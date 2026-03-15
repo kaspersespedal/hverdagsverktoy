@@ -457,7 +457,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
     <div id="calc-dashboard" class="dash-container">
       <!-- Theme selector -->
       <div style="margin-bottom:16px;">
-        <div id="theme-picker" style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;"></div>
+        <div id="theme-picker" style="display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;"></div>
       </div>
       <!-- Tool cards grid -->
       <div class="dash-section-title" id="dash-tools-title">Verktøy</div>
@@ -3656,26 +3656,63 @@ function buildThemePicker(){
   if(!wrap) return;
   const current=(document.documentElement.getAttribute('data-theme')||'blue');
   wrap.innerHTML='';
+  // "Tema" label
+  const lbl=document.createElement('span');
+  lbl.style.cssText='font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--text);opacity:.4;';
+  lbl.textContent='Tema';
+  // Trigger button — active color dot + chevron
+  const activeTheme=THEMES.find(t=>t.id===current)||THEMES[0];
+  const btn=document.createElement('button');
+  btn.id='theme-trigger';
+  btn.style.cssText='display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:7px 12px;cursor:pointer;outline:none;transition:border-color .2s,box-shadow .2s;box-shadow:0 1px 3px rgba(0,0,0,.06);';
+  btn.onmouseenter=function(){this.style.borderColor='var(--accent)';};
+  btn.onmouseleave=function(){var p=document.getElementById('theme-panel');if(!p||p.style.display==='none')this.style.borderColor='var(--border)';};
+  var dot=document.createElement('span');
+  dot.style.cssText='width:16px;height:16px;border-radius:50%;background:'+activeTheme.dot+';border:1.5px solid rgba(0,0,0,.1);flex-shrink:0;';
+  var btnLabel=document.createElement('span');
+  btnLabel.style.cssText='font-size:13px;font-weight:500;color:var(--text);opacity:.6;';
+  btnLabel.textContent=activeTheme.label;
+  var arrow=document.createElement('span');
+  arrow.style.cssText='font-size:10px;color:var(--text);opacity:.35;';
+  arrow.innerHTML='&#9662;';
+  btn.appendChild(dot);
+  btn.appendChild(btnLabel);
+  btn.appendChild(arrow);
+  // Dropdown panel — horizontal row of color dots
+  const panel=document.createElement('div');
+  panel.id='theme-panel';
+  panel.style.cssText='position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:6px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;display:none;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;white-space:nowrap;';
   THEMES.forEach(t=>{
-    const active=t.id===current;
-    const btn=document.createElement('button');
-    btn.setAttribute('data-theme-btn',t.id);
-    btn.setAttribute('title',t.label);
-    btn.onclick=()=>setTheme(t.id);
-    const dotBorder=t.ring||t.dot;
-    const size=active?'32px':'28px';
-    btn.style.cssText='position:relative;width:'+size+';height:'+size+';border-radius:50%;border:2.5px solid '+(active?dotBorder:'transparent')+';'+(t.dot.startsWith('linear')?'background:'+t.dot:'background:'+t.dot)+';cursor:pointer;transition:all .2s ease;box-shadow:'+(active?'0 0 0 2px var(--surface), 0 2px 8px rgba(0,0,0,.18)':'0 1px 3px rgba(0,0,0,.1)')+';outline:none;padding:0;flex-shrink:0;';
-    btn.onmouseenter=function(){if(!active)this.style.transform='scale(1.15)';this.style.boxShadow='0 2px 10px rgba(0,0,0,.2)';};
-    btn.onmouseleave=function(){this.style.transform='scale(1)';this.style.boxShadow=active?'0 0 0 2px var(--surface), 0 2px 8px rgba(0,0,0,.18)':'0 1px 3px rgba(0,0,0,.1)';};
-    if(active){
-      const check=document.createElement('span');
-      const isDark=t.id==='dark'||t.id==='corporate';
-      check.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:14px;line-height:1;color:'+(isDark?'#fff':'#fff')+';text-shadow:0 1px 2px rgba(0,0,0,.4);pointer-events:none;';
-      check.textContent='✓';
-      btn.appendChild(check);
+    const isActive=t.id===current;
+    const swatch=document.createElement('button');
+    swatch.title=t.label;
+    swatch.style.cssText='width:28px;height:28px;border-radius:50%;border:2.5px solid '+(isActive?(t.ring||t.dot):'transparent')+';background:'+t.dot+';cursor:pointer;outline:none;padding:0;transition:transform .15s,border-color .15s,box-shadow .15s;flex-shrink:0;position:relative;display:inline-block;vertical-align:middle;'+(isActive?'box-shadow:0 0 0 2px var(--surface),0 2px 8px rgba(0,0,0,.15);':'')+(t!==THEMES[0]?'margin-left:10px;':'');
+    swatch.onmouseenter=function(){if(!isActive)this.style.transform='scale(1.18)';this.style.boxShadow='0 2px 10px rgba(0,0,0,.18)';};
+    swatch.onmouseleave=function(){this.style.transform='scale(1)';this.style.boxShadow=isActive?'0 0 0 2px var(--surface),0 2px 8px rgba(0,0,0,.15)':'';};
+    swatch.onclick=function(e){e.stopPropagation();setTheme(t.id);};
+    if(isActive){
+      var ck=document.createElement('span');
+      ck.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:13px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.4);pointer-events:none;';
+      ck.textContent='\u2713';
+      swatch.appendChild(ck);
     }
-    wrap.appendChild(btn);
+    panel.appendChild(swatch);
   });
+  btn.onclick=function(e){
+    e.stopPropagation();
+    var open=panel.style.display==='none';
+    panel.style.display=open?'block':'none';
+    btn.style.borderColor=open?'var(--accent)':'var(--border)';
+  };
+  document.addEventListener('click',function(e){
+    if(!wrap.contains(e.target)){
+      panel.style.display='none';
+      btn.style.borderColor='var(--border)';
+    }
+  });
+  wrap.appendChild(lbl);
+  wrap.appendChild(btn);
+  wrap.appendChild(panel);
 }
 function setTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
@@ -4580,6 +4617,40 @@ function scrollToEl(el,mode){
   }
 }
 
+// Default values for each calculator panel
+const CALC_DEFAULTS={
+  salary:{'s-g':'800,000','s-c':0,'s-r':0},
+  mortgage:{'m-a':'300,000','m-r':'5.5','m-y':'25','m-type':0},
+  npv:{'n-inv':'1,000,000','n-r':'10','n-c1':'300,000','n-c2':'350,000','n-c3':'400,000','n-c4':'400,000','n-c5':'500,000'},
+  vat:{'v-a':'10,000','v-r':0,'v-t':0,'adj-type':0,'adj-mva':'2,500,000','adj-period':'10','adj-years':'4','adj-old':'100','adj-new':'60'},
+  basic:{'bc-decimals':'2','uc-val':'1000','valgevinst-units':'10,000','valgevinst-buy-rate':'10.50','valgevinst-sell-rate':'11.20','uttak-mv':'1,000,000','uttak-sv':'400,000','uttak-andel':'100','uttak-skjerming':'0'}
+};
+function resetCalcPanel(n){
+  const panel=document.getElementById('calc-'+n);
+  if(!panel) return;
+  const defs=CALC_DEFAULTS[n]||{};
+  // Reset inputs to defaults
+  Object.keys(defs).forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    if(el.tagName==='SELECT'){el.selectedIndex=typeof defs[id]==='number'?defs[id]:0;}
+    else{el.value=defs[id];}
+  });
+  // Reset all selects in this panel to first option (if not in defaults)
+  panel.querySelectorAll('select').forEach(sel=>{
+    if(!defs[sel.id]) sel.selectedIndex=0;
+  });
+  // Hide all result sections
+  panel.querySelectorAll('.result-sec').forEach(r=>r.classList.add('hidden'));
+  // Reset basic calculator display
+  if(n==='basic'){
+    const disp=document.getElementById('bc-display');
+    if(disp) disp.value='0';
+    bcExpr='';bcHistory='';bcFresh=true;
+    // Reset to basic mode
+    switchCalcMode('basic');
+  }
+}
 function switchCalc(n) {
   activeCalc = n;
   ['dashboard','basic','salary','mortgage','npv','vat'].forEach(c => {
@@ -4593,6 +4664,7 @@ function switchCalc(n) {
     try{ updateDashStats(); }catch(e){}
     updateDashLabels();
   } else {
+    resetCalcPanel(n);
     setTimeout(()=>{scrollToEl(document.getElementById('calc-'+n),'top');},80);
   }
 }
