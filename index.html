@@ -155,6 +155,7 @@
 /* Glass overrides */
 /* Frost overrides — same look as glass but solid */
 [data-theme="frost"] .topbar{background:rgba(104,117,245,1);}
+[data-theme="frost"] footer{background:rgba(104,117,245,1);}
 /* Glass overrides */
 [data-theme="glass"] .card,[data-theme="glass"] .info-card{backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);background:var(--surface);}
 [data-theme="glass"] .topbar{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(104,117,245,.8);}
@@ -546,7 +547,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
             <div style="font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;" id="bc-lvu-label">Lønn vs Utbytte</div>
             <div id="bc-lvu-help" style="font-style:italic;font-size:11.5px;margin-bottom:8px;"><a href="javascript:void(0)" onclick="goToAgaCard()" style="color:var(--accent);text-decoration:none;opacity:.7;">Se AGA-satsene →</a></div>
             <div id="lvu-info-toggle" style="margin-bottom:12px;">
-              <a href="javascript:void(0)" onclick="var b=document.getElementById('lvu-info-body');var opening=b.classList.contains('hidden');b.classList.toggle('hidden');this.querySelector('span').textContent=opening?'▼':'▶';if(opening)setTimeout(function(){b.scrollIntoView({behavior:'smooth',block:'nearest'})},50)" style="font-size:12px;color:var(--ink2);text-decoration:none;font-weight:600;display:flex;align-items:center;gap:6px;"><span>▶</span> <span id="lvu-info-label">Hva viser denne kalkulatoren?</span></a>
+              <a href="javascript:void(0)" onclick="var b=document.getElementById('lvu-info-body');var opening=b.classList.contains('hidden');b.classList.toggle('hidden');this.querySelector('span').textContent=opening?'▼':'▶';if(opening)setTimeout(function(){smartScroll(b)},150)" style="font-size:12px;color:var(--ink2);text-decoration:none;font-weight:600;display:flex;align-items:center;gap:6px;"><span>▶</span> <span id="lvu-info-label">Hva viser denne kalkulatoren?</span></a>
               <div id="lvu-info-body" class="hidden" style="margin-top:8px;padding:12px 14px;background:var(--surface2);border-radius:10px;font-size:12px;line-height:1.6;color:var(--ink2);">
                 <div style="font-weight:700;color:var(--ink);margin-bottom:6px;" id="lvu-info-h">Kort forklart</div>
                 <div id="lvu-info-text">Kalkulatoren sammenligner <b>hva det koster selskapet</b> å gi deg et gitt beløp — enten som lønn eller utbytte. Den viser <b>ikke</b> hva du sitter igjen med privat.<br><br>
@@ -635,7 +636,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
             </div>
             <!-- Fagkalkulatorer dropdown -->
             <div style="border-top:1px solid var(--border);margin:6px 0 2px;"></div>
-            <div onclick="const list=document.getElementById('cm-extra-list');list.classList.toggle('cm-open');this.querySelector('.cm-arrow').classList.toggle('cm-arrow-open');if(list.classList.contains('cm-open')){const self=this;setTimeout(()=>{list.lastElementChild.scrollIntoView({behavior:'smooth',block:'nearest'});setTimeout(()=>{const r=self.getBoundingClientRect();if(r.top<0)self.scrollIntoView({behavior:'smooth',block:'start'})},400)},300);}" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-size:12px;font-weight:700;color:var(--ink3);letter-spacing:.5px;text-transform:uppercase;">
+            <div onclick="const list=document.getElementById('cm-extra-list');list.classList.toggle('cm-open');this.querySelector('.cm-arrow').classList.toggle('cm-arrow-open');if(list.classList.contains('cm-open')){const self=this;setTimeout(()=>{smartScroll(list.lastElementChild);setTimeout(()=>{const r=self.getBoundingClientRect();const off=stickyOffset();if(r.top<off)smartScroll(self)},500)},300);}" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-size:12px;font-weight:700;color:var(--ink3);letter-spacing:.5px;text-transform:uppercase;">
               <span style="font-size:14px;"></span> <span id="lbl-fagcalc">Fagkalkulatorer</span> <span class="cm-arrow" style="margin-left:auto;font-size:10px;transition:transform .2s;">▼</span>
             </div>
             <div id="cm-extra-list">
@@ -1108,7 +1109,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
             </div>
             <!-- Collapsible explanation -->
             <div style="margin-top:16px;" id="adj-explain-wrap">
-              <div style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 0;" onclick="const b=this.nextElementSibling;const opening=b.style.display==='none';b.style.display=opening?'block':'none';this.querySelector('.adj-arrow').textContent=opening?'▼':'▶';if(opening)setTimeout(()=>{const y=this.getBoundingClientRect().top+window.scrollY-120;window.scrollTo({top:y,behavior:'smooth'})},100)">
+              <div style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 0;" onclick="const b=this.nextElementSibling;const opening=b.style.display==='none';b.style.display=opening?'block':'none';this.querySelector('.adj-arrow').textContent=opening?'▼':'▶';if(opening){const self=this;setTimeout(()=>smartScroll(self),150);}">
                 <span class="adj-arrow" style="font-size:10px;color:var(--ink3);">▶</span>
                 <span id="adj-ex-title" style="font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;">Forklaring av justeringsreglene (mval. kap. 9)</span>
               </div>
@@ -4244,7 +4245,8 @@ function morPopulateType(){
 }
 
 function goToDeprCard(){
-  switchCalc('salary');
+  switchCalc('salary', true);
+  window.scrollTo({top:0,behavior:'auto'});
   setTimeout(()=>{
     const card=document.getElementById('sal-depr-card');
     if(!card) return;
@@ -4256,65 +4258,42 @@ function goToDeprCard(){
         const headers=card.querySelectorAll('.ir-hdr');
         let target=card;
         for(const h of headers){if(h.textContent.includes('SALDOGRUPP')){target=h;break;}}
-        target.scrollIntoView({behavior:'smooth',block:'start'});
-        setTimeout(()=>{
-          const off=stickyOffset();
-          const r=target.getBoundingClientRect();
-          if(Math.abs(r.top-off)>5) window.scrollBy({top:r.top-off,behavior:'smooth'});
-        },500);
-      },500);
-    },350);
-  },250);
+        smartScroll(target);
+      },600);
+    },400);
+  },350);
 }
 function goToAgaCard(){
-  switchCalc('vat');
+  switchCalc('vat', true);
+  window.scrollTo({top:0,behavior:'auto'});
   setTimeout(()=>{
     const c=document.getElementById('vat-aga-card');
     if(!c) return;
     c.classList.remove('hidden','collapsed');
-    setTimeout(()=>{
-      c.scrollIntoView({behavior:'smooth',block:'start'});
-      setTimeout(()=>{
-        const off=stickyOffset();
-        const r=c.getBoundingClientRect();
-        if(Math.abs(r.top-off)>5) window.scrollBy({top:r.top-off,behavior:'smooth'});
-      },500);
-    },300);
-  },250);
+    setTimeout(()=>{ smartScroll(c); },400);
+  },350);
 }
 function goToLvuCalc(){
-  switchCalc('basic');
+  switchCalc('basic', true);
+  window.scrollTo({top:0,behavior:'auto'});
   setTimeout(()=>{
     switchCalcMode('lvu');
     setTimeout(()=>{
       const el=document.getElementById('bc-lvu');
-      if(el){
-        el.scrollIntoView({behavior:'smooth',block:'start'});
-        setTimeout(()=>{
-          const off=stickyOffset();
-          const r=el.getBoundingClientRect();
-          if(Math.abs(r.top-off)>5) window.scrollBy({top:r.top-off,behavior:'smooth'});
-        },500);
-      }
-    },200);
-  },200);
+      if(el) smartScroll(el);
+    },300);
+  },300);
 }
 function goToAvsCalc(){
-  switchCalc('basic');
+  switchCalc('basic', true);
+  window.scrollTo({top:0,behavior:'auto'});
   setTimeout(()=>{
     switchCalcMode('avs');
     setTimeout(()=>{
       const el=document.getElementById('bc-avs');
-      if(el){
-        el.scrollIntoView({behavior:'smooth',block:'start'});
-        setTimeout(()=>{
-          const off=stickyOffset();
-          const r=el.getBoundingClientRect();
-          if(Math.abs(r.top-off)>5) window.scrollBy({top:r.top-off,behavior:'smooth'});
-        },500);
-      }
-    },200);
-  },200);
+      if(el) smartScroll(el);
+    },300);
+  },300);
 }
 function toggleLawGroup(group){
   var body = group.querySelector('.law-group-body');
@@ -4333,7 +4312,7 @@ function toggleLawGroup(group){
     // After transition, remove fixed max-height so nested content can expand
     setTimeout(function(){ body.style.maxHeight = 'none'; }, 550);
     // Smooth scroll group header to top (below sticky header)
-    setTimeout(function(){ scrollToEl(group,'top'); }, 550);
+    setTimeout(function(){ smartScroll(group); }, 550);
   }
 }
 function toggleCard(card){
@@ -4343,11 +4322,7 @@ function toggleCard(card){
   const arrow = card.querySelector('.card-title span');
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
   if(wasCollapsed){
-    // Wait for expand animation to start before scrolling into view
-    setTimeout(()=>{
-      const nav = document.querySelector('.calc-nav');
-      scrollToEl(card,'top');
-    }, 250);
+    setTimeout(()=>{ smartScroll(card); }, 250);
   }
 }
 
@@ -5151,6 +5126,21 @@ function scrollToEl(el,mode){
     }
   }
 }
+function smartScroll(el,retries){
+  if(!el)return;
+  retries=retries||0;
+  const off=stickyOffset();
+  const r=el.getBoundingClientRect();
+  const targetY=r.top+window.scrollY-off;
+  window.scrollTo({top:Math.max(0,targetY),behavior:'smooth'});
+  // Only retry once to correct for layout shifts (e.g. card animations)
+  if(retries<1){
+    setTimeout(function(){
+      const r2=el.getBoundingClientRect();
+      if(Math.abs(r2.top-off)>15) smartScroll(el,retries+1);
+    },400);
+  }
+}
 
 // Reset calculator panel when switching
 function resetCalcPanel(n){
@@ -5195,7 +5185,7 @@ function resetCalcPanel(n){
     if(extraList&&extraList.classList.contains('cm-open')){extraList.classList.remove('cm-open');if(cmArrow)cmArrow.classList.remove('cm-arrow-open');}
   }catch(e){console.warn('resetCalcPanel:',e);}
 }
-function switchCalc(n) {
+function switchCalc(n, skipScroll) {
   activeCalc = n;
   ['dashboard','basic','salary','mortgage','npv','vat'].forEach(c => {
     var ce=document.getElementById('calc-'+c);if(ce)ce.classList.toggle('hidden', c!==n);
@@ -5209,7 +5199,23 @@ function switchCalc(n) {
     updateDashLabels();
   } else {
     resetCalcPanel(n);
-    setTimeout(()=>{scrollToEl(document.getElementById('calc-'+n),'top');},80);
+    // Scroll active tab button horizontally in navbar
+    var cnav2=document.querySelector('.calc-nav');
+    var activeTab=document.getElementById('tab-'+n);
+    if(cnav2&&activeTab){
+      var tabLeft=activeTab.offsetLeft-cnav2.offsetLeft;
+      var center=tabLeft-cnav2.clientWidth/2+activeTab.clientWidth/2;
+      cnav2.scrollTo({left:center,behavior:'smooth'});
+    }
+    if(!skipScroll){
+      // Scroll page to calculator (instant, no animation)
+      var target=document.getElementById('calc-'+n);
+      if(target){
+        var off=stickyOffset();
+        var rect=target.getBoundingClientRect();
+        window.scrollTo({top:window.pageYOffset+rect.top-off,behavior:'auto'});
+      }
+    }
   }
 }
 
