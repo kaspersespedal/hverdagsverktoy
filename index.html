@@ -675,15 +675,15 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
               <div class="rgrid" id="s-trinn-grid"></div>
             </div>
           </div>
-          <!-- Uttakskalkulator -->
-          <div id="sal-uttak-card" style="margin-top:20px;border-top:1.5px solid var(--border);padding-top:20px;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-              
+          <!-- Uttakskalkulator (collapsible) -->
+          <div id="sal-uttak-card" class="info-card collapsed" style="margin-top:16px;">
+            <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
               <div>
-                <div style="font-weight:700;font-size:15px;color:var(--ink);" id="uttak-title">Uttakskalkulator</div>
-                <div style="font-size:12px;color:var(--ink3);" id="uttak-desc">Sktl. § 5-2 — skatt ved uttak av eiendeler fra virksomhet</div>
+                <div class="card-title" id="uttak-title">Uttakskalkulator <span style="font-size:11px;opacity:.5">▼</span></div>
+                <div class="card-desc" id="uttak-desc">Sktl. § 5-2 — skatt ved uttak av eiendeler fra virksomhet</div>
               </div>
             </div>
+            <div class="law-body" style="padding:0 24px 20px;">
             <div class="fg"><label class="flbl" id="uttak-l-type">Virksomhetstype</label>
               <select class="fc" id="uttak-type" onchange="uttakToggleFields()">
                 <option id="uttak-opt-enk" value="enk">Enkeltpersonforetak (ENK)</option>
@@ -737,7 +737,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
             </div>
             <!-- Collapsible explanation -->
             <div style="margin-top:16px;" id="uttak-explain-wrap">
-              <div style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 0;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display==='none'?'block':'none';this.querySelector('.uttak-arrow').textContent=b.style.display==='none'?'▶':'▼'">
+              <div style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 0;" onclick="const b=this.nextElementSibling;const opening=b.style.display==='none';b.style.display=opening?'block':'none';this.querySelector('.uttak-arrow').textContent=opening?'▼':'▶';if(opening)setTimeout(()=>{const y=this.getBoundingClientRect().top+window.scrollY-120;window.scrollTo({top:y,behavior:'smooth'})},100)">
                 <span class="uttak-arrow" style="font-size:10px;color:var(--ink3);">▶</span>
                 <span id="uttak-ex-title" style="font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;">Forklaring av uttaksreglene (sktl. § 5-2)</span>
               </div>
@@ -786,7 +786,8 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
                 </div>
               </div>
             </div>
-          </div>
+            </div><!-- /law-body -->
+          </div><!-- /sal-uttak-card -->
         </div>
       </div>
       <div class="right-col">
@@ -981,16 +982,15 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
               <div class="rt"><div class="rt-lbl" id="vat-r-pct">Rate %</div><div class="rt-val" id="v-pct">–</div></div>
             </div>
           </div>
-          <!-- Adjustment calculator -->
-          <div id="vat-adj-card" class="hidden" style="margin-top:20px;border-top:1.5px solid var(--border);padding-top:20px;">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
-              
+          <!-- Adjustment calculator (collapsible) -->
+          <div id="vat-adj-card" class="info-card collapsed" style="margin-top:16px;">
+            <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
               <div>
-                <div style="font-weight:700;font-size:15px;color:var(--ink);" id="vat-adj-title">Justeringskalkulator</div>
-                <div style="font-size:12px;color:var(--ink3);" id="vat-adj-desc">Mval. kap. 9 — justering av inngående MVA ved bruksendring</div>
-                <div id="vat-adj-help" style="font-style:italic;font-size:11.5px;margin-top:2px;"><a href="javascript:void(0)" onclick="const c=document.getElementById('vat-adj-info-card');if(c){c.classList.remove('hidden','collapsed');scrollToEl(c,'top')}" style="color:var(--accent);text-decoration:none;opacity:.7;">Trenger du hjelp med kalkulatoren? →</a></div>
+                <div class="card-title" id="vat-adj-title">Justeringskalkulator <span style="font-size:11px;opacity:.5">▼</span></div>
+                <div class="card-desc" id="vat-adj-desc">Mval. kap. 9 — justering av inngående MVA ved bruksendring</div>
               </div>
             </div>
+            <div class="law-body" style="padding:0 24px 20px;">
             <div class="fg"><label class="flbl" id="adj-l-type">Type kapitalvare</label>
               <select class="fc" id="adj-type" onchange="document.getElementById('adj-period').value=this.value==='eiendom'?'10':'5'">
                 <option value="eiendom" id="adj-opt-prop">Fast eiendom (§ 9-1 b) — 10 år</option>
@@ -1032,7 +1032,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
             </div>
             <!-- Collapsible explanation -->
             <div style="margin-top:16px;" id="adj-explain-wrap">
-              <div style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 0;" onclick="const b=this.nextElementSibling;b.style.display=b.style.display==='none'?'block':'none';this.querySelector('.adj-arrow').textContent=b.style.display==='none'?'▶':'▼'">
+              <div style="cursor:pointer;display:flex;align-items:center;gap:8px;padding:10px 0;" onclick="const b=this.nextElementSibling;const opening=b.style.display==='none';b.style.display=opening?'block':'none';this.querySelector('.adj-arrow').textContent=opening?'▼':'▶';if(opening)setTimeout(()=>{const y=this.getBoundingClientRect().top+window.scrollY-120;window.scrollTo({top:y,behavior:'smooth'})},100)">
                 <span class="adj-arrow" style="font-size:10px;color:var(--ink3);">▶</span>
                 <span id="adj-ex-title" style="font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.5px;text-transform:uppercase;">Forklaring av justeringsreglene (mval. kap. 9)</span>
               </div>
@@ -1090,7 +1090,8 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
                 </div>
               </div>
             </div>
-          </div>
+            </div><!-- /law-body -->
+          </div><!-- /vat-adj-card -->
         </div>
       </div>
       <div class="right-col">
@@ -1455,6 +1456,9 @@ const REGIONS = {
 
     salIntroTitle:'What is tax?', salIntroDesc:'Brief explanation for newcomers to Norway',
     salIntroRows: [['— TAX IN NORWAY —','Everyone who lives or works in Norway pays tax. The money goes to hospitals, schools, roads, police, kindergartens and welfare schemes.'],['What is deducted from your salary?','Your employer automatically deducts tax from your salary each month. You receive what is left — this is called «net salary».'],['How much tax do you pay?','It depends on how much you earn. The more you earn, the more tax you pay. Most people pay between 25% and 35% of their salary.'],['Tax card (Skattekort)','When you start working in Norway you receive a tax card from the Tax Agency. It tells your employer how much tax should be deducted.'],['Tax return (Skattemelding)','Each year (usually March/April) you receive a tax return. It shows what you have earned and paid in tax. Check that everything is correct.'],['Can you get money back?','Yes! If you have paid too much tax you get money back (tax settlement). If you have paid too little you must pay the rest.'],['What are deductions?','Some expenses can reduce your tax — for example interest on loans, travel to work, or union fees. These are called deductions.'],['What is bracket tax?','An extra tax that increases in brackets the more you earn. Low income = low bracket tax. High income = higher bracket tax.'],['Need help?','<a href="https://www.skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline">The Tax Agency (skatteetaten.no)</a> has information in many languages. You can also call them on 800 80 000.']],
+    salLawGroupTitle:'Tax Act', salLawGroupDesc:'Ch. 2–14 · Tax liability · Income · Deductions · Gains · Companies · Anti-avoidance',
+    vatLawGroupTitle:'VAT Act', vatLawGroupDesc:'Ch. 1–9 · Definitions · Exemptions · Zero-rating · Deductions · Adjustments',
+    vatExemptTitle:'Exemptions, withdrawals and imports (Ch. 3)', vatZeroTitle:'Zero-rating (Ch. 6)',
     salAgaTitle:'Employer social security contributions (AGA zones)', salAgaDesc:'Rates vary depending on where the business is located',
     salAgaRows: [['— ZONES AND RATES —','Employer social security contribution (AGA) varies depending on where the business is located (ftrl. § 23-2)'],['Zone I (whole country except districts)','14.1% — applies to most businesses in cities and central areas','ftrl. § 23-2'],['Zone Ia','10.6% — some district municipalities with lower rate','ftrl. § 23-2'],['Zone II','10.6% — scattered municipalities in Northern Norway and inner Eastern Norway','ftrl. § 23-2'],['Zone III','6.4% — district municipalities with low population density','ftrl. § 23-2'],['Zone IV','5.1% — North Troms and parts of Finnmark','ftrl. § 23-2'],['Zone IVa','7.9% — certain municipalities in Troms and Nordland','ftrl. § 23-2'],['Zone V (Finnmark and North Troms)','0% — no employer social security contribution','ftrl. § 23-2'],['— FREE ALLOWANCE AND EXEMPTIONS —','Differentiated AGA and state aid rules'],['What is the free allowance?','Businesses in lower zones have a free allowance (approx. 500,000 kr/year) where they can use a reduced rate. Above the allowance Zone I rate (14.1%) is charged.','ESA rules'],['Extra tax on high salaries?','From 2023: 5% extra employer social security contribution on salary above 750,000 kr per employee (applies to all zones).','ftrl. § 23-2a'],['— CALCULATION EXAMPLE —','Zone I, salary 600,000 kr'],['AGA (14.1%)','600,000 × 0.141 = 84,600 kr','ftrl. § 23-2'],['Holiday pay (12%)','600,000 × 0.12 = 72,000 kr','ferieloven § 10'],['OTP (2%)','600,000 × 0.02 = 12,000 kr','OTP-loven'],['Total cost above gross','84,600 + 72,000 + 12,000 = 168,600 kr (28.1% above gross)','']],
     salDeprTitle:'Balance depreciation (ch. 14, §§ 14-40 to 14-48)', salDeprDesc:'Depreciation pools · Depreciation rates · Gain and loss · Negative balance',
@@ -1690,6 +1694,9 @@ const REGIONS = {
 
     salIntroTitle:'什么是税收?', salIntroDesc:'为初来乍到的人提供的简短说明',
     salIntroRows: [['— 挪威税收 —','所有在挪威居住或工作的人都要缴税。这些钱用于医院、学校、道路、警察、幼儿园和社会保险计划。'],['从你的工资中扣除什么?','你的雇主每个月从你的工资中自动扣除税款。你拿到的是剩余部分——这被称为"净工资"。'],['你要缴多少税?','这取决于你赚了多少钱。你赚的越多，你缴的税就越多。大多数人缴工资的25%到35%。'],['税卡','当你开始在挪威工作时，你会从税务局获得一张税卡。它告诉雇主应该扣除多少税款。'],['纳税申报表','每年（通常在3月/4月），你会收到一份纳税申报表。它显示你赚了多少和缴了多少税。检查所有数字是否正确。'],['你能拿回钱吗?','可以！如果你缴的税过多，你会获得退款（税款结算）。如果你缴的税过少，你需要支付差额。'],['什么是减除?','某些支出可以减少你的税款——例如贷款利息支出、上班交通费或工会会费。这些被称为减除。'],['什么是阶梯税?','一种额外的税，随着你的收入增加而增加。低收入=低阶梯税。高收入=更高的阶梯税。'],['需要帮助?','<a href="https://www.skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline">税务局（skatteetaten.no）</a>提供多种语言的信息。你也可以拨打他们的电话 800 80 000。']],
+    salLawGroupTitle:'税法', salLawGroupDesc:'第2–14章 · 纳税义务 · 收入 · 扣除 · 收益 · 公司 · 反避税',
+    vatLawGroupTitle:'增值税法', vatLawGroupDesc:'第1–9章 · 定义 · 豁免 · 零税率 · 扣除 · 调整',
+    vatExemptTitle:'豁免、提取和进口（第3章）', vatZeroTitle:'零税率（第6章）',
     salAgaTitle:'雇主社会保险费（AGA-区)', salAgaDesc:'费率因企业所在地而异',
     salAgaRows: [['— 区域和费率 —','雇主社会保险费（AGA）因企业所在地而异（ftrl. § 23-2）'],['区域 I（全国除外边远地区）','14.1% — 适用于大多数城市和中心地区的企业','ftrl. § 23-2'],['区域 Ia','10.6% — 某些具有较低费率的边远市镇','ftrl. § 23-2'],['区域 II','10.6% — 北挪威和东部内陆地区的零散市镇','ftrl. § 23-2'],['区域 III','6.4% — 人口密度低的边远市镇','ftrl. § 23-2'],['区域 IV','5.1% — 北特罗姆斯和芬马克的部分地区','ftrl. § 23-2'],['区域 IVa','7.9% — 特罗姆斯和北兰郡的某些市镇','ftrl. § 23-2'],['区域 V（芬马克和北特罗姆斯）','0% — 无雇主社会保险费','ftrl. § 23-2'],['— 免税额和豁免 —','差异化社会保险费和国家援助规则'],['什么是免税额?','较低区域的企业有一个免税额（约50万克朗/年），他们可以使用减少的费率。超过免税额部分按区域 I 费率（14.1%）计算。','ESA-regelverk'],['高工资的额外费用?','从2023年起：对超过每位员工75万克朗的工资征收5%的额外雇主社会保险费（适用于所有区域）。','ftrl. § 23-2a'],['— 计算示例 —','区域 I，工资 600 000 克朗'],['社会保险费（14.1%）','600 000 × 0.141 = 84 600 克朗','ftrl. § 23-2'],['年假津贴（12%）','600 000 × 0.12 = 72 000 克朗','ferieloven § 10'],['养老金（2%）','600 000 × 0.02 = 12 000 克朗','OTP-loven'],['总成本超毛工资','84 600 + 72 000 + 12 000 = 168 600 克朗（超毛工资的28.1%）','']],
     salDeprTitle:'账面余额折旧（第 14 章，§§ 14-40 至 14-48）', salDeprDesc:'折旧组 · 折旧率 · 收益和损失 · 负账面余额',
@@ -1932,6 +1939,9 @@ const REGIONS = {
 
     salIntroTitle:'Qu\'est-ce que l\'impôt ?', salIntroDesc:'Une explication courte pour ceux qui sont nouveaux en Norvège',
     salIntroRows: [['— FISCALITÉ EN NORVÈGE —','Tous ceux qui vivent ou travaillent en Norvège paient des impôts. Cet argent va aux hôpitaux, écoles, routes, police, garderies et régimes d\'aide sociale.'],['Qu\'est-ce qui est déduit de votre salaire ?','Votre employeur déduit automatiquement l\'impôt de votre salaire chaque mois. Ce que vous recevez est le montant restant — c\'est ce qu\'on appelle le « salaire net ».'],['Combien d\'impôts payez-vous ?','Cela dépend de ce que vous gagnez. Plus vous gagnez, plus vous payez d\'impôts. La plupart des gens paient entre 25 % et 35 % de leur salaire.'],['Carte fiscale','Lorsque vous commencez à travailler en Norvège, vous recevez une carte fiscale de l\'Administration fiscale. Elle indique à votre employeur combien d\'impôt doit être déduit.'],['Déclaration fiscale','Chaque année (généralement en mars/avril), vous recevez une déclaration fiscale. Elle montre ce que vous avez gagné et payé en impôts. Vérifiez que tout est correct.'],['Pouvez-vous récupérer de l\'argent ?','Oui ! Si vous avez payé trop d\'impôts, vous recevrez un remboursement (réglement fiscal). Si vous avez payé trop peu, vous devez payer le reste.'],['Que sont les déductions ?','Certaines dépenses peuvent réduire vos impôts — par exemple les intérêts débiteurs d\'emprunts, les trajets domicile-travail ou les cotisations syndicales. Celles-ci s\'appellent des déductions.'],['Que est l\'impôt progressif ?','Une taxe supplémentaire qui augmente par paliers à mesure que vous gagnez plus. Revenu faible = impôt progressif faible. Revenu élevé = impôt progressif plus élevé.'],['Avez-vous besoin d\'aide ?','<a href="https://www.skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline">l\'Administration fiscale (skatteetaten.no)</a> propose des informations en plusieurs langues. Vous pouvez également les appeler au 800 80 000.']],
+    salLawGroupTitle:'Loi fiscale', salLawGroupDesc:'Ch. 2–14 · Obligation fiscale · Revenus · Déductions · Plus-values · Sociétés · Anti-évasion',
+    vatLawGroupTitle:'Loi sur la TVA', vatLawGroupDesc:'Ch. 1–9 · Définitions · Exonérations · Taux zéro · Déductions · Ajustements',
+    vatExemptTitle:'Exonérations, retraits et importations (ch. 3)', vatZeroTitle:'Taux zéro (ch. 6)',
     salAgaTitle:'Cotisations patronales (zones AGA)', salAgaDesc:'Les taux varient selon le lieu d\'implantation de l\'entreprise',
     salAgaRows: [['— ZONES ET TAUX —','Les cotisations patronales (AGA) varient selon le lieu d\'implantation de l\'entreprise (ftrl. § 23-2)'],['Zone I (tout le pays sauf les régions)','14,1 % — s\'applique à la plupart des entreprises en zones urbaines et centrales','ftrl. § 23-2'],['Zone Ia','10,6 % — certaines communes rurales avec un taux légèrement réduit','ftrl. § 23-2'],['Zone II','10,6 % — communes dispersées en Norvège du Nord et à l\'est intérieur','ftrl. § 23-2'],['Zone III','6,4 % — communes rurales avec une faible densité de population','ftrl. § 23-2'],['Zone IV','5,1 % — Nord-Troms et parties du Finnmark','ftrl. § 23-2'],['Zone IVa','7,9 % — certaines communes du Troms et du Nordland','ftrl. § 23-2'],['Zone V (Finnmark et Nord-Troms)','0 % — pas de cotisations patronales','ftrl. § 23-2'],['— ALLOCATIONS EXONÉRÉES ET EXEMPTIONS —','Règles sur les cotisations différenciées et l\'aide d\'État'],['Qu\'est-ce que l\'allocation exonérée ?','Les entreprises dans les zones réduites ont une allocation exonérée (environ 500 000 kr/an) où elles peuvent utiliser un taux réduit. Au-delà, le taux de la zone I (14,1 %) s\'applique.','ESA-regelverk'],['Cotisation supplémentaire sur les salaires élevés ?','À partir de 2023 : cotisation patronale supplémentaire de 5 % sur les salaires supérieurs à 750 000 kr par salarié (s\'applique à toutes les zones).','ftrl. § 23-2a'],['— EXEMPLE DE CALCUL —','Zone I, salaire 600 000 kr'],['Cotisations patronales (14,1 %)','600 000 × 0,141 = 84 600 kr','ftrl. § 23-2'],['Indemnité congés (12 %)','600 000 × 0,12 = 72 000 kr','ferieloven § 10'],['Retraite (2 %)','600 000 × 0,02 = 12 000 kr','OTP-loven'],['Coût total en sus du brut','84 600 + 72 000 + 12 000 = 168 600 kr (28,1 % en sus du brut)','']],
     salDeprTitle:'Amortissement linéaire (chap. 14, §§ 14-40 à 14-48)', salDeprDesc:'Groupes d\'amortissement · Taux d\'amortissement · Gains et pertes · Solde négatif',
@@ -2061,6 +2071,9 @@ const REGIONS = {
     salCorpTitle:'Særregler selskaper (kap. 10)', salCorpDesc:'Utbytte · Aksjegevinst · Konsernbidrag · NOKUS',
     salReorgTitle:'Omorganisering (kap. 11)', salReorgDesc:'Fusjon · Fisjon · Aksjebytte · Omdanning',
     salAntiTitle:'Interessefellesskap og omgåelse (kap. 13)', salAntiDesc:'Armlengdeprinsippet · Omgåelsesnormen · Skatteposisjoner',
+    salLawGroupTitle:'Skatteloven', salLawGroupDesc:'Kap. 2–14 · Skatteplikt · Inntekt · Fradrag · Gevinst · Selskaper · Omgåelse',
+    vatLawGroupTitle:'Merverdiavgiftsloven', vatLawGroupDesc:'Kap. 1–9 · Definisjoner · Unntak · Fritak · Fradrag · Justering',
+    vatExemptTitle:'Unntak, uttak og innførsel (kap. 3)', vatZeroTitle:'Fritak (kap. 6)',
     salAgaTitle:'Arbeidsgiveravgift (AGA-soner)', salAgaDesc:'Satsene varierer etter hvor bedriften holder til',
     salAgaRows: [['— SONER OG SATSER —','Arbeidsgiveravgiften (AGA) varierer etter hvor bedriften holder til (ftrl. § 23-2)'],['Sone I (hele landet unntatt distrikter)','14,1 % — gjelder de fleste bedrifter i byer og sentrale strøk','ftrl. § 23-2'],['Sone Ia','10,6 % — noen distriktskommuner med noe lavere sats','ftrl. § 23-2'],['Sone II','10,6 % — spredte kommuner i Nord-Norge og indre Østlandet','ftrl. § 23-2'],['Sone III','6,4 % — distriktskommuner med lav befolkningstetthet','ftrl. § 23-2'],['Sone IV','5,1 % — Nord-Troms og deler av Finnmark','ftrl. § 23-2'],['Sone IVa','7,9 % — enkelte kommuner i Troms og Nordland','ftrl. § 23-2'],['Sone V (Finnmark og Nord-Troms)','0 % — ingen arbeidsgiveravgift','ftrl. § 23-2'],['— FRIBELØP OG UNNTAK —','Differensiert AGA og statsstøtteregler'],['Hva er fribeløpet?','Bedrifter i lavere soner har et fribeløp (ca. 500 000 kr/år) der de kan bruke redusert sats. Over fribeløpet betales sone I-sats (14,1 %).','ESA-regelverk'],['Ekstra avgift på høye lønninger?','Fra 2023: 5 % ekstra arbeidsgiveravgift på lønn over 750 000 kr per ansatt (gjelder alle soner).','ftrl. § 23-2a'],['— BEREGNINGSEKSEMPEL —','Sone I, lønn 600 000 kr'],['AGA (14,1 %)','600 000 × 0,141 = 84 600 kr','ftrl. § 23-2'],['Feriepenger (12 %)','600 000 × 0,12 = 72 000 kr','ferieloven § 10'],['OTP (2 %)','600 000 × 0,02 = 12 000 kr','OTP-loven'],['Total kostnad over brutto','84 600 + 72 000 + 12 000 = 168 600 kr (28,1 % over brutto)','']],
     salDeprTitle:'Saldoavskrivning (kap. 14, §§ 14-40 til 14-48)', salDeprDesc:'Saldogrupper · Avskrivningssatser · Gevinst og tap · Negativ saldo',
@@ -2414,6 +2427,9 @@ const REGIONS = {
 
     salIntroTitle: 'Czym jest podatek?', salIntroDesc: 'Krótkie wyjaśnienie dla tych, którzy dopiero przychodzą do Norwegii',
     salIntroRows: [ ['— PODATEK W NORWEGII —', 'Wszyscy, którzy mieszkają lub pracują w Norwegii, płacą podatki. Pieniądze idą na szpitale, szkoły, drogi, policję, przedszkola i systemy zabezpieczenia społecznego.'], ['Co jest odliczane z Twojej pensji?', 'Twój pracodawca automatycznie odlicza podatek z Twojej pensji każdego miesiąca. Otrzymujesz to, co zostało — to się nazywa „pensja netto".'], ['Ile podatku płacisz?', 'To zależy od tego, ile zarabiasz. Im więcej zarabiasz, tym więcej podatku płacisz. Większość ludzi płaci między 25% a 35% swojej pensji.'], ['Podatek dochodowy (skattekort)', 'Gdy zaczniesz pracować w Norwegii, otrzymasz kartę podatkową od Skatteetaten. Mówi ona pracodawcy, ile podatku powinno być odliczone.'], ['Zeznanie podatkowe (selvangivelse)', 'Każdego roku (zwykle w marcu/kwietnia) otrzymujesz zeznanie podatkowe. Pokazuje ono, ile zarabiałeś i ile podatku zapłaciłeś. Sprawdź, czy wszystko się zgadza.'], ['Czy możesz odzyskać pieniądze?', 'Tak! Jeśli zapłaciłeś za dużo podatku, otrzymasz pieniądze zwrot (skatteoppgjør). Jeśli zapłaciłeś za mało, musisz zapłacić resztę.'], ['Czym jest ulga podatkowa?', 'Niektóre wydatki mogą zmniejszyć Twój podatek — na przykład odsetki od kredytu, dojazd do pracy lub składka związkowa. To się nazywa odliczenia.'], ['Czym jest podatek progresywny?', 'Dodatkowy podatek, który rośnie wraz z Twoimi dochodami. Niska pensja = niski podatek progresywny. Wysoka pensja = wyższy podatek progresywny.'], ['Potrzebujesz pomocy?', '<a href="https://www.skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline">Skatteetaten (skatteetaten.no)</a> ma informacje w wielu językach. Możesz ich też zadzwonić pod numer 800 80 000.'], ],
+    salLawGroupTitle:'Ustawa podatkowa', salLawGroupDesc:'Rozdz. 2–14 · Obowiązek podatkowy · Dochód · Odliczenia · Zyski · Spółki · Unikanie',
+    vatLawGroupTitle:'Ustawa o VAT', vatLawGroupDesc:'Rozdz. 1–9 · Definicje · Zwolnienia · Stawka zerowa · Odliczenia · Korekty',
+    vatExemptTitle:'Zwolnienia, wypłaty i import (rozdz. 3)', vatZeroTitle:'Stawka zerowa (rozdz. 6)',
     salAgaTitle: 'Opłata pracodawcy (AGA-strefy)', salAgaDesc: 'Stawki różnią się w zależności od lokalizacji firmy',
     salAgaRows: [ ['— STREFY I STAWKI —', 'Opłata pracodawcy (AGA) różni się w zależności od lokalizacji firmy (ftrl. § 23-2)'], ['Strefa I (cały kraj z wyjątkiem regionów)', '14,1 % — dotyczy większości firm w miastach i centralnych okolicach', 'ftrl. § 23-2'], ['Strefa Ia', '10,6 % — niektóre gminy regionalne z niższą stawką', 'ftrl. § 23-2'], ['Strefa II', '10,6 % — rozproszone gminy w Północnej Norwegii i wewnętrznym Wschodzie', 'ftrl. § 23-2'], ['Strefa III', '6,4 % — gminy regionalne ze słabą gęstością zaludnienia', 'ftrl. § 23-2'], ['Strefa IV', '5,1 % — Północny Troms i części Finnmarku', 'ftrl. § 23-2'], ['Strefa IVa', '7,9 % — wybrane gminy w Troms i Nordland', 'ftrl. § 23-2'], ['Strefa V (Finnmark i Północny Troms)', '0 % — brak opłaty pracodawcy', 'ftrl. § 23-2'], ['— LIMITY I WYJĄTKI —', 'Zróżnicowana AGA i zasady wsparcia państwa'], ['Co to jest limit?', 'Firmy w niższych strefach mają limit (około 500 000 kr/rok), w którym mogą stosować obniżoną stawkę. Powyżej limitu stosuje się stawkę strefy I (14,1 %).', 'Zasady EEA'], ['Dodatkowa opłata na wysokie pensje?', 'Od 2023 r.: dodatkowa 5 % opłata pracodawcy na pensje powyżej 750 000 kr na pracownika (dotyczy wszystkich stref).', 'ftrl. § 23-2a'], ['— PRZYKŁAD OBLICZENIA —', 'Strefa I, pensja 600 000 kr'], ['AGA (14,1 %)', '600 000 × 0,141 = 84 600 kr', 'ftrl. § 23-2'], ['Dodatek wakacyjny (12 %)', '600 000 × 0,12 = 72 000 kr', 'ferieloven § 10'], ['OTP (2 %)', '600 000 × 0,02 = 12 000 kr', 'OTP-loven'], ['Całkowity koszt powyżej płacy brutto', '84 600 + 72 000 + 12 000 = 168 600 kr (28,1 % powyżej brutto)', ''], ],
     salDeprTitle: 'Amortyzacja saldowa (rozdz. 14, §§ 14-40 do 14-48)', salDeprDesc: 'Grupy saldowe · Stawki amortyzacji · Zyski i straty · Ujemne saldo',
@@ -2655,6 +2671,9 @@ const REGIONS = {
 
     salIntroTitle: 'Що таке податок?', salIntroDesc: 'Коротке пояснення для тих, хто новий у Норвегії',
     salIntroRows: [ ['— ПОДАТОК У НОРВЕГІЇ —', 'Усі, хто мешкає або працює в Норвегії, платять податки. Гроші йдуть на лікарні, школи, дороги, поліцію, дитячі садки та системи соціального забезпечення.'], ['Що утримується з твої зарплати?', 'Твій роботодавець автоматично утримує податок з твоєї зарплати кожного місяця. Ти отримуєш те, що залишилось — це називається «чиста зарплата».'], ['Скільки податку ти платиш?', 'Це залежить від того, скільки ти заробляєш. Чим більше ти заробляєш, тим більше податку платиш. Більшість людей платять від 25% до 35% своєї зарплати.'], ['Податковий талон (skattekort)', 'Коли ти починаєш працювати в Норвегії, ти отримуєш податковий талон від Skatteetaten. Він повідомляє роботодавцю, скільки податку слід утримувати.'], ['Податкова декларація (selvangivelse)', 'Кожного року (зазвичай у березні/квітні) ти отримуєш податкову декларацію. Вона показує, скільки ти заробив і скільки податків сплатив. Перевір, чи все правильно.'], ['Чи можеш ти повернути гроші?', 'Так! Якщо ти сплатив забагато податків, ти отримаєш повернення (skatteoppgjør). Якщо ти сплатив замало, ти маєш доплатити.'], ['Що таке податкове відрахування?', 'Деякі видатки можуть зменшити твій податок — наприклад, відсотки по кредиту, дорога на роботу або членські внески в профспілку. Це називається відрахуваннями.'], ['Що таке прогресивний податок?', 'Додатковий податок, який зростає разом з твоїми доходами. Низькі доходи = низький прогресивний податок. Високі доходи = вищий прогресивний податок.'], ['Потрібна допомога?', '<a href="https://www.skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline">Skatteetaten (skatteetaten.no)</a> має інформацію багатьма мовами. Ти також можеш подзвонити їм на 800 80 000.'], ],
+    salLawGroupTitle:'Податковий закон', salLawGroupDesc:'Розд. 2–14 · Податковий обов\'язок · Дохід · Відрахування · Прибуток · Компанії · Уникнення',
+    vatLawGroupTitle:'Закон про ПДВ', vatLawGroupDesc:'Розд. 1–9 · Визначення · Звільнення · Нульова ставка · Відрахування · Коригування',
+    vatExemptTitle:'Звільнення, вилучення та імпорт (розд. 3)', vatZeroTitle:'Нульова ставка (розд. 6)',
     salAgaTitle: 'Збір роботодавця (AGA-зони)', salAgaDesc: 'Ставки варіюються залежно від місцезнаходження компанії',
     salAgaRows: [ ['— ЗОНИ ТА СТАВКИ —', 'Збір роботодавця (AGA) варіюється залежно від місцезнаходження компанії (ftrl. § 23-2)'], ['Зона I (вся країна крім районів)', '14,1 % — стосується більшості компаній у містах і центральних районах', 'ftrl. § 23-2'], ['Зона Ia', '10,6 % — деякі районні муніципалітети з дещо нижчою ставкою', 'ftrl. § 23-2'], ['Зона II', '10,6 % — розкидані муніципалітети на Північній Норвегії та внутрішньому Сході', 'ftrl. § 23-2'], ['Зона III', '6,4 % — районні муніципалітети з низькою щільністю населення', 'ftrl. § 23-2'], ['Зона IV', '5,1 % — північний Трумс і частини Фінмарку', 'ftrl. § 23-2'], ['Зона IVa', '7,9 % — окремі муніципалітети в Трумсі та Нордланді', 'ftrl. § 23-2'], ['Зона V (Фінмарк та північний Трумс)', '0 % — без збору роботодавця', 'ftrl. § 23-2'], ['— ЗВІЛЬНЕННЯ ТА ВИНЯТКИ —', 'Диференційований AGA та правила державної підтримки'], ['Що таке звільнення?', 'Компанії у нижчих зонах мають звільнення (близько 500 000 kr/рік), в якому вони можуть використовувати знижену ставку. Вище звільнення застосовується ставка зони I (14,1 %).', 'Правила EEA'], ['Додатковий збір на високі зарплати?', 'З 2023 р.: додатковий 5 % збір роботодавця на зарплати понад 750 000 kr на одного працівника (стосується всіх зон).', 'ftrl. § 23-2a'], ['— ПРИКЛАД РОЗРАХУНКУ —', 'Зона I, зарплата 600 000 kr'], ['AGA (14,1 %)', '600 000 × 0,141 = 84 600 kr', 'ftrl. § 23-2'], ['Відпускні (12 %)', '600 000 × 0,12 = 72 000 kr', 'ferieloven § 10'], ['OTP (2 %)', '600 000 × 0,02 = 12 000 kr', 'OTP-loven'], ['Загальна вартість понад брутто-зарплату', '84 600 + 72 000 + 12 000 = 168 600 kr (28,1 % понад брутто)', ''], ],
     salDeprTitle: 'Залишкова амортизація (розд. 14, §§ 14-40 до 14-48)', salDeprDesc: 'Групи залишку · Ставки амортизації · Прибутки та збитки · Негативний залишок',
@@ -2897,7 +2916,10 @@ const REGIONS = {
 
     salIntroTitle:'ما هي الضريبة؟', salIntroDesc:'شرح مختصر لك كشخص جديد في النرويج',
     salIntroRows: [ ['— الضرائب في النرويج —','الجميع الذين يعيشون أو يعملون في النرويج يدفعون ضرائب. تذهب الأموال إلى المستشفيات والمدارس والطرق والشرطة ورياض الأطفال والضمان الاجتماعي.'], ['ما الذي يتم خصمه من راتبك؟','صاحب العمل يخصم الضريبة تلقائياً من راتبك كل شهر. تحصل على ما يتبقى — وهذا يسمى «الراتب الصافي».'], ['كم ضريبة تدفع؟','هذا يعتمد على مقدار ما تكسبه. كلما زاد دخلك، زادت الضريبة. معظم الناس يدفعون بين 25% و 35% من رواتبهم.'], ['بطاقة الضريبة','عندما تبدأ العمل في النرويج، تحصل على بطاقة ضريبية من سلطة الضرائب. تخبر صاحب العمل بمقدار الضريبة المراد خصمها.'], ['الإقرار الضريبي','كل عام (عادة في مارس/أبريل) تحصل على إقرار ضريبي. يوضح ما كسبته وما دفعته من ضرائب. تحقق من صحة البيانات.'], ['هل يمكنك الحصول على أموال مسترجعة؟','نعم! إذا دفعت ضرائب أكثر من اللازم، ستسترجع الأموال (التسوية الضريبية). إذا دفعت أقل من اللازم، عليك دفع الفرق.'], ['ما هو الخصم؟','بعض النفقات يمكن أن تقلل ضريبتك — على سبيل المثال، نفقات الفائدة على القروض أو السفر إلى العمل أو رسوم النقابات. تسمى هذه الخصومات.'], ['ما هي الضريبة التصاعدية؟','ضريبة إضافية تزداد حسب دخلك. الدخل المنخفض = ضريبة تصاعدية منخفضة. الدخل المرتفع = ضريبة تصاعدية أعلى.'], ['هل تحتاج إلى مساعدة؟','<a href="https://www.skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline">سلطة الضرائب (skatteetaten.no)</a> توفر معلومات بلغات عديدة. يمكنك أيضاً الاتصال بهم على 800 80 000.'] ],
-    salAgaTitle:'رسم صاحب العمل (AGA-soner)', salAgaDesc:'تختلف الأسعار حسب مكان تواجد الشركة',
+    salLawGroupTitle:'قانون الضرائب', salLawGroupDesc:'الفصل 2–14 · الالتزام الضريبي · الدخل · الخصومات · الأرباح · الشركات · مكافحة التهرب',
+    vatLawGroupTitle:'قانون ضريبة القيمة المضافة', vatLawGroupDesc:'الفصل 1–9 · التعريفات · الإعفاءات · الإعفاء الصفري · الخصومات · التعديلات',
+    vatExemptTitle:'الإعفاءات والسحب والاستيراد (الفصل 3)', vatZeroTitle:'الإعفاء الصفري (الفصل 6)',
+    salAgaTitle:'رسم صاحب العمل (مناطق AGA)', salAgaDesc:'تختلف الأسعار حسب مكان تواجد الشركة',
     salAgaRows: [ ['— المناطق والأسعار —','رسم صاحب العمل (AGA) يختلف حسب مكان تواجد الشركة (ftrl. § 23-2)'], ['المنطقة الأولى (البلد كله ما عدا المناطق النائية)','14,1 % — تنطبق على معظم الشركات في المدن والمناطق المركزية','ftrl. § 23-2'], ['المنطقة الأولى A','10,6 % — بعض البلديات النائية بأسعار أقل قليلاً','ftrl. § 23-2'], ['المنطقة الثانية','10,6 % — بلديات متفرقة في شمال النرويج والشرق الداخلي','ftrl. § 23-2'], ['المنطقة الثالثة','6,4 % — بلديات نائية بكثافة سكانية منخفضة','ftrl. § 23-2'], ['المنطقة الرابعة','5,1 % — شمال تروم وأجزاء من فنمارك','ftrl. § 23-2'], ['المنطقة الرابعة A','7,9 % — بعض البلديات في تروم ونوردلاند','ftrl. § 23-2'], ['المنطقة الخامسة (فنمارك وشمال تروم)','0 % — لا توجد رسوم صاحب عمل','ftrl. § 23-2'], ['— الإعفاءات والاستثناءات —','رسوم AGA المتباينة وقواعد الدعم الحكومي'], ['ما هو الحد المعفى؟','الشركات في المناطق المنخفضة لها حد معفى (حوالي 500 000 كرونة/سنة) حيث يمكنها استخدام سعر مخفض. فوق الحد تُدفع الأسعار الموجودة في المنطقة الأولى (14,1 %).','ESA-regelverk'], ['رسم إضافي على الرواتب المرتفعة؟','من 2023: رسم صاحب عمل إضافي بنسبة 5 % على الراتب الذي يزيد عن 750 000 كرونة لكل موظف (ينطبق على جميع المناطق).','ftrl. § 23-2a'], ['— مثال على الحساب —','المنطقة الأولى، راتب 600 000 كرونة'], ['رسم صاحب العمل (14,1 %)','600 000 × 0,141 = 84 600 كرونة','ftrl. § 23-2'], ['رواتب الإجازة (12 %)','600 000 × 0,12 = 72 000 كرونة','ferieloven § 10'], ['المساهمة التقاعدية الإضافية (2 %)','600 000 × 0,02 = 12 000 كرونة','OTP-loven'], ['إجمالي التكلفة فوق الراتب الإجمالي','84 600 + 72 000 + 12 000 = 168 600 كرونة (28,1 % فوق الراتب الإجمالي)',''] ],
     salDeprTitle:'الاستهلاك المتراكم (الفصل 14، §§ 14-40 إلى 14-48)', salDeprDesc:'مجموعات الأرصدة · معدلات الاستهلاك · الأرباح والخسائر · الرصيد السالب',
     salDeprRows: [ ['— ما هو الاستهلاك المتراكم؟ —','تقييم انخفاض القيمة الضريبية للأصول الثابتة (§ 14-40 إلى § 14-48)'], ['القاعدة الأساسية','الأصول الثابتة الدائمة والمهمة (تكلفة فوق 15 000 كرونة، مدة استخدام فوق 3 سنوات) لا يمكن خصمها بشكل مباشر. يتم استهلاكها على مدار الوقت بالاستهلاك المتراكم.','§ 14-40(1)'], ['ماذا يعني الاستهلاك المتراكم؟','تخصم نسبة مئوية ثابتة من القيمة المتبقية كل عام. السنة الأولى: استهلاك التكلفة الأصلية. بعد ذلك: استهلاك الرصيد المتبقي.','§ 14-42(1)'], ['الخصم المباشر (المشتريات الصغيرة)','الأصول الثابتة التي تقل تكلفتها عن 15 000 كرونة أو مدة استخدامها أقل من 3 سنوات يمكن خصمها بشكل مباشر في السنة التي تشتري فيها.','§ 14-40(1)'], ['— مجموعات الأرصدة (§ 14-41 / § 14-43) —','جميع الأصول القابلة للاستهلاك توضع في إحدى 10 مجموعات (أ–ي)'], ['المجموعة أ – 30%','آلات المكاتب، آلات التصوير، الطابعات، أجهزة الحاسوب ومعدات البيانات المماثلة.','§ 14-43(1)a'], ['المجموعة ب – 20%','القيمة التجارية المكتسبة (حسن النية).','§ 14-43(1)b'], ['المجموعة ج – 24%','الشاحنات ذات المقطورة، شاحنات النقل، الحافلات، سيارات النقل والمقطورات.','§ 14-43(1)c'], ['المجموعة د – 20%','السيارات الشخصية، الجرارات، الآلات، الأدوات، الأجهزة والمفروشات المماثلة.','§ 14-43(1)d'], ['المجموعة ه – 14%','السفن والقوارب والحفارات والمماثلة.','§ 14-43(1)e'], ['المجموعة و – 12%','الطائرات والهليكوبتر.','§ 14-43(1)f'], ['المجموعة ز – 5%','المعدات الكهربائية في شركات الطاقة.','§ 14-43(1)g'], ['المجموعة ح – 4%','المباني والمنشآت. مباني تربية الماشية في الزراعة: 6%. الهياكل البسيطة قصيرة المدى: 10%.','§ 14-43(1)h'], ['المجموعة ط – 2%','المباني التجارية.','§ 14-43(1)i'], ['المجموعة ي – 10%','التركيبات التقنية الثابتة في المباني (التهوية والمصاعد والكهرباء وغيرها).','§ 14-43(1)j'], ['— الرصيد المجمع مقابل الرصيد الفردي —','كيفية تجميع الأصول الثابتة (§ 14-41)'], ['الرصيد المجمع (المجموعات أ–د)','جميع الأصول الثابتة في نفس المجموعة تندمج في رصيد واحد مشترك. تُضاف المشتريات الجديدة، تُطرح المبيعات. لا تحتاج إلى متابعة كل أصل ثابت على حدة.','§ 14-41(1)'], ['الرصيد الفردي (المجموعات ه–ي)','كل أصل ثابت له رصيده الخاص ويتم استهلاكه بشكل منفصل. يوفر إجمالي أفضل للقيم الفردية الكبيرة.','§ 14-41(2)'], ['— الأرباح والخسائر عند البيع —','ماذا يحدث عند بيع أصل ثابت مستهلك؟ (§ 14-44 إلى § 14-46)'], ['الرصيد المجمع (أ–د): سعر البيع يُطرح من الرصيد','عند بيع آلة في المجموعة د، ينخفض رصيد المجموعة بمبلغ البيع. لا توجد ضريبة أرباح فورية.','§ 14-44(1)'], ['الرصيد السالب (أ–د)','إذا بعت بأكثر من قيمة الرصيد، يصبح الرصيد سالباً. يتم إدراج الرصيد السالب في الدخل بنسبة استهلاك المجموعة على الأقل كل عام. الرصيد أقل من 15 000 كرونة يمكن إدراجه مباشرة.','§ 14-44(2–3)'], ['الرصيد الفردي (ه–ي): الأرباح/الخسائر عند البيع','الربح = سعر البيع ناقص الرصيد. يمكن إدراج الربح فوراً أو في حساب الأرباح والخسائر.','§ 14-45(2)'], ['حساب الأرباح والخسائر (§ 14-45)','يمكنك تجميع الأرباح والخسائر من المجموعة ه–ي في حساب واحد. يتم إدراج هذا/خصم هذا بنسبة 20% على الأقل سنوياً.','§ 14-45(4)'], ['إعفاء ضريبي شرطي عند البيع غير الطوعي','الحريق، الحادث، المصادرة وما شابه: يمكنك إعادة الاستثمار في غضون 3 سنوات دون دفع ضرائب فورية.','§ 14-44(4)'], ['— مثال عملي —','شراء سيارة نقل (المجموعة ج، 24%)'], ['التكلفة الأصلية','500 000 كرونة → تُضاف إلى رصيد المجموعة ج'], ['استهلاك السنة الأولى','500 000 × 24% = 120 000 كرونة خصم. الرصيد الجديد: 380 000 كرونة.','§ 14-43(1)c'], ['استهلاك السنة الثانية','380 000 × 24% = 91 200 كرونة خصم. الرصيد الجديد: 288 800 كرونة.',''], ['بيع السيارة في السنة الثالثة مقابل 300 000','رصيد 288 800 → اطرح 300 000 = −11 200 كرونة (رصيد سالب). يتم إدراج هذا بنسبة 24%/سنة.','§ 14-44(2)'] ],
@@ -3137,6 +3159,9 @@ const REGIONS = {
 
     salIntroTitle:'Kas yra mokestis?', salIntroDesc:'Trumpa paaiškini, jei tu gyveni Norvegijoje pirmo kartą',
     salIntroRows: [ ['— MOKESČIAI NORVEGIJOJE —','Visi, kurie gyvena ar dirba Norvegijoje, moka mokesčius. Pinigai eina ligoninėms, mokykloms, keliams, policijai, darželiams ir socialinės apsaugos programoms.'], ['Kas atskaitoma iš jūsų atlyginimo?','Jūsų darbdavys automatiškai atskaitytai mokesčius iš jūsų atlyginimo kiekvieną mėnesį. Jūs gaunate likutį — tai vadinama «grynasis atlyginimas».'], ['Kiek mokesčio jūs mokate?','Tai priklauso nuo to, kiek jūs uždirbate. Kuo daugiau uždirbate, tuo daugiau mokesčio mokate. Dauguma moka nuo 25% iki 35% savo atlyginimo.'], ['Mokesčio kortelė','Kai pradedinate darbą Norvegijoje, iš Mokesčių valdybos gausite mokesčio kortelę. Ji nusako darbdaviui, kiek mokesčio turi būti atskaityta.'], ['Mokesčio deklaracija','Kiekvienais metais (paprastai kovo/balandžio mėn.) gausite mokesčio deklaraciją. Joje rodoma, kiek uždirbote ir kiek mokesčio sumokėjote. Patikrinkite, ar viskas teisingai.'], ['Ar galite gauti grąžą?','Taip! Jei sumokėjote per daug mokesčio, gausite grąžą (mokesčio sąskaita). Jei sumokėjote per mažai, turėsite susimokėti skirtumą.'], ['Kas yra nuolaida?','Kai kurie išlaidos gali sumažinti jūsų mokestį — pavyzdžiui, paskolos palūkanos, kelionė į darbą ar profesinės sąjungos narystės mokestis. Tai vadinama nuolaidomis.'], ['Kas yra laipsningas mokestis?','Papildomas mokestis, kuris didėja, kuo daugiau jūs uždirbate. Žemas uždarbis = žemas laipsningas mokestis. Aukštas uždarbis = aukštesnis laipsningas mokestis.'], ['Ar jums reikalinga pagalba?','<a href="https://www.skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline">Mokesčių valdyba (skatteetaten.no)</a> turi informaciją daugeliu kalbų. Taip pat galite jiem skambinti 800 80 000.'] ],
+    salLawGroupTitle:'Mokesčių įstatymas', salLawGroupDesc:'Sk. 2–14 · Mokestinė prievolė · Pajamos · Atskaitymai · Pelnas · Bendrovės · Vengimas',
+    vatLawGroupTitle:'PVM įstatymas', vatLawGroupDesc:'Sk. 1–9 · Apibrėžimai · Išimtys · Nulinis tarifas · Atskaitymai · Koregavimai',
+    vatExemptTitle:'Išimtys, paėmimai ir importas (sk. 3)', vatZeroTitle:'Nulinis tarifas (sk. 6)',
     salAgaTitle:'Darbdavio mokestis (AGA-zonos)', salAgaDesc:'Tarifai skiriasi priklausomai nuo to, kur yra įmonė',
     salAgaRows: [ ['— ZONOS IR TARIFAI —','Darbdavio mokestis (AGA) skiriasi priklausomai nuo to, kur įmonė yra (ftrl. § 23-2)'], ['I zona (visas šalis išskyrus nuotolines sritis)','14,1 % — taikoma daugiausiems miestų ir centrinių vietovių įmonėms','ftrl. § 23-2'], ['Ia zona','10,6 % — kai kurie nuotoliniai savivaldybės su šiek tiek žemesniu tarifu','ftrl. § 23-2'], ['II zona','10,6 % — išsklaidytos savivaldybės Šiaurės Norvegijoje ir vidiniame Rytuose','ftrl. § 23-2'], ['III zona','6,4 % — nuotolinės savivaldybės su žema gyventojų tankybe','ftrl. § 23-2'], ['IV zona','5,1 % — Šiaurės Troms ir Finnmarko dalys','ftrl. § 23-2'], ['IVa zona','7,9 % — kai kurie Tromso ir Nordlando savivaldybės','ftrl. § 23-2'], ['V zona (Finmarka ir Šiaurės Troms)','0 % — nėra darbdavio mokesčio','ftrl. § 23-2'], ['— APLIEKA IR IŠIMTYS —','Skirtingas AGA ir valstybės pagalbos nuostatai'], ['Kas yra atleidimas?','Įmonės žemesnėse zonose turi atleidimą (apie 500 000 kr/metus), kuriame gali taikyti sumažintą tarifą. Virš atleidimo taikomos I zonos tarifai (14,1 %).','ESA-regelverk'], ['Papildomas mokestis aukštiems atlyginimams?','Nuo 2023: 5% papildomas darbdavio mokestis už atlyginimą, viršijantį 750 000 kr vienam darbuotojui (galioja visose zonose).','ftrl. § 23-2a'], ['— SKAIČIAVIMO PAVYZDYS —','I zona, atlyginimas 600 000 kr'], ['AGA (14,1 %)','600 000 × 0,141 = 84 600 kr','ftrl. § 23-2'], ['Atostogų mokestis (12 %)','600 000 × 0,12 = 72 000 kr','ferieloven § 10'], ['OTP (2 %)','600 000 × 0,02 = 12 000 kr','OTP-loven'], ['Bendra brutto kaina','84 600 + 72 000 + 12 000 = 168 600 kr (28,1 % virš brutto)',''] ],
     salDeprTitle:'Balanso nusidėvėjimas (14 sk., §§ 14-40 iki 14-48)', salDeprDesc:'Balanso grupės · Nusidėvėjimo tarifai · Pelnas ir nuostoliai · Neigiamas balansas',
@@ -3374,6 +3399,9 @@ const REGIONS = {
 
     salIntroTitle:'Waa maxay canshuurta?', salIntroDesc:'Sharaxaad gaaban dhaaf ku hadsan adoo cusub oo jooga Norwey',
     salIntroRows: [ ['— CANSHUURTA NORWEY —','Qof kasta oo jooga ama u shaqeeya Norwey waxay bixinaysaa canshuurta. Lacaggu waxaa iska tagaya isbitaalo, dugsiyada, jidka, poliska, daycare iyo nolol dhaafsiisa.'], ['Maxaa ka jaray hawlwadaada?','Caasimadorkaaga waxuu ku jabiyaa canshuurta oo kale si otomatik ah oo bishan kasta. Waxaad heesataa inta hadhaaf ah — tan oo loogu yeedho «hakad safiyey».'], ['Meeleeye canshuurta aad bixi doonto?','Waxaa ku xidhan sidee aad u tiraddo. Hadii aad tiraddo badan tahay, canshuurta ayaa badan noqotaa. Inta badan dadka waxay bixi yaan labada iyo sadexda iyo sagal iyo labaatan iyo shan iyo sagal ilaa boqolka oo toban iyo sagal iyo labaatan % ee hakadkooda.'], ['Karti canshuurta','Markad bilaabto inaa shaqeysid Norwey, waxaad helaysaa karti canshuurta oo kale oo ka imanaya Banta Canshuurta. Waxa jira ay sheegtaa caasimadorkaaga meeleeye canshuurta oo loogu yeedho.'], ['Deeq-canshuurta (self-assessment)','Isbuuc kasta (inta badan Maarso/Abriil) waxaad helaysaa deeq-canshuurta. Waxaa sida ay tusaa siday aad tiraddo iyo meeleeye canshuurta aad bixi tahay. Hubi in wax kasta ay si fiican ah u dhacay.'], ['Wuu ku soo celin karaa lacag?','Hah! Hadii aad bixday canshuurta badan oo leh, waxaad soo celin doontaa lacag (soo-guuritaanka canshuurta). Hadii aad bixday canshuurta yar oo leh, waxaad bixi doontaa farqiga.'], ['Waa maxay qotocda?','Cid yar oo masarifka ah ayaa kari kara inay yareyso canshuurta — tusaale ahaan, mushaharka qayd (interest) ee deynka, safarka shaqada, ama bayaadhka caasimadorka ama saxiibka saxiibka. Tan oo loogu yeedho qotodda.'], ['Waa maxay canshuurta tartiibta?','Canshuurta dheedheer oo kordeysaa xaalka jid hore oo aad tiraddo. Dhamaad gaaban = canshuurta tartiibta gaaban. Dhamaad saraya = canshuurta tartiibta saraya.'], ['Waa maxay caabuq?','<a href="https://www.skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline">Banta Canshuurta (skatteetaten.no)</a> waxay leedahay aqoon luuqad badanba. Waxa kale oo aad ku yeedh kartaa 800 80 000.'] ],
+    salLawGroupTitle:'Sharciga canshuurta', salLawGroupDesc:'Qb. 2–14 · Mas\'uuliyadda · Dakhli · Jariirado · Faa\'iido · Shirkadaha · Ka-hortagga',
+    vatLawGroupTitle:'Sharciga VAT', vatLawGroupDesc:'Qb. 1–9 · Qeexitaano · Dhaafid · Eber-qiimo · Jariirado · Hagaajin',
+    vatExemptTitle:'Dhaafid, bixid iyo soo-dejin (qb. 3)', vatZeroTitle:'Eber-qiimo (qb. 6)',
     salAgaTitle:'Canshuurta caasimadora (AGA-zones)', salAgaDesc:'Aasaar waxaa isa duwanaan xaalka shirkaddu joogo',
     salAgaRows: [ ['— AGAGAAR IYO AASAAR —','Canshuurta caasimadora (AGA) waxaa isa duwanaan alaabta shirkaddu joogo (ftrl. § 23-2)'], ['Gobol I (dalka oo dhan malaka goboladda fog)','14,1 % — waxa la adeegsadaa inta badan shirkado caruurta iyo jidadka dhexe','ftrl. § 23-2'], ['Gobol Ia','10,6 % — qaar kamid ah goboladda fog oo aasaar yar yar leh','ftrl. § 23-2'], ['Gobol II','10,6 % — goboladda kala baxan ee Waxooga Woqooyi iyo Bariga gudaha','ftrl. § 23-2'], ['Gobol III','6,4 % — goboladda fog oo dad yar oo leh','ftrl. § 23-2'], ['Gobol IV','5,1 % — Waxooga Woqooyi Troms iyo qaybaha Finnmark','ftrl. § 23-2'], ['Gobol IVa','7,9 % — qaar kamid ah goboladda Troms iyo Nordland','ftrl. § 23-2'], ['Gobol V (Finnmark iyo Waxooga Woqooyi Troms)','0 % — canshuurta caasimadora malax','ftrl. § 23-2'], ['— FULINTA IYO CAASINA —','Canshuurta caasimadora isu-duwanaan iyo xeeladaha caabuq','Waa maxay fulinta?','Shirkado goboladda yar leh waxay leeyihiin fulinta (qiyaas 500 000 kr/sanad) taas oo ay ka isticmaali karaan aasaar yar. Marka hore oo fulinta ka baxdo, waxaa bixi waa aasaar Gobol I (14,1 %).','ESA-regelverk'], ['Canshuurta dheedheer oo kordheysay hakad?','Laga bilaabo 2023: Canshuurta caasimadora dheedheer oo 5 % oo lagu bixi hakad ka badan 750 000 kr per shaqaale (waxaa la adeegsadaa goboladda oo dhan).','ftrl. § 23-2a'], ['— TUSAALE XISAABIN —','Gobol I, hakad 600 000 kr'], ['AGA (14,1 %)','600 000 × 0,141 = 84 600 kr','ftrl. § 23-2'], ['Hakad kurgii (12 %)','600 000 × 0,12 = 72 000 kr','ferieloven § 10'], ['OTP (2 %)','600 000 × 0,02 = 12 000 kr','OTP-loven'], ['Kharashka guud ee sareeya','84 600 + 72 000 + 12 000 = 168 600 kr (28,1 % sareeya)',''] ],
     salDeprTitle:'Qiimaynta miisaanka (kab. 14, §§ 14-40 ilaa 14-48)', salDeprDesc:'Kooxda miisaanka · Aasaar qiimaynta · Faa\'idada iyo dhamaadka · Miisaan dhib',
@@ -3615,6 +3643,9 @@ const REGIONS = {
 
     salIntroTitle:'ምሞቕ ምኒ ነዉ?', salIntroDesc:'ንሰብ ዋርጋ ኖርወይ ዝነውር እታ ትርጕም ጂግግ',
     salIntroRows: [ ['— ምሞቕ ኖርወይ —','ሓንሳብ ኖርወይ ዝነውር ወይ ዝቆጠር ሕዱግ ምሞቕ ይመልስ፤ ገንዘብ ሕክምና ቤት፣ ስሩ ቤት፣ መስመር ከተማ ኡ፣ ፖሊስ፣ ሞገስ ገምገም ሰራሕ ዝመለስ ተሳትፎ ተሸኩ ይምለስ።'], ['ሚጥን ሰብከ ጋውኢ?','መሪሕ ስራሕ ሀገር ምሞቕ ምሪርባ ሕጡብ ሕሙስ ይቆጥር። ሕግሪ ገድልካ ዝስተወይ ውዳቤ — «ናቢ ሳሪሕ»።'], ['ክንድን ምሞቕ ትመልስ?','በተመሪሕ ክንድ ገንዘብ ትመልስ። ብዙሕ ገንዘብ ትመልስ፣ ብዙሕ ምሞቕ ትመልስ። ብዙሕ ሰብ ሙሉእ ወርሒ 25% ካብ 35% ይመልስ።'], ['ምሞቕ ፊርማን','ዝተወለደ ስራሕ ኖርወይ ምሞቕ ፊርማን ኣካል መሪሕ ምሞቕ ይቕበል። ክንድ ምሞቕ መሪሕ ስራሕ ታሕበወል።'], ['ምሞቕ ዓሪፎት (ራስ ዓሪ ስሉም)','ሓር ሕሉፍ (ልክ ሕዳር/ሌቢ) ምሞቕ ዓሪፎት ይቕበልካ። ገድልካ ክንድ ሀገር ምሞቕ ዝመልስ ታሕበወል። ሓምሳይ ሙሉእ።'], ['ገንዘብ ምስርግግ ንገብር?','ሓወሓዋ! ብዙሕ ምሞቕ ተመልስካ፣ ገንዘብ ምስርግግ (ምሞቕ ሊቅ)። ክንድ ምሞቕ ንካ ገንዘብ ክመልስ።'], ['ምሞቕ ዝተነጠለ ምኒ?','ገርጎስ ዝወስደ ሰወሮ ምሞቕ ናብ — ለዓሊ ደቂ ተቋራጢ ውደብ ወይ ስራሕ ወርሒ ወይ ግንቦት ሕርስቲ አውጊ። ንዚኦም የርግግ ተሰሪዎ።'], ['ምሞቕ ደርጃ ምኒ?','ስጡር ምሞቕ ህርስቲ ተደርጂ ብሰፊሕ ጊዝ። ዝገለ ደርጃ = ዝገለ ምሞቕ ደርጃ። ስቅ ደርጃ = ስቅ ምሞቕ ደርጃ።'], ['ከተማ ምስርግግ?','<a href="https://www.skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline">መሪሕ ምሞቕ (skatteetaten.no)</a> ልሳን ብዙሕ ሕበረታ ኣለዎ። ሓንጊ ይምልስካ 800 80 000።'] ],
+    salLawGroupTitle:'ሕጊ ግብሪ', salLawGroupDesc:'ምዕ. 2–14 · ግዴታ ግብሪ · እቶት · ቅነሳ · ረብሓ · ትካላት · ምቅላስ',
+    vatLawGroupTitle:'ሕጊ VAT', vatLawGroupDesc:'ምዕ. 1–9 · ትርጉማት · ምሕረት · ዜሮ-ዋጋ · ቅነሳ · ምትዕርራይ',
+    vatExemptTitle:'ምሕረት፣ ምውጻእ ን ምስታፍ (ምዕ. 3)', vatZeroTitle:'ዜሮ-ዋጋ (ምዕ. 6)',
     salAgaTitle:'ምሞቕ መሪሕ (AGA-ሳንት)', salAgaDesc:'ስጡር በምንግስት መሪሕ ውሉድ ሳንት ይለያዩ',
     salAgaRows: [ ['— ሳንትታት ኡ ስጡር —','ምሞቕ መሪሕ (AGA) ምንግስት መሪሕ ውሉድ ሳንት ይለያዩ (ftrl. § 23-2)'], ['ሳንት I (ሀገር መስሪሕ ውሉድ ሳንትታት)','14,1 % — ብዙሕ ከተማ ወ ስልጣናዊ ዞናት ተሰሪዎ','ftrl. § 23-2'], ['ሳንት Ia','10,6 % — ጥቅሎ ዞና ትንኩ ዝቀነ ስጡር','ftrl. § 23-2'], ['ሳንት II','10,6 % — ክፍተት ሳንትታት ሰሜን ኖርወይ ወ ውስጥ ትሪግ','ftrl. § 23-2'], ['ሳንት III','6,4 % — ዞና ትንኩ ዝተንጣለ ወሃሀ ትካል','ftrl. § 23-2'], ['ሳንት IV','5,1 % — ሰሜን ትሪግ ወ ክፍተት ፊናር','ftrl. § 23-2'], ['ሳንት IVa','7,9 % — ገጽ ትሪግ ወ ነርድላንድ ሳንትታት','ftrl. § 23-2'], ['ሳንት V (ፊናር ወ ሰሜን ትሪግ)','0 % — ምሞቕ መሪሕ ነየ','ftrl. § 23-2'], ['— ውሱን ወ ክፍተት —','ይለያይ ምሞቕ መሪሕ ወ ግዜ ርግግ ክንድ'], ['ምሞቕ ውሱን ምኒ?','ሜዳ ዝገለ ሳንትታት ውሱን (ገምገም 500 000 kr/ሓ) ዝተቀነ ስጡር። ውሱን ላዕ I ሳንት ስጡር (14,1 %).','ESA-regelverk'], ['ስጡር ስቅ ወርሒ?','ካብ 2023: 5 % ጨርሃ ምሞቕ መሪሕ ወርሒ ላዕ 750 000 kr ነበር ስራሕ (ሓንሳብ ሳንትታት።','ftrl. § 23-2a'], ['— ምሳሌ ስሒብ —','ሳንት I፣ ወርሒ 600 000 kr'], ['AGA (14,1 %)','600 000 × 0,141 = 84 600 kr','ftrl. § 23-2'], ['ዓወት ወርሒ (12 %)','600 000 × 0,12 = 72 000 kr','ferieloven § 10'], ['OTP (2 %)','600 000 × 0,02 = 12 000 kr','OTP-loven'], ['ዕጅ ግብር ላዕ ግሪስ','84 600 + 72 000 + 12 000 = 168 600 kr (28,1 % ላዕ ግሪስ)',''] ],
     salDeprTitle:'ሚዛን ስሊሙ (14 ደምዓት፣ §§ 14-40 እስከ 14-48)', salDeprDesc:'ሚዛን ውሑዱ · ሙዝን ዕብየት · ግብር ወ ጥሊመት · ሉስ ሚዛን',
@@ -3670,8 +3701,8 @@ const REGIONS = {
 // ═══════════════════════════════════════════════════════
 const THEMES = [
   {id:'blue',labelKey:'themeBlue',fallback:'Blå',dot:'#7a9ecc'},
-  {id:'corporate',labelKey:'themeCorporate',fallback:'Skarp',dot:'#1e40af'},
   {id:'dark',labelKey:'themeDark',fallback:'Mørk',dot:'#1c1e2e',ring:'#6c8aef'},
+  {id:'corporate',labelKey:'themeCorporate',fallback:'Skarp',dot:'#1e40af'},
   {id:'glass',labelKey:'themeGlass',fallback:'Glass',dot:'linear-gradient(135deg,#6875f5,#8b95ff)',ring:'#6875f5'},
   {id:'pink',labelKey:'themePink',fallback:'Rosa',dot:'#e891b2'},
   {id:'purple',labelKey:'themePurple',fallback:'Lilla',dot:'#a78bdf'},
@@ -3902,7 +3933,7 @@ function goToDeprCard(){
     const card=document.getElementById('sal-depr-card');
     if(!card) return;
     if(card.classList.contains('collapsed')) toggleCard(card);
-    card.scrollIntoView({behavior:'smooth',block:'center'});
+    scrollToEl(card,'center');
   },120);
 }
 function toggleLawGroup(group){
@@ -3914,15 +3945,15 @@ function toggleLawGroup(group){
     body.style.maxHeight = '0';
     group.classList.remove('open');
     // Smooth scroll group header into view
-    setTimeout(function(){ group.scrollIntoView({behavior:'smooth', block:'nearest'}); }, 350);
+    setTimeout(function(){ scrollToEl(group,'nearest'); }, 350);
   } else {
     // Opening: animate max-height from 0 to content
     group.classList.add('open');
     body.style.maxHeight = body.scrollHeight + 'px';
     // After transition, remove fixed max-height so nested content can expand
     setTimeout(function(){ body.style.maxHeight = 'none'; }, 550);
-    // Smooth scroll to show the group content
-    setTimeout(function(){ group.scrollIntoView({behavior:'smooth', block:'start'}); }, 100);
+    // Smooth scroll group header to top (below sticky header)
+    setTimeout(function(){ scrollToEl(group,'top'); }, 550);
   }
 }
 function toggleCard(card){
@@ -4312,8 +4343,7 @@ function updateVatUI() {
   }
   // Adjustment calculator — translate labels
   if(adjCard) {
-    adjCard.classList.remove('hidden');
-    setText('vat-adj-title', r.adjTitle||'Justeringskalkulator');
+    var ael=document.getElementById('vat-adj-title');if(ael)ael.innerHTML=(r.adjTitle||'Justeringskalkulator')+arrow;
     setText('vat-adj-desc', r.adjDesc||'Mval. kap. 9 — justering av inngående MVA ved bruksendring');
     setText('adj-l-type', r.adjLType||'Type kapitalvare');
     const optP=document.getElementById('adj-opt-prop'); if(optP) optP.textContent=r.adjOptProp||'Fast eiendom (§ 9-1 b) — 10 år';
@@ -4375,7 +4405,7 @@ function updateVatUI() {
 
 function updateUttakUI() {
   const r = R();
-  setText('uttak-title', r.uttakTitle || 'Withdrawal Calculator');
+  var el=document.getElementById('uttak-title');if(el)el.innerHTML=(r.uttakTitle||'Uttakskalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('uttak-desc', r.uttakDesc || 'Tax Act § 5-2 — tax on withdrawal of assets from business');
   setText('uttak-l-type', r.uttakLType || 'Type of business');
   setText('uttak-l-mv', r.uttakLMv || 'Market value at withdrawal (kr)');
@@ -4565,7 +4595,7 @@ function updateFagkalkulatorUI() {
   const agaZoneHintEl = document.getElementById('aga-hint-zone');
   if(agaZoneHintEl) {
     const linkText = r.agaZoneLinkText || 'Se alle soner →';
-    agaZoneHintEl.innerHTML = (r.agaZoneHint || 'AGA = arbeidsgiveravgift. Satsen avhenger av hvor bedriften holder til.') + ' <a href="javascript:void(0)" onclick="switchCalc(\'vat\');setTimeout(()=>{const c=document.getElementById(\'vat-aga-card\');if(c){c.classList.remove(\'hidden\',\'collapsed\');c.scrollIntoView({behavior:\'smooth\',block:\'center\'})}},300)" style="color:var(--accent);text-decoration:underline;opacity:.8;">' + linkText + '</a>';
+    agaZoneHintEl.innerHTML = (r.agaZoneHint || 'AGA = arbeidsgiveravgift. Satsen avhenger av hvor bedriften holder til.') + ' <a href="javascript:void(0)" onclick="switchCalc(\'vat\');setTimeout(()=>{const c=document.getElementById(\'vat-aga-card\');if(c){c.classList.remove(\'hidden\',\'collapsed\');scrollToEl(c,\'center\')}},300)" style="color:var(--accent);text-decoration:underline;opacity:.8;">' + linkText + '</a>';
   }
   setText('aga-hint-otp', r.agaOtpHint || 'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G (124 028 kr i 2025) til pensjon.');
   setText('pensjon-hint', r.pensjonHint || 'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over 1G). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.');
@@ -4725,6 +4755,12 @@ function resetCalcPanel(n){
       card.classList.add('collapsed');
       var arrow=card.querySelector('.card-title span');
       if(arrow) arrow.textContent='▼';
+    });
+    // Collapse all open law-groups
+    panel.querySelectorAll('.law-group.open').forEach(function(g){
+      g.classList.remove('open');
+      var body=g.querySelector('.law-group-body');
+      if(body) body.style.maxHeight='0';
     });
     // Close fagkalkulatorer dropdown if open
     var extraList=document.getElementById('cm-extra-list');
@@ -5033,7 +5069,7 @@ function calcAdj() {
     document.getElementById('adj-r-lbl').textContent = r.adjUnder||'Under terskelverdi';
     document.getElementById('adj-r-val').textContent = fmt(terskel);
     document.getElementById('adj-r-sub').textContent = (r.adjUnderSub||'Inngående MVA må overstige {t} for justeringsplikt').replace('{t}',fmt(terskel));
-    document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,#94a3b8,#64748b)';
+    document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
     document.getElementById('adj-r-base').textContent = '–';
     document.getElementById('adj-r-annual').textContent = '–';
     document.getElementById('adj-r-remain').textContent = '–';
@@ -5046,7 +5082,7 @@ function calcAdj() {
     document.getElementById('adj-r-lbl').textContent = r.adjExpired||'Justeringsperioden utløpt';
     document.getElementById('adj-r-val').textContent = '0';
     document.getElementById('adj-r-sub').textContent = (r.adjExpiredSub||'Alle {p} år er brukt — ingen justering nødvendig').replace('{p}',periode);
-    document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,#94a3b8,#64748b)';
+    document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
     document.getElementById('adj-r-base').textContent = fmt(totalMva / periode);
     document.getElementById('adj-r-annual').textContent = '0';
     document.getElementById('adj-r-remain').textContent = '0' + ofT + periode;
@@ -5061,7 +5097,7 @@ function calcAdj() {
     document.getElementById('adj-r-lbl').textContent = r.adjBagatell||'Under bagatellgrensen (§ 9-2)';
     document.getElementById('adj-r-val').textContent = '0';
     document.getElementById('adj-r-sub').textContent = (r.adjBagatellSub||'Endring på {p} er under 10 prosentpoeng — ingen justeringsplikt').replace('{p}',pct(Math.abs(endring)*100));
-    document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,#94a3b8,#64748b)';
+    document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
     document.getElementById('adj-r-base').textContent = fmt(totalMva / periode);
     document.getElementById('adj-r-annual').textContent = '0';
     document.getElementById('adj-r-remain').textContent = (periode - aarBrukt) + ofT + periode;
@@ -5131,7 +5167,7 @@ function calcUttak() {
     rLbl.textContent = r.uttakNoGain || 'Ingen gevinst';
     rVal.textContent = fmt(0);
     rSub.textContent = r.uttakNoGainDesc || 'Skattemessig verdi er lik eller høyere enn markedsverdi — ingen uttaksbeskatning';
-    rh.style.background = 'linear-gradient(135deg,#94a3b8,#64748b)';
+    rh.style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
     rAlm.textContent = '–';
     rTrygd.textContent = '–';
     rTrinn.textContent = '–';
