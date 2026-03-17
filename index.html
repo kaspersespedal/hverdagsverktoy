@@ -32,6 +32,14 @@
 <!-- Favicon (inline SVG) -->
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234a6fa5'/%3E%3Crect x='7' y='6' width='18' height='4' rx='1.5' fill='white' opacity='.95'/%3E%3Crect x='7' y='13' width='8' height='3' rx='1' fill='white' opacity='.7'/%3E%3Crect x='17' y='13' width='8' height='3' rx='1' fill='white' opacity='.7'/%3E%3Crect x='7' y='18' width='8' height='3' rx='1' fill='white' opacity='.5'/%3E%3Crect x='17' y='18' width='8' height='3' rx='1' fill='white' opacity='.5'/%3E%3Crect x='7' y='23' width='8' height='3' rx='1' fill='white' opacity='.4'/%3E%3Crect x='17' y='23' width='8' height='3' rx='1' fill='%2368b5a0'/%3E%3C/svg%3E">
 
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4a6fa5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hverdagsverktøy">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
 <!-- Fonts: Bunny Fonts (GDPR-kompatibel, ingen sporing) -->
 <link href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <style>
@@ -387,9 +395,8 @@ footer{background:linear-gradient(135deg,var(--grad-dark),var(--accent-l));color
 html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
 
 @media(max-width:600px){
-  .calc-nav{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;gap:2px;padding:4px;}
-  .calc-nav::-webkit-scrollbar{display:none;}
-  .calc-nav button{white-space:nowrap;flex-shrink:0;font-size:12px;padding:8px 12px;}
+  .calc-nav{flex-wrap:wrap;gap:4px;padding:6px;}
+  .calc-tab{font-size:15px;padding:12px 10px;min-width:0;flex:1 1 auto;}
 }
 
 </style>
@@ -457,7 +464,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
       <button class="calc-tab" onclick="switchCalc('mortgage')" id="tab-mortgage"><span></span><span id="tl-mor">Boliglån</span></button>
       <button class="calc-tab" onclick="switchCalc('salary')" id="tab-salary"><span></span><span id="tl-sal">Skatt</span></button>
       <button class="calc-tab" onclick="switchCalc('vat')" id="tab-vat"><span></span><span id="tl-vat">Avgift</span></button>
-      <button class="calc-tab" onclick="switchCalc('npv')" id="tab-npv"><span></span><span id="tl-npv">Lønnsomhetsanalyse</span></button>
+      <button class="calc-tab" onclick="switchCalc('npv')" id="tab-npv"><span></span><span id="tl-npv">Personlig økonomi</span></button>
       <!-- 9 extra calculators moved to KALKULATORTYPE dropdown -->
     </nav>
 
@@ -492,7 +499,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
         </div>
         <div class="dash-tool-card" onclick="switchCalc('npv')">
 
-          <div class="dash-tool-name" id="dash-t-npv">Lønnsomhetsanalyse</div>
+          <div class="dash-tool-name" id="dash-t-npv">Personlig økonomi</div>
           <div class="dash-tool-desc" id="dash-t-npv-d">NPV, IRR og tilbakebetalingstid for investeringer</div>
         </div>
         <!-- 9 extra calculators available via KALKULATORTYPE dropdown -->
@@ -566,7 +573,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
           <!-- AVS: Avskrivning -->
           <div id="bc-avs" class="hidden" style="padding:20px 24px;background:var(--surface);">
             <div style="font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;" id="bc-avs-label">Avskrivning</div>
-            <div style="font-size:11px;color:var(--ink2);margin-bottom:10px;line-height:1.5;" id="bc-avs-intro">Saldoavskrivning: eiendelen skrives ned med en fast prosent hvert &aring;r. Velg gruppe etter type eiendel (<a href="#" onclick="goToDeprCard();return false" style="color:var(--accent-d);text-decoration:underline;cursor:pointer;">sktl. &sect;&sect; 14-40 til 14-48</a>).</div>
+            <div style="font-size:11px;color:var(--ink2);margin-bottom:10px;line-height:1.5;" id="bc-avs-intro">Skattemessig saldoavskrivning: eiendelen skrives ned med en fast prosent hvert &aring;r. Velg gruppe etter type eiendel (<a href="#" onclick="goToDeprCard();return false" style="color:var(--accent-d);text-decoration:underline;cursor:pointer;">sktl. &sect;&sect; 14-40 til 14-48</a>). <em>NB: Regnskapsmessige avskrivninger skal følge en fornuftig avskrivingsplan (rskl. § 5-3).</em></div>
             <div class="fg"><label class="flbl" id="avs-l-price">Kjøpesum (kr)</label><input class="fc" type="text" id="avs-price" value="1,000,000" inputmode="numeric"></div><div class="fg"><label class="flbl" id="avs-l-group">Avskrivningsgruppe</label><select class="fc" id="avs-group"><option value="0.30">a: 30% – Kontormaskiner o.l.</option><option value="0.20">b: 20% – Forretningsverdi (goodwill)</option><option value="0.24">c: 24% – Vogntog, lastebiler, busser o.l.</option><option value="0.20">d: 20% – Personbiler, maskiner, inventar o.l.</option><option value="0.14">e: 14% – Skip, fartøyer, rigger o.l.</option><option value="0.12">f: 12% – Fly, helikopter</option><option value="0.05">g: 5% – Elektroteknisk utrustning i kraftforetak</option><option value="0.04">h: 4% – Bygg og anlegg (husdyrbygg 6%, enkel 10%)</option><option value="0.02">i: 2% – Forretningsbygg</option><option value="0.10">j: 10% – Fast teknisk installasjon i bygning</option></select></div><button class="btn-calc" onclick="calcAvs()"><span id="btn-calc-avs">Beregn →</span></button><div id="avs-res" class="result-sec hidden" style="margin-top:12px;"><div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;" id="avs-table-header">10-årig avskrivningsplan</div><div id="avs-table" style="width:100%;border-collapse:collapse;font-size:13px;"></div></div>
           </div>
           <!-- FERIE: Feriepenger -->
@@ -808,6 +815,62 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
             </div>
             </div><!-- /law-body -->
           </div><!-- /sal-uttak-card -->
+          <!-- Utdelingsmodellen calculator (collapsible) -->
+          <div id="sal-utdeling-card" class="info-card collapsed" style="margin-top:16px;">
+            <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+              <div>
+                <div class="card-title" id="utdeling-title">Utdelingsmodellen <span style="font-size:11px;opacity:.5">▼</span></div>
+                <div class="card-desc" id="utdeling-desc">Effektiv skattebelastning ved utdeling fra AS og ENK</div>
+              </div>
+            </div>
+            <div class="law-body" style="padding:0 24px 20px;">
+            <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="utdeling-intro">Kalkulatoren viser den samlede skattebelastningen når overskudd deles ut til eier. For <b>AS</b> (aksjonærmodellen): selskapsskatt 22 % + utbytteskatt 37,84 % = <b>51,5 %</b> effektiv sats. For <b>ENK</b> (foretaksmodellen): alminnelig inntekt 22 % + trygdeavgift 10,8 % + trinnskatt = opptil <b>50,6 %</b> marginalskatt. Symmetriprinsippet sikrer at valg av selskapsform ikke gir skattefordel i seg selv.<br><br><i style="font-size:12px;opacity:.7">ENK-visningen er en forenklet pedagogisk illustrasjon — faktisk skatt påvirkes også av bl.a. personfradrag og minstefradrag.</i></div>
+            <div class="fg"><label class="flbl" id="utdeling-l-type">Selskapsform</label>
+              <select class="fc" id="utdeling-type" onchange="utdelingToggleType()">
+                <option id="utdeling-opt-as" value="as">Aksjeselskap (AS) — aksjonærmodellen</option>
+                <option id="utdeling-opt-enk" value="enk">Enkeltpersonforetak (ENK) — foretaksmodellen</option>
+              </select>
+            </div>
+            <div class="fg"><label class="flbl" id="utdeling-l-overskudd">Overskudd før skatt (kr)</label>
+              <input class="fc" type="text" id="utdeling-overskudd" value="1,000,000" inputmode="numeric">
+            </div>
+            <div class="fg"><label class="flbl" id="utdeling-l-skjerming">Skjermingsfradrag (kr)</label>
+              <input class="fc" type="text" id="utdeling-skjerming" value="0" inputmode="numeric">
+            </div>
+            <button class="btn-calc" onclick="calcUtdeling()"><span id="btn-calc-utdeling">Beregn effektiv skatt →</span></button>
+            <div id="utdeling-res" class="result-sec hidden">
+              <div class="rh" id="utdeling-rh">
+                <div class="rh-lbl" id="utdeling-r-lbl">Total skattebelastning</div>
+                <div class="rh-val" id="utdeling-r-val">–</div>
+                <div class="rh-sub" id="utdeling-r-sub">–</div>
+              </div>
+              <!-- AS result grid -->
+              <div class="rgrid" id="utdeling-as-grid">
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-overskudd">Overskudd før skatt</div><div class="rt-val" id="utdeling-r-overskudd">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-selskap">Selskapsskatt (22 %)</div><div class="rt-val" id="utdeling-r-selskap">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-etter">Etter selskapsskatt</div><div class="rt-val" id="utdeling-r-etter">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-skjerming2">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-oppjustert">Oppjustert utbytte (×1,72)</div><div class="rt-val" id="utdeling-r-oppjustert">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-utbytte">Utbytteskatt aksjonær (22 %)</div><div class="rt-val" id="utdeling-r-utbytte">–</div></div>
+                <div class="rt" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;"><div class="rt-lbl" id="utdeling-rl-total" style="font-weight:700;">Total skatt (begge nivåer)</div><div class="rt-val" id="utdeling-r-total" style="font-weight:700;">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-netto">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-eff">–</div></div>
+              </div>
+              <!-- ENK result grid -->
+              <div class="rgrid hidden" id="utdeling-enk-grid">
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-overskudd">Overskudd (næringsinntekt)</div><div class="rt-val" id="utdeling-r-enk-overskudd">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-alm">Alminnelig inntektsskatt (22 %)</div><div class="rt-val" id="utdeling-r-enk-alm">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-enk-skjerming">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-person">= Beregnet personinntekt</div><div class="rt-val" id="utdeling-r-enk-person">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trygd">Trygdeavgift (10,8 %)</div><div class="rt-val" id="utdeling-r-enk-trygd">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trinn">Trinnskatt</div><div class="rt-val" id="utdeling-r-enk-trinn">–</div></div>
+                <div class="rt" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;"><div class="rt-lbl" id="utdeling-rl-enk-total" style="font-weight:700;">Total skatt</div><div class="rt-val" id="utdeling-r-enk-total" style="font-weight:700;">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-enk-netto">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-enk-eff">–</div></div>
+              </div>
+            </div>
+            </div><!-- /law-body -->
+          </div><!-- /sal-utdeling-card -->
         </div>
       </div>
       <div class="right-col">
@@ -990,8 +1053,87 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
     <!-- ══════════════ NPV ══════════════ -->
     <div id="calc-npv" class="calc-grid hidden">
       <div class="card">
-        <div class="card-hdr"><div><div class="card-title" id="npv-title">NPV / IRR Calculator</div><div class="card-desc" id="npv-desc">Net present value and internal rate of return.</div></div></div>
-        <div class="card-body">
+        <!-- Bilkostnadskalkulator — collapsible -->
+        <div id="bil-wrapper" class="info-card collapsed" style="border:none;box-shadow:none;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="bil-title">Bilkostnadskalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bil-desc">Se hva bilen din gjennomsnittlig koster deg per måned og over tid</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
+          <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="bil-intro">De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er.</div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="bil-l-merke">Bilmerke</label>
+              <select class="fc" id="bil-merke" onchange="bilUpdateDefaults()">
+                <option value="snitt">Gjennomsnitt</option>
+                <option value="toyota">Toyota</option>
+                <option value="volkswagen">Volkswagen</option>
+                <option value="volvo">Volvo</option>
+                <option value="skoda">Škoda</option>
+                <option value="hyundai">Hyundai / Kia</option>
+                <option value="bmw">BMW</option>
+                <option value="mercedes">Mercedes-Benz</option>
+                <option value="audi">Audi</option>
+                <option value="tesla">Tesla</option>
+              </select>
+            </div>
+            <div class="fg"><label class="flbl" id="bil-l-pris">Kjøpspris (kr)</label>
+              <input class="fc" type="text" id="bil-pris" value="400,000" inputmode="numeric">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="bil-l-aar">Eiertid (år)</label>
+              <input class="fc" type="number" id="bil-aar" value="5" min="1" max="20" step="1">
+            </div>
+            <div class="fg"><label class="flbl" id="bil-l-km">Årlig kjørelengde (km)</label>
+              <input class="fc" type="text" id="bil-km" value="12,000" inputmode="numeric">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="bil-l-startKm">Kilometerstand ved kjøp</label>
+              <input class="fc" type="text" id="bil-start-km" value="0" inputmode="numeric">
+            </div>
+            <div class="fg" style="visibility:hidden;"><label class="flbl">&nbsp;</label><input class="fc" type="text" disabled></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="bil-l-drivstoff">Drivstoff</label>
+              <select class="fc" id="bil-drivstoff">
+                <option value="bensin">Bensin</option>
+                <option value="diesel">Diesel</option>
+                <option value="elbil">Elbil</option>
+              </select>
+            </div>
+            <div class="fg"><label class="flbl" id="bil-l-forsikring">Forsikring (kr/år)</label>
+              <input class="fc" type="text" id="bil-forsikring" value="10,000" inputmode="numeric">
+            </div>
+          </div>
+          <button class="btn-calc" onclick="calcBilkostnad()"><span id="btn-calc-bil">Beregn bilkostnad →</span></button>
+          <div id="bil-res" class="result-sec hidden">
+            <div class="rh" id="bil-rh">
+              <div class="rh-lbl" id="bil-r-lbl">Total eierkostnad</div>
+              <div class="rh-val" id="bil-r-val">–</div>
+              <div class="rh-sub" id="bil-r-sub">–</div>
+            </div>
+            <div class="rgrid">
+              <div class="rt"><div class="rt-lbl" id="bil-rl-mnd">Kostnad per måned</div><div class="rt-val" id="bil-r-mnd">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-km">Kostnad per km</div><div class="rt-val" id="bil-r-km">–</div></div>
+              <div class="rt" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;"><div class="rt-lbl" id="bil-rl-verditap">Verditap</div><div class="rt-val" id="bil-r-verditap">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-driv">Drivstoff / lading</div><div class="rt-val" id="bil-r-driv">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-fors">Forsikring</div><div class="rt-val" id="bil-r-fors">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-service">Service og vedlikehold</div><div class="rt-val" id="bil-r-service">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-dekk">Dekk (slitasje)</div><div class="rt-val" id="bil-r-dekk">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-avgift">Trafikkforsikringsavgift</div><div class="rt-val" id="bil-r-avgift">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-bom">Bompenger (estimat)</div><div class="rt-val" id="bil-r-bom">–</div></div>
+            </div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;" id="bil-disclaimer">* Røft estimat. Faktiske kostnader varierer med kjøremønster, bosted, forsikringsvilkår og bilens tilstand.</div>
+          </div>
+          </div>
+        </div>
+
+        <!-- Lønnsomhetsanalyse (NPV/IRR) — collapsible -->
+        <div id="npv-wrapper" class="info-card collapsed" style="margin-top:16px;border:none;box-shadow:none;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="npv-title">Lønnsomhetsanalyse (NPV / IRR) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="npv-desc">Netto nåverdi og internrente for investeringsprosjekter.</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
           <div class="form-row">
             <div class="fg"><label class="flbl" id="npv-l-inv">Initial Investment</label><input class="fc" type="text" id="n-inv" value="1,000,000" inputmode="numeric"></div>
             <div class="fg"><label class="flbl" id="npv-l-rate">Discount Rate (%)</label><input class="fc" type="number" id="n-r" value="10" step="0.5"></div>
@@ -1017,6 +1159,7 @@ html{scrollbar-width:auto;scrollbar-color:rgba(37,99,235,.2) var(--bg);}
               <div class="rt"><div class="rt-lbl" id="npv-r-sum">Total Cash Flows</div><div class="rt-val" id="n-sum">–</div></div>
               <div class="rt"><div class="rt-lbl" id="npv-r-pi">Profitability Index</div><div class="rt-val" id="n-pi">–</div></div>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -1402,7 +1545,7 @@ const REGIONS = {
     heroH1:'Everyday Tools<br><em>Calculator, mortgage, tax, VAT and profitability analysis</em>',
     heroP:'',
     heroKickerTb:'✦ Free financial calculators',
-    tabSal:'Tax', tabMor:'Mortgage', tabNpv:'Profitability analysis', tabVat:'VAT',
+    tabSal:'Tax', tabMor:'Mortgage', tabNpv:'Personal finance', tabVat:'VAT',
     tabBasic:'Calculator', cmLabel:'Calculator type', cmBasic:'Basic', cmFinance:'Financial', cmScientific:'Scientific', cmUnit:'Unit conversion', cmFinCalcs:'Financial calculators', cmFcSal:'Salary after tax', cmFcMor:'Mortgage', cmFcNpv:'Profitability analysis', cmFcVat:'VAT',
     fcLblType:'Calculation type', fcTvm:'Present value / Future value (TVM)', fcMargin:'Margin & Markup', fcBe:'Break-even', fcCompound:'Compound interest', fcDiscount:'Discount calculation', fcPv:'Present value (PV)', fcRate:'Annual interest (%)', fcYears:'Number of years', fcPmt:'Annual payment', fcCost:'Cost price', fcSell:'Selling price', fcFixed:'Fixed costs', fcPriceU:'Selling price per unit', fcVarCost:'Variable cost per unit', fcPrinc:'Starting amount', fcFreq:'Interest payments per year', fcOrig:'Original price', fcDiscPct:'Discount (%)', fcBtn:'Calculate →', fcResLbl:'Result',
     fcRFv:'Future value (FV)', fcRAfter:'After', fcRYr:'years', fcRStart:'Starting amount', fcRTotalPmt:'Total payments', fcRInterest:'Interest earned', fcRReturn:'Total return', fcRProfit:'Profit', fcRRevenue:'Required revenue', fcRContrib:'Contribution per unit', fcRContribMarg:'Contribution margin', fcRBePoint:'Break-even point', fcRUnits:'units', fcREndVal:'Final value', fcRMonthly:'with monthly interest', fcRDoubling:'Doubling after', fcRDiscPrice:'Price after discount', fcRSaved:'You save', fcRDiscount:'Discount', fcRYouPay:'You pay', fcROfPrice:'of the price',
@@ -1424,11 +1567,19 @@ const REGIONS = {
     morRMth:'Monthly payment', morRTot:'Total repaid', morRInt:'Total interest', morRY1i:'Year 1 interest', morRY1p:'Year 1 principal', morRFirst:'First month', morRLast:'Last month', calcError:'Error',
     morLType:'Loan type', morAnnuity:'Annuity loan', morSerial:'Serial loan', vatRInclCalc:'Price incl. VAT', vatRExclCalc:'Price excl. VAT', vatRInputTag:'(your input)',
     morInfoTitle:'Mortgage guide', morInfoDesc:'Norwegian lending rules',
-    npvTitle:'NPV / IRR calculator', npvDesc:'Net present value and internal rate of return for investment projects.',
+    bilTitle:'Car Cost Calculator', bilDesc:'See what your car really costs you per month and over time',
+    bilIntro:'Most people underestimate the cost of car ownership. Beyond the purchase price come depreciation, insurance, fuel, service, tires, road tax and tolls. The figures below are rough estimates based on averages from NAF and OFV — intended only to illustrate how expensive car ownership really is.',
+    bilLMerke:'Car brand', bilLPris:'Purchase price (kr)', bilLAar:'Ownership period (years)', bilLKm:'Annual mileage (km)', bilLStartKm:'Mileage at purchase (km)',
+    bilLDrivstoff:'Fuel type', bilLForsikring:'Insurance (kr/yr)', bilBtn:'Calculate car cost →',
+    bilRLbl:'Total ownership cost', bilRMnd:'Cost per month', bilRKm:'Cost per km',
+    bilRVerditap:'Depreciation', bilRDriv:'Fuel / charging', bilRFors:'Insurance',
+    bilRService:'Service and maintenance', bilRDekk:'Tires (wear)', bilRAvgift:'Road tax', bilRBom:'Tolls (estimate)',
+    bilPerMnd:'/mo',
+    npvTitle:'Profitability Analysis (NPV / IRR)', npvDesc:'Net present value and internal rate of return for investment projects.',
     lInv:'Investment (kr)', lRateD:'Discount rate (%)', lCF1:'Cash flow year 1', lCF2:'Cash flow year 2', lCF3:'Cash flow year 3', lCF4:'Cash flow year 4', lCF5:'Cash flow year 5',
     npvRLbl:'Net present value (NPV)', npvRPay:'Payback period', npvRSum:'Total cash flows', npvRPi:'Profitability index',
     npvInfoTitle:'Interpretation guide', npvInfoDesc:'How to read NPV and IRR',
-    npvHowtoTitle:'How to use the calculator', npvHowtoDesc:'Step-by-step guide to NPV and IRR',
+    npvHowtoTitle:'How to use the Profitability Analysis (NPV/IRR) calculator', npvHowtoDesc:'Step-by-step guide to NPV and IRR',
     npvHowtoRows: [['— STEP BY STEP —','How to do an investment analysis'],['1. Investment amount','Enter the total amount you invest today. E.g.: buying equipment, property, starting a project.'],['2. Discount rate','Use your required rate of return. Typically WACC (8-12%) or alternative return. Higher rate = stricter standard.'],['3. Cash flows','Enter expected net cash flow (revenue minus expenses) for each year. Use realistic estimates.'],['4. Press Calculate','The calculator gives you NPV, IRR, payback period and profitability index.'],['— HOW TO READ THE RESULTS —',''],['NPV (net present value)','Positive NPV = the investment returns more than required. The higher, the better.'],['IRR (internal rate of return)','The rate that makes NPV = 0. Compare with your required return. IRR > requirement = good investment.'],['Payback period','How many years to recover the investment. Shorter is better — but don\'t reject a good project just because it takes time.'],['Profitability Index (PI)','Ratio of present value of income to investment. PI > 1 = profitable. PI of 1.3 means 30% return above requirement.']],
     npvExamplesTitle:'Real-world examples', npvExamplesDesc:'Typical investment decisions',
     npvExamplesRows: [['— EXAMPLE 1: NEW MACHINE —','Manufacturing company evaluates new machine'],['Investment','1,000,000 kr'],['Cash flow per year','300,000 kr for 5 years (increased production, lower maintenance)'],['Discount rate','10% (WACC)'],['NPV','137,236 kr → Profitable! The investment returns more than 10%.'],['— EXAMPLE 2: RENTAL PROPERTY —','Private person evaluates buying rental property'],['Investment','3,000,000 kr (equity + loan)'],['Net rental income per year','150,000 kr (after interest, maintenance, tax)'],['Expected sale gain year 5','500,000 kr'],['Discount rate','7% (alternative return from stock market)'],['Assessment','Compare NPV with alternative investment in funds — consider risk and liquidity.'],['— EXAMPLE 3: STARTUP —','Entrepreneur evaluates new business'],['Investment','500,000 kr'],['Year 1-2','Negative: -100,000 and -50,000 (startup)'],['Year 3-5','Positive: 200,000, 300,000, 400,000'],['Important','Use higher discount rate (15-20%) for startups because risk is higher.']],
@@ -1490,6 +1641,20 @@ const REGIONS = {
     uttakExExc4:'Group relations: On withdrawal from subsidiary to shareholder, the subsidiary is subject to withdrawal taxation',
     uttakExExc5:'Private use of company assets: Ongoing use (e.g. residence, boat, car) is taxed as dividend to shareholder under the shareholder model',
     uttakExSource:'Source: Tax Act § 5-2, § 5-3 and ch. 9 (Act-1999-03-26-14). The calculator is indicative only — contact an accountant for specific assessments.',
+    utdelingTitle:'Dividend Tax Model', utdelingDesc:'Effective tax burden on distributions from AS and sole prop.',
+    utdelingIntro:'This calculator shows the combined tax burden when profits are distributed to the owner. For <b>AS</b> (shareholder model): corporate tax 22% + dividend tax 37.84% = <b>51.5%</b> effective rate. For <b>sole prop.</b> (enterprise model): ordinary income 22% + national insurance 10.8% + bracket tax = up to <b>50.6%</b> marginal rate. The symmetry principle ensures the business form itself provides no tax advantage.<br><br><i style="font-size:12px;opacity:.7">The sole prop. view is a simplified pedagogical illustration — actual tax is also affected by personal allowance and minimum deduction.</i>',
+    utdelingLType:'Business form', utdelingOptAs:'Limited company (AS) — shareholder model', utdelingOptEnk:'Sole proprietorship (ENK) — enterprise model',
+    utdelingLOverskudd:'Pre-tax profit (kr)', utdelingLSkjerming:'Shielding deduction (kr)',
+    utdelingBtn:'Calculate effective tax →', utdelingRLbl:'Total tax burden',
+    utdelingROverskudd:'Pre-tax profit', utdelingRSelskap:'Corporate tax (22%)',
+    utdelingREtter:'After corporate tax', utdelingRSkjerming:'− Shielding deduction',
+    utdelingROppjustert:'Uplifted dividend (×1.72)', utdelingRUtbytte:'Dividend tax shareholder (22%)',
+    utdelingRTotal:'Total tax (both levels)', utdelingRNetto:'Net to owner',
+    utdelingREff:'Effective tax rate', utdelingEffRate:'Effective tax rate', utdelingNetLabel:'Net to owner',
+    utdelingREnkOverskudd:'Profit (business income)', utdelingREnkAlm:'Ordinary income tax (22%)',
+    utdelingREnkSkjerming:'− Shielding deduction', utdelingREnkPerson:'= Calculated personal income',
+    utdelingREnkTrygd:'National insurance (10.8%)', utdelingREnkTrinn:'Bracket tax',
+    utdelingREnkTotal:'Total tax', utdelingREnkNetto:'Net to owner', utdelingREnkEff:'Effective tax rate',
     adjExTitle:'Explanation of adjustment rules (VAT Act ch. 9)',
     adjExWhat:'What is adjustment?',
     adjExWhatDesc:'When you have deducted input VAT on a capital asset and the use changes during the adjustment period (more or less VAT-liable), you must adjust the deduction — either repay to the state or claim additional deduction.',
@@ -1600,6 +1765,8 @@ const REGIONS = {
     ccAmount:'Amount', trinnBreakdownTitle:'Bracket Tax Breakdown', lawHintText:'Difficult concept? See the dropdown "Important rules and concepts explained" above the Tax Act',
     trinnLabel1:'Bracket 1', trinnLabel2:'Bracket 2', trinnLabel3:'Bracket 3', trinnLabel4:'Bracket 4', trinnLabel5:'Bracket 5', almSkattLabel:'Ordinary income tax',
     lvuSalary:'Salary', lvuDividend:'Dividend', lvuIsCheaper:'is cheaper for the company',
+    lvuInfoLabel:'What does this calculator show?', lvuInfoH:'In short',
+    lvuInfoText:'The calculator compares <b>what it costs the company</b> to give you a given amount — either as salary or dividend. It does <b>not</b> show what you take home personally.<br><br><b>Salary:</b> The amount + employer\'s national insurance (AGA) + holiday pay (12%) + OTP (2%). This is the company\'s total cost.<br><br><b>Dividend:</b> To distribute e.g. 500,000 kr the company must earn 641,026 kr before 22% corporate tax (500,000 / 0.78).<br><br><b>Note:</b> As the recipient, you also pay personal tax — income tax on salary, or dividend tax (adjusted ×1.72, taxed at 22%) on dividends. This calculator does not include personal tax — it only looks at the company side.',
     conMailName:'Name', conMailEmail:'Email',
     adjBagatell:'Below de minimis threshold (§ 9-2)', adjBagatellSub:'Change of {p} is below 10 percentage points — no adjustment required',
     rgMain:'Main language', rgNorway:'Languages in Norway', rgIntl:'International',
@@ -1672,6 +1839,16 @@ const REGIONS = {
     uttakExExc4:'集团关系：从子公司向股东提取时，子公司承担提取征税责任',
     uttakExExc5:'企业资产的私人使用：持续使用（如住宅、船、车）按股东模式作为股利对股东征税',
     uttakExSource:'来源：税法§ 5-2、§ 5-3和第9章（法律-1999-03-26-14）。该计算器仅供参考——具体评估请咨询会计师。',
+    utdelingTitle:'分红税模型 (AS)', utdelingDesc:'公司税 + 股息税 = 51.5% 有效税率',
+    utdelingIntro:'分红税模型展示了有限公司利润先缴纳公司税（22%），然后在股东提取股息时缴纳股息税（37.84%）的合并税负。在没有免税额的情况下，有效税率为 <b>51.5%</b>。',
+    utdelingEnkNote:'<b>个人企业：</b>对于个人企业，适用企业模型，在对称税规则下，个人收入的有效边际税率相当——因此企业形式本身不提供税收优势。',
+    utdelingLOverskudd:'税前利润（克朗）', utdelingLSkjerming:'免税额（克朗）',
+    utdelingBtn:'计算有效税率 →', utdelingRLbl:'总税负',
+    utdelingROverskudd:'税前利润', utdelingRSelskap:'公司税（22%）',
+    utdelingREtter:'公司税后', utdelingRSkjerming:'− 免税额',
+    utdelingROppjustert:'调增股息（×1.72）', utdelingRUtbytte:'股东股息税（22%）',
+    utdelingRTotal:'总税（两个层面）', utdelingRNetto:'股东净额',
+    utdelingREff:'有效税率', utdelingEffRate:'有效税率', utdelingNetLabel:'股东净额',
     adjExTitle:'调整规则说明（增值税法第9章）',
     adjExWhat:'什么是调整？',
     adjExWhatDesc:'当你对资本资产的进项增值税抵扣后，在调整期内使用方式改变（增值税义务增加或减少），你必须调整抵扣——要么向国家返款，要么要求更多抵扣。',
@@ -1734,7 +1911,7 @@ const REGIONS = {
     heroH1:'日常工具<br><em>计算器、房贷、税收、增值税和盈利分析</em>',
     heroP:'',
     heroKickerTb:'✦ 免费财务计算器',
-    tabSal:'税收', tabMor:'房贷', tabNpv:'盈利分析', tabVat:'增值税',
+    tabSal:'税收', tabMor:'房贷', tabNpv:'个人财务', tabVat:'增值税',
     tabBasic:'计算器', cmLabel:'计算器类型', cmBasic:'基本', cmFinance:'金融', cmScientific:'科学', cmUnit:'单位换算', cmFinCalcs:'金融计算器', cmFcSal:'税后工资', cmFcMor:'房贷', cmFcNpv:'盈利分析', cmFcVat:'增值税',
     fcLblType:'计算类型', fcTvm:'现值/终值 (TVM)', fcMargin:'利润率和加价', fcBe:'盈亏平衡', fcCompound:'复利', fcDiscount:'折扣计算', fcPv:'现值 (PV)', fcRate:'年利率 (%)', fcYears:'年数', fcPmt:'年度支付', fcCost:'成本价', fcSell:'售价', fcFixed:'固定成本', fcPriceU:'单位售价', fcVarCost:'单位可变成本', fcPrinc:'初始金额', fcFreq:'每年付息次数', fcOrig:'原价', fcDiscPct:'折扣 (%)', fcBtn:'计算 →', fcResLbl:'结果',
     fcRFv:'终值 (FV)', fcRAfter:'经过', fcRYr:'年', fcRStart:'初始金额', fcRTotalPmt:'总支付额', fcRInterest:'赚取利息', fcRReturn:'总回报率', fcRProfit:'利润', fcRRevenue:'所需收入', fcRContrib:'单位贡献', fcRContribMarg:'贡献率', fcRBePoint:'盈亏平衡点', fcRUnits:'单位', fcREndVal:'最终价值', fcRMonthly:'按月复利', fcRDoubling:'翻倍需要', fcRDiscPrice:'折后价格', fcRSaved:'节省', fcRDiscount:'折扣', fcRYouPay:'您支付', fcROfPrice:'的价格',
@@ -1868,9 +2045,20 @@ const REGIONS = {
     ccAmount:'金额', trinnBreakdownTitle:'阶梯税明细', lawHintText:'概念不理解？请参阅税法上方的"重要规则和概念解释"下拉菜单',
     trinnLabel1:'阶梯1', trinnLabel2:'阶梯2', trinnLabel3:'阶梯3', trinnLabel4:'阶梯4', trinnLabel5:'阶梯5', almSkattLabel:'普通所得税',
     lvuSalary:'工资', lvuDividend:'股息', lvuIsCheaper:'对公司更便宜',
+    lvuInfoLabel:'这个计算器显示什么？', lvuInfoH:'简单来说',
+    lvuInfoText:'该计算器比较公司给您一定金额的<b>总成本</b>——无论是工资还是股息。它<b>不</b>显示您个人实际获得的金额。<br><br><b>工资：</b>金额 + 雇主国民保险(AGA) + 假期工资(12%) + OTP(2%)。这是公司的总成本。<br><br><b>股息：</b>要分配例如500,000克朗，公司必须在22%公司税前赚取641,026克朗(500,000 / 0.78)。<br><br><b>注意：</b>作为受益人，您还需缴纳个人税——工资需缴所得税，股息则需缴股息税(调整×1.72，按22%征税)。本计算器不含个人税——仅显示公司端。',
     conMailName:'姓名', conMailEmail:'电子邮件',
     adjBagatell:'低于最低限额 (§ 9-2)', adjBagatellSub:'变动{p}低于10个百分点——无需调整',
     rgMain:'主要语言', rgNorway:'挪威语言', rgIntl:'国际',
+    bilTitle:'汽车费用计算器', bilDesc:'查看您的汽车每月和长期真正花费多少',
+    bilIntro:'大多数人低估了拥有汽车的成本。除了购买价格外，还有贬值、保险、燃料、维修、轮胎、交通保险费和过路费。此计算器显示完整的图景。',
+    bilLMerke:'汽车品牌', bilLPris:'购买价格（kr）', bilLAar:'持有年数', bilLKm:'年行驶里程（km）', bilLStartKm:'购买时里程（km）',
+    bilLDrivstoff:'燃料类型', bilLForsikring:'保险（kr/年）', bilBtn:'计算汽车费用 →',
+    bilRLbl:'总拥有成本', bilRMnd:'每月费用', bilRKm:'每公里费用',
+    bilRVerditap:'贬值', bilRDriv:'燃料/充电', bilRFors:'保险',
+    bilRService:'维修保养', bilRDekk:'轮胎（磨损）', bilRAvgift:'交通保险费', bilRBom:'过路费（估计）',
+    bilPerMnd:'/月',
+    npvTitle:'盈利能力分析（NPV / IRR）', npvDesc:'投资项目的净现值和内部收益率。',
     ccCurrNames:['挪威克朗','欧元','美元','英镑','瑞典克朗','丹麦克朗','波兰兹罗提','瑞士法郎','日元','人民币','加拿大元','澳大利亚元','印度卢比','土耳其里拉','巴西雷亚尔']
 },
   fr: {
@@ -1943,7 +2131,7 @@ const REGIONS = {
     heroH1:'Outils du quotidien<br><em>Calculateur, prêt immobilier, impôt, TVA et analyse de rentabilité</em>',
     heroP:'',
     heroKickerTb:'✦ Calculateurs financiers gratuits',
-    tabSal:'Impôt', tabMor:'Prêt immobilier', tabNpv:'Analyse de rentabilité', tabVat:'TVA',
+    tabSal:'Impôt', tabMor:'Prêt immobilier', tabNpv:'Finances personnelles', tabVat:'TVA',
     tabBasic:'Calculatrice', cmLabel:'Type de calculatrice', cmBasic:'Simple', cmFinance:'Financière', cmScientific:'Scientifique', cmUnit:'Conversion d\'unités', cmFinCalcs:'Calculatrices financières', cmFcSal:'Salaire après impôt', cmFcMor:'Prêt immobilier', cmFcNpv:'Analyse de rentabilité', cmFcVat:'TVA',
     fcLblType:'Type de calcul', fcTvm:'Valeur actuelle / Valeur future (TVM)', fcMargin:'Marge et Markup', fcBe:'Seuil de rentabilité', fcCompound:'Intérêts composés', fcDiscount:'Calcul de remise', fcPv:'Valeur actuelle (VA)', fcRate:'Taux annuel (%)', fcYears:'Nombre d\'années', fcPmt:'Paiement annuel', fcCost:'Prix de revient', fcSell:'Prix de vente', fcFixed:'Coûts fixes', fcPriceU:'Prix de vente unitaire', fcVarCost:'Coût variable unitaire', fcPrinc:'Montant initial', fcFreq:'Versements d\'intérêts par an', fcOrig:'Prix d\'origine', fcDiscPct:'Remise (%)', fcBtn:'Calculer →', fcResLbl:'Résultat',
     fcRFv:'Valeur future (VF)', fcRAfter:'Après', fcRYr:'ans', fcRStart:'Montant initial', fcRTotalPmt:'Paiements totaux', fcRInterest:'Intérêts gagnés', fcRReturn:'Rendement total', fcRProfit:'Bénéfice', fcRRevenue:'Chiffre d\'affaires nécessaire', fcRContrib:'Contribution unitaire', fcRContribMarg:'Taux de marge', fcRBePoint:'Seuil de rentabilité', fcRUnits:'unités', fcREndVal:'Valeur finale', fcRMonthly:'avec intérêts mensuels', fcRDoubling:'Doublement après', fcRDiscPrice:'Prix après remise', fcRSaved:'Vous économisez', fcRDiscount:'Remise', fcRYouPay:'Vous payez', fcROfPrice:'du prix',
@@ -2027,6 +2215,16 @@ const REGIONS = {
     uttakExExc4:'Relations de groupe: sur retrait de filiale à actionnaire, la filiale est assujettie à l\'imposition sur retrait',
     uttakExExc5:'Usage personnel d\'actifs de l\'entreprise: usage continu (p. ex. résidence, bateau, voiture) imposé comme dividende à l\'actionnaire selon le modèle actionnarial',
     uttakExSource:'Source: Loi fiscale § 5-2, § 5-3 et ch. 9 (Loi-1999-03-26-14). La calculatrice est indicative uniquement — veuillez consulter un comptable pour des évaluations spécifiques.',
+    utdelingTitle:'Modèle de taxation des dividendes (AS)', utdelingDesc:'Impôt société + impôt dividendes = 51,5 % taux effectif',
+    utdelingIntro:'Le modèle de taxation des dividendes montre la charge fiscale combinée lorsque les bénéfices d\'une société sont d\'abord taxés à l\'impôt sur les sociétés (22 %), puis à l\'impôt sur les dividendes (37,84 %) lors de la distribution. Sans déduction de protection, le taux effectif est de <b>51,5 %</b>.',
+    utdelingEnkNote:'<b>Entreprise individuelle :</b> Pour les entreprises individuelles, le modèle d\'entreprise s\'applique, qui avec des règles fiscales symétriques donne un taux marginal effectif équivalent — la forme de l\'entreprise ne procure donc pas d\'avantage fiscal en soi.',
+    utdelingLOverskudd:'Bénéfice avant impôt (kr)', utdelingLSkjerming:'Déduction de protection (kr)',
+    utdelingBtn:'Calculer l\'impôt effectif →', utdelingRLbl:'Charge fiscale totale',
+    utdelingROverskudd:'Bénéfice avant impôt', utdelingRSelskap:'Impôt société (22 %)',
+    utdelingREtter:'Après impôt société', utdelingRSkjerming:'− Déduction de protection',
+    utdelingROppjustert:'Dividende majoré (×1,72)', utdelingRUtbytte:'Impôt dividendes actionnaire (22 %)',
+    utdelingRTotal:'Impôt total (deux niveaux)', utdelingRNetto:'Net à l\'actionnaire',
+    utdelingREff:'Taux d\'imposition effectif', utdelingEffRate:'Taux d\'imposition effectif', utdelingNetLabel:'Net à l\'actionnaire',
     adjExTitle:'Explication des règles d\'ajustement (Loi TVA ch. 9)',
     adjExWhat:'Qu\'est-ce que l\'ajustement?',
     adjExWhatDesc:'Après déduction de la TVA en amont sur une immobilisation, si l\'utilisation change au cours de la période d\'ajustement (plus ou moins de TVA déductible), vous devez ajuster votre déduction — soit rembourser l\'État, soit réclamer une déduction supplémentaire.',
@@ -2136,9 +2334,20 @@ const REGIONS = {
     ccAmount:'Montant', trinnBreakdownTitle:'Détail de l\'impôt progressif', lawHintText:'Concept difficile ? Consultez le menu déroulant « Règles et concepts importants » au-dessus de la loi fiscale',
     trinnLabel1:'Palier 1', trinnLabel2:'Palier 2', trinnLabel3:'Palier 3', trinnLabel4:'Palier 4', trinnLabel5:'Palier 5', almSkattLabel:'Impôt sur le revenu ordinaire',
     lvuSalary:'Salaire', lvuDividend:'Dividende', lvuIsCheaper:'est moins cher pour l\'entreprise',
+    lvuInfoLabel:'Que montre ce calculateur ?', lvuInfoH:'En bref',
+    lvuInfoText:'Le calculateur compare <b>ce que coûte à l\'entreprise</b> de vous verser un montant donné — sous forme de salaire ou de dividende. Il n\'indique <b>pas</b> ce que vous recevez personnellement.<br><br><b>Salaire :</b> Le montant + cotisation patronale (AGA) + congés payés (12%) + OTP (2%). C\'est le coût total pour l\'entreprise.<br><br><b>Dividende :</b> Pour distribuer p. ex. 500 000 kr, l\'entreprise doit réaliser 641 026 kr avant l\'impôt sur les sociétés de 22% (500 000 / 0,78).<br><br><b>Remarque :</b> En tant que bénéficiaire, vous payez également un impôt personnel — impôt sur le revenu pour le salaire, ou impôt sur les dividendes (ajusté ×1,72, taxé à 22%) pour les dividendes. Ce calculateur ne tient pas compte de l\'impôt personnel — il se concentre uniquement sur le côté entreprise.',
     conMailName:'Nom', conMailEmail:'E-mail',
     adjBagatell:'Sous le seuil de minimis (§ 9-2)', adjBagatellSub:'Changement de {p} inférieur à 10 points de pourcentage — aucun ajustement requis',
     rgMain:'Langue principale', rgNorway:'Langues en Norvège', rgIntl:'International',
+    bilTitle:'Calculateur de coûts auto', bilDesc:'Découvrez ce que votre voiture vous coûte réellement par mois et au fil du temps',
+    bilIntro:'La plupart des gens sous-estiment le coût de possession d\'une voiture. Au-delà du prix d\'achat s\'ajoutent la dépréciation, l\'assurance, le carburant, l\'entretien, les pneus, la taxe routière et les péages. Ce calculateur montre le tableau complet.',
+    bilLMerke:'Marque', bilLPris:'Prix d\'achat (kr)', bilLAar:'Durée de possession (ans)', bilLKm:'Kilométrage annuel (km)', bilLStartKm:'Kilométrage à l\'achat (km)',
+    bilLDrivstoff:'Carburant', bilLForsikring:'Assurance (kr/an)', bilBtn:'Calculer le coût auto →',
+    bilRLbl:'Coût total de possession', bilRMnd:'Coût par mois', bilRKm:'Coût par km',
+    bilRVerditap:'Dépréciation', bilRDriv:'Carburant / recharge', bilRFors:'Assurance',
+    bilRService:'Entretien et réparations', bilRDekk:'Pneus (usure)', bilRAvgift:'Taxe routière', bilRBom:'Péages (estimation)',
+    bilPerMnd:'/mois',
+    npvTitle:'Analyse de rentabilité (VAN / TRI)', npvDesc:'Valeur actuelle nette et taux de rendement interne pour les projets d\'investissement.',
     ccCurrNames:['Couronne norvégienne','Euro','Dollar américain','Livre sterling','Couronne suédoise','Couronne danoise','Zloty polonais','Franc suisse','Yen japonais','Yuan chinois','Dollar canadien','Dollar australien','Roupie indienne','Livre turque','Réal brésilien']
 },
   no: {
@@ -2203,8 +2412,8 @@ const REGIONS = {
     heroH1:'Hverdagsverktøy<br><em>Kalkulator, boliglån, skatt, avgift og lønnsomhetsanalyse</em>',
     heroP:'',
     heroKickerTb:'✦ Gratis finanskalkulatorer',
-    tabSal:'Skatt', tabMor:'Boliglån', tabNpv:'Lønnsomhetsanalyse', tabVat:'Avgift',
-    tabBasic:'Kalkulator', cmLabel:'Kalkulatortype', cmBasic:'Enkel', cmFinance:'Finansiell', cmScientific:'Vitenskapelig', cmUnit:'Valuta', cmFinCalcs:'Finanskalkulatorer', cmFcSal:'Lønn etter skatt', cmFcMor:'Boliglån', cmFcNpv:'Lønnsomhetsanalyse', cmFcVat:'Avgift',
+    tabSal:'Skatt', tabMor:'Boliglån', tabNpv:'Personlig økonomi', tabVat:'Avgift',
+    tabBasic:'Kalkulator', cmLabel:'Kalkulatortype', cmBasic:'Enkel', cmFinance:'Finansiell', cmScientific:'Vitenskapelig', cmUnit:'Valuta', cmFinCalcs:'Finanskalkulatorer', cmFcSal:'Lønn etter skatt', cmFcMor:'Boliglån', cmFcNpv:'Personlig økonomi', cmFcVat:'Avgift',
     fcLblType:'Beregningstype', fcTvm:'Nåverdi / Fremtidsverdi (TVM)', fcMargin:'Margin & Markup', fcBe:'Break-even', fcCompound:'Renters rente', fcDiscount:'Rabattberegning', fcPv:'Nåverdi (PV)', fcRate:'Årlig rente (%)', fcYears:'Antall år', fcPmt:'Årlig innbetaling', fcCost:'Kostpris', fcSell:'Salgspris', fcFixed:'Faste kostnader', fcPriceU:'Salgspris per enhet', fcVarCost:'Variabel kostnad per enhet', fcPrinc:'Startbeløp', fcFreq:'Renteutbetalinger per år', fcOrig:'Opprinnelig pris', fcDiscPct:'Rabatt (%)', fcBtn:'Beregn →', fcResLbl:'Resultat',
     fcRFv:'Fremtidsverdi (FV)', fcRAfter:'Etter', fcRYr:'år', fcRStart:'Startbeløp', fcRTotalPmt:'Innbetalinger totalt', fcRInterest:'Opptjent rente', fcRReturn:'Total avkastning', fcRProfit:'Fortjeneste', fcRRevenue:'Nødvendig omsetning', fcRContrib:'Dekningsbidrag/enhet', fcRContribMarg:'Dekningsgrad', fcRBePoint:'Break-even punkt', fcRUnits:'enheter', fcREndVal:'Sluttverdi', fcRMonthly:'med månedlig rente', fcRDoubling:'Dobling etter', fcRDiscPrice:'Pris etter rabatt', fcRSaved:'Du sparer', fcRDiscount:'Rabatt', fcRYouPay:'Du betaler', fcROfPrice:'av prisen',
     ucLblCat:'Kategori', ucLength:'Lengde', ucWeight:'Vekt', ucTemp:'Temperatur', ucArea:'Areal', ucVolume:'Volum', ucSpeed:'Hastighet', ucFrom:'Fra', ucTo:'Til', ucValue:'Verdi', ucResult:'Resultat',
@@ -2242,11 +2451,19 @@ const REGIONS = {
     ioRlMthFree:'Månedlig betaling (kun renter)', ioRlTotFree:'Totale renter i perioden', ioRlMthAfter:'Månedlig betaling (annuitet)', ioRlIntAfter:'Renter i restperioden',
     ioRlTotIntIo:'Totale renter (med avdragsfritt)', ioRlTotIntAnn:'Totale renter (annuitet fra dag 1)', ioRlDiff:'Ekstra rentekostnad', ioRlAnnMth:'Månedlig annuitet fra dag 1',
     ioRSub:'Ekstra rentekostnad vs. annuitet fra dag 1',
-    npvTitle:'NPV / IRR-kalkulator', npvDesc:'Netto nåverdi og internrente for investeringsprosjekter.',
+    bilTitle:'Bilkostnadskalkulator', bilDesc:'Se hva bilen din gjennomsnittlig koster deg per måned og over tid',
+    bilIntro:'De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er.',
+    bilLMerke:'Bilmerke', bilLPris:'Kjøpspris (kr)', bilLAar:'Eiertid (år)', bilLKm:'Årlig kjørelengde (km)', bilLStartKm:'Kilometerstand ved kjøp',
+    bilLDrivstoff:'Drivstoff', bilLForsikring:'Forsikring (kr/år)', bilBtn:'Beregn bilkostnad →',
+    bilRLbl:'Total eierkostnad', bilRMnd:'Kostnad per måned', bilRKm:'Kostnad per km',
+    bilRVerditap:'Verditap', bilRDriv:'Drivstoff / lading', bilRFors:'Forsikring',
+    bilRService:'Service og vedlikehold', bilRDekk:'Dekk (slitasje)', bilRAvgift:'Trafikkforsikringsavgift', bilRBom:'Bompenger (estimat)',
+    bilPerMnd:'/mnd',
+    npvTitle:'Lønnsomhetsanalyse (NPV / IRR)', npvDesc:'Netto nåverdi og internrente for investeringsprosjekter.',
     lInv:'Investering (kr)', lRateD:'Diskonteringsrente (%)', lCF1:'Kontantstrøm år 1', lCF2:'Kontantstrøm år 2', lCF3:'Kontantstrøm år 3', lCF4:'Kontantstrøm år 4', lCF5:'Kontantstrøm år 5',
     npvRLbl:'Netto nåverdi (NPV)', npvRPay:'Tilbakebetalingstid', npvRSum:'Totale kontantstrømmer', npvRPi:'Lønnsomhetsindeks',
     npvInfoTitle:'Tolkningsguide', npvInfoDesc:'Slik leser du NPV og IRR',
-    npvHowtoTitle:'Slik bruker du kalkulatoren', npvHowtoDesc:'Steg-for-steg guide til NPV og IRR',
+    npvHowtoTitle:'Slik bruker du Lønnsomhetsanalyse (NPV/IRR) kalkulatoren', npvHowtoDesc:'Steg-for-steg guide til NPV og IRR',
     npvHowtoRows: [['— STEG FOR STEG —','Slik gjør du en investeringsanalyse'],['1. Investeringsbeløp','Skriv inn totalbeløpet du investerer i dag. Eks.: kjøp av maskin, eiendom, oppstart av prosjekt.'],['2. Diskonteringsrente','Bruk avkastningskravet ditt. Typisk WACC (8-12%) eller alternativ avkastning. Høyere rente = strengere krav.'],['3. Kontantstrømmene','Skriv inn forventet netto kontantstrøm (inntekter minus utgifter) for hvert år. Bruk realistiske estimater.'],['4. Trykk Beregn','Kalkulatoren gir deg NPV, IRR, tilbakebetalingstid og lønnsomhetsindeks.'],['— SLIK LESER DU RESULTATENE —',''],['NPV (netto nåverdi)','Positiv NPV = investeringen gir mer enn avkastningskravet. Jo høyere, jo bedre.'],['IRR (internrente)','Renten som gjør NPV = 0. Sammenlign med avkastningskravet ditt. IRR > kravet = god investering.'],['Tilbakebetalingstid','Hvor mange år det tar å tjene tilbake investeringen. Kortere er bedre — men si ikke nei til et godt prosjekt bare fordi det tar litt tid.'],['Lønnsomhetsindeks (PI)','Forholdet mellom nåverdi av inntekter og investering. PI > 1 = lønnsomt. PI på 1.3 betyr 30% avkastning utover kravet.']],
     npvExamplesTitle:'Eksempler fra virkeligheten', npvExamplesDesc:'Typiske investeringsbeslutninger',
     npvExamplesRows: [['— EKSEMPEL 1: NY MASKIN —','Produksjonsbedrift vurderer ny maskin'],['Investering','1 000 000 kr'],['Kontantstrøm per år','300 000 kr i 5 år (økt produksjon, lavere vedlikehold)'],['Diskonteringsrente','10% (WACC)'],['NPV','137 236 kr → Lønnsomt! Investeringen gir mer enn 10% avkastning.'],['— EKSEMPEL 2: UTLEIELEILIGHET —','Privatperson vurderer kjøp av utleieleilighet'],['Investering','3 000 000 kr (egenkapital + lån)'],['Netto leieinntekt per år','150 000 kr (etter renter, vedlikehold, skatt)'],['Forventet salgsgevinst år 5','500 000 kr'],['Diskonteringsrente','7% (alternativavkastning aksjemarkedet)'],['Vurdering','Sammenlign NPV med alternativ plassering i fond — husk risiko og likviditet.'],['— EKSEMPEL 3: OPPSTART —','Gründer vurderer ny bedrift'],['Investering','500 000 kr'],['År 1-2','Negativt: -100 000 og -50 000 (oppstart)'],['År 3-5','Positivt: 200 000, 300 000, 400 000'],['Viktig','Bruk høyere diskonteringsrente (15-20%) for oppstart fordi risikoen er høyere.']],
@@ -2315,6 +2532,20 @@ const REGIONS = {
     uttakExExc4:'Konsernforhold: Ved uttak fra datterselskap til aksjonær, er det datterselskapet som er subjekt for uttaksbeskatning',
     uttakExExc5:'Privat bruk av selskapets eiendeler: Løpende bruk (f.eks. bolig, båt, bil) beskattes som utbytte hos aksjonæren etter aksjonærmodellen',
     uttakExSource:'Kilde: Skatteloven § 5-2, § 5-3 og kap. 9 (lov-1999-03-26-14). Kalkulatoren er veiledende — kontakt revisor for konkrete vurderinger.',
+    utdelingTitle:'Utdelingsmodellen', utdelingDesc:'Effektiv skattebelastning ved utdeling fra AS og ENK',
+    utdelingIntro:'Kalkulatoren viser den samlede skattebelastningen når overskudd deles ut til eier. For <b>AS</b> (aksjonærmodellen): selskapsskatt 22 % + utbytteskatt 37,84 % = <b>51,5 %</b> effektiv sats. For <b>ENK</b> (foretaksmodellen): alminnelig inntekt 22 % + trygdeavgift 10,8 % + trinnskatt = opptil <b>50,6 %</b> marginalskatt. Symmetriprinsippet sikrer at valg av selskapsform ikke gir skattefordel i seg selv.<br><br><i style="font-size:12px;opacity:.7">ENK-visningen er en forenklet pedagogisk illustrasjon — faktisk skatt påvirkes også av bl.a. personfradrag og minstefradrag.</i>',
+    utdelingLType:'Selskapsform', utdelingOptAs:'Aksjeselskap (AS) — aksjonærmodellen', utdelingOptEnk:'Enkeltpersonforetak (ENK) — foretaksmodellen',
+    utdelingLOverskudd:'Overskudd før skatt (kr)', utdelingLSkjerming:'Skjermingsfradrag (kr)',
+    utdelingBtn:'Beregn effektiv skatt →', utdelingRLbl:'Total skattebelastning',
+    utdelingROverskudd:'Overskudd før skatt', utdelingRSelskap:'Selskapsskatt (22 %)',
+    utdelingREtter:'Etter selskapsskatt', utdelingRSkjerming:'− Skjermingsfradrag',
+    utdelingROppjustert:'Oppjustert utbytte (×1,72)', utdelingRUtbytte:'Utbytteskatt aksjonær (22 %)',
+    utdelingRTotal:'Total skatt (begge nivåer)', utdelingRNetto:'Netto til eier',
+    utdelingREff:'Effektiv skattesats', utdelingEffRate:'Effektiv skattesats', utdelingNetLabel:'Netto til eier',
+    utdelingREnkOverskudd:'Overskudd (næringsinntekt)', utdelingREnkAlm:'Alminnelig inntektsskatt (22 %)',
+    utdelingREnkSkjerming:'− Skjermingsfradrag', utdelingREnkPerson:'= Beregnet personinntekt',
+    utdelingREnkTrygd:'Trygdeavgift (10,8 %)', utdelingREnkTrinn:'Trinnskatt',
+    utdelingREnkTotal:'Total skatt', utdelingREnkNetto:'Netto til eier', utdelingREnkEff:'Effektiv skattesats',
     adjExTitle:'Forklaring av justeringsreglene (mval. kap. 9)',
     adjExWhat:'Hva er justering?',
     adjExWhatDesc:'Når du har fradragsført inngående MVA på en kapitalvare, og bruken endres i justeringsperioden (mer eller mindre avgiftspliktig), må du justere fradraget — enten tilbakebetale til staten eller kreve mer fradrag.',
@@ -2359,7 +2590,7 @@ const REGIONS = {
     valgavinBuyAmtLabel:'Kjøpt beløp (NOK)', valgevinBuyRateLabel:'Kjøpskurs', valgevinSellAmtLabel:'Solgt beløp (valuta)', valgevinSellRateLabel:'Salgskurs', valgevinBtn:'Beregn →', valgevinResultLabel:'Gevinst/-tap (NOK)', valgevinTaxableLabel:'Skattepliktig',
     likvidStartLabel:'Startbalanse (kr)', likvidIncomeLabel:'Månedlig inntekt (kr)', likvidExpenseLabel:'Månedlig utgift (kr)', likvidBtn:'Beregn →',
     pensjonAgeLabel:'Nåværende alder', pensjonRetireLabel:'Pensjoneringsalder', pensjonSalaryLabel:'Årslønn', pensjonOtpLabel:'OTP-rate', pensjonReturnLabel:'Avkastning (%)', pensjonBtn:'Beregn →', pensjonPotLabel:'Total pensjonspott ved 67 år', pensjonAnnualLabel:'Estimert årlig pensjon', pensjonMonthlyLabel:'Månedlig pensjon', pensjonRealLabel:'Kjøpekraft i dag (2% inflasjon)', pensjonDisclaimer:'Dette er et estimat for planleggingsformål. Faktisk pensjon kan variere basert på faktisk avkastning, bidrag og regelendringer.',
-    avsIntro: 'Saldoavskrivning: eiendelen skrives ned med en fast prosent hvert år. Velg gruppe etter type eiendel.',
+    avsIntro: 'Skattemessig saldoavskrivning: eiendelen skrives ned med en fast prosent hvert år. Velg gruppe etter type eiendel. NB: Regnskapsmessige avskrivninger skal følge en fornuftig avskrivingsplan (rskl. § 5-3).',
     renteIntro: 'Nominell rente er det banken oppgir. Effektiv rente inkluderer også gebyrer og etableringsavgift — den viser hva lånet faktisk koster deg.',
     valgevinIntro: 'Beregn gevinst eller tap ved kjøp og salg av utenlandsk valuta. Gevinst beskattes med 22%.',
     likvidIntro: 'Viser om du har nok penger på konto måned for måned. Startbalanse + inntekter − utgifter = det du har igjen.',
@@ -2403,6 +2634,8 @@ const REGIONS = {
     ccAmount:'Beløp', trinnBreakdownTitle:'Trinnskatt-detaljer', lawHintText:'Vanskelig begrep? Se dropdown «Viktige regler og begreper forklart» over Skatteloven',
     trinnLabel1:'Trinn 1', trinnLabel2:'Trinn 2', trinnLabel3:'Trinn 3', trinnLabel4:'Trinn 4', trinnLabel5:'Trinn 5', almSkattLabel:'Alminnelig inntektsskatt',
     lvuSalary:'Lønn', lvuDividend:'Utbytte', lvuIsCheaper:'er billigere for selskapet',
+    lvuInfoLabel:'Hva viser denne kalkulatoren?', lvuInfoH:'Kort forklart',
+    lvuInfoText:'Kalkulatoren sammenligner <b>hva det koster selskapet</b> å gi deg et gitt beløp — enten som lønn eller utbytte. Den viser <b>ikke</b> hva du sitter igjen med privat.<br><br><b>Lønn:</b> Beløpet + arbeidsgiveravgift (AGA) + feriepenger (12%) + OTP (2%). Dette er selskapets totalkostnad.<br><br><b>Utbytte:</b> For å dele ut f.eks. 500 000 kr må selskapet tjene 641 026 kr før 22% selskapsskatt (500 000 / 0,78).<br><br><b>Merk:</b> Som mottaker betaler du i tillegg personlig skatt — inntektsskatt på lønn, eller utbytteskatt (oppjustert ×1,72, beskattet med 22%) på utbytte. Denne kalkulatoren tar ikke med den personlige skatten — den ser kun på selskapets side.',
     conMailName:'Navn', conMailEmail:'E-post',
     adjBagatell:'Under bagatellgrensen (§ 9-2)', adjBagatellSub:'Endring på {p} er under 10 prosentpoeng — ingen justeringsplikt',
     rgMain:'Hovedspråk', rgNorway:'Språk i Norge', rgIntl:'Internasjonalt',
@@ -2468,7 +2701,7 @@ const REGIONS = {
     heroH1:'Narzędzia codzienne<br><em>Kalkulator, kredyt hipoteczny, podatek, VAT i analiza opłacalności</em>',
     heroP:'',
     heroKickerTb:'✦ Darmowe kalkulatory finansowe',
-    tabSal:'Podatek', tabMor:'Kredyt hipoteczny', tabNpv:'Analiza opłacalności', tabVat:'VAT',
+    tabSal:'Podatek', tabMor:'Kredyt hipoteczny', tabNpv:'Finanse osobiste', tabVat:'VAT',
     tabBasic:'Kalkulator', cmLabel:'Typ kalkulatora', cmBasic:'Prosty', cmFinance:'Finansowy', cmScientific:'Naukowy', cmUnit:'Konwersja jednostek', cmFinCalcs:'Kalkulatory finansowe', cmFcSal:'Wynagrodzenie po podatku', cmFcMor:'Kredyt hipoteczny', cmFcNpv:'Analiza opłacalności', cmFcVat:'VAT',
     fcLblType:'Typ obliczeń', fcTvm:'Wartość bieżąca / przyszła (TVM)', fcMargin:'Marża i narzut', fcBe:'Próg rentowności', fcCompound:'Procent składany', fcDiscount:'Obliczanie rabatu', fcPv:'Wartość bieżąca (PV)', fcRate:'Roczna stopa (%)', fcYears:'Liczba lat', fcPmt:'Roczna wpłata', fcCost:'Cena zakupu', fcSell:'Cena sprzedaży', fcFixed:'Koszty stałe', fcPriceU:'Cena sprzedaży za jednostkę', fcVarCost:'Koszt zmienny za jednostkę', fcPrinc:'Kwota początkowa', fcFreq:'Wypłaty odsetek rocznie', fcOrig:'Cena oryginalna', fcDiscPct:'Rabat (%)', fcBtn:'Oblicz →', fcResLbl:'Wynik',
     fcRFv:'Wartość przyszła (FV)', fcRAfter:'Po', fcRYr:'lat', fcRStart:'Kwota początkowa', fcRTotalPmt:'Wpłaty ogółem', fcRInterest:'Naliczone odsetki', fcRReturn:'Całkowity zwrot', fcRProfit:'Zysk', fcRRevenue:'Wymagany przychód', fcRContrib:'Marża na jednostkę', fcRContribMarg:'Stopień pokrycia', fcRBePoint:'Próg rentowności', fcRUnits:'jednostek', fcREndVal:'Wartość końcowa', fcRMonthly:'z miesięcznym oprocentowaniem', fcRDoubling:'Podwojenie po', fcRDiscPrice:'Cena po rabacie', fcRSaved:'Oszczędzasz', fcRDiscount:'Rabat', fcRYouPay:'Płacisz', fcROfPrice:'ceny',
@@ -2561,6 +2794,16 @@ const REGIONS = {
     uttakExExc4:'Stosunki grup: przy wycofaniu od spółki zależnej do akcjonariusza, spółka zależna podlega opodatkowaniu wycofywania',
     uttakExExc5:'Użytkowanie prywatne aktywów przedsiębiorstwa: użytkowanie bieżące (np. rezydencja, łódź, samochód) opodatkowane jako dywidenda dla akcjonariusza zgodnie z modelem akcjonariusza',
     uttakExSource:'Źródło: Kodeks podatkowy § 5-2, § 5-3 i rozdz. 9 (Ustawa-1999-03-26-14). Kalkulator jest wyłącznie orientacyjny — konsultuj się z księgowym w sprawie konkretnych ocen.',
+    utdelingTitle:'Model opodatkowania dywidend (AS)', utdelingDesc:'Podatek CIT + podatek od dywidend = 51,5% efektywna stawka',
+    utdelingIntro:'Model opodatkowania dywidend pokazuje łączne obciążenie podatkowe, gdy zyski spółki są najpierw opodatkowane podatkiem CIT (22%), a następnie podatkiem od dywidend (37,84%) przy wypłacie. Bez odliczenia ochronnego efektywna stawka wynosi <b>51,5%</b>.',
+    utdelingEnkNote:'<b>Jednoosobowa działalność:</b> Dla jednoosobowych działalności gospodarczych obowiązuje model przedsiębiorstwa, który przy symetrycznych zasadach podatkowych daje równoważną efektywną stawkę krańcową — forma działalności sama w sobie nie daje przewagi podatkowej.',
+    utdelingLOverskudd:'Zysk przed opodatkowaniem (kr)', utdelingLSkjerming:'Odliczenie ochronne (kr)',
+    utdelingBtn:'Oblicz efektywny podatek →', utdelingRLbl:'Łączne obciążenie podatkowe',
+    utdelingROverskudd:'Zysk przed opodatkowaniem', utdelingRSelskap:'Podatek CIT (22%)',
+    utdelingREtter:'Po podatku CIT', utdelingRSkjerming:'− Odliczenie ochronne',
+    utdelingROppjustert:'Podwyższona dywidenda (×1,72)', utdelingRUtbytte:'Podatek od dywidend (22%)',
+    utdelingRTotal:'Łączny podatek (oba poziomy)', utdelingRNetto:'Netto dla akcjonariusza',
+    utdelingREff:'Efektywna stawka podatkowa', utdelingEffRate:'Efektywna stawka podatkowa', utdelingNetLabel:'Netto dla akcjonariusza',
     adjExTitle:'Wyjaśnienie zasad korekty (Ustawa o VAT rozdz. 9)',
     adjExWhat:'Czym jest korekta?',
     adjExWhatDesc:'Po potrąceniu VAT naliczonego od środka trwałego, jeśli jego użytkowaniem zmieni się w okresie korekty (więcej lub mniej przedmiotów opodatkowanych VAT), musisz skorygować potrącenie — albo zwrócić państwu, albo żądać dodatkowego potrącenia.',
@@ -2670,9 +2913,20 @@ const REGIONS = {
     ccAmount:'Kwota', trinnBreakdownTitle:'Szczegóły podatku progresywnego', lawHintText:'Trudne pojęcie? Zobacz menu rozwijane „Ważne zasady i pojęcia" nad ustawą podatkową',
     trinnLabel1:'Próg 1', trinnLabel2:'Próg 2', trinnLabel3:'Próg 3', trinnLabel4:'Próg 4', trinnLabel5:'Próg 5', almSkattLabel:'Zwykły podatek dochodowy',
     lvuSalary:'Wynagrodzenie', lvuDividend:'Dywidenda', lvuIsCheaper:'jest tańsze dla firmy',
+    lvuInfoLabel:'Co pokazuje ten kalkulator?', lvuInfoH:'Krótko mówiąc',
+    lvuInfoText:'Kalkulator porównuje <b>koszt ponoszony przez firmę</b> przy wypłacie danej kwoty — w formie pensji lub dywidendy. Nie pokazuje tego, <b>co otrzymujesz osobiście</b>.<br><br><b>Pensja:</b> Kwota + składka pracodawcy (AGA) + wynagrodzenie urlopowe (12%) + OTP (2%). To jest całkowity koszt firmy.<br><br><b>Dywidenda:</b> Aby wypłacić np. 500 000 kr, firma musi zarobić 641 026 kr przed 22% podatkiem korporacyjnym (500 000 / 0,78).<br><br><b>Uwaga:</b> Jako odbiorca płacisz dodatkowo podatek osobisty — podatek dochodowy od pensji lub podatek od dywidendy (powiększony ×1,72, opodatkowany 22%). Ten kalkulator nie uwzględnia podatku osobistego — patrzy wyłącznie na stronę firmy.',
     conMailName:'Imię', conMailEmail:'E-mail',
     adjBagatell:'Poniżej progu bagatelnego (§ 9-2)', adjBagatellSub:'Zmiana o {p} jest poniżej 10 punktów procentowych — korekta nie jest wymagana',
     rgMain:'Język główny', rgNorway:'Języki w Norwegii', rgIntl:'Międzynarodowe',
+    bilTitle:'Kalkulator kosztów samochodu', bilDesc:'Zobacz, ile naprawdę kosztuje Twój samochód miesięcznie i w czasie',
+    bilIntro:'Większość ludzi nie docenia kosztów posiadania samochodu. Poza ceną zakupu dochodzi utrata wartości, ubezpieczenie, paliwo, serwis, opony, podatek drogowy i opłaty za przejazd. Ten kalkulator pokazuje pełny obraz.',
+    bilLMerke:'Marka', bilLPris:'Cena zakupu (kr)', bilLAar:'Okres posiadania (lata)', bilLKm:'Roczny przebieg (km)', bilLStartKm:'Przebieg przy zakupie (km)',
+    bilLDrivstoff:'Paliwo', bilLForsikring:'Ubezpieczenie (kr/rok)', bilBtn:'Oblicz koszty samochodu →',
+    bilRLbl:'Całkowity koszt posiadania', bilRMnd:'Koszt miesięczny', bilRKm:'Koszt za km',
+    bilRVerditap:'Utrata wartości', bilRDriv:'Paliwo / ładowanie', bilRFors:'Ubezpieczenie',
+    bilRService:'Serwis i konserwacja', bilRDekk:'Opony (zużycie)', bilRAvgift:'Podatek drogowy', bilRBom:'Opłaty drogowe (szacunek)',
+    bilPerMnd:'/mies.',
+    npvTitle:'Analiza opłacalności (NPV / IRR)', npvDesc:'Wartość bieżąca netto i wewnętrzna stopa zwrotu dla projektów inwestycyjnych.',
     ccCurrNames:['Korona norweska','Euro','Dolar amerykański','Funt brytyjski','Korona szwedzka','Korona duńska','Złoty polski','Frank szwajcarski','Jen japoński','Juan chiński','Dolar kanadyjski','Dolar australijski','Rupia indyjska','Lira turecka','Real brazylijski']
 },
   uk: {
@@ -2734,7 +2988,7 @@ const REGIONS = {
     heroH1:'Щоденні інструменти<br><em>Калькулятор, іпотека, податки, ПДВ та аналіз прибутковості</em>',
     heroP:'',
     heroKickerTb:'✦ Безкоштовні фінансові калькулятори',
-    tabSal:'Податки', tabMor:'Іпотека', tabNpv:'Аналіз прибутковості', tabVat:'ПДВ',
+    tabSal:'Податки', tabMor:'Іпотека', tabNpv:'Особисті фінанси', tabVat:'ПДВ',
     tabBasic:'Калькулятор', cmLabel:'Тип калькулятора', cmBasic:'Простий', cmFinance:'Фінансовий', cmScientific:'Науковий', cmUnit:'Конвертація одиниць', cmFinCalcs:'Фінансові калькулятори', cmFcSal:'Зарплата після податків', cmFcMor:'Іпотека', cmFcNpv:'Аналіз прибутковості', cmFcVat:'ПДВ',
     fcLblType:'Тип розрахунку', fcTvm:'Теперішня/Майбутня вартість (TVM)', fcMargin:'Маржа та націнка', fcBe:'Точка беззбитковості', fcCompound:'Складні відсотки', fcDiscount:'Розрахунок знижки', fcPv:'Теперішня вартість (PV)', fcRate:'Річна ставка (%)', fcYears:'Кількість років', fcPmt:'Щорічний платіж', fcCost:'Собівартість', fcSell:'Ціна продажу', fcFixed:'Постійні витрати', fcPriceU:'Ціна за одиницю', fcVarCost:'Змінні витрати на одиницю', fcPrinc:'Початкова сума', fcFreq:'Нарахувань відсотків на рік', fcOrig:'Початкова ціна', fcDiscPct:'Знижка (%)', fcBtn:'Розрахувати →', fcResLbl:'Результат',
     fcRFv:'Майбутня вартість (FV)', fcRAfter:'Через', fcRYr:'років', fcRStart:'Початкова сума', fcRTotalPmt:'Загальні платежі', fcRInterest:'Нараховані відсотки', fcRReturn:'Загальна прибутковість', fcRProfit:'Прибуток', fcRRevenue:'Необхідний дохід', fcRContrib:'Внесок на одиницю', fcRContribMarg:'Рівень покриття', fcRBePoint:'Точка беззбитковості', fcRUnits:'одиниць', fcREndVal:'Кінцева вартість', fcRMonthly:'з щомісячними відсотками', fcRDoubling:'Подвоєння через', fcRDiscPrice:'Ціна зі знижкою', fcRSaved:'Ви заощаджуєте', fcRDiscount:'Знижка', fcRYouPay:'Ви платите', fcROfPrice:'від ціни',
@@ -2827,6 +3081,16 @@ const REGIONS = {
     uttakExExc4:'Групові відносини: при зняттю від дочірнього товариства до акціонера, дочірнє товариство підлягає опорядуванню коштів',
     uttakExExc5:'Приватне використання активів товариства: поточне використання (напр. резиденція, човен, автомобіль) оподатковується як дивіденд акціонеру за моделлю акціонера',
     uttakExSource:'Джерело: Податковий кодекс § 5-2, § 5-3 та розд. 9 (Закон-1999-03-26-14). Калькулятор є орієнтовним тільки — проконсультуйтеся з бухгалтером щодо конкретних оцінок.',
+    utdelingTitle:'Модель оподаткування дивідендів (AS)', utdelingDesc:'Корпоративний податок + податок на дивіденди = 51,5% ефективна ставка',
+    utdelingIntro:'Модель оподаткування дивідендів показує сукупне податкове навантаження, коли прибуток компанії спочатку оподатковується корпоративним податком (22%), а потім податком на дивіденди (37,84%) при виплаті. Без захисного вирахування ефективна ставка становить <b>51,5%</b>.',
+    utdelingEnkNote:'<b>ФОП:</b> Для фізичних осіб-підприємців діє модель підприємства, яка при симетричних податкових правилах дає еквівалентну ефективну граничну ставку — форма бізнесу сама по собі не дає податкових переваг.',
+    utdelingLOverskudd:'Прибуток до оподаткування (kr)', utdelingLSkjerming:'Захисне вирахування (kr)',
+    utdelingBtn:'Розрахувати ефективний податок →', utdelingRLbl:'Загальне податкове навантаження',
+    utdelingROverskudd:'Прибуток до оподаткування', utdelingRSelskap:'Корпоративний податок (22%)',
+    utdelingREtter:'Після корпоративного податку', utdelingRSkjerming:'− Захисне вирахування',
+    utdelingROppjustert:'Збільшені дивіденди (×1,72)', utdelingRUtbytte:'Податок на дивіденди (22%)',
+    utdelingRTotal:'Загальний податок (обидва рівні)', utdelingRNetto:'Нетто акціонеру',
+    utdelingREff:'Ефективна податкова ставка', utdelingEffRate:'Ефективна податкова ставка', utdelingNetLabel:'Нетто акціонеру',
     adjExTitle:'Пояснення правил коригування (Закон про ПДВ розд. 9)',
     adjExWhat:'Що таке коригування?',
     adjExWhatDesc:'Після списання вхідного ПДВ на основне засіб, якщо його використання змінюється протягом періоду коригування (більше або менше предметів, що підлягають ПДВ), необхідно скоригувати списання — або повернути державі, або вимагати додаткового списання.',
@@ -2937,9 +3201,20 @@ const REGIONS = {
     ccAmount:'Сума', trinnBreakdownTitle:'Деталі прогресивного податку', lawHintText:'Складне поняття? Дивіться випадаюче меню «Важливі правила та поняття» над Податковим кодексом',
     trinnLabel1:'Ступінь 1', trinnLabel2:'Ступінь 2', trinnLabel3:'Ступінь 3', trinnLabel4:'Ступінь 4', trinnLabel5:'Ступінь 5', almSkattLabel:'Звичайний податок на дохід',
     lvuSalary:'Зарплата', lvuDividend:'Дивіденд', lvuIsCheaper:'дешевше для компанії',
+    lvuInfoLabel:'Що показує цей калькулятор?', lvuInfoH:'Коротко',
+    lvuInfoText:'Калькулятор порівнює <b>скільки коштує компанії</b> виплатити вам певну суму — у вигляді зарплати або дивіденду. Він <b>не</b> показує, скільки ви отримуєте особисто.<br><br><b>Зарплата:</b> Сума + внесок роботодавця (AGA) + оплачувана відпустка (12%) + OTP (2%). Це загальна вартість для компанії.<br><br><b>Дивіденд:</b> Щоб виплатити, наприклад, 500 000 крон, компанія повинна заробити 641 026 крон до 22% корпоративного податку (500 000 / 0,78).<br><br><b>Примітка:</b> Як одержувач, ви також сплачуєте особистий податок — прибутковий на зарплату або податок на дивіденди (×1,72, оподаткований 22%). Цей калькулятор не враховує особистий податок — він дивиться лише на сторону компанії.',
     conMailName:'Ім\'я', conMailEmail:'Електронна пошта',
     adjBagatell:'Нижче порогу де мінімус (§ 9-2)', adjBagatellSub:'Зміна на {p} менше 10 відсоткових пунктів — коригування не потрібне',
     rgMain:'Основна мова', rgNorway:'Мови в Норвегії', rgIntl:'Міжнародні',
+    bilTitle:'Калькулятор витрат на авто', bilDesc:'Дізнайтеся, скільки насправді коштує ваш автомобіль на місяць і з часом',
+    bilIntro:'Більшість людей недооцінюють вартість володіння авто. Крім ціни покупки — втрата вартості, страхування, пальне, обслуговування, шини, дорожній податок та мита. Цей калькулятор показує повну картину.',
+    bilLMerke:'Марка', bilLPris:'Ціна покупки (kr)', bilLAar:'Період володіння (роки)', bilLKm:'Річний пробіг (км)', bilLStartKm:'Пробіг при покупці (км)',
+    bilLDrivstoff:'Паливо', bilLForsikring:'Страхування (kr/рік)', bilBtn:'Розрахувати витрати на авто →',
+    bilRLbl:'Загальна вартість володіння', bilRMnd:'Витрати на місяць', bilRKm:'Витрати за км',
+    bilRVerditap:'Знецінення', bilRDriv:'Паливо / зарядка', bilRFors:'Страхування',
+    bilRService:'Сервіс та обслуговування', bilRDekk:'Шини (знос)', bilRAvgift:'Дорожній податок', bilRBom:'Мита (оцінка)',
+    bilPerMnd:'/міс.',
+    npvTitle:'Аналіз прибутковості (NPV / IRR)', npvDesc:'Чиста теперішня вартість та внутрішня норма прибутку для інвестиційних проєктів.',
     ccCurrNames:['Норвезька крона','Євро','Долар США','Британський фунт','Шведська крона','Данська крона','Польський злотий','Швейцарський франк','Японська єна','Китайський юань','Канадський долар','Австралійський долар','Індійська рупія','Турецька ліра','Бразильський реал']
 },
   ar: {
@@ -3004,7 +3279,7 @@ const REGIONS = {
     heroH1:'أدوات يومية<br><em>حاسبة، قرض السكن، الضرائب، ضريبة القيمة المضافة وتحليل الربحية</em>',
     heroP:'',
     heroKickerTb:'✦ حاسبات مالية مجانية',
-    tabSal:'الضرائب', tabMor:'قرض السكن', tabNpv:'تحليل الربحية', tabVat:'ض.ق.م',
+    tabSal:'الضرائب', tabMor:'قرض السكن', tabNpv:'المالية الشخصية', tabVat:'ض.ق.م',
     tabBasic:'آلة حاسبة', cmLabel:'نوع الآلة الحاسبة', cmBasic:'بسيطة', cmFinance:'مالية', cmScientific:'علمية', cmUnit:'تحويل الوحدات', cmFinCalcs:'الآلات الحاسبة المالية', cmFcSal:'الراتب بعد الضريبة', cmFcMor:'قرض السكن', cmFcNpv:'تحليل الربحية', cmFcVat:'ض.ق.م',
     fcLblType:'نوع الحساب', fcTvm:'القيمة الحالية / المستقبلية (TVM)', fcMargin:'الهامش والعلاوة', fcBe:'نقطة التعادل', fcCompound:'الفائدة المركبة', fcDiscount:'حساب الخصم', fcPv:'القيمة الحالية (PV)', fcRate:'معدل الفائدة السنوي (%)', fcYears:'عدد السنوات', fcPmt:'الدفعة السنوية', fcCost:'سعر التكلفة', fcSell:'سعر البيع', fcFixed:'التكاليف الثابتة', fcPriceU:'سعر البيع للوحدة', fcVarCost:'التكلفة المتغيرة للوحدة', fcPrinc:'المبلغ الأولي', fcFreq:'دفعات الفائدة سنوياً', fcOrig:'السعر الأصلي', fcDiscPct:'الخصم (%)', fcBtn:'احسب →', fcResLbl:'النتيجة',
     fcRFv:'القيمة المستقبلية (FV)', fcRAfter:'بعد', fcRYr:'سنوات', fcRStart:'المبلغ الأولي', fcRTotalPmt:'إجمالي المدفوعات', fcRInterest:'الفائدة المكتسبة', fcRReturn:'العائد الإجمالي', fcRProfit:'الربح', fcRRevenue:'الإيرادات المطلوبة', fcRContrib:'المساهمة لكل وحدة', fcRContribMarg:'نسبة المساهمة', fcRBePoint:'نقطة التعادل', fcRUnits:'وحدات', fcREndVal:'القيمة النهائية', fcRMonthly:'بفائدة شهرية', fcRDoubling:'التضاعف بعد', fcRDiscPrice:'السعر بعد الخصم', fcRSaved:'توفر', fcRDiscount:'الخصم', fcRYouPay:'تدفع', fcROfPrice:'من السعر',
@@ -3096,6 +3371,16 @@ const REGIONS = {
     uttakExExc4:'العلاقات الجماعية: عند السحب من الشركة التابعة للمساهم، تخضع الشركة التابعة لضريبة السحب',
     uttakExExc5:'الاستخدام الشخصي لأصول الشركة: الاستخدام المستمر (مثل المسكن والقارب والسيارة) يتم فرض ضريبة عليه كتوزيع أرباح للمساهم وفقاً لنموذج المساهم',
     uttakExSource:'المصدر: قانون الضريبة § 5-2، § 5-3 والفصل 9 (القانون-1999-03-26-14). الآلة الحاسبة مؤشرة فقط — استشر محاسباً للتقييمات المحددة.',
+    utdelingTitle:'نموذج ضريبة الأرباح (AS)', utdelingDesc:'ضريبة الشركات + ضريبة الأرباح = 51.5% معدل فعلي',
+    utdelingIntro:'يوضح نموذج ضريبة الأرباح العبء الضريبي الإجمالي عندما تخضع أرباح الشركة أولاً لضريبة الشركات (22%)، ثم لضريبة الأرباح (37.84%) عند توزيعها. بدون خصم الحماية، يبلغ المعدل الفعلي <b>51.5%</b>.',
+    utdelingEnkNote:'<b>مؤسسة فردية:</b> بالنسبة للمؤسسات الفردية، ينطبق نموذج المؤسسة، الذي بقواعد ضريبية متماثلة يعطي معدلاً هامشياً فعلياً مكافئاً — لذا لا يوفر شكل العمل ميزة ضريبية بحد ذاته.',
+    utdelingLOverskudd:'الربح قبل الضريبة (kr)', utdelingLSkjerming:'خصم الحماية (kr)',
+    utdelingBtn:'احسب الضريبة الفعلية →', utdelingRLbl:'إجمالي العبء الضريبي',
+    utdelingROverskudd:'الربح قبل الضريبة', utdelingRSelskap:'ضريبة الشركات (22%)',
+    utdelingREtter:'بعد ضريبة الشركات', utdelingRSkjerming:'− خصم الحماية',
+    utdelingROppjustert:'أرباح معدلة (×1.72)', utdelingRUtbytte:'ضريبة أرباح المساهم (22%)',
+    utdelingRTotal:'إجمالي الضريبة (كلا المستويين)', utdelingRNetto:'صافي للمساهم',
+    utdelingREff:'معدل الضريبة الفعلي', utdelingEffRate:'معدل الضريبة الفعلي', utdelingNetLabel:'صافي للمساهم',
     adjExTitle:'شرح قواعس التسوية (قانون ض.ق.م. الفصل 9)',
     adjExWhat:'ما هي التسوية؟',
     adjExWhatDesc:'بعد خصم ضريبة المدخلات على الأصل الثابت، إذا تغير الاستخدام خلال فترة التسوية (أكثر أو أقل من الخضوع للضريبة)، يجب تسوية الخصم — إما إعادة الدفع للدولة أو المطالبة بخصم إضافي.',
@@ -3204,9 +3489,20 @@ const REGIONS = {
     ccAmount:'المبلغ', trinnBreakdownTitle:'تفاصيل الضريبة التصاعدية', lawHintText:'مفهوم صعب؟ راجع القائمة المنسدلة «القواعد والمفاهيم المهمة» فوق قانون الضرائب',
     trinnLabel1:'الشريحة 1', trinnLabel2:'الشريحة 2', trinnLabel3:'الشريحة 3', trinnLabel4:'الشريحة 4', trinnLabel5:'الشريحة 5', almSkattLabel:'ضريبة الدخل العادية',
     lvuSalary:'الراتب', lvuDividend:'الأرباح الموزعة', lvuIsCheaper:'أرخص للشركة',
+    lvuInfoLabel:'ماذا يُظهر هذا الحاسبة؟', lvuInfoH:'باختصار',
+    lvuInfoText:'تقارن الحاسبة <b>تكلفة الشركة</b> لمنحك مبلغاً معيناً — إما كراتب أو كأرباح. لا تُظهر <b>ما تحصل عليه شخصياً</b>.<br><br><b>الراتب:</b> المبلغ + اشتراك صاحب العمل (AGA) + بدل الإجازة (12%) + OTP (2%). هذه هي التكلفة الإجمالية للشركة.<br><br><b>الأرباح:</b> لتوزيع 500,000 كرون مثلاً، يجب أن تربح الشركة 641,026 كرون قبل ضريبة الشركات 22% (500,000 / 0.78).<br><br><b>ملاحظة:</b> كمستفيد، تدفع أيضاً ضريبة شخصية — ضريبة دخل على الراتب، أو ضريبة أرباح (×1.72، بمعدل 22%) على الأرباح. لا تشمل هذه الحاسبة الضريبة الشخصية — فهي تنظر فقط إلى جانب الشركة.',
     conMailName:'الاسم', conMailEmail:'البريد الإلكتروني',
     adjBagatell:'أقل من الحد الأدنى (§ 9-2)', adjBagatellSub:'التغيير بمقدار {p} أقل من 10 نقاط مئوية — لا يلزم تعديل',
     rgMain:'اللغة الرئيسية', rgNorway:'لغات في النرويج', rgIntl:'دولي',
+    bilTitle:'حاسبة تكاليف السيارة', bilDesc:'اكتشف كم تكلفك سيارتك فعلاً شهرياً وعلى المدى الطويل',
+    bilIntro:'معظم الناس يقللون من تقدير تكلفة امتلاك سيارة. بالإضافة إلى سعر الشراء هناك انخفاض القيمة والتأمين والوقود والصيانة والإطارات وضريبة الطريق والرسوم. هذه الحاسبة تعرض الصورة الكاملة.',
+    bilLMerke:'الماركة', bilLPris:'سعر الشراء (kr)', bilLAar:'فترة الملكية (سنوات)', bilLKm:'المسافة السنوية (كم)', bilLStartKm:'عداد الكيلومترات عند الشراء',
+    bilLDrivstoff:'نوع الوقود', bilLForsikring:'التأمين (kr/سنة)', bilBtn:'احسب تكلفة السيارة ←',
+    bilRLbl:'إجمالي تكلفة الملكية', bilRMnd:'التكلفة الشهرية', bilRKm:'التكلفة لكل كم',
+    bilRVerditap:'انخفاض القيمة', bilRDriv:'الوقود / الشحن', bilRFors:'التأمين',
+    bilRService:'الخدمة والصيانة', bilRDekk:'الإطارات (التآكل)', bilRAvgift:'ضريبة الطريق', bilRBom:'الرسوم (تقدير)',
+    bilPerMnd:'/شهر',
+    npvTitle:'تحليل الربحية (NPV / IRR)', npvDesc:'صافي القيمة الحالية ومعدل العائد الداخلي لمشاريع الاستثمار.',
     ccCurrNames:['كرون نرويجي','يورو','دولار أمريكي','جنيه إسترليني','كرون سويدي','كرون دنماركي','زلوتي بولندي','فرنك سويسري','ين ياباني','يوان صيني','دولار كندي','دولار أسترالي','روبية هندية','ليرة تركية','ريال برازيلي']
 },
   lt: {
@@ -3269,7 +3565,7 @@ const REGIONS = {
     heroH1:'Kasdieniai įrankiai<br><em>Skaičiuoklė, būsto paskola, mokesčiai, PVM ir pelningumo analizė</em>',
     heroP:'',
     heroKickerTb:'✦ Nemokamos finansinės skaičiuoklės',
-    tabSal:'Mokesčiai', tabMor:'Būsto paskola', tabNpv:'Pelningumo analizė', tabVat:'PVM',
+    tabSal:'Mokesčiai', tabMor:'Būsto paskola', tabNpv:'Asmeniniai finansai', tabVat:'PVM',
     tabBasic:'Skaičiuotuvas', cmLabel:'Skaičiuotuvo tipas', cmBasic:'Paprastas', cmFinance:'Finansinis', cmScientific:'Mokslinis', cmUnit:'Vienetų konvertavimas', cmFinCalcs:'Finansiniai skaičiuotuvai', cmFcSal:'Atlyginimas po mokesčių', cmFcMor:'Būsto paskola', cmFcNpv:'Pelningumo analizė', cmFcVat:'PVM',
     fcLblType:'Skaičiavimo tipas', fcTvm:'Dabartinė / Būsimoji vertė (TVM)', fcMargin:'Marža ir antkainis', fcBe:'Lūžio taškas', fcCompound:'Sudėtinės palūkanos', fcDiscount:'Nuolaidos skaičiavimas', fcPv:'Dabartinė vertė (PV)', fcRate:'Metinė palūkanų norma (%)', fcYears:'Metų skaičius', fcPmt:'Metinis mokėjimas', fcCost:'Savikaina', fcSell:'Pardavimo kaina', fcFixed:'Pastoviosios išlaidos', fcPriceU:'Pardavimo kaina už vienetą', fcVarCost:'Kintamosios išlaidos už vienetą', fcPrinc:'Pradinė suma', fcFreq:'Palūkanų mokėjimai per metus', fcOrig:'Pradinė kaina', fcDiscPct:'Nuolaida (%)', fcBtn:'Skaičiuoti →', fcResLbl:'Rezultatas',
     fcRFv:'Būsimoji vertė (FV)', fcRAfter:'Po', fcRYr:'metų', fcRStart:'Pradinė suma', fcRTotalPmt:'Mokėjimai iš viso', fcRInterest:'Uždirbtos palūkanos', fcRReturn:'Bendra grąža', fcRProfit:'Pelnas', fcRRevenue:'Reikalingos pajamos', fcRContrib:'Padengimas už vienetą', fcRContribMarg:'Padengimo laipsnis', fcRBePoint:'Lūžio taškas', fcRUnits:'vienetų', fcREndVal:'Galutinė vertė', fcRMonthly:'su mėnesinėmis palūkanomis', fcRDoubling:'Padvigubėja po', fcRDiscPrice:'Kaina su nuolaida', fcRSaved:'Sutaupote', fcRDiscount:'Nuolaida', fcRYouPay:'Mokate', fcROfPrice:'kainos',
@@ -3362,6 +3658,16 @@ const REGIONS = {
     uttakExExc4:'Grupiniai santykiai: ištraukus iš dukterinės bendrovės akcininkui, dukterinė bendrovė patiria ištraukos apmokestinimą',
     uttakExExc5:'Asmeninis verslo turto naudojimas: nuolatinis naudojimas (pvz. gyvenamoji vieta, valtis, automobilis) apmokestinamas kaip dividendas akcininkui pagal akcinės bendrovės modelį',
     uttakExSource:'Šaltinis: Mokesčio kodeksas § 5-2, § 5-3 ir sk. 9 (Įstatymas-1999-03-26-14). Skaičiuoklė yra tik orientacinis — konkrečiam vertinimui pasitarkite su buhalteriu.',
+    utdelingTitle:'Dividendų apmokestinimo modelis (AS)', utdelingDesc:'Pelno mokestis + dividendų mokestis = 51,5% efektyvi norma',
+    utdelingIntro:'Dividendų apmokestinimo modelis rodo bendrą mokesčių naštą, kai bendrovės pelnas pirmiausia apmokestinamas pelno mokesčiu (22%), o tada dividendų mokesčiu (37,84%) išmokant. Be apsaugos atskaitos efektyvi norma yra <b>51,5%</b>.',
+    utdelingEnkNote:'<b>Individualus verslas:</b> Individualioms įmonėms taikomas verslo modelis, kuris su simetrinėmis mokesčių taisyklėmis duoda lygiavertę efektyvią ribinę normą — verslo forma pati savaime nesuteikia mokestinio pranašumo.',
+    utdelingLOverskudd:'Pelnas prieš mokesčius (kr)', utdelingLSkjerming:'Apsaugos atskaita (kr)',
+    utdelingBtn:'Apskaičiuoti efektyvų mokestį →', utdelingRLbl:'Bendra mokesčių našta',
+    utdelingROverskudd:'Pelnas prieš mokesčius', utdelingRSelskap:'Pelno mokestis (22%)',
+    utdelingREtter:'Po pelno mokesčio', utdelingRSkjerming:'− Apsaugos atskaita',
+    utdelingROppjustert:'Padidinti dividendai (×1,72)', utdelingRUtbytte:'Dividendų mokestis akcininkui (22%)',
+    utdelingRTotal:'Bendras mokestis (abu lygiai)', utdelingRNetto:'Grynoji suma akcininkui',
+    utdelingREff:'Efektyvi mokesčių norma', utdelingEffRate:'Efektyvi mokesčių norma', utdelingNetLabel:'Grynoji suma akcininkui',
     adjExTitle:'Koregavimo taisyklių paaiškinimas (PVM įst. sk. 9)',
     adjExWhat:'Kas yra koregavimas?',
     adjExWhatDesc:'Atskaitę PVM iš ilgalaikio turto, jei jo naudojimas keičiasi koregavimo laikotarpiu (daugiau ar mažiau PVM objekto), turite koreguoti atskaitą — arba grąžinti valstybei, arba pareikalauti papildomo atskaitymo.',
@@ -3470,9 +3776,20 @@ const REGIONS = {
     ccAmount:'Suma', trinnBreakdownTitle:'Progresinio mokesčio detalės', lawHintText:'Sudėtinga sąvoka? Žiūrėkite išskleidžiamąjį meniu „Svarbios taisyklės ir sąvokos" virš Mokesčių įstatymo',
     trinnLabel1:'1 pakopa', trinnLabel2:'2 pakopa', trinnLabel3:'3 pakopa', trinnLabel4:'4 pakopa', trinnLabel5:'5 pakopa', almSkattLabel:'Paprastas pajamų mokestis',
     lvuSalary:'Atlyginimas', lvuDividend:'Dividendai', lvuIsCheaper:'pigiau įmonei',
+    lvuInfoLabel:'Ką rodo šis skaičiuotuvas?', lvuInfoH:'Trumpai',
+    lvuInfoText:'Skaičiuotuvas lygina <b>kiek kainuoja įmonei</b> sumokėti jums tam tikrą sumą — kaip atlyginimą ar dividendus. Jis <b>nerodo</b>, kiek jūs gaunate asmeniškai.<br><br><b>Atlyginimas:</b> Suma + darbdavio įmoka (AGA) + atostogų išmoka (12%) + OTP (2%). Tai bendra įmonės išlaida.<br><br><b>Dividendai:</b> Norint išmokėti pvz. 500 000 kr, įmonė turi uždirbti 641 026 kr prieš 22% pelno mokestį (500 000 / 0,78).<br><br><b>Pastaba:</b> Kaip gavėjas, mokate ir asmeninį mokestį — pajamų mokestį nuo atlyginimo arba dividendų mokestį (×1,72, apmokestinamas 22%) nuo dividendų. Šis skaičiuotuvas neapima asmeninio mokesčio — jis žiūri tik į įmonės pusę.',
     conMailName:'Vardas', conMailEmail:'El. paštas',
     adjBagatell:'Žemiau minimalios ribos (§ 9-2)', adjBagatellSub:'Pokytis {p} yra mažesnis nei 10 procentinių punktų — koregavimas nereikalingas',
     rgMain:'Pagrindinė kalba', rgNorway:'Kalbos Norvegijoje', rgIntl:'Tarptautinės',
+    bilTitle:'Automobilio kaštų skaičiuoklė', bilDesc:'Sužinokite, kiek jūsų automobilis iš tikrųjų kainuoja per mėnesį ir ilgainiui',
+    bilIntro:'Dauguma žmonių neįvertina automobilio nuosavybės kaštų. Be pirkimo kainos yra vertės sumažėjimas, draudimas, kuras, aptarnavimas, padangos, kelių mokestis ir rinkliavos. Ši skaičiuoklė rodo visą vaizdą.',
+    bilLMerke:'Markė', bilLPris:'Pirkimo kaina (kr)', bilLAar:'Nuosavybės laikotarpis (metai)', bilLKm:'Metinis rida (km)', bilLStartKm:'Rida pirkimo metu (km)',
+    bilLDrivstoff:'Kuro tipas', bilLForsikring:'Draudimas (kr/metai)', bilBtn:'Apskaičiuoti automobilio kaštus →',
+    bilRLbl:'Bendri nuosavybės kaštai', bilRMnd:'Kaštai per mėnesį', bilRKm:'Kaštai už km',
+    bilRVerditap:'Vertės sumažėjimas', bilRDriv:'Kuras / įkrovimas', bilRFors:'Draudimas',
+    bilRService:'Aptarnavimas ir priežiūra', bilRDekk:'Padangos (nusidėvėjimas)', bilRAvgift:'Kelių mokestis', bilRBom:'Rinkliavos (apytiksliai)',
+    bilPerMnd:'/mėn.',
+    npvTitle:'Pelningumo analizė (NPV / IRR)', npvDesc:'Grynoji dabartinė vertė ir vidinė grąžos norma investiciniams projektams.',
     ccCurrNames:['Norvegų krona','Euras','JAV doleris','Britų svaras','Švedų krona','Danų krona','Lenkų zlotas','Šveicarų frankas','Japonų jena','Kinų juanis','Kanados doleris','Australijos doleris','Indijos rupija','Turkų lira','Brazilijos realas']
 },
   so: {
@@ -3535,7 +3852,7 @@ const REGIONS = {
     heroH1:'Qalab Maalinle ah<br><em>Xisaabiye, amaahda guriga, cashuurta, MVA iyo falanqaynta faa\'iidada</em>',
     heroP:'',
     heroKickerTb:'✦ Xisaabiyayaal maaliyadeed oo bilaash ah',
-    tabSal:'Cashuurta', tabMor:'Amaahda guriga', tabNpv:'Falanqaynta faa\'iidada', tabVat:'MVA',
+    tabSal:'Cashuurta', tabMor:'Amaahda guriga', tabNpv:'Maaliyadda shakhsiga', tabVat:'MVA',
     tabBasic:'Xisaabiye', cmLabel:'Nooca xisaabiyaha', cmBasic:'Fudud', cmFinance:'Maaliyadeed', cmScientific:'Sayniseed', cmUnit:'Beddelka cutubka', cmFinCalcs:'Xisaabiyeyaasha maaliyadda', cmFcSal:'Mushaharka cashuurta kadib', cmFcMor:'Amaahda guriga', cmFcNpv:'Falanqaynta faa\'iidada', cmFcVat:'MVA',
     fcLblType:'Nooca xisaabinta', fcTvm:'Qiimaha hadda / Mustaqbalka (TVM)', fcMargin:'Faa\'iidada & Kordhinta', fcBe:'Bar-bar', fcCompound:'Ribada isku dhafan', fcDiscount:'Xisaabinta qiimo-dhimista', fcPv:'Qiimaha hadda (PV)', fcRate:'Heerka ribada sanadlaha (%)', fcYears:'Tirada sannadaha', fcPmt:'Lacagta sanadlaha ah', fcCost:'Qiimaha iibsiga', fcSell:'Qiimaha iibka', fcFixed:'Kharashka go\'an', fcPriceU:'Qiimaha iibka halbeegga', fcVarCost:'Kharashka isbeddelka halbeegga', fcPrinc:'Lacagta bilowga', fcFreq:'Lacag-bixinnada ribada sanadkii', fcOrig:'Qiimaha asalka', fcDiscPct:'Qiimo-dhimis (%)', fcBtn:'Xisaabi →', fcResLbl:'Natiijada',
     fcRFv:'Qiimaha mustaqbalka (FV)', fcRAfter:'Ka dib', fcRYr:'sano', fcRStart:'Lacagta bilowga', fcRTotalPmt:'Wadarta lacag-bixinnada', fcRInterest:'Ribada la helay', fcRReturn:'Soo-celinta guud', fcRProfit:'Faa\'iidada', fcRRevenue:'Dakhliga loo baahan yahay', fcRContrib:'Wax-ku-biirinta halbeegga', fcRContribMarg:'Heerka wax-ku-biirinta', fcRBePoint:'Bar-bar', fcRUnits:'halbeeg', fcREndVal:'Qiimaha kama dambaysta', fcRMonthly:'oo leh ribo bil-bil ah', fcRDoubling:'Labanlaab ka dib', fcRDiscPrice:'Qiimaha qiimo-dhimista kadib', fcRSaved:'Waad keydsataa', fcRDiscount:'Qiimo-dhimis', fcRYouPay:'Waxaad bixisaa', fcROfPrice:'qiimaha',
@@ -3625,6 +3942,16 @@ const REGIONS = {
     uttakExExc4:'Xiriirka kooxda: soo baxinta isku duwow akshonaraha, shirkada ku duwow waxaa ay khuseysa canshuurta soo baxinta',
     uttakExExc5:'Isticmaalka gaar ah ee xogta ganacsigu: isticmaalka joogto ah (tusaale ahaan: guri, dooni, gaari) waxaa lagu canshuuraa sida rabitka akshonaraha iyada oo waxaa loo adeegsadey qaabka akshonaraha',
     uttakExSource:'Isha: Sharciga canshuurta § 5-2, § 5-3 iyo qaybta 9 (Sharciga-1999-03-26-14). Xisaabiyahadu waa tilmaan oo keliya — la midaasho accountant si loogu naago qiimeyno qaas.',
+    utdelingTitle:'Qaabka canshuurta macaashka (AS)', utdelingDesc:'Canshuurta shirkadda + canshuurta macaashka = 51.5% heer dhabta ah',
+    utdelingIntro:'Qaabka canshuurta macaashka wuxuu muujinayaa culeysiga canshuurta wadajir markii faa\'iidada shirkadda marka hore lagu canshuuray canshuurta shirkadda (22%), ka dibna canshuurta macaashka (37.84%) marka la bixiyo. Haddii aan jirin dhimista ilaalinta, heerka dhabta ah waa <b>51.5%</b>.',
+    utdelingEnkNote:'<b>Ganacsi shakhsi:</b> Ganacsiga shakhsiyeedka, qaabka ganacsiga ayaa khuseeya, kaas oo leh xeerarka canshuurta isku midka ah uu bixiyo heer kharash dhabta ah oo la mid ah — sidaas darteed qaabka ganacsiga laftiisa ma bixiyo faa\'iido canshuur.',
+    utdelingLOverskudd:'Faa\'iidada ka hor canshuurta (kr)', utdelingLSkjerming:'Dhimista ilaalinta (kr)',
+    utdelingBtn:'Xisaabi canshuurta dhabta ah →', utdelingRLbl:'Wadarta culeysiga canshuurta',
+    utdelingROverskudd:'Faa\'iidada ka hor canshuurta', utdelingRSelskap:'Canshuurta shirkadda (22%)',
+    utdelingREtter:'Ka dib canshuurta shirkadda', utdelingRSkjerming:'− Dhimista ilaalinta',
+    utdelingROppjustert:'Macaash la kordhiyay (×1.72)', utdelingRUtbytte:'Canshuurta macaashka (22%)',
+    utdelingRTotal:'Wadarta canshuurta (labada heer)', utdelingRNetto:'Saafiga milkiilaha',
+    utdelingREff:'Heerka canshuurta dhabta ah', utdelingEffRate:'Heerka canshuurta dhabta ah', utdelingNetLabel:'Saafiga milkiilaha',
     adjExTitle:'Sharaxaadda xeerarka hagaajinta (sharciga CBM qaybta 9)',
     adjExWhat:'Maxaa ah hagaajinta?',
     adjExWhatDesc:'Marka aad dhimisay CBM-ka soo galay mid xogta joogta ah, haddii isticmaalka isbeddelaa muddo hagaajintu (wax badan ama yar CBM), waxaa lagaa hagaajin dhimista — ama celisaa dawlada ama codsata dhimista dheeraad ah.',
@@ -3733,9 +4060,20 @@ const REGIONS = {
     ccAmount:'Qadarka', trinnBreakdownTitle:'Faahfaahinta canshuurta kor u socota', lawHintText:'Fikrad adag? Eeg liiska hoos u dhaca "Xeerarka iyo fikradaha muhiimka ah" ee ka sarreeya Xeerka Canshuurta',
     trinnLabel1:'Heerka 1', trinnLabel2:'Heerka 2', trinnLabel3:'Heerka 3', trinnLabel4:'Heerka 4', trinnLabel5:'Heerka 5', almSkattLabel:'Canshuurta dakhliga caadiga ah',
     lvuSalary:'Mushahaar', lvuDividend:'Qayb-dhigasho', lvuIsCheaper:'ayaa ka jaban shirkadda',
+    lvuInfoLabel:'Maxay tusinaysaa xisaabiyahan?', lvuInfoH:'Si kooban',
+    lvuInfoText:'Xisaabiyahan wuxuu barbar dhigayaa <b>intay shirkaddu ku kacdo</b> inay kuu siiyo xad cayiman — annagoo mushahaar ama qayb-dhigasho ahaanaysa. Kuma tusinayso <b>intaad adigu hesho</b>.<br><br><b>Mushahaar:</b> Xaddiga + canshuurta shaqo-bixiyaha (AGA) + lacagta fasaxa (12%) + OTP (2%). Kani waa kharashka guud ee shirkadda.<br><br><b>Qayb-dhigasho:</b> Si loo qaybsho 500,000 kr, shirkaddu waxay u baahan tahay inay kasban 641,026 kr ka hor canshuurta shirkadda 22% (500,000 / 0.78).<br><br><b>Xusuusin:</b> Adigu sidoo kale waad bixisaa canshuur shakhsi ah — canshuurta dakhliga mushaharka, ama canshuurta qayb-dhigashada (×1.72, canshuur 22%). Xisaabiyahan kuma darayo canshuurta shakhsiga — wuxuu eegayaa oo kaliya dhinaca shirkadda.',
     conMailName:'Magaca', conMailEmail:'Iimaylka',
     adjBagatell:'Ka hooseeya xadka ugu yar (§ 9-2)', adjBagatellSub:'Isbedelku {p} waa ka hooseeya 10 dhibcood boqolkiiba — hagaajin looma baahna',
     rgMain:'Luqadda aasaasiga ah', rgNorway:'Luqadaha Norway', rgIntl:'Caalamiga',
+    bilTitle:'Xisaabiyaha kharashka gaariiga', bilDesc:'Eeg intuu gaariigaagu adiga kuu kacayo bishii iyo wakhti dheer',
+    bilIntro:'Dadka badankood way ka yar yihiin kharashka lahaan gaari. Qiimaha iibsashada ka dib waxaa jira dhimista qiimaha, caymiska, shidaalka, dayactirka, taayirada, canshuurta wadooyinka iyo kharashyada gudbinta. Xisaabiyahan wuxuu muujinayaa sawirka dhamaystiran.',
+    bilLMerke:'Nooca gaariiga', bilLPris:'Qiimaha iibsashada (kr)', bilLAar:'Mudada lahaanshaha (sano)', bilLKm:'Masaafo sannadeedka ah (km)', bilLStartKm:'Kiilomeetarka markii la iibsaday',
+    bilLDrivstoff:'Nooca shidaalka', bilLForsikring:'Caymis (kr/sano)', bilBtn:'Xisaabi kharashka gaariiga →',
+    bilRLbl:'Wadarta kharashka lahaanshaha', bilRMnd:'Kharashka bishii', bilRKm:'Kharashka km-kii',
+    bilRVerditap:'Dhimista qiimaha', bilRDriv:'Shidaal / daldalid', bilRFors:'Caymis',
+    bilRService:'Dayactir iyo ilaalin', bilRDekk:'Taayirad (dildillaac)', bilRAvgift:'Canshuurta wadooyinka', bilRBom:'Kharashyada gudbinta (qiyaas)',
+    bilPerMnd:'/bishii',
+    npvTitle:'Falanqaynta faa\'iidada (NPV / IRR)', npvDesc:'Qiimaha saafiga hadda iyo heerka soo-celinta gudaha mashruucyada maalgelinta.',
     ccCurrNames:['Kroonka Norwayga','Yuurada','Doolarka Maraykanka','Bowndha Ingiriiska','Kroonka Iswiidhan','Kroonka Danishka','Zloty-ga Booland','Faranka Iswiisarland','Yenta Jabaan','Yuanta Shiinaha','Doolarka Kanada','Doolarka Awstaraaliya','Ruubiga Hindiya','Lirada Turkiga','Reaalka Baraasiil']
 },
   ti: {
@@ -3799,7 +4137,7 @@ const REGIONS = {
     heroH1:'መዓልታዊ መሳርሒታት<br><em>ካልኩሌተር፣ ልቓሕ ገዛ፣ ግብሪ፣ ተ.ዋ.ግ. ከምኡ ውን ትንተና ርብሕ</em>',
     heroP:'',
     heroKickerTb:'✦ ነጻ ፋይናንሳዊ ካልኩሌተራት',
-    tabSal:'ግብሪ', tabMor:'ልቓሕ ገዛ', tabNpv:'ትንተና ርብሕ', tabVat:'ተ.ዋ.ግ.',
+    tabSal:'ግብሪ', tabMor:'ልቓሕ ገዛ', tabNpv:'ውልቃዊ ፋይናንስ', tabVat:'ተ.ዋ.ግ.',
     tabBasic:'ካልኩሌተር', cmLabel:'ዓይነት ካልኩሌተር', cmBasic:'ቀሊል', cmFinance:'ፋይናንስ', cmScientific:'ሳይንሳዊ', cmUnit:'ምልዋጥ ኣሃዱ', cmFinCalcs:'ፋይናንሳዊ ካልኩሌተራት', cmFcSal:'ደሞዝ ድሕሪ ግብሪ', cmFcMor:'ልቓሕ ገዛ', cmFcNpv:'ትንተና ርብሕ', cmFcVat:'ተ.ዋ.ግ.',
     fcLblType:'ዓይነት ሕሳብ', fcTvm:'ህሉው / መጻኢ ዋጋ (TVM)', fcMargin:'ትርፊ ሕዳግ', fcBe:'ነቝጣ ምዕሩይ', fcCompound:'ኣብ ኣብ ወለድ', fcDiscount:'ሕሳብ ቅናስ', fcPv:'ህሉው ዋጋ (PV)', fcRate:'ዓመታዊ ወለድ (%)', fcYears:'ብዝሒ ዓመታት', fcPmt:'ዓመታዊ ክፍሊት', fcCost:'ዋጋ ዕድጊ', fcSell:'ዋጋ መሸጣ', fcFixed:'ቀዋሚ ወጻኢታት', fcPriceU:'ዋጋ መሸጣ ንሓደ', fcVarCost:'ተቐያያሪ ወጻኢ ንሓደ', fcPrinc:'መበገሲ መጠን', fcFreq:'ወለድ ኣብ ዓመት', fcOrig:'ናይ ቀደም ዋጋ', fcDiscPct:'ቅናስ (%)', fcBtn:'ሕሰብ →', fcResLbl:'ውጽኢት',
     fcRFv:'መጻኢ ዋጋ (FV)', fcRAfter:'ድሕሪ', fcRYr:'ዓመት', fcRStart:'መበገሲ መጠን', fcRTotalPmt:'ጠቕላላ ክፍሊታት', fcRInterest:'ዝተረኽበ ወለድ', fcRReturn:'ጠቕላላ ትርፊ', fcRProfit:'ትርፊ', fcRRevenue:'ዘድሊ ኣታዊ', fcRContrib:'ኣበርክቶ ንሓደ', fcRContribMarg:'ደረጃ ኣበርክቶ', fcRBePoint:'ነቝጣ ምዕሩይ', fcRUnits:'ኣሃዱ', fcREndVal:'ናይ መወዳእታ ዋጋ', fcRMonthly:'ብወርሓዊ ወለድ', fcRDoubling:'ዕጽፊ ድሕሪ', fcRDiscPrice:'ዋጋ ድሕሪ ቅናስ', fcRSaved:'ትቝጥብ', fcRDiscount:'ቅናስ', fcRYouPay:'ትኸፍል', fcROfPrice:'ናይ ዋጋ',
@@ -3892,6 +4230,16 @@ const REGIONS = {
     uttakExExc4:'ብዝኽረታት ውዳበ: ግብሪ ምጥቃስ ውዳበ ሞያ ሞያ ግብሪ ተዓዲሙ',
     uttakExExc5:'ውልቃዊ ጥቅሚ ሞያ ሳልቅ: ስምምሒ ጥቅሚ (ምሳል: ሞገስ፣ መርከብ፣ መኪናት) በሞያ ጥቁስ ነ ሞያ ግብሪ ዝዓውዖ ክፋላዊ',
     uttakExSource:'ምንጭ: ግብሪ ሕጋውነት § 5-2, § 5-3 ን ምዕራፍ 9 (ሕጋውነት-1999-03-26-14)። ካልኩሌተር ሰበ ምኳንንት — ተወሳኺ ምስ ሒሳብ ሳይንስ ኪነት።',
+    utdelingTitle:'ናይ ዲቪደንድ ግብሪ ሞዴል (AS)', utdelingDesc:'ግብሪ ትካል + ግብሪ ዲቪደንድ = 51.5% ኣድማዒ ተመን',
+    utdelingIntro:'ናይ ዲቪደንድ ግብሪ ሞዴል ንሓባር ግብሪ ጽዕነት ይርኢ ምስ ናይ ትካል ረብሓ መጀመርታ ብናይ ትካል ግብሪ (22%) ዝቕንስ፣ ድሕሪኡ ብናይ ዲቪደንድ ግብሪ (37.84%) ኣብ ምውጽእ። ብዘይ ናይ ምክልኻል ቅነሳ፣ ኣድማዒ ተመን <b>51.5%</b> እዩ።',
+    utdelingEnkNote:'<b>ውልቃዊ ትካል:</b> ንውልቃዊ ትካላት ናይ ትካል ሞዴል ይምልከት፣ ብተመሳሳሊ ናይ ግብሪ ሕግታት ተመሳሳሊ ኣድማዒ ግብሪ ይህብ — ስለዚ ናይ ትካል ቅርጺ ባዕሉ ናይ ግብሪ ጥቕሚ ኣይህብን።',
+    utdelingLOverskudd:'ረብሓ ቅድሚ ግብሪ (kr)', utdelingLSkjerming:'ናይ ምክልኻል ቅነሳ (kr)',
+    utdelingBtn:'ኣድማዒ ግብሪ ሕሳብ →', utdelingRLbl:'ሓባር ናይ ግብሪ ጽዕነት',
+    utdelingROverskudd:'ረብሓ ቅድሚ ግብሪ', utdelingRSelskap:'ግብሪ ትካል (22%)',
+    utdelingREtter:'ድሕሪ ግብሪ ትካል', utdelingRSkjerming:'− ናይ ምክልኻል ቅነሳ',
+    utdelingROppjustert:'ዝዓበየ ዲቪደንድ (×1.72)', utdelingRUtbytte:'ግብሪ ዲቪደንድ (22%)',
+    utdelingRTotal:'ሓባር ግብሪ (ክልተ ደረጃ)', utdelingRNetto:'ሕፁር ንባዓል ኣክስዮን',
+    utdelingREff:'ኣድማዒ ናይ ግብሪ ተመን', utdelingEffRate:'ኣድማዒ ናይ ግብሪ ተመን', utdelingNetLabel:'ሕፁር ንባዓል ኣክስዮን',
     adjExTitle:'ናይ ምቍራጽ ሕጋውተ ፍለጣ (ተ.ዋ.ግ. ሕጋውነት ምዕራፍ 9)',
     adjExWhat:'እንታይ እዩ ምቍራጽ?',
     adjExWhatDesc:'ብሞያ ተ.ዋ.ግ. ዝወረደ ዝግበር ግብሪ ውሳነ, ሳልቅ ግዜ ምቍራጽ ክፍለ ዝወወ (ደቂቕ ወይስ ሓጺር ተ.ዋ.ግ.), ምቍራጽ ታሕበወ — ወይ ንደወለተ ምልሳ ወይ ናይ ተ.ዋ.ግ. ቅነሳ ዝኩሪ።',
@@ -4000,9 +4348,20 @@ const REGIONS = {
     ccAmount:'ብዝሒ', trinnBreakdownTitle:'ዝርዝር ደረጃዊ ግብሪ', lawHintText:'ኣጸጋሚ ሓሳብ? ኣብ ልዕሊ ሕጊ ግብሪ ዘሎ «ኣገደስቲ ሕግታትን ሓሳባትን» ዝብል ዝርዝር ርአ',
     trinnLabel1:'ደረጃ 1', trinnLabel2:'ደረጃ 2', trinnLabel3:'ደረጃ 3', trinnLabel4:'ደረጃ 4', trinnLabel5:'ደረጃ 5', almSkattLabel:'ስሩዕ ናይ ኣታዊ ግብሪ',
     lvuSalary:'ደሞዝ', lvuDividend:'ዲቪደንድ', lvuIsCheaper:'ንትካል ዝሕሰር እዩ',
+    lvuInfoLabel:'እዚ ካልኩሌተር እንታይ የርኢ?', lvuInfoH:'ብሓጺሩ',
+    lvuInfoText:'እዚ ካልኩሌተር <b>ንትካል ክንደይ ዝወጽእ</b> ምዃኑ ይነጻጽር — ወይ ደሞዝ ወይ ዲቪደንድ ንምሃብ። ንዓኻ ብውልቂ <b>ክንደይ ከም ዝበጻሕካ ኣየርኢን</b>።<br><br><b>ደሞዝ:</b> ገንዘብ + ናይ ወሃቢ ስራሕ ኣበርክቶ (AGA) + ናይ ዕረፍቲ ኣሎዋንስ (12%) + OTP (2%)። እዚ እዩ ጠቅላላ ወጻኢ ትካል።<br><br><b>ዲቪደንድ:</b> ንኣብነት 500,000 kr ንምክፍፋል ትካል 641,026 kr ቅድሚ 22% ናይ ትካል ግብሪ (500,000 / 0.78) ክረብሕ ኣለዎ።<br><br><b>ኣስተውዕሉ:</b> ከም ተቐባሊ ናይ ውልቂ ግብሪ እውን ትኸፍል — ደሞዝ ናይ ኣታዊ ግብሪ፣ ወይ ዲቪደንድ ግብሪ (×1.72፣ 22%) ምስ ዲቪደንድ። እዚ ካልኩሌተር ናይ ውልቂ ግብሪ ኣይሕወሶን — ናይ ትካል ሸነኽ ጥራሕ ዕዮ ይዕዝብ።',
     conMailName:'ስም', conMailEmail:'ኢ-መይል',
     adjBagatell:'ካብ ዝተሓተ ደረጃ ታሕቲ (§ 9-2)', adjBagatellSub:'ለውጢ {p} ካብ 10 ሚእታዊ ነጥቢ ታሕቲ — ማዕርግ ኣየድልን',
     rgMain:'ቀንዲ ቋንቋ', rgNorway:'ቋንቋታት ኣብ ኖርወይ', rgIntl:'ኣህጉራዊ',
+    bilTitle:'ካልኩሌተር ወጻኢ መኪና', bilDesc:'መኪናኻ ብሓቂ ብወርሒ ከምኡ\'ውን ምስ ግዜ ክንደይ ከም ዝወጽእ ርአ',
+    bilIntro:'መብዛሕትኦም ሰባት ወጻኢ ምውናን መኪና ከም ዝግምቱ ኣይገብሩን። ብዘይካ ዋጋ ምግዛእ: ምጉዳል ዋጋ፣ ውሕስነት፣ ነዳዲ፣ ኣገልግሎት፣ ጐማ፣ ግብሪ መንገዲ ከምኡ\'ውን ቦምፐንገር ኣሎ። እዚ ካልኩሌተር ምሉእ ስእሊ ይርኢ።',
+    bilLMerke:'ዓይነት መኪና', bilLPris:'ዋጋ ምግዛእ (kr)', bilLAar:'ግዜ ምውናን (ዓመታት)', bilLKm:'ዓመታዊ ርሕቀት (km)', bilLStartKm:'ኪሎሜትር ክትገዝእ ከለኻ',
+    bilLDrivstoff:'ዓይነት ነዳዲ', bilLForsikring:'ውሕስነት (kr/ዓመት)', bilBtn:'ወጻኢ መኪና ኣሕሲብ →',
+    bilRLbl:'ጠቕላላ ወጻኢ ምውናን', bilRMnd:'ወርሓዊ ወጻኢ', bilRKm:'ወጻኢ ብኪሎሜትር',
+    bilRVerditap:'ምጉዳል ዋጋ', bilRDriv:'ነዳዲ / ምልኣት', bilRFors:'ውሕስነት',
+    bilRService:'ኣገልግሎትን ጽገናን', bilRDekk:'ጐማ (ምብላይ)', bilRAvgift:'ግብሪ መንገዲ', bilRBom:'ቦምፐንገር (ግምት)',
+    bilPerMnd:'/ወርሒ',
+    npvTitle:'ትንተና ረብሓ (NPV / IRR)', npvDesc:'ንናይ ወፍሪ ፕሮጀክታት ናይ ኔቶ ሕጂ-ዋጋን ውሽጣዊ ዋጋ ምምላስን።',
     ccCurrNames:['ናይ ኖርወይ ክሮነ','ዩሮ','ናይ ኣመሪካ ዶላር','ናይ ብሪጣንያ ፓውንድ','ናይ ሽወደን ክሮነ','ናይ ደንማርክ ክሮነ','ናይ ፖላንድ ዝሎቲ','ናይ ሽዊዘርላንድ ፍራንክ','ናይ ጃፓን የን','ናይ ቻይና ዩዋን','ናይ ካናዳ ዶላር','ናይ ኣውስትራልያ ዶላር','ናይ ህንዲ ሩፒ','ናይ ቱርኪ ሊራ','ናይ ብራዚል ሪያል']
 },
 };
@@ -4246,22 +4605,36 @@ function morPopulateType(){
 
 function goToDeprCard(){
   switchCalc('salary', true);
-  window.scrollTo({top:0,behavior:'auto'});
+  const card=document.getElementById('sal-depr-card');
+  if(!card) return;
+  // Open law-group instantly (no animation)
+  const lawGroup=card.closest('.law-group');
+  if(lawGroup && !lawGroup.classList.contains('open')){
+    lawGroup.classList.add('open');
+    const body=lawGroup.querySelector('.law-group-body');
+    if(body){body.style.transition='none';body.style.maxHeight='none';}
+  }
+  // Open card instantly (no animation)
+  if(card.classList.contains('collapsed')){
+    card.classList.remove('collapsed');
+    const arrow=card.querySelector('.card-title span');
+    if(arrow) arrow.textContent='▲';
+  }
+  // Force synchronous layout so the browser commits all changes
+  void card.offsetHeight;
+  // Wait for the card content to fully render (progressive layout takes ~200ms)
   setTimeout(()=>{
-    const card=document.getElementById('sal-depr-card');
-    if(!card) return;
-    const lawGroup=card.closest('.law-group');
-    if(lawGroup && !lawGroup.classList.contains('open')) toggleLawGroup(lawGroup);
-    setTimeout(()=>{
-      if(card.classList.contains('collapsed')) toggleCard(card);
-      setTimeout(()=>{
-        const headers=card.querySelectorAll('.ir-hdr');
-        let target=card;
-        for(const h of headers){if(h.textContent.includes('SALDOGRUPP')){target=h;break;}}
-        smartScroll(target);
-      },600);
-    },400);
-  },350);
+    // Target the SALDOGRUPP header row (§ 14-41 / § 14-43) — works across all languages
+    const hdrs=card.querySelectorAll('.ir-hdr');
+    let target=null;
+    for(const h of hdrs){if(h.textContent.includes('14-41') || h.textContent.includes('14-43')){target=h;break;}}
+    if(!target) target=card;
+    const off=stickyOffset();
+    const top=target.getBoundingClientRect().top+window.scrollY-off-8;
+    window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+    // Restore transition for future use
+    if(lawGroup){const body=lawGroup.querySelector('.law-group-body');if(body)setTimeout(()=>{body.style.transition='';},400);}
+  },250);
 }
 function goToAgaCard(){
   switchCalc('vat', true);
@@ -4275,25 +4648,23 @@ function goToAgaCard(){
 }
 function goToLvuCalc(){
   switchCalc('basic', true);
-  window.scrollTo({top:0,behavior:'auto'});
-  setTimeout(()=>{
-    switchCalcMode('lvu');
-    setTimeout(()=>{
-      const el=document.getElementById('bc-lvu');
-      if(el) smartScroll(el);
-    },300);
-  },300);
+  switchCalcMode('lvu', true);
+  const el=document.getElementById('bc-lvu');
+  if(el){el.style.animation='none';el.style.opacity='1';el.style.transform='none';
+    const off=stickyOffset();
+    const top=el.getBoundingClientRect().top+window.scrollY-off;
+    window.scrollTo(0, Math.max(0,top));
+  }
 }
 function goToAvsCalc(){
   switchCalc('basic', true);
-  window.scrollTo({top:0,behavior:'auto'});
-  setTimeout(()=>{
-    switchCalcMode('avs');
-    setTimeout(()=>{
-      const el=document.getElementById('bc-avs');
-      if(el) smartScroll(el);
-    },300);
-  },300);
+  switchCalcMode('avs', true);
+  const el=document.getElementById('bc-avs');
+  if(el){el.style.animation='none';el.style.opacity='1';el.style.transform='none';
+    const off=stickyOffset();
+    const top=el.getBoundingClientRect().top+window.scrollY-off;
+    window.scrollTo(0, Math.max(0,top));
+  }
 }
 function toggleLawGroup(group){
   var body = group.querySelector('.law-group-body');
@@ -4606,7 +4977,30 @@ function updateMortgageUI() {
 
 function updateNpvUI() {
   const r = R();
-  setText('npv-title', r.npvTitle || 'NPV / IRR Calculator');
+  // Bilkostnadskalkulator labels
+  var bilEl=document.getElementById('bil-title');if(bilEl)bilEl.innerHTML=(r.bilTitle || 'Car Cost Calculator')+' <span style="font-size:11px;opacity:.5">▼</span>';
+  setText('bil-desc', r.bilDesc || 'See what your car really costs you per month and over time');
+  if(document.getElementById('bil-intro')) document.getElementById('bil-intro').textContent = r.bilIntro || 'Most people underestimate the cost of car ownership. Beyond the purchase price come depreciation, insurance, fuel, service, tires, road tax and tolls. The figures below are rough estimates based on averages from NAF and OFV — intended only to illustrate how expensive car ownership really is.';
+  setText('bil-l-merke', r.bilLMerke || 'Car brand');
+  setText('bil-l-pris', r.bilLPris || 'Purchase price (kr)');
+  setText('bil-l-aar', r.bilLAar || 'Ownership period (years)');
+  setText('bil-l-km', r.bilLKm || 'Annual mileage (km)');
+  setText('bil-l-startKm', r.bilLStartKm || 'Mileage at purchase (km)');
+  setText('bil-l-drivstoff', r.bilLDrivstoff || 'Fuel type');
+  setText('bil-l-forsikring', r.bilLForsikring || 'Insurance (kr/yr)');
+  setText('btn-calc-bil', r.bilBtn || 'Calculate car cost →');
+  setText('bil-r-lbl', r.bilRLbl || 'Total ownership cost');
+  setText('bil-rl-mnd', r.bilRMnd || 'Cost per month');
+  setText('bil-rl-km', r.bilRKm || 'Cost per km');
+  setText('bil-rl-verditap', r.bilRVerditap || 'Depreciation');
+  setText('bil-rl-driv', r.bilRDriv || 'Fuel / charging');
+  setText('bil-rl-fors', r.bilRFors || 'Insurance');
+  setText('bil-rl-service', r.bilRService || 'Service and maintenance');
+  setText('bil-rl-dekk', r.bilRDekk || 'Tires (wear)');
+  setText('bil-rl-avgift', r.bilRAvgift || 'Road tax');
+  setText('bil-rl-bom', r.bilRBom || 'Tolls (estimate)');
+  // NPV labels
+  var npvEl=document.getElementById('npv-title');if(npvEl)npvEl.innerHTML=(r.npvTitle || 'NPV / IRR Calculator')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('npv-desc', r.npvDesc || 'Net present value and internal rate of return.');
   setText('npv-l-inv', r.lInv || 'Initial Investment');
   setText('npv-l-rate', r.lRateD || 'Discount Rate (%)');
@@ -4862,6 +5256,37 @@ function updateUttakUI() {
   if(document.getElementById('uttak-ex-exc4')) document.getElementById('uttak-ex-exc4').innerHTML = r.uttakExExc4 || 'Group relations...';
   if(document.getElementById('uttak-ex-exc5')) document.getElementById('uttak-ex-exc5').innerHTML = r.uttakExExc5 || 'Private use...';
   setText('uttak-ex-source', r.uttakExSource || 'Source: Tax Act § 5-2...');
+  // Utdelingsmodellen card
+  var utdEl=document.getElementById('utdeling-title');if(utdEl)utdEl.innerHTML=(r.utdelingTitle||'Dividend Tax Model')+' <span style="font-size:11px;opacity:.5">▼</span>';
+  setText('utdeling-desc', r.utdelingDesc || 'Effective tax burden on distributions from AS and sole prop.');
+  if(document.getElementById('utdeling-intro')) document.getElementById('utdeling-intro').innerHTML = r.utdelingIntro || 'This calculator shows the combined tax burden when profits are distributed to the owner. For <b>AS</b>: corporate tax 22% + dividend tax 37.84% = <b>51.5%</b>. For <b>sole prop.</b>: ordinary income 22% + national insurance 10.8% + bracket tax = up to <b>50.6%</b>.';
+  setText('utdeling-l-type', r.utdelingLType || 'Business form');
+  setText('utdeling-opt-as', r.utdelingOptAs || 'Limited company (AS) — shareholder model');
+  setText('utdeling-opt-enk', r.utdelingOptEnk || 'Sole proprietorship (ENK) — enterprise model');
+  setText('utdeling-l-overskudd', r.utdelingLOverskudd || 'Pre-tax profit (kr)');
+  setText('utdeling-l-skjerming', r.utdelingLSkjerming || 'Shielding deduction (kr)');
+  setText('btn-calc-utdeling', r.utdelingBtn || 'Calculate effective tax →');
+  setText('utdeling-r-lbl', r.utdelingRLbl || 'Total tax burden');
+  // AS labels
+  setText('utdeling-rl-overskudd', r.utdelingROverskudd || 'Pre-tax profit');
+  setText('utdeling-rl-selskap', r.utdelingRSelskap || 'Corporate tax (22%)');
+  setText('utdeling-rl-etter', r.utdelingREtter || 'After corporate tax');
+  setText('utdeling-rl-skjerming', r.utdelingRSkjerming || '− Shielding deduction');
+  setText('utdeling-rl-oppjustert', r.utdelingROppjustert || 'Uplifted dividend (×1.72)');
+  setText('utdeling-rl-utbytte', r.utdelingRUtbytte || 'Dividend tax shareholder (22%)');
+  setText('utdeling-rl-total', r.utdelingRTotal || 'Total tax (both levels)');
+  setText('utdeling-rl-netto', r.utdelingRNetto || 'Net to owner');
+  setText('utdeling-rl-eff', r.utdelingREff || 'Effective tax rate');
+  // ENK labels
+  setText('utdeling-rl-enk-overskudd', r.utdelingREnkOverskudd || 'Profit (business income)');
+  setText('utdeling-rl-enk-alm', r.utdelingREnkAlm || 'Ordinary income tax (22%)');
+  setText('utdeling-rl-enk-skjerming', r.utdelingREnkSkjerming || '− Shielding deduction');
+  setText('utdeling-rl-enk-person', r.utdelingREnkPerson || '= Calculated personal income');
+  setText('utdeling-rl-enk-trygd', r.utdelingREnkTrygd || 'National insurance (10.8%)');
+  setText('utdeling-rl-enk-trinn', r.utdelingREnkTrinn || 'Bracket tax');
+  setText('utdeling-rl-enk-total', r.utdelingREnkTotal || 'Total tax');
+  setText('utdeling-rl-enk-netto', r.utdelingREnkNetto || 'Net to owner');
+  setText('utdeling-rl-enk-eff', r.utdelingREnkEff || 'Effective tax rate');
 }
 
 
@@ -4925,6 +5350,11 @@ function updateFagkalkulatorUI() {
   setText('lvu-r-sal', r.lvuRSal || 'Lønn - Total kostnad');
   setText('lvu-r-div', r.lvuRDiv || 'Utbytte - Total kostnad');
   setText('lvu-r-diff', r.lvuRDiff || 'Differanse (billigste)');
+  // LVU info box
+  setText('lvu-info-label', r.lvuInfoLabel || 'Hva viser denne kalkulatoren?');
+  setText('lvu-info-h', r.lvuInfoH || 'Kort forklart');
+  const lvuInfoEl = document.getElementById('lvu-info-text');
+  if(lvuInfoEl) lvuInfoEl.innerHTML = r.lvuInfoText || 'Kalkulatoren sammenligner <b>hva det koster selskapet</b> å gi deg et gitt beløp — enten som lønn eller utbytte. Den viser <b>ikke</b> hva du sitter igjen med privat.<br><br><b>Lønn:</b> Beløpet + arbeidsgiveravgift (AGA) + feriepenger (12%) + OTP (2%). Dette er selskapets totalkostnad.<br><br><b>Utbytte:</b> For å dele ut f.eks. 500 000 kr må selskapet tjene 641 026 kr før 22% selskapsskatt (500 000 / 0,78).<br><br><b>Merk:</b> Som mottaker betaler du i tillegg personlig skatt — inntektsskatt på lønn, eller utbytteskatt (oppjustert ×1,72, beskattet med 22%) på utbytte. Denne kalkulatoren tar ikke med den personlige skatten — den ser kun på selskapets side.';
   // AGA labels
   setText('aga-l-sal', r.agaSal || 'Brutto lønn per år');
   setText('aga-l-zone', r.agaZone || 'AGA-sone');
@@ -4988,7 +5418,7 @@ function updateFagkalkulatorUI() {
 
   // --- Intro texts ---
   const avsIntroEl = document.getElementById('bc-avs-intro');
-  if(avsIntroEl) avsIntroEl.innerHTML = (r.avsIntro || 'Saldoavskrivning: eiendelen skrives ned med en fast prosent hvert år. Velg gruppe etter type eiendel.') + ' (<a href="#" onclick="goToDeprCard();return false" style="color:var(--accent-d);text-decoration:underline;cursor:pointer;">sktl. §§ 14-40 til 14-48</a>).';
+  if(avsIntroEl) avsIntroEl.innerHTML = (r.avsIntro || 'Skattemessig saldoavskrivning: eiendelen skrives ned med en fast prosent hvert år. Velg gruppe etter type eiendel. <em>NB: Regnskapsmessige avskrivninger skal følge en fornuftig avskrivingsplan (rskl. § 5-3).</em>') + ' (<a href="#" onclick="goToDeprCard();return false" style="color:var(--accent-d);text-decoration:underline;cursor:pointer;">sktl. §§ 14-40 til 14-48</a>).';
   setText('bc-rente-intro', r.renteIntro || 'Nominell rente er det banken oppgir. Effektiv rente inkluderer også gebyrer og etableringsavgift — den viser hva lånet faktisk koster deg.');
   setText('bc-valgevinst-intro', r.valgevinIntro || 'Beregn gevinst eller tap ved kjøp og salg av utenlandsk valuta. Gevinst beskattes med 22%.');
   setText('bc-likvid-intro', r.likvidIntro || 'Viser om du har nok penger på konto måned for måned. Startbalanse + inntekter − utgifter = det du har igjen.');
@@ -5131,15 +5561,26 @@ function smartScroll(el,retries){
   retries=retries||0;
   const off=stickyOffset();
   const r=el.getBoundingClientRect();
-  const targetY=r.top+window.scrollY-off;
-  window.scrollTo({top:Math.max(0,targetY),behavior:'smooth'});
-  // Only retry once to correct for layout shifts (e.g. card animations)
-  if(retries<1){
-    setTimeout(function(){
-      const r2=el.getBoundingClientRect();
-      if(Math.abs(r2.top-off)>15) smartScroll(el,retries+1);
-    },400);
+  const targetY=Math.max(0, r.top+window.scrollY-off);
+  const startY=window.scrollY;
+  const dist=targetY-startY;
+  if(Math.abs(dist)<5)return;
+  const dur=Math.min(600, Math.max(300, Math.abs(dist)*0.6));
+  let start=null;
+  function ease(t){return t<0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1;}
+  function step(ts){
+    if(!start)start=ts;
+    const p=Math.min((ts-start)/dur,1);
+    window.scrollTo(0, startY+dist*ease(p));
+    if(p<1) requestAnimationFrame(step);
+    else if(retries<1){
+      setTimeout(function(){
+        const r2=el.getBoundingClientRect();
+        if(Math.abs(r2.top-off)>15) smartScroll(el,retries+1);
+      },500);
+    }
   }
+  requestAnimationFrame(step);
 }
 
 // Reset calculator panel when switching
@@ -5245,7 +5686,7 @@ function updateDashLabels() {
   el('dash-t-sal', r.tabSal || 'Skatt');
   el('dash-t-mor', r.tabMor || 'Boliglån');
   el('dash-t-vat', r.tabVat || 'Avgift');
-  el('dash-t-npv', r.tabNpv || 'Lønnsomhetsanalyse');
+  el('dash-t-npv', r.tabNpv || 'Personlig økonomi');
   el('dash-t-basic-d', r.dashDescBasic || 'Enkel, finansiell, vitenskapelig og enhetskonvertering');
   el('dash-t-sal-d', r.dashDescSal || 'Beregn nettoinntekt fra brutto årslønn med trinnskatt');
   el('dash-t-mor-d', r.dashDescMor || 'Månedlig betaling, annuitet og serielån');
@@ -5286,29 +5727,25 @@ function calcSal() {
   var _sr=document.getElementById('s-r');const ks=_sr?+_sr.value:0;
   let ts = 0;
   const trinnAmounts = [];
-  if(region==='no') {
-    // 2026 Norwegian tax rules
-    const almSats = ks; // 0.22 standard, 0.185 Finnmark/Nord-Troms
-    const pf = (kl==='2') ? 229200 : 114540; // Personfradrag 2026
-    const mf = Math.min(Math.max(b*0.46,0),95700); // Minstefradrag 2026: 46%, maks 95 700
-    const almInntekt = Math.max(b - mf - pf, 0);
-    // Trinnskatt 2026 (5 trinn)
-    const trinnSteps = [
-      [226100,318300,0.017,(r.trinnLabel1||'Trinn 1')],
-      [318300,725050,0.040,(r.trinnLabel2||'Trinn 2')],
-      [725050,980100,0.137,(r.trinnLabel3||'Trinn 3')],
-      [980100,1467200,0.168,(r.trinnLabel4||'Trinn 4')],
-      [1467200,Infinity,0.178,(r.trinnLabel5||'Trinn 5')]
-    ];
-    trinnSteps.forEach(([lo,hi,s,lbl])=>{const amt=b>lo?(Math.min(b,hi)-lo)*s:0;ts+=amt;trinnAmounts.push({lbl,rate:s,amt});});
-    // Alminnelig inntektsskatt (22% standard, 18.5% tiltakssonen)
-    const almSkatt = almInntekt * almSats;
-    ts += almSkatt;
-    trinnAmounts.push({lbl:(r.almSkattLabel||'Alminnelig inntektsskatt'),rate:almSats,amt:almSkatt});
-  } else {
-    ts = b * ks;
-  }
-  const soc = b * (region==='no' ? 0.076 : region==='en' ? 0.08 : region==='zh' ? 0.105 : region==='fr' ? 0.22 : region==='pt' ? 0.11 : region==='es' ? 0.064 : 0.08); // Trygdeavgift 2026: 7.6%
+  // Always use full Norwegian tax rules (region = language, not country)
+  const almSats = ks; // 0.22 standard, 0.185 Finnmark/Nord-Troms
+  const pf = (kl==='2') ? 229200 : 114540; // Personfradrag 2026
+  const mf = Math.min(Math.max(b*0.46,0),95700); // Minstefradrag 2026: 46%, maks 95 700
+  const almInntekt = Math.max(b - mf - pf, 0);
+  // Trinnskatt 2026 (5 trinn)
+  const trinnSteps = [
+    [226100,318300,0.017,(r.trinnLabel1||'Trinn 1')],
+    [318300,725050,0.040,(r.trinnLabel2||'Trinn 2')],
+    [725050,980100,0.137,(r.trinnLabel3||'Trinn 3')],
+    [980100,1467200,0.168,(r.trinnLabel4||'Trinn 4')],
+    [1467200,Infinity,0.178,(r.trinnLabel5||'Trinn 5')]
+  ];
+  trinnSteps.forEach(([lo,hi,s,lbl])=>{const amt=b>lo?(Math.min(b,hi)-lo)*s:0;ts+=amt;trinnAmounts.push({lbl,rate:s,amt});});
+  // Alminnelig inntektsskatt (22% standard, 18.5% tiltakssonen)
+  const almSkatt = almInntekt * almSats;
+  ts += almSkatt;
+  trinnAmounts.push({lbl:(r.almSkattLabel||'Alminnelig inntektsskatt'),rate:almSats,amt:almSkatt});
+  const soc = b * 0.076; // Trygdeavgift 2026: 7.6% (same for all languages)
   const tot = ts + soc;
   const net = b - tot;
   _sal = { b, net, tot, eff:tot/b*100, soc, region };
@@ -5321,9 +5758,9 @@ function calcSal() {
   // Trinnskatt breakdown
   const tg = document.getElementById('s-trinn-grid');
   const td = document.getElementById('s-trinn');
-  if(region==='no' && tg) {
+  if(tg) {
     tg.innerHTML = trinnAmounts.map(t=>`<div class="rt"><div class="rt-lbl">${t.lbl} (${(t.rate*100).toFixed(1)}%)</div><div class="rt-val">${fmt(t.amt)}</div></div>`).join('');
-    td.classList.remove('hidden');
+    if(td) td.classList.remove('hidden');
   } else if(td) {
     td.classList.add('hidden');
   }
@@ -5441,6 +5878,114 @@ function calcIo() {
   document.getElementById('io-r-annmth').textContent = fmt(annMth);
   document.getElementById('io-res').classList.remove('hidden');
   setTimeout(()=>scrollToEl(document.getElementById('io-res'),'top'),80);
+}
+
+// ═══════════════════════════════════════════════════════
+// CAR COST CALCULATOR
+// ═══════════════════════════════════════════════════════
+// Brand profiles: depreciation rate (annual % of remaining), service multiplier vs average
+// Sources: NAF, OFV, Autobransjens Leverandørforening, typical Norwegian market data
+var BIL_MERKER = {
+  snitt:      {depr:0.15, service:1.0,  label:'Gjennomsnitt'},
+  toyota:     {depr:0.12, service:0.80, label:'Toyota'},
+  volkswagen: {depr:0.15, service:1.00, label:'Volkswagen'},
+  volvo:      {depr:0.16, service:1.05, label:'Volvo'},
+  skoda:      {depr:0.14, service:0.85, label:'Škoda'},
+  hyundai:    {depr:0.14, service:0.85, label:'Hyundai / Kia'},
+  bmw:        {depr:0.18, service:1.35, label:'BMW'},
+  mercedes:   {depr:0.19, service:1.40, label:'Mercedes-Benz'},
+  audi:       {depr:0.17, service:1.30, label:'Audi'},
+  tesla:      {depr:0.20, service:0.70, label:'Tesla'}
+};
+
+function bilUpdateDefaults() {
+  var m = document.getElementById('bil-merke').value;
+  var p = BIL_MERKER[m];
+  if (!p) return;
+  // Suggest insurance based on brand tier (NAF/OFV data)
+  var ins = m==='bmw'||m==='mercedes'||m==='audi' ? 14000 : m==='tesla' ? 12000 : m==='volvo' ? 11000 : 10000;
+  document.getElementById('bil-forsikring').value = fmt(ins).replace(' kr','');
+  document.getElementById('bil-res').classList.add('hidden');
+}
+
+function calcBilkostnad() {
+  var r = R();
+  var pris = parseNum('bil-pris');
+  if (pris <= 0) return;
+  var aar = Math.max(1, Math.min(20, +document.getElementById('bil-aar').value || 5));
+  var km = Math.max(1000, parseNum('bil-km') || 12000);
+  var startKm = Math.max(0, parseNum('bil-start-km') || 0);
+  var merke = document.getElementById('bil-merke').value;
+  var drivstoff = document.getElementById('bil-drivstoff').value;
+  var forsikring = parseNum('bil-forsikring');
+  var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
+
+  // 1. Depreciation (declining balance, adjusted for starting km)
+  // Higher starting km = car has already passed steepest depreciation curve
+  // Depreciation rate reduction: ~30% slower at 100k km, ~50% at 200k+
+  var deprFactor = 1 / (1 + startKm / 150000); // smooth curve: 0km=1.0, 75k=0.67, 150k=0.5, 300k=0.33
+  var adjDepr = bp.depr * deprFactor;
+  var restverdi = pris;
+  for (var i = 0; i < aar; i++) restverdi *= (1 - adjDepr);
+  var verditap = pris - restverdi;
+
+  // 2. Fuel / charging cost over period
+  // Higher km cars have slightly higher fuel consumption (~5% per 100k km)
+  var kmWearFactor = 1 + (startKm / 100000) * 0.05;
+  var drivKostPerKm;
+  if (drivstoff === 'elbil') {
+    drivKostPerKm = 0.20 * 2.0 * kmWearFactor; // 0.20 kWh/km × 2.0 kr/kWh (hjemmelading snitt)
+  } else if (drivstoff === 'diesel') {
+    drivKostPerKm = 0.06 * 19.0 * kmWearFactor; // 0.06 l/km × 19 kr/l (2026 snitt)
+  } else {
+    drivKostPerKm = 0.07 * 20.0 * kmWearFactor; // 0.07 l/km × 20 kr/l (2026 snitt)
+  }
+  var drivTotal = drivKostPerKm * km * aar;
+
+  // 3. Insurance
+  var forsTotal = forsikring * aar;
+
+  // 4. Service & maintenance: adjusted for total km over ownership
+  // Higher mileage = more frequent and expensive service (OFV data)
+  var serviceBase = drivstoff === 'elbil' ? 0.012 : 0.02;
+  var avgTotalKm = startKm + (km * aar / 2); // average km over ownership period
+  var serviceKmFactor = 1 + Math.max(0, avgTotalKm - 60000) / 200000; // gradual increase above 60k km
+  var servicePerAar = pris * serviceBase * bp.service * serviceKmFactor;
+  var serviceTotal = servicePerAar * aar;
+
+  // 5. Tires: ~4000-5000 kr/yr (summer+winter sets, dekkskift, wear). Elbil slightly higher (heavier)
+  var dekkPerAar = drivstoff === 'elbil' ? 5000 : 4000;
+  var dekkTotal = dekkPerAar * aar;
+
+  // 6. Trafikkforsikringsavgift (2025 rates, regjeringen.no): fossil 2329 kr, elbil 3270 kr
+  var avgiftPerAar = drivstoff === 'elbil' ? 3270 : 2329;
+  var avgiftTotal = avgiftPerAar * aar;
+
+  // 7. Bompenger estimate: average Norwegian driver ~6000 kr/yr, elbil gets ~50% discount (being phased out)
+  var bomPerAar = drivstoff === 'elbil' ? 3500 : 6000;
+  var bomTotal = bomPerAar * aar;
+
+  // Totals
+  var totalKostnad = verditap + drivTotal + forsTotal + serviceTotal + dekkTotal + avgiftTotal + bomTotal;
+  var perMnd = totalKostnad / (aar * 12);
+  var totalKm = km * aar;
+  var perKm = totalKostnad / totalKm;
+
+  document.getElementById('bil-r-val').textContent = fmt(totalKostnad);
+  document.getElementById('bil-r-sub').textContent = fmt(perMnd) + (r.bilPerMnd || '/mnd') + ' · ' + perKm.toFixed(1).replace('.',',') + ' kr/km · ' + aar + ' ' + (r.yr || 'år');
+  // Use default theme gradient (same as other calculators)
+  document.getElementById('bil-r-mnd').textContent = fmt(perMnd);
+  document.getElementById('bil-r-km').textContent = perKm.toFixed(1).replace('.',',') + ' kr';
+  document.getElementById('bil-r-verditap').textContent = fmt(verditap);
+  document.getElementById('bil-r-driv').textContent = fmt(drivTotal);
+  document.getElementById('bil-r-fors').textContent = fmt(forsTotal);
+  document.getElementById('bil-r-service').textContent = fmt(serviceTotal);
+  document.getElementById('bil-r-dekk').textContent = fmt(dekkTotal);
+  document.getElementById('bil-r-avgift').textContent = fmt(avgiftTotal);
+  document.getElementById('bil-r-bom').textContent = fmt(bomTotal);
+
+  document.getElementById('bil-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('bil-res'),'nearest');},80);
 }
 
 function calcNpv() {
@@ -5724,6 +6269,84 @@ function calcUttak() {
   setTimeout(()=>scrollToEl(document.getElementById('uttak-res'),'nearest'),80);
 }
 
+function utdelingToggleType() {
+  document.getElementById('utdeling-res').classList.add('hidden');
+}
+
+function calcUtdeling() {
+  const r = R();
+  const overskudd = parseNum('utdeling-overskudd');
+  if (overskudd <= 0) return;
+  const skjerming = parseNum('utdeling-skjerming');
+  var _ut=document.getElementById('utdeling-type');const type=_ut?_ut.value:'as';
+  const asGrid = document.getElementById('utdeling-as-grid');
+  const enkGrid = document.getElementById('utdeling-enk-grid');
+
+  let totalSkatt, netto, effSats;
+
+  if (type === 'enk') {
+    // Foretaksmodellen: alminnelig inntekt 22% + trygdeavgift 10.8% (2026) + trinnskatt on personinntekt
+    asGrid.classList.add('hidden');
+    enkGrid.classList.remove('hidden');
+    const almSkatt = overskudd * 0.22;
+    const personinntekt = Math.max(0, overskudd - skjerming);
+    const trygd = personinntekt * 0.108;
+    // Trinnskatt 2026 (progressive brackets)
+    const trinnSatser = [
+      { grense: 1467200, sats: 0.178 },
+      { grense: 980100,  sats: 0.168 },
+      { grense: 725050,  sats: 0.137 },
+      { grense: 318300,  sats: 0.040 },
+      { grense: 226100,  sats: 0.017 }
+    ];
+    let trinn = 0, gjenstaar = personinntekt;
+    for (const t of trinnSatser) {
+      if (gjenstaar > t.grense) { trinn += (gjenstaar - t.grense) * t.sats; gjenstaar = t.grense; }
+    }
+    totalSkatt = almSkatt + trygd + trinn;
+    netto = overskudd - totalSkatt;
+    effSats = (totalSkatt / overskudd) * 100;
+
+    document.getElementById('utdeling-r-enk-overskudd').textContent = fmt(overskudd);
+    document.getElementById('utdeling-r-enk-alm').textContent = fmt(almSkatt);
+    document.getElementById('utdeling-r-enk-skjerming').textContent = fmt(skjerming);
+    document.getElementById('utdeling-r-enk-person').textContent = fmt(personinntekt);
+    document.getElementById('utdeling-r-enk-trygd').textContent = fmt(trygd);
+    document.getElementById('utdeling-r-enk-trinn').textContent = fmt(trinn);
+    document.getElementById('utdeling-r-enk-total').textContent = fmt(totalSkatt);
+    document.getElementById('utdeling-r-enk-netto').textContent = fmt(netto);
+    document.getElementById('utdeling-r-enk-eff').textContent = pct(effSats);
+  } else {
+    // Aksjonærmodellen: selskapsskatt 22% + oppjustert utbytte × 22%
+    asGrid.classList.remove('hidden');
+    enkGrid.classList.add('hidden');
+    const selskapsskatt = overskudd * 0.22;
+    const etterSelskap = overskudd - selskapsskatt;
+    const utbytteGrunnlag = Math.max(0, etterSelskap - skjerming);
+    const oppjustert = utbytteGrunnlag * 1.72;
+    const utbytteskatt = oppjustert * 0.22;
+    totalSkatt = selskapsskatt + utbytteskatt;
+    netto = overskudd - totalSkatt;
+    effSats = (totalSkatt / overskudd) * 100;
+
+    document.getElementById('utdeling-r-overskudd').textContent = fmt(overskudd);
+    document.getElementById('utdeling-r-selskap').textContent = fmt(selskapsskatt);
+    document.getElementById('utdeling-r-etter').textContent = fmt(etterSelskap);
+    document.getElementById('utdeling-r-skjerming2').textContent = fmt(skjerming);
+    document.getElementById('utdeling-r-oppjustert').textContent = fmt(oppjustert);
+    document.getElementById('utdeling-r-utbytte').textContent = fmt(utbytteskatt);
+    document.getElementById('utdeling-r-total').textContent = fmt(totalSkatt);
+    document.getElementById('utdeling-r-netto').textContent = fmt(netto);
+    document.getElementById('utdeling-r-eff').textContent = pct(effSats);
+  }
+
+  document.getElementById('utdeling-r-val').textContent = fmt(totalSkatt);
+  document.getElementById('utdeling-r-sub').textContent = (r.utdelingEffRate || 'Effektiv skattesats') + ': ' + pct(effSats) + ' · ' + (r.utdelingNetLabel || 'Netto til eier') + ': ' + fmt(netto);
+  document.getElementById('utdeling-rh').style.background = 'linear-gradient(135deg,var(--accent),var(--accent-l))';
+  document.getElementById('utdeling-res').classList.remove('hidden');
+  setTimeout(()=>scrollToEl(document.getElementById('utdeling-res'),'nearest'),80);
+}
+
 // ═══════════════════════════════════════════════════════
 // BASIC CALCULATOR
 // ═══════════════════════════════════════════════════════
@@ -5952,7 +6575,7 @@ function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseN
 function calcAga(){const sal=parseNum('aga-salary');if(sal<=0)return;const aga=+document.getElementById('aga-zone').value;const ferie=+document.getElementById('aga-ferie').value;const otp=+document.getElementById('aga-otp').value;const agaAmt=sal*aga;const ferieAmt=sal*ferie;const otpAmt=sal*otp;const total=sal+agaAmt+ferieAmt+otpAmt;const pct=(agaAmt+ferieAmt+otpAmt)/sal*100;document.getElementById('aga-aga-amt').textContent=fmt(agaAmt);document.getElementById('aga-ferie-amt').textContent=fmt(ferieAmt);document.getElementById('aga-otp-amt').textContent=fmt(otpAmt);document.getElementById('aga-total').textContent=fmt(total);document.getElementById('aga-per-month').textContent=fmt(total/12)+' '+(R().agaPerMonth||'/mnd');document.getElementById('aga-pct').textContent=pct.toFixed(1)+'%';document.getElementById('aga-res').classList.remove('hidden');}
 
 // AVS: Avskrivning
-function calcAvs(){const price=parseNum('avs-price');if(price<=0)return;const rate=+document.getElementById('avs-group').value;const r=R();let remaining=price;const rows=[];rows.push('<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;font-weight:600;color:var(--ink);">'+(r.avsColYear||'År')+'</td><td style="padding:8px 4px;font-weight:600;color:var(--ink);text-align:right;">'+(r.avsColStart||'Verdi start')+'</td><td style="padding:8px 4px;font-weight:600;color:var(--ink);text-align:right;">'+(r.avsColDepr||'Avskrivning')+'</td><td style="padding:8px 4px;font-weight:600;color:var(--ink);text-align:right;">'+(r.avsColEnd||'Verdi slutt')+'</td></tr>');for(let i=1;i<=10;i++){const depr=remaining*rate;const newRemaining=remaining-depr;rows.push('<tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 4px;">'+i+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(remaining)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(depr)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(newRemaining)+'</td></tr>');remaining=newRemaining;}document.getElementById('avs-table').innerHTML='<table style="width:100%;border-collapse:collapse;">'+rows.join('')+'</table>';document.getElementById('avs-res').classList.remove('hidden');}
+function calcAvs(){const price=parseNum('avs-price');if(price<=0)return;const rate=+document.getElementById('avs-group').value;const r=R();let remaining=price;const rows=[];rows.push('<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;font-weight:600;color:var(--ink);">'+(r.avsColYear||'År')+'</td><td style="padding:8px 4px;font-weight:600;color:var(--ink);text-align:right;">'+(r.avsColStart||'Verdi start')+'</td><td style="padding:8px 4px;font-weight:600;color:var(--ink);text-align:right;">'+(r.avsColDepr||'Avskrivning')+'</td><td style="padding:8px 4px;font-weight:600;color:var(--ink);text-align:right;">'+(r.avsColEnd||'Verdi slutt')+'</td></tr>');for(let i=1;i<=10;i++){const depr=remaining*rate;const newRemaining=remaining-depr;rows.push('<tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 4px;">'+i+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(remaining)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(depr)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(newRemaining)+'</td></tr>');remaining=newRemaining;}document.getElementById('avs-table').innerHTML='<table style="width:100%;border-collapse:collapse;">'+rows.join('')+'</table>';document.getElementById('avs-res').classList.remove('hidden');requestAnimationFrame(()=>setTimeout(()=>smartScroll(document.getElementById('avs-res')),150));}
 
 // FERIE: Feriepenger
 function calcFerie(){const sal=parseNum('ferie-salary');if(sal<=0)return;const type=+document.getElementById('ferie-type').value;const over60=document.getElementById('ferie-over60').checked;const amt=sal*type;const daily=amt/220;let bonus=0;if(over60){bonus=sal*(type+0.023)-amt;}document.getElementById('ferie-amt').textContent=fmt(amt);document.getElementById('ferie-daily').textContent=fmt(daily);if(over60){document.getElementById('ferie-over60-row').classList.remove('hidden');document.getElementById('ferie-with-bonus').textContent=fmt(amt+bonus);}else{document.getElementById('ferie-over60-row').classList.add('hidden');}document.getElementById('ferie-res').classList.remove('hidden');}
@@ -6057,7 +6680,7 @@ function calcPensjon(){
   document.getElementById('pensjon-res').classList.remove('hidden');
 }
 
-function switchCalcMode(mode){
+function switchCalcMode(mode, skipScroll){
   bcMode=mode;
   bcExpr='';bcHistory='';bcFresh=true;
   document.querySelectorAll('.cm-opt').forEach(el=>el.classList.remove('cm-active'));
@@ -6100,11 +6723,13 @@ function switchCalcMode(mode){
     bcUpdateDisp();
   }
   // Scroll to the active panel, not just nav
-  setTimeout(()=>{
-    var target=document.getElementById('bc-'+mode);
-    if(!target||target.classList.contains('hidden')) target=document.querySelector('.calc-nav');
-    if(target) scrollToEl(target,'top');
-  },120);
+  if(!skipScroll){
+    setTimeout(()=>{
+      var target=document.getElementById('bc-'+mode);
+      if(!target||target.classList.contains('hidden')) target=document.querySelector('.calc-nav');
+      if(target) scrollToEl(target,'top');
+    },120);
+  }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -6380,6 +7005,17 @@ window.scrollTo(0,0);
 document.querySelectorAll('select.fc').forEach(function(sel){
   sel.addEventListener('focus',function(){setTimeout(function(){scrollToEl(sel);},150);});
 });
+
+// PWA: Register service worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./sw.js').then(function(reg){
+      console.log('SW registered, scope:',reg.scope);
+    }).catch(function(err){
+      console.log('SW registration failed:',err);
+    });
+  });
+}
 </script>
 </body>
 </html>
