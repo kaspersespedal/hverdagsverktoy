@@ -1,0 +1,361 @@
+<!--
+  Hverdagsverktøy — Gratis norsk finanskalkulator
+  © 2024–2026 Kasper Espedal. All rights reserved.
+  https://hverdagsverktoy.com
+-->
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personlig økonomi – Hverdagsverktøy</title>
+<meta name="description" content="Gratis norsk finanskalkulator — beregn bilkostnad, budsjett, NPV og IRR. Kjører helt lokalt i nettleseren.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234a6fa5'/%3E%3Crect x='7' y='6' width='18' height='4' rx='1.5' fill='white' opacity='.95'/%3E%3Crect x='7' y='13' width='8' height='3' rx='1' fill='white' opacity='.7'/%3E%3Crect x='17' y='13' width='8' height='3' rx='1' fill='white' opacity='.7'/%3E%3Crect x='7' y='18' width='8' height='3' rx='1' fill='white' opacity='.5'/%3E%3Crect x='17' y='18' width='8' height='3' rx='1' fill='white' opacity='.5'/%3E%3Crect x='7' y='23' width='8' height='3' rx='1' fill='white' opacity='.4'/%3E%3Crect x='17' y='23' width='8' height='3' rx='1' fill='white' opacity='.4'/%3E%3C/svg%3E">
+<link href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/style.css">
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <div class="hdr">
+      <a class="logo" href="index.html" style="text-decoration:none;color:inherit;cursor:pointer">Hverdagsverktøy</a>
+      <div class="hdr-right">
+        <div class="region-sel">
+          <div class="region-cur" onclick="toggleDD()">
+            <span class="flag" id="rf">🇳🇴</span>
+            <span id="rn">Norsk</span>
+            <span class="chev">▼</span>
+          </div>
+          <div class="region-dd" id="rdd">
+            <div class="region-group-label" id="rg-main">Hovedspråk</div>
+            <div class="region-opt active" onclick="setRegion('no',event)"><span class="flag">🇳🇴</span><span>Norsk</span></div>
+            <div class="region-opt" onclick="setRegion('en',event)"><span class="flag">🇬🇧</span><span>English</span></div>
+            <div class="region-divider"></div>
+            <div class="region-group-label" id="rg-norway">Språk i Norge</div>
+            <div class="region-opt" onclick="setRegion('pl',event)"><span class="flag">🇵🇱</span><span>Polski</span></div>
+            <div class="region-opt" onclick="setRegion('uk',event)"><span class="flag">🇺🇦</span><span>Українська</span></div>
+            <div class="region-opt" onclick="setRegion('ar',event)"><span class="flag">🇸🇦</span><span>العربية</span></div>
+            <div class="region-opt" onclick="setRegion('lt',event)"><span class="flag">🇱🇹</span><span>Lietuvių</span></div>
+            <div class="region-opt" onclick="setRegion('so',event)"><span class="flag">🇸🇴</span><span>Soomaali</span></div>
+            <div class="region-opt" onclick="setRegion('ti',event)"><span class="flag">🇪🇷</span><span>ትግርኛ</span></div>
+            <div class="region-divider"></div>
+            <div class="region-group-label" id="rg-intl">Internasjonalt</div>
+            <div class="region-opt" onclick="setRegion('zh',event)"><span class="flag">🇨🇳</span><span>中文</span></div>
+            <div class="region-opt" onclick="setRegion('fr',event)"><span class="flag">🇫🇷</span><span>Français</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- NAV BAR -->
+    <nav class="calc-nav">
+      <a href="index.html" class="calc-tab" id="tab-dashboard" style="text-decoration:none;"><span></span><span id="tl-dash">Hjem</span></a>
+      <a href="kalkulator.html" class="calc-tab" id="tab-basic" style="text-decoration:none;"><span></span><span id="tl-basic">Kalkulator</span></a>
+      <a href="boliglan.html" class="calc-tab" id="tab-mortgage" style="text-decoration:none;"><span></span><span id="tl-mor">Boliglån</span></a>
+      <a href="skatt.html" class="calc-tab" id="tab-salary" style="text-decoration:none;"><span></span><span id="tl-sal">Skatt</span></a>
+      <a href="avgift.html" class="calc-tab" id="tab-vat" style="text-decoration:none;"><span></span><span id="tl-vat">Avgift</span></a>
+      <a href="personlig.html" class="calc-tab active" id="tab-npv" style="text-decoration:none;"><span></span><span id="tl-npv">Personlig økonomi</span></a>
+    </nav>
+
+    <!-- ══════════════ NPV ══════════════ -->
+    <div id="calc-npv" class="calc-grid">
+      <div class="card">
+        <!-- Bilkostnadskalkulator — collapsible -->
+        <div id="bil-wrapper" class="info-card collapsed" style="border:none;box-shadow:none;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="bil-title">Bilkostnadskalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bil-desc">Se hva bilen din gjennomsnittlig koster deg per måned og over tid</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
+          <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="bil-intro">De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er.</div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="bil-l-merke">Bilmerke</label>
+              <select class="fc" id="bil-merke" onchange="bilUpdateDefaults()">
+                <option value="snitt">Gjennomsnitt</option>
+                <option value="toyota">Toyota</option>
+                <option value="volkswagen">Volkswagen</option>
+                <option value="volvo">Volvo</option>
+                <option value="skoda">Škoda</option>
+                <option value="hyundai">Hyundai / Kia</option>
+                <option value="bmw">BMW</option>
+                <option value="mercedes">Mercedes-Benz</option>
+                <option value="audi">Audi</option>
+                <option value="tesla">Tesla</option>
+              </select>
+            </div>
+            <div class="fg"><label class="flbl" id="bil-l-pris">Kjøpspris (kr)</label>
+              <input class="fc" type="text" id="bil-pris" value="400,000" inputmode="numeric">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="bil-l-aar">Eiertid (år)</label>
+              <input class="fc" type="number" id="bil-aar" value="5" min="1" max="20" step="1">
+            </div>
+            <div class="fg"><label class="flbl" id="bil-l-km">Årlig kjørelengde (km)</label>
+              <input class="fc" type="text" id="bil-km" value="12,000" inputmode="numeric">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="bil-l-startKm">Kilometerstand ved kjøp</label>
+              <input class="fc" type="text" id="bil-start-km" value="0" inputmode="numeric">
+            </div>
+            <div class="fg" style="visibility:hidden;"><label class="flbl">&nbsp;</label><input class="fc" type="text" disabled></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="bil-l-drivstoff">Drivstoff</label>
+              <select class="fc" id="bil-drivstoff">
+                <option value="bensin">Bensin</option>
+                <option value="diesel">Diesel</option>
+                <option value="elbil">Elbil</option>
+              </select>
+            </div>
+            <div class="fg"><label class="flbl" id="bil-l-forsikring">Forsikring (kr/år)</label>
+              <input class="fc" type="text" id="bil-forsikring" value="10,000" inputmode="numeric">
+            </div>
+          </div>
+          <button class="btn-calc" onclick="calcBilkostnad()"><span id="btn-calc-bil">Beregn bilkostnad →</span></button>
+          <div id="bil-res" class="result-sec hidden">
+            <div class="rh" id="bil-rh">
+              <div class="rh-lbl" id="bil-r-lbl">Total eierkostnad</div>
+              <div class="rh-val" id="bil-r-val">–</div>
+              <div class="rh-sub" id="bil-r-sub">–</div>
+            </div>
+            <div class="rgrid">
+              <div class="rt"><div class="rt-lbl" id="bil-rl-mnd">Kostnad per måned</div><div class="rt-val" id="bil-r-mnd">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-km">Kostnad per km</div><div class="rt-val" id="bil-r-km">–</div></div>
+              <div class="rt" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;"><div class="rt-lbl" id="bil-rl-verditap">Verditap</div><div class="rt-val" id="bil-r-verditap">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-driv">Drivstoff / lading</div><div class="rt-val" id="bil-r-driv">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-fors">Forsikring</div><div class="rt-val" id="bil-r-fors">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-service">Service og vedlikehold</div><div class="rt-val" id="bil-r-service">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-dekk">Dekk (slitasje)</div><div class="rt-val" id="bil-r-dekk">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-avgift">Trafikkforsikringsavgift</div><div class="rt-val" id="bil-r-avgift">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="bil-rl-bom">Bompenger (estimat)</div><div class="rt-val" id="bil-r-bom">–</div></div>
+            </div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;" id="bil-disclaimer">* Røft estimat. Faktiske kostnader varierer med kjøremønster, bosted, forsikringsvilkår og bilens tilstand.</div>
+          </div>
+          </div>
+        </div>
+
+        <!-- Budsjettkalkulator — collapsible -->
+        <div id="budsjett-wrapper" class="info-card collapsed" style="margin-top:16px;border:none;box-shadow:none;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="budsjett-title">Budsjettkalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="budsjett-desc">Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
+          <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="budsjett-intro">Legg inn alle inntektene og utgiftene dine for å få full oversikt over økonomien. Du kan legge til så mange poster du vil, og laste ned budsjettet som CSV.</div>
+
+          <!-- Inntekter -->
+          <div style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;" id="budsjett-l-income-hdr">Inntekter</div>
+              <button onclick="budsjettAddRow('income')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;" id="budsjett-btn-add-income">+ Legg til</button>
+            </div>
+            <div id="budsjett-income-rows">
+              <div class="budsjett-row" style="display:flex;gap:8px;margin-bottom:6px;">
+                <input type="text" class="fc budsjett-name" placeholder="Lønn" style="flex:2;">
+                <input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;">
+                <button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Utgifter -->
+          <div style="margin-bottom:16px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;" id="budsjett-l-expense-hdr">Utgifter</div>
+              <button onclick="budsjettAddRow('expense')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;" id="budsjett-btn-add-expense">+ Legg til</button>
+            </div>
+            <div id="budsjett-expense-rows">
+              <div class="budsjett-row" style="display:flex;gap:8px;margin-bottom:6px;">
+                <select class="fc budsjett-cat" style="flex:1;font-size:12px;">
+                  <option value="bolig">Bolig</option><option value="transport">Transport</option><option value="mat">Mat</option><option value="forsikring">Forsikring</option><option value="helse">Helse</option><option value="underholdning">Underholdning</option><option value="klaer">Klær</option><option value="sparing">Sparing</option><option value="annet">Annet</option>
+                </select>
+                <input type="text" class="fc budsjett-name" placeholder="Husleie" style="flex:2;">
+                <input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;">
+                <button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-calc" onclick="budsjettCalc()"><span id="btn-calc-budsjett">Beregn budsjett →</span></button>
+
+          <div id="budsjett-res" class="result-sec hidden" style="margin-top:12px;">
+            <div class="rh"><div class="rh-lbl" id="budsjett-r-lbl">Månedlig balanse</div><div class="rh-val" id="budsjett-r-balance">–</div><div class="rh-sub" id="budsjett-r-verdict">–</div></div>
+            <div class="rgrid">
+              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-income">Sum inntekter</div><div class="rt-val gld" id="budsjett-r-income">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-expense">Sum utgifter</div><div class="rt-val" id="budsjett-r-expense">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-savings">Sparerate</div><div class="rt-val" id="budsjett-r-savings">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-annual">Årlig overskudd</div><div class="rt-val" id="budsjett-r-annual">–</div></div>
+            </div>
+            <div id="budsjett-breakdown" style="margin-top:12px;"></div>
+            <button onclick="budsjettPdf()" style="margin-top:12px;width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;" id="budsjett-btn-pdf">Last ned (CSV)</button>
+            <div style="margin-top:8px;padding:10px 12px;background:var(--card-bg,#f7f8fc);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.6;" id="budsjett-csv-tip">
+              <strong>Tips:</strong> Hvis kolonnene ikke deles automatisk i Excel: Merk kolonne A → Data → Tekst til kolonner → Skilletegn → Semikolon → Fullfør.
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <!-- Lønnsomhetsanalyse (NPV/IRR) — collapsible -->
+        <div id="npv-wrapper" class="info-card collapsed" style="margin-top:16px;border:none;box-shadow:none;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="npv-title">Lønnsomhetsanalyse (NPV / IRR) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="npv-desc">Netto nåverdi og internrente for investeringsprosjekter.</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="npv-l-inv">Initial Investment</label><input class="fc" type="text" id="n-inv" value="1,000,000" inputmode="numeric"></div>
+            <div class="fg"><label class="flbl" id="npv-l-rate">Discount Rate (%)</label><input class="fc" type="number" id="n-r" value="10" step="0.5"></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="npv-l-cf1">Cash Flow Year 1</label><input class="fc" type="text" id="n-c1" value="300,000" inputmode="numeric"></div>
+            <div class="fg"><label class="flbl" id="npv-l-cf2">Cash Flow Year 2</label><input class="fc" type="text" id="n-c2" value="350,000" inputmode="numeric"></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="npv-l-cf3">Cash Flow Year 3</label><input class="fc" type="text" id="n-c3" value="400,000" inputmode="numeric"></div>
+            <div class="fg"><label class="flbl" id="npv-l-cf4">Cash Flow Year 4</label><input class="fc" type="text" id="n-c4" value="400,000" inputmode="numeric"></div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="npv-l-cf5">Cash Flow Year 5</label><input class="fc" type="text" id="n-c5" value="500,000" inputmode="numeric"></div>
+            <div class="fg" style="visibility:hidden;"><label class="flbl">&nbsp;</label><input class="fc" type="text" disabled></div>
+          </div>
+          <button class="btn-calc" onclick="calcNpv()"><span id="btn-calc-n">Calculate →</span></button>
+          <div id="n-res" class="result-sec hidden">
+            <div class="rh"><div class="rh-lbl" id="npv-r-lbl">Net Present Value (NPV)</div><div class="rh-val" id="n-npv">–</div><div class="rh-sub" id="n-verd">–</div></div>
+            <div class="rgrid">
+              <div class="rt"><div class="rt-lbl">IRR</div><div class="rt-val gld" id="n-irr">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="npv-r-pay">Payback Period</div><div class="rt-val" id="n-pay">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="npv-r-sum">Total Cash Flows</div><div class="rt-val" id="n-sum">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="npv-r-pi">Profitability Index</div><div class="rt-val" id="n-pi">–</div></div>
+            </div>
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="right-col">
+        <!-- Budsjettkalkulator hjelp -->
+        <div class="info-card collapsed" id="bud-howto-card">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="bud-howto-title">Slik bruker du Budsjettkalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bud-howto-desc">Steg-for-steg guide til budsjettering</div></div></div>
+          <div id="bud-howto-rows" class="law-body"></div>
+        </div>
+        <!-- Bilkostnad hjelp -->
+        <div class="info-card collapsed" id="bil-howto-card" style="margin-top:16px;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="bil-howto-title">Slik bruker du Bilkostnadskalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bil-howto-desc">Steg-for-steg guide til bilkostnader</div></div></div>
+          <div id="bil-howto-rows" class="law-body"></div>
+        </div>
+        <!-- NPV/IRR hjelp -->
+        <div class="info-card collapsed" id="npv-howto-card" style="margin-top:16px;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="npv-howto-title">Slik bruker du Lønnsomhetsanalyse (NPV/IRR) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="npv-howto-desc">Steg-for-steg guide til NPV og IRR</div></div></div>
+          <div id="npv-howto-rows" class="law-body"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Hverdagsverktøy</div>
+      <div class="footer-links"><a href="#" id="fl-priv">Privacy</a><a href="#" id="fl-con">Contact</a></div>
+    </div>
+    <div class="footer-copy" id="fl-copy">© 2024 Hverdagsverktøy — Calculations are indicative. Always consult a qualified professional. Not financial advice.</div>
+  </div>
+</footer>
+
+<!-- PRIVACY OVERLAY -->
+<div class="priv-overlay" id="priv-overlay">
+  <div class="priv-page">
+    <div class="priv-back" onclick="closePrivacy()">← <span id="priv-back">Tilbake</span></div>
+    <h1 id="priv-h1">Personvernerklæring</h1>
+    <div class="priv-updated" id="priv-updated">Sist oppdatert: mars 2026</div>
+    <div class="priv-intro" id="priv-intro">Hverdagsverktøy er en gratis finanskalkulator som kjører helt og holdent i nettleseren din. Vi tar personvernet ditt på alvor — og den enkleste måten å beskytte det på er å aldri samle inn data i utgangspunktet.</div>
+
+    <div class="priv-section">
+      <h2 id="priv-h-nodata">Ingen datainnsamling</h2>
+      <p id="priv-p-nodata">Vi samler ikke inn, lagrer eller sender noen form for personopplysninger. Alle beregninger skjer lokalt i nettleseren din. Ingen data forlater enheten din.</p>
+    </div>
+    <div class="priv-section">
+      <h2 id="priv-h-cookies">Ingen informasjonskapsler (cookies)</h2>
+      <p id="priv-p-cookies">Denne nettsiden bruker ingen cookies — verken til analyse, sporing eller reklame. Det finnes ingen cookie-banner fordi det ikke finnes noen cookies.</p>
+    </div>
+    <div class="priv-section">
+      <h2 id="priv-h-thirdparty">Ingen tredjepartstjenester</h2>
+      <p id="priv-p-thirdparty">Vi bruker ingen analysetjenester (Google Analytics, Facebook Pixel e.l.), ingen annonseringsnettverk og ingen sporing av noe slag. Eneste eksterne ressurs er Bunny Fonts for skrifttyper.</p>
+    </div>
+    <div class="priv-section">
+      <h2 id="priv-h-storage">Minimal lokal lagring</h2>
+      <p id="priv-p-storage">Kalkulatoren bruker localStorage kun for å huske dine valg av tema og språk. Ingen personopplysninger lagres. Du kan slette disse når som helst via nettleserinnstillingene.</p>
+    </div>
+    <div class="priv-section">
+      <h2 id="priv-h-children">Barn</h2>
+      <p id="priv-p-children">Siden vi ikke samler inn noen data, er tjenesten trygg å bruke for alle aldersgrupper.</p>
+    </div>
+    <div class="priv-section">
+      <h2 id="priv-h-changes">Endringer</h2>
+      <p id="priv-p-changes">Dersom vi endrer denne erklæringen, oppdaterer vi datoen øverst. Siden vi ikke samler inn data, forventer vi ingen vesentlige endringer.</p>
+    </div>
+    <div class="priv-contact">
+      <h2 id="priv-h-contact">Kontakt</h2>
+      <p id="priv-p-contact">Har du spørsmål om personvern? Send en e-post til kontakt@hverdagsverktoy.com.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT OVERLAY -->
+<div class="contact-overlay" id="contact-overlay">
+  <div class="contact-page">
+    <div class="priv-back" onclick="closeContact()">← <span id="con-back">Tilbake</span></div>
+    <h1 id="con-h1">Kontakt oss</h1>
+    <div class="contact-sub" id="con-sub">Har du spørsmål, tilbakemeldinger eller forslag? Vi hører gjerne fra deg.</div>
+
+    <form class="contact-form" id="contact-form" onsubmit="submitContact(event)">
+      <div class="contact-fg">
+        <label id="con-l-name">Navn</label>
+        <input type="text" id="con-name" required>
+      </div>
+      <div class="contact-fg">
+        <label id="con-l-email">E-post</label>
+        <input type="email" id="con-email" required>
+      </div>
+      <div class="contact-fg">
+        <label id="con-l-subject">Emne</label>
+        <select id="con-subject">
+          <option value="general" id="con-opt-general">Generell henvendelse</option>
+          <option value="bug" id="con-opt-bug">Feilrapport</option>
+          <option value="feature" id="con-opt-feature">Forslag til forbedring</option>
+          <option value="other" id="con-opt-other">Annet</option>
+        </select>
+      </div>
+      <div class="contact-fg">
+        <label id="con-l-message">Melding</label>
+        <textarea id="con-message" required></textarea>
+      </div>
+      <button type="submit" class="contact-btn" id="con-btn">Send melding →</button>
+    </form>
+
+    <div class="contact-success" id="con-success">
+      <div class="check">✓</div>
+      <h2 id="con-success-h">Takk for meldingen!</h2>
+      <p id="con-success-p">E-postklienten din åpnes med meldingen ferdig utfylt. Trykk «Send» i e-postklienten for å fullføre.</p>
+    </div>
+
+    <div class="contact-alt">
+      <h2 id="con-alt-h">Direkte kontakt</h2>
+      <p id="con-alt-p">Du kan også sende e-post direkte til <a href="mailto:kontakt@hverdagsverktoy.com">kontakt@hverdagsverktoy.com</a></p>
+    </div>
+  </div>
+</div>
+
+<script src="shared/regions.js"></script>
+<script src="shared/core.js"></script>
+<script>initPage();</script>
+</body>
+</html>
