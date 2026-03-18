@@ -2284,6 +2284,7 @@ function mkBtn(b, small){
   return el;
 }
 function buildCalcKeys(mode){
+  if(!bcKeys) return;
   bcKeys.innerHTML='';
   if(mode==='scientific'){
     // Function strip at top
