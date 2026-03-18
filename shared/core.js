@@ -1616,20 +1616,18 @@ function calcMor() {
 
   // Omkostninger
   const feesPerMonth = parseNum('m-fees');
-  const feesRes = document.getElementById('m-fees-res');
-  if(feesRes) {
-    if(feesPerMonth > 0) {
-      const totalFees = feesPerMonth * n;
-      const grandTotal = tot + totalFees;
-      document.getElementById('m-fees-tot').textContent = fmt(totalFees);
-      document.getElementById('m-fees-total').textContent = fmt(grandTotal);
-      feesRes.classList.remove('hidden');
-      // Oppdater hovedtall til å inkludere omkostninger
-      document.getElementById('m-mth').textContent = fmt(mnd + feesPerMonth);
-      document.getElementById('m-sub').textContent = fmt(grandTotal) + ' / ' + years + ' ' + (r.yr||'yrs');
-    } else {
-      feesRes.classList.add('hidden');
-    }
+  const feesCell = document.getElementById('m-fees-cell');
+  if(feesPerMonth > 0) {
+    const totalFees = feesPerMonth * n;
+    const grandTotal = tot + totalFees;
+    document.getElementById('m-fees-tot').textContent = fmt(totalFees);
+    if(feesCell) feesCell.classList.remove('hidden');
+    // Totalt tilbakebetalt inkluderer omkostninger
+    document.getElementById('m-tot').textContent = fmt(grandTotal);
+    document.getElementById('m-mth').textContent = fmt(mnd + feesPerMonth);
+    document.getElementById('m-sub').textContent = fmt(grandTotal) + ' / ' + years + ' ' + (r.yr||'yrs');
+  } else {
+    if(feesCell) feesCell.classList.add('hidden');
   }
 
   // Skattefradrag: 22% av totale renter
