@@ -1012,7 +1012,7 @@ const REGIONS = {
     bilTitle:'Bilkostnadskalkulator', bilDesc:'Se hva bilen din gjennomsnittlig koster deg per måned og over tid',
     bilIntro:'De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er.',
     bilLMerke:'Bilmerke', bilLPris:'Kjøpspris (kr)', bilLAar:'Eiertid (år)', bilLKm:'Årlig kjørelengde (km)', bilLStartKm:'Kilometerstand ved kjøp',
-    bilLDrivstoff:'Drivstoff', bilLForsikring:'Forsikring (kr/år)', bilBtn:'Beregn bilkostnad →',
+    bilLDrivstoff:'Drivstoff', bilLForsikring:'Forsikring (kr/mnd)', bilBtn:'Beregn bilkostnad →',
     bilRLbl:'Total eierkostnad', bilRMnd:'Kostnad per måned', bilRKm:'Kostnad per km',
     bilRVerditap:'Verditap', bilRDriv:'Drivstoff / lading', bilRFors:'Forsikring',
     bilRService:'Service og vedlikehold', bilRDekk:'Dekk (slitasje)', bilRAvgift:'Trafikkforsikringsavgift', bilRBom:'Bompenger (estimat)',
