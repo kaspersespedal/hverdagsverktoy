@@ -2486,13 +2486,13 @@ function vgFillRate(){
   const r=R();
   if(ccRates[cur] && ccRates.NOK){
     const ratePerUnit = 1/ccRates[cur];
-    hint.textContent=(r.vgDagensKurs||'Dagens kurs: ca.')+' '+ratePerUnit.toFixed(2)+' NOK/'+cur+(ccRatesLoaded?' (live)':' '+(r.vgLive||'(ca.)'));
+    hint.textContent=(r.vgDagensKurs||'Dagens kurs: ca.')+' '+ratePerUnit.toFixed(2).replace('.',',')+' NOK/'+cur+(ccRatesLoaded?' (live)':' '+(r.vgLive||'(ca.)'));
   } else { hint.textContent=''; }
 }
 function calcValgevinst(){
   const units=parseNum('valgevinst-units');
-  const buyRate=+document.getElementById('valgevinst-buy-rate').value;
-  const sellRate=+document.getElementById('valgevinst-sell-rate').value;
+  const buyRate=+(document.getElementById('valgevinst-buy-rate').value.replace(',','.'));
+  const sellRate=+(document.getElementById('valgevinst-sell-rate').value.replace(',','.'));
   if(units<=0||buyRate<=0||sellRate<=0) return;
   const r=R();
   const costNok=units*buyRate;
