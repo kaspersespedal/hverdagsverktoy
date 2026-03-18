@@ -111,11 +111,11 @@ let _sal, _mor, _npv, _vat;
 function R() { const r=REGIONS[region]; return r.base ? Object.assign({},REGIONS[r.base],r) : r; }
 function fmt(n) {
   const r=R();
-  return new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(Math.round(n))+' '+r.currency;
+  return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(Math.round(n)).replace(/\u00a0/g,' ')+' '+r.currency;
 }
-function pct(n) { return n.toFixed(1)+' %'; }
-function parseNum(id) { const el=document.getElementById(id); return el ? +(el.value.replace(/,/g,'')) || 0 : 0; }
-function fmtInput(n) { return new Intl.NumberFormat('en-US',{maximumFractionDigits:0}).format(n); }
+function pct(n) { return n.toFixed(1).replace('.',',')+' %'; }
+function parseNum(id) { const el=document.getElementById(id); return el ? +(el.value.replace(/[\s\u00a0,]/g,'').replace(',','.')) || 0 : 0; }
+function fmtInput(n) { return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(n).replace(/\u00a0/g,' '); }
 
 // Live-format number inputs
 document.addEventListener('input', function(e) {
