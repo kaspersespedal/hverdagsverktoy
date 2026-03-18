@@ -316,10 +316,8 @@ footer{background:linear-gradient(135deg,var(--grad-dark),var(--accent-l));color
 /* CALC MODE SELECTOR */
 .cm-opt:hover{background:var(--surface2);}
 .cm-active{background:var(--surface2)!important;color:var(--accent-l)!important;font-weight:700!important;}
-.cm-arrow-open{transform:rotate(180deg);}
-/* Smooth dropdown for fagkalkulatorer */
-#cm-extra-list{max-height:0;opacity:0;overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s ease;padding-left:4px;}
-#cm-extra-list.cm-open{max-height:2000px;opacity:1;overflow:visible;transition:max-height .4s cubic-bezier(.4,0,.2,1),opacity .3s ease .05s;}
+/* Fagkalkulatorer list — always visible */
+#cm-extra-list{padding-left:4px;}
 /* Smooth result sections */
 .result-sec:not(.hidden){animation:resultIn .35s ease both;}
 @keyframes resultIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
@@ -332,7 +330,18 @@ footer{background:linear-gradient(135deg,var(--grad-dark),var(--accent-l));color
 .info-card:not(.collapsed) .law-body{opacity:1;}
 .info-card .card-hdr:hover{background:var(--surface2);transition:background .15s ease;}
 .info-card .card-hdr{transition:background .15s ease;}
-@media(max-width:768px){#calc-basic{grid-template-columns:1fr!important;}}
+@media(max-width:768px){
+  #calc-basic{grid-template-columns:1fr!important;}
+  #calc-basic>div:last-child{display:none!important;}
+  body.mobile-sidebar-open #calc-basic>div:last-child{display:flex!important;flex-direction:column;gap:14px;position:fixed;top:0;right:0;bottom:0;width:280px;z-index:210;background:var(--surface);overflow-y:auto;box-shadow:-4px 0 24px rgba(0,0,0,.15);animation:slideInRight .25s ease;padding:16px 0;}
+  .mobile-mode-btn{display:flex!important;}
+  .mobile-sidebar-backdrop{display:block!important;pointer-events:none;opacity:0;transition:opacity .25s;}
+  body.mobile-sidebar-open .mobile-sidebar-backdrop{pointer-events:auto;opacity:1;}
+}
+@keyframes slideInRight{from{transform:translateX(100%);}to{transform:translateX(0);}}
+.mobile-mode-btn{display:none;position:fixed;bottom:20px;right:20px;z-index:220;width:48px;height:48px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:20px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.2);align-items:center;justify-content:center;transition:transform .15s;}
+.mobile-mode-btn:active{transform:scale(.92);}
+.mobile-sidebar-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;}
 .hidden{display:none!important;}
 /* Law group dropdown */
 .law-group{margin-top:16px;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--surface);}

@@ -189,12 +189,12 @@ function updateTabs() {
   document.getElementById('tl-npv').textContent = r.tabNpv || 'NPV / IRR';
   document.getElementById('tl-vat').textContent = r.tabVat || 'Tax / Duties';
   document.getElementById('tl-basic').textContent = r.tabBasic || 'Calculator';
-  // Right panel labels
-  document.getElementById('lbl-calctype').textContent = r.cmLabel || 'Calculator type';
-  document.getElementById('lbl-basic').textContent = r.cmBasic || 'Basic';
-  document.getElementById('lbl-finance').textContent = r.cmFinance || 'Financial';
-  document.getElementById('lbl-scientific').textContent = r.cmScientific || 'Scientific';
-  document.getElementById('lbl-unit').textContent = r.cmUnit || 'Unit conversion';
+  // Right panel labels (only on kalkulator.html)
+  var _ct=document.getElementById('lbl-calctype');if(_ct)_ct.textContent = r.cmLabel || 'Calculator type';
+  var _cb=document.getElementById('lbl-basic');if(_cb)_cb.textContent = r.cmBasic || 'Basic';
+  var _cf=document.getElementById('lbl-finance');if(_cf)_cf.textContent = r.cmFinance || 'Financial';
+  var _cs=document.getElementById('lbl-scientific');if(_cs)_cs.textContent = r.cmScientific || 'Scientific';
+  var _cu=document.getElementById('lbl-unit');if(_cu)_cu.textContent = r.cmUnit || 'Unit conversion';
   // Finanskalkulatorer shortcut panel (removed — safe-skip)
   const _fc = id => { const el=document.getElementById(id); return el; };
   if(_fc('lbl-fincalcs')) _fc('lbl-fincalcs').textContent = r.cmFinCalcs || 'Financial calculators';
@@ -202,24 +202,27 @@ function updateTabs() {
   if(_fc('lbl-fc-mor')) _fc('lbl-fc-mor').textContent = r.cmFcMor || 'Mortgage';
   if(_fc('lbl-fc-npv')) _fc('lbl-fc-npv').textContent = r.cmFcNpv || 'Profitability analysis';
   if(_fc('lbl-fc-vat')) _fc('lbl-fc-vat').textContent = r.cmFcVat || 'Tax / Duties';
-  // Update mode label for current calc mode
-  const modeLabels = {basic: r.tabBasic, scientific: r.cmScientific, finance: r.cmFinance, unit: r.cmUnit};
-  document.getElementById('bc-mode-label').textContent = modeLabels[bcMode] || r.tabBasic || 'Calculator';
-  // Finance calculator labels
-  document.getElementById('fc-lbl-type').textContent = r.fcLblType || 'Calculation type';
-  document.getElementById('fc-btn').textContent = r.fcBtn || 'Calculate →';
-  document.getElementById('fc-res-lbl').textContent = r.fcResLbl || 'Result';
-  fcPopulateSelect();
-  fcUpdateFields();
-  // Unit converter labels
-  document.getElementById('uc-lbl-from').textContent = r.ucFrom || 'Fra';
-  document.getElementById('uc-lbl-to').textContent = r.ucTo || 'Til';
-  document.getElementById('uc-lbl-val').textContent = r.ccAmount || 'Beløp';
-  document.getElementById('uc-lbl-res').textContent = r.ucResult || 'Resultat';
-  const swapEl=document.getElementById('cc-swap'); if(swapEl) swapEl.textContent='⇅ '+(r.ccSwap||'Bytt');
-  // Mortgage loan type
-  document.getElementById('mor-l-type').textContent = r.morLType || 'Loan type';
-  morPopulateType();
+  // Update mode label for current calc mode (kalkulator.html only)
+  var _bml=document.getElementById('bc-mode-label');
+  if(_bml){
+    const modeLabels = {basic: r.tabBasic, scientific: r.cmScientific, finance: r.cmFinance, unit: r.cmUnit};
+    _bml.textContent = modeLabels[bcMode] || r.tabBasic || 'Calculator';
+    // Finance calculator labels
+    setText('fc-lbl-type', r.fcLblType || 'Calculation type');
+    setText('fc-btn', r.fcBtn || 'Calculate →');
+    setText('fc-res-lbl', r.fcResLbl || 'Result');
+    fcPopulateSelect();
+    fcUpdateFields();
+    // Unit converter labels
+    setText('uc-lbl-from', r.ucFrom || 'Fra');
+    setText('uc-lbl-to', r.ucTo || 'Til');
+    setText('uc-lbl-val', r.ccAmount || 'Beløp');
+    setText('uc-lbl-res', r.ucResult || 'Resultat');
+    const swapEl=document.getElementById('cc-swap'); if(swapEl) swapEl.textContent='⇅ '+(r.ccSwap||'Bytt');
+  }
+  // Mortgage loan type (boliglan.html only)
+  var _mlt=document.getElementById('mor-l-type');if(_mlt)_mlt.textContent = r.morLType || 'Loan type';
+  if(document.getElementById('m-type')) morPopulateType();
 }
 function morPopulateType(){
   const r = R();
@@ -234,7 +237,7 @@ function morPopulateType(){
 
 function goToDeprCard(){
   if(!document.getElementById('sal-depr-card')){
-    window.location.href='/skatt#sal-depr-card'; return;
+    window.location.href='skatt.html#sal-depr-card'; return;
   }
   switchCalc('salary', true);
   const card=document.getElementById('sal-depr-card');
@@ -264,7 +267,7 @@ function goToDeprCard(){
 }
 function goToAgaCard(){
   if(!document.getElementById('vat-aga-card')){
-    window.location.href='/avgift#vat-aga-card'; return;
+    window.location.href='avgift.html#vat-aga-card'; return;
   }
   switchCalc('vat', true);
   window.scrollTo({top:0,behavior:'auto'});
@@ -277,7 +280,7 @@ function goToAgaCard(){
 }
 function goToLvuCalc(){
   if(!document.getElementById('bc-lvu')){
-    window.location.href='/kalkulator#lvu'; return;
+    window.location.href='kalkulator.html#lvu'; return;
   }
   switchCalc('basic', true);
   switchCalcMode('lvu', true);
@@ -290,7 +293,7 @@ function goToLvuCalc(){
 }
 function goToAvsCalc(){
   if(!document.getElementById('bc-avs')){
-    window.location.href='/kalkulator#avs'; return;
+    window.location.href='kalkulator.html#avs'; return;
   }
   switchCalc('basic', true);
   switchCalcMode('avs', true);
@@ -1284,14 +1287,10 @@ function resetCalcPanel(n){
       var body=g.querySelector('.law-group-body');
       if(body) body.style.maxHeight='0';
     });
-    // Close fagkalkulatorer dropdown if open
-    var extraList=document.getElementById('cm-extra-list');
-    var cmArrow=document.querySelector('.cm-arrow');
-    if(extraList&&extraList.classList.contains('cm-open')){extraList.classList.remove('cm-open');if(cmArrow)cmArrow.classList.remove('cm-arrow-open');}
   }catch(e){console.warn('resetCalcPanel:',e);}
 }
 // Page mapping for multi-page navigation
-var PAGE_MAP = {dashboard:'/',basic:'/kalkulator',salary:'/skatt',mortgage:'/boliglan',npv:'/personlig',vat:'/avgift'};
+var PAGE_MAP = {dashboard:'index.html',basic:'kalkulator.html',salary:'skatt.html',mortgage:'boliglan.html',npv:'personlig.html',vat:'avgift.html'};
 function switchCalc(n, skipScroll) {
   // If the target page content exists on current page, toggle visibility (same-page)
   var target=document.getElementById('calc-'+n);
@@ -2442,6 +2441,7 @@ function calcPensjon(){
 function switchCalcMode(mode, skipScroll){
   bcMode=mode;
   bcExpr='';bcHistory='';bcFresh=true;
+  if(typeof closeMobileSidebar==='function')closeMobileSidebar();
   document.querySelectorAll('.cm-opt').forEach(el=>el.classList.remove('cm-active'));
   const modeMap={basic:'cm-basic',finance:'cm-fin',scientific:'cm-sci',unit:'cm-unit',lvu:'cm-lvu',aga:'cm-aga',avs:'cm-avs',ferie:'cm-ferie',rente:'cm-rente',valgevinst:'cm-valgevinst',likvid:'cm-likvid',pensjon:'cm-pensjon'};
   var mEl=document.getElementById(modeMap[mode]);if(mEl)mEl.classList.add('cm-active');
@@ -2451,11 +2451,7 @@ function switchCalcMode(mode, skipScroll){
   specialPanels.forEach(id=>{var el=document.getElementById(id);if(el)el.classList.add('hidden');});
   const r=R();
   const extraModes={lvu:r.lblLvu||'Lønn vs Utbytte',aga:r.lblAga||'Ansattkostnad',avs:r.lblAvs||'Avskrivning',ferie:r.lblFerie||'Feriepenger',rente:r.lblRente||'Effektiv Rente',valgevinst:r.lblValgevinst||'Valutagevinst',likvid:r.lblLikvid||'Likviditet',pensjon:r.lblPensjon||'Pensjon'};
-  // Auto-open/close fagkalkulatorer dropdown
-  const extraList=document.getElementById('cm-extra-list');
-  const arrow=document.querySelector('.cm-arrow');
   if(extraModes[mode]){
-    if(extraList&&!extraList.classList.contains('cm-open')){extraList.classList.add('cm-open');if(arrow)arrow.classList.add('cm-arrow-open');}
     if(keysWrap)keysWrap.classList.add('hidden');if(dispWrap)dispWrap.classList.add('hidden');
     const panel=document.getElementById('bc-'+mode);if(panel){panel.classList.remove('hidden');panel.classList.remove('bc-panel-anim');void panel.offsetWidth;panel.classList.add('bc-panel-anim');}
     var ml=document.getElementById('bc-mode-label');if(ml)ml.textContent=extraModes[mode];
@@ -2716,6 +2712,10 @@ function fcCalc(){
   document.getElementById('fc-result').classList.remove('hidden');
   setTimeout(()=>scrollToEl(document.getElementById('fc-result'),'nearest'),80);
 }
+
+// Mobile sidebar toggle
+function toggleMobileSidebar(){document.body.classList.toggle('mobile-sidebar-open');}
+function closeMobileSidebar(){document.body.classList.remove('mobile-sidebar-open');}
 
 // Init basic calc
 buildCalcKeys('basic');
