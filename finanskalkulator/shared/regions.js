@@ -1021,7 +1021,7 @@ const REGIONS = {
     ioRlMthFree:'Månedlig betaling (kun renter)', ioRlTotFree:'Totale renter i perioden', ioRlMthAfter:'Månedlig betaling (annuitet)', ioRlIntAfter:'Renter i restperioden',
     ioRlTotIntIo:'Totale renter (med avdragsfritt)', ioRlTotIntAnn:'Totale renter (annuitet fra dag 1)', ioRlDiff:'Ekstra rentekostnad', ioRlAnnMth:'Månedlig annuitet fra dag 1',
     ioRSub:'Ekstra rentekostnad vs. annuitet fra dag 1',
-    bilTitle:'Bilkostnadskalkulator', bilDesc:'Se hva bilen din gjennomsnittlig koster deg per måned og over tid',
+    bilTitle:'Bil', bilDesc:'Se hva bilen din gjennomsnittlig koster deg per måned og over tid',
     bilIntro:'De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er.',
     bilLMerke:'Bilmerke', bilLPris:'Kjøpspris (kr)', bilLAar:'Eiertid (år)', bilLKm:'Årlig kjørelengde (km)', bilLStartKm:'Kilometerstand ved kjøp',
     bilLDrivstoff:'Drivstoff', bilLForsikring:'Forsikring (kr/mnd)', bilLTilstand:'Kjøpt som', bilLModell:'Årsmodell', bilLKjopsaar:'Kjøpsår',

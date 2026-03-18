@@ -67,10 +67,67 @@
     <!-- ══════════════ NPV ══════════════ -->
     <div id="calc-npv" class="calc-grid">
       <div class="card">
-        <!-- Bilkostnadskalkulator — collapsible -->
-        <div id="bil-wrapper" class="info-card collapsed" style="border:none;box-shadow:none;">
+        <!-- 1. Budsjettkalkulator -->
+        <div id="budsjett-wrapper" class="info-card collapsed" style="border:none;box-shadow:none;">
           <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
-            <div><div class="card-title" id="bil-title">Bilkostnadskalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bil-desc">Se hva bilen din gjennomsnittlig koster deg per måned og over tid</div></div>
+            <div><div class="card-title" id="budsjett-title">Budsjettkalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="budsjett-desc">Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
+          <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="budsjett-intro">Legg inn alle inntektene og utgiftene dine for å få full oversikt over økonomien. Du kan legge til så mange poster du vil, og laste ned budsjettet som CSV.</div>
+
+          <!-- Inntekter -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:13px;font-weight:700;color:var(--ink);" id="budsjett-l-income-hdr">Inntekter</div>
+              <button onclick="budsjettAddRow('income')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;" id="budsjett-btn-add-income">+ Legg til</button>
+            </div>
+            <div id="budsjett-income-rows">
+              <div class="budsjett-row" style="display:flex;gap:8px;margin-bottom:6px;">
+                <input type="text" class="fc budsjett-name" placeholder="Lønn" style="flex:2;">
+                <input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;">
+                <button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Utgifter -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:13px;font-weight:700;color:var(--ink);" id="budsjett-l-expense-hdr">Utgifter</div>
+              <button onclick="budsjettAddRow('expense')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;" id="budsjett-btn-add-expense">+ Legg til</button>
+            </div>
+            <div id="budsjett-expense-rows">
+              <div class="budsjett-row" style="display:flex;gap:8px;margin-bottom:6px;">
+                <input type="text" class="fc budsjett-name" placeholder="Husleie" style="flex:2;">
+                <input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;">
+                <button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-calc" onclick="budsjettCalc()"><span id="btn-calc-budsjett">Beregn budsjett →</span></button>
+
+          <div id="budsjett-res" class="result-sec hidden" style="margin-top:12px;">
+            <div class="rh"><div class="rh-lbl" id="budsjett-r-lbl">Månedlig balanse</div><div class="rh-val" id="budsjett-r-balance">–</div><div class="rh-sub" id="budsjett-r-verdict">–</div></div>
+            <div class="rgrid">
+              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-income">Sum inntekter</div><div class="rt-val gld" id="budsjett-r-income">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-expense">Sum utgifter</div><div class="rt-val" id="budsjett-r-expense">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-savings">Sparerate</div><div class="rt-val" id="budsjett-r-savings">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-annual">Årlig overskudd</div><div class="rt-val" id="budsjett-r-annual">–</div></div>
+            </div>
+            <div id="budsjett-breakdown" style="margin-top:12px;"></div>
+            <button onclick="budsjettPdf()" style="margin-top:12px;width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;" id="budsjett-btn-pdf">Last ned (CSV)</button>
+            <div style="margin-top:8px;padding:10px 12px;background:var(--card-bg,#f7f8fc);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.6;" id="budsjett-csv-tip">
+              <strong>Tips:</strong> Hvis kolonnene ikke deles automatisk i Excel: Merk kolonne A → Data → Tekst til kolonner → Skilletegn → Semikolon → Fullfør.
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <!-- 2. Bil -->
+        <div id="bil-wrapper" class="info-card collapsed" style="margin-top:16px;border:none;box-shadow:none;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="bil-title">Bil <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bil-desc">Se hva bilen din gjennomsnittlig koster deg per måned og over tid</div></div>
           </div>
           <div class="law-body" style="padding:0 24px 20px;">
           <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="bil-intro">De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er.</div>
@@ -165,64 +222,7 @@
           </div>
         </div>
 
-        <!-- Budsjettkalkulator — collapsible -->
-        <div id="budsjett-wrapper" class="info-card collapsed" style="margin-top:16px;border:none;box-shadow:none;">
-          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
-            <div><div class="card-title" id="budsjett-title">Budsjettkalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="budsjett-desc">Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV</div></div>
-          </div>
-          <div class="law-body" style="padding:0 24px 20px;">
-          <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="budsjett-intro">Legg inn alle inntektene og utgiftene dine for å få full oversikt over økonomien. Du kan legge til så mange poster du vil, og laste ned budsjettet som CSV.</div>
-
-          <!-- Inntekter -->
-          <div style="margin-bottom:14px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-              <div style="font-size:13px;font-weight:700;color:var(--ink);" id="budsjett-l-income-hdr">Inntekter</div>
-              <button onclick="budsjettAddRow('income')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;" id="budsjett-btn-add-income">+ Legg til</button>
-            </div>
-            <div id="budsjett-income-rows">
-              <div class="budsjett-row" style="display:flex;gap:8px;margin-bottom:6px;">
-                <input type="text" class="fc budsjett-name" placeholder="Lønn" style="flex:2;">
-                <input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;">
-                <button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Utgifter -->
-          <div style="margin-bottom:14px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-              <div style="font-size:13px;font-weight:700;color:var(--ink);" id="budsjett-l-expense-hdr">Utgifter</div>
-              <button onclick="budsjettAddRow('expense')" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;" id="budsjett-btn-add-expense">+ Legg til</button>
-            </div>
-            <div id="budsjett-expense-rows">
-              <div class="budsjett-row" style="display:flex;gap:8px;margin-bottom:6px;">
-                <input type="text" class="fc budsjett-name" placeholder="Husleie" style="flex:2;">
-                <input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;">
-                <button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>
-              </div>
-            </div>
-          </div>
-
-          <button class="btn-calc" onclick="budsjettCalc()"><span id="btn-calc-budsjett">Beregn budsjett →</span></button>
-
-          <div id="budsjett-res" class="result-sec hidden" style="margin-top:12px;">
-            <div class="rh"><div class="rh-lbl" id="budsjett-r-lbl">Månedlig balanse</div><div class="rh-val" id="budsjett-r-balance">–</div><div class="rh-sub" id="budsjett-r-verdict">–</div></div>
-            <div class="rgrid">
-              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-income">Sum inntekter</div><div class="rt-val gld" id="budsjett-r-income">–</div></div>
-              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-expense">Sum utgifter</div><div class="rt-val" id="budsjett-r-expense">–</div></div>
-              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-savings">Sparerate</div><div class="rt-val" id="budsjett-r-savings">–</div></div>
-              <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-annual">Årlig overskudd</div><div class="rt-val" id="budsjett-r-annual">–</div></div>
-            </div>
-            <div id="budsjett-breakdown" style="margin-top:12px;"></div>
-            <button onclick="budsjettPdf()" style="margin-top:12px;width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;" id="budsjett-btn-pdf">Last ned (CSV)</button>
-            <div style="margin-top:8px;padding:10px 12px;background:var(--card-bg,#f7f8fc);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.6;" id="budsjett-csv-tip">
-              <strong>Tips:</strong> Hvis kolonnene ikke deles automatisk i Excel: Merk kolonne A → Data → Tekst til kolonner → Skilletegn → Semikolon → Fullfør.
-            </div>
-          </div>
-          </div>
-        </div>
-
-        <!-- Lønnsomhetsanalyse (NPV/IRR) — collapsible -->
+        <!-- 3. Lønnsomhetsanalyse (NPV/IRR) — collapsible -->
         <div id="npv-wrapper" class="info-card collapsed" style="margin-top:16px;border:none;box-shadow:none;">
           <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
             <div><div class="card-title" id="npv-title">Lønnsomhetsanalyse (NPV / IRR) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="npv-desc">Netto nåverdi og internrente for investeringsprosjekter.</div></div>
