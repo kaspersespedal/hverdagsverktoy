@@ -649,6 +649,18 @@ function updateMortgageUI() {
   setText('mor-r-y1p', r.morRY1p || 'Year 1 Principal');
   setText('mor-r-first', r.morRFirst || 'Første måned');
   setText('mor-r-last', r.morRLast || 'Siste måned');
+  setText('mor-l-fees', r.morLFees || 'Månedlige omkostninger (kr)');
+  setText('mor-fees-hint', r.morFeesHint || 'Termingebyr, forsikring, felleskostnader o.l.');
+  setText('mor-l-io', r.morIoToggle || 'Avdragsfri periode');
+  setText('mor-l-ioyrs', r.morIoYrsLabel || 'Avdragsfri periode (år)');
+  setText('mor-io-section-hdr', r.morIoSectionHdr || 'Avdragsfri periode');
+  setText('mor-r-fees-tot', r.morRFeesTot || 'Totale omkostninger');
+  setText('mor-tax-hdr', r.morTaxHdr || 'Skattefradrag (22 %)');
+  setText('mor-r-tax', r.morRTax || 'Totalt skattefradrag');
+  setText('mor-r-tax-y1', r.morRTaxY1 || 'År 1 skattefradrag');
+  setText('mor-r-io-mthfree', r.morRIoMthFree || 'Månedlig (kun renter)');
+  setText('mor-r-io-mthafter', r.morRIoMthAfter || 'Månedlig etter');
+  setText('mor-r-io-extra', r.morRIoExtra || 'Ekstra rentekostnad');
   const morReqEl = document.getElementById('mor-req-title');
   if(morReqEl) morReqEl.innerHTML = (r.morReqTitle || 'Krav til boliglån') + ' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('mor-req-desc', r.morReqDesc || 'Egenkapital, gjeldsgrad, stresstest, avdrag');
