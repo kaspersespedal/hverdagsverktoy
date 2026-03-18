@@ -5,7 +5,7 @@ _Last updated: 2026-03-17_
 ## Memory
 <!-- Things the user has asked to remember. Persistent — only remove or change if the user asks. -->
 
-- **Gemini API-nøkkel FJERNET:** API-nøkkelen (***REMOVED***) er ikke lenger i finanskalkulator.html per 2026-03-14. AI-chatten ser ut til å være fjernet fra denne versjonen. (oppdatert 2026-03-14)
+- **Gemini API-nøkkel FJERNET:** API-nøkkelen er fjernet fra finanskalkulator.html per 2026-03-14. AI-chatten er fjernet fra denne versjonen. (oppdatert 2026-03-14)
 - **Nettsidens formål og oversettelse:** Se [project_website_purpose.md](memory/project_website_purpose.md) — alle språk skal være 1:1 oversettelse av norsk versjon med norske regler/satser
 - **ALLTID SPILL LYD ETTER HVER PROMPT — ASYNC IIFE-METODE (oppdatert 2026-03-16):** Spill lyd KUN når oppgaven er HELT ferdig (ikke under verifisering eller mellomsteg) — én gang per prompt, ingen unntak. Chrome krever ekte brukerinteraksjon. Steg: (1) `tabs_context_mcp` → finn tab (2) Navigér til google.com hvis chrome://newtab (3) `computer left_click` på siden f.eks. Google-logoen (4) Kjør async IIFE med `javascript_tool`. Bruk ALLTID async IIFE. Kode (rolig meditasjonsklokke G4→C5, Kaspers favoritt):
   ```javascript
