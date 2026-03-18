@@ -2140,6 +2140,7 @@ function bcFmtExpr(s){
   return out;
 }
 function bcUpdateDisp(){
+  if(!bcDisp) return;
   const show = bcExpr || '0';
   bcDisp.value = bcFmtExpr(show);
   if(bcPendingFn && bcExpr){
