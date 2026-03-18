@@ -231,6 +231,7 @@ function updateTabs() {
   // Salary (skatt.html)
   autoRecalc('s-c','s-res',calcSal);
   autoRecalc('s-r','s-res',calcSal);
+  var _sDeduct=document.getElementById('s-deduct');if(_sDeduct){_sDeduct.addEventListener('input',function(){var r=document.getElementById('s-res');if(r&&!r.classList.contains('hidden'))calcSal();});}
   // VAT (avgift.html)
   autoRecalc('v-r','v-res',calcVat);
   autoRecalc('v-t','v-res',calcVat);
@@ -1489,7 +1490,8 @@ function calcSal() {
   const almSats = ks; // 0.22 standard, 0.185 Finnmark/Nord-Troms
   const pf = (kl==='2') ? 229200 : 114540; // Personfradrag 2026
   const mf = Math.min(Math.max(b*0.46,0),95700); // Minstefradrag 2026: 46%, maks 95 700
-  const almInntekt = Math.max(b - mf - pf, 0);
+  const renteFradrag = parseNum('s-deduct');
+  const almInntekt = Math.max(b - mf - pf - renteFradrag, 0);
   // Trinnskatt 2026 (5 trinn)
   const trinnSteps = [
     [226100,318300,0.017,(r.trinnLabel1||'Trinn 1')],
@@ -1514,6 +1516,16 @@ function calcSal() {
   document.getElementById('s-eff').textContent = pct(tot/b*100);
   document.getElementById('s-soc').textContent = fmt(soc);
   document.getElementById('s-day').textContent = fmt(net/260);
+  // Rentefradrag-visning
+  var deductCell = document.getElementById('s-deduct-cell');
+  if(deductCell) {
+    if(renteFradrag > 0) {
+      document.getElementById('s-deduct-val').textContent = '- ' + fmt(renteFradrag * almSats);
+      deductCell.classList.remove('hidden');
+    } else {
+      deductCell.classList.add('hidden');
+    }
+  }
   // Trinnskatt breakdown
   const tg = document.getElementById('s-trinn-grid');
   const td = document.getElementById('s-trinn');
