@@ -464,6 +464,10 @@ function updateSalaryUI() {
   setText('sal-r-eff', r.salREff || 'Effective Rate');
   setText('sal-r-soc', r.salRSoc || 'Social / NI');
   setText('sal-r-day', r.salRDay || 'Net per Day');
+  setText('sal-disclaimer', r.salDisclaimer || 'Beregningen er veiledende og tar ikke hensyn til alle individuelle fradrag. Faktisk skatt avhenger av reisefradrag, fagforeningskontingent, BSU, gjeldsrenter og andre fradrag du har krav på.');
+  setText('sal-l-deduct', r.salDeductLabel || 'Rentefradrag — årlige rentekostnader (valgfritt)');
+  setText('sal-deduct-hint', r.salDeductHint || 'Finner du i boliglånskalkulatoren under «År 1 renter». Reduserer skatten med 22 % av beløpet.');
+  setText('sal-r-deduct', r.salRDeduct || 'Rentefradrag');
   setText('s-trinn-title', r.trinnBreakdownTitle || 'Trinnskatt Breakdown');
   // Help card
   const salHelpCard = document.getElementById('sal-help-card');
