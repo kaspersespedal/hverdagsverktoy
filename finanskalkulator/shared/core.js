@@ -660,7 +660,9 @@ function updateNpvUI() {
   setText('bil-l-km', r.bilLKm || 'Annual mileage (km)');
   setText('bil-l-startKm', r.bilLStartKm || 'Mileage at purchase (km)');
   setText('bil-l-drivstoff', r.bilLDrivstoff || 'Fuel type');
-  setText('bil-l-forsikring', r.bilLForsikring || 'Insurance (kr/yr)');
+  setText('bil-l-forsikring', r.bilLForsikring || 'Forsikring (kr/mnd)');
+  setText('bil-l-drivstoff-mnd', r.bilLDrivstoffMnd || 'Drivstoff/lading (kr/mnd)');
+  setText('bil-l-bom-mnd', r.bilLBomMnd || 'Bompenger (kr/mnd)');
   setText('btn-calc-bil', r.bilBtn || 'Calculate car cost →');
   setText('bil-r-lbl', r.bilRLbl || 'Total ownership cost');
   setText('bil-rl-mnd', r.bilRMnd || 'Cost per month');
@@ -1609,13 +1611,15 @@ var BIL_MERKER = {
 };
 
 function bilInitYear(){
-  var sel=document.getElementById('bil-kjopsaar');
-  if(!sel) return;
   var now=new Date().getFullYear();
-  sel.innerHTML='';
-  for(var y=now;y>=now-20;y--){
-    var o=document.createElement('option');o.value=y;o.textContent=y;sel.appendChild(o);
-  }
+  ['bil-kjopsaar','bil-aarsmodell'].forEach(function(id){
+    var sel=document.getElementById(id);
+    if(!sel) return;
+    sel.innerHTML='';
+    for(var y=now;y>=now-30;y--){
+      var o=document.createElement('option');o.value=y;o.textContent=y;sel.appendChild(o);
+    }
+  });
 }
 function bilSyncEiertid(){
   var y=+document.getElementById('bil-kjopsaar').value;
@@ -1627,8 +1631,10 @@ function bilUpdateDefaults() {
   var m = document.getElementById('bil-merke').value;
   var p = BIL_MERKER[m];
   if (!p) return;
-  var ins = m==='bmw'||m==='mercedes'||m==='audi' ? 14000 : m==='tesla' ? 12000 : m==='volvo' ? 11000 : 10000;
-  document.getElementById('bil-forsikring').value = fmt(ins).replace(' kr','');
+  // Clear user overrides so auto-estimate kicks in
+  document.getElementById('bil-forsikring').value = '';
+  var dm=document.getElementById('bil-drivstoff-mnd'); if(dm) dm.value='';
+  var bm=document.getElementById('bil-bom-mnd'); if(bm) bm.value='';
   document.getElementById('bil-res').classList.add('hidden');
 }
 
@@ -1641,7 +1647,10 @@ function calcBilkostnad() {
   var startKm = Math.max(0, parseNum('bil-start-km') || 0);
   var merke = document.getElementById('bil-merke').value;
   var drivstoff = document.getElementById('bil-drivstoff').value;
-  var forsikring = parseNum('bil-forsikring');
+  // User overrides (monthly values) — empty = auto-estimate
+  var forsikringMnd = parseNum('bil-forsikring'); // monthly
+  var drivstoffMnd = parseNum('bil-drivstoff-mnd'); // monthly
+  var bomMnd = parseNum('bil-bom-mnd'); // monthly
   var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
 
   // 1. Depreciation (declining balance, adjusted for condition)
@@ -1660,20 +1669,28 @@ function calcBilkostnad() {
   var verditap = pris - restverdi;
 
   // 2. Fuel / charging cost over period
-  // Higher km cars have slightly higher fuel consumption (~5% per 100k km)
-  var kmWearFactor = 1 + (startKm / 100000) * 0.05;
-  var drivKostPerKm;
-  if (drivstoff === 'elbil') {
-    drivKostPerKm = 0.20 * 2.0 * kmWearFactor; // 0.20 kWh/km × 2.0 kr/kWh (hjemmelading snitt)
-  } else if (drivstoff === 'diesel') {
-    drivKostPerKm = 0.06 * 19.0 * kmWearFactor; // 0.06 l/km × 19 kr/l (2026 snitt)
+  if (drivstoffMnd > 0) {
+    var drivTotal = drivstoffMnd * 12 * aar;
   } else {
-    drivKostPerKm = 0.07 * 20.0 * kmWearFactor; // 0.07 l/km × 20 kr/l (2026 snitt)
+    var kmWearFactor = 1 + (startKm / 100000) * 0.05;
+    var drivKostPerKm;
+    if (drivstoff === 'elbil') {
+      drivKostPerKm = 0.20 * 2.0 * kmWearFactor;
+    } else if (drivstoff === 'diesel') {
+      drivKostPerKm = 0.06 * 19.0 * kmWearFactor;
+    } else {
+      drivKostPerKm = 0.07 * 20.0 * kmWearFactor;
+    }
+    var drivTotal = drivKostPerKm * km * aar;
   }
-  var drivTotal = drivKostPerKm * km * aar;
 
-  // 3. Insurance
-  var forsTotal = forsikring * aar;
+  // 3. Insurance (user enters monthly, or auto-estimate)
+  if (forsikringMnd > 0) {
+    var forsTotal = forsikringMnd * 12 * aar;
+  } else {
+    var autoIns = merke==='bmw'||merke==='mercedes'||merke==='audi' ? 1200 : merke==='tesla' ? 1000 : merke==='volvo' ? 900 : 800;
+    var forsTotal = autoIns * 12 * aar;
+  }
 
   // 4. Service & maintenance: flat annual rate adjusted for brand and km
   // NAF/OFV average: ~8000-12000 kr/yr for fossil, ~4000-6000 for elbil
@@ -1691,9 +1708,13 @@ function calcBilkostnad() {
   var avgiftPerAar = drivstoff === 'elbil' ? 3270 : 2329;
   var avgiftTotal = avgiftPerAar * aar;
 
-  // 7. Bompenger estimate: average ~4000-5000 kr/yr, elbil ~50% discount
-  var bomPerAar = drivstoff === 'elbil' ? 2500 : 4500;
-  var bomTotal = bomPerAar * aar;
+  // 7. Bompenger (user monthly override or auto-estimate)
+  if (bomMnd > 0) {
+    var bomTotal = bomMnd * 12 * aar;
+  } else {
+    var bomPerAar = drivstoff === 'elbil' ? 2500 : 4500;
+    var bomTotal = bomPerAar * aar;
+  }
 
   // Totals
   var totalKostnad = verditap + drivTotal + forsTotal + serviceTotal + dekkTotal + avgiftTotal + bomTotal;
