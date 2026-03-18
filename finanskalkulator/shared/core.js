@@ -804,7 +804,21 @@ function updateVatUI() {
     // Show group wrapper
     vatLawGroup.classList.remove('hidden');
     setText('vat-law-group-title', r.vatLawGroupTitle || 'Merverdiavgiftsloven');
-    setText('vat-law-group-desc', r.vatLawGroupDesc || 'Kap. 1–9 · Definisjoner · Unntak · Fritak · Fradrag · Justering');
+    // Build clickable desc links for MVA law group
+    (function(){
+      var map=[
+        ['vat-def-card', r.vatDescDef||'Definisjoner'],
+        ['vat-reg-card', r.vatDescReg||'Registrering'],
+        ['vat-exempt-card', r.vatDescUnntak||'Unntak'],
+        ['vat-calc-card', r.vatDescBeregn||'Beregning'],
+        ['vat-zero-card', r.vatDescFritak||'Fritak'],
+        ['vat-ded-card', r.vatDescFradrag||'Fradrag'],
+        ['vat-adj-info-card', r.vatDescJust||'Justering']
+      ];
+      var html=map.map(function(m){return '<span class="desc-link" data-target="'+m[0]+'">'+m[1]+'</span>';}).join(' · ');
+      var el=document.getElementById('vat-law-group-desc');
+      if(el) el.innerHTML=html;
+    })();
     // Split vatLawRows into exempt (kap. 3) and zero-rated (kap. 6)
     var exemptRows = [], zeroRows = [], section = 'exempt';
     r.vatLawRows.forEach(function(row){
@@ -1594,11 +1608,25 @@ var BIL_MERKER = {
   tesla:      {depr:0.20, service:0.70, label:'Tesla'}
 };
 
+function bilInitYear(){
+  var sel=document.getElementById('bil-kjopsaar');
+  if(!sel) return;
+  var now=new Date().getFullYear();
+  sel.innerHTML='';
+  for(var y=now;y>=now-20;y--){
+    var o=document.createElement('option');o.value=y;o.textContent=y;sel.appendChild(o);
+  }
+}
+function bilSyncEiertid(){
+  var y=+document.getElementById('bil-kjopsaar').value;
+  var now=new Date().getFullYear();
+  var diff=now-y;
+  if(diff>=0) document.getElementById('bil-aar').value=Math.max(1,diff);
+}
 function bilUpdateDefaults() {
   var m = document.getElementById('bil-merke').value;
   var p = BIL_MERKER[m];
   if (!p) return;
-  // Suggest insurance based on brand tier (NAF/OFV data)
   var ins = m==='bmw'||m==='mercedes'||m==='audi' ? 14000 : m==='tesla' ? 12000 : m==='volvo' ? 11000 : 10000;
   document.getElementById('bil-forsikring').value = fmt(ins).replace(' kr','');
   document.getElementById('bil-res').classList.add('hidden');
@@ -1641,24 +1669,24 @@ function calcBilkostnad() {
   // 3. Insurance
   var forsTotal = forsikring * aar;
 
-  // 4. Service & maintenance: adjusted for total km over ownership
-  // Higher mileage = more frequent and expensive service (OFV data)
-  var serviceBase = drivstoff === 'elbil' ? 0.012 : 0.02;
-  var avgTotalKm = startKm + (km * aar / 2); // average km over ownership period
-  var serviceKmFactor = 1 + Math.max(0, avgTotalKm - 60000) / 200000; // gradual increase above 60k km
-  var servicePerAar = pris * serviceBase * bp.service * serviceKmFactor;
+  // 4. Service & maintenance: flat annual rate adjusted for brand and km
+  // NAF/OFV average: ~8000-12000 kr/yr for fossil, ~4000-6000 for elbil
+  var serviceFlat = drivstoff === 'elbil' ? 5000 : 9000;
+  var avgTotalKm = startKm + (km * aar / 2);
+  var serviceKmFactor = 1 + Math.max(0, avgTotalKm - 60000) / 300000;
+  var servicePerAar = serviceFlat * bp.service * serviceKmFactor;
   var serviceTotal = servicePerAar * aar;
 
-  // 5. Tires: ~4000-5000 kr/yr (summer+winter sets, dekkskift, wear). Elbil slightly higher (heavier)
-  var dekkPerAar = drivstoff === 'elbil' ? 5000 : 4000;
+  // 5. Tires: ~3500-4500 kr/yr (summer+winter sets, dekkskift, wear)
+  var dekkPerAar = drivstoff === 'elbil' ? 4500 : 3500;
   var dekkTotal = dekkPerAar * aar;
 
-  // 6. Trafikkforsikringsavgift (2025 rates, regjeringen.no): fossil 2329 kr, elbil 3270 kr
+  // 6. Trafikkforsikringsavgift (2025/2026 rates): fossil ~2400 kr, elbil ~3300 kr
   var avgiftPerAar = drivstoff === 'elbil' ? 3270 : 2329;
   var avgiftTotal = avgiftPerAar * aar;
 
-  // 7. Bompenger estimate: average Norwegian driver ~6000 kr/yr, elbil gets ~50% discount (being phased out)
-  var bomPerAar = drivstoff === 'elbil' ? 3500 : 6000;
+  // 7. Bompenger estimate: average ~4000-5000 kr/yr, elbil ~50% discount
+  var bomPerAar = drivstoff === 'elbil' ? 2500 : 4500;
   var bomTotal = bomPerAar * aar;
 
   // Totals
@@ -2941,6 +2969,7 @@ function initPage(){
   document.querySelectorAll('.region-opt').forEach(function(el){el.classList.remove('active');});
   var activeOpt=document.querySelector('.region-opt[onclick*="\''+region+'\'"]');
   if(activeOpt) activeOpt.classList.add('active');
+  bilInitYear();
   updateAll();
   window.scrollTo(0,0);
   // Auto-scroll selects into view on focus (mobile-friendly)
