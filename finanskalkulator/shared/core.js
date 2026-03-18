@@ -223,6 +223,8 @@ function updateTabs() {
   // Mortgage loan type (boliglan.html only)
   var _mlt=document.getElementById('mor-l-type');if(_mlt)_mlt.textContent = r.morLType || 'Loan type';
   if(document.getElementById('m-type')) morPopulateType();
+  var _ioChk=document.getElementById('m-io-check');
+  if(_ioChk){_ioChk.addEventListener('change',function(){document.getElementById('m-io-fields').classList.toggle('hidden',!this.checked);});}
 }
 function morPopulateType(){
   const r = R();
@@ -1545,56 +1547,34 @@ function calcMor() {
   document.getElementById('m-eff').textContent = effRate.toFixed(2).replace('.',',') + ' %';
   document.getElementById('m-y1i').textContent = fmt(r1);
   document.getElementById('m-y1p').textContent = fmt(a1);
+  // Avdragsfritt-beregning integrert i hovedkalkulatoren
+  const ioCheck = document.getElementById('m-io-check');
+  const ioRes = document.getElementById('m-io-res');
+  if(ioCheck && ioCheck.checked && ioRes) {
+    const ioYears = +(document.getElementById('m-io-yrs').value) || 5;
+    if(ioYears < years) {
+      const ioMonths = ioYears * 12;
+      const remainMonths = n - ioMonths;
+      const mthFree = P * mRate;
+      const mthAfter = mRate === 0 ? P / remainMonths : P * mRate * Math.pow(1 + mRate, remainMonths) / (Math.pow(1 + mRate, remainMonths) - 1);
+      const totFreePeriodInt = mthFree * ioMonths;
+      const totAfterPeriod = mthAfter * remainMonths;
+      const intAfterPeriod = totAfterPeriod - P;
+      const totIntIo = totFreePeriodInt + intAfterPeriod;
+      const diff = totIntIo - rnt;
+      document.getElementById('m-io-mthfree').textContent = fmt(mthFree);
+      document.getElementById('m-io-mthafter').textContent = fmt(mthAfter);
+      document.getElementById('m-io-extra').textContent = '+ ' + fmt(diff);
+      ioRes.classList.remove('hidden');
+    } else {
+      ioRes.classList.add('hidden');
+    }
+  } else if(ioRes) {
+    ioRes.classList.add('hidden');
+  }
+
   document.getElementById('m-res').classList.remove('hidden');
   setTimeout(()=>scrollToEl(document.getElementById('m-res'),'top'),80);
-}
-
-function calcIo() {
-  const r = R();
-  const P = parseNum('io-amount');
-  if(P <= 0) return;
-  const yearlyRate = +document.getElementById('io-rate').value || 0;
-  const mRate = yearlyRate / 100 / 12;
-  const ioYears = +(document.getElementById('io-free').value) || 5;
-  const totalYears = +(document.getElementById('io-total').value) || 25;
-  if(ioYears >= totalYears) { alert(r.calcError || 'Feil'); return; }
-
-  const ioMonths = ioYears * 12;
-  const totalMonths = totalYears * 12;
-  const remainMonths = totalMonths - ioMonths;
-
-  // During interest-only period: pay only interest, no principal reduction
-  const mthFree = P * mRate;
-  const totFreePeriodInt = mthFree * ioMonths;
-
-  // After interest-only period: full annuity on original P for remaining months
-  const mthAfter = mRate === 0 ? P / remainMonths : P * mRate * Math.pow(1 + mRate, remainMonths) / (Math.pow(1 + mRate, remainMonths) - 1);
-  const totAfterPeriod = mthAfter * remainMonths;
-  const intAfterPeriod = totAfterPeriod - P;
-
-  // Total interest with interest-only
-  const totIntIo = totFreePeriodInt + intAfterPeriod;
-
-  // Comparison: annuity from day 1 for totalMonths
-  const annMth = mRate === 0 ? P / totalMonths : P * mRate * Math.pow(1 + mRate, totalMonths) / (Math.pow(1 + mRate, totalMonths) - 1);
-  const totAnn = annMth * totalMonths;
-  const totIntAnn = totAnn - P;
-
-  // Extra cost
-  const diff = totIntIo - totIntAnn;
-
-  document.getElementById('io-r-val').textContent = fmt(diff);
-  document.getElementById('io-r-sub').textContent = r.ioRSub || 'Ekstra rentekostnad vs. annuitet fra dag 1';
-  document.getElementById('io-r-mthfree').textContent = fmt(mthFree);
-  document.getElementById('io-r-totfree').textContent = fmt(totFreePeriodInt);
-  document.getElementById('io-r-mthafter').textContent = fmt(mthAfter);
-  document.getElementById('io-r-intafter').textContent = fmt(intAfterPeriod);
-  document.getElementById('io-r-totint-io').textContent = fmt(totIntIo);
-  document.getElementById('io-r-totint-ann').textContent = fmt(totIntAnn);
-  document.getElementById('io-r-diff').textContent = '+ ' + fmt(diff);
-  document.getElementById('io-r-annmth').textContent = fmt(annMth);
-  document.getElementById('io-res').classList.remove('hidden');
-  setTimeout(()=>scrollToEl(document.getElementById('io-res'),'top'),80);
 }
 
 // ═══════════════════════════════════════════════════════
