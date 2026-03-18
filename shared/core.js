@@ -2118,16 +2118,17 @@ const sciMainBtns = [
   {l:'±',t:'op'},{l:'0',t:'num'},{l:',',t:'num'},{l:'=',t:'acc'}
 ];
 
+/* BACKUP original bcBtnStyle: bg=var(--surface), accent colors, var(--border) borders */
 function bcBtnStyle(t,l,isSmall){
   let sz = isSmall ? '12px' : '16px';
   let pad = isSmall ? '10px 6px' : '16px 8px';
   let rad = isSmall ? '10px' : '12px';
-  let base = `border:none;border-radius:${rad};padding:${pad};font-family:'Inter',sans-serif;font-size:${sz};font-weight:600;cursor:pointer;transition:all .15s;`;
-  if(l==='=') return base+'background:linear-gradient(135deg,var(--accent-d,#5b8def),var(--accent));color:#fff;font-size:17px;font-weight:800;';
-  if(t==='acc') return base+'background:color-mix(in srgb,var(--accent) 8%,transparent);color:var(--accent-d,#5b8def);border:1.5px solid color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;';
-  if(t==='fn') return base+'background:color-mix(in srgb,var(--accent) 5%,transparent);color:var(--accent-d,#5b8def);border:1.5px solid color-mix(in srgb,var(--accent) 12%,transparent);';
-  if(t==='op') return base+'background:var(--surface2);color:var(--ink3);border:1.5px solid var(--border);';
-  return base+'background:var(--surface);color:var(--ink);border:1.5px solid var(--border);';
+  let base = `border:none;border-radius:${rad};padding:${pad};font-family:'JetBrains Mono','SF Mono','Fira Code','Inter',sans-serif;font-size:${sz};font-weight:600;cursor:pointer;transition:all .15s;`;
+  if(l==='=') return base+'background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;font-size:17px;font-weight:800;box-shadow:0 0 20px rgba(139,92,246,.35);';
+  if(t==='acc') return base+'background:rgba(139,92,246,.12);color:#c4b5fd;border:1px solid rgba(139,92,246,.25);font-weight:700;';
+  if(t==='fn') return base+'background:rgba(139,92,246,.08);color:#a78bfa;border:1px solid rgba(139,92,246,.2);';
+  if(t==='op') return base+'background:rgba(255,255,255,.06);color:#93c5fd;border:1px solid rgba(147,197,253,.2);';
+  return base+'background:rgba(255,255,255,.06);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.1);';
 }
 
 function bcFmtExpr(s){
@@ -2263,8 +2264,8 @@ function mkBtn(b, small){
   const el=document.createElement('button');
   if(b.l==='⌫'){el.innerHTML=bkspSVG;el.style.cssText=bcBtnStyle(b.t,b.l,small)+'display:flex;align-items:center;justify-content:center;';}
   else{el.textContent=b.l;el.style.cssText=bcBtnStyle(b.t,b.l,small);}
-  el.onmouseenter=()=>{el.style.transform='translateY(-1px)';el.style.boxShadow='0 2px 8px rgba(14,40,110,.08)';};
-  el.onmouseleave=()=>{el.style.transform='translateY(0)';el.style.boxShadow='none';};
+  el.onmouseenter=()=>{el.style.transform='translateY(-1px)';el.style.boxShadow='0 4px 12px rgba(139,92,246,.15)';el.style.background=b.l==='='?'linear-gradient(135deg,#8b5cf6,#c084fc)':'rgba(255,255,255,.1)';};
+  el.onmouseleave=()=>{el.style.transform='translateY(0)';el.style.boxShadow='none';el.style.background='';};
   el.onclick=()=>bcPress(b.l);
   return el;
 }
