@@ -224,7 +224,14 @@ function updateTabs() {
   var _mlt=document.getElementById('mor-l-type');if(_mlt)_mlt.textContent = r.morLType || 'Loan type';
   if(document.getElementById('m-type')) morPopulateType();
   var _ioChk=document.getElementById('m-io-check');
-  if(_ioChk){_ioChk.addEventListener('change',function(){document.getElementById('m-io-fields').classList.toggle('hidden',!this.checked);});}
+  if(_ioChk){_ioChk.addEventListener('change',function(){document.getElementById('m-io-fields').classList.toggle('hidden',!this.checked);if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});}
+  var _mtSel=document.getElementById('m-type');if(_mtSel){_mtSel.addEventListener('change',function(){morUpdateHint();if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});morUpdateHint();}
+}
+function morUpdateHint(){
+  var sel=document.getElementById('m-type');var hint=document.getElementById('m-type-hint');
+  if(!sel||!hint)return;var r=R();
+  if(sel.value==='serial') hint.textContent=r.morHintSerial||'Faste avdrag, synkende renter. Høyere start, men lavere totalkostnad.';
+  else hint.textContent=r.morHintAnnuity||'Lik månedlig betaling hele perioden. Lavere start, men høyere totalkostnad.';
 }
 function morPopulateType(){
   const r = R();
@@ -1572,6 +1579,13 @@ function calcMor() {
   } else if(ioRes) {
     ioRes.classList.add('hidden');
   }
+
+  // Skattefradrag: 22% av totale renter
+  const taxDeduction = rnt * 0.22;
+  const taxEl = document.getElementById('m-tax');
+  if(taxEl) taxEl.textContent = fmt(taxDeduction);
+  const taxY1El = document.getElementById('m-tax-y1');
+  if(taxY1El) taxY1El.textContent = fmt(r1 * 0.22);
 
   document.getElementById('m-res').classList.remove('hidden');
   setTimeout(()=>scrollToEl(document.getElementById('m-res'),'top'),80);
