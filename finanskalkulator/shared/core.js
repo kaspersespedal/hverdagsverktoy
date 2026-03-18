@@ -1036,6 +1036,10 @@ function updateFagkalkulatorUI() {
   setText('lbl-valgevinst', r.lblValgevinst || 'Valutagevinst');
   setText('lbl-likvid', r.lblLikvid || 'Likviditet');
   setText('lbl-pensjon', r.lblPensjon || 'Pensjon');
+  // Mobile bar buttons
+  setText('mobile-switch-btn', r.mobileSwitch || 'Bytt kalkulator');
+  setText('mobile-focus-btn', r.mobileFocus || 'Fokus');
+  setText('mobile-focus-exit', r.mobileFocusExit || 'Lukk');
   // Panel titles
   setText('bc-lvu-label', r.lblLvu || 'Lønn vs Utbytte');
   setText('bc-aga-label', r.lblAga || 'Ansattkostnad');
