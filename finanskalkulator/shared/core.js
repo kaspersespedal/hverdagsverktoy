@@ -2838,6 +2838,8 @@ if(document.getElementById('m-type')) morPopulateType();
 // ═══════════════════════════════════════════════════════
 document.addEventListener('keydown', function(e){
   if(e.key==='Enter'){
+    var tag=e.target.tagName;
+    if(tag==='TEXTAREA'||e.target.closest('form')) return;
     e.preventDefault();
     const calcMap = {salary:calcSal, mortgage:calcMor, npv:calcNpv, vat:calcVat};
     if(activeCalc==='basic' && bcMode==='finance'){ fcCalc(); return; }
