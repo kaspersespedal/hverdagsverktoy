@@ -1172,7 +1172,7 @@ function updateFooter() {
   setText('fl-about', r.footerAbout||'About');
   setText('fl-priv', r.footerPriv||'Privacy');
   setText('fl-con', r.footerCon||'Contact');
-  setText('fl-copy', (r.footerCopy||'© 2024 Hverdagsverktøy').replace('2024', yr));
+  setText('fl-copy', (r.footerCopy||'© 2024–2026 Hverdagsverktøy').replace(/2026/g, yr));
   // Wire privacy link
   const privLink = document.getElementById('fl-priv');
   if(privLink) privLink.onclick = function(e){ e.preventDefault(); openPrivacy(); };
