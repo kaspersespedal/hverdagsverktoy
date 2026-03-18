@@ -1456,7 +1456,8 @@ function calcSal() {
   const almSkatt = almInntekt * almSats;
   ts += almSkatt;
   trinnAmounts.push({lbl:(r.almSkattLabel||'Alminnelig inntektsskatt'),rate:almSats,amt:almSkatt});
-  const soc = b * 0.076; // Trygdeavgift 2026: 7.6% (same for all languages)
+  const socRate = (kl==='self') ? 0.108 : 0.076; // Trygdeavgift 2026: 10.8% selvstendig, 7.6% lønnstaker
+  const soc = b * socRate;
   const tot = ts + soc;
   const net = b - tot;
   _sal = { b, net, tot, eff:tot/b*100, soc, region };
@@ -2039,7 +2040,9 @@ function calcUtdeling() {
     // Foretaksmodellen: alminnelig inntekt 22% + trygdeavgift 10.8% (2026) + trinnskatt on personinntekt
     asGrid.classList.add('hidden');
     enkGrid.classList.remove('hidden');
-    const almSkatt = overskudd * 0.22;
+    const personfradrag = 114540; // 2026
+    const almInntekt = Math.max(0, overskudd - personfradrag);
+    const almSkatt = almInntekt * 0.22;
     const personinntekt = Math.max(0, overskudd - skjerming);
     const trygd = personinntekt * 0.108;
     // Trinnskatt 2026 (progressive brackets)
@@ -2323,7 +2326,7 @@ function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseN
 }
 
 // AGA: Ansattkostnad
-function calcAga(){const sal=parseNum('aga-salary');if(sal<=0)return;const aga=+document.getElementById('aga-zone').value;const ferie=+document.getElementById('aga-ferie').value;const otp=+document.getElementById('aga-otp').value;const agaAmt=sal*aga;const ferieAmt=sal*ferie;const otpAmt=sal*otp;const total=sal+agaAmt+ferieAmt+otpAmt;const pct=(agaAmt+ferieAmt+otpAmt)/sal*100;document.getElementById('aga-aga-amt').textContent=fmt(agaAmt);document.getElementById('aga-ferie-amt').textContent=fmt(ferieAmt);document.getElementById('aga-otp-amt').textContent=fmt(otpAmt);document.getElementById('aga-total').textContent=fmt(total);document.getElementById('aga-per-month').textContent=fmt(total/12)+' '+(R().agaPerMonth||'/mnd');document.getElementById('aga-pct').textContent=pct.toFixed(1)+'%';document.getElementById('aga-res').classList.remove('hidden');}
+function calcAga(){const sal=parseNum('aga-salary');if(sal<=0)return;const aga=+document.getElementById('aga-zone').value;const ferie=+document.getElementById('aga-ferie').value;const otp=+document.getElementById('aga-otp').value;const ferieAmt=sal*ferie;const otpAmt=sal*otp;const agaBase=sal+ferieAmt+otpAmt;const agaAmt=agaBase*aga;const total=sal+agaAmt+ferieAmt+otpAmt;const pct=(agaAmt+ferieAmt+otpAmt)/sal*100;document.getElementById('aga-aga-amt').textContent=fmt(agaAmt);document.getElementById('aga-ferie-amt').textContent=fmt(ferieAmt);document.getElementById('aga-otp-amt').textContent=fmt(otpAmt);document.getElementById('aga-total').textContent=fmt(total);document.getElementById('aga-per-month').textContent=fmt(total/12)+' '+(R().agaPerMonth||'/mnd');document.getElementById('aga-pct').textContent=pct.toFixed(1)+'%';document.getElementById('aga-res').classList.remove('hidden');}
 
 // AVS: Avskrivning — mode toggle
 window.avsMode='regnskap';
