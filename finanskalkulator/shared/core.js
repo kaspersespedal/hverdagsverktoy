@@ -1644,11 +1644,17 @@ function calcBilkostnad() {
   var forsikring = parseNum('bil-forsikring');
   var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
 
-  // 1. Depreciation (declining balance, adjusted for starting km)
-  // Higher starting km = car has already passed steepest depreciation curve
-  // Depreciation rate reduction: ~30% slower at 100k km, ~50% at 200k+
-  var deprFactor = 1 / (1 + startKm / 150000); // smooth curve: 0km=1.0, 75k=0.67, 150k=0.5, 300k=0.33
-  var adjDepr = bp.depr * deprFactor;
+  // 1. Depreciation (declining balance, adjusted for km and price)
+  // Cars bought cheaper have already passed steepest depreciation
+  // A 250k Mercedes (new ~600k) has lost ~60% already → slower future loss
+  var kmFactor = 1 / (1 + startKm / 150000);
+  // Price factor: cheaper purchase = already depreciated = slower rate
+  // New-price estimate by brand (rough Norwegian market)
+  var newPrice = {snitt:400000,toyota:380000,volkswagen:420000,volvo:500000,skoda:350000,
+    hyundai:360000,bmw:600000,mercedes:650000,audi:580000,tesla:450000}[merke]||400000;
+  var alreadyDepr = Math.max(0, 1 - pris / newPrice); // 0=new, 0.6=already lost 60%
+  var priceFactor = 1 - alreadyDepr * 0.6; // reduce depr rate by up to 60% for heavily depreciated cars
+  var adjDepr = bp.depr * kmFactor * priceFactor;
   var restverdi = pris;
   for (var i = 0; i < aar; i++) restverdi *= (1 - adjDepr);
   var verditap = pris - restverdi;
