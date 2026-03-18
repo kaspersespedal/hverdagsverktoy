@@ -335,6 +335,25 @@ function toggleCard(card){
   }
 }
 
+// Desc-link: click a keyword in law-group-desc to open group + scroll to card
+document.addEventListener('click',function(e){
+  var link=e.target.closest('.desc-link');
+  if(!link) return;
+  e.stopPropagation();
+  var targetId=link.dataset.target;
+  var card=document.getElementById(targetId);
+  if(!card) return;
+  var group=card.closest('.law-group');
+  if(group&&!group.classList.contains('open')){
+    group.classList.add('open');
+    var body=group.querySelector('.law-group-body');
+    body.style.maxHeight=body.scrollHeight+'px';
+    setTimeout(function(){body.style.maxHeight='none';},550);
+  }
+  if(card.classList.contains('collapsed')) toggleCard(card);
+  setTimeout(function(){ smartScroll(card); },300);
+});
+
 const LOVDATA={
   sktl:'https://lovdata.no/lov/1999-03-26-14/',
   mval:'https://lovdata.no/lov/2009-06-19-58/',
@@ -434,7 +453,23 @@ function updateSalaryUI() {
   if(r.salLawRows || r.salSubjRows){
     salLawGroup.classList.remove('hidden');
     setText('sal-law-group-title', r.salLawGroupTitle || 'Skatteloven');
-    setText('sal-law-group-desc', r.salLawGroupDesc || 'Kap. 2–14 · Skatteplikt · Inntekt · Fradrag · Gevinst · Selskaper · Omgåelse');
+    // Build clickable desc links that jump to each card
+    (function(){
+      var map=[
+        ['sal-subj-card', r.salDescSubj||'Skatteplikt'],
+        ['sal-law-card', r.salDescInnt||'Inntekt'],
+        ['sal-ded-card', r.salDescFrad||'Fradrag'],
+        ['sal-real-card', r.salDescGev||'Gevinst'],
+        ['sal-corp-card', r.salDescSels||'Selskaper'],
+        ['sal-reorg-card', r.salDescOmorg||'Omorganisering'],
+        ['sal-anti-card', r.salDescOmg||'Omgåelse'],
+        ['sal-time-card', r.salDescTid||'Tidfesting'],
+        ['sal-depr-card', r.salDescAvs||'Avskrivning']
+      ];
+      var html=map.map(function(m){return '<span class="desc-link" data-target="'+m[0]+'">'+m[1]+'</span>';}).join(' · ');
+      var el=document.getElementById('sal-law-group-desc');
+      if(el) el.innerHTML=html;
+    })();
   } else {
     salLawGroup.classList.add('hidden');
   }
