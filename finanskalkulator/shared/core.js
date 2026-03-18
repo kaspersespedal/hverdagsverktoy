@@ -226,6 +226,40 @@ function updateTabs() {
   var _ioChk=document.getElementById('m-io-check');
   if(_ioChk){_ioChk.addEventListener('change',function(){document.getElementById('m-io-fields').classList.toggle('hidden',!this.checked);if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});}
   var _mtSel=document.getElementById('m-type');if(_mtSel){_mtSel.addEventListener('change',function(){morUpdateHint();if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});morUpdateHint();}
+  // Auto-recalc on dropdown change for ALL calculators
+  function autoRecalc(selId, resId, calcFn){var s=document.getElementById(selId);if(s)s.addEventListener('change',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))calcFn();});}
+  // Salary (skatt.html)
+  autoRecalc('s-c','s-res',calcSal);
+  autoRecalc('s-r','s-res',calcSal);
+  // VAT (avgift.html)
+  autoRecalc('v-r','v-res',calcVat);
+  autoRecalc('v-t','v-res',calcVat);
+  // VAT Adjustment
+  autoRecalc('adj-type','adj-res',calcAdj);
+  // LVU (kalkulator.html)
+  autoRecalc('lvu-zone','lvu-res',calcLvu);
+  // AGA
+  autoRecalc('aga-zone','aga-res',calcAga);
+  autoRecalc('aga-ferie','aga-res',calcAga);
+  autoRecalc('aga-otp','aga-res',calcAga);
+  // Avskrivning
+  autoRecalc('avs-group','avs-res',function(){calcAvs(true);});
+  // Feriepenger
+  autoRecalc('ferie-type','ferie-res',calcFerie);
+  // Pensjon
+  autoRecalc('pensjon-otp','pensjon-res',calcPensjon);
+  // Uttak (skatt.html)
+  autoRecalc('uttak-type','uttak-res',calcUttak);
+  // Utdeling
+  autoRecalc('utdeling-type','utdeling-res',calcUtdeling);
+  // Bil (personlig.html)
+  autoRecalc('bil-merke','bil-res',calcBilkostnad);
+  autoRecalc('bil-tilstand','bil-res',calcBilkostnad);
+  autoRecalc('bil-drivstoff','bil-res',calcBilkostnad);
+  autoRecalc('bil-aarsmodell','bil-res',calcBilkostnad);
+  autoRecalc('bil-kjopsaar','bil-res',calcBilkostnad);
+  // Valutagevinst
+  autoRecalc('valgevinst-currency','valgevinst-res',calcValgevinst);
 }
 function morUpdateHint(){
   var sel=document.getElementById('m-type');var hint=document.getElementById('m-type-hint');
