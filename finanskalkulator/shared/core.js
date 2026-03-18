@@ -2831,7 +2831,7 @@ fcUpdateFields();
 ccPopulate();
 ccFetchRates();
 vgPopulate();
-morPopulateType();
+if(document.getElementById('m-type')) morPopulateType();
 // Restore theme from localStorage
 // ═══════════════════════════════════════════════════════
 // ENTER KEY → CALCULATE
