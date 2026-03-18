@@ -2916,7 +2916,8 @@ if('scrollRestoration' in history) history.scrollRestoration = 'manual';
 function budsjettAddRow(type){
   var r=R();var cont=document.getElementById('budsjett-'+type+'-rows');
   var row=document.createElement('div');row.className='budsjett-row';row.style.cssText='display:flex;gap:8px;margin-bottom:6px;';
-  row.innerHTML='<input type="text" class="fc budsjett-name" placeholder="" style="flex:2;">'+
+  var phName=type==='income'?(r.budPlaceholderIncome||'f.eks. Lønn'):(r.budPlaceholderExpense||'f.eks. Utgift');
+  row.innerHTML='<input type="text" class="fc budsjett-name" placeholder="'+phName+'" style="flex:2;">'+
     '<input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;">'+
     '<button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>';
   cont.appendChild(row);
