@@ -1,3 +1,9 @@
+// ═══════════════════════════════════════════════════════
+// Hverdagsverktøy — regions.js
+// © 2024–2026 Kasper Skjæveland Espedal. All rights reserved.
+// https://hverdagsverktoy.com
+// ═══════════════════════════════════════════════════════
+
 // REGIONS — translation data for all 10 languages
 const REGIONS = {
   en: {
