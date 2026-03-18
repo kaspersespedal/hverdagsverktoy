@@ -137,7 +137,7 @@ document.addEventListener('input', function(e) {
 // ═══════════════════════════════════════════════════════
 function setRegion(r, e) {
   region = r;
-  try { localStorage.setItem('hvt-lang', r); } catch(e){}
+  try { localStorage.setItem('hvt-lang', r); } catch(_e){}
   var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
   var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
   document.querySelectorAll('.region-opt').forEach(el => el.classList.remove('active'));
