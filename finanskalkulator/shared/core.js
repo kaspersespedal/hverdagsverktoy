@@ -2231,8 +2231,8 @@ function bcBtnStyle(t,l,isSmall){
 function bcFmtExpr(s){
   let out = (s||'').replace(/(\d+\.?\d*)/g, (m) => {
     const parts = m.split('.');
-    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return parts.join('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
+    return parts.length > 1 ? parts[0] + ',' + parts[1] : parts[0];
   });
   out = out.replace(/×10\*\*/g, '×10^').replace(/\*\*/g, '^');
   return out;
