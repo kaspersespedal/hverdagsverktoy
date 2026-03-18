@@ -1614,6 +1614,24 @@ function calcMor() {
     ioRes.classList.add('hidden');
   }
 
+  // Omkostninger
+  const feesPerMonth = parseNum('m-fees');
+  const feesRes = document.getElementById('m-fees-res');
+  if(feesRes) {
+    if(feesPerMonth > 0) {
+      const totalFees = feesPerMonth * n;
+      const grandTotal = tot + totalFees;
+      document.getElementById('m-fees-tot').textContent = fmt(totalFees);
+      document.getElementById('m-fees-total').textContent = fmt(grandTotal);
+      feesRes.classList.remove('hidden');
+      // Oppdater hovedtall til å inkludere omkostninger
+      document.getElementById('m-mth').textContent = fmt(mnd + feesPerMonth);
+      document.getElementById('m-sub').textContent = fmt(grandTotal) + ' / ' + years + ' ' + (r.yr||'yrs');
+    } else {
+      feesRes.classList.add('hidden');
+    }
+  }
+
   // Skattefradrag: 22% av totale renter
   const taxDeduction = rnt * 0.22;
   const taxEl = document.getElementById('m-tax');
