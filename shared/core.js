@@ -2442,6 +2442,12 @@ function switchCalcMode(mode, skipScroll){
   bcMode=mode;
   bcExpr='';bcHistory='';bcFresh=true;
   if(typeof closeMobileSidebar==='function')closeMobileSidebar();
+  if(typeof exitFocusMode==='function')exitFocusMode();
+  // Update mobile bar label
+  var mobileLabels={basic:'Enkel',scientific:'Vitenskapelig',finance:'Finansiell',unit:'Valuta',lvu:'Lønn vs Utbytte',aga:'Ansattkostnad',avs:'Avskrivning',ferie:'Feriepenger',rente:'Effektiv Rente',valgevinst:'Valutagevinst',likvid:'Likviditet',pensjon:'Pensjon'};
+  if(typeof updateMobileBar==='function')updateMobileBar(mobileLabels[mode]||mode);
+  // Auto-focus for scientific on mobile
+  if(mode==='scientific'&&window.innerWidth<=768&&typeof enterFocusMode==='function')setTimeout(enterFocusMode,100);
   document.querySelectorAll('.cm-opt').forEach(el=>el.classList.remove('cm-active'));
   const modeMap={basic:'cm-basic',finance:'cm-fin',scientific:'cm-sci',unit:'cm-unit',lvu:'cm-lvu',aga:'cm-aga',avs:'cm-avs',ferie:'cm-ferie',rente:'cm-rente',valgevinst:'cm-valgevinst',likvid:'cm-likvid',pensjon:'cm-pensjon'};
   var mEl=document.getElementById(modeMap[mode]);if(mEl)mEl.classList.add('cm-active');
@@ -2716,6 +2722,10 @@ function fcCalc(){
 // Mobile sidebar toggle
 function toggleMobileSidebar(){document.body.classList.toggle('mobile-sidebar-open');}
 function closeMobileSidebar(){document.body.classList.remove('mobile-sidebar-open');}
+// Focus mode
+function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';}
+function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';}
+function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
 
 // Init basic calc
 buildCalcKeys('basic');
