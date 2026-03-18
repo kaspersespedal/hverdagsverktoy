@@ -2597,7 +2597,7 @@ const ccCurrencyFlags = ['🇳🇴','🇪🇺','🇺🇸','🇬🇧','🇸🇪',
 function getCcCurrencies(){ const r=R(); const names=r.ccCurrNames||ccCurrenciesNO; return ccCurrencyCodes.map((code,i)=>[code,ccCurrencyFlags[i]+' '+code+' — '+(names[i]||ccCurrenciesNO[i])]); }
 const ccCurrencies = getCcCurrencies();
 // Fallback rates vs NOK (approximate March 2026)
-let ccRates = {NOK:1,EUR:0.0858,USD:0.0935,GBP:0.0737,SEK:0.9524,DKK:0.6404,PLN:0.3685,CHF:0.0813,JPY:14.02,CNY:0.6618,CAD:0.1267,AUD:0.1435,INR:7.88,TRY:3.39,BRL:0.5356};
+let ccRates = {NOK:1,EUR:0.0904,USD:0.0935,GBP:0.0737,SEK:0.9524,DKK:0.6404,PLN:0.3685,CHF:0.0813,JPY:14.02,CNY:0.6618,CAD:0.1267,AUD:0.1435,INR:7.88,TRY:3.39,BRL:0.5356};
 let ccRatesLoaded = false;
 let ccLastUpdate = '';
 
@@ -2610,6 +2610,7 @@ async function ccFetchRates(){
       ccRatesLoaded = true;
       ccLastUpdate = data.time_last_update_utc ? new Date(data.time_last_update_utc).toLocaleDateString('no') : '';
       ccConvert();
+      vgFillRate();
     }
   } catch(e){ /* use fallback rates */ }
 }
