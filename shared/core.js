@@ -237,7 +237,7 @@ function morPopulateType(){
 
 function goToDeprCard(){
   if(!document.getElementById('sal-depr-card')){
-    window.location.href='skatt.html#sal-depr-card'; return;
+    window.location.href='/skatt/#sal-depr-card'; return;
   }
   switchCalc('salary', true);
   const card=document.getElementById('sal-depr-card');
@@ -267,7 +267,7 @@ function goToDeprCard(){
 }
 function goToAgaCard(){
   if(!document.getElementById('vat-aga-card')){
-    window.location.href='avgift.html#vat-aga-card'; return;
+    window.location.href='/avgift/#vat-aga-card'; return;
   }
   switchCalc('vat', true);
   window.scrollTo({top:0,behavior:'auto'});
@@ -280,7 +280,7 @@ function goToAgaCard(){
 }
 function goToLvuCalc(){
   if(!document.getElementById('bc-lvu')){
-    window.location.href='kalkulator.html#lvu'; return;
+    window.location.href='/kalkulator/#lvu'; return;
   }
   switchCalc('basic', true);
   switchCalcMode('lvu', true);
@@ -293,7 +293,7 @@ function goToLvuCalc(){
 }
 function goToAvsCalc(){
   if(!document.getElementById('bc-avs')){
-    window.location.href='kalkulator.html#avs'; return;
+    window.location.href='/kalkulator/#avs'; return;
   }
   switchCalc('basic', true);
   switchCalcMode('avs', true);
@@ -1290,7 +1290,7 @@ function resetCalcPanel(n){
   }catch(e){console.warn('resetCalcPanel:',e);}
 }
 // Page mapping for multi-page navigation
-var PAGE_MAP = {dashboard:'index.html',basic:'kalkulator.html',salary:'skatt.html',mortgage:'boliglan.html',npv:'personlig.html',vat:'avgift.html'};
+var PAGE_MAP = {dashboard:'/',basic:'/kalkulator/',salary:'/skatt/',mortgage:'/boliglan/',npv:'/personlig/',vat:'/avgift/'};
 function switchCalc(n, skipScroll) {
   // If the target page content exists on current page, toggle visibility (same-page)
   var target=document.getElementById('calc-'+n);
