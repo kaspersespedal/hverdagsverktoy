@@ -2864,17 +2864,6 @@ if('scrollRestoration' in history) history.scrollRestoration = 'manual';
   if(sel) sel.classList.add('active');
 })();
 // ── Budsjettkalkulator ──
-function budsjettCatOptions(r){
-  return '<option value="bolig">'+(r.budCatBolig||'Bolig')+'</option>'+
-    '<option value="transport">'+(r.budCatTransport||'Transport')+'</option>'+
-    '<option value="mat">'+(r.budCatMat||'Mat')+'</option>'+
-    '<option value="forsikring">'+(r.budCatForsikring||'Forsikring')+'</option>'+
-    '<option value="helse">'+(r.budCatHelse||'Helse')+'</option>'+
-    '<option value="underholdning">'+(r.budCatUnderholdning||'Underholdning')+'</option>'+
-    '<option value="klaer">'+(r.budCatKlaer||'Klær')+'</option>'+
-    '<option value="sparing">'+(r.budCatSparing||'Sparing')+'</option>'+
-    '<option value="annet">'+(r.budCatAnnet||'Annet')+'</option>';
-}
 function budsjettAddRow(type){
   var r=R();var cont=document.getElementById('budsjett-'+type+'-rows');
   var row=document.createElement('div');row.className='budsjett-row';row.style.cssText='display:flex;gap:8px;margin-bottom:6px;';
@@ -2896,12 +2885,9 @@ function budsjettCalc(){
     if(amt>0){incomeItems.push({name:name,amount:amt});totalIncome+=amt;}
   });
   expenseRows.forEach(function(row){
-    var catEl=row.querySelector('.budsjett-cat');
-    var cat=catEl?catEl.options[catEl.selectedIndex].text:'';
-    var name=row.querySelector('.budsjett-name').value.trim();
-    var displayName=name?(cat+' '+name):cat;
+    var name=row.querySelector('.budsjett-name').value.trim()||r.budDefaultExpense||'Utgift';
     var amt=+(row.querySelector('.budsjett-amount').value.replace(/[^0-9.\-]/g,''))||0;
-    if(amt>0){expenseItems.push({name:displayName,amount:amt,category:catEl?catEl.value:'annet'});totalExpense+=amt;}
+    if(amt>0){expenseItems.push({name:name,amount:amt});totalExpense+=amt;}
   });
   var balance=totalIncome-totalExpense;
   var savingsRate=totalIncome>0?((balance/totalIncome)*100):0;
@@ -2913,64 +2899,43 @@ function budsjettCalc(){
   document.getElementById('budsjett-r-annual').textContent=fmt(balance*12);
   var verdict=balance>0?(r.budVerdictSurplus||'Du har et månedlig overskudd.'):balance===0?(r.budVerdictBreakeven||'Du går i null.'):( r.budVerdictDeficit||'Du bruker mer enn du tjener.');
   document.getElementById('budsjett-r-verdict').textContent=verdict;
-  // Category breakdown
-  var cats={};
-  expenseItems.forEach(function(item){
-    var c=item.category||'annet';
-    cats[c]=(cats[c]||0)+item.amount;
-  });
+  // Expense breakdown (simple list with bar chart)
   var bd=document.getElementById('budsjett-breakdown');
-  if(expenseItems.length>0){
-    var td1='<td style="padding:4px 8px;border-bottom:1px solid var(--border);">';
-    var td2='<td style="padding:4px 8px;border-bottom:1px solid var(--border);text-align:right;">';
-    var td3='<td style="padding:4px 8px;border-bottom:1px solid var(--border);text-align:right;opacity:.6;">';
-    var html='<div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;">'+(r.budBreakdownTitle||'Utgifter per kategori')+'</div>';
-    html+='<table style="width:100%;border-collapse:collapse;font-size:13px;">';
-    var catNames={bolig:r.budCatBolig||'Bolig',transport:r.budCatTransport||'Transport',mat:r.budCatMat||'Mat',forsikring:r.budCatForsikring||'Forsikring',helse:r.budCatHelse||'Helse',underholdning:r.budCatUnderholdning||'Underholdning',klaer:r.budCatKlaer||'Klær',sparing:r.budCatSparing||'Sparing',annet:r.budCatAnnet||'Annet'};
-    var sorted=Object.keys(cats).sort(function(a,b){return cats[b]-cats[a];});
-    sorted.forEach(function(c){
-      var pct=totalExpense>0?((cats[c]/totalExpense)*100).toFixed(1):'0';
-      html+='<tr>'+td1+(catNames[c]||c)+'</td>'+td2+fmt(cats[c])+'</td>'+td3+pct+' %</td></tr>';
-    });
-    html+='<tr style="font-weight:700;border-top:2px solid var(--border);">'+td1+(r.budTotal||'Totalt')+'</td>'+td2+fmt(totalExpense)+'</td>'+td3+'100 %</td></tr>';
-    html+='</table>';
-    // Bar chart
-    html+='<div style="margin-top:12px;">';
-    sorted.forEach(function(c){
-      var pct=totalExpense>0?((cats[c]/totalExpense)*100):0;
+  if(expenseItems.length>1){
+    var html='<div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;">'+(r.budBreakdownTitle||'Utgiftsfordeling')+'</div>';
+    html+='<div style="margin-top:4px;">';
+    expenseItems.sort(function(a,b){return b.amount-a.amount;});
+    expenseItems.forEach(function(item){
+      var pct=totalExpense>0?((item.amount/totalExpense)*100):0;
       html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px;">'+
-        '<div style="width:80px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+(catNames[c]||c)+'</div>'+
+        '<div style="width:90px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+item.name+'</div>'+
         '<div style="flex:1;background:var(--border);border-radius:4px;height:14px;overflow:hidden;">'+
         '<div style="width:'+pct+'%;height:100%;background:var(--accent);border-radius:4px;transition:width .3s;"></div></div>'+
-        '<div style="width:40px;text-align:right;opacity:.6;">'+pct.toFixed(0)+'%</div></div>';
+        '<div style="width:70px;text-align:right;opacity:.6;">'+fmt(item.amount)+'</div></div>';
     });
     html+='</div>';
     bd.innerHTML=html;
   } else { bd.innerHTML=''; }
   document.getElementById('budsjett-res').classList.remove('hidden');
   // Store data for CSV
-  window._budsjettData={incomeItems:incomeItems,expenseItems:expenseItems,totalIncome:totalIncome,totalExpense:totalExpense,balance:balance,savingsRate:savingsRate,cats:cats};
+  window._budsjettData={incomeItems:incomeItems,expenseItems:expenseItems,totalIncome:totalIncome,totalExpense:totalExpense,balance:balance,savingsRate:savingsRate};
 }
 function budsjettPdf(){
   var d=window._budsjettData;if(!d)return;
   var r=R();
   var sep=';';
-  var catNames={bolig:r.budCatBolig||'Bolig',transport:r.budCatTransport||'Transport',mat:r.budCatMat||'Mat',forsikring:r.budCatForsikring||'Forsikring',helse:r.budCatHelse||'Helse',underholdning:r.budCatUnderholdning||'Underholdning',klaer:r.budCatKlaer||'Klær',sparing:r.budCatSparing||'Sparing',annet:r.budCatAnnet||'Annet'};
   var rows=[];
-  rows.push([(r.budPdfTitle||'Personlig budsjett'),'',new Date().toLocaleDateString('no-NO',{year:'numeric',month:'long',day:'numeric'})]);
+  rows.push([(r.budPdfTitle||'Personlig budsjett'),new Date().toLocaleDateString('no-NO',{year:'numeric',month:'long',day:'numeric'})]);
   rows.push([]);
-  rows.push([(r.budLIncomeHdr||'Inntekter').toUpperCase(),'','']);
-  rows.push([(r.budDefaultIncome||'Post'),'',(r.budTotal||'Beløp')]);
-  d.incomeItems.forEach(function(i){rows.push([i.name,'',i.amount]);});
-  rows.push([(r.budTotal||'Totalt'),'',d.totalIncome]);
+  rows.push([(r.budLIncomeHdr||'Inntekter').toUpperCase(),'']);
+  rows.push([(r.budDefaultIncome||'Post'),(r.budTotal||'Beløp')]);
+  d.incomeItems.forEach(function(i){rows.push([i.name,i.amount]);});
+  rows.push([(r.budTotal||'Totalt'),d.totalIncome]);
   rows.push([]);
-  rows.push([(r.budLExpenseHdr||'Utgifter').toUpperCase(),'','']);
-  rows.push([(r.budBreakdownTitle||'Kategori'),(r.budDefaultIncome||'Post'),(r.budTotal||'Beløp')]);
-  d.expenseItems.forEach(function(i){
-    var cat=i.category||'annet';
-    rows.push([catNames[cat]||cat,i.name.replace(new RegExp('^.*?\\s'),''),i.amount]);
-  });
-  rows.push([(r.budTotal||'Totalt'),'',d.totalExpense]);
+  rows.push([(r.budLExpenseHdr||'Utgifter').toUpperCase(),'']);
+  rows.push([(r.budDefaultExpense||'Post'),(r.budTotal||'Beløp')]);
+  d.expenseItems.forEach(function(i){rows.push([i.name,i.amount]);});
+  rows.push([(r.budTotal||'Totalt'),d.totalExpense]);
   rows.push([]);
   rows.push([(r.budBreakdownTitle||'Utgifter per kategori').toUpperCase(),'','']);
   rows.push([(r.budBreakdownTitle||'Kategori'),(r.budTotal||'Beløp'),'%']);
