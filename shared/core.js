@@ -309,7 +309,7 @@ function updateTabs() {
   // Auto-recalc on text input change
   function autoRecalcInput(ids,resId,fn){ids.forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('input',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))fn();});});}
   autoRecalcInput(['dok-verdi'],'dok-res',calcDok);
-  autoRecalcInput(['formue-primaer','formue-sekundaer','formue-aksjer','formue-bank','formue-gjeld'],'formue-res',calcFormue);
+  autoRecalcInput(['formue-primaer','formue-sekundaer','formue-fritid','formue-naering','formue-aksjer','formue-driftsmidler','formue-bank','formue-gjeld'],'formue-res',calcFormue);
   autoRecalcInput(['reise-km','reise-dager','reise-bom'],'reise-res',calcReise);
   // Bil (personlig.html)
   autoRecalc('bil-merke','bil-res',calcBilkostnad);
@@ -2039,27 +2039,31 @@ function calcForeldrepenger(){
 // ═══════════════════════════════════════════════════════
 function calcFormue(){
   var pri=parseNum('formue-primaer'),sek=parseNum('formue-sekundaer');
-  var aksjer=parseNum('formue-aksjer'),bank=parseNum('formue-bank');
+  var fritid=parseNum('formue-fritid'),naering=parseNum('formue-naering');
+  var aksjer=parseNum('formue-aksjer'),driftsmidler=parseNum('formue-driftsmidler');
+  var bank=parseNum('formue-bank');
   var gjeld=parseNum('formue-gjeld');
   var sel=document.getElementById('formue-personer');var personer=sel?+sel.value:1;
   // Verdsettelsesrabatter 2026 (Skatteetaten)
   var priU10=Math.min(pri,10000000),priO10=Math.max(pri-10000000,0);
-  var priV=priU10*0.25+priO10*0.70;// Primærbolig: 25% under 10M, 70% over
-  var sekV=sek*1.00;// Sekundærbolig: 100%
-  var aksV=aksjer*0.80;// Aksjer/fond: 80%
+  var priV=priU10*0.25+priO10*0.70;// Primærbolig: 25% under 10M, 70% over (§ 4-10(2))
+  var sekV=sek*1.00;// Sekundærbolig: 100% (§ 4-10(3))
+  var fritidV=fritid*0.30;// Fritidsbolig: maks 30% av markedsverdi (§ 4-10(6))
+  var naeringV=naering*0.80;// Næringseiendom: 80% av utleieverdi (§ 4-10(7))
+  var aksV=aksjer*0.80;// Aksjer/fond: 80% (§ 4-12)
+  var driftV=driftsmidler*0.70;// Driftsmidler: 70% (§ 4-17)
   var bankV=bank*1.00;// Bank: 100%
-  var bruttoFormue=priV+sekV+aksV+bankV;
+  var bruttoFormue=priV+sekV+fritidV+naeringV+aksV+driftV+bankV;
   // Gjeldsreduksjon (§ 4-19): gjeld fordeles forholdsmessig på eiendeler,
-  // men reduseres KUN for eiendeler med rabatt under 100% (aksjer/fond).
-  // Primærbolig-gjeld reduseres IKKE (Skatteetatens metode).
-  var markedTotal=pri+sek+aksjer+bank;
+  // reduseres for eiendeler med rabatt (aksjer 80%, driftsmidler 70%, næring 80%).
+  // Primærbolig, sekundærbolig og bank reduseres IKKE.
+  var markedTotal=pri+sek+fritid+naering+aksjer+driftsmidler+bank;
   if(markedTotal>0){
-    var gjeldPri=gjeld*(pri/markedTotal);// Gjeld tilordnet primærbolig
-    var gjeldSek=gjeld*(sek/markedTotal);// Gjeld tilordnet sekundærbolig
-    var gjeldAks=gjeld*(aksjer/markedTotal);// Gjeld tilordnet aksjer
-    var gjeldBank=gjeld*(bank/markedTotal);// Gjeld tilordnet bank
-    // Kun aksjeandelen reduseres (80% verdsettelse = 20% reduksjon)
-    var gjeldJustert=gjeldPri+gjeldSek+(gjeldAks*0.80)+gjeldBank;
+    var gjeldAks=gjeld*(aksjer/markedTotal);
+    var gjeldDrift=gjeld*(driftsmidler/markedTotal);
+    var gjeldNaer=gjeld*(naering/markedTotal);
+    var gjeldRest=gjeld-gjeldAks-gjeldDrift-gjeldNaer;// Pri+sek+fritid+bank
+    var gjeldJustert=gjeldRest+(gjeldAks*0.80)+(gjeldDrift*0.70)+(gjeldNaer*0.80);
   }else{var gjeldJustert=gjeld;}
   var nettoFormue=bruttoFormue-gjeldJustert;// Kan bli negativ
   // Bunnfradrag 2026: 1 900 000 kr per person
@@ -2093,7 +2097,10 @@ function calcFormue(){
     function fRow(label,mv,sv){return '<tr style="border-top:1px solid var(--border);"><td style="padding:6px 0;">'+label+'</td><td style="text-align:right;color:var(--ink3);padding:6px 0;">'+fmt(mv)+'</td><td style="text-align:right;padding:6px 0;font-weight:600;">'+fmt(Math.round(sv))+'</td></tr>';}
     if(pri>0)h+=fRow(r.formuePrimaerShort||'Primærbolig',pri,priV);
     if(sek>0)h+=fRow(r.formueSekundaerShort||'Sekundærbolig',sek,sekV);
+    if(fritid>0)h+=fRow(r.formueFritidShort||'Fritidsbolig',fritid,fritidV);
+    if(naering>0)h+=fRow(r.formueNaeringShort||'Næringseiendom',naering,naeringV);
     if(aksjer>0)h+=fRow(r.formueAksjerShort||'Aksjer/fond',aksjer,aksV);
+    if(driftsmidler>0)h+=fRow(r.formueDriftShort||'Driftsmidler',driftsmidler,driftV);
     if(bank>0)h+=fRow(r.formueBankShort||'Bank',bank,bankV);
     h+='</tbody></table>';
     // Info om når formueskatt inntrer
