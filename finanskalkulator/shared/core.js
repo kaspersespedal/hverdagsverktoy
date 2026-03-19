@@ -2085,6 +2085,11 @@ function calcFormue(){
     if(aksjer>0)h+=fRow(r.formueAksjerShort||'Aksjer/fond',aksjer,aksV,'80 %');
     if(bank>0)h+=fRow(r.formueBankShort||'Bank',bank,bankV,'100 %');
     h+='</tbody></table>';
+    // Info om når formueskatt inntrer
+    if(skattepliktig<=0){
+      var mangler=bunnfradrag-nettoFormue;
+      h+='<div style="margin-top:10px;padding:8px 12px;background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:6px;font-size:11px;color:var(--ink2);line-height:1.5;">'+(r.formueThreshold||'Formueskatt inntrer når netto skattemessig formue overstiger')+' <b>'+fmt(bunnfradrag)+' kr</b>. '+(r.formueMargin||'Du har')+' <b>'+fmt(Math.round(mangler))+' kr</b> '+(r.formueMarginLeft||'i margin før formueskatt.')+'</div>';
+    }
     bd.innerHTML=h;
   }
   document.getElementById('formue-res').classList.remove('hidden');
