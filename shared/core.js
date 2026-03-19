@@ -2079,16 +2079,16 @@ function calcFormue(){
   if(bd){
     var h='<div style="font-weight:700;margin-bottom:8px;">'+(r.formueRabattTitle||'Skattemessig verdsettelse')+'</div>';
     h+='<table style="width:100%;font-size:12px;border-collapse:collapse;"><thead><tr style="color:var(--ink3);font-size:11px;text-transform:uppercase;letter-spacing:.3px;"><th style="text-align:left;padding:4px 0;font-weight:600;">'+(r.formueColEiendel||'Eiendel')+'</th><th style="text-align:right;padding:4px 0;font-weight:600;">'+(r.formueColMarked||'Markedsverdi')+'</th><th style="text-align:right;padding:4px 0;font-weight:600;">'+(r.formueColSkatt||'Skatteverdi')+'</th></tr></thead><tbody>';
-    function fRow(label,mv,sv,pct){return '<tr style="border-top:1px solid var(--border);"><td style="padding:6px 0;">'+label+'</td><td style="text-align:right;color:var(--ink3);padding:6px 0;">'+fmt(mv)+'</td><td style="text-align:right;padding:6px 0;"><b>'+fmt(Math.round(sv))+'</b> <span style="font-size:11px;color:var(--ink3);">('+pct+')</span></td></tr>';}
-    if(pri>0)h+=fRow(r.formuePrimaerShort||'Primærbolig',pri,priV,priO10>0?'25/70 %':'25 %');
-    if(sek>0)h+=fRow(r.formueSekundaerShort||'Sekundærbolig',sek,sekV,'100 %');
-    if(aksjer>0)h+=fRow(r.formueAksjerShort||'Aksjer/fond',aksjer,aksV,'80 %');
-    if(bank>0)h+=fRow(r.formueBankShort||'Bank',bank,bankV,'100 %');
+    function fRow(label,mv,sv){return '<tr style="border-top:1px solid var(--border);"><td style="padding:6px 0;">'+label+'</td><td style="text-align:right;color:var(--ink3);padding:6px 0;">'+fmt(mv)+'</td><td style="text-align:right;padding:6px 0;font-weight:600;">'+fmt(Math.round(sv))+'</td></tr>';}
+    if(pri>0)h+=fRow(r.formuePrimaerShort||'Primærbolig',pri,priV);
+    if(sek>0)h+=fRow(r.formueSekundaerShort||'Sekundærbolig',sek,sekV);
+    if(aksjer>0)h+=fRow(r.formueAksjerShort||'Aksjer/fond',aksjer,aksV);
+    if(bank>0)h+=fRow(r.formueBankShort||'Bank',bank,bankV);
     h+='</tbody></table>';
     // Info om når formueskatt inntrer
     if(skattepliktig<=0){
       var mangler=bunnfradrag-nettoFormue;
-      h+='<div style="margin-top:10px;padding:8px 12px;background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:6px;font-size:11px;color:var(--ink2);line-height:1.5;">'+(r.formueThreshold||'Formueskatt inntrer når netto skattemessig formue overstiger')+' <b>'+fmt(bunnfradrag)+' kr</b>. '+(r.formueMargin||'Du har')+' <b>'+fmt(Math.round(mangler))+' kr</b> '+(r.formueMarginLeft||'i margin før formueskatt.')+'</div>';
+      h+='<div style="margin-top:10px;padding:8px 12px;background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:6px;font-size:11px;color:var(--ink2);line-height:1.5;">'+(r.formueThreshold||'Formueskatt inntrer når netto skattemessig formue overstiger')+' <b>'+fmt(bunnfradrag)+'</b>. '+(r.formueMargin||'Du har')+' <b>'+fmt(Math.round(mangler))+'</b> '+(r.formueMarginLeft||'i margin før formueskatt.')+'</div>';
     }
     bd.innerHTML=h;
   }
