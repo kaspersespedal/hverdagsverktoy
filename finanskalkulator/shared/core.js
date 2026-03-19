@@ -623,7 +623,12 @@ function updateSalaryUI() {
     salKeyGroup.classList.remove('hidden');
     document.getElementById('sal-key-rows').innerHTML = infoRowsHTML(r.salKeyRows);
     document.getElementById('sal-key-title').textContent = r.salKeyTitle || 'Viktige regler og begreper forklart';
-    document.getElementById('sal-key-desc').textContent = r.salKeyDesc || 'Hovedregelen · Realisasjon · Inngangsverdi · Utbytte · Fritaksmetoden · Konsernbidrag · Fusjon · Omgåelse';
+    var keyDescEl = document.getElementById('sal-key-desc');
+    if(r.salKeyDescLinks) {
+      keyDescEl.innerHTML = r.salKeyDescLinks;
+    } else {
+      keyDescEl.innerHTML = '<span class="desc-link" data-target="sal-law-card">Hovedregelen</span> · <span class="desc-link" data-target="sal-real-card">Realisasjon</span> · <span class="desc-link" data-target="sal-real-card">Inngangsverdi</span> · <span class="desc-link" data-target="sal-corp-card">Utbytte</span> · <span class="desc-link" data-target="sal-corp-card">Fritaksmetoden</span> · <span class="desc-link" data-target="sal-corp-card">Konsernbidrag</span> · <span class="desc-link" data-target="sal-reorg-card">Fusjon</span> · <span class="desc-link" data-target="sal-anti-card">Omgåelse</span>';
+    }
   } else {
     salKeyGroup.classList.add('hidden');
   }
