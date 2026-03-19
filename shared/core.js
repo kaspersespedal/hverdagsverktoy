@@ -4,6 +4,47 @@
 // https://hverdagsverktoy.com
 // ═══════════════════════════════════════════════════════
 
+const RATES_LAST_UPDATED = '2026-03-19';
+const RATES_YEAR = 2026;
+
+function checkRatesAge(){
+  var updated=new Date(RATES_LAST_UPDATED);
+  var now=new Date();
+  var monthsDiff=(now.getFullYear()-updated.getFullYear())*12+(now.getMonth()-updated.getMonth());
+  return {stale:monthsDiff>=6,months:monthsDiff};
+}
+
+function injectRatesDisclaimer(resEl){
+  if(!resEl||resEl.querySelector('.rates-disc'))return;
+  var r=R();var age=checkRatesAge();
+  var updatedStr=RATES_LAST_UPDATED.split('-').reverse().join('.');
+  var txt=(r.ratesDisclaimer||'Satser: Inntektsåret')+' '+RATES_YEAR+' · '+(r.ratesUpdated||'Sist oppdatert')+' '+updatedStr;
+  var staleHtml='';
+  if(age.stale){staleHtml='<div style="margin-top:4px;color:#b45309;font-weight:600;">⚠️ '+(r.ratesStale||'Satsene ble sist oppdatert for over 6 måneder siden og kan være utdaterte.')+'</div>';}
+  var d=document.createElement('div');d.className='rates-disc';
+  d.style.cssText='font-size:11px;color:var(--ink3);padding:6px 12px;border-radius:6px;background:color-mix(in srgb,var(--accent) 4%,transparent);margin-bottom:8px;line-height:1.5;';
+  d.innerHTML=txt+' · <a href="https://skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">skatteetaten.no</a>'+staleHtml;
+  resEl.insertBefore(d,resEl.firstChild);
+}
+// Auto-inject disclaimer when result sections become visible
+(function(){
+  var obs=new MutationObserver(function(muts){
+    muts.forEach(function(m){
+      if(m.type==='attributes'&&m.attributeName==='class'){
+        var el=m.target;
+        if(el.classList.contains('result-sec')&&!el.classList.contains('hidden')){
+          injectRatesDisclaimer(el);
+        }
+      }
+    });
+  });
+  document.addEventListener('DOMContentLoaded',function(){
+    document.querySelectorAll('.result-sec').forEach(function(el){
+      obs.observe(el,{attributes:true,attributeFilter:['class']});
+    });
+  });
+})();
+
 // ═══════════════════════════════════════════════════════
 // THEME
 // ═══════════════════════════════════════════════════════
@@ -630,8 +671,8 @@ function updateSalaryUI() {
     var _shsf=document.getElementById('sal-help-sub-formue');if(_shsf)_shsf.innerHTML=(r.formueTitle||'Formueskatt')+' <span style="font-size:11px;opacity:.5">▼</span>';
     var _shsr=document.getElementById('sal-help-sub-reise');if(_shsr)_shsr.innerHTML=(r.reiseTitle||'Reisefradrag')+' <span style="font-size:11px;opacity:.5">▼</span>';
     // Formue + reise sub-help rows
-    var _fhr=document.getElementById('formue-help-rows');if(_fhr)_fhr.innerHTML=infoRowsHTML(r.formueHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn om du betaler formueskatt'],['Fyll inn verdier','Skriv inn markedsverdi for bolig, aksjer, bankinnskudd og gjeld. Kalkulatoren bruker verdsettelsesrabattene automatisk.'],['Verdsettelsesrabatter','Primærbolig: 25% (70% over 10M). Aksjer/fond: 80%. Bankinnskudd: 100%.'],['Bunnfradrag','1 700 000 kr per person. Ektefeller får dobbelt.'],['— GODT Å VITE —',''],['Mange betaler ikke','Med typisk boliglån og primærbolig betaler de fleste null i formueskatt.'],['Gjeld reduseres','Gjeldsfradraget justeres proporsjonalt med verdsettelsesrabattene.']]);
-    var _rhr=document.getElementById('reise-help-rows');if(_rhr)_rhr.innerHTML=infoRowsHTML(r.reiseHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn pendlerfradrag for arbeidsreise'],['Avstand','Skriv inn avstand én vei i km. Kalkulatoren dobler automatisk for tur-retur.'],['Arbeidsdager','Standard er 230 dager. Juster for deltid eller fravær.'],['Bompenger/ferge','Faktiske utgifter per arbeidsdag legges til reisekostnaden.'],['— GODT Å VITE —',''],['Bunnfradrag','Du må ha mer enn 14 400 kr i reisekostnader for å få fradrag.'],['Maks fradrag','Øvre grense er 97 000 kr per år.'],['Skattebesparelse','Fradraget gir 22% tilbake — det er besparelsen du ser i resultatet.']]);
+    var _fhr=document.getElementById('formue-help-rows');if(_fhr)_fhr.innerHTML=infoRowsHTML(r.formueHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn om du betaler formueskatt'],['Fyll inn verdier','Skriv inn markedsverdi for bolig, aksjer, bankinnskudd og gjeld. Kalkulatoren bruker verdsettelsesrabattene automatisk.'],['Verdsettelsesrabatter','Primærbolig: 25% (70% over 10M). Aksjer/fond: 80%. Bankinnskudd: 100%.'],['Bunnfradrag','1 900 000 kr per person (2026). Ektefeller får dobbelt.'],['— GODT Å VITE —',''],['Mange betaler ikke','Med typisk boliglån og primærbolig betaler de fleste null i formueskatt.'],['Gjeld reduseres','Gjeldsfradraget justeres proporsjonalt med verdsettelsesrabattene.']]);
+    var _rhr=document.getElementById('reise-help-rows');if(_rhr)_rhr.innerHTML=infoRowsHTML(r.reiseHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn pendlerfradrag for arbeidsreise'],['Avstand','Skriv inn avstand én vei i km. Kalkulatoren dobler automatisk for tur-retur.'],['Arbeidsdager','Standard er 230 dager. Juster for deltid eller fravær.'],['Bompenger/ferge','Faktiske utgifter per arbeidsdag legges til reisekostnaden.'],['— GODT Å VITE —',''],['Bunnfradrag','Du må ha mer enn 12 000 kr i reisekostnader for å få fradrag (2026).'],['Maks fradrag','Øvre grense er 120 000 kr per år (2026).'],['Skattebesparelse','Fradraget gir 22% tilbake — det er besparelsen du ser i resultatet.']]);
   } else {
     salHelpCard.classList.add('hidden');
   }
@@ -1521,7 +1562,7 @@ function updateFagkalkulatorUI() {
   setText('valgevinst-r-tax', r.valgevinTaxLabel || 'Skatt (22%)');
   setText('valgevinst-r-net', r.valgevinNetLabel || 'Netto etter skatt');
   // --- Dropdown options ---
-  repopulateSelect('aga-zone', r.agaZoneOpts, ['0.141','0.106','0.064','0.051','0']);
+  repopulateSelect('aga-zone', r.agaZoneOpts, ['0.141','0.106','0.064','0.079','0.051','0']);
   repopulateSelect('aga-ferie', r.agaFerieOpts, ['0.102','0.12']);
   repopulateSelect('aga-otp', r.agaOtpOpts, ['0.02','0.05','0.07']);
   repopulateSelect('avs-group', r.avsGroupOpts, ['0.30','0.20','0.24','0.20','0.14','0.12','0.05','0.04','0.02','0.10']);
