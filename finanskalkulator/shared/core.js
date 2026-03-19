@@ -28,7 +28,7 @@ function buildThemePicker(){
     wrap=document.createElement('div');
     wrap.id='theme-picker';
     wrap.style.cssText='display:flex;align-items:center;gap:6px;position:relative;';
-    hdrRight.insertBefore(wrap,hdrRight.firstChild);
+    hdrRight.appendChild(wrap);
   }
   var isHeader=!!wrap.closest('.hdr-right');
   var current=(document.documentElement.getAttribute('data-theme')||'blue');
