@@ -587,6 +587,7 @@ function updateSalaryUI() {
     (function(){
       var map=[
         ['sal-subj-card', r.salDescSubj||'Skatteplikt'],
+        ['sal-wealth-card', r.salDescFormue||'Formue'],
         ['sal-law-card', r.salDescInnt||'Inntekt'],
         ['sal-ded-card', r.salDescFrad||'Fradrag'],
         ['sal-real-card', r.salDescGev||'Gevinst'],
@@ -594,7 +595,8 @@ function updateSalaryUI() {
         ['sal-reorg-card', r.salDescOmorg||'Omorganisering'],
         ['sal-anti-card', r.salDescOmg||'Omgåelse'],
         ['sal-time-card', r.salDescTid||'Tidfesting'],
-        ['sal-depr-card', r.salDescAvs||'Avskrivning']
+        ['sal-depr-card', r.salDescAvs||'Avskrivning'],
+        ['sal-credit-card', r.salDescKredit||'Skattefradrag']
       ];
       var html=map.map(function(m){return '<span class="desc-link" data-target="'+m[0]+'">'+m[1]+'</span>';}).join(' · ');
       var el=document.getElementById('sal-law-group-desc');
@@ -718,6 +720,30 @@ function updateSalaryUI() {
     document.getElementById('sal-subj-desc').textContent = r.salSubjDesc || 'Bosted · Selskaper · Fritak · Ektefeller · Barn';
   } else {
     salSubjCard.classList.add('hidden');
+  }
+  const salWealthCard = document.getElementById('sal-wealth-card');
+  if(salWealthCard){
+    if(r.salWealthRows){
+      salWealthCard.classList.remove('hidden');
+      salWealthCard.classList.add('collapsed');
+      document.getElementById('sal-wealth-rows').innerHTML = lawHint + infoRowsHTML(r.salWealthRows);
+      document.getElementById('sal-wealth-title').innerHTML = (r.salWealthTitle || 'Formue (kap. 4)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
+      document.getElementById('sal-wealth-desc').textContent = r.salWealthDesc || 'Verdsettelse · Bolig · Aksjer · Rabatter · Bunnfradrag';
+    } else {
+      salWealthCard.classList.add('hidden');
+    }
+  }
+  const salCreditCard = document.getElementById('sal-credit-card');
+  if(salCreditCard){
+    if(r.salCreditRows){
+      salCreditCard.classList.remove('hidden');
+      salCreditCard.classList.add('collapsed');
+      document.getElementById('sal-credit-rows').innerHTML = lawHint + infoRowsHTML(r.salCreditRows);
+      document.getElementById('sal-credit-title').innerHTML = (r.salCreditTitle || 'Fradrag i skatt (kap. 16)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
+      document.getElementById('sal-credit-desc').textContent = r.salCreditDesc || 'BSU · Pensjon · Kreditfradrag · SkatteFUNN';
+    } else {
+      salCreditCard.classList.add('hidden');
+    }
   }
 }
 
