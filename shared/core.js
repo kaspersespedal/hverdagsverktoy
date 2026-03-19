@@ -306,8 +306,11 @@ function updateTabs() {
   // Reisefradrag — no dropdown, but we can wire inputs
   // Dokumentavgift (boliglan.html)
   autoRecalc('dok-type','dok-res',calcDok);
-  // Foreldrepenger (personlig.html)
-  autoRecalc('fp-dekning','fp-res',calcForeldrepenger);
+  // Auto-recalc on text input change
+  function autoRecalcInput(ids,resId,fn){ids.forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('input',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))fn();});});}
+  autoRecalcInput(['dok-verdi'],'dok-res',calcDok);
+  autoRecalcInput(['formue-primaer','formue-sekundaer','formue-aksjer','formue-bank','formue-gjeld'],'formue-res',calcFormue);
+  autoRecalcInput(['reise-km','reise-dager','reise-bom'],'reise-res',calcReise);
   // Bil (personlig.html)
   autoRecalc('bil-merke','bil-res',calcBilkostnad);
   autoRecalc('bil-tilstand','bil-res',calcBilkostnad);
