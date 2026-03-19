@@ -1229,7 +1229,7 @@ const REGIONS = {
     footerCopy:'© 2026 Hverdagsverktøy — Veiledende kun. Ikke profesjonell finansiell eller juridisk rådgivning.',
     secCalc:'Kalkulatorer',secGuideTax:'Skatteguide',secGuideMor:'Boligguide',secGuideVat:'Avgiftsguide',secGuidePerso:'Veiledning',
     heroKicker:'✦ Norske Hverdagsverktøy',
-    heroH1:'Hverdagsverktøy<br><em>Praktiske verktøy for bedrift og privat</em>',
+    heroH1:'Hverdagsverktøy<br><em>Praktiske verktøy for privatøkonomi</em>',
     heroP:'',
     heroKickerTb:'✦ Gratis finanskalkulatorer',
     tabSal:'Skatt', tabMor:'Boliglån', tabNpv:'Personlig økonomi', tabVat:'Avgift',
