@@ -1054,8 +1054,14 @@ function updateNpvUI() {
   setText('budsjett-col-amount-i',r.budColAmount||'Amount (kr/mo)');
   setText('budsjett-col-desc-e',r.budColDesc||'Description');
   setText('budsjett-col-amount-e',r.budColAmount||'Amount (kr/mo)');
-  var phI=document.getElementById('budsjett-ph-income');if(phI)phI.placeholder=r.budPlaceholderIncome||'e.g. Salary';
-  var phE=document.getElementById('budsjett-ph-expense');if(phE)phE.placeholder=r.budPlaceholderExpense||'e.g. Rent';
+  // Update dropdown options for existing rows on language change
+  document.querySelectorAll('#budsjett-income-rows .budsjett-cat').forEach(function(sel){
+    var val=sel.value;
+    sel.querySelector('option[value="Lønn"]').textContent=r.budOptLonn||'Lønn';
+    sel.querySelector('option[value="Studielån"]').textContent=r.budOptStudielan||'Studielån';
+    sel.querySelector('option[value="Stipend"]').textContent=r.budOptStipend||'Stipend';
+    sel.querySelector('option[value="__custom__"]').textContent=r.budOptCustom||'Valgfritt...';
+  });
   setText('budsjett-btn-add-income','+ '+(r.budBtnAdd||'Legg til'));
   setText('budsjett-btn-add-expense','+ '+(r.budBtnAdd||'Legg til'));
   setText('btn-calc-budsjett',r.budBtnCalc||'Beregn budsjett →');
@@ -1067,9 +1073,18 @@ function updateNpvUI() {
   setText('budsjett-btn-pdf',r.budBtnPdf||'Last ned (CSV)');
   var csvTipEl=document.getElementById('budsjett-csv-tip');
   if(csvTipEl)csvTipEl.innerHTML='<strong>'+(r.budCsvTipLabel||'Tips')+':</strong> '+(r.budCsvTip||'Hvis kolonnene ikke deles automatisk i Excel: Merk kolonne A → Data → Tekst til kolonner → Skilletegn → Semikolon → Fullfør.');
-  // Update category dropdowns
+  // Update expense category dropdowns
   document.querySelectorAll('#budsjett-expense-rows .budsjett-cat').forEach(function(sel){
-    var val=sel.value;sel.innerHTML=budsjettCatOptions(r);sel.value=val;
+    var o=sel.querySelector('option[value="Terminbeløp"]');if(o)o.textContent=r.budOptTermin||'Terminbeløp';
+    o=sel.querySelector('option[value="Husleie"]');if(o)o.textContent=r.budOptHusleie||'Husleie';
+    o=sel.querySelector('option[value="Mat"]');if(o)o.textContent=r.budOptMat||'Mat';
+    o=sel.querySelector('option[value="Transport"]');if(o)o.textContent=r.budOptTransport||'Transport';
+    o=sel.querySelector('option[value="Strøm"]');if(o)o.textContent=r.budOptStrom||'Strøm';
+    o=sel.querySelector('option[value="Forsikring"]');if(o)o.textContent=r.budOptForsikring||'Forsikring';
+    o=sel.querySelector('option[value="Mobil/Internett"]');if(o)o.textContent=r.budOptMobil||'Mobil/Internett';
+    o=sel.querySelector('option[value="Trening"]');if(o)o.textContent=r.budOptTrening||'Trening';
+    o=sel.querySelector('option[value="Streaming/Abonnement"]');if(o)o.textContent=r.budOptStreaming||'Streaming/Abonnement';
+    o=sel.querySelector('option[value="__custom__"]');if(o)o.textContent=r.budOptCustom||'Valgfritt...';
   });
   // NPV labels
   var npvEl=document.getElementById('npv-title');if(npvEl)npvEl.innerHTML=(r.npvTitle || 'NPV / IRR Calculator')+' <span style="font-size:11px;opacity:.5">▼</span>';
@@ -3510,15 +3525,57 @@ if('scrollRestoration' in history) history.scrollRestoration = 'manual';
   if(sel) sel.classList.add('active');
 })();
 // ── Budsjettkalkulator ──
+function budsjettCatChange(sel){
+  var wrap=sel.parentElement;
+  var existing=wrap.querySelector('.budsjett-custom');
+  if(sel.value==='__custom__'){
+    if(!existing){
+      var inp=document.createElement('input');inp.type='text';inp.className='fc budsjett-custom';
+      inp.placeholder='Skriv inn...';inp.style.cssText='width:100%;margin-top:4px;';
+      wrap.appendChild(inp);inp.focus();
+    }
+  } else {
+    if(existing)existing.remove();
+  }
+}
+function budsjettGetName(row){
+  var sel=row.querySelector('.budsjett-cat');
+  if(sel){
+    if(sel.value==='__custom__'){
+      var custom=row.querySelector('.budsjett-custom');
+      return custom?custom.value.trim():'';
+    }
+    return sel.value;
+  }
+  var nameInput=row.querySelector('.budsjett-name');
+  return nameInput?nameInput.value.trim():'';
+}
 function budsjettAddRow(type){
   var r=R();var cont=document.getElementById('budsjett-'+type+'-rows');
   var row=document.createElement('div');row.className='budsjett-row';row.style.cssText='display:flex;gap:8px;margin-bottom:6px;';
-  var phName=type==='income'?(r.budPlaceholderIncome||'f.eks. Lønn'):(r.budPlaceholderExpense||'f.eks. Utgift');
-  row.innerHTML='<input type="text" class="fc budsjett-name" placeholder="'+phName+'" style="flex:2;">'+
+  var opts='';
+  if(type==='income'){
+    opts='<option value="Lønn">'+(r.budOptLonn||'Lønn')+'</option>'+
+      '<option value="Studielån">'+(r.budOptStudielan||'Studielån')+'</option>'+
+      '<option value="Stipend">'+(r.budOptStipend||'Stipend')+'</option>'+
+      '<option value="__custom__">'+(r.budOptCustom||'Valgfritt...')+'</option>';
+  } else {
+    opts='<option value="Terminbeløp">'+(r.budOptTermin||'Terminbeløp')+'</option>'+
+      '<option value="Husleie">'+(r.budOptHusleie||'Husleie')+'</option>'+
+      '<option value="Mat">'+(r.budOptMat||'Mat')+'</option>'+
+      '<option value="Transport">'+(r.budOptTransport||'Transport')+'</option>'+
+      '<option value="Strøm">'+(r.budOptStrom||'Strøm')+'</option>'+
+      '<option value="Forsikring">'+(r.budOptForsikring||'Forsikring')+'</option>'+
+      '<option value="Mobil/Internett">'+(r.budOptMobil||'Mobil/Internett')+'</option>'+
+      '<option value="Trening">'+(r.budOptTrening||'Trening')+'</option>'+
+      '<option value="Streaming/Abonnement">'+(r.budOptStreaming||'Streaming/Abonnement')+'</option>'+
+      '<option value="__custom__">'+(r.budOptCustom||'Valgfritt...')+'</option>';
+  }
+  row.innerHTML='<div style="flex:2;position:relative;"><select class="fc budsjett-cat" onchange="budsjettCatChange(this)" style="width:100%;">'+opts+'</select></div>'+
     '<input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;">'+
     '<button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>';
   cont.appendChild(row);
-  row.querySelector('.budsjett-name').focus();
+  row.querySelector('.budsjett-cat').focus();
 }
 function budsjettCalc(){
   var r=R();
@@ -3527,12 +3584,12 @@ function budsjettCalc(){
   var totalIncome=0,totalExpense=0;
   var incomeItems=[],expenseItems=[];
   incomeRows.forEach(function(row){
-    var name=row.querySelector('.budsjett-name').value.trim()||r.budDefaultIncome||'Inntekt';
+    var name=budsjettGetName(row)||r.budDefaultIncome||'Inntekt';
     var amt=+(row.querySelector('.budsjett-amount').value.replace(/[^0-9.\-]/g,''))||0;
     if(amt>0){incomeItems.push({name:name,amount:amt});totalIncome+=amt;}
   });
   expenseRows.forEach(function(row){
-    var name=row.querySelector('.budsjett-name').value.trim()||r.budDefaultExpense||'Utgift';
+    var name=budsjettGetName(row)||r.budDefaultExpense||'Utgift';
     var amt=+(row.querySelector('.budsjett-amount').value.replace(/[^0-9.\-]/g,''))||0;
     if(amt>0){expenseItems.push({name:name,amount:amt});totalExpense+=amt;}
   });
