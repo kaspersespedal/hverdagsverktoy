@@ -3069,8 +3069,8 @@ function fcCalc(){
 function toggleMobileSidebar(){document.body.classList.toggle('mobile-sidebar-open');}
 function closeMobileSidebar(){document.body.classList.remove('mobile-sidebar-open');}
 // Focus mode
-function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';}
-function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';}
+function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no');}
+function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');}
 function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
 
 // Init basic calc
