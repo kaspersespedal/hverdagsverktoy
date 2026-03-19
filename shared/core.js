@@ -2130,8 +2130,10 @@ function calcFormue(){
     }
     bd.innerHTML=h;
   }
-  document.getElementById('formue-res').classList.remove('hidden');
-  setTimeout(function(){scrollToEl(document.getElementById('formue-res'),'top');},80);
+  var _fres=document.getElementById('formue-res');
+  var wasHidden=_fres.classList.contains('hidden');
+  _fres.classList.remove('hidden');
+  if(wasHidden)setTimeout(function(){scrollToEl(_fres,'top');},80);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2157,8 +2159,10 @@ function calcReise(){
   document.getElementById('reise-r-bunnfradrag').textContent='− '+fmt(nedreGrense);
   document.getElementById('reise-r-besparelse').textContent=fmt(Math.round(besparelse));
   document.getElementById('reise-r-permnd').textContent=fmt(Math.round(perMnd));
-  document.getElementById('reise-res').classList.remove('hidden');
-  setTimeout(function(){scrollToEl(document.getElementById('reise-res'),'top');},80);
+  var _rres=document.getElementById('reise-res');
+  var _rwh=_rres.classList.contains('hidden');
+  _rres.classList.remove('hidden');
+  if(_rwh)setTimeout(function(){scrollToEl(_rres,'top');},80);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2180,8 +2184,10 @@ function calcDok(){
   document.getElementById('dok-r-attestgebyr').textContent=fmt(attest);
   var tip=document.getElementById('dok-tip');
   if(tip)tip.innerHTML=t==='borettslag'?(r.dokTipBorettslag||'I borettslag eier du en andel, ikke eiendommen direkte. Dokumentavgift påløper ikke — du betaler kun tinglysingsgebyr og attestgebyr.'):(r.dokTipSelveier||'Dokumentavgift beregnes av eiendommens markedsverdi på tinglysingstidspunktet. Borettslag er fritatt. Nybygg fra utbygger kan ha lavere grunnlag (tomt alene).');
-  document.getElementById('dok-res').classList.remove('hidden');
-  setTimeout(function(){scrollToEl(document.getElementById('dok-res'),'top');},80);
+  var _dres=document.getElementById('dok-res');
+  var _dwh=_dres.classList.contains('hidden');
+  _dres.classList.remove('hidden');
+  if(_dwh)setTimeout(function(){scrollToEl(_dres,'top');},80);
 }
 
 // ═══════════════════════════════════════════════════════
