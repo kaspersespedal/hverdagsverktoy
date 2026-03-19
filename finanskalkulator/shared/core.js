@@ -3222,6 +3222,23 @@ function initPage(){
   if(activeOpt) activeOpt.classList.add('active');
   bilInitYear();
   updateAll();
+  // Set calc-nav sticky top to match actual header height
+  (function(){
+    var h=document.querySelector('header');
+    var nav=document.querySelector('.calc-nav');
+    if(h&&nav){
+      var hH=h.offsetHeight;
+      nav.style.top=hH+'px';
+      // Also fix mobile-mode-bar if present
+      var mmb=document.querySelector('.mobile-mode-bar');
+      if(mmb) mmb.style.top=hH+'px';
+    }
+    // Re-check on resize (header height may change)
+    window.addEventListener('resize',function(){
+      if(h&&nav) nav.style.top=h.offsetHeight+'px';
+      if(h&&document.querySelector('.mobile-mode-bar')) document.querySelector('.mobile-mode-bar').style.top=h.offsetHeight+'px';
+    });
+  })();
   window.scrollTo(0,0);
   // Auto-scroll selects into view on focus (mobile-friendly)
   document.querySelectorAll('select.fc').forEach(function(sel){
