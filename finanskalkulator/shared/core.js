@@ -406,6 +406,17 @@ function goToAvsCalc(){
     window.scrollTo(0, Math.max(0,top));
   }
 }
+function openLawCard(cardId){
+  var card=document.getElementById(cardId);if(!card)return;
+  // Open parent law-group if collapsed
+  var group=card.closest('.law-group');
+  if(group&&!group.classList.contains('open'))toggleLawGroup(group);
+  // Open the card itself
+  setTimeout(function(){
+    if(card.classList.contains('collapsed'))card.classList.remove('collapsed');
+    setTimeout(function(){card.scrollIntoView({behavior:'smooth',block:'start'});},150);
+  },100);
+}
 function toggleLawGroup(group){
   var body = group.querySelector('.law-group-body');
   if(group.classList.contains('open')){
