@@ -2074,16 +2074,18 @@ function calcFormue(){
   document.getElementById('formue-r-bunnfradrag').textContent='− '+fmt(bunnfradrag)+' ('+personer+'×'+fmt(1700000)+')';
   document.getElementById('formue-r-skattepliktig').textContent=fmt(Math.round(skattepliktig));
   document.getElementById('formue-r-effsats').textContent=effSatsStr;
-  // Breakdown — "Skatteverdi i % av markedsverdi"
+  // Breakdown table
   var bd=document.getElementById('formue-breakdown');
   if(bd){
-    var lines=[];
-    lines.push('<div style="font-weight:700;margin-bottom:8px;">'+(r.formueRabattTitle||'Skattemessig verdsettelse')+'</div>');
-    if(pri>0){var priPct=priO10>0?'25 %/70 %':'25 %';lines.push('<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;"><span>'+(r.formuePrimaerShort||'Primærbolig')+'</span><span style="color:var(--ink3);">'+fmt(pri)+' → <b>'+fmt(Math.round(priV))+'</b> <span style="font-size:11px;">(verdsatt til '+priPct+')</span></span></div>');}
-    if(sek>0)lines.push('<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;"><span>'+(r.formueSekundaerShort||'Sekundærbolig')+'</span><span style="color:var(--ink3);">'+fmt(sek)+' → <b>'+fmt(Math.round(sekV))+'</b> <span style="font-size:11px;">(verdsatt til 100 %)</span></span></div>');
-    if(aksjer>0)lines.push('<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;"><span>'+(r.formueAksjerShort||'Aksjer/fond')+'</span><span style="color:var(--ink3);">'+fmt(aksjer)+' → <b>'+fmt(Math.round(aksV))+'</b> <span style="font-size:11px;">(verdsatt til 80 %)</span></span></div>');
-    if(bank>0)lines.push('<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;"><span>'+(r.formueBankShort||'Bank')+'</span><span style="color:var(--ink3);">'+fmt(bank)+' → <b>'+fmt(Math.round(bankV))+'</b> <span style="font-size:11px;">(verdsatt til 100 %)</span></span></div>');
-    bd.innerHTML=lines.join('');
+    var h='<div style="font-weight:700;margin-bottom:8px;">'+(r.formueRabattTitle||'Skattemessig verdsettelse')+'</div>';
+    h+='<table style="width:100%;font-size:12px;border-collapse:collapse;"><thead><tr style="color:var(--ink3);font-size:11px;text-transform:uppercase;letter-spacing:.3px;"><th style="text-align:left;padding:4px 0;font-weight:600;">'+(r.formueColEiendel||'Eiendel')+'</th><th style="text-align:right;padding:4px 0;font-weight:600;">'+(r.formueColMarked||'Markedsverdi')+'</th><th style="text-align:right;padding:4px 0;font-weight:600;">'+(r.formueColSkatt||'Skatteverdi')+'</th></tr></thead><tbody>';
+    function fRow(label,mv,sv,pct){return '<tr style="border-top:1px solid var(--border);"><td style="padding:6px 0;">'+label+'</td><td style="text-align:right;color:var(--ink3);padding:6px 0;">'+fmt(mv)+'</td><td style="text-align:right;padding:6px 0;"><b>'+fmt(Math.round(sv))+'</b> <span style="font-size:11px;color:var(--ink3);">('+pct+')</span></td></tr>';}
+    if(pri>0)h+=fRow(r.formuePrimaerShort||'Primærbolig',pri,priV,priO10>0?'25/70 %':'25 %');
+    if(sek>0)h+=fRow(r.formueSekundaerShort||'Sekundærbolig',sek,sekV,'100 %');
+    if(aksjer>0)h+=fRow(r.formueAksjerShort||'Aksjer/fond',aksjer,aksV,'80 %');
+    if(bank>0)h+=fRow(r.formueBankShort||'Bank',bank,bankV,'100 %');
+    h+='</tbody></table>';
+    bd.innerHTML=h;
   }
   document.getElementById('formue-res').classList.remove('hidden');
   setTimeout(function(){scrollToEl(document.getElementById('formue-res'),'top');},80);
