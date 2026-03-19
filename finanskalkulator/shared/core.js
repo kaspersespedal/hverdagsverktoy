@@ -397,11 +397,58 @@ function toggleCard(card){
   }
 }
 
-// Desc-link: click a keyword in law-group-desc to open group + scroll to card
+// Open a key topic by keyword — opens relevant law group + card and scrolls to specific row
+function openKeyTopic(keyword){
+  var topicMap={
+    'fritaksmetoden':'sal-corp-card',
+    'hovedregelen':'sal-law-card',
+    'realisasjon':'sal-real-card',
+    'inngangsverdi':'sal-real-card',
+    'utbytte':'sal-corp-card',
+    'konsernbidrag':'sal-corp-card',
+    'fusjon':'sal-reorg-card',
+    'omgåelse':'sal-anti-card'
+  };
+  var kw=(keyword||'').toLowerCase();
+  var cardId=topicMap[kw];
+  if(!cardId) return;
+  var card=document.getElementById(cardId);
+  if(!card) return;
+  var group=card.closest('.law-group');
+  if(group&&!group.classList.contains('open')){
+    group.classList.add('open');
+    var body=group.querySelector('.law-group-body');
+    body.style.maxHeight=body.scrollHeight+'px';
+    setTimeout(function(){body.style.maxHeight='none';},550);
+  }
+  if(card.classList.contains('collapsed')) toggleCard(card);
+  // Find the specific row matching this topic and scroll+highlight it
+  setTimeout(function(){
+    var target=card.querySelector('[data-topic*="'+kw+'"]');
+    if(target){
+      smartScroll(target);
+      target.style.transition='background .3s';
+      target.style.background='color-mix(in srgb,var(--accent) 15%,transparent)';
+      setTimeout(function(){target.style.background='';},2500);
+    } else {
+      smartScroll(card);
+    }
+  },400);
+}
+
+// Desc-link: click a keyword in law-group-desc to open group + scroll to card/row
 document.addEventListener('click',function(e){
   var link=e.target.closest('.desc-link');
   if(!link) return;
   e.stopPropagation();
+  // Try openKeyTopic first for precise row scrolling
+  var linkText=(link.textContent||'').trim().toLowerCase();
+  var topicMap={'fritaksmetoden':1,'hovedregelen':1,'realisasjon':1,'inngangsverdi':1,'utbytte':1,'konsernbidrag':1,'fusjon':1,'omgåelse':1};
+  if(topicMap[linkText]){
+    openKeyTopic(linkText);
+    return;
+  }
+  // Fallback: just open the card
   var targetId=link.dataset.target;
   var card=document.getElementById(targetId);
   if(!card) return;
@@ -453,19 +500,33 @@ function infoRowsHTML(rows, defaultLaw) {
   const dl = defaultLaw || 'sktl';
   return rows.map(r => {
     const [k,v,hint] = r;
-    if(k.startsWith('—')) return `<div class="ir ir-hdr" style="flex-direction:column;align-items:flex-start;gap:2px;padding:14px 22px 10px;background:var(--surface2);"><span class="k" style="font-weight:700;color:var(--accent);font-size:11px;letter-spacing:.5px">${k}</span>${v?`<span style="font-size:11.5px;color:var(--ink3);font-weight:400;line-height:1.4">${v}</span>`:''}</div>`;
+    // Extract § reference for data-topic anchoring
+    var topicAttr = '';
+    var secMatch = k.match(/§\s*([\d]+-[\d]+(?:\s*to\s*[\d]+-[\d]+)?)/);
+    if(secMatch) topicAttr = ' data-section="' + secMatch[1].replace(/\s+/g,'') + '"';
+    // Also add keyword-based topic for common terms (check both key and value)
+    var kvLower = (k + ' ' + (v||'')).toLowerCase();
+    var kwTopics = [];
+    if(kvLower.indexOf('fritaksmetod')>=0||kvLower.indexOf('participation exemption')>=0||kvLower.indexOf('免税方法')>=0||kvLower.indexOf('régime d\'exonération')>=0||kvLower.indexOf('metoda zwolnienia')>=0) kwTopics.push('fritaksmetoden');
+    if(kvLower.indexOf('konsernbidrag')>=0||kvLower.indexOf('group contribution')>=0) kwTopics.push('konsernbidrag');
+    if(kvLower.indexOf('fusjon')>=0||kvLower.indexOf('merger')>=0) kwTopics.push('fusjon');
+    if(kvLower.indexOf('omgåelse')>=0||kvLower.indexOf('anti-avoidance')>=0||kvLower.indexOf('avoidance')>=0) kwTopics.push('omgåelse');
+    if(kvLower.indexOf('realisasjon')>=0||kvLower.indexOf('realisation')>=0) kwTopics.push('realisasjon');
+    if(kwTopics.length) topicAttr += ' data-topic="' + kwTopics.join(',') + '"';
+
+    if(k.startsWith('—')) return `<div class="ir ir-hdr"${topicAttr} style="flex-direction:column;align-items:flex-start;gap:2px;padding:14px 22px 10px;background:var(--surface2);"><span class="k" style="font-weight:700;color:var(--accent);font-size:11px;letter-spacing:.5px">${k}</span>${v?`<span style="font-size:11.5px;color:var(--ink3);font-weight:400;line-height:1.4">${v}</span>`:''}</div>`;
     const long = v && v.length > 40;
     const linkedHint = hint ? lovdataLink(hint, dl) : '';
     const url = hint ? lovdataUrl(hint, dl) : '';
     const clickable = url ? ` onclick="window.open('${url}','_blank')" style="flex-direction:column;align-items:flex-start;gap:4px;padding:12px 22px;cursor:pointer;transition:background .15s;border-radius:4px;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"` : ' style="flex-direction:column;align-items:flex-start;gap:4px;padding:12px 22px;"';
     if(long || hint) {
-      return `<div class="ir"${clickable}>
+      return `<div class="ir"${topicAttr}${clickable}>
         <div style="font-weight:600;color:var(--ink);font-size:13px;line-height:1.4">${k}</div>
         <div style="color:var(--ink2);font-size:12.5px;line-height:1.5;font-weight:400">${v}</div>
         ${linkedHint?`<div style="font-size:12.5px;color:var(--accent-d);font-weight:500;line-height:1.5">${linkedHint}</div>`:''}
       </div>`;
     }
-    return `<div class="ir"><span class="k">${k}</span><span class="v a">${v}</span></div>`;
+    return `<div class="ir"${topicAttr}><span class="k">${k}</span><span class="v a">${v}</span></div>`;
   }).join('');
 }
 
