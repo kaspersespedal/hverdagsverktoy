@@ -1163,7 +1163,7 @@ const REGIONS = {
     uttakExExc4:'Konsernforhold: Ved uttak fra datterselskap til aksjonær, er det datterselskapet som er subjekt for uttaksbeskatning',
     uttakExExc5:'Privat bruk av selskapets eiendeler: Løpende bruk (f.eks. bolig, båt, bil) beskattes som utbytte hos aksjonæren etter aksjonærmodellen',
     uttakExSource:'Kilde: Skatteloven § 5-2, § 5-3 og kap. 9 (lov-1999-03-26-14). Kalkulatoren er veiledende — kontakt revisor for konkrete vurderinger.',
-    utdelingTitle:'Utdelingsmodellen', utdelingDesc:'Effektiv skattebelastning ved utdeling fra AS og ENK',
+    utdelingTitle:'Effektiv skatt ved utdeling', utdelingDesc:'Sammenlign skattebelastningen ved utdeling fra AS og ENK',
     utdelingIntro:'Kalkulatoren viser den samlede skattebelastningen når overskudd deles ut til eier. For <b>AS</b> (aksjonærmodellen): selskapsskatt 22 % + utbytteskatt 37,84 % = <b>51,5 %</b> effektiv sats. For <b>ENK</b> (foretaksmodellen): alminnelig inntekt 22 % + trygdeavgift 10,8 % + trinnskatt = opptil <b>50,6 %</b> marginalskatt. Symmetriprinsippet sikrer at valg av selskapsform ikke gir skattefordel i seg selv.<br><br><i style="font-size:12px;opacity:.7">ENK-visningen er en forenklet pedagogisk illustrasjon — faktisk skatt påvirkes også av bl.a. personfradrag og minstefradrag.</i>',
     utdelingLType:'Selskapsform', utdelingOptAs:'Aksjeselskap (AS) — aksjonærmodellen', utdelingOptEnk:'Enkeltpersonforetak (ENK) — foretaksmodellen',
     utdelingLOverskudd:'Overskudd før skatt (kr)', utdelingLSkjerming:'Skjermingsfradrag (kr)',

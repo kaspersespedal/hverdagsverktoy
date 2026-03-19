@@ -532,7 +532,7 @@ function infoRowsHTML(rows, defaultLaw) {
 
 function updateSalaryUI() {
   const r = R();
-  setText('sal-title', r.salTitle || 'Salary After Tax');
+  var salTitleEl=document.getElementById('sal-title');if(salTitleEl)salTitleEl.innerHTML=(r.salTitle||'Salary After Tax')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('sal-desc', r.salDesc || 'Calculate net salary from gross annual income.');
   setText('sal-l-gross', r.lGross || 'Gross Annual Salary');
   setText('sal-l-class', r.lClass || 'Tax Class');
