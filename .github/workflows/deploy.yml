@@ -1,0 +1,41 @@
+name: Deploy finanskalkulator to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'finanskalkulator/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy source files to deploy locations
+        run: |
+          cp finanskalkulator/index.html index.html
+          cp finanskalkulator/kalkulator.html kalkulator/index.html
+          cp finanskalkulator/boliglan.html boliglan/index.html
+          cp finanskalkulator/skatt.html skatt/index.html
+          cp finanskalkulator/avgift.html avgift/index.html
+          cp finanskalkulator/personlig.html personlig/index.html
+          cp finanskalkulator/shared/core.js shared/core.js
+          cp finanskalkulator/shared/style.css shared/style.css
+          cp finanskalkulator/shared/regions.js shared/regions.js
+
+      - name: Check for changes
+        id: check
+        run: |
+          git diff --quiet && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push deploy files
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html kalkulator/ boliglan/ skatt/ avgift/ personlig/ shared/
+          git commit -m "Auto-deploy: synk fra finanskalkulator/"
+          git push
