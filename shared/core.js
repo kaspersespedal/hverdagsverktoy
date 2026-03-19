@@ -2065,25 +2065,28 @@ function calcFormue(){
   var stat=statBase1*0.003+statBase2*0.004;
   var totalSkatt=kommunal+stat;
   var effSats=markedTotal>0?(totalSkatt/markedTotal*100):0;
+  var effSatsStr=effSats<0.05&&effSats>0?'< 0,1 %':(Math.round(effSats*10)/10).toFixed(1).replace('.',',')+' %';
   var r=R();
-  document.getElementById('formue-r-val').textContent=fmt(Math.round(totalSkatt));
-  document.getElementById('formue-r-sub').textContent=(r.formueEffSatsLabel||'Effektiv sats')+': '+pct(effSats)+' '+(r.formueOfMarked||'av markedsverdi');
+  document.getElementById('formue-r-val').textContent=skattepliktig<=0?(r.formueNoTax||'0 kr — ingen formueskatt'):fmt(Math.round(totalSkatt));
+  document.getElementById('formue-r-sub').textContent=skattepliktig<=0?(r.formueUnderBunn||'Netto formue er under bunnfradraget'):((r.formueEffSatsLabel||'Effektiv sats')+': '+effSatsStr+' '+(r.formueOfMarked||'av markedsverdi'));
   document.getElementById('formue-r-brutto').textContent=fmt(Math.round(bruttoFormue));
   document.getElementById('formue-r-gjeld').textContent='− '+fmt(Math.round(gjeldJustert));
   document.getElementById('formue-r-netto').textContent=fmt(Math.round(nettoFormue));
   document.getElementById('formue-r-bunnfradrag').textContent='− '+fmt(bunnfradrag);
   document.getElementById('formue-r-skattepliktig').textContent=fmt(Math.round(skattepliktig));
-  document.getElementById('formue-r-effsats').textContent=pct(effSats);
+  document.getElementById('formue-r-effsats').textContent=effSatsStr;
   // Breakdown
   var bd=document.getElementById('formue-breakdown');
   if(bd){
     var lines=[];
-    lines.push('<b>'+(r.formueRabattTitle||'Verdsettelsesrabatter brukt')+'</b>');
-    if(pri>0)lines.push((r.formueLPrimaer||'Primærbolig')+': '+fmt(pri)+' → '+fmt(Math.round(priV))+' ('+((priO10>0)?'25%/70%':'25%')+')');
-    if(sek>0)lines.push((r.formueLSekundaer||'Sekundærbolig')+': '+fmt(sek)+' → '+fmt(Math.round(sekV))+' (100%)');
-    if(aksjer>0)lines.push((r.formueLAksjer||'Aksjer/fond')+': '+fmt(aksjer)+' → '+fmt(Math.round(aksV))+' (80%)');
-    if(bank>0)lines.push((r.formueLBank||'Bankinnskudd')+': '+fmt(bank)+' → '+fmt(Math.round(bankV))+' (100%)');
-    bd.innerHTML=lines.join('<br>');
+    lines.push('<div style="font-weight:700;margin-bottom:6px;">'+(r.formueRabattTitle||'Verdsettelsesrabatter brukt')+'</div>');
+    lines.push('<table style="width:100%;font-size:12px;border-collapse:collapse;">');
+    if(pri>0)lines.push('<tr><td style="padding:2px 0;">'+(r.formuePrimaerShort||'Primærbolig')+'</td><td style="text-align:right;color:var(--ink3);">'+fmt(pri)+'</td><td style="text-align:center;padding:0 8px;">→</td><td style="text-align:right;font-weight:600;">'+fmt(Math.round(priV))+'</td><td style="text-align:right;color:var(--ink3);padding-left:8px;">'+((priO10>0)?'25%/70%':'25%')+'</td></tr>');
+    if(sek>0)lines.push('<tr><td style="padding:2px 0;">'+(r.formueSekundaerShort||'Sekundærbolig')+'</td><td style="text-align:right;color:var(--ink3);">'+fmt(sek)+'</td><td style="text-align:center;padding:0 8px;">→</td><td style="text-align:right;font-weight:600;">'+fmt(Math.round(sekV))+'</td><td style="text-align:right;color:var(--ink3);padding-left:8px;">100%</td></tr>');
+    if(aksjer>0)lines.push('<tr><td style="padding:2px 0;">'+(r.formueAksjerShort||'Aksjer/fond')+'</td><td style="text-align:right;color:var(--ink3);">'+fmt(aksjer)+'</td><td style="text-align:center;padding:0 8px;">→</td><td style="text-align:right;font-weight:600;">'+fmt(Math.round(aksV))+'</td><td style="text-align:right;color:var(--ink3);padding-left:8px;">80%</td></tr>');
+    if(bank>0)lines.push('<tr><td style="padding:2px 0;">'+(r.formueBankShort||'Bank')+'</td><td style="text-align:right;color:var(--ink3);">'+fmt(bank)+'</td><td style="text-align:center;padding:0 8px;">→</td><td style="text-align:right;font-weight:600;">'+fmt(Math.round(bankV))+'</td><td style="text-align:right;color:var(--ink3);padding-left:8px;">100%</td></tr>');
+    lines.push('</table>');
+    bd.innerHTML=lines.join('');
   }
   document.getElementById('formue-res').classList.remove('hidden');
   setTimeout(function(){scrollToEl(document.getElementById('formue-res'),'top');},80);
