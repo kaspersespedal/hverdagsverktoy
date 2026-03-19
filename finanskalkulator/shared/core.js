@@ -20,17 +20,29 @@ const THEMES = [
 ];
 function themeLabel(t){try{var r=typeof R==='function'&&typeof region!=='undefined'?R():null;return r&&r[t.labelKey]?r[t.labelKey]:t.fallback;}catch(e){return t.fallback;}}
 function buildThemePicker(){
-  const wrap=document.getElementById('theme-picker');
-  if(!wrap) return;
-  const current=(document.documentElement.getAttribute('data-theme')||'blue');
+  var wrap=document.getElementById('theme-picker');
+  // If no dedicated theme-picker div, inject into header next to language selector
+  if(!wrap){
+    var hdrRight=document.querySelector('.hdr-right');
+    if(!hdrRight) return;
+    wrap=document.createElement('div');
+    wrap.id='theme-picker';
+    wrap.style.cssText='display:flex;align-items:center;gap:6px;position:relative;';
+    hdrRight.insertBefore(wrap,hdrRight.firstChild);
+  }
+  var isHeader=!!wrap.closest('.hdr-right');
+  var current=(document.documentElement.getAttribute('data-theme')||'blue');
   wrap.innerHTML='';
-  // "Tema" label
-  const lbl=document.createElement('span');
-  lbl.style.cssText='font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink);opacity:.4;';
-  try{lbl.textContent=(typeof R==='function'&&typeof region!=='undefined'?R().themeLabel:null)||'Tema';}catch(e){lbl.textContent='Tema';}
+  // "Tema" label — only show on dashboard (not in header)
+  if(!isHeader){
+    var lbl=document.createElement('span');
+    lbl.style.cssText='font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink);opacity:.4;';
+    try{lbl.textContent=(typeof R==='function'&&typeof region!=='undefined'?R().themeLabel:null)||'Tema';}catch(e){lbl.textContent='Tema';}
+    wrap.appendChild(lbl);
+  }
   // Trigger button — active color dot + chevron
-  const activeTheme=THEMES.find(t=>t.id===current)||THEMES[0];
-  const btn=document.createElement('button');
+  var activeTheme=THEMES.find(function(t){return t.id===current;})||THEMES[0];
+  var btn=document.createElement('button');
   btn.id='theme-trigger';
   btn.style.cssText='display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:7px 12px;cursor:pointer;outline:none;transition:border-color .2s,box-shadow .2s;box-shadow:0 1px 3px rgba(0,0,0,.06);';
   btn.onmouseenter=function(){this.style.borderColor='var(--accent)';};
@@ -47,14 +59,14 @@ function buildThemePicker(){
   btn.appendChild(btnLabel);
   btn.appendChild(arrow);
   // Dropdown panel — horizontal row of color dots
-  const panel=document.createElement('div');
+  var panel=document.createElement('div');
   panel.id='theme-panel';
-  panel.style.cssText='position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:6px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;display:none;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;white-space:nowrap;';
-  THEMES.forEach(t=>{
-    const isActive=t.id===current;
-    const swatch=document.createElement('button');
+  panel.style.cssText='position:absolute;top:100%;'+(isHeader?'right:0;':'left:50%;transform:translateX(-50%);')+'margin-top:6px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;display:none;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;white-space:nowrap;';
+  THEMES.forEach(function(t,i){
+    var isActive=t.id===current;
+    var swatch=document.createElement('button');
     swatch.title=themeLabel(t);
-    swatch.style.cssText='width:28px;height:28px;border-radius:50%;border:2.5px solid '+(isActive?(t.ring||t.dot):'transparent')+';background:'+t.dot+';cursor:pointer;outline:none;padding:0;transition:transform .15s,border-color .15s,box-shadow .15s;flex-shrink:0;position:relative;display:inline-block;vertical-align:middle;'+(isActive?'box-shadow:0 0 0 2px var(--surface),0 2px 8px rgba(0,0,0,.15);':'')+(t!==THEMES[0]?'margin-left:10px;':'');
+    swatch.style.cssText='width:28px;height:28px;border-radius:50%;border:2.5px solid '+(isActive?(t.ring||t.dot):'transparent')+';background:'+t.dot+';cursor:pointer;outline:none;padding:0;transition:transform .15s,border-color .15s,box-shadow .15s;flex-shrink:0;position:relative;display:inline-block;vertical-align:middle;'+(isActive?'box-shadow:0 0 0 2px var(--surface),0 2px 8px rgba(0,0,0,.15);':'')+(i>0?'margin-left:10px;':'');
     swatch.onmouseenter=function(){if(!isActive)this.style.transform='scale(1.18)';this.style.boxShadow='0 2px 10px rgba(0,0,0,.18)';};
     swatch.onmouseleave=function(){this.style.transform='scale(1)';this.style.boxShadow=isActive?'0 0 0 2px var(--surface),0 2px 8px rgba(0,0,0,.15)':'';};
     swatch.onclick=function(e){e.stopPropagation();setTheme(t.id);};
@@ -82,7 +94,6 @@ function buildThemePicker(){
       if(w&&p&&!w.contains(e.target)){p.style.display='none';if(b)b.style.borderColor='var(--border)';}
     });
   }
-  wrap.appendChild(lbl);
   wrap.appendChild(btn);
   wrap.appendChild(panel);
 }
