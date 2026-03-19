@@ -61,7 +61,7 @@ function buildThemePicker(){
   // Dropdown panel — horizontal row of color dots
   var panel=document.createElement('div');
   panel.id='theme-panel';
-  panel.style.cssText='position:absolute;top:100%;'+(isHeader?'right:0;':'left:50%;transform:translateX(-50%);')+'margin-top:6px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;display:none;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;white-space:nowrap;';
+  panel.style.cssText='position:fixed;margin-top:6px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;display:none;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:9999;white-space:nowrap;';
   THEMES.forEach(function(t,i){
     var isActive=t.id===current;
     var swatch=document.createElement('button');
@@ -82,7 +82,22 @@ function buildThemePicker(){
   btn.onclick=function(e){
     e.stopPropagation();
     var open=panel.style.display==='none';
-    panel.style.display=open?'block':'none';
+    if(open){
+      // Show off-screen to measure, then position
+      panel.style.display='block';
+      panel.style.visibility='hidden';
+      panel.style.left='0';panel.style.top='0';
+      var rect=btn.getBoundingClientRect();
+      var panelW=panel.offsetWidth;
+      var left=rect.left;
+      if(left+panelW>window.innerWidth-12) left=window.innerWidth-panelW-12;
+      if(left<12) left=12;
+      panel.style.left=left+'px';
+      panel.style.top=(rect.bottom+6)+'px';
+      panel.style.visibility='visible';
+    } else {
+      panel.style.display='none';
+    }
     btn.style.borderColor=open?'var(--accent)':'var(--border)';
   };
   // Close on outside click (only add listener once)
