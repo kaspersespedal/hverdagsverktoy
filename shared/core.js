@@ -210,6 +210,7 @@ function updateAll() {
   try{buildThemePicker();}catch(e){}
   // Section titles
   var _sc=document.getElementById('sec-calculators');if(_sc)_sc.textContent=R().secCalc||'Kalkulatorer';
+  var _sg=document.getElementById('sec-guide');if(_sg){var gk=document.getElementById('calc-salary')?'secGuideTax':document.getElementById('calc-mortgage')?'secGuideMor':document.getElementById('calc-vat')?'secGuideVat':document.getElementById('calc-npv')?'secGuidePerso':'secGuide';_sg.textContent=R()[gk]||_sg.textContent;}
   // clear results
   ['s-res','m-res','n-res','v-res'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
   _sal=_mor=_npv=_vat=null;
