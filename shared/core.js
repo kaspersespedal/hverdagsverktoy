@@ -36,7 +36,7 @@ function buildThemePicker(){
   // "Tema" label — only show on dashboard (not in header)
   if(!isHeader){
     var lbl=document.createElement('span');
-    lbl.style.cssText='font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink);opacity:.4;';
+    lbl.style.cssText='font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--ink);opacity:.55;';
     try{lbl.textContent=(typeof R==='function'&&typeof region!=='undefined'?R().themeLabel:null)||'Tema';}catch(e){lbl.textContent='Tema';}
     wrap.appendChild(lbl);
   }
