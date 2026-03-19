@@ -683,6 +683,18 @@ function updateSalaryUI() {
   } else {
     salDeprCard.classList.add('hidden');
   }
+  const salPrincCard = document.getElementById('sal-princ-card');
+  if(salPrincCard){
+    if(r.salPrincRows){
+      salPrincCard.classList.remove('hidden');
+      salPrincCard.classList.add('collapsed');
+      document.getElementById('sal-princ-rows').innerHTML = lawHint + infoRowsHTML(r.salPrincRows);
+      document.getElementById('sal-princ-title').innerHTML = (r.salPrincTitle || 'Prinsipper og rettspraksis') + ' <span style="font-size:11px;opacity:.5">▼</span>';
+      document.getElementById('sal-princ-desc').textContent = r.salPrincDesc || 'Skatteevne · Nøytralitet · Legalitet · Sentrale høyesterettsdommer';
+    } else {
+      salPrincCard.classList.add('hidden');
+    }
+  }
   const salKeyGroup = document.getElementById('sal-key-group');
   if(r.salKeyRows){
     salKeyGroup.classList.remove('hidden');
