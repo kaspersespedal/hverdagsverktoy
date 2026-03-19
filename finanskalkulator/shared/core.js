@@ -3332,7 +3332,7 @@ function fcUpdateFields(){
 
 function fcCalc(){
   const type = document.getElementById('fc-type').value;
-  const g = id => parseFloat(document.getElementById(id).value.replace(/,/g,''))||0;
+  const g = id => parseFloat(document.getElementById(id).value.replace(/[\s\u00a0,]/g,''))||0;
   const resLbl = document.getElementById('fc-res-lbl');
   const resVal = document.getElementById('fc-res-val');
   const resSub = document.getElementById('fc-res-sub');
