@@ -3069,8 +3069,8 @@ function fcCalc(){
 function toggleMobileSidebar(){document.body.classList.toggle('mobile-sidebar-open');}
 function closeMobileSidebar(){document.body.classList.remove('mobile-sidebar-open');}
 // Focus mode
-function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no');}
-function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');}
+function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';var mmb=document.querySelector('.mobile-mode-bar');if(mmb)mmb.style.top='0px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no');}
+function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var mmb=document.querySelector('.mobile-mode-bar');var h=document.querySelector('header');if(mmb&&h)mmb.style.top=h.offsetHeight+'px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');}
 function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
 
 // Init basic calc
@@ -3231,12 +3231,13 @@ function initPage(){
       nav.style.top=hH+'px';
       // Also fix mobile-mode-bar if present
       var mmb=document.querySelector('.mobile-mode-bar');
-      if(mmb) mmb.style.top=hH+'px';
+      if(mmb&&!document.body.classList.contains('calc-focus')) mmb.style.top=hH+'px';
     }
     // Re-check on resize (header height may change)
     window.addEventListener('resize',function(){
       if(h&&nav) nav.style.top=h.offsetHeight+'px';
-      if(h&&document.querySelector('.mobile-mode-bar')) document.querySelector('.mobile-mode-bar').style.top=h.offsetHeight+'px';
+      var mmb2=document.querySelector('.mobile-mode-bar');
+      if(h&&mmb2&&!document.body.classList.contains('calc-focus')) mmb2.style.top=h.offsetHeight+'px';
     });
   })();
   window.scrollTo(0,0);
