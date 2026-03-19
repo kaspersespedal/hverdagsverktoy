@@ -657,7 +657,7 @@ function updateSalaryUI() {
   if(_sjT){
     _sjT.innerHTML=(r.sjekkTitle||'Skattemelding-sjekkliste')+' <span style="font-size:11px;opacity:.5">▼</span>';
     setText('sjekk-desc',r.sjekkDesc||'Har du glemt noe? Sjekk vanlige fradrag du kan ha krav på.');
-    for(var qi=1;qi<=9;qi++)setText('sjekk-q'+qi,(r['sjekkQ'+qi])||(document.getElementById('sjekk-q'+qi)||{}).textContent||'');
+    for(var qi=1;qi<=8;qi++)setText('sjekk-q'+qi,(r['sjekkQ'+qi])||(document.getElementById('sjekk-q'+qi)||{}).textContent||'');
     setText('sjekk-summary-lbl',r.sjekkSummaryLbl||'Estimert potensiell besparelse');
     setText('sjekk-note',r.sjekkNote||'Estimatene er veiledende.');
   }
@@ -1958,25 +1958,23 @@ function calcMor() {
 var SJEKK_DATA=[
   {id:'sjekk-c1',fradrag:15000,type:'fradrag'},// Pendler: ~15k avg reisefradrag
   {id:'sjekk-c2',fradrag:30000,type:'fradrag'},// Boliglån: ~30k rentefradrag
-  {id:'sjekk-c3',fradrag:8700,type:'fradrag'},// Fagforening: max 8700
+  {id:'sjekk-c3',fradrag:8700,type:'fradrag'},// Fagforening: max 8700 (2026)
   {id:'sjekk-c4',fradrag:2750,type:'skattefradrag'},// BSU: 10% av 27500 = 2750 direkte
-  {id:'sjekk-c5',fradrag:0,type:'info'},// Barnehage: foreldrefradrag avviklet 2023, men sjekk
+  {id:'sjekk-c5',fradrag:15000,type:'fradrag'},// Barnehage: foreldrefradrag 15000 for 1 barn
   {id:'sjekk-c6',fradrag:5500,type:'fradrag'},// Gaver: max 25000 × 22%
-  {id:'sjekk-c7',fradrag:2200,type:'fradrag'},// Hjemmekontor: fast sats 2200/år
-  {id:'sjekk-c8',fradrag:0,type:'info'},// Aksjetap: varierer
-  {id:'sjekk-c9',fradrag:0,type:'info'}// Utleie: varierer
+  {id:'sjekk-c7',fradrag:0,type:'info'},// Aksjetap: varierer
+  {id:'sjekk-c8',fradrag:0,type:'info'}// Utleie: varierer
 ];
 function updateSjekkliste(){
   var r=R();var tips=r.sjekkTips||[
-    'Reisefradrag: Bor du mer enn 37 km fra jobb kan du ha krav på fradrag. Bruk reisefradragskalkulatoren over!',
-    'Rentefradrag: Du får 22% av renteutgifter tilbake på skatten. Sjekk at alle lån er med i skattemeldingen.',
-    'Fagforening: Maks 8 700 kr i fradrag. Sjekk at beløpet er forhåndsutfylt korrekt.',
-    'BSU: 10% skattefradrag (maks 2 750 kr/år). Gjelder til du fyller 34 år og ikke eier bolig.',
-    'Foreldrefradrag for barnehage/SFO er avviklet fra 2023, men sjekk om du har andre barnerettede fradrag.',
-    'Gavefradrag: Fradrag for gaver over 500 kr til godkjente organisasjoner, maks 25 000 kr/år.',
-    'Hjemmekontor: Fast fradrag på 2 200 kr/år uten dokumentasjon, eller faktiske kostnader med dokumentasjon.',
-    'Tap på aksjer/fond kan fremføres og trekkes fra gevinster. Sjekk at alle realiserte tap er med.',
-    'Utleieinntekter: Skattefritt ved utleie av inntil halvparten av boligen. Ved utleie over 30 dager via Airbnb: 85% av inntekt over 10 000 kr er skattepliktig.'
+    'Reisefradrag: Gjelder reise mellom hjem og fast arbeidssted. Avstanden må typisk overstige 37 km tur-retur for at det skal lønne seg etter egenandelen på 14 400 kr. Bruk reisefradragskalkulatoren over.',
+    'Rentefradrag: Du får 22 % av renteutgifter tilbake på skatten. Sjekk at alle lån (boliglån, studielån, billån) er med i skattemeldingen.',
+    'Fagforening: Maks 8 700 kr i fradrag for 2026. Sjekk at beløpet er forhåndsutfylt korrekt.',
+    'BSU: 10 % skattefradrag (maks 2 750 kr/år). Gjelder til og med året du fyller 33 år, og du kan ikke eie bolig per 31. desember.',
+    'Foreldrefradrag: Inntil 15 000 kr for ett barn og 10 000 kr for hvert barn utover det. Gjelder dokumenterte utgifter til barnehage, SFO og dagmamma.',
+    'Gavefradrag: Fradrag for gaver på minst 500 kr til den enkelte godkjente organisasjon, maks 25 000 kr/år totalt.',
+    'Har du realisert tap på aksjer eller fond? Sjekk at tapet er kommet med i skattemeldingen. Tap gir fradrag med effektiv verdi 37,84 % (oppjustert).',
+    'Utleie av egen bolig: Skattefritt dersom du selv bor i minst halvparten (etter utleieverdi). Korttidsutleie (under 30 dager per leieforhold): inntekt inntil 10 000 kr er skattefri, 85 % av overskytende er skattepliktig.'
   ];
   var totalBesparelse=0;var nChecked=0;
   SJEKK_DATA.forEach(function(q,i){
