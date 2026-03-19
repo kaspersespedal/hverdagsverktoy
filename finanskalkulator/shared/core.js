@@ -2251,8 +2251,8 @@ function bcBtnStyle(t,l,isSmall){
   let rad = isSmall ? '10px' : '12px';
   let base = `border:none;border-radius:${rad};padding:${pad};font-family:'Inter',sans-serif;font-size:${sz};font-weight:600;cursor:pointer;transition:all .15s;`;
   if(l==='=') return base+'background:linear-gradient(135deg,var(--accent-d,#5b8def),var(--accent));color:#fff;font-size:17px;font-weight:800;';
-  if(t==='acc') return base+'background:color-mix(in srgb,var(--accent) 8%,transparent);color:var(--accent-d,#5b8def);border:1.5px solid color-mix(in srgb,var(--accent) 15%,transparent);font-weight:700;';
-  if(t==='fn') return base+'background:color-mix(in srgb,var(--accent) 5%,transparent);color:var(--accent-d,#5b8def);border:1.5px solid color-mix(in srgb,var(--accent) 12%,transparent);';
+  if(t==='acc') return base+'background:color-mix(in srgb,var(--accent) 6%,transparent);color:var(--accent-d,#5b8def);border:1.5px solid color-mix(in srgb,var(--accent) 10%,transparent);font-weight:700;';
+  if(t==='fn') return base+'background:color-mix(in srgb,var(--accent) 4%,transparent);color:var(--accent-d,#5b8def);border:1.5px solid color-mix(in srgb,var(--accent) 8%,transparent);';
   if(t==='op') return base+'background:var(--surface2);color:var(--ink3);border:1.5px solid var(--border);';
   return base+'background:var(--surface);color:var(--ink);border:1.5px solid var(--border);';
 }
