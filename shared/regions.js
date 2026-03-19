@@ -300,7 +300,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2% (4 weeks holiday)','12% (5 weeks holiday)'],
     agaOtpOpts: ['2% (statutory minimum)','5%','7%'],
     pensjonOtpOpts: ['2% (statutory minimum)','5%','7%'],
-    lvuZoneOpts: ['Zone I (14.1%)','Zone Ia/II (10.6%)','Zone III (6.4%)','Zone V (0%)'],
+    lvuZoneOpts: ['Zone I (14,1%)','Zone Ia/II (10,6%)','Zone III (6,4%)','Zone IVa (7,9%)','Zone IV (5,1%)','Zone V (0%)'],
     vgDagensKurs: 'Current rate: approx.',
     vgLive: '(approx.)'
 ,
@@ -664,7 +664,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2%（4周假期）','12%（5周假期）'],
     agaOtpOpts: ['2%（法定最低）','5%','7%'],
     pensjonOtpOpts: ['2%（法定最低）','5%','7%'],
-    lvuZoneOpts: ['I区 (14.1%)','Ia/II区 (10.6%)','III区 (6.4%)','V区 (0%)'],
+    lvuZoneOpts: ['I区 (14,1%)','Ia/II区 (10,6%)','III区 (6,4%)','IVa区 (7,9%)','IV区 (5,1%)','V区 (0%)'],
     vgDagensKurs: '当前汇率：约',
     vgLive: '（约）'
 ,
@@ -1052,7 +1052,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2% (4 semaines de congé)','12% (5 semaines de congé)'],
     agaOtpOpts: ['2% (minimum légal)','5%','7%'],
     pensjonOtpOpts: ['2% (minimum légal)','5%','7%'],
-    lvuZoneOpts: ['Zone I (14.1%)','Zone Ia/II (10.6%)','Zone III (6.4%)','Zone V (0%)'],
+    lvuZoneOpts: ['Zone I (14,1%)','Zone Ia/II (10,6%)','Zone III (6,4%)','Zone IVa (7,9%)','Zone IV (5,1%)','Zone V (0%)'],
     vgDagensKurs: 'Taux actuel : env.',
     vgLive: '(env.)'
 ,
@@ -1463,7 +1463,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2% (4 uker ferie)','12% (5 uker ferie)'],
     agaOtpOpts: ['2% (lovpålagt minimum)','5%','7%'],
     pensjonOtpOpts: ['2% (lovpålagt minimum)','5%','7%'],
-    lvuZoneOpts: ['Sone I (14.1%)','Sone Ia/II (10.6%)','Sone III (6.4%)','Sone V (0%)'],
+    lvuZoneOpts: ['Sone I (14,1%)','Sone Ia/II (10,6%)','Sone III (6,4%)','Sone IVa (7,9%)','Sone IV (5,1%)','Sone V (0%)'],
     vgDagensKurs: 'Dagens kurs: ca.',
     vgLive: '(ca.)'
 ,
@@ -1838,7 +1838,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2% (4 tygodnie urlopu)','12% (5 tygodni urlopu)'],
     agaOtpOpts: ['2% (minimum ustawowe)','5%','7%'],
     pensjonOtpOpts: ['2% (minimum ustawowe)','5%','7%'],
-    lvuZoneOpts: ['Strefa I (14.1%)','Strefa Ia/II (10.6%)','Strefa III (6.4%)','Strefa V (0%)'],
+    lvuZoneOpts: ['Strefa I (14,1%)','Strefa Ia/II (10,6%)','Strefa III (6,4%)','Strefa IVa (7,9%)','Strefa IV (5,1%)','Strefa V (0%)'],
     vgDagensKurs: 'Bieżący kurs: ok.',
     vgLive: '(ok.)'
 ,
@@ -2225,7 +2225,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2% (4 тижні відпустки)','12% (5 тижнів відпустки)'],
     agaOtpOpts: ['2% (законодавчий мінімум)','5%','7%'],
     pensjonOtpOpts: ['2% (законодавчий мінімум)','5%','7%'],
-    lvuZoneOpts: ['Зона I (14.1%)','Зона Ia/II (10.6%)','Зона III (6.4%)','Зона V (0%)'],
+    lvuZoneOpts: ['Зона I (14,1%)','Зона Ia/II (10,6%)','Зона III (6,4%)','Зона IVa (7,9%)','Зона IV (5,1%)','Зона V (0%)'],
     vgDagensKurs: 'Поточний курс: прибл.',
     vgLive: '(прибл.)'
 ,
@@ -2612,7 +2612,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2% (4 أسابيع إجازة)','12% (5 أسابيع إجازة)'],
     agaOtpOpts: ['2% (الحد الأدنى القانوني)','5%','7%'],
     pensjonOtpOpts: ['2% (الحد الأدنى القانوني)','5%','7%'],
-    lvuZoneOpts: ['المنطقة I (14.1%)','المنطقة Ia/II (10.6%)','المنطقة III (6.4%)','المنطقة V (0%)'],
+    lvuZoneOpts: ['المنطقة I (14,1%)','المنطقة Ia/II (10,6%)','المنطقة III (6,4%)','المنطقة IVa (7,9%)','المنطقة IV (5,1%)','المنطقة V (0%)'],
     vgDagensKurs: 'السعر الحالي: تقريباً',
     vgLive: '(تقريباً)'
 ,
@@ -2998,7 +2998,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2% (4 savaitės atostogų)','12% (5 savaitės atostogų)'],
     agaOtpOpts: ['2% (teisėtas minimumas)','5%','7%'],
     pensjonOtpOpts: ['2% (teisėtas minimumas)','5%','7%'],
-    lvuZoneOpts: ['Zona I (14.1%)','Zona Ia/II (10.6%)','Zona III (6.4%)','Zona V (0%)'],
+    lvuZoneOpts: ['Zona I (14,1%)','Zona Ia/II (10,6%)','Zona III (6,4%)','Zona IVa (7,9%)','Zona IV (5,1%)','Zona V (0%)'],
     vgDagensKurs: 'Dabartinis kursas: apie',
     vgLive: '(apie)'
 ,
@@ -3382,7 +3382,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2% (4 toddobaad fasax)','12% (5 toddobaad fasax)'],
     agaOtpOpts: ['2% (ugu yaraan sharciga)','5%','7%'],
     pensjonOtpOpts: ['2% (ugu yaraan sharciga)','5%','7%'],
-    lvuZoneOpts: ['Aag I (14.1%)','Aag Ia/II (10.6%)','Aag III (6.4%)','Aag V (0%)'],
+    lvuZoneOpts: ['Aag I (14,1%)','Aag Ia/II (10,6%)','Aag III (6,4%)','Aag IVa (7,9%)','Aag IV (5,1%)','Aag V (0%)'],
     vgDagensKurs: 'Qiimaha maanta: qiyaastii',
     vgLive: '(qiyaastii)'
 ,
@@ -3769,7 +3769,7 @@ const REGIONS = {
     agaFerieOpts: ['10.2% (4 ሰሙን ዕረፍቲ)','12% (5 ሰሙን ዕረፍቲ)'],
     agaOtpOpts: ['2% (ሕጋዊ ዝተሓተ)','5%','7%'],
     pensjonOtpOpts: ['2% (ሕጋዊ ዝተሓተ)','5%','7%'],
-    lvuZoneOpts: ['ዞባ I (14.1%)','ዞባ Ia/II (10.6%)','ዞባ III (6.4%)','ዞባ V (0%)'],
+    lvuZoneOpts: ['ዞባ I (14,1%)','ዞባ Ia/II (10,6%)','ዞባ III (6,4%)','ዞባ IVa (7,9%)','ዞባ IV (5,1%)','ዞባ V (0%)'],
     vgDagensKurs: 'ናይ ሎሚ ምንዛር: ሓ.',
     vgLive: '(ሓ.)'
 ,
