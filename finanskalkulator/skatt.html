@@ -330,6 +330,93 @@
             </div>
           </div>
 
+          <!-- Formueskatt-kalkulator -->
+          <div id="formue-wrapper" class="info-card collapsed" style="margin-top:16px;">
+            <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+              <div><div class="card-title" id="formue-title">Formueskatt <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="formue-desc">Beregn formueskatt med verdsettelsesrabatter</div></div>
+            </div>
+            <div class="law-body" style="padding:0 24px 20px;">
+              <div class="form-row">
+                <div class="fg"><label class="flbl" id="formue-l-primaer" for="formue-primaer">Primærbolig (markedsverdi)</label>
+                  <input class="fc" type="text" id="formue-primaer" value="5 000 000" inputmode="numeric">
+                </div>
+                <div class="fg"><label class="flbl" id="formue-l-sekundaer" for="formue-sekundaer">Sekundærbolig (markedsverdi)</label>
+                  <input class="fc" type="text" id="formue-sekundaer" value="0" inputmode="numeric">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="fg"><label class="flbl" id="formue-l-aksjer" for="formue-aksjer">Aksjer og fond</label>
+                  <input class="fc" type="text" id="formue-aksjer" value="500 000" inputmode="numeric">
+                </div>
+                <div class="fg"><label class="flbl" id="formue-l-bank" for="formue-bank">Bankinnskudd</label>
+                  <input class="fc" type="text" id="formue-bank" value="200 000" inputmode="numeric">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="fg"><label class="flbl" id="formue-l-gjeld" for="formue-gjeld">Total gjeld</label>
+                  <input class="fc" type="text" id="formue-gjeld" value="3 000 000" inputmode="numeric">
+                </div>
+                <div class="fg"><label class="flbl" id="formue-l-personer" for="formue-personer">Skattesubjekt</label>
+                  <select class="fc" id="formue-personer">
+                    <option id="formue-opt-en" value="1">Enslig (1 × bunnfradrag)</option>
+                    <option id="formue-opt-to" value="2">Ektefeller (2 × bunnfradrag)</option>
+                  </select>
+                </div>
+              </div>
+              <button class="btn-calc" onclick="calcFormue()"><span id="btn-calc-formue">Beregn formueskatt →</span></button>
+              <div id="formue-res" class="result-sec hidden">
+                <div class="rh" id="formue-rh">
+                  <div class="rh-lbl" id="formue-r-lbl">Formueskatt</div>
+                  <div class="rh-val" id="formue-r-val">–</div>
+                  <div class="rh-sub" id="formue-r-sub">–</div>
+                </div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="formue-rl-brutto">Brutto skattemessig formue</div><div class="rt-val" id="formue-r-brutto">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="formue-rl-gjeld">Gjeldsfradrag (justert)</div><div class="rt-val" id="formue-r-gjeld">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="formue-rl-netto">Netto formue</div><div class="rt-val" id="formue-r-netto">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="formue-rl-bunnfradrag">Bunnfradrag</div><div class="rt-val" id="formue-r-bunnfradrag">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="formue-rl-skattepliktig">Skattepliktig formue</div><div class="rt-val" id="formue-r-skattepliktig">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="formue-rl-effsats">Effektiv skattesats</div><div class="rt-val" id="formue-r-effsats">–</div></div>
+                </div>
+                <div id="formue-breakdown" style="margin-top:12px;padding:10px 14px;background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1px solid color-mix(in srgb,var(--accent) 15%,var(--border));border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.6;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Reisefradrag / pendlerfradrag -->
+          <div id="reise-wrapper" class="info-card collapsed" style="margin-top:16px;">
+            <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+              <div><div class="card-title" id="reise-title">Reisefradrag <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="reise-desc">Beregn pendlerfradrag for reise mellom hjem og jobb</div></div>
+            </div>
+            <div class="law-body" style="padding:0 24px 20px;">
+              <div class="form-row">
+                <div class="fg"><label class="flbl" id="reise-l-km" for="reise-km">Avstand hjem–jobb (km, én vei)</label>
+                  <input class="fc" type="text" id="reise-km" value="35" inputmode="numeric">
+                </div>
+                <div class="fg"><label class="flbl" id="reise-l-dager" for="reise-dager">Arbeidsdager per år</label>
+                  <input class="fc" type="number" id="reise-dager" value="230" min="1" max="365">
+                </div>
+              </div>
+              <div class="fg"><label class="flbl" id="reise-l-bom" for="reise-bom">Bompenger / ferge per dag (kr)</label>
+                <input class="fc" type="text" id="reise-bom" value="0" inputmode="numeric">
+              </div>
+              <button class="btn-calc" onclick="calcReise()"><span id="btn-calc-reise">Beregn reisefradrag →</span></button>
+              <div id="reise-res" class="result-sec hidden">
+                <div class="rh" id="reise-rh">
+                  <div class="rh-lbl" id="reise-r-lbl">Årlig reisefradrag</div>
+                  <div class="rh-val" id="reise-r-val">–</div>
+                  <div class="rh-sub" id="reise-r-sub">–</div>
+                </div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="reise-rl-brutto">Brutto reisekostnad</div><div class="rt-val" id="reise-r-brutto">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="reise-rl-bunnfradrag">Bunnfradrag</div><div class="rt-val" id="reise-r-bunnfradrag">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="reise-rl-besparelse">Skattebesparelse (22 %)</div><div class="rt-val" id="reise-r-besparelse">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="reise-rl-permnd">Per måned</div><div class="rt-val" id="reise-r-permnd">–</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div><!-- /card -->
       </div><!-- /left-wrapper -->
@@ -414,6 +501,59 @@
             </div>
           </div>
         </div>
+
+        <!-- Skattemelding-sjekkliste -->
+        <div id="sjekk-card" class="info-card collapsed" style="margin-top:16px;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="sjekk-title">Skattemelding-sjekkliste <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="sjekk-desc">Har du glemt noe? Sjekk vanlige fradrag du kan ha krav på.</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
+            <div id="sjekk-body" style="display:flex;flex-direction:column;gap:10px;">
+              <label class="sjekk-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;">
+                <input type="checkbox" id="sjekk-c1" onchange="updateSjekkliste()" style="margin-top:3px;flex-shrink:0;">
+                <div><span id="sjekk-q1" style="font-weight:600;">Pendler du til jobb?</span><div id="sjekk-c1-tip" class="hidden" style="font-size:11px;color:var(--ink3);margin-top:4px;"></div></div>
+              </label>
+              <label class="sjekk-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;">
+                <input type="checkbox" id="sjekk-c2" onchange="updateSjekkliste()" style="margin-top:3px;flex-shrink:0;">
+                <div><span id="sjekk-q2" style="font-weight:600;">Har du boliglån?</span><div id="sjekk-c2-tip" class="hidden" style="font-size:11px;color:var(--ink3);margin-top:4px;"></div></div>
+              </label>
+              <label class="sjekk-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;">
+                <input type="checkbox" id="sjekk-c3" onchange="updateSjekkliste()" style="margin-top:3px;flex-shrink:0;">
+                <div><span id="sjekk-q3" style="font-weight:600;">Betaler du fagforeningskontingent?</span><div id="sjekk-c3-tip" class="hidden" style="font-size:11px;color:var(--ink3);margin-top:4px;"></div></div>
+              </label>
+              <label class="sjekk-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;">
+                <input type="checkbox" id="sjekk-c4" onchange="updateSjekkliste()" style="margin-top:3px;flex-shrink:0;">
+                <div><span id="sjekk-q4" style="font-weight:600;">Sparer du i BSU?</span><div id="sjekk-c4-tip" class="hidden" style="font-size:11px;color:var(--ink3);margin-top:4px;"></div></div>
+              </label>
+              <label class="sjekk-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;">
+                <input type="checkbox" id="sjekk-c5" onchange="updateSjekkliste()" style="margin-top:3px;flex-shrink:0;">
+                <div><span id="sjekk-q5" style="font-weight:600;">Har du barn i barnehage/SFO?</span><div id="sjekk-c5-tip" class="hidden" style="font-size:11px;color:var(--ink3);margin-top:4px;"></div></div>
+              </label>
+              <label class="sjekk-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;">
+                <input type="checkbox" id="sjekk-c6" onchange="updateSjekkliste()" style="margin-top:3px;flex-shrink:0;">
+                <div><span id="sjekk-q6" style="font-weight:600;">Gir du gaver til frivillige organisasjoner?</span><div id="sjekk-c6-tip" class="hidden" style="font-size:11px;color:var(--ink3);margin-top:4px;"></div></div>
+              </label>
+              <label class="sjekk-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;">
+                <input type="checkbox" id="sjekk-c7" onchange="updateSjekkliste()" style="margin-top:3px;flex-shrink:0;">
+                <div><span id="sjekk-q7" style="font-weight:600;">Jobber du hjemmefra (hjemmekontor)?</span><div id="sjekk-c7-tip" class="hidden" style="font-size:11px;color:var(--ink3);margin-top:4px;"></div></div>
+              </label>
+              <label class="sjekk-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;">
+                <input type="checkbox" id="sjekk-c8" onchange="updateSjekkliste()" style="margin-top:3px;flex-shrink:0;">
+                <div><span id="sjekk-q8" style="font-weight:600;">Har du tap på aksjer eller fond?</span><div id="sjekk-c8-tip" class="hidden" style="font-size:11px;color:var(--ink3);margin-top:4px;"></div></div>
+              </label>
+              <label class="sjekk-item" style="display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;line-height:1.5;">
+                <input type="checkbox" id="sjekk-c9" onchange="updateSjekkliste()" style="margin-top:3px;flex-shrink:0;">
+                <div><span id="sjekk-q9" style="font-weight:600;">Leier du ut bolig?</span><div id="sjekk-c9-tip" class="hidden" style="font-size:11px;color:var(--ink3);margin-top:4px;"></div></div>
+              </label>
+            </div>
+            <div id="sjekk-summary" class="hidden" style="margin-top:16px;padding:14px 16px;background:color-mix(in srgb,var(--accent) 10%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--accent);margin-bottom:6px;" id="sjekk-summary-lbl">Estimert potensiell besparelse</div>
+              <div style="font-size:24px;font-weight:700;color:var(--ink);" id="sjekk-total">0 kr</div>
+              <div style="font-size:11px;color:var(--ink3);margin-top:4px;" id="sjekk-note">Estimatene er veiledende. Faktisk besparelse avhenger av din totale inntekt og skattesituasjon.</div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
     </div>
