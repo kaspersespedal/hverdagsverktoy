@@ -44,7 +44,7 @@ function buildThemePicker(){
   var activeTheme=THEMES.find(function(t){return t.id===current;})||THEMES[0];
   var btn=document.createElement('button');
   btn.id='theme-trigger';
-  btn.style.cssText='display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:7px 12px;cursor:pointer;outline:none;transition:border-color .2s,box-shadow .2s;box-shadow:0 1px 3px rgba(0,0,0,.06);';
+  btn.style.cssText='display:inline-flex;align-items:center;gap:8px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 14px;cursor:pointer;outline:none;transition:all .15s;font-size:13px;font-weight:600;';
   btn.onmouseenter=function(){this.style.borderColor='var(--accent)';};
   btn.onmouseleave=function(){var p=document.getElementById('theme-panel');if(!p||p.style.display==='none')this.style.borderColor='var(--border)';};
   var dot=document.createElement('span');
