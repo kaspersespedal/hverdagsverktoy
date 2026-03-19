@@ -67,7 +67,10 @@ function buildThemePicker(){
     var swatch=document.createElement('button');
     swatch.title=themeLabel(t);
     var swatchBorder=isActive?(t.ring||t.dot):(t.dotBorder||'transparent');
-    swatch.style.cssText='width:28px;height:28px;border-radius:50%;border:2.5px solid '+swatchBorder+';background:'+t.dot+';cursor:pointer;outline:none;padding:0;transition:transform .15s,border-color .15s,box-shadow .15s;flex-shrink:0;position:relative;display:inline-block;vertical-align:middle;'+(isActive?'box-shadow:0 0 0 2px var(--surface),0 2px 8px rgba(0,0,0,.15);':'')+(i>0?'margin-left:10px;':'');
+    var isMobile=window.innerWidth<500;
+    var swSize=isMobile?'24px':'28px';
+    var swGap=isMobile?'7px':'10px';
+    swatch.style.cssText='width:'+swSize+';height:'+swSize+';border-radius:50%;border:2.5px solid '+swatchBorder+';background:'+t.dot+';cursor:pointer;outline:none;padding:0;transition:transform .15s,border-color .15s,box-shadow .15s;flex-shrink:0;position:relative;display:inline-block;vertical-align:middle;'+(isActive?'box-shadow:0 0 0 2px var(--surface),0 2px 8px rgba(0,0,0,.15);':'')+(i>0?'margin-left:'+swGap+';':'');
     swatch.onmouseenter=function(){if(!isActive)this.style.transform='scale(1.18)';this.style.boxShadow='0 2px 10px rgba(0,0,0,.18)';};
     swatch.onmouseleave=function(){this.style.transform='scale(1)';this.style.boxShadow=isActive?'0 0 0 2px var(--surface),0 2px 8px rgba(0,0,0,.15)':'';};
     swatch.onclick=function(e){e.stopPropagation();setTheme(t.id);};
@@ -89,10 +92,17 @@ function buildThemePicker(){
       panel.style.left='0';panel.style.top='0';
       var rect=btn.getBoundingClientRect();
       var panelW=panel.offsetWidth;
-      var left=rect.left;
-      if(left+panelW>window.innerWidth-12) left=window.innerWidth-panelW-12;
-      if(left<12) left=12;
-      panel.style.left=left+'px';
+      var vw=window.innerWidth;
+      if(panelW>vw-24){
+        // Panel wider than screen — center it
+        panel.style.left='12px';panel.style.right='12px';
+      } else {
+        var right=vw-rect.right;
+        if(right<12) right=12;
+        if(right+panelW>vw-12) right=vw-panelW-12;
+        panel.style.left='auto';
+        panel.style.right=right+'px';
+      }
       panel.style.top=(rect.bottom+6)+'px';
       panel.style.visibility='visible';
     } else {
