@@ -599,6 +599,52 @@ function updateSalaryUI() {
   } else {
     salHelpCard.classList.add('hidden');
   }
+  // Formueskatt labels
+  var _fmT=document.getElementById('formue-title');
+  if(_fmT){
+    _fmT.innerHTML=(r.formueTitle||'Formueskatt')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('formue-desc',r.formueDesc||'Beregn formueskatt med verdsettelsesrabatter');
+    setText('formue-l-primaer',r.formueLPrimaer||'Primærbolig (markedsverdi)');
+    setText('formue-l-sekundaer',r.formueLSekundaer||'Sekundærbolig (markedsverdi)');
+    setText('formue-l-aksjer',r.formueLAksjer||'Aksjer og fond');
+    setText('formue-l-bank',r.formueLBank||'Bankinnskudd');
+    setText('formue-l-gjeld',r.formueLGjeld||'Total gjeld');
+    setText('formue-l-personer',r.formueLPersoner||'Skattesubjekt');
+    setText('formue-opt-en',r.formueOptEn||'Enslig (1 × bunnfradrag)');
+    setText('formue-opt-to',r.formueOptTo||'Ektefeller (2 × bunnfradrag)');
+    setText('btn-calc-formue',r.formueBtnCalc||'Beregn formueskatt →');
+    setText('formue-r-lbl',r.formueRLbl||'Formueskatt');
+    setText('formue-rl-brutto',r.formueRlBrutto||'Brutto skattemessig formue');
+    setText('formue-rl-gjeld',r.formueRlGjeld||'Gjeldsfradrag (justert)');
+    setText('formue-rl-netto',r.formueRlNetto||'Netto formue');
+    setText('formue-rl-bunnfradrag',r.formueRlBunnfradrag||'Bunnfradrag');
+    setText('formue-rl-skattepliktig',r.formueRlSkattepliktig||'Skattepliktig formue');
+    setText('formue-rl-effsats',r.formueRlEffsats||'Effektiv skattesats');
+  }
+  // Reisefradrag labels
+  var _reT=document.getElementById('reise-title');
+  if(_reT){
+    _reT.innerHTML=(r.reiseTitle||'Reisefradrag')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('reise-desc',r.reiseDesc||'Beregn pendlerfradrag for reise mellom hjem og jobb');
+    setText('reise-l-km',r.reiseLKm||'Avstand hjem–jobb (km, én vei)');
+    setText('reise-l-dager',r.reiseLDager||'Arbeidsdager per år');
+    setText('reise-l-bom',r.reiseLBom||'Bompenger / ferge per dag (kr)');
+    setText('btn-calc-reise',r.reiseBtnCalc||'Beregn reisefradrag →');
+    setText('reise-r-lbl',r.reiseRLbl||'Årlig reisefradrag');
+    setText('reise-rl-brutto',r.reiseRlBrutto||'Brutto reisekostnad');
+    setText('reise-rl-bunnfradrag',r.reiseRlBunnfradrag||'Bunnfradrag');
+    setText('reise-rl-besparelse',r.reiseRlBesparelse||'Skattebesparelse (22 %)');
+    setText('reise-rl-permnd',r.reiseRlPermnd||'Per måned');
+  }
+  // Sjekkliste labels
+  var _sjT=document.getElementById('sjekk-title');
+  if(_sjT){
+    _sjT.innerHTML=(r.sjekkTitle||'Skattemelding-sjekkliste')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('sjekk-desc',r.sjekkDesc||'Har du glemt noe? Sjekk vanlige fradrag du kan ha krav på.');
+    for(var qi=1;qi<=9;qi++)setText('sjekk-q'+qi,(r['sjekkQ'+qi])||(document.getElementById('sjekk-q'+qi)||{}).textContent||'');
+    setText('sjekk-summary-lbl',r.sjekkSummaryLbl||'Estimert potensiell besparelse');
+    setText('sjekk-note',r.sjekkNote||'Estimatene er veiledende.');
+  }
   const salIntroCard = document.getElementById('sal-intro-card');
   if(r.salIntroRows){
     salIntroCard.classList.remove('hidden');
@@ -868,6 +914,21 @@ function updateMortgageUI() {
   setText('io-rl-totint-ann', r.ioRlTotIntAnn || 'Totale renter (annuitet fra dag 1)');
   setText('io-rl-diff', r.ioRlDiff || 'Ekstra rentekostnad');
   setText('io-rl-annmth', r.ioRlAnnMth || 'Månedlig annuitet fra dag 1');
+  // Dokumentavgift labels
+  var _dokT=document.getElementById('dok-title');
+  if(_dokT){
+    _dokT.innerHTML=(r.dokTitle||'Dokumentavgift')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('dok-desc',r.dokDesc||'2,5 % av markedsverdi ved tinglysing av eiendomsoverdragelse');
+    setText('dok-l-verdi',r.dokLVerdi||'Markedsverdi (kr)');
+    setText('dok-l-type',r.dokLType||'Type eiendom');
+    setText('dok-opt-bolig',r.dokOptBolig||'Selveier (bolig/fritid)');
+    setText('dok-opt-borettslag',r.dokOptBorettslag||'Borettslag (kun andel)');
+    setText('btn-calc-dok',r.dokBtnCalc||'Beregn dokumentavgift →');
+    setText('dok-r-lbl',r.dokRLbl||'Totale tinglysningskostnader');
+    setText('dok-rl-avgift',r.dokRlAvgift||'Dokumentavgift (2,5 %)');
+    setText('dok-rl-tinglyse',r.dokRlTinglyse||'Tinglysingsgebyr');
+    setText('dok-rl-attestgebyr',r.dokRlAttestgebyr||'Attestgebyr');
+  }
 }
 
 function updateNpvUI() {
@@ -967,6 +1028,26 @@ function updateNpvUI() {
     setText('npv-howto-desc', r.npvHowtoDesc || 'Step-by-step guide to NPV and IRR');
     if(r.npvHowtoRows){document.getElementById('npv-howto-rows').innerHTML=infoRowsHTML(r.npvHowtoRows);npvHowtoCard.classList.remove('hidden');}
     else{npvHowtoCard.classList.add('hidden');}
+  }
+  // Foreldrepenger labels
+  var _fpT=document.getElementById('fp-title');
+  if(_fpT){
+    _fpT.innerHTML=(r.fpTitle||'Foreldrepenger')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('fp-desc',r.fpDesc||'Beregn foreldrepenger — 100 % vs. 80 %, fordeling mor/far');
+    setText('fp-l-inntekt',r.fpLInntekt||'Årsinntekt (kr)');
+    setText('fp-l-dekning',r.fpLDekning||'Dekningsgrad');
+    setText('fp-opt-100',r.fpOpt100||'100 % — 49 uker');
+    setText('fp-opt-80',r.fpOpt80||'80 % — 59 uker');
+    setText('btn-calc-fp',r.fpBtnCalc||'Beregn foreldrepenger →');
+    setText('fp-r-lbl',r.fpRLbl||'Månedlig utbetaling');
+    setText('fp-rl-total',r.fpRlTotal||'Total utbetaling');
+    setText('fp-rl-dagsats',r.fpRlDagsats||'Dagsats');
+    setText('fp-rl-grunnlag',r.fpRlGrunnlag||'Beregningsgrunnlag');
+    setText('fp-rl-uker',r.fpRlUker||'Totalt antall uker');
+    setText('fp-rl-mor',r.fpRlMor||'Mødrekvote');
+    setText('fp-rl-far',r.fpRlFar||'Fedrekvote');
+    setText('fp-rl-felles',r.fpRlFelles||'Fellesperiode');
+    setText('fp-rl-forfoedsel',r.fpRlForfoedsel||'Før fødsel');
   }
 }
 
@@ -1853,6 +1934,193 @@ function calcMor() {
 
   document.getElementById('m-res').classList.remove('hidden');
   setTimeout(()=>scrollToEl(document.getElementById('m-res'),'top'),80);
+}
+
+// ═══════════════════════════════════════════════════════
+// SKATTEMELDING SJEKKLISTE
+// ═══════════════════════════════════════════════════════
+var SJEKK_DATA=[
+  {id:'sjekk-c1',fradrag:15000,type:'fradrag'},// Pendler: ~15k avg reisefradrag
+  {id:'sjekk-c2',fradrag:30000,type:'fradrag'},// Boliglån: ~30k rentefradrag
+  {id:'sjekk-c3',fradrag:8700,type:'fradrag'},// Fagforening: max 8700
+  {id:'sjekk-c4',fradrag:2750,type:'skattefradrag'},// BSU: 10% av 27500 = 2750 direkte
+  {id:'sjekk-c5',fradrag:0,type:'info'},// Barnehage: foreldrefradrag avviklet 2023, men sjekk
+  {id:'sjekk-c6',fradrag:5500,type:'fradrag'},// Gaver: max 25000 × 22%
+  {id:'sjekk-c7',fradrag:2200,type:'fradrag'},// Hjemmekontor: fast sats 2200/år
+  {id:'sjekk-c8',fradrag:0,type:'info'},// Aksjetap: varierer
+  {id:'sjekk-c9',fradrag:0,type:'info'}// Utleie: varierer
+];
+function updateSjekkliste(){
+  var r=R();var tips=r.sjekkTips||[
+    'Reisefradrag: Bor du mer enn 37 km fra jobb kan du ha krav på fradrag. Bruk reisefradragskalkulatoren over!',
+    'Rentefradrag: Du får 22% av renteutgifter tilbake på skatten. Sjekk at alle lån er med i skattemeldingen.',
+    'Fagforening: Maks 8 700 kr i fradrag. Sjekk at beløpet er forhåndsutfylt korrekt.',
+    'BSU: 10% skattefradrag (maks 2 750 kr/år). Gjelder til du fyller 34 år og ikke eier bolig.',
+    'Foreldrefradrag for barnehage/SFO er avviklet fra 2023, men sjekk om du har andre barnerettede fradrag.',
+    'Gavefradrag: Fradrag for gaver over 500 kr til godkjente organisasjoner, maks 25 000 kr/år.',
+    'Hjemmekontor: Fast fradrag på 2 200 kr/år uten dokumentasjon, eller faktiske kostnader med dokumentasjon.',
+    'Tap på aksjer/fond kan fremføres og trekkes fra gevinster. Sjekk at alle realiserte tap er med.',
+    'Utleieinntekter: Skattefritt ved utleie av inntil halvparten av boligen. Ved utleie over 30 dager via Airbnb: 85% av inntekt over 10 000 kr er skattepliktig.'
+  ];
+  var totalBesparelse=0;var nChecked=0;
+  SJEKK_DATA.forEach(function(q,i){
+    var cb=document.getElementById(q.id);
+    var tipEl=document.getElementById(q.id+'-tip');
+    if(!cb)return;
+    if(tipEl)tipEl.innerHTML=tips[i]||'';
+    if(cb.checked){
+      nChecked++;
+      if(tipEl)tipEl.classList.remove('hidden');
+      if(q.type==='fradrag')totalBesparelse+=Math.round(q.fradrag*0.22);
+      else if(q.type==='skattefradrag')totalBesparelse+=q.fradrag;
+    }else{
+      if(tipEl)tipEl.classList.add('hidden');
+    }
+  });
+  var summary=document.getElementById('sjekk-summary');
+  if(summary){
+    if(nChecked>0){summary.classList.remove('hidden');document.getElementById('sjekk-total').textContent=fmt(totalBesparelse)+' kr';}
+    else summary.classList.add('hidden');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// FORELDREPENGER CALCULATOR
+// ═══════════════════════════════════════════════════════
+function calcForeldrepenger(){
+  var inntekt=parseNum('fp-inntekt');if(inntekt<=0)return;
+  var G=124028;// Grunnbeløp 2026 (estimat)
+  var maxGrunnlag=6*G;// 744 168
+  var grunnlag=Math.min(inntekt,maxGrunnlag);
+  var sel=document.getElementById('fp-dekning');
+  var dekning=sel?+sel.value:100;
+  var totalUker=dekning===100?49:59;
+  var morKvote=dekning===100?15:19;
+  var farKvote=dekning===100?15:19;
+  var forFodsel=3;
+  var felles=totalUker-morKvote-farKvote-forFodsel;
+  var dekPct=dekning/100;
+  var dagsats=Math.round(grunnlag/260*dekPct);
+  var mndUtbetaling=Math.round(dagsats*21.67);
+  var totalUtbetaling=Math.round(dagsats*totalUker*5);
+  var r=R();
+  document.getElementById('fp-r-val').textContent=fmt(mndUtbetaling);
+  document.getElementById('fp-r-sub').textContent=dekning+'% '+( r.fpDekning||'dekning')+' · '+totalUker+' '+(r.fpUker||'uker');
+  document.getElementById('fp-r-total').textContent=fmt(totalUtbetaling);
+  document.getElementById('fp-r-dagsats').textContent=fmt(dagsats);
+  document.getElementById('fp-r-grunnlag').textContent=fmt(grunnlag)+(inntekt>maxGrunnlag?' (6G max)':'');
+  document.getElementById('fp-r-uker').textContent=totalUker+' '+(r.fpUker||'uker');
+  document.getElementById('fp-r-mor').textContent=morKvote+' '+(r.fpUker||'uker');
+  document.getElementById('fp-r-far').textContent=farKvote+' '+(r.fpUker||'uker');
+  document.getElementById('fp-r-felles').textContent=felles+' '+(r.fpUker||'uker');
+  document.getElementById('fp-r-forfoedsel').textContent=forFodsel+' '+(r.fpUker||'uker');
+  var tip=document.getElementById('fp-tip');
+  if(tip)tip.innerHTML=inntekt>maxGrunnlag?(r.fpTipMax||'Inntekt over 6G ('+fmt(maxGrunnlag)+' kr) dekkes ikke av NAV. Mange arbeidsgivere dekker mellomlegget.'):(r.fpTipGeneral||'Grunnbeløpet (G) justeres hvert år i mai. Foreldrepenger beregnes ut fra inntekt de siste 3 månedene eller siste 12 måneder — det som gir høyest grunnlag.');
+  document.getElementById('fp-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('fp-res'),'top');},80);
+}
+
+// ═══════════════════════════════════════════════════════
+// FORMUESKATT CALCULATOR
+// ═══════════════════════════════════════════════════════
+function calcFormue(){
+  var pri=parseNum('formue-primaer'),sek=parseNum('formue-sekundaer');
+  var aksjer=parseNum('formue-aksjer'),bank=parseNum('formue-bank');
+  var gjeld=parseNum('formue-gjeld');
+  var sel=document.getElementById('formue-personer');var personer=sel?+sel.value:1;
+  // Verdsettelsesrabatter 2026
+  var priU10=Math.min(pri,10000000),priO10=Math.max(pri-10000000,0);
+  var priV=priU10*0.25+priO10*0.70;
+  var sekV=sek*1.00;var aksV=aksjer*0.80;var bankV=bank*1.00;
+  var bruttoFormue=priV+sekV+aksV+bankV;
+  // Gjeldsreduksjon (§ 4-19): gjeld reduseres proporsjonalt med rabatterte eiendeler
+  var markedTotal=pri+sek+aksjer+bank;
+  var debtFactor=markedTotal>0?bruttoFormue/markedTotal:1;
+  var gjeldJustert=gjeld*debtFactor;
+  var nettoFormue=Math.max(bruttoFormue-gjeldJustert,0);
+  // Bunnfradrag
+  var bunnfradrag=1700000*personer;
+  var skattepliktig=Math.max(nettoFormue-bunnfradrag,0);
+  // Skattesatser 2026: kommunal 0,7% + stat 0,3% (over 1,7M) + ekstra 0,4% (over 20M)
+  var kommunal=skattepliktig*0.007;
+  var statGrense=20000000*personer-bunnfradrag;
+  var statBase1=Math.min(skattepliktig,Math.max(statGrense,0));
+  var statBase2=Math.max(skattepliktig-Math.max(statGrense,0),0);
+  var stat=statBase1*0.003+statBase2*0.004;
+  var totalSkatt=kommunal+stat;
+  var effSats=markedTotal>0?(totalSkatt/markedTotal*100):0;
+  var r=R();
+  document.getElementById('formue-r-val').textContent=fmt(Math.round(totalSkatt));
+  document.getElementById('formue-r-sub').textContent=(r.formueEffSatsLabel||'Effektiv sats')+': '+pct(effSats)+' '+(r.formueOfMarked||'av markedsverdi');
+  document.getElementById('formue-r-brutto').textContent=fmt(Math.round(bruttoFormue));
+  document.getElementById('formue-r-gjeld').textContent='− '+fmt(Math.round(gjeldJustert));
+  document.getElementById('formue-r-netto').textContent=fmt(Math.round(nettoFormue));
+  document.getElementById('formue-r-bunnfradrag').textContent='− '+fmt(bunnfradrag);
+  document.getElementById('formue-r-skattepliktig').textContent=fmt(Math.round(skattepliktig));
+  document.getElementById('formue-r-effsats').textContent=pct(effSats);
+  // Breakdown
+  var bd=document.getElementById('formue-breakdown');
+  if(bd){
+    var lines=[];
+    lines.push('<b>'+(r.formueRabattTitle||'Verdsettelsesrabatter brukt')+'</b>');
+    if(pri>0)lines.push((r.formueLPrimaer||'Primærbolig')+': '+fmt(pri)+' → '+fmt(Math.round(priV))+' ('+((priO10>0)?'25%/70%':'25%')+')');
+    if(sek>0)lines.push((r.formueLSekundaer||'Sekundærbolig')+': '+fmt(sek)+' → '+fmt(Math.round(sekV))+' (100%)');
+    if(aksjer>0)lines.push((r.formueLAksjer||'Aksjer/fond')+': '+fmt(aksjer)+' → '+fmt(Math.round(aksV))+' (80%)');
+    if(bank>0)lines.push((r.formueLBank||'Bankinnskudd')+': '+fmt(bank)+' → '+fmt(Math.round(bankV))+' (100%)');
+    bd.innerHTML=lines.join('<br>');
+  }
+  document.getElementById('formue-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('formue-res'),'top');},80);
+}
+
+// ═══════════════════════════════════════════════════════
+// REISEFRADRAG / PENDLERFRADRAG CALCULATOR
+// ═══════════════════════════════════════════════════════
+function calcReise(){
+  var km=parseNum('reise-km');if(km<=0)return;
+  var dager=parseNum('reise-dager')||230;
+  var bom=parseNum('reise-bom');
+  var satsPerKm=1.76;// 2026
+  var bunnfradrag=14400;
+  var maxFradrag=97000;
+  var reisekost=km*2*dager*satsPerKm;
+  var bomTotal=bom*dager;
+  var brutto=reisekost+bomTotal;
+  var fradrag=Math.min(Math.max(brutto-bunnfradrag,0),maxFradrag);
+  var besparelse=fradrag*0.22;
+  var perMnd=besparelse/12;
+  var r=R();
+  document.getElementById('reise-r-val').textContent=fmt(Math.round(fradrag));
+  document.getElementById('reise-r-sub').textContent=(r.reiseBesparelseLbl||'Skattebesparelse')+': '+fmt(Math.round(besparelse))+'/'+r.yr;
+  document.getElementById('reise-r-brutto').textContent=fmt(Math.round(brutto));
+  document.getElementById('reise-r-bunnfradrag').textContent='− '+fmt(bunnfradrag);
+  document.getElementById('reise-r-besparelse').textContent=fmt(Math.round(besparelse));
+  document.getElementById('reise-r-permnd').textContent=fmt(Math.round(perMnd));
+  document.getElementById('reise-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('reise-res'),'top');},80);
+}
+
+// ═══════════════════════════════════════════════════════
+// DOKUMENTAVGIFT CALCULATOR
+// ═══════════════════════════════════════════════════════
+function calcDok(){
+  var verdi=parseNum('dok-verdi');if(verdi<=0)return;
+  var type=document.getElementById('dok-type');var t=type?type.value:'bolig';
+  var rate=0.025;// 2.5% standard
+  var avgift=t==='borettslag'?0:verdi*rate;
+  var tinglyse=585;// Fast gebyr 2026
+  var attest=172;// Attestgebyr
+  var total=avgift+tinglyse+attest;
+  var r=R();
+  document.getElementById('dok-r-val').textContent=fmt(total);
+  document.getElementById('dok-r-sub').textContent=t==='borettslag'?(r.dokBorettslagSub||'Borettslag er fritatt for dokumentavgift'):(pct(rate*100)+' '+r.adjOfTotal+fmt(verdi));
+  document.getElementById('dok-r-avgift').textContent=fmt(avgift);
+  document.getElementById('dok-r-tinglyse').textContent=fmt(tinglyse);
+  document.getElementById('dok-r-attestgebyr').textContent=fmt(attest);
+  var tip=document.getElementById('dok-tip');
+  if(tip)tip.innerHTML=t==='borettslag'?(r.dokTipBorettslag||'I borettslag eier du en andel, ikke eiendommen direkte. Dokumentavgift påløper ikke — du betaler kun tinglysingsgebyr og attestgebyr.'):(r.dokTipSelveier||'Dokumentavgift beregnes av eiendommens markedsverdi på tinglysingstidspunktet. Borettslag er fritatt. Nybygg fra utbygger kan ha lavere grunnlag (tomt alene).');
+  document.getElementById('dok-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('dok-res'),'top');},80);
 }
 
 // ═══════════════════════════════════════════════════════
