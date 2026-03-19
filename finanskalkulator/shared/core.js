@@ -406,7 +406,7 @@ function goToAvsCalc(){
     window.scrollTo(0, Math.max(0,top));
   }
 }
-function openLawCard(cardId){
+function openLawCard(cardId,searchText){
   var card=document.getElementById(cardId);if(!card)return;
   // Open parent law-group if collapsed
   var group=card.closest('.law-group');
@@ -414,7 +414,16 @@ function openLawCard(cardId){
   // Open the card itself
   setTimeout(function(){
     if(card.classList.contains('collapsed'))card.classList.remove('collapsed');
-    setTimeout(function(){card.scrollIntoView({behavior:'smooth',block:'start'});},150);
+    setTimeout(function(){
+      if(searchText){
+        // Find the specific paragraph text inside the card
+        var rows=card.querySelectorAll('.ir .k, .ir');
+        var target=null;
+        rows.forEach(function(r){if(r.textContent.indexOf(searchText)>=0)target=r;});
+        if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.style.background='color-mix(in srgb,var(--accent) 15%,transparent)';setTimeout(function(){target.style.background='';},2000);return;}
+      }
+      card.scrollIntoView({behavior:'smooth',block:'start'});
+    },200);
   },100);
 }
 function toggleLawGroup(group){
