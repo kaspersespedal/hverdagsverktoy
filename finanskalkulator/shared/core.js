@@ -2042,22 +2042,33 @@ function calcFormue(){
   var aksjer=parseNum('formue-aksjer'),bank=parseNum('formue-bank');
   var gjeld=parseNum('formue-gjeld');
   var sel=document.getElementById('formue-personer');var personer=sel?+sel.value:1;
-  // Verdsettelsesrabatter 2026
+  // Verdsettelsesrabatter 2026 (Skatteetaten)
   var priU10=Math.min(pri,10000000),priO10=Math.max(pri-10000000,0);
-  var priV=priU10*0.25+priO10*0.70;
-  var sekV=sek*1.00;var aksV=aksjer*0.80;var bankV=bank*1.00;
+  var priV=priU10*0.25+priO10*0.70;// Primærbolig: 25% under 10M, 70% over
+  var sekV=sek*1.00;// Sekundærbolig: 100%
+  var aksV=aksjer*0.80;// Aksjer/fond: 80%
+  var bankV=bank*1.00;// Bank: 100%
   var bruttoFormue=priV+sekV+aksV+bankV;
-  // Gjeldsreduksjon (§ 4-19): gjeld reduseres proporsjonalt med rabatterte eiendeler
+  // Gjeldsreduksjon (§ 4-19): gjeld fordeles forholdsmessig på eiendeler,
+  // men reduseres KUN for eiendeler med rabatt under 100% (aksjer/fond).
+  // Primærbolig-gjeld reduseres IKKE (Skatteetatens metode).
   var markedTotal=pri+sek+aksjer+bank;
-  var debtFactor=markedTotal>0?bruttoFormue/markedTotal:1;
-  var gjeldJustert=gjeld*debtFactor;
-  var nettoFormue=Math.max(bruttoFormue-gjeldJustert,0);
-  // Bunnfradrag
-  var bunnfradrag=1700000*personer;
+  if(markedTotal>0){
+    var gjeldPri=gjeld*(pri/markedTotal);// Gjeld tilordnet primærbolig
+    var gjeldSek=gjeld*(sek/markedTotal);// Gjeld tilordnet sekundærbolig
+    var gjeldAks=gjeld*(aksjer/markedTotal);// Gjeld tilordnet aksjer
+    var gjeldBank=gjeld*(bank/markedTotal);// Gjeld tilordnet bank
+    // Kun aksjeandelen reduseres (80% verdsettelse = 20% reduksjon)
+    var gjeldJustert=gjeldPri+gjeldSek+(gjeldAks*0.80)+gjeldBank;
+  }else{var gjeldJustert=gjeld;}
+  var nettoFormue=bruttoFormue-gjeldJustert;// Kan bli negativ
+  // Bunnfradrag 2026: 1 900 000 kr per person
+  var bunnfradrag=1900000*personer;
   var skattepliktig=Math.max(nettoFormue-bunnfradrag,0);
-  // Skattesatser 2026: kommunal 0,7% + stat 0,3% (over 1,7M) + ekstra 0,4% (over 20M)
+  // Skattesatser 2026: kommunal 0,7% + stat 0,3% = 1,0% opp til 21,5M
+  // Over 21,5M: kommunal 0,7% + stat 0,4% = 1,1%
   var kommunal=skattepliktig*0.007;
-  var statGrense=20000000*personer-bunnfradrag;
+  var statGrense=(21500000-1900000)*personer;// Innslagspunkt trinn 2
   var statBase1=Math.min(skattepliktig,Math.max(statGrense,0));
   var statBase2=Math.max(skattepliktig-Math.max(statGrense,0),0);
   var stat=statBase1*0.003+statBase2*0.004;
@@ -2071,7 +2082,7 @@ function calcFormue(){
   document.getElementById('formue-r-brutto').textContent=fmt(Math.round(bruttoFormue));
   document.getElementById('formue-r-gjeld').textContent='− '+fmt(Math.round(gjeldJustert));
   document.getElementById('formue-r-netto').textContent=fmt(Math.round(nettoFormue));
-  document.getElementById('formue-r-bunnfradrag').textContent='− '+fmt(bunnfradrag)+' ('+personer+'×'+fmt(1700000)+')';
+  document.getElementById('formue-r-bunnfradrag').textContent='− '+fmt(bunnfradrag)+' ('+personer+'×'+fmt(1900000)+')';
   document.getElementById('formue-r-skattepliktig').textContent=fmt(Math.round(skattepliktig));
   document.getElementById('formue-r-effsats').textContent=effSatsStr;
   // Breakdown table
