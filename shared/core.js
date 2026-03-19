@@ -509,9 +509,12 @@ function infoRowsHTML(rows, defaultLaw) {
     var kwTopics = [];
     if(kvLower.indexOf('fritaksmetod')>=0||kvLower.indexOf('participation exemption')>=0||kvLower.indexOf('免税方法')>=0||kvLower.indexOf('régime d\'exonération')>=0||kvLower.indexOf('metoda zwolnienia')>=0) kwTopics.push('fritaksmetoden');
     if(kvLower.indexOf('konsernbidrag')>=0||kvLower.indexOf('group contribution')>=0) kwTopics.push('konsernbidrag');
-    if(kvLower.indexOf('fusjon')>=0||kvLower.indexOf('merger')>=0) kwTopics.push('fusjon');
+    if(kvLower.indexOf('fusjon')>=0||kvLower.indexOf('merger')>=0||kvLower.indexOf('合并')>=0) kwTopics.push('fusjon');
     if(kvLower.indexOf('omgåelse')>=0||kvLower.indexOf('anti-avoidance')>=0||kvLower.indexOf('avoidance')>=0) kwTopics.push('omgåelse');
-    if(kvLower.indexOf('realisasjon')>=0||kvLower.indexOf('realisation')>=0) kwTopics.push('realisasjon');
+    if(kvLower.indexOf('realisasjon')>=0||kvLower.indexOf('realisation')>=0||kvLower.indexOf('realisering')>=0) kwTopics.push('realisasjon');
+    if(kvLower.indexOf('hovedregel')>=0||kvLower.indexOf('main rule')>=0||kvLower.indexOf('skattepliktig inntekt')>=0||kvLower.indexOf('taxable income')>=0) kwTopics.push('hovedregelen');
+    if(kvLower.indexOf('inngangsverdi')>=0||kvLower.indexOf('cost basis')>=0||kvLower.indexOf('cost price')>=0) kwTopics.push('inngangsverdi');
+    if(kvLower.indexOf('utbytte')>=0||kvLower.indexOf('dividend')>=0||kvLower.indexOf('skjerming')>=0||kvLower.indexOf('shielding')>=0) kwTopics.push('utbytte');
     if(kwTopics.length) topicAttr += ' data-topic="' + kwTopics.join(',') + '"';
 
     if(k.startsWith('—')) return `<div class="ir ir-hdr"${topicAttr} style="flex-direction:column;align-items:flex-start;gap:2px;padding:14px 22px 10px;background:var(--surface2);"><span class="k" style="font-weight:700;color:var(--accent);font-size:11px;letter-spacing:.5px">${k}</span>${v?`<span style="font-size:11.5px;color:var(--ink3);font-weight:400;line-height:1.4">${v}</span>`:''}</div>`;
@@ -1442,13 +1445,13 @@ function scrollToEl(el,mode){
 function smartScroll(el,retries){
   if(!el)return;
   retries=retries||0;
-  const off=stickyOffset();
+  const off=stickyOffset()+12;
   const r=el.getBoundingClientRect();
   const targetY=Math.max(0, r.top+window.scrollY-off);
   const startY=window.scrollY;
   const dist=targetY-startY;
-  if(Math.abs(dist)<5)return;
-  const dur=Math.min(600, Math.max(300, Math.abs(dist)*0.6));
+  if(Math.abs(dist)<5&&retries>0)return;
+  const dur=Math.min(500, Math.max(250, Math.abs(dist)*0.5));
   let start=null;
   function ease(t){return t<0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1;}
   function step(ts){
@@ -1456,11 +1459,13 @@ function smartScroll(el,retries){
     const p=Math.min((ts-start)/dur,1);
     window.scrollTo(0, startY+dist*ease(p));
     if(p<1) requestAnimationFrame(step);
-    else if(retries<1){
+    else if(retries<3){
+      // Re-check after CSS transitions settle (law-group expand = 550ms)
+      var delay=retries===0?600:400;
       setTimeout(function(){
         const r2=el.getBoundingClientRect();
-        if(Math.abs(r2.top-off)>15) smartScroll(el,retries+1);
-      },500);
+        if(Math.abs(r2.top-off)>20) smartScroll(el,retries+1);
+      },delay);
     }
   }
   requestAnimationFrame(step);
