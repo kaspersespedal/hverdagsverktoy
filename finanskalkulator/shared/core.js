@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════
 // Hverdagsverktøy — core.js
-// © 2024–2026 Kasper Skjæveland Espedal. All rights reserved.
+// © 2026 Kasper Skjæveland Espedal. All rights reserved.
 // https://hverdagsverktoy.com
 // ═══════════════════════════════════════════════════════
 
@@ -1242,7 +1242,7 @@ function updateFooter() {
   setText('fl-about', r.footerAbout||'About');
   setText('fl-priv', r.footerPriv||'Privacy');
   setText('fl-con', r.footerCon||'Contact');
-  setText('fl-copy', (r.footerCopy||'© 2024–2026 Hverdagsverktøy').replace(/2026/g, yr));
+  setText('fl-copy', (r.footerCopy||'© 2026 Hverdagsverktøy').replace(/2026/g, yr));
   // Wire privacy link
   const privLink = document.getElementById('fl-priv');
   if(privLink) privLink.onclick = function(e){ e.preventDefault(); openPrivacy(); };
@@ -1717,6 +1717,7 @@ function bilUpdateDefaults() {
   // Clear user overrides so auto-estimate kicks in
   document.getElementById('bil-forsikring').value = '';
   var dm=document.getElementById('bil-drivstoff-mnd'); if(dm) dm.value='';
+  var sm=document.getElementById('bil-service-mnd'); if(sm) sm.value='';
   var bm=document.getElementById('bil-bom-mnd'); if(bm) bm.value='';
   document.getElementById('bil-res').classList.add('hidden');
 }
@@ -1734,6 +1735,7 @@ function calcBilkostnad() {
   var forsikringMnd = parseNum('bil-forsikring'); // monthly
   var drivstoffMnd = parseNum('bil-drivstoff-mnd'); // monthly
   var bomMnd = parseNum('bil-bom-mnd'); // monthly
+  var serviceMnd = parseNum('bil-service-mnd'); // monthly
   var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
 
   // 1. Depreciation (declining balance, adjusted for condition)
@@ -1775,13 +1777,17 @@ function calcBilkostnad() {
     var forsTotal = autoIns * 12 * aar;
   }
 
-  // 4. Service & maintenance: flat annual rate adjusted for brand and km
-  // NAF/OFV average: ~8000-12000 kr/yr for fossil, ~4000-6000 for elbil
-  var serviceFlat = drivstoff === 'elbil' ? 5000 : 9000;
-  var avgTotalKm = startKm + (km * aar / 2);
-  var serviceKmFactor = 1 + Math.max(0, avgTotalKm - 60000) / 300000;
-  var servicePerAar = serviceFlat * bp.service * serviceKmFactor;
-  var serviceTotal = servicePerAar * aar;
+  // 4. Service & maintenance (user enters monthly, or auto-estimate)
+  if (serviceMnd > 0) {
+    var serviceTotal = serviceMnd * 12 * aar;
+  } else {
+    // NAF/OFV average: ~8000-12000 kr/yr for fossil, ~4000-6000 for elbil
+    var serviceFlat = drivstoff === 'elbil' ? 5000 : 9000;
+    var avgTotalKm = startKm + (km * aar / 2);
+    var serviceKmFactor = 1 + Math.max(0, avgTotalKm - 60000) / 300000;
+    var servicePerAar = serviceFlat * bp.service * serviceKmFactor;
+    var serviceTotal = servicePerAar * aar;
+  }
 
   // 5. Tires: ~3500-4500 kr/yr (summer+winter sets, dekkskift, wear)
   var dekkPerAar = drivstoff === 'elbil' ? 4500 : 3500;
