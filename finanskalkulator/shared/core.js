@@ -206,6 +206,8 @@ function updateAll() {
   if(document.getElementById('calc-basic'))try{updateFagkalkulatorUI();ccPopulate();vgPopulate();}catch(e){}
   try{updateFooter();}catch(e){}
   try{buildThemePicker();}catch(e){}
+  // Section titles
+  var _sc=document.getElementById('sec-calculators');if(_sc)_sc.textContent=R().secCalc||'Kalkulatorer';
   // clear results
   ['s-res','m-res','n-res','v-res'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
   _sal=_mor=_npv=_vat=null;
