@@ -301,6 +301,13 @@ function updateTabs() {
   autoRecalc('uttak-type','uttak-res',calcUttak);
   // Utdeling
   autoRecalc('utdeling-type','utdeling-res',calcUtdeling);
+  // Formueskatt (skatt.html)
+  autoRecalc('formue-personer','formue-res',calcFormue);
+  // Reisefradrag — no dropdown, but we can wire inputs
+  // Dokumentavgift (boliglan.html)
+  autoRecalc('dok-type','dok-res',calcDok);
+  // Foreldrepenger (personlig.html)
+  autoRecalc('fp-dekning','fp-res',calcForeldrepenger);
   // Bil (personlig.html)
   autoRecalc('bil-merke','bil-res',calcBilkostnad);
   autoRecalc('bil-tilstand','bil-res',calcBilkostnad);
@@ -596,6 +603,12 @@ function updateSalaryUI() {
     // Sub-help rows
     var _uhr=document.getElementById('uttak-help-rows');if(_uhr&&r.uttakHelpRows)_uhr.innerHTML=infoRowsHTML(r.uttakHelpRows);
     var _udhr=document.getElementById('utdeling-help-rows');if(_udhr&&r.utdelingHelpRows)_udhr.innerHTML=infoRowsHTML(r.utdelingHelpRows);
+    // Formue + reise sub-help titles
+    var _shsf=document.getElementById('sal-help-sub-formue');if(_shsf)_shsf.innerHTML=(r.formueTitle||'Formueskatt')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    var _shsr=document.getElementById('sal-help-sub-reise');if(_shsr)_shsr.innerHTML=(r.reiseTitle||'Reisefradrag')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    // Formue + reise sub-help rows
+    var _fhr=document.getElementById('formue-help-rows');if(_fhr)_fhr.innerHTML=infoRowsHTML(r.formueHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn om du betaler formueskatt'],['Fyll inn verdier','Skriv inn markedsverdi for bolig, aksjer, bankinnskudd og gjeld. Kalkulatoren bruker verdsettelsesrabattene automatisk.'],['Verdsettelsesrabatter','Primærbolig: 25% (70% over 10M). Aksjer/fond: 80%. Bankinnskudd: 100%.'],['Bunnfradrag','1 700 000 kr per person. Ektefeller får dobbelt.'],['— GODT Å VITE —',''],['Mange betaler ikke','Med typisk boliglån og primærbolig betaler de fleste null i formueskatt.'],['Gjeld reduseres','Gjeldsfradraget justeres proporsjonalt med verdsettelsesrabattene.']]);
+    var _rhr=document.getElementById('reise-help-rows');if(_rhr)_rhr.innerHTML=infoRowsHTML(r.reiseHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn pendlerfradrag for arbeidsreise'],['Avstand','Skriv inn avstand én vei i km. Kalkulatoren dobler automatisk for tur-retur.'],['Arbeidsdager','Standard er 230 dager. Juster for deltid eller fravær.'],['Bompenger/ferge','Faktiske utgifter per arbeidsdag legges til reisekostnaden.'],['— GODT Å VITE —',''],['Bunnfradrag','Du må ha mer enn 14 400 kr i reisekostnader for å få fradrag.'],['Maks fradrag','Øvre grense er 97 000 kr per år.'],['Skattebesparelse','Fradraget gir 22% tilbake — det er besparelsen du ser i resultatet.']]);
   } else {
     salHelpCard.classList.add('hidden');
   }
