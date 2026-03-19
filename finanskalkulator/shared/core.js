@@ -725,10 +725,15 @@ function updateNpvUI() {
   setText('bil-l-aar', r.bilLAar || 'Ownership period (years)');
   setText('bil-l-km', r.bilLKm || 'Annual mileage (km)');
   setText('bil-l-startKm', r.bilLStartKm || 'Mileage at purchase (km)');
+  setText('bil-l-tilstand', r.bilLTilstand || 'Bought as');
+  setText('bil-l-modell', r.bilLModell || 'Year model');
+  setText('bil-l-kjopsaar', r.bilLKjopsaar || 'Year of purchase');
   setText('bil-l-drivstoff', r.bilLDrivstoff || 'Fuel type');
-  setText('bil-l-forsikring', r.bilLForsikring || 'Forsikring (kr/mnd)');
-  setText('bil-l-drivstoff-mnd', r.bilLDrivstoffMnd || 'Drivstoff/lading (kr/mnd)');
-  setText('bil-l-bom-mnd', r.bilLBomMnd || 'Bompenger (kr/mnd)');
+  setText('bil-manual-hdr', r.bilManualHdr || 'These can be filled in manually, if desired');
+  setText('bil-l-forsikring', r.bilLForsikring || 'Insurance (kr/mo)');
+  setText('bil-l-drivstoff-mnd', r.bilLDrivstoffMnd || 'Fuel/charging (kr/mo)');
+  setText('bil-l-service-mnd', r.bilLServiceMnd || 'Service and maintenance (kr/mo)');
+  setText('bil-l-bom-mnd', r.bilLBomMnd || 'Tolls (kr/mo)');
   setText('btn-calc-bil', r.bilBtn || 'Calculate car cost →');
   setText('bil-r-lbl', r.bilRLbl || 'Total ownership cost');
   setText('bil-rl-mnd', r.bilRMnd || 'Cost per month');
@@ -740,6 +745,7 @@ function updateNpvUI() {
   setText('bil-rl-dekk', r.bilRDekk || 'Tires (wear)');
   setText('bil-rl-avgift', r.bilRAvgift || 'Road tax');
   setText('bil-rl-bom', r.bilRBom || 'Tolls (estimate)');
+  setText('bil-r-info', r.bilRInfo || '= Depreciation + Fuel + Insurance + Service + Tires + Road tax + Tolls');
   // Bil dropdowns & disclaimer
   repopulateSelect('bil-merke', r.bilMerkeOpts || ['Gjennomsnitt','Toyota','Volkswagen','Volvo','Škoda','Hyundai / Kia','BMW','Mercedes-Benz','Audi','Tesla'], ['snitt','toyota','volkswagen','volvo','skoda','hyundai','bmw','mercedes','audi','tesla']);
   repopulateSelect('bil-drivstoff', r.bilFuelOpts || ['Bensin','Diesel','Elbil'], ['bensin','diesel','elbil']);
