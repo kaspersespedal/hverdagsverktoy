@@ -2063,27 +2063,26 @@ function calcFormue(){
   var stat=statBase1*0.003+statBase2*0.004;
   var totalSkatt=kommunal+stat;
   var effSats=markedTotal>0?(totalSkatt/markedTotal*100):0;
-  var effSatsStr=effSats<0.05&&effSats>0?'< 0,1 %':(Math.round(effSats*10)/10).toFixed(1).replace('.',',')+' %';
+  // Effektiv sats med 2 desimaler
+  var effSatsStr=(Math.round(effSats*100)/100).toFixed(2).replace('.',',')+' %';
   var r=R();
   document.getElementById('formue-r-val').textContent=skattepliktig<=0?(r.formueNoTax||'0 kr — ingen formueskatt'):fmt(Math.round(totalSkatt));
   document.getElementById('formue-r-sub').textContent=skattepliktig<=0?(r.formueUnderBunn||'Netto formue er under bunnfradraget'):((r.formueEffSatsLabel||'Effektiv sats')+': '+effSatsStr+' '+(r.formueOfMarked||'av markedsverdi'));
   document.getElementById('formue-r-brutto').textContent=fmt(Math.round(bruttoFormue));
   document.getElementById('formue-r-gjeld').textContent='− '+fmt(Math.round(gjeldJustert));
   document.getElementById('formue-r-netto').textContent=fmt(Math.round(nettoFormue));
-  document.getElementById('formue-r-bunnfradrag').textContent='− '+fmt(bunnfradrag);
+  document.getElementById('formue-r-bunnfradrag').textContent='− '+fmt(bunnfradrag)+' ('+personer+'×'+fmt(1700000)+')';
   document.getElementById('formue-r-skattepliktig').textContent=fmt(Math.round(skattepliktig));
   document.getElementById('formue-r-effsats').textContent=effSatsStr;
-  // Breakdown
+  // Breakdown — "Skatteverdi i % av markedsverdi"
   var bd=document.getElementById('formue-breakdown');
   if(bd){
     var lines=[];
-    lines.push('<div style="font-weight:700;margin-bottom:6px;">'+(r.formueRabattTitle||'Verdsettelsesrabatter brukt')+'</div>');
-    lines.push('<table style="width:100%;font-size:12px;border-collapse:collapse;">');
-    if(pri>0)lines.push('<tr><td style="padding:2px 0;">'+(r.formuePrimaerShort||'Primærbolig')+'</td><td style="text-align:right;color:var(--ink3);">'+fmt(pri)+'</td><td style="text-align:center;padding:0 8px;">→</td><td style="text-align:right;font-weight:600;">'+fmt(Math.round(priV))+'</td><td style="text-align:right;color:var(--ink3);padding-left:8px;">'+((priO10>0)?'25%/70%':'25%')+'</td></tr>');
-    if(sek>0)lines.push('<tr><td style="padding:2px 0;">'+(r.formueSekundaerShort||'Sekundærbolig')+'</td><td style="text-align:right;color:var(--ink3);">'+fmt(sek)+'</td><td style="text-align:center;padding:0 8px;">→</td><td style="text-align:right;font-weight:600;">'+fmt(Math.round(sekV))+'</td><td style="text-align:right;color:var(--ink3);padding-left:8px;">100%</td></tr>');
-    if(aksjer>0)lines.push('<tr><td style="padding:2px 0;">'+(r.formueAksjerShort||'Aksjer/fond')+'</td><td style="text-align:right;color:var(--ink3);">'+fmt(aksjer)+'</td><td style="text-align:center;padding:0 8px;">→</td><td style="text-align:right;font-weight:600;">'+fmt(Math.round(aksV))+'</td><td style="text-align:right;color:var(--ink3);padding-left:8px;">80%</td></tr>');
-    if(bank>0)lines.push('<tr><td style="padding:2px 0;">'+(r.formueBankShort||'Bank')+'</td><td style="text-align:right;color:var(--ink3);">'+fmt(bank)+'</td><td style="text-align:center;padding:0 8px;">→</td><td style="text-align:right;font-weight:600;">'+fmt(Math.round(bankV))+'</td><td style="text-align:right;color:var(--ink3);padding-left:8px;">100%</td></tr>');
-    lines.push('</table>');
+    lines.push('<div style="font-weight:700;margin-bottom:8px;">'+(r.formueRabattTitle||'Skattemessig verdsettelse')+'</div>');
+    if(pri>0){var priPct=priO10>0?'25 %/70 %':'25 %';lines.push('<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;"><span>'+(r.formuePrimaerShort||'Primærbolig')+'</span><span style="color:var(--ink3);">'+fmt(pri)+' → <b>'+fmt(Math.round(priV))+'</b> <span style="font-size:11px;">(verdsatt til '+priPct+')</span></span></div>');}
+    if(sek>0)lines.push('<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;"><span>'+(r.formueSekundaerShort||'Sekundærbolig')+'</span><span style="color:var(--ink3);">'+fmt(sek)+' → <b>'+fmt(Math.round(sekV))+'</b> <span style="font-size:11px;">(verdsatt til 100 %)</span></span></div>');
+    if(aksjer>0)lines.push('<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;"><span>'+(r.formueAksjerShort||'Aksjer/fond')+'</span><span style="color:var(--ink3);">'+fmt(aksjer)+' → <b>'+fmt(Math.round(aksV))+'</b> <span style="font-size:11px;">(verdsatt til 80 %)</span></span></div>');
+    if(bank>0)lines.push('<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;"><span>'+(r.formueBankShort||'Bank')+'</span><span style="color:var(--ink3);">'+fmt(bank)+' → <b>'+fmt(Math.round(bankV))+'</b> <span style="font-size:11px;">(verdsatt til 100 %)</span></span></div>');
     bd.innerHTML=lines.join('');
   }
   document.getElementById('formue-res').classList.remove('hidden');
