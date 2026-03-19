@@ -198,6 +198,8 @@ document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){v
 function updateAll() {
   try{updateHero();}catch(e){}
   try{updateTabs();}catch(e){}
+  // Scroll active tab into view on mobile
+  try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(_at)setTimeout(function(){_at.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});},50);_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});}}catch(e){}
   try{updateDashLabels();}catch(e){}
   if(document.getElementById('calc-salary'))try{updateSalaryUI();updateUttakUI();}catch(e){}
   if(document.getElementById('calc-mortgage'))try{updateMortgageUI();}catch(e){}
