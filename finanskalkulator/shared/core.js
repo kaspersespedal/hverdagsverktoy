@@ -587,8 +587,15 @@ function updateSalaryUI() {
     salHelpCard.classList.remove('hidden');
     salHelpCard.classList.add('collapsed');
     document.getElementById('sal-help-rows').innerHTML = infoRowsHTML(r.salHelpRows);
-    document.getElementById('sal-help-title').innerHTML = (r.salHelpTitle || 'Hjelp med denne kalkulatoren') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('sal-help-desc').textContent = r.salHelpDesc || 'Slik bruker du skattekalkulatoren';
+    document.getElementById('sal-help-title').innerHTML = (r.salHelpTitle || 'Hjelp med kalkulatorene') + ' <span style="font-size:11px;opacity:.5">▼</span>';
+    document.getElementById('sal-help-desc').textContent = r.salHelpDesc || 'Slik bruker du skattekalkulatorene';
+    // Sub-help titles
+    var _shss=document.getElementById('sal-help-sub-salary');if(_shss)_shss.innerHTML=(r.salTitle||'Lønn etter skatt')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    var _shsu=document.getElementById('sal-help-sub-uttak');if(_shsu)_shsu.innerHTML=(r.uttakHelpTitle||'Uttakskalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    var _shsd=document.getElementById('sal-help-sub-utdeling');if(_shsd)_shsd.innerHTML=(r.utdelingHelpTitle||'Effektiv skatt ved utdeling')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    // Sub-help rows
+    var _uhr=document.getElementById('uttak-help-rows');if(_uhr&&r.uttakHelpRows)_uhr.innerHTML=infoRowsHTML(r.uttakHelpRows);
+    var _udhr=document.getElementById('utdeling-help-rows');if(_udhr&&r.utdelingHelpRows)_udhr.innerHTML=infoRowsHTML(r.utdelingHelpRows);
   } else {
     salHelpCard.classList.add('hidden');
   }
@@ -785,7 +792,7 @@ function updateMortgageUI() {
     morHelpCard.classList.remove('hidden');
     morHelpCard.classList.add('collapsed');
     document.getElementById('mor-help-rows').innerHTML = infoRowsHTML(r.morHelpRows);
-    document.getElementById('mor-help-title').innerHTML = (r.morHelpTitle || 'Hjelp med denne kalkulatoren') + ' <span style="font-size:11px;opacity:.5">▼</span>';
+    document.getElementById('mor-help-title').innerHTML = (r.morHelpTitle || 'Hjelp med kalkulatoren') + ' <span style="font-size:11px;opacity:.5">▼</span>';
     document.getElementById('mor-help-desc').textContent = r.morHelpDesc || 'Slik bruker du boliglånskalkulatoren';
   } else {
     morHelpCard.classList.add('hidden');
@@ -971,8 +978,13 @@ function updateVatUI() {
     vatHelpCard.classList.remove('hidden');
     vatHelpCard.classList.add('collapsed');
     document.getElementById('vat-help-rows').innerHTML = infoRowsHTML(r.vatHelpRows,'mval');
-    document.getElementById('vat-help-title').innerHTML = (r.vatHelpTitle || 'Hjelp med denne kalkulatoren') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('vat-help-desc').textContent = r.vatHelpDesc || 'Slik bruker du MVA-kalkulatoren';
+    document.getElementById('vat-help-title').innerHTML = (r.vatHelpTitle || 'Hjelp med kalkulatorene') + ' <span style="font-size:11px;opacity:.5">▼</span>';
+    document.getElementById('vat-help-desc').textContent = r.vatHelpDesc || 'Slik bruker du avgiftskalkulatorene';
+    // Sub-help titles
+    var _vhsm=document.getElementById('vat-help-sub-mva');if(_vhsm)_vhsm.innerHTML=(r.vatTitle||'MVA-kalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    var _vhsa=document.getElementById('vat-help-sub-adj');if(_vhsa)_vhsa.innerHTML=(r.adjTitle||'Justeringskalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    // Sub-help rows
+    var _ahr=document.getElementById('adj-help-rows');if(_ahr&&r.adjHelpRows)_ahr.innerHTML=infoRowsHTML(r.adjHelpRows,'mval');
   } else {
     vatHelpCard.classList.add('hidden');
   }
