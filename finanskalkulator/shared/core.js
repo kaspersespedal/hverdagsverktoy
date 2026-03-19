@@ -2097,26 +2097,26 @@ function calcFormue(){
 }
 
 // ═══════════════════════════════════════════════════════
-// REISEFRADRAG / PENDLERFRADRAG CALCULATOR
+// REISEFRADRAG CALCULATOR
 // ═══════════════════════════════════════════════════════
 function calcReise(){
   var km=parseNum('reise-km');if(km<=0)return;
   var dager=parseNum('reise-dager')||230;
   var bom=parseNum('reise-bom');
-  var satsPerKm=1.76;// 2026
-  var bunnfradrag=14400;
-  var maxFradrag=97000;
+  var satsPerKm=1.90;// Skatteetaten 2025/2026
+  var nedreGrense=12000;// Egenandel
+  var oevreGrense=120000;// Maks fradragsgrunnlag
   var reisekost=km*2*dager*satsPerKm;
   var bomTotal=bom*dager;
-  var brutto=reisekost+bomTotal;
-  var fradrag=Math.min(Math.max(brutto-bunnfradrag,0),maxFradrag);
+  var brutto=Math.min(reisekost+bomTotal,oevreGrense);// Tak på 120 000
+  var fradrag=Math.max(brutto-nedreGrense,0);
   var besparelse=fradrag*0.22;
   var perMnd=besparelse/12;
   var r=R();
   document.getElementById('reise-r-val').textContent=fmt(Math.round(fradrag));
-  document.getElementById('reise-r-sub').textContent=(r.reiseBesparelseLbl||'Skattebesparelse')+': '+fmt(Math.round(besparelse))+'/'+r.yr;
-  document.getElementById('reise-r-brutto').textContent=fmt(Math.round(brutto));
-  document.getElementById('reise-r-bunnfradrag').textContent='− '+fmt(bunnfradrag);
+  document.getElementById('reise-r-sub').textContent=(r.reiseBesparelseLbl||'Skattebesparelse')+': '+fmt(Math.round(besparelse))+'/'+(r.yr||'år')+' · 1,90 kr/km · '+(r.reiseEgenandel||'egenandel')+' 12 000 kr';
+  document.getElementById('reise-r-brutto').textContent=fmt(Math.round(brutto))+(reisekost+bomTotal>oevreGrense?' (tak '+fmt(oevreGrense)+')':'');
+  document.getElementById('reise-r-bunnfradrag').textContent='− '+fmt(nedreGrense);
   document.getElementById('reise-r-besparelse').textContent=fmt(Math.round(besparelse));
   document.getElementById('reise-r-permnd').textContent=fmt(Math.round(perMnd));
   document.getElementById('reise-res').classList.remove('hidden');
