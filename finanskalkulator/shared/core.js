@@ -32,7 +32,7 @@ function injectRatesDisclaimer(resEl){
     muts.forEach(function(m){
       if(m.type==='attributes'&&m.attributeName==='class'){
         var el=m.target;
-        if(el.classList.contains('result-sec')&&!el.classList.contains('hidden')){
+        if(el.classList.contains('result-sec')&&!el.classList.contains('hidden')&&el.id!=='bil-res'){
           injectRatesDisclaimer(el);
         }
       }
@@ -2286,6 +2286,7 @@ function bilSetMode(mode) {
 
   // Show fields
   fields.style.display = '';
+  bilUpdateInsHint();
 
   // Highlight selected button
   btnPlan.style.opacity = mode === 'plan' ? '1' : '.55';
@@ -2295,20 +2296,27 @@ function bilSetMode(mode) {
   var r = R();
 
   if (mode === 'own') {
-    // Own mode: auto-calc eiertid, show resale, lock eiertid
+    // Own mode: auto-calc eiertid, show resale, lock eiertid, unlock kjøpsår
     eiertidInput.readOnly = true;
     eiertidInput.style.opacity = '.6';
     eiertidInfo.style.display = '';
     if (eiertidHint) eiertidHint.style.display = 'none';
     rowResale.style.display = '';
+    var kjopsaarSel = document.getElementById('bil-kjopsaar');
+    kjopsaarSel.disabled = false;
+    kjopsaarSel.style.opacity = '1';
     bilSyncEiertid(); // calculate eiertid from kjøpsår
   } else {
-    // Plan mode: manual eiertid, hide resale
+    // Plan mode: manual eiertid, hide resale, lock kjøpsår to current year
     eiertidInput.readOnly = false;
     eiertidInput.style.opacity = '1';
     eiertidInfo.style.display = 'none';
     if (eiertidHint) { eiertidHint.style.display = ''; eiertidHint.textContent = r.bilEiertidHint || 'Hvor lenge planlegger du å eie bilen?'; }
     rowResale.style.display = 'none';
+    var kjopsaarSel = document.getElementById('bil-kjopsaar');
+    kjopsaarSel.value = new Date().getFullYear();
+    kjopsaarSel.disabled = true;
+    kjopsaarSel.style.opacity = '.6';
   }
 
   // Hide result when switching mode
@@ -2351,6 +2359,17 @@ function bilClampKjopsaar(){
   if(+kjop.value < +modell.value) kjop.value = modell.value;
   bilSyncEiertid();
 }
+function bilUpdateInsHint() {
+  var pris = parseNum('bil-pris') || 400000;
+  var merke = (document.getElementById('bil-merke') || {}).value || 'snitt';
+  var forsikringType = (document.getElementById('bil-forsikring-type') || {}).value || 'fullkasko';
+  var insTypeBase = forsikringType === 'ansvar' ? 350 : forsikringType === 'delkasko' ? 550 : 800;
+  var insBrandMult = merke==='bmw'||merke==='mercedes'||merke==='audi' ? 1.35 : merke==='tesla' ? 1.2 : merke==='volvo' ? 1.05 : 1.0;
+  var insValueScale = forsikringType === 'ansvar' ? 0.85 + 0.15 * Math.min(1, pris / 300000) : 0.5 + 0.5 * Math.min(1, pris / 400000);
+  var est = Math.round(insTypeBase * insBrandMult * insValueScale);
+  var hint = document.getElementById('bil-ins-hint');
+  if (hint) hint.textContent = 'Estimat: ~' + est.toLocaleString('nb-NO') + ' kr/mnd';
+}
 function bilUpdateDefaults() {
   var m = document.getElementById('bil-merke').value;
   var p = BIL_MERKER[m];
@@ -2361,6 +2380,7 @@ function bilUpdateDefaults() {
   var sm=document.getElementById('bil-service-mnd'); if(sm) sm.value='';
   var bm=document.getElementById('bil-bom-mnd'); if(bm) bm.value='';
   document.getElementById('bil-res').classList.add('hidden');
+  bilUpdateInsHint();
 }
 
 function calcBilkostnad() {
