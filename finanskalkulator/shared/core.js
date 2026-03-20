@@ -2507,6 +2507,7 @@ function calcBilkostnad() {
   document.getElementById('bil-r-dekk').textContent = fmt(dekkTotal);
   document.getElementById('bil-r-avgift').textContent = fmt(avgiftTotal);
   document.getElementById('bil-r-bom').textContent = fmt(bomTotal);
+  document.getElementById('bil-r-total').textContent = fmt(totalKostnad + pris);
 
   document.getElementById('bil-res').classList.remove('hidden');
   setTimeout(function(){scrollToEl(document.getElementById('bil-res'),'nearest');},80);
