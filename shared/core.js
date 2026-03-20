@@ -1151,6 +1151,58 @@ function updateNpvUI() {
     if(r.bilHowtoRows){document.getElementById('bil-howto-rows').innerHTML=infoRowsHTML(r.bilHowtoRows);bilHowtoCard.classList.remove('hidden');}
     else{bilHowtoCard.classList.add('hidden');}
   }
+  // Studielån howto card
+  const studieHowtoCard = document.getElementById('studie-howto-card');
+  if(studieHowtoCard) {
+    document.getElementById('studie-howto-title').innerHTML = (r.studieHowtoTitle || 'Slik bruker du Studielånkalkulatoren') + ' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('studie-howto-desc', r.studieHowtoDesc || 'Steg-for-steg guide til studielån');
+    if(r.studieHowtoRows){document.getElementById('studie-howto-rows').innerHTML=infoRowsHTML(r.studieHowtoRows);studieHowtoCard.classList.remove('hidden');}
+    else{studieHowtoCard.classList.add('hidden');}
+  }
+  // Studielån labels
+  var _stT=document.getElementById('studie-title');
+  if(_stT){
+    _stT.innerHTML=(r.studieTitle||'Studielån')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('studie-desc',r.studieDesc||'Stipend vs. lån, nedbetalingsplan og månedskostnad fra Lånekassen');
+    setText('studie-intro',r.studieIntro||'Beregn hva studielånet ditt faktisk koster. Se hvor mye som blir stipend, hva du må betale tilbake, og hva månedskostnaden blir med ulike renter. Basert på Lånekassens satser for 2025–2026.');
+    setText('studie-l-varighet',r.studieLVarighet||'Studievarighet (år)');
+    setText('studie-l-grad',r.studieLGrad||'Fullfører du en grad?');
+    setText('studie-l-basis',r.studieLBasis||'Basisstøtte per måned (kr)');
+    setText('studie-l-mnd',r.studieLMnd||'Utbetalingsmåneder per år');
+    setText('studie-l-totalstotte',r.studieLTotalstotte||'Total basisstøtte');
+    setText('studie-l-laandel',r.studieLLaandel||'Gjenstående lån');
+    setText('studie-extra-hdr',r.studieExtraHdr||'Tillegg (skolepenger, tilleggslån o.l.) ▾');
+    setText('studie-l-skolepenger',r.studieLSkolepenger||'Lån til skolepenger (kr/år)');
+    setText('studie-l-tilleggslan',r.studieLTilleggslan||'Tilleggslån, 30+ (kr/år)');
+    setText('studie-sec-nedbetaling',r.studieSecNedbetaling||'Nedbetalingsvilkår');
+    setText('studie-l-rente',r.studieLRente||'Rente (%)');
+    setText('studie-l-nedbtid',r.studieLNedbtid||'Nedbetalingstid (år)');
+    setText('btn-calc-studie',r.studieBtnCalc||'Beregn studielån →');
+    setText('studie-r-lbl',r.studieRLbl||'Månedlig nedbetaling');
+    setText('studie-rl-totalstotte',r.studieRlTotalstotte||'Total basisstøtte');
+    setText('studie-rl-stipend',r.studieRlStipend||'Omgjort til stipend');
+    setText('studie-rl-ekstralan',r.studieRlEkstralan||'Tillegg (skolepenger + tilleggslån)');
+    setText('studie-rl-gjeld',r.studieRlGjeld||'Gjeld ved studieslutt');
+    setText('studie-rl-rente',r.studieRlRente||'Rente');
+    setText('studie-rl-tid',r.studieRlTid||'Nedbetalingstid');
+    setText('studie-rl-totbetalt',r.studieRlTotbetalt||'Totalt tilbakebetalt');
+    setText('studie-rl-totrente',r.studieRlTotrente||'Herav renter');
+    setText('studie-rl-skattefradrag',r.studieRlSkattefradrag||'Skattefradrag på renter (22 %)');
+    setText('studie-rl-reellkost',r.studieRlReellkost||'Reell kostnad etter skattefradrag');
+    setText('studie-sec-rentesamm',r.studieSecRentesamm||'Månedskostnad ved ulike renter');
+    setText('studie-th-rente',r.studieThRente||'Rente');
+    setText('studie-th-mndbet',r.studieThMndbet||'Mnd. betaling');
+    setText('studie-th-totrente',r.studieThTotrente||'Total rente');
+    setText('studie-th-totbetalt',r.studieThTotbetalt||'Totalt betalt');
+    setText('studie-sec-nedplan',r.studieSecNedplan||'Nedbetalingsplan (år for år)');
+    setText('studie-th-aar',r.studieThAar||'År');
+    setText('studie-th-betaling',r.studieThBetaling||'Betaling');
+    setText('studie-th-renter',r.studieThRenter||'Renter');
+    setText('studie-th-avdrag',r.studieThAvdrag||'Avdrag');
+    setText('studie-th-restgjeld',r.studieThRestgjeld||'Restgjeld');
+    setText('studie-disclaimer',r.studieDisclaimer||'* Basert på Lånekassens satser 2025–2026. Faktisk stipendandel avhenger av beståtte studiepoeng og inntekt/formue. Annuitetslån med termingebyr 18 kr (0 kr med eFaktura).');
+    studieUpdateTotal();
+  }
   // NPV Howto card
   const npvHowtoCard = document.getElementById('npv-howto-card');
   if(npvHowtoCard) {
@@ -3818,6 +3870,181 @@ function calcSpare() {
   document.getElementById('spare-res').classList.remove('hidden');
   scrollToEl(document.getElementById('spare-res'));
 }
+
+// ── Studielån (Lånekassen) ──
+function _studieSatser(){return{borte:15169,hjemme:7682};}
+function studieClampBorte(){
+  var S=_studieSatser();
+  var aar=+(document.getElementById('studie-varighet').value)||3;
+  var borteEl=document.getElementById('studie-borte-aar');
+  if(!borteEl) return;
+  borteEl.max=aar;
+  if(+borteEl.value>aar) borteEl.value=aar;
+  if(+borteEl.value<0) borteEl.value=0;
+  var borte=+borteEl.value;
+  var hjemme=aar-borte;
+  var hintEl=document.getElementById('studie-boform-hint');
+  if(hintEl){
+    var parts=[];
+    if(borte>0) parts.push(borte+' år borteboer ('+fmt(S.borte)+'/mnd)');
+    if(hjemme>0) parts.push(hjemme+' år hjemmeboer ('+fmt(S.hjemme)+'/mnd)');
+    hintEl.textContent=parts.join(' + ');
+  }
+}
+function studieUpdateTotal(){
+  var S=_studieSatser();
+  var mndPerAar=+(document.getElementById('studie-mnd').value)||11;
+  var aar=+(document.getElementById('studie-varighet').value)||3;
+  var borte=+(document.getElementById('studie-borte-aar').value)||0;
+  var hjemme=aar-borte;
+  var grad=document.getElementById('studie-grad').value==='ja';
+  var totalStotte=(borte*S.borte+hjemme*S.hjemme)*mndPerAar;
+  var stipendPct=grad?0.40:0.15;
+  var stipend=Math.round(totalStotte*stipendPct);
+  var laan=totalStotte-stipend;
+  var pctLabel=grad?'40':'15';
+  document.getElementById('studie-v-totalstotte').textContent=fmt(totalStotte);
+  document.getElementById('studie-v-stipend').textContent=fmt(stipend);
+  document.getElementById('studie-v-laan').textContent=fmt(laan);
+  var infoEl=document.getElementById('studie-l-stipendandel');
+  if(infoEl){
+    var r=R();
+    if(grad){
+      infoEl.textContent=(r.studieStipendGrad||'Omgjort til stipend')+' ('+pctLabel+' %)';
+    } else {
+      infoEl.textContent=(r.studieStipendNoGrad||'Omgjort til stipend')+' ('+pctLabel+' %)';
+    }
+  }
+  var omgjInfo=document.getElementById('studie-omgj-info');
+  if(omgjInfo){
+    var r=R();
+    if(grad){
+      omgjInfo.textContent=r.studieOmgjGrad||'Stipendandel: 25 % for fullført grad + 15 % for beståtte studiepoeng = 40 %. Uten grad: kun 15 % for studiepoeng.';
+    } else {
+      omgjInfo.textContent=r.studieOmgjNoGrad||'Uten fullført grad får du kun 15 % omgjort til stipend (for beståtte studiepoeng). Fullfør en grad for å få 40 %.';
+    }
+  }
+}
+function calcStudielan(){
+  var r=R();
+  var mndPerAar=+(document.getElementById('studie-mnd').value)||11;
+  var aar=+(document.getElementById('studie-varighet').value)||3;
+  var borte=+(document.getElementById('studie-borte-aar').value)||0;
+  var hjemme=aar-borte;
+  var grad=document.getElementById('studie-grad').value==='ja';
+  var rente=+(document.getElementById('studie-rente').value)||0;
+  var nedbtid=+(document.getElementById('studie-nedbtid').value)||20;
+  var skolepenger=parseNum('studie-skolepenger');
+  var tilleggslan=parseNum('studie-tilleggslan');
+
+  var S=_studieSatser();
+  var totalStotte=(borte*S.borte+hjemme*S.hjemme)*mndPerAar;
+  var stipendPct=grad?0.40:0.15;
+  var stipend=Math.round(totalStotte*stipendPct);
+  var ekstraLan=(skolepenger+tilleggslan)*aar;
+  var gjeld=totalStotte-stipend+ekstraLan;
+
+  // Annuitetslån
+  var mndRente=rente/100/12;
+  var antTerminer=nedbtid*12;
+  var mndBetaling;
+  if(mndRente>0){
+    mndBetaling=gjeld*mndRente*Math.pow(1+mndRente,antTerminer)/(Math.pow(1+mndRente,antTerminer)-1);
+  } else {
+    mndBetaling=gjeld/antTerminer;
+  }
+  var totBetalt=mndBetaling*antTerminer;
+  var totRente=totBetalt-gjeld;
+  var skattefradrag=totRente*0.22;
+  var reellKostnad=totBetalt-skattefradrag;
+
+  // Display results
+  document.getElementById('studie-r-mnd').textContent=fmt(mndBetaling)+' kr';
+  document.getElementById('studie-r-totalstotte').textContent=fmt(totalStotte);
+  document.getElementById('studie-r-stipend').textContent=fmt(stipend)+' ('+(stipendPct*100).toFixed(0)+' %)';
+  document.getElementById('studie-r-ekstralan').textContent=fmt(ekstraLan);
+  document.getElementById('studie-r-gjeld').textContent=fmt(gjeld);
+  document.getElementById('studie-r-rente').textContent=rente.toFixed(1).replace('.',',')+' %';
+  document.getElementById('studie-r-tid').textContent=nedbtid+' '+(r.studieAar||'år');
+  document.getElementById('studie-r-totbetalt').textContent=fmt(totBetalt);
+  document.getElementById('studie-r-totrente').textContent=fmt(totRente);
+  document.getElementById('studie-r-skattefradrag').textContent=fmt(skattefradrag);
+  document.getElementById('studie-r-reellkost').textContent=fmt(reellKostnad);
+
+  // Verdict
+  var verdictEl=document.getElementById('studie-r-verdict');
+  var mndEtterSkatt=mndBetaling-(totRente*0.22/antTerminer);
+  if(mndBetaling<2000){
+    verdictEl.textContent=r.studieVerdictLow||'Overkommelig — lavere enn de fleste abonnementstjenester.';
+  } else if(mndBetaling<3500){
+    verdictEl.textContent=r.studieVerdictMid||'Moderat — omtrent som en strømregning.';
+  } else {
+    verdictEl.textContent=r.studieVerdictHigh||'Høy månedskostnad — vurder lengre nedbetalingstid.';
+  }
+
+  // Rente-sammenligning
+  var renteRater=[2.0,3.0,4.0,5.0,6.0,7.0,8.0];
+  var tbody=document.getElementById('studie-rente-tbody');
+  tbody.innerHTML='';
+  for(var i=0;i<renteRater.length;i++){
+    var r2=renteRater[i]/100/12;
+    var mBet;
+    if(r2>0){
+      mBet=gjeld*r2*Math.pow(1+r2,antTerminer)/(Math.pow(1+r2,antTerminer)-1);
+    } else {
+      mBet=gjeld/antTerminer;
+    }
+    var tBet=mBet*antTerminer;
+    var tRente2=tBet-gjeld;
+    var tr=document.createElement('tr');
+    tr.style.cssText='border-bottom:1px solid var(--border);';
+    if(i%2===0) tr.style.background='var(--surface2)';
+    var isActive=Math.abs(renteRater[i]-rente)<0.05;
+    if(isActive) tr.style.cssText+='font-weight:700;background:color-mix(in srgb,var(--accent) 10%,transparent);';
+    tr.innerHTML='<td style="padding:6px 10px;color:var(--ink);">'+renteRater[i].toFixed(1).replace('.',',')+' %'+(isActive?' ←':'')+'</td>'+
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);">'+fmt(mBet)+'</td>'+
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);">'+fmt(tRente2)+'</td>'+
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);">'+fmt(tBet)+'</td>';
+    tbody.appendChild(tr);
+  }
+
+  // Nedbetalingsplan (år for år)
+  var planBody=document.getElementById('studie-plan-tbody');
+  planBody.innerHTML='';
+  var restgjeld=gjeld;
+  var aarligBetaling=mndBetaling*12;
+  for(var y=1;y<=nedbtid;y++){
+    var aarRente=0;
+    var aarAvdrag=0;
+    for(var m=0;m<12;m++){
+      var mRente=restgjeld*mndRente;
+      var mAvdrag=mndBetaling-mRente;
+      if(mAvdrag>restgjeld) mAvdrag=restgjeld;
+      aarRente+=mRente;
+      aarAvdrag+=mAvdrag;
+      restgjeld-=mAvdrag;
+      if(restgjeld<0) restgjeld=0;
+    }
+    var tr=document.createElement('tr');
+    tr.style.cssText='border-bottom:1px solid var(--border);';
+    if(y%2===0) tr.style.background='var(--surface2)';
+    tr.innerHTML='<td style="padding:6px 10px;color:var(--ink);">'+y+'</td>'+
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);">'+fmt(aarRente+aarAvdrag)+'</td>'+
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);">'+fmt(aarRente)+'</td>'+
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);">'+fmt(aarAvdrag)+'</td>'+
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);font-weight:'+(y===nedbtid?'700':'400')+';">'+fmt(restgjeld)+'</td>';
+    planBody.appendChild(tr);
+    if(restgjeld<=0) break;
+  }
+
+  // Show & scroll
+  document.getElementById('studie-res').classList.remove('hidden');
+  scrollToEl(document.getElementById('studie-res'));
+}
+// Auto-update total on load
+document.addEventListener('DOMContentLoaded',function(){
+  if(document.getElementById('studie-borte-aar')){ studieClampBorte(); studieUpdateTotal(); }
+});
 
 // ── Budsjettkalkulator ──
 function budsjettCatChange(sel){

@@ -9,7 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Personlig økonomi – Hverdagsverktøy</title>
-<meta name="description" content="Gratis norsk finanskalkulator — beregn bilkostnad, budsjett og sparing. Kjører helt lokalt i nettleseren.">
+<meta name="description" content="Gratis norsk finanskalkulator — beregn bilkostnad, budsjett, sparing og studielån. Kjører helt lokalt i nettleseren.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234a6fa5'/%3E%3Crect x='7' y='6' width='18' height='4' rx='1.5' fill='white' opacity='.95'/%3E%3Crect x='7' y='13' width='8' height='3' rx='1' fill='white' opacity='.7'/%3E%3Crect x='17' y='13' width='8' height='3' rx='1' fill='white' opacity='.7'/%3E%3Crect x='7' y='18' width='8' height='3' rx='1' fill='white' opacity='.5'/%3E%3Crect x='17' y='18' width='8' height='3' rx='1' fill='white' opacity='.5'/%3E%3Crect x='7' y='23' width='8' height='3' rx='1' fill='white' opacity='.4'/%3E%3Crect x='17' y='23' width='8' height='3' rx='1' fill='white' opacity='.4'/%3E%3C/svg%3E">
 <link href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/shared/style.css?v=20260320b">
@@ -358,6 +358,152 @@
           </div>
         </div>
 
+        <!-- 4. Studielån (Lånekassen) -->
+        <div id="studie-wrapper" class="info-card collapsed" style="margin-top:0;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="studie-title">Studielån <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="studie-desc">Stipend vs. lån, nedbetalingsplan og månedskostnad fra Lånekassen</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
+          <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="studie-intro">Beregn hva studielånet ditt faktisk koster. Se hvor mye som blir stipend, hva du må betale tilbake, og hva månedskostnaden blir med ulike renter. Basert på Lånekassens satser for 2025–2026.</div>
+
+          <!-- Studieoppsett -->
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="studie-l-varighet" for="studie-varighet">Studievarighet (år)</label>
+              <select class="fc" id="studie-varighet" onchange="studieClampBorte();studieUpdateTotal()">
+                <option value="1">1 år</option>
+                <option value="2">2 år</option>
+                <option value="3" selected>3 år (bachelor)</option>
+                <option value="4">4 år</option>
+                <option value="5">5 år (master)</option>
+                <option value="6">6 år</option>
+              </select>
+            </div>
+            <div class="fg"><label class="flbl" id="studie-l-grad" for="studie-grad">Fullfører du en grad?</label>
+              <select class="fc" id="studie-grad" onchange="studieUpdateTotal()">
+                <option value="ja" selected>Ja — fullført grad</option>
+                <option value="nei">Nei — enkeltemner</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="studie-l-borte" for="studie-borte-aar">Antall år borteboer</label>
+              <input class="fc" type="number" id="studie-borte-aar" value="3" min="0" max="6" step="1" onchange="studieClampBorte();studieUpdateTotal()">
+            </div>
+            <div class="fg"><label class="flbl" id="studie-l-mnd" for="studie-mnd">Utbetalingsmåneder per år</label>
+              <select class="fc" id="studie-mnd" onchange="studieUpdateTotal()">
+                <option value="11" selected>11 måneder</option>
+                <option value="10">10 måneder</option>
+              </select>
+            </div>
+          </div>
+          <div id="studie-boform-hint" style="font-size:11px;color:var(--ink3);margin:-6px 0 10px;font-style:italic;"></div>
+
+          <!-- Total støtte visning -->
+          <div id="studie-total-box" style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid var(--border);border-radius:var(--rs);padding:12px 16px;margin-bottom:16px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+              <span style="font-size:12px;font-weight:600;color:var(--ink);" id="studie-l-totalstotte">Total basisstøtte</span>
+              <span style="font-size:15px;font-weight:700;color:var(--accent);" id="studie-v-totalstotte">–</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:12px;color:var(--ink2);" id="studie-l-stipendandel">Omgjort til stipend (40 %)</span>
+              <span style="font-size:13px;font-weight:600;color:var(--ink);" id="studie-v-stipend">–</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;color:var(--ink2);" id="studie-l-laandel">Gjenstående lån</span>
+              <span style="font-size:13px;font-weight:600;color:var(--ink);" id="studie-v-laan">–</span>
+            </div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:8px;line-height:1.5;" id="studie-omgj-info">Stipendandel: 25 % for fullført grad + 15 % for beståtte studiepoeng = 40 %. Uten grad: kun 15 % for studiepoeng.</div>
+          </div>
+
+          <!-- Tillegg -->
+          <details style="margin:0 0 16px;">
+            <summary style="font-size:11px;color:var(--ink3);cursor:pointer;font-weight:500;letter-spacing:.3px;user-select:none;" id="studie-extra-hdr">Tillegg (skolepenger, tilleggslån o.l.) ▾</summary>
+            <div style="margin-top:10px;">
+            <div class="form-row">
+              <div class="fg"><label class="flbl" id="studie-l-skolepenger" for="studie-skolepenger">Lån til skolepenger (kr/år)</label>
+                <input class="fc" type="text" id="studie-skolepenger" value="0" inputmode="numeric">
+              </div>
+              <div class="fg"><label class="flbl" id="studie-l-tilleggslan" for="studie-tilleggslan">Tilleggslån, 30+ (kr/år)</label>
+                <input class="fc" type="text" id="studie-tilleggslan" value="0" inputmode="numeric">
+              </div>
+            </div>
+            </div>
+          </details>
+
+          <!-- Nedbetalingsvilkår -->
+          <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--ink3);margin:0 0 10px;" id="studie-sec-nedbetaling">Nedbetalingsvilkår</div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="studie-l-rente" for="studie-rente">Rente (%)</label>
+              <input class="fc" type="number" id="studie-rente" value="5.0" step="0.1" min="0" max="15">
+            </div>
+            <div class="fg"><label class="flbl" id="studie-l-nedbtid" for="studie-nedbtid">Nedbetalingstid (år)</label>
+              <input class="fc" type="number" id="studie-nedbtid" value="20" step="1" min="1" max="30">
+            </div>
+          </div>
+
+          <button class="btn-calc" onclick="calcStudielan()"><span id="btn-calc-studie">Beregn studielån →</span></button>
+
+          <div id="studie-res" class="result-sec hidden" style="margin-top:12px;">
+            <div class="rh">
+              <div class="rh-lbl" id="studie-r-lbl">Månedlig nedbetaling</div>
+              <div class="rh-val" id="studie-r-mnd">–</div>
+              <div class="rh-sub" id="studie-r-verdict">–</div>
+            </div>
+            <div class="rgrid">
+              <div class="rt"><div class="rt-lbl" id="studie-rl-totalstotte">Total basisstøtte</div><div class="rt-val" id="studie-r-totalstotte">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="studie-rl-stipend">Omgjort til stipend</div><div class="rt-val" id="studie-r-stipend">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="studie-rl-ekstralan">Tillegg (skolepenger + tilleggslån)</div><div class="rt-val" id="studie-r-ekstralan">–</div></div>
+              <div class="rt" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;"><div class="rt-lbl" style="font-weight:700;" id="studie-rl-gjeld">Gjeld ved studieslutt</div><div class="rt-val" style="font-weight:700;" id="studie-r-gjeld">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="studie-rl-rente">Rente</div><div class="rt-val" id="studie-r-rente">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="studie-rl-tid">Nedbetalingstid</div><div class="rt-val" id="studie-r-tid">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="studie-rl-totbetalt">Totalt tilbakebetalt</div><div class="rt-val" id="studie-r-totbetalt">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="studie-rl-totrente">Herav renter</div><div class="rt-val" id="studie-r-totrente">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="studie-rl-skattefradrag">Skattefradrag på renter (22 %)</div><div class="rt-val" id="studie-r-skattefradrag">–</div></div>
+              <div class="rt"><div class="rt-lbl" style="font-weight:700;" id="studie-rl-reellkost">Reell kostnad etter skattefradrag</div><div class="rt-val" style="font-weight:700;" id="studie-r-reellkost">–</div></div>
+            </div>
+
+            <!-- Rente-sammenligning -->
+            <div style="margin-top:16px;">
+              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--ink3);margin-bottom:8px;" id="studie-sec-rentesamm">Månedskostnad ved ulike renter</div>
+              <div id="studie-rente-table-wrapper" style="border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;">
+                <table id="studie-rente-table" style="width:100%;border-collapse:collapse;font-size:12px;">
+                  <thead>
+                    <tr style="background:var(--surface2);">
+                      <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--ink);" id="studie-th-rente">Rente</th>
+                      <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="studie-th-mndbet">Mnd. betaling</th>
+                      <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="studie-th-totrente">Total rente</th>
+                      <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="studie-th-totbetalt">Totalt betalt</th>
+                    </tr>
+                  </thead>
+                  <tbody id="studie-rente-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Nedbetalingsplan -->
+            <div style="margin-top:16px;">
+              <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--ink3);margin-bottom:8px;" id="studie-sec-nedplan">Nedbetalingsplan (år for år)</div>
+              <div id="studie-plan-wrapper" style="max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--rs);">
+                <table id="studie-plan-table" style="width:100%;border-collapse:collapse;font-size:12px;">
+                  <thead>
+                    <tr style="background:var(--surface2);position:sticky;top:0;">
+                      <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--ink);" id="studie-th-aar">År</th>
+                      <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="studie-th-betaling">Betaling</th>
+                      <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="studie-th-renter">Renter</th>
+                      <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="studie-th-avdrag">Avdrag</th>
+                      <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="studie-th-restgjeld">Restgjeld</th>
+                    </tr>
+                  </thead>
+                  <tbody id="studie-plan-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;" id="studie-disclaimer">* Basert på Lånekassens satser 2025–2026. Faktisk stipendandel avhenger av beståtte studiepoeng og inntekt/formue. Annuitetslån med termingebyr 18 kr (0 kr med eFaktura).</div>
+          </div>
+          </div>
+        </div>
+
       </div><!-- /card -->
       </div><!-- /left-wrapper -->
       <div class="right-col">
@@ -376,6 +522,11 @@
         <div class="info-card collapsed" id="spare-howto-card" style="margin-top:16px;">
           <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="spare-howto-title">Slik bruker du Sparekalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="spare-howto-desc">Steg-for-steg guide til sparing og rentes rente</div></div></div>
           <div id="spare-howto-rows" class="law-body"></div>
+        </div>
+        <!-- Studielån hjelp -->
+        <div class="info-card collapsed" id="studie-howto-card" style="margin-top:16px;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="studie-howto-title">Slik bruker du Studielånkalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="studie-howto-desc">Steg-for-steg guide til studielån</div></div></div>
+          <div id="studie-howto-rows" class="law-body"></div>
         </div>
       </div>
     </div>
