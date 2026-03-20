@@ -1052,6 +1052,32 @@ function updateNpvUI() {
   setText('bil-mode-own-label', r.bilModeOwn || 'Bil jeg allerede eier');
   var resaleEl=document.getElementById('bil-l-resale');if(resaleEl){var rt=r.bilLResale||'Forventet salgsverdi / Finn-pris (kr)';resaleEl.innerHTML=rt.replace('Finn','<a href="https://www.finn.no/car/used/search.html" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Finn</a>');}
   setText('bil-disclaimer', r.bilDisclaimer || '* Rough estimate. Actual costs vary with driving pattern, location, insurance terms and vehicle condition.');
+  // Lønn etter skatt labels
+  var lonnEl=document.getElementById('lonn-title');if(lonnEl)lonnEl.innerHTML=(r.lonnTitle||'Lønn etter skatt')+' <span style="font-size:11px;opacity:.5">▼</span>';
+  setText('lonn-desc',r.lonnDesc||'Legg inn timelønn og timer per uke — se hva du faktisk får utbetalt');
+  setText('lonn-intro',r.lonnIntro||'Jobber du deltid ved siden av skole eller studier? Legg inn timelønnen din og hvor mange timer du jobber i uka — så ser du bruttolønn, skattetrekk, feriepenger og hva du faktisk får utbetalt. Basert på norske skatteregler for 2026.');
+  setText('lonn-l-timelonn',r.lonnLTimelonn||'Timelønn (kr)');
+  setText('lonn-l-timer',r.lonnLTimer||'Timer per uke');
+  setText('lonn-l-uker',r.lonnLUker||'Arbeidsuker per år');
+  setText('lonn-l-alder',r.lonnLAlder||'Alder');
+  var lonnAlderSel=document.getElementById('lonn-alder');if(lonnAlderSel){lonnAlderSel.options[0].text=r.lonnOptUnder18||'Under 18 år';lonnAlderSel.options[1].text=r.lonnOpt18plus||'18 år eller eldre';}
+  setText('lonn-frikort-hint',r.lonnFrikortHint||'Frikortgrensen for 2026 er 70 000 kr. Tjener du under dette, trekkes ingen skatt.');
+  setText('btn-calc-lonn',r.lonnBtnCalc||'Beregn lønn →');
+  setText('lonn-r-lbl',r.lonnRLbl||'Utbetalt per måned');
+  setText('lonn-rl-brutto-aar',r.lonnRlBruttoAar||'Bruttolønn per år');
+  setText('lonn-rl-brutto-mnd',r.lonnRlBruttoMnd||'Bruttolønn per måned');
+  setText('lonn-rl-skatt',r.lonnRlSkatt||'Skattetrekk per år');
+  setText('lonn-rl-skatt-mnd',r.lonnRlSkattMnd||'Skattetrekk per måned');
+  setText('lonn-rl-effektiv',r.lonnRlEffektiv||'Effektiv skattesats');
+  setText('lonn-rl-feriepenger',r.lonnRlFeriepenger||'Feriepenger (10,2 %)');
+  setText('lonn-rl-netto-aar',r.lonnRlNettoAar||'Netto årslønn (etter skatt)');
+  setText('lonn-rl-netto-time',r.lonnRlNettoTime||'Netto per time');
+  setText('lonn-disclaimer',r.lonnDisclaimer||'* Forenklet estimat. Faktisk skattetrekk avhenger av skattekortet ditt (tabelltrekk). Feriepenger utbetales normalt i juni året etter.');
+  // Lønn howto
+  var lonnHowtoEl=document.getElementById('lonn-howto-title');if(lonnHowtoEl)lonnHowtoEl.innerHTML=(r.lonnHowtoTitle||'Slik bruker du Lønnskalkulatoren')+' <span style="font-size:11px;opacity:.5">▼</span>';
+  setText('lonn-howto-desc',r.lonnHowtoDesc||'Steg-for-steg guide for VGS-elever og studenter');
+  var lonnHowtoC=document.getElementById('lonn-howto-rows');
+  if(lonnHowtoC){var lonnHR=r.lonnHowtoRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn hva du faktisk får utbetalt fra deltidsjobben'],['1. Timelønn','Skriv inn timelønnen din. Minstelønn finnes ikke i Norge, men tariff er typisk 160–220 kr for unge.'],['2. Timer per uke','Hvor mange timer jobber du i en typisk uke? Deltid ved siden av skole er gjerne 10–20 timer.'],['3. Arbeidsuker per år','Standard er 47 uker (52 minus 5 uker ferie). Jobber du kun i ferier, skriv inn antall uker.'],['4. Alder','Under 18 betaler du ingen trygdeavgift. Over 18 trekkes 7,6 % trygdeavgift.'],['— SLIK LESER DU RESULTATENE —',''],['Frikort (70 000 kr)','Tjener du under 70 000 kr i året, trekkes ingen skatt. Du trenger kun frikort (bestilles på skatteetaten.no).'],['Bruttolønn','Det du tjener FØR skatt. Timelønn × timer × uker.'],['Skattetrekk','Det staten trekker i skatt. Beregnes fra trinnskatt, alminnelig inntektsskatt og trygdeavgift.'],['Feriepenger','Arbeidsgiver setter av 10,2 % av lønnen din til feriepenger. Utbetales normalt i juni året etter.'],['Netto','Det du faktisk får inn på konto hver måned — etter at skatten er trukket.'],['— GODT Å VITE —',''],['Skattekort','Bestill skattekort på skatteetaten.no. Uten skattekort trekkes 50 % skatt!'],['Selvangivelse','Selv om du ikke betaler skatt, må du sjekke skattemeldingen i april.'],['Feriepenger ≠ ekstra lønn','Feriepenger erstatter lønnen i ferien — du får dem utbetalt når du tar ferie.']];lonnHowtoC.innerHTML=lonnHR.map(function(row){return '<div class="law-item" style="padding:10px 24px;border-bottom:1px solid var(--border);"><div style="font-weight:600;font-size:13px;color:var(--ink);">'+row[0]+'</div>'+(row[1]?'<div style="font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.6;">'+row[1]+'</div>':'')+'</div>';}).join('');}
   // Budsjett labels
   var budEl=document.getElementById('budsjett-title');if(budEl)budEl.innerHTML=(r.budsjettTitle||'Budsjettkalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('budsjett-desc',r.budsjettDesc||'Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV');
@@ -3721,6 +3747,117 @@ if('scrollRestoration' in history) history.scrollRestoration = 'manual';
   if(sel) sel.classList.add('active');
 })();
 // ═══════════════════════════════════════════════════════
+// LØNN ETTER SKATT — Simplified wage calculator for youth
+// ═══════════════════════════════════════════════════════
+function calcLonn() {
+  const r = R();
+  const timelonn = parseNum('lonn-timelonn');
+  const timerUke = +(document.getElementById('lonn-timer').value) || 0;
+  const ukerAar = +(document.getElementById('lonn-uker').value) || 47;
+  var _la=document.getElementById('lonn-alder');const alder=_la?_la.value:'18plus';
+  if(timelonn<=0||timerUke<=0) return;
+
+  const bruttoAar = timelonn * timerUke * ukerAar;
+  const bruttoMnd = bruttoAar / 12;
+
+  // Frikortgrense 2026: 70 000 kr
+  const frikortgrense = 70000;
+
+  // Minstefradrag 2026: 46%, maks 95 700 kr
+  const mf = Math.min(Math.max(bruttoAar * 0.46, 0), 95700);
+  // Personfradrag 2026: 114 540 kr (klasse 1)
+  const pf = 114540;
+  // Alminnelig inntekt
+  const almInntekt = Math.max(bruttoAar - mf - pf, 0);
+
+  let totalSkatt = 0;
+  const breakdown = [];
+
+  if(bruttoAar <= frikortgrense) {
+    // Under frikortgrensen — ingen skatt
+    breakdown.push({lbl:(r.lonnBdFrikort||'Under frikortgrensen — ingen skatt'),val:0});
+  } else {
+    // Trinnskatt 2026
+    const trinnSteps = [
+      [226100, 318300, 0.017, (r.trinnLabel1||'Trinn 1')],
+      [318300, 725050, 0.040, (r.trinnLabel2||'Trinn 2')],
+      [725050, 980100, 0.137, (r.trinnLabel3||'Trinn 3')],
+      [980100, 1467200, 0.168, (r.trinnLabel4||'Trinn 4')],
+      [1467200, Infinity, 0.178, (r.trinnLabel5||'Trinn 5')]
+    ];
+    let trinnskatt = 0;
+    trinnSteps.forEach(function(s){
+      var lo=s[0],hi=s[1],rate=s[2];
+      var amt = bruttoAar>lo ? (Math.min(bruttoAar,hi)-lo)*rate : 0;
+      if(amt>0) trinnskatt += amt;
+    });
+    if(trinnskatt>0) { totalSkatt+=trinnskatt; breakdown.push({lbl:(r.lonnBdTrinn||'Trinnskatt'),val:trinnskatt}); }
+
+    // Alminnelig inntektsskatt 22%
+    const almSkatt = almInntekt * 0.22;
+    if(almSkatt>0) { totalSkatt+=almSkatt; breakdown.push({lbl:(r.lonnBdAlm||'Alminnelig inntektsskatt (22 %)'),val:almSkatt}); }
+
+    // Trygdeavgift 7.6% (lavere sats 3.0% for under 17, men vi bruker 7.6% for 18+)
+    // Under 17 år betaler 0% trygdeavgift. 17-69 år betaler 7.6%.
+    var trygdRate = (alder==='under18') ? 0 : 0.076;
+    const trygd = bruttoAar * trygdRate;
+    if(trygd>0) { totalSkatt+=trygd; breakdown.push({lbl:(r.lonnBdTrygd||'Trygdeavgift ('+(trygdRate*100).toFixed(1)+' %)'),val:trygd}); }
+
+    // Minstefradrag & personfradrag info
+    breakdown.push({lbl:(r.lonnBdMf||'Minstefradrag'), val: -mf, isFradrag:true});
+    breakdown.push({lbl:(r.lonnBdPf||'Personfradrag'), val: -pf, isFradrag:true});
+  }
+
+  // Feriepenger 10.2% (4 uker, standard under 60 år)
+  const feriepenger = bruttoAar * 0.102;
+
+  const nettoAar = bruttoAar - totalSkatt;
+  const nettoMnd = nettoAar / 12;
+  const nettoTime = (totalSkatt > 0) ? timelonn * (1 - totalSkatt/bruttoAar) : timelonn;
+  const effSats = bruttoAar > 0 ? (totalSkatt/bruttoAar*100) : 0;
+
+  // Verdict
+  var verdict = '';
+  if(bruttoAar <= frikortgrense) {
+    verdict = r.lonnVerdictFrikort || 'Du tjener under frikortgrensen — ingen skatt!';
+  } else if(effSats < 15) {
+    verdict = r.lonnVerdictLav || 'Lav skattesats — typisk for deltidsjobb ved siden av studier.';
+  } else {
+    verdict = r.lonnVerdictNormal || 'Normal skattesats for inntektsnivået ditt.';
+  }
+
+  document.getElementById('lonn-r-netto-mnd').textContent = fmt(nettoMnd);
+  document.getElementById('lonn-r-verdict').textContent = verdict;
+  document.getElementById('lonn-r-brutto-aar').textContent = fmt(bruttoAar);
+  document.getElementById('lonn-r-brutto-mnd').textContent = fmt(bruttoMnd);
+  document.getElementById('lonn-r-skatt').textContent = fmt(totalSkatt);
+  document.getElementById('lonn-r-skatt-mnd').textContent = fmt(totalSkatt/12);
+  document.getElementById('lonn-r-effektiv').textContent = pct(effSats);
+  document.getElementById('lonn-r-feriepenger').textContent = fmt(feriepenger);
+  document.getElementById('lonn-r-netto-aar').textContent = fmt(nettoAar);
+  document.getElementById('lonn-r-netto-time').textContent = fmt(nettoTime);
+
+  // Breakdown
+  var bd = document.getElementById('lonn-breakdown');
+  if(bd && breakdown.length > 0) {
+    var html = '<div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--ink3);margin-bottom:8px;">'+(r.lonnBdTitle||'Skatteberegning')+'</div>';
+    html += '<div style="border:1px solid var(--border);border-radius:var(--rs);overflow:hidden;">';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:12px;">';
+    breakdown.forEach(function(item){
+      var color = item.isFradrag ? 'color:var(--ink3);font-style:italic;' : '';
+      var valStr = item.isFradrag ? fmt(Math.abs(item.val))+' ↓' : fmt(item.val);
+      html += '<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;'+color+'">'+item.lbl+'</td><td style="padding:8px 10px;text-align:right;font-weight:500;'+color+'">'+valStr+'</td></tr>';
+    });
+    html += '<tr style="background:var(--surface2);font-weight:700;"><td style="padding:8px 10px;">'+(r.lonnBdTotal||'Total skatt')+'</td><td style="padding:8px 10px;text-align:right;">'+fmt(totalSkatt)+'</td></tr>';
+    html += '</table></div>';
+    bd.innerHTML = html;
+  }
+
+  document.getElementById('lonn-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('lonn-res'),'top');},80);
+}
+
+// ═══════════════════════════════════════════════════════
 // SPAREKALKULATOR — Compound interest with visualization
 // ═══════════════════════════════════════════════════════
 var _spareChart = null;
@@ -3849,7 +3986,7 @@ function calcSpare() {
         },
         y: {
           stacked: true,
-          grid: { color: borderColor },
+          grid: { display: false },
           ticks: {
             color: inkColor,
             font: { size: 11 },
