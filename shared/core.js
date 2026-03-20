@@ -3214,8 +3214,9 @@ function buildCalcKeys(mode){
 
 // LVU: Lønn vs Utbytte — sammenligner selskapskostnad for begge
 function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseNum('lvu-zone');
-  // Lønn: selskapet betaler brutto + AGA + feriepenger + OTP
-  const salCost=g*(1+aga+0.12+0.02);
+  // Lønn: selskapet betaler brutto + feriepenger + OTP + AGA (på hele grunnlaget)
+  const ferie=g*0.12;const otp=g*0.02;const agaBase=g+ferie+otp;const agaAmt=agaBase*aga;
+  const salCost=g+ferie+otp+agaAmt;
   // Utbytte: selskapet trenger nok overskudd før skatt til å dele ut g
   const divPreTax=g/(1-0.22);
   // Aksjonæren betaler utbytteskatt: (g-skjerming)*1.72*0.22
