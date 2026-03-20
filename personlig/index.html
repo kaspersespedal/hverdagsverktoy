@@ -69,6 +69,65 @@
       <div>
         <h2 class="section-title" id="sec-calculators" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid color-mix(in srgb,var(--accent) 15%,transparent);">Kalkulatorer</h2>
         <div class="card">
+        <!-- 0. Sparekalkulator -->
+        <div id="spare-wrapper" class="info-card collapsed">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="spare-title">Sparekalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="spare-desc">Se kraften i rentes rente — hvor mye du sparer vs. hva renten genererer</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
+          <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="spare-intro">Legg inn startbeløp, månedlig sparing, forventet avkastning og antall år. Grafen viser tydelig forskjellen mellom det du faktisk sparte og det renten genererte — rentes rente-effekten.</div>
+
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="spare-l-start" for="spare-start">Startbeløp (kr)</label>
+              <input class="fc" type="text" id="spare-start" value="10 000" inputmode="numeric">
+            </div>
+            <div class="fg"><label class="flbl" id="spare-l-monthly" for="spare-monthly">Månedlig sparing (kr)</label>
+              <input class="fc" type="text" id="spare-monthly" value="2 000" inputmode="numeric">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="spare-l-rate" for="spare-rate">Forventet årlig avkastning (%)</label>
+              <input class="fc" type="number" id="spare-rate" value="7" step="0.5" min="0" max="30">
+            </div>
+            <div class="fg"><label class="flbl" id="spare-l-years" for="spare-years">Antall år</label>
+              <input class="fc" type="number" id="spare-years" value="10" step="1" min="1" max="60">
+            </div>
+          </div>
+
+          <button class="btn-calc" onclick="calcSpare()"><span id="btn-calc-spare">Beregn sparing →</span></button>
+
+          <div id="spare-res" class="result-sec hidden" style="margin-top:12px;">
+            <div class="rh">
+              <div class="rh-lbl" id="spare-r-lbl">Total verdi etter sparing</div>
+              <div class="rh-val" id="spare-r-total">–</div>
+              <div class="rh-sub" id="spare-r-verdict">–</div>
+            </div>
+            <div class="rgrid">
+              <div class="rt"><div class="rt-lbl" id="spare-rl-innskudd">Totalt innskudd</div><div class="rt-val" id="spare-r-innskudd">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="spare-rl-rente">Opptjent rente</div><div class="rt-val gld" id="spare-r-rente">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="spare-rl-renteandel">Renteandel av total</div><div class="rt-val gld" id="spare-r-renteandel">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="spare-rl-effektiv">Effektiv månedlig avkastning</div><div class="rt-val" id="spare-r-effektiv">–</div></div>
+            </div>
+            <div style="margin-top:16px;position:relative;">
+              <canvas id="spare-chart" width="600" height="300" style="width:100%;max-height:340px;"></canvas>
+            </div>
+            <div id="spare-table-wrapper" style="margin-top:16px;max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--rs);">
+              <table id="spare-table" style="width:100%;border-collapse:collapse;font-size:12px;">
+                <thead>
+                  <tr style="background:var(--surface2);position:sticky;top:0;">
+                    <th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--ink);" id="spare-th-year">År</th>
+                    <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="spare-th-innskudd">Innskudd</th>
+                    <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="spare-th-rente">Rente</th>
+                    <th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);" id="spare-th-total">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="spare-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+        </div>
+
         <!-- 1. Budsjettkalkulator -->
         <div id="budsjett-wrapper" class="info-card collapsed">
           <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
@@ -339,6 +398,11 @@
       </div><!-- /left-wrapper -->
       <div class="right-col">
         <h2 class="section-title" id="sec-guide" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid color-mix(in srgb,var(--accent) 15%,transparent);">Veiledning</h2>
+        <!-- Sparekalkulator hjelp -->
+        <div class="info-card collapsed" id="spare-howto-card">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="spare-howto-title">Slik bruker du Sparekalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="spare-howto-desc">Steg-for-steg guide til sparing og rentes rente</div></div></div>
+          <div id="spare-howto-rows" class="law-body"></div>
+        </div>
         <!-- Budsjettkalkulator hjelp -->
         <div class="info-card collapsed" id="bud-howto-card">
           <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="bud-howto-title">Slik bruker du Budsjett <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bud-howto-desc">Steg-for-steg guide til budsjettering</div></div></div>
@@ -455,6 +519,7 @@
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="/shared/regions.js?v=20260320"></script>
 <script src="/shared/core.js?v=20260320"></script>
 <script>initPage();</script>
