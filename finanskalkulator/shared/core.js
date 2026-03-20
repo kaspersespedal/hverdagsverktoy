@@ -1105,6 +1105,36 @@ function updateNpvUI() {
   setText('npv-r-pay', r.npvRPay || 'Payback Period');
   setText('npv-r-sum', r.npvRSum || 'Total Cash Flows');
   setText('npv-r-pi', r.npvRPi || 'Profitability Index');
+  // NPV panel labels (kalkulator.html)
+  setText('bc-npv-label', r.npvTitle || 'Lønnsomhetsanalyse (NPV/IRR)');
+  setText('bc-npv-intro', r.npvDesc || 'Netto nåverdi og internrente for investeringsprosjekter.');
+  setText('lbl-npv-calc', r.lblNpvCalc || 'Lønnsomhetsanalyse (NPV/IRR)');
+  // Sparekalkulator labels
+  var spareEl=document.getElementById('spare-title');if(spareEl)spareEl.innerHTML=(r.spareTitle||'Sparekalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
+  setText('spare-desc',r.spareDesc||'Se kraften i rentes rente — hvor mye du sparer vs. hva renten genererer');
+  setText('spare-intro',r.spareIntro||'Legg inn startbeløp, månedlig sparing, forventet avkastning og antall år. Grafen viser tydelig forskjellen mellom det du faktisk sparte og det renten genererte — rentes rente-effekten.');
+  setText('spare-l-start',r.spareLStart||'Startbeløp (kr)');
+  setText('spare-l-monthly',r.spareLMonthly||'Månedlig sparing (kr)');
+  setText('spare-l-rate',r.spareLRate||'Forventet årlig avkastning (%)');
+  setText('spare-l-years',r.spareLYears||'Antall år');
+  setText('btn-calc-spare',r.spareBtnCalc||'Beregn sparing →');
+  setText('spare-r-lbl',r.spareRLbl||'Total verdi etter sparing');
+  setText('spare-rl-innskudd',r.spareRlInnskudd||'Totalt innskudd');
+  setText('spare-rl-rente',r.spareRlRente||'Opptjent rente');
+  setText('spare-rl-renteandel',r.spareRlRenteandel||'Renteandel av total');
+  setText('spare-rl-effektiv',r.spareRlEffektiv||'Effektiv månedlig avkastning');
+  setText('spare-th-year',r.spareThYear||'År');
+  setText('spare-th-innskudd',r.spareThInnskudd||'Innskudd');
+  setText('spare-th-rente',r.spareThRente||'Rente');
+  setText('spare-th-total',r.spareThTotal||'Total');
+  // Spare howto card
+  var spareHowtoCard=document.getElementById('spare-howto-card');
+  if(spareHowtoCard){
+    document.getElementById('spare-howto-title').innerHTML=(r.spareHowtoTitle||'Slik bruker du Sparekalkulatoren')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('spare-howto-desc',r.spareHowtoDesc||'Steg-for-steg guide til sparing og rentes rente');
+    if(r.spareHowtoRows){document.getElementById('spare-howto-rows').innerHTML=infoRowsHTML(r.spareHowtoRows);spareHowtoCard.classList.remove('hidden');}
+    else{spareHowtoCard.classList.add('hidden');}
+  }
   // Budsjett howto card
   const budHowtoCard = document.getElementById('bud-howto-card');
   if(budHowtoCard) {
@@ -3312,19 +3342,19 @@ function switchCalcMode(mode, skipScroll){
   if(typeof closeMobileSidebar==='function')closeMobileSidebar();
   if(typeof exitFocusMode==='function')exitFocusMode();
   // Update mobile bar label
-  var mobileLabels={basic:'Enkel',scientific:'Vitenskapelig',finance:'Finansiell',unit:'Valuta',lvu:'Lønn vs Utbytte',aga:'Ansattkostnad',avs:'Avskrivning',ferie:'Feriepenger',rente:'Effektiv Rente',valgevinst:'Valutagevinst',likvid:'Likviditet',pensjon:'Pensjon'};
+  var mobileLabels={basic:'Enkel',scientific:'Vitenskapelig',finance:'Finansiell',unit:'Valuta',lvu:'Lønn vs Utbytte',aga:'Ansattkostnad',avs:'Avskrivning',ferie:'Feriepenger',rente:'Effektiv Rente',valgevinst:'Valutagevinst',likvid:'Likviditet',pensjon:'Pensjon',npv:'NPV/IRR'};
   if(typeof updateMobileBar==='function')updateMobileBar(mobileLabels[mode]||mode);
   // Auto-focus for scientific on mobile
   if(mode==='scientific'&&window.innerWidth<=768&&typeof enterFocusMode==='function')setTimeout(enterFocusMode,100);
   document.querySelectorAll('.cm-opt').forEach(el=>el.classList.remove('cm-active'));
-  const modeMap={basic:'cm-basic',finance:'cm-fin',scientific:'cm-sci',unit:'cm-unit',lvu:'cm-lvu',aga:'cm-aga',avs:'cm-avs',ferie:'cm-ferie',rente:'cm-rente',valgevinst:'cm-valgevinst',likvid:'cm-likvid',pensjon:'cm-pensjon'};
+  const modeMap={basic:'cm-basic',finance:'cm-fin',scientific:'cm-sci',unit:'cm-unit',lvu:'cm-lvu',aga:'cm-aga',avs:'cm-avs',ferie:'cm-ferie',rente:'cm-rente',valgevinst:'cm-valgevinst',likvid:'cm-likvid',pensjon:'cm-pensjon',npv:'cm-npv'};
   var mEl=document.getElementById(modeMap[mode]);if(mEl)mEl.classList.add('cm-active');
   const keysWrap=bcKeys?bcKeys.parentElement:null;
   const dispWrap=bcDisp?bcDisp.parentElement:null;
-  const specialPanels=['bc-unit','bc-finance','bc-lvu','bc-aga','bc-avs','bc-ferie','bc-rente','bc-valgevinst','bc-likvid','bc-pensjon'];
+  const specialPanels=['bc-unit','bc-finance','bc-lvu','bc-aga','bc-avs','bc-ferie','bc-rente','bc-valgevinst','bc-likvid','bc-pensjon','bc-npv'];
   specialPanels.forEach(id=>{var el=document.getElementById(id);if(el)el.classList.add('hidden');});
   const r=R();
-  const extraModes={lvu:r.lblLvu||'Lønn vs Utbytte',aga:r.lblAga||'Ansattkostnad',avs:r.lblAvs||'Avskrivning',ferie:r.lblFerie||'Feriepenger',rente:r.lblRente||'Effektiv Rente',valgevinst:r.lblValgevinst||'Valutagevinst',likvid:r.lblLikvid||'Likviditet',pensjon:r.lblPensjon||'Pensjon'};
+  const extraModes={lvu:r.lblLvu||'Lønn vs Utbytte',aga:r.lblAga||'Ansattkostnad',avs:r.lblAvs||'Avskrivning',ferie:r.lblFerie||'Feriepenger',rente:r.lblRente||'Effektiv Rente',valgevinst:r.lblValgevinst||'Valutagevinst',likvid:r.lblLikvid||'Likviditet',pensjon:r.lblPensjon||'Pensjon',npv:r.lblNpvCalc||'Lønnsomhetsanalyse (NPV/IRR)'};
   if(extraModes[mode]){
     if(keysWrap)keysWrap.classList.add('hidden');if(dispWrap)dispWrap.classList.add('hidden');
     const panel=document.getElementById('bc-'+mode);if(panel){panel.classList.remove('hidden');panel.classList.remove('bc-panel-anim');void panel.offsetWidth;panel.classList.add('bc-panel-anim');}
@@ -3638,6 +3668,157 @@ if('scrollRestoration' in history) history.scrollRestoration = 'manual';
   var sel=document.querySelector('.region-opt[onclick*="\''+region+'\'"]');
   if(sel) sel.classList.add('active');
 })();
+// ═══════════════════════════════════════════════════════
+// SPAREKALKULATOR — Compound interest with visualization
+// ═══════════════════════════════════════════════════════
+var _spareChart = null;
+
+function calcSpare() {
+  const r = R();
+  const start = parseNum('spare-start');
+  const monthly = parseNum('spare-monthly');
+  const rateAnnual = +(document.getElementById('spare-rate').value) || 0;
+  const years = +(document.getElementById('spare-years').value) || 1;
+  const rateMonthly = rateAnnual / 100 / 12;
+
+  // Build year-by-year data
+  let balance = start;
+  let totalDeposits = start;
+  const data = [];
+  data.push({ year: 0, deposits: start, interest: 0, total: start });
+
+  for (let y = 1; y <= years; y++) {
+    let yearStart = balance;
+    for (let m = 0; m < 12; m++) {
+      balance = balance * (1 + rateMonthly) + monthly;
+    }
+    totalDeposits += monthly * 12;
+    let totalInterest = balance - totalDeposits;
+    data.push({ year: y, deposits: totalDeposits, interest: totalInterest, total: balance });
+  }
+
+  const totalVal = balance;
+  const totalDep = totalDeposits;
+  const totalInt = totalVal - totalDep;
+  const intPct = totalVal > 0 ? (totalInt / totalVal * 100) : 0;
+  const effMonthly = totalVal > 0 && totalDep > 0 ? ((Math.pow(totalVal / start, 1 / (years * 12)) - 1) * 100) : 0;
+
+  // Display results
+  document.getElementById('spare-r-total').textContent = fmt(totalVal);
+  document.getElementById('spare-r-innskudd').textContent = fmt(totalDep);
+  document.getElementById('spare-r-rente').textContent = fmt(totalInt);
+  document.getElementById('spare-r-renteandel').textContent = intPct.toFixed(1).replace('.', ',') + ' %';
+  document.getElementById('spare-r-effektiv').textContent = effMonthly.toFixed(3).replace('.', ',') + ' %';
+
+  // Verdict
+  var verdictEl = document.getElementById('spare-r-verdict');
+  if (totalInt > totalDep) {
+    verdictEl.textContent = r.spareVerdictGreat || 'Renten tjente mer enn du sparte — rentes rente-effekten i aksjon!';
+    verdictEl.style.color = 'var(--green)';
+  } else if (totalInt > 0) {
+    verdictEl.textContent = r.spareVerdictGood || 'Renten ga deg ' + intPct.toFixed(0) + ' % ekstra — tid er din beste venn.';
+    verdictEl.style.color = 'var(--accent)';
+  } else {
+    verdictEl.textContent = r.spareVerdictNone || 'Uten avkastning vokser pengene kun med innskuddene dine.';
+    verdictEl.style.color = 'var(--ink2)';
+  }
+
+  // Build table
+  var tbody = document.getElementById('spare-tbody');
+  tbody.innerHTML = '';
+  var yearLabel = r.spareThYear || 'År';
+  for (var i = 0; i < data.length; i++) {
+    var d = data[i];
+    var tr = document.createElement('tr');
+    tr.style.cssText = 'border-bottom:1px solid var(--border);';
+    if (i % 2 === 0) tr.style.background = 'var(--surface2)';
+    tr.innerHTML = '<td style="padding:6px 10px;color:var(--ink);">' + (d.year === 0 ? (r.spareStart || 'Start') : d.year) + '</td>' +
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);">' + fmtInput(Math.round(d.deposits)) + '</td>' +
+      '<td style="padding:6px 10px;text-align:right;color:var(--green);font-weight:500;">' + fmtInput(Math.round(d.interest)) + '</td>' +
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);font-weight:600;">' + fmtInput(Math.round(d.total)) + '</td>';
+    tbody.appendChild(tr);
+  }
+
+  // Chart
+  var ctx = document.getElementById('spare-chart').getContext('2d');
+  if (_spareChart) _spareChart.destroy();
+
+  var labels = data.map(function(d) { return d.year === 0 ? (r.spareStart || 'Start') : (r.spareThYear || 'År') + ' ' + d.year; });
+  var depositsData = data.map(function(d) { return Math.round(d.deposits); });
+  var interestData = data.map(function(d) { return Math.round(d.interest); });
+
+  // Get computed CSS colors
+  var cs = getComputedStyle(document.documentElement);
+  var accentColor = cs.getPropertyValue('--accent').trim() || '#7a9ecc';
+  var greenColor = cs.getPropertyValue('--green').trim() || '#16a34a';
+  var inkColor = cs.getPropertyValue('--ink2').trim() || '#4a5568';
+  var borderColor = cs.getPropertyValue('--border').trim() || '#e0e8f4';
+
+  _spareChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: r.spareChartDeposits || 'Innskudd',
+          data: depositsData,
+          backgroundColor: accentColor + '99',
+          borderColor: accentColor,
+          borderWidth: 1,
+          borderRadius: 3
+        },
+        {
+          label: r.spareChartInterest || 'Rente (rentes rente)',
+          data: interestData,
+          backgroundColor: greenColor + '99',
+          borderColor: greenColor,
+          borderWidth: 1,
+          borderRadius: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: { color: inkColor, font: { size: 12, family: 'Inter' }, usePointStyle: true, pointStyle: 'rectRounded', padding: 16 }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(ctx) { return ctx.dataset.label + ': ' + new Intl.NumberFormat('nb-NO').format(ctx.parsed.y).replace(/\u00a0/g, ' ') + ' ' + (R().currency || 'kr'); }
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          grid: { display: false },
+          ticks: { color: inkColor, font: { size: 11 }, maxRotation: 45 }
+        },
+        y: {
+          stacked: true,
+          grid: { color: borderColor },
+          ticks: {
+            color: inkColor,
+            font: { size: 11 },
+            callback: function(val) {
+              if (val >= 1000000) return (val / 1000000).toFixed(1).replace('.0', '') + 'M';
+              if (val >= 1000) return (val / 1000).toFixed(0) + 'k';
+              return val;
+            }
+          }
+        }
+      }
+    }
+  });
+
+  document.getElementById('spare-res').classList.remove('hidden');
+  scrollToEl(document.getElementById('spare-res'));
+}
+
 // ── Budsjettkalkulator ──
 function budsjettCatChange(sel){
   var wrap=sel.parentElement;
@@ -3828,7 +4009,7 @@ function initPage(){
       }
       // Handle mode hashes like #lvu, #avs
       if(typeof switchCalcMode==='function'){
-        var modes=['lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon'];
+        var modes=['lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
         if(modes.indexOf(hash)>=0) switchCalcMode(hash);
       }
     },300);
