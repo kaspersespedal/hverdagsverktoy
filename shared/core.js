@@ -1078,6 +1078,26 @@ function updateNpvUI() {
   setText('lonn-howto-desc',r.lonnHowtoDesc||'Steg-for-steg guide for VGS-elever og studenter');
   var lonnHowtoC=document.getElementById('lonn-howto-rows');
   if(lonnHowtoC){var lonnHR=r.lonnHowtoRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn hva du faktisk får utbetalt fra deltidsjobben'],['1. Timelønn','Skriv inn timelønnen din. Minstelønn finnes ikke i Norge, men tariff er typisk 160–220 kr for unge.'],['2. Timer per uke','Hvor mange timer jobber du i en typisk uke? Deltid ved siden av skole er gjerne 10–20 timer.'],['3. Arbeidsuker per år','Standard er 47 uker (52 minus 5 uker ferie). Jobber du kun i ferier, skriv inn antall uker.'],['4. Alder','Under 18 betaler du ingen trygdeavgift. Over 18 trekkes 7,6 % trygdeavgift.'],['— SLIK LESER DU RESULTATENE —',''],['Frikort (70 000 kr)','Tjener du under 70 000 kr i året, trekkes ingen skatt. Du trenger kun frikort (bestilles på skatteetaten.no).'],['Bruttolønn','Det du tjener FØR skatt. Timelønn × timer × uker.'],['Skattetrekk','Det staten trekker i skatt. Beregnes fra trinnskatt, alminnelig inntektsskatt og trygdeavgift.'],['Feriepenger','Arbeidsgiver setter av 10,2 % av lønnen din til feriepenger. Utbetales normalt i juni året etter.'],['Netto','Det du faktisk får inn på konto hver måned — etter at skatten er trukket.'],['— GODT Å VITE —',''],['Skattekort','Bestill skattekort på skatteetaten.no. Uten skattekort trekkes 50 % skatt!'],['Selvangivelse','Selv om du ikke betaler skatt, må du sjekke skattemeldingen i april.'],['Feriepenger ≠ ekstra lønn','Feriepenger erstatter lønnen i ferien — du får dem utbetalt når du tar ferie.']];lonnHowtoC.innerHTML=lonnHR.map(function(row){return '<div class="law-item" style="padding:10px 24px;border-bottom:1px solid var(--border);"><div style="font-weight:600;font-size:13px;color:var(--ink);">'+row[0]+'</div>'+(row[1]?'<div style="font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.6;">'+row[1]+'</div>':'')+'</div>';}).join('');}
+  // Abonnement labels
+  var aboEl=document.getElementById('abo-title');if(aboEl)aboEl.innerHTML=(r.aboTitle||'Abonnement')+' <span style="font-size:11px;opacity:.5">▼</span>';
+  setText('abo-desc',r.aboDesc||'Se totalkostnaden for alle abonnementene dine — per måned og per år');
+  setText('abo-intro',r.aboIntro||'Mange undervurderer hvor mye de betaler i abonnementer. Legg inn alle tjenestene dine — streaming, trening, mobil, sky-lagring, osv. — og se den faktiske totalkostnaden. Overraskelseseffekten er stor.');
+  setText('abo-l-hdr',r.aboLHdr||'Dine abonnementer');
+  setText('abo-col-name',r.aboColName||'Tjeneste');
+  setText('abo-col-amount',r.aboColAmount||'Pris (kr/mnd)');
+  setText('abo-btn-add','+ '+(r.aboBtnAdd||'Legg til'));
+  setText('btn-calc-abo',r.aboBtnCalc||'Beregn totalkostnad →');
+  setText('abo-r-lbl',r.aboRLbl||'Total abonnementskostnad');
+  setText('abo-rl-aar',r.aboRlAar||'Per år');
+  setText('abo-rl-antall',r.aboRlAntall||'Antall abonnementer');
+  setText('abo-rl-snitt',r.aboRlSnitt||'Snitt per abonnement');
+  setText('abo-rl-daglig',r.aboRlDaglig||'Per dag');
+  setText('abo-disclaimer',r.aboDisclaimer||'* Kun en oversikt. Faktiske priser kan variere med kampanjer, familieabonnementer og prisendringer.');
+  // Abo howto
+  var aboHowtoEl=document.getElementById('abo-howto-title');if(aboHowtoEl)aboHowtoEl.innerHTML=(r.aboHowtoTitle||'Slik bruker du Abonnementskalkulatoren')+' <span style="font-size:11px;opacity:.5">▼</span>';
+  setText('abo-howto-desc',r.aboHowtoDesc||'Få full oversikt over abonnementskostnadene dine');
+  var aboHowtoC=document.getElementById('abo-howto-rows');
+  if(aboHowtoC){var aboHR=r.aboHowtoRows||[['— SLIK BRUKER DU KALKULATOREN —','Få oversikt over hva du betaler i abonnementer'],['1. Legg inn abonnementene dine','Velg fra listen eller skriv inn egne. Prisene fylles inn automatisk med typiske norske priser, men du kan justere.'],['2. Trykk Beregn','Du ser totalkostnad per måned, per år og per dag — pluss en perspektiv-boks som setter beløpet i sammenheng.'],['3. Vurder hvert abonnement','Bruker du egentlig alle tjenestene? Mange betaler for ting de sjelden bruker.'],['— GODT Å VITE —',''],['Subscription creep','Små beløp som 99 kr/mnd føles ufarlige, men 10 slike abonnementer er nesten 12 000 kr i året.'],['Del der du kan','Familie- og venneabonnementer er ofte mye billigere per person. Spotify Family, Netflix Standard osv.'],['Rydd opp regelmessig','Sett en påminnelse hver 3. måned: Gå gjennom kontoutskriften og se etter abonnementer du har glemt.']];aboHowtoC.innerHTML=aboHR.map(function(row){return '<div class="law-item" style="padding:10px 24px;border-bottom:1px solid var(--border);"><div style="font-weight:600;font-size:13px;color:var(--ink);">'+row[0]+'</div>'+(row[1]?'<div style="font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.6;">'+row[1]+'</div>':'')+'</div>';}).join('');}
   // Budsjett labels
   var budEl=document.getElementById('budsjett-title');if(budEl)budEl.innerHTML=(r.budsjettTitle||'Budsjettkalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('budsjett-desc',r.budsjettDesc||'Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV');
@@ -4181,6 +4201,145 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 // ── Budsjettkalkulator ──
+// ═══════════════════════════════════════════════════════
+// ABONNEMENTSKALKULATOR — Subscription creep tracker
+// ═══════════════════════════════════════════════════════
+
+var ABO_DEFAULTS={
+  'Spotify':119,'Netflix':119,'HBO Max':99,'Disney+':109,'YouTube Premium':129,
+  'Viaplay':149,'Apple Music':119,'Apple iCloud+':12,'Treningssenter':399,
+  'Mobilabonnement':399,'Bredbånd':499,'VG+':199,'Aftenposten':399,
+  'Adobe Creative Cloud':659,'Microsoft 365':99,'PlayStation Plus':69,'Xbox Game Pass':119
+};
+
+function aboCatChange(sel){
+  var wrap=sel.parentElement;
+  var existing=wrap.querySelector('.abo-custom');
+  if(sel.value==='__custom__'){
+    if(!existing){
+      var inp=document.createElement('input');inp.type='text';inp.className='fc abo-custom';
+      inp.placeholder='Skriv inn...';inp.style.cssText='width:100%;margin-top:4px;';
+      wrap.appendChild(inp);inp.focus();
+    }
+  } else {
+    if(existing)existing.remove();
+    // Auto-fill default price
+    var amtInput=sel.closest('.abo-row').querySelector('.abo-amount');
+    if(amtInput&&ABO_DEFAULTS[sel.value]){amtInput.value=ABO_DEFAULTS[sel.value];}
+  }
+}
+
+function aboGetName(row){
+  var sel=row.querySelector('.abo-cat');
+  if(sel){
+    if(sel.value==='__custom__'){
+      var custom=row.querySelector('.abo-custom');
+      return custom?custom.value.trim():'';
+    }
+    return sel.value;
+  }
+  return '';
+}
+
+function aboAddRow(){
+  var r=R();var cont=document.getElementById('abo-rows');
+  var row=document.createElement('div');row.className='abo-row';row.style.cssText='display:flex;gap:8px;margin-bottom:6px;';
+  var opts='<option value="Spotify">Spotify</option>'+
+    '<option value="Netflix">Netflix</option>'+
+    '<option value="HBO Max">HBO Max</option>'+
+    '<option value="Disney+">Disney+</option>'+
+    '<option value="YouTube Premium">YouTube Premium</option>'+
+    '<option value="Viaplay">Viaplay</option>'+
+    '<option value="Apple Music">Apple Music</option>'+
+    '<option value="Apple iCloud+">Apple iCloud+</option>'+
+    '<option value="Treningssenter">'+(r.aboOptTrening||'Treningssenter')+'</option>'+
+    '<option value="Mobilabonnement">'+(r.aboOptMobil||'Mobilabonnement')+'</option>'+
+    '<option value="Bredbånd">'+(r.aboOptBredband||'Bredbånd')+'</option>'+
+    '<option value="VG+">VG+</option>'+
+    '<option value="Aftenposten">Aftenposten</option>'+
+    '<option value="Adobe Creative Cloud">Adobe Creative Cloud</option>'+
+    '<option value="Microsoft 365">Microsoft 365</option>'+
+    '<option value="PlayStation Plus">PlayStation Plus</option>'+
+    '<option value="Xbox Game Pass">Xbox Game Pass</option>'+
+    '<option value="__custom__">'+(r.aboOptCustom||'Valgfritt...')+'</option>';
+  row.innerHTML='<div style="flex:2;position:relative;"><select class="fc abo-cat" onchange="aboCatChange(this)" style="width:100%;">'+opts+'</select></div>'+
+    '<input type="text" class="fc abo-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" value="119">'+
+    '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>';
+  cont.appendChild(row);
+  row.querySelector('.abo-cat').focus();
+}
+
+function calcAbo(){
+  var r=R();
+  var rows=document.querySelectorAll('#abo-rows .abo-row');
+  var totalMnd=0;
+  var items=[];
+  rows.forEach(function(row){
+    var name=aboGetName(row)||r.aboDefaultName||'Abonnement';
+    var amt=+(row.querySelector('.abo-amount').value.replace(/[^0-9.\-]/g,''))||0;
+    if(amt>0){items.push({name:name,amount:amt});totalMnd+=amt;}
+  });
+  if(items.length===0)return;
+
+  var totalAar=totalMnd*12;
+  var antall=items.length;
+  var snitt=totalMnd/antall;
+  var daglig=totalAar/365;
+
+  // Verdict
+  var verdict='';
+  if(totalMnd<500){
+    verdict=r.aboVerdictLow||'Lavt forbruk — du har god kontroll på abonnementene.';
+  } else if(totalMnd<1500){
+    verdict=r.aboVerdictMid||'Moderat — sjekk om du bruker alle tjenestene aktivt.';
+  } else if(totalMnd<3000){
+    verdict=r.aboVerdictHigh||'Høyt forbruk — her kan du spare mye ved å kutte noen tjenester.';
+  } else {
+    verdict=r.aboVerdictVeryHigh||'Veldig høyt — du betaler mer enn de fleste i abonnementer.';
+  }
+
+  document.getElementById('abo-r-mnd').textContent=fmt(totalMnd)+(r.aboPerMnd||' / mnd');
+  document.getElementById('abo-r-verdict').textContent=verdict;
+  document.getElementById('abo-r-aar').textContent=fmt(totalAar);
+  document.getElementById('abo-r-antall').textContent=antall;
+  document.getElementById('abo-r-snitt').textContent=fmt(Math.round(snitt));
+  document.getElementById('abo-r-daglig').textContent=fmt(Math.round(daglig));
+
+  // Breakdown bar chart
+  var bd=document.getElementById('abo-breakdown');
+  if(items.length>0){
+    var html='<div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;">'+(r.aboBreakdownTitle||'Fordeling')+'</div>';
+    html+='<div style="margin-top:4px;">';
+    items.sort(function(a,b){return b.amount-a.amount;});
+    items.forEach(function(item){
+      var pctVal=totalMnd>0?((item.amount/totalMnd)*100):0;
+      html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px;">'+
+        '<div style="width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+item.name+'</div>'+
+        '<div style="flex:1;background:var(--border);border-radius:4px;height:14px;overflow:hidden;">'+
+        '<div style="width:'+pctVal+'%;height:100%;background:var(--accent);border-radius:4px;transition:width .3s;"></div></div>'+
+        '<div style="width:80px;text-align:right;opacity:.6;">'+fmt(item.amount)+' <span style="font-size:10px;">/ '+(r.aboMo||'mnd')+'</span></div></div>';
+    });
+    html+='</div>';
+    bd.innerHTML=html;
+  } else { bd.innerHTML=''; }
+
+  // Perspective box — "what else could you buy"
+  var persEl=document.getElementById('abo-perspective');
+  if(persEl){
+    var kaffe=Math.round(totalAar/55);
+    var flyreiser=Math.round(totalAar/1500*10)/10;
+    var iphone=(totalAar/15990*100).toFixed(0);
+    var html2='<div style="font-weight:600;margin-bottom:6px;">'+(r.aboPerspTitle||'Perspektiv — hva tilsvarer dette?')+'</div>';
+    html2+='<div>☕ '+fmt(totalAar)+' kr/år ≈ <strong>'+kaffe+'</strong> '+(r.aboPerspKaffe||'kopper kaffe')+'</div>';
+    html2+='<div>✈️ ≈ <strong>'+flyreiser+'</strong> '+(r.aboPerspFly||'tur-retur flyreiser i Europa')+'</div>';
+    html2+='<div>📱 ≈ <strong>'+iphone+' %</strong> '+(r.aboPerspIphone||'av en ny iPhone')+'</div>';
+    persEl.innerHTML=html2;
+  }
+
+  document.getElementById('abo-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('abo-res'),'top');},80);
+}
+
 function budsjettCatChange(sel){
   var wrap=sel.parentElement;
   var existing=wrap.querySelector('.budsjett-custom');

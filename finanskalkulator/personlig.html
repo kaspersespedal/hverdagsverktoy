@@ -558,6 +558,76 @@
           </div>
         </div>
 
+        <!-- 6. Abonnementskalkulator -->
+        <div id="abo-wrapper" class="info-card collapsed" style="margin-top:0;">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+            <div><div class="card-title" id="abo-title">Abonnement <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="abo-desc">Se totalkostnaden for alle abonnementene dine — per måned og per år</div></div>
+          </div>
+          <div class="law-body" style="padding:0 24px 20px;">
+          <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="abo-intro">Mange undervurderer hvor mye de betaler i abonnementer. Legg inn alle tjenestene dine — streaming, trening, mobil, sky-lagring, osv. — og se den faktiske totalkostnaden. Overraskelseseffekten er stor.</div>
+
+          <!-- Abonnement-rader -->
+          <div style="margin-bottom:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div style="font-size:13px;font-weight:700;color:var(--ink);" id="abo-l-hdr">Dine abonnementer</div>
+              <button onclick="aboAddRow()" style="background:var(--accent);color:#fff;border:none;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;" id="abo-btn-add">+ Legg til</button>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:4px;padding:0 4px;">
+              <div style="flex:2;font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.3px;" id="abo-col-name">Tjeneste</div>
+              <div style="flex:1;font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.3px;text-align:right;" id="abo-col-amount">Pris (kr/mnd)</div>
+              <div style="width:24px;"></div>
+            </div>
+            <div id="abo-rows">
+              <div class="abo-row" style="display:flex;gap:8px;margin-bottom:6px;">
+                <div style="flex:2;position:relative;">
+                  <select class="fc abo-cat" onchange="aboCatChange(this)" style="width:100%;">
+                    <option value="Spotify" selected>Spotify</option>
+                    <option value="Netflix">Netflix</option>
+                    <option value="HBO Max">HBO Max</option>
+                    <option value="Disney+">Disney+</option>
+                    <option value="YouTube Premium">YouTube Premium</option>
+                    <option value="Viaplay">Viaplay</option>
+                    <option value="Apple Music">Apple Music</option>
+                    <option value="Apple iCloud+">Apple iCloud+</option>
+                    <option value="Treningssenter">Treningssenter</option>
+                    <option value="Mobilabonnement">Mobilabonnement</option>
+                    <option value="Bredbånd">Bredbånd</option>
+                    <option value="VG+">VG+</option>
+                    <option value="Aftenposten">Aftenposten</option>
+                    <option value="Adobe Creative Cloud">Adobe Creative Cloud</option>
+                    <option value="Microsoft 365">Microsoft 365</option>
+                    <option value="PlayStation Plus">PlayStation Plus</option>
+                    <option value="Xbox Game Pass">Xbox Game Pass</option>
+                    <option value="__custom__">Valgfritt...</option>
+                  </select>
+                </div>
+                <input type="text" class="fc abo-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" value="119">
+                <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-calc" onclick="calcAbo()"><span id="btn-calc-abo">Beregn totalkostnad →</span></button>
+
+          <div id="abo-res" class="result-sec hidden" style="margin-top:12px;">
+            <div class="rh">
+              <div class="rh-lbl" id="abo-r-lbl">Total abonnementskostnad</div>
+              <div class="rh-val" id="abo-r-mnd">–</div>
+              <div class="rh-sub" id="abo-r-verdict">–</div>
+            </div>
+            <div class="rgrid">
+              <div class="rt"><div class="rt-lbl" id="abo-rl-aar">Per år</div><div class="rt-val" style="font-weight:700;" id="abo-r-aar">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="abo-rl-antall">Antall abonnementer</div><div class="rt-val" id="abo-r-antall">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="abo-rl-snitt">Snitt per abonnement</div><div class="rt-val" id="abo-r-snitt">–</div></div>
+              <div class="rt"><div class="rt-lbl" id="abo-rl-daglig">Per dag</div><div class="rt-val" id="abo-r-daglig">–</div></div>
+            </div>
+            <div id="abo-breakdown" style="margin-top:12px;"></div>
+            <div id="abo-perspective" style="margin-top:12px;padding:12px 16px;background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid var(--border);border-radius:var(--rs);font-size:12px;color:var(--ink2);line-height:1.7;"></div>
+            <div style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;" id="abo-disclaimer">* Kun en oversikt. Faktiske priser kan variere med kampanjer, familieabonnementer og prisendringer.</div>
+          </div>
+          </div>
+        </div>
+
       </div><!-- /card -->
       </div><!-- /left-wrapper -->
       <div class="right-col" style="gap:0;">
@@ -587,6 +657,11 @@
         <div class="info-card collapsed" id="lonn-howto-card">
           <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="lonn-howto-title">Slik bruker du Lønnskalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="lonn-howto-desc">Steg-for-steg guide for VGS-elever og studenter</div></div></div>
           <div id="lonn-howto-rows" class="law-body"></div>
+        </div>
+        <!-- Abonnementskalkulator hjelp -->
+        <div class="info-card collapsed" id="abo-howto-card">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="abo-howto-title">Slik bruker du Abonnementskalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="abo-howto-desc">Få full oversikt over abonnementskostnadene dine</div></div></div>
+          <div id="abo-howto-rows" class="law-body"></div>
         </div>
         </div><!-- /card -->
       </div>
