@@ -134,15 +134,16 @@ function buildThemePicker(){
       var rect=btn.getBoundingClientRect();
       var panelW=panel.offsetWidth;
       var vw=window.innerWidth;
+      // Center panel under button
+      var btnCenter=rect.left+rect.width/2;
+      var idealLeft=btnCenter-panelW/2;
       if(panelW>vw-24){
-        // Panel wider than screen — center it
         panel.style.left='12px';panel.style.right='12px';
       } else {
-        var right=vw-rect.right;
-        if(right<12) right=12;
-        if(right+panelW>vw-12) right=vw-panelW-12;
-        panel.style.left='auto';
-        panel.style.right=right+'px';
+        if(idealLeft<12) idealLeft=12;
+        if(idealLeft+panelW>vw-12) idealLeft=vw-panelW-12;
+        panel.style.left=idealLeft+'px';
+        panel.style.right='auto';
       }
       panel.style.top=(rect.bottom+6)+'px';
       panel.style.visibility='visible';
