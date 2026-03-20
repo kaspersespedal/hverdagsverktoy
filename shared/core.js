@@ -4201,6 +4201,35 @@ document.addEventListener('DOMContentLoaded',function(){
   if(document.getElementById('studie-borte-aar')){ studieClampBorte(); studieUpdateTotal(); }
 });
 
+// ── Match calculator card heights with howto card heights ──
+function syncCardHeights(){
+  var pairs=[
+    ['budsjett-wrapper','bud-howto-card'],
+    ['bil-wrapper','bil-howto-card'],
+    ['spare-wrapper','spare-howto-card'],
+    ['studie-wrapper','studie-howto-card'],
+    ['lonn-wrapper','lonn-howto-card'],
+    ['abo-wrapper','abo-howto-card']
+  ];
+  if(window.innerWidth<900){
+    pairs.forEach(function(p){
+      var a=document.getElementById(p[0]),b=document.getElementById(p[1]);
+      if(a)a.style.minHeight='';
+      if(b)b.style.minHeight='';
+    });
+    return;
+  }
+  pairs.forEach(function(p){
+    var a=document.getElementById(p[0]),b=document.getElementById(p[1]);
+    if(!a||!b)return;
+    a.style.minHeight='';b.style.minHeight='';
+    var ha=a.offsetHeight,hb=b.offsetHeight;
+    var mx=Math.max(ha,hb);
+    a.style.minHeight=mx+'px';
+    b.style.minHeight=mx+'px';
+  });
+}
+
 // ── Budsjettkalkulator ──
 // ═══════════════════════════════════════════════════════
 // ABONNEMENTSKALKULATOR — Subscription creep tracker
@@ -4489,6 +4518,13 @@ function initPage(){
   if(activeOpt) activeOpt.classList.add('active');
   bilInitYear();
   updateAll();
+  // Sync calculator/howto card heights
+  setTimeout(syncCardHeights,200);
+  window.addEventListener('resize',syncCardHeights);
+  if(document.fonts&&document.fonts.ready) document.fonts.ready.then(function(){setTimeout(syncCardHeights,50);});
+  // Re-sync on card toggle
+  var _origToggle=window.toggleCard;
+  window.toggleCard=function(el){_origToggle(el);setTimeout(syncCardHeights,500);};
   // Set calc-nav sticky top to match actual header height
   (function(){
     var h=document.querySelector('header');
