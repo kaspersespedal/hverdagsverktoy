@@ -1301,6 +1301,7 @@ const REGIONS = {
     bilIntro:'De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er.',
     bilLMerke:'Bilmerke', bilLPris:'Kjøpspris (kr)', bilLAar:'Eiertid (år)', bilLKm:'Årlig kjørelengde (km)', bilLStartKm:'Kilometerstand ved kjøp',
     bilLDrivstoff:'Drivstoff', bilLForsikring:'Forsikring (kr/mnd)', bilLTilstand:'Kjøpt som', bilLModell:'Årsmodell', bilLKjopsaar:'Kjøpsår',
+    bilLForsikringType:'Forsikringstype', bilOptFullkasko:'Fullkasko', bilOptDelkasko:'Delkasko', bilOptAnsvar:'Ansvar',
     bilLDrivstoffMnd:'Drivstoff/lading (kr/mnd)', bilLServiceMnd:'Service og vedlikehold (kr/mnd)', bilLBomMnd:'Bompenger (kr/mnd)',
     bilModePlan:'Bil jeg vurderer å kjøpe', bilModeOwn:'Bil jeg allerede eier', bilEiertidHint:'Hvor lenge planlegger du å eie bilen?',
     bilLResale:'Forventet salgsverdi / Finn-pris (kr)', bilOwnEiertidAuto:'Eiertid: {n} år (beregnet fra kjøpsår {y})',

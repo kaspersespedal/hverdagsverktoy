@@ -1023,6 +1023,11 @@ function updateNpvUI() {
   setText('bil-l-modell', r.bilLModell || 'Year model');
   setText('bil-l-kjopsaar', r.bilLKjopsaar || 'Year of purchase');
   setText('bil-l-drivstoff', r.bilLDrivstoff || 'Fuel type');
+  setText('bil-l-forsikring-type', r.bilLForsikringType || 'Insurance type');
+  repopulateSelect('bil-forsikring-type',
+    [r.bilOptFullkasko || 'Comprehensive (Fullkasko)', r.bilOptDelkasko || 'Partial (Delkasko)', r.bilOptAnsvar || 'Liability only (Ansvar)'],
+    ['fullkasko', 'delkasko', 'ansvar']
+  );
   setText('bil-manual-hdr', r.bilManualHdr || 'These can be filled in manually, if desired');
   setText('bil-l-forsikring', r.bilLForsikring || 'Insurance (kr/mo)');
   setText('bil-l-drivstoff-mnd', r.bilLDrivstoffMnd || 'Fuel/charging (kr/mo)');
@@ -2412,11 +2417,24 @@ function calcBilkostnad() {
     var drivTotal = drivKostPerKm * km * aar;
   }
 
-  // 3. Insurance (user enters monthly, or auto-estimate)
+  // 3. Insurance (user enters monthly, or auto-estimate by type)
+  var forsikringType = (document.getElementById('bil-forsikring-type') || {}).value || 'fullkasko';
   if (forsikringMnd > 0) {
     var forsTotal = forsikringMnd * 12 * aar;
   } else {
-    var autoIns = merke==='bmw'||merke==='mercedes'||merke==='audi' ? 1200 : merke==='tesla' ? 1000 : merke==='volvo' ? 900 : 800;
+    // Norwegian averages (monthly): Ansvar ~250-400, Delkasko ~400-700, Fullkasko ~600-1200
+    // Base rates per type (for average ~200k car)
+    var insTypeBase = forsikringType === 'ansvar' ? 350 : forsikringType === 'delkasko' ? 550 : 800;
+    // Brand premium multiplier
+    var insBrandMult = merke==='bmw'||merke==='mercedes'||merke==='audi' ? 1.35 : merke==='tesla' ? 1.2 : merke==='volvo' ? 1.05 : 1.0;
+    // Scale by car value — ansvar is fairly flat, kasko scales more with value
+    var insValueScale;
+    if (forsikringType === 'ansvar') {
+      insValueScale = 0.85 + 0.15 * Math.min(1, pris / 300000); // mostly flat
+    } else {
+      insValueScale = 0.5 + 0.5 * Math.min(1, pris / 400000); // scales with value
+    }
+    var autoIns = insTypeBase * insBrandMult * insValueScale;
     var forsTotal = autoIns * 12 * aar;
   }
 
