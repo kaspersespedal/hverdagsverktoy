@@ -1062,7 +1062,7 @@ function updateNpvUI() {
   setText('lonn-l-uker',r.lonnLUker||'Arbeidsuker per år');
   setText('lonn-l-alder',r.lonnLAlder||'Alder');
   var lonnAlderSel=document.getElementById('lonn-alder');if(lonnAlderSel){lonnAlderSel.options[0].text=r.lonnOptUnder18||'Under 18 år';lonnAlderSel.options[1].text=r.lonnOpt18plus||'18 år eller eldre';}
-  setText('lonn-frikort-hint',r.lonnFrikortHint||'Frikortgrensen for 2026 er 70 000 kr. Tjener du under dette, trekkes ingen skatt.');
+  setText('lonn-frikort-hint',r.lonnFrikortHint||'Frikortgrensen for 2026 er 100 000 kr. Tjener du under dette, trekkes ingen skatt.');
   setText('btn-calc-lonn',r.lonnBtnCalc||'Beregn lønn →');
   setText('lonn-r-lbl',r.lonnRLbl||'Utbetalt per måned');
   setText('lonn-rl-brutto-aar',r.lonnRlBruttoAar||'Bruttolønn per år');
@@ -2000,7 +2000,7 @@ function calcSal() {
   const trinnAmounts = [];
   // Always use full Norwegian tax rules (region = language, not country)
   const almSats = ks; // 0.22 standard, 0.185 Finnmark/Nord-Troms
-  const pf = (kl==='2') ? 229200 : 114540; // Personfradrag 2026
+  const pf = 114540; // Personfradrag 2026 (skatteklasse 2 avskaffet fra 2018)
   const mf = Math.min(Math.max(b*0.46,0),95700); // Minstefradrag 2026: 46%, maks 95 700
   const renteFradrag = parseNum('s-deduct');
   const almInntekt = Math.max(b - mf - pf - renteFradrag, 0);
@@ -2216,7 +2216,7 @@ function updateSjekkliste(){
 // ═══════════════════════════════════════════════════════
 function calcForeldrepenger(){
   var inntekt=parseNum('fp-inntekt');if(inntekt<=0)return;
-  var G=124028;// Grunnbeløp 2026 (estimat)
+  var G=130160;// Grunnbeløp (gjeldende fra 1. mai 2025)
   var maxGrunnlag=6*G;// 744 168
   var grunnlag=Math.min(inntekt,maxGrunnlag);
   var sel=document.getElementById('fp-dekning');
@@ -2282,13 +2282,13 @@ function calcFormue(){
   // Bunnfradrag 2026: 1 900 000 kr per person
   var bunnfradrag=1900000*personer;
   var skattepliktig=Math.max(nettoFormue-bunnfradrag,0);
-  // Skattesatser 2026: kommunal 0,7% + stat 0,3% = 1,0% opp til 21,5M
-  // Over 21,5M: kommunal 0,7% + stat 0,4% = 1,1%
-  var kommunal=skattepliktig*0.007;
+  // Skattesatser 2026: kommunal 0,35% + stat 0,65% = 1,0% opp til 21,5M
+  // Over 21,5M: kommunal 0,35% + stat 0,75% = 1,1%
+  var kommunal=skattepliktig*0.0035;
   var statGrense=(21500000-1900000)*personer;// Innslagspunkt trinn 2
   var statBase1=Math.min(skattepliktig,Math.max(statGrense,0));
   var statBase2=Math.max(skattepliktig-Math.max(statGrense,0),0);
-  var stat=statBase1*0.003+statBase2*0.004;
+  var stat=statBase1*0.0065+statBase2*0.0075;
   var totalSkatt=kommunal+stat;
   var effSats=markedTotal>0?(totalSkatt/markedTotal*100):0;
   // Effektiv sats med 2 desimaler
@@ -3782,8 +3782,8 @@ function calcLonn() {
   const bruttoAar = timelonn * timerUke * ukerAar;
   const bruttoMnd = bruttoAar / 12;
 
-  // Frikortgrense 2026: 70 000 kr
-  const frikortgrense = 70000;
+  // Frikortgrense 2026: 100 000 kr
+  const frikortgrense = 100000;
 
   // Minstefradrag 2026: 46%, maks 95 700 kr
   const mf = Math.min(Math.max(bruttoAar * 0.46, 0), 95700);
