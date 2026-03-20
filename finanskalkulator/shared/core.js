@@ -2322,7 +2322,11 @@ function bilInitYear(){
   });
 }
 function bilSyncEiertid(){
-  bilClampKjopsaar(); // ensure kjøpsår >= årsmodell
+  // When kjøpsår changes: clamp årsmodell down if needed
+  var modell = document.getElementById('bil-aarsmodell');
+  var kjop = document.getElementById('bil-kjopsaar');
+  if(modell && kjop && +modell.value > +kjop.value) modell.value = kjop.value;
+
   if(bilMode !== 'own') return; // Only auto-sync in own mode
   var y=+document.getElementById('bil-kjopsaar').value;
   var now=new Date().getFullYear();
@@ -2334,14 +2338,13 @@ function bilSyncEiertid(){
   infoEl.textContent = (r.bilOwnEiertidAuto || 'Eiertid: {n} år (beregnet fra kjøpsår {y})').replace('{n}', aar).replace('{y}', y);
 }
 
-// Ensure kjøpsår >= årsmodell (can't buy a car before its model year)
+// When årsmodell changes: clamp kjøpsår up if needed
 function bilClampKjopsaar(){
   var modell = document.getElementById('bil-aarsmodell');
   var kjop = document.getElementById('bil-kjopsaar');
   if(!modell || !kjop) return;
-  var m = +modell.value;
-  var k = +kjop.value;
-  if(k < m) kjop.value = m;
+  if(+kjop.value < +modell.value) kjop.value = modell.value;
+  bilSyncEiertid();
 }
 function bilUpdateDefaults() {
   var m = document.getElementById('bil-merke').value;
