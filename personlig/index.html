@@ -163,6 +163,15 @@
           </div>
           <div class="law-body" style="padding:0 24px 20px;">
           <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;" id="bil-intro">De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er.</div>
+
+          <!-- Mode selection -->
+          <div id="bil-mode-select" style="display:flex;gap:10px;margin-bottom:18px;">
+            <button type="button" class="btn-calc" id="bil-mode-plan" onclick="bilSetMode('plan')" style="flex:1;opacity:.55;font-size:13px;"><span id="bil-mode-plan-label">Bil jeg vurderer å kjøpe</span></button>
+            <button type="button" class="btn-calc" id="bil-mode-own" onclick="bilSetMode('own')" style="flex:1;opacity:.55;font-size:13px;"><span id="bil-mode-own-label">Bil jeg allerede eier</span></button>
+          </div>
+
+          <!-- All fields hidden until mode is chosen -->
+          <div id="bil-fields" style="display:none;">
           <div class="form-row">
             <div class="fg"><label class="flbl" id="bil-l-merke" for="bil-merke">Bilmerke</label>
               <select class="fc" id="bil-merke" onchange="bilUpdateDefaults()">
@@ -206,7 +215,8 @@
               </select>
             </div>
           </div>
-          <div class="form-row">
+          <!-- Ownership duration row: shown for plan mode, auto-calculated for own mode -->
+          <div class="form-row" id="bil-row-eiertid">
             <div class="fg"><label class="flbl" id="bil-l-aar" for="bil-aar">Eiertid (år)</label>
               <input class="fc" type="number" id="bil-aar" value="5" min="1" max="20" step="1">
             </div>
@@ -214,9 +224,20 @@
               <input class="fc" type="text" id="bil-km" value="12 000" inputmode="numeric">
             </div>
           </div>
+          <!-- Auto-calculated eiertid display for "own" mode -->
+          <div id="bil-own-eiertid-info" style="display:none;font-size:12px;color:var(--ink3);margin:-6px 0 12px;font-style:italic;">
+            <span id="bil-own-eiertid-text">Eiertid beregnes automatisk fra kjøpsår</span>
+          </div>
           <div class="form-row">
             <div class="fg"><label class="flbl" id="bil-l-startKm" for="bil-start-km">Kilometerstand ved kjøp</label>
               <input class="fc" type="text" id="bil-start-km" value="0" inputmode="numeric">
+            </div>
+            <div class="fg"></div>
+          </div>
+          <!-- Resale value field for "own" mode -->
+          <div id="bil-row-resale" class="form-row" style="display:none;">
+            <div class="fg"><label class="flbl" id="bil-l-resale" for="bil-resale">Forventet salgsverdi / Finn-pris (kr)</label>
+              <input class="fc" type="text" id="bil-resale" value="" inputmode="numeric" placeholder="Estimeres automatisk">
             </div>
             <div class="fg"></div>
           </div>
@@ -238,6 +259,7 @@
             </div>
           </div>
           <button class="btn-calc" onclick="calcBilkostnad()"><span id="btn-calc-bil">Beregn bilkostnad →</span></button>
+          </div><!-- /bil-fields -->
           <div id="bil-res" class="result-sec hidden">
             <div class="rh" id="bil-rh">
               <div class="rh-lbl" id="bil-r-lbl">Total eierkostnad</div>

@@ -1043,6 +1043,9 @@ function updateNpvUI() {
   // Bil dropdowns & disclaimer
   repopulateSelect('bil-merke', r.bilMerkeOpts || ['Gjennomsnitt','Toyota','Volkswagen','Volvo','Škoda','Hyundai / Kia','BMW','Mercedes-Benz','Audi','Tesla'], ['snitt','toyota','volkswagen','volvo','skoda','hyundai','bmw','mercedes','audi','tesla']);
   repopulateSelect('bil-drivstoff', r.bilFuelOpts || ['Bensin','Diesel','Elbil'], ['bensin','diesel','elbil']);
+  setText('bil-mode-plan-label', r.bilModePlan || 'Bil jeg vurderer å kjøpe');
+  setText('bil-mode-own-label', r.bilModeOwn || 'Bil jeg allerede eier');
+  setText('bil-l-resale', r.bilLResale || 'Forventet salgsverdi / Finn-pris (kr)');
   setText('bil-disclaimer', r.bilDisclaimer || '* Rough estimate. Actual costs vary with driving pattern, location, insurance terms and vehicle condition.');
   // Budsjett labels
   var budEl=document.getElementById('budsjett-title');if(budEl)budEl.innerHTML=(r.budsjettTitle||'Budsjettkalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
@@ -2264,6 +2267,44 @@ var BIL_MERKER = {
   tesla:      {depr:0.20, service:0.70, label:'Tesla'}
 };
 
+var bilMode = ''; // 'plan' or 'own'
+
+function bilSetMode(mode) {
+  bilMode = mode;
+  var fields = document.getElementById('bil-fields');
+  var btnPlan = document.getElementById('bil-mode-plan');
+  var btnOwn = document.getElementById('bil-mode-own');
+  var rowEiertid = document.getElementById('bil-row-eiertid');
+  var eiertidInfo = document.getElementById('bil-own-eiertid-info');
+  var rowResale = document.getElementById('bil-row-resale');
+  var eiertidInput = document.getElementById('bil-aar');
+
+  // Show fields
+  fields.style.display = '';
+
+  // Highlight selected button
+  btnPlan.style.opacity = mode === 'plan' ? '1' : '.55';
+  btnOwn.style.opacity = mode === 'own' ? '1' : '.55';
+
+  if (mode === 'own') {
+    // Own mode: auto-calc eiertid, show resale, lock eiertid
+    eiertidInput.readOnly = true;
+    eiertidInput.style.opacity = '.6';
+    eiertidInfo.style.display = '';
+    rowResale.style.display = '';
+    bilSyncEiertid(); // calculate eiertid from kjøpsår
+  } else {
+    // Plan mode: manual eiertid, hide resale
+    eiertidInput.readOnly = false;
+    eiertidInput.style.opacity = '1';
+    eiertidInfo.style.display = 'none';
+    rowResale.style.display = 'none';
+  }
+
+  // Hide result when switching mode
+  document.getElementById('bil-res').classList.add('hidden');
+}
+
 function bilInitYear(){
   var now=new Date().getFullYear();
   ['bil-kjopsaar','bil-aarsmodell'].forEach(function(id){
@@ -2280,6 +2321,13 @@ function bilSyncEiertid(){
   var now=new Date().getFullYear();
   var diff=now-y;
   if(diff>=0) document.getElementById('bil-aar').value=Math.max(1,diff);
+  // Update info text for own mode
+  if(bilMode === 'own') {
+    var infoEl = document.getElementById('bil-own-eiertid-text');
+    var r = R();
+    var aar = Math.max(1, diff);
+    infoEl.textContent = (r.bilOwnEiertidAuto || 'Eiertid: {n} år (beregnet fra kjøpsår {y})').replace('{n}', aar).replace('{y}', y);
+  }
 }
 function bilUpdateDefaults() {
   var m = document.getElementById('bil-merke').value;
@@ -2309,20 +2357,27 @@ function calcBilkostnad() {
   var serviceMnd = parseNum('bil-service-mnd'); // monthly
   var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
 
-  // 1. Depreciation (declining balance, adjusted for condition)
+  // 1. Depreciation / value loss
   var tilstand = (document.getElementById('bil-tilstand')||{}).value || 'brukt';
-  var kmFactor = 1 / (1 + startKm / 150000);
-  var adjDepr;
-  if (tilstand === 'ny') {
-    // New car: full brand depreciation rate, only adjusted for km
-    adjDepr = bp.depr * kmFactor;
+  var resaleInput = parseNum('bil-resale');
+  var verditap;
+
+  if (bilMode === 'own' && resaleInput > 0) {
+    // User provided actual resale value (e.g. from Finn) — use it directly
+    verditap = Math.max(0, pris - resaleInput);
   } else {
-    // Used car: already past steepest depreciation, reduce rate significantly
-    adjDepr = bp.depr * 0.55 * kmFactor; // ~45% slower depreciation
+    // Estimate depreciation with declining balance model
+    var kmFactor = 1 / (1 + startKm / 150000);
+    var adjDepr;
+    if (tilstand === 'ny') {
+      adjDepr = bp.depr * kmFactor;
+    } else {
+      adjDepr = bp.depr * 0.55 * kmFactor;
+    }
+    var restverdi = pris;
+    for (var i = 0; i < aar; i++) restverdi *= (1 - adjDepr);
+    verditap = pris - restverdi;
   }
-  var restverdi = pris;
-  for (var i = 0; i < aar; i++) restverdi *= (1 - adjDepr);
-  var verditap = pris - restverdi;
 
   // 2. Fuel / charging cost over period
   if (drivstoffMnd > 0) {
