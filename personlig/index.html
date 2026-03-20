@@ -172,19 +172,29 @@
 
           <!-- All fields hidden until mode is chosen -->
           <div id="bil-fields" style="display:none;">
-          <!-- Eiertid first — most important input for the calculation -->
+          <!-- Kjøpsår + Eiertid first row — user sees eiertid update when changing kjøpsår -->
           <div class="form-row" id="bil-row-eiertid">
+            <div class="fg"><label class="flbl" id="bil-l-kjopsaar" for="bil-kjopsaar">Kjøpsår</label>
+              <select class="fc" id="bil-kjopsaar" onchange="bilSyncEiertid()">
+              </select>
+            </div>
             <div class="fg"><label class="flbl" id="bil-l-aar" for="bil-aar">Eiertid (år)</label>
               <input class="fc" type="number" id="bil-aar" value="1" min="1" max="20" step="1">
-            </div>
-            <div class="fg"><label class="flbl" id="bil-l-km" for="bil-km">Årlig kjørelengde (km)</label>
-              <input class="fc" type="text" id="bil-km" value="12 000" inputmode="numeric">
             </div>
           </div>
           <div id="bil-eiertid-hint" style="font-size:11px;color:var(--ink3);margin:-6px 0 10px;font-style:italic;">Hvor lenge planlegger du å eie bilen?</div>
           <!-- Auto-calculated eiertid display for "own" mode -->
           <div id="bil-own-eiertid-info" style="display:none;font-size:12px;color:var(--ink3);margin:-6px 0 12px;font-style:italic;">
             <span id="bil-own-eiertid-text">Eiertid beregnes automatisk fra kjøpsår</span>
+          </div>
+          <!-- Årsmodell + Årlig kjørelengde -->
+          <div class="form-row">
+            <div class="fg"><label class="flbl" id="bil-l-modell" for="bil-aarsmodell">Årsmodell</label>
+              <select class="fc" id="bil-aarsmodell" onchange="bilClampKjopsaar()"></select>
+            </div>
+            <div class="fg"><label class="flbl" id="bil-l-km" for="bil-km">Årlig kjørelengde (km)</label>
+              <input class="fc" type="text" id="bil-km" value="12 000" inputmode="numeric">
+            </div>
           </div>
           <div class="form-row">
             <div class="fg"><label class="flbl" id="bil-l-merke" for="bil-merke">Bilmerke</label>
@@ -217,15 +227,6 @@
                 <option value="bensin">Bensin</option>
                 <option value="diesel">Diesel</option>
                 <option value="elbil">Elbil</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="fg"><label class="flbl" id="bil-l-modell" for="bil-aarsmodell">Årsmodell</label>
-              <select class="fc" id="bil-aarsmodell"></select>
-            </div>
-            <div class="fg"><label class="flbl" id="bil-l-kjopsaar" for="bil-kjopsaar">Kjøpsår</label>
-              <select class="fc" id="bil-kjopsaar" onchange="bilSyncEiertid()">
               </select>
             </div>
           </div>
