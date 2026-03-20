@@ -2425,7 +2425,10 @@ function calcBilkostnad() {
     var serviceFlat = drivstoff === 'elbil' ? 5000 : 9000;
     var avgTotalKm = startKm + (km * aar / 2);
     var serviceKmFactor = 1 + Math.max(0, avgTotalKm - 60000) / 300000;
-    var servicePerAar = serviceFlat * bp.service * serviceKmFactor;
+    // Scale down for cheap cars — a 30k car won't get 9k/yr in service
+    var priceFactor = Math.min(1, pris / 200000);
+    priceFactor = 0.3 + 0.7 * priceFactor; // floor at 30% of base rate
+    var servicePerAar = serviceFlat * bp.service * serviceKmFactor * priceFactor;
     var serviceTotal = servicePerAar * aar;
   }
 
