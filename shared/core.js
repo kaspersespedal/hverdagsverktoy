@@ -2286,11 +2286,15 @@ function bilSetMode(mode) {
   btnPlan.style.opacity = mode === 'plan' ? '1' : '.55';
   btnOwn.style.opacity = mode === 'own' ? '1' : '.55';
 
+  var eiertidHint = document.getElementById('bil-eiertid-hint');
+  var r = R();
+
   if (mode === 'own') {
     // Own mode: auto-calc eiertid, show resale, lock eiertid
     eiertidInput.readOnly = true;
     eiertidInput.style.opacity = '.6';
     eiertidInfo.style.display = '';
+    if (eiertidHint) eiertidHint.style.display = 'none';
     rowResale.style.display = '';
     bilSyncEiertid(); // calculate eiertid from kjøpsår
   } else {
@@ -2298,6 +2302,7 @@ function bilSetMode(mode) {
     eiertidInput.readOnly = false;
     eiertidInput.style.opacity = '1';
     eiertidInfo.style.display = 'none';
+    if (eiertidHint) { eiertidHint.style.display = ''; eiertidHint.textContent = r.bilEiertidHint || 'Hvor lenge planlegger du å eie bilen?'; }
     rowResale.style.display = 'none';
   }
 
@@ -2317,17 +2322,15 @@ function bilInitYear(){
   });
 }
 function bilSyncEiertid(){
+  if(bilMode !== 'own') return; // Only auto-sync in own mode
   var y=+document.getElementById('bil-kjopsaar').value;
   var now=new Date().getFullYear();
   var diff=now-y;
   if(diff>=0) document.getElementById('bil-aar').value=Math.max(1,diff);
-  // Update info text for own mode
-  if(bilMode === 'own') {
-    var infoEl = document.getElementById('bil-own-eiertid-text');
-    var r = R();
-    var aar = Math.max(1, diff);
-    infoEl.textContent = (r.bilOwnEiertidAuto || 'Eiertid: {n} år (beregnet fra kjøpsår {y})').replace('{n}', aar).replace('{y}', y);
-  }
+  var infoEl = document.getElementById('bil-own-eiertid-text');
+  var r = R();
+  var aar = Math.max(1, diff);
+  infoEl.textContent = (r.bilOwnEiertidAuto || 'Eiertid: {n} år (beregnet fra kjøpsår {y})').replace('{n}', aar).replace('{y}', y);
 }
 function bilUpdateDefaults() {
   var m = document.getElementById('bil-merke').value;
