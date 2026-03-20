@@ -3766,13 +3766,10 @@ function calcSpare() {
   var verdictEl = document.getElementById('spare-r-verdict');
   if (totalInt > totalDep) {
     verdictEl.textContent = r.spareVerdictGreat || 'Renten tjente mer enn du sparte — rentes rente-effekten i aksjon!';
-    verdictEl.style.color = 'var(--green)';
   } else if (totalInt > 0) {
     verdictEl.textContent = r.spareVerdictGood || 'Renten ga deg ' + intPct.toFixed(0) + ' % ekstra — tid er din beste venn.';
-    verdictEl.style.color = 'var(--accent)';
   } else {
     verdictEl.textContent = r.spareVerdictNone || 'Uten avkastning vokser pengene kun med innskuddene dine.';
-    verdictEl.style.color = 'var(--ink2)';
   }
 
   // Build table
