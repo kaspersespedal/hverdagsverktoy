@@ -1105,6 +1105,10 @@ function updateNpvUI() {
   setText('npv-r-pay', r.npvRPay || 'Payback Period');
   setText('npv-r-sum', r.npvRSum || 'Total Cash Flows');
   setText('npv-r-pi', r.npvRPi || 'Profitability Index');
+  // NPV panel labels (kalkulator.html)
+  setText('bc-npv-label', r.npvTitle || 'Lønnsomhetsanalyse (NPV/IRR)');
+  setText('bc-npv-intro', r.npvDesc || 'Netto nåverdi og internrente for investeringsprosjekter.');
+  setText('lbl-npv-calc', r.lblNpvCalc || 'Lønnsomhetsanalyse (NPV/IRR)');
   // Sparekalkulator labels
   var spareEl=document.getElementById('spare-title');if(spareEl)spareEl.innerHTML=(r.spareTitle||'Sparekalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('spare-desc',r.spareDesc||'Se kraften i rentes rente — hvor mye du sparer vs. hva renten genererer');
@@ -3338,19 +3342,19 @@ function switchCalcMode(mode, skipScroll){
   if(typeof closeMobileSidebar==='function')closeMobileSidebar();
   if(typeof exitFocusMode==='function')exitFocusMode();
   // Update mobile bar label
-  var mobileLabels={basic:'Enkel',scientific:'Vitenskapelig',finance:'Finansiell',unit:'Valuta',lvu:'Lønn vs Utbytte',aga:'Ansattkostnad',avs:'Avskrivning',ferie:'Feriepenger',rente:'Effektiv Rente',valgevinst:'Valutagevinst',likvid:'Likviditet',pensjon:'Pensjon'};
+  var mobileLabels={basic:'Enkel',scientific:'Vitenskapelig',finance:'Finansiell',unit:'Valuta',lvu:'Lønn vs Utbytte',aga:'Ansattkostnad',avs:'Avskrivning',ferie:'Feriepenger',rente:'Effektiv Rente',valgevinst:'Valutagevinst',likvid:'Likviditet',pensjon:'Pensjon',npv:'NPV/IRR'};
   if(typeof updateMobileBar==='function')updateMobileBar(mobileLabels[mode]||mode);
   // Auto-focus for scientific on mobile
   if(mode==='scientific'&&window.innerWidth<=768&&typeof enterFocusMode==='function')setTimeout(enterFocusMode,100);
   document.querySelectorAll('.cm-opt').forEach(el=>el.classList.remove('cm-active'));
-  const modeMap={basic:'cm-basic',finance:'cm-fin',scientific:'cm-sci',unit:'cm-unit',lvu:'cm-lvu',aga:'cm-aga',avs:'cm-avs',ferie:'cm-ferie',rente:'cm-rente',valgevinst:'cm-valgevinst',likvid:'cm-likvid',pensjon:'cm-pensjon'};
+  const modeMap={basic:'cm-basic',finance:'cm-fin',scientific:'cm-sci',unit:'cm-unit',lvu:'cm-lvu',aga:'cm-aga',avs:'cm-avs',ferie:'cm-ferie',rente:'cm-rente',valgevinst:'cm-valgevinst',likvid:'cm-likvid',pensjon:'cm-pensjon',npv:'cm-npv'};
   var mEl=document.getElementById(modeMap[mode]);if(mEl)mEl.classList.add('cm-active');
   const keysWrap=bcKeys?bcKeys.parentElement:null;
   const dispWrap=bcDisp?bcDisp.parentElement:null;
-  const specialPanels=['bc-unit','bc-finance','bc-lvu','bc-aga','bc-avs','bc-ferie','bc-rente','bc-valgevinst','bc-likvid','bc-pensjon'];
+  const specialPanels=['bc-unit','bc-finance','bc-lvu','bc-aga','bc-avs','bc-ferie','bc-rente','bc-valgevinst','bc-likvid','bc-pensjon','bc-npv'];
   specialPanels.forEach(id=>{var el=document.getElementById(id);if(el)el.classList.add('hidden');});
   const r=R();
-  const extraModes={lvu:r.lblLvu||'Lønn vs Utbytte',aga:r.lblAga||'Ansattkostnad',avs:r.lblAvs||'Avskrivning',ferie:r.lblFerie||'Feriepenger',rente:r.lblRente||'Effektiv Rente',valgevinst:r.lblValgevinst||'Valutagevinst',likvid:r.lblLikvid||'Likviditet',pensjon:r.lblPensjon||'Pensjon'};
+  const extraModes={lvu:r.lblLvu||'Lønn vs Utbytte',aga:r.lblAga||'Ansattkostnad',avs:r.lblAvs||'Avskrivning',ferie:r.lblFerie||'Feriepenger',rente:r.lblRente||'Effektiv Rente',valgevinst:r.lblValgevinst||'Valutagevinst',likvid:r.lblLikvid||'Likviditet',pensjon:r.lblPensjon||'Pensjon',npv:r.lblNpvCalc||'Lønnsomhetsanalyse (NPV/IRR)'};
   if(extraModes[mode]){
     if(keysWrap)keysWrap.classList.add('hidden');if(dispWrap)dispWrap.classList.add('hidden');
     const panel=document.getElementById('bc-'+mode);if(panel){panel.classList.remove('hidden');panel.classList.remove('bc-panel-anim');void panel.offsetWidth;panel.classList.add('bc-panel-anim');}
@@ -4005,7 +4009,7 @@ function initPage(){
       }
       // Handle mode hashes like #lvu, #avs
       if(typeof switchCalcMode==='function'){
-        var modes=['lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon'];
+        var modes=['lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
         if(modes.indexOf(hash)>=0) switchCalcMode(hash);
       }
     },300);
