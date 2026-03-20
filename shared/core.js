@@ -1045,7 +1045,7 @@ function updateNpvUI() {
   repopulateSelect('bil-drivstoff', r.bilFuelOpts || ['Bensin','Diesel','Elbil'], ['bensin','diesel','elbil']);
   setText('bil-mode-plan-label', r.bilModePlan || 'Bil jeg vurderer å kjøpe');
   setText('bil-mode-own-label', r.bilModeOwn || 'Bil jeg allerede eier');
-  setText('bil-l-resale', r.bilLResale || 'Forventet salgsverdi / Finn-pris (kr)');
+  var resaleEl=document.getElementById('bil-l-resale');if(resaleEl){var rt=r.bilLResale||'Forventet salgsverdi / Finn-pris (kr)';resaleEl.innerHTML=rt.replace('Finn','<a href="https://www.finn.no/car/used/search.html" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Finn</a>');}
   setText('bil-disclaimer', r.bilDisclaimer || '* Rough estimate. Actual costs vary with driving pattern, location, insurance terms and vehicle condition.');
   // Budsjett labels
   var budEl=document.getElementById('budsjett-title');if(budEl)budEl.innerHTML=(r.budsjettTitle||'Budsjettkalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
