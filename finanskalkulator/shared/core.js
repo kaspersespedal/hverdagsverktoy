@@ -3784,18 +3784,45 @@ if(document.getElementById('m-type')) morPopulateType();
 // ENTER KEY → CALCULATE
 // ═══════════════════════════════════════════════════════
 document.addEventListener('keydown', function(e){
-  if(e.key==='Enter'){
-    var tag=e.target.tagName;
-    if(tag==='TEXTAREA'||e.target.closest('form')) return;
-    e.preventDefault();
-    const calcMap = {salary:calcSal, mortgage:calcMor, npv:calcNpv, vat:calcVat};
-    if(activeCalc==='basic' && bcMode==='finance'){ fcCalc(); return; }
-    if(activeCalc==='basic'){
-      const subCalcMap={lvu:calcLvu,aga:calcAga,avs:calcAvs,ferie:calcFerie,rente:calcRente,valgevinst:calcValgevinst,likvid:calcLikvid,pensjon:calcPensjon};
-      if(subCalcMap[bcMode]){ subCalcMap[bcMode](); return; }
-      bcPress('='); return;
+  // Skip if user is typing in an input/textarea/select
+  var tag=e.target.tagName;
+  if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT') {
+    if(e.key==='Enter'){
+      if(!e.target.closest('form')){
+        e.preventDefault();
+        const calcMap={salary:calcSal,mortgage:calcMor,npv:calcNpv,vat:calcVat};
+        if(activeCalc==='basic'&&bcMode==='finance'){fcCalc();return;}
+        if(activeCalc==='basic'){
+          const subCalcMap={aga:calcAga,avs:calcAvs,ferie:calcFerie,rente:calcRente,valgevinst:calcValgevinst,likvid:calcLikvid,pensjon:calcPensjon};
+          if(subCalcMap[bcMode]){subCalcMap[bcMode]();return;}
+        }
+        if(calcMap[activeCalc])calcMap[activeCalc]();
+      }
     }
-    if(calcMap[activeCalc]) calcMap[activeCalc]();
+    return;
+  }
+  // Calculator keyboard input (only for basic/scientific calc modes)
+  var isCalcPage=activeCalc==='basic'||(activeCalc==='dashboard'&&document.getElementById('calc-basic')&&!document.getElementById('calc-basic').classList.contains('hidden'));
+  if(isCalcPage&&(bcMode==='basic'||bcMode==='scientific')){
+    var keyMap={'0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9',
+      '.':',',',':',','+':'+','-':'−','*':'×','/':'÷','(':' (',')':') ',
+      'Backspace':'⌫','Delete':'C','Escape':'C'};
+    var mapped=keyMap[e.key];
+    if(mapped){e.preventDefault();bcPress(mapped);return;}
+    if(e.key==='Enter'){e.preventDefault();bcPress('=');return;}
+    if(e.key==='%'){e.preventDefault();bcPress('%');return;}
+  }
+  // Enter for other calculators
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const calcMap={salary:calcSal,mortgage:calcMor,npv:calcNpv,vat:calcVat};
+    if(activeCalc==='basic'&&bcMode==='finance'){fcCalc();return;}
+    if(activeCalc==='basic'){
+      const subCalcMap={aga:calcAga,avs:calcAvs,ferie:calcFerie,rente:calcRente,valgevinst:calcValgevinst,likvid:calcLikvid,pensjon:calcPensjon};
+      if(subCalcMap[bcMode]){subCalcMap[bcMode]();return;}
+      bcPress('=');return;
+    }
+    if(calcMap[activeCalc])calcMap[activeCalc]();
   }
 });
 
