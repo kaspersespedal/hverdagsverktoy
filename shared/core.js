@@ -1851,6 +1851,7 @@ function scrollToEl(el,mode){
 }
 function smartScroll(el,retries){
   if(!el)return;
+  if(document.body.classList.contains('desktop-focus'))return;
   retries=retries||0;
   const off=stickyOffset()+12;
   const r=el.getBoundingClientRect();
