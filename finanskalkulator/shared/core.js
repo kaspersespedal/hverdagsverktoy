@@ -57,7 +57,8 @@ const THEMES = [
   {id:'blue',labelKey:'themeBlue',fallback:'Blå',dot:'#7a9ecc'},
   {id:'green',labelKey:'themeGreen',fallback:'Grønn',dot:'#6db89a'},
   {id:'peach',labelKey:'themePeach',fallback:'Fersken',dot:'#e8a878'},
-  {id:'glass',labelKey:'themeGlass',fallback:'Glass',dot:'linear-gradient(135deg,#6875f5,#8b95ff)',ring:'#6875f5'}
+  {id:'glass',labelKey:'themeGlass',fallback:'Glass',dot:'linear-gradient(135deg,#6875f5,#8b95ff)',ring:'#6875f5'},
+  {id:'hendrix',labelKey:'themeHendrix',fallback:'Hendrix',dot:'linear-gradient(135deg,#7b2d8e,#c45e2c,#d4a030)',ring:'#7b2d8e',dotBorder:'rgba(123,45,142,.3)'}
 ];
 function themeLabel(t){try{var r=typeof R==='function'&&typeof region!=='undefined'?R():null;return r&&r[t.labelKey]?r[t.labelKey]:t.fallback;}catch(e){return t.fallback;}}
 function buildThemePicker(){
@@ -174,12 +175,100 @@ function setTheme(t) {
     if(mode==='basic') buildCalcKeys('basic');
     else if(mode==='scientific') buildCalcKeys('scientific');
   }
+  // Hendrix flowers
+  if(t==='hendrix') hendrixFlowersStart();
+  else hendrixFlowersStop();
+}
+
+// ═══════════════════════════════════════════════════════
+// HENDRIX — Falling Flowers
+// Gentle 60s flower-power petals drifting down
+// ═══════════════════════════════════════════════════════
+var _hendrixInterval=null;
+var _hendrixContainer=null;
+
+function hendrixFlowerSVG(){
+  // 6 different flower/petal shapes — warm psychedelic palette
+  var flowers=[
+    // Daisy — classic flower power
+    function(c1,c2){return '<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><g opacity=".85"><ellipse cx="20" cy="10" rx="5" ry="9" fill="'+c1+'" transform="rotate(0 20 20)"/><ellipse cx="20" cy="10" rx="5" ry="9" fill="'+c1+'" transform="rotate(60 20 20)"/><ellipse cx="20" cy="10" rx="5" ry="9" fill="'+c1+'" transform="rotate(120 20 20)"/><ellipse cx="20" cy="10" rx="5" ry="9" fill="'+c1+'" transform="rotate(180 20 20)"/><ellipse cx="20" cy="10" rx="5" ry="9" fill="'+c1+'" transform="rotate(240 20 20)"/><ellipse cx="20" cy="10" rx="5" ry="9" fill="'+c1+'" transform="rotate(300 20 20)"/><circle cx="20" cy="20" r="5" fill="'+c2+'"/></g></svg>';},
+    // Simple petal
+    function(c1){return '<svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg"><path d="M15 2 C20 8, 26 14, 15 28 C4 14, 10 8, 15 2Z" fill="'+c1+'" opacity=".7"/></svg>';},
+    // Tiny 5-petal flower
+    function(c1,c2){return '<svg viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg"><g opacity=".8"><ellipse cx="18" cy="8" rx="4.5" ry="8" fill="'+c1+'" transform="rotate(0 18 18)"/><ellipse cx="18" cy="8" rx="4.5" ry="8" fill="'+c1+'" transform="rotate(72 18 18)"/><ellipse cx="18" cy="8" rx="4.5" ry="8" fill="'+c1+'" transform="rotate(144 18 18)"/><ellipse cx="18" cy="8" rx="4.5" ry="8" fill="'+c1+'" transform="rotate(216 18 18)"/><ellipse cx="18" cy="8" rx="4.5" ry="8" fill="'+c1+'" transform="rotate(288 18 18)"/><circle cx="18" cy="18" r="4" fill="'+c2+'"/></g></svg>';},
+    // Peace rose petal
+    function(c1){return '<svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><path d="M14 3 Q22 10 20 18 Q18 24 14 26 Q10 24 8 18 Q6 10 14 3Z" fill="'+c1+'" opacity=".65"/></svg>';},
+    // Small dot blossom
+    function(c1,c2){return '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="5" r="4" fill="'+c1+'" opacity=".7"/><circle cx="18.5" cy="10.5" r="4" fill="'+c1+'" opacity=".6"/><circle cx="16" cy="18" r="4" fill="'+c1+'" opacity=".65"/><circle cx="8" cy="18" r="4" fill="'+c1+'" opacity=".6"/><circle cx="5.5" cy="10.5" r="4" fill="'+c1+'" opacity=".7"/><circle cx="12" cy="12" r="3" fill="'+c2+'"/></svg>';},
+    // Leaf
+    function(c1){return '<svg viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 Q20 10 18 22 Q16 28 12 30 Q8 28 6 22 Q4 10 12 2Z" fill="'+c1+'" opacity=".5"/><line x1="12" y1="6" x2="12" y2="26" stroke="'+c1+'" stroke-width=".8" opacity=".4"/></svg>';}
+  ];
+  // Psychedelic warm palette — purples, oranges, golds, magentas, soft greens
+  var palettes=[
+    ['#c45e2c','#d4a030'], // burnt orange + gold
+    ['#7b2d8e','#e8c060'], // deep purple + gold
+    ['#d4618a','#d4a030'], // magenta-pink + gold
+    ['#c45e2c','#fef3e0'], // orange + cream
+    ['#9b4dca','#e8844a'], // violet + tangerine
+    ['#d4a030','#7b2d8e'], // gold + purple
+    ['#c0705a','#ead8c0'], // terracotta + warm beige
+    ['#6a8a5a','#d4a030']  // sage green + gold
+  ];
+  var p=palettes[Math.floor(Math.random()*palettes.length)];
+  var f=flowers[Math.floor(Math.random()*flowers.length)];
+  return f(p[0],p[1]);
+}
+
+function hendrixSpawnFlower(){
+  if(!_hendrixContainer) return;
+  var el=document.createElement('div');
+  el.className='hendrix-flower';
+  var size=14+Math.random()*20; // 14–34px, subtle
+  el.style.width=size+'px';
+  el.style.height=size+'px';
+  el.style.left=(Math.random()*100)+'vw';
+  var dur=10+Math.random()*14; // 10–24s fall time
+  var drift=(Math.random()-.5)*120; // horizontal drift
+  var spin=(Math.random()-.5)*540; // rotation
+  el.style.setProperty('--drift',drift+'px');
+  el.style.setProperty('--spin',spin+'deg');
+  el.style.animationDuration=dur+'s';
+  el.style.animationDelay=(Math.random()*2)+'s';
+  el.innerHTML=hendrixFlowerSVG();
+  _hendrixContainer.appendChild(el);
+  // Remove after animation
+  setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},((dur+2)*1000)+500);
+}
+
+function hendrixFlowersStart(){
+  if(_hendrixInterval) return; // already running
+  // Create container
+  if(!_hendrixContainer){
+    _hendrixContainer=document.createElement('div');
+    _hendrixContainer.className='hendrix-flowers';
+    document.body.appendChild(_hendrixContainer);
+  }
+  _hendrixContainer.style.display='';
+  // Spawn a few immediately
+  for(var i=0;i<5;i++) setTimeout(hendrixSpawnFlower, i*600);
+  // Then spawn gently — one every 2.5–4s
+  _hendrixInterval=setInterval(function(){
+    if(document.hidden) return;
+    hendrixSpawnFlower();
+  }, 2800);
+}
+
+function hendrixFlowersStop(){
+  if(_hendrixInterval){clearInterval(_hendrixInterval);_hendrixInterval=null;}
+  if(_hendrixContainer){_hendrixContainer.style.display='none';_hendrixContainer.innerHTML='';}
 }
 (function(){
   try {
     const saved = localStorage.getItem('hvt-theme');
     const valid = THEMES.map(t=>t.id);
-    document.documentElement.setAttribute('data-theme', (saved && valid.includes(saved)) ? saved : 'dark');
+    const chosen = (saved && valid.includes(saved)) ? saved : 'dark';
+    document.documentElement.setAttribute('data-theme', chosen);
+    if(chosen==='hendrix') document.addEventListener('DOMContentLoaded',function(){hendrixFlowersStart();});
   } catch(e){
     document.documentElement.setAttribute('data-theme', 'dark');
   }
