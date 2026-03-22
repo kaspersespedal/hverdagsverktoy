@@ -750,7 +750,7 @@ function updateSalaryUI() {
   } else {
     salIntroCard.classList.add('hidden');
   }
-  setText('sal-info-title', r.salInfoTitle || 'Tax Reference');
+  var _sit=document.getElementById('sal-info-title');if(_sit)_sit.innerHTML=(r.salInfoTitle||'Skattereferanse')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('sal-info-desc', r.salInfoDesc || 'Current rates for selected region');
   const sc = document.getElementById('s-c'); sc.innerHTML = (r.salClasses||[]).map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
   const sr = document.getElementById('s-r'); sr.innerHTML = (r.salRegions||[]).map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
@@ -760,7 +760,7 @@ function updateSalaryUI() {
   const salLawGroup = document.getElementById('sal-law-group');
   if(r.salLawRows || r.salSubjRows){
     salLawGroup.classList.remove('hidden');
-    setText('sal-law-group-title', r.salLawGroupTitle || 'Skatteloven');
+    var _slgt=document.getElementById('sal-law-group-title');if(_slgt)_slgt.innerHTML=(r.salLawGroupTitle||'Skatteloven')+' <span style="font-size:11px;opacity:.5">▼</span>';
     setText('sal-law-group-desc', 'Kapitler og paragrafer fra skatteloven');
   } else {
     salLawGroup.classList.add('hidden');
@@ -861,7 +861,7 @@ function updateSalaryUI() {
   if(r.salKeyRows){
     salKeyGroup.classList.remove('hidden');
     document.getElementById('sal-key-rows').innerHTML = infoRowsHTML(r.salKeyRows);
-    document.getElementById('sal-key-title').textContent = r.salKeyTitle || 'Viktige regler og begreper forklart';
+    document.getElementById('sal-key-title').innerHTML = (r.salKeyTitle || 'Viktige regler og begreper forklart') + ' <span style="font-size:11px;opacity:.5">▼</span>';
     setText('sal-key-desc', 'Sentrale skatteregler og begreper forklart');
   } else {
     salKeyGroup.classList.add('hidden');
@@ -3753,6 +3753,14 @@ function toggleDesktopFocus(side){
   });
   // Always start without focus mode — reset on each page load
   document.body.classList.remove('desktop-focus','focus-left','focus-right');
+  // Add global focus close bar before calc-grid
+  var grid=document.querySelector('.calc-grid');
+  if(grid&&!document.getElementById('focus-close-bar')){
+    var bar=document.createElement('div');
+    bar.id='focus-close-bar';
+    bar.innerHTML='<button onclick="toggleDesktopFocus()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;">✕ Lukk fokus</button>';
+    grid.parentElement.insertBefore(bar,grid);
+  }
 })();
 
 // Init basic calc
