@@ -511,6 +511,10 @@ function toggleCard(card){
   }
   const arrow = card.querySelector('.card-title span');
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
+  if(document.body.classList.contains('desktop-focus')){
+    setTimeout(function(){ window.scrollTo(0, 0); }, 50);
+    return;
+  }
   if(wasCollapsed){
     setTimeout(()=>{ smartScroll(card); }, 250);
   }
