@@ -414,7 +414,7 @@ function goToAgaCard(){
     window.location.href='/avgift/#vat-aga-card'; return;
   }
   switchCalc('vat', true);
-  window.scrollTo({top:0,behavior:'auto'});
+  window.scrollTo({top:0,behavior:'smooth'});
   setTimeout(()=>{
     const c=document.getElementById('vat-aga-card');
     if(!c) return;
@@ -432,7 +432,7 @@ function goToLvuCalc(){
   if(el){el.style.animation='none';el.style.opacity='1';el.style.transform='none';
     const off=stickyOffset();
     const top=el.getBoundingClientRect().top+window.scrollY-off;
-    window.scrollTo(0, Math.max(0,top));
+    window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
   }
 }
 function goToAvsCalc(){
@@ -445,7 +445,7 @@ function goToAvsCalc(){
   if(el){el.style.animation='none';el.style.opacity='1';el.style.transform='none';
     const off=stickyOffset();
     const top=el.getBoundingClientRect().top+window.scrollY-off;
-    window.scrollTo(0, Math.max(0,top));
+    window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
   }
 }
 function openLawCard(cardId,searchText){
@@ -512,7 +512,7 @@ function toggleCard(card){
   const arrow = card.querySelector('.card-title span');
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
   if(document.body.classList.contains('desktop-focus')){
-    setTimeout(function(){ window.scrollTo(0, 0); }, 50);
+    setTimeout(function(){ window.scrollTo({top:0,behavior:'smooth'}); }, 50);
     return;
   }
   if(wasCollapsed){
@@ -1920,7 +1920,7 @@ function switchCalc(n, skipScroll) {
       if(!skipScroll){
         var off=stickyOffset();
         var rect=target.getBoundingClientRect();
-        window.scrollTo({top:window.pageYOffset+rect.top-off,behavior:'auto'});
+        window.scrollTo({top:window.pageYOffset+rect.top-off,behavior:'smooth'});
       }
     }
   } else {
