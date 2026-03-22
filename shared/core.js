@@ -491,29 +491,24 @@ function toggleLawGroup(group){
 function toggleCard(card){
   const wasCollapsed = card.classList.contains('collapsed');
   var body = card.querySelector('.law-body');
-  // When collapsing, pin scroll so the card header stays in place
   if(!wasCollapsed){
-    // Animate close: set explicit max-height first, then collapse
-    if(body){
-      body.style.maxHeight = body.scrollHeight + 'px';
-      body.offsetHeight; // force reflow
-    }
+    // Collapsing — pin scroll so header stays in place
     var hdr = card.querySelector('.card-hdr');
     var topBefore = (hdr||card).getBoundingClientRect().top;
+    if(body) body.classList.remove('opening');
     card.classList.add('collapsed');
     var topAfter = (hdr||card).getBoundingClientRect().top;
     var drift = topAfter - topBefore;
     if(Math.abs(drift) > 2) window.scrollBy(0, drift);
   } else {
-    // Animate open: remove collapsed, set max-height to scrollHeight, then clear
+    // Opening — add animation class
     card.classList.remove('collapsed');
     if(body){
-      var h = body.scrollHeight;
-      body.style.maxHeight = h + 'px';
-      setTimeout(function(){ body.style.maxHeight = ''; }, 400);
+      body.classList.remove('opening');
+      body.offsetHeight; // force reflow
+      body.classList.add('opening');
     }
   }
-  // Rotate arrow indicator
   const arrow = card.querySelector('.card-title span');
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
   if(wasCollapsed){
