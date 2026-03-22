@@ -3523,6 +3523,7 @@ function ccPopulate(){
   const defaults=['NOK','EUR'];
   ['uc-from','uc-to'].forEach((id,i)=>{
     const sel=document.getElementById(id);
+    if(!sel) return;
     const prev=sel.value||defaults[i];
     sel.innerHTML='';
     getCcCurrencies().forEach(([code,label],j)=>{
@@ -3605,6 +3606,7 @@ function getFcConfigs() {
 function fcPopulateSelect(){
   const cfgs = getFcConfigs();
   const sel = document.getElementById('fc-type');
+  if(!sel) return;
   const cur = sel.value || 'tvm';
   sel.innerHTML = '';
   for(const [k,v] of Object.entries(cfgs)){
@@ -3622,6 +3624,7 @@ function fcUpdateFields(){
   var _fct=document.getElementById('fc-type');const type=_fct?_fct.value:'pv';
   const cfg = getFcConfigs()[type];
   const container = document.getElementById('fc-fields');
+  if(!container) return;
   container.innerHTML = '';
   cfg.fields.forEach(f => {
     const isRate = f.id.includes('rate');
@@ -3725,6 +3728,28 @@ var _focusZoomHandler=null;
 function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';var mmb=document.querySelector('.mobile-mode-bar');if(mmb)mmb.style.top='0px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no');_focusZoomHandler=function(e){if(e.touches&&e.touches.length>1){e.preventDefault();}};document.addEventListener('touchstart',_focusZoomHandler,{passive:false});document.addEventListener('gesturestart',function(e){e.preventDefault();},{passive:false});}
 function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var mmb=document.querySelector('.mobile-mode-bar');var h=document.querySelector('header');if(mmb&&h)mmb.style.top=h.offsetHeight+'px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');if(_focusZoomHandler){document.removeEventListener('touchstart',_focusZoomHandler);_focusZoomHandler=null;}}
 function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
+
+// Desktop focus mode
+function toggleDesktopFocus(){
+  document.body.classList.toggle('desktop-focus');
+  try{localStorage.setItem('hvt-desktop-focus',document.body.classList.contains('desktop-focus')?'1':'0');}catch(e){}
+}
+(function initDesktopFocus(){
+  // Add focus toggle button to all .card elements inside .calc-grid
+  document.querySelectorAll('.calc-grid > div:first-child .card').forEach(function(card){
+    if(card.querySelector('.focus-toggle')) return;
+    var hdr=card.querySelector('.card-hdr');
+    if(!hdr) return;
+    hdr.style.position='relative';
+    var btn=document.createElement('button');
+    btn.className='focus-toggle';
+    btn.onclick=function(e){e.stopPropagation();toggleDesktopFocus();};
+    btn.innerHTML='<span class="focus-toggle-label">⛶ Fokus</span><span class="focus-toggle-exit">✕ Lukk</span>';
+    hdr.appendChild(btn);
+  });
+  // Restore saved preference
+  try{if(localStorage.getItem('hvt-desktop-focus')==='1')document.body.classList.add('desktop-focus');}catch(e){}
+})();
 
 // Init basic calc
 buildCalcKeys('basic');
