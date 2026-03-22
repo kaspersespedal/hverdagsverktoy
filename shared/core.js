@@ -490,7 +490,17 @@ function toggleLawGroup(group){
 }
 function toggleCard(card){
   const wasCollapsed = card.classList.contains('collapsed');
-  card.classList.toggle('collapsed');
+  // When collapsing, pin scroll so the card header stays in place
+  if(!wasCollapsed){
+    var hdr = card.querySelector('.card-hdr');
+    var topBefore = (hdr||card).getBoundingClientRect().top;
+    card.classList.toggle('collapsed');
+    var topAfter = (hdr||card).getBoundingClientRect().top;
+    var drift = topAfter - topBefore;
+    if(Math.abs(drift) > 2) window.scrollBy(0, drift);
+  } else {
+    card.classList.toggle('collapsed');
+  }
   // Rotate arrow indicator
   const arrow = card.querySelector('.card-title span');
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
