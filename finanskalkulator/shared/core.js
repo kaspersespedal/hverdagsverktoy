@@ -3757,8 +3757,8 @@ function toggleDesktopFocus(){
     btn.innerHTML='<span class="focus-toggle-label">⛶ Fokus</span><span class="focus-toggle-exit">✕ Lukk</span>';
     hdr.appendChild(btn);
   });
-  // Restore saved preference
-  try{if(localStorage.getItem('hvt-desktop-focus')==='1')document.body.classList.add('desktop-focus');}catch(e){}
+  // Always start without focus mode — reset on each page load
+  try{localStorage.removeItem('hvt-desktop-focus');}catch(e){}
 })();
 
 // Init basic calc
