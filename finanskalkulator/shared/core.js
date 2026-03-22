@@ -4228,33 +4228,7 @@ document.addEventListener('DOMContentLoaded',function(){
 });
 
 // ── Match calculator card heights with howto card heights ──
-function syncCardHeights(){
-  var pairs=[
-    ['budsjett-wrapper','bud-howto-card'],
-    ['bil-wrapper','bil-howto-card'],
-    ['spare-wrapper','spare-howto-card'],
-    ['studie-wrapper','studie-howto-card'],
-    ['lonn-wrapper','lonn-howto-card'],
-    ['abo-wrapper','abo-howto-card']
-  ];
-  if(window.innerWidth<900){
-    pairs.forEach(function(p){
-      var a=document.getElementById(p[0]),b=document.getElementById(p[1]);
-      if(a)a.style.minHeight='';
-      if(b)b.style.minHeight='';
-    });
-    return;
-  }
-  pairs.forEach(function(p){
-    var a=document.getElementById(p[0]),b=document.getElementById(p[1]);
-    if(!a||!b)return;
-    a.style.minHeight='';b.style.minHeight='';
-    var ha=a.offsetHeight,hb=b.offsetHeight;
-    var mx=Math.max(ha,hb);
-    a.style.minHeight=mx+'px';
-    b.style.minHeight=mx+'px';
-  });
-}
+function syncCardHeights(){}
 
 // ── Budsjettkalkulator ──
 // ═══════════════════════════════════════════════════════
