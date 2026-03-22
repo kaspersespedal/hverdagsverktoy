@@ -88,7 +88,7 @@
 
     <!-- ══════════════ BASIC CALCULATOR ══════════════ -->
     <div id="calc-focus-bar" style="display:none;max-width:640px;margin:0 auto 16px;"></div>
-    <div id="calc-basic" class="calc-grid" style="grid-template-columns:380px 280px;justify-content:center;align-items:start;">
+    <div id="calc-basic" class="calc-grid" style="grid-template-columns:1fr 1fr;max-width:700px;margin:0 auto;align-items:start;">
       <!-- LEFT: Calculator -->
       <div>
         <div class="card" style="border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08);display:flex;flex-direction:column;">
@@ -131,21 +131,6 @@
             <div class="fg"><label class="flbl" id="uc-lbl-val" for="uc-val">Beløp</label><input class="fc" type="number" id="uc-val" value="1000" oninput="ccConvert()"></div>
             <div class="rh" style="margin-top:4px;"><div class="rh-lbl" id="uc-lbl-res">Resultat</div><div class="rh-val" id="uc-res">–</div><div class="rh-sub" id="uc-rate-info" style="font-size:11px;opacity:.5;margin-top:4px;"></div></div>
             <div id="cc-swap" onclick="ccSwap()" style="text-align:center;margin-top:10px;cursor:pointer;font-size:13px;color:var(--accent);font-weight:600;">⇅ Bytt</div>
-          </div>
-          <!-- LVU: Lønn vs Utbytte -->
-          <div id="bc-lvu" class="hidden" style="padding:20px 24px;background:var(--surface);">
-            <div style="font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;" id="bc-lvu-label">Lønn vs Utbytte</div>
-            <div id="lvu-info-toggle" style="margin-bottom:12px;">
-              <a href="javascript:void(0)" onclick="var b=document.getElementById('lvu-info-body');var opening=b.classList.contains('hidden');b.classList.toggle('hidden');this.querySelector('span').textContent=opening?'▼':'▶';if(opening)setTimeout(function(){smartScroll(b)},150)" style="font-size:12px;color:var(--ink2);text-decoration:none;font-weight:600;display:flex;align-items:center;gap:6px;"><span>▶</span> <span id="lvu-info-label">Hva viser denne kalkulatoren?</span></a>
-              <div id="lvu-info-body" class="hidden" style="margin-top:8px;padding:12px 14px;background:var(--surface2);border-radius:10px;font-size:12px;line-height:1.6;color:var(--ink2);">
-                <div style="font-weight:700;color:var(--ink);margin-bottom:6px;" id="lvu-info-h">Kort forklart</div>
-                <div id="lvu-info-text">Kalkulatoren sammenligner <b>hva det koster selskapet</b> å gi deg et gitt beløp — enten som lønn eller utbytte. Den viser <b>ikke</b> hva du sitter igjen med privat.<br><br>
-                <b>Lønn:</b> Beløpet + arbeidsgiveravgift (AGA) + feriepenger (12%) + OTP (2%). Dette er selskapets totalkostnad.<br><br>
-                <b>Utbytte:</b> For å dele ut f.eks. 500 000 kr må selskapet tjene 641 026 kr før 22% selskapsskatt (500 000 / 0,78).<br><br>
-                <b>Merk:</b> Som mottaker betaler du i tillegg personlig skatt — inntektsskatt på lønn, eller utbytteskatt (oppjustert ×1,72, beskattet med 22%) på utbytte. Denne kalkulatoren tar ikke med den personlige skatten — den ser kun på selskapets side.</div>
-              </div>
-            </div>
-            <div class="fg"><label class="flbl" id="lvu-l-gross" for="lvu-gross">Beløp (brutto)</label><input class="fc" type="text" id="lvu-gross" value="500 000" inputmode="numeric"></div><div class="fg"><label class="flbl" id="lvu-l-zone" for="lvu-zone">AGA-sone</label><select class="fc" id="lvu-zone"><option value="0.141">Sone I (14,1%)</option><option value="0.106">Sone Ia/II (10,6%)</option><option value="0.064">Sone III (6,4%)</option><option value="0.079">Sone IVa (7,9%)</option><option value="0.051">Sone IV (5,1%)</option><option value="0">Sone V (0%)</option></select></div><button class="btn-calc" onclick="calcLvu()"><span id="btn-calc-lvu">Beregn →</span></button><div id="lvu-res" class="result-sec hidden"><div class="rh"><div class="rh-lbl" id="lvu-r-sal">Lønn - Total kostnad</div><div class="rh-val" id="lvu-sal-cost">–</div></div><div class="rgrid"><div class="rt"><div class="rt-lbl" id="lvu-r-div">Utbytte - Total kostnad</div><div class="rt-val" id="lvu-div-cost">–</div></div><div class="rt"><div class="rt-lbl" id="lvu-r-diff">Differanse (billigste)</div><div class="rt-val" id="lvu-diff">–</div></div></div></div>
           </div>
           <!-- AGA: Ansattkostnad -->
           <div id="bc-aga" class="hidden" style="padding:20px 24px;background:var(--surface);">
@@ -277,9 +262,6 @@
             </div>
             <div class="cm-opt" onclick="switchCalcMode('ferie')" id="cm-ferie" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-size:13px;font-weight:500;color:var(--ink2);">
               <span style="font-size:17px;"></span> <span id="lbl-ferie">Feriepenger</span>
-            </div>
-            <div class="cm-opt" onclick="switchCalcMode('lvu')" id="cm-lvu" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-size:13px;font-weight:500;color:var(--ink2);">
-              <span style="font-size:17px;"></span> <span id="lbl-lvu">Lønn vs Utbytte</span>
             </div>
             <div class="cm-opt" onclick="switchCalcMode('aga')" id="cm-aga" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-size:13px;font-weight:500;color:var(--ink2);">
               <span style="font-size:17px;"></span> <span id="lbl-aga">Ansattkostnad</span>
