@@ -127,82 +127,135 @@ input[type=number]{-moz-appearance:textfield;}
   --sh-lg:0 2px 10px rgba(120,40,80,.08),0 20px 56px rgba(120,40,80,.1);
   --r:12px;--rs:8px;
 }
-/* Hendrix — psychedelic background glow */
+/* Hendrix — animated psychedelic background */
 [data-theme="hendrix"] body{
-  background-color:#fffdf9;
-  background-image:radial-gradient(ellipse at 10% 30%,rgba(123,45,142,.05),transparent 50%),
-    radial-gradient(ellipse at 90% 60%,rgba(196,94,44,.05),transparent 50%),
-    radial-gradient(ellipse at 50% 90%,rgba(212,160,48,.04),transparent 40%);
-  background-attachment:fixed;
+  background-color:#fffdf9;position:relative;
 }
-[data-theme="hendrix"] .hero::after {
-  opacity:.35;
+[data-theme="hendrix"] body>*{position:relative;z-index:1;}
+[data-theme="hendrix"]::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background:
-    radial-gradient(circle at 15% 35%, rgba(123,45,142,.4), transparent 45%),
-    radial-gradient(circle at 85% 25%, rgba(196,94,44,.35), transparent 45%),
-    radial-gradient(circle at 50% 80%, rgba(212,160,48,.3), transparent 40%);
+    radial-gradient(ellipse at 20% 30%,rgba(123,45,142,.06),transparent 50%),
+    radial-gradient(ellipse at 80% 60%,rgba(196,94,44,.06),transparent 50%),
+    radial-gradient(ellipse at 50% 80%,rgba(212,160,48,.05),transparent 45%),
+    radial-gradient(ellipse at 60% 10%,rgba(180,50,90,.04),transparent 40%);
+  animation:hendrixBgPulse 25s ease-in-out infinite alternate;
+}
+@keyframes hendrixBgPulse{
+  0%{opacity:.7;filter:hue-rotate(0deg);}
+  33%{opacity:1;filter:hue-rotate(15deg);}
+  66%{opacity:.8;filter:hue-rotate(-10deg);}
+  100%{opacity:1;filter:hue-rotate(5deg);}
+}
+/* Hendrix — hero psychedelic title */
+[data-theme="hendrix"] .hero::after {
+  opacity:.4;
+  background:
+    radial-gradient(circle at 15% 35%, rgba(123,45,142,.45), transparent 45%),
+    radial-gradient(circle at 85% 25%, rgba(196,94,44,.4), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(212,160,48,.35), transparent 40%);
+  animation:hendrixHeroShift 20s ease-in-out infinite alternate;
+}
+@keyframes hendrixHeroShift{
+  0%{transform:translate(0,0) scale(1);}
+  50%{transform:translate(5%,-3%) scale(1.05);}
+  100%{transform:translate(-3%,4%) scale(.97);}
 }
 [data-theme="hendrix"] .hero h1 {
-  background: linear-gradient(135deg, #7b2d8e 0%, #c45e2c 40%, #d4a030 80%, #c45e2c 100%);
+  background: linear-gradient(135deg, #7b2d8e 0%, #c45e2c 25%, #d4a030 50%, #c45e2c 75%, #7b2d8e 100%);
+  background-size:300% 100%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation:hendrixTitleShift 8s ease-in-out infinite;
 }
+@keyframes hendrixTitleShift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 [data-theme="hendrix"] .hero h1 em {
   -webkit-text-fill-color: var(--ink3);
 }
+/* Hendrix — result header & buttons */
 [data-theme="hendrix"] .rh {
   background: linear-gradient(135deg, #7b2d8e 0%, #c45e2c 50%, #d4a030 100%);
 }
 [data-theme="hendrix"] .btn-calc {
-  background: linear-gradient(135deg, #7b2d8e, #c45e2c);
+  background: linear-gradient(135deg, #7b2d8e, #c45e2c, #d4a030);
+  background-size:200% 100%;
+  transition:all .3s ease;
 }
 [data-theme="hendrix"] .btn-calc:hover {
-  box-shadow: 0 5px 24px rgba(123,45,142,.3);
+  background-position:100% 0;
+  box-shadow: 0 0 20px rgba(123,45,142,.3), 0 0 40px rgba(196,94,44,.15);
+  transform:translateY(-2px);
 }
 [data-theme="hendrix"] .calc-tab.active {
   background: linear-gradient(135deg, #7b2d8e, #c45e2c);
   color: #fff;
+  box-shadow:0 0 12px rgba(123,45,142,.25);
 }
+/* Hendrix — psychedelic card borders with glow */
 [data-theme="hendrix"] .dash-tool-card {
   border: 1.5px solid transparent;
   background-image:linear-gradient(var(--surface),var(--surface)),linear-gradient(135deg,rgba(123,45,142,.3),rgba(196,94,44,.3),rgba(212,160,48,.3));
   background-origin:border-box;background-clip:padding-box,border-box;
-  transition: all .3s ease;
+  transition: all .4s ease;
 }
 [data-theme="hendrix"] .dash-tool-card:hover {
-  background-image:linear-gradient(var(--surface),var(--surface)),linear-gradient(135deg,rgba(123,45,142,.6),rgba(196,94,44,.5),rgba(212,160,48,.5));
-  box-shadow: 0 4px 24px rgba(123,45,142,.12), 0 0 0 1px rgba(196,94,44,.08);
-  transform:translateY(-3px);
+  background-image:linear-gradient(var(--surface),var(--surface)),linear-gradient(135deg,rgba(123,45,142,.7),rgba(196,94,44,.6),rgba(212,160,48,.6));
+  box-shadow: 0 4px 30px rgba(123,45,142,.15), 0 0 15px rgba(196,94,44,.08);
+  transform:translateY(-4px) scale(1.01);
 }
 [data-theme="hendrix"] .card{
   border-color:color-mix(in srgb,var(--accent) 15%,var(--border));
+  transition:box-shadow .3s ease;
+}
+[data-theme="hendrix"] .card:hover{
+  box-shadow:0 2px 16px rgba(123,45,142,.06);
 }
 [data-theme="hendrix"] .info-card .card-title{
   background:linear-gradient(135deg,#7b2d8e,#c45e2c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
 }
+[data-theme="hendrix"] .info-card .card-hdr:hover{
+  background:linear-gradient(135deg,rgba(123,45,142,.03),rgba(196,94,44,.03))!important;
+}
+/* Hendrix — footer & dividers */
 [data-theme="hendrix"] footer {
   background: #fef7ee;
   border-top-color: #ead8c0;
 }
 [data-theme="hendrix"] .hero-dash-rule {
   background: linear-gradient(90deg, #7b2d8e, #c45e2c, #d4a030, #c45e2c, #7b2d8e);
-  background-size:200% 100%;
-  animation:hendrixShimmer 4s ease-in-out infinite;
-  opacity: .7;
+  background-size:300% 100%;
+  animation:hendrixTitleShift 6s ease-in-out infinite;
+  opacity: .8;
   height: 3px;
   width: 80px;
 }
-@keyframes hendrixShimmer{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
 [data-theme="hendrix"] .ai-hdr {
   background: linear-gradient(135deg, #7b2d8e, #c45e2c);
+}
+/* Hendrix — psychedelic scrollbar */
+[data-theme="hendrix"] ::-webkit-scrollbar{width:10px;}
+[data-theme="hendrix"] ::-webkit-scrollbar-track{background:#fef9f0;}
+[data-theme="hendrix"] ::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,#7b2d8e,#c45e2c,#d4a030);border-radius:8px;border:2px solid #fef9f0;
+}
+[data-theme="hendrix"] ::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,#9b4dca,#e8844a,#e8c060);
+}
+/* Hendrix — selection */
+[data-theme="hendrix"] ::selection{background:rgba(123,45,142,.2);color:#2a1a3e;}
+/* Hendrix — input focus glow */
+[data-theme="hendrix"] .fc:focus{
+  border-color:#c45e2c;
+  box-shadow:0 0 0 3px rgba(123,45,142,.1),0 0 12px rgba(196,94,44,.08);
 }
 /* Hendrix — Art Nouveau rose vine borders */
 [data-theme="hendrix"] body{position:relative;}
 [data-theme="hendrix"] body::before,
 [data-theme="hendrix"] body::after{
   content:'';position:fixed;top:0;bottom:0;width:80px;pointer-events:none;z-index:9998;
-  background-repeat:repeat-y;background-size:80px auto;opacity:.18;
+  background-repeat:repeat-y;background-size:80px auto;opacity:.25;
+  animation:hendrixVineSway 30s ease-in-out infinite alternate;
 }
 [data-theme="hendrix"] body::before{
   left:0;
@@ -212,8 +265,13 @@ input[type=number]{-moz-appearance:textfield;}
   right:0;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='400' viewBox='0 0 80 400'%3E%3Cdefs%3E%3CradialGradient id='r1' cx='.5' cy='.4'%3E%3Cstop offset='0' stop-color='%23d4365c'/%3E%3Cstop offset='.6' stop-color='%23a82040'/%3E%3Cstop offset='1' stop-color='%237a1830'/%3E%3C/radialGradient%3E%3CradialGradient id='r2' cx='.5' cy='.4'%3E%3Cstop offset='0' stop-color='%23e88050'/%3E%3Cstop offset='.6' stop-color='%23c45e2c'/%3E%3Cstop offset='1' stop-color='%23903818'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M40 0 C25 30 22 50 32 75 C42 100 62 95 65 120 C68 145 52 155 40 160 C28 165 18 150 22 175 C26 200 55 210 60 235 C65 260 45 270 38 280 C31 290 25 275 30 300 C35 325 60 335 62 360 C64 385 45 395 40 400' fill='none' stroke='%23355828' stroke-width='2.5' stroke-linecap='round'/%3E%3Cpath d='M37 0 C23 32 20 48 30 72 C40 96 58 92 62 118' fill='none' stroke='%23456a35' stroke-width='1' opacity='.5'/%3E%3Cpath d='M28 40 L24 36' stroke='%23355828' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M58 110 L62 106' stroke='%23355828' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M25 185 L21 181' stroke='%23355828' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M58 250 L63 247' stroke='%23355828' stroke-width='1.5' stroke-linecap='round'/%3E%3Cg transform='translate(38,68)'%3E%3Cpath d='M0 0 C-6-4-10 2-8 8 C-6 14 0 16 0 16 C0 16 6 14 8 8 C10 2 6-4 0 0Z' fill='url(%23r1)' opacity='.9'/%3E%3Cpath d='M0 2 C-4-1-7 3-5 7 C-3 11 0 13 0 13 C0 13 3 11 5 7 C7 3 4-1 0 2Z' fill='%23d4365c' opacity='.7'/%3E%3Cpath d='M0 4 C-2 1-4 4-3 6 C-1 9 0 10 0 10 C0 10 1 9 3 6 C4 4 2 1 0 4Z' fill='%23e86080' opacity='.5'/%3E%3Ccircle cx='0' cy='7' r='1.5' fill='%23d4a030' opacity='.6'/%3E%3C/g%3E%3Cg transform='translate(62,155)'%3E%3Cpath d='M0 0 C-7-5-12 2-10 10 C-8 18 0 20 0 20 C0 20 8 18 10 10 C12 2 7-5 0 0Z' fill='url(%23r2)' opacity='.85'/%3E%3Cpath d='M0 3 C-5 0-8 5-6 10 C-4 15 0 17 0 17 C0 17 4 15 6 10 C8 5 5 0 0 3Z' fill='%23e88050' opacity='.6'/%3E%3Cpath d='M0 6 C-3 3-5 6-4 9 C-2 12 0 14 0 14 C0 14 2 12 4 9 C5 6 3 3 0 6Z' fill='%23f0a878' opacity='.45'/%3E%3Ccircle cx='0' cy='10' r='2' fill='%23d4a030' opacity='.5'/%3E%3C/g%3E%3Cg transform='translate(30,290)'%3E%3Cpath d='M0 0 C-6-4-10 2-8 8 C-6 14 0 16 0 16 C0 16 6 14 8 8 C10 2 6-4 0 0Z' fill='url(%23r1)' opacity='.85'/%3E%3Cpath d='M0 2 C-4-1-7 3-5 7 C-3 11 0 13 0 13 C0 13 3 11 5 7 C7 3 4-1 0 2Z' fill='%23d4365c' opacity='.6'/%3E%3Ccircle cx='0' cy='7' r='1.5' fill='%23d4a030' opacity='.5'/%3E%3C/g%3E%3Cg transform='translate(55,360)'%3E%3Cpath d='M0-3 C-3 0-4 5-2 8 C0 10 2 8 4 5 C3 2 2-1 0-3Z' fill='%23a82040' opacity='.7'/%3E%3Cpath d='M-1-4 C-1-4 0-6 1-4 C2-2 1 0 0 2 C-1 0-2-2-1-4Z' fill='%23355828' opacity='.8'/%3E%3C/g%3E%3Cpath d='M32 45 C24 38 18 42 22 50 C26 56 34 52 32 45Z' fill='%23456a35' opacity='.7'/%3E%3Cline x1='32' y1='45' x2='23' y2='48' stroke='%23355828' stroke-width='.5' opacity='.5'/%3E%3Cpath d='M65 130 C74 125 76 132 70 138 C64 142 60 135 65 130Z' fill='%23456a35' opacity='.65'/%3E%3Cpath d='M25 200 C16 195 15 202 20 208 C25 212 30 206 25 200Z' fill='%23456a35' opacity='.6'/%3E%3Cpath d='M60 260 C68 255 71 262 65 268 C60 272 56 265 60 260Z' fill='%23456a35' opacity='.65'/%3E%3Cpath d='M35 330 C27 324 24 330 28 336 C32 341 38 336 35 330Z' fill='%23456a35' opacity='.6'/%3E%3C/svg%3E");
 }
+@keyframes hendrixVineSway{
+  0%{background-position-y:0px;opacity:.25;}
+  50%{background-position-y:-40px;opacity:.3;}
+  100%{background-position-y:-80px;opacity:.25;}
+}
 @media(max-width:900px){
-  [data-theme="hendrix"] body::before,[data-theme="hendrix"] body::after{width:40px;opacity:.12;}
+  [data-theme="hendrix"] body::before,[data-theme="hendrix"] body::after{width:40px;opacity:.15;}
 }
 @media(prefers-reduced-motion:reduce){
   [data-theme="hendrix"] body::before,[data-theme="hendrix"] body::after{display:none;}
