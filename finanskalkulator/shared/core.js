@@ -3748,25 +3748,34 @@ function exitFocusMode(){document.body.classList.remove('calc-focus');document.b
 function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
 
 // Desktop focus mode
-function toggleDesktopFocus(){
-  document.body.classList.toggle('desktop-focus');
-  try{localStorage.setItem('hvt-desktop-focus',document.body.classList.contains('desktop-focus')?'1':'0');}catch(e){}
+function toggleDesktopFocus(side){
+  var b=document.body;
+  if(b.classList.contains('desktop-focus')){
+    b.classList.remove('desktop-focus','focus-left','focus-right');
+  } else {
+    b.classList.add('desktop-focus');
+    b.classList.add(side==='right'?'focus-right':'focus-left');
+  }
 }
 (function initDesktopFocus(){
-  // Add focus toggle button to all .card elements inside .calc-grid
-  document.querySelectorAll('.calc-grid > div:first-child .card').forEach(function(card){
+  // Add focus toggle button to all .card elements inside .calc-grid (both columns)
+  document.querySelectorAll('.calc-grid > div > .card, .calc-grid > .right-col > .card').forEach(function(card){
     if(card.querySelector('.focus-toggle')) return;
     var hdr=card.querySelector('.card-hdr');
     if(!hdr) return;
     hdr.style.position='relative';
+    // Determine which side this card is on
+    var grid=card.closest('.calc-grid');
+    var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
+    var isRight=parent&&(parent.classList.contains('right-col')||parent===grid.children[grid.children.length-1]);
     var btn=document.createElement('button');
     btn.className='focus-toggle';
-    btn.onclick=function(e){e.stopPropagation();toggleDesktopFocus();};
+    btn.onclick=function(e){e.stopPropagation();toggleDesktopFocus(isRight?'right':'left');};
     btn.innerHTML='<span class="focus-toggle-label">⛶ Fokus</span><span class="focus-toggle-exit">✕ Lukk</span>';
     hdr.appendChild(btn);
   });
   // Always start without focus mode — reset on each page load
-  try{localStorage.removeItem('hvt-desktop-focus');}catch(e){}
+  document.body.classList.remove('desktop-focus','focus-left','focus-right');
 })();
 
 // Init basic calc
