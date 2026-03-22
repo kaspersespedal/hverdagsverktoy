@@ -49,8 +49,8 @@ function injectRatesDisclaimer(resEl){
 // THEME
 // ═══════════════════════════════════════════════════════
 const THEMES = [
-  {id:'frost',labelKey:'themeFrost',fallback:'Standard',dot:'linear-gradient(135deg,#a8c4e6,#89b0d9)',ring:'#6875f5'},
   {id:'dark',labelKey:'themeDark',fallback:'Mørk',dot:'linear-gradient(135deg,#1c1e2e,#2d3352)',ring:'#6c8aef',dotBorder:'rgba(255,255,255,.25)'},
+  {id:'frost',labelKey:'themeFrost',fallback:'Standard',dot:'linear-gradient(135deg,#a8c4e6,#89b0d9)',ring:'#6875f5'},
   {id:'corporate',labelKey:'themeCorporate',fallback:'Skarp',dot:'#1e40af'},
   {id:'pink',labelKey:'themePink',fallback:'Rosa',dot:'#e891b2'},
   {id:'purple',labelKey:'themePurple',fallback:'Lilla',dot:'#a78bdf'},
@@ -179,9 +179,9 @@ function setTheme(t) {
   try {
     const saved = localStorage.getItem('hvt-theme');
     const valid = THEMES.map(t=>t.id);
-    document.documentElement.setAttribute('data-theme', (saved && valid.includes(saved)) ? saved : 'frost');
+    document.documentElement.setAttribute('data-theme', (saved && valid.includes(saved)) ? saved : 'dark');
   } catch(e){
-    document.documentElement.setAttribute('data-theme', 'frost');
+    document.documentElement.setAttribute('data-theme', 'dark');
   }
 })();
 
