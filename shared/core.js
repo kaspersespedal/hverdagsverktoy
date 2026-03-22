@@ -761,25 +761,7 @@ function updateSalaryUI() {
   if(r.salLawRows || r.salSubjRows){
     salLawGroup.classList.remove('hidden');
     setText('sal-law-group-title', r.salLawGroupTitle || 'Skatteloven');
-    // Build clickable desc links that jump to each card
-    (function(){
-      var map=[
-        ['sal-subj-card', r.salDescSubj||'Skatteplikt'],
-        ['sal-wealth-card', r.salDescFormue||'Formue'],
-        ['sal-law-card', r.salDescInnt||'Inntekt'],
-        ['sal-ded-card', r.salDescFrad||'Fradrag'],
-        ['sal-real-card', r.salDescGev||'Gevinst'],
-        ['sal-corp-card', r.salDescSels||'Selskaper'],
-        ['sal-reorg-card', r.salDescOmorg||'Omorganisering'],
-        ['sal-anti-card', r.salDescOmg||'Omgåelse'],
-        ['sal-time-card', r.salDescTid||'Tidfesting'],
-        ['sal-depr-card', r.salDescAvs||'Avskrivning'],
-        ['sal-credit-card', r.salDescKredit||'Skattefradrag']
-      ];
-      var html=map.map(function(m){return '<span class="desc-link" data-target="'+m[0]+'">'+m[1]+'</span>';}).join(' · ');
-      var el=document.getElementById('sal-law-group-desc');
-      if(el) el.innerHTML=html;
-    })();
+    setText('sal-law-group-desc', 'Kapitler og paragrafer fra skatteloven');
   } else {
     salLawGroup.classList.add('hidden');
   }
@@ -880,12 +862,7 @@ function updateSalaryUI() {
     salKeyGroup.classList.remove('hidden');
     document.getElementById('sal-key-rows').innerHTML = infoRowsHTML(r.salKeyRows);
     document.getElementById('sal-key-title').textContent = r.salKeyTitle || 'Viktige regler og begreper forklart';
-    var keyDescEl = document.getElementById('sal-key-desc');
-    if(r.salKeyDescLinks) {
-      keyDescEl.innerHTML = r.salKeyDescLinks;
-    } else {
-      keyDescEl.innerHTML = '<span class="desc-link" data-target="sal-law-card">Hovedregelen</span> · <span class="desc-link" data-target="sal-real-card">Realisasjon</span> · <span class="desc-link" data-target="sal-real-card">Inngangsverdi</span> · <span class="desc-link" data-target="sal-corp-card">Utbytte</span> · <span class="desc-link" data-target="sal-corp-card">Fritaksmetoden</span> · <span class="desc-link" data-target="sal-corp-card">Konsernbidrag</span> · <span class="desc-link" data-target="sal-reorg-card">Fusjon</span> · <span class="desc-link" data-target="sal-anti-card">Omgåelse</span>';
-    }
+    setText('sal-key-desc', 'Sentrale skatteregler og begreper forklart');
   } else {
     salKeyGroup.classList.add('hidden');
   }
