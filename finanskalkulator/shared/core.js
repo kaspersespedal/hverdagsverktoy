@@ -2002,8 +2002,8 @@ function calcSal() {
   const mf = Math.min(Math.max(b*0.46,0),95700); // Minstefradrag 2026: 46%, maks 95 700
   const renteFradrag = parseNum('s-deduct');
   // Nye fradrag — fagforening, IPS, gaver, reise (alle reduserer alminnelig inntekt)
-  const fagforening = Math.min(parseNum('s-fagforening')||0, 8250);
-  const ips = Math.min(parseNum('s-pensjon')||0, 15000);
+  const fagforening = Math.min(parseNum('s-fagforening')||0, 8700);
+  const ips = Math.min(parseNum('s-pensjon')||0, 25000);
   const gaver = Math.min(parseNum('s-gaver')||0, 25000);
   const reise = parseNum('s-reise')||0;
   const bsu = Math.min(parseNum('s-bsu')||0, 27500);
@@ -2392,7 +2392,7 @@ function calcDok(){
   var type=document.getElementById('dok-type');var t=type?type.value:'bolig';
   var rate=0.025;// 2.5% standard
   var avgift=t==='borettslag'?0:verdi*rate;
-  var tinglyse=585;// Fast gebyr 2026
+  var tinglyse=545;// Fast gebyr 2026
   var attest=172;// Attestgebyr
   var total=avgift+tinglyse+attest;
   var r=R();
@@ -2632,8 +2632,8 @@ function calcBilkostnad() {
   var dekkPerAar = drivstoff === 'elbil' ? 4500 : 3500;
   var dekkTotal = dekkPerAar * aar;
 
-  // 6. Trafikkforsikringsavgift (2025/2026 rates): fossil ~2400 kr, elbil ~3300 kr
-  var avgiftPerAar = drivstoff === 'elbil' ? 3270 : 2329;
+  // 6. Trafikkforsikringsavgift (fra 1. mars 2026): fossil 6,52 kr/dag, elbil 9,16 kr/dag
+  var avgiftPerAar = drivstoff === 'elbil' ? 3343 : 2380;
   var avgiftTotal = avgiftPerAar * aar;
 
   // 7. Bompenger (user monthly override or auto-estimate)
