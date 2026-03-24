@@ -280,6 +280,19 @@ function updateHero() {
         link.appendChild(em);
       }
     }
+    // Add disco ball to hero
+    var hero=document.querySelector('.hero');
+    if(hero&&!hero.querySelector('.disco-ball')){
+      var ball=document.createElement('div');ball.className='disco-ball';
+      ball.innerHTML='<div class="disco-ball-wire"></div><div class="disco-ball-orb"></div>';
+      hero.appendChild(ball);
+    }
+  } else {
+    // Remove disco ball if switching away
+    var db=document.querySelector('.disco-ball');if(db)db.remove();
+    // Unwrap disco link if present
+    var dw=document.querySelector('.disco-link-wrap');
+    if(dw){var emInside=dw.querySelector('em');if(emInside)dw.parentElement.insertBefore(emInside,dw);dw.remove();}
   }
   document.getElementById('hero-p').textContent = r.heroP || '';
   const tbEl = document.getElementById('tb-main'); if(tbEl) tbEl.textContent = r.heroKickerTb || '';
