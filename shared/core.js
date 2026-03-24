@@ -53,12 +53,10 @@ const THEMES = [
   {id:'frost',labelKey:'themeFrost',fallback:'Standard',dot:'linear-gradient(135deg,#a8c4e6,#89b0d9)',ring:'#6875f5'},
   {id:'corporate',labelKey:'themeCorporate',fallback:'Skarp',dot:'#1e40af'},
   {id:'pink',labelKey:'themePink',fallback:'Rosa',dot:'#e891b2'},
-  {id:'purple',labelKey:'themePurple',fallback:'Lilla',dot:'#a78bdf'},
   {id:'blue',labelKey:'themeBlue',fallback:'Blå',dot:'#7a9ecc'},
-  {id:'green',labelKey:'themeGreen',fallback:'Grønn',dot:'#6db89a'},
-  {id:'peach',labelKey:'themePeach',fallback:'Fersken',dot:'#e8a878'},
   {id:'glass',labelKey:'themeGlass',fallback:'Glass',dot:'linear-gradient(135deg,#6875f5,#8b95ff)',ring:'#6875f5'},
-  {id:'hendrix',labelKey:'themeHendrix',fallback:'Hendrix',dot:'linear-gradient(135deg,#7b2d8e,#c45e2c,#d4a030)',ring:'#7b2d8e',dotBorder:'rgba(123,45,142,.3)'}
+  {id:'hendrix',labelKey:'themeHendrix',fallback:'Hendrix',dot:'linear-gradient(135deg,#7b2d8e,#c45e2c,#d4a030)',ring:'#7b2d8e',dotBorder:'rgba(123,45,142,.3)'},
+  {id:'disco',labelKey:'themeDisco',fallback:'Disco',dot:'linear-gradient(135deg,#7b2ff7,#e91e8c,#ff6b35)',ring:'#e91e8c',dotBorder:'rgba(233,30,140,.3)'}
 ];
 function themeLabel(t){try{var r=typeof R==='function'&&typeof region!=='undefined'?R():null;return r&&r[t.labelKey]?r[t.labelKey]:t.fallback;}catch(e){return t.fallback;}}
 function buildThemePicker(){
