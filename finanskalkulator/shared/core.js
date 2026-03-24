@@ -1269,11 +1269,13 @@ function updateNpvUI() {
   setText('budsjett-col-amount-e',r.budColAmount||'Amount (kr/mo)');
   // Update dropdown options for existing rows on language change
   document.querySelectorAll('#budsjett-income-rows .budsjett-cat').forEach(function(sel){
-    var val=sel.value;
-    sel.querySelector('option[value="Lønn"]').textContent=r.budOptLonn||'Lønn';
-    sel.querySelector('option[value="Studielån"]').textContent=r.budOptStudielan||'Studielån';
-    sel.querySelector('option[value="Stipend"]').textContent=r.budOptStipend||'Stipend';
-    sel.querySelector('option[value="__custom__"]').textContent=r.budOptCustom||'Valgfritt...';
+    var o;
+    o=sel.querySelector('option[value="Lønn (netto)"]');if(o)o.textContent=r.budOptLonn||'Lønn (netto)';
+    o=sel.querySelector('option[value="Ekstrajobb/freelance"]');if(o)o.textContent=r.budOptEkstra||'Ekstrajobb/freelance';
+    o=sel.querySelector('option[value="Stipend"]');if(o)o.textContent=r.budOptStipend||'Stipend';
+    o=sel.querySelector('option[value="Kapitalinntekter"]');if(o)o.textContent=r.budOptKapital||'Kapitalinntekter';
+    o=sel.querySelector('option[value="NAV-ytelser"]');if(o)o.textContent=r.budOptNav||'NAV-ytelser';
+    o=sel.querySelector('option[value="__custom__"]');if(o)o.textContent=r.budOptCustom||'Valgfritt...';
   });
   setText('budsjett-btn-add-income','+ '+(r.budBtnAdd||'Legg til'));
   setText('budsjett-btn-add-expense','+ '+(r.budBtnAdd||'Legg til'));
@@ -1288,15 +1290,18 @@ function updateNpvUI() {
   if(csvTipEl)csvTipEl.innerHTML='<strong>'+(r.budCsvTipLabel||'Tips')+':</strong> '+(r.budCsvTip||'Hvis kolonnene ikke deles automatisk i Excel: Merk kolonne A → Data → Tekst til kolonner → Skilletegn → Semikolon → Fullfør.');
   // Update expense category dropdowns
   document.querySelectorAll('#budsjett-expense-rows .budsjett-cat').forEach(function(sel){
-    var o=sel.querySelector('option[value="Terminbeløp"]');if(o)o.textContent=r.budOptTermin||'Terminbeløp';
-    o=sel.querySelector('option[value="Husleie"]');if(o)o.textContent=r.budOptHusleie||'Husleie';
-    o=sel.querySelector('option[value="Mat"]');if(o)o.textContent=r.budOptMat||'Mat';
+    var o=sel.querySelector('option[value="Husleie"]');if(o)o.textContent=r.budOptHusleie||'Husleie';
+    o=sel.querySelector('option[value="Mat og dagligvarer"]');if(o)o.textContent=r.budOptMat||'Mat og dagligvarer';
     o=sel.querySelector('option[value="Transport"]');if(o)o.textContent=r.budOptTransport||'Transport';
     o=sel.querySelector('option[value="Strøm"]');if(o)o.textContent=r.budOptStrom||'Strøm';
     o=sel.querySelector('option[value="Forsikring"]');if(o)o.textContent=r.budOptForsikring||'Forsikring';
     o=sel.querySelector('option[value="Mobil/Internett"]');if(o)o.textContent=r.budOptMobil||'Mobil/Internett';
+    o=sel.querySelector('option[value="Studielån (nedbetaling)"]');if(o)o.textContent=r.budOptStudielan||'Studielån (nedbetaling)';
+    o=sel.querySelector('option[value="Boliglån (terminbeløp)"]');if(o)o.textContent=r.budOptTermin||'Boliglån (terminbeløp)';
     o=sel.querySelector('option[value="Trening"]');if(o)o.textContent=r.budOptTrening||'Trening';
     o=sel.querySelector('option[value="Streaming/Abonnement"]');if(o)o.textContent=r.budOptStreaming||'Streaming/Abonnement';
+    o=sel.querySelector('option[value="Klær og personlig"]');if(o)o.textContent=r.budOptKlaer||'Klær og personlig';
+    o=sel.querySelector('option[value="Sparing/BSU"]');if(o)o.textContent=r.budOptSparing||'Sparing/BSU';
     o=sel.querySelector('option[value="__custom__"]');if(o)o.textContent=r.budOptCustom||'Valgfritt...';
   });
   // NPV labels
