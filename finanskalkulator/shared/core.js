@@ -4503,7 +4503,9 @@ function budsjettCalc(){
     html+='</div>';
     bd.innerHTML=html;
   } else { bd.innerHTML=''; }
-  document.getElementById('budsjett-res').classList.remove('hidden');
+  var resEl=document.getElementById('budsjett-res');
+  resEl.classList.remove('hidden');
+  setTimeout(function(){ smartScroll(resEl); },100);
   // Store data for CSV
   window._budsjettData={incomeItems:incomeItems,expenseItems:expenseItems,totalIncome:totalIncome,totalExpense:totalExpense,balance:balance,savingsRate:savingsRate};
 }
