@@ -262,6 +262,120 @@ function updateAll() {
   var ma=document.getElementById('m-a');if(ma)ma.value = fmtInput(3000000);
 }
 
+// Three.js disco ball
+var _discoBall3D=null;
+function initDiscoBall3D(container){
+  function boot(){
+    if(!window.THREE){
+      // Lazy-load Three.js
+      var s=document.createElement('script');
+      s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      s.onload=function(){buildScene(container);};
+      document.head.appendChild(s);
+    } else {
+      buildScene(container);
+    }
+  }
+  function buildScene(el){
+    var T=window.THREE;if(!T)return;
+    var W=80,H=110;
+    var scene=new T.Scene();
+    var camera=new T.PerspectiveCamera(40,W/H,0.1,100);
+    camera.position.set(0,0.2,3.2);
+    var renderer=new T.WebGLRenderer({alpha:true,antialias:true});
+    renderer.setSize(W,H);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.setClearColor(0x000000,0);
+    el.appendChild(renderer.domElement);
+
+    // Disco ball — faceted icosahedron
+    var geo=new T.IcosahedronGeometry(0.85,2);
+    // Create faceted look by computing flat normals
+    geo.computeVertexNormals();
+    // Make each face flat-shaded by duplicating vertices
+    var mat=new T.MeshStandardMaterial({
+      color:0xc0c0c8,metalness:0.95,roughness:0.08,flatShading:true,
+      envMapIntensity:1.5
+    });
+    var mesh=new T.Mesh(geo,mat);
+    mesh.position.y=0.05;
+    scene.add(mesh);
+
+    // Environment map — procedural cube texture for reflections
+    var cubeRT=new T.WebGLCubeRenderTarget(64);
+    var cubeScene=new T.Scene();
+    // Dark environment with colored spots
+    cubeScene.background=new T.Color(0x0d0a18);
+    var spotColors=[0x7b2ff7,0xe91e8c,0xff6b35,0x00d4ff,0xffd700];
+    spotColors.forEach(function(c,i){
+      var sGeo=new T.SphereGeometry(0.3,8,8);
+      var sMat=new T.MeshBasicMaterial({color:c});
+      var sMesh=new T.Mesh(sGeo,sMat);
+      var angle=(i/spotColors.length)*Math.PI*2;
+      sMesh.position.set(Math.cos(angle)*2,Math.sin(angle*0.7)*1.5,Math.sin(angle)*2);
+      cubeScene.add(sMesh);
+    });
+    var cubeCamera=new T.CubeCamera(0.1,10,cubeRT);
+    cubeCamera.update(renderer,cubeScene);
+    mat.envMap=cubeRT.texture;
+
+    // Lights
+    var ambient=new T.AmbientLight(0x222233,0.4);
+    scene.add(ambient);
+    var lights=[
+      {color:0x7b2ff7,x:2,y:1,z:1,intensity:1.2},
+      {color:0xe91e8c,x:-1.5,y:-0.5,z:2,intensity:1.0},
+      {color:0xff6b35,x:0,y:2,z:-1.5,intensity:0.8}
+    ];
+    var pointLights=[];
+    lights.forEach(function(l){
+      var pl=new T.PointLight(l.color,l.intensity,8);
+      pl.position.set(l.x,l.y,l.z);
+      scene.add(pl);
+      pointLights.push(pl);
+    });
+
+    // Thin wire cap on top
+    var capGeo=new T.CylinderGeometry(0.06,0.06,0.08,8);
+    var capMat=new T.MeshStandardMaterial({color:0x888890,metalness:0.9,roughness:0.2});
+    var cap=new T.Mesh(capGeo,capMat);
+    cap.position.y=0.9;
+    scene.add(cap);
+
+    var clock=new T.Clock();
+    var animId;
+    function animate(){
+      animId=requestAnimationFrame(animate);
+      var t=clock.getElapsedTime();
+      mesh.rotation.y=t*0.4;
+      mesh.rotation.x=Math.sin(t*0.3)*0.08;
+      // Rotate lights around ball
+      pointLights.forEach(function(pl,i){
+        var a=t*0.5+i*(Math.PI*2/3);
+        pl.position.x=Math.cos(a)*2.5;
+        pl.position.z=Math.sin(a)*2.5;
+        pl.position.y=Math.sin(t*0.3+i)*0.8;
+      });
+      renderer.render(scene,camera);
+    }
+    animate();
+    _discoBall3D={renderer:renderer,scene:scene,geo:geo,mat:mat,animId:animId,cubeRT:cubeRT,capGeo:capGeo,capMat:capMat};
+  }
+  boot();
+}
+function destroyDiscoBall3D(){
+  if(!_discoBall3D)return;
+  var d=_discoBall3D;
+  if(d.animId)cancelAnimationFrame(d.animId);
+  if(d.geo)d.geo.dispose();
+  if(d.mat)d.mat.dispose();
+  if(d.capGeo)d.capGeo.dispose();
+  if(d.capMat)d.capMat.dispose();
+  if(d.cubeRT)d.cubeRT.dispose();
+  if(d.renderer){d.renderer.dispose();d.renderer.forceContextLoss();var c=d.renderer.domElement;if(c&&c.parentElement)c.parentElement.removeChild(c);}
+  _discoBall3D=null;
+}
+
 function updateHero() {
   const r = R();
   document.getElementById('hero-h1').innerHTML = r.heroH1 || 'Hverdagsverktøy<br><em>Praktiske verktøy for bedrift og privat</em>';
@@ -281,15 +395,17 @@ function updateHero() {
         link.appendChild(em);
       }
     }
-    // Add disco ball to hero
+    // Add Three.js disco ball to hero
     var hero=document.querySelector('.hero');
     if(hero&&!hero.querySelector('.disco-ball')){
       var ball=document.createElement('div');ball.className='disco-ball';
-      ball.innerHTML='<div class="disco-ball-wire"></div><div class="disco-ball-orb"></div>';
+      ball.innerHTML='<div class="disco-ball-wire"></div>';
       hero.appendChild(ball);
+      initDiscoBall3D(ball);
     }
   } else {
-    // Remove disco ball if switching away
+    // Remove disco ball + cleanup Three.js if switching away
+    destroyDiscoBall3D();
     var db=document.querySelector('.disco-ball');if(db)db.remove();
     // Unwrap disco link if present
     var dw=document.querySelector('.disco-link-wrap');
