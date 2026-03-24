@@ -263,7 +263,7 @@ function updateAll() {
 }
 
 // Three.js disco ball
-var _discoBall3D=null;
+var _discoBall3D=[];
 function initDiscoBall3D(container){
   function boot(){
     if(!window.THREE){
@@ -359,21 +359,21 @@ function initDiscoBall3D(container){
       renderer.render(scene,camera);
     }
     animate();
-    _discoBall3D={renderer:renderer,scene:scene,geo:geo,mat:mat,animId:animId,cubeRT:cubeRT,capGeo:capGeo,capMat:capMat};
+    _discoBall3D.push({renderer:renderer,scene:scene,geo:geo,mat:mat,animId:animId,cubeRT:cubeRT,capGeo:capGeo,capMat:capMat});
   }
   boot();
 }
 function destroyDiscoBall3D(){
-  if(!_discoBall3D)return;
-  var d=_discoBall3D;
-  if(d.animId)cancelAnimationFrame(d.animId);
-  if(d.geo)d.geo.dispose();
-  if(d.mat)d.mat.dispose();
-  if(d.capGeo)d.capGeo.dispose();
-  if(d.capMat)d.capMat.dispose();
-  if(d.cubeRT)d.cubeRT.dispose();
-  if(d.renderer){d.renderer.dispose();d.renderer.forceContextLoss();var c=d.renderer.domElement;if(c&&c.parentElement)c.parentElement.removeChild(c);}
-  _discoBall3D=null;
+  _discoBall3D.forEach(function(d){
+    if(d.animId)cancelAnimationFrame(d.animId);
+    if(d.geo)d.geo.dispose();
+    if(d.mat)d.mat.dispose();
+    if(d.capGeo)d.capGeo.dispose();
+    if(d.capMat)d.capMat.dispose();
+    if(d.cubeRT)d.cubeRT.dispose();
+    if(d.renderer){d.renderer.dispose();d.renderer.forceContextLoss();var c=d.renderer.domElement;if(c&&c.parentElement)c.parentElement.removeChild(c);}
+  });
+  _discoBall3D=[];
 }
 
 function updateHero() {
@@ -395,13 +395,15 @@ function updateHero() {
         link.appendChild(em);
       }
     }
-    // Add Three.js disco ball to hero
+    // Add Two Three.js disco balls to hero (left + right)
     var hero=document.querySelector('.hero');
     if(hero&&!hero.querySelector('.disco-ball')){
-      var ball=document.createElement('div');ball.className='disco-ball';
-      ball.innerHTML='<div class="disco-ball-wire"></div>';
-      hero.appendChild(ball);
-      initDiscoBall3D(ball);
+      ['left','right'].forEach(function(side){
+        var ball=document.createElement('div');ball.className='disco-ball disco-ball-'+side;
+        ball.innerHTML='<div class="disco-ball-wire"></div>';
+        hero.appendChild(ball);
+        initDiscoBall3D(ball);
+      });
     }
   } else if(document.documentElement.getAttribute('data-theme')==='hendrix'){
     // Hendrix easter egg — link subtitle to YouTube
@@ -418,11 +420,11 @@ function updateHero() {
     }
     // Cleanup disco stuff if switching from disco
     destroyDiscoBall3D();
-    var db=document.querySelector('.disco-ball');if(db)db.remove();
+    document.querySelectorAll('.disco-ball').forEach(function(db){db.remove();});
   } else {
     // Remove disco ball + cleanup Three.js if switching away
     destroyDiscoBall3D();
-    var db=document.querySelector('.disco-ball');if(db)db.remove();
+    document.querySelectorAll('.disco-ball').forEach(function(db){db.remove();});
     // Unwrap any theme link if present
     var dw=document.querySelector('.disco-link-wrap')||document.querySelector('.hendrix-link-wrap');
     if(dw){var emInside=dw.querySelector('em');if(emInside)dw.parentElement.insertBefore(emInside,dw);dw.remove();}
