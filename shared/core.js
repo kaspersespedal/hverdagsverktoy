@@ -513,10 +513,6 @@ function toggleCard(card){
   }
   const arrow = card.querySelector('.card-title span');
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
-  if(document.body.classList.contains('desktop-focus')){
-    setTimeout(function(){ window.scrollTo({top:0,behavior:'smooth'}); }, 50);
-    return;
-  }
   if(wasCollapsed){
     setTimeout(()=>{ smartScroll(card); }, 250);
   }
@@ -1834,7 +1830,6 @@ function scrollToEl(el,mode){
 }
 function smartScroll(el,retries){
   if(!el)return;
-  if(document.body.classList.contains('desktop-focus'))return;
   retries=retries||0;
   const off=stickyOffset()+12;
   const r=el.getBoundingClientRect();
@@ -3865,40 +3860,35 @@ function calcLonn() {
   let totalSkatt = 0;
   const breakdown = [];
 
-  if(bruttoAar <= frikortgrense) {
-    // Under frikortgrensen — ingen skatt
-    breakdown.push({lbl:(r.lonnBdFrikort||'Under frikortgrensen — ingen skatt'),val:0});
-  } else {
-    // Trinnskatt 2026
-    const trinnSteps = [
-      [226100, 318300, 0.017, (r.trinnLabel1||'Trinn 1')],
-      [318300, 725050, 0.040, (r.trinnLabel2||'Trinn 2')],
-      [725050, 980100, 0.137, (r.trinnLabel3||'Trinn 3')],
-      [980100, 1467200, 0.168, (r.trinnLabel4||'Trinn 4')],
-      [1467200, Infinity, 0.178, (r.trinnLabel5||'Trinn 5')]
-    ];
-    let trinnskatt = 0;
-    trinnSteps.forEach(function(s){
-      var lo=s[0],hi=s[1],rate=s[2];
-      var amt = bruttoAar>lo ? (Math.min(bruttoAar,hi)-lo)*rate : 0;
-      if(amt>0) trinnskatt += amt;
-    });
-    if(trinnskatt>0) { totalSkatt+=trinnskatt; breakdown.push({lbl:(r.lonnBdTrinn||'Trinnskatt'),val:trinnskatt}); }
+  // Trinnskatt 2026
+  const trinnSteps = [
+    [226100, 318300, 0.017, (r.trinnLabel1||'Trinn 1')],
+    [318300, 725050, 0.040, (r.trinnLabel2||'Trinn 2')],
+    [725050, 980100, 0.137, (r.trinnLabel3||'Trinn 3')],
+    [980100, 1467200, 0.168, (r.trinnLabel4||'Trinn 4')],
+    [1467200, Infinity, 0.178, (r.trinnLabel5||'Trinn 5')]
+  ];
+  let trinnskatt = 0;
+  trinnSteps.forEach(function(s){
+    var lo=s[0],hi=s[1],rate=s[2];
+    var amt = bruttoAar>lo ? (Math.min(bruttoAar,hi)-lo)*rate : 0;
+    if(amt>0) trinnskatt += amt;
+  });
+  if(trinnskatt>0) { totalSkatt+=trinnskatt; breakdown.push({lbl:(r.lonnBdTrinn||'Trinnskatt'),val:trinnskatt}); }
 
-    // Alminnelig inntektsskatt 22%
-    const almSkatt = almInntekt * 0.22;
-    if(almSkatt>0) { totalSkatt+=almSkatt; breakdown.push({lbl:(r.lonnBdAlm||'Alminnelig inntektsskatt (22 %)'),val:almSkatt}); }
+  // Alminnelig inntektsskatt 22%
+  const almSkatt = almInntekt * 0.22;
+  if(almSkatt>0) { totalSkatt+=almSkatt; breakdown.push({lbl:(r.lonnBdAlm||'Alminnelig inntektsskatt (22 %)'),val:almSkatt}); }
 
-    // Trygdeavgift 7.6% (lavere sats 3.0% for under 17, men vi bruker 7.6% for 18+)
-    // Under 17 år betaler 0% trygdeavgift. 17-69 år betaler 7.6%.
-    var trygdRate = (alder==='under18') ? 0 : 0.076;
-    const trygd = bruttoAar * trygdRate;
-    if(trygd>0) { totalSkatt+=trygd; breakdown.push({lbl:(r.lonnBdTrygd||'Trygdeavgift ('+(trygdRate*100).toFixed(1)+' %)'),val:trygd}); }
+  // Trygdeavgift 7.6% for 18+, 0% for under 18
+  // Beregnes på personinntekt uavhengig av frikortgrense
+  var trygdRate = (alder==='under18') ? 0 : 0.076;
+  const trygd = bruttoAar * trygdRate;
+  if(trygd>0) { totalSkatt+=trygd; breakdown.push({lbl:(r.lonnBdTrygd||'Trygdeavgift ('+(trygdRate*100).toFixed(1)+' %)'),val:trygd}); }
 
-    // Minstefradrag & personfradrag info
-    breakdown.push({lbl:(r.lonnBdMf||'Minstefradrag'), val: -mf, isFradrag:true});
-    breakdown.push({lbl:(r.lonnBdPf||'Personfradrag'), val: -pf, isFradrag:true});
-  }
+  // Minstefradrag & personfradrag info
+  breakdown.push({lbl:(r.lonnBdMf||'Minstefradrag'), val: -mf, isFradrag:true});
+  breakdown.push({lbl:(r.lonnBdPf||'Personfradrag'), val: -pf, isFradrag:true});
 
   // Feriepenger 10.2% (4 uker, standard under 60 år)
   const feriepenger = bruttoAar * 0.102;
@@ -3910,8 +3900,8 @@ function calcLonn() {
 
   // Verdict
   var verdict = '';
-  if(bruttoAar <= frikortgrense) {
-    verdict = r.lonnVerdictFrikort || 'Du tjener under frikortgrensen — ingen skatt!';
+  if(totalSkatt <= 0) {
+    verdict = r.lonnVerdictFrikort || 'Ingen skatt — inntekten er lav nok til at fradragene dekker alt.';
   } else if(effSats < 15) {
     verdict = r.lonnVerdictLav || 'Lav skattesats — typisk for deltidsjobb ved siden av studier.';
   } else {
@@ -4125,8 +4115,9 @@ function studieUpdateTotal(){
   var hjemme=aar-borte;
   var grad=document.getElementById('studie-grad').value==='ja';
   var totalStotte=(borte*S.borte+hjemme*S.hjemme)*mndPerAar;
+  var borteDel=borte*S.borte*mndPerAar;
   var stipendPct=grad?0.40:0.15;
-  var stipend=Math.round(totalStotte*stipendPct);
+  var stipend=Math.round(borteDel*stipendPct);
   var laan=totalStotte-stipend;
   var pctLabel=grad?'40':'15';
   document.getElementById('studie-v-totalstotte').textContent=fmt(totalStotte);
@@ -4145,7 +4136,7 @@ function studieUpdateTotal(){
   if(omgjInfo){
     var r=R();
     if(grad){
-      omgjInfo.textContent=r.studieOmgjGrad||'Stipendandel: 25 % for fullført grad + 15 % for beståtte studiepoeng = 40 %. Uten grad: kun 15 % for studiepoeng.';
+      omgjInfo.textContent=r.studieOmgjGrad||'Stipendandel: 25 % for fullført grad + 15 % for beståtte studiepoeng = 40 %. Kun borteboer-delen kan omgjøres. Uten grad: kun 15 % for studiepoeng.';
     } else {
       omgjInfo.textContent=r.studieOmgjNoGrad||'Uten fullført grad får du kun 15 % omgjort til stipend (for beståtte studiepoeng). Fullfør en grad for å få 40 %.';
     }
@@ -4165,8 +4156,9 @@ function calcStudielan(){
 
   var S=_studieSatser();
   var totalStotte=(borte*S.borte+hjemme*S.hjemme)*mndPerAar;
+  var borteDel=borte*S.borte*mndPerAar;
   var stipendPct=grad?0.40:0.15;
-  var stipend=Math.round(totalStotte*stipendPct);
+  var stipend=Math.round(borteDel*stipendPct);
   var ekstraLan=(skolepenger+tilleggslan)*aar;
   var gjeld=totalStotte-stipend+ekstraLan;
 
@@ -4467,6 +4459,9 @@ function budsjettAddRow(type){
   cont.appendChild(row);
   row.querySelector('.budsjett-cat').focus();
 }
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&e.target.classList.contains('budsjett-amount')){e.preventDefault();budsjettCalc();}
+});
 function budsjettCalc(){
   var r=R();
   var incomeRows=document.querySelectorAll('#budsjett-income-rows .budsjett-row');
