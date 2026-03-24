@@ -172,6 +172,7 @@ function setTheme(t) {
     if(mode==='basic') buildCalcKeys('basic');
     else if(mode==='scientific') buildCalcKeys('scientific');
   }
+  try{updateHero();}catch(e){}
 }
 (function(){
   try {
@@ -264,6 +265,10 @@ function updateAll() {
 function updateHero() {
   const r = R();
   document.getElementById('hero-h1').innerHTML = r.heroH1 || 'Hverdagsverktøy<br><em>Praktiske verktøy for bedrift og privat</em>';
+  if(document.documentElement.getAttribute('data-theme')==='disco'){
+    var em=document.querySelector('#hero-h1 em');
+    if(em) em.textContent='You Should Be Dancing';
+  }
   document.getElementById('hero-p').textContent = r.heroP || '';
   const tbEl = document.getElementById('tb-main'); if(tbEl) tbEl.textContent = r.heroKickerTb || '';
   setText('rg-main', r.rgMain || 'Hovedspråk');
