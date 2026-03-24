@@ -267,7 +267,7 @@ function updateHero() {
   document.getElementById('hero-h1').innerHTML = r.heroH1 || 'Hverdagsverktøy<br><em>Praktiske verktøy for bedrift og privat</em>';
   if(document.documentElement.getAttribute('data-theme')==='disco'){
     var em=document.querySelector('#hero-h1 em');
-    if(em) em.textContent='\u266B You Should Be Dancing \u266A';
+    if(em) em.innerHTML='\u266B <a href="https://www.youtube.com/watch?v=LUID0jSh2Ic" target="_blank" rel="noopener" style="color:inherit;-webkit-text-fill-color:inherit;text-decoration:none;border-bottom:1px dashed rgba(138,114,176,.4);transition:border-color .2s;" onmouseenter="this.style.borderColor=\'var(--accent)\'" onmouseleave="this.style.borderColor=\'rgba(138,114,176,.4)\'">You Should Be Dancing</a> \u266A';
   }
   document.getElementById('hero-p').textContent = r.heroP || '';
   const tbEl = document.getElementById('tb-main'); if(tbEl) tbEl.textContent = r.heroKickerTb || '';
