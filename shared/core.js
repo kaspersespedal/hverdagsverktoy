@@ -267,7 +267,7 @@ function updateHero() {
   document.getElementById('hero-h1').innerHTML = r.heroH1 || 'Hverdagsverktøy<br><em>Praktiske verktøy for bedrift og privat</em>';
   if(document.documentElement.getAttribute('data-theme')==='disco'){
     var em=document.querySelector('#hero-h1 em');
-    if(em) em.textContent='You Should Be Dancing';
+    if(em) em.textContent='\u266B You Should Be Dancing \u266A';
   }
   document.getElementById('hero-p').textContent = r.heroP || '';
   const tbEl = document.getElementById('tb-main'); if(tbEl) tbEl.textContent = r.heroKickerTb || '';
