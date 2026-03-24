@@ -276,6 +276,7 @@ function updateHero() {
         link.target='_blank';link.rel='noopener';
         link.className='disco-link-wrap';
         link.style.cssText='text-decoration:none;color:inherit;display:block;position:relative;z-index:10;cursor:pointer;';
+        link.onclick=function(e){e.stopPropagation();};
         em.parentElement.insertBefore(link,em);
         link.appendChild(em);
       }
