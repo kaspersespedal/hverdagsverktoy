@@ -665,7 +665,16 @@ function toggleCard(card){
     var drift = topAfter - topBefore;
     if(Math.abs(drift) > 2) window.scrollBy(0, drift);
   } else {
-    // Opening — add animation class
+    // Opening — collapse other open cards in the same column first
+    var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
+    if(parent){
+      parent.querySelectorAll('.info-card:not(.collapsed)').forEach(function(other){
+        if(other===card)return;
+        other.classList.add('collapsed');
+        var otherArrow=other.querySelector('.card-title span');
+        if(otherArrow)otherArrow.textContent='▼';
+      });
+    }
     card.classList.remove('collapsed');
     if(body){
       body.classList.remove('opening');
