@@ -3031,15 +3031,15 @@ const sciMainBtns = [
 ];
 
 function bcBtnStyle(t,l,isSmall){
-  let sz = isSmall ? '12px' : '16px';
-  let pad = isSmall ? '10px 6px' : '16px 8px';
-  let rad = isSmall ? '10px' : '12px';
-  let base = `border:none;border-radius:${rad};padding:${pad};font-family:'Inter',sans-serif;font-size:${sz};font-weight:600;cursor:pointer;transition:all .15s;`;
-  if(l==='=') return base+'background:linear-gradient(135deg,var(--accent-d,#5b8def),var(--accent));color:#fff;font-size:17px;font-weight:800;';
-  if(t==='acc') return base+'background:color-mix(in srgb,var(--accent) 4%,transparent);color:var(--accent-d,#5b8def);border:1.5px solid color-mix(in srgb,var(--accent) 7%,transparent);font-weight:700;';
-  if(t==='fn') return base+'background:color-mix(in srgb,var(--accent) 3%,transparent);color:var(--accent-d,#5b8def);border:1.5px solid color-mix(in srgb,var(--accent) 5%,transparent);';
-  if(t==='op') return base+'background:var(--surface2);color:var(--ink3);border:1.5px solid var(--border);';
-  return base+'background:var(--surface);color:var(--ink);border:1.5px solid var(--border);';
+  let sz = isSmall ? '12px' : '17px';
+  let pad = isSmall ? '10px 6px' : '18px 8px';
+  let rad = isSmall ? '10px' : '14px';
+  let base = `border:none;border-radius:${rad};padding:${pad};font-family:'Inter',sans-serif;font-size:${sz};font-weight:500;cursor:pointer;transition:all .15s ease;`;
+  if(l==='=') return base+'background:linear-gradient(135deg,var(--accent-d,#5b8def),var(--accent));color:#fff;font-size:18px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.12);';
+  if(t==='acc') return base+'background:color-mix(in srgb,var(--accent) 6%,transparent);color:var(--accent-d,#5b8def);border:1px solid color-mix(in srgb,var(--accent) 8%,transparent);font-weight:600;';
+  if(t==='fn') return base+'background:color-mix(in srgb,var(--accent) 4%,transparent);color:var(--accent-d,#5b8def);border:1px solid color-mix(in srgb,var(--accent) 6%,transparent);font-weight:600;';
+  if(t==='op') return base+'background:var(--surface2);color:var(--ink3);border:1px solid var(--border);font-weight:600;';
+  return base+'background:var(--surface);color:var(--ink);border:1px solid var(--border);font-weight:500;';
 }
 
 function bcFmtExpr(s){
@@ -3200,7 +3200,7 @@ function buildCalcKeys(mode){
     bcKeys.appendChild(grid);
   } else {
     const grid=document.createElement('div');
-    grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:10px;';
+    grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;';
     basicBtns.forEach(b=>grid.appendChild(mkBtn(b,false)));
     bcKeys.appendChild(grid);
   }
