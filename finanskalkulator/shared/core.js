@@ -443,6 +443,7 @@ function updateTabs() {
   document.getElementById('tl-npv').textContent = r.tabNpv || 'NPV / IRR';
   document.getElementById('tl-vat').textContent = r.tabVat || 'Tax / Duties';
   document.getElementById('tl-basic').textContent = r.tabBasic || 'Calculator';
+  var _tlSelskap=document.getElementById('tl-selskap');if(_tlSelskap)_tlSelskap.textContent = r.tabSelskap || 'Selskap';
   // Right panel labels (only on kalkulator.html)
   var _ct=document.getElementById('lbl-calctype');if(_ct)_ct.textContent = r.cmLabel || 'Calculator type';
   var _cb=document.getElementById('lbl-basic');if(_cb)_cb.textContent = r.cmBasic || 'Basic';
@@ -2129,10 +2130,12 @@ function updateDashLabels() {
   el('dash-t-sal', r.tabSal || 'Skatt');
   el('dash-t-mor', r.tabMor || 'Boliglån');
   el('dash-t-vat', r.tabVat || 'Avgift');
+  el('dash-t-selskap', r.tabSelskap || 'Selskap');
   el('dash-t-npv', r.tabNpv || 'Personlig økonomi');
   el('dash-t-basic-d', r.dashDescBasic || 'Enkel, valuta, finansiell, vitenskapelig og fagkalkulatorer');
   el('dash-t-sal-d', r.dashDescSal || 'Utregning av skatt, begreper og skatteloven');
   el('dash-t-mor-d', r.dashDescMor || 'Boliglånskalkulator, krav til boliglån, kostnader og BSU');
+  el('dash-t-selskap-d', r.dashDescSelskap || 'Aksjeselskap, kommandittselskap og selskapsrett');
   el('dash-t-vat-d', r.dashDescVat || 'MVA, merverdiavgiftsloven og arbeidsgiveravgift');
   el('dash-t-npv-d', r.dashDescNpv || 'Bilkostnad, budsjett og lønnsomhet');
   el('dash-ref-title', r.dashRefTitle || 'Hurtigreferanse');
