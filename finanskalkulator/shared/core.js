@@ -51,7 +51,6 @@ function injectRatesDisclaimer(resEl){
 const THEMES = [
   {id:'dark',labelKey:'themeDark',fallback:'Mørk',dot:'linear-gradient(135deg,#1c1e2e,#2d3352)',ring:'#6c8aef',dotBorder:'rgba(255,255,255,.25)'},
   {id:'frost',labelKey:'themeFrost',fallback:'Standard',dot:'linear-gradient(135deg,#a8c4e6,#89b0d9)',ring:'#6875f5'},
-  {id:'corporate',labelKey:'themeCorporate',fallback:'Skarp',dot:'#1e40af'},
   {id:'pink',labelKey:'themePink',fallback:'Rosa',dot:'#e891b2'},
   {id:'blue',labelKey:'themeBlue',fallback:'Blå',dot:'#7a9ecc'},
   {id:'glass',labelKey:'themeGlass',fallback:'Glass',dot:'linear-gradient(135deg,#6875f5,#8b95ff)',ring:'#6875f5'},
@@ -1997,7 +1996,14 @@ function calcSal() {
   const pf = 114540; // Personfradrag 2026 (skatteklasse 2 avskaffet fra 2018)
   const mf = Math.min(Math.max(b*0.46,0),95700); // Minstefradrag 2026: 46%, maks 95 700
   const renteFradrag = parseNum('s-deduct');
-  const almInntekt = Math.max(b - mf - pf - renteFradrag, 0);
+  // Nye fradrag — fagforening, IPS, gaver, reise (alle reduserer alminnelig inntekt)
+  const fagforening = Math.min(parseNum('s-fagforening')||0, 8250);
+  const ips = Math.min(parseNum('s-pensjon')||0, 15000);
+  const gaver = Math.min(parseNum('s-gaver')||0, 25000);
+  const reise = parseNum('s-reise')||0;
+  const bsu = Math.min(parseNum('s-bsu')||0, 27500);
+  const ekstraFradrag = fagforening + ips + gaver + reise;
+  const almInntekt = Math.max(b - mf - pf - renteFradrag - ekstraFradrag, 0);
   // Trinnskatt 2026 (5 trinn)
   const trinnSteps = [
     [226100,318300,0.017,(r.trinnLabel1||'Trinn 1')],
@@ -2013,7 +2019,8 @@ function calcSal() {
   trinnAmounts.push({lbl:(r.almSkattLabel||'Alminnelig inntektsskatt'),rate:almSats,amt:almSkatt});
   const socRate = (kl==='self') ? 0.108 : 0.076; // Trygdeavgift 2026: 10.8% selvstendig, 7.6% lønnstaker
   const soc = b * socRate;
-  const tot = ts + soc;
+  const bsuKreditt = bsu * 0.10; // BSU: 10% direkte skattefradrag (ikke inntektsfradrag)
+  const tot = Math.max(ts + soc - bsuKreditt, 0);
   const net = b - tot;
   _sal = { b, net, tot, eff:tot/b*100, soc, region };
   document.getElementById('s-net').textContent = fmt(net);
@@ -2030,6 +2037,26 @@ function calcSal() {
       deductCell.classList.remove('hidden');
     } else {
       deductCell.classList.add('hidden');
+    }
+  }
+  // Andre fradrag-visning (fagforening + IPS + gaver + reise → 22%)
+  var fradragCell = document.getElementById('s-fradrag-cell');
+  if(fradragCell) {
+    if(ekstraFradrag > 0) {
+      document.getElementById('s-fradrag-val').textContent = '- ' + fmt(ekstraFradrag * almSats);
+      fradragCell.classList.remove('hidden');
+    } else {
+      fradragCell.classList.add('hidden');
+    }
+  }
+  // BSU-visning (10% direkte skattefradrag)
+  var bsuCell = document.getElementById('s-bsu-cell');
+  if(bsuCell) {
+    if(bsu > 0) {
+      document.getElementById('s-bsu-val').textContent = '- ' + fmt(bsuKreditt);
+      bsuCell.classList.remove('hidden');
+    } else {
+      bsuCell.classList.add('hidden');
     }
   }
   // Trinnskatt breakdown
@@ -4293,6 +4320,12 @@ function syncCardHeights(){}
 // ═══════════════════════════════════════════════════════
 
 var ABO_DEFAULTS={
+  'Spotify':139,'Netflix':129,'HBO Max':149,'Disney+':109,'YouTube Premium':169,
+  'Viaplay':799,'Apple Music':99,'Apple iCloud+':29,'Treningssenter':449,
+  'Mobilabonnement':349,'Bredbånd':699,'VG+':99,'Aftenposten':379,
+  'Adobe Creative Cloud':619,'Microsoft 365':119,'PlayStation Plus':85,'Xbox Game Pass':149
+};
+var ABO_OLD={
   'Spotify':119,'Netflix':119,'HBO Max':99,'Disney+':109,'YouTube Premium':129,
   'Viaplay':149,'Apple Music':119,'Apple iCloud+':12,'Treningssenter':399,
   'Mobilabonnement':399,'Bredbånd':499,'VG+':199,'Aftenposten':399,
@@ -4350,7 +4383,7 @@ function aboAddRow(){
     '<option value="Xbox Game Pass">Xbox Game Pass</option>'+
     '<option value="__custom__">'+(r.aboOptCustom||'Valgfritt...')+'</option>';
   row.innerHTML='<div style="flex:2;position:relative;"><select class="fc abo-cat" onchange="aboCatChange(this)" style="width:100%;">'+opts+'</select></div>'+
-    '<input type="text" class="fc abo-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" value="119">'+
+    '<input type="text" class="fc abo-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" value="139">'+
     '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>';
   cont.appendChild(row);
   row.querySelector('.abo-cat').focus();
@@ -4410,6 +4443,51 @@ function calcAbo(){
     bd.innerHTML=html;
   } else { bd.innerHTML=''; }
 
+  // Price change summary — show old vs new prices
+  var changeEl=document.getElementById('abo-pricechange');
+  if(!changeEl){
+    changeEl=document.createElement('div');changeEl.id='abo-pricechange';
+    changeEl.style.cssText='margin-top:12px;padding:14px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;font-size:12px;line-height:1.7;color:var(--ink2);';
+    bd.parentElement.insertBefore(changeEl,bd.nextSibling);
+  }
+  var totalOld=0,changes=[];
+  items.forEach(function(item){
+    var oldP=ABO_OLD[item.name];
+    if(oldP!==undefined&&oldP!==item.amount){
+      var diff=item.amount-oldP;
+      var pctChange=((diff/oldP)*100).toFixed(0);
+      changes.push({name:item.name,old:oldP,now:item.amount,diff:diff,pct:pctChange});
+      totalOld+=oldP;
+    } else {
+      totalOld+=(oldP||item.amount);
+    }
+  });
+  if(changes.length>0){
+    var totalDiff=totalMnd-totalOld;
+    var ch='<div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;">'+(r.aboPriceChangeTitle||'Prisendringer siste år')+'</div>';
+    changes.sort(function(a,b){return b.diff-a.diff;});
+    changes.forEach(function(c){
+      var col=c.diff>0?'var(--red)':'var(--green)';
+      var arrow=c.diff>0?'↑':'↓';
+      ch+='<div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0;">'+
+        '<span>'+c.name+'</span>'+
+        '<span><span style="opacity:.5;text-decoration:line-through;">'+fmt(c.old)+'</span> → '+fmt(c.now)+' <span style="color:'+col+';font-weight:600;">'+arrow+' '+(c.diff>0?'+':'')+fmt(c.diff)+' ('+c.pct+' %)</span></span></div>';
+    });
+    if(totalDiff!==0){
+      var tCol=totalDiff>0?'var(--red)':'var(--green)';
+      ch+='<div style="margin-top:6px;padding-top:6px;border-top:1px solid var(--border);display:flex;justify-content:space-between;font-weight:600;">'+
+        '<span>'+(r.aboTotalChange||'Total prisøkning / mnd')+'</span>'+
+        '<span style="color:'+tCol+';">'+(totalDiff>0?'+':'')+fmt(totalDiff)+' kr</span></div>';
+      ch+='<div style="display:flex;justify-content:space-between;opacity:.7;">'+
+        '<span>'+(r.aboTotalChangeYear||'Per år')+'</span>'+
+        '<span style="color:'+tCol+';">'+(totalDiff>0?'+':'')+fmt(totalDiff*12)+' kr</span></div>';
+    }
+    changeEl.innerHTML=ch;
+    changeEl.style.display='block';
+  } else {
+    changeEl.style.display='none';
+  }
+
   // Perspective box — "what else could you buy"
   var persEl=document.getElementById('abo-perspective');
   if(persEl){
@@ -4457,20 +4535,25 @@ function budsjettAddRow(type){
   var row=document.createElement('div');row.className='budsjett-row';row.style.cssText='display:flex;gap:8px;margin-bottom:6px;';
   var opts='';
   if(type==='income'){
-    opts='<option value="Lønn">'+(r.budOptLonn||'Lønn')+'</option>'+
-      '<option value="Studielån">'+(r.budOptStudielan||'Studielån')+'</option>'+
+    opts='<option value="Lønn (netto)">'+(r.budOptLonn||'Lønn (netto)')+'</option>'+
+      '<option value="Ekstrajobb/freelance">'+(r.budOptEkstra||'Ekstrajobb/freelance')+'</option>'+
       '<option value="Stipend">'+(r.budOptStipend||'Stipend')+'</option>'+
+      '<option value="Kapitalinntekter">'+(r.budOptKapital||'Kapitalinntekter')+'</option>'+
+      '<option value="NAV-ytelser">'+(r.budOptNav||'NAV-ytelser')+'</option>'+
       '<option value="__custom__">'+(r.budOptCustom||'Valgfritt...')+'</option>';
   } else {
-    opts='<option value="Terminbeløp">'+(r.budOptTermin||'Terminbeløp')+'</option>'+
-      '<option value="Husleie">'+(r.budOptHusleie||'Husleie')+'</option>'+
-      '<option value="Mat">'+(r.budOptMat||'Mat')+'</option>'+
+    opts='<option value="Husleie">'+(r.budOptHusleie||'Husleie')+'</option>'+
+      '<option value="Mat og dagligvarer">'+(r.budOptMat||'Mat og dagligvarer')+'</option>'+
       '<option value="Transport">'+(r.budOptTransport||'Transport')+'</option>'+
       '<option value="Strøm">'+(r.budOptStrom||'Strøm')+'</option>'+
       '<option value="Forsikring">'+(r.budOptForsikring||'Forsikring')+'</option>'+
       '<option value="Mobil/Internett">'+(r.budOptMobil||'Mobil/Internett')+'</option>'+
+      '<option value="Studielån (nedbetaling)">'+(r.budOptStudielan||'Studielån (nedbetaling)')+'</option>'+
+      '<option value="Boliglån (terminbeløp)">'+(r.budOptTermin||'Boliglån (terminbeløp)')+'</option>'+
       '<option value="Trening">'+(r.budOptTrening||'Trening')+'</option>'+
       '<option value="Streaming/Abonnement">'+(r.budOptStreaming||'Streaming/Abonnement')+'</option>'+
+      '<option value="Klær og personlig">'+(r.budOptKlaer||'Klær og personlig')+'</option>'+
+      '<option value="Sparing/BSU">'+(r.budOptSparing||'Sparing/BSU')+'</option>'+
       '<option value="__custom__">'+(r.budOptCustom||'Valgfritt...')+'</option>';
   }
   row.innerHTML='<div style="flex:2;position:relative;"><select class="fc budsjett-cat" onchange="budsjettCatChange(this)" style="width:100%;">'+opts+'</select></div>'+
