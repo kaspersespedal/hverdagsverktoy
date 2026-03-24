@@ -3409,7 +3409,7 @@ function buildCalcKeys(mode){
     bcKeys.appendChild(grid);
   } else {
     const grid=document.createElement('div');
-    grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;';
+    grid.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(6,1fr);gap:8px;flex:1;';
     basicBtns.forEach(b=>grid.appendChild(mkBtn(b,false)));
     bcKeys.appendChild(grid);
   }
