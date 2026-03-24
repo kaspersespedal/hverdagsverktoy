@@ -3733,21 +3733,43 @@ function toggleDesktopFocus(side){
     b.classList.add(side==='right'?'focus-right':'focus-left');
   }
 }
-(function initDesktopFocus(){
-  // Add focus toggle button to all .card elements inside .calc-grid (both columns)
-  document.querySelectorAll('.calc-grid > div > .card, .calc-grid > .right-col > .card').forEach(function(card){
-    if(card.querySelector('.focus-toggle')) return;
-    var hdr=card.querySelector('.card-hdr');
-    if(!hdr) return;
-    hdr.style.position='relative';
-    // Determine which side this card is on
-    var grid=card.closest('.calc-grid');
-    var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
+function initDesktopFocus(){
+  // Add focus buttons to section title headers
+  document.querySelectorAll('.calc-grid .section-title').forEach(function(h2){
+    if(h2.querySelector('.focus-toggle')) return;
+    h2.style.display='flex';h2.style.alignItems='center';h2.style.justifyContent='space-between';
+    var parent=h2.closest('.calc-grid > div, .calc-grid > .right-col');
+    var grid=h2.closest('.calc-grid');
     var isRight=parent&&(parent.classList.contains('right-col')||parent===grid.children[grid.children.length-1]);
     var btn=document.createElement('button');
     btn.className='focus-toggle';
     btn.onclick=function(e){e.stopPropagation();toggleDesktopFocus(isRight?'right':'left');};
     btn.innerHTML='<span class="focus-toggle-label">⛶ Fokus</span><span class="focus-toggle-exit">✕ Lukk</span>';
+    h2.appendChild(btn);
+  });
+  // Add small focus circle to each info-card header
+  document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
+    if(hdr.querySelector('.focus-card-btn')) return;
+    var card=hdr.parentElement;
+    if(!card||!card.classList.contains('info-card')) return;
+    var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
+    var grid=card.closest('.calc-grid');
+    var isRight=parent&&(parent.classList.contains('right-col')||parent===grid.children[grid.children.length-1]);
+    hdr.style.position='relative';
+    var btn=document.createElement('button');
+    btn.className='focus-card-btn';
+    btn.title='Fokus';
+    btn.onclick=function(e){
+      e.stopPropagation();
+      var b=document.body;
+      if(!b.classList.contains('desktop-focus')){
+        b.classList.add('desktop-focus');
+        b.classList.add(isRight?'focus-right':'focus-left');
+      }
+      // Expand this card if collapsed
+      if(card.classList.contains('collapsed')) toggleCard(card);
+      setTimeout(function(){ smartScroll(card); },250);
+    };
     hdr.appendChild(btn);
   });
   // Always start without focus mode — reset on each page load
@@ -3760,7 +3782,7 @@ function toggleDesktopFocus(side){
     bar.innerHTML='<button onclick="toggleDesktopFocus()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;">✕ Lukk fokus</button>';
     grid.parentElement.insertBefore(bar,grid);
   }
-})();
+}
 
 // Init basic calc
 buildCalcKeys('basic');
@@ -4611,5 +4633,6 @@ function initPage(){
       }
     },300);
   }
+  initDesktopFocus();
 }
 
