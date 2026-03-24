@@ -403,12 +403,28 @@ function updateHero() {
       hero.appendChild(ball);
       initDiscoBall3D(ball);
     }
+  } else if(document.documentElement.getAttribute('data-theme')==='hendrix'){
+    // Hendrix easter egg — link subtitle to YouTube
+    var emH=document.querySelector('#hero-h1 em');
+    if(emH&&!emH.parentElement.classList.contains('hendrix-link-wrap')){
+      var linkH=document.createElement('a');
+      linkH.href='https://www.youtube.com/watch?v=LCGSfEWDNFs';
+      linkH.target='_blank';linkH.rel='noopener';
+      linkH.className='hendrix-link-wrap';
+      linkH.style.cssText='text-decoration:none;color:inherit;-webkit-text-fill-color:inherit;display:block;position:relative;z-index:10;cursor:pointer;';
+      linkH.onclick=function(e){e.stopPropagation();};
+      emH.parentElement.insertBefore(linkH,emH);
+      linkH.appendChild(emH);
+    }
+    // Cleanup disco stuff if switching from disco
+    destroyDiscoBall3D();
+    var db=document.querySelector('.disco-ball');if(db)db.remove();
   } else {
     // Remove disco ball + cleanup Three.js if switching away
     destroyDiscoBall3D();
     var db=document.querySelector('.disco-ball');if(db)db.remove();
-    // Unwrap disco link if present
-    var dw=document.querySelector('.disco-link-wrap');
+    // Unwrap any theme link if present
+    var dw=document.querySelector('.disco-link-wrap')||document.querySelector('.hendrix-link-wrap');
     if(dw){var emInside=dw.querySelector('em');if(emInside)dw.parentElement.insertBefore(emInside,dw);dw.remove();}
   }
   document.getElementById('hero-p').textContent = r.heroP || '';
