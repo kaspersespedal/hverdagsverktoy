@@ -670,7 +670,7 @@ function toggleCard(card){
     var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
     if(parent){
       parent.querySelectorAll('.info-card:not(.collapsed)').forEach(function(other){
-        if(other===card)return;
+        if(other===card||other.contains(card)||card.contains(other))return;
         other.classList.add('collapsed');
         var otherArrow=other.querySelector('.card-title span');
         if(otherArrow)otherArrow.textContent='▼';
