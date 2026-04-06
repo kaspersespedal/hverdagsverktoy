@@ -4007,7 +4007,7 @@ function initDesktopFocus(){
   }
 }
 
-// Mobile section tabs — scroll-based navigation (no content hiding)
+// Mobile section tabs — show/hide navigation (matches desktop focus feel)
 function initMobileFocus(){
   var grid=document.querySelector('.calc-grid');
   if(!grid) return;
@@ -4019,34 +4019,24 @@ function initMobileFocus(){
   var bar=document.createElement('div');
   bar.className='mobile-section-tabs';
   var tabs=[];
+  function activateCol(idx){
+    cols.forEach(function(c,i){c.classList.toggle('mobile-active',i===idx);});
+    tabs.forEach(function(t,i){t.classList.toggle('active',i===idx);});
+    window.scrollTo({top:0,behavior:'instant'});
+  }
   cols.forEach(function(col,i){
     var title=col.querySelector('.section-title');
     if(!title) return;
     var tab=document.createElement('button');
     tab.className='mobile-section-tab'+(i===0?' active':'');
     tab.textContent=title.textContent.replace(/⛶.*|✕.*/g,'').trim();
-    tab.onclick=function(){
-      var offset=col.getBoundingClientRect().top+window.scrollY-120;
-      window.scrollTo({top:offset,behavior:'smooth'});
-      tabs.forEach(function(t){t.classList.remove('active');});
-      tab.classList.add('active');
-    };
+    tab.onclick=function(){ activateCol(i); };
     bar.appendChild(tab);
     tabs.push(tab);
   });
   grid.parentElement.insertBefore(bar,grid);
-  // Update active tab based on scroll position
-  if('IntersectionObserver' in window){
-    var observer=new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          var idx=cols.indexOf(entry.target);
-          if(idx>=0) tabs.forEach(function(t,i){t.classList.toggle('active',i===idx);});
-        }
-      });
-    },{threshold:0.15,rootMargin:'-100px 0px -50% 0px'});
-    cols.forEach(function(col){observer.observe(col);});
-  }
+  // Activate first column by default
+  activateCol(0);
 }
 
 // Init basic calc
@@ -4957,4 +4947,3 @@ function initPage(){
   initDesktopFocus();
   initMobileFocus();
 }
-
