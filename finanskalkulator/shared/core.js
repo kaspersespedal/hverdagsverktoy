@@ -382,7 +382,7 @@ function updateHero() {
   if(document.documentElement.getAttribute('data-theme')==='disco'){
     var em=document.querySelector('#hero-h1 em');
     if(em){
-      em.textContent='\u266B You Should Be Dancing \u266A';
+      em.textContent='\u266B Dancing \u266A';
       // Wrap entire em in a clickable link outside the gradient clip context
       if(!em.parentElement.classList.contains('disco-link-wrap')){
         var link=document.createElement('a');
