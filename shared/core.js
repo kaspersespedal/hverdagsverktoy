@@ -191,12 +191,27 @@ function setTheme(t) {
 // ═══════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════
-let region = (function(){ try { const s=localStorage.getItem('hvt-lang'); if(s && REGIONS[s]) return s; } catch(e){} return 'no'; })();
+const VALID_LANGS = ['no','en','zh','fr','pl','uk','ar','lt','so','ti'];
+if(typeof REGIONS === 'undefined') var REGIONS = {};
+let region = (function(){ try { const s=localStorage.getItem('hvt-lang'); if(s && VALID_LANGS.indexOf(s)>=0) return s; } catch(e){} return 'no'; })();
+let _langLoading = {};
+function loadLang(code) {
+  if(REGIONS[code]) return Promise.resolve();
+  if(_langLoading[code]) return _langLoading[code];
+  _langLoading[code] = new Promise(function(resolve, reject) {
+    var s = document.createElement('script');
+    s.src = '/shared/lang/' + code + '.js?v=v7';
+    s.onload = function() { delete _langLoading[code]; resolve(); };
+    s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
+    document.head.appendChild(s);
+  });
+  return _langLoading[code];
+}
 buildThemePicker();
 let activeCalc = 'dashboard';
 let _sal, _mor, _npv, _vat;
 
-function R() { const r=REGIONS[region]; return r.base ? Object.assign({},REGIONS[r.base],r) : r; }
+function R() { const r=REGIONS[region]; if(!r) return REGIONS['no']||{}; return r.base ? Object.assign({},REGIONS[r.base],r) : r; }
 function fmt(n) {
   const r=R();
   return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(Math.round(n)).replace(/\u00a0/g,' ')+' '+r.currency;
@@ -226,13 +241,18 @@ document.addEventListener('input', function(e) {
 function setRegion(r, e) {
   region = r;
   try { localStorage.setItem('hvt-lang', r); } catch(_e){}
-  var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
-  var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
   document.querySelectorAll('.region-opt').forEach(el => el.classList.remove('active'));
   if(e && e.currentTarget) e.currentTarget.classList.add('active');
-  else document.querySelector('.region-opt[onclick*="\''+r+'\'"]')?.classList.add('active');
+  else { var opt=document.querySelector('.region-opt[onclick*="\''+r+'\'"]'); if(opt) opt.classList.add('active'); }
   var _rdd=document.getElementById('rdd');if(_rdd)_rdd.classList.remove('open');
-  updateAll();
+  loadLang(r).then(function() {
+    var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
+    var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
+    updateAll();
+  }).catch(function() {
+    // Fallback: switch to Norwegian if language fails to load
+    if(r !== 'no') { region = 'no'; updateAll(); }
+  });
 }
 function toggleDD() { var el=document.getElementById('rdd');if(el)el.classList.toggle('open'); }
 document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){var _rd=document.getElementById('rdd');if(_rd)_rd.classList.remove('open');} });
@@ -4883,6 +4903,13 @@ function budsjettPdf(){
 
 // Page initialization — called by each page after DOM is ready
 function initPage(){
+  // Load active language, then initialize
+  loadLang(region).catch(function() {
+    region = 'no';
+    return loadLang('no');
+  }).then(function() { _initPageReady(); });
+}
+function _initPageReady(){
   // Sync region selector UI with saved language
   var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
   var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
