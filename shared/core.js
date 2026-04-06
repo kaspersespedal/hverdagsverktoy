@@ -50,7 +50,7 @@ function injectRatesDisclaimer(resEl){
 // ═══════════════════════════════════════════════════════
 const THEMES = [
   {id:'carbon',labelKey:'themeCarbon',fallback:'Standard Mørk',dot:'#1e1e1e',ring:'#d4a574',dotBorder:'rgba(255,255,255,.08)'},
-  {id:'frost',labelKey:'themeFrost',fallback:'Standard',dot:'#9bb5d6',ring:'#6875f5',dotBorder:'rgba(0,0,0,.06)'},
+  {id:'frost',labelKey:'themeFrost',fallback:'Standard',dot:'#e8ecf4',ring:'#4f5fe5',dotBorder:'rgba(79,95,229,.12)'},
   {id:'dark',labelKey:'themeDark',fallback:'Mørk',dot:'#242740',ring:'#6c8aef',dotBorder:'rgba(255,255,255,.12)'},
   {id:'pink',labelKey:'themePink',fallback:'Rosa',dot:'#e4a0be',ring:'#e890b2',dotBorder:'rgba(0,0,0,.06)'},
   {id:'glass',labelKey:'themeGlass',fallback:'Glass',dot:'#7c88f8',ring:'#6875f5',dotBorder:'rgba(0,0,0,.06)'},
@@ -73,6 +73,8 @@ function buildThemePicker(){
   var isHeader=!!wrap.closest('.hdr-right');
   var current=(document.documentElement.getAttribute('data-theme')||'blue');
   wrap.innerHTML='';
+  var oldPanel=document.getElementById('theme-panel');
+  if(oldPanel) oldPanel.remove();
   // "Tema" label — only show on dashboard (not in header)
   if(!isHeader){
     var lbl=document.createElement('span');
@@ -158,11 +160,11 @@ function buildThemePicker(){
       var w=document.getElementById('theme-picker');
       var p=document.getElementById('theme-panel');
       var b=document.getElementById('theme-trigger');
-      if(w&&p&&!w.contains(e.target)){p.style.display='none';if(b)b.style.borderColor='var(--border)';}
+      if(w&&p&&!w.contains(e.target)&&!p.contains(e.target)){p.style.display='none';if(b)b.style.borderColor='var(--border)';}
     });
   }
   wrap.appendChild(btn);
-  wrap.appendChild(panel);
+  document.body.appendChild(panel);
 }
 function setTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
@@ -189,12 +191,27 @@ function setTheme(t) {
 // ═══════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════
-let region = (function(){ try { const s=localStorage.getItem('hvt-lang'); if(s && REGIONS[s]) return s; } catch(e){} return 'no'; })();
+const VALID_LANGS = ['no','en','zh','fr','pl','uk','ar','lt','so','ti'];
+if(typeof REGIONS === 'undefined') var REGIONS = {};
+let region = (function(){ try { const s=localStorage.getItem('hvt-lang'); if(s && VALID_LANGS.indexOf(s)>=0) return s; } catch(e){} return 'no'; })();
+let _langLoading = {};
+function loadLang(code) {
+  if(REGIONS[code]) return Promise.resolve();
+  if(_langLoading[code]) return _langLoading[code];
+  _langLoading[code] = new Promise(function(resolve, reject) {
+    var s = document.createElement('script');
+    s.src = '/shared/lang/' + code + '.js?v=v8';
+    s.onload = function() { delete _langLoading[code]; resolve(); };
+    s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
+    document.head.appendChild(s);
+  });
+  return _langLoading[code];
+}
 buildThemePicker();
 let activeCalc = 'dashboard';
 let _sal, _mor, _npv, _vat;
 
-function R() { const r=REGIONS[region]; return r.base ? Object.assign({},REGIONS[r.base],r) : r; }
+function R() { const r=REGIONS[region]; if(!r) return REGIONS['no']||{}; return r.base ? Object.assign({},REGIONS[r.base],r) : r; }
 function fmt(n) {
   const r=R();
   return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(Math.round(n)).replace(/\u00a0/g,' ')+' '+r.currency;
@@ -224,13 +241,18 @@ document.addEventListener('input', function(e) {
 function setRegion(r, e) {
   region = r;
   try { localStorage.setItem('hvt-lang', r); } catch(_e){}
-  var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
-  var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
   document.querySelectorAll('.region-opt').forEach(el => el.classList.remove('active'));
   if(e && e.currentTarget) e.currentTarget.classList.add('active');
-  else document.querySelector('.region-opt[onclick*="\''+r+'\'"]')?.classList.add('active');
+  else { var opt=document.querySelector('.region-opt[onclick*="\''+r+'\'"]'); if(opt) opt.classList.add('active'); }
   var _rdd=document.getElementById('rdd');if(_rdd)_rdd.classList.remove('open');
-  updateAll();
+  loadLang(r).then(function() {
+    var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
+    var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
+    updateAll();
+  }).catch(function() {
+    // Fallback: switch to Norwegian if language fails to load
+    if(r !== 'no') { region = 'no'; updateAll(); }
+  });
 }
 function toggleDD() { var el=document.getElementById('rdd');if(el)el.classList.toggle('open'); }
 document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){var _rd=document.getElementById('rdd');if(_rd)_rd.classList.remove('open');} });
@@ -4005,7 +4027,7 @@ function initDesktopFocus(){
   }
 }
 
-// Mobile section tabs — scroll-based navigation (no content hiding)
+// Mobile section tabs — show/hide navigation (matches desktop focus feel)
 function initMobileFocus(){
   var grid=document.querySelector('.calc-grid');
   if(!grid) return;
@@ -4017,34 +4039,24 @@ function initMobileFocus(){
   var bar=document.createElement('div');
   bar.className='mobile-section-tabs';
   var tabs=[];
+  function activateCol(idx){
+    cols.forEach(function(c,i){c.classList.toggle('mobile-active',i===idx);});
+    tabs.forEach(function(t,i){t.classList.toggle('active',i===idx);});
+    window.scrollTo({top:0,behavior:'instant'});
+  }
   cols.forEach(function(col,i){
     var title=col.querySelector('.section-title');
     if(!title) return;
     var tab=document.createElement('button');
     tab.className='mobile-section-tab'+(i===0?' active':'');
     tab.textContent=title.textContent.replace(/⛶.*|✕.*/g,'').trim();
-    tab.onclick=function(){
-      var offset=col.getBoundingClientRect().top+window.scrollY-120;
-      window.scrollTo({top:offset,behavior:'smooth'});
-      tabs.forEach(function(t){t.classList.remove('active');});
-      tab.classList.add('active');
-    };
+    tab.onclick=function(){ activateCol(i); };
     bar.appendChild(tab);
     tabs.push(tab);
   });
   grid.parentElement.insertBefore(bar,grid);
-  // Update active tab based on scroll position
-  if('IntersectionObserver' in window){
-    var observer=new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          var idx=cols.indexOf(entry.target);
-          if(idx>=0) tabs.forEach(function(t,i){t.classList.toggle('active',i===idx);});
-        }
-      });
-    },{threshold:0.15,rootMargin:'-100px 0px -50% 0px'});
-    cols.forEach(function(col){observer.observe(col);});
-  }
+  // Activate first column by default
+  activateCol(0);
 }
 
 // Init basic calc
@@ -4891,6 +4903,13 @@ function budsjettPdf(){
 
 // Page initialization — called by each page after DOM is ready
 function initPage(){
+  // Load active language, then initialize
+  loadLang(region).catch(function() {
+    region = 'no';
+    return loadLang('no');
+  }).then(function() { _initPageReady(); });
+}
+function _initPageReady(){
   // Sync region selector UI with saved language
   var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
   var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
@@ -4955,4 +4974,3 @@ function initPage(){
   initDesktopFocus();
   initMobileFocus();
 }
-
