@@ -73,6 +73,8 @@ function buildThemePicker(){
   var isHeader=!!wrap.closest('.hdr-right');
   var current=(document.documentElement.getAttribute('data-theme')||'blue');
   wrap.innerHTML='';
+  var oldPanel=document.getElementById('theme-panel');
+  if(oldPanel) oldPanel.remove();
   // "Tema" label — only show on dashboard (not in header)
   if(!isHeader){
     var lbl=document.createElement('span');
@@ -158,11 +160,11 @@ function buildThemePicker(){
       var w=document.getElementById('theme-picker');
       var p=document.getElementById('theme-panel');
       var b=document.getElementById('theme-trigger');
-      if(w&&p&&!w.contains(e.target)){p.style.display='none';if(b)b.style.borderColor='var(--border)';}
+      if(w&&p&&!w.contains(e.target)&&!p.contains(e.target)){p.style.display='none';if(b)b.style.borderColor='var(--border)';}
     });
   }
   wrap.appendChild(btn);
-  wrap.appendChild(panel);
+  document.body.appendChild(panel);
 }
 function setTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
