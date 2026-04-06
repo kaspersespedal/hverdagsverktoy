@@ -50,7 +50,7 @@ function injectRatesDisclaimer(resEl){
 // ═══════════════════════════════════════════════════════
 const THEMES = [
   {id:'carbon',labelKey:'themeCarbon',fallback:'Standard Mørk',dot:'#1e1e1e',ring:'#d4a574',dotBorder:'rgba(255,255,255,.08)'},
-  {id:'frost',labelKey:'themeFrost',fallback:'Standard',dot:'#9bb5d6',ring:'#6875f5',dotBorder:'rgba(0,0,0,.06)'},
+  {id:'frost',labelKey:'themeFrost',fallback:'Standard',dot:'#e8ecf4',ring:'#4f5fe5',dotBorder:'rgba(79,95,229,.12)'},
   {id:'dark',labelKey:'themeDark',fallback:'Mørk',dot:'#242740',ring:'#6c8aef',dotBorder:'rgba(255,255,255,.12)'},
   {id:'pink',labelKey:'themePink',fallback:'Rosa',dot:'#e4a0be',ring:'#e890b2',dotBorder:'rgba(0,0,0,.06)'},
   {id:'glass',labelKey:'themeGlass',fallback:'Glass',dot:'#7c88f8',ring:'#6875f5',dotBorder:'rgba(0,0,0,.06)'},
