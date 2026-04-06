@@ -935,6 +935,8 @@ function updateSalaryUI() {
   const salLawGroup = document.getElementById('sal-law-group');
   if(r.salLawRows || r.salSubjRows){
     salLawGroup.classList.remove('hidden');
+    var _slgt=document.getElementById('sal-law-group-title');if(_slgt)_slgt.innerHTML=(r.salLawGroupTitle||'Skatteloven')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('sal-law-group-desc', 'Kapitler og paragrafer fra skatteloven');
   } else {
     salLawGroup.classList.add('hidden');
   }
