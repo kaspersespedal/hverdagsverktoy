@@ -4005,46 +4005,46 @@ function initDesktopFocus(){
   }
 }
 
-// Mobile focus bar — auto-injected for all calc-grid pages
+// Mobile section tabs — scroll-based navigation (no content hiding)
 function initMobileFocus(){
   var grid=document.querySelector('.calc-grid');
   if(!grid) return;
   // Skip kalkulator.html (has its own mobile mode bar)
   if(document.getElementById('calc-basic')) return;
-  if(document.querySelector('.mobile-focus-bar')) return;
-  var cols=Array.from(grid.children);
+  if(document.querySelector('.mobile-section-tabs')) return;
+  var cols=Array.from(grid.children).filter(function(c){return c.querySelector&&c.querySelector('.section-title');});
   if(cols.length<2) return;
   var bar=document.createElement('div');
-  bar.className='mobile-focus-bar';
-  // "Alle" pill
-  var allPill=document.createElement('button');
-  allPill.className='mobile-focus-pill active';
-  allPill.textContent='Alle';
-  allPill.onclick=function(){
-    document.body.classList.remove('mobile-focus');
-    cols.forEach(function(c){c.removeAttribute('data-mobile-visible');});
-    bar.querySelectorAll('.mobile-focus-pill').forEach(function(p){p.classList.remove('active');});
-    allPill.classList.add('active');
-  };
-  bar.appendChild(allPill);
-  // One pill per column
+  bar.className='mobile-section-tabs';
+  var tabs=[];
   cols.forEach(function(col,i){
     var title=col.querySelector('.section-title');
     if(!title) return;
-    var pill=document.createElement('button');
-    pill.className='mobile-focus-pill';
-    pill.textContent=title.textContent.replace(/⛶.*|✕.*/g,'').trim();
-    pill.onclick=function(){
-      document.body.classList.add('mobile-focus');
-      cols.forEach(function(c){c.removeAttribute('data-mobile-visible');});
-      col.setAttribute('data-mobile-visible','true');
-      bar.querySelectorAll('.mobile-focus-pill').forEach(function(p){p.classList.remove('active');});
-      pill.classList.add('active');
-      window.scrollTo({top:grid.offsetTop-80,behavior:'smooth'});
+    var tab=document.createElement('button');
+    tab.className='mobile-section-tab'+(i===0?' active':'');
+    tab.textContent=title.textContent.replace(/⛶.*|✕.*/g,'').trim();
+    tab.onclick=function(){
+      var offset=col.getBoundingClientRect().top+window.scrollY-120;
+      window.scrollTo({top:offset,behavior:'smooth'});
+      tabs.forEach(function(t){t.classList.remove('active');});
+      tab.classList.add('active');
     };
-    bar.appendChild(pill);
+    bar.appendChild(tab);
+    tabs.push(tab);
   });
   grid.parentElement.insertBefore(bar,grid);
+  // Update active tab based on scroll position
+  if('IntersectionObserver' in window){
+    var observer=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var idx=cols.indexOf(entry.target);
+          if(idx>=0) tabs.forEach(function(t,i){t.classList.toggle('active',i===idx);});
+        }
+      });
+    },{threshold:0.15,rootMargin:'-100px 0px -50% 0px'});
+    cols.forEach(function(col){observer.observe(col);});
+  }
 }
 
 // Init basic calc

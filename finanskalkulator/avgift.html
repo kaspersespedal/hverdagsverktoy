@@ -88,7 +88,63 @@
 
     <!-- ══════════════ VAT ══════════════ -->
     <div id="calc-vat" class="calc-grid">
-      <div>
+<div>
+        <h2 class="section-title" id="sec-guide" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid color-mix(in srgb,var(--accent) 15%,transparent);">Avgiftsguide</h2>
+        <div class="card">
+        <div class="info-card collapsed" id="vat-intro-card">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="vat-intro-title">Hva er avgift (MVA)? <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-intro-desc">Kort forklaring for deg som er ny i Norge</div></div></div>
+          <div id="vat-intro-rows" class="law-body"></div>
+        </div>
+        <div class="info-card collapsed" id="vat-subj-card">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="vat-subj-title">Hvem er avgiftspliktig? <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-subj-desc">Næring, omsetningsgrense, registreringsplikt</div></div></div>
+          <div id="vat-subj-rows" class="law-body"></div>
+        </div>
+        <div class="info-card collapsed" id="vat-info-card">
+          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="vat-info-title">Tax Rates Reference <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-info-desc">Official rates for selected region</div></div></div>
+          <div id="vat-info-rows" class="law-body"></div>
+        </div>
+        </div><!-- /card -->
+        <div class="law-group hidden" id="vat-law-group" onclick="if(event.target.closest('.law-group-hdr')&&!event.target.closest('.info-card')&&!event.target.closest('.desc-link'))toggleLawGroup(this)">
+          <div class="law-group-hdr">
+            <div>
+              <div class="law-group-title" id="vat-law-group-title">Merverdiavgiftsloven</div>
+              <div class="law-group-desc" id="vat-law-group-desc">Kap. 1–9 · Definisjoner · Unntak · Fritak · Fradrag · Justering</div>
+            </div>
+            <span class="law-group-arrow">▼</span>
+          </div>
+          <div class="law-group-body">
+            <div class="info-card collapsed" id="vat-def-card">
+              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-def-title">Definisjoner (§ 1-3) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-def-desc">Omsetning, varer, tjenester, avgiftssubjekt m.m.</div></div></div>
+              <div id="vat-def-rows" class="law-body"></div>
+            </div>
+            <div class="info-card collapsed" id="vat-reg-card">
+              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-reg-title">Registrering (kap. 2) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-reg-desc">Fellesregistrering, frivillig reg., forhåndsregistrering</div></div></div>
+              <div id="vat-reg-rows" class="law-body"></div>
+            </div>
+            <div class="info-card collapsed" id="vat-exempt-card">
+              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-exempt-title">Unntak, uttak og innførsel (kap. 3) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-exempt-desc">Unntatt fra loven · Uttak til privat bruk · Import</div></div></div>
+              <div id="vat-exempt-rows" class="law-body"></div>
+            </div>
+            <div class="info-card collapsed" id="vat-calc-card">
+              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-calc-title">Beregningsgrunnlag (kap. 4) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-calc-desc">Vederlag, byttehandel, interessefellesskap, tap</div></div></div>
+              <div id="vat-calc-rows" class="law-body"></div>
+            </div>
+            <div class="info-card collapsed" id="vat-zero-card">
+              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-zero-title">Fritak (kap. 6) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-zero-desc">Nullsats — 0 % utgående, full fradragsrett</div></div></div>
+              <div id="vat-zero-rows" class="law-body"></div>
+            </div>
+            <div class="info-card collapsed" id="vat-ded-card">
+              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-ded-title">Fradrag (kap. 8) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-ded-desc">Hovedregel, delt bruk, begrensninger</div></div></div>
+              <div id="vat-ded-rows" class="law-body"></div>
+            </div>
+            <div class="info-card collapsed" id="vat-adj-info-card">
+              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-adj-info-title">Justering (kap. 9) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-adj-info-desc">Kapitalvarer, justeringsperioder</div></div></div>
+              <div id="vat-adj-info-rows" class="law-body"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="right-col" style="gap:0;align-self:start;">
         <h2 class="section-title" id="sec-calculators" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid color-mix(in srgb,var(--accent) 15%,transparent);">Kalkulatorer</h2>
         <div class="card">
         <div id="vat-wrapper" class="info-card collapsed">
@@ -247,64 +303,7 @@
           <div id="vat-aga-rows" class="law-body"></div>
         </div>
         </div><!-- /aga-card -->
-      </div><!-- /left-wrapper -->
-      <div class="right-col" style="gap:0;align-self:start;">
-        <h2 class="section-title" id="sec-guide" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid color-mix(in srgb,var(--accent) 15%,transparent);">Avgiftsguide</h2>
-        <div class="card">
-        <div class="info-card collapsed" id="vat-intro-card">
-          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="vat-intro-title">Hva er avgift (MVA)? <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-intro-desc">Kort forklaring for deg som er ny i Norge</div></div></div>
-          <div id="vat-intro-rows" class="law-body"></div>
-        </div>
-        <div class="info-card collapsed" id="vat-subj-card">
-          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="vat-subj-title">Hvem er avgiftspliktig? <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-subj-desc">Næring, omsetningsgrense, registreringsplikt</div></div></div>
-          <div id="vat-subj-rows" class="law-body"></div>
-        </div>
-        <div class="info-card collapsed" id="vat-info-card">
-          <div class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="vat-info-title">Tax Rates Reference <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-info-desc">Official rates for selected region</div></div></div>
-          <div id="vat-info-rows" class="law-body"></div>
-        </div>
-        </div><!-- /card -->
-        <div class="law-group hidden" id="vat-law-group" onclick="if(event.target.closest('.law-group-hdr')&&!event.target.closest('.info-card')&&!event.target.closest('.desc-link'))toggleLawGroup(this)">
-          <div class="law-group-hdr">
-            <div>
-              <div class="law-group-title" id="vat-law-group-title">Merverdiavgiftsloven</div>
-              <div class="law-group-desc" id="vat-law-group-desc">Kap. 1–9 · Definisjoner · Unntak · Fritak · Fradrag · Justering</div>
-            </div>
-            <span class="law-group-arrow">▼</span>
-          </div>
-          <div class="law-group-body">
-            <div class="info-card collapsed" id="vat-def-card">
-              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-def-title">Definisjoner (§ 1-3) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-def-desc">Omsetning, varer, tjenester, avgiftssubjekt m.m.</div></div></div>
-              <div id="vat-def-rows" class="law-body"></div>
-            </div>
-            <div class="info-card collapsed" id="vat-reg-card">
-              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-reg-title">Registrering (kap. 2) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-reg-desc">Fellesregistrering, frivillig reg., forhåndsregistrering</div></div></div>
-              <div id="vat-reg-rows" class="law-body"></div>
-            </div>
-            <div class="info-card collapsed" id="vat-exempt-card">
-              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-exempt-title">Unntak, uttak og innførsel (kap. 3) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-exempt-desc">Unntatt fra loven · Uttak til privat bruk · Import</div></div></div>
-              <div id="vat-exempt-rows" class="law-body"></div>
-            </div>
-            <div class="info-card collapsed" id="vat-calc-card">
-              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-calc-title">Beregningsgrunnlag (kap. 4) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-calc-desc">Vederlag, byttehandel, interessefellesskap, tap</div></div></div>
-              <div id="vat-calc-rows" class="law-body"></div>
-            </div>
-            <div class="info-card collapsed" id="vat-zero-card">
-              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-zero-title">Fritak (kap. 6) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-zero-desc">Nullsats — 0 % utgående, full fradragsrett</div></div></div>
-              <div id="vat-zero-rows" class="law-body"></div>
-            </div>
-            <div class="info-card collapsed" id="vat-ded-card">
-              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-ded-title">Fradrag (kap. 8) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-ded-desc">Hovedregel, delt bruk, begrensninger</div></div></div>
-              <div id="vat-ded-rows" class="law-body"></div>
-            </div>
-            <div class="info-card collapsed" id="vat-adj-info-card">
-              <div class="card-hdr" style="cursor:pointer" onclick="event.stopPropagation();toggleCard(this.parentElement)"><div><div class="card-title" id="vat-adj-info-title">Justering (kap. 9) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="vat-adj-info-desc">Kapitalvarer, justeringsperioder</div></div></div>
-              <div id="vat-adj-info-rows" class="law-body"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      
     </div>
 
   </div>
