@@ -1435,7 +1435,7 @@ const REGIONS = {
     conAltH:'Direkte kontakt', conAltP:'Du kan også sende e-post direkte til',
     footerCopy:'© 2026 Hverdagsverktøy — Veiledende beregninger basert på kjente satser per mars 2026. Satser oppdateres manuelt og kan avvike fra gjeldende regler. Sjekk alltid skatteetaten.no for offisielle satser. Ikke profesjonell finansiell eller juridisk rådgivning.',
     ratesDisclaimer:'Satser: Inntektsåret',ratesUpdated:'Sist oppdatert',ratesStale:'Satsene ble sist oppdatert for over 6 måneder siden og kan være utdaterte.',
-    secCalc:'Kalkulatorer',secGuideTax:'Skatteguide',secGuideMor:'Boligguide',secGuideVat:'Avgiftsguide',secGuidePerso:'Veiledning',
+    secCalc:'Kalkulatorer',secGuideTax:'Veiledning',secGuideMor:'Boligguide',secGuideVat:'Avgiftsguide',secGuidePerso:'Veiledning',
     heroKicker:'✦ Norske Hverdagsverktøy',
     heroH1:'Hverdagsverktøy<br><em>Praktiske verktøy for privatøkonomi</em>',
     heroP:'',

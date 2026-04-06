@@ -935,8 +935,6 @@ function updateSalaryUI() {
   const salLawGroup = document.getElementById('sal-law-group');
   if(r.salLawRows || r.salSubjRows){
     salLawGroup.classList.remove('hidden');
-    var _slgt=document.getElementById('sal-law-group-title');if(_slgt)_slgt.innerHTML=(r.salLawGroupTitle||'Skatteloven')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    setText('sal-law-group-desc', 'Kapitler og paragrafer fra skatteloven');
   } else {
     salLawGroup.classList.add('hidden');
   }
@@ -3935,27 +3933,39 @@ function enterFocusMode(){document.body.classList.add('calc-focus');document.bod
 function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var mmb=document.querySelector('.mobile-mode-bar');var h=document.querySelector('header');if(mmb&&h)mmb.style.top=h.offsetHeight+'px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');if(_focusZoomHandler){document.removeEventListener('touchstart',_focusZoomHandler);_focusZoomHandler=null;}}
 function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
 
-// Desktop focus mode
-function toggleDesktopFocus(side){
+// Desktop focus mode — index-based (supports N columns)
+function toggleDesktopFocus(colIndex){
   var b=document.body;
+  var grid=document.querySelector('.calc-grid');
+  if(!grid) return;
   if(b.classList.contains('desktop-focus')){
-    b.classList.remove('desktop-focus','focus-left','focus-right');
-  } else {
+    // Exit focus
+    b.classList.remove('desktop-focus');
+    Array.from(grid.children).forEach(function(c){c.removeAttribute('data-desktop-hidden');});
+  } else if(colIndex!==undefined){
+    // Enter focus on specific column
     b.classList.add('desktop-focus');
-    b.classList.add(side==='right'?'focus-right':'focus-left');
+    Array.from(grid.children).forEach(function(c,i){
+      if(i!==colIndex) c.setAttribute('data-desktop-hidden','true');
+      else c.removeAttribute('data-desktop-hidden');
+    });
   }
+}
+function _getColIndex(el){
+  var parent=el.closest('.calc-grid > div, .calc-grid > .right-col');
+  var grid=el.closest('.calc-grid');
+  if(!parent||!grid) return 0;
+  return Array.from(grid.children).indexOf(parent);
 }
 function initDesktopFocus(){
   // Add focus buttons to section title headers
   document.querySelectorAll('.calc-grid .section-title').forEach(function(h2){
     if(h2.querySelector('.focus-toggle')) return;
     h2.style.display='flex';h2.style.alignItems='center';h2.style.justifyContent='space-between';
-    var parent=h2.closest('.calc-grid > div, .calc-grid > .right-col');
-    var grid=h2.closest('.calc-grid');
-    var isRight=parent&&(parent.classList.contains('right-col')||parent===grid.children[grid.children.length-1]);
+    var idx=_getColIndex(h2);
     var btn=document.createElement('button');
     btn.className='focus-toggle';
-    btn.onclick=function(e){e.stopPropagation();toggleDesktopFocus(isRight?'right':'left');};
+    btn.onclick=function(e){e.stopPropagation();toggleDesktopFocus(idx);};
     btn.innerHTML='<span class="focus-toggle-label">⛶ Fokus</span><span class="focus-toggle-exit">✕ Lukk</span>';
     h2.appendChild(btn);
   });
@@ -3964,9 +3974,7 @@ function initDesktopFocus(){
     if(hdr.querySelector('.focus-card-btn')) return;
     var card=hdr.parentElement;
     if(!card||!card.classList.contains('info-card')) return;
-    var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
-    var grid=card.closest('.calc-grid');
-    var isRight=parent&&(parent.classList.contains('right-col')||parent===grid.children[grid.children.length-1]);
+    var idx=_getColIndex(card);
     hdr.style.position='relative';
     var btn=document.createElement('button');
     btn.className='focus-card-btn';
@@ -3975,25 +3983,66 @@ function initDesktopFocus(){
       e.stopPropagation();
       var b=document.body;
       if(!b.classList.contains('desktop-focus')){
-        b.classList.add('desktop-focus');
-        b.classList.add(isRight?'focus-right':'focus-left');
+        toggleDesktopFocus(idx);
       }
-      // Expand this card if collapsed
       if(card.classList.contains('collapsed')) toggleCard(card);
       setTimeout(function(){ smartScroll(card); },250);
     };
     hdr.appendChild(btn);
   });
-  // Always start without focus mode — reset on each page load
-  document.body.classList.remove('desktop-focus','focus-left','focus-right');
-  // Add global focus close bar before calc-grid
+  // Always start without focus mode
+  document.body.classList.remove('desktop-focus');
   var grid=document.querySelector('.calc-grid');
+  if(grid) Array.from(grid.children).forEach(function(c){c.removeAttribute('data-desktop-hidden');});
+  // Add global focus close bar before calc-grid
   if(grid&&!document.getElementById('focus-close-bar')){
     var bar=document.createElement('div');
     bar.id='focus-close-bar';
     bar.innerHTML='<button onclick="toggleDesktopFocus()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;">✕ Lukk fokus</button>';
     grid.parentElement.insertBefore(bar,grid);
   }
+}
+
+// Mobile focus bar — auto-injected for all calc-grid pages
+function initMobileFocus(){
+  var grid=document.querySelector('.calc-grid');
+  if(!grid) return;
+  // Skip kalkulator.html (has its own mobile mode bar)
+  if(document.getElementById('calc-basic')) return;
+  if(document.querySelector('.mobile-focus-bar')) return;
+  var cols=Array.from(grid.children);
+  if(cols.length<2) return;
+  var bar=document.createElement('div');
+  bar.className='mobile-focus-bar';
+  // "Alle" pill
+  var allPill=document.createElement('button');
+  allPill.className='mobile-focus-pill active';
+  allPill.textContent='Alle';
+  allPill.onclick=function(){
+    document.body.classList.remove('mobile-focus');
+    cols.forEach(function(c){c.removeAttribute('data-mobile-visible');});
+    bar.querySelectorAll('.mobile-focus-pill').forEach(function(p){p.classList.remove('active');});
+    allPill.classList.add('active');
+  };
+  bar.appendChild(allPill);
+  // One pill per column
+  cols.forEach(function(col,i){
+    var title=col.querySelector('.section-title');
+    if(!title) return;
+    var pill=document.createElement('button');
+    pill.className='mobile-focus-pill';
+    pill.textContent=title.textContent.replace(/⛶.*|✕.*/g,'').trim();
+    pill.onclick=function(){
+      document.body.classList.add('mobile-focus');
+      cols.forEach(function(c){c.removeAttribute('data-mobile-visible');});
+      col.setAttribute('data-mobile-visible','true');
+      bar.querySelectorAll('.mobile-focus-pill').forEach(function(p){p.classList.remove('active');});
+      pill.classList.add('active');
+      window.scrollTo({top:grid.offsetTop-80,behavior:'smooth'});
+    };
+    bar.appendChild(pill);
+  });
+  grid.parentElement.insertBefore(bar,grid);
 }
 
 // Init basic calc
@@ -4902,5 +4951,6 @@ function initPage(){
     },300);
   }
   initDesktopFocus();
+  initMobileFocus();
 }
 
