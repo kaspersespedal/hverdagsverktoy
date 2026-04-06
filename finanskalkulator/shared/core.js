@@ -3627,7 +3627,9 @@ function calcPensjon(){
   const years=retire-age;if(years<=0)return;
   let pot=0;
   for(let y=0;y<years;y++){pot=(pot+sal*otpRate)*(1+retRate);}
-  const annual=pot/20;
+  // Utbetaling over 20 år med fortsatt avkastning (annuitet)
+  const payoutYears=20;
+  const annual=retRate>0?pot*retRate/(1-Math.pow(1+retRate,-payoutYears)):pot/payoutYears;
   const monthly=annual/12;
   // Inflasjonsjustert kjøpekraft (2% inflasjon)
   const inflasjon=0.02;
@@ -4015,7 +4017,7 @@ document.addEventListener('keydown', function(e){
     if(e.key==='Enter'){
       if(!e.target.closest('form')){
         e.preventDefault();
-        const calcMap={salary:calcSal,mortgage:calcMor,npv:calcNpv,vat:calcVat};
+        const calcMap={salary:calcSal,mortgage:calcMor,npv:calcNpv,vat:calcVat,uttak:calcUttak,adj:calcAdj};
         if(activeCalc==='basic'&&bcMode==='finance'){fcCalc();return;}
         if(activeCalc==='basic'){
           const subCalcMap={aga:calcAga,avs:calcAvs,ferie:calcFerie,rente:calcRente,valgevinst:calcValgevinst,likvid:calcLikvid,pensjon:calcPensjon};
@@ -4040,7 +4042,7 @@ document.addEventListener('keydown', function(e){
   // Enter for other calculators
   if(e.key==='Enter'){
     e.preventDefault();
-    const calcMap={salary:calcSal,mortgage:calcMor,npv:calcNpv,vat:calcVat};
+    const calcMap={salary:calcSal,mortgage:calcMor,npv:calcNpv,vat:calcVat,uttak:calcUttak,adj:calcAdj};
     if(activeCalc==='basic'&&bcMode==='finance'){fcCalc();return;}
     if(activeCalc==='basic'){
       const subCalcMap={aga:calcAga,avs:calcAvs,ferie:calcFerie,rente:calcRente,valgevinst:calcValgevinst,likvid:calcLikvid,pensjon:calcPensjon};
