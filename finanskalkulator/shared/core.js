@@ -1238,7 +1238,7 @@ function updateNpvUI() {
   setText('bil-rl-bom', r.bilRBom || 'Tolls (estimate)');
   setText('bil-r-info', r.bilRInfo || '= Depreciation + Fuel + Insurance + Service + Tires + Road tax + Tolls');
   // Bil dropdowns & disclaimer
-  repopulateSelect('bil-merke', r.bilMerkeOpts || ['Gjennomsnitt','Toyota','Volkswagen','Volvo','Škoda','Hyundai / Kia','BMW','Mercedes-Benz','Audi','Tesla'], ['snitt','toyota','volkswagen','volvo','skoda','hyundai','bmw','mercedes','audi','tesla']);
+  bilRepopulateMerke(r);
   repopulateSelect('bil-drivstoff', r.bilFuelOpts || ['Bensin','Diesel','Elbil'], ['bensin','diesel','elbil']);
   setText('bil-mode-plan-label', r.bilModePlan || 'Bil jeg vurderer å kjøpe');
   setText('bil-mode-own-label', r.bilModeOwn || 'Bil jeg allerede eier');
@@ -2613,19 +2613,101 @@ function calcDok(){
 // CAR COST CALCULATOR
 // ═══════════════════════════════════════════════════════
 // Brand profiles: depreciation rate (annual % of remaining), service multiplier vs average
-// Sources: NAF, OFV, Autobransjens Leverandørforening, typical Norwegian market data
+// Sources: NAF, OFV, Finn.no markedsdata, Autobransjens Leverandørforening (2024-2026)
+// depr = årlig verditap som andel av gjenværende verdi (declining balance)
+// service = multiplikator vs norsk gjennomsnitt (~9000 kr/år fossil, ~5000 kr/år elbil)
+// cat = kategori for forsikringsestimat: 'budget'|'standard'|'premium'|'luxury'|'ev-budget'
 var BIL_MERKER = {
-  snitt:      {depr:0.15, service:1.0,  label:'Gjennomsnitt'},
-  toyota:     {depr:0.12, service:0.80, label:'Toyota'},
-  volkswagen: {depr:0.15, service:1.00, label:'Volkswagen'},
-  volvo:      {depr:0.16, service:1.05, label:'Volvo'},
-  skoda:      {depr:0.14, service:0.85, label:'Škoda'},
-  hyundai:    {depr:0.14, service:0.85, label:'Hyundai / Kia'},
-  bmw:        {depr:0.18, service:1.35, label:'BMW'},
-  mercedes:   {depr:0.19, service:1.40, label:'Mercedes-Benz'},
-  audi:       {depr:0.17, service:1.30, label:'Audi'},
-  tesla:      {depr:0.20, service:0.70, label:'Tesla'}
+  snitt:      {depr:0.15, service:1.00, cat:'standard',   label:'Gjennomsnitt'},
+  // ── Japansk ──
+  toyota:     {depr:0.12, service:0.80, cat:'standard',   label:'Toyota'},
+  lexus:      {depr:0.12, service:1.15, cat:'premium',    label:'Lexus'},
+  honda:      {depr:0.14, service:0.90, cat:'standard',   label:'Honda'},
+  mazda:      {depr:0.13, service:0.85, cat:'standard',   label:'Mazda'},
+  nissan:     {depr:0.14, service:0.95, cat:'standard',   label:'Nissan'},
+  suzuki:     {depr:0.11, service:0.85, cat:'budget',     label:'Suzuki'},
+  mitsubishi: {depr:0.16, service:1.00, cat:'standard',   label:'Mitsubishi'},
+  subaru:     {depr:0.16, service:1.00, cat:'standard',   label:'Subaru'},
+  // ── Koreansk ──
+  hyundai:    {depr:0.14, service:0.85, cat:'standard',   label:'Hyundai'},
+  kia:        {depr:0.14, service:0.85, cat:'standard',   label:'Kia'},
+  // ── Tysk (standard) ──
+  volkswagen: {depr:0.15, service:1.00, cat:'standard',   label:'Volkswagen'},
+  skoda:      {depr:0.14, service:0.85, cat:'standard',   label:'Škoda'},
+  cupra:      {depr:0.17, service:1.05, cat:'standard',   label:'CUPRA / SEAT'},
+  // ── Tysk (premium) ──
+  bmw:        {depr:0.18, service:1.35, cat:'premium',    label:'BMW'},
+  mercedes:   {depr:0.19, service:1.40, cat:'premium',    label:'Mercedes-Benz'},
+  audi:       {depr:0.18, service:1.30, cat:'premium',    label:'Audi'},
+  porsche:    {depr:0.20, service:1.60, cat:'luxury',     label:'Porsche'},
+  // ── Svensk ──
+  volvo:      {depr:0.16, service:1.05, cat:'standard',   label:'Volvo'},
+  polestar:   {depr:0.16, service:1.05, cat:'premium',    label:'Polestar'},
+  // ── Fransk ──
+  peugeot:    {depr:0.19, service:1.15, cat:'standard',   label:'Peugeot'},
+  citroen:    {depr:0.18, service:1.10, cat:'standard',   label:'Citroën'},
+  renault:    {depr:0.20, service:1.10, cat:'standard',   label:'Renault'},
+  dacia:      {depr:0.21, service:0.80, cat:'budget',     label:'Dacia'},
+  // ── Annet Europa ──
+  fiat:       {depr:0.16, service:1.00, cat:'standard',   label:'Fiat'},
+  ford:       {depr:0.18, service:1.10, cat:'standard',   label:'Ford'},
+  landrover:  {depr:0.20, service:1.40, cat:'luxury',     label:'Land Rover'},
+  // ── Elbil (kinesisk) ──
+  tesla:      {depr:0.18, service:0.70, cat:'ev-budget',  label:'Tesla'},
+  byd:        {depr:0.22, service:1.20, cat:'ev-budget',  label:'BYD'},
+  mg:         {depr:0.23, service:1.15, cat:'ev-budget',  label:'MG'}
 };
+
+// Grouped brand order for the select dropdown
+var BIL_GROUPS = [
+  {label:'Japansk',    keys:['toyota','lexus','honda','mazda','nissan','suzuki','mitsubishi','subaru']},
+  {label:'Koreansk',   keys:['hyundai','kia']},
+  {label:'Tysk',       keys:['volkswagen','skoda','cupra','bmw','mercedes','audi','porsche']},
+  {label:'Svensk',     keys:['volvo','polestar']},
+  {label:'Fransk',     keys:['peugeot','citroen','renault','dacia']},
+  {label:'Annet',      keys:['fiat','ford','landrover']},
+  {label:'Elbilmerker',keys:['tesla','byd','mg']}
+];
+// Group label translations (only "Average" label differs per language)
+var BIL_GROUP_I18N = {en:{g0:'Japanese',g1:'Korean',g2:'German',g3:'Swedish',g4:'French',g5:'Other',g6:'EV brands',avg:'Average'},
+  zh:{g0:'日系',g1:'韩系',g2:'德系',g3:'瑞典',g4:'法系',g5:'其他',g6:'电动品牌',avg:'平均'},
+  fr:{g0:'Japonais',g1:'Coréen',g2:'Allemand',g3:'Suédois',g4:'Français',g5:'Autre',g6:'Marques EV',avg:'Moyenne'},
+  no:{g0:'Japansk',g1:'Koreansk',g2:'Tysk',g3:'Svensk',g4:'Fransk',g5:'Annet',g6:'Elbilmerker',avg:'Gjennomsnitt'},
+  pl:{g0:'Japońskie',g1:'Koreańskie',g2:'Niemieckie',g3:'Szwedzkie',g4:'Francuskie',g5:'Inne',g6:'Marki EV',avg:'Średnia'},
+  uk:{g0:'Японські',g1:'Корейські',g2:'Німецькі',g3:'Шведські',g4:'Французькі',g5:'Інші',g6:'Марки EV',avg:'Середнє'},
+  ar:{g0:'يابانية',g1:'كورية',g2:'ألمانية',g3:'سويدية',g4:'فرنسية',g5:'أخرى',g6:'علامات EV',avg:'المتوسط'},
+  lt:{g0:'Japoniški',g1:'Korejiečių',g2:'Vokiški',g3:'Švediški',g4:'Prancūziški',g5:'Kiti',g6:'EV markės',avg:'Vidurkis'},
+  so:{g0:'Jabbaanka',g1:'Kuuriyaanka',g2:'Jarmalka',g3:'Iswiidishka',g4:'Faransiiska',g5:'Kuwo kale',g6:'EV brand',avg:'Celceliska'},
+  ti:{g0:'ጃፓናዊ',g1:'ኮርያዊ',g2:'ጀርመናዊ',g3:'ሽወደናዊ',g4:'ፈረንሳዊ',g5:'ካልእ',g6:'ኤሌክትሪክ',avg:'ማእከላይ'},
+  sv:{g0:'Japansk',g1:'Koreansk',g2:'Tysk',g3:'Svensk',g4:'Fransk',g5:'Övrigt',g6:'Elbilmärken',avg:'Genomsnitt'},
+  es:{g0:'Japonés',g1:'Coreano',g2:'Alemán',g3:'Sueco',g4:'Francés',g5:'Otro',g6:'Marcas EV',avg:'Promedio'},
+  pt:{g0:'Japonês',g1:'Coreano',g2:'Alemão',g3:'Sueco',g4:'Francês',g5:'Outro',g6:'Marcas EV',avg:'Média'},
+  ur:{g0:'جاپانی',g1:'کوریائی',g2:'جرمن',g3:'سویڈش',g4:'فرانسیسی',g5:'دیگر',g6:'ای وی برانڈز',avg:'اوسط'}
+};
+function bilRepopulateMerke(r){
+  var sel=document.getElementById('bil-merke');
+  if(!sel) return;
+  var cur=sel.value;
+  sel.innerHTML='';
+  var lang=curRegion||'no';
+  var t=BIL_GROUP_I18N[lang]||BIL_GROUP_I18N.no;
+  // "Gjennomsnitt" option first
+  var avgOpt=document.createElement('option');
+  avgOpt.value='snitt';avgOpt.textContent=t.avg;
+  sel.appendChild(avgOpt);
+  BIL_GROUPS.forEach(function(g,gi){
+    var og=document.createElement('optgroup');
+    og.label=t['g'+gi]||g.label;
+    g.keys.forEach(function(k){
+      var bp=BIL_MERKER[k];if(!bp)return;
+      var o=document.createElement('option');
+      o.value=k;o.textContent=bp.label;
+      og.appendChild(o);
+    });
+    sel.appendChild(og);
+  });
+  sel.value=cur;
+}
 
 var bilMode = ''; // 'plan' or 'own'
 
@@ -2717,9 +2799,12 @@ function bilClampKjopsaar(){
 function bilUpdateInsHint() {
   var pris = parseNum('bil-pris') || 400000;
   var merke = (document.getElementById('bil-merke') || {}).value || 'snitt';
+  var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
   var forsikringType = (document.getElementById('bil-forsikring-type') || {}).value || 'fullkasko';
   var insTypeBase = forsikringType === 'ansvar' ? 350 : forsikringType === 'delkasko' ? 550 : 800;
-  var insBrandMult = merke==='bmw'||merke==='mercedes'||merke==='audi' ? 1.35 : merke==='tesla' ? 1.2 : merke==='volvo' ? 1.05 : 1.0;
+  // Brand insurance multiplier based on category
+  var catMult = {budget:0.90, standard:1.0, premium:1.35, luxury:1.50, 'ev-budget':1.15};
+  var insBrandMult = catMult[bp.cat] || 1.0;
   var insValueScale = forsikringType === 'ansvar' ? 0.85 + 0.15 * Math.min(1, pris / 300000) : 0.5 + 0.5 * Math.min(1, pris / 400000);
   var est = Math.round(insTypeBase * insBrandMult * insValueScale);
   var hint = document.getElementById('bil-ins-hint');
@@ -2800,8 +2885,9 @@ function calcBilkostnad() {
     // Norwegian averages (monthly): Ansvar ~250-400, Delkasko ~400-700, Fullkasko ~600-1200
     // Base rates per type (for average ~200k car)
     var insTypeBase = forsikringType === 'ansvar' ? 350 : forsikringType === 'delkasko' ? 550 : 800;
-    // Brand premium multiplier
-    var insBrandMult = merke==='bmw'||merke==='mercedes'||merke==='audi' ? 1.35 : merke==='tesla' ? 1.2 : merke==='volvo' ? 1.05 : 1.0;
+    // Brand premium multiplier based on category
+    var catMult = {budget:0.90, standard:1.0, premium:1.35, luxury:1.50, 'ev-budget':1.15};
+    var insBrandMult = catMult[bp.cat] || 1.0;
     // Scale by car value — ansvar is fairly flat, kasko scales more with value
     var insValueScale;
     if (forsikringType === 'ansvar') {
