@@ -3617,10 +3617,11 @@ function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseN
   document.getElementById('lvu-div-cost').textContent=fmt(divPreTax);
   document.getElementById('lvu-diff').textContent=cheaper+' '+(r.lvuIsCheaper||'er billigere for selskapet')+' ('+fmt(diff)+')';
   document.getElementById('lvu-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('lvu-res'),'top');},80);
 }
 
 // AGA: Ansattkostnad
-function calcAga(){const sal=parseNum('aga-salary');if(sal<=0)return;const aga=+document.getElementById('aga-zone').value;const ferie=+document.getElementById('aga-ferie').value;const otp=+document.getElementById('aga-otp').value;const ferieAmt=sal*ferie;const otpAmt=sal*otp;const agaBase=sal+ferieAmt+otpAmt;const agaAmt=agaBase*aga;const total=sal+agaAmt+ferieAmt+otpAmt;const pct=(agaAmt+ferieAmt+otpAmt)/sal*100;document.getElementById('aga-aga-amt').textContent=fmt(agaAmt);document.getElementById('aga-ferie-amt').textContent=fmt(ferieAmt);document.getElementById('aga-otp-amt').textContent=fmt(otpAmt);document.getElementById('aga-total').textContent=fmt(total);document.getElementById('aga-per-month').textContent=fmt(total/12)+' '+(R().agaPerMonth||'/mnd');document.getElementById('aga-pct').textContent=pct.toFixed(1)+'%';document.getElementById('aga-res').classList.remove('hidden');}
+function calcAga(){const sal=parseNum('aga-salary');if(sal<=0)return;const aga=+document.getElementById('aga-zone').value;const ferie=+document.getElementById('aga-ferie').value;const otp=+document.getElementById('aga-otp').value;const ferieAmt=sal*ferie;const otpAmt=sal*otp;const agaBase=sal+ferieAmt+otpAmt;const agaAmt=agaBase*aga;const total=sal+agaAmt+ferieAmt+otpAmt;const pct=(agaAmt+ferieAmt+otpAmt)/sal*100;document.getElementById('aga-aga-amt').textContent=fmt(agaAmt);document.getElementById('aga-ferie-amt').textContent=fmt(ferieAmt);document.getElementById('aga-otp-amt').textContent=fmt(otpAmt);document.getElementById('aga-total').textContent=fmt(total);document.getElementById('aga-per-month').textContent=fmt(total/12)+' '+(R().agaPerMonth||'/mnd');document.getElementById('aga-pct').textContent=pct.toFixed(1)+'%';document.getElementById('aga-res').classList.remove('hidden');setTimeout(function(){scrollToEl(document.getElementById('aga-res'),'top');},80);}
 
 // AVS: Avskrivning — mode toggle
 window.avsMode='regnskap';
@@ -3755,6 +3756,7 @@ function calcRente(){
   document.getElementById('rente-total').textContent=fmt(totalCost);
   document.getElementById('rente-fees').textContent=fmt(totalFees);
   document.getElementById('rente-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('rente-res'),'top');},80);
 }
 
 
@@ -3801,10 +3803,11 @@ function calcValgevinst(){
   document.getElementById('valgevinst-tax').textContent=gain>0?fmt(tax):fmt(0);
   document.getElementById('valgevinst-net').textContent=fmt(net);
   document.getElementById('valgevinst-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('valgevinst-res'),'top');},80);
 }
 
 // LIKVID: Likviditetsbudsjett
-function calcLikvid(){const start=parseNum('likvid-start'),income=parseNum('likvid-income'),expense=parseNum('likvid-expense');const r=R();let balance=start;const rows=['<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;font-weight:600;">'+(r.likvidColMonth||'Måned')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColStart||'Start')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColIncome||'Inntekt')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColExpense||'Utgift')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColEnd||'Slutt')+'</td></tr>'];for(let i=1;i<=6;i++){const endBal=balance+income-expense;const style=endBal<0?'background:rgba(255,0,0,0.05);':'';rows.push('<tr style="border-bottom:1px solid var(--border);'+style+'"><td style="padding:6px 4px;">'+(r.likvidMnd||'Mnd')+' '+i+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(balance)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(income)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(expense)+'</td><td style="padding:6px 4px;text-align:right;font-weight:600;">'+fmt(endBal)+'</td></tr>');balance=endBal;}document.getElementById('likvid-table').innerHTML='<table style="width:100%;border-collapse:collapse;">'+rows.join('')+'</table>';document.getElementById('likvid-res').classList.remove('hidden');}
+function calcLikvid(){const start=parseNum('likvid-start'),income=parseNum('likvid-income'),expense=parseNum('likvid-expense');const r=R();let balance=start;const rows=['<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;font-weight:600;">'+(r.likvidColMonth||'Måned')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColStart||'Start')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColIncome||'Inntekt')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColExpense||'Utgift')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColEnd||'Slutt')+'</td></tr>'];for(let i=1;i<=6;i++){const endBal=balance+income-expense;const style=endBal<0?'background:rgba(255,0,0,0.05);':'';rows.push('<tr style="border-bottom:1px solid var(--border);'+style+'"><td style="padding:6px 4px;">'+(r.likvidMnd||'Mnd')+' '+i+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(balance)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(income)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(expense)+'</td><td style="padding:6px 4px;text-align:right;font-weight:600;">'+fmt(endBal)+'</td></tr>');balance=endBal;}document.getElementById('likvid-table').innerHTML='<table style="width:100%;border-collapse:collapse;">'+rows.join('')+'</table>';document.getElementById('likvid-res').classList.remove('hidden');setTimeout(function(){scrollToEl(document.getElementById('likvid-res'),'top');},80);}
 
 // PENSJON: Pensjon OTP
 function calcPensjon(){
@@ -3825,6 +3828,7 @@ function calcPensjon(){
   document.getElementById('pensjon-real-monthly').textContent=fmt(realMonthly);
   document.getElementById('pensjon-disclaimer').classList.remove('hidden');
   document.getElementById('pensjon-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('pensjon-res'),'top');},80);
 }
 
 function switchCalcMode(mode, skipScroll){
