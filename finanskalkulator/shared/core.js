@@ -5104,6 +5104,8 @@ function _initPageReady(){
       var card=el.classList.contains('info-card')?el:el.closest&&el.closest('.info-card');
       if(card){
         if(card.classList.contains('collapsed')) card.classList.remove('collapsed');
+        // Clear hash to prevent browser auto-scroll
+        history.replaceState(null,'',window.location.pathname);
         if(_isMobile()){
           enterMobileFocus(card);
         } else {
@@ -5111,6 +5113,8 @@ function _initPageReady(){
           toggleDesktopFocus(idx);
         }
         window.scrollTo(0,0);
+        // Belt-and-suspenders: override any delayed browser scroll
+        setTimeout(function(){window.scrollTo(0,0);},0);
       } else {
         el.scrollIntoView({block:'start'});
       }
