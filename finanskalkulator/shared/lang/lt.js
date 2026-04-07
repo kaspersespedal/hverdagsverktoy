@@ -453,5 +453,13 @@ REGIONS['lt'] = {
     studieAar:'metų', studieVerdictLow:'Įmanoma — mažiau nei dauguma prenumeratų.', studieVerdictMid:'Vidutinė — maždaug kaip komunalinių paslaugų sąskaita.', studieVerdictHigh:'Didelė mėnesinė kaina — apsvarstykite ilgesnį grąžinimo laikotarpį.',
     studieDisclaimer:'* Remiantis Lånekassen 2025-2026 normomis. Faktinė stipendijos dalis priklauso nuo išlaikytų kreditų ir pajamų/turto. Anuiteto paskola su 18 kr termino mokesčiu (0 kr su eFaktura).',
 
-    ccCurrNames:['Norvegų krona','Euras','JAV doleris','Britų svaras','Švedų krona','Danų krona','Lenkų zlotas','Šveicarų frankas','Japonų jena','Kinų juanis','Kanados doleris','Australijos doleris','Indijos rupija','Turkų lira','Brazilijos realas']
+    ccCurrNames:['Norvegų krona','Euras','JAV doleris','Britų svaras','Švedų krona','Danų krona','Lenkų zlotas','Šveicarų frankas','Japonų jena','Kinų juanis','Kanados doleris','Australijos doleris','Indijos rupija','Turkų lira','Brazilijos realas'],
+    searchPlaceholder:'Ieškokite įrankių, sąvokų ar įstatymų…',
+    searchPopular:'Siūlomi',
+    searchNoResults:'Rezultatų nerasta',
+    searchMissing:'Kažko trūksta?',
+    searchTagTool:'Įrankis',
+    searchTagConcept:'Sąvoka',
+    searchTagLaw:'Įstatymas',
+    searchFeedbackMsg:'Pasakykite, ko ieškote'
 };

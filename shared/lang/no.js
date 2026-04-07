@@ -465,5 +465,13 @@ REGIONS['no'] = {
     studieSecNedplan:'Nedbetalingsplan (år for år)', studieThAar:'År', studieThBetaling:'Betaling', studieThRenter:'Renter', studieThAvdrag:'Avdrag', studieThRestgjeld:'Restgjeld',
     studieAar:'år', studieVerdictLow:'Overkommelig — lavere enn de fleste abonnementstjenester.', studieVerdictMid:'Moderat — omtrent som en strømregning.', studieVerdictHigh:'Høy månedskostnad — vurder lengre nedbetalingstid.',
     studieDisclaimer:'* Basert på Lånekassens satser 2025–2026. Faktisk stipendandel avhenger av beståtte studiepoeng og inntekt/formue. Annuitetslån med termingebyr 18 kr (0 kr med eFaktura).',
-    ccCurrNames:['Norske kroner','Euro','US Dollar','Britiske pund','Svenske kroner','Danske kroner','Polske zloty','Sveitsiske franc','Japanske yen','Kinesiske yuan','Kanadiske dollar','Australske dollar','Indiske rupi','Tyrkiske lira','Brasilianske real']
+    ccCurrNames:['Norske kroner','Euro','US Dollar','Britiske pund','Svenske kroner','Danske kroner','Polske zloty','Sveitsiske franc','Japanske yen','Kinesiske yuan','Kanadiske dollar','Australske dollar','Indiske rupi','Tyrkiske lira','Brasilianske real'],
+    searchPlaceholder:'Søk etter verktøy, begreper eller lover…',
+    searchPopular:'Foreslåtte',
+    searchNoResults:'Ingen treff',
+    searchMissing:'Savner du noe?',
+    searchTagTool:'Verktøy',
+    searchTagConcept:'Begrep',
+    searchTagLaw:'Lov',
+    searchFeedbackMsg:'Fortell oss hva du leter etter'
 };

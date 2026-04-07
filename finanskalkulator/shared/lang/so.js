@@ -452,5 +452,13 @@ REGIONS['so'] = {
     studieAar:'sanno', studieVerdictLow:'La maarayn karaa — ka yar inta badan ee adeegyada rukunyaha.', studieVerdictMid:'Dhexdhexaad — ku dhawaad biilka korontada.', studieVerdictHigh:'Kharash bishii sare — tixgeli muddada bixinta oo dheer.',
     studieDisclaimer:'* Ku salaysan heerarka Lånekassen 2025-2026. Qayb deeqda dhabta ah waxay ku xiran tahay dhibcaha la gudbay iyo dakhliga/hantida. Deynta annuity leh leh kharash xilli 18 kr (0 kr leh eFaktura).',
 
-    ccCurrNames:['Kroonka Norwayga','Yuurada','Doolarka Maraykanka','Bowndha Ingiriiska','Kroonka Iswiidhan','Kroonka Danishka','Zloty-ga Booland','Faranka Iswiisarland','Yenta Jabaan','Yuanta Shiinaha','Doolarka Kanada','Doolarka Awstaraaliya','Ruubiga Hindiya','Lirada Turkiga','Reaalka Baraasiil']
+    ccCurrNames:['Kroonka Norwayga','Yuurada','Doolarka Maraykanka','Bowndha Ingiriiska','Kroonka Iswiidhan','Kroonka Danishka','Zloty-ga Booland','Faranka Iswiisarland','Yenta Jabaan','Yuanta Shiinaha','Doolarka Kanada','Doolarka Awstaraaliya','Ruubiga Hindiya','Lirada Turkiga','Reaalka Baraasiil'],
+    searchPlaceholder:'Raadi qalabyo, fikrado ama sharciyada…',
+    searchPopular:'La soo jeediyey',
+    searchNoResults:'Natiijo la ma helin',
+    searchMissing:'Ma wax baa ka maqan?',
+    searchTagTool:'Qalab',
+    searchTagConcept:'Fikrad',
+    searchTagLaw:'Sharci',
+    searchFeedbackMsg:'Noo sheeg waxa aad raadinayso'
 };

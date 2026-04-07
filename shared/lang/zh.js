@@ -454,5 +454,13 @@ REGIONS['zh'] = {
     studieSecNedplan:'还款计划（逐年）', studieThAar:'年', studieThBetaling:'还款', studieThRenter:'利息', studieThAvdrag:'本金', studieThRestgjeld:'剩余',
     studieAar:'年', studieVerdictLow:'可承受 — 低于大多数订阅服务。', studieVerdictMid:'适中 — 大约相当于一笔水电费。', studieVerdictHigh:'月费较高 — 考虑延长还款期限。',
     studieDisclaimer:'* 基于Lånekassen 2025-2026年标准。实际助学金比例取决于通过学分和收入/资产。等额年金贷款，手续费18 kr（eFaktura为0 kr）。',
-    ccCurrNames:['挪威克朗','欧元','美元','英镑','瑞典克朗','丹麦克朗','波兰兹罗提','瑞士法郎','日元','人民币','加拿大元','澳大利亚元','印度卢比','土耳其里拉','巴西雷亚尔']
+    ccCurrNames:['挪威克朗','欧元','美元','英镑','瑞典克朗','丹麦克朗','波兰兹罗提','瑞士法郎','日元','人民币','加拿大元','澳大利亚元','印度卢比','土耳其里拉','巴西雷亚尔'],
+    searchPlaceholder:'搜索工具、概念或法律…',
+    searchPopular:'推荐',
+    searchNoResults:'无结果',
+    searchMissing:'缺少什么？',
+    searchTagTool:'工具',
+    searchTagConcept:'概念',
+    searchTagLaw:'法律',
+    searchFeedbackMsg:'告诉我们您在找什么'
 };

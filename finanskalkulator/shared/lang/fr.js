@@ -454,5 +454,13 @@ REGIONS['fr'] = {
     studieSecNedplan:'Plan de remboursement (année par année)', studieThAar:'Année', studieThBetaling:'Paiement', studieThRenter:'Intérêts', studieThAvdrag:'Capital', studieThRestgjeld:'Restant',
     studieAar:'ans', studieVerdictLow:'Gérable — moins que la plupart des abonnements.', studieVerdictMid:'Modéré — environ comme une facture de services publics.', studieVerdictHigh:'Coût mensuel élevé — envisagez une période de remboursement plus longue.',
     studieDisclaimer:'* Basé sur les taux Lånekassen 2025-2026. La part de bourse réelle dépend des crédits validés et des revenus/patrimoine. Prêt à annuités avec frais de terme de 18 kr (0 kr avec eFaktura).',
-    ccCurrNames:['Couronne norvégienne','Euro','Dollar américain','Livre sterling','Couronne suédoise','Couronne danoise','Zloty polonais','Franc suisse','Yen japonais','Yuan chinois','Dollar canadien','Dollar australien','Roupie indienne','Livre turque','Réal brésilien']
+    ccCurrNames:['Couronne norvégienne','Euro','Dollar américain','Livre sterling','Couronne suédoise','Couronne danoise','Zloty polonais','Franc suisse','Yen japonais','Yuan chinois','Dollar canadien','Dollar australien','Roupie indienne','Livre turque','Réal brésilien'],
+    searchPlaceholder:'Rechercher des outils, concepts ou lois…',
+    searchPopular:'Suggestions',
+    searchNoResults:'Aucun résultat',
+    searchMissing:'Il manque quelque chose ?',
+    searchTagTool:'Outil',
+    searchTagConcept:'Concept',
+    searchTagLaw:'Loi',
+    searchFeedbackMsg:'Dites-nous ce que vous cherchez'
 };

@@ -453,5 +453,13 @@ REGIONS['pl'] = {
     studieSecNedplan:'Plan spłaty (rok po roku)', studieThAar:'Rok', studieThBetaling:'Płatność', studieThRenter:'Odsetki', studieThAvdrag:'Kapitał', studieThRestgjeld:'Pozostało',
     studieAar:'lat', studieVerdictLow:'Do opanowania — mniej niż większość subskrypcji.', studieVerdictMid:'Umiarkowane — mniej więcej jak rachunek za media.', studieVerdictHigh:'Wysoki koszt miesięczny — rozważ dłuższy okres spłaty.',
     studieDisclaimer:'* Na podstawie stawek Lånekassen 2025-2026. Rzeczywisty udział stypendium zależy od zaliczonych punktów i dochodów/majątku. Pożyczka annuitetowa z opłatą za termin 18 kr (0 kr z eFaktura).',
-    ccCurrNames:['Korona norweska','Euro','Dolar amerykański','Funt brytyjski','Korona szwedzka','Korona duńska','Złoty polski','Frank szwajcarski','Jen japoński','Juan chiński','Dolar kanadyjski','Dolar australijski','Rupia indyjska','Lira turecka','Real brazylijski']
+    ccCurrNames:['Korona norweska','Euro','Dolar amerykański','Funt brytyjski','Korona szwedzka','Korona duńska','Złoty polski','Frank szwajcarski','Jen japoński','Juan chiński','Dolar kanadyjski','Dolar australijski','Rupia indyjska','Lira turecka','Real brazylijski'],
+    searchPlaceholder:'Szukaj narzędzi, pojęć lub przepisów…',
+    searchPopular:'Proponowane',
+    searchNoResults:'Brak wyników',
+    searchMissing:'Czegoś brakuje?',
+    searchTagTool:'Narzędzie',
+    searchTagConcept:'Pojęcie',
+    searchTagLaw:'Prawo',
+    searchFeedbackMsg:'Powiedz nam, czego szukasz'
 };
