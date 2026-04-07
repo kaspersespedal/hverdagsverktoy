@@ -689,121 +689,37 @@ REGIONS['fr'] = {
     searchTagTool:'Outil',
     searchTagConcept:'Concept',
     searchTagLaw:'Loi',
-    searchFeedbackMsg:'Dites-nous ce que vous cherchez'
-    // ═══ LÉGISLATION — AKSJELOVEN & SELSKAPSLOVEN ═══
-
+    searchFeedbackMsg:'Dites-nous ce que vous cherchez',
     selLawGroupTitle:'Aksjeloven et Selskapsloven',
     selLawGroupDesc:'Règles juridiques pour les AS, ANS, DA et KS',
     selLawLabelAsl:'Aksjeloven (Loi sur les sociétés anonymes)',
     selLawLabelSel:'Selskapsloven (Loi sur les sociétés de personnes)',
     selLawHint:'Cliquez sur une référence de paragraphe (§) pour voir le texte juridique sur Lovdata',
-
     selAslStiftTitle:'Constitution (ch. 2)',
     selAslStiftDesc:'Document de constitution · Capital social · Statuts',
-    selAslStiftRows:[
-      ['Que faut-il pour constituer une AS ?','Un document de constitution signé par tous les fondateurs, comprenant les statuts, le capital social et l\'élection du conseil.','asl. § 2-1'],
-      ['Que doivent contenir les statuts ?','Le nom de l\'entreprise, la commune, la nature de l\'activité, le montant du capital social et la valeur nominale des actions.','asl. § 2-2'],
-      ['Capital social minimum','30 000 kr (réduit de 100 000 kr en 2012).','asl. § 3-1'],
-      ['Apports en nature','Possibles avec des biens, mais nécessitent une documentation avec confirmation de l\'auditeur.','asl. § 2-4 et § 2-6'],
-      ['Quand la société est-elle constituée ?','Lorsque le document de constitution est signé par tous les fondateurs. La société n\'a pas de droits tant qu\'elle n\'est pas enregistrée au Foretaksregisteret.','asl. § 2-9 et § 2-18'],
-      ['Délai d\'enregistrement','Dans les 3 mois suivant la signature du document de constitution, sinon la constitution est caduque.','asl. § 2-18']
-    ],
-
+    selAslStiftRows:[['What is needed to form an AS?','A founding document signed by all subscribers, including articles of association, share capital and board election.','asl. § 2-1'],['What must the articles contain?','Company name, municipality, nature of business, share capital amount and par value of shares.','asl. § 2-2'],['Minimum share capital','NOK 30,000 (reduced from 100,000 in 2012).','asl. § 3-1'],['Non-cash contributions','Possible with assets in kind, but must be documented with auditor confirmation.','asl. § 2-4 and § 2-6'],['When is the company formed?','When the founding document is signed by all founders. The company has no legal rights until registered in the Register of Business Enterprises.','asl. § 2-9 and § 2-18'],['Deadline for registration','Within 3 months of signing the founding document, otherwise the formation lapses.','asl. § 2-18']],
     selAslKapitalTitle:'Capital social et distributions (ch. 3 et 8)',
     selAslKapitalDesc:'Augmentation de capital · Dividendes · Exigence de suffisance',
-    selAslKapitalRows:[
-      ['Augmentation de capital','Décision de l\'assemblée générale à la majorité des 2/3. Possible par nouvelle souscription, émission gratuite ou fusion.','asl. § 10-1'],
-      ['Réduction de capital','Peut être utilisée pour couvrir des pertes, distribuer aux actionnaires ou transférer en réserves. Nécessite un avis aux créanciers.','asl. § 12-1'],
-      ['Dividendes — règle principale','La société peut distribuer des dividendes sur le bénéfice net ou les fonds propres distribuables, par décision de l\'assemblée générale.','asl. § 8-1'],
-      ['Exigence de suffisance','La société doit toujours avoir des fonds propres et une liquidité adaptés au risque et à l\'ampleur des opérations.','asl. § 3-4'],
-      ['Obligation d\'agir en cas de fonds propres insuffisants','Le conseil doit traiter immédiatement la question et convoquer l\'assemblée générale si les fonds propres sont insuffisants.','asl. § 3-5'],
-      ['Base de dividendes','Actifs nets moins fonds propres liés (capital social, réserve de gains non réalisés). Les prêts aux actionnaires sont déduits.','asl. § 8-1 (2)-(4)'],
-      ['Dividende extraordinaire','Le conseil peut distribuer un dividende extraordinaire basé sur un bilan intermédiaire sans attendre l\'assemblée générale annuelle.','asl. § 8-2a']
-    ],
-
+    selAslKapitalRows:[['Capital increase','Resolved by the general meeting with 2/3 majority. Can be done by new subscription, bonus issue or merger.','asl. § 10-1'],['Capital reduction','Can be used to cover losses, distribute to shareholders or transfer to reserves. Requires creditor notice.','asl. § 12-1'],['Dividends — main rule','The company may distribute dividends from net profit or distributable equity, resolved by the general meeting.','asl. § 8-1'],['Adequacy requirement','The company must at all times have equity and liquidity adequate for its risk and scope of operations.','asl. § 3-4'],['Duty to act on low equity','The board must immediately address the matter and convene a general meeting if equity is inadequately low.','asl. § 3-5'],['Dividend basis','Net assets minus restricted equity (share capital, unrealised gains reserve). Loans to shareholders are deducted.','asl. § 8-1 (2)-(4)'],['Extraordinary dividend','The board may distribute extraordinary dividends based on an interim balance sheet without waiting for the annual general meeting.','asl. § 8-2a']],
     selAslLedelseTitle:'Direction et organisation (ch. 6)',
     selAslLedelseDesc:'Conseil · Directeur général · Assemblée générale',
-    selAslLedelseRows:[
-      ['Devoirs du conseil','Gérer la société, assurer une organisation adéquate, superviser la gestion quotidienne et les opérations de la société.','asl. § 6-12'],
-      ['Composition du conseil','Minimum 1 membre du conseil pour capital ≤ 3 millions kr, sinon minimum 3. Représentation des employés au-delà de 30 employés.','asl. § 6-1'],
-      ['Directeur général','Non requis si le capital social est inférieur à 3 millions kr. Peut être élu par le conseil.','asl. § 6-2'],
-      ['Assemblée générale','Organe suprême de la société. Tenue dans les 6 mois suivant la fin de l\'exercice. Approuve les comptes annuels, les dividendes et les élections du conseil.','asl. § 5-1 et § 5-5'],
-      ['Conflit d\'intérêts au conseil','Un membre du conseil ne peut participer aux affaires dans lesquelles il a un intérêt personnel contraire à celui de la société.','asl. § 6-27'],
-      ['Responsabilité du conseil','Les membres du conseil qui causent intentionnellement ou par négligence un préjudice à la société peuvent être tenus personnellement responsables.','asl. § 17-1']
-    ],
-
+    selAslLedelseRows:[['Board duties','Manage the company, ensure proper organisation, supervise day-to-day management and the company\'s operations.','asl. § 6-12'],['Board composition','Minimum 1 board member for share capital ≤ 3 million kr, otherwise minimum 3. Employee representation required above 30 employees.','asl. § 6-1'],['Managing director','Not required if share capital is below 3 million kr. May be elected by the board.','asl. § 6-2'],['General meeting','The company\'s supreme body. Held within 6 months after the end of the financial year. Approves annual accounts, dividends and board elections.','asl. § 5-1 and § 5-5'],['Board member disqualification','A board member may not participate in matters where they have a personal interest conflicting with the company\'s.','asl. § 6-27'],['Board liability','Board members who intentionally or negligently cause loss to the company may be held personally liable.','asl. § 17-1']],
     selAslAksjerTitle:'Actions et transfert (ch. 4)',
     selAslAksjerDesc:'Registre des actionnaires · Droit de préemption · Consentement',
-    selAslAksjerRows:[
-      ['Registre des actionnaires','La société doit tenir un registre de toutes les actions avec le nom et l\'adresse du propriétaire. Doit être accessible au public.','asl. § 4-5'],
-      ['Droit de préemption','Les actionnaires ont un droit de préemption lors du transfert d\'actions, sauf disposition contraire des statuts.','asl. § 4-19'],
-      ['Consentement du conseil pour le transfert','L\'acquisition d\'actions nécessite le consentement du conseil, sauf disposition contraire des statuts.','asl. § 4-15'],
-      ['Transfert d\'actions','Les actions sont transférées par notification à la société. L\'acquéreur obtient des droits à partir du moment de la notification.','asl. § 4-12'],
-      ['Rachat forcé','Un actionnaire peut demander le rachat en cas d\'abus substantiel de position par la majorité.','asl. § 4-24'],
-      ['Actions propres','La société peut acquérir jusqu\'à 10 % de ses propres actions sur autorisation de l\'assemblée générale.','asl. § 9-2']
-    ],
-
+    selAslAksjerRows:[['Shareholder register','The company must keep a register of all shares with the owner\'s name and address. Must be publicly accessible.','asl. § 4-5'],['Pre-emption rights','Shareholders have pre-emption rights on share transfers, unless the articles provide otherwise.','asl. § 4-19'],['Board consent for transfer','Acquisition of shares requires board consent, unless the articles provide otherwise.','asl. § 4-15'],['Share transfer','Shares are transferred by notice to the company. The acquirer gains rights from the time the acquisition is notified.','asl. § 4-12'],['Compulsory redemption','A shareholder may demand redemption in case of substantial abuse of position by the majority.','asl. § 4-24'],['Own shares','The company may acquire up to 10% of its own shares under authorisation from the general meeting.','asl. § 9-2']],
     selAslFusjonTitle:'Fusion, scission et dissolution (ch. 13–16)',
     selAslFusjonDesc:'Fusion · Scission · Liquidation',
-    selAslFusjonRows:[
-      ['Fusion','Une société absorbe une autre. Nécessite un plan de fusion, majorité des 2/3 dans les deux sociétés et avis aux créanciers de 6 semaines.','asl. § 13-3 et § 13-14'],
-      ['Scission','Une société est divisée en deux ou plus. Les valeurs peuvent être transférées à une société nouvelle ou existante.','asl. § 14-2'],
-      ['Fusion/scission en franchise d\'impôt','Réalisée selon les règles de l\'Aksjeloven, la fusion et la scission peuvent bénéficier de la continuité fiscale (pas d\'imposition immédiate).','sktl. § 11-2 et § 11-4'],
-      ['Dissolution','L\'assemblée générale décide la dissolution à la majorité des 2/3. Le conseil notifie le Foretaksregisteret.','asl. § 16-1'],
-      ['Comité de liquidation','Le conseil fait office de comité de liquidation et doit régler les dettes, réaliser les actifs et distribuer le solde net aux actionnaires.','asl. § 16-2 et § 16-9'],
-      ['Avis aux créanciers','Lors de la dissolution, les créanciers doivent être notifiés avec un délai de 6 semaines dans la publication du Brønnøysundregistrene.','asl. § 16-4']
-    ],
-
+    selAslFusjonRows:[['Merger','One company takes over another. Requires a merger plan, 2/3 majority in both companies and 6-week creditor notice.','asl. § 13-3 and § 13-14'],['Demerger','A company is split into two or more. Values can be transferred to a new or existing company.','asl. § 14-2'],['Tax-free merger/demerger','If carried out under the Companies Act rules, merger and demerger can occur with tax continuity (no immediate taxation).','sktl. § 11-2 and § 11-4'],['Dissolution','The general meeting resolves dissolution with 2/3 majority. The board notifies the Register of Business Enterprises.','asl. § 16-1'],['Liquidation board','The board serves as liquidation board and must settle liabilities, realise assets and distribute net proceeds to shareholders.','asl. § 16-2 and § 16-9'],['Creditor notice','Upon dissolution, creditors must be notified with a 6-week deadline in the Brønnøysund Register\'s official gazette.','asl. § 16-4']],
     selSelGrunnTitle:'Règles de base des sociétés en nom collectif (ch. 2)',
     selSelGrunnDesc:'Contrat de société · Responsabilité · Associés',
-    selSelGrunnRows:[
-      ['Qu\'est-ce qu\'une société en nom collectif ?','Deux ou plusieurs associés exercent une activité ensemble, et au moins un est responsable de manière illimitée des obligations de la société.','sel. § 1-2'],
-      ['ANS vs DA','Dans une ANS, tous les associés sont solidairement responsables de toutes les dettes. Dans une DA, chaque associé est responsable au prorata — c\'est-à-dire de sa part de la dette.','sel. § 1-2 (1) b et c'],
-      ['Contrat de société','Toutes les sociétés en nom collectif doivent avoir un contrat écrit précisant les associés, les apports et la répartition des bénéfices/pertes.','sel. § 2-3'],
-      ['Nombre minimum d\'associés','Au moins 2 associés. La société est dissoute s\'il ne reste qu\'un seul associé pendant plus de 6 mois.','sel. § 1-2 et § 2-37'],
-      ['Responsabilité des associés — illimitée','Les associés d\'ANS/DA sont personnellement responsables au-delà de leurs apports. Les créanciers peuvent se retourner directement contre les associés (ANS) ou au prorata (DA).','sel. § 2-4'],
-      ['Patrimoine de la société','Les apports des associés et les autres actifs de la société forment le patrimoine de la société. Les associés ne peuvent retirer des valeurs affaiblissant la couverture des créanciers.','sel. § 2-7']
-    ],
-
+    selSelGrunnRows:[['What is a general partnership?','Two or more partners conduct business together, and at least one is unlimitedly liable for the company\'s obligations.','sel. § 1-2'],['ANS vs DA','In ANS all partners are jointly liable for all debts. In DA each partner is liable pro rata — i.e. for their share of the debt.','sel. § 1-2 (1) b and c'],['Partnership agreement','All general partnerships must have a written partnership agreement specifying partners, contributions and profit/loss distribution.','sel. § 2-3'],['Minimum number of partners','At least 2 partners. The company is dissolved if only one partner remains for more than 6 months.','sel. § 1-2 and § 2-37'],['Partner liability — unlimited','Partners in ANS/DA are personally liable beyond their contributions. Creditors can claim directly from partners (ANS) or pro rata (DA).','sel. § 2-4'],['Partnership assets','Partners\' contributions and other company assets form the partnership\'s assets. Partners may not withdraw values that weaken creditor coverage.','sel. § 2-7']],
     selSelInternTitle:'Organisation interne (ch. 2)',
     selSelInternDesc:'Réunion des associés · Gestion · Excédent',
-    selSelInternRows:[
-      ['Réunion des associés','Autorité suprême dans une société en nom collectif. Tous les associés ont le droit de participer. Les décisions requièrent l\'unanimité sauf accord contraire.','sel. § 2-8'],
-      ['Exigences de majorité','Les décisions ordinaires requièrent l\'unanimité. Les décisions spéciales (modification du contrat) requièrent le consentement de tous.','sel. § 2-12 et § 2-13'],
-      ['Droit de gestion des associés','Chaque associé a le droit et le devoir de participer à la gestion de la société, sauf accord contraire.','sel. § 2-16'],
-      ['Bénéfices et pertes','Répartis également entre les associés sauf disposition contraire du contrat de société.','sel. § 2-25 et § 2-26'],
-      ['Retraits','Un associé peut retirer des fonds conformément au contrat de société ou aux décisions de la réunion des associés.','sel. § 2-26'],
-      ['Comptabilité et audit','Les sociétés en nom collectif ayant un chiffre d\'affaires supérieur à 5 millions kr sont soumises aux obligations comptables. Au-delà de certains seuils, un auditeur est requis.','regnskapsloven § 1-2 et revisorloven § 2-1']
-    ],
-
+    selSelInternRows:[['Partnership meeting','Supreme authority in a general partnership. All partners have the right to attend. Decisions require unanimity unless otherwise agreed.','sel. § 2-8'],['Majority requirements','Ordinary decisions require unanimity. Special decisions (amending the partnership agreement) require consent from all.','sel. § 2-12 and § 2-13'],['Partners\' management rights','Each partner has the right and duty to participate in managing the partnership, unless otherwise agreed.','sel. § 2-16'],['Profit and loss','Distributed equally among partners unless the partnership agreement provides otherwise.','sel. § 2-25 and § 2-26'],['Withdrawals','A partner may withdraw funds in accordance with the partnership agreement or decisions at the partnership meeting.','sel. § 2-26'],['Accounting and audit','General partnerships with sales revenue over 5 million kr are subject to accounting obligations. Above certain thresholds, an auditor is required.','Accounting Act § 1-2 and Auditor Act § 2-1']],
     selSelKsTitle:'Société en commandite (ch. 3)',
     selSelKsDesc:'Commandité · Commanditaire · Responsabilité',
-    selSelKsRows:[
-      ['Qu\'est-ce qu\'une société en commandite ?','Une société avec au moins un commandité (responsabilité illimitée) et au moins un commanditaire (responsabilité limitée à l\'apport).','sel. § 3-1'],
-      ['Rôle du commandité','A une responsabilité personnelle illimitée et gère l\'activité de la société. Souvent une AS sert de commandité.','sel. § 3-1 et § 3-9'],
-      ['Responsabilité du commanditaire','Responsable uniquement de son apport convenu. Ne peut participer à la gestion sans perdre la limitation.','sel. § 3-1 et § 3-7'],
-      ['Exigence d\'apport','Le commanditaire doit verser l\'apport convenu. L\'apport ne peut être inférieur à 20 000 kr par commanditaire.','sel. § 3-1 (2)'],
-      ['Gestion dans une KS','Le commandité gère la société. Le commanditaire peut assister aux réunions mais n\'a pas de droit de gestion sans accord.','sel. § 3-9'],
-      ['Imposition des associés','La KS est imposée par imposition des associés — les bénéfices/pertes sont imposés directement chez les associés, pas dans la société.','sktl. § 10-40 flg.']
-    ],
-
+    selSelKsRows:[['What is a limited partnership?','A company with at least one general partner (unlimited liability) and at least one limited partner (liability limited to contribution).','sel. § 3-1'],['General partner\'s role','Has unlimited personal liability and manages the company\'s business. Often an AS serves as general partner.','sel. § 3-1 and § 3-9'],['Limited partner\'s liability','Liable only for agreed contribution. Cannot participate in management without losing the limitation.','sel. § 3-1 and § 3-7'],['Contribution requirement','The limited partner must pay agreed contribution. The contribution cannot be set below NOK 20,000 per limited partner.','sel. § 3-1 (2)'],['Management in KS','The general partner manages the company. The limited partner may attend partnership meetings but has no management rights without agreement.','sel. § 3-9'],['Partner taxation','KS is taxed through partner taxation — profit/loss is taxed directly with the partners, not in the company.','sktl. § 10-40 ff.']],
     selSelOpplosTitle:'Retrait et dissolution (ch. 2)',
     selSelOpplosDesc:'Rachat · Démission · Liquidation',
-    selSelOpplosRows:[
-      ['Démission','Un associé peut démissionner avec un préavis de 6 mois avant la fin de l\'exercice, sauf accord contraire.','sel. § 2-32'],
-      ['Rachat','Un associé peut demander le rachat en cas de manquement grave d\'autres associés ou pour d\'autres raisons importantes.','sel. § 2-32 (2)'],
-      ['Évaluation à la sortie','Le montant du rachat est fixé à la valeur réelle de la part, sauf disposition contraire du contrat de société.','sel. § 2-33'],
-      ['Dissolution par unanimité','La réunion des associés peut décider la dissolution si tous les associés sont d\'accord.','sel. § 2-37'],
-      ['Dissolution judiciaire','Le tribunal peut dissoudre la société si des raisons impérieuses le justifient, par exemple des problèmes de coopération persistants.','sel. § 2-38'],
-      ['Liquidation','Lors de la dissolution, la liquidation est effectuée : les dettes sont réglées, les actifs réalisés et le solde net distribué entre les associés.','sel. § 2-39 flg.']
-    ],
-
-    searchPlaceholder:'Rechercher des outils, concepts ou lois…',
-    searchPopular:'Suggestions',
-    searchNoResults:'Aucun résultat',
-    searchMissing:'Il manque quelque chose ?',
-    searchTagTool:'Outil',
-    searchTagConcept:'Concept',
-    searchTagLaw:'Loi',
-    searchFeedbackMsg:'Dites-nous ce que vous cherchez'
+    selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 ff.']]
 };

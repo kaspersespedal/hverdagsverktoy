@@ -643,112 +643,37 @@ REGIONS['so'] = {
     // --- Noocyo kale oo shirkad
     selskapAndreTitle:'Noocyo kale oo shirkad',
     selskapAndreDesc:'ASA, NUF, SA iyo asaasigga',
-    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Marka laga reebo noocyada caadiga ah waxaa jira noocyo kale oo shirkad ee lagu isticmaalo baahyo gaar ah.</div>'
-    // ═══ SHARCIGA — AKSJELOVEN & SELSKAPSLOVEN ═══
-
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Marka laga reebo noocyada caadiga ah waxaa jira noocyo kale oo shirkad ee lagu isticmaalo baahyo gaar ah.</div>',
     selLawGroupTitle:'Aksjeloven iyo Selskapsloven',
     selLawGroupDesc:'Xeerarka sharciga ee AS, ANS, DA iyo KS',
     selLawLabelAsl:'Aksjeloven (Sharciga shirkadaha saamiga)',
     selLawLabelSel:'Selskapsloven (Sharciga iskaashiga)',
     selLawHint:'Guji tixraaca qaybta (§) si aad u aragto qoraalka sharciga Lovdata',
-
     selAslStiftTitle:'Aasaasid (qaybta 2)',
     selAslStiftDesc:'Dukumentiga aasaasidda · Lacag-celinta · Xeerka',
-    selAslStiftRows:[
-      ['Maxaa loo baahan yahay si loo aasaaso AS?','Dukumenti aasaasid oo ay saxiixeen dhammaan asaasayaasha, oo ay ku jiraan xeerka, lacag-celinta iyo doorashada gudiga.','asl. § 2-1'],
-      ['Maxay xeerku u baahan yahay inuu ka kooban yahay?','Magaca shirkadda, degmada, nooca ganacisga, lacag-celinta iyo qiimaha saamiyada.','asl. § 2-2'],
-      ['Lacag-celinta ugu yar','30 000 kr (waxaa laga dhimay 100 000 kr sannadkii 2012).','asl. § 3-1'],
-      ['Wax-ku-biirinta aan lacag ahayn','Waxaa suurtagal ah hanti, laakiin waxaa loo baahan yahay dukumentayn leh xaqiijinta la-talliyaha.','asl. § 2-4 iyo § 2-6'],
-      ['Goorma ayaa shirkadda la aasaasay?','Markii dukumentiga aasaasidda ay saxiixaan dhammaan asaasayaasha. Shirkaddu ma hesho xuquuq ilaa la diiwaageliyey Foretaksregisteret.','asl. § 2-9 iyo § 2-18'],
-      ['Mudadda diiwaangelinta','3 bilood gudahood kadib saxiixa dukumentiga aasaasidda, haddii kale aasaasidu way lumaysaa.','asl. § 2-18']
-    ],
-
+    selAslStiftRows:[['What is needed to form an AS?','A founding document signed by all subscribers, including articles of association, share capital and board election.','asl. § 2-1'],['What must the articles contain?','Company name, municipality, nature of business, share capital amount and par value of shares.','asl. § 2-2'],['Minimum share capital','NOK 30,000 (reduced from 100,000 in 2012).','asl. § 3-1'],['Non-cash contributions','Possible with assets in kind, but must be documented with auditor confirmation.','asl. § 2-4 and § 2-6'],['When is the company formed?','When the founding document is signed by all founders. The company has no legal rights until registered in the Register of Business Enterprises.','asl. § 2-9 and § 2-18'],['Deadline for registration','Within 3 months of signing the founding document, otherwise the formation lapses.','asl. § 2-18']],
     selAslKapitalTitle:'Lacag-celinta iyo qaybinta (qaybta 3 iyo 8)',
     selAslKapitalDesc:'Kordhinta lacag-celinta · Macaashka · Shuruudda ku filnaanta',
-    selAslKapitalRows:[
-      ['Kordhinta lacag-celinta','Go\'aan shirka guud 2/3 cod-badan. Waxa suurtagal ah iibin cusub, saami bonus ah ama isku-mid.','asl. § 10-1'],
-      ['Dhimista lacag-celinta','Waxa loo isticmaali karaa khasaare-daboolid, qaybinta mulkiilayaasha ama u wareejinta kaydka. Waxay u baahan tahay ogeysiis deyn-qabayaal.','asl. § 12-1'],
-      ['Macaashka — xeerka asaasiga','Shirkaddu waxay qaybin kartaa macaash ka yimid faa\'iidada safiga ah ama hantida xorta ah, go\'aanka shirka guud.','asl. § 8-1'],
-      ['Shuruudda ku filnaanta','Shirkaddu waa inay mar walba leedahay hanti iyo dareerimo ku filan khatarta iyo baaxadda ganacisga.','asl. § 3-4'],
-      ['Waajibka falcelinta lacag-celinta yar','Gudiddu waa inay isla markiiba ka wada hadashaa oo ay u yeeraan shirka guud haddii hantidu tahay mid aan ku filnayn.','asl. § 3-5'],
-      ['Saldhigga macaashka','Hantida safiga ah ka jar hantida xidhan (lacag-celinta, kaydka faa\'iidada aan la garanin). Amaahda mulkiilayaasha waa la jaraa.','asl. § 8-1 (2)-(4)'],
-      ['Macaash aan caadi ahayn','Gudiddu waxay qaybin kartaa macaash aan caadi ahayn iyadoo ku salaysan miisaaniyad dhexe iyada oo aan la sugin shirka guud ee sanadka.','asl. § 8-2a']
-    ],
-
+    selAslKapitalRows:[['Capital increase','Resolved by the general meeting with 2/3 majority. Can be done by new subscription, bonus issue or merger.','asl. § 10-1'],['Capital reduction','Can be used to cover losses, distribute to shareholders or transfer to reserves. Requires creditor notice.','asl. § 12-1'],['Dividends — main rule','The company may distribute dividends from net profit or distributable equity, resolved by the general meeting.','asl. § 8-1'],['Adequacy requirement','The company must at all times have equity and liquidity adequate for its risk and scope of operations.','asl. § 3-4'],['Duty to act on low equity','The board must immediately address the matter and convene a general meeting if equity is inadequately low.','asl. § 3-5'],['Dividend basis','Net assets minus restricted equity (share capital, unrealised gains reserve). Loans to shareholders are deducted.','asl. § 8-1 (2)-(4)'],['Extraordinary dividend','The board may distribute extraordinary dividends based on an interim balance sheet without waiting for the annual general meeting.','asl. § 8-2a']],
     selAslLedelseTitle:'Maamulka iyo qaab-dhismeedka (qaybta 6)',
     selAslLedelseDesc:'Gudiga · Agaasimaha · Shirka guud',
-    selAslLedelseRows:[
-      ['Howlaha gudiga','Maamulida shirkadda, hubinta qaab-dhismeed habboon, kormeerida maamulka maalinlaha ah iyo howlaha shirkadda.','asl. § 6-12'],
-      ['Qaab-dhismeedka gudiga','Ugu yaraan 1 xubin gudiga lacag-celinta ≤ 3 milyan kr, haddii kale ugu yaraan 3. Wakiilnimada shaqaalaha > 30 shaqaale.','asl. § 6-1'],
-      ['Agaasimaha','Looma baahna haddii lacag-celintu ka yar tahay 3 milyan kr. Gudidu way dooran kartaa.','asl. § 6-2'],
-      ['Shirka guud','Hay\'adda ugu sarreeya shirkadda. Waxaa la qabtaa 6 bilood gudahooda kadib dhammaadka sannad-maaliyadeedka. Ansixiyaa xisaabaadka, macaashka iyo doorashada gudiga.','asl. § 5-1 iyo § 5-5'],
-      ['Ka-saarista gudiga','Xubin gudiga ah kama qayb-qaadan karo arrimaha uu leeyahay dan shakhsi ah oo ka soo horjeeda danta shirkadda.','asl. § 6-27'],
-      ['Mas\'uuliyadda gudiga','Xubnaha gudiga ee ula kac ah ama dayac ku keena shirkadda khasaare, waxay noqon karaan kuwo shakhsi ahaan mas\'uul ah.','asl. § 17-1']
-    ],
-
+    selAslLedelseRows:[['Board duties','Manage the company, ensure proper organisation, supervise day-to-day management and the company\'s operations.','asl. § 6-12'],['Board composition','Minimum 1 board member for share capital ≤ 3 million kr, otherwise minimum 3. Employee representation required above 30 employees.','asl. § 6-1'],['Managing director','Not required if share capital is below 3 million kr. May be elected by the board.','asl. § 6-2'],['General meeting','The company\'s supreme body. Held within 6 months after the end of the financial year. Approves annual accounts, dividends and board elections.','asl. § 5-1 and § 5-5'],['Board member disqualification','A board member may not participate in matters where they have a personal interest conflicting with the company\'s.','asl. § 6-27'],['Board liability','Board members who intentionally or negligently cause loss to the company may be held personally liable.','asl. § 17-1']],
     selAslAksjerTitle:'Saamiyada iyo ganacsiga (qaybta 4)',
     selAslAksjerDesc:'Diiwaanka mulkiilayaasha · Xaqa mudnaanta · Ogolaanshaha',
-    selAslAksjerRows:[
-      ['Diiwaanka mulkiilayaasha','Shirkaddu waa inay haysataa diiwaan dhammaan saamiyada oo ay ku jirto magaca iyo cinwaanka mulkiilaha. Waa inuu u furan yahay qof walba.','asl. § 4-5'],
-      ['Xaqa mudnaanta','Mulkiilayaashu waxay leeyihiin xaq mudnaaneed markii la iibiyo saamiyada, ilaa xeerku yidhaahdo wax kale.','asl. § 4-19'],
-      ['Ogolaanshaha gudiga wareejinta','Helitaanka saamiyada wuxuu u baahan yahay ogolaansho gudiga, ilaa xeerku yidhaahdo wax kale.','asl. § 4-15'],
-      ['Wareejinta saamiyada','Saamiyada waxaa la wareejiyaa ogeysiis shirkadda. Helahaa wuxuu helaa xuquuq waqtiga ogeysiiska helitaanka.','asl. § 4-12'],
-      ['Soo-celinta qasabka ah','Mulkiilahu wuu codsan karaa soo-celinta haddii ay jirto si-adeegsi weyn oo ay sameeyeen inta badan.','asl. § 4-24'],
-      ['Saamiyada shirkadda','Shirkaddu waxay heli kartaa ilaa 10% saamiyadeeda amar-siinta shirka guud.','asl. § 9-2']
-    ],
-
+    selAslAksjerRows:[['Shareholder register','The company must keep a register of all shares with the owner\'s name and address. Must be publicly accessible.','asl. § 4-5'],['Pre-emption rights','Shareholders have pre-emption rights on share transfers, unless the articles provide otherwise.','asl. § 4-19'],['Board consent for transfer','Acquisition of shares requires board consent, unless the articles provide otherwise.','asl. § 4-15'],['Share transfer','Shares are transferred by notice to the company. The acquirer gains rights from the time the acquisition is notified.','asl. § 4-12'],['Compulsory redemption','A shareholder may demand redemption in case of substantial abuse of position by the majority.','asl. § 4-24'],['Own shares','The company may acquire up to 10% of its own shares under authorisation from the general meeting.','asl. § 9-2']],
     selAslFusjonTitle:'Isku-mid, kala-qaybsanaan iyo burburinta (qaybta 13–16)',
     selAslFusjonDesc:'Isku-mid · Kala-qaybsanaan · Xallinta',
-    selAslFusjonRows:[
-      ['Isku-mid','Shirkad ayaa ka wareegta mid kale. Waxay u baahan tahay qorshe isku-mid, 2/3 cod-badan labada shirkadood iyo ogeysiis deyn-qabayaal 6 toddobaad.','asl. § 13-3 iyo § 13-14'],
-      ['Kala-qaybsanaan','Shirkad ayaa loo qaybiyaa laba ama ka badan. Qiimayaasha waxaa loo wareejin karaa shirkad cusub ama jirta.','asl. § 14-2'],
-      ['Isku-mid/kala-qaybsanaan canshuur-la\'aan','Haddii lagu fuliyo xeerarka Aksjeloven, isku-midka iyo kala-qaybsanaantu waxay dhici karaan canshuur joogto ah (canshuur degdeg ah la\'aan).','sktl. § 11-2 iyo § 11-4'],
-      ['Burburinta','Shirka guud ayaa go\'aamiyaa burburinta 2/3 cod-badan. Gudidda ayaa u wargelisa Foretaksregisteret.','asl. § 16-1'],
-      ['Gudida xallinta','Gudiddu waxay u shaqeeyaan gudida xallinta waxaana waajib ah inay xalliyaan waajibaatooyinka, iibiyaan hantida oo ay u qaybiyaan safiga mulkiilayaasha.','asl. § 16-2 iyo § 16-9'],
-      ['Ogeysiis deyn-qabayaal','Burburinta, deyn-qabayaalka waa in loo sheegaa muddo 6 toddobaad ah daabacaadda Brønnøysundregistrene.','asl. § 16-4']
-    ],
-
+    selAslFusjonRows:[['Merger','One company takes over another. Requires a merger plan, 2/3 majority in both companies and 6-week creditor notice.','asl. § 13-3 and § 13-14'],['Demerger','A company is split into two or more. Values can be transferred to a new or existing company.','asl. § 14-2'],['Tax-free merger/demerger','If carried out under the Companies Act rules, merger and demerger can occur with tax continuity (no immediate taxation).','sktl. § 11-2 and § 11-4'],['Dissolution','The general meeting resolves dissolution with 2/3 majority. The board notifies the Register of Business Enterprises.','asl. § 16-1'],['Liquidation board','The board serves as liquidation board and must settle liabilities, realise assets and distribute net proceeds to shareholders.','asl. § 16-2 and § 16-9'],['Creditor notice','Upon dissolution, creditors must be notified with a 6-week deadline in the Brønnøysund Register\'s official gazette.','asl. § 16-4']],
     selSelGrunnTitle:'Xeerarka aasaasiga iskaashiga guud (qaybta 2)',
     selSelGrunnDesc:'Heshiiska iskaashiga · Mas\'uuliyadda · Xubnaaha',
-    selSelGrunnRows:[
-      ['Waa maxay iskaashi guud?','Laba ama ka badan xubnood oo wada ganacsi, ugu yaraan mid ka mas\'uul ah oo aan xadidnayn waajibaatooyinka shirkadda.','sel. § 1-2'],
-      ['ANS vs DA','ANS dhammaan xubnaahu waxay si wadajir ah ugu mas\'uul yihiin dhammaan deynta. DA xubin walba wuxuu ugu mas\'uul yahay qayb — taasi waa qaybiisa deynta.','sel. § 1-2 (1) b iyo c'],
-      ['Heshiiska iskaashiga','Dhammaan iskaashiyada guud waa inay leeyihiin heshiis qoran oo tilmaamaya xubnaaha, wax-ku-biirinta iyo qaybinta faa\'iidada/khasaaraha.','sel. § 2-3'],
-      ['Tirada ugu yar ee xubnaaha','Ugu yaraan 2 xubnood. Iskaashigu waa la burburiyaa haddii hal xubin oo keliya ka hartay in ka badan 6 bilood.','sel. § 1-2 iyo § 2-37'],
-      ['Mas\'uuliyadda xubnaaha — aan xadidnayn','Xubnaaha ANS/DA waxay shakhsi ahaan ugu mas\'uul yihiin wax ka badan wax-ku-biirinta. Deyn-qabayaalku waxay si toos ah ugu codsadaan xubnaaha (ANS) ama qaybta (DA).','sel. § 2-4'],
-      ['Hantida iskaashiga','Wax-ku-biirinta xubnaaha iyo hantida kale ee shirkadda waa hantida iskaashiga. Xubnaahu ma soo saari karaan qiimayaal wiiqaya daboolida deyn-qabayaalka.','sel. § 2-7']
-    ],
-
+    selSelGrunnRows:[['What is a general partnership?','Two or more partners conduct business together, and at least one is unlimitedly liable for the company\'s obligations.','sel. § 1-2'],['ANS vs DA','In ANS all partners are jointly liable for all debts. In DA each partner is liable pro rata — i.e. for their share of the debt.','sel. § 1-2 (1) b and c'],['Partnership agreement','All general partnerships must have a written partnership agreement specifying partners, contributions and profit/loss distribution.','sel. § 2-3'],['Minimum number of partners','At least 2 partners. The company is dissolved if only one partner remains for more than 6 months.','sel. § 1-2 and § 2-37'],['Partner liability — unlimited','Partners in ANS/DA are personally liable beyond their contributions. Creditors can claim directly from partners (ANS) or pro rata (DA).','sel. § 2-4'],['Partnership assets','Partners\' contributions and other company assets form the partnership\'s assets. Partners may not withdraw values that weaken creditor coverage.','sel. § 2-7']],
     selSelInternTitle:'Qaab-dhismeedka gudaha (qaybta 2)',
     selSelInternDesc:'Shirka xubnaaha · Maamulka · Faa\'iido dheeraadka',
-    selSelInternRows:[
-      ['Shirka xubnaaha','Awoodda ugu sarreysa iskaashiga guud. Dhammaan xubnaahu waxay xaq u leeyihiin inay ka qaybgalaan. Go\'aamadu waxay u baahan yihiin isku-raac, haddii aan si kale loo heshiin.','sel. § 2-8'],
-      ['Shuruudaha inta badan','Go\'aamada caadiga ah waxay u baahan yihiin isku-raac. Go\'aamada gaarka ah (beddelka heshiiska) waxay u baahan yihiin ogolaanshaha dhammaantood.','sel. § 2-12 iyo § 2-13'],
-      ['Xaqa maamulka xubnaaha','Xubin walba wuxuu leeyahay xaq iyo waajib inuu ka qaybgalo maamulka iskaashiga, haddii aan si kale loo heshiin.','sel. § 2-16'],
-      ['Faa\'iidada iyo khasaaraha','Waxaa loo qaybiyaa si siman xubnaaha, haddii heshiiska iskaashigu uusan odhan wax kale.','sel. § 2-25 iyo § 2-26'],
-      ['Soo-saarid','Xubin ayaa soo saari kara lacag sida ku qoran heshiiska iskaashiga ama go\'aamada shirka xubnaaha.','sel. § 2-26'],
-      ['Xisaabaadka iyo la-tallinta','Iskaashiyada guud ee dakhligoodu ka badan yahay 5 milyan kr waa kuwa xisaabaad loo baahan yahay. Meel ka sarraysa meelaha cayiman la-taliye ayaa loo baahan yahay.','regnskapsloven § 1-2 iyo revisorloven § 2-1']
-    ],
-
+    selSelInternRows:[['Partnership meeting','Supreme authority in a general partnership. All partners have the right to attend. Decisions require unanimity unless otherwise agreed.','sel. § 2-8'],['Majority requirements','Ordinary decisions require unanimity. Special decisions (amending the partnership agreement) require consent from all.','sel. § 2-12 and § 2-13'],['Partners\' management rights','Each partner has the right and duty to participate in managing the partnership, unless otherwise agreed.','sel. § 2-16'],['Profit and loss','Distributed equally among partners unless the partnership agreement provides otherwise.','sel. § 2-25 and § 2-26'],['Withdrawals','A partner may withdraw funds in accordance with the partnership agreement or decisions at the partnership meeting.','sel. § 2-26'],['Accounting and audit','General partnerships with sales revenue over 5 million kr are subject to accounting obligations. Above certain thresholds, an auditor is required.','Accounting Act § 1-2 and Auditor Act § 2-1']],
     selSelKsTitle:'Iskaashiga komandiitiga (qaybta 3)',
     selSelKsDesc:'Xubnaha guud · Komandiitiyaha · Mas\'uuliyadda',
-    selSelKsRows:[
-      ['Waa maxay iskaashi komandiitiga?','Shirkad leh ugu yaraan hal xubin guud (mas\'uuliyad aan xadidnayn) iyo ugu yaraan hal komandiitiye (mas\'uuliyad xadidan wax-ku-biirinta).','sel. § 3-1'],
-      ['Doorka xubinka guud','Wuxuu leeyahay mas\'uuliyad shakhsiyeed oo aan xadidnayn wuxuuna maamulaa ganacisga shirkadda. Inta badan AS ayaa ah xubinka guud.','sel. § 3-1 iyo § 3-9'],
-      ['Mas\'uuliyadda komandiitiyaha','Wuxuu keliya ugu mas\'uul yahay wax-ku-biirinta la heshiiyey. Kama qaybgali karo maamulka iyada oo aan lumin xadidaadda.','sel. § 3-1 iyo § 3-7'],
-      ['Shuruudda wax-ku-biirinta','Komandiitiyahu waa inuu bixiyaa wax-ku-biirinta la heshiiyey. Wax-ku-biirintu kama yaraato 20 000 kr komandiitiye kasta.','sel. § 3-1 (2)'],
-      ['Maamulka KS','Xubinka guud ayaa maamula shirkadda. Komandiitiyahu wuu ka qaybgeli karaa shirarka laakiin xuquuq maamul ma laha heshiis la\'aan.','sel. § 3-9'],
-      ['Canshuurta xubnaaha','KS waxaa lagu canshuuraa canshuurta xubnaaha — faa\'iidada/khasaaraha waxaa si toos ah loogu canshuuraa xubnaaha, shirkadda laguma canshuurto.','sktl. § 10-40 flg.']
-    ],
-
+    selSelKsRows:[['What is a limited partnership?','A company with at least one general partner (unlimited liability) and at least one limited partner (liability limited to contribution).','sel. § 3-1'],['General partner\'s role','Has unlimited personal liability and manages the company\'s business. Often an AS serves as general partner.','sel. § 3-1 and § 3-9'],['Limited partner\'s liability','Liable only for agreed contribution. Cannot participate in management without losing the limitation.','sel. § 3-1 and § 3-7'],['Contribution requirement','The limited partner must pay agreed contribution. The contribution cannot be set below NOK 20,000 per limited partner.','sel. § 3-1 (2)'],['Management in KS','The general partner manages the company. The limited partner may attend partnership meetings but has no management rights without agreement.','sel. § 3-9'],['Partner taxation','KS is taxed through partner taxation — profit/loss is taxed directly with the partners, not in the company.','sktl. § 10-40 ff.']],
     selSelOpplosTitle:'Ka-bixitaan iyo burburin (qaybta 2)',
     selSelOpplosDesc:'Soo-iibsi · Is-casilid · Xallin',
-    selSelOpplosRows:[
-      ['Is-casilid','Xubin ayaa is-casili kara 6 bilood ogeysiis ka hor dhammaadka sannad-maaliyadeedka, haddii aan si kale loo heshiin.','sel. § 2-32'],
-      ['Soo-iibsi','Xubin ayaa codsan kara soo-iibsi haddii ay jirto ku-xad-gudasho weyn oo ay sameeyeen xubnaha kale, ama sababo kale oo muhiim ah.','sel. § 2-32 (2)'],
-      ['Qiimeynta markii la baxayo','Qaddarka soo-iibsigu wuxuu ku salaysan yahay qiimaha dhabta ah ee qaybta, haddii heshiiska iskaashigu uusan odhan wax kale.','sel. § 2-33'],
-      ['Burburin isku-raac','Shirka xubnaahu wuxuu go\'aamin karaa burburin haddii dhammaan xubnaahu yihiin kuwo raalli ah.','sel. § 2-37'],
-      ['Burburin maxkamad','Maxkamaddu waxay burburin kartaa shirkadda haddii ay jiraan sababooyin culus, tusaale iskaashi dhibaatooyin joogto ah.','sel. § 2-38'],
-      ['Xallinta','Burburinta, waajibaatooyinka waa la xalliyaa, hantida waa la iibiyaa oo safiga waxaa loo qaybiyaa xubnaaha.','sel. § 2-39 flg.']
-    ]
+    selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 ff.']]
 };
