@@ -787,12 +787,14 @@ const LOVDATA={
   mval:'https://lovdata.no/lov/2009-06-19-58/',
   ftrl:'https://lovdata.no/lov/1997-02-28-19/',
   ferieloven:'https://lovdata.no/lov/1988-04-29-21/',
-  'OTP-loven':'https://lovdata.no/lov/2005-12-21-124/'
+  'OTP-loven':'https://lovdata.no/lov/2005-12-21-124/',
+  asl:'https://lovdata.no/lov/1997-06-13-44/',
+  sel:'https://lovdata.no/lov/1985-06-21-83/'
 };
 function lovdataUrl(text, defaultLaw) {
   if(!text) return '';
   const dl = defaultLaw || 'sktl';
-  const re = /((?:ftrl|mval|ferieloven|OTP-loven|sktl)\.\s*)?§\s*(\d+[\-\d]*(?:\(\d+\))?(?:\s*[a-j])?)/;
+  const re = /((?:ftrl|mval|ferieloven|OTP-loven|sktl|asl|sel)\.\s*)?§\s*(\d+[\-\d]*(?:\(\d+\))?(?:\s*[a-j])?)/;
   const m = text.match(re);
   if(!m) return '';
   let base = LOVDATA[dl];
@@ -803,7 +805,7 @@ function lovdataUrl(text, defaultLaw) {
 function lovdataLink(text, defaultLaw) {
   if(!text) return '';
   const dl = defaultLaw || 'sktl';
-  return text.replace(/((?:ftrl|mval|ferieloven|OTP-loven|sktl)\.\s*)?§\s*(\d+[\-\d]*(?:\(\d+\))?(?:\s*[a-j])?)/g, function(match, prefix, para) {
+  return text.replace(/((?:ftrl|mval|ferieloven|OTP-loven|sktl|asl|sel)\.\s*)?§\s*(\d+[\-\d]*(?:\(\d+\))?(?:\s*[a-j])?)/g, function(match, prefix, para) {
     let base = LOVDATA[dl];
     if(prefix) {
       const key = prefix.trim().replace(/\.\s*$/,'');
