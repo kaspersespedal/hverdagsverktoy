@@ -244,8 +244,10 @@ function initSearch(){
   }
   chips.innerHTML = chipHTML;
 
-  // Show chips on focus (if input is empty)
+  // Show chips on focus (if input is empty) + close language dropdown
   input.addEventListener('focus', function(){
+    // Close language dropdown when search is focused
+    var rdd=document.getElementById('rdd');if(rdd)rdd.classList.remove('open');
     if(!input.value.trim()){
       chips.classList.add('visible');
       dropdown.classList.remove('visible');
