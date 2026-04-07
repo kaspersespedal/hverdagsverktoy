@@ -2085,7 +2085,8 @@ function setText(id, val) { const el=document.getElementById(id); if(el) el.text
 function stickyOffset(){
   const h=document.querySelector('header');
   const n=document.querySelector('.calc-nav');
-  return (h?h.offsetHeight:0)+(n&&n.style.display!=='none'?n.offsetHeight:0)+12;
+  const mmb=document.querySelector('.mobile-mode-bar');
+  return (h?h.offsetHeight:0)+(n&&n.style.display!=='none'?n.offsetHeight:0)+(mmb&&window.getComputedStyle(mmb).display!=='none'?mmb.offsetHeight:0)+12;
 }
 function scrollToEl(el,mode){
   if(!el)return;
@@ -3881,7 +3882,7 @@ function switchCalcMode(mode, skipScroll){
     setTimeout(()=>{
       var target=document.getElementById('bc-'+mode);
       if(!target||target.classList.contains('hidden')) target=document.querySelector('.calc-nav');
-      if(target) scrollToEl(target,'top');
+      if(target) scrollToEl(target,'nearest');
     },120);
   }
 }
