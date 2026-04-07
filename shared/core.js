@@ -5208,7 +5208,7 @@ function likvidCsv(){
 
 // ── Boliglån CSV ──
 function morCsv(){
-  var d=window._mor;if(!d)return;
+  var d=typeof _mor!=='undefined'?_mor:window._mor;if(!d)return;
   var r=R();
   var rows=[];
   rows.push(['Nedbetalingsplan',_csvDate()]);
