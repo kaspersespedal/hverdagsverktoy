@@ -105,17 +105,8 @@ var SEARCH_DATA = [
   {name:'Merverdiavgiftsloven kap. 8 — Fradrag',desc:'Hovedregel, delt bruk og begrensninger',url:'/avgift/#vat-ded-card',tags:'merverdiavgiftsloven mval kap 8 fradrag delt bruk input deduction',type:'law',page:'Avgift'},
   {name:'Merverdiavgiftsloven kap. 9 — Justering',desc:'Kapitalvarer og justeringsperioder',url:'/avgift/#vat-adj-info-card',tags:'merverdiavgiftsloven mval kap 9 justering kapitalvarer adjustment',type:'law',page:'Avgift'},
   {name:'Regnskapsloven § 5-3 — Avskrivning',desc:'Anleggsmidler med begrenset levetid skal avskrives',url:'/kalkulator/#avs',tags:'regnskapsloven rskl 5-3 avskrivning anleggsmidler levetid accounting act',type:'law',page:'Kalkulator'},
-  {name:'Aksjeloven',desc:'Lov om aksjeselskaper — stiftelse, kapital, styre og generalforsamling',url:'/selskap/#sel-law-group',tags:'aksjeloven lov aksjeselskap as 1997 stiftelse kapital companies act',type:'law',page:'Selskap'},
-  {name:'Aksjeloven kap. 2 — Stiftelse',desc:'Stiftelsesdokument, aksjekapital og vedtekter',url:'/selskap/#sel-asl-stift-card',tags:'aksjeloven kap 2 stiftelse stiftelsesdokument vedtekter aksjekapital formation',type:'law',page:'Selskap'},
-  {name:'Aksjeloven kap. 3 og 8 — Kapital og utbytte',desc:'Aksjekapital, utdeling, forsvarlighetskrav og utbytte',url:'/selskap/#sel-asl-kapital-card',tags:'aksjeloven kap 3 8 kapital utbytte utdeling forsvarlighetskrav dividend',type:'law',page:'Selskap'},
-  {name:'Aksjeloven kap. 6 — Ledelse',desc:'Styre, daglig leder og generalforsamling',url:'/selskap/#sel-asl-ledelse-card',tags:'aksjeloven kap 6 ledelse styre daglig leder generalforsamling board management',type:'law',page:'Selskap'},
-  {name:'Aksjeloven kap. 4 — Aksjer',desc:'Aksjeeierbok, forkjøpsrett og samtykke',url:'/selskap/#sel-asl-aksjer-card',tags:'aksjeloven kap 4 aksjer eierbok forkjøpsrett samtykke overdragelse shares transfer',type:'law',page:'Selskap'},
-  {name:'Aksjeloven kap. 13–16 — Fusjon og oppløsning',desc:'Fusjon, fisjon, oppløsning og avvikling',url:'/selskap/#sel-asl-fusjon-card',tags:'aksjeloven kap 13 14 15 16 fusjon fisjon oppløsning avvikling merger demerger dissolution',type:'law',page:'Selskap'},
-  {name:'Selskapsloven',desc:'Lov om ansvarlige selskaper og kommandittselskaper',url:'/selskap/#sel-law-group',tags:'selskapsloven lov ansvarlig selskap kommandittselskap ans da ks 1985 partnership act',type:'law',page:'Selskap'},
-  {name:'Selskapsloven kap. 2 — Grunnregler',desc:'Selskapsavtale, ansvar og deltakere i ANS/DA',url:'/selskap/#sel-sel-grunn-card',tags:'selskapsloven kap 2 grunnregler selskapsavtale ansvar deltakere ans da partnership',type:'law',page:'Selskap'},
-  {name:'Selskapsloven kap. 2 — Intern organisering',desc:'Selskapsmøte, forvaltning og overskudd',url:'/selskap/#sel-sel-intern-card',tags:'selskapsloven kap 2 intern organisering selskapsmøte forvaltning overskudd internal',type:'law',page:'Selskap'},
-  {name:'Selskapsloven kap. 3 — Kommandittselskap',desc:'Komplementar, kommandittist og ansvar i KS',url:'/selskap/#sel-sel-ks-card',tags:'selskapsloven kap 3 kommandittselskap komplementar kommandittist ks limited partnership',type:'law',page:'Selskap'},
-  {name:'Selskapsloven kap. 2 — Uttreden og oppløsning',desc:'Utløsning, oppsigelse og avvikling',url:'/selskap/#sel-sel-opplos-card',tags:'selskapsloven kap 2 uttreden oppløsning utløsning oppsigelse avvikling withdrawal dissolution',type:'law',page:'Selskap'}
+  {name:'Aksjeloven',desc:'Lov om aksjeselskaper — stiftelse, kapital, styre og generalforsamling',url:'/selskap/#selskap-as-card',tags:'aksjeloven lov aksjeselskap as 1997 stiftelse kapital companies act',type:'law',page:'Selskap'},
+  {name:'Selskapsloven',desc:'Lov om ansvarlige selskaper og kommandittselskaper',url:'/selskap/#selskap-ans-card',tags:'selskapsloven lov ansvarlig selskap kommandittselskap ans da ks 1985 partnership act',type:'law',page:'Selskap'}
 ];
 
 /* ─── Foreslåtte (popular searches) ─── */
