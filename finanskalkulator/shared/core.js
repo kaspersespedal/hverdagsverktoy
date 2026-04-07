@@ -2689,7 +2689,7 @@ function bilRepopulateMerke(r){
   if(!sel) return;
   var cur=sel.value;
   sel.innerHTML='';
-  var lang=curRegion||'no';
+  var lang=(typeof region!=='undefined'?region:'no')||'no';
   var t=BIL_GROUP_I18N[lang]||BIL_GROUP_I18N.no;
   // "Gjennomsnitt" option first
   var avgOpt=document.createElement('option');
@@ -2811,7 +2811,8 @@ function bilUpdateInsHint() {
   if (hint) hint.textContent = 'Estimat: ~' + est.toLocaleString('nb-NO') + ' kr/mnd';
 }
 function bilUpdateDefaults() {
-  var m = document.getElementById('bil-merke').value;
+  var el = document.getElementById('bil-merke'); if(!el) return;
+  var m = el.value;
   var p = BIL_MERKER[m];
   if (!p) return;
   // Clear user overrides so auto-estimate kicks in
@@ -4091,12 +4092,16 @@ function initDesktopFocus(){
     btn.title='Fokus';
     btn.onclick=function(e){
       e.stopPropagation();
-      var b=document.body;
-      if(!b.classList.contains('desktop-focus')){
-        toggleDesktopFocus(idx);
+      if(_isMobile()){
+        enterMobileFocus(card);
+      } else {
+        var b=document.body;
+        if(!b.classList.contains('desktop-focus')){
+          toggleDesktopFocus(idx);
+        }
+        if(card.classList.contains('collapsed')) toggleCard(card);
+        setTimeout(function(){ smartScroll(card); },250);
       }
-      if(card.classList.contains('collapsed')) toggleCard(card);
-      setTimeout(function(){ smartScroll(card); },250);
     };
     hdr.appendChild(btn);
   });
@@ -4112,6 +4117,52 @@ function initDesktopFocus(){
     grid.parentElement.insertBefore(bar,grid);
   }
 }
+
+// ═══════════════════════════════════════════════════════
+// MOBILE FOCUS MODE — tap ⛶ on a card to go fullscreen
+// ═══════════════════════════════════════════════════════
+function enterMobileFocus(card){
+  if(!card) return;
+  var b=document.body;
+  var grid=card.closest('.calc-grid');
+  if(!grid) return;
+  var col=card.closest('.calc-grid > div, .calc-grid > .right-col');
+  if(!col) return;
+  // Mark active column + card
+  Array.from(grid.children).forEach(function(c){c.removeAttribute('data-mf-visible');});
+  col.setAttribute('data-mf-visible','true');
+  // Mark only this card visible
+  col.querySelectorAll('.info-card').forEach(function(ic){ic.removeAttribute('data-mf-card');});
+  card.setAttribute('data-mf-card','true');
+  // Open card if collapsed
+  if(card.classList.contains('collapsed')) toggleCard(card);
+  // Create or show close bar
+  var closeBar=document.getElementById('mobile-focus-close');
+  if(!closeBar){
+    closeBar=document.createElement('div');
+    closeBar.id='mobile-focus-close';
+    var title=card.querySelector('.card-title');
+    var titleText=title?title.textContent.replace(/[▼⛶✕]/g,'').trim():'';
+    closeBar.innerHTML='<span class="mf-title">'+titleText+'</span><button class="mf-close" onclick="exitMobileFocus()">✕ Lukk</button>';
+    grid.parentElement.insertBefore(closeBar,grid);
+  } else {
+    var title=card.querySelector('.card-title');
+    var titleText=title?title.textContent.replace(/[▼⛶✕]/g,'').trim():'';
+    var mfT=closeBar.querySelector('.mf-title'); if(mfT) mfT.textContent=titleText;
+  }
+  b.classList.add('mobile-focus-active');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function exitMobileFocus(){
+  var b=document.body;
+  b.classList.remove('mobile-focus-active');
+  var grid=document.querySelector('.calc-grid');
+  if(grid){
+    Array.from(grid.children).forEach(function(c){c.removeAttribute('data-mf-visible');});
+    grid.querySelectorAll('.info-card[data-mf-card]').forEach(function(ic){ic.removeAttribute('data-mf-card');});
+  }
+}
+function _isMobile(){return window.innerWidth<=900;}
 
 // Mobile section tabs — show/hide navigation (matches desktop focus feel)
 function initMobileFocus(){

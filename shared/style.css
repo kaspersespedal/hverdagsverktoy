@@ -11,7 +11,7 @@ input[type=number]{-moz-appearance:textfield;}
 /* ══════════════════════════════════════
    BLUE PROFESSIONAL THEME
 ══════════════════════════════════════ */
-:root{--bg:#ffffff;--surface:#ffffff;--surface2:#f0f4fa;--border:#e0e8f4;--border2:#d0dae8;--ink:#1a1a2e;--ink2:#4a5568;--ink3:#8a9ab4;--red:#dc2626;--green:#16a34a;--gold:#818cf8;--gold-l:#a5b4fc;--sh:0 1px 3px rgba(14,40,110,.05),0 4px 18px rgba(14,40,110,.07);--sh-lg:0 2px 10px rgba(14,40,110,.08),0 20px 56px rgba(14,40,110,.1);--r:14px;--rs:9px;}
+:root{--bg:#ffffff;--surface:#ffffff;--surface2:#f0f4fa;--border:#e0e8f4;--border2:#d0dae8;--ink:#1a1a2e;--ink2:#4a5568;--ink3:#8a9ab4;--text:#1a1a2e;--muted:#6b7280;--red:#dc2626;--green:#16a34a;--gold:#818cf8;--gold-l:#a5b4fc;--sh:0 1px 3px rgba(14,40,110,.05),0 4px 18px rgba(14,40,110,.07);--sh-lg:0 2px 10px rgba(14,40,110,.08),0 20px 56px rgba(14,40,110,.1);--r:14px;--rs:9px;}
 /* B&W — Swiss minimalist monochrome */
 [data-theme="bw"] {
   --bg:#f5f5f5;--surface:#fafafa;--surface2:#efefef;--border:#d4d4d4;--border2:#c0c0c0;
@@ -673,8 +673,10 @@ main{padding:16px 0 0;flex:1;}
 .law-group-label:first-child{padding-top:0;}
 /* Mobile section tabs — DISABLED (content stacks naturally) */
 .mobile-section-tabs{display:none!important;}
-/* Mobile column reorder: calculators first, guide below */
-@media(max-width:900px){.calc-grid>div:first-child{order:2;}.calc-grid>div:last-child,.calc-grid>.right-col{order:1;}}
+/* Mobile column reorder: calculators first, guide below (default for most pages) */
+@media(max-width:900px){.calc-grid>div:first-child{order:2;}.calc-grid>div:last-child,.calc-grid>.right-col{order:1;}
+/* Skatt page exception: guide/veiledning first */
+#calc-salary>div:first-child{order:1!important;}#calc-salary>.right-col{order:2!important;}}
 /* Legacy mobile focus (kept for compat) */
 .mobile-focus-bar{display:none;}
 body.mobile-focus .calc-grid>div{display:none!important;}
@@ -692,11 +694,29 @@ body.desktop-focus #focus-close-bar{display:flex;max-width:640px;margin:0 auto 1
 body.desktop-focus .info-card:not(.collapsed)~.info-card.collapsed{display:none!important;}
 body.desktop-focus .info-card.collapsed:has(~.info-card:not(.collapsed)){display:none!important;}
 .focus-toggle-exit{display:none!important;}
-.focus-card-btn{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface2);color:var(--ink3);cursor:pointer;font-size:11px;line-height:1;display:none;align-items:center;justify-content:center;transition:all .15s;z-index:2;padding:0;}
+.focus-card-btn{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface2);color:var(--ink3);cursor:pointer;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .15s;z-index:2;padding:0;}
 .focus-card-btn::after{content:'⛶';font-size:12px;}
-@media(min-width:901px){.focus-card-btn{display:flex;}}
 .focus-card-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent);transform:scale(1.1);}
 body.desktop-focus .focus-card-btn{display:none!important;}
+/* ═══ MOBILE FOCUS MODE ═══ */
+/* Close bar for mobile focus */
+#mobile-focus-close{display:none;position:sticky;top:0;z-index:201;background:var(--surface);border-bottom:1.5px solid var(--border);padding:8px 16px;justify-content:space-between;align-items:center;}
+#mobile-focus-close .mf-title{font-family:'Inter',sans-serif;font-size:14px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;margin-right:12px;}
+#mobile-focus-close .mf-close{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;flex-shrink:0;}
+@media(max-width:900px){
+  body.mobile-focus-active{overflow:hidden;}
+  body.mobile-focus-active header,body.mobile-focus-active .calc-nav,body.mobile-focus-active footer,body.mobile-focus-active .mobile-section-tabs{display:none!important;}
+  body.mobile-focus-active #mobile-focus-close{display:flex!important;}
+  body.mobile-focus-active .calc-grid{display:block!important;}
+  body.mobile-focus-active .calc-grid>div{display:none!important;}
+  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"]{display:block!important;}
+  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] .section-title{display:none!important;}
+  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] .info-card{display:none!important;}
+  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] .info-card[data-mf-card="true"]{display:block!important;}
+  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] .card{border:none;box-shadow:none;border-radius:0;}
+  body.mobile-focus-active .focus-card-btn{display:none!important;}
+  body.mobile-focus-active .focus-toggle{display:none!important;}
+}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
 /* CARD */
@@ -787,7 +807,7 @@ select.fc{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='
 .dash-ref-val{font-weight:700;color:var(--ink);font-family:'Inter',sans-serif;}
 
 /* FOOTER */
-footer{background:var(--surface2);background:color-mix(in srgb,var(--accent-l) 12%,var(--surface));color:var(--muted);padding:34px 0 26px;border-top:1px solid var(--border);border-top:1px solid color-mix(in srgb,var(--accent) 15%,transparent);}
+footer{background:var(--surface2);background:color-mix(in srgb,var(--accent-l) 12%,var(--surface));color:var(--muted);padding:34px 0 26px;border-top:1px solid var(--border);}
 .footer-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
 .footer-logo{font-family:'Inter',sans-serif;font-size:17px;font-weight:800;color:var(--text);letter-spacing:-.3px;}
 .footer-links{display:flex;gap:20px;flex-wrap:wrap;}
