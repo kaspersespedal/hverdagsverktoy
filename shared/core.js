@@ -5174,7 +5174,7 @@ function _initPageReady(){
       if(h&&mmb2&&!document.body.classList.contains('calc-focus')) mmb2.style.top=h.offsetHeight+'px';
     });
   })();
-  window.scrollTo(0,0);
+  if(!window.location.hash) window.scrollTo(0,0);
   // Auto-scroll selects into view on focus (mobile-friendly)
   document.querySelectorAll('select.fc').forEach(function(sel){
     sel.addEventListener('focus',function(){setTimeout(function(){scrollToEl(sel);},150);});
@@ -5207,16 +5207,16 @@ function _initPageReady(){
       var card=el.classList.contains('info-card')?el:el.closest&&el.closest('.info-card');
       if(card){
         if(card.classList.contains('collapsed')) card.classList.remove('collapsed');
-        // Clear hash to prevent browser auto-scroll
-        history.replaceState(null,'',window.location.pathname);
         if(_isMobile()){
+          // Clear hash to prevent browser auto-scroll on mobile
+          history.replaceState(null,'',window.location.pathname);
           enterMobileFocus(card);
+          window.scrollTo(0,0);
+          setTimeout(function(){window.scrollTo(0,0);},0);
         } else {
-          var idx=_getColIndex(card);
-          toggleDesktopFocus(idx);
+          // On desktop, open the card and let browser handle hash scroll
+          // CSS scroll-margin-top on .info-card handles sticky header offset
         }
-        window.scrollTo(0,0);
-        setTimeout(function(){window.scrollTo(0,0);},0);
       } else {
         el.scrollIntoView({block:'start'});
       }
