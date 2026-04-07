@@ -269,6 +269,17 @@ function setRegion(r, e) {
 function toggleDD() { var el=document.getElementById('rdd');if(el){el.classList.toggle('open');var ss=document.getElementById('site-search');if(el.classList.contains('open')){if(ss)ss.style.visibility='hidden';var si=document.getElementById('search-input');if(si)si.blur();}else{if(ss)ss.style.visibility='';}} }
 document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){var _rd=document.getElementById('rdd');if(_rd&&_rd.classList.contains('open')){_rd.classList.remove('open');var ss=document.getElementById('site-search');if(ss)ss.style.visibility='';}} });
 
+// Smooth page transitions for nav tabs + dashboard cards
+document.addEventListener('click',function(e){
+  var link=e.target.closest('.calc-tab[href], .dash-tool-card[href]');
+  if(!link||link.getAttribute('href')==='#')return;
+  var href=link.getAttribute('href');
+  if(!href||href===window.location.pathname)return;
+  e.preventDefault();
+  document.body.classList.add('page-leaving');
+  setTimeout(function(){window.location.href=href;},150);
+});
+
 // ═══════════════════════════════════════════════════════
 // UPDATE ALL UI
 // ═══════════════════════════════════════════════════════
