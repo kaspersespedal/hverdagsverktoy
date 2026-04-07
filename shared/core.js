@@ -277,7 +277,7 @@ document.addEventListener('click',function(e){
   if(!href||href===window.location.pathname)return;
   e.preventDefault();
   document.body.classList.add('page-leaving');
-  setTimeout(function(){window.location.href=href;},150);
+  setTimeout(function(){window.location.href=href;},100);
 });
 
 // ═══════════════════════════════════════════════════════
