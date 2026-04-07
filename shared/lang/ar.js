@@ -648,36 +648,113 @@ REGIONS['ar'] = {
       +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">قاعدة أصول مستقلة بدون ملاك — مؤسسة لغرض محدد (الخيرية، البحث، الثقافة). لا يمكن لأحد سحب الفائض. موجهة من قبل مجلس إدارة وفقاً للنظام الأساسي. المتطلبات: رأس مال أساسي على الأقل 100,000 كرونة. منظمة بموجب قانون المؤسسات (LOV-2001-06-15-59).</div>'
       +'</div>'
       +'</div>',
+
+    // ═══ القوانين — AKSJELOVEN & SELSKAPSLOVEN ═══
+
     selLawGroupTitle:'Aksjeloven و Selskapsloven',
-    selLawGroupDesc:'القواعس القانونية لـ AS و ANS و DA و KS',
+    selLawGroupDesc:'القواعد القانونية لـ AS و ANS و DA و KS',
     selLawLabelAsl:'Aksjeloven (قانون الشركات المساهمة)',
     selLawLabelSel:'Selskapsloven (قانون الشراكات)',
     selLawHint:'انقر على مرجع الفقرة (§) لعرض النص القانوني على Lovdata',
+
     selAslStiftTitle:'التأسيس (الفصل 2)',
     selAslStiftDesc:'وثيقة التأسيس · رأس المال · النظام الأساسي',
-    selAslStiftRows:[['What is needed to form an AS?','A founding document signed by all subscribers, including articles of association, share capital and board election.','asl. § 2-1'],['What must the articles contain?','Company name, municipality, nature of business, share capital amount and par value of shares.','asl. § 2-2'],['Minimum share capital','NOK 30,000 (reduced from 100,000 in 2012).','asl. § 3-1'],['Non-cash contributions','Possible with assets in kind, but must be documented with auditor confirmation.','asl. § 2-4 and § 2-6'],['When is the company formed?','When the founding document is signed by all founders. The company has no legal rights until registered in the Register of Business Enterprises.','asl. § 2-9 and § 2-18'],['Deadline for registration','Within 3 months of signing the founding document, otherwise the formation lapses.','asl. § 2-18']],
+    selAslStiftRows:[
+      ['ما المطلوب لتأسيس AS؟','وثيقة تأسيس موقعة من جميع المؤسسين، تتضمن النظام الأساسي ورأس المال واختيار مجلس الإدارة.','asl. § 2-1'],
+      ['ماذا يجب أن يتضمن النظام الأساسي؟','اسم الشركة، البلدية، نوع النشاط، حجم رأس المال والقيمة الاسمية للأسهم.','asl. § 2-2'],
+      ['الحد الأدنى لرأس المال','30,000 كرونة (خُفض من 100,000 كرونة في 2012).','asl. § 3-1'],
+      ['المساهمات غير النقدية','ممكنة بشكل عيني، لكن تحتاج توثيقاً مع تأكيد مراجع الحسابات.','asl. § 2-4 و § 2-6'],
+      ['متى تُعتبر الشركة مؤسسة؟','عند توقيع وثيقة التأسيس من جميع المؤسسين. لا تحصل الشركة على حقوق حتى تُسجل في Foretaksregisteret.','asl. § 2-9 و § 2-18'],
+      ['مهلة التسجيل','خلال 3 أشهر من توقيع وثيقة التأسيس، وإلا يسقط التأسيس.','asl. § 2-18']
+    ],
+
     selAslKapitalTitle:'رأس المال والتوزيعات (الفصل 3 و 8)',
     selAslKapitalDesc:'زيادة رأس المال · الأرباح · شرط الكفاية',
-    selAslKapitalRows:[['Capital increase','Resolved by the general meeting with 2/3 majority. Can be done by new subscription, bonus issue or merger.','asl. § 10-1'],['Capital reduction','Can be used to cover losses, distribute to shareholders or transfer to reserves. Requires creditor notice.','asl. § 12-1'],['Dividends — main rule','The company may distribute dividends from net profit or distributable equity, resolved by the general meeting.','asl. § 8-1'],['Adequacy requirement','The company must at all times have equity and liquidity adequate for its risk and scope of operations.','asl. § 3-4'],['Duty to act on low equity','The board must immediately address the matter and convene a general meeting if equity is inadequately low.','asl. § 3-5'],['Dividend basis','Net assets minus restricted equity (share capital, unrealised gains reserve). Loans to shareholders are deducted.','asl. § 8-1 (2)-(4)'],['Extraordinary dividend','The board may distribute extraordinary dividends based on an interim balance sheet without waiting for the annual general meeting.','asl. § 8-2a']],
+    selAslKapitalRows:[
+      ['زيادة رأس المال','قرار من الجمعية العامة بأغلبية الثلثين. يمكن عبر اكتتاب جديد أو إصدار مجاني أو اندماج.','asl. § 10-1'],
+      ['تخفيض رأس المال','يمكن استخدامه لتغطية الخسائر أو التوزيع على المساهمين أو التحويل للاحتياطيات. يتطلب إشعار الدائنين.','asl. § 12-1'],
+      ['الأرباح — القاعدة الرئيسية','يمكن للشركة توزيع أرباح من صافي الربح أو حقوق الملكية القابلة للتوزيع بقرار من الجمعية العامة.','asl. § 8-1'],
+      ['شرط الكفاية','يجب أن تمتلك الشركة دائماً حقوق ملكية وسيولة مناسبة لمخاطر وحجم العمليات.','asl. § 3-4'],
+      ['واجب التصرف عند انخفاض رأس المال','يجب على مجلس الإدارة معالجة الأمر فوراً ودعوة الجمعية العامة إذا كانت حقوق الملكية منخفضة بشكل غير مقبول.','asl. § 3-5'],
+      ['أساس الأرباح','صافي الأصول ناقص رأس المال المقيد (رأس مال الأسهم، احتياطي الأرباح غير المحققة). تُخصم القروض للمساهمين.','asl. § 8-1 (2)-(4)'],
+      ['أرباح استثنائية','يمكن لمجلس الإدارة توزيع أرباح استثنائية بناءً على ميزانية مؤقتة دون انتظار الجمعية العامة السنوية.','asl. § 8-2a']
+    ],
+
     selAslLedelseTitle:'الإدارة والتنظيم (الفصل 6)',
     selAslLedelseDesc:'مجلس الإدارة · المدير العام · الجمعية العامة',
-    selAslLedelseRows:[['Board duties','Manage the company, ensure proper organisation, supervise day-to-day management and the company\'s operations.','asl. § 6-12'],['Board composition','Minimum 1 board member for share capital ≤ 3 million kr, otherwise minimum 3. Employee representation required above 30 employees.','asl. § 6-1'],['Managing director','Not required if share capital is below 3 million kr. May be elected by the board.','asl. § 6-2'],['General meeting','The company\'s supreme body. Held within 6 months after the end of the financial year. Approves annual accounts, dividends and board elections.','asl. § 5-1 and § 5-5'],['Board member disqualification','A board member may not participate in matters where they have a personal interest conflicting with the company\'s.','asl. § 6-27'],['Board liability','Board members who intentionally or negligently cause loss to the company may be held personally liable.','asl. § 17-1']],
+    selAslLedelseRows:[
+      ['مهام مجلس الإدارة','إدارة الشركة وضمان التنظيم السليم والإشراف على الإدارة اليومية وعمليات الشركة.','asl. § 6-12'],
+      ['تكوين مجلس الإدارة','عضو واحد على الأقل لرأس مال ≤ 3 مليون كرونة، وإلا 3 على الأقل. تمثيل الموظفين عند > 30 موظفاً.','asl. § 6-1'],
+      ['المدير العام','غير مطلوب إذا كان رأس المال أقل من 3 مليون كرونة. يمكن أن ينتخبه مجلس الإدارة.','asl. § 6-2'],
+      ['الجمعية العامة','أعلى هيئة في الشركة. تُعقد خلال 6 أشهر بعد نهاية السنة المالية. تعتمد الحسابات السنوية والأرباح وانتخابات مجلس الإدارة.','asl. § 5-1 و § 5-5'],
+      ['تعارض المصالح','لا يجوز لعضو مجلس الإدارة المشاركة في أمور لديه فيها مصلحة شخصية تتعارض مع مصلحة الشركة.','asl. § 6-27'],
+      ['مسؤولية مجلس الإدارة','أعضاء مجلس الإدارة الذين يتسببون عمداً أو بإهمال في خسارة للشركة قد يتحملون مسؤولية شخصية.','asl. § 17-1']
+    ],
+
     selAslAksjerTitle:'الأسهم والتداول (الفصل 4)',
     selAslAksjerDesc:'سجل المساهمين · حق الأولوية · الموافقة',
-    selAslAksjerRows:[['Shareholder register','The company must keep a register of all shares with the owner\'s name and address. Must be publicly accessible.','asl. § 4-5'],['Pre-emption rights','Shareholders have pre-emption rights on share transfers, unless the articles provide otherwise.','asl. § 4-19'],['Board consent for transfer','Acquisition of shares requires board consent, unless the articles provide otherwise.','asl. § 4-15'],['Share transfer','Shares are transferred by notice to the company. The acquirer gains rights from the time the acquisition is notified.','asl. § 4-12'],['Compulsory redemption','A shareholder may demand redemption in case of substantial abuse of position by the majority.','asl. § 4-24'],['Own shares','The company may acquire up to 10% of its own shares under authorisation from the general meeting.','asl. § 9-2']],
+    selAslAksjerRows:[
+      ['سجل المساهمين','يجب على الشركة الاحتفاظ بسجل لجميع الأسهم مع اسم وعنوان المالك. يجب أن يكون متاحاً للجمهور.','asl. § 4-5'],
+      ['حق الأولوية','للمساهمين حق الأولوية عند بيع الأسهم، ما لم ينص النظام الأساسي على خلاف ذلك.','asl. § 4-19'],
+      ['موافقة مجلس الإدارة على النقل','يتطلب اكتساب الأسهم موافقة مجلس الإدارة، ما لم ينص النظام الأساسي على خلاف ذلك.','asl. § 4-15'],
+      ['نقل الأسهم','تُنقل الأسهم بإشعار الشركة. يحصل المكتسب على الحقوق من وقت الإشعار بالاكتساب.','asl. § 4-12'],
+      ['الاسترداد الإجباري','يمكن للمساهم المطالبة بالاسترداد في حالة إساءة استخدام كبيرة للمنصب من قبل الأغلبية.','asl. § 4-24'],
+      ['الأسهم الذاتية','يمكن للشركة اكتساب ما يصل إلى 10% من أسهمها بتفويض من الجمعية العامة.','asl. § 9-2']
+    ],
+
     selAslFusjonTitle:'الاندماج والتقسيم والحل (الفصل 13–16)',
     selAslFusjonDesc:'الاندماج · التقسيم · التصفية',
-    selAslFusjonRows:[['Merger','One company takes over another. Requires a merger plan, 2/3 majority in both companies and 6-week creditor notice.','asl. § 13-3 and § 13-14'],['Demerger','A company is split into two or more. Values can be transferred to a new or existing company.','asl. § 14-2'],['Tax-free merger/demerger','If carried out under the Companies Act rules, merger and demerger can occur with tax continuity (no immediate taxation).','sktl. § 11-2 and § 11-4'],['Dissolution','The general meeting resolves dissolution with 2/3 majority. The board notifies the Register of Business Enterprises.','asl. § 16-1'],['Liquidation board','The board serves as liquidation board and must settle liabilities, realise assets and distribute net proceeds to shareholders.','asl. § 16-2 and § 16-9'],['Creditor notice','Upon dissolution, creditors must be notified with a 6-week deadline in the Brønnøysund Register\'s official gazette.','asl. § 16-4']],
+    selAslFusjonRows:[
+      ['الاندماج','شركة تستحوذ على أخرى. يتطلب خطة اندماج وأغلبية الثلثين في كلتا الشركتين وإشعار الدائنين لمدة 6 أسابيع.','asl. § 13-3 و § 13-14'],
+      ['التقسيم','تُقسم الشركة إلى اثنتين أو أكثر. يمكن نقل القيم إلى شركة جديدة أو قائمة.','asl. § 14-2'],
+      ['اندماج/تقسيم معفى من الضرائب','إذا تم وفقاً لقواعد Aksjeloven، يمكن أن يتم الاندماج والتقسيم باستمرارية ضريبية (بدون ضريبة فورية).','sktl. § 11-2 و § 11-4'],
+      ['الحل','تقرر الجمعية العامة الحل بأغلبية الثلثين. يبلغ مجلس الإدارة Foretaksregisteret.','asl. § 16-1'],
+      ['لجنة التصفية','يعمل مجلس الإدارة كلجنة تصفية ويجب تسوية الالتزامات وتحقيق الأصول وتوزيع الصافي على المساهمين.','asl. § 16-2 و § 16-9'],
+      ['إشعار الدائنين','عند الحل يجب إشعار الدائنين بمهلة 6 أسابيع في منشور Brønnøysundregistrene.','asl. § 16-4']
+    ],
+
     selSelGrunnTitle:'القواعد الأساسية للشراكات العامة (الفصل 2)',
     selSelGrunnDesc:'اتفاقية الشراكة · المسؤولية · الشركاء',
-    selSelGrunnRows:[['What is a general partnership?','Two or more partners conduct business together, and at least one is unlimitedly liable for the company\'s obligations.','sel. § 1-2'],['ANS vs DA','In ANS all partners are jointly liable for all debts. In DA each partner is liable pro rata — i.e. for their share of the debt.','sel. § 1-2 (1) b and c'],['Partnership agreement','All general partnerships must have a written partnership agreement specifying partners, contributions and profit/loss distribution.','sel. § 2-3'],['Minimum number of partners','At least 2 partners. The company is dissolved if only one partner remains for more than 6 months.','sel. § 1-2 and § 2-37'],['Partner liability — unlimited','Partners in ANS/DA are personally liable beyond their contributions. Creditors can claim directly from partners (ANS) or pro rata (DA).','sel. § 2-4'],['Partnership assets','Partners\' contributions and other company assets form the partnership\'s assets. Partners may not withdraw values that weaken creditor coverage.','sel. § 2-7']],
+    selSelGrunnRows:[
+      ['ما هي الشراكة العامة؟','شريكان أو أكثر يمارسان نشاطاً تجارياً معاً، وشريك واحد على الأقل يتحمل مسؤولية غير محدودة عن التزامات الشركة.','sel. § 1-2'],
+      ['ANS مقابل DA','في ANS يتحمل جميع الشركاء مسؤولية تضامنية عن كل الديون. في DA يتحمل كل شريك مسؤولية نسبية — أي عن حصته من الدين.','sel. § 1-2 (1) b و c'],
+      ['اتفاقية الشراكة','يجب أن يكون لجميع الشراكات العامة اتفاقية مكتوبة تحدد الشركاء والمساهمات وتوزيع الأرباح/الخسائر.','sel. § 2-3'],
+      ['الحد الأدنى لعدد الشركاء','شريكان على الأقل. تُحل الشركة إذا بقي شريك واحد فقط لأكثر من 6 أشهر.','sel. § 1-2 و § 2-37'],
+      ['مسؤولية الشركاء — غير محدودة','شركاء ANS/DA مسؤولون شخصياً بما يتجاوز مساهماتهم. يمكن للدائنين المطالبة مباشرة من الشركاء (ANS) أو نسبياً (DA).','sel. § 2-4'],
+      ['أصول الشراكة','مساهمات الشركاء وأصول الشركة الأخرى تشكل أصول الشراكة. لا يجوز للشركاء سحب قيم تضعف تغطية الدائنين.','sel. § 2-7']
+    ],
+
     selSelInternTitle:'التنظيم الداخلي (الفصل 2)',
     selSelInternDesc:'اجتماع الشركاء · الإدارة · الفائض',
-    selSelInternRows:[['Partnership meeting','Supreme authority in a general partnership. All partners have the right to attend. Decisions require unanimity unless otherwise agreed.','sel. § 2-8'],['Majority requirements','Ordinary decisions require unanimity. Special decisions (amending the partnership agreement) require consent from all.','sel. § 2-12 and § 2-13'],['Partners\' management rights','Each partner has the right and duty to participate in managing the partnership, unless otherwise agreed.','sel. § 2-16'],['Profit and loss','Distributed equally among partners unless the partnership agreement provides otherwise.','sel. § 2-25 and § 2-26'],['Withdrawals','A partner may withdraw funds in accordance with the partnership agreement or decisions at the partnership meeting.','sel. § 2-26'],['Accounting and audit','General partnerships with sales revenue over 5 million kr are subject to accounting obligations. Above certain thresholds, an auditor is required.','Accounting Act § 1-2 and Auditor Act § 2-1']],
+    selSelInternRows:[
+      ['اجتماع الشركاء','أعلى سلطة في الشراكة العامة. لجميع الشركاء حق الحضور. القرارات تتطلب الإجماع ما لم يُتفق على خلاف ذلك.','sel. § 2-8'],
+      ['متطلبات الأغلبية','القرارات العادية تتطلب الإجماع. القرارات الخاصة (تعديل اتفاقية الشراكة) تتطلب موافقة الجميع.','sel. § 2-12 و § 2-13'],
+      ['حق إدارة الشركاء','لكل شريك الحق والواجب في المشاركة في إدارة الشراكة، ما لم يُتفق على خلاف ذلك.','sel. § 2-16'],
+      ['الربح والخسارة','يُوزع بالتساوي بين الشركاء ما لم تنص اتفاقية الشراكة على خلاف ذلك.','sel. § 2-25 و § 2-26'],
+      ['السحب','يمكن للشريك سحب أموال وفقاً لاتفاقية الشراكة أو قرارات اجتماع الشركاء.','sel. § 2-26'],
+      ['المحاسبة والتدقيق','الشراكات العامة ذات إيرادات المبيعات أكثر من 5 مليون كرونة ملزمة بالمحاسبة. فوق عتبات معينة يُطلب مراجع حسابات.','regnskapsloven § 1-2 و revisorloven § 2-1']
+    ],
+
     selSelKsTitle:'شراكة التوصية (الفصل 3)',
     selSelKsDesc:'الشريك المتضامن · الشريك الموصي · المسؤولية',
-    selSelKsRows:[['What is a limited partnership?','A company with at least one general partner (unlimited liability) and at least one limited partner (liability limited to contribution).','sel. § 3-1'],['General partner\'s role','Has unlimited personal liability and manages the company\'s business. Often an AS serves as general partner.','sel. § 3-1 and § 3-9'],['Limited partner\'s liability','Liable only for agreed contribution. Cannot participate in management without losing the limitation.','sel. § 3-1 and § 3-7'],['Contribution requirement','The limited partner must pay agreed contribution. The contribution cannot be set below NOK 20,000 per limited partner.','sel. § 3-1 (2)'],['Management in KS','The general partner manages the company. The limited partner may attend partnership meetings but has no management rights without agreement.','sel. § 3-9'],['Partner taxation','KS is taxed through partner taxation — profit/loss is taxed directly with the partners, not in the company.','sktl. § 10-40 ff.']],
+    selSelKsRows:[
+      ['ما هي شراكة التوصية؟','شركة بها شريك متضامن واحد على الأقل (مسؤولية غير محدودة) وشريك موصي واحد على الأقل (مسؤولية محدودة بالمساهمة).','sel. § 3-1'],
+      ['دور الشريك المتضامن','يتحمل مسؤولية شخصية غير محدودة ويدير أعمال الشركة. غالباً ما يكون AS هو الشريك المتضامن.','sel. § 3-1 و § 3-9'],
+      ['مسؤولية الشريك الموصي','مسؤول فقط عن مساهمته المتفق عليها. لا يمكنه المشاركة في الإدارة دون فقدان التحديد.','sel. § 3-1 و § 3-7'],
+      ['شرط المساهمة','يجب على الشريك الموصي دفع المساهمة المتفق عليها. لا يمكن أن تقل المساهمة عن 20,000 كرونة لكل شريك موصي.','sel. § 3-1 (2)'],
+      ['الإدارة في KS','الشريك المتضامن يدير الشركة. يمكن للشريك الموصي حضور الاجتماعات لكن ليس له حق الإدارة بدون اتفاق.','sel. § 3-9'],
+      ['ضريبة الشركاء','يُفرض على KS ضريبة من خلال ضريبة الشركاء — يُفرض الربح/الخسارة مباشرة على الشركاء وليس على الشركة.','sktl. § 10-40 flg.']
+    ],
+
     selSelOpplosTitle:'الانسحاب والحل (الفصل 2)',
     selSelOpplosDesc:'الشراء · الاستقالة · التصفية',
-    selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 ff.']]
+    selSelOpplosRows:[
+      ['الاستقالة','يمكن للشريك الاستقالة بإشعار مدته 6 أشهر قبل نهاية السنة المالية، ما لم يُتفق على خلاف ذلك.','sel. § 2-32'],
+      ['الشراء','يمكن للشريك المطالبة بالشراء في حالة مخالفة جوهرية من شركاء آخرين أو لأسباب مهمة أخرى.','sel. § 2-32 (2)'],
+      ['التقييم عند الخروج','يُحدد مبلغ الشراء بالقيمة العادلة للحصة ما لم تنص اتفاقية الشراكة على خلاف ذلك.','sel. § 2-33'],
+      ['الحل بالإجماع','يمكن لاجتماع الشركاء أن يقرر الحل إذا وافق جميع الشركاء.','sel. § 2-37'],
+      ['الحل بحكم المحكمة','يمكن للمحكمة حل الشركة إذا كانت هناك أسباب قاهرة، مثل مشاكل تعاون مستمرة.','sel. § 2-38'],
+      ['التصفية','عند الحل تُجرى التصفية: تُسوى الالتزامات وتُحقق الأصول ويُوزع الصافي بين الشركاء.','sel. § 2-39 flg.']
+    ]
+
 };
