@@ -699,7 +699,7 @@ REGIONS['no'] = {
       +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Stiftelse</div>'
       +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">En selvstendig formuesmasse uten eiere — stiftet for et bestemt formål (veldedighet, forskning, kultur). Ingen kan ta ut overskudd. Styres av et styre i henhold til vedtektene. Krav: minst 100 000 kr grunnkapital. Regulert av stiftelsesloven (LOV-2001-06-15-59).</div>'
       +'</div>'
-      +'</div>'
+      +'</div>',
     // ═══════════ LOVVERK — AKSJELOVEN & SELSKAPSLOVEN ═══════════
 
     selLawGroupTitle:'Aksjeloven og Selskapsloven',
