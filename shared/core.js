@@ -4131,27 +4131,33 @@ function enterMobileFocus(card){
   // Mark active column + card
   Array.from(grid.children).forEach(function(c){c.removeAttribute('data-mf-visible');});
   col.setAttribute('data-mf-visible','true');
-  // Mark only this card visible
+  // Mark only this card visible — for nested cards, mark the top-level parent
   col.querySelectorAll('.info-card').forEach(function(ic){ic.removeAttribute('data-mf-card');});
-  card.setAttribute('data-mf-card','true');
+  var parentCard=card.parentElement&&card.parentElement.closest&&card.parentElement.closest('.info-card');
+  var visibleCard=parentCard||card;
+  visibleCard.setAttribute('data-mf-card','true');
   // Open card if collapsed
+  if(visibleCard.classList.contains('collapsed')) toggleCard(visibleCard);
   if(card.classList.contains('collapsed')) toggleCard(card);
+  // Get title from the target card (not parent)
+  var titleEl=card.querySelector(':scope > .card-hdr .card-title');
+  var titleText=titleEl?titleEl.textContent.replace(/[▼⛶✕]/g,'').trim():'';
   // Create or show close bar
   var closeBar=document.getElementById('mobile-focus-close');
   if(!closeBar){
     closeBar=document.createElement('div');
     closeBar.id='mobile-focus-close';
-    var title=card.querySelector('.card-title');
-    var titleText=title?title.textContent.replace(/[▼⛶✕]/g,'').trim():'';
     closeBar.innerHTML='<span class="mf-title">'+titleText+'</span><button class="mf-close" onclick="exitMobileFocus()">✕ Lukk</button>';
     grid.parentElement.insertBefore(closeBar,grid);
   } else {
-    var title=card.querySelector('.card-title');
-    var titleText=title?title.textContent.replace(/[▼⛶✕]/g,'').trim():'';
     var mfT=closeBar.querySelector('.mf-title'); if(mfT) mfT.textContent=titleText;
   }
   window.scrollTo(0,0);
   b.classList.add('mobile-focus-active');
+  // For nested cards, scroll to the specific card after focus activates
+  if(parentCard){
+    setTimeout(function(){card.scrollIntoView({block:'start',behavior:'auto'});},50);
+  }
 }
 function exitMobileFocus(){
   var b=document.body;
@@ -5094,6 +5100,14 @@ function _initPageReady(){
     if(el){
       // Open card/law-group if collapsed — instant, no animation
       if(el.classList.contains('collapsed')) el.classList.remove('collapsed');
+      // Also open any parent info-cards that are collapsed (nested cards)
+      var parent=el.parentElement;
+      while(parent){
+        if(parent.classList&&parent.classList.contains('info-card')&&parent.classList.contains('collapsed')){
+          parent.classList.remove('collapsed');
+        }
+        parent=parent.parentElement;
+      }
       var lawGroup=el.closest&&el.closest('.law-group');
       if(lawGroup&&!lawGroup.classList.contains('open')){
         lawGroup.classList.add('open');
@@ -5113,7 +5127,6 @@ function _initPageReady(){
           toggleDesktopFocus(idx);
         }
         window.scrollTo(0,0);
-        // Belt-and-suspenders: override any delayed browser scroll
         setTimeout(function(){window.scrollTo(0,0);},0);
       } else {
         el.scrollIntoView({block:'start'});
@@ -5121,7 +5134,7 @@ function _initPageReady(){
     }
     // Handle mode hashes like #lvu, #avs
     if(typeof switchCalcMode==='function'){
-      var modes=['lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
+      var modes=['basic','scientific','finance','unit','lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
       if(modes.indexOf(hash)>=0) switchCalcMode(hash);
     }
   }
