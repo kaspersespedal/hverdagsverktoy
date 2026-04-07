@@ -746,6 +746,7 @@ function toggleCard(card){
       body.classList.remove('opening');
       body.offsetHeight; // force reflow
       body.classList.add('opening');
+      body.addEventListener('animationend',function h(){body.classList.remove('opening');body.removeEventListener('animationend',h);},{once:true});
     }
   }
   const arrow = card.querySelector('.card-title span');
@@ -4203,7 +4204,6 @@ function initDesktopFocus(){
     var card=hdr.parentElement;
     if(!card||!card.classList.contains('info-card')) return;
     var idx=_getColIndex(card);
-    hdr.style.position='relative';
     var btn=document.createElement('button');
     btn.className='focus-card-btn';
     btn.title='Fokus';
@@ -4348,6 +4348,10 @@ document.addEventListener('keydown', function(e){
     if(e.key==='Enter'){
       if(!e.target.closest('form')){
         e.preventDefault();
+        // Generic: find nearest .btn-calc[onclick*="calc"] in same card/section
+        var card=e.target.closest('.card,.info-card,.bc-panel,[id^="bc-"]');
+        if(card){var btn=card.querySelector('.btn-calc[onclick*="calc"]');if(btn){btn.click();return;}}
+        // Fallback to mode-based mapping
         const calcMap={salary:calcSal,mortgage:calcMor,npv:calcNpv,vat:calcVat,uttak:calcUttak,adj:calcAdj};
         if(activeCalc==='basic'&&bcMode==='finance'){fcCalc();return;}
         if(activeCalc==='basic'){
