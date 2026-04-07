@@ -4150,8 +4150,8 @@ function enterMobileFocus(card){
     var titleText=title?title.textContent.replace(/[▼⛶✕]/g,'').trim():'';
     var mfT=closeBar.querySelector('.mf-title'); if(mfT) mfT.textContent=titleText;
   }
+  window.scrollTo(0,0);
   b.classList.add('mobile-focus-active');
-  window.scrollTo({top:0,behavior:'instant'});
 }
 function exitMobileFocus(){
   var b=document.body;
