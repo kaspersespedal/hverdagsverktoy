@@ -279,7 +279,7 @@ function updateAll() {
   try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(_at)setTimeout(function(){_at.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});},50);_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});
   // Animated pill indicator
   if(_at){
-    var pill=document.createElement('div');pill.className='calc-nav-pill';_cnav.style.position='relative';_cnav.appendChild(pill);
+    var pill=document.createElement('div');pill.className='calc-nav-pill';_cnav.appendChild(pill);
     var prevIdx=sessionStorage.getItem('nav-pill-idx');
     var tabs=Array.from(_cnav.querySelectorAll('.calc-tab'));
     var curIdx=tabs.indexOf(_at);
