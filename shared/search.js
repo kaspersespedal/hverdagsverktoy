@@ -371,7 +371,10 @@ function highlight(text, q){
 window.openContactWithSuggestion = function(query){
   var overlay = document.getElementById('contact-overlay');
   if(overlay){
-    overlay.style.display = 'block';
+    overlay.classList.add('open');
+    document.body.style.overflow='hidden';
+    document.getElementById('contact-form').style.display='';
+    var successEl=document.getElementById('con-success');if(successEl)successEl.classList.remove('show');
     var subjectEl = document.getElementById('con-subject');
     if(subjectEl) subjectEl.value = 'feature';
     var msgEl = document.getElementById('con-message');
