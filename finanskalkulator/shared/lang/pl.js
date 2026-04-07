@@ -662,4 +662,111 @@ REGIONS['pl'] = {
     selskapAndreTitle:'Inne formy biznesowe',
     selskapAndreDesc:'ASA, NUF, SA i fundacja',
     selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Oprócz najczęstszych form istnieją inne formy biznesowe do specjalnych potrzeb.</div>'
+    // ═══ PRAWO — AKSJELOVEN & SELSKAPSLOVEN ═══
+
+    selLawGroupTitle:'Aksjeloven i Selskapsloven',
+    selLawGroupDesc:'Przepisy prawne dla AS, ANS, DA i KS',
+    selLawLabelAsl:'Aksjeloven (Ustawa o spółkach akcyjnych)',
+    selLawLabelSel:'Selskapsloven (Ustawa o spółkach osobowych)',
+    selLawHint:'Kliknij odniesienie do paragrafu (§), aby zobaczyć tekst prawny na Lovdata',
+
+    selAslStiftTitle:'Założenie (rozdz. 2)',
+    selAslStiftDesc:'Dokument założycielski · Kapitał zakładowy · Statut',
+    selAslStiftRows:[
+      ['Co jest potrzebne do założenia AS?','Dokument założycielski podpisany przez wszystkich subskrybentów, zawierający statut, kapitał zakładowy i wybór zarządu.','asl. § 2-1'],
+      ['Co musi zawierać statut?','Nazwę firmy, gminę, rodzaj działalności, wysokość kapitału zakładowego i wartość nominalną akcji.','asl. § 2-2'],
+      ['Minimalny kapitał zakładowy','30 000 kr (obniżony ze 100 000 kr w 2012 r.).','asl. § 3-1'],
+      ['Wkłady niepieniężne','Możliwe w formie rzeczowej, ale wymagają dokumentacji z potwierdzeniem biegłego rewidenta.','asl. § 2-4 i § 2-6'],
+      ['Kiedy spółka jest założona?','Gdy dokument założycielski jest podpisany przez wszystkich założycieli. Spółka nie ma praw do czasu rejestracji w Foretaksregisteret.','asl. § 2-9 i § 2-18'],
+      ['Termin zgłoszenia do rejestru','W ciągu 3 miesięcy od podpisania dokumentu założycielskiego, w przeciwnym razie założenie traci ważność.','asl. § 2-18']
+    ],
+
+    selAslKapitalTitle:'Kapitał zakładowy i wypłaty (rozdz. 3 i 8)',
+    selAslKapitalDesc:'Podwyższenie kapitału · Dywidenda · Wymóg adekwatności',
+    selAslKapitalRows:[
+      ['Podwyższenie kapitału','Uchwała walnego zgromadzenia większością 2/3 głosów. Możliwe przez nową subskrypcję, emisję premiową lub fuzję.','asl. § 10-1'],
+      ['Obniżenie kapitału','Może służyć pokryciu strat, wypłacie akcjonariuszom lub przeniesieniu do rezerw. Wymaga powiadomienia wierzycieli.','asl. § 12-1'],
+      ['Dywidenda — zasada główna','Spółka może wypłacić dywidendę z zysku netto lub wolnego kapitału własnego, na mocy uchwały walnego zgromadzenia.','asl. § 8-1'],
+      ['Wymóg adekwatności','Spółka musi zawsze posiadać kapitał własny i płynność odpowiednie do ryzyka i zakresu działalności.','asl. § 3-4'],
+      ['Obowiązek działania przy niskim kapitale','Zarząd musi niezwłocznie zająć się sprawą i zwołać walne zgromadzenie, jeśli kapitał własny jest nieodpowiednio niski.','asl. § 3-5'],
+      ['Podstawa dywidendy','Aktywa netto minus kapitał związany (kapitał zakładowy, rezerwa na niezrealizowane zyski). Pożyczki dla akcjonariuszy są odliczane.','asl. § 8-1 (2)-(4)'],
+      ['Dywidenda nadzwyczajna','Zarząd może wypłacić dywidendę nadzwyczajną na podstawie bilansu śródrocznego bez czekania na zwyczajne walne zgromadzenie.','asl. § 8-2a']
+    ],
+
+    selAslLedelseTitle:'Zarządzanie i organizacja (rozdz. 6)',
+    selAslLedelseDesc:'Zarząd · Dyrektor zarządzający · Walne zgromadzenie',
+    selAslLedelseRows:[
+      ['Obowiązki zarządu','Zarządzanie spółką, zapewnienie właściwej organizacji, nadzór nad bieżącym zarządzaniem i działalnością spółki.','asl. § 6-12'],
+      ['Skład zarządu','Minimum 1 członek zarządu dla kapitału ≤ 3 mln kr, w przeciwnym razie minimum 3. Przedstawicielstwo pracowników przy > 30 pracownikach.','asl. § 6-1'],
+      ['Dyrektor zarządzający','Niewymagany, jeśli kapitał zakładowy jest poniżej 3 mln kr. Może być wybrany przez zarząd.','asl. § 6-2'],
+      ['Walne zgromadzenie','Najwyższy organ spółki. Odbywa się w ciągu 6 miesięcy po zakończeniu roku obrachunkowego. Zatwierdza sprawozdanie roczne, dywidendę i wybory zarządu.','asl. § 5-1 i § 5-5'],
+      ['Wyłączenie członka zarządu','Członek zarządu nie może uczestniczyć w sprawach, w których ma interes osobisty sprzeczny z interesem spółki.','asl. § 6-27'],
+      ['Odpowiedzialność zarządu','Członkowie zarządu, którzy umyślnie lub niedbale wyrządzą szkodę spółce, mogą ponosić osobistą odpowiedzialność odszkodowawczą.','asl. § 17-1']
+    ],
+
+    selAslAksjerTitle:'Akcje i obrót (rozdz. 4)',
+    selAslAksjerDesc:'Rejestr akcjonariuszy · Prawo pierwokupu · Zgoda',
+    selAslAksjerRows:[
+      ['Rejestr akcjonariuszy','Spółka musi prowadzić rejestr wszystkich akcji z nazwiskiem i adresem właściciela. Musi być publicznie dostępny.','asl. § 4-5'],
+      ['Prawo pierwokupu','Akcjonariusze mają prawo pierwokupu przy sprzedaży akcji, chyba że statut stanowi inaczej.','asl. § 4-19'],
+      ['Zgoda zarządu na przeniesienie','Nabycie akcji wymaga zgody zarządu, chyba że statut stanowi inaczej.','asl. § 4-15'],
+      ['Przeniesienie akcji','Akcje przenoszone są przez zawiadomienie spółki. Nabywca uzyskuje prawa od momentu zgłoszenia nabycia.','asl. § 4-12'],
+      ['Przymusowe umorzenie','Akcjonariusz może żądać umorzenia w przypadku istotnego nadużycia pozycji przez większość.','asl. § 4-24'],
+      ['Akcje własne','Spółka może nabyć do 10% własnych akcji na podstawie upoważnienia walnego zgromadzenia.','asl. § 9-2']
+    ],
+
+    selAslFusjonTitle:'Fuzja, podział i rozwiązanie (rozdz. 13–16)',
+    selAslFusjonDesc:'Fuzja · Podział · Likwidacja',
+    selAslFusjonRows:[
+      ['Fuzja','Jedna spółka przejmuje drugą. Wymaga planu fuzji, większości 2/3 w obu spółkach i 6-tygodniowego powiadomienia wierzycieli.','asl. § 13-3 i § 13-14'],
+      ['Podział','Spółka dzielona na dwie lub więcej. Wartości mogą być przenoszone do nowej lub istniejącej spółki.','asl. § 14-2'],
+      ['Fuzja/podział bez podatku','Przeprowadzone zgodnie z przepisami Aksjeloven, fuzja i podział mogą nastąpić z kontynuacją podatkową (bez natychmiastowego opodatkowania).','sktl. § 11-2 i § 11-4'],
+      ['Rozwiązanie','Walne zgromadzenie podejmuje uchwałę o rozwiązaniu większością 2/3. Zarząd zgłasza to do Foretaksregisteret.','asl. § 16-1'],
+      ['Komisja likwidacyjna','Zarząd pełni funkcję komisji likwidacyjnej i musi uregulować zobowiązania, zrealizować aktywa i rozdzielić wartość netto między akcjonariuszy.','asl. § 16-2 i § 16-9'],
+      ['Powiadomienie wierzycieli','Przy rozwiązaniu wierzyciele muszą być powiadomieni z 6-tygodniowym terminem w publikacji Brønnøysundregistrene.','asl. § 16-4']
+    ],
+
+    selSelGrunnTitle:'Podstawowe zasady spółek jawnych (rozdz. 2)',
+    selSelGrunnDesc:'Umowa spółki · Odpowiedzialność · Wspólnicy',
+    selSelGrunnRows:[
+      ['Czym jest spółka jawna?','Dwóch lub więcej wspólników prowadzi działalność razem, a przynajmniej jeden odpowiada nieograniczenie za zobowiązania spółki.','sel. § 1-2'],
+      ['ANS vs DA','W ANS wszyscy wspólnicy odpowiadają solidarnie za cały dług. W DA każdy wspólnik odpowiada proporcjonalnie — tj. za swoją część długu.','sel. § 1-2 (1) b i c'],
+      ['Umowa spółki','Wszystkie spółki jawne muszą mieć pisemną umowę spółki określającą wspólników, wkłady i podział zysków/strat.','sel. § 2-3'],
+      ['Minimalna liczba wspólników','Co najmniej 2 wspólników. Spółka ulega rozwiązaniu, jeśli pozostaje tylko jeden wspólnik przez ponad 6 miesięcy.','sel. § 1-2 i § 2-37'],
+      ['Odpowiedzialność wspólników — nieograniczona','Wspólnicy w ANS/DA odpowiadają osobiście ponad swoje wkłady. Wierzyciele mogą żądać bezpośrednio od wspólników (ANS) lub proporcjonalnie (DA).','sel. § 2-4'],
+      ['Majątek spółki','Wkłady wspólników i inne aktywa spółki stanowią majątek spółki. Wspólnicy nie mogą wycofywać wartości osłabiających pokrycie wierzycieli.','sel. § 2-7']
+    ],
+
+    selSelInternTitle:'Organizacja wewnętrzna (rozdz. 2)',
+    selSelInternDesc:'Zgromadzenie wspólników · Zarządzanie · Nadwyżka',
+    selSelInternRows:[
+      ['Zgromadzenie wspólników','Najwyższa władza w spółce jawnej. Wszyscy wspólnicy mają prawo uczestniczyć. Decyzje wymagają jednomyślności, chyba że ustalono inaczej.','sel. § 2-8'],
+      ['Wymagania większościowe','Zwykłe uchwały wymagają jednomyślności. Szczególne decyzje (zmiana umowy spółki) wymagają zgody wszystkich.','sel. § 2-12 i § 2-13'],
+      ['Prawo zarządzania wspólników','Każdy wspólnik ma prawo i obowiązek uczestniczyć w zarządzaniu spółką, chyba że ustalono inaczej.','sel. § 2-16'],
+      ['Zysk i strata','Dzielone równo między wspólników, chyba że umowa spółki stanowi inaczej.','sel. § 2-25 i § 2-26'],
+      ['Wypłaty','Wspólnik może wypłacić środki zgodnie z umową spółki lub uchwałami zgromadzenia wspólników.','sel. § 2-26'],
+      ['Rachunkowość i rewizja','Spółki jawne z przychodami ze sprzedaży powyżej 5 mln kr podlegają obowiązkowi rachunkowości. Powyżej określonych progów wymagany jest biegły rewident.','regnskapsloven § 1-2 i revisorloven § 2-1']
+    ],
+
+    selSelKsTitle:'Spółki komandytowe (rozdz. 3)',
+    selSelKsDesc:'Komplementariusz · Komandytariusz · Odpowiedzialność',
+    selSelKsRows:[
+      ['Czym jest spółka komandytowa?','Spółka z co najmniej jednym komplementariuszem (nieograniczona odpowiedzialność) i co najmniej jednym komandytariuszem (odpowiedzialność do wkładu).','sel. § 3-1'],
+      ['Rola komplementariusza','Ma nieograniczoną odpowiedzialność osobistą i zarządza działalnością spółki. Często jako komplementariusz występuje AS.','sel. § 3-1 i § 3-9'],
+      ['Odpowiedzialność komandytariusza','Odpowiada tylko za uzgodniony wkład. Nie może uczestniczyć w zarządzaniu bez utraty ograniczenia.','sel. § 3-1 i § 3-7'],
+      ['Wymóg wkładu','Komandytariusz musi wpłacić uzgodniony wkład. Wkład nie może być niższy niż 20 000 kr na komandytariusza.','sel. § 3-1 (2)'],
+      ['Zarządzanie w KS','Komplementariusz zarządza spółką. Komandytariusz może uczestniczyć w zgromadzeniach ale nie ma prawa zarządzania bez umowy.','sel. § 3-9'],
+      ['Opodatkowanie wspólników','KS jest opodatkowany przez opodatkowanie wspólników — zysk/strata jest opodatkowany bezpośrednio u wspólników, nie w spółce.','sktl. § 10-40 nast.']
+    ],
+
+    selSelOpplosTitle:'Wystąpienie i rozwiązanie (rozdz. 2)',
+    selSelOpplosDesc:'Wykup · Rezygnacja · Likwidacja',
+    selSelOpplosRows:[
+      ['Rezygnacja','Wspólnik może zrezygnować z 6-miesięcznym wypowiedzeniem przed końcem roku obrachunkowego, chyba że ustalono inaczej.','sel. § 2-32'],
+      ['Wykup','Wspólnik może żądać wykupu w przypadku istotnego naruszenia przez innych wspólników lub z innych ważnych powodów.','sel. § 2-32 (2)'],
+      ['Wycena przy wystąpieniu','Kwotę wykupu ustala się na podstawie rzeczywistej wartości udziału, chyba że umowa spółki stanowi inaczej.','sel. § 2-33'],
+      ['Rozwiązanie za jednomyślną zgodą','Zgromadzenie wspólników może uchwalić rozwiązanie, jeśli wszyscy wspólnicy się zgadzają.','sel. § 2-37'],
+      ['Rozwiązanie przez sąd','Sąd może rozwiązać spółkę, jeśli przemawiają za tym ważne powody, np. trwałe problemy we współpracy.','sel. § 2-38'],
+      ['Likwidacja','Po rozwiązaniu przeprowadzana jest likwidacja: regulowane są zobowiązania, realizowane aktywa i wartość netto dzielona między wspólników.','sel. § 2-39 nast.']
+    ]
 };

@@ -700,4 +700,120 @@ REGIONS['no'] = {
       +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">En selvstendig formuesmasse uten eiere — stiftet for et bestemt formål (veldedighet, forskning, kultur). Ingen kan ta ut overskudd. Styres av et styre i henhold til vedtektene. Krav: minst 100 000 kr grunnkapital. Regulert av stiftelsesloven (LOV-2001-06-15-59).</div>'
       +'</div>'
       +'</div>'
+    // ═══════════ LOVVERK — AKSJELOVEN & SELSKAPSLOVEN ═══════════
+
+    selLawGroupTitle:'Aksjeloven og Selskapsloven',
+    selLawGroupDesc:'Lovregler for AS, ANS, DA og KS',
+    selLawLabelAsl:'Aksjeloven',
+    selLawLabelSel:'Selskapsloven',
+    selLawHint:'Klikk på en paragrafhenvisning (§) for å se lovteksten på Lovdata',
+
+    // --- Aksjeloven: Stiftelse (kap. 2) ---
+    selAslStiftTitle:'Stiftelse (kap. 2)',
+    selAslStiftDesc:'Stiftelsesdokument · Aksjekapital · Vedtekter',
+    selAslStiftRows:[
+      ['Hva trengs for å stifte et AS?','Stiftelsesdokument signert av alle aksjetegnere, med vedtekter, aksjekapital og styrevalg.','asl. § 2-1'],
+      ['Hva må vedtektene inneholde?','Foretaksnavn, kommune, virksomhetens art, aksjekapitalens størrelse og aksjenes pålydende.','asl. § 2-2'],
+      ['Minste aksjekapital','30 000 kr (senket fra 100 000 kr i 2012).','asl. § 3-1'],
+      ['Aksjeinnskudd i annet enn penger','Kan gjøres med tingsinnskudd (eiendeler), men må redegjøres for i eget dokument med revisorbekreftelse.','asl. § 2-4 og § 2-6'],
+      ['Når er selskapet stiftet?','Når stiftelsesdokumentet er signert av alle stifterne. Selskapet får ikke rettigheter før det er registrert i Foretaksregisteret.','asl. § 2-9 og § 2-18'],
+      ['Frist for melding til Foretaksregisteret','Innen 3 måneder etter signering av stiftelsesdokumentet, ellers faller stiftelsen bort.','asl. § 2-18']
+    ],
+
+    // --- Aksjeloven: Aksjekapital og utdeling (kap. 3 og 8) ---
+    selAslKapitalTitle:'Aksjekapital og utdeling (kap. 3 og 8)',
+    selAslKapitalDesc:'Kapitalforhøyelse · Utbytte · Forsvarlighetskrav',
+    selAslKapitalRows:[
+      ['Kapitalforhøyelse','Generalforsamlingen vedtar med 2/3 flertall. Kan gjøres ved nytegning, fondsemisjon eller fusjon.','asl. § 10-1'],
+      ['Kapitalnedsettelse','Kan brukes til dekning av tap, utdeling til aksjonærer eller overføring til fond. Krever kreditorvarsel.','asl. § 12-1'],
+      ['Utbytte — hovedregel','Selskapet kan dele ut utbytte av årsresultatet eller fri egenkapital, vedtatt av generalforsamlingen.','asl. § 8-1'],
+      ['Forsvarlighetskravet','Selskapet skal til enhver tid ha en egenkapital og likviditet som er forsvarlig ut fra risiko og omfang.','asl. § 3-4'],
+      ['Handleplikt ved lav egenkapital','Styret skal straks behandle saken og innkalle generalforsamling dersom egenkapitalen er uforsvarlig lav.','asl. § 3-5'],
+      ['Utbyttegrunnlag','Netto eiendeler minus bundet egenkapital (aksjekapital, fond for urealiserte gevinster, udisponert fond). Lån til aksjonærer trekkes fra.','asl. § 8-1 (2)-(4)'],
+      ['Ekstraordinært utbytte','Styret kan dele ut ekstraordinært utbytte basert på mellombalanse, uten å vente til ordinær generalforsamling.','asl. § 8-2a']
+    ],
+
+    // --- Aksjeloven: Ledelse og organisering (kap. 6) ---
+    selAslLedelseTitle:'Ledelse og organisering (kap. 6)',
+    selAslLedelseDesc:'Styre · Daglig leder · Generalforsamling',
+    selAslLedelseRows:[
+      ['Styrets oppgaver','Forvalte selskapet, påse forsvarlig organisering, føre tilsyn med daglig ledelse og selskapets virksomhet.','asl. § 6-12'],
+      ['Styresammensetning','Minst 1 styremedlem for aksjekapital ≤ 3 mill. kr, ellers minst 3. Ansatterepresentasjon ved > 30 ansatte.','asl. § 6-1'],
+      ['Daglig leder','Ikke påkrevd hvis aksjekapitalen er under 3 mill. kr. Kan velges av styret.','asl. § 6-2'],
+      ['Generalforsamlingen','Selskapets øverste organ. Holdes innen 6 måneder etter regnskapsårets utgang. Vedtar årsregnskap, utbytte og styrevalg.','asl. § 5-1 og § 5-5'],
+      ['Inhabilitet i styret','Styremedlem kan ikke delta i behandling av saker der vedkommende har særinteresse som kan stride mot selskapets.','asl. § 6-27'],
+      ['Styrets erstatningsansvar','Styremedlemmer som forsettlig eller uaktsomt volder tap for selskapet, kan bli personlig erstatningsansvarlige.','asl. § 17-1']
+    ],
+
+    // --- Aksjeloven: Aksjer og omsetning (kap. 4) ---
+    selAslAksjerTitle:'Aksjer og omsetning (kap. 4)',
+    selAslAksjerDesc:'Aksjeeierbok · Forkjøpsrett · Samtykke',
+    selAslAksjerRows:[
+      ['Aksjeeierbok','Selskapet skal føre bok over alle aksjer med eierens navn og adresse. Skal være tilgjengelig for enhver.','asl. § 4-5'],
+      ['Forkjøpsrett','Aksjonærer har forkjøpsrett ved salg av aksjer, med mindre vedtektene sier noe annet.','asl. § 4-19'],
+      ['Styresamtykke ved overdragelse','Erverv av aksje krever samtykke fra styret, med mindre vedtektene bestemmer noe annet.','asl. § 4-15'],
+      ['Aksjeoverføring','Aksjer overføres ved melding til selskapet. Erververen får rettigheter fra det tidspunkt ervervet er meldt.','asl. § 4-12'],
+      ['Innløsning av aksjer','Aksjonær kan kreve innløsning ved vesentlig misbruk av posisjon av flertallet — «tvangsinnløsning».','asl. § 4-24'],
+      ['Egne aksjer','Selskapet kan erverve inntil 10 % av egne aksjer etter fullmakt fra generalforsamlingen.','asl. § 9-2']
+    ],
+
+    // --- Aksjeloven: Fusjon, fisjon og oppløsning (kap. 13–16) ---
+    selAslFusjonTitle:'Fusjon, fisjon og oppløsning (kap. 13–16)',
+    selAslFusjonDesc:'Sammenslåing · Deling · Avvikling',
+    selAslFusjonRows:[
+      ['Fusjon — sammenslåing','Et selskap overtar et annet. Krever fusjonsplan, 2/3 flertall i begge selskap og 6 ukers kreditorvarsel.','asl. § 13-3 og § 13-14'],
+      ['Fisjon — deling','Et selskap deles i to eller flere. Kan gjøres ved at verdier overføres til et nytt eller eksisterende selskap.','asl. § 14-2'],
+      ['Skattefri fusjon/fisjon','Gjennomført etter aksjelovens regler kan fusjon og fisjon skje med skattemessig kontinuitet (ingen umiddelbar beskatning).','sktl. § 11-2 og § 11-4'],
+      ['Oppløsning','Generalforsamlingen vedtar oppløsning med 2/3 flertall. Styret melder fra til Foretaksregisteret.','asl. § 16-1'],
+      ['Avviklingsstyre','Styret fungerer som avviklingsstyre og skal gjøre opp selskapets forpliktelser, realisere eiendeler og fordele netto til aksjonærer.','asl. § 16-2 og § 16-9'],
+      ['Kreditorvarsel','Ved oppløsning skal kreditorer varsles med 6 ukers frist i Brønnøysundregistrenes kunngjøringspublikasjon.','asl. § 16-4']
+    ],
+
+    // --- Selskapsloven: Grunnregler (kap. 2) ---
+    selSelGrunnTitle:'Grunnregler for ansvarlige selskap (kap. 2)',
+    selSelGrunnDesc:'Selskapsavtale · Ansvar · Deltakere',
+    selSelGrunnRows:[
+      ['Hva er et ansvarlig selskap?','To eller flere deltakere driver økonomisk virksomhet sammen, og minst én hefter ubegrenset for selskapets forpliktelser.','sel. § 1-2'],
+      ['ANS vs DA','I ANS hefter alle deltakere solidarisk for hele gjelden. I DA hefter hver deltaker pro rata — dvs. for sin andel av gjelden.','sel. § 1-2 (1) b og c'],
+      ['Selskapsavtale','Alle ansvarlige selskap skal ha skriftlig selskapsavtale som angir deltakerne, innskudd og fordeling av over-/underskudd.','sel. § 2-3'],
+      ['Krav til antall deltakere','Minst 2 deltakere. Selskapet oppløses dersom det kun er én deltaker igjen i mer enn 6 måneder.','sel. § 1-2 og § 2-37'],
+      ['Deltakeransvar — ubegrenset','Deltakere i ANS/DA er personlig ansvarlige utover innskudd. Kreditorer kan gå på deltakerne direkte (ANS) eller pro rata (DA).','sel. § 2-4'],
+      ['Selskapsformue','Deltakernes innskudd og øvrige selskapsverdier er selskapets formue. Deltakerne kan ikke ta ut verdier som svekker kreditorenes dekning.','sel. § 2-7']
+    ],
+
+    // --- Selskapsloven: Intern organisering (kap. 2) ---
+    selSelInternTitle:'Intern organisering (kap. 2)',
+    selSelInternDesc:'Selskapsmøte · Forvaltning · Overskudd',
+    selSelInternRows:[
+      ['Selskapsmøte','Øverste myndighet i ansvarlig selskap. Alle deltakere har rett til å delta. Vedtak krever enstemmighet med mindre annet er avtalt.','sel. § 2-8'],
+      ['Flertallskrav','Vanlige vedtak krever enstemmighet. For spesielle beslutninger (endring av selskapsavtalen) kreves samtykke fra alle.','sel. § 2-12 og § 2-13'],
+      ['Deltakernes forvaltningsrett','Hver deltaker har rett og plikt til å delta i forvaltningen av selskapet, med mindre annet er avtalt.','sel. § 2-16'],
+      ['Overskudd og underskudd','Fordeles likt mellom deltakerne med mindre selskapsavtalen bestemmer noe annet.','sel. § 2-25 og § 2-26'],
+      ['Uttak fra selskapet','En deltaker kan ta ut midler i samsvar med det som er fastsatt i selskapsavtalen eller vedtatt på selskapsmøtet.','sel. § 2-26'],
+      ['Regnskap og revisjon','Ansvarlige selskap med salgsinntekter over 5 mill. kr er regnskapspliktige. Over visse terskler kreves revisor.','regnskapsloven § 1-2 og revisorloven § 2-1']
+    ],
+
+    // --- Selskapsloven: Kommandittselskap (kap. 3) ---
+    selSelKsTitle:'Kommandittselskap (kap. 3)',
+    selSelKsDesc:'Komplementar · Kommandittist · Ansvar',
+    selSelKsRows:[
+      ['Hva er et kommandittselskap?','Et selskap med minst én komplementar (ubegrenset ansvar) og minst én kommandittist (begrenset til innskudd).','sel. § 3-1'],
+      ['Komplementarens rolle','Har ubegrenset personlig ansvar og leder selskapets virksomhet. Ofte et AS som er komplementar.','sel. § 3-1 og § 3-9'],
+      ['Kommandittistens ansvar','Hefter kun for sitt avtalte innskudd. Kan ikke delta i ledelsen uten å miste begrensningen.','sel. § 3-1 og § 3-7'],
+      ['Innskuddskrav','Kommandittisten må innbetale avtalt innskudd. Innskuddet kan ikke settes til under 20 000 kr per kommandittist.','sel. § 3-1 (2)'],
+      ['Forvaltning i KS','Komplementaren forvalter selskapet. Kommandittisten kan delta i selskapsmøte men har ikke forvaltningsrett uten avtale.','sel. § 3-9'],
+      ['Deltakerligning','KS beskattes gjennom deltakerligning — overskudd/underskudd skattlegges direkte hos deltakerne, ikke i selskapet.','sktl. § 10-40 flg.']
+    ],
+
+    // --- Selskapsloven: Uttreden og oppløsning (kap. 2) ---
+    selSelOpplosTitle:'Uttreden og oppløsning (kap. 2)',
+    selSelOpplosDesc:'Utløsning · Oppsigelse · Avvikling',
+    selSelOpplosRows:[
+      ['Oppsigelse','Deltaker kan si opp med 6 måneders varsel til regnskapsårets slutt, med mindre annet er avtalt.','sel. § 2-32'],
+      ['Utløsning','Deltaker kan kreve seg utløst ved vesentlig mislighold fra andre deltakere, eller andre vektige grunner.','sel. § 2-32 (2)'],
+      ['Verdsettelse ved uttreden','Utløsningssummen fastsettes til andelens virkelige verdi med mindre selskapsavtalen bestemmer annet.','sel. § 2-33'],
+      ['Oppløsning ved enstemmighet','Selskapsmøtet kan vedta oppløsning dersom alle deltakere er enige.','sel. § 2-37'],
+      ['Oppløsning ved dom','Retten kan oppløse selskapet dersom tungtveiende grunner taler for det, f.eks. vedvarende samarbeidsproblemer.','sel. § 2-38'],
+      ['Avvikling','Ved oppløsning gjennomføres avvikling: forpliktelser gjøres opp, eiendeler realiseres og netto fordeles mellom deltakerne.','sel. § 2-39 flg.']
+    ]
 };

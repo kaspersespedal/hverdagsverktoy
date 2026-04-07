@@ -205,7 +205,7 @@ function search(q){
   return results.slice(0, 6);
 }
 
-/* ─── Find injection point on any page ─── */
+/* ─── Find injection point — homepage only ─── */
 function findInjectionPoint(){
   // Priority 1: Dashboard tools title (homepage)
   var toolsTitle = document.getElementById('dash-tools-title');
@@ -215,12 +215,7 @@ function findInjectionPoint(){
   var dashRule2 = document.getElementById('hero-dash-rule2');
   if(dashRule2) return {parent: dashRule2.parentNode, before: dashRule2};
 
-  // Priority 3: Main content on subpages (after nav, before cards)
-  var main = document.querySelector('main .container');
-  if(main && main.firstElementChild){
-    return {parent: main, before: main.firstElementChild};
-  }
-
+  // Subpages: do not inject search
   return null;
 }
 
