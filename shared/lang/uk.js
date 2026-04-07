@@ -462,4 +462,228 @@ REGIONS['uk'] = {
     searchTagConcept:'Поняття',
     searchTagLaw:'Закон',
     searchFeedbackMsg:'Розкажіть нам, що ви шукаєте'
+,
+    secSelskapGuide:'Форми компаній',
+    secSelskapRef:'Довідка',
+
+    // --- Яка форма компанії вам підходить? ---
+    selskapVelgTitle:'Яка форма компанії вам підходить?',
+    selskapVelgDesc:'Простий огляд для правильного вибору',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Більшість тих, хто починає самостійну діяльність в Норвегії, вибирають між <b>індивідуальним підприємством (ENK)</b> і <b>акціонерним товариством (AS)</b>. Вибір залежить від ризику, рівня доходу та потреби в найманих працівниках.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Ви хочете стартувати просто і дешево?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Виберіть <b>ENK</b> — безплатна реєстрація, немає вимог до мінімального капіталу. Ідеально для фрилансерів, консультантів та малих підприємств.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Ви хочете захистити приватну економіку?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Виберіть <b>AS</b> — ви ризикуєте лише акціонерним капіталом (30 000 kr). Краще для компаній з найманими працівниками, боргами або високим ризиком.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Ви плануєте розпочати з іншими?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Виберіть <b>ANS</b> (солідарна відповідальність) або <b>DA</b> (розподілена відповідальність). Потребує мінімум 2 учасників. Простіше за AS, але особиста відповідальність.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Вам потрібні пасивні інвестори?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Виберіть <b>KS</b> — поєднайте активних керівників (комплементаріусів) з інвесторами, які ризикують лише своїм внеском (командитистів).</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Емпіричне правило</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">До 600 000 kr доходу та низький ризик → <b>ENK</b>. Понад 600 000 kr, найманих працівників або ризик → <b>AS</b>. Партнерство → <b>ANS/DA</b>. Це приблизні межі — оцініть свою ситуацію.</div>'
+      +'</div>',
+
+    // --- ENK ---
+    selskapEnkTitle:'Індивідуальне підприємство (ENK)',
+    selskapEnkDesc:'Найпростіший спосіб розпочати самостійну діяльність',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Індивідуальне підприємство — це найпростіша форма компанії в Норвегії. Ви і бізнес — це одна й та ж людина юридично, що означає, що ви маєте <b>повну особисту відповідальність</b> за весь борг та зобов\'язання.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Ключові факти</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Плата за реєстрацію</span><span style="font-weight:700;color:var(--ink);">Безплатно</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Вимога до мінімального капіталу</span><span style="font-weight:700;color:var(--ink);">Немає</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Кількість власників</span><span style="font-weight:700;color:var(--ink);">Лише 1 особа</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Особиста відповідальність</span><span style="font-weight:700;color:var(--ink);">Повна — все, що ви маєте</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Податок на прибуток</span><span style="font-weight:700;color:var(--ink);">22 % + соціальний внесок 10,8 % + прогресивний податок</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Реєстрація по ПДВ</span><span style="font-weight:700;color:var(--ink);">При обороті понад 50 000 kr</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Переваги</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Безплатна і проста реєстрація — ви реєструєте себе в Реєстрі одиниць через Altinn. Немає вимог до ради директорів, загальних зборів або річної звітності (до певних меж). Ви можете вільно виводити гроші з підприємства. Сприятливе оподаткування при низьких доходах.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Недоліки</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Повна особиста відповідальність — кредитори можуть забрати ваш дім. Вищий соціальний внесок (10,8 % проти 7,6 % для найманих працівників). Відсутність прав найманих працівників для вас (немає хворобляної від 1-го дня, немає допомоги з безробіття). Може виглядати менш професійно.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Законодавство:</b> Немає окремого закону про компанії — регульовано загальними правилами. Закон про ведення бухгалтерії (Bokføringsloven) стосується підприємців. Реєстрація через Закон про Реєстр одиниць.'
+      +'</div>',
+
+    // --- AS ---
+    selskapAsTitle:'Акціонерне товариство (AS)',
+    selskapAsDesc:'Обмежена відповідальність та професійне управління',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Акціонерне товариство — це окремий суб\'єкт права — відокремлений від власників. Ви ризикуєте <b>лише акціонерним капіталом, який ви внесли</b>, а не своїм приватним майном. AS — найпоширеніша форма компанії в Норвегії, понад 350 000 зареєстрованих компаній.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Ключові факти</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Плата за реєстрацію</span><span style="font-weight:700;color:var(--ink);">6 825 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Вимога до мінімального акціонерного капіталу</span><span style="font-weight:700;color:var(--ink);">Мінімум 30 000 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Кількість власників</span><span style="font-weight:700;color:var(--ink);">1 або більше</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Особиста відповідальність</span><span style="font-weight:700;color:var(--ink);">Обмежена до внесеного капіталу</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Податок на прибуток компанії</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Податок на дивіденди (приватний власник)</span><span style="font-weight:700;color:var(--ink);">37,84 % (переглянуто)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Вимога до ради директорів</span><span style="font-weight:700;color:var(--ink);">Мінімум 1 член</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Структура</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>Загальні збори</b> — вищий орган, всі акціонери мають право голосу (1 акція = 1 голос). <b>Рада директорів</b> — керує компанією, мінімум 1 член. <b>Генеральний директор</b> — необов\'язково, займається повсякденною діяльністю.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Переваги</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Обмежена відповідальність захищає приватну економіку. Власник, який отримує зарплату, має права найманого працівника (хворобляна з 1-го дня, допомога з безробіття, пенсія). Метод звільнення робить дивіденди між компаніями майже безоподатковим. Авторитетно перед клієнтами та банками.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Недоліки</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Вища збірна податкова ставка при дивідендах (до ~51,5 % загалом). Формальні вимоги до ради директорів, загальних зборів та річної звітності. Витрати на реєстрацію та ведення бухгалтерії. Неможливо вільно виводити гроші — дивіденди потребують рішення.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Чи можна обійтися без аудитора?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Так, якщо компанія має операційні доходи менше 7 млн. kr, баланс менше 27 млн. kr і в середньому менше 10 найманих працівників.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Законодавство:</b> Закон про акціонерні товариства (LOV-1997-06-13-44). Заснування, капітал, рада директорів та загальні збори регульовані в гл. 2–6.'
+      +'</div>',
+
+    // --- ANS / DA ---
+    selskapAnsTitle:'Товариство з обмеженою відповідальністю (ANS / DA)',
+    selskapAnsDesc:'Партнерство з особистою відповідальністю',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Товариство з обмеженою відповідальністю — це партнерство, де учасники мають <b>особисту відповідальність за борги товариства</b>. Потребує мінімум 2 учасники. Типово для юридичних контор, медичних практик та малих спільних проектів.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS проти DA — яка різниця?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS (солідарна відповідальність):</b> Кожен учасник відповідає за <i>весь</i> борг. Кредитор може вимагати всю суму від одного учасника.<br><b>DA (розподілена відповідальність):</b> Кожен учасник відповідає лише за свою <i>пропорційну частку</i> боргу. Якщо у вас 50 % часток, ви відповідаєте максимум за 50 % боргу.</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Ключові факти</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Плата за реєстрацію</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Вимога до мінімального капіталу</span><span style="font-weight:700;color:var(--ink);">Немає</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Кількість учасників</span><span style="font-weight:700;color:var(--ink);">Мінімум 2</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Особиста відповідальність</span><span style="font-weight:700;color:var(--ink);">Необмежена (ANS: солідарна, DA: пропорційна)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Оподаткування</span><span style="font-weight:700;color:var(--ink);">Оподаткування учасників — прибуток оподатковується в учасників</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Що таке оподаткування учасників?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Товариство не платить податок самостійно. Замість того, прибуток і збитки розподіляються між учасниками за їхньою часткою володіння і оподатковуються на їхній особистій податковій декларації. Податкова ставка 22 % звичайного доходу, і розподіл понад захист від оподаткування оподатковується як дивіденди.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Договір про товариство</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Договір про товариство є обов\'язковим і регулює частки володіння, розподіл прибутку, робочий вклад, вихід та розпуск. Без хорошого договору можуть виникнути конфлікти.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Законодавство:</b> Закон про компанії (LOV-1985-06-21-83). Відповідальність регульована в §§ 1-1 та 1-2. Договір про товариство в § 2-3.'
+      +'</div>',
+
+    // --- KS ---
+    selskapKsTitle:'Командитне товариство (KS)',
+    selskapKsDesc:'Комбінація активних керівників та пасивних інвесторів',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Командитне товариство поєднує <b>комплементаріусів</b> (активних керівників з необмеженою відповідальністю) з <b>командитистами</b> (пасивних інвесторів з обмеженою відповідальністю). Використовується, коли потрібні зовнішні інвестицій, але ви не хочете розмовляти з AS.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Комплементаріус проти командитиста</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="display:flex;flex-direction:column;gap:12px;">'
+      +'<div><div style="font-weight:700;color:var(--ink);margin-bottom:4px;">Комплементаріус (загальний партнер)</div><div style="font-size:12px;color:var(--ink2);line-height:1.6;">Керує товариством, має право голосу, <b>особистої необмеженої відповідальності</b> за борги товариства. Як правило, вносить найменше або не вносить капітал — його внесок це роботи та управління.</div></div>'
+      +'<div><div style="font-weight:700;color:var(--ink);margin-bottom:4px;">Командитист (обмежений партнер)</div><div style="font-size:12px;color:var(--ink2);line-height:1.6;">Інвестор, не має права голосу, <b>обмежена відповідальність</b> — ризикує лише внеском. Не може вмішуватися в управління (інакше втрачає захист).</div></div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Ключові факти</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Плата за реєстрацію</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Мінімум комплементаріусів</span><span style="font-weight:700;color:var(--ink);">1</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Мінімум командитистів</span><span style="font-weight:700;color:var(--ink);">1</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Мінімальний капітал</span><span style="font-weight:700;color:var(--ink);">На розсуд (зазвичай кілька тисяч kr)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Оподаткування</span><span style="font-weight:700;color:var(--ink);">Оподаткування учасників</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Переваги</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Комплементаріус отримує прямий контроль без капіталу. Командитист має обмежену відповідальність при інвестиціях. Менш формальне, ніж AS. Легше договориться про розподіл прибутку чим в DA/ANS.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Недоліки</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Комплементаріус має необмежену відповідальність — це ризиковано. Командитист не має голосу. Складніше організувати, ніж простіші форми. Може бути складно привести нових командитистів пізніше.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Командитист втрачає обмежену відповідальність, якщо…</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Командитист вмішується в управління товариством. Тоді він може вважатися комплементаріусом і мати особисту відповідальність за борги (закон про компанії § 3-9).</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Законодавство:</b> Закон про компанії гл. 3 (LOV-1985-06-21-83). Відповідальність командитиста в § 3-7. Відповідальність комплементаріуса в § 3-8.'
+      +'</div>',
+
+    // --- Порівняння ---
+    selskapCompareTitle:'Порівняння форм компаній',
+    selskapCompareDesc:'Відповідальність, податки, вимоги та власники поряд',
+    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
+      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
+      +'</tr></thead><tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Відповідальність</td><td style="padding:8px 10px;color:var(--ink2);">Необмежена</td><td style="padding:8px 10px;color:var(--ink2);">Обмежена</td><td style="padding:8px 10px;color:var(--ink2);">Необмежена</td><td style="padding:8px 10px;color:var(--ink2);">Комп: необмеж.<br>Комм: обмеж.</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Власники</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Стартовий капітал</td><td style="padding:8px 10px;color:var(--ink2);">Немає</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Немає</td><td style="padding:8px 10px;color:var(--ink2);">На розсуд</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Плата за реєс.</td><td style="padding:8px 10px;color:var(--ink2);">Безплатно</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Оподаткування</td><td style="padding:8px 10px;color:var(--ink2);">Особисте</td><td style="padding:8px 10px;color:var(--ink2);">22 % компанія + дивіденди</td><td style="padding:8px 10px;color:var(--ink2);">Оподаток. учасників</td><td style="padding:8px 10px;color:var(--ink2);">Оподаток. учасників</td></tr>'
+      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Законодавство</td><td style="padding:8px 10px;color:var(--ink2);">Загальні правила</td><td style="padding:8px 10px;color:var(--ink2);">Закон про акціонерні товариства</td><td style="padding:8px 10px;color:var(--ink2);">Закон про компанії</td><td style="padding:8px 10px;color:var(--ink2);">Закон про компанії гл. 3</td></tr>'
+      +'</tbody></table></div>',
+
+    // --- Податки та форми компаній ---
+    selskapSkattTitle:'Податки та форми компаній',
+    selskapSkattDesc:'Податок на компанію, дивіденди та оподаткування учасників',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Способ оподаткування компанії залежить від її форми. Головна відмінність між компаніями, які є <b>окремими платниками податків</b> (AS) та компаніями, які оподатковуються через <b>оподаткування учасників</b> (ANS, DA, KS).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS — два рівні податків</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">1. Податок на прибуток компанії</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">2. Податок на дивіденди при розподілі (переглянуто × 1,72)</span><span style="font-weight:700;color:var(--ink);">37,84 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Сумарна граничний податок при дивідендах</span><span style="font-weight:700;color:var(--ink);">~51,5 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Метод звільнення (компанія власнить компанію)</span><span style="font-weight:700;color:var(--ink);">Приблизно 0 %</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS/DA/KS — оподаткування учасників</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Компанія не є окремим платником податків. Замість того, прибуток та збитки розподіляються між учасниками за їхньою часткою володіння і оподатковуються як <b>звичайний дохід (22 %)</b> у кожного окремо. Розподіл понад захист від оподаткування оподатковується як особистий дохід.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ENK — оподатковується як особистий дохід</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Прибуток оподатковується як дохід від діяльності: звичайний дохід (22 %) + соціальний внесок (10,8 %) + прогресивний податок. Модель підприємства дає захист від оподаткування на капітальні доходи.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Джерело:</b> Закон про податки гл. 10 (модель акціонера), гл. 10 частина B (модель учасника), гл. 12 (модель підприємства). Ставки: Податкове рішення Стортингу 2026.'
+      +'</div>',
+
+    // --- Реєстрація ---
+    selskapRegTitle:'Як реєструвати компанію',
+    selskapRegDesc:'Крок за кроком через Altinn та Brønnøysund',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Вся реєстрація підприємств в Норвегії проводиться електронно через <b>Altinn</b> (координована реєстраційна декларація). Компанія реєструється в Реєстрі одиниць та можливо у Реєстрі підприємств.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Крок за кроком</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">1. Виберіть форму компанії</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Вирішите, яка форма вам підходить: ENK, AS, ANS, DA або KS на основі ваших потреб.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">2. Заповніть координовану реєстраційну декларацію</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Увійдіть на altinn.no. Заповніть назву компанії, мету, власників та адресу. Для AS: додайте документ про заснування та статут.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">3. Підпишіть та сплатіть</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Всі засновники повинні підписати. Сплатіть реєстраційний збір (ENK: безплатно, AS: 6 825 kr, ANS/DA/KS: 2 250 kr). Для AS: переведіть акціонерний капітал на бізнес-рахунок.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">4. Отримайте організаційний номер</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Час обробки: 1–5 робочих днів. Ви отримаєте орг. номер, який використовується для всіх контактів з державою.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">5. Реєстрація по ПДВ (необов\'язково)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Обов\'язково, коли оборот перевищує 50 000 kr протягом 12 місяців. Можна подати заявку на реєстрацію заздалегідь.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Порада:</b> Ви можете зарезервувати назву компанії в Реєстрах Brønnøysund перед реєстрацією. Перевірте <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">перевірку назви</a>, щоб побачити, доступна ли назва.'
+      +'</div>',
+
+    // --- Інші форми компаній ---
+    selskapAndreTitle:'Інші форми компаній',
+    selskapAndreDesc:'ASA, NUF, SA та Фонд',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Крім найпоширеніших форм, існують інші форми компаній для спеціальних потреб.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">ASA — Публічне акціонерне товариство</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Для компаній, які будуть котуватися на біржі або мати багато акціонерів. Вимоги: мінімум 1 млн. kr акціонерного капіталу, 3 члени ради, генеральний директор та аудитор. Акції можуть вільно торгуватися. Регульовано законом про публічні акціонерні товариства (LOV-1997-06-13-45).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">NUF — Норвезька філія іноземної компанії</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Норвезька філія іноземної компанії. Була популярна як «дешева AS» через британські Ltd-компанії, але після того як вимога до AS була знижена до 30 000 kr (2012), більшість перейшла на норвезьку AS. Юридично це філія, а не самостійна норвезька компанія.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">SA — Кооперативне товариство</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Належить членам і керується демократично. Кожна особа має 1 голос незалежно від внеску. Використовується житловими кооперативами, споживчими кооперативами (Coop) та сільськогосподарськими кооперативами (Tine, Nortura). Мінімум 2 члени. Регульовано законом про кооперативи (LOV-2007-06-29-81).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Фонд</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Самостійна майнова база без власників — заснована для визначеної мети (благодійність, дослідження, культура). Ніхто не може прибрати прибуток. Керується радою відповідно до статуту. Вимога: мінімум 100 000 kr основного капіталу. Регульовано законом про фонди (LOV-2001-06-15-59).</div>'
+      +'</div>'
+      +'</div>',
 };

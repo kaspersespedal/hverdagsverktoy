@@ -462,4 +462,204 @@ REGIONS['pl'] = {
     searchTagConcept:'Pojęcie',
     searchTagLaw:'Prawo',
     searchFeedbackMsg:'Powiedz nam, czego szukasz'
+,
+
+    // --- Selskap (Formy biznesowe) ---
+    secSelskapGuide:'Formy biznesowe',
+    secSelskapRef:'Odnośniki',
+
+    // --- Która forma biznesowa ci pasuje? ---
+    selskapVelgTitle:'Która forma biznesowa ci pasuje?',
+    selskapVelgDesc:'Przejrzysty przegląd, aby wybrać odpowiednią',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Większość osób rozpoczynających samodzielną działalność w Norwegii wybiera między <b>jednoosobową działalnością (ENK)</b> a <b>spółką akcyjną (AS)</b>. Wybór zależy od ryzyka, poziomu dochodów i tego, czy potrzebujesz pracowników.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Chcesz zacząć prosto i tanio?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Wybierz <b>ENK</b> — bezpłatna rejestracja, bez wymogów kapitału zakładowego. Idealne dla freelancerów, konsultantów i małych firm.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Chcesz chronić swoje finanse osobiste?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Wybierz <b>AS</b> — ryzykujesz tylko włożony kapitał (30 000 kr). Lepiej dla firm z pracownikami, długami lub wysokim ryzykiem.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Chcesz zacząć z kimś innym?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Wybierz <b>ANS</b> (odpowiedzialność solidarna) lub <b>DA</b> (odpowiedzialność podzielona). Wymaga co najmniej 2 uczestników. Prostsze niż AS, ale z osobistą odpowiedzialnością.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Czy potrzebujesz biernych inwestorów?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Wybierz <b>KS</b> — połącz aktywnych liderów (komplementariuszy) z inwestorami ryzykującymi tylko wkład (komandytariuszy).</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Zasada kciuka</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Poniżej 600 000 kr dochodów i niskie ryzyko → <b>ENK</b>. Powyżej 600 000 kr, pracownicy lub ryzyko → <b>AS</b>. Partnerstwo → <b>ANS/DA</b>. To są przybliżone granice — oceń swoją sytuację.</div>'
+      +'</div>',
+
+    // --- ENK ---
+    selskapEnkTitle:'Jednoosobowa działalność (ENK)',
+    selskapEnkDesc:'Najprostszy sposób na początek samodzielnie',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Jednoosobowa działalność to najprostsza forma biznesu w Norwegii. Ty i twoja firma to w sensie prawnym ta sama osoba — oznacza to, że masz <b>pełną osobistą odpowiedzialność</b> za wszystkie długi i zobowiązania.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Kluczowe fakty</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Opłata rejestracyjna</span><span style="font-weight:700;color:var(--ink);">Bezpłatna</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Wymóg kapitału zakładowego</span><span style="font-weight:700;color:var(--ink);">Brak</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Liczba właścicieli</span><span style="font-weight:700;color:var(--ink);">Tylko 1 osoba</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Odpowiedzialność osobista</span><span style="font-weight:700;color:var(--ink);">Pełna — wszystko co posiadasz</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Podatek od zysku</span><span style="font-weight:700;color:var(--ink);">22 % + ubezpieczenie społeczne 10,8 % + podatek progresywny</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Podatek VAT</span><span style="font-weight:700;color:var(--ink);">Przy obrotach powyżej 50 000 kr</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Zalety</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Bezpłatne i łatwe do założenia — rejestrujesz się w Enhetsregisteret przez Altinn. Brak wymogów dotyczących zarządu, zgromadzenia akcjonariuszy lub sprawozdania finansowego (poniżej określonych limitów). Możesz swobodnie wypłacać pieniądze z firmy. Korzystne opodatkowanie przy niskich dochodach.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Wady</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Pełna odpowiedzialność osobista — wierzyciele mogą zająć twój dom. Wyższe ubezpieczenie społeczne (10,8 % vs. 7,6 % dla pracowników). Brak praw pracowniczych dla ciebie (brak zasiłku chorobowego od dnia 1, brak zasiłku dla bezrobotnych). Może działać mniej profesjonalnie.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Prawo:</b> Brak oddzielnej ustawy o spółkach — regulowana przepisami ogólnymi. Prawo księgowe obowiązuje przedsiębiorców. Rejestracja poprzez Enhetsregisterloven.'
+      +'</div>',
+
+    // --- AS ---
+    selskapAsTitle:'Spółka akcyjna (AS)',
+    selskapAsDesc:'Ograniczona odpowiedzialność i profesjonalne zarządzanie',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Spółka akcyjna to samodzielny podmiot prawny — odseparowany od właścicieli. Ryzykujesz <b>tylko włożony kapitał zakładowy</b>, nie swoje prywatne mienie. AS to najpowszechniejsza forma biznesu w Norwegii, z ponad 350 000 zarejestrowanymi spółkami.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Kluczowe fakty</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Opłata rejestracyjna</span><span style="font-weight:700;color:var(--ink);">6 825 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Wymóg kapitału zakładowego</span><span style="font-weight:700;color:var(--ink);">Minimum 30 000 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Liczba właścicieli</span><span style="font-weight:700;color:var(--ink);">1 lub więcej</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Odpowiedzialność osobista</span><span style="font-weight:700;color:var(--ink);">Ograniczona do włożonego kapitału</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Podatek spółki</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Podatek od dywidendy (właściciel osób)</span><span style="font-weight:700;color:var(--ink);">37,84 % (podwyższony)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Wymóg zarządu</span><span style="font-weight:700;color:var(--ink);">Minimum 1 członek zarządu</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Struktura</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>Zgromadzenie akcjonariuszy</b> — najwyższy organ, wszyscy akcjonariusze mają prawo głosu (1 akcja = 1 głos). <b>Zarząd</b> — zarządza spółką, minimum 1 członek. <b>Dyrektor generalny</b> — opcjonalnie, obsługuje codzienną działalność.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Zalety</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Ograniczona odpowiedzialność chroni finanse osobiste. Właściciel pobierający wynagrodzenie uzyskuje prawa pracownicze (zasiłek chorobowy od dnia 1, zasiłek dla bezrobotnych, emerytura). Metoda zwolnienia czyni dywidendy między spółkami praktycznie wolne od podatku. Wiarygodna wobec klientów i banków.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Wady</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Wyższa łączna stawka podatkowa przy dywidendzie (do ~51,5 % łącznie). Formalne wymogi dotyczące zarządu, zgromadzenia akcjonariuszy i sprawozdania finansowego. Koszty rejestracji i księgowości. Nie możesz swobodnie wypłacać pieniądze — dywidenda wymaga uchwały.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Czy możesz zrezygnować z biegłego rewidenta?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Tak, jeśli spółka ma przychody operacyjne poniżej 7 mln kr, bilans poniżej 27 mln kr i średnio poniżej 10 pracowników.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Prawo:</b> Akcjeloven (LOV-1997-06-13-44). Założenie, kapitał, zarząd i zgromadzenie akcjonariuszy regulowane w rozdziale. 2–6.'
+      +'</div>',
+
+    // --- ANS / DA ---
+    selskapAnsTitle:'Spółka jawna (ANS / DA)',
+    selskapAnsDesc:'Partnerstwo z odpowiedzialnością osobistą',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Spółka jawna to partnerstwo, w którym wspólnicy mają <b>osobistą odpowiedzialność za długi spółki</b>. Wymaga co najmniej 2 wspólników. Typowe dla kancelarii prawnych, praktyk lekarskich i małych projektów współpracy.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS vs. DA — jaka jest różnica?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS (odpowiedzialność solidarna):</b> Każdy wspólnik odpowiada za <i>całość</i> długu. Wierzyciel może żądać całej kwoty od jednego wspólnika.<br><b>DA (odpowiedzialność podzielona):</b> Każdy wspólnik odpowiada tylko za swoją <i>proporcjonalną część</i> długu. Jeśli masz 50 % udziału, odpowiadasz za maksymalnie 50 % długu.</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Kluczowe fakta</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Opłata rejestracyjna</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Wymóg kapitału zakładowego</span><span style="font-weight:700;color:var(--ink);">Brak</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Liczba wspólników</span><span style="font-weight:700;color:var(--ink);">Minimum 2</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Odpowiedzialność osobista</span><span style="font-weight:700;color:var(--ink);">Nieograniczona (ANS: solidarna, DA: pro rata)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Opodatkowanie</span><span style="font-weight:700;color:var(--ink);">Opodatkowanie przez uczestników — zysk opodatkowany u wspólników</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Co to jest opodatkowanie przez uczestników?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Spółka nie płaci podatku sama. Zamiast tego zysk i strata są rozdzielane wspólnikom według ich udziałów i opodatkowane w ich osobistym zeznaniu podatkowym. Stawka podatkowa wynosi 22 % zwykłych dochodów, a wypłata powyżej odliczenia ochronnego jest opodatkowana jako dywidenda.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Umowa spółki</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Umowa spółki jest obowiązkowa i reguluje udziały, podział zysku, wkład pracy, wyjście i rozwiązanie. Bez dobrej umowy mogą pojawić się konflikty.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Prawo:</b> Selskapsloven (LOV-1985-06-21-83). Odpowiedzialność regulowana w §§ 1-1 i 1-2. Umowa spółki w § 2-3.'
+      +'</div>',
+
+    // --- KS ---
+    selskapKsTitle:'Komandyta (KS)',
+    selskapKsDesc:'Aktywni liderzy i bierni inwestorzy',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Komandyta to forma partnerstwa z dwiema rolami: komplementariusze (aktywni, nieograniczona odpowiedzialność) i komandytariusze (bierni, ograniczona odpowiedzialność do wkładu). Historycznie popularna w transporcie morskim i nieruchomościach.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Kluczowe fakta</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Opłata rejestracyjna</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Wymóg kapitału zakładowego</span><span style="font-weight:700;color:var(--ink);">Opcjonalnie (komandytariusze zwykle wpłacają)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Opodatkowanie</span><span style="font-weight:700;color:var(--ink);">Opodatkowanie przez uczestników — jak ANS/DA</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Odpowiedzialność komplementariusza</span><span style="font-weight:700;color:var(--ink);">Nieograniczona — jak w ANS</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Odpowiedzialność komandytariusza</span><span style="font-weight:700;color:var(--ink);">Ograniczona do wkładu kapitałowego</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Liczba uczestników</span><span style="font-weight:700;color:var(--ink);">Minimum 2 (1 kompl. + 1 komm.)</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Dlaczego KS była popularna?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Przed 1992 roku komandytariusze mogli odliczyć straty spółki od swoich osobistych zeznań podatkowych bez ograniczeń. To czyniło KS bardzo atrakcyjną dla minimalizacji podatków w żegludze i nieruchomościach. Po zaostrzeniu zasad odliczeń (tylko do wysokości wkładu kapitałowego) jej popularność gwałtownie spadła.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Komandytariusz traci ograniczoną odpowiedzialność, jeśli…</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Komandytariusz zaangażuje się w zarządzanie spółką. Wtedy może być uznany za komplementariusza i odpowiadać osobiście za długi (selskapsloven § 3-9).</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Prawo:</b> Selskapsloven rozdział 3 (LOV-1985-06-21-83). Odpowiedzialność komandytariusza w § 3-7. Odpowiedzialność komplementariusza w § 3-8.'
+      +'</div>',
+
+    // --- Porównanie ---
+    selskapCompareTitle:'Porównanie form biznesowych',
+    selskapCompareDesc:'Odpowiedzialność, podatki, wymogi i właściciele obok siebie',
+    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
+      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
+      +'</tr></thead><tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Odpowiedzialność</td><td style="padding:8px 10px;color:var(--ink2);">Nieograniczona</td><td style="padding:8px 10px;color:var(--ink2);">Ograniczona</td><td style="padding:8px 10px;color:var(--ink2);">Nieograniczona</td><td style="padding:8px 10px;color:var(--ink2);">Kompl: nieogr.<br>Komm: ogr.</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Właściciele</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Kapitał zakładowy</td><td style="padding:8px 10px;color:var(--ink2);">Brak</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Brak</td><td style="padding:8px 10px;color:var(--ink2);">Opcjonalnie</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Opłata rej.</td><td style="padding:8px 10px;color:var(--ink2);">Bezpłatna</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Opodatkowanie</td><td style="padding:8px 10px;color:var(--ink2);">Osobiste</td><td style="padding:8px 10px;color:var(--ink2);">22 % spółka + dywidenda</td><td style="padding:8px 10px;color:var(--ink2);">Opodatkowanie uczestników</td><td style="padding:8px 10px;color:var(--ink2);">Opodatkowanie uczestników</td></tr>'
+      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Prawo</td><td style="padding:8px 10px;color:var(--ink2);">Przepisy ogólne</td><td style="padding:8px 10px;color:var(--ink2);">Akcjeloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven rozdz. 3</td></tr>'
+      +'</tbody></table></div>',
+
+    // --- Podatki i formy biznesowe ---
+    selskapSkattTitle:'Podatki i formy biznesowe',
+    selskapSkattDesc:'Podatek spółki, dywidenda i opodatkowanie uczestników',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Sposób opodatkowania spółki zależy od jej formy. Główne rozróżnienie dotyczy spółek będących <b>oddzielnym podmiotem podatkowym</b> (AS) i spółek opodatkowanych przez <b>opodatkowanie uczestników</b> (ANS, DA, KS).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS — dwa poziomy opodatkowania</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">1. Podatek spółki od zysku</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">2. Podatek od dywidendy przy wypłacie (podwyższony × 1,72)</span><span style="font-weight:700;color:var(--ink);">37,84 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Łączny podatek brzegowy przy dywidendzie</span><span style="font-weight:700;color:var(--ink);">~51,5 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Metoda zwolnienia (spółka posiada spółkę)</span><span style="font-weight:700;color:var(--ink);">Około 0 %</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS/DA/KS — opodatkowanie uczestników</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Spółka nie jest oddzielnym podmiotem podatkowym. Zysk i strata są rozdzielane wspólnikom według ich udziałów i opodatkowane jako <b>zwykły dochód (22 %)</b> dla każdego. Wypłata powyżej odliczenia ochronnego jest opodatkowana jako dochód osobisty.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ENK — opodatkowana jako dochód osobisty</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Zysk jest opodatkowany jako dochód z prowadzenia działalności: zwykły dochód (22 %) + ubezpieczenie społeczne (10,8 %) + podatek progresywny. Model foretaksowy daje odliczenie osłonowe od zwrotu z kapitału.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Źródło:</b> Skatteloven rozdział 10 (model akcjonariuszy), rozdział 10 część B (model uczestników), rozdział 12 (model foretaksowy). Stawki: Uchwała podatkowa Storting 2026.'
+      +'</div>',
+
+    // --- Rejestracja ---
+    selskapRegTitle:'Jak zarejestrować spółkę',
+    selskapRegDesc:'Krok po kroku przez Altinn i Brønnøysund',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Wszystkie rejestracjacje przedsiębiorstw w Norwegii odbywają się elektronicznie przez <b>Altinn</b> (skoordynowana meldacja rejestracyjna). Spółka jest rejestrowana w Enhetsregisteret i ewentualnie w Foretaksregisteret.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Krok po kroku</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">1. Wybierz formę biznesową</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Zdecyduj się na ENK, AS, ANS, DA lub KS na podstawie swoich potrzeb.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">2. Wypełnij skoordynowaną meldancję rejestracyjną</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Zaloguj się na altinn.no. Wypełnij nazwę spółki, cel, właścicieli i adres. W przypadku AS: dołącz dokument założycielski i statut.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">3. Podpisz i zapłać</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Wszyscy założyciele muszą podpisać. Zapłacić opłatę rejestracyjną (ENK: bezpłatna, AS: 6 825 kr, ANS/DA/KS: 2 250 kr). W przypadku AS: przenieś kapitał zakładowy na konto biznesowe.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">4. Otrzymaj numer organizacji</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Czas przetwarzania: 1–5 dni roboczych. Otrzymasz numer org. używany w całej komunikacji z instytucjami publicznymi.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">5. Rejestracja VAT (opcjonalna)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Obowiązkowa, gdy obroty przekraczają 50 000 kr w ciągu 12 miesięcy. Możesz wnioskować o wcześniejszą rejestrację.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Porada:</b> Możesz zarezerwować nazwę spółki w Brønnøysundregistrene przed rejestracją. Sprawdź <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">kontrolę nazwy</a>, aby zobaczyć, czy nazwa jest dostępna.'
+      +'</div>',
+
+    // --- Inne formy biznesowe ---
+    selskapAndreTitle:'Inne formy biznesowe',
+    selskapAndreDesc:'ASA, NUF, SA i fundacja',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Oprócz najczęstszych form istnieją inne formy biznesowe do specjalnych potrzeb.</div>'
 };

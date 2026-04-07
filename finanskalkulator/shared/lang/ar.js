@@ -461,5 +461,192 @@ REGIONS['ar'] = {
     searchTagTool:'أداة',
     searchTagConcept:'مفهوم',
     searchTagLaw:'قانون',
-    searchFeedbackMsg:'أخبرنا بما تبحث عنه'
+
+    secSelskapGuide:'أشكال الشركات',
+    secSelskapRef:'المرجع',
+
+    // --- Hvilken selskapsform passer deg? ---
+    selskapVelgTitle:'أي شكل شركة يناسبك؟',
+    selskapVelgDesc:'نظرة عامة سهلة لاختيار الشكل الصحيح',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">معظم من يبدأ عملهم الخاص في النرويج يختار بين <b>المؤسسة الفردية (ENK)</b> و <b>الشركة المساهمة (AS)</b>. يعتمد الاختيار على المخاطرة ومستوى الدخل وما إذا كنت تحتاج موظفين.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">هل تريد البدء بطريقة بسيطة وغير مكلفة؟</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">اختر <b>ENK</b> — التسجيل مجاني، لا توجد متطلبات رأس مال. مثالية للعاملين الحرين والمستشارين والشركات الصغيرة.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">هل تريد حماية أموالك الشخصية؟</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">اختر <b>AS</b> — أنت تخاطر برأس المال فقط (30,000 كرونة). أفضل للشركات التي لديها موظفون أو ديون أو مخاطرة عالية.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">هل تريد البدء مع آخرين؟</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">اختر <b>ANS</b> (المسؤولية المتضامنة) أو <b>DA</b> (المسؤولية المشتركة). يتطلب على الأقل شريكين. أبسط من AS، لكن مسؤولية شخصية.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">هل تحتاج مستثمرين سلبيين؟</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">اختر <b>KS</b> — اجمع بين المديرين النشطين (الشركاء العامين) ومستثمرين يخاطرون برأس المال فقط (الشركاء المحدودين).</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">القاعدة الذهبية</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">أقل من 600,000 كرونة دخل ومخاطرة منخفضة → <b>ENK</b>. أكثر من 600,000 كرونة أو موظفون أو مخاطرة → <b>AS</b>. شراكة → <b>ANS/DA</b>. هذه حدود تقريبية — قيّم وضعك الخاص.</div>'
+      +'</div>',
+
+    // --- ENK ---
+    selskapEnkTitle:'المؤسسة الفردية (ENK)',
+    selskapEnkDesc:'أبسط طريقة للبدء بعملك الخاص',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">المؤسسة الفردية هي أبسط شكل شركة في النرويج. أنت والعمل من الناحية القانونية شخص واحد — مما يعني أن لديك <b>مسؤولية شخصية كاملة</b> عن جميع الديون والالتزامات.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">حقائق أساسية</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">رسوم التسجيل</span><span style="font-weight:700;color:var(--ink);">مجاني</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">متطلبات رأس المال</span><span style="font-weight:700;color:var(--ink);">لا شيء</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">عدد الملاك</span><span style="font-weight:700;color:var(--ink);">شخص واحد فقط</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">المسؤولية الشخصية</span><span style="font-weight:700;color:var(--ink);">كاملة — كل ما تملكه</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">الضريبة على الأرباح</span><span style="font-weight:700;color:var(--ink);">22% + رسم التأمين الاجتماعي 10.8% + الضريبة التصاعدية</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">التزام ضريبة القيمة المضافة</span><span style="font-weight:700;color:var(--ink);">عند المبيعات فوق 50,000 كرونة</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">المزايا</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">مجاني وبسيط للبدء — تسجل نفسك في السجل المركزي عبر Altinn. لا متطلبات لمجلس إدارة أو جمعية عمومية أو بيانات مالية (ضمن حدود معينة). يمكنك بحرية سحب الأموال من المشروع. ضريبة مواتية عند الدخل المنخفض.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">العيوب</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">مسؤولية شخصية كاملة — الدائنون يمكنهم الاستيلاء على منزلك. رسم التأمين الاجتماعي أعلى (10.8% مقابل 7.6% لموظفي الأجر). لا حقوق موظف لنفسك (لا راتب مرضي من اليوم الأول، لا إعانة بطالة). قد تبدو أقل احترافية.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>الإطار القانوني:</b> لا قانون شركة منفصل — تنظمها القواعس العامة. يطبق قانون الدفاتر على الأنشطة التجارية. التسجيل عبر قانون السجل المركزي.'
+      +'</div>',
+
+    // --- AS ---
+    selskapAsTitle:'الشركة المساهمة (AS)',
+    selskapAsDesc:'مسؤولية محدودة وإدارة احترافية',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">الشركة المساهمة كيان قانوني منفصل — مختلفة عن المالكين. أنت تخاطر <b>برأس المال فقط الذي استثمرته</b>، وليس أموالك الشخصية. AS هي الشكل الأكثر شيوعاً في النرويج، مع أكثر من 350,000 شركة مسجلة.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">حقائق أساسية</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">رسوم التسجيل</span><span style="font-weight:700;color:var(--ink);">6,825 كرونة</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">متطلبات رأس المال</span><span style="font-weight:700;color:var(--ink);">الحد الأدنى 30,000 كرونة</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">عدد الملاك</span><span style="font-weight:700;color:var(--ink);">واحد أو أكثر</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">المسؤولية الشخصية</span><span style="font-weight:700;color:var(--ink);">محدودة برأس المال المستثمر</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ضريبة الشركة</span><span style="font-weight:700;color:var(--ink);">22%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ضريبة الأرباح (مالك فرد)</span><span style="font-weight:700;color:var(--ink);">37.84% (معدلة)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">متطلبات مجلس الإدارة</span><span style="font-weight:700;color:var(--ink);">الحد الأدنى عضو واحد</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">الهيكل</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>الجمعية العمومية</b> — الجهاز الأعلى، جميع المساهمين لهم حق التصويت (سهم واحد = صوت واحد). <b>مجلس الإدارة</b> — يدير الشركة، على الأقل عضو واحد. <b>المدير العام</b> — اختياري، يتولى الإدارة اليومية.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">المزايا</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">المسؤولية المحدودة تحمي أموالك الشخصية. المالك الذي يأخذ راتب يحصل على حقوق الموظف (راتب مرضي من اليوم الأول، إعانة بطالة، معاش). طريقة الإعفاء تجعل الأرباح بين الشركات معفاة تقريباً من الضريبة. موثوقة مع العملاء والبنوك.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">العيوب</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ضريبة إجمالية أعلى عند توزيع الأرباح (حتى 51.5% الإجمالي). متطلبات رسمية لمجلس الإدارة والجمعية العمومية والبيانات المالية. تكلفة التسجيل والمحاسبة. لا يمكنك بحرية سحب الأموال — يتطلب الأرباح قراراً.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">هل يمكنك تجنب المدقق؟</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">نعم، إذا كان دخل الشركة أقل من 7 ملايين كرونة ومجموع الأصول أقل من 27 مليون كرونة وعدد الموظفين أقل من 10 في المتوسط.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>الإطار القانوني:</b> قانون الشركات المساهمة (LOV-1997-06-13-44). التأسيس ورأس المال ومجلس الإدارة والجمعية العمومية تنظم في الفصول 2-6.'
+      +'</div>',
+
+    // --- ANS / DA ---
+    selskapAnsTitle:'الشركة المسؤولة (ANS / DA)',
+    selskapAnsDesc:'شراكة مع مسؤولية شخصية',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">الشركة المسؤولة شراكة حيث <b>يتحمل الشركاء مسؤولية شخصية عن ديون الشركة</b>. يتطلب على الأقل شريكين. نموذجية لمكاتب المحامين والعيادات الطبية والمشاريع التعاونية الصغيرة.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS مقابل DA — ما الفرق؟</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS (المسؤولية المتضامنة):</b> كل شريك يضمن <i>كل</i> الدين. يمكن للدائن أن يطلب المبلغ الكامل من شريك واحد.<br><b>DA (المسؤولية المشتركة):</b> كل شريك يضمن فقط <i>حصته النسبية</i> من الدين. إذا كان لديك 50% ملكية، فأنت تضمن بحد أقصى 50% من الدين.</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">حقائق أساسية</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">رسوم التسجيل</span><span style="font-weight:700;color:var(--ink);">2,250 كرونة</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">متطلبات رأس المال</span><span style="font-weight:700;color:var(--ink);">لا شيء</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">عدد الشركاء</span><span style="font-weight:700;color:var(--ink);">على الأقل 2</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">المسؤولية الشخصية</span><span style="font-weight:700;color:var(--ink);">غير محدودة (ANS: متضامنة، DA: نسبية)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">الضريبة</span><span style="font-weight:700;color:var(--ink);">ضريبة المالكين — الأرباح تُفرض على الشركاء</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ما هي ضريبة المالكين؟</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">الشركة لا تدفع ضريبة بنفسها. بدلاً من ذلك، توزع الأرباح والخسائر على الشركاء حسب حصتهم، وتُفرض على إقراراتهم الضريبية الشخصية. معدل الضريبة هو 22% للدخل العادي، والتوزيع فوق خصم الحماية يفرض كأرباح.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">اتفاقية الشركة</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">اتفاقية الشركة إلزامية وتنظم الحصص الملكية وتقسيم الأرباح والعمل والانسحاب والحل. بدون اتفاقية جيدة يمكن أن تنشأ نزاعات.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>الإطار القانوني:</b> قانون الشركات (LOV-1985-06-21-83). المسؤولية تنظم في §§ 1-1 و 1-2. اتفاقية الشركة في § 2-3.'
+      +'</div>',
+
+    // --- KS ---
+    selskapKsTitle:'شركة التوصية (KS)',
+    selskapKsDesc:'مزيج من المديرين والمستثمرين',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">شركة التوصية تجمع بين نوعين من الشركاء: <b>الشركاء العامين (komplementarer)</b> لديهم مسؤولية غير محدودة والمديرين، و <b>الشركاء المحدودين (kommandittister)</b> يستثمرون فقط ولا يشاركون في الإدارة.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">متى تختار KS؟</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">عندما تريد أن تجد مستثمرين (شركاء محدودين) بدون أن تعطيهم السيطرة على الإدارة. الشركاء العامون يقودون الأعمال والشركاء المحدودون يساهمون بأموال فقط. شائعة في الاستثمار والأسهم الخاصة.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">حقائق أساسية</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">الشركاء العامون</span><span style="font-weight:700;color:var(--ink);">مسؤولية غير محدودة</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">الشركاء المحدودون</span><span style="font-weight:700;color:var(--ink);">مسؤولية محدودة برأس المال</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">الضريبة</span><span style="font-weight:700;color:var(--ink);">ضريبة المالكين — مثل ANS/DA</span></div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>الإطار القانوني:</b> قانون الشركات (LOV-1985-06-21-83). شركة التوصية تنظم في الفصل 2.'
+      +'</div>',
+
+    // --- مقارنة الأشكال ---
+    selskapCompareTitle:'مقارنة أشكال الشركات',
+    selskapCompareDesc:'جدول سريع للمقارنة',
+    selskapCompareBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">هنا مقارنة سريعة للمساعدة في الاختيار بين الأشكال الرئيسية.</div>'
+      +'<div style="overflow-x:auto;margin-bottom:16px;">'
+      +'<table style="width:100%;border-collapse:collapse;font-size:12px;">'
+      +'<thead style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<tr><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">الخاصية</th><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">ENK</th><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">AS</th><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">ANS/DA</th><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">KS</th></tr>'
+      +'</thead>'
+      +'<tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">التأسيس</td><td style="padding:10px;color:var(--ink);">مجاني</td><td style="padding:10px;color:var(--ink);">6,825 kr</td><td style="padding:10px;color:var(--ink);">2,250 kr</td><td style="padding:10px;color:var(--ink);">2,250 kr</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">رأس المال</td><td style="padding:10px;color:var(--ink);">لا شيء</td><td style="padding:10px;color:var(--ink);">30,000 kr</td><td style="padding:10px;color:var(--ink);">لا شيء</td><td style="padding:10px;color:var(--ink);">متغير</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">الملاك</td><td style="padding:10px;color:var(--ink);">1</td><td style="padding:10px;color:var(--ink);">1+</td><td style="padding:10px;color:var(--ink);">2+</td><td style="padding:10px;color:var(--ink);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">المسؤولية</td><td style="padding:10px;color:var(--ink);">غير محدودة</td><td style="padding:10px;color:var(--ink);">محدودة</td><td style="padding:10px;color:var(--ink);">غير محدودة</td><td style="padding:10px;color:var(--ink);">مختلطة</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">الضريبة</td><td style="padding:10px;color:var(--ink);">22% + TI</td><td style="padding:10px;color:var(--ink);">22% الشركة</td><td style="padding:10px;color:var(--ink);">المالكين</td><td style="padding:10px;color:var(--ink);">المالكين</td></tr>'
+      +'</tbody>'
+      +'</table>'
+      +'</div>',
+
+    // --- الضرائب والنماذج ---
+    selskapSkattTitle:'الضرائب والتقارير',
+    selskapSkattDesc:'الالتزامات الضريبية والمحاسبية',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">كل شكل شركة له التزامات ضريبية ومحاسبية مختلفة.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ENK</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">تقدم الإقرار الضريبي كفرد. الأرباح تفرض كدخل شخصي (22% + رسوم اجتماعية + ضريبة تصاعدية). لا بيانات مالية مطلوبة عادة ما لم تتجاوز حداً معيناً. الدفاتر البسيطة يجب الاحتفاظ بها.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">الشركة تدفع ضريبة الدخل 22% على الأرباح. يجب تقديم بيانات مالية سنوية عبر Brønnøysund. قد تحتاج مدقق إذا تجاوزت حداً معيناً. الأرباح الموزعة تفرض على المالكين بنسبة 37.84%.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS / DA / KS</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">الشركة نفسها لا تدفع ضريبة. توزع الأرباح على الشركاء الذين يفرضون الضريبة على إقراراتهم الشخصية. يجب تقديم بيانات مالية للشركة عبر Brønnøysund إذا تجاوزت حداً معيناً.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>ملاحظة:</b> جميع الشركات يجب أن تسجل في السجل المركزي وتتابع قوانين ضريبة القيمة المضافة. استشر محاسب أو مستشار ضريبي لحالتك المحددة.'
+      +'</div>',
+
+    // --- التسجيل والتقييم ---
+    selskapRegTitle:'التسجيل والتقييم',
+    selskapRegDesc:'خطوات البدء',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">التسجيل يختلف حسب نوع الشركة. معظم تسجل عبر Altinn أو تواصل مع Brønnøysund مباشرة.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">للمؤسسة الفردية (ENK)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">سجل في السجل المركزي عبر Altinn (أو شكل الورقة). يستغرق عادة بضعة أيام. تحتاج رقم تعريف ضريبي (organisasjonsnummer) من مصلحة الضرائب.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">للشركة المساهمة (AS)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">تقدم طلب التأسيس عبر Brønnøysund مع عقد التأسيس ونموذج التسجيل. تدفع 6,825 كرونة. يستغرق حوالي أسبوع.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">لـ ANS / DA / KS</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">سجل في السجل المركزي عبر Altinn مع اتفاقية الشركة. تدفع 2,250 كرونة. يستغرق عادة بضعة أيام.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>نصيحة:</b> استشر محامي أو مستشار قبل التسجيل لضمان أن تختار الشكل الصحيح والتوثيق.'
+      +'</div>',
+
+    // --- Andre selskapsformer ---
+    selskapAndreTitle:'أشكال شركات أخرى',
+    selskapAndreDesc:'ASA, NUF, SA والمؤسسات',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">بالإضافة إلى الأشكال الشائعة، هناك أشكال شركات أخرى لاحتياجات خاصة.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">ASA — الشركة المساهمة العامة</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">للشركات المدرجة في البورصة أو التي لديها عدد كبير من المساهمين. المتطلبات: رأس مال أدنى 1 مليون كرونة، 3 أعضاء مجلس إدارة على الأقل، مدير عام ومدقق حسابات. الأسهم يمكن تبديلها بحرية. منظمة بموجب قانون الشركات المساهمة العامة (LOV-1997-06-13-45).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">NUF — مؤسسة أجنبية مسجلة في النرويج</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">فرع نرويجي من شركة أجنبية. كانت شائعة كـ «AS رخيصة» عبر شركات بريطانية Ltd، لكن بعد خفض متطلبات AS إلى 30,000 كرونة (2012)، معظم انتقل إلى AS النرويجي. من الناحية القانونية، هذا فرع وليس شركة نرويجية مستقلة.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">SA — التعاونية (التعاون)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">مملوكة وموجهة ديمقراطياً من قبل الأعضاء. كل شخص لديه صوت واحد بغض النظر عن المساهمة. تستخدم من قبل الإسكان والمنظمات الاستهلاكية (Coop) والتعاونيات الزراعية (Tine, Nortura). حد أدنى 2 عضو. منظمة بموجب قانون التعاون (LOV-2007-06-29-81).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">المؤسسة</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">قاعدة أصول مستقلة بدون ملاك — مؤسسة لغرض محدد (الخيرية، البحث، الثقافة). لا يمكن لأحد سحب الفائض. موجهة من قبل مجلس إدارة وفقاً للنظام الأساسي. المتطلبات: رأس مال أساسي على الأقل 100,000 كرونة. منظمة بموجب قانون المؤسسات (LOV-2001-06-15-59).</div>'
+      +'</div>'
+      +'</div>',
+
 };

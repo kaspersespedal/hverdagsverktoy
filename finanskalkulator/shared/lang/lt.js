@@ -461,5 +461,230 @@ REGIONS['lt'] = {
     searchTagTool:'Įrankis',
     searchTagConcept:'Sąvoka',
     searchTagLaw:'Įstatymas',
-    searchFeedbackMsg:'Pasakykite, ko ieškote'
+    searchFeedbackMsg:'Pasakykite, ko ieškote',
+
+    secSelskapGuide:'Įmonių formos',
+    secSelskapRef:'Nuoroda',
+
+    // --- Kuri įmonės forma jums tinka? ---
+    selskapVelgTitle:'Kuri įmonės forma jums tinka?',
+    selskapVelgDesc:'Paprasta apžvalga norint pasirinkti tinkamą',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Dauguma kurie pradeda darbą patys Norvegijoje pasirinkdami tarp <b>individualiųjų paslaugų teikėjų (IČ)</b> ir <b>akcinių bendrovių (AS)</b>. Pasirinkimas priklauso nuo rizikos, pajamų lygio ir to, ar reikia darbuotojų.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Ar norite pradėti paprastai ir pigiai?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Pasirinkite <b>IČ</b> — nemokama registracija, nėra minimalaus kapitalo reikalavimo. Puiku laisviems specialistams, konsultantams ir mažoms bendrovėms.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Ar norite apsaugoti savo asmenines finansas?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Pasirinkite <b>AS</b> — rizikuojate tik akcinį kapitalą (30 000 kr). Geriau bendrovėms su darbuotojais, skolom ar didelėmis rizikom.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Ar pradėsite su kažkuo kitu?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Pasirinkite <b>ANS</b> (solidari atsakomybė) arba <b>DA</b> (dalinė atsakomybė). Reikalingi mažiausiai 2 dalyviai. Paprasčiau nei AS, tačiau su asmenine atsakomybe.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Ar reikalingi pasyvūs investuotojai?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Pasirinkite <b>KS</b> — sujunkite aktyvius vadovus (komplementarus) su investuotojais, kurie rizikuoja tik savo indėliu (komandito dalyviai).</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Nykščio taisyklė</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Žemiau 600 000 kr pajamų ir mažą riziką → <b>IČ</b>. Virš 600 000 kr, darbuotojai arba rizika → <b>AS</b>. Partnerystė → <b>ANS/DA</b>. Tai apytikslės ribos — įvertinkite savo situaciją.</div>'
+      +'</div>',
+
+    // --- IČ ---
+    selskapEnkTitle:'Individualus paslaugų teikėjas (IČ)',
+    selskapEnkDesc:'Paprasčiausias būdas pradėti darbą patam',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Individualus paslaugų teikėjas yra paprasčiausia įmonės forma Norvegijoje. Jūs ir jūsų veikla yra teisiniam aspektu ta pati asmenybe — tai reiškia, kad turite <b>visišką asmeninę atsakomybę</b> už visas skolas ir įsipareigojimus.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Pagrindiniai faktai</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registracijos mokestis</span><span style="font-weight:700;color:var(--ink);">Nemokama</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Minimalus pradžios kapitalas</span><span style="font-weight:700;color:var(--ink);">Nėra</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Savininkai skaičius</span><span style="font-weight:700;color:var(--ink);">Tik 1 asmuo</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Asmeninė atsakomybė</span><span style="font-weight:700;color:var(--ink);">Visiškai — viskas ką turite</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Mokestis nuo pelno</span><span style="font-weight:700;color:var(--ink);">22 % + socialinis mokestis 10,8 % + progresyvusis mokestis</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">PVM pareiga</span><span style="font-weight:700;color:var(--ink);">Kai pardavimas virš 50 000 kr</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Privalumai</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Nemokama ir paprasta pradėti — registruojatės Subjektų registre per Altinn. Nereikalingas valdymo organas, generalinis akcininkų susirinkimas arba metinis ataskaitas (iki tam tikrų ribų). Galite laisvai paimti pinigus iš verslo. Palankus mokestis mažesnėms pajamoms.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Trūkumai</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Visišką asmeninę atsakomybę — kreditoriai gali atimti jūsų namus. Aukštesnis socialinis mokestis (10,8 % vs. 7,6 % algą gaunančiems). Nėra darbuotojo teisių sau (nėra ligos pašalpos nuo 1 dienos, nėra nedarbo pašalpos). Gali atrodyti mažiau profesionaliai.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Įstatymas:</b> Nėra atskiro individualaus paslaugų teikėjo įstatymo — reguliuojama bendromis taisyklėmis. Buhalterinės apskaitos įstatymas galioja verslininkams. Registracija per Subjektų registro įstatymą.'
+      +'</div>',
+
+    // --- AS ---
+    selskapAsTitle:'Akcinė bendrovė (AS)',
+    selskapAsDesc:'Ribota atsakomybė ir profesionali veikla',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Akcinė bendrovė yra atskira teisinė asmenybe — atskirta nuo savininkų. Jūs rizikuojate <b>tik injektų akcinį kapitalą</b>, o ne savo asmenines nuosavybes. AS yra labiausiai paplitusi įmonės forma Norvegijoje su daugiau nei 350 000 registruotomis bendrovėmis.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Pagrindiniai faktai</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registracijos mokestis</span><span style="font-weight:700;color:var(--ink);">6 825 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Minimalus akcinis kapitalas</span><span style="font-weight:700;color:var(--ink);">Mažiausiai 30 000 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Savininkai skaičius</span><span style="font-weight:700;color:var(--ink);">1 ar daugiau</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Asmeninė atsakomybė</span><span style="font-weight:700;color:var(--ink);">Ribota iki injektų kapitalo</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Bendrovės mokestis</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Dividendų mokestis (asmeninis savininkas)</span><span style="font-weight:700;color:var(--ink);">37,84 % (pakoreguota)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Valdymo organo reikalavimas</span><span style="font-weight:700;color:var(--ink);">Mažiausiai 1 valdymo organo narys</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Struktūra</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>Akcininkų susirinkimas</b> — aukščiausias organas, visi akciniai turi balsavimo teisę (1 akcija = 1 balsas). <b>Valdymo organas</b> — valdo bendrovę, mažiausiai 1 narys. <b>Generalinis direktorius</b> — neobligatorinis, valdo kasdienę veiklą.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Privalumai</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Ribota atsakomybė apsaugo asmenines finansas. Savininkas kuriam reikalingas atlygis gauna darbuotojo teises (ligos pašalpa nuo 1 dienos, nedarbo pašalpa, pensija). Atleidimo metodas daro dividendus tarp bendrovių beveik neapmokestinus. Patikima klientams ir bankams.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Trūkumai</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Aukštesnis bendras apmokestinimas už dividendus (iki ~51,5 % iš viso). Formalūs reikalavimai valdymo organui, akcininkų susirinkimui ir metiniam ataskaitą. Išlaidos registracijai ir buhalterinei apskaitai. Negalite laisvai imti pinigų — dividendai reikalauja sprendimo.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Ar galite neturi auditorių?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Taip, jei bendrovė turi veiklos pajamų žemiau 7 mil. kr, balanso suma žemiau 27 mil. kr ir vidutiniškai žemiau 10 darbuotojų.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Įstatymas:</b> Akcinės bendrovės įstatymas (LOV-1997-06-13-44). Steigimas, kapitalas, valdymo organas ir akcininkų susirinkimas reguliuojami 2-6 skyriuose.'
+      +'</div>',
+
+    // --- ANS / DA ---
+    selskapAnsTitle:'Atsakinga bendrovė (ANS / DA)',
+    selskapAnsDesc:'Partnerystė su asmenine atsakomybe',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Atsakinga bendrovė yra partnerystė, kurioje dalyviai turi <b>asmeninę atsakomybę už bendrovės skolas</b>. Reikalingi mažiausiai 2 dalyviai. Tipiška advokatų biurams, gydytojų praktikoms ir mažiems bendram projektams.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS vs. DA — koks yra skirtumas?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS (solidari atsakomybė):</b> Kiekvienas dalyvys yra atsakingas už <i>visą</i> skolą. Kreditorius gali reikalauti visos sumos iš vieno dalyvio.<br><b>DA (dalinė atsakomybė):</b> Kiekvienas dalyvys yra atsakingas tik už jo <i>proporcingą dalį</i> skolos. Jei turite 50 % nuosavybę, esate atsakingi už maks. 50 % skolos.</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Pagrindiniai faktai</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registracijos mokestis</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Minimalus pradžios kapitalas</span><span style="font-weight:700;color:var(--ink);">Nėra</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Dalyvių skaičius</span><span style="font-weight:700;color:var(--ink);">Mažiausiai 2</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Asmeninė atsakomybė</span><span style="font-weight:700;color:var(--ink);">Neribotas (ANS: solidari, DA: pro rata)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Apmokestinimas</span><span style="font-weight:700;color:var(--ink);">Dalyvio apmokestinimas — pelnas apmokestinamas pas dalyvius</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Kas yra dalyvio apmokestinimas?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Bendrovė pati negrįžtina mokesčio. Vietoj to pelnas ir nuostolis paskirstomi dalyviams pagal jų nuosavybės dalį ir apmokestinamas jų asmeninėje mokestinėje deklaracijoje. Mokesčio norma yra 22 % paprastajai pajamoms, o paskirstymas aukščiau apsaugos atskaitos apmokestinamas kaip dividendai.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Partnerystės sutartis</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Partnerystės sutartis yra privaloma ir reguliuoja nuosavybės dalis, pelno paskirstymą, darbo indėlį, išėjimą ir išformavimą. Be geros sutarties gali kilti konfliktai.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Įstatymas:</b> Bendrovės įstatymas (LOV-1985-06-21-83). Atsakomybė reguliuojama §§ 1-1 ir 1-2. Partnerystės sutartis § 2-3.'
+      +'</div>',
+
+    // --- KS ---
+    selskapKsTitle:'Komandito bendrovė (KS)',
+    selskapKsDesc:'Du dalyvio tipai — skirtinga rizika ir atsakomybė',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Komandito bendrovė turi du dalyvio tipus su visiškai skirtingais vaidmenimis ir atsakomybe. Buvo istoriškai populiari laivyboje ir nekilnojamajame turte, bet šiandien retai naudojama (apie 120 registruotų Norvegijoje).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Du vaidmenys</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Komplementaras (aktyvus)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Veda bendrovę ir priima sprendimus. Turi <b>neribotos asmenines atsakomybės</b> už visas skolas. Reikalingas mažiausiai 1 komplementaras.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Komandito dalyvys (pasyvus)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Investuoja kapitalą, bet nedalyvauja vadovavime. Atsakomybė <b>ribota iki indėlio</b>. Reikalingas mažiausiai 1 komandito dalyvys.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Pagrindiniai faktai</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registracijos mokestis</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Komandito dalyviųo kapitalas (minimumas)</span><span style="font-weight:700;color:var(--ink);">Nustatytas partnerystės sutartyje</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Apmokestinimas</span><span style="font-weight:700;color:var(--ink);">Dalyvio apmokestinimas (kaip ANS/DA)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Dalyvių skaičius</span><span style="font-weight:700;color:var(--ink);">Mažiausiai 2 (1 komp. + 1 komand.)</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Kodėl buvo populiari KS?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Prieš 1992 metus komandito dalyviai galėjo atskaitą bendrovės nuostolius iš savo asmeninės mokestinės deklaracijos be ribojimų. Tai padarė KS labai patrauklią mokesčiams sumažinti laivyboje ir nekilnojamajame turte. Po nuostolių atskaitų ribojimo (tik nuo injektų kapitalo) populiarumas staigiai krito.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Komandito dalyvys praranda ribotą atsakomybę jei…</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Komandito dalyvys įsimaišo į bendrovės vadovavimą. Tada jis gali būti laikomas komplementaru ir asmeniškai atsakingas už skolą (bendrovės įstatymas § 3-9).</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Įstatymas:</b> Bendrovės įstatymo 3 skyrius (LOV-1985-06-21-83). Komandito dalyvio atsakomybė § 3-7. Komplementaro atsakomybė § 3-8.'
+      +'</div>',
+
+    // --- Palyginimas ---
+    selskapCompareTitle:'Įmonių formų palyginimas',
+    selskapCompareDesc:'Atsakomybė, mokestis, reikalavimai ir savininkai greta',
+    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
+      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">IČ</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
+      +'</tr></thead><tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Atsakomybė</td><td style="padding:8px 10px;color:var(--ink2);">Neribotas</td><td style="padding:8px 10px;color:var(--ink2);">Ribots</td><td style="padding:8px 10px;color:var(--ink2);">Neribotas</td><td style="padding:8px 10px;color:var(--ink2);">Komp: neribots<br>Komand: ribots</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Savininkai</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Pradžios kapitalas</td><td style="padding:8px 10px;color:var(--ink2);">Nėra</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Nėra</td><td style="padding:8px 10px;color:var(--ink2);">Neprivalomas</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Reg.mokest.</td><td style="padding:8px 10px;color:var(--ink2);">Nemokama</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Apmokestinimas</td><td style="padding:8px 10px;color:var(--ink2);">Asmeninis</td><td style="padding:8px 10px;color:var(--ink2);">22 % bendrovė + dividendai</td><td style="padding:8px 10px;color:var(--ink2);">Dalyvio apmokestinimas</td><td style="padding:8px 10px;color:var(--ink2);">Dalyvio apmokestinimas</td></tr>'
+      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Įstatymas</td><td style="padding:8px 10px;color:var(--ink2);">Bendrosios taisyklės</td><td style="padding:8px 10px;color:var(--ink2);">Akcinės bendrovės įstatymas</td><td style="padding:8px 10px;color:var(--ink2);">Bendrovės įstatymas</td><td style="padding:8px 10px;color:var(--ink2);">Bendrovės įstatymas 3 sk.</td></tr>'
+      +'</tbody></table></div>',
+
+    // --- Mokestis ir įmonės formos ---
+    selskapSkattTitle:'Mokestis ir įmonės formos',
+    selskapSkattDesc:'Bendrovės mokestis, dividendai ir dalyvio apmokestinimas',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Kaip apmokestinama bendrovė priklauso nuo jos formos. Pagrindinė skirtis yra tarp bendrovių, kurios yra <b>atskiri mokesčio subjektai</b> (AS) ir bendrovių, kurios apmokestinamos per <b>dalyvio apmokestinimą</b> (ANS, DA, KS).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS — dvi mokestinės pakopos</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">1. Bendrovės mokestis pelui</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">2. Dividendų mokestis paskirstymui (pakoreguota × 1,72)</span><span style="font-weight:700;color:var(--ink);">37,84 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Bendras kraštutinis mokestis paskirstant dividendus</span><span style="font-weight:700;color:var(--ink);">~51,5 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Atleidimo metodas (bendrovė valdo bendrovę)</span><span style="font-weight:700;color:var(--ink);">Beveik 0 %</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS/DA/KS — dalyvio apmokestinimas</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Bendrovė nėra atskiras mokesčio subjektas. Pelnas ir nuostolis paskirstomi dalyviams pagal jų nuosavybės dalį ir apmokestinamas kaip <b>paprastoji pajama (22 %)</b> jų asmeninėje mokestinėje deklaracijoje. Paskirstymas aukščiau apsaugos atskaitos apmokestinamas kaip asmeninis dividendas.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">IČ — apmokestinimas kaip asmeninės pajamos</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Pelnas apmokestinamas kaip verslo pajamos: paprastoji pajama (22 %) + socialinis mokestis (10,8 %) + progresyvusis mokestis. Versliniko modelis suteikia apsaugos atskaitą kapitalo grąžai.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Šaltinis:</b> Mokesčio įstatymas 10 sk. (akcininkų modelis), 10 sk. B dalis (dalyvio modelis), 12 sk. (versliniko modelis). Normos: Stortingo mokesčio nutarimas 2026.'
+      +'</div>',
+
+    // --- Registracija ---
+    selskapRegTitle:'Kaip registruoti bendrovę',
+    selskapRegDesc:'Žingsnis po žingsnio per Altinn ir Brønnøysund',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Visas verslininkų registracija Norvegijoje vykdoma elektroniškai per <b>Altinn</b> (suderintas registracijos pranešimas). Bendrovė registruojama Subjektų registre ir, jei reikalinga, Verslininkų registre.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Žingsnis po žingsnio</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">1. Pasirinkite įmonės formą</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Nuspręskite dėl IČ, AS, ANS, DA arba KS, atsižvelgdami į savo poreikius.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">2. Užpildykite suderintą registracijos pranešimą</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Prisijunkite prie altinn.no. Įveskite bendrovės pavadinimą, tikslą, savininkus ir adresą. AS: pridėkite įstatinio dokumentą ir reglamentą.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">3. Pasirašykite ir sumokėkite</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Visi steigėjai turi pasirašyti. Sumokėkite registracijos mokestį (IČ: nemokama, AS: 6 825 kr, ANS/DA/KS: 2 250 kr). AS: pavedę akcinį kapitalą į verslo sąskaitą.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">4. Gauti organizacijos numerį</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Apdorojimo laikas: 1–5 darbo dienos. Gausite org.nr. naudojamą visuose bendruose santykiuose.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">5. PVM registracija (neobligatorinis)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Obliviuojama, kai pardavimas viršija 50 000 kr per 12 mėnesių. Galite prašyti išankstinės registracijos.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Patarimas:</b> Galite rezervuoti bendrovės pavadinimą Brønnøysund registruose prieš registruodami. Patikrinkite <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">vardo kontrolę</a> norėdami pamatyti, ar vardas laisvas.'
+      +'</div>',
+
+    // --- Kitos įmonės formos ---
+    selskapAndreTitle:'Kitos įmonės formos',
+    selskapAndreDesc:'ASA, NUF, SA ir fondas',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Be labiausiai paplitusių formų, yra dar kelios specialioms poreikiams.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">ASA — Viešoji akcinė bendrovė</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Bendrovėms, kurios turi būti registruotos biržoje arba turėti daug akcininkų. Reikalavimai: mažiausiai 1 mil. kr akcinis kapitalas, 3 valdymo organo nariai, generalinis direktorius ir auditorius. Akcijos gali būti laisvai parduodamos. Reguliuojama viešojo akcinės bendrovės įstatymu (LOV-1997-06-13-45).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">NUF — Norvegijoje registruota užsienio veikla</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Užsienio bendrovės Norvegijos filialas. Buvo populiarus kaip „pigus AS" per britaniškus Ltd-s, bet po to kai AS minimumas sumažėjo iki 30 000 kr (2012) dauguma perėjo į norvegišką AS. Teisiniu požiūriu tai yra filialas, o ne atskira norvegų bendrovė.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">SA — Bendradarbiavimo bendrovė (kooperatyvas)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Priklausanti ir demokratiškai vadinama narių. Kiekvienas asmuo turi 1 balsą nepriklausomai nuo indėlio. Naudojama namų bendrijomis, vartotojų kooperatyvais (Coop) ir žemės ūkio kooperatyvais (Tine, Nortura). Mažiausiai 2 nariai. Reguliuojama bendradarbiavimo įstatymu (LOV-2007-06-29-81).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Fondas</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Atskira turto masė be savininkų — steigta tam tikram tikslui (filantropija, mokslas, kultūra). Niekas negali paimti pertekliaus. Vadovaujama valdymo organo pagal reglamentą. Reikalavimai: mažiausiai 100 000 kr pradžios kapitalas. Reguliuojama fondo įstatymu (LOV-2001-06-15-59).</div>'
+      +'</div>'
+      +'</div>'
 };

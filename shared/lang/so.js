@@ -460,5 +460,188 @@ REGIONS['so'] = {
     searchTagTool:'Qalab',
     searchTagConcept:'Fikrad',
     searchTagLaw:'Sharci',
-    searchFeedbackMsg:'Noo sheeg waxa aad raadinayso'
+    searchFeedbackMsg:'Noo sheeg waxa aad raadinayso',
+
+    secSelskapGuide:'Noocyada Shirkadaha',
+    secSelskapRef:'Tusitaan',
+
+    // --- Nooca shirkad ee lagaa dooneeyey?
+    selskapVelgTitle:'Nooca shirkad ee lagaa dooneeyey?',
+    selskapVelgDesc:'Koobka fudud si aad u doorto midka saxda ah',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Dadka badan ee qo\'da bilaaba Norwayga waxay dooraan waxa u dhexeeya <b>Ganacsiga shakhsi ahaaneed (ENK)</b> iyo <b>Shirkadda saamileyda (AS)</b>. Doorashadu waxay ku xidhan tahay khatar, heerka dakhliga iyo haddii aad u baahantahay shaqaale.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Miyaad rabto inaad bilawdo si fudud iyo gah yar?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Dooro <b>ENK</b> — xorna lagu qoro, onko mahadsanid ah. Wanaagsan in lah freelancers, adeegga iyo biznisyada yar.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Miyaad rabto inaad ilaaliso dhaqaalahaaga shakhsi ahaaneed?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Dooro <b>AS</b> — adiga oo khatar celiya kaliya maalka saamiga ah (30 000 kr). Wanaagsan in lah biznisyada leh shaqaale, deyn ama khatar sare.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Miyaad bilawbi doontaa mid kale oo la mid ah?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Dooro <b>ANS</b> (damaanad isku-mid ah) ama <b>DA</b> (damaanad isu-goyn). Waxay u baahan yihiin yax-yar 2 qof. Si fudud ka AS, laakiin damaanad shakhsi ah.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Miyaad u baahantahay ay jiraan malaay fiirsigaysi?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Dooro <b>KS</b> — isku biir hogaaminta xooga leh (komplementaar) oo ay jiraan malaay iyagoo kaliya khatar celiya maalka (kommandittist).</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Calaacalka gacan</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Ka yar 600 000 kr dakhli iyo khatar yar → <b>ENK</b>. Ka badan 600 000 kr, shaqaale ama khatar → <b>AS</b>. Iskaashi → <b>ANS/DA</b>. Kuwan waa xudud caabirka — tixgeli xaalakaaga.</div>'
+      +'</div>',
+    selskapEnkTitle:'Ganacsiga shakhsi ahaaneed (ENK)',
+    selskapEnkDesc:'Habka fudud ee si fiican loo qo\'da qof kale',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Ganacsiga shakhsi ahaaneed waa nooca fudud ee shirkadaha Norwayga. Adiga iyo bizniskaaga waa qof hal ah — tani waxay macnaheedu yahay inaad leedahay <b>damaanad shakhsi oo dhan</b> u dhaf dhoor iyo waajibno.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Xogta la\'inaad">Macluumaad inaad garoonka</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Koofiyaha qorista</span><span style="font-weight:700;color:var(--ink);">Xorna</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Mahadsanid ah ee maalka bilowa</span><span style="font-weight:700;color:var(--ink);">Onko</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Tirada iska leh</span><span style="font-weight:700;color:var(--ink);">Kaliya 1 qof</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Damaanad shakhsi ah</span><span style="font-weight:700;color:var(--ink);">Buuxa — wax walbo aad leedahay</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Canshuur ee faa\'idada</span><span style="font-weight:700;color:var(--ink);">22% + kaydinta canshuur 10,8% + canshuur safka</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Waajibka MVA</span><span style="font-weight:700;color:var(--ink);">Ka badan omdac 50 000 kr</span></div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Waxyaalo wanaagsan</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Xorna iyo fudud — aad qor karto Enhetsregisteret dhexdhexaadka Altinn. Onko mahadsanid ah oo stura, guddida ama xisaabinta sanadlaha (xudud yar). Aad si xor ah u iska qaadi kartaa lacagta bizniskaaga. Canshuurta wanaagsan dakhli yar.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Balaayo</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Damaanad shakhsi oo dhan — hoggaamiyayaashu way qaadi karaan guriga. Kaydinta sare (10,8% vs. 7,6% ee meeraysyada mushaharka). Onko haqu hayga shaqaale ee kaa (onko caabuuf maalintii 1, onko dhib, onko taageerada). Si yar muuqata oo xirfad leh.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Sharci:</b> Onko sharci shirkad iska hor — lagu xukumayo xeerarka caadiga ah. Xeerka Bokefoolinta waa la yidhaahdaa ee dad leh ganacsi. Qorista dhexdhexaadka Xeerka Qaar.'
+      +'</div>',
+    selskapAsTitle:'Shirkadda saamileyda (AS)',
+    selskapAsDesc:'Khatar xakamiyad iyo haleellada xirfad leh',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Shirkadda saamileyda waa qof sharci iska hor — iska duwan iska leh. Aad khatar celiya <b>kaliya maalka saamiga ah ee aad isku soo gabagabiyey</b>, onko dhaqaalahaaga shakhsi ah. AS waa nooca shirkad ee caadiga ah Norwayga, oo leh 350 000 oo shirkado lagu qoray.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Xogta muhiimka ah</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Koofiyaha qorista</span><span style="font-weight:700;color:var(--ink);">6 825 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Mahadsanid ah ee maalka saamiga</span><span style="font-weight:700;color:var(--ink);">Yax-yar 30 000 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Tirada iska leh</span><span style="font-weight:700;color:var(--ink);">1 ama badan</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Damaanad shakhsi ah</span><span style="font-weight:700;color:var(--ink);">Xakamiyad oo kaliya ilaa maalka</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Canshuur shirkada</span><span style="font-weight:700;color:var(--ink);">22%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Canshuur faa\'ida (iska leh shakhsi)</span><span style="font-weight:700;color:var(--ink);">37,84% (sare)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Mahadsanid ah ee stura</span><span style="font-weight:700;color:var(--ink);">Yax-yar 1 xubnaha stura</span></div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Dhismaha</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>Guddiga guud</b> — garka sare, dhammaan saamiyeyaashu waxay leedahay codka (1 saami = 1 cod). <b>Stura</b> — walbahaareeda shirkada, yax-yar 1 xubnaha. <b>Aabaha maalineed</b> — ikhtiyaariga ah, waxuu waardiya shaqada maalineed.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Waxyaalo wanaagsan</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Khatar xakamiyad waxa ilaaliya dhaqaalahaaga shakhsi ah. Iska leh ee qaata mushaharka ayaa leh haqu hayga shaqaale (caabuuf maalintii 1, dagaale, kaydinta). Habka dhalaallinta ayaa waxa dhig iska qubay dhax shirkadaha. Tixda wanaagsan galabnimadu iyo bangigga.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Balaayo</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Canshuur walaaca sare ee faa\'ida (ilaa ~51,5% wadarta). Waajibbaad sura, guddiga iyo xisaabinta sanadlaha. Gasha qorista iyo xisaabitaanka. Onko si xor ah u iska qaadi kartaa lacagta — faa\'ida waxay u baahan yihiin go\'an.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Miyaad warejishan kartaa wakiilka dib?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Hah, hadii shirkadu ay leedahay dakhli shaqo ka yar 7 mill. kr, baraha saafiga ka yar 27 mill. kr iyo caadiga lagu ahaa ka yar 10 shaqaale.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Sharci:</b> Xeerka Saamileyda (LOV-1997-06-13-44). Stiftelse, maali, stura iyo guddiga oo lagu xukumayo qabka 2–6.',
+    selskapAnsTitle:'Shirkadda waalid ah (ANS / DA)',
+    selskapAnsDesc:'Iskaashi oo leh damaanad shakhsi ah',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Shirkadda waalid ah waa iskaashi ee qof ka mid ah ay leh <b>damaanad shakhsi ah u dhaf deyn shirkadeed</b>. Waxay u baahan yihiin yax-yar 2 qof. Caadi in lah fircoontada isha, dhakiimyada iyo yar-yar iskaashi masaaruuf.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS vs. DA — maxay kala duwan yihiin?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS (damaanad isku-mid ah):</b> Qof walba waxay damaanad u haysa <i>buuxa</i> deyna. Howlwaale ayaa lug u yeedin karaa lacag buuxa hal qof.<br><b>DA (damaanad isu-goyn):</b> Qof walba waxay damaanad u haysa kaliya <i>caadiga</i> deyna. Haddii aad leedahay 50% iska leh, waxaad damaanad u haysa kaliya 50% deyna.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Xogta muhiimka ah</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Koofiyaha qorista</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Mahadsanid ah ee maalka bilowa</span><span style="font-weight:700;color:var(--ink);">Onko</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Tirada qof ka mid ah</span><span style="font-weight:700;color:var(--ink);">Yax-yar 2</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Damaanad shakhsi ah</span><span style="font-weight:700;color:var(--ink);">Xakamiyad (ANS: isku-mid, DA: kaas iska gaar)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Canshuurta</span><span style="font-weight:700;color:var(--ink);">Canshuurta qof — faa\'ida ayaa iska qybiyey qof ka</span></div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Maxay yihiin canshuurta qof?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Shirkadu ma bixiso canshuur iyada. Hadal faa\'ida iyo khaladka ayaa lagu qybiyey qof ka iska leh qaybka, oo ay canshuur lagu yeerto iska qor shakhsi ah. Heerka canshuurta waa 22% dakhli caadi ah, iyo soo saarka walaaca oo kordhaya ay canshuur dhalliyada.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Heshiiska shirkada</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Heshiiska shirkada waa waajib iyo waxa shurudaha qaybka leh, soo saarka qybka, shaqqada, ka bixista iyo xallinta. Hadii aan jirin heshii wanaagsan waxaa dhici kara iska khilaaf.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Sharci:</b> Xeerka Shirkada (LOV-1985-06-21-83). Damaanad oo lagu xukumayo §§ 1-1 iyo 1-2. Heshiiska shirkada § 2-3.',
+    selskapKsTitle:'Shirkadda ammaan (KS)',
+    selskapKsDesc:'Nooc laba qof — khatar iyo damaanad oo ka duwan',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Shirkadda ammaan waxay leedahay nooc laba qof oo leh doorooyinka iyo damaanaadka si ka duwan. Waxay ahaa caadi in lah shaki-gaadir iyo dhul, laakiin hadda lagu isticmaalo yar (xaa. 120 oo lagu qoray Norwayga).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Dooro laba</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Komplementaar (xooga)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Waxuu haleellada shirkada iyo go\'an. Waxuu leh <b>damaanad shakhsi oo xakamiyad ah</b> u dhaf dhoor. Yax-yar 1 komplementaar waa waajib.</div>'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Kommandittist (caasino)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Waxuu maalaynaya maal, laakiin ma qeybgal hadal. Damaanad waa <b>xakamiyad ilaa maalka</b>. Yax-yar 1 kommandittist waa waajib.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Xogta muhiimka ah</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Koofiyaha qorista</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Maalka kommandittist (yax-yar)</span><span style="font-weight:700;color:var(--ink);">Lagu sameeyey heshiiska shirkada</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Canshuurta</span><span style="font-weight:700;color:var(--ink);">Canshuurta qof (sida ANS/DA)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Tirada qof ka mid ah</span><span style="font-weight:700;color:var(--ink);">Yax-yar 2 (1 komp. + 1 komm.)</span></div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Maxay ahayd sida ay caadi ahayd KS?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Hadii 1992 kommandittisyada way yeelisan karaan shirkadda khaladka qaybinta qor shakhsi ah oon hadii. Tani waxay waxa heer gaara dhuli iyo gami. Ka dib tilmaam sida lagu tiirga (kaliya soo qaybinta ilaa maalka) gacanku hayga yar.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Kommandittist waxa iska baddelaya damaanad xakamiyad hadii…</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Kommandittist-ku haddii uu isku daro maaraynta shirkadda. Markaa waxaa laga yaabaa in loo arko komplementar oo uu u dhafdo deynta shakhsi ahaan (selskapsloven § 3-9).</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Sharci:</b> Selskapsloven kap. 3 (LOV-1985-06-21-83). Damaanadda kommandittist § 3-7. Damaanadda komplementar § 3-8.'
+      +'</div>',
+
+    // --- Isbarbar dhig ---
+    selskapCompareTitle:'Isbarbar dhigga noocyada shirkadaha',
+    selskapCompareDesc:'Damaanad, canshuur, shuruud iyo mulkiilayaal',
+    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
+      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
+      +'</tr></thead><tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Damaanad</td><td style="padding:8px 10px;color:var(--ink2);">Xad la\'aan</td><td style="padding:8px 10px;color:var(--ink2);">Xakamiyad</td><td style="padding:8px 10px;color:var(--ink2);">Xad la\'aan</td><td style="padding:8px 10px;color:var(--ink2);">Komp: xad la\'aan<br>Komm: xakam.</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Mulkiilayaal</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Maalka bilowga</td><td style="padding:8px 10px;color:var(--ink2);">Xorna</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Xorna</td><td style="padding:8px 10px;color:var(--ink2);">Ikhtiyaar</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Qorista</td><td style="padding:8px 10px;color:var(--ink2);">Xorna</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
+      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Canshuur</td><td style="padding:8px 10px;color:var(--ink2);">Shakhsi</td><td style="padding:8px 10px;color:var(--ink2);">22 % shirkad + qayb</td><td style="padding:8px 10px;color:var(--ink2);">Qaybinta</td><td style="padding:8px 10px;color:var(--ink2);">Qaybinta</td></tr>'
+      +'</tbody></table></div>',
+
+    // --- Canshuur iyo noocyada shirkadaha ---
+    selskapSkattTitle:'Canshuur iyo noocyada shirkadaha',
+    selskapSkattDesc:'Canshuurta shirkadda, qaybinta iyo deltakerligning',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Sida shirkadda canshuurta loo qaato waxay ku xidhan tahay nooca shirkadda. Farqiga wayn waa in shirkado <b>ah laftooda qaato canshuur</b> (AS) iyo kuwo la qaato <b>deltakerligning</b> (ANS, DA, KS).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS — laba heer oo canshuur ah</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">1. Canshuurta shirkadda faa\'idada</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">2. Canshuurta qaybinta (× 1,72)</span><span style="font-weight:700;color:var(--ink);">37,84 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Wadarta canshuurta</span><span style="font-weight:700;color:var(--ink);">~51,5 %</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS/DA/KS — deltakerligning</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Shirkadda maaha qaataha canshuurta. Faa\'iida iyo khasaare waxaa loo qaybiyaa qof kasta oo ah mulkiilaha. Canshuurta waa <b>22 %</b> alminnelig inntekt. Qaybinta ka badan skjermingsfradrag waxaa lagu canshuuraa sida dakhli shakhsi ah.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Isha:</b> Skatteloven kap. 10 (aksjonærmodellen), kap. 10 deel B (deltakermodellen), kap. 12 (foretaksmodellen). Qiimayaasha: Stortingets skattevedtak 2026.'
+      +'</div>',
+
+    // --- Sida loo qoro shirkad ---
+    selskapRegTitle:'Sida loo qoro shirkad',
+    selskapRegDesc:'Tallaabo-tallaabo dhexdhexaadka Altinn iyo Brønnøysund',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Qorista shirkadaada waxaa dhici karaa dhexdhexaadka <b>Altinn</b>. Halkaa ayaad dib u qobi kartaa xog iyo waliiga.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">1. Doorasho nooca shirkada</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">ENK, AS, ANS, DA ama KS? Khataarta, dakhliga iyo doorashadu waxay ku xidhan tahay.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">2. Magac iyo xog</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Nooca gabadhada iyo dulalka fuudaada iska dhaa. Fadi hadaw guud iyo inagu.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">3. Saxiix iyo bali</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Dhammaan asaasayaashu ay saxixdooda waajib. Bali koofiyaha qorista (ENK: xorna, AS: 6 825 kr, ANS/DA/KS: 2 250 kr). AS: soodi maalka saamiga ah bangiga shaqada.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">4. Helay tirada magaalada</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Waktu isu-dhexgal: 1–5 maalmo shaqo. Waad heeli doontaa tirada magaalada ee loo isticmaalo dhammaan la\'aashaada saraakusha.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">5. Qorista MVA (ikhtiyaariga ah)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Waajib hadii omdac ay ka badan 50 000 kr xilli 12 bilood. Way raadi kartaa qorista hore.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Tilaabo:</b> Aad kaydinta magaca shirkada dhexdhexaadka Brønnøysundregistrene hadii aad qoro. Eeg <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">navcinta</a> si aad u aragto haddii magaca ay xor ah.'
+      +'</div>',
+
+    // --- Noocyo kale oo shirkad
+    selskapAndreTitle:'Noocyo kale oo shirkad',
+    selskapAndreDesc:'ASA, NUF, SA iyo asaasigga',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Marka laga reebo noocyada caadiga ah waxaa jira noocyo kale oo shirkad ee lagu isticmaalo baahyo gaar ah.</div>'
 };

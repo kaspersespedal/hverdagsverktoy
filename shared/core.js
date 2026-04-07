@@ -270,12 +270,15 @@ function updateAll() {
   if(document.getElementById('calc-mortgage'))try{updateMortgageUI();}catch(e){}
   if(document.getElementById('calc-npv'))try{updateNpvUI();}catch(e){}
   if(document.getElementById('calc-vat'))try{updateVatUI();}catch(e){}
+  if(document.getElementById('calc-selskap'))try{updateSelskapUI();}catch(e){}
   if(document.getElementById('calc-basic'))try{updateFagkalkulatorUI();ccPopulate();vgPopulate();}catch(e){}
   try{updateFooter();}catch(e){}
   try{buildThemePicker();}catch(e){}
   // Section titles
   var _sc=document.getElementById('sec-calculators');if(_sc)_sc.textContent=R().secCalc||'Kalkulatorer';
   var _sg=document.getElementById('sec-guide');if(_sg){var gk=document.getElementById('calc-salary')?'secGuideTax':document.getElementById('calc-mortgage')?'secGuideMor':document.getElementById('calc-vat')?'secGuideVat':document.getElementById('calc-npv')?'secGuidePerso':'secGuide';_sg.textContent=R()[gk]||_sg.textContent;}
+  var _ssg=document.getElementById('sec-selskap-guide');if(_ssg)_ssg.textContent=R().secSelskapGuide||'Selskapsformer';
+  var _ssr=document.getElementById('sec-selskap-ref');if(_ssr)_ssr.textContent=R().secSelskapRef||'Referanse';
   // clear results
   ['s-res','m-res','n-res','v-res'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
   _sal=_mor=_npv=_vat=null;
@@ -1772,6 +1775,34 @@ function repopulateSelectByIndex(id, labels) {
   const cur = sel.selectedIndex;
   const opts = sel.querySelectorAll('option');
   labels.forEach((lbl, i) => { if(opts[i]) opts[i].textContent = lbl; });
+}
+
+// ═══════════════════════════════════════════════════════
+// SELSKAP PAGE
+// ═══════════════════════════════════════════════════════
+function updateSelskapUI() {
+  var r = R();
+  var arrow = ' <span style="font-size:11px;opacity:.5">▼</span>';
+  // Helper to populate a card
+  function fillCard(id, titleKey, descKey, bodyKey) {
+    var card = document.getElementById(id);
+    if(!card) return;
+    var titleEl = card.querySelector('.card-title');
+    var descEl = card.querySelector('.card-desc');
+    var bodyEl = document.getElementById(id.replace('-card','-body'));
+    if(titleEl && r[titleKey]) titleEl.innerHTML = r[titleKey] + arrow;
+    if(descEl && r[descKey]) descEl.textContent = r[descKey];
+    if(bodyEl && r[bodyKey]) bodyEl.innerHTML = r[bodyKey];
+  }
+  fillCard('selskap-velg-card', 'selskapVelgTitle', 'selskapVelgDesc', 'selskapVelgBody');
+  fillCard('selskap-enk-card', 'selskapEnkTitle', 'selskapEnkDesc', 'selskapEnkBody');
+  fillCard('selskap-as-card', 'selskapAsTitle', 'selskapAsDesc', 'selskapAsBody');
+  fillCard('selskap-ans-card', 'selskapAnsTitle', 'selskapAnsDesc', 'selskapAnsBody');
+  fillCard('selskap-ks-card', 'selskapKsTitle', 'selskapKsDesc', 'selskapKsBody');
+  fillCard('selskap-compare-card', 'selskapCompareTitle', 'selskapCompareDesc', 'selskapCompareBody');
+  fillCard('selskap-skatt-card', 'selskapSkattTitle', 'selskapSkattDesc', 'selskapSkattBody');
+  fillCard('selskap-reg-card', 'selskapRegTitle', 'selskapRegDesc', 'selskapRegBody');
+  fillCard('selskap-andre-card', 'selskapAndreTitle', 'selskapAndreDesc', 'selskapAndreBody');
 }
 
 function updateFagkalkulatorUI() {
@@ -5152,3 +5183,4 @@ function _initPageReady(){
     }
   }
 }
+  

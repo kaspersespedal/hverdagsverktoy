@@ -462,5 +462,204 @@ REGIONS['ti'] = {
     searchTagTool:'መሳርሒ',
     searchTagConcept:'ኣምር',
     searchTagLaw:'ሕጊ',
-    searchFeedbackMsg:'እንታይ ትደሊ ከም ዘለኻ ንገረና'
+    searchFeedbackMsg:'እንታይ ትደሊ ከም ዘለኻ ንገረና',
+    secSelskapGuide:'ሕንጻት ሕብረተ ሥራ',
+    secSelskapRef:'ምላሽ',
+
+    // --- Hvilken selskapsform passer deg? ---
+    selskapVelgTitle:'ክትኸውን ይግባኣካ ዘይ ሕብረተ ሥራ?',
+    selskapVelgDesc:'ብሉጽ ዘለዓ ካብ ትምህርቲ ሕሳብ',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ብዙሓት ዝጀመሩ ብናጭብ ብኖርወይ መካ ናይ <b>ውልቃዊ ትካል (ENK)</b> ክ <b>ኣክስየ ትካል (AS)</b> መራጮም ይምረጡ። ምረጫ ንስጡም፣ ገንዘበኛ ዓመት ወኢሳ ዝተምህር ሪሪት የገልግሉ።</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">ብሉጽ እንዳ ደገሙ ሕሙጥ ምስተገብር?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;"><b>ENK</b> ምረጽ — ብልሙድ መዝገባ፣ ወሰኒ ብኣቐማጥ የለን። ንወሃብ መሸጥ፣ ገደብ ምስራሕ፤ ዝኣመሰሉ ሥራታት።</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">ናይ ግለ ገንዘብ ከሪመሉ ትደሊ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;"><b>AS</b> ምረጽ — ብ30,000 kr ኣክስየ ወሰኒ ጥራይ ተስሓስ። ንወለዳት ኣሠሪት፣ ዕዳ ወይ ልዑል ስጡም።</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">ናይ ሐደ ቢስ ኣሕዋት ምስ ምስረታ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;"><b>ANS</b> (ሙሉእ ተገዳሊነት) ወይ <b>DA</b> (ዝተቃወሙ ተገዳሊነት) ምረጽ። ናይ 2 ወይ ክሳብ ላዕላይ ሓደ ያስፈልጋት። ካብ AS ሉጽ፣ ግን ናይ ግለ ተገዳሊነት ኣላት።</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">ንነጻ ወዓቲ የድሊ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;"><b>KS</b> ምረጽ — ነገደፍ ስራ ሰብ (compl.) ምስ ገንዘበኛ መዛሪ (comm.) ገዛ። የውህጥ ወለዳት።</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ብስእለ ኣምላክ</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">ታሕትዋይ 600,000 kr እንዳ ሕሱብ ዝተሓሸ ስጡም → <b>ENK</b>። ላዕላይ 600,000 kr፣ ወለዳት ወይ ስጡም → <b>AS</b>። ድምደመ → <b>ANS/DA</b>። እዚ ብሮሃይ ብጣሓስ ተረወሰ — ናይ ግለ መኸተ ገምግም።</div>'
+      +'</div>',
+
+    // --- ENK ---
+    selskapEnkTitle:'ውልቃዊ ትካል (ENK)',
+    selskapEnkDesc:'ብሉጽ ንዘራ ሰባት ሥራ ምምስራት',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ውልቃዊ ትካል ብሉጽ ሕንጻት ሕብረተ ሥራ ኖርወይ ሥራ። ንስሓ ሥራ ብሓሶ ሕግታዊ ሰብ ዩ — <b>ሙሉእ ናይ ግለ ተገዳሊነት</b> ናይ ሙሉእ ዕዳ ወ ምልክት ኣለካ።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ትሕዝቶ ራዲሳት</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ክፍሊ መዝገባ</span><span style="font-weight:700;color:var(--ink);">ብልሙድ</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ወሰኒ ብኣቐማጥ</span><span style="font-weight:700;color:var(--ink);">የለን</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ቁጽሪ ስራ ሰባት</span><span style="font-weight:700;color:var(--ink);">ዝዓቐን 1 ሰብ</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ናይ ግለ ተገዳሊነት</span><span style="font-weight:700;color:var(--ink);">ሙሉእ — ሙሉእ ነገር ናትካ</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ግብሪ ላዕላይ ዓንዲ</span><span style="font-weight:700;color:var(--ink);">22% + ሠወር ግብሪ 10,8% + ደረጃ ግብሪ</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ዋጋ ምሕላው ታሪኽ</span><span style="font-weight:700;color:var(--ink);">ላዕላይ 50,000 kr ዝሕሙር</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ጥቅሞች</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ብልሙድ ዝሰርሓ — ብ Altinn ብ ታሕትዋይ ምዝገባት። ወሰኒ ምሁር ውኡ ወይ ጠቕላላ ሂሳብ (ስሓተት ውሳኔ)። ብሓሊም ገንዘብ ካብ ሥራ ሓሳል። ቅሬታ ግብሪ ዝተሓሸ ገንዘበኛ።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ውንጄታት</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ሙሉእ ናይ ግለ ተገዳሊነት — ተበግስ ቤትካ ሓሳል። ልዑል ሠወር ግብሪ (10,8% ወይ. 7,6% ዘተወለደ)። ናይ ግለ ዝተምሃሩ ሊሴ (ድሕሪ 1 መዓልቲ አይምሃርን፣ ከዋሊ የለን)። ኣፅዋግ ንስቱዕ ትውዓል ይኽእል።</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>ሕግታት:</b> ምልክት ምላላ ሕግ የለን — ብወሳኒ ሕጋት ይመሃላለሉ። ምዝገባ ሕጊ ንነገደፍ ሰብ። ምዝገባ በ ወሰኒ ምዝገባ ሕጊ።'
+      +'</div>',
+
+    // --- AS ---
+    selskapAsTitle:'ኣክስየ ትካል (AS)',
+    selskapAsDesc:'ውሱን ተገዳሊነት ወ ሞያዊ ምስራት',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ኣክስየ ትካል ርእሳዊ ሕግታዊ ሰብ ይኸውን — ካብ ስራ ሰብ ተወሰደ። <b>ብኣክስየ ገንዘብ ሰሐብካዮ ጥራይ ተስሓስ</b>፣ ግለ ነገርካ አይመዘገብን። AS ተበሳ ሕብረተ ሥራ ኖርወይ፣ ከ 350,000 ዝተመዝገበ ሕብረተ ሥራ ተበሃሎ።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ትሕዝቶ ራዲሳት</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ክፍሊ መዝገባ</span><span style="font-weight:700;color:var(--ink);">6,825 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ወሰኒ ኣክስየ ገንዘብ</span><span style="font-weight:700;color:var(--ink);">ስሌት 30,000 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ቁጽሪ ስራ ሰባት</span><span style="font-weight:700;color:var(--ink);">1 ወይ ላዕላይ</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ናይ ግለ ተገዳሊነት</span><span style="font-weight:700;color:var(--ink);">ውሱን ብወሰኒ ገንዘብ</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ግብሪ ሥራ ሰብ</span><span style="font-weight:700;color:var(--ink);">22%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ግብሪ ዋጋ (ናይ ግለ ስራ ሰብ)</span><span style="font-weight:700;color:var(--ink);">37,84% (ዝረገወ)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ወሰኒ ሙሁር</span><span style="font-weight:700;color:var(--ink);">ስሌት 1 ሙሁር</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ርግጋግ</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>ጠቕላላ ስብ</b> — ሙሉእ ሙሁር፣ ሙሉእ ስራ ሰብ ዝነበሮ (1 ዝውደር = 1 ውድገ)። <b>ሙሁር</b> — ሥራ ይመስሪ፣ ስሌት 1 ሙሁር። <b>ዕለታዊ ምስሪት ሰብ</b> — ምረጫ፣ ዕለታዊ ስራ ይመስሪ።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ጥቅሞች</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ውሱን ተገዳሊነት ግለ ገንዘብ ከሪመሉ። ሥራ ሰብ ዝወሓደ ሊሴ ናይ ግለ ዝተምሃሩ ሊሴ ሰፊር። ዋጋ ዝብፍ ሪሎ (ሕብረተ ሥራ ትቤተ ዝብፍ ምልክት)። ኣዝዩ ተወሳኺ ልዕሊ ግጥሚ ወ ባንካት።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ውንጄታት</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ልዑል ሙሉእ ግብሪ ላዕላይ ዋጋ (~51,5% ሙሉእ)። ሙሉእ ወሰኒ ሙሁር፣ ጠቕላላ ሂሳብ ወ ጠቕላላ ስብ። ክፍሊ መዝገባ ወ ሂሳብ ጥገነት። ብሓሊም ገንዘብ ሓሳል — ዋጋ ምወዳዕ ስራ ያስፈልጋት።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ተጋሩዋ ሓሞት ይኽእል?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">አዎ፣ ሕብረተ ሥራ ዕለታዊ ገንዘብ ስሌት 7 ሚልዮን kr፣ ጠቕላላ ገንዘብ ስሌት 27 ሚልዮን kr ወ ስሌት 10 ወለዳት ከለዋ።</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>ሕግታት:</b> ኣክስየ ሕጊ (LOV-1997-06-13-44)። ስሪት፣ ገንዘብ፣ ሙሁር ወ ጠቕላላ ስብ በ ዕ. 2–6 ይመሃላለሉ።'
+      +'</div>',
+
+    // --- ANS / DA ---
+    selskapAnsTitle:'ተገዳሊ ሕብረተ ሥራ (ANS / DA)',
+    selskapAnsDesc:'ድምደመ ከ ናይ ግለ ተገዳሊነት',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ተገዳሊ ሕብረተ ሥራ ድምደመ ሥራ ይኸውን ከምኡ <b>ንታሕቲ ሕብረተ ሥራ ዕዳ ናይ ግለ ተገዳሊነት</b> ኣለዋ። ስሌት 2 ታሕቲ ያስፈልጋት። ለገዳም ፋርማ፣ ሞያዊ ምክሊ ወ ንኡስ ድምደመ።</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS ወይ. DA — ምን ፍልልይ ኣለዋ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS (ሙሉእ ተገዳሊነት):</b> ነገደፍ ታሕቲ <i>ሙሉእ</i> ዕዳ ይብፉ። ተበግስ ሙሉእ ጠቕላላ ካብ ነገደፍ ሓዲ ሓሳል።<br><b>DA (ዝተቃወሙ ተገዳሊነት):</b> ነገደፍ ታሕቲ <i>ጎድናተው</i> ዕዳ ይብፉ። 50% ሰ ከ ያህል፣ 50% ዕዳ ይብፉ።</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ትሕዝቶ ራዲሳት</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ክፍሊ መዝገባ</span><span style="font-weight:700;color:var(--ink);">2,250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ወሰኒ ብኣቐማጥ</span><span style="font-weight:700;color:var(--ink);">የለን</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ቁጽሪ ታሕቲ</span><span style="font-weight:700;color:var(--ink);">ስሌት 2</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ናይ ግለ ተገዳሊነት</span><span style="font-weight:700;color:var(--ink);">ብልሙድ (ANS: ሙሉእ፣ DA: ጎድናተው)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ግብሪ</span><span style="font-weight:700;color:var(--ink);">ታሕቲ ግብሪ — ዓንዲ ታሕቲ ገንዘብ</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ታሕቲ ግብሪ ምንድን?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ሥራ ብራሱ ግብሪ ይኸፋ። ቤታውታት ዓንዲ ወ ውንጣት ናይ ታሕቲ ቤተ መገምገምታ ይደሌዩ፣ ና ግለ ገንዘብ ሪ ይቅየር። ግብሪ 22% ወደሺት ገንዘብ፣ ወ ዋጋ ውሳኔ ውሳኔ ግብሪ።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ሥራ ምልክት</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ሥራ ምልክት የጠበቃ ወ ሰ ቐብታት፣ ዓንዲ ምደራ፣ ሥራ ግምገማ ተወሰደ ወ ተወገደ ይመሃላለሉ። ናይ ጥሩይ ስራ ምልክት ብልሙድ ኢና።</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>ሕግታት:</b> ሥራ ሕጊ (LOV-1985-06-21-83)። ተገዳሊነት በ §§ 1-1 ወ 1-2 ይመሃላለሉ። ሥራ ምልክት በ § 2-3።'
+      +'</div>',
+
+    // --- KS ---
+    selskapKsTitle:'ድንበር ተገዳሊ ሕብረተ ሥራ (KS)',
+    selskapKsDesc:'ነገደፍ (ጋር ተገዳሊነት) ወ ገንዘበኛ ጃለ (ተወሰደ)',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">KS <b>ነገደፍ</b> (komplementar) — ሙሉእ ተገዳሊነት ወ <b>ገንዘበኛ ጃለ</b> (kommandittist) — ውሱን ተገዳሊነት በ መጠን ሀህወለወት ቀርሒ ገንዘብ። ልዑል ጠዋት ፍሊ።</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ነገደፍ ወይ. ገንዘበኛ ጃለ — ብጣሓስ ምንድን?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ነገደፍ (komplementar):</b> ሙሉእ ተገዳሊነት — ሥራ ስራ ወ ዕዳ ይብፉ።<br><b>ገንዘበኛ ጃለ (kommandittist):</b> ውሱን ተገዳሊነት — ገንዘብ ሰሕ ጥራይ ተስሓስ። ሥራ ስራ ውስኡ ይወስዳ።</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ትሕዝቶ ራዲሳት</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ክፍሊ መዝገባ</span><span style="font-weight:700;color:var(--ink);">2,250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ወሰኒ ገንዘብ</span><span style="font-weight:700;color:var(--ink);">ምረጫ</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ቁጽሪ ታሕቲ</span><span style="font-weight:700;color:var(--ink);">ስሌት 2 (1 ነገደፍ + 1 ጃለ)</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ለምን KS ዝመስሓልዓወ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ድሕሪ 1992 ገንዘበኛ ጃለ ሥራ ውንጣት ዘወት ግለ ግብሪ መስገዲ ያለ ውሳኔ ይኽእሉ። ኢ KS ዝተጥቀመ ግብሪ ምንሳት በ ባለዓይን ወ ባለሬት ዝተምዝገበ። ድሕሪ ተወሰኑ ምንሳት ሕግ (ፍራ ውሳኔ ጥራይ)፣ ታሕቲ ጠየቁ።</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ገንዘበኛ ጃለ ውሱን ተገዳሊነት ዳዓሰ…</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">ገንዘበኛ ጃለ ሥራ ስራ ውስኡ ይወስዳ። ብዙሕ ከምኡ ነገደፍ ተራቅቀ ወ ሙሉእ ተገዳሊነት ይውገዓ (ሥራ ሕጊ § 3-9)።</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>ሕግታት:</b> ሥራ ሕጊ ዕ. 3 (LOV-1985-06-21-83)። ገንዘበኛ ጃለ ተገዳሊነት በ § 3-7። ነገደፍ ተገዳሊነት በ § 3-8።'
+      +'</div>',
+
+    // --- Sammenligning ---
+    selskapCompareTitle:'ስሓተት ሕብረተ ሥራ',
+    selskapCompareDesc:'ተገዳሊነት፣ ግብሪ፣ ወሰኒ ወ ሰ ቅሮሓ ኣብ ደገ',
+    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
+      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
+      +'</tr></thead><tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">ተገዳሊነት</td><td style="padding:8px 10px;color:var(--ink2);">ብልሙድ</td><td style="padding:8px 10px;color:var(--ink2);">ውሱን</td><td style="padding:8px 10px;color:var(--ink2);">ብልሙድ</td><td style="padding:8px 10px;color:var(--ink2);">ነገደፍ: ብልሙድ<br>ጃለ: ውሱን</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">ሰ ቅሮሓ</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">ብኣቐማጥ</td><td style="padding:8px 10px;color:var(--ink2);">የለን</td><td style="padding:8px 10px;color:var(--ink2);">30,000 kr</td><td style="padding:8px 10px;color:var(--ink2);">የለን</td><td style="padding:8px 10px;color:var(--ink2);">ምረጫ</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">ክፍሊ መዝገባ</td><td style="padding:8px 10px;color:var(--ink2);">ብልሙድ</td><td style="padding:8px 10px;color:var(--ink2);">6,825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">ግብሪ</td><td style="padding:8px 10px;color:var(--ink2);">ናይ ግለ</td><td style="padding:8px 10px;color:var(--ink2);">22% ሥራ + ዋጋ</td><td style="padding:8px 10px;color:var(--ink2);">ታሕቲ ግብሪ</td><td style="padding:8px 10px;color:var(--ink2);">ታሕቲ ግብሪ</td></tr>'
+      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">ሕግታት</td><td style="padding:8px 10px;color:var(--ink2);">ወደሺት ሕጋት</td><td style="padding:8px 10px;color:var(--ink2);">ኣክስየ ሕጊ</td><td style="padding:8px 10px;color:var(--ink2);">ሥራ ሕጊ</td><td style="padding:8px 10px;color:var(--ink2);">ሥራ ሕጊ ዕ. 3</td></tr>'
+      +'</tbody></table></div>',
+
+    // --- Skatt og selskapsformer ---
+    selskapSkattTitle:'ግብሪ ወ ሕብረተ ሥራ',
+    selskapSkattDesc:'ግብሪ ሥራ ሰብ፣ ዋጋ ወ ታሕቲ ግብሪ',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ሥራ ግብሪ ሕብረተ ሥራ ሲሪ ይወሰናል። ትሕቶ ፍልልይ ሥራ <b>ርእሳዊ ግብሪ ዝገበሩ</b> (AS) ወ <b>ታሕቲ ግብሪ</b> (ANS፣ DA፣ KS) መካ ይኸውን።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS — ሁለት ደረጃ ግብሪ</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">1. ግብሪ ሥራ ሰብ ላዕላይ ዓንዲ</span><span style="font-weight:700;color:var(--ink);">22%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">2. ግብሪ ዋጋ ላዕላይ ዝወገ (ብደረጃ × 1,72)</span><span style="font-weight:700;color:var(--ink);">37,84%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ሙሉእ ወሰናዊ ግብሪ ላዕላይ ዋጋ</span><span style="font-weight:700;color:var(--ink);">~51,5%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">ወሰን ስልክ (ሥራ ሰብ ሥራ ሰብ)</span><span style="font-weight:700;color:var(--ink);">ምግብር 0%</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS/DA/KS — ታሕቲ ግብሪ</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ሥራ ርእሳዊ ግብሪ ዝገበር። ዓንዲ ወ ውንጣት ታሕቲ ለታሕቲ ቤተ ሙዋ ወ <b>ወደሺት ገንዘብ (22%)</b> ተሕላ ይሆናሉ። ዋጋ ውሳኔ ውሳኔ ግብሪ።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ENK — ናይ ግለ ገንዘብ ግብሪ</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ዓንዲ ግብሪ ሥራ ገንዘብ: ወደሺት ገንዘብ (22%) + ሠወር ግብሪ (10,8%) + ደረጃ ግብሪ። ሥራ ሪሎ ዋጋ ወሰን ገንዘብ።</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>ምያስ:</b> ግብሪ ሕጊ ዕ. 10 (ሰ ሪሎ)፣ ዕ. 10 ክፍሊ B (ታሕቲ ሪሎ)፣ ዕ. 12 (ሥራ ሪሎ)። ስሌታት: ምርጫ ግብሪ ስምምታት 2026።'
+      +'</div>',
+
+    // --- Registrering ---
+    selskapRegTitle:'ሥራ ሰብ ስሪት ኣብኹም',
+    selskapRegDesc:'ስጉምቲ ብስጉምቲ በ Altinn ወ Brønnøysund',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ሙሉእ ኖርወይ ሕብረተ ሥራ ምዝገባ ብኢሌክትሮን <b>Altinn</b> (ኢተወሃሃደ መዝገባ) ይተሳሰር። ሥራ ወሰንግ ምዝገባ ይኸውን።</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ስጉምቲ ብስጉምቲ</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">1. ሕብረተ ሥራ ምረጽ</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">ENK፣ AS፣ ANS፣ DA ወይ. KS ተወሰኑ።</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">2. ኢተወሃሃደ መዝገባ ሙሉ</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">altinn.no ውስኡ ገቡ። ሥራ ስም፣ ተግባር፣ ሰ ቅሮሓ ወ ስፍራ ሙሉ። AS: ስሪት ሰነድ ወ ሕግ ወስኩ።</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">3. ስንት ዝወሰኖ ወ ክፍሊ</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">ሙሉእ ስሪት ድምትም። ክፍሊ መዝገባ (ENK: ብልሙድ፣ AS: 6,825 kr፣ ANS/DA/KS: 2,250 kr)። AS: ኣክስየ ገንዘብ ቢስ ሂሳብ ማድግ።</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">4. ሕብረተ ስቦ ተቆጣጠር</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">ስሪት ግዜ: 1–5 ሥራ ቀን። ሕብረተ ስቦ ቀበላ ሙሉእ ሰ ውዝግ።</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">5. ዋጋ ምሕላው ታሪኽ (ምረጫ)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">ወሪቅ 50,000 kr ላዕላይ 12 ወርሒ። ቅድሚት ምዝገባ ሐምለበሉ።</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>ምክር:</b> Brønnøysund ምዝገባ ስም መቁመጥ ነገራውሓ። <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">ስም ውጣ</a> ነገራውሓ ወርድ።'
+      +'</div>',
+
+    // --- Andre selskapsformer ---
+    selskapAndreTitle:'ካልእ ሕብረተ ሥራ',
+    selskapAndreDesc:'ASA፣ NUF፣ SA ወ ምርዓታ',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">ብዙሓት ብምልክት ኣለዋ ብምዝገባ ሕጋዊ ናይ ሓሳሪ።</div>',
+
 };

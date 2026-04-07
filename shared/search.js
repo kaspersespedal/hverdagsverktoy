@@ -52,7 +52,13 @@ var SEARCH_DATA = [
   {name:'Justeringskalkulator',desc:'Justering av inngående MVA ved bruksendring',url:'/avgift/#vat-adj-card',tags:'justering mva inngående bruksendring kapitalvare justeringsperiode mval kap 9',type:'tool',page:'Avgift'},
 
   // Selskap
-  {name:'Aksjeselskap (AS)',desc:'Stiftelse, drift, ansvar og regler for aksjeselskap',url:'/selskap/',tags:'aksjeselskap as stiftelse styret generalforsamling aksjekapital vedtekter company',type:'tool',page:'Selskap'},
+  {name:'Velg selskapsform',desc:'Hvilken selskapsform passer for deg? ENK, AS, ANS, DA eller KS',url:'/selskap/#selskap-velg-card',tags:'selskapsform velge starte bedrift virksomhet enk as ans da ks company form choose',type:'tool',page:'Selskap'},
+  {name:'Enkeltpersonforetak (ENK)',desc:'Den enkleste måten å starte for seg selv — gratis og uten krav til kapital',url:'/selskap/#selskap-enk-card',tags:'enkeltpersonforetak enk selvstendig næringsdrivende frilanser gratis registrering sole proprietorship',type:'tool',page:'Selskap'},
+  {name:'Aksjeselskap (AS)',desc:'Begrenset ansvar, aksjekapital og profesjonell drift',url:'/selskap/#selskap-as-card',tags:'aksjeselskap as stiftelse styret generalforsamling aksjekapital vedtekter 30000 company limited',type:'tool',page:'Selskap'},
+  {name:'Ansvarlig selskap (ANS / DA)',desc:'Partnerskap med personlig ansvar — solidarisk eller delt',url:'/selskap/#selskap-ans-card',tags:'ansvarlig selskap ans da partnerskap solidarisk delt ansvar selskapsavtale partnership',type:'tool',page:'Selskap'},
+  {name:'Kommandittselskap (KS)',desc:'To typer deltakere med ulik risiko — komplementar og kommandittist',url:'/selskap/#selskap-ks-card',tags:'kommandittselskap ks komplementar kommandittist limited partnership begrenset ansvar',type:'tool',page:'Selskap'},
+  {name:'Sammenligning selskapsformer',desc:'ENK, AS, ANS, DA og KS side om side — ansvar, skatt og krav',url:'/selskap/#selskap-compare-card',tags:'sammenligning selskapsformer enk as ans da ks tabell compare company forms',type:'tool',page:'Selskap'},
+  {name:'Registrere selskap',desc:'Steg-for-steg: slik registrerer du foretak via Altinn',url:'/selskap/#selskap-reg-card',tags:'registrere selskap foretak altinn brønnøysund organisasjonsnummer register company',type:'tool',page:'Selskap'},
 
   // ══════ BEGREPER (Nivå 2 — fagtermer) ══════
   {name:'Trinnskatt',desc:'Progressiv skatt som øker med inntekten — 4 trinn',url:'/skatt/',tags:'trinnskatt trinn progressiv skatt inntekt sats bracket tax',type:'concept',page:'Skatt'},
@@ -75,6 +81,11 @@ var SEARCH_DATA = [
   {name:'Næring eller hobby?',desc:'Når blir biinntekt skattepliktig næringsvirksomhet?',url:'/skatt/#sal-naering-hobby-card',tags:'næring hobby biinntekt skattepliktig virksomhet grense business hobby',type:'concept',page:'Skatt'},
   {name:'Konsernbidrag',desc:'Overføring av overskudd mellom selskaper i samme konsern',url:'/skatt/',tags:'konsernbidrag konsern overføring selskap morselskap datterselskap group contribution',type:'concept',page:'Skatt'},
   {name:'Fritaksmetoden',desc:'Selskaper slipper skatt på aksjeutbytte og -gevinst',url:'/skatt/',tags:'fritaksmetoden fritak skatt utbytte aksjegevinst selskap participation exemption',type:'concept',page:'Skatt'},
+  {name:'Deltakerligning',desc:'Overskudd fordeles og beskattes hos hver deltaker — ANS, DA og KS',url:'/selskap/#selskap-skatt-card',tags:'deltakerligning deltakermodellen ansvarlig selskap kommandittselskap fordeling partner taxation',type:'concept',page:'Selskap'},
+  {name:'Selskapsskatt',desc:'22 % skatt på overskudd i aksjeselskap',url:'/selskap/#selskap-skatt-card',tags:'selskapsskatt 22 prosent overskudd aksjeselskap as corporate tax',type:'concept',page:'Selskap'},
+  {name:'Utbytteskatt',desc:'37,84 % skatt på utbytte til personlige aksjonærer (oppjustert)',url:'/selskap/#selskap-skatt-card',tags:'utbytteskatt utbytte aksjonær oppjustert 37.84 1.72 dividend tax',type:'concept',page:'Selskap'},
+  {name:'Komplementar',desc:'Aktiv leder i KS med ubegrenset personlig ansvar',url:'/selskap/#selskap-ks-card',tags:'komplementar ks kommandittselskap aktiv leder ubegrenset ansvar general partner',type:'concept',page:'Selskap'},
+  {name:'Kommandittist',desc:'Passiv investor i KS — ansvar begrenset til innskuddet',url:'/selskap/#selskap-ks-card',tags:'kommandittist ks investor passiv begrenset ansvar innskudd limited partner',type:'concept',page:'Selskap'},
   {name:'MVA-satser',desc:'25% generell, 15% mat, 12% transport/kultur, 0% eksport',url:'/avgift/',tags:'mva satser 25 15 12 0 prosent mat transport kultur eksport vat rates',type:'concept',page:'Avgift'},
   {name:'Omsetningsgrense MVA',desc:'Registreringsplikt ved omsetning over 50 000 kr',url:'/avgift/',tags:'omsetningsgrense mva registrering 50000 plikt næring turnover threshold',type:'concept',page:'Avgift'},
   {name:'Fradragsrett MVA',desc:'Rett til å trekke fra inngående MVA på bedriftskjøp',url:'/avgift/',tags:'fradragsrett mva inngående utgående trekke fra bedrift input vat deduction',type:'concept',page:'Avgift'},
@@ -93,7 +104,9 @@ var SEARCH_DATA = [
   {name:'Merverdiavgiftsloven kap. 6 — Fritak',desc:'Nullsats — 0% utgående, full fradragsrett',url:'/avgift/#vat-zero-card',tags:'merverdiavgiftsloven mval kap 6 fritak nullsats eksport zero rate',type:'law',page:'Avgift'},
   {name:'Merverdiavgiftsloven kap. 8 — Fradrag',desc:'Hovedregel, delt bruk og begrensninger',url:'/avgift/#vat-ded-card',tags:'merverdiavgiftsloven mval kap 8 fradrag delt bruk input deduction',type:'law',page:'Avgift'},
   {name:'Merverdiavgiftsloven kap. 9 — Justering',desc:'Kapitalvarer og justeringsperioder',url:'/avgift/#vat-adj-info-card',tags:'merverdiavgiftsloven mval kap 9 justering kapitalvarer adjustment',type:'law',page:'Avgift'},
-  {name:'Regnskapsloven § 5-3 — Avskrivning',desc:'Anleggsmidler med begrenset levetid skal avskrives',url:'/kalkulator/#avs',tags:'regnskapsloven rskl 5-3 avskrivning anleggsmidler levetid accounting act',type:'law',page:'Kalkulator'}
+  {name:'Regnskapsloven § 5-3 — Avskrivning',desc:'Anleggsmidler med begrenset levetid skal avskrives',url:'/kalkulator/#avs',tags:'regnskapsloven rskl 5-3 avskrivning anleggsmidler levetid accounting act',type:'law',page:'Kalkulator'},
+  {name:'Aksjeloven',desc:'Lov om aksjeselskaper — stiftelse, kapital, styre og generalforsamling',url:'/selskap/#selskap-as-card',tags:'aksjeloven lov aksjeselskap as 1997 stiftelse kapital companies act',type:'law',page:'Selskap'},
+  {name:'Selskapsloven',desc:'Lov om ansvarlige selskaper og kommandittselskaper',url:'/selskap/#selskap-ans-card',tags:'selskapsloven lov ansvarlig selskap kommandittselskap ans da ks 1985 partnership act',type:'law',page:'Selskap'}
 ];
 
 /* ─── Foreslåtte (popular searches) ─── */

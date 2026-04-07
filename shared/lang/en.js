@@ -465,5 +465,231 @@ REGIONS['en'] = {
     searchTagTool:'Tool',
     searchTagConcept:'Concept',
     searchTagLaw:'Law',
-    searchFeedbackMsg:'Tell us what you are looking for'
+    searchFeedbackMsg:'Tell us what you are looking for',
+
+    // --- Company Forms Guide ---
+    secSelskapGuide:'Company Forms',
+    secSelskapRef:'Reference',
+
+    // --- Which company form suits you? ---
+    selskapVelgTitle:'Which company form suits you?',
+    selskapVelgDesc:'Simple overview to choose the right one',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Most people starting for themselves in Norway choose between <b>Sole Proprietorship (ENK)</b> and <b>Limited Company (AS)</b>. The choice depends on risk, income level, and whether you need employees.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Want to start simple and cheap?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Choose <b>ENK</b> — free to register, no capital requirement. Perfect for freelancers, consultants and small businesses.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Want to protect your personal finances?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Choose <b>AS</b> — you only risk the share capital (30,000 kr). Better for businesses with employees, debt, or high risk.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Starting with other people?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Choose <b>ANS</b> (joint and several liability) or <b>DA</b> (shared liability). Requires at least 2 partners. Simpler than AS, but personal liability.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Need passive investors?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Choose <b>KS</b> — combine active managers (complementary partners) with investors who only risk their investment (limited partners).</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Rule of thumb</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Under 600,000 kr in income and low risk → <b>ENK</b>. Over 600,000 kr, employees, or risk → <b>AS</b>. Partnership → <b>ANS/DA</b>. These are approximate limits — assess your own situation.</div>'
+      +'</div>',
+
+    // --- ENK ---
+    selskapEnkTitle:'Sole Proprietorship (ENK)',
+    selskapEnkDesc:'The simplest way to start for yourself',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">A sole proprietorship is the simplest company form in Norway. You and the business are legally the same person — meaning you have <b>full personal liability</b> for all debts and obligations.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Key facts</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registration fee</span><span style="font-weight:700;color:var(--ink);">Free</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Capital requirement</span><span style="font-weight:700;color:var(--ink);">None</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Number of owners</span><span style="font-weight:700;color:var(--ink);">Only 1 person</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Personal liability</span><span style="font-weight:700;color:var(--ink);">Full — everything you own</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Tax on profit</span><span style="font-weight:700;color:var(--ink);">22% + national insurance 10.8% + bracket tax</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">VAT obligation</span><span style="font-weight:700;color:var(--ink);">When turnover exceeds 50,000 kr</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Advantages</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Free and simple to start — you register in the Unit Register via Altinn. No requirements for board, general meeting, or annual accounts (under certain limits). You can freely withdraw money from the business. Favorable tax at low income levels.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Disadvantages</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Full personal liability — creditors can take your house. Higher national insurance (10.8% vs. 7.6% for employees). No employee rights for yourself (no sick leave from day 1, no unemployment benefits). May seem less professional.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Legislation:</b> No separate company law — regulated by general rules. Bookkeeping Act applies to business operators. Registration via the Unit Register Act.'
+      +'</div>',
+
+    // --- AS ---
+    selskapAsTitle:'Limited Company (AS)',
+    selskapAsDesc:'Limited liability and professional operations',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">A limited company is a separate legal entity — separate from the owners. You only risk <b>the share capital you have invested</b>, not your private assets. AS is the most common company form in Norway, with over 350,000 registered companies.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Key facts</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registration fee</span><span style="font-weight:700;color:var(--ink);">6,825 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Share capital requirement</span><span style="font-weight:700;color:var(--ink);">Minimum 30,000 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Number of owners</span><span style="font-weight:700;color:var(--ink);">1 or more</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Personal liability</span><span style="font-weight:700;color:var(--ink);">Limited to invested capital</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Company tax</span><span style="font-weight:700;color:var(--ink);">22%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Dividend tax (personal owner)</span><span style="font-weight:700;color:var(--ink);">37.84% (gross-up)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Board requirement</span><span style="font-weight:700;color:var(--ink);">Minimum 1 board member</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Structure</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>General Meeting</b> — highest body, all shareholders have voting rights (1 share = 1 vote). <b>Board</b> — manages the company, at least 1 member. <b>Managing Director</b> — optional, handles daily operations.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Advantages</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Limited liability protects your personal finances. Owner taking salary gets employee rights (sick leave from day 1, unemployment benefits, pension). Exemption method makes dividends between companies nearly tax-free. Credible to customers and banks.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Disadvantages</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Higher total tax on dividends (up to ~51.5% total). Formal requirements for board, general meeting, and annual accounts. Cost of registration and accounting. Cannot freely withdraw money — dividends require a decision.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Can you skip auditor?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Yes, if the company has operating revenue under 7 million kr, balance sheet under 27 million kr, and average under 10 employees.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Legislation:</b> Aksjeloven (LOV-1997-06-13-44). Establishment, capital, board and general meeting regulated in ch. 2–6.'
+      +'</div>',
+
+    // --- ANS / DA ---
+    selskapAnsTitle:'Partnership (ANS / DA)',
+    selskapAnsDesc:'Partnership with personal liability',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">A partnership is a partnership where partners have <b>personal liability for the company\'s debts</b>. Requires at least 2 partners. Typical for law firms, medical practices, and small collaboration projects.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS vs. DA — what\'s the difference?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS (joint and several liability):</b> Each partner is liable for the <i>entire</i> debt. A creditor can demand the full amount from one partner.<br><b>DA (shared liability):</b> Each partner is liable only for their <i>proportional share</i> of the debt. If you have 50% ownership, you are liable for a maximum of 50% of the debt.</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Key facts</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registration fee</span><span style="font-weight:700;color:var(--ink);">2,250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Capital requirement</span><span style="font-weight:700;color:var(--ink);">None</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Number of partners</span><span style="font-weight:700;color:var(--ink);">At least 2</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Personal liability</span><span style="font-weight:700;color:var(--ink);">Unlimited (ANS: joint and several, DA: pro rata)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Taxation</span><span style="font-weight:700;color:var(--ink);">Partner taxation — profit is taxed with the partners</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">What is partner taxation?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">The company does not pay tax itself. Instead, profit and loss are allocated to partners according to ownership share, and taxed on their personal tax return. The tax rate is 22% ordinary income, and distributions beyond the basic deduction are taxed as dividends.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Partnership agreement</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">A partnership agreement is mandatory and regulates ownership shares, profit distribution, work effort, exit, and dissolution. Without a good agreement, conflicts can arise.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Legislation:</b> Selskapsloven (LOV-1985-06-21-83). Liability regulated in §§ 1-1 and 1-2. Partnership agreement in § 2-3.'
+      +'</div>',
+
+    // --- KS ---
+    selskapKsTitle:'Limited Partnership (KS)',
+    selskapKsDesc:'Two types of partners — different risk and liability',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">A limited partnership has two types of partners with completely different roles and liability. It was historically popular in shipping and real estate, but is rarely used today (approximately 120 registered in Norway).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">The two roles</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">General Partner (active)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Manages the company and makes decisions. Has <b>unlimited personal liability</b> for all debt. At least 1 general partner is required.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Limited Partner (passive)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Invests capital but does not participate in management. Liability <b>limited to investment</b>. At least 1 limited partner is required.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Key facts</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registration fee</span><span style="font-weight:700;color:var(--ink);">2,250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Limited partner capital (minimum)</span><span style="font-weight:700;color:var(--ink);">Set in partnership agreement</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Taxation</span><span style="font-weight:700;color:var(--ink);">Partner taxation (like ANS/DA)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Number of partners</span><span style="font-weight:700;color:var(--ink);">At least 2 (1 general + 1 limited)</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Why was KS popular?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Before 1992, limited partners could deduct the company\'s losses on their personal tax return without limit. This made KS very attractive for tax minimization in shipping and real estate. After tightening of deduction rules (only deduction up to invested capital), popularity fell sharply.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Limited partner loses limited liability if…</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">The limited partner gets involved in the management of the company. Then they can be considered a general partner and be personally liable for the debt (Selskapsloven § 3-9).</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Legislation:</b> Selskapsloven ch. 3 (LOV-1985-06-21-83). Limited partner liability in § 3-7. General partner liability in § 3-8.'
+      +'</div>',
+
+    // --- Comparison ---
+    selskapCompareTitle:'Comparison of company forms',
+    selskapCompareDesc:'Liability, tax, requirements and owners side by side',
+    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
+      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
+      +'</tr></thead><tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Liability</td><td style="padding:8px 10px;color:var(--ink2);">Unlimited</td><td style="padding:8px 10px;color:var(--ink2);">Limited</td><td style="padding:8px 10px;color:var(--ink2);">Unlimited</td><td style="padding:8px 10px;color:var(--ink2);">Gen: unlimited<br>Lim: limited</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Owners</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Capital</td><td style="padding:8px 10px;color:var(--ink2);">None</td><td style="padding:8px 10px;color:var(--ink2);">30,000 kr</td><td style="padding:8px 10px;color:var(--ink2);">None</td><td style="padding:8px 10px;color:var(--ink2);">Optional</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Reg. fee</td><td style="padding:8px 10px;color:var(--ink2);">Free</td><td style="padding:8px 10px;color:var(--ink2);">6,825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Tax</td><td style="padding:8px 10px;color:var(--ink2);">Personal</td><td style="padding:8px 10px;color:var(--ink2);">22% company + dividend</td><td style="padding:8px 10px;color:var(--ink2);">Partner taxation</td><td style="padding:8px 10px;color:var(--ink2);">Partner taxation</td></tr>'
+      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Legislation</td><td style="padding:8px 10px;color:var(--ink2);">General rules</td><td style="padding:8px 10px;color:var(--ink2);">Aksjeloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven ch. 3</td></tr>'
+      +'</tbody></table></div>',
+
+    // --- Tax and company forms ---
+    selskapSkattTitle:'Tax and company forms',
+    selskapSkattDesc:'Company tax, dividends and partner taxation',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">How a company is taxed depends on the company form. The main distinction is between companies that are <b>separate tax entities</b> (AS) and companies taxed through <b>partner taxation</b> (ANS, DA, KS).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS — two layers of tax</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">1. Company tax on profit</span><span style="font-weight:700;color:var(--ink);">22%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">2. Dividend tax on distribution (gross-up × 1.72)</span><span style="font-weight:700;color:var(--ink);">37.84%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Combined marginal tax on dividend</span><span style="font-weight:700;color:var(--ink);">~51.5%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Exemption method (company owns company)</span><span style="font-weight:700;color:var(--ink);">Approximately 0%</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS/DA/KS — partner taxation</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">The company is not a separate tax entity. Profit and loss are allocated to partners according to ownership share and taxed as <b>ordinary income (22%)</b> for each. Distributions beyond the basic deduction are taxed as personal income.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ENK — taxed as personal income</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Profit is taxed as business income: ordinary income (22%) + national insurance (10.8%) + bracket tax. The business model provides a basic deduction on capital returns.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Source:</b> Tax Act ch. 10 (shareholder model), ch. 10 part B (partner model), ch. 12 (business model). Rates: Parliament\'s tax decision 2026.'
+      +'</div>',
+
+    // --- Registration ---
+    selskapRegTitle:'How to register a company',
+    selskapRegDesc:'Step-by-step via Altinn and Brønnøysund',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">All registration of enterprises in Norway is done electronically via <b>Altinn</b> (coordinated registration notification). The company is registered in the Unit Register and possibly the Business Register.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Step by step</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">1. Choose company form</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Decide on ENK, AS, ANS, DA, or KS based on your needs.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">2. Fill out coordinated registration notification</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Log in to altinn.no. Fill in company name, purpose, owners, and address. For AS: attach establishment document and bylaws.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">3. Sign and pay</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">All founders must sign. Pay registration fee (ENK: free, AS: 6,825 kr, ANS/DA/KS: 2,250 kr). For AS: transfer share capital to business account.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">4. Receive organization number</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Processing time: 1–5 business days. You receive org. number used in all contact with the public sector.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">5. VAT registration (optional)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Required when turnover exceeds 50,000 kr over 12 months. Can apply for advance registration.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Tip:</b> You can reserve a company name in the Brønnøysund Register before registration. Check <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">name control</a> to see if the name is available.'
+      +'</div>',
+
+    // --- Other company forms ---
+    selskapAndreTitle:'Other company forms',
+    selskapAndreDesc:'ASA, NUF, SA, and Foundation',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">In addition to the most common forms, there are several company forms for special needs.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">ASA — Public Limited Company</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">For companies to be listed on the stock exchange or have many shareholders. Requirements: minimum 1 million kr share capital, 3 board members, managing director, and auditor. Shares can be freely traded. Regulated by the Public Limited Company Act (LOV-1997-06-13-45).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">NUF — Registered Foreign Enterprise</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">A Norwegian branch of a foreign company. Was popular as a "cheap AS" via British Ltd companies, but after the AS requirement was lowered to 30,000 kr (2012), most switched to Norwegian AS. Legally this is a branch, not an independent Norwegian company.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">SA — Cooperative</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Owned and democratically governed by its members. Each person has 1 vote regardless of contribution. Used by housing cooperatives, consumer cooperatives (Coop), and agricultural cooperatives (Tine, Nortura). Minimum 2 members. Regulated by the Cooperative Act (LOV-2007-06-29-81).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Foundation</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">An independent asset without owners — established for a specific purpose (charity, research, culture). No one can withdraw profit. Governed by a board according to bylaws. Requirement: minimum 100,000 kr base capital. Regulated by the Foundation Act (LOV-2001-06-15-59).</div>'
+      +'</div>'
+      +'</div>'
 };

@@ -455,6 +455,233 @@ REGIONS['fr'] = {
     studieAar:'ans', studieVerdictLow:'Gérable — moins que la plupart des abonnements.', studieVerdictMid:'Modéré — environ comme une facture de services publics.', studieVerdictHigh:'Coût mensuel élevé — envisagez une période de remboursement plus longue.',
     studieDisclaimer:'* Basé sur les taux Lånekassen 2025-2026. La part de bourse réelle dépend des crédits validés et des revenus/patrimoine. Prêt à annuités avec frais de terme de 18 kr (0 kr avec eFaktura).',
     ccCurrNames:['Couronne norvégienne','Euro','Dollar américain','Livre sterling','Couronne suédoise','Couronne danoise','Zloty polonais','Franc suisse','Yen japonais','Yuan chinois','Dollar canadien','Dollar australien','Roupie indienne','Livre turque','Réal brésilien'],
+
+    // --- Formes d'entreprise ---
+    secSelskapGuide:'Formes d\'entreprise',
+    secSelskapRef:'Référence',
+
+    // --- Quelle forme d'entreprise vous convient ? ---
+    selskapVelgTitle:'Quelle forme d\'entreprise vous convient ?',
+    selskapVelgDesc:'Aperçu simple pour choisir la bonne',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">La plupart de ceux qui démarrent pour eux-mêmes en Norvège choisissent entre <b>entreprise individuelle (ENK)</b> et <b>société par actions (AS)</b>. Le choix dépend du risque, du niveau de revenu et de vos besoins en employés.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Voulez-vous démarrer simplement et à bas coût ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Choisissez <b>ENK</b> — gratuit à enregistrer, aucun capital social requis. Parfait pour les indépendants, consultants et petites entreprises.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Voulez-vous protéger votre économie personnelle ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Choisissez <b>AS</b> — vous ne risquez que le capital-actions investi (30 000 kr). Mieux pour les entreprises avec employés, dettes ou risque élevé.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Allez-vous démarrer avec d\'autres ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Choisissez <b>ANS</b> (responsabilité conjointe et solidaire) ou <b>DA</b> (responsabilité partagée). Nécessite au minimum 2 associés. Plus simple qu\'AS, mais responsabilité personnelle.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Avez-vous besoin d\'investisseurs passifs ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Choisissez <b>KS</b> — combinez des gestionnaires actifs (commandités) avec des investisseurs qui ne risquent que leur investissement (commanditaires).</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Règle empirique</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Moins de 600 000 kr de revenu et risque faible → <b>ENK</b>. Plus de 600 000 kr, employés ou risque → <b>AS</b>. Partenariat → <b>ANS/DA</b>. Ce sont des limites approximatives — évaluez votre propre situation.</div>'
+      +'</div>',
+
+    // --- ENK ---
+    selskapEnkTitle:'Entreprise individuelle (ENK)',
+    selskapEnkDesc:'Le moyen le plus simple de démarrer pour vous-même',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Une entreprise individuelle est la forme d\'entreprise la plus simple en Norvège. Vous et l\'entreprise êtes juridiquement la même personne — cela signifie que vous avez <b>une responsabilité personnelle complète</b> pour toutes les dettes et obligations.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Faits clés</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Frais d\'enregistrement</span><span style="font-weight:700;color:var(--ink);">Gratuit</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Exigence de capital social</span><span style="font-weight:700;color:var(--ink);">Aucune</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Nombre de propriétaires</span><span style="font-weight:700;color:var(--ink);">Une seule personne</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Responsabilité personnelle</span><span style="font-weight:700;color:var(--ink);">Complète — tout ce que vous possédez</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Impôt sur le bénéfice</span><span style="font-weight:700;color:var(--ink);">22 % + cotisation sociale 10,8 % + impôt par tranches</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Obligation TVA</span><span style="font-weight:700;color:var(--ink);">À partir d\'un chiffre d\'affaires de 50 000 kr</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Avantages</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Gratuit et simple à démarrer — vous vous enregistrez au Registre des unités via Altinn. Aucune exigence de conseil d\'administration, d\'assemblée générale ou de comptes annuels (dans certaines limites). Vous pouvez retirer librement l\'argent de l\'entreprise. Fiscalité favorable à revenus bas.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Inconvénients</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Responsabilité personnelle complète — les créanciers peuvent saisir votre maison. Cotisation sociale plus élevée (10,8 % vs 7,6 % pour les salariés). Pas de droits des salariés pour vous-même (pas d\'indemnité maladie dès le 1er jour, pas d\'allocation chômage). Peut sembler moins professionnel.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Législation :</b> Pas de loi spéciale sur les sociétés — régie par les règles générales. La loi sur la tenue des registres comptables s\'applique aux entreprises. Enregistrement via la loi sur le Registre des unités.'
+      +'</div>',
+
+    // --- AS ---
+    selskapAsTitle:'Société par actions (AS)',
+    selskapAsDesc:'Responsabilité limitée et gestion professionnelle',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Une société par actions est une personne morale distincte — séparée des propriétaires. Vous ne risquez <b>que le capital-actions que vous avez investi</b>, pas vos biens personnels. AS est la forme d\'entreprise la plus courante en Norvège, avec plus de 350 000 sociétés enregistrées.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Faits clés</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Frais d\'enregistrement</span><span style="font-weight:700;color:var(--ink);">6 825 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Capital-actions obligatoire</span><span style="font-weight:700;color:var(--ink);">Minimum 30 000 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Nombre de propriétaires</span><span style="font-weight:700;color:var(--ink);">1 ou plus</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Responsabilité personnelle</span><span style="font-weight:700;color:var(--ink);">Limitée au capital investi</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Impôt sur les sociétés</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Impôt sur les dividendes (propriétaire personne)</span><span style="font-weight:700;color:var(--ink);">37,84 % (majoré)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Conseil d\'administration obligatoire</span><span style="font-weight:700;color:var(--ink);">Minimum 1 membre</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Structure</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>Assemblée générale</b> — organe suprême, tous les actionnaires ont droit de vote (1 action = 1 vote). <b>Conseil d\'administration</b> — gère la société, au minimum 1 membre. <b>Directeur général</b> — optionnel, gère la gestion quotidienne.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Avantages</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">La responsabilité limitée protège votre économie personnelle. Un propriétaire qui perçoit un salaire bénéficie des droits des salariés (indemnité maladie dès le 1er jour, allocation chômage, pension). La méthode d\'exemption rend les dividendes entre sociétés pratiquement exonérés d\'impôt. Digne de confiance auprès des clients et des banques.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Inconvénients</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Fiscalité globale plus élevée en cas de dividende (jusqu\'à ~51,5 % au total). Exigences formelles pour le conseil d\'administration, l\'assemblée générale et les comptes annuels. Coût d\'enregistrement et de comptabilité. Impossible de retirer librement les fonds — les dividendes nécessitent une décision.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Pouvez-vous vous dispenser d\'un auditeur ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Oui, si la société a un chiffre d\'affaires inférieur à 7 millions de kr, un bilan inférieur à 27 millions de kr et en moyenne moins de 10 employés.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Législation :</b> Loi sur les sociétés par actions (LOV-1997-06-13-44). Constitution, capital, conseil d\'administration et assemblée générale régis au ch. 2-6.'
+      +'</div>',
+
+    // --- ANS / DA ---
+    selskapAnsTitle:'Société en nom collectif (ANS / DA)',
+    selskapAnsDesc:'Partenariat avec responsabilité personnelle',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Une société en nom collectif est un partenariat où les associés ont <b>une responsabilité personnelle pour les dettes de la société</b>. Nécessite au minimum 2 associés. Typique pour les cabinets d\'avocats, les cabinets médicaux et les petits projets collaboratifs.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS vs. DA — quelle est la différence ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS (responsabilité conjointe et solidaire) :</b> Chaque associé est responsable de l\'ensemble de la dette. Un créancier peut exiger le paiement complet d\'un seul associé.<br><b>DA (responsabilité partagée) :</b> Chaque associé n\'est responsable que de sa <i>part proportionnelle</i> de la dette. Si vous avez 50 % d\'intérêt, vous êtes responsable de maximum 50 % de la dette.</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Faits clés</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Frais d\'enregistrement</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Capital social obligatoire</span><span style="font-weight:700;color:var(--ink);">Aucun</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Nombre d\'associés</span><span style="font-weight:700;color:var(--ink);">Au minimum 2</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Responsabilité personnelle</span><span style="font-weight:700;color:var(--ink);">Illimitée (ANS : conjointe, DA : au prorata)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Fiscalité</span><span style="font-weight:700;color:var(--ink);">Imposition des associés — le bénéfice est imposé chez les associés</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Qu\'est-ce que l\'imposition des associés ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">La société n\'est pas imposée elle-même. Au lieu de cela, les bénéfices et pertes sont répartis entre les associés selon leur part et imposés sur leur déclaration d\'impôt personnelle. Le taux d\'imposition est de 22 % sur les revenus ordinaires, et les distributions au-delà de l\'abattement fiscal sont imposées comme dividendes.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Contrat de société</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Un contrat de société est obligatoire et réglemente les parts d\'intérêt, la distribution des bénéfices, le travail apporté, la sortie et la dissolution. Sans un bon contrat, des conflits peuvent survenir.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Législation :</b> Loi sur les sociétés (LOV-1985-06-21-83). Responsabilité régulée aux §§ 1-1 et 1-2. Contrat de société au § 2-3.'
+      +'</div>',
+
+    // --- KS ---
+    selskapKsTitle:'Société en commandite (KS)',
+    selskapKsDesc:'Deux types d\'associés — risque et responsabilité différents',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Une société en commandite a deux types d\'associés avec des rôles et responsabilités très différents. Historiquement populaire dans le transport maritime et l\'immobilier, mais rarement utilisée aujourd\'hui (environ 120 enregistrées en Norvège).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Les deux rôles</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Commandité (actif)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Gère la société et prend les décisions. A une <b>responsabilité personnelle illimitée</b> pour toutes les dettes. Au minimum 1 commandité est obligatoire.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Commanditaire (passif)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Investit du capital, mais ne participe pas à la gestion. Responsabilité <b>limitée à l\'investissement</b>. Au minimum 1 commanditaire est obligatoire.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Faits clés</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Frais d\'enregistrement</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Capital du commanditaire (minimum)</span><span style="font-weight:700;color:var(--ink);">Défini dans le contrat de société</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Fiscalité</span><span style="font-weight:700;color:var(--ink);">Imposition des associés (comme ANS/DA)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Nombre d\'associés</span><span style="font-weight:700;color:var(--ink);">Au minimum 2 (1 commandité + 1 commanditaire)</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Pourquoi KS était-il populaire ?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Avant 1992, les commanditaires pouvaient déduire les pertes de la société de leur déclaration d\'impôt personnelle sans limite. Cela rendait KS très attrayant pour réduire les impôts dans le transport maritime et l\'immobilier. Après le resserrement des règles de déduction (déduction seulement jusqu\'au capital investi), la popularité a chuté fortement.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Le commanditaire perd la responsabilité limitée si…</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Le commanditaire s\'implique dans la gestion de la société. Dans ce cas, il/elle peut être considéré(e) comme commandité(e) et engager sa responsabilité personnelle pour les dettes (loi sur les sociétés § 3-9).</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Législation :</b> Loi sur les sociétés ch. 3 (LOV-1985-06-21-83). Responsabilité du commanditaire au § 3-7. Responsabilité du commandité au § 3-8.'
+      +'</div>',
+
+    // --- Comparaison ---
+    selskapCompareTitle:'Comparaison des formes d\'entreprise',
+    selskapCompareDesc:'Responsabilité, fiscalité, exigences et propriétaires côte à côte',
+    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
+      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
+      +'</tr></thead><tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Responsabilité</td><td style="padding:8px 10px;color:var(--ink2);">Illimitée</td><td style="padding:8px 10px;color:var(--ink2);">Limitée</td><td style="padding:8px 10px;color:var(--ink2);">Illimitée</td><td style="padding:8px 10px;color:var(--ink2);">Commandité : illimitée<br>Commanditaire : limitée</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Propriétaires</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Capital social</td><td style="padding:8px 10px;color:var(--ink2);">Aucun</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Aucun</td><td style="padding:8px 10px;color:var(--ink2);">Optionnel</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Frais d\'enregistrement</td><td style="padding:8px 10px;color:var(--ink2);">Gratuit</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Fiscalité</td><td style="padding:8px 10px;color:var(--ink2);">Personnelle</td><td style="padding:8px 10px;color:var(--ink2);">22 % société + dividendes</td><td style="padding:8px 10px;color:var(--ink2);">Imposition des associés</td><td style="padding:8px 10px;color:var(--ink2);">Imposition des associés</td></tr>'
+      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Législation</td><td style="padding:8px 10px;color:var(--ink2);">Règles générales</td><td style="padding:8px 10px;color:var(--ink2);">Loi sur les sociétés par actions</td><td style="padding:8px 10px;color:var(--ink2);">Loi sur les sociétés</td><td style="padding:8px 10px;color:var(--ink2);">Loi sur les sociétés ch. 3</td></tr>'
+      +'</tbody></table></div>',
+
+    // --- Impôt et formes d\'entreprise ---
+    selskapSkattTitle:'Impôt et formes d\'entreprise',
+    selskapSkattDesc:'Impôt sur les sociétés, dividendes et imposition des associés',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">La façon dont la société est imposée dépend de sa forme juridique. La distinction principale est entre les sociétés qui sont des <b>sujets fiscaux indépendants</b> (AS) et les sociétés imposées via l\'<b>imposition des associés</b> (ANS, DA, KS).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS — deux niveaux d\'imposition</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">1. Impôt sur les sociétés sur bénéfice</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">2. Impôt sur dividendes distribués (majoré × 1,72)</span><span style="font-weight:700;color:var(--ink);">37,84 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Impôt marginal combiné en cas de dividende</span><span style="font-weight:700;color:var(--ink);">~51,5 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Méthode d\'exemption (société détient société)</span><span style="font-weight:700;color:var(--ink);">Pratiquement 0 %</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS/DA/KS — imposition des associés</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">La société n\'est pas un sujet fiscal indépendant. Les bénéfices et pertes sont répartis entre les associés selon leur part et imposés comme <b>revenus ordinaires (22 %)</b> chez l\'individu. Les distributions au-delà de l\'abattement fiscal sont imposées comme revenus personnels.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ENK — imposée comme revenu personnel</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Le bénéfice est imposé comme revenus professionnels : revenus ordinaires (22 %) + cotisation sociale (10,8 %) + impôt par tranches. Le modèle d\'entreprise individuelle donne une déduction fiscale sur rendement du capital.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Source :</b> Code fiscal ch. 10 (modèle actionnaire), ch. 10 partie B (modèle associé), ch. 12 (modèle entreprise). Taux : Vote fiscal du Parlement 2026.'
+      +'</div>',
+
+    // --- Enregistrement ---
+    selskapRegTitle:'Comment enregistrer une société',
+    selskapRegDesc:'Étape par étape via Altinn et Brønnøysund',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Tout enregistrement d\'entreprise en Norvège se fait par voie électronique via <b>Altinn</b> (déclaration de registre coordonnée). La société s\'enregistre au Registre des unités et éventuellement au Registre des entreprises.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Étape par étape</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">1. Choisir la forme d\'entreprise</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Décidez entre ENK, AS, ANS, DA ou KS selon vos besoins.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">2. Remplir la déclaration de registre coordonnée</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Connectez-vous à altinn.no. Entrez le nom de la société, l\'objet, les propriétaires et l\'adresse. Pour AS : joignez le document de constitution et les statuts.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">3. Signer et payer</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Tous les fondateurs doivent signer. Payez les frais d\'enregistrement (ENK : gratuit, AS : 6 825 kr, ANS/DA/KS : 2 250 kr). Pour AS : transférez le capital-actions sur un compte bancaire professionnel.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">4. Recevoir le numéro d\'organisation</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Délai de traitement : 1-5 jours ouvrables. Vous recevez un numéro d\'organisation utilisé dans toute communication avec l\'administration.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">5. Enregistrement TVA (optionnel)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Obligatoire quand le chiffre d\'affaires dépasse 50 000 kr sur 12 mois. Vous pouvez demander un enregistrement préalable.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Conseil :</b> Vous pouvez réserver le nom de votre société dans les Registres Brønnøysund avant l\'enregistrement. Vérifiez le <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">contrôle du nom</a> pour voir si le nom est disponible.'
+      +'</div>',
+
+    // --- Autres formes d\'entreprise ---
+    selskapAndreTitle:'Autres formes d\'entreprise',
+    selskapAndreDesc:'ASA, NUF, SA et fondation',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">En plus des formes les plus courantes, il existe plusieurs formes d\'entreprise pour des besoins spécialisés.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">ASA — Société anonyme</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Pour les sociétés destinées à être cotées en bourse ou ayant de nombreux actionnaires. Exigences : capital social minimum 1 million kr, 3 membres du conseil d\'administration, directeur général et auditeur. Les actions peuvent être librement négociées. Régie par la loi sur les sociétés anonymes (LOV-1997-06-13-45).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">NUF — Entreprise étrangère enregistrée en Norvège</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Une succursale norvégienne d\'une société étrangère. Était populaire comme « AS bon marché » via des sociétés britanniques Ltd, mais après réduction de l\'exigence d\'AS à 30 000 kr (2012), la plupart ont changé pour AS norois. Sur le plan juridique, c\'est une succursale, pas une société norvégienne indépendante.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">SA — Coopérative (société mutuelle)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Propriété et gouvernance démocratique des membres. Chaque personne a 1 vote indépendamment de sa contribution. Utilisée par les coopératives d\'habitation, les coopératives de consommation (Coop) et les coopératives agricoles (Tine, Nortura). Minimum 2 membres. Régie par la loi sur les coopératives (LOV-2007-06-29-81).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Fondation</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Une masse de biens autonome sans propriétaires — créée pour un objectif spécifique (charité, recherche, culture). Personne ne peut retirer les bénéfices. Gérée par un conseil d\'administration selon les statuts. Exigence : capital minimum 100 000 kr. Régie par la loi sur les fondations (LOV-2001-06-15-59).</div>'
+      +'</div>'
+      +'</div>',
+
     searchPlaceholder:'Rechercher des outils, concepts ou lois…',
     searchPopular:'Suggestions',
     searchNoResults:'Aucun résultat',

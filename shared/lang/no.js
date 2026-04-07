@@ -473,5 +473,231 @@ REGIONS['no'] = {
     searchTagTool:'Verktøy',
     searchTagConcept:'Begrep',
     searchTagLaw:'Lov',
-    searchFeedbackMsg:'Fortell oss hva du leter etter'
+    searchFeedbackMsg:'Fortell oss hva du leter etter',
+
+    // ═══════════════ SELSKAP PAGE ═══════════════
+    secSelskapGuide:'Selskapsformer',
+    secSelskapRef:'Referanse',
+
+    // --- Hvilken selskapsform passer deg? ---
+    selskapVelgTitle:'Hvilken selskapsform passer deg?',
+    selskapVelgDesc:'Enkel oversikt for å velge riktig',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">De fleste som starter for seg selv i Norge velger mellom <b>enkeltpersonforetak (ENK)</b> og <b>aksjeselskap (AS)</b>. Valget avhenger av risiko, inntektsnivå og om du trenger ansatte.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Vil du starte enkelt og billig?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Velg <b>ENK</b> — gratis å registrere, ingen krav til startkapital. Perfekt for frilansere, konsulenter og småbedrifter.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Vil du beskytte privatøkonomien?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Velg <b>AS</b> — du risikerer kun aksjekapitalen (30 000 kr). Bedre for bedrifter med ansatte, gjeld eller høy risiko.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Skal du starte med noen andre?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Velg <b>ANS</b> (solidarisk ansvar) eller <b>DA</b> (delt ansvar). Krever minst 2 deltakere. Enklere enn AS, men personlig ansvar.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">Trenger du passive investorer?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Velg <b>KS</b> — kombiner aktive ledere (komplementarer) med investorer som bare risikerer innskuddet (kommandittister).</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Tommelfingerregel</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Under 600 000 kr i inntekt og lav risiko → <b>ENK</b>. Over 600 000 kr, ansatte eller risiko → <b>AS</b>. Partnerskap → <b>ANS/DA</b>. Disse er omtrentlige grenser — vurder din egen situasjon.</div>'
+      +'</div>',
+
+    // --- ENK ---
+    selskapEnkTitle:'Enkeltpersonforetak (ENK)',
+    selskapEnkDesc:'Den enkleste måten å starte for seg selv',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Et enkeltpersonforetak er den enkleste selskapsformen i Norge. Du og bedriften er juridisk sett samme person — det betyr at du har <b>fullt personlig ansvar</b> for all gjeld og forpliktelser.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Nøkkelfakta</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registreringsgebyr</span><span style="font-weight:700;color:var(--ink);">Gratis</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Krav til startkapital</span><span style="font-weight:700;color:var(--ink);">Ingen</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Antall eiere</span><span style="font-weight:700;color:var(--ink);">Kun 1 person</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Personlig ansvar</span><span style="font-weight:700;color:var(--ink);">Fullt — alt du eier</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Skatt på overskudd</span><span style="font-weight:700;color:var(--ink);">22 % + trygdeavgift 10,8 % + trinnskatt</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">MVA-plikt</span><span style="font-weight:700;color:var(--ink);">Ved omsetning over 50 000 kr</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Fordeler</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Gratis og enkelt å starte — du registrerer deg i Enhetsregisteret via Altinn. Ingen krav til styre, generalforsamling eller årsregnskap (under visse grenser). Du kan fritt ta ut penger fra foretaket. Gunstig skatt ved lave inntekter.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Ulemper</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Fullt personlig ansvar — kreditorer kan ta boligen din. Høyere trygdeavgift (10,8 % vs. 7,6 % for lønnsmottakere). Ikke ansattrettigheter for deg selv (ingen sykelønn fra dag 1, ingen dagpenger). Kan virke mindre profesjonelt.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Lovverk:</b> Ikke eget selskapslov — regulert av alminnelige regler. Bokføringsloven gjelder for næringsdrivende. Registrering via Enhetsregisterloven.'
+      +'</div>',
+
+    // --- AS ---
+    selskapAsTitle:'Aksjeselskap (AS)',
+    selskapAsDesc:'Begrenset ansvar og profesjonell drift',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Et aksjeselskap er et eget rettssubjekt — skilt fra eierne. Du risikerer <b>kun aksjekapitalen du har skutt inn</b>, ikke dine private eiendeler. AS er den vanligste selskapsformen i Norge, med over 350 000 registrerte selskaper.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Nøkkelfakta</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registreringsgebyr</span><span style="font-weight:700;color:var(--ink);">6 825 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Krav til aksjekapital</span><span style="font-weight:700;color:var(--ink);">Minimum 30 000 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Antall eiere</span><span style="font-weight:700;color:var(--ink);">1 eller flere</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Personlig ansvar</span><span style="font-weight:700;color:var(--ink);">Begrenset til innskutt kapital</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Selskapsskatt</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Utbytteskatt (personlig eier)</span><span style="font-weight:700;color:var(--ink);">37,84 % (oppjustert)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Krav til styre</span><span style="font-weight:700;color:var(--ink);">Minimum 1 styremedlem</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Struktur</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>Generalforsamling</b> — øverste organ, alle aksjonærer har stemmerett (1 aksje = 1 stemme). <b>Styret</b> — forvalter selskapet, minst 1 medlem. <b>Daglig leder</b> — valgfritt, håndterer daglig drift.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Fordeler</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Begrenset ansvar beskytter privatøkonomien. Eier som tar ut lønn får ansattrettigheter (sykelønn fra dag 1, dagpenger, pensjon). Fritaksmetoden gjør utbytte mellom selskaper tilnærmet skattefritt. Troverdig overfor kunder og banker.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Ulemper</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Høyere samlet beskatning ved utbytte (opptil ~51,5 % totalt). Formelle krav til styre, generalforsamling og årsregnskap. Kostnad for registrering og regnskapsføring. Kan ikke fritt ta ut penger — utbytte krever vedtak.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Kan du slippe revisor?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Ja, hvis selskapet har driftsinntekter under 7 mill. kr, balansesum under 27 mill. kr og gjennomsnittlig under 10 ansatte.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Lovverk:</b> Aksjeloven (LOV-1997-06-13-44). Stiftelse, kapital, styre og generalforsamling regulert i kap. 2–6.'
+      +'</div>',
+
+    // --- ANS / DA ---
+    selskapAnsTitle:'Ansvarlig selskap (ANS / DA)',
+    selskapAnsDesc:'Partnerskap med personlig ansvar',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Et ansvarlig selskap er et partnerskap der deltakerne har <b>personlig ansvar for selskapets gjeld</b>. Krever minst 2 deltakere. Typisk for advokatfirma, legepraksiser og små samarbeidsprosjekter.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS vs. DA — hva er forskjellen?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS (solidarisk ansvar):</b> Hver deltaker hefter for <i>hele</i> gjelden. En kreditor kan kreve hele beløpet av én deltaker.<br><b>DA (delt ansvar):</b> Hver deltaker hefter kun for sin <i>forholdsmessige andel</i> av gjelden. Har du 50 % eierandel, hefter du for maks 50 % av gjelden.</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Nøkkelfakta</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registreringsgebyr</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Krav til startkapital</span><span style="font-weight:700;color:var(--ink);">Ingen</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Antall deltakere</span><span style="font-weight:700;color:var(--ink);">Minst 2</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Personlig ansvar</span><span style="font-weight:700;color:var(--ink);">Ubegrenset (ANS: solidarisk, DA: pro rata)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Beskatning</span><span style="font-weight:700;color:var(--ink);">Deltakerligning — overskudd skattes hos deltakerne</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Hva er deltakerligning?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Selskapet betaler ikke skatt selv. I stedet fordeles overskudd og underskudd til deltakerne etter eierandel, og beskattes på deres personlige selvangivelse. Skattesatsen er 22 % alminnelig inntekt, og utdeling utover skjermingsfradraget beskattes som utbytte.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Selskapsavtalen</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">En selskapsavtale er obligatorisk og regulerer eierandeler, overskuddsdeling, arbeidsinnsats, uttreden og oppløsning. Uten en god avtale kan det oppstå konflikter.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Lovverk:</b> Selskapsloven (LOV-1985-06-21-83). Ansvar regulert i §§ 1-1 og 1-2. Selskapsavtale i § 2-3.'
+      +'</div>',
+
+    // --- KS ---
+    selskapKsTitle:'Kommandittselskap (KS)',
+    selskapKsDesc:'To typer deltakere — ulik risiko og ansvar',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Et kommandittselskap har to typer deltakere med helt ulike roller og ansvar. Det var historisk populært i shipping og eiendom, men brukes sjelden i dag (ca. 120 registrerte i Norge).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">De to rollene</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Komplementar (aktiv)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Leder selskapet og tar beslutninger. Har <b>ubegrenset personlig ansvar</b> for all gjeld. Minst 1 komplementar er påkrevd.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">Kommandittist (passiv)</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">Investerer kapital, men deltar ikke i ledelsen. Ansvar <b>begrenset til innskuddet</b>. Minst 1 kommandittist er påkrevd.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Nøkkelfakta</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registreringsgebyr</span><span style="font-weight:700;color:var(--ink);">2 250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Kommandittistkapital (minimum)</span><span style="font-weight:700;color:var(--ink);">Fastsatt i selskapsavtalen</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Beskatning</span><span style="font-weight:700;color:var(--ink);">Deltakerligning (som ANS/DA)</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Antall deltakere</span><span style="font-weight:700;color:var(--ink);">Minst 2 (1 kompl. + 1 komm.)</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Hvorfor var KS populært?</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Før 1992 kunne kommandittister trekke fra selskapets underskudd på sin personlige skattemelding uten begrensning. Dette gjorde KS svært attraktivt for skatteminimering i shipping og eiendom. Etter innstramming av fradragsreglene (kun fradrag opp til innskutt kapital) falt populariteten kraftig.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">Kommandittist mister begrenset ansvar hvis…</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Kommandittisten blander seg i ledelsen av selskapet. Da kan vedkommende bli ansett som komplementar og hefte personlig for gjelden (selskapsloven § 3-9).</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Lovverk:</b> Selskapsloven kap. 3 (LOV-1985-06-21-83). Kommandittistens ansvar i § 3-7. Komplementarens ansvar i § 3-8.'
+      +'</div>',
+
+    // --- Sammenligning ---
+    selskapCompareTitle:'Sammenligning av selskapsformer',
+    selskapCompareDesc:'Ansvar, skatt, krav og eiere side om side',
+    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
+      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
+      +'</tr></thead><tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Ansvar</td><td style="padding:8px 10px;color:var(--ink2);">Ubegrenset</td><td style="padding:8px 10px;color:var(--ink2);">Begrenset</td><td style="padding:8px 10px;color:var(--ink2);">Ubegrenset</td><td style="padding:8px 10px;color:var(--ink2);">Kompl: ubegr.<br>Komm: begr.</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Eiere</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Startkapital</td><td style="padding:8px 10px;color:var(--ink2);">Ingen</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Ingen</td><td style="padding:8px 10px;color:var(--ink2);">Valgfritt</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Reg.gebyr</td><td style="padding:8px 10px;color:var(--ink2);">Gratis</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Beskatning</td><td style="padding:8px 10px;color:var(--ink2);">Personlig</td><td style="padding:8px 10px;color:var(--ink2);">22 % selskap + utbytte</td><td style="padding:8px 10px;color:var(--ink2);">Deltakerligning</td><td style="padding:8px 10px;color:var(--ink2);">Deltakerligning</td></tr>'
+      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Lovverk</td><td style="padding:8px 10px;color:var(--ink2);">Alminnelige regler</td><td style="padding:8px 10px;color:var(--ink2);">Aksjeloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven kap. 3</td></tr>'
+      +'</tbody></table></div>',
+
+    // --- Skatt og selskapsformer ---
+    selskapSkattTitle:'Skatt og selskapsformer',
+    selskapSkattDesc:'Selskapsskatt, utbytte og deltakerligning',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Hvordan selskapet beskattes avhenger av selskapsformen. Hovedskillet er mellom selskaper som er <b>egne skattesubjekter</b> (AS) og selskaper som beskattes gjennom <b>deltakerligning</b> (ANS, DA, KS).</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS — to ledd med skatt</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">1. Selskapsskatt på overskudd</span><span style="font-weight:700;color:var(--ink);">22 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">2. Utbytteskatt på utdeling (oppjustert × 1,72)</span><span style="font-weight:700;color:var(--ink);">37,84 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Samlet marginalskatt ved utbytte</span><span style="font-weight:700;color:var(--ink);">~51,5 %</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Fritaksmetoden (selskap eier selskap)</span><span style="font-weight:700;color:var(--ink);">Tilnærmet 0 %</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS/DA/KS — deltakerligning</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Selskapet er ikke et eget skattesubjekt. Overskudd og underskudd fordeles til deltakerne etter eierandel og beskattes som <b>alminnelig inntekt (22 %)</b> hos den enkelte. Utdeling utover skjermingsfradrag beskattes som personinntekt.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ENK — beskattes som personinntekt</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Overskudd beskattes som næringsinntekt: alminnelig inntekt (22 %) + trygdeavgift (10,8 %) + trinnskatt. Foretaksmodellen gir skjermingsfradrag på kapitalavkastning.</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Kilde:</b> Skatteloven kap. 10 (aksjonærmodellen), kap. 10 del B (deltakermodellen), kap. 12 (foretaksmodellen). Satser: Stortingets skattevedtak 2026.'
+      +'</div>',
+
+    // --- Registrering ---
+    selskapRegTitle:'Slik registrerer du selskap',
+    selskapRegDesc:'Steg-for-steg via Altinn og Brønnøysund',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">All registrering av foretak i Norge gjøres elektronisk via <b>Altinn</b> (samordnet registermelding). Selskapet registreres i Enhetsregisteret og eventuelt Foretaksregisteret.</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Steg for steg</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">1. Velg selskapsform</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Bestem deg for ENK, AS, ANS, DA eller KS basert på dine behov.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">2. Fyll ut samordnet registermelding</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Logg inn på altinn.no. Fyll inn selskapsnavn, formål, eiere og adresse. For AS: legg ved stiftelsesdokument og vedtekter.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">3. Signer og betal</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Alle stiftere må signere. Betal registreringsgebyr (ENK: gratis, AS: 6 825 kr, ANS/DA/KS: 2 250 kr). For AS: overfør aksjekapital til bedriftskonto.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">4. Motta organisasjonsnummer</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Behandlingstid: 1–5 virkedager. Du mottar org.nr. som brukes i all kontakt med det offentlige.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">5. MVA-registrering (valgfritt)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">Påkrevd når omsetning overstiger 50 000 kr over 12 måneder. Kan søke om forhåndsregistrering.</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>Tips:</b> Du kan reservere selskapsnavn i Brønnøysundregistrene før du registrerer. Sjekk <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">navnekontrollen</a> for å se om navnet er ledig.'
+      +'</div>',
+
+    // --- Andre selskapsformer ---
+    selskapAndreTitle:'Andre selskapsformer',
+    selskapAndreDesc:'ASA, NUF, SA og stiftelse',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">I tillegg til de vanligste formene finnes det flere selskapsformer for spesielle behov.</div>'
+      +'<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">ASA — Allmennaksjeselskap</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">For selskaper som skal noteres på børs eller ha mange aksjonærer. Krav: minst 1 mill. kr aksjekapital, 3 styremedlemmer, daglig leder og revisor. Aksjene kan fritt omsettes. Regulert av allmennaksjeloven (LOV-1997-06-13-45).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">NUF — Norskregistrert utenlandsk foretak</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">En norsk avdeling av et utenlandsk selskap. Var populært som «billig AS» via britiske Ltd-selskaper, men etter at AS-kravet ble senket til 30 000 kr (2012) har de fleste gått over til norsk AS. Juridisk sett er dette en filial, ikke et selvstendig norsk selskap.</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">SA — Samvirkeforetak (kooperativ)</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Eid og demokratisk styrt av medlemmene. Hver person har 1 stemme uavhengig av innskudd. Brukes av borettslag, forbrukersamvirker (Coop) og landbrukssamvirker (Tine, Nortura). Minst 2 medlemmer. Regulert av samvirkelova (LOV-2007-06-29-81).</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Stiftelse</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">En selvstendig formuesmasse uten eiere — stiftet for et bestemt formål (veldedighet, forskning, kultur). Ingen kan ta ut overskudd. Styres av et styre i henhold til vedtektene. Krav: minst 100 000 kr grunnkapital. Regulert av stiftelsesloven (LOV-2001-06-15-59).</div>'
+      +'</div>'
+      +'</div>'
 };

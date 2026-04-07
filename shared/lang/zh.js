@@ -462,5 +462,230 @@ REGIONS['zh'] = {
     searchTagTool:'工具',
     searchTagConcept:'概念',
     searchTagLaw:'法律',
-    searchFeedbackMsg:'告诉我们您在找什么'
+    searchFeedbackMsg:'告诉我们您在找什么',
+
+    secSelskapGuide:'公司形式',
+    secSelskapRef:'参考',
+
+    // --- 哪种公司形式适合你？ ---
+    selskapVelgTitle:'哪种公司形式适合你？',
+    selskapVelgDesc:'简单总览，选择正确的公司形式',
+    selskapVelgBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">在挪威开办自己企业的大多数人会在<b>个体经营（ENK）</b>和<b>有限责任公司（AS）</b>之间选择。选择取决于风险、收入水平和是否需要员工。</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">想要简单和便宜开始？</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">选择<b>ENK</b> — 免费注册，无需起始资本。非常适合自由职业者、顾问和小企业。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">想保护个人财产？</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">选择<b>AS</b> — 你只承担股本风险（30,000 kr）。对有员工、债务或高风险的企业更好。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">要和他人一起创办？</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">选择<b>ANS</b>（连带责任）或<b>DA</b>（分担责任）。需至少2个合伙人。比AS简单，但有个人责任。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">需要被动投资者？</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">选择<b>KS</b> — 结合积极管理者（普通合伙人）与只承担其出资风险的投资者（有限合伙人）。</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">经验法则</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">年收入低于600,000 kr且风险低 → <b>ENK</b>。超过600,000 kr、有员工或风险 → <b>AS</b>。合伙关系 → <b>ANS/DA</b>。这些是大概边界 — 评估你的具体情况。</div>'
+      +'</div>',
+
+    // --- ENK ---
+    selskapEnkTitle:'个体经营（ENK）',
+    selskapEnkDesc:'自己创办的最简单方式',
+    selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">个体经营是挪威最简单的公司形式。从法律上讲，你和企业是同一个人 — 这意味着你对所有债务和责任有<b>完全个人责任</b>。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">关键事实</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">注册费</span><span style="font-weight:700;color:var(--ink);">免费</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">起始资本要求</span><span style="font-weight:700;color:var(--ink);">无</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">业主数量</span><span style="font-weight:700;color:var(--ink);">仅1人</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">个人责任</span><span style="font-weight:700;color:var(--ink);">完全 — 你拥有的所有东西</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">利润税</span><span style="font-weight:700;color:var(--ink);">22% + 社保费 10.8% + 累进税</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">增值税责任</span><span style="font-weight:700;color:var(--ink);">营业额超过50,000 kr时</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">优点</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">免费简单创办 — 通过Altinn在单位注册处注册。在一定限额内，无需董事会、股东大会或年度报告的要求。你可以自由从企业提取资金。低收入时税收有利。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">缺点</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">完全个人责任 — 债权人可以收缴你的住房。社保费较高（10.8% vs. 工薪族7.6%）。没有个人员工权益（无第1天病假、无失业救济）。可能显得不够专业。</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>法律依据：</b>无独立公司法 — 受普通规则管制。簿记法适用于经营者。根据单位注册处法注册。'
+      +'</div>',
+
+    // --- AS ---
+    selskapAsTitle:'有限责任公司（AS）',
+    selskapAsDesc:'有限责任和专业运营',
+    selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">有限责任公司是一个独立的法人实体 — 与业主分开。你只承担你投入的<b>股本风险</b>，不是你的个人资产。AS是挪威最常见的公司形式，注册超过350,000家。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">关键事实</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">注册费</span><span style="font-weight:700;color:var(--ink);">6,825 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">股本要求</span><span style="font-weight:700;color:var(--ink);">最低30,000 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">业主数量</span><span style="font-weight:700;color:var(--ink);">1人或多人</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">个人责任</span><span style="font-weight:700;color:var(--ink);">仅限投入资本</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">公司税</span><span style="font-weight:700;color:var(--ink);">22%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">股利税（个人股东）</span><span style="font-weight:700;color:var(--ink);">37.84%（调整后）</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">董事会要求</span><span style="font-weight:700;color:var(--ink);">最少1名董事</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">结构</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><b>股东大会</b> — 最高权力机构，所有股东有投票权（1股 = 1票）。<b>董事会</b> — 管理公司，至少1名成员。<b>执行董事</b> — 可选，处理日常运营。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">优点</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">有限责任保护个人财产。作为业主的工资获得员工权益（第1天病假、失业救济、养老金）。豁免法使公司间股利几乎免税。对客户和银行有信誉。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">缺点</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">股利总税收较高（最高~51.5%）。正式的董事会、股东大会和年度报告要求。注册和会计成本。无法自由提取资金 — 股利需要决议。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">能免除审计师吗？</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">可以，如果公司营业收入低于700万kr，资产总额低于2,700万kr，平均员工少于10名。</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>法律依据：</b>股份公司法（LOV-1997-06-13-44）。成立、资本、董事会和股东大会在第2-6章规定。'
+      +'</div>',
+
+    // --- ANS / DA ---
+    selskapAnsTitle:'合伙企业（ANS / DA）',
+    selskapAnsDesc:'有个人责任的合伙关系',
+    selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">合伙企业是合伙人<b>对公司债务有个人责任</b>的伙伴关系。需至少2名合伙人。典型于律师事务所、医疗诊所和小合作项目。</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">ANS vs. DA — 有什么区别？</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;"><b>ANS（连带责任）：</b>每个合伙人对<i>全部</i>债务承担责任。债权人可以向一名合伙人追讨全额。<br><b>DA（分担责任）：</b>每个合伙人仅对其<i>按比例份额</i>的债务承担责任。如果你持股50%，你最多对50%债务承担责任。</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">关键事实</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">注册费</span><span style="font-weight:700;color:var(--ink);">2,250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">起始资本要求</span><span style="font-weight:700;color:var(--ink);">无</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">合伙人数量</span><span style="font-weight:700;color:var(--ink);">最少2个</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">个人责任</span><span style="font-weight:700;color:var(--ink);">无限（ANS：连带，DA：按比例）</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">税收</span><span style="font-weight:700;color:var(--ink);">合伙人征税 — 盈利按比例分配给合伙人</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">什么是合伙人征税？</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">公司本身不缴税。相反，盈利和亏损按所有权比例分配给合伙人，并在其个人申报中征税。税率为22%普通收入，分配超过屏蔽额的部分作为股利征税。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">合伙协议</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">合伙协议是强制性的，规定所有权份额、盈利分享、工作投入、退出和解散。没有良好协议，可能产生冲突。</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>法律依据：</b>公司法（LOV-1985-06-21-83）。责任在§§ 1-1和1-2中规定。合伙协议在§ 2-3中。'
+      +'</div>',
+
+    // --- KS ---
+    selskapKsTitle:'有限合伙企业（KS）',
+    selskapKsDesc:'两种合伙人 — 不同的风险和责任',
+    selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">有限合伙企业有两种合伙人，角色和责任完全不同。在航运和房地产中历史上很流行，但今天很少使用（挪威约120家）。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">两个角色</div>'
+      +'<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">普通合伙人（积极）</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">管理公司并做决策。对所有债务有<b>无限个人责任</b>。至少1名普通合伙人是必需。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;">有限合伙人（被动）</div>'
+      +'<div style="font-size:13px;color:var(--ink2);line-height:1.6;">投资资本，但不参与管理。责任<b>仅限投资金额</b>。至少1名有限合伙人是必需。</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">关键事实</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">注册费</span><span style="font-weight:700;color:var(--ink);">2,250 kr</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">有限合伙人资本（最低）</span><span style="font-weight:700;color:var(--ink);">在合伙协议中规定</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">税收</span><span style="font-weight:700;color:var(--ink);">合伙人征税（与ANS/DA相同）</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">合伙人数量</span><span style="font-weight:700;color:var(--ink);">最少2个（1普通+1有限）</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">为什么KS曾经很受欢迎？</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">在1992年之前，有限合伙人可以在个人税申报中无限扣除公司亏损。这使得KS对航运和房地产的税收最小化非常有吸引力。在扣除规则收紧后（仅限投资额的扣除），人气急剧下降。</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:6px;font-size:14px;">有限合伙人失去有限责任如果…</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">有限合伙人参与公司管理。那样他们可能被视为普通合伙人，对债务个人承担责任（公司法§ 3-9）。</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>法律依据：</b>公司法第3章（LOV-1985-06-21-83）。有限合伙人责任在§ 3-7。普通合伙人责任在§ 3-8。'
+      +'</div>',
+
+    // --- 比较 ---
+    selskapCompareTitle:'公司形式比较',
+    selskapCompareDesc:'责任、税收、要求和业主对比',
+    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
+      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
+      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
+      +'</tr></thead><tbody>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">责任</td><td style="padding:8px 10px;color:var(--ink2);">无限</td><td style="padding:8px 10px;color:var(--ink2);">有限</td><td style="padding:8px 10px;color:var(--ink2);">无限</td><td style="padding:8px 10px;color:var(--ink2);">普通：无限<br>有限：有限</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">业主</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">起始资本</td><td style="padding:8px 10px;color:var(--ink2);">无</td><td style="padding:8px 10px;color:var(--ink2);">30,000 kr</td><td style="padding:8px 10px;color:var(--ink2);">无</td><td style="padding:8px 10px;color:var(--ink2);">可选</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">注册费</td><td style="padding:8px 10px;color:var(--ink2);">免费</td><td style="padding:8px 10px;color:var(--ink2);">6,825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td></tr>'
+      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">税收</td><td style="padding:8px 10px;color:var(--ink2);">个人</td><td style="padding:8px 10px;color:var(--ink2);">22%公司+股利</td><td style="padding:8px 10px;color:var(--ink2);">合伙人征税</td><td style="padding:8px 10px;color:var(--ink2);">合伙人征税</td></tr>'
+      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">法律依据</td><td style="padding:8px 10px;color:var(--ink2);">普通规则</td><td style="padding:8px 10px;color:var(--ink2);">股份公司法</td><td style="padding:8px 10px;color:var(--ink2);">公司法</td><td style="padding:8px 10px;color:var(--ink2);">公司法第3章</td></tr>'
+      +'</tbody></table></div>',
+
+    // --- 税收和公司形式 ---
+    selskapSkattTitle:'税收和公司形式',
+    selskapSkattDesc:'公司税、股利和合伙人征税',
+    selskapSkattBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">公司如何征税取决于公司形式。主要区别是<b>独立税务对象</b>（AS）和通过<b>合伙人征税</b>（ANS、DA、KS）征税的公司之间。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">AS — 两层税</div>'
+      +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">1. 盈利公司税</span><span style="font-weight:700;color:var(--ink);">22%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">2. 分配股利税（调整×1.72）</span><span style="font-weight:700;color:var(--ink);">37.84%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">股利边际总税</span><span style="font-weight:700;color:var(--ink);">~51.5%</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">豁免法（公司持有公司）</span><span style="font-weight:700;color:var(--ink);">约0%</span></div>'
+      +'</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ANS/DA/KS — 合伙人征税</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">公司不是独立的税务对象。盈利和亏损按所有权比例分配给合伙人，按个人征税为<b>普通收入（22%）</b>。分配超过屏蔽额的部分作为个人收入征税。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">ENK — 作为个人收入征税</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">盈利作为营业收入征税：普通收入（22%）+ 社保费（10.8%）+ 累进税。企业模式提供资本收益屏蔽额。</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>来源：</b>税法第10章（股东模式）、第10章B部分（合伙人模式）、第12章（企业模式）。税率：议会2026年税决议。'
+      +'</div>',
+
+    // --- 注册 ---
+    selskapRegTitle:'如何注册公司',
+    selskapRegDesc:'通过Altinn和Brønnøysund分步骤',
+    selskapRegBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">在挪威注册所有企业通过电子<b>Altinn</b>（协调登记申报）完成。公司在单位注册处和可能的企业登记处注册。</div>'
+      +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">分步骤</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">1. 选择公司形式</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">根据你的需要在ENK、AS、ANS、DA或KS之间决定。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">2. 填写协调登记申报</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">登录altinn.no。填入公司名称、目的、业主和地址。对于AS：附上成立文件和章程。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">3. 签署并支付</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">所有创始人必须签署。支付注册费（ENK：免费，AS：6,825 kr，ANS/DA/KS：2,250 kr）。对于AS：将股本转账到商业账户。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">4. 获得组织编号</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">处理时间：1-5个工作日。你接收组织编号用于与政府的所有沟通。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);">5. 增值税注册（可选）</div>'
+      +'<div style="font-size:12px;color:var(--ink2);margin-top:4px;">当营业额在12个月内超过50,000 kr时必需。可申请事前注册。</div>'
+      +'</div>'
+      +'</div>'
+      +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
+      +'<b>提示：</b>你可以在Brønnøysund寄存处中预留公司名称后再注册。查看<a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">名称检查</a>查看名称是否可用。'
+      +'</div>',
+
+    // --- 其他公司形式 ---
+    selskapAndreTitle:'其他公司形式',
+    selskapAndreDesc:'ASA、NUF、SA和基金会',
+    selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">除了最常见的形式，还有几种针对特殊需求的公司形式。</div>'
+      +'<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">ASA — 公众有限公司</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">用于将在证券交易所上市或拥有众多股东的公司。要求：最少100万kr股本、3名董事、执行董事和审计师。股份可自由转让。由公众有限公司法规定（LOV-1997-06-13-45）。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">NUF — 挪威注册外国企业</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">外国公司的挪威分支。作为"廉价AS"通过英国有限责任公司曾很受欢迎，但在AS要求降至30,000 kr后（2012），大多数已转为挪威AS。法律上这是一个分公司，不是独立的挪威公司。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">SA — 合作社</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">由成员民主拥有和管理。不论出资多少，每人一票。由住房合作社、消费合作社（Coop）和农业合作社（Tine、Nortura）使用。最少2个成员。由合作法规定（LOV-2007-06-29-81）。</div>'
+      +'</div>'
+      +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
+      +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">基金会</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">没有所有人的独立资产 — 为特定目的成立（慈善、研究、文化）。没有人可以提取盈利。由根据章程的董事会管理。要求：最少100,000 kr基本资本。由基金会法规定（LOV-2001-06-15-59）。</div>'
+      +'</div>'
+      +'</div>'
 };
