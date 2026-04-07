@@ -266,8 +266,8 @@ function setRegion(r, e) {
     if(r !== 'no') { region = 'no'; updateAll(); }
   });
 }
-function toggleDD() { var el=document.getElementById('rdd');if(el){el.classList.toggle('open');var ss=document.getElementById('site-search');if(el.classList.contains('open')){if(ss)ss.style.visibility='hidden';var si=document.getElementById('search-input');if(si)si.blur();}else{if(ss)ss.style.visibility='';}} }
-document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){var _rd=document.getElementById('rdd');if(_rd&&_rd.classList.contains('open')){_rd.classList.remove('open');var ss=document.getElementById('site-search');if(ss)ss.style.visibility='';}} });
+function toggleDD() { var el=document.getElementById('rdd');if(el){el.classList.toggle('open');if(el.classList.contains('open')){var si=document.getElementById('search-input');if(si)si.blur();var ss=document.getElementById('site-search');if(ss){var gap=ss.getBoundingClientRect().top-el.getBoundingClientRect().top-8;if(gap>100)el.style.maxHeight=gap+'px';}else{el.style.maxHeight='';}}else{el.style.maxHeight='';}}}
+document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){var _rd=document.getElementById('rdd');if(_rd)_rd.classList.remove('open');} });
 
 // ═══════════════════════════════════════════════════════
 // UPDATE ALL UI
