@@ -269,6 +269,13 @@ function setRegion(r, e) {
 function toggleDD() { var el=document.getElementById('rdd');if(el)el.classList.toggle('open'); }
 document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){var _rd=document.getElementById('rdd');if(_rd)_rd.classList.remove('open');} });
 
+// Subtle content fade-in on every page load (including bfcache restore)
+(function(){
+  function fadeIn(){var m=document.querySelector('main');if(m){m.classList.remove('page-in');void m.offsetHeight;m.classList.add('page-in');}}
+  document.addEventListener('DOMContentLoaded',fadeIn);
+  window.addEventListener('pageshow',function(e){if(e.persisted)fadeIn();});
+})();
+
 // ═══════════════════════════════════════════════════════
 // UPDATE ALL UI
 // ═══════════════════════════════════════════════════════
