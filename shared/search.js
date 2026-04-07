@@ -80,6 +80,7 @@ var SEARCH_DATA = [
   {name:'Fradragsrett MVA',desc:'Rett til å trekke fra inngående MVA på bedriftskjøp',url:'/avgift/',tags:'fradragsrett mva inngående utgående trekke fra bedrift',type:'concept',page:'Avgift'},
 
   // ══════ LOVHENVISNINGER (Nivå 3) ══════
+  {name:'Skatteloven',desc:'Kapitler og paragrafer fra skatteloven',url:'/skatt/#sal-law-group',tags:'skatteloven lov skatt kapittel paragraf',type:'law',page:'Skatt'},
   {name:'Skatteloven kap. 2 — Skatteplikt',desc:'Hvem er skattepliktige til Norge?',url:'/skatt/#sal-subj-card',tags:'skatteloven kap 2 skatteplikt bosted selskap',type:'law',page:'Skatt'},
   {name:'Skatteloven kap. 4 — Formue',desc:'Verdsettelse av formue, aksjer, bolig og rabatter',url:'/skatt/#sal-wealth-card',tags:'skatteloven kap 4 formue verdsettelse bolig aksjer',type:'law',page:'Skatt'},
   {name:'Skatteloven kap. 5 — Inntekt',desc:'Skattepliktig inntekt, lønn, kapital og skattefrie ytelser',url:'/skatt/#sal-law-card',tags:'skatteloven kap 5 inntekt lønn kapital ytelser',type:'law',page:'Skatt'},

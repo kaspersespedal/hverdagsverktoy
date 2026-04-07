@@ -4158,10 +4158,6 @@ function enterMobileFocus(card){
   }
   window.scrollTo(0,0);
   b.classList.add('mobile-focus-active');
-  // For nested cards, scroll to the specific card after focus activates
-  if(parentCard){
-    setTimeout(function(){card.scrollIntoView({block:'start',behavior:'auto'});},50);
-  }
 }
 function exitMobileFocus(){
   var b=document.body;
