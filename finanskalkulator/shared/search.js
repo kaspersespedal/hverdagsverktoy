@@ -11,16 +11,16 @@
 var SEARCH_DATA = [
   // ══════ VERKTØY (Nivå 1 — høyest prioritet) ══════
   // Personlig økonomi
-  {name:'Budsjett',desc:'Lag et personlig budsjett med inntekter og utgifter',url:'/personlig/#budsjett',tags:'budsjett økonomi personlig inntekt utgift spare penger husholdning',type:'tool',page:'Personlig økonomi'},
-  {name:'Bilkostnad',desc:'Beregn hva bilen din faktisk koster per måned og km',url:'/personlig/#bil',tags:'bil bilkostnad bilhold kjøretøy drivstoff forsikring bompenger vedlikehold bensin diesel elbil km kilometer',type:'tool',page:'Personlig økonomi'},
-  {name:'Sparekalkulator',desc:'Se kraften i rentes rente over tid',url:'/personlig/#spare',tags:'spare sparing rentes rente avkastning fond aksjer investering månedlig',type:'tool',page:'Personlig økonomi'},
-  {name:'Studielån',desc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen',url:'/personlig/#studielan',tags:'studielån lånekassen stipend student studie nedbetaling lån utdanning',type:'tool',page:'Personlig økonomi'},
-  {name:'Lønn etter skatt',desc:'Se hva du faktisk får utbetalt fra timelønnen din',url:'/personlig/#lonn',tags:'lønn timelønn netto brutto utbetalt lønn etter skatt nettolønn hva får jeg',type:'tool',page:'Personlig økonomi'},
-  {name:'Abonnementskalkulator',desc:'Se totalkostnaden for alle abonnementene dine',url:'/personlig/#abonnement',tags:'abonnement streaming netflix spotify hbo viaplay subscription månedskostnad',type:'tool',page:'Personlig økonomi'},
+  {name:'Budsjett',desc:'Lag et personlig budsjett med inntekter og utgifter',url:'/personlig/#budsjett-wrapper',tags:'budsjett økonomi personlig inntekt utgift spare penger husholdning',type:'tool',page:'Personlig økonomi'},
+  {name:'Bilkostnad',desc:'Beregn hva bilen din faktisk koster per måned og km',url:'/personlig/#bil-wrapper',tags:'bil bilkostnad bilhold kjøretøy drivstoff forsikring bompenger vedlikehold bensin diesel elbil km kilometer',type:'tool',page:'Personlig økonomi'},
+  {name:'Sparekalkulator',desc:'Se kraften i rentes rente over tid',url:'/personlig/#spare-wrapper',tags:'spare sparing rentes rente avkastning fond aksjer investering månedlig',type:'tool',page:'Personlig økonomi'},
+  {name:'Studielån',desc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen',url:'/personlig/#studie-wrapper',tags:'studielån lånekassen stipend student studie nedbetaling lån utdanning',type:'tool',page:'Personlig økonomi'},
+  {name:'Lønn etter skatt',desc:'Se hva du faktisk får utbetalt fra timelønnen din',url:'/personlig/#lonn-wrapper',tags:'lønn timelønn netto brutto utbetalt lønn etter skatt nettolønn hva får jeg',type:'tool',page:'Personlig økonomi'},
+  {name:'Abonnementskalkulator',desc:'Se totalkostnaden for alle abonnementene dine',url:'/personlig/#abo-wrapper',tags:'abonnement streaming netflix spotify hbo viaplay subscription månedskostnad',type:'tool',page:'Personlig økonomi'},
 
   // Boliglån
-  {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling månedlig betaling',type:'tool',page:'Boliglån'},
-  {name:'Dokumentavgift',desc:'Beregn tinglysning og dokumentavgift ved boligkjøp',url:'/boliglan/#dokumentavgift',tags:'dokumentavgift tinglysing tinglysningsgebyr attestgebyr boligkjøp eiendom selveier borettslag',type:'tool',page:'Boliglån'},
+  {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/#mor-wrapper',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling månedlig betaling',type:'tool',page:'Boliglån'},
+  {name:'Dokumentavgift',desc:'Beregn tinglysning og dokumentavgift ved boligkjøp',url:'/boliglan/#dok-wrapper',tags:'dokumentavgift tinglysing tinglysningsgebyr attestgebyr boligkjøp eiendom selveier borettslag',type:'tool',page:'Boliglån'},
 
   // Kalkulator
   {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/',tags:'kalkulator regnemaskin pluss minus gange dele prosent',type:'tool',page:'Kalkulator'},
@@ -38,15 +38,15 @@ var SEARCH_DATA = [
   {name:'Lønn vs Utbytte',desc:'Sammenlign skatt på lønn mot utbytte fra eget AS',url:'/kalkulator/#lvu',tags:'lønn utbytte aksjeselskap as eier utdeling uttak skatt sammenlign optimal',type:'tool',page:'Kalkulator'},
 
   // Skatt
-  {name:'Skattkalkulator',desc:'Beregn skatt på årsinntekt med trinnskatt',url:'/skatt/',tags:'skatt skattkalkulator trinnskatt trygdeavgift brutto netto inntektsskatt',type:'tool',page:'Skatt'},
-  {name:'Uttakskalkulator',desc:'Skatt ved uttak av eiendeler fra virksomhet',url:'/skatt/#uttak',tags:'uttak skatt virksomhet eiendeler sktl 5-2',type:'tool',page:'Skatt'},
-  {name:'Effektiv skatt ved utdeling',desc:'Aksjonærmodellen og foretaksmodellen',url:'/skatt/#utdeling',tags:'utdeling utbytte aksjonærmodellen foretaksmodellen selskapsskatt effektiv skatt',type:'tool',page:'Skatt'},
-  {name:'Formueskatt',desc:'Beregn formueskatt med verdsettelsesrabatter',url:'/skatt/#formue',tags:'formue formueskatt verdsettelsesrabatt bolig aksjer eiendom gjeld bunnfradrag',type:'tool',page:'Skatt'},
-  {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/#reise',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger fradrag',type:'tool',page:'Skatt'},
+  {name:'Skattkalkulator',desc:'Beregn skatt på årsinntekt med trinnskatt',url:'/skatt/#sal-salary-card',tags:'skatt skattkalkulator trinnskatt trygdeavgift brutto netto inntektsskatt',type:'tool',page:'Skatt'},
+  {name:'Uttakskalkulator',desc:'Skatt ved uttak av eiendeler fra virksomhet',url:'/skatt/#sal-uttak-card',tags:'uttak skatt virksomhet eiendeler sktl 5-2',type:'tool',page:'Skatt'},
+  {name:'Effektiv skatt ved utdeling',desc:'Aksjonærmodellen og foretaksmodellen',url:'/skatt/#sal-utdeling-card',tags:'utdeling utbytte aksjonærmodellen foretaksmodellen selskapsskatt effektiv skatt',type:'tool',page:'Skatt'},
+  {name:'Formueskatt',desc:'Beregn formueskatt med verdsettelsesrabatter',url:'/skatt/#formue-wrapper',tags:'formue formueskatt verdsettelsesrabatt bolig aksjer eiendom gjeld bunnfradrag',type:'tool',page:'Skatt'},
+  {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/#reise-wrapper',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger fradrag',type:'tool',page:'Skatt'},
 
   // Avgift
-  {name:'MVA-kalkulator',desc:'Beregn MVA-beløp og priser inkl/ekskl. avgift',url:'/avgift/',tags:'mva moms merverdiavgift avgift vat 25 15 12 prosent inkludert ekskludert',type:'tool',page:'Avgift'},
-  {name:'Justeringskalkulator',desc:'Justering av inngående MVA ved bruksendring',url:'/avgift/#justering',tags:'justering mva inngående bruksendring kapitalvare justeringsperiode mval kap 9',type:'tool',page:'Avgift'},
+  {name:'MVA-kalkulator',desc:'Beregn MVA-beløp og priser inkl/ekskl. avgift',url:'/avgift/#vat-wrapper',tags:'mva moms merverdiavgift avgift vat 25 15 12 prosent inkludert ekskludert',type:'tool',page:'Avgift'},
+  {name:'Justeringskalkulator',desc:'Justering av inngående MVA ved bruksendring',url:'/avgift/#vat-adj-card',tags:'justering mva inngående bruksendring kapitalvare justeringsperiode mval kap 9',type:'tool',page:'Avgift'},
 
   // Selskap
   {name:'Aksjeselskap (AS)',desc:'Stiftelse, drift, ansvar og regler for aksjeselskap',url:'/selskap/',tags:'aksjeselskap as stiftelse styret generalforsamling aksjekapital vedtekter',type:'tool',page:'Selskap'},
@@ -58,12 +58,12 @@ var SEARCH_DATA = [
   {name:'Minstefradrag',desc:'Standardfradrag alle lønnsmottakere får automatisk',url:'/skatt/',tags:'minstefradrag standard fradrag lønn automatisk',type:'concept',page:'Skatt'},
   {name:'Trygdeavgift',desc:'Avgift til folketrygden — 7.9% av lønn',url:'/skatt/',tags:'trygdeavgift folketrygden nav 7.9 prosent',type:'concept',page:'Skatt'},
   {name:'Egenkapital',desc:'Minimumskapital du må ha ved boligkjøp (15%)',url:'/boliglan/',tags:'egenkapital 15 prosent boligkjøp krav bank',type:'concept',page:'Boliglån'},
-  {name:'BSU — Boligsparing for ungdom',desc:'Skattefradrag på 20% av innskudd, maks 27 500 kr/år',url:'/boliglan/#bsu',tags:'bsu boligsparing ungdom skattefradrag 20 prosent sparing bolig',type:'concept',page:'Boliglån'},
+  {name:'BSU — Boligsparing for ungdom',desc:'Skattefradrag på 20% av innskudd, maks 27 500 kr/år',url:'/boliglan/#mor-wrapper',tags:'bsu boligsparing ungdom skattefradrag 20 prosent sparing bolig',type:'concept',page:'Boliglån'},
   {name:'Gjeldsgrad',desc:'Forholdet mellom total gjeld og bruttoinntekt (maks 5x)',url:'/boliglan/',tags:'gjeldsgrad gjeld inntekt 5 ganger krav bank boliglån',type:'concept',page:'Boliglån'},
   {name:'Stresstest',desc:'Banken tester om du tåler 3 prosentpoeng renteøkning',url:'/boliglan/',tags:'stresstest rente økning bank test tåle boliglån',type:'concept',page:'Boliglån'},
-  {name:'Aksjonærmodellen',desc:'Modell for beskatning av utbytte til personlige aksjonærer',url:'/skatt/#utdeling',tags:'aksjonærmodellen utbytte skjermingsfradrag oppjusteringsfaktor aksjonær',type:'concept',page:'Skatt'},
-  {name:'Foretaksmodellen',desc:'Modell for beskatning av enkeltpersonforetak',url:'/skatt/#utdeling',tags:'foretaksmodellen enkeltpersonforetak enk selvstending næring',type:'concept',page:'Skatt'},
-  {name:'Verdsettelsesrabatt',desc:'Rabatt på formuesverdi for aksjer, bolig og driftsmidler',url:'/skatt/#formue',tags:'verdsettelsesrabatt formue aksjer bolig rabatt reduksjon',type:'concept',page:'Skatt'},
+  {name:'Aksjonærmodellen',desc:'Modell for beskatning av utbytte til personlige aksjonærer',url:'/skatt/#sal-utdeling-card',tags:'aksjonærmodellen utbytte skjermingsfradrag oppjusteringsfaktor aksjonær',type:'concept',page:'Skatt'},
+  {name:'Foretaksmodellen',desc:'Modell for beskatning av enkeltpersonforetak',url:'/skatt/#sal-utdeling-card',tags:'foretaksmodellen enkeltpersonforetak enk selvstending næring',type:'concept',page:'Skatt'},
+  {name:'Verdsettelsesrabatt',desc:'Rabatt på formuesverdi for aksjer, bolig og driftsmidler',url:'/skatt/#formue-wrapper',tags:'verdsettelsesrabatt formue aksjer bolig rabatt reduksjon',type:'concept',page:'Skatt'},
   {name:'Saldoavskrivning',desc:'Skattemessig avskrivning med fast prosent av restverdi',url:'/kalkulator/#avs',tags:'saldoavskrivning skattemessig avskrivning saldo degressiv restverdi saldogruppe',type:'concept',page:'Kalkulator'},
   {name:'OTP — Obligatorisk tjenestepensjon',desc:'Arbeidsgiver må spare minst 2% av lønn over 1G til pensjon',url:'/kalkulator/#aga',tags:'otp obligatorisk tjenestepensjon arbeidsgiver 2 prosent 1g pensjon',type:'concept',page:'Kalkulator'},
   {name:'Arbeidsgiveravgift (AGA)',desc:'Avgift arbeidsgiver betaler på lønn — varierer etter sone',url:'/kalkulator/#aga',tags:'arbeidsgiveravgift aga sone avgift arbeidsgiver lønn 14.1',type:'concept',page:'Kalkulator'},
@@ -97,14 +97,14 @@ var SEARCH_DATA = [
 
 /* ─── Foreslåtte (popular searches) ─── */
 var SUGGESTED = [
-  {label:'Lønn etter skatt', url:'/skatt/'},
-  {label:'Boliglån',         url:'/boliglan/'},
-  {label:'BSU',              url:'/boliglan/#bsu'},
-  {label:'MVA',              url:'/avgift/'},
-  {label:'Bilkostnad',       url:'/personlig/#bil'},
+  {label:'Lønn etter skatt', url:'/skatt/#sal-salary-card'},
+  {label:'Boliglån',         url:'/boliglan/#mor-wrapper'},
+  {label:'BSU',              url:'/boliglan/#mor-wrapper'},
+  {label:'MVA',              url:'/avgift/#vat-wrapper'},
+  {label:'Bilkostnad',       url:'/personlig/#bil-wrapper'},
   {label:'Feriepenger',      url:'/kalkulator/#ferie'},
-  {label:'Budsjett',         url:'/personlig/#budsjett'},
-  {label:'Studielån',        url:'/personlig/#studielan'}
+  {label:'Budsjett',         url:'/personlig/#budsjett-wrapper'},
+  {label:'Studielån',        url:'/personlig/#studie-wrapper'}
 ];
 
 /* ─── Type labels and icons ─── */
@@ -180,12 +180,14 @@ function search(q){
 
 /* ─── Build and inject the search bar ─── */
 function initSearch(){
-  var hero = document.querySelector('.hero .container .hero-inner > div');
-  if(!hero) return;
-
-  // Find the second dash rule to insert before
-  var dashRule2 = document.getElementById('hero-dash-rule2');
-  if(!dashRule2) return;
+  // Insert search bar before the tools grid in the dashboard
+  var toolsTitle = document.getElementById('dash-tools-title');
+  if(!toolsTitle){
+    // Fallback for non-index pages: insert in hero
+    var dashRule2 = document.getElementById('hero-dash-rule2');
+    if(!dashRule2) return;
+    var fallbackParent = dashRule2.parentNode;
+  }
 
   // Create search container
   var wrap = document.createElement('div');
@@ -199,7 +201,11 @@ function initSearch(){
     '<div class="search-dropdown" id="search-dropdown"></div>' +
     '<div class="search-suggestions" id="search-suggestions"></div>';
 
-  dashRule2.parentNode.insertBefore(wrap, dashRule2);
+  if(toolsTitle){
+    toolsTitle.parentNode.insertBefore(wrap, toolsTitle);
+  } else {
+    fallbackParent.insertBefore(wrap, document.getElementById('hero-dash-rule2'));
+  }
 
   var input    = document.getElementById('search-input');
   var dropdown = document.getElementById('search-dropdown');

@@ -5086,6 +5086,8 @@ function _initPageReady(){
     sel.addEventListener('focus',function(){setTimeout(function(){scrollToEl(sel);},150);});
   });
   // Handle hash-based deep links (cross-page navigation)
+  initDesktopFocus();
+  initMobileFocus();
   var hash=window.location.hash.replace('#','');
   if(hash){
     setTimeout(function(){
@@ -5099,7 +5101,22 @@ function _initPageReady(){
           var body=lawGroup.querySelector('.law-group-body');
           if(body){body.style.maxHeight='none';}
         }
-        setTimeout(function(){smartScroll(el);},200);
+        // Auto-focus the card if it's an info-card
+        var card=el.classList.contains('info-card')?el:el.closest&&el.closest('.info-card');
+        if(card){
+          setTimeout(function(){
+            if(_isMobile()){
+              enterMobileFocus(card);
+            } else {
+              var idx=_getColIndex(card);
+              toggleDesktopFocus(idx);
+              if(card.classList.contains('collapsed')) toggleCard(card);
+              setTimeout(function(){smartScroll(card);},250);
+            }
+          },100);
+        } else {
+          setTimeout(function(){smartScroll(el);},200);
+        }
       }
       // Handle mode hashes like #lvu, #avs
       if(typeof switchCalcMode==='function'){
@@ -5108,6 +5125,4 @@ function _initPageReady(){
       }
     },300);
   }
-  initDesktopFocus();
-  initMobileFocus();
 }
