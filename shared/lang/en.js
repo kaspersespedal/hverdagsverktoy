@@ -691,5 +691,113 @@ REGIONS['en'] = {
       +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Foundation</div>'
       +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">An independent asset without owners — established for a specific purpose (charity, research, culture). No one can withdraw profit. Governed by a board according to bylaws. Requirement: minimum 100,000 kr base capital. Regulated by the Foundation Act (LOV-2001-06-15-59).</div>'
       +'</div>'
-      +'</div>'
+      +'</div>',
+
+    // ═══ LAWS — AKSJELOVEN & SELSKAPSLOVEN ═══
+
+    selLawGroupTitle:'Norwegian Companies Act and Partnership Act',
+    selLawGroupDesc:'Legal rules for AS, ANS, DA and KS',
+    selLawLabelAsl:'Companies Act (Aksjeloven)',
+    selLawLabelSel:'Partnership Act (Selskapsloven)',
+    selLawHint:'Click a section reference (§) to view the legal text on Lovdata',
+
+    selAslStiftTitle:'Formation (Ch. 2)',
+    selAslStiftDesc:'Founding document · Share capital · Articles of association',
+    selAslStiftRows:[
+      ['What is needed to form an AS?','A founding document signed by all subscribers, including articles of association, share capital and board election.','asl. § 2-1'],
+      ['What must the articles contain?','Company name, municipality, nature of business, share capital amount and par value of shares.','asl. § 2-2'],
+      ['Minimum share capital','NOK 30,000 (reduced from 100,000 in 2012).','asl. § 3-1'],
+      ['Non-cash contributions','Possible with assets in kind, but must be documented with auditor confirmation.','asl. § 2-4 and § 2-6'],
+      ['When is the company formed?','When the founding document is signed by all founders. The company has no legal rights until registered in the Register of Business Enterprises.','asl. § 2-9 and § 2-18'],
+      ['Deadline for registration','Within 3 months of signing the founding document, otherwise the formation lapses.','asl. § 2-18']
+    ],
+
+    selAslKapitalTitle:'Share capital and distributions (Ch. 3 and 8)',
+    selAslKapitalDesc:'Capital increase · Dividends · Adequacy requirement',
+    selAslKapitalRows:[
+      ['Capital increase','Resolved by the general meeting with 2/3 majority. Can be done by new subscription, bonus issue or merger.','asl. § 10-1'],
+      ['Capital reduction','Can be used to cover losses, distribute to shareholders or transfer to reserves. Requires creditor notice.','asl. § 12-1'],
+      ['Dividends — main rule','The company may distribute dividends from net profit or distributable equity, resolved by the general meeting.','asl. § 8-1'],
+      ['Adequacy requirement','The company must at all times have equity and liquidity adequate for its risk and scope of operations.','asl. § 3-4'],
+      ['Duty to act on low equity','The board must immediately address the matter and convene a general meeting if equity is inadequately low.','asl. § 3-5'],
+      ['Dividend basis','Net assets minus restricted equity (share capital, unrealised gains reserve). Loans to shareholders are deducted.','asl. § 8-1 (2)-(4)'],
+      ['Extraordinary dividend','The board may distribute extraordinary dividends based on an interim balance sheet without waiting for the annual general meeting.','asl. § 8-2a']
+    ],
+
+    selAslLedelseTitle:'Management and organisation (Ch. 6)',
+    selAslLedelseDesc:'Board · Managing director · General meeting',
+    selAslLedelseRows:[
+      ['Board duties','Manage the company, ensure proper organisation, supervise day-to-day management and the company\'s operations.','asl. § 6-12'],
+      ['Board composition','Minimum 1 board member for share capital ≤ 3 million kr, otherwise minimum 3. Employee representation required above 30 employees.','asl. § 6-1'],
+      ['Managing director','Not required if share capital is below 3 million kr. May be elected by the board.','asl. § 6-2'],
+      ['General meeting','The company\'s supreme body. Held within 6 months after the end of the financial year. Approves annual accounts, dividends and board elections.','asl. § 5-1 and § 5-5'],
+      ['Board member disqualification','A board member may not participate in matters where they have a personal interest conflicting with the company\'s.','asl. § 6-27'],
+      ['Board liability','Board members who intentionally or negligently cause loss to the company may be held personally liable.','asl. § 17-1']
+    ],
+
+    selAslAksjerTitle:'Shares and transfer (Ch. 4)',
+    selAslAksjerDesc:'Shareholder register · Pre-emption rights · Consent',
+    selAslAksjerRows:[
+      ['Shareholder register','The company must keep a register of all shares with the owner\'s name and address. Must be publicly accessible.','asl. § 4-5'],
+      ['Pre-emption rights','Shareholders have pre-emption rights on share transfers, unless the articles provide otherwise.','asl. § 4-19'],
+      ['Board consent for transfer','Acquisition of shares requires board consent, unless the articles provide otherwise.','asl. § 4-15'],
+      ['Share transfer','Shares are transferred by notice to the company. The acquirer gains rights from the time the acquisition is notified.','asl. § 4-12'],
+      ['Compulsory redemption','A shareholder may demand redemption in case of substantial abuse of position by the majority.','asl. § 4-24'],
+      ['Own shares','The company may acquire up to 10% of its own shares under authorisation from the general meeting.','asl. § 9-2']
+    ],
+
+    selAslFusjonTitle:'Merger, demerger and dissolution (Ch. 13–16)',
+    selAslFusjonDesc:'Merger · Demerger · Winding up',
+    selAslFusjonRows:[
+      ['Merger','One company takes over another. Requires a merger plan, 2/3 majority in both companies and 6-week creditor notice.','asl. § 13-3 and § 13-14'],
+      ['Demerger','A company is split into two or more. Values can be transferred to a new or existing company.','asl. § 14-2'],
+      ['Tax-free merger/demerger','If carried out under the Companies Act rules, merger and demerger can occur with tax continuity (no immediate taxation).','sktl. § 11-2 and § 11-4'],
+      ['Dissolution','The general meeting resolves dissolution with 2/3 majority. The board notifies the Register of Business Enterprises.','asl. § 16-1'],
+      ['Liquidation board','The board serves as liquidation board and must settle liabilities, realise assets and distribute net proceeds to shareholders.','asl. § 16-2 and § 16-9'],
+      ['Creditor notice','Upon dissolution, creditors must be notified with a 6-week deadline in the Brønnøysund Register\'s official gazette.','asl. § 16-4']
+    ],
+
+    selSelGrunnTitle:'Basic rules for general partnerships (Ch. 2)',
+    selSelGrunnDesc:'Partnership agreement · Liability · Partners',
+    selSelGrunnRows:[
+      ['What is a general partnership?','Two or more partners conduct business together, and at least one is unlimitedly liable for the company\'s obligations.','sel. § 1-2'],
+      ['ANS vs DA','In ANS all partners are jointly liable for all debts. In DA each partner is liable pro rata — i.e. for their share of the debt.','sel. § 1-2 (1) b and c'],
+      ['Partnership agreement','All general partnerships must have a written partnership agreement specifying partners, contributions and profit/loss distribution.','sel. § 2-3'],
+      ['Minimum number of partners','At least 2 partners. The company is dissolved if only one partner remains for more than 6 months.','sel. § 1-2 and § 2-37'],
+      ['Partner liability — unlimited','Partners in ANS/DA are personally liable beyond their contributions. Creditors can claim directly from partners (ANS) or pro rata (DA).','sel. § 2-4'],
+      ['Partnership assets','Partners\' contributions and other company assets form the partnership\'s assets. Partners may not withdraw values that weaken creditor coverage.','sel. § 2-7']
+    ],
+
+    selSelInternTitle:'Internal organisation (Ch. 2)',
+    selSelInternDesc:'Partnership meeting · Management · Surplus',
+    selSelInternRows:[
+      ['Partnership meeting','Supreme authority in a general partnership. All partners have the right to attend. Decisions require unanimity unless otherwise agreed.','sel. § 2-8'],
+      ['Majority requirements','Ordinary decisions require unanimity. Special decisions (amending the partnership agreement) require consent from all.','sel. § 2-12 and § 2-13'],
+      ['Partners\' management rights','Each partner has the right and duty to participate in managing the partnership, unless otherwise agreed.','sel. § 2-16'],
+      ['Profit and loss','Distributed equally among partners unless the partnership agreement provides otherwise.','sel. § 2-25 and § 2-26'],
+      ['Withdrawals','A partner may withdraw funds in accordance with the partnership agreement or decisions at the partnership meeting.','sel. § 2-26'],
+      ['Accounting and audit','General partnerships with sales revenue over 5 million kr are subject to accounting obligations. Above certain thresholds, an auditor is required.','Accounting Act § 1-2 and Auditor Act § 2-1']
+    ],
+
+    selSelKsTitle:'Limited partnerships (Ch. 3)',
+    selSelKsDesc:'General partner · Limited partner · Liability',
+    selSelKsRows:[
+      ['What is a limited partnership?','A company with at least one general partner (unlimited liability) and at least one limited partner (liability limited to contribution).','sel. § 3-1'],
+      ['General partner\'s role','Has unlimited personal liability and manages the company\'s business. Often an AS serves as general partner.','sel. § 3-1 and § 3-9'],
+      ['Limited partner\'s liability','Liable only for agreed contribution. Cannot participate in management without losing the limitation.','sel. § 3-1 and § 3-7'],
+      ['Contribution requirement','The limited partner must pay agreed contribution. The contribution cannot be set below NOK 20,000 per limited partner.','sel. § 3-1 (2)'],
+      ['Management in KS','The general partner manages the company. The limited partner may attend partnership meetings but has no management rights without agreement.','sel. § 3-9'],
+      ['Partner taxation','KS is taxed through partner taxation — profit/loss is taxed directly with the partners, not in the company.','sktl. § 10-40 ff.']
+    ],
+
+    selSelOpplosTitle:'Withdrawal and dissolution (Ch. 2)',
+    selSelOpplosDesc:'Buyout · Resignation · Winding up',
+    selSelOpplosRows:[
+      ['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],
+      ['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],
+      ['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],
+      ['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],
+      ['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],
+      ['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 ff.']
+    ]
 };

@@ -686,5 +686,113 @@ REGIONS['lt'] = {
       +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Fondas</div>'
       +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Atskira turto masė be savininkų — steigta tam tikram tikslui (filantropija, mokslas, kultūra). Niekas negali paimti pertekliaus. Vadovaujama valdymo organo pagal reglamentą. Reikalavimai: mažiausiai 100 000 kr pradžios kapitalas. Reguliuojama fondo įstatymu (LOV-2001-06-15-59).</div>'
       +'</div>'
-      +'</div>'
+      +'</div>',
+
+    // ═══ TEISĖ — AKSJELOVEN & SELSKAPSLOVEN ═══
+
+    selLawGroupTitle:'Aksjeloven ir Selskapsloven',
+    selLawGroupDesc:'Teisinės normos AS, ANS, DA ir KS',
+    selLawLabelAsl:'Aksjeloven (Akcinių bendrovių įstatymas)',
+    selLawLabelSel:'Selskapsloven (Partnerysčių įstatymas)',
+    selLawHint:'Spustelėkite paragrafo nuorodą (§), kad peržiūrėtumėte teisės tekstą Lovdata',
+
+    selAslStiftTitle:'Steigimas (sk. 2)',
+    selAslStiftDesc:'Steigimo dokumentas · Akcinis kapitalas · Įstatai',
+    selAslStiftRows:[
+      ['Ko reikia norint įsteigti AS?','Steigimo dokumento, pasirašyto visų steigėjų, su įstatais, akciniu kapitalu ir valdybos rinkimais.','asl. § 2-1'],
+      ['Ką turi apimti įstatai?','Įmonės pavadinimą, savivaldybę, veiklos pobūdį, akcinio kapitalo dydį ir akcijų nominalią vertę.','asl. § 2-2'],
+      ['Minimalus akcinis kapitalas','30 000 kr (sumažintas nuo 100 000 kr 2012 m.).','asl. § 3-1'],
+      ['Nepiniginiai įnašai','Galimi turtu, bet reikia dokumentuoti su auditoriaus patvirtinimu.','asl. § 2-4 ir § 2-6'],
+      ['Kada bendrovė laikoma įsteigta?','Kai steigimo dokumentą pasirašo visi steigėjai. Bendrovė neturi teisių, kol neregistruota Foretaksregisteret.','asl. § 2-9 ir § 2-18'],
+      ['Registracijos terminas','Per 3 mėnesius nuo steigimo dokumento pasirašymo, kitaip steigimas netenka galios.','asl. § 2-18']
+    ],
+
+    selAslKapitalTitle:'Akcinis kapitalas ir paskirstymai (sk. 3 ir 8)',
+    selAslKapitalDesc:'Kapitalo didinimas · Dividendai · Pakankamumo reikalavimas',
+    selAslKapitalRows:[
+      ['Kapitalo didinimas','Visuotinio akcininkų susirinkimo sprendimas 2/3 balsų dauguma. Galimas nauja emisija, premijų emisija arba susijungimas.','asl. § 10-1'],
+      ['Kapitalo mažinimas','Gali būti naudojamas nuostoliams padengti, paskirstyti akcininkams arba pervesti į rezervus. Reikia pranešti kreditoriams.','asl. § 12-1'],
+      ['Dividendai — pagrindinė taisyklė','Bendrovė gali paskirstyti dividendus iš grynojo pelno arba laisvojo nuosavo kapitalo, visuotinio susirinkimo sprendimu.','asl. § 8-1'],
+      ['Pakankamumo reikalavimas','Bendrovė visada turi turėti nuosavą kapitalą ir likvidumą, atitinkančius riziką ir veiklos apimtį.','asl. § 3-4'],
+      ['Pareiga veikti esant žemam kapitalui','Valdyba turi nedelsiant svarstyti reikalą ir sušaukti visuotinį susirinkimą, jei nuosavas kapitalas nepriimtinai žemas.','asl. § 3-5'],
+      ['Dividendų bazė','Grynieji aktyvai minus susietas kapitalas (akcinis kapitalas, nerealizuoto pelno rezervas). Paskolos akcininkams atimamos.','asl. § 8-1 (2)-(4)'],
+      ['Neeilinis dividendas','Valdyba gali paskirstyti neeilinį dividendą pagal tarpinę ataskaitą, nelaukiant metinio visuotinio susirinkimo.','asl. § 8-2a']
+    ],
+
+    selAslLedelseTitle:'Valdymas ir organizavimas (sk. 6)',
+    selAslLedelseDesc:'Valdyba · Direktorius · Visuotinis susirinkimas',
+    selAslLedelseRows:[
+      ['Valdybos pareigos','Valdyti bendrovę, užtikrinti tinkamą organizavimą, prižiūrėti kasdienį valdymą ir bendrovės veiklą.','asl. § 6-12'],
+      ['Valdybos sudėtis','Mažiausiai 1 valdybos narys kapitalui ≤ 3 mln kr, kitaip mažiausiai 3. Darbuotojų atstovavimas esant > 30 darbuotojų.','asl. § 6-1'],
+      ['Direktorius','Neprivalomas, jei akcinis kapitalas mažesnis nei 3 mln kr. Gali būti išrinktas valdybos.','asl. § 6-2'],
+      ['Visuotinis susirinkimas','Aukščiausias bendrovės organas. Vyksta per 6 mėnesius po finansinių metų pabaigos. Tvirtina metinę ataskaitą, dividendus ir valdybos rinkimus.','asl. § 5-1 ir § 5-5'],
+      ['Valdybos nario nušalinimas','Valdybos narys negali dalyvauti svarstant klausimus, kuriuose turi asmeninį interesą, prieštaraujantį bendrovės interesams.','asl. § 6-27'],
+      ['Valdybos atsakomybė','Valdybos nariai, tyčia ar neatsargiai padarę bendrovei nuostolių, gali būti asmeniškai atsakingi.','asl. § 17-1']
+    ],
+
+    selAslAksjerTitle:'Akcijos ir apyvarta (sk. 4)',
+    selAslAksjerDesc:'Akcininkų registras · Pirmenybės teisė · Sutikimas',
+    selAslAksjerRows:[
+      ['Akcininkų registras','Bendrovė turi vesti visų akcijų registrą su savininko vardu ir adresu. Turi būti viešai prieinamas.','asl. § 4-5'],
+      ['Pirmenybės teisė','Akcininkai turi pirmenybės teisę parduodant akcijas, nebent įstatai nustato kitaip.','asl. § 4-19'],
+      ['Valdybos sutikimas perleisti','Akcijų įsigijimui reikia valdybos sutikimo, nebent įstatai nustato kitaip.','asl. § 4-15'],
+      ['Akcijų perleidimas','Akcijos perleidžiamos pranešus bendrovei. Įgijėjas gauna teises nuo pranešimo apie įsigijimą momento.','asl. § 4-12'],
+      ['Priverstinis išpirkimas','Akcininkas gali reikalauti išpirkimo esant reikšmingam daugumos piktnaudžiavimui pozicija.','asl. § 4-24'],
+      ['Savos akcijos','Bendrovė gali įsigyti iki 10% savų akcijų visuotinio susirinkimo įgaliojimu.','asl. § 9-2']
+    ],
+
+    selAslFusjonTitle:'Susijungimas, padalijimas ir likvidavimas (sk. 13–16)',
+    selAslFusjonDesc:'Susijungimas · Padalijimas · Likvidavimas',
+    selAslFusjonRows:[
+      ['Susijungimas','Viena bendrovė perima kitą. Reikia susijungimo plano, 2/3 daugumos abiejose bendrovėse ir 6 savaičių pranešimo kreditoriams.','asl. § 13-3 ir § 13-14'],
+      ['Padalijimas','Bendrovė dalijama į dvi ar daugiau. Vertės gali būti perkeltos į naują arba esamą bendrovę.','asl. § 14-2'],
+      ['Neapmokestinamas susijungimas/padalijimas','Vykdomas pagal Aksjeloven taisykles, susijungimas ir padalijimas gali vykti su mokestiniu tęstinumu (be skubaus apmokestinimo).','sktl. § 11-2 ir § 11-4'],
+      ['Likvidavimas','Visuotinis susirinkimas priima sprendimą dėl likvidavimo 2/3 dauguma. Valdyba praneša Foretaksregisteret.','asl. § 16-1'],
+      ['Likvidacinė komisija','Valdyba veikia kaip likvidacinė komisija ir turi atsiskaityti su įsipareigojimais, realizuoti turtą ir paskirstyti grynąsias pajamas akcininkams.','asl. § 16-2 ir § 16-9'],
+      ['Pranešimas kreditoriams','Likviduojant kreditoriai turi būti informuoti su 6 savaičių terminu Brønnøysundregistrene publikacijoje.','asl. § 16-4']
+    ],
+
+    selSelGrunnTitle:'Pagrindinės tikrųjų ūkinių bendrijų taisyklės (sk. 2)',
+    selSelGrunnDesc:'Bendrijos sutartis · Atsakomybė · Dalininkai',
+    selSelGrunnRows:[
+      ['Kas yra tikroji ūkinė bendrija?','Du ar daugiau dalininkai kartu vykdo veiklą, ir bent vienas neribotai atsako už bendrijos įsipareigojimus.','sel. § 1-2'],
+      ['ANS vs DA','ANS visi dalininkai solidariai atsako už visą skolą. DA kiekvienas dalininkas atsako proporcingai — t.y. už savo dalį skolos.','sel. § 1-2 (1) b ir c'],
+      ['Bendrijos sutartis','Visos tikrosios ūkinės bendrijos turi turėti rašytinę sutartį, nurodančią dalininkus, įnašus ir pelno/nuostolių paskirstymą.','sel. § 2-3'],
+      ['Minimalus dalininkų skaičius','Mažiausiai 2 dalininkai. Bendrija likviduojama, jei lieka tik vienas dalininkas ilgiau nei 6 mėnesius.','sel. § 1-2 ir § 2-37'],
+      ['Dalininkų atsakomybė — neribota','ANS/DA dalininkai asmeniškai atsako virš savo įnašų. Kreditoriai gali reikalauti tiesiogiai iš dalininkų (ANS) arba proporcingai (DA).','sel. § 2-4'],
+      ['Bendrijos turtas','Dalininkų įnašai ir kitas bendrijos turtas sudaro bendrijos turtą. Dalininkai negali išimti vertybių, silpninančių kreditorių dengimą.','sel. § 2-7']
+    ],
+
+    selSelInternTitle:'Vidinis organizavimas (sk. 2)',
+    selSelInternDesc:'Dalininkų susirinkimas · Valdymas · Perteklius',
+    selSelInternRows:[
+      ['Dalininkų susirinkimas','Aukščiausia valdžia tikrojoje ūkinėje bendrijoje. Visi dalininkai turi teisę dalyvauti. Sprendimai reikalauja vienbalsiškumo, nebent susitarta kitaip.','sel. § 2-8'],
+      ['Daugumos reikalavimai','Paprastiems sprendimams reikia vienbalsiškumo. Specialiems sprendimams (sutarties pakeitimas) reikia visų sutikimo.','sel. § 2-12 ir § 2-13'],
+      ['Dalininkų valdymo teisė','Kiekvienas dalininkas turi teisę ir pareigą dalyvauti valdant bendriją, nebent susitarta kitaip.','sel. § 2-16'],
+      ['Pelnas ir nuostoliai','Paskirstomi po lygiai tarp dalininkų, nebent bendrijos sutartis nustato kitaip.','sel. § 2-25 ir § 2-26'],
+      ['Išėmimai','Dalininkas gali išimti lėšas pagal bendrijos sutartį arba dalininkų susirinkimo sprendimus.','sel. § 2-26'],
+      ['Apskaita ir auditas','Tikrosios ūkinės bendrijos su pardavimo pajamomis virš 5 mln kr privalo vesti apskaitą. Virš tam tikrų ribų reikia auditoriaus.','regnskapsloven § 1-2 ir revisorloven § 2-1']
+    ],
+
+    selSelKsTitle:'Komanditinė ūkinė bendrija (sk. 3)',
+    selSelKsDesc:'Tikrasis narys · Komanditas · Atsakomybė',
+    selSelKsRows:[
+      ['Kas yra komanditinė ūkinė bendrija?','Bendrija su bent vienu tikruoju nariu (neribota atsakomybė) ir bent vienu komanditu (atsakomybė ribota įnašu).','sel. § 3-1'],
+      ['Tikrojo nario vaidmuo','Turi neribotą asmeninę atsakomybę ir valdo bendrijos veiklą. Dažnai AS yra tikrasis narys.','sel. § 3-1 ir § 3-9'],
+      ['Komandito atsakomybė','Atsako tik už sutartą įnašą. Negali dalyvauti valdyme neprarasdamas apribojimo.','sel. § 3-1 ir § 3-7'],
+      ['Įnašo reikalavimas','Komanditas turi sumokėti sutartą įnašą. Įnašas negali būti mažesnis nei 20 000 kr vienam komanditui.','sel. § 3-1 (2)'],
+      ['Valdymas KS','Tikrasis narys valdo bendriją. Komanditas gali dalyvauti susirinkimuose, bet neturi valdymo teisės be susitarimo.','sel. § 3-9'],
+      ['Dalininkų apmokestinimas','KS apmokestinamas per dalininkų apmokestinimą — pelnas/nuostoliai apmokestinami tiesiogiai dalininkams, ne bendrijoje.','sktl. § 10-40 flg.']
+    ],
+
+    selSelOpplosTitle:'Pasitraukimas ir likvidavimas (sk. 2)',
+    selSelOpplosDesc:'Išpirkimas · Atsistatydinimas · Likvidavimas',
+    selSelOpplosRows:[
+      ['Atsistatydinimas','Dalininkas gali atsistatydinti su 6 mėnesių įspėjimu iki finansinių metų pabaigos, nebent susitarta kitaip.','sel. § 2-32'],
+      ['Išpirkimas','Dalininkas gali reikalauti išpirkimo esant reikšmingam kitų dalininkų pažeidimui arba dėl kitų svarbių priežasčių.','sel. § 2-32 (2)'],
+      ['Vertinimas pasitraukiant','Išpirkimo suma nustatoma pagal dalies tikrąją vertę, nebent bendrijos sutartis nustato kitaip.','sel. § 2-33'],
+      ['Likvidavimas vieningai sutikus','Dalininkų susirinkimas gali priimti sprendimą dėl likvidavimo, jei visi dalininkai sutinka.','sel. § 2-37'],
+      ['Likvidavimas teismo sprendimu','Teismas gali likviduoti bendriją, jei yra svarių priežasčių, pvz., nuolatinės bendradarbiavimo problemos.','sel. § 2-38'],
+      ['Likvidavimo procesas','Likviduojant atsiskaitoma su įsipareigojimais, realizuojamas turtas ir grynasis rezultatas paskirstomas tarp dalininkų.','sel. § 2-39 flg.']
+    ]
 };

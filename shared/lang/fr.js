@@ -682,6 +682,114 @@ REGIONS['fr'] = {
       +'</div>'
       +'</div>',
 
+    // ═══ LÉGISLATION — AKSJELOVEN & SELSKAPSLOVEN ═══
+
+    selLawGroupTitle:'Aksjeloven et Selskapsloven',
+    selLawGroupDesc:'Règles juridiques pour les AS, ANS, DA et KS',
+    selLawLabelAsl:'Aksjeloven (Loi sur les sociétés anonymes)',
+    selLawLabelSel:'Selskapsloven (Loi sur les sociétés de personnes)',
+    selLawHint:'Cliquez sur une référence de paragraphe (§) pour voir le texte juridique sur Lovdata',
+
+    selAslStiftTitle:'Constitution (ch. 2)',
+    selAslStiftDesc:'Document de constitution · Capital social · Statuts',
+    selAslStiftRows:[
+      ['Que faut-il pour constituer une AS ?','Un document de constitution signé par tous les fondateurs, comprenant les statuts, le capital social et l\'élection du conseil.','asl. § 2-1'],
+      ['Que doivent contenir les statuts ?','Le nom de l\'entreprise, la commune, la nature de l\'activité, le montant du capital social et la valeur nominale des actions.','asl. § 2-2'],
+      ['Capital social minimum','30 000 kr (réduit de 100 000 kr en 2012).','asl. § 3-1'],
+      ['Apports en nature','Possibles avec des biens, mais nécessitent une documentation avec confirmation de l\'auditeur.','asl. § 2-4 et § 2-6'],
+      ['Quand la société est-elle constituée ?','Lorsque le document de constitution est signé par tous les fondateurs. La société n\'a pas de droits tant qu\'elle n\'est pas enregistrée au Foretaksregisteret.','asl. § 2-9 et § 2-18'],
+      ['Délai d\'enregistrement','Dans les 3 mois suivant la signature du document de constitution, sinon la constitution est caduque.','asl. § 2-18']
+    ],
+
+    selAslKapitalTitle:'Capital social et distributions (ch. 3 et 8)',
+    selAslKapitalDesc:'Augmentation de capital · Dividendes · Exigence de suffisance',
+    selAslKapitalRows:[
+      ['Augmentation de capital','Décision de l\'assemblée générale à la majorité des 2/3. Possible par nouvelle souscription, émission gratuite ou fusion.','asl. § 10-1'],
+      ['Réduction de capital','Peut être utilisée pour couvrir des pertes, distribuer aux actionnaires ou transférer en réserves. Nécessite un avis aux créanciers.','asl. § 12-1'],
+      ['Dividendes — règle principale','La société peut distribuer des dividendes sur le bénéfice net ou les fonds propres distribuables, par décision de l\'assemblée générale.','asl. § 8-1'],
+      ['Exigence de suffisance','La société doit toujours avoir des fonds propres et une liquidité adaptés au risque et à l\'ampleur des opérations.','asl. § 3-4'],
+      ['Obligation d\'agir en cas de fonds propres insuffisants','Le conseil doit traiter immédiatement la question et convoquer l\'assemblée générale si les fonds propres sont insuffisants.','asl. § 3-5'],
+      ['Base de dividendes','Actifs nets moins fonds propres liés (capital social, réserve de gains non réalisés). Les prêts aux actionnaires sont déduits.','asl. § 8-1 (2)-(4)'],
+      ['Dividende extraordinaire','Le conseil peut distribuer un dividende extraordinaire basé sur un bilan intermédiaire sans attendre l\'assemblée générale annuelle.','asl. § 8-2a']
+    ],
+
+    selAslLedelseTitle:'Direction et organisation (ch. 6)',
+    selAslLedelseDesc:'Conseil · Directeur général · Assemblée générale',
+    selAslLedelseRows:[
+      ['Devoirs du conseil','Gérer la société, assurer une organisation adéquate, superviser la gestion quotidienne et les opérations de la société.','asl. § 6-12'],
+      ['Composition du conseil','Minimum 1 membre du conseil pour capital ≤ 3 millions kr, sinon minimum 3. Représentation des employés au-delà de 30 employés.','asl. § 6-1'],
+      ['Directeur général','Non requis si le capital social est inférieur à 3 millions kr. Peut être élu par le conseil.','asl. § 6-2'],
+      ['Assemblée générale','Organe suprême de la société. Tenue dans les 6 mois suivant la fin de l\'exercice. Approuve les comptes annuels, les dividendes et les élections du conseil.','asl. § 5-1 et § 5-5'],
+      ['Conflit d\'intérêts au conseil','Un membre du conseil ne peut participer aux affaires dans lesquelles il a un intérêt personnel contraire à celui de la société.','asl. § 6-27'],
+      ['Responsabilité du conseil','Les membres du conseil qui causent intentionnellement ou par négligence un préjudice à la société peuvent être tenus personnellement responsables.','asl. § 17-1']
+    ],
+
+    selAslAksjerTitle:'Actions et transfert (ch. 4)',
+    selAslAksjerDesc:'Registre des actionnaires · Droit de préemption · Consentement',
+    selAslAksjerRows:[
+      ['Registre des actionnaires','La société doit tenir un registre de toutes les actions avec le nom et l\'adresse du propriétaire. Doit être accessible au public.','asl. § 4-5'],
+      ['Droit de préemption','Les actionnaires ont un droit de préemption lors du transfert d\'actions, sauf disposition contraire des statuts.','asl. § 4-19'],
+      ['Consentement du conseil pour le transfert','L\'acquisition d\'actions nécessite le consentement du conseil, sauf disposition contraire des statuts.','asl. § 4-15'],
+      ['Transfert d\'actions','Les actions sont transférées par notification à la société. L\'acquéreur obtient des droits à partir du moment de la notification.','asl. § 4-12'],
+      ['Rachat forcé','Un actionnaire peut demander le rachat en cas d\'abus substantiel de position par la majorité.','asl. § 4-24'],
+      ['Actions propres','La société peut acquérir jusqu\'à 10 % de ses propres actions sur autorisation de l\'assemblée générale.','asl. § 9-2']
+    ],
+
+    selAslFusjonTitle:'Fusion, scission et dissolution (ch. 13–16)',
+    selAslFusjonDesc:'Fusion · Scission · Liquidation',
+    selAslFusjonRows:[
+      ['Fusion','Une société absorbe une autre. Nécessite un plan de fusion, majorité des 2/3 dans les deux sociétés et avis aux créanciers de 6 semaines.','asl. § 13-3 et § 13-14'],
+      ['Scission','Une société est divisée en deux ou plus. Les valeurs peuvent être transférées à une société nouvelle ou existante.','asl. § 14-2'],
+      ['Fusion/scission en franchise d\'impôt','Réalisée selon les règles de l\'Aksjeloven, la fusion et la scission peuvent bénéficier de la continuité fiscale (pas d\'imposition immédiate).','sktl. § 11-2 et § 11-4'],
+      ['Dissolution','L\'assemblée générale décide la dissolution à la majorité des 2/3. Le conseil notifie le Foretaksregisteret.','asl. § 16-1'],
+      ['Comité de liquidation','Le conseil fait office de comité de liquidation et doit régler les dettes, réaliser les actifs et distribuer le solde net aux actionnaires.','asl. § 16-2 et § 16-9'],
+      ['Avis aux créanciers','Lors de la dissolution, les créanciers doivent être notifiés avec un délai de 6 semaines dans la publication du Brønnøysundregistrene.','asl. § 16-4']
+    ],
+
+    selSelGrunnTitle:'Règles de base des sociétés en nom collectif (ch. 2)',
+    selSelGrunnDesc:'Contrat de société · Responsabilité · Associés',
+    selSelGrunnRows:[
+      ['Qu\'est-ce qu\'une société en nom collectif ?','Deux ou plusieurs associés exercent une activité ensemble, et au moins un est responsable de manière illimitée des obligations de la société.','sel. § 1-2'],
+      ['ANS vs DA','Dans une ANS, tous les associés sont solidairement responsables de toutes les dettes. Dans une DA, chaque associé est responsable au prorata — c\'est-à-dire de sa part de la dette.','sel. § 1-2 (1) b et c'],
+      ['Contrat de société','Toutes les sociétés en nom collectif doivent avoir un contrat écrit précisant les associés, les apports et la répartition des bénéfices/pertes.','sel. § 2-3'],
+      ['Nombre minimum d\'associés','Au moins 2 associés. La société est dissoute s\'il ne reste qu\'un seul associé pendant plus de 6 mois.','sel. § 1-2 et § 2-37'],
+      ['Responsabilité des associés — illimitée','Les associés d\'ANS/DA sont personnellement responsables au-delà de leurs apports. Les créanciers peuvent se retourner directement contre les associés (ANS) ou au prorata (DA).','sel. § 2-4'],
+      ['Patrimoine de la société','Les apports des associés et les autres actifs de la société forment le patrimoine de la société. Les associés ne peuvent retirer des valeurs affaiblissant la couverture des créanciers.','sel. § 2-7']
+    ],
+
+    selSelInternTitle:'Organisation interne (ch. 2)',
+    selSelInternDesc:'Réunion des associés · Gestion · Excédent',
+    selSelInternRows:[
+      ['Réunion des associés','Autorité suprême dans une société en nom collectif. Tous les associés ont le droit de participer. Les décisions requièrent l\'unanimité sauf accord contraire.','sel. § 2-8'],
+      ['Exigences de majorité','Les décisions ordinaires requièrent l\'unanimité. Les décisions spéciales (modification du contrat) requièrent le consentement de tous.','sel. § 2-12 et § 2-13'],
+      ['Droit de gestion des associés','Chaque associé a le droit et le devoir de participer à la gestion de la société, sauf accord contraire.','sel. § 2-16'],
+      ['Bénéfices et pertes','Répartis également entre les associés sauf disposition contraire du contrat de société.','sel. § 2-25 et § 2-26'],
+      ['Retraits','Un associé peut retirer des fonds conformément au contrat de société ou aux décisions de la réunion des associés.','sel. § 2-26'],
+      ['Comptabilité et audit','Les sociétés en nom collectif ayant un chiffre d\'affaires supérieur à 5 millions kr sont soumises aux obligations comptables. Au-delà de certains seuils, un auditeur est requis.','regnskapsloven § 1-2 et revisorloven § 2-1']
+    ],
+
+    selSelKsTitle:'Société en commandite (ch. 3)',
+    selSelKsDesc:'Commandité · Commanditaire · Responsabilité',
+    selSelKsRows:[
+      ['Qu\'est-ce qu\'une société en commandite ?','Une société avec au moins un commandité (responsabilité illimitée) et au moins un commanditaire (responsabilité limitée à l\'apport).','sel. § 3-1'],
+      ['Rôle du commandité','A une responsabilité personnelle illimitée et gère l\'activité de la société. Souvent une AS sert de commandité.','sel. § 3-1 et § 3-9'],
+      ['Responsabilité du commanditaire','Responsable uniquement de son apport convenu. Ne peut participer à la gestion sans perdre la limitation.','sel. § 3-1 et § 3-7'],
+      ['Exigence d\'apport','Le commanditaire doit verser l\'apport convenu. L\'apport ne peut être inférieur à 20 000 kr par commanditaire.','sel. § 3-1 (2)'],
+      ['Gestion dans une KS','Le commandité gère la société. Le commanditaire peut assister aux réunions mais n\'a pas de droit de gestion sans accord.','sel. § 3-9'],
+      ['Imposition des associés','La KS est imposée par imposition des associés — les bénéfices/pertes sont imposés directement chez les associés, pas dans la société.','sktl. § 10-40 flg.']
+    ],
+
+    selSelOpplosTitle:'Retrait et dissolution (ch. 2)',
+    selSelOpplosDesc:'Rachat · Démission · Liquidation',
+    selSelOpplosRows:[
+      ['Démission','Un associé peut démissionner avec un préavis de 6 mois avant la fin de l\'exercice, sauf accord contraire.','sel. § 2-32'],
+      ['Rachat','Un associé peut demander le rachat en cas de manquement grave d\'autres associés ou pour d\'autres raisons importantes.','sel. § 2-32 (2)'],
+      ['Évaluation à la sortie','Le montant du rachat est fixé à la valeur réelle de la part, sauf disposition contraire du contrat de société.','sel. § 2-33'],
+      ['Dissolution par unanimité','La réunion des associés peut décider la dissolution si tous les associés sont d\'accord.','sel. § 2-37'],
+      ['Dissolution judiciaire','Le tribunal peut dissoudre la société si des raisons impérieuses le justifient, par exemple des problèmes de coopération persistants.','sel. § 2-38'],
+      ['Liquidation','Lors de la dissolution, la liquidation est effectuée : les dettes sont réglées, les actifs réalisés et le solde net distribué entre les associés.','sel. § 2-39 flg.']
+    ],
+
     searchPlaceholder:'Rechercher des outils, concepts ou lois…',
     searchPopular:'Suggestions',
     searchNoResults:'Aucun résultat',

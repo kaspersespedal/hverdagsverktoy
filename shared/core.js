@@ -1803,6 +1803,41 @@ function updateSelskapUI() {
   fillCard('selskap-skatt-card', 'selskapSkattTitle', 'selskapSkattDesc', 'selskapSkattBody');
   fillCard('selskap-reg-card', 'selskapRegTitle', 'selskapRegDesc', 'selskapRegBody');
   fillCard('selskap-andre-card', 'selskapAndreTitle', 'selskapAndreDesc', 'selskapAndreBody');
+
+  // ═══ LAW-GROUP: Aksjeloven & Selskapsloven ═══
+  var lg = document.getElementById('sel-law-group');
+  if(lg) {
+    var lgT = lg.querySelector('.card-title');
+    var lgD = lg.querySelector('.card-desc');
+    if(lgT && r.selLawGroupTitle) lgT.innerHTML = r.selLawGroupTitle + arrow;
+    if(lgD && r.selLawGroupDesc) lgD.textContent = r.selLawGroupDesc;
+    // Group labels
+    var _la = document.getElementById('sel-law-label-asl'); if(_la && r.selLawLabelAsl) _la.textContent = r.selLawLabelAsl;
+    var _ls = document.getElementById('sel-law-label-sel'); if(_ls && r.selLawLabelSel) _ls.textContent = r.selLawLabelSel;
+    // Law hint
+    var lawHintSel = '<div style="padding:10px 22px 6px;font-size:11.5px;font-style:italic;color:var(--ink3);opacity:.7">'+(r.selLawHint||'Klikk på en paragrafhenvisning (§) for å se lovteksten på Lovdata')+'</div>';
+    // Aksjeloven nested cards
+    function fillLawCard(cardId, rowsId, titleKey, descKey, rowsKey) {
+      var c = document.getElementById(cardId);
+      if(!c) return;
+      var t = c.querySelector('.card-title');
+      var d = c.querySelector('.card-desc');
+      if(t && r[titleKey]) t.innerHTML = r[titleKey] + arrow;
+      if(d && r[descKey]) d.textContent = r[descKey];
+      var rb = document.getElementById(rowsId);
+      if(rb && r[rowsKey]) rb.innerHTML = lawHintSel + infoRowsHTML(r[rowsKey]);
+    }
+    fillLawCard('sel-asl-stift-card','sel-asl-stift-rows','selAslStiftTitle','selAslStiftDesc','selAslStiftRows');
+    fillLawCard('sel-asl-kapital-card','sel-asl-kapital-rows','selAslKapitalTitle','selAslKapitalDesc','selAslKapitalRows');
+    fillLawCard('sel-asl-ledelse-card','sel-asl-ledelse-rows','selAslLedelseTitle','selAslLedelseDesc','selAslLedelseRows');
+    fillLawCard('sel-asl-aksjer-card','sel-asl-aksjer-rows','selAslAksjerTitle','selAslAksjerDesc','selAslAksjerRows');
+    fillLawCard('sel-asl-fusjon-card','sel-asl-fusjon-rows','selAslFusjonTitle','selAslFusjonDesc','selAslFusjonRows');
+    // Selskapsloven nested cards
+    fillLawCard('sel-sel-grunn-card','sel-sel-grunn-rows','selSelGrunnTitle','selSelGrunnDesc','selSelGrunnRows');
+    fillLawCard('sel-sel-intern-card','sel-sel-intern-rows','selSelInternTitle','selSelInternDesc','selSelInternRows');
+    fillLawCard('sel-sel-ks-card','sel-sel-ks-rows','selSelKsTitle','selSelKsDesc','selSelKsRows');
+    fillLawCard('sel-sel-opplos-card','sel-sel-opplos-rows','selSelOpplosTitle','selSelOpplosDesc','selSelOpplosRows');
+  }
 }
 
 function updateFagkalkulatorUI() {
