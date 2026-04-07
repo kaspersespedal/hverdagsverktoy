@@ -3041,6 +3041,7 @@ function calcBilkostnad() {
   var totalKm = km * aar;
   var perKm = totalKostnad / totalKm;
 
+  window._bilData={verditap:Math.round(verditap),drivTotal:Math.round(drivTotal),forsTotal:Math.round(forsTotal),serviceTotal:Math.round(serviceTotal),dekkTotal:Math.round(dekkTotal),avgiftTotal:Math.round(avgiftTotal),bomTotal:Math.round(bomTotal),totalKostnad:Math.round(totalKostnad),perKm:perKm,aar:aar};
   document.getElementById('bil-r-val').textContent = fmt(totalKostnad);
   document.getElementById('bil-r-sub').textContent = fmt(perMnd) + (r.bilPerMnd || '/mnd') + ' · ' + perKm.toFixed(1).replace('.',',') + ' ' + r.currency + '/km · ' + aar + ' ' + (r.yr || 'år');
   // Use default theme gradient (same as other calculators)
@@ -3719,16 +3720,20 @@ function calcAvs(skipScroll){
   var years=mode==='regnskap'?lifeYears:(mode==='compare'?Math.max(10,lifeYears):10);
   var tds='<td style="padding:8px 4px;font-weight:600;color:var(--ink);';
   var rows=[];
+  var _csvRows=[];
   if(mode==='skatt'){
     rows.push('<tr style="border-bottom:1px solid var(--border);">'+tds+'">'+(_y(r))+'</td>'+tds+'text-align:right;">'+(_s(r))+'</td>'+tds+'text-align:right;">'+(_d(r))+'</td>'+tds+'text-align:right;">'+(_e(r))+'</td></tr>');
-    var remaining=price;for(var i=1;i<=10;i++){var depr=remaining*taxRate;var newR=remaining-depr;rows.push(_row(i,fmt(remaining),fmt(depr),fmt(newR)));remaining=newR;}
+    var remaining=price;for(var i=1;i<=10;i++){var depr=remaining*taxRate;var newR=remaining-depr;rows.push(_row(i,fmt(remaining),fmt(depr),fmt(newR)));_csvRows.push([i,Math.round(remaining),Math.round(depr),Math.round(newR)]);remaining=newR;}
+    window._avsData={headers:[_y(r),_s(r),_d(r),_e(r)],rows:_csvRows};
   }else if(mode==='regnskap'){
     rows.push('<tr style="border-bottom:1px solid var(--border);">'+tds+'">'+(_y(r))+'</td>'+tds+'text-align:right;">'+(_s(r))+'</td>'+tds+'text-align:right;">'+(_d(r))+'</td>'+tds+'text-align:right;">'+(_e(r))+'</td></tr>');
-    var bookVal=price;for(var i=1;i<=lifeYears;i++){var depr=Math.min(annualLinear,bookVal-scrapValue);if(depr<=0)break;var newBV=bookVal-depr;rows.push(_row(i,fmt(bookVal),fmt(depr),fmt(newBV)));bookVal=newBV;}
+    var bookVal=price;for(var i=1;i<=lifeYears;i++){var depr=Math.min(annualLinear,bookVal-scrapValue);if(depr<=0)break;var newBV=bookVal-depr;rows.push(_row(i,fmt(bookVal),fmt(depr),fmt(newBV)));_csvRows.push([i,Math.round(bookVal),Math.round(depr),Math.round(newBV)]);bookVal=newBV;}
+    window._avsData={headers:[_y(r),_s(r),_d(r),_e(r)],rows:_csvRows};
   }else{
     rows.push('<tr style="border-bottom:2px solid var(--border);">'+tds+'">'+(r.avsColYear||'År')+'</td>'+tds+'text-align:right;">'+(r.avsCmpRegnskap||'Regnskap (lineær)')+'</td>'+tds+'text-align:right;">'+(r.avsCmpSkatt||'Skatt (saldo)')+'</td>'+tds+'text-align:right;">'+(r.avsCmpDiff||'Differanse')+'</td></tr>');
     var taxRemaining=price;var bookVal=price;var cumDiffs=[];var bookVals=[price];var taxVals=[price];
-    for(var i=1;i<=years;i++){var taxDepr=taxRemaining*taxRate;taxRemaining-=taxDepr;var accDepr=0;if(bookVal>scrapValue){accDepr=Math.min(annualLinear,bookVal-scrapValue);}bookVal-=accDepr;var diff=accDepr-taxDepr;cumDiffs.push(diff);bookVals.push(bookVal);taxVals.push(taxRemaining);rows.push('<tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 4px;">'+i+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(accDepr)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(taxDepr)+'</td><td style="padding:6px 4px;text-align:right;">'+((diff>=0?'+':'')+fmt(diff))+'</td></tr>');}
+    for(var i=1;i<=years;i++){var taxDepr=taxRemaining*taxRate;taxRemaining-=taxDepr;var accDepr=0;if(bookVal>scrapValue){accDepr=Math.min(annualLinear,bookVal-scrapValue);}bookVal-=accDepr;var diff=accDepr-taxDepr;cumDiffs.push(diff);bookVals.push(bookVal);taxVals.push(taxRemaining);_csvRows.push([i,Math.round(accDepr),Math.round(taxDepr),Math.round(diff)]);rows.push('<tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 4px;">'+i+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(accDepr)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(taxDepr)+'</td><td style="padding:6px 4px;text-align:right;">'+((diff>=0?'+':'')+fmt(diff))+'</td></tr>');}
+    window._avsData={headers:[(r.avsColYear||'År'),(r.avsCmpRegnskap||'Regnskap'),(r.avsCmpSkatt||'Skatt'),(r.avsCmpDiff||'Differanse')],rows:_csvRows,total:['Totalt',Math.round(price-Math.max(bookVal,0)),Math.round(price-taxRemaining),Math.round((price-Math.max(bookVal,0))-(price-taxRemaining))]};
     var taxTotalDepr=price-taxRemaining;var accTotalDepr=price-Math.max(bookVal,0);
     rows.push('<tr style="border-top:2px solid var(--ink);font-weight:600;"><td style="padding:8px 4px;">'+(r.avsTotal||'Totalt')+'</td><td style="padding:8px 4px;text-align:right;">'+fmt(accTotalDepr)+'</td><td style="padding:8px 4px;text-align:right;">'+fmt(taxTotalDepr)+'</td><td style="padding:8px 4px;text-align:right;">'+fmt(accTotalDepr-taxTotalDepr)+'</td></tr>');
     rows.push('<tr><td colspan="4" style="padding:10px 4px 4px;font-size:11px;color:var(--ink3);line-height:1.4;"><em>'+(r.avsCmpNote||'Differanse = regnskap − skatt. Negativ differanse → skattemessig avskrivning høyere → bokført verdi > skattemessig verdi → utsatt skattegjeld. Positiv differanse → omvendt → utsatt skattefordel.')+'</em></td></tr>');
@@ -3835,7 +3840,7 @@ function calcValgevinst(){
 }
 
 // LIKVID: Likviditetsbudsjett
-function calcLikvid(){const start=parseNum('likvid-start'),income=parseNum('likvid-income'),expense=parseNum('likvid-expense');const r=R();let balance=start;const rows=['<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;font-weight:600;">'+(r.likvidColMonth||'Måned')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColStart||'Start')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColIncome||'Inntekt')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColExpense||'Utgift')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColEnd||'Slutt')+'</td></tr>'];for(let i=1;i<=6;i++){const endBal=balance+income-expense;const style=endBal<0?'background:rgba(255,0,0,0.05);':'';rows.push('<tr style="border-bottom:1px solid var(--border);'+style+'"><td style="padding:6px 4px;">'+(r.likvidMnd||'Mnd')+' '+i+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(balance)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(income)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(expense)+'</td><td style="padding:6px 4px;text-align:right;font-weight:600;">'+fmt(endBal)+'</td></tr>');balance=endBal;}document.getElementById('likvid-table').innerHTML='<table style="width:100%;border-collapse:collapse;">'+rows.join('')+'</table>';document.getElementById('likvid-res').classList.remove('hidden');setTimeout(function(){scrollToEl(document.getElementById('likvid-res'),'top');},80);}
+function calcLikvid(){const start=parseNum('likvid-start'),income=parseNum('likvid-income'),expense=parseNum('likvid-expense');const r=R();let balance=start;var _ld=[];const rows=['<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 4px;font-weight:600;">'+(r.likvidColMonth||'Måned')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColStart||'Start')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColIncome||'Inntekt')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColExpense||'Utgift')+'</td><td style="padding:8px 4px;font-weight:600;text-align:right;">'+(r.likvidColEnd||'Slutt')+'</td></tr>'];for(let i=1;i<=6;i++){const endBal=balance+income-expense;_ld.push({month:'Mnd '+i,start:Math.round(balance),income:Math.round(income),expense:Math.round(expense),end:Math.round(endBal)});const style=endBal<0?'background:rgba(255,0,0,0.05);':'';rows.push('<tr style="border-bottom:1px solid var(--border);'+style+'"><td style="padding:6px 4px;">'+(r.likvidMnd||'Mnd')+' '+i+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(balance)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(income)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(expense)+'</td><td style="padding:6px 4px;text-align:right;font-weight:600;">'+fmt(endBal)+'</td></tr>');balance=endBal;}window._likvidData=_ld;document.getElementById('likvid-table').innerHTML='<table style="width:100%;border-collapse:collapse;">'+rows.join('')+'</table>';document.getElementById('likvid-res').classList.remove('hidden');setTimeout(function(){scrollToEl(document.getElementById('likvid-res'),'top');},80);}
 
 // PENSJON: Pensjon OTP
 function calcPensjon(){
@@ -4929,6 +4934,7 @@ function calcAbo(){
     verdict=r.aboVerdictVeryHigh||'Veldig høyt — du betaler mer enn de fleste i abonnementer.';
   }
 
+  window._aboData={items:items,totalMnd:totalMnd,totalAar:totalAar,antall:antall,snitt:snitt};
   document.getElementById('abo-r-mnd').textContent=fmt(totalMnd)+(r.aboPerMnd||' / mnd');
   document.getElementById('abo-r-verdict').textContent=verdict;
   document.getElementById('abo-r-aar').textContent=fmt(totalAar);
@@ -5157,11 +5163,117 @@ function budsjettPdf(){
   rows.push([r.budRLblAnnual||'Årlig overskudd','',d.balance*12]);
   rows.push([]);
   rows.push([(r.budPdfFooter||'Generert av Hverdagsverktøy')]);
+  downloadCSV(rows,'budsjett.csv');
+}
+
+// ═══════════════════════════════════════════════════════
+// SHARED CSV EXPORT HELPER
+// ═══════════════════════════════════════════════════════
+function downloadCSV(rows,filename){
+  var sep=';';
   var csv=rows.map(function(r){return r.map(function(c){var s=String(c==null?'':c);return s.indexOf(sep)>=0||s.indexOf('"')>=0?'"'+s.replace(/"/g,'""')+'"':s;}).join(sep);}).join('\r\n');
   var blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
   var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');a.href=url;a.download='budsjett.csv';
+  var a=document.createElement('a');a.href=url;a.download=filename;
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function _csvDate(){return new Date().toLocaleDateString('no-NO',{year:'numeric',month:'long',day:'numeric'});}
+
+// ── Avskrivning CSV ──
+function avsCsv(){
+  var d=window._avsData;if(!d)return;
+  var rows=[];
+  rows.push(['Avskrivningsplan',_csvDate()]);
+  rows.push([]);
+  rows.push(d.headers);
+  d.rows.forEach(function(r){rows.push(r);});
+  if(d.total)rows.push(d.total);
+  rows.push([]);
+  rows.push(['Generert av Hverdagsverktøy']);
+  downloadCSV(rows,'avskrivning.csv');
+}
+
+// ── Likviditet CSV ──
+function likvidCsv(){
+  var d=window._likvidData;if(!d)return;
+  var rows=[];
+  rows.push(['Likviditetsbudsjett',_csvDate()]);
+  rows.push([]);
+  rows.push(['Måned','Start','Inntekt','Utgift','Slutt']);
+  d.forEach(function(r){rows.push([r.month,r.start,r.income,r.expense,r.end]);});
+  rows.push([]);
+  rows.push(['Generert av Hverdagsverktøy']);
+  downloadCSV(rows,'likviditet.csv');
+}
+
+// ── Boliglån CSV ──
+function morCsv(){
+  var d=window._mor;if(!d)return;
+  var r=R();
+  var rows=[];
+  rows.push(['Nedbetalingsplan',_csvDate()]);
+  rows.push([]);
+  rows.push(['Lånebeløp',d.P]);
+  rows.push(['Rente',d.rate+'%']);
+  rows.push(['Løpetid',d.years+' år']);
+  rows.push(['Type',d.type==='serial'?'Serielån':'Annuitetslån']);
+  rows.push(['Månedlig betaling',Math.round(d.mnd)]);
+  rows.push(['Total tilbakebetaling',Math.round(d.tot)]);
+  rows.push(['Total rente',Math.round(d.rnt)]);
+  rows.push([]);
+  rows.push(['Måned','Betaling','Renter','Avdrag','Restgjeld']);
+  var bal=d.P;var mRate=d.rate/100/12;var n=d.years*12;
+  for(var i=1;i<=n;i++){
+    var interest=bal*mRate;
+    var payment,principal;
+    if(d.type==='serial'){principal=d.P/n;payment=principal+interest;}
+    else{payment=d.mnd;principal=payment-interest;}
+    bal-=principal;if(bal<0)bal=0;
+    rows.push([i,Math.round(payment),Math.round(interest),Math.round(principal),Math.round(bal)]);
+  }
+  rows.push([]);
+  rows.push(['Generert av Hverdagsverktøy']);
+  downloadCSV(rows,'boliglan.csv');
+}
+
+// ── Abonnement CSV ──
+function aboCsv(){
+  var d=window._aboData;if(!d)return;
+  var rows=[];
+  rows.push(['Abonnementsoversikt',_csvDate()]);
+  rows.push([]);
+  rows.push(['Tjeneste','Beløp/mnd']);
+  d.items.forEach(function(i){rows.push([i.name,i.amount]);});
+  rows.push([]);
+  rows.push(['Totalt per måned',d.totalMnd]);
+  rows.push(['Totalt per år',d.totalAar]);
+  rows.push(['Antall abonnementer',d.antall]);
+  rows.push(['Snitt per abonnement',Math.round(d.snitt)]);
+  rows.push([]);
+  rows.push(['Generert av Hverdagsverktøy']);
+  downloadCSV(rows,'abonnementer.csv');
+}
+
+// ── Bilkostnad CSV ──
+function bilCsv(){
+  var d=window._bilData;if(!d)return;
+  var rows=[];
+  rows.push(['Bilkostnad',_csvDate()]);
+  rows.push([]);
+  rows.push(['Kategori','Beløp ('+d.aar+' år)','Per måned']);
+  rows.push(['Verditap',d.verditap,Math.round(d.verditap/(d.aar*12))]);
+  rows.push(['Drivstoff/lading',d.drivTotal,Math.round(d.drivTotal/(d.aar*12))]);
+  rows.push(['Forsikring',d.forsTotal,Math.round(d.forsTotal/(d.aar*12))]);
+  rows.push(['Service og vedlikehold',d.serviceTotal,Math.round(d.serviceTotal/(d.aar*12))]);
+  rows.push(['Dekk',d.dekkTotal,Math.round(d.dekkTotal/(d.aar*12))]);
+  rows.push(['Trafikkforsikringsavgift',d.avgiftTotal,Math.round(d.avgiftTotal/(d.aar*12))]);
+  rows.push(['Bompenger',d.bomTotal,Math.round(d.bomTotal/(d.aar*12))]);
+  rows.push([]);
+  rows.push(['Total eierkostnad',d.totalKostnad,Math.round(d.totalKostnad/(d.aar*12))]);
+  rows.push(['Kostnad per km',d.perKm.toFixed(1)+' kr','']);
+  rows.push([]);
+  rows.push(['Generert av Hverdagsverktøy']);
+  downloadCSV(rows,'bilkostnad.csv');
 }
 
 // Page initialization — called by each page after DOM is ready
