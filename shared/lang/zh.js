@@ -687,113 +687,53 @@ REGIONS['zh'] = {
       +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">基金会</div>'
       +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">没有所有人的独立资产 — 为特定目的成立（慈善、研究、文化）。没有人可以提取盈利。由根据章程的董事会管理。要求：最少100,000 kr基本资本。由基金会法规定（LOV-2001-06-15-59）。</div>'
       +'</div>'
-      +'</div>'
-    // ═══ 法律 — AKSJELOVEN & SELSKAPSLOVEN ═══
-
+      +'</div>',
     selLawGroupTitle:'Aksjeloven 和 Selskapsloven',
     selLawGroupDesc:'AS、ANS、DA 和 KS 的法律规则',
     selLawLabelAsl:'Aksjeloven（股份有限公司法）',
     selLawLabelSel:'Selskapsloven（合伙企业法）',
     selLawHint:'点击条款引用（§）在 Lovdata 上查看法律文本',
-
     selAslStiftTitle:'设立（第2章）',
     selAslStiftDesc:'设立文件 · 股本 · 章程',
-    selAslStiftRows:[
-      ['设立AS需要什么？','所有发起人签署的设立文件，包含章程、股本和董事会选举。','asl. § 2-1'],
-      ['章程必须包含什么？','公司名称、所在市镇、经营性质、股本金额和股票面值。','asl. § 2-2'],
-      ['最低股本','30,000 克朗（2012年从100,000克朗降低）。','asl. § 3-1'],
-      ['非现金出资','可以实物出资，但需要审计师确认的文件。','asl. § 2-4 和 § 2-6'],
-      ['公司何时成立？','所有发起人签署设立文件时。公司在Foretaksregisteret注册前无权利。','asl. § 2-9 和 § 2-18'],
-      ['注册期限','签署设立文件后3个月内，否则设立失效。','asl. § 2-18']
-    ],
-
+    selAslStiftRows:[['What is needed to form an AS?','A founding document signed by all subscribers, including articles of association, share capital and board election.','asl. § 2-1'],['What must the articles contain?','Company name, municipality, nature of business, share capital amount and par value of shares.','asl. § 2-2'],['Minimum share capital','NOK 30,000 (reduced from 100,000 in 2012).','asl. § 3-1'],['Non-cash contributions','Possible with assets in kind, but must be documented with auditor confirmation.','asl. § 2-4 and § 2-6'],['When is the company formed?','When the founding document is signed by all founders. The company has no legal rights until registered in the Register of Business Enterprises.','asl. § 2-9 and § 2-18'],['Deadline for registration','Within 3 months of signing the founding document, otherwise the formation lapses.','asl. § 2-18']],
     selAslKapitalTitle:'股本和分配（第3和8章）',
     selAslKapitalDesc:'增资 · 股息 · 充足性要求',
-    selAslKapitalRows:[
-      ['增资','股东大会以2/3多数通过。可通过新增认购、赠股或合并实现。','asl. § 10-1'],
-      ['减资','可用于弥补亏损、分配给股东或转入储备金。需通知债权人。','asl. § 12-1'],
-      ['股息——主要规则','公司可从净利润或可分配股本中分配股息，由股东大会决议。','asl. § 8-1'],
-      ['充足性要求','公司必须始终拥有与风险和经营规模相适应的股本和流动性。','asl. § 3-4'],
-      ['股本过低时的行动义务','董事会必须立即处理并在股本不足时召集股东大会。','asl. § 3-5'],
-      ['股息基础','净资产减去受限股本（股本、未实现收益储备）。向股东的贷款须扣除。','asl. § 8-1 (2)-(4)'],
-      ['临时股息','董事会可基于中期资产负债表分配临时股息，无需等待年度股东大会。','asl. § 8-2a']
-    ],
-
+    selAslKapitalRows:[['Capital increase','Resolved by the general meeting with 2/3 majority. Can be done by new subscription, bonus issue or merger.','asl. § 10-1'],['Capital reduction','Can be used to cover losses, distribute to shareholders or transfer to reserves. Requires creditor notice.','asl. § 12-1'],['Dividends — main rule','The company may distribute dividends from net profit or distributable equity, resolved by the general meeting.','asl. § 8-1'],['Adequacy requirement','The company must at all times have equity and liquidity adequate for its risk and scope of operations.','asl. § 3-4'],['Duty to act on low equity','The board must immediately address the matter and convene a general meeting if equity is inadequately low.','asl. § 3-5'],['Dividend basis','Net assets minus restricted equity (share capital, unrealised gains reserve). Loans to shareholders are deducted.','asl. § 8-1 (2)-(4)'],['Extraordinary dividend','The board may distribute extraordinary dividends based on an interim balance sheet without waiting for the annual general meeting.','asl. § 8-2a']],
     selAslLedelseTitle:'管理和组织（第6章）',
     selAslLedelseDesc:'董事会 · 总经理 · 股东大会',
-    selAslLedelseRows:[
-      ['董事会职责','管理公司，确保适当组织，监督日常管理和公司运营。','asl. § 6-12'],
-      ['董事会组成','股本≤300万克朗至少1名董事，否则至少3名。超过30名员工需员工代表。','asl. § 6-1'],
-      ['总经理','股本低于300万克朗时不强制要求。可由董事会选举。','asl. § 6-2'],
-      ['股东大会','公司最高机构。在财务年度结束后6个月内召开。批准年度报告、股息和董事会选举。','asl. § 5-1 和 § 5-5'],
-      ['董事会利益冲突','董事不得参与其个人利益与公司利益冲突的事务。','asl. § 6-27'],
-      ['董事会责任','故意或疏忽造成公司损失的董事可能承担个人赔偿责任。','asl. § 17-1']
-    ],
-
+    selAslLedelseRows:[['Board duties','Manage the company, ensure proper organisation, supervise day-to-day management and the company\'s operations.','asl. § 6-12'],['Board composition','Minimum 1 board member for share capital ≤ 3 million kr, otherwise minimum 3. Employee representation required above 30 employees.','asl. § 6-1'],['Managing director','Not required if share capital is below 3 million kr. May be elected by the board.','asl. § 6-2'],['General meeting','The company\'s supreme body. Held within 6 months after the end of the financial year. Approves annual accounts, dividends and board elections.','asl. § 5-1 and § 5-5'],['Board member disqualification','A board member may not participate in matters where they have a personal interest conflicting with the company\'s.','asl. § 6-27'],['Board liability','Board members who intentionally or negligently cause loss to the company may be held personally liable.','asl. § 17-1']],
     selAslAksjerTitle:'股票和转让（第4章）',
     selAslAksjerDesc:'股东名册 · 优先权 · 同意',
-    selAslAksjerRows:[
-      ['股东名册','公司必须保存所有股票的名册，包含所有者姓名和地址。必须公开。','asl. § 4-5'],
-      ['优先权','股东在股票转让时享有优先权，除非章程另有规定。','asl. § 4-19'],
-      ['董事会转让同意','获取股票需要董事会同意，除非章程另有规定。','asl. § 4-15'],
-      ['股票转让','股票通过通知公司进行转让。收购方从通知收购时起获得权利。','asl. § 4-12'],
-      ['强制赎回','股东在多数方严重滥用地位时可要求赎回。','asl. § 4-24'],
-      ['回购自身股票','公司可在股东大会授权下回购最多10%的自身股票。','asl. § 9-2']
-    ],
-
+    selAslAksjerRows:[['Shareholder register','The company must keep a register of all shares with the owner\'s name and address. Must be publicly accessible.','asl. § 4-5'],['Pre-emption rights','Shareholders have pre-emption rights on share transfers, unless the articles provide otherwise.','asl. § 4-19'],['Board consent for transfer','Acquisition of shares requires board consent, unless the articles provide otherwise.','asl. § 4-15'],['Share transfer','Shares are transferred by notice to the company. The acquirer gains rights from the time the acquisition is notified.','asl. § 4-12'],['Compulsory redemption','A shareholder may demand redemption in case of substantial abuse of position by the majority.','asl. § 4-24'],['Own shares','The company may acquire up to 10% of its own shares under authorisation from the general meeting.','asl. § 9-2']],
     selAslFusjonTitle:'合并、分立和解散（第13-16章）',
     selAslFusjonDesc:'合并 · 分立 · 清算',
-    selAslFusjonRows:[
-      ['合并','一家公司接管另一家。需要合并计划、两家公司均需2/3多数以及6周债权人通知。','asl. § 13-3 和 § 13-14'],
-      ['分立','公司分为两个或更多。价值可转移至新公司或现有公司。','asl. § 14-2'],
-      ['免税合并/分立','按照Aksjeloven规则进行的合并和分立可享受税务延续（无即时征税）。','sktl. § 11-2 和 § 11-4'],
-      ['解散','股东大会以2/3多数决议解散。董事会通知Foretaksregisteret。','asl. § 16-1'],
-      ['清算委员会','董事会作为清算委员会，须清偿债务、变现资产并将净额分配给股东。','asl. § 16-2 和 § 16-9'],
-      ['债权人通知','解散时须在Brønnøysundregistrene公告中以6周期限通知债权人。','asl. § 16-4']
-    ],
-
+    selAslFusjonRows:[['Merger','One company takes over another. Requires a merger plan, 2/3 majority in both companies and 6-week creditor notice.','asl. § 13-3 and § 13-14'],['Demerger','A company is split into two or more. Values can be transferred to a new or existing company.','asl. § 14-2'],['Tax-free merger/demerger','If carried out under the Companies Act rules, merger and demerger can occur with tax continuity (no immediate taxation).','sktl. § 11-2 and § 11-4'],['Dissolution','The general meeting resolves dissolution with 2/3 majority. The board notifies the Register of Business Enterprises.','asl. § 16-1'],['Liquidation board','The board serves as liquidation board and must settle liabilities, realise assets and distribute net proceeds to shareholders.','asl. § 16-2 and § 16-9'],['Creditor notice','Upon dissolution, creditors must be notified with a 6-week deadline in the Brønnøysund Register\'s official gazette.','asl. § 16-4']],
     selSelGrunnTitle:'普通合伙基本规则（第2章）',
     selSelGrunnDesc:'合伙协议 · 责任 · 合伙人',
-    selSelGrunnRows:[
-      ['什么是普通合伙？','两个或更多合伙人共同经营，至少一人对公司债务承担无限责任。','sel. § 1-2'],
-      ['ANS与DA的区别','ANS中所有合伙人对全部债务承担连带责任。DA中每个合伙人按比例承担责任——即对其份额的债务。','sel. § 1-2 (1) b 和 c'],
-      ['合伙协议','所有普通合伙必须有书面协议，说明合伙人、出资和利润/亏损分配。','sel. § 2-3'],
-      ['最少合伙人数','至少2名合伙人。如果仅剩1名合伙人超过6个月，公司将解散。','sel. § 1-2 和 § 2-37'],
-      ['合伙人责任——无限','ANS/DA合伙人对超出出资的部分承担个人责任。债权人可直接向合伙人追偿（ANS）或按比例追偿（DA）。','sel. § 2-4'],
-      ['合伙财产','合伙人的出资和其他公司资产构成合伙财产。合伙人不得提取削弱债权人保障的价值。','sel. § 2-7']
-    ],
-
+    selSelGrunnRows:[['What is a general partnership?','Two or more partners conduct business together, and at least one is unlimitedly liable for the company\'s obligations.','sel. § 1-2'],['ANS vs DA','In ANS all partners are jointly liable for all debts. In DA each partner is liable pro rata — i.e. for their share of the debt.','sel. § 1-2 (1) b and c'],['Partnership agreement','All general partnerships must have a written partnership agreement specifying partners, contributions and profit/loss distribution.','sel. § 2-3'],['Minimum number of partners','At least 2 partners. The company is dissolved if only one partner remains for more than 6 months.','sel. § 1-2 and § 2-37'],['Partner liability — unlimited','Partners in ANS/DA are personally liable beyond their contributions. Creditors can claim directly from partners (ANS) or pro rata (DA).','sel. § 2-4'],['Partnership assets','Partners\' contributions and other company assets form the partnership\'s assets. Partners may not withdraw values that weaken creditor coverage.','sel. § 2-7']],
     selSelInternTitle:'内部组织（第2章）',
     selSelInternDesc:'合伙人会议 · 管理 · 盈余',
-    selSelInternRows:[
-      ['合伙人会议','普通合伙的最高权力机构。所有合伙人有权参加。决议需一致同意，除非另有约定。','sel. § 2-8'],
-      ['多数要求','普通决议需一致同意。特殊决议（修改合伙协议）需所有人同意。','sel. § 2-12 和 § 2-13'],
-      ['合伙人管理权','每个合伙人有权利和义务参与合伙管理，除非另有约定。','sel. § 2-16'],
-      ['利润和亏损','在合伙人之间平均分配，除非合伙协议另有规定。','sel. § 2-25 和 § 2-26'],
-      ['提取','合伙人可按合伙协议或合伙人会议决议提取资金。','sel. § 2-26'],
-      ['会计和审计','销售收入超过500万克朗的普通合伙须履行会计义务。超过一定门槛须聘请审计师。','regnskapsloven § 1-2 和 revisorloven § 2-1']
-    ],
-
+    selSelInternRows:[['Partnership meeting','Supreme authority in a general partnership. All partners have the right to attend. Decisions require unanimity unless otherwise agreed.','sel. § 2-8'],['Majority requirements','Ordinary decisions require unanimity. Special decisions (amending the partnership agreement) require consent from all.','sel. § 2-12 and § 2-13'],['Partners\' management rights','Each partner has the right and duty to participate in managing the partnership, unless otherwise agreed.','sel. § 2-16'],['Profit and loss','Distributed equally among partners unless the partnership agreement provides otherwise.','sel. § 2-25 and § 2-26'],['Withdrawals','A partner may withdraw funds in accordance with the partnership agreement or decisions at the partnership meeting.','sel. § 2-26'],['Accounting and audit','General partnerships with sales revenue over 5 million kr are subject to accounting obligations. Above certain thresholds, an auditor is required.','Accounting Act § 1-2 and Auditor Act § 2-1']],
     selSelKsTitle:'有限合伙（第3章）',
     selSelKsDesc:'普通合伙人 · 有限合伙人 · 责任',
-    selSelKsRows:[
-      ['什么是有限合伙？','至少有一名普通合伙人（无限责任）和一名有限合伙人（责任限于出资）的公司。','sel. § 3-1'],
-      ['普通合伙人的角色','承担无限个人责任并管理公司业务。通常由AS担任普通合伙人。','sel. § 3-1 和 § 3-9'],
-      ['有限合伙人的责任','仅对约定出资负责。参与管理将失去责任限制。','sel. § 3-1 和 § 3-7'],
-      ['出资要求','有限合伙人须缴纳约定出资。每位有限合伙人的出资不得低于20,000克朗。','sel. § 3-1 (2)'],
-      ['KS中的管理','普通合伙人管理公司。有限合伙人可参加会议但无协议则无管理权。','sel. § 3-9'],
-      ['合伙人课税','KS通过合伙人课税——利润/亏损直接在合伙人处征税，不在公司层面。','sktl. § 10-40 flg.']
-    ],
-
+    selSelKsRows:[['What is a limited partnership?','A company with at least one general partner (unlimited liability) and at least one limited partner (liability limited to contribution).','sel. § 3-1'],['General partner\'s role','Has unlimited personal liability and manages the company\'s business. Often an AS serves as general partner.','sel. § 3-1 and § 3-9'],['Limited partner\'s liability','Liable only for agreed contribution. Cannot participate in management without losing the limitation.','sel. § 3-1 and § 3-7'],['Contribution requirement','The limited partner must pay agreed contribution. The contribution cannot be set below NOK 20,000 per limited partner.','sel. § 3-1 (2)'],['Management in KS','The general partner manages the company. The limited partner may attend partnership meetings but has no management rights without agreement.','sel. § 3-9'],['Partner taxation','KS is taxed through partner taxation — profit/loss is taxed directly with the partners, not in the company.','sktl. § 10-40 ff.']],
     selSelOpplosTitle:'退出和解散（第2章）',
     selSelOpplosDesc:'收购 · 退出 · 清算',
-    selSelOpplosRows:[
-      ['退出','合伙人可在财务年度结束前提前6个月通知退出，除非另有约定。','sel. § 2-32'],
-      ['收购','合伙人在其他合伙人严重违约或有其他重要原因时可要求收购。','sel. § 2-32 (2)'],
-      ['退出时的估值','收购金额按份额的公允价值确定，除非合伙协议另有规定。','sel. § 2-33'],
-      ['全体一致解散','合伙人会议可在所有合伙人同意时决议解散。','sel. § 2-37'],
-      ['法院解散','法院可在有充分理由时解散公司，如持续的合作问题。','sel. § 2-38'],
-      ['清算','解散时进行清算：清偿债务、变现资产，净额在合伙人之间分配。','sel. § 2-39 flg.']
-    ]
-
-};
+    selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']]
+,
+    avsCmpNote:'Differanse = regnskap − skatt. Negativ differanse → skattemessig avskrivning høyere → bokført verdi > skattemessig verdi → utsatt skattegjeld. Positiv differanse → omvendt → utsatt skattefordel.',
+    avsCmpSkatt:'Skatt (saldo)', avsCmpRegnskap: 'Regnskap (lineær)', avsCmpDiff: 'Differanse',
+    avsCmpValNote:'Bokført verdi = regnskapsmessig restverdi (lineær avskrivning). Skattemessig verdi = saldoverdi (degressiv avskrivning). Forskjell = bokført − skattemessig. Positiv forskjell → utsatt skattegjeld. Negativ forskjell → utsatt skattefordel. Tallene er basert på verdiene du har lagt inn i sammenligningen over.',
+    avsCmpValTitle:'Verdi på driftsmiddelet', avsCmpBookVal: 'Bokført verdi', avsCmpTaxVal: 'Skattemessig verdi', avsCmpValDiff: 'Forskjell',
+    avsIntroCompare:'Sammenlign skattemessig saldoavskrivning (degressiv) med regnskapsmessig lineær avskrivning. Differansen viser midlertidig forskjell som påvirker utsatt skatt.',
+    avsIntroRegnskap:'Regnskapsmessig avskrivning etter <strong>rskl. § 5-3</strong>: anleggsmidler med begrenset utnyttbar levetid skal avskrives etter en fornuftig avskrivningsplan. Lineær metode fordeler kostprisen jevnt over levetiden.',
+    avsIntroSkatt:'Skattemessig saldoavskrivning: eiendelen skrives ned med en fast prosent av restverdi hvert år (degressiv metode). Velg saldogruppe etter type eiendel.',
+    avsLifeLabel:'Utnyttbar levetid (år)', avsRegPctLabel: 'Avskrivningssats (%)', avsScrapLabel: 'Restverdi (%)',
+    avsModeSkatt:'Skatt', avsModeRegnskap: 'Regnskap', avsModeCompare: 'Sammenlign',
+    avsRegTableHeader:'Lineær avskrivningsplan', avsCmpTableHeader: 'Sammenligning: Skatt vs. Regnskap',
+    avsRegnskapInfo:'Lineær avskrivning etter rskl. § 5-3. Eiendelen avskrives jevnt over forventet utnyttbar levetid, ned til eventuell restverdi.',
+    avsTotal:'Totalt',
+    bcDecLabel:'Desimaler',
+    utdelingREnkSkjerming:'− Skjermingsfradrag', utdelingREnkPerson:'= Beregnet personinntekt',
+    utdelingREnkTotal:'Total skatt', utdelingREnkNetto:'Netto til eier', utdelingREnkEff:'Effektiv skattesats',
+    utdelingREnkTrygd:'Trygdeavgift (10,8 %)', utdelingREnkTrinn:'Trinnskatt'};

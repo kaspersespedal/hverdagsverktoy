@@ -200,12 +200,19 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v8';
+    s.src = '/shared/lang/' + code + '.js?v=v9';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
   });
   return _langLoading[code];
+}
+
+// Register service worker for offline support
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').catch(function(){});
+  });
 }
 buildThemePicker();
 let activeCalc = 'dashboard';
@@ -219,6 +226,7 @@ function fmt(n) {
 function pct(n) { return n.toFixed(1).replace('.',',')+' %'; }
 function parseNum(id) { const el=document.getElementById(id); return el ? +(el.value.replace(/[\s\u00a0,]/g,'').replace(',','.')) || 0 : 0; }
 function fmtInput(n) { return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(n).replace(/\u00a0/g,' '); }
+function setEl(id, val) { var el=document.getElementById(id); if(el) el.textContent=val; }
 
 // Live-format number inputs
 document.addEventListener('input', function(e) {
@@ -238,18 +246,22 @@ document.addEventListener('input', function(e) {
 // ═══════════════════════════════════════════════════════
 // REGION SWITCH
 // ═══════════════════════════════════════════════════════
+let _regionSwitchId = 0;
 function setRegion(r, e) {
   region = r;
+  var switchId = ++_regionSwitchId;
   try { localStorage.setItem('hvt-lang', r); } catch(_e){}
   document.querySelectorAll('.region-opt').forEach(el => el.classList.remove('active'));
   if(e && e.currentTarget) e.currentTarget.classList.add('active');
   else { var opt=document.querySelector('.region-opt[onclick*="\''+r+'\'"]'); if(opt) opt.classList.add('active'); }
   var _rdd=document.getElementById('rdd');if(_rdd)_rdd.classList.remove('open');
   loadLang(r).then(function() {
+    if(switchId !== _regionSwitchId) return; // stale switch, skip
     var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
     var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
     updateAll();
   }).catch(function() {
+    if(switchId !== _regionSwitchId) return;
     // Fallback: switch to Norwegian if language fails to load
     if(r !== 'no') { region = 'no'; updateAll(); }
   });
@@ -2157,7 +2169,7 @@ function resetCalcPanel(n){
       var body=g.querySelector('.law-group-body');
       if(body) body.style.maxHeight='0';
     });
-  }catch(e){console.warn('resetCalcPanel:',e);}
+  }catch(e){}
 }
 // Page mapping for multi-page navigation
 var PAGE_MAP = {dashboard:'/',basic:'/kalkulator/',salary:'/skatt/',mortgage:'/boliglan/',npv:'/personlig/',vat:'/avgift/'};
@@ -2291,17 +2303,17 @@ function calcSal() {
   const tot = Math.max(ts + soc - bsuKreditt, 0);
   const net = b - tot;
   _sal = { b, net, tot, eff:tot/b*100, soc, region };
-  document.getElementById('s-net').textContent = fmt(net);
-  document.getElementById('s-mth').textContent = fmt(net/12) + (r.mo||'/mo');
-  document.getElementById('s-tax').textContent = fmt(tot);
-  document.getElementById('s-eff').textContent = pct(tot/b*100);
-  document.getElementById('s-soc').textContent = fmt(soc);
-  document.getElementById('s-day').textContent = fmt(net/260);
+  setEl('s-net', fmt(net));
+  setEl('s-mth', fmt(net/12) + (r.mo||'/mo'));
+  setEl('s-tax', fmt(tot));
+  setEl('s-eff', pct(tot/b*100));
+  setEl('s-soc', fmt(soc));
+  setEl('s-day', fmt(net/260));
   // Rentefradrag-visning
   var deductCell = document.getElementById('s-deduct-cell');
   if(deductCell) {
     if(renteFradrag > 0) {
-      document.getElementById('s-deduct-val').textContent = '- ' + fmt(renteFradrag * almSats);
+      setEl('s-deduct-val', '- ' + fmt(renteFradrag * almSats));
       deductCell.classList.remove('hidden');
     } else {
       deductCell.classList.add('hidden');
@@ -2311,7 +2323,7 @@ function calcSal() {
   var fradragCell = document.getElementById('s-fradrag-cell');
   if(fradragCell) {
     if(ekstraFradrag > 0) {
-      document.getElementById('s-fradrag-val').textContent = '- ' + fmt(ekstraFradrag * almSats);
+      setEl('s-fradrag-val', '- ' + fmt(ekstraFradrag * almSats));
       fradragCell.classList.remove('hidden');
     } else {
       fradragCell.classList.add('hidden');
@@ -2321,7 +2333,7 @@ function calcSal() {
   var bsuCell = document.getElementById('s-bsu-cell');
   if(bsuCell) {
     if(bsu > 0) {
-      document.getElementById('s-bsu-val').textContent = '- ' + fmt(bsuKreditt);
+      setEl('s-bsu-val', '- ' + fmt(bsuKreditt));
       bsuCell.classList.remove('hidden');
     } else {
       bsuCell.classList.add('hidden');
@@ -2336,19 +2348,20 @@ function calcSal() {
   } else if(td) {
     td.classList.add('hidden');
   }
-  document.getElementById('s-res').classList.remove('hidden');
-  setTimeout(()=>scrollToEl(document.getElementById('s-res'),'top'),80);
+  var _sr=document.getElementById('s-res');if(_sr)_sr.classList.remove('hidden');
+  setTimeout(()=>{var _sres=document.getElementById('s-res');if(_sres)scrollToEl(_sres,'top');},80);
 }
 
 function calcMor() {
   const r = R();
   const P = parseNum('m-a');
   if(P<=0) return;
-  const yearlyRate = +document.getElementById('m-r').value || 0;
+  const yearlyRate = Math.max(+document.getElementById('m-r').value || 0, 0);
   const mRate = yearlyRate / 100 / 12;
   const rawYears = +document.getElementById('m-y').value;
-  const years = rawYears > 0 ? rawYears : 25;
+  const years = Math.min(rawYears > 0 ? rawYears : 25, 50);
   if(!rawYears) document.getElementById('m-y').value = '25';
+  if(rawYears > 50) document.getElementById('m-y').value = '50';
   const n = years * 12;
   var _mt=document.getElementById('m-type');const loanType=_mt?_mt.value:'annuity';
   const serialRange = document.getElementById('m-serial-range');
@@ -2373,9 +2386,9 @@ function calcMor() {
     lastPmt = lastBal + lastBal * mRate;
     mnd = firstPmt; // Viser første måned som hovedtall
     serialRange.classList.remove('hidden');
-    document.getElementById('m-first').textContent = fmt(firstPmt);
-    document.getElementById('m-last').textContent = fmt(lastPmt);
-    document.getElementById('mor-r-mth').textContent = r.morRMth || 'Månedlig betaling';
+    setEl('m-first', fmt(firstPmt));
+    setEl('m-last', fmt(lastPmt));
+    setEl('mor-r-mth', r.morRMth || 'Månedlig betaling');
   } else {
     // Annuitetslån: fast månedlig betaling
     mnd = mRate===0 ? P/n : P*mRate*Math.pow(1+mRate,n)/(Math.pow(1+mRate,n)-1);
@@ -2389,18 +2402,18 @@ function calcMor() {
       bal -= (mnd - ri);
     }
     serialRange.classList.add('hidden');
-    document.getElementById('mor-r-mth').textContent = r.morRMth || 'Månedlig betaling';
+    setEl('mor-r-mth', r.morRMth || 'Månedlig betaling');
   }
 
   const effRate = mRate === 0 ? 0 : (Math.pow(1 + mRate, 12) - 1) * 100;
   _mor = { P, rate:yearlyRate, years, mnd, tot, rnt, type:loanType };
-  document.getElementById('m-mth').textContent = fmt(mnd);
-  document.getElementById('m-sub').textContent = fmt(tot) + ' / ' + years + ' ' + (r.yr||'yrs');
-  document.getElementById('m-tot').textContent = fmt(tot);
-  document.getElementById('m-int').textContent = fmt(rnt);
-  document.getElementById('m-eff').textContent = effRate.toFixed(2).replace('.',',') + ' %';
-  document.getElementById('m-y1i').textContent = fmt(r1);
-  document.getElementById('m-y1p').textContent = fmt(a1);
+  setEl('m-mth', fmt(mnd));
+  setEl('m-sub', fmt(tot) + ' / ' + years + ' ' + (r.yr||'yrs'));
+  setEl('m-tot', fmt(tot));
+  setEl('m-int', fmt(rnt));
+  setEl('m-eff', effRate.toFixed(2).replace('.',',') + ' %');
+  setEl('m-y1i', fmt(r1));
+  setEl('m-y1p', fmt(a1));
   // Avdragsfritt-beregning integrert i hovedkalkulatoren
   const ioCheck = document.getElementById('m-io-check');
   const ioRes = document.getElementById('m-io-res');
@@ -2416,9 +2429,9 @@ function calcMor() {
       const intAfterPeriod = totAfterPeriod - P;
       const totIntIo = totFreePeriodInt + intAfterPeriod;
       const diff = totIntIo - rnt;
-      document.getElementById('m-io-mthfree').textContent = fmt(mthFree);
-      document.getElementById('m-io-mthafter').textContent = fmt(mthAfter);
-      document.getElementById('m-io-extra').textContent = '+ ' + fmt(diff);
+      setEl('m-io-mthfree', fmt(mthFree));
+      setEl('m-io-mthafter', fmt(mthAfter));
+      setEl('m-io-extra', '+ ' + fmt(diff));
       ioRes.classList.remove('hidden');
     } else {
       ioRes.classList.add('hidden');
@@ -2433,12 +2446,12 @@ function calcMor() {
   if(feesPerMonth > 0) {
     const totalFees = feesPerMonth * n;
     const grandTotal = tot + totalFees;
-    document.getElementById('m-fees-tot').textContent = fmt(totalFees);
+    setEl('m-fees-tot', fmt(totalFees));
     if(feesCell) feesCell.classList.remove('hidden');
     // Totalt tilbakebetalt inkluderer omkostninger
-    document.getElementById('m-tot').textContent = fmt(grandTotal);
-    document.getElementById('m-mth').textContent = fmt(mnd + feesPerMonth);
-    document.getElementById('m-sub').textContent = fmt(grandTotal) + ' / ' + years + ' ' + (r.yr||'yrs');
+    setEl('m-tot', fmt(grandTotal));
+    setEl('m-mth', fmt(mnd + feesPerMonth));
+    setEl('m-sub', fmt(grandTotal) + ' / ' + years + ' ' + (r.yr||'yrs'));
   } else {
     if(feesCell) feesCell.classList.add('hidden');
   }
@@ -2450,8 +2463,8 @@ function calcMor() {
   const taxY1El = document.getElementById('m-tax-y1');
   if(taxY1El) taxY1El.textContent = fmt(r1 * 0.22);
 
-  document.getElementById('m-res').classList.remove('hidden');
-  setTimeout(()=>scrollToEl(document.getElementById('m-res'),'top'),80);
+  var _mres=document.getElementById('m-res');if(_mres)_mres.classList.remove('hidden');
+  setTimeout(()=>{var _mr=document.getElementById('m-res');if(_mr)scrollToEl(_mr,'top');},80);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -3057,14 +3070,14 @@ function calcNpv() {
   const sum=cfs.reduce((a,b)=>a+b,0);
   const pi=inv>0?(npv+inv)/inv:0;
   _npv = { inv, rate:rate*100, cfs, npv, irr:irrValid?irr*100:null, pay, pi };
-  document.getElementById('n-npv').textContent = fmt(npv);
-  document.getElementById('n-verd').textContent = npv>=0 ? (r.npvPos||'✓ Profitable') : (r.npvNeg||'✗ Unprofitable');
-  document.getElementById('n-irr').textContent = irrValid ? pct(irr*100) : 'N/A';
-  document.getElementById('n-pay').textContent = pay!==null ? pay.toFixed(1)+' '+(r.yr||'yrs') : '>5 '+(r.yr||'yrs');
-  document.getElementById('n-sum').textContent = fmt(sum);
-  document.getElementById('n-pi').textContent = pi.toFixed(2)+'x';
-  document.getElementById('n-res').classList.remove('hidden');
-  setTimeout(()=>scrollToEl(document.getElementById('n-res'),'top'),80);
+  setEl('n-npv', fmt(npv));
+  setEl('n-verd', npv>=0 ? (r.npvPos||'✓ Profitable') : (r.npvNeg||'✗ Unprofitable'));
+  setEl('n-irr', irrValid ? pct(irr*100) : 'N/A');
+  setEl('n-pay', pay!==null ? pay.toFixed(1)+' '+(r.yr||'yrs') : '>5 '+(r.yr||'yrs'));
+  setEl('n-sum', fmt(sum));
+  setEl('n-pi', pi.toFixed(2)+'x');
+  var _nres=document.getElementById('n-res');if(_nres)_nres.classList.remove('hidden');
+  setTimeout(()=>{var _nr=document.getElementById('n-res');if(_nr)scrollToEl(_nr,'top');},80);
 }
 
 function calcVat() {
@@ -3079,21 +3092,21 @@ function calcVat() {
   const rr = R();
   if(tp==='ex'){
     // Input was excl. VAT → main result is incl. VAT
-    document.getElementById('vat-r-incl').textContent = rr.vatRInclCalc||'Price incl. VAT';
-    document.getElementById('v-inc').textContent = fmt(inc);
-    document.getElementById('vat-r-excl').textContent = (rr.vatRExclCalc||'Price excl. VAT') + ' ' + (rr.vatRInputTag||'(your input)');
-    document.getElementById('v-exc').textContent = fmt(ex);
+    setEl('vat-r-incl', rr.vatRInclCalc||'Price incl. VAT');
+    setEl('v-inc', fmt(inc));
+    setEl('vat-r-excl', (rr.vatRExclCalc||'Price excl. VAT') + ' ' + (rr.vatRInputTag||'(your input)'));
+    setEl('v-exc', fmt(ex));
   } else {
     // Input was incl. VAT → main result is excl. VAT
-    document.getElementById('vat-r-incl').textContent = rr.vatRExclCalc||'Price excl. VAT';
-    document.getElementById('v-inc').textContent = fmt(ex);
-    document.getElementById('vat-r-excl').textContent = (rr.vatRInclCalc||'Price incl. VAT') + ' ' + (rr.vatRInputTag||'(your input)');
-    document.getElementById('v-exc').textContent = fmt(inc);
+    setEl('vat-r-incl', rr.vatRExclCalc||'Price excl. VAT');
+    setEl('v-inc', fmt(ex));
+    setEl('vat-r-excl', (rr.vatRInclCalc||'Price incl. VAT') + ' ' + (rr.vatRInputTag||'(your input)'));
+    setEl('v-exc', fmt(inc));
   }
-  document.getElementById('v-vat').textContent = fmt(vt);
-  document.getElementById('v-pct').textContent = pct(s*100);
-  document.getElementById('v-res').classList.remove('hidden');
-  setTimeout(()=>scrollToEl(document.getElementById('v-res'),'top'),80);
+  setEl('v-vat', fmt(vt));
+  setEl('v-pct', pct(s*100));
+  var _vres=document.getElementById('v-res');if(_vres)_vres.classList.remove('hidden');
+  setTimeout(()=>{var _vr=document.getElementById('v-res');if(_vr)scrollToEl(_vr,'top');},80);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -3112,43 +3125,43 @@ function calcAdj() {
   const ofT = r.adjOfTotal || ' av ';
 
   if(totalMva < terskel) {
-    document.getElementById('adj-r-lbl').textContent = r.adjUnder||'Under terskelverdi';
-    document.getElementById('adj-r-val').textContent = fmt(terskel);
-    document.getElementById('adj-r-sub').textContent = (r.adjUnderSub||'Inngående MVA må overstige {t} for justeringsplikt').replace('{t}',fmt(terskel));
-    document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
-    document.getElementById('adj-r-base').textContent = '–';
-    document.getElementById('adj-r-annual').textContent = '–';
-    document.getElementById('adj-r-remain').textContent = '–';
-    document.getElementById('adj-r-change').textContent = '–';
-    document.getElementById('adj-res').classList.remove('hidden');
+    setEl('adj-r-lbl', r.adjUnder||'Under terskelverdi');
+    setEl('adj-r-val', fmt(terskel));
+    setEl('adj-r-sub', (r.adjUnderSub||'Inngående MVA må overstige {t} for justeringsplikt').replace('{t}',fmt(terskel)));
+    var _arh=document.getElementById('adj-rh');if(_arh)_arh.style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
+    setEl('adj-r-base', '–');
+    setEl('adj-r-annual', '–');
+    setEl('adj-r-remain', '–');
+    setEl('adj-r-change', '–');
+    var _ares=document.getElementById('adj-res');if(_ares)_ares.classList.remove('hidden');
     return;
   }
 
   if(aarBrukt >= periode) {
-    document.getElementById('adj-r-lbl').textContent = r.adjExpired||'Justeringsperioden utløpt';
-    document.getElementById('adj-r-val').textContent = '0';
-    document.getElementById('adj-r-sub').textContent = (r.adjExpiredSub||'Alle {p} år er brukt — ingen justering nødvendig').replace('{p}',periode);
-    document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
-    document.getElementById('adj-r-base').textContent = fmt(totalMva / periode);
-    document.getElementById('adj-r-annual').textContent = '0';
-    document.getElementById('adj-r-remain').textContent = '0' + ofT + periode;
-    document.getElementById('adj-r-change').textContent = pct((nyAndel - gammelAndel) * 100);
-    document.getElementById('adj-res').classList.remove('hidden');
+    setEl('adj-r-lbl', r.adjExpired||'Justeringsperioden utløpt');
+    setEl('adj-r-val', '0');
+    setEl('adj-r-sub', (r.adjExpiredSub||'Alle {p} år er brukt — ingen justering nødvendig').replace('{p}',periode));
+    var _arh2=document.getElementById('adj-rh');if(_arh2)_arh2.style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
+    setEl('adj-r-base', fmt(totalMva / periode));
+    setEl('adj-r-annual', '0');
+    setEl('adj-r-remain', '0' + ofT + periode);
+    setEl('adj-r-change', pct((nyAndel - gammelAndel) * 100));
+    var _ares2=document.getElementById('adj-res');if(_ares2)_ares2.classList.remove('hidden');
     return;
   }
 
   // Bagatellgrense § 9-2: justering foretas ikke hvis endring < 10 prosentpoeng
   const endring = nyAndel - gammelAndel;
   if(Math.round(Math.abs(endring) * 100) < 10) {
-    document.getElementById('adj-r-lbl').textContent = r.adjBagatell||'Under bagatellgrensen (§ 9-2)';
-    document.getElementById('adj-r-val').textContent = '0';
-    document.getElementById('adj-r-sub').textContent = (r.adjBagatellSub||'Endring på {p} er under 10 prosentpoeng — ingen justeringsplikt').replace('{p}',pct(Math.abs(endring)*100));
-    document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
-    document.getElementById('adj-r-base').textContent = fmt(totalMva / periode);
-    document.getElementById('adj-r-annual').textContent = '0';
-    document.getElementById('adj-r-remain').textContent = (periode - aarBrukt) + ofT + periode;
-    document.getElementById('adj-r-change').textContent = pct(endring * 100);
-    document.getElementById('adj-res').classList.remove('hidden');
+    setEl('adj-r-lbl', r.adjBagatell||'Under bagatellgrensen (§ 9-2)');
+    setEl('adj-r-val', '0');
+    setEl('adj-r-sub', (r.adjBagatellSub||'Endring på {p} er under 10 prosentpoeng — ingen justeringsplikt').replace('{p}',pct(Math.abs(endring)*100)));
+    var _arh3=document.getElementById('adj-rh');if(_arh3)_arh3.style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
+    setEl('adj-r-base', fmt(totalMva / periode));
+    setEl('adj-r-annual', '0');
+    setEl('adj-r-remain', (periode - aarBrukt) + ofT + periode);
+    setEl('adj-r-change', pct(endring * 100));
+    var _ares3=document.getElementById('adj-res');if(_ares3)_ares3.classList.remove('hidden');
     return;
   }
 
@@ -3157,21 +3170,21 @@ function calcAdj() {
   const justering = arligBeloep * endring * gjenstaende;
 
   const erTilbake = justering < 0;
-  document.getElementById('adj-r-lbl').textContent = erTilbake ? (r.adjRepay||'Tilbakebetaling til staten') : (r.adjIncrease||'Økt fradrag');
-  document.getElementById('adj-r-val').textContent = fmt(Math.abs(justering));
-  document.getElementById('adj-r-sub').textContent = erTilbake
+  setEl('adj-r-lbl', erTilbake ? (r.adjRepay||'Tilbakebetaling til staten') : (r.adjIncrease||'Økt fradrag'));
+  setEl('adj-r-val', fmt(Math.abs(justering)));
+  setEl('adj-r-sub', erTilbake
     ? (r.adjRepaySub||'Du må tilbakebetale {a} i tidligere fradragsført MVA').replace('{a}',fmt(Math.abs(justering)))
-    : (r.adjIncreaseSub||'Du kan kreve {a} i ekstra MVA-fradrag').replace('{a}',fmt(justering));
-  document.getElementById('adj-rh').style.background = 'linear-gradient(135deg,var(--accent),var(--accent-l))';
+    : (r.adjIncreaseSub||'Du kan kreve {a} i ekstra MVA-fradrag').replace('{a}',fmt(justering)));
+  var _arh4=document.getElementById('adj-rh');if(_arh4)_arh4.style.background = 'linear-gradient(135deg,var(--accent),var(--accent-l))';
 
   const arligJustering = arligBeloep * Math.abs(endring);
-  document.getElementById('adj-r-base').textContent = fmt(arligBeloep);
-  document.getElementById('adj-r-annual').textContent = fmt(arligJustering);
-  document.getElementById('adj-r-remain').textContent = gjenstaende + ofT + periode;
-  document.getElementById('adj-r-change').textContent = (endring > 0 ? '+' : '') + pct(endring * 100);
+  setEl('adj-r-base', fmt(arligBeloep));
+  setEl('adj-r-annual', fmt(arligJustering));
+  setEl('adj-r-remain', gjenstaende + ofT + periode);
+  setEl('adj-r-change', (endring > 0 ? '+' : '') + pct(endring * 100));
 
-  document.getElementById('adj-res').classList.remove('hidden');
-  setTimeout(()=>scrollToEl(document.getElementById('adj-res'),'nearest'),80);
+  var _ares4=document.getElementById('adj-res');if(_ares4)_ares4.classList.remove('hidden');
+  setTimeout(()=>{var _ar=document.getElementById('adj-res');if(_ar)scrollToEl(_ar,'nearest');},80);
 }
 
 // ═══════════════════════════════════════════════════════
@@ -5215,4 +5228,3 @@ function _initPageReady(){
     }
   }
 }
-  
