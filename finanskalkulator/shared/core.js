@@ -5090,39 +5090,35 @@ function _initPageReady(){
   initMobileFocus();
   var hash=window.location.hash.replace('#','');
   if(hash){
-    setTimeout(function(){
-      var el=document.getElementById(hash);
-      if(el){
-        // Open card/law-group if collapsed
-        if(el.classList.contains('collapsed')) el.classList.remove('collapsed');
-        var lawGroup=el.closest&&el.closest('.law-group');
-        if(lawGroup&&!lawGroup.classList.contains('open')){
-          lawGroup.classList.add('open');
-          var body=lawGroup.querySelector('.law-group-body');
-          if(body){body.style.maxHeight='none';}
-        }
-        // Auto-focus the card if it's an info-card
-        var card=el.classList.contains('info-card')?el:el.closest&&el.closest('.info-card');
-        if(card){
-          setTimeout(function(){
-            if(_isMobile()){
-              enterMobileFocus(card);
-            } else {
-              var idx=_getColIndex(card);
-              toggleDesktopFocus(idx);
-              if(card.classList.contains('collapsed')) toggleCard(card);
-              setTimeout(function(){smartScroll(card);},250);
-            }
-          },100);
+    var el=document.getElementById(hash);
+    if(el){
+      // Open card/law-group if collapsed — instant, no animation
+      if(el.classList.contains('collapsed')) el.classList.remove('collapsed');
+      var lawGroup=el.closest&&el.closest('.law-group');
+      if(lawGroup&&!lawGroup.classList.contains('open')){
+        lawGroup.classList.add('open');
+        var body=lawGroup.querySelector('.law-group-body');
+        if(body){body.style.maxHeight='none';}
+      }
+      // Auto-focus the card if it's an info-card — immediate
+      var card=el.classList.contains('info-card')?el:el.closest&&el.closest('.info-card');
+      if(card){
+        if(card.classList.contains('collapsed')) card.classList.remove('collapsed');
+        if(_isMobile()){
+          enterMobileFocus(card);
         } else {
-          setTimeout(function(){smartScroll(el);},200);
+          var idx=_getColIndex(card);
+          toggleDesktopFocus(idx);
         }
+        window.scrollTo(0,0);
+      } else {
+        el.scrollIntoView({block:'start'});
       }
-      // Handle mode hashes like #lvu, #avs
-      if(typeof switchCalcMode==='function'){
-        var modes=['lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
-        if(modes.indexOf(hash)>=0) switchCalcMode(hash);
-      }
-    },300);
+    }
+    // Handle mode hashes like #lvu, #avs
+    if(typeof switchCalcMode==='function'){
+      var modes=['lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
+      if(modes.indexOf(hash)>=0) switchCalcMode(hash);
+    }
   }
 }
