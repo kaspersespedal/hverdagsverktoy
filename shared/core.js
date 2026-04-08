@@ -175,7 +175,7 @@ function setTheme(t) {
     if(mode==='basic') buildCalcKeys('basic');
     else if(mode==='scientific') buildCalcKeys('scientific');
   }
-  try{updateHero();}catch(e){}
+  try{updateHero();}catch(e){if(typeof _uiErr==='function')_uiErr('updateHero/theme',e);}
 }
 (function(){
   try {
@@ -194,6 +194,8 @@ function setTheme(t) {
 const VALID_LANGS = ['no','en','zh','fr','pl','uk','ar','lt','so','ti'];
 if(typeof REGIONS === 'undefined') var REGIONS = {};
 let region = (function(){ try { const s=localStorage.getItem('hvt-lang'); if(s && VALID_LANGS.indexOf(s)>=0) return s; } catch(e){} return 'no'; })();
+// Set dir attribute on load for RTL languages
+(function(){if(region==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}})();
 let _langLoading = {};
 function loadLang(code) {
   if(REGIONS[code]) return Promise.resolve();
@@ -257,6 +259,10 @@ function setRegion(r, e) {
   var _rdd=document.getElementById('rdd');if(_rdd)_rdd.classList.remove('open');
   loadLang(r).then(function() {
     if(switchId !== _regionSwitchId) return; // stale switch, skip
+    // RTL support for Arabic
+    var isRTL = (r === 'ar');
+    document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', r === 'no' ? 'nb' : r);
     var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
     var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
     updateAll();
@@ -273,14 +279,15 @@ document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){v
 // ═══════════════════════════════════════════════════════
 // UPDATE ALL UI
 // ═══════════════════════════════════════════════════════
+function _uiErr(fn,e){if(typeof console!=='undefined'&&console.error)console.error('[HVT] '+fn+':',e);}
 function updateAll() {
-  try{updateHero();}catch(e){}
-  try{updateTabs();}catch(e){}
+  try{updateHero();}catch(e){_uiErr('updateHero',e);}
+  try{updateTabs();}catch(e){_uiErr('updateTabs',e);}
   // Scroll active tab into view on mobile
-  try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(_at)setTimeout(function(){var r=_at.getBoundingClientRect(),nr=_cnav.getBoundingClientRect();_cnav.scrollLeft=_cnav.scrollLeft+(r.left-nr.left)-(nr.width-r.width)/2;var _pill=_cnav.querySelector('.calc-nav-pill');if(_pill){_pill.style.transition='none';var r2=_at.getBoundingClientRect(),nr2=_cnav.getBoundingClientRect();_pill.style.left=(r2.left-nr2.left+_cnav.scrollLeft)+'px';_pill.offsetHeight;_pill.style.transition='';}},100);_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});
+  try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(_at)setTimeout(function(){var r=_at.getBoundingClientRect(),nr=_cnav.getBoundingClientRect();_cnav.scrollLeft=_cnav.scrollLeft+(r.left-nr.left)-(nr.width-r.width)/2;var _pill=_cnav.querySelector('.calc-nav-pill');if(_pill){_pill.style.transition='none';var r2=_at.getBoundingClientRect(),nr2=_cnav.getBoundingClientRect();_pill.style.left=(r2.left-nr2.left+_cnav.scrollLeft)+'px';_pill.offsetHeight;_pill.style.transition='';}},100);if(!_cnav._hvtScrollBound){_cnav._hvtScrollBound=true;_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});}
   // Animated pill indicator
   if(_at){
-    var pill=document.createElement('div');pill.className='calc-nav-pill';_cnav.appendChild(pill);
+    var pill=_cnav.querySelector('.calc-nav-pill');if(!pill){pill=document.createElement('div');pill.className='calc-nav-pill';_cnav.appendChild(pill);}
     var prevIdx=sessionStorage.getItem('nav-pill-idx');
     var tabs=Array.from(_cnav.querySelectorAll('.calc-tab'));
     var curIdx=tabs.indexOf(_at);
@@ -301,18 +308,20 @@ function updateAll() {
       positionPill(_at,false);
     }
     sessionStorage.setItem('nav-pill-idx',curIdx);
-    window.addEventListener('resize',function(){positionPill(_at,false);});
+    if(window._hvtPillResize) window.removeEventListener('resize',window._hvtPillResize);
+    window._hvtPillResize=function(){positionPill(_at,false);};
+    window.addEventListener('resize',window._hvtPillResize);
   }
-  }}catch(e){}
-  try{updateDashLabels();}catch(e){}
-  if(document.getElementById('calc-salary'))try{updateSalaryUI();updateUttakUI();}catch(e){}
-  if(document.getElementById('calc-mortgage'))try{updateMortgageUI();}catch(e){}
-  if(document.getElementById('calc-npv'))try{updateNpvUI();}catch(e){}
-  if(document.getElementById('calc-vat'))try{updateVatUI();}catch(e){}
-  if(document.getElementById('calc-selskap'))try{updateSelskapUI();}catch(e){}
-  if(document.getElementById('calc-basic'))try{updateFagkalkulatorUI();ccPopulate();vgPopulate();}catch(e){}
-  try{updateFooter();}catch(e){}
-  try{buildThemePicker();}catch(e){}
+  }}catch(e){_uiErr('calcNav',e);}
+  try{updateDashLabels();}catch(e){_uiErr('updateDashLabels',e);}
+  if(document.getElementById('calc-salary'))try{updateSalaryUI();updateUttakUI();}catch(e){_uiErr('updateSalaryUI',e);}
+  if(document.getElementById('calc-mortgage'))try{updateMortgageUI();}catch(e){_uiErr('updateMortgageUI',e);}
+  if(document.getElementById('calc-npv'))try{updateNpvUI();}catch(e){_uiErr('updateNpvUI',e);}
+  if(document.getElementById('calc-vat'))try{updateVatUI();}catch(e){_uiErr('updateVatUI',e);}
+  if(document.getElementById('calc-selskap'))try{updateSelskapUI();}catch(e){_uiErr('updateSelskapUI',e);}
+  if(document.getElementById('calc-basic'))try{updateFagkalkulatorUI();ccPopulate();vgPopulate();}catch(e){_uiErr('updateFagkalkulatorUI',e);}
+  try{updateFooter();}catch(e){_uiErr('updateFooter',e);}
+  try{buildThemePicker();}catch(e){_uiErr('buildThemePicker',e);}
   // Section titles
   var _sc=document.getElementById('sec-calculators');if(_sc)_sc.textContent=R().secCalc||'Kalkulatorer';
   var _sg=document.getElementById('sec-guide');if(_sg){var gk=document.getElementById('calc-salary')?'secGuideTax':document.getElementById('calc-mortgage')?'secGuideMor':document.getElementById('calc-vat')?'secGuideVat':document.getElementById('calc-npv')?'secGuidePerso':'secGuide';_sg.textContent=R()[gk]||_sg.textContent;}
@@ -2286,7 +2295,7 @@ function resetCalcPanel(n){
       var body=g.querySelector('.law-group-body');
       if(body) body.style.maxHeight='0';
     });
-  }catch(e){}
+  }catch(e){_uiErr('toggleLawGroup',e);}
 }
 // Page mapping for multi-page navigation
 var PAGE_MAP = {dashboard:'/',basic:'/kalkulator/',salary:'/skatt/',mortgage:'/boliglan/',npv:'/personlig/',vat:'/avgift/'};
@@ -2302,7 +2311,7 @@ function switchCalc(n, skipScroll) {
     var cnav=document.querySelector('.calc-nav');if(cnav)cnav.style.display = n==='dashboard' ? 'none' : '';
     if(n==='dashboard'){
       setTimeout(()=>window.scrollTo({top:0,behavior:'smooth'}),50);
-      try{ updateDashStats(); }catch(e){}
+      try{ updateDashStats(); }catch(e){_uiErr('updateDashStats',e);}
       updateDashLabels();
     } else {
       resetCalcPanel(n);
