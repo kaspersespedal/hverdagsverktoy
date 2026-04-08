@@ -426,6 +426,9 @@
   var opts=document.querySelectorAll('#calc-basic > div:last-child .cm-opt');
   opts.forEach(function(o){
     var clone=o.cloneNode(true);
+    // Remove IDs from clones to avoid duplicate-ID conflicts with translation
+    clone.querySelectorAll('[id]').forEach(function(el){el.removeAttribute('id');});
+    clone.removeAttribute('id');
     var origOnclick=o.getAttribute('onclick');
     clone.setAttribute('onclick',origOnclick+";document.getElementById('calc-focus-dd').classList.add('hidden');");
     dd.appendChild(clone);
