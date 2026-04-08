@@ -447,11 +447,11 @@ function updateHero() {
   if(document.documentElement.getAttribute('data-theme')==='disco'){
     var em=document.querySelector('#hero-h1 em');
     if(em){
-      em.textContent='\u266B Dancing \u266A';
+      em.textContent='\u266B '+em.textContent+' \u266A';
       // Wrap entire em in a clickable link outside the gradient clip context
       if(!em.parentElement.classList.contains('disco-link-wrap')){
         var link=document.createElement('a');
-        link.href='https://www.youtube.com/watch?v=LUID0jSh2Ic';
+        link.href='https://www.youtube.com/watch?v=LUID0jSh2Ic&t=10';
         link.target='_blank';link.rel='noopener';
         link.className='disco-link-wrap';
         link.style.cssText='text-decoration:none;color:inherit;display:block;position:relative;z-index:10;cursor:pointer;';
