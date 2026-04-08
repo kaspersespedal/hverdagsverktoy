@@ -1494,8 +1494,48 @@ function updateNpvUI() {
     setText('studie-th-avdrag',r.studieThAvdrag||'Avdrag');
     setText('studie-th-restgjeld',r.studieThRestgjeld||'Restgjeld');
     setText('studie-disclaimer',r.studieDisclaimer||'* Basert på Lånekassens satser 2025–2026. Faktisk stipendandel avhenger av beståtte studiepoeng og inntekt/formue. Annuitetslån med termingebyr 18 kr (0 kr med eFaktura).');
+    repopulateSelect('studie-varighet',r.studieVarighetOpts||['1 år','2 år','3 år (bachelor)','4 år','5 år (master)','6 år'],['1','2','3','4','5','6']);
+    repopulateSelect('studie-grad',r.studieGradOpts||['Ja — fullført grad','Nei'],['ja','nei']);
+    repopulateSelect('studie-mnd',r.studieMndOpts||['11 måneder','10 måneder'],['11','10']);
     studieUpdateTotal();
   }
+  // Budget static selects — repopulate from language
+  (function(){
+    var incRows=document.querySelectorAll('#budsjett-income-rows .budsjett-cat');
+    var incOpts=r.budIncomeOpts||['Lønn (netto)','Ekstrajobb/freelance','Stipend','Kapitalinntekter','NAV-ytelser'];
+    var incVals=['Lønn (netto)','Ekstrajobb/freelance','Stipend','Kapitalinntekter','NAV-ytelser'];
+    var expRows=document.querySelectorAll('#budsjett-expense-rows .budsjett-cat');
+    var expOpts=r.budExpenseOpts||['Husleie','Mat og dagligvarer','Transport','Strøm','Forsikring','Mobil/Internett','Studielån (nedbetaling)','Boliglån (terminbeløp)','Trening','Streaming/Abonnement','Klær og personlig','Sparing/BSU'];
+    var expVals=['Husleie','Mat og dagligvarer','Transport','Strøm','Forsikring','Mobil/Internett','Studielån (nedbetaling)','Boliglån (terminbeløp)','Trening','Streaming/Abonnement','Klær og personlig','Sparing/BSU'];
+    var custom=r.budOptCustom||'Valgfritt...';
+    function repopCat(sel,opts,vals){
+      var cur=sel.value;
+      var isCustom=cur==='__custom__'||sel.querySelector('input');
+      if(isCustom)return;
+      sel.innerHTML='';
+      for(var i=0;i<opts.length;i++){var o=document.createElement('option');o.value=vals[i];o.textContent=opts[i];if(vals[i]===cur)o.selected=true;sel.appendChild(o);}
+      var co=document.createElement('option');co.value='__custom__';co.textContent=custom;sel.appendChild(co);
+    }
+    incRows.forEach(function(s){repopCat(s,incOpts,incVals);});
+    expRows.forEach(function(s){repopCat(s,expOpts,expVals);});
+  })();
+  // Abo static selects — repopulate from language
+  (function(){
+    var aboRows=document.querySelectorAll('#abo-rows .abo-cat');
+    if(!aboRows.length)return;
+    var aboOpts=[r.aboOptNetflix||'Netflix',r.aboOptSpotify||'Spotify',r.aboOptHBO||'HBO Max',r.aboOptDisney||'Disney+',r.aboOptYoutube||'YouTube Premium',r.aboOptViaplay||'Viaplay',r.aboOptAppleMusic||'Apple Music',r.aboOptIcloud||'Apple iCloud+',r.aboOptTrening||'Treningssenter',r.aboOptMobil||'Mobilabonnement',r.aboOptBredband||'Bredbånd',r.aboOptVG||'VG+',r.aboOptAftenposten||'Aftenposten',r.aboOptAvis||'Annen avis/magasin'];
+    var aboVals=['Netflix','Spotify','HBO Max','Disney+','YouTube Premium','Viaplay','Apple Music','Apple iCloud+','Treningssenter','Mobilabonnement','Bredbånd','VG+','Aftenposten','Annen avis/magasin'];
+    var custom=r.aboOptCustom||'Valgfritt...';
+    aboRows.forEach(function(sel){
+      var cur=sel.value;if(cur==='__custom__')return;
+      sel.innerHTML='';
+      for(var i=0;i<aboOpts.length;i++){var o=document.createElement('option');o.value=aboVals[i];o.textContent=aboOpts[i];if(aboVals[i]===cur)o.selected=true;sel.appendChild(o);}
+      var co=document.createElement('option');co.value='__custom__';co.textContent=custom;sel.appendChild(co);
+    });
+  })();
+  // CSV and misc buttons
+  setText('bil-btn-csv',r.btnCsv||'Last ned CSV');
+  setText('abo-btn-csv',r.btnCsv||'Last ned CSV');
   // NPV Howto card
   const npvHowtoCard = document.getElementById('npv-howto-card');
   if(npvHowtoCard) {
