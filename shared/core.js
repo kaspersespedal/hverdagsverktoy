@@ -2070,6 +2070,27 @@ function updateFagkalkulatorUI() {
   repopulateSelect('pensjon-otp', r.pensjonOtpOpts, ['0.02','0.05','0.07']);
   repopulateSelectByIndex('lvu-zone', r.lvuZoneOpts);
 
+  // --- NPV panel labels (kalkulator page) ---
+  setText('bc-npv-label', r.npvTitle || 'Lønnsomhetsanalyse (NPV/IRR)');
+  setText('bc-npv-intro', r.npvDesc || 'Netto nåverdi og internrente for investeringsprosjekter.');
+  setText('lbl-npv-calc', r.npvTitle || 'Lønnsomhetsanalyse (NPV/IRR)');
+  setText('npv-l-inv', r.lInv || 'Investering (kr)');
+  setText('npv-l-rate', r.lRateD || 'Diskonteringsrente (%)');
+  ['1','2','3','4','5'].forEach(i => setText('npv-l-cf'+i, (r['lCF'+i])||('Kontantstrøm år '+i)));
+  setText('btn-calc-n', r.btnCalc || 'Beregn →');
+  setText('npv-r-lbl', r.npvRLbl || 'Netto nåverdi (NPV)');
+  setText('npv-r-pay', r.npvRPay || 'Tilbakebetalingstid');
+  setText('npv-r-sum', r.npvRSum || 'Totale kontantstrømmer');
+  setText('npv-r-pi', r.npvRPi || 'Lønnsomhetsindeks');
+  // NPV Howto card
+  const npvHowtoCard = document.getElementById('npv-howto-card');
+  if(npvHowtoCard) {
+    document.getElementById('npv-howto-title').innerHTML = (r.npvHowtoTitle || 'Slik bruker du kalkulatoren') + ' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('npv-howto-desc', r.npvHowtoDesc || 'Steg-for-steg guide til NPV og IRR');
+    if(r.npvHowtoRows){document.getElementById('npv-howto-rows').innerHTML=infoRowsHTML(r.npvHowtoRows);npvHowtoCard.classList.remove('hidden');}
+    else{npvHowtoCard.classList.add('hidden');}
+  }
+
 }
 
 function updateFooter() {
