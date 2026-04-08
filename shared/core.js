@@ -5310,41 +5310,41 @@ function morCsv(){
 
 // ── Abonnement CSV ──
 function aboCsv(){
-  var d=window._aboData;if(!d)return;
+  var d=window._aboData;if(!d)return;var r=R();
   var rows=[];
-  rows.push(['Abonnementsoversikt',_csvDate()]);
+  rows.push([r.csvAboTitle||'Abonnementsoversikt',_csvDate()]);
   rows.push([]);
-  rows.push(['Tjeneste','Beløp/mnd']);
+  rows.push([r.csvAboService||'Tjeneste',r.csvAboAmount||'Beløp/mnd']);
   d.items.forEach(function(i){rows.push([i.name,i.amount]);});
   rows.push([]);
-  rows.push(['Totalt per måned',d.totalMnd]);
-  rows.push(['Totalt per år',d.totalAar]);
-  rows.push(['Antall abonnementer',d.antall]);
-  rows.push(['Snitt per abonnement',Math.round(d.snitt)]);
+  rows.push([r.csvAboTotalMnd||'Totalt per måned',d.totalMnd]);
+  rows.push([r.csvAboTotalAar||'Totalt per år',d.totalAar]);
+  rows.push([r.csvAboCount||'Antall abonnementer',d.antall]);
+  rows.push([r.csvAboAvg||'Snitt per abonnement',Math.round(d.snitt)]);
   rows.push([]);
-  rows.push(['Generert av Hverdagsverktøy']);
+  rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);
   downloadCSV(rows,'abonnementer.csv');
 }
 
 // ── Bilkostnad CSV ──
 function bilCsv(){
-  var d=window._bilData;if(!d)return;
+  var d=window._bilData;if(!d)return;var r=R();
   var rows=[];
-  rows.push(['Bilkostnad',_csvDate()]);
+  rows.push([r.csvBilTitle||'Bilkostnad',_csvDate()]);
   rows.push([]);
-  rows.push(['Kategori','Beløp ('+d.aar+' år)','Per måned']);
-  rows.push(['Verditap',d.verditap,Math.round(d.verditap/(d.aar*12))]);
-  rows.push(['Drivstoff/lading',d.drivTotal,Math.round(d.drivTotal/(d.aar*12))]);
-  rows.push(['Forsikring',d.forsTotal,Math.round(d.forsTotal/(d.aar*12))]);
-  rows.push(['Service og vedlikehold',d.serviceTotal,Math.round(d.serviceTotal/(d.aar*12))]);
-  rows.push(['Dekk',d.dekkTotal,Math.round(d.dekkTotal/(d.aar*12))]);
-  rows.push(['Trafikkforsikringsavgift',d.avgiftTotal,Math.round(d.avgiftTotal/(d.aar*12))]);
-  rows.push(['Bompenger',d.bomTotal,Math.round(d.bomTotal/(d.aar*12))]);
+  rows.push([r.csvBilCategory||'Kategori',(r.csvBilAmount||'Beløp')+' ('+d.aar+' '+(r.yr||'år')+')',r.csvBilPerMonth||'Per måned']);
+  rows.push([r.csvBilDepreciation||'Verditap',d.verditap,Math.round(d.verditap/(d.aar*12))]);
+  rows.push([r.csvBilFuel||'Drivstoff/lading',d.drivTotal,Math.round(d.drivTotal/(d.aar*12))]);
+  rows.push([r.csvBilInsurance||'Forsikring',d.forsTotal,Math.round(d.forsTotal/(d.aar*12))]);
+  rows.push([r.csvBilService||'Service og vedlikehold',d.serviceTotal,Math.round(d.serviceTotal/(d.aar*12))]);
+  rows.push([r.csvBilTires||'Dekk',d.dekkTotal,Math.round(d.dekkTotal/(d.aar*12))]);
+  rows.push([r.csvBilTax||'Trafikkforsikringsavgift',d.avgiftTotal,Math.round(d.avgiftTotal/(d.aar*12))]);
+  rows.push([r.csvBilTolls||'Bompenger',d.bomTotal,Math.round(d.bomTotal/(d.aar*12))]);
   rows.push([]);
-  rows.push(['Total eierkostnad',d.totalKostnad,Math.round(d.totalKostnad/(d.aar*12))]);
-  rows.push(['Kostnad per km',d.perKm.toFixed(1)+' kr','']);
+  rows.push([r.csvBilTotal||'Total eierkostnad',d.totalKostnad,Math.round(d.totalKostnad/(d.aar*12))]);
+  rows.push([r.csvBilPerKm||'Kostnad per km',d.perKm.toFixed(1)+' kr','']);
   rows.push([]);
-  rows.push(['Generert av Hverdagsverktøy']);
+  rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);
   downloadCSV(rows,'bilkostnad.csv');
 }
 
