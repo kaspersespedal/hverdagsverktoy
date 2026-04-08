@@ -110,6 +110,7 @@ REGIONS['en'] = {
     bilModePlan:'Car I\'m considering buying', bilModeOwn:'Car I already own', bilEiertidHint:'How long do you plan to own the car?',
     bilLResale:'Expected resale value / listing price (kr)', bilOwnEiertidAuto:'Ownership: {n} years (calculated from purchase year {y})',
     bilManualHdr:'Numbers look off? Enter your actual costs ▾',
+    bilPlaceholderAuto:'Auto-estimated',
     bilBtn:'Calculate car cost →',
     bilRLbl:'Total ownership cost', bilRMnd:'Cost per month', bilRKm:'Cost per km',
     bilRVerditap:'Depreciation', bilRDriv:'Fuel / charging', bilRFors:'Insurance',

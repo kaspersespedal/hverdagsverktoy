@@ -20,7 +20,7 @@ function injectRatesDisclaimer(resEl){
   var updatedStr=RATES_LAST_UPDATED.split('-').reverse().join('.');
   var txt=(r.ratesDisclaimer||'Satser: Inntektsåret')+' '+RATES_YEAR+' · '+(r.ratesUpdated||'Sist oppdatert')+' '+updatedStr;
   var staleHtml='';
-  if(age.stale){staleHtml='<div style="margin-top:4px;color:#b45309;font-weight:600;">⚠️ '+(r.ratesStale||'Satsene ble sist oppdatert for over 6 måneder siden og kan være utdaterte.')+'</div>';}
+  if(age.stale){staleHtml='<div style="margin-top:4px;color:#b45309;font-weight:600;">'+(r.ratesStale||'Satsene ble sist oppdatert for over 6 måneder siden og kan være utdaterte.')+'</div>';}
   var d=document.createElement('div');d.className='rates-disc';
   d.style.cssText='font-size:11px;color:var(--ink3);padding:6px 12px;border-radius:6px;background:color-mix(in srgb,var(--accent) 4%,transparent);margin-bottom:8px;line-height:1.5;';
   d.innerHTML=txt+' · <a href="https://skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">skatteetaten.no</a>'+staleHtml;
@@ -266,7 +266,7 @@ function setRegion(r, e) {
     if(r !== 'no') { region = 'no'; updateAll(); }
   });
 }
-function toggleDD() { var el=document.getElementById('rdd');if(el)el.classList.toggle('open'); }
+function toggleDD() { var el=document.getElementById('rdd');if(el){el.classList.toggle('open');var cur=document.querySelector('.region-cur');if(cur)cur.setAttribute('aria-expanded',el.classList.contains('open')+'');} }
 document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){var _rd=document.getElementById('rdd');if(_rd)_rd.classList.remove('open');} });
 
 
@@ -721,6 +721,7 @@ function toggleLawGroup(group){
 function toggleCard(card){
   const wasCollapsed = card.classList.contains('collapsed');
   var body = card.querySelector('.law-body');
+  var cardHdr=card.querySelector('.card-hdr');
   if(!wasCollapsed){
     // Collapsing — pin scroll so header stays in place
     var hdr = card.querySelector('.card-hdr');
@@ -729,7 +730,7 @@ function toggleCard(card){
     card.classList.add('collapsed');
     var topAfter = (hdr||card).getBoundingClientRect().top;
     var drift = topAfter - topBefore;
-    if(Math.abs(drift) > 2) window.scrollBy(0, drift);
+    if(Math.abs(drift) > 2) window.scrollBy({top:drift,behavior:'instant'});
   } else {
     // Opening — collapse other open cards in the same column first
     var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
@@ -751,6 +752,7 @@ function toggleCard(card){
   }
   const arrow = card.querySelector('.card-title span');
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
+  if(cardHdr) cardHdr.setAttribute('aria-expanded', wasCollapsed+'');
   if(wasCollapsed){
     setTimeout(()=>{ smartScroll(card); }, 250);
   }
@@ -1289,6 +1291,9 @@ function updateNpvUI() {
   setText('bil-mode-own-label', r.bilModeOwn || 'Bil jeg allerede eier');
   var resaleEl=document.getElementById('bil-l-resale');if(resaleEl){var rt=r.bilLResale||'Forventet salgsverdi / Finn-pris (kr)';resaleEl.innerHTML=rt.replace('Finn','<a href="https://www.finn.no/car/used/search.html" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Finn</a>');}
   setText('bil-disclaimer', r.bilDisclaimer || '* Rough estimate. Actual costs vary with driving pattern, location, insurance terms and vehicle condition.');
+  // Set translatable placeholders on bil inputs
+  var estAuto=r.bilPlaceholderAuto||'Estimeres automatisk';
+  ['bil-resale','bil-forsikring','bil-drivstoff-mnd','bil-service-mnd','bil-bom-mnd'].forEach(function(id){var el=document.getElementById(id);if(el)el.placeholder=estAuto;});
   // Lønn etter skatt labels
   var lonnEl=document.getElementById('lonn-title');if(lonnEl)lonnEl.innerHTML=(r.lonnTitle||'Lønn etter skatt')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('lonn-desc',r.lonnDesc||'Legg inn timelønn og timer per uke — se hva du faktisk får utbetalt');
@@ -2147,7 +2152,7 @@ function smartScroll(el,retries){
   function step(ts){
     if(!start)start=ts;
     const p=Math.min((ts-start)/dur,1);
-    window.scrollTo(0, startY+dist*ease(p));
+    window.scrollTo({top:startY+dist*ease(p),behavior:'instant'});
     if(p<1) requestAnimationFrame(step);
     else if(retries<3){
       // Re-check after CSS transitions settle (law-group expand = 550ms)
@@ -4271,7 +4276,7 @@ function enterMobileFocus(card){
   } else {
     var mfT=closeBar.querySelector('.mf-title'); if(mfT) mfT.textContent=titleText;
   }
-  window.scrollTo(0,0);
+  window.scrollTo({top:0,behavior:'instant'});
   b.classList.add('mobile-focus-active');
 }
 function exitMobileFocus(){
@@ -5016,9 +5021,9 @@ function calcAbo(){
     var flyreiser=Math.round(totalAar/1500*10)/10;
     var iphone=(totalAar/15990*100).toFixed(0);
     var html2='<div style="font-weight:600;margin-bottom:6px;">'+(r.aboPerspTitle||'Perspektiv — hva tilsvarer dette?')+'</div>';
-    html2+='<div>☕ '+fmt(totalAar)+' kr/år ≈ <strong>'+kaffe+'</strong> '+(r.aboPerspKaffe||'kopper kaffe')+'</div>';
-    html2+='<div>✈️ ≈ <strong>'+flyreiser+'</strong> '+(r.aboPerspFly||'tur-retur flyreiser i Europa')+'</div>';
-    html2+='<div>📱 ≈ <strong>'+iphone+' %</strong> '+(r.aboPerspIphone||'av en ny iPhone')+'</div>';
+    html2+='<div>'+fmt(totalAar)+' kr/år ≈ <strong>'+kaffe+'</strong> '+(r.aboPerspKaffe||'kopper kaffe')+'</div>';
+    html2+='<div>≈ <strong>'+flyreiser+'</strong> '+(r.aboPerspFly||'tur-retur flyreiser i Europa')+'</div>';
+    html2+='<div>≈ <strong>'+iphone+' %</strong> '+(r.aboPerspIphone||'av en ny iPhone')+'</div>';
     persEl.innerHTML=html2;
   }
 
@@ -5077,9 +5082,11 @@ function budsjettAddRow(type){
       '<option value="Sparing/BSU">'+(r.budOptSparing||'Sparing/BSU')+'</option>'+
       '<option value="__custom__">'+(r.budOptCustom||'Valgfritt...')+'</option>';
   }
-  row.innerHTML='<div style="flex:2;position:relative;"><select class="fc budsjett-cat" onchange="budsjettCatChange(this)" style="width:100%;">'+opts+'</select></div>'+
-    '<input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;">'+
-    '<button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>';
+  var catLabel=type==='income'?(r.budsjettColDescI||'Beskrivelse'):(r.budsjettColDescE||'Beskrivelse');
+  var amtLabel=type==='income'?(r.budsjettColAmountI||'Belop'):(r.budsjettColAmountE||'Belop');
+  row.innerHTML='<div style="flex:2;position:relative;"><select class="fc budsjett-cat" onchange="budsjettCatChange(this)" style="width:100%;" aria-label="'+catLabel+'">'+opts+'</select></div>'+
+    '<input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" aria-label="'+amtLabel+'">'+
+    '<button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern" aria-label="Fjern rad">×</button>';
   cont.appendChild(row);
   row.querySelector('.budsjett-cat').focus();
 }
@@ -5322,7 +5329,22 @@ function _initPageReady(){
       if(h&&mmb2&&!document.body.classList.contains('calc-focus')) mmb2.style.top=h.offsetHeight+'px';
     });
   })();
-  if(!window.location.hash) window.scrollTo(0,0);
+  if(!window.location.hash) window.scrollTo({top:0,behavior:'instant'});
+  // Accessibility: add aria-labels to interactive elements
+  (function(){
+    var nav=document.querySelector('.calc-nav');
+    if(nav) nav.setAttribute('aria-label','Navigasjon mellom verktoy');
+    nav&&nav.querySelectorAll('.calc-tab').forEach(function(t){t.setAttribute('role','tab');});
+    var regionCur=document.querySelector('.region-cur');
+    if(regionCur){regionCur.setAttribute('role','button');regionCur.setAttribute('aria-label','Velg sprak');regionCur.setAttribute('aria-haspopup','listbox');regionCur.setAttribute('aria-expanded','false');regionCur.setAttribute('tabindex','0');regionCur.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleDD();}});}
+    var regionDD=document.getElementById('rdd');
+    if(regionDD) regionDD.setAttribute('role','listbox');
+    document.querySelectorAll('.region-opt').forEach(function(o){o.setAttribute('role','option');});
+    var themePicker=document.getElementById('theme-picker');
+    if(themePicker){var btn=themePicker.querySelector('button');if(btn&&!btn.getAttribute('aria-label'))btn.setAttribute('aria-label','Velg tema');}
+    document.querySelectorAll('.btn-calc').forEach(function(b){if(!b.getAttribute('aria-label'))b.setAttribute('aria-label',b.textContent.replace(/→/g,'').trim());});
+    document.querySelectorAll('.card-hdr').forEach(function(h){h.setAttribute('role','button');h.setAttribute('aria-expanded',!h.parentElement.classList.contains('collapsed')+'');h.setAttribute('tabindex','0');h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleCard(h.parentElement);}});});
+  })();
   // Auto-scroll selects into view on focus (mobile-friendly)
   document.querySelectorAll('select.fc').forEach(function(sel){
     sel.addEventListener('focus',function(){setTimeout(function(){scrollToEl(sel);},150);});
@@ -5359,14 +5381,14 @@ function _initPageReady(){
           // Clear hash to prevent browser auto-scroll on mobile
           history.replaceState(null,'',window.location.pathname);
           enterMobileFocus(card);
-          window.scrollTo(0,0);
-          setTimeout(function(){window.scrollTo(0,0);},0);
+          window.scrollTo({top:0,behavior:'instant'});
+          setTimeout(function(){window.scrollTo({top:0,behavior:'instant'});},0);
         } else {
           // On desktop, open the card and let browser handle hash scroll
           // CSS scroll-margin-top on .info-card handles sticky header offset
         }
       } else {
-        el.scrollIntoView({block:'start'});
+        el.scrollIntoView({block:'start',behavior:'smooth'});
       }
     }
     // Handle mode hashes like #lvu, #avs

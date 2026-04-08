@@ -123,6 +123,7 @@ REGIONS['no'] = {
     bilModePlan:'Bil jeg vurderer å kjøpe', bilModeOwn:'Bil jeg allerede eier', bilEiertidHint:'Hvor lenge planlegger du å eie bilen?',
     bilLResale:'Forventet salgsverdi / Finn-pris (kr)', bilOwnEiertidAuto:'Eiertid: {n} år (beregnet fra kjøpsår {y})',
     bilManualHdr:'Ser tallene feil ut? Legg inn faktiske kostnader ▾',
+    bilPlaceholderAuto:'Estimeres automatisk',
     bilBtn:'Beregn bilkostnad →',
     bilRLbl:'Total eierkostnad', bilRMnd:'Kostnad per måned', bilRKm:'Kostnad per km',
     bilRVerditap:'Verditap', bilRDriv:'Drivstoff / lading', bilRFors:'Forsikring',

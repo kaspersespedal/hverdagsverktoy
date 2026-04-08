@@ -23,7 +23,7 @@
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234a6fa5'/%3E%3Crect x='7' y='6' width='18' height='4' rx='1.5' fill='white' opacity='.95'/%3E%3Crect x='7' y='13' width='8' height='3' rx='1' fill='white' opacity='.7'/%3E%3Crect x='17' y='13' width='8' height='3' rx='1' fill='white' opacity='.7'/%3E%3Crect x='7' y='18' width='8' height='3' rx='1' fill='white' opacity='.5'/%3E%3Crect x='17' y='18' width='8' height='3' rx='1' fill='white' opacity='.5'/%3E%3Crect x='7' y='23' width='8' height='3' rx='1' fill='white' opacity='.4'/%3E%3Crect x='17' y='23' width='8' height='3' rx='1' fill='white' opacity='.4'/%3E%3C/svg%3E">
 <link href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/shared/style.css?v=v11">
+<link rel="stylesheet" href="/shared/style.css?v=v12">
 </head>
 <body>
 
@@ -132,6 +132,21 @@
             <div class="fg"><label class="flbl" id="uc-lbl-val" for="uc-val">Beløp</label><input class="fc" type="number" id="uc-val" value="1000" oninput="ccConvert()"></div>
             <div class="rh" style="margin-top:4px;"><div class="rh-lbl" id="uc-lbl-res">Resultat</div><div class="rh-val" id="uc-res">–</div><div class="rh-sub" id="uc-rate-info" style="font-size:11px;opacity:.5;margin-top:4px;"></div></div>
             <div id="cc-swap" onclick="ccSwap()" style="text-align:center;margin-top:10px;cursor:pointer;font-size:13px;color:var(--accent);font-weight:600;">⇅ Bytt</div>
+          </div>
+          <!-- LVU: Lønn vs Utbytte -->
+          <div id="bc-lvu" class="hidden" style="padding:20px 24px;background:var(--surface);">
+            <div style="font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;" id="bc-lvu-label">Lønn vs Utbytte</div>
+            <div style="font-size:11px;color:var(--ink2);margin-bottom:10px;line-height:1.5;" id="bc-lvu-help">Sammenlign hva det koster selskapet å ta ut penger som lønn vs. utbytte. Inkluderer AGA, feriepenger og OTP for lønn, og selskapsskatt for utbytte.</div>
+            <div class="fg"><label class="flbl" id="lvu-l-gross" for="lvu-gross">Brutto beløp (kr)</label><input class="fc" type="text" id="lvu-gross" value="500 000" inputmode="numeric"></div>
+            <div class="fg"><label class="flbl" id="lvu-l-zone" for="lvu-zone">AGA-sone</label><select class="fc" id="lvu-zone"><option value="0.141">Sone I (14.1%)</option><option value="0.106">Sone Ia/II (10.6%)</option><option value="0.064">Sone III (6.4%)</option><option value="0.051">Sone IV (5.1%)</option><option value="0">Sone V (0%)</option></select></div>
+            <button class="btn-calc" onclick="calcLvu()"><span id="btn-calc-lvu">Beregn →</span></button>
+            <div id="lvu-res" class="result-sec hidden">
+              <div class="rh"><div class="rh-lbl" id="lvu-r-diff">Resultat</div><div class="rh-val" id="lvu-diff">–</div></div>
+              <div class="rgrid">
+                <div class="rt"><div class="rt-lbl" id="lvu-r-sal">Selskapskostnad (lønn)</div><div class="rt-val" id="lvu-sal-cost">–</div></div>
+                <div class="rt"><div class="rt-lbl" id="lvu-r-div">Selskapskostnad (utbytte)</div><div class="rt-val" id="lvu-div-cost">–</div></div>
+              </div>
+            </div>
           </div>
           <!-- AGA: Ansattkostnad -->
           <div id="bc-aga" class="hidden" style="padding:20px 24px;background:var(--surface);">
@@ -257,6 +272,9 @@
             <div id="cm-extra-list" class="cm-open">
             <div class="cm-opt" onclick="switchCalcMode('npv')" id="cm-npv" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-size:13px;font-weight:500;color:var(--ink2);">
               <span style="font-size:17px;"></span> <span id="lbl-npv-calc">Lønnsomhetsanalyse (NPV/IRR)</span>
+            </div>
+            <div class="cm-opt" onclick="switchCalcMode('lvu')" id="cm-lvu" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-size:13px;font-weight:500;color:var(--ink2);">
+              <span style="font-size:17px;"></span> <span id="lbl-lvu">Lønn vs Utbytte</span>
             </div>
             <div class="cm-opt" onclick="switchCalcMode('avs')" id="cm-avs" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-size:13px;font-weight:500;color:var(--ink2);">
               <span style="font-size:17px;"></span> <span id="lbl-avs">Avskrivning</span>
@@ -387,7 +405,7 @@
 </div>
 
 <!-- Language files now loaded dynamically by core.js -->
-<script src="/shared/core.js?v=v11"></script>
+<script src="/shared/core.js?v=v12"></script>
 <script src="/shared/search.js?v=v3"></script>
 <script>initPage();
 (function(){
