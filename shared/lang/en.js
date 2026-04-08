@@ -281,6 +281,7 @@ REGIONS['en'] = {
     bcDecLabel:'Decimals',
     lblFagcalc:'Professional Calculators', lblLvu:'Salary vs Dividend', lblAga:'Employee Cost', lblAvs:'Depreciation', lblFerie:'Holiday Pay', lblRente:'Effective Interest Rate', lblProsent:'Percentage', lblValgevinst:'Currency Gain', lblLikvid:'Liquidity', lblPensjon:'Pension',
     mobileSwitch:'Switch calculator', mobileFocus:'Focus', mobileFocusExit:'Close',
+    focusLabel:'Focus', focusClose:'Close focus', focusSwitchCalc:'Switch calculator',
     lvuGross:'Gross Amount', lvuZone:'AGA Zone', lvuBtn:'Calculate →', lvuRSal:'Salary - Total Cost', lvuRDiv:'Dividend - Total Cost', lvuRDiff:'Difference (Cheapest)',
     agaSal:'Gross Salary per Year', agaZone:'AGA Zone', agaFerie:'Holiday Pay', agaOtp:'OTP Rate', agaBtn:'Calculate →', agaRTotal:'Total Annual Cost', agaRAga:'AGA', agaRFerie:'Holiday Pay', agaROtp:'OTP', agaRPct:'% over Gross', agaPerMonth:'/month',
     avsPriceLabel:'Purchase Price (kr)', avsGroupLabel:'Depreciation Group', avsBtn:'Calculate →', avsDepTableHeader:'10-Year Depreciation Schedule',

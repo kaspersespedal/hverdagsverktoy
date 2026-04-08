@@ -300,6 +300,7 @@ REGIONS['no'] = {
     bcDecLabel:'Desimaler',
     lblFagcalc:'Fagkalkulatorer', lblLvu:'Lønn vs Utbytte', lblAga:'Ansattkostnad', lblAvs:'Avskrivning', lblFerie:'Feriepenger', lblRente:'Effektiv Rente', lblProsent:'Prosent', lblValgevinst:'Valutagevinst', lblLikvid:'Likviditet', lblPensjon:'Pensjon',
     mobileSwitch:'Bytt kalkulator', mobileFocus:'Fokus', mobileFocusExit:'Lukk',
+    focusLabel:'Fokus', focusClose:'Lukk fokus', focusSwitchCalc:'Bytt kalkulator',
     lvuGross:'Beløp (brutto)', lvuZone:'AGA-sone', lvuBtn:'Beregn →', lvuRSal:'Lønn - Total kostnad', lvuRDiv:'Utbytte - Total kostnad', lvuRDiff:'Differanse (billigste)',
     agaSal:'Brutto lønn per år', agaZone:'AGA-sone', agaFerie:'Feriepenger', agaOtp:'OTP-rate', agaBtn:'Beregn →', agaRTotal:'Total årskostnad', agaRAga:'AGA', agaRFerie:'Feriepenger', agaROtp:'OTP', agaRPct:'% over brutto', agaPerMonth:'/mnd',
     avsPriceLabel:'Kjøpesum (kr)', avsGroupLabel:'Avskrivningsgruppe', avsBtn:'Beregn →', avsDepTableHeader:'10-årig avskrivningsplan',

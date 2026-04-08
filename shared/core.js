@@ -1909,6 +1909,10 @@ function updateFagkalkulatorUI() {
   setText('bc-pensjon-label', r.lblPensjon || 'Pensjon');
   // Decimal label
   setText('bc-dec-lbl', r.bcDecLabel || 'Desimaler');
+  // Kalkulator focus mode labels
+  setText('kalk-focus-lbl', r.focusLabel || 'Fokus');
+  setText('kalk-focus-exit', r.focusClose || 'Lukk fokus');
+  var _kfsb=document.getElementById('kalk-focus-switch-lbl');if(_kfsb)_kfsb.textContent=(r.focusSwitchCalc||'Bytt kalkulator')+' \u25BC';
   // Help hints on remaining calculators (lvu, valgevinst still have links)
   const hh = r.calcHelpHint || 'Trenger du hjelp med kalkulatoren? →';
   ['bc-lvu-help'].forEach(id=>{
@@ -4200,7 +4204,7 @@ function initDesktopFocus(){
     var btn=document.createElement('button');
     btn.className='focus-toggle';
     btn.onclick=function(e){e.stopPropagation();toggleDesktopFocus(idx);};
-    btn.innerHTML='<span class="focus-toggle-label">⛶ Fokus</span><span class="focus-toggle-exit">✕ Lukk</span>';
+    var _r=R();btn.innerHTML='<span class="focus-toggle-label">'+(_r.focusLabel||'Fokus')+'</span><span class="focus-toggle-exit">'+(_r.focusClose||'Lukk fokus')+'</span>';
     h2.appendChild(btn);
   });
   // Add small focus circle to each info-card header
@@ -4235,7 +4239,7 @@ function initDesktopFocus(){
   if(grid&&!document.getElementById('focus-close-bar')){
     var bar=document.createElement('div');
     bar.id='focus-close-bar';
-    bar.innerHTML='<button onclick="toggleDesktopFocus()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;">✕ Lukk fokus</button>';
+    var _r2=R();bar.innerHTML='<button onclick="toggleDesktopFocus()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;">'+(_r2.focusClose||'Lukk fokus')+'</button>';
     grid.parentElement.insertBefore(bar,grid);
   }
 }
