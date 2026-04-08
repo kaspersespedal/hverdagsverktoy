@@ -200,7 +200,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v10';
+    s.src = '/shared/lang/' + code + '.js?v=v16';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -3957,8 +3957,9 @@ function switchCalcMode(mode, skipScroll){
   bcExpr='';bcHistory='';bcFresh=true;
   if(typeof closeMobileSidebar==='function')closeMobileSidebar();
   if(typeof exitFocusMode==='function')exitFocusMode();
-  // Update mobile bar label
-  var mobileLabels={basic:'Enkel',scientific:'Vitenskapelig',finance:'Finansiell',unit:'Valuta',lvu:'Lønn vs Utbytte',aga:'Ansattkostnad',avs:'Avskrivning',ferie:'Feriepenger',rente:'Effektiv Rente',valgevinst:'Valutagevinst',likvid:'Likviditet',pensjon:'Pensjon',npv:'NPV/IRR'};
+  // Update mobile bar label (translated)
+  var r=R();
+  var mobileLabels={basic:r.cmBasic||'Enkel',scientific:r.cmScientific||'Vitenskapelig',finance:r.cmFinance||'Finansiell',unit:r.cmUnit||'Valuta',lvu:r.lblLvu||'Lønn vs Utbytte',aga:r.lblAga||'Ansattkostnad',avs:r.lblAvs||'Avskrivning',ferie:r.lblFerie||'Feriepenger',rente:r.lblRente||'Effektiv Rente',valgevinst:r.lblValgevinst||'Valutagevinst',likvid:r.lblLikvid||'Likviditet',pensjon:r.lblPensjon||'Pensjon',npv:r.npvTitle||'NPV/IRR'};
   if(typeof updateMobileBar==='function')updateMobileBar(mobileLabels[mode]||mode);
   // Auto-focus for scientific on mobile
   if(mode==='scientific'&&window.innerWidth<=768&&typeof enterFocusMode==='function')setTimeout(enterFocusMode,100);
@@ -3969,7 +3970,6 @@ function switchCalcMode(mode, skipScroll){
   const dispWrap=bcDisp?bcDisp.parentElement:null;
   const specialPanels=['bc-unit','bc-finance','bc-lvu','bc-aga','bc-avs','bc-ferie','bc-rente','bc-valgevinst','bc-likvid','bc-pensjon','bc-npv'];
   specialPanels.forEach(id=>{var el=document.getElementById(id);if(el)el.classList.add('hidden');});
-  const r=R();
   const extraModes={lvu:r.lblLvu||'Lønn vs Utbytte',aga:r.lblAga||'Ansattkostnad',avs:r.lblAvs||'Avskrivning',ferie:r.lblFerie||'Feriepenger',rente:r.lblRente||'Effektiv Rente',valgevinst:r.lblValgevinst||'Valutagevinst',likvid:r.lblLikvid||'Likviditet',pensjon:r.lblPensjon||'Pensjon',npv:r.lblNpvCalc||'Lønnsomhetsanalyse (NPV/IRR)'};
   if(extraModes[mode]){
     if(keysWrap)keysWrap.classList.add('hidden');if(dispWrap)dispWrap.classList.add('hidden');
