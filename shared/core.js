@@ -2664,9 +2664,8 @@ function calcFormue(){
     bd.innerHTML=h;
   }
   var _fres=document.getElementById('formue-res');
-  var wasHidden=_fres.classList.contains('hidden');
   _fres.classList.remove('hidden');
-  if(wasHidden)setTimeout(function(){scrollToEl(_fres,'top');},80);
+  setTimeout(function(){scrollToEl(_fres,'top');},80);
 }
 
 // ═══════════════════════════════════════════════════════
