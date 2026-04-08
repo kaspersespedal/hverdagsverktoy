@@ -1401,7 +1401,7 @@ function updateNpvUI() {
   // NPV panel labels (kalkulator.html)
   setText('bc-npv-label', r.npvTitle || 'Lønnsomhetsanalyse (NPV/IRR)');
   setText('bc-npv-intro', r.npvDesc || 'Netto nåverdi og internrente for investeringsprosjekter.');
-  setText('lbl-npv-calc', r.lblNpvCalc || 'Lønnsomhetsanalyse (NPV/IRR)');
+  setText('lbl-npv-calc', r.npvTitle || 'Lønnsomhetsanalyse (NPV/IRR)');
   // Sparekalkulator labels
   var spareEl=document.getElementById('spare-title');if(spareEl)spareEl.innerHTML=(r.spareTitle||'Sparekalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('spare-desc',r.spareDesc||'Se kraften i rentes rente — hvor mye du sparer vs. hva renten genererer');
