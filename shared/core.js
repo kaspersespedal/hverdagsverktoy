@@ -2127,27 +2127,45 @@ function stickyOffset(){
 }
 var _scrollId=0; // cancellation token for all programmatic scrolls
 function _cancelScroll(){_scrollId++;}
-// Cancel programmatic scroll on user touch/wheel
+// Cancel programmatic scroll on user touch/wheel/keyboard
 (function(){
   var opts={passive:true};
   window.addEventListener('wheel',_cancelScroll,opts);
   window.addEventListener('touchstart',_cancelScroll,opts);
+  window.addEventListener('keydown',function(e){
+    if(e.key==='ArrowUp'||e.key==='ArrowDown'||e.key==='PageUp'||e.key==='PageDown'||e.key===' ')_cancelScroll();
+  },opts);
 })();
+function _animateScroll(targetY,dur,id,cb){
+  var startY=window.scrollY;
+  var dist=targetY-startY;
+  if(Math.abs(dist)<3){if(cb)cb();return;}
+  var start=null;
+  function ease(t){return t<0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1;}
+  function step(ts){
+    if(id!==_scrollId)return;
+    if(!start)start=ts;
+    var p=Math.min((ts-start)/dur,1);
+    window.scrollTo(0, startY+dist*ease(p));
+    if(p<1) requestAnimationFrame(step);
+    else if(cb) cb();
+  }
+  requestAnimationFrame(step);
+}
 function scrollToEl(el,mode){
   if(!el)return;
   _cancelScroll();
   var id=_scrollId;
   var off=stickyOffset();
   if(mode==='top'){
-    var top=el.getBoundingClientRect().top+window.scrollY-off;
-    window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+    var top=Math.max(0,el.getBoundingClientRect().top+window.scrollY-off);
+    _animateScroll(top,300,id);
   } else {
-    // 'nearest' — only scroll if not already in view
     var rect=el.getBoundingClientRect();
     var vH=window.innerHeight;
     if(rect.top<off||rect.bottom>vH){
-      var top2=el.getBoundingClientRect().top+window.scrollY-off;
-      window.scrollTo({top:Math.max(0,top2),behavior:'smooth'});
+      var top2=Math.max(0,el.getBoundingClientRect().top+window.scrollY-off);
+      _animateScroll(top2,300,id);
     }
   }
 }
@@ -2157,29 +2175,17 @@ function smartScroll(el,retries){
   var id=_scrollId;
   retries=retries||0;
   var off=stickyOffset()+12;
-  var r=el.getBoundingClientRect();
-  var targetY=Math.max(0, r.top+window.scrollY-off);
-  var startY=window.scrollY;
-  var dist=targetY-startY;
-  if(Math.abs(dist)<5&&retries>0)return;
-  var dur=Math.min(400, Math.max(200, Math.abs(dist)*0.4));
-  var start=null;
-  function ease(t){return t<0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1;}
-  function step(ts){
-    if(id!==_scrollId)return; // cancelled
-    if(!start)start=ts;
-    var p=Math.min((ts-start)/dur,1);
-    window.scrollTo(0, startY+dist*ease(p));
-    if(p<1) requestAnimationFrame(step);
-    else if(retries<2){
-      setTimeout(function(){
-        if(id!==_scrollId)return;
-        var r2=el.getBoundingClientRect();
-        if(Math.abs(r2.top-off)>20) smartScroll(el,retries+1);
-      },400);
-    }
-  }
-  requestAnimationFrame(step);
+  var targetY=Math.max(0, el.getBoundingClientRect().top+window.scrollY-off);
+  if(Math.abs(targetY-window.scrollY)<5&&retries>0)return;
+  var dur=Math.min(400, Math.max(200, Math.abs(targetY-window.scrollY)*0.4));
+  _animateScroll(targetY,dur,id,function(){
+    if(id!==_scrollId||retries>=2)return;
+    setTimeout(function(){
+      if(id!==_scrollId)return;
+      var r2=el.getBoundingClientRect();
+      if(Math.abs(r2.top-off)>20) smartScroll(el,retries+1);
+    },400);
+  });
 }
 
 // Reset calculator panel when switching
