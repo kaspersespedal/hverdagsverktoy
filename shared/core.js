@@ -2125,46 +2125,58 @@ function stickyOffset(){
   const mmb=document.querySelector('.mobile-mode-bar');
   return (h?h.offsetHeight:0)+(n&&n.style.display!=='none'?n.offsetHeight:0)+(mmb&&window.getComputedStyle(mmb).display!=='none'?mmb.offsetHeight:0)+12;
 }
+var _scrollId=0; // cancellation token for all programmatic scrolls
+function _cancelScroll(){_scrollId++;}
+// Cancel programmatic scroll on user touch/wheel
+(function(){
+  var opts={passive:true};
+  window.addEventListener('wheel',_cancelScroll,opts);
+  window.addEventListener('touchstart',_cancelScroll,opts);
+})();
 function scrollToEl(el,mode){
   if(!el)return;
-  const off=stickyOffset();
+  _cancelScroll();
+  var id=_scrollId;
+  var off=stickyOffset();
   if(mode==='top'){
-    const top=el.getBoundingClientRect().top+window.scrollY-off;
+    var top=el.getBoundingClientRect().top+window.scrollY-off;
     window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
   } else {
     // 'nearest' — only scroll if not already in view
-    const rect=el.getBoundingClientRect();
-    const vH=window.innerHeight;
+    var rect=el.getBoundingClientRect();
+    var vH=window.innerHeight;
     if(rect.top<off||rect.bottom>vH){
-      const top=el.getBoundingClientRect().top+window.scrollY-off;
-      window.scrollTo({top:Math.max(0,top),behavior:'smooth'});
+      var top2=el.getBoundingClientRect().top+window.scrollY-off;
+      window.scrollTo({top:Math.max(0,top2),behavior:'smooth'});
     }
   }
 }
 function smartScroll(el,retries){
   if(!el)return;
+  _cancelScroll();
+  var id=_scrollId;
   retries=retries||0;
-  const off=stickyOffset()+12;
-  const r=el.getBoundingClientRect();
-  const targetY=Math.max(0, r.top+window.scrollY-off);
-  const startY=window.scrollY;
-  const dist=targetY-startY;
+  var off=stickyOffset()+12;
+  var r=el.getBoundingClientRect();
+  var targetY=Math.max(0, r.top+window.scrollY-off);
+  var startY=window.scrollY;
+  var dist=targetY-startY;
   if(Math.abs(dist)<5&&retries>0)return;
-  const dur=Math.min(500, Math.max(250, Math.abs(dist)*0.5));
-  let start=null;
+  var dur=Math.min(400, Math.max(200, Math.abs(dist)*0.4));
+  var start=null;
   function ease(t){return t<0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1;}
   function step(ts){
+    if(id!==_scrollId)return; // cancelled
     if(!start)start=ts;
-    const p=Math.min((ts-start)/dur,1);
-    window.scrollTo({top:startY+dist*ease(p),behavior:'instant'});
+    var p=Math.min((ts-start)/dur,1);
+    window.scrollTo(0, startY+dist*ease(p));
     if(p<1) requestAnimationFrame(step);
-    else if(retries<3){
-      // Re-check after CSS transitions settle (law-group expand = 550ms)
-      var delay=retries===0?600:400;
+    else if(retries<2){
       setTimeout(function(){
-        const r2=el.getBoundingClientRect();
+        if(id!==_scrollId)return;
+        var r2=el.getBoundingClientRect();
         if(Math.abs(r2.top-off)>20) smartScroll(el,retries+1);
-      },delay);
+      },400);
     }
   }
   requestAnimationFrame(step);
