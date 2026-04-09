@@ -240,7 +240,7 @@ function setFlagSrc(img, countryCode) {
 }
 function fmt(n) {
   const r=R();
-  return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(Math.round(n)).replace(/\u00a0/g,' ')+' '+r.currency;
+  return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(Math.round(n)).replace(/\u00a0/g,' ')+' '+(r.currency||'kr');
 }
 function pct(n) { return n.toFixed(1).replace('.',',')+' %'; }
 function parseNum(id) { const el=document.getElementById(id); return el ? +(el.value.replace(/[\s\u00a0,]/g,'').replace(',','.')) || 0 : 0; }
@@ -4197,7 +4197,7 @@ function switchCalcMode(mode, skipScroll){
 const ccCurrenciesNO = ['Norske kroner','Euro','US Dollar','Britiske pund','Svenske kroner','Danske kroner','Polske zloty','Sveitsiske franc','Japanske yen','Kinesiske yuan','Kanadiske dollar','Australske dollar','Indiske rupi','Tyrkiske lira','Brasilianske real'];
 const ccCurrencyCodes = ['NOK','EUR','USD','GBP','SEK','DKK','PLN','CHF','JPY','CNY','CAD','AUD','INR','TRY','BRL'];
 const ccCurrencyFlags = ['no','eu','us','gb','se','dk','pl','ch','jp','cn','ca','au','in','tr','br'];
-function getCcCurrencies(){ const r=R(); const names=r.ccCurrNames||ccCurrenciesNO; return ccCurrencyCodes.map((code,i)=>[code,'<img class="flag" src="https://flagcdn.com/w80/'+ccCurrencyFlags[i]+'.png" alt="'+code+'"> '+code+' — '+(names[i]||ccCurrenciesNO[i])]); }
+function getCcCurrencies(){ const r=R(); const names=r.ccCurrNames||ccCurrenciesNO; return ccCurrencyCodes.map((code,i)=>[code,code+' — '+(names[i]||ccCurrenciesNO[i]),ccCurrencyFlags[i]]); }
 // Fallback rates vs NOK (approximate March 2026)
 let ccRates = {NOK:1,EUR:0.0904,USD:0.0935,GBP:0.0737,SEK:0.9524,DKK:0.6404,PLN:0.3685,CHF:0.0813,JPY:14.02,CNY:0.6618,CAD:0.1267,AUD:0.1435,INR:7.88,TRY:3.39,BRL:0.5356};
 let ccRatesLoaded = false;
