@@ -314,8 +314,8 @@ function updateAll() {
   try{updateHero();}catch(e){_uiErr('updateHero',e);}
   try{updateTabs();}catch(e){_uiErr('updateTabs',e);}
   try{var _si=document.getElementById('search-input');if(_si){var _r=R();_si.placeholder=_r.searchPlaceholder||'Søk etter verktøy eller begrep...';}}catch(e){}
-  // Scroll active tab into view on mobile
-  try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(_at)setTimeout(function(){var r=_at.getBoundingClientRect(),nr=_cnav.getBoundingClientRect();_cnav.scrollLeft=_cnav.scrollLeft+(r.left-nr.left)-(nr.width-r.width)/2;var _pill=_cnav.querySelector('.calc-nav-pill');if(_pill){_pill.style.transition='none';var r2=_at.getBoundingClientRect(),nr2=_cnav.getBoundingClientRect();_pill.style.left=(r2.left-nr2.left+_cnav.scrollLeft)+'px';_pill.offsetHeight;_pill.style.transition='';}},100);if(!_cnav._hvtScrollBound){_cnav._hvtScrollBound=true;_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});}
+  // Scroll-end class toggle for mask-image fade
+  try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(!_cnav._hvtScrollBound){_cnav._hvtScrollBound=true;_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});}
   // Animated pill indicator
   if(_at){
     var pill=_cnav.querySelector('.calc-nav-pill');if(!pill){pill=document.createElement('div');pill.className='calc-nav-pill';_cnav.appendChild(pill);}
@@ -775,8 +775,10 @@ function toggleCard(card){
     if(Math.abs(drift) > 2) window.scrollBy({top:drift,behavior:'instant'});
   } else {
     // Opening — collapse other open cards in the same column first
+    // Skip accordion for law chapter cards (inside .law-body) so earlier chapters stay open
+    var isLawChapter=!!card.closest('.law-body');
     var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
-    if(parent){
+    if(parent&&!isLawChapter){
       parent.querySelectorAll('.info-card:not(.collapsed)').forEach(function(other){
         if(other===card||other.contains(card)||card.contains(other))return;
         other.classList.add('collapsed');
@@ -5114,6 +5116,19 @@ document.addEventListener('DOMContentLoaded',function(){
       else{this.style.display='none';}
     };
   });
+});
+// Center active nav tab on mobile after page fully initializes
+window.addEventListener('load',function(){
+  setTimeout(function(){
+    var cnav=document.querySelector('.calc-nav');
+    if(!cnav) return;
+    var at=cnav.querySelector('.calc-tab.active');
+    if(!at||cnav.scrollWidth<=cnav.clientWidth) return;
+    var r=at.getBoundingClientRect(),nr=cnav.getBoundingClientRect();
+    cnav.scrollLeft=cnav.scrollLeft+(r.left-nr.left)-(nr.width-r.width)/2;
+    var pill=cnav.querySelector('.calc-nav-pill');
+    if(pill){pill.style.transition='none';var r2=at.getBoundingClientRect(),nr2=cnav.getBoundingClientRect();pill.style.left=(r2.left-nr2.left+cnav.scrollLeft)+'px';pill.offsetHeight;pill.style.transition='';}
+  },100);
 });
 
 // ── Match calculator card heights with howto card heights ──
