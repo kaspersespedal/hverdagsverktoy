@@ -907,6 +907,9 @@ function updateLawChapterNav(card){
         var chipTop=stickyOffset()-12;
         g._chapterNav.classList.add('visible');
         g._chapterNav.style.top=chipTop+'px';
+        // Hide initially — scroll handler will reveal when header is scrolled past
+        var groupHdr=g.querySelector(':scope > .card-hdr');
+        if(groupHdr&&groupHdr.getBoundingClientRect().top>chipTop){g._chapterNav.style.display='none';}
         // Set nested card-hdr top dynamically below chip bar (only for OPEN cards)
         g._chipHdrTop=(chipTop+g._chapterNav.offsetHeight)+'px';
         g.querySelectorAll('.law-body > .info-card:not(.collapsed)').forEach(function(c){
