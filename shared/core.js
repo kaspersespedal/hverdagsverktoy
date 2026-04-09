@@ -798,6 +798,82 @@ function toggleCard(card){
   if(wasCollapsed){
     setTimeout(()=>{ smartScroll(card); }, 250);
   }
+  updateLawChapterNav(card);
+}
+
+// ── Law chapter sticky nav ──
+function initLawChapterNav(lawGroupId){
+  var group=document.getElementById(lawGroupId);
+  if(!group||group.querySelector('.law-chapter-nav'))return;
+  var body=group.querySelector('.law-body');
+  if(!body)return;
+  var cards=body.querySelectorAll(':scope > .info-card');
+  if(!cards.length)return;
+  var nav=document.createElement('div');
+  nav.className='law-chapter-nav';
+  var chips=[];
+  cards.forEach(function(card){
+    var titleEl=card.querySelector('.card-title');
+    if(!titleEl)return;
+    var text=titleEl.textContent.replace(/[▼▲]/g,'').trim();
+    // Extract short label: "kap. X" / "rozdz. X" / "ch. X" or first word(s)
+    var m=text.match(/\((?:kap|rozdz|ch|гл|فصل|cap|skyrius|章|cutub|ምዕ)\.\s*[\d§–,\s]+\)/i);
+    var label;
+    if(m){label=m[0].replace(/[()]/g,'').replace(/kap\./i,'Kap.');}
+    else{label=text.split(/[:(–]/)[0].trim();if(label.length>12){var words=label.split(/\s+/);label=words[0];if(label.length>12)label=label.substring(0,10)+'…';}}
+    var chip=document.createElement('span');
+    chip.className='law-chapter-chip';
+    chip.textContent=label;
+    chip.onclick=function(e){
+      e.stopPropagation();
+      // Open the chapter if collapsed
+      if(card.classList.contains('collapsed'))toggleCard(card);
+      else setTimeout(function(){scrollToEl(card,'top');},50);
+    };
+    chip._card=card;
+    nav.appendChild(chip);
+    chips.push(chip);
+  });
+  nav.style.top=(stickyOffset()-2)+'px';
+  body.insertBefore(nav,body.firstChild);
+  // IntersectionObserver for active chip
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var chip=chips.find(function(c){return c._card===entry.target;});
+        if(!chip)return;
+        if(entry.isIntersecting){
+          chips.forEach(function(c){c.classList.remove('active');});
+          chip.classList.add('active');
+          // Auto-scroll chip into view
+          chip.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+        }
+      });
+    },{rootMargin:'-140px 0px -60% 0px',threshold:0});
+    cards.forEach(function(card){obs.observe(card);});
+    group._chapterObs=obs;
+  }
+  group._chapterNav=nav;
+}
+function updateLawChapterNav(card){
+  // Show/hide chapter nav when a law-group is toggled
+  var lawGroups=['sal-law-group','sel-law-group'];
+  lawGroups.forEach(function(id){
+    if(card&&card.id!==id)return;
+    var g=document.getElementById(id);
+    if(!g)return;
+    if(!g.classList.contains('collapsed')){
+      initLawChapterNav(id);
+      if(g._chapterNav)g._chapterNav.classList.add('visible');
+      // Allow sticky to work — parent .card must not clip
+      var parentCard=g.closest('.card');
+      if(parentCard)parentCard.style.overflow='visible';
+    } else {
+      if(g._chapterNav)g._chapterNav.classList.remove('visible');
+      var parentCard=g.closest('.card');
+      if(parentCard)parentCard.style.overflow='';
+    }
+  });
 }
 
 // Open a key topic by keyword — opens relevant law group + card and scrolls to specific row
