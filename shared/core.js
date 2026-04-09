@@ -879,11 +879,24 @@ function updateLawChapterNav(card){
     if(!g.classList.contains('collapsed')){
       initLawChapterNav(id);
       if(g._chapterNav){
+        var chipTop=stickyOffset()-12;
         g._chapterNav.classList.add('visible');
-        g._chapterNav.style.top=(stickyOffset()-12)+'px';
+        g._chapterNav.style.top=chipTop+'px';
+        g.classList.add('law-chips-active');
+        // Set nested card-hdr top dynamically below chip bar
+        var hdrTop=(chipTop+g._chapterNav.offsetHeight)+'px';
+        g.querySelectorAll('.law-body > .info-card').forEach(function(c){
+          var h=c.querySelector(':scope > .card-hdr');
+          if(h)h.style.top=hdrTop;
+        });
       }
     } else {
       if(g._chapterNav)g._chapterNav.classList.remove('visible');
+      g.classList.remove('law-chips-active');
+      g.querySelectorAll('.law-body > .info-card').forEach(function(c){
+        var h=c.querySelector(':scope > .card-hdr');
+        if(h)h.style.top='';
+      });
     }
   });
 }
