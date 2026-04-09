@@ -273,7 +273,7 @@ function setRegion(r, e) {
   document.querySelectorAll('.region-opt').forEach(el => el.classList.remove('active'));
   if(e && e.currentTarget) e.currentTarget.classList.add('active');
   else { var opt=document.querySelector('.region-opt[onclick*="\''+r+'\'"]'); if(opt) opt.classList.add('active'); }
-  var _rdd=document.getElementById('rdd');if(_rdd)_rdd.classList.remove('open');
+  closeDD();
   loadLang(r).then(function() {
     if(switchId !== _regionSwitchId) return; // stale switch, skip
     // RTL support for Arabic
@@ -289,8 +289,21 @@ function setRegion(r, e) {
     if(r !== 'no') { region = 'no'; updateAll(); }
   });
 }
-function toggleDD() { var el=document.getElementById('rdd');if(el){el.classList.toggle('open');var cur=document.querySelector('.region-cur');if(cur)cur.setAttribute('aria-expanded',el.classList.contains('open')+'');} }
-document.addEventListener('click', e => { if(!e.target.closest('.region-sel')){var _rd=document.getElementById('rdd');if(_rd)_rd.classList.remove('open');} });
+function toggleDD() {
+  var el=document.getElementById('rdd');
+  if(!el) return;
+  el.classList.toggle('open');
+  var cur=document.querySelector('.region-cur');
+  if(cur) cur.setAttribute('aria-expanded',el.classList.contains('open')+'');
+  // Mobile backdrop
+  var bd=document.getElementById('region-backdrop');
+  if(el.classList.contains('open')){
+    if(!bd){bd=document.createElement('div');bd.id='region-backdrop';bd.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;display:none;';bd.onclick=function(){closeDD();};document.body.appendChild(bd);}
+    if(window.innerWidth<=600){bd.style.display='block';}else{bd.style.display='none';}
+  } else if(bd){bd.style.display='none';}
+}
+function closeDD(){var el=document.getElementById('rdd');if(el)el.classList.remove('open');var cur=document.querySelector('.region-cur');if(cur)cur.setAttribute('aria-expanded','false');var bd=document.getElementById('region-backdrop');if(bd)bd.style.display='none';}
+document.addEventListener('click', e => { if(!e.target.closest('.region-sel')&&!e.target.closest('#region-backdrop')){closeDD();} });
 
 
 // ═══════════════════════════════════════════════════════
