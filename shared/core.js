@@ -827,15 +827,34 @@ function initLawChapterNav(lawGroupId){
     chip.onclick=function(e){
       e.stopPropagation();
       // Open the chapter if collapsed
-      if(card.classList.contains('collapsed'))toggleCard(card);
-      else setTimeout(function(){scrollToEl(card,'top');},50);
+      if(card.classList.contains('collapsed')){
+        toggleCard(card);
+        // After toggle+scroll, adjust for chip bar height
+        setTimeout(function(){
+          var off=stickyOffset()+44;
+          var top=Math.max(0,card.getBoundingClientRect().top+window.scrollY-off);
+          window.scroll({top:top,behavior:'smooth'});
+        },350);
+      } else {
+        var off=stickyOffset()+44;
+        var top=Math.max(0,card.getBoundingClientRect().top+window.scrollY-off);
+        window.scroll({top:top,behavior:'smooth'});
+      }
     };
     chip._card=card;
     nav.appendChild(chip);
     chips.push(chip);
   });
-  nav.style.top=(stickyOffset()-2)+'px';
+  var navTop=stickyOffset()-2;
+  nav.style.top=navTop+'px';
   body.insertBefore(nav,body.firstChild);
+  // Nested card headers must stick below the chip bar
+  var chipH=42;// approximate chip bar height
+  group._chipStickyTop=(navTop+chipH)+'px';
+  cards.forEach(function(card){
+    var hdr=card.querySelector(':scope > .card-hdr');
+    if(hdr){hdr.style.top=group._chipStickyTop;hdr.style.zIndex='10';}
+  });
   // IntersectionObserver for active chip
   if('IntersectionObserver' in window){
     var obs=new IntersectionObserver(function(entries){
