@@ -875,7 +875,7 @@ function updateLawChapterNav(card){
       initLawChapterNav(id);
       if(g._chapterNav){
         g._chapterNav.classList.add('visible');
-        g._chapterNav.style.top=stickyOffset()+'px';
+        g._chapterNav.style.top=(stickyOffset()-12)+'px';
       }
     } else {
       if(g._chapterNav)g._chapterNav.classList.remove('visible');
