@@ -1,6 +1,6 @@
 // Hverdagsverktøy — fr.js (auto-generated)
 REGIONS['fr'] = {
-    flag:'🇫🇷', name:'Français',
+    flag:'fr', name:'Français',
     lang:'fr',    currency:'kr', currencyCode:'NOK',
     salDefaults: { gross: 800000 },
     salClasses: [['1','Classe 1 (Standard)'],['self','Travailleur indépendant']],

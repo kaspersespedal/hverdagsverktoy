@@ -68,7 +68,8 @@ function buildThemePicker(){
     wrap=document.createElement('div');
     wrap.id='theme-picker';
     wrap.style.cssText='display:flex;align-items:center;gap:6px;position:relative;';
-    hdrRight.appendChild(wrap);
+    var regionSel=hdrRight.querySelector('.region-sel');
+    if(regionSel) hdrRight.insertBefore(wrap,regionSel); else hdrRight.appendChild(wrap);
   }
   var isHeader=!!wrap.closest('.hdr-right');
   var current=(document.documentElement.getAttribute('data-theme')||'blue');
@@ -269,7 +270,7 @@ function setRegion(r, e) {
     var isRTL = (r === 'ar');
     document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
     document.documentElement.setAttribute('lang', r === 'no' ? 'nb' : r);
-    var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
+    var _rf=document.getElementById('rf');if(_rf)_rf.src='https://flagcdn.com/w40/'+R().flag+'.png';
     var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
     updateAll();
   }).catch(function() {
@@ -289,6 +290,7 @@ function _uiErr(fn,e){if(typeof console!=='undefined'&&console.error)console.err
 function updateAll() {
   try{updateHero();}catch(e){_uiErr('updateHero',e);}
   try{updateTabs();}catch(e){_uiErr('updateTabs',e);}
+  try{var _si=document.getElementById('search-input');if(_si){var _r=R();_si.placeholder=_r.searchPlaceholder||'Søk etter verktøy eller begrep...';}}catch(e){}
   // Scroll active tab into view on mobile
   try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(_at)setTimeout(function(){var r=_at.getBoundingClientRect(),nr=_cnav.getBoundingClientRect();_cnav.scrollLeft=_cnav.scrollLeft+(r.left-nr.left)-(nr.width-r.width)/2;var _pill=_cnav.querySelector('.calc-nav-pill');if(_pill){_pill.style.transition='none';var r2=_at.getBoundingClientRect(),nr2=_cnav.getBoundingClientRect();_pill.style.left=(r2.left-nr2.left+_cnav.scrollLeft)+'px';_pill.offsetHeight;_pill.style.transition='';}},100);if(!_cnav._hvtScrollBound){_cnav._hvtScrollBound=true;_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});}
   // Animated pill indicator
@@ -4031,8 +4033,8 @@ function switchCalcMode(mode, skipScroll){
 // ═══════════════════════════════════════════════════════
 const ccCurrenciesNO = ['Norske kroner','Euro','US Dollar','Britiske pund','Svenske kroner','Danske kroner','Polske zloty','Sveitsiske franc','Japanske yen','Kinesiske yuan','Kanadiske dollar','Australske dollar','Indiske rupi','Tyrkiske lira','Brasilianske real'];
 const ccCurrencyCodes = ['NOK','EUR','USD','GBP','SEK','DKK','PLN','CHF','JPY','CNY','CAD','AUD','INR','TRY','BRL'];
-const ccCurrencyFlags = ['🇳🇴','🇪🇺','🇺🇸','🇬🇧','🇸🇪','🇩🇰','🇵🇱','🇨🇭','🇯🇵','🇨🇳','🇨🇦','🇦🇺','🇮🇳','🇹🇷','🇧🇷'];
-function getCcCurrencies(){ const r=R(); const names=r.ccCurrNames||ccCurrenciesNO; return ccCurrencyCodes.map((code,i)=>[code,ccCurrencyFlags[i]+' '+code+' — '+(names[i]||ccCurrenciesNO[i])]); }
+const ccCurrencyFlags = ['no','eu','us','gb','se','dk','pl','ch','jp','cn','ca','au','in','tr','br'];
+function getCcCurrencies(){ const r=R(); const names=r.ccCurrNames||ccCurrenciesNO; return ccCurrencyCodes.map((code,i)=>[code,'<img class="flag" src="https://flagcdn.com/w40/'+ccCurrencyFlags[i]+'.png" alt="'+code+'"> '+code+' — '+(names[i]||ccCurrenciesNO[i])]); }
 // Fallback rates vs NOK (approximate March 2026)
 let ccRates = {NOK:1,EUR:0.0904,USD:0.0935,GBP:0.0737,SEK:0.9524,DKK:0.6404,PLN:0.3685,CHF:0.0813,JPY:14.02,CNY:0.6618,CAD:0.1267,AUD:0.1435,INR:7.88,TRY:3.39,BRL:0.5356};
 let ccRatesLoaded = false;
@@ -4500,7 +4502,7 @@ document.addEventListener('keydown', function(e){
 if('scrollRestoration' in history) history.scrollRestoration = 'manual';
 // Restore saved language in header
 (function(){
-  var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
+  var _rf=document.getElementById('rf');if(_rf)_rf.src='https://flagcdn.com/w40/'+R().flag+'.png';
   var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
   document.querySelectorAll('.region-opt').forEach(function(el){el.classList.remove('active');});
   var sel=document.querySelector('.region-opt[onclick*="\''+region+'\'"]');
@@ -5398,7 +5400,7 @@ function initPage(){
 }
 function _initPageReady(){
   // Sync region selector UI with saved language
-  var _rf=document.getElementById('rf');if(_rf)_rf.textContent=R().flag;
+  var _rf=document.getElementById('rf');if(_rf)_rf.src='https://flagcdn.com/w40/'+R().flag+'.png';
   var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
   document.querySelectorAll('.region-opt').forEach(function(el){el.classList.remove('active');});
   var activeOpt=document.querySelector('.region-opt[onclick*="\''+region+'\'"]');

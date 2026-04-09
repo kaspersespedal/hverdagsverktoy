@@ -1,6 +1,6 @@
 // Hverdagsverktøy — ar.js (auto-generated)
 REGIONS['ar'] = {
-    flag:'🇸🇦', name:'العربية', lang:'ar', currency:'kr', currencyCode:'NOK',
+    flag:'sa', name:'العربية', lang:'ar', currency:'kr', currencyCode:'NOK',
     salDefaults: { gross: 800000 },
     salClasses: [['1','الفئة 1 (عادي)'],['self','عامل مستقل']],
     salRegions: [['0.22','قياسي (كل النرويج)'],['0.185','فينمارك / شمال ترومس (منطقة الحوافز)']],

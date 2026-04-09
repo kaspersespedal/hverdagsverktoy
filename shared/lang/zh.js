@@ -1,6 +1,6 @@
 // Hverdagsverktøy — zh.js (auto-generated)
 REGIONS['zh'] = {
-    flag:'🇨🇳', name:'中文',
+    flag:'cn', name:'中文',
     lang:'zh',    currency:'kr', currencyCode:'NOK',
     salDefaults: { gross: 800000 },
     salClasses: [['1','第1类（标准）'],['self','个体经营者']],

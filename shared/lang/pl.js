@@ -1,6 +1,6 @@
 // Hverdagsverktøy — pl.js (auto-generated)
 REGIONS['pl'] = {
-    flag:'🇵🇱', name:'Polski', lang:'pl', currency:'kr', currencyCode:'NOK',
+    flag:'pl', name:'Polski', lang:'pl', currency:'kr', currencyCode:'NOK',
     salDefaults: { gross: 800000 },
     salClasses: [['1','Klasa 1 (Standardowa)'],['self','Osoba samozatrudniona']],
     salRegions: [['0.22','Standardowa (cały kraj)'],['0.185','Finnmark / Troms Północny (strefa ulg)']],

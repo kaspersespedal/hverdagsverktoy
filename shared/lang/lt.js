@@ -1,6 +1,6 @@
 // Hverdagsverktøy — lt.js (auto-generated)
 REGIONS['lt'] = {
-    flag:'🇱🇹', name:'Lietuvių', lang:'lt', currency:'kr', currencyCode:'NOK',
+    flag:'lt', name:'Lietuvių', lang:'lt', currency:'kr', currencyCode:'NOK',
     salDefaults: { gross: 800000 },
     salClasses: [['1','1 klasė (Standartinė)'],['self','Savarankiškai dirbantis']],
     salRegions: [['0.22','Standartinis (visa šalis)'],['0.185','Finnmarkas / Šiaurės Tromsas (lengvatinė zona)']],

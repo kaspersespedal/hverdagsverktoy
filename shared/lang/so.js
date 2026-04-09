@@ -1,6 +1,6 @@
 // Hverdagsverktøy — so.js (auto-generated)
 REGIONS['so'] = {
-    flag:'🇸🇴', name:'Soomaali', lang:'so', currency:'kr', currencyCode:'NOK',
+    flag:'so', name:'Soomaali', lang:'so', currency:'kr', currencyCode:'NOK',
     salDefaults: { gross: 800000 },
     salClasses: [['1','Fasalka 1 (Caadiga ah)'],['self','Shaqo-iska-qabso']],
     salRegions: [['0.22','Caadiga ah (wadanka oo dhan)'],['0.185','Finnmark / Waqooyiga Troms (aagga tallaabooyinka)']],

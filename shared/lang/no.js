@@ -1,6 +1,6 @@
 // Hverdagsverktøy — no.js (auto-generated)
 REGIONS['no'] = {
-    flag:'🇳🇴', name:'Norsk',
+    flag:'no', name:'Norsk',
     lang:'no',    currency:'kr', currencyCode:'NOK',
     salDefaults: { gross: 800000 },
     salClasses: [['1','Klasse 1 (Standard)'],['self','Selvstendig næringsdrivende']],

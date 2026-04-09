@@ -1,6 +1,6 @@
 // Hverdagsverktøy — uk.js (auto-generated)
 REGIONS['uk'] = {
-    flag:'🇺🇦', name:'Українська', lang:'uk', currency:'kr', currencyCode:'NOK',
+    flag:'ua', name:'Українська', lang:'uk', currency:'kr', currencyCode:'NOK',
     salDefaults: { gross: 800000 },
     salClasses: [['1','Клас 1 (Стандартний)'],['self','Самозайнята особа']],
     salRegions: [['0.22','Стандартна (вся країна)'],['0.185','Фіннмарк / Північний Тромс (зона пільг)']],

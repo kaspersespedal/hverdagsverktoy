@@ -1,6 +1,6 @@
 // Hverdagsverktøy — ti.js (auto-generated)
 REGIONS['ti'] = {
-    flag:'🇪🇷', name:'ትግርኛ',
+    flag:'er', name:'ትግርኛ',
     lang:'ti',    currency:'kr', currencyCode:'NOK',
     salDefaults: { gross: 800000 },
     salClasses: [['1','ክፍሊ 1 (ስታንዳርድ)'],['self','ብሕታዊ ነጋዳይ']],
