@@ -855,11 +855,21 @@ function initLawChapterNav(lawGroupId){
       if(!nav.classList.contains('visible'))return;
       var off=stickyOffset();
       // Find which card is most visible
-      // Hide chip bar if law-group is not in viewport
+      // Hide chip bar if law-group is not in viewport or header still visible
       var gRect=group.getBoundingClientRect();
-      if(gRect.bottom<off+44||gRect.top>window.innerHeight){
+      var groupHdr=group.querySelector(':scope > .card-hdr');
+      var navTop=parseFloat(nav.style.top)||off;
+      var groupHdrTop=groupHdr?groupHdr.getBoundingClientRect().top:gRect.top;
+      if(gRect.bottom<off+44||gRect.top>window.innerHeight||groupHdrTop>navTop){
         nav.style.display='none';return;
-      } else {nav.style.display='';}
+      } else {
+        nav.style.display='';
+        // In focus mode, keep chip bar flush below focus close bar
+        var mfc=document.getElementById('mobile-focus-close');
+        if(mfc&&document.body.classList.contains('mobile-focus-active')&&window.getComputedStyle(mfc).display!=='none'){
+          nav.style.top=Math.round(mfc.getBoundingClientRect().bottom)+'px';
+        }
+      }
       var best=null,bestDist=Infinity;
       chips.forEach(function(c){
         var r=c._card.getBoundingClientRect();
@@ -890,10 +900,11 @@ function updateLawChapterNav(card){
     if(!g.classList.contains('collapsed')){
       initLawChapterNav(id);
       if(g._chapterNav){
+        g.classList.add('law-chips-active');
+        if(document.body.classList.contains('mobile-focus-active'))document.body.classList.add('law-focus-chips');
         var chipTop=stickyOffset()-12;
         g._chapterNav.classList.add('visible');
         g._chapterNav.style.top=chipTop+'px';
-        g.classList.add('law-chips-active');
         // Set nested card-hdr top dynamically below chip bar (only for OPEN cards)
         g._chipHdrTop=(chipTop+g._chapterNav.offsetHeight)+'px';
         g.querySelectorAll('.law-body > .info-card:not(.collapsed)').forEach(function(c){
@@ -909,6 +920,7 @@ function updateLawChapterNav(card){
     } else {
       if(g._chapterNav)g._chapterNav.classList.remove('visible');
       g.classList.remove('law-chips-active');
+      document.body.classList.remove('law-focus-chips');
       g.querySelectorAll('.law-body > .info-card').forEach(function(c){
         var h=c.querySelector(':scope > .card-hdr');
         if(h)h.style.top='';
@@ -2348,7 +2360,8 @@ function stickyOffset(){
   const h=document.querySelector('header');
   const n=document.querySelector('.calc-nav');
   const mmb=document.querySelector('.mobile-mode-bar');
-  return (h?h.offsetHeight:0)+(n&&n.style.display!=='none'?n.offsetHeight:0)+(mmb&&window.getComputedStyle(mmb).display!=='none'?mmb.offsetHeight:0)+12;
+  const mfc=document.getElementById('mobile-focus-close');
+  return (h?h.offsetHeight:0)+(n&&n.style.display!=='none'?n.offsetHeight:0)+(mmb&&window.getComputedStyle(mmb).display!=='none'?mmb.offsetHeight:0)+(mfc&&window.getComputedStyle(mfc).display!=='none'?mfc.offsetHeight:0)+12;
 }
 var _scrollId=0; // cancellation token for all programmatic scrolls
 function _cancelScroll(){_scrollId++;}
@@ -4525,11 +4538,15 @@ function enterMobileFocus(card){
   }
   window.scrollTo({top:0,behavior:'instant'});
   b.classList.add('mobile-focus-active');
+  // Recalculate law chip bar position now that focus-close bar is visible
+  if(visibleCard.id&&visibleCard.id.endsWith('-law-group')){updateLawChapterNav(visibleCard);}
+  else{var lg=visibleCard.closest('[id$="-law-group"]');if(lg)updateLawChapterNav(lg);}
 }
 function exitMobileFocus(){
   if(window._deepLinkFocus){delete window._deepLinkFocus;window.location.href='/';return;}
   var b=document.body;
   b.classList.remove('mobile-focus-active');
+  b.classList.remove('law-focus-chips');
   var grid=document.querySelector('.calc-grid');
   if(grid){
     // Collapse cards that were opened by focus
@@ -4545,6 +4562,9 @@ function exitMobileFocus(){
     });
     Array.from(grid.children).forEach(function(c){c.removeAttribute('data-mf-visible');});
   }
+  // Hide any visible law chapter nav bars
+  document.querySelectorAll('.law-chapter-nav.visible').forEach(function(nav){nav.classList.remove('visible');nav.style.display='';});
+  ['sal-law-group','sel-law-group'].forEach(function(id){var g=document.getElementById(id);if(g)g.classList.remove('law-chips-active');});
 }
 function _isMobile(){return window.innerWidth<=900;}
 
