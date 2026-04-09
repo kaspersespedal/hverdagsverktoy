@@ -855,10 +855,15 @@ function initLawChapterNav(lawGroupId){
         var dist=Math.abs(r.top-off-44);
         if(r.top<off+200&&r.bottom>off&&dist<bestDist){bestDist=dist;best=c;}
       });
-      if(best){
+      if(best&&!best.classList.contains('active')){
         chips.forEach(function(c){c.classList.remove('active');});
         best.classList.add('active');
-        best.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+        // Only scroll chip if it's outside the visible area of the nav
+        var cr=best.getBoundingClientRect();
+        var nr=nav.getBoundingClientRect();
+        if(cr.left<nr.left||cr.right>nr.right){
+          best.scrollIntoView({behavior:'instant',block:'nearest',inline:'center'});
+        }
       }
     });
   }
