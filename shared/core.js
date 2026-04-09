@@ -193,7 +193,13 @@ function setTheme(t) {
 // ═══════════════════════════════════════════════════════
 const VALID_LANGS = ['no','en','zh','fr','pl','uk','ar','lt','so','ti'];
 if(typeof REGIONS === 'undefined') var REGIONS = {};
-let region = (function(){ try { const s=localStorage.getItem('hvt-lang'); if(s && VALID_LANGS.indexOf(s)>=0) return s; } catch(e){} return 'no'; })();
+let region = (function(){
+  // Priority 1: ?lang= URL parameter (for shared links)
+  try { var urlLang = new URLSearchParams(window.location.search).get('lang'); if(urlLang && VALID_LANGS.indexOf(urlLang)>=0) { try{localStorage.setItem('hvt-lang',urlLang);}catch(e){} return urlLang; } } catch(e){}
+  // Priority 2: localStorage
+  try { const s=localStorage.getItem('hvt-lang'); if(s && VALID_LANGS.indexOf(s)>=0) return s; } catch(e){}
+  return 'no';
+})();
 // Set dir attribute on load for RTL languages
 (function(){if(region==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}})();
 let _langLoading = {};
@@ -202,7 +208,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v16';
+    s.src = '/shared/lang/' + code + '.js?v=v17';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -452,7 +458,9 @@ function destroyDiscoBall3D(){
 
 function updateHero() {
   const r = R();
-  document.getElementById('hero-h1').innerHTML = r.heroH1 || 'Hverdagsverktøy<br><em>Praktiske verktøy for bedrift og privat</em>';
+  var _heroH1 = document.getElementById('hero-h1');
+  if(!_heroH1) return; // subpages don't have hero
+  _heroH1.innerHTML = r.heroH1 || 'Hverdagsverktøy<br><em>Praktiske verktøy for bedrift og privat</em>';
   if(document.documentElement.getAttribute('data-theme')==='disco'){
     var em=document.querySelector('#hero-h1 em');
     if(em){
@@ -503,7 +511,7 @@ function updateHero() {
     var dw=document.querySelector('.disco-link-wrap')||document.querySelector('.hendrix-link-wrap');
     if(dw){var emInside=dw.querySelector('em');if(emInside)dw.parentElement.insertBefore(emInside,dw);dw.remove();}
   }
-  document.getElementById('hero-p').textContent = r.heroP || '';
+  var _heroP = document.getElementById('hero-p'); if(_heroP) _heroP.textContent = r.heroP || '';
   const tbEl = document.getElementById('tb-main'); if(tbEl) tbEl.textContent = r.heroKickerTb || '';
   setText('rg-main', r.rgMain || 'Hovedspråk');
   setText('rg-norway', r.rgNorway || 'Språk i Norge');
@@ -512,11 +520,11 @@ function updateHero() {
 
 function updateTabs() {
   const r = R();
-  document.getElementById('tl-sal').textContent = r.tabSal || 'Salary After Tax';
-  document.getElementById('tl-mor').textContent = r.tabMor || 'Mortgage';
-  document.getElementById('tl-npv').textContent = r.tabNpv || 'NPV / IRR';
-  document.getElementById('tl-vat').textContent = r.tabVat || 'Tax / Duties';
-  document.getElementById('tl-basic').textContent = r.tabBasic || 'Calculator';
+  var _tlSal=document.getElementById('tl-sal');if(_tlSal)_tlSal.textContent = r.tabSal || 'Salary After Tax';
+  var _tlMor=document.getElementById('tl-mor');if(_tlMor)_tlMor.textContent = r.tabMor || 'Mortgage';
+  var _tlNpv=document.getElementById('tl-npv');if(_tlNpv)_tlNpv.textContent = r.tabNpv || 'NPV / IRR';
+  var _tlVat=document.getElementById('tl-vat');if(_tlVat)_tlVat.textContent = r.tabVat || 'Tax / Duties';
+  var _tlBasic=document.getElementById('tl-basic');if(_tlBasic)_tlBasic.textContent = r.tabBasic || 'Calculator';
   var _tlSelskap=document.getElementById('tl-selskap');if(_tlSelskap)_tlSelskap.textContent = r.tabSelskap || 'Selskap';
   // Right panel labels (only on kalkulator.html)
   var _ct=document.getElementById('lbl-calctype');if(_ct)_ct.textContent = r.cmLabel || 'Calculator type';

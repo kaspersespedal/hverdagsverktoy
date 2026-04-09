@@ -485,6 +485,7 @@ REGIONS['no'] = {
     searchTagConcept:'Begrep',
     searchTagLaw:'Lov',
     searchFeedbackMsg:'Fortell oss hva du leter etter',
+    suggestLonn:'Lønn etter skatt',suggestBoliglan:'Boliglån',suggestBsu:'BSU',suggestMva:'MVA',suggestBilkost:'Bilkostnad',suggestFerie:'Feriepenger',suggestBudsjett:'Budsjett',suggestStudie:'Studielån',
 
     // ═══════════════ SELSKAP PAGE ═══════════════
     secSelskapGuide:'Selskapsformer',

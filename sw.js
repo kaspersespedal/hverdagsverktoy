@@ -1,5 +1,5 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v16';
+const CACHE_NAME = 'hverdagsverktoy-v17';
 
 // Files to cache for offline use
 const PRECACHE_URLS = [
@@ -7,8 +7,17 @@ const PRECACHE_URLS = [
   './manifest.json',
   './shared/core.js',
   './shared/style.css',
+  './shared/search.js',
   './shared/lang/no.js',
   './shared/lang/en.js',
+  './shared/lang/zh.js',
+  './shared/lang/fr.js',
+  './shared/lang/pl.js',
+  './shared/lang/uk.js',
+  './shared/lang/ar.js',
+  './shared/lang/lt.js',
+  './shared/lang/so.js',
+  './shared/lang/ti.js',
   './fonts/PlayfairDisplay-Bold.woff2',
   './fonts/PlayfairDisplay-BoldItalic.woff2',
   './fonts/Inter-Regular.woff2',

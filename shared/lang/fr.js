@@ -701,6 +701,7 @@ REGIONS['fr'] = {
     searchTagConcept:'Concept',
     searchTagLaw:'Loi',
     searchFeedbackMsg:'Dites-nous ce que vous cherchez',
+    suggestLonn:'Salaire net',suggestBoliglan:'Prêt immobilier',suggestBsu:'BSU',suggestMva:'TVA',suggestBilkost:'Coût auto',suggestFerie:'Pécule de vacances',suggestBudsjett:'Budget',suggestStudie:'Prêt étudiant',
     selLawGroupTitle:'Aksjeloven et Selskapsloven',
     selLawGroupDesc:'Règles juridiques pour les AS, ANS, DA et KS',
     selLawLabelAsl:'Aksjeloven (Loi sur les sociétés anonymes)',

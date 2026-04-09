@@ -109,16 +109,16 @@ var SEARCH_DATA = [
   {name:'Selskapsloven',desc:'Lov om ansvarlige selskaper og kommandittselskaper',url:'/selskap/#selskap-ans-card',tags:'selskapsloven lov ansvarlig selskap kommandittselskap ans da ks 1985 partnership act',type:'law',page:'Selskap'}
 ];
 
-/* ─── Foreslåtte (popular searches) ─── */
+/* ─── Foreslåtte (popular searches — translated) ─── */
 var SUGGESTED = [
-  {label:'Lønn etter skatt', url:'/personlig/#lonn-wrapper'},
-  {label:'Boliglån',         url:'/boliglan/#mor-wrapper'},
-  {label:'BSU',              url:'/boliglan/#mor-bsu-card'},
-  {label:'MVA',              url:'/avgift/#vat-wrapper'},
-  {label:'Bilkostnad',       url:'/personlig/#bil-wrapper'},
-  {label:'Feriepenger',      url:'/kalkulator/#ferie'},
-  {label:'Budsjett',         url:'/personlig/#budsjett-wrapper'},
-  {label:'Studielån',        url:'/personlig/#studie-wrapper'}
+  {labelKey:'suggestLonn',    fallback:'Lønn etter skatt', url:'/personlig/#lonn-wrapper'},
+  {labelKey:'suggestBoliglan',fallback:'Boliglån',         url:'/boliglan/#mor-wrapper'},
+  {labelKey:'suggestBsu',     fallback:'BSU',              url:'/boliglan/#mor-bsu-card'},
+  {labelKey:'suggestMva',     fallback:'MVA',              url:'/avgift/#vat-wrapper'},
+  {labelKey:'suggestBilkost', fallback:'Bilkostnad',       url:'/personlig/#bil-wrapper'},
+  {labelKey:'suggestFerie',   fallback:'Feriepenger',      url:'/kalkulator/#ferie'},
+  {labelKey:'suggestBudsjett',fallback:'Budsjett',         url:'/personlig/#budsjett-wrapper'},
+  {labelKey:'suggestStudie',  fallback:'Studielån',        url:'/personlig/#studie-wrapper'}
 ];
 
 /* ─── Type labels (translated) ─── */
@@ -240,7 +240,7 @@ function initSearch(){
   var popularLabel = T('searchPopular','Populære:');
   var chipHTML = '<span class="search-chip-label">'+popularLabel+'</span>';
   for(var i=0; i<SUGGESTED.length; i++){
-    chipHTML += '<a href="'+SUGGESTED[i].url+'" class="search-chip">'+SUGGESTED[i].label+'</a>';
+    chipHTML += '<a href="'+SUGGESTED[i].url+'" class="search-chip">'+T(SUGGESTED[i].labelKey, SUGGESTED[i].fallback)+'</a>';
   }
   chips.innerHTML = chipHTML;
 

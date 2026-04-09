@@ -473,6 +473,7 @@ REGIONS['uk'] = {
     searchTagConcept:'Поняття',
     searchTagLaw:'Закон',
     searchFeedbackMsg:'Розкажіть нам, що ви шукаєте'
+    suggestLonn:'Зарплата після податків',suggestBoliglan:'Іпотека',suggestBsu:'BSU',suggestMva:'ПДВ',suggestBilkost:'Вартість авто',suggestFerie:'Відпускні',suggestBudsjett:'Бюджет',suggestStudie:'Студентський кредит',
 ,
     secSelskapGuide:'Форми компаній',
     secSelskapRef:'Довідка',

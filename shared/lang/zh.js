@@ -474,6 +474,7 @@ REGIONS['zh'] = {
     searchTagConcept:'概念',
     searchTagLaw:'法律',
     searchFeedbackMsg:'告诉我们您在找什么',
+    suggestLonn:'税后工资',suggestBoliglan:'房贷',suggestBsu:'BSU',suggestMva:'增值税',suggestBilkost:'汽车费用',suggestFerie:'假期工资',suggestBudsjett:'预算',suggestStudie:'学生贷款',
 
     secSelskapGuide:'公司形式',
     secSelskapRef:'参考',
