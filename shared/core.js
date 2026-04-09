@@ -801,10 +801,10 @@ function toggleCard(card){
   updateLawChapterNav(card);
 }
 
-// ── Law chapter sticky nav ──
+// ── Law chapter sticky nav (fixed position, outside card) ──
 function initLawChapterNav(lawGroupId){
   var group=document.getElementById(lawGroupId);
-  if(!group||group.querySelector('.law-chapter-nav'))return;
+  if(group._chapterNav)return;
   var body=group.querySelector('.law-body');
   if(!body)return;
   var cards=body.querySelectorAll(':scope > .info-card');
@@ -816,7 +816,6 @@ function initLawChapterNav(lawGroupId){
     var titleEl=card.querySelector('.card-title');
     if(!titleEl)return;
     var text=titleEl.textContent.replace(/[▼▲]/g,'').trim();
-    // Extract short label: "kap. X" / "rozdz. X" / "ch. X" or first word(s)
     var m=text.match(/\((?:kap|rozdz|ch|гл|فصل|cap|skyrius|章|cutub|ምዕ)\.\s*[\d§–,\s]+\)/i);
     var label;
     if(m){label=m[0].replace(/[()]/g,'').replace(/kap\./i,'Kap.');}
@@ -826,56 +825,47 @@ function initLawChapterNav(lawGroupId){
     chip.textContent=label;
     chip.onclick=function(e){
       e.stopPropagation();
-      // Open the chapter if collapsed
-      if(card.classList.contains('collapsed')){
-        toggleCard(card);
-        // After toggle+scroll, adjust for chip bar height
-        setTimeout(function(){
-          var off=stickyOffset()+44;
-          var top=Math.max(0,card.getBoundingClientRect().top+window.scrollY-off);
-          window.scroll({top:top,behavior:'smooth'});
-        },350);
-      } else {
+      if(card.classList.contains('collapsed'))toggleCard(card);
+      setTimeout(function(){
         var off=stickyOffset()+44;
         var top=Math.max(0,card.getBoundingClientRect().top+window.scrollY-off);
         window.scroll({top:top,behavior:'smooth'});
-      }
+      },card.classList.contains('collapsed')?50:350);
     };
     chip._card=card;
     nav.appendChild(chip);
     chips.push(chip);
   });
-  var navTop=stickyOffset()-2;
-  nav.style.top=navTop+'px';
-  body.insertBefore(nav,body.firstChild);
-  // Nested card headers must stick below the chip bar
-  var chipH=42;// approximate chip bar height
-  group._chipStickyTop=(navTop+chipH)+'px';
-  cards.forEach(function(card){
-    var hdr=card.querySelector(':scope > .card-hdr');
-    if(hdr){hdr.style.top=group._chipStickyTop;hdr.style.zIndex='10';}
-  });
-  // IntersectionObserver for active chip
-  if('IntersectionObserver' in window){
-    var obs=new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        var chip=chips.find(function(c){return c._card===entry.target;});
-        if(!chip)return;
-        if(entry.isIntersecting){
-          chips.forEach(function(c){c.classList.remove('active');});
-          chip.classList.add('active');
-          // Auto-scroll chip into view
-          chip.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-        }
-      });
-    },{rootMargin:'-140px 0px -60% 0px',threshold:0});
-    cards.forEach(function(card){obs.observe(card);});
-    group._chapterObs=obs;
-  }
+  // Append to body as fixed element
+  document.body.appendChild(nav);
   group._chapterNav=nav;
+  group._chapterChips=chips;
+  // Scroll listener to show/hide and track active chip
+  var _ticking=false;
+  function onScroll(){
+    if(_ticking)return;_ticking=true;
+    requestAnimationFrame(function(){
+      _ticking=false;
+      if(!nav.classList.contains('visible'))return;
+      var off=stickyOffset();
+      // Find which card is most visible
+      var best=null,bestDist=Infinity;
+      chips.forEach(function(c){
+        var r=c._card.getBoundingClientRect();
+        var dist=Math.abs(r.top-off-44);
+        if(r.top<off+200&&r.bottom>off&&dist<bestDist){bestDist=dist;best=c;}
+      });
+      if(best){
+        chips.forEach(function(c){c.classList.remove('active');});
+        best.classList.add('active');
+        best.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+      }
+    });
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  group._chapterScrollHandler=onScroll;
 }
 function updateLawChapterNav(card){
-  // Show/hide chapter nav when a law-group is toggled
   var lawGroups=['sal-law-group','sel-law-group'];
   lawGroups.forEach(function(id){
     if(card&&card.id!==id)return;
@@ -883,14 +873,12 @@ function updateLawChapterNav(card){
     if(!g)return;
     if(!g.classList.contains('collapsed')){
       initLawChapterNav(id);
-      if(g._chapterNav)g._chapterNav.classList.add('visible');
-      // Allow sticky to work — parent .card must not clip
-      var parentCard=g.closest('.card');
-      if(parentCard)parentCard.style.overflow='visible';
+      if(g._chapterNav){
+        g._chapterNav.classList.add('visible');
+        g._chapterNav.style.top=stickyOffset()+'px';
+      }
     } else {
       if(g._chapterNav)g._chapterNav.classList.remove('visible');
-      var parentCard=g.closest('.card');
-      if(parentCard)parentCard.style.overflow='';
     }
   });
 }
