@@ -909,7 +909,7 @@ function updateLawChapterNav(card){
         g._chapterNav.classList.add('visible');
         if(isMF){
           var lb=g.querySelector('.law-body');
-          if(lb){var mfc=document.getElementById('mobile-focus-close');var stickyTop=mfc?(mfc.getBoundingClientRect().bottom)+'px':'93px';lb.insertBefore(g._chapterNav,lb.firstChild);g._chapterNav.style.position='sticky';g._chapterNav.style.top=stickyTop;}
+          if(lb){var mfc=document.getElementById('mobile-focus-close');var stickyTop=mfc?(parseInt(getComputedStyle(mfc).top)||45)+mfc.offsetHeight+'px':'93px';lb.insertBefore(g._chapterNav,lb.firstChild);g._chapterNav.style.position='sticky';g._chapterNav.style.top=stickyTop;}
         } else {
           if(g._chapterNav.parentNode!==document.body)document.body.appendChild(g._chapterNav);
           g._chapterNav.style.position='';g._chapterNav.style.top=chipTop+'px';
