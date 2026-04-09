@@ -273,7 +273,7 @@ REGIONS['ti'] = {
     pensjonHint: 'OTP = ግዴታዊ ናይ ሞያ ጥሮታ (ትሕቲ 1G ዘሎ ደሞዝ 2% ዝወሓደ)። ረብሓ ዓመታዊ ናይ ጥሮታ ፈንድ ተጸባኢ ረብሓ — ታሪኻዊ ማእከላይ ሓ. 5-7%።',
     agaZoneHint: 'AGA = ናይ ወሃቢ ስራሕ ማሕበራዊ ድሕነት ወፈያ። መጠን ኣብ ቦታ ትካል ይምርኮስ።',
     agaZoneLinkText: 'ኩሎም ዞባታት ርአ →',
-    agaOtpHint: 'OTP = ግዴታዊ ናይ ሞያ ጥሮታ። ወሃቢ ስራሕ ትሕቲ 1G (124,028 ክሮነር 2025) ዘሎ ደሞዝ 2% ዝወሓደ ንጥሮታ ክቕምጥ ኣለዎ።',
+    agaOtpHint: 'OTP = ግዴታዊ ናይ ሞያ ጥሮታ። ወሃቢ ስራሕ ትሕቲ 1G (130,160 كرونة في 2025/2026) ዘሎ ደሞዝ 2% ዝወሓደ ንጥሮታ ክቕምጥ ኣለዎ።',
     valgevinCurrencyLabel: 'ባጤራ',
     valgevinUnitsLabel: 'ዝተገዝኡ ኣሃዛት',
     valgevinCostLabel: 'ናይ ዋጋ (NOK)',

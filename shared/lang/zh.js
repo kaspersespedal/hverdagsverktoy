@@ -274,7 +274,7 @@ REGIONS['zh'] = {
     pensjonHint: 'OTP = 强制性职业养老金（工资超过1G的至少2%）。收益率是养老基金的预期年收益率 — 历史平均约5-7%。',
     agaZoneHint: 'AGA = 雇主社会保障缴款。费率取决于企业所在地。',
     agaZoneLinkText: '查看所有区域 →',
-    agaOtpHint: 'OTP = 强制性职业养老金。雇主必须为工资超过1G（2025年为124,028克朗）的部分至少储蓄2%用于养老。',
+    agaOtpHint: 'OTP = 强制性职业养老金。雇主必须为工资超过1G（2025/2026年为130,160克朗）的部分至少储蓄2%用于养老。',
     valgevinCurrencyLabel: '货币',
     valgevinUnitsLabel: '购买单位数',
     valgevinCostLabel: '成本价（NOK）',

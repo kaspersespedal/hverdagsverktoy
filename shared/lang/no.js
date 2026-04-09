@@ -326,7 +326,7 @@ REGIONS['no'] = {
     pensjonHint: 'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over 1G). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.',
     agaZoneHint: 'AGA = arbeidsgiveravgift. Satsen avhenger av hvor bedriften holder til.',
     agaZoneLinkText: 'Se alle soner →',
-    agaOtpHint: 'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G (124 028 kr i 2025) til pensjon.',
+    agaOtpHint: 'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G (130 160 kr i 2025/2026) til pensjon.',
     valgevinCurrencyLabel: 'Valuta',
     valgevinUnitsLabel: 'Antall enheter kjøpt',
     valgevinCostLabel: 'Kostpris (NOK)',

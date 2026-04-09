@@ -272,7 +272,7 @@ REGIONS['lt'] = {
     pensjonHint: 'OTP = privaloma profesinė pensija (min. 2% atlyginimo virš 1G). Grąža yra tikėtina metinė pensijų fondo grąža — istorinis vidurkis apie 5-7%.',
     agaZoneHint: 'AGA = darbdavio socialinio draudimo įmoka. Tarifas priklauso nuo įmonės buvimo vietos.',
     agaZoneLinkText: 'Žiūrėti visas zonas →',
-    agaOtpHint: 'OTP = privaloma profesinė pensija. Darbdavys turi taupyti bent 2% atlyginimo virš 1G (124 028 NOK 2025 m.) pensijai.',
+    agaOtpHint: 'OTP = privaloma profesinė pensija. Darbdavys turi taupyti bent 2% atlyginimo virš 1G (130 160 NOK 2025/2026 m.) pensijai.',
     valgevinCurrencyLabel: 'Valiuta',
     valgevinUnitsLabel: 'Nupirktų vienetų skaičius',
     valgevinCostLabel: 'Savikaina (NOK)',

@@ -330,7 +330,7 @@ REGIONS['en'] = {
     pensjonHint: 'OTP = mandatory occupational pension (min. 2% of salary above 1G). Return is expected annual return on pension fund — historical average approx. 5-7%.',
     agaZoneHint: 'AGA = employer social security contribution. The rate depends on where the business is located.',
     agaZoneLinkText: 'See all zones →',
-    agaOtpHint: 'OTP = mandatory occupational pension. Employer must save at least 2% of salary above 1G (NOK 124,028 in 2025) for pension.',
+    agaOtpHint: 'OTP = mandatory occupational pension. Employer must save at least 2% of salary above 1G (NOK 130,160 in 2025/2026) for pension.',
     valgevinCurrencyLabel: 'Currency',
     valgevinUnitsLabel: 'Number of units purchased',
     valgevinCostLabel: 'Cost price (NOK)',

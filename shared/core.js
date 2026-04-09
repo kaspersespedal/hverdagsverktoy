@@ -2175,7 +2175,7 @@ function updateFagkalkulatorUI() {
     const linkText = r.agaZoneLinkText || 'Se alle soner →';
     agaZoneHintEl.innerHTML = (r.agaZoneHint || 'AGA = arbeidsgiveravgift. Satsen avhenger av hvor bedriften holder til.') + ' <a href="javascript:void(0)" onclick="goToAgaCard()" style="color:var(--accent);text-decoration:underline;opacity:.8;">' + linkText + '</a>';
   }
-  setText('aga-hint-otp', r.agaOtpHint || 'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G (124 028 kr i 2025) til pensjon.');
+  setText('aga-hint-otp', r.agaOtpHint || 'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G (130 160 kr i 2025/2026) til pensjon.');
   setText('pensjon-hint', r.pensjonHint || 'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over 1G). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.');
   // --- Additional valgevinst labels ---
   setText('valgevinst-l-currency', r.valgevinCurrencyLabel || 'Valuta');

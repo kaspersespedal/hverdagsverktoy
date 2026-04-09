@@ -273,7 +273,7 @@ REGIONS['pl'] = {
     pensjonHint: 'OTP = obowiązkowa emerytura pracownicza (min. 2% wynagrodzenia powyżej 1G). Zwrot to oczekiwany roczny zwrot z funduszu emerytalnego — średnia historyczna ok. 5-7%.',
     agaZoneHint: 'AGA = składka pracodawcy na ubezpieczenie społeczne. Stawka zależy od lokalizacji firmy.',
     agaZoneLinkText: 'Zobacz wszystkie strefy →',
-    agaOtpHint: 'OTP = obowiązkowa emerytura pracownicza. Pracodawca musi oszczędzać co najmniej 2% wynagrodzenia powyżej 1G (124 028 NOK w 2025) na emeryturę.',
+    agaOtpHint: 'OTP = obowiązkowa emerytura pracownicza. Pracodawca musi oszczędzać co najmniej 2% wynagrodzenia powyżej 1G (130 160 NOK w 2025/2026) na emeryturę.',
     valgevinCurrencyLabel: 'Waluta',
     valgevinUnitsLabel: 'Liczba zakupionych jednostek',
     valgevinCostLabel: 'Cena nabycia (NOK)',

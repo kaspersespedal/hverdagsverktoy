@@ -270,7 +270,7 @@ REGIONS['so'] = {
     pensjonHint: 'OTP = hawl-gabba waajibka ah (ugu yaraan 2% mushaharka ka sarreeya 1G). Soo-celinta waa soo-celinta sanadlaha ah ee la filayo — celceliska taariikhiga ah qiyaastii 5-7%.',
     agaZoneHint: 'AGA = lacagta shaqo-bixinta caymiska bulshada. Qiimaha wuxuu ku xiran yahay halka shirkaddu ku taalo.',
     agaZoneLinkText: 'Arag dhammaan aagagga →',
-    agaOtpHint: 'OTP = hawl-gabba waajibka ah. Shaqo-bixiyaha waa inuu keydiyaa ugu yaraan 2% mushaharka ka sarreeya 1G (124,028 kr 2025) hawl-gabbadda.',
+    agaOtpHint: 'OTP = hawl-gabba waajibka ah. Shaqo-bixiyaha waa inuu keydiyaa ugu yaraan 2% mushaharka ka sarreeya 1G (130,160 kr 2025/2026) hawl-gabbadda.',
     valgevinCurrencyLabel: 'Lacagta',
     valgevinUnitsLabel: 'Tirada qaybaha la iibsaday',
     valgevinCostLabel: 'Qiimaha kharashka (NOK)',
