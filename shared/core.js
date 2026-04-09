@@ -903,10 +903,17 @@ function updateLawChapterNav(card){
       initLawChapterNav(id);
       if(g._chapterNav){
         g.classList.add('law-chips-active');
-        if(document.body.classList.contains('mobile-focus-active'))document.body.classList.add('law-focus-chips');
+        var isMF=document.body.classList.contains('mobile-focus-active');
+        if(isMF)document.body.classList.add('law-focus-chips');
         var chipTop=stickyOffset()-12;
         g._chapterNav.classList.add('visible');
-        g._chapterNav.style.top=chipTop+'px';
+        if(isMF){
+          var lb=g.querySelector('.law-body');
+          if(lb){var mfc=document.getElementById('mobile-focus-close');var stickyTop=mfc?(mfc.getBoundingClientRect().bottom)+'px':'93px';lb.insertBefore(g._chapterNav,lb.firstChild);g._chapterNav.style.position='sticky';g._chapterNav.style.top=stickyTop;}
+        } else {
+          if(g._chapterNav.parentNode!==document.body)document.body.appendChild(g._chapterNav);
+          g._chapterNav.style.position='';g._chapterNav.style.top=chipTop+'px';
+        }
         // Hide initially — scroll handler will reveal when header is scrolled past
         var groupHdr=g.querySelector(':scope > .card-hdr');
         if(groupHdr&&groupHdr.getBoundingClientRect().top>chipTop){g._chapterNav.style.display='none';}
@@ -4567,8 +4574,8 @@ function exitMobileFocus(){
     });
     Array.from(grid.children).forEach(function(c){c.removeAttribute('data-mf-visible');});
   }
-  // Hide any visible law chapter nav bars
-  document.querySelectorAll('.law-chapter-nav.visible').forEach(function(nav){nav.classList.remove('visible');nav.style.display='';});
+  // Move chip bars back to body and hide
+  document.querySelectorAll('.law-chapter-nav.visible').forEach(function(nav){nav.classList.remove('visible');nav.style.display='';nav.style.position='';nav.style.top='';if(nav.parentNode!==document.body)document.body.appendChild(nav);});
   ['sal-law-group','sel-law-group'].forEach(function(id){var g=document.getElementById(id);if(g)g.classList.remove('law-chips-active');});
 }
 function _isMobile(){return window.innerWidth<=900;}
