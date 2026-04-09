@@ -4268,6 +4268,7 @@ function toggleDesktopFocus(colIndex){
   var grid=document.querySelector('.calc-grid');
   if(!grid) return;
   if(b.classList.contains('desktop-focus')){
+    if(window._deepLinkFocus){delete window._deepLinkFocus;window.location.href='/';return;}
     // Exit focus — collapse cards that were opened by focus
     b.classList.remove('desktop-focus');
     grid.querySelectorAll('.info-card[data-opened-by-focus]').forEach(function(ic){
@@ -4379,6 +4380,7 @@ function enterMobileFocus(card){
   b.classList.add('mobile-focus-active');
 }
 function exitMobileFocus(){
+  if(window._deepLinkFocus){delete window._deepLinkFocus;window.location.href='/';return;}
   var b=document.body;
   b.classList.remove('mobile-focus-active');
   var grid=document.querySelector('.calc-grid');
@@ -5475,16 +5477,19 @@ function _initPageReady(){
       // Auto-focus the card if it's an info-card — immediate
       var card=el.classList.contains('info-card')?el:el.closest&&el.closest('.info-card');
       if(card){
+        window._deepLinkFocus=true;
         if(card.classList.contains('collapsed')) card.classList.remove('collapsed');
+        // Clear hash to prevent browser auto-scroll
+        history.replaceState(null,'',window.location.pathname);
         if(_isMobile()){
-          // Clear hash to prevent browser auto-scroll on mobile
-          history.replaceState(null,'',window.location.pathname);
           enterMobileFocus(card);
           window.scrollTo({top:0,behavior:'instant'});
           setTimeout(function(){window.scrollTo({top:0,behavior:'instant'});},0);
         } else {
-          // On desktop, open the card and let browser handle hash scroll
-          // CSS scroll-margin-top on .info-card handles sticky header offset
+          // Desktop: enter focus mode on the card's column
+          var colIdx=_getColIndex(card);
+          toggleDesktopFocus(colIdx);
+          setTimeout(function(){ smartScroll(card); },100);
         }
       } else {
         el.scrollIntoView({block:'start',behavior:'smooth'});

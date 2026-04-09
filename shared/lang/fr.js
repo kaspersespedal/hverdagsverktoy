@@ -604,20 +604,15 @@ REGIONS['fr'] = {
     // --- Comparaison ---
     selskapCompareTitle:'Comparaison des formes d\'entreprise',
     selskapCompareDesc:'Responsabilité, fiscalité, exigences et propriétaires côte à côte',
-    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
-      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
-      +'</tr></thead><tbody>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Responsabilité</td><td style="padding:8px 10px;color:var(--ink2);">Illimitée</td><td style="padding:8px 10px;color:var(--ink2);">Limitée</td><td style="padding:8px 10px;color:var(--ink2);">Illimitée</td><td style="padding:8px 10px;color:var(--ink2);">Commandité : illimitée<br>Commanditaire : limitée</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Propriétaires</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Capital social</td><td style="padding:8px 10px;color:var(--ink2);">Aucun</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Aucun</td><td style="padding:8px 10px;color:var(--ink2);">Optionnel</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Frais d\'enregistrement</td><td style="padding:8px 10px;color:var(--ink2);">Gratuit</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Fiscalité</td><td style="padding:8px 10px;color:var(--ink2);">Personnelle</td><td style="padding:8px 10px;color:var(--ink2);">22 % société + dividendes</td><td style="padding:8px 10px;color:var(--ink2);">Imposition des associés</td><td style="padding:8px 10px;color:var(--ink2);">Imposition des associés</td></tr>'
-      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Législation</td><td style="padding:8px 10px;color:var(--ink2);">Règles générales</td><td style="padding:8px 10px;color:var(--ink2);">Loi sur les sociétés par actions</td><td style="padding:8px 10px;color:var(--ink2);">Loi sur les sociétés</td><td style="padding:8px 10px;color:var(--ink2);">Loi sur les sociétés ch. 3</td></tr>'
+    selskapCompareBody:'<div class="cmp-wrap"><table class="cmp-table">'
+      +'<thead><tr><th></th><th>ENK</th><th>AS</th><th>ANS/DA</th><th>KS</th></tr></thead>'
+      +'<tbody>'
+      +'<tr><td>Respon\u00ADsabilit\u00E9</td><td><span class="cmp-pill amber">Illimit\u00E9e</span></td><td><span class="cmp-pill green">Limit\u00E9e</span></td><td><span class="cmp-pill amber">Illimit\u00E9e</span></td><td><span class="cmp-pill amber">Commandit\u00E9 : illimit\u00E9e</span><br><span class="cmp-pill green">Comman\u00ADditaire : limit\u00E9e</span></td></tr>'
+      +'<tr><td>Propri\u00E9taires</td><td>1</td><td>1+</td><td>2+</td><td>2+</td></tr>'
+      +'<tr><td>Capital social</td><td><span class="cmp-pill green">Aucun</span></td><td>30 000 kr</td><td><span class="cmp-pill green">Aucun</span></td><td>Optionnel</td></tr>'
+      +'<tr><td>Frais d\'enreg.</td><td><span class="cmp-pill green">Gratuit</span></td><td>6 825 kr</td><td>2 250 kr</td><td>2 250 kr</td></tr>'
+      +'<tr><td>Fiscalit\u00E9</td><td>Personnelle</td><td><span class="cmp-pill blue">22 % + dividendes</span></td><td>Imposition des associ\u00E9s</td><td>Imposition des associ\u00E9s</td></tr>'
+      +'<tr><td>L\u00E9gislation</td><td>R\u00E8gles g\u00E9n\u00E9rales</td><td>Loi sur les soci\u00E9t\u00E9s par actions</td><td>Loi sur les soci\u00E9t\u00E9s</td><td>Loi soc. ch. 3</td></tr>'
       +'</tbody></table></div>',
 
     // --- Impôt et formes d\'entreprise ---

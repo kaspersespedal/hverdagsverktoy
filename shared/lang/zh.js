@@ -612,20 +612,15 @@ REGIONS['zh'] = {
     // --- 比较 ---
     selskapCompareTitle:'公司形式比较',
     selskapCompareDesc:'责任、税收、要求和业主对比',
-    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
-      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
-      +'</tr></thead><tbody>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">责任</td><td style="padding:8px 10px;color:var(--ink2);">无限</td><td style="padding:8px 10px;color:var(--ink2);">有限</td><td style="padding:8px 10px;color:var(--ink2);">无限</td><td style="padding:8px 10px;color:var(--ink2);">普通：无限<br>有限：有限</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">业主</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">起始资本</td><td style="padding:8px 10px;color:var(--ink2);">无</td><td style="padding:8px 10px;color:var(--ink2);">30,000 kr</td><td style="padding:8px 10px;color:var(--ink2);">无</td><td style="padding:8px 10px;color:var(--ink2);">可选</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">注册费</td><td style="padding:8px 10px;color:var(--ink2);">免费</td><td style="padding:8px 10px;color:var(--ink2);">6,825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">税收</td><td style="padding:8px 10px;color:var(--ink2);">个人</td><td style="padding:8px 10px;color:var(--ink2);">22%公司+股利</td><td style="padding:8px 10px;color:var(--ink2);">合伙人征税</td><td style="padding:8px 10px;color:var(--ink2);">合伙人征税</td></tr>'
-      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">法律依据</td><td style="padding:8px 10px;color:var(--ink2);">普通规则</td><td style="padding:8px 10px;color:var(--ink2);">股份公司法</td><td style="padding:8px 10px;color:var(--ink2);">公司法</td><td style="padding:8px 10px;color:var(--ink2);">公司法第3章</td></tr>'
+    selskapCompareBody:'<div class="cmp-wrap"><table class="cmp-table">'
+      +'<thead><tr><th></th><th>ENK</th><th>AS</th><th>ANS/DA</th><th>KS</th></tr></thead>'
+      +'<tbody>'
+      +'<tr><td>\u8D23\u4EFB</td><td><span class="cmp-pill amber">\u65E0\u9650</span></td><td><span class="cmp-pill green">\u6709\u9650</span></td><td><span class="cmp-pill amber">\u65E0\u9650</span></td><td><span class="cmp-pill amber">\u666E\u901A\uFF1A\u65E0\u9650</span><br><span class="cmp-pill green">\u6709\u9650\uFF1A\u6709\u9650</span></td></tr>'
+      +'<tr><td>\u4E1A\u4E3B</td><td>1</td><td>1+</td><td>2+</td><td>2+</td></tr>'
+      +'<tr><td>\u8D77\u59CB\u8D44\u672C</td><td><span class="cmp-pill green">\u65E0</span></td><td>30,000 kr</td><td><span class="cmp-pill green">\u65E0</span></td><td>\u53EF\u9009</td></tr>'
+      +'<tr><td>\u6CE8\u518C\u8D39</td><td><span class="cmp-pill green">\u514D\u8D39</span></td><td>6,825 kr</td><td>2,250 kr</td><td>2,250 kr</td></tr>'
+      +'<tr><td>\u7A0E\u6536</td><td>\u4E2A\u4EBA</td><td><span class="cmp-pill blue">22 % + \u80A1\u5229</span></td><td>\u5408\u4F19\u4EBA\u5F81\u7A0E</td><td>\u5408\u4F19\u4EBA\u5F81\u7A0E</td></tr>'
+      +'<tr><td>\u6CD5\u5F8B\u4F9D\u636E</td><td>\u666E\u901A\u89C4\u5219</td><td>\u80A1\u4EFD\u516C\u53F8\u6CD5</td><td>\u516C\u53F8\u6CD5</td><td>\u516C\u53F8\u6CD5\u7B2C3\u7AE0</td></tr>'
       +'</tbody></table></div>',
 
     // --- 税收和公司形式 ---

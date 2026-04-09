@@ -604,20 +604,15 @@ REGIONS['pl'] = {
     // --- Porównanie ---
     selskapCompareTitle:'Porównanie form biznesowych',
     selskapCompareDesc:'Odpowiedzialność, podatki, wymogi i właściciele obok siebie',
-    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
-      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
-      +'</tr></thead><tbody>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Odpowiedzialność</td><td style="padding:8px 10px;color:var(--ink2);">Nieograniczona</td><td style="padding:8px 10px;color:var(--ink2);">Ograniczona</td><td style="padding:8px 10px;color:var(--ink2);">Nieograniczona</td><td style="padding:8px 10px;color:var(--ink2);">Kompl: nieogr.<br>Komm: ogr.</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Właściciele</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Kapitał zakładowy</td><td style="padding:8px 10px;color:var(--ink2);">Brak</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Brak</td><td style="padding:8px 10px;color:var(--ink2);">Opcjonalnie</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Opłata rej.</td><td style="padding:8px 10px;color:var(--ink2);">Bezpłatna</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Opodatkowanie</td><td style="padding:8px 10px;color:var(--ink2);">Osobiste</td><td style="padding:8px 10px;color:var(--ink2);">22 % spółka + dywidenda</td><td style="padding:8px 10px;color:var(--ink2);">Opodatkowanie uczestników</td><td style="padding:8px 10px;color:var(--ink2);">Opodatkowanie uczestników</td></tr>'
-      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Prawo</td><td style="padding:8px 10px;color:var(--ink2);">Przepisy ogólne</td><td style="padding:8px 10px;color:var(--ink2);">Akcjeloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven rozdz. 3</td></tr>'
+    selskapCompareBody:'<div class="cmp-wrap"><table class="cmp-table">'
+      +'<thead><tr><th></th><th>ENK</th><th>AS</th><th>ANS/DA</th><th>KS</th></tr></thead>'
+      +'<tbody>'
+      +'<tr><td>Odpowie\u00ADdzialno\u015B\u0107</td><td><span class="cmp-pill amber">Nieogra\u00ADniczona</span></td><td><span class="cmp-pill green">Ograniczona</span></td><td><span class="cmp-pill amber">Nieogra\u00ADniczona</span></td><td><span class="cmp-pill amber">Kompl: nieogr.</span><br><span class="cmp-pill green">Komm: ogr.</span></td></tr>'
+      +'<tr><td>W\u0142a\u015Bciciele</td><td>1</td><td>1+</td><td>2+</td><td>2+</td></tr>'
+      +'<tr><td>Kapita\u0142 zak\u0142adowy</td><td><span class="cmp-pill green">Brak</span></td><td>30 000 kr</td><td><span class="cmp-pill green">Brak</span></td><td>Opcjonalnie</td></tr>'
+      +'<tr><td>Op\u0142ata rej.</td><td><span class="cmp-pill green">Bezp\u0142atna</span></td><td>6 825 kr</td><td>2 250 kr</td><td>2 250 kr</td></tr>'
+      +'<tr><td>Opodatkowanie</td><td>Osobiste</td><td><span class="cmp-pill blue">22 % + dywidenda</span></td><td>Opodatkowanie uczestnik\u00F3w</td><td>Opodatkowanie uczestnik\u00F3w</td></tr>'
+      +'<tr><td>Prawo</td><td>Przepisy og\u00F3lne</td><td>Akcjeloven</td><td>Selskaps\u00ADloven</td><td>Sel.loven rozdz. 3</td></tr>'
       +'</tbody></table></div>',
 
     // --- Podatki i formy biznesowe ---

@@ -595,21 +595,15 @@ REGIONS['ar'] = {
     // --- مقارنة الأشكال ---
     selskapCompareTitle:'مقارنة أشكال الشركات',
     selskapCompareDesc:'جدول سريع للمقارنة',
-    selskapCompareBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">هنا مقارنة سريعة للمساعدة في الاختيار بين الأشكال الرئيسية.</div>'
-      +'<div style="overflow-x:auto;margin-bottom:16px;">'
-      +'<table style="width:100%;border-collapse:collapse;font-size:12px;">'
-      +'<thead style="background:var(--surface2);border-bottom:2px solid var(--border);">'
-      +'<tr><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">الخاصية</th><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">ENK</th><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">AS</th><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">ANS/DA</th><th style="text-align:left;padding:10px;color:var(--ink);font-weight:700;">KS</th></tr>'
-      +'</thead>'
+    selskapCompareBody:'<div class="cmp-wrap"><table class="cmp-table">'
+      +'<thead><tr><th></th><th>ENK</th><th>AS</th><th>ANS/DA</th><th>KS</th></tr></thead>'
       +'<tbody>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">التأسيس</td><td style="padding:10px;color:var(--ink);">مجاني</td><td style="padding:10px;color:var(--ink);">6,825 kr</td><td style="padding:10px;color:var(--ink);">2,250 kr</td><td style="padding:10px;color:var(--ink);">2,250 kr</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">رأس المال</td><td style="padding:10px;color:var(--ink);">لا شيء</td><td style="padding:10px;color:var(--ink);">30,000 kr</td><td style="padding:10px;color:var(--ink);">لا شيء</td><td style="padding:10px;color:var(--ink);">متغير</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">الملاك</td><td style="padding:10px;color:var(--ink);">1</td><td style="padding:10px;color:var(--ink);">1+</td><td style="padding:10px;color:var(--ink);">2+</td><td style="padding:10px;color:var(--ink);">2+</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">المسؤولية</td><td style="padding:10px;color:var(--ink);">غير محدودة</td><td style="padding:10px;color:var(--ink);">محدودة</td><td style="padding:10px;color:var(--ink);">غير محدودة</td><td style="padding:10px;color:var(--ink);">مختلطة</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:10px;color:var(--ink2);">الضريبة</td><td style="padding:10px;color:var(--ink);">22% + TI</td><td style="padding:10px;color:var(--ink);">22% الشركة</td><td style="padding:10px;color:var(--ink);">المالكين</td><td style="padding:10px;color:var(--ink);">المالكين</td></tr>'
-      +'</tbody>'
-      +'</table>'
-      +'</div>',
+      +'<tr><td>\u0627\u0644\u0645\u0633\u0624\u0648\u0644\u064A\u0629</td><td><span class="cmp-pill amber">\u063A\u064A\u0631 \u0645\u062D\u062F\u0648\u062F\u0629</span></td><td><span class="cmp-pill green">\u0645\u062D\u062F\u0648\u062F\u0629</span></td><td><span class="cmp-pill amber">\u063A\u064A\u0631 \u0645\u062D\u062F\u0648\u062F\u0629</span></td><td>\u0645\u062E\u062A\u0644\u0637\u0629</td></tr>'
+      +'<tr><td>\u0627\u0644\u0645\u0644\u0627\u0643</td><td>1</td><td>1+</td><td>2+</td><td>2+</td></tr>'
+      +'<tr><td>\u0631\u0623\u0633 \u0627\u0644\u0645\u0627\u0644</td><td><span class="cmp-pill green">\u0644\u0627 \u0634\u064A\u0621</span></td><td>30,000 kr</td><td><span class="cmp-pill green">\u0644\u0627 \u0634\u064A\u0621</span></td><td>\u0645\u062A\u063A\u064A\u0631</td></tr>'
+      +'<tr><td>\u0627\u0644\u062A\u0623\u0633\u064A\u0633</td><td><span class="cmp-pill green">\u0645\u062C\u0627\u0646\u064A</span></td><td>6,825 kr</td><td>2,250 kr</td><td>2,250 kr</td></tr>'
+      +'<tr><td>\u0627\u0644\u0636\u0631\u064A\u0628\u0629</td><td>22% + TI</td><td><span class="cmp-pill blue">22 % + \u0623\u0631\u0628\u0627\u062D</span></td><td>\u0627\u0644\u0645\u0627\u0644\u0643\u064A\u0646</td><td>\u0627\u0644\u0645\u0627\u0644\u0643\u064A\u0646</td></tr>'
+      +'</tbody></table></div>',
 
     // --- الضرائب والنماذج ---
     selskapSkattTitle:'الضرائب والتقارير',

@@ -616,20 +616,15 @@ REGIONS['en'] = {
     // --- Comparison ---
     selskapCompareTitle:'Comparison of company forms',
     selskapCompareDesc:'Liability, tax, requirements and owners side by side',
-    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
-      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
-      +'</tr></thead><tbody>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Liability</td><td style="padding:8px 10px;color:var(--ink2);">Unlimited</td><td style="padding:8px 10px;color:var(--ink2);">Limited</td><td style="padding:8px 10px;color:var(--ink2);">Unlimited</td><td style="padding:8px 10px;color:var(--ink2);">Gen: unlimited<br>Lim: limited</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Owners</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Capital</td><td style="padding:8px 10px;color:var(--ink2);">None</td><td style="padding:8px 10px;color:var(--ink2);">30,000 kr</td><td style="padding:8px 10px;color:var(--ink2);">None</td><td style="padding:8px 10px;color:var(--ink2);">Optional</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Reg. fee</td><td style="padding:8px 10px;color:var(--ink2);">Free</td><td style="padding:8px 10px;color:var(--ink2);">6,825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2,250 kr</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Tax</td><td style="padding:8px 10px;color:var(--ink2);">Personal</td><td style="padding:8px 10px;color:var(--ink2);">22% company + dividend</td><td style="padding:8px 10px;color:var(--ink2);">Partner taxation</td><td style="padding:8px 10px;color:var(--ink2);">Partner taxation</td></tr>'
-      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Legislation</td><td style="padding:8px 10px;color:var(--ink2);">General rules</td><td style="padding:8px 10px;color:var(--ink2);">Aksjeloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven ch. 3</td></tr>'
+    selskapCompareBody:'<div class="cmp-wrap"><table class="cmp-table">'
+      +'<thead><tr><th></th><th>ENK</th><th>AS</th><th>ANS/DA</th><th>KS</th></tr></thead>'
+      +'<tbody>'
+      +'<tr><td>Liability</td><td><span class="cmp-pill amber">Unlimited</span></td><td><span class="cmp-pill green">Limited</span></td><td><span class="cmp-pill amber">Unlimited</span></td><td><span class="cmp-pill amber">Gen: unlimited</span><br><span class="cmp-pill green">Lim: limited</span></td></tr>'
+      +'<tr><td>Owners</td><td>1</td><td>1+</td><td>2+</td><td>2+</td></tr>'
+      +'<tr><td>Capital</td><td><span class="cmp-pill green">None</span></td><td>30,000 kr</td><td><span class="cmp-pill green">None</span></td><td>Optional</td></tr>'
+      +'<tr><td>Reg. fee</td><td><span class="cmp-pill green">Free</span></td><td>6,825 kr</td><td>2,250 kr</td><td>2,250 kr</td></tr>'
+      +'<tr><td>Tax</td><td>Personal</td><td><span class="cmp-pill blue">22 % + dividend</span></td><td>Partner taxation</td><td>Partner taxation</td></tr>'
+      +'<tr><td>Legislation</td><td>General rules</td><td>Aksjeloven</td><td>Selskaps\u00ADloven</td><td>Sel.loven ch. 3</td></tr>'
       +'</tbody></table></div>',
 
     // --- Tax and company forms ---

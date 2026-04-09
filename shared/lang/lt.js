@@ -611,20 +611,15 @@ REGIONS['lt'] = {
     // --- Palyginimas ---
     selskapCompareTitle:'Įmonių formų palyginimas',
     selskapCompareDesc:'Atsakomybė, mokestis, reikalavimai ir savininkai greta',
-    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
-      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">IČ</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
-      +'</tr></thead><tbody>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Atsakomybė</td><td style="padding:8px 10px;color:var(--ink2);">Neribotas</td><td style="padding:8px 10px;color:var(--ink2);">Ribots</td><td style="padding:8px 10px;color:var(--ink2);">Neribotas</td><td style="padding:8px 10px;color:var(--ink2);">Komp: neribots<br>Komand: ribots</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Savininkai</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Pradžios kapitalas</td><td style="padding:8px 10px;color:var(--ink2);">Nėra</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Nėra</td><td style="padding:8px 10px;color:var(--ink2);">Neprivalomas</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Reg.mokest.</td><td style="padding:8px 10px;color:var(--ink2);">Nemokama</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Apmokestinimas</td><td style="padding:8px 10px;color:var(--ink2);">Asmeninis</td><td style="padding:8px 10px;color:var(--ink2);">22 % bendrovė + dividendai</td><td style="padding:8px 10px;color:var(--ink2);">Dalyvio apmokestinimas</td><td style="padding:8px 10px;color:var(--ink2);">Dalyvio apmokestinimas</td></tr>'
-      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Įstatymas</td><td style="padding:8px 10px;color:var(--ink2);">Bendrosios taisyklės</td><td style="padding:8px 10px;color:var(--ink2);">Akcinės bendrovės įstatymas</td><td style="padding:8px 10px;color:var(--ink2);">Bendrovės įstatymas</td><td style="padding:8px 10px;color:var(--ink2);">Bendrovės įstatymas 3 sk.</td></tr>'
+    selskapCompareBody:'<div class="cmp-wrap"><table class="cmp-table">'
+      +'<thead><tr><th></th><th>ENK</th><th>AS</th><th>ANS/DA</th><th>KS</th></tr></thead>'
+      +'<tbody>'
+      +'<tr><td>Atsakomyb\u0117</td><td><span class="cmp-pill amber">Neribotas</span></td><td><span class="cmp-pill green">Ribots</span></td><td><span class="cmp-pill amber">Neribotas</span></td><td><span class="cmp-pill amber">Komp: neribots</span><br><span class="cmp-pill green">Komand: ribots</span></td></tr>'
+      +'<tr><td>Savininkai</td><td>1</td><td>1+</td><td>2+</td><td>2+</td></tr>'
+      +'<tr><td>Prad\u017Eios kapitalas</td><td><span class="cmp-pill green">N\u0117ra</span></td><td>30 000 kr</td><td><span class="cmp-pill green">N\u0117ra</span></td><td>Neprivalomas</td></tr>'
+      +'<tr><td>Reg.mokest.</td><td><span class="cmp-pill green">Nemokama</span></td><td>6 825 kr</td><td>2 250 kr</td><td>2 250 kr</td></tr>'
+      +'<tr><td>Apmokestinimas</td><td>Asmeninis</td><td><span class="cmp-pill blue">22 % + dividendai</span></td><td>Dalyvio apmokes\u00ADtinimas</td><td>Dalyvio apmokes\u00ADtinimas</td></tr>'
+      +'<tr><td>\u012Estatymas</td><td>Bendrosios taisykl\u0117s</td><td>Akcin\u0117s bendrov\u0117s \u012Fstatymas</td><td>Bendrov\u0117s \u012Fstatymas</td><td>Bend. \u012Fst. 3 sk.</td></tr>'
       +'</tbody></table></div>',
 
     // --- Mokestis ir įmonės formos ---

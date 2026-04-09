@@ -624,20 +624,15 @@ REGIONS['no'] = {
     // --- Sammenligning ---
     selskapCompareTitle:'Sammenligning av selskapsformer',
     selskapCompareDesc:'Ansvar, skatt, krav og eiere side om side',
-    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
-      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
-      +'</tr></thead><tbody>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Ansvar</td><td style="padding:8px 10px;color:var(--ink2);">Ubegrenset</td><td style="padding:8px 10px;color:var(--ink2);">Begrenset</td><td style="padding:8px 10px;color:var(--ink2);">Ubegrenset</td><td style="padding:8px 10px;color:var(--ink2);">Kompl: ubegr.<br>Komm: begr.</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Eiere</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Startkapital</td><td style="padding:8px 10px;color:var(--ink2);">Ingen</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Ingen</td><td style="padding:8px 10px;color:var(--ink2);">Valgfritt</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Reg.gebyr</td><td style="padding:8px 10px;color:var(--ink2);">Gratis</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Beskatning</td><td style="padding:8px 10px;color:var(--ink2);">Personlig</td><td style="padding:8px 10px;color:var(--ink2);">22 % selskap + utbytte</td><td style="padding:8px 10px;color:var(--ink2);">Deltakerligning</td><td style="padding:8px 10px;color:var(--ink2);">Deltakerligning</td></tr>'
-      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);white-space:nowrap;">Lovverk</td><td style="padding:8px 10px;color:var(--ink2);">Alminnelige regler</td><td style="padding:8px 10px;color:var(--ink2);">Aksjeloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven</td><td style="padding:8px 10px;color:var(--ink2);">Selskapsloven kap. 3</td></tr>'
+    selskapCompareBody:'<div class="cmp-wrap"><table class="cmp-table">'
+      +'<thead><tr><th></th><th>ENK</th><th>AS</th><th>ANS/DA</th><th>KS</th></tr></thead>'
+      +'<tbody>'
+      +'<tr><td>Ansvar</td><td><span class="cmp-pill amber">Ubegr.</span></td><td><span class="cmp-pill green">Begr.</span></td><td><span class="cmp-pill amber">Ubegr.</span></td><td><span class="cmp-pill amber">K: ubegr.</span><br><span class="cmp-pill green">K: begr.</span></td></tr>'
+      +'<tr><td>Eiere</td><td>1</td><td>1+</td><td>2+</td><td>2+</td></tr>'
+      +'<tr><td>Startkapital</td><td><span class="cmp-pill green">Ingen</span></td><td>30 000 kr</td><td><span class="cmp-pill green">Ingen</span></td><td>Valgfritt</td></tr>'
+      +'<tr><td>Reg.gebyr</td><td><span class="cmp-pill green">Gratis</span></td><td>6 825 kr</td><td>2 250 kr</td><td>2 250 kr</td></tr>'
+      +'<tr><td>Beskatning</td><td>Personlig</td><td><span class="cmp-pill blue">22 % + utbytte</span></td><td>Deltakerlignet</td><td>Deltakerlignet</td></tr>'
+      +'<tr><td>Lovverk</td><td>Alm. regler</td><td>Aksjeloven</td><td>Selskapsloven</td><td>Sel.loven kap. 3</td></tr>'
       +'</tbody></table></div>',
 
     // --- Skatt og selskapsformer ---

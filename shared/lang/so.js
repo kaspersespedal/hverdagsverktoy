@@ -591,19 +591,14 @@ REGIONS['so'] = {
     // --- Isbarbar dhig ---
     selskapCompareTitle:'Isbarbar dhigga noocyada shirkadaha',
     selskapCompareDesc:'Damaanad, canshuur, shuruud iyo mulkiilayaal',
-    selskapCompareBody:'<div style="overflow-x:auto;margin-bottom:16px;"><table style="width:100%;border-collapse:collapse;font-size:12px;line-height:1.5;">'
-      +'<thead><tr style="background:var(--surface2);border-bottom:2px solid var(--border);">'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;"></th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ENK</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">AS</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">ANS/DA</th>'
-      +'<th style="padding:8px 10px;text-align:left;font-weight:700;color:var(--ink);white-space:nowrap;">KS</th>'
-      +'</tr></thead><tbody>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Damaanad</td><td style="padding:8px 10px;color:var(--ink2);">Xad la\'aan</td><td style="padding:8px 10px;color:var(--ink2);">Xakamiyad</td><td style="padding:8px 10px;color:var(--ink2);">Xad la\'aan</td><td style="padding:8px 10px;color:var(--ink2);">Komp: xad la\'aan<br>Komm: xakam.</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Mulkiilayaal</td><td style="padding:8px 10px;color:var(--ink2);">1</td><td style="padding:8px 10px;color:var(--ink2);">1+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td><td style="padding:8px 10px;color:var(--ink2);">2+</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Maalka bilowga</td><td style="padding:8px 10px;color:var(--ink2);">Xorna</td><td style="padding:8px 10px;color:var(--ink2);">30 000 kr</td><td style="padding:8px 10px;color:var(--ink2);">Xorna</td><td style="padding:8px 10px;color:var(--ink2);">Ikhtiyaar</td></tr>'
-      +'<tr style="border-bottom:1px solid var(--border);background:var(--surface2);"><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Qorista</td><td style="padding:8px 10px;color:var(--ink2);">Xorna</td><td style="padding:8px 10px;color:var(--ink2);">6 825 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td><td style="padding:8px 10px;color:var(--ink2);">2 250 kr</td></tr>'
-      +'<tr><td style="padding:8px 10px;font-weight:600;color:var(--ink);">Canshuur</td><td style="padding:8px 10px;color:var(--ink2);">Shakhsi</td><td style="padding:8px 10px;color:var(--ink2);">22 % shirkad + qayb</td><td style="padding:8px 10px;color:var(--ink2);">Qaybinta</td><td style="padding:8px 10px;color:var(--ink2);">Qaybinta</td></tr>'
+    selskapCompareBody:'<div class="cmp-wrap"><table class="cmp-table">'
+      +'<thead><tr><th></th><th>ENK</th><th>AS</th><th>ANS/DA</th><th>KS</th></tr></thead>'
+      +'<tbody>'
+      +'<tr><td>Damaanad</td><td><span class="cmp-pill amber">Xad la\'aan</span></td><td><span class="cmp-pill green">Xakamiyad</span></td><td><span class="cmp-pill amber">Xad la\'aan</span></td><td><span class="cmp-pill amber">Komp: xad la\'aan</span><br><span class="cmp-pill green">Komm: xakam.</span></td></tr>'
+      +'<tr><td>Mulkiilayaal</td><td>1</td><td>1+</td><td>2+</td><td>2+</td></tr>'
+      +'<tr><td>Maalka bilowga</td><td><span class="cmp-pill green">Xorna</span></td><td>30 000 kr</td><td><span class="cmp-pill green">Xorna</span></td><td>Ikhtiyaar</td></tr>'
+      +'<tr><td>Qorista</td><td><span class="cmp-pill green">Xorna</span></td><td>6 825 kr</td><td>2 250 kr</td><td>2 250 kr</td></tr>'
+      +'<tr><td>Canshuur</td><td>Shakhsi</td><td><span class="cmp-pill blue">22 % + qayb</span></td><td>Qaybinta</td><td>Qaybinta</td></tr>'
       +'</tbody></table></div>',
 
     // --- Canshuur iyo noocyada shirkadaha ---
