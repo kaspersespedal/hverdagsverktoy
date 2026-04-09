@@ -2508,7 +2508,7 @@ function updateDashStats() {
   const el = (id) => document.getElementById(id);
   const sv=el('dash-sal-val'),mv=el('dash-mor-val'),nv=el('dash-npv-val');
   if(sv){ sv.textContent = _sal ? fmt(_sal.net) : '–'; }
-  if(mv){ mv.textContent = _mor ? fmt(_mor.mnd) + R().mo : '–'; }
+  if(mv){ mv.textContent = _mor ? fmt(_mor.mnd) + (R().mo||'/mnd') : '–'; }
   if(nv){
     nv.textContent = _npv ? fmt(_npv.npv) : '–';
     nv.style.color = '';
@@ -3313,10 +3313,10 @@ function calcBilkostnad() {
 
   window._bilData={verditap:Math.round(verditap),drivTotal:Math.round(drivTotal),forsTotal:Math.round(forsTotal),serviceTotal:Math.round(serviceTotal),dekkTotal:Math.round(dekkTotal),avgiftTotal:Math.round(avgiftTotal),bomTotal:Math.round(bomTotal),totalKostnad:Math.round(totalKostnad),perKm:perKm,aar:aar};
   document.getElementById('bil-r-val').textContent = fmt(totalKostnad);
-  document.getElementById('bil-r-sub').textContent = fmt(perMnd) + (r.bilPerMnd || '/mnd') + ' · ' + perKm.toFixed(1).replace('.',',') + ' ' + r.currency + '/km · ' + aar + ' ' + (r.yr || 'år');
+  document.getElementById('bil-r-sub').textContent = fmt(perMnd) + (r.bilPerMnd || '/mnd') + ' · ' + perKm.toFixed(1).replace('.',',') + ' ' + (r.currency||'kr') + '/km · ' + aar + ' ' + (r.yr || 'år');
   // Use default theme gradient (same as other calculators)
   document.getElementById('bil-r-mnd').textContent = fmt(perMnd);
-  document.getElementById('bil-r-km').textContent = perKm.toFixed(1).replace('.',',') + ' ' + r.currency;
+  document.getElementById('bil-r-km').textContent = perKm.toFixed(1).replace('.',',') + ' ' + (r.currency||'kr');
   document.getElementById('bil-r-verditap').textContent = fmt(verditap);
   document.getElementById('bil-r-driv').textContent = fmt(drivTotal);
   document.getElementById('bil-r-fors').textContent = fmt(forsTotal);
