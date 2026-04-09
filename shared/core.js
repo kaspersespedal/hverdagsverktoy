@@ -798,6 +798,12 @@ function toggleCard(card){
   if(wasCollapsed){
     setTimeout(()=>{ smartScroll(card); }, 250);
   }
+  // Fix card-hdr top for law-chips-active groups
+  var lawParent=card.closest('.law-chips-active');
+  if(lawParent&&lawParent._chipHdrTop){
+    var hdr=card.querySelector(':scope > .card-hdr');
+    if(hdr) hdr.style.top=wasCollapsed?lawParent._chipHdrTop:'';
+  }
   updateLawChapterNav(card);
 }
 
@@ -849,6 +855,11 @@ function initLawChapterNav(lawGroupId){
       if(!nav.classList.contains('visible'))return;
       var off=stickyOffset();
       // Find which card is most visible
+      // Hide chip bar if law-group is not in viewport
+      var gRect=group.getBoundingClientRect();
+      if(gRect.bottom<off+44||gRect.top>window.innerHeight){
+        nav.style.display='none';return;
+      } else {nav.style.display='';}
       var best=null,bestDist=Infinity;
       chips.forEach(function(c){
         var r=c._card.getBoundingClientRect();
@@ -883,11 +894,16 @@ function updateLawChapterNav(card){
         g._chapterNav.classList.add('visible');
         g._chapterNav.style.top=chipTop+'px';
         g.classList.add('law-chips-active');
-        // Set nested card-hdr top dynamically below chip bar
-        var hdrTop=(chipTop+g._chapterNav.offsetHeight)+'px';
-        g.querySelectorAll('.law-body > .info-card').forEach(function(c){
+        // Set nested card-hdr top dynamically below chip bar (only for OPEN cards)
+        g._chipHdrTop=(chipTop+g._chapterNav.offsetHeight)+'px';
+        g.querySelectorAll('.law-body > .info-card:not(.collapsed)').forEach(function(c){
           var h=c.querySelector(':scope > .card-hdr');
-          if(h)h.style.top=hdrTop;
+          if(h)h.style.top=g._chipHdrTop;
+        });
+        // Ensure collapsed cards have NO top offset
+        g.querySelectorAll('.law-body > .info-card.collapsed').forEach(function(c){
+          var h=c.querySelector(':scope > .card-hdr');
+          if(h)h.style.top='';
         });
       }
     } else {
