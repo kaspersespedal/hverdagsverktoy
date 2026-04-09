@@ -209,7 +209,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v17';
+    s.src = '/shared/lang/' + code + '.js?v=v19';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -1957,6 +1957,11 @@ function updateFagkalkulatorUI() {
   setText('mobile-switch-btn', r.mobileSwitch || 'Bytt kalkulator');
   setText('mobile-focus-btn', r.mobileFocus || 'Fokus');
   setText('mobile-focus-exit', r.mobileFocusExit || 'Lukk');
+  // Update mobile mode label on language switch
+  if(typeof bcMode!=='undefined' && typeof updateMobileBar==='function'){
+    var _ml={basic:r.cmBasic||'Enkel',scientific:r.cmScientific||'Vitenskapelig',finance:r.cmFinance||'Finansiell',unit:r.cmUnit||'Valuta',lvu:r.lblLvu||'Lønn vs Utbytte',aga:r.lblAga||'Ansattkostnad',avs:r.lblAvs||'Avskrivning',ferie:r.lblFerie||'Feriepenger',rente:r.lblRente||'Effektiv Rente',valgevinst:r.lblValgevinst||'Valutagevinst',likvid:r.lblLikvid||'Likviditet',pensjon:r.lblPensjon||'Pensjon',npv:r.npvTitle||'NPV/IRR'};
+    updateMobileBar(_ml[bcMode]||bcMode);
+  }
   // Panel titles
   setText('bc-lvu-label', r.lblLvu || 'Lønn vs Utbytte');
   setText('bc-aga-label', r.lblAga || 'Ansattkostnad');
