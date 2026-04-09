@@ -228,6 +228,16 @@ let activeCalc = 'dashboard';
 let _sal, _mor, _npv, _vat;
 
 function R() { const r=REGIONS[region]; if(!r) return REGIONS['no']||{}; return r.base ? Object.assign({},REGIONS[r.base],r) : r; }
+// Flag image loader with retry and fallback
+function setFlagSrc(img, countryCode) {
+  if(!img||!countryCode) return;
+  img.onerror = function() {
+    if(!this._retried) { this._retried=true; this.src='https://flagcdn.com/w80/'+countryCode+'.png?r='+Date.now(); }
+    else { this.style.display='none'; }
+  };
+  img.onload = function() { this._retried=false; this.style.display=''; };
+  img.src='https://flagcdn.com/w80/'+countryCode+'.png';
+}
 function fmt(n) {
   const r=R();
   return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(Math.round(n)).replace(/\u00a0/g,' ')+' '+r.currency;
@@ -270,7 +280,7 @@ function setRegion(r, e) {
     var isRTL = (r === 'ar');
     document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
     document.documentElement.setAttribute('lang', r === 'no' ? 'nb' : r);
-    var _rf=document.getElementById('rf');if(_rf)_rf.src='https://flagcdn.com/w80/'+R().flag+'.png';
+    var _rf=document.getElementById('rf');if(_rf)setFlagSrc(_rf,R().flag);
     var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
     updateAll();
   }).catch(function() {
@@ -4507,7 +4517,7 @@ document.addEventListener('keydown', function(e){
 if('scrollRestoration' in history) history.scrollRestoration = 'manual';
 // Restore saved language in header
 (function(){
-  var _rf=document.getElementById('rf');if(_rf)_rf.src='https://flagcdn.com/w80/'+R().flag+'.png';
+  var _rf=document.getElementById('rf');if(_rf)setFlagSrc(_rf,R().flag);
   var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
   document.querySelectorAll('.region-opt').forEach(function(el){el.classList.remove('active');});
   var sel=document.querySelector('.region-opt[onclick*="\''+region+'\'"]');
@@ -4942,6 +4952,18 @@ function calcStudielan(){
 // Auto-update total on load
 document.addEventListener('DOMContentLoaded',function(){
   if(document.getElementById('studie-borte-aar')){ studieClampBorte(); studieUpdateTotal(); }
+  // Retry broken flag images
+  document.querySelectorAll('img.flag').forEach(function(img){
+    if(!img.complete||img.naturalWidth===0){
+      var origSrc=img.src;
+      img.onerror=function(){this.style.display='none';};
+      img.src=origSrc+'?r='+Date.now();
+    }
+    img.onerror=function(){
+      if(!this._retried){this._retried=true;this.src=this.src.split('?')[0]+'?r='+Date.now();}
+      else{this.style.display='none';}
+    };
+  });
 });
 
 // ── Match calculator card heights with howto card heights ──
@@ -5405,7 +5427,7 @@ function initPage(){
 }
 function _initPageReady(){
   // Sync region selector UI with saved language
-  var _rf=document.getElementById('rf');if(_rf)_rf.src='https://flagcdn.com/w80/'+R().flag+'.png';
+  var _rf=document.getElementById('rf');if(_rf)setFlagSrc(_rf,R().flag);
   var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
   document.querySelectorAll('.region-opt').forEach(function(el){el.classList.remove('active');});
   var activeOpt=document.querySelector('.region-opt[onclick*="\''+region+'\'"]');
