@@ -2452,7 +2452,10 @@ function _animateScroll(targetY,dur,id,cb){
     if(id!==_scrollId)return;
     if(!start)start=ts;
     var p=Math.min((ts-start)/dur,1);
-    window.scrollTo(0, startY+dist*ease(p));
+    // CRITICAL: must use behavior:'instant' because html{scroll-behavior:smooth}
+    // makes the browser override plain scrollTo(x,y) with its own smooth scroll,
+    // which fights this rAF-driven easing and results in no visible scrolling.
+    window.scrollTo({top: startY+dist*ease(p), left: 0, behavior: 'instant'});
     if(p<1) requestAnimationFrame(step);
     else if(cb) cb();
   }
