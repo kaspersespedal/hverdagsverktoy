@@ -39,7 +39,7 @@ REGIONS['so'] = {
     privHCookies:'Cookies malaha',
     privPCookies:'Websaydkani ma isticmaalo cookies — falanqayn, dabagal, ama xayeysiis midna. Ma jiro calaamad cookie sababtoo ah ma jiraan cookies.',
     privHThirdparty:'Adeeg dhinac saddexaad malaha',
-    privPThirdparty:'Ma isticmaalno adeegyo falanqayn ah (Google Analytics, Facebook Pixel iwm.), shabakadaha xayeysiinta ama dabagal nooc kasta ah. Kheyraadka dibedda ee keliya waa Bunny Fonts farta.',
+    privPThirdparty:'Ma isticmaalno adeegyo falanqayn ah (Google Analytics, Facebook Pixel iwm.), shabakadaha xayeysiinta ama dabagal nooc kasta ah. Qaar ka mid ah kheyraadka dibedda ayaa loo soo geliyaa soo bandhigida: Bunny Fonts (farta), flagcdn.com (astaamaha calanka ee doorashada luqadda), iyo — kaliya marka si firfircoon loo isticmaalo beddeladda lacagaha — open.er-api.com (qiimaha sarifka). Midna kama helo xog shakhsi ah ama xog xisaabin, kaliya cinwaankaaga IP iyo macluumaadka browser-ka caadiga ah.',
     privHStorage:'Kaydis maxalli ah yar',
     privPStorage:'Xisaabiyuhu wuxuu isticmaalaa localStorage kaliya si uu u xasuusto doorashooyinkaaga mawduuca iyo luqadda. Xog shakhsi ah lama kaydiyo. Waad tirtiri kartaa waqti kasta iyada oo loo marayo goobaha browserka.',
     privHChildren:'Carruurta',

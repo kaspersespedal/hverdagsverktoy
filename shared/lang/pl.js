@@ -39,7 +39,7 @@ REGIONS['pl'] = {
     privHCookies:'Brak plików cookie',
     privPCookies:'Ta strona nie używa żadnych plików cookie — ani do analizy, śledzenia, ani reklamy. Nie ma bannera cookie, ponieważ nie ma żadnych plików cookie.',
     privHThirdparty:'Brak usług stron trzecich',
-    privPThirdparty:'Nie korzystamy z żadnych usług analitycznych (Google Analytics, Facebook Pixel itp.), sieci reklamowych ani żadnego śledzenia. Jedynym zasobem zewnętrznym jest Bunny Fonts do typografii.',
+    privPThirdparty:'Nie korzystamy z żadnych usług analitycznych (Google Analytics, Facebook Pixel itp.), sieci reklamowych ani żadnego śledzenia. Kilka zasobów zewnętrznych jest ładowanych do wyświetlania: Bunny Fonts (czcionki), flagcdn.com (ikony flag dla przełącznika języka) oraz — tylko podczas aktywnego korzystania z przelicznika walut — open.er-api.com (kursy walut). Żaden z nich nie otrzymuje danych osobowych ani danych obliczeń, tylko Twój adres IP i standardowe informacje przeglądarki.',
     privHStorage:'Minimalne lokalne przechowywanie',
     privPStorage:'Kalkulator używa localStorage wyłącznie do zapamiętania preferencji motywu i języka. Żadne dane osobowe nie są przechowywane. Możesz je usunąć w dowolnym momencie w ustawieniach przeglądarki.',
     privHChildren:'Dzieci',

@@ -39,7 +39,7 @@ REGIONS['lt'] = {
     privHCookies:'Jokių slapukų',
     privPCookies:'Ši svetainė nenaudoja jokių slapukų — nei analitikai, stebėjimui, nei reklamai. Nėra slapukų juostos, nes nėra slapukų.',
     privHThirdparty:'Jokių trečiųjų šalių paslaugų',
-    privPThirdparty:'Mes nenaudojame jokių analitikos paslaugų (Google Analytics, Facebook Pixel ir kt.), reklamos tinklų ar bet kokio stebėjimo. Vienintelis išorinis šaltinis yra Bunny Fonts šriftams.',
+    privPThirdparty:'Mes nenaudojame jokių analitikos paslaugų (Google Analytics, Facebook Pixel ir kt.), reklamos tinklų ar bet kokio stebėjimo. Keli išoriniai ištekliai yra įkeliami rodymui: Bunny Fonts (šriftai), flagcdn.com (vėliavų piktogramos kalbos parinkikliui) ir — tik aktyviai naudojant valiutų keityklą — open.er-api.com (valiutų kursai). Nė vienas iš jų negauna asmens ar skaičiavimų duomenų, tik jūsų IP adresą ir standartinę naršyklės informaciją.',
     privHStorage:'Minimali vietinė saugykla',
     privPStorage:'Skaičiuotuvas naudoja localStorage tik jūsų temos ir kalbos nuostatoms įsiminti. Jokie asmeniniai duomenys nesaugomi. Galite juos ištrinti bet kuriuo metu per naršyklės nustatymus.',
     privHChildren:'Vaikai',

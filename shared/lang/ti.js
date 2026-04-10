@@ -40,7 +40,7 @@ REGIONS['ti'] = {
     privHCookies:'ኩኪስ የለን',
     privPCookies:'እዛ ወብሳይት ዝኾነ ኩኪስ ኣይትጥቀምን — ንትንተና ንምክትታል ወይ ንማስታወቂያ። ናይ ኩኪስ ባነር የለን ምኽንያቱ ኩኪስ የለን።',
     privHThirdparty:'ናይ ሳልሳይ ወገን ኣገልግሎት የለን',
-    privPThirdparty:'ዝኾነ ናይ ትንተና ኣገልግሎት (Google Analytics, Facebook Pixel ወዘተ) ናይ ማስታወቂያ መርበብ ወይ ዝኾነ ምክትታል ኣይንጥቀምን። እቲ እንኮ ናይ ደገ ጸጋ Bunny Fonts ንፊደላት እዩ።',
+    privPThirdparty:'ዝኾነ ናይ ትንተና ኣገልግሎት (Google Analytics, Facebook Pixel ወዘተ) ናይ ማስታወቂያ መርበብ ወይ ዝኾነ ምክትታል ኣይንጥቀምን። ንምርኣይ ዝጥቀሙ ገለ ናይ ደገ ጸጋታት፦ Bunny Fonts (ፊደላት)፣ flagcdn.com (ናይ ቋንቋ መምረጺ ባንዴራታት)፣ ከምኡውን — ናይ ሸርፊ መቐየሪ ክትጥቀም ከለኻ ጥራይ — open.er-api.com (ናይ ሸርፊ ዋጋታት)። ካብዚኣቶም ዝኾነ ውልቃዊ ሓበሬታ ወይ ናይ ውፅኢት ሓበሬታ ኣይረክብን፣ ናትካ IP ኣድራሻን ናይ ብራውዘር ስታንዳርድ ሓበሬታን ጥራይ።',
     privHStorage:'ውሑድ ናይ ውሽጢ ዕቃ-ቤት',
     privPStorage:'ሕሳብ ኮምፒዩተር localStorage ጥራይ ንምዕቃብ ናይ ቴማን ቋንቋን ምርጫታትካ ይጥቀም። ውልቃዊ ዳታ ኣይዕቀብን። ብናይ ብራውዘር ውቅር ኣብ ዝኾነ ግዜ ክትድምስሶም ትኽእል።',
     privHChildren:'ቆልዑ',

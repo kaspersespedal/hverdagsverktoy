@@ -41,7 +41,7 @@ REGIONS['no'] = {
     privHCookies:'Ingen informasjonskapsler (cookies)',
     privPCookies:'Denne nettsiden bruker ingen cookies — verken til analyse, sporing eller reklame. Det finnes ingen cookie-banner fordi det ikke finnes noen cookies.',
     privHThirdparty:'Ingen tredjepartstjenester',
-    privPThirdparty:'Vi bruker ingen analysetjenester (Google Analytics, Facebook Pixel e.l.), ingen annonseringsnettverk og ingen sporing av noe slag. Eneste eksterne ressurs er Bunny Fonts for skrifttyper.',
+    privPThirdparty:'Vi bruker ingen analysetjenester (Google Analytics, Facebook Pixel e.l.), ingen annonseringsnettverk og ingen sporing av noe slag. Noen eksterne ressurser lastes for visning: Bunny Fonts (skrifttyper), flagcdn.com (flagg-ikoner for språkvelgeren), og — kun ved aktiv bruk av valutaomregneren — open.er-api.com (valutakurser). Ingen av disse mottar personopplysninger eller beregningsdata, kun din IP-adresse og standard nettleserinformasjon.',
     privHStorage:'Minimal lokal lagring',
     privPStorage:'Kalkulatoren bruker localStorage kun for å huske dine valg av tema og språk. Ingen personopplysninger lagres. Du kan slette disse når som helst via nettleserinnstillingene.',
     privHChildren:'Barn',

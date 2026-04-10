@@ -119,7 +119,7 @@ REGIONS['zh'] = {
     privHCookies:'无 Cookie',
     privPCookies:'本网站不使用任何 Cookie——不用于分析、跟踪或广告。没有 Cookie 横幅，因为没有 Cookie。',
     privHThirdparty:'无第三方服务',
-    privPThirdparty:'我们不使用任何分析服务（Google Analytics、Facebook Pixel 等）、广告网络或任何形式的跟踪。唯一的外部资源是用于字体的 Bunny Fonts。',
+    privPThirdparty:'我们不使用任何分析服务（Google Analytics、Facebook Pixel 等）、广告网络或任何形式的跟踪。部分外部资源用于显示：Bunny Fonts（字体）、flagcdn.com（语言选择器的国旗图标），以及——仅在您主动使用货币转换器时——open.er-api.com（汇率）。这些都不会收到个人信息或计算数据，仅收到您的 IP 地址和标准浏览器信息。',
     privHStorage:'最小本地存储',
     privPStorage:'计算器仅使用 localStorage 保存您的主题和语言偏好设置。不存储任何个人数据。您可以随时通过浏览器设置清除这些数据。',
     privHChildren:'儿童',

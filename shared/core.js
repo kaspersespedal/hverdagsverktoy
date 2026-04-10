@@ -4340,10 +4340,31 @@ const ccCurrenciesNO = ['Norske kroner','Euro','US Dollar','Britiske pund','Sven
 const ccCurrencyCodes = ['NOK','EUR','USD','GBP','SEK','DKK','PLN','CHF','JPY','CNY','CAD','AUD','INR','TRY','BRL'];
 const ccCurrencyFlags = ['no','eu','us','gb','se','dk','pl','ch','jp','cn','ca','au','in','tr','br'];
 function getCcCurrencies(){ const r=R(); const names=r.ccCurrNames||ccCurrenciesNO; return ccCurrencyCodes.map((code,i)=>[code,code+' — '+(names[i]||ccCurrenciesNO[i]),ccCurrencyFlags[i]]); }
-// Fallback rates vs NOK (approximate March 2026)
+// Last-resort fallback rates vs NOK (approximate — only used if live fetch AND
+// localStorage cache are both unavailable, i.e. cold first-visit offline). The
+// live ER-API fetch replaces these within ~500ms of page load; subsequent visits
+// use the localStorage cache until a fresh fetch succeeds.
 let ccRates = {NOK:1,EUR:0.0904,USD:0.0935,GBP:0.0737,SEK:0.9524,DKK:0.6404,PLN:0.3685,CHF:0.0813,JPY:14.02,CNY:0.6618,CAD:0.1267,AUD:0.1435,INR:7.88,TRY:3.39,BRL:0.5356};
 let ccRatesLoaded = false;
+let ccRatesCached = false;
 let ccLastUpdate = '';
+const CC_CACHE_KEY = 'hvt-cc-rates';
+const CC_CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+// Try to load a cached rates snapshot from localStorage before hitting the network.
+(function ccLoadCache(){
+  try {
+    const raw = localStorage.getItem(CC_CACHE_KEY);
+    if(!raw) return;
+    const obj = JSON.parse(raw);
+    if(!obj || typeof obj !== 'object' || !obj.rates || !obj.ts) return;
+    // Accept cache up to 7 days old — older than that, fall back to hardcoded.
+    if(Date.now() - obj.ts > CC_CACHE_MAX_AGE_MS) return;
+    ccRates = obj.rates;
+    ccRatesCached = true;
+    ccLastUpdate = obj.updatedStr || '';
+  } catch(e){ /* ignore, use fallback */ }
+})();
 
 async function ccFetchRates(){
   try {
@@ -4352,11 +4373,20 @@ async function ccFetchRates(){
     if(data.result==='success'){
       ccRates = data.rates;
       ccRatesLoaded = true;
+      ccRatesCached = false;
       ccLastUpdate = data.time_last_update_utc ? new Date(data.time_last_update_utc).toLocaleDateString('no') : '';
+      // Persist for offline / next-visit use
+      try {
+        localStorage.setItem(CC_CACHE_KEY, JSON.stringify({
+          rates: data.rates,
+          ts: Date.now(),
+          updatedStr: ccLastUpdate
+        }));
+      } catch(e){ /* storage full / private mode — ignore */ }
       ccConvert();
       vgFillRate();
     }
-  } catch(e){ /* use fallback rates */ }
+  } catch(e){ /* use cached or fallback rates */ }
 }
 
 function ccPopulate(){
@@ -4385,7 +4415,14 @@ function ccConvert(){
   const rate=(rateTo/rateFrom);
   document.getElementById('uc-res').textContent=result.toLocaleString('no',{minimumFractionDigits:2,maximumFractionDigits:2});
   const info=document.getElementById('uc-rate-info');
-  const r=R();if(info) info.textContent='1 '+from+' = '+rate.toLocaleString('no',{minimumFractionDigits:4,maximumFractionDigits:4})+' '+to+(ccRatesLoaded?' '+(r.ccLive||'(live)'):' '+(r.ccApprox||'(ca.)'));
+  const r=R();
+  if(info){
+    var stateSuffix;
+    if(ccRatesLoaded) stateSuffix = ' ' + (r.ccLive || '(live)');
+    else if(ccRatesCached) stateSuffix = ' ' + (r.ccCached || '(lagret ' + (ccLastUpdate||'') + ')').trim();
+    else stateSuffix = ' ' + (r.ccApprox || '(ca.)');
+    info.textContent = '1 '+from+' = '+rate.toLocaleString('no',{minimumFractionDigits:4,maximumFractionDigits:4})+' '+to+stateSuffix;
+  }
 }
 
 function ccSwap(){

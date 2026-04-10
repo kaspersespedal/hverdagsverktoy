@@ -49,7 +49,7 @@ REGIONS['fr'] = {
     privHCookies:'Aucun cookie',
     privPCookies:'Ce site n\'utilise aucun cookie — ni pour l\'analyse, le suivi ou la publicité. Il n\'y a pas de bannière cookie car il n\'y a pas de cookies.',
     privHThirdparty:'Aucun service tiers',
-    privPThirdparty:'Nous n\'utilisons aucun service d\'analyse (Google Analytics, Facebook Pixel, etc.), aucun réseau publicitaire et aucun suivi. La seule ressource externe est Bunny Fonts pour la typographie.',
+    privPThirdparty:'Nous n\'utilisons aucun service d\'analyse (Google Analytics, Facebook Pixel, etc.), aucun réseau publicitaire et aucun suivi. Quelques ressources externes sont chargées pour l\'affichage : Bunny Fonts (polices), flagcdn.com (icônes de drapeau pour le sélecteur de langue), et — uniquement lorsque vous utilisez activement le convertisseur de devises — open.er-api.com (taux de change). Aucune ne reçoit de données personnelles ou de calcul, uniquement votre adresse IP et les informations standard du navigateur.',
     privHStorage:'Stockage local minimal',
     privPStorage:'La calculatrice utilise uniquement localStorage pour mémoriser vos préférences de thème et de langue. Aucune donnée personnelle n\'est stockée. Vous pouvez les effacer à tout moment via les paramètres de votre navigateur.',
     privHChildren:'Enfants',

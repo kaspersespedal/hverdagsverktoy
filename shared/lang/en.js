@@ -45,7 +45,7 @@ REGIONS['en'] = {
     privHCookies:'No cookies',
     privPCookies:'This website uses no cookies — not for analytics, tracking or advertising. There is no cookie banner because there are no cookies.',
     privHThirdparty:'No third-party services',
-    privPThirdparty:'We use no analytics services (Google Analytics, Facebook Pixel etc.), no advertising networks and no tracking of any kind. The only external resource is Bunny Fonts for typography.',
+    privPThirdparty:'We use no analytics services (Google Analytics, Facebook Pixel etc.), no advertising networks and no tracking of any kind. A few external resources are loaded for display: Bunny Fonts (typefaces), flagcdn.com (flag icons for the language picker), and — only when you actively use the currency converter — open.er-api.com (exchange rates). None of these receive personal or calculation data, only your IP address and standard browser information.',
     privHStorage:'Minimal local storage',
     privPStorage:'The calculator uses localStorage only to remember your theme and language preferences. No personal data is stored. You can clear these at any time via your browser settings.',
     privHChildren:'Children',
