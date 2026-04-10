@@ -209,7 +209,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v19';
+    s.src = '/shared/lang/' + code + '.js?v=v20';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -282,6 +282,7 @@ function setRegion(r, e) {
     document.documentElement.setAttribute('lang', r === 'no' ? 'nb' : r);
     var _rf=document.getElementById('rf');if(_rf)setFlagSrc(_rf,R().flag);
     var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
+    try { if(typeof window.hvtSearchInvalidate==='function') window.hvtSearchInvalidate(); } catch(_e){}
     updateAll();
   }).catch(function() {
     if(switchId !== _regionSwitchId) return;
@@ -778,15 +779,27 @@ function toggleCard(card){
     // Skip accordion for law chapter cards (inside .law-body) so earlier chapters stay open
     var isLawChapter=!!card.closest('.law-body');
     var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
+    // Pin-position: measure this card's header top BEFORE collapsing others,
+    // so we can compensate for any upward drift caused by collapsing cards above it.
+    var hdrForPin=card.querySelector(':scope > .card-hdr')||card;
+    var topBeforeOpen=hdrForPin.getBoundingClientRect().top;
+    var didCollapseOthers=false;
     if(parent&&!isLawChapter){
       parent.querySelectorAll('.info-card:not(.collapsed)').forEach(function(other){
         if(other===card||other.contains(card)||card.contains(other))return;
         other.classList.add('collapsed');
         var otherArrow=other.querySelector('.card-title span');
         if(otherArrow)otherArrow.textContent='▼';
+        didCollapseOthers=true;
       });
     }
     card.classList.remove('collapsed');
+    // Compensate drift from collapsing cards above — keep this card visually pinned
+    if(didCollapseOthers){
+      var topAfterOpen=hdrForPin.getBoundingClientRect().top;
+      var driftOpen=topAfterOpen-topBeforeOpen;
+      if(Math.abs(driftOpen)>2) window.scrollBy({top:driftOpen,behavior:'instant'});
+    }
     if(body){
       body.classList.remove('opening');
       body.offsetHeight; // force reflow
@@ -798,7 +811,21 @@ function toggleCard(card){
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
   if(cardHdr) cardHdr.setAttribute('aria-expanded', wasCollapsed+'');
   if(wasCollapsed){
-    setTimeout(()=>{ smartScroll(card); }, 250);
+    // Smart scroll only if the card header is NOT already comfortably in view.
+    // Prevents the jarring "jump up-down" effect when opening a card that is
+    // already visible after neighbouring cards collapsed above it.
+    setTimeout(function(){
+      var hdrNow=card.querySelector(':scope > .card-hdr')||card;
+      var r=hdrNow.getBoundingClientRect();
+      var off=stickyOffset();
+      var vH=window.innerHeight||document.documentElement.clientHeight;
+      // If header is within the viewport sweet-spot (below sticky, above bottom),
+      // no need to scroll at all — just let the content expand in place.
+      var comfortableTop=off+8;
+      var comfortableBottom=vH-80;
+      if(r.top>=comfortableTop&&r.top<=comfortableBottom) return;
+      smartScroll(card);
+    }, 250);
   }
   // Fix card-hdr top for law-chips-active groups
   var lawParent=card.closest('.law-chips-active');
@@ -848,7 +875,10 @@ function initLawChapterNav(lawGroupId){
   document.body.appendChild(nav);
   group._chapterNav=nav;
   group._chapterChips=chips;
-  // Scroll listener to show/hide and track active chip
+
+  // ── Scroll handler: ONLY toggles visibility of the chip bar. Cheap (O(1)).
+  // Active-chip tracking is delegated to IntersectionObserver below, which is
+  // far more performant on long law pages (skatteloven has ~15 chapters).
   var _ticking=false;
   function onScroll(){
     if(_ticking)return;_ticking=true;
@@ -856,42 +886,68 @@ function initLawChapterNav(lawGroupId){
       _ticking=false;
       if(!nav.classList.contains('visible'))return;
       var off=stickyOffset();
-      // Find which card is most visible
-      // Hide chip bar if law-group is not in viewport or header still visible
       var gRect=group.getBoundingClientRect();
       var groupHdr=group.querySelector(':scope > .card-hdr');
       var navTop=parseFloat(nav.style.top)||off;
       var groupHdrTop=groupHdr?groupHdr.getBoundingClientRect().top:gRect.top;
       if(gRect.bottom<off+44||gRect.top>window.innerHeight||groupHdrTop>navTop){
         nav.style.display='none';return;
-      } else {
-        nav.style.display='';
-        // In focus mode, keep chip bar flush below focus close bar
-        var mfc=document.getElementById('mobile-focus-close');
-        if(mfc&&document.body.classList.contains('mobile-focus-active')&&window.getComputedStyle(mfc).display!=='none'){
-          nav.style.top=Math.round(mfc.getBoundingClientRect().bottom)+'px';
-        }
       }
-      var best=null,bestDist=Infinity;
-      chips.forEach(function(c){
-        var r=c._card.getBoundingClientRect();
-        var dist=Math.abs(r.top-off-44);
-        if(r.top<off+200&&r.bottom>off&&dist<bestDist){bestDist=dist;best=c;}
-      });
-      if(best&&!best.classList.contains('active')){
-        chips.forEach(function(c){c.classList.remove('active');});
-        best.classList.add('active');
-        // Only scroll chip if it's outside the visible area of the nav
-        var cr=best.getBoundingClientRect();
-        var nr=nav.getBoundingClientRect();
-        if(cr.left<nr.left||cr.right>nr.right){
-          best.scrollIntoView({behavior:'instant',block:'nearest',inline:'center'});
-        }
+      nav.style.display='';
+      // In focus mode, keep chip bar flush below focus close bar
+      var mfc=document.getElementById('mobile-focus-close');
+      if(mfc&&document.body.classList.contains('mobile-focus-active')&&window.getComputedStyle(mfc).display!=='none'){
+        nav.style.top=Math.round(mfc.getBoundingClientRect().bottom)+'px';
       }
     });
   }
   window.addEventListener('scroll',onScroll,{passive:true});
   group._chapterScrollHandler=onScroll;
+
+  // ── Active-chip tracking via IntersectionObserver ──
+  // Each card reports its intersection ratio against a "top strip" root margin.
+  // The card closest to the sticky top that is currently intersecting becomes
+  // the active chip. This avoids layout reads during scrolling entirely.
+  if('IntersectionObserver' in window){
+    try {
+      // rootMargin: shift the top of the viewport down past the sticky header
+      // and chip bar (~160px) so only cards that have "reached" the chip bar
+      // count as intersecting.
+      var io=new IntersectionObserver(function(entries){
+        // Find the topmost currently-intersecting card.
+        var visibleCards=[];
+        chips.forEach(function(c){
+          if(c._isVisible) visibleCards.push(c);
+        });
+        entries.forEach(function(en){
+          var chip=en.target._chip;
+          if(!chip) return;
+          chip._isVisible = en.isIntersecting;
+        });
+        if(!nav.classList.contains('visible')) return;
+        // Pick the first chip whose card is currently in the "active zone".
+        var best=null;
+        for(var i=0;i<chips.length;i++){
+          if(chips[i]._isVisible){ best=chips[i]; break; }
+        }
+        if(best && !best.classList.contains('active')){
+          chips.forEach(function(c){c.classList.remove('active');});
+          best.classList.add('active');
+          var cr=best.getBoundingClientRect();
+          var nr=nav.getBoundingClientRect();
+          if(cr.left<nr.left||cr.right>nr.right){
+            best.scrollIntoView({behavior:'instant',block:'nearest',inline:'center'});
+          }
+        }
+      },{
+        // Active zone: from ~160px below viewport top to ~65% down the screen
+        rootMargin:'-160px 0px -35% 0px',
+        threshold:[0,0.01,0.5,1]
+      });
+      chips.forEach(function(c){ c._card._chip=c; io.observe(c._card); });
+      group._chapterObserver=io;
+    } catch(_e){/* silent */}
+  }
 }
 function updateLawChapterNav(card){
   var lawGroups=['sal-law-group','sel-law-group'];

@@ -130,14 +130,125 @@ function typeLabel(type){
 }
 
 /* ─── Normalize string for matching ─── */
+// Unicode-safe: preserves letters in ALL scripts (Latin, Cyrillic, Arabic,
+// CJK, Ge'ez/Tigrinya, etc.) while stripping punctuation and diacritics.
+// This is what allows search to work in every supported language.
 function norm(s){
-  return s.toLowerCase()
-    .replace(/[æ]/g,'ae').replace(/[ø]/g,'o').replace(/[å]/g,'a')
-    .replace(/[éè]/g,'e').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
+  if(s==null) return '';
+  var out = String(s).toLowerCase();
+  // Norwegian/Danish/Swedish special handling — map to Latin equivalents so
+  // searches work regardless of whether the user types ø/o, æ/ae, å/a.
+  out = out.replace(/æ/g,'ae').replace(/ø/g,'o').replace(/å/g,'a');
+  // Strip combining diacritics (é→e, ü→u, ś→s, ą→a, etc.)
+  try { out = out.normalize('NFD').replace(/[\u0300-\u036f]/g,''); } catch(e){}
+  // Keep unicode letters + digits + spaces, replace everything else with space.
+  try { out = out.replace(/[^\p{L}\p{N} ]/gu, ' '); }
+  catch(e){ out = out.replace(/[^a-z0-9 ]/g,' '); }
+  return out.replace(/\s+/g,' ').trim();
+}
+
+/* ─── URL → translation key map ───
+   Maps each tool URL to a list of keys in R() whose translated values should
+   be included in the item's multilingual search haystack. Keeps SEARCH_DATA
+   clean and makes it trivial to add more mappings later. */
+var URL_TO_I18N_KEYS = {
+  // Personlig økonomi
+  '/personlig/#budsjett-wrapper': ['budsjettTitle','budsjettDesc','budsjettHowtoTitle','budsjettHowtoDesc','tabPerso','dashDescPerso'],
+  '/personlig/#bil-wrapper':       ['bilTitle','bilDesc'],
+  '/personlig/#spare-wrapper':     ['spareTitle','spareDesc'],
+  '/personlig/#studie-wrapper':    ['studieTitle','studieDesc'],
+  '/personlig/#lonn-wrapper':      ['lonnTitle','lonnDesc','lonnHowtoTitle','lonnHowtoDesc'],
+  '/personlig/#abo-wrapper':       ['aboTitle','aboDesc'],
+  // Boliglån
+  '/boliglan/#mor-wrapper':        ['morTitle','morDesc','morInfoTitle','morInfoDesc','tabMor'],
+  '/boliglan/#dok-wrapper':        ['dokTitle','dokDesc'],
+  '/boliglan/#mor-bsu-card':       ['morBsuTitle','morBsuDesc'],
+  // Kalkulator (fagkalkulatorer)
+  '/kalkulator/':                  ['tabBasic','cmBasic','cmLabel'],
+  '/kalkulator/#scientific':       ['cmScientific'],
+  '/kalkulator/#unit':             ['cmUnit'],
+  '/kalkulator/#finance':          ['cmFinance','cmFinCalcs'],
+  '/kalkulator/#aga':              ['lblAga','agaRTotal','agaSal','salAgaTitle','salAgaDesc'],
+  '/kalkulator/#avs':              ['lblAvs'],
+  '/kalkulator/#ferie':            ['lblFerie','agaFerie','lonnRlFeriepenger'],
+  '/kalkulator/#rente':            ['lblRente','renteEffLabel','renteAmountLabel','renteIntro'],
+  '/kalkulator/#valgevinst':       ['lblValgevinst'],
+  '/kalkulator/#likvid':           ['lblLikvid','likvidIntro'],
+  '/kalkulator/#npv':              ['npvTitle','npvDesc','cmFcNpv'],
+  '/kalkulator/#pensjon':          ['lblPensjon','pensjonHint'],
+  '/kalkulator/#lvu':              ['lblLvu','lvuRSal','lvuRDiv','lvuGross'],
+  // Skatt
+  '/skatt/#sal-salary-card':       ['salTitle','salDesc','tabSal','cmFcSal'],
+  '/skatt/#formue-wrapper':        ['formueTitle','formueDesc'],
+  '/skatt/#reise-wrapper':         ['reiseTitle','reiseDesc'],
+  // Avgift
+  '/avgift/#vat-wrapper':          ['vatTitle','vatDesc','tabVat','cmFcVat'],
+  '/avgift/#vat-adj-card':         ['vatAdjTitle','vatAdjDesc'],
+  // Selskap
+  '/selskap/#selskap-as-card':     ['tabSelskap','dashDescSelskap'],
+  '/selskap/#selskap-enk-card':    ['tabSelskap','dashDescSelskap'],
+  '/selskap/#selskap-ans-card':    ['tabSelskap','dashDescSelskap'],
+  '/selskap/#selskap-ks-card':     ['tabSelskap','dashDescSelskap']
+};
+
+/* ─── Multilingual haystack cache ─── */
+// For each item, precompute a haystack that includes translated strings from
+// the currently active language dictionary. Rebuilds when the language
+// changes. This lets users type in their own language and still find tools.
+var _i18nHaystacks = null;
+var _i18nLang = null;
+function buildI18nHaystacks(){
+  try {
+    var r = (typeof R === 'function') ? R() : null;
+    if(!r) return null;
+    // Collect all translated string values from R() into one big blob.
+    var allVals = [];
+    for(var k in r){
+      if(Object.prototype.hasOwnProperty.call(r,k)){
+        var v = r[k];
+        if(typeof v === 'string') allVals.push(v);
+        else if(Array.isArray(v)){
+          // Flatten arrays of strings / nested arrays one level deep
+          for(var i2=0;i2<v.length;i2++){
+            if(typeof v[i2]==='string') allVals.push(v[i2]);
+            else if(Array.isArray(v[i2])) allVals.push(v[i2].join(' '));
+          }
+        }
+      }
+    }
+    var globalBlob = norm(allVals.join(' '));
+    // Per-item i18n haystacks: resolve translation keys from URL_TO_I18N_KEYS
+    // (or item.i18nKeys) and normalize the resulting strings.
+    var hays = [];
+    for(var i=0; i<SEARCH_DATA.length; i++){
+      var it = SEARCH_DATA[i];
+      var parts = [];
+      var keys = it.i18nKeys || URL_TO_I18N_KEYS[it.url] || null;
+      if(keys){
+        for(var j=0;j<keys.length;j++){
+          var kk=keys[j];
+          var val=r[kk];
+          if(!val) continue;
+          if(typeof val==='string') parts.push(norm(val));
+          else if(Array.isArray(val)) parts.push(norm(val.join(' ')));
+        }
+      }
+      hays.push(parts.join(' '));
+    }
+    return {perItem:hays, global:globalBlob};
+  } catch(e){ return null; }
+}
+function getI18nHaystacks(){
+  var curLang = (typeof region !== 'undefined') ? region : 'no';
+  if(!_i18nHaystacks || _i18nLang !== curLang){
+    _i18nHaystacks = buildI18nHaystacks();
+    _i18nLang = curLang;
+  }
+  return _i18nHaystacks;
 }
 
 /* ─── Score a search item against query ─── */
-function scoreItem(item, q){
+function scoreItem(item, q, itemIdx, hays){
   var qn = norm(q);
   var words = qn.split(' ').filter(Boolean);
   if(!words.length) return 0;
@@ -145,6 +256,13 @@ function scoreItem(item, q){
   var nameN = norm(item.name);
   var descN = norm(item.desc);
   var tagsN = norm(item.tags);
+  // Append per-item translated haystack (if available) to the tag bag so
+  // queries in the active UI language can hit translated names/descriptions.
+  var i18nN = '';
+  if(hays && hays.perItem && hays.perItem[itemIdx]){
+    i18nN = hays.perItem[itemIdx];
+    if(i18nN){ tagsN = tagsN + ' ' + i18nN; nameN = nameN + ' ' + i18nN; }
+  }
   var score = 0;
 
   // Exact name match → highest
@@ -187,14 +305,18 @@ function scoreItem(item, q){
 /* ─── Search function ─── */
 function search(q){
   if(!q || !q.trim()) return [];
+  var hays = getI18nHaystacks();
   var results = [];
   for(var i=0; i<SEARCH_DATA.length; i++){
-    var s = scoreItem(SEARCH_DATA[i], q);
+    var s = scoreItem(SEARCH_DATA[i], q, i, hays);
     if(s > 0) results.push({item:SEARCH_DATA[i], score:s});
   }
   results.sort(function(a,b){ return b.score - a.score; });
   return results.slice(0, 6);
 }
+// Invalidate translated haystacks when language changes — core.js should call
+// this after setRegion(), but we also detect lazily on each search.
+window.hvtSearchInvalidate = function(){ _i18nHaystacks = null; _i18nLang = null; };
 
 /* ─── Find injection point — homepage only ─── */
 function findInjectionPoint(){

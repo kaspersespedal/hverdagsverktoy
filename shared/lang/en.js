@@ -674,7 +674,7 @@ REGIONS['en'] = {
       +'</div>'
       +'</div>'
       +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
-      +'<b>Tip:</b> You can reserve a company name in the Brønnøysund Register before registration. Check <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">name control</a> to see if the name is available.'
+      +'<b>Tip:</b> You can reserve a company name in the Brønnøysund Register before registration. Check <a href="https://navnesok.no/" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">name control</a> to see if the name is available.'
       +'</div>',
 
     // --- Other company forms ---

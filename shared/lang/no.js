@@ -682,7 +682,7 @@ REGIONS['no'] = {
       +'</div>'
       +'</div>'
       +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
-      +'<b>Tips:</b> Du kan reservere selskapsnavn i Brønnøysundregistrene før du registrerer. Sjekk <a href="https://w2.brreg.no/enhet/sok/navnkontroll.jsp" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">navnekontrollen</a> for å se om navnet er ledig.'
+      +'<b>Tips:</b> Du kan reservere selskapsnavn i Brønnøysundregistrene før du registrerer. Sjekk <a href="https://navnesok.no/" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;">navnekontrollen</a> for å se om navnet er ledig.'
       +'</div>',
 
     // --- Andre selskapsformer ---
