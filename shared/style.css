@@ -675,8 +675,12 @@ body.desktop-focus .calc-grid>div[data-desktop-hidden="true"]{display:none!impor
 body.desktop-focus .focus-toggle{display:none!important;}
 #focus-close-bar{display:none;}
 body.desktop-focus #focus-close-bar{display:flex;max-width:640px;margin:0 auto 12px;justify-content:flex-end;}
-body.desktop-focus .info-card:not(.collapsed)~.info-card.collapsed{display:none!important;}
-body.desktop-focus .info-card.collapsed:has(~.info-card:not(.collapsed)){display:none!important;}
+/* In desktop focus mode, hide collapsed siblings of an open top-level info-card so
+   the focused content fills the column. Scoped to `.card > .info-card` (top-level
+   only) so that nested chapter cards inside .law-body are NOT hidden when one
+   chapter is open — all chapters should stay visible in a law-group. */
+body.desktop-focus .card > .info-card:not(.collapsed) ~ .info-card.collapsed{display:none!important;}
+body.desktop-focus .card > .info-card.collapsed:has(~ .info-card:not(.collapsed)){display:none!important;}
 body.desktop-focus .info-card .info-card{border:none;border-radius:0;box-shadow:none;border-bottom:1px solid var(--border);margin:0;}
 body.desktop-focus .info-card .info-card .card-hdr{padding:14px 20px 12px;}
 body.desktop-focus .info-card .info-card .card-title{font-size:15px;}
