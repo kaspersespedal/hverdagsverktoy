@@ -256,16 +256,23 @@ var PAGE_KEY = {
 
 /* ─── Resolve display strings for a search item ───
    Returns {name, desc, page} with translations applied when available.
-   Falls back to the item's hardcoded Norwegian fields otherwise. */
+   Title/desc translation is only applied to tool items — several
+   concepts and laws legitimately share a URL with a tool (e.g.
+   Annuitetslån concept + Boliglånskalkulator tool both on
+   /boliglan/#mor-wrapper), and we must not collapse those distinct
+   entries into the same displayed name. Page label is always
+   translated since it's purely a category. */
 function resolveDisplay(item){
   var out = { name: item.name, desc: item.desc, page: item.page };
   try {
     var r = (typeof R === 'function') ? R() : null;
     if(!r) return out;
-    var disp = URL_TO_DISPLAY[item.url];
-    if(disp){
-      if(disp.title && typeof r[disp.title]==='string' && r[disp.title].trim()) out.name = r[disp.title];
-      if(disp.desc  && typeof r[disp.desc]==='string'  && r[disp.desc].trim())  out.desc = r[disp.desc];
+    if(item.type === 'tool'){
+      var disp = URL_TO_DISPLAY[item.url];
+      if(disp){
+        if(disp.title && typeof r[disp.title]==='string' && r[disp.title].trim()) out.name = r[disp.title];
+        if(disp.desc  && typeof r[disp.desc]==='string'  && r[disp.desc].trim())  out.desc = r[disp.desc];
+      }
     }
     var pk = PAGE_KEY[item.page];
     if(pk && typeof r[pk]==='string' && r[pk].trim()) out.page = r[pk];
