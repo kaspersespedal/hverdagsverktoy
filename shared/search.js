@@ -191,6 +191,88 @@ var URL_TO_I18N_KEYS = {
   '/selskap/#selskap-ks-card':     ['tabSelskap','dashDescSelskap']
 };
 
+/* ─── URL → display key map ───
+   Maps each search item's URL to translation keys for the DISPLAYED
+   title and description. Used when rendering result rows so the
+   dropdown respects the active UI language. Falls back to the
+   hardcoded Norwegian name/desc when a key is missing or empty. */
+var URL_TO_DISPLAY = {
+  // Personlig økonomi
+  '/personlig/#budsjett-wrapper': {title:'budsjettTitle', desc:'budsjettDesc'},
+  '/personlig/#bil-wrapper':      {title:'bilTitle',      desc:'bilDesc'},
+  '/personlig/#spare-wrapper':    {title:'spareTitle',    desc:'spareDesc'},
+  '/personlig/#studie-wrapper':   {title:'studieTitle',   desc:'studieDesc'},
+  '/personlig/#lonn-wrapper':     {title:'lonnTitle',     desc:'lonnDesc'},
+  '/personlig/#abo-wrapper':      {title:'aboTitle',      desc:'aboDesc'},
+  // Boliglån
+  '/boliglan/#mor-wrapper':       {title:'morTitle',      desc:'morDesc'},
+  '/boliglan/#dok-wrapper':       {title:'dokTitle',      desc:'dokDesc'},
+  '/boliglan/#mor-bsu-card':      {title:'morBsuTitle',   desc:'morBsuDesc'},
+  // Kalkulator
+  '/kalkulator/':                 {title:'cmBasic'},
+  '/kalkulator/#scientific':      {title:'cmScientific'},
+  '/kalkulator/#unit':            {title:'cmUnit'},
+  '/kalkulator/#finance':         {title:'cmFinance'},
+  '/kalkulator/#aga':             {title:'lblAga'},
+  '/kalkulator/#avs':             {title:'lblAvs'},
+  '/kalkulator/#ferie':           {title:'lblFerie'},
+  '/kalkulator/#rente':           {title:'lblRente',      desc:'renteIntro'},
+  '/kalkulator/#valgevinst':      {title:'lblValgevinst'},
+  '/kalkulator/#likvid':          {title:'lblLikvid',     desc:'likvidIntro'},
+  '/kalkulator/#npv':             {title:'npvTitle',      desc:'npvDesc'},
+  '/kalkulator/#pensjon':         {title:'lblPensjon',    desc:'pensjonHint'},
+  '/kalkulator/#lvu':             {title:'lblLvu'},
+  // Skatt
+  '/skatt/#sal-salary-card':      {title:'salTitle',      desc:'salDesc'},
+  '/skatt/#sal-uttak-card':       {title:'uttakTitle',    desc:'uttakDesc'},
+  '/skatt/#sal-utdeling-card':    {title:'utdelingTitle', desc:'utdelingDesc'},
+  '/skatt/#formue-wrapper':       {title:'formueTitle',   desc:'formueDesc'},
+  '/skatt/#reise-wrapper':        {title:'reiseTitle',    desc:'reiseDesc'},
+  // Avgift
+  '/avgift/#vat-wrapper':         {title:'vatTitle',      desc:'vatDesc'},
+  '/avgift/#vat-adj-card':        {title:'vatAdjTitle',   desc:'vatAdjDesc'},
+  // Selskap
+  '/selskap/#selskap-velg-card':    {title:'selskapVelgTitle',    desc:'selskapVelgDesc'},
+  '/selskap/#selskap-enk-card':     {title:'selskapEnkTitle',     desc:'selskapEnkDesc'},
+  '/selskap/#selskap-as-card':      {title:'selskapAsTitle',      desc:'selskapAsDesc'},
+  '/selskap/#selskap-ans-card':     {title:'selskapAnsTitle',     desc:'selskapAnsDesc'},
+  '/selskap/#selskap-ks-card':      {title:'selskapKsTitle',      desc:'selskapKsDesc'},
+  '/selskap/#selskap-compare-card': {title:'selskapCompareTitle', desc:'selskapCompareDesc'},
+  '/selskap/#selskap-reg-card':     {title:'selskapRegTitle',     desc:'selskapRegDesc'}
+};
+
+/* ─── Page label → translation key ───
+   Maps the hardcoded Norwegian `page` strings in SEARCH_DATA to
+   translation keys so the "page" chip in each result also
+   follows the active UI language. */
+var PAGE_KEY = {
+  'Personlig økonomi': 'tabNpv',
+  'Boliglån':          'tabMor',
+  'Kalkulator':        'tabBasic',
+  'Skatt':             'tabSal',
+  'Avgift':            'tabVat',
+  'Selskap':           'tabSelskap'
+};
+
+/* ─── Resolve display strings for a search item ───
+   Returns {name, desc, page} with translations applied when available.
+   Falls back to the item's hardcoded Norwegian fields otherwise. */
+function resolveDisplay(item){
+  var out = { name: item.name, desc: item.desc, page: item.page };
+  try {
+    var r = (typeof R === 'function') ? R() : null;
+    if(!r) return out;
+    var disp = URL_TO_DISPLAY[item.url];
+    if(disp){
+      if(disp.title && typeof r[disp.title]==='string' && r[disp.title].trim()) out.name = r[disp.title];
+      if(disp.desc  && typeof r[disp.desc]==='string'  && r[disp.desc].trim())  out.desc = r[disp.desc];
+    }
+    var pk = PAGE_KEY[item.page];
+    if(pk && typeof r[pk]==='string' && r[pk].trim()) out.page = r[pk];
+  } catch(e){}
+  return out;
+}
+
 /* ─── Multilingual haystack cache ─── */
 // For each item, precompute a haystack that includes translated strings from
 // the currently active language dictionary. Rebuilds when the language
@@ -405,14 +487,15 @@ function initSearch(){
     var html = '';
     for(var i=0; i<results.length; i++){
       var r = results[i].item;
+      var d = resolveDisplay(r);
       html += '<a href="'+r.url+'" class="search-result" data-idx="'+i+'">' +
         '<div class="search-result-left">' +
-          '<div class="search-result-name">'+highlight(r.name, q)+'</div>' +
-          '<div class="search-result-desc">'+r.desc+'</div>' +
+          '<div class="search-result-name">'+highlight(d.name, q)+'</div>' +
+          '<div class="search-result-desc">'+d.desc+'</div>' +
         '</div>' +
         '<div class="search-result-right">' +
           '<span class="search-result-tag search-tag-'+r.type+'">'+typeLabel(r.type)+'</span>' +
-          '<span class="search-result-page">'+r.page+'</span>' +
+          '<span class="search-result-page">'+d.page+'</span>' +
         '</div>' +
       '</a>';
     }
