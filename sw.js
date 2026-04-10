@@ -1,5 +1,5 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v18';
+const CACHE_NAME = 'hverdagsverktoy-v20';
 
 // Files to cache for offline use
 const PRECACHE_URLS = [
@@ -71,17 +71,19 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  // Cache-first for local files
+  // Cache-first for local files.
+  // ignoreSearch: true lets precached URLs (./shared/core.js) match versioned
+  // requests (/shared/core.js?v=v20) so precache still works after cache-bust bumps.
   event.respondWith(
-    caches.match(event.request)
+    caches.match(event.request, { ignoreSearch: true })
       .then(cached => {
         if (cached) {
-          // Return cache but update in background (stale-while-revalidate)
-          const fetchPromise = fetch(event.request).then(response => {
+          // Return cache but update in background (stale-while-revalidate).
+          // Store under the actual requested URL (with query) so next lookup is a fast hit.
+          fetch(event.request).then(response => {
             if (response.ok) {
               caches.open(CACHE_NAME).then(cache => cache.put(event.request, response));
             }
-            return response.clone();
           }).catch(() => {});
           return cached;
         }

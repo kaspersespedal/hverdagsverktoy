@@ -2625,6 +2625,23 @@ function updateDashLabels() {
 // ═══════════════════════════════════════════════════════
 // CALCULATORS
 // ═══════════════════════════════════════════════════════
+
+/**
+ * Calculate trygdeavgift (national insurance contributions) with 2026 rules
+ * - Lower threshold: 99,650 kr (no contribution below this)
+ * - Phase-in cap: maximum 25% of income exceeding threshold
+ * @param {number} inntekt - Gross income
+ * @param {number} rate - Contribution rate (0.076 for employees, 0.108 for self-employed)
+ * @returns {number} Trygdeavgift amount
+ */
+function calcTrygdeavgift(inntekt, rate) {
+  const NEDRE_GRENSE = 99650;
+  if (inntekt <= NEDRE_GRENSE) return 0;
+  const ordinaer = inntekt * rate;
+  const opptrapping = (inntekt - NEDRE_GRENSE) * 0.25;
+  return Math.min(ordinaer, opptrapping);
+}
+
 function calcSal() {
   const r = R();
   const b = parseNum('s-g');
@@ -2660,7 +2677,7 @@ function calcSal() {
   ts += almSkatt;
   trinnAmounts.push({lbl:(r.almSkattLabel||'Alminnelig inntektsskatt'),rate:almSats,amt:almSkatt});
   const socRate = (kl==='self') ? 0.108 : 0.076; // Trygdeavgift 2026: 10.8% selvstendig, 7.6% lønnstaker
-  const soc = b * socRate;
+  const soc = calcTrygdeavgift(b, socRate);
   const bsuKreditt = bsu * 0.10; // BSU: 10% direkte skattefradrag (ikke inntektsfradrag)
   const tot = Math.max(ts + soc - bsuKreditt, 0);
   const net = b - tot;
@@ -2721,9 +2738,10 @@ function calcMor() {
   const yearlyRate = Math.max(+document.getElementById('m-r').value || 0, 0);
   const mRate = yearlyRate / 100 / 12;
   const rawYears = +document.getElementById('m-y').value;
-  const years = Math.min(rawYears > 0 ? rawYears : 25, 50);
+  // Utlånsforskriften § 4-5: maksimal løpetid 30 år
+  const years = Math.min(rawYears > 0 ? rawYears : 25, 30);
   if(!rawYears) document.getElementById('m-y').value = '25';
-  if(rawYears > 50) document.getElementById('m-y').value = '50';
+  if(rawYears > 30) document.getElementById('m-y').value = '30';
   const n = years * 12;
   var _mt=document.getElementById('m-type');const loanType=_mt?_mt.value:'annuity';
   const serialRange = document.getElementById('m-serial-range');
@@ -2768,7 +2786,7 @@ function calcMor() {
   }
 
   const effRate = mRate === 0 ? 0 : (Math.pow(1 + mRate, 12) - 1) * 100;
-  _mor = { P, rate:yearlyRate, years, mnd, tot, rnt, type:loanType };
+  _mor = { P, rate:yearlyRate, years, mnd, tot, rnt, type:loanType, fees: parseNum('m-fees') || 0 };
   setEl('m-mth', fmt(mnd));
   setEl('m-sub', fmt(tot) + ' / ' + years + ' ' + (r.yr||'yrs'));
   setEl('m-tot', fmt(tot));
@@ -2880,7 +2898,7 @@ function updateSjekkliste(){
 // ═══════════════════════════════════════════════════════
 function calcForeldrepenger(){
   var inntekt=parseNum('fp-inntekt');if(inntekt<=0)return;
-  var G=130160;// Grunnbeløp (gjeldende fra 1. mai 2025)
+  var G=130160;// Grunnbeløp — gjeldende 2025-05-01 t.o.m. 2026-04-30. NAV fastsetter nytt G hver 1. mai.
   var maxGrunnlag=6*G;// 744 168
   var grunnlag=Math.min(inntekt,maxGrunnlag);
   var sel=document.getElementById('fp-dekning');
@@ -3029,8 +3047,9 @@ function calcDok(){
   var type=document.getElementById('dok-type');var t=type?type.value:'bolig';
   var rate=0.025;// 2.5% standard
   var avgift=t==='borettslag'?0:verdi*rate;
-  var tinglyse=545;// Fast gebyr 2026
-  var attest=172;// Attestgebyr
+  var tinglyse=545;// Fast gebyr 2026 (Kartverket)
+  // Attestgebyr: ingen separat sats funnet på Kartverket.no per april 2026 — inkludert i tinglysingsgebyret
+  var attest=0;
   var total=avgift+tinglyse+attest;
   var r=R();
   document.getElementById('dok-r-val').textContent=fmt(total);
@@ -3308,9 +3327,11 @@ function calcBilkostnad() {
     if (drivstoff === 'elbil') {
       drivKostPerKm = 0.20 * 2.0 * kmWearFactor;
     } else if (drivstoff === 'diesel') {
-      drivKostPerKm = 0.06 * 19.0 * kmWearFactor;
+      // Diesel april 2026: ~25,08 kr/L (GlobalPetrolPrices)
+      drivKostPerKm = 0.06 * 25.08 * kmWearFactor;
     } else {
-      drivKostPerKm = 0.07 * 20.0 * kmWearFactor;
+      // Bensin april 2026: ~21,00 kr/L (GlobalPetrolPrices)
+      drivKostPerKm = 0.07 * 21.00 * kmWearFactor;
     }
     var drivTotal = drivKostPerKm * km * aar;
   }
@@ -3476,6 +3497,11 @@ function calcVat() {
 // ═══════════════════════════════════════════════════════
 function calcAdj() {
   const r = R();
+  const adjRh = document.getElementById('adj-rh');
+  const adjRes = document.getElementById('adj-res');
+  const setRhMuted = function(){ if(adjRh) adjRh.style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))'; };
+  const setRhActive = function(){ if(adjRh) adjRh.style.background = 'linear-gradient(135deg,var(--accent),var(--accent-l))'; };
+  const showRes = function(){ if(adjRes) adjRes.classList.remove('hidden'); };
   var _at=document.getElementById('adj-type');const type=_at?_at.value:'eiendom';
   const totalMva = parseNum('adj-mva');
   if(totalMva <= 0) return;
@@ -3490,12 +3516,12 @@ function calcAdj() {
     setEl('adj-r-lbl', r.adjUnder||'Under terskelverdi');
     setEl('adj-r-val', fmt(terskel));
     setEl('adj-r-sub', (r.adjUnderSub||'Inngående MVA må overstige {t} for justeringsplikt').replace('{t}',fmt(terskel)));
-    var _arh=document.getElementById('adj-rh');if(_arh)_arh.style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
+    setRhMuted();
     setEl('adj-r-base', '–');
     setEl('adj-r-annual', '–');
     setEl('adj-r-remain', '–');
     setEl('adj-r-change', '–');
-    var _ares=document.getElementById('adj-res');if(_ares)_ares.classList.remove('hidden');
+    showRes();
     return;
   }
 
@@ -3503,12 +3529,12 @@ function calcAdj() {
     setEl('adj-r-lbl', r.adjExpired||'Justeringsperioden utløpt');
     setEl('adj-r-val', '0');
     setEl('adj-r-sub', (r.adjExpiredSub||'Alle {p} år er brukt — ingen justering nødvendig').replace('{p}',periode));
-    var _arh2=document.getElementById('adj-rh');if(_arh2)_arh2.style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
+    setRhMuted();
     setEl('adj-r-base', fmt(totalMva / periode));
     setEl('adj-r-annual', '0');
     setEl('adj-r-remain', '0' + ofT + periode);
     setEl('adj-r-change', pct((nyAndel - gammelAndel) * 100));
-    var _ares2=document.getElementById('adj-res');if(_ares2)_ares2.classList.remove('hidden');
+    showRes();
     return;
   }
 
@@ -3518,12 +3544,12 @@ function calcAdj() {
     setEl('adj-r-lbl', r.adjBagatell||'Under bagatellgrensen (§ 9-2)');
     setEl('adj-r-val', '0');
     setEl('adj-r-sub', (r.adjBagatellSub||'Endring på {p} er under 10 prosentpoeng — ingen justeringsplikt').replace('{p}',pct(Math.abs(endring)*100)));
-    var _arh3=document.getElementById('adj-rh');if(_arh3)_arh3.style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
+    setRhMuted();
     setEl('adj-r-base', fmt(totalMva / periode));
     setEl('adj-r-annual', '0');
     setEl('adj-r-remain', (periode - aarBrukt) + ofT + periode);
     setEl('adj-r-change', pct(endring * 100));
-    var _ares3=document.getElementById('adj-res');if(_ares3)_ares3.classList.remove('hidden');
+    showRes();
     return;
   }
 
@@ -3537,7 +3563,7 @@ function calcAdj() {
   setEl('adj-r-sub', erTilbake
     ? (r.adjRepaySub||'Du må tilbakebetale {a} i tidligere fradragsført MVA').replace('{a}',fmt(Math.abs(justering)))
     : (r.adjIncreaseSub||'Du kan kreve {a} i ekstra MVA-fradrag').replace('{a}',fmt(justering)));
-  var _arh4=document.getElementById('adj-rh');if(_arh4)_arh4.style.background = 'linear-gradient(135deg,var(--accent),var(--accent-l))';
+  setRhActive();
 
   const arligJustering = arligBeloep * Math.abs(endring);
   setEl('adj-r-base', fmt(arligBeloep));
@@ -3545,7 +3571,7 @@ function calcAdj() {
   setEl('adj-r-remain', gjenstaende + ofT + periode);
   setEl('adj-r-change', (endring > 0 ? '+' : '') + pct(endring * 100));
 
-  var _ares4=document.getElementById('adj-res');if(_ares4)_ares4.classList.remove('hidden');
+  showRes();
   setTimeout(()=>{var _ar=document.getElementById('adj-res');if(_ar)scrollToEl(_ar,'nearest');},80);
 }
 
@@ -3554,9 +3580,9 @@ function calcAdj() {
 // ═══════════════════════════════════════════════════════
 function uttakToggleFields() {
   var _ut=document.getElementById('uttak-type');const type=_ut?_ut.value:'aksjer';
-  document.getElementById('uttak-as-fields').classList.toggle('hidden', type !== 'as');
-  document.getElementById('uttak-enk-fields').classList.toggle('hidden', type !== 'enk');
-  document.getElementById('uttak-res').classList.add('hidden');
+  var el1=document.getElementById('uttak-as-fields');if(el1)el1.classList.toggle('hidden', type !== 'as');
+  var el2=document.getElementById('uttak-enk-fields');if(el2)el2.classList.toggle('hidden', type !== 'enk');
+  var el3=document.getElementById('uttak-res');if(el3)el3.classList.add('hidden');
 }
 
 function calcUttak() {
@@ -3565,7 +3591,8 @@ function calcUttak() {
   const mv = parseNum('uttak-mv');
   const sv = parseNum('uttak-sv');
   if (mv <= 0) return;
-  const andel = Math.min(Math.max(+document.getElementById('uttak-andel').value || 100, 1), 100) / 100;
+  var _ua=document.getElementById('uttak-andel');const andelVal=_ua?+((_ua.value||'100')):100;
+  const andel = Math.min(Math.max(andelVal, 1), 100) / 100;
 
   const gevinst = (mv - sv) * andel;
 
@@ -3607,7 +3634,7 @@ function calcUttak() {
     let trygd = 0, trinn = 0;
 
     if (erPersoninntekt) {
-      trygd = gevinst * 0.108;
+      trygd = calcTrygdeavgift(gevinst, 0.108);
       // Trinnskatt-beregning på gevinsten
       const trinnSatser = [
         { grense: 1467200, sats: 0.178 },
@@ -3697,7 +3724,7 @@ function calcUtdeling() {
     const almInntekt = Math.max(0, overskudd - personfradrag);
     const almSkatt = almInntekt * 0.22;
     const personinntekt = Math.max(0, overskudd - skjerming);
-    const trygd = personinntekt * 0.108;
+    const trygd = calcTrygdeavgift(personinntekt, 0.108);
     // Trinnskatt 2026 (progressive brackets)
     const trinnSatser = [
       { grense: 1467200, sats: 0.178 },
@@ -3983,7 +4010,29 @@ function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseN
 }
 
 // AGA: Ansattkostnad
-function calcAga(){const sal=parseNum('aga-salary');if(sal<=0)return;const aga=+document.getElementById('aga-zone').value;const ferie=+document.getElementById('aga-ferie').value;const otp=+document.getElementById('aga-otp').value;const ferieAmt=sal*ferie;const otpAmt=sal*otp;const agaBase=sal+ferieAmt+otpAmt;const agaAmt=agaBase*aga;const total=sal+agaAmt+ferieAmt+otpAmt;const pct=(agaAmt+ferieAmt+otpAmt)/sal*100;document.getElementById('aga-aga-amt').textContent=fmt(agaAmt);document.getElementById('aga-ferie-amt').textContent=fmt(ferieAmt);document.getElementById('aga-otp-amt').textContent=fmt(otpAmt);document.getElementById('aga-total').textContent=fmt(total);document.getElementById('aga-per-month').textContent=fmt(total/12)+' '+(R().agaPerMonth||'/mnd');document.getElementById('aga-pct').textContent=pct.toFixed(1)+'%';document.getElementById('aga-res').classList.remove('hidden');setTimeout(function(){scrollToEl(document.getElementById('aga-res'),'top');},80);}
+// OTP-grunnlag per Innskuddspensjonsloven § 4-7: kun lønn mellom 1G og 12G er pensjonsgivende
+function calcAga(){
+  const sal=parseNum('aga-salary');if(sal<=0)return;
+  const aga=+document.getElementById('aga-zone').value;
+  const ferie=+document.getElementById('aga-ferie').value;
+  const otp=+document.getElementById('aga-otp').value;
+  const G=130160; // 1G 2026 (gyldig til 2026-04-30)
+  const otpBase=Math.max(0, Math.min(sal, 12*G) - 1*G);
+  const ferieAmt=sal*ferie;
+  const otpAmt=otpBase*otp;
+  const agaBase=sal+ferieAmt+otpAmt;
+  const agaAmt=agaBase*aga;
+  const total=sal+agaAmt+ferieAmt+otpAmt;
+  const pct=(agaAmt+ferieAmt+otpAmt)/sal*100;
+  document.getElementById('aga-aga-amt').textContent=fmt(agaAmt);
+  document.getElementById('aga-ferie-amt').textContent=fmt(ferieAmt);
+  document.getElementById('aga-otp-amt').textContent=fmt(otpAmt);
+  document.getElementById('aga-total').textContent=fmt(total);
+  document.getElementById('aga-per-month').textContent=fmt(total/12)+' '+(R().agaPerMonth||'/mnd');
+  document.getElementById('aga-pct').textContent=pct.toFixed(1)+'%';
+  document.getElementById('aga-res').classList.remove('hidden');
+  setTimeout(function(){scrollToEl(document.getElementById('aga-res'),'top');},80);
+}
 
 // AVS: Avskrivning — mode toggle
 window.avsMode='regnskap';
@@ -4090,7 +4139,31 @@ function _y(r){return r.avsColYear||'År';}function _s(r){return r.avsColStart||
 function _row(i,s,d,e){return '<tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 4px;">'+i+'</td><td style="padding:6px 4px;text-align:right;">'+s+'</td><td style="padding:6px 4px;text-align:right;">'+d+'</td><td style="padding:6px 4px;text-align:right;">'+e+'</td></tr>';}
 
 // FERIE: Feriepenger
-function calcFerie(){const sal=parseNum('ferie-salary');if(sal<=0)return;const type=+document.getElementById('ferie-type').value;const over60=document.getElementById('ferie-over60').checked;const amt=sal*type;const daily=amt/220;let bonus=0;if(over60){bonus=sal*(type+0.023)-amt;}document.getElementById('ferie-amt').textContent=fmt(amt);document.getElementById('ferie-daily').textContent=fmt(daily);if(over60){document.getElementById('ferie-over60-row').classList.remove('hidden');document.getElementById('ferie-with-bonus').textContent=fmt(amt+bonus);}else{document.getElementById('ferie-over60-row').classList.add('hidden');}document.getElementById('ferie-res').classList.remove('hidden');}
+// Ferieloven § 10: grunnsats 10,2% (12% ved 5 ukers ferie).
+// 60+ ekstra uke: +2,3 prosentpoeng på grunnlaget, men KUN opp til 6G (Ferieloven § 10 nr. 3).
+function calcFerie(){
+  const sal=parseNum('ferie-salary');if(sal<=0)return;
+  const type=+document.getElementById('ferie-type').value;
+  const over60=document.getElementById('ferie-over60').checked;
+  const amt=sal*type;
+  const daily=amt/220;
+  let bonus=0;
+  if(over60){
+    const G=130160;// 1G 2026
+    const sixG=6*G;
+    const extraBase=Math.min(sal, sixG);// 6G-tak på ekstra uke
+    bonus=extraBase*0.023;
+  }
+  document.getElementById('ferie-amt').textContent=fmt(amt);
+  document.getElementById('ferie-daily').textContent=fmt(daily);
+  if(over60){
+    document.getElementById('ferie-over60-row').classList.remove('hidden');
+    document.getElementById('ferie-with-bonus').textContent=fmt(amt+bonus);
+  }else{
+    document.getElementById('ferie-over60-row').classList.add('hidden');
+  }
+  document.getElementById('ferie-res').classList.remove('hidden');
+}
 
 // RENTE: Effektiv Rente (bisection method)
 function calcRente(){
@@ -4179,8 +4252,11 @@ function calcLikvid(){const start=parseNum('likvid-start'),income=parseNum('likv
 function calcPensjon(){
   const age=+document.getElementById('pensjon-age').value,retire=+document.getElementById('pensjon-retire').value,sal=parseNum('pensjon-salary'),otpRate=+document.getElementById('pensjon-otp').value,retRate=+document.getElementById('pensjon-return').value/100;
   const years=retire-age;if(years<=0)return;
+  // Innskuddspensjonsloven § 4-7: OTP-grunnlag kun lønn mellom 1G og 12G
+  const G=130160; // 1G 2026
+  const otpBase=Math.max(0, Math.min(sal, 12*G) - 1*G);
   let pot=0;
-  for(let y=0;y<years;y++){pot=(pot+sal*otpRate)*(1+retRate);}
+  for(let y=0;y<years;y++){pot=(pot+otpBase*otpRate)*(1+retRate);}
   // Utbetaling over 20 år med fortsatt avkastning (annuitet)
   const payoutYears=20;
   const annual=retRate>0?pot*retRate/(1-Math.pow(1+retRate,-payoutYears)):pot/payoutYears;
@@ -4211,6 +4287,9 @@ function switchCalcMode(mode, skipScroll){
   document.querySelectorAll('.cm-opt').forEach(el=>el.classList.remove('cm-active'));
   const modeMap={basic:'cm-basic',finance:'cm-fin',scientific:'cm-sci',unit:'cm-unit',lvu:'cm-lvu',aga:'cm-aga',avs:'cm-avs',ferie:'cm-ferie',rente:'cm-rente',valgevinst:'cm-valgevinst',likvid:'cm-likvid',pensjon:'cm-pensjon',npv:'cm-npv'};
   var mEl=document.getElementById(modeMap[mode]);if(mEl)mEl.classList.add('cm-active');
+  // Also mark cloned .cm-opt elements in the focus-bar dropdown. Clones have their
+  // IDs stripped (to avoid duplicate-ID conflicts), so we match on data-mode instead.
+  document.querySelectorAll('#calc-focus-dd .cm-opt[data-mode="'+mode+'"]').forEach(function(el){el.classList.add('cm-active');});
   const keysWrap=bcKeys?bcKeys.parentElement:null;
   const dispWrap=bcDisp?bcDisp.parentElement:null;
   const specialPanels=['bc-unit','bc-finance','bc-lvu','bc-aga','bc-avs','bc-ferie','bc-rente','bc-valgevinst','bc-likvid','bc-pensjon','bc-npv'];
@@ -4791,7 +4870,7 @@ function calcLonn() {
   // Trygdeavgift 7.6% for 18+, 0% for under 18
   // Beregnes på personinntekt uavhengig av frikortgrense
   var trygdRate = (alder==='under18') ? 0 : 0.076;
-  const trygd = bruttoAar * trygdRate;
+  const trygd = trygdRate > 0 ? calcTrygdeavgift(bruttoAar, trygdRate) : 0;
   if(trygd>0) { totalSkatt+=trygd; breakdown.push({lbl:(r.lonnBdTrygd||'Trygdeavgift ('+(trygdRate*100).toFixed(1)+' %)'),val:trygd}); }
 
   // Minstefradrag & personfradrag info
@@ -4880,7 +4959,8 @@ function calcSpare() {
   const totalDep = totalDeposits;
   const totalInt = totalVal - totalDep;
   const intPct = totalVal > 0 ? (totalInt / totalVal * 100) : 0;
-  const effMonthly = totalVal > 0 && totalDep > 0 ? ((Math.pow(totalVal / start, 1 / (years * 12)) - 1) * 100) : 0;
+  // Effektiv månedsrente: kun meningsfull med positiv startkapital
+  const effMonthly = (start > 0 && totalVal > 0 && totalDep > 0) ? ((Math.pow(totalVal / start, 1 / (years * 12)) - 1) * 100) : 0;
 
   // Display results
   document.getElementById('spare-r-total').textContent = fmt(totalVal);
@@ -5206,7 +5286,8 @@ function syncCardHeights(){}
 // ═══════════════════════════════════════════════════════
 
 var ABO_DEFAULTS={
-  'Spotify':139,'Netflix':129,'HBO Max':149,'Disney+':109,'YouTube Premium':169,
+  // Netflix Standard april 2026: 159 kr/mnd
+  'Spotify':139,'Netflix':159,'HBO Max':149,'Disney+':109,'YouTube Premium':169,
   'Viaplay':799,'Apple Music':99,'Apple iCloud+':29,'Treningssenter':449,
   'Mobilabonnement':349,'Bredbånd':699,'VG+':99,'Aftenposten':379,
   'Adobe Creative Cloud':619,'Microsoft 365':119,'PlayStation Plus':85,'Xbox Game Pass':149
@@ -5589,11 +5670,13 @@ function morCsv(){
   rows.push(['Rente',d.rate+'%']);
   rows.push(['Løpetid',d.years+' år']);
   rows.push(['Type',d.type==='serial'?'Serielån':'Annuitetslån']);
-  rows.push(['Månedlig betaling',Math.round(d.mnd)]);
-  rows.push(['Total tilbakebetaling',Math.round(d.tot)]);
+  var fees=+d.fees||0;
+  rows.push(['Månedlig betaling',Math.round(d.mnd+fees)]);
+  if(fees>0) rows.push(['  herav omkostninger',Math.round(fees)]);
+  rows.push(['Total tilbakebetaling',Math.round(d.tot + fees*d.years*12)]);
   rows.push(['Total rente',Math.round(d.rnt)]);
   rows.push([]);
-  rows.push(['Måned','Betaling','Renter','Avdrag','Restgjeld']);
+  rows.push(['Måned','Betaling','Renter','Avdrag','Omkostninger','Restgjeld']);
   var bal=d.P;var mRate=d.rate/100/12;var n=d.years*12;
   for(var i=1;i<=n;i++){
     var interest=bal*mRate;
@@ -5601,7 +5684,7 @@ function morCsv(){
     if(d.type==='serial'){principal=d.P/n;payment=principal+interest;}
     else{payment=d.mnd;principal=payment-interest;}
     bal-=principal;if(bal<0)bal=0;
-    rows.push([i,Math.round(payment),Math.round(interest),Math.round(principal),Math.round(bal)]);
+    rows.push([i,Math.round(payment+fees),Math.round(interest),Math.round(principal),Math.round(fees),Math.round(bal)]);
   }
   rows.push([]);
   rows.push(['Generert av Hverdagsverktøy']);
@@ -5650,9 +5733,25 @@ function bilCsv(){
 
 // Page initialization — called by each page after DOM is ready
 function initPage(){
-  // Load active language, then initialize
-  loadLang(region).catch(function() {
+  // Load active language, then initialize.
+  // If the active language fails to load we fall back to Norwegian and log a
+  // warning so the silent reset isn't invisible to the user/developer.
+  var requestedRegion = region;
+  loadLang(requestedRegion).catch(function(err) {
+    console.warn('[hverdagsverktoy] Failed to load language "' + requestedRegion + '", falling back to Norwegian.', err);
     region = 'no';
+    try { localStorage.removeItem('hvt-lang'); } catch(e){}
+    // Show a transient toast so the user sees why the language reverted.
+    window.addEventListener('load', function(){
+      if(document.getElementById('hvt-lang-toast')) return;
+      var t = document.createElement('div');
+      t.id = 'hvt-lang-toast';
+      t.textContent = 'Språk kunne ikke lastes — viser norsk.';
+      t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#b45309;color:#fff;padding:10px 18px;border-radius:8px;font:600 13px/1.3 Inter,sans-serif;z-index:10000;box-shadow:0 6px 20px rgba(0,0,0,.18);';
+      document.body.appendChild(t);
+      setTimeout(function(){ t.style.transition='opacity .4s'; t.style.opacity='0'; }, 5000);
+      setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); }, 5500);
+    }, { once: true });
     return loadLang('no');
   }).then(function() { _initPageReady(); });
 }

@@ -38,7 +38,7 @@
 <link rel="dns-prefetch" href="https://fonts.bunny.net">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
 <link href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/shared/style.css?v=v20">
+<link rel="stylesheet" href="/shared/style.css?v=v21">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -466,13 +466,15 @@
 </div>
 
 <!-- Language files now loaded dynamically by core.js -->
-<script src="/shared/core.js?v=v20"></script>
+<script src="/shared/core.js?v=v21"></script>
 <script src="/shared/search.js?v=v7"></script>
-<script>initPage();
-(function(){
+<script>
+initPage();
+// Build the desktop focus-bar AFTER initPage() resolves so translations are loaded
+// and R() returns the active language (not the "no" fallback).
+function _buildKalkFocusBar(){
   var bar=document.getElementById('calc-focus-bar');
-  if(!bar)return;
-  // Build focus bar content
+  if(!bar) return;
   var _r=R();
   bar.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;">'
     +'<button id="calc-focus-btn" onclick="toggleDesktopFocus()" class="focus-toggle" style="position:static;display:inline-flex;">'
@@ -482,22 +484,43 @@
     +'style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink);font-family:Inter,sans-serif;" id="kalk-focus-switch-lbl">'+(_r.focusSwitchCalc||'Bytt kalkulator')+' \u25BC</button>'
     +'<div id="calc-focus-dd" class="hidden" style="position:absolute;right:0;top:100%;margin-top:4px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);z-index:100;min-width:220px;padding:6px;"></div>'
     +'</div></div>';
-  // Copy calc mode options into dropdown
+  // Copy calc mode options into dropdown. Use data-mode so switchCalcMode can still
+  // highlight the active clone even though IDs are stripped to avoid duplicates.
   var dd=document.getElementById('calc-focus-dd');
   var opts=document.querySelectorAll('#calc-basic > div:last-child .cm-opt');
   opts.forEach(function(o){
+    var origOnclick=o.getAttribute('onclick')||'';
+    var modeMatch=origOnclick.match(/switchCalcMode\('([^']+)'/);
+    var mode=modeMatch?modeMatch[1]:'';
     var clone=o.cloneNode(true);
-    // Remove IDs from clones to avoid duplicate-ID conflicts with translation
     clone.querySelectorAll('[id]').forEach(function(el){el.removeAttribute('id');});
     clone.removeAttribute('id');
-    var origOnclick=o.getAttribute('onclick');
+    if(mode) clone.setAttribute('data-mode', mode);
     clone.setAttribute('onclick',origOnclick+";document.getElementById('calc-focus-dd').classList.add('hidden');");
     dd.appendChild(clone);
   });
-  // Show bar on desktop
   if(window.innerWidth>900) bar.style.display='block';
   window.addEventListener('resize',function(){bar.style.display=window.innerWidth>900?'block':'none';});
-  // Override toggleDesktopFocus to sync focus bar
+  // Override toggleDesktopFocus to sync focus-bar visibility. Wrap the original and
+  // flip the button's visible label so "Lukk fokus" swaps with "Fokus" in focus mode.
   var origToggle=window.toggleDesktopFocus;
-  window.toggleDesktopFocus=function(){
-    origTogg
+  window.toggleDesktopFocus=function(colIndex){
+    if(typeof origToggle==='function') origToggle(colIndex);
+    var isFocus=document.body.classList.contains('focus-mode');
+    var lbl=document.getElementById('kalk-focus-lbl');
+    var exit=document.getElementById('kalk-focus-exit');
+    var sw=document.getElementById('calc-focus-switch');
+    if(lbl) lbl.style.display=isFocus?'none':'';
+    if(exit) exit.style.display=isFocus?'':'none';
+    if(sw) sw.style.display=isFocus?'inline-block':'none';
+  };
+}
+// Poll briefly until REGIONS is populated (loadLang resolved), then build.
+(function waitForLang(tries){
+  if(typeof REGIONS!=='undefined' && REGIONS[region]){ _buildKalkFocusBar(); return; }
+  if(tries>50) { _buildKalkFocusBar(); return; }
+  setTimeout(function(){ waitForLang(tries+1); }, 40);
+})(0);
+</script>
+</body>
+</html>
