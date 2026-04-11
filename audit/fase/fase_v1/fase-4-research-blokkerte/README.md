@@ -2,7 +2,8 @@
 title: Fase 4 — /research-blokkerte fixes
 date: 2026-04-11
 tags: [audit, fase, fase-4, v12, research]
-status: planlagt
+status: completed
+commit: 68fcd32
 parent: ../README.md
 ---
 
@@ -56,4 +57,29 @@ parent: ../README.md
 5. Kryssreferer audit-rapport med `> [!success] Verifisert via /research`-markør
 6. Commit + push
 
-Status: **ⓘ Avventer manuell trigger** — `/research` skal kalles eksplisitt per bundle.
+Status: **✅ Ferdig** — commit `68fcd32` (2026-04-11).
+
+## Verifiseringsresultater (11 testcases via preview_eval)
+
+| Fix | Test | Resultat |
+|---|---|---|
+| **Boliglan H5 stress-note** | runtime + HTML-fallback + lang-file | Alle 3 konsistente "§ 5 ... høyeste av 7 % og rente + 3 prosentpoeng" |
+| **Boliglan H5 max-years** | runtime + HTML-fallback + lang-file | "Maks løpetid 30 år (bankpraksis). Lån over 60 % belåningsgrad krever avdrag — § 9" |
+| **Bagatellgrense § 9-5** | calcAdj runtime med endring=5 pp | `adj-r-lbl` = "Under bagatellgrensen (§ 9-5 tredje ledd)" |
+| **ABO_CATALOG** | `Object.keys(ABO_CATALOG).length` | 27 varianter |
+| **ABO optgroups** | dropdown struktur | 8 grupper (Musikk, Streaming, Sport, iCloud+, Gaming, Software, Nyheter, Annet) |
+| **Viaplay varianter** | katalog | F&S [169, 149], Total [799, 749] |
+| **PS Plus 3 tier** | Essential/Extra/Premium | [105, 85] / [149, 119] / [179, 139] |
+| **iCloud+ 3 sizes** | 50GB/200GB/2TB | [12, 12] / [29, 29] / [109, 109] |
+| **Apple Music 2 tier** | Individual/Family | [139, 109] / [229, 199] |
+| Console errors | preview | 0 |
+| Alle Fase 1-3 fixes | regresjonscheck | ingen brudd |
+
+## Åpne funn etter Fase 4 (utsatt til Fase 5)
+
+- Stiftelsesloven § 22 presisering for 8 andre språk (ar, zh, fr, pl, uk, lt, so, ti) — krever per-språk oversettelse
+- Skatt R-skatt-1..7 (0 avvik) — bare lukk flagg i V12 consolidated uten kode-endring
+- 1G oppdatering — vent til 20. mai 2026 trygdeoppgjør
+- M-rest + L-tier fra V12 audit (~50 items)
+
+**Alle H-tier i V12 er nå adressert.**
