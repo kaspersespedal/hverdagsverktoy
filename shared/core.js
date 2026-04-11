@@ -1527,11 +1527,11 @@ function updateMortgageUI() {
   setText('mor-r-io-mthfree', r.morRIoMthFree || 'Månedlig (kun renter)');
   setText('mor-r-io-mthafter', r.morRIoMthAfter || 'Månedlig etter');
   setText('mor-r-io-extra', r.morRIoExtra || 'Ekstra rentekostnad');
-  setText('mor-note-maxyears', r.morNoteMaxYears || 'Maks løpetid er 30 år (Utlånsforskriften § 4-5).');
+  setText('mor-note-maxyears', r.morNoteMaxYears || 'Maks løpetid 30 år (bankpraksis). Lån over 60 % belåningsgrad krever avdrag — Utlånsforskriften § 9.');
   setText('mor-stress-hdr', r.morStressHdr || 'Stresstest (+3 prosentpoeng)');
   setText('mor-r-stress-mth', r.morRStressMth || 'Månedlig ved +3 pp');
   setText('mor-r-stress-diff', r.morRStressDiff || 'Økt månedskostnad');
-  setText('mor-stress-note', r.morStressNote || 'Utlånsforskriften § 5: banken må sjekke at du tåler +3 prosentpoeng høyere rente.');
+  setText('mor-stress-note', r.morStressNote || 'Utlånsforskriften § 5: banken må sjekke at du tåler høyeste av 7 % og rente + 3 prosentpoeng.');
   const morReqEl = document.getElementById('mor-req-title');
   if(morReqEl) morReqEl.innerHTML = (r.morReqTitle || 'Krav til boliglån') + ' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('mor-req-desc', r.morReqDesc || 'Egenkapital, gjeldsgrad, stresstest, avdrag');
@@ -2870,7 +2870,9 @@ function calcMor() {
   const yearlyRate = Math.max(getVal('m-r', 0), 0);
   const mRate = yearlyRate / 100 / 12;
   const rawYears = getVal('m-y', 0);
-  // Utlånsforskriften § 4-5: maksimal løpetid 30 år
+  // Maks løpetid 30 år er bankpraksis (ikke lovfestet). Utlånsforskriften § 9
+  // krever avdrag for lån med belåningsgrad > 60 %, som gjør 30 år til praktisk maks.
+  // Ref: research/research_v1/2026-04-11_research_boliglan-utlansforskriften.md
   const years = Math.min(rawYears > 0 ? rawYears : 25, 30);
   var _myEl = document.getElementById('m-y');
   if(_myEl){
@@ -2978,7 +2980,9 @@ function calcMor() {
   const taxY1El = document.getElementById('m-tax-y1');
   if(taxY1El) taxY1El.textContent = fmt(r1 * 0.22);
 
-  // Stresstest: Utlånsforskriften § 4-4 — høyeste av 7% og rente + 3 pp
+  // Stresstest: Utlånsforskriften § 5 — høyeste av 7% og rente + 3 pp
+  // (Verifisert via research_v1/boliglan-utlansforskriften — V12 H5 fix:
+  // kodens tidligere "§ 4-4" var feil, V10s "§ 9" var også feil. Rett svar er § 5.)
   // V12 B12-M4 fix: Når avdragsfri-periode er aktiv skal stresstest bruke
   // amortiseringsperioden (years - ioYears) × 12 måneder, siden månedlig
   // betaling er høyest etter IO-periodens slutt. Tidligere ignorerte stresstest
@@ -3719,10 +3723,13 @@ function calcAdj() {
     return;
   }
 
-  // Bagatellgrense § 9-2: justering foretas ikke hvis endring < 10 prosentpoeng
+  // Bagatellgrense § 9-5 tredje ledd: justering foretas ikke hvis endring < 10 prosentpoeng
+  // (Verifisert via research_v1/kalkulator-avgift-satser — kodens tidligere "§ 9-2" var feil;
+  // § 9-2 regulerer NÅR justering skal skje, ikke bagatellgrensen. § 9-5 regulerer BEREGNINGEN
+  // og inneholder bagatellgrensen i tredje ledd.)
   const endring = nyAndel - gammelAndel;
   if(Math.round(Math.abs(endring) * 100) < 10) {
-    setEl('adj-r-lbl', r.adjBagatell||'Under bagatellgrensen (§ 9-2)');
+    setEl('adj-r-lbl', r.adjBagatell||'Under bagatellgrensen (§ 9-5 tredje ledd)');
     setEl('adj-r-val', '0');
     setEl('adj-r-sub', (r.adjBagatellSub||'Endring på {p} er under 10 prosentpoeng — ingen justeringsplikt').replace('{p}',pct(Math.abs(endring)*100)));
     setRhMuted();
@@ -4193,7 +4200,9 @@ function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseN
 }
 
 // AGA: Ansattkostnad
-// OTP-grunnlag per Innskuddspensjonsloven § 4-7: kun lønn mellom 1G og 12G er pensjonsgivende
+// OTP-grunnlag per innskuddspensjonsloven § 5-2: kun lønn mellom 1G og 12G er pensjonsgivende
+// (Verifisert via research_v1/kalkulator-avgift-satser — kodens tidligere "§ 4-7" finnes ikke;
+// korrekt er § 5-2 i kap. 5 Innskuddsplanen.)
 function calcAga(){
   const sal=parseNum('aga-salary');if(sal<=0)return;
   // V12 Fase 3 Pattern B: getVal/setEl er null-safe
@@ -4445,7 +4454,8 @@ function calcPensjon(){
   // V12 Fase 3 Pattern B: getVal er null-safe
   const age=getVal('pensjon-age',0),retire=getVal('pensjon-retire',0),sal=parseNum('pensjon-salary'),otpRate=getVal('pensjon-otp',0),retRate=getVal('pensjon-return',0)/100;
   const years=retire-age;if(years<=0)return;
-  // Innskuddspensjonsloven § 4-7: OTP-grunnlag kun lønn mellom 1G og 12G
+  // Innskuddspensjonsloven § 5-2: OTP-grunnlag kun lønn mellom 1G og 12G
+  // (Verifisert via research_v1/kalkulator-avgift-satser)
   const G=_HVT_G; // 1G — sentralisert i _HVT_G (V12 Fase 3 K12-M5)
   const otpBase=Math.max(0, Math.min(sal, 12*G) - 1*G);
   let pot=0;
@@ -5526,19 +5536,62 @@ function syncCardHeights(){}
 // ABONNEMENTSKALKULATOR — Subscription creep tracker
 // ═══════════════════════════════════════════════════════
 
-var ABO_DEFAULTS={
-  // Netflix Standard april 2026: 159 kr/mnd
-  'Spotify':139,'Netflix':159,'HBO Max':149,'Disney+':109,'YouTube Premium':169,
-  'Viaplay':799,'Apple Music':99,'Apple iCloud+':29,'Treningssenter':449,
-  'Mobilabonnement':349,'Bredbånd':699,'VG+':99,'Aftenposten':379,
-  'Adobe Creative Cloud':619,'Microsoft 365':119,'PlayStation Plus':85,'Xbox Game Pass':149
+// V12 Fase 4 ABO multi-tier: expanded catalog with variants for services where
+// pricing varies meaningfully by tier (Spotify, Netflix, Viaplay, Apple Music,
+// iCloud+, PS Plus, Xbox GP). Verified 2026-04-11 via research_v1/personlig-abo-priskatalog
+// mot apple.com/no, viaplay.no, spotify.com/no, microsoft.com/nb-no, tek.no, itavisen.no.
+//
+// Earlier bug: ABO_OLD brukte Viaplay Film & Serier (149) mens ABO_DEFAULTS brukte
+// Viaplay Total (799) — 436% "prisøkning" var ren feilsammenligning av to ulike
+// produkter. Nå sammenlignes varianter konsistent.
+//
+// Format: [current_2026_04_price, approx_one_year_ago_price]
+var ABO_CATALOG = {
+  // Musikk
+  'Spotify Individual': [139, 119],
+  'Spotify Duo': [199, 169],
+  'Spotify Family': [229, 199],
+  'Apple Music Individual': [139, 109],
+  'Apple Music Family': [229, 199],
+  // Streaming (film/TV)
+  'Netflix Standard': [159, 129],
+  'Netflix Premium': [199, 169],
+  'HBO Max Standard': [149, 109],
+  'Disney+': [109, 109],
+  'YouTube Premium': [169, 139],
+  // Sport/TV-pakker
+  'Viaplay Film & Serier': [169, 149],
+  'Viaplay Total': [799, 749],
+  // Skytjenester / Apple
+  'Apple iCloud+ 50GB': [12, 12],
+  'Apple iCloud+ 200GB': [29, 29],
+  'Apple iCloud+ 2TB': [109, 109],
+  // Gaming
+  'PlayStation Plus Essential': [105, 85],
+  'PlayStation Plus Extra': [149, 119],
+  'PlayStation Plus Premium': [179, 139],
+  'Xbox Game Pass PC': [169, 119],
+  'Xbox Game Pass Ultimate': [309, 179],
+  // Software
+  'Adobe Creative Cloud': [659, 659],
+  'Microsoft 365 Personal': [121, 99],
+  // Nyheter/aviser
+  'VG+': [99, 99],
+  'Aftenposten': [379, 399],
+  // Generiske kategorier (bruker skriver egen pris typisk)
+  'Treningssenter': [449, 399],
+  'Mobilabonnement': [349, 399],
+  'Bredbånd': [699, 499]
 };
-var ABO_OLD={
-  'Spotify':119,'Netflix':119,'HBO Max':99,'Disney+':109,'YouTube Premium':129,
-  'Viaplay':149,'Apple Music':119,'Apple iCloud+':12,'Treningssenter':399,
-  'Mobilabonnement':399,'Bredbånd':499,'VG+':199,'Aftenposten':399,
-  'Adobe Creative Cloud':659,'Microsoft 365':99,'PlayStation Plus':69,'Xbox Game Pass':119
-};
+
+// Backwards compat shims: derive ABO_DEFAULTS (current) and ABO_OLD (~1 year ago)
+// from the catalog. Existing calcAbo-code reads these two objects.
+var ABO_DEFAULTS = {};
+var ABO_OLD = {};
+Object.keys(ABO_CATALOG).forEach(function(k){
+  ABO_DEFAULTS[k] = ABO_CATALOG[k][0];
+  ABO_OLD[k] = ABO_CATALOG[k][1];
+});
 
 function aboCatChange(sel){
   var wrap=sel.parentElement;
@@ -5572,24 +5625,54 @@ function aboGetName(row){
 function aboAddRow(){
   var r=R();var cont=document.getElementById('abo-rows');
   var row=document.createElement('div');row.className='abo-row';row.style.cssText='display:flex;gap:8px;margin-bottom:6px;';
-  var opts='<option value="Spotify">Spotify</option>'+
-    '<option value="Netflix">Netflix</option>'+
-    '<option value="HBO Max">HBO Max</option>'+
-    '<option value="Disney+">Disney+</option>'+
-    '<option value="YouTube Premium">YouTube Premium</option>'+
-    '<option value="Viaplay">Viaplay</option>'+
-    '<option value="Apple Music">Apple Music</option>'+
-    '<option value="Apple iCloud+">Apple iCloud+</option>'+
-    '<option value="Treningssenter">'+(r.aboOptTrening||'Treningssenter')+'</option>'+
-    '<option value="Mobilabonnement">'+(r.aboOptMobil||'Mobilabonnement')+'</option>'+
-    '<option value="Bredbånd">'+(r.aboOptBredband||'Bredbånd')+'</option>'+
-    '<option value="VG+">VG+</option>'+
-    '<option value="Aftenposten">Aftenposten</option>'+
-    '<option value="Adobe Creative Cloud">Adobe Creative Cloud</option>'+
-    '<option value="Microsoft 365">Microsoft 365</option>'+
-    '<option value="PlayStation Plus">PlayStation Plus</option>'+
-    '<option value="Xbox Game Pass">Xbox Game Pass</option>'+
-    '<option value="__custom__">'+(r.aboOptCustom||'Valgfritt...')+'</option>';
+  // V12 Fase 4: Multi-tier dropdown med optgroups. Varianter per tjeneste der
+  // pris varierer meningsfullt (Spotify/Netflix/Viaplay/PS Plus/Xbox/Apple iCloud+).
+  // Generiske kategorier (Treningssenter/Mobil/Bredbånd) har bare én entry.
+  var opts=
+    '<optgroup label="'+(r.aboGrpMusikk||'Musikk')+'">'+
+      '<option value="Spotify Individual">Spotify Individual</option>'+
+      '<option value="Spotify Duo">Spotify Duo</option>'+
+      '<option value="Spotify Family">Spotify Family</option>'+
+      '<option value="Apple Music Individual">Apple Music Individual</option>'+
+      '<option value="Apple Music Family">Apple Music Family</option>'+
+    '</optgroup>'+
+    '<optgroup label="'+(r.aboGrpStream||'Streaming (film/TV)')+'">'+
+      '<option value="Netflix Standard">Netflix Standard</option>'+
+      '<option value="Netflix Premium">Netflix Premium</option>'+
+      '<option value="HBO Max Standard">HBO Max Standard</option>'+
+      '<option value="Disney+">Disney+</option>'+
+      '<option value="YouTube Premium">YouTube Premium</option>'+
+    '</optgroup>'+
+    '<optgroup label="'+(r.aboGrpSport||'Sport/TV-pakker')+'">'+
+      '<option value="Viaplay Film &amp; Serier">Viaplay Film &amp; Serier</option>'+
+      '<option value="Viaplay Total">Viaplay Total</option>'+
+    '</optgroup>'+
+    '<optgroup label="'+(r.aboGrpSky||'Apple iCloud+')+'">'+
+      '<option value="Apple iCloud+ 50GB">Apple iCloud+ 50GB</option>'+
+      '<option value="Apple iCloud+ 200GB">Apple iCloud+ 200GB</option>'+
+      '<option value="Apple iCloud+ 2TB">Apple iCloud+ 2TB</option>'+
+    '</optgroup>'+
+    '<optgroup label="'+(r.aboGrpGaming||'Gaming')+'">'+
+      '<option value="PlayStation Plus Essential">PlayStation Plus Essential</option>'+
+      '<option value="PlayStation Plus Extra">PlayStation Plus Extra</option>'+
+      '<option value="PlayStation Plus Premium">PlayStation Plus Premium</option>'+
+      '<option value="Xbox Game Pass PC">Xbox Game Pass PC</option>'+
+      '<option value="Xbox Game Pass Ultimate">Xbox Game Pass Ultimate</option>'+
+    '</optgroup>'+
+    '<optgroup label="'+(r.aboGrpSoftware||'Software')+'">'+
+      '<option value="Adobe Creative Cloud">Adobe Creative Cloud</option>'+
+      '<option value="Microsoft 365 Personal">Microsoft 365 Personal</option>'+
+    '</optgroup>'+
+    '<optgroup label="'+(r.aboGrpNyheter||'Nyheter')+'">'+
+      '<option value="VG+">VG+</option>'+
+      '<option value="Aftenposten">Aftenposten</option>'+
+    '</optgroup>'+
+    '<optgroup label="'+(r.aboGrpAnnet||'Annet')+'">'+
+      '<option value="Treningssenter">'+(r.aboOptTrening||'Treningssenter')+'</option>'+
+      '<option value="Mobilabonnement">'+(r.aboOptMobil||'Mobilabonnement')+'</option>'+
+      '<option value="Bredbånd">'+(r.aboOptBredband||'Bredbånd')+'</option>'+
+      '<option value="__custom__">'+(r.aboOptCustom||'Valgfritt...')+'</option>'+
+    '</optgroup>';
   row.innerHTML='<div style="flex:2;position:relative;"><select class="fc abo-cat" onchange="aboCatChange(this)" style="width:100%;">'+opts+'</select></div>'+
     '<input type="text" class="fc abo-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" value="139">'+
     '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>';

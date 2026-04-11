@@ -99,7 +99,7 @@ REGIONS['en'] = {
     morLFees:'Monthly costs (kr)', morFeesHint:'Term fee, insurance, common costs etc.', morIoToggle:'Interest-only period', morIoYrsLabel:'Interest-only period (years)',
     morIoSectionHdr:'Interest-only period', morRFeesTot:'Total costs', morTaxHdr:'Tax deduction (22%)', morRTax:'Total tax deduction', morRTaxY1:'Year 1 tax deduction',
     morRIoMthFree:'Monthly (interest only)', morRIoMthAfter:'Monthly after', morRIoExtra:'Extra interest cost',
-    morNoteMaxYears:'Maximum term is 30 years (Norwegian Lending Regulation § 4-5).', morStressHdr:'Stress test (+3 percentage points)', morRStressMth:'Monthly at +3 pp', morRStressDiff:'Additional monthly cost', morStressNote:'Norwegian Lending Regulation § 4-4: banks must verify borrowers can handle the higher of 7% or rate + 3 pp.',
+    morNoteMaxYears:'Maximum term 30 years (bank practice). Loans above 60 % LTV require amortisation — Norwegian Lending Regulation § 9.', morStressHdr:'Stress test (+3 percentage points)', morRStressMth:'Monthly at +3 pp', morRStressDiff:'Additional monthly cost', morStressNote:'Norwegian Lending Regulation § 5: banks must verify borrowers can handle the higher of 7% or rate + 3 pp.',
     morLType:'Loan type', morAnnuity:'Annuity loan', morSerial:'Serial loan', vatRInclCalc:'Price incl. VAT', vatRExclCalc:'Price excl. VAT', vatRInputTag:'(your input)',
     morInfoTitle:'Mortgage guide', morInfoDesc:'Norwegian lending rules',
     bilTitle:'Car Cost Calculator', bilDesc:'See what your car really costs you per month and over time',
@@ -443,7 +443,7 @@ REGIONS['en'] = {
     lvuInfoLabel:'What does this calculator show?', lvuInfoH:'In short',
     lvuInfoText:'The calculator compares <b>what it costs the company</b> to give you a given amount — either as salary or dividend. It does <b>not</b> show what you take home personally.<br><br><b>Salary:</b> The amount + employer\'s national insurance (AGA) + holiday pay (12%) + OTP (2%). This is the company\'s total cost.<br><br><b>Dividend:</b> To distribute e.g. 500,000 kr the company must earn 641,026 kr before 22% corporate tax (500,000 / 0.78).<br><br><b>Note:</b> As the recipient, you also pay personal tax — income tax on salary, or dividend tax (adjusted ×1.72, taxed at 22%) on dividends. This calculator does not include personal tax — it only looks at the company side.',
     conMailName:'Name', conMailEmail:'Email',
-    adjBagatell:'Below de minimis threshold (§ 9-2)', adjBagatellSub:'Change of {p} is below 10 percentage points — no adjustment required',
+    adjBagatell:'Below de minimis threshold (§ 9-5 tredje ledd)', adjBagatellSub:'Change of {p} is below 10 percentage points — no adjustment required',
     rgMain:'Main language', rgNorway:'Languages in Norway', rgIntl:'International',
     // Sparekalkulator
     spareTitle:'Savings Calculator', spareDesc:'See the power of compound interest — how much you save vs. what interest generates',
@@ -703,7 +703,7 @@ REGIONS['en'] = {
       +'</div>'
       +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
       +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Foundation</div>'
-      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">An independent asset without owners — established for a specific purpose (charity, research, culture). No one can withdraw profit. Governed by a board according to bylaws. Requirement: minimum 100,000 kr base capital. Regulated by the Foundation Act (LOV-2001-06-15-59).</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">An independent asset without owners — established for a specific purpose (charity, research, culture). No one can withdraw profit. Governed by a board according to bylaws. Requirement: minimum 100,000 kr base capital (200,000 kr for commercial foundations, per Foundation Act § 22). Regulated by the Foundation Act (LOV-2001-06-15-59).</div>'
       +'</div>'
       +'</div>',
     selLawGroupTitle:'Norwegian Companies Act and Partnership Act',

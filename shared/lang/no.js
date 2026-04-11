@@ -108,7 +108,7 @@ REGIONS['no'] = {
     morLFees:'Månedlige omkostninger (kr)', morFeesHint:'Termingebyr, forsikring, felleskostnader o.l.', morIoToggle:'Avdragsfri periode', morIoYrsLabel:'Avdragsfri periode (år)',
     morIoSectionHdr:'Avdragsfri periode', morRFeesTot:'Totale omkostninger', morTaxHdr:'Skattefradrag (22 %)', morRTax:'Totalt skattefradrag', morRTaxY1:'År 1 skattefradrag',
     morRIoMthFree:'Månedlig (kun renter)', morRIoMthAfter:'Månedlig etter', morRIoExtra:'Ekstra rentekostnad',
-    morNoteMaxYears:'Maks løpetid er 30 år (Utlånsforskriften § 4-5).', morStressHdr:'Stresstest (+3 prosentpoeng)', morRStressMth:'Månedlig ved +3 pp', morRStressDiff:'Økt månedskostnad', morStressNote:'Utlånsforskriften § 4-4: banken må sjekke at du tåler høyeste av 7 % og rente + 3 prosentpoeng.',
+    morNoteMaxYears:'Maks løpetid 30 år (bankpraksis). Lån over 60 % belåningsgrad krever avdrag — Utlånsforskriften § 9.', morStressHdr:'Stresstest (+3 prosentpoeng)', morRStressMth:'Månedlig ved +3 pp', morRStressDiff:'Økt månedskostnad', morStressNote:'Utlånsforskriften § 5: banken må sjekke at du tåler høyeste av 7 % og rente + 3 prosentpoeng.',
     morLType:'Lånetype', morAnnuity:'Annuitetslån', morSerial:'Serielån', vatRInclCalc:'Pris inkl. MVA', vatRExclCalc:'Pris eks. MVA', vatRInputTag:'(din input)',
     morInfoTitle:'Boliglånsguide', morInfoDesc:'Norske utlånsregler',
     morIoTitle:'Avdragsfritt lån', morIoDesc:'Sammenlign avdragsfritt vs. annuitet fra dag 1',
@@ -453,7 +453,7 @@ REGIONS['no'] = {
     lvuInfoLabel:'Hva viser denne kalkulatoren?', lvuInfoH:'Kort forklart',
     lvuInfoText:'Kalkulatoren sammenligner <b>hva det koster selskapet</b> å gi deg et gitt beløp — enten som lønn eller utbytte. Den viser <b>ikke</b> hva du sitter igjen med privat.<br><br><b>Lønn:</b> Beløpet + arbeidsgiveravgift (AGA) + feriepenger (12%) + OTP (2%). Dette er selskapets totalkostnad.<br><br><b>Utbytte:</b> For å dele ut f.eks. 500 000 kr må selskapet tjene 641 026 kr før 22% selskapsskatt (500 000 / 0,78).<br><br><b>Merk:</b> Som mottaker betaler du i tillegg personlig skatt — inntektsskatt på lønn, eller utbytteskatt (oppjustert ×1,72, beskattet med 22%) på utbytte. Denne kalkulatoren tar ikke med den personlige skatten — den ser kun på selskapets side.',
     conMailName:'Navn', conMailEmail:'E-post',
-    adjBagatell:'Under bagatellgrensen (§ 9-2)', adjBagatellSub:'Endring på {p} er under 10 prosentpoeng — ingen justeringsplikt',
+    adjBagatell:'Under bagatellgrensen (§ 9-5 tredje ledd)', adjBagatellSub:'Endring på {p} er under 10 prosentpoeng — ingen justeringsplikt',
     rgMain:'Hovedspråk', rgNorway:'Språk i Norge', rgIntl:'Internasjonalt',
     // Sparekalkulator
     spareTitle:'Sparekalkulator', spareDesc:'Se kraften i rentes rente — hvor mye du sparer vs. hva renten genererer',
@@ -713,7 +713,7 @@ REGIONS['no'] = {
       +'</div>'
       +'<div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;">'
       +'<div style="font-weight:700;font-size:13px;color:var(--ink);margin-bottom:4px;">Stiftelse</div>'
-      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">En selvstendig formuesmasse uten eiere — stiftet for et bestemt formål (veldedighet, forskning, kultur). Ingen kan ta ut overskudd. Styres av et styre i henhold til vedtektene. Krav: minst 100 000 kr grunnkapital. Regulert av stiftelsesloven (LOV-2001-06-15-59).</div>'
+      +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">En selvstendig formuesmasse uten eiere — stiftet for et bestemt formål (veldedighet, forskning, kultur). Ingen kan ta ut overskudd. Styres av et styre i henhold til vedtektene. Krav: minst 100 000 kr grunnkapital (200 000 kr for næringsdrivende stiftelser, jf. stiftelsesloven § 22). Regulert av stiftelsesloven (LOV-2001-06-15-59).</div>'
       +'</div>'
       +'</div>',
     // ═══════════ LOVVERK — AKSJELOVEN & SELSKAPSLOVEN ═══════════
