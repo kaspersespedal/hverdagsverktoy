@@ -64,7 +64,7 @@ var SEARCH_DATA = [
   {name:'Trinnskatt',desc:'Progressiv skatt som øker med inntekten — 4 trinn',url:'/skatt/',tags:'trinnskatt trinn progressiv skatt inntekt sats bracket tax',type:'concept',page:'Skatt',sk:'trinnskatt'},
   {name:'Skattefradrag',desc:'Fradrag som reduserer skatten din direkte',url:'/skatt/#sal-ded-card',tags:'skattefradrag fradrag redusere skatt tax deduction',type:'concept',page:'Skatt',sk:'skatteFradrag'},
   {name:'Minstefradrag',desc:'Standardfradrag alle lønnsmottakere får automatisk',url:'/skatt/',tags:'minstefradrag standard fradrag lønn automatisk minimum deduction',type:'concept',page:'Skatt',sk:'minstefradrag'},
-  {name:'Trygdeavgift',desc:'Avgift til folketrygden — 7.9% av lønn',url:'/skatt/',tags:'trygdeavgift folketrygden nav 7.9 prosent social security',type:'concept',page:'Skatt',sk:'trygdeavgift'},
+  {name:'Trygdeavgift',desc:'Avgift til folketrygden — 7.6% av lønn (2026)',url:'/skatt/',tags:'trygdeavgift folketrygden nav 7.6 prosent social security',type:'concept',page:'Skatt',sk:'trygdeavgift'},
   {name:'Egenkapital',desc:'Minimumskapital du må ha ved boligkjøp (10%)',url:'/boliglan/',tags:'egenkapital 10 prosent boligkjøp krav bank equity down payment',type:'concept',page:'Boliglån',sk:'egenkapital'},
   {name:'BSU — Boligsparing for ungdom',desc:'Skattefradrag på 10% av innskudd, maks 27 500 kr/år',url:'/boliglan/#mor-bsu-card',tags:'bsu boligsparing ungdom skattefradrag 10 prosent sparing bolig housing savings',type:'concept',page:'Boliglån',sk:'bsu'},
   {name:'Gjeldsgrad',desc:'Forholdet mellom total gjeld og bruttoinntekt (maks 5x)',url:'/boliglan/',tags:'gjeldsgrad gjeld inntekt 5 ganger krav bank boliglån debt ratio',type:'concept',page:'Boliglån',sk:'gjeldsgrad'},
