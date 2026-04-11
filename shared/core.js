@@ -318,9 +318,11 @@ var _RESULT_RECALC_MAP = {
   'mor-res':'calcMor',
   'fp-res':'calcForeldrepenger',
   'reise-res':'calcReise',
+  'formue-res':'calcFormue',
   'dok-res':'calcDok',
   'npv-res':'calcNpv',
-  'vat-res':'calcVat',
+  'v-res':'calcVat',
+  'adj-res':'calcAdj',
   'lvu-res':'calcLvu',
   'aga-res':'calcAga',
   'avs-res':'calcAvs',
@@ -3536,7 +3538,10 @@ function calcBilkostnad() {
   document.getElementById('bil-r-dekk').textContent = fmt(dekkTotal);
   document.getElementById('bil-r-avgift').textContent = fmt(avgiftTotal);
   document.getElementById('bil-r-bom').textContent = fmt(bomTotal);
-  document.getElementById('bil-r-total').textContent = fmt(totalKostnad + pris);
+  // V12 H6 fix: bil-r-total skal være pris + drift, ikke totalKostnad + pris
+  // (totalKostnad inneholder allerede verditap = pris - restverdi, så den gamle
+  // formelen ga 2·pris - restverdi + drift). drift = totalKostnad - verditap.
+  document.getElementById('bil-r-total').textContent = fmt(pris + (totalKostnad - verditap));
 
   document.getElementById('bil-res').classList.remove('hidden');
   setTimeout(function(){scrollToEl(document.getElementById('bil-res'),'nearest');},80);
@@ -5104,7 +5109,7 @@ function calcSpare() {
   const start = parseNum('spare-start');
   const monthly = parseNum('spare-monthly');
   const rateAnnual = +(document.getElementById('spare-rate').value) || 0;
-  const years = +(document.getElementById('spare-years').value) || 1;
+  const years = Math.max(1, +(document.getElementById('spare-years').value) || 1);
   const rateMonthly = rateAnnual / 100 / 12;
 
   // Build year-by-year data
@@ -5336,7 +5341,7 @@ function calcStudielan(){
   var reellKostnad=totBetalt-skattefradrag;
 
   // Display results
-  document.getElementById('studie-r-mnd').textContent=fmt(mndBetaling)+' kr';
+  document.getElementById('studie-r-mnd').textContent=fmt(mndBetaling);
   document.getElementById('studie-r-totalstotte').textContent=fmt(totalStotte);
   document.getElementById('studie-r-stipend').textContent=fmt(stipend)+' ('+(stipendPct*100).toFixed(0)+' %)';
   document.getElementById('studie-r-ekstralan').textContent=fmt(ekstraLan);
