@@ -2,7 +2,7 @@
 title: Fase 1 — Quick wins
 date: 2026-04-11
 tags: [audit, fase, fase-1, quick-wins, v12]
-status: active
+status: completed
 parent: ../README.md
 ---
 
@@ -14,13 +14,13 @@ parent: ../README.md
 
 | # | ID | Tier | Fil:linje | Beskrivelse | Status | Commit |
 |---|---|---|---|---|---|---|
-| 1 | **H6 Personlig** | H | `shared/core.js:3539` | `bil-r-total` dobbelt-teller verditap (1 044 650→744 650) | ⏳ | — |
-| 2 | **H2 Skatt** | H | `shared/core.js:308-331` | Legg til `'formue-res':'calcFormue'` i `_RESULT_RECALC_MAP` | ⏳ | — |
-| 3 | **H8 Avgift** | H | `shared/core.js:323` | `'vat-res'`→`'v-res'` + legg til `'adj-res':'calcAdj'` | ⏳ | — |
-| 4 | **P12-M1** | M | `shared/core.js:5339` | Fjern dobbel `' kr'` suffix på `studie-r-mnd` | ⏳ | — |
-| 5 | **P12-M2** | M | `personlig/index.html:680` | Fjern duplisert `id="lonn-frikort-note"` | ⏳ | — |
-| 6 | **A12-M5** | M | `avgift/index.html:272` | Typo "gjenståend" → "gjenstående" | ⏳ | — |
-| 7 | **P12-M4** | M | `shared/core.js:5107` | Wrap `years` med `Math.max(1, ...)` | ⏳ | — |
+| 1 | **H6 Personlig** | H | `shared/core.js:3539` | `bil-r-total` dobbelt-teller verditap (1 044 650→744 650) | ✅ | a1c9cc9 |
+| 2 | **H2 Skatt** | H | `shared/core.js:308-331` | Legg til `'formue-res':'calcFormue'` i `_RESULT_RECALC_MAP` | ✅ | a1c9cc9 |
+| 3 | **H8 Avgift** | H | `shared/core.js:323` | `'vat-res'`→`'v-res'` + legg til `'adj-res':'calcAdj'` | ✅ | a1c9cc9 |
+| 4 | **P12-M1** | M | `shared/core.js:5339` | Fjern dobbel `' kr'` suffix på `studie-r-mnd` | ✅ | a1c9cc9 |
+| 5 | **P12-M2** | M | `personlig/index.html:680` | Fjern duplisert `id="lonn-frikort-note"` | ✅ | a1c9cc9 |
+| 6 | **A12-M5** | M | `avgift/index.html:272` | Typo "gjenståend" → "gjenstående" | ✅ | a1c9cc9 |
+| 7 | **P12-M4** | M | `shared/core.js:5107` | Wrap `years` med `Math.max(1, ...)` | ✅ | a1c9cc9 |
 
 ## Detaljer per fix
 
