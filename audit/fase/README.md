@@ -15,8 +15,8 @@ Organisering av V12-funn i 5 faser etter kompleksitet og dependencies. Hver fase
 |---|---|---|---|---|
 | **Fase 1** | Quick wins (1-8 linjer hver) | ~30 min | 7 | ✅ Ferdig (`a1c9cc9`) |
 | **Fase 2** | Mellomstore (verdict-logikk, formler) | 30-90 min | 5 + bonus | ✅ Ferdig (`a1395d9`) |
-| **Fase 3** | Strukturelle (helpers, refactor) | 1-3 timer | 5 | 🟡 Neste |
-| **Fase 4** | /research-blokkerte | 2-4 timer | 4 bundles | ⏸️ Venter |
+| **Fase 3** | Strukturelle (helpers, refactor) | 1-3 timer | 5 + bonus | ✅ Ferdig (`e942378`) |
+| **Fase 4** | /research-blokkerte | 2-4 timer | 4 bundles | 🟡 Neste |
 | **Fase 5** | Cleanup batch (M-rest + L-tier) | 3-5 timer | 50+ | ⏸️ Venter |
 
 ## Mappestruktur

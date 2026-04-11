@@ -364,12 +364,12 @@ Følgende krever ekstern primærkilde-verifikasjon før eventuell fix:
 12. ✅ **B12-M6 Enter-handler boliglan** — `_initPageReady`, 5 inputs
 13. ✅ **BONUS sjekk-total kr kr** — `core.js:3009`, samme klasse som P12-M1
 
-### Fase 3 — Strukturelle fixes (1-3 timer)
-13. **H4 autoRecalc leak fix** — idempotent binding via `__hvtRecalcBound`-flag
-14. **Pattern B null-check helpers** — `getVal/getChk/setEl` + refactor av 7 calc-funksjoner i kalkulator + skatt + personlig + avgift
-15. **H10 Avgift updateAll null-check sweep** — guard alle 8+ DOM-access
-16. **P12-M8 13 i18n-keys** — Python-script som legger til keys i alle 10 lang-filer
-17. **K12-M5 G=130160 DRY** — sentral konstant
+### Fase 3 — Strukturelle fixes (LUKKET — commit `e942378`)
+13. ✅ **H4 autoRecalc leak fix** — idempotent `__hvtBound` (empirisk: 1 listener etter 5 updateAll, var 5)
+14. ✅ **Pattern B null-check helpers** — `getVal/getChk` + refactor av 10 calc-funksjoner
+15. ✅ **H10 Avgift updateAll null-check sweep** — vat-info-rows + 7 _setRowsHTML + vat-aga guards
+16. ✅ **P12-M8 14 i18n-keys** — `scripts/add_p12_m8_keys.py` (NO+EN+8 språk)
+17. ✅ **K12-M5 G=130160 DRY** — `_HVT_G` sentral konstant erstatter 4 hardkodede
 
 ### Fase 4 — /research-blokkerte
 18. **R-bol-1 Utlånsforskriften** — kjør /research, så fix H5 boliglan + 22 steder
