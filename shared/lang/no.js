@@ -115,7 +115,7 @@ REGIONS['no'] = {
     ioRlTotIntIo:'Totale renter (med avdragsfritt)', ioRlTotIntAnn:'Totale renter (annuitet fra dag 1)', ioRlDiff:'Ekstra rentekostnad', ioRlAnnMth:'Månedlig annuitet fra dag 1',
     ioRSub:'Ekstra rentekostnad vs. annuitet fra dag 1',
     bilTitle:'Bil', bilDesc:'Se hva bilen din gjennomsnittlig koster deg per måned og over tid',
-    bilIntro:'De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er.',
+    bilIntro:'De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er. Drivstoffpriser er estimater basert på snittpris 2026; veibruksavgift-reduksjon apr–sept 2026 ikke modellert separat.',
     bilLMerke:'Bilmerke', bilLPris:'Kjøpspris (kr)', bilLAar:'Eiertid (år)', bilLKm:'Årlig kjørelengde (km)', bilLStartKm:'Kilometerstand ved kjøp',
     bilLDrivstoff:'Drivstoff', bilLForsikring:'Forsikring (kr/mnd)', bilLTilstand:'Kjøpt som', bilLModell:'Årsmodell', bilLKjopsaar:'Kjøpsår',
     bilLForsikringType:'Forsikringstype', bilOptFullkasko:'Fullkasko', bilOptDelkasko:'Delkasko', bilOptAnsvar:'Ansvar',

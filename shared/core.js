@@ -209,7 +209,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v21';
+    s.src = '/shared/lang/' + code + '.js?v=v22';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -3330,11 +3330,13 @@ function calcBilkostnad() {
     if (drivstoff === 'elbil') {
       drivKostPerKm = 0.20 * 2.0 * kmWearFactor;
     } else if (drivstoff === 'diesel') {
-      // Diesel april 2026: ~25,08 kr/L (GlobalPetrolPrices)
-      drivKostPerKm = 0.06 * 25.08 * kmWearFactor;
+      // Diesel 2026 baseline: ~27,93 kr/L = pump 25,08 (GlobalPetrolPrices apr 2026) + veibruksavgift 2,28 × 1,25 MVA.
+      // Temporær veibruksavgift-reduksjon (0 kr apr–sept 2026, Stortingsvedtak 486/2026) ikke modellert separat.
+      drivKostPerKm = 0.06 * 27.93 * kmWearFactor;
     } else {
-      // Bensin april 2026: ~21,00 kr/L (GlobalPetrolPrices)
-      drivKostPerKm = 0.07 * 21.00 * kmWearFactor;
+      // Bensin 2026 baseline: ~25,71 kr/L = pump 21,00 (GlobalPetrolPrices apr 2026) + veibruksavgift 3,77 × 1,25 MVA.
+      // Temporær veibruksavgift-reduksjon (0 kr apr–sept 2026, Stortingsvedtak 486/2026) ikke modellert separat.
+      drivKostPerKm = 0.07 * 25.71 * kmWearFactor;
     }
     var drivTotal = drivKostPerKm * km * aar;
   }

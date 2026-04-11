@@ -393,7 +393,7 @@ REGIONS['so'] = {
     adjBagatell:'Ka hooseeya xadka ugu yar (§ 9-2)', adjBagatellSub:'Isbedelku {p} waa ka hooseeya 10 dhibcood boqolkiiba — hagaajin looma baahna',
     rgMain:'Luqadda aasaasiga ah', rgNorway:'Luqadaha Norway', rgIntl:'Caalamiga',
     bilTitle:'Xisaabiyaha kharashka gaariiga', bilDesc:'Eeg intuu gaariigaagu adiga kuu kacayo bishii iyo wakhti dheer',
-    bilIntro:'Dadka badankood way ka yar yihiin kharashka lahaan gaari. Qiimaha iibsashada ka dib waxaa jira dhimista qiimaha, caymiska, shidaalka, dayactirka, taayirada, canshuurta wadooyinka iyo kharashyada gudbinta. Xisaabiyahan wuxuu muujinayaa sawirka dhamaystiran.',
+    bilIntro:'Dadka badankood way ka yar yihiin kharashka lahaan gaari. Qiimaha iibsashada ka dib waxaa jira dhimista qiimaha, caymiska, shidaalka, dayactirka, taayirada, canshuurta wadooyinka iyo kharashyada gudbinta. Xisaabiyahan wuxuu muujinayaa sawirka dhamaystiran. Qiimaha shidaalka waa qiyaaso ku salaysan celceliska 2026; dhimista cashuurta wadada (Abriil–Sebtembar 2026) si gaar ah looma qiyaasin.',
     bilLMerke:'Nooca gaariiga', bilLPris:'Qiimaha iibsashada (kr)', bilLAar:'Mudada lahaanshaha (sano)', bilLKm:'Masaafo sannadeedka ah (km)', bilLStartKm:'Kiilomeetarka markii la iibsaday',
     bilLDrivstoff:'Nooca shidaalka', bilLForsikring:'Caymis (kr/bil.)', bilLTilstand:'La iibsaday', bilLModell:'Sanadka nooca', bilLKjopsaar:'Sanadkii la iibsaday',
     bilLForsikringType:'Nooca caymiska', bilOptFullkasko:'Caymis buuxa', bilOptDelkasko:'Caymis qayb ah', bilOptAnsvar:'Mas\'uuliyadda',

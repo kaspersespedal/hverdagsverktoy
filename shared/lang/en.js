@@ -102,7 +102,7 @@ REGIONS['en'] = {
     morLType:'Loan type', morAnnuity:'Annuity loan', morSerial:'Serial loan', vatRInclCalc:'Price incl. VAT', vatRExclCalc:'Price excl. VAT', vatRInputTag:'(your input)',
     morInfoTitle:'Mortgage guide', morInfoDesc:'Norwegian lending rules',
     bilTitle:'Car Cost Calculator', bilDesc:'See what your car really costs you per month and over time',
-    bilIntro:'Most people underestimate the cost of car ownership. Beyond the purchase price come depreciation, insurance, fuel, service, tires, road tax and tolls. The figures below are rough estimates based on averages from NAF and OFV — intended only to illustrate how expensive car ownership really is.',
+    bilIntro:'Most people underestimate the cost of car ownership. Beyond the purchase price come depreciation, insurance, fuel, service, tires, road tax and tolls. The figures below are rough estimates based on averages from NAF and OFV — intended only to illustrate how expensive car ownership really is. Fuel prices are estimates based on 2026 average; the temporary road usage tax reduction (Apr–Sept 2026) is not modeled separately.',
     bilLMerke:'Car brand', bilLPris:'Purchase price (kr)', bilLAar:'Ownership period (years)', bilLKm:'Annual mileage (km)', bilLStartKm:'Mileage at purchase (km)',
     bilLDrivstoff:'Fuel type', bilLForsikring:'Insurance (kr/mnd)', bilLTilstand:'Bought as', bilLModell:'Year model', bilLKjopsaar:'Year of purchase',
     bilLForsikringType:'Insurance type', bilOptFullkasko:'Comprehensive', bilOptDelkasko:'Partial', bilOptAnsvar:'Liability',

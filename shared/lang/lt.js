@@ -381,7 +381,7 @@ REGIONS['lt'] = {
     adjBagatell:'Žemiau minimalios ribos (§ 9-2)', adjBagatellSub:'Pokytis {p} yra mažesnis nei 10 procentinių punktų — koregavimas nereikalingas',
     rgMain:'Pagrindinė kalba', rgNorway:'Kalbos Norvegijoje', rgIntl:'Tarptautinės',
     bilTitle:'Automobilio kaštų skaičiuoklė', bilDesc:'Sužinokite, kiek jūsų automobilis iš tikrųjų kainuoja per mėnesį ir ilgainiui',
-    bilIntro:'Dauguma žmonių neįvertina automobilio nuosavybės kaštų. Be pirkimo kainos yra vertės sumažėjimas, draudimas, kuras, aptarnavimas, padangos, kelių mokestis ir rinkliavos. Ši skaičiuoklė rodo visą vaizdą.',
+    bilIntro:'Dauguma žmonių neįvertina automobilio nuosavybės kaštų. Be pirkimo kainos yra vertės sumažėjimas, draudimas, kuras, aptarnavimas, padangos, kelių mokestis ir rinkliavos. Ši skaičiuoklė rodo visą vaizdą. Kuro kainos yra įvertinimai pagal 2026 m. vidurkį; laikinas kelių mokesčio sumažinimas (bal.–rugs. 2026) atskirai nemodeliuojamas.',
     bilLMerke:'Markė', bilLPris:'Pirkimo kaina (kr)', bilLAar:'Nuosavybės laikotarpis (metai)', bilLKm:'Metinis rida (km)', bilLStartKm:'Rida pirkimo metu (km)',
     bilLDrivstoff:'Kuro tipas', bilLForsikring:'Draudimas (kr/mėn.)', bilLTilstand:'Pirkta kaip', bilLModell:'Metų modelis', bilLKjopsaar:'Pirkimo metai',
     bilLForsikringType:'Draudimo tipas', bilOptFullkasko:'Pilnas KASKO', bilOptDelkasko:'Dalinis', bilOptAnsvar:'Civilinė atsakomybė',

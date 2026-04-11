@@ -383,7 +383,7 @@ REGIONS['zh'] = {
     adjBagatell:'低于最低限额 (§ 9-2)', adjBagatellSub:'变动{p}低于10个百分点——无需调整',
     rgMain:'主要语言', rgNorway:'挪威语言', rgIntl:'国际',
     bilTitle:'汽车费用计算器', bilDesc:'查看您的汽车每月和长期真正花费多少',
-    bilIntro:'大多数人低估了拥有汽车的成本。除了购买价格外，还有贬值、保险、燃料、维修、轮胎、交通保险费和过路费。此计算器显示完整的图景。',
+    bilIntro:'大多数人低估了拥有汽车的成本。除了购买价格外，还有贬值、保险、燃料、维修、轮胎、交通保险费和过路费。此计算器显示完整的图景。燃油价格基于2026年平均价格估算；2026年4月至9月的临时道路使用税减免未单独建模。',
     bilLMerke:'汽车品牌', bilLPris:'购买价格（kr）', bilLAar:'持有年数', bilLKm:'年行驶里程（km）', bilLStartKm:'购买时里程（km）',
     bilLDrivstoff:'燃料类型', bilLForsikring:'保险（kr/月）', bilLTilstand:'购买状态', bilLModell:'年款', bilLKjopsaar:'购买年份',
     bilLForsikringType:'保险类型', bilOptFullkasko:'全险', bilOptDelkasko:'部分险', bilOptAnsvar:'责任险',

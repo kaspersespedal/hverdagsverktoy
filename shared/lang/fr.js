@@ -383,7 +383,7 @@ REGIONS['fr'] = {
     adjBagatell:'Sous le seuil de minimis (§ 9-2)', adjBagatellSub:'Changement de {p} inférieur à 10 points de pourcentage — aucun ajustement requis',
     rgMain:'Langue principale', rgNorway:'Langues en Norvège', rgIntl:'International',
     bilTitle:'Calculateur de coûts auto', bilDesc:'Découvrez ce que votre voiture vous coûte réellement par mois et au fil du temps',
-    bilIntro:'La plupart des gens sous-estiment le coût de possession d\'une voiture. Au-delà du prix d\'achat s\'ajoutent la dépréciation, l\'assurance, le carburant, l\'entretien, les pneus, la taxe routière et les péages. Ce calculateur montre le tableau complet.',
+    bilIntro:'La plupart des gens sous-estiment le coût de possession d\'une voiture. Au-delà du prix d\'achat s\'ajoutent la dépréciation, l\'assurance, le carburant, l\'entretien, les pneus, la taxe routière et les péages. Ce calculateur montre le tableau complet. Les prix du carburant sont des estimations basées sur la moyenne 2026 ; la réduction temporaire de la taxe d\'usage routier (avr.–sept. 2026) n\'est pas modélisée séparément.',
     bilLMerke:'Marque', bilLPris:'Prix d\'achat (kr)', bilLAar:'Durée de possession (ans)', bilLKm:'Kilométrage annuel (km)', bilLStartKm:'Kilométrage à l\'achat (km)',
     bilLDrivstoff:'Carburant', bilLForsikring:'Assurance (kr/mois)', bilLTilstand:'Acheté comme', bilLModell:'Modèle année', bilLKjopsaar:'Année d\'achat',
     bilLForsikringType:'Type d\'assurance', bilOptFullkasko:'Tous risques', bilOptDelkasko:'Partielle', bilOptAnsvar:'Responsabilité civile',

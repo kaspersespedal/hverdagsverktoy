@@ -382,7 +382,7 @@ REGIONS['pl'] = {
     adjBagatell:'Poniżej progu bagatelnego (§ 9-2)', adjBagatellSub:'Zmiana o {p} jest poniżej 10 punktów procentowych — korekta nie jest wymagana',
     rgMain:'Język główny', rgNorway:'Języki w Norwegii', rgIntl:'Międzynarodowe',
     bilTitle:'Kalkulator kosztów samochodu', bilDesc:'Zobacz, ile naprawdę kosztuje Twój samochód miesięcznie i w czasie',
-    bilIntro:'Większość ludzi nie docenia kosztów posiadania samochodu. Poza ceną zakupu dochodzi utrata wartości, ubezpieczenie, paliwo, serwis, opony, podatek drogowy i opłaty za przejazd. Ten kalkulator pokazuje pełny obraz.',
+    bilIntro:'Większość ludzi nie docenia kosztów posiadania samochodu. Poza ceną zakupu dochodzi utrata wartości, ubezpieczenie, paliwo, serwis, opony, podatek drogowy i opłaty za przejazd. Ten kalkulator pokazuje pełny obraz. Ceny paliwa to szacunki oparte na średniej z 2026 r.; tymczasowa obniżka podatku drogowego (kwie.–wrz. 2026) nie jest modelowana osobno.',
     bilLMerke:'Marka', bilLPris:'Cena zakupu (kr)', bilLAar:'Okres posiadania (lata)', bilLKm:'Roczny przebieg (km)', bilLStartKm:'Przebieg przy zakupie (km)',
     bilLDrivstoff:'Paliwo', bilLForsikring:'Ubezpieczenie (kr/mies.)', bilLTilstand:'Kupiony jako', bilLModell:'Rocznik', bilLKjopsaar:'Rok zakupu',
     bilLForsikringType:'Typ ubezpieczenia', bilOptFullkasko:'AC (pełne)', bilOptDelkasko:'Częściowe', bilOptAnsvar:'OC',
