@@ -1,13 +1,18 @@
 ---
-title: Research v1 — indeks
+title: Research v1 — indeks (FERDIG)
 date: 2026-04-11
-tags: [research, indeks, v1]
-status: active
+tags: [research, indeks, v1, ferdig]
+status: verified
+ferdig_dato: 2026-04-11
+neste_versjon: research_v2
 ---
 
-# Research v1 — indeks (2026-04-11)
+# Research v1 — indeks (FERDIG ✅ 2026-04-11)
 
 Første versjons-arkiv av `/research`-rapporter for hverdagsverktoy.com. Alle rapporter kjørt på sesjonen 2026-04-11 i forbindelse med V10/V11/V12 audit-ryddingen.
+
+> [!success] Runden er ferdig
+> Alle 7 rapporter verifisert mot primærkilder. Funn implementert i Fase 4 (commit `68fcd32`). Neste research-runde skal lagres i [[../research_v2/README|research_v2/]] (klar tom mappe).
 
 ## Rapporter
 

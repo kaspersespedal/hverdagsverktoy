@@ -3,20 +3,26 @@ title: Research INDEX
 date: 2026-04-11
 tags: [research, indeks, oversikt]
 status: active
-gjeldende: research_v1
+ferdig: research_v1
+klar: research_v2
 ---
 
 # Research INDEX — hverdagsverktoy.com
 
-Samle-indeks over alle `/research`-versjoner. Gjeldende versjon er alltid den høyeste `vN`.
+Samle-indeks over alle `/research`-versjoner. Hver versjon er en ferdig research-runde. Det skal alltid finnes ÉN klar tom mappe (`vN+1`) opprettet ved slutten av forrige runde — den er destinasjon for neste `/research`-kall.
 
 ## Versjoner
 
 | Versjon | Dato | Antall rapporter | Status | Indeks |
 |---|---|---:|---|---|
-| **v1** | 2026-04-11 | 7 | ✅ Aktiv (gjeldende) | [[research_v1/README]] |
+| **v1** | 2026-04-11 | 7 | ✅ Ferdig | [[research_v1/README]] |
+| **v2** | — | 0 | 🟢 Klar (venter på neste runde) | [[research_v2/README]] |
 
-## Gjeldende versjon: `research_v1/`
+## Klar mappe for neste runde: `research_v2/`
+
+🟢 **Tom og klar.** Opprettet 2026-04-11 ved slutten av v1-runden. Neste `/research`-kall skriver hit. Når v2 er ferdig, opprettes `research_v3/` automatisk som ny klar mappe.
+
+## Forrige ferdige versjon: `research_v1/`
 
 Opprettet 2026-04-11 under V10/V11/V12 audit-rydderunden. Dekker:
 
@@ -30,16 +36,31 @@ Opprettet 2026-04-11 under V10/V11/V12 audit-rydderunden. Dekker:
 
 Se [[research_v1/README]] for full oversikt over hver rapport.
 
-## Når opprettes en ny versjon?
+## Versjons-policy (v1.4 — "alltid klar mappe")
 
-Ny `research_vN/`-mappe opprettes når:
+**Hovedregel:** når en research-runde er ferdig, opprettes umiddelbart en ny tom `vN+1`-mappe som "klar". Dette gjør at det alltid er én synlig "neste destinasjon" for kommende research.
 
-1. **Ny skatteår** (januar hvert år) — alle sats-rapporter må re-verifiseres fordi Stortingsvedtak endrer seg per kalenderår
-2. **Større lovendring** — f.eks. ny Utlånsforskrift, ny aksjelov-revisjon, ny stiftelseslov
-3. **Vesentlig kritikk av eksisterende rapport** — hvis en ekstern kilde motsier en verifisert rapport
-4. **Minst 6 måneder siden sist** — generell oppfriskning selv om intet spesifikt har endret seg
+**Workflow:**
+```
+[research_v1/ ferdig — README oppdatert med status: verified]
+   ↓
+[opprett research_v2/ med tom README + status: ready]
+   ↓
+[neste /research-kall] → skriv rapporter til research_v2/
+   ↓
+[research_v2/ ferdig]
+   ↓
+[opprett research_v3/ tom + klar]
+```
 
-Policy: gamle versjoner **slettes aldri**. De er historiske referansepunkter som viser når kunnskap ble verifisert + hvilken kilde-datering ble brukt. Dette er C1-lærdommen fra V10 (ikke stole på 2023-kilder for 2026-satser).
+**Når kjøres ny research?** Tilsvarende v1.2-reglene:
+1. **Ny skatteår** (januar hvert år) — alle sats-rapporter må re-verifiseres
+2. **Større lovendring** — f.eks. ny Utlånsforskrift, ny aksjelov-revisjon
+3. **Vesentlig kritikk av eksisterende rapport** — ekstern kilde motsier verifisert rapport
+4. **Minst 6 måneder siden sist** — generell oppfriskning
+5. **/audit flagger ny "needs research"** — handoff fra audit til research
+
+**Policy:** gamle versjoner **slettes aldri**. De er historiske referansepunkter som viser når kunnskap ble verifisert + hvilken kilde-datering ble brukt. Dette er C1-lærdommen fra V10.
 
 ## Format + regler
 
