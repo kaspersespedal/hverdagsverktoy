@@ -1187,7 +1187,13 @@ function infoRowsHTML(rows, defaultLaw) {
     const long = v && v.length > 40;
     const linkedHint = hint ? lovdataLink(hint, dl) : '';
     const url = hint ? lovdataUrl(hint, dl) : '';
-    const clickable = url ? ` onclick="window.open('${url}','_blank')" style="flex-direction:column;align-items:flex-start;gap:4px;padding:12px 22px;cursor:pointer;transition:background .15s;border-radius:4px;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"` : ' style="flex-direction:column;align-items:flex-start;gap:4px;padding:12px 22px;"';
+    // V11 A-fix: Mønster #3 infoRowsHTML a11y refactor. Lukker ~300+ keyboard-utilgjengelige
+    // div-onclick-elementer cross-page (skatt/avgift/selskap) ved å legge til role="link",
+    // tabindex="0" og onkeydown for Enter-activation. Bruker IKKE <a>-tag som outer-element
+    // fordi hint-innholdet kan inneholde inner <a>-tags fra lovdataLink() (nested anchors er
+    // ugyldig HTML). role="link" + tabindex + keydown er standard a11y-pattern for
+    // div-wrapped navigation-kontrol med inner links.
+    const clickable = url ? ` role="link" tabindex="0" onclick="window.open('${url}','_blank')" onkeydown="if(event.key==='Enter'){event.preventDefault();window.open('${url}','_blank');}" style="flex-direction:column;align-items:flex-start;gap:4px;padding:12px 22px;cursor:pointer;transition:background .15s;border-radius:4px;" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=''"` : ' style="flex-direction:column;align-items:flex-start;gap:4px;padding:12px 22px;"';
     if(long || hint) {
       return `<div class="ir"${topicAttr}${clickable}>
         <div style="font-weight:600;color:var(--ink);font-size:13px;line-height:1.4">${k}</div>
