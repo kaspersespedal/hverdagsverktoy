@@ -61,7 +61,7 @@ var SEARCH_DATA = [
   {name:'Registrere selskap',desc:'Steg-for-steg: slik registrerer du foretak via Altinn',url:'/selskap/#selskap-reg-card',tags:'registrere selskap foretak altinn brønnøysund organisasjonsnummer register company',type:'tool',page:'Selskap',sk:'selskapReg'},
 
   // ══════ BEGREPER (Nivå 2 — fagtermer) ══════
-  {name:'Trinnskatt',desc:'Progressiv skatt som øker med inntekten — 4 trinn',url:'/skatt/',tags:'trinnskatt trinn progressiv skatt inntekt sats bracket tax',type:'concept',page:'Skatt',sk:'trinnskatt'},
+  {name:'Trinnskatt',desc:'Progressiv skatt som øker med inntekten — 5 trinn',url:'/skatt/',tags:'trinnskatt trinn progressiv skatt inntekt sats bracket tax',type:'concept',page:'Skatt',sk:'trinnskatt'},
   {name:'Skattefradrag',desc:'Fradrag som reduserer skatten din direkte',url:'/skatt/#sal-ded-card',tags:'skattefradrag fradrag redusere skatt tax deduction',type:'concept',page:'Skatt',sk:'skatteFradrag'},
   {name:'Minstefradrag',desc:'Standardfradrag alle lønnsmottakere får automatisk',url:'/skatt/',tags:'minstefradrag standard fradrag lønn automatisk minimum deduction',type:'concept',page:'Skatt',sk:'minstefradrag'},
   {name:'Trygdeavgift',desc:'Avgift til folketrygden — 7.6% av lønn (2026)',url:'/skatt/',tags:'trygdeavgift folketrygden nav 7.6 prosent social security',type:'concept',page:'Skatt',sk:'trygdeavgift'},
