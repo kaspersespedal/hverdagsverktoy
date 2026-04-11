@@ -15,7 +15,10 @@ function checkRatesAge(){
 }
 
 function injectRatesDisclaimer(resEl){
-  if(!resEl||resEl.querySelector('.rates-disc'))return;
+  if(!resEl)return;
+  // Update-safe: remove any existing disclaimer so language-change re-injects fresh text
+  var _oldDisc=resEl.querySelector('.rates-disc');
+  if(_oldDisc)_oldDisc.remove();
   var r=R();var age=checkRatesAge();
   var updatedStr=RATES_LAST_UPDATED.split('-').reverse().join('.');
   var txt=(r.ratesDisclaimer||'Satser: Inntektsåret')+' '+RATES_YEAR+' · '+(r.ratesUpdated||'Sist oppdatert')+' '+updatedStr;
@@ -285,12 +288,66 @@ function setRegion(r, e) {
     try { if(typeof window.hvtSearchInvalidate==='function') window.hvtSearchInvalidate(); } catch(_e){}
     try { if(typeof window.hvtSearchRebuildChips==='function') window.hvtSearchRebuildChips(); } catch(_e){}
     updateAll();
+    // V11 E-fix: re-render visible calc result sections so cached calc output (charts, motivation text,
+    // rates disclaimer, table cells) updates to new language. Bug: focus-modus tittel/Sist oppdatert/motivasjon
+    // vises på forrige språk etter setRegion. Samme mønster som hvtSearchRebuildChips fra commit 3b41e83.
+    try { if(typeof window.hvtRebuildVisibleResults==='function') window.hvtRebuildVisibleResults(); } catch(_e){}
   }).catch(function() {
     if(switchId !== _regionSwitchId) return;
     // Fallback: switch to Norwegian if language fails to load
     if(r !== 'no') { region = 'no'; updateAll(); }
   });
 }
+// V11 E-fix: Re-render visible calc result sections on language change.
+// Bug: calcSpare/calcSal/etc. render language-dependent text (titles, motivation, chart labels,
+// table cells, rates disclaimer) once at calculation time. setRegion→updateAll updates form labels
+// but NOT the already-rendered result output, so users see mixed languages after switching.
+// Fix: after setRegion's updateAll(), re-call the corresponding calc function for each visible
+// result-sec, which re-renders all text fresh. scrollToEl is suppressed via _hvtLangRecalcActive
+// flag to avoid scroll-jumping. injectRatesDisclaimer is also made update-safe.
+var _RESULT_RECALC_MAP = {
+  'spare-res':'calcSpare',
+  'bil-res':'calcBilkostnad',
+  'studie-res':'calcStudielan',
+  'lonn-res':'calcLonn',
+  'abo-res':'calcAbo',
+  'budsjett-res':'budsjettCalc',
+  'sal-res':'calcSal',
+  'uttak-res':'calcUttak',
+  'utdeling-res':'calcUtdeling',
+  'mor-res':'calcMor',
+  'fp-res':'calcForeldrepenger',
+  'reise-res':'calcReise',
+  'dok-res':'calcDok',
+  'npv-res':'calcNpv',
+  'vat-res':'calcVat',
+  'lvu-res':'calcLvu',
+  'aga-res':'calcAga',
+  'avs-res':'calcAvs',
+  'ferie-res':'calcFerie',
+  'rente-res':'calcRente',
+  'valgevinst-res':'calcValgevinst',
+  'pensjon-res':'calcPensjon'
+};
+function hvtRebuildVisibleResults(){
+  window._hvtLangRecalcActive = true;
+  try {
+    Object.keys(_RESULT_RECALC_MAP).forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el || el.classList.contains('hidden')) return;
+      var fnName = _RESULT_RECALC_MAP[id];
+      var fn = window[fnName];
+      if(typeof fn !== 'function') return;
+      try { fn(); } catch(e){ try{_uiErr('recalc:'+fnName,e);}catch(_){} }
+      // Re-inject rates disclaimer with fresh language text (injectRatesDisclaimer is update-safe)
+      try { injectRatesDisclaimer(el); } catch(_e){}
+    });
+  } finally {
+    window._hvtLangRecalcActive = false;
+  }
+}
+window.hvtRebuildVisibleResults = hvtRebuildVisibleResults;
+
 function toggleDD() {
   var el=document.getElementById('rdd');
   if(!el) return;
@@ -2494,6 +2551,8 @@ function _animateScroll(targetY,dur,id,cb){
 }
 function scrollToEl(el,mode){
   if(!el)return;
+  // V11 E-fix: skip scroll during language-change recalc to avoid jumping back to result section
+  if(window._hvtLangRecalcActive)return;
   _cancelScroll();
   var id=_scrollId;
   var off=stickyOffset();
