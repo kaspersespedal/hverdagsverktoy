@@ -209,7 +209,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v23';
+    s.src = '/shared/lang/' + code + '.js?v=v24';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -634,6 +634,9 @@ function updateTabs() {
   autoRecalc('bil-kjopsaar','bil-res',calcBilkostnad);
   // Valutagevinst
   autoRecalc('valgevinst-currency','valgevinst-res',calcValgevinst);
+  // Enter-key handler for mortgage inputs — triggers calcMor()
+  function bindEnter(ids, fn){ids.forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fn();}});});}
+  bindEnter(['m-a','m-r','m-y','m-fees','m-io-yrs'], function(){ if(typeof calcMor==='function') calcMor(); });
 }
 function morUpdateHint(){
   var sel=document.getElementById('m-type');var hint=document.getElementById('m-type-hint');
@@ -4165,7 +4168,10 @@ function calcFerie(){
   const type=+document.getElementById('ferie-type').value;
   const over60=document.getElementById('ferie-over60').checked;
   const amt=sal*type;
-  const daily=amt/220;
+  // Daglig sats = feriepenger per ferievirkedag (5-dagers arbeidsuke)
+  // 4 uker = 20 arbeidsdager, 5 uker = 25 arbeidsdager (Ferieloven § 5)
+  const vacationDays=type>=0.12?25:20;
+  const daily=amt/vacationDays;
   let bonus=0;
   if(over60){
     const G=130160;// 1G 2026
