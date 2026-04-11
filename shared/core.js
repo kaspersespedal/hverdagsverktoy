@@ -5669,11 +5669,11 @@ function budsjettPdf(){
   d.expenseItems.forEach(function(i){rows.push([i.name,i.amount]);});
   rows.push([(r.budTotal||'Totalt'),d.totalExpense]);
   rows.push([]);
-  rows.push([(r.budBreakdownTitle||'Utgifter per kategori').toUpperCase(),'','']);
-  rows.push([(r.budBreakdownTitle||'Kategori'),(r.budTotal||'Beløp'),'%']);
-  Object.keys(d.cats).sort(function(a,b){return d.cats[b]-d.cats[a];}).forEach(function(c){
-    var pct=d.totalExpense>0?((d.cats[c]/d.totalExpense)*100).toFixed(1):'0';
-    rows.push([catNames[c]||c,d.cats[c],pct+'%']);
+  rows.push([(r.budBreakdownTitle||'Utgiftsfordeling').toUpperCase(),'','']);
+  rows.push([(r.budDefaultExpense||'Post'),(r.budTotal||'Beløp'),'%']);
+  d.expenseItems.slice().sort(function(a,b){return b.amount-a.amount;}).forEach(function(item){
+    var pct=d.totalExpense>0?((item.amount/d.totalExpense)*100).toFixed(1):'0';
+    rows.push([item.name,item.amount,pct+'%']);
   });
   rows.push([]);
   rows.push([(r.budSummaryTitle||'Sammendrag').toUpperCase(),'','']);
