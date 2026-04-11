@@ -2906,7 +2906,7 @@ var SJEKK_DATA=[
 ];
 function updateSjekkliste(){
   var r=R();var tips=r.sjekkTips||[
-    'Reisefradrag: Gjelder reise mellom hjem og fast arbeidssted. Avstanden må typisk overstige 37 km tur-retur for at det skal lønne seg etter egenandelen på 14 400 kr. Bruk reisefradragskalkulatoren over.',
+    'Reisefradrag: Gjelder reise mellom hjem og fast arbeidssted. Avstanden må typisk overstige 27 km tur-retur for at det skal lønne seg etter egenandelen på 12 000 kr. Bruk reisefradragskalkulatoren over.',
     'Rentefradrag: Du får 22 % av renteutgifter tilbake på skatten. Sjekk at alle lån (boliglån, studielån, billån) er med i skattemeldingen.',
     'Fagforening: Maks 8 700 kr i fradrag for 2026. Sjekk at beløpet er forhåndsutfylt korrekt.',
     'BSU: 10 % skattefradrag (maks 2 750 kr/år). Gjelder til og med året du fyller 33 år, og du kan ikke eie bolig per 31. desember.',
