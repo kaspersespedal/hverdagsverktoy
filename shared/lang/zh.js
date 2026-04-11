@@ -66,6 +66,9 @@ REGIONS['zh'] = {
     uttakExExc5:'企业资产的私人使用：持续使用（如住宅、船、车）按股东模式作为股利对股东征税',
     uttakExSource:'来源：税法§ 5-2、§ 5-3和第9章（法律-1999-03-26-14）。该计算器仅供参考——具体评估请咨询会计师。',
     utdelingTitle:'分红税模型', utdelingDesc:'AS和个体企业利润分配的有效税负',
+    utdelingFritakTitle:'参股免税制度（税法 § 2-38）',
+    utdelingFritakBody:'根据参股免税制度，<b>公司之间</b>的股息和资本收益通常免税。控股公司可以从子公司获得股息而无需缴税——只有当利润进一步分配给<i>个人</i>股东时，股息税才会生效。上方的计算器正是展示这最后一个环节。',
+    utdelingFritakLink:'阅读更多关于参股免税制度 →',
     utdelingIntro:'此计算器展示利润分配给所有者时的综合税负。<b>AS</b>（股东模式）：公司税22% + 股息税37.84% = <b>51.5%</b>有效税率。<b>ENK</b>个体企业（企业模式）：普通收入22% + 社会保险10.8% + 阶梯税 = 最高<b>50.6%</b>边际税率。对称原则确保企业形式本身不提供税收优势。<br><br><i style="font-size:12px;opacity:.7">个体企业视图为简化的教学说明——实际税收还受个人免税额和最低扣除额影响。</i>',
     utdelingLOverskudd:'税前利润（克朗）', utdelingLSkjerming:'免税额（克朗）',
     utdelingBtn:'计算有效税率 →', utdelingRLbl:'总税负',
@@ -809,4 +812,10 @@ REGIONS['zh'] = {
       aksjeloven:'公司法 有限责任',
       selskapsloven:'合伙法 合伙企业'
     },
+    searchDn: {
+      trinnskatt:'阶梯税', skatteFradrag:'税收抵免', minstefradrag:'标准扣除', trygdeavgift:'社会保障金', egenkapital:'自有资金', bsu:'BSU — 青年住房储蓄', gjeldsgrad:'债务收入比', stresstest:'压力测试', aksjonarmodellen:'股东模型', foretaksmodellen:'个体企业模型', verdsettelsesrabatt:'估值折扣', saldoavs:'余额递减折旧法', otp:'OTP — 强制性职业养老金', agaBegrep:'雇主缴费（AGA）', rentesRente:'复利', annuitet:'等额本息贷款', serieLan:'等额本金贷款', naeringHobby:'商业还是爱好？', konsernbidrag:'集团贡献', fritaksmetoden:'参股免税制度', deltakerligning:'合伙人征税', selskapsskatt:'公司税', utbytteskatt:'股息税', komplementar:'普通合伙人', kommandittist:'有限合伙人', mvaSatser:'增值税率', omsetning:'增值税登记门槛', fradragsrett:'增值税抵扣权', skatteloven:'挪威税法', sktlK2:'税法第2章 — 纳税义务', sktlK4:'税法第4章 — 财产', sktlK5:'税法第5章 — 收入', sktlK6:'税法第6章 — 扣除', sktlK9:'税法第9章 — 收益和损失', sktlK10:'税法第10章 — 公司', sktlK14:'税法第14章 — 折旧', mvalK2:'增值税法第2章 — 登记', mvalK3:'增值税法第3章 — 豁免', mvalK6:'增值税法第6章 — 零税率', mvalK8:'增值税法第8章 — 扣除', mvalK9:'增值税法第9章 — 调整', rskl53:'会计法第5-3条 — 折旧', aksjeloven:'股份公司法', selskapsloven:'合伙企业法'
+    },
+    searchDs: {
+      trinnskatt:'随收入增加的累进税 — 4个档次', skatteFradrag:'直接减少您应缴税款的扣除', minstefradrag:'所有工薪族自动享有的标准扣除', trygdeavgift:'缴纳社会保障基金 — 工资的7.9%', egenkapital:'购房所需的最低自有资金（15%）', bsu:'存款20%的税收抵免，每年最高27,500克朗', gjeldsgrad:'总债务与总收入的比率（最高5倍）', stresstest:'银行检查您能否承受3个百分点的加息', aksjonarmodellen:'面向个人股东的股息征税模型', foretaksmodellen:'个体企业的征税模型', verdsettelsesrabatt:'对股票、住房和经营资产的财产价值折扣', saldoavs:'按残值固定百分比计算的税务折旧', otp:'雇主必须为超过1G的工资储蓄至少2%', agaBegrep:'雇主按工资支付的税 — 因地区而异', rentesRente:'收益的收益 — 让储蓄随时间变强大的效应', annuitet:'整个贷款期内每月偿还金额相同的贷款', serieLan:'每月本金偿还金额相同的贷款 — 总成本比等额本息低', naeringHobby:'副业收入何时成为应税商业活动？', konsernbidrag:'同一集团内公司之间的利润转移', fritaksmetoden:'公司获得的股息和股权收益免税', deltakerligning:'利润分配并在每个合伙人处征税 — ANS、DA和KS', selskapsskatt:'对股份公司利润征收22%的税', utbytteskatt:'对个人股东征收37.84%的股息税（上调后）', komplementar:'KS中承担无限个人责任的积极管理人', kommandittist:'KS中的被动投资者 — 责任以出资额为限', mvaSatser:'一般25%，食品15%，交通/文化12%，出口0%', omsetning:'营业额超过50,000克朗时必须登记', fradragsrett:'可从商业采购中抵扣进项增值税的权利', skatteloven:'税法的章节和条款', sktlK2:'谁需要在挪威纳税？', sktlK4:'财产、股票、住房的评估和折扣', sktlK5:'应税收入、工资、资本和免税福利', sktlK6:'标准扣除、债务利息和特别扣除', sktlK9:'变现、房屋销售、遗产、赠与和移居', sktlK10:'股息、股权收益、集团贡献和NOKUS', sktlK14:'折旧组、税率和收益/损失', mvalK2:'集团登记、自愿登记和预先登记', mvalK3:'增值税法的豁免范围', mvalK6:'销项增值税0%，完全抵扣权', mvalK8:'主要规则、混合使用和限制', mvalK9:'资本货物和调整期', rskl53:'使用寿命有限的固定资产须计提折旧', aksjeloven:'有限责任公司法 — 成立、资本、董事会', selskapsloven:'无限合伙和有限合伙企业法'
+    }
 };

@@ -230,7 +230,7 @@ var URL_TO_DISPLAY = {
   '/skatt/#reise-wrapper':        {title:'reiseTitle',    desc:'reiseDesc'},
   // Avgift
   '/avgift/#vat-wrapper':         {title:'vatTitle',      desc:'vatDesc'},
-  '/avgift/#vat-adj-card':        {title:'vatAdjTitle',   desc:'vatAdjDesc'},
+  '/avgift/#vat-adj-card':        {title:'adjTitle',      desc:'adjDesc'},
   // Selskap
   '/selskap/#selskap-velg-card':    {title:'selskapVelgTitle',    desc:'selskapVelgDesc'},
   '/selskap/#selskap-enk-card':     {title:'selskapEnkTitle',     desc:'selskapEnkDesc'},
@@ -273,6 +273,10 @@ function resolveDisplay(item){
         if(disp.title && typeof r[disp.title]==='string' && r[disp.title].trim()) out.name = r[disp.title];
         if(disp.desc  && typeof r[disp.desc]==='string'  && r[disp.desc].trim())  out.desc = r[disp.desc];
       }
+    } else if(item.sk && r.searchDn && r.searchDn[item.sk]){
+      // Concept/law items: look up translated display name by sk key
+      out.name = r.searchDn[item.sk];
+      if(r.searchDs && r.searchDs[item.sk]) out.desc = r.searchDs[item.sk];
     }
     var pk = PAGE_KEY[item.page];
     if(pk && typeof r[pk]==='string' && r[pk].trim()) out.page = r[pk];

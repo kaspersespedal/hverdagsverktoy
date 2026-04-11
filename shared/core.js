@@ -209,7 +209,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v24';
+    s.src = '/shared/lang/' + code + '.js?v=v25';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -2058,6 +2058,10 @@ function updateUttakUI() {
   var utdEl=document.getElementById('utdeling-title');if(utdEl)utdEl.innerHTML=(r.utdelingTitle||'Dividend Tax Model')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('utdeling-desc', r.utdelingDesc || 'Effective tax burden on distributions from AS and sole prop.');
   if(document.getElementById('utdeling-intro')) document.getElementById('utdeling-intro').innerHTML = r.utdelingIntro || 'This calculator shows the combined tax burden when profits are distributed to the owner. For <b>AS</b>: corporate tax 22% + dividend tax 37.84% = <b>51.5%</b>. For <b>sole prop.</b>: ordinary income 22% + national insurance 10.8% + bracket tax = up to <b>50.6%</b>.';
+  setText('utdeling-fritak-title', r.utdelingFritakTitle || 'Fritaksmetoden (sktl. § 2-38)');
+  var _ufBody=document.getElementById('utdeling-fritak-body');
+  if(_ufBody) _ufBody.innerHTML = r.utdelingFritakBody || 'Utbytte og aksjegevinst <b>mellom selskaper</b> er i hovedsak skattefritt under fritaksmetoden. Det betyr at et holdingselskap kan motta utbytte fra et datterselskap uten å betale skatt — det er først når pengene deles ut videre til en <i>personlig</i> aksjonær at utbytteskatten slår inn. Kalkulatoren over viser nettopp dette siste leddet.';
+  setText('utdeling-fritak-link', r.utdelingFritakLink || 'Les mer om fritaksmetoden →');
   setText('utdeling-l-type', r.utdelingLType || 'Business form');
   setText('utdeling-opt-as', r.utdelingOptAs || 'Limited company (AS) — shareholder model');
   setText('utdeling-opt-enk', r.utdelingOptEnk || 'Sole proprietorship (ENK) — enterprise model');
