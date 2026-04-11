@@ -2325,7 +2325,7 @@ function updateFagkalkulatorUI() {
   repopulateSelect('avs-group', r.avsGroupOpts, ['0.30','0.20','0.24','0.20','0.14','0.12','0.05','0.04','0.02','0.10']);
   repopulateSelect('ferie-type', r.ferieTypeOpts, ['0.102','0.12']);
   repopulateSelect('pensjon-otp', r.pensjonOtpOpts, ['0.02','0.05','0.07']);
-  repopulateSelectByIndex('lvu-zone', r.lvuZoneOpts);
+  repopulateSelect('lvu-zone', r.lvuZoneOpts, ['0.141','0.106','0.064','0.079','0.051','0']);
 
   // --- NPV panel labels (kalkulator page) ---
   setText('bc-npv-label', r.npvTitle || 'Lønnsomhetsanalyse (NPV/IRR)');
