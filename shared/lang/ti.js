@@ -94,7 +94,7 @@ REGIONS['ti'] = {
     morLFees:'ወርሓዊ ወጻኢ (kr)', morFeesHint:'ናይ ግዜ ክፍሊት፣ ውሕስነት፣ ሓባራዊ ወጻኢ ወዘተ', morIoToggle:'ግዜ ብዘይ ምኽፋል', morIoYrsLabel:'ግዜ ብዘይ ምኽፋል (ዓመታት)',
     morIoSectionHdr:'ግዜ ብዘይ ምኽፋል', morRFeesTot:'ጠቕላላ ወጻኢ', morTaxHdr:'ናይ ግብሪ ቅነሳ (22%)', morRTax:'ጠቕላላ ናይ ግብሪ ቅነሳ', morRTaxY1:'ዓመት 1 ናይ ግብሪ ቅነሳ',
     morRIoMthFree:'ወርሓዊ (ወለድ ጥራይ)', morRIoMthAfter:'ወርሓዊ ድሕሪኡ', morRIoExtra:'ተወሳኺ ናይ ወለድ ወጻኢ',
-    morNoteMaxYears:'እቲ ዝበዝሐ ግዜ ልቓሕ 30 ዓመት እዩ (ሕጊ ልቓሕ ኖርወይ § 4-5)።', morStressHdr:'መርመራ ጸቕጢ (+3 ሚእታዊ ነጥቢ)', morRStressMth:'ወርሓዊ ኣብ +3 ነጥቢ', morRStressDiff:'ወርሓዊ ዝውሰኽ', morStressNote:'ሕጊ ልቓሕ ኖርወይ § 5፦ ባንክ ተለቃሒ 3 ሚእታዊ ነጥቢ ዝበዝሐ ወለድ ክኽእል ከረጋግጽ ኣለዎ።',
+    morNoteMaxYears:'እቲ ዝበዝሐ ግዜ ልቓሕ 30 ዓመት እዩ (ሕጊ ልቓሕ ኖርወይ § 4-5)።', morStressHdr:'መርመራ ጸቕጢ (+3 ሚእታዊ ነጥቢ)', morRStressMth:'ወርሓዊ ኣብ +3 ነጥቢ', morRStressDiff:'ወርሓዊ ዝውሰኽ', morStressNote:'ሕጊ ልቓሕ ኖርወይ § 4-4፦ ባንክ ተለቃሒ እቲ ካብ 7% ወይ ወለድ + 3 ሚእታዊ ነጥቢ ዝዓቢ ክኽእል ከረጋግጽ ኣለዎ።',
     morLType:'ዓይነት ልቓሕ', morAnnuity:'ኣኑይቲ ልቓሕ', morSerial:'ተኸታታሊ ልቓሕ', vatRInclCalc:'ዋጋ ተ.ዋ.ግ. ሓዊስካ', vatRExclCalc:'ዋጋ ብዘይ ተ.ዋ.ግ.', vatRInputTag:'(ዝኣተኻዮ)',
     morInfoTitle:'ናይ ልቓሕ ገዛ መምርሒ', morInfoDesc:'ኖርወጃውያን ናይ ልቓሕ ሕግታት',
     morIoTitle:'ብዘይ ምኽፋል ልቓሕ', morIoDesc:'ብዘይ ምኽፋል vs. ኣኑይቲ ካብ መዓልቲ 1 ኣወዳድር',

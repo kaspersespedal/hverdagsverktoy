@@ -2859,8 +2859,9 @@ function calcMor() {
   const taxY1El = document.getElementById('m-tax-y1');
   if(taxY1El) taxY1El.textContent = fmt(r1 * 0.22);
 
-  // Stresstest: Utlånsforskriften § 5 — banken må sjekke at låntaker tåler +3 pp høyere rente
-  const stressRate = (yearlyRate + 3) / 100 / 12;
+  // Stresstest: Utlånsforskriften § 4-4 — høyeste av 7% og rente + 3 pp
+  const stressYearlyPct = Math.max(yearlyRate + 3, 7);
+  const stressRate = stressYearlyPct / 100 / 12;
   const stressMnd = stressRate === 0
     ? P / n
     : P * stressRate * Math.pow(1 + stressRate, n) / (Math.pow(1 + stressRate, n) - 1);

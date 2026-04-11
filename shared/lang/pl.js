@@ -93,7 +93,7 @@ REGIONS['pl'] = {
     morLFees:'Koszty miesięczne (kr)', morFeesHint:'Opłata za ratę, ubezpieczenie, koszty wspólne itp.', morIoToggle:'Okres karencji', morIoYrsLabel:'Okres karencji (lata)',
     morIoSectionHdr:'Okres karencji', morRFeesTot:'Łączne koszty', morTaxHdr:'Odliczenie podatkowe (22%)', morRTax:'Łączne odliczenie podatkowe', morRTaxY1:'Odliczenie podatkowe rok 1',
     morRIoMthFree:'Miesięcznie (tylko odsetki)', morRIoMthAfter:'Miesięcznie po', morRIoExtra:'Dodatkowy koszt odsetek',
-    morNoteMaxYears:'Maksymalny okres spłaty: 30 lat (norweskie przepisy § 4-5).', morStressHdr:'Test warunków skrajnych (+3 p.p.)', morRStressMth:'Miesięcznie przy +3 p.p.', morRStressDiff:'Wzrost miesięczny', morStressNote:'Norweskie przepisy § 5: bank musi sprawdzić, czy kredytobiorca poradzi sobie ze wzrostem oprocentowania o 3 p.p.',
+    morNoteMaxYears:'Maksymalny okres spłaty: 30 lat (norweskie przepisy § 4-5).', morStressHdr:'Test warunków skrajnych (+3 p.p.)', morRStressMth:'Miesięcznie przy +3 p.p.', morRStressDiff:'Wzrost miesięczny', morStressNote:'Norweskie przepisy § 4-4: bank musi sprawdzić, czy kredytobiorca poradzi sobie z wyższą z dwóch wartości — 7% lub oprocentowanie + 3 p.p.',
     morLType:'Typ kredytu', morAnnuity:'Kredyt annuitetowy', morSerial:'Kredyt seryjny', vatRInclCalc:'Cena z VAT', vatRExclCalc:'Cena bez VAT', vatRInputTag:'(Twoje dane)',
     morInfoTitle:'Przewodnik po kredytach', morInfoDesc:'Norweskie zasady udzielania kredytów',
     morIoTitle:'Kredyt z karencją', morIoDesc:'Porównaj karencję z annuitetem od 1. dnia',

@@ -176,7 +176,7 @@ REGIONS['zh'] = {
     morLFees:'每月费用 (kr)', morFeesHint:'期限费、保险、公共费用等', morIoToggle:'免还本金期', morIoYrsLabel:'免还本金期（年）',
     morIoSectionHdr:'免还本金期', morRFeesTot:'总费用', morTaxHdr:'税收减免 (22%)', morRTax:'总税收减免', morRTaxY1:'第1年税收减免',
     morRIoMthFree:'每月（仅利息）', morRIoMthAfter:'之后每月', morRIoExtra:'额外利息成本',
-    morNoteMaxYears:'最长期限为30年（挪威贷款条例第4-5条）。', morStressHdr:'压力测试（+3个百分点）', morRStressMth:'+3个百分点时的月供', morRStressDiff:'每月增加', morStressNote:'挪威贷款条例第5条：银行必须核实借款人能否承受3个百分点的利率上升。',
+    morNoteMaxYears:'最长期限为30年（挪威贷款条例第4-5条）。', morStressHdr:'压力测试（+3个百分点）', morRStressMth:'+3个百分点时的月供', morRStressDiff:'每月增加', morStressNote:'挪威贷款条例第4-4条：银行必须核实借款人能否承受7%与利率+3个百分点中的较高者。',
     morLType:'贷款类型', morAnnuity:'等额本息', morSerial:'等额本金', vatRInclCalc:'含增值税价格', vatRExclCalc:'不含增值税价格', vatRInputTag:'（您的输入）',
     morInfoTitle:'房贷指南', morInfoDesc:'挪威贷款规则',
     morIoTitle:'免还本金贷款', morIoDesc:'比较免还本金与从第一天起的等额本息',

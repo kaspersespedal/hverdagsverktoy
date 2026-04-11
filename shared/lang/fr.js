@@ -103,7 +103,7 @@ REGIONS['fr'] = {
     morLFees:'Frais mensuels (kr)', morFeesHint:'Frais de terme, assurance, charges communes etc.', morIoToggle:'Période sans amortissement', morIoYrsLabel:'Période sans amortissement (années)',
     morIoSectionHdr:'Période sans amortissement', morRFeesTot:'Coûts totaux', morTaxHdr:'Déduction fiscale (22%)', morRTax:'Déduction fiscale totale', morRTaxY1:'Déduction fiscale année 1',
     morRIoMthFree:'Mensuel (intérêts seuls)', morRIoMthAfter:'Mensuel après', morRIoExtra:'Coût d\'intérêts supplémentaire',
-    morNoteMaxYears:'Durée maximale : 30 ans (Réglementation norvégienne § 4-5).', morStressHdr:'Test de résistance (+3 points de pourcentage)', morRStressMth:'Mensualité à +3 pp', morRStressDiff:'Augmentation mensuelle', morStressNote:'Réglementation norvégienne § 5 : la banque doit vérifier que vous pouvez supporter une hausse de 3 points de pourcentage.',
+    morNoteMaxYears:'Durée maximale : 30 ans (Réglementation norvégienne § 4-5).', morStressHdr:'Test de résistance (+3 points de pourcentage)', morRStressMth:'Mensualité à +3 pp', morRStressDiff:'Augmentation mensuelle', morStressNote:'Réglementation norvégienne § 4-4 : la banque doit vérifier que vous pouvez supporter le plus élevé entre 7 % et le taux + 3 points de pourcentage.',
     morLType:'Type de prêt', morAnnuity:'Prêt annuité', morSerial:'Prêt sériel', vatRInclCalc:'Prix TTC', vatRExclCalc:'Prix HT', vatRInputTag:'(votre saisie)',
     morInfoTitle:'Guide prêt immobilier', morInfoDesc:'Règles de prêt norvégiennes',
     morIoTitle:'Prêt sans amortissement', morIoDesc:'Comparer sans amortissement vs. annuité dès le jour 1',

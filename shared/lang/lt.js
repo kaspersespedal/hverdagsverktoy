@@ -93,7 +93,7 @@ REGIONS['lt'] = {
     morLFees:'Mėnesinės išlaidos (kr)', morFeesHint:'Mokestis už terminą, draudimas, bendrosios išlaidos ir kt.', morIoToggle:'Laikotarpis be amortizacijos', morIoYrsLabel:'Laikotarpis be amortizacijos (metai)',
     morIoSectionHdr:'Laikotarpis be amortizacijos', morRFeesTot:'Bendros išlaidos', morTaxHdr:'Mokesčių atskaitymas (22%)', morRTax:'Bendras mokesčių atskaitymas', morRTaxY1:'1 m. mokesčių atskaitymas',
     morRIoMthFree:'Mėnesinis (tik palūkanos)', morRIoMthAfter:'Mėnesinis po', morRIoExtra:'Papildomos palūkanų išlaidos',
-    morNoteMaxYears:'Ilgiausias terminas – 30 metų (Norvegijos skolinimo reglamentas § 4-5).', morStressHdr:'Streso testas (+3 procentiniai punktai)', morRStressMth:'Mėnesio įmoka esant +3 p.p.', morRStressDiff:'Mėnesio įmokos padidėjimas', morStressNote:'Norvegijos skolinimo reglamentas § 5: bankas privalo patikrinti, ar paskolos gavėjas atlaikys palūkanų padidėjimą 3 procentiniais punktais.',
+    morNoteMaxYears:'Ilgiausias terminas – 30 metų (Norvegijos skolinimo reglamentas § 4-5).', morStressHdr:'Streso testas (+3 procentiniai punktai)', morRStressMth:'Mėnesio įmoka esant +3 p.p.', morRStressDiff:'Mėnesio įmokos padidėjimas', morStressNote:'Norvegijos skolinimo reglamentas § 4-4: bankas privalo patikrinti, ar paskolos gavėjas atlaikys didesnę iš dviejų reikšmių — 7% arba palūkanas + 3 procentinius punktus.',
     morLType:'Paskolos tipas', morAnnuity:'Anuiteto paskola', morSerial:'Serijinė paskola', vatRInclCalc:'Kaina su PVM', vatRExclCalc:'Kaina be PVM', vatRInputTag:'(jūsų įvestis)',
     morInfoTitle:'Būsto paskolos vadovas', morInfoDesc:'Norvegijos skolinimo taisyklės',
     morIoTitle:'Paskola be amortizacijos', morIoDesc:'Palyginti be amortizacijos su anuitetu nuo 1 dienos',

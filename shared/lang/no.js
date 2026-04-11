@@ -108,7 +108,7 @@ REGIONS['no'] = {
     morLFees:'Månedlige omkostninger (kr)', morFeesHint:'Termingebyr, forsikring, felleskostnader o.l.', morIoToggle:'Avdragsfri periode', morIoYrsLabel:'Avdragsfri periode (år)',
     morIoSectionHdr:'Avdragsfri periode', morRFeesTot:'Totale omkostninger', morTaxHdr:'Skattefradrag (22 %)', morRTax:'Totalt skattefradrag', morRTaxY1:'År 1 skattefradrag',
     morRIoMthFree:'Månedlig (kun renter)', morRIoMthAfter:'Månedlig etter', morRIoExtra:'Ekstra rentekostnad',
-    morNoteMaxYears:'Maks løpetid er 30 år (Utlånsforskriften § 4-5).', morStressHdr:'Stresstest (+3 prosentpoeng)', morRStressMth:'Månedlig ved +3 pp', morRStressDiff:'Økt månedskostnad', morStressNote:'Utlånsforskriften § 5: banken må sjekke at du tåler +3 prosentpoeng høyere rente.',
+    morNoteMaxYears:'Maks løpetid er 30 år (Utlånsforskriften § 4-5).', morStressHdr:'Stresstest (+3 prosentpoeng)', morRStressMth:'Månedlig ved +3 pp', morRStressDiff:'Økt månedskostnad', morStressNote:'Utlånsforskriften § 4-4: banken må sjekke at du tåler høyeste av 7 % og rente + 3 prosentpoeng.',
     morLType:'Lånetype', morAnnuity:'Annuitetslån', morSerial:'Serielån', vatRInclCalc:'Pris inkl. MVA', vatRExclCalc:'Pris eks. MVA', vatRInputTag:'(din input)',
     morInfoTitle:'Boliglånsguide', morInfoDesc:'Norske utlånsregler',
     morIoTitle:'Avdragsfritt lån', morIoDesc:'Sammenlign avdragsfritt vs. annuitet fra dag 1',
