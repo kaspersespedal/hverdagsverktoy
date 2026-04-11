@@ -457,13 +457,18 @@ function initSearch(){
   var chips    = document.getElementById('search-suggestions');
   var activeIdx = -1;
 
-  // Build suggestion chips
-  var popularLabel = T('searchPopular','Populære:');
-  var chipHTML = '<span class="search-chip-label">'+popularLabel+'</span>';
-  for(var i=0; i<SUGGESTED.length; i++){
-    chipHTML += '<a href="'+SUGGESTED[i].url+'" class="search-chip">'+T(SUGGESTED[i].labelKey, SUGGESTED[i].fallback)+'</a>';
+  // Build suggestion chips (rebuildable on language change)
+  function buildChips(){
+    var popularLabel = T('searchPopular','Populære:');
+    var chipHTML = '<span class="search-chip-label">'+popularLabel+'</span>';
+    for(var i=0; i<SUGGESTED.length; i++){
+      chipHTML += '<a href="'+SUGGESTED[i].url+'" class="search-chip">'+T(SUGGESTED[i].labelKey, SUGGESTED[i].fallback)+'</a>';
+    }
+    chips.innerHTML = chipHTML;
   }
-  chips.innerHTML = chipHTML;
+  buildChips();
+  // Expose so setRegion() / language switcher can retranslate chips
+  window.hvtSearchRebuildChips = buildChips;
 
   // Show chips on focus (if input is empty) + close language dropdown
   input.addEventListener('focus', function(){

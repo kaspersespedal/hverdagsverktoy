@@ -283,6 +283,7 @@ function setRegion(r, e) {
     var _rf=document.getElementById('rf');if(_rf)setFlagSrc(_rf,R().flag);
     var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
     try { if(typeof window.hvtSearchInvalidate==='function') window.hvtSearchInvalidate(); } catch(_e){}
+    try { if(typeof window.hvtSearchRebuildChips==='function') window.hvtSearchRebuildChips(); } catch(_e){}
     updateAll();
   }).catch(function() {
     if(switchId !== _regionSwitchId) return;
