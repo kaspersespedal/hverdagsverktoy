@@ -1291,7 +1291,7 @@ function updateSalaryUI() {
   if(_sjT){
     _sjT.innerHTML=(r.sjekkTitle||'Skattemelding-sjekkliste')+' <span style="font-size:11px;opacity:.5">▼</span>';
     setText('sjekk-desc',r.sjekkDesc||'Har du glemt noe? Sjekk vanlige fradrag du kan ha krav på.');
-    for(var qi=1;qi<=8;qi++)setText('sjekk-q'+qi,(r['sjekkQ'+qi])||(document.getElementById('sjekk-q'+qi)||{}).textContent||'');
+    for(var qi=1;qi<=9;qi++)setText('sjekk-q'+qi,(r['sjekkQ'+qi])||(document.getElementById('sjekk-q'+qi)||{}).textContent||'');
     setText('sjekk-summary-lbl',r.sjekkSummaryLbl||'Estimert potensiell besparelse');
     setText('sjekk-note',r.sjekkNote||'Estimatene er veiledende.');
   }
@@ -2952,11 +2952,23 @@ function calcMor() {
   if(taxY1El) taxY1El.textContent = fmt(r1 * 0.22);
 
   // Stresstest: Utlånsforskriften § 4-4 — høyeste av 7% og rente + 3 pp
+  // V12 B12-M4 fix: Når avdragsfri-periode er aktiv skal stresstest bruke
+  // amortiseringsperioden (years - ioYears) × 12 måneder, siden månedlig
+  // betaling er høyest etter IO-periodens slutt. Tidligere ignorerte stresstest
+  // IO-flagget og ga identisk tall med/uten IO (24 157 → faktisk ~26 035 for
+  // 3M lån, 5,5%, 25 år, IO=5).
   const stressYearlyPct = Math.max(yearlyRate + 3, 7);
   const stressRate = stressYearlyPct / 100 / 12;
+  let stressN = n;
+  if(ioCheck && ioCheck.checked) {
+    const ioYearsForStress = +(document.getElementById('m-io-yrs').value) || 5;
+    if(ioYearsForStress > 0 && ioYearsForStress < years) {
+      stressN = (years - ioYearsForStress) * 12;
+    }
+  }
   const stressMnd = stressRate === 0
-    ? P / n
-    : P * stressRate * Math.pow(1 + stressRate, n) / (Math.pow(1 + stressRate, n) - 1);
+    ? P / stressN
+    : P * stressRate * Math.pow(1 + stressRate, stressN) / (Math.pow(1 + stressRate, stressN) - 1);
   const stressDiff = stressMnd - mnd;
   setEl('m-stress-mth', fmt(stressMnd));
   setEl('m-stress-diff', '+ ' + fmt(stressDiff));
@@ -2968,6 +2980,11 @@ function calcMor() {
 // ═══════════════════════════════════════════════════════
 // SKATTEMELDING SJEKKLISTE
 // ═══════════════════════════════════════════════════════
+// V12 H1+H3 fix: Sjekkliste utvidet til 9 entries og rearrangert slik at HTML c7-c9 +
+// SJEKK_DATA + lang-keys (sjekkQ7=hjemmekontor, sjekkQ8=aksjer, sjekkQ9=utleie) er
+// semantisk konsistente. Tidligere viste applyLang sjekkQ7="hjemmekontor" mens
+// SJEKK_DATA[6]={type:'info'} var definert for aksjetap → 0 kr besparelse i stedet
+// for ~484 kr. Lukker også H3 (sjekk-c9 manglet fra DOM).
 var SJEKK_DATA=[
   {id:'sjekk-c1',fradrag:15000,type:'fradrag'},// Pendler: ~15k avg reisefradrag
   {id:'sjekk-c2',fradrag:30000,type:'fradrag'},// Boliglån: ~30k rentefradrag
@@ -2975,8 +2992,9 @@ var SJEKK_DATA=[
   {id:'sjekk-c4',fradrag:2750,type:'skattefradrag'},// BSU: 10% av 27500 = 2750 direkte
   {id:'sjekk-c5',fradrag:15000,type:'fradrag'},// Barnehage: foreldrefradrag 15000 for 1 barn
   {id:'sjekk-c6',fradrag:5500,type:'fradrag'},// Gaver: max 25000 × 22%
-  {id:'sjekk-c7',fradrag:0,type:'info'},// Aksjetap: varierer
-  {id:'sjekk-c8',fradrag:0,type:'info'}// Utleie: varierer
+  {id:'sjekk-c7',fradrag:2200,type:'fradrag'},// Hjemmekontor: 2200 kr fast fradrag
+  {id:'sjekk-c8',fradrag:0,type:'info'},// Aksjetap: varierer
+  {id:'sjekk-c9',fradrag:0,type:'info'}// Utleie: varierer
 ];
 function updateSjekkliste(){
   var r=R();var tips=r.sjekkTips||[
@@ -2986,6 +3004,7 @@ function updateSjekkliste(){
     'BSU: 10 % skattefradrag (maks 2 750 kr/år). Gjelder til og med året du fyller 33 år, og du kan ikke eie bolig per 31. desember.',
     'Foreldrefradrag: Inntil 15 000 kr for ett barn og 10 000 kr for hvert barn utover det. Gjelder dokumenterte utgifter til barnehage, SFO og dagmamma.',
     'Gavefradrag: Fradrag for gaver på minst 500 kr til den enkelte godkjente organisasjon, maks 25 000 kr/år totalt.',
+    'Hjemmekontor: Fast fradrag på 2 200 kr/år uten dokumentasjon, eller faktiske kostnader med dokumentasjon.',
     'Har du realisert tap på aksjer eller fond? Sjekk at tapet er kommet med i skattemeldingen. Tap gir fradrag med effektiv verdi 37,84 % (oppjustert).',
     'Utleie av egen bolig: Skattefritt dersom du selv bor i minst halvparten (etter utleieverdi). Korttidsutleie (under 30 dager per leieforhold): inntekt inntil 10 000 kr er skattefri, 85 % av overskytende er skattepliktig.'
   ];
@@ -3006,7 +3025,7 @@ function updateSjekkliste(){
   });
   var summary=document.getElementById('sjekk-summary');
   if(summary){
-    if(nChecked>0){summary.classList.remove('hidden');document.getElementById('sjekk-total').textContent=fmt(totalBesparelse)+' kr';}
+    if(nChecked>0){summary.classList.remove('hidden');document.getElementById('sjekk-total').textContent=fmt(totalBesparelse);}
     else summary.classList.add('hidden');
   }
 }
@@ -3640,9 +3659,11 @@ function calcAdj() {
   if(totalMva <= 0) return;
   const periode = type === 'eiendom' ? 10 : 5;
   const terskel = type === 'eiendom' ? 100000 : 50000;
-  const aarBrukt = parseInt(document.getElementById('adj-years').value) || 0;
-  const gammelAndel = (parseNum('adj-old') || 0) / 100;
-  const nyAndel = (parseNum('adj-new') || 0) / 100;
+  // V12 H9 fix: clamp inputs til lovlige bereik. aarBrukt ∈ [0, periode],
+  // gammelAndel/nyAndel ∈ [0, 1]. Tidligere kunne 200% input gi absurde resultater.
+  const aarBrukt = Math.max(0, Math.min(periode, parseInt(document.getElementById('adj-years').value) || 0));
+  const gammelAndel = Math.max(0, Math.min(1, (parseNum('adj-old') || 0) / 100));
+  const nyAndel = Math.max(0, Math.min(1, (parseNum('adj-new') || 0) / 100));
   const ofT = r.adjOfTotal || ' av ';
 
   if(totalMva < terskel) {
@@ -5059,8 +5080,12 @@ function calcLonn() {
   const effSats = bruttoAar > 0 ? (totalSkatt/bruttoAar*100) : 0;
 
   // Verdict
+  // V12 H7 fix: Bruker som tjener inntil frikortgrensen (100 000 kr) får
+  // frikort-verdict selv om en liten trygd-opptrapping kan påløpe
+  // (99 650 → 100 000 = 88 kr). Tidligere bommet på "Lav skattesats"
+  // for eksakt målgruppen (VGS/student deltidsjobb).
   var verdict = '';
-  if(totalSkatt <= 0) {
+  if(bruttoAar <= frikortgrense || totalSkatt <= 0) {
     verdict = r.lonnVerdictFrikort || 'Ingen skatt — inntekten er lav nok til at fradragene dekker alt.';
   } else if(effSats < 15) {
     verdict = r.lonnVerdictLav || 'Lav skattesats — typisk for deltidsjobb ved siden av studier.';
@@ -5980,6 +6005,13 @@ function _initPageReady(){
     if(themePicker){var btn=themePicker.querySelector('button');if(btn&&!btn.getAttribute('aria-label'))btn.setAttribute('aria-label','Velg tema');}
     document.querySelectorAll('.btn-calc').forEach(function(b){if(!b.getAttribute('aria-label'))b.setAttribute('aria-label',b.textContent.replace(/→/g,'').trim());});
     document.querySelectorAll('.card-hdr').forEach(function(h){h.setAttribute('role','button');h.setAttribute('aria-expanded',!h.parentElement.classList.contains('collapsed')+'');h.setAttribute('tabindex','0');h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleCard(h.parentElement);}});});
+    // V12 B12-M6: Enter-handler på boliglan-inputs (5 felt) → trigger calcMor
+    ['m-a','m-r','m-y','m-io-yrs','m-fees'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.addEventListener('keydown', function(e){
+        if(e.key === 'Enter'){ e.preventDefault(); if(typeof calcMor === 'function') calcMor(); }
+      });
+    });
   })();
   // Auto-scroll selects into view on focus (mobile-friendly)
   document.querySelectorAll('select.fc').forEach(function(sel){
