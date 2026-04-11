@@ -1227,6 +1227,24 @@ function updateSalaryUI() {
     setText('sjekk-summary-lbl',r.sjekkSummaryLbl||'Estimert potensiell besparelse');
     setText('sjekk-note',r.sjekkNote||'Estimatene er veiledende.');
   }
+  // Næring eller hobby — full card with EN fallback for non-NO languages
+  var _nhCard=document.getElementById('sal-naering-hobby-card');
+  if(_nhCard){
+    var _nhEn=(typeof REGIONS!=='undefined'&&REGIONS.en)||{};
+    var _nhBody=r.nhBodyHTML||_nhEn.nhBodyHTML;
+    if(_nhBody){
+      _nhCard.classList.remove('hidden');
+      var _nhT=r.nhTitle||_nhEn.nhTitle||'Næring eller hobby?';
+      var _nhD=r.nhDesc||_nhEn.nhDesc||'Når blir biinntekt skattepliktig næringsvirksomhet?';
+      var _nhTitleEl=document.getElementById('naering-hobby-title');
+      if(_nhTitleEl)_nhTitleEl.innerHTML=_nhT+' <span style="font-size:11px;opacity:.5">▼</span>';
+      setText('naering-hobby-desc',_nhD);
+      var _nhBodyEl=document.getElementById('naering-hobby-body');
+      if(_nhBodyEl)_nhBodyEl.innerHTML=_nhBody;
+    } else {
+      _nhCard.classList.add('hidden');
+    }
+  }
   const salIntroCard = document.getElementById('sal-intro-card');
   if(r.salIntroRows){
     salIntroCard.classList.remove('hidden');
