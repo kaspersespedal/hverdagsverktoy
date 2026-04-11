@@ -423,6 +423,7 @@ REGIONS['ti'] = {
     budOptLonn:'ደሞዝ', budOptStudielan:'ልቓሕ ትምህርቲ', budOptStipend:'ዕድል ትምህርቲ', budOptCustom:'ናይ ገዛእ ርእስኻ...', budOptTermin:'ክፍሊት ገዛ', budOptHusleie:'ክራይ', budOptMat:'መግቢ', budOptTransport:'መጓዓዝያ', budOptStrom:'ኤለክትሪክ', budOptForsikring:'ውሕስነት', budOptMobil:'ሞባይል/ኢንተርነት', budOptTrening:'ስፖርት', budOptStreaming:'ስትሪሚንግ/ምዝገባ',
     budRLbl:'ወርሓዊ ሚዛን', budRLblIncome:'ጠቕላላ እቶት', budRLblExpense:'ጠቕላላ ወጻኢ', budRLblSavings:'ምጣነ ዕቑባ', budRLblAnnual:'ዓመታዊ ትርፊ',
     budBtnPdf:'ኣውርዱ (CSV)', budCsvTip:'ኣብ Excel ዓምድታት ብቐጥታ እንተ ዘይተፈላለዩ: ዓምዲ A ምረጹ → ዳታ → ጽሑፍ ናብ ዓምድታት → መፈላለዪ → ሰሚኮሎን → ውዳእ።', budTotal:'ጠቕላላ', budBreakdownTitle:'ወጻኢ ብመደብ', budSummaryTitle:'ጽማቕ',
+    budsjettColDescI:'መግለጺ', budsjettColAmountI:'መጠን', budsjettColDescE:'መግለጺ', budsjettColAmountE:'መጠን', budDefaultExpense:'ኣይነት', budOptEkstra:'ተወሳኺ ስራሕ', budOptKapital:'ኣታዊ ካፒታል', budOptNav:'ናይ NAV ጥቕምታት', budOptKlaer:'ክዳውንቲ ን ብሕታዊ', budOptSparing:'ቑጠባ/BSU', aboPriceChangeTitle:'ለውጢ ዋጋ ዓሚ', aboTotalChange:'ጠቕላላ ወሰኽ / ወርሒ', aboTotalChangeYear:'ብዓመት', budCsvTipLabel:'ምኽሪ',
     budCatBolig:'መንበሪ', budCatTransport:'መጓዓዝያ', budCatMat:'መግቢ', budCatForsikring:'ውሕስነት', budCatHelse:'ጥዕና', budCatUnderholdning:'መዘናግዒ', budCatKlaer:'ክዳውንቲ', budCatSparing:'ዕቑባ', budCatAnnet:'ካልእ',
     budVerdictSurplus:'ወርሓዊ ትርፊ ኣለኩም።', budVerdictBreakeven:'ሚዛን ኢኹም።', budVerdictDeficit:'ካብ ዝረኽብዎ ንላዕሊ ትወጽኡ ኣለኹም።',
     budPdfTitle:'ውልቃዊ በጀት', budPdfFooter:'ብ Hverdagsverktøy ዝተሰርሐ', budDefaultIncome:'እቶት',

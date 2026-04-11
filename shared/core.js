@@ -249,6 +249,15 @@ function pct(n) { return n.toFixed(1).replace('.',',')+' %'; }
 function parseNum(id) { const el=document.getElementById(id); return el ? +(el.value.replace(/[\s\u00a0,]/g,'').replace(',','.')) || 0 : 0; }
 function fmtInput(n) { return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(n).replace(/\u00a0/g,' '); }
 function setEl(id, val) { var el=document.getElementById(id); if(el) el.textContent=val; }
+// V12 Fase 3 helpers (Pattern B null-check epidemi):
+// getVal — null-safe raw value getter (returnerer fallback hvis element mangler eller value er falsy)
+// getChk — null-safe checkbox getter
+function getVal(id, fallback) { var el=document.getElementById(id); var v=el?+el.value:NaN; return isNaN(v)?(fallback||0):v; }
+function getChk(id) { var el=document.getElementById(id); return el?!!el.checked:false; }
+// V12 Fase 3 K12-M5: Sentral G-konstant (DRY-fix for 4 hardkodede 130160 i calcFormue/calcAga/calcFerie/calcPensjon).
+// 1G fastsettes av NAV per 1. mai. Gjelder fra 2025-05-01 t.o.m. 2026-04-30.
+// NB: Oppdater 1. mai 2026 til ny verdi (varslet justering på vårparten).
+var _HVT_G = 130160;
 
 // Live-format number inputs
 document.addEventListener('input', function(e) {
@@ -649,15 +658,19 @@ function updateTabs() {
   // Mortgage loan type (boliglan.html only)
   var _mlt=document.getElementById('mor-l-type');if(_mlt)_mlt.textContent = r.morLType || 'Loan type';
   if(document.getElementById('m-type')) morPopulateType();
+  // V12 Fase 3 H4 fix: alle event-binding-helpers nedenfor er gjort idempotente
+  // via __hvtBound-flagg for å hindre lineær listener-vekst per updateAll-kjøring.
+  // Tidligere: hver språkbytte la til 1 ny listener per element → 10 språkbytter
+  // = 10 stacked listeners → calc kalt 10× per change-event.
   var _ioChk=document.getElementById('m-io-check');
-  if(_ioChk){_ioChk.addEventListener('change',function(){document.getElementById('m-io-fields').classList.toggle('hidden',!this.checked);if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});}
-  var _mtSel=document.getElementById('m-type');if(_mtSel){_mtSel.addEventListener('change',function(){morUpdateHint();if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});morUpdateHint();}
-  // Auto-recalc on dropdown change for ALL calculators
-  function autoRecalc(selId, resId, calcFn){var s=document.getElementById(selId);if(s)s.addEventListener('change',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))calcFn();});}
+  if(_ioChk && !_ioChk.__hvtBound){_ioChk.__hvtBound=true;_ioChk.addEventListener('change',function(){document.getElementById('m-io-fields').classList.toggle('hidden',!this.checked);if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});}
+  var _mtSel=document.getElementById('m-type');if(_mtSel){if(!_mtSel.__hvtBound){_mtSel.__hvtBound=true;_mtSel.addEventListener('change',function(){morUpdateHint();if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});}morUpdateHint();}
+  // Auto-recalc on dropdown change for ALL calculators (idempotent)
+  function autoRecalc(selId, resId, calcFn){var s=document.getElementById(selId);if(s && !s.__hvtRecalcBound){s.__hvtRecalcBound=true;s.addEventListener('change',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))calcFn();});}}
   // Salary (skatt.html)
   autoRecalc('s-c','s-res',calcSal);
   autoRecalc('s-r','s-res',calcSal);
-  var _sDeduct=document.getElementById('s-deduct');if(_sDeduct){_sDeduct.addEventListener('input',function(){var r=document.getElementById('s-res');if(r&&!r.classList.contains('hidden'))calcSal();});}
+  var _sDeduct=document.getElementById('s-deduct');if(_sDeduct && !_sDeduct.__hvtRecalcBound){_sDeduct.__hvtRecalcBound=true;_sDeduct.addEventListener('input',function(){var r=document.getElementById('s-res');if(r&&!r.classList.contains('hidden'))calcSal();});}
   // VAT (avgift.html)
   autoRecalc('v-r','v-res',calcVat);
   autoRecalc('v-t','v-res',calcVat);
@@ -684,8 +697,8 @@ function updateTabs() {
   // Reisefradrag — no dropdown, but we can wire inputs
   // Dokumentavgift (boliglan.html)
   autoRecalc('dok-type','dok-res',calcDok);
-  // Auto-recalc on text input change
-  function autoRecalcInput(ids,resId,fn){ids.forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('input',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))fn();});});}
+  // Auto-recalc on text input change (idempotent)
+  function autoRecalcInput(ids,resId,fn){ids.forEach(function(id){var el=document.getElementById(id);if(el && !el.__hvtRecalcInputBound){el.__hvtRecalcInputBound=true;el.addEventListener('input',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))fn();});}});}
   autoRecalcInput(['dok-verdi'],'dok-res',calcDok);
   autoRecalcInput(['formue-primaer','formue-sekundaer','formue-fritid','formue-naering','formue-aksjer','formue-driftsmidler','formue-bank','formue-gjeld'],'formue-res',calcFormue);
   autoRecalcInput(['reise-km','reise-dager','reise-bom'],'reise-res',calcReise);
@@ -697,8 +710,8 @@ function updateTabs() {
   autoRecalc('bil-kjopsaar','bil-res',calcBilkostnad);
   // Valutagevinst
   autoRecalc('valgevinst-currency','valgevinst-res',calcValgevinst);
-  // Enter-key handler for mortgage inputs — triggers calcMor()
-  function bindEnter(ids, fn){ids.forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fn();}});});}
+  // Enter-key handler for mortgage inputs — triggers calcMor() (idempotent)
+  function bindEnter(ids, fn){ids.forEach(function(id){var el=document.getElementById(id);if(el && !el.__hvtEnterBound){el.__hvtEnterBound=true;el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fn();}});}});}
   bindEnter(['m-a','m-r','m-y','m-fees','m-io-yrs'], function(){ if(typeof calcMor==='function') calcMor(); });
 }
 function morUpdateHint(){
@@ -1930,9 +1943,13 @@ function updateVatUI() {
   setText('vat-r-pct', r.vatRPct || 'Rate %');
   setText('vat-info-title', r.vatInfoTitle || 'Tax Rates Reference');
   setText('vat-info-desc', r.vatInfoDesc || 'Official rates for selected region');
-  document.getElementById('vat-info-rows').innerHTML = infoRowsHTML(r.vatInfoRows||[],'mval');
+  // V12 H10 fix: null-checks gjennom hele VAT-blokk for å hindre at en manglende
+  // DOM-node bryter hele updateAll()-kjeden. Tidligere kunne search-fokus-modus eller
+  // SPA-manipulasjon fjerne et element og crashe alle påfølgende seksjoner.
+  var _vir=document.getElementById('vat-info-rows');
+  if(_vir) _vir.innerHTML = infoRowsHTML(r.vatInfoRows||[],'mval');
   const vr = document.getElementById('v-r');
-  vr.innerHTML = (r.vatRates||[]).map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  if(vr) vr.innerHTML = (r.vatRates||[]).map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
   if(r.vatOptEx) { const oe=document.getElementById('vat-opt-ex'); if(oe) oe.textContent=r.vatOptEx; }
   if(r.vatOptInc) { const oi=document.getElementById('vat-opt-inc'); if(oi) oi.textContent=r.vatOptInc; }
   // "Hva er avgift?" intro card
@@ -1971,7 +1988,7 @@ function updateVatUI() {
   const adjCard = document.getElementById('vat-adj-card');
   const arrow = ' <span style="font-size:11px;opacity:.5">▼</span>';
   const vatLawGroup = document.getElementById('vat-law-group');
-  if(r.vatLawRows){
+  if(r.vatLawRows && vatLawGroup){
     // Show group wrapper
     vatLawGroup.classList.remove('hidden');
     setText('vat-law-group-title', r.vatLawGroupTitle || 'Merverdiavgiftsloven');
@@ -1999,13 +2016,14 @@ function updateVatUI() {
       if(h.indexOf('IMPORTS') !== -1 || (h.indexOf('INNFØRSEL') !== -1 && h.indexOf('—') === 0)) section = 'exempt';
       if(section === 'exempt') exemptRows.push(row); else zeroRows.push(row);
     });
-    document.getElementById('vat-exempt-rows').innerHTML = infoRowsHTML(r.vatExemptRows||exemptRows,'mval');
-    document.getElementById('vat-zero-rows').innerHTML = infoRowsHTML(r.vatZeroRows||zeroRows,'mval');
-    document.getElementById('vat-def-rows').innerHTML = infoRowsHTML(r.vatDefRows||[],'mval');
-    document.getElementById('vat-reg-rows').innerHTML = infoRowsHTML(r.vatRegRows||[],'mval');
-    document.getElementById('vat-calc-rows').innerHTML = infoRowsHTML(r.vatCalcRows||[],'mval');
-    document.getElementById('vat-ded-rows').innerHTML = infoRowsHTML(r.vatDedRows||[],'mval');
-    document.getElementById('vat-adj-info-rows').innerHTML = infoRowsHTML(r.vatAdjRows||[],'mval');
+    var _setRowsHTML = function(id, html){var el=document.getElementById(id); if(el) el.innerHTML=html;};
+    _setRowsHTML('vat-exempt-rows', infoRowsHTML(r.vatExemptRows||exemptRows,'mval'));
+    _setRowsHTML('vat-zero-rows', infoRowsHTML(r.vatZeroRows||zeroRows,'mval'));
+    _setRowsHTML('vat-def-rows', infoRowsHTML(r.vatDefRows||[],'mval'));
+    _setRowsHTML('vat-reg-rows', infoRowsHTML(r.vatRegRows||[],'mval'));
+    _setRowsHTML('vat-calc-rows', infoRowsHTML(r.vatCalcRows||[],'mval'));
+    _setRowsHTML('vat-ded-rows', infoRowsHTML(r.vatDedRows||[],'mval'));
+    _setRowsHTML('vat-adj-info-rows', infoRowsHTML(r.vatAdjRows||[],'mval'));
     // Update titles
     const setTitle = (id,txt)=>{const el=document.getElementById(id);if(el)el.innerHTML=txt+arrow;};
     setTitle('vat-exempt-title', r.vatExemptTitle||'Unntak, uttak og innførsel (kap. 3)');
@@ -2022,7 +2040,7 @@ function updateVatUI() {
     setText('vat-ded-desc', r.vatDedDesc||'Hovedregel, delt bruk, begrensninger');
     setTitle('vat-adj-info-title', r.vatAdjInfoTitle||'Justering (kap. 9)');
     setText('vat-adj-info-desc', r.vatAdjInfoDesc||'Kapitalvarer, justeringsperioder');
-  } else {
+  } else if(vatLawGroup) {
     vatLawGroup.classList.add('hidden');
   }
   // Adjustment calculator — translate labels
@@ -2085,9 +2103,14 @@ function updateVatUI() {
   // AGA card (moved from salary)
   const vatAgaCard = document.getElementById('vat-aga-card');
   if(vatAgaCard) {
-    document.getElementById('vat-aga-title').innerHTML=(r.salAgaTitle||'Employer Social Security (AGA zones)')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    var _vatAt=document.getElementById('vat-aga-title');
+    if(_vatAt) _vatAt.innerHTML=(r.salAgaTitle||'Employer Social Security (AGA zones)')+' <span style="font-size:11px;opacity:.5">▼</span>';
     setText('vat-aga-desc', r.salAgaDesc || 'Rates vary by business location');
-    if(r.salAgaRows){document.getElementById('vat-aga-rows').innerHTML=infoRowsHTML(r.salAgaRows)+'<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);"><a href="javascript:void(0)" onclick="goToLvuCalc()" style="font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;opacity:.8;">Lønn vs Utbytte-kalkulator →</a></div>';vatAgaCard.classList.remove('hidden');}
+    if(r.salAgaRows){
+      var _vatAr=document.getElementById('vat-aga-rows');
+      if(_vatAr) _vatAr.innerHTML=infoRowsHTML(r.salAgaRows)+'<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);"><a href="javascript:void(0)" onclick="goToLvuCalc()" style="font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;opacity:.8;">Lønn vs Utbytte-kalkulator →</a></div>';
+      vatAgaCard.classList.remove('hidden');
+    }
     else{vatAgaCard.classList.add('hidden');}
   }
 }
@@ -2843,13 +2866,17 @@ function calcMor() {
   const r = R();
   const P = parseNum('m-a');
   if(P<=0) return;
-  const yearlyRate = Math.max(+document.getElementById('m-r').value || 0, 0);
+  // V12 Fase 3 Pattern B (B12-L4): null-safe DOM access for 3 input-fields
+  const yearlyRate = Math.max(getVal('m-r', 0), 0);
   const mRate = yearlyRate / 100 / 12;
-  const rawYears = +document.getElementById('m-y').value;
+  const rawYears = getVal('m-y', 0);
   // Utlånsforskriften § 4-5: maksimal løpetid 30 år
   const years = Math.min(rawYears > 0 ? rawYears : 25, 30);
-  if(!rawYears) document.getElementById('m-y').value = '25';
-  if(rawYears > 30) document.getElementById('m-y').value = '30';
+  var _myEl = document.getElementById('m-y');
+  if(_myEl){
+    if(!rawYears) _myEl.value = '25';
+    if(rawYears > 30) _myEl.value = '30';
+  }
   const n = years * 12;
   var _mt=document.getElementById('m-type');const loanType=_mt?_mt.value:'annuity';
   const serialRange = document.getElementById('m-serial-range');
@@ -3035,7 +3062,7 @@ function updateSjekkliste(){
 // ═══════════════════════════════════════════════════════
 function calcForeldrepenger(){
   var inntekt=parseNum('fp-inntekt');if(inntekt<=0)return;
-  var G=130160;// Grunnbeløp — gjeldende 2025-05-01 t.o.m. 2026-04-30. NAV fastsetter nytt G hver 1. mai.
+  var G=_HVT_G;// Grunnbeløp — sentralisert i _HVT_G (V12 Fase 3 K12-M5)
   var maxGrunnlag=6*G;// 744 168
   var grunnlag=Math.min(inntekt,maxGrunnlag);
   var sel=document.getElementById('fp-dekning');
@@ -3113,14 +3140,15 @@ function calcFormue(){
   // Effektiv sats med 2 desimaler
   var effSatsStr=(Math.round(effSats*100)/100).toFixed(2).replace('.',',')+' %';
   var r=R();
-  document.getElementById('formue-r-val').textContent=skattepliktig<=0?(r.formueNoTax||'0 kr — ingen formueskatt'):fmt(Math.round(totalSkatt));
-  document.getElementById('formue-r-sub').textContent=skattepliktig<=0?(r.formueUnderBunn||'Netto formue er under bunnfradraget'):((r.formueEffSatsLabel||'Effektiv sats')+': '+effSatsStr+' '+(r.formueOfMarked||'av markedsverdi'));
-  document.getElementById('formue-r-brutto').textContent=fmt(Math.round(bruttoFormue));
-  document.getElementById('formue-r-gjeld').textContent='− '+fmt(Math.round(gjeldJustert));
-  document.getElementById('formue-r-netto').textContent=fmt(Math.round(nettoFormue));
-  document.getElementById('formue-r-bunnfradrag').textContent='− '+fmt(bunnfradrag)+' ('+personer+'×'+fmt(1900000)+')';
-  document.getElementById('formue-r-skattepliktig').textContent=fmt(Math.round(skattepliktig));
-  document.getElementById('formue-r-effsats').textContent=effSatsStr;
+  // V12 Fase 3 Pattern B: setEl er null-safe (calcFormue null-check sweep)
+  setEl('formue-r-val', skattepliktig<=0?(r.formueNoTax||'0 kr — ingen formueskatt'):fmt(Math.round(totalSkatt)));
+  setEl('formue-r-sub', skattepliktig<=0?(r.formueUnderBunn||'Netto formue er under bunnfradraget'):((r.formueEffSatsLabel||'Effektiv sats')+': '+effSatsStr+' '+(r.formueOfMarked||'av markedsverdi')));
+  setEl('formue-r-brutto', fmt(Math.round(bruttoFormue)));
+  setEl('formue-r-gjeld', '− '+fmt(Math.round(gjeldJustert)));
+  setEl('formue-r-netto', fmt(Math.round(nettoFormue)));
+  setEl('formue-r-bunnfradrag', '− '+fmt(bunnfradrag)+' ('+personer+'×'+fmt(1900000)+')');
+  setEl('formue-r-skattepliktig', fmt(Math.round(skattepliktig)));
+  setEl('formue-r-effsats', effSatsStr);
   // Breakdown table
   var bd=document.getElementById('formue-breakdown');
   if(bd){
@@ -3143,8 +3171,7 @@ function calcFormue(){
     bd.innerHTML=h;
   }
   var _fres=document.getElementById('formue-res');
-  _fres.classList.remove('hidden');
-  setTimeout(function(){scrollToEl(_fres,'top');},80);
+  if(_fres){_fres.classList.remove('hidden'); setTimeout(function(){scrollToEl(_fres,'top');},80);}
 }
 
 // ═══════════════════════════════════════════════════════
@@ -3741,6 +3768,10 @@ function uttakToggleFields() {
 
 function calcUttak() {
   const r = R();
+  // V12 Fase 3 Pattern B: lokale null-safe helpers
+  const _txt = (el, val) => { if(el) el.textContent = val; };
+  const _disp = (el, d) => { if(el) el.style.display = d; };
+  const _bg = (el, bg) => { if(el) el.style.background = bg; };
   var _ut=document.getElementById('uttak-type');const type=_ut?_ut.value:'aksjer';
   const mv = parseNum('uttak-mv');
   const sv = parseNum('uttak-sv');
@@ -3763,21 +3794,21 @@ function calcUttak() {
   const rTrinn = document.getElementById('uttak-r-trinn');
   const asGrid = document.getElementById('uttak-as-grid');
 
-  rGevinst.textContent = fmt(gevinst);
+  _txt(rGevinst, fmt(gevinst));
 
   if (gevinst <= 0) {
-    rLbl.textContent = r.uttakNoGain || 'Ingen gevinst';
-    rVal.textContent = fmt(0);
-    rSub.textContent = r.uttakNoGainDesc || 'Skattemessig verdi er lik eller høyere enn markedsverdi — ingen uttaksbeskatning';
-    rh.style.background = 'linear-gradient(135deg,var(--ink3),var(--ink2))';
-    rAlm.textContent = '–';
-    rTrygd.textContent = '–';
-    rTrinn.textContent = '–';
-    rtTrygd.style.display = '';
-    rtTrinn.style.display = '';
-    asGrid.classList.add('hidden');
-    document.getElementById('uttak-res').classList.remove('hidden');
-    setTimeout(()=>scrollToEl(document.getElementById('uttak-res'),'nearest'),80);
+    _txt(rLbl, r.uttakNoGain || 'Ingen gevinst');
+    _txt(rVal, fmt(0));
+    _txt(rSub, r.uttakNoGainDesc || 'Skattemessig verdi er lik eller høyere enn markedsverdi — ingen uttaksbeskatning');
+    _bg(rh, 'linear-gradient(135deg,var(--ink3),var(--ink2))');
+    _txt(rAlm, '–');
+    _txt(rTrygd, '–');
+    _txt(rTrinn, '–');
+    _disp(rtTrygd, '');
+    _disp(rtTrinn, '');
+    if(asGrid) asGrid.classList.add('hidden');
+    var _ures=document.getElementById('uttak-res');
+    if(_ures){_ures.classList.remove('hidden'); setTimeout(()=>scrollToEl(_ures,'nearest'),80);}
     return;
   }
 
@@ -3809,17 +3840,17 @@ function calcUttak() {
     const totalSkatt = almSkatt + trygd + trinn;
     const effSats = (totalSkatt / gevinst) * 100;
 
-    rLbl.textContent = r.uttakEnkTotal || 'Total skatt ved uttak (ENK)';
-    rVal.textContent = fmt(totalSkatt);
-    rSub.textContent = (r.uttakEffRate || 'Effektiv skattesats') + ': ' + pct(effSats) + ' · ' + (r.uttakNetAfterTax || 'Netto etter skatt') + ': ' + fmt(gevinst - totalSkatt);
-    rh.style.background = 'linear-gradient(135deg,var(--accent),var(--accent-l))';
+    _txt(rLbl, r.uttakEnkTotal || 'Total skatt ved uttak (ENK)');
+    _txt(rVal, fmt(totalSkatt));
+    _txt(rSub, (r.uttakEffRate || 'Effektiv skattesats') + ': ' + pct(effSats) + ' · ' + (r.uttakNetAfterTax || 'Netto etter skatt') + ': ' + fmt(gevinst - totalSkatt));
+    _bg(rh, 'linear-gradient(135deg,var(--accent),var(--accent-l))');
 
-    rAlm.textContent = fmt(almSkatt);
-    rtTrygd.style.display = '';
-    rtTrinn.style.display = '';
-    rTrygd.textContent = erPersoninntekt ? fmt(trygd) : '–';
-    rTrinn.textContent = erPersoninntekt ? fmt(trinn) : '–';
-    asGrid.classList.add('hidden');
+    _txt(rAlm, fmt(almSkatt));
+    _disp(rtTrygd, '');
+    _disp(rtTrinn, '');
+    _txt(rTrygd, erPersoninntekt ? fmt(trygd) : '–');
+    _txt(rTrinn, erPersoninntekt ? fmt(trinn) : '–');
+    if(asGrid) asGrid.classList.add('hidden');
 
   } else {
     // AS: to nivåer — selskapsskatt + utbytteskatt på det som faktisk kan deles ut
@@ -3833,26 +3864,26 @@ function calcUttak() {
     const nettoEtterSkatt = gevinst - totalSkatt;
     const effSats = (totalSkatt / gevinst) * 100;
 
-    rLbl.textContent = r.uttakAsTotal || 'Total skattekostnad (AS — begge nivåer)';
-    rVal.textContent = fmt(totalSkatt);
-    rSub.textContent = (r.uttakEffRate || 'Effektiv skattesats') + ': ' + pct(effSats) + ' · ' + (r.uttakAsLevels || 'Selskap + aksjonær');
-    rh.style.background = 'linear-gradient(135deg,var(--accent),var(--accent-l))';
+    _txt(rLbl, r.uttakAsTotal || 'Total skattekostnad (AS — begge nivåer)');
+    _txt(rVal, fmt(totalSkatt));
+    _txt(rSub, (r.uttakEffRate || 'Effektiv skattesats') + ': ' + pct(effSats) + ' · ' + (r.uttakAsLevels || 'Selskap + aksjonær'));
+    _bg(rh, 'linear-gradient(135deg,var(--accent),var(--accent-l))');
 
     // Hide ENK-specific rows
-    rAlm.textContent = '–';
-    rtTrygd.style.display = 'none';
-    rtTrinn.style.display = 'none';
+    _txt(rAlm, '–');
+    _disp(rtTrygd, 'none');
+    _disp(rtTrinn, 'none');
 
     // Show AS grid
-    asGrid.classList.remove('hidden');
-    document.getElementById('uttak-r-selskap').textContent = fmt(selskapsskatt);
-    document.getElementById('uttak-r-utbytte').textContent = fmt(utbytteskatt);
-    document.getElementById('uttak-r-total').textContent = fmt(totalSkatt);
-    document.getElementById('uttak-r-netto').textContent = fmt(nettoEtterSkatt);
+    if(asGrid) asGrid.classList.remove('hidden');
+    setEl('uttak-r-selskap', fmt(selskapsskatt));
+    setEl('uttak-r-utbytte', fmt(utbytteskatt));
+    setEl('uttak-r-total', fmt(totalSkatt));
+    setEl('uttak-r-netto', fmt(nettoEtterSkatt));
   }
 
-  document.getElementById('uttak-res').classList.remove('hidden');
-  setTimeout(()=>scrollToEl(document.getElementById('uttak-res'),'nearest'),80);
+  var _uresFinal=document.getElementById('uttak-res');
+  if(_uresFinal){_uresFinal.classList.remove('hidden'); setTimeout(()=>scrollToEl(_uresFinal,'nearest'),80);}
 }
 
 function utdelingToggleType() {
@@ -4151,26 +4182,25 @@ function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseN
   const salCost=g+ferie+otp+agaAmt;
   // Utbytte: selskapet trenger nok overskudd før skatt til å dele ut g
   const divPreTax=g/(1-0.22);
-  // Aksjonæren betaler utbytteskatt: (g-skjerming)*1.72*0.22
-  const divTax=g*1.72*0.22; // forenklet, uten skjerming
-  const divNet=g-divTax;
   const r=R();const cheaper=salCost<divPreTax?(r.lvuSalary||'Lønn'):(r.lvuDividend||'Utbytte');
   const diff=Math.abs(salCost-divPreTax);
-  document.getElementById('lvu-sal-cost').textContent=fmt(salCost);
-  document.getElementById('lvu-div-cost').textContent=fmt(divPreTax);
-  document.getElementById('lvu-diff').textContent=cheaper+' '+(r.lvuIsCheaper||'er billigere for selskapet')+' ('+fmt(diff)+')';
-  document.getElementById('lvu-res').classList.remove('hidden');
-  setTimeout(function(){scrollToEl(document.getElementById('lvu-res'),'top');},80);
+  // V12 Fase 3 Pattern B: setEl er null-safe
+  setEl('lvu-sal-cost', fmt(salCost));
+  setEl('lvu-div-cost', fmt(divPreTax));
+  setEl('lvu-diff', cheaper+' '+(r.lvuIsCheaper||'er billigere for selskapet')+' ('+fmt(diff)+')');
+  var _lr=document.getElementById('lvu-res');
+  if(_lr){_lr.classList.remove('hidden'); setTimeout(function(){scrollToEl(_lr,'top');},80);}
 }
 
 // AGA: Ansattkostnad
 // OTP-grunnlag per Innskuddspensjonsloven § 4-7: kun lønn mellom 1G og 12G er pensjonsgivende
 function calcAga(){
   const sal=parseNum('aga-salary');if(sal<=0)return;
-  const aga=+document.getElementById('aga-zone').value;
-  const ferie=+document.getElementById('aga-ferie').value;
-  const otp=+document.getElementById('aga-otp').value;
-  const G=130160; // 1G 2026 (gyldig til 2026-04-30)
+  // V12 Fase 3 Pattern B: getVal/setEl er null-safe
+  const aga=getVal('aga-zone',0);
+  const ferie=getVal('aga-ferie',0);
+  const otp=getVal('aga-otp',0);
+  const G=_HVT_G; // 1G — sentralisert i _HVT_G (V12 Fase 3 K12-M5)
   const otpBase=Math.max(0, Math.min(sal, 12*G) - 1*G);
   const ferieAmt=sal*ferie;
   const otpAmt=otpBase*otp;
@@ -4178,14 +4208,14 @@ function calcAga(){
   const agaAmt=agaBase*aga;
   const total=sal+agaAmt+ferieAmt+otpAmt;
   const pct=(agaAmt+ferieAmt+otpAmt)/sal*100;
-  document.getElementById('aga-aga-amt').textContent=fmt(agaAmt);
-  document.getElementById('aga-ferie-amt').textContent=fmt(ferieAmt);
-  document.getElementById('aga-otp-amt').textContent=fmt(otpAmt);
-  document.getElementById('aga-total').textContent=fmt(total);
-  document.getElementById('aga-per-month').textContent=fmt(total/12)+' '+(R().agaPerMonth||'/mnd');
-  document.getElementById('aga-pct').textContent=pct.toFixed(1)+'%';
-  document.getElementById('aga-res').classList.remove('hidden');
-  setTimeout(function(){scrollToEl(document.getElementById('aga-res'),'top');},80);
+  setEl('aga-aga-amt', fmt(agaAmt));
+  setEl('aga-ferie-amt', fmt(ferieAmt));
+  setEl('aga-otp-amt', fmt(otpAmt));
+  setEl('aga-total', fmt(total));
+  setEl('aga-per-month', fmt(total/12)+' '+(R().agaPerMonth||'/mnd'));
+  setEl('aga-pct', pct.toFixed(1)+'%');
+  var _ar=document.getElementById('aga-res');
+  if(_ar){_ar.classList.remove('hidden'); setTimeout(function(){scrollToEl(_ar,'top');},80);}
 }
 
 // AVS: Avskrivning — mode toggle
@@ -4297,8 +4327,9 @@ function _row(i,s,d,e){return '<tr style="border-bottom:1px solid var(--border);
 // 60+ ekstra uke: +2,3 prosentpoeng på grunnlaget, men KUN opp til 6G (Ferieloven § 10 nr. 3).
 function calcFerie(){
   const sal=parseNum('ferie-salary');if(sal<=0)return;
-  const type=+document.getElementById('ferie-type').value;
-  const over60=document.getElementById('ferie-over60').checked;
+  // V12 Fase 3 Pattern B: null-safe input lesning
+  const type=getVal('ferie-type', 0.102);
+  const over60=getChk('ferie-over60');
   const amt=sal*type;
   // Daglig sats = feriepenger per ferievirkedag (5-dagers arbeidsuke)
   // 4 uker = 20 arbeidsdager, 5 uker = 25 arbeidsdager (Ferieloven § 5)
@@ -4306,25 +4337,28 @@ function calcFerie(){
   const daily=amt/vacationDays;
   let bonus=0;
   if(over60){
-    const G=130160;// 1G 2026
+    const G=_HVT_G;// 1G — sentralisert i _HVT_G (V12 Fase 3 K12-M5)
     const sixG=6*G;
     const extraBase=Math.min(sal, sixG);// 6G-tak på ekstra uke
     bonus=extraBase*0.023;
   }
-  document.getElementById('ferie-amt').textContent=fmt(amt);
-  document.getElementById('ferie-daily').textContent=fmt(daily);
+  setEl('ferie-amt', fmt(amt));
+  setEl('ferie-daily', fmt(daily));
+  var _frow=document.getElementById('ferie-over60-row');
   if(over60){
-    document.getElementById('ferie-over60-row').classList.remove('hidden');
-    document.getElementById('ferie-with-bonus').textContent=fmt(amt+bonus);
+    if(_frow) _frow.classList.remove('hidden');
+    setEl('ferie-with-bonus', fmt(amt+bonus));
   }else{
-    document.getElementById('ferie-over60-row').classList.add('hidden');
+    if(_frow) _frow.classList.add('hidden');
   }
-  document.getElementById('ferie-res').classList.remove('hidden');
+  var _fres=document.getElementById('ferie-res');
+  if(_fres) _fres.classList.remove('hidden');
 }
 
 // RENTE: Effektiv Rente (bisection method)
 function calcRente(){
-  const amt=parseNum('rente-amount'),nom=+document.getElementById('rente-nom').value/100,est=parseNum('rente-est'),monthlyFee=parseNum('rente-monthly'),years=+document.getElementById('rente-years').value;
+  // V12 Fase 3 Pattern B: getVal er null-safe
+  const amt=parseNum('rente-amount'),nom=getVal('rente-nom',0)/100,est=parseNum('rente-est'),monthlyFee=parseNum('rente-monthly'),years=getVal('rente-years',0);
   if(amt<=0||years<=0||nom<0||monthlyFee<0||est<0)return;
   const n=years*12;
   // Monthly annuity payment at nominal rate
@@ -4348,11 +4382,11 @@ function calcRente(){
   const eff=(lo+hi)/2*100;
   const totalFees=est+monthlyFee*n;
   const totalCost=annuity*n+monthlyFee*n+est;
-  document.getElementById('rente-eff').textContent=eff.toFixed(2)+'%';
-  document.getElementById('rente-total').textContent=fmt(totalCost);
-  document.getElementById('rente-fees').textContent=fmt(totalFees);
-  document.getElementById('rente-res').classList.remove('hidden');
-  setTimeout(function(){scrollToEl(document.getElementById('rente-res'),'top');},80);
+  setEl('rente-eff', eff.toFixed(2)+'%');
+  setEl('rente-total', fmt(totalCost));
+  setEl('rente-fees', fmt(totalFees));
+  var _rr=document.getElementById('rente-res');
+  if(_rr){_rr.classList.remove('hidden'); setTimeout(function(){scrollToEl(_rr,'top');},80);}
 }
 
 
@@ -4382,9 +4416,10 @@ function vgFillRate(){
   } else { hint.textContent=''; }
 }
 function calcValgevinst(){
+  // V12 Fase 3 Pattern B: parseNum håndterer komma+space, null-safe
   const units=parseNum('valgevinst-units');
-  const buyRate=+(document.getElementById('valgevinst-buy-rate').value.replace(',','.'));
-  const sellRate=+(document.getElementById('valgevinst-sell-rate').value.replace(',','.'));
+  const buyRate=parseNum('valgevinst-buy-rate');
+  const sellRate=parseNum('valgevinst-sell-rate');
   if(units<=0||buyRate<=0||sellRate<=0) return;
   const r=R();
   const costNok=units*buyRate;
@@ -4392,14 +4427,14 @@ function calcValgevinst(){
   const gain=saleNok-costNok;
   const tax=gain>0?gain*0.22:0;
   const net=gain-tax;
-  document.getElementById('valgevinst-result').textContent=fmt(gain);
-  document.getElementById('valgevinst-verdict').textContent=gain>=0?(r.valgevinGain||'✓ Gevinst'):(r.valgevinLoss||'✗ Tap');
-  document.getElementById('valgevinst-cost').textContent=fmt(costNok);
-  document.getElementById('valgevinst-sale').textContent=fmt(saleNok);
-  document.getElementById('valgevinst-tax').textContent=gain>0?fmt(tax):fmt(0);
-  document.getElementById('valgevinst-net').textContent=fmt(net);
-  document.getElementById('valgevinst-res').classList.remove('hidden');
-  setTimeout(function(){scrollToEl(document.getElementById('valgevinst-res'),'top');},80);
+  setEl('valgevinst-result', fmt(gain));
+  setEl('valgevinst-verdict', gain>=0?(r.valgevinGain||'✓ Gevinst'):(r.valgevinLoss||'✗ Tap'));
+  setEl('valgevinst-cost', fmt(costNok));
+  setEl('valgevinst-sale', fmt(saleNok));
+  setEl('valgevinst-tax', gain>0?fmt(tax):fmt(0));
+  setEl('valgevinst-net', fmt(net));
+  var _vr=document.getElementById('valgevinst-res');
+  if(_vr){_vr.classList.remove('hidden'); setTimeout(function(){scrollToEl(_vr,'top');},80);}
 }
 
 // LIKVID: Likviditetsbudsjett
@@ -4407,10 +4442,11 @@ function calcLikvid(){const start=parseNum('likvid-start'),income=parseNum('likv
 
 // PENSJON: Pensjon OTP
 function calcPensjon(){
-  const age=+document.getElementById('pensjon-age').value,retire=+document.getElementById('pensjon-retire').value,sal=parseNum('pensjon-salary'),otpRate=+document.getElementById('pensjon-otp').value,retRate=+document.getElementById('pensjon-return').value/100;
+  // V12 Fase 3 Pattern B: getVal er null-safe
+  const age=getVal('pensjon-age',0),retire=getVal('pensjon-retire',0),sal=parseNum('pensjon-salary'),otpRate=getVal('pensjon-otp',0),retRate=getVal('pensjon-return',0)/100;
   const years=retire-age;if(years<=0)return;
   // Innskuddspensjonsloven § 4-7: OTP-grunnlag kun lønn mellom 1G og 12G
-  const G=130160; // 1G 2026
+  const G=_HVT_G; // 1G — sentralisert i _HVT_G (V12 Fase 3 K12-M5)
   const otpBase=Math.max(0, Math.min(sal, 12*G) - 1*G);
   let pot=0;
   for(let y=0;y<years;y++){pot=(pot+otpBase*otpRate)*(1+retRate);}
@@ -4421,13 +4457,14 @@ function calcPensjon(){
   // Inflasjonsjustert kjøpekraft (2% inflasjon)
   const inflasjon=0.02;
   const realMonthly=monthly/Math.pow(1+inflasjon,years);
-  document.getElementById('pensjon-pot').textContent=fmt(pot);
-  document.getElementById('pensjon-annual').textContent=fmt(annual);
-  document.getElementById('pensjon-monthly').textContent=fmt(monthly);
-  document.getElementById('pensjon-real-monthly').textContent=fmt(realMonthly);
-  document.getElementById('pensjon-disclaimer').classList.remove('hidden');
-  document.getElementById('pensjon-res').classList.remove('hidden');
-  setTimeout(function(){scrollToEl(document.getElementById('pensjon-res'),'top');},80);
+  setEl('pensjon-pot', fmt(pot));
+  setEl('pensjon-annual', fmt(annual));
+  setEl('pensjon-monthly', fmt(monthly));
+  setEl('pensjon-real-monthly', fmt(realMonthly));
+  var _pdis=document.getElementById('pensjon-disclaimer');
+  if(_pdis) _pdis.classList.remove('hidden');
+  var _pres=document.getElementById('pensjon-res');
+  if(_pres){_pres.classList.remove('hidden'); setTimeout(function(){scrollToEl(_pres,'top');},80);}
 }
 
 function switchCalcMode(mode, skipScroll){
@@ -4668,15 +4705,18 @@ function fcUpdateFields(){
 }
 
 function fcCalc(){
-  const type = document.getElementById('fc-type').value;
-  const g = id => parseFloat(document.getElementById(id).value.replace(/[\s\u00a0,]/g,''))||0;
+  // V12 Fase 3 Pattern B: null-safe DOM access
+  var _ft=document.getElementById('fc-type');
+  if(!_ft) return;
+  const type = _ft.value;
+  const g = id => { var el=document.getElementById(id); return el?(parseFloat(el.value.replace(/[\s\u00a0,]/g,''))||0):0; };
   const resLbl = document.getElementById('fc-res-lbl');
   const resVal = document.getElementById('fc-res-val');
   const resSub = document.getElementById('fc-res-sub');
   const resGrid = document.getElementById('fc-res-grid');
   const r = R();
-  resGrid.innerHTML = '';
-  resSub.textContent = '';
+  if(resGrid) resGrid.innerHTML = '';
+  if(resSub) resSub.textContent = '';
 
   if(type==='tvm'){
     const pv=g('fc-pv'), rate=g('fc-rate')/100, n=g('fc-n'), pmt=g('fc-pmt');
@@ -5726,7 +5766,7 @@ function budsjettAddRow(type){
       '<option value="__custom__">'+(r.budOptCustom||'Valgfritt...')+'</option>';
   }
   var catLabel=type==='income'?(r.budsjettColDescI||'Beskrivelse'):(r.budsjettColDescE||'Beskrivelse');
-  var amtLabel=type==='income'?(r.budsjettColAmountI||'Belop'):(r.budsjettColAmountE||'Belop');
+  var amtLabel=type==='income'?(r.budsjettColAmountI||'Beløp'):(r.budsjettColAmountE||'Beløp');
   row.innerHTML='<div style="flex:2;position:relative;"><select class="fc budsjett-cat" onchange="budsjettCatChange(this)" style="width:100%;" aria-label="'+catLabel+'">'+opts+'</select></div>'+
     '<input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" aria-label="'+amtLabel+'">'+
     '<button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern" aria-label="Fjern rad">×</button>';
@@ -6005,13 +6045,8 @@ function _initPageReady(){
     if(themePicker){var btn=themePicker.querySelector('button');if(btn&&!btn.getAttribute('aria-label'))btn.setAttribute('aria-label','Velg tema');}
     document.querySelectorAll('.btn-calc').forEach(function(b){if(!b.getAttribute('aria-label'))b.setAttribute('aria-label',b.textContent.replace(/→/g,'').trim());});
     document.querySelectorAll('.card-hdr').forEach(function(h){h.setAttribute('role','button');h.setAttribute('aria-expanded',!h.parentElement.classList.contains('collapsed')+'');h.setAttribute('tabindex','0');h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleCard(h.parentElement);}});});
-    // V12 B12-M6: Enter-handler på boliglan-inputs (5 felt) → trigger calcMor
-    ['m-a','m-r','m-y','m-io-yrs','m-fees'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el) el.addEventListener('keydown', function(e){
-        if(e.key === 'Enter'){ e.preventDefault(); if(typeof calcMor === 'function') calcMor(); }
-      });
-    });
+    // V12 Fase 3: Boliglan Enter-handler er nå håndtert idempotent inne i updateAll
+    // (bindEnter linje ~705) — fjernet duplisert _initPageReady-binding fra Fase 2.
   })();
   // Auto-scroll selects into view on focus (mobile-friendly)
   document.querySelectorAll('select.fc').forEach(function(sel){

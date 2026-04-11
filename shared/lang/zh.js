@@ -424,6 +424,7 @@ REGIONS['zh'] = {
     budOptLonn:'工资', budOptStudielan:'助学贷款', budOptStipend:'奖学金', budOptCustom:'自定义...', budOptTermin:'房贷还款', budOptHusleie:'房租', budOptMat:'食品', budOptTransport:'交通', budOptStrom:'电费', budOptForsikring:'保险', budOptMobil:'手机/网络', budOptTrening:'健身', budOptStreaming:'流媒体/订阅',
     budRLbl:'月度余额', budRLblIncome:'收入合计', budRLblExpense:'支出合计', budRLblSavings:'储蓄率', budRLblAnnual:'年度盈余',
     budBtnPdf:'下载 (CSV)', budCsvTip:'如果Excel中列未自动拆分：选择A列 → 数据 → 分列 → 分隔符号 → 分号 → 完成。', budTotal:'合计', budBreakdownTitle:'按类别支出', budSummaryTitle:'摘要',
+    budsjettColDescI:'描述', budsjettColAmountI:'金额', budsjettColDescE:'描述', budsjettColAmountE:'金额', budDefaultExpense:'项目', budOptEkstra:'兼职/自由职业', budOptKapital:'资本收益', budOptNav:'NAV福利', budOptKlaer:'服装和个人', budOptSparing:'储蓄/BSU', aboPriceChangeTitle:'去年价格变动', aboTotalChange:'总涨幅/月', aboTotalChangeYear:'每年', budCsvTipLabel:'提示',
     budCatBolig:'住房', budCatTransport:'交通', budCatMat:'食品', budCatForsikring:'保险', budCatHelse:'医疗', budCatUnderholdning:'娱乐', budCatKlaer:'服装', budCatSparing:'储蓄', budCatAnnet:'其他',
     budVerdictSurplus:'您有月度盈余。', budVerdictBreakeven:'收支平衡。', budVerdictDeficit:'您的支出超过收入。',
     budPdfTitle:'个人预算', budPdfFooter:'由 Hverdagsverktøy 生成', budDefaultIncome:'收入',
