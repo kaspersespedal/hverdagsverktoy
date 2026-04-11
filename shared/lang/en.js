@@ -99,6 +99,7 @@ REGIONS['en'] = {
     morLFees:'Monthly costs (kr)', morFeesHint:'Term fee, insurance, common costs etc.', morIoToggle:'Interest-only period', morIoYrsLabel:'Interest-only period (years)',
     morIoSectionHdr:'Interest-only period', morRFeesTot:'Total costs', morTaxHdr:'Tax deduction (22%)', morRTax:'Total tax deduction', morRTaxY1:'Year 1 tax deduction',
     morRIoMthFree:'Monthly (interest only)', morRIoMthAfter:'Monthly after', morRIoExtra:'Extra interest cost',
+    morNoteMaxYears:'Maximum term is 30 years (Norwegian Lending Regulation § 4-5).', morStressHdr:'Stress test (+3 percentage points)', morRStressMth:'Monthly at +3 pp', morRStressDiff:'Additional monthly cost', morStressNote:'Norwegian Lending Regulation § 5: banks must verify borrowers can handle a 3 pp interest increase.',
     morLType:'Loan type', morAnnuity:'Annuity loan', morSerial:'Serial loan', vatRInclCalc:'Price incl. VAT', vatRExclCalc:'Price excl. VAT', vatRInputTag:'(your input)',
     morInfoTitle:'Mortgage guide', morInfoDesc:'Norwegian lending rules',
     bilTitle:'Car Cost Calculator', bilDesc:'See what your car really costs you per month and over time',

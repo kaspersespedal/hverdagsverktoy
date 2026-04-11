@@ -209,7 +209,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v22';
+    s.src = '/shared/lang/' + code + '.js?v=v23';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -1424,6 +1424,11 @@ function updateMortgageUI() {
   setText('mor-r-io-mthfree', r.morRIoMthFree || 'Månedlig (kun renter)');
   setText('mor-r-io-mthafter', r.morRIoMthAfter || 'Månedlig etter');
   setText('mor-r-io-extra', r.morRIoExtra || 'Ekstra rentekostnad');
+  setText('mor-note-maxyears', r.morNoteMaxYears || 'Maks løpetid er 30 år (Utlånsforskriften § 4-5).');
+  setText('mor-stress-hdr', r.morStressHdr || 'Stresstest (+3 prosentpoeng)');
+  setText('mor-r-stress-mth', r.morRStressMth || 'Månedlig ved +3 pp');
+  setText('mor-r-stress-diff', r.morRStressDiff || 'Økt månedskostnad');
+  setText('mor-stress-note', r.morStressNote || 'Utlånsforskriften § 5: banken må sjekke at du tåler +3 prosentpoeng høyere rente.');
   const morReqEl = document.getElementById('mor-req-title');
   if(morReqEl) morReqEl.innerHTML = (r.morReqTitle || 'Krav til boliglån') + ' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('mor-req-desc', r.morReqDesc || 'Egenkapital, gjeldsgrad, stresstest, avdrag');
@@ -2845,6 +2850,15 @@ function calcMor() {
   if(taxEl) taxEl.textContent = fmt(taxDeduction);
   const taxY1El = document.getElementById('m-tax-y1');
   if(taxY1El) taxY1El.textContent = fmt(r1 * 0.22);
+
+  // Stresstest: Utlånsforskriften § 5 — banken må sjekke at låntaker tåler +3 pp høyere rente
+  const stressRate = (yearlyRate + 3) / 100 / 12;
+  const stressMnd = stressRate === 0
+    ? P / n
+    : P * stressRate * Math.pow(1 + stressRate, n) / (Math.pow(1 + stressRate, n) - 1);
+  const stressDiff = stressMnd - mnd;
+  setEl('m-stress-mth', fmt(stressMnd));
+  setEl('m-stress-diff', '+ ' + fmt(stressDiff));
 
   var _mres=document.getElementById('m-res');if(_mres)_mres.classList.remove('hidden');
   setTimeout(()=>{var _mr=document.getElementById('m-res');if(_mr)scrollToEl(_mr,'top');},80);

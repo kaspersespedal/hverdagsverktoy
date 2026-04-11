@@ -94,6 +94,7 @@ REGIONS['ar'] = {
     morLFees:'التكاليف الشهرية (kr)', morFeesHint:'رسوم القسط، التأمين، التكاليف المشتركة إلخ', morIoToggle:'فترة بدون أقساط', morIoYrsLabel:'فترة بدون أقساط (سنوات)',
     morIoSectionHdr:'فترة بدون أقساط', morRFeesTot:'إجمالي التكاليف', morTaxHdr:'الخصم الضريبي (22%)', morRTax:'إجمالي الخصم الضريبي', morRTaxY1:'الخصم الضريبي السنة الأولى',
     morRIoMthFree:'شهرياً (فوائد فقط)', morRIoMthAfter:'شهرياً بعد', morRIoExtra:'تكلفة فوائد إضافية',
+    morNoteMaxYears:'المدة القصوى 30 عامًا (اللائحة النرويجية للإقراض § 4-5).', morStressHdr:'اختبار الضغط (+3 نقاط مئوية)', morRStressMth:'شهريًا عند +3 نقاط', morRStressDiff:'الزيادة الشهرية', morStressNote:'اللائحة النرويجية للإقراض § 5: يجب على البنك التحقق من قدرة المقترض على تحمل زيادة الفائدة بمقدار 3 نقاط مئوية.',
     morLType:'نوع القرض', morAnnuity:'قرض سنوي', morSerial:'قرض تسلسلي', vatRInclCalc:'السعر شامل ض.ق.م', vatRExclCalc:'السعر بدون ض.ق.م', vatRInputTag:'(مدخلاتك)',
     morInfoTitle:'دليل قرض السكن', morInfoDesc:'قواعد الإقراض النرويجية',
     morIoTitle:'قرض بدون أقساط', morIoDesc:'مقارنة بدون أقساط مع القسط السنوي من اليوم الأول',

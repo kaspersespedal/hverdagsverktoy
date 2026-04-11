@@ -91,6 +91,7 @@ REGIONS['so'] = {
     morLFees:'Kharashka billaha (kr)', morFeesHint:'Khidmada muddada, caymiska, kharashka wadaagga iwm.', morIoToggle:'Muddada lacag-celin la\'aanta', morIoYrsLabel:'Muddada lacag-celin la\'aanta (sanno)',
     morIoSectionHdr:'Muddada lacag-celin la\'aanta', morRFeesTot:'Kharashka guud', morTaxHdr:'Jaritaanka cashuurta (22%)', morRTax:'Jaritaanka cashuurta guud', morRTaxY1:'Jaritaanka cashuurta sannadka 1',
     morRIoMthFree:'Billaha (ribada kaliya)', morRIoMthAfter:'Billaha kadib', morRIoExtra:'Kharash ribada dheeraad ah',
+    morNoteMaxYears:'Muddada ugu badan 30 sano (Xeerarka Deynta Norway § 4-5).', morStressHdr:'Imtixaanka culeyska (+3 dhibic boqolkiiba)', morRStressMth:'Bishii marka +3 pp', morRStressDiff:'Kordhinta bishii', morStressNote:'Xeerarka Deynta Norway § 5: bangigu waa inuu hubiyo in amaahiyuhu awoodi karo kor u kaca ribada oo 3 dhibic boqolkiiba ah.',
     morLType:'Nooca amaahda', morAnnuity:'Amaah annuity', morSerial:'Amaah taxane', vatRInclCalc:'Qiimaha MVA la socdo', vatRExclCalc:'Qiimaha MVA la\'aan', vatRInputTag:'(gelintaada)',
     morInfoTitle:'Hagaha amaahda guriga', morInfoDesc:'Xeerarka amaah-bixinta Noorwiijiga',
     morIoTitle:'Amaah aan lacag-celin lahayn', morIoDesc:'Is-barbar dhig amaah aan lacag-celin lahayn iyo annuity maalinta 1aad',
