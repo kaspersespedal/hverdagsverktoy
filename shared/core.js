@@ -343,7 +343,10 @@ function hvtRebuildVisibleResults(){
       try { injectRatesDisclaimer(el); } catch(_e){}
     });
   } finally {
-    window._hvtLangRecalcActive = false;
+    // V11 H1-fix: delay reset by 600ms so that setTimeout-delayed scrollToEl/smartScroll
+    // calls from calc functions (80-517ms delays) still see the flag and skip scrolling.
+    // Previously flag was reset synchronously here, causing scroll-jump-back regression.
+    setTimeout(function(){ window._hvtLangRecalcActive = false; }, 600);
   }
 }
 window.hvtRebuildVisibleResults = hvtRebuildVisibleResults;
@@ -2570,6 +2573,10 @@ function scrollToEl(el,mode){
 }
 function smartScroll(el,retries){
   if(!el)return;
+  // V11 H1-fix: suppress scroll during lang-change recalc (same as scrollToEl line 2544).
+  // Bug: setTimeout-delayed scrollToEl/smartScroll calls from calcBilkostnad/calcLonn/calcAbo/
+  // budsjettCalc fyrer 80-517ms etter at _hvtLangRecalcActive ble reset syncron i finally.
+  if(window._hvtLangRecalcActive)return;
   _cancelScroll();
   var id=_scrollId;
   retries=retries||0;
