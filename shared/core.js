@@ -3443,13 +3443,23 @@ function calcBilkostnad() {
     if (drivstoff === 'elbil') {
       drivKostPerKm = 0.20 * 2.0 * kmWearFactor;
     } else if (drivstoff === 'diesel') {
-      // Diesel 2026 baseline: ~27,93 kr/L = pump 25,08 (GlobalPetrolPrices apr 2026) + veibruksavgift 2,28 × 1,25 MVA.
-      // Temporær veibruksavgift-reduksjon (0 kr apr–sept 2026, Stortingsvedtak 486/2026) ikke modellert separat.
-      drivKostPerKm = 0.06 * 27.93 * kmWearFactor;
+      // Diesel 2026 baseline (årsgjennomsnitt med veibruksavgift-suspensjon):
+      //   Normal pumpepris: 27,93 kr/L = pump 25,08 + (2,28 veibruksavgift × 1,25 MVA)
+      //   Suspendert (1.apr–1.sep 2026): 25,08 kr/L (0 kr veibruksavgift)
+      //   2026 årsgjennomsnitt: (5×25,08 + 7×27,93) / 12 = 26,74 kr/L
+      // Kilder: Skatteetaten satser, Lovdata STV-2025-12-18-2759 (normal),
+      //         Lovdata LTI/2026-03-26-486 (suspensjon, vedtatt 2026-03-26).
+      // NB: Oppdater for 2027 — suspensjonen gjelder kun 2026.
+      drivKostPerKm = 0.06 * 26.74 * kmWearFactor;
     } else {
-      // Bensin 2026 baseline: ~25,71 kr/L = pump 21,00 (GlobalPetrolPrices apr 2026) + veibruksavgift 3,77 × 1,25 MVA.
-      // Temporær veibruksavgift-reduksjon (0 kr apr–sept 2026, Stortingsvedtak 486/2026) ikke modellert separat.
-      drivKostPerKm = 0.07 * 25.71 * kmWearFactor;
+      // Bensin 2026 baseline (årsgjennomsnitt med veibruksavgift-suspensjon):
+      //   Normal pumpepris: 25,71 kr/L = pump 21,00 + (3,77 veibruksavgift × 1,25 MVA)
+      //   Suspendert (1.apr–1.sep 2026): 21,00 kr/L (0 kr veibruksavgift)
+      //   2026 årsgjennomsnitt: (5×21,00 + 7×25,71) / 12 = 23,75 kr/L
+      // Kilder: Skatteetaten satser, Lovdata STV-2025-12-18-2759 (normal),
+      //         Lovdata LTI/2026-03-26-486 (suspensjon, vedtatt 2026-03-26).
+      // NB: Oppdater for 2027 — suspensjonen gjelder kun 2026.
+      drivKostPerKm = 0.07 * 23.75 * kmWearFactor;
     }
     var drivTotal = drivKostPerKm * km * aar;
   }
