@@ -356,12 +356,13 @@ Følgende krever ekstern primærkilde-verifikasjon før eventuell fix:
 6. ✅ **A12-M5 typo "gjenståend"** — `avgift/index.html:272`
 7. ✅ **P12-M4 calcSpare negativ years clamp** — `core.js:5112`
 
-### Fase 2 — Mellomstore (30-90 min)
-8. **H7 Personlig calcLonn frikort-verdict** + kobl inn dead `frikortgrense`-konstant
-9. **H9 Avgift calcAdj clamp** — 3 linjer
-10. **B12-M4 boliglan stresstest IO-aware** — endre `calcMor` formel
-11. **H1+H3 Skatt sjekkliste atomic fix** — utvid HTML+SJEKK_DATA+applyLang-loop til 9
-12. **B12-M6 + Enter-handler boliglan** — sentralt i `_initPageReady`
+### Fase 2 — Mellomstore (LUKKET — commit `a1395d9`)
+8. ✅ **H7 Personlig calcLonn frikort-verdict** — `core.js:5063`, bruker dead `frikortgrense`
+9. ✅ **H9 Avgift calcAdj clamp** — `core.js:3643-3645`
+10. ✅ **B12-M4 boliglan stresstest IO-aware** — `core.js:2954-2972` (24 157→26 035 for IO=5)
+11. ✅ **H1+H3 Skatt sjekkliste atomic** — HTML+SJEKK_DATA+applyLang loop til 9, hjemmekontor 484 kr
+12. ✅ **B12-M6 Enter-handler boliglan** — `_initPageReady`, 5 inputs
+13. ✅ **BONUS sjekk-total kr kr** — `core.js:3009`, samme klasse som P12-M1
 
 ### Fase 3 — Strukturelle fixes (1-3 timer)
 13. **H4 autoRecalc leak fix** — idempotent binding via `__hvtRecalcBound`-flag
