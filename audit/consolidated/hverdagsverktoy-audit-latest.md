@@ -371,10 +371,12 @@ Følgende krever ekstern primærkilde-verifikasjon før eventuell fix:
 16. ✅ **P12-M8 14 i18n-keys** — `scripts/add_p12_m8_keys.py` (NO+EN+8 språk)
 17. ✅ **K12-M5 G=130160 DRY** — `_HVT_G` sentral konstant erstatter 4 hardkodede
 
-### Fase 4 — /research-blokkerte
-18. **R-bol-1 Utlånsforskriften** — kjør /research, så fix H5 boliglan + 22 steder
-19. **R-skatt-1..7** — kjør /research, så verifiser/oppdater 7 satser
-20. **R-sel-1..3** — kjør /research, så fix selskap-tekster
+### Fase 4 — /research-blokkerte (LUKKET — commit `68fcd32`)
+18. ✅ **R-bol-1 Utlånsforskriften** — research_v1/boliglan-utlansforskriften. § 5 stresstest, § 9 avdragskrav. 23 steder oppdatert.
+19. ✅ **R-skatt-1..7** — research_v1/skatt-7-satser. 0 avvik. Ingen kode-endring.
+20. ✅ **R-kalk-1 + R-avgift** — research_v1/kalkulator-avgift-satser. 2 nye paragraf-feil fanget: bagatellgrense § 9-5 tredje ledd (10 lang + core.js) + OTP § 5-2 (core.js kommentarer).
+21. ✅ **R-sel-2** — research_v1/selskap-rettskilder. Stiftelsesloven § 22 200k for næring. NO + EN fikset, 8 andre språk utsatt til Fase 5.
+22. ✅ **R-pers-1 ABO** — research_v1/personlig-abo-priskatalog. ABO_CATALOG multi-tier (27 varianter, 8 optgroups). Viaplay-sammenligningsfeil løst (F&S vs Total separert).
 
 ### Fase 5 — Cleanup batch
 21. M-tier rest (so/ti morReqRows duplikat, morCsv i18n, dead code)

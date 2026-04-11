@@ -16,25 +16,23 @@ Organisering av V12-funn i 5 faser etter kompleksitet og dependencies. Hver fase
 | **Fase 1** | Quick wins (1-8 linjer hver) | ~30 min | 7 | ✅ Ferdig (`a1c9cc9`) |
 | **Fase 2** | Mellomstore (verdict-logikk, formler) | 30-90 min | 5 + bonus | ✅ Ferdig (`a1395d9`) |
 | **Fase 3** | Strukturelle (helpers, refactor) | 1-3 timer | 5 + bonus | ✅ Ferdig (`e942378`) |
-| **Fase 4** | /research-blokkerte | 2-4 timer | 4 bundles | 🟡 Neste |
-| **Fase 5** | Cleanup batch (M-rest + L-tier) | 3-5 timer | 50+ | ⏸️ Venter |
+| **Fase 4** | /research-blokkerte | 2-4 timer | 5 bundles | ✅ Ferdig (`68fcd32`) |
+| **Fase 5** | Cleanup batch (M-rest + L-tier) | 3-5 timer | 50+ | 🟡 Siste |
 
 ## Mappestruktur
 
 ```
 audit/fase/
-├── README.md                       (denne fila)
-├── fase-1-quick-wins/
-│   └── README.md                   (7 fixes, status, commit-refs)
-├── fase-2-mellomstore/
-│   └── README.md
-├── fase-3-strukturelle/
-│   └── README.md
-├── fase-4-research-blokkerte/
-│   └── README.md
-└── fase-5-cleanup/
-    └── README.md
+├── README.md                       (denne fila — oversikt + policy)
+└── fase_v1/                        (v1 tracker — 2026-04-11 V12-runden)
+    ├── fase-1-quick-wins/README.md      (✅ a1c9cc9 — 7 fixes)
+    ├── fase-2-mellomstore/README.md     (✅ a1395d9 — 5 fixes + bonus)
+    ├── fase-3-strukturelle/README.md    (✅ e942378 — Pattern B refactor)
+    ├── fase-4-research-blokkerte/README.md  (✅ 68fcd32 — 5 bundles)
+    └── fase-5-cleanup/README.md         (🟡 Siste — M-rest + L-tier)
 ```
+
+**Versjonering:** når en ny audit-runde (V13, V14, ...) kommer, lag ny `fase_v2/`-mappe for den runden. Gamle vN/-mapper bevares som historiske referansepunkter.
 
 ## Workflow per fase
 
