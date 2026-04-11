@@ -5144,7 +5144,10 @@ function calcSpare() {
 }
 
 // ── Studielån (Lånekassen) ──
-function _studieSatser(){return{borte:15169,hjemme:7682};}
+// Basislån 2025–26: 15 169 kr/mnd (samme for borte- og hjemmeboere).
+// Forskjellen ligger i stipend-omgjøringen — kun borteboere får opp til
+// 40 % (fullført grad) eller 15 % av basislånet konvertert til stipend.
+function _studieSatser(){return{borte:15169,hjemme:15169};}
 function studieClampBorte(){
   var S=_studieSatser();
   var aar=+(document.getElementById('studie-varighet').value)||3;
@@ -5158,9 +5161,9 @@ function studieClampBorte(){
   var hintEl=document.getElementById('studie-boform-hint');
   if(hintEl){
     var parts=[];
-    if(borte>0) parts.push(borte+' år borteboer ('+fmt(S.borte)+'/mnd)');
-    if(hjemme>0) parts.push(hjemme+' år hjemmeboer ('+fmt(S.hjemme)+'/mnd)');
-    hintEl.textContent=parts.join(' + ');
+    if(borte>0) parts.push(borte+' år borteboer');
+    if(hjemme>0) parts.push(hjemme+' år hjemmeboer');
+    hintEl.textContent=parts.length?parts.join(' + ')+' ('+fmt(S.borte)+'/mnd basislån)':'';
   }
 }
 function studieUpdateTotal(){
