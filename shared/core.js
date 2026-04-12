@@ -4828,9 +4828,9 @@ function fcCalc(){
 function toggleMobileSidebar(){document.body.classList.toggle('mobile-sidebar-open');}
 function closeMobileSidebar(){document.body.classList.remove('mobile-sidebar-open');}
 // Focus mode
-var _focusZoomHandler=null;
-function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';var mmb=document.querySelector('.mobile-mode-bar');if(mmb)mmb.style.top='0px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no');_focusZoomHandler=function(e){if(e.touches&&e.touches.length>1){e.preventDefault();}};document.addEventListener('touchstart',_focusZoomHandler,{passive:false});document.addEventListener('gesturestart',function(e){e.preventDefault();},{passive:false});var scrollContainer=document.querySelector('#calc-basic>div:first-child');if(scrollContainer)scrollContainer.style.overflowY='auto';}
-function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var mmb=document.querySelector('.mobile-mode-bar');var h=document.querySelector('header');if(mmb&&h&&h.offsetHeight>0)mmb.style.top=h.offsetHeight+'px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');if(_focusZoomHandler){document.removeEventListener('touchstart',_focusZoomHandler);_focusZoomHandler=null;}}
+var _focusZoomHandler=null;var _focusGestureHandler=null;
+function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';var mmb=document.querySelector('.mobile-mode-bar');if(mmb)mmb.style.top='0px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no');_focusZoomHandler=function(e){if(e.touches&&e.touches.length>1){e.preventDefault();}};document.addEventListener('touchstart',_focusZoomHandler,{passive:false});_focusGestureHandler=function(e){e.preventDefault();};document.addEventListener('gesturestart',_focusGestureHandler,{passive:false});var scrollContainer=document.querySelector('#calc-basic>div:first-child');if(scrollContainer)scrollContainer.style.overflowY='auto';}
+function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var mmb=document.querySelector('.mobile-mode-bar');var h=document.querySelector('header');if(mmb&&h&&h.offsetHeight>0)mmb.style.top=h.offsetHeight+'px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');if(_focusZoomHandler){document.removeEventListener('touchstart',_focusZoomHandler);_focusZoomHandler=null;}if(_focusGestureHandler){document.removeEventListener('gesturestart',_focusGestureHandler);_focusGestureHandler=null;}}
 function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
 
 // Landscape auto-switch: basic ↔ scientific (iPhone calculator style)
@@ -6007,28 +6007,28 @@ function _csvDate(){var loc={'en':'en-GB','ar':'ar-SA','zh':'zh-CN','fr':'fr-FR'
 
 // ── Avskrivning CSV ──
 function avsCsv(){
-  var d=window._avsData;if(!d)return;
+  var d=window._avsData;if(!d)return;var r=R();
   var rows=[];
-  rows.push(['Avskrivningsplan',_csvDate()]);
+  rows.push([r.avsDepTableHeader||'Avskrivningsplan',_csvDate()]);
   rows.push([]);
   rows.push(d.headers);
-  d.rows.forEach(function(r){rows.push(r);});
+  d.rows.forEach(function(row){rows.push(row);});
   if(d.total)rows.push(d.total);
   rows.push([]);
-  rows.push(['Generert av Hverdagsverktøy']);
+  rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);
   downloadCSV(rows,'avskrivning.csv');
 }
 
 // ── Likviditet CSV ──
 function likvidCsv(){
-  var d=window._likvidData;if(!d)return;
+  var d=window._likvidData;if(!d)return;var r=R();
   var rows=[];
-  rows.push(['Likviditetsbudsjett',_csvDate()]);
+  rows.push([r.likvidTitle||'Likviditetsbudsjett',_csvDate()]);
   rows.push([]);
-  rows.push(['Måned','Start','Inntekt','Utgift','Slutt']);
-  d.forEach(function(r){rows.push([r.month,r.start,r.income,r.expense,r.end]);});
+  rows.push([r.likvidColMonth||'Måned',r.likvidColStart||'Start',r.likvidColIncome||'Inntekt',r.likvidColExpense||'Utgift',r.likvidColEnd||'Slutt']);
+  d.forEach(function(row){rows.push([row.month,row.start,row.income,row.expense,row.end]);});
   rows.push([]);
-  rows.push(['Generert av Hverdagsverktøy']);
+  rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);
   downloadCSV(rows,'likviditet.csv');
 }
 
