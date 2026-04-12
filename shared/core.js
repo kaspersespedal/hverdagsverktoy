@@ -301,6 +301,8 @@ function setRegion(r, e) {
     // rates disclaimer, table cells) updates to new language. Bug: focus-modus tittel/Sist oppdatert/motivasjon
     // vises på forrige språk etter setRegion. Samme mønster som hvtSearchRebuildChips fra commit 3b41e83.
     try { if(typeof window.hvtRebuildVisibleResults==='function') window.hvtRebuildVisibleResults(); } catch(_e){}
+    // Refresh focus mode labels (title, exit button, desktop toggles) after language switch
+    try { _refreshFocusLabels(); } catch(_e){}
   }).catch(function() {
     if(switchId !== _regionSwitchId) return;
     // Fallback: switch to Norwegian if language fails to load
@@ -361,6 +363,18 @@ function hvtRebuildVisibleResults(){
   }
 }
 window.hvtRebuildVisibleResults = hvtRebuildVisibleResults;
+
+// Refresh focus mode labels after language switch — mf-title, exit button, desktop toggles
+function _refreshFocusLabels(){
+  var r=R();
+  // Mobile focus close bar title — re-read from the focused card's updated .card-title
+  var mfTitle=document.querySelector('.mf-title');
+  if(mfTitle){var fc=document.querySelector('.info-card[data-mf-focus]');if(fc){var t=fc.querySelector(':scope > .card-hdr .card-title');if(t)mfTitle.textContent=t.textContent.replace(/[▼⛶✕]/g,'').trim();}}
+  // Mobile focus exit button
+  var mfClose=document.querySelector('.mf-close');if(mfClose)mfClose.textContent='\u2715 '+(r.mobileFocusExit||'Lukk');
+  // Desktop focus toggle labels
+  document.querySelectorAll('.focus-toggle').forEach(function(btn){var lbl=btn.querySelector('.focus-toggle-label');var ex=btn.querySelector('.focus-toggle-exit');if(lbl)lbl.textContent=r.focusLabel||'Fokus';if(ex)ex.textContent=r.focusClose||'Lukk fokus';});
+}
 
 function toggleDD() {
   var el=document.getElementById('rdd');
