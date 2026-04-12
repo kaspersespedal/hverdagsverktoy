@@ -1882,18 +1882,15 @@ function updateNpvUI() {
     incRows.forEach(function(s){repopCat(s,incOpts,incVals);});
     expRows.forEach(function(s){repopCat(s,expOpts,expVals);});
   })();
-  // Abo static selects — repopulate from language
+  // Abo selects — repopulate with multi-tier optgroups on language switch
   (function(){
     var aboRows=document.querySelectorAll('#abo-rows .abo-cat');
     if(!aboRows.length)return;
-    var aboOpts=[r.aboOptNetflix||'Netflix',r.aboOptSpotify||'Spotify',r.aboOptHBO||'HBO Max',r.aboOptDisney||'Disney+',r.aboOptYoutube||'YouTube Premium',r.aboOptViaplay||'Viaplay',r.aboOptAppleMusic||'Apple Music',r.aboOptIcloud||'Apple iCloud+',r.aboOptTrening||'Treningssenter',r.aboOptMobil||'Mobilabonnement',r.aboOptBredband||'Bredbånd',r.aboOptVG||'VG+',r.aboOptAftenposten||'Aftenposten',r.aboOptAvis||'Annen avis/magasin'];
-    var aboVals=['Netflix','Spotify','HBO Max','Disney+','YouTube Premium','Viaplay','Apple Music','Apple iCloud+','Treningssenter','Mobilabonnement','Bredbånd','VG+','Aftenposten','Annen avis/magasin'];
-    var custom=r.aboOptCustom||'Valgfritt...';
+    var opts=_aboOptsHTML(r);
     aboRows.forEach(function(sel){
       var cur=sel.value;if(cur==='__custom__')return;
-      sel.innerHTML='';
-      for(var i=0;i<aboOpts.length;i++){var o=document.createElement('option');o.value=aboVals[i];o.textContent=aboOpts[i];if(aboVals[i]===cur)o.selected=true;sel.appendChild(o);}
-      var co=document.createElement('option');co.value='__custom__';co.textContent=custom;sel.appendChild(co);
+      sel.innerHTML=opts;
+      for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===cur){sel.options[i].selected=true;break;}}
     });
   })();
   // CSV and misc buttons
@@ -5671,57 +5668,57 @@ function aboGetName(row){
   return '';
 }
 
+// Shared optgroup HTML for abo dropdowns — used by aboAddRow + applyLang repopulation
+function _aboOptsHTML(r){
+  return '<optgroup label="'+(r.aboGrpMusikk||'Musikk')+'">'+
+    '<option value="Spotify Individual">Spotify Individual</option>'+
+    '<option value="Spotify Duo">Spotify Duo</option>'+
+    '<option value="Spotify Family">Spotify Family</option>'+
+    '<option value="Apple Music Individual">Apple Music Individual</option>'+
+    '<option value="Apple Music Family">Apple Music Family</option>'+
+  '</optgroup>'+
+  '<optgroup label="'+(r.aboGrpStream||'Streaming (film/TV)')+'">'+
+    '<option value="Netflix Standard">Netflix Standard</option>'+
+    '<option value="Netflix Premium">Netflix Premium</option>'+
+    '<option value="HBO Max Standard">HBO Max Standard</option>'+
+    '<option value="Disney+">Disney+</option>'+
+    '<option value="YouTube Premium">YouTube Premium</option>'+
+  '</optgroup>'+
+  '<optgroup label="'+(r.aboGrpSport||'Sport/TV-pakker')+'">'+
+    '<option value="Viaplay Film &amp; Serier">Viaplay Film &amp; Serier</option>'+
+    '<option value="Viaplay Total">Viaplay Total</option>'+
+  '</optgroup>'+
+  '<optgroup label="'+(r.aboGrpSky||'Apple iCloud+')+'">'+
+    '<option value="Apple iCloud+ 50GB">Apple iCloud+ 50GB</option>'+
+    '<option value="Apple iCloud+ 200GB">Apple iCloud+ 200GB</option>'+
+    '<option value="Apple iCloud+ 2TB">Apple iCloud+ 2TB</option>'+
+  '</optgroup>'+
+  '<optgroup label="'+(r.aboGrpGaming||'Gaming')+'">'+
+    '<option value="PlayStation Plus Essential">PlayStation Plus Essential</option>'+
+    '<option value="PlayStation Plus Extra">PlayStation Plus Extra</option>'+
+    '<option value="PlayStation Plus Premium">PlayStation Plus Premium</option>'+
+    '<option value="Xbox Game Pass PC">Xbox Game Pass PC</option>'+
+    '<option value="Xbox Game Pass Ultimate">Xbox Game Pass Ultimate</option>'+
+  '</optgroup>'+
+  '<optgroup label="'+(r.aboGrpSoftware||'Software')+'">'+
+    '<option value="Adobe Creative Cloud">Adobe Creative Cloud</option>'+
+    '<option value="Microsoft 365 Personal">Microsoft 365 Personal</option>'+
+  '</optgroup>'+
+  '<optgroup label="'+(r.aboGrpNyheter||'Nyheter')+'">'+
+    '<option value="VG+">VG+</option>'+
+    '<option value="Aftenposten">Aftenposten</option>'+
+  '</optgroup>'+
+  '<optgroup label="'+(r.aboGrpAnnet||'Annet')+'">'+
+    '<option value="Treningssenter">'+(r.aboOptTrening||'Treningssenter')+'</option>'+
+    '<option value="Mobilabonnement">'+(r.aboOptMobil||'Mobilabonnement')+'</option>'+
+    '<option value="Bredbånd">'+(r.aboOptBredband||'Bredbånd')+'</option>'+
+    '<option value="__custom__">'+(r.aboOptCustom||'Valgfritt...')+'</option>'+
+  '</optgroup>';
+}
 function aboAddRow(){
   var r=R();var cont=document.getElementById('abo-rows');
   var row=document.createElement('div');row.className='abo-row';row.style.cssText='display:flex;gap:8px;margin-bottom:6px;';
-  // V12 Fase 4: Multi-tier dropdown med optgroups. Varianter per tjeneste der
-  // pris varierer meningsfullt (Spotify/Netflix/Viaplay/PS Plus/Xbox/Apple iCloud+).
-  // Generiske kategorier (Treningssenter/Mobil/Bredbånd) har bare én entry.
-  var opts=
-    '<optgroup label="'+(r.aboGrpMusikk||'Musikk')+'">'+
-      '<option value="Spotify Individual">Spotify Individual</option>'+
-      '<option value="Spotify Duo">Spotify Duo</option>'+
-      '<option value="Spotify Family">Spotify Family</option>'+
-      '<option value="Apple Music Individual">Apple Music Individual</option>'+
-      '<option value="Apple Music Family">Apple Music Family</option>'+
-    '</optgroup>'+
-    '<optgroup label="'+(r.aboGrpStream||'Streaming (film/TV)')+'">'+
-      '<option value="Netflix Standard">Netflix Standard</option>'+
-      '<option value="Netflix Premium">Netflix Premium</option>'+
-      '<option value="HBO Max Standard">HBO Max Standard</option>'+
-      '<option value="Disney+">Disney+</option>'+
-      '<option value="YouTube Premium">YouTube Premium</option>'+
-    '</optgroup>'+
-    '<optgroup label="'+(r.aboGrpSport||'Sport/TV-pakker')+'">'+
-      '<option value="Viaplay Film &amp; Serier">Viaplay Film &amp; Serier</option>'+
-      '<option value="Viaplay Total">Viaplay Total</option>'+
-    '</optgroup>'+
-    '<optgroup label="'+(r.aboGrpSky||'Apple iCloud+')+'">'+
-      '<option value="Apple iCloud+ 50GB">Apple iCloud+ 50GB</option>'+
-      '<option value="Apple iCloud+ 200GB">Apple iCloud+ 200GB</option>'+
-      '<option value="Apple iCloud+ 2TB">Apple iCloud+ 2TB</option>'+
-    '</optgroup>'+
-    '<optgroup label="'+(r.aboGrpGaming||'Gaming')+'">'+
-      '<option value="PlayStation Plus Essential">PlayStation Plus Essential</option>'+
-      '<option value="PlayStation Plus Extra">PlayStation Plus Extra</option>'+
-      '<option value="PlayStation Plus Premium">PlayStation Plus Premium</option>'+
-      '<option value="Xbox Game Pass PC">Xbox Game Pass PC</option>'+
-      '<option value="Xbox Game Pass Ultimate">Xbox Game Pass Ultimate</option>'+
-    '</optgroup>'+
-    '<optgroup label="'+(r.aboGrpSoftware||'Software')+'">'+
-      '<option value="Adobe Creative Cloud">Adobe Creative Cloud</option>'+
-      '<option value="Microsoft 365 Personal">Microsoft 365 Personal</option>'+
-    '</optgroup>'+
-    '<optgroup label="'+(r.aboGrpNyheter||'Nyheter')+'">'+
-      '<option value="VG+">VG+</option>'+
-      '<option value="Aftenposten">Aftenposten</option>'+
-    '</optgroup>'+
-    '<optgroup label="'+(r.aboGrpAnnet||'Annet')+'">'+
-      '<option value="Treningssenter">'+(r.aboOptTrening||'Treningssenter')+'</option>'+
-      '<option value="Mobilabonnement">'+(r.aboOptMobil||'Mobilabonnement')+'</option>'+
-      '<option value="Bredbånd">'+(r.aboOptBredband||'Bredbånd')+'</option>'+
-      '<option value="__custom__">'+(r.aboOptCustom||'Valgfritt...')+'</option>'+
-    '</optgroup>';
+  var opts=_aboOptsHTML(r);
   row.innerHTML='<div style="flex:2;position:relative;"><select class="fc abo-cat" onchange="aboCatChange(this)" style="width:100%;">'+opts+'</select></div>'+
     '<input type="text" class="fc abo-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" value="139">'+
     '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>';
