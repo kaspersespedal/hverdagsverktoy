@@ -676,6 +676,7 @@ function updateTabs() {
   autoRecalc('v-t','v-res',calcVat);
   // VAT Adjustment
   autoRecalc('adj-type','adj-res',calcAdj);
+  autoRecalcInput(['adj-mva','adj-years','adj-old','adj-new'],'adj-res',calcAdj);
   // LVU (kalkulator.html)
   autoRecalc('lvu-zone','lvu-res',calcLvu);
   // AGA
@@ -1931,18 +1932,18 @@ function updateVatUI() {
   } else {
     vatHelpCard.classList.add('hidden');
   }
-  setText('vat-title', r.vatTitle || 'VAT / Tax Calculator');
-  setText('vat-desc', r.vatDesc || 'Calculate tax amounts and prices incl/excl.');
-  setText('vat-l-amount', r.lVatAmount || 'Amount');
-  setText('vat-l-rate', r.lVatRate || 'Tax Rate');
-  setText('vat-l-type', r.lVatType || 'Amount is');
-  setText('btn-calc-v', r.btnCalc || 'Calculate →');
-  setText('vat-r-incl', r.vatRIncl || 'Price Incl. Tax');
-  setText('vat-r-excl', r.vatRExcl || 'Excl. Tax');
-  setText('vat-r-tax', r.vatRTax || 'Tax Amount');
-  setText('vat-r-pct', r.vatRPct || 'Rate %');
-  setText('vat-info-title', r.vatInfoTitle || 'Tax Rates Reference');
-  setText('vat-info-desc', r.vatInfoDesc || 'Official rates for selected region');
+  setText('vat-title', r.vatTitle || 'MVA-kalkulator');
+  setText('vat-desc', r.vatDesc || 'Beregn MVA-beløp og priser inkl./ekskl.');
+  setText('vat-l-amount', r.lVatAmount || 'Beløp');
+  setText('vat-l-rate', r.lVatRate || 'MVA-sats');
+  setText('vat-l-type', r.lVatType || 'Beløpet er');
+  setText('btn-calc-v', r.btnCalc || 'Beregn →');
+  setText('vat-r-incl', r.vatRIncl || 'Pris inkl. MVA');
+  setText('vat-r-excl', r.vatRExcl || 'Ekskl. MVA');
+  setText('vat-r-tax', r.vatRTax || 'MVA-beløp');
+  setText('vat-r-pct', r.vatRPct || 'Sats %');
+  setText('vat-info-title', r.vatInfoTitle || 'MVA-satser referanse');
+  setText('vat-info-desc', r.vatInfoDesc || 'Offisielle satser');
   // V12 H10 fix: null-checks gjennom hele VAT-blokk for å hindre at en manglende
   // DOM-node bryter hele updateAll()-kjeden. Tidligere kunne search-fokus-modus eller
   // SPA-manipulasjon fjerne et element og crashe alle påfølgende seksjoner.
@@ -2873,12 +2874,9 @@ function calcMor() {
   // Maks løpetid 30 år er bankpraksis (ikke lovfestet). Utlånsforskriften § 9
   // krever avdrag for lån med belåningsgrad > 60 %, som gjør 30 år til praktisk maks.
   // Ref: research/research_v1/2026-04-11_research_boliglan-utlansforskriften.md
-  const years = Math.min(rawYears > 0 ? rawYears : 25, 30);
+  const years = rawYears > 0 ? Math.min(rawYears, 30) : 25;
   var _myEl = document.getElementById('m-y');
-  if(_myEl){
-    if(!rawYears) _myEl.value = '25';
-    if(rawYears > 30) _myEl.value = '30';
-  }
+  if(_myEl && String(_myEl.value) !== String(years)) _myEl.value = years;
   const n = years * 12;
   var _mt=document.getElementById('m-type');const loanType=_mt?_mt.value:'annuity';
   const serialRange = document.getElementById('m-serial-range');
@@ -3451,9 +3449,12 @@ function bilUpdateDefaults() {
 function calcBilkostnad() {
   var r = R();
   var pris = parseNum('bil-pris');
-  if (pris <= 0) return;
+  if (pris <= 0) { var _br=document.getElementById('bil-res'); if(_br) _br.classList.add('hidden'); return; }
   var aar = Math.max(1, Math.min(20, +document.getElementById('bil-aar').value || 5));
-  var km = Math.max(1000, parseNum('bil-km') || 12000);
+  var rawKm = parseNum('bil-km') || 12000;
+  var km = Math.max(1000, rawKm);
+  var _kmEl = document.getElementById('bil-km');
+  if(_kmEl && rawKm > 0 && rawKm < 1000) _kmEl.value = '1000';
   var startKm = Math.max(0, parseNum('bil-start-km') || 0);
   var merke = document.getElementById('bil-merke').value;
   var drivstoff = document.getElementById('bil-drivstoff').value;
@@ -3658,15 +3659,15 @@ function calcVat() {
   const rr = R();
   if(tp==='ex'){
     // Input was excl. VAT → main result is incl. VAT
-    setEl('vat-r-incl', rr.vatRInclCalc||'Price incl. VAT');
+    setEl('vat-r-incl', rr.vatRInclCalc||'Pris inkl. MVA');
     setEl('v-inc', fmt(inc));
-    setEl('vat-r-excl', (rr.vatRExclCalc||'Price excl. VAT') + ' ' + (rr.vatRInputTag||'(your input)'));
+    setEl('vat-r-excl', (rr.vatRExclCalc||'Pris ekskl. MVA') + ' ' + (rr.vatRInputTag||'(din input)'));
     setEl('v-exc', fmt(ex));
   } else {
     // Input was incl. VAT → main result is excl. VAT
-    setEl('vat-r-incl', rr.vatRExclCalc||'Price excl. VAT');
+    setEl('vat-r-incl', rr.vatRExclCalc||'Pris ekskl. MVA');
     setEl('v-inc', fmt(ex));
-    setEl('vat-r-excl', (rr.vatRInclCalc||'Price incl. VAT') + ' ' + (rr.vatRInputTag||'(your input)'));
+    setEl('vat-r-excl', (rr.vatRInclCalc||'Pris inkl. MVA') + ' ' + (rr.vatRInputTag||'(din input)'));
     setEl('v-exc', fmt(inc));
   }
   setEl('v-vat', fmt(vt));
@@ -3687,7 +3688,7 @@ function calcAdj() {
   const showRes = function(){ if(adjRes) adjRes.classList.remove('hidden'); };
   var _at=document.getElementById('adj-type');const type=_at?_at.value:'eiendom';
   const totalMva = parseNum('adj-mva');
-  if(totalMva <= 0) return;
+  if(totalMva <= 0) { if(adjRes) adjRes.classList.add('hidden'); return; }
   const periode = type === 'eiendom' ? 10 : 5;
   const terskel = type === 'eiendom' ? 100000 : 50000;
   // V12 H9 fix: clamp inputs til lovlige bereik. aarBrukt ∈ [0, periode],
@@ -5430,7 +5431,6 @@ function calcStudielan(){
 
   // Verdict
   var verdictEl=document.getElementById('studie-r-verdict');
-  var mndEtterSkatt=mndBetaling-(totRente*0.22/antTerminer);
   if(mndBetaling<2000){
     verdictEl.textContent=r.studieVerdictLow||'Overkommelig — lavere enn de fleste abonnementstjenester.';
   } else if(mndBetaling<3500){

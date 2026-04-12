@@ -188,7 +188,8 @@ var URL_TO_I18N_KEYS = {
   '/selskap/#selskap-as-card':     ['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-enk-card':    ['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-ans-card':    ['tabSelskap','dashDescSelskap'],
-  '/selskap/#selskap-ks-card':     ['tabSelskap','dashDescSelskap']
+  '/selskap/#selskap-ks-card':     ['tabSelskap','dashDescSelskap'],
+  '/selskap/#selskap-andre-card':  ['tabSelskap','dashDescSelskap']
 };
 
 /* ─── URL → display key map ───
@@ -238,7 +239,8 @@ var URL_TO_DISPLAY = {
   '/selskap/#selskap-ans-card':     {title:'selskapAnsTitle',     desc:'selskapAnsDesc'},
   '/selskap/#selskap-ks-card':      {title:'selskapKsTitle',      desc:'selskapKsDesc'},
   '/selskap/#selskap-compare-card': {title:'selskapCompareTitle', desc:'selskapCompareDesc'},
-  '/selskap/#selskap-reg-card':     {title:'selskapRegTitle',     desc:'selskapRegDesc'}
+  '/selskap/#selskap-reg-card':     {title:'selskapRegTitle',     desc:'selskapRegDesc'},
+  '/selskap/#selskap-andre-card':   {title:'selskapAndreTitle',   desc:'selskapAndreDesc'}
 };
 
 /* ─── Page label → translation key ───
