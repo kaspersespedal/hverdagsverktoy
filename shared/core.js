@@ -2921,7 +2921,8 @@ function calcMor() {
   }
 
   const effRate = mRate === 0 ? 0 : (Math.pow(1 + mRate, 12) - 1) * 100;
-  _mor = { P, rate:yearlyRate, years, mnd, tot, rnt, type:loanType, fees: parseNum('m-fees') || 0 };
+  var _ioChkEl=document.getElementById('m-io-check');
+  _mor = { P, rate:yearlyRate, years, mnd, tot, rnt, type:loanType, fees: parseNum('m-fees') || 0, ioYears: (_ioChkEl&&_ioChkEl.checked)?(+(document.getElementById('m-io-yrs').value)||0):0 };
   setEl('m-mth', fmt(mnd));
   setEl('m-sub', fmt(tot) + ' / ' + years + ' ' + (r.yr||'yrs'));
   setEl('m-tot', fmt(tot));
@@ -3624,7 +3625,7 @@ function calcNpv() {
       f+=cf/p;
       df-=(i+1)*cf/Math.pow(1+irr,i+2);
     });
-    if(Math.abs(df)<1e-12){break;}
+    if(Math.abs(df)<1e-12){irrValid=false;break;}
     const step=f/df;
     irr-=step;
     // Guard: keep irr in reasonable range
@@ -5208,8 +5209,8 @@ function calcSpare() {
   const totalDep = totalDeposits;
   const totalInt = totalVal - totalDep;
   const intPct = totalVal > 0 ? (totalInt / totalVal * 100) : 0;
-  // Effektiv månedsrente: kun meningsfull med positiv startkapital
-  const effMonthly = (start > 0 && totalVal > 0 && totalDep > 0) ? ((Math.pow(totalVal / start, 1 / (years * 12)) - 1) * 100) : 0;
+  // Effektiv månedsrente: compound monthly rate from annual rate
+  const effMonthly = rateAnnual > 0 ? ((Math.pow(1 + rateAnnual / 100, 1 / 12) - 1) * 100) : 0;
 
   // Display results
   document.getElementById('spare-r-total').textContent = fmt(totalVal);
@@ -5954,7 +5955,7 @@ function downloadCSV(rows,filename){
   var a=document.createElement('a');a.href=url;a.download=filename;
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
-function _csvDate(){return new Date().toLocaleDateString('no-NO',{year:'numeric',month:'long',day:'numeric'});}
+function _csvDate(){var loc={'en':'en-GB','ar':'ar-SA','zh':'zh-CN','fr':'fr-FR','pl':'pl-PL','uk':'uk-UA','lt':'lt-LT','so':'so-SO','ti':'ti-ER'}[region]||'nb-NO';return new Date().toLocaleDateString(loc,{year:'numeric',month:'long',day:'numeric'});}
 
 // ── Avskrivning CSV ──
 function avsCsv(){
@@ -5993,8 +5994,10 @@ function morCsv(){
   rows.push(['Lånebeløp',d.P]);
   rows.push(['Rente',d.rate+'%']);
   rows.push(['Løpetid',d.years+' år']);
-  rows.push(['Type',d.type==='serial'?'Serielån':'Annuitetslån']);
+  rows.push(['Type',d.type==='serial'?(r.morTypeSerial||'Serielån'):(r.morTypeAnnuity||'Annuitetslån')]);
   var fees=+d.fees||0;
+  var ioMonths=(d.ioYears||0)*12;
+  if(ioMonths>0) rows.push(['Avdragsfri periode',d.ioYears+' år']);
   rows.push(['Månedlig betaling',Math.round(d.mnd+fees)]);
   if(fees>0) rows.push(['  herav omkostninger',Math.round(fees)]);
   rows.push(['Total tilbakebetaling',Math.round(d.tot + fees*d.years*12)]);
@@ -6002,11 +6005,14 @@ function morCsv(){
   rows.push([]);
   rows.push(['Måned','Betaling','Renter','Avdrag','Omkostninger','Restgjeld']);
   var bal=d.P;var mRate=d.rate/100/12;var n=d.years*12;
+  var payN=n-ioMonths;
+  var mthAfterIo=payN>0?(mRate===0?d.P/payN:d.P*mRate*Math.pow(1+mRate,payN)/(Math.pow(1+mRate,payN)-1)):d.mnd;
   for(var i=1;i<=n;i++){
     var interest=bal*mRate;
     var payment,principal;
-    if(d.type==='serial'){principal=d.P/n;payment=principal+interest;}
-    else{payment=d.mnd;principal=payment-interest;}
+    if(i<=ioMonths){principal=0;payment=interest;}
+    else if(d.type==='serial'){principal=d.P/payN;payment=principal+interest;}
+    else{payment=mthAfterIo;principal=payment-interest;}
     bal-=principal;if(bal<0)bal=0;
     rows.push([i,Math.round(payment+fees),Math.round(interest),Math.round(principal),Math.round(fees),Math.round(bal)]);
   }
