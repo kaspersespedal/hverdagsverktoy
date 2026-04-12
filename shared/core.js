@@ -1338,6 +1338,15 @@ function updateSalaryUI() {
       setText('naering-hobby-desc',_nhD);
       var _nhBodyEl=document.getElementById('naering-hobby-body');
       if(_nhBodyEl)_nhBodyEl.innerHTML=_nhBody;
+    } else if(!REGIONS.en){
+      // EN not loaded yet — load it for fallback, then retry
+      _nhCard.classList.add('hidden');
+      loadLang('en').then(function(){var _enR=REGIONS.en||{};if(_enR.nhBodyHTML){
+        _nhCard.classList.remove('hidden');
+        var _t2=document.getElementById('naering-hobby-title');if(_t2)_t2.innerHTML=(_enR.nhTitle||'Business or hobby?')+' <span style="font-size:11px;opacity:.5">▼</span>';
+        setText('naering-hobby-desc',_enR.nhDesc||'When does side income become taxable business income?');
+        var _b2=document.getElementById('naering-hobby-body');if(_b2)_b2.innerHTML=_enR.nhBodyHTML;
+      }});
     } else {
       _nhCard.classList.add('hidden');
     }
