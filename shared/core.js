@@ -198,6 +198,8 @@ function setTheme(t) {
 const VALID_LANGS = ['no','en','zh','fr','pl','uk','ar','lt','so','ti'];
 if(typeof REGIONS === 'undefined') var REGIONS = {};
 let region = (function(){
+  // Priority 0: URL path subdirectory (/en/skatt/ → en)
+  try { var ps=window.location.pathname.split('/'); if(ps.length>=2&&ps[1].length===2&&VALID_LANGS.indexOf(ps[1])>=0){ var pl=ps[1]; try{localStorage.setItem('hvt-lang',pl);}catch(e){} return pl; } } catch(e){}
   // Priority 1: ?lang= URL parameter (for shared links)
   try { var urlLang = new URLSearchParams(window.location.search).get('lang'); if(urlLang && VALID_LANGS.indexOf(urlLang)>=0) { try{localStorage.setItem('hvt-lang',urlLang);}catch(e){} return urlLang; } } catch(e){}
   // Priority 2: localStorage
@@ -212,7 +214,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v25';
+    s.src = '/shared/lang/' + code + '.js?v=v26';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -1732,6 +1734,12 @@ function updateNpvUI() {
     o=sel.querySelector('option[value="NAV-ytelser"]');if(o)o.textContent=r.budOptNav||'NAV-ytelser';
     o=sel.querySelector('option[value="__custom__"]');if(o)o.textContent=r.budOptCustom||'Valgfritt...';
   });
+  // Update aria-labels on all existing budget rows (Per-L2 i18n fix)
+  var _removeAria=r.budRemoveAria||'Fjern rad',_removeTitle=r.budRemoveTitle||'Fjern';
+  document.querySelectorAll('#budsjett-income-rows .budsjett-cat').forEach(function(s){s.setAttribute('aria-label',r.budsjettColDescI||'Inntektskategori');});
+  document.querySelectorAll('#budsjett-expense-rows .budsjett-cat').forEach(function(s){s.setAttribute('aria-label',r.budsjettColDescE||'Utgiftskategori');});
+  document.querySelectorAll('.budsjett-amount').forEach(function(s){s.setAttribute('aria-label',r.budColAmount||'Beløp (kr/mnd)');});
+  document.querySelectorAll('#budsjett-income-rows button, #budsjett-expense-rows button').forEach(function(b){if(b.textContent.trim()==='×'){b.setAttribute('aria-label',_removeAria);b.setAttribute('title',_removeTitle);}});
   setText('budsjett-btn-add-income','+ '+(r.budBtnAdd||'Legg til'));
   setText('budsjett-btn-add-expense','+ '+(r.budBtnAdd||'Legg til'));
   setText('btn-calc-budsjett',r.budBtnCalc||'Beregn budsjett →');
@@ -2440,7 +2448,8 @@ function updateFagkalkulatorUI() {
     const linkText = r.agaZoneLinkText || 'Se alle soner →';
     agaZoneHintEl.innerHTML = (r.agaZoneHint || 'AGA = arbeidsgiveravgift. Satsen avhenger av hvor bedriften holder til.') + ' <a href="javascript:void(0)" onclick="goToAgaCard()" style="color:var(--accent);text-decoration:underline;opacity:.8;">' + linkText + '</a>';
   }
-  setText('aga-hint-otp', r.agaOtpHint || 'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G (130 160 kr i 2025/2026) til pensjon.');
+  var _otpHint=(r.agaOtpHint||'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G ({1G}) til pensjon.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
+  setText('aga-hint-otp',_otpHint);
   setText('pensjon-hint', r.pensjonHint || 'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over 1G). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.');
   // --- Additional valgevinst labels ---
   setText('valgevinst-l-currency', r.valgevinCurrencyLabel || 'Valuta');
@@ -5907,7 +5916,7 @@ function budsjettAddRow(type){
   var amtLabel=type==='income'?(r.budsjettColAmountI||'Beløp'):(r.budsjettColAmountE||'Beløp');
   row.innerHTML='<div style="flex:2;position:relative;"><select class="fc budsjett-cat" onchange="budsjettCatChange(this)" style="width:100%;" aria-label="'+catLabel+'">'+opts+'</select></div>'+
     '<input type="text" class="fc budsjett-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" aria-label="'+amtLabel+'">'+
-    '<button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern" aria-label="Fjern rad">×</button>';
+    '<button onclick="this.parentElement.remove();budsjettCalc()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="'+(r.budRemoveTitle||'Fjern')+'" aria-label="'+(r.budRemoveAria||'Fjern rad')+'">×</button>';
   cont.appendChild(row);
   row.querySelector('.budsjett-cat').focus();
 }
