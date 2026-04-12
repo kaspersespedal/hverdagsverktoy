@@ -136,6 +136,7 @@ REGIONS['zh'] = {
     conOptGeneral:'一般咨询', conOptBug:'错误报告', conOptFeature:'功能建议', conOptOther:'其他',
     conBtn:'发送消息 →', conSuccessH:'谢谢！', conSuccessP:'您的电子邮件客户端将打开并预填消息。在邮件客户端中点击"发送"即可完成。',
     conAltH:'直接联系', conAltP:'您也可以直接发送电子邮件至',
+    footerAuthor:'由 Kasper Espedal 制作 · 斯塔万格大学会计与审计硕士生',
     footerCopy:'© 2026 Hverdagsverktøy — 基于2026年3月已知税率的指导性计算。税率手动更新，可能与现行规则有所不同。请始终查阅skatteetaten.no获取官方税率。不构成专业财务或法律建议。',
     ratesDisclaimer:'税率：纳税年度',ratesUpdated:'最后更新',ratesStale:'税率上次更新已超过6个月，可能已过时。',
     secCalc:'计算器',secGuideTax:'税务指南',secGuideMor:'住房指南',secGuideVat:'税费指南',secGuidePerso:'使用指南',

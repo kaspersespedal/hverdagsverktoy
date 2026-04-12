@@ -55,6 +55,7 @@ REGIONS['no'] = {
     conOptGeneral:'Generell henvendelse', conOptBug:'Feilrapport', conOptFeature:'Forslag til forbedring', conOptOther:'Annet',
     conBtn:'Send melding →', conSuccessH:'Takk for meldingen!', conSuccessP:'E-postklienten din åpnes med meldingen ferdig utfylt. Trykk «Send» i e-postklienten for å fullføre.',
     conAltH:'Direkte kontakt', conAltP:'Du kan også sende e-post direkte til',
+    footerAuthor:'Laget av Kasper Espedal · Masterstudent i regnskap og revisjon, Universitetet i Stavanger',
     footerCopy:'© 2026 Hverdagsverktøy — Veiledende beregninger basert på kjente satser per mars 2026. Satser oppdateres manuelt og kan avvike fra gjeldende regler. Sjekk alltid skatteetaten.no for offisielle satser. Ikke profesjonell finansiell eller juridisk rådgivning.',
     ratesDisclaimer:'Satser: Inntektsåret',ratesUpdated:'Sist oppdatert',ratesStale:'Satsene ble sist oppdatert for over 6 måneder siden og kan være utdaterte.',
     secCalc:'Kalkulatorer',secGuideTax:'Veiledning',secGuideMor:'Boligguide',secGuideVat:'Avgiftsguide',secGuidePerso:'Veiledning',

@@ -63,6 +63,7 @@ REGIONS['fr'] = {
     conOptGeneral:'Demande générale', conOptBug:'Signalement de bug', conOptFeature:'Suggestion d\'amélioration', conOptOther:'Autre',
     conBtn:'Envoyer le message →', conSuccessH:'Merci !', conSuccessP:'Votre client de messagerie s\'ouvrira avec le message pré-rempli. Cliquez sur « Envoyer » dans votre client pour terminer.',
     conAltH:'Contact direct', conAltP:'Vous pouvez également envoyer un e-mail directement à',
+    footerAuthor:'Créé par Kasper Espedal · Étudiant en master de comptabilité et d’audit, Université de Stavanger',
     footerCopy:'© 2026 Hverdagsverktøy — Calculs indicatifs basés sur les taux connus en mars 2026. Les taux sont mis à jour manuellement et peuvent différer des règles en vigueur. Vérifiez toujours skatteetaten.no pour les taux officiels. Pas de conseil financier ou juridique professionnel.',
     ratesDisclaimer:'Taux : Année fiscale',ratesUpdated:'Dernière mise à jour',ratesStale:'Les taux ont été mis à jour il y a plus de 6 mois et peuvent être obsolètes.',
     secCalc:'Calculateurs',secGuideTax:'Guide fiscal',secGuideMor:'Guide immobilier',secGuideVat:'Guide taxes',secGuidePerso:'Guides',

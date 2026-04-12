@@ -59,6 +59,7 @@ REGIONS['en'] = {
     conOptGeneral:'General inquiry', conOptBug:'Bug report', conOptFeature:'Feature suggestion', conOptOther:'Other',
     conBtn:'Send message →', conSuccessH:'Thank you!', conSuccessP:'Your email client will open with the message pre-filled. Click "Send" in your email client to complete.',
     conAltH:'Direct contact', conAltP:'You can also email directly at',
+    footerAuthor:'Made by Kasper Espedal · MSc student in Accounting and Auditing, University of Stavanger',
     footerCopy:'© 2026 Hverdagsverktøy — Indicative calculations based on known rates as of March 2026. Rates are updated manually and may differ from current rules. Always check skatteetaten.no for official rates. Not professional financial or legal advice.',
     ratesDisclaimer:'Rates: Tax year',ratesUpdated:'Last updated',ratesStale:'The rates were last updated over 6 months ago and may be outdated.',
     secCalc:'Calculators',secGuideTax:'Tax Guide',secGuideMor:'Housing Guide',secGuideVat:'Tax & Duties Guide',secGuidePerso:'Guides',
