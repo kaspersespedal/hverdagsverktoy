@@ -3210,7 +3210,7 @@ function calcReise(){
   var perMnd=besparelse/12;
   var r=R();
   document.getElementById('reise-r-val').textContent=fmt(Math.round(fradrag));
-  document.getElementById('reise-r-sub').textContent=(r.reiseBesparelseLbl||'Skattebesparelse')+': '+fmt(Math.round(besparelse))+'/'+(r.yr||'år')+' · 1,90 kr/km · '+(r.reiseEgenandel||'egenandel')+' 12 000 kr';
+  document.getElementById('reise-r-sub').textContent=(r.reiseBesparelseLbl||'Skattebesparelse')+': '+fmt(Math.round(besparelse))+'/'+(r.yr||'år')+' · '+satsPerKm.toFixed(2).replace('.',',')+' kr/km · '+(r.reiseEgenandel||'egenandel')+' '+fmt(nedreGrense)+' kr';
   document.getElementById('reise-r-brutto').textContent=fmt(Math.round(brutto))+(reisekost+bomTotal>oevreGrense?' (tak '+fmt(oevreGrense)+')':'');
   document.getElementById('reise-r-bunnfradrag').textContent='− '+fmt(nedreGrense);
   document.getElementById('reise-r-besparelse').textContent=fmt(Math.round(besparelse));
@@ -4205,7 +4205,7 @@ function buildCalcKeys(mode){
 // LVU: Lønn vs Utbytte — sammenligner selskapskostnad for begge
 function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseNum('lvu-zone');
   // Lønn: selskapet betaler brutto + feriepenger + OTP + AGA (på hele grunnlaget)
-  const ferie=g*0.12;const otp=g*0.02;const agaBase=g+ferie+otp;const agaAmt=agaBase*aga;
+  const G=_HVT_G;const ferie=g*0.12;const otpBase=Math.max(0,Math.min(g,12*G)-G);const otp=otpBase*0.02;const agaBase=g+ferie+otp;const agaAmt=agaBase*aga;
   const salCost=g+ferie+otp+agaAmt;
   // Utbytte: selskapet trenger nok overskudd før skatt til å dele ut g
   const divPreTax=g/(1-0.22);
@@ -4830,7 +4830,7 @@ function closeMobileSidebar(){document.body.classList.remove('mobile-sidebar-ope
 // Focus mode
 var _focusZoomHandler=null;
 function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';var mmb=document.querySelector('.mobile-mode-bar');if(mmb)mmb.style.top='0px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no');_focusZoomHandler=function(e){if(e.touches&&e.touches.length>1){e.preventDefault();}};document.addEventListener('touchstart',_focusZoomHandler,{passive:false});document.addEventListener('gesturestart',function(e){e.preventDefault();},{passive:false});var scrollContainer=document.querySelector('#calc-basic>div:first-child');if(scrollContainer)scrollContainer.style.overflowY='auto';}
-function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var mmb=document.querySelector('.mobile-mode-bar');var h=document.querySelector('header');if(mmb&&h)mmb.style.top=h.offsetHeight+'px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');if(_focusZoomHandler){document.removeEventListener('touchstart',_focusZoomHandler);_focusZoomHandler=null;}}
+function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var mmb=document.querySelector('.mobile-mode-bar');var h=document.querySelector('header');if(mmb&&h&&h.offsetHeight>0)mmb.style.top=h.offsetHeight+'px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');if(_focusZoomHandler){document.removeEventListener('touchstart',_focusZoomHandler);_focusZoomHandler=null;}}
 function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
 
 // Landscape auto-switch: basic ↔ scientific (iPhone calculator style)
