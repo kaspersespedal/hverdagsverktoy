@@ -206,6 +206,8 @@ let region = (function(){
   try { const s=localStorage.getItem('hvt-lang'); if(s && VALID_LANGS.indexOf(s)>=0) return s; } catch(e){}
   return 'no';
 })();
+// Redirect ?lang=X to /X/path/ (SEO Fase 4 — canonical subdirectory URLs)
+(function(){try{var ql=new URLSearchParams(window.location.search).get('lang');if(ql&&VALID_LANGS.indexOf(ql)>=0&&ql!=='no'){var p=window.location.pathname.replace(/\/$/,'');if(!/^\/[a-z]{2}(\/|$)/.test(p)){var dst='/'+ql+p+'/';window.location.replace(dst);return;}}}catch(e){}})();
 // Set dir attribute on load for RTL languages
 (function(){if(region==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}})();
 let _langLoading = {};
