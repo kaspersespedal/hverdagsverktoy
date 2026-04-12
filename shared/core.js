@@ -4000,6 +4000,7 @@ function calcUtdeling() {
 // ═══════════════════════════════════════════════════════
 let bcMode = 'basic';
 let bcExpr = '', bcFresh = true, bcHistory = '';
+let _bcLandscapeAuto = false;
 const bcDisp = document.getElementById('bc-display');
 const bcKeys = document.getElementById('bc-keys');
 const bcExprDisp = document.getElementById('bc-expr-display');
@@ -4496,9 +4497,9 @@ function calcPensjon(){
   if(_pres){_pres.classList.remove('hidden'); setTimeout(function(){scrollToEl(_pres,'top');},80);}
 }
 
-function switchCalcMode(mode, skipScroll){
+function switchCalcMode(mode, skipScroll, preserveExpr){
   bcMode=mode;
-  bcExpr='';bcHistory='';bcFresh=true;
+  if(!preserveExpr){bcExpr='';bcHistory='';bcFresh=true;_bcLandscapeAuto=false;}
   if(typeof closeMobileSidebar==='function')closeMobileSidebar();
   if(typeof exitFocusMode==='function')exitFocusMode();
   // Update mobile bar label (translated)
@@ -4506,7 +4507,7 @@ function switchCalcMode(mode, skipScroll){
   var mobileLabels={basic:r.cmBasic||'Enkel',scientific:r.cmScientific||'Vitenskapelig',finance:r.cmFinance||'Finansiell',unit:r.cmUnit||'Valuta',lvu:r.lblLvu||'Lønn vs Utbytte',aga:r.lblAga||'Ansattkostnad',avs:r.lblAvs||'Avskrivning',ferie:r.lblFerie||'Feriepenger',rente:r.lblRente||'Effektiv Rente',valgevinst:r.lblValgevinst||'Valutagevinst',likvid:r.lblLikvid||'Likviditet',pensjon:r.lblPensjon||'Pensjon',npv:r.npvTitle||'NPV/IRR'};
   if(typeof updateMobileBar==='function')updateMobileBar(mobileLabels[mode]||mode);
   // Auto-focus for scientific on mobile
-  if(mode==='scientific'&&window.innerWidth<=768&&typeof enterFocusMode==='function')setTimeout(enterFocusMode,100);
+  if(mode==='scientific'&&window.innerWidth<=768&&!document.body.classList.contains('calc-landscape')&&typeof enterFocusMode==='function')setTimeout(enterFocusMode,100);
   document.querySelectorAll('.cm-opt').forEach(el=>el.classList.remove('cm-active'));
   const modeMap={basic:'cm-basic',finance:'cm-fin',scientific:'cm-sci',unit:'cm-unit',lvu:'cm-lvu',aga:'cm-aga',avs:'cm-avs',ferie:'cm-ferie',rente:'cm-rente',valgevinst:'cm-valgevinst',likvid:'cm-likvid',pensjon:'cm-pensjon',npv:'cm-npv'};
   var mEl=document.getElementById(modeMap[mode]);if(mEl)mEl.classList.add('cm-active');
@@ -4832,6 +4833,36 @@ function enterFocusMode(){document.body.classList.add('calc-focus');document.bod
 function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var mmb=document.querySelector('.mobile-mode-bar');var h=document.querySelector('header');if(mmb&&h)mmb.style.top=h.offsetHeight+'px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');if(_focusZoomHandler){document.removeEventListener('touchstart',_focusZoomHandler);_focusZoomHandler=null;}}
 function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
 
+// Landscape auto-switch: basic ↔ scientific (iPhone calculator style)
+(function initLandscapeCalc(){
+  if(!window.matchMedia) return;
+  var mql=window.matchMedia('(orientation:landscape) and (max-height:500px)');
+  function onOrient(e){
+    if(!document.getElementById('bc-keys')) return;
+    if(e.matches){
+      if(bcMode==='basic'){
+        _bcLandscapeAuto=true;
+        switchCalcMode('scientific',true,true);
+        document.body.classList.add('calc-landscape');
+      }
+    } else {
+      document.body.classList.remove('calc-landscape');
+      if(_bcLandscapeAuto&&bcMode==='scientific'){
+        switchCalcMode('basic',true,true);
+      }
+      _bcLandscapeAuto=false;
+    }
+  }
+  if(mql.addEventListener) mql.addEventListener('change',onOrient);
+  else if(mql.addListener) mql.addListener(onOrient);
+  // Initial check
+  if(mql.matches&&document.getElementById('bc-keys')&&bcMode==='basic'){
+    _bcLandscapeAuto=true;
+    switchCalcMode('scientific',true,true);
+    document.body.classList.add('calc-landscape');
+  }
+})();
+
 // Desktop focus mode — index-based (supports N columns)
 function toggleDesktopFocus(colIndex){
   var b=document.body;
@@ -5010,8 +5041,8 @@ function initMobileFocus(){
   activateCol(0);
 }
 
-// Init basic calc
-buildCalcKeys('basic');
+// Init calc (respect landscape auto-switch)
+buildCalcKeys(bcMode==='scientific'?'scientific':'basic');
 bcFresh=false;
 bcUpdateDisp();
 fcPopulateSelect();

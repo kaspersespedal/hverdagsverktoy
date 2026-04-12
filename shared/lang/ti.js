@@ -479,7 +479,7 @@ REGIONS['ti'] = {
     searchTagConcept:'ኣምር',
     searchTagLaw:'ሕጊ',
     searchFeedbackMsg:'እንታይ ትደሊ ከም ዘለኻ ንገረና',
-    suggestLonn:'ድሕሪ ቀረጽ ደሞዝ',suggestBoliglan:'ልቓሕ ገዛ',suggestBsu:'BSU',suggestMva:'ተወሰኽ ቀረጽ',suggestBilkost:'ወጻኢ መኪና',suggestFerie:'ክፍሊት ዕረፍቲ',suggestBudsjett:'በጀት',suggestStudie:'ልቓሕ ተማሃሮ',
+    suggestLonn:'ድሕሪ ቀረጽ ደሞዝ',suggestBoliglan:'ልቓሕ ገዛ',suggestBsu:'BSU',suggestMva:'ተወሰኽ ቀረጽ',suggestBilkost:'ወጻኢ መኪና',suggestFerie:'ክፍሊት ዕረፍቲ',suggestBudsjett:'በጀት',suggestStudie:'ልቓሕ ተማሃሮ',suggestKalk:'ካልኩለይተር',
     secSelskapGuide:'ሕንጻት ሕብረተ ሥራ',
     secSelskapRef:'ምላሽ',
 

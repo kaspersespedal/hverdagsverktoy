@@ -478,7 +478,7 @@ REGIONS['pl'] = {
     searchTagConcept:'Pojęcie',
     searchTagLaw:'Prawo',
     searchFeedbackMsg:'Powiedz nam, czego szukasz',
-    suggestLonn:'Wynagrodzenie netto',suggestBoliglan:'Kredyt hipoteczny',suggestBsu:'BSU',suggestMva:'VAT',suggestBilkost:'Koszt samochodu',suggestFerie:'Wynagrodzenie urlopowe',suggestBudsjett:'Budżet',suggestStudie:'Kredyt studencki',
+    suggestLonn:'Wynagrodzenie netto',suggestBoliglan:'Kredyt hipoteczny',suggestBsu:'BSU',suggestMva:'VAT',suggestBilkost:'Koszt samochodu',suggestFerie:'Wynagrodzenie urlopowe',suggestBudsjett:'Budżet',suggestStudie:'Kredyt studencki',suggestKalk:'Kalkulator',
 
     // --- Selskap (Formy biznesowe) ---
     secSelskapGuide:'Formy biznesowe',

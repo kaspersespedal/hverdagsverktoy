@@ -478,7 +478,7 @@ REGIONS['lt'] = {
     searchTagConcept:'Sąvoka',
     searchTagLaw:'Įstatymas',
     searchFeedbackMsg:'Pasakykite, ko ieškote',
-    suggestLonn:'Atlyginimas po mokesčių',suggestBoliglan:'Būsto paskola',suggestBsu:'BSU',suggestMva:'PVM',suggestBilkost:'Automobilio kaina',suggestFerie:'Atostoginiai',suggestBudsjett:'Biudžetas',suggestStudie:'Studijų paskola',
+    suggestLonn:'Atlyginimas po mokesčių',suggestBoliglan:'Būsto paskola',suggestBsu:'BSU',suggestMva:'PVM',suggestBilkost:'Automobilio kaina',suggestFerie:'Atostoginiai',suggestBudsjett:'Biudžetas',suggestStudie:'Studijų paskola',suggestKalk:'Skaičiuotuvas',
 
     secSelskapGuide:'Įmonių formos',
     secSelskapRef:'Nuoroda',

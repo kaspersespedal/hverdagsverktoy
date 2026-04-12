@@ -478,7 +478,7 @@ REGIONS['ar'] = {
     searchTagConcept:'مفهوم',
     searchTagLaw:'قانون',
     searchFeedbackMsg:'أخبرنا بما تبحث عنه',
-    suggestLonn:'الراتب بعد الضريبة',suggestBoliglan:'قرض السكن',suggestBsu:'BSU',suggestMva:'ضريبة القيمة المضافة',suggestBilkost:'تكلفة السيارة',suggestFerie:'أجر الإجازة',suggestBudsjett:'الميزانية',suggestStudie:'قرض الطالب',
+    suggestLonn:'الراتب بعد الضريبة',suggestBoliglan:'قرض السكن',suggestBsu:'BSU',suggestMva:'ضريبة القيمة المضافة',suggestBilkost:'تكلفة السيارة',suggestFerie:'أجر الإجازة',suggestBudsjett:'الميزانية',suggestStudie:'قرض الطالب',suggestKalk:'الآلة الحاسبة',
 
     secSelskapGuide:'أشكال الشركات',
     secSelskapRef:'المرجع',

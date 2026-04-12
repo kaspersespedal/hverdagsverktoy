@@ -477,7 +477,7 @@ REGIONS['so'] = {
     searchTagConcept:'Fikrad',
     searchTagLaw:'Sharci',
     searchFeedbackMsg:'Noo sheeg waxa aad raadinayso',
-    suggestLonn:'Mushahar ka dib canshuurta',suggestBoliglan:'Amaahda guriga',suggestBsu:'BSU',suggestMva:'CBM',suggestBilkost:'Kharashka gaari',suggestFerie:'Lacagta fasaxa',suggestBudsjett:'Miisaaniye',suggestStudie:'Amaahda ardayga',
+    suggestLonn:'Mushahar ka dib canshuurta',suggestBoliglan:'Amaahda guriga',suggestBsu:'BSU',suggestMva:'CBM',suggestBilkost:'Kharashka gaari',suggestFerie:'Lacagta fasaxa',suggestBudsjett:'Miisaaniye',suggestStudie:'Amaahda ardayga',suggestKalk:'Xisaabiye',
 
     secSelskapGuide:'Noocyada Shirkadaha',
     secSelskapRef:'Tusitaan',

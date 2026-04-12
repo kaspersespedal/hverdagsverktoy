@@ -114,6 +114,7 @@ var SEARCH_DATA = [
 var SUGGESTED = [
   {labelKey:'suggestLonn',    fallback:'Lønn etter skatt', url:'/personlig/#lonn-wrapper'},
   {labelKey:'suggestBoliglan',fallback:'Boliglån',         url:'/boliglan/#mor-wrapper'},
+  {labelKey:'suggestKalk',    fallback:'Kalkulator',       url:'/kalkulator/'},
   {labelKey:'suggestBsu',     fallback:'BSU',              url:'/boliglan/#mor-bsu-card'},
   {labelKey:'suggestMva',     fallback:'MVA',              url:'/avgift/#vat-wrapper'},
   {labelKey:'suggestBilkost', fallback:'Bilkostnad',       url:'/personlig/#bil-wrapper'},

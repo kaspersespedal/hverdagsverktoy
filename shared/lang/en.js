@@ -484,7 +484,7 @@ REGIONS['en'] = {
     searchTagConcept:'Concept',
     searchTagLaw:'Law',
     searchFeedbackMsg:'Tell us what you are looking for',
-    suggestLonn:'Salary after tax',suggestBoliglan:'Mortgage',suggestBsu:'BSU',suggestMva:'VAT',suggestBilkost:'Car cost',suggestFerie:'Holiday pay',suggestBudsjett:'Budget',suggestStudie:'Student loan',
+    suggestLonn:'Salary after tax',suggestBoliglan:'Mortgage',suggestBsu:'BSU',suggestMva:'VAT',suggestBilkost:'Car cost',suggestFerie:'Holiday pay',suggestBudsjett:'Budget',suggestStudie:'Student loan',suggestKalk:'Calculator',
 
     // --- Company Forms Guide ---
     secSelskapGuide:'Company Forms',
