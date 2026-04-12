@@ -446,7 +446,7 @@ function updateAll() {
   var _ssg=document.getElementById('sec-selskap-guide');if(_ssg)_ssg.textContent=R().secSelskapGuide||'Selskapsformer';
   var _ssr=document.getElementById('sec-selskap-ref');if(_ssr)_ssr.textContent=R().secSelskapRef||'Referanse';
   // clear results
-  ['s-res','m-res','n-res','v-res'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
+  ['s-res','m-res','n-res','v-res','adj-res'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
   _sal=_mor=_npv=_vat=null;
   // set defaults (only if elements exist)
   const d = R().salDefaults;
@@ -1353,7 +1353,7 @@ function updateSalaryUI() {
     salIntroCard.classList.add('hidden');
   }
   var _sit=document.getElementById('sal-info-title');if(_sit)_sit.innerHTML=(r.salInfoTitle||'Skattereferanse')+' <span style="font-size:11px;opacity:.5">▼</span>';
-  setText('sal-info-desc', r.salInfoDesc || 'Current rates for selected region');
+  setText('sal-info-desc', r.salInfoDesc || 'Gjeldende satser for valgt region');
   const sc = document.getElementById('s-c'); sc.innerHTML = (r.salClasses||[]).map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
   const sr = document.getElementById('s-r'); sr.innerHTML = (r.salRegions||[]).map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
   document.getElementById('sal-info-rows').innerHTML = infoRowsHTML(r.salInfoRows||[]);
@@ -1363,7 +1363,7 @@ function updateSalaryUI() {
   if(r.salLawRows || r.salSubjRows){
     salLawGroup.classList.remove('hidden');
     var _slgt=document.getElementById('sal-law-group-title');if(_slgt)_slgt.innerHTML=(r.salLawGroupTitle||'Skatteloven')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    setText('sal-law-group-desc', 'Kapitler og paragrafer fra skatteloven');
+    setText('sal-law-group-desc', r.salLawGroupDesc || 'Kapitler og paragrafer fra skatteloven');
   } else {
     salLawGroup.classList.add('hidden');
   }
@@ -1464,7 +1464,7 @@ function updateSalaryUI() {
     salKeyGroup.classList.remove('hidden');
     document.getElementById('sal-key-rows').innerHTML = infoRowsHTML(r.salKeyRows);
     document.getElementById('sal-key-title').innerHTML = (r.salKeyTitle || 'Viktige regler og begreper forklart') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    setText('sal-key-desc', 'Sentrale skatteregler og begreper forklart');
+    setText('sal-key-desc', r.salKeyDesc || 'Sentrale skatteregler og begreper forklart');
   } else {
     salKeyGroup.classList.add('hidden');
   }
@@ -2072,7 +2072,7 @@ function updateVatUI() {
     setText('adj-hint-years', r.adjHintYears||'Hele år siden MVA-fradraget ble tatt');
     setText('adj-hint-old', r.adjHintOld||'Andel avgiftspliktig bruk før endringen');
     setText('adj-hint-new', r.adjHintNew||'Andel avgiftspliktig bruk etter endringen');
-    setText('adj-r-info', r.adjRInfo||'= (MVA ÷ periode) × endring i andel × gjenståend år');
+    setText('adj-r-info', r.adjRInfo||'= (MVA ÷ periode) × endring i andel × gjenståande år');
     setText('btn-calc-adj', r.adjBtn||'Beregn justering →');
     setText('adj-rl-base', r.adjRlBase||'Årlig grunnbeløp (MVA/periode)');
     setText('adj-rl-annual', r.adjRlAnnual||'Årlig justering');
@@ -2117,8 +2117,8 @@ function updateVatUI() {
   const vatAgaCard = document.getElementById('vat-aga-card');
   if(vatAgaCard) {
     var _vatAt=document.getElementById('vat-aga-title');
-    if(_vatAt) _vatAt.innerHTML=(r.salAgaTitle||'Employer Social Security (AGA zones)')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    setText('vat-aga-desc', r.salAgaDesc || 'Rates vary by business location');
+    if(_vatAt) _vatAt.innerHTML=(r.salAgaTitle||'Arbeidsgiveravgift (AGA-soner)')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('vat-aga-desc', r.salAgaDesc || 'Satsene varierer etter hvor bedriften holder til');
     if(r.salAgaRows){
       var _vatAr=document.getElementById('vat-aga-rows');
       if(_vatAr) _vatAr.innerHTML=infoRowsHTML(r.salAgaRows)+'<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);"><a href="javascript:void(0)" onclick="goToLvuCalc()" style="font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;opacity:.8;">Lønn vs Utbytte-kalkulator →</a></div>';
@@ -5367,7 +5367,7 @@ function calcSpare() {
   });
 
   document.getElementById('spare-res').classList.remove('hidden');
-  scrollToEl(document.getElementById('spare-res'));
+  setTimeout(function(){scrollToEl(document.getElementById('spare-res'));},80);
 }
 
 // ── Studielån (Lånekassen) ──
@@ -5721,7 +5721,7 @@ function aboAddRow(){
   var opts=_aboOptsHTML(r);
   row.innerHTML='<div style="flex:2;position:relative;"><select class="fc abo-cat" onchange="aboCatChange(this)" style="width:100%;">'+opts+'</select></div>'+
     '<input type="text" class="fc abo-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" value="139">'+
-    '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern">×</button>';
+    '<button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--ink3,#999);cursor:pointer;font-size:16px;padding:0 4px;" title="Fjern" aria-label="Fjern rad">×</button>';
   cont.appendChild(row);
   row.querySelector('.abo-cat').focus();
 }

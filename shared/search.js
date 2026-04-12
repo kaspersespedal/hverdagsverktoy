@@ -187,11 +187,15 @@ var URL_TO_I18N_KEYS = {
   '/avgift/#vat-wrapper':          ['vatTitle','vatDesc','tabVat','cmFcVat'],
   '/avgift/#vat-adj-card':         ['vatAdjTitle','vatAdjDesc'],
   // Selskap
+  '/selskap/#selskap-velg-card':    ['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-as-card':     ['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-enk-card':    ['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-ans-card':    ['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-ks-card':     ['tabSelskap','dashDescSelskap'],
-  '/selskap/#selskap-andre-card':  ['tabSelskap','dashDescSelskap']
+  '/selskap/#selskap-andre-card':  ['tabSelskap','dashDescSelskap'],
+  '/selskap/#selskap-compare-card':['tabSelskap','dashDescSelskap'],
+  '/selskap/#selskap-skatt-card':  ['tabSelskap','dashDescSelskap'],
+  '/selskap/#selskap-reg-card':    ['tabSelskap','dashDescSelskap']
 };
 
 /* ─── URL → display key map ───
