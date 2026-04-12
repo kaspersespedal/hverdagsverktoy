@@ -3206,16 +3206,15 @@ function calcReise(){
   var besparelse=fradrag*0.22;
   var perMnd=besparelse/12;
   var r=R();
-  document.getElementById('reise-r-val').textContent=fmt(Math.round(fradrag));
-  document.getElementById('reise-r-sub').textContent=(r.reiseBesparelseLbl||'Skattebesparelse')+': '+fmt(Math.round(besparelse))+'/'+(r.yr||'år')+' · '+satsPerKm.toFixed(2).replace('.',',')+' kr/km · '+(r.reiseEgenandel||'egenandel')+' '+fmt(nedreGrense)+' kr';
-  document.getElementById('reise-r-brutto').textContent=fmt(Math.round(brutto))+(reisekost+bomTotal>oevreGrense?' (tak '+fmt(oevreGrense)+')':'');
-  document.getElementById('reise-r-bunnfradrag').textContent='− '+fmt(nedreGrense);
-  document.getElementById('reise-r-besparelse').textContent=fmt(Math.round(besparelse));
-  document.getElementById('reise-r-permnd').textContent=fmt(Math.round(perMnd));
+  setEl('reise-r-val',fmt(Math.round(fradrag)));
+  setEl('reise-r-sub',(r.reiseBesparelseLbl||'Skattebesparelse')+': '+fmt(Math.round(besparelse))+'/'+(r.yr||'år')+' · '+satsPerKm.toFixed(2).replace('.',',')+' kr/km · '+(r.reiseEgenandel||'egenandel')+' '+fmt(nedreGrense)+' kr');
+  setEl('reise-r-brutto',fmt(Math.round(brutto))+(reisekost+bomTotal>oevreGrense?' (tak '+fmt(oevreGrense)+')':''));
+  setEl('reise-r-bunnfradrag','− '+fmt(nedreGrense));
+  setEl('reise-r-besparelse',fmt(Math.round(besparelse)));
+  setEl('reise-r-permnd',fmt(Math.round(perMnd)));
   var _rres=document.getElementById('reise-res');
-  var _rwh=_rres.classList.contains('hidden');
-  _rres.classList.remove('hidden');
-  if(_rwh)setTimeout(function(){scrollToEl(_rres,'top');},80);
+  if(_rres){var _rwh=_rres.classList.contains('hidden');_rres.classList.remove('hidden');
+  if(_rwh)setTimeout(function(){scrollToEl(_rres,'top');},80);}
 }
 
 // ═══════════════════════════════════════════════════════
@@ -3949,15 +3948,15 @@ function calcUtdeling() {
     netto = overskudd - totalSkatt;
     effSats = (totalSkatt / overskudd) * 100;
 
-    document.getElementById('utdeling-r-enk-overskudd').textContent = fmt(overskudd);
-    document.getElementById('utdeling-r-enk-alm').textContent = fmt(almSkatt);
-    document.getElementById('utdeling-r-enk-skjerming').textContent = fmt(skjerming);
-    document.getElementById('utdeling-r-enk-person').textContent = fmt(personinntekt);
-    document.getElementById('utdeling-r-enk-trygd').textContent = fmt(trygd);
-    document.getElementById('utdeling-r-enk-trinn').textContent = fmt(trinn);
-    document.getElementById('utdeling-r-enk-total').textContent = fmt(totalSkatt);
-    document.getElementById('utdeling-r-enk-netto').textContent = fmt(netto);
-    document.getElementById('utdeling-r-enk-eff').textContent = pct(effSats);
+    setEl('utdeling-r-enk-overskudd', fmt(overskudd));
+    setEl('utdeling-r-enk-alm', fmt(almSkatt));
+    setEl('utdeling-r-enk-skjerming', fmt(skjerming));
+    setEl('utdeling-r-enk-person', fmt(personinntekt));
+    setEl('utdeling-r-enk-trygd', fmt(trygd));
+    setEl('utdeling-r-enk-trinn', fmt(trinn));
+    setEl('utdeling-r-enk-total', fmt(totalSkatt));
+    setEl('utdeling-r-enk-netto', fmt(netto));
+    setEl('utdeling-r-enk-eff', pct(effSats));
   } else {
     // Aksjonærmodellen: selskapsskatt 22% + oppjustert utbytte × 22%
     asGrid.classList.remove('hidden');
@@ -3971,21 +3970,21 @@ function calcUtdeling() {
     netto = overskudd - totalSkatt;
     effSats = (totalSkatt / overskudd) * 100;
 
-    document.getElementById('utdeling-r-overskudd').textContent = fmt(overskudd);
-    document.getElementById('utdeling-r-selskap').textContent = fmt(selskapsskatt);
-    document.getElementById('utdeling-r-etter').textContent = fmt(etterSelskap);
-    document.getElementById('utdeling-r-skjerming2').textContent = fmt(skjerming);
-    document.getElementById('utdeling-r-oppjustert').textContent = fmt(oppjustert);
-    document.getElementById('utdeling-r-utbytte').textContent = fmt(utbytteskatt);
-    document.getElementById('utdeling-r-total').textContent = fmt(totalSkatt);
-    document.getElementById('utdeling-r-netto').textContent = fmt(netto);
-    document.getElementById('utdeling-r-eff').textContent = pct(effSats);
+    setEl('utdeling-r-overskudd', fmt(overskudd));
+    setEl('utdeling-r-selskap', fmt(selskapsskatt));
+    setEl('utdeling-r-etter', fmt(etterSelskap));
+    setEl('utdeling-r-skjerming2', fmt(skjerming));
+    setEl('utdeling-r-oppjustert', fmt(oppjustert));
+    setEl('utdeling-r-utbytte', fmt(utbytteskatt));
+    setEl('utdeling-r-total', fmt(totalSkatt));
+    setEl('utdeling-r-netto', fmt(netto));
+    setEl('utdeling-r-eff', pct(effSats));
   }
 
-  document.getElementById('utdeling-r-val').textContent = fmt(totalSkatt);
-  document.getElementById('utdeling-r-sub').textContent = (r.utdelingEffRate || 'Effektiv skattesats') + ': ' + pct(effSats) + ' · ' + (r.utdelingNetLabel || 'Netto til eier') + ': ' + fmt(netto);
-  document.getElementById('utdeling-rh').style.background = 'linear-gradient(135deg,var(--accent),var(--accent-l))';
-  document.getElementById('utdeling-res').classList.remove('hidden');
+  setEl('utdeling-r-val', fmt(totalSkatt));
+  setEl('utdeling-r-sub', (r.utdelingEffRate || 'Effektiv skattesats') + ': ' + pct(effSats) + ' · ' + (r.utdelingNetLabel || 'Netto til eier') + ': ' + fmt(netto));
+  var _utRh=document.getElementById('utdeling-rh');if(_utRh)_utRh.style.background='linear-gradient(135deg,var(--accent),var(--accent-l))';
+  var _utRes=document.getElementById('utdeling-res');if(_utRes)_utRes.classList.remove('hidden');
   setTimeout(()=>scrollToEl(document.getElementById('utdeling-res'),'nearest'),80);
 }
 
@@ -5949,8 +5948,8 @@ function budsjettCalc(){
     bd.innerHTML=html;
   } else { bd.innerHTML=''; }
   var resEl=document.getElementById('budsjett-res');
-  resEl.classList.remove('hidden');
-  setTimeout(function(){ smartScroll(resEl); },100);
+  if(resEl){resEl.classList.remove('hidden');
+  setTimeout(function(){scrollToEl(resEl,'nearest');},80);}
   // Store data for CSV
   window._budsjettData={incomeItems:incomeItems,expenseItems:expenseItems,totalIncome:totalIncome,totalExpense:totalExpense,balance:balance,savingsRate:savingsRate};
 }
