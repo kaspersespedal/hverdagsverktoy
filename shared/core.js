@@ -687,6 +687,7 @@ function updateTabs() {
   autoRecalc('avs-group','avs-res',function(){calcAvs(true);});
   // Feriepenger
   autoRecalc('ferie-type','ferie-res',calcFerie);
+  autoRecalc('ferie-over60','ferie-res',calcFerie);
   // Pensjon
   autoRecalc('pensjon-otp','pensjon-res',calcPensjon);
   // Uttak (skatt.html)
@@ -2808,7 +2809,7 @@ function calcSal() {
   const almSkatt = almInntekt * almSats;
   ts += almSkatt;
   trinnAmounts.push({lbl:(r.almSkattLabel||'Alminnelig inntektsskatt'),rate:almSats,amt:almSkatt});
-  const socRate = (kl==='self') ? 0.108 : 0.076; // Trygdeavgift 2026: 10.8% selvstendig, 7.6% lønnstaker
+  const socRate = 0.076; // Trygdeavgift 2026: 7.6% lønnstaker (kl==='self' branch removed — no self-employed option in UI)
   const soc = calcTrygdeavgift(b, socRate);
   const bsuKreditt = bsu * 0.10; // BSU: 10% direkte skattefradrag (ikke inntektsfradrag)
   const tot = Math.max(ts + soc - bsuKreditt, 0);
@@ -3460,7 +3461,9 @@ function calcBilkostnad() {
   var merke = document.getElementById('bil-merke').value;
   var drivstoff = document.getElementById('bil-drivstoff').value;
   // User overrides (monthly values) — empty = auto-estimate
+  var _bilForsEl = document.getElementById('bil-forsikring');
   var forsikringMnd = parseNum('bil-forsikring'); // monthly
+  var forsikringUserSet = _bilForsEl && _bilForsEl.value.trim() !== '';
   var drivstoffMnd = parseNum('bil-drivstoff-mnd'); // monthly
   var bomMnd = parseNum('bil-bom-mnd'); // monthly
   var serviceMnd = parseNum('bil-service-mnd'); // monthly
@@ -3520,7 +3523,7 @@ function calcBilkostnad() {
 
   // 3. Insurance (user enters monthly, or auto-estimate by type)
   var forsikringType = (document.getElementById('bil-forsikring-type') || {}).value || 'fullkasko';
-  if (forsikringMnd > 0) {
+  if (forsikringUserSet) {
     var forsTotal = forsikringMnd * 12 * aar;
   } else {
     // Norwegian averages (monthly): Ansvar ~250-400, Delkasko ~400-700, Fullkasko ~600-1200
@@ -3651,7 +3654,7 @@ function calcNpv() {
 function calcVat() {
   const a = parseNum('v-a');
   if(a<=0) return;
-  var _vr=document.getElementById('v-r');const s=_vr?+_vr.value/100:0.25;
+  var _vr=document.getElementById('v-r');const s=_vr&&_vr.value?+_vr.value/100:0.25;
   var _vt=document.getElementById('v-t');const tp=_vt?_vt.value:'ex';
   let ex,vt,inc;
   if(tp==='ex'){ex=a;vt=ex*s;inc=ex+vt;}else{inc=a;ex=inc/(1+s);vt=inc-ex;}
@@ -4196,7 +4199,7 @@ function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseN
   // V12 Fase 3 Pattern B: setEl er null-safe
   setEl('lvu-sal-cost', fmt(salCost));
   setEl('lvu-div-cost', fmt(divPreTax));
-  setEl('lvu-diff', cheaper+' '+(r.lvuIsCheaper||'er billigere for selskapet')+' ('+fmt(diff)+')');
+  setEl('lvu-diff', cheaper+' '+(r.lvuIsCheaper||'er billigere for selskapet')+' (−'+fmt(diff)+')');
   var _lr=document.getElementById('lvu-res');
   if(_lr){_lr.classList.remove('hidden'); setTimeout(function(){scrollToEl(_lr,'top');},80);}
 }
@@ -5420,7 +5423,7 @@ function calcStudielan(){
   // Display results
   document.getElementById('studie-r-mnd').textContent=fmt(mndBetaling);
   document.getElementById('studie-r-totalstotte').textContent=fmt(totalStotte);
-  document.getElementById('studie-r-stipend').textContent=fmt(stipend)+' ('+(stipendPct*100).toFixed(0)+' %)';
+  document.getElementById('studie-r-stipend').textContent=stipend>0?fmt(stipend)+' ('+(stipendPct*100).toFixed(0)+' %)':fmt(0);
   document.getElementById('studie-r-ekstralan').textContent=fmt(ekstraLan);
   document.getElementById('studie-r-gjeld').textContent=fmt(gjeld);
   document.getElementById('studie-r-rente').textContent=rente.toFixed(1).replace('.',',')+' %';
