@@ -25,7 +25,7 @@ function injectRatesDisclaimer(resEl){
   var staleHtml='';
   if(age.stale){staleHtml='<div style="margin-top:4px;color:#b45309;font-weight:600;">'+(r.ratesStale||'Satsene ble sist oppdatert for over 6 måneder siden og kan være utdaterte.')+'</div>';}
   var d=document.createElement('div');d.className='rates-disc';
-  d.style.cssText='font-size:11px;color:var(--ink3);padding:6px 12px;border-radius:6px;background:color-mix(in srgb,var(--accent) 4%,transparent);margin-bottom:8px;line-height:1.5;';
+  d.style.cssText='font-size:11px;color:var(--ink3);padding:6px 12px;border-radius:6px;background:rgba(100,120,200,.04);margin-bottom:8px;line-height:1.5;';d.style.background='color-mix(in srgb,var(--accent) 4%,transparent)';
   d.innerHTML=txt+' · <a href="https://skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">skatteetaten.no</a>'+staleHtml;
   resEl.insertBefore(d,resEl.firstChild);
 }
@@ -834,7 +834,7 @@ function openLawCard(cardId,searchText){
         var rows=card.querySelectorAll('.ir .k, .ir');
         var target=null;
         rows.forEach(function(r){if(r.textContent.indexOf(searchText)>=0)target=r;});
-        if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.style.background='color-mix(in srgb,var(--accent) 15%,transparent)';setTimeout(function(){target.style.background='';},2000);return;}
+        if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.style.background='rgba(100,120,200,.15)';target.style.background='color-mix(in srgb,var(--accent) 15%,transparent)';setTimeout(function(){target.style.background='';},2000);return;}
       }
       card.scrollIntoView({behavior:'smooth',block:'start'});
     },200);
@@ -1127,7 +1127,7 @@ function openKeyTopic(keyword){
     if(target){
       smartScroll(target);
       target.style.transition='background .3s';
-      target.style.background='color-mix(in srgb,var(--accent) 15%,transparent)';
+      target.style.background='rgba(100,120,200,.15)';target.style.background='color-mix(in srgb,var(--accent) 15%,transparent)';
       setTimeout(function(){target.style.background='';},2500);
     } else {
       smartScroll(card);
@@ -3202,7 +3202,7 @@ function calcFormue(){
     // Info om når formueskatt inntrer
     if(skattepliktig<=0){
       var mangler=bunnfradrag-nettoFormue;
-      h+='<div style="margin-top:10px;padding:8px 12px;background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:6px;font-size:11px;color:var(--ink2);line-height:1.5;">'+(r.formueThreshold||'Formueskatt inntrer når netto skattemessig formue overstiger')+' <b>'+fmt(bunnfradrag)+'</b>. '+(r.formueMargin||'Du har')+' <b>'+fmt(Math.round(mangler))+'</b> '+(r.formueMarginLeft||'i margin før formueskatt.')+'</div>';
+      h+='<div style="margin-top:10px;padding:8px 12px;background:rgba(100,120,200,.06);border-radius:6px;font-size:11px;color:var(--ink2);line-height:1.5;">'+(r.formueThreshold||'Formueskatt inntrer når netto skattemessig formue overstiger')+' <b>'+fmt(bunnfradrag)+'</b>. '+(r.formueMargin||'Du har')+' <b>'+fmt(Math.round(mangler))+'</b> '+(r.formueMarginLeft||'i margin før formueskatt.')+'</div>';
     }
     bd.innerHTML=h;
   }
@@ -4049,8 +4049,8 @@ function bcBtnStyle(t,l,isSmall){
   let rad = isSmall ? '10px' : '14px';
   let base = `border:none;border-radius:${rad};padding:${pad};font-family:'Inter',sans-serif;font-size:${sz};font-weight:500;cursor:pointer;transition:all .15s ease;`;
   if(l==='=') return base+'background:linear-gradient(135deg,var(--accent-d,#5b8def),var(--accent));color:#fff;font-size:18px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.12);';
-  if(t==='acc') return base+'background:color-mix(in srgb,var(--accent) 6%,transparent);color:var(--accent-d,#5b8def);border:1px solid color-mix(in srgb,var(--accent) 8%,transparent);font-weight:600;';
-  if(t==='fn') return base+'background:color-mix(in srgb,var(--accent) 4%,transparent);color:var(--accent-d,#5b8def);border:1px solid color-mix(in srgb,var(--accent) 6%,transparent);font-weight:600;';
+  if(t==='acc') return base+'background:rgba(100,120,200,.06);color:var(--accent-d,#5b8def);border:1px solid rgba(100,120,200,.08);font-weight:600;';
+  if(t==='fn') return base+'background:rgba(100,120,200,.04);color:var(--accent-d,#5b8def);border:1px solid rgba(100,120,200,.06);font-weight:600;';
   if(t==='op') return base+'background:var(--surface2);color:var(--ink3);border:1px solid var(--border);font-weight:600;';
   return base+'background:var(--surface);color:var(--ink);border:1px solid var(--border);font-weight:500;';
 }
@@ -4649,7 +4649,7 @@ function ccPopulate(){
 function ccConvert(){
   const from=document.getElementById('uc-from').value;
   const to=document.getElementById('uc-to').value;
-  const val=parseFloat(document.getElementById('uc-val').value)||0;
+  const val=Math.abs(parseFloat(document.getElementById('uc-val').value))||0;
   const rateFrom=ccRates[from]||1;
   const rateTo=ccRates[to]||1;
   const result=val*(rateTo/rateFrom);
@@ -4929,7 +4929,9 @@ function initDesktopFocus(){
     var idx=_getColIndex(card);
     var btn=document.createElement('button');
     btn.className='focus-card-btn';
+    btn.type='button';
     btn.title='Fokus';
+    btn.setAttribute('aria-label','Fokus');
     btn.onclick=function(e){
       e.stopPropagation();
       if(_isMobile()){
@@ -5526,7 +5528,7 @@ function calcStudielan(){
     tr.style.cssText='border-bottom:1px solid var(--border);';
     if(i%2===0) tr.style.background='var(--surface2)';
     var isActive=Math.abs(renteRater[i]-rente)<0.05;
-    if(isActive) tr.style.cssText+='font-weight:700;background:color-mix(in srgb,var(--accent) 10%,transparent);';
+    if(isActive){tr.style.cssText+='font-weight:700;background:rgba(100,120,200,.10);';tr.style.background='color-mix(in srgb,var(--accent) 10%,transparent)';}
     tr.innerHTML='<td style="padding:6px 10px;color:var(--ink);">'+renteRater[i].toFixed(1).replace('.',',')+' %'+(isActive?' ←':'')+'</td>'+
       '<td style="padding:6px 10px;text-align:right;color:var(--ink);">'+fmt(mBet)+'</td>'+
       '<td style="padding:6px 10px;text-align:right;color:var(--ink);">'+fmt(tRente2)+'</td>'+
