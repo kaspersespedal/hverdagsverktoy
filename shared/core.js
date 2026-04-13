@@ -6126,8 +6126,6 @@ function bilCsv(){
 
 // Page initialization — called by each page after DOM is ready
 function initPage(){
-  // Safety: reveal page after 2s even if lang loading fails completely
-  setTimeout(function(){ document.body.classList.remove('hvt-loading'); document.body.classList.add('hvt-ready'); }, 2000);
   // Load active language, then initialize.
   // If the active language fails to load we fall back to Norwegian and log a
   // warning so the silent reset isn't invisible to the user/developer.
@@ -6163,9 +6161,6 @@ function _initPageReady(){
     if(ic.querySelector(':scope > .law-body')) ic.classList.add('has-law-body');
   });
   updateAll();
-  // Reveal page after language + theme are ready (prevents flash/flicker)
-  document.body.classList.remove('hvt-loading');
-  document.body.classList.add('hvt-ready');
   // Rebuild search chips with loaded language (chips built before lang was ready)
   try { if(typeof window.hvtSearchRebuildChips==='function') window.hvtSearchRebuildChips(); } catch(_e){}
   try { if(typeof window.hvtSearchInvalidate==='function') window.hvtSearchInvalidate(); } catch(_e){}
