@@ -6166,6 +6166,9 @@ function _initPageReady(){
     if(ic.querySelector(':scope > .law-body')) ic.classList.add('has-law-body');
   });
   updateAll();
+  // Rebuild search chips with loaded language (chips built before lang was ready)
+  try { if(typeof window.hvtSearchRebuildChips==='function') window.hvtSearchRebuildChips(); } catch(_e){}
+  try { if(typeof window.hvtSearchInvalidate==='function') window.hvtSearchInvalidate(); } catch(_e){}
   // Sync calculator/howto card heights
   setTimeout(syncCardHeights,200);
   window.addEventListener('resize',syncCardHeights);
