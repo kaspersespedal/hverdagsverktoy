@@ -415,12 +415,8 @@ function updateAll() {
       if(!animate)pill.offsetHeight;
       pill.style.transition='';
     }
-    if(prevIdx!==null&&prevIdx!=curIdx&&tabs[prevIdx]){
-      positionPill(tabs[prevIdx],false);
-      requestAnimationFrame(function(){positionPill(_at,true);});
-    } else {
-      positionPill(_at,false);
-    }
+    // Always snap pill to active tab on page load (no cross-page animation)
+    positionPill(_at,false);
     sessionStorage.setItem('nav-pill-idx',curIdx);
     if(window._hvtPillResize) window.removeEventListener('resize',window._hvtPillResize);
     window._hvtPillResize=function(){positionPill(_at,false);};
