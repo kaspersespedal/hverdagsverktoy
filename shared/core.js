@@ -897,6 +897,24 @@ function toggleCard(card){
   const arrow = card.querySelector('.card-title span');
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
   if(cardHdr) cardHdr.setAttribute('aria-expanded', wasCollapsed+'');
+  // Desktop focus: hide siblings when opening a card, show them when collapsing
+  if(document.body.classList.contains('desktop-focus')){
+    var container=card.parentElement;
+    if(container){
+      if(wasCollapsed){
+        // Opening — hide siblings, mark card so it collapses on focus exit
+        card.setAttribute('data-opened-by-focus','true');
+        container.querySelectorAll(':scope > .info-card').forEach(function(ic){
+          if(ic!==card) ic.setAttribute('data-desktop-card-hidden','true');
+        });
+      } else {
+        // Collapsing — show siblings so user can pick another
+        container.querySelectorAll(':scope > .info-card[data-desktop-card-hidden]').forEach(function(ic){
+          ic.removeAttribute('data-desktop-card-hidden');
+        });
+      }
+    }
+  }
   if(wasCollapsed){
     // Smart scroll only if the card header is NOT already comfortably in view.
     // Prevents the jarring "jump up-down" effect when opening a card that is
