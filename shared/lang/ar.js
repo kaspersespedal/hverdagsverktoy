@@ -31,7 +31,7 @@ REGIONS['ar'] = {
     vatCalcRows: [['القاعدة العامة (§ 4-1)','المقابل بدون الضريبة'],['المقايضة (§ 4-3)','القيمة السوقية العادية','في المقايضة يُستخدم سعر السوق كأساس للضريبة'],['مصالح مشتركة (§ 5)','لا تقل عن القيمة السوقية العادية','إذا بعت بسعر منخفض لشركتك الخاصة تُحسب الضريبة على سعر السوق'],['خسارة الديون (§ 4-7)','يمكن تصحيح الدين المفقود نهائياً','العميل لا يدفع أبداً — يمكنك استرداد الضريبة التي دفعتها']],
     vatRegRows: [['التسجيل المشترك (§ 2-2)','ملكية ≥85%، مسؤولية تضامنية','يمكن لشركات المجموعة التسجيل كوحدة ضريبية واحدة'],['التسجيل الطوعي للإيجار (§ 2-3)','المباني/المنشآت لمستأجر مسجل في الضريبة','يحصل المؤجر على خصم ضريبة على التجديد/البناء عندما يكون المستأجر مسجلاً'],['التسجيل المسبق (§ 2-4)','مشتريات كبيرة قبل بدء البيع','يمكن للشركة الجديدة التسجيل قبل بلوغ 50 000 kr في المبيعات']],
     npvPos:'✓ استثمار مربح — اقبل', npvNeg:'✗ استثمار غير مربح — ارفض', yr:'سنة', mo:'/شهر', day:'/يوم',
-    footerAbout:'حول', footerPriv:'الخصوصية', footerCon:'اتصل بنا',
+    footerAbout:'حول', footerPriv:'الخصوصية', footerCon:'اتصل بنا', seoToggle:'حول هذه الصفحة',
     privBack:'رجوع',
     privH1:'سياسة الخصوصية',
     privUpdated:'آخر تحديث: مارس 2026',
@@ -696,6 +696,7 @@ REGIONS['ar'] = {
     selSelOpplosTitle:'الانسحاب والحل (الفصل 2)',
     selSelOpplosDesc:'الشراء · الاستقالة · التصفية',
     selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']],
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'ميزانية أسرة دخل نفقات ادخار مال شخصي',
       bilkostnad:'سيارة تكلفة وقود تأمين رسوم صيانة بنزين ديزل كهربائية مسافة',

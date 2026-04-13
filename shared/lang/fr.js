@@ -39,7 +39,7 @@ REGIONS['fr'] = {
     vatCalcRows: [['Règle principale (§ 4-1)','La contrepartie hors TVA'],['Échange en nature (§ 4-3)','Valeur de marché courante','En cas d\'échange, le prix du marché est utilisé comme base pour la TVA'],['Communauté d\'intérêts (§ 4-4)','Pas inférieur à la valeur de marché courante','Si vous vendez à bas prix à votre propre société, la TVA est calculée sur le prix du marché'],['Perte sur créance (§ 4-7)','Possibilité de corriger une créance définitivement perdue','Le client ne paie jamais — vous pouvez alors récupérer la TVA que vous avez versée']],
     vatRegRows: [['Enregistrement commun (§ 2-2)','≥85% de propriété, responsabilité solidaire','Les sociétés d\'un groupe peuvent être enregistrées comme une seule unité TVA'],['Enregistrement volontaire location (§ 2-3)','Bâtiments/installations pour locataire enregistré TVA','Le bailleur obtient la déduction de TVA sur les travaux/construction lorsque le locataire est enregistré à la TVA'],['Pré-enregistrement (§ 2-4)','Acquisitions importantes avant le chiffre d\'affaires','Une entreprise nouvellement créée peut s\'enregistrer avant d\'avoir atteint 50 000 kr de chiffre d\'affaires']],
     npvPos:'✓ Investissement rentable — accepter', npvNeg:'✗ Investissement non rentable — rejeter', yr:'ans', mo:'/mois', day:'/jour',
-    footerAbout:'À propos', footerPriv:'Confidentialité', footerCon:'Contact',
+    footerAbout:'À propos', footerPriv:'Confidentialité', footerCon:'Contact', seoToggle:'À propos de cette page',
     privBack:'Retour',
     privH1:'Politique de confidentialité',
     privUpdated:'Dernière mise à jour : mars 2026',
@@ -738,6 +738,7 @@ REGIONS['fr'] = {
     selSelOpplosTitle:'Retrait et dissolution (ch. 2)',
     selSelOpplosDesc:'Rachat · Démission · Liquidation',
     selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']],
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'budget ménage revenu dépense épargne finance personnelle',
       bilkostnad:'voiture coût véhicule carburant assurance péage entretien essence diesel électrique kilométrage',

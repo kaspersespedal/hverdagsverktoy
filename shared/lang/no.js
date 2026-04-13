@@ -31,7 +31,7 @@ REGIONS['no'] = {
     vatCalcRows: [['Hva beregnes mva av?','Vederlaget eksklusive mva','§ 4-1'],['Byttehandel?','Markedspris brukes som beregningsgrunnlag','§ 4-3'],['Selger du billig til eget selskap?','Mva beregnes av markedspris ved interessefellesskap','§ 4-4'],['Kunden betaler aldri?','Du kan tilbakeføre mva ved endelig konstatert tap på fordring','§ 4-7']],
     vatRegRows: [['Konsernselskaper som én enhet?','Fellesregistrering ved minst 85 % eierskap — solidaransvar','§ 2-2'],['Leier du ut næringseiendom?','Frivillig registrering gir mva-fradrag på oppussing/bygging','§ 2-3'],['Nyoppstartet med store innkjøp?','Forhåndsregistrering mulig før du har nådd 50 000 kr i omsetning','§ 2-4']],
     npvPos:'✓ Lønnsom investering – aksepter', npvNeg:'✗ Ulønnsom investering – forkast', yr:'år', mo:'/mnd', day:'/dag',
-    footerAbout:'Om oss', footerPriv:'Personvern', footerCon:'Kontakt',
+    footerAbout:'Om oss', footerPriv:'Personvern', footerCon:'Kontakt', seoToggle:'Om denne siden',
     privBack:'Tilbake',
     privH1:'Personvernerklæring',
     privUpdated:'Sist oppdatert: mars 2026',
@@ -833,6 +833,7 @@ REGIONS['no'] = {
       ['Oppløsning ved dom','Retten kan oppløse selskapet dersom tungtveiende grunner taler for det, f.eks. vedvarende samarbeidsproblemer.','sel. § 2-38'],
       ['Avvikling','Ved oppløsning gjennomføres avvikling: forpliktelser gjøres opp, eiendeler realiseres og netto fordeles mellom deltakerne.','sel. § 2-39 flg.']
     ],
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'budsjett økonomi husholdning inntekt utgift spare penger',
       bilkostnad:'bil bilkostnad drivstoff forsikring bompenger vedlikehold bensin diesel elbil kilometer',

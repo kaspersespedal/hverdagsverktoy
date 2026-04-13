@@ -29,7 +29,7 @@ REGIONS['so'] = {
     vatCalcRows: [['Xeerka guud (§ 4-1)','Lacag-bixinta MVA la\'aanta ah'],['Beddelka (§ 4-3)','Qiimaha suuqa caadiga ah','Marka la beddelayo qiimaha suuqa ayaa loo isticmaalaa saldhiga MVA'],['Xidhiidhka danaha (§ 4-4)','Ka yar maaha qiimaha suuqa caadiga ah','Haddii aad jaban u iibiso shirkaddaada MVA waxaa laga xisaabiyaa qiimaha suuqa'],['Khasaaraha sheegashada (§ 4-7)','Waa la saxin karaa sheegashada la waayay ugu dambeyntii','Macmiilku ma bixiyo weligii — markaas waxaad soo celin kartaa MVA-da aad bixisay']],
     vatRegRows: [['Diiwaangelinta wadajirka (§ 2-2)','≥85% lahaansho, mas\'uuliyad wadaag','Shirkadaha kooxda waxaa loo diiwangelin karaa hal qof MVA ah'],['Diiwaangelinta ikhtiyaariga kirada (§ 2-3)','Dhismaha kireenaha MVA diiwaangashan','Kireeyaha ayaa helaya jaritaan MVA dayactirka/dhismaha marka kireenaha uu diiwaangashan yahay'],['Diiwaangelinta hordhac (§ 2-4)','Iibsashooyin waaweyn ka hor iibinta','Ganacsiga cusub wuxuu isdiiwaangelin karaa ka hor inta uusan gaadhin 50 000 kr iibinta']],
     npvPos:'✓ Maalgelinta faa\'iido leh – aqbal', npvNeg:'✗ Maalgelinta faa\'iido la\'aan – diid', yr:'sano', mo:'/bil', day:'/maalin',
-    footerAbout:'Naga', footerPriv:'Arrimaha gaarka ah', footerCon:'Nala soo xiriir',
+    footerAbout:'Naga', footerPriv:'Arrimaha gaarka ah', footerCon:'Nala soo xiriir', seoToggle:'Ku saabsan boggan',
     privBack:'Dib u noqo',
     privH1:'Siyaasadda Arrimaha Gaarka ah',
     privUpdated:'Markii ugu dambeysay la cusbooneysiiyey: Maarso 2026',
@@ -692,6 +692,7 @@ REGIONS['so'] = {
     selSelOpplosTitle:'Ka-bixitaan iyo burburin (qaybta 2)',
     selSelOpplosDesc:'Soo-iibsi · Is-casilid · Xallin',
     selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']],
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'miisaaniyad qoys dakhli kharash kaydin lacag',
       bilkostnad:'baabuur kharash shidaal caymis jidka dayactir shidaal naaftada korontada',

@@ -30,7 +30,7 @@ REGIONS['ti'] = {
     vatSubjRows: [['— መሰረታዊ ቅድመ-ኩነታት —','ንተ.ዋ.ግ. ግዴታ ሰለስተ ነገራት ክማልኡ ኣለዎም'],['1. ነጋዳይ','ንግዳዊ ንጥፈት ክትዓዪ ኣለካ — ሆቢ ወይ ናይ ስራሕ ዝምድና ኣይኮነን','§ 2-1(1)'],['2. ሽያጥ ኣቑሑ/ኣገልግሎት','ግብይት ክህሉ ኣለዎ — ምቕራብ ብዋጋ (ክፍሊት)','§ 1-3(1)a'],['3. ናይ ሽያጥ ደረት','ኣብ 12 ወርሒ ልዕሊ 50 000 kr ሽያጥ','§ 2-1(1)'],['— መን ክምዝገብ ኣለዎ？ —',''],['ልዕሊ 50 000 kr ዝሸጡ ነጋዶ','ኣብ ናይ ተ.ዋ.ግ. መዝገብ ክምዝገቡ ግዴታ','§ 2-1(1)'],['ናይ በጎ ውድባት','ልዕሊ ደረት: 140 000 kr','§ 2-1(1)'],['ናይ ስፖርት ፍጻመታት','ፍሉይ ደረት: 3 000 000 kr','§ 2-1(1)'],['— ትርጓመ ቃላት —',''],['«ንግዲ» እንታይ ማለት?','ነጻ፣ ቀጻሊ፣ ቁጠባዊ ባህሪ ዘለዎ ንርብሕ ዝበቅዕ ንጥፈት። ሆቢን ናይ ሓንቲ ጊዜ ስራሕን ልሙድ ንግዲ ኣይኮነን።'],['«ሽያጥ» እንታይ ማለት?','ኣቑሑ ወይ ኣገልግሎት ብዋጋ ምቕራብ። ህያብ፣ ካሕሳን ሓገዝን ልሙድ ሽያጥ ኣይኮነን።','§ 1-3(1)a'],['«ናይ ተ.ዋ.ግ. ኣካል» እንታይ ማለት?','ኣብ ናይ ተ.ዋ.ግ. መዝገብ ዝተመዝገበ (ወይ ክምዝገብ ዝግብኦ) ተ.ዋ.ግ. ክሕስብን ክኸፍልን ግዴታ ዘለዎ ሰብ።','§ 1-3(1)d'],['ፍቓደኛ ምዝገባ?','ናይ ንግዲ ንብረት ኣካራዪ ብፍቓዱ ክምዝገብ ይኽእል ናይ ኣታዊ ተ.ዋ.ግ. ቅነሳ ንምርካብ።','§ 2-3']],
     vatSubjTitle:'መን እዩ ናይ ተ.ዋ.ግ. ግዱድ?', vatSubjDesc:'ንግዳዊ ንጥፈት · ናይ ሽያጥ ደረት · ናይ ምዝገባ ግዴታ',
     npvPos:'✓ ዝርባሕ ወፍሪ – ተቐበሎ', npvNeg:'✗ ዘይርባሕ ወፍሪ – ኣይትቀበሎ', yr:'ዓመት', mo:'/ወርሒ', day:'/መዓልቲ',
-    footerAbout:'ብዛዕባና', footerPriv:'ውልቃዊ ሓበሬታ', footerCon:'ርኸቡና',
+    footerAbout:'ብዛዕባና', footerPriv:'ውልቃዊ ሓበሬታ', footerCon:'ርኸቡና', seoToggle:'ብዛዕባ እዚ ገጽ',
     privBack:'ተመለስ',
     privH1:'ፖሊሲ ውልቃዊ ሓበሬታ',
     privUpdated:'ዝተሓደሰ: መጋቢት 2026',
@@ -709,6 +709,7 @@ REGIONS['ti'] = {
     selSelOpplosTitle:'ምውጻእ ን ምፍራስ ን (ምዕ. 2)',
     selSelOpplosDesc:'ምዕዳግ · ምውጻእ · ምእካብ',
     selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']],
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'ባጀት ገቢ ወጪ ቁጠባ ገንዘብ የግል',
       bilkostnad:'መኪና ወጪ ነዳጅ ኢንሹራንስ መንገድ ጥገና ኤሌክትሪክ',

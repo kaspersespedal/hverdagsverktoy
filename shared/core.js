@@ -208,7 +208,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v26';
+    s.src = '/shared/lang/' + code + '.js?v=v27';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -437,6 +437,8 @@ function updateAll() {
   var _sg=document.getElementById('sec-guide');if(_sg){var gk=document.getElementById('calc-salary')?'secGuideTax':document.getElementById('calc-mortgage')?'secGuideMor':document.getElementById('calc-vat')?'secGuideVat':document.getElementById('calc-npv')?'secGuidePerso':'secGuide';_sg.textContent=R()[gk]||_sg.textContent;}
   var _ssg=document.getElementById('sec-selskap-guide');if(_ssg)_ssg.textContent=R().secSelskapGuide||'Selskapsformer';
   var _ssr=document.getElementById('sec-selskap-ref');if(_ssr)_ssr.textContent=R().secSelskapRef||'Referanse';
+  // Update page title on language change
+  try{var _ts=R().pageTitleSuffix||' – Hverdagsverktøy';var _tn=document.getElementById('calc-salary')?R().tabSal:document.getElementById('calc-mortgage')?R().tabMor:document.getElementById('calc-basic')?R().tabBasic:document.getElementById('calc-vat')?R().tabVat:document.getElementById('calc-selskap')?R().tabSelskap:document.getElementById('calc-npv')?R().tabNpv:null;if(_tn)document.title=_tn+_ts;}catch(e){}
   // clear results
   ['s-res','m-res','n-res','v-res','adj-res'].forEach(id => { const el=document.getElementById(id); if(el) el.classList.add('hidden'); });
   _sal=_mor=_npv=_vat=null;
@@ -2513,6 +2515,7 @@ function updateFooter() {
   // Wire contact link
   const conLink = document.getElementById('fl-con');
   if(conLink) conLink.onclick = function(e){ e.preventDefault(); openContact(); };
+  setText('seo-toggle', r.seoToggle||'Om denne siden');
 }
 
 function openPrivacy() { updatePrivacyUI(); document.getElementById('priv-overlay').classList.add('open'); document.body.style.overflow='hidden'; }

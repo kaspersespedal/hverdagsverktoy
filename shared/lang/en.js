@@ -35,7 +35,7 @@ REGIONS['en'] = {
     vatCalcRows: [['Main rule (§ 4-1)','Consideration excluding VAT'],['Barter (§ 4-3)','Fair market value','In barter transactions, market price is used as the basis for VAT'],['Related parties (§ 4-4)','Not lower than fair market value','If you sell cheaply to your own company, VAT is calculated on market price'],['Loss on receivables (§ 4-7)','May correct finally lost receivable','The customer never pays — then you can reverse VAT you have remitted']],
     vatRegRows: [['Joint registration (§ 2-2)','≥85% ownership, joint liability','Group companies can be registered as one VAT entity'],['Voluntary registration – letting (§ 2-3)','Buildings/structures to VAT-registered tenant','Landlord gets VAT deduction on renovation/construction when tenant is VAT-registered'],['Pre-registration (§ 2-4)','Significant acquisitions before turnover','Newly started businesses can register before reaching 50 000 kr in turnover']],
     npvPos:'✓ Profitable investment – accept', npvNeg:'✗ Unprofitable investment – reject', yr:'yrs', mo:'/mo', day:'/day',
-    footerAbout:'About', footerPriv:'Privacy', footerCon:'Contact',
+    footerAbout:'About', footerPriv:'Privacy', footerCon:'Contact', seoToggle:'About this page',
     privBack:'Back',
     privH1:'Privacy Policy',
     privUpdated:'Last updated: March 2026',
@@ -740,6 +740,7 @@ REGIONS['en'] = {
     selSelOpplosDesc:'Buyout · Resignation · Winding up',
     selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']]
 ,
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'budget household income expense spending planner personal finance',
       bilkostnad:'car cost vehicle fuel insurance tolls maintenance petrol gasoline diesel electric mileage',

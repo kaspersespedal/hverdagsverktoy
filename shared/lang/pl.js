@@ -29,7 +29,7 @@ REGIONS['pl'] = {
     vatCalcRows: [['Zasada główna (§ 4-1)','Wynagrodzenie bez VAT'],['Wymiana barterowa (§ 4-3)','Zwykła wartość rynkowa','Przy wymianie barterowej jako podstawę VAT przyjmuje się cenę rynkową'],['Powiązania osobowe (§ 4-4)','Nie niższa niż zwykła wartość rynkowa','Sprzedajesz tanio własnej spółce — VAT naliczany od ceny rynkowej'],['Strata z wierzytelności (§ 4-7)','Można skorygować ostatecznie utraconą wierzytelność','Klient nigdy nie zapłaci — wtedy możesz odzyskać wpłacony VAT']],
     vatRegRows: [['Wspólna rejestracja (§ 2-2)','≥85% własności, odpowiedzialność solidarna','Spółki koncernowe mogą być zarejestrowane jako jedna jednostka VAT'],['Dobrowolna rej. wynajmu (§ 2-3)','Budynki/obiekty dla zarejestrowanego najemcy VAT','Wynajmujący uzyskuje odliczenie VAT od remontu/budowy, gdy najemca jest zarejestrowany w VAT'],['Rejestracja wstępna (§ 2-4)','Znaczące nabycia przed obrotem','Nowo założona firma może się zarejestrować zanim osiągnie 50 000 kr obrotu']],
     npvPos:'✓ Opłacalna inwestycja — zaakceptuj', npvNeg:'✗ Nieopłacalna inwestycja — odrzuć', yr:'lat', mo:'/mies.', day:'/dzień',
-    footerAbout:'O nas', footerPriv:'Prywatność', footerCon:'Kontakt',
+    footerAbout:'O nas', footerPriv:'Prywatność', footerCon:'Kontakt', seoToggle:'O tej stronie',
     privBack:'Wróć',
     privH1:'Polityka prywatności',
     privUpdated:'Ostatnia aktualizacja: marzec 2026',
@@ -709,6 +709,7 @@ REGIONS['pl'] = {
     selSelOpplosTitle:'Wystąpienie i rozwiązanie (rozdz. 2)',
     selSelOpplosDesc:'Wykup · Rezygnacja · Likwidacja',
     selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']],
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'budżet gospodarstwo dochód wydatek oszczędności finanse osobiste',
       bilkostnad:'samochód koszty pojazd paliwo ubezpieczenie opłaty utrzymanie benzyna diesel elektryczny przebieg',

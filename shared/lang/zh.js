@@ -112,7 +112,7 @@ REGIONS['zh'] = {
     adjExRev3:'例外：征收、破产和死亡（§ 9-6(4)）',
     adjExSource:'来源：增值税法第9章（法律-2009-06-19-58）。该计算器仅供参考——具体评估请咨询会计师。',
     npvPos:'✓ 有利可图的投资——接受', npvNeg:'✗ 无利可图的投资——拒绝', yr:'年', mo:'/月', day:'/天',
-    footerAbout:'关于我们', footerPriv:'隐私政策', footerCon:'联系我们',
+    footerAbout:'关于我们', footerPriv:'隐私政策', footerCon:'联系我们', seoToggle:'关于本页',
     privBack:'返回',
     privH1:'隐私政策',
     privUpdated:'最后更新：2026年3月',
@@ -736,6 +736,7 @@ REGIONS['zh'] = {
     selSelOpplosTitle:'退出和解散（第2章）',
     selSelOpplosDesc:'收购 · 退出 · 清算',
     selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']],
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'预算 家庭 收入 支出 储蓄 个人理财',
       bilkostnad:'汽车 费用 燃料 保险 过路费 维护 汽油 柴油 电动车 里程',

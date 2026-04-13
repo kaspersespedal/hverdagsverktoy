@@ -28,7 +28,7 @@ REGIONS['uk'] = {
     vatCalcRows: [['Основне правило (§ 4-1)','Винагорода без ПДВ'],['Бартер (§ 4-3)','Звичайна ринкова вартість','При бартері ринкова ціна використовується як база для ПДВ'],['Пов\'язані сторони (§ 5)','Не нижче звичайної ринкової вартості','Якщо продаєте дешево власній компанії, ПДВ нараховується від ринкової ціни'],['Збиток за вимогами (§ 4-7)','Можна скоригувати остаточно втрачену вимогу','Клієнт не платить — тоді можна повернути сплачений ПДВ']],
     vatRegRows: [['Спільна реєстрація (§ 2-2)','≥85% власності, солідарна відповідальність','Компанії концерну можуть бути зареєстровані як один суб\'єкт ПДВ'],['Добровільна реєстрація оренди (§ 2-3)','Будівлі/споруди для зареєстрованого орендаря','Орендодавець отримує вирахування ПДВ на ремонт/будівництво, коли орендар зареєстрований'],['Попередня реєстрація (§ 2-4)','Значні придбання до початку обороту','Нове підприємство може зареєструватися до досягнення обороту 50 000 kr']],
     npvPos:'✓ Прибуткова інвестиція — прийняти', npvNeg:'✗ Збиткова інвестиція — відхилити', yr:'років', mo:'/міс', day:'/день',
-    footerAbout:'Про нас', footerPriv:'Конфіденційність', footerCon:'Контакт',
+    footerAbout:'Про нас', footerPriv:'Конфіденційність', footerCon:'Контакт', seoToggle:'Про цю сторінку',
     privBack:'Назад',
     privH1:'Політика конфіденційності',
     privUpdated:'Останнє оновлення: березень 2026',
@@ -733,6 +733,7 @@ REGIONS['uk'] = {
     selSelOpplosTitle:'Вихід та ліквідація (розд. 2)',
     selSelOpplosDesc:'Викуп · Вихід · Ліквідація',
     selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']],
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'бюджет домогосподарство дохід витрати заощадження особисті фінанси',
       bilkostnad:'автомобіль вартість пальне страхування платні дороги обслуговування бензин дизель електрокар кілометраж',

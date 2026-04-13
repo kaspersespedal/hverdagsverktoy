@@ -29,7 +29,7 @@ REGIONS['lt'] = {
     vatCalcRows: [['Pagrindinė taisyklė (§ 4-1)','Atlygis be PVM'],['Mainai (§ 4-3)','Įprastinė rinkos vertė','Mainų atveju PVM pagrindas yra rinkos kaina'],['Susijusios šalys (§ 4-4)','Ne mažiau nei įprastinė rinkos vertė','Parduodant pigiai savo bendrovei, PVM skaičiuojamas nuo rinkos kainos'],['Nuostolis dėl reikalavimo (§ 4-7)','Galima koreguoti galutinai prarastą reikalavimą','Klientas niekada nesumokėjo — galite susigrąžinti sumokėtą PVM']],
     vatRegRows: [['Bendra registracija (§ 2-2)','≥85% nuosavybės, solidarioji atsakomybė','Koncerno bendrovės gali būti registruotos kaip vienas PVM subjektas'],['Savanoriška registracija nuomai (§ 2-3)','Pastatai/statiniai PVM registruotam nuomininkui','Nuomotojas gauna PVM atskaitymą už remontą/statybą, kai nuomininkas yra PVM registruotas'],['Išankstinė registracija (§ 2-4)','Reikšmingi pirkimai prieš apyvartą','Naujai įkurta įmonė gali registruotis dar nepasiekusi 50 000 kr apyvartos']],
     npvPos:'✓ Pelninga investicija – priimkite', npvNeg:'✗ Nepelninga investicija – atmeskite', yr:'m.', mo:'/mėn.', day:'/d.',
-    footerAbout:'Apie mus', footerPriv:'Privatumas', footerCon:'Kontaktai',
+    footerAbout:'Apie mus', footerPriv:'Privatumas', footerCon:'Kontaktai', seoToggle:'Apie šį puslapį',
     privBack:'Grįžti',
     privH1:'Privatumo politika',
     privUpdated:'Paskutinis atnaujinimas: 2026 m. kovas',
@@ -735,6 +735,7 @@ REGIONS['lt'] = {
     selSelOpplosTitle:'Pasitraukimas ir likvidavimas (sk. 2)',
     selSelOpplosDesc:'Išpirkimas · Atsistatydinimas · Likvidavimas',
     selSelOpplosRows:[['Resignation','A partner may resign with 6 months\' notice before the end of the financial year, unless otherwise agreed.','sel. § 2-32'],['Buyout','A partner may demand buyout in case of material breach by other partners, or other important reasons.','sel. § 2-32 (2)'],['Valuation on exit','The buyout sum is set at the share\'s fair value unless the partnership agreement provides otherwise.','sel. § 2-33'],['Dissolution by unanimity','The partnership meeting may resolve dissolution if all partners agree.','sel. § 2-37'],['Dissolution by court','The court may dissolve the company if compelling reasons warrant it, e.g. persistent cooperation problems.','sel. § 2-38'],['Winding up','Upon dissolution, winding up is carried out: liabilities are settled, assets realised and net proceeds distributed among partners.','sel. § 2-39 flg.']],
+    pageTitleSuffix:' \u2013 Hverdagsverkt\u00f8y',
     searchKw: {
       budsjett:'biudžetas namų ūkis pajamos išlaidos santaupos asmeniniai finansai',
       bilkostnad:'automobilis išlaidos degalai draudimas rinkliavos techninė priežiūra benzinas dyzelinas elektromobilis ridos',
