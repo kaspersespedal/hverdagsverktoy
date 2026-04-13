@@ -5616,8 +5616,6 @@ window.addEventListener('load',function(){
   },100);
 });
 
-// ── Match calculator card heights with howto card heights ──
-function syncCardHeights(){}
 
 // ── Budsjettkalkulator ──
 // ═══════════════════════════════════════════════════════
