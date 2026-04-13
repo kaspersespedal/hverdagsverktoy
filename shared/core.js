@@ -4972,12 +4972,12 @@ function enterMobileFocus(card){
   Array.from(grid.children).forEach(function(c){c.removeAttribute('data-mf-visible');});
   col.setAttribute('data-mf-visible','true');
   // Mark only this card visible — for nested cards, mark the top-level parent
-  col.querySelectorAll('.info-card').forEach(function(ic){ic.removeAttribute('data-mf-card');ic.removeAttribute('data-mf-focus');});
+  col.querySelectorAll('.info-card').forEach(function(ic){ic.removeAttribute('data-mf-card');ic.removeAttribute('data-mf-focus');ic.classList.remove('mf-has-focus');});
   var parentCard=card.parentElement&&card.parentElement.closest&&card.parentElement.closest('.info-card');
   var visibleCard=parentCard||card;
   visibleCard.setAttribute('data-mf-card','true');
   // Mark the actual focused nested card (hides parent chrome + siblings)
-  if(card!==visibleCard) card.setAttribute('data-mf-focus','true');
+  if(card!==visibleCard) { card.setAttribute('data-mf-focus','true'); visibleCard.classList.add('mf-has-focus'); }
   // Open card if collapsed
   if(visibleCard.classList.contains('collapsed')){toggleCard(visibleCard);visibleCard.setAttribute('data-opened-by-focus','true');}
   if(card!==visibleCard&&card.classList.contains('collapsed')){toggleCard(card);card.setAttribute('data-opened-by-focus','true');}
@@ -5017,6 +5017,9 @@ function exitMobileFocus(){
     });
     grid.querySelectorAll('.info-card[data-mf-focus]').forEach(function(ic){
       ic.removeAttribute('data-mf-focus');
+    });
+    grid.querySelectorAll('.mf-has-focus').forEach(function(ic){
+      ic.classList.remove('mf-has-focus');
     });
     Array.from(grid.children).forEach(function(c){c.removeAttribute('data-mf-visible');});
   }
@@ -6158,6 +6161,10 @@ function _initPageReady(){
   var activeOpt=document.querySelector('.region-opt[onclick*="\''+region+'\'"]');
   if(activeOpt) activeOpt.classList.add('active');
   bilInitYear();
+  // Safari :has() polyfill — add .has-law-body class for CSS compatibility
+  document.querySelectorAll('.info-card').forEach(function(ic){
+    if(ic.querySelector(':scope > .law-body')) ic.classList.add('has-law-body');
+  });
   updateAll();
   // Sync calculator/howto card heights
   setTimeout(syncCardHeights,200);
