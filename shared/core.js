@@ -4882,6 +4882,7 @@ function toggleDesktopFocus(colIndex){
       ic.removeAttribute('data-opened-by-focus');
     });
     Array.from(grid.children).forEach(function(c){c.removeAttribute('data-desktop-hidden');});
+    grid.querySelectorAll('[data-desktop-card-hidden]').forEach(function(el){el.removeAttribute('data-desktop-card-hidden');});
   } else if(colIndex!==undefined){
     // Enter focus on specific column
     b.classList.add('desktop-focus');
@@ -4929,7 +4930,15 @@ function initDesktopFocus(){
         if(!b.classList.contains('desktop-focus')){
           toggleDesktopFocus(idx);
         }
-        if(card.classList.contains('collapsed')) toggleCard(card);
+        // Hide sibling cards in same container — show only this card
+        var container=card.parentElement;
+        if(container){
+          container.querySelectorAll(':scope > .info-card').forEach(function(ic){
+            if(ic!==card) ic.setAttribute('data-desktop-card-hidden','true');
+            else ic.removeAttribute('data-desktop-card-hidden');
+          });
+        }
+        if(card.classList.contains('collapsed')){toggleCard(card);card.setAttribute('data-opened-by-focus','true');}
         setTimeout(function(){ smartScroll(card); },250);
       }
     };
