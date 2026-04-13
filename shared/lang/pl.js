@@ -363,7 +363,7 @@ REGIONS['pl'] = {
       'BSU: 10% ulga podatkowa (maks. 2 750 kr/rok). Obowiązuje do 34. roku życia, jeśli nie posiadasz mieszkania.',
       'Odliczenie na opiekę nad dziećmi w przedszkolu/SFO zostało zniesione od 2023, ale sprawdź inne odliczenia związane z dziećmi.',
       'Odliczenie darowizn: Odliczenie za darowizny powyżej 500 kr na zatwierdzone organizacje, maks. 25 000 kr/rok.',
-      'Biuro domowe: Ryczałtowe odliczenie 2 200 kr/rok bez dokumentacji lub faktyczne koszty z dokumentacją.',
+      'Biuro domowe: Ryczałtowe odliczenie 2 240 kr/rok bez dokumentacji lub faktyczne koszty z dokumentacją.',
       'Straty na akcjach/funduszach można przenosić i odliczać od zysków. Sprawdź, czy wszystkie zrealizowane straty są uwzględnione.',
       'Dochody z wynajmu: Zwolnione z podatku przy wynajmie do połowy mieszkania. Wynajem ponad 30 dni przez Airbnb: 85% dochodu powyżej 10 000 kr podlega opodatkowaniu.'
     ],

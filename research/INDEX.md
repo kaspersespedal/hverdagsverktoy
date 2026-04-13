@@ -16,11 +16,16 @@ Samle-indeks over alle `/research`-versjoner. Hver versjon er en ferdig research
 | Versjon | Dato | Antall rapporter | Status | Indeks |
 |---|---|---:|---|---|
 | **v1** | 2026-04-11 | 7 | ✅ Ferdig | [[research_v1/README]] |
-| **v2** | — | 0 | 🟢 Klar (venter på neste runde) | [[research_v2/README]] |
+| **v2** | 2026-04-13 | 1 | ✅ Ferdig | [[research_v2/README]] |
+| **v3** | — | 0 | 🟢 Klar (venter på neste runde) | [[research_v3/README]] |
 
-## Klar mappe for neste runde: `research_v2/`
+## Klar mappe for neste runde: `research_v3/`
 
-🟢 **Tom og klar.** Opprettet 2026-04-11 ved slutten av v1-runden. Neste `/research`-kall skriver hit. Når v2 er ferdig, opprettes `research_v3/` automatisk som ny klar mappe.
+🟢 **Tom og klar.** Opprettet 2026-04-13 ved slutten av v2-runden. Neste `/research`-kall skriver hit.
+
+## Forrige ferdige versjon: `research_v2/`
+
+Opprettet 2026-04-13. V14 SEO-artikkel verifisering — 5 verdier sjekket. Hjemmekontor stale i kode (2200→2240). V14 Bol-H1 avkreftet (10% egenkapital korrekt etter forskriftsendring des 2024).
 
 ## Forrige ferdige versjon: `research_v1/`
 

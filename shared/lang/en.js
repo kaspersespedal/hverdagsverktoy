@@ -422,7 +422,7 @@ REGIONS['en'] = {
       'BSU: 10% tax credit (max 2 750 kr/year). Applies until you turn 34 and do not own a home.',
       'The childcare deduction for daycare/SFO was abolished from 2023, but check if you have other child-related deductions.',
       'Donation deduction: Deduction for gifts over 500 kr to approved organisations, max 25 000 kr/year.',
-      'Home office: Flat deduction of 2 200 kr/year without documentation, or actual costs with documentation.',
+      'Home office: Flat deduction of 2 240 kr/year without documentation, or actual costs with documentation.',
       'Losses on shares/funds can be carried forward and offset against gains. Check that all realised losses are included.',
       'Rental income: Tax-free when renting out up to half of your home. When renting out for more than 30 days via Airbnb: 85% of income above 10 000 kr is taxable.'
     ],

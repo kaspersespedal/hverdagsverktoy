@@ -364,7 +364,7 @@ REGIONS['fr'] = {
       'BSU : Crédit d\'impôt de 10% (max. 2 750 kr/an). S\'applique jusqu\'à 34 ans si vous ne possédez pas de logement.',
       'La déduction pour garde d\'enfants en crèche/SFO a été supprimée depuis 2023, mais vérifiez les autres déductions liées aux enfants.',
       'Déduction pour dons : Déduction pour les dons supérieurs à 500 kr aux organisations agréées, max. 25 000 kr/an.',
-      'Bureau à domicile : Déduction forfaitaire de 2 200 kr/an sans justificatif, ou coûts réels avec justificatif.',
+      'Bureau à domicile : Déduction forfaitaire de 2 240 kr/an sans justificatif, ou coûts réels avec justificatif.',
       'Les pertes sur actions/fonds peuvent être reportées et déduites des gains. Vérifiez que toutes les pertes réalisées sont incluses.',
       'Revenus locatifs : Exonérés si vous louez jusqu\'à la moitié de votre logement. Location de plus de 30 jours via Airbnb : 85% des revenus au-delà de 10 000 kr sont imposables.'
     ],

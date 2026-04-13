@@ -374,7 +374,7 @@ REGIONS['so'] = {
       'BSU: 10% cafis canshuur (ugu badnaan 2 750 kr/sannadkii). Waxay dhaqan gashaa ilaa 34 jir haddii aanad guri lahayn.',
       'Jarriitaanka daryeelka carruurta xanaanada/SFO waa la joojiyay 2023, laakiin hubi jarriitaanada kale ee la xiriira carruurta.',
       'Jarriitaanka deeqda: Jarriitaan deeqo ka badan 500 kr oo la siiyo ururrada la ansixiyey, ugu badnaan 25 000 kr/sannadkii.',
-      'Xafiiska guriga: Jarriitaan go\'an 2 200 kr/sannadkii oo aan dukumeenti lahayn, ama kharashka dhabta ah oo dukumeenti leh.',
+      'Xafiiska guriga: Jarriitaan go\'an 2 240 kr/sannadkii oo aan dukumeenti lahayn, ama kharashka dhabta ah oo dukumeenti leh.',
       'Khasaaraha sahaamadaha/sanduuqyada waa la gudbiin karaa oo laga jari karaa faa\'iidooyinka. Hubi in khasaarooyinka oo dhan ku jiraan.',
       'Dakhliga kirada: Canshuur la\'aan marka la kiraysto ilaa badh guriga. Kirada ka badan 30 maalmood oo Airbnb: 85% dakhliga ka sarreeya 10 000 kr waa la canshuuraa.'
     ],

@@ -3055,7 +3055,7 @@ var SJEKK_DATA=[
   {id:'sjekk-c4',fradrag:2750,type:'skattefradrag'},// BSU: 10% av 27500 = 2750 direkte
   {id:'sjekk-c5',fradrag:15000,type:'fradrag'},// Barnehage: foreldrefradrag 15000 for 1 barn
   {id:'sjekk-c6',fradrag:5500,type:'fradrag'},// Gaver: max 25000 × 22%
-  {id:'sjekk-c7',fradrag:2200,type:'fradrag'},// Hjemmekontor: 2200 kr fast fradrag
+  {id:'sjekk-c7',fradrag:2240,type:'fradrag'},// Hjemmekontor: 2240 kr fast fradrag
   {id:'sjekk-c8',fradrag:0,type:'info'},// Aksjetap: varierer
   {id:'sjekk-c9',fradrag:0,type:'info'}// Utleie: varierer
 ];
@@ -3067,7 +3067,7 @@ function updateSjekkliste(){
     'BSU: 10 % skattefradrag (maks 2 750 kr/år). Gjelder til og med året du fyller 33 år, og du kan ikke eie bolig per 31. desember.',
     'Foreldrefradrag: Inntil 15 000 kr for ett barn og 10 000 kr for hvert barn utover det. Gjelder dokumenterte utgifter til barnehage, SFO og dagmamma.',
     'Gavefradrag: Fradrag for gaver på minst 500 kr til den enkelte godkjente organisasjon, maks 25 000 kr/år totalt.',
-    'Hjemmekontor: Fast fradrag på 2 200 kr/år uten dokumentasjon, eller faktiske kostnader med dokumentasjon.',
+    'Hjemmekontor: Fast fradrag på 2 240 kr/år uten dokumentasjon, eller faktiske kostnader med dokumentasjon.',
     'Har du realisert tap på aksjer eller fond? Sjekk at tapet er kommet med i skattemeldingen. Tap gir fradrag med effektiv verdi 37,84 % (oppjustert).',
     'Utleie av egen bolig: Skattefritt dersom du selv bor i minst halvparten (etter utleieverdi). Korttidsutleie (under 30 dager per leieforhold): inntekt inntil 10 000 kr er skattefri, 85 % av overskytende er skattepliktig.'
   ];

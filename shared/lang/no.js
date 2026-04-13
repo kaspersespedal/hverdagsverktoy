@@ -432,7 +432,7 @@ REGIONS['no'] = {
       'BSU: 10% skattefradrag (maks 2 750 kr/år). Gjelder til du fyller 34 år og ikke eier bolig.',
       'Foreldrefradrag: Dokumenterte barnepass-kostnader (barnehage/SFO) for barn under 12 år — maks 15 000 kr for ett barn + 10 000 kr per ytterligere barn (2026).',
       'Gavefradrag: Fradrag for gaver over 500 kr til godkjente organisasjoner, maks 25 000 kr/år.',
-      'Hjemmekontor: Fast fradrag på 2 200 kr/år uten dokumentasjon, eller faktiske kostnader med dokumentasjon.',
+      'Hjemmekontor: Fast fradrag på 2 240 kr/år uten dokumentasjon, eller faktiske kostnader med dokumentasjon.',
       'Tap på aksjer/fond kan fremføres og trekkes fra gevinster. Sjekk at alle realiserte tap er med.',
       'Utleieinntekter: Skattefritt ved utleie av inntil halvparten av boligen. Ved utleie over 30 dager via Airbnb: 85% av inntekt over 10 000 kr er skattepliktig.'
     ],

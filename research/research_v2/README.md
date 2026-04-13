@@ -1,45 +1,32 @@
 ---
-title: Research v2 — klar for neste runde
-date: 2026-04-11
-tags: [research, v2, ready]
-status: ready
+title: Research v2 — V14 SEO-artikkel verifisering
+date: 2026-04-13
+tags: [research, v2, verified]
+status: verified
 parent: ../INDEX.md
 ---
 
-# Research v2 — klar for neste runde
+# Research v2 — V14 SEO-artikkel verifisering
 
-Denne mappa er **opprettet, men tom**. Den ble klargjort av `/research`-skillen ved slutten av v1 (commit `68fcd32`, 2026-04-11).
+Ferdigstilt 2026-04-13. Verifiserte 5 verdier flagget i V14 audit (Pattern F: SEO-artikkel drift).
 
 ## Status
 
-🟢 **Klar** — venter på neste `/research`-kall.
+✅ **Ferdig** — alle 5 verdier verifisert mot primærkilder med høy confidence.
 
-Når neste research kjøres, lagres rapporten(e) HER i `research_v2/`, og deretter opprettes `research_v3/` som ny tom klargjort mappe.
+## Rapporter
 
-## Workflow (v1.4 — "alltid klar mappe")
+| # | Rapport | Verdier | Confidence | Status |
+|---|---|---|---|---|
+| 1 | [[2026-04-13_research_v14-seo-artikkel-5-verdier]] | Hjemmekontor, AGA, AS/ANS gebyr, egenkapital | Høy | ✅ Verified |
 
-```
-[research_v1/ ferdig] → opprett research_v2/ (tom) som "klar"
-                              ↓
-[neste /research-kall] → skriv rapporter til research_v2/
-                              ↓
-[research_v2/ ferdig] → opprett research_v3/ (tom) som "klar"
-```
+## Hovedfunn
 
-## Hva skal være her etter neste runde?
+- **Kode korrekt for 4/5 verdier** (AGA, AS, ANS/DA, egenkapital)
+- **Hjemmekontor stale i kode:** 2 200 → 2 240 kr
+- **Alle 5 SEO-artikler stale** i STATIC_NO
+- **V14 Bol-H1 AVKREFTET:** 10% egenkapital er korrekt (forskriftsendring des 2024)
 
-Når denne mappa fylles:
-- Én eller flere `YYYY-MM-DD_research_[slug].md`-rapporter
-- Oppdatert `README.md` (denne fila) med indeks over rapportene + status `verified`
-- Push av oppdatering til `research/INDEX.md`
-- Opprettelse av `research_v3/` som ny klar tom mappe
+## Forrige versjon
 
-## Hvis ingen ny research blir kjørt
-
-Mappa kan bli stående tom. Det er OK — det betyr bare at det ikke har vært behov for verifikasjon mot offisielle kilder siden v1.
-
-## Hvordan triggere ny research?
-
-Kjør `/research [bundle eller spesifikk sats]` — eller la `/audit` flagge en sats som "needs research verification" og handoff følger.
-
-Forrige versjon: [[../research_v1/README]]
+Se [[../research_v1/README|research_v1]] (7 rapporter, verifisert 2026-04-11)

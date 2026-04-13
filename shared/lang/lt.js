@@ -362,7 +362,7 @@ REGIONS['lt'] = {
       'BSU: 10% mokesčių kreditas (maks. 2 750 kr/metus). Galioja iki 34 metų, jei neturite būsto.',
       'Vaikų priežiūros atskaitymas darželyje/SFO panaikintas nuo 2023, bet patikrinkite kitus su vaikais susijusius atskaitymus.',
       'Aukojimo atskaitymas: Atskaitymas už aukas virš 500 kr patvirtintoms organizacijoms, maks. 25 000 kr/metus.',
-      'Namų biuras: Fiksuotas atskaitymas 2 200 kr/metus be dokumentų arba faktinės išlaidos su dokumentais.',
+      'Namų biuras: Fiksuotas atskaitymas 2 240 kr/metus be dokumentų arba faktinės išlaidos su dokumentais.',
       'Nuostoliai iš akcijų/fondų gali būti perkelti ir atimti iš pelno. Patikrinkite, ar visi realizuoti nuostoliai įtraukti.',
       'Nuomos pajamos: Neapmokestinamos nuomojant iki pusės būsto. Nuoma ilgiau nei 30 dienų per Airbnb: 85% pajamų virš 10 000 kr apmokestinamos.'
     ],
