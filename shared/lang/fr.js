@@ -279,7 +279,7 @@ REGIONS['fr'] = {
     pensjonHint: 'OTP = pension professionnelle obligatoire (min. 2% du salaire au-dessus de 1G). Le rendement est le rendement annuel attendu du fonds de pension — moyenne historique env. 5-7%.',
     agaZoneHint: 'AGA = cotisation patronale de sécurité sociale. Le taux dépend de l\'emplacement de l\'entreprise.',
     agaZoneLinkText: 'Voir toutes les zones →',
-    agaOtpHint: 'OTP = pension professionnelle obligatoire. L'''employeur doit épargner au moins 2% du salaire au-dessus de 1G ({1G}) pour la retraite.',
+    agaOtpHint: 'OTP = pension professionnelle obligatoire. L\'employeur doit épargner au moins 2% du salaire au-dessus de 1G ({1G}) pour la retraite.',
     
     valgevinCurrencyLabel: 'Devise',
     valgevinUnitsLabel: 'Nombre d\'unités achetées',
