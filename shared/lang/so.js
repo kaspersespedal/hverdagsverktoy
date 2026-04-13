@@ -359,6 +359,7 @@ REGIONS['so'] = {
     fpDekning:'daboolid', fpUker:'toddobaad',
     fpTipMax:'Dakhli ka sarreeya 6G ({max} kr) kama bixiyo NAV. Shaqo-bixiyeyaal badan ayaa bixiya farqiga.',
     fpTipGeneral:'Lacagta aasaasiga (G) waxaa la hagaajiyaa sannad kasta Maajo. Lacagta waalidnimada waxaa lagu xisaabiyaa dakhliga 3-dii bilood ee ugu dambeeyay ama 12-kii bilood — kan ugu sarreeya ayaa la doortaa.',
+    nhTitle:'Ganacsi mise wax xiiso ah?', nhDesc:'Goorma dakhliga dheeraadka ah uu noqdaa ganacsi canshuur la qaadayo?',
     sjekkTitle:'Liiska hubinta bayaanka canshuurta', sjekkDesc:'Ma wax baad illowday? Hubi jarriitaanada caadiga ah ee aad xaq u leedahay.',
     sjekkQ1:'Ma safartaa shaqada?', sjekkQ2:'Ma leedahay deyn guri?',
     sjekkQ3:'Ma bixisaa khidmadda ururka shaqaalaha?', sjekkQ4:'Ma ku kaydisaa BSU?',

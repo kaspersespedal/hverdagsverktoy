@@ -348,6 +348,7 @@ REGIONS['pl'] = {
     fpDekning:'pokrycie', fpUker:'tygodni',
     fpTipMax:'Dochód powyżej 6G ({max} kr) nie jest pokrywany przez NAV. Wielu pracodawców pokrywa różnicę.',
     fpTipGeneral:'Kwota bazowa (G) jest korygowana co roku w maju. Zasiłek rodzicielski obliczany jest na podstawie dochodu z ostatnich 3 lub 12 miesięcy — wybierana jest wyższa podstawa.',
+    nhTitle:'Działalność gospodarcza czy hobby?', nhDesc:'Kiedy dochody dodatkowe stają się opodatkowaną działalnością gospodarczą?',
     sjekkTitle:'Lista kontrolna zeznania podatkowego', sjekkDesc:'Czy o czymś zapomniałeś? Sprawdź typowe odliczenia, do których możesz mieć prawo.',
     sjekkQ1:'Dojeżdżasz do pracy?', sjekkQ2:'Masz kredyt hipoteczny?',
     sjekkQ3:'Płacisz składki związkowe?', sjekkQ4:'Oszczędzasz w BSU?',

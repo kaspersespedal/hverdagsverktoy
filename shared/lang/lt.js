@@ -347,6 +347,7 @@ REGIONS['lt'] = {
     fpDekning:'padengimas', fpUker:'savaitės',
     fpTipMax:'Pajamos virš 6G ({max} kr) nepadengiamos NAV. Daugelis darbdavių padengia skirtumą.',
     fpTipGeneral:'Bazinė suma (G) koreguojama kasmet gegužę. Tėvystės pašalpa skaičiuojama pagal pajamas per pastaruosius 3 arba 12 mėnesių — pasirenkama didesnė bazė.',
+    nhTitle:'Verslas ar pomėgis?', nhDesc:'Kada papildomos pajamos tampa apmokestinama verslo veikla?',
     sjekkTitle:'Mokesčių deklaracijos kontrolinis sąrašas', sjekkDesc:'Ar ką nors pamiršote? Patikrinkite įprastus atskaitymus, į kuriuos galite turėti teisę.',
     sjekkQ1:'Ar važinėjate į darbą?', sjekkQ2:'Ar turite būsto paskolą?',
     sjekkQ3:'Ar mokate profsąjungos mokestį?', sjekkQ4:'Ar taupote BSU?',

@@ -349,6 +349,7 @@ REGIONS['zh'] = {
     fpDekning:'覆盖', fpUker:'周',
     fpTipMax:'超过 6G（{max} kr）的收入不在 NAV 覆盖范围内。许多雇主会补足差额。',
     fpTipGeneral:'基本金额（G）每年五月调整。育儿津贴根据最近3个月或最近12个月的收入计算——取较高者。',
+    nhTitle:'经营还是爱好？', nhDesc:'副业收入何时成为应税经营活动？',
     sjekkTitle:'报税清单', sjekkDesc:'是否遗漏了什么？检查您可能有权获得的常见扣除。',
     sjekkQ1:'您通勤上班吗？', sjekkQ2:'您有住房贷款吗？',
     sjekkQ3:'您缴纳工会会费吗？', sjekkQ4:'您在 BSU 中储蓄吗？',

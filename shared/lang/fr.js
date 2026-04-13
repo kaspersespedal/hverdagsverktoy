@@ -349,6 +349,7 @@ REGIONS['fr'] = {
     fpDekning:'couverture', fpUker:'semaines',
     fpTipMax:'Les revenus supérieurs à 6G ({max} kr) ne sont pas couverts par NAV. De nombreux employeurs couvrent la différence.',
     fpTipGeneral:'Le montant de base (G) est ajusté chaque année en mai. Les allocations parentales sont calculées sur les revenus des 3 derniers mois ou des 12 derniers mois — le montant le plus élevé est retenu.',
+    nhTitle:'Activit\u00e9 commerciale ou loisir ?', nhDesc:'Quand un revenu compl\u00e9mentaire devient-il une activit\u00e9 commerciale imposable ?',
     sjekkTitle:'Checklist déclaration fiscale', sjekkDesc:'Avez-vous oublié quelque chose ? Vérifiez les déductions courantes auxquelles vous pouvez avoir droit.',
     sjekkQ1:'Faites-vous la navette pour aller au travail ?', sjekkQ2:'Avez-vous un prêt immobilier ?',
     sjekkQ3:'Payez-vous une cotisation syndicale ?', sjekkQ4:'Épargnez-vous en BSU ?',
