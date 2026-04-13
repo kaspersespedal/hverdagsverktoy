@@ -54,7 +54,7 @@ REGIONS['ti'] = {
     conOptGeneral:'ሓፈሻዊ ሕቶ', conOptBug:'ጸገም ጸብጻብ', conOptFeature:'ናይ ባህርይ ርእይቶ', conOptOther:'ካልእ',
     conBtn:'መልእኽቲ ስደድ →', conSuccessH:'የቐንየልና!', conSuccessP:'ናይ ኢመይል ክላየንትኩም ምስ ዝተዳለወ መልእኽቲ ክኽፈት እዩ። ንምውዳእ ኣብ ኢመይል ክላየንት «ስደድ» ጠውቑ።',
     conAltH:'ቀጥታዊ ርክብ', conAltP:'ብቐጥታ ኢመይል ክትልእኹ ትኽእሉ ናብ',
-    footerAuthor:'ብካስፐር ኤስፐዳል ዝተሰርሐ · ኣብ ዓኺል ኣካውንቲንግ ኣንድ ኦዲቲንግ፣ ዩኒቨርሲቲ ስታቫንጊር',
+    footerAuthor:'Hverdagsverktøy',
     footerCopy:'© 2026 Hverdagsverktøy — ንመምርሒ ዝኸውን ስሌት ኣብ ክሳብ መጋቢት 2026 ዝተፈልጡ ተመኖታት ዝተመርኮሰ። ተመኖታት ብኢድ ይሕደሱ ካብ ዝሰርሑ ሕግታት ክፈላለዩ ይኽእሉ። ኩሉ ግዜ skatteetaten.no ንወግዓዊ ተመኖታት ኣረጋግጹ። ሞያዊ ፋይናንሳዊ ወይ ሕጋዊ ምኽሪ ኣይኮነን።',
     ratesDisclaimer:'ተመኖታት: ናይ ግብሪ ዓመት',ratesUpdated:'ናይ መወዳእታ ምሕዳስ',ratesStale:'ተመኖታት ን6 ኣዋርሕ ንላዕሊ ኣይተሓደሱን ኣረጊት ክኾኑ ይኽእሉ።',
     secCalc:'ካልኩሌተራት',secGuideTax:'ናይ ግብሪ መምርሒ',secGuideMor:'ናይ ገዛ መምርሒ',secGuideVat:'ናይ ክፍሊት መምርሒ',secGuidePerso:'መምርሒታት',

@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════
 // Hverdagsverktøy — core.js
-// © 2026 Kasper Skjæveland Espedal. All rights reserved.
+// © 2026 Hverdagsverktøy. All rights reserved.
 // https://hverdagsverktoy.com
 // ═══════════════════════════════════════════════════════
 
@@ -2498,7 +2498,7 @@ function updateFooter() {
   setText('fl-about', r.footerAbout||'About');
   setText('fl-priv', r.footerPriv||'Privacy');
   setText('fl-con', r.footerCon||'Contact');
-  setText('fl-author', r.footerAuthor||'Laget av Kasper Espedal · Masterstudent i regnskap og revisjon, Universitetet i Stavanger');
+  setText('fl-author', r.footerAuthor||'Hverdagsverktøy — gratis norske finanskalkulatorer');
   setText('fl-copy', (r.footerCopy||'© 2026 Hverdagsverktøy').replace(/2026/g, yr));
   // Wire privacy link
   const privLink = document.getElementById('fl-priv');

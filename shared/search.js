@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════
    Hverdagsverktøy — Søkemodul
    Instant client-side search across all tools and concepts.
-   © 2026 Kasper Skjæveland Espedal. All rights reserved.
+   © 2026 Hverdagsverktøy. All rights reserved.
    ═══════════════════════════════════════════════════════════ */
 
 (function(){
