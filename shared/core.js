@@ -181,16 +181,8 @@ function setTheme(t) {
   }
   try{updateHero();}catch(e){if(typeof _uiErr==='function')_uiErr('updateHero/theme',e);}
 }
-(function(){
-  try {
-    const saved = localStorage.getItem('hvt-theme');
-    const valid = THEMES.map(t=>t.id);
-    const chosen = (saved && valid.includes(saved)) ? saved : 'dark';
-    document.documentElement.setAttribute('data-theme', chosen);
-  } catch(e){
-    document.documentElement.setAttribute('data-theme', 'dark');
-  }
-})();
+// Theme IIFE moved to inline <script> in <head> of each HTML file
+// to prevent white flash (sets data-theme before CSS renders).
 
 // ═══════════════════════════════════════════════════════
 // STATE
@@ -5070,7 +5062,8 @@ bcUpdateDisp();
 fcPopulateSelect();
 fcUpdateFields();
 ccPopulate();
-ccFetchRates();
+// Skip network fetch if localStorage cache is < 1 hour old (perf: saves 1 request per page load)
+if(!ccRatesCached || (function(){ try { var r=localStorage.getItem(CC_CACHE_KEY); if(!r) return true; var o=JSON.parse(r); return !o||!o.ts||Date.now()-o.ts>3600000; } catch(e){ return true; } })()) ccFetchRates();
 vgPopulate();
 if(document.getElementById('m-type')) morPopulateType();
 // Restore theme from localStorage
@@ -6133,6 +6126,8 @@ function bilCsv(){
 
 // Page initialization — called by each page after DOM is ready
 function initPage(){
+  // Safety: reveal page after 2s even if lang loading fails completely
+  setTimeout(function(){ document.body.classList.remove('hvt-loading'); document.body.classList.add('hvt-ready'); }, 2000);
   // Load active language, then initialize.
   // If the active language fails to load we fall back to Norwegian and log a
   // warning so the silent reset isn't invisible to the user/developer.
@@ -6168,6 +6163,9 @@ function _initPageReady(){
     if(ic.querySelector(':scope > .law-body')) ic.classList.add('has-law-body');
   });
   updateAll();
+  // Reveal page after language + theme are ready (prevents flash/flicker)
+  document.body.classList.remove('hvt-loading');
+  document.body.classList.add('hvt-ready');
   // Rebuild search chips with loaded language (chips built before lang was ready)
   try { if(typeof window.hvtSearchRebuildChips==='function') window.hvtSearchRebuildChips(); } catch(_e){}
   try { if(typeof window.hvtSearchInvalidate==='function') window.hvtSearchInvalidate(); } catch(_e){}
