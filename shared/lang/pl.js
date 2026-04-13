@@ -275,7 +275,7 @@ REGIONS['pl'] = {
     renteIntro: 'Nominalna stopa procentowa to ta podana przez bank. Efektywna stopa uwzględnia również opłaty i prowizję — pokazuje, ile kredyt naprawdę kosztuje.',
     valgevinIntro: 'Oblicz zysk lub stratę z kupna i sprzedaży walut obcych. Zyski są opodatkowane stawką 22%.',
     likvidIntro: 'Pokazuje, czy masz wystarczająco pieniędzy na koncie miesiąc po miesiącu. Saldo początkowe + przychody − wydatki = to, co zostaje.',
-    pensjonHint: 'OTP = obowiązkowa emerytura pracownicza (min. 2% wynagrodzenia powyżej 1G). Zwrot to oczekiwany roczny zwrot z funduszu emerytalnego — średnia historyczna ok. 5-7%.',
+    pensjonHint: 'OTP = obowiązkowa emerytura pracownicza (min. 2% wynagrodzenia powyżej {1G}). Zwrot to oczekiwany roczny zwrot z funduszu emerytalnego — średnia historyczna ok. 5-7%.',
     agaZoneHint: 'AGA = składka pracodawcy na ubezpieczenie społeczne. Stawka zależy od lokalizacji firmy.',
     agaZoneLinkText: 'Zobacz wszystkie strefy →',
     agaOtpHint: 'OTP = obowiązkowa emerytura pracownicza. Pracodawca musi oszczędzać co najmniej 2% wynagrodzenia powyżej 1G ({1G}) na emeryturę.',

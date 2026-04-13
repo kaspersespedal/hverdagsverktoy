@@ -333,7 +333,7 @@ REGIONS['en'] = {
     renteIntro: 'The nominal interest rate is what the bank quotes. The effective rate also includes fees and establishment charges — showing what the loan actually costs you.',
     valgevinIntro: 'Calculate gain or loss on purchase and sale of foreign currency. Gains are taxed at 22%.',
     likvidIntro: 'Shows whether you have enough money in your account month by month. Starting balance + income − expenses = what you have left.',
-    pensjonHint: 'OTP = mandatory occupational pension (min. 2% of salary above 1G). Return is expected annual return on pension fund — historical average approx. 5-7%.',
+    pensjonHint: 'OTP = mandatory occupational pension (min. 2% of salary above {1G}). Return is expected annual return on pension fund — historical average approx. 5-7%.',
     agaZoneHint: 'AGA = employer social security contribution. The rate depends on where the business is located.',
     agaZoneLinkText: 'See all zones →',
     agaOtpHint: 'OTP = mandatory occupational pension. Employer must save at least 2% of salary above 1G ({1G}) for pension.',

@@ -274,7 +274,7 @@ REGIONS['lt'] = {
     renteIntro: 'Nominali palūkanų norma yra ta, kurią nurodo bankas. Efektyvi norma taip pat apima mokesčius ir steigimo mokestį — parodo tikrąją paskolos kainą.',
     valgevinIntro: 'Apskaičiuokite pelną ar nuostolį perkant ir parduodant užsienio valiutą. Pelnas apmokestinamas 22%.',
     likvidIntro: 'Rodo, ar turite pakankamai pinigų sąskaitoje kiekvieną mėnesį. Pradinis likutis + pajamos − išlaidos = kas lieka.',
-    pensjonHint: 'OTP = privaloma profesinė pensija (min. 2% atlyginimo virš 1G). Grąža yra tikėtina metinė pensijų fondo grąža — istorinis vidurkis apie 5-7%.',
+    pensjonHint: 'OTP = privaloma profesinė pensija (min. 2% atlyginimo virš {1G}). Grąža yra tikėtina metinė pensijų fondo grąža — istorinis vidurkis apie 5-7%.',
     agaZoneHint: 'AGA = darbdavio socialinio draudimo įmoka. Tarifas priklauso nuo įmonės buvimo vietos.',
     agaZoneLinkText: 'Žiūrėti visas zonas →',
     agaOtpHint: 'OTP = privaloma profesinė pensija. Darbdavys turi taupyti bent 2% atlyginimo virš 1G ({1G}) pensijai.',

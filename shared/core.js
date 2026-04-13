@@ -2458,7 +2458,8 @@ function updateFagkalkulatorUI() {
   }
   var _otpHint=(r.agaOtpHint||'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G ({1G}) til pensjon.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
   setText('aga-hint-otp',_otpHint);
-  setText('pensjon-hint', r.pensjonHint || 'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over 1G). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.');
+  var _pensjonHint=(r.pensjonHint||'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over {1G}). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
+  setText('pensjon-hint', _pensjonHint);
   // --- Additional valgevinst labels ---
   setText('valgevinst-l-currency', r.valgevinCurrencyLabel || 'Valuta');
   setText('valgevinst-l-units', r.valgevinUnitsLabel || 'Antall enheter kjøpt');

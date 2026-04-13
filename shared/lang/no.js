@@ -331,7 +331,7 @@ REGIONS['no'] = {
     renteIntro: 'Nominell rente er det banken oppgir. Effektiv rente inkluderer også gebyrer og etableringsavgift — den viser hva lånet faktisk koster deg.',
     valgevinIntro: 'Beregn gevinst eller tap ved kjøp og salg av utenlandsk valuta. Gevinst beskattes med 22%.',
     likvidIntro: 'Viser om du har nok penger på konto måned for måned. Startbalanse + inntekter − utgifter = det du har igjen.',
-    pensjonHint: 'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over 1G). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.',
+    pensjonHint: 'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over {1G}). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.',
     agaZoneHint: 'AGA = arbeidsgiveravgift. Satsen avhenger av hvor bedriften holder til.',
     agaZoneLinkText: 'Se alle soner →',
     agaOtpHint: 'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G ({1G}) til pensjon.',

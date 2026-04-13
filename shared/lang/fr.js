@@ -276,7 +276,7 @@ REGIONS['fr'] = {
     renteIntro: 'Le taux d\'intérêt nominal est celui indiqué par la banque. Le taux effectif inclut également les frais et les frais d\'établissement — il montre ce que le prêt vous coûte réellement.',
     valgevinIntro: 'Calculez le gain ou la perte sur l\'achat et la vente de devises étrangères. Les gains sont imposés à 22%.',
     likvidIntro: 'Montre si vous avez suffisamment d\'argent sur votre compte mois par mois. Solde initial + revenus − dépenses = ce qu\'il vous reste.',
-    pensjonHint: 'OTP = pension professionnelle obligatoire (min. 2% du salaire au-dessus de 1G). Le rendement est le rendement annuel attendu du fonds de pension — moyenne historique env. 5-7%.',
+    pensjonHint: 'OTP = pension professionnelle obligatoire (min. 2% du salaire au-dessus de {1G}). Le rendement est le rendement annuel attendu du fonds de pension — moyenne historique env. 5-7%.',
     agaZoneHint: 'AGA = cotisation patronale de sécurité sociale. Le taux dépend de l\'emplacement de l\'entreprise.',
     agaZoneLinkText: 'Voir toutes les zones →',
     agaOtpHint: 'OTP = pension professionnelle obligatoire. L\'employeur doit épargner au moins 2% du salaire au-dessus de 1G ({1G}) pour la retraite.',

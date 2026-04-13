@@ -272,7 +272,7 @@ REGIONS['so'] = {
     renteIntro: 'Ribada magaca leh waa ta ay bankiga sheegto. Ribada dhabta ah waxaa kaloo ku jira khidmadaha — waxay muujinaysaa inta amaahdu kugu kacleynayso dhab ahaan.',
     valgevinIntro: 'Xisaabi faa\'iida ama khasaare ka timaada iibka iyo gadashada lacagta ajaanibiga. Faa\'iidada waxaa lagu canshuuraa 22%.',
     likvidIntro: 'Muujinaysaa haddii aad lacag ku filan leedahay akoonkaaga bil walba. Haraaga billowga + dakhliga − kharashaadka = inta hadhay.',
-    pensjonHint: 'OTP = hawl-gabba waajibka ah (ugu yaraan 2% mushaharka ka sarreeya 1G). Soo-celinta waa soo-celinta sanadlaha ah ee la filayo — celceliska taariikhiga ah qiyaastii 5-7%.',
+    pensjonHint: 'OTP = hawl-gabba waajibka ah (ugu yaraan 2% mushaharka ka sarreeya {1G}). Soo-celinta waa soo-celinta sanadlaha ah ee la filayo — celceliska taariikhiga ah qiyaastii 5-7%.',
     agaZoneHint: 'AGA = lacagta shaqo-bixinta caymiska bulshada. Qiimaha wuxuu ku xiran yahay halka shirkaddu ku taalo.',
     agaZoneLinkText: 'Arag dhammaan aagagga →',
     agaOtpHint: 'OTP = hawl-gabba waajibka ah. Shaqo-bixiyaha waa inuu keydiyaa ugu yaraan 2% mushaharka ka sarreeya 1G ({1G}) hawl-gabbadda.',
