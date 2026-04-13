@@ -103,7 +103,6 @@ REGIONS['pl'] = {
     ioRlMthFree:'Rata miesięczna (tylko odsetki)', ioRlTotFree:'Łączne odsetki w okresie', ioRlMthAfter:'Rata miesięczna (annuitet)', ioRlIntAfter:'Odsetki w pozostałym okresie',
     ioRlTotIntIo:'Łączne odsetki (z karencją)', ioRlTotIntAnn:'Łączne odsetki (annuitet od 1. dnia)', ioRlDiff:'Dodatkowy koszt odsetek', ioRlAnnMth:'Miesięczny annuitet od 1. dnia',
     ioRSub:'Dodatkowy koszt odsetek vs. annuitet od 1. dnia',
-    npvDesc:'Wartość bieżąca netto i wewnętrzna stopa zwrotu dla projektów inwestycyjnych.',
     lInv:'Inwestycja (kr)', lRateD:'Stopa dyskontowa (%)', lCF1:'Przepływ pieniężny rok 1', lCF2:'Przepływ pieniężny rok 2', lCF3:'Przepływ pieniężny rok 3', lCF4:'Przepływ pieniężny rok 4', lCF5:'Przepływ pieniężny rok 5',
     npvRLbl:'Wartość bieżąca netto (NPV)', npvRPay:'Okres zwrotu', npvRSum:'Łączne przepływy pieniężne', npvRPi:'Indeks rentowności',
     vatTitle:'Kalkulator VAT', vatDesc:'Oblicz kwoty z VAT i bez VAT.',

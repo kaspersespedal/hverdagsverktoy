@@ -113,7 +113,6 @@ REGIONS['fr'] = {
     ioRlMthFree:'Mensualité (intérêts uniquement)', ioRlTotFree:'Intérêts totaux dans la période', ioRlMthAfter:'Mensualité (annuité)', ioRlIntAfter:'Intérêts période restante',
     ioRlTotIntIo:'Intérêts totaux (avec sans amortissement)', ioRlTotIntAnn:'Intérêts totaux (annuité dès jour 1)', ioRlDiff:'Coût d\'intérêt supplémentaire', ioRlAnnMth:'Mensualité annuité dès jour 1',
     ioRSub:'Coût d\'intérêt supplémentaire vs. annuité dès jour 1',
-    npvDesc:'Valeur actuelle nette et taux de rendement interne pour les projets d\'investissement.',
     lInv:'Investissement (kr)', lRateD:'Taux d\'actualisation (%)', lCF1:'Flux de trésorerie année 1', lCF2:'Flux de trésorerie année 2', lCF3:'Flux de trésorerie année 3', lCF4:'Flux de trésorerie année 4', lCF5:'Flux de trésorerie année 5',
     npvRLbl:'Valeur actuelle nette (VAN)', npvRPay:'Délai de récupération', npvRSum:'Flux de trésorerie totaux', npvRPi:'Indice de rentabilité',
     vatTitle:'Calculateur de TVA', vatDesc:'Calculez les montants avec et sans TVA.',

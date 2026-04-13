@@ -2256,15 +2256,6 @@ function repopulateSelect(id, labels, values) {
   });
   sel.value = cur;
 }
-function repopulateSelectByIndex(id, labels) {
-  if (!labels) return;
-  const sel = document.getElementById(id);
-  if (!sel) return;
-  const cur = sel.selectedIndex;
-  const opts = sel.querySelectorAll('option');
-  labels.forEach((lbl, i) => { if(opts[i]) opts[i].textContent = lbl; });
-}
-
 // ═══════════════════════════════════════════════════════
 // SELSKAP PAGE
 // ═══════════════════════════════════════════════════════
@@ -4744,10 +4735,6 @@ function fcPopulateSelect(){
   }
   sel.value = cur;
 }
-function ucPopulateCat(){ ccPopulate(); }
-function ucUpdateUnits(){ ccConvert(); }
-function ucConvert(){ ccConvert(); }
-
 function fcUpdateFields(){
   var _fct=document.getElementById('fc-type');const type=_fct?_fct.value:'pv';
   const cfg = getFcConfigs()[type];

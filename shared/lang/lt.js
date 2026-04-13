@@ -103,7 +103,6 @@ REGIONS['lt'] = {
     ioRlMthFree:'Mėnesinė įmoka (tik palūkanos)', ioRlTotFree:'Bendros palūkanos per laikotarpį', ioRlMthAfter:'Mėnesinė įmoka (anuitetas)', ioRlIntAfter:'Palūkanos likusiam laikotarpiui',
     ioRlTotIntIo:'Bendros palūkanos (su be amortizacijos)', ioRlTotIntAnn:'Bendros palūkanos (anuitetas nuo 1 d.)', ioRlDiff:'Papildoma palūkanų kaina', ioRlAnnMth:'Mėnesinis anuitetas nuo 1 dienos',
     ioRSub:'Papildoma palūkanų kaina vs. anuitetas nuo 1 dienos',
-    npvDesc:'Grynoji dabartinė vertė ir vidinė grąžos norma investiciniams projektams.',
     lInv:'Investicija (kr)', lRateD:'Diskonto norma (%)', lCF1:'Pinigų srautas 1 m.', lCF2:'Pinigų srautas 2 m.', lCF3:'Pinigų srautas 3 m.', lCF4:'Pinigų srautas 4 m.', lCF5:'Pinigų srautas 5 m.',
     npvRLbl:'Grynoji dabartinė vertė (NPV)', npvRPay:'Atsipirkimo laikotarpis', npvRSum:'Bendri pinigų srautai', npvRPi:'Pelningumo indeksas',
     vatTitle:'PVM skaičiuoklė', vatDesc:'Apskaičiuokite sumas su ir be pridėtinės vertės mokesčio.',

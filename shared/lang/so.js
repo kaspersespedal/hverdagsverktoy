@@ -101,7 +101,6 @@ REGIONS['so'] = {
     ioRlMthFree:'Lacag-bixinta billaha (ribada kaliya)', ioRlTotFree:'Ribada guud ee muddada', ioRlMthAfter:'Lacag-bixinta billaha (annuity)', ioRlIntAfter:'Ribada muddada hartay',
     ioRlTotIntIo:'Ribada guud (leh aan lacag-celin)', ioRlTotIntAnn:'Ribada guud (annuity maalinta 1aad)', ioRlDiff:'Kharashka ribada dheeraadka ah', ioRlAnnMth:'Annuity billaha maalinta 1aad',
     ioRSub:'Kharashka ribada dheeraadka ah vs. annuity maalinta 1aad',
-    npvDesc:'Qiimaha saafiga hadda iyo heerka soo-celinta gudaha mashruucyada maalgelinta.',
     lInv:'Maalgelinta (kr)', lRateD:'Heerka qiime-dhimista (%)', lCF1:'Socodka lacageed sannadka 1', lCF2:'Socodka lacageed sannadka 2', lCF3:'Socodka lacageed sannadka 3', lCF4:'Socodka lacageed sannadka 4', lCF5:'Socodka lacageed sannadka 5',
     npvRLbl:'Qiimaha saafiga hadda (NPV)', npvRPay:'Wakhtiga lacag-celinta', npvRSum:'Socodka lacageed guud', npvRPi:'Tilmaamaha faa\'iidada',
     vatTitle:'Xisaabiyaha MVA', vatDesc:'Xisaabi qaddarrada leh iyo la\'aanta MVA.',

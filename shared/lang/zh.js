@@ -186,7 +186,6 @@ REGIONS['zh'] = {
     ioRlMthFree:'每月还款（仅利息）', ioRlTotFree:'期间总利息', ioRlMthAfter:'每月还款（等额本息）', ioRlIntAfter:'剩余期间利息',
     ioRlTotIntIo:'总利息（含免还本金）', ioRlTotIntAnn:'总利息（从第一天起等额本息）', ioRlDiff:'额外利息成本', ioRlAnnMth:'从第一天起每月等额本息',
     ioRSub:'与从第一天起等额本息相比的额外利息成本',
-    npvDesc:'投资项目的净现值和内部收益率。',
     lInv:'投资额（kr）', lRateD:'贴现率（%）', lCF1:'第1年现金流', lCF2:'第2年现金流', lCF3:'第3年现金流', lCF4:'第4年现金流', lCF5:'第5年现金流',
     npvRLbl:'净现值（NPV）', npvRPay:'回收期', npvRSum:'现金流合计', npvRPi:'盈利指数',
     vatTitle:'增值税计算器', vatDesc:'计算含税和不含税金额。',
