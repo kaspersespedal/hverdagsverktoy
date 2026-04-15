@@ -1271,34 +1271,6 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <script src="/shared/core.js?v=v37"></script>
 <script src="/shared/search.js?v=v10"></script>
 <script src="/shared/lang/no.js?v=v27"></script>
-<script>
-// Auto-focus first card on desktop load (personlig page only)
-(function(){
-  if(window.innerWidth < 901) return;
-  if(window.location.hash) return; // let deep-link hash take precedence
-  var _orig = window._initPageReady;
-  window._initPageReady = function(){
-    _orig.apply(this, arguments);
-    var firstCard = document.getElementById('budsjett-wrapper');
-    if(!firstCard) return;
-    if(!document.body.classList.contains('desktop-focus')){
-      toggleDesktopFocus(0);
-    }
-    var col = firstCard.closest('.personlig-col');
-    if(col){
-      col.querySelectorAll(':scope > .card > .info-card').forEach(function(ic){
-        if(ic !== firstCard) ic.setAttribute('data-desktop-card-hidden','true');
-        else ic.removeAttribute('data-desktop-card-hidden');
-      });
-    }
-    if(firstCard.classList.contains('collapsed')){
-      toggleCard(firstCard);
-      firstCard.setAttribute('data-opened-by-focus','true');
-    }
-    window.scrollTo({top:0,behavior:'instant'});
-  };
-})();
-initPage();
-</script>
+<script>initPage();</script>
 </body>
 </html>
