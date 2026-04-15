@@ -62,6 +62,7 @@ var SEARCH_DATA = [
   {name:'Registrere selskap',desc:'Steg-for-steg: slik registrerer du foretak via Altinn',url:'/selskap/#selskap-reg-card',tags:'registrere selskap foretak altinn brønnøysund organisasjonsnummer register company',type:'tool',page:'Selskap',sk:'selskapReg'},
 
   // ══════ BEGREPER (Nivå 2 — fagtermer) ══════
+  {name:'Fradrag',desc:'Beløp som reduserer skattegrunnlaget eller skatten din',url:'/skatt/#sal-ded-card',tags:'fradrag reduksjon skattegrunnlag skatt minstefradrag reisefradrag særfradrag gjeldsrenter deduction',type:'concept',page:'Skatt',sk:'fradrag'},
   {name:'Trinnskatt',desc:'Progressiv skatt som øker med inntekten — 5 trinn',url:'/skatt/',tags:'trinnskatt trinn progressiv skatt inntekt sats bracket tax',type:'concept',page:'Skatt',sk:'trinnskatt'},
   {name:'Skattefradrag',desc:'Fradrag som reduserer skatten din direkte',url:'/skatt/#sal-ded-card',tags:'skattefradrag fradrag redusere skatt tax deduction',type:'concept',page:'Skatt',sk:'skatteFradrag'},
   {name:'Minstefradrag',desc:'Standardfradrag alle lønnsmottakere får automatisk',url:'/skatt/',tags:'minstefradrag standard fradrag lønn automatisk minimum deduction',type:'concept',page:'Skatt',sk:'minstefradrag'},
