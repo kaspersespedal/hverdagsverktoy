@@ -74,7 +74,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 .hvt-loading{opacity:0}.hvt-ready{opacity:1;transition:opacity .12s ease-out}
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
-<link href="/shared/style.css?v=v50" rel="stylesheet"/>
+<link href="/shared/style.css?v=v51" rel="stylesheet"/>
 <link as="script" href="/shared/core.js?v=v37" rel="preload"/>
 <script type="application/ld+json">
 {
@@ -1131,18 +1131,26 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
   }
 
 
-  // Open calc + scroll into its help section
+  // Toggle howto visibility (howto cards are hidden by default via CSS)
   window.openCalcHelp=function(wrapperId, howtoId){
     var wrapper=document.getElementById(wrapperId);
     var howto=document.getElementById(howtoId);
     if(!wrapper||!howto) return;
+    // Toggle off if already visible
+    if(howto.classList.contains('howto-visible')){
+      howto.classList.remove('howto-visible');
+      return;
+    }
     // Open the calc wrapper if collapsed
     if(wrapper.classList.contains('collapsed')){
       window.toggleCard(wrapper);
     }
-    // Open the inner howto (or toggle it)
+    // Reveal + expand the howto
     setTimeout(function(){
-      window.toggleCard(howto);
+      howto.classList.add('howto-visible');
+      if(howto.classList.contains('collapsed')){
+        window.toggleCard(howto);
+      }
       howto.scrollIntoView({behavior:'smooth',block:'center'});
     }, 100);
   };
