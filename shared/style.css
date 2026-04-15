@@ -1185,12 +1185,28 @@ html{scrollbar-width:auto;scrollbar-color:rgba(128,128,180,.2) var(--bg);scrollb
 /* Uniform card header height + ellipsis for symmetry — applies to info-cards inside a section's .card wrapper */
 #personlig-cols .card>.info-card{position:relative}
 #personlig-cols .card>.info-card.collapsed>.card-hdr{min-height:76px;max-height:76px;align-items:center}
-#personlig-cols .card>.info-card.collapsed>.card-hdr>div{min-width:0;width:100%;padding-right:40px}
+#personlig-cols .card>.info-card.collapsed>.card-hdr>div{min-width:0;width:100%;padding-right:76px}
+/* Both absolute buttons vertically centred in the 76px collapsed header */
+#personlig-cols .card>.info-card>.card-hdr>.focus-card-btn,
+#personlig-cols .card>.info-card>.calc-help-btn{top:50%;transform:translateY(-50%)}
+/* Keep vertical centering when focus-card-btn scales on hover */
+@media(hover:hover){#personlig-cols .card>.info-card>.card-hdr>.focus-card-btn:hover{transform:translateY(-50%) scale(1.1);}}
 #personlig-cols .card>.info-card.collapsed>.card-hdr .card-desc{display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
 /* Fix rectangle-behind-expanded-card bug: ensure info-card body doesn't show parent .card background leak */
 #personlig-cols .card>.info-card:not(.collapsed){background:var(--surface);position:relative;z-index:1}
 /* Last info-card in section has no bottom border (visual cleanliness) */
 #personlig-cols .card>.info-card:last-child{border-bottom:none}
+/* Focus mode — desktop: hide cards/columns that don't contain the open card */
+body.desktop-focus #personlig-cols{grid-template-columns:1fr!important;}
+body.desktop-focus #personlig-cols .cat-title{display:none!important;}
+body.desktop-focus #personlig-cols .card:has(>.info-card.collapsed){display:none!important;}
+body.desktop-focus #personlig-cols .personlig-col:not(:has(>.card>.info-card:not(.collapsed))){display:none!important;}
+/* Focus mode — mobile: hide columns/cards that don't contain the focused card */
+@media(max-width:900px){
+  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] #personlig-cols .cat-title{display:none!important;}
+  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] #personlig-cols .personlig-col:not(:has([data-mf-card="true"])){display:none!important;}
+  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] #personlig-cols .card:not(:has([data-mf-card="true"])){display:none!important;}
+}
 /* ? help button */
-.calc-help-btn{position:absolute;top:8px;right:44px;width:24px;height:24px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);color:var(--ink2);font-weight:700;font-size:13px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;font-family:inherit;transition:background .15s,color .15s}
+.calc-help-btn{position:absolute;top:50%;transform:translateY(-50%);right:44px;width:24px;height:24px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);color:var(--ink2);font-weight:700;font-size:13px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;font-family:inherit;transition:background .15s,color .15s}
 @media(hover:hover){.calc-help-btn:hover{background:color-mix(in srgb,var(--accent) 18%,var(--surface2));color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,var(--border))}}
