@@ -252,7 +252,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
     <h1 class="sr-only" id="tool-h1">Kalkulator — enkel, valuta, finansiell og vitenskapelig</h1>
 
     <!-- ══════════════ BASIC CALCULATOR ══════════════ -->
-    <div id="calc-focus-bar" style="display:none;max-width:640px;margin:0 auto 16px;"></div>
+    <div id="calc-focus-bar" style="display:none;max-width:480px;margin:0 auto 16px;"></div>
     <div id="calc-basic" class="calc-grid" style="grid-template-columns:1fr 1fr;max-width:700px;margin:0 auto;align-items:stretch;">
       <!-- LEFT: Calculator -->
       <div style="display:flex;flex-direction:column;align-self:stretch;">
@@ -607,22 +607,36 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <script src="/shared/lang/no.js?v=v27"></script>
 <script>
 initPage();
-// Build the desktop focus-bar AFTER initPage() resolves so translations are loaded
-// and R() returns the active language (not the "no" fallback).
+// Kalkulator page: focus mode is always-on. No toggle button.
+// Build only the Switch Calculator dropdown, right-aligned within the calculator's bounds.
+function _kalkEnterFocus(){
+  var b=document.body;
+  var grid=document.querySelector('.calc-grid');
+  if(!grid) return;
+  b.classList.add('desktop-focus');
+  Array.from(grid.children).forEach(function(c,i){
+    if(i!==0) c.setAttribute('data-desktop-hidden','true');
+    else c.removeAttribute('data-desktop-hidden');
+  });
+  // Keep focus-close-bar gone if it reappears
+  var fcb=document.getElementById('focus-close-bar');
+  if(fcb) fcb.remove();
+}
 function _buildKalkFocusBar(){
   var bar=document.getElementById('calc-focus-bar');
   if(!bar) return;
   var _r=R();
-  bar.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;">'
-    +'<button id="calc-focus-btn" onclick="toggleDesktopFocus(0)" class="focus-toggle" style="position:static;display:inline-flex;">'
-    +'<span class="focus-toggle-label" id="kalk-focus-lbl">'+(_r.focusLabel||'Fokus')+'</span><span class="focus-toggle-exit" id="kalk-focus-exit">'+(_r.focusClose||'Lukk fokus')+'</span></button>'
-    +'<div id="calc-focus-switch" style="display:none;position:relative;">'
+  // Remove the blue "Close focus" button injected by initDesktopFocus()
+  var fcb=document.getElementById('focus-close-bar');
+  if(fcb) fcb.remove();
+  // Build only the Switch Calculator dropdown — no focus toggle button
+  bar.innerHTML='<div style="display:flex;justify-content:flex-end;">'
+    +'<div id="calc-focus-switch" style="position:relative;">'
     +'<button id="calc-focus-switch-btn" onclick="document.getElementById(\'calc-focus-dd\').classList.toggle(\'hidden\')" '
-    +'style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink);font-family:Inter,sans-serif;" id="kalk-focus-switch-lbl">'+(_r.focusSwitchCalc||'Bytt kalkulator')+' \u25BC</button>'
+    +'style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink);font-family:Inter,sans-serif;">'+(_r.focusSwitchCalc||'Bytt kalkulator')+' \u25BC</button>'
     +'<div id="calc-focus-dd" class="hidden" style="position:absolute;right:0;top:100%;margin-top:4px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);z-index:100;min-width:220px;padding:6px;"></div>'
     +'</div></div>';
-  // Copy calc mode options into dropdown. Use data-mode so switchCalcMode can still
-  // highlight the active clone even though IDs are stripped to avoid duplicates.
+  // Copy calc mode options into dropdown
   var dd=document.getElementById('calc-focus-dd');
   var opts=document.querySelectorAll('#calc-basic > div:last-child .cm-opt');
   opts.forEach(function(o){
@@ -632,25 +646,21 @@ function _buildKalkFocusBar(){
     var clone=o.cloneNode(true);
     clone.querySelectorAll('[id]').forEach(function(el){el.removeAttribute('id');});
     clone.removeAttribute('id');
-    if(mode) clone.setAttribute('data-mode', mode);
+    if(mode) clone.setAttribute('data-mode',mode);
     clone.setAttribute('onclick',origOnclick+";document.getElementById('calc-focus-dd').classList.add('hidden');");
     dd.appendChild(clone);
   });
   if(window.innerWidth>900) bar.style.display='block';
   window.addEventListener('resize',function(){bar.style.display=window.innerWidth>900?'block':'none';});
-  // Override toggleDesktopFocus to sync focus-bar visibility. Wrap the original and
-  // flip the button's visible label so "Lukk fokus" swaps with "Fokus" in focus mode.
-  var origToggle=window.toggleDesktopFocus;
-  window.toggleDesktopFocus=function(colIndex){
-    if(typeof origToggle==='function') origToggle(colIndex);
-    var isFocus=document.body.classList.contains('desktop-focus');
-    var lbl=document.getElementById('kalk-focus-lbl');
-    var exit=document.getElementById('kalk-focus-exit');
-    var sw=document.getElementById('calc-focus-switch');
-    if(lbl) lbl.style.display=isFocus?'none':'';
-    if(exit) exit.style.display=isFocus?'':'none';
-    if(sw) sw.style.display=isFocus?'inline-block':'none';
-  };
+  // Enter focus mode immediately — always-on for kalkulator page
+  _kalkEnterFocus();
+  // Override toggleDesktopFocus so focus can never be exited on this page
+  window.toggleDesktopFocus=function(){_kalkEnterFocus();};
+  // Watch for initDesktopFocus() undoing our changes (it runs async via Promise microtask)
+  // and immediately restore focus mode whenever desktop-focus is removed from body.
+  (new MutationObserver(function(){
+    if(!document.body.classList.contains('desktop-focus')) _kalkEnterFocus();
+  })).observe(document.body,{attributes:true,attributeFilter:['class']});
 }
 // Poll briefly until REGIONS is populated (loadLang resolved), then build.
 (function waitForLang(tries){
