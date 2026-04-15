@@ -1636,7 +1636,6 @@ function updateNpvUI() {
   // Bilkostnadskalkulator labels
   var bilEl=document.getElementById('bil-title');if(bilEl)bilEl.innerHTML=(r.bilTitle || 'Car Cost Calculator')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('bil-desc', r.bilDesc || 'See what your car really costs you per month and over time');
-  if(document.getElementById('bil-intro')) document.getElementById('bil-intro').textContent = r.bilIntro || 'Most people underestimate the cost of car ownership. Beyond the purchase price come depreciation, insurance, fuel, service, tires, road tax and tolls. The figures below are rough estimates based on averages from NAF and OFV — intended only to illustrate how expensive car ownership really is.';
   setText('bil-l-merke', r.bilLMerke || 'Car brand');
   setText('bil-l-pris', r.bilLPris || 'Purchase price (kr)');
   setText('bil-l-aar', r.bilLAar || 'Ownership period (years)');
@@ -1681,7 +1680,6 @@ function updateNpvUI() {
   // Lønn etter skatt labels
   var lonnEl=document.getElementById('lonn-title');if(lonnEl)lonnEl.innerHTML=(r.lonnTitle||'Lønn etter skatt')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('lonn-desc',r.lonnDesc||'Legg inn timelønn og timer per uke — se hva du faktisk får utbetalt');
-  setText('lonn-intro',r.lonnIntro||'Jobber du deltid ved siden av skole eller studier? Legg inn timelønnen din og hvor mange timer du jobber i uka — så ser du bruttolønn, skattetrekk, feriepenger og hva du faktisk får utbetalt. Basert på norske skatteregler for 2026.');
   setText('lonn-l-timelonn',r.lonnLTimelonn||'Timelønn (kr)');
   setText('lonn-l-timer',r.lonnLTimer||'Timer per uke');
   setText('lonn-l-uker',r.lonnLUker||'Arbeidsuker per år');
@@ -1707,7 +1705,6 @@ function updateNpvUI() {
   // Abonnement labels
   var aboEl=document.getElementById('abo-title');if(aboEl)aboEl.innerHTML=(r.aboTitle||'Abonnement')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('abo-desc',r.aboDesc||'Se totalkostnaden for alle abonnementene dine — per måned og per år');
-  setText('abo-intro',r.aboIntro||'Mange undervurderer hvor mye de betaler i abonnementer. Legg inn alle tjenestene dine — streaming, trening, mobil, sky-lagring, osv. — og se den faktiske totalkostnaden. Overraskelseseffekten er stor.');
   setText('abo-l-hdr',r.aboLHdr||'Dine abonnementer');
   setText('abo-col-name',r.aboColName||'Tjeneste');
   setText('abo-col-amount',r.aboColAmount||'Pris (kr/mnd)');
@@ -1727,7 +1724,6 @@ function updateNpvUI() {
   // Budsjett labels
   var budEl=document.getElementById('budsjett-title');if(budEl)budEl.innerHTML=(r.budsjettTitle||'Budsjettkalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('budsjett-desc',r.budsjettDesc||'Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV');
-  setText('budsjett-intro',r.budsjettIntro||'Legg inn alle inntektene og utgiftene dine for å få full oversikt over økonomien. Du kan legge til så mange poster du vil, og laste ned budsjettet som CSV.');
   setText('budsjett-l-income-hdr',r.budLIncomeHdr||'Inntekter');
   setText('budsjett-l-expense-hdr',r.budLExpenseHdr||'Utgifter');
   setText('budsjett-col-desc-i',r.budColDesc||'Description');
@@ -1795,7 +1791,6 @@ function updateNpvUI() {
   // Sparekalkulator labels
   var spareEl=document.getElementById('spare-title');if(spareEl)spareEl.innerHTML=(r.spareTitle||'Sparekalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('spare-desc',r.spareDesc||'Se kraften i rentes rente — hvor mye du sparer vs. hva renten genererer');
-  setText('spare-intro',r.spareIntro||'Legg inn startbeløp, månedlig sparing, forventet avkastning og antall år. Grafen viser tydelig forskjellen mellom det du faktisk sparte og det renten genererte — rentes rente-effekten.');
   setText('spare-l-start',r.spareLStart||'Startbeløp (kr)');
   setText('spare-l-monthly',r.spareLMonthly||'Månedlig sparing (kr)');
   setText('spare-l-rate',r.spareLRate||'Forventet årlig avkastning (%)');
@@ -1847,7 +1842,6 @@ function updateNpvUI() {
   if(_stT){
     _stT.innerHTML=(r.studieTitle||'Studielån')+' <span style="font-size:11px;opacity:.5">▼</span>';
     setText('studie-desc',r.studieDesc||'Stipend vs. lån, nedbetalingsplan og månedskostnad fra Lånekassen');
-    setText('studie-intro',r.studieIntro||'Beregn hva studielånet ditt faktisk koster. Se hvor mye som blir stipend, hva du må betale tilbake, og hva månedskostnaden blir med ulike renter. Basert på Lånekassens satser for 2025–2026.');
     setText('studie-l-varighet',r.studieLVarighet||'Studievarighet (år)');
     setText('studie-l-grad',r.studieLGrad||'Fullfører du en grad?');
     setText('studie-l-basis',r.studieLBasis||'Basisstøtte per måned (kr)');
