@@ -74,7 +74,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 .hvt-loading{opacity:0}.hvt-ready{opacity:1;transition:opacity .12s ease-out}
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
-<link href="/shared/style.css?v=v44" rel="stylesheet"/>
+<link href="/shared/style.css?v=v45" rel="stylesheet"/>
 <link as="script" href="/shared/core.js?v=v37" rel="preload"/>
 <script type="application/ld+json">
 {
@@ -245,15 +245,18 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <div class="container">
 <h1 class="sr-only" id="tool-h1">Personlig økonomi — bilkostnad, budsjett og lønnsomhet</h1>
 <!-- ══════════════ NPV ══════════════ -->
-<div class="calc-grid" id="calc-npv">
-<div class="right-col" style="gap:0;">
+<div class="calc-grid" id="calc-npv" style="grid-template-columns:1fr;">
+<div class="right-col" style="gap:0;width:100%;">
 <h2 class="section-title" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid color-mix(in srgb,var(--accent) 15%,transparent);">Hverdagsverktøy</h2>
 <div class="personlig-cols" id="personlig-cols"><div class="personlig-col"><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Hverdagsøkonomi</h3><div class="info-card collapsed" id="budsjett-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="budsjett-title">Budsjett <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="budsjett-desc">Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('budsjett-wrapper','bud-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div id="budsjett-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Legg inn alle inntektene og utgiftene dine for å få full oversikt over økonomien. Du kan legge til så mange poster du vil, og laste ned budsjettet som CSV.</div>
+<div class="info-card collapsed" id="bud-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="bud-howto-title">Slik bruker du Budsjett <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bud-howto-desc">Steg-for-steg guide til budsjettering</div></div></button>
+<div class="law-body" id="bud-howto-rows"></div>
+</div><div id="budsjett-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Legg inn alle inntektene og utgiftene dine for å få full oversikt over økonomien. Du kan legge til så mange poster du vil, og laste ned budsjettet som CSV.</div>
 <!-- Inntekter -->
 <div style="margin-bottom:14px;">
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -336,9 +339,12 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div><div class="info-card collapsed" id="abo-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="abo-title">Abonnement <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="abo-desc">Se totalkostnaden for alle abonnementene dine — per måned og per år</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('abo-wrapper','abo-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div id="abo-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Mange undervurderer hvor mye de betaler i abonnementer. Legg inn alle tjenestene dine — streaming, trening, mobil, sky-lagring, osv. — og se den faktiske totalkostnaden. Overraskelseseffekten er stor.</div>
+<div class="info-card collapsed" id="abo-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="abo-howto-title">Slik bruker du Abonnementskalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="abo-howto-desc">Få full oversikt over abonnementskostnadene dine</div></div></button>
+<div class="law-body" id="abo-howto-rows"></div>
+</div><div id="abo-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Mange undervurderer hvor mye de betaler i abonnementer. Legg inn alle tjenestene dine — streaming, trening, mobil, sky-lagring, osv. — og se den faktiske totalkostnaden. Overraskelseseffekten er stor.</div>
 <!-- Abonnement-rader -->
 <div style="margin-bottom:14px;">
 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
@@ -427,9 +433,12 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div><div class="info-card collapsed" id="bil-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="bil-title">Bil <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bil-desc">Se hva bilen din gjennomsnittlig koster deg per måned og over tid</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('bil-wrapper','bil-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div id="bil-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er. Drivstoffpriser er estimater basert på snittpris 2026; veibruksavgift-reduksjonen apr–sept 2026 er inkludert i beregningen.</div>
+<div class="info-card collapsed" id="bil-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="bil-howto-title">Slik bruker du Bilkalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bil-howto-desc">Steg-for-steg guide til bilkostnader</div></div></button>
+<div class="law-body" id="bil-howto-rows"></div>
+</div><div id="bil-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">De fleste undervurderer hva det koster å eie bil. Utover selve kjøpsprisen kommer verditap, forsikring, drivstoff, service, dekk, trafikkforsikringsavgift og bompenger. Tallene under er røffe estimater basert på gjennomsnitt fra NAF og OFV — kun ment for å illustrere hvor dyrt bilhold faktisk er. Drivstoffpriser er estimater basert på snittpris 2026; veibruksavgift-reduksjonen apr–sept 2026 er inkludert i beregningen.</div>
 <!-- Mode selection -->
 <div id="bil-mode-select" style="display:flex;gap:10px;margin-bottom:18px;">
 <button class="btn-calc" id="bil-mode-own" onclick="bilSetMode('own')" style="flex:1;opacity:.55;font-size:13px;" type="button"><span id="bil-mode-own-label">Bil jeg allerede eier</span></button>
@@ -600,9 +609,12 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Lån</h3><div class="info-card collapsed" id="studie-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="studie-title">Studielån <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="studie-desc">Stipend vs. lån, nedbetalingsplan og månedskostnad fra Lånekassen</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('studie-wrapper','studie-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div id="studie-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Beregn hva studielånet ditt faktisk koster. Se hvor mye som blir stipend, hva du må betale tilbake, og hva månedskostnaden blir med ulike renter. Basert på Lånekassens satser for 2025–2026.</div>
+<div class="info-card collapsed" id="studie-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="studie-howto-title">Slik bruker du Studielånkalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="studie-howto-desc">Steg-for-steg guide til studielån</div></div></button>
+<div class="law-body" id="studie-howto-rows"></div>
+</div><div id="studie-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Beregn hva studielånet ditt faktisk koster. Se hvor mye som blir stipend, hva du må betale tilbake, og hva månedskostnaden blir med ulike renter. Basert på Lånekassens satser for 2025–2026.</div>
 <!-- Studieoppsett -->
 <div class="form-row">
 <div class="fg"><label class="flbl" for="studie-varighet" id="studie-l-varighet">Studievarighet (år)</label>
@@ -734,9 +746,14 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div><div class="info-card collapsed" id="fbl-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Forbrukslån og effektiv rente <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Hva lånet faktisk koster — nominell rente er ikke hele sannheten</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('fbl-wrapper','fbl-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div class="form-row">
+<div class="info-card collapsed" id="fbl-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik bruker du Forbrukslån-kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Nominell vs effektiv rente + sammenlign tilbud</div></div></button>
+<div class="law-body" style="padding:0 20px 16px;">
+<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Nominell rente</strong> er den rentesatsen banken annonserer. <strong>Effektiv rente</strong> inkluderer gebyrer (etableringsgebyr + terminomkostninger) og viser den faktiske kostnaden per år.<br/><br/>To lån med samme nominelle rente kan ha svært ulik effektiv rente om gebyrene er forskjellige. Alltid sammenlign på effektiv rente, ikke nominell.<br/><br/>Skriv inn lånebeløp, nominell rente, gebyrer og løpetid. Kalkulatoren viser månedlig betaling, total kostnad og reell effektiv rente.</div>
+</div>
+</div><div class="form-row">
 <div class="fg"><label class="flbl" for="fbl-beloep">Lånebeløp (kr)</label>
 <input class="fc" id="fbl-beloep" inputmode="numeric" oninput="calcFbl()" type="text" value="100 000"/>
 </div>
@@ -772,9 +789,12 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Sparing</h3><div class="info-card collapsed" id="spare-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="spare-title">Sparekalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="spare-desc">Se kraften i rentes rente — hvor mye du sparer vs. hva renten genererer</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('spare-wrapper','spare-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div id="spare-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Legg inn startbeløp, månedlig sparing, forventet avkastning og antall år. Grafen viser tydelig forskjellen mellom det du faktisk sparte og det renten genererte — rentes rente-effekten.</div>
+<div class="info-card collapsed" id="spare-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="spare-howto-title">Slik bruker du Sparekalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="spare-howto-desc">Steg-for-steg guide til sparing og rentes rente</div></div></button>
+<div class="law-body" id="spare-howto-rows"></div>
+</div><div id="spare-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Legg inn startbeløp, månedlig sparing, forventet avkastning og antall år. Grafen viser tydelig forskjellen mellom det du faktisk sparte og det renten genererte — rentes rente-effekten.</div>
 <div class="form-row">
 <div class="fg"><label class="flbl" for="spare-start" id="spare-l-start">Startbeløp (kr)</label>
 <input class="fc" id="spare-start" inputmode="numeric" type="text" value="10 000"/>
@@ -822,60 +842,15 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div>
 </div>
 </div>
-</div><div class="info-card collapsed" id="personlig-help-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
-<div><div class="card-title" id="personlig-help-title">Hjelp med kalkulatorene <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="personlig-help-desc">Steg-for-steg guider til alle kalkulatorene</div></div>
-</button>
-<div class="law-body" id="personlig-help-body" style="padding:12px 24px 20px;"><div class="info-card collapsed" id="bud-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="bud-howto-title">Slik bruker du Budsjett <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bud-howto-desc">Steg-for-steg guide til budsjettering</div></div></button>
-<div class="law-body" id="bud-howto-rows"></div>
-</div><div class="info-card collapsed" id="abo-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="abo-howto-title">Slik bruker du Abonnementskalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="abo-howto-desc">Få full oversikt over abonnementskostnadene dine</div></div></button>
-<div class="law-body" id="abo-howto-rows"></div>
-</div><div class="info-card collapsed" id="bil-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="bil-howto-title">Slik bruker du Bilkalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bil-howto-desc">Steg-for-steg guide til bilkostnader</div></div></button>
-<div class="law-body" id="bil-howto-rows"></div>
-</div><div class="info-card collapsed" id="lonn-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="lonn-howto-title">Slik bruker du Lønnskalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="lonn-howto-desc">Steg-for-steg guide for VGS-elever og studenter</div></div></button>
-<div class="law-body" id="lonn-howto-rows"></div>
-</div><div class="info-card collapsed" id="syk-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik bruker du Sykepenger-kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Sykepenger, 6G-taket og arbeidsgivers forpliktelser</div></div></button>
-<div class="law-body" style="padding:0 20px 16px;">
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Hovedregel:</strong> Ved sykefravær får du 100% av lønn fra NAV — men bare opp til <strong>6G (6 × grunnbeløpet = 780 960 kr i 2026)</strong>. Lønn over 6G kompenseres ikke av NAV.<br/><br/><strong>Arbeidsgiverperioden:</strong> De første 16 dagene betaler arbeidsgiver sykepenger — basert på full lønn (uten 6G-tak).<br/><br/><strong>Etter 16 dager:</strong> NAV overtar. Hvis du tjener over 6G, dekker NAV kun 6G — resten må du selv tape eller ha privat forsikring for.<br/><br/><strong>Maksimal varighet:</strong> Sykepenger fra NAV gis i inntil 52 uker.<br/><br/>Skriv inn årslønn — så ser du hva du faktisk får per måned fra NAV og hvor mye du taper over 6G.</div>
-</div>
-</div><div class="info-card collapsed" id="fam-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik bruker du Foreldrefradrag-kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Foreldrefradrag, maksimalpris og søskenmoderasjon forklart</div></div></button>
-<div class="law-body" style="padding:0 20px 16px;">
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Foreldrefradrag:</strong> Du kan trekke fra inntil 25 000 kr for første barn og 15 000 kr per ytterligere barn i dokumenterte utgifter til barnepass (barnehage, SFO, dagmamma). Fradraget gis i alminnelig inntekt — 22% av beløpet spart i skatt.<br/><br/><strong>Maksimalpris barnehage (2026):</strong> Makspris per måned for heltidsplass (SJEKK oppdatert sats fra regjeringen.no). Kommunen kan ha inntektsgradert eller gratis plass.<br/><br/><strong>Søskenmoderasjon:</strong> 30% rabatt for barn nr. 2, 50% for barn nr. 3 og flere.<br/><br/>Fyll inn antall barn, månedspris og inntekt — så ser du årlig utgift, fradragseffekt og netto kostnad.</div>
-</div>
-</div><div class="info-card collapsed" id="studie-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="studie-howto-title">Slik bruker du Studielånkalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="studie-howto-desc">Steg-for-steg guide til studielån</div></div></button>
-<div class="law-body" id="studie-howto-rows"></div>
-</div><div class="info-card collapsed" id="fbl-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik bruker du Forbrukslån-kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Nominell vs effektiv rente + sammenlign tilbud</div></div></button>
-<div class="law-body" style="padding:0 20px 16px;">
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Nominell rente</strong> er den rentesatsen banken annonserer. <strong>Effektiv rente</strong> inkluderer gebyrer (etableringsgebyr + terminomkostninger) og viser den faktiske kostnaden per år.<br/><br/>To lån med samme nominelle rente kan ha svært ulik effektiv rente om gebyrene er forskjellige. Alltid sammenlign på effektiv rente, ikke nominell.<br/><br/>Skriv inn lånebeløp, nominell rente, gebyrer og løpetid. Kalkulatoren viser månedlig betaling, total kostnad og reell effektiv rente.</div>
-</div>
-</div><div class="info-card collapsed" id="spare-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="spare-howto-title">Slik bruker du Sparekalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="spare-howto-desc">Steg-for-steg guide til sparing og rentes rente</div></div></button>
-<div class="law-body" id="spare-howto-rows"></div>
-</div><div class="info-card collapsed" id="invest-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik bruker du Aksjer og obligasjoner <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Aksjer vs obligasjoner — risiko, avkastning og miks</div></div></button>
-<div class="law-body" style="padding:0 20px 16px;">
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Aksjer</strong> er eierandeler i et selskap — du får del i overskuddet (utbytte) og verdiendringer. Høyere forventet avkastning (historisk ~7% årlig for Oslo Børs), men høyere risiko med svingninger.<br/><br/><strong>Obligasjoner</strong> er lån du gir til stat eller selskap. Du får fast kupongrente og pålydende tilbake ved forfall. Lavere forventet avkastning (~3–4% for norske statsobligasjoner), men langt mer stabilt.<br/><br/><strong>Hvorfor miks?</strong> Mange kombinerer begge — aksjer for vekst, obligasjoner for stabilitet. Tommelfingerregelen «100 minus alderen din = aksjeandel» er kjent, men det finnes ingen fasit. Jo lenger investeringshorisont, desto mer aksjer tåler du.<br/><br/><strong>Hvordan bruke:</strong> Sett månedlig innskudd, antall år og juster aksje-andelen med glidebryteren. Resultatet viser estimert sluttverdi med blandet avkastning.</div>
-</div>
-</div><div class="info-card collapsed" id="konto-howto-card" style="margin-top:8px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik velger du investeringskonto <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Hva er forskjellen og hvordan velger du riktig?</div></div></button>
-<div class="law-body" style="padding:0 20px 16px;">
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Aksjesparekonto (ASK):</strong> Du kan kjøpe og selge aksjer og aksjefond uten å betale skatt på gevinst før du tar pengene ut av kontoen. Ingen årlig skatt så lenge pengene blir værende. Passer til langsiktig aksjesparing.<br/><br/><strong>Individuell pensjonssparing (IPS):</strong> Låst til du er 62 år. Du får skattefradrag på inntil 15 000 kr i året (22% = 3 300 kr spart). Skatt betales først ved uttak som pensjon. Passer hvis du vil ha ekstra pensjonssparing og tåler å binde pengene.<br/><br/><strong>Fondskonto (vanlig):</strong> Du betaler skatt på utbytte og gevinst hvert år. Friere enn ASK og IPS, men dårligere skattemessig. Passer hvis du trenger fleksibilitet eller investerer i noe som ikke kvalifiserer for ASK.</div>
-</div>
-</div></div>
 </div></div><div class="personlig-col"><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Lønn og NAV-ytelser</h3><div class="info-card collapsed" id="lonn-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="lonn-title">Lønn etter skatt <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="lonn-desc">Legg inn timelønn og timer per uke — se hva du faktisk får utbetalt</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('lonn-wrapper','lonn-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div id="lonn-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Jobber du deltid ved siden av skole eller studier? Legg inn timelønnen din og hvor mange timer du jobber i uka — så ser du bruttolønn, skattetrekk, feriepenger og hva du faktisk får utbetalt. Basert på norske skatteregler for 2026.</div>
+<div class="info-card collapsed" id="lonn-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title" id="lonn-howto-title">Slik bruker du Lønnskalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="lonn-howto-desc">Steg-for-steg guide for VGS-elever og studenter</div></div></button>
+<div class="law-body" id="lonn-howto-rows"></div>
+</div><div id="lonn-intro" style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Jobber du deltid ved siden av skole eller studier? Legg inn timelønnen din og hvor mange timer du jobber i uka — så ser du bruttolønn, skattetrekk, feriepenger og hva du faktisk får utbetalt. Basert på norske skatteregler for 2026.</div>
 <div class="form-row">
 <div class="fg"><label class="flbl" for="lonn-timelonn" id="lonn-l-timelonn">Timelønn (kr)</label>
 <input class="fc" id="lonn-timelonn" inputmode="numeric" type="text" value="200"/>
@@ -921,9 +896,14 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div><div class="info-card collapsed" id="syk-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Sykepenger og 6G-taket <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Hva du faktisk får hvis du blir langtidssyk — og hvor NAV stopper</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('syk-wrapper','syk-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div class="fg"><label class="flbl" for="syk-lonn">Årslønn (brutto, kr)</label>
+<div class="info-card collapsed" id="syk-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik bruker du Sykepenger-kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Sykepenger, 6G-taket og arbeidsgivers forpliktelser</div></div></button>
+<div class="law-body" style="padding:0 20px 16px;">
+<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Hovedregel:</strong> Ved sykefravær får du 100% av lønn fra NAV — men bare opp til <strong>6G (6 × grunnbeløpet = 780 960 kr i 2026)</strong>. Lønn over 6G kompenseres ikke av NAV.<br/><br/><strong>Arbeidsgiverperioden:</strong> De første 16 dagene betaler arbeidsgiver sykepenger — basert på full lønn (uten 6G-tak).<br/><br/><strong>Etter 16 dager:</strong> NAV overtar. Hvis du tjener over 6G, dekker NAV kun 6G — resten må du selv tape eller ha privat forsikring for.<br/><br/><strong>Maksimal varighet:</strong> Sykepenger fra NAV gis i inntil 52 uker.<br/><br/>Skriv inn årslønn — så ser du hva du faktisk får per måned fra NAV og hvor mye du taper over 6G.</div>
+</div>
+</div><div class="fg"><label class="flbl" for="syk-lonn">Årslønn (brutto, kr)</label>
 <input class="fc" id="syk-lonn" inputmode="numeric" oninput="calcSyk()" type="text" value="700 000"/>
 </div>
 <div aria-live="polite" class="result-sec" id="syk-res" style="margin-top:16px;">
@@ -944,9 +924,14 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div><div class="info-card collapsed" id="fam-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Foreldrefradrag og barnehage <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Netto kostnad etter skattefradrag og søskenmoderasjon</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('fam-wrapper','fam-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div class="form-row">
+<div class="info-card collapsed" id="fam-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik bruker du Foreldrefradrag-kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Foreldrefradrag, maksimalpris og søskenmoderasjon forklart</div></div></button>
+<div class="law-body" style="padding:0 20px 16px;">
+<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Foreldrefradrag:</strong> Du kan trekke fra inntil 25 000 kr for første barn og 15 000 kr per ytterligere barn i dokumenterte utgifter til barnepass (barnehage, SFO, dagmamma). Fradraget gis i alminnelig inntekt — 22% av beløpet spart i skatt.<br/><br/><strong>Maksimalpris barnehage (2026):</strong> Makspris per måned for heltidsplass (SJEKK oppdatert sats fra regjeringen.no). Kommunen kan ha inntektsgradert eller gratis plass.<br/><br/><strong>Søskenmoderasjon:</strong> 30% rabatt for barn nr. 2, 50% for barn nr. 3 og flere.<br/><br/>Fyll inn antall barn, månedspris og inntekt — så ser du årlig utgift, fradragseffekt og netto kostnad.</div>
+</div>
+</div><div class="form-row">
 <div class="fg"><label class="flbl" for="fam-barn">Antall barn i barnehage</label>
 <input class="fc" id="fam-barn" inputmode="numeric" oninput="calcFam()" type="text" value="2"/>
 </div>
@@ -975,9 +960,14 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Investering</h3><div class="info-card collapsed" id="invest-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Aksjer <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Beregn forventet avkastning på aksjesparing over tid</div></div>
-</button>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('invest-wrapper','invest-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Aksjer er eierandeler i selskaper. Historisk har aksjemarkedet gitt ca. 7% årlig avkastning over lange perioder — men med store svingninger fra år til år. Skriv inn hvor mye du sparer månedlig for å se forventet sluttverdi.</div>
+<div class="info-card collapsed" id="invest-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik bruker du Aksjer og obligasjoner <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Aksjer vs obligasjoner — risiko, avkastning og miks</div></div></button>
+<div class="law-body" style="padding:0 20px 16px;">
+<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Aksjer</strong> er eierandeler i et selskap — du får del i overskuddet (utbytte) og verdiendringer. Høyere forventet avkastning (historisk ~7% årlig for Oslo Børs), men høyere risiko med svingninger.<br/><br/><strong>Obligasjoner</strong> er lån du gir til stat eller selskap. Du får fast kupongrente og pålydende tilbake ved forfall. Lavere forventet avkastning (~3–4% for norske statsobligasjoner), men langt mer stabilt.<br/><br/><strong>Hvorfor miks?</strong> Mange kombinerer begge — aksjer for vekst, obligasjoner for stabilitet. Tommelfingerregelen «100 minus alderen din = aksjeandel» er kjent, men det finnes ingen fasit. Jo lenger investeringshorisont, desto mer aksjer tåler du.<br/><br/><strong>Hvordan bruke:</strong> Sett månedlig innskudd, antall år og juster aksje-andelen med glidebryteren. Resultatet viser estimert sluttverdi med blandet avkastning.</div>
+</div>
+</div><div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:16px;">Aksjer er eierandeler i selskaper. Historisk har aksjemarkedet gitt ca. 7% årlig avkastning over lange perioder — men med store svingninger fra år til år. Skriv inn hvor mye du sparer månedlig for å se forventet sluttverdi.</div>
 <div class="form-row">
 <div class="fg"><label class="flbl" for="inv-beloep">Månedlig innskudd</label>
 <input class="fc" id="inv-beloep" inputmode="numeric" oninput="calcInv()" type="text" value="3 000"/>
@@ -986,7 +976,6 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <input class="fc" id="inv-ar" inputmode="numeric" oninput="calcInv()" type="text" value="20"/>
 </div>
 </div>
-
 <div aria-live="polite" class="result-sec" id="inv-res" style="margin-top:16px;">
 <div class="rh">
 <div class="rh-lbl">Forventet sluttverdi</div>
@@ -1005,8 +994,13 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div><div class="info-card collapsed" id="konto-wrapper" style="margin-top:0;">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Fond (Aksjefond og ASK) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Hva er fond — og hvorfor ASK er en smart konto for aksjefond</div></div>
-</button>
-<div class="law-body" style="padding:0 24px 20px;"><div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Fond</strong> er en stor "sekk" av penger som en fondsforvalter investerer for deg — typisk i mange aksjer samtidig. Du kjøper andeler i sekken. Fordelen: risiko spres automatisk over mange selskaper.</div>
+</button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('konto-wrapper','konto-howto-card')" title="Vis veiledning" type="button">?</button>
+<div class="law-body" style="padding:0 24px 20px;"><div class="info-card collapsed" id="konto-howto-card" style="margin-bottom:14px;">
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik velger du investeringskonto <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Hva er forskjellen og hvordan velger du riktig?</div></div></button>
+<div class="law-body" style="padding:0 20px 16px;">
+<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Aksjesparekonto (ASK):</strong> Du kan kjøpe og selge aksjer og aksjefond uten å betale skatt på gevinst før du tar pengene ut av kontoen. Ingen årlig skatt så lenge pengene blir værende. Passer til langsiktig aksjesparing.<br/><br/><strong>Individuell pensjonssparing (IPS):</strong> Låst til du er 62 år. Du får skattefradrag på inntil 15 000 kr i året (22% = 3 300 kr spart). Skatt betales først ved uttak som pensjon. Passer hvis du vil ha ekstra pensjonssparing og tåler å binde pengene.<br/><br/><strong>Fondskonto (vanlig):</strong> Du betaler skatt på utbytte og gevinst hvert år. Friere enn ASK og IPS, men dårligere skattemessig. Passer hvis du trenger fleksibilitet eller investerer i noe som ikke kvalifiserer for ASK.</div>
+</div>
+</div><div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Fond</strong> er en stor "sekk" av penger som en fondsforvalter investerer for deg — typisk i mange aksjer samtidig. Du kjøper andeler i sekken. Fordelen: risiko spres automatisk over mange selskaper.</div>
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Aksjefond (AF)</strong> investerer bare i aksjer. To hovedtyper:<br/>• <strong>Indeksfond</strong> — følger passivt en hel børs (f.eks. Oslo Børs eller verden). Lave gebyrer (0,2–0,4%), og slår oftest aktive fond over tid.<br/>• <strong>Aktivt forvaltet fond</strong> — fondsforvalter plukker aksjer manuelt. Høyere gebyrer (1–2%) som spiser avkastning.</div>
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Aksjesparekonto (ASK)</strong> er en type konto hvor du kan kjøpe og selge aksjer og aksjefond <em>uten</em> å betale skatt på gevinst før du tar pengene ut av kontoen. Flytt fritt mellom fond inne på ASK uten skattesmell — perfekt for langsiktig aksjesparing.</div>
 <div style="overflow-x:auto;margin-top:14px;">
@@ -1136,6 +1130,23 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
   } else {
     calcInv();calcFbl();calcFam();calcSyk();
   }
+
+
+  // Open calc + scroll into its help section
+  window.openCalcHelp=function(wrapperId, howtoId){
+    var wrapper=document.getElementById(wrapperId);
+    var howto=document.getElementById(howtoId);
+    if(!wrapper||!howto) return;
+    // Open the calc wrapper if collapsed
+    if(wrapper.classList.contains('collapsed')){
+      window.toggleCard(wrapper);
+    }
+    // Open the inner howto (or toggle it)
+    setTimeout(function(){
+      window.toggleCard(howto);
+      howto.scrollIntoView({behavior:'smooth',block:'center'});
+    }, 100);
+  };
 })();
 </script>
 <details class="seo-details" id="seo-details">
