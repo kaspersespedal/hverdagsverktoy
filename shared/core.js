@@ -434,6 +434,7 @@ function updateAll() {
   try{buildThemePicker();}catch(e){_uiErr('buildThemePicker',e);}
   // Section titles
   var _sc=document.getElementById('sec-calculators');if(_sc)_sc.textContent=R().secCalc||'Kalkulatorer';
+  var _sec=document.getElementById('sec-employee-costs');if(_sec)_sec.textContent=R().secEmployeeCosts||'Ansattkostnader';
   var _sg=document.getElementById('sec-guide');if(_sg){var gk=document.getElementById('calc-salary')?'secGuideTax':document.getElementById('calc-mortgage')?'secGuideMor':document.getElementById('calc-vat')?'secGuideVat':document.getElementById('calc-npv')?'secGuidePerso':'secGuide';_sg.textContent=R()[gk]||_sg.textContent;}
   var _ssg=document.getElementById('sec-selskap-guide');if(_ssg)_ssg.textContent=R().secSelskapGuide||'Selskapsformer';
   var _ssr=document.getElementById('sec-selskap-ref');if(_ssr)_ssr.textContent=R().secSelskapRef||'Referanse';
@@ -4349,7 +4350,7 @@ function calcAvs(skipScroll){
     for(var i=1;i<=years;i++){var bv=bookVals[i];var tv=taxVals[i];var vdiff=bv-tv;valRows+='<tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 4px;">'+i+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(bv)+'</td><td style="padding:6px 4px;text-align:right;">'+fmt(tv)+'</td><td style="padding:6px 4px;text-align:right;">'+((vdiff>=0?'+':'')+fmt(vdiff))+'</td></tr>';}
     rows.push('<tr><td colspan="4" style="padding:16px 0 8px;"><div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;">'+(r.avsCmpValTitle||'Verdi på driftsmiddelet')+'</div><table style="width:100%;border-collapse:collapse;font-size:13px;">'+valRows+'</table><div style="font-size:11px;color:var(--ink3);margin-top:8px;line-height:1.4;font-style:italic;">'+(r.avsCmpValNote||'Bokført verdi = regnskapsmessig restverdi (lineær avskrivning). Skattemessig verdi = saldoverdi (degressiv avskrivning). Forskjell = bokført − skattemessig. Positiv forskjell → utsatt skattegjeld. Negativ forskjell → utsatt skattefordel. Tallene er basert på verdiene du har lagt inn i sammenligningen over.')+'</div></td></tr>');
   }
-  document.getElementById('avs-table').innerHTML='<table style="width:100%;border-collapse:collapse;">'+rows.join('')+'</table>';
+  document.getElementById('avs-table').innerHTML='<div style="overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -8px;padding:0 8px;"><table style="width:100%;min-width:320px;border-collapse:collapse;">'+rows.join('')+'</table></div>';
   document.getElementById('avs-res').classList.remove('hidden');
   if(!skipScroll) requestAnimationFrame(function(){setTimeout(function(){smartScroll(document.getElementById('avs-res'))},150)});
 }
