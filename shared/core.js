@@ -6081,219 +6081,66 @@ function downloadCSV(rows,filename){
 }
 function _csvDate(){var loc={'en':'en-GB','ar':'ar-SA','zh':'zh-CN','fr':'fr-FR','pl':'pl-PL','uk':'uk-UA','lt':'lt-LT','so':'so-SO','ti':'ti-ER'}[region]||'nb-NO';return new Date().toLocaleDateString(loc,{year:'numeric',month:'long',day:'numeric'});}
 
-// ── Avskrivning export ──
+// ── Avskrivning export ── (ekte CSV — Excel-eksport flyttet til betalt spor, E4-1)
 function avsCsv(){
   var d=window._avsData;if(!d)return;var r=R();
-  _loadXlsx().then(function(){
-    var ws={};var row=0;var nc=d.headers.length;
-    // Title
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.avsDepTableHeader||'Avskrivningsplan',_XS.title);
-    for(var c=1;c<nc;c++)ws[XLSX.utils.encode_cell({r:row,c:c})]=_xlsxCell('',_XS.title);
-    ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:nc-1}}];
-    row++;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(_xlsxDate(),_XS.date);row++;row++;
-    // Headers
-    d.headers.forEach(function(h,i){ws[XLSX.utils.encode_cell({r:row,c:i})]=_xlsxCell(h,i===0?_XS.hdrL:_XS.hdr);});
-    row++;
-    // Data rows
-    d.rows.forEach(function(dr,ri){
-      var alt=ri%2===1;
-      dr.forEach(function(v,ci){ws[XLSX.utils.encode_cell({r:row,c:ci})]=_xlsxCell(v,ci===0?(alt?_XS.txtAlt:_XS.txt):(alt?_XS.numAlt:_XS.num));});
-      row++;
-    });
-    if(d.total){d.total.forEach(function(v,ci){ws[XLSX.utils.encode_cell({r:row,c:ci})]=_xlsxCell(v,ci===0?_XS.bold:_XS.boldNum);});row++;}
-    row++;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvGenerated||'Generert av hverdagsverktoy.com',_XS.footer);
-    ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:row,c:nc-1}});
-    ws['!cols']=d.headers.map(function(_,i){return{wch:i===0?10:18};});
-    ws['!rows']=[{hpt:28}];
-    _xlsxWrite(ws,'avskrivning.xlsx',r.avsDepTableHeader||'Avskrivning');
-  }).catch(function(){
-    // Fallback to CSV
-    var rows=[];rows.push([r.avsDepTableHeader||'Avskrivningsplan',_csvDate()]);rows.push([]);rows.push(d.headers);
-    d.rows.forEach(function(row){rows.push(row);});if(d.total)rows.push(d.total);rows.push([]);rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);
-    downloadCSV(rows,'avskrivning.csv');
-  });
+  var rows=[];rows.push([r.avsDepTableHeader||'Avskrivningsplan',_csvDate()]);rows.push([]);rows.push(d.headers);
+  d.rows.forEach(function(row){rows.push(row);});if(d.total)rows.push(d.total);rows.push([]);rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);
+  downloadCSV(rows,'avskrivning.csv');
 }
 
-// ── Likviditet export ──
+// ── Likviditet export ── (ekte CSV — E4-1)
 function likvidCsv(){
   var d=window._likvidData;if(!d)return;var r=R();
-  _loadXlsx().then(function(){
-    var ws={};var row=0;var nc=5;
-    var hdrs=[r.likvidColMonth||'Måned',r.likvidColStart||'Start',r.likvidColIncome||'Inntekt',r.likvidColExpense||'Utgift',r.likvidColEnd||'Slutt'];
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.likvidTitle||'Likviditetsbudsjett',_XS.title);
-    for(var c=1;c<nc;c++)ws[XLSX.utils.encode_cell({r:row,c:c})]=_xlsxCell('',_XS.title);
-    ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:nc-1}}];row++;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(_xlsxDate(),_XS.date);row++;row++;
-    hdrs.forEach(function(h,i){ws[XLSX.utils.encode_cell({r:row,c:i})]=_xlsxCell(h,i===0?_XS.hdrL:_XS.hdr);});row++;
-    d.forEach(function(dr,ri){
-      var alt=ri%2===1;
-      ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(dr.month,alt?_XS.txtAlt:_XS.txt);
-      [dr.start,dr.income,dr.expense,dr.end].forEach(function(v,ci){ws[XLSX.utils.encode_cell({r:row,c:ci+1})]=_xlsxCell(v,alt?_XS.numAlt:_XS.num);});
-      row++;
-    });
-    row++;ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvGenerated||'Generert av hverdagsverktoy.com',_XS.footer);
-    ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:row,c:nc-1}});
-    ws['!cols']=[{wch:14},{wch:16},{wch:16},{wch:16},{wch:16}];
-    ws['!rows']=[{hpt:28}];
-    _xlsxWrite(ws,'likviditet.xlsx',r.likvidTitle||'Likviditet');
-  }).catch(function(){
-    var rows=[];rows.push([r.likvidTitle||'Likviditetsbudsjett',_csvDate()]);rows.push([]);
-    rows.push([r.likvidColMonth||'Måned',r.likvidColStart||'Start',r.likvidColIncome||'Inntekt',r.likvidColExpense||'Utgift',r.likvidColEnd||'Slutt']);
-    d.forEach(function(row){rows.push([row.month,row.start,row.income,row.expense,row.end]);});rows.push([]);rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);
-    downloadCSV(rows,'likviditet.csv');
-  });
+  var rows=[];rows.push([r.likvidTitle||'Likviditetsbudsjett',_csvDate()]);rows.push([]);
+  rows.push([r.likvidColMonth||'Måned',r.likvidColStart||'Start',r.likvidColIncome||'Inntekt',r.likvidColExpense||'Utgift',r.likvidColEnd||'Slutt']);
+  d.forEach(function(row){rows.push([row.month,row.start,row.income,row.expense,row.end]);});rows.push([]);rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);
+  downloadCSV(rows,'likviditet.csv');
 }
 
-// ── Boliglån export ──
+// ── Boliglån export ── (ekte CSV — E4-1)
 function morCsv(){
   var d=typeof _mor!=='undefined'?_mor:window._mor;if(!d)return;var r=R();
-  _loadXlsx().then(function(){
-    var ws={};var row=0;var nc=6;var merges=[];
-    // Title
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.morCsvTitle||'Nedbetalingsplan',_XS.title);
-    for(var c=1;c<nc;c++)ws[XLSX.utils.encode_cell({r:row,c:c})]=_xlsxCell('',_XS.title);
-    merges.push({s:{r:0,c:0},e:{r:0,c:nc-1}});row++;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(_xlsxDate(),_XS.date);row++;row++;
-    // Summary section
-    var fees=+d.fees||0;var ioMonths=(d.ioYears||0)*12;
-    var summary=[[r.morLblLoan||'Lånebeløp',d.P],[r.morLblRate||'Rente',d.rate+'%'],[r.morLblYears||'Løpetid',d.years+' '+(r.yr||'år')],
-      [r.morLblType||'Type',d.type==='serial'?(r.morTypeSerial||'Serielån'):(r.morTypeAnnuity||'Annuitetslån')]];
-    if(ioMonths>0) summary.push([r.morLblIo||'Avdragsfri periode',d.ioYears+' '+(r.yr||'år')]);
-    summary.push([r.morLblMnd||'Månedlig betaling',Math.round(d.mnd+fees)]);
-    summary.push([r.morLblTotal||'Total tilbakebetaling',Math.round(d.tot+fees*d.years*12)]);
-    summary.push([r.morLblInterest||'Total rente',Math.round(d.rnt)]);
-    summary.forEach(function(s){
-      ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(s[0],_XS.label);
-      ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell(s[1],typeof s[1]==='number'?_XS.value:_XS.bold);
-      row++;
-    });
-    row++;
-    // Schedule headers
-    var shdrs=[r.morColMonth||'Måned',r.morColPayment||'Betaling',r.morColInterest||'Renter',r.morColPrincipal||'Avdrag',r.morColFees||'Omkostninger',r.morColBalance||'Restgjeld'];
-    shdrs.forEach(function(h,i){ws[XLSX.utils.encode_cell({r:row,c:i})]=_xlsxCell(h,i===0?_XS.hdrL:_XS.hdr);});row++;
-    // Schedule data
-    var bal=d.P;var mRate=d.rate/100/12;var n=d.years*12;var payN=n-ioMonths;
-    var mthAfterIo=payN>0?(mRate===0?d.P/payN:d.P*mRate*Math.pow(1+mRate,payN)/(Math.pow(1+mRate,payN)-1)):d.mnd;
-    for(var i=1;i<=n;i++){
-      var interest=bal*mRate;var payment,principal;
-      if(i<=ioMonths){principal=0;payment=interest;}
-      else if(d.type==='serial'){principal=d.P/payN;payment=principal+interest;}
-      else{payment=mthAfterIo;principal=payment-interest;}
-      bal-=principal;if(bal<0)bal=0;
-      var alt=i%2===0;
-      ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(i,alt?_XS.txtAlt:_XS.txt);
-      [Math.round(payment+fees),Math.round(interest),Math.round(principal),Math.round(fees),Math.round(bal)].forEach(function(v,ci){
-        ws[XLSX.utils.encode_cell({r:row,c:ci+1})]=_xlsxCell(v,alt?_XS.numAlt:_XS.num);
-      });
-      row++;
-    }
-    row++;ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvGenerated||'Generert av hverdagsverktoy.com',_XS.footer);
-    ws['!merges']=merges;
-    ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:row,c:nc-1}});
-    ws['!cols']=[{wch:10},{wch:14},{wch:14},{wch:14},{wch:14},{wch:16}];
-    ws['!rows']=[{hpt:28}];
-    _xlsxWrite(ws,'boliglan.xlsx',r.morCsvTitle||'Nedbetalingsplan');
-  }).catch(function(){
-    var rows=[];rows.push(['Nedbetalingsplan',_csvDate()]);rows.push([]);
-    rows.push(['Lånebeløp',d.P]);rows.push(['Rente',d.rate+'%']);rows.push(['Løpetid',d.years+' år']);
-    rows.push(['Type',d.type==='serial'?'Serielån':'Annuitetslån']);
-    var fees=+d.fees||0;var ioMonths=(d.ioYears||0)*12;
-    rows.push(['Månedlig betaling',Math.round(d.mnd+fees)]);rows.push(['Total rente',Math.round(d.rnt)]);rows.push([]);
-    rows.push(['Måned','Betaling','Renter','Avdrag','Omkostninger','Restgjeld']);
-    var bal=d.P;var mRate=d.rate/100/12;var n=d.years*12;var payN=n-ioMonths;
-    var mthAfterIo=payN>0?(mRate===0?d.P/payN:d.P*mRate*Math.pow(1+mRate,payN)/(Math.pow(1+mRate,payN)-1)):d.mnd;
-    for(var i=1;i<=n;i++){var interest=bal*mRate;var payment,principal;
-      if(i<=ioMonths){principal=0;payment=interest;}else if(d.type==='serial'){principal=d.P/payN;payment=principal+interest;}else{payment=mthAfterIo;principal=payment-interest;}
-      bal-=principal;if(bal<0)bal=0;rows.push([i,Math.round(payment+fees),Math.round(interest),Math.round(principal),Math.round(fees),Math.round(bal)]);}
-    rows.push([]);rows.push(['Generert av Hverdagsverktøy']);downloadCSV(rows,'boliglan.csv');
-  });
+  var rows=[];rows.push([r.morCsvTitle||'Nedbetalingsplan',_csvDate()]);rows.push([]);
+  rows.push([r.morLblLoan||'Lånebeløp',d.P]);rows.push([r.morLblRate||'Rente',d.rate+'%']);rows.push([r.morLblYears||'Løpetid',d.years+' '+(r.yr||'år')]);
+  rows.push([r.morLblType||'Type',d.type==='serial'?(r.morTypeSerial||'Serielån'):(r.morTypeAnnuity||'Annuitetslån')]);
+  var fees=+d.fees||0;var ioMonths=(d.ioYears||0)*12;
+  if(ioMonths>0) rows.push([r.morLblIo||'Avdragsfri periode',d.ioYears+' '+(r.yr||'år')]);
+  rows.push([r.morLblMnd||'Månedlig betaling',Math.round(d.mnd+fees)]);rows.push([r.morLblInterest||'Total rente',Math.round(d.rnt)]);rows.push([]);
+  rows.push([r.morColMonth||'Måned',r.morColPayment||'Betaling',r.morColInterest||'Renter',r.morColPrincipal||'Avdrag',r.morColFees||'Omkostninger',r.morColBalance||'Restgjeld']);
+  var bal=d.P;var mRate=d.rate/100/12;var n=d.years*12;var payN=n-ioMonths;
+  var mthAfterIo=payN>0?(mRate===0?d.P/payN:d.P*mRate*Math.pow(1+mRate,payN)/(Math.pow(1+mRate,payN)-1)):d.mnd;
+  for(var i=1;i<=n;i++){var interest=bal*mRate;var payment,principal;
+    if(i<=ioMonths){principal=0;payment=interest;}else if(d.type==='serial'){principal=d.P/payN;payment=principal+interest;}else{payment=mthAfterIo;principal=payment-interest;}
+    bal-=principal;if(bal<0)bal=0;rows.push([i,Math.round(payment+fees),Math.round(interest),Math.round(principal),Math.round(fees),Math.round(bal)]);}
+  rows.push([]);rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);downloadCSV(rows,'boliglan.csv');
 }
 
-// ── Abonnement export ──
+// ── Abonnement export ── (ekte CSV — E4-1)
 function aboCsv(){
   var d=window._aboData;if(!d)return;var r=R();
-  _loadXlsx().then(function(){
-    var ws={};var row=0;var nc=2;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvAboTitle||'Abonnementsoversikt',_XS.title);
-    ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell('',_XS.title);
-    ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:1}}];row++;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(_xlsxDate(),_XS.date);row++;row++;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvAboService||'Tjeneste',_XS.hdrL);
-    ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell(r.csvAboAmount||'Beløp/mnd',_XS.hdr);row++;
-    d.items.forEach(function(item,i){
-      var alt=i%2===1;
-      ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(item.name,alt?_XS.txtAlt:_XS.txt);
-      ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell(item.amount,alt?_XS.numAlt:_XS.num);row++;
-    });
-    row++;
-    [[r.csvAboTotalMnd||'Totalt per måned',d.totalMnd],[r.csvAboTotalAar||'Totalt per år',d.totalAar],
-     [r.csvAboCount||'Antall abonnementer',d.antall],[r.csvAboAvg||'Snitt per abonnement',Math.round(d.snitt)]].forEach(function(s){
-      ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(s[0],_XS.bold);
-      ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell(s[1],_XS.boldNum);row++;
-    });
-    row++;ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvGenerated||'Generert av hverdagsverktoy.com',_XS.footer);
-    ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:row,c:1}});
-    ws['!cols']=[{wch:28},{wch:16}];ws['!rows']=[{hpt:28}];
-    _xlsxWrite(ws,'abonnementer.xlsx',r.csvAboTitle||'Abonnementer');
-  }).catch(function(){
-    var rows=[];rows.push([r.csvAboTitle||'Abonnementsoversikt',_csvDate()]);rows.push([]);
-    rows.push([r.csvAboService||'Tjeneste',r.csvAboAmount||'Beløp/mnd']);
-    d.items.forEach(function(i){rows.push([i.name,i.amount]);});rows.push([]);
-    rows.push([r.csvAboTotalMnd||'Totalt per måned',d.totalMnd]);rows.push([r.csvAboTotalAar||'Totalt per år',d.totalAar]);
-    rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);downloadCSV(rows,'abonnementer.csv');
-  });
+  var rows=[];rows.push([r.csvAboTitle||'Abonnementsoversikt',_csvDate()]);rows.push([]);
+  rows.push([r.csvAboService||'Tjeneste',r.csvAboAmount||'Beløp/mnd']);
+  d.items.forEach(function(i){rows.push([i.name,i.amount]);});rows.push([]);
+  rows.push([r.csvAboTotalMnd||'Totalt per måned',d.totalMnd]);rows.push([r.csvAboTotalAar||'Totalt per år',d.totalAar]);
+  rows.push([r.csvAboCount||'Antall abonnementer',d.antall]);rows.push([r.csvAboAvg||'Snitt per abonnement',Math.round(d.snitt)]);
+  rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);downloadCSV(rows,'abonnementer.csv');
 }
 
-// ── Bilkostnad export ──
+// ── Bilkostnad export ── (ekte CSV — E4-1)
 function bilCsv(){
   var d=window._bilData;if(!d)return;var r=R();
-  _loadXlsx().then(function(){
-    var ws={};var row=0;var nc=3;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvBilTitle||'Bilkostnad',_XS.title);
-    ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell('',_XS.title);
-    ws[XLSX.utils.encode_cell({r:row,c:2})]=_xlsxCell('',_XS.title);
-    ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:2}}];row++;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(_xlsxDate(),_XS.date);row++;row++;
-    // Headers
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvBilCategory||'Kategori',_XS.hdrL);
-    ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell((r.csvBilAmount||'Beløp')+' ('+d.aar+' '+(r.yr||'år')+')',_XS.hdr);
-    ws[XLSX.utils.encode_cell({r:row,c:2})]=_xlsxCell(r.csvBilPerMonth||'Per måned',_XS.hdr);row++;
-    // Data
-    var items=[[r.csvBilDepreciation||'Verditap',d.verditap],[r.csvBilFuel||'Drivstoff/lading',d.drivTotal],
-      [r.csvBilInsurance||'Forsikring',d.forsTotal],[r.csvBilService||'Service og vedlikehold',d.serviceTotal],
-      [r.csvBilTires||'Dekk',d.dekkTotal],[r.csvBilTax||'Trafikkforsikringsavgift',d.avgiftTotal],
-      [r.csvBilTolls||'Bompenger',d.bomTotal]];
-    items.forEach(function(item,i){
-      var alt=i%2===1;
-      ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(item[0],alt?_XS.txtAlt:_XS.txt);
-      ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell(item[1],alt?_XS.numAlt:_XS.num);
-      ws[XLSX.utils.encode_cell({r:row,c:2})]=_xlsxCell(Math.round(item[1]/(d.aar*12)),alt?_XS.numAlt:_XS.num);row++;
-    });
-    row++;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvBilTotal||'Total eierkostnad',_XS.bold);
-    ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell(d.totalKostnad,_XS.boldNum);
-    ws[XLSX.utils.encode_cell({r:row,c:2})]=_xlsxCell(Math.round(d.totalKostnad/(d.aar*12)),_XS.boldNum);row++;
-    ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvBilPerKm||'Kostnad per km',_XS.label);
-    ws[XLSX.utils.encode_cell({r:row,c:1})]=_xlsxCell(d.perKm.toFixed(1)+' kr',_XS.bold);row++;
-    row++;ws[XLSX.utils.encode_cell({r:row,c:0})]=_xlsxCell(r.csvGenerated||'Generert av hverdagsverktoy.com',_XS.footer);
-    ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:row,c:2}});
-    ws['!cols']=[{wch:26},{wch:18},{wch:14}];ws['!rows']=[{hpt:28}];
-    _xlsxWrite(ws,'bilkostnad.xlsx',r.csvBilTitle||'Bilkostnad');
-  }).catch(function(){
-    var rows=[];rows.push([r.csvBilTitle||'Bilkostnad',_csvDate()]);rows.push([]);
-    rows.push([r.csvBilCategory||'Kategori',(r.csvBilAmount||'Beløp'),r.csvBilPerMonth||'Per måned']);
-    rows.push([r.csvBilDepreciation||'Verditap',d.verditap,Math.round(d.verditap/(d.aar*12))]);
-    rows.push([r.csvBilFuel||'Drivstoff/lading',d.drivTotal,Math.round(d.drivTotal/(d.aar*12))]);
-    rows.push([r.csvBilInsurance||'Forsikring',d.forsTotal,Math.round(d.forsTotal/(d.aar*12))]);
-    rows.push([r.csvBilService||'Service og vedlikehold',d.serviceTotal,Math.round(d.serviceTotal/(d.aar*12))]);
-    rows.push([r.csvBilTires||'Dekk',d.dekkTotal,Math.round(d.dekkTotal/(d.aar*12))]);
-    rows.push([r.csvBilTax||'Trafikkforsikringsavgift',d.avgiftTotal,Math.round(d.avgiftTotal/(d.aar*12))]);
-    rows.push([r.csvBilTolls||'Bompenger',d.bomTotal,Math.round(d.bomTotal/(d.aar*12))]);rows.push([]);
-    rows.push([r.csvBilTotal||'Total eierkostnad',d.totalKostnad,Math.round(d.totalKostnad/(d.aar*12))]);
-    rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);downloadCSV(rows,'bilkostnad.csv');
-  });
+  var rows=[];rows.push([r.csvBilTitle||'Bilkostnad',_csvDate()]);rows.push([]);
+  rows.push([r.csvBilCategory||'Kategori',(r.csvBilAmount||'Beløp'),r.csvBilPerMonth||'Per måned']);
+  rows.push([r.csvBilDepreciation||'Verditap',d.verditap,Math.round(d.verditap/(d.aar*12))]);
+  rows.push([r.csvBilFuel||'Drivstoff/lading',d.drivTotal,Math.round(d.drivTotal/(d.aar*12))]);
+  rows.push([r.csvBilInsurance||'Forsikring',d.forsTotal,Math.round(d.forsTotal/(d.aar*12))]);
+  rows.push([r.csvBilService||'Service og vedlikehold',d.serviceTotal,Math.round(d.serviceTotal/(d.aar*12))]);
+  rows.push([r.csvBilTires||'Dekk',d.dekkTotal,Math.round(d.dekkTotal/(d.aar*12))]);
+  rows.push([r.csvBilTax||'Trafikkforsikringsavgift',d.avgiftTotal,Math.round(d.avgiftTotal/(d.aar*12))]);
+  rows.push([r.csvBilTolls||'Bompenger',d.bomTotal,Math.round(d.bomTotal/(d.aar*12))]);rows.push([]);
+  rows.push([r.csvBilTotal||'Total eierkostnad',d.totalKostnad,Math.round(d.totalKostnad/(d.aar*12))]);
+  rows.push([r.csvGenerated||'Generert av Hverdagsverktøy']);downloadCSV(rows,'bilkostnad.csv');
 }
 
 // Page initialization — called by each page after DOM is ready
