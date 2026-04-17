@@ -3368,7 +3368,7 @@ function bilSetMode(mode) {
   fields.style.display = '';
   bilUpdateInsHint();
 
-  // Highlight selected button
+  // Selected button glows, unselected dims (standard toggle UX)
   btnPlan.style.opacity = mode === 'plan' ? '1' : '.55';
   btnOwn.style.opacity = mode === 'own' ? '1' : '.55';
 

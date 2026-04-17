@@ -12,6 +12,14 @@ function T(key, fallback){ try { var v = R()[key]; return v || fallback; } catch
 
 /* ─── Search index ─── */
 var SEARCH_DATA = [
+  // ══════ SEKSJONER (Nivå 0 — grunnord-rooting) ══════
+  {name:'Skatt',desc:'Skattkalkulator, satser, begreper og skatteloven',url:'/skatt/',tags:'skatt seksjon oversikt skattkalkulator satser lovverk tax section',type:'section',page:'Skatt',sk:'skattSection'},
+  {name:'Boliglån',desc:'Boliglånskalkulator, krav, kostnader og BSU',url:'/boliglan/',tags:'boliglån seksjon oversikt mortgage lån section',type:'section',page:'Boliglån',sk:'boliglanSection'},
+  {name:'Kalkulator',desc:'Enkel, valuta, finansiell, vitenskapelig og fagkalkulatorer',url:'/kalkulator/',tags:'kalkulator seksjon calculator oversikt section',type:'section',page:'Kalkulator',sk:'kalkSection'},
+  {name:'Avgift',desc:'MVA, merverdiavgiftsloven og arbeidsgiveravgift',url:'/avgift/',tags:'avgift seksjon mva vat oversikt section',type:'section',page:'Avgift',sk:'avgiftSection'},
+  {name:'Selskap',desc:'Aksjeselskap, kommandittselskap og selskapsrett',url:'/selskap/',tags:'selskap seksjon company selskapsform oversikt section',type:'section',page:'Selskap',sk:'selskapSection'},
+  {name:'Personlig økonomi',desc:'Budsjett, bil, sparing og lønnsomhet',url:'/personlig/',tags:'personlig økonomi seksjon personal finance oversikt section',type:'section',page:'Personlig økonomi',sk:'personligSection'},
+
   // ══════ VERKTØY (Nivå 1 — høyest prioritet) ══════
   // Personlig økonomi
   {name:'Budsjett',desc:'Lag et personlig budsjett med inntekter og utgifter',url:'/personlig/#budsjett-wrapper',tags:'budsjett økonomi personlig inntekt utgift spare penger husholdning budget',type:'tool',page:'Personlig økonomi',sk:'budsjett'},
@@ -404,7 +412,8 @@ function scoreItem(item, q, itemIdx, hays){
   if(matched < words.length) return 0;
 
   // Type priority
-  if(item.type === 'tool') score += 15;
+  if(item.type === 'section') score += 30;
+  else if(item.type === 'tool') score += 15;
   else if(item.type === 'concept') score += 5;
 
   return score;
