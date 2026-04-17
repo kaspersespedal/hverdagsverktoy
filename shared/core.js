@@ -5734,7 +5734,7 @@ function _aboOptsHTML(r){
 }
 function aboAddRow(){
   var r=R();var cont=document.getElementById('abo-rows');
-  var row=document.createElement('div');row.className='abo-row';row.style.cssText='display:flex;gap:8px;margin-bottom:6px;';
+  var row=document.createElement('div');row.className='abo-row';row.style.cssText='display:flex;align-items:flex-start;gap:8px;margin-bottom:6px;';
   var opts=_aboOptsHTML(r);
   row.innerHTML='<div style="flex:2;position:relative;"><select class="fc abo-cat" onchange="aboCatChange(this)" style="width:100%;">'+opts+'</select></div>'+
     '<input type="text" class="fc abo-amount" placeholder="0" inputmode="numeric" style="flex:1;text-align:right;" value="139">'+
