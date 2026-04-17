@@ -1567,7 +1567,7 @@ function updateMortgageUI() {
   setText('mor-r-io-mthfree', r.morRIoMthFree || 'Månedlig (kun renter)');
   setText('mor-r-io-mthafter', r.morRIoMthAfter || 'Månedlig etter');
   setText('mor-r-io-extra', r.morRIoExtra || 'Ekstra rentekostnad');
-  setText('mor-note-maxyears', r.morNoteMaxYears || 'Maks løpetid 30 år (bankpraksis). Lån over 60 % belåningsgrad krever avdrag — Utlånsforskriften § 9.');
+  setText('mor-note-maxyears', r.morNoteMaxYears || 'Maks løpetid 30 år (bankpraksis). Har du lånt mer enn 60 % av boligens verdi må du betale avdrag — Utlånsforskriften § 9.');
   setText('mor-stress-hdr', r.morStressHdr || 'Stresstest (+3 prosentpoeng)');
   setText('mor-r-stress-mth', r.morRStressMth || 'Månedlig ved +3 pp');
   setText('mor-r-stress-diff', r.morRStressDiff || 'Økt månedskostnad');
@@ -1847,7 +1847,6 @@ function updateNpvUI() {
     setText('studie-desc',r.studieDesc||'Stipend vs. lån, nedbetalingsplan og månedskostnad fra Lånekassen');
     setText('studie-l-varighet',r.studieLVarighet||'Studievarighet (år)');
     setText('studie-l-grad',r.studieLGrad||'Fullfører du en grad?');
-    setText('studie-l-basis',r.studieLBasis||'Basisstøtte per måned (kr)');
     setText('studie-l-mnd',r.studieLMnd||'Utbetalingsmåneder per år');
     setText('studie-l-totalstotte',r.studieLTotalstotte||'Total basisstøtte');
     setText('studie-l-laandel',r.studieLLaandel||'Gjenstående lån');
@@ -1955,6 +1954,7 @@ function updateVatUI() {
   // Help rows — populated inline per calc, shown via ? button (openCalcHelp)
   var _vhr=document.getElementById('vat-help-rows');if(_vhr&&r.vatHelpRows)_vhr.innerHTML=infoRowsHTML(r.vatHelpRows,'mval');
   var _ahr=document.getElementById('adj-help-rows');if(_ahr&&r.adjHelpRows)_ahr.innerHTML=infoRowsHTML(r.adjHelpRows,'mval');
+  var _agr=document.getElementById('aga-help-rows');if(_agr&&r.agaHelpRows)_agr.innerHTML=infoRowsHTML(r.agaHelpRows);
   setText('vat-title', r.vatTitle || 'MVA-kalkulator');
   setText('vat-desc', r.vatDesc || 'Beregn MVA-beløp og priser inkl./ekskl.');
   setText('vat-l-amount', r.lVatAmount || 'Beløp');
@@ -5432,9 +5432,9 @@ function studieUpdateTotal(){
   if(infoEl){
     var r=R();
     if(grad){
-      infoEl.textContent=(r.studieStipendGrad||'Omgjort til stipend')+' ('+pctLabel+' %)';
+      infoEl.textContent=r.studieStipendGrad||'Du mottar som stipend';
     } else {
-      infoEl.textContent=(r.studieStipendNoGrad||'Omgjort til stipend')+' ('+pctLabel+' %)';
+      infoEl.textContent=r.studieStipendNoGrad||'Du mottar som stipend';
     }
   }
   var omgjInfo=document.getElementById('studie-omgj-info');
