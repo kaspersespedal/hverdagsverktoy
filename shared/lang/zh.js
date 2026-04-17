@@ -232,7 +232,7 @@ REGIONS['zh'] = {
     likvidStartLabel:'期初余额（克朗）', likvidIncomeLabel:'月收入（克朗）', likvidExpenseLabel:'月支出（克朗）', likvidBtn:'计算 →',
     pensjonAgeLabel:'现在年龄', pensjonRetireLabel:'退休年龄', pensjonSalaryLabel:'年薪', pensjonOtpLabel:'OTP利率', pensjonReturnLabel:'回报率（%）', pensjonBtn:'计算 →', pensjonPotLabel:'67岁时总养老金', pensjonAnnualLabel:'估计年养老金', pensjonMonthlyLabel:'月养老金', pensjonRealLabel:'今天的购买力（2%通胀）', pensjonDisclaimer:'这只是规划用途的估计。实际养老金可能会根据实际收益、贡献和监管变化而异。',
     hs1:'计算器', hs2:'区域',
-    dashHome:'首页', themeLabel:'主题', themeBlue:'蓝色', themeCorporate:'锐利', themeDark:'深色', themeGlass:'玻璃', themePink:'粉色', themePurple:'紫色', themeGreen:'绿色', themePeach:'桃色', themeFrost:'标准', themeHendrix:'Hendrix', themeDisco:'Disco', themeCarbon:'Standard Dark', themeBw:'Ray', dashSalLabel:'最近计算净额', dashMorLabel:'最近计算贷款', dashNpvLabel:'最近计算NPV', dashToolsTitle:'工具', dashRefTitle:'快速参考', dashRefTax:'税率 2026', dashRefVat:'增值税率', dashRefDed:'扣除 2026',
+    dashHome:'首页', themeLabel:'主题', themeBlue:'蓝色', themeCorporate:'锐利', themeDark:'深色', themeGlass:'玻璃', themePink:'粉色', themePurple:'紫色', themeGreen:'绿色', themePeach:'桃色', themeFrost:'标准', themeHendrix:'Hendrix', themeDisco:'Disco', themeCarbon:'标准深色', themeBw:'Ray', dashSalLabel:'最近计算净额', dashMorLabel:'最近计算贷款', dashNpvLabel:'最近计算NPV', dashToolsTitle:'工具', dashRefTitle:'快速参考', dashRefTax:'税率 2026', dashRefVat:'增值税率', dashRefDed:'扣除 2026',
     dashDescBasic:'基本、金融、科学和单位换算', dashDescSal:'根据年税前工资计算净收入（含阶梯税）', dashDescMor:'月供、等额本息和等额本金', dashDescVat:'计算含税和不含税金额', dashDescNpv:'NPV、IRR和投资回收期',
     drTax1:'普通所得税',drTax2:'社会保险费',drTax3:'阶梯税1 (226k+)',drTax4:'阶梯税2 (318k+)',drTax5:'阶梯税3 (725k+)',drVat1:'标准',drVat2:'食品',drVat3:'交通/酒店/电影院',drVat4:'免征（出口等）',drDed1:'个人免税额',drDed2:'最低扣除额（上限）',drDed3:'工会会费（上限）',drDed4:'利息扣除',
 
