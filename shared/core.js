@@ -2320,8 +2320,12 @@ function updateSelskapUI() {
 
 function updateFagkalkulatorUI() {
   const r = R();
+  // Group headers
+  setText('lbl-group-modus', r.lblGroupModus || 'Kalkulator-modus');
+  setText('lbl-group-valuta', r.lblGroupValuta || 'Valuta');
+  setText('lbl-group-lonn', r.lblGroupLonn || 'Lønn & Arbeidsgiver');
+  setText('lbl-group-invest', r.lblGroupInvest || 'Investering & Analyse');
   // Menu labels
-  setText('lbl-fagcalc', r.lblFagcalc || 'Fagkalkulatorer');
   setText('lbl-lvu', r.lblLvu || 'Lønn vs Utbytte');
   setText('lbl-aga', r.lblAga || 'Ansattkostnad');
   setText('lbl-avs', r.lblAvs || 'Avskrivning');

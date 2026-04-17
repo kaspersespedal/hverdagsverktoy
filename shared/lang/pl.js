@@ -213,7 +213,7 @@ REGIONS['pl'] = {
     adjExRev2:'Nieruchomość przed ukończeniem (§ 9-7) — pełne potrącenie odwrócone jeśli sprzedano/przeznaczono przed ukończeniem',
     adjExRev3:'Wyjątek: zajęcie, bankructwo i śmierć (§ 9-6(4))',
     adjExSource:'Źródło: Ustawa o VAT rozdz. 9 (Ustawa-2009-06-19-58). Kalkulator jest wyłącznie orientacyjny — konsultuj się z księgowym w sprawie konkretnych ocen.',
-    lblFagcalc:'Kalkulatory Zawodowe', lblLvu:'Pensja vs Dywidenda', lblAga:'Koszt Pracownika', lblAvs:'Amortyzacja', lblFerie:'Wynagrodzenie Urlopowe', lblRente:'Efektywna Stopa Procentowa', lblProsent:'Procent', lblValgevinst:'Zysk ze Zmian Kursów', lblLikvid:'Płynność', lblPensjon:'Emerytura',
+    lblGroupModus:'Tryb kalkulatora', lblGroupValuta:'Waluta', lblGroupLonn:'Pensja i pracodawca', lblGroupInvest:'Inwestycja i analiza', lblLvu:'Pensja vs Dywidenda', lblAga:'Koszt Pracownika', lblAvs:'Amortyzacja', lblFerie:'Wynagrodzenie Urlopowe', lblRente:'Efektywna Stopa Procentowa', lblProsent:'Procent', lblValgevinst:'Zysk ze Zmian Kursów', lblLikvid:'Płynność', lblPensjon:'Emerytura',
     mobileSwitch:'Zmień kalkulator', mobileFocus:'Skupienie', mobileFocusExit:'Zamknij',
     focusLabel:'Skupienie', focusClose:'Zamknij skupienie', focusSwitchCalc:'Zmień kalkulator',
     btnCsv:'Pobierz CSV',

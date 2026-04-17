@@ -213,7 +213,7 @@ REGIONS['lt'] = {
     adjExRev2:'Nekilnojamasis turtas prieš atliekant (§ 9-7) — visiškas atskaitymas atšaukiamas jei parduota/perturinaI prieš atliekant',
     adjExRev3:'Išimtis: sekvestras, bankrotas ir mirtis (§ 9-6(4))',
     adjExSource:'Šaltinis: PVM įstatymas sk. 9 (Įstatymas-2009-06-19-58). Skaičiuoklė yra tik orientacinis — konkrečiam vertinimui pasitarkite su buhalteriu.',
-    lblFagcalc:'Profesionalūs Skaičiuotuvai', lblLvu:'Atlyginimas vs Dividendas', lblAga:'Darbuotojo Išlaidos', lblAvs:'Nusidėvėjimas', lblFerie:'Atostogų Išmoka', lblRente:'Efektyvus Palūkanų Dydis', lblProsent:'Procentas', lblValgevinst:'Valiutos Pelnas', lblLikvid:'Likvidumas', lblPensjon:'Pensija',
+    lblGroupModus:'Skaičiuotuvo režimas', lblGroupValuta:'Valiuta', lblGroupLonn:'Atlyginimas ir darbdavys', lblGroupInvest:'Investicijos ir analizė', lblLvu:'Atlyginimas vs Dividendas', lblAga:'Darbuotojo Išlaidos', lblAvs:'Nusidėvėjimas', lblFerie:'Atostogų Išmoka', lblRente:'Efektyvus Palūkanų Dydis', lblProsent:'Procentas', lblValgevinst:'Valiutos Pelnas', lblLikvid:'Likvidumas', lblPensjon:'Pensija',
     mobileSwitch:'Keisti skaičiuotuvą', mobileFocus:'Fokusas', mobileFocusExit:'Uždaryti',
     focusLabel:'Fokusas', focusClose:'Uždaryti fokusą', focusSwitchCalc:'Keisti skaičiuotuvą',
     btnCsv:'Atsisiųsti CSV',

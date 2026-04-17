@@ -214,7 +214,7 @@ REGIONS['fr'] = {
     adjExRev2:'Immeuble avant achèvement (§ 9-7) — déduction complète annulée si vendu/réutilisé avant achèvement',
     adjExRev3:'Exception: condamnation, faillite et décès (§ 9-6(4))',
     adjExSource:'Source: Loi TVA ch. 9 (Loi-2009-06-19-58). La calculatrice est indicative uniquement — veuillez consulter un comptable pour des évaluations spécifiques.',
-    lblFagcalc:'Calculatrices Professionnelles', lblLvu:'Salaire vs Dividende', lblAga:'Coût Employé', lblAvs:'Amortissement', lblFerie:'Congés Payés', lblRente:'Taux d\'Intérêt Effectif', lblProsent:'Pourcentage', lblValgevinst:'Gain de Change', lblLikvid:'Liquidité', lblPensjon:'Pension',
+    lblGroupModus:'Mode Calculatrice', lblGroupValuta:'Devise', lblGroupLonn:'Salaire & Employeur', lblGroupInvest:'Investissement & Analyse', lblLvu:'Salaire vs Dividende', lblAga:'Coût Employé', lblAvs:'Amortissement', lblFerie:'Congés Payés', lblRente:'Taux d\'Intérêt Effectif', lblProsent:'Pourcentage', lblValgevinst:'Gain de Change', lblLikvid:'Liquidité', lblPensjon:'Pension',
     mobileSwitch:'Changer de calculatrice', mobileFocus:'Focus', mobileFocusExit:'Fermer',
     focusLabel:'Focus', focusClose:'Fermer le focus', focusSwitchCalc:'Changer de calculatrice',
     btnCsv:'Télécharger CSV',

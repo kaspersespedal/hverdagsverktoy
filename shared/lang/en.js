@@ -285,7 +285,7 @@ REGIONS['en'] = {
     adjOfTotal:' of ',
     calcHelpHint:'Need help with the calculator? →',
     bcDecLabel:'Decimals',
-    lblFagcalc:'Professional Calculators', lblLvu:'Salary vs Dividend', lblAga:'Employee Cost', lblAvs:'Depreciation', lblFerie:'Holiday Pay', lblRente:'Effective Interest Rate', lblProsent:'Percentage', lblValgevinst:'Currency Gain', lblLikvid:'Liquidity', lblPensjon:'Pension',
+    lblGroupModus:'Calculator Mode', lblGroupValuta:'Currency', lblGroupLonn:'Salary & Employer', lblGroupInvest:'Investment & Analysis', lblLvu:'Salary vs Dividend', lblAga:'Employee Cost', lblAvs:'Depreciation', lblFerie:'Holiday Pay', lblRente:'Effective Interest Rate', lblProsent:'Percentage', lblValgevinst:'Currency Gain', lblLikvid:'Liquidity', lblPensjon:'Pension',
     mobileSwitch:'Switch calculator', mobileFocus:'Focus', mobileFocusExit:'Close',
     focusLabel:'Focus', focusClose:'Close focus', focusSwitchCalc:'Switch calculator',
     btnCsv:'Download CSV',
