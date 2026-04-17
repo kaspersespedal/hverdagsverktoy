@@ -418,8 +418,14 @@ function updateAll() {
     // Always snap pill to active tab on page load (no cross-page animation)
     positionPill(_at,false);
     sessionStorage.setItem('nav-pill-idx',curIdx);
-    // Reposition after fonts load (text widths change on font swap) and on resize.
-    // ResizeObserver on active tab catches font-swap reflow + any future layout changes.
+    // Reposition-kjede for font-swap/layout-reflow:
+    //  1) rAF — etter initial layout settler
+    //  2) setTimeout(250) — etter deferred font CSS fra Bunny Fonts lastes
+    //  3) document.fonts.ready — når font-faces faktisk swappes
+    //  4) ResizeObserver — alle fremtidige size-endringer
+    //  5) window.resize — viewport-resize
+    requestAnimationFrame(function(){positionPill(_at,false);});
+    setTimeout(function(){positionPill(_at,false);},250);
     if(window._hvtPillRO){try{window._hvtPillRO.disconnect();}catch(_){}}
     if(typeof ResizeObserver!=='undefined'){
       window._hvtPillRO=new ResizeObserver(function(){positionPill(_at,false);});
