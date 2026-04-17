@@ -943,6 +943,27 @@ function toggleCard(card){
   updateLawChapterNav(card);
 }
 
+// Toggle howto visibility (howto cards are hidden by default via CSS). Used by calc-help-btn (?).
+window.openCalcHelp=function(wrapperId, howtoId){
+  var wrapper=document.getElementById(wrapperId);
+  var howto=document.getElementById(howtoId);
+  if(!wrapper||!howto) return;
+  if(howto.classList.contains('howto-visible')){
+    howto.classList.remove('howto-visible');
+    return;
+  }
+  if(wrapper.classList.contains('collapsed')){
+    window.toggleCard(wrapper);
+  }
+  setTimeout(function(){
+    howto.classList.add('howto-visible');
+    if(howto.classList.contains('collapsed')){
+      window.toggleCard(howto);
+    }
+    howto.scrollIntoView({behavior:'smooth',block:'center'});
+  }, 100);
+};
+
 // ── Law chapter sticky nav (fixed position, outside card) ──
 function initLawChapterNav(lawGroupId){
   var group=document.getElementById(lawGroupId);
@@ -1266,30 +1287,12 @@ function updateSalaryUI() {
   setText('sal-deduct-hint', r.salDeductHint || 'Finner du i boliglånskalkulatoren under «År 1 renter». Reduserer skatten med 22 % av beløpet.');
   setText('sal-r-deduct', r.salRDeduct || 'Rentefradrag');
   setText('s-trinn-title', r.trinnBreakdownTitle || 'Trinnskatt Breakdown');
-  // Help card
-  const salHelpCard = document.getElementById('sal-help-card');
-  if(r.salHelpRows){
-    salHelpCard.classList.remove('hidden');
-    salHelpCard.classList.add('collapsed');
-    document.getElementById('sal-help-rows').innerHTML = infoRowsHTML(r.salHelpRows);
-    document.getElementById('sal-help-title').innerHTML = (r.salHelpTitle || 'Hjelp med kalkulatorene') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('sal-help-desc').textContent = r.salHelpDesc || 'Slik bruker du skattekalkulatorene';
-    // Sub-help titles
-    var _shss=document.getElementById('sal-help-sub-salary');if(_shss)_shss.innerHTML=(r.salTitle||'Lønn etter skatt')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    var _shsu=document.getElementById('sal-help-sub-uttak');if(_shsu)_shsu.innerHTML=(r.uttakHelpTitle||'Uttakskalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    var _shsd=document.getElementById('sal-help-sub-utdeling');if(_shsd)_shsd.innerHTML=(r.utdelingHelpTitle||'Effektiv skatt ved utdeling')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    // Sub-help rows
-    var _uhr=document.getElementById('uttak-help-rows');if(_uhr&&r.uttakHelpRows)_uhr.innerHTML=infoRowsHTML(r.uttakHelpRows);
-    var _udhr=document.getElementById('utdeling-help-rows');if(_udhr&&r.utdelingHelpRows)_udhr.innerHTML=infoRowsHTML(r.utdelingHelpRows);
-    // Formue + reise sub-help titles
-    var _shsf=document.getElementById('sal-help-sub-formue');if(_shsf)_shsf.innerHTML=(r.formueTitle||'Formueskatt')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    var _shsr=document.getElementById('sal-help-sub-reise');if(_shsr)_shsr.innerHTML=(r.reiseTitle||'Reisefradrag')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    // Formue + reise sub-help rows
-    var _fhr=document.getElementById('formue-help-rows');if(_fhr)_fhr.innerHTML=infoRowsHTML(r.formueHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn om du betaler formueskatt'],['Fyll inn verdier','Skriv inn markedsverdi for bolig, aksjer, bankinnskudd og gjeld. Kalkulatoren bruker verdsettelsesrabattene automatisk.'],['Verdsettelsesrabatter','Primærbolig: 25% (70% over 10M). Aksjer/fond: 80%. Bankinnskudd: 100%.'],['Bunnfradrag','1 900 000 kr per person (2026). Ektefeller får dobbelt.'],['— GODT Å VITE —',''],['Mange betaler ikke','Med typisk boliglån og primærbolig betaler de fleste null i formueskatt.'],['Gjeld reduseres','Gjeldsfradraget justeres proporsjonalt med verdsettelsesrabattene.']]);
-    var _rhr=document.getElementById('reise-help-rows');if(_rhr)_rhr.innerHTML=infoRowsHTML(r.reiseHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn pendlerfradrag for arbeidsreise'],['Avstand','Skriv inn avstand én vei i km. Kalkulatoren dobler automatisk for tur-retur.'],['Arbeidsdager','Standard er 230 dager. Juster for deltid eller fravær.'],['Bompenger/ferge','Faktiske utgifter per arbeidsdag legges til reisekostnaden.'],['— GODT Å VITE —',''],['Bunnfradrag','Du må ha mer enn 12 000 kr i reisekostnader for å få fradrag (2026).'],['Maks fradrag','Øvre grense er 120 000 kr per år (2026).'],['Skattebesparelse','Fradraget gir 22% tilbake — det er besparelsen du ser i resultatet.']]);
-  } else {
-    salHelpCard.classList.add('hidden');
-  }
+  // Help rows — populated inline per calc, shown via ? button (openCalcHelp)
+  var _shr=document.getElementById('sal-help-rows');if(_shr&&r.salHelpRows)_shr.innerHTML=infoRowsHTML(r.salHelpRows);
+  var _uhr=document.getElementById('uttak-help-rows');if(_uhr&&r.uttakHelpRows)_uhr.innerHTML=infoRowsHTML(r.uttakHelpRows);
+  var _udhr=document.getElementById('utdeling-help-rows');if(_udhr&&r.utdelingHelpRows)_udhr.innerHTML=infoRowsHTML(r.utdelingHelpRows);
+  var _fhr=document.getElementById('formue-help-rows');if(_fhr)_fhr.innerHTML=infoRowsHTML(r.formueHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn om du betaler formueskatt'],['Fyll inn verdier','Skriv inn markedsverdi for bolig, aksjer, bankinnskudd og gjeld. Kalkulatoren bruker verdsettelsesrabattene automatisk.'],['Verdsettelsesrabatter','Primærbolig: 25% (70% over 10M). Aksjer/fond: 80%. Bankinnskudd: 100%.'],['Bunnfradrag','1 900 000 kr per person (2026). Ektefeller får dobbelt.'],['— GODT Å VITE —',''],['Mange betaler ikke','Med typisk boliglån og primærbolig betaler de fleste null i formueskatt.'],['Gjeld reduseres','Gjeldsfradraget justeres proporsjonalt med verdsettelsesrabattene.']]);
+  var _rhr=document.getElementById('reise-help-rows');if(_rhr)_rhr.innerHTML=infoRowsHTML(r.reiseHelpRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn pendlerfradrag for arbeidsreise'],['Avstand','Skriv inn avstand én vei i km. Kalkulatoren dobler automatisk for tur-retur.'],['Arbeidsdager','Standard er 230 dager. Juster for deltid eller fravær.'],['Bompenger/ferge','Faktiske utgifter per arbeidsdag legges til reisekostnaden.'],['— GODT Å VITE —',''],['Bunnfradrag','Du må ha mer enn 12 000 kr i reisekostnader for å få fradrag (2026).'],['Maks fradrag','Øvre grense er 120 000 kr per år (2026).'],['Skattebesparelse','Fradraget gir 22% tilbake — det er besparelsen du ser i resultatet.']]);
   // Formueskatt labels
   var _fmT=document.getElementById('formue-title');
   if(_fmT){
@@ -1949,22 +1952,9 @@ function updateNpvUI() {
 
 function updateVatUI() {
   const r = R();
-  // Help card
-  const vatHelpCard = document.getElementById('vat-help-card');
-  if(r.vatHelpRows){
-    vatHelpCard.classList.remove('hidden');
-    vatHelpCard.classList.add('collapsed');
-    document.getElementById('vat-help-rows').innerHTML = infoRowsHTML(r.vatHelpRows,'mval');
-    document.getElementById('vat-help-title').innerHTML = (r.vatHelpTitle || 'Hjelp med kalkulatorene') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('vat-help-desc').textContent = r.vatHelpDesc || 'Slik bruker du avgiftskalkulatorene';
-    // Sub-help titles
-    var _vhsm=document.getElementById('vat-help-sub-mva');if(_vhsm)_vhsm.innerHTML=(r.vatTitle||'MVA-kalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    var _vhsa=document.getElementById('vat-help-sub-adj');if(_vhsa)_vhsa.innerHTML=(r.adjTitle||'Justeringskalkulator')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    // Sub-help rows
-    var _ahr=document.getElementById('adj-help-rows');if(_ahr&&r.adjHelpRows)_ahr.innerHTML=infoRowsHTML(r.adjHelpRows,'mval');
-  } else {
-    vatHelpCard.classList.add('hidden');
-  }
+  // Help rows — populated inline per calc, shown via ? button (openCalcHelp)
+  var _vhr=document.getElementById('vat-help-rows');if(_vhr&&r.vatHelpRows)_vhr.innerHTML=infoRowsHTML(r.vatHelpRows,'mval');
+  var _ahr=document.getElementById('adj-help-rows');if(_ahr&&r.adjHelpRows)_ahr.innerHTML=infoRowsHTML(r.adjHelpRows,'mval');
   setText('vat-title', r.vatTitle || 'MVA-kalkulator');
   setText('vat-desc', r.vatDesc || 'Beregn MVA-beløp og priser inkl./ekskl.');
   setText('vat-l-amount', r.lVatAmount || 'Beløp');
