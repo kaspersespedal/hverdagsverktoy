@@ -418,6 +418,16 @@ function updateAll() {
     // Always snap pill to active tab on page load (no cross-page animation)
     positionPill(_at,false);
     sessionStorage.setItem('nav-pill-idx',curIdx);
+    // Reposition after fonts load (text widths change on font swap) and on resize.
+    // ResizeObserver on active tab catches font-swap reflow + any future layout changes.
+    if(window._hvtPillRO){try{window._hvtPillRO.disconnect();}catch(_){}}
+    if(typeof ResizeObserver!=='undefined'){
+      window._hvtPillRO=new ResizeObserver(function(){positionPill(_at,false);});
+      window._hvtPillRO.observe(_at);
+    }
+    if(document.fonts&&document.fonts.ready&&document.fonts.ready.then){
+      document.fonts.ready.then(function(){positionPill(_at,false);});
+    }
     if(window._hvtPillResize) window.removeEventListener('resize',window._hvtPillResize);
     window._hvtPillResize=function(){positionPill(_at,false);};
     window.addEventListener('resize',window._hvtPillResize);
