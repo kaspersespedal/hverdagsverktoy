@@ -2196,11 +2196,14 @@ function updateUttakUI() {
   var _ufBody=document.getElementById('utdeling-fritak-body');
   if(_ufBody) _ufBody.innerHTML = r.utdelingFritakBody || 'Utbytte og aksjegevinst <b>mellom selskaper</b> er i hovedsak skattefritt under fritaksmetoden. Det betyr at et holdingselskap kan motta utbytte fra et datterselskap uten å betale skatt — det er først når pengene deles ut videre til en <i>personlig</i> aksjonær at utbytteskatten slår inn. Kalkulatoren over viser nettopp dette siste leddet.';
   setText('utdeling-fritak-link', r.utdelingFritakLink || 'Les mer om fritaksmetoden →');
-  setText('utdeling-l-type', r.utdelingLType || 'Business form');
-  setText('utdeling-opt-as', r.utdelingOptAs || 'Limited company (AS) — shareholder model');
-  setText('utdeling-opt-enk', r.utdelingOptEnk || 'Sole proprietorship (ENK) — enterprise model');
+  setText('utdeling-l-type', r.utdelingLType || 'Which type of company?');
+  setText('utdeling-opt-as', r.utdelingOptAs || 'Limited company (AS)');
+  setText('utdeling-opt-enk', r.utdelingOptEnk || 'Sole proprietorship (ENK)');
+  setText('utdeling-hint-type', r.utdelingHintType || 'AS: company pays 22% tax first, then you pay ~37.84% on dividends. ENK: you pay tax directly on business income up to ~50.6%.');
   setText('utdeling-l-overskudd', r.utdelingLOverskudd || 'Pre-tax profit (kr)');
+  setText('utdeling-hint-overskudd', r.utdelingHintOverskudd || 'What the company earned before tax. Example: 500,000 or 1,000,000 kr.');
   setText('utdeling-l-skjerming', r.utdelingLSkjerming || 'Shielding deduction (kr)');
+  setText('utdeling-hint-skjerming', r.utdelingHintSkjerming || 'Leave as 0 if unsure. The shielding deduction reduces dividend tax — calculated by the Tax Administration based on capital you contributed.');
   setText('btn-calc-utdeling', r.utdelingBtn || 'Calculate effective tax →');
   setText('utdeling-r-lbl', r.utdelingRLbl || 'Total tax burden');
   // AS labels
