@@ -308,7 +308,7 @@ REGIONS['no'] = {
     adjExSource:'Kilde: Merverdiavgiftsloven kap. 9 (lov-2009-06-19-58). Kalkulatoren er veiledende — kontakt revisor for konkrete vurderinger.',
     calcHelpHint:'Trenger du hjelp med kalkulatoren? →',
     bcDecLabel:'Desimaler',
-    lblFagcalc:'Fagkalkulatorer', lblLvu:'Lønn vs Utbytte', lblAga:'Ansattkostnad', lblAvs:'Avskrivning', lblFerie:'Feriepenger', lblRente:'Effektiv Rente', lblProsent:'Prosent', lblValgevinst:'Valutagevinst', lblLikvid:'Likviditet', lblPensjon:'Pensjon',
+    lblGroupModus:'Kalkulator-modus', lblGroupValuta:'Valuta', lblGroupLonn:'Lønn & Arbeidsgiver', lblGroupInvest:'Investering & Analyse', lblLvu:'Lønn vs Utbytte', lblAga:'Ansattkostnad', lblAvs:'Avskrivning', lblFerie:'Feriepenger', lblRente:'Effektiv Rente', lblProsent:'Prosent', lblValgevinst:'Valutagevinst', lblLikvid:'Likviditet', lblPensjon:'Pensjon',
     mobileSwitch:'Bytt kalkulator', mobileFocus:'Fokus', mobileFocusExit:'Lukk',
     focusLabel:'Fokus', focusClose:'Lukk fokus', focusSwitchCalc:'Bytt kalkulator',
     btnCsv:'Last ned CSV',

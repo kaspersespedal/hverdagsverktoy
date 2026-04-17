@@ -210,7 +210,7 @@ REGIONS['zh'] = {
     adjRepaySub:'您必须退还 {a} 的已扣除增值税', adjIncreaseSub:'您可以申请 {a} 的额外增值税扣除',
     adjExplain:'调整规则说明（增值税法第9章）',
     adjOfTotal:' / ',
-    lblFagcalc:'专业计算器', lblLvu:'薪资对比股息', lblAga:'员工成本', lblAvs:'折旧', lblFerie:'假期工资', lblRente:'有效利率', lblProsent:'百分比', lblValgevinst:'汇兑收益', lblLikvid:'流动性', lblPensjon:'养老金',
+    lblGroupModus:'计算器模式', lblGroupValuta:'货币', lblGroupLonn:'薪资与雇主', lblGroupInvest:'投资与分析', lblLvu:'薪资对比股息', lblAga:'员工成本', lblAvs:'折旧', lblFerie:'假期工资', lblRente:'有效利率', lblProsent:'百分比', lblValgevinst:'汇兑收益', lblLikvid:'流动性', lblPensjon:'养老金',
     mobileSwitch:'切换计算器', mobileFocus:'专注', mobileFocusExit:'关闭',
     focusLabel:'专注', focusClose:'关闭专注', focusSwitchCalc:'切换计算器',
     btnCsv:'下载CSV',

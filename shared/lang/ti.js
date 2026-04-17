@@ -214,7 +214,7 @@ REGIONS['ti'] = {
     adjExRev2:'ቤት ሳልቅ ግዜ ሊዩ (§ 9-7) — ሙሉእ ቅነሳ ምልሳ ምስ ሸዩ/ሪጉ ከዋህሉ ግዜ',
     adjExRev3:'ዝጸወ: ማሕበራዊ ጥቃ፣ ልዕልና ወ ሞትን (§ 9-6(4))',
     adjExSource:'ምንጭ: ተ.ዋ.ግ. ሕጋውነት ምዕራፍ 9 (ሕጋውነት-2009-06-19-58)። ካልኩሌተር ሰበ ምኳንንት — ተወሳኺ ምስ ሒሳብ ሳይንስ ኪነት።',
-    lblFagcalc:'ፍላጻዊ ካልኩሌተርስ', lblLvu:'ደሞዝ vs ገቢ', lblAga:'ወጪ ሠራዊት', lblAvs:'ክፋል', lblFerie:'ለጥበቦ ክፍያ', lblRente:'ውጤታማ ወለድ ደረጃ', lblProsent:'መቶ', lblValgevinst:'ሌላ ገንዘብ ዋጋ', lblLikvid:'ፈሳሽነት', lblPensjon:'ጡረታ',
+    lblGroupModus:'ኣገባብ ካልኩሌተር', lblGroupValuta:'ገንዘብ', lblGroupLonn:'ደሞዝ ን ቀጣሪ', lblGroupInvest:'ወፍሪ ን ትንታነ', lblLvu:'ደሞዝ vs ገቢ', lblAga:'ወጪ ሠራዊት', lblAvs:'ክፋል', lblFerie:'ለጥበቦ ክፍያ', lblRente:'ውጤታማ ወለድ ደረጃ', lblProsent:'መቶ', lblValgevinst:'ሌላ ገንዘብ ዋጋ', lblLikvid:'ፈሳሽነት', lblPensjon:'ጡረታ',
     mobileSwitch:'ቀይር ካልኩሌተር', mobileFocus:'ትኩረት', mobileFocusExit:'ዕጾ',
     focusLabel:'ትኩረት', focusClose:'ትኩረት ዕጾ', focusSwitchCalc:'ቀይር ካልኩሌተር',
     btnCsv:'CSV ኣውርድ',

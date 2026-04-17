@@ -211,7 +211,7 @@ REGIONS['so'] = {
     adjExRev2:'Xogta ka hor dhamaadka (§ 9-7) — dhimis buuxa waxaa la joojiyan haddii la iibiyay/la wareejiyay ka hor dhamaadka',
     adjExRev3:'Isticmaalka: la qabtay, bankrot iyo dhimatada (§ 9-6(4))',
     adjExSource:'Isha: Sharciga CBM qaybta 9 (Sharciga-2009-06-19-58). Xisaabiyahadu waa tilmaan oo keliya — la midaasho accountant si loogu naago qiimeyno qaas.',
-    lblFagcalc:'Xisaabiyahada Xirfadleed', lblLvu:'Mushiishe vs Laakiibadhka', lblAga:'Kharajka Shaqalaha', lblAvs:'Qiimo Dhaladhis', lblFerie:'Lacagta Fusuq', lblRente:'Heerka Riba ee Walaweyn', lblProsent:'Gaadhsan', lblValgevinst:'Faida Badala Lacag', lblLikvid:'Maqliyada', lblPensjon:'Sharciga Jibaara',
+    lblGroupModus:'Nooca Xisaabta', lblGroupValuta:'Lacagta', lblGroupLonn:'Mushiishe & Shaqa-Bixiye', lblGroupInvest:'Maalgelin & Falanqayn', lblLvu:'Mushiishe vs Laakiibadhka', lblAga:'Kharajka Shaqalaha', lblAvs:'Qiimo Dhaladhis', lblFerie:'Lacagta Fusuq', lblRente:'Heerka Riba ee Walaweyn', lblProsent:'Gaadhsan', lblValgevinst:'Faida Badala Lacag', lblLikvid:'Maqliyada', lblPensjon:'Sharciga Jibaara',
     mobileSwitch:'Bedel xisaabiyaha', mobileFocus:'Diirad', mobileFocusExit:'Xir',
     focusLabel:'Diirad', focusClose:'Xir diirad', focusSwitchCalc:'Bedel xisaabiyaha',
     btnCsv:'Soo deji CSV',

@@ -214,7 +214,7 @@ REGIONS['ar'] = {
     adjExRev2:'العقار قبل الانتهاء (§ 9-7) — يتم إلغاء الخصم الكامل إذا تم البيع/إعادة التخصيص قبل الانتهاء',
     adjExRev3:'استثناء: الاستملاك والإفلاس والوفاة (§ 9-6(4))',
     adjExSource:'المصدر: قانون ض.ق.م. الفصل 9 (القانون-2009-06-19-58). الآلة الحاسبة مؤشرة فقط — استشر محاسباً للتقييمات المحددة.',
-    lblFagcalc:'الآلات الحاسبة المتخصصة', lblLvu:'الراتب مقابل الأرباح', lblAga:'تكلفة الموظف', lblAvs:'الاستهلاك', lblFerie:'أجر الإجازة', lblRente:'سعر الفائدة الفعلي', lblProsent:'النسبة المئوية', lblValgevinst:'الربح من صرف العملات', lblLikvid:'السيولة', lblPensjon:'المعاش التقاعدي',
+    lblGroupModus:'وضع الآلة الحاسبة', lblGroupValuta:'العملة', lblGroupLonn:'الراتب وصاحب العمل', lblGroupInvest:'الاستثمار والتحليل', lblLvu:'الراتب مقابل الأرباح', lblAga:'تكلفة الموظف', lblAvs:'الاستهلاك', lblFerie:'أجر الإجازة', lblRente:'سعر الفائدة الفعلي', lblProsent:'النسبة المئوية', lblValgevinst:'الربح من صرف العملات', lblLikvid:'السيولة', lblPensjon:'المعاش التقاعدي',
     mobileSwitch:'تغيير الآلة الحاسبة', mobileFocus:'تركيز', mobileFocusExit:'إغلاق',
     focusLabel:'تركيز', focusClose:'إغلاق التركيز', focusSwitchCalc:'تغيير الآلة الحاسبة',
     btnCsv:'تحميل CSV',
