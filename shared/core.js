@@ -208,7 +208,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v35';
+    s.src = '/shared/lang/' + code + '.js?v=v37';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -396,6 +396,8 @@ function _uiErr(fn,e){if(typeof console!=='undefined'&&console.error)console.err
 function updateAll() {
   try{updateHero();}catch(e){_uiErr('updateHero',e);}
   try{updateTabs();}catch(e){_uiErr('updateTabs',e);}
+  try{var _th=document.getElementById('tool-h1');if(_th){var _p=location.pathname,_rh=R(),_kh=_p.indexOf('/skatt')>=0?'toolH1Skatt':_p.indexOf('/kalkulator')>=0?'toolH1Kalk':_p.indexOf('/boliglan')>=0?'toolH1Bolig':_p.indexOf('/avgift')>=0?'toolH1Avg':_p.indexOf('/selskap')>=0?'toolH1Sel':_p.indexOf('/personlig')>=0?'toolH1Per':null;if(_kh&&_rh[_kh])_th.textContent=_rh[_kh];}}catch(e){_uiErr('toolH1',e);}
+  try{var _ra=R();var _rc=document.querySelector('.region-cur');if(_rc)_rc.setAttribute('aria-label',_ra.a11yLang||'Velg sprak');var _tp=document.getElementById('theme-picker');if(_tp){var _tb=_tp.querySelector('button');if(_tb)_tb.setAttribute('aria-label',_ra.a11yTheme||'Velg tema');}}catch(e){_uiErr('a11yLbl',e);}
   try{var _si=document.getElementById('search-input');if(_si){var _r=R();_si.placeholder=_r.searchPlaceholder||'Søk etter verktøy eller begrep...';}}catch(e){}
   // Scroll-end class toggle for mask-image fade
   try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(!_cnav._hvtScrollBound){_cnav._hvtScrollBound=true;_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});}
@@ -6538,12 +6540,12 @@ function _initPageReady(){
     if(nav) nav.setAttribute('aria-label','Navigasjon mellom verktoy');
     nav&&nav.querySelectorAll('.calc-tab').forEach(function(t){t.setAttribute('role','tab');});
     var regionCur=document.querySelector('.region-cur');
-    if(regionCur){regionCur.setAttribute('role','button');regionCur.setAttribute('aria-label','Velg sprak');regionCur.setAttribute('aria-haspopup','listbox');regionCur.setAttribute('aria-expanded','false');regionCur.setAttribute('tabindex','0');regionCur.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleDD();}});}
+    if(regionCur){regionCur.setAttribute('role','button');regionCur.setAttribute('aria-label',(R().a11yLang||'Velg sprak'));regionCur.setAttribute('aria-haspopup','listbox');regionCur.setAttribute('aria-expanded','false');regionCur.setAttribute('tabindex','0');regionCur.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleDD();}});}
     var regionDD=document.getElementById('rdd');
     if(regionDD) regionDD.setAttribute('role','listbox');
     document.querySelectorAll('.region-opt').forEach(function(o){o.setAttribute('role','option');});
     var themePicker=document.getElementById('theme-picker');
-    if(themePicker){var btn=themePicker.querySelector('button');if(btn&&!btn.getAttribute('aria-label'))btn.setAttribute('aria-label','Velg tema');}
+    if(themePicker){var btn=themePicker.querySelector('button');if(btn&&!btn.getAttribute('aria-label'))btn.setAttribute('aria-label',(R().a11yTheme||'Velg tema'));}
     document.querySelectorAll('.btn-calc').forEach(function(b){if(!b.getAttribute('aria-label'))b.setAttribute('aria-label',b.textContent.replace(/→/g,'').trim());});
     document.querySelectorAll('.card-hdr').forEach(function(h){h.setAttribute('role','button');h.setAttribute('aria-expanded',!h.parentElement.classList.contains('collapsed')+'');h.setAttribute('tabindex','0');h.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();toggleCard(h.parentElement);}});});
     // V12 Fase 3: Boliglan Enter-handler er nå håndtert idempotent inne i updateAll
