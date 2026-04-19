@@ -737,6 +737,12 @@ function updateTabs() {
   autoRecalc('bil-kjopsaar','bil-res',calcBilkostnad);
   // Valutagevinst
   autoRecalc('valgevinst-currency','valgevinst-res',calcValgevinst);
+  // Studielån (personlig.html)
+  autoRecalc('studie-mnd','studie-res',calcStudielan);
+  autoRecalc('studie-varighet','studie-res',calcStudielan);
+  autoRecalc('studie-borte-aar','studie-res',calcStudielan);
+  autoRecalc('studie-grad','studie-res',calcStudielan);
+  autoRecalcInput(['studie-rente','studie-nedbtid','studie-skolepenger','studie-tilleggslan'],'studie-res',calcStudielan);
   // Enter-key handler for mortgage inputs — triggers calcMor() (idempotent)
   function bindEnter(ids, fn){ids.forEach(function(id){var el=document.getElementById(id);if(el && !el.__hvtEnterBound){el.__hvtEnterBound=true;el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fn();}});}});}
   bindEnter(['m-a','m-r','m-y','m-fees','m-io-yrs'], function(){ if(typeof calcMor==='function') calcMor(); });
