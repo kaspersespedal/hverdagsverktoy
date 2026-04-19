@@ -93,7 +93,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
 <link href="/shared/style.css?v=v102" rel="stylesheet"/>
-<link as="script" href="/shared/core.js?v=v73" rel="preload"/>
+<link as="script" href="/shared/core.js?v=v74" rel="preload"/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -843,19 +843,26 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div>
 <button class="btn-calc" onclick="calcSpare()"><span id="btn-calc-spare">Beregn sparing →</span></button>
 <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--border);">
-<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-<span id="spare-l-scenarios" style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;">Prøv scenarioer</span>
+<button id="spare-scenario-toggle" type="button" onclick="spareToggleScenarios()" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--ink2);border-radius:8px;padding:9px 14px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;display:flex;justify-content:space-between;align-items:center;">
+<span>Vis forslag til scenarioer</span>
+<span id="spare-scenario-chev" style="font-size:11px;opacity:.7;">▼</span>
+</button>
+<div id="spare-scenario-panel" style="display:none;margin-top:10px;">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+<span id="spare-l-scenarios" style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;">Velg forslag eller lagre eget</span>
 <button id="spare-save-btn" type="button" onclick="spareSaveCurrent()" style="font-size:11px;color:var(--accent);background:transparent;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:999px;padding:4px 10px;cursor:pointer;font-family:inherit;font-weight:600;">+ Lagre eget</button>
 </div>
-<div class="spare-scenarios">
-<button type="button" onclick="spareSet(10000,0,'lump',7,10)">Ingen sparing (rentes rente alene)</button>
-<button type="button" onclick="spareSet(10000,2000,'monthly',7,10)">2 000/mnd × 10 år</button>
-<button type="button" onclick="spareSet(0,50000,'yearly',6,20)">50 000/år × 20 år</button>
-<button type="button" onclick="spareSet(50000,15000,'quarterly',5,15)">Kvartalsvis 15 000</button>
-<button type="button" onclick="spareSet(0,25000,'half',6,30)">Pensjon — halvårlig 25 000 × 30 år</button>
-<button type="button" onclick="spareSet(500000,0,'lump',5,20)">Arv/bonus — 500 000 alene × 20 år</button>
+<select id="spare-scenario-picker" class="fc" style="width:100%;">
+<option value="">Velg et forslag…</option>
+<option value="10000|0|lump|7|10">Ingen sparing — 10 000 kr alene × 10 år @ 7 %</option>
+<option value="10000|2000|monthly|7|10">2 000/mnd × 10 år @ 7 %</option>
+<option value="0|50000|yearly|6|20">50 000/år × 20 år @ 6 %</option>
+<option value="50000|15000|quarterly|5|15">Kvartalsvis 15 000 × 15 år @ 5 %</option>
+<option value="0|25000|half|6|30">Pensjon — halvårlig 25 000 × 30 år @ 6 %</option>
+<option value="500000|0|lump|5|20">Arv/bonus — 500 000 alene × 20 år @ 5 %</option>
+</select>
+<div id="spare-custom-row" class="spare-scenarios" style="margin-top:8px;"></div>
 </div>
-<div id="spare-custom-row" class="spare-scenarios" style="margin-top:6px;"></div>
 </div>
 <div aria-live="polite" class="result-sec hidden" id="spare-res" style="margin-top:12px;">
 <div class="rh">
@@ -1365,7 +1372,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <!-- Language files now loaded dynamically by core.js -->
-<script defer src="/shared/core.js?v=v73"></script>
+<script defer src="/shared/core.js?v=v74"></script>
 <script defer src="/shared/search-intents.js?v=v1"></script>
 <script defer src="/shared/search.js?v=v14"></script>
 <script defer src="/shared/lang/no.js?v=v35"></script>

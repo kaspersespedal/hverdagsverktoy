@@ -5663,8 +5663,27 @@ document.addEventListener('DOMContentLoaded',function(){
   if(fe && !fe.__spareHintBound){fe.__spareHintBound=true;fe.addEventListener('change',spareUpdateYearHint);}
   var rf=document.getElementById('spare-rf-rate');
   if(rf && !rf.__spareRfBound){rf.__spareRfBound=true;rf.addEventListener('input',function(){if(!document.getElementById('spare-res').classList.contains('hidden'))calcSpareRF();});}
+  var picker=document.getElementById('spare-scenario-picker');
+  if(picker && !picker.__spareBound){
+    picker.__spareBound=true;
+    picker.addEventListener('change',function(e){
+      if(!e.target.value) return;
+      var p=e.target.value.split('|');
+      window.spareSet(+p[0],+p[1],p[2],+p[3],+p[4]);
+      e.target.value='';
+    });
+  }
   if(ie){spareUpdateYearHint();spareRenderSaved();}
 });
+window.spareToggleScenarios=function(){
+  var panel=document.getElementById('spare-scenario-panel');
+  var chev=document.getElementById('spare-scenario-chev');
+  if(!panel)return;
+  var open=panel.style.display!=='none';
+  panel.style.display=open?'none':'block';
+  if(chev)chev.textContent=open?'▼':'▲';
+  document.getElementById('spare-scenario-toggle').querySelector('span:first-child').textContent=open?'Vis forslag til scenarioer':'Skjul forslag';
+};
 
 // ── Studielån (Lånekassen) ──
 // Basislån 2025–26: 15 169 kr/mnd (samme for borte- og hjemmeboere).
