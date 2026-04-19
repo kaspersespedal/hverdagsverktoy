@@ -208,7 +208,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v28';
+    s.src = '/shared/lang/' + code + '.js?v=v29';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -879,7 +879,7 @@ function toggleCard(card){
     card.classList.add('collapsed');
     var topAfter = (hdr||card).getBoundingClientRect().top;
     var drift = topAfter - topBefore;
-    if(Math.abs(drift) > 2) window.scrollBy({top:drift,behavior:'instant'});
+    if(Math.abs(drift) > 2) _scrollInstant(function(){window.scrollBy(0, drift);});
   } else {
     // Opening — collapse other open cards in the same column first
     // Skip accordion for law chapter cards (inside .law-body) so earlier chapters stay open
@@ -904,7 +904,7 @@ function toggleCard(card){
     if(didCollapseOthers){
       var topAfterOpen=hdrForPin.getBoundingClientRect().top;
       var driftOpen=topAfterOpen-topBeforeOpen;
-      if(Math.abs(driftOpen)>2) window.scrollBy({top:driftOpen,behavior:'instant'});
+      if(Math.abs(driftOpen)>2) _scrollInstant(function(){window.scrollBy(0, driftOpen);});
     }
     if(body){
       body.classList.remove('opening');
@@ -1081,7 +1081,7 @@ function initLawChapterNav(lawGroupId){
           var cr=best.getBoundingClientRect();
           var nr=nav.getBoundingClientRect();
           if(cr.left<nr.left||cr.right>nr.right){
-            best.scrollIntoView({behavior:'instant',block:'nearest',inline:'center'});
+            _scrollInstant(function(){best.scrollIntoView({block:'nearest',inline:'center'});});
           }
         }
       },{
@@ -2607,22 +2607,31 @@ function _cancelScroll(){_scrollId++;}
     if(e.key==='ArrowUp'||e.key==='ArrowDown'||e.key==='PageUp'||e.key==='PageDown'||e.key===' ')_cancelScroll();
   },opts);
 })();
+// Safari 15.0-15.3 ignores scrollTo({behavior:'instant'}); fallback temporarily
+// overrides CSS scroll-behavior and uses plain scroll calls.
+function _scrollInstant(op){
+  var el=document.documentElement;
+  var prev=el.style.scrollBehavior;
+  el.style.scrollBehavior='auto';
+  try { op(); } finally { el.style.scrollBehavior=prev; }
+}
+
 function _animateScroll(targetY,dur,id,cb){
   var startY=window.scrollY;
   var dist=targetY-startY;
   if(Math.abs(dist)<3){if(cb)cb();return;}
   var start=null;
+  var htmlEl=document.documentElement;
+  var prevSB=htmlEl.style.scrollBehavior;
+  htmlEl.style.scrollBehavior='auto';
   function ease(t){return t<0.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1;}
   function step(ts){
-    if(id!==_scrollId)return;
+    if(id!==_scrollId){htmlEl.style.scrollBehavior=prevSB;return;}
     if(!start)start=ts;
     var p=Math.min((ts-start)/dur,1);
-    // CRITICAL: must use behavior:'instant' because html{scroll-behavior:smooth}
-    // makes the browser override plain scrollTo(x,y) with its own smooth scroll,
-    // which fights this rAF-driven easing and results in no visible scrolling.
-    window.scrollTo({top: startY+dist*ease(p), left: 0, behavior: 'instant'});
+    window.scrollTo(0, startY+dist*ease(p));
     if(p<1) requestAnimationFrame(step);
-    else if(cb) cb();
+    else { htmlEl.style.scrollBehavior=prevSB; if(cb) cb(); }
   }
   requestAnimationFrame(step);
 }
@@ -5010,7 +5019,7 @@ function enterMobileFocus(card){
   } else {
     var mfT=closeBar.querySelector('.mf-title'); if(mfT) mfT.textContent=titleText;
   }
-  window.scrollTo({top:0,behavior:'instant'});
+  _scrollInstant(function(){window.scrollTo(0, 0);});
   b.classList.add('mobile-focus-active');
   // Recalculate law chip bar position now that focus-close bar is visible
   if(visibleCard.id&&visibleCard.id.endsWith('-law-group')){updateLawChapterNav(visibleCard);}
@@ -5060,7 +5069,7 @@ function initMobileFocus(){
   function activateCol(idx){
     cols.forEach(function(c,i){c.classList.toggle('mobile-active',i===idx);});
     tabs.forEach(function(t,i){t.classList.toggle('active',i===idx);});
-    window.scrollTo({top:0,behavior:'instant'});
+    _scrollInstant(function(){window.scrollTo(0, 0);});
   }
   cols.forEach(function(col,i){
     var title=col.querySelector('.section-title');
@@ -6219,7 +6228,7 @@ function _initPageReady(){
       if(h&&mmb2&&!document.body.classList.contains('calc-focus')) mmb2.style.top=h.offsetHeight+'px';
     });
   })();
-  if(!window.location.hash) window.scrollTo({top:0,behavior:'instant'});
+  if(!window.location.hash) _scrollInstant(function(){window.scrollTo(0, 0);});
   // Accessibility: add aria-labels to interactive elements
   (function(){
     var nav=document.querySelector('.calc-nav');
@@ -6274,8 +6283,8 @@ function _initPageReady(){
         history.replaceState(null,'',window.location.pathname);
         if(_isMobile()){
           enterMobileFocus(card);
-          window.scrollTo({top:0,behavior:'instant'});
-          setTimeout(function(){window.scrollTo({top:0,behavior:'instant'});},0);
+          _scrollInstant(function(){window.scrollTo(0, 0);});
+          setTimeout(function(){_scrollInstant(function(){window.scrollTo(0, 0);});},0);
         } else {
           // Desktop: enter focus mode on the card's column
           var colIdx=_getColIndex(card);
@@ -6293,3 +6302,7 @@ function _initPageReady(){
     }
   }
 }
+
+// Boot: scripts use `defer`, so they execute in order before DOMContentLoaded fires.
+// By the time this listener runs, search.js and lang/*.js have completed.
+document.addEventListener('DOMContentLoaded', initPage);
