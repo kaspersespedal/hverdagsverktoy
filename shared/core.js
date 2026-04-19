@@ -882,17 +882,22 @@ function toggleCard(card){
     if(Math.abs(drift) > 2) _scrollInstant(function(){window.scrollBy(0, drift);});
   } else {
     // Opening — collapse other open cards in the same column first
-    // Skip accordion for law chapter cards (inside .law-body) so earlier chapters stay open
+    // Skip accordion for:
+    // - law chapter cards (inside .law-body) so earlier chapters stay open
+    // - top-level calculator wrappers (id ending in -wrapper) so users can keep
+    //   multiple calculators open side-by-side (E28 bug #2: MVA/AGA-mutex)
     var isLawChapter=!!card.closest('.law-body');
+    var isCalcWrapper=/-wrapper$/.test(card.id);
     var parent=card.closest('.calc-grid > div, .calc-grid > .right-col');
     // Pin-position: measure this card's header top BEFORE collapsing others,
     // so we can compensate for any upward drift caused by collapsing cards above it.
     var hdrForPin=card.querySelector(':scope > .card-hdr')||card;
     var topBeforeOpen=hdrForPin.getBoundingClientRect().top;
     var didCollapseOthers=false;
-    if(parent&&!isLawChapter){
+    if(parent&&!isLawChapter&&!isCalcWrapper){
       parent.querySelectorAll('.info-card:not(.collapsed)').forEach(function(other){
         if(other===card||other.contains(card)||card.contains(other))return;
+        if(/-wrapper$/.test(other.id))return; // keep calc wrappers open
         other.classList.add('collapsed');
         var otherArrow=other.querySelector('.card-title span');
         if(otherArrow)otherArrow.textContent='▼';
