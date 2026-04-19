@@ -6206,8 +6206,8 @@ function renderComplexityDots(){
     if(card.querySelector(':scope > .cmp-dots')) return;
     var n=pips[level];
     var dotsHtml='<span class="cmp-dots">'+
-      '<span class="cmp-pips"><span class="cmp-on">'+'●'.repeat(n)+'</span><span class="cmp-off">'+'●'.repeat(3-n)+'</span></span>'+
-      '<span class="cmp-lbl">'+labels[level]+'</span></span>';
+      '<span class="cmp-lbl">'+labels[level]+'</span>'+
+      '<span class="cmp-pips"><span class="cmp-on">'+'●'.repeat(n)+'</span><span class="cmp-off">'+'●'.repeat(3-n)+'</span></span></span>';
     card.insertAdjacentHTML('beforeend',dotsHtml);
   });
 }
