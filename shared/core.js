@@ -5525,7 +5525,10 @@ function calcSpare() {
 
   document.getElementById('spare-res').classList.remove('hidden');
   calcSpareRF();
-  setTimeout(function(){scrollToEl(document.getElementById('spare-res'));},80);
+  // Ingen auto-scroll: spare-res, RF-chart og RF-tabell er store blokker som
+  // rendres med delay (Chart.js, fonter) => smartScroll re-retry-runder
+  // skapte viewport-hopping. Bruker er allerede ved Beregn-knappen, resultatet
+  // dukker opp rett under — ingen grunn til aa yanke viewporten.
 }
 
 // Sparekonto-sammenligning: samme innskudd til lav sparerente
