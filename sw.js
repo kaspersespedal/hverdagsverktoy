@@ -1,7 +1,9 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v69';
+const CACHE_NAME = 'hverdagsverktoy-v72';
 
 // Files to cache for offline use
+// Fonts are served from fonts.bunny.net (see index.html <link rel="preload">);
+// local ./fonts/*.woff2 paths don't exist and would 404 here.
 const PRECACHE_URLS = [
   './',
   './manifest.json',
@@ -18,21 +20,38 @@ const PRECACHE_URLS = [
   './shared/lang/ar.js',
   './shared/lang/lt.js',
   './shared/lang/so.js',
-  './shared/lang/ti.js',
-  './fonts/PlayfairDisplay-Bold.woff2',
-  './fonts/PlayfairDisplay-BoldItalic.woff2',
-  './fonts/Inter-Regular.woff2',
-  './fonts/Inter-Medium.woff2',
-  './fonts/Inter-SemiBold.woff2',
-  './fonts/Inter-Bold.woff2'
+  './shared/lang/ti.js'
 ];
 
-// Install: precache all essential files
+// Flag images (external CDN) — precached so language dropdown renders instantly
+const FLAG_URLS = [
+  'https://flagcdn.com/w80/no.png',
+  'https://flagcdn.com/w80/gb.png',
+  'https://flagcdn.com/w80/pl.png',
+  'https://flagcdn.com/w80/ua.png',
+  'https://flagcdn.com/w80/sa.png',
+  'https://flagcdn.com/w80/lt.png',
+  'https://flagcdn.com/w80/so.png',
+  'https://flagcdn.com/w80/er.png',
+  'https://flagcdn.com/w80/cn.png',
+  'https://flagcdn.com/w80/fr.png'
+];
+
+// Install: precache essentials per-URL (so a single 404 doesn't abort all caching).
+// Flags are fetched no-cors (opaque responses) and stored via cache.put — cache.add
+// rejects opaque responses in Chrome, put accepts them.
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(PRECACHE_URLS))
-      .then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then(cache =>
+      Promise.allSettled([
+        ...PRECACHE_URLS.map(u => cache.add(u).catch(() => {})),
+        ...FLAG_URLS.map(u =>
+          fetch(u, {mode:'no-cors'})
+            .then(r => cache.put(u, r))
+            .catch(() => {})
+        )
+      ])
+    ).then(() => self.skipWaiting())
   );
 });
 
