@@ -932,10 +932,21 @@ function toggleCard(card){
           if(ic!==card) ic.setAttribute('data-desktop-card-hidden','true');
         });
       } else {
-        // Collapsing — show siblings so user can pick another
-        container.querySelectorAll(':scope > .info-card[data-desktop-card-hidden]').forEach(function(ic){
+        // Collapsing — show ALL hidden siblings (E31-fix: tidligere scope var
+        // card.parentElement/:scope>.info-card som paa /personlig kun fant 1 info-card
+        // per .card-wrapper — andre kort i kolonnen forble skjult = blank side).
+        document.querySelectorAll('[data-desktop-card-hidden]').forEach(function(ic){
           ic.removeAttribute('data-desktop-card-hidden');
         });
+        // E31-fix: hvis dette var eneste aapne top-level kort (som er tilfellet
+        // naar bruker kollapser det fokuserte kortet), exit focus-mode helt. Uten
+        // dette skjuler `#personlig-cols .card:not(:has(>.info-card:not(.collapsed)))`
+        // (style.css:1257) hele kolonnen siden ingen kort er aapne.
+        card.removeAttribute('data-opened-by-focus');
+        var anyStillOpen=document.querySelector('.info-card[data-opened-by-focus]');
+        if(!anyStillOpen){
+          document.body.classList.remove('desktop-focus');
+        }
       }
     }
   }
