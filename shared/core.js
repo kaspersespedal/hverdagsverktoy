@@ -466,6 +466,7 @@ function updateAll() {
   const d = R().salDefaults;
   var sg=document.getElementById('s-g');if(sg)sg.value = fmtInput(d.gross);
   var ma=document.getElementById('m-a');if(ma)ma.value = fmtInput(3000000);
+  _renameHowtoArrows();
 }
 
 // Three.js disco ball
@@ -875,10 +876,33 @@ function toggleLawGroup(group){
     setTimeout(function(){ smartScroll(group); }, 550);
   }
 }
+// Replace ▼ collapse-arrows on howto-titles with a "Skjul veiledning" label,
+// so clicking the header reads as a deliberate close action. Idempotent — safe
+// to call after every updateAll() / lang switch.
+function _renameHowtoArrows(){
+  try{
+    var r=(typeof R==='function')?R():{};
+    var label=r.closeHelp||'Skjul veiledning';
+    var titles=document.querySelectorAll('[id$="-howto-title"], #mor-help-title');
+    titles.forEach(function(el){
+      el.querySelectorAll('span').forEach(function(s){
+        var t=(s.textContent||'').trim();
+        if(t==='▼' || t===label){
+          s.textContent=label;
+          s.removeAttribute('style');
+          s.classList.add('howto-close-label');
+        }
+      });
+    });
+  }catch(e){}
+}
 function toggleCard(card){
-  // Howto-cards: clicking the header hides the entire howto via howto-visible
-  // removal, instead of collapsing the card. Matches the "Skjul veiledning" UX.
-  if(card && card.id && /-howto-card$/.test(card.id) && card.classList.contains('howto-visible')){
+  // Howto-cards: when the header is clicked on an already-visible (and expanded)
+  // howto, hide the entire howto via howto-visible removal instead of collapsing.
+  // Skips when also collapsed — that's the openCalcHelp internal expand path.
+  if(card && card.id && /-howto-card$/.test(card.id)
+     && card.classList.contains('howto-visible')
+     && !card.classList.contains('collapsed')){
     card.classList.remove('howto-visible');
     return;
   }
@@ -913,8 +937,9 @@ function toggleCard(card){
         if(other===card||other.contains(card)||card.contains(other))return;
         if(/-wrapper$/.test(other.id))return; // keep calc wrappers open
         other.classList.add('collapsed');
+        var otherIsHowto = other.id && (/-howto-card$/.test(other.id) || other.id==='mor-help-card');
         var otherArrow=other.querySelector('.card-title span');
-        if(otherArrow)otherArrow.textContent='▼';
+        if(otherArrow && !otherIsHowto)otherArrow.textContent='▼';
         didCollapseOthers=true;
       });
     }
@@ -933,7 +958,9 @@ function toggleCard(card){
     }
   }
   const arrow = card.querySelector('.card-title span');
-  if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
+  // Howto-cards keep "Skjul veiledning" as their close-label — don't overwrite with ▲/▼
+  var isHowtoCard = card && card.id && (/-howto-card$/.test(card.id) || card.id==='mor-help-card');
+  if(arrow && !isHowtoCard) arrow.textContent = wasCollapsed ? '▲' : '▼';
   if(cardHdr) cardHdr.setAttribute('aria-expanded', wasCollapsed+'');
   // Desktop focus: hide siblings when opening a card, show them when collapsing
   // Gjelder både .desktop-focus (skatt/boliglan/avgift) og .cat-focus (/personlig)
@@ -1010,6 +1037,7 @@ window.openCalcHelp=function(wrapperId, howtoId){
     if(howto.classList.contains('collapsed')){
       window.toggleCard(howto);
     }
+    _renameHowtoArrows();
     howto.scrollIntoView({behavior:'smooth',block:'center'});
     // Auto-hide: naar brukeren klikker noe annet inni kortet (input/knapp/
     // annen seksjon), kollaps howto-en. Bruker taper ikke visning ved klikk
