@@ -4981,6 +4981,13 @@ function _hideCardSiblingsDesktop(card){
     else ic.setAttribute('data-desktop-card-hidden','true');
   });
 }
+window.openCardInFocus=function(id){
+  var card=document.getElementById(id);if(!card)return;
+  var btn=card.querySelector('.focus-card-btn');
+  if(btn){btn.click();return;}
+  if(card.classList.contains('collapsed'))card.querySelector('.card-hdr').click();
+  card.scrollIntoView({behavior:'smooth',block:'start'});
+};
 function initDesktopFocus(){
   // Add focus buttons to section title headers
   document.querySelectorAll('.calc-grid .section-title').forEach(function(h2){
