@@ -922,7 +922,8 @@ function toggleCard(card){
   if(arrow) arrow.textContent = wasCollapsed ? '▲' : '▼';
   if(cardHdr) cardHdr.setAttribute('aria-expanded', wasCollapsed+'');
   // Desktop focus: hide siblings when opening a card, show them when collapsing
-  if(document.body.classList.contains('desktop-focus')){
+  // Gjelder både .desktop-focus (skatt/boliglan/avgift) og .cat-focus (/personlig)
+  if(document.body.classList.contains('desktop-focus')||document.body.classList.contains('cat-focus')){
     var container=card.parentElement;
     if(container){
       if(wasCollapsed){
@@ -946,6 +947,8 @@ function toggleCard(card){
         var anyStillOpen=document.querySelector('.info-card[data-opened-by-focus]');
         if(!anyStillOpen){
           document.body.classList.remove('desktop-focus');
+          // NB: cat-focus beholdes — bruker forblir i kategori-visning selv om
+          // de lukker siste åpne kort. Exit skjer via close-bar eller nytt cat-klikk.
         }
       }
     }
