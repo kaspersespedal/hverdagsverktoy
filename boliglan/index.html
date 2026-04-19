@@ -316,6 +316,11 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
         <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="mor-title">Boliglånskalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="mor-desc">Månedlig betaling og totale lånekostnader.</div></div></button>
         <button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('mor-wrapper','mor-howto-card')" title="Vis veiledning" type="button">?</button>
         <div class="law-body" style="padding:0 24px 20px;">
+          <!-- Howto-kort: skjult by default, apnes via ?-knapp -->
+          <div id="mor-howto-card" class="info-card collapsed" style="margin-bottom:14px;">
+            <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="mor-help-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="mor-help-desc">Slik bruker du boliglånskalkulatoren</div></div></button>
+            <div id="mor-help-rows" class="law-body"></div>
+          </div>
           <div class="fg"><label class="flbl" id="mor-l-type" for="m-type">Lånetype</label>
             <select class="fc" id="m-type"></select>
             <div id="m-type-hint" style="font-size:12px;color:var(--ink3);margin-top:4px;line-height:1.4;"></div>
@@ -386,6 +391,10 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
             </button>
             <button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('maxlan-wrapper','maxlan-howto-card')" title="Vis veiledning" type="button">?</button>
             <div class="law-body" style="padding:0 24px 20px;">
+              <div id="maxlan-howto-card" class="info-card collapsed" style="margin-bottom:14px;">
+                <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="maxlan-howto-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="maxlan-howto-desc">Slik bruker du Hva har jeg råd til</div></div></button>
+                <div id="maxlan-howto-rows" class="law-body"></div>
+              </div>
               <div class="fg"><label class="flbl" id="maxlan-l-inntekt" for="maxlan-inntekt">Brutto årsinntekt (kr)</label>
                 <input class="fc" type="text" id="maxlan-inntekt" value="650 000" inputmode="numeric" autocomplete="off">
                 <div style="font-size:11px;color:var(--ink3);margin-top:3px;" id="maxlan-inntekt-hint">Hvis dere er to: skriv inn samlet inntekt</div>
@@ -419,6 +428,10 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
             </button>
             <button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('bvl-wrapper','bvl-howto-card')" title="Vis veiledning" type="button">?</button>
             <div class="law-body" style="padding:0 24px 20px;">
+              <div id="bvl-howto-card" class="info-card collapsed" style="margin-bottom:14px;">
+                <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="bvl-howto-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bvl-howto-desc">Slik bruker du Bolig vs leie</div></div></button>
+                <div id="bvl-howto-rows" class="law-body"></div>
+              </div>
               <div class="fg"><label class="flbl" id="bvl-l-pris" for="bvl-pris">Kjøpspris bolig (kr)</label>
                 <input class="fc" type="text" id="bvl-pris" value="4 000 000" inputmode="numeric" autocomplete="off">
               </div>
@@ -454,24 +467,6 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
                 <div id="bvl-tip" style="margin-top:12px;padding:10px 14px;background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1px solid color-mix(in srgb,var(--accent) 15%,var(--border));border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.6;"></div>
               </div>
             </div>
-          </div>
-
-          <!-- Howto-kort for Boliglånskalkulator: skjult by default, åpnes via ? -->
-          <div id="mor-howto-card" class="info-card collapsed">
-            <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="mor-help-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="mor-help-desc">Slik bruker du boliglånskalkulatoren</div></div></button>
-            <div id="mor-help-rows" class="law-body"></div>
-          </div>
-
-          <!-- Howto-kort for Maks lån: skjult by default -->
-          <div id="maxlan-howto-card" class="info-card collapsed">
-            <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="maxlan-howto-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="maxlan-howto-desc">Slik bruker du Hva har jeg råd til</div></div></button>
-            <div id="maxlan-howto-rows" class="law-body"></div>
-          </div>
-
-          <!-- Howto-kort for Bolig vs leie: skjult by default -->
-          <div id="bvl-howto-card" class="info-card collapsed">
-            <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="bvl-howto-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bvl-howto-desc">Slik bruker du Bolig vs leie</div></div></button>
-            <div id="bvl-howto-rows" class="law-body"></div>
           </div>
 
         </div><!-- /card -->
