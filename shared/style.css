@@ -710,8 +710,11 @@ body.desktop-focus .info-card .info-card .card-desc{font-size:12px;}
 .info-card.law-chips-active .info-card:not(.collapsed)>.card-hdr{top:134px;}
 .info-card .info-card:last-child{border-bottom:none!important;}
 /* E4-U3: Fjern separator-linje OVER ekspandert info-card så det smelter sammen med kortet over som "samme kort". Bruker transparent border (ikke display:none) for å bevare layout-flow. */
-.card>.info-card:has(+ .info-card:not(.collapsed)),
-.info-card .info-card:has(+ .info-card:not(.collapsed)){border-bottom-color:transparent!important;}
+/* @supports gate: Safari 15.0-15.3 mangler :has() — uten wrapping ville hele regelen bli ignorert. */
+@supports selector(:has(*)){
+  .card>.info-card:has(+ .info-card:not(.collapsed)),
+  .info-card .info-card:has(+ .info-card:not(.collapsed)){border-bottom-color:transparent!important;}
+}
 .focus-toggle-exit{display:none!important;}
 .focus-card-btn{position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface2);color:var(--ink3);cursor:pointer;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .15s;z-index:2;padding:0;}
 .focus-card-btn::after{content:'⛶';font-size:12px;}
@@ -1224,13 +1227,17 @@ html{scrollbar-width:auto;scrollbar-color:rgba(128,128,180,.2) var(--bg);scrollb
 /* Focus mode — desktop: hide cards/columns that don't contain the open card */
 body.desktop-focus #personlig-cols{grid-template-columns:1fr!important;}
 body.desktop-focus #personlig-cols .cat-title{display:none!important;}
-body.desktop-focus #personlig-cols .card:not(:has(>.info-card:not([id*="howto"]):not(.collapsed))){display:none!important;}
-body.desktop-focus #personlig-cols .personlig-col:not(:has(>.card>.info-card:not(.collapsed))){display:none!important;}
+@supports selector(:has(*)){
+  body.desktop-focus #personlig-cols .card:not(:has(>.info-card:not([id*="howto"]):not(.collapsed))){display:none!important;}
+  body.desktop-focus #personlig-cols .personlig-col:not(:has(>.card>.info-card:not(.collapsed))){display:none!important;}
+}
 /* Focus mode — mobile: hide columns/cards that don't contain the focused card */
 @media(max-width:900px){
   body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] #personlig-cols .cat-title{display:none!important;}
-  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] #personlig-cols .personlig-col:not(:has([data-mf-card="true"])){display:none!important;}
-  body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] #personlig-cols .card:not(:has([data-mf-card="true"])){display:none!important;}
+  @supports selector(:has(*)){
+    body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] #personlig-cols .personlig-col:not(:has([data-mf-card="true"])){display:none!important;}
+    body.mobile-focus-active .calc-grid>div[data-mf-visible="true"] #personlig-cols .card:not(:has([data-mf-card="true"])){display:none!important;}
+  }
 }
 /* Howto cards: hidden by default, revealed via ? button (openCalcHelp) */
 .info-card[id$="-howto-card"]:not(.howto-visible){display:none!important;}
