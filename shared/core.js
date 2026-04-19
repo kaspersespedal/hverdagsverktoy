@@ -5656,7 +5656,16 @@ function calcStudielan(){
 }
 // Auto-update total on load
 document.addEventListener('DOMContentLoaded',function(){
-  if(document.getElementById('studie-borte-aar')){ studieClampBorte(); studieUpdateTotal(); }
+  if(document.getElementById('studie-borte-aar')){
+    studieClampBorte(); studieUpdateTotal();
+    // Live preview-update pa alle 4 inputs (change + input for number-typing)
+    [['studie-varighet',true],['studie-grad',false],['studie-borte-aar',true],['studie-mnd',false]].forEach(function(pair){
+      var el=document.getElementById(pair[0]);var clamp=pair[1];
+      if(!el||el.__studieLiveBound)return;el.__studieLiveBound=true;
+      var fn=function(){if(clamp)studieClampBorte();studieUpdateTotal();};
+      el.addEventListener('change',fn);el.addEventListener('input',fn);
+    });
+  }
   // Retry broken flag images
   document.querySelectorAll('img.flag').forEach(function(img){
     if(!img.complete||img.naturalWidth===0){
