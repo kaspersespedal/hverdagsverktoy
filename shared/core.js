@@ -4969,7 +4969,7 @@ function _exitAllFocus(){
   b.classList.remove('desktop-focus');
   var grid=document.querySelector('.calc-grid');
   if(grid){
-    grid.querySelectorAll('.info-card[data-opened-by-focus]').forEach(function(ic){
+    grid.querySelectorAll('.info-card:not(.collapsed)').forEach(function(ic){
       ic.classList.add('collapsed');ic.removeAttribute('data-opened-by-focus');
     });
     Array.from(grid.children).forEach(function(c){c.removeAttribute('data-desktop-hidden');});
@@ -5155,8 +5155,7 @@ function exitMobileFocus(){
   b.classList.remove('law-focus-chips');
   var grid=document.querySelector('.calc-grid');
   if(grid){
-    // Collapse cards that were opened by focus
-    grid.querySelectorAll('.info-card[data-opened-by-focus]').forEach(function(ic){
+    grid.querySelectorAll('.info-card:not(.collapsed)').forEach(function(ic){
       ic.classList.add('collapsed');
       ic.removeAttribute('data-opened-by-focus');
     });
