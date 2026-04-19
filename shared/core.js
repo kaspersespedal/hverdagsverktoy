@@ -5343,13 +5343,19 @@ function calcLonn() {
 // ═══════════════════════════════════════════════════════
 var _spareChart = null;
 
+var SPARE_FREQ_PER_YEAR = {monthly:12, quarterly:4, half:2, yearly:1, lump:0};
 function calcSpare() {
   const r = R();
   const start = parseNum('spare-start');
-  const monthly = parseNum('spare-monthly');
+  const amt = parseNum('spare-monthly');
+  const freqEl = document.getElementById('spare-freq');
+  const freq = freqEl ? freqEl.value : 'monthly';
   const rateAnnual = +(document.getElementById('spare-rate').value) || 0;
   const years = Math.max(1, +(document.getElementById('spare-years').value) || 1);
-  const rateMonthly = rateAnnual / 100 / 12;
+  const isLump = freq === 'lump';
+  const periodsPerYear = isLump ? 12 : (SPARE_FREQ_PER_YEAR[freq] || 12);
+  const periodRate = rateAnnual / 100 / periodsPerYear;
+  const periodAmt = isLump ? 0 : amt;
 
   // Build year-by-year data
   let balance = start;
@@ -5358,11 +5364,10 @@ function calcSpare() {
   data.push({ year: 0, deposits: start, interest: 0, total: start });
 
   for (let y = 1; y <= years; y++) {
-    let yearStart = balance;
-    for (let m = 0; m < 12; m++) {
-      balance = balance * (1 + rateMonthly) + monthly;
+    for (let p = 0; p < periodsPerYear; p++) {
+      balance = balance * (1 + periodRate) + periodAmt;
     }
-    totalDeposits += monthly * 12;
+    totalDeposits += periodAmt * periodsPerYear;
     let totalInterest = balance - totalDeposits;
     data.push({ year: y, deposits: totalDeposits, interest: totalInterest, total: balance });
   }
@@ -5486,6 +5491,68 @@ function calcSpare() {
   document.getElementById('spare-res').classList.remove('hidden');
   setTimeout(function(){scrollToEl(document.getElementById('spare-res'));},80);
 }
+
+// Sparekalk — frequency hint + saved scenarios
+function spareUpdateYearHint(){
+  var hint=document.getElementById('spare-year-hint');if(!hint)return;
+  var freq=document.getElementById('spare-freq').value;
+  var amt=parseNum('spare-monthly');
+  var input=document.getElementById('spare-monthly');
+  if(freq==='lump'){
+    hint.innerHTML='— Kun startbeløp. Renten alene jobber for deg.';
+    input.disabled=true;input.style.opacity='.5';
+  } else {
+    var perYear=amt*(SPARE_FREQ_PER_YEAR[freq]||0);
+    hint.innerHTML='= <strong style="color:var(--accent);font-style:normal;font-weight:700;">'+fmtInput(perYear)+' kr</strong> per år';
+    input.disabled=false;input.style.opacity='1';
+  }
+}
+window.spareSet=function(start,amt,freq,rate,years){
+  var get=function(id){return document.getElementById(id);};
+  get('spare-start').value=fmtInput(start);get('spare-monthly').value=fmtInput(amt);
+  get('spare-freq').value=freq;get('spare-rate').value=rate;get('spare-years').value=years;
+  spareUpdateYearHint();calcSpare();
+};
+var SPARE_LS_KEY='hvt-spare-scenarios';
+var SPARE_FREQ_LABEL={monthly:'/mnd',quarterly:'/kv',half:'/halv',yearly:'/år',lump:'startbeløp'};
+function spareLoadSaved(){try{return JSON.parse(localStorage.getItem(SPARE_LS_KEY)||'[]');}catch(e){return [];}}
+function spareSaveSaved(arr){try{localStorage.setItem(SPARE_LS_KEY,JSON.stringify(arr));}catch(e){}}
+function spareRenderSaved(){
+  var row=document.getElementById('spare-custom-row');if(!row)return;
+  row.innerHTML='';var saved=spareLoadSaved();
+  saved.forEach(function(s,i){
+    var btn=document.createElement('button');btn.type='button';
+    var label=s.freq==='lump'
+      ? s.name+' — '+fmtInput(s.start)+' kr × '+s.years+' år'
+      : s.name+' — '+fmtInput(s.amt)+SPARE_FREQ_LABEL[s.freq]+' × '+s.years+' år';
+    btn.innerHTML='<span style="color:var(--accent);">★</span> '+label+' <span data-del="'+i+'" style="margin-left:6px;opacity:.5;cursor:pointer;padding:0 4px;">×</span>';
+    btn.onclick=function(e){
+      if(e.target.dataset && e.target.dataset.del!==undefined){
+        var arr=spareLoadSaved();arr.splice(+e.target.dataset.del,1);spareSaveSaved(arr);spareRenderSaved();return;
+      }
+      window.spareSet(s.start,s.amt,s.freq,s.rate,s.years);
+    };
+    row.appendChild(btn);
+  });
+}
+window.spareSaveCurrent=function(){
+  var name=prompt('Gi scenarioet et navn:','Mitt scenario');if(!name)return;
+  var s={
+    name:name.slice(0,24),
+    start:parseNum('spare-start'),
+    amt:parseNum('spare-monthly'),
+    freq:document.getElementById('spare-freq').value,
+    rate:+document.getElementById('spare-rate').value||0,
+    years:+document.getElementById('spare-years').value||1
+  };
+  var arr=spareLoadSaved();arr.push(s);spareSaveSaved(arr);spareRenderSaved();
+};
+document.addEventListener('DOMContentLoaded',function(){
+  var ie=document.getElementById('spare-monthly'),fe=document.getElementById('spare-freq');
+  if(ie && !ie.__spareHintBound){ie.__spareHintBound=true;ie.addEventListener('input',spareUpdateYearHint);}
+  if(fe && !fe.__spareHintBound){fe.__spareHintBound=true;fe.addEventListener('change',spareUpdateYearHint);}
+  if(ie){spareUpdateYearHint();spareRenderSaved();}
+});
 
 // ── Studielån (Lånekassen) ──
 // Basislån 2025–26: 15 169 kr/mnd (samme for borte- og hjemmeboere).
