@@ -4928,14 +4928,7 @@ function toggleDesktopFocus(colIndex){
   if(b.classList.contains('cat-focus')){exitCategoryFocus();return;}
   if(b.classList.contains('desktop-focus')){
     if(window._deepLinkFocus){delete window._deepLinkFocus;window.location.href='/';return;}
-    // Exit focus — collapse cards that were opened by focus
-    b.classList.remove('desktop-focus');
-    grid.querySelectorAll('.info-card[data-opened-by-focus]').forEach(function(ic){
-      ic.classList.add('collapsed');
-      ic.removeAttribute('data-opened-by-focus');
-    });
-    Array.from(grid.children).forEach(function(c){c.removeAttribute('data-desktop-hidden');});
-    grid.querySelectorAll('[data-desktop-card-hidden]').forEach(function(el){el.removeAttribute('data-desktop-card-hidden');});
+    _exitAllFocus();
   } else if(colIndex!==undefined){
     // Enter focus on specific column
     b.classList.add('desktop-focus');
@@ -4943,6 +4936,26 @@ function toggleDesktopFocus(colIndex){
       if(i!==colIndex) c.setAttribute('data-desktop-hidden','true');
       else c.removeAttribute('data-desktop-hidden');
     });
+  } else {
+    // Neither class active, no index — user clicked close-bar in a stale state.
+    // Scrub every stale attribute so focus state is clean.
+    _exitAllFocus();
+  }
+}
+// Sentralisert exit — rydder opp ALLE fokus-attributter samtidig sa ingen
+// mellomtilstand kan bli hengende (tidligere regresjon: focus-card-btn
+// inni cat-focus etterlot opened-by-focus + desktop-card-hidden uten
+// body-klasse => sibling-hide-CSS-regler deaktivert men DOM "trodde" fokus).
+function _exitAllFocus(){
+  var b=document.body;
+  b.classList.remove('desktop-focus');
+  var grid=document.querySelector('.calc-grid');
+  if(grid){
+    grid.querySelectorAll('.info-card[data-opened-by-focus]').forEach(function(ic){
+      ic.classList.add('collapsed');ic.removeAttribute('data-opened-by-focus');
+    });
+    Array.from(grid.children).forEach(function(c){c.removeAttribute('data-desktop-hidden');});
+    grid.querySelectorAll('[data-desktop-card-hidden]').forEach(function(el){el.removeAttribute('data-desktop-card-hidden');});
   }
 }
 function _getColIndex(el){
@@ -4971,6 +4984,8 @@ function exitCategoryFocus(){
   document.querySelectorAll('#personlig-cols [data-cat-focused],#personlig-cols [data-cat-focused-col]').forEach(function(el){
     el.removeAttribute('data-cat-focused');el.removeAttribute('data-cat-focused-col');
   });
+  // Ogsaa rydd kort-niva attributter (sa exit fra cat-focus er komplett).
+  _exitAllFocus();
 }
 // Hide all info-cards in target's column, except target + its ancestors + descendants
 function _hideCardSiblingsDesktop(card){
@@ -5028,7 +5043,10 @@ function initDesktopFocus(){
         enterMobileFocus(card);
       } else {
         var b=document.body;
-        if(!b.classList.contains('desktop-focus')){
+        // Hvis ALLEREDE i cat-focus, ikke kall toggleDesktopFocus (som tidligere
+        // exiterte cat-focus og etterlot stale state). Bare scope til dette kortet.
+        var inFocus = b.classList.contains('desktop-focus') || b.classList.contains('cat-focus');
+        if(!inFocus){
           toggleDesktopFocus(idx);
         }
         _hideCardSiblingsDesktop(card);
