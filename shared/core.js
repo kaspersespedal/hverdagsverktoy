@@ -208,7 +208,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v29';
+    s.src = '/shared/lang/' + code + '.js?v=v35';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -4924,6 +4924,15 @@ function _getColIndex(el){
   if(!parent||!grid) return 0;
   return Array.from(grid.children).indexOf(parent);
 }
+// Hide all info-cards in target's column, except target + its ancestors + descendants
+function _hideCardSiblingsDesktop(card){
+  var col=card.closest('.calc-grid > div, .calc-grid > .right-col')||card.closest('.calc-grid');
+  if(!col) return;
+  col.querySelectorAll('.info-card').forEach(function(ic){
+    if(ic===card||ic.contains(card)||card.contains(ic)) ic.removeAttribute('data-desktop-card-hidden');
+    else ic.setAttribute('data-desktop-card-hidden','true');
+  });
+}
 function initDesktopFocus(){
   // Add focus buttons to section title headers
   document.querySelectorAll('.calc-grid .section-title').forEach(function(h2){
@@ -4956,14 +4965,7 @@ function initDesktopFocus(){
         if(!b.classList.contains('desktop-focus')){
           toggleDesktopFocus(idx);
         }
-        // Hide sibling cards in same container — show only this card
-        var container=card.parentElement;
-        if(container){
-          container.querySelectorAll(':scope > .info-card').forEach(function(ic){
-            if(ic!==card) ic.setAttribute('data-desktop-card-hidden','true');
-            else ic.removeAttribute('data-desktop-card-hidden');
-          });
-        }
+        _hideCardSiblingsDesktop(card);
         if(card.classList.contains('collapsed')){toggleCard(card);card.setAttribute('data-opened-by-focus','true');}
         setTimeout(function(){ smartScroll(card); },250);
       }
@@ -6253,69 +6255,63 @@ function _initPageReady(){
   // Handle hash-based deep links (cross-page navigation)
   initDesktopFocus();
   initMobileFocus();
+  _handleHashFocus();
+}
+
+// Runs on initial load AND on hashchange so manual URL edits to #avs/#npv
+// (or any deep-link anchor) re-trigger focus mode + switchCalcMode.
+function _handleHashFocus(){
   var hash=window.location.hash.replace('#','');
-  if(hash){
-    var el=document.getElementById(hash);
-    if(el){
-      // Open card/law-group if collapsed — instant, no animation
-      if(el.classList.contains('collapsed')){el.classList.remove('collapsed');el.setAttribute('data-opened-by-focus','true');}
-      // Also open any parent info-cards that are collapsed (nested cards)
-      var parent=el.parentElement;
-      while(parent){
-        if(parent.classList&&parent.classList.contains('info-card')&&parent.classList.contains('collapsed')){
-          parent.classList.remove('collapsed');
-          parent.setAttribute('data-opened-by-focus','true');
-        }
-        parent=parent.parentElement;
+  if(!hash) return;
+  var el=document.getElementById(hash);
+  if(el){
+    // Open card/law-group if collapsed — instant, no animation
+    if(el.classList.contains('collapsed')){el.classList.remove('collapsed');el.setAttribute('data-opened-by-focus','true');}
+    // Also open any parent info-cards that are collapsed (nested cards)
+    var parent=el.parentElement;
+    while(parent){
+      if(parent.classList&&parent.classList.contains('info-card')&&parent.classList.contains('collapsed')){
+        parent.classList.remove('collapsed');
+        parent.setAttribute('data-opened-by-focus','true');
       }
-      var lawGroup=el.closest&&el.closest('.law-group');
-      if(lawGroup&&!lawGroup.classList.contains('open')){
-        lawGroup.classList.add('open');
-        var body=lawGroup.querySelector('.law-group-body');
-        if(body){body.style.maxHeight='none';}
-      }
-      // Auto-focus the card if it's an info-card — immediate
-      var card=el.classList.contains('info-card')?el:el.closest&&el.closest('.info-card');
-      if(card){
-        window._deepLinkFocus=true;
-        if(card.classList.contains('collapsed')) card.classList.remove('collapsed');
-        // Clear hash to prevent browser auto-scroll
-        history.replaceState(null,'',window.location.pathname);
-        if(_isMobile()){
-          enterMobileFocus(card);
-          _scrollInstant(function(){window.scrollTo(0, 0);});
-          setTimeout(function(){_scrollInstant(function(){window.scrollTo(0, 0);});},0);
-        } else {
-          // Desktop: enter focus mode on the card's column + hide sibling cards
-          var colIdx=_getColIndex(card);
-          toggleDesktopFocus(colIdx);
-          var container=card.parentElement;
-          if(container){
-            container.querySelectorAll(':scope > .info-card').forEach(function(ic){
-              if(ic!==card) ic.setAttribute('data-desktop-card-hidden','true');
-              else ic.removeAttribute('data-desktop-card-hidden');
-            });
-          }
-          setTimeout(function(){ smartScroll(card); },100);
-        }
+      parent=parent.parentElement;
+    }
+    var lawGroup=el.closest&&el.closest('.law-group');
+    if(lawGroup&&!lawGroup.classList.contains('open')){
+      lawGroup.classList.add('open');
+      var body=lawGroup.querySelector('.law-group-body');
+      if(body){body.style.maxHeight='none';}
+    }
+    // Auto-focus the card if it's an info-card — immediate
+    var card=el.classList.contains('info-card')?el:el.closest&&el.closest('.info-card');
+    if(card){
+      window._deepLinkFocus=true;
+      if(card.classList.contains('collapsed')) card.classList.remove('collapsed');
+      // Clear hash to prevent browser auto-scroll
+      history.replaceState(null,'',window.location.pathname);
+      if(_isMobile()){
+        enterMobileFocus(card);
+        _scrollInstant(function(){window.scrollTo(0, 0);});
+        setTimeout(function(){_scrollInstant(function(){window.scrollTo(0, 0);});},0);
       } else {
-        el.scrollIntoView({block:'start',behavior:'smooth'});
+        // Desktop: enter focus mode on column + hide all other cards (keep ancestors/descendants of target)
+        var colIdx=_getColIndex(card);
+        toggleDesktopFocus(colIdx);
+        _hideCardSiblingsDesktop(card);
+        setTimeout(function(){ smartScroll(card); },100);
       }
+    } else {
+      el.scrollIntoView({block:'start',behavior:'smooth'});
     }
-    // Handle mode hashes like #lvu, #avs
-    if(typeof switchCalcMode==='function'){
-      var modes=['basic','scientific','finance','unit','lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
-      if(modes.indexOf(hash)>=0) switchCalcMode(hash);
-    }
+  }
+  // Handle mode hashes like #lvu, #avs
+  if(typeof switchCalcMode==='function'){
+    var modes=['basic','scientific','finance','unit','lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
+    if(modes.indexOf(hash)>=0) switchCalcMode(hash);
   }
 }
 
 // Boot: scripts use `defer`, so they execute in order before DOMContentLoaded fires.
 // By the time this listener runs, search.js and lang/*.js have completed.
 document.addEventListener('DOMContentLoaded', initPage);
-window.addEventListener('hashchange', function(){
-  var hash=window.location.hash.replace('#','');
-  if(!hash||typeof switchCalcMode!=='function') return;
-  var modes=['basic','scientific','finance','unit','lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
-  if(modes.indexOf(hash)>=0) switchCalcMode(hash);
-});
+window.addEventListener('hashchange', _handleHashFocus);
