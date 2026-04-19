@@ -250,13 +250,11 @@ input[type=number]{-moz-appearance:textfield;}
 }
 /* Hendrix — psychedelic card borders with glow */
 [data-theme="hendrix"] .dash-tool-card {
-  border: 1.5px solid transparent;
-  background-image:linear-gradient(var(--surface),var(--surface)),linear-gradient(135deg,rgba(123,45,142,.3),rgba(196,94,44,.3),rgba(212,160,48,.3));
-  background-origin:border-box;background-clip:padding-box,border-box;
+  border: 1.5px solid rgba(123,45,142,.22);
   transition: all .4s ease;
 }
 @media(hover:hover){[data-theme="hendrix"] .dash-tool-card:hover {
-  background-image:linear-gradient(var(--surface),var(--surface)),linear-gradient(135deg,rgba(123,45,142,.7),rgba(196,94,44,.6),rgba(212,160,48,.6));
+  border-color: rgba(196,94,44,.55);
   box-shadow: 0 4px 30px rgba(123,45,142,.15), 0 0 15px rgba(196,94,44,.08);
   transform:translateY(-4px) scale(1.01);
 }}
@@ -716,8 +714,10 @@ body.desktop-focus #calc-focus-bar .focus-toggle{display:inline-flex!important;}
 /* E31: bar fixed top-right — alltid synlig, tar ingen plass fra flow.
    Kort lander konsistent paa tvers av sider (/personlig hadde 116px ekstra
    space pga bar i document flow som ikke ble scrollet bak sticky nav). */
-body.desktop-focus #focus-close-bar{display:flex;position:fixed;top:12px;right:12px;z-index:250;margin:0;padding:0;max-width:unset;justify-content:flex-end;}
-body.desktop-focus #focus-close-bar button{box-shadow:0 4px 12px rgba(0,0,0,.3);}
+body.desktop-focus #focus-close-bar,body.cat-focus #focus-close-bar{display:flex;position:fixed;top:12px;right:12px;z-index:250;margin:0;padding:0;max-width:unset;justify-content:flex-end;}
+body.desktop-focus #focus-close-bar button,body.cat-focus #focus-close-bar button{box-shadow:0 4px 12px rgba(0,0,0,.3);}
+body.cat-focus .focus-toggle{display:none!important;}
+body.cat-focus #personlig-cols .cat-title[data-cat-focused] .focus-toggle{display:inline-flex!important;}
 /* In desktop focus mode, keep ALL top-level cards visible so the user has an
    overview of the whole section. Expanding one card no longer hides its siblings —
    hovedfokus = full overview of a column, not isolation of a single open card. */
@@ -1254,6 +1254,11 @@ html{scrollbar-width:auto;scrollbar-color:rgba(128,128,180,.2) var(--bg);scrollb
 #personlig-cols .card>.info-card:not(.collapsed){background:var(--surface);position:relative;z-index:1}
 /* Last info-card in section has no bottom border (visual cleanliness) */
 #personlig-cols .card>.info-card:last-child{border-bottom:none!important}
+/* Kategori-fokus (/personlig): Fokus-knapp paa .cat-title viser kun valgt kategori */
+body.cat-focus #personlig-cols{grid-template-columns:1fr!important;}
+body.cat-focus #personlig-cols .personlig-col:not([data-cat-focused-col]){display:none!important;}
+body.cat-focus #personlig-cols .cat-title:not([data-cat-focused]){display:none!important;}
+body.cat-focus #personlig-cols .card:not([data-cat-focused]){display:none!important;}
 /* Focus mode — desktop: hide cards/columns that don't contain the open card */
 body.desktop-focus #personlig-cols{grid-template-columns:1fr!important;}
 body.desktop-focus #personlig-cols .cat-title{display:none!important;}
@@ -1276,3 +1281,8 @@ body.desktop-focus #personlig-cols .cat-title{display:none!important;}
 /* ? help button */
 .calc-help-btn{position:absolute;top:8px;right:44px;width:24px;height:24px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);color:var(--ink2);font-weight:700;font-size:13px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;padding:0;line-height:1;font-family:inherit;transition:background .15s,color .15s}
 @media(hover:hover){.calc-help-btn:hover{background:color-mix(in srgb,var(--accent) 18%,var(--surface2));color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,var(--border))}}
+/* Inline field-label ? help button — for forklaringer på spesifikke input-felter */
+.flbl-row{display:flex;align-items:center;gap:4px;margin-bottom:7px}
+.flbl-row .flbl{margin-bottom:0}
+.flbl-help{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);color:var(--ink3);font-size:9px;font-weight:700;cursor:help;padding:0;line-height:1;font-family:inherit;text-transform:none;letter-spacing:0;transition:background .15s,color .15s,border-color .15s}
+@media(hover:hover){.flbl-help:hover{background:color-mix(in srgb,var(--accent) 18%,var(--surface2));color:var(--accent);border-color:color-mix(in srgb,var(--accent) 30%,var(--border))}}
