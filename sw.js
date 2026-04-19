@@ -1,5 +1,5 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v43';
+const CACHE_NAME = 'hverdagsverktoy-v44';
 
 // Files to cache for offline use
 const PRECACHE_URLS = [
