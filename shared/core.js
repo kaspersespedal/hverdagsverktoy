@@ -1003,6 +1003,24 @@ window.openCalcHelp=function(wrapperId, howtoId){
       window.toggleCard(howto);
     }
     howto.scrollIntoView({behavior:'smooth',block:'center'});
+    // Auto-hide: naar brukeren klikker noe annet inni kortet (input/knapp/
+    // annen seksjon), kollaps howto-en. Bruker taper ikke visning ved klikk
+    // inni howto selv eller paa ?-knappen.
+    var autoHide=function(e){
+      if(!howto.classList.contains('howto-visible')){
+        wrapper.removeEventListener('click',autoHide,true);
+        wrapper.removeEventListener('focusin',autoHide,true);
+        return;
+      }
+      var t=e.target;
+      if(howto.contains(t)) return;
+      if(t.closest && t.closest('.calc-help-btn')) return;
+      howto.classList.remove('howto-visible');
+      wrapper.removeEventListener('click',autoHide,true);
+      wrapper.removeEventListener('focusin',autoHide,true);
+    };
+    wrapper.addEventListener('click',autoHide,true);
+    wrapper.addEventListener('focusin',autoHide,true);
   }, 100);
 };
 
