@@ -6286,9 +6286,16 @@ function _initPageReady(){
           _scrollInstant(function(){window.scrollTo(0, 0);});
           setTimeout(function(){_scrollInstant(function(){window.scrollTo(0, 0);});},0);
         } else {
-          // Desktop: enter focus mode on the card's column
+          // Desktop: enter focus mode on the card's column + hide sibling cards
           var colIdx=_getColIndex(card);
           toggleDesktopFocus(colIdx);
+          var container=card.parentElement;
+          if(container){
+            container.querySelectorAll(':scope > .info-card').forEach(function(ic){
+              if(ic!==card) ic.setAttribute('data-desktop-card-hidden','true');
+              else ic.removeAttribute('data-desktop-card-hidden');
+            });
+          }
           setTimeout(function(){ smartScroll(card); },100);
         }
       } else {
@@ -6306,3 +6313,9 @@ function _initPageReady(){
 // Boot: scripts use `defer`, so they execute in order before DOMContentLoaded fires.
 // By the time this listener runs, search.js and lang/*.js have completed.
 document.addEventListener('DOMContentLoaded', initPage);
+window.addEventListener('hashchange', function(){
+  var hash=window.location.hash.replace('#','');
+  if(!hash||typeof switchCalcMode!=='function') return;
+  var modes=['basic','scientific','finance','unit','lvu','aga','avs','ferie','rente','valgevinst','likvid','pensjon','npv'];
+  if(modes.indexOf(hash)>=0) switchCalcMode(hash);
+});
