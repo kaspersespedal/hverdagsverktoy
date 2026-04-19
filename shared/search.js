@@ -419,6 +419,34 @@ function scoreItem(item, q, itemIdx, hays){
   return score;
 }
 
+/* ─── Intent pre-matcher (Mac-leveranse 2026-04-19) ─── */
+function matchIntent(q){
+  if(typeof window.SEARCH_INTENTS !== 'object' || !window.SEARCH_INTENTS) return null;
+  var qn = q.toLowerCase().trim();
+  if(!qn) return null;
+  for(var section in window.SEARCH_INTENTS){
+    var data = window.SEARCH_INTENTS[section];
+    if(!data) continue;
+    var targetMap = {};
+    (data.targets||[]).forEach(function(t){ targetMap[t.id] = t; });
+    var intents = data.intents || [];
+    for(var i=0; i<intents.length; i++){
+      var it = intents[i];
+      var qMatch = (it.q||'').toLowerCase() === qn;
+      var kwMatch = false;
+      var kws = it.keywords || [];
+      for(var j=0; j<kws.length; j++){
+        if(kws[j] && qn.indexOf(kws[j].toLowerCase()) >= 0){ kwMatch = true; break; }
+      }
+      if(qMatch || kwMatch){
+        var t = targetMap[it.target];
+        if(t && t.url) return { url:t.url, name:t.name, desc:t.description };
+      }
+    }
+  }
+  return null;
+}
+
 /* ─── Search function ─── */
 function search(q){
   if(!q || !q.trim()) return [];
@@ -429,6 +457,17 @@ function search(q){
     if(s > 0) results.push({item:SEARCH_DATA[i], score:s});
   }
   results.sort(function(a,b){ return b.score - a.score; });
+  var intent = matchIntent(q);
+  if(intent){
+    var dupIdx = -1;
+    for(var k=0; k<results.length; k++){ if(results[k].item.url === intent.url){ dupIdx = k; break; } }
+    if(dupIdx >= 0){
+      results[dupIdx].score = 1000;
+      results.sort(function(a,b){ return b.score - a.score; });
+    } else {
+      results.unshift({ item:{ name:intent.name, desc:intent.desc||'', url:intent.url, tags:'', type:'tool', page:'' }, score:1000 });
+    }
+  }
   return results.slice(0, 6);
 }
 // Invalidate translated haystacks when language changes — core.js should call
