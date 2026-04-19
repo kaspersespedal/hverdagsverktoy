@@ -208,7 +208,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v37';
+    s.src = '/shared/lang/' + code + '.js?v=v38';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -326,7 +326,8 @@ var _RESULT_RECALC_MAP = {
   'fp-res':'calcForeldrepenger',
   'reise-res':'calcReise',
   'formue-res':'calcFormue',
-  'dok-res':'calcDok',
+  'maxlan-res':'calcMaxLan',
+  'bvl-res':'calcBvl',
   'npv-res':'calcNpv',
   'v-res':'calcVat',
   'adj-res':'calcAdj',
@@ -724,11 +725,10 @@ function updateTabs() {
   // Formueskatt (skatt.html)
   autoRecalc('formue-personer','formue-res',calcFormue);
   // Reisefradrag — no dropdown, but we can wire inputs
-  // Dokumentavgift (boliglan.html)
-  autoRecalc('dok-type','dok-res',calcDok);
   // Auto-recalc on text input change (idempotent)
   function autoRecalcInput(ids,resId,fn){ids.forEach(function(id){var el=document.getElementById(id);if(el && !el.__hvtRecalcInputBound){el.__hvtRecalcInputBound=true;el.addEventListener('input',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))fn();});}});}
-  autoRecalcInput(['dok-verdi'],'dok-res',calcDok);
+  autoRecalcInput(['maxlan-inntekt','maxlan-gjeld','maxlan-ek'],'maxlan-res',calcMaxLan);
+  autoRecalcInput(['bvl-pris','bvl-ek','bvl-rente','bvl-leie','bvl-felleskost','bvl-vedlikehold','bvl-aar','bvl-vekst','bvl-leievekst','bvl-avk'],'bvl-res',calcBvl);
   autoRecalcInput(['formue-primaer','formue-sekundaer','formue-fritid','formue-naering','formue-aksjer','formue-driftsmidler','formue-bank','formue-gjeld'],'formue-res',calcFormue);
   autoRecalcInput(['reise-km','reise-dager','reise-bom'],'reise-res',calcReise);
   // Bil (personlig.html)
@@ -1592,15 +1592,15 @@ function updateSalaryUI() {
 
 function updateMortgageUI() {
   const r = R();
-  // Help card
-  const morHelpCard = document.getElementById('mor-help-card');
-  if(r.morHelpRows){
+  // Help card (renamed: mor-help-card → mor-howto-card so CSS auto-hides until ? clicked)
+  const morHelpCard = document.getElementById('mor-howto-card');
+  if(morHelpCard && r.morHelpRows){
     morHelpCard.classList.remove('hidden');
     morHelpCard.classList.add('collapsed');
     document.getElementById('mor-help-rows').innerHTML = infoRowsHTML(r.morHelpRows);
     document.getElementById('mor-help-title').innerHTML = (r.morHelpTitle || 'Hjelp med kalkulatoren') + ' <span style="font-size:11px;opacity:.5">▼</span>';
     document.getElementById('mor-help-desc').textContent = r.morHelpDesc || 'Slik bruker du boliglånskalkulatoren';
-  } else {
+  } else if(morHelpCard) {
     morHelpCard.classList.add('hidden');
   }
   setText('mor-title', r.morTitle || 'Mortgage Calculator');
@@ -1679,20 +1679,61 @@ function updateMortgageUI() {
   setText('io-rl-totint-ann', r.ioRlTotIntAnn || 'Totale renter (annuitet fra dag 1)');
   setText('io-rl-diff', r.ioRlDiff || 'Ekstra rentekostnad');
   setText('io-rl-annmth', r.ioRlAnnMth || 'Månedlig annuitet fra dag 1');
-  // Dokumentavgift labels
-  var _dokT=document.getElementById('dok-title');
-  if(_dokT){
-    _dokT.innerHTML=(r.dokTitle||'Dokumentavgift')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    setText('dok-desc',r.dokDesc||'2,5 % av markedsverdi ved tinglysing av eiendomsoverdragelse');
-    setText('dok-l-verdi',r.dokLVerdi||'Markedsverdi (kr)');
-    setText('dok-l-type',r.dokLType||'Type eiendom');
-    setText('dok-opt-bolig',r.dokOptBolig||'Selveier (bolig/fritid)');
-    setText('dok-opt-borettslag',r.dokOptBorettslag||'Borettslag (kun andel)');
-    setText('btn-calc-dok',r.dokBtnCalc||'Beregn dokumentavgift →');
-    setText('dok-r-lbl',r.dokRLbl||'Totale tinglysningskostnader');
-    setText('dok-rl-avgift',r.dokRlAvgift||'Dokumentavgift (2,5 %)');
-    setText('dok-rl-tinglyse',r.dokRlTinglyse||'Tinglysingsgebyr');
-    setText('dok-rl-attestgebyr',r.dokRlAttestgebyr||'Attestgebyr');
+  // Maks lan (Hva har jeg rad til?) labels
+  var _mlT=document.getElementById('maxlan-title');
+  if(_mlT){
+    _mlT.innerHTML=(r.maxlanTitle||'Hva har jeg råd til?')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('maxlan-desc',r.maxlanDesc||'Maks lånebeløp basert på inntekt og egenkapital');
+    setText('maxlan-l-inntekt',r.maxlanLInntekt||'Brutto årsinntekt (kr)');
+    setText('maxlan-inntekt-hint',r.maxlanInntektHint||'Hvis dere er to: skriv inn samlet inntekt');
+    setText('maxlan-l-gjeld',r.maxlanLGjeld||'Annen gjeld i dag (kr)');
+    setText('maxlan-gjeld-hint',r.maxlanGjeldHint||'Studielån, billån, forbrukslån — alt som teller mot gjeldsgraden');
+    setText('maxlan-l-ek',r.maxlanLEk||'Egenkapital (kr)');
+    setText('maxlan-ek-hint',r.maxlanEkHint||'Sparing, BSU, gave, gevinst fra forrige bolig');
+    setText('btn-calc-maxlan',r.maxlanBtnCalc||'Beregn →');
+    setText('maxlan-r-lbl',r.maxlanRLbl||'Maks lånebeløp');
+    setText('maxlan-r-pris-lbl',r.maxlanRPrisLbl||'Maks boligpris');
+    setText('maxlan-r-gjeldsgrad-lbl',r.maxlanRGjeldsgradLbl||'Gjeldsgrad');
+    setText('maxlan-r-ek-lbl',r.maxlanREkLbl||'EK-andel');
+    setText('maxlan-r-binding-lbl',r.maxlanRBindingLbl||'Begrensende faktor');
+  }
+  // Bolig vs leie labels
+  var _bvT=document.getElementById('bvl-title');
+  if(_bvT){
+    _bvT.innerHTML=(r.bvlTitle||'Bolig vs leie')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('bvl-desc',r.bvlDesc||'Sammenlign total kostnad over X år — hva lønner seg?');
+    setText('bvl-l-pris',r.bvlLPris||'Kjøpspris bolig (kr)');
+    setText('bvl-l-ek',r.bvlLEk||'Egenkapital (kr)');
+    setText('bvl-l-rente',r.bvlLRente||'Lånerente (%)');
+    setText('bvl-l-leie',r.bvlLLeie||'Månedlig leie i dag (kr)');
+    setText('bvl-leie-hint',r.bvlLeieHint||'For en tilsvarende bolig');
+    setText('bvl-l-felleskost',r.bvlLFelleskost||'Felleskostnader/mnd (kr)');
+    setText('bvl-l-vedlikehold',r.bvlLVedlikehold||'Vedlikehold (% av verdi/år)');
+    setText('bvl-l-aar',r.bvlLAar||'Tidsperiode (år)');
+    setText('bvl-l-vekst',r.bvlLVekst||'Boligprisvekst (%/år)');
+    setText('bvl-l-leievekst',r.bvlLLeievekst||'Leievekst (%/år)');
+    setText('bvl-l-avk',r.bvlLAvk||'Alt. avkastning EK (%/år)');
+    setText('btn-calc-bvl',r.bvlBtnCalc||'Beregn →');
+    setText('bvl-r-lbl',r.bvlRLbl||'Hva lønner seg over perioden');
+    setText('bvl-r-eie-lbl',r.bvlREieLbl||'Total kostnad ved eie');
+    setText('bvl-r-leie-lbl',r.bvlRLeieLbl||'Total kostnad ved leie');
+    setText('bvl-r-be-lbl',r.bvlRBeLbl||'Break-even');
+    setText('bvl-r-formue-lbl',r.bvlRFormueLbl||'Formue ved eie');
+  }
+  // Howto-card titler for nye kalkulatorer
+  var _mhT=document.getElementById('maxlan-howto-title');
+  if(_mhT){
+    _mhT.innerHTML=(r.maxlanHowtoTitle||'Hjelp med kalkulatoren')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('maxlan-howto-desc',r.maxlanHowtoDesc||'Slik bruker du Hva har jeg råd til');
+    var _mhR=document.getElementById('maxlan-howto-rows');
+    if(_mhR&&r.maxlanHowtoRows)_mhR.innerHTML=infoRowsHTML(r.maxlanHowtoRows);
+  }
+  var _bhT=document.getElementById('bvl-howto-title');
+  if(_bhT){
+    _bhT.innerHTML=(r.bvlHowtoTitle||'Hjelp med kalkulatoren')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    setText('bvl-howto-desc',r.bvlHowtoDesc||'Slik bruker du Bolig vs leie');
+    var _bhR=document.getElementById('bvl-howto-rows');
+    if(_bhR&&r.bvlHowtoRows)_bhR.innerHTML=infoRowsHTML(r.bvlHowtoRows);
   }
 }
 
@@ -3304,27 +3345,138 @@ function calcReise(){
 // ═══════════════════════════════════════════════════════
 // DOKUMENTAVGIFT CALCULATOR
 // ═══════════════════════════════════════════════════════
-function calcDok(){
-  var verdi=parseNum('dok-verdi');if(verdi<=0)return;
-  var type=document.getElementById('dok-type');var t=type?type.value:'bolig';
-  var rate=0.025;// 2.5% standard
-  var avgift=t==='borettslag'?0:verdi*rate;
-  var tinglyse=545;// Fast gebyr 2026 (Kartverket)
-  // Attestgebyr: ingen separat sats funnet på Kartverket.no per april 2026 — inkludert i tinglysingsgebyret
-  var attest=0;
-  var total=avgift+tinglyse+attest;
-  var r=R();
-  document.getElementById('dok-r-val').textContent=fmt(total);
-  document.getElementById('dok-r-sub').textContent=t==='borettslag'?(r.dokBorettslagSub||'Borettslag er fritatt for dokumentavgift'):(pct(rate*100)+' '+r.adjOfTotal+fmt(verdi));
-  document.getElementById('dok-r-avgift').textContent=fmt(avgift);
-  document.getElementById('dok-r-tinglyse').textContent=fmt(tinglyse);
-  document.getElementById('dok-r-attestgebyr').textContent=fmt(attest);
-  var tip=document.getElementById('dok-tip');
-  if(tip)tip.innerHTML=t==='borettslag'?(r.dokTipBorettslag||'I borettslag eier du en andel, ikke eiendommen direkte. Dokumentavgift påløper ikke — du betaler kun tinglysingsgebyr og attestgebyr.'):(r.dokTipSelveier||'Dokumentavgift beregnes av eiendommens markedsverdi på tinglysingstidspunktet. Borettslag er fritatt. Nybygg fra utbygger kan ha lavere grunnlag (tomt alene).');
-  var _dres=document.getElementById('dok-res');
-  var _dwh=_dres.classList.contains('hidden');
-  _dres.classList.remove('hidden');
-  if(_dwh)setTimeout(function(){scrollToEl(_dres,'top');},80);
+// calcDok fjernet — Dokumentavgift-kalkulator (#dok-wrapper) erstattet av calcMaxLan + calcBvl
+
+// ═══════════════════════════════════════════════════════
+// MAX LOAN — "Hva har jeg råd til?"
+// Utlånsforskriften: gjeldsgrad ≤ 5× brutto inntekt, EK ≥ 10% av boligpris (LTV ≤ 90%)
+// ═══════════════════════════════════════════════════════
+function calcMaxLan(){
+  var inntekt=parseNum('maxlan-inntekt');if(inntekt<=0)return;
+  var gjeld=parseNum('maxlan-gjeld');
+  var ek=parseNum('maxlan-ek');
+  // Gjeldsgrad-begrensning: total gjeld ≤ 5× inntekt → maks bolig-lån = 5× − annen gjeld
+  var maxLanGjeldsgrad = Math.max(0, 5*inntekt - gjeld);
+  // EK-begrensning: lån ≤ 9× EK (LTV 90% ⇒ EK = 10% av pris ⇒ pris = EK/0.10 ⇒ lån = pris − EK = EK/0.10 − EK = 9×EK)
+  var maxLanEk = ek * 9;
+  var maxLan = Math.min(maxLanGjeldsgrad, maxLanEk);
+  var binding = maxLanGjeldsgrad <= maxLanEk ? 'gjeldsgrad' : 'ek';
+  var maxPris = maxLan + ek;
+  var gjeldsgrad = inntekt > 0 ? (maxLan + gjeld) / inntekt : 0;
+  var ekAndel = maxPris > 0 ? ek / maxPris : 0;
+  var r = R();
+  document.getElementById('maxlan-r-val').textContent = fmt(maxLan);
+  document.getElementById('maxlan-r-sub').textContent = binding==='gjeldsgrad'
+    ? (r.maxlanSubGjeldsgrad || 'Begrenset av 5× inntekt-regelen')
+    : (r.maxlanSubEk || 'Begrenset av 10% egenkapital-kravet');
+  document.getElementById('maxlan-r-pris').textContent = fmt(maxPris);
+  document.getElementById('maxlan-r-gjeldsgrad').textContent = gjeldsgrad.toFixed(1) + '×';
+  document.getElementById('maxlan-r-ek-andel').textContent = (ekAndel*100).toFixed(1) + '%';
+  document.getElementById('maxlan-r-binding').textContent = binding==='gjeldsgrad'
+    ? (r.maxlanBindGjeldsgrad || '5× inntekt')
+    : (r.maxlanBindEk || '10% EK');
+  var tip = document.getElementById('maxlan-tip');
+  if(tip){
+    var msg = binding==='gjeldsgrad'
+      ? (r.maxlanTipGjeldsgrad || 'Du er begrenset av gjeldsgrad-regelen (Utlånsforskriften § 4). For å øke lånekapasiteten må du øke inntekten eller nedbetale annen gjeld. Hver krone i gjeld du nedbetaler frigjør 1 krone i lånekapasitet.')
+      : (r.maxlanTipEk || 'Du er begrenset av egenkapital-kravet (Utlånsforskriften § 6). For å øke lånekapasiteten trenger du mer EK. Hver krone i ekstra EK gir 9 kr i økt lånekapasitet og 10 kr i økt boligbudsjett.');
+    tip.innerHTML = msg;
+  }
+  var _mlres=document.getElementById('maxlan-res');
+  var _mlwh=_mlres.classList.contains('hidden');
+  _mlres.classList.remove('hidden');
+  if(_mlwh)setTimeout(function(){scrollToEl(_mlres,'top');},80);
+}
+
+// ═══════════════════════════════════════════════════════
+// BUY VS RENT — "Bolig vs leie" break-even
+// Sammenligner totalkostnad over X år: eie (rente + felleskost + vedlikehold − verdiøkning)
+// vs leie (akkumulert leie + alt-avkastning på EK som kunne vært i fond)
+// ═══════════════════════════════════════════════════════
+function calcBvl(){
+  var pris=parseNum('bvl-pris');if(pris<=0)return;
+  var ek=parseNum('bvl-ek');
+  var renteAr=parseFloat(document.getElementById('bvl-rente').value)/100;
+  var leieMnd=parseNum('bvl-leie');
+  var fkMnd=parseNum('bvl-felleskost');
+  var vlPct=parseFloat(document.getElementById('bvl-vedlikehold').value)/100;
+  var aar=parseInt(document.getElementById('bvl-aar').value)||10;
+  var prisVekstAr=parseFloat(document.getElementById('bvl-vekst').value)/100;
+  var leieVekstAr=parseFloat(document.getElementById('bvl-leievekst').value)/100;
+  var avkAr=parseFloat(document.getElementById('bvl-avk').value)/100;
+  var lan = Math.max(0, pris - ek);
+  // Annuitet-månedlig over 25 år (typisk boliglån-løpetid)
+  var nMaks=25*12, rMnd=renteAr/12;
+  var annuitet = rMnd>0 ? lan * rMnd / (1 - Math.pow(1+rMnd,-nMaks)) : lan/nMaks;
+  // Beregn over aar-periode
+  var totalEie = 0, totalLeie = 0;
+  var lanRest = lan;
+  var boligVerdi = pris;
+  var leieAr = leieMnd*12;
+  var ekAlt = ek; // alternativ: invester EK i fond
+  var rentBetaltTot = 0, avdragTot = 0;
+  for(var y=1; y<=aar; y++){
+    // Eie: rente + avdrag + felleskost + vedlikehold (årlig)
+    var renteAretTotal = 0, avdragAretTotal = 0;
+    for(var m=0; m<12; m++){
+      var renteMnd = lanRest * rMnd;
+      var avdragMnd = annuitet - renteMnd;
+      if(lanRest <= 0){renteMnd=0;avdragMnd=0;}
+      renteAretTotal += renteMnd;
+      avdragAretTotal += Math.min(avdragMnd, lanRest);
+      lanRest = Math.max(0, lanRest - avdragMnd);
+    }
+    rentBetaltTot += renteAretTotal;
+    avdragTot += avdragAretTotal;
+    var fkAretTotal = fkMnd*12;
+    var vlAretTotal = boligVerdi * vlPct;
+    // Skattefradrag: 22% av rentekostnader
+    var skattefradragAr = renteAretTotal * 0.22;
+    totalEie += renteAretTotal + fkAretTotal + vlAretTotal - skattefradragAr;
+    // Leie: årlig leie + alternativ-avkastning på EK
+    totalLeie += leieAr;
+    leieAr *= (1 + leieVekstAr);
+    ekAlt *= (1 + avkAr);
+    boligVerdi *= (1 + prisVekstAr);
+  }
+  // Formue ved eie etter perioden = boligVerdi − gjenstående lån
+  var formueEie = boligVerdi - lanRest;
+  // Netto kostnad ved eie = totalEie − verdiøkning
+  // Men også: man har "spart" via avdrag som blir formue. Sammenlignet med leie der EK gror i fond:
+  var nettoEie = totalEie - (formueEie - ek); // total cash-cost minus formuesoppbygging
+  var nettoLeie = totalLeie - (ekAlt - ek);   // total cash-cost minus alternativ-avkastning
+  var diff = nettoLeie - nettoEie;
+  var vinner = diff >= 0 ? 'eie' : 'leie';
+  var r = R();
+  document.getElementById('bvl-r-val').textContent = vinner==='eie'
+    ? (r.bvlVinnerEie || 'Eie lønner seg') + ' (' + fmt(Math.abs(diff)) + ')'
+    : (r.bvlVinnerLeie || 'Leie lønner seg') + ' (' + fmt(Math.abs(diff)) + ')';
+  document.getElementById('bvl-r-sub').textContent = (r.bvlSubOver || 'Over') + ' ' + aar + ' ' + (r.bvlSubAr || 'år');
+  document.getElementById('bvl-r-eie').textContent = fmt(Math.round(nettoEie));
+  document.getElementById('bvl-r-leie').textContent = fmt(Math.round(nettoLeie));
+  // Break-even: enkel approks — antall år til eie blir billigere
+  var be = '–';
+  if(diff < 0 && prisVekstAr > 0){
+    // Leie vinner i denne perioden — vis hvor mange år til boligprisvekst tar over
+    be = '> ' + aar + ' ' + (r.bvlSubAr || 'år');
+  } else if(diff >= 0 && aar <= 5){
+    be = '~' + aar + ' ' + (r.bvlSubAr || 'år');
+  } else if(diff >= 0){
+    be = (r.bvlBeRask || 'Innen perioden');
+  }
+  document.getElementById('bvl-r-be').textContent = be;
+  document.getElementById('bvl-r-formue').textContent = fmt(Math.round(formueEie));
+  var tip = document.getElementById('bvl-tip');
+  if(tip){
+    var msg = vinner==='eie'
+      ? (r.bvlTipEie || 'Eie lønner seg over ' + aar + ' år når man tar med formuesoppbygging via avdrag og verdiøkning. Skattefradrag på 22 % av renter inkludert. Husk at boligpris-vekst er antakelse — historisk snitt i Norge 1990-2024 er ~5%/år, men kan svinge mye lokalt.')
+      : (r.bvlTipLeie || 'Leie lønner seg i denne perioden — ofte fordi alternativ-avkastning på EK i fond gir mer enn boligprisvekst, eller fordi du selger før verdiøkning hentes inn. Vurder kortere tidsperspektiv eller flytting.');
+    tip.innerHTML = msg;
+  }
+  var _bvres=document.getElementById('bvl-res');
+  var _bvwh=_bvres.classList.contains('hidden');
+  _bvres.classList.remove('hidden');
+  if(_bvwh)setTimeout(function(){scrollToEl(_bvres,'top');},80);
 }
 
 // ═══════════════════════════════════════════════════════
