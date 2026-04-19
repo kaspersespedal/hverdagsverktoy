@@ -876,6 +876,12 @@ function toggleLawGroup(group){
   }
 }
 function toggleCard(card){
+  // Howto-cards: clicking the header hides the entire howto via howto-visible
+  // removal, instead of collapsing the card. Matches the "Skjul veiledning" UX.
+  if(card && card.id && /-howto-card$/.test(card.id) && card.classList.contains('howto-visible')){
+    card.classList.remove('howto-visible');
+    return;
+  }
   const wasCollapsed = card.classList.contains('collapsed');
   var body = card.querySelector('.law-body');
   var cardHdr=card.querySelector('.card-hdr');
@@ -5175,6 +5181,49 @@ window.openCardInFocus=function(id){
   if(card.classList.contains('collapsed'))card.querySelector('.card-hdr').click();
   card.scrollIntoView({behavior:'smooth',block:'start'});
 };
+// Inline SVG corner-brackets — matches CSS-mask version but renders instantly as DOM child,
+// so the icon appears the moment the button is inserted (no wait for CSS-mask paint).
+var FOCUS_BTN_SVG='<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none" aria-hidden="true"><path d="M3 6V3h3M13 6V3h-3M3 10v3h3M13 10v3h-3"/></svg>';
+// Idempotent. Called early on DOMContentLoaded (before loadLang) AND from initDesktopFocus,
+// so focus buttons appear as soon as DOM is parsed instead of waiting for the language file.
+function _ensureFocusBtnsOnCards(){
+  document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
+    if(hdr.querySelector('.focus-card-btn')) return;
+    var card=hdr.parentElement;
+    if(!card||!card.classList.contains('info-card')) return;
+    var idx=(typeof _getColIndex==='function') ? _getColIndex(card) : 0;
+    var btn=document.createElement('button');
+    btn.className='focus-card-btn';
+    btn.type='button';
+    btn.title='Fokus';
+    btn.setAttribute('aria-label','Fokus');
+    btn.innerHTML=FOCUS_BTN_SVG;
+    btn.onclick=function(e){
+      e.stopPropagation();
+      if(typeof _isMobile==='function' && _isMobile()){
+        if(typeof enterMobileFocus==='function') enterMobileFocus(card);
+      } else {
+        var b=document.body;
+        var inFocus = b.classList.contains('desktop-focus') || b.classList.contains('cat-focus');
+        if(!inFocus && typeof toggleDesktopFocus==='function'){
+          toggleDesktopFocus(idx);
+        }
+        if(typeof _hideCardSiblingsDesktop==='function') _hideCardSiblingsDesktop(card);
+        if(card.classList.contains('collapsed') && typeof toggleCard==='function'){
+          toggleCard(card);card.setAttribute('data-opened-by-focus','true');
+        }
+        setTimeout(function(){ if(typeof smartScroll==='function') smartScroll(card); },250);
+      }
+    };
+    hdr.appendChild(btn);
+  });
+}
+// Fire as early as possible so buttons exist before loadLang resolves.
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', _ensureFocusBtnsOnCards);
+} else {
+  _ensureFocusBtnsOnCards();
+}
 function initDesktopFocus(){
   // Add focus buttons to section title headers
   document.querySelectorAll('.calc-grid .section-title').forEach(function(h2){
@@ -5217,36 +5266,8 @@ function initDesktopFocus(){
     };
     hdr.appendChild(bbtn);
   });
-  // Add small focus circle to each info-card header
-  document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
-    if(hdr.querySelector('.focus-card-btn')) return;
-    var card=hdr.parentElement;
-    if(!card||!card.classList.contains('info-card')) return;
-    var idx=_getColIndex(card);
-    var btn=document.createElement('button');
-    btn.className='focus-card-btn';
-    btn.type='button';
-    btn.title='Fokus';
-    btn.setAttribute('aria-label','Fokus');
-    btn.onclick=function(e){
-      e.stopPropagation();
-      if(_isMobile()){
-        enterMobileFocus(card);
-      } else {
-        var b=document.body;
-        // Hvis ALLEREDE i cat-focus, ikke kall toggleDesktopFocus (som tidligere
-        // exiterte cat-focus og etterlot stale state). Bare scope til dette kortet.
-        var inFocus = b.classList.contains('desktop-focus') || b.classList.contains('cat-focus');
-        if(!inFocus){
-          toggleDesktopFocus(idx);
-        }
-        _hideCardSiblingsDesktop(card);
-        if(card.classList.contains('collapsed')){toggleCard(card);card.setAttribute('data-opened-by-focus','true');}
-        setTimeout(function(){ smartScroll(card); },250);
-      }
-    };
-    hdr.appendChild(btn);
-  });
+  // Add small focus circle to each info-card header (idempotent — may already have run early).
+  _ensureFocusBtnsOnCards();
   // Always start without focus mode
   document.body.classList.remove('desktop-focus');
   var grid=document.querySelector('.calc-grid');
