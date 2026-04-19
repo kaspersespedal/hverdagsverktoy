@@ -5044,6 +5044,25 @@ function initDesktopFocus(){
     var _r=R();btn.innerHTML='<span class="focus-toggle-label">'+(_r.focusLabel||'Fokus')+'</span><span class="focus-toggle-exit">'+(_r.focusClose||'Lukk fokus')+'</span>';
     h3.appendChild(btn);
   });
+  // Add back button to each info-card header — visible only in focus mode (CSS-gated)
+  document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
+    if(hdr.querySelector('.focus-back-btn')) return;
+    var bbtn=document.createElement('button');
+    bbtn.className='focus-back-btn';
+    bbtn.type='button';
+    bbtn.innerHTML='\u2190';
+    var _rb=R();var bLbl=(_rb.focusClose||'Tilbake');
+    bbtn.title=bLbl;
+    bbtn.setAttribute('aria-label',bLbl);
+    bbtn.onclick=function(e){
+      e.stopPropagation();e.preventDefault();
+      var b=document.body;
+      if(b.classList.contains('mobile-focus-active')){exitMobileFocus();}
+      else if(b.classList.contains('cat-focus')){exitCategoryFocus();}
+      else if(b.classList.contains('desktop-focus')){toggleDesktopFocus();}
+    };
+    hdr.appendChild(bbtn);
+  });
   // Add small focus circle to each info-card header
   document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
     if(hdr.querySelector('.focus-card-btn')) return;
