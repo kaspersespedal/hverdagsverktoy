@@ -664,14 +664,19 @@ main{padding:16px 0 0;flex:1;}
    pa mobil. Eksplisitt display:block + aspect-ratio sikrer konsistent rendering. */
 #spare-chart{display:block;width:100%;height:auto;aspect-ratio:2/1;max-height:340px;}
 
-/* E30 — Kompleksitets-indikator per kalkulator (C3: dots i desc-linja).
-   Injisert via renderComplexityDots() i core.js til .card-desc av info-card[data-complexity]. */
-.cmp-dots{display:inline-flex;align-items:center;gap:6px;margin-left:8px;font-size:11px;vertical-align:middle;}
-.cmp-dots .cmp-sep{color:var(--ink3);opacity:.6;margin-right:2px;}
-.cmp-dots .cmp-pips{letter-spacing:1.5px;font-size:9px;line-height:1;}
+/* E30 — Kompleksitets-indikator per kalkulator (topp-hoyre av info-card).
+   Vises kun naar kortet er collapsed — motsatt state av .calc-help-btn som
+   vises kun naar expanded (E18-regel). Deler samme plass uten clash. */
+.info-card[data-complexity]{position:relative;}
+.info-card[data-complexity] > .cmp-dots{
+  position:absolute;top:14px;right:16px;
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;line-height:1;pointer-events:none;
+}
+.info-card[data-complexity]:not(.collapsed) > .cmp-dots{display:none;}
+.cmp-dots .cmp-pips{letter-spacing:2px;font-size:10px;}
 .cmp-dots .cmp-lbl{color:var(--ink3);font-weight:500;}
-.cmp-dots .cmp-on{opacity:1;}
-.cmp-dots .cmp-off{color:var(--border);opacity:.6;}
+.cmp-dots .cmp-off{color:var(--border);opacity:.5;}
 .info-card[data-complexity="easy"] .cmp-dots .cmp-on{color:#5dd47f;}
 .info-card[data-complexity="medium"] .cmp-dots .cmp-on{color:#f5c445;}
 .info-card[data-complexity="hard"] .cmp-dots .cmp-on{color:#e66d6d;}

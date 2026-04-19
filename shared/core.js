@@ -6194,22 +6194,21 @@ function initPage(){
   }).then(function() { _initPageReady(); });
 }
 function syncCardHeights(){}
-// E30 — Render kompleksitets-indikator (C3-stil: dots i desc-linja) for info-cards
-// med data-complexity-attributt. Idempotent: skipper kort som allerede har .cmp-dots.
+// E30 — Render kompleksitets-indikator (topp-hoyre av info-card, kun collapsed-state).
+// Vises naar kortet er collapsed; skjules naar expanded (bytter plass med ?-knapp via CSS).
+// Idempotent: skipper kort som allerede har .cmp-dots.
 function renderComplexityDots(){
   var labels={easy:'Enkel',medium:'Middels',hard:'Avansert'};
   var pips={easy:1,medium:2,hard:3};
   document.querySelectorAll('.info-card[data-complexity]').forEach(function(card){
     var level=card.getAttribute('data-complexity');
     if(!labels[level]) return;
-    var desc=card.querySelector(':scope > .card-hdr .card-desc');
-    if(!desc||desc.querySelector('.cmp-dots')) return;
+    if(card.querySelector(':scope > .cmp-dots')) return;
     var n=pips[level];
     var dotsHtml='<span class="cmp-dots">'+
-      '<span class="cmp-sep">·</span>'+
       '<span class="cmp-pips"><span class="cmp-on">'+'●'.repeat(n)+'</span><span class="cmp-off">'+'●'.repeat(3-n)+'</span></span>'+
       '<span class="cmp-lbl">'+labels[level]+'</span></span>';
-    desc.insertAdjacentHTML('beforeend',dotsHtml);
+    card.insertAdjacentHTML('beforeend',dotsHtml);
   });
 }
 
