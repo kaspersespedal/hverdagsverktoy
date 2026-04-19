@@ -4915,6 +4915,8 @@ function toggleDesktopFocus(colIndex){
   var b=document.body;
   var grid=document.querySelector('.calc-grid');
   if(!grid) return;
+  // Exit category-focus mode (used on /personlig) if active
+  if(b.classList.contains('cat-focus')){exitCategoryFocus();return;}
   if(b.classList.contains('desktop-focus')){
     if(window._deepLinkFocus){delete window._deepLinkFocus;window.location.href='/';return;}
     // Exit focus — collapse cards that were opened by focus
@@ -4940,6 +4942,27 @@ function _getColIndex(el){
   if(!parent||!grid) return 0;
   return Array.from(grid.children).indexOf(parent);
 }
+// Kategori-fokus (brukt kun på /personlig). Viser valgt .cat-title + neste .card-sibling
+// og .personlig-col som inneholder dem; skjuler de andre.
+function toggleCategoryFocus(catTitle){
+  var b=document.body;
+  if(b.classList.contains('cat-focus')&&catTitle.hasAttribute('data-cat-focused')){exitCategoryFocus();return;}
+  document.querySelectorAll('#personlig-cols [data-cat-focused],#personlig-cols [data-cat-focused-col]').forEach(function(el){
+    el.removeAttribute('data-cat-focused');el.removeAttribute('data-cat-focused-col');
+  });
+  catTitle.setAttribute('data-cat-focused','true');
+  var nxt=catTitle.nextElementSibling;
+  if(nxt&&nxt.classList.contains('card')) nxt.setAttribute('data-cat-focused','true');
+  var col=catTitle.closest('.personlig-col');
+  if(col) col.setAttribute('data-cat-focused-col','true');
+  b.classList.add('cat-focus');
+}
+function exitCategoryFocus(){
+  document.body.classList.remove('cat-focus');
+  document.querySelectorAll('#personlig-cols [data-cat-focused],#personlig-cols [data-cat-focused-col]').forEach(function(el){
+    el.removeAttribute('data-cat-focused');el.removeAttribute('data-cat-focused-col');
+  });
+}
 // Hide all info-cards in target's column, except target + its ancestors + descendants
 function _hideCardSiblingsDesktop(card){
   var col=card.closest('.calc-grid > div, .calc-grid > .right-col')||card.closest('.calc-grid');
@@ -4960,6 +4983,17 @@ function initDesktopFocus(){
     btn.onclick=function(e){e.stopPropagation();toggleDesktopFocus(idx);};
     var _r=R();btn.innerHTML='<span class="focus-toggle-label">'+(_r.focusLabel||'Fokus')+'</span><span class="focus-toggle-exit">'+(_r.focusClose||'Lukk fokus')+'</span>';
     h2.appendChild(btn);
+  });
+  // /personlig uses .cat-title (h3) per kategori i stedet for én .section-title per kolonne.
+  // Egen kategori-fokus: viser kun valgt kategori, skjuler de andre 5.
+  document.querySelectorAll('#personlig-cols .cat-title').forEach(function(h3){
+    if(h3.querySelector('.focus-toggle')) return;
+    h3.style.display='flex';h3.style.alignItems='center';h3.style.justifyContent='space-between';
+    var btn=document.createElement('button');
+    btn.className='focus-toggle';
+    btn.onclick=function(e){e.stopPropagation();toggleCategoryFocus(h3);};
+    var _r=R();btn.innerHTML='<span class="focus-toggle-label">'+(_r.focusLabel||'Fokus')+'</span><span class="focus-toggle-exit">'+(_r.focusClose||'Lukk fokus')+'</span>';
+    h3.appendChild(btn);
   });
   // Add small focus circle to each info-card header
   document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
