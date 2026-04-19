@@ -6466,22 +6466,10 @@ function initPage(){
 }
 function syncCardHeights(){}
 // E30 — Render kompleksitets-indikator (topp-hoyre av info-card, kun collapsed-state).
-// Vises naar kortet er collapsed; skjules naar expanded (bytter plass med ?-knapp via CSS).
-// Idempotent: skipper kort som allerede har .cmp-dots.
-function renderComplexityDots(){
-  var labels={easy:'Enkel',medium:'Middels',hard:'Avansert'};
-  var pips={easy:1,medium:2,hard:3};
-  document.querySelectorAll('.info-card[data-complexity]').forEach(function(card){
-    var level=card.getAttribute('data-complexity');
-    if(!labels[level]) return;
-    if(card.querySelector(':scope > .cmp-dots')) return;
-    var n=pips[level];
-    var dotsHtml='<span class="cmp-dots">'+
-      '<span class="cmp-lbl">'+labels[level]+'</span>'+
-      '<span class="cmp-pips"><span class="cmp-on">'+'●'.repeat(n)+'</span><span class="cmp-off">'+'●'.repeat(3-n)+'</span></span></span>';
-    card.insertAdjacentHTML('beforeend',dotsHtml);
-  });
-}
+// No-op: kompleksitets-dots er CSS-only via ::before/::after paa data-complexity
+// sa de vises fra forste paint (ingen FOUC). Beholder funksjonsnavnet for
+// kompatibilitet med eventuelle gamle cache-kjorete kall.
+function renderComplexityDots(){}
 
 function _initPageReady(){
   // Sync region selector UI with saved language
