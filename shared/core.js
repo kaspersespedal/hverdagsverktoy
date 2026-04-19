@@ -5342,8 +5342,23 @@ function calcLonn() {
 // SPAREKALKULATOR — Compound interest with visualization
 // ═══════════════════════════════════════════════════════
 var _spareChart = null;
+var _spareRfChart = null;
 
 var SPARE_FREQ_PER_YEAR = {monthly:12, quarterly:4, half:2, yearly:1, lump:0};
+function _spareCompute(start, amt, freq, years, rateAnnual){
+  var isLump = freq === 'lump';
+  var periodsPerYear = isLump ? 12 : (SPARE_FREQ_PER_YEAR[freq] || 12);
+  var periodRate = rateAnnual / 100 / periodsPerYear;
+  var periodAmt = isLump ? 0 : amt;
+  var balance = start, totalDeposits = start;
+  var data = [{year:0, deposits:start, interest:0, total:start}];
+  for (var y=1; y<=years; y++){
+    for (var p=0; p<periodsPerYear; p++) balance = balance*(1+periodRate) + periodAmt;
+    totalDeposits += periodAmt * periodsPerYear;
+    data.push({year:y, deposits:totalDeposits, interest:balance-totalDeposits, total:balance});
+  }
+  return data;
+}
 function calcSpare() {
   const r = R();
   const start = parseNum('spare-start');
@@ -5352,25 +5367,9 @@ function calcSpare() {
   const freq = freqEl ? freqEl.value : 'monthly';
   const rateAnnual = +(document.getElementById('spare-rate').value) || 0;
   const years = Math.max(1, +(document.getElementById('spare-years').value) || 1);
-  const isLump = freq === 'lump';
-  const periodsPerYear = isLump ? 12 : (SPARE_FREQ_PER_YEAR[freq] || 12);
-  const periodRate = rateAnnual / 100 / periodsPerYear;
-  const periodAmt = isLump ? 0 : amt;
-
-  // Build year-by-year data
-  let balance = start;
-  let totalDeposits = start;
-  const data = [];
-  data.push({ year: 0, deposits: start, interest: 0, total: start });
-
-  for (let y = 1; y <= years; y++) {
-    for (let p = 0; p < periodsPerYear; p++) {
-      balance = balance * (1 + periodRate) + periodAmt;
-    }
-    totalDeposits += periodAmt * periodsPerYear;
-    let totalInterest = balance - totalDeposits;
-    data.push({ year: y, deposits: totalDeposits, interest: totalInterest, total: balance });
-  }
+  const data = _spareCompute(start, amt, freq, years, rateAnnual);
+  const balance = data[data.length-1].total;
+  const totalDeposits = data[data.length-1].deposits;
 
   const totalVal = balance;
   const totalDep = totalDeposits;
@@ -5489,7 +5488,82 @@ function calcSpare() {
   });
 
   document.getElementById('spare-res').classList.remove('hidden');
+  calcSpareRF();
   setTimeout(function(){scrollToEl(document.getElementById('spare-res'));},80);
+}
+
+// Sparekonto-sammenligning: samme innskudd til lav sparerente
+function calcSpareRF(){
+  var rfEl = document.getElementById('spare-rf-rate');
+  if (!rfEl) return;
+  var start = parseNum('spare-start');
+  var amt = parseNum('spare-monthly');
+  var freq = document.getElementById('spare-freq').value;
+  var years = Math.max(1, +(document.getElementById('spare-years').value) || 1);
+  var rfRate = +rfEl.value || 0;
+  var investRate = +(document.getElementById('spare-rate').value) || 0;
+  var rfData = _spareCompute(start, amt, freq, years, rfRate);
+  var investData = _spareCompute(start, amt, freq, years, investRate);
+  var rfTotal = rfData[rfData.length-1].total;
+  var rfDep = rfData[rfData.length-1].deposits;
+  var rfInt = rfTotal - rfDep;
+  var investTotal = investData[investData.length-1].total;
+  var diff = investTotal - rfTotal;
+  document.getElementById('spare-rf-r-total').textContent = fmt(rfTotal);
+  document.getElementById('spare-rf-r-rente').textContent = fmt(rfInt);
+  var diffEl = document.getElementById('spare-rf-r-diff');
+  diffEl.textContent = (diff>=0?'+':'') + fmt(diff);
+  diffEl.style.color = diff>=0 ? 'var(--green)' : 'var(--red)';
+
+  // Table
+  var tbody = document.getElementById('spare-rf-tbody');
+  tbody.innerHTML = '';
+  var rr = R();
+  for (var i=0; i<rfData.length; i++){
+    var d = rfData[i];
+    var tr = document.createElement('tr');
+    tr.style.cssText = 'border-bottom:1px solid var(--border);';
+    if (i % 2 === 0) tr.style.background = 'var(--surface2)';
+    tr.innerHTML = '<td style="padding:6px 10px;color:var(--ink);">' + (d.year===0?(rr.spareStart||'Start'):d.year) + '</td>' +
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);">' + fmtInput(Math.round(d.deposits)) + '</td>' +
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink2);font-weight:500;">' + fmtInput(Math.round(d.interest)) + '</td>' +
+      '<td style="padding:6px 10px;text-align:right;color:var(--ink);font-weight:600;">' + fmtInput(Math.round(d.total)) + '</td>';
+    tbody.appendChild(tr);
+  }
+
+  // Chart — muted colors to distinguish from main
+  var ctxRf = document.getElementById('spare-rf-chart').getContext('2d');
+  if (_spareRfChart) _spareRfChart.destroy();
+  var cs = getComputedStyle(document.documentElement);
+  var inkColor = cs.getPropertyValue('--ink2').trim() || '#4a5568';
+  var ink3Color = cs.getPropertyValue('--ink3').trim() || '#8a9ab4';
+  var labels = rfData.map(function(d){return d.year===0?(rr.spareStart||'Start'):(rr.spareThYear||'År')+' '+d.year;});
+  _spareRfChart = new Chart(ctxRf, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        { label: rr.spareChartDeposits || 'Innskudd', data: rfData.map(function(d){return Math.round(d.deposits);}),
+          backgroundColor: ink3Color+'60', borderColor: ink3Color, borderWidth: 1, borderRadius: 3 },
+        { label: 'Sparerente', data: rfData.map(function(d){return Math.round(d.interest);}),
+          backgroundColor: inkColor+'40', borderColor: inkColor, borderWidth: 1, borderRadius: 3 }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode:'index', intersect:false },
+      plugins: {
+        legend: { position:'top', labels: { color: inkColor, font: { size: 12, family: 'Inter' }, usePointStyle: true, pointStyle: 'rectRounded', padding: 16 } },
+        tooltip: { callbacks: { label: function(ctx){ return ctx.dataset.label+': '+new Intl.NumberFormat('nb-NO').format(ctx.parsed.y).replace(/\u00a0/g,' ')+' '+(R().currency||'kr'); } } }
+      },
+      scales: {
+        x: { stacked:true, grid:{display:false}, ticks:{ color: inkColor, font:{size:11}, maxRotation:45 } },
+        y: { stacked:true, grid:{display:false}, ticks:{ color: inkColor, font:{size:11},
+          callback: function(val){ if(val>=1000000) return (val/1000000).toFixed(1).replace('.0','')+'M'; if(val>=1000) return (val/1000).toFixed(0)+'k'; return val; }
+        } }
+      }
+    }
+  });
 }
 
 // Sparekalk — frequency hint + saved scenarios
@@ -5551,6 +5625,8 @@ document.addEventListener('DOMContentLoaded',function(){
   var ie=document.getElementById('spare-monthly'),fe=document.getElementById('spare-freq');
   if(ie && !ie.__spareHintBound){ie.__spareHintBound=true;ie.addEventListener('input',spareUpdateYearHint);}
   if(fe && !fe.__spareHintBound){fe.__spareHintBound=true;fe.addEventListener('change',spareUpdateYearHint);}
+  var rf=document.getElementById('spare-rf-rate');
+  if(rf && !rf.__spareRfBound){rf.__spareRfBound=true;rf.addEventListener('input',function(){if(!document.getElementById('spare-res').classList.contains('hidden'))calcSpareRF();});}
   if(ie){spareUpdateYearHint();spareRenderSaved();}
 });
 
