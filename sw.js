@@ -1,5 +1,5 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v37';
+const CACHE_NAME = 'hverdagsverktoy-v38';
 
 // Files to cache for offline use
 const PRECACHE_URLS = [
@@ -62,7 +62,7 @@ self.addEventListener('fetch', event => {
           // Cache successful external responses
           if (response.ok) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone).catch(() => {}));
           }
           return response;
         })
@@ -82,7 +82,7 @@ self.addEventListener('fetch', event => {
           // Store under the actual requested URL (with query) so next lookup is a fast hit.
           fetch(event.request).then(response => {
             if (response.ok) {
-              caches.open(CACHE_NAME).then(cache => cache.put(event.request, response));
+              caches.open(CACHE_NAME).then(cache => cache.put(event.request, response).catch(() => {}));
             }
           }).catch(() => {});
           return cached;
@@ -91,7 +91,7 @@ self.addEventListener('fetch', event => {
         return fetch(event.request).then(response => {
           if (response.ok) {
             const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone).catch(() => {}));
           }
           return response;
         });
