@@ -6194,6 +6194,25 @@ function initPage(){
   }).then(function() { _initPageReady(); });
 }
 function syncCardHeights(){}
+// E30 — Render kompleksitets-indikator (C3-stil: dots i desc-linja) for info-cards
+// med data-complexity-attributt. Idempotent: skipper kort som allerede har .cmp-dots.
+function renderComplexityDots(){
+  var labels={easy:'Enkel',medium:'Middels',hard:'Avansert'};
+  var pips={easy:1,medium:2,hard:3};
+  document.querySelectorAll('.info-card[data-complexity]').forEach(function(card){
+    var level=card.getAttribute('data-complexity');
+    if(!labels[level]) return;
+    var desc=card.querySelector(':scope > .card-hdr .card-desc');
+    if(!desc||desc.querySelector('.cmp-dots')) return;
+    var n=pips[level];
+    var dotsHtml='<span class="cmp-dots">'+
+      '<span class="cmp-sep">·</span>'+
+      '<span class="cmp-pips"><span class="cmp-on">'+'●'.repeat(n)+'</span><span class="cmp-off">'+'●'.repeat(3-n)+'</span></span>'+
+      '<span class="cmp-lbl">'+labels[level]+'</span></span>';
+    desc.insertAdjacentHTML('beforeend',dotsHtml);
+  });
+}
+
 function _initPageReady(){
   // Sync region selector UI with saved language
   var _rf=document.getElementById('rf');if(_rf)setFlagSrc(_rf,R().flag);
@@ -6207,6 +6226,7 @@ function _initPageReady(){
     if(ic.querySelector(':scope > .law-body')) ic.classList.add('has-law-body');
   });
   updateAll();
+  renderComplexityDots();
   // Rebuild search chips with loaded language (chips built before lang was ready)
   try { if(typeof window.hvtSearchRebuildChips==='function') window.hvtSearchRebuildChips(); } catch(_e){}
   try { if(typeof window.hvtSearchInvalidate==='function') window.hvtSearchInvalidate(); } catch(_e){}
