@@ -992,9 +992,16 @@ function toggleCard(card){
       if(wasCollapsed){
         // Opening — hide siblings, mark card so it collapses on focus exit
         card.setAttribute('data-opened-by-focus','true');
-        container.querySelectorAll(':scope > .info-card').forEach(function(ic){
-          if(ic!==card) ic.setAttribute('data-desktop-card-hidden','true');
-        });
+        // Bruk _hideCardSiblingsDesktop for cross-`.card`-wrapper-hiding (f.eks.
+        // /skatt der Skatteloven ligger i separat `.card`-wrapper fra hovedkalk).
+        // Scope til `.calc-grid > div` + info-card-søsken i aktiv kolonne.
+        if(typeof _hideCardSiblingsDesktop==='function' && card.closest('.calc-grid')){
+          _hideCardSiblingsDesktop(card);
+        } else {
+          container.querySelectorAll(':scope > .info-card').forEach(function(ic){
+            if(ic!==card) ic.setAttribute('data-desktop-card-hidden','true');
+          });
+        }
       } else {
         // Collapsing — show ALL hidden siblings (E31-fix: tidligere scope var
         // card.parentElement/:scope>.info-card som paa /personlig kun fant 1 info-card
