@@ -3206,10 +3206,29 @@ window.generateLonnPdf = async function(){
       },
       defaultStyle:{ fontSize:10, color:'#2a2a2a' }
     };
-    pdfMake.createPdf(doc).download('lonn-etter-skatt-' + new Date().toISOString().slice(0,10) + '.pdf');
+    var filename = 'lonn-etter-skatt-' + new Date().toISOString().slice(0,10) + '.pdf';
+    // Blob-URL + manuell <a>-klikk — mer pålitelig enn pdfmake's innebygde download()
+    await new Promise(function(resolve, reject){
+      pdfMake.createPdf(doc).getBlob(function(blob){
+        try {
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          a.style.display = 'none';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function(){
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            resolve();
+          }, 200);
+        } catch(err){ reject(err); }
+      }, reject);
+    });
   } catch(e){
     console.error('PDF-feil:', e);
-    alert('Kunne ikke lage PDF. Sjekk internett-tilkobling og prøv igjen.');
+    alert('Kunne ikke lage PDF: ' + e.message);
   } finally {
     if(btn){btn.disabled=false;btn.textContent='Last ned PDF';}
   }
