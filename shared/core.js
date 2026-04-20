@@ -3480,14 +3480,14 @@ function calcMaxLan(){
 function calcBvl(){
   var pris=parseNum('bvl-pris');if(pris<=0)return;
   var ek=parseNum('bvl-ek');
-  var renteAr=parseFloat(document.getElementById('bvl-rente').value)/100;
+  var renteAr=(parseFloat(document.getElementById('bvl-rente').value)||0)/100;
   var leieMnd=parseNum('bvl-leie');
   var fkMnd=parseNum('bvl-felleskost');
-  var vlPct=parseFloat(document.getElementById('bvl-vedlikehold').value)/100;
+  var vlPct=(parseFloat(document.getElementById('bvl-vedlikehold').value)||0)/100;
   var aar=parseInt(document.getElementById('bvl-aar').value)||10;
-  var prisVekstAr=parseFloat(document.getElementById('bvl-vekst').value)/100;
-  var leieVekstAr=parseFloat(document.getElementById('bvl-leievekst').value)/100;
-  var avkAr=parseFloat(document.getElementById('bvl-avk').value)/100;
+  var prisVekstAr=(parseFloat(document.getElementById('bvl-vekst').value)||0)/100;
+  var leieVekstAr=(parseFloat(document.getElementById('bvl-leievekst').value)||0)/100;
+  var avkAr=(parseFloat(document.getElementById('bvl-avk').value)||0)/100;
   var lan = Math.max(0, pris - ek);
   // Annuitet-månedlig over valgt løpetid (default 25 år matcher calcMor-default)
   var lopetidAr = parseInt(document.getElementById('bvl-lopetid') && document.getElementById('bvl-lopetid').value) || 25;
