@@ -5216,16 +5216,19 @@ var FOCUS_BTN_SVG='<svg viewBox="0 0 16 16" width="12" height="12" fill="none" s
 // so focus buttons appear as soon as DOM is parsed instead of waiting for the language file.
 function _ensureFocusBtnsOnCards(){
   document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
-    if(hdr.querySelector('.focus-card-btn')) return;
     var card=hdr.parentElement;
     if(!card||!card.classList.contains('info-card')) return;
     var idx=(typeof _getColIndex==='function') ? _getColIndex(card) : 0;
-    var btn=document.createElement('button');
-    btn.className='focus-card-btn';
-    btn.type='button';
-    btn.title='Fokus';
-    btn.setAttribute('aria-label','Fokus');
-    btn.innerHTML=FOCUS_BTN_SVG;
+    var btn=hdr.querySelector(':scope > .focus-card-btn');
+    if(!btn){
+      btn=document.createElement('button');
+      btn.className='focus-card-btn';
+      btn.type='button';
+      btn.title='Fokus';
+      btn.setAttribute('aria-label','Fokus');
+      btn.innerHTML=FOCUS_BTN_SVG;
+      hdr.appendChild(btn);
+    }
     btn.onclick=function(e){
       e.stopPropagation();
       if(typeof _isMobile==='function' && _isMobile()){
@@ -5243,7 +5246,6 @@ function _ensureFocusBtnsOnCards(){
         setTimeout(function(){ if(typeof smartScroll==='function') smartScroll(card); },250);
       }
     };
-    hdr.appendChild(btn);
   });
 }
 // Fire as early as possible so buttons exist before loadLang resolves.
@@ -5275,9 +5277,12 @@ function initDesktopFocus(){
     var _r=R();btn.innerHTML='<span class="focus-toggle-label">'+(_r.focusLabel||'Fokus')+'</span><span class="focus-toggle-exit">'+(_r.focusClose||'Lukk fokus')+'</span>';
     h3.appendChild(btn);
   });
-  // Add back button to each info-card header — visible only in focus mode (CSS-gated)
+  // Add back button to each info-card header — visible only in focus mode (CSS-gated).
+  // Skip howto-cards: they already have their own "Skjul veiledning" close label.
   document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
     if(hdr.querySelector('.focus-back-btn')) return;
+    var _c=hdr.parentElement;
+    if(_c && _c.id && (/-howto-card$/.test(_c.id) || _c.id==='mor-help-card')) return;
     var bbtn=document.createElement('button');
     bbtn.className='focus-back-btn';
     bbtn.type='button';
