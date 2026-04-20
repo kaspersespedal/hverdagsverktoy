@@ -669,27 +669,24 @@ function _kalkEnterFocus(){
 }
 function _buildKalkFocusBar(){
   var bar=document.getElementById('calc-focus-bar');
-  if(bar) bar.style.display='none'; // Legacy bar — kept in DOM but hidden (replaced by header-integrated button)
+  if(!bar) return;
   var _r=R();
   // Remove the blue "Close focus" button injected by initDesktopFocus()
   var fcb=document.getElementById('focus-close-bar');
   if(fcb) fcb.remove();
-  // Inject switch-button INTO gold header (left of DESIMALER) — no vertical space consumed
-  var decLbl=document.getElementById('bc-dec-lbl');
-  if(!decLbl) return;
-  var ctrlsRow=decLbl.parentNode;                    // flex row with DESIMALER + stepper
-  var headerRow=ctrlsRow.parentNode;                 // outer flex row (mode-label + ctrlsRow)
-  if(document.getElementById('calc-focus-switch-btn')) return; // already built
-  var wrap=document.createElement('div');
-  wrap.id='calc-focus-switch';
-  wrap.style.cssText='position:relative;display:none;'; // shown on desktop via code below
-  wrap.innerHTML='<button id="calc-focus-switch-btn" type="button" aria-label="'+(_r.focusSwitchCalc||'Bytt kalkulator')+'" '
-    +'style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:4px 10px 4px 8px;font-size:11px;font-weight:600;cursor:pointer;color:rgba(255,255,255,.9);font-family:Inter,sans-serif;letter-spacing:.3px;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;transition:background .15s,border-color .15s;">'
+  // Compact pill BAR above the card — always visible across all modes (gold header gets
+  // display:none on finance/unit/aga/lvu/avs/npv/rente/ferie/valgevinst/likvid/pensjon,
+  // so a header-integrated button would vanish on 9 of 12 modes).
+  bar.style.cssText='max-width:480px;margin:0 auto 6px;display:flex;justify-content:flex-end;';
+  bar.innerHTML='<div id="calc-focus-switch" style="position:relative;">'
+    +'<button id="calc-focus-switch-btn" type="button" aria-label="'+(_r.focusSwitchCalc||'Bytt kalkulator')+'" '
+    +'style="background:color-mix(in srgb,var(--accent) 10%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 35%,var(--border));border-radius:999px;padding:5px 12px 5px 10px;font-size:11px;font-weight:600;cursor:pointer;color:var(--accent);font-family:Inter,sans-serif;letter-spacing:.3px;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;transition:background .15s,border-color .15s,transform .15s;">'
     +'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3l4 4-4 4"/><path d="M3 7h18"/><path d="M7 21l-4-4 4-4"/><path d="M21 17H3"/></svg>'
-    +'<span>'+(_r.focusSwitchCalc||'Bytt')+'</span></button>'
-    +'<div id="calc-focus-dd" class="hidden" style="position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:0 8px 28px rgba(0,0,0,.25);z-index:100;min-width:240px;padding:6px;"></div>';
-  headerRow.insertBefore(wrap, ctrlsRow);
+    +'<span>'+(_r.focusSwitchCalc||'Bytt kalkulator')+'</span></button>'
+    +'<div id="calc-focus-dd" class="hidden" style="position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:0 8px 28px rgba(0,0,0,.25);z-index:100;min-width:240px;padding:6px;"></div>'
+    +'</div>';
   var btn=document.getElementById('calc-focus-switch-btn');
+  var wrap=document.getElementById('calc-focus-switch');
   btn.onclick=function(e){e.stopPropagation();document.getElementById('calc-focus-dd').classList.toggle('hidden');};
   // Close dropdown on outside-click
   document.addEventListener('click',function(e){var dd=document.getElementById('calc-focus-dd');if(!dd||dd.classList.contains('hidden'))return;if(!wrap.contains(e.target))dd.classList.add('hidden');});
@@ -711,7 +708,7 @@ function _buildKalkFocusBar(){
       dd.appendChild(clone);
     });
   }
-  function updateVisibility(){wrap.style.display=window.innerWidth>900?'inline-flex':'none';}
+  function updateVisibility(){bar.style.display=window.innerWidth>900?'flex':'none';}
   updateVisibility();
   window.addEventListener('resize',updateVisibility);
   // Enter focus mode immediately — always-on for kalkulator page
