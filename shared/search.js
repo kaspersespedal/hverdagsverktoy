@@ -441,6 +441,14 @@ function loadSearchIntents(){
    matching questions from SEARCH_INTENTS[section].questions. All-words-present
    substring match so "hvordan mva" matches "hvordan beregne mva". */
 var Q_PREFIXES = ['hvordan','hva er','hva koster','hva betyr','hvor mye','hvor mange','når','hvorfor','hvem','hvilken','hvilke','kan jeg','er det'];
+var Q_ACRONYMS = /\b(mva|aga|bsu|npv|irr|otp|ips|ask|as|asa|ans|da|ks|nuf|enk|nav|moms|eps|bps|ebit|wacc|roce|roe|kpi|sifo|eu|eøs|sepa|iban|bic|kid)\b/gi;
+function formatQuestion(s){
+  if(!s) return '';
+  s = s.charAt(0).toUpperCase() + s.slice(1);
+  s = s.replace(Q_ACRONYMS, function(m){ return m.toUpperCase(); });
+  if(!/[?!.]$/.test(s)) s += '?';
+  return s;
+}
 function matchQuestions(q){
   if(typeof window.SEARCH_INTENTS !== 'object' || !window.SEARCH_INTENTS) return [];
   var qn = q.toLowerCase().trim();
@@ -467,7 +475,7 @@ function matchQuestions(q){
       var startsWith = qt.indexOf(qn) === 0 ? 1 : 0;
       bySection[section].push({
         url: t.url,
-        name: qi.q,
+        name: formatQuestion(qi.q),
         desc: (t.name||'') + (t.description ? ' — ' + t.description : ''),
         section: section,
         _rank: startsWith
