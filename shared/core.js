@@ -471,6 +471,7 @@ function updateAll() {
   var sg=document.getElementById('s-g');if(sg)sg.value = fmtInput(d.gross);
   var ma=document.getElementById('m-a');if(ma)ma.value = fmtInput(3000000);
   _renameHowtoArrows();
+  _addLawSubCloseLabel();
   try{_updateI18nHtml(R());}catch(e){_uiErr('i18nHtml',e);}
 }
 
@@ -898,6 +899,29 @@ function toggleLawGroup(group){
     setTimeout(function(){ smartScroll(group); }, 550);
   }
 }
+// Legg til "Skjul denne loven"-pill på sub-kort inne law-group. Synlig via CSS
+// kun når body.desktop-focus + outer law-group har data-opened-by-focus + sub-kort
+// ikke-collapsed. Onclick kollapser sub-kortet (bevarer outer focus via toggleCard-fix).
+function _addLawSubCloseLabel(){
+  try{
+    var r=(typeof R==='function')?R():{};
+    var label=r.lawSubClose||'Skjul denne loven';
+    document.querySelectorAll('.law-body > .info-card > .card-hdr > div > .card-title').forEach(function(titleEl){
+      var sub=titleEl.closest('.info-card');
+      if(!sub) return;
+      var existing=titleEl.querySelector('.law-close-label');
+      if(existing){existing.textContent=label;return;}
+      var s=document.createElement('span');
+      s.className='law-close-label';
+      s.textContent=label;
+      s.addEventListener('click',function(e){
+        e.stopPropagation();e.preventDefault();
+        if(!sub.classList.contains('collapsed')) toggleCard(sub);
+      });
+      titleEl.appendChild(s);
+    });
+  }catch(e){}
+}
 // Replace ▼ collapse-arrows on howto-titles with a "Skjul veiledning" label,
 // so clicking the header reads as a deliberate close action. Idempotent — safe
 // to call after every updateAll() / lang switch.
@@ -1003,22 +1027,27 @@ function toggleCard(card){
           });
         }
       } else {
-        // Collapsing — show ALL hidden siblings (E31-fix: tidligere scope var
-        // card.parentElement/:scope>.info-card som paa /personlig kun fant 1 info-card
-        // per .card-wrapper — andre kort i kolonnen forble skjult = blank side).
-        document.querySelectorAll('[data-desktop-card-hidden]').forEach(function(ic){
-          ic.removeAttribute('data-desktop-card-hidden');
-        });
-        // E31-fix: hvis dette var eneste aapne top-level kort (som er tilfellet
-        // naar bruker kollapser det fokuserte kortet), exit focus-mode helt. Uten
-        // dette skjuler `#personlig-cols .card:not(:has(>.info-card:not(.collapsed)))`
-        // (style.css:1257) hele kolonnen siden ingen kort er aapne.
+        // Collapsing. To støtte nested focus (/skatt Skatteloven-sub-kort), sjekk
+        // om dette kortet kollapses INNE i et annet focus-kort. I så fall, scope
+        // unhide kun til descendants av outer, slik at top-level søsken utenfor
+        // outer forblir skjult — bruker blir i outer-focus (f.eks. Skatteloven).
+        var outerFocus=card.parentElement && card.parentElement.closest('.info-card[data-opened-by-focus]');
         card.removeAttribute('data-opened-by-focus');
-        var anyStillOpen=document.querySelector('.info-card[data-opened-by-focus]');
-        if(!anyStillOpen){
-          document.body.classList.remove('desktop-focus');
-          // NB: cat-focus beholdes — bruker forblir i kategori-visning selv om
-          // de lukker siste åpne kort. Exit skjer via close-bar eller nytt cat-klikk.
+        if(outerFocus){
+          outerFocus.querySelectorAll('[data-desktop-card-hidden]').forEach(function(ic){
+            ic.removeAttribute('data-desktop-card-hidden');
+          });
+          // body.desktop-focus beholdes fordi outerFocus fortsatt har data-opened-by-focus.
+        } else {
+          document.querySelectorAll('[data-desktop-card-hidden]').forEach(function(ic){
+            ic.removeAttribute('data-desktop-card-hidden');
+          });
+          var anyStillOpen=document.querySelector('.info-card[data-opened-by-focus]');
+          if(!anyStillOpen){
+            document.body.classList.remove('desktop-focus');
+            // NB: cat-focus beholdes — bruker forblir i kategori-visning selv om
+            // de lukker siste åpne kort. Exit skjer via close-bar eller nytt cat-klikk.
+          }
         }
       }
     }
@@ -5532,9 +5561,10 @@ function _ensureFocusBtnsOnCards(){
 }
 // Fire as early as possible so buttons exist before loadLang resolves.
 if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded', _ensureFocusBtnsOnCards);
+  document.addEventListener('DOMContentLoaded', function(){_ensureFocusBtnsOnCards();_addLawSubCloseLabel();});
 } else {
   _ensureFocusBtnsOnCards();
+  _addLawSubCloseLabel();
 }
 function initDesktopFocus(){
   // Add focus buttons to section title headers

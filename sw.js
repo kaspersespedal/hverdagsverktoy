@@ -1,26 +1,16 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v88';
+const CACHE_NAME = 'hverdagsverktoy-v92';
 
-// Files to cache for offline use
-// Fonts are served from fonts.bunny.net (see index.html <link rel="preload">);
-// local ./fonts/*.woff2 paths don't exist and would 404 here.
+// Files to cache on SW install for offline use.
+// Lang files are NOT precached — they'd add ~2.5 MB to install cost and most users
+// only need 1 of 10. The fetch handler caches them on-demand (stale-while-revalidate).
+// search-intents.js is lazy-loaded by search.js so it's not install-critical either.
 const PRECACHE_URLS = [
   './',
   './manifest.json',
   './shared/core.js',
   './shared/style.css',
-  './shared/search.js',
-  './shared/search-intents.js',
-  './shared/lang/no.js',
-  './shared/lang/en.js',
-  './shared/lang/zh.js',
-  './shared/lang/fr.js',
-  './shared/lang/pl.js',
-  './shared/lang/uk.js',
-  './shared/lang/ar.js',
-  './shared/lang/lt.js',
-  './shared/lang/so.js',
-  './shared/lang/ti.js'
+  './shared/search.js'
 ];
 
 // Flag images (external CDN) — precached so language dropdown renders instantly
