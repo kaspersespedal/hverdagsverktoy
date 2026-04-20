@@ -729,7 +729,7 @@ function updateTabs() {
   // Auto-recalc on text input change (idempotent)
   function autoRecalcInput(ids,resId,fn){ids.forEach(function(id){var el=document.getElementById(id);if(el && !el.__hvtRecalcInputBound){el.__hvtRecalcInputBound=true;el.addEventListener('input',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))fn();});}});}
   autoRecalcInput(['maxlan-inntekt','maxlan-gjeld','maxlan-ek'],'maxlan-res',calcMaxLan);
-  autoRecalcInput(['bvl-pris','bvl-ek','bvl-rente','bvl-leie','bvl-felleskost','bvl-vedlikehold','bvl-aar','bvl-vekst','bvl-leievekst','bvl-avk'],'bvl-res',calcBvl);
+  autoRecalcInput(['bvl-pris','bvl-ek','bvl-rente','bvl-leie','bvl-felleskost','bvl-vedlikehold','bvl-aar','bvl-lopetid','bvl-vekst','bvl-leievekst','bvl-avk'],'bvl-res',calcBvl);
   autoRecalcInput(['formue-primaer','formue-sekundaer','formue-fritid','formue-naering','formue-aksjer','formue-driftsmidler','formue-bank','formue-gjeld'],'formue-res',calcFormue);
   autoRecalcInput(['reise-km','reise-dager','reise-bom'],'reise-res',calcReise);
   // Bil (personlig.html)
@@ -3439,8 +3439,10 @@ function calcBvl(){
   var leieVekstAr=parseFloat(document.getElementById('bvl-leievekst').value)/100;
   var avkAr=parseFloat(document.getElementById('bvl-avk').value)/100;
   var lan = Math.max(0, pris - ek);
-  // Annuitet-månedlig over 25 år (typisk boliglån-løpetid)
-  var nMaks=25*12, rMnd=renteAr/12;
+  // Annuitet-månedlig over valgt løpetid (default 25 år matcher calcMor-default)
+  var lopetidAr = parseInt(document.getElementById('bvl-lopetid') && document.getElementById('bvl-lopetid').value) || 25;
+  if(lopetidAr<10) lopetidAr=10; if(lopetidAr>30) lopetidAr=30;
+  var nMaks=lopetidAr*12, rMnd=renteAr/12;
   var annuitet = rMnd>0 ? lan * rMnd / (1 - Math.pow(1+rMnd,-nMaks)) : lan/nMaks;
   // Beregn over aar-periode
   var totalEie = 0, totalLeie = 0;
@@ -3486,8 +3488,13 @@ function calcBvl(){
     ? (r.bvlVinnerEie || 'Eie lønner seg') + ' (' + fmt(Math.abs(diff)) + ')'
     : (r.bvlVinnerLeie || 'Leie lønner seg') + ' (' + fmt(Math.abs(diff)) + ')';
   document.getElementById('bvl-r-sub').textContent = (r.bvlSubOver || 'Over') + ' ' + aar + ' ' + (r.bvlSubAr || 'år');
-  document.getElementById('bvl-r-eie').textContent = fmt(Math.round(nettoEie));
-  document.getElementById('bvl-r-leie').textContent = fmt(Math.round(nettoLeie));
+  // Label-flip: negativ netto = formuesvekst overstiger kostnader → vis som gevinst
+  var eieLbl = nettoEie >= 0 ? (r.bvlREieLbl || 'Total kostnad ved eie') : (r.bvlREieGevinst || 'Netto gevinst ved eie');
+  var leieLbl = nettoLeie >= 0 ? (r.bvlRLeieLbl || 'Total kostnad ved leie') : (r.bvlRLeieGevinst || 'Netto gevinst ved leie');
+  var _el = document.getElementById('bvl-r-eie-lbl'); if(_el) _el.textContent = eieLbl;
+  var _ll = document.getElementById('bvl-r-leie-lbl'); if(_ll) _ll.textContent = leieLbl;
+  document.getElementById('bvl-r-eie').textContent = fmt(Math.round(Math.abs(nettoEie)));
+  document.getElementById('bvl-r-leie').textContent = fmt(Math.round(Math.abs(nettoLeie)));
   // Break-even: enkel approks — antall år til eie blir billigere
   var be = '–';
   if(diff < 0 && prisVekstAr > 0){
