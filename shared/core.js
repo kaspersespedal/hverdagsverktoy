@@ -212,7 +212,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v41';
+    s.src = '/shared/lang/' + code + '.js?v=v42';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -1864,6 +1864,26 @@ function updateNpvUI() {
   setText('lonn-howto-desc',r.lonnHowtoDesc||'Steg-for-steg guide for VGS-elever og studenter');
   var lonnHowtoC=document.getElementById('lonn-howto-rows');
   if(lonnHowtoC){var lonnHR=r.lonnHowtoRows||[['— SLIK BRUKER DU KALKULATOREN —','Beregn hva du faktisk får utbetalt fra deltidsjobben'],['1. Timelønn','Skriv inn timelønnen din. Minstelønn finnes ikke i Norge, men tariff er typisk 160–220 kr for unge.'],['2. Timer per uke','Hvor mange timer jobber du i en typisk uke? Deltid ved siden av skole er gjerne 10–20 timer.'],['3. Arbeidsuker per år','Standard er 47 uker (52 minus 5 uker ferie). Jobber du kun i ferier, skriv inn antall uker.'],['4. Alder','Under 18 betaler du ingen trygdeavgift. Over 18 trekkes 7,6 % trygdeavgift.'],['— SLIK LESER DU RESULTATENE —',''],['Frikort (100 000 kr)','Tjener du under 100 000 kr i året, trekkes ingen skatt. Du trenger kun frikort (bestilles på skatteetaten.no).'],['Bruttolønn','Det du tjener FØR skatt. Timelønn × timer × uker.'],['Skattetrekk','Det staten trekker i skatt. Beregnes fra trinnskatt, alminnelig inntektsskatt og trygdeavgift.'],['Feriepenger','Arbeidsgiver setter av 10,2 % av lønnen din til feriepenger. Utbetales normalt i juni året etter.'],['Netto','Det du faktisk får inn på konto hver måned — etter at skatten er trukket.'],['— GODT Å VITE —',''],['Skattekort','Bestill skattekort på skatteetaten.no. Uten skattekort trekkes 50 % skatt!'],['Selvangivelse','Selv om du ikke betaler skatt, må du sjekke skattemeldingen i april.'],['Feriepenger ≠ ekstra lønn','Feriepenger erstatter lønnen i ferien — du får dem utbetalt når du tar ferie.']];lonnHowtoC.innerHTML=lonnHR.map(function(row){return '<div class="law-item" style="padding:10px 24px;border-bottom:1px solid var(--border);"><div style="font-weight:600;font-size:13px;color:var(--ink);">'+row[0]+'</div>'+(row[1]?'<div style="font-size:12px;color:var(--ink2);margin-top:4px;line-height:1.6;">'+row[1]+'</div>':'')+'</div>';}).join('');}
+  // /personlig card titles/descs + category headers (HARDCODE-DD-1)
+  function _setCardTitle(id,val,def){var e=document.getElementById(id);if(e)e.innerHTML=(val||def)+' <span style="font-size:11px;opacity:.5">▼</span>';}
+  _setCardTitle('fbl-title',r.fblTitle,'Forbrukslån');
+  setText('fbl-desc',r.fblDesc||'Hva lånet faktisk koster — nominell rente er ikke hele sannheten');
+  _setCardTitle('syk-title',r.sykTitle,'Sykepenger');
+  setText('syk-desc',r.sykDesc||'Hva du faktisk får hvis du blir langtidssyk — og hvor NAV stopper');
+  _setCardTitle('fam-title',r.famTitle,'Foreldrefradrag');
+  setText('fam-desc',r.famDesc||'Netto kostnad etter skattefradrag og søskenmoderasjon');
+  _setCardTitle('invest-title',r.investTitle,'Aksjer');
+  setText('invest-desc',r.investDesc||'Slik fungerer aksjer — tips, risiko og begreper');
+  _setCardTitle('konto-title',r.kontoTitle,'Fond og ASK');
+  setText('konto-desc',r.kontoDesc||'Hva er fond — og hvorfor ASK er en smart konto for aksjefond');
+  _setCardTitle('teknisk-title',r.tekniskTitle,'Teknisk ordliste');
+  setText('teknisk-desc',r.tekniskDesc||'Forklaringer på avanserte investerings- og handelsbegreper — enkelt forklart');
+  setText('cat-hverdag',r.catHverdag||'Hverdagsøkonomi');
+  setText('cat-lan',r.catLan||'Lån');
+  setText('cat-sparing',r.catSparing||'Sparing');
+  setText('cat-lonn',r.catLonn||'Lønn og NAV-ytelser');
+  setText('cat-invest',r.catInvest||'Investering');
+  setText('cat-teknisk',r.catTeknisk||'Teknisk');
   // Abonnement labels
   var aboEl=document.getElementById('abo-title');if(aboEl)aboEl.innerHTML=(r.aboTitle||'Abonnement')+' <span style="font-size:11px;opacity:.5">▼</span>';
   setText('abo-desc',r.aboDesc||'Se totalkostnaden for alle abonnementene dine — per måned og per år');
