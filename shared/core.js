@@ -1104,13 +1104,13 @@ function initLawChapterNav(lawGroupId){
     var titleEl=card.querySelector('.card-title');
     if(!titleEl)return;
     var text=titleEl.textContent.replace(/[▼▲]/g,'').trim();
-    var m=text.match(/\((?:kap|rozdz|ch|гл|فصل|cap|skyrius|章|cutub|ምዕ)\.\s*[\d§–,\s]+\)/i);
-    var label;
-    if(m){label=m[0].replace(/[()]/g,'').replace(/kap\./i,'Kap.');}
-    else{label=text.split(/[:(–]/)[0].trim();if(label.length>12){var words=label.split(/\s+/);label=words[0];if(label.length>12)label=label.substring(0,10)+'…';}}
+    var m=text.match(/\((?:kap|rozdz|ch|гл|فصل|cap|skyrius|章|cutub|ምዕ)\.\s*(\d+)/i);
+    var label,num;
+    if(m){num=m[1];label='Kap. '+num;}
+    else{num='P';label=text.split(/[:(–]/)[0].trim();if(label.length>12){var words=label.split(/\s+/);label=words[0];if(label.length>12)label=label.substring(0,10)+'…';}}
     var chip=document.createElement('span');
     chip.className='law-chapter-chip';
-    chip.textContent=label;
+    chip.innerHTML='<span class="chip-num">'+num+'</span><span class="chip-lbl">'+label+'</span>';
     chip.onclick=function(e){
       e.stopPropagation();
       if(card.classList.contains('collapsed'))toggleCard(card);
@@ -3042,7 +3042,8 @@ function calcSal() {
   const bsuKreditt = bsu * 0.10; // BSU: 10% direkte skattefradrag (ikke inntektsfradrag)
   const tot = Math.max(ts + soc - bsuKreditt, 0);
   const net = b - tot;
-  _sal = { b, net, tot, eff:tot/b*100, soc, region };
+  _sal = { b, net, tot, eff:tot/b*100, soc, region, kl, mf, pf, almInntekt, almSkatt, almSats, renteFradrag, fagforening, ips, gaver, reise, bsu, bsuKreditt, trinnAmounts };
+  window._sal = _sal;
   setEl('s-net', fmt(net));
   setEl('s-mth', fmt(net/12) + (r.mo||'/mo'));
   setEl('s-tax', fmt(tot));
@@ -3091,6 +3092,128 @@ function calcSal() {
   var _sr=document.getElementById('s-res');if(_sr)_sr.classList.remove('hidden');
   setTimeout(()=>{var _sres=document.getElementById('s-res');if(_sres)scrollToEl(_sres,'top');},80);
 }
+
+// ═══════════════════════════════════════════════════════
+// PDF-generator: lønn etter skatt (prototype, 2026-04-20)
+// Laster pdfmake lazy via CDN ved første klikk
+// ═══════════════════════════════════════════════════════
+var _pdfmakeLoading = null;
+function _loadPdfmake(){
+  if(window.pdfMake) return Promise.resolve();
+  if(_pdfmakeLoading) return _pdfmakeLoading;
+  _pdfmakeLoading = new Promise(function(resolve, reject){
+    var s1 = document.createElement('script');
+    s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/pdfmake.min.js';
+    s1.onload = function(){
+      var s2 = document.createElement('script');
+      s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.10/vfs_fonts.js';
+      s2.onload = resolve;
+      s2.onerror = reject;
+      document.head.appendChild(s2);
+    };
+    s1.onerror = reject;
+    document.head.appendChild(s1);
+  });
+  return _pdfmakeLoading;
+}
+
+window.generateLonnPdf = async function(){
+  var btn = document.getElementById('sal-pdf-btn');
+  if(btn){btn.disabled = true; btn.textContent = 'Laster…';}
+  try {
+    await _loadPdfmake();
+    var s = window._sal;
+    if(!s){if(btn){btn.disabled=false;btn.textContent='Last ned PDF';}return;}
+    var today = new Date().toLocaleDateString('nb-NO',{day:'numeric',month:'long',year:'numeric'});
+    var regionLbl = s.almSats===0.185 ? 'Finnmark/Nord-Troms (18,5 %)' : 'Resten av Norge (22 %)';
+    // Bygge fradrags-tabell kun med aktive linjer
+    var fradragRows = [[{text:'Post',bold:true},{text:'Beløp',bold:true,alignment:'right'}]];
+    fradragRows.push(['Bruttolønn (basis)', {text:fmt(s.b),alignment:'right'}]);
+    fradragRows.push(['Minstefradrag (46 %, maks 95 700)', {text:'- '+fmt(s.mf),alignment:'right',color:'#d94841'}]);
+    fradragRows.push(['Personfradrag 2026', {text:'- '+fmt(s.pf),alignment:'right',color:'#d94841'}]);
+    if(s.renteFradrag>0) fradragRows.push(['Rentefradrag', {text:'- '+fmt(s.renteFradrag),alignment:'right',color:'#d94841'}]);
+    if(s.fagforening>0) fradragRows.push(['Fagforeningskontingent (maks 8 700)', {text:'- '+fmt(s.fagforening),alignment:'right',color:'#d94841'}]);
+    if(s.ips>0) fradragRows.push(['IPS (maks 25 000)', {text:'- '+fmt(s.ips),alignment:'right',color:'#d94841'}]);
+    if(s.gaver>0) fradragRows.push(['Gaver til veldedighet (maks 25 000)', {text:'- '+fmt(s.gaver),alignment:'right',color:'#d94841'}]);
+    if(s.reise>0) fradragRows.push(['Reisefradrag', {text:'- '+fmt(s.reise),alignment:'right',color:'#d94841'}]);
+    fradragRows.push([{text:'Alminnelig inntekt (grunnlag)',bold:true}, {text:fmt(s.almInntekt),alignment:'right',bold:true}]);
+    // Trinnskatt-tabell
+    var trinnRows = [[{text:'Trinn',bold:true},{text:'Sats',bold:true,alignment:'right'},{text:'Skatt',bold:true,alignment:'right'}]];
+    s.trinnAmounts.forEach(function(t){
+      if(t.amt<=0) return;
+      trinnRows.push([t.lbl, {text:(t.rate*100).toFixed(1)+' %',alignment:'right'}, {text:fmt(t.amt),alignment:'right'}]);
+    });
+    trinnRows.push([{text:'Trygdeavgift',italics:true},{text:'7,6 %',alignment:'right'},{text:fmt(s.soc),alignment:'right'}]);
+    if(s.bsuKreditt>0) trinnRows.push([{text:'BSU-skattefradrag',italics:true},{text:'-10 %',alignment:'right'},{text:'- '+fmt(s.bsuKreditt),alignment:'right',color:'#2f9e44'}]);
+    trinnRows.push([{text:'TOTAL SKATT',bold:true},{},{text:fmt(s.tot),alignment:'right',bold:true}]);
+
+    var doc = {
+      pageSize: 'A4',
+      pageMargins: [48, 56, 48, 60],
+      info: { title: 'Lønn etter skatt — ' + today, author: 'Hverdagsverktøy.com' },
+      content: [
+        { text: 'Lønn etter skatt', style: 'h1' },
+        { text: today + '  ·  ' + regionLbl, style: 'sub', margin:[0,2,0,24] },
+        // Hero-block
+        { table: { widths:['*'], body: [[{
+            stack: [
+              { text: 'NETTO ÅRSINNTEKT', style:'heroLbl' },
+              { text: fmt(s.net), style:'heroVal' },
+              { text: fmt(s.net/12) + ' / måned   ·   ' + fmt(s.net/260) + ' / dag', style:'heroSub' }
+            ],
+            fillColor: '#f7f5f1', margin:[20,18,20,18]
+        }]]}, layout:'noBorders', margin:[0,0,0,20] },
+        // Key stats
+        { columns: [
+          { width:'*', stack:[{text:'Total skatt',style:'statLbl'},{text:fmt(s.tot),style:'statVal'}] },
+          { width:'*', stack:[{text:'Effektiv sats',style:'statLbl'},{text:s.eff.toFixed(1).replace('.',',')+' %',style:'statVal'}] },
+          { width:'*', stack:[{text:'Trygdeavgift',style:'statLbl'},{text:fmt(s.soc),style:'statVal'}] },
+        ], margin:[0,0,0,24] },
+        // Inntekts-grunnlag
+        { text:'Inntekts-grunnlag', style:'h2' },
+        { table:{ widths:['*',80], body: fradragRows }, layout:{hLineWidth:function(i,n){return i===0||i===1||i===n.table.body.length?0.8:0.3;},hLineColor:function(){return '#d0d0d0';},vLineWidth:function(){return 0;}}, margin:[0,6,0,24] },
+        // Skatte-breakdown
+        { text:'Skatte-breakdown', style:'h2' },
+        { table:{ widths:['*',50,80], body: trinnRows }, layout:{hLineWidth:function(i,n){return i===0||i===1||i===n.table.body.length?0.8:0.3;},hLineColor:function(){return '#d0d0d0';},vLineWidth:function(){return 0;}}, margin:[0,6,0,24] },
+        // Noter
+        { text:'Forutsetninger', style:'h2' },
+        { ul:[
+          'Satser for inntektsåret 2026.',
+          'Personfradrag: 114 540 kr. Minstefradrag: 46 % (maks 95 700 kr).',
+          'Trygdeavgift: 7,6 % av bruttoinntekt. Frikort-grense: 100 000 kr (ikke modellert).',
+          'Alminnelig inntektssats: ' + (s.almSats*100).toFixed(1).replace('.',',') + ' %.',
+          'BSU gir 10 % direkte skattefradrag (ikke inntektsfradrag).'
+        ], style:'note', margin:[0,6,0,0] }
+      ],
+      footer: function(curr, total){
+        return { columns:[
+          { text:'Generert av Hverdagsverktøy.com — veiledende beregning, ikke profesjonell rådgivning.', style:'footerLeft', margin:[48,16,0,0] },
+          { text:'Side ' + curr + ' / ' + total, alignment:'right', style:'footerRight', margin:[0,16,48,0] }
+        ]};
+      },
+      styles: {
+        h1:{ fontSize:26, bold:true, color:'#1a1a2e' },
+        h2:{ fontSize:13, bold:true, color:'#1a1a2e', margin:[0,8,0,4] },
+        sub:{ fontSize:10, color:'#6a6a6a' },
+        heroLbl:{ fontSize:9, bold:true, color:'#8a6d3b', characterSpacing:1.5, margin:[0,0,0,6] },
+        heroVal:{ fontSize:34, bold:true, color:'#1a1a2e', margin:[0,0,0,4] },
+        heroSub:{ fontSize:11, color:'#6a6a6a' },
+        statLbl:{ fontSize:8, bold:true, color:'#8a8a8a', characterSpacing:1, margin:[0,0,0,3] },
+        statVal:{ fontSize:18, bold:true, color:'#1a1a2e' },
+        note:{ fontSize:9, color:'#6a6a6a', lineHeight:1.4 },
+        footerLeft:{ fontSize:8, color:'#999' },
+        footerRight:{ fontSize:8, color:'#999' }
+      },
+      defaultStyle:{ fontSize:10, color:'#2a2a2a' }
+    };
+    pdfMake.createPdf(doc).download('lonn-etter-skatt-' + new Date().toISOString().slice(0,10) + '.pdf');
+  } catch(e){
+    console.error('PDF-feil:', e);
+    alert('Kunne ikke lage PDF. Sjekk internett-tilkobling og prøv igjen.');
+  } finally {
+    if(btn){btn.disabled=false;btn.textContent='Last ned PDF';}
+  }
+};
 
 function calcMor() {
   const r = R();
