@@ -1104,9 +1104,14 @@ function initLawChapterNav(lawGroupId){
     var titleEl=card.querySelector('.card-title');
     if(!titleEl)return;
     var text=titleEl.textContent.replace(/[▼▲]/g,'').trim();
-    var m=text.match(/\((?:kap|rozdz|ch|гл|فصل|cap|skyrius|章|cutub|ምዕ)\.\s*(\d+)/i);
+    var m=text.match(/\((?:kap|rozdz|ch|гл|فصل|cap|skyrius|章|cutub|ምዕ)\.\s*(\d+)([^)]*)/i);
     var label,num;
-    if(m){num=m[1];label='Kap. '+num;}
+    if(m){
+      var kapNum=m[1];
+      var sm=(m[2]||'').match(/§+\s*\d+[-–](\d+)/);
+      num=sm?'§'+sm[1]:kapNum;
+      label='Kap. '+kapNum;
+    }
     else{num='P';label=text.split(/[:(–]/)[0].trim();if(label.length>12){var words=label.split(/\s+/);label=words[0];if(label.length>12)label=label.substring(0,10)+'…';}}
     var chip=document.createElement('span');
     chip.className='law-chapter-chip';
