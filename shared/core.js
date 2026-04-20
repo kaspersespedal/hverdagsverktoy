@@ -5195,6 +5195,7 @@ function toggleDesktopFocus(colIndex){
   } else if(colIndex!==undefined){
     // Enter focus on specific column
     b.classList.add('desktop-focus');
+    b.classList.add('col-focus');
     Array.from(grid.children).forEach(function(c,i){
       if(i!==colIndex) c.setAttribute('data-desktop-hidden','true');
       else c.removeAttribute('data-desktop-hidden');
@@ -5212,6 +5213,7 @@ function toggleDesktopFocus(colIndex){
 function _exitAllFocus(){
   var b=document.body;
   b.classList.remove('desktop-focus');
+  b.classList.remove('col-focus');
   var grid=document.querySelector('.calc-grid');
   if(grid){
     grid.querySelectorAll('.info-card:not(.collapsed)').forEach(function(ic){
@@ -5366,7 +5368,7 @@ function initDesktopFocus(){
   if(grid&&!document.getElementById('focus-close-bar')){
     var bar=document.createElement('div');
     bar.id='focus-close-bar';
-    var _r2=R();bar.innerHTML='<button onclick="toggleDesktopFocus()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;">'+(_r2.focusClose||'Lukk fokus')+'</button>';
+    var _r2=R();bar.innerHTML='<button onclick="toggleDesktopFocus()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;"><span style="font-size:15px;line-height:1;">←</span> '+(_r2.focusClose||'Lukk fokus')+'</button>';
     grid.parentElement.insertBefore(bar,grid);
   }
 }
