@@ -454,7 +454,11 @@ function matchQuestions(q){
   var qn = q.toLowerCase().trim();
   if(!qn) return [];
   var isQ = false;
-  for(var p=0;p<Q_PREFIXES.length;p++){ if(qn.indexOf(Q_PREFIXES[p]) === 0){ isQ = true; break; } }
+  for(var p=0;p<Q_PREFIXES.length;p++){
+    var pref = Q_PREFIXES[p];
+    if(qn.indexOf(pref) === 0){ isQ = true; break; }
+    if(qn.length >= 3 && pref.indexOf(qn) === 0){ isQ = true; break; }
+  }
   if(!isQ) return [];
   var words = qn.split(/\s+/).filter(Boolean);
   var bySection = {};

@@ -106,7 +106,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 .hvt-loading{opacity:0}.hvt-ready{opacity:1;transition:opacity .12s ease-out}
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
-<link rel="stylesheet" href="/shared/style.css?v=v133" fetchpriority="high">
+<link rel="stylesheet" href="/shared/style.css?v=v134" fetchpriority="high">
 <link rel="preload" href="/shared/core.js?v=v115" as="script" fetchpriority="high">
 <script type="application/ld+json">
 {
@@ -648,7 +648,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <!-- Language files now loaded dynamically by core.js -->
 <script>(function(){var S='<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none" aria-hidden="true"><path d="M3 6V3h3M13 6V3h-3M3 10v3h3M13 10v3h-3"/></svg>';var hs=document.querySelectorAll('.calc-grid .info-card > .card-hdr');for(var i=0;i<hs.length;i++){if(hs[i].querySelector(':scope > .focus-card-btn'))continue;var b=document.createElement('button');b.className='focus-card-btn';b.type='button';b.title='Fokus';b.setAttribute('aria-label','Fokus');b.innerHTML=S;hs[i].appendChild(b);}})();</script>
 <script defer src="/shared/core.js?v=v115"></script>
-<script defer src="/shared/search.js?v=v20"></script>
+<script defer src="/shared/search.js?v=v21"></script>
 <script>(function(){var V=['no','en','zh','fr','pl','uk','ar','lt','so','ti'];var ps=location.pathname.split('/');var sub=ps.length>=2&&ps[1].length===2&&V.indexOf(ps[1])>=0?ps[1]:null;var q=null,st=null;try{q=new URLSearchParams(location.search).get('lang');}catch(e){}try{st=localStorage.getItem('hvt-lang');}catch(e){}var l=sub||(q&&V.indexOf(q)>=0?q:null)||(st&&V.indexOf(st)>=0?st:null)||'no';document.write('<script defer src="/shared/lang/'+l+'.js?v=v43"><\/script>');})();</script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
@@ -669,18 +669,30 @@ function _kalkEnterFocus(){
 }
 function _buildKalkFocusBar(){
   var bar=document.getElementById('calc-focus-bar');
-  if(!bar) return;
+  if(bar) bar.style.display='none'; // Legacy bar — kept in DOM but hidden (replaced by header-integrated button)
   var _r=R();
   // Remove the blue "Close focus" button injected by initDesktopFocus()
   var fcb=document.getElementById('focus-close-bar');
   if(fcb) fcb.remove();
-  // Build only the Switch Calculator dropdown — no focus toggle button
-  bar.innerHTML='<div style="display:flex;justify-content:flex-end;">'
-    +'<div id="calc-focus-switch" style="position:relative;">'
-    +'<button id="calc-focus-switch-btn" onclick="document.getElementById(\'calc-focus-dd\').classList.toggle(\'hidden\')" '
-    +'style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--rs);padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink);font-family:Inter,sans-serif;">'+(_r.focusSwitchCalc||'Bytt kalkulator')+' \u25BC</button>'
-    +'<div id="calc-focus-dd" class="hidden" style="position:absolute;right:0;top:100%;margin-top:4px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);z-index:100;min-width:220px;padding:6px;"></div>'
-    +'</div></div>';
+  // Inject switch-button INTO gold header (left of DESIMALER) — no vertical space consumed
+  var decLbl=document.getElementById('bc-dec-lbl');
+  if(!decLbl) return;
+  var ctrlsRow=decLbl.parentNode;                    // flex row with DESIMALER + stepper
+  var headerRow=ctrlsRow.parentNode;                 // outer flex row (mode-label + ctrlsRow)
+  if(document.getElementById('calc-focus-switch-btn')) return; // already built
+  var wrap=document.createElement('div');
+  wrap.id='calc-focus-switch';
+  wrap.style.cssText='position:relative;display:none;'; // shown on desktop via code below
+  wrap.innerHTML='<button id="calc-focus-switch-btn" type="button" aria-label="'+(_r.focusSwitchCalc||'Bytt kalkulator')+'" '
+    +'style="background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:4px 10px 4px 8px;font-size:11px;font-weight:600;cursor:pointer;color:rgba(255,255,255,.9);font-family:Inter,sans-serif;letter-spacing:.3px;text-transform:uppercase;display:inline-flex;align-items:center;gap:5px;transition:background .15s,border-color .15s;">'
+    +'<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3l4 4-4 4"/><path d="M3 7h18"/><path d="M7 21l-4-4 4-4"/><path d="M21 17H3"/></svg>'
+    +'<span>'+(_r.focusSwitchCalc||'Bytt')+'</span></button>'
+    +'<div id="calc-focus-dd" class="hidden" style="position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);box-shadow:0 8px 28px rgba(0,0,0,.25);z-index:100;min-width:240px;padding:6px;"></div>';
+  headerRow.insertBefore(wrap, ctrlsRow);
+  var btn=document.getElementById('calc-focus-switch-btn');
+  btn.onclick=function(e){e.stopPropagation();document.getElementById('calc-focus-dd').classList.toggle('hidden');};
+  // Close dropdown on outside-click
+  document.addEventListener('click',function(e){var dd=document.getElementById('calc-focus-dd');if(!dd||dd.classList.contains('hidden'))return;if(!wrap.contains(e.target))dd.classList.add('hidden');});
   // Copy all mode-picker children (group headers, separators, buttons) into dropdown
   var dd=document.getElementById('calc-focus-dd');
   var panel=document.querySelector('#calc-basic > div:last-child > div.card > div:last-child');
@@ -699,8 +711,9 @@ function _buildKalkFocusBar(){
       dd.appendChild(clone);
     });
   }
-  if(window.innerWidth>900) bar.style.display='block';
-  window.addEventListener('resize',function(){bar.style.display=window.innerWidth>900?'block':'none';});
+  function updateVisibility(){wrap.style.display=window.innerWidth>900?'inline-flex':'none';}
+  updateVisibility();
+  window.addEventListener('resize',updateVisibility);
   // Enter focus mode immediately — always-on for kalkulator page
   _kalkEnterFocus();
   // Override toggleDesktopFocus so focus can never be exited on this page
