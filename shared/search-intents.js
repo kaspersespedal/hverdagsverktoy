@@ -617,8 +617,8 @@ window.SEARCH_INTENTS = {
       {
         "id": "dok",
         "name": "Dokumentavgift og tinglysing",
-        "url": "/boliglan/#dok-wrapper",
-        "description": "2,5 % dokumentavgift + tinglysingsgebyr + attestgebyr"
+        "url": "/boliglan/#maxlan-wrapper",
+        "description": "2,5 % dokumentavgift + tinglysingsgebyr + attestgebyr — se maks-lån-kalkulator for totalkostnad"
       },
       {
         "id": "req",
