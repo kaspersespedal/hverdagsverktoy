@@ -1040,9 +1040,9 @@ function toggleCard(card){
       smartScroll(card);
     }, 250);
   }
-  // Fix card-hdr top for law-chips-active groups
+  // Fix card-hdr top for law-chips-active groups (kun NESTEDE kort, ikke gruppens eget)
   var lawParent=card.closest('.law-chips-active');
-  if(lawParent&&lawParent._chipHdrTop){
+  if(lawParent&&lawParent!==card&&lawParent._chipHdrTop){
     var hdr=card.querySelector(':scope > .card-hdr');
     if(hdr) hdr.style.top=wasCollapsed?lawParent._chipHdrTop:'';
   }
