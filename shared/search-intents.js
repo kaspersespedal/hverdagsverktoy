@@ -3,7 +3,7 @@ window.SEARCH_INTENTS = {
   "avgift": {
     "section": "avgift",
     "base_url": "/avgift",
-    "version": "2026-04-19",
+    "version": "2026-04-20",
     "targets": [
       {
         "id": "vat",
@@ -600,12 +600,162 @@ window.SEARCH_INTENTS = {
         ],
         "target": "guide"
       }
+    ],
+    "questions": [
+      {
+        "q": "hvordan beregne mva",
+        "target": "vat"
+      },
+      {
+        "q": "hvordan regne ut mva",
+        "target": "vat"
+      },
+      {
+        "q": "hvor mye er mva",
+        "target": "vat"
+      },
+      {
+        "q": "hva koster mva",
+        "target": "vat"
+      },
+      {
+        "q": "hvordan justere mva",
+        "target": "adj"
+      },
+      {
+        "q": "når må jeg justere mva",
+        "target": "adj"
+      },
+      {
+        "q": "hva er mva-justering",
+        "target": "adj"
+      },
+      {
+        "q": "hvor mye koster det å ansette",
+        "target": "aga"
+      },
+      {
+        "q": "hvordan beregne arbeidsgiveravgift",
+        "target": "aga"
+      },
+      {
+        "q": "hva koster en ansatt",
+        "target": "aga"
+      },
+      {
+        "q": "hva er aga",
+        "target": "aga"
+      },
+      {
+        "q": "hvor mye er arbeidsgiveravgift",
+        "target": "aga"
+      },
+      {
+        "q": "hva er merverdiavgift",
+        "target": "vat-info"
+      },
+      {
+        "q": "hva betyr mva",
+        "target": "vat-info"
+      },
+      {
+        "q": "hvorfor finnes mva",
+        "target": "vat-info"
+      },
+      {
+        "q": "hvem er avgiftspliktig",
+        "target": "vat-subj"
+      },
+      {
+        "q": "når blir jeg avgiftspliktig",
+        "target": "vat-subj"
+      },
+      {
+        "q": "hvem må betale mva",
+        "target": "vat-subj"
+      },
+      {
+        "q": "hva er inngående mva",
+        "target": "vat-def"
+      },
+      {
+        "q": "hva er utgående mva",
+        "target": "vat-def"
+      },
+      {
+        "q": "hva er mva-grunnlag",
+        "target": "vat-def"
+      },
+      {
+        "q": "når må jeg registrere mva",
+        "target": "vat-reg"
+      },
+      {
+        "q": "hvordan registrere mva",
+        "target": "vat-reg"
+      },
+      {
+        "q": "hvor mye må jeg omsette for mva",
+        "target": "vat-reg"
+      },
+      {
+        "q": "hva er unntatt fra mva",
+        "target": "vat-exempt"
+      },
+      {
+        "q": "hvorfor er helse unntatt mva",
+        "target": "vat-exempt"
+      },
+      {
+        "q": "hva er nullsats",
+        "target": "vat-zero"
+      },
+      {
+        "q": "hvordan fungerer nullsats mva",
+        "target": "vat-zero"
+      },
+      {
+        "q": "hvordan få mva-fradrag",
+        "target": "vat-ded"
+      },
+      {
+        "q": "hva kan jeg trekke fra i mva",
+        "target": "vat-ded"
+      },
+      {
+        "q": "hvordan regne prosent mva",
+        "target": "vat-calc-card"
+      },
+      {
+        "q": "hva er aga-soner",
+        "target": "vat-aga"
+      },
+      {
+        "q": "hvor finner jeg aga-sone",
+        "target": "vat-aga"
+      },
+      {
+        "q": "når skal kapitalvare justeres",
+        "target": "adj-info"
+      },
+      {
+        "q": "hva er en kapitalvare",
+        "target": "adj-info"
+      },
+      {
+        "q": "hvilke avgiftskalkulatorer finnes",
+        "target": "calcs"
+      },
+      {
+        "q": "hvor finner jeg avgiftsguide",
+        "target": "guide"
+      }
     ]
   },
   "boliglan": {
     "section": "boliglan",
     "base_url": "/boliglan",
-    "version": "2026-04-19",
+    "version": "2026-04-20",
     "note": "Anchors verifisert mot live DOM.",
     "targets": [
       {
@@ -1254,12 +1404,98 @@ window.SEARCH_INTENTS = {
         ],
         "target": "mor"
       }
+    ],
+    "questions": [
+      {
+        "q": "hvor mye kan jeg låne",
+        "target": "mor"
+      },
+      {
+        "q": "hvor mye blir boliglånet",
+        "target": "mor"
+      },
+      {
+        "q": "hvordan regne ut boliglån",
+        "target": "mor"
+      },
+      {
+        "q": "hva koster boliglånet per måned",
+        "target": "mor"
+      },
+      {
+        "q": "hvordan beregne terminbeløp",
+        "target": "mor"
+      },
+      {
+        "q": "hvor mye er dokumentavgiften",
+        "target": "dok"
+      },
+      {
+        "q": "hvordan beregne dokumentavgift",
+        "target": "dok"
+      },
+      {
+        "q": "hva koster tinglysning",
+        "target": "dok"
+      },
+      {
+        "q": "hvor mye egenkapital trenger jeg",
+        "target": "req"
+      },
+      {
+        "q": "hva er gjeldsgrad",
+        "target": "req"
+      },
+      {
+        "q": "hvem kan få boliglån",
+        "target": "req"
+      },
+      {
+        "q": "hvordan oppfylle boliglånskrav",
+        "target": "req"
+      },
+      {
+        "q": "hva koster det å kjøpe bolig",
+        "target": "cost"
+      },
+      {
+        "q": "hvilke gebyrer er det på boliglån",
+        "target": "cost"
+      },
+      {
+        "q": "hvor mye renter betaler jeg på bolig",
+        "target": "cost"
+      },
+      {
+        "q": "hva er bsu",
+        "target": "bsu"
+      },
+      {
+        "q": "hvor mye kan jeg spare i bsu",
+        "target": "bsu"
+      },
+      {
+        "q": "hvor mye fradrag gir bsu",
+        "target": "bsu"
+      },
+      {
+        "q": "når må jeg slutte med bsu",
+        "target": "bsu"
+      },
+      {
+        "q": "hvilke boliglåns-kalkulatorer finnes",
+        "target": "calcs"
+      },
+      {
+        "q": "hvor finner jeg boligguide",
+        "target": "guide"
+      }
     ]
   },
   "kalkulator": {
     "section": "kalkulator",
     "base_url": "/kalkulator",
-    "version": "2026-04-19",
+    "version": "2026-04-20",
     "note": "Kalkulator bruker mode-switch via switchCalcMode(). Core.js hash-handler matcher hash = modus-navn direkte (uten cm- prefiks) og kaller switchCalcMode automatisk.",
     "targets": [
       {
@@ -1843,12 +2079,158 @@ window.SEARCH_INTENTS = {
         ],
         "target": "lvu"
       }
+    ],
+    "questions": [
+      {
+        "q": "hvor finner jeg kalkulator",
+        "target": "basic"
+      },
+      {
+        "q": "hvordan regne enkle tall",
+        "target": "basic"
+      },
+      {
+        "q": "hvordan beregne nåverdi",
+        "target": "fin"
+      },
+      {
+        "q": "hvordan regne ut annuitet",
+        "target": "fin"
+      },
+      {
+        "q": "hva er finanskalkulator",
+        "target": "fin"
+      },
+      {
+        "q": "hvor finner jeg vitenskapelig kalkulator",
+        "target": "sci"
+      },
+      {
+        "q": "hvordan regne sinus",
+        "target": "sci"
+      },
+      {
+        "q": "hvordan regne cosinus",
+        "target": "sci"
+      },
+      {
+        "q": "hvordan konvertere valuta",
+        "target": "unit"
+      },
+      {
+        "q": "hvor mye er dollar i kroner",
+        "target": "unit"
+      },
+      {
+        "q": "hvordan regne om enheter",
+        "target": "unit"
+      },
+      {
+        "q": "hvordan beskattes valutagevinst",
+        "target": "valgevinst"
+      },
+      {
+        "q": "hva er skatt på valuta",
+        "target": "valgevinst"
+      },
+      {
+        "q": "hva lønner seg lønn eller utbytte",
+        "target": "lvu"
+      },
+      {
+        "q": "hvordan sammenligne lønn og utbytte",
+        "target": "lvu"
+      },
+      {
+        "q": "hva er mest skatteoptimalt lønn eller utbytte",
+        "target": "lvu"
+      },
+      {
+        "q": "hvor mye feriepenger får jeg",
+        "target": "ferie"
+      },
+      {
+        "q": "hvordan beregne feriepenger",
+        "target": "ferie"
+      },
+      {
+        "q": "når får jeg feriepenger",
+        "target": "ferie"
+      },
+      {
+        "q": "hva er feriepengesatsen",
+        "target": "ferie"
+      },
+      {
+        "q": "hvor mye pensjon får jeg",
+        "target": "pensjon"
+      },
+      {
+        "q": "hvordan beregne pensjon",
+        "target": "pensjon"
+      },
+      {
+        "q": "hva er pensjonssparing",
+        "target": "pensjon"
+      },
+      {
+        "q": "hvordan beregne npv",
+        "target": "npv"
+      },
+      {
+        "q": "hva er npv",
+        "target": "npv"
+      },
+      {
+        "q": "hvordan regne ut irr",
+        "target": "npv"
+      },
+      {
+        "q": "hvordan beregne effektiv rente",
+        "target": "rente"
+      },
+      {
+        "q": "hva er forskjellen nominell og effektiv rente",
+        "target": "rente"
+      },
+      {
+        "q": "hvor mye koster lånet egentlig",
+        "target": "rente"
+      },
+      {
+        "q": "hvordan lage likviditetsbudsjett",
+        "target": "likvid"
+      },
+      {
+        "q": "hva er likviditet",
+        "target": "likvid"
+      },
+      {
+        "q": "hvordan beregne avskrivning",
+        "target": "avs"
+      },
+      {
+        "q": "hvor mange saldogrupper finnes",
+        "target": "avs"
+      },
+      {
+        "q": "hva er saldogruppe",
+        "target": "avs"
+      },
+      {
+        "q": "hvilken saldogruppe tilhører bilen",
+        "target": "avs"
+      },
+      {
+        "q": "hvor finner jeg aga-kalkulator",
+        "target": "aga-ref"
+      }
     ]
   },
   "personlig": {
     "section": "personlig",
     "base_url": "/personlig",
-    "version": "2026-04-19",
+    "version": "2026-04-20",
     "targets": [
       {
         "id": "bud",
@@ -2507,12 +2889,158 @@ window.SEARCH_INTENTS = {
         ],
         "target": "tek"
       }
+    ],
+    "questions": [
+      {
+        "q": "hvordan lage budsjett",
+        "target": "bud"
+      },
+      {
+        "q": "hva er sifo-budsjett",
+        "target": "bud"
+      },
+      {
+        "q": "hvor mye koster det å leve",
+        "target": "bud"
+      },
+      {
+        "q": "hvor mye går til mat i måneden",
+        "target": "bud"
+      },
+      {
+        "q": "hvor mye betaler jeg for abonnementer",
+        "target": "abo"
+      },
+      {
+        "q": "hvordan holde oversikt over abonnementer",
+        "target": "abo"
+      },
+      {
+        "q": "hvor mye koster det å ha bil",
+        "target": "bil"
+      },
+      {
+        "q": "hvordan beregne bilkostnad",
+        "target": "bil"
+      },
+      {
+        "q": "hva koster bilen i året",
+        "target": "bil"
+      },
+      {
+        "q": "hvor mye kan jeg låne fra lånekassen",
+        "target": "studie"
+      },
+      {
+        "q": "hvordan nedbetale studielån",
+        "target": "studie"
+      },
+      {
+        "q": "hva er renten på studielån",
+        "target": "studie"
+      },
+      {
+        "q": "hva koster et forbrukslån",
+        "target": "fbl"
+      },
+      {
+        "q": "hvordan beregne forbrukslån",
+        "target": "fbl"
+      },
+      {
+        "q": "hvor mye rente på forbrukslån",
+        "target": "fbl"
+      },
+      {
+        "q": "hvor mye blir det om jeg sparer",
+        "target": "spare"
+      },
+      {
+        "q": "hvordan fungerer renters rente",
+        "target": "spare"
+      },
+      {
+        "q": "hvor mye må jeg spare per måned",
+        "target": "spare"
+      },
+      {
+        "q": "hva er renters rente",
+        "target": "spare"
+      },
+      {
+        "q": "hvor mye netto lønn får jeg",
+        "target": "lonn"
+      },
+      {
+        "q": "hva sitter jeg igjen med etter skatt",
+        "target": "lonn"
+      },
+      {
+        "q": "hvordan beregne netto lønn",
+        "target": "lonn"
+      },
+      {
+        "q": "hvor mye får jeg i sykepenger",
+        "target": "syk"
+      },
+      {
+        "q": "hvordan beregne sykepenger",
+        "target": "syk"
+      },
+      {
+        "q": "når får jeg sykepenger fra nav",
+        "target": "syk"
+      },
+      {
+        "q": "hvor mye er barnetrygd",
+        "target": "fam"
+      },
+      {
+        "q": "hvordan søke kontantstøtte",
+        "target": "fam"
+      },
+      {
+        "q": "hva er familiebidrag",
+        "target": "fam"
+      },
+      {
+        "q": "hvordan investere",
+        "target": "invest"
+      },
+      {
+        "q": "hva er investeringskonto",
+        "target": "invest"
+      },
+      {
+        "q": "hva er forskjellen på ask og ips",
+        "target": "konto"
+      },
+      {
+        "q": "hvilken kontotype skal jeg velge",
+        "target": "konto"
+      },
+      {
+        "q": "hva er fondskonto",
+        "target": "konto"
+      },
+      {
+        "q": "hva er ips",
+        "target": "tek"
+      },
+      {
+        "q": "hva er etf",
+        "target": "tek"
+      },
+      {
+        "q": "hva er obligasjoner",
+        "target": "tek"
+      }
     ]
   },
   "selskap": {
     "section": "selskap",
     "base_url": "/selskap",
-    "version": "2026-04-19",
+    "version": "2026-04-20",
     "targets": [
       {
         "id": "velg",
@@ -3086,12 +3614,154 @@ window.SEARCH_INTENTS = {
         ],
         "target": "asl-kapital"
       }
+    ],
+    "questions": [
+      {
+        "q": "hvilken selskapsform skal jeg velge",
+        "target": "velg"
+      },
+      {
+        "q": "hvilken selskapsform passer meg",
+        "target": "velg"
+      },
+      {
+        "q": "hva er best as eller enk",
+        "target": "velg"
+      },
+      {
+        "q": "hva er enk",
+        "target": "enk"
+      },
+      {
+        "q": "hva betyr enkeltpersonforetak",
+        "target": "enk"
+      },
+      {
+        "q": "hvordan skattlegges enk",
+        "target": "enk"
+      },
+      {
+        "q": "hva er as",
+        "target": "as"
+      },
+      {
+        "q": "hvordan starte as",
+        "target": "as"
+      },
+      {
+        "q": "hvor mye aksjekapital må jeg ha",
+        "target": "as"
+      },
+      {
+        "q": "hva koster det å starte as",
+        "target": "as"
+      },
+      {
+        "q": "hva er ans",
+        "target": "ans"
+      },
+      {
+        "q": "hvordan starte ans",
+        "target": "ans"
+      },
+      {
+        "q": "hva er forskjellen ans og da",
+        "target": "ans"
+      },
+      {
+        "q": "hva er kommandittselskap",
+        "target": "ks"
+      },
+      {
+        "q": "hvordan fungerer ks",
+        "target": "ks"
+      },
+      {
+        "q": "hvordan sammenligne selskapsformer",
+        "target": "compare"
+      },
+      {
+        "q": "hva er forskjellen as og enk",
+        "target": "compare"
+      },
+      {
+        "q": "hvordan beskattes selskap",
+        "target": "skatt"
+      },
+      {
+        "q": "hva er selskapsskatten",
+        "target": "skatt"
+      },
+      {
+        "q": "hvordan registrere selskap",
+        "target": "reg"
+      },
+      {
+        "q": "hvor registrerer jeg i brønnøysund",
+        "target": "reg"
+      },
+      {
+        "q": "hva koster det å registrere selskap",
+        "target": "reg"
+      },
+      {
+        "q": "hva er nuf",
+        "target": "andre"
+      },
+      {
+        "q": "hva er samvirkeforetak",
+        "target": "andre"
+      },
+      {
+        "q": "hvordan stifte as",
+        "target": "asl-stift"
+      },
+      {
+        "q": "hvilken dokumentasjon trenger jeg for as",
+        "target": "asl-stift"
+      },
+      {
+        "q": "hvor mye aksjekapital minimum",
+        "target": "asl-kapital"
+      },
+      {
+        "q": "hva er egenkapital i as",
+        "target": "asl-kapital"
+      },
+      {
+        "q": "hvem må sitte i styret",
+        "target": "asl-ledelse"
+      },
+      {
+        "q": "hvem kan være daglig leder",
+        "target": "asl-ledelse"
+      },
+      {
+        "q": "hvordan utbetale utbytte",
+        "target": "asl-aksjer"
+      },
+      {
+        "q": "hvem har aksjonærrettigheter",
+        "target": "asl-aksjer"
+      },
+      {
+        "q": "hvordan fusjonere as",
+        "target": "asl-fusjon"
+      },
+      {
+        "q": "hva er fusjon",
+        "target": "asl-fusjon"
+      },
+      {
+        "q": "hva er fisjon",
+        "target": "asl-fusjon"
+      }
     ]
   },
   "skatt": {
     "section": "skatt",
     "base_url": "/skatt",
-    "version": "2026-04-19",
+    "version": "2026-04-20",
     "targets": [
       {
         "id": "salary",
@@ -3636,6 +4306,88 @@ window.SEARCH_INTENTS = {
         "keywords": [
           "realisasjon skatt"
         ],
+        "target": "guide"
+      }
+    ],
+    "questions": [
+      {
+        "q": "hvor mye skatt betaler jeg",
+        "target": "salary"
+      },
+      {
+        "q": "hvor mye sitter jeg igjen med etter skatt",
+        "target": "salary"
+      },
+      {
+        "q": "hvordan beregne trinnskatt",
+        "target": "salary"
+      },
+      {
+        "q": "hva er trygdeavgift",
+        "target": "salary"
+      },
+      {
+        "q": "hvordan beskattes uttak fra enk",
+        "target": "uttak"
+      },
+      {
+        "q": "hva er uttaksskatt",
+        "target": "uttak"
+      },
+      {
+        "q": "hvor mye skatt på utbytte",
+        "target": "utdeling"
+      },
+      {
+        "q": "hvordan beregne utbytteskatt",
+        "target": "utdeling"
+      },
+      {
+        "q": "hva er effektiv skatt på utbytte",
+        "target": "utdeling"
+      },
+      {
+        "q": "hvor mye formuesskatt betaler jeg",
+        "target": "formue"
+      },
+      {
+        "q": "hva er formuesskatt",
+        "target": "formue"
+      },
+      {
+        "q": "når må jeg betale formuesskatt",
+        "target": "formue"
+      },
+      {
+        "q": "hvordan regne ut reisefradrag",
+        "target": "reise"
+      },
+      {
+        "q": "hvor mye reisefradrag kan jeg få",
+        "target": "reise"
+      },
+      {
+        "q": "hvem kan få reisefradrag",
+        "target": "reise"
+      },
+      {
+        "q": "er det næring eller hobby",
+        "target": "sjekk"
+      },
+      {
+        "q": "hvordan vet jeg om det er næring",
+        "target": "sjekk"
+      },
+      {
+        "q": "når blir hobby til næring",
+        "target": "sjekk"
+      },
+      {
+        "q": "hvor finner jeg skatteguide",
+        "target": "guide"
+      },
+      {
+        "q": "hvilke fradrag finnes",
         "target": "guide"
       }
     ]
