@@ -365,7 +365,7 @@ REGIONS['fr'] = {
       'Déduction trajet : Si vous habitez à plus de 37 km de votre travail, vous pouvez avoir droit à une déduction. Utilisez le calculateur de déduction trajet !',
       'Déduction d\'intérêts : Vous récupérez 22% des frais d\'intérêts sur vos impôts. Vérifiez que tous les prêts figurent dans votre déclaration.',
       'Syndicat : Déduction max. 8 700 kr. Vérifiez que le montant est correctement pré-rempli.',
-      'BSU : Crédit d\'impôt de 10% (max. 2 750 kr/an). S\'applique jusqu\'à 34 ans si vous ne possédez pas de logement.',
+      "BSU : Crédit d'impôt de 10% (max. 2 750 kr/an). S'applique jusqu'à la fin de l'année de vos 33 ans si vous ne possédez pas de logement.",
       'La déduction pour garde d\'enfants en crèche/SFO a été supprimée depuis 2023, mais vérifiez les autres déductions liées aux enfants.',
       'Déduction pour dons : Déduction pour les dons supérieurs à 500 kr aux organisations agréées, max. 25 000 kr/an.',
       'Bureau à domicile : Déduction forfaitaire de 2 240 kr/an sans justificatif, ou coûts réels avec justificatif.',

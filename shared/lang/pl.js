@@ -364,7 +364,7 @@ REGIONS['pl'] = {
       'Odliczenie dojazdowe: Jeśli mieszkasz ponad 37 km od pracy, możesz mieć prawo do odliczenia. Skorzystaj z kalkulatora odliczeń dojazdowych!',
       'Odliczenie odsetek: Otrzymujesz 22% wydatków na odsetki z powrotem na podatku. Sprawdź, czy wszystkie kredyty są uwzględnione w zeznaniu.',
       'Związek zawodowy: Maks. 8 700 kr odliczenia. Sprawdź, czy kwota jest poprawnie wstępnie wypełniona.',
-      'BSU: 10% ulga podatkowa (maks. 2 750 kr/rok). Obowiązuje do 34. roku życia, jeśli nie posiadasz mieszkania.',
+      'BSU: 10% ulga podatkowa (maks. 2 750 kr/rok). Obowiązuje do końca roku, w którym kończysz 33 lata, jeśli nie posiadasz mieszkania.',
       'Odliczenie na opiekę nad dziećmi w przedszkolu/SFO zostało zniesione od 2023, ale sprawdź inne odliczenia związane z dziećmi.',
       'Odliczenie darowizn: Odliczenie za darowizny powyżej 500 kr na zatwierdzone organizacje, maks. 25 000 kr/rok.',
       'Biuro domowe: Ryczałtowe odliczenie 2 240 kr/rok bez dokumentacji lub faktyczne koszty z dokumentacją.',
