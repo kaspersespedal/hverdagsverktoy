@@ -138,6 +138,7 @@ function typeLabel(type){
   if(type==='tool') return T('searchTagTool','Verktøy');
   if(type==='concept') return T('searchTagConcept','Begrep');
   if(type==='law') return T('searchTagLaw','Lov');
+  if(type==='question') return T('searchTagQuestion','Spørsmål');
   return '';
 }
 
@@ -430,9 +431,62 @@ function loadSearchIntents(){
   if(__hvtIntentsLoadStarted || window.SEARCH_INTENTS) return;
   __hvtIntentsLoadStarted = true;
   var s = document.createElement('script');
-  s.src = '/shared/search-intents.js?v=v2';
+  s.src = '/shared/search-intents.js?v=v3';
   s.async = true;
   document.head.appendChild(s);
+}
+
+/* ─── Question-suggestion matcher (2026-04-20) ─── */
+/* Triggers when query starts with Norwegian question-word. Returns array of
+   matching questions from SEARCH_INTENTS[section].questions. All-words-present
+   substring match so "hvordan mva" matches "hvordan beregne mva". */
+var Q_PREFIXES = ['hvordan','hva er','hva koster','hva betyr','hvor mye','hvor mange','når','hvorfor','hvem','hvilken','hvilke','kan jeg','er det'];
+function matchQuestions(q){
+  if(typeof window.SEARCH_INTENTS !== 'object' || !window.SEARCH_INTENTS) return [];
+  var qn = q.toLowerCase().trim();
+  if(!qn) return [];
+  var isQ = false;
+  for(var p=0;p<Q_PREFIXES.length;p++){ if(qn.indexOf(Q_PREFIXES[p]) === 0){ isQ = true; break; } }
+  if(!isQ) return [];
+  var words = qn.split(/\s+/).filter(Boolean);
+  var bySection = {};
+  for(var section in window.SEARCH_INTENTS){
+    var data = window.SEARCH_INTENTS[section];
+    if(!data || !data.questions) continue;
+    var targetMap = {};
+    (data.targets||[]).forEach(function(t){ targetMap[t.id] = t; });
+    bySection[section] = [];
+    for(var i=0;i<data.questions.length;i++){
+      var qi = data.questions[i];
+      var qt = (qi.q||'').toLowerCase();
+      var allIn = true;
+      for(var w=0;w<words.length;w++){ if(qt.indexOf(words[w]) < 0){ allIn = false; break; } }
+      if(!allIn) continue;
+      var t = targetMap[qi.target];
+      if(!t || !t.url) continue;
+      var startsWith = qt.indexOf(qn) === 0 ? 1 : 0;
+      bySection[section].push({
+        url: t.url,
+        name: qi.q,
+        desc: (t.name||'') + (t.description ? ' — ' + t.description : ''),
+        section: section,
+        _rank: startsWith
+      });
+    }
+    bySection[section].sort(function(a,b){ return b._rank - a._rank; });
+  }
+  // Round-robin interleave across sections so no single section hogs all slots
+  var out = [];
+  var sections = Object.keys(bySection);
+  var maxLen = 0;
+  for(var s=0;s<sections.length;s++){ if(bySection[sections[s]].length > maxLen) maxLen = bySection[sections[s]].length; }
+  for(var idx=0; idx<maxLen; idx++){
+    for(var s2=0; s2<sections.length; s2++){
+      var arr = bySection[sections[s2]];
+      if(arr[idx]) out.push(arr[idx]);
+    }
+  }
+  return out;
 }
 
 /* ─── Intent pre-matcher (Mac-leveranse 2026-04-19) ─── */
@@ -482,6 +536,19 @@ function search(q){
       results.sort(function(a,b){ return b.score - a.score; });
     } else {
       results.unshift({ item:{ name:intent.name, desc:intent.desc||'', url:intent.url, tags:'', type:'tool', page:'' }, score:1000 });
+    }
+  }
+  // Question-suggestions — prepend when query starts with question-word
+  var questions = matchQuestions(q);
+  if(questions.length > 0){
+    var seen = {};
+    for(var r2=0; r2<results.length; r2++){ seen[results[r2].item.url + '|' + results[r2].item.name] = true; }
+    for(var qi=questions.length-1; qi>=0; qi--){
+      var qq = questions[qi];
+      var key = qq.url + '|' + qq.name;
+      if(seen[key]) continue;
+      results.unshift({ item:{ name:qq.name, desc:qq.desc, url:qq.url, tags:'', type:'question', page:'' }, score: 2000 + qi });
+      seen[key] = true;
     }
   }
   return results.slice(0, 6);

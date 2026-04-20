@@ -526,6 +526,7 @@ REGIONS['no'] = {
     searchTagTool:'Verktøy',
     searchTagConcept:'Begrep',
     searchTagLaw:'Lov',
+    searchTagQuestion:'Spørsmål',
     searchFeedbackMsg:'Fortell oss hva du leter etter',
     suggestLonn:'Lønn etter skatt',suggestBoliglan:'Boliglån',suggestBsu:'BSU',suggestMva:'MVA',suggestBilkost:'Bilkostnad',suggestFerie:'Feriepenger',suggestBudsjett:'Budsjett',suggestStudie:'Studielån',suggestKalk:'Kalkulator',
 
