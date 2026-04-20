@@ -475,17 +475,19 @@ function updateAll() {
 }
 
 // Swap innerHTML on [data-i18n-html] elements when current lang has an override key.
-// NO HTML i siden er fallback — hvis key mangler i R(), ingen endring skjer.
+// Original NO HTML caches paa el._hvtI18nHtmlOrig ved forste kjoring og brukes som fallback
+// naar R() mangler key (f.eks. bytte tilbake til NO etter EN).
 function _updateI18nHtml(r){
   if(!r) return;
   var els=document.querySelectorAll('[data-i18n-html]');
   for(var i=0;i<els.length;i++){
     var el=els[i],key=el.getAttribute('data-i18n-html');
-    if(!key||!r[key]) continue;
-    if(el._hvtI18nHtmlKey===key && el._hvtI18nHtmlVal===r[key]) continue;
-    el.innerHTML=r[key];
-    el._hvtI18nHtmlKey=key;
-    el._hvtI18nHtmlVal=r[key];
+    if(!key) continue;
+    if(el._hvtI18nHtmlOrig===undefined) el._hvtI18nHtmlOrig=el.innerHTML;
+    var target=r[key]||el._hvtI18nHtmlOrig;
+    if(el._hvtI18nHtmlApplied===target) continue;
+    el.innerHTML=target;
+    el._hvtI18nHtmlApplied=target;
   }
 }
 
