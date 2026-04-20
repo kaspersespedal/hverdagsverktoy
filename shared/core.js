@@ -1172,7 +1172,11 @@ function initLawChapterNav(lawGroupId){
       var groupHdr=group.querySelector(':scope > .card-hdr');
       var navTop=parseFloat(nav.style.top)||off;
       var groupHdrTop=groupHdr?groupHdr.getBoundingClientRect().top:gRect.top;
-      if(gRect.bottom<off+44||gRect.top>window.innerHeight||groupHdrTop>navTop){
+      var isMFocus=document.body.classList.contains('mobile-focus-active')&&document.body.classList.contains('law-focus-chips');
+      // I law-focus-chips er groupHdr skjult (rect=0) og sticky holder chip-bar på plass — skjul bare hvis hele gruppen er ute av viewport
+      if(isMFocus){
+        if(gRect.bottom<off+44||gRect.top>window.innerHeight){nav.style.display='none';return;}
+      } else if(gRect.bottom<off+44||gRect.top>window.innerHeight||groupHdrTop>navTop){
         nav.style.display='none';return;
       }
       nav.style.display='';
@@ -1253,8 +1257,10 @@ function updateLawChapterNav(card){
           g._chapterNav.style.position='';g._chapterNav.style.top=chipTop+'px';
         }
         // Hide initially — scroll handler will reveal when header is scrolled past
+        // Men i law-focus-chips er groupHdr skjult via CSS, så hopp over hide-sjekken
         var groupHdr=g.querySelector(':scope > .card-hdr');
-        if(groupHdr&&groupHdr.getBoundingClientRect().top>chipTop){g._chapterNav.style.display='none';}
+        if(!isMF&&groupHdr&&groupHdr.getBoundingClientRect().top>chipTop){g._chapterNav.style.display='none';}
+        else g._chapterNav.style.display='';
         // Set nested card-hdr top dynamically below chip bar (only for OPEN cards)
         g._chipHdrTop=(chipTop+g._chapterNav.offsetHeight)+'px';
         g.querySelectorAll('.law-body > .info-card:not(.collapsed)').forEach(function(c){
