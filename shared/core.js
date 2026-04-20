@@ -1769,6 +1769,7 @@ function updateMortgageUI() {
     setText('bvl-l-vekst',r.bvlLVekst||'Boligprisvekst (%/år)');
     setText('bvl-l-leievekst',r.bvlLLeievekst||'Leievekst (%/år)');
     setText('bvl-l-avk',r.bvlLAvk||'Alt. avkastning EK (%/år)');
+    setText('bvl-l-lopetid',r.bvlLLopetid||'Nedbetalingstid lån (år)');
     setText('btn-calc-bvl',r.bvlBtnCalc||'Beregn →');
     setText('bvl-r-lbl',r.bvlRLbl||'Hva lønner seg over perioden');
     setText('bvl-r-eie-lbl',r.bvlREieLbl||'Total kostnad ved eie');
@@ -3466,7 +3467,7 @@ function calcMaxLan(){
       : (r.maxlanTipEk || 'Du er begrenset av egenkapital-kravet (Utlånsforskriften § 6). For å øke lånekapasiteten trenger du mer EK. Hver krone i ekstra EK gir 9 kr i økt lånekapasitet og 10 kr i økt boligbudsjett.');
     tip.innerHTML = msg;
   }
-  var _mlres=document.getElementById('maxlan-res');
+  var _mlres=document.getElementById('maxlan-res');if(!_mlres)return;
   var _mlwh=_mlres.classList.contains('hidden');
   _mlres.classList.remove('hidden');
   if(_mlwh)setTimeout(function(){scrollToEl(_mlres,'top');},80);
@@ -3564,7 +3565,7 @@ function calcBvl(){
       : (r.bvlTipLeie || 'Leie lønner seg i denne perioden — ofte fordi alternativ-avkastning på EK i fond gir mer enn boligprisvekst, eller fordi du selger før verdiøkning hentes inn. Vurder kortere tidsperspektiv eller flytting.');
     tip.innerHTML = msg;
   }
-  var _bvres=document.getElementById('bvl-res');
+  var _bvres=document.getElementById('bvl-res');if(!_bvres)return;
   var _bvwh=_bvres.classList.contains('hidden');
   _bvres.classList.remove('hidden');
   if(_bvwh)setTimeout(function(){scrollToEl(_bvres,'top');},80);

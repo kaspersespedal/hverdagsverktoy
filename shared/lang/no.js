@@ -465,7 +465,7 @@ REGIONS['no'] = {
     bvlLPris:'Kjøpspris bolig (kr)', bvlLEk:'Egenkapital (kr)', bvlLRente:'Lånerente (%)',
     bvlLLeie:'Månedlig leie i dag (kr)', bvlLeieHint:'For en tilsvarende bolig',
     bvlLFelleskost:'Felleskostnader/mnd (kr)', bvlLVedlikehold:'Vedlikehold (% av verdi/år)',
-    bvlLAar:'Tidsperiode (år)', bvlLVekst:'Boligprisvekst (%/år)', bvlLLeievekst:'Leievekst (%/år)', bvlLAvk:'Alt. avkastning EK (%/år)',
+    bvlLAar:'Tidsperiode (år)', bvlLVekst:'Boligprisvekst (%/år)', bvlLLeievekst:'Leievekst (%/år)', bvlLAvk:'Alt. avkastning EK (%/år)', bvlLLopetid:'Nedbetalingstid lån (år)',
     bvlBtnCalc:'Beregn →',
     bvlRLbl:'Hva lønner seg over perioden', bvlREieLbl:'Total kostnad ved eie', bvlRLeieLbl:'Total kostnad ved leie', bvlRBeLbl:'Break-even', bvlRFormueLbl:'Formue ved eie',
     bvlVinnerEie:'Eie lønner seg', bvlVinnerLeie:'Leie lønner seg', bvlSubOver:'Over', bvlSubAr:'år', bvlBeRask:'Innen perioden',
