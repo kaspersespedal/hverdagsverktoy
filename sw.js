@@ -1,5 +1,5 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v87';
+const CACHE_NAME = 'hverdagsverktoy-v89';
 
 // Files to cache for offline use
 // Fonts are served from fonts.bunny.net (see index.html <link rel="preload">);
