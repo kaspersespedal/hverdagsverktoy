@@ -5258,8 +5258,18 @@ function exitCategoryFocus(){
 }
 // Hide all info-cards in target's column, except target + its ancestors + descendants
 function _hideCardSiblingsDesktop(card){
-  var col=card.closest('.calc-grid > div, .calc-grid > .right-col')||card.closest('.calc-grid');
+  var grid=card.closest('.calc-grid');
+  var col=card.closest('.calc-grid > div, .calc-grid > .right-col')||grid;
   if(!col) return;
+  // Skjul andre .calc-grid > div-søsken som ikke inneholder det fokuserte kortet
+  // (f.eks. /skatt har separat Skatteloven-kort utenfor main-calc-kortet)
+  if(grid){
+    Array.from(grid.children).forEach(function(sib){
+      if(sib===col||sib.contains(card)) sib.removeAttribute('data-desktop-hidden');
+      else sib.setAttribute('data-desktop-hidden','true');
+    });
+  }
+  // Skjul info-card-søsken innen aktiv kolonne (eksisterende adferd)
   col.querySelectorAll('.info-card').forEach(function(ic){
     if(ic===card||ic.contains(card)||card.contains(ic)) ic.removeAttribute('data-desktop-card-hidden');
     else ic.setAttribute('data-desktop-card-hidden','true');
