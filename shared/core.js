@@ -14,11 +14,15 @@ function checkRatesAge(){
   return {stale:monthsDiff>=6,months:monthsDiff};
 }
 
+// Only calculators that depend on Norwegian tax rates get the "Satser: Inntektsåret" disclaimer.
+const TAX_RESULT_IDS = new Set(['s-res','uttak-res','utdeling-res','formue-res','reise-res','v-res','adj-res','aga-res','lvu-res','avs-res','valgevinst-res','lonn-res']);
+
 function injectRatesDisclaimer(resEl){
   if(!resEl)return;
   // Update-safe: remove any existing disclaimer so language-change re-injects fresh text
   var _oldDisc=resEl.querySelector('.rates-disc');
   if(_oldDisc)_oldDisc.remove();
+  if(!TAX_RESULT_IDS.has(resEl.id))return;
   var r=R();var age=checkRatesAge();
   var updatedStr=RATES_LAST_UPDATED.split('-').reverse().join('.');
   var txt=(r.ratesDisclaimer||'Satser: Inntektsåret')+' '+RATES_YEAR+' · '+(r.ratesUpdated||'Sist oppdatert')+' '+updatedStr;
@@ -35,7 +39,7 @@ function injectRatesDisclaimer(resEl){
     muts.forEach(function(m){
       if(m.type==='attributes'&&m.attributeName==='class'){
         var el=m.target;
-        if(el.classList.contains('result-sec')&&!el.classList.contains('hidden')&&el.id!=='bil-res'){
+        if(el.classList.contains('result-sec')&&!el.classList.contains('hidden')){
           injectRatesDisclaimer(el);
         }
       }
