@@ -314,7 +314,7 @@ REGIONS['no'] = {
     mobileSwitch:'Bytt kalkulator', mobileFocus:'Fokus', mobileFocusExit:'Lukk',
     focusLabel:'Fokus', focusClose:'Lukk fokus', focusSwitchCalc:'Bytt kalkulator',
     toolH1Skatt:'Skattekalkulator 2026 — lønn, trinnskatt, utbytte og effektiv skatt', toolH1Kalk:'Kalkulator — enkel, valuta, finansiell og vitenskapelig', toolH1Bolig:'Boliglånskalkulator — månedlig betaling, BSU og totale kostnader', toolH1Avg:'Avgiftskalkulator — MVA, arbeidsgiveravgift og andre avgifter', toolH1Sel:'Selskapsformer i Norge — AS, ENK, ANS, DA og KS', toolH1Per:'Personlig økonomi — bilkostnad, budsjett og lønnsomhet',
-    a11yLang:'Velg språk', a11yTheme:'Velg tema', closeHelp:'Skjul veiledning',
+    a11yLang:'Velg språk', a11yTheme:'Velg tema', calcHelpAria:'Vis veiledning', closeHelp:'Skjul veiledning',
     btnCsv:'Last ned CSV',
     csvGenerated:'Generert av Hverdagsverktøy',
     csvAboTitle:'Abonnementsoversikt', csvAboService:'Tjeneste', csvAboAmount:'Beløp/mnd', csvAboTotalMnd:'Totalt per måned', csvAboTotalAar:'Totalt per år', csvAboCount:'Antall abonnementer', csvAboAvg:'Snitt per abonnement',

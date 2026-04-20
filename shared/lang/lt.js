@@ -218,7 +218,7 @@ REGIONS['lt'] = {
     mobileSwitch:'Keisti skaičiuotuvą', mobileFocus:'Fokusas', mobileFocusExit:'Uždaryti',
     focusLabel:'Fokusas', focusClose:'Uždaryti fokusą', focusSwitchCalc:'Keisti skaičiuotuvą',
     toolH1Skatt:'Mokesčių skaičiuoklė 2026 — atlyginimas, progresinis mokestis, dividendai ir efektyvusis mokestis', toolH1Kalk:'Skaičiuoklė — paprasta, valiutų, finansinė ir mokslinė', toolH1Bolig:'Būsto paskolos skaičiuoklė — mėnesinė įmoka, BSU ir bendros išlaidos', toolH1Avg:'Mokesčių skaičiuoklė — PVM, darbdavio mokestis ir kiti mokesčiai', toolH1Sel:'Įmonių formos Norvegijoje — AS, ENK, ANS, DA ir KS', toolH1Per:'Asmeniniai finansai — automobilio išlaidos, biudžetas ir pelningumas',
-    a11yLang:'Pasirinkite kalbą', a11yTheme:'Pasirinkite temą',
+    a11yLang:'Pasirinkite kalbą', a11yTheme:'Pasirinkite temą', calcHelpAria:'Rodyti vadovą',
     btnCsv:'Atsisiųsti CSV',
     csvGenerated:'Sugeneravo Hverdagsverktøy',
     csvAboTitle:'Prenumeratų apžvalga', csvAboService:'Paslauga', csvAboAmount:'Suma/mėn.', csvAboTotalMnd:'Iš viso per mėnesį', csvAboTotalAar:'Iš viso per metus', csvAboCount:'Prenumeratų skaičius', csvAboAvg:'Vidurkis',

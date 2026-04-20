@@ -218,7 +218,7 @@ REGIONS['pl'] = {
     mobileSwitch:'Zmień kalkulator', mobileFocus:'Skupienie', mobileFocusExit:'Zamknij',
     focusLabel:'Skupienie', focusClose:'Zamknij skupienie', focusSwitchCalc:'Zmień kalkulator',
     toolH1Skatt:'Kalkulator podatkowy 2026 — wynagrodzenie, podatek progresywny, dywidendy i efektywny podatek', toolH1Kalk:'Kalkulator — prosty, walutowy, finansowy i naukowy', toolH1Bolig:'Kalkulator kredytu hipotecznego — miesięczna rata, BSU i całkowite koszty', toolH1Avg:'Kalkulator opłat — VAT, podatek pracodawcy i inne opłaty', toolH1Sel:'Formy spółek w Norwegii — AS, ENK, ANS, DA i KS', toolH1Per:'Finanse osobiste — koszt samochodu, budżet i rentowność',
-    a11yLang:'Wybierz język', a11yTheme:'Wybierz motyw',
+    a11yLang:'Wybierz język', a11yTheme:'Wybierz motyw', calcHelpAria:'Pokaż przewodnik',
     btnCsv:'Pobierz CSV',
     csvGenerated:'Wygenerowano przez Hverdagsverktøy',
     csvAboTitle:'Przegląd subskrypcji', csvAboService:'Usługa', csvAboAmount:'Kwota/mies.', csvAboTotalMnd:'Razem miesięcznie', csvAboTotalAar:'Razem rocznie', csvAboCount:'Liczba subskrypcji', csvAboAvg:'Średnia na subskrypcję',

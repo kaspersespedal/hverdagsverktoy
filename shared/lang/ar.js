@@ -219,7 +219,7 @@ REGIONS['ar'] = {
     mobileSwitch:'تغيير الآلة الحاسبة', mobileFocus:'تركيز', mobileFocusExit:'إغلاق',
     focusLabel:'تركيز', focusClose:'إغلاق التركيز', focusSwitchCalc:'تغيير الآلة الحاسبة',
     toolH1Skatt:'حاسبة الضرائب 2026 — الراتب، الضريبة التصاعدية، توزيعات الأرباح والضريبة الفعلية', toolH1Kalk:'حاسبة — بسيطة، عملة، مالية وعلمية', toolH1Bolig:'حاسبة قرض السكن — الدفعة الشهرية، BSU وإجمالي التكاليف', toolH1Avg:'حاسبة الرسوم — ض.ق.م، ضريبة صاحب العمل ورسوم أخرى', toolH1Sel:'أشكال الشركات في النرويج — AS، ENK، ANS، DA و KS', toolH1Per:'المالية الشخصية — تكلفة السيارة، الميزانية والربحية',
-    a11yLang:'اختر اللغة', a11yTheme:'اختر السمة',
+    a11yLang:'اختر اللغة', a11yTheme:'اختر السمة', calcHelpAria:'إظهار الدليل',
     btnCsv:'تحميل CSV',
     csvGenerated:'تم إنشاؤه بواسطة Hverdagsverktøy',
     csvAboTitle:'نظرة عامة على الاشتراكات', csvAboService:'الخدمة', csvAboAmount:'المبلغ/شهر', csvAboTotalMnd:'الإجمالي شهريًا', csvAboTotalAar:'الإجمالي سنويًا', csvAboCount:'عدد الاشتراكات', csvAboAvg:'المتوسط لكل اشتراك',

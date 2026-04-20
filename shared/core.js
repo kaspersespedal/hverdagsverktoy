@@ -212,7 +212,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v42';
+    s.src = '/shared/lang/' + code + '.js?v=v43';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -402,7 +402,7 @@ function updateAll() {
   try{updateHero();}catch(e){_uiErr('updateHero',e);}
   try{updateTabs();}catch(e){_uiErr('updateTabs',e);}
   try{var _th=document.getElementById('tool-h1');if(_th){var _p=location.pathname,_rh=R(),_kh=_p.indexOf('/skatt')>=0?'toolH1Skatt':_p.indexOf('/kalkulator')>=0?'toolH1Kalk':_p.indexOf('/boliglan')>=0?'toolH1Bolig':_p.indexOf('/avgift')>=0?'toolH1Avg':_p.indexOf('/selskap')>=0?'toolH1Sel':_p.indexOf('/personlig')>=0?'toolH1Per':null;if(_kh&&_rh[_kh])_th.textContent=_rh[_kh];}}catch(e){_uiErr('toolH1',e);}
-  try{var _ra=R();var _rc=document.querySelector('.region-cur');if(_rc)_rc.setAttribute('aria-label',_ra.a11yLang||'Velg sprak');var _tp=document.getElementById('theme-picker');if(_tp){var _tb=_tp.querySelector('button');if(_tb)_tb.setAttribute('aria-label',_ra.a11yTheme||'Velg tema');}}catch(e){_uiErr('a11yLbl',e);}
+  try{var _ra=R();var _rc=document.querySelector('.region-cur');if(_rc)_rc.setAttribute('aria-label',_ra.a11yLang||'Velg sprak');var _tp=document.getElementById('theme-picker');if(_tp){var _tb=_tp.querySelector('button');if(_tb)_tb.setAttribute('aria-label',_ra.a11yTheme||'Velg tema');}var _chT=_ra.calcHelpAria||'Vis veiledning';document.querySelectorAll('.calc-help-btn').forEach(function(b){b.setAttribute('aria-label',_chT);b.title=_chT;});}catch(e){_uiErr('a11yLbl',e);}
   try{var _si=document.getElementById('search-input');if(_si){var _r=R();_si.placeholder=_r.searchPlaceholder||'Søk etter verktøy eller begrep...';}}catch(e){}
   // Scroll-end class toggle for mask-image fade
   try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(!_cnav._hvtScrollBound){_cnav._hvtScrollBound=true;_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});}

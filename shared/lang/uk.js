@@ -217,7 +217,7 @@ REGIONS['uk'] = {
     mobileSwitch:'Змінити калькулятор', mobileFocus:'Фокус', mobileFocusExit:'Закрити',
     focusLabel:'Фокус', focusClose:'Закрити фокус', focusSwitchCalc:'Змінити калькулятор',
     toolH1Skatt:'Калькулятор податків 2026 — зарплата, прогресивний податок, дивіденди та ефективний податок', toolH1Kalk:'Калькулятор — простий, валютний, фінансовий і науковий', toolH1Bolig:'Іпотечний калькулятор — щомісячний платіж, BSU та загальні витрати', toolH1Avg:'Калькулятор платежів — ПДВ, податок роботодавця та інші платежі', toolH1Sel:'Форми компаній у Норвегії — AS, ENK, ANS, DA та KS', toolH1Per:'Особисті фінанси — витрати на авто, бюджет та рентабельність',
-    a11yLang:'Обрати мову', a11yTheme:'Обрати тему',
+    a11yLang:'Обрати мову', a11yTheme:'Обрати тему', calcHelpAria:'Показати посібник',
     btnCsv:'Завантажити CSV',
     csvGenerated:'Згенеровано Hverdagsverktøy',
     csvAboTitle:'Огляд підписок', csvAboService:'Сервіс', csvAboAmount:'Сума/міс.', csvAboTotalMnd:'Всього на місяць', csvAboTotalAar:'Всього на рік', csvAboCount:'Кількість підписок', csvAboAvg:'Середня на підписку',

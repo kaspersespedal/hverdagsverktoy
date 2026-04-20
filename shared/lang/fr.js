@@ -219,7 +219,7 @@ REGIONS['fr'] = {
     mobileSwitch:'Changer de calculatrice', mobileFocus:'Focus', mobileFocusExit:'Fermer',
     focusLabel:'Focus', focusClose:'Fermer le focus', focusSwitchCalc:'Changer de calculatrice',
     toolH1Skatt:'Calculateur d’impôt 2026 — salaire, impôt par tranches, dividendes et impôt effectif', toolH1Kalk:'Calculateur — standard, devise, financier et scientifique', toolH1Bolig:'Calculateur de prêt immobilier — mensualité, BSU et coûts totaux', toolH1Avg:'Calculateur de taxes — TVA, cotisations patronales et autres taxes', toolH1Sel:'Formes d’entreprise en Norvège — AS, ENK, ANS, DA et KS', toolH1Per:'Finances personnelles — coût de la voiture, budget et rentabilité',
-    a11yLang:'Choisir la langue', a11yTheme:'Choisir le thème',
+    a11yLang:'Choisir la langue', a11yTheme:'Choisir le thème', calcHelpAria:'Afficher le guide',
     btnCsv:'Télécharger CSV',
     csvGenerated:'Généré par Hverdagsverktøy',
     csvAboTitle:'Aperçu des abonnements', csvAboService:'Service', csvAboAmount:'Montant/mois', csvAboTotalMnd:'Total mensuel', csvAboTotalAar:'Total annuel', csvAboCount:'Nombre d\'abonnements', csvAboAvg:'Moyenne par abonnement',
@@ -849,7 +849,7 @@ REGIONS['fr'] = {
     },
     // /personlig card titles, descs & category headers (FR)
     fblTitle:'Prêt à la consommation', fblDesc:"Ce que coûte vraiment le prêt — le taux nominal n'est pas toute la vérité",
-    sykTitle:'Indemnité maladie', sykDesc:'Ce que vous touchez réellement en arrêt long — et où NAV s\\'arrête',
+    sykTitle:'Indemnité maladie', sykDesc:"Ce que vous touchez réellement en arrêt long — et où NAV s'arrête",
     famTitle:'Déduction parentale', famDesc:'Coût net après déduction fiscale et remise fratrie',
     investTitle:'Actions', investDesc:'Comment fonctionnent les actions — conseils, risques et termes',
     kontoTitle:'Fonds et ASK', kontoDesc:"Ce que sont les fonds — et pourquoi ASK est un compte intelligent pour les fonds d'actions",

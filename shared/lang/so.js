@@ -216,7 +216,7 @@ REGIONS['so'] = {
     mobileSwitch:'Bedel xisaabiyaha', mobileFocus:'Diirad', mobileFocusExit:'Xir',
     focusLabel:'Diirad', focusClose:'Xir diirad', focusSwitchCalc:'Bedel xisaabiyaha',
     toolH1Skatt:'Xisaabiyaha canshuurta 2026 — mushaharka, canshuurta darajada, faa\'iidooyinka iyo canshuurta dhabta ah', toolH1Kalk:'Xisaabiyaha — aasaasi, lacag, maaliyadeed iyo saynis', toolH1Bolig:'Xisaabiyaha amaahda guriga — bixinta bishii, BSU iyo kharashyada guud', toolH1Avg:'Xisaabiyaha canshuurta — MVA, canshuurta shaqada iyo canshuuro kale', toolH1Sel:'Qaababka shirkadaha Norway — AS, ENK, ANS, DA iyo KS', toolH1Per:'Maaliyadda shaqsiga — kharashka baabuurka, miisaaniyadda iyo faa\'iido-raadinta',
-    a11yLang:'Dooro luuqada', a11yTheme:'Dooro mawduuca',
+    a11yLang:'Dooro luuqada', a11yTheme:'Dooro mawduuca', calcHelpAria:'Muuji hagaha',
     btnCsv:'Soo deji CSV',
     csvGenerated:'Waxaa sameeyey Hverdagsverktøy',
     csvAboTitle:'Dulmar rukunka', csvAboService:'Adeegga', csvAboAmount:'Lacag/bilood', csvAboTotalMnd:'Wadarta bishii', csvAboTotalAar:'Wadarta sanadkii', csvAboCount:'Tirada rukunka', csvAboAvg:'Celceliska',
