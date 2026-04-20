@@ -265,6 +265,8 @@ REGIONS['no'] = {
     utdelingLOverskudd:'Overskudd før skatt (kr)', utdelingHintOverskudd:'Det selskapet har tjent før skatt trekkes. Eksempel: 500 000 eller 1 000 000 kr.',
     utdelingLSkjerming:'Skjermingsfradrag (kr)', utdelingHintSkjerming:'La stå 0 hvis du er usikker. Skjermingsfradraget reduserer utbytteskatten — beregnes av Skatteetaten basert på det du har skutt inn i selskapet.',
     utdelingBtn:'Beregn effektiv skatt →', utdelingRLbl:'Total skattebelastning',
+    utdelingAsHdrSelskap:'Selskapsnivå', utdelingAsHdrAksjonaer:'Aksjonærnivå', utdelingAsHdrSamlet:'Samlet',
+    utdelingEnkHdrAlm:'Alminnelig inntekt', utdelingEnkHdrPerson:'Personinntekt', utdelingEnkHdrSamlet:'Samlet',
     utdelingROverskudd:'Overskudd før skatt', utdelingRSelskap:'Selskapsskatt (22 %)',
     utdelingREtter:'Etter selskapsskatt', utdelingRSkjerming:'− Skjermingsfradrag',
     utdelingROppjustert:'Oppjustert utbytte (×1,72)', utdelingRUtbytte:'Utbytteskatt aksjonær (22 %)',

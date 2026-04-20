@@ -2347,6 +2347,14 @@ function updateUttakUI() {
   setText('utdeling-hint-skjerming', r.utdelingHintSkjerming || 'Leave as 0 if unsure. The shielding deduction reduces dividend tax — calculated by the Tax Administration based on capital you contributed.');
   setText('btn-calc-utdeling', r.utdelingBtn || 'Calculate effective tax →');
   setText('utdeling-r-lbl', r.utdelingRLbl || 'Total tax burden');
+  // AS section headers
+  setText('utdeling-as-hdr-selskap', r.utdelingAsHdrSelskap || 'Company level');
+  setText('utdeling-as-hdr-aksjonaer', r.utdelingAsHdrAksjonaer || 'Shareholder level');
+  setText('utdeling-as-hdr-samlet', r.utdelingAsHdrSamlet || 'Combined');
+  // ENK section headers
+  setText('utdeling-enk-hdr-alm', r.utdelingEnkHdrAlm || 'Ordinary income');
+  setText('utdeling-enk-hdr-person', r.utdelingEnkHdrPerson || 'Personal income');
+  setText('utdeling-enk-hdr-samlet', r.utdelingEnkHdrSamlet || 'Combined');
   // AS labels
   setText('utdeling-rl-overskudd', r.utdelingROverskudd || 'Pre-tax profit');
   setText('utdeling-rl-selskap', r.utdelingRSelskap || 'Corporate tax (22%)');
