@@ -476,6 +476,7 @@ REGIONS['so'] = {
 
     ccCurrNames:['Kroonka Norwayga','Yuurada','Doolarka Maraykanka','Bowndha Ingiriiska','Kroonka Iswiidhan','Kroonka Danishka','Zloty-ga Booland','Faranka Iswiisarland','Yenta Jabaan','Yuanta Shiinaha','Doolarka Kanada','Doolarka Awstaraaliya','Ruubiga Hindiya','Lirada Turkiga','Reaalka Baraasiil'],
     searchPlaceholder:'Raadi qalabyo, fikrado ama sharciyada…',
+    searchKbdHint:'Taabo / si aad u xulato raadinta',
     searchPopular:'La soo jeediyey',
     searchNoResults:'Natiijo la ma helin',
     searchMissing:'Ma wax baa ka maqan?',

@@ -477,6 +477,7 @@ REGIONS['lt'] = {
 
     ccCurrNames:['Norvegų krona','Euras','JAV doleris','Britų svaras','Švedų krona','Danų krona','Lenkų zlotas','Šveicarų frankas','Japonų jena','Kinų juanis','Kanados doleris','Australijos doleris','Indijos rupija','Turkų lira','Brazilijos realas'],
     searchPlaceholder:'Ieškokite įrankių, sąvokų ar įstatymų…',
+    searchKbdHint:'Paspauskite /, kad aktyvuotumėte paiešką',
     searchPopular:'Siūlomi',
     searchNoResults:'Rezultatų nerasta',
     searchMissing:'Kažko trūksta?',

@@ -510,12 +510,13 @@ function initSearch(){
   wrap.id = 'site-search';
 
   var placeholder = T('searchPlaceholder','Søk etter verktøy eller begrep...');
+  var kbdHint = T('searchKbdHint','Trykk / for å fokusere søket');
 
   wrap.innerHTML =
     '<div class="search-box">' +
       '<svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
       '<input type="text" id="search-input" placeholder="'+placeholder+'" autocomplete="off" spellcheck="false">' +
-      '<kbd class="search-kbd">/</kbd>' +
+      '<kbd class="search-kbd" title="'+kbdHint+'" aria-label="'+kbdHint+'">/</kbd>' +
     '</div>' +
     '<div class="search-dropdown" id="search-dropdown"></div>' +
     '<div class="search-suggestions" id="search-suggestions"></div>';

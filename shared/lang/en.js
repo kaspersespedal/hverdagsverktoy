@@ -481,6 +481,7 @@ REGIONS['en'] = {
     studieDisclaimer:'* Based on Lånekassen rates 2025–2026. Actual grant share depends on passed credits and income/assets. Annuity loan with 18 kr term fee (0 kr with eFaktura).',
     ccCurrNames:['Norwegian krone','Euro','US Dollar','British pound','Swedish krona','Danish krone','Polish zloty','Swiss franc','Japanese yen','Chinese yuan','Canadian dollar','Australian dollar','Indian rupee','Turkish lira','Brazilian real'],
     searchPlaceholder:'Search for tools, concepts or laws…',
+    searchKbdHint:'Press / to focus search',
     searchPopular:'Suggested',
     searchNoResults:'No results',
     searchMissing:'Missing something?',

@@ -478,6 +478,7 @@ REGIONS['zh'] = {
     studieDisclaimer:'* 基于Lånekassen 2025-2026年标准。实际助学金比例取决于通过学分和收入/资产。等额年金贷款，手续费18 kr（eFaktura为0 kr）。',
     ccCurrNames:['挪威克朗','欧元','美元','英镑','瑞典克朗','丹麦克朗','波兰兹罗提','瑞士法郎','日元','人民币','加拿大元','澳大利亚元','印度卢比','土耳其里拉','巴西雷亚尔'],
     searchPlaceholder:'搜索工具、概念或法律…',
+    searchKbdHint:'按 / 键聚焦搜索框',
     searchPopular:'推荐',
     searchNoResults:'无结果',
     searchMissing:'缺少什么？',

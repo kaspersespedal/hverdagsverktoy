@@ -700,6 +700,7 @@ REGIONS['fr'] = {
       +'</div>',
 
     searchPlaceholder:'Rechercher des outils, concepts ou lois…',
+    searchKbdHint:'Appuyez sur / pour accéder à la recherche',
     searchPopular:'Suggestions',
     searchNoResults:'Aucun résultat',
     searchMissing:'Il manque quelque chose ?',
