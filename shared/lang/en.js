@@ -422,7 +422,7 @@ REGIONS['en'] = {
       'Commuter deduction: If you live more than 37 km from work you may be entitled to a deduction. Use the commuter deduction calculator!',
       'Interest deduction: You get 22% of interest expenses back on your tax. Check that all loans are included in your tax return.',
       'Trade union: Max 8 700 kr deduction. Check that the amount is correctly pre-filled.',
-      'BSU: 10% tax credit (max 2 750 kr/year). Applies until you turn 34 and do not own a home.',
+      'BSU: 10% tax credit (max 2 750 kr/year). Applies through the year you turn 33, if you do not own a home.',
       'The childcare deduction for daycare/SFO was abolished from 2023, but check if you have other child-related deductions.',
       'Donation deduction: Deduction for gifts over 500 kr to approved organisations, max 25 000 kr/year.',
       'Home office: Flat deduction of 2 240 kr/year without documentation, or actual costs with documentation.',

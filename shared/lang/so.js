@@ -375,7 +375,7 @@ REGIONS['so'] = {
       'Jarriitaanka safarka: Haddii aad ka fogaatay 37 km shaqada, waxaad xaq u yeelan kartaa jarriitaan. Isticmaal xisaabiyaha jarriitaanka safarka!',
       'Jarriitaanka ribada: Waxaad heshaa 22% kharashka ribada oo dib laguu soo celiyo canshuurta. Hubi in deymaha oo dhan ku jiraan bayaankaaga.',
       'Ururka shaqaalaha: Ugu badnaan 8 700 kr jarriitaan. Hubi in qaddarka si sax ah horay loogu buuxiyey.',
-      'BSU: 10% cafis canshuur (ugu badnaan 2 750 kr/sannadkii). Waxay dhaqan gashaa ilaa 34 jir haddii aanad guri lahayn.',
+      'BSU: 10% cafis canshuur (ugu badnaan 2 750 kr/sannadkii). Waxay dhaqan gashaa ilaa dhammaadka sannadka aad 33 jirsato, haddii aanad guri lahayn.',
       'Jarriitaanka daryeelka carruurta xanaanada/SFO waa la joojiyay 2023, laakiin hubi jarriitaanada kale ee la xiriira carruurta.',
       'Jarriitaanka deeqda: Jarriitaan deeqo ka badan 500 kr oo la siiyo ururrada la ansixiyey, ugu badnaan 25 000 kr/sannadkii.',
       'Xafiiska guriga: Jarriitaan go\'an 2 240 kr/sannadkii oo aan dukumeenti lahayn, ama kharashka dhabta ah oo dukumeenti leh.',

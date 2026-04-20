@@ -435,7 +435,7 @@ REGIONS['no'] = {
       'Reisefradrag: Bor du mer enn 27 km fra jobb kan du ha krav på fradrag. Bruk reisefradragskalkulatoren!',
       'Rentefradrag: Du får 22% av renteutgifter tilbake på skatten. Sjekk at alle lån er med i skattemeldingen.',
       'Fagforening: Maks 8 700 kr i fradrag. Sjekk at beløpet er forhåndsutfylt korrekt.',
-      'BSU: 10% skattefradrag (maks 2 750 kr/år). Gjelder til du fyller 34 år og ikke eier bolig.',
+      'BSU: 10% skattefradrag (maks 2 750 kr/år). Gjelder t.o.m. året du fyller 33 år og ikke eier bolig.',
       'Foreldrefradrag: Dokumenterte barnepass-kostnader (barnehage/SFO) for barn under 12 år — maks 15 000 kr for ett barn + 10 000 kr per ytterligere barn (2026).',
       'Gavefradrag: Fradrag for gaver over 500 kr til godkjente organisasjoner, maks 25 000 kr/år.',
       'Hjemmekontor: Fast fradrag på 2 240 kr/år uten dokumentasjon, eller faktiske kostnader med dokumentasjon.',

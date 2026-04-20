@@ -363,7 +363,7 @@ REGIONS['lt'] = {
       'Kelionės atskaitymas: Jei gyvenate toliau nei 37 km nuo darbo, galite turėti teisę į atskaitymą. Naudokite kelionės atskaitymo skaičiuotuvą!',
       'Palūkanų atskaitymas: Gaunate 22% palūkanų išlaidų grąžą mokesčiuose. Patikrinkite, ar visos paskolos įtrauktos į deklaraciją.',
       'Profsąjunga: Maks. 8 700 kr atskaitymas. Patikrinkite, ar suma teisingai iš anksto užpildyta.',
-      'BSU: 10% mokesčių kreditas (maks. 2 750 kr/metus). Galioja iki 34 metų, jei neturite būsto.',
+      'BSU: 10% mokesčių kreditas (maks. 2 750 kr/metus). Galioja iki metų, kai sueina 33 metai, jei neturite būsto.',
       'Vaikų priežiūros atskaitymas darželyje/SFO panaikintas nuo 2023, bet patikrinkite kitus su vaikais susijusius atskaitymus.',
       'Aukojimo atskaitymas: Atskaitymas už aukas virš 500 kr patvirtintoms organizacijoms, maks. 25 000 kr/metus.',
       'Namų biuras: Fiksuotas atskaitymas 2 240 kr/metus be dokumentų arba faktinės išlaidos su dokumentais.',

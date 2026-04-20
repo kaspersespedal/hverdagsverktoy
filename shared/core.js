@@ -4109,7 +4109,7 @@ function calcAdj() {
 // UTTAKSKALKULATOR (sktl. § 5-2)
 // ═══════════════════════════════════════════════════════
 function uttakToggleFields() {
-  var _ut=document.getElementById('uttak-type');const type=_ut?_ut.value:'aksjer';
+  var _ut=document.getElementById('uttak-type');const type=_ut?_ut.value:'enk';
   var el1=document.getElementById('uttak-as-fields');if(el1)el1.classList.toggle('hidden', type !== 'as');
   var el2=document.getElementById('uttak-enk-fields');if(el2)el2.classList.toggle('hidden', type !== 'enk');
   var el3=document.getElementById('uttak-res');if(el3)el3.classList.add('hidden');
@@ -4121,7 +4121,7 @@ function calcUttak() {
   const _txt = (el, val) => { if(el) el.textContent = val; };
   const _disp = (el, d) => { if(el) el.style.display = d; };
   const _bg = (el, bg) => { if(el) el.style.background = bg; };
-  var _ut=document.getElementById('uttak-type');const type=_ut?_ut.value:'aksjer';
+  var _ut=document.getElementById('uttak-type');const type=_ut?_ut.value:'enk';
   const mv = parseNum('uttak-mv');
   const sv = parseNum('uttak-sv');
   if (mv <= 0) return;
