@@ -2642,7 +2642,7 @@ function updateFagkalkulatorUI() {
   repopulateSelect('aga-zone', r.agaZoneOpts, ['0.141','0.106','0.064','0.079','0.051','0']);
   repopulateSelect('aga-ferie', r.agaFerieOpts, ['0.102','0.12']);
   repopulateSelect('aga-otp', r.agaOtpOpts, ['0.02','0.05','0.07']);
-  repopulateSelect('avs-group', r.avsGroupOpts, ['0.30','0.20','0.24','0.20','0.14','0.12','0.05','0.04','0.02','0.10']);
+  repopulateSelect('avs-group', r.avsGroupOpts, ['a-0.30','b-0.20','c-0.24','d-0.20','e-0.14','f-0.12','g-0.05','h-0.04','i-0.02','j-0.10']);
   repopulateSelect('ferie-type', r.ferieTypeOpts, ['0.102','0.12']);
   repopulateSelect('pensjon-otp', r.pensjonOtpOpts, ['0.02','0.05','0.07']);
   repopulateSelect('lvu-zone', r.lvuZoneOpts, ['0.141','0.106','0.064','0.079','0.051','0']);
@@ -4629,7 +4629,7 @@ function avsLifeChanged(){var life=Math.max(1,+(document.getElementById('avs-lif
 function calcAvs(skipScroll){
   var price=parseNum('avs-price');if(price<=0)return;
   var r=R();var mode=window.avsMode||'skatt';
-  var taxRate=+document.getElementById('avs-group').value;
+  var taxRate=parseFloat(String(document.getElementById('avs-group').value).split('-').pop())||0.20;
   var regPct=Math.max(0.1,+(document.getElementById('avs-reg-pct')||{value:10}).value||10)/100;
   var scrapPct=Math.max(0,Math.min(100,+(document.getElementById('avs-scrap')||{value:0}).value||0))/100;
   var scrapValue=price*scrapPct;var depBase=price-scrapValue;
