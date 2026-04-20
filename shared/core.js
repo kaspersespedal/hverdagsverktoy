@@ -4492,10 +4492,13 @@ function bcPress(k){
 const bkspSVG = `<svg width="20" height="16" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 1H8L1 9l7 8h13a1 1 0 001-1V2a1 1 0 00-1-1z"/><line x1="17" y1="6" x2="12" y2="12"/><line x1="12" y1="6" x2="17" y2="12"/></svg>`;
 function mkBtn(b, small){
   const el=document.createElement('button');
+  el.type='button';
   if(b.l==='⌫'){el.innerHTML=bkspSVG;el.style.cssText=bcBtnStyle(b.t,b.l,small)+'display:flex;align-items:center;justify-content:center;';}
   else{el.textContent=b.l;el.style.cssText=bcBtnStyle(b.t,b.l,small);}
-  el.onmouseenter=()=>{el.style.transform='translateY(-1px)';el.style.boxShadow='0 2px 8px rgba(14,40,110,.08)';};
-  el.onmouseleave=()=>{el.style.transform='translateY(0)';el.style.boxShadow='none';};
+  if(matchMedia('(hover:hover)').matches){
+    el.onmouseenter=()=>{el.style.transform='translateY(-1px)';el.style.boxShadow='0 2px 8px rgba(14,40,110,.08)';};
+    el.onmouseleave=()=>{el.style.transform='translateY(0)';el.style.boxShadow='none';};
+  }
   el.onclick=()=>bcPress(b.l);
   return el;
 }
