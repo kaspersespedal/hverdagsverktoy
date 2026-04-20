@@ -57,6 +57,7 @@
 
 
 
+
 <!-- Open Graph -->
 <meta property="og:title" content="Mokesčių skaičiuoklė – Hverdagsverktøy">
 <meta property="og:description" content="Nemokama norvegiška mokesčių skaičiuoklė — apskaičiuokite atlyginimą po mokesčių ir efektyvų mokesčių tarifą.">
@@ -69,7 +70,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
 
-<meta name="twitter:title" content="Skatt – Hverdagsverktøy">
+<meta name="twitter:title" content="Mokesčių skaičiuoklė – Hverdagsverktøy">
 <meta name="twitter:description" content="Nemokama norvegiška mokesčių skaičiuoklė — apskaičiuokite atlyginimą po mokesčių ir efektyvų mokesčių tarifą.">
 
 <!-- Favicon (inline SVG) -->
@@ -111,9 +112,9 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 .hvt-loading{opacity:0}.hvt-ready{opacity:1;transition:opacity .12s ease-out}
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
-<link rel="stylesheet" href="/shared/style.css?v=v113">
+<link rel="stylesheet" href="/shared/style.css?v=v119">
 <script>try{localStorage.setItem('hvt-lang','lt');}catch(e){}</script>
-<link rel="preload" href="/shared/core.js?v=v92" as="script">
+<link rel="preload" href="/shared/core.js?v=v93" as="script">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -363,7 +364,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
         <div class="card">
 
           <!-- Lønn etter skatt (collapsible) -->
-          <div id="sal-salary-card" class="info-card collapsed" style="margin-top:0;">
+          <div id="sal-salary-card" class="info-card collapsed" data-complexity="medium" style="margin-top:0;">
             <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
               <div>
                 <div class="card-title" id="sal-title">Lønn etter skatt <span style="font-size:11px;opacity:.5">▼</span></div>
@@ -433,11 +434,16 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
               <div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;" id="s-trinn-title">Trinnskatt Breakdown</div>
               <div class="rgrid" id="s-trinn-grid"></div>
             </div>
+            <!-- CTA: lenke til boliglanskalkulator fra skatt -->
+            <a href="/boliglan/#maxlan-wrapper" id="sal-cta-bolig" style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding:12px 14px;background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;text-decoration:none;color:var(--ink);font-size:13px;gap:12px;">
+              <div><strong id="sal-cta-title">Hva har du råd til å kjøpe?</strong><div id="sal-cta-desc" style="font-size:11.5px;color:var(--ink2);margin-top:2px;">Se maks lånebeløp og boligpris basert på inntekten din</div></div>
+              <span style="font-size:18px;color:var(--accent);">→</span>
+            </a>
           </div>
             </div><!-- /law-body -->
           </div><!-- /sal-salary-card -->
           <!-- Uttakskalkulator (collapsible) -->
-          <div id="sal-uttak-card" class="info-card collapsed">
+          <div id="sal-uttak-card" class="info-card collapsed" data-complexity="hard">
             <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
               <div>
                 <div class="card-title" id="uttak-title">Uttakskalkulator <span style="font-size:11px;opacity:.5">▼</span></div>
@@ -560,7 +566,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
             </div><!-- /law-body -->
           </div><!-- /sal-uttak-card -->
           <!-- Utdelingsmodellen calculator (collapsible) -->
-          <div id="sal-utdeling-card" class="info-card collapsed">
+          <div id="sal-utdeling-card" class="info-card collapsed" data-complexity="hard">
             <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
               <div>
                 <div class="card-title" id="utdeling-title">Effektiv skatt ved utdeling <span style="font-size:11px;opacity:.5">▼</span></div>
@@ -601,36 +607,54 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
                 <div class="rh-val" id="utdeling-r-val">–</div>
                 <div class="rh-sub" id="utdeling-r-sub">–</div>
               </div>
-              <!-- AS result grid -->
-              <div class="rgrid" id="utdeling-as-grid">
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-overskudd">Overskudd før skatt</div><div class="rt-val" id="utdeling-r-overskudd">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-selskap">Selskapsskatt (22 %)</div><div class="rt-val" id="utdeling-r-selskap">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-etter">Etter selskapsskatt</div><div class="rt-val" id="utdeling-r-etter">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-skjerming2">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-oppjustert">Oppjustert utbytte (×1,72)</div><div class="rt-val" id="utdeling-r-oppjustert">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-utbytte">Utbytteskatt aksjonær (22 %)</div><div class="rt-val" id="utdeling-r-utbytte">–</div></div>
-                <div class="rt" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;"><div class="rt-lbl" id="utdeling-rl-total" style="font-weight:700;">Total skatt (begge nivåer)</div><div class="rt-val" id="utdeling-r-total" style="font-weight:700;">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-netto">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-eff">–</div></div>
+              <!-- AS result — 3 sections: selskapsnivå / aksjonærnivå / samlet -->
+              <div id="utdeling-as-grid">
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-as-hdr-selskap">Selskapsnivå</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-overskudd">Overskudd før skatt</div><div class="rt-val" id="utdeling-r-overskudd">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-selskap">Selskapsskatt (22 %)</div><div class="rt-val" id="utdeling-r-selskap">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-etter">Etter selskapsskatt</div><div class="rt-val" id="utdeling-r-etter">–</div></div>
+                </div>
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-as-hdr-aksjonaer">Aksjonærnivå</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-skjerming2">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-oppjustert">Oppjustert utbytte (×1,72)</div><div class="rt-val" id="utdeling-r-oppjustert">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-utbytte">Utbytteskatt aksjonær (22 %)</div><div class="rt-val" id="utdeling-r-utbytte">–</div></div>
+                </div>
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-as-hdr-samlet">Samlet</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-total" style="font-weight:700;">Total skatt (begge nivåer)</div><div class="rt-val" id="utdeling-r-total" style="font-weight:700;">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-netto">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-eff">–</div></div>
+                </div>
               </div>
-              <!-- ENK result grid -->
-              <div class="rgrid hidden" id="utdeling-enk-grid">
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-overskudd">Overskudd (næringsinntekt)</div><div class="rt-val" id="utdeling-r-enk-overskudd">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-alm">Alminnelig inntektsskatt (22 %)</div><div class="rt-val" id="utdeling-r-enk-alm">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-enk-skjerming">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-person">= Beregnet personinntekt</div><div class="rt-val" id="utdeling-r-enk-person">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trygd">Trygdeavgift (10,8 %)</div><div class="rt-val" id="utdeling-r-enk-trygd">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trinn">Trinnskatt</div><div class="rt-val" id="utdeling-r-enk-trinn">–</div></div>
-                <div class="rt" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;"><div class="rt-lbl" id="utdeling-rl-enk-total" style="font-weight:700;">Total skatt</div><div class="rt-val" id="utdeling-r-enk-total" style="font-weight:700;">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-enk-netto">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-enk-eff">–</div></div>
+              <!-- ENK result — 3 sections: alminnelig / personinntekt / samlet -->
+              <div class="hidden" id="utdeling-enk-grid">
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-enk-hdr-alm">Alminnelig inntekt</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-overskudd">Overskudd (næringsinntekt)</div><div class="rt-val" id="utdeling-r-enk-overskudd">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-alm">Alminnelig inntektsskatt (22 %)</div><div class="rt-val" id="utdeling-r-enk-alm">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-enk-skjerming">–</div></div>
+                </div>
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-enk-hdr-person">Personinntekt</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-person">= Beregnet personinntekt</div><div class="rt-val" id="utdeling-r-enk-person">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trygd">Trygdeavgift (10,8 %)</div><div class="rt-val" id="utdeling-r-enk-trygd">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trinn">Trinnskatt</div><div class="rt-val" id="utdeling-r-enk-trinn">–</div></div>
+                </div>
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-enk-hdr-samlet">Samlet</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-total" style="font-weight:700;">Total skatt</div><div class="rt-val" id="utdeling-r-enk-total" style="font-weight:700;">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-enk-netto">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-enk-eff">–</div></div>
+                </div>
               </div>
             </div>
             </div><!-- /law-body -->
           </div><!-- /sal-utdeling-card -->
 
           <!-- Formueskatt-kalkulator -->
-          <div id="formue-wrapper" class="info-card collapsed">
+          <div id="formue-wrapper" class="info-card collapsed" data-complexity="medium">
             <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
               <div><div class="card-title" id="formue-title">Formueskatt <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="formue-desc">Beregn formueskatt med verdsettelsesrabatter</div></div>
             </button>
@@ -701,7 +725,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
           </div>
 
           <!-- Reisefradrag / pendlerfradrag -->
-          <div id="reise-wrapper" class="info-card collapsed">
+          <div id="reise-wrapper" class="info-card collapsed" data-complexity="medium">
             <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
               <div><div class="card-title" id="reise-title">Reisefradrag <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="reise-desc">Fradrag for reise mellom hjem og fast arbeidssted</div></div>
             </button>
@@ -848,8 +872,8 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 
 <!-- Language files now loaded dynamically by core.js -->
 <script>(function(){var S='<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none" aria-hidden="true"><path d="M3 6V3h3M13 6V3h-3M3 10v3h3M13 10v3h-3"/></svg>';var hs=document.querySelectorAll('.calc-grid .info-card > .card-hdr');for(var i=0;i<hs.length;i++){if(hs[i].querySelector(':scope > .focus-card-btn'))continue;var b=document.createElement('button');b.className='focus-card-btn';b.type='button';b.title='Fokus';b.setAttribute('aria-label','Fokus');b.innerHTML=S;hs[i].appendChild(b);}})();</script>
-<script defer src="/shared/core.js?v=v92"></script>
+<script defer src="/shared/core.js?v=v93"></script>
 <script defer src="/shared/search.js?v=v15"></script>
-<script defer src="/shared/lang/no.js?v=v35"></script>
+<script defer src="/shared/lang/no.js?v=v39"></script>
 </body>
 </html>

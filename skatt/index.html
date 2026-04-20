@@ -57,6 +57,7 @@
 
 
 
+
 <!-- Open Graph -->
 <meta property="og:title" content="Skatt – Hverdagsverktøy">
 <meta property="og:description" content="Beregn lønn etter skatt, trinnskatt, uttaksbeskatning og effektiv skatt ved utdeling. Kjører lokalt — ingen data samles inn.">
@@ -112,7 +113,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
 <link rel="stylesheet" href="/shared/style.css?v=v119">
-<link rel="preload" href="/shared/core.js?v=v92" as="script">
+<link rel="preload" href="/shared/core.js?v=v93" as="script">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -676,29 +677,47 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
                 <div class="rh-val" id="utdeling-r-val">–</div>
                 <div class="rh-sub" id="utdeling-r-sub">–</div>
               </div>
-              <!-- AS result grid -->
-              <div class="rgrid" id="utdeling-as-grid">
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-overskudd">Overskudd før skatt</div><div class="rt-val" id="utdeling-r-overskudd">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-selskap">Selskapsskatt (22 %)</div><div class="rt-val" id="utdeling-r-selskap">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-etter">Etter selskapsskatt</div><div class="rt-val" id="utdeling-r-etter">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-skjerming2">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-oppjustert">Oppjustert utbytte (×1,72)</div><div class="rt-val" id="utdeling-r-oppjustert">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-utbytte">Utbytteskatt aksjonær (22 %)</div><div class="rt-val" id="utdeling-r-utbytte">–</div></div>
-                <div class="rt" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;"><div class="rt-lbl" id="utdeling-rl-total" style="font-weight:700;">Total skatt (begge nivåer)</div><div class="rt-val" id="utdeling-r-total" style="font-weight:700;">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-netto">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-eff">–</div></div>
+              <!-- AS result — 3 sections: selskapsnivå / aksjonærnivå / samlet -->
+              <div id="utdeling-as-grid">
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-as-hdr-selskap">Selskapsnivå</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-overskudd">Overskudd før skatt</div><div class="rt-val" id="utdeling-r-overskudd">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-selskap">Selskapsskatt (22 %)</div><div class="rt-val" id="utdeling-r-selskap">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-etter">Etter selskapsskatt</div><div class="rt-val" id="utdeling-r-etter">–</div></div>
+                </div>
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-as-hdr-aksjonaer">Aksjonærnivå</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-skjerming2">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-oppjustert">Oppjustert utbytte (×1,72)</div><div class="rt-val" id="utdeling-r-oppjustert">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-utbytte">Utbytteskatt aksjonær (22 %)</div><div class="rt-val" id="utdeling-r-utbytte">–</div></div>
+                </div>
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-as-hdr-samlet">Samlet</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-total" style="font-weight:700;">Total skatt (begge nivåer)</div><div class="rt-val" id="utdeling-r-total" style="font-weight:700;">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-netto">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-eff">–</div></div>
+                </div>
               </div>
-              <!-- ENK result grid -->
-              <div class="rgrid hidden" id="utdeling-enk-grid">
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-overskudd">Overskudd (næringsinntekt)</div><div class="rt-val" id="utdeling-r-enk-overskudd">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-alm">Alminnelig inntektsskatt (22 %)</div><div class="rt-val" id="utdeling-r-enk-alm">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-enk-skjerming">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-person">= Beregnet personinntekt</div><div class="rt-val" id="utdeling-r-enk-person">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trygd">Trygdeavgift (10,8 %)</div><div class="rt-val" id="utdeling-r-enk-trygd">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trinn">Trinnskatt</div><div class="rt-val" id="utdeling-r-enk-trinn">–</div></div>
-                <div class="rt" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px;"><div class="rt-lbl" id="utdeling-rl-enk-total" style="font-weight:700;">Total skatt</div><div class="rt-val" id="utdeling-r-enk-total" style="font-weight:700;">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-enk-netto">–</div></div>
-                <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-enk-eff">–</div></div>
+              <!-- ENK result — 3 sections: alminnelig / personinntekt / samlet -->
+              <div class="hidden" id="utdeling-enk-grid">
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-enk-hdr-alm">Alminnelig inntekt</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-overskudd">Overskudd (næringsinntekt)</div><div class="rt-val" id="utdeling-r-enk-overskudd">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-alm">Alminnelig inntektsskatt (22 %)</div><div class="rt-val" id="utdeling-r-enk-alm">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-skjerming">− Skjermingsfradrag</div><div class="rt-val" id="utdeling-r-enk-skjerming">–</div></div>
+                </div>
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-enk-hdr-person">Personinntekt</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-person">= Beregnet personinntekt</div><div class="rt-val" id="utdeling-r-enk-person">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trygd">Trygdeavgift (10,8 %)</div><div class="rt-val" id="utdeling-r-enk-trygd">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-trinn">Trinnskatt</div><div class="rt-val" id="utdeling-r-enk-trinn">–</div></div>
+                </div>
+                <div style="margin:14px 0 8px;font-weight:500;font-size:12px;color:var(--ink3);letter-spacing:.3px;text-transform:uppercase;" id="utdeling-enk-hdr-samlet">Samlet</div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-total" style="font-weight:700;">Total skatt</div><div class="rt-val" id="utdeling-r-enk-total" style="font-weight:700;">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-netto">Netto til eier</div><div class="rt-val" id="utdeling-r-enk-netto">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="utdeling-rl-enk-eff">Effektiv skattesats</div><div class="rt-val" id="utdeling-r-enk-eff">–</div></div>
+                </div>
               </div>
             </div>
             </div><!-- /law-body -->
@@ -969,7 +988,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 
 <!-- Language files now loaded dynamically by core.js -->
 <script>(function(){var S='<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none" aria-hidden="true"><path d="M3 6V3h3M13 6V3h-3M3 10v3h3M13 10v3h-3"/></svg>';var hs=document.querySelectorAll('.calc-grid .info-card > .card-hdr');for(var i=0;i<hs.length;i++){if(hs[i].querySelector(':scope > .focus-card-btn'))continue;var b=document.createElement('button');b.className='focus-card-btn';b.type='button';b.title='Fokus';b.setAttribute('aria-label','Fokus');b.innerHTML=S;hs[i].appendChild(b);}})();</script>
-<script defer src="/shared/core.js?v=v92"></script>
+<script defer src="/shared/core.js?v=v93"></script>
 <script defer src="/shared/search.js?v=v15"></script>
 <script defer src="/shared/lang/no.js?v=v39"></script>
 </body>

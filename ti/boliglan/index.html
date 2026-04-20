@@ -59,6 +59,7 @@
 
 
 
+
 <!-- Open Graph -->
 <meta property="og:title" content="ካልኩለተር ብድሪ ገዛ – Hverdagsverktøy">
 <meta property="og:description" content="ናይ ኖርወይ ብድሪ ገዛ ካልኩለተር ብነጻ — ክፍሊትን ስትረስ ተስትን ኣረጋግጽ።">
@@ -71,7 +72,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
 
-<meta name="twitter:title" content="Boliglån – Hverdagsverktøy">
+<meta name="twitter:title" content="ካልኩለተር ብድሪ ገዛ – Hverdagsverktøy">
 <meta name="twitter:description" content="ናይ ኖርወይ ብድሪ ገዛ ካልኩለተር ብነጻ — ክፍሊትን ስትረስ ተስትን ኣረጋግጽ።">
 
 <!-- Favicon (inline SVG) -->
@@ -114,9 +115,9 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 .hvt-loading{opacity:0}.hvt-ready{opacity:1;transition:opacity .12s ease-out}
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
-<link rel="stylesheet" href="/shared/style.css?v=v113">
+<link rel="stylesheet" href="/shared/style.css?v=v119">
 <script>try{localStorage.setItem('hvt-lang','ti');}catch(e){}</script>
-<link rel="preload" href="/shared/core.js?v=v92" as="script">
+<link rel="preload" href="/shared/core.js?v=v93" as="script">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -242,10 +243,15 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
       <div class="right-col" style="gap:0;">
         <h2 class="section-title" id="sec-calculators" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:0 0 18px;padding-bottom:10px;border-bottom:2px solid color-mix(in srgb,var(--accent) 15%,transparent);">Kalkulatorer</h2>
         <div class="card">
-        <div id="mor-wrapper" class="info-card collapsed">
+        <div id="mor-wrapper" class="info-card collapsed" data-complexity="medium">
         <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="mor-title">Boliglånskalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="mor-desc">Månedlig betaling og totale lånekostnader.</div></div></button>
-        <button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('mor-wrapper','mor-help-card')" title="Vis veiledning" type="button">?</button>
+        <button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('mor-wrapper','mor-howto-card')" title="Vis veiledning" type="button">?</button>
         <div class="law-body" style="padding:0 24px 20px;">
+          <!-- Howto-kort: skjult by default, apnes via ?-knapp -->
+          <div id="mor-howto-card" class="info-card collapsed" style="margin-bottom:14px;">
+            <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="mor-help-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="mor-help-desc">Slik bruker du boliglånskalkulatoren</div></div></button>
+            <div id="mor-help-rows" class="law-body"></div>
+          </div>
           <div class="fg"><label class="flbl" id="mor-l-type" for="m-type">Lånetype</label>
             <select class="fc" id="m-type"></select>
             <div id="m-type-hint" style="font-size:12px;color:var(--ink3);margin-top:4px;line-height:1.4;"></div>
@@ -309,44 +315,92 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
         </div><!-- /law-body -->
         </div><!-- /mor-wrapper info-card -->
 
-          <!-- Dokumentavgift-kalkulator -->
-          <div id="dok-wrapper" class="info-card collapsed">
+          <!-- Hva har jeg råd til? -->
+          <div id="maxlan-wrapper" class="info-card collapsed" data-complexity="easy">
             <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
-              <div><div class="card-title" id="dok-title">Dokumentavgift <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="dok-desc">2,5 % av markedsverdi ved tinglysing av eiendomsoverdragelse</div></div>
+              <div><div class="card-title" id="maxlan-title">Hva har jeg råd til? <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="maxlan-desc">Maks lånebeløp basert på inntekt og egenkapital</div></div>
             </button>
+            <button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('maxlan-wrapper','maxlan-howto-card')" title="Vis veiledning" type="button">?</button>
             <div class="law-body" style="padding:0 24px 20px;">
-              <div class="fg"><label class="flbl" id="dok-l-verdi" for="dok-verdi">Markedsverdi (kr)</label>
-                <input class="fc" type="text" id="dok-verdi" value="4 000 000" inputmode="numeric">
+              <div id="maxlan-howto-card" class="info-card collapsed" style="margin-bottom:14px;">
+                <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="maxlan-howto-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="maxlan-howto-desc">Slik bruker du Hva har jeg råd til</div></div></button>
+                <div id="maxlan-howto-rows" class="law-body"></div>
               </div>
-              <div class="form-row">
-                <div class="fg"><label class="flbl" id="dok-l-type" for="dok-type">Type eiendom</label>
-                  <select class="fc" id="dok-type">
-                    <option id="dok-opt-bolig" value="bolig">Selveier (bolig/fritid)</option>
-                    <option id="dok-opt-borettslag" value="borettslag">Borettslag (kun andel)</option>
-                  </select>
-                </div>
+              <div class="fg"><label class="flbl" id="maxlan-l-inntekt" for="maxlan-inntekt">Brutto årsinntekt (kr)</label>
+                <input class="fc" type="text" id="maxlan-inntekt" value="650 000" inputmode="numeric" autocomplete="off">
+                <div style="font-size:11px;color:var(--ink3);margin-top:3px;" id="maxlan-inntekt-hint">Hvis dere er to: skriv inn samlet inntekt</div>
               </div>
-              <button class="btn-calc" onclick="calcDok()"><span id="btn-calc-dok">Beregn dokumentavgift →</span></button>
-              <div id="dok-res" class="result-sec hidden">
-                <div class="rh" id="dok-rh">
-                  <div class="rh-lbl" id="dok-r-lbl">Totale tinglysningskostnader</div>
-                  <div class="rh-val" id="dok-r-val">–</div>
-                  <div class="rh-sub" id="dok-r-sub">–</div>
-                </div>
+              <div class="fg"><label class="flbl" id="maxlan-l-gjeld" for="maxlan-gjeld">Annen gjeld i dag (kr)</label>
+                <input class="fc" type="text" id="maxlan-gjeld" value="0" inputmode="numeric" autocomplete="off">
+                <div style="font-size:11px;color:var(--ink3);margin-top:3px;" id="maxlan-gjeld-hint">Studielån, billån, forbrukslån — alt som teller mot gjeldsgraden</div>
+              </div>
+              <div class="fg"><label class="flbl" id="maxlan-l-ek" for="maxlan-ek">Egenkapital (kr)</label>
+                <input class="fc" type="text" id="maxlan-ek" value="500 000" inputmode="numeric" autocomplete="off">
+                <div style="font-size:11px;color:var(--ink3);margin-top:3px;" id="maxlan-ek-hint">Sparing, BSU, gave, gevinst fra forrige bolig</div>
+              </div>
+              <button class="btn-calc" onclick="calcMaxLan()"><span id="btn-calc-maxlan">Beregn →</span></button>
+              <div id="maxlan-res" class="result-sec hidden">
+                <div class="rh"><div class="rh-lbl" id="maxlan-r-lbl">Maks lånebeløp</div><div class="rh-val" id="maxlan-r-val">–</div><div class="rh-sub" id="maxlan-r-sub">–</div></div>
                 <div class="rgrid">
-                  <div class="rt"><div class="rt-lbl" id="dok-rl-avgift">Dokumentavgift (2,5 %)</div><div class="rt-val" id="dok-r-avgift">–</div></div>
-                  <div class="rt"><div class="rt-lbl" id="dok-rl-tinglyse">Tinglysingsgebyr</div><div class="rt-val" id="dok-r-tinglyse">–</div></div>
-                  <div class="rt"><div class="rt-lbl" id="dok-rl-attestgebyr">Attestgebyr</div><div class="rt-val" id="dok-r-attestgebyr">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="maxlan-r-pris-lbl">Maks boligpris</div><div class="rt-val" id="maxlan-r-pris">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="maxlan-r-gjeldsgrad-lbl">Gjeldsgrad</div><div class="rt-val" id="maxlan-r-gjeldsgrad">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="maxlan-r-ek-lbl">EK-andel</div><div class="rt-val" id="maxlan-r-ek-andel">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="maxlan-r-binding-lbl">Begrensende faktor</div><div class="rt-val" id="maxlan-r-binding">–</div></div>
                 </div>
-                <div id="dok-tip" style="margin-top:12px;padding:10px 14px;background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1px solid color-mix(in srgb,var(--accent) 15%,var(--border));border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.6;"></div>
+                <div id="maxlan-tip" style="margin-top:12px;padding:10px 14px;background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1px solid color-mix(in srgb,var(--accent) 15%,var(--border));border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.6;"></div>
               </div>
             </div>
           </div>
 
-          <!-- Hjelp med kalkulatoren -->
-          <div id="mor-help-card" class="info-card collapsed">
-            <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="mor-help-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="mor-help-desc">Slik bruker du boliglånskalkulatoren</div></div></button>
-            <div id="mor-help-rows" class="law-body"></div>
+          <!-- Bolig vs leie -->
+          <div id="bvl-wrapper" class="info-card collapsed" data-complexity="medium">
+            <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)">
+              <div><div class="card-title" id="bvl-title">Bolig vs leie <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bvl-desc">Sammenlign total kostnad over X år — hva lønner seg?</div></div>
+            </button>
+            <button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('bvl-wrapper','bvl-howto-card')" title="Vis veiledning" type="button">?</button>
+            <div class="law-body" style="padding:0 24px 20px;">
+              <div id="bvl-howto-card" class="info-card collapsed" style="margin-bottom:14px;">
+                <button type="button" class="card-hdr" style="cursor:pointer" onclick="toggleCard(this.parentElement)"><div><div class="card-title" id="bvl-howto-title">Hjelp med kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bvl-howto-desc">Slik bruker du Bolig vs leie</div></div></button>
+                <div id="bvl-howto-rows" class="law-body"></div>
+              </div>
+              <div class="fg"><label class="flbl" id="bvl-l-pris" for="bvl-pris">Kjøpspris bolig (kr)</label>
+                <input class="fc" type="text" id="bvl-pris" value="4 000 000" inputmode="numeric" autocomplete="off">
+              </div>
+              <div class="form-row">
+                <div class="fg"><label class="flbl" id="bvl-l-ek" for="bvl-ek">Egenkapital (kr)</label><input class="fc" type="text" id="bvl-ek" value="500 000" inputmode="numeric" autocomplete="off"></div>
+                <div class="fg"><label class="flbl" id="bvl-l-rente" for="bvl-rente">Lånerente (%)</label><input class="fc" type="number" id="bvl-rente" value="5.5" step="0.1"></div>
+              </div>
+              <div class="fg"><label class="flbl" id="bvl-l-leie" for="bvl-leie">Månedlig leie i dag (kr)</label>
+                <input class="fc" type="text" id="bvl-leie" value="15 000" inputmode="numeric" autocomplete="off">
+                <div style="font-size:11px;color:var(--ink3);margin-top:3px;" id="bvl-leie-hint">For en tilsvarende bolig</div>
+              </div>
+              <div class="form-row">
+                <div class="fg"><label class="flbl" id="bvl-l-felleskost" for="bvl-felleskost">Felleskostnader/mnd (kr)</label><input class="fc" type="text" id="bvl-felleskost" value="3 500" inputmode="numeric" autocomplete="off"></div>
+                <div class="fg"><label class="flbl" id="bvl-l-vedlikehold" for="bvl-vedlikehold">Vedlikehold (% av verdi/år)</label><input class="fc" type="number" id="bvl-vedlikehold" value="1.0" step="0.1"></div>
+              </div>
+              <div class="form-row">
+                <div class="fg"><label class="flbl" id="bvl-l-aar" for="bvl-aar">Tidsperiode (år)</label><input class="fc" type="number" id="bvl-aar" value="10" min="1" max="30"></div>
+                <div class="fg"><label class="flbl" id="bvl-l-lopetid" for="bvl-lopetid">Nedbetalingstid lån (år)</label><input class="fc" type="number" id="bvl-lopetid" value="25" min="10" max="30"></div>
+              </div>
+              <div class="form-row">
+                <div class="fg"><label class="flbl" id="bvl-l-vekst" for="bvl-vekst">Boligprisvekst (%/år)</label><input class="fc" type="number" id="bvl-vekst" value="3.0" step="0.1"></div>
+                <div class="fg"><label class="flbl" id="bvl-l-leievekst" for="bvl-leievekst">Leievekst (%/år)</label><input class="fc" type="number" id="bvl-leievekst" value="3.0" step="0.1"></div>
+              </div>
+              <div class="form-row">
+                <div class="fg"><label class="flbl" id="bvl-l-avk" for="bvl-avk">Alt. avkastning EK (%/år)</label><input class="fc" type="number" id="bvl-avk" value="6.0" step="0.1"></div>
+              </div>
+              <button class="btn-calc" onclick="calcBvl()"><span id="btn-calc-bvl">Beregn →</span></button>
+              <div id="bvl-res" class="result-sec hidden">
+                <div class="rh"><div class="rh-lbl" id="bvl-r-lbl">Hva lønner seg over perioden</div><div class="rh-val" id="bvl-r-val">–</div><div class="rh-sub" id="bvl-r-sub">–</div></div>
+                <div class="rgrid">
+                  <div class="rt"><div class="rt-lbl" id="bvl-r-eie-lbl">Total kostnad ved eie</div><div class="rt-val" id="bvl-r-eie">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="bvl-r-leie-lbl">Total kostnad ved leie</div><div class="rt-val" id="bvl-r-leie">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="bvl-r-be-lbl">Break-even</div><div class="rt-val" id="bvl-r-be">–</div></div>
+                  <div class="rt"><div class="rt-lbl" id="bvl-r-formue-lbl">Formue ved eie</div><div class="rt-val" id="bvl-r-formue">–</div></div>
+                </div>
+                <div id="bvl-tip" style="margin-top:12px;padding:10px 14px;background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1px solid color-mix(in srgb,var(--accent) 15%,var(--border));border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.6;"></div>
+              </div>
+            </div>
           </div>
 
         </div><!-- /card -->
@@ -457,9 +511,9 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <!-- SCRIPTS -->
 <!-- Language files now loaded dynamically by core.js -->
 <script>(function(){var S='<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none" aria-hidden="true"><path d="M3 6V3h3M13 6V3h-3M3 10v3h3M13 10v3h-3"/></svg>';var hs=document.querySelectorAll('.calc-grid .info-card > .card-hdr');for(var i=0;i<hs.length;i++){if(hs[i].querySelector(':scope > .focus-card-btn'))continue;var b=document.createElement('button');b.className='focus-card-btn';b.type='button';b.title='Fokus';b.setAttribute('aria-label','Fokus');b.innerHTML=S;hs[i].appendChild(b);}})();</script>
-<script defer src="/shared/core.js?v=v92"></script>
+<script defer src="/shared/core.js?v=v93"></script>
 <script defer src="/shared/search.js?v=v15"></script>
-<script defer src="/shared/lang/no.js?v=v35"></script>
+<script defer src="/shared/lang/no.js?v=v39"></script>
 
 </body>
 </html>

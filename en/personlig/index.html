@@ -35,6 +35,7 @@
 
 
 
+
 <link href="https://hverdagsverktoy.com/personlig/" hreflang="nb" rel="alternate"/>
 <link href="https://hverdagsverktoy.com/en/personlig/" hreflang="en" rel="alternate"/>
 <link href="https://hverdagsverktoy.com/pl/personlig/" hreflang="pl" rel="alternate"/>
@@ -92,8 +93,8 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 .hvt-loading{opacity:0}.hvt-ready{opacity:1;transition:opacity .12s ease-out}
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
-<link href="/shared/style.css?v=v113" rel="stylesheet"/>
-<link as="script" href="/shared/core.js?v=v92" rel="preload"/>
+<link href="/shared/style.css?v=v119" rel="stylesheet"/>
+<link as="script" href="/shared/core.js?v=v93" rel="preload"/>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -275,7 +276,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <!-- ══════════════ NPV ══════════════ -->
 <div class="calc-grid" id="calc-npv" style="grid-template-columns:1fr;">
 <div class="right-col" style="gap:0;width:100%;">
-<div class="personlig-cols" id="personlig-cols"><div class="personlig-col"><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Hverdagsøkonomi</h3><div class="card"><div class="info-card collapsed" id="budsjett-wrapper">
+<div class="personlig-cols" id="personlig-cols"><div class="personlig-col"><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Hverdagsøkonomi</h3><div class="card"><div class="info-card collapsed" data-complexity="medium" id="budsjett-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="budsjett-title">Budsjett <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="budsjett-desc">Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('budsjett-wrapper','bud-howto-card')" title="Vis veiledning" type="button">?</button>
@@ -357,13 +358,18 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <div class="rt"><div class="rt-lbl" id="budsjett-r-lbl-annual">Årlig overskudd</div><div class="rt-val" id="budsjett-r-annual">–</div></div>
 </div>
 <div id="budsjett-breakdown" style="margin-top:12px;"></div>
+<!-- CTA: lenke til boliglanskalkulator fra budsjett (hva har du rad til?) -->
+<a href="/boliglan/#maxlan-wrapper" id="budsjett-cta-bolig" style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding:12px 14px;background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;text-decoration:none;color:var(--ink);font-size:13px;gap:12px;">
+  <div><strong id="budsjett-cta-title">Hva har du råd til å kjøpe?</strong><div id="budsjett-cta-desc" style="font-size:11.5px;color:var(--ink2);margin-top:2px;">Basert på inntekten din — se maks lånebeløp og boligpris</div></div>
+  <span style="font-size:18px;color:var(--accent);">→</span>
+</a>
 <button id="budsjett-btn-pdf" onclick="budsjettPdf()" style="margin-top:12px;width:100%;background:var(--accent);color:#fff;border:none;border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;">Last ned (CSV)</button>
 <div id="budsjett-csv-tip" style="margin-top:8px;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.6;">
 <strong>Tips:</strong> Hvis kolonnene ikke deles automatisk i Excel: Merk kolonne A → Data → Tekst til kolonner → Skilletegn → Semikolon → Fullfør.
             </div>
 </div>
 </div>
-</div><div class="info-card collapsed" id="abo-wrapper">
+</div><div class="info-card collapsed" data-complexity="easy" id="abo-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="abo-title">Abonnement <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="abo-desc">Se totalkostnaden for alle abonnementene dine — per måned og per år</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('abo-wrapper','abo-howto-card')" title="Vis veiledning" type="button">?</button>
@@ -457,7 +463,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <button id="abo-btn-csv" onclick="aboCsv()" style="margin-top:12px;width:100%;background:var(--surface2);color:var(--ink2);border:1.5px solid var(--border);border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Last ned CSV</button>
 </div>
 </div>
-</div><div class="info-card collapsed" id="bil-wrapper">
+</div><div class="info-card collapsed" data-complexity="medium" id="bil-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="bil-title">Bil <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="bil-desc">Se hva bilen din gjennomsnittlig koster deg per måned og over tid</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('bil-wrapper','bil-howto-card')" title="Vis veiledning" type="button">?</button>
@@ -633,7 +639,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <button id="bil-btn-csv" onclick="bilCsv()" style="margin-top:12px;width:100%;background:var(--surface2);color:var(--ink2);border:1.5px solid var(--border);border-radius:8px;padding:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;">Last ned CSV</button>
 </div>
 </div>
-</div></div><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Lån</h3><div class="card"><div class="info-card collapsed" id="studie-wrapper">
+</div></div><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Lån</h3><div class="card"><div class="info-card collapsed" data-complexity="medium" id="studie-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="studie-title">Studielån <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="studie-desc">Stipend vs. lån, nedbetalingsplan og månedskostnad fra Lånekassen</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('studie-wrapper','studie-howto-card')" title="Vis veiledning" type="button">?</button>
@@ -690,14 +696,14 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <div id="studie-omgj-info" style="font-size:11px;color:var(--ink3);margin-top:8px;line-height:1.5;">Fullfører du graden blir 40 % av borteboer-lånet ditt til stipend — altså penger du får beholde. Uten grad: 15 %.</div>
 </div>
 <!-- Tillegg -->
-<details style="margin:0 0 16px;">
-<summary id="studie-extra-hdr" style="font-size:11px;color:var(--ink3);cursor:pointer;font-weight:500;letter-spacing:.3px;user-select:none;">Tillegg (skolepenger, tilleggslån o.l.) ▾</summary>
-<div style="margin-top:10px;">
+<details style="margin:0 0 20px;">
+<summary id="studie-extra-hdr" style="font-size:11px;color:var(--ink3);cursor:pointer;font-weight:500;letter-spacing:.3px;user-select:none;padding:4px 0;">Tillegg (skolepenger, tilleggslån o.l.) ▾</summary>
+<div style="margin-top:14px;">
 <div class="form-row">
-<div class="fg"><label class="flbl" for="studie-skolepenger" id="studie-l-skolepenger">Lån til skolepenger (kr/år)</label>
+<div class="fg"><div class="flbl-row"><label class="flbl" for="studie-skolepenger" id="studie-l-skolepenger">Lån til skolepenger (kr/år)</label><button aria-label="Forklaring — skolepenger-lån" class="flbl-help" onclick="event.preventDefault()" tabindex="-1" title="Ekstra utdanningslån for å dekke skoleavgift ved private skoler eller utenlandsstudier. Maks ~148 000 kr/år. Kommer i tillegg til basislånet." type="button">?</button></div>
 <input class="fc" id="studie-skolepenger" inputmode="numeric" type="text" value="0"/>
 </div>
-<div class="fg"><label class="flbl" for="studie-tilleggslan" id="studie-l-tilleggslan">Tilleggslån, 30+ (kr/år)</label>
+<div class="fg"><div class="flbl-row"><label class="flbl" for="studie-tilleggslan" id="studie-l-tilleggslan">Tilleggslån, 30+ (kr/år)</label><button aria-label="Forklaring — tilleggslån for studenter over 30" class="flbl-help" onclick="event.preventDefault()" tabindex="-1" title="Ekstra lån for studenter over 30 år, eller med forsørgeransvar for barn under 16. Maks ~100 000 kr/år. Må søkes om separat hos Lånekassen." type="button">?</button></div>
 <input class="fc" id="studie-tilleggslan" inputmode="numeric" type="text" value="0"/>
 </div>
 </div>
@@ -770,7 +776,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <div id="studie-disclaimer" style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;">* Basert på Lånekassens satser 2025–2026. Faktisk stipendandel avhenger av beståtte studiepoeng og inntekt/formue. Annuitetslån med termingebyr 18 kr (0 kr med eFaktura).</div>
 </div>
 </div>
-</div><div class="info-card collapsed" id="fbl-wrapper">
+</div><div class="info-card collapsed" data-complexity="medium" id="fbl-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Forbrukslån <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Hva lånet faktisk koster — nominell rente er ikke hele sannheten</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('fbl-wrapper','fbl-howto-card')" title="Vis veiledning" type="button">?</button>
@@ -813,7 +819,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div>
 </div>
 </div>
-</div></div><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Sparing</h3><div class="card"><div class="info-card collapsed" id="spare-wrapper">
+</div></div><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Sparing</h3><div class="card"><div class="info-card collapsed" data-complexity="easy" id="spare-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="spare-title">Sparekalkulator <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="spare-desc">Se kraften i rentes rente — hvor mye du sparer vs. hva renten genererer</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('spare-wrapper','spare-howto-card')" title="Vis veiledning" type="button">?</button>
@@ -826,19 +832,54 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <div class="fg"><label class="flbl" for="spare-start" id="spare-l-start">Startbeløp (kr)</label>
 <input class="fc" id="spare-start" inputmode="numeric" type="text" value="10 000"/>
 </div>
-<div class="fg"><label class="flbl" for="spare-monthly" id="spare-l-monthly">Månedlig sparing (kr)</label>
-<input class="fc" id="spare-monthly" inputmode="numeric" type="text" value="2 000"/>
-</div>
-</div>
-<div class="form-row">
 <div class="fg"><label class="flbl" for="spare-rate" id="spare-l-rate">Forventet årlig avkastning (%)</label>
 <input class="fc" id="spare-rate" max="30" min="0" step="0.5" type="number" value="7"/>
 </div>
+</div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+<label class="flbl" for="spare-monthly" id="spare-l-monthly" style="margin-bottom:0;">Innskudd (kr)</label>
+<span id="spare-freq-hint" style="font-size:11px;color:var(--ink3);font-style:italic;">Hvor ofte og hvor mye du legger inn</span>
+</div>
+<div class="spare-innskudd-grid" style="display:grid;grid-template-columns:1.1fr 1fr;gap:8px;margin-bottom:6px;">
+<input class="fc" id="spare-monthly" inputmode="numeric" type="text" value="0"/>
+<select class="fc" id="spare-freq">
+<option value="monthly">Månedlig</option>
+<option value="quarterly">Kvartalsvis</option>
+<option value="half">Halvårlig</option>
+<option value="yearly">Årlig</option>
+<option value="lump">Ingen — kun startbeløp</option>
+</select>
+</div>
+<div id="spare-year-hint" style="font-size:11px;color:var(--ink3);font-style:italic;margin:0 0 14px 2px;">= <strong style="color:var(--accent);font-style:normal;font-weight:700;">0 kr</strong> per år</div>
+<div class="form-row">
 <div class="fg"><label class="flbl" for="spare-years" id="spare-l-years">Antall år</label>
 <input class="fc" id="spare-years" max="60" min="1" step="1" type="number" value="10"/>
 </div>
+<div class="fg" style="visibility:hidden"><label class="flbl">_</label><input class="fc" type="text"/></div>
 </div>
 <button class="btn-calc" onclick="calcSpare()"><span id="btn-calc-spare">Beregn sparing →</span></button>
+<div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--border);">
+<button id="spare-scenario-toggle" type="button" onclick="spareToggleScenarios()" style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--ink2);border-radius:8px;padding:9px 14px;font-size:12px;cursor:pointer;font-family:inherit;font-weight:600;display:flex;justify-content:space-between;align-items:center;">
+<span>Vis forslag til scenarioer</span>
+<span id="spare-scenario-chev" style="font-size:11px;opacity:.7;">▼</span>
+</button>
+<div id="spare-scenario-panel" style="display:none;margin-top:10px;">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+<span id="spare-l-scenarios" style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;">Velg forslag eller lagre eget</span>
+<button id="spare-save-btn" type="button" onclick="spareSaveCurrent()" style="font-size:11px;color:var(--accent);background:transparent;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:999px;padding:4px 10px;cursor:pointer;font-family:inherit;font-weight:600;">+ Lagre eget</button>
+</div>
+<select id="spare-scenario-picker" class="fc" style="width:100%;">
+<option value="">Velg et forslag…</option>
+<option value="10000|0|lump|7|10">Ingen sparing — 10 000 kr alene × 10 år @ 7 %</option>
+<option value="10000|2000|monthly|7|10">2 000/mnd × 10 år @ 7 %</option>
+<option value="0|50000|yearly|6|20">50 000/år × 20 år @ 6 %</option>
+<option value="50000|15000|quarterly|5|15">Kvartalsvis 15 000 × 15 år @ 5 %</option>
+<option value="0|25000|half|6|30">Pensjon — halvårlig 25 000 × 30 år @ 6 %</option>
+<option value="500000|0|lump|5|20">Arv/bonus — 500 000 alene × 20 år @ 5 %</option>
+</select>
+<div id="spare-custom-row" class="spare-scenarios" style="margin-top:8px;"></div>
+</div>
+</div>
 <div aria-live="polite" class="result-sec hidden" id="spare-res" style="margin-top:12px;">
 <div class="rh">
 <div class="rh-lbl" id="spare-r-lbl">Total verdi etter sparing</div>
@@ -867,9 +908,41 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <tbody id="spare-tbody"></tbody>
 </table>
 </div>
+<!-- Sparekonto-sammenligning: samme layout, lav sparerente -->
+<div id="spare-rf-section" style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px;">
+<div style="font-size:13px;color:var(--ink);font-weight:700;">Til sammenligning: vanlig sparekonto</div>
+<div style="display:flex;align-items:center;gap:6px;">
+<input id="spare-rf-rate" max="15" min="0" step="0.1" type="number" value="2.0" style="width:72px;padding:5px 8px;font-size:12px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--ink);font-family:inherit;"/>
+<span style="font-size:11px;color:var(--ink3);">% sparerente</span>
 </div>
 </div>
-</div></div></div><div class="personlig-col"><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Lønn og NAV-ytelser</h3><div class="card"><div class="info-card collapsed" id="lonn-wrapper">
+<div id="spare-rf-disclaimer" style="font-size:11px;color:var(--ink3);font-style:italic;margin-bottom:12px;">Typisk vanlig sparekonto (DNB/Nordea/Sparebank 1-nivå, uten vilkår). Din bank kan avvike — juster over.</div>
+<div class="rgrid" style="margin-bottom:12px;">
+<div class="rt"><div class="rt-lbl">Total på sparekonto</div><div class="rt-val" id="spare-rf-r-total">–</div></div>
+<div class="rt"><div class="rt-lbl">Opptjent rente</div><div class="rt-val" id="spare-rf-r-rente">–</div></div>
+<div class="rt"><div class="rt-lbl">Forskjell mot investering</div><div class="rt-val" id="spare-rf-r-diff" style="color:var(--accent);">–</div></div>
+</div>
+<div style="margin-top:12px;position:relative;">
+<canvas height="300" id="spare-rf-chart" style="width:100%;max-height:340px;" width="600"></canvas>
+</div>
+<div id="spare-rf-table-wrapper" style="margin-top:16px;max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--rs);">
+<table id="spare-rf-table" style="width:100%;border-collapse:collapse;font-size:12px;">
+<thead>
+<tr style="background:var(--surface2);position:sticky;top:0;">
+<th style="padding:8px 10px;text-align:left;font-weight:600;color:var(--ink);">År</th>
+<th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);">Innskudd</th>
+<th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);">Rente</th>
+<th style="padding:8px 10px;text-align:right;font-weight:600;color:var(--ink);">Total</th>
+</tr>
+</thead>
+<tbody id="spare-rf-tbody"></tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div></div></div><div class="personlig-col"><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Lønn og NAV-ytelser</h3><div class="card"><div class="info-card collapsed" data-complexity="easy" id="lonn-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title" id="lonn-title">Lønn etter skatt <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc" id="lonn-desc">Legg inn timelønn og timer per uke — se hva du faktisk får utbetalt</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('lonn-wrapper','lonn-howto-card')" title="Vis veiledning" type="button">?</button>
@@ -898,6 +971,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </div>
 </div>
 <div id="lonn-frikort-hint" style="font-size:11px;color:var(--ink3);margin:-6px 0 10px;font-style:italic;">Frikortgrensen for 2026 er 100 000 kr. Tjener du under dette, trekker ikke arbeidsgiver skatt. Du kan fortsatt skylde trygdeavgift ved skatteoppgjøret.</div>
+<div style="margin:0 0 12px;padding:10px 14px;background:color-mix(in srgb,var(--accent) 6%,var(--surface2));border:1px solid color-mix(in srgb,var(--accent) 18%,var(--border));border-radius:8px;font-size:12px;color:var(--ink2);line-height:1.55;">Dette er en forenklet beregning. Vil du ha full oversikt over trinnskatt, trygdeavgift, alminnelig inntekt og fradrag? <a href="/skatt/#sal-salary-card" style="color:var(--accent);text-decoration:underline;font-weight:600;">Åpne Skattekalkulatoren →</a></div>
 <button class="btn-calc" onclick="calcLonn()"><span id="btn-calc-lonn">Beregn lønn →</span></button>
 <div aria-live="polite" class="result-sec hidden" id="lonn-res" style="margin-top:12px;">
 <div class="rh">
@@ -920,15 +994,44 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <div id="lonn-disclaimer" style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;">* Forenklet estimat. Faktisk skattetrekk avhenger av skattekortet ditt (tabelltrekk). Feriepenger utbetales normalt i juni året etter.</div>
 </div>
 </div>
-</div><div class="info-card collapsed" id="syk-wrapper">
+</div><div class="info-card collapsed" data-complexity="easy" id="syk-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Sykepenger <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Hva du faktisk får hvis du blir langtidssyk — og hvor NAV stopper</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('syk-wrapper','syk-howto-card')" title="Vis veiledning" type="button">?</button>
 <div class="law-body" style="padding:0 24px 20px;">
 <div class="info-card collapsed" id="syk-howto-card" style="margin-bottom:14px;">
-<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Slik bruker du Sykepenger-kalkulatoren <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Sykepenger, 6G-taket og arbeidsgivers forpliktelser</div></div></button>
+<button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Hvordan fungerer sykepenger? <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">3 faser, 6G-taket, egenmelding og omsorgspenger</div></div></button>
 <div class="law-body" style="padding:0 20px 16px;">
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Hovedregel:</strong> Ved sykefravær får du 100% av lønn fra NAV — men bare opp til <strong>6G (6 × grunnbeløpet = 780 960 kr i 2026)</strong>. Lønn over 6G kompenseres ikke av NAV.<br/><br/><strong>Arbeidsgiverperioden:</strong> De første 16 dagene betaler arbeidsgiver sykepenger — basert på full lønn (uten 6G-tak).<br/><br/><strong>Etter 16 dager:</strong> NAV overtar. Hvis du tjener over 6G, dekker NAV kun 6G — resten må du selv tape eller ha privat forsikring for.<br/><br/><strong>Maksimal varighet:</strong> Sykepenger fra NAV gis i inntil 52 uker.<br/><br/>Skriv inn årslønn — så ser du hva du faktisk får per måned fra NAV og hvor mye du taper over 6G.</div>
+<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong style="color:var(--ink);">Hvordan fungerer det — 3 faser:</strong><br/><br/>
+
+<strong>Dag 1–16 — arbeidsgiver betaler:</strong> 100 % av lønnen din, <em>uten tak</em>. Tjener du 1 million, får du full lønn disse to ukene.<br/><br/>
+
+<strong>Dag 17–365 — NAV tar over:</strong> NAV betaler 100 %, men maks <strong>6G = 780 960 kr/år (≈ 65 080 kr/måned)</strong>. Tjener du mer, taper du det over 6G — med mindre tariffavtalen din dekker mellomlegget (mange offentlige ansatte får det, ikke alle private).<br/><br/>
+
+<strong>Etter 52 uker:</strong> Sykepengene stopper. Du søker <strong>arbeidsavklaringspenger (AAP)</strong> — 66 % av inntekt opp til 6G, inntil 3 år. Krever minst 50 % nedsatt arbeidsevne.<br/><br/>
+
+<div style="background:color-mix(in srgb,rgba(220,120,60,1) 8%,transparent);border:1px solid color-mix(in srgb,rgba(220,120,60,1) 20%,var(--border));border-radius:8px;padding:12px 16px;margin:6px 0 14px;font-size:12px;line-height:1.6;"><div style="text-align:center;font-weight:700;color:var(--ink);margin-bottom:6px;">Vanlig misforståelse</div><em>"Jeg får 100 % lønn hele sykeperioden."</em> Feil. Bare de første 16 dagene er uten tak. Tjener du 900 000 og er langtidssyk, får du ca 65 080 kr/mnd fra NAV — ikke 75 000 kr/mnd.</div>
+
+<strong style="color:var(--ink);">Egenmelding (uten legeerklæring):</strong><br/>
+• <strong>Vanlig arbeidsplass:</strong> 3 kalenderdager × inntil 4 ganger/år (etter 2 mnd ansettelse)<br/>
+• <strong>IA-bedrift:</strong> 8 kalenderdager × inntil 24 dager/år<br/><br/>
+
+<strong style="color:var(--ink);">Gradert sykmelding:</strong> Minst 20 % og maks 99 % nedsatt arbeidsevne. Du jobber delvis og får sykepenger for resten.<br/><br/>
+
+<strong style="color:var(--ink);">Spesielle regler:</strong><br/>
+• <strong>Selvstendig næringsdrivende:</strong> 0 kr de første 16 dagene, deretter kun <strong>75 %</strong> fra dag 17 (opp til 6G). Kan kjøpe tilleggsforsikring hos NAV for bedre dekning.<br/>
+• <strong>Frilanser:</strong> 0 kr første 16 dager, deretter 100 % opp til 6G.<br/>
+• <strong>67–70 år:</strong> Kun <strong>60 sykepengedager</strong> totalt igjen.<br/>
+• <strong>Over 70 år:</strong> Ingen rett til sykepenger fra folketrygden.<br/>
+• <strong>Opptjeningstid:</strong> Minst 4 ukers ansettelse før sykdomsstart.<br/><br/>
+
+<strong style="color:var(--ink);">Sykt barn — egen ordning (omsorgspenger, ikke sykepenger):</strong><br/>
+• <strong>10 dager/år</strong> for 1–2 barn, <strong>15 dager/år</strong> for 3+ barn (per forelder)<br/>
+• Dobbel kvote for aleneforeldre<br/>
+• + 10 ekstra dager ved kronisk/langvarig sykt barn<br/>
+• Gjelder til barnet fyller 12 år (18 år ved kronisk sykdom)<br/><br/>
+
+<strong>Skriv inn årslønn under</strong> — så ser du hva du faktisk får per måned fra NAV og hvor mye du eventuelt taper over 6G-taket.</div>
 </div>
 </div><div class="fg"><label class="flbl" for="syk-lonn">Årslønn (brutto, kr)</label>
 <input class="fc" id="syk-lonn" inputmode="numeric" oninput="calcSyk()" type="text" value="700 000"/>
@@ -948,7 +1051,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <div style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;">* Arbeidsgiver dekker de første 16 dagene på full lønn. Sykepenger fra NAV varer inntil 52 uker. 1G = 130 160 kr i 2026.</div>
 </div>
 </div>
-</div><div class="info-card collapsed" id="fam-wrapper">
+</div><div class="info-card collapsed" data-complexity="medium" id="fam-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Foreldrefradrag <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Netto kostnad etter skattefradrag og søskenmoderasjon</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('fam-wrapper','fam-howto-card')" title="Vis veiledning" type="button">?</button>
@@ -984,19 +1087,20 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <div style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;">* Fradraget gjelder dokumenterte barnepassutgifter for barn under 12 år. Kommunal makspris og inntektsgradert moderasjon kommer i tillegg.</div>
 </div>
 </div>
-</div></div><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Investering</h3><div class="card"><div class="info-card collapsed" id="invest-wrapper">
+</div></div><h3 class="cat-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:4px 0 12px;padding-bottom:6px;border-bottom:1px solid color-mix(in srgb,var(--accent) 15%,transparent);">Investering</h3><div class="card"><div class="info-card collapsed" data-complexity="easy" id="invest-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Aksjer <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Slik fungerer aksjer — tips, risiko og begreper</div></div>
 </button>
 <div class="law-body" style="padding:0 24px 20px;">
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Aksjer er eierandeler i et selskap.</strong> Kjøper du en aksje i Equinor, eier du en liten bit av selskapet — og har rett til del av overskuddet.</div>
+<a href="#spare-wrapper" onclick="event.preventDefault();openCardInFocus('spare-wrapper')" style="display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:600;text-decoration:none;margin-bottom:16px;">→ Regn på din sparing i Sparekalkulatoren</a>
 
 <div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:12px 16px;margin-bottom:14px;">
 <div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:13px;">Hvordan tjener du penger på aksjer?</div>
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;">1. <strong>Utbytte</strong> — selskapet deler overskudd med eierne (typisk 1–3 % per år)<br/>2. <strong>Kursstigning</strong> — aksjen øker i verdi, du selger dyrere enn du kjøpte</div>
 </div>
 
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Forventet avkastning:</strong> Historisk har aksjemarkedet gitt rundt <strong>7 % årlig i snitt</strong> over lange perioder (Oslo Børs, globale indekser). Men enkeltår svinger enormt — +40 % det ene året, −30 % det neste.<br/><br/><em style="font-size:12px;opacity:.8">Eksempel: 3 000 kr/mnd i 20 år = 720 000 kr innskutt. Med 7 % snitt-avkastning blir det ca. 1,55 mill. Bruk <a href="#spare-wrapper" onclick="event.preventDefault();var c=document.getElementById('spare-wrapper');if(c){if(c.classList.contains('collapsed'))c.querySelector('.card-hdr').click();c.scrollIntoView({behavior:'smooth',block:'start'});}" style="color:var(--accent);text-decoration:underline;">sparekalkulatoren</a> for å regne ulike scenarioer.</em></div>
+<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Forventet avkastning:</strong> Historisk har aksjemarkedet gitt rundt <strong>7 % årlig i snitt</strong> over lange perioder (Oslo Børs, globale indekser). Men enkeltår svinger enormt — +40 % det ene året, −30 % det neste.<br/><br/><em style="font-size:12px;opacity:.8">Eksempel: 3 000 kr/mnd i 20 år = 720 000 kr innskutt. Med 7 % snitt-avkastning blir det ca. 1,55 mill. Bruk <a href="#spare-wrapper" onclick="event.preventDefault();openCardInFocus('spare-wrapper')" style="color:var(--accent);text-decoration:underline;">sparekalkulatoren</a> for å regne ulike scenarioer.</em></div>
 
 <div style="background:color-mix(in srgb,rgba(220,120,60,1) 8%,transparent);border:1px solid color-mix(in srgb,rgba(220,120,60,1) 20%,var(--border));border-radius:8px;padding:12px 16px;margin-bottom:14px;">
 <div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:13px;">Hvor stor risiko?</div>
@@ -1014,7 +1118,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 
 <div style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;">* Historiske tall basert på Oslo Børs / MSCI World. Reell avkastning kan bli langt lavere eller høyere — aksjer er volatile.</div>
 </div>
-</div><div class="info-card collapsed" id="konto-wrapper">
+</div><div class="info-card collapsed" data-complexity="medium" id="konto-wrapper">
 <button class="card-hdr" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button">
 <div><div class="card-title">Fond og ASK <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Hva er fond — og hvorfor ASK er en smart konto for aksjefond</div></div>
 </button><button aria-label="Vis veiledning" class="calc-help-btn" onclick="event.stopPropagation();openCalcHelp('konto-wrapper','konto-howto-card')" title="Vis veiledning" type="button">?</button>
@@ -1024,6 +1128,7 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Aksjesparekonto (ASK):</strong> Du kan kjøpe og selge aksjer og aksjefond uten å betale skatt på gevinst før du tar pengene ut av kontoen. Ingen årlig skatt så lenge pengene blir værende. Passer til langsiktig aksjesparing.<br/><br/><strong>Individuell pensjonssparing (IPS):</strong> Låst til du er 62 år. Du får skattefradrag på inntil 15 000 kr i året (22% = 3 300 kr spart). Skatt betales først ved uttak som pensjon. Passer hvis du vil ha ekstra pensjonssparing og tåler å binde pengene.<br/><br/><strong>Fondskonto (vanlig):</strong> Du betaler skatt på utbytte og gevinst hvert år. Friere enn ASK og IPS, men dårligere skattemessig. Passer hvis du trenger fleksibilitet eller investerer i noe som ikke kvalifiserer for ASK.</div>
 </div>
 </div><div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Fond</strong> er en stor "sekk" av penger som en fondsforvalter investerer for deg — typisk i mange aksjer samtidig. Du kjøper andeler i sekken. Fordelen: risiko spres automatisk over mange selskaper.</div>
+<a href="#spare-wrapper" onclick="event.preventDefault();openCardInFocus('spare-wrapper')" style="display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:600;text-decoration:none;margin-bottom:16px;">→ Regn på fondsparing i Sparekalkulatoren</a>
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Aksjefond (AF)</strong> investerer bare i aksjer. To hovedtyper:<br/>• <strong>Indeksfond</strong> — følger passivt en hel børs (f.eks. Oslo Børs eller verden). Lave gebyrer (0,2–0,4%), og slår oftest aktive fond over tid.<br/>• <strong>Aktivt forvaltet fond</strong> — fondsforvalter plukker aksjer manuelt. Høyere gebyrer (1–2%) som spiser avkastning.</div>
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Aksjesparekonto (ASK)</strong> er en type konto hvor du kan kjøpe og selge aksjer og aksjefond <em>uten</em> å betale skatt på gevinst før du tar pengene ut av kontoen. Flytt fritt mellom fond inne på ASK uten skattesmell — perfekt for langsiktig aksjesparing.</div>
 <div style="overflow-x:auto;margin-top:14px;">
@@ -1256,8 +1361,8 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <!-- Language files now loaded dynamically by core.js -->
 <script>(function(){var S='<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none" aria-hidden="true"><path d="M3 6V3h3M13 6V3h-3M3 10v3h3M13 10v3h-3"/></svg>';var hs=document.querySelectorAll('.calc-grid .info-card > .card-hdr');for(var i=0;i<hs.length;i++){if(hs[i].querySelector(':scope > .focus-card-btn'))continue;var b=document.createElement('button');b.className='focus-card-btn';b.type='button';b.title='Fokus';b.setAttribute('aria-label','Fokus');b.innerHTML=S;hs[i].appendChild(b);}})();</script>
-<script defer src="/shared/core.js?v=v92"></script>
+<script defer src="/shared/core.js?v=v93"></script>
 <script defer src="/shared/search.js?v=v15"></script>
-<script defer src="/shared/lang/no.js?v=v35"></script>
+<script defer src="/shared/lang/no.js?v=v39"></script>
 </body>
 </html>
