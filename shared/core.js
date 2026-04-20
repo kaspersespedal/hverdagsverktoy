@@ -471,6 +471,22 @@ function updateAll() {
   var sg=document.getElementById('s-g');if(sg)sg.value = fmtInput(d.gross);
   var ma=document.getElementById('m-a');if(ma)ma.value = fmtInput(3000000);
   _renameHowtoArrows();
+  try{_updateI18nHtml(R());}catch(e){_uiErr('i18nHtml',e);}
+}
+
+// Swap innerHTML on [data-i18n-html] elements when current lang has an override key.
+// NO HTML i siden er fallback — hvis key mangler i R(), ingen endring skjer.
+function _updateI18nHtml(r){
+  if(!r) return;
+  var els=document.querySelectorAll('[data-i18n-html]');
+  for(var i=0;i<els.length;i++){
+    var el=els[i],key=el.getAttribute('data-i18n-html');
+    if(!key||!r[key]) continue;
+    if(el._hvtI18nHtmlKey===key && el._hvtI18nHtmlVal===r[key]) continue;
+    el.innerHTML=r[key];
+    el._hvtI18nHtmlKey=key;
+    el._hvtI18nHtmlVal=r[key];
+  }
 }
 
 // Three.js disco ball
