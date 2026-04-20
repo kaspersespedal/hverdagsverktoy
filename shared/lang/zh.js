@@ -215,7 +215,7 @@ REGIONS['zh'] = {
     mobileSwitch:'切换计算器', mobileFocus:'专注', mobileFocusExit:'关闭',
     focusLabel:'专注', focusClose:'关闭专注', focusSwitchCalc:'切换计算器',
     toolH1Skatt:'税收计算器 2026 — 工资、阶梯税、股息和有效税率', toolH1Kalk:'计算器 — 基本、货币、金融和科学', toolH1Bolig:'房贷计算器 — 月供、BSU 和总成本', toolH1Avg:'费用计算器 — 增值税、雇主税和其他费用', toolH1Sel:'挪威的公司形式 — AS、ENK、ANS、DA 和 KS', toolH1Per:'个人财务 — 汽车成本、预算和盈利能力',
-    a11yLang:'选择语言', a11yTheme:'选择主题',
+    a11yLang:'选择语言', a11yTheme:'选择主题', calcHelpAria:'显示指南',
     btnCsv:'下载CSV',
     csvGenerated:'由 Hverdagsverktøy 生成',
     csvAboTitle:'订阅概览', csvAboService:'服务', csvAboAmount:'金额/月', csvAboTotalMnd:'每月总计', csvAboTotalAar:'每年总计', csvAboCount:'订阅数量', csvAboAvg:'平均每项',

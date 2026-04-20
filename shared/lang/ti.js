@@ -219,7 +219,7 @@ REGIONS['ti'] = {
     mobileSwitch:'ቀይር ካልኩሌተር', mobileFocus:'ትኩረት', mobileFocusExit:'ዕጾ',
     focusLabel:'ትኩረት', focusClose:'ትኩረት ዕጾ', focusSwitchCalc:'ቀይር ካልኩሌተር',
     toolH1Skatt:'ግብሪ ካልክዡለዽ 2026 — ደመወዝ። ደረጃዊ ግብሪ። ትርፋን መክፍታን ሕሰብና ወና ኣድማዕ ግብሪ', toolH1Kalk:'ካልክዡለዽ — መሰረታዊ፡ ዓስሰራዊ፡ ግንድባዊ፡ ገምጊዋዊ', toolH1Bolig:'ለቁሕ ገዛ ካልክዡለዽ — ወርሃዊ ክፍለት፡ BSU፡ ከመትል ባህሪ', toolH1Avg:'ከፍሻ ካልክዡለዽ — ተ.ዋ.ግ.፡ ኢምዑምበት ከፍሻ ወና ኩዓላት ከፍሺታት', toolH1Sel:'ኣዓስላ ትካቱጁ ካብ ትካል እጥይ — AS፡ ENK፡ ANS፡ DA ከርበብ KS', toolH1Per:'ብንᎣጎጎተዎ፡ ብዚቝጎ ንብ቙ባ — ብስራብ ኢዙ፡ በደጤ፡ ወና ታኩሪ',
-    a11yLang:'ቅላንቃ ምርጭ', a11yTheme:'ጬማ ምርጭ',
+    a11yLang:'ቅላንቃ ምርጭ', a11yTheme:'ጬማ ምርጭ', calcHelpAria:'መምሪሒ ኣርኢ',
     btnCsv:'CSV ኣውርድ',
     csvGenerated:'ብ Hverdagsverktøy ዝተሰርሐ',
     csvAboTitle:'ናይ ምዝገባ ጽማቕ', csvAboService:'ኣገልግሎት', csvAboAmount:'ገንዘብ/ወርሒ', csvAboTotalMnd:'ጠቕላላ ብወርሒ', csvAboTotalAar:'ጠቕላላ ብዓመት', csvAboCount:'ቁጽሪ ምዝገባ', csvAboAvg:'ማእከላይ',
