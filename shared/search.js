@@ -31,7 +31,8 @@ var SEARCH_DATA = [
 
   // Boliglån
   {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/#mor-wrapper',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling månedlig betaling mortgage',type:'tool',page:'Boliglån',sk:'boliglan'},
-  {name:'Dokumentavgift',desc:'Beregn tinglysning og dokumentavgift ved boligkjøp',url:'/boliglan/#dok-wrapper',tags:'dokumentavgift tinglysing tinglysningsgebyr attestgebyr boligkjøp eiendom selveier borettslag',type:'tool',page:'Boliglån',sk:'dok'},
+  {name:'Hva har jeg råd til?',desc:'Maks lånebeløp basert på inntekt og egenkapital',url:'/boliglan/#maxlan-wrapper',tags:'maks lån hva kan jeg låne inntekt egenkapital gjeldsgrad utlånsforskriften låneramme boliglån max loan',type:'tool',page:'Boliglån',sk:'maxlan'},
+  {name:'Bolig vs leie',desc:'Sammenlign total kostnad over X år — hva lønner seg?',url:'/boliglan/#bvl-wrapper',tags:'bolig vs leie kjøpe leie sammenligne break-even eie rent vs buy investering avkastning',type:'tool',page:'Boliglån',sk:'bvl'},
 
   // Kalkulator (hash handled by switchCalcMode in core.js)
   {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/',tags:'kalkulator regnemaskin pluss minus gange dele prosent calculator',type:'tool',page:'Kalkulator',sk:'kalkBasic'},
@@ -172,7 +173,8 @@ var URL_TO_I18N_KEYS = {
   '/personlig/#abo-wrapper':       ['aboTitle','aboDesc'],
   // Boliglån
   '/boliglan/#mor-wrapper':        ['morTitle','morDesc','morInfoTitle','morInfoDesc','tabMor'],
-  '/boliglan/#dok-wrapper':        ['dokTitle','dokDesc'],
+  '/boliglan/#maxlan-wrapper':     ['maxlanTitle','maxlanDesc'],
+  '/boliglan/#bvl-wrapper':        ['bvlTitle','bvlDesc'],
   '/boliglan/#mor-bsu-card':       ['morBsuTitle','morBsuDesc'],
   // Kalkulator (fagkalkulatorer)
   '/kalkulator/':                  ['tabBasic','cmBasic','cmLabel'],
@@ -222,7 +224,8 @@ var URL_TO_DISPLAY = {
   '/personlig/#abo-wrapper':      {title:'aboTitle',      desc:'aboDesc'},
   // Boliglån
   '/boliglan/#mor-wrapper':       {title:'morTitle',      desc:'morDesc'},
-  '/boliglan/#dok-wrapper':       {title:'dokTitle',      desc:'dokDesc'},
+  '/boliglan/#maxlan-wrapper':    {title:'maxlanTitle',   desc:'maxlanDesc'},
+  '/boliglan/#bvl-wrapper':       {title:'bvlTitle',      desc:'bvlDesc'},
   '/boliglan/#mor-bsu-card':      {title:'morBsuTitle',   desc:'morBsuDesc'},
   // Kalkulator
   '/kalkulator/':                 {title:'cmBasic'},
@@ -427,7 +430,7 @@ function loadSearchIntents(){
   if(__hvtIntentsLoadStarted || window.SEARCH_INTENTS) return;
   __hvtIntentsLoadStarted = true;
   var s = document.createElement('script');
-  s.src = '/shared/search-intents.js?v=v1';
+  s.src = '/shared/search-intents.js?v=v2';
   s.async = true;
   document.head.appendChild(s);
 }
