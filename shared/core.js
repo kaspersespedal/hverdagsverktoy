@@ -3126,83 +3126,143 @@ window.generateLonnPdf = async function(){
     if(!s){if(btn){btn.disabled=false;btn.textContent='Last ned PDF';}return;}
     var today = new Date().toLocaleDateString('nb-NO',{day:'numeric',month:'long',year:'numeric'});
     var regionLbl = s.almSats===0.185 ? 'Finnmark/Nord-Troms (18,5 %)' : 'Resten av Norge (22 %)';
-    // Bygge fradrags-tabell kun med aktive linjer
-    var fradragRows = [[{text:'Post',bold:true},{text:'Beløp',bold:true,alignment:'right'}]];
-    fradragRows.push(['Bruttolønn (basis)', {text:fmt(s.b),alignment:'right'}]);
-    fradragRows.push(['Minstefradrag (46 %, maks 95 700)', {text:'- '+fmt(s.mf),alignment:'right',color:'#d94841'}]);
-    fradragRows.push(['Personfradrag 2026', {text:'- '+fmt(s.pf),alignment:'right',color:'#d94841'}]);
-    if(s.renteFradrag>0) fradragRows.push(['Rentefradrag', {text:'- '+fmt(s.renteFradrag),alignment:'right',color:'#d94841'}]);
-    if(s.fagforening>0) fradragRows.push(['Fagforeningskontingent (maks 8 700)', {text:'- '+fmt(s.fagforening),alignment:'right',color:'#d94841'}]);
-    if(s.ips>0) fradragRows.push(['IPS (maks 25 000)', {text:'- '+fmt(s.ips),alignment:'right',color:'#d94841'}]);
-    if(s.gaver>0) fradragRows.push(['Gaver til veldedighet (maks 25 000)', {text:'- '+fmt(s.gaver),alignment:'right',color:'#d94841'}]);
-    if(s.reise>0) fradragRows.push(['Reisefradrag', {text:'- '+fmt(s.reise),alignment:'right',color:'#d94841'}]);
-    fradragRows.push([{text:'Alminnelig inntekt (grunnlag)',bold:true}, {text:fmt(s.almInntekt),alignment:'right',bold:true}]);
-    // Trinnskatt-tabell
-    var trinnRows = [[{text:'Trinn',bold:true},{text:'Sats',bold:true,alignment:'right'},{text:'Skatt',bold:true,alignment:'right'}]];
-    s.trinnAmounts.forEach(function(t){
-      if(t.amt<=0) return;
-      trinnRows.push([t.lbl, {text:(t.rate*100).toFixed(1)+' %',alignment:'right'}, {text:fmt(t.amt),alignment:'right'}]);
-    });
-    trinnRows.push([{text:'Trygdeavgift',italics:true},{text:'7,6 %',alignment:'right'},{text:fmt(s.soc),alignment:'right'}]);
-    if(s.bsuKreditt>0) trinnRows.push([{text:'BSU-skattefradrag',italics:true},{text:'-10 %',alignment:'right'},{text:'- '+fmt(s.bsuKreditt),alignment:'right',color:'#2f9e44'}]);
-    trinnRows.push([{text:'TOTAL SKATT',bold:true},{},{text:fmt(s.tot),alignment:'right',bold:true}]);
+    var reportId = 'HV-' + Date.now().toString(36).toUpperCase().slice(-6);
+
+    // === BAR-VISUALISERING: beregn max for proporsjonale barer ===
+    var barItems = [];
+    s.trinnAmounts.forEach(function(t){ if(t.amt>0) barItems.push({lbl:t.lbl, rate:(t.rate*100).toFixed(1)+' %', amt:t.amt, color:'#4a6fa5'}); });
+    barItems.push({lbl:'Trygdeavgift', rate:'7,6 %', amt:s.soc, color:'#6b8fc9'});
+    if(s.bsuKreditt>0) barItems.push({lbl:'BSU-fradrag', rate:'-10 %', amt:-s.bsuKreditt, color:'#5dd47f'});
+    var maxBar = Math.max.apply(null, barItems.map(function(b){return Math.abs(b.amt);}));
+    var barWidth = 260;
+
+    // === BAR-ROW BUILDER: tekst+bar+beløp ===
+    function barRow(item){
+      var w = Math.max(2, Math.abs(item.amt)/maxBar * barWidth);
+      var isNeg = item.amt < 0;
+      return [
+        {text:[{text:item.lbl,bold:true},{text:'  '+item.rate,fontSize:9,color:'#8a8a8a'}], margin:[0,4,0,0]},
+        { canvas:[{type:'rect',x:0,y:6,w:w,h:8,color:isNeg?'#5dd47f':item.color,r:2}], margin:[0,0,0,0]},
+        {text:(isNeg?'- ':'')+fmt(Math.abs(item.amt)),alignment:'right',bold:!isNeg,color:isNeg?'#2f9e44':'#1a1a2e',margin:[0,4,0,0]}
+      ];
+    }
+    var barRows = barItems.map(barRow);
+    // TOTAL-rad
+    barRows.push([
+      {text:'TOTAL SKATT',bold:true,color:'#1a1a2e',margin:[0,6,0,0]},
+      {text:''},
+      {text:fmt(s.tot),alignment:'right',bold:true,fontSize:13,color:'#1a1a2e',margin:[0,4,0,0]}
+    ]);
+
+    // === FRADRAG-TABELL m/ zebra ===
+    var fradragRows = [[{text:'POST',bold:true,color:'#8a8a8a',fontSize:8,characterSpacing:1,margin:[0,4,0,4]},{text:'BELØP',bold:true,color:'#8a8a8a',fontSize:8,characterSpacing:1,alignment:'right',margin:[0,4,0,4]}]];
+    function addFrad(label, amt, isNeg){
+      fradragRows.push([{text:label,margin:[0,5,0,5]},{text:(isNeg?'- ':'')+fmt(Math.abs(amt)),alignment:'right',color:isNeg?'#d94841':'#1a1a2e',margin:[0,5,0,5]}]);
+    }
+    addFrad('Bruttolønn', s.b, false);
+    addFrad('Minstefradrag (46 %, maks 95 700)', s.mf, true);
+    addFrad('Personfradrag 2026', s.pf, true);
+    if(s.renteFradrag>0) addFrad('Rentefradrag', s.renteFradrag, true);
+    if(s.fagforening>0) addFrad('Fagforeningskontingent', s.fagforening, true);
+    if(s.ips>0) addFrad('IPS (pensjonssparing)', s.ips, true);
+    if(s.gaver>0) addFrad('Gaver til veldedighet', s.gaver, true);
+    if(s.reise>0) addFrad('Reisefradrag', s.reise, true);
+    fradragRows.push([{text:'Alminnelig inntekt',bold:true,fontSize:11,margin:[0,8,0,8]},{text:fmt(s.almInntekt),alignment:'right',bold:true,fontSize:11,color:'#1a1a2e',margin:[0,8,0,8]}]);
 
     var doc = {
       pageSize: 'A4',
-      pageMargins: [48, 56, 48, 60],
-      info: { title: 'Lønn etter skatt — ' + today, author: 'Hverdagsverktøy.com' },
-      content: [
-        { text: 'Lønn etter skatt', style: 'h1' },
-        { text: today + '  ·  ' + regionLbl, style: 'sub', margin:[0,2,0,24] },
-        // Hero-block
-        { table: { widths:['*'], body: [[{
-            stack: [
-              { text: 'NETTO ÅRSINNTEKT', style:'heroLbl' },
-              { text: fmt(s.net), style:'heroVal' },
-              { text: fmt(s.net/12) + ' / måned   ·   ' + fmt(s.net/260) + ' / dag', style:'heroSub' }
-            ],
-            fillColor: '#f7f5f1', margin:[20,18,20,18]
-        }]]}, layout:'noBorders', margin:[0,0,0,20] },
-        // Key stats
-        { columns: [
-          { width:'*', stack:[{text:'Total skatt',style:'statLbl'},{text:fmt(s.tot),style:'statVal'}] },
-          { width:'*', stack:[{text:'Effektiv sats',style:'statLbl'},{text:s.eff.toFixed(1).replace('.',',')+' %',style:'statVal'}] },
-          { width:'*', stack:[{text:'Trygdeavgift',style:'statLbl'},{text:fmt(s.soc),style:'statVal'}] },
-        ], margin:[0,0,0,24] },
-        // Inntekts-grunnlag
-        { text:'Inntekts-grunnlag', style:'h2' },
-        { table:{ widths:['*',80], body: fradragRows }, layout:{hLineWidth:function(i,n){return i===0||i===1||i===n.table.body.length?0.8:0.3;},hLineColor:function(){return '#d0d0d0';},vLineWidth:function(){return 0;}}, margin:[0,6,0,24] },
-        // Skatte-breakdown
-        { text:'Skatte-breakdown', style:'h2' },
-        { table:{ widths:['*',50,80], body: trinnRows }, layout:{hLineWidth:function(i,n){return i===0||i===1||i===n.table.body.length?0.8:0.3;},hLineColor:function(){return '#d0d0d0';},vLineWidth:function(){return 0;}}, margin:[0,6,0,24] },
-        // Noter
-        { text:'Forutsetninger', style:'h2' },
-        { ul:[
-          'Satser for inntektsåret 2026.',
-          'Personfradrag: 114 540 kr. Minstefradrag: 46 % (maks 95 700 kr).',
-          'Trygdeavgift: 7,6 % av bruttoinntekt. Frikort-grense: 100 000 kr (ikke modellert).',
-          'Alminnelig inntektssats: ' + (s.almSats*100).toFixed(1).replace('.',',') + ' %.',
-          'BSU gir 10 % direkte skattefradrag (ikke inntektsfradrag).'
-        ], style:'note', margin:[0,6,0,0] }
-      ],
-      footer: function(curr, total){
+      pageMargins: [48, 80, 48, 60],
+      info: { title: 'Lønn etter skatt — ' + today, author: 'Hverdagsverktøy.com', subject: 'Skatterapport 2026' },
+      background: function(currentPage, pageSize){
+        // Subtil gold accent-linje øverst
+        return [
+          { canvas:[{type:'rect', x:0, y:0, w:pageSize.width, h:4, color:'#c9a066'}] }
+        ];
+      },
+      header: function(curr){
+        if(curr!==1) return null;
         return { columns:[
-          { text:'Generert av Hverdagsverktøy.com — veiledende beregning, ikke profesjonell rådgivning.', style:'footerLeft', margin:[48,16,0,0] },
-          { text:'Side ' + curr + ' / ' + total, alignment:'right', style:'footerRight', margin:[0,16,48,0] }
+          { text:'HVERDAGSVERKTØY', style:'brandMark', margin:[48,28,0,0] },
+          { text:'SKATTERAPPORT · '+reportId, style:'docMeta', alignment:'right', margin:[0,28,48,0] }
         ]};
       },
+      content: [
+        // === TITTEL ===
+        { text:'Lønn etter skatt', style:'h1', margin:[0,6,0,2] },
+        { text:today+'   ·   '+regionLbl, style:'sub', margin:[0,0,0,28] },
+
+        // === DUAL-HERO: Netto + Effektiv ===
+        { table:{ widths:['*','*'], body:[[
+          { stack:[
+            { text:'NETTO ÅRSINNTEKT', style:'heroLbl' },
+            { text:fmt(s.net), style:'heroVal' },
+            { canvas:[{type:'line',x1:0,y1:0,x2:30,y2:0,lineWidth:2,lineColor:'#c9a066'}], margin:[0,4,0,8] },
+            { text:fmt(s.net/12)+' per måned', style:'heroSub' },
+            { text:fmt(s.net/260)+' per dag', style:'heroSubMuted' }
+          ], fillColor:'#f9f6f0', margin:[22,22,22,22] },
+          { stack:[
+            { text:'EFFEKTIV SKATTESATS', style:'heroLbl' },
+            { text:s.eff.toFixed(1).replace('.',',')+' %', style:'heroVal' },
+            { canvas:[{type:'line',x1:0,y1:0,x2:30,y2:0,lineWidth:2,lineColor:'#c9a066'}], margin:[0,4,0,8] },
+            { text:fmt(s.tot)+' i total skatt', style:'heroSub' },
+            { text:fmt(s.soc)+' herav trygdeavgift', style:'heroSubMuted' }
+          ], fillColor:'#f9f6f0', margin:[22,22,22,22] }
+        ]]}, layout:{
+          hLineWidth:function(){return 0;}, vLineWidth:function(i){return i===1?0.5:0;},
+          vLineColor:function(){return '#e8dfcc';}
+        }, margin:[0,0,0,32] },
+
+        // === SKATTE-BREAKDOWN m/ bar-viz ===
+        { text:'SKATTE-BREAKDOWN', style:'sectionLbl' },
+        { canvas:[{type:'line',x1:0,y1:0,x2:499,y2:0,lineWidth:0.8,lineColor:'#c9a066'}], margin:[0,2,0,16] },
+        { table:{ widths:[160, 260, 80], body: barRows }, layout:'noBorders', margin:[0,0,0,32] },
+
+        // === FRADRAG-TABELL ===
+        { text:'INNTEKTS-GRUNNLAG', style:'sectionLbl' },
+        { canvas:[{type:'line',x1:0,y1:0,x2:499,y2:0,lineWidth:0.8,lineColor:'#c9a066'}], margin:[0,2,0,12] },
+        { table:{ widths:['*',90], body: fradragRows }, layout:{
+          hLineWidth:function(i,n){ if(i===0||i===1) return 0.6; if(i===n.table.body.length-1||i===n.table.body.length) return 0.6; return 0; },
+          hLineColor:function(){return '#c9a066';},
+          vLineWidth:function(){return 0;},
+          fillColor:function(rowIdx){ if(rowIdx===0)return null; if(rowIdx===fradragRows.length-1)return null; return rowIdx%2===0?'#fbf9f5':null; }
+        }, margin:[0,0,0,24] },
+
+        // === FORUTSETNINGER ===
+        { text:'FORUTSETNINGER', style:'sectionLbl' },
+        { canvas:[{type:'line',x1:0,y1:0,x2:499,y2:0,lineWidth:0.8,lineColor:'#c9a066'}], margin:[0,2,0,10] },
+        { columns:[
+          { width:'*', ul:[
+            'Satser for inntektsåret 2026',
+            'Personfradrag: 114 540 kr',
+            'Minstefradrag: 46 % (maks 95 700 kr)'
+          ], style:'note' },
+          { width:'*', ul:[
+            'Trygdeavgift: 7,6 % av bruttoinntekt',
+            'Alminnelig inntektssats: '+(s.almSats*100).toFixed(1).replace('.',',')+' %',
+            'BSU: 10 % direkte skattefradrag'
+          ], style:'note' }
+        ] }
+      ],
+      footer: function(curr, total){
+        return { margin:[48,20,48,0], table:{ widths:['*','auto'], body:[[
+          { text:[
+            { text:'Hverdagsverktøy.com', bold:true, color:'#1a1a2e', fontSize:8 },
+            { text:'   ·   veiledende beregning, ikke profesjonell rådgivning', color:'#999', fontSize:8 }
+          ], border:[false,true,false,false], borderColor:['#e0e0e0','#e0e0e0','#e0e0e0','#e0e0e0'], margin:[0,8,0,0] },
+          { text:reportId+'   ·   side '+curr+' / '+total, alignment:'right', color:'#999', fontSize:8, border:[false,true,false,false], borderColor:['#e0e0e0','#e0e0e0','#e0e0e0','#e0e0e0'], margin:[0,8,0,0] }
+        ]]}, layout:{ defaultBorder:false, hLineWidth:function(i){return i===0?0.5:0;}, hLineColor:function(){return '#e0e0e0';} }};
+      },
       styles: {
-        h1:{ fontSize:26, bold:true, color:'#1a1a2e' },
-        h2:{ fontSize:13, bold:true, color:'#1a1a2e', margin:[0,8,0,4] },
-        sub:{ fontSize:10, color:'#6a6a6a' },
-        heroLbl:{ fontSize:9, bold:true, color:'#8a6d3b', characterSpacing:1.5, margin:[0,0,0,6] },
-        heroVal:{ fontSize:34, bold:true, color:'#1a1a2e', margin:[0,0,0,4] },
-        heroSub:{ fontSize:11, color:'#6a6a6a' },
-        statLbl:{ fontSize:8, bold:true, color:'#8a8a8a', characterSpacing:1, margin:[0,0,0,3] },
-        statVal:{ fontSize:18, bold:true, color:'#1a1a2e' },
-        note:{ fontSize:9, color:'#6a6a6a', lineHeight:1.4 },
-        footerLeft:{ fontSize:8, color:'#999' },
-        footerRight:{ fontSize:8, color:'#999' }
+        brandMark:{ fontSize:9, bold:true, color:'#1a1a2e', characterSpacing:2 },
+        docMeta:{ fontSize:8, color:'#8a8a8a', characterSpacing:1.2 },
+        h1:{ fontSize:32, bold:true, color:'#1a1a2e' },
+        sub:{ fontSize:10, color:'#8a8a8a' },
+        sectionLbl:{ fontSize:9, bold:true, color:'#1a1a2e', characterSpacing:2, margin:[0,0,0,2] },
+        heroLbl:{ fontSize:8, bold:true, color:'#8a6d3b', characterSpacing:1.8, margin:[0,0,0,10] },
+        heroVal:{ fontSize:36, bold:true, color:'#1a1a2e', margin:[0,0,0,0] },
+        heroSub:{ fontSize:11, color:'#4a4a4a', bold:true },
+        heroSubMuted:{ fontSize:10, color:'#8a8a8a', margin:[0,2,0,0] },
+        note:{ fontSize:9, color:'#6a6a6a', lineHeight:1.45 }
       },
       defaultStyle:{ fontSize:10, color:'#2a2a2a' }
     };
