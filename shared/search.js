@@ -419,6 +419,19 @@ function scoreItem(item, q, itemIdx, hays){
   return score;
 }
 
+/* ─── Lazy-load search-intents.js (80KB) — only when search is actually used.
+   Pages without search never pay the download. matchIntent() returns null
+   gracefully if not yet loaded (race-safe for first keystroke). */
+var __hvtIntentsLoadStarted = false;
+function loadSearchIntents(){
+  if(__hvtIntentsLoadStarted || window.SEARCH_INTENTS) return;
+  __hvtIntentsLoadStarted = true;
+  var s = document.createElement('script');
+  s.src = '/shared/search-intents.js?v=v1';
+  s.async = true;
+  document.head.appendChild(s);
+}
+
 /* ─── Intent pre-matcher (Mac-leveranse 2026-04-19) ─── */
 function matchIntent(q){
   if(typeof window.SEARCH_INTENTS !== 'object' || !window.SEARCH_INTENTS) return null;
@@ -527,8 +540,9 @@ function initSearch(){
   // Expose so setRegion() / language switcher can retranslate chips
   window.hvtSearchRebuildChips = buildChips;
 
-  // Show chips on focus (if input is empty) + close language dropdown
+  // Show chips on focus (if input is empty) + close language dropdown + kickstart intents-load
   input.addEventListener('focus', function(){
+    loadSearchIntents();
     // Close language dropdown when search is focused
     var rdd=document.getElementById('rdd');if(rdd)rdd.classList.remove('open');
     if(!input.value.trim()){
@@ -536,6 +550,12 @@ function initSearch(){
       dropdown.classList.remove('visible');
     }
   });
+  // Backup: load intents at idle time even if user never focuses search
+  if('requestIdleCallback' in window){
+    requestIdleCallback(loadSearchIntents, { timeout: 4000 });
+  } else {
+    setTimeout(loadSearchIntents, 3000);
+  }
 
   // Handle input
   input.addEventListener('input', function(){
