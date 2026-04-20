@@ -905,7 +905,7 @@ function toggleLawGroup(group){
 function _addLawSubCloseLabel(){
   try{
     var r=(typeof R==='function')?R():{};
-    var label=r.lawSubClose||'Skjul denne loven';
+    var label=r.lawSubClose||'Skjul denne paragrafen';
     document.querySelectorAll('.law-body > .info-card > .card-hdr > div > .card-title').forEach(function(titleEl){
       var sub=titleEl.closest('.info-card');
       if(!sub) return;
@@ -1134,12 +1134,12 @@ function initLawChapterNav(lawGroupId){
     if(!titleEl)return;
     var text=titleEl.textContent.replace(/[▼▲]/g,'').trim();
     var m=text.match(/\((?:kap|rozdz|ch|гл|فصل|cap|skyrius|章|cutub|ምዕ)\.\s*(\d+)/i);
-    var label,num;
-    if(m){num=m[1];label='Kap. '+num;}
-    else{num='P';label=text.split(/[:(–]/)[0].trim();if(label.length>12){var words=label.split(/\s+/);label=words[0];if(label.length>12)label=label.substring(0,10)+'…';}}
+    var label;
+    if(m){label='Kap. '+m[1];}
+    else{label=text.split(/[:(–]/)[0].trim();if(label.length>12){var words=label.split(/\s+/);label=words[0];if(label.length>12)label=label.substring(0,10)+'…';}}
     var chip=document.createElement('span');
     chip.className='law-chapter-chip';
-    chip.innerHTML='<span class="chip-num">'+num+'</span><span class="chip-lbl">'+label+'</span>';
+    chip.textContent=label;
     chip.onclick=function(e){
       e.stopPropagation();
       if(card.classList.contains('collapsed'))toggleCard(card);
