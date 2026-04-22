@@ -597,10 +597,10 @@ function initSearch(){
   wrap.innerHTML =
     '<div class="search-box">' +
       '<svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
-      '<input type="text" id="search-input" placeholder="'+placeholder+'" autocomplete="off" spellcheck="false">' +
+      '<input type="text" id="search-input" placeholder="'+placeholder+'" autocomplete="off" spellcheck="false" aria-label="'+placeholder+'" role="combobox" aria-expanded="false" aria-controls="search-dropdown">' +
       '<kbd class="search-kbd" title="'+kbdHint+'" aria-label="'+kbdHint+'">/</kbd>' +
     '</div>' +
-    '<div class="search-dropdown" id="search-dropdown"></div>' +
+    '<div class="search-dropdown" id="search-dropdown" role="listbox" aria-live="polite"></div>' +
     '<div class="search-suggestions" id="search-suggestions"></div>';
 
   point.parent.insertBefore(wrap, point.before);
@@ -660,8 +660,15 @@ function initSearch(){
       dropdown.innerHTML =
         '<div class="search-no-results">' +
           '<div class="search-no-results-text">'+noResultsText+' «<strong>'+escHtml(q)+'</strong>»</div>' +
-          '<a href="#" class="search-missing-link" onclick="openContactWithSuggestion(\''+escAttr(q)+'\');return false;">'+missingText+'</a>' +
+          '<a href="#" class="search-missing-link" data-missing-query="'+escAttr(q)+'">'+missingText+'</a>' +
         '</div>';
+      var missingLink = dropdown.querySelector('.search-missing-link');
+      if(missingLink){
+        missingLink.addEventListener('click', function(ev){
+          ev.preventDefault();
+          if(typeof openContactWithSuggestion === 'function') openContactWithSuggestion(this.dataset.missingQuery || '');
+        });
+      }
       dropdown.classList.add('visible');
       return;
     }
