@@ -1567,7 +1567,7 @@ function updateSalaryUI() {
     salDedCard.classList.add('collapsed');
     document.getElementById('sal-ded-rows').innerHTML = lawHint + infoRowsHTML(r.salDedRows);
     document.getElementById('sal-ded-title').innerHTML = (r.salDedTitle || 'Fradrag (kap. 6)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('sal-ded-desc').textContent = r.salDedDesc || 'Minstefradrag · Gjeldsrenter · Særfradrag';
+    document.getElementById('sal-ded-desc').textContent = r.salDedDesc || 'Utgifter du trekker fra · rentekostnader · spesielle fradrag';
   } else {
     salDedCard.classList.add('hidden');
   }
@@ -1577,7 +1577,7 @@ function updateSalaryUI() {
     salRealCard.classList.add('collapsed');
     document.getElementById('sal-real-rows').innerHTML = lawHint + infoRowsHTML(r.salRealRows);
     document.getElementById('sal-real-title').innerHTML = (r.salRealTitle || 'Gevinst og tap (kap. 9)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('sal-real-desc').textContent = r.salRealDesc || 'Realisasjon · Bolig · Arv/gave · Utflytting';
+    document.getElementById('sal-real-desc').textContent = r.salRealDesc || 'Når du selger noe · bolig · arv og gaver · ved utflytting fra Norge';
   } else {
     salRealCard.classList.add('hidden');
   }
@@ -1587,7 +1587,7 @@ function updateSalaryUI() {
     salCorpCard.classList.add('collapsed');
     document.getElementById('sal-corp-rows').innerHTML = lawHint + infoRowsHTML(r.salCorpRows);
     document.getElementById('sal-corp-title').innerHTML = (r.salCorpTitle || 'Særregler selskaper (kap. 10)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('sal-corp-desc').textContent = r.salCorpDesc || 'Utbytte · Aksjegevinst · Konsernbidrag · NOKUS';
+    document.getElementById('sal-corp-desc').textContent = r.salCorpDesc || 'Utbytte · gevinst på aksjer · pengeflytting innad i konsern · skatt på utenlandske datterselskap (NOKUS)';
   } else {
     salCorpCard.classList.add('hidden');
   }
@@ -1597,7 +1597,7 @@ function updateSalaryUI() {
     salReorgCard.classList.add('collapsed');
     document.getElementById('sal-reorg-rows').innerHTML = lawHint + infoRowsHTML(r.salReorgRows);
     document.getElementById('sal-reorg-title').innerHTML = (r.salReorgTitle || 'Omorganisering (kap. 11)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('sal-reorg-desc').textContent = r.salReorgDesc || 'Fusjon · Fisjon · Aksjebytte · Omdanning';
+    document.getElementById('sal-reorg-desc').textContent = r.salReorgDesc || 'Slå sammen selskaper · dele opp · bytte aksjer · endre selskapsform';
   } else {
     salReorgCard.classList.add('hidden');
   }
@@ -1607,7 +1607,7 @@ function updateSalaryUI() {
     salAntiCard.classList.add('collapsed');
     document.getElementById('sal-anti-rows').innerHTML = lawHint + infoRowsHTML(r.salAntiRows);
     document.getElementById('sal-anti-title').innerHTML = (r.salAntiTitle || 'Interessefellesskap og omgåelse (kap. 13)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('sal-anti-desc').textContent = r.salAntiDesc || 'Armlengdeprinsippet · Omgåelsesnormen · Skatteposisjoner';
+    document.getElementById('sal-anti-desc').textContent = r.salAntiDesc || 'Priser mellom nærstående må være som mellom uavhengige · forbud mot å «omgå» reglene · regler om opparbeidede skattefordeler';
   } else {
     salAntiCard.classList.add('hidden');
   }
@@ -1617,7 +1617,7 @@ function updateSalaryUI() {
     salTimeCard.classList.add('collapsed');
     document.getElementById('sal-time-rows').innerHTML = lawHint + infoRowsHTML(r.salTimeRows);
     document.getElementById('sal-time-title').innerHTML = (r.salTimeTitle || 'Tidfesting av inntekt og fradrag (kap. 14)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('sal-time-desc').textContent = r.salTimeDesc || 'Inntektsperioder · Realisasjon · Kontantprinsippet · Underskudd';
+    document.getElementById('sal-time-desc').textContent = r.salTimeDesc || 'Hvilket år inntekten/utgiften teller i · når den regnes · «betalt-prinsippet» · minus-år';
   } else {
     salTimeCard.classList.add('hidden');
   }
@@ -1627,7 +1627,7 @@ function updateSalaryUI() {
     salDeprCard.classList.add('collapsed');
     document.getElementById('sal-depr-rows').innerHTML = lawHint + infoRowsHTML(r.salDeprRows) + '<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);"><a href="javascript:void(0)" onclick="goToAvsCalc()" style="font-size:12px;font-weight:600;color:var(--accent);text-decoration:none;opacity:.8;">Åpne avskrivningskalkulatoren →</a></div>';
     document.getElementById('sal-depr-title').innerHTML = (r.salDeprTitle || 'Saldoavskrivning (kap. 14, §§ 14-40 til 14-48)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-    document.getElementById('sal-depr-desc').textContent = r.salDeprDesc || 'Saldogrupper · Avskrivningssatser · Gevinst og tap · Negativ saldo';
+    document.getElementById('sal-depr-desc').textContent = r.salDeprDesc || 'Slik skriver du av maskiner og bygg år for år (skatteloven § 14-40 flg.)';
   } else {
     salDeprCard.classList.add('hidden');
   }
@@ -1638,7 +1638,7 @@ function updateSalaryUI() {
       salPrincCard.classList.add('collapsed');
       document.getElementById('sal-princ-rows').innerHTML = lawHint + infoRowsHTML(r.salPrincRows);
       document.getElementById('sal-princ-title').innerHTML = (r.salPrincTitle || 'Prinsipper og rettspraksis') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-      document.getElementById('sal-princ-desc').textContent = r.salPrincDesc || 'Skatteevne · Nøytralitet · Legalitet · Sentrale høyesterettsdommer';
+      document.getElementById('sal-princ-desc').textContent = r.salPrincDesc || 'Hvem tåler å betale · at skatten ikke vrir atferd · at skatter trenger lov · viktige dommer';
     } else {
       salPrincCard.classList.add('hidden');
     }
@@ -1669,7 +1669,7 @@ function updateSalaryUI() {
       salWealthCard.classList.add('collapsed');
       document.getElementById('sal-wealth-rows').innerHTML = lawHint + infoRowsHTML(r.salWealthRows);
       document.getElementById('sal-wealth-title').innerHTML = (r.salWealthTitle || 'Formue (kap. 4)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-      document.getElementById('sal-wealth-desc').textContent = r.salWealthDesc || 'Verdsettelse · Bolig · Aksjer · Rabatter · Bunnfradrag';
+      document.getElementById('sal-wealth-desc').textContent = r.salWealthDesc || 'Hva eiendelene dine er verdt · bolig · aksjer · hva du kan trekke fra';
     } else {
       salWealthCard.classList.add('hidden');
     }
@@ -1681,7 +1681,7 @@ function updateSalaryUI() {
       salCreditCard.classList.add('collapsed');
       document.getElementById('sal-credit-rows').innerHTML = lawHint + infoRowsHTML(r.salCreditRows);
       document.getElementById('sal-credit-title').innerHTML = (r.salCreditTitle || 'Fradrag i skatt (kap. 16)') + ' <span style="font-size:11px;opacity:.5">▼</span>';
-      document.getElementById('sal-credit-desc').textContent = r.salCreditDesc || 'BSU · Pensjon · Kreditfradrag · SkatteFUNN';
+      document.getElementById('sal-credit-desc').textContent = r.salCreditDesc || 'Boligsparing for ungdom (BSU) · pensjonsfradrag · skatt betalt i utlandet · SkatteFUNN (skattefradrag for forskning)';
     } else {
       salCreditCard.classList.add('hidden');
     }
