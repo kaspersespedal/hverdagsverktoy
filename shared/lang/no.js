@@ -178,7 +178,7 @@ REGIONS['no'] = {
     budHowtoRows: [['— SLIK BRUKER DU KALKULATOREN —','Lag et personlig budsjett på få minutter'],['1. Legg inn inntekter','Skriv inn alle inntektene dine — lønn, leieinntekt, stønad, osv. Bruk «+ Legg til» for å legge til flere poster.'],['2. Legg inn utgifter','Velg kategori fra nedtrekkslisten (Bolig, Mat, Transport osv.), gi posten et navn, og skriv inn beløpet. Legg til så mange du vil.'],['3. Trykk Beregn','Du får oversikt over månedlig balanse, sparerate, årlig overskudd, og en fordeling av utgiftene per kategori.'],['4. Last ned (CSV)','Klikk «Last ned» for å lagre budsjettet som CSV-fil du kan åpne i Excel.'],['— SLIK LESER DU RESULTATENE —',''],['Månedlig balanse','Inntekter minus utgifter. Grønt = overskudd, rødt = underskudd.'],['Sparerate','Hvor stor andel av inntektene du sparer. 10-20% er anbefalt som minimum.'],['Utgifter per kategori','Viser hvor pengene dine går. Bruk stolpediagrammet til å finne de største utgiftspostene.'],['— GODT Å VITE —',''],['50/30/20-regelen','En enkel tommelfingerregel: 50% til nødvendigheter (bolig, mat, transport), 30% til ønsker (underholdning, klær), 20% til sparing og gjeldsbetaling.'],['Juster månedlig','Et budsjett er et levende dokument. Gå gjennom det hver måned og tilpass etter faktiske tall.']],
     bilHowtoTitle:'Slik bruker du Bilkalkulatoren', bilHowtoDesc:'Steg-for-steg guide til bilkostnader',
     bilHowtoRows: [['— SLIK BRUKER DU KALKULATOREN —','Beregn hva det koster å eie bil'],['1. Velg bilmerke','Velg bilmerke fra listen. «Gjennomsnitt» bruker typiske norske tall fra NAF og OFV.'],['2. Fyll inn detaljer','Kjøpspris, eiertid, årlig kjørelengde, drivstofftype og forsikring. Jo mer nøyaktig, jo bedre estimat.'],['3. Trykk Beregn','Du får total eierkostnad, kostnad per måned og per kilometer.'],['— SLIK LESER DU RESULTATENE —',''],['Kostnad per måned','Alt inkludert: verditap, drivstoff, forsikring, service, dekk, avgifter og bompenger.'],['Kostnad per km','Nyttig for å sammenligne med kollektivtransport eller el-sparkesykkel.'],['Verditap','Den desidert største kostnaden for de fleste. Nye biler taper mest de første årene.'],['— GODT Å VITE —',''],['Elbil vs. fossilbil','Elbiler har lavere drivstoff- og avgiftskostnader, men ofte høyere kjøpspris. Totalkostnaden kan være lik over tid.'],['Forsikring varierer mye','Ung sjåfør i Oslo betaler flere ganger mer enn erfaren sjåfør i distriktene. Sjekk flere tilbud.']],
-    npvHowtoTitle:'Slik bruker du NPV/IRR-kalkulatoren', npvHowtoDesc:'Steg-for-steg guide til NPV og IRR',
+    npvHowtoTitle:'Slik bruker du NPV/IRR-kalkulatoren', npvHowtoDesc:'Steg-for-steg: regn ut om investeringen lønner seg (NPV/IRR)',
     npvHowtoRows: [['— STEG FOR STEG —','Slik gjør du en investeringsanalyse'],['1. Investeringsbeløp','Skriv inn totalbeløpet du investerer i dag. Eks.: kjøp av maskin, eiendom, oppstart av prosjekt.'],['2. Diskonteringsrente','Bruk avkastningskravet ditt. Typisk WACC (8-12%) eller alternativ avkastning. Høyere rente = strengere krav.'],['3. Kontantstrømmene','Skriv inn forventet netto kontantstrøm (inntekter minus utgifter) for hvert år. Bruk realistiske estimater.'],['4. Trykk Beregn','Kalkulatoren gir deg NPV, IRR, tilbakebetalingstid og lønnsomhetsindeks.'],['— SLIK LESER DU RESULTATENE —',''],['NPV (netto nåverdi)','Positiv NPV = investeringen gir mer enn avkastningskravet. Jo høyere, jo bedre.'],['IRR (internrente)','Renten som gjør NPV = 0. Sammenlign med avkastningskravet ditt. IRR > kravet = god investering.'],['Tilbakebetalingstid','Hvor mange år det tar å tjene tilbake investeringen. Kortere er bedre — men si ikke nei til et godt prosjekt bare fordi det tar litt tid.'],['Lønnsomhetsindeks (PI)','Forholdet mellom nåverdi av inntekter og investering. PI > 1 = lønnsomt. PI på 1.3 betyr 30% avkastning utover kravet.'],['— ORDFORKLARING —',''],['NPV (Net Present Value)','Nåverdien av fremtidige kontantstrømmer minus investering'],['IRR (Internal Rate of Return)','Renten som gir NPV = 0'],['WACC','Vektet gjennomsnittlig kapitalkostnad'],['— TOLKNING —',''],['NPV > 0','Lønnsom – aksepter investering'],['NPV < 0','Ulønnsom – forkast'],['IRR > WACC','Verdiskapende prosjekt'],['IRR < WACC','Verdiødeleggende prosjekt'],['— REFERANSE —',''],['Diskonteringsrente','Vanligvis WACC (før skatt)'],['Typisk WACC','8–12%'],['Tilbakebetalingstid','Kortere er bedre'],['— EKSEMPEL 1: NY MASKIN —','Produksjonsbedrift vurderer ny maskin'],['Investering','1 000 000 kr'],['Kontantstrøm per år','300 000 kr i 5 år (økt produksjon, lavere vedlikehold)'],['Diskonteringsrente','10% (WACC)'],['NPV','137 236 kr → Lønnsomt! Investeringen gir mer enn 10% avkastning.'],['— EKSEMPEL 2: UTLEIELEILIGHET —','Privatperson vurderer kjøp av utleieleilighet'],['Investering','3 000 000 kr (egenkapital + lån)'],['Netto leieinntekt per år','150 000 kr (etter renter, vedlikehold, skatt)'],['Forventet salgsgevinst år 5','500 000 kr'],['Diskonteringsrente','7% (alternativavkastning aksjemarkedet)'],['Vurdering','Sammenlign NPV med alternativ plassering i fond — husk risiko og likviditet.'],['— EKSEMPEL 3: OPPSTART —','Gründer vurderer ny bedrift'],['Investering','500 000 kr'],['År 1-2','Negativt: -100 000 og -50 000 (oppstart)'],['År 3-5','Positivt: 200 000, 300 000, 400 000'],['Viktig','Bruk høyere diskonteringsrente (15-20%) for oppstart fordi risikoen er høyere.'],['— GODE RÅD —',''],['Vær konservativ med estimatene','Det er bedre å bli positivt overrasket enn å tape penger. Bruk realistiske (ikke optimistiske) kontantstrømmer.'],['Bruk riktig diskonteringsrente','For bedrifter: WACC. For privatpersoner: alternativavkastning (hva du ellers kunne tjent). For risikable prosjekter: legg på 3-5%.'],['Ikke glem restverdien','Har prosjektet verdi etter år 5? Legg inn salgsverdi eller skrapverdi i siste års kontantstrøm.'],['Tenk på skatt','Kontantstrømmene bør være etter skatt. Husk at avskrivninger gir skattefordel.'],['— VANLIGE FEIL —',''],['Blander kontantstrøm og resultat','NPV bruker kontantstrøm (penger inn/ut), IKKE regnskapsmessig overskudd. Avskrivninger er ikke kontantstrøm.'],['Glemmer arbeidskapital','Ny virksomhet trenger ofte penger bundet i varelager og kundefordringer — dette er en investering.'],['For lav diskonteringsrente','Bruker du 3% (bankrente) i stedet for 10% (WACC), ser alt lønnsomt ut. Bruk markedets avkastningskrav.'],['Ignorerer alternativkostnaden','Pengene du investerer kunne vært plassert andre steder. NPV-analysen tar hensyn til dette via diskonteringsrenten.'],['Bare ser på tilbakebetalingstid','Kort tilbakebetalingstid er fint, men et prosjekt som tar lengre tid kan ha mye høyere NPV. Se helheten.']],
     npvInfoRows:[["— ORDFORKLARING —",""],["NPV (Net Present Value)","Nåverdien av fremtidige kontantstrømmer minus investering"],["IRR (Internal Rate of Return)","Renten som gir NPV = 0"],["WACC","Vektet gjennomsnittlig kapitalkostnad"],["— TOLKNING —",""],["NPV > 0","Lønnsom – aksepter investering"],["NPV < 0","Ulønnsom – forkast"],["IRR > WACC","Verdiskapende prosjekt"],["IRR < WACC","Verdiødeleggende prosjekt"],["— REFERANSE —",""],["Diskonteringsrente","Vanligvis WACC (før skatt)"],["Typisk WACC","8–12%"],["Tilbakebetalingstid","Kortere er bedre"]],
     vatExemptDesc:"Unntatt fra loven · Uttak til privat bruk · Import",
@@ -562,7 +562,7 @@ REGIONS['no'] = {
       +'</div>',
 
     // --- ENK ---
-    selskapEnkTitle:'Enkeltpersonforetak (ENK)',
+    selskapEnkTitle:'Enkeltpersonforetak (ENK) — når du driver alene i eget navn',
     selskapEnkDesc:'Den enkleste måten å starte for seg selv',
     selskapEnkBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Et enkeltpersonforetak er den enkleste selskapsformen i Norge. Du og bedriften er juridisk sett samme person — det betyr at du har <b>fullt personlig ansvar</b> for all gjeld og forpliktelser.</div>'
       +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Nøkkelfakta</div>'
@@ -583,7 +583,7 @@ REGIONS['no'] = {
       +'</div>',
 
     // --- AS ---
-    selskapAsTitle:'Aksjeselskap (AS)',
+    selskapAsTitle:'Aksjeselskap (AS) — eget selskap, begrenset privat ansvar',
     selskapAsDesc:'Begrenset ansvar og profesjonell drift',
     selskapAsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Et aksjeselskap er et eget rettssubjekt — skilt fra eierne. Du risikerer <b>kun aksjekapitalen du har skutt inn</b>, ikke dine private eiendeler. AS er den vanligste selskapsformen i Norge, med over 350 000 registrerte selskaper.</div>'
       +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Nøkkelfakta</div>'
@@ -605,7 +605,7 @@ REGIONS['no'] = {
       +'</div>',
 
     // --- ANS / DA ---
-    selskapAnsTitle:'Ansvarlig selskap (ANS / DA)',
+    selskapAnsTitle:'Ansvarlig selskap (ANS = alle hefter helt, DA = delt ansvar)',
     selskapAnsDesc:'Partnerskap med personlig ansvar',
     selskapAnsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Et ansvarlig selskap er et partnerskap der deltakerne har <b>personlig ansvar for selskapets gjeld</b>. Krever minst 2 deltakere. Typisk for advokatfirma, legepraksiser og små samarbeidsprosjekter.</div>'
       +'<div style="background:color-mix(in srgb,var(--accent) 8%,var(--surface2));border:1.5px solid color-mix(in srgb,var(--accent) 20%,var(--border));border-radius:10px;padding:14px 16px;margin-bottom:16px;">'
@@ -629,7 +629,7 @@ REGIONS['no'] = {
       +'</div>',
 
     // --- KS ---
-    selskapKsTitle:'Kommandittselskap (KS)',
+    selskapKsTitle:'Kommandittselskap (KS) — to typer eiere, én med begrenset og én med fullt ansvar',
     selskapKsDesc:'To typer deltakere — ulik risiko og ansvar',
     selskapKsBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Et kommandittselskap har to typer deltakere med helt ulike roller og ansvar. Det var historisk populært i shipping og eiendom, men brukes sjelden i dag (ca. 120 registrerte i Norge).</div>'
       +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">De to rollene</div>'
@@ -725,7 +725,7 @@ REGIONS['no'] = {
       +'</div>',
 
     // --- Andre selskapsformer ---
-    selskapAndreTitle:'Andre selskapsformer',
+    selskapAndreTitle:'Andre former (ASA, NUF, SA, stiftelse)',
     selskapAndreDesc:'ASA, NUF, SA og stiftelse',
     selskapAndreBody:'<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">I tillegg til de vanligste formene finnes det flere selskapsformer for spesielle behov.</div>'
       +'<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">'
@@ -751,11 +751,11 @@ REGIONS['no'] = {
     selLawGroupTitle:'Aksjeloven og Selskapsloven',
     selLawGroupDesc:'Lovregler for AS, ANS, DA og KS',
     selLawLabelAsl:'Aksjeloven',
-    selLawLabelSel:'Selskapsloven',
+    selLawLabelSel:'Selskapsloven — regler for ANS, DA og KS',
     selLawHint:'Klikk på en paragrafhenvisning (§) for å se lovteksten på Lovdata',
 
     // --- Aksjeloven: Stiftelse (kap. 2) ---
-    selAslStiftTitle:'Stiftelse (kap. 2)',
+    selAslStiftTitle:'Hvordan starte et AS (aksjeloven kapittel 2)',
     selAslStiftDesc:'Stiftelsesdokument · Aksjekapital · Vedtekter',
     selAslStiftRows:[
       ['Hva trengs for å stifte et AS?','Stiftelsesdokument signert av alle aksjetegnere, med vedtekter, aksjekapital og styrevalg.','asl. § 2-1'],
@@ -767,7 +767,7 @@ REGIONS['no'] = {
     ],
 
     // --- Aksjeloven: Aksjekapital og utdeling (kap. 3 og 8) ---
-    selAslKapitalTitle:'Aksjekapital og utdeling (kap. 3 og 8)',
+    selAslKapitalTitle:'Pengene i selskapet og utbytte til eierne (aksjeloven kap. 3 og 8)',
     selAslKapitalDesc:'Kapitalforhøyelse · Utbytte · Forsvarlighetskrav',
     selAslKapitalRows:[
       ['Kapitalforhøyelse','Generalforsamlingen vedtar med 2/3 flertall. Kan gjøres ved nytegning, fondsemisjon eller fusjon.','asl. § 10-1'],
@@ -780,7 +780,7 @@ REGIONS['no'] = {
     ],
 
     // --- Aksjeloven: Ledelse og organisering (kap. 6) ---
-    selAslLedelseTitle:'Ledelse og organisering (kap. 6)',
+    selAslLedelseTitle:'Styre, daglig leder og møter (aksjeloven kap. 6)',
     selAslLedelseDesc:'Styre · Daglig leder · Generalforsamling',
     selAslLedelseRows:[
       ['Styrets oppgaver','Forvalte selskapet, påse forsvarlig organisering, føre tilsyn med daglig ledelse og selskapets virksomhet.','asl. § 6-12'],
@@ -840,7 +840,7 @@ REGIONS['no'] = {
     ],
 
     // --- Selskapsloven: Kommandittselskap (kap. 3) ---
-    selSelKsTitle:'Kommandittselskap (kap. 3)',
+    selSelKsTitle:'Kommandittselskap — komplementar + kommandittist (selskapsloven kap. 3)',
     selSelKsDesc:'Komplementar · Kommandittist · Ansvar',
     selSelKsRows:[
       ['Hva er et kommandittselskap?','Et selskap med minst én komplementar (ubegrenset ansvar) og minst én kommandittist (begrenset til innskudd).','sel. § 3-1'],
