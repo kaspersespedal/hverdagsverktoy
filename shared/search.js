@@ -39,7 +39,7 @@ var SEARCH_DATA = [
   {name:'Vitenskapelig kalkulator',desc:'Sin, cos, log, potenser og mer',url:'/kalkulator/#scientific',tags:'vitenskapelig kalkulator sin cos tan log ln potens kvadratrot pi scientific',type:'tool',page:'Kalkulator',sk:'kalkSci'},
   {name:'Valutakalkulator',desc:'Regn om mellom valutaer med oppdaterte kurser',url:'/kalkulator/#unit',tags:'valuta valutaomregner kurs dollar euro pund usd eur gbp sek dkk currency',type:'tool',page:'Kalkulator',sk:'kalkValuta'},
   {name:'Finansiell kalkulator',desc:'Nåverdi, fremtidsverdi og annuitetsberegninger',url:'/kalkulator/#finance',tags:'finansiell kalkulator nåverdi fremtidsverdi annuitet rente perioder financial',type:'tool',page:'Kalkulator',sk:'kalkFin'},
-  {name:'Ansattkostnad (AGA)',desc:'Beregn total årskostnad for en ansatt inkl. AGA og OTP',url:'/avgift/#aga-wrapper',tags:'ansattkostnad aga arbeidsgiveravgift otp pensjon feriepenger lønn kostnad ansatt arbeidsgiver employee cost',type:'tool',page:'Kalkulator',sk:'aga'},
+  {name:'Ansattkostnad (AGA)',desc:'Beregn total årskostnad for en ansatt inkl. AGA og OTP',url:'/avgift/#aga-wrapper',tags:'ansattkostnad aga arbeidsgiveravgift otp pensjon feriepenger lønn kostnad ansatt arbeidsgiver employee cost',type:'tool',page:'Avgift',sk:'aga'},
   {name:'Avskrivning',desc:'Regnskapsmessig og skattemessig avskrivning',url:'/kalkulator/#avs',tags:'avskrivning saldoavskrivning lineær saldo avskrivningsgruppe driftsmiddel restverdi levetid anleggsmiddel depreciation',type:'tool',page:'Kalkulator',sk:'avs'},
   {name:'Feriepenger',desc:'Beregn feriepenger ut fra årslønn og ferieordning',url:'/kalkulator/#ferie',tags:'feriepenger ferie ferielov ferieordning over 60 bonus ferietillegg 10.2 12 prosent holiday pay',type:'tool',page:'Kalkulator',sk:'ferie'},
   {name:'Effektiv rente',desc:'Se hva lånet faktisk koster inkl. gebyrer',url:'/kalkulator/#rente',tags:'effektiv rente nominell rente gebyr etableringsavgift lånekostnad effective interest rate',type:'tool',page:'Kalkulator',sk:'rente'},
@@ -72,14 +72,14 @@ var SEARCH_DATA = [
 
   // ══════ BEGREPER (Nivå 2 — fagtermer) ══════
   {name:'Fradrag',desc:'Beløp som reduserer skattegrunnlaget eller skatten din',url:'/skatt/#sal-ded-card',tags:'fradrag reduksjon skattegrunnlag skatt minstefradrag reisefradrag særfradrag gjeldsrenter deduction',type:'concept',page:'Skatt',sk:'fradrag'},
-  {name:'Trinnskatt',desc:'Progressiv skatt som øker med inntekten — 5 trinn',url:'/skatt/',tags:'trinnskatt trinn progressiv skatt inntekt sats bracket tax',type:'concept',page:'Skatt',sk:'trinnskatt'},
-  {name:'Skattefradrag',desc:'Fradrag som reduserer skatten din direkte',url:'/skatt/#sal-ded-card',tags:'skattefradrag fradrag redusere skatt tax deduction',type:'concept',page:'Skatt',sk:'skatteFradrag'},
-  {name:'Minstefradrag',desc:'Standardfradrag alle lønnsmottakere får automatisk',url:'/skatt/',tags:'minstefradrag standard fradrag lønn automatisk minimum deduction',type:'concept',page:'Skatt',sk:'minstefradrag'},
-  {name:'Trygdeavgift',desc:'Avgift til folketrygden — 7.6% av lønn (2026)',url:'/skatt/',tags:'trygdeavgift folketrygden nav 7.6 prosent social security',type:'concept',page:'Skatt',sk:'trygdeavgift'},
-  {name:'Egenkapital',desc:'Minimumskapital du må ha ved boligkjøp (10%)',url:'/boliglan/',tags:'egenkapital 10 prosent boligkjøp krav bank equity down payment',type:'concept',page:'Boliglån',sk:'egenkapital'},
+  {name:'Trinnskatt',desc:'Progressiv skatt som øker med inntekten — 5 trinn',url:'/skatt/#sal-info-card',tags:'trinnskatt trinn progressiv skatt inntekt sats bracket tax',type:'concept',page:'Skatt',sk:'trinnskatt'},
+  {name:'Skattefradrag',desc:'Fradrag som reduserer skatten din direkte',url:'/skatt/#sal-credit-card',tags:'skattefradrag fradrag redusere skatt tax deduction',type:'concept',page:'Skatt',sk:'skatteFradrag'},
+  {name:'Minstefradrag',desc:'Standardfradrag alle lønnsmottakere får automatisk',url:'/skatt/#sal-ded-card',tags:'minstefradrag standard fradrag lønn automatisk minimum deduction',type:'concept',page:'Skatt',sk:'minstefradrag'},
+  {name:'Trygdeavgift',desc:'Avgift til folketrygden — 7.6% av lønn (2026)',url:'/skatt/#sal-info-card',tags:'trygdeavgift folketrygden nav 7.6 prosent social security',type:'concept',page:'Skatt',sk:'trygdeavgift'},
+  {name:'Egenkapital',desc:'Minimumskapital du må ha ved boligkjøp (10%)',url:'/boliglan/#mor-req-card',tags:'egenkapital 10 prosent boligkjøp krav bank equity down payment',type:'concept',page:'Boliglån',sk:'egenkapital'},
   {name:'BSU — Boligsparing for ungdom',desc:'Skattefradrag på 10% av innskudd, maks 27 500 kr/år',url:'/boliglan/#mor-bsu-card',tags:'bsu boligsparing ungdom skattefradrag 10 prosent sparing bolig housing savings',type:'concept',page:'Boliglån',sk:'bsu'},
-  {name:'Gjeldsgrad',desc:'Forholdet mellom total gjeld og bruttoinntekt (maks 5x)',url:'/boliglan/',tags:'gjeldsgrad gjeld inntekt 5 ganger krav bank boliglån debt ratio',type:'concept',page:'Boliglån',sk:'gjeldsgrad'},
-  {name:'Stresstest',desc:'Banken tester om du tåler 3 prosentpoeng renteøkning',url:'/boliglan/',tags:'stresstest rente økning bank test tåle boliglån stress test',type:'concept',page:'Boliglån',sk:'stresstest'},
+  {name:'Gjeldsgrad',desc:'Forholdet mellom total gjeld og bruttoinntekt (maks 5x)',url:'/boliglan/#mor-req-card',tags:'gjeldsgrad gjeld inntekt 5 ganger krav bank boliglån debt ratio',type:'concept',page:'Boliglån',sk:'gjeldsgrad'},
+  {name:'Stresstest',desc:'Banken tester om du tåler 3 prosentpoeng renteøkning',url:'/boliglan/#mor-req-card',tags:'stresstest rente økning bank test tåle boliglån stress test',type:'concept',page:'Boliglån',sk:'stresstest'},
   {name:'Aksjonærmodellen',desc:'Modell for beskatning av utbytte til personlige aksjonærer',url:'/skatt/#sal-utdeling-card',tags:'aksjonærmodellen utbytte skjermingsfradrag oppjusteringsfaktor aksjonær shareholder model',type:'concept',page:'Skatt',sk:'aksjonarmodellen'},
   {name:'Foretaksmodellen',desc:'Modell for beskatning av enkeltpersonforetak',url:'/skatt/#sal-utdeling-card',tags:'foretaksmodellen enkeltpersonforetak enk selvstending næring sole proprietor',type:'concept',page:'Skatt',sk:'foretaksmodellen'},
   {name:'Verdsettelsesrabatt',desc:'Rabatt på formuesverdi for aksjer, bolig og driftsmidler',url:'/skatt/#formue-wrapper',tags:'verdsettelsesrabatt formue aksjer bolig rabatt reduksjon valuation discount',type:'concept',page:'Skatt',sk:'verdsettelsesrabatt'},
@@ -90,16 +90,16 @@ var SEARCH_DATA = [
   {name:'Annuitetslån',desc:'Lån med like store månedlige betalinger hele perioden',url:'/boliglan/#mor-wrapper',tags:'annuitetslån annuitet fast betaling like stor måned annuity loan',type:'concept',page:'Boliglån',sk:'annuitet'},
   {name:'Serielån',desc:'Lån med like store avdrag — totalt billigere enn annuitet',url:'/boliglan/#mor-wrapper',tags:'serielån serie avdrag billigere synkende betaling serial loan',type:'concept',page:'Boliglån',sk:'serieLan'},
   {name:'Næring eller hobby?',desc:'Når blir biinntekt skattepliktig næringsvirksomhet?',url:'/skatt/#sal-naering-hobby-card',tags:'næring hobby biinntekt skattepliktig virksomhet grense business hobby',type:'concept',page:'Skatt',sk:'naeringHobby'},
-  {name:'Konsernbidrag',desc:'Overføring av overskudd mellom selskaper i samme konsern',url:'/skatt/',tags:'konsernbidrag konsern overføring selskap morselskap datterselskap group contribution',type:'concept',page:'Skatt',sk:'konsernbidrag'},
-  {name:'Fritaksmetoden',desc:'Selskaper slipper skatt på aksjeutbytte og -gevinst',url:'/skatt/',tags:'fritaksmetoden fritak skatt utbytte aksjegevinst selskap participation exemption',type:'concept',page:'Skatt',sk:'fritaksmetoden'},
+  {name:'Konsernbidrag',desc:'Overføring av overskudd mellom selskaper i samme konsern',url:'/skatt/#sal-corp-card',tags:'konsernbidrag konsern overføring selskap morselskap datterselskap group contribution',type:'concept',page:'Skatt',sk:'konsernbidrag'},
+  {name:'Fritaksmetoden',desc:'Selskaper slipper skatt på aksjeutbytte og -gevinst',url:'/skatt/#sal-corp-card',tags:'fritaksmetoden fritak skatt utbytte aksjegevinst selskap participation exemption',type:'concept',page:'Skatt',sk:'fritaksmetoden'},
   {name:'Deltakerligning',desc:'Overskudd fordeles og beskattes hos hver deltaker — ANS, DA og KS',url:'/selskap/#selskap-skatt-card',tags:'deltakerligning deltakermodellen ansvarlig selskap kommandittselskap fordeling partner taxation',type:'concept',page:'Selskap',sk:'deltakerligning'},
   {name:'Selskapsskatt',desc:'22 % skatt på overskudd i aksjeselskap',url:'/selskap/#selskap-skatt-card',tags:'selskapsskatt 22 prosent overskudd aksjeselskap as corporate tax',type:'concept',page:'Selskap',sk:'selskapsskatt'},
   {name:'Utbytteskatt',desc:'37,84 % skatt på utbytte til personlige aksjonærer (oppjustert)',url:'/selskap/#selskap-skatt-card',tags:'utbytteskatt utbytte aksjonær oppjustert 37.84 1.72 dividend tax',type:'concept',page:'Selskap',sk:'utbytteskatt'},
   {name:'Komplementar',desc:'Aktiv leder i KS med ubegrenset personlig ansvar',url:'/selskap/#selskap-ks-card',tags:'komplementar ks kommandittselskap aktiv leder ubegrenset ansvar general partner',type:'concept',page:'Selskap',sk:'komplementar'},
   {name:'Kommandittist',desc:'Passiv investor i KS — ansvar begrenset til innskuddet',url:'/selskap/#selskap-ks-card',tags:'kommandittist ks investor passiv begrenset ansvar innskudd limited partner',type:'concept',page:'Selskap',sk:'kommandittist'},
-  {name:'MVA-satser',desc:'25% generell, 15% mat, 12% transport/kultur, 0% eksport',url:'/avgift/',tags:'mva satser 25 15 12 0 prosent mat transport kultur eksport vat rates',type:'concept',page:'Avgift',sk:'mvaSatser'},
-  {name:'Omsetningsgrense MVA',desc:'Registreringsplikt ved omsetning over 50 000 kr',url:'/avgift/',tags:'omsetningsgrense mva registrering 50000 plikt næring turnover threshold',type:'concept',page:'Avgift',sk:'omsetning'},
-  {name:'Fradragsrett MVA',desc:'Rett til å trekke fra inngående MVA på bedriftskjøp',url:'/avgift/',tags:'fradragsrett mva inngående utgående trekke fra bedrift input vat deduction',type:'concept',page:'Avgift',sk:'fradragsrett'},
+  {name:'MVA-satser',desc:'25% generell, 15% mat, 12% transport/kultur, 0% eksport',url:'/avgift/#vat-info-card',tags:'mva satser 25 15 12 0 prosent mat transport kultur eksport vat rates',type:'concept',page:'Avgift',sk:'mvaSatser'},
+  {name:'Omsetningsgrense MVA',desc:'Registreringsplikt ved omsetning over 50 000 kr',url:'/avgift/#vat-subj-card',tags:'omsetningsgrense mva registrering 50000 plikt næring turnover threshold',type:'concept',page:'Avgift',sk:'omsetning'},
+  {name:'Fradragsrett MVA',desc:'Rett til å trekke fra inngående MVA på bedriftskjøp',url:'/avgift/#vat-ded-card',tags:'fradragsrett mva inngående utgående trekke fra bedrift input vat deduction',type:'concept',page:'Avgift',sk:'fradragsrett'},
 
   // ══════ LOVHENVISNINGER (Nivå 3) ══════
   {name:'Skatteloven',desc:'Kapitler og paragrafer fra skatteloven',url:'/skatt/#sal-law-group',tags:'skatteloven lov skatt kapittel paragraf tax act',type:'law',page:'Skatt',sk:'skatteloven'},
@@ -182,7 +182,7 @@ var URL_TO_I18N_KEYS = {
   '/kalkulator/#scientific':       ['cmScientific'],
   '/kalkulator/#unit':             ['cmUnit'],
   '/kalkulator/#finance':          ['cmFinance','cmFinCalcs'],
-  '/kalkulator/#aga':              ['lblAga','agaRTotal','agaSal','salAgaTitle','salAgaDesc'],
+  '/avgift/#aga-wrapper':          ['lblAga','agaRTotal','agaSal','salAgaTitle','salAgaDesc'],
   '/kalkulator/#avs':              ['lblAvs'],
   '/kalkulator/#ferie':            ['lblFerie','agaFerie','lonnRlFeriepenger'],
   '/kalkulator/#rente':            ['lblRente','renteEffLabel','renteAmountLabel','renteIntro'],
@@ -233,7 +233,7 @@ var URL_TO_DISPLAY = {
   '/kalkulator/#scientific':      {title:'cmScientific'},
   '/kalkulator/#unit':            {title:'cmUnit'},
   '/kalkulator/#finance':         {title:'cmFinance'},
-  '/kalkulator/#aga':             {title:'lblAga'},
+  '/avgift/#aga-wrapper':         {title:'lblAga'},
   '/kalkulator/#avs':             {title:'lblAvs'},
   '/kalkulator/#ferie':           {title:'lblFerie'},
   '/kalkulator/#rente':           {title:'lblRente',      desc:'renteIntro'},
@@ -381,7 +381,7 @@ function scoreItem(item, q, itemIdx, hays){
   var i18nN = '';
   if(hays && hays.perItem && hays.perItem[itemIdx]){
     i18nN = hays.perItem[itemIdx];
-    if(i18nN){ tagsN = tagsN + ' ' + i18nN; nameN = nameN + ' ' + i18nN; }
+    if(i18nN){ tagsN = tagsN + ' ' + i18nN; }
   }
   var score = 0;
 
