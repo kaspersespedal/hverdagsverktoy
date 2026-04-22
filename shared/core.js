@@ -30,7 +30,7 @@ function injectRatesDisclaimer(resEl){
   if(age.stale){staleHtml='<div style="margin-top:4px;color:#b45309;font-weight:600;">'+(r.ratesStale||'Satsene ble sist oppdatert for over 6 måneder siden og kan være utdaterte.')+'</div>';}
   var d=document.createElement('div');d.className='rates-disc';
   d.style.cssText='font-size:11px;color:var(--ink3);padding:6px 12px;border-radius:6px;background:rgba(100,120,200,.04);margin-bottom:8px;line-height:1.5;';d.style.background='color-mix(in srgb,var(--accent) 4%,transparent)';
-  d.innerHTML=txt+' · <a href="https://skatteetaten.no" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">skatteetaten.no</a>'+staleHtml;
+  d.innerHTML=txt+' · <a href="https://skatteetaten.no" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">skatteetaten.no</a>'+staleHtml;
   resEl.insertBefore(d,resEl.firstChild);
 }
 // Auto-inject disclaimer when result sections become visible
@@ -619,7 +619,7 @@ function updateHero() {
       if(!em.parentElement.classList.contains('disco-link-wrap')){
         var link=document.createElement('a');
         link.href='https://www.youtube.com/watch?v=LUID0jSh2Ic&t=10';
-        link.target='_blank';link.rel='noopener';
+        link.target='_blank';link.rel='noopener noreferrer';
         link.className='disco-link-wrap';
         link.style.cssText='text-decoration:none;color:inherit;display:block;position:relative;z-index:10;cursor:pointer;';
         link.onclick=function(e){e.stopPropagation();};
@@ -643,7 +643,7 @@ function updateHero() {
     if(emH&&!emH.parentElement.classList.contains('hendrix-link-wrap')){
       var linkH=document.createElement('a');
       linkH.href='https://www.youtube.com/watch?v=LCGSfEWDNFs';
-      linkH.target='_blank';linkH.rel='noopener';
+      linkH.target='_blank';linkH.rel='noopener noreferrer';
       linkH.className='hendrix-link-wrap';
       linkH.style.cssText='text-decoration:none;color:inherit;-webkit-text-fill-color:inherit;display:block;position:relative;z-index:10;cursor:pointer;';
       linkH.onclick=function(e){e.stopPropagation();};
@@ -1382,7 +1382,7 @@ function lovdataLink(text, defaultLaw) {
     }
     const clean = para.replace(/\(.*$/,'').trim();
     const url = base + '%C2%A7' + clean;
-    return '<a href="'+url+'" target="_blank" rel="noopener" style="color:var(--accent-d);text-decoration:underline;font-weight:500">'+match.trim()+'</a>';
+    return '<a href="'+url+'" target="_blank" rel="noopener noreferrer" style="color:var(--accent-d);text-decoration:underline;font-weight:500">'+match.trim()+'</a>';
   });
 }
 function infoRowsHTML(rows, defaultLaw) {
@@ -1877,7 +1877,7 @@ function updateNpvUI() {
   repopulateSelect('bil-drivstoff', r.bilFuelOpts || ['Bensin','Diesel','Elbil'], ['bensin','diesel','elbil']);
   setText('bil-mode-plan-label', r.bilModePlan || 'Bil jeg vurderer å kjøpe');
   setText('bil-mode-own-label', r.bilModeOwn || 'Bil jeg allerede eier');
-  var resaleEl=document.getElementById('bil-l-resale');if(resaleEl){var rt=r.bilLResale||'Forventet salgsverdi / Finn-pris (kr)';resaleEl.innerHTML=rt.replace('Finn','<a href="https://www.finn.no/car/used/search.html" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:underline;">Finn</a>');}
+  var resaleEl=document.getElementById('bil-l-resale');if(resaleEl){var rt=r.bilLResale||'Forventet salgsverdi / Finn-pris (kr)';resaleEl.innerHTML=rt.replace('Finn','<a href="https://www.finn.no/car/used/search.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent);text-decoration:underline;">Finn</a>');}
   setText('bil-disclaimer', r.bilDisclaimer || '* Rough estimate. Actual costs vary with driving pattern, location, insurance terms and vehicle condition.');
   // Set translatable placeholders on bil inputs
   var estAuto=r.bilPlaceholderAuto||'Estimeres automatisk';
@@ -2730,8 +2730,46 @@ function updateFooter() {
   setText('seo-toggle', r.seoToggle||'Om denne siden');
 }
 
-function openPrivacy() { updatePrivacyUI(); document.getElementById('priv-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closePrivacy() { document.getElementById('priv-overlay').classList.remove('open'); document.body.style.overflow=''; }
+// ─── Modal a11y helper: role=dialog + focus-trap + Escape + focus restore ───
+var _hvtModalState = {prev:null, keyHandler:null, el:null};
+function _hvtModalOpen(overlayId, labelId){
+  var el = document.getElementById(overlayId); if(!el) return;
+  el.setAttribute('role','dialog');
+  el.setAttribute('aria-modal','true');
+  if(labelId) el.setAttribute('aria-labelledby', labelId);
+  el.setAttribute('tabindex','-1');
+  _hvtModalState.prev = document.activeElement;
+  _hvtModalState.el = el;
+  el.classList.add('open');
+  document.body.style.overflow='hidden';
+  // Initial focus: first focusable, fallback to the panel itself
+  setTimeout(function(){
+    var f = el.querySelector('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+    (f||el).focus();
+  }, 30);
+  _hvtModalState.keyHandler = function(e){
+    if(e.key==='Escape'){ e.preventDefault(); _hvtModalClose(); return; }
+    if(e.key!=='Tab') return;
+    var nodes = el.querySelectorAll('button:not([disabled]),[href],input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])');
+    var vis = []; for(var i=0;i<nodes.length;i++){ if(nodes[i].offsetParent!==null) vis.push(nodes[i]); }
+    if(!vis.length) return;
+    var first = vis[0], last = vis[vis.length-1];
+    if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+    else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+  };
+  document.addEventListener('keydown', _hvtModalState.keyHandler);
+}
+function _hvtModalClose(){
+  var el = _hvtModalState.el; if(!el) return;
+  el.classList.remove('open');
+  document.body.style.overflow='';
+  if(_hvtModalState.keyHandler){ document.removeEventListener('keydown', _hvtModalState.keyHandler); _hvtModalState.keyHandler=null; }
+  if(_hvtModalState.prev && _hvtModalState.prev.focus){ try{ _hvtModalState.prev.focus(); }catch(e){} }
+  _hvtModalState.el = null; _hvtModalState.prev = null;
+}
+
+function openPrivacy() { updatePrivacyUI(); _hvtModalOpen('priv-overlay','priv-h1'); }
+function closePrivacy() { _hvtModalClose(); }
 
 function updatePrivacyUI() {
   const r = R();
@@ -2755,8 +2793,8 @@ function updatePrivacyUI() {
   setText('priv-p-contact', r.privPContact||'Har du spørsmål om personvern? Send en e-post til kontakt@hverdagsverktoy.com.');
 }
 
-function openContact() { updateContactUI(); document.getElementById('contact-form').style.display=''; document.getElementById('con-success').classList.remove('show'); document.getElementById('contact-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
-function closeContact() { document.getElementById('contact-overlay').classList.remove('open'); document.body.style.overflow=''; }
+function openContact() { updateContactUI(); document.getElementById('contact-form').style.display=''; document.getElementById('con-success').classList.remove('show'); _hvtModalOpen('contact-overlay','con-h1'); }
+function closeContact() { _hvtModalClose(); }
 
 function submitContact(e) {
   e.preventDefault();
@@ -2766,7 +2804,20 @@ function submitContact(e) {
   if(!subjectSel) return;
   const subjectText = subjectSel.options[subjectSel.selectedIndex].textContent;
   var _cm=document.getElementById('con-message');const message=_cm?_cm.value.trim():'';
-  if(!name || !email || !message) return;
+  // a11y: set aria-invalid + inline error text for screen readers
+  var _r0 = R();
+  var _req = _r0.conErrRequired || 'Må fylles ut';
+  var _eml = _r0.conErrEmail || 'Ugyldig e-postadresse';
+  function _set(id, valid, msg){var f=document.getElementById(id);if(!f)return;f.setAttribute('aria-invalid',valid?'false':'true');var er=document.getElementById(id+'-err');if(er)er.textContent=valid?'':msg;}
+  var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  _set('con-name', !!name, _req);
+  _set('con-email', !!email && emailOk, email ? _eml : _req);
+  _set('con-message', !!message, _req);
+  if(!name || !email || !emailOk || !message){
+    var first = !name ? _cn : (!email || !emailOk) ? _ce : _cm;
+    if(first && first.focus) first.focus();
+    return;
+  }
   const _r = R();
   const body = (_r.conMailName||'Navn') + ': ' + name + '\n' + (_r.conMailEmail||'E-post') + ': ' + email + '\n\n' + message;
   const mailto = 'mailto:kontakt@hverdagsverktoy.com?subject=' + encodeURIComponent('Hverdagsverktøy — ' + subjectText) + '&body=' + encodeURIComponent(body);
@@ -6881,6 +6932,8 @@ function initPage(){
       if(document.getElementById('hvt-lang-toast')) return;
       var t = document.createElement('div');
       t.id = 'hvt-lang-toast';
+      t.setAttribute('role','status');
+      t.setAttribute('aria-live','polite');
       t.textContent = 'Språk kunne ikke lastes — viser norsk.';
       t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#b45309;color:#fff;padding:10px 18px;border-radius:8px;font:600 13px/1.3 Inter,sans-serif;z-index:10000;box-shadow:0 6px 20px rgba(0,0,0,.18);';
       document.body.appendChild(t);

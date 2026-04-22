@@ -1,16 +1,16 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v102';
+const CACHE_NAME = 'hverdagsverktoy-v104';
 
 // Files to cache on SW install for offline use.
 // Lang files are NOT precached — they'd add ~2.5 MB to install cost and most users
 // only need 1 of 10. The fetch handler caches them on-demand (stale-while-revalidate).
-// search-intents.js is lazy-loaded by search.js so it's not install-critical either.
 const PRECACHE_URLS = [
   './',
   './manifest.json',
   './shared/core.js',
   './shared/style.css',
-  './shared/search.js'
+  './shared/search.js',
+  './shared/search-intents.js'
 ];
 
 // Flag images (external CDN) — precached so language dropdown renders instantly
