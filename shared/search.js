@@ -28,6 +28,7 @@ var SEARCH_DATA = [
   {name:'Studielån',desc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen',url:'/personlig/#studie-wrapper',tags:'studielån lånekassen stipend student studie nedbetaling lån utdanning student loan',type:'tool',page:'Personlig økonomi',sk:'studielan'},
   {name:'Lønn etter skatt',desc:'Se hva du faktisk får utbetalt fra timelønnen din',url:'/personlig/#lonn-wrapper',tags:'lønn timelønn netto brutto utbetalt lønn etter skatt nettolønn hva får jeg salary after tax wage',type:'tool',page:'Personlig økonomi',sk:'lonn'},
   {name:'Abonnementskalkulator',desc:'Se totalkostnaden for alle abonnementene dine',url:'/personlig/#abo-wrapper',tags:'abonnement streaming netflix spotify hbo viaplay subscription månedskostnad',type:'tool',page:'Personlig økonomi',sk:'abo'},
+  {name:'Aksjer (veiledning)',desc:'Hva er aksjer, risiko, skatt 37,84 % og 5 tips til nybegynnere',url:'/personlig/#invest-wrapper',tags:'aksjer veiledning guide nybegynner risiko skjermingsfradrag utbytte ask aksjesparekonto indeksfond stocks shares investing dividends',type:'concept',page:'Personlig økonomi',sk:'aksjerVeiledning'},
 
   // Boliglån
   {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/#mor-wrapper',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling månedlig betaling mortgage',type:'tool',page:'Boliglån',sk:'boliglan'},
