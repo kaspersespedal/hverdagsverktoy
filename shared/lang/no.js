@@ -506,7 +506,7 @@ REGIONS['no'] = {
     studieIntro:'Beregn hva studielånet ditt faktisk koster. Se hvor mye som blir stipend, hva du må betale tilbake, og hva månedskostnaden blir med ulike renter. Basert på Lånekassens satser for 2025–2026.',
     studieLVarighet:'Studievarighet (år)', studieLGrad:'Fullfører du en grad?', studieLMnd:'Utbetalingsmåneder per år',
     studieLTotalstotte:'Total basisstøtte', studieStipendGrad:'Du mottar som stipend', studieStipendNoGrad:'Du mottar som stipend', studieLLaandel:'Du må betale tilbake',
-    studieOmgjGrad:'Bor du hjemmefra og fullfører graden: 40 % av borteboer-lånet blir stipend — penger du ikke må betale tilbake. Uten fullført grad: bare 15 %.',
+    studieOmgjGrad:'Bor du hjemmefra og fullfører graden: 40 % av lånet blir gratis stipend — penger du slipper å betale tilbake. Bor du hjemme hos foreldre, eller fullfører ikke graden: bare 15 %.',
     studieOmgjNoGrad:'Uten fullført grad får du kun 15 % som stipend (for beståtte studiepoeng). Fullfør graden for å få 40 %.',
     studieExtraHdr:'Tillegg (skoleavgift, ekstra lån o.l.) ▾', studieLSkolepenger:'Lån til skoleavgift — privatskole eller utland (kr/år)', studieLTilleggslan:'Ekstra lån — over 30 år eller med barn (kr/år)',
     studieSecNedbetaling:'Nedbetalingsvilkår', studieLRente:'Rente (%)', studieLNedbtid:'Nedbetalingstid i år (vanligvis 20)', studieBtnCalc:'Beregn studielån →',
