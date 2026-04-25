@@ -193,11 +193,13 @@ var URL_TO_I18N_KEYS = {
   '/kalkulator/#lvu':              ['lblLvu','lvuRSal','lvuRDiv','lvuGross'],
   // Skatt
   '/skatt/#sal-salary-card':       ['salTitle','salDesc','tabSal','cmFcSal'],
+  '/skatt/#sal-uttak-card':        ['uttakTitle','uttakDesc','tabSal'],
+  '/skatt/#sal-utdeling-card':     ['utdelingTitle','utdelingDesc','tabSal'],
   '/skatt/#formue-wrapper':        ['formueTitle','formueDesc'],
   '/skatt/#reise-wrapper':         ['reiseTitle','reiseDesc'],
   // Avgift
   '/avgift/#vat-wrapper':          ['vatTitle','vatDesc','tabVat','cmFcVat'],
-  '/avgift/#vat-adj-card':         ['vatAdjTitle','vatAdjDesc'],
+  '/avgift/#vat-adj-card':         ['adjTitle','adjDesc','tabVat'],
   // Selskap
   '/selskap/#selskap-velg-card':    ['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-as-card':     ['tabSelskap','dashDescSelskap'],
