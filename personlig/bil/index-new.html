@@ -1,0 +1,1439 @@
+<!doctype html>
+<html lang="no" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Bilkostnad — Personlig økonomi · Hverdagsverktøy</title>
+<meta name="description" content="Beregn hva bilen din faktisk koster per måned og per kilometer — verditap, drivstoff, forsikring, service, dekk, avgift og bompenger.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+    --ink:#ececea;
+    --ink2:#a8a39a;
+    --ink3:#797469;
+    --ink4:#54514a;
+    --bg:#0d0d0c;
+    --surface:#131312;
+    --surface-2:#191917;
+    --accent:#c89968;
+    --accent-2:#d8ad7e;
+    --line:rgba(255,255,255,.06);
+    --line-2:rgba(255,255,255,.10);
+    --line-warm:rgba(200,153,104,.18);
+
+    --pos:#5fa978;
+    --neg:#c46a6a;
+
+    --ease: cubic-bezier(.22, 1, .36, 1);
+
+    --nav-bg: rgba(13,13,12,.78);
+    --mark-bg: #1a1714;
+    --menu-bg: #161513;
+    --hover-bg: rgba(255,255,255,.04);
+    --hover-bg-soft: rgba(255,255,255,.02);
+    --kbd-bg: rgba(255,255,255,.04);
+    --flag-shadow: rgba(0,0,0,.4);
+  }
+
+  /* ── FROST ────────────────────────────────────────── */
+  [data-theme="frost"]{
+    --ink:#1a1714; --ink2:#5e574e; --ink3:#8a8378; --ink4:#b5ae9f;
+    --bg:#fafaf7; --surface:#ffffff; --surface-2:#f3f1ec;
+    --accent:#a87842; --accent-2:#8d6233;
+    --line:rgba(0,0,0,.08); --line-2:rgba(0,0,0,.14); --line-warm:rgba(168,120,66,.22);
+    --pos:#3a8a55; --neg:#b8504e;
+    --nav-bg: rgba(250,250,247,.82); --mark-bg:#f3eee5; --menu-bg:#ffffff;
+    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
+    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
+  }
+
+  /* ── HENDRIX ──────────────────────────────────────── */
+  [data-theme="hendrix"]{
+    --ink:#f4e6d3; --ink2:#c7ad8b; --ink3:#937c5e; --ink4:#5f4f3a;
+    --bg:#1f110b; --surface:#2a1810; --surface-2:#341f15;
+    --accent:#d4794a; --accent-2:#e6926a;
+    --line:rgba(244,230,211,.07); --line-2:rgba(244,230,211,.13); --line-warm:rgba(212,121,74,.22);
+    --pos:#7ab46f; --neg:#d36a5a;
+    --nav-bg: rgba(31,17,11,.82); --mark-bg:#34211a; --menu-bg:#2a1810;
+    --hover-bg: rgba(244,230,211,.05); --hover-bg-soft: rgba(244,230,211,.025);
+    --kbd-bg: rgba(244,230,211,.05); --flag-shadow: rgba(0,0,0,.4);
+  }
+
+  /* ── DARK (Mørk-Blå) ──────────────────────────────── */
+  [data-theme="dark"]{
+    --ink:#e6e8ef; --ink2:#9ba0b3; --ink3:#6c7185; --ink4:#444858;
+    --bg:#0d0e1a; --surface:#141528; --surface-2:#1c1d34;
+    --accent:#6c8aef; --accent-2:#94a8f5;
+    --line:rgba(255,255,255,.06); --line-2:rgba(255,255,255,.10); --line-warm:rgba(108,138,239,.20);
+    --pos:#5fa978; --neg:#c46a6a;
+    --nav-bg: rgba(13,14,26,.78); --mark-bg:#1c1d34; --menu-bg:#181a2e;
+    --hover-bg: rgba(255,255,255,.04); --hover-bg-soft: rgba(255,255,255,.02);
+    --kbd-bg: rgba(255,255,255,.04); --flag-shadow: rgba(0,0,0,.4);
+  }
+
+  /* ── GLASS ────────────────────────────────────────── */
+  [data-theme="glass"]{
+    --ink:#1a1d2e; --ink2:#5a6280; --ink3:#8a93ad; --ink4:#b5bdcf;
+    --bg:#f0f3fa; --surface:#ffffff; --surface-2:#e8edf6;
+    --accent:#6875f5; --accent-2:#5562e5;
+    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(104,117,245,.22);
+    --pos:#3a8a55; --neg:#b8504e;
+    --nav-bg: rgba(240,243,250,.82); --mark-bg:#e8edf6; --menu-bg:#ffffff;
+    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
+    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
+  }
+
+  /* ── BW (Ray) ─────────────────────────────────────── */
+  [data-theme="bw"]{
+    --ink:#f5f5f5; --ink2:#b0b0b0; --ink3:#808080; --ink4:#555555;
+    --bg:#0a0a0a; --surface:#141414; --surface-2:#1c1c1c;
+    --accent:#ffffff; --accent-2:#e0e0e0;
+    --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.13); --line-warm:rgba(255,255,255,.18);
+    --pos:#9aa39a; --neg:#c2a5a5;
+    --nav-bg: rgba(10,10,10,.82); --mark-bg:#1c1c1c; --menu-bg:#141414;
+    --hover-bg: rgba(255,255,255,.05); --hover-bg-soft: rgba(255,255,255,.025);
+    --kbd-bg: rgba(255,255,255,.05); --flag-shadow: rgba(0,0,0,.4);
+  }
+
+  /* ── DISCO ────────────────────────────────────────── */
+  [data-theme="disco"]{
+    --ink:#f5e6f5; --ink2:#c4a8c4; --ink3:#8a6e90; --ink4:#5a445e;
+    --bg:#15081a; --surface:#1f0d28; --surface-2:#281033;
+    --accent:#e91e8c; --accent-2:#ff4ba6;
+    --line:rgba(245,230,245,.06); --line-2:rgba(245,230,245,.10); --line-warm:rgba(233,30,140,.22);
+    --pos:#5fa978; --neg:#ff7a8a;
+    --nav-bg: rgba(21,8,26,.82); --mark-bg:#281033; --menu-bg:#1f0d28;
+    --hover-bg: rgba(245,230,245,.05); --hover-bg-soft: rgba(245,230,245,.025);
+    --kbd-bg: rgba(245,230,245,.05); --flag-shadow: rgba(0,0,0,.4);
+  }
+
+  /* ── PINK ─────────────────────────────────────────── */
+  [data-theme="pink"]{
+    --ink:#2a1a22; --ink2:#6b4a58; --ink3:#9a7585; --ink4:#c4a8b5;
+    --bg:#fef1f5; --surface:#ffffff; --surface-2:#fce2eb;
+    --accent:#e890b2; --accent-2:#d676a0;
+    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(232,144,178,.24);
+    --pos:#3a8a55; --neg:#d36a73;
+    --nav-bg: rgba(254,241,245,.82); --mark-bg:#fce2eb; --menu-bg:#ffffff;
+    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
+    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:var(--font-sans);
+    font-size:15px;line-height:1.55;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+  }
+  .container{max-width:1120px;margin:0 auto;padding:0 32px}
+  ::selection{background:rgba(200,153,104,.28);color:#fff}
+
+  /* ── NAV ─────────────────────────────────────────── */
+  .nav-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--nav-bg);
+    backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s var(--ease);
+  }
+  .nav-wrap.scrolled{border-bottom-color:var(--line)}
+  nav.top-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:24px}
+  .brand-row{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+  .mark{
+    width:28px;height:28px;border-radius:5px;
+    background:var(--mark-bg);
+    border:1px solid var(--line-warm);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .wordmark{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:18px;letter-spacing:-.2px;line-height:1;color:var(--ink);
+  }
+  .nav-right{display:flex;align-items:center;gap:8px;position:relative}
+  .nav-back{
+    font-size:13px;color:var(--ink3);text-decoration:none;
+    display:inline-flex;align-items:center;gap:6px;
+    padding:7px 11px;border-radius:5px;
+    border:1px solid var(--line-2);
+    transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .nav-back:hover{color:var(--ink);border-color:var(--line-warm);background:var(--hover-bg)}
+
+  .theme-btn,.lang-btn{
+    display:flex;align-items:center;gap:8px;background:transparent;
+    border:1px solid var(--line-2);color:var(--ink2);
+    padding:7px 11px;border-radius:5px;font:500 13px/1 var(--font-sans);cursor:pointer;
+    transition:border-color .2s var(--ease), color .2s var(--ease);
+  }
+  .theme-btn:hover,.theme-btn[aria-expanded="true"],
+  .lang-btn:hover,.lang-btn[aria-expanded="true"]{border-color:var(--line-warm);color:var(--ink)}
+  .theme-btn .theme-dot{
+    width:14px;height:14px;border-radius:50%;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+    flex-shrink:0;
+  }
+  .lang-btn .flag{width:18px;height:13px;border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px var(--flag-shadow)}
+  .lang-btn .flag img{width:100%;height:100%;display:block;object-fit:cover}
+  .chev{opacity:.5;transition:transform .2s var(--ease)}
+  .theme-btn[aria-expanded="true"] .chev,
+  .lang-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+
+  .theme-menu,.lang-menu{
+    position:absolute;top:calc(100% + 8px);right:0;
+    background:var(--menu-bg);
+    border:1px solid var(--line-2);
+    border-radius:6px;padding:8px;min-width:200px;
+    box-shadow:0 18px 40px rgba(0,0,0,.5);
+    opacity:0;pointer-events:none;transform:translateY(-4px);
+    transition:opacity .18s var(--ease), transform .18s var(--ease);
+    z-index:100;
+  }
+  .theme-menu.open,.lang-menu.open{opacity:1;pointer-events:auto;transform:none}
+  .theme-menu h5,.lang-menu h5{
+    margin:6px 8px 4px;font:600 10px/1 var(--font-sans);
+    letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);
+  }
+  .theme-menu h5:not(:first-child),.lang-menu h5:not(:first-child){margin-top:8px}
+  .theme-item,.lang-menu a{
+    display:flex;align-items:center;gap:10px;width:100%;
+    background:transparent;border:0;cursor:pointer;
+    padding:7px 8px;border-radius:4px;
+    color:var(--ink2);text-decoration:none;
+    font:500 13px/1 var(--font-sans);
+    text-align:left;
+    transition:background .15s var(--ease), color .15s var(--ease);
+  }
+  .theme-item:hover,.lang-menu a:hover{background:var(--hover-bg);color:var(--ink)}
+  .theme-item.current,.lang-menu a.current{color:var(--ink);background:var(--hover-bg-soft)}
+  .lang-menu a .flag{width:18px;height:13px;border-radius:2px;overflow:hidden;flex-shrink:0;box-shadow:0 0 0 1px var(--flag-shadow)}
+  .lang-menu a .flag img{width:100%;height:100%;display:block;object-fit:cover}
+
+  /* ── TABS ────────────────────────────────────────── */
+  .tabs-wrap{
+    border-bottom:1px solid var(--line);
+    background:var(--nav-bg);
+    position:sticky;top:64px;z-index:40;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  }
+  .tabs{
+    display:flex;gap:2px;padding:6px 0;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex-shrink:0;background:transparent;border:0;
+    padding:10px 14px;border-radius:4px;cursor:pointer;
+    font:500 13px/1 var(--font-sans);letter-spacing:-.05px;
+    color:var(--ink3);
+    display:flex;align-items:center;gap:8px;
+    transition:color .2s var(--ease), background .2s var(--ease);
+    position:relative;
+    text-decoration:none;
+  }
+  .tab:hover{color:var(--ink2);background:var(--hover-bg-soft)}
+  .tab[aria-selected="true"]{color:var(--ink)}
+  .tab[aria-selected="true"]::after{
+    content:"";position:absolute;left:14px;right:14px;bottom:-7px;height:2px;
+    background:var(--accent);
+  }
+  .tab .tab-icon{width:14px;height:14px;color:currentColor;opacity:.6}
+  .tab[aria-selected="true"] .tab-icon{opacity:1;color:var(--accent)}
+
+  /* ── PAGE HERO ───────────────────────────────────── */
+  .page-hero{
+    padding:56px 0 36px;text-align:left;
+    border-bottom:1px solid var(--line);
+  }
+  .page-hero .container{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:end}
+
+  .page-eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font:600 11px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--ink3);margin-bottom:18px;
+  }
+  .page-eyebrow a{color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
+  .page-eyebrow a:hover{color:var(--accent)}
+  .page-eyebrow .arrow{color:var(--ink4);font-weight:400}
+  .page-eyebrow .current{color:var(--ink2)}
+
+  h1.page-title{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:clamp(36px, 4.6vw, 54px);line-height:1.05;letter-spacing:-1.2px;
+    margin:0 0 14px;color:var(--ink);
+  }
+  h1.page-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
+  .page-lead{
+    font-size:14px;line-height:1.55;color:var(--ink2);margin:0;max-width:58ch;
+  }
+
+  .page-stats{
+    display:flex;flex-direction:column;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .page-stat{
+    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .page-stat:last-child{border-bottom:none}
+  .page-stat .l{
+    font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;
+    color:var(--ink3);
+  }
+  .page-stat .v{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:30px;line-height:1;letter-spacing:-.6px;color:var(--ink);
+    font-variant-numeric:tabular-nums lining-nums;
+    white-space:nowrap;
+  }
+  .page-stat .v .u{
+    font-family:var(--font-sans);font-weight:500;
+    font-size:13px;color:var(--ink3);letter-spacing:0;
+    margin-left:4px;
+  }
+
+  /* ── FOOTER ──────────────────────────────────────── */
+  footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot em{font-style:italic;color:var(--ink4)}
+
+  @media (max-width: 880px){
+    .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
+    .page-stats{align-self:stretch}
+    .tabs-wrap{top:60px}
+  }
+  @media (max-width: 560px){
+    .container{padding:0 22px}
+    .page-hero{padding:36px 0 28px}
+    h1.page-title{font-size:clamp(30px, 8vw, 42px)}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important}
+    html{scroll-behavior:auto}
+  }
+
+  /* ── BACK PILL (creative return) ─────────────────── */
+  .back-pill-wrap{margin:24px 0 0}
+  .back-pill{
+    display:inline-flex;align-items:center;gap:14px;
+    padding:11px 18px 11px 14px;
+    background:var(--surface);border:1px solid var(--line-2);border-radius:999px;
+    text-decoration:none;color:var(--ink2);
+    transition:background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
+  }
+  .back-pill:hover{background:var(--surface-2);border-color:var(--line-warm);color:var(--ink);transform:translateX(-3px)}
+  .back-pill .arrow-back{
+    width:24px;height:24px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--hover-bg);color:var(--accent);
+    transition:background .25s var(--ease)}
+  .back-pill:hover .arrow-back{background:var(--hover-bg)}
+  .back-pill .back-eyebrow{
+    font:600 10px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--ink3);
+  }
+  .back-pill .back-label{
+    font:500 13px/1 var(--font-sans);color:inherit;
+  }
+  .back-pill .back-stack{display:flex;flex-direction:column;gap:3px}
+
+  /* ── BIL GRID ────────────────────────────────────── */
+  .bil-grid{
+    display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;
+    padding:8px 0 56px;
+  }
+  .bil-form{display:flex;flex-direction:column;gap:24px}
+  .bil-section{
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:18px 22px 20px;
+  }
+  .bil-section-head{
+    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    padding-bottom:12px;margin-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .bil-section-head h2{
+    font-family:var(--font-sans);font-size:11px;font-weight:600;
+    letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
+    margin:0;
+  }
+
+  /* form rows */
+  .form-row{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+    margin-bottom:12px;
+  }
+  .form-row:last-child{margin-bottom:0}
+  .fg{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .flbl{
+    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--ink3);
+  }
+  .fc{
+    width:100%;background:var(--bg);
+    border:1px solid var(--line-2);border-radius:5px;
+    padding:10px 12px;
+    color:var(--ink);font:500 13.5px/1.2 var(--font-sans);
+    outline:none;
+    transition:border-color .2s var(--ease), background .2s var(--ease);
+    font-variant-numeric:tabular-nums;
+  }
+  select.fc{
+    appearance:none;-webkit-appearance:none;cursor:pointer;
+    padding-right:32px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23797469' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center;
+  }
+  .fc:focus{border-color:var(--line-warm);background:var(--surface-2)}
+  .fhint{
+    font:400 11.5px/1.4 var(--font-sans);
+    color:var(--ink3);margin-top:2px;font-style:italic;min-height:1em;
+  }
+
+  /* manual override (collapsible) */
+  details.bil-manual{margin-top:6px}
+  details.bil-manual > summary{
+    list-style:none;cursor:pointer;
+    font:600 11px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--ink3);
+    padding:10px 0;
+    display:flex;align-items:center;gap:8px;
+    transition:color .2s var(--ease);
+  }
+  details.bil-manual > summary::-webkit-details-marker{display:none}
+  details.bil-manual > summary:hover{color:var(--ink2)}
+  details.bil-manual > summary::after{
+    content:"";width:8px;height:8px;
+    border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+    transform:rotate(45deg);transition:transform .2s var(--ease);
+    margin-left:4px;
+  }
+  details.bil-manual[open] > summary::after{transform:rotate(-135deg)}
+  details.bil-manual[open] > summary{margin-bottom:10px;border-bottom:1px solid var(--line);padding-bottom:14px}
+
+  .bil-calc-btn{
+    margin-top:4px;width:100%;
+    padding:14px 20px;background:var(--accent);
+    border:0;border-radius:6px;cursor:pointer;
+    color:var(--surface);font:600 14px/1 var(--font-sans);letter-spacing:.2px;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    transition:background .2s var(--ease), transform .15s var(--ease);
+  }
+  .bil-calc-btn:hover{background:var(--accent-2)}
+  .bil-calc-btn:active{transform:scale(.99)}
+  [data-theme="frost"] .bil-calc-btn,
+  [data-theme="glass"] .bil-calc-btn,
+  [data-theme="pink"] .bil-calc-btn{color:#fff}
+
+  /* ── RESULT (sticky right) ───────────────────────── */
+  .bil-result{
+    position:sticky;top:124px;
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:24px 22px 20px;
+    display:flex;flex-direction:column;gap:16px;
+  }
+  .res-headline{
+    border-bottom:1px solid var(--line);
+    padding-bottom:16px;
+  }
+  .res-headline .r-lbl{
+    display:block;
+    font:600 10px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--ink3);margin-bottom:8px;
+  }
+  .res-headline .r-val{
+    display:block;
+    font-family:var(--font-serif);font-weight:500;
+    font-size:38px;line-height:1;letter-spacing:-.8px;color:var(--ink);
+    font-variant-numeric:tabular-nums lining-nums;
+  }
+  .res-headline .r-sub{
+    display:block;margin-top:8px;
+    font-size:12.5px;color:var(--ink3);
+  }
+  .res-stats{display:flex;flex-direction:column}
+  .res-stat{
+    display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    padding:11px 0;border-bottom:1px solid var(--line);
+    font-size:13px;
+  }
+  .res-stat:last-child{border-bottom:none}
+  .res-stat .l{color:var(--ink2);
+    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;}
+  .res-stat .v{
+    font-family:var(--font-serif);font-weight:500;font-size:17px;
+    color:var(--ink);font-variant-numeric:tabular-nums;
+  }
+  .res-stat .v.dim{color:var(--ink4)}
+  .res-stat.divider{
+    margin-top:6px;padding-top:14px;
+    border-top:1px solid var(--line);
+  }
+
+  .res-csv{
+    margin-top:2px;width:100%;
+    padding:11px 14px;
+    background:transparent;border:1px solid var(--line-2);border-radius:5px;
+    color:var(--ink2);font:600 12px/1 var(--font-sans);letter-spacing:.3px;
+    cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    transition:all .2s var(--ease);
+  }
+  .res-csv:hover{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink)}
+  .res-csv:disabled{opacity:.4;cursor:not-allowed}
+
+  .res-disclaimer{
+    font-size:11.5px;color:var(--ink3);margin:0;font-style:italic;line-height:1.5;
+  }
+
+  /* ── BREAKDOWN (bar chart) ───────────────────────── */
+  .bil-breakdown{
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:22px 24px 26px;
+    margin-bottom:48px;
+  }
+  .bil-breakdown.empty{display:none}
+  .bil-breakdown h3{
+    font-family:var(--font-sans);font-size:11px;font-weight:600;
+    letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
+    margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--line);
+  }
+  .bil-bar{
+    display:grid;grid-template-columns:160px 1fr 100px;gap:12px;align-items:center;
+    padding:6px 0;font-size:13px;
+  }
+  .bil-bar .bn{color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bil-bar .bv{
+    font-family:var(--font-serif);font-weight:500;color:var(--ink);
+    font-variant-numeric:tabular-nums;text-align:right;
+  }
+  .bil-bar .btrack{
+    background:var(--bg);border:1px solid var(--line);border-radius:4px;
+    height:10px;overflow:hidden;
+  }
+  .bil-bar .bfill{
+    height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    border-radius:3px;transition:width .5s cubic-bezier(.22,1,.36,1);
+  }
+
+  @media (max-width: 880px){
+    .bil-grid{grid-template-columns:1fr}
+    .bil-result{position:static;top:auto}
+    .bil-bar{grid-template-columns:120px 1fr 84px;gap:8px}
+  }
+  @media (max-width: 560px){
+    .bil-section{padding:16px 16px 18px}
+    .bil-result{padding:20px 18px 18px}
+    .form-row{grid-template-columns:1fr;gap:12px}
+    .bil-bar{grid-template-columns:100px 1fr 72px;font-size:12px}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark-g" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8ad7e"/><stop offset="1" stop-color="#a87842"/>
+    </linearGradient>
+    <symbol id="mark-h" viewBox="0 0 64 64">
+      <rect x="14" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="42" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="22" y="28" width="20" height="8" rx="1.5" fill="url(#mark-g)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="nav-wrap" id="navWrap">
+  <div class="container">
+    <nav class="top-nav">
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy hjem">
+        <span class="mark"><svg width="16" height="16"><use href="#mark-h"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+      <div class="nav-right">
+        <a href="/" class="nav-back">
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+          Forsiden
+        </a>
+        <button class="theme-btn" id="themeBtn" aria-haspopup="true" aria-expanded="false" aria-controls="themeMenu">
+          <span class="theme-dot" id="themeDot" style="background:#1e1e1e"></span>
+          <span class="theme-label">Tema</span>
+          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
+        </button>
+        <div class="theme-menu" id="themeMenu" role="menu" aria-labelledby="themeBtn">
+          <h5>Tema</h5>
+          <button type="button" class="theme-item" data-theme="carbon"  role="menuitem"><span class="theme-dot" style="background:#1e1e1e"></span> Mørk</button>
+          <button type="button" class="theme-item" data-theme="frost"   role="menuitem"><span class="theme-dot" style="background:#e8ecf4;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span> Lys</button>
+          <button type="button" class="theme-item" data-theme="dark"    role="menuitem"><span class="theme-dot" style="background:#242740"></span> Mørk-Blå</button>
+          <button type="button" class="theme-item" data-theme="glass"   role="menuitem"><span class="theme-dot" style="background:#7c88f8"></span> Glass</button>
+          <button type="button" class="theme-item" data-theme="hendrix" role="menuitem"><span class="theme-dot" style="background:#9e5c3a"></span> Hendrix</button>
+          <button type="button" class="theme-item" data-theme="bw"      role="menuitem"><span class="theme-dot" style="background:#8a8a8a;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)"></span> Ray</button>
+          <button type="button" class="theme-item" data-theme="disco"   role="menuitem"><span class="theme-dot" style="background:#b044a2"></span> Disco</button>
+          <button type="button" class="theme-item" data-theme="pink"    role="menuitem"><span class="theme-dot" style="background:#e4a0be;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span> Rosa</button>
+        </div>
+        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu">
+          <span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span>
+          <span class="lang-label">Norsk</span>
+          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
+        </button>
+        <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
+          <h5>Hovedspråk</h5>
+          <a href="/personlig/" class="current" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
+          <a href="/en/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
+          <h5>Språk i Norge</h5>
+          <a href="/pl/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
+          <a href="/uk/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
+          <a href="/ar/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
+          <a href="/lt/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
+          <a href="/so/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
+          <a href="/ti/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
+          <h5>Internasjonalt</h5>
+          <a href="/zh/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
+          <a href="/fr/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap" role="tablist" aria-label="Kategorier">
+  <div class="container">
+    <div class="tabs">
+      <a href="/personlig/" class="tab" role="tab" aria-selected="true">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
+        Personlig økonomi
+      </a>
+      <a href="/boliglan/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg>
+        Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>
+        Kalkulator
+      </a>
+      <a href="/skatt/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+        Skatt
+      </a>
+      <a href="/selskap/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg>
+        Selskap
+      </a>
+      <a href="/avgift/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+        Avgift
+      </a>
+      <a href="/regnskap/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+        Regnskap
+      </a>
+      <a href="/lov/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V21"/><path d="M9 21 H15"/><path d="M5 6 H19"/><path d="M2 13 L5 6 L8 13 Z"/><path d="M16 13 L19 6 L22 13 Z"/></svg>
+        Lov
+      </a>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+
+  <div class="container">
+    <div class="back-pill-wrap">
+      <a href="/personlig/index-new.html" class="back-pill" aria-label="Tilbake til Personlig økonomi">
+        <span class="arrow-back" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/><line x1="4" y1="7" x2="12" y2="7"/></svg>
+        </span>
+        <span class="back-stack">
+          <span class="back-eyebrow">Personlig økonomi</span>
+          <span class="back-label">Tilbake til alle verktøy</span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <section class="page-hero" data-screen-label="Bilkostnad Hero">
+    <div class="container">
+      <div>
+        <div class="page-eyebrow">
+          <a href="/">Forsiden</a>
+          <span class="arrow">/</span>
+          <a href="/personlig/index-new.html">Personlig økonomi</a>
+          <span class="arrow">/</span>
+          <span class="current">Bilkostnad</span>
+        </div>
+        <h1 class="page-title"><em>Bilkostnad</em></h1>
+        <p class="page-lead">Hva bilen din faktisk koster — per måned, per kilometer og over hele eiertiden. Verditap, drivstoff, forsikring, service, dekk, trafikkforsikringsavgift og bompenger. Alle beregninger gjøres lokalt i nettleseren.</p>
+      </div>
+      <div class="page-stats">
+        <div class="page-stat"><span class="l">Per måned</span><span class="v" id="hStatMnd">–</span></div>
+        <div class="page-stat"><span class="l">Per km</span><span class="v" id="hStatKm">–</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="bil-grid">
+
+      <div class="bil-form">
+
+        <section class="bil-section" aria-labelledby="bilCarHdr">
+          <header class="bil-section-head">
+            <h2 id="bilCarHdr">Bilen</h2>
+          </header>
+
+          <div class="form-row">
+            <div class="fg">
+              <label class="flbl" for="bil-pris">Kjøpspris (kr)</label>
+              <input class="fc" id="bil-pris" inputmode="numeric" type="text" value="400 000">
+            </div>
+            <div class="fg">
+              <label class="flbl" for="bil-tilstand">Kjøpt som</label>
+              <select class="fc" id="bil-tilstand">
+                <option value="brukt">Brukt</option>
+                <option value="ny">Ny</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="fg">
+              <label class="flbl" for="bil-merke">Bilmerke</label>
+              <select class="fc" id="bil-merke"></select>
+            </div>
+            <div class="fg">
+              <label class="flbl" for="bil-aarsmodell">Årsmodell</label>
+              <select class="fc" id="bil-aarsmodell"></select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="fg">
+              <label class="flbl" for="bil-kjopsaar">Kjøpsår</label>
+              <select class="fc" id="bil-kjopsaar"></select>
+            </div>
+            <div class="fg">
+              <label class="flbl" for="bil-aar">Eiertid (år)</label>
+              <input class="fc" id="bil-aar" type="number" min="1" max="20" step="1" value="5">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="fg">
+              <label class="flbl" for="bil-km">Årlig kjørelengde (km)</label>
+              <input class="fc" id="bil-km" inputmode="numeric" type="text" value="12 000">
+            </div>
+            <div class="fg">
+              <label class="flbl" for="bil-start-km">Kilometerstand ved kjøp</label>
+              <input class="fc" id="bil-start-km" inputmode="numeric" type="text" value="0">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="fg">
+              <label class="flbl" for="bil-drivstoff">Drivstoff</label>
+              <select class="fc" id="bil-drivstoff">
+                <option value="bensin">Bensin</option>
+                <option value="diesel">Diesel</option>
+                <option value="elbil">Elbil</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label class="flbl" for="bil-forsikring-type">Forsikringstype</label>
+              <select class="fc" id="bil-forsikring-type">
+                <option value="fullkasko">Fullkasko</option>
+                <option value="delkasko">Delkasko</option>
+                <option value="ansvar">Ansvar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="fhint" id="bil-ins-hint"></div>
+        </section>
+
+        <section class="bil-section" aria-labelledby="bilManualHdr">
+          <header class="bil-section-head">
+            <h2 id="bilManualHdr">Faktiske kostnader (valgfritt)</h2>
+          </header>
+          <details class="bil-manual">
+            <summary>Ser tallene feil ut? Legg inn faktiske kostnader</summary>
+            <div class="form-row">
+              <div class="fg">
+                <label class="flbl" for="bil-resale">Forventet salgsverdi (kr)</label>
+                <input class="fc" id="bil-resale" inputmode="numeric" type="text" placeholder="Estimeres automatisk" value="">
+              </div>
+              <div class="fg">
+                <label class="flbl" for="bil-forsikring">Forsikring (kr/mnd)</label>
+                <input class="fc" id="bil-forsikring" inputmode="numeric" type="text" placeholder="Estimeres automatisk" value="">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="fg">
+                <label class="flbl" for="bil-drivstoff-mnd">Drivstoff/lading (kr/mnd)</label>
+                <input class="fc" id="bil-drivstoff-mnd" inputmode="numeric" type="text" placeholder="Estimeres automatisk" value="">
+              </div>
+              <div class="fg">
+                <label class="flbl" for="bil-service-mnd">Service og vedlikehold (kr/mnd)</label>
+                <input class="fc" id="bil-service-mnd" inputmode="numeric" type="text" placeholder="Estimeres automatisk" value="">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="fg">
+                <label class="flbl" for="bil-bom-mnd">Bompenger (kr/mnd)</label>
+                <input class="fc" id="bil-bom-mnd" inputmode="numeric" type="text" placeholder="Estimeres automatisk" value="">
+              </div>
+              <div class="fg"></div>
+            </div>
+          </details>
+        </section>
+
+        <button type="button" id="bilCalcBtn" class="bil-calc-btn">
+          Beregn bilkostnad
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
+        </button>
+
+      </div>
+
+      <aside class="bil-result" aria-live="polite">
+        <div class="res-headline">
+          <span class="r-lbl">Total eierkostnad</span>
+          <span class="r-val" id="rTotal">–</span>
+          <span class="r-sub" id="rTotalSub">Legg inn tall for å se kostnadene</span>
+        </div>
+        <div class="res-stats">
+          <div class="res-stat"><span class="l">Per måned</span><span class="v" id="rMnd">–</span></div>
+          <div class="res-stat"><span class="l">Per km</span><span class="v" id="rKm">–</span></div>
+          <div class="res-stat divider"><span class="l">Verditap</span><span class="v" id="rVerditap">–</span></div>
+          <div class="res-stat"><span class="l">Drivstoff/lading</span><span class="v" id="rDriv">–</span></div>
+          <div class="res-stat"><span class="l">Forsikring</span><span class="v" id="rFors">–</span></div>
+          <div class="res-stat"><span class="l">Service og vedlikehold</span><span class="v" id="rService">–</span></div>
+          <div class="res-stat"><span class="l">Dekk</span><span class="v" id="rDekk">–</span></div>
+          <div class="res-stat"><span class="l">Trafikkforsikringsavgift</span><span class="v" id="rAvgift">–</span></div>
+          <div class="res-stat"><span class="l">Bompenger</span><span class="v" id="rBom">–</span></div>
+        </div>
+        <p class="res-disclaimer">Røft estimat. Faktiske kostnader varierer med kjøremønster, bosted, forsikringsvilkår og bilens tilstand.</p>
+        <button type="button" id="bilCsvBtn" class="res-csv" disabled>
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2 V10"/><polyline points="3.5 6.5 7 10 10.5 6.5"/><line x1="2" y1="12" x2="12" y2="12"/></svg>
+          Last ned (CSV)
+        </button>
+      </aside>
+
+    </div>
+
+    <section class="bil-breakdown empty" id="bilBreakdown" aria-labelledby="bilBreakdownHdr">
+      <h3 id="bilBreakdownHdr">Kostnadsfordeling over hele eiertiden</h3>
+      <div id="bilBars"></div>
+    </section>
+  </div>
+
+</main>
+
+<footer>
+  <div class="container foot">
+    <span>© 2026 Hverdagsverktøy</span>
+    <em>Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+  </div>
+</footer>
+
+<script>
+  // ── Subtle nav border on scroll ──
+  (function(){
+    var nav = document.getElementById('navWrap');
+    if(!nav) return;
+    var ticking = false;
+    function update(){
+      if(window.scrollY > 8) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ requestAnimationFrame(update); ticking = true; }
+    }, {passive:true});
+    update();
+  })();
+
+  // ── Theme dropdown ──
+  (function(){
+    var btn = document.getElementById('themeBtn');
+    var menu = document.getElementById('themeMenu');
+    var dot = document.getElementById('themeDot');
+    if(!btn || !menu) return;
+    var KEY = 'hv-theme';
+    var root = document.documentElement;
+    var THEMES = {
+      carbon:  {label:'Mørk',     dot:'#1e1e1e', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
+      frost:   {label:'Lys',      dot:'#e8ecf4', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'},
+      dark:    {label:'Mørk-Blå', dot:'#242740', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.10)'},
+      glass:   {label:'Glass',    dot:'#7c88f8', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'},
+      hendrix: {label:'Hendrix',  dot:'#9e5c3a', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
+      bw:      {label:'Ray',      dot:'#8a8a8a', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.4)'},
+      disco:   {label:'Disco',    dot:'#b044a2', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
+      pink:    {label:'Rosa',     dot:'#e4a0be', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'}
+    };
+    function paintTrigger(t){
+      var th = THEMES[t] || THEMES.carbon;
+      dot.style.background = th.dot;
+      dot.style.boxShadow = th.dotShadow;
+    }
+    function markCurrent(t){
+      menu.querySelectorAll('.theme-item').forEach(function(el){
+        if(el.getAttribute('data-theme') === t) el.classList.add('current');
+        else el.classList.remove('current');
+      });
+    }
+    function apply(t){
+      if(!THEMES[t]) t = 'carbon';
+      root.setAttribute('data-theme', t);
+      paintTrigger(t);
+      markCurrent(t);
+    }
+    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
+    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
+
+    var saved;
+    try { saved = localStorage.getItem(KEY); } catch(e){}
+    apply(THEMES[saved] ? saved : 'carbon');
+
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
+    });
+    menu.querySelectorAll('.theme-item').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var t = el.getAttribute('data-theme');
+        apply(t);
+        try { localStorage.setItem(KEY, t); } catch(e){}
+        close();
+      });
+    });
+    document.addEventListener('click', function(e){
+      if(!menu.contains(e.target) && !btn.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  })();
+
+  // ── Language menu ──
+  (function(){
+    var btn = document.getElementById('langBtn');
+    var menu = document.getElementById('langMenu');
+    if(!btn || !menu) return;
+    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
+    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
+    });
+    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  })();
+
+  // ── Bilkostnad: form, calc, breakdown, CSV ──
+  (function(){
+    // BIL_MERKER — porter fra shared/core.js (samme tall)
+    var BIL_MERKER = {
+      snitt:      {depr:0.15, service:1.00, cat:'standard',   label:'Gjennomsnitt'},
+      // Japansk
+      toyota:     {depr:0.12, service:0.80, cat:'standard',   label:'Toyota'},
+      lexus:      {depr:0.12, service:1.15, cat:'premium',    label:'Lexus'},
+      honda:      {depr:0.14, service:0.90, cat:'standard',   label:'Honda'},
+      mazda:      {depr:0.13, service:0.85, cat:'standard',   label:'Mazda'},
+      nissan:     {depr:0.14, service:0.95, cat:'standard',   label:'Nissan'},
+      suzuki:     {depr:0.11, service:0.85, cat:'budget',     label:'Suzuki'},
+      mitsubishi: {depr:0.16, service:1.00, cat:'standard',   label:'Mitsubishi'},
+      subaru:     {depr:0.16, service:1.00, cat:'standard',   label:'Subaru'},
+      // Koreansk
+      hyundai:    {depr:0.14, service:0.85, cat:'standard',   label:'Hyundai'},
+      kia:        {depr:0.14, service:0.85, cat:'standard',   label:'Kia'},
+      // Tysk
+      volkswagen: {depr:0.15, service:1.00, cat:'standard',   label:'Volkswagen'},
+      skoda:      {depr:0.14, service:0.85, cat:'standard',   label:'Škoda'},
+      cupra:      {depr:0.17, service:1.05, cat:'standard',   label:'CUPRA / SEAT'},
+      bmw:        {depr:0.18, service:1.35, cat:'premium',    label:'BMW'},
+      mercedes:   {depr:0.19, service:1.40, cat:'premium',    label:'Mercedes-Benz'},
+      audi:       {depr:0.18, service:1.30, cat:'premium',    label:'Audi'},
+      porsche:    {depr:0.20, service:1.60, cat:'luxury',     label:'Porsche'},
+      // Svensk
+      volvo:      {depr:0.16, service:1.05, cat:'standard',   label:'Volvo'},
+      polestar:   {depr:0.16, service:1.05, cat:'premium',    label:'Polestar'},
+      // Fransk
+      peugeot:    {depr:0.19, service:1.15, cat:'standard',   label:'Peugeot'},
+      citroen:    {depr:0.18, service:1.10, cat:'standard',   label:'Citroën'},
+      renault:    {depr:0.20, service:1.10, cat:'standard',   label:'Renault'},
+      dacia:      {depr:0.21, service:0.80, cat:'budget',     label:'Dacia'},
+      // Annet Europa
+      fiat:       {depr:0.16, service:1.00, cat:'standard',   label:'Fiat'},
+      ford:       {depr:0.18, service:1.10, cat:'standard',   label:'Ford'},
+      landrover:  {depr:0.20, service:1.40, cat:'luxury',     label:'Land Rover'},
+      // Elbil
+      tesla:      {depr:0.18, service:0.70, cat:'ev-budget',  label:'Tesla'},
+      byd:        {depr:0.22, service:1.20, cat:'ev-budget',  label:'BYD'},
+      mg:         {depr:0.23, service:1.15, cat:'ev-budget',  label:'MG'}
+    };
+    var BIL_GROUPS = [
+      {label:'Japansk',     keys:['toyota','lexus','honda','mazda','nissan','suzuki','mitsubishi','subaru']},
+      {label:'Koreansk',    keys:['hyundai','kia']},
+      {label:'Tysk',        keys:['volkswagen','skoda','cupra','bmw','mercedes','audi','porsche']},
+      {label:'Svensk',      keys:['volvo','polestar']},
+      {label:'Fransk',      keys:['peugeot','citroen','renault','dacia']},
+      {label:'Annet',       keys:['fiat','ford','landrover']},
+      {label:'Elbilmerker', keys:['tesla','byd','mg']}
+    ];
+
+    var KEY = 'hv-bil-v1';
+    var STATE = {};
+    var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
+    function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
+    function fmtInt(n){ return fmtNb.format(n).replace(/ /g, ' '); }
+    function parseAmt(s){
+      if(!s) return 0;
+      var raw = String(s).replace(/[^0-9\-]/g, '');
+      if(!raw || raw === '-') return 0;
+      var n = parseInt(raw, 10);
+      return isNaN(n) ? 0 : n;
+    }
+    function parseNum(id){
+      var el = document.getElementById(id);
+      if(!el) return 0;
+      return parseAmt(el.value);
+    }
+    function setText(id, v){ var el=document.getElementById(id); if(el) el.textContent = v; }
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, function(c){
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
+      });
+    }
+
+    // Build merke dropdown
+    function buildMerkeOptions(){
+      var sel = document.getElementById('bil-merke');
+      sel.innerHTML = '';
+      var avg = document.createElement('option');
+      avg.value = 'snitt'; avg.textContent = 'Gjennomsnitt';
+      sel.appendChild(avg);
+      BIL_GROUPS.forEach(function(g){
+        var og = document.createElement('optgroup');
+        og.label = g.label;
+        g.keys.forEach(function(k){
+          var bp = BIL_MERKER[k]; if(!bp) return;
+          var o = document.createElement('option');
+          o.value = k; o.textContent = bp.label;
+          og.appendChild(o);
+        });
+        sel.appendChild(og);
+      });
+    }
+
+    // Build year dropdowns (last 30 years)
+    function buildYearOptions(){
+      var now = new Date().getFullYear();
+      ['bil-kjopsaar','bil-aarsmodell'].forEach(function(id){
+        var sel = document.getElementById(id);
+        sel.innerHTML = '';
+        for(var y = now; y >= now - 30; y--){
+          var o = document.createElement('option');
+          o.value = y; o.textContent = y;
+          sel.appendChild(o);
+        }
+      });
+      // default: kjøpsår = now, årsmodell = now
+      document.getElementById('bil-kjopsaar').value = now;
+      document.getElementById('bil-aarsmodell').value = now;
+    }
+
+    // Insurance hint
+    function bilUpdateInsHint(){
+      var pris = parseNum('bil-pris') || 400000;
+      var merke = document.getElementById('bil-merke').value || 'snitt';
+      var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
+      var fType = document.getElementById('bil-forsikring-type').value || 'fullkasko';
+      var insTypeBase = fType === 'ansvar' ? 350 : fType === 'delkasko' ? 550 : 800;
+      var catMult = {budget:0.90, standard:1.0, premium:1.35, luxury:1.50, 'ev-budget':1.15};
+      var insBrandMult = catMult[bp.cat] || 1.0;
+      var insValueScale = fType === 'ansvar'
+        ? 0.85 + 0.15 * Math.min(1, pris / 300000)
+        : 0.5 + 0.5 * Math.min(1, pris / 400000);
+      var est = Math.round(insTypeBase * insBrandMult * insValueScale);
+      setText('bil-ins-hint', 'Estimat for forsikring: ~' + est.toLocaleString('nb-NO') + ' kr/mnd');
+    }
+
+    // Clear manual overrides when merke changes
+    function bilUpdateDefaults(){
+      ['bil-forsikring','bil-drivstoff-mnd','bil-service-mnd','bil-bom-mnd','bil-resale'].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.value = '';
+      });
+      bilUpdateInsHint();
+    }
+
+    // Year sync helpers
+    function clampYears(){
+      var modell = document.getElementById('bil-aarsmodell');
+      var kjop = document.getElementById('bil-kjopsaar');
+      if(modell && kjop && +modell.value > +kjop.value){
+        modell.value = kjop.value;
+      }
+    }
+
+    function calcBilkostnad(){
+      var pris = parseNum('bil-pris');
+      if(pris <= 0){
+        clearResult();
+        return;
+      }
+      var aar = Math.max(1, Math.min(20, +document.getElementById('bil-aar').value || 5));
+      var rawKm = parseNum('bil-km') || 12000;
+      var km = Math.max(1000, rawKm);
+      var startKm = Math.max(0, parseNum('bil-start-km') || 0);
+      var merke = document.getElementById('bil-merke').value;
+      var drivstoff = document.getElementById('bil-drivstoff').value;
+
+      var forsEl = document.getElementById('bil-forsikring');
+      var forsikringMnd = parseNum('bil-forsikring');
+      var forsikringUserSet = forsEl && forsEl.value.trim() !== '';
+      var drivstoffMnd = parseNum('bil-drivstoff-mnd');
+      var bomMnd = parseNum('bil-bom-mnd');
+      var serviceMnd = parseNum('bil-service-mnd');
+      var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
+      var tilstand = document.getElementById('bil-tilstand').value || 'brukt';
+      var resaleInput = parseNum('bil-resale');
+
+      // 1. Verditap (depreciation)
+      var verditap;
+      if(resaleInput > 0){
+        verditap = Math.max(0, pris - resaleInput);
+      } else {
+        var kmFactor = 1 / (1 + startKm / 150000);
+        var adjDepr = tilstand === 'ny' ? bp.depr * kmFactor : bp.depr * 0.55 * kmFactor;
+        var restverdi = pris;
+        for(var i = 0; i < aar; i++) restverdi *= (1 - adjDepr);
+        verditap = pris - restverdi;
+      }
+
+      // 2. Drivstoff/lading
+      // Bensin/diesel 2026-årsgjennomsnitt med veibruksavgift-suspensjon (1.apr–1.sep 2026):
+      //   Diesel: (5×25,08 + 7×27,93)/12 = 26,74 kr/L
+      //   Bensin: (5×21,00 + 7×25,71)/12 = 23,75 kr/L
+      // Kilder: Skatteetaten satser, Lovdata STV-2025-12-18-2759 + LTI/2026-03-26-486.
+      // NB: Oppdater for 2027 — suspensjonen gjelder kun 2026.
+      var drivTotal;
+      if(drivstoffMnd > 0){
+        drivTotal = drivstoffMnd * 12 * aar;
+      } else {
+        var kmWearFactor = 1 + (startKm / 100000) * 0.05;
+        var drivKostPerKm;
+        if(drivstoff === 'elbil') drivKostPerKm = 0.20 * 2.0 * kmWearFactor;
+        else if(drivstoff === 'diesel') drivKostPerKm = 0.06 * 26.74 * kmWearFactor;
+        else drivKostPerKm = 0.07 * 23.75 * kmWearFactor;
+        drivTotal = drivKostPerKm * km * aar;
+      }
+
+      // 3. Forsikring
+      var forsikringType = document.getElementById('bil-forsikring-type').value || 'fullkasko';
+      var forsTotal;
+      if(forsikringUserSet){
+        forsTotal = forsikringMnd * 12 * aar;
+      } else {
+        var insTypeBase = forsikringType === 'ansvar' ? 350 : forsikringType === 'delkasko' ? 550 : 800;
+        var catMult = {budget:0.90, standard:1.0, premium:1.35, luxury:1.50, 'ev-budget':1.15};
+        var insBrandMult = catMult[bp.cat] || 1.0;
+        var insValueScale = forsikringType === 'ansvar'
+          ? 0.85 + 0.15 * Math.min(1, pris / 300000)
+          : 0.5 + 0.5 * Math.min(1, pris / 400000);
+        var autoIns = insTypeBase * insBrandMult * insValueScale;
+        forsTotal = autoIns * 12 * aar;
+      }
+
+      // 4. Service og vedlikehold
+      var serviceTotal;
+      if(serviceMnd > 0){
+        serviceTotal = serviceMnd * 12 * aar;
+      } else {
+        var serviceFlat = drivstoff === 'elbil' ? 5000 : 9000;
+        var avgTotalKm = startKm + (km * aar / 2);
+        var serviceKmFactor = 1 + Math.max(0, avgTotalKm - 60000) / 300000;
+        var priceFactor = Math.min(1, pris / 200000);
+        priceFactor = 0.3 + 0.7 * priceFactor;
+        var servicePerAar = serviceFlat * bp.service * serviceKmFactor * priceFactor;
+        serviceTotal = servicePerAar * aar;
+      }
+
+      // 5. Dekk
+      var dekkPerAar = drivstoff === 'elbil' ? 4500 : 3500;
+      var dekkTotal = dekkPerAar * aar;
+
+      // 6. Trafikkforsikringsavgift (fra 1. mars 2026): fossil 6,52 kr/dag, elbil 9,16 kr/dag
+      var avgiftPerAar = drivstoff === 'elbil' ? 3343 : 2380;
+      var avgiftTotal = avgiftPerAar * aar;
+
+      // 7. Bompenger
+      var bomTotal;
+      if(bomMnd > 0){
+        bomTotal = bomMnd * 12 * aar;
+      } else {
+        var bomPerAar = drivstoff === 'elbil' ? 2500 : 4500;
+        bomTotal = bomPerAar * aar;
+      }
+
+      var totalKostnad = verditap + drivTotal + forsTotal + serviceTotal + dekkTotal + avgiftTotal + bomTotal;
+      var perMnd = totalKostnad / (aar * 12);
+      var totalKm = km * aar;
+      var perKm = totalKostnad / totalKm;
+
+      STATE = {
+        pris: pris,
+        aar: aar,
+        kmAarlig: km,
+        startKm: startKm,
+        merke: merke,
+        merkeLabel: bp.label,
+        drivstoff: drivstoff,
+        forsikringType: forsikringType,
+        verditap: Math.round(verditap),
+        drivTotal: Math.round(drivTotal),
+        forsTotal: Math.round(forsTotal),
+        serviceTotal: Math.round(serviceTotal),
+        dekkTotal: Math.round(dekkTotal),
+        avgiftTotal: Math.round(avgiftTotal),
+        bomTotal: Math.round(bomTotal),
+        totalKostnad: Math.round(totalKostnad),
+        perMnd: perMnd,
+        perKm: perKm
+      };
+
+      setText('rTotal', fmtKr(totalKostnad));
+      setText('rTotalSub', fmtKr(perMnd) + '/mnd · ' + perKm.toFixed(1).replace('.', ',') + ' kr/km · ' + aar + ' år');
+      setText('rMnd', fmtKr(perMnd));
+      setText('rKm', perKm.toFixed(1).replace('.', ',') + ' kr');
+      setText('rVerditap', fmtKr(verditap));
+      setText('rDriv', fmtKr(drivTotal));
+      setText('rFors', fmtKr(forsTotal));
+      setText('rService', fmtKr(serviceTotal));
+      setText('rDekk', fmtKr(dekkTotal));
+      setText('rAvgift', fmtKr(avgiftTotal));
+      setText('rBom', fmtKr(bomTotal));
+
+      setText('hStatMnd', fmtKr(perMnd));
+      setText('hStatKm', perKm.toFixed(1).replace('.', ',') + ' kr');
+
+      // Breakdown bars
+      var bd = document.getElementById('bilBreakdown');
+      var bars = document.getElementById('bilBars');
+      var items = [
+        {name:'Verditap',                   value: STATE.verditap},
+        {name:'Drivstoff/lading',           value: STATE.drivTotal},
+        {name:'Forsikring',                 value: STATE.forsTotal},
+        {name:'Service og vedlikehold',     value: STATE.serviceTotal},
+        {name:'Dekk',                       value: STATE.dekkTotal},
+        {name:'Trafikkforsikringsavgift',   value: STATE.avgiftTotal},
+        {name:'Bompenger',                  value: STATE.bomTotal}
+      ];
+      var maxV = items.reduce(function(m,it){ return Math.max(m, it.value); }, 0);
+      var sortedItems = items.slice().sort(function(a,b){ return b.value - a.value; });
+      var html = '';
+      sortedItems.forEach(function(it){
+        var pctTotal = STATE.totalKostnad > 0 ? (it.value / STATE.totalKostnad) * 100 : 0;
+        var widthPct = maxV > 0 ? (it.value / maxV) * 100 : 0;
+        html += '<div class="bil-bar">' +
+          '<div class="bn">' + escapeHtml(it.name) + '</div>' +
+          '<div class="btrack"><div class="bfill" style="width:' + widthPct.toFixed(1) + '%"></div></div>' +
+          '<div class="bv">' + fmtKr(it.value) + ' <span style="color:var(--ink4);font-size:11px;">(' + pctTotal.toFixed(0) + '%)</span></div>' +
+        '</div>';
+      });
+      bars.innerHTML = html;
+      bd.classList.remove('empty');
+
+      var csvBtn = document.getElementById('bilCsvBtn');
+      csvBtn.disabled = false;
+
+      persist();
+    }
+
+    function clearResult(){
+      ['rTotal','rMnd','rKm','rVerditap','rDriv','rFors','rService','rDekk','rAvgift','rBom','hStatMnd','hStatKm'].forEach(function(id){ setText(id, '–'); });
+      setText('rTotalSub', 'Legg inn tall for å se kostnadene');
+      var bd = document.getElementById('bilBreakdown');
+      if(bd) bd.classList.add('empty');
+      var csvBtn = document.getElementById('bilCsvBtn');
+      if(csvBtn) csvBtn.disabled = true;
+    }
+
+    function liveFormat(inp){
+      var raw = inp.value.replace(/[^0-9\-]/g, '');
+      if(raw === '' || raw === '-') return;
+      var num = parseInt(raw, 10);
+      if(isNaN(num)) return;
+      var pos = inp.selectionStart;
+      var oldLen = inp.value.length;
+      inp.value = fmtInt(num);
+      var newLen = inp.value.length;
+      try { inp.setSelectionRange(pos + (newLen - oldLen), pos + (newLen - oldLen)); } catch(e){}
+    }
+
+    function persist(){
+      try {
+        var snap = {
+          pris: document.getElementById('bil-pris').value,
+          tilstand: document.getElementById('bil-tilstand').value,
+          merke: document.getElementById('bil-merke').value,
+          aarsmodell: document.getElementById('bil-aarsmodell').value,
+          kjopsaar: document.getElementById('bil-kjopsaar').value,
+          aar: document.getElementById('bil-aar').value,
+          km: document.getElementById('bil-km').value,
+          startKm: document.getElementById('bil-start-km').value,
+          drivstoff: document.getElementById('bil-drivstoff').value,
+          forsikringType: document.getElementById('bil-forsikring-type').value,
+          resale: document.getElementById('bil-resale').value,
+          forsikring: document.getElementById('bil-forsikring').value,
+          drivstoffMnd: document.getElementById('bil-drivstoff-mnd').value,
+          serviceMnd: document.getElementById('bil-service-mnd').value,
+          bomMnd: document.getElementById('bil-bom-mnd').value
+        };
+        localStorage.setItem(KEY, JSON.stringify(snap));
+      } catch(e){}
+    }
+    function restore(){
+      try {
+        var raw = localStorage.getItem(KEY);
+        if(!raw) return null;
+        return JSON.parse(raw);
+      } catch(e){ return null; }
+    }
+    function applyRestored(d){
+      if(!d) return;
+      var setVal = function(id, v){ var el=document.getElementById(id); if(el && v != null) el.value = v; };
+      setVal('bil-pris', d.pris);
+      setVal('bil-tilstand', d.tilstand);
+      setVal('bil-merke', d.merke);
+      setVal('bil-aarsmodell', d.aarsmodell);
+      setVal('bil-kjopsaar', d.kjopsaar);
+      setVal('bil-aar', d.aar);
+      setVal('bil-km', d.km);
+      setVal('bil-start-km', d.startKm);
+      setVal('bil-drivstoff', d.drivstoff);
+      setVal('bil-forsikring-type', d.forsikringType);
+      setVal('bil-resale', d.resale);
+      setVal('bil-forsikring', d.forsikring);
+      setVal('bil-drivstoff-mnd', d.drivstoffMnd);
+      setVal('bil-service-mnd', d.serviceMnd);
+      setVal('bil-bom-mnd', d.bomMnd);
+    }
+
+    function downloadCsv(){
+      if(!STATE || !STATE.totalKostnad) return;
+      var sep = ';';
+      var rows = [];
+      var today = new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
+      rows.push(['Bilkostnad', today]);
+      rows.push([]);
+      rows.push(['BILEN', '']);
+      rows.push(['Kjøpspris (kr)', STATE.pris]);
+      rows.push(['Bilmerke', STATE.merkeLabel]);
+      rows.push(['Drivstoff', STATE.drivstoff]);
+      rows.push(['Forsikringstype', STATE.forsikringType]);
+      rows.push(['Eiertid (år)', STATE.aar]);
+      rows.push(['Årlig kjørelengde (km)', STATE.kmAarlig]);
+      rows.push(['Kilometerstand ved kjøp', STATE.startKm]);
+      rows.push([]);
+      rows.push(['KOSTNADER OVER HELE EIERTIDEN', 'Beløp (kr)']);
+      rows.push(['Verditap', STATE.verditap]);
+      rows.push(['Drivstoff/lading', STATE.drivTotal]);
+      rows.push(['Forsikring', STATE.forsTotal]);
+      rows.push(['Service og vedlikehold', STATE.serviceTotal]);
+      rows.push(['Dekk', STATE.dekkTotal]);
+      rows.push(['Trafikkforsikringsavgift', STATE.avgiftTotal]);
+      rows.push(['Bompenger', STATE.bomTotal]);
+      rows.push(['Total eierkostnad', STATE.totalKostnad]);
+      rows.push([]);
+      rows.push(['SAMMENDRAG', '']);
+      rows.push(['Per måned', Math.round(STATE.perMnd)]);
+      rows.push(['Per km', STATE.perKm.toFixed(2).replace('.', ',') + ' kr']);
+      rows.push([]);
+      rows.push(['Generert av Hverdagsverktøy']);
+
+      var csv = rows.map(function(r){
+        return r.map(function(c){
+          var s = String(c == null ? '' : c);
+          return (s.indexOf(sep) >= 0 || s.indexOf('"') >= 0) ? '"' + s.replace(/"/g, '""') + '"' : s;
+        }).join(sep);
+      }).join('\r\n');
+
+      var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url; a.download = 'bilkostnad.csv';
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    // Wire events
+    function onAnyInput(){
+      // live-format pris/km/start-km/resale/forsikring/drivstoff-mnd/service-mnd/bom-mnd
+      var formatIds = ['bil-pris','bil-km','bil-start-km','bil-resale','bil-forsikring','bil-drivstoff-mnd','bil-service-mnd','bil-bom-mnd'];
+      formatIds.forEach(function(id){
+        var el = document.getElementById(id);
+        if(el){
+          el.addEventListener('input', function(){
+            liveFormat(el);
+            if(id === 'bil-pris') bilUpdateInsHint();
+            persist();
+          });
+        }
+      });
+      var changeIds = ['bil-tilstand','bil-merke','bil-aarsmodell','bil-kjopsaar','bil-aar','bil-drivstoff','bil-forsikring-type'];
+      changeIds.forEach(function(id){
+        var el = document.getElementById(id);
+        if(el){
+          el.addEventListener('change', function(){
+            if(id === 'bil-merke') bilUpdateDefaults();
+            if(id === 'bil-aarsmodell' || id === 'bil-kjopsaar') clampYears();
+            if(id === 'bil-forsikring-type') bilUpdateInsHint();
+            persist();
+          });
+        }
+      });
+    }
+
+    // Init
+    buildMerkeOptions();
+    buildYearOptions();
+    var saved = restore();
+    if(saved) applyRestored(saved);
+    bilUpdateInsHint();
+    onAnyInput();
+
+    document.getElementById('bilCalcBtn').addEventListener('click', function(){
+      calcBilkostnad();
+      var bd = document.getElementById('bilBreakdown');
+      if(bd && !bd.classList.contains('empty')){
+        bd.scrollIntoView({ behavior:'smooth', block:'nearest' });
+      }
+    });
+    document.getElementById('bilCsvBtn').addEventListener('click', downloadCsv);
+
+    // Allow Enter key on numeric inputs to trigger calc
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' && e.target && e.target.classList && e.target.classList.contains('fc') && e.target.tagName === 'INPUT'){
+        e.preventDefault();
+        calcBilkostnad();
+      }
+    });
+
+    // If we restored, run calc once
+    if(saved && saved.pris) calcBilkostnad();
+  })();
+</script>
+
+</body>
+</html>
