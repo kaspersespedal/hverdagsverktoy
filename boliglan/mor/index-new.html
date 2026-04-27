@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="no" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Boliglånskalkulator — månedlig betaling og totalkostnad · Hverdagsverktøy</title>
+<meta name="description" content="Regn ut månedlig betaling, totale renter, skattefradrag og stresstest for boliglånet. Annuitet eller serielån, valgfri avdragsfri periode. Norske 2026-regler. Alt skjer lokalt i nettleseren.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+    --ink:#ececea;
+    --ink2:#a8a39a;
+    --ink3:#797469;
+    --ink4:#54514a;
+    --bg:#0d0d0c;
+    --surface:#131312;
+    --surface-2:#191917;
+    --accent:#c89968;
+    --accent-2:#d8ad7e;
+    --line:rgba(255,255,255,.06);
+    --line-2:rgba(255,255,255,.10);
+    --line-warm:rgba(200,153,104,.18);
+
+    --ease: cubic-bezier(.22, 1, .36, 1);
+
+    --nav-bg: rgba(13,13,12,.78);
+    --mark-bg: #1a1714;
+    --menu-bg: #161513;
+    --hover-bg: rgba(255,255,255,.04);
+    --hover-bg-soft: rgba(255,255,255,.02);
+    --kbd-bg: rgba(255,255,255,.04);
+    --flag-shadow: rgba(0,0,0,.4);
+  }
+
+  [data-theme="frost"]{
+    --ink:#1a1714; --ink2:#5e574e; --ink3:#8a8378; --ink4:#b5ae9f;
+    --bg:#fafaf7; --surface:#ffffff; --surface-2:#f3f1ec;
+    --accent:#a87842; --accent-2:#8d6233;
+    --line:rgba(0,0,0,.08); --line-2:rgba(0,0,0,.14); --line-warm:rgba(168,120,66,.22);
+    --nav-bg: rgba(250,250,247,.82); --mark-bg:#f3eee5; --menu-bg:#ffffff;
+    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
+    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
+  }
+  [data-theme="hendrix"]{
+    --ink:#f4e6d3; --ink2:#c7ad8b; --ink3:#937c5e; --ink4:#5f4f3a;
+    --bg:#1f110b; --surface:#2a1810; --surface-2:#341f15;
+    --accent:#d4794a; --accent-2:#e6926a;
+    --line:rgba(244,230,211,.07); --line-2:rgba(244,230,211,.13); --line-warm:rgba(212,121,74,.22);
+    --nav-bg: rgba(31,17,11,.82); --mark-bg:#34211a; --menu-bg:#2a1810;
+    --hover-bg: rgba(244,230,211,.05); --hover-bg-soft: rgba(244,230,211,.025);
+    --kbd-bg: rgba(244,230,211,.05); --flag-shadow: rgba(0,0,0,.4);
+  }
+  [data-theme="dark"]{
+    --ink:#e6e8ef; --ink2:#9ba0b3; --ink3:#6c7185; --ink4:#444858;
+    --bg:#0d0e1a; --surface:#141528; --surface-2:#1c1d34;
+    --accent:#6c8aef; --accent-2:#94a8f5;
+    --line:rgba(255,255,255,.06); --line-2:rgba(255,255,255,.10); --line-warm:rgba(108,138,239,.20);
+    --nav-bg: rgba(13,14,26,.78); --mark-bg:#1c1d34; --menu-bg:#181a2e;
+    --hover-bg: rgba(255,255,255,.04); --hover-bg-soft: rgba(255,255,255,.02);
+    --kbd-bg: rgba(255,255,255,.04); --flag-shadow: rgba(0,0,0,.4);
+  }
+  [data-theme="glass"]{
+    --ink:#1a1d2e; --ink2:#5a6280; --ink3:#8a93ad; --ink4:#b5bdcf;
+    --bg:#f0f3fa; --surface:#ffffff; --surface-2:#e8edf6;
+    --accent:#6875f5; --accent-2:#5562e5;
+    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(104,117,245,.22);
+    --nav-bg: rgba(240,243,250,.82); --mark-bg:#e8edf6; --menu-bg:#ffffff;
+    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
+    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
+  }
+  [data-theme="bw"]{
+    --ink:#f5f5f5; --ink2:#b0b0b0; --ink3:#808080; --ink4:#555555;
+    --bg:#0a0a0a; --surface:#141414; --surface-2:#1c1c1c;
+    --accent:#ffffff; --accent-2:#e0e0e0;
+    --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.13); --line-warm:rgba(255,255,255,.18);
+    --nav-bg: rgba(10,10,10,.82); --mark-bg:#1c1c1c; --menu-bg:#141414;
+    --hover-bg: rgba(255,255,255,.05); --hover-bg-soft: rgba(255,255,255,.025);
+    --kbd-bg: rgba(255,255,255,.05); --flag-shadow: rgba(0,0,0,.4);
+  }
+  [data-theme="disco"]{
+    --ink:#f5e6f5; --ink2:#c4a8c4; --ink3:#8a6e90; --ink4:#5a445e;
+    --bg:#15081a; --surface:#1f0d28; --surface-2:#281033;
+    --accent:#e91e8c; --accent-2:#ff4ba6;
+    --line:rgba(245,230,245,.06); --line-2:rgba(245,230,245,.10); --line-warm:rgba(233,30,140,.22);
+    --nav-bg: rgba(21,8,26,.82); --mark-bg:#281033; --menu-bg:#1f0d28;
+    --hover-bg: rgba(245,230,245,.05); --hover-bg-soft: rgba(245,230,245,.025);
+    --kbd-bg: rgba(245,230,245,.05); --flag-shadow: rgba(0,0,0,.4);
+  }
+  [data-theme="pink"]{
+    --ink:#2a1a22; --ink2:#6b4a58; --ink3:#9a7585; --ink4:#c4a8b5;
+    --bg:#fef1f5; --surface:#ffffff; --surface-2:#fce2eb;
+    --accent:#e890b2; --accent-2:#d676a0;
+    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(232,144,178,.24);
+    --nav-bg: rgba(254,241,245,.82); --mark-bg:#fce2eb; --menu-bg:#ffffff;
+    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
+    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:var(--font-sans);
+    font-size:15px;line-height:1.55;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+  }
+  .container{max-width:1120px;margin:0 auto;padding:0 32px}
+  ::selection{background:rgba(200,153,104,.28);color:#fff}
+
+  .nav-wrap{
+    position:sticky;top:0;z-index:50;
+    background:var(--nav-bg);
+    backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s var(--ease);
+  }
+  .nav-wrap.scrolled{border-bottom-color:var(--line)}
+  nav.top-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:24px}
+  .brand-row{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+  .mark{
+    width:28px;height:28px;border-radius:5px;
+    background:var(--mark-bg);
+    border:1px solid var(--line-warm);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .wordmark{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:18px;letter-spacing:-.2px;line-height:1;color:var(--ink);
+  }
+  .nav-right{display:flex;align-items:center;gap:8px;position:relative}
+  .nav-back{
+    font-size:13px;color:var(--ink3);text-decoration:none;
+    display:inline-flex;align-items:center;gap:6px;
+    padding:7px 11px;border-radius:5px;
+    border:1px solid var(--line-2);
+    transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .nav-back:hover{color:var(--ink);border-color:var(--line-warm);background:var(--hover-bg)}
+
+  .theme-btn,.lang-btn{
+    display:flex;align-items:center;gap:8px;background:transparent;
+    border:1px solid var(--line-2);color:var(--ink2);
+    padding:7px 11px;border-radius:5px;font:500 13px/1 var(--font-sans);cursor:pointer;
+    transition:border-color .2s var(--ease), color .2s var(--ease);
+  }
+  .theme-btn:hover,.theme-btn[aria-expanded="true"],
+  .lang-btn:hover,.lang-btn[aria-expanded="true"]{border-color:var(--line-warm);color:var(--ink)}
+  .theme-btn .theme-dot{
+    width:14px;height:14px;border-radius:50%;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);
+    flex-shrink:0;
+  }
+  .lang-btn .flag{width:18px;height:13px;border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px var(--flag-shadow)}
+  .lang-btn .flag img{width:100%;height:100%;display:block;object-fit:cover}
+  .chev{opacity:.5;transition:transform .2s var(--ease)}
+  .theme-btn[aria-expanded="true"] .chev,
+  .lang-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+
+  .theme-menu,.lang-menu{
+    position:absolute;top:calc(100% + 8px);right:0;
+    background:var(--menu-bg);
+    border:1px solid var(--line-2);
+    border-radius:6px;padding:8px;min-width:200px;
+    box-shadow:0 18px 40px rgba(0,0,0,.5);
+    opacity:0;pointer-events:none;transform:translateY(-4px);
+    transition:opacity .18s var(--ease), transform .18s var(--ease);
+    z-index:100;
+  }
+  .theme-menu.open,.lang-menu.open{opacity:1;pointer-events:auto;transform:none}
+  .theme-menu h5,.lang-menu h5{
+    margin:6px 8px 4px;font:600 10px/1 var(--font-sans);
+    letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);
+  }
+  .theme-menu h5:not(:first-child),.lang-menu h5:not(:first-child){margin-top:8px}
+  .theme-item,.lang-menu a{
+    display:flex;align-items:center;gap:10px;width:100%;
+    background:transparent;border:0;cursor:pointer;
+    padding:7px 8px;border-radius:4px;
+    color:var(--ink2);text-decoration:none;
+    font:500 13px/1 var(--font-sans);
+    text-align:left;
+    transition:background .15s var(--ease), color .15s var(--ease);
+  }
+  .theme-item:hover,.lang-menu a:hover{background:var(--hover-bg);color:var(--ink)}
+  .theme-item.current,.lang-menu a.current{color:var(--ink);background:var(--hover-bg-soft)}
+  .lang-menu a .flag{width:18px;height:13px;border-radius:2px;overflow:hidden;flex-shrink:0;box-shadow:0 0 0 1px var(--flag-shadow)}
+  .lang-menu a .flag img{width:100%;height:100%;display:block;object-fit:cover}
+
+  .tabs-wrap{
+    border-bottom:1px solid var(--line);
+    background:var(--nav-bg);
+    position:sticky;top:64px;z-index:40;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  }
+  .tabs{
+    display:flex;gap:2px;padding:6px 0;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex-shrink:0;background:transparent;border:0;
+    padding:10px 14px;border-radius:4px;cursor:pointer;
+    font:500 13px/1 var(--font-sans);letter-spacing:-.05px;
+    color:var(--ink3);
+    display:flex;align-items:center;gap:8px;
+    transition:color .2s var(--ease), background .2s var(--ease);
+    position:relative;
+    text-decoration:none;
+  }
+  .tab:hover{color:var(--ink2);background:var(--hover-bg-soft)}
+  .tab[aria-selected="true"]{color:var(--ink)}
+  .tab[aria-selected="true"]::after{
+    content:"";position:absolute;left:14px;right:14px;bottom:-7px;height:2px;
+    background:var(--accent);
+  }
+  .tab .tab-icon{width:14px;height:14px;color:currentColor;opacity:.6}
+  .tab[aria-selected="true"] .tab-icon{opacity:1;color:var(--accent)}
+
+  .page-hero{
+    padding:56px 0 36px;text-align:left;
+    border-bottom:1px solid var(--line);
+  }
+  .page-hero .container{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:end}
+
+  .page-eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font:600 11px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--ink3);margin-bottom:18px;
+  }
+  .page-eyebrow a{color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
+  .page-eyebrow a:hover{color:var(--accent)}
+  .page-eyebrow .arrow{color:var(--ink4);font-weight:400}
+  .page-eyebrow .current{color:var(--ink2)}
+
+  h1.page-title{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:clamp(36px, 4.6vw, 54px);line-height:1.05;letter-spacing:-1.2px;
+    margin:0 0 14px;color:var(--ink);
+  }
+  h1.page-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
+  .page-lead{
+    font-size:14px;line-height:1.55;color:var(--ink2);margin:0;max-width:58ch;
+  }
+
+  .page-stats{
+    display:flex;flex-direction:column;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .page-stat{
+    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .page-stat:last-child{border-bottom:none}
+  .page-stat .l{
+    font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;
+    color:var(--ink3);
+  }
+  .page-stat .v{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:30px;line-height:1;letter-spacing:-.6px;color:var(--ink);
+    font-variant-numeric:tabular-nums lining-nums;
+    white-space:nowrap;
+  }
+
+  footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot em{font-style:italic;color:var(--ink4)}
+
+  @media (max-width: 880px){
+    .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
+    .page-stats{align-self:stretch}
+    .tabs-wrap{top:60px}
+  }
+  @media (max-width: 560px){
+    .container{padding:0 22px}
+    .page-hero{padding:36px 0 28px}
+    h1.page-title{font-size:clamp(30px, 8vw, 42px)}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important}
+    html{scroll-behavior:auto}
+  }
+
+  .back-pill-wrap{margin:24px 0 0}
+  .back-pill{
+    display:inline-flex;align-items:center;gap:14px;
+    padding:11px 18px 11px 14px;
+    background:var(--surface);border:1px solid var(--line-2);border-radius:999px;
+    text-decoration:none;color:var(--ink2);
+    transition:background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
+  }
+  .back-pill:hover{background:var(--surface-2);border-color:var(--line-warm);color:var(--ink);transform:translateX(-3px)}
+  .back-pill .arrow-back{
+    width:24px;height:24px;border-radius:50%;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:var(--hover-bg);color:var(--accent);
+    transition:background .25s var(--ease)}
+  .back-pill:hover .arrow-back{background:var(--hover-bg)}
+  .back-pill .back-eyebrow{
+    font:600 10px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--ink3);
+  }
+  .back-pill .back-label{
+    font:500 13px/1 var(--font-sans);color:inherit;
+  }
+  .back-pill .back-stack{display:flex;flex-direction:column;gap:3px}
+
+  .calc-grid{
+    display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;
+    padding:8px 0 56px;
+  }
+  .calc-form{display:flex;flex-direction:column;gap:24px}
+  .calc-section{
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:18px 22px 20px;
+  }
+  .calc-section-head{
+    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    padding-bottom:12px;margin-bottom:14px;
+    border-bottom:1px solid var(--line);
+  }
+  .calc-section-head h2{
+    font-family:var(--font-sans);font-size:11px;font-weight:600;
+    letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
+    margin:0;
+  }
+  .calc-section-head .hint{
+    font-size:11.5px;color:var(--ink3);font-style:italic;
+  }
+
+  .calc-fields{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;
+  }
+  .fg{display:flex;flex-direction:column;gap:6px}
+  .fg.full{grid-column:1 / -1}
+  .fg label.flbl{
+    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--ink3);
+  }
+  .fg input,
+  .fg select{
+    width:100%;background:var(--bg);
+    border:1px solid var(--line-2);border-radius:5px;
+    padding:11px 12px;
+    color:var(--ink);font:500 14px/1.2 var(--font-sans);
+    outline:none;
+    font-variant-numeric:tabular-nums;
+    transition:border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .fg input:focus,
+  .fg select:focus{
+    border-color:var(--line-warm);background:var(--surface-2);
+  }
+  .fg select{
+    appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:32px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23797469' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");
+    background-repeat:no-repeat;background-position:right 10px center;
+  }
+  .fg .hint-line{
+    font-size:11.5px;color:var(--ink3);line-height:1.55;margin-top:2px;font-style:italic;
+  }
+  .check-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer}
+  .check-row input{width:16px;height:16px;cursor:pointer;accent-color:var(--accent);background:transparent}
+
+  .info-box{
+    margin:0;padding:11px 14px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-left:2px solid var(--accent);
+    border-radius:5px;
+    font-size:12.5px;color:var(--ink2);line-height:1.55;
+  }
+  .info-box a{color:var(--accent);text-decoration:underline;font-weight:600}
+
+  .calc-result{
+    position:sticky;top:124px;
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:24px 22px 20px;
+    display:flex;flex-direction:column;gap:16px;
+  }
+  .res-headline{
+    border-bottom:1px solid var(--line);
+    padding-bottom:16px;
+  }
+  .res-headline .r-lbl{
+    display:block;
+    font:600 10px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--ink3);margin-bottom:8px;
+  }
+  .res-headline .r-val{
+    display:block;
+    font-family:var(--font-serif);font-weight:500;
+    font-size:38px;line-height:1;letter-spacing:-.8px;color:var(--ink);
+    font-variant-numeric:tabular-nums lining-nums;
+  }
+  .res-headline .r-verdict{
+    display:block;margin-top:8px;
+    font-size:12.5px;color:var(--ink3);font-style:italic;
+  }
+  .res-stats{display:flex;flex-direction:column}
+  .res-stat{
+    display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    padding:11px 0;border-bottom:1px solid var(--line);
+    font-size:13px;
+  }
+  .res-stat:last-child{border-bottom:none}
+  .res-stat.divide{border-top:1px solid var(--line);margin-top:4px;padding-top:14px}
+  .res-stat .l{color:var(--ink2);
+    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;}
+  .res-stat .v{
+    font-family:var(--font-serif);font-weight:500;font-size:17px;
+    color:var(--ink);font-variant-numeric:tabular-nums;
+  }
+  .res-stat.strong .v{font-weight:700;font-size:18px}
+  .res-section-h{
+    font:600 10px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--ink3);margin:8px 0 -2px;
+  }
+  .res-note{
+    font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;
+    margin:6px 0 0;
+  }
+  .hidden{display:none}
+
+  @media (max-width: 880px){
+    .calc-grid{grid-template-columns:1fr}
+    .calc-result{position:static;top:auto}
+  }
+  @media (max-width: 560px){
+    .calc-section{padding:16px 16px 18px}
+    .calc-result{padding:20px 18px 18px}
+    .calc-fields{grid-template-columns:1fr;gap:12px}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark-g" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8ad7e"/><stop offset="1" stop-color="#a87842"/>
+    </linearGradient>
+    <symbol id="mark-h" viewBox="0 0 64 64">
+      <rect x="14" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="42" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="22" y="28" width="20" height="8" rx="1.5" fill="url(#mark-g)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="nav-wrap" id="navWrap">
+  <div class="container">
+    <nav class="top-nav">
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy hjem">
+        <span class="mark"><svg width="16" height="16"><use href="#mark-h"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+      <div class="nav-right">
+        <a href="/" class="nav-back">
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+          Forsiden
+        </a>
+        <button class="theme-btn" id="themeBtn" aria-haspopup="true" aria-expanded="false" aria-controls="themeMenu">
+          <span class="theme-dot" id="themeDot" style="background:#1e1e1e"></span>
+          <span class="theme-label">Tema</span>
+          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
+        </button>
+        <div class="theme-menu" id="themeMenu" role="menu" aria-labelledby="themeBtn">
+          <h5>Tema</h5>
+          <button type="button" class="theme-item" data-theme="carbon"  role="menuitem"><span class="theme-dot" style="background:#1e1e1e"></span> Mørk</button>
+          <button type="button" class="theme-item" data-theme="frost"   role="menuitem"><span class="theme-dot" style="background:#e8ecf4;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span> Lys</button>
+          <button type="button" class="theme-item" data-theme="dark"    role="menuitem"><span class="theme-dot" style="background:#242740"></span> Mørk-Blå</button>
+          <button type="button" class="theme-item" data-theme="glass"   role="menuitem"><span class="theme-dot" style="background:#7c88f8"></span> Glass</button>
+          <button type="button" class="theme-item" data-theme="hendrix" role="menuitem"><span class="theme-dot" style="background:#9e5c3a"></span> Hendrix</button>
+          <button type="button" class="theme-item" data-theme="bw"      role="menuitem"><span class="theme-dot" style="background:#8a8a8a;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)"></span> Ray</button>
+          <button type="button" class="theme-item" data-theme="disco"   role="menuitem"><span class="theme-dot" style="background:#b044a2"></span> Disco</button>
+          <button type="button" class="theme-item" data-theme="pink"    role="menuitem"><span class="theme-dot" style="background:#e4a0be;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span> Rosa</button>
+        </div>
+        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu">
+          <span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span>
+          <span class="lang-label">Norsk</span>
+          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
+        </button>
+        <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
+          <h5>Hovedspråk</h5>
+          <a href="/boliglan/" class="current" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
+          <a href="/en/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
+          <h5>Språk i Norge</h5>
+          <a href="/pl/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
+          <a href="/uk/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
+          <a href="/ar/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
+          <a href="/lt/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
+          <a href="/so/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
+          <a href="/ti/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
+          <h5>Internasjonalt</h5>
+          <a href="/zh/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
+          <a href="/fr/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap" role="tablist" aria-label="Kategorier">
+  <div class="container">
+    <div class="tabs">
+      <a href="/personlig/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
+        Personlig økonomi
+      </a>
+      <a href="/boliglan/" class="tab" role="tab" aria-selected="true">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg>
+        Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>
+        Kalkulator
+      </a>
+      <a href="/skatt/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+        Skatt
+      </a>
+      <a href="/selskap/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg>
+        Selskap
+      </a>
+      <a href="/avgift/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+        Avgift
+      </a>
+      <a href="/regnskap/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+        Regnskap
+      </a>
+      <a href="/lov/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V21"/><path d="M9 21 H15"/><path d="M5 6 H19"/><path d="M2 13 L5 6 L8 13 Z"/><path d="M16 13 L19 6 L22 13 Z"/></svg>
+        Lov
+      </a>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+
+  <div class="container">
+    <div class="back-pill-wrap">
+      <a href="/boliglan/index-new.html" class="back-pill" aria-label="Tilbake til Boliglån">
+        <span class="arrow-back" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/><line x1="4" y1="7" x2="12" y2="7"/></svg>
+        </span>
+        <span class="back-stack">
+          <span class="back-eyebrow">Boliglån</span>
+          <span class="back-label">Tilbake til alle verktøy</span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <section class="page-hero" data-screen-label="Boliglån Hero">
+    <div class="container">
+      <div>
+        <div class="page-eyebrow">
+          <a href="/">Forsiden</a>
+          <span class="arrow">/</span>
+          <a href="/boliglan/index-new.html">Boliglån</a>
+          <span class="arrow">/</span>
+          <span class="current">Boliglånskalkulator</span>
+        </div>
+        <h1 class="page-title"><em>Boliglåns</em>kalkulator</h1>
+        <p class="page-lead">Skriv inn lånebeløp, rente og løpetid — så regner vi ut månedlig betaling, totale renter, skattefradrag og stresstest. Annuitetslån eller serielån, valgfri avdragsfri periode. Norske 2026-praksis (Utlånsforskriften § 5). Alt skjer lokalt i nettleseren.</p>
+      </div>
+      <div class="page-stats">
+        <div class="page-stat"><span class="l">Månedlig betaling</span><span class="v" id="hStatMnd">–</span></div>
+        <div class="page-stat"><span class="l">Totale renter</span><span class="v" id="hStatRnt">–</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="calc-grid">
+
+      <div class="calc-form">
+
+        <section class="calc-section" aria-labelledby="morInputHdr">
+          <header class="calc-section-head">
+            <h2 id="morInputHdr">Lånevilkår</h2>
+            <span class="hint">2026-praksis</span>
+          </header>
+          <div class="calc-fields">
+            <div class="fg full">
+              <label class="flbl" for="m-type">Lånetype</label>
+              <select id="m-type">
+                <option value="annuity">Annuitetslån — fast månedlig betaling</option>
+                <option value="serial">Serielån — fast avdrag, synkende terminbeløp</option>
+              </select>
+            </div>
+            <div class="fg full">
+              <label class="flbl" for="m-a">Lånebeløp (kr)</label>
+              <input type="text" id="m-a" value="3 000 000" inputmode="numeric" autocomplete="off">
+            </div>
+            <div class="fg">
+              <label class="flbl" for="m-r">Rente (%)</label>
+              <input type="number" id="m-r" value="5.5" step="0.1">
+            </div>
+            <div class="fg">
+              <label class="flbl" for="m-y">Løpetid (år)</label>
+              <input type="number" id="m-y" value="25" max="30">
+            </div>
+            <div class="fg full">
+              <label class="flbl" for="m-fees">Månedlige omkostninger (kr)</label>
+              <input type="text" id="m-fees" value="0" inputmode="numeric" autocomplete="off">
+              <span class="hint-line">Termingebyr, forsikring, felleskostnader o.l.</span>
+            </div>
+            <div class="fg full">
+              <label class="check-row">
+                <input type="checkbox" id="m-io-check">
+                <span>Avdragsfri periode</span>
+              </label>
+            </div>
+            <div class="fg full hidden" id="m-io-fields">
+              <label class="flbl" for="m-io-yrs">Avdragsfri periode (år)</label>
+              <input type="number" id="m-io-yrs" value="5" min="1" max="30">
+            </div>
+          </div>
+          <p class="hint-line" style="margin-top:10px">Maks tilbakebetalingstid 30 år (bankpraksis). Låner du over 60 % av boligens pris må du betale ned hvert år (Utlånsforskriften § 9).</p>
+        </section>
+
+        <p class="info-box">
+          Stresstesten i resultatet følger Utlånsforskriften § 5 — banken må vise at du tåler renten ved 7 % eller dagens rente + 3 prosentpoeng (strengeste av de to).
+        </p>
+
+      </div>
+
+      <aside class="calc-result" aria-live="polite">
+        <div class="res-headline">
+          <span class="r-lbl">Månedlig betaling</span>
+          <span class="r-val" id="m-mth">–</span>
+          <span class="r-verdict" id="m-sub">Skriv inn lånebeløp og rente</span>
+        </div>
+
+        <div class="res-stats">
+          <div class="res-stat hidden" id="m-first-row"><span class="l">Første måned</span><span class="v" id="m-first">–</span></div>
+          <div class="res-stat hidden" id="m-last-row"><span class="l">Siste måned</span><span class="v" id="m-last">–</span></div>
+          <div class="res-stat"><span class="l">Totalt tilbakebetalt</span><span class="v" id="m-tot">–</span></div>
+          <div class="res-stat"><span class="l">Totale renter</span><span class="v" id="m-int">–</span></div>
+          <div class="res-stat"><span class="l">Effektiv rente</span><span class="v" id="m-eff">–</span></div>
+          <div class="res-stat"><span class="l">År 1 renter</span><span class="v" id="m-y1i">–</span></div>
+          <div class="res-stat"><span class="l">År 1 avdrag</span><span class="v" id="m-y1p">–</span></div>
+          <div class="res-stat hidden" id="m-fees-cell"><span class="l">Totale omkostninger</span><span class="v" id="m-fees-tot">–</span></div>
+        </div>
+
+        <div class="res-section-h">Pengene staten gir tilbake (22 % av rentene)</div>
+        <div class="res-stats">
+          <div class="res-stat"><span class="l">Totalt skattefradrag</span><span class="v" id="m-tax">–</span></div>
+          <div class="res-stat"><span class="l">År 1 skattefradrag</span><span class="v" id="m-tax-y1">–</span></div>
+        </div>
+
+        <div class="res-section-h">Tåler du renten å øke? (banken sjekker +3 %)</div>
+        <div class="res-stats">
+          <div class="res-stat"><span class="l">Månedlig ved +3 pp</span><span class="v" id="m-stress-mth">–</span></div>
+          <div class="res-stat"><span class="l">Økt månedskostnad</span><span class="v" id="m-stress-diff">–</span></div>
+        </div>
+        <p class="res-note">Banken må vise at du klarer renten hvis den blir 7 % eller dagens rente + 3 prosentpoeng — strengeste av de to (Utlånsforskriften § 5).</p>
+
+        <div class="hidden" id="m-io-res">
+          <div class="res-section-h">Avdragsfri periode</div>
+          <div class="res-stats">
+            <div class="res-stat"><span class="l">Månedlig (kun renter)</span><span class="v" id="m-io-mthfree">–</span></div>
+            <div class="res-stat"><span class="l">Månedlig etter</span><span class="v" id="m-io-mthafter">–</span></div>
+            <div class="res-stat"><span class="l">Ekstra rentekostnad</span><span class="v" id="m-io-extra">–</span></div>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="container foot">
+    <span>© 2026 Hverdagsverktøy</span>
+    <em>Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+  </div>
+</footer>
+
+<script>
+  // ── Subtle nav border on scroll ──
+  (function(){
+    var nav = document.getElementById('navWrap');
+    if(!nav) return;
+    var ticking = false;
+    function update(){
+      if(window.scrollY > 8) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+      ticking = false;
+    }
+    window.addEventListener('scroll', function(){
+      if(!ticking){ requestAnimationFrame(update); ticking = true; }
+    }, {passive:true});
+    update();
+  })();
+
+  // ── Theme dropdown ──
+  (function(){
+    var btn = document.getElementById('themeBtn');
+    var menu = document.getElementById('themeMenu');
+    var dot = document.getElementById('themeDot');
+    if(!btn || !menu) return;
+    var KEY = 'hv-theme';
+    var root = document.documentElement;
+    var THEMES = {
+      carbon:  {label:'Mørk',     dot:'#1e1e1e', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
+      frost:   {label:'Lys',      dot:'#e8ecf4', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'},
+      dark:    {label:'Mørk-Blå', dot:'#242740', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.10)'},
+      glass:   {label:'Glass',    dot:'#7c88f8', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'},
+      hendrix: {label:'Hendrix',  dot:'#9e5c3a', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
+      bw:      {label:'Ray',      dot:'#8a8a8a', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.4)'},
+      disco:   {label:'Disco',    dot:'#b044a2', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
+      pink:    {label:'Rosa',     dot:'#e4a0be', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'}
+    };
+    function paintTrigger(t){
+      var th = THEMES[t] || THEMES.carbon;
+      dot.style.background = th.dot;
+      dot.style.boxShadow = th.dotShadow;
+    }
+    function markCurrent(t){
+      menu.querySelectorAll('.theme-item').forEach(function(el){
+        if(el.getAttribute('data-theme') === t) el.classList.add('current');
+        else el.classList.remove('current');
+      });
+    }
+    function apply(t){
+      if(!THEMES[t]) t = 'carbon';
+      root.setAttribute('data-theme', t);
+      paintTrigger(t);
+      markCurrent(t);
+    }
+    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
+    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
+
+    var saved;
+    try { saved = localStorage.getItem(KEY); } catch(e){}
+    apply(THEMES[saved] ? saved : 'carbon');
+
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
+    });
+    menu.querySelectorAll('.theme-item').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var t = el.getAttribute('data-theme');
+        apply(t);
+        try { localStorage.setItem(KEY, t); } catch(e){}
+        close();
+      });
+    });
+    document.addEventListener('click', function(e){
+      if(!menu.contains(e.target) && !btn.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  })();
+
+  // ── Language menu ──
+  (function(){
+    var btn = document.getElementById('langBtn');
+    var menu = document.getElementById('langMenu');
+    if(!btn || !menu) return;
+    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
+    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
+    });
+    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  })();
+
+  // ── Boliglånskalkulator: portet calcMor (shared/core.js:3265) ──
+  (function(){
+    var KEY = 'hv-mor-v1';
+
+    // ── helpers (port fra core.js parseNum/fmt/getVal/setEl) ──
+    function parseNum(id){
+      var el = document.getElementById(id);
+      return el ? +(el.value.replace(/[\s ,]/g,'').replace(',','.')) || 0 : 0;
+    }
+    function fmt(n){
+      return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0})
+        .format(Math.round(n)).replace(/ /g,' ') + ' kr';
+    }
+    function getVal(id, fb){
+      var el = document.getElementById(id);
+      var v = el ? +el.value : NaN;
+      return isNaN(v) ? (fb||0) : v;
+    }
+    function setEl(id, val){
+      var el = document.getElementById(id);
+      if(el) el.textContent = val;
+    }
+    function show(id, on){
+      var el = document.getElementById(id);
+      if(!el) return;
+      if(on) el.classList.remove('hidden'); else el.classList.add('hidden');
+    }
+
+    // ── Hovedberegning (1:1 port fra calcMor) ──
+    function calcMor(){
+      var P = parseNum('m-a');
+      if(P <= 0){
+        setEl('m-mth','–'); setEl('m-sub','Skriv inn lånebeløp og rente');
+        ['m-tot','m-int','m-eff','m-y1i','m-y1p','m-fees-tot','m-tax','m-tax-y1','m-stress-mth','m-stress-diff','m-first','m-last','m-io-mthfree','m-io-mthafter','m-io-extra'].forEach(function(id){setEl(id,'–');});
+        setEl('hStatMnd','–'); setEl('hStatRnt','–');
+        show('m-first-row',false); show('m-last-row',false);
+        show('m-io-res',false); show('m-fees-cell',false);
+        return;
+      }
+
+      var yearlyRate = Math.max(getVal('m-r', 0), 0);
+      var mRate = yearlyRate / 100 / 12;
+      var rawYears = getVal('m-y', 0);
+      var years = rawYears > 0 ? Math.min(rawYears, 30) : 25;
+      var _myEl = document.getElementById('m-y');
+      if(_myEl && String(_myEl.value) !== String(years)) _myEl.value = years;
+      var n = years * 12;
+      var _mt = document.getElementById('m-type');
+      var loanType = _mt ? _mt.value : 'annuity';
+
+      var mnd, tot, rnt, r1=0, a1=0, firstPmt, lastPmt;
+
+      if(loanType === 'serial'){
+        var avdrag = P / n;
+        var bal = P;
+        tot = 0; rnt = 0;
+        firstPmt = avdrag + bal * mRate;
+        for(var i=0; i<n; i++){
+          var renteIMnd = bal * mRate;
+          var betaling = avdrag + renteIMnd;
+          tot += betaling;
+          rnt += renteIMnd;
+          if(i < 12){ r1 += renteIMnd; a1 += avdrag; }
+          bal -= avdrag;
+        }
+        var lastBal = Math.max(P - avdrag*(n-1), 0);
+        lastPmt = lastBal + lastBal * mRate;
+        mnd = firstPmt;
+        show('m-first-row', true); show('m-last-row', true);
+        setEl('m-first', fmt(firstPmt));
+        setEl('m-last',  fmt(lastPmt));
+      } else {
+        mnd = mRate===0 ? P/n : P*mRate*Math.pow(1+mRate,n)/(Math.pow(1+mRate,n)-1);
+        tot = mnd*n;
+        rnt = tot - P;
+        var bal2 = P;
+        for(var j=0; j<12; j++){
+          var ri = bal2 * mRate;
+          r1 += ri;
+          a1 += mnd - ri;
+          bal2 -= (mnd - ri);
+        }
+        show('m-first-row', false); show('m-last-row', false);
+      }
+
+      var effRate = mRate === 0 ? 0 : (Math.pow(1 + mRate, 12) - 1) * 100;
+
+      setEl('m-mth', fmt(mnd));
+      setEl('m-sub', fmt(tot) + ' / ' + years + ' år');
+      setEl('m-tot', fmt(tot));
+      setEl('m-int', fmt(rnt));
+      setEl('m-eff', effRate.toFixed(2).replace('.', ',') + ' %');
+      setEl('m-y1i', fmt(r1));
+      setEl('m-y1p', fmt(a1));
+
+      // Avdragsfri-beregning
+      var ioCheck = document.getElementById('m-io-check');
+      if(ioCheck && ioCheck.checked){
+        var ioYears = +(document.getElementById('m-io-yrs').value) || 5;
+        if(ioYears < years){
+          var ioMonths = ioYears * 12;
+          var remainMonths = n - ioMonths;
+          var mthFree = P * mRate;
+          var mthAfter = mRate === 0 ? P / remainMonths : P * mRate * Math.pow(1 + mRate, remainMonths) / (Math.pow(1 + mRate, remainMonths) - 1);
+          var totFreePeriodInt = mthFree * ioMonths;
+          var totAfterPeriod = mthAfter * remainMonths;
+          var intAfterPeriod = totAfterPeriod - P;
+          var totIntIo = totFreePeriodInt + intAfterPeriod;
+          var diff = totIntIo - rnt;
+          setEl('m-io-mthfree', fmt(mthFree));
+          setEl('m-io-mthafter', fmt(mthAfter));
+          setEl('m-io-extra', '+ ' + fmt(diff));
+          show('m-io-res', true);
+        } else {
+          show('m-io-res', false);
+        }
+      } else {
+        show('m-io-res', false);
+      }
+
+      // Omkostninger
+      var feesPerMonth = parseNum('m-fees');
+      if(feesPerMonth > 0){
+        var totalFees = feesPerMonth * n;
+        var grandTotal = tot + totalFees;
+        setEl('m-fees-tot', fmt(totalFees));
+        show('m-fees-cell', true);
+        setEl('m-tot', fmt(grandTotal));
+        setEl('m-mth', fmt(mnd + feesPerMonth));
+        setEl('m-sub', fmt(grandTotal) + ' / ' + years + ' år');
+      } else {
+        show('m-fees-cell', false);
+      }
+
+      // Skattefradrag: 22 % av renter
+      var taxDeduction = rnt * 0.22;
+      setEl('m-tax', fmt(taxDeduction));
+      setEl('m-tax-y1', fmt(r1 * 0.22));
+
+      // Stresstest § 5: høyeste av 7 % og rente+3 pp
+      var stressYearlyPct = Math.max(yearlyRate + 3, 7);
+      var stressRate = stressYearlyPct / 100 / 12;
+      var stressN = n;
+      if(ioCheck && ioCheck.checked){
+        var ioYearsForStress = +(document.getElementById('m-io-yrs').value) || 5;
+        if(ioYearsForStress > 0 && ioYearsForStress < years){
+          stressN = (years - ioYearsForStress) * 12;
+        }
+      }
+      var stressMnd = stressRate === 0
+        ? P / stressN
+        : P * stressRate * Math.pow(1 + stressRate, stressN) / (Math.pow(1 + stressRate, stressN) - 1);
+      var stressDiff = stressMnd - mnd;
+      setEl('m-stress-mth', fmt(stressMnd));
+      setEl('m-stress-diff', '+ ' + fmt(stressDiff));
+
+      // Hero-stats
+      setEl('hStatMnd', fmt(mnd + (feesPerMonth||0)));
+      setEl('hStatRnt', fmt(rnt));
+
+      persist();
+    }
+
+    // ── Persistens ──
+    function persist(){
+      try {
+        var snap = {
+          type: document.getElementById('m-type').value,
+          a:    document.getElementById('m-a').value,
+          r:    document.getElementById('m-r').value,
+          y:    document.getElementById('m-y').value,
+          fees: document.getElementById('m-fees').value,
+          io:   document.getElementById('m-io-check').checked,
+          ioy:  document.getElementById('m-io-yrs').value
+        };
+        localStorage.setItem(KEY, JSON.stringify(snap));
+      } catch(e){}
+    }
+    function restore(){
+      try {
+        var raw = localStorage.getItem(KEY);
+        if(!raw) return;
+        var s = JSON.parse(raw);
+        if(s.type != null) document.getElementById('m-type').value = s.type;
+        if(s.a    != null) document.getElementById('m-a').value    = s.a;
+        if(s.r    != null) document.getElementById('m-r').value    = s.r;
+        if(s.y    != null) document.getElementById('m-y').value    = s.y;
+        if(s.fees != null) document.getElementById('m-fees').value = s.fees;
+        if(s.io)           document.getElementById('m-io-check').checked = true;
+        if(s.ioy  != null) document.getElementById('m-io-yrs').value = s.ioy;
+      } catch(e){}
+    }
+
+    // ── IO-felter toggle ──
+    document.getElementById('m-io-check').addEventListener('change', function(){
+      show('m-io-fields', this.checked);
+      calcMor();
+    });
+
+    // ── Live recalc ──
+    ['m-a','m-r','m-y','m-fees','m-io-yrs'].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.addEventListener('input', calcMor);
+    });
+    document.getElementById('m-type').addEventListener('change', calcMor);
+
+    // ── Init ──
+    restore();
+    if(document.getElementById('m-io-check').checked){
+      show('m-io-fields', true);
+    }
+    calcMor();
+  })();
+</script>
+
+</body>
+</html>
