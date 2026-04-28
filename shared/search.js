@@ -118,7 +118,34 @@ var SEARCH_DATA = [
   {name:'Merverdiavgiftsloven kap. 9 — Justering',desc:'Kapitalvarer og justeringsperioder',url:'/avgift/#vat-adj-info-card',tags:'merverdiavgiftsloven mval kap 9 justering kapitalvarer adjustment',type:'law',page:'Avgift',sk:'mvalK9'},
   {name:'Regnskapsloven § 5-3 — Avskrivning',desc:'Anleggsmidler med begrenset levetid skal avskrives',url:'/kalkulator/#avs',tags:'regnskapsloven rskl 5-3 avskrivning anleggsmidler levetid accounting act',type:'law',page:'Kalkulator',sk:'rskl53'},
   {name:'Aksjeloven',desc:'Lov om aksjeselskaper — stiftelse, kapital, styre og generalforsamling',url:'/selskap/#selskap-as-card',tags:'aksjeloven lov aksjeselskap as 1997 stiftelse kapital companies act',type:'law',page:'Selskap',sk:'aksjeloven'},
-  {name:'Selskapsloven',desc:'Lov om ansvarlige selskaper og kommandittselskaper',url:'/selskap/#selskap-ans-card',tags:'selskapsloven lov ansvarlig selskap kommandittselskap ans da ks 1985 partnership act',type:'law',page:'Selskap',sk:'selskapsloven'}
+  {name:'Selskapsloven',desc:'Lov om ansvarlige selskaper og kommandittselskaper',url:'/selskap/#selskap-ans-card',tags:'selskapsloven lov ansvarlig selskap kommandittselskap ans da ks 1985 partnership act',type:'law',page:'Selskap',sk:'selskapsloven'},
+
+  // ══════ EDITORIAL PROTOTYPES (path-routing — /new-layout/ redesign) ══════
+  {name:'Hverdagsverktøy',desc:'Gratis norske verktøy for økonomi',url:'/',tags:'hverdagsverktøy hjem hoved økonomi kalkulator',type:'section',page:'Hjem'},
+  {name:'Ansattkostnad (AGA)',desc:'Beregn total årskostnad for en ansatt inkl. AGA og OTP',url:'/avgift/aga/',tags:'ansattkostnad aga arbeidsgiveravgift otp pensjon feriepenger lønn kostnad ansatt',type:'tool',page:'Avgift'},
+  {name:'MVA-kalkulator',desc:'Beregn MVA-beløp og priser inkl/ekskl. avgift',url:'/avgift/vat/',tags:'mva moms merverdiavgift avgift vat 25 15 12 prosent',type:'tool',page:'Avgift'},
+  {name:'Bolig vs leie',desc:'Sammenlign total kostnad over X år — hva lønner seg?',url:'/boliglan/bvl/',tags:'bolig vs leie kjøpe leie sammenligne break-even eie rent vs buy investering',type:'tool',page:'Boliglån'},
+  {name:'Hva har jeg råd til?',desc:'Maks lånebeløp basert på inntekt og egenkapital',url:'/boliglan/maxlan/',tags:'maks lån hva kan jeg låne inntekt egenkapital gjeldsgrad utlånsforskriften',type:'tool',page:'Boliglån'},
+  {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/mor/',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling',type:'tool',page:'Boliglån'},
+  {name:'Avskrivning',desc:'Regnskapsmessig og skattemessig avskrivning',url:'/kalkulator/avs/',tags:'avskrivning saldoavskrivning lineær saldo avskrivningsgruppe restverdi',type:'tool',page:'Kalkulator'},
+  {name:'Feriepenger',desc:'Beregn feriepenger ut fra årslønn og ferieordning',url:'/kalkulator/ferie/',tags:'feriepenger ferie ferielov ferieordning over 60 bonus ferietillegg',type:'tool',page:'Kalkulator'},
+  {name:'Valutagevinst',desc:'Beregn gevinst eller tap ved kjøp og salg av valuta',url:'/kalkulator/valgevinst/',tags:'valutagevinst valutatap valuta kjøp salg kurs gevinst skatt',type:'tool',page:'Kalkulator'},
+  {name:'Lov',desc:'Skatteloven, aksjeloven, merverdiavgiftsloven og bokføringsloven',url:'/lov/',tags:'lov skatteloven aksjeloven merverdiavgiftsloven bokføringsloven lovverk',type:'section',page:'Lov'},
+  {name:'Abonnementskalkulator',desc:'Se totalkostnaden for alle abonnementene dine',url:'/personlig/abo/',tags:'abonnement streaming netflix spotify hbo viaplay subscription månedskostnad',type:'tool',page:'Personlig økonomi'},
+  {name:'Aksjer (veiledning)',desc:'Hva er aksjer, risiko, skatt 37,84 % og 5 tips til nybegynnere',url:'/personlig/aksjer/',tags:'aksjer veiledning guide nybegynner risiko skjermingsfradrag utbytte ask aksjesparekonto',type:'concept',page:'Personlig økonomi'},
+  {name:'Bilkostnad',desc:'Beregn hva bilen din faktisk koster per måned og km',url:'/personlig/bil/',tags:'bil bilkostnad bilhold kjøretøy drivstoff forsikring bompenger vedlikehold bensin diesel',type:'tool',page:'Personlig økonomi'},
+  {name:'Budsjett',desc:'Lag et personlig budsjett med inntekter og utgifter',url:'/personlig/budsjett/',tags:'budsjett økonomi personlig inntekt utgift spare penger husholdning',type:'tool',page:'Personlig økonomi'},
+  {name:'Familie',desc:'Kalkulatorer og informasjon for familieøkonomi',url:'/personlig/fam/',tags:'familie familieøkonomi barn barnestipend barnetrygd foreldrepenger',type:'section',page:'Personlig økonomi'},
+  {name:'Forbrukslån',desc:'Beregn kostnad ved forbrukslån og sammenlikn renter',url:'/personlig/fbl/',tags:'forbrukslån forbruk lån rente effektivrente kostnad',type:'tool',page:'Personlig økonomi'},
+  {name:'Bankkonto',desc:'Oversikt over bankkonti, sparkekonto og spareavtaler',url:'/personlig/konto/',tags:'bankkonto sparkekonto rente spareavtale bank innskudd',type:'section',page:'Personlig økonomi'},
+  {name:'Lønn etter skatt',desc:'Se hva du faktisk får utbetalt fra timelønnen din',url:'/personlig/lonn/',tags:'lønn timelønn netto brutto utbetalt lønn etter skatt nettolønn',type:'tool',page:'Personlig økonomi'},
+  {name:'Sparekalkulator',desc:'Se kraften i rentes rente over tid',url:'/personlig/spare/',tags:'spare sparing rentes rente avkastning fond aksjer investering månedlig',type:'tool',page:'Personlig økonomi'},
+  {name:'Studielån',desc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen',url:'/personlig/studie/',tags:'studielån lånekassen stipend student studie nedbetaling lån utdanning',type:'tool',page:'Personlig økonomi'},
+  {name:'Sykepenger og NAV',desc:'Oversikt over sykepenger, dagpenger og NAV-ytelser',url:'/personlig/syk/',tags:'sykepenger nav dagpenger utbetaling arbeidsløs',type:'section',page:'Personlig økonomi'},
+  {name:'Teknisk økonomi',desc:'Oversikt over tekniske økonomi-kalkulatorer',url:'/personlig/teknisk/',tags:'teknisk økonomi likvid cashflow nåverdi internrente npv irr',type:'section',page:'Personlig økonomi'},
+  {name:'Regnskap',desc:'Verktøy og kalkulator for regnskap og bokføring',url:'/regnskap/',tags:'regnskap bokføring regnskapsføring avskrivning driftsmiddel',type:'section',page:'Regnskap'},
+  {name:'Formueskatt',desc:'Beregn formueskatt med verdsettelsesrabatter',url:'/skatt/formue/',tags:'formue formueskatt verdsettelsesrabatt bolig aksjer eiendom gjeld',type:'tool',page:'Skatt'},
+  {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/reise/',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger',type:'tool',page:'Skatt'}
 ];
 
 /* ─── Foreslåtte (popular searches — translated) ─── */
