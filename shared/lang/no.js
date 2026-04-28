@@ -1086,5 +1086,19 @@ REGIONS['no'] = {
     persToolStudieDesc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen — full omgjøring og gradering.',
     persToolBudsjettDesc:'Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV.',
     persToolAksjerTitle:'Aksjer',
-    persToolAksjerDesc:'Skatt på aksjegevinst, oppjusteringsfaktor 1,72 og skjermingsfradrag — komplett veiledning.'
+    persToolAksjerDesc:'Skatt på aksjegevinst, oppjusteringsfaktor 1,72 og skjermingsfradrag — komplett veiledning.',
+
+    // — home (editorial redesign) —
+    homeHeroTitle:'Praktiske verktøy for <em>privatøkonomi</em>, skatt og lovverk.',
+    homeHeroLangPill:'10 språk',
+    homeHeroSubtitle:'Oppdatert til gjeldende regler for 2026.',
+    homeMarketTitle:'Markedsdata',
+    homeSectionCategories:'Kategorier',
+    homeCategoriesCount:'6 seksjoner',
+    homeCardPersonlig:'Personlig økonomi',
+    homeCardBoliglan:'Boliglån',
+    homeCardKalkulator:'Kalkulator',
+    homeCardSkatt:'Skatt',
+    homeCardSelskap:'Selskap',
+    homeCardAvgift:'Avgift'
 };
