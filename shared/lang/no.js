@@ -1034,6 +1034,32 @@ REGIONS['no'] = {
       mvalK9:'Kapitalvarer og justeringsperioder',
       rskl53:'Anleggsmidler med begrenset levetid skal avskrives',
       aksjeloven:'Lov om aksjeselskaper — stiftelse, kapital, styre',
-      selskapsloven:'Lov om ansvarlige selskaper og kommandittselskaper'
+      selskapsloven:'Lov om ansvarlige selskaper og kommandittselskaper',
+
+      // — kalkulator landing (editorial redesign) —
+      kalkHeroTitle:'Kalkulator',
+      kalkHeroSubtitle:'Fra hverdagsmatte til vitenskapelige funksjoner, valutaomregning og finansielle modeller. Alt regner lokalt i nettleseren.',
+      kalkStatCalculators:'Kalkulatorer',
+      kalkStatCurrencies:'Valutaer',
+      kalkFilterPlaceholder:'Filtrer verktøy i denne kategorien…',
+      kalkChipAll:'Alle',
+      kalkChipPopular:'Populære',
+      kalkChipNew:'Nye',
+      kalkSectionTools:'Verktøy',
+      kalkSectionRates:'Faste kurser',
+      kalkSeeAllCurrencies:'Se alle valutaer',
+      kalkTagLive:'Live',
+      kalkToolSciTitle:'Vitenskapelig',
+      kalkToolSciDesc:'Sin, cos, log, potenser, fakultet — full RPN-modus tilgjengelig.',
+      kalkToolValutaTitle:'Valuta',
+      kalkToolValutaDesc:'Regn om mellom 168 valutaer med oppdaterte kurser.',
+      kalkToolFinTitle:'Finansiell',
+      kalkToolFinDesc:'Nåverdi, fremtidsverdi, annuitet og effektiv rente.',
+      kalkToolAvsTitle:'Avskrivning',
+      kalkToolAvsDesc:'Saldo og lineær avskrivning — alle grupper A til J.',
+      kalkToolFerieTitle:'Feriepenger',
+      kalkToolFerieDesc:'10,2 %, 12,0 % og +2,3 % over 60 år — full beregning.',
+      kalkToolNpvTitle:'NPV / IRR',
+      kalkToolNpvDesc:'Lønnsomhetsanalyse med netto nåverdi og internrente.'
     }
 };
