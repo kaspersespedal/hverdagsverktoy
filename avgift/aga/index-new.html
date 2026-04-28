@@ -8,6 +8,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
 <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap">
+<link rel="preload" href="/shared/core.js?v=v120" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hv-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -604,12 +605,12 @@
           <span class="arrow">/</span>
           <span class="current">Arbeidsgiveravgift</span>
         </div>
-        <h1 class="page-title"><em>Arbeids­giver­avgift</em></h1>
-        <p class="page-lead">Skriv inn brutto årslønn, velg AGA-sone, feriepenger og OTP — så regner vi ut den fulle årskostnaden for arbeidsgiver. Norske 2026-satser per sone (I, Ia/II, III, IVa, IV, V), 1G = 130 160 kr. OTP-grunnlag følger innskuddspensjonsloven § 5-2 (mellom 1G og 12G). Alt skjer lokalt i nettleseren.</p>
+        <h1 class="page-title"><em data-i18n="agaTitle">Arbeids­giver­avgift</em></h1>
+        <p class="page-lead" data-i18n="agaSubtitle">Skriv inn brutto årslønn, velg AGA-sone, feriepenger og OTP — så regner vi ut den fulle årskostnaden for arbeidsgiver. Norske 2026-satser per sone (I, Ia/II, III, IVa, IV, V), 1G = 130 160 kr. OTP-grunnlag følger innskuddspensjonsloven § 5-2 (mellom 1G og 12G). Alt skjer lokalt i nettleseren.</p>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l">Total årskostnad</span><span class="v" id="hStatTotal">–</span></div>
-        <div class="page-stat"><span class="l">% over brutto</span><span class="v" id="hStatPct">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="agaRTotal">Total årskostnad</span><span class="v" id="hStatTotal">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="agaRPct">% over brutto</span><span class="v" id="hStatPct">–</span></div>
       </div>
     </div>
   </section>
@@ -621,16 +622,16 @@
 
         <section class="aga-section" aria-labelledby="agaInputHdr">
           <header class="aga-section-head">
-            <h2 id="agaInputHdr">Lønn og sone</h2>
-            <span class="hint">2026-satser</span>
+            <h2 id="agaInputHdr" data-i18n="agaSectionInput">Lønn og sone</h2>
+            <span class="hint" data-i18n="agaSectionHint">2026-satser</span>
           </header>
           <div class="aga-fields">
             <div class="aga-fg full">
-              <label for="aga-salary">Brutto lønn per år (kr)</label>
+              <label for="aga-salary" data-i18n="agaLblSalary">Brutto lønn per år (kr)</label>
               <input id="aga-salary" type="text" inputmode="numeric" value="600 000" autocomplete="off">
             </div>
             <div class="aga-fg full">
-              <label for="aga-zone">AGA-sone</label>
+              <label for="aga-zone" data-i18n="agaZone">AGA-sone</label>
               <select id="aga-zone">
                 <option value="0.141">Sone I (14,1 %) — byer/sentrale strøk</option>
                 <option value="0.106">Sone Ia/II (10,6 %) — distrikt</option>
@@ -642,14 +643,14 @@
               <p class="aga-hint">Satsen avhenger av hvor bedriften holder til. F.eks. 14,1 % i Oslo, 0 % i Finnmark.</p>
             </div>
             <div class="aga-fg">
-              <label for="aga-ferie">Feriepenger</label>
+              <label for="aga-ferie" data-i18n="agaFerie">Feriepenger</label>
               <select id="aga-ferie">
                 <option value="0.102">10,2 % (4 uker ferie)</option>
                 <option value="0.12">12 % (5 uker ferie)</option>
               </select>
             </div>
             <div class="aga-fg">
-              <label for="aga-otp">OTP-rate</label>
+              <label for="aga-otp" data-i18n="agaOtp">OTP-rate</label>
               <select id="aga-otp">
                 <option value="0.02">2 % (lovpålagt minimum)</option>
                 <option value="0.05">5 %</option>
@@ -668,7 +669,7 @@
         </p>
 
         <button type="button" id="agaCalcBtn" class="aga-calc-btn">
-          Beregn årskostnad
+          <span data-i18n="agaBtnCalc">Beregn årskostnad</span>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
         </button>
 
@@ -676,16 +677,16 @@
 
       <aside class="aga-result" aria-live="polite">
         <div class="res-headline">
-          <span class="r-lbl">Total årskostnad</span>
+          <span class="r-lbl" data-i18n="agaRTotal">Total årskostnad</span>
           <span class="r-val" id="rTotal">–</span>
           <span class="r-verdict" id="rVerdict">Skriv inn brutto lønn for å se total ansattkostnad</span>
         </div>
         <div class="res-stats">
-          <div class="res-stat"><span class="l">Per måned</span><span class="v" id="rPerMonth">–</span></div>
-          <div class="res-stat divide"><span class="l">AGA</span><span class="v" id="rAga">–</span></div>
-          <div class="res-stat"><span class="l">Feriepenger</span><span class="v" id="rFerie">–</span></div>
-          <div class="res-stat"><span class="l">OTP</span><span class="v" id="rOtp">–</span></div>
-          <div class="res-stat strong"><span class="l">% over brutto</span><span class="v" id="rPct">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="agaOutPerMonth">Per måned</span><span class="v" id="rPerMonth">–</span></div>
+          <div class="res-stat divide"><span class="l" data-i18n="agaRAga">AGA</span><span class="v" id="rAga">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="agaRFerie">Feriepenger</span><span class="v" id="rFerie">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="agaROtp">OTP</span><span class="v" id="rOtp">–</span></div>
+          <div class="res-stat strong"><span class="l" data-i18n="agaRPct">% over brutto</span><span class="v" id="rPct">–</span></div>
         </div>
       </aside>
 
@@ -815,7 +816,7 @@
       var v = el ? +el.value : NaN;
       return isNaN(v) ? (fallback || 0) : v;
     }
-    function setText(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; }
+    function setOutputText(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; }
 
     // Port av calcAga (core.js:4730) — byte-for-byte matematikk
     function compute(){
@@ -845,27 +846,27 @@
       var d = compute();
 
       if(!d.hasData){
-        setText('rTotal', '–');
-        setText('rVerdict', 'Skriv inn brutto lønn for å se total ansattkostnad');
-        setText('rPerMonth', '–');
-        setText('rAga', '–');
-        setText('rFerie', '–');
-        setText('rOtp', '–');
-        setText('rPct', '–');
-        setText('hStatTotal', '–');
-        setText('hStatPct', '–');
+        setOutputText('rTotal', '–');
+        setOutputText('rVerdict', 'Skriv inn brutto lønn for å se total ansattkostnad');
+        setOutputText('rPerMonth', '–');
+        setOutputText('rAga', '–');
+        setOutputText('rFerie', '–');
+        setOutputText('rOtp', '–');
+        setOutputText('rPct', '–');
+        setOutputText('hStatTotal', '–');
+        setOutputText('hStatPct', '–');
         persist();
         return;
       }
 
-      setText('rTotal', fmtKr(d.total));
-      setText('rPerMonth', fmtKr(d.perMonth) + ' /mnd');
-      setText('rAga', fmtKr(d.agaAmt));
-      setText('rFerie', fmtKr(d.ferieAmt));
-      setText('rOtp', fmtKr(d.otpAmt));
-      setText('rPct', d.pct.toFixed(1) + ' %');
-      setText('hStatTotal', fmtKr(d.total));
-      setText('hStatPct', d.pct.toFixed(1) + ' %');
+      setOutputText('rTotal', fmtKr(d.total));
+      setOutputText('rPerMonth', fmtKr(d.perMonth) + ' /mnd');
+      setOutputText('rAga', fmtKr(d.agaAmt));
+      setOutputText('rFerie', fmtKr(d.ferieAmt));
+      setOutputText('rOtp', fmtKr(d.otpAmt));
+      setOutputText('rPct', d.pct.toFixed(1) + ' %');
+      setOutputText('hStatTotal', fmtKr(d.total));
+      setOutputText('hStatPct', d.pct.toFixed(1) + ' %');
 
       var verdict;
       if(d.agaRate === 0){
@@ -875,7 +876,7 @@
       } else {
         verdict = 'Distriktssats — redusert AGA på ' + (d.agaRate*100).toFixed(1).replace('.',',') + ' %.';
       }
-      setText('rVerdict', verdict);
+      setOutputText('rVerdict', verdict);
 
       persist();
     }
@@ -916,6 +917,8 @@
     recalc();
   })();
 </script>
+
+<script defer src="/shared/core.js?v=v120"></script>
 
 <script>
   if('serviceWorker' in navigator){
