@@ -473,6 +473,7 @@ function updateAll() {
   _renameHowtoArrows();
   _addLawSubCloseLabel();
   try{_updateI18nHtml(R());}catch(e){_uiErr('i18nHtml',e);}
+  try{_updateI18nText(R());}catch(e){_uiErr('i18nText',e);}
 }
 
 // Swap innerHTML on [data-i18n-html] elements when current lang has an override key.
@@ -489,6 +490,26 @@ function _updateI18nHtml(r){
     if(el._hvtI18nHtmlApplied===target) continue;
     el.innerHTML=target;
     el._hvtI18nHtmlApplied=target;
+  }
+}
+
+// Swap textContent on [data-i18n] elements (excluding those with [data-i18n-html]).
+// Brukes av editorial-prototyper (<page>/index-new.html) som annoterer plain-text
+// elementer (subtitle, knappe-labels, h3, count-tekst). Same fallback-mønster som
+// _updateI18nHtml: original NO caches paa el._hvtI18nTextOrig, brukes naar R() mangler key.
+// Bruker textContent (ikke innerHTML) — XSS-trygt + bevarer ikke barn-elementer.
+// For oversettelser med inline-markup, bruk data-i18n-html i stedet.
+function _updateI18nText(r){
+  if(!r) return;
+  var els=document.querySelectorAll('[data-i18n]:not([data-i18n-html])');
+  for(var i=0;i<els.length;i++){
+    var el=els[i],key=el.getAttribute('data-i18n');
+    if(!key) continue;
+    if(el._hvtI18nTextOrig===undefined) el._hvtI18nTextOrig=el.textContent;
+    var target=r[key]||el._hvtI18nTextOrig;
+    if(el._hvtI18nTextApplied===target) continue;
+    el.textContent=target;
+    el._hvtI18nTextApplied=target;
   }
 }
 
