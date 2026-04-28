@@ -1604,5 +1604,31 @@ REGIONS['no'] = {
     bilNRBom:'Bompenger',
     bilNResDisclaimer:'Røft estimat. Faktiske kostnader varierer med kjøremønster, bosted, forsikringsvilkår og bilens tilstand.',
     bilNCsvBtn:'Last ned (CSV)',
-    bilNBreakdownHdr:'Kostnadsfordeling over hele eiertiden'
+    bilNBreakdownHdr:'Kostnadsfordeling over hele eiertiden',
+
+    // — personlig/abo (Abonnement — calc, ny editorial layout) —
+    aboNTitle:'Abonnement',
+    aboNLead:'Legg inn abonnementene dine, så regner vi ut totalkostnaden per måned, per år og per dag. Velg fra katalogen for å fylle inn priser automatisk — eller skriv inn dine egne. Alt skjer lokalt i nettleseren.',
+    aboNStatMonth:'Per måned',
+    aboNStatYear:'Per år',
+    aboNListHdr:'Dine abonnementer',
+    aboNAddBtn:'Legg til',
+    aboNColTjeneste:'Tjeneste',
+    aboNColPris:'Pris (kr/mnd)',
+    aboNBtnCalc:'Beregn totalkostnad',
+    aboNRMonthLbl:'Total per måned',
+    aboNRVerdictInit:'Legg inn abonnementer for å se totalen',
+    aboNRYear:'Per år',
+    aboNRCount:'Antall abonnementer',
+    aboNRAvg:'Snitt per abonnement',
+    aboNRDaily:'Per dag',
+    aboNCsvBtn:'Last ned (CSV)',
+    aboNBreakdownHdr:'Fordeling',
+    aboNPcHdr:'Prisendringer siste år',
+    aboNPcTotalLbl:'Total prisøkning per måned',
+    aboNPcYearLbl:'Per år',
+    aboNPerspHdr:'Perspektiv — hva tilsvarer dette?',
+    aboNPerspKaffe:'Kopper kaffe à 55 kr',
+    aboNPerspFly:'Tur-retur flyreiser i Europa à 1500 kr',
+    aboNPerspIphone:'Andel av en ny iPhone à 15 990 kr'
 };
