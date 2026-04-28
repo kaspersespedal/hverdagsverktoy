@@ -1199,6 +1199,34 @@ REGIONS['no'] = {
     formueROutSkattepliktig:'Skattepliktig formue',
     formueROutEffSats:'Effektiv sats',
 
+    // — reise calc (editorial redesign) —
+    reiseTitleNew:'<em>Reise</em>fradrag',
+    reiseSubtitle:'Beregn fradrag for reise mellom hjem og fast arbeidssted (pendlerfradrag) for 2026 — sats 1,90 kr per kilometer, egenandel 12 000 kr og tak på fradragsgrunnlaget 120 000 kr. Skattebesparelsen er 22 % av netto fradrag. Alt skjer lokalt i nettleseren.',
+    reiseHStatFradrag:'Årlig fradrag',
+    reiseHStatBesparelse:'Skattebesparelse',
+    reiseSectionInput:'Reise hjem–jobb',
+    reiseSectionHint:'2026-satser',
+    reiseLblKm:'Avstand én vei (km)',
+    reiseLblDager:'Arbeidsdager per år',
+    reiseLblBom:'Bompenger / ferge per dag (kr)',
+    reiseBtnCalcNew:'Beregn reisefradrag',
+    reiseROutBrutto:'Brutto reisekostnad',
+    reiseROutEgenandel:'Egenandel (nedre grense)',
+    reiseROutBesparelse:'Skattebesparelse (22 %)',
+    reiseROutPerMnd:'Per måned',
+
+    // — lov landing (editorial redesign) —
+    lovTitleNew:'<em>Lov</em>',
+    lovSubtitle:'Skatteloven, aksjeloven, merverdiavgiftsloven og bokføringsloven — søkbart oppslagsverk i de viktigste norske næringslovene. Alle moduler er på vei.',
+    lovHStatLover:'Lover dekket',
+    lovHStatOppdatert:'Sist oppdatert',
+
+    // — regnskap landing (editorial redesign) —
+    regnskapTitleNew:'<em>Regnskap</em>',
+    regnskapSubtitle:'Bokføring, balanse, resultatregnskap og kontoplan — verktøy for praktisk regnskapsføring etter norsk standard. Alle kalkulatorer er på vei.',
+    regnskapHStatVerktoy:'Verktøy under utvikling',
+    regnskapHStatKontoplan:'Standard kontoplan',
+
     // — personlig/konto (Fond og ASK — content page) —
     kontoTitle:'Fond og ASK',
     kontoLead:'Hva er fond — og hvorfor ASK er en smart konto for aksjefond. Slik velger du mellom Aksjesparekonto, IPS og vanlig fondskonto, med skattesatser for 2026.',

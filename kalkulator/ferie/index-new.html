@@ -8,6 +8,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
 <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap">
+<link rel="preload" href="/shared/core.js?v=v120" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hv-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -375,12 +376,12 @@
           <span class="arrow">/</span>
           <span class="current">Feriepenger</span>
         </div>
-        <h1 class="page-title"><em>Feriepenger</em></h1>
-        <p class="page-lead">Regn ut feriepengene dine etter Ferieloven § 10 — 10,2 % grunnsats (4 ukers ferie) eller 12 % (5 ukers ferie). Over 60 år gir et tillegg på 2,3 prosentpoeng på grunnlag opp til 6G (Ferieloven § 10 nr. 3). Alt skjer lokalt i nettleseren.</p>
+        <h1 class="page-title"><em data-i18n="ferieTitle">Feriepenger</em></h1>
+        <p class="page-lead" data-i18n="ferieSubtitle">Regn ut feriepengene dine etter Ferieloven § 10 — 10,2 % grunnsats (4 ukers ferie) eller 12 % (5 ukers ferie). Over 60 år gir et tillegg på 2,3 prosentpoeng på grunnlag opp til 6G (Ferieloven § 10 nr. 3). Alt skjer lokalt i nettleseren.</p>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l">Feriepenger</span><span class="v" id="hStatAmt">–</span></div>
-        <div class="page-stat"><span class="l">Daglig sats</span><span class="v" id="hStatDaily">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="ferieAmtLabel">Feriepenger</span><span class="v" id="hStatAmt">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="ferieDailyLabel">Daglig sats</span><span class="v" id="hStatDaily">–</span></div>
       </div>
     </div>
   </section>
@@ -392,16 +393,16 @@
 
         <section class="calc-section" aria-labelledby="ferieInputHdr">
           <header class="calc-section-head">
-            <h2 id="ferieInputHdr">Inntekt og ferietype</h2>
-            <span class="hint">Ferieloven § 10</span>
+            <h2 id="ferieInputHdr" data-i18n="ferieSectionInput">Inntekt og ferietype</h2>
+            <span class="hint" data-i18n="ferieSectionHint">Ferieloven § 10</span>
           </header>
           <div class="calc-fields">
             <div class="calc-fg full">
-              <label for="ferie-salary">Årslønn (grunnlag)</label>
+              <label for="ferie-salary" data-i18n="ferieLblSalary">Årslønn (grunnlag)</label>
               <input id="ferie-salary" type="text" inputmode="numeric" value="500 000" autocomplete="off">
             </div>
             <div class="calc-fg full">
-              <label for="ferie-type">Ferietype</label>
+              <label for="ferie-type" data-i18n="ferieTypeLabel">Ferietype</label>
               <select id="ferie-type">
                 <option value="0.102" selected>4 uker (10,2 %)</option>
                 <option value="0.12">5 uker (12 %)</option>
@@ -410,14 +411,14 @@
             <div class="calc-fg full">
               <div class="check-row">
                 <input type="checkbox" id="ferie-over60">
-                <label for="ferie-over60">Over 60 år (+2,3 % bonus, opptil 6G)</label>
+                <label for="ferie-over60" data-i18n="ferieLblOver60">Over 60 år (+2,3 % bonus, opptil 6G)</label>
               </div>
             </div>
           </div>
           <p class="calc-hint">Feriepenger betales året etter opptjeningsåret. Grunnlag er normalt arbeidsinntekt — ikke feriepenger fra forrige år, ikke utbytte. Bonusen for 60+ gjelder kun grunnlag opp til 6G (1G = 130&nbsp;160 kr i 2026).</p>
 
           <button type="button" id="ferieCalcBtn" class="calc-btn">
-            Beregn feriepenger
+            <span data-i18n="ferieBtnCalc">Beregn feriepenger</span>
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
           </button>
         </section>
@@ -429,17 +430,17 @@
 
       <aside class="calc-result" aria-live="polite">
         <div class="res-headline">
-          <span class="r-lbl">Feriepenger</span>
+          <span class="r-lbl" data-i18n="ferieAmtLabel">Feriepenger</span>
           <span class="r-val" id="rAmt">–</span>
           <span class="r-verdict" id="rVerdict">Skriv inn årslønn for å se feriepengene</span>
         </div>
         <div class="res-stats">
-          <div class="res-stat"><span class="l">Grunnlag</span><span class="v" id="rBase">–</span></div>
-          <div class="res-stat"><span class="l">Sats</span><span class="v" id="rRate">–</span></div>
-          <div class="res-stat"><span class="l">Antall feriedager</span><span class="v" id="rDays">–</span></div>
-          <div class="res-stat"><span class="l">Daglig sats</span><span class="v" id="rDaily">–</span></div>
-          <div class="res-stat divide" id="rBonusRow" hidden><span class="l">Bonus 60+ (2,3 %)</span><span class="v" id="rBonus">–</span></div>
-          <div class="res-stat strong" id="rWithBonusRow" hidden><span class="l">Med 60+ bonus</span><span class="v" id="rWithBonus">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="ferieRBase">Grunnlag</span><span class="v" id="rBase">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="ferieRRate">Sats</span><span class="v" id="rRate">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="ferieRDays">Antall feriedager</span><span class="v" id="rDays">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="ferieDailyLabel">Daglig sats</span><span class="v" id="rDaily">–</span></div>
+          <div class="res-stat divide" id="rBonusRow" hidden><span class="l" data-i18n="ferieRBonus">Bonus 60+ (2,3 %)</span><span class="v" id="rBonus">–</span></div>
+          <div class="res-stat strong" id="rWithBonusRow" hidden><span class="l" data-i18n="ferieOver60Result">Med 60+ bonus</span><span class="v" id="rWithBonus">–</span></div>
         </div>
         <p class="calc-disclaimer" style="margin:0;">Feriepenger er normalt skattefrie ved utbetaling i juni året etter, men inngår i skatteoppgjøret. Trekkfri utbetaling er kun et tidspunktspørsmål — feriepengene er skattepliktig inntekt.</p>
       </aside>
@@ -534,7 +535,7 @@
     function parseNum(id){var el = document.getElementById(id); if(!el) return 0; return parseAmt(el.value);}
     function getVal(id, fallback){var el = document.getElementById(id); var v = el ? +el.value : NaN; return isNaN(v) ? (fallback || 0) : v;}
     function getChk(id){var el = document.getElementById(id); return el ? !!el.checked : false;}
-    function setText(id, val){var el = document.getElementById(id); if(el) el.textContent = val;}
+    function setOutputText(id, val){var el = document.getElementById(id); if(el) el.textContent = val;}
 
     // ── Hovedberegning (port fra shared/core.js calcFerie ~4861) ──
     function compute(){
@@ -571,37 +572,37 @@
       STATE = d;
 
       if(!d.hasData){
-        setText('rAmt', '–');
-        setText('rVerdict', 'Skriv inn årslønn for å se feriepengene');
-        setText('rBase','–'); setText('rRate','–'); setText('rDays','–'); setText('rDaily','–');
+        setOutputText('rAmt', '–');
+        setOutputText('rVerdict', 'Skriv inn årslønn for å se feriepengene');
+        setOutputText('rBase','–'); setOutputText('rRate','–'); setOutputText('rDays','–'); setOutputText('rDaily','–');
         document.getElementById('rBonusRow').hidden = true;
         document.getElementById('rWithBonusRow').hidden = true;
-        setText('hStatAmt','–'); setText('hStatDaily','–');
+        setOutputText('hStatAmt','–'); setOutputText('hStatDaily','–');
         persist();
         return;
       }
 
-      setText('rAmt', fmtKr(d.amt));
-      setText('rBase', fmtKr(d.sal));
+      setOutputText('rAmt', fmtKr(d.amt));
+      setOutputText('rBase', fmtKr(d.sal));
       var rateLbl = d.type >= 0.12 ? '12 % (5 uker)' : '10,2 % (4 uker)';
-      setText('rRate', rateLbl);
-      setText('rDays', d.vacationDays);
-      setText('rDaily', fmtKr(d.daily));
-      setText('hStatAmt', fmtKr(d.amt));
-      setText('hStatDaily', fmtKr(d.daily));
+      setOutputText('rRate', rateLbl);
+      setOutputText('rDays', d.vacationDays);
+      setOutputText('rDaily', fmtKr(d.daily));
+      setOutputText('hStatAmt', fmtKr(d.amt));
+      setOutputText('hStatDaily', fmtKr(d.daily));
 
       var verdict = d.over60
         ? 'Inkludert 60+ bonus får du ' + fmtKr(d.withBonus) + ' i feriepenger.'
         : 'Feriepengene utbetales normalt i juni året etter opptjening.';
-      setText('rVerdict', verdict);
+      setOutputText('rVerdict', verdict);
 
       var bonusRow = document.getElementById('rBonusRow');
       var withRow = document.getElementById('rWithBonusRow');
       if(d.over60){
         bonusRow.hidden = false;
         withRow.hidden = false;
-        setText('rBonus', fmtKr(d.bonus));
-        setText('rWithBonus', fmtKr(d.withBonus));
+        setOutputText('rBonus', fmtKr(d.bonus));
+        setOutputText('rWithBonus', fmtKr(d.withBonus));
       } else {
         bonusRow.hidden = true;
         withRow.hidden = true;
@@ -642,6 +643,8 @@
     recalc();
   })();
 </script>
+
+<script defer src="/shared/core.js?v=v120"></script>
 
 <script>
   if('serviceWorker' in navigator){

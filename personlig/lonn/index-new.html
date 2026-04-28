@@ -8,6 +8,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
 <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap">
+<link rel="preload" href="/shared/core.js?v=v120" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hv-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -682,12 +683,12 @@
           <span class="arrow">/</span>
           <span class="current">Lønn etter skatt</span>
         </div>
-        <h1 class="page-title"><em>Lønn</em> etter skatt</h1>
-        <p class="page-lead">Skriv inn timelønn, timer per uke og alder — så regner vi ut hva du faktisk får utbetalt etter skatt. Norske 2026-satser (trinnskatt, alminnelig inntektsskatt, trygdeavgift, minstefradrag, personfradrag). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
+        <h1 class="page-title" data-i18n-html="lonnTitleHtml"><em>Lønn</em> etter skatt</h1>
+        <p class="page-lead" data-i18n="lonnSubtitle">Skriv inn timelønn, timer per uke og alder — så regner vi ut hva du faktisk får utbetalt etter skatt. Norske 2026-satser (trinnskatt, alminnelig inntektsskatt, trygdeavgift, minstefradrag, personfradrag). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l">Netto månedlig</span><span class="v" id="hStatNetto">–</span></div>
-        <div class="page-stat"><span class="l">Effektiv skattesats</span><span class="v" id="hStatEffektiv">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="lonnStatNetto">Netto månedlig</span><span class="v" id="hStatNetto">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="lonnRlEffektiv">Effektiv skattesats</span><span class="v" id="hStatEffektiv">–</span></div>
       </div>
     </div>
   </section>
@@ -699,24 +700,24 @@
 
         <section class="lonn-section" aria-labelledby="lonnInputHdr">
           <header class="lonn-section-head">
-            <h2 id="lonnInputHdr">Inntekt</h2>
-            <span class="hint">2026-satser</span>
+            <h2 id="lonnInputHdr" data-i18n="lonnSectionInput">Inntekt</h2>
+            <span class="hint" data-i18n="lonnSectionHint">2026-satser</span>
           </header>
           <div class="lonn-fields">
             <div class="lonn-fg">
-              <label for="lonnTimelonn">Timelønn (kr)</label>
+              <label for="lonnTimelonn" data-i18n="lonnLTimelonn">Timelønn (kr)</label>
               <input id="lonnTimelonn" type="text" inputmode="numeric" value="200" autocomplete="off">
             </div>
             <div class="lonn-fg">
-              <label for="lonnTimer">Timer per uke</label>
+              <label for="lonnTimer" data-i18n="lonnLTimer">Timer per uke</label>
               <input id="lonnTimer" type="number" min="1" max="60" step="1" value="15" autocomplete="off">
             </div>
             <div class="lonn-fg">
-              <label for="lonnUker">Arbeidsuker per år</label>
+              <label for="lonnUker" data-i18n="lonnLUker">Arbeidsuker per år</label>
               <input id="lonnUker" type="number" min="1" max="52" step="1" value="47" autocomplete="off">
             </div>
             <div class="lonn-fg">
-              <label for="lonnAlder">Alder</label>
+              <label for="lonnAlder" data-i18n="lonnLAlder">Alder</label>
               <select id="lonnAlder">
                 <option value="under18">Under 18 år</option>
                 <option value="18plus" selected>18 år eller eldre</option>
@@ -732,7 +733,7 @@
         </p>
 
         <button type="button" id="lonnCalcBtn" class="lonn-calc-btn">
-          Beregn lønn
+          <span data-i18n="lonnBtnCalcShort">Beregn lønn</span>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
         </button>
 
@@ -740,19 +741,19 @@
 
       <aside class="lonn-result" aria-live="polite">
         <div class="res-headline">
-          <span class="r-lbl">Utbetalt per måned</span>
+          <span class="r-lbl" data-i18n="lonnRLbl">Utbetalt per måned</span>
           <span class="r-val" id="rNettoMnd">–</span>
           <span class="r-verdict" id="rVerdict">Skriv inn timelønn og timer for å se utbetalingen</span>
         </div>
         <div class="res-stats">
-          <div class="res-stat"><span class="l">Bruttolønn per år</span><span class="v" id="rBruttoAar">–</span></div>
-          <div class="res-stat"><span class="l">Bruttolønn per måned</span><span class="v" id="rBruttoMnd">–</span></div>
-          <div class="res-stat divide"><span class="l">Skattetrekk per år</span><span class="v" id="rSkattAar">–</span></div>
-          <div class="res-stat"><span class="l">Skattetrekk per måned</span><span class="v" id="rSkattMnd">–</span></div>
-          <div class="res-stat"><span class="l">Effektiv skattesats</span><span class="v" id="rEffektiv">–</span></div>
-          <div class="res-stat divide"><span class="l">Feriepenger (10,2 %)</span><span class="v" id="rFeriepenger">–</span></div>
-          <div class="res-stat strong"><span class="l">Netto årslønn</span><span class="v" id="rNettoAar">–</span></div>
-          <div class="res-stat"><span class="l">Netto per time</span><span class="v" id="rNettoTime">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="lonnRlBruttoAar">Bruttolønn per år</span><span class="v" id="rBruttoAar">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="lonnRlBruttoMnd">Bruttolønn per måned</span><span class="v" id="rBruttoMnd">–</span></div>
+          <div class="res-stat divide"><span class="l" data-i18n="lonnRlSkatt">Skattetrekk per år</span><span class="v" id="rSkattAar">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="lonnRlSkattMnd">Skattetrekk per måned</span><span class="v" id="rSkattMnd">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="lonnRlEffektiv">Effektiv skattesats</span><span class="v" id="rEffektiv">–</span></div>
+          <div class="res-stat divide"><span class="l" data-i18n="lonnRlFeriepenger">Feriepenger (10,2 %)</span><span class="v" id="rFeriepenger">–</span></div>
+          <div class="res-stat strong"><span class="l" data-i18n="lonnRNettoAarShort">Netto årslønn</span><span class="v" id="rNettoAar">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="lonnRlNettoTime">Netto per time</span><span class="v" id="rNettoTime">–</span></div>
         </div>
         <a href="/personlig/budsjett/index-new.html" class="res-cta">
           <span>
@@ -1002,16 +1003,16 @@
       var d = compute();
       STATE = d;
 
-      var setText = function(id, val){ var el=document.getElementById(id); if(el) el.textContent = val; };
+      var setOutputText = function(id, val){ var el=document.getElementById(id); if(el) el.textContent = val; };
 
       if(!d.hasData){
-        setText('rNettoMnd', '–');
-        setText('rVerdict', 'Skriv inn timelønn og timer for å se utbetalingen');
-        setText('rBruttoAar','–'); setText('rBruttoMnd','–');
-        setText('rSkattAar','–'); setText('rSkattMnd','–');
-        setText('rEffektiv','–'); setText('rFeriepenger','–');
-        setText('rNettoAar','–'); setText('rNettoTime','–');
-        setText('hStatNetto','–'); setText('hStatEffektiv','–');
+        setOutputText('rNettoMnd', '–');
+        setOutputText('rVerdict', 'Skriv inn timelønn og timer for å se utbetalingen');
+        setOutputText('rBruttoAar','–'); setOutputText('rBruttoMnd','–');
+        setOutputText('rSkattAar','–'); setOutputText('rSkattMnd','–');
+        setOutputText('rEffektiv','–'); setOutputText('rFeriepenger','–');
+        setOutputText('rNettoAar','–'); setOutputText('rNettoTime','–');
+        setOutputText('hStatNetto','–'); setOutputText('hStatEffektiv','–');
         var bd = document.getElementById('lonnBreakdown');
         bd.classList.add('empty');
         document.getElementById('lonnBdTable').innerHTML = '';
@@ -1020,18 +1021,18 @@
         return;
       }
 
-      setText('rNettoMnd', fmtKr(d.nettoMnd));
-      setText('rVerdict', d.verdict);
-      setText('rBruttoAar', fmtKr(d.bruttoAar));
-      setText('rBruttoMnd', fmtKr(d.bruttoMnd));
-      setText('rSkattAar', fmtKr(d.totalSkatt));
-      setText('rSkattMnd', fmtKr(d.totalSkatt/12));
-      setText('rEffektiv', fmtPct(d.effSats));
-      setText('rFeriepenger', fmtKr(d.feriepenger));
-      setText('rNettoAar', fmtKr(d.nettoAar));
-      setText('rNettoTime', fmtKr(d.nettoTime));
-      setText('hStatNetto', fmtKr(d.nettoMnd));
-      setText('hStatEffektiv', fmtPct(d.effSats));
+      setOutputText('rNettoMnd', fmtKr(d.nettoMnd));
+      setOutputText('rVerdict', d.verdict);
+      setOutputText('rBruttoAar', fmtKr(d.bruttoAar));
+      setOutputText('rBruttoMnd', fmtKr(d.bruttoMnd));
+      setOutputText('rSkattAar', fmtKr(d.totalSkatt));
+      setOutputText('rSkattMnd', fmtKr(d.totalSkatt/12));
+      setOutputText('rEffektiv', fmtPct(d.effSats));
+      setOutputText('rFeriepenger', fmtKr(d.feriepenger));
+      setOutputText('rNettoAar', fmtKr(d.nettoAar));
+      setOutputText('rNettoTime', fmtKr(d.nettoTime));
+      setOutputText('hStatNetto', fmtKr(d.nettoMnd));
+      setOutputText('hStatEffektiv', fmtPct(d.effSats));
 
       // Breakdown-tabell
       var bdTable = document.getElementById('lonnBdTable');
@@ -1142,6 +1143,8 @@
     recalc();
   })();
 </script>
+
+<script defer src="/shared/core.js?v=v120"></script>
 
 <script>
   if('serviceWorker' in navigator){
