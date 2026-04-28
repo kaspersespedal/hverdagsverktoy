@@ -1630,5 +1630,27 @@ REGIONS['no'] = {
     aboNPerspHdr:'Perspektiv — hva tilsvarer dette?',
     aboNPerspKaffe:'Kopper kaffe à 55 kr',
     aboNPerspFly:'Tur-retur flyreiser i Europa à 1500 kr',
-    aboNPerspIphone:'Andel av en ny iPhone à 15 990 kr'
+    aboNPerspIphone:'Andel av en ny iPhone à 15 990 kr',
+
+    // — personlig/budsjett (Budsjett — calc, ny editorial layout) —
+    budNTitle:'Budsjett',
+    budNLead:'Legg inn inntekter og utgifter, så regner vi ut månedlig balanse, sparerate og årlig overskudd. Alt skjer lokalt i nettleseren — ingen data sendes noe sted.',
+    budNStatBalance:'Beregnet balanse',
+    budNStatSavings:'Sparerate',
+    budNIncomeHdr:'Inntekter',
+    budNExpenseHdr:'Utgifter',
+    budNAddBtn:'Legg til',
+    budNColDesc:'Beskrivelse',
+    budNColAmount:'Beløp (kr/mnd)',
+    budNBtnCalc:'Beregn budsjett',
+    budNRBalanceLbl:'Månedlig balanse',
+    budNRVerdictInit:'Legg inn tall for å se balansen',
+    budNRIncome:'Sum inntekter',
+    budNRExpense:'Sum utgifter',
+    budNRSavings:'Sparerate',
+    budNRAnnual:'Årlig overskudd',
+    budNCtaTitle:'Hva har du råd til å kjøpe?',
+    budNCtaDesc:'Maks lånebeløp basert på inntekten din',
+    budNCsvBtn:'Last ned (CSV)',
+    budNBreakdownHdr:'Utgiftsfordeling'
 };
