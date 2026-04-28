@@ -1061,5 +1061,30 @@ REGIONS['no'] = {
       kalkToolFerieDesc:'10,2 %, 12,0 % og +2,3 % over 60 år — full beregning.',
       kalkToolNpvTitle:'NPV / IRR',
       kalkToolNpvDesc:'Lønnsomhetsanalyse med netto nåverdi og internrente.'
-    }
+    },
+
+    // — personlig landing (editorial redesign) —
+    persEyebrowHome:'Forsiden',
+    persEyebrowCurrent:'Personlig økonomi',
+    persHeroTitle:'Personlig <em>økonomi</em>',
+    persHeroSubtitle:'Lønn etter skatt, bilkostnad, sparing og budsjett — alle kalkulatorer for hverdagsøkonomien din. Kjører lokalt, ingen tracking.',
+    persStatTools:'Kalkulatorer',
+    persStatRates:'Oppdaterte satser',
+    persFilterPlaceholder:'Filtrer verktøy i denne kategorien…',
+    persChipAll:'Alle',
+    persChipPopular:'Populære',
+    persChipNew:'Nye',
+    persSectionTools:'Verktøy',
+    persSectionRates:'Nøkkeltall 2026',
+    persSeeAllRates:'Se alle satser',
+    persTagPopular:'Populær',
+    persTagNew:'Ny',
+    persTagNyStil:'Ny stil',
+    persToolLonnDesc:'Hva du faktisk får utbetalt fra timelønn eller årslønn — trinnskatt og trygdeavgift inkludert.',
+    persToolBilDesc:'Drivstoff, forsikring, bompenger og verditap — hva bilen faktisk koster per måned.',
+    persToolSpareDesc:'Se hvordan rentes rente vokser sparepengene dine over tid — månedlig eller årlig innskudd.',
+    persToolStudieDesc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen — full omgjøring og gradering.',
+    persToolBudsjettDesc:'Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV.',
+    persToolAksjerTitle:'Aksjer',
+    persToolAksjerDesc:'Skatt på aksjegevinst, oppjusteringsfaktor 1,72 og skjermingsfradrag — komplett veiledning.'
 };
