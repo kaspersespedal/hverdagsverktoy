@@ -8,6 +8,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
 <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap">
+<link rel="preload" href="/shared/core.js?v=v120" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hv-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -611,12 +612,12 @@
           <span class="arrow">/</span>
           <span class="current">MVA-kalkulator</span>
         </div>
-        <h1 class="page-title"><em>MVA</em>-kalkulator</h1>
-        <p class="page-lead">Skriv inn et beløp og velg sats — så regner vi ut prisen med eller uten merverdiavgift. Norske 2026-satser (25 % standard, 15 % næringsmidler, 12 % transport/hotell/kino, 0 % fritak). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
+        <h1 class="page-title" data-i18n-html="vatTitleNew"><em>MVA</em>-kalkulator</h1>
+        <p class="page-lead" data-i18n="vatSubtitle">Skriv inn et beløp og velg sats — så regner vi ut prisen med eller uten merverdiavgift. Norske 2026-satser (25 % standard, 15 % næringsmidler, 12 % transport/hotell/kino, 0 % fritak). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l">MVA-beløp</span><span class="v" id="hStatVat">–</span></div>
-        <div class="page-stat"><span class="l">Effektiv sats</span><span class="v" id="hStatRate">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="vatHStatVat">MVA-beløp</span><span class="v" id="hStatVat">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="vatHStatRate">Effektiv sats</span><span class="v" id="hStatRate">–</span></div>
       </div>
     </div>
   </section>
@@ -628,16 +629,16 @@
 
         <section class="vat-section" aria-labelledby="vatInputHdr">
           <header class="vat-section-head">
-            <h2 id="vatInputHdr">Beregning</h2>
-            <span class="hint">2026-satser</span>
+            <h2 id="vatInputHdr" data-i18n="vatSectionInput">Beregning</h2>
+            <span class="hint" data-i18n="vatSectionHint">2026-satser</span>
           </header>
           <div class="vat-fields">
             <div class="vat-fg full">
-              <label for="v-a">Beløp (kr)</label>
+              <label for="v-a" data-i18n="vatLblAmt">Beløp (kr)</label>
               <input id="v-a" type="text" inputmode="numeric" value="10 000" autocomplete="off">
             </div>
             <div class="vat-fg">
-              <label for="v-r">MVA-sats</label>
+              <label for="v-r" data-i18n="vatLblRate">MVA-sats</label>
               <select id="v-r">
                 <option value="25">25 % Standard – varer og tjenester (§ 5-1)</option>
                 <option value="15">15 % Næringsmidler (§ 5-2)</option>
@@ -646,7 +647,7 @@
               </select>
             </div>
             <div class="vat-fg">
-              <label for="v-t">Beløpet er</label>
+              <label for="v-t" data-i18n="vatLblType">Beløpet er</label>
               <select id="v-t">
                 <option value="ex">Uten MVA → Legg til MVA</option>
                 <option value="inc">Med MVA → Trekk fra MVA</option>
@@ -661,7 +662,7 @@
         </p>
 
         <button type="button" id="vatCalcBtn" class="vat-calc-btn">
-          Beregn MVA
+          <span data-i18n="vatBtnCalc">Beregn MVA</span>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
         </button>
 
@@ -675,8 +676,8 @@
         </div>
         <div class="res-stats">
           <div class="res-stat"><span class="l" id="rL1">Pris ekskl. MVA</span><span class="v" id="rExc">–</span></div>
-          <div class="res-stat"><span class="l">MVA-beløp</span><span class="v" id="rVat">–</span></div>
-          <div class="res-stat strong"><span class="l">Sats</span><span class="v" id="rPct">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="vatRVat">MVA-beløp</span><span class="v" id="rVat">–</span></div>
+          <div class="res-stat strong"><span class="l" data-i18n="vatRPctShort">Sats</span><span class="v" id="rPct">–</span></div>
         </div>
       </aside>
 
@@ -802,7 +803,7 @@
       return isNaN(n) || n < 0 ? 0 : n;
     }
 
-    function setText(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; }
+    function setOutputText(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; }
 
     // Port av calcVat (core.js:4169) — byte-for-byte matematikk
     function compute(){
@@ -822,37 +823,37 @@
       var d = compute();
 
       if(!d.hasData){
-        setText('rMainLbl', 'Pris inkl. MVA');
-        setText('rMain', '–');
-        setText('rVerdict', 'Skriv inn beløp og velg sats for å beregne');
-        setText('rL1', 'Pris ekskl. MVA');
-        setText('rExc', '–');
-        setText('rVat', '–');
-        setText('rPct', '–');
-        setText('hStatVat', '–');
-        setText('hStatRate', '–');
+        setOutputText('rMainLbl', 'Pris inkl. MVA');
+        setOutputText('rMain', '–');
+        setOutputText('rVerdict', 'Skriv inn beløp og velg sats for å beregne');
+        setOutputText('rL1', 'Pris ekskl. MVA');
+        setOutputText('rExc', '–');
+        setOutputText('rVat', '–');
+        setOutputText('rPct', '–');
+        setOutputText('hStatVat', '–');
+        setOutputText('hStatRate', '–');
         persist();
         return;
       }
 
       // Hovedresultat: input var ekskl. → vis inkl. som main, og motsatt
       if(d.tp === 'ex'){
-        setText('rMainLbl', 'Pris inkl. MVA');
-        setText('rMain', fmtKr(d.inc));
-        setText('rL1', 'Pris ekskl. MVA (din input)');
-        setText('rExc', fmtKr(d.ex));
-        setText('rVerdict', 'MVA er lagt til på beløpet du skrev inn.');
+        setOutputText('rMainLbl', 'Pris inkl. MVA');
+        setOutputText('rMain', fmtKr(d.inc));
+        setOutputText('rL1', 'Pris ekskl. MVA (din input)');
+        setOutputText('rExc', fmtKr(d.ex));
+        setOutputText('rVerdict', 'MVA er lagt til på beløpet du skrev inn.');
       } else {
-        setText('rMainLbl', 'Pris ekskl. MVA');
-        setText('rMain', fmtKr(d.ex));
-        setText('rL1', 'Pris inkl. MVA (din input)');
-        setText('rExc', fmtKr(d.inc));
-        setText('rVerdict', 'MVA er trukket fra beløpet du skrev inn.');
+        setOutputText('rMainLbl', 'Pris ekskl. MVA');
+        setOutputText('rMain', fmtKr(d.ex));
+        setOutputText('rL1', 'Pris inkl. MVA (din input)');
+        setOutputText('rExc', fmtKr(d.inc));
+        setOutputText('rVerdict', 'MVA er trukket fra beløpet du skrev inn.');
       }
-      setText('rVat', fmtKr(d.vat));
-      setText('rPct', fmtPct(d.s));
-      setText('hStatVat', fmtKr(d.vat));
-      setText('hStatRate', fmtPct(d.s));
+      setOutputText('rVat', fmtKr(d.vat));
+      setOutputText('rPct', fmtPct(d.s));
+      setOutputText('hStatVat', fmtKr(d.vat));
+      setOutputText('hStatRate', fmtPct(d.s));
 
       persist();
     }
@@ -890,6 +891,8 @@
     recalc();
   })();
 </script>
+
+<script defer src="/shared/core.js?v=v120"></script>
 
 <script>
   if('serviceWorker' in navigator){
