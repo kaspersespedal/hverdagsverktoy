@@ -682,6 +682,49 @@
     .spare-compare{padding:18px 16px 18px}
     .spare-saved{padding:16px 16px 18px}
   }
+
+  /* ── T2 site-shell additions (search anchor / footer links / focus / help / howto) ── */
+  #site-search-anchor{display:none}
+  .foot{align-items:center}
+  .foot-links{display:inline-flex;align-items:center;gap:10px;font-size:12.5px}
+  .foot-links a{color:var(--ink3);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}
+  .foot-links a:hover{color:var(--ink);border-bottom-color:var(--line-2)}
+  .foot-sep{color:var(--ink4)}
+  .page-hero-actions{display:flex;gap:8px;margin-top:14px}
+  .calc-help-btn,.focus-card-btn{
+    width:32px;height:32px;border:1px solid var(--line);background:transparent;color:var(--ink2);
+    border-radius:50%;font-size:14px;line-height:1;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:color .18s ease,border-color .18s ease;
+  }
+  @media(hover:hover){
+    .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line-2)}
+  }
+  .calc-help-btn:focus-visible,.focus-card-btn:focus-visible{outline:1px solid var(--accent);outline-offset:2px}
+  body.focus-mode > .nav-wrap,
+  body.focus-mode > .tabs-wrap,
+  body.focus-mode > footer{display:none}
+  body.focus-mode .back-pill-wrap{display:none}
+  .howto-wrap{margin:32px 0}
+  details.howto{
+    border:1px solid var(--line);border-radius:10px;padding:18px 22px;background:var(--surface);
+  }
+  details.howto > summary{
+    cursor:pointer;font-weight:500;color:var(--ink);list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+  }
+  details.howto > summary::-webkit-details-marker{display:none}
+  details.howto > summary::after{
+    content:'';width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+    transform:rotate(45deg);transition:transform .2s ease;flex:0 0 auto
+  }
+  details.howto[open] > summary::after{transform:rotate(-135deg)}
+  details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .howto-body{color:var(--ink2);font-size:14.5px;line-height:1.55}
+  .howto-row{padding:10px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:240px 1fr;gap:24px}
+  .howto-row:first-child{border-top:0;padding-top:2px}
+  .howto-row > strong{color:var(--ink);font-weight:500}
+  @media(max-width:640px){.howto-row{grid-template-columns:1fr;gap:4px}.howto-row > strong{margin-bottom:2px}}
 </style>
 </head>
 <body>
@@ -709,6 +752,7 @@
         <span class="wordmark">Hverdagsverktøy</span>
       </a>
       <div class="nav-right">
+        <div id="site-search-anchor"></div>
         <a href="/" class="nav-back">
           <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
           Forsiden
@@ -821,6 +865,10 @@
         </div>
         <h1 class="page-title" data-i18n-html="spareTitleHtml"><em>Spare</em>kalkulator</h1>
         <p class="page-lead" data-i18n="spareSubtitle">Se kraften i rentes rente over tid. Legg inn startbeløp, månedlig innskudd og forventet avkastning — og se hvordan pengene vokser år for år. Alt skjer lokalt i nettleseren.</p>
+      </div>
+      <div class="page-hero-actions">
+        <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
+        <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
       <div class="page-stats">
         <div class="page-stat"><span class="l" data-i18n="spareStatTotal">Sluttbeløp</span><span class="v" id="hStatTotal">–</span></div>
@@ -960,12 +1008,29 @@
 
   </div>
 
+
+
+
+
+  <div class="container howto-wrap">
+    <details class="howto" id="howto-spareHowto">
+      <summary>
+        <span class="howto-title" data-howto-title="spareHowto">Slik bruker du Sparekalkulatoren</span>
+      </summary>
+      <div class="howto-body" data-howto-prefix="spareHowto"></div>
+    </details>
+  </div>
 </main>
 
 <footer>
   <div class="container foot">
-    <span>© 2026 Hverdagsverktøy</span>
-    <em>Veiledende beregninger. Ikke profesjonell rådgivning.</em>
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc">Veiledende beregninger. Ikke profesjonell rådgivning.</em>
   </div>
 </footer>
 
@@ -1644,6 +1709,7 @@
 </script>
 
 <script defer src="/shared/core.js?v=v121"></script>
+<script defer src="/shared/search.js?v=v25"></script>
 
 <script>
   if('serviceWorker' in navigator){
@@ -1651,6 +1717,94 @@
       navigator.serviceWorker.register('/sw.js').catch(function(){});
     });
   }
+</script>
+
+
+
+
+<script>
+  // ── T2 site-shell wiring (howto render + ? toggle + ⛶ focus) ──
+  (function(){
+    function renderHowto(){
+      var bodies = document.querySelectorAll('[data-howto-prefix]');
+      if(!bodies.length) return;
+      var r = (typeof R === 'function') ? R() : {};
+      bodies.forEach(function(body){
+        var prefix = body.getAttribute('data-howto-prefix'); // e.g. "lonnHowto"
+        var rows = r && r[prefix + 'Rows'];
+        var html = '';
+        if(rows && rows.length){
+          // Rows-array style (lonnHowtoRows, aboHowtoRows, ...)
+          for(var i=0;i<rows.length;i++){
+            var label = rows[i][0]||'';
+            var desc  = rows[i][1]||'';
+            html += '<div class="howto-row"><strong>'+label+'</strong><span>'+desc+'</span></div>';
+          }
+        } else {
+          // Paragraph style (famHowtoP1..P4, sykHowtoLead/P1..PN/Outro, ...)
+          if(r[prefix + 'Lead']) html += '<p>' + r[prefix + 'Lead'] + '</p>';
+          for(var j=1; j<=10; j++){
+            var p = r[prefix + 'P' + j];
+            if(p) html += '<p>' + p + '</p>';
+          }
+          if(r[prefix + 'Helper']) html += '<p class="howto-helper"><em>' + r[prefix + 'Helper'] + '</em></p>';
+          if(r[prefix + 'Outro']) html += '<p>' + r[prefix + 'Outro'] + '</p>';
+        }
+        if(html) body.innerHTML = html;
+      });
+      // Update title text from lang
+      var titles = document.querySelectorAll('[data-howto-title]');
+      titles.forEach(function(t){
+        var prefix = t.getAttribute('data-howto-title');
+        var titleKey = prefix + 'Title';
+        if(r && r[titleKey]) t.textContent = r[titleKey];
+      });
+    }
+    function init(){
+      // ? toggles howto details
+      document.querySelectorAll('.calc-help-btn').forEach(function(b){
+        b.addEventListener('click', function(){
+          var d = document.querySelector('details.howto');
+          if(!d) return;
+          d.open = !d.open;
+          if(d.open) d.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      });
+      // ⛶ toggles focus mode
+      document.querySelectorAll('.focus-card-btn').forEach(function(b){
+        b.addEventListener('click', function(){
+          document.body.classList.toggle('focus-mode');
+        });
+      });
+      renderHowto();
+    }
+    // Poll-render: lang is loaded async by core.js after DOMContentLoaded.
+    // Keep retrying every 80 ms until R() returns content for the prefix, max ~3 s.
+    function pollRender(){
+      var bodies = document.querySelectorAll('[data-howto-prefix]');
+      if(!bodies.length) return;
+      var attempts = 0;
+      var max = 38; // ~3 s
+      var t = setInterval(function(){
+        attempts++;
+        var r = (typeof R === 'function') ? R() : {};
+        var ready = false;
+        bodies.forEach(function(b){
+          var p = b.getAttribute('data-howto-prefix');
+          if(r[p+'Rows'] || r[p+'Lead'] || r[p+'P1']) ready = true;
+        });
+        if(ready){
+          renderHowto();
+          clearInterval(t);
+        } else if(attempts >= max){
+          clearInterval(t);
+        }
+      }, 80);
+    }
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
+    } else { init(); pollRender(); }
+  })();
 </script>
 </body>
 </html>
