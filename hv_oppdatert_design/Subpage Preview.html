@@ -15,7 +15,7 @@
     --ink2:#a8a39a;
     --ink3:#797469;
     --ink4:#54514a;
-    --bg:#0d0d0c;
+    --bg:#0A0908;
     --surface:#131312;
     --surface-2:#191917;
     --accent:#c89968;
@@ -28,6 +28,90 @@
     --neg:#c46a6a;
 
     --ease: cubic-bezier(.22, 1, .36, 1);
+
+    /* Aurora atmosphere tokens — ported from Homepage.html */
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --dur-fast: 220ms;
+    --dur-base: 420ms;
+  }
+  /* ─────────────────────────────────────────────────────
+     ATMOSPHERE — Aurora over ink (site-wide)
+     Same four-layer stack as Homepage.html. See that file for full notes.
+  ───────────────────────────────────────────────────── */
+  .atmo-base{
+    position:fixed;inset:0;z-index:-3;pointer-events:none;
+    background:linear-gradient(to bottom, #0F0D0A 0%, #070605 100%);
+  }
+  .atmo{
+    position:fixed;inset:0;z-index:-2;pointer-events:none;
+    isolation:isolate;overflow:hidden;contain:layout paint;
+  }
+  .band{
+    position:absolute;pointer-events:none;will-change:transform;
+    mix-blend-mode:screen;transform-origin:center;
+  }
+  .band-inner{
+    position:absolute;inset:0;
+    will-change:transform, opacity;transform-origin:center;
+  }
+  .band-a{
+    width:140vw;height:30vh;left:50%;top:18%;margin-left:-70vw;
+    animation: bandADriftX 38s ease-in-out infinite;
+  }
+  .band-a .band-inner{
+    background:radial-gradient(ellipse at center,
+      hsl(38, 60%, 75%) 0%, transparent 50%);
+    opacity:.08;
+    animation:
+      bandADriftY 53s ease-in-out infinite,
+      bandABreathe 24s ease-in-out infinite;
+  }
+  .band-b{
+    width:110vw;height:22vh;left:42%;top:30%;margin-left:-55vw;
+    animation: bandBDriftX 41s ease-in-out infinite;
+    animation-delay: -20.5s;
+  }
+  .band-b .band-inner{
+    background:radial-gradient(ellipse at center,
+      hsl(28, 50%, 55%) 0%, transparent 50%);
+    opacity:.05;
+    animation:
+      bandBDriftY 47s ease-in-out infinite,
+      bandBBreathe 31s ease-in-out infinite;
+    animation-delay: -23.5s, -15.5s;
+  }
+  @keyframes bandADriftX{ 0%,100%{transform:translate3d(-4%,0,0)} 50%{transform:translate3d(4%,0,0)} }
+  @keyframes bandADriftY{ 0%,100%{transform:translate3d(0,-1.5%,0)} 50%{transform:translate3d(0,1.5%,0)} }
+  @keyframes bandABreathe{ 0%,100%{opacity:.08} 50%{opacity:.10} }
+  @keyframes bandBDriftX{ 0%,100%{transform:translate3d(4%,0,0)} 50%{transform:translate3d(-4%,0,0)} }
+  @keyframes bandBDriftY{ 0%,100%{transform:translate3d(0,1.5%,0)} 50%{transform:translate3d(0,-1.5%,0)} }
+  @keyframes bandBBreathe{ 0%,100%{opacity:.05} 50%{opacity:.07} }
+  .cursor-light{
+    position:fixed;left:0;top:0;
+    width:1200px;height:1200px;margin:-600px 0 0 -600px;
+    pointer-events:none;
+    background:radial-gradient(circle,
+      hsla(38, 70%, 75%, 0.04) 0%, transparent 60%);
+    transform: translate3d(50vw, 50vh, 0);
+    will-change:transform;mix-blend-mode:screen;
+  }
+  .film-grain{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    opacity:.035;mix-blend-mode:overlay;width:100%;height:100%;
+  }
+  @media (max-width: 768px){
+    .band-a{ animation-duration:57s; }
+    .band-a .band-inner{ animation: bandADriftY 79s ease-in-out infinite; }
+    .band-b{ animation-duration:61s; }
+    .band-b .band-inner{ animation: bandBDriftY 70s ease-in-out infinite; }
+    .cursor-light{ display:none; }
+    .film-grain{ opacity:.02; }
+  }
+  @media (max-width: 1023px){ .cursor-light{ display:none; } }
+  @media (prefers-reduced-data: reduce), (update: slow){
+    .band, .band-inner{ animation:none !important; }
+    .cursor-light{ display:none !important; }
+    .film-grain{ opacity:.02 !important; }
   }
   *,*::before,*::after{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -317,10 +401,29 @@
   @media (prefers-reduced-motion: reduce){
     *{transition:none !important;animation:none !important}
     html{scroll-behavior:auto}
+    .band-a .band-inner{ opacity:.04 !important; }
+    .band-b .band-inner{ opacity:.025 !important; }
+    .cursor-light{ display:none !important; }
   }
 </style>
 </head>
 <body>
+
+<!-- ATMOSPHERE — Aurora over ink. Site-wide, fixed. -->
+<div class="atmo-base" aria-hidden="true"></div>
+<div class="atmo" aria-hidden="true">
+  <div class="band band-a"><div class="band-inner"></div></div>
+  <div class="band band-b"><div class="band-inner"></div></div>
+  <div class="cursor-light" id="cursorLight"></div>
+</div>
+<svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">
+  <filter id="atmoGrain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"
+      stitchTiles="stitch" seed="4"/>
+    <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#atmoGrain)"/>
+</svg>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -625,6 +728,43 @@ window.addEventListener('hashchange', function(){
 
 var initial = location.hash.replace('#','');
 renderPage(PAGES[initial] ? initial : 'personlig');
+</script>
+
+<script>
+/* Cursor-anchored light — lerp 0.06, lags 200–400ms.
+   Disabled <1024px and under prefers-reduced-motion. Pauses on hidden tab. */
+(function(){
+  var REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var WIDE   = matchMedia('(min-width: 1024px)').matches;
+  var light  = document.getElementById('cursorLight');
+  if(!light) return;
+  if(REDUCE || !WIDE){ light.style.display = 'none'; return; }
+  var targetX = window.innerWidth/2, targetY = window.innerHeight/2;
+  var curX = targetX, curY = targetY;
+  var raf = null, paused = false;
+  function tick(){
+    if(paused){ raf = null; return; }
+    curX += (targetX - curX) * 0.06;
+    curY += (targetY - curY) * 0.06;
+    light.style.transform =
+      'translate3d(' + curX.toFixed(2) + 'px,' + curY.toFixed(2) + 'px,0)';
+    if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
+      raf = requestAnimationFrame(tick);
+    } else { raf = null; }
+  }
+  window.addEventListener('mousemove', function(e){
+    targetX = e.clientX; targetY = e.clientY;
+    if(!raf && !paused) raf = requestAnimationFrame(tick);
+  }, {passive:true});
+  document.addEventListener('visibilitychange', function(){
+    paused = document.hidden;
+    if(paused){ if(raf){ cancelAnimationFrame(raf); raf = null; } }
+    else if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
+      raf = requestAnimationFrame(tick);
+    }
+  });
+  light.style.transform = 'translate3d(' + targetX + 'px,' + targetY + 'px,0)';
+})();
 </script>
 
 </body>

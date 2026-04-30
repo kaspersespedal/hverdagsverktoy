@@ -1,0 +1,128 @@
+/* ─────────────────────────────────────────────────────
+   ATMOSPHERE — "Aurora over ink" (site-wide)
+   Four-layer stack, fixed, behind everything:
+     L1 .atmo-base    — solid base + vertical gradient
+     L2 .atmo .band   — two horizontal aurora bands, blend:screen
+     L3 .atmo .cursor-light — single soft circular light, lerp 0.06
+     L4 .film-grain   — static SVG fractal noise, blend:overlay, ~3.5%
+   Mobile: drift slowed x1.5, no cursor light, grain -> 2%.
+   Reduced-motion: bands static at 0.5x, no drift, no cursor light.
+   Source: hv_oppdatert_design/Homepage.html (v3, 2026-04-30).
+───────────────────────────────────────────────────── */
+.atmo-base{
+  position:fixed;inset:0;z-index:-3;pointer-events:none;
+  background:linear-gradient(to bottom, #0F0D0A 0%, #070605 100%);
+}
+.atmo{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  isolation:isolate;overflow:hidden;contain:layout paint;
+}
+/* Each band uses a two-element nest so X-drift, Y-drift, and the
+   opacity-breathe can each animate without fighting for a single
+   transform property. Non-equal periods (38/53 and 41/47) so the
+   loop is never visible. */
+.band{
+  position:absolute;pointer-events:none;will-change:transform;
+  mix-blend-mode:screen;transform-origin:center;
+}
+.band-inner{
+  position:absolute;inset:0;
+  will-change:transform, opacity;transform-origin:center;
+}
+/* Band A — primary cream, anchored above the headline. */
+.band-a{
+  width:140vw;height:30vh;
+  left:50%;top:18%;margin-left:-70vw;
+  animation: bandADriftX 38s ease-in-out infinite;
+}
+.band-a .band-inner{
+  background:radial-gradient(ellipse at center,
+    hsl(38, 60%, 75%) 0%, transparent 50%);
+  opacity:.08;
+  animation:
+    bandADriftY 53s ease-in-out infinite,
+    bandABreathe 24s ease-in-out infinite;
+}
+/* Band B — deeper amber, lower note, counter-phase from t=0. */
+.band-b{
+  width:110vw;height:22vh;
+  left:42%;top:30%;margin-left:-55vw;
+  animation: bandBDriftX 41s ease-in-out infinite;
+  animation-delay: -20.5s;
+}
+.band-b .band-inner{
+  background:radial-gradient(ellipse at center,
+    hsl(28, 50%, 55%) 0%, transparent 50%);
+  opacity:.05;
+  animation:
+    bandBDriftY 47s ease-in-out infinite,
+    bandBBreathe 31s ease-in-out infinite;
+  animation-delay: -23.5s, -15.5s;
+}
+@keyframes bandADriftX{
+  0%, 100% { transform: translate3d(-4%, 0, 0); }
+  50%      { transform: translate3d( 4%, 0, 0); }
+}
+@keyframes bandADriftY{
+  0%, 100% { transform: translate3d(0, -1.5%, 0); }
+  50%      { transform: translate3d(0,  1.5%, 0); }
+}
+@keyframes bandABreathe{
+  0%, 100% { opacity: .08; }
+  50%      { opacity: .10; }
+}
+@keyframes bandBDriftX{
+  0%, 100% { transform: translate3d( 4%, 0, 0); }
+  50%      { transform: translate3d(-4%, 0, 0); }
+}
+@keyframes bandBDriftY{
+  0%, 100% { transform: translate3d(0,  1.5%, 0); }
+  50%      { transform: translate3d(0, -1.5%, 0); }
+}
+@keyframes bandBBreathe{
+  0%, 100% { opacity: .05; }
+  50%      { opacity: .07; }
+}
+/* L3 — Cursor-anchored light. Position written by JS via translate3d. */
+.cursor-light{
+  position:fixed;left:0;top:0;
+  width:1200px;height:1200px;margin:-600px 0 0 -600px;
+  pointer-events:none;
+  background:radial-gradient(circle,
+    hsla(38, 70%, 75%, 0.04) 0%, transparent 60%);
+  transform: translate3d(50vw, 50vh, 0);
+  will-change:transform;mix-blend-mode:screen;
+}
+/* L4 — Static SVG fractal grain. z-index: -1 so it sits above the
+   atmosphere (-2/-3) but below unpositioned/sticky foreground content.
+   Keeps text crisp (grain only mixes with atmosphere) and avoids forcing
+   position:relative on every body child — which would break sticky nav. */
+.film-grain{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  opacity:.035;mix-blend-mode:overlay;
+  width:100%;height:100%;
+}
+
+/* Mobile (<= 768px) — drift slowed x1.5, no cursor light, grain -> 2%. */
+@media (max-width: 768px){
+  .band-a{ animation-duration:57s; }
+  .band-a .band-inner{ animation: bandADriftY 79s ease-in-out infinite; }
+  .band-b{ animation-duration:61s; }
+  .band-b .band-inner{ animation: bandBDriftY 70s ease-in-out infinite; }
+  .cursor-light{ display:none; }
+  .film-grain{ opacity:.02; }
+}
+@media (max-width: 1023px){
+  .cursor-light{ display:none; }
+}
+@media (prefers-reduced-motion: reduce){
+  .band, .band-inner{ animation:none !important; }
+  .band-a .band-inner{ opacity:.04 !important; }
+  .band-b .band-inner{ opacity:.025 !important; }
+  .cursor-light{ display:none !important; }
+}
+@media (prefers-reduced-data: reduce), (update: slow){
+  .band, .band-inner{ animation:none !important; }
+  .cursor-light{ display:none !important; }
+  .film-grain{ opacity:.02 !important; }
+}

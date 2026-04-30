@@ -16,7 +16,7 @@
     --ink2:#a8a39a;
     --ink3:#797469;
     --ink4:#54514a;
-    --bg:#0d0d0c;
+    --bg:#0A0908;
     --surface:#131312;
     --surface-2:#191917;
     --accent:#c89968;
@@ -271,19 +271,121 @@
   /* ── HERO — quiet, editorial ─────────────────────── */
   .hero{padding:96px 0 56px;text-align:left;position:relative;isolation:isolate}
 
-  /* Hero backdrop — three layered cognac/cream orbs at different sizes,
-     anchors, drift periods (non-rational so they never re-sync), and depths.
-     Cursor parallax is depth-differentiated: back orb barely moves, front
-     orb moves most, giving a quiet sense of dimension on hover.
-     A faint horizon hairline lives beneath them.
-     Everything is transform/opacity — fully composited. */
+  /* ─────────────────────────────────────────────────────
+     ATMOSPHERE — "Aurora over ink" (site-wide)
+     Four-layer stack, fixed, behind everything:
+       L1 .atmo-base    — solid #0A0908 + vertical gradient #0F0D0A→#070605
+       L2 .atmo .band   — two horizontal aurora bands, blend:screen
+       L3 .atmo .cursor-light — single soft circular light, lerp 0.06
+       L4 .film-grain   — static SVG fractal noise, blend:overlay, ~3.5%
+     Mobile: drift slowed ×1.5, breathing dropped, no cursor light, grain → 2%.
+     Reduced-motion: bands static at 0.5×, no drift, no cursor light.
+  ───────────────────────────────────────────────────── */
+  .atmo-base{
+    position:fixed;inset:0;z-index:-3;pointer-events:none;
+    background:linear-gradient(to bottom, #0F0D0A 0%, #070605 100%);
+  }
+  .atmo{
+    position:fixed;inset:0;z-index:-2;pointer-events:none;
+    isolation:isolate;overflow:hidden;contain:layout paint;
+  }
+  /* Each band uses a two-element nest so X-drift, Y-drift, and the
+     opacity-breathe can each animate without fighting for a single
+     transform property. Non-equal periods (38/53 and 41/47) so the
+     loop is never visible. */
+  .band{
+    position:absolute;pointer-events:none;will-change:transform;
+    mix-blend-mode:screen;transform-origin:center;
+  }
+  .band-inner{
+    position:absolute;inset:0;
+    will-change:transform, opacity;transform-origin:center;
+  }
+  /* Band A — primary cream, anchored above the headline. */
+  .band-a{
+    width:140vw;height:30vh;
+    left:50%;top:18%;margin-left:-70vw;
+    animation: bandADriftX 38s ease-in-out infinite;
+  }
+  .band-a .band-inner{
+    background:radial-gradient(ellipse at center,
+      hsl(38, 60%, 75%) 0%, transparent 50%);
+    opacity:.08;
+    animation:
+      bandADriftY 53s ease-in-out infinite,
+      bandABreathe 24s ease-in-out infinite;
+  }
+  /* Band B — deeper amber, lower note, counter-phase from t=0. */
+  .band-b{
+    width:110vw;height:22vh;
+    left:42%;top:30%;margin-left:-55vw;
+    animation: bandBDriftX 41s ease-in-out infinite;
+    animation-delay: -20.5s;
+  }
+  .band-b .band-inner{
+    background:radial-gradient(ellipse at center,
+      hsl(28, 50%, 55%) 0%, transparent 50%);
+    opacity:.05;
+    animation:
+      bandBDriftY 47s ease-in-out infinite,
+      bandBBreathe 31s ease-in-out infinite;
+    animation-delay: -23.5s, -15.5s;
+  }
+  @keyframes bandADriftX{
+    0%, 100% { transform: translate3d(-4%, 0, 0); }
+    50%      { transform: translate3d( 4%, 0, 0); }
+  }
+  @keyframes bandADriftY{
+    0%, 100% { transform: translate3d(0, -1.5%, 0); }
+    50%      { transform: translate3d(0,  1.5%, 0); }
+  }
+  @keyframes bandABreathe{
+    0%, 100% { opacity: .08; }
+    50%      { opacity: .10; }
+  }
+  @keyframes bandBDriftX{
+    0%, 100% { transform: translate3d( 4%, 0, 0); }
+    50%      { transform: translate3d(-4%, 0, 0); }
+  }
+  @keyframes bandBDriftY{
+    0%, 100% { transform: translate3d(0,  1.5%, 0); }
+    50%      { transform: translate3d(0, -1.5%, 0); }
+  }
+  @keyframes bandBBreathe{
+    0%, 100% { opacity: .05; }
+    50%      { opacity: .07; }
+  }
+  /* L3 — Cursor-anchored light. Position written by JS via translate3d. */
+  .cursor-light{
+    position:fixed;left:0;top:0;
+    width:1200px;height:1200px;margin:-600px 0 0 -600px;
+    pointer-events:none;
+    background:radial-gradient(circle,
+      hsla(38, 70%, 75%, 0.04) 0%, transparent 60%);
+    transform: translate3d(50vw, 50vh, 0);
+    will-change:transform;mix-blend-mode:screen;
+  }
+  /* L4 — Static SVG fractal grain. z-index: -1 so it sits ABOVE the
+     atmosphere (-2/-3) but BELOW unpositioned/sticky foreground content.
+     This keeps text crisp (grain only mixes with atmosphere) and avoids
+     forcing position:relative on every body child — which would break
+     sticky nav. The brief's verbal contract: "sat on top of everything
+     except foreground content". */
+  .film-grain{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    opacity:.035;mix-blend-mode:overlay;
+    width:100%;height:100%;
+  }
+  /* Foreground stays in normal flow — no z-index promotion needed.
+     Sticky nav, sticky tabs, modals, etc. all work as authored. */
+
+  /* Legacy hero-bg shell kept (zero-cost) so the existing hero markup
+     placeholder doesn't disturb layout. The orb children are removed
+     when the atmosphere ports in. */
   .hero-bg{
     position:absolute;inset:-180px 0 -80px;z-index:-1;pointer-events:none;
     overflow:hidden;
   }
-  /* The orb wrapper handles cursor parallax (transform on parent),
-     the inner pseudo-element handles ambient drift + breathing. Nesting
-     keeps the two motions independent so neither resets the other. */
   .hero-bg .orb{
     position:absolute;
     transform: translate3d(
@@ -854,6 +956,13 @@
   /* Count-up — keep tabular alignment while animating */
   .count-up{font-variant-numeric:tabular-nums}
 
+  /* ─────────────────────────────────────────────────────
+     RESPONSIVE — tablet → phone cascade
+     ≤880  tablet: 2-up grids, hero loosens
+     ≤640  phone:  single-col, nav compresses, hero dials in
+     ≤480  small:  tight padding, lang button → flag-only
+     ≤380  tiny:   final crunch
+   ───────────────────────────────────────────────────── */
   @media (max-width: 880px){
     .grid{grid-template-columns:repeat(2,1fr)}
     .daily-grid{grid-template-columns:repeat(2,1fr)}
@@ -863,13 +972,141 @@
     .sg-grid{grid-template-columns:1fr}
     .about-grid{grid-template-columns:1fr;gap:24px}
     .data-foot{flex-direction:column;align-items:flex-start;gap:8px}
+    section.tools{padding:48px 0 64px}
+    section.daily{padding:24px 0 4px}
   }
-  @media (max-width: 560px){
-    .grid{grid-template-columns:1fr}
+
+  @media (max-width: 640px){
+    /* Container — tighter rails, but keep editorial breathing */
+    .container{padding:0 20px}
+
+    /* Nav — shrink the lang chip; brand stays */
+    nav{padding:14px 0;gap:12px}
+    .wordmark{font-size:16.5px}
+    .mark{width:26px;height:26px}
+    .lang-btn{padding:6px 10px;font-size:12.5px}
+
+    /* Hero — quieter, denser. Headline scales down hard so the
+       em phrase still gets its own line break naturally. */
+    .hero{padding:44px 0 28px}
+    h1{
+      font-size:clamp(34px, 8.6vw, 44px);
+      line-height:1.08;letter-spacing:-1px;
+      max-width:none;
+    }
+    .hero-tag{
+      gap:10px;font-size:13px;margin-top:18px;
+    }
+    .hero-tag .lang-pill{font-size:10.5px;padding:3px 8px}
+
+    /* Search — kill the ⌘K kbd (mobile keyboards don't hint that),
+       drop input padding so glyphs sit comfortably. */
+    .search-wrap{margin-top:24px}
+    .search-shell input{
+      padding:14px 18px 14px 44px;font-size:14.5px;
+    }
+    .search-icon{left:14px}
+    .search-kbd{display:none}
+
+    /* Daily — single column, headers stack vertically with horizontal divider.
+       Each widget keeps its identity via bottom-border row separators. */
+    .daily-frame{border-radius:5px}
+    .daily-head{
+      flex-direction:column;align-items:flex-start;gap:8px;
+      padding:12px 18px 11px;
+    }
+    .daily-head .stamp{font-size:10.5px}
     .daily-grid{grid-template-columns:1fr}
-    .widget{border-right:none !important;border-bottom:1px solid var(--line)}
+    .widget{
+      padding:16px 18px;
+      border-right:none !important;
+      border-bottom:1px solid var(--line);
+    }
     .widget:last-child{border-bottom:none}
-    .container{padding:0 22px}
+    .widget-value{font-size:26px}
+    .widget-sub{font-size:12px}
+
+    /* Tools — section head stacks; cards single column with
+       slimmer padding so the editorial number+title pairing
+       doesn't feel cramped. */
+    section.tools{padding:40px 0 56px}
+    .section-head{
+      flex-direction:column;align-items:flex-start;gap:10px;
+      padding-bottom:14px;margin-bottom:20px;
+    }
+    .section-head h2{font-size:22px;letter-spacing:-.3px}
+    .section-head .label{font-size:10.5px}
+    .grid{grid-template-columns:1fr;border-radius:5px}
+    .card{padding:22px 20px 22px}
+    .card h3{font-size:18px}
+    .card p{font-size:13px;max-width:none}
+    .card .arrow{top:22px;right:20px}
+
+    /* Footer — stack the brand row over links; bottom row stays wrap. */
+    footer{padding:28px 0 32px}
+    .foot-top{
+      flex-direction:column;align-items:flex-start;gap:18px;margin-bottom:20px;
+    }
+    .foot-links{flex-wrap:wrap;gap:2px;margin-left:-12px}
+    .foot-bottom{
+      flex-direction:column;gap:8px;
+      padding-top:16px;font-size:11px;
+    }
+
+    /* Ticker — keep alive but trim */
+    aside.ticker-top{padding:7px 0}
+    .ticker-track{gap:32px}
+    .ti{font-size:11.5px;gap:7px}
+    .ti .val{font-size:12px}
+    .ticker-badge{display:none}
+
+    /* Hero atmosphere — pull the orbs in, drop their reach
+       so the headline doesn't fight a wash of warm light. */
+    .hero-bg{inset:-100px 0 -40px}
+    .hero-bg .orb-a{width:680px;height:680px}
+    .hero-bg .orb-b{width:480px;height:480px;left:8%}
+    .hero-bg .orb-c{width:360px;height:360px;left:88%}
+  }
+
+  @media (max-width: 480px){
+    .container{padding:0 16px}
+
+    /* Nav — collapse lang button to flag + chev only.
+       Full label hides; tap target stays ≥ 38px. */
+    .lang-btn{padding:7px 9px;gap:6px}
+    .lang-btn .lang-label{display:none}
+
+    /* Hero — push headline a touch tighter */
+    .hero{padding:36px 0 22px}
+    h1{font-size:clamp(30px, 9.4vw, 38px);letter-spacing:-.6px}
+    .hero-tag{font-size:12.5px;gap:8px}
+
+    /* Search */
+    .search-shell input{padding:13px 16px 13px 40px;font-size:14px}
+    .search-icon{left:12px;width:16px;height:16px}
+
+    /* Daily widgets — tighter rows */
+    .daily-head{padding:11px 16px 10px}
+    .widget{padding:14px 16px}
+    .widget-value{font-size:24px}
+
+    /* Tools */
+    .card{padding:20px 18px}
+    .card .num{font-size:10.5px}
+    .card h3{font-size:17px}
+    .card .arrow{top:20px;right:18px}
+
+    /* Footer */
+    .foot-links a{font-size:12.5px;padding:5px 10px}
+  }
+
+  @media (max-width: 380px){
+    .container{padding:0 14px}
+    h1{font-size:28px;letter-spacing:-.4px}
+    .wordmark{font-size:15.5px}
+    .mark{width:24px;height:24px}
+    .widget-value{font-size:22px}
+    .card h3{font-size:16.5px}
   }
   @media (prefers-reduced-motion: reduce){
     *{ transition-duration: var(--dur-micro) !important; animation:none !important; }
@@ -884,16 +1121,61 @@
     }
     aside.ticker-top{ opacity:1 !important; filter:none !important; }
     .ticker-track{ animation:none !important; transform:none !important; }
-    .hero-bg .orb{ transform:none !important; transition:none !important; }
-    .hero-bg .orb::before{ animation:none !important; transform:none !important; opacity:1 !important; }
+    /* Aurora atmosphere — collapse to static at 0.5× base opacity */
+    .band, .band-inner{ animation:none !important; }
+    .band-a .band-inner{ opacity:.04 !important; }
+    .band-b .band-inner{ opacity:.025 !important; }
+    .cursor-light{ display:none !important; }
     .scroll-progress{ display:none !important; }
     html{ scroll-behavior:auto; }
+  }
+  /* Mobile (≤ 768px) — drift slowed ×1.5, breathing dropped, no cursor light,
+     grain → 2%. Saves battery on phones. */
+  @media (max-width: 768px){
+    .band-a{ animation-duration:57s; }
+    .band-a .band-inner{
+      animation: bandADriftY 79s ease-in-out infinite;
+    }
+    .band-b{ animation-duration:61s; }
+    .band-b .band-inner{
+      animation: bandBDriftY 70s ease-in-out infinite;
+    }
+    .cursor-light{ display:none; }
+    .film-grain{ opacity:.02; }
+  }
+  @media (max-width: 1023px){
+    .cursor-light{ display:none; }
+  }
+  /* Honour reduced-data + slow-update — disable all atmosphere motion */
+  @media (prefers-reduced-data: reduce), (update: slow){
+    .band, .band-inner{ animation:none !important; }
+    .cursor-light{ display:none !important; }
+    .film-grain{ opacity:.02 !important; }
   }
 </style>
 </head>
 <body>
 
 <a class="skip" href="#main">Hopp til hovedinnhold</a>
+
+<!-- ATMOSPHERE — Aurora over ink. Site-wide, fixed, behind everything. -->
+<div class="atmo-base" aria-hidden="true"></div>
+<div class="atmo" aria-hidden="true">
+  <div class="band band-a"><div class="band-inner"></div></div>
+  <div class="band band-b"><div class="band-inner"></div></div>
+  <div class="cursor-light" id="cursorLight"></div>
+</div>
+<svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">
+  <filter id="atmoGrain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"
+      stitchTiles="stitch" seed="4"/>
+    <feColorMatrix values="0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0.5 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#atmoGrain)"/>
+</svg>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
@@ -976,7 +1258,7 @@
       <div class="nav-right">
         <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu">
           <span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span>
-          <span>Norsk</span>
+          <span class="lang-label">Norsk</span>
           <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
         </button>
         <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
@@ -1002,11 +1284,8 @@
 <main id="main">
 
   <section class="hero" data-screen-label="02 Hero">
-    <div class="hero-bg" aria-hidden="true">
-      <span class="orb orb-a" id="heroOrbA"></span>
-      <span class="orb orb-b" id="heroOrbB"></span>
-      <span class="orb orb-c" id="heroOrbC"></span>
-    </div>
+    <!-- Hero atmosphere is now site-wide via .atmo / .atmo-base / .film-grain -->
+    
     <div class="container">
       <h1 id="heroH1" data-headline>Praktiske verktøy for <em>privatøkonomi</em>, skatt og lovverk.</h1>
       <p class="hero-tag rise" data-rise-d="0"><span class="lang-pill">10 språk</span><span>Oppdatert til gjeldende regler for 2026.</span></p>
@@ -1358,62 +1637,45 @@
     io.observe(stamp);
   })();
 
-  // ── Hero orbs — depth-differentiated cursor parallax ──────
-  // Three layered orbs (back/mid/front) each get the same normalized -1..1
-  // pointer vector, but apply their own --depth multiplier so the front
-  // moves more than the back. Lerp at 0.05 — very smooth, no perceptible
-  // tracking. Inputs are clamped; outputs are pushed only when delta > 0.001.
+  // ── Cursor-anchored light — lerp 0.06, lags 200–400ms ─────
+  // Replaces the previous orb parallax. Single soft circular gradient
+  // follows the cursor with heavy damping. Disabled below 1024px and
+  // under prefers-reduced-motion. Pauses on visibilitychange.
   (function(){
-    if(REDUCE_MOTION || IS_MOBILE) return;
-    var orbs = [
-      document.getElementById('heroOrbA'),
-      document.getElementById('heroOrbB'),
-      document.getElementById('heroOrbC')
-    ].filter(Boolean);
-    var hero = document.querySelector('.hero');
-    if(!orbs.length || !hero) return;
+    var WIDE = matchMedia('(min-width: 1024px)').matches;
+    var light = document.getElementById('cursorLight');
+    if(!light) return;
+    if(REDUCE_MOTION || !WIDE){ light.style.display = 'none'; return; }
 
-    var targetX = 0, targetY = 0;
-    var curX = 0, curY = 0;
-    var raf = null;
+    var targetX = window.innerWidth  / 2;
+    var targetY = window.innerHeight / 2;
+    var curX = targetX, curY = targetY;
+    var raf = null, paused = false;
 
-    function onMove(e){
-      var r = hero.getBoundingClientRect();
-      var cx = r.left + r.width  / 2;
-      var cy = r.top  + r.height / 2;
-      // Normalize to roughly -1..1 inside the hero rect, clamped wider
-      // so the parallax only reaches its limits when the cursor is well
-      // outside the hero (subtle).
-      var nx = (e.clientX - cx) / (r.width  * 1.4);
-      var ny = (e.clientY - cy) / (r.height * 1.4);
-      if(nx < -1) nx = -1; else if(nx > 1) nx = 1;
-      if(ny < -1) ny = -1; else if(ny > 1) ny = 1;
-      targetX = nx;
-      targetY = ny;
-      if(!raf) raf = requestAnimationFrame(tick);
-    }
     function tick(){
-      // Lerp at 0.05 — extremely smooth follow, lower than typical (0.08).
-      curX += (targetX - curX) * 0.05;
-      curY += (targetY - curY) * 0.05;
-      var sx = curX.toFixed(4);
-      var sy = curY.toFixed(4);
-      for(var i = 0; i < orbs.length; i++){
-        orbs[i].style.setProperty('--mx', sx);
-        orbs[i].style.setProperty('--my', sy);
-      }
-      if(Math.abs(targetX - curX) > 0.0008 || Math.abs(targetY - curY) > 0.0008){
+      if(paused){ raf = null; return; }
+      curX += (targetX - curX) * 0.06;
+      curY += (targetY - curY) * 0.06;
+      light.style.transform =
+        'translate3d(' + curX.toFixed(2) + 'px,' + curY.toFixed(2) + 'px,0)';
+      if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
         raf = requestAnimationFrame(tick);
-      } else {
-        raf = null;
-      }
+      } else { raf = null; }
     }
-
+    function onMove(e){
+      targetX = e.clientX; targetY = e.clientY;
+      if(!raf && !paused) raf = requestAnimationFrame(tick);
+    }
     window.addEventListener('mousemove', onMove, {passive:true});
-    window.addEventListener('pagehide', function(){
-      window.removeEventListener('mousemove', onMove);
-      if(raf) cancelAnimationFrame(raf);
-    }, {once:true});
+    document.addEventListener('visibilitychange', function(){
+      paused = document.hidden;
+      if(paused){ if(raf){ cancelAnimationFrame(raf); raf = null; } }
+      else if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
+        raf = requestAnimationFrame(tick);
+      }
+    });
+    light.style.transform =
+      'translate3d(' + targetX + 'px,' + targetY + 'px,0)';
   })();
 
   // ── Localized date ──
