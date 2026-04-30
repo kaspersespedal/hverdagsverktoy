@@ -505,6 +505,45 @@
     *{transition:none !important;animation:none !important}
     html{scroll-behavior:auto}
   }
+
+  /* T3: site-shell — help-btn + focus-btn + howto-details + full footer */
+  .formue-section-head{position:relative;}
+  .section-head-actions{display:inline-flex;gap:6px;align-items:center;margin-left:auto;}
+  .calc-help-btn,.focus-card-btn{
+    background:transparent;border:1px solid var(--line-2);color:var(--ink3);
+    width:26px;height:26px;border-radius:50%;cursor:pointer;padding:0;
+    display:inline-flex;align-items:center;justify-content:center;
+    font:600 13px/1 var(--font-sans);
+    transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease);
+  }
+  @media (hover: hover){
+    .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line);background:var(--hover-bg);}
+  }
+  body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer,body.focus-mode .back-pill-wrap{display:none;}
+  body.focus-mode .page-hero{padding-top:24px;}
+  details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;}
+  details.howto>summary{
+    list-style:none;cursor:pointer;padding:13px 18px;
+    font:600 11px/1.4 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink2);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  details.howto>summary::-webkit-details-marker{display:none;}
+  details.howto>summary::after{content:'';width:7px;height:7px;border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);transform:rotate(45deg);transition:transform .15s var(--ease);}
+  details.howto[open]>summary::after{transform:rotate(225deg);}
+  details.howto .howto-body{padding:0 18px 14px;}
+  details.howto .howto-row{padding:9px 0;border-top:1px solid var(--line);}
+  details.howto .howto-row:first-child{border-top:none;}
+  details.howto .howto-row .h-title{font-weight:600;font-size:13px;color:var(--ink);}
+  details.howto .howto-row .h-desc{font-size:12px;color:var(--ink2);margin-top:3px;line-height:1.6;}
+  .site-footer-full{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 32px;background:var(--surface);}
+  .site-footer-full .container{display:flex;flex-direction:column;gap:8px;}
+  .site-footer-full .footer-inner{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:8px;}
+  .site-footer-full .footer-logo{font:600 14px/1 var(--font-sans);color:var(--ink);}
+  .site-footer-full .footer-links{display:flex;gap:18px;}
+  .site-footer-full .footer-links a{font:500 13px/1 var(--font-sans);color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
+  @media (hover: hover){.site-footer-full .footer-links a:hover{color:var(--ink);}}
+  .site-footer-full .footer-author{font-size:12px;color:var(--ink3);}
+  .site-footer-full .footer-copy{font-size:12px;color:var(--ink3);line-height:1.6;}
 </style>
 </head>
 <body>
@@ -532,6 +571,7 @@
         <span class="wordmark">Hverdagsverktøy</span>
       </a>
       <div class="nav-right">
+        <div id="site-search-anchor"></div>
         <a href="/" class="nav-back">
           <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
           Forsiden
@@ -657,10 +697,25 @@
 
       <div class="formue-form">
 
+        <details class="howto" id="formue-howto">
+          <summary data-i18n="formueHowtoSummary">Slik bruker du formueskatt-kalkulatoren</summary>
+          <div class="howto-body">
+            <div class="howto-row"><div class="h-title">Fyll inn verdier</div><div class="h-desc">Skriv inn markedsverdi for bolig, aksjer, bankinnskudd og gjeld. Kalkulatoren bruker verdsettelsesrabattene automatisk.</div></div>
+            <div class="howto-row"><div class="h-title">Verdsettelsesrabatter</div><div class="h-desc">Primærbolig: 25% (70% over 10M). Aksjer/fond: 80%. Bankinnskudd: 100%.</div></div>
+            <div class="howto-row"><div class="h-title">Bunnfradrag</div><div class="h-desc">1 900 000 kr per person (2026). Ektefeller får dobbelt.</div></div>
+            <div class="howto-row"><div class="h-title">Mange betaler ikke</div><div class="h-desc">Med typisk boliglån og primærbolig betaler de fleste null i formueskatt.</div></div>
+            <div class="howto-row"><div class="h-title">Gjeld reduseres</div><div class="h-desc">Gjeldsfradraget justeres proporsjonalt med verdsettelsesrabattene.</div></div>
+          </div>
+        </details>
+
         <section class="formue-section" aria-labelledby="formueEiendomHdr">
           <header class="formue-section-head">
             <h2 id="formueEiendomHdr" data-i18n="formueSectionEiendom">Eiendom</h2>
             <span class="hint" data-i18n="formueSectionHint">2026-satser</span>
+            <div class="section-head-actions">
+              <button type="button" class="calc-help-btn" data-target="formue-howto" aria-label="Vis veiledning" title="Vis veiledning">?</button>
+              <button type="button" class="focus-card-btn" aria-label="Fokus" title="Fokus">⛶</button>
+            </div>
           </header>
           <div class="form-row">
             <div class="fg">
@@ -767,8 +822,13 @@
 
 <footer>
   <div class="container foot">
-    <span>© 2026 Hverdagsverktøy</span>
-    <em>Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
   </div>
 </footer>
 
@@ -1052,6 +1112,7 @@
 </script>
 
 <script defer src="/shared/core.js?v=v121"></script>
+<script defer src="/shared/search.js?v=v25"></script>
 
 <script>
   if('serviceWorker' in navigator){

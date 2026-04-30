@@ -438,6 +438,44 @@
     .calc-result{padding:20px 18px 18px}
     .calc-fields{grid-template-columns:1fr;gap:12px}
   }
+
+  /* T3: site-shell — help-btn + focus-btn + howto-details + full footer */
+  .section-head-actions{display:inline-flex;gap:6px;align-items:center;margin-left:auto;}
+  .calc-help-btn,.focus-card-btn{
+    background:transparent;border:1px solid var(--line-2);color:var(--ink3);
+    width:26px;height:26px;border-radius:50%;cursor:pointer;padding:0;
+    display:inline-flex;align-items:center;justify-content:center;
+    font:600 13px/1 var(--font-sans);
+    transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease);
+  }
+  @media (hover: hover){
+    .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line);background:var(--hover-bg);}
+  }
+  body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer,body.focus-mode .back-pill-wrap{display:none;}
+  body.focus-mode .page-hero{padding-top:24px;}
+  details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;}
+  details.howto>summary{
+    list-style:none;cursor:pointer;padding:13px 18px;
+    font:600 11px/1.4 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink2);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  details.howto>summary::-webkit-details-marker{display:none;}
+  details.howto>summary::after{content:'';width:7px;height:7px;border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);transform:rotate(45deg);transition:transform .15s var(--ease);}
+  details.howto[open]>summary::after{transform:rotate(225deg);}
+  details.howto .howto-body{padding:0 18px 14px;}
+  details.howto .howto-row{padding:9px 0;border-top:1px solid var(--line);}
+  details.howto .howto-row:first-child{border-top:none;}
+  details.howto .howto-row .h-title{font-weight:600;font-size:13px;color:var(--ink);}
+  details.howto .howto-row .h-desc{font-size:12px;color:var(--ink2);margin-top:3px;line-height:1.6;}
+  .site-footer-full{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 32px;background:var(--surface);}
+  .site-footer-full .container{display:flex;flex-direction:column;gap:8px;}
+  .site-footer-full .footer-inner{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:8px;}
+  .site-footer-full .footer-logo{font:600 14px/1 var(--font-sans);color:var(--ink);}
+  .site-footer-full .footer-links{display:flex;gap:18px;}
+  .site-footer-full .footer-links a{font:500 13px/1 var(--font-sans);color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
+  @media (hover: hover){.site-footer-full .footer-links a:hover{color:var(--ink);}}
+  .site-footer-full .footer-author{font-size:12px;color:var(--ink3);}
+  .site-footer-full .footer-copy{font-size:12px;color:var(--ink3);line-height:1.6;}
 </style>
 </head>
 <body>
@@ -465,6 +503,7 @@
         <span class="wordmark">Hverdagsverktøy</span>
       </a>
       <div class="nav-right">
+        <div id="site-search-anchor"></div>
         <a href="/" class="nav-back">
           <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
           Forsiden
@@ -590,10 +629,30 @@
 
       <div class="calc-form">
 
+        <details class="howto" id="maxlan-howto">
+          <summary data-i18n="maxlanHowtoSummary">Slik bruker du Hva har jeg råd til</summary>
+          <div class="howto-body">
+            <div class="howto-row"><div class="h-title">Brutto årsinntekt</div><div class="h-desc">Samlet lønn før skatt. Hvis dere er to i husholdningen, legg sammen begges inntekter.</div></div>
+            <div class="howto-row"><div class="h-title">Annen gjeld</div><div class="h-desc">Studielån, billån og forbrukslån teller. Kredittkort-ramme teller kun hvis brukt. BSU-saldo teller IKKE som gjeld.</div></div>
+            <div class="howto-row"><div class="h-title">Egenkapital</div><div class="h-desc">Sparing, BSU, arv, gave fra familie, gevinst fra salg av forrige bolig.</div></div>
+            <div class="howto-row"><div class="h-title">Maks lånebeløp</div><div class="h-desc">Minimum av to regler: 5× inntekt − annen gjeld, ELLER 9× egenkapital (EK må være 10% av pris).</div></div>
+            <div class="howto-row"><div class="h-title">Maks boligpris</div><div class="h-desc">Lån + egenkapital. Husk at du også trenger penger til dokumentavgift (2,5%) og tinglysing.</div></div>
+            <div class="howto-row"><div class="h-title">Gjeldsgrad</div><div class="h-desc">Total gjeld / brutto inntekt. Utlånsforskriften § 4: maks 5×.</div></div>
+            <div class="howto-row"><div class="h-title">EK-andel</div><div class="h-desc">Egenkapital / boligpris. Utlånsforskriften § 6: min 10%.</div></div>
+            <div class="howto-row"><div class="h-title">Utlånsforskriften §§ 4+6</div><div class="h-desc">Banken MÅ følge disse reglene for alle standard-lån. Maks 10% av utlånene kan avvike (fleksibilitetskvote).</div></div>
+            <div class="howto-row"><div class="h-title">Sekundærbolig</div><div class="h-desc">Hvis du kjøper investering-bolig trenger du 40% EK (Utlånsforskriften § 5).</div></div>
+            <div class="howto-row"><div class="h-title">Stresstest</div><div class="h-desc">I tillegg til disse reglene må du tåle en renteøkning til minst 7% (§ 5).</div></div>
+          </div>
+        </details>
+
         <section class="calc-section" aria-labelledby="maxlanInputHdr">
           <header class="calc-section-head">
             <h2 id="maxlanInputHdr" data-i18n="mxlSectionInput">Inntekt og egenkapital</h2>
             <span class="hint" data-i18n="mxlSectionHint">2026-regler</span>
+            <div class="section-head-actions">
+              <button type="button" class="calc-help-btn" data-target="maxlan-howto" aria-label="Vis veiledning" title="Vis veiledning">?</button>
+              <button type="button" class="focus-card-btn" aria-label="Fokus" title="Fokus">⛶</button>
+            </div>
           </header>
           <div class="calc-fields">
             <div class="fg full">
@@ -640,10 +699,14 @@
 
 </main>
 
-<footer>
-  <div class="container foot">
-    <span>© 2026 Hverdagsverktøy</span>
-    <em>Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+<footer class="site-footer-full">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Hverdagsverktøy</div>
+      <div class="footer-links"><a href="#" id="fl-priv">Privacy</a><a href="#" id="fl-con">Contact</a></div>
+    </div>
+    <div class="footer-author" id="fl-author">Hverdagsverktøy — gratis norske finanskalkulatorer</div>
+    <div class="footer-copy" id="fl-copy">© 2026 Hverdagsverktøy — Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</div>
   </div>
 </footer>
 
@@ -836,7 +899,22 @@
   })();
 </script>
 
+<script>
+(function(){
+  document.querySelectorAll('.calc-help-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=b.getAttribute('data-target'); if(!id) return;
+      var d=document.getElementById(id); if(!d) return;
+      if(d.tagName==='DETAILS'){d.open=!d.open; if(d.open) d.scrollIntoView({behavior:'smooth',block:'nearest'});}
+    });
+  });
+  document.querySelectorAll('.focus-card-btn').forEach(function(b){
+    b.addEventListener('click',function(){document.body.classList.toggle('focus-mode');});
+  });
+})();
+</script>
 <script defer src="/shared/core.js?v=v121"></script>
+<script defer src="/shared/search.js?v=v25"></script>
 
 <script>
   if('serviceWorker' in navigator){

@@ -452,6 +452,44 @@
     .calc-result{padding:20px 18px 18px}
     .calc-fields{grid-template-columns:1fr;gap:12px}
   }
+
+  /* T3: site-shell — help-btn + focus-btn + howto-details + full footer */
+  .section-head-actions{display:inline-flex;gap:6px;align-items:center;margin-left:auto;}
+  .calc-help-btn,.focus-card-btn{
+    background:transparent;border:1px solid var(--line-2);color:var(--ink3);
+    width:26px;height:26px;border-radius:50%;cursor:pointer;padding:0;
+    display:inline-flex;align-items:center;justify-content:center;
+    font:600 13px/1 var(--font-sans);
+    transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease);
+  }
+  @media (hover: hover){
+    .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line);background:var(--hover-bg);}
+  }
+  body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer,body.focus-mode .back-pill-wrap{display:none;}
+  body.focus-mode .page-hero{padding-top:24px;}
+  details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;}
+  details.howto>summary{
+    list-style:none;cursor:pointer;padding:13px 18px;
+    font:600 11px/1.4 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink2);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  }
+  details.howto>summary::-webkit-details-marker{display:none;}
+  details.howto>summary::after{content:'';width:7px;height:7px;border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);transform:rotate(45deg);transition:transform .15s var(--ease);}
+  details.howto[open]>summary::after{transform:rotate(225deg);}
+  details.howto .howto-body{padding:0 18px 14px;}
+  details.howto .howto-row{padding:9px 0;border-top:1px solid var(--line);}
+  details.howto .howto-row:first-child{border-top:none;}
+  details.howto .howto-row .h-title{font-weight:600;font-size:13px;color:var(--ink);}
+  details.howto .howto-row .h-desc{font-size:12px;color:var(--ink2);margin-top:3px;line-height:1.6;}
+  .site-footer-full{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 32px;background:var(--surface);}
+  .site-footer-full .container{display:flex;flex-direction:column;gap:8px;}
+  .site-footer-full .footer-inner{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:8px;}
+  .site-footer-full .footer-logo{font:600 14px/1 var(--font-sans);color:var(--ink);}
+  .site-footer-full .footer-links{display:flex;gap:18px;}
+  .site-footer-full .footer-links a{font:500 13px/1 var(--font-sans);color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
+  @media (hover: hover){.site-footer-full .footer-links a:hover{color:var(--ink);}}
+  .site-footer-full .footer-author{font-size:12px;color:var(--ink3);}
+  .site-footer-full .footer-copy{font-size:12px;color:var(--ink3);line-height:1.6;}
 </style>
 </head>
 <body>
@@ -479,6 +517,7 @@
         <span class="wordmark">Hverdagsverktøy</span>
       </a>
       <div class="nav-right">
+        <div id="site-search-anchor"></div>
         <a href="/" class="nav-back">
           <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
           Forsiden
@@ -604,10 +643,30 @@
 
       <div class="calc-form">
 
+        <details class="howto" id="mor-howto">
+          <summary data-i18n="morHowtoSummary">Slik bruker du boliglånskalkulatoren</summary>
+          <div class="howto-body">
+            <div class="howto-row"><div class="h-title">Lånetype</div><div class="h-desc">Annuitetslån = like store månedlige betalinger. Serielån = synkende betalinger (høyere i starten, lavere mot slutten).</div></div>
+            <div class="howto-row"><div class="h-title">Lånebeløp</div><div class="h-desc">Beløpet du låner fra banken. Husk at du må ha minst 10% egenkapital.</div></div>
+            <div class="howto-row"><div class="h-title">Rente</div><div class="h-desc">Bankens rentesats. Snittlig boliglånsrente ligger ca. 5,1% variabel.</div></div>
+            <div class="howto-row"><div class="h-title">Løpetid</div><div class="h-desc">Antall år du betaler tilbake lånet. Vanlig er 25–30 år i Norge.</div></div>
+            <div class="howto-row"><div class="h-title">Månedlig betaling</div><div class="h-desc">Det du betaler banken hver måned (renter + avdrag).</div></div>
+            <div class="howto-row"><div class="h-title">Totalt tilbakebetalt</div><div class="h-desc">Summen av alle betalinger over hele løpetiden. Viser hva lånet faktisk koster.</div></div>
+            <div class="howto-row"><div class="h-title">Totale renter</div><div class="h-desc">Hvor mye du betaler i renter totalt. Ofte mer enn selve lånebeløpet over 25–30 år.</div></div>
+            <div class="howto-row"><div class="h-title">Annuitet vs. serielån</div><div class="h-desc">Annuitet: forutsigbart, likt beløp. Serielån: billigere totalt, men høyere start.</div></div>
+            <div class="howto-row"><div class="h-title">Skattefradrag på renter</div><div class="h-desc">Du får 22% av renteutgiftene tilbake på skatten. Reell rentekostnad er ca. 3,98% ved 5,1% rente.</div></div>
+            <div class="howto-row"><div class="h-title">Stresstest</div><div class="h-desc">Banken sjekker at du tåler rente på minst 7% (eller gjeldende rente + 3 prosentpoeng).</div></div>
+          </div>
+        </details>
+
         <section class="calc-section" aria-labelledby="morInputHdr">
           <header class="calc-section-head">
             <h2 id="morInputHdr" data-i18n="morSectionInput">Lånevilkår</h2>
             <span class="hint" data-i18n="morSectionHint">2026-praksis</span>
+            <div class="section-head-actions">
+              <button type="button" class="calc-help-btn" data-target="mor-howto" aria-label="Vis veiledning" title="Vis veiledning">?</button>
+              <button type="button" class="focus-card-btn" aria-label="Fokus" title="Fokus">⛶</button>
+            </div>
           </header>
           <div class="calc-fields">
             <div class="fg full">
@@ -700,10 +759,14 @@
 
 </main>
 
-<footer>
-  <div class="container foot">
-    <span>© 2026 Hverdagsverktøy</span>
-    <em>Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+<footer class="site-footer-full">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">Hverdagsverktøy</div>
+      <div class="footer-links"><a href="#" id="fl-priv">Privacy</a><a href="#" id="fl-con">Contact</a></div>
+    </div>
+    <div class="footer-author" id="fl-author">Hverdagsverktøy — gratis norske finanskalkulatorer</div>
+    <div class="footer-copy" id="fl-copy">© 2026 Hverdagsverktøy — Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</div>
   </div>
 </footer>
 
@@ -1015,7 +1078,22 @@
   })();
 </script>
 
+<script>
+(function(){
+  document.querySelectorAll('.calc-help-btn').forEach(function(b){
+    b.addEventListener('click',function(){
+      var id=b.getAttribute('data-target'); if(!id) return;
+      var d=document.getElementById(id); if(!d) return;
+      if(d.tagName==='DETAILS'){d.open=!d.open; if(d.open) d.scrollIntoView({behavior:'smooth',block:'nearest'});}
+    });
+  });
+  document.querySelectorAll('.focus-card-btn').forEach(function(b){
+    b.addEventListener('click',function(){document.body.classList.toggle('focus-mode');});
+  });
+})();
+</script>
 <script defer src="/shared/core.js?v=v121"></script>
+<script defer src="/shared/search.js?v=v25"></script>
 
 <script>
   if('serviceWorker' in navigator){
