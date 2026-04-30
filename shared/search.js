@@ -609,6 +609,10 @@ function findInjectionPoint(){
   var dashRule2 = document.getElementById('hero-dash-rule2');
   if(dashRule2) return {parent: dashRule2.parentNode, before: dashRule2};
 
+  // Priority 3: Editorial prototype anchor (index-new.html landings)
+  var protoAnchor = document.getElementById('site-search-anchor');
+  if(protoAnchor) return {parent: protoAnchor.parentNode, before: protoAnchor};
+
   // Subpages: do not inject search
   return null;
 }
