@@ -1490,4 +1490,12 @@ REGIONS['fr'] = {
     tekSkjDesc: 'Une petite part du rendement des actions est non imposable chaque année (env. 3,25 % du prix d\'achat)',
     tekSkjBody: '<p>L\'abattement de protection signifie qu\'<strong>une petite part de votre rendement sur actions est non imposable chaque année</strong> — une sorte de compensation pour le fait que vous auriez pu placer cet argent sans risque à la banque. Calculé automatiquement par Skatteetaten.</p><p class="note">En clair : le taux de protection pour 2026 est de 3,25 %, multiplié par votre prix d\'achat des actions.</p><p><strong>Exemple :</strong> Si vous avez des actions pour 200 000 kr, l\'abattement de protection s\'élève à environ 6 500 kr en 2026. Si vous touchez 10 000 kr de dividende, seuls 3 500 kr sont imposés (après ajustement).</p><p><strong>Quand vous y êtes confronté :</strong> Sur la déclaration d\'impôt chaque année, ou quand vous lisez sur l\'impôt sur les dividendes et que quelqu\'un mentionne que « l\'impôt effectif est inférieur à 37,84 % ».</p>',
     tekFootNote: '* Taux 2026. Les règles peuvent évoluer — consultez skatteetaten.no et votre fournisseur de fonds.',
+
+    bvlHowtoSummary:`Comment utiliser Acheter vs Louer`,
+    focusBtn:`Masquer les distractions`,
+    formueHowtoSummary:`Comment utiliser le calculateur d'impôt sur la fortune`,
+    howtoBtn:`Afficher le guide`,
+    maxlanHowtoSummary:`Comment utiliser Combien puis-je me permettre`,
+    morHowtoSummary:`Comment utiliser le calculateur de prêt immobilier`,
+    valgevNetLabel:`Net après impôt`,
 };

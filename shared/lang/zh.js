@@ -1484,4 +1484,12 @@ tekSkjTitle:'屏蔽扣除额',
 tekSkjDesc:'股票收益每年有一小部分免税（购买价的约3.25%）',
 tekSkjBody:'<p>屏蔽扣除额意味着<strong>您的股票收益每年有一小部分免税</strong> — 作为您本可以无风险存银行的补偿。由挪威税务局自动计算。</p><p class="note">简化：2026年屏蔽利率为3.25%，乘以您购买股票的价格。</p><p><strong>例如：</strong>如果您拥有200 000 kr的股票，2026年屏蔽扣除额约为6 500 kr。如果获得10 000 kr股息，仅3 500 kr征税（调整后）。</p><p><strong>何时遇到：</strong>每年税务申报时，或当您阅读关于股息税并有人提到"实际税率低于37.84%"时。</p>',
 tekFootNote:'* 2026年费率。规则可能变化 — 请查阅 skatteetaten.no 和您的基金提供商。',
+
+    bvlHowtoSummary:`如何使用购房 vs 租房`,
+    focusBtn:`隐藏干扰`,
+    formueHowtoSummary:`如何使用财富税计算器`,
+    howtoBtn:`显示指南`,
+    maxlanHowtoSummary:`如何使用我能负担多少`,
+    morHowtoSummary:`如何使用房贷计算器`,
+    valgevNetLabel:`税后净额`,
 };

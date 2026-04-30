@@ -1457,4 +1457,12 @@ REGIONS['pl'] = {
     vatSectionInput:'Obliczenie',
     vatSubtitle:'Wpisz kwotę i wybierz stawkę — obliczymy cenę z VAT lub bez. Norweskie stawki 2026 (25% standard, 15% żywność, 12% transport/hotel/kino, 0% zwolnione). Wszystko dzieje się lokalnie w przeglądarce — żadne dane nie są nigdzie wysyłane.',
     vatTitleNew:'Kalkulator <em>VAT</em>',
+
+    bvlHowtoSummary:`Jak korzystać z Kup vs Wynajmij`,
+    focusBtn:`Ukryj rozproszenia`,
+    formueHowtoSummary:`Jak korzystać z kalkulatora podatku majątkowego`,
+    howtoBtn:`Pokaż przewodnik`,
+    maxlanHowtoSummary:`Jak korzystać z Na ile mnie stać`,
+    morHowtoSummary:`Jak korzystać z kalkulatora kredytu hipotecznego`,
+    valgevNetLabel:`Netto po podatku`,
 };

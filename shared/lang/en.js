@@ -1484,4 +1484,12 @@ REGIONS['en'] = {
     vatSectionInput: 'Calculation',
     vatSubtitle: 'Enter an amount and choose a rate — and we\'ll calculate the price with or without VAT. Norwegian 2026 rates (25% standard, 15% foodstuffs, 12% transport/hotels/cinema, 0% exempt). Everything happens locally in your browser — no data is sent anywhere.',
     vatTitleNew: '<em>VAT</em> calculator',
+
+    bvlHowtoSummary:`How to use Buy vs Rent`,
+    focusBtn:`Hide distractions`,
+    formueHowtoSummary:`How to use the wealth tax calculator`,
+    howtoBtn:`Show guide`,
+    maxlanHowtoSummary:`How to use How much can I afford`,
+    morHowtoSummary:`How to use the mortgage calculator`,
+    valgevNetLabel:`Net after tax`,
 };

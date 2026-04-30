@@ -1441,4 +1441,12 @@ REGIONS['so'] = {
     vatSectionInput: 'Xisaabin',
     vatSubtitle: 'Geli lacag oo dooro heer — markaasaan ku xisaabin doonaa qiimaha oo leh ama aan lahayn VAT. Heerarka Norway 2026 (25 % standard, 15 % cunto, 12 % gaadiidka/hudheelka/sinimo, 0 % dhaaf). Wax kasta waxay ku dhacaan biraawsarka — xog meel kale lama dirayo.',
     vatTitleNew: `Xisaabiyaha <em>VAT</em>`,
+
+    bvlHowtoSummary:`Sida loo isticmaalo Iibsi vs Kireysi`,
+    focusBtn:`Qari waxyaalaha mashquul yeelaya`,
+    formueHowtoSummary:`Sida loo isticmaalo xisaabiyaha cashuurta hantida`,
+    howtoBtn:`Tus tilmaamta`,
+    maxlanHowtoSummary:`Sida loo isticmaalo Intee ayaan awoodaa`,
+    morHowtoSummary:`Sida loo isticmaalo xisaabiyaha amaahda guriga`,
+    valgevNetLabel:`Saafiga cashuurta ka dib`,
 };

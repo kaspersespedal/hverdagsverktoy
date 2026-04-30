@@ -1455,4 +1455,12 @@ REGIONS['ti'] = {
     vatSectionInput: 'ሕሳብ',
     vatSubtitle: 'መጠን ኣእትው ዋጋ ምረጽ — ድሕሪኡ ምስ VAT ወይ ብዘይ VAT ዋጋ ንሕስብ። ናይ ኖርወይ 2026 ዋጋታት (25 % ስታንዳርድ፣ 15 % መግቢ፣ 12 % መጓዓዝያ/ሆቴል/ሲነማ፣ 0 % ናጻ)። ኩሉ ኣብ ብራውዘር ይካየድ — ዳታ ናብ ካልእ ቦታ ኣይልኣኽን።',
     vatTitleNew: `ቆጻሪ <em>VAT</em>`,
+
+    bvlHowtoSummary:`ምግዛእ ምስ ምክራይ ኣጠቓቕማ`,
+    focusBtn:`ሰሓብቲ ነገራት ሕባእ`,
+    formueHowtoSummary:`ናይ ሃብቲ ግብሪ ካልኩሌተር ኣጠቓቕማ`,
+    howtoBtn:`መምርሒ ኣርኢ`,
+    maxlanHowtoSummary:`ክንደይ ክኸፍል ከም ዝኽእል ኣጠቓቕማ`,
+    morHowtoSummary:`ናይ ቤት ልቓሕ ካልኩሌተር ኣጠቓቕማ`,
+    valgevNetLabel:`ድሕሪ ግብሪ ጽሩይ`,
 };

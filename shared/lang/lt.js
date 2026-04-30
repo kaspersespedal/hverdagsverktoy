@@ -1483,4 +1483,12 @@ REGIONS['lt'] = {
     vatSectionInput: 'Skaičiavimas',
     vatSubtitle: 'Įveskite sumą ir pasirinkite tarifą — apskaičiuosime kainą su arba be pridėtinės vertės mokesčio. Norvegiški 2026 m. tarifai (25 % standartinis, 15 % maisto produktai, 12 % transportas/viešbutis/kinas, 0 % atleista). Viskas vyksta lokaliai naršyklėje — jokie duomenys niekur nesiunčiami.',
     vatTitleNew: '<em>PVM</em> skaičiuoklė',
+
+    bvlHowtoSummary:`Kaip naudoti Pirkti vs Nuomotis`,
+    focusBtn:`Slėpti trukdžius`,
+    formueHowtoSummary:`Kaip naudoti turto mokesčio skaičiuoklę`,
+    howtoBtn:`Rodyti vadovą`,
+    maxlanHowtoSummary:`Kaip naudoti Kiek galiu sau leisti`,
+    morHowtoSummary:`Kaip naudoti būsto paskolos skaičiuoklę`,
+    valgevNetLabel:`Grynasis po mokesčio`,
 };
