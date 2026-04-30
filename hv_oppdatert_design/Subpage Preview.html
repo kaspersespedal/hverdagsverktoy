@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="no" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Underside-forhåndsvisning — Hverdagsverktøy</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap">
+<style>
+  :root{
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+
+    --ink:#ececea;
+    --ink2:#a8a39a;
+    --ink3:#797469;
+    --ink4:#54514a;
+    --bg:#0d0d0c;
+    --surface:#131312;
+    --surface-2:#191917;
+    --accent:#c89968;
+    --accent-2:#d8ad7e;
+    --line:rgba(255,255,255,.06);
+    --line-2:rgba(255,255,255,.10);
+    --line-warm:rgba(200,153,104,.18);
+
+    --pos:#5fa978;
+    --neg:#c46a6a;
+
+    --ease: cubic-bezier(.22, 1, .36, 1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:var(--font-sans);
+    font-size:15px;line-height:1.55;
+    min-height:100vh;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+  }
+  .container{max-width:1120px;margin:0 auto;padding:0 32px}
+  ::selection{background:rgba(200,153,104,.28);color:#fff}
+
+  /* ── NAV ─────────────────────────────────────────── */
+  .nav-wrap{
+    position:sticky;top:0;z-index:50;
+    background:rgba(13,13,12,.78);
+    backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line);
+  }
+  nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:24px}
+  .brand-row{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+  .mark{
+    width:28px;height:28px;border-radius:5px;
+    background:#1a1714;
+    border:1px solid var(--line-warm);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .wordmark{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:18px;letter-spacing:-.2px;line-height:1;color:var(--ink);
+  }
+  .nav-back{
+    font-size:13px;color:var(--ink3);text-decoration:none;
+    display:flex;align-items:center;gap:6px;
+    padding:7px 11px;border-radius:5px;
+    border:1px solid var(--line-2);
+    transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .nav-back:hover{color:var(--ink);border-color:rgba(255,255,255,.22);background:rgba(255,255,255,.02)}
+
+  /* ── TABS ────────────────────────────────────────── */
+  .tabs-wrap{
+    border-bottom:1px solid var(--line);
+    background:rgba(13,13,12,.78);
+    position:sticky;top:64px;z-index:40;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  }
+  .tabs{
+    display:flex;gap:2px;padding:6px 0;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    flex-shrink:0;background:transparent;border:0;
+    padding:10px 14px;border-radius:4px;cursor:pointer;
+    font:500 13px/1 var(--font-sans);letter-spacing:-.05px;
+    color:var(--ink3);
+    display:flex;align-items:center;gap:8px;
+    transition:color .2s var(--ease), background .2s var(--ease);
+    position:relative;
+    text-decoration:none;
+  }
+  .tab:hover{color:var(--ink2);background:rgba(255,255,255,.03)}
+  .tab[aria-selected="true"]{
+    color:var(--ink);
+  }
+  .tab[aria-selected="true"]::after{
+    content:"";position:absolute;left:14px;right:14px;bottom:-7px;height:2px;
+    background:var(--accent);
+  }
+  .tab .tab-icon{
+    width:14px;height:14px;color:currentColor;opacity:.6;
+  }
+  .tab[aria-selected="true"] .tab-icon{opacity:1;color:var(--accent)}
+
+  /* ── PAGE HERO ───────────────────────────────────── */
+  .page-hero{
+    padding:56px 0 36px;text-align:left;
+    border-bottom:1px solid var(--line);
+  }
+  .page-hero .container{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:end}
+
+  .page-eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font:600 11px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--ink3);margin-bottom:18px;
+  }
+  .page-eyebrow a{color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
+  .page-eyebrow a:hover{color:var(--accent)}
+  .page-eyebrow .arrow{color:var(--ink4);font-weight:400}
+  .page-eyebrow .current{color:var(--ink2)}
+
+  h1.page-title{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:clamp(36px, 4.6vw, 54px);line-height:1.05;letter-spacing:-1.2px;
+    margin:0 0 14px;color:var(--ink);
+  }
+  h1.page-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
+  .page-lead{
+    font-size:14px;line-height:1.55;color:var(--ink2);margin:0;max-width:58ch;
+  }
+
+  .page-stats{
+    display:flex;flex-direction:column;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .page-stat{
+    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .page-stat:last-child{border-bottom:none}
+  .page-stat .l{
+    font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;
+    color:var(--ink3);
+  }
+  .page-stat .v{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:30px;line-height:1;letter-spacing:-.6px;color:var(--ink);
+    font-variant-numeric:tabular-nums lining-nums;
+    white-space:nowrap;
+  }
+  .page-stat .v .u{
+    font-family:var(--font-sans);font-weight:500;
+    font-size:13px;color:var(--ink3);letter-spacing:0;
+    margin-left:4px;
+  }
+
+  /* ── FILTER BAR ──────────────────────────────────── */
+  .filter-bar{
+    margin:28px 0 4px;
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  }
+  .filter-input{
+    flex:1;min-width:240px;position:relative;
+  }
+  .filter-input input{
+    width:100%;background:var(--surface);
+    border:1px solid var(--line-2);border-radius:6px;
+    padding:12px 14px 12px 40px;
+    color:var(--ink);font:400 14px/1 var(--font-sans);
+    outline:none;
+    transition:border-color .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .filter-input input::placeholder{color:var(--ink3)}
+  .filter-input input:focus{
+    border-color:rgba(200,153,104,.5);
+    background:var(--surface-2);
+    box-shadow:0 0 0 3px rgba(200,153,104,.10);
+  }
+  .filter-input svg{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink3);pointer-events:none;
+  }
+  .chip-row{display:flex;gap:4px;flex-wrap:wrap}
+  .chip{
+    background:transparent;border:1px solid var(--line-2);
+    color:var(--ink2);font:500 12px/1 var(--font-sans);
+    padding:9px 12px;border-radius:5px;cursor:pointer;
+    transition:all .2s var(--ease);
+    text-decoration:none;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .chip:hover{border-color:rgba(255,255,255,.22);color:var(--ink)}
+  .chip.active{background:rgba(200,153,104,.08);border-color:rgba(200,153,104,.32);color:var(--ink)}
+  .chip .ct{color:var(--ink4);font-weight:500}
+
+  /* ── TOOL CARDS ──────────────────────────────────── */
+  section.tools{padding:0 0 56px}
+  .col-head{
+    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    height:36px;
+    padding-bottom:14px;margin-bottom:18px;
+    border-bottom:1px solid var(--line);
+  }
+  .col-head h2, .col-head h3{
+    font-family:var(--font-sans);font-size:11px;font-weight:600;
+    letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
+    margin:0;
+  }
+  .col-head .count{font-size:12.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
+
+  .tool-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:6px;overflow:hidden;
+  }
+  .tool-card{
+    position:relative;background:var(--surface);padding:22px 24px;
+    text-decoration:none;color:var(--ink);
+    display:flex;flex-direction:column;gap:6px;
+    transition:background .2s var(--ease);
+    min-height:108px;
+  }
+  .tool-card:hover{background:var(--surface-2)}
+  .tool-card .tc-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:2px;
+  }
+  .tool-card h3{
+    font-family:var(--font-serif);font-weight:500;font-size:18px;
+    line-height:1.25;letter-spacing:-.25px;margin:0;color:var(--ink);
+    transition:color .2s var(--ease);
+  }
+  .tool-card:hover h3{color:var(--accent-2)}
+  .tool-card p{
+    font-size:13px;line-height:1.55;color:var(--ink3);margin:0;
+  }
+  .tool-card .tc-tag{
+    font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;
+    color:var(--accent);
+    background:rgba(200,153,104,.08);
+    padding:3px 7px;border-radius:3px;
+    flex-shrink:0;
+    border:1px solid var(--line-warm);
+  }
+  .tool-card .arrow{
+    align-self:flex-start;color:var(--ink4);margin-top:2px;
+    transition:color .25s var(--ease), transform .25s var(--ease);
+  }
+  .tool-card:hover .arrow{color:var(--accent);transform:translate(2px,-2px)}
+
+  /* ── REFERENCE PANEL ─────────────────────────────── */
+  .page-grid{
+    display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start;
+    padding-top:24px;
+  }
+  .ref-col{display:flex;flex-direction:column}
+  .ref-panel{
+    background:var(--surface);
+    border:1px solid var(--line);border-radius:6px;
+    padding:6px 20px;
+  }
+  .ref-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:10px 0;border-bottom:1px solid var(--line);
+    font-size:13px;
+  }
+  .ref-row:last-child{border-bottom:none}
+  .ref-row .label{color:var(--ink2)}
+  .ref-row .val{
+    font-family:var(--font-serif);font-weight:500;
+    color:var(--ink);font-variant-numeric:tabular-nums;
+  }
+  .ref-row .val.accent{color:var(--accent-2)}
+
+  .ref-cta{
+    margin-top:16px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 14px;border-radius:5px;
+    background:transparent;border:1px solid var(--line-2);
+    color:var(--ink2);text-decoration:none;
+    font:600 12px/1 var(--font-sans);letter-spacing:.4px;
+    transition:background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
+  }
+  .ref-cta:hover{background:rgba(200,153,104,.06);border-color:rgba(200,153,104,.32);color:var(--ink)}
+  .ref-cta svg{color:var(--accent);transition:transform .2s var(--ease)}
+  .ref-cta:hover svg{transform:translateX(2px)}
+
+  /* ── FOOTER ──────────────────────────────────────── */
+  footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot em{font-style:italic;color:var(--ink4)}
+
+  /* ── PAGE TRANSITION ─────────────────────────────── */
+  .page-content{
+    animation:pageIn .35s var(--ease) both;
+  }
+  @keyframes pageIn{
+    from{opacity:0;transform:translateY(6px)}
+    to{opacity:1;transform:none}
+  }
+
+  @media (max-width: 880px){
+    .page-grid{grid-template-columns:1fr}
+    .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
+    .page-stats{align-self:stretch}
+    .tool-grid{grid-template-columns:1fr}
+    .tabs-wrap{top:60px}
+  }
+  @media (max-width: 560px){
+    .container{padding:0 22px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark-g" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8ad7e"/><stop offset="1" stop-color="#a87842"/>
+    </linearGradient>
+    <symbol id="mark-h" viewBox="0 0 64 64">
+      <rect x="14" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="42" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="22" y="28" width="20" height="8" rx="1.5" fill="url(#mark-g)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="nav-wrap">
+  <div class="container">
+    <nav>
+      <a href="Homepage.html" class="brand-row">
+        <span class="mark"><svg width="16" height="16"><use href="#mark-h"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+      <a href="Homepage.html" class="nav-back">
+        <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+        Forsiden
+      </a>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap" role="tablist" aria-label="Kategorier">
+  <div class="container">
+    <div class="tabs" id="tabs">
+      <a href="#personlig" class="tab" role="tab" data-tab="personlig" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
+        Personlig økonomi
+      </a>
+      <a href="#boliglan" class="tab" role="tab" data-tab="boliglan" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg>
+        Boliglån
+      </a>
+      <a href="#kalkulator" class="tab" role="tab" data-tab="kalkulator" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>
+        Kalkulator
+      </a>
+      <a href="#skatt" class="tab" role="tab" data-tab="skatt" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+        Skatt
+      </a>
+      <a href="#selskap" class="tab" role="tab" data-tab="selskap" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg>
+        Selskap
+      </a>
+      <a href="#avgift" class="tab" role="tab" data-tab="avgift" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+        Avgift
+      </a>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+  <div id="pageHost"></div>
+</main>
+
+<footer>
+  <div class="container foot">
+    <span>© 2026 Hverdagsverktøy</span>
+    <em>Veiledende beregninger basert på kjente satser.</em>
+  </div>
+</footer>
+
+<script>
+var PAGES = {
+  personlig: {
+    title:'Personlig <em>økonomi</em>',
+    crumb:'Personlig økonomi',
+    lead:'Lønn etter skatt, bilkostnad, sparing og budsjett — alle kalkulatorer for hverdagsøkonomien din.',
+    stats:[ {v:'7', l:'Kalkulatorer'}, {v:'2026', l:'Oppdaterte satser'} ],
+    tools:[
+      {n:'Lønn etter skatt', d:'Hva du faktisk får utbetalt fra timelønn eller årslønn.', tag:'Populær'},
+      {n:'Bilkostnad', d:'Drivstoff, forsikring, bompenger og verditap per måned.', tag:''},
+      {n:'Sparekalkulator', d:'Se hvordan rentes rente vokser sparepengene dine over tid.', tag:''},
+      {n:'Studielån', d:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen.', tag:''},
+      {n:'Budsjett', d:'Lag et personlig budsjett med alle inntekter og utgifter.', tag:''},
+      {n:'Pensjon', d:'Forventet pensjon fra folketrygd, OTP og egen sparing.', tag:'Ny'},
+    ],
+    ref:{
+      title:'Nøkkeltall 2026',
+      rows:[
+        {l:'Frikortgrense', v:'70 000 kr', accent:true},
+        {l:'Trygdeavgift', v:'7,7 %'},
+        {l:'Minstefradrag', v:'104 450 kr'},
+        {l:'Personfradrag', v:'108 550 kr'},
+      ],
+      cta:'Se alle satser',
+    },
+  },
+  boliglan: {
+    title:'<em>Boliglån</em>',
+    crumb:'Boliglån',
+    lead:'Hva har du råd til, hva koster det totalt, og lønner BSU seg fortsatt? Følger Finanstilsynets utlånsforskrift 2026.',
+    stats:[ {v:'5,40', u:'%', l:'Snittrente boliglån'}, {v:'5,0', u:'×', l:'Maks gjeldsgrad'} ],
+    tools:[
+      {n:'Boliglånskalkulator', d:'Månedlig betaling, totalkostnad og rentekostnad over løpetid.', tag:'Populær'},
+      {n:'Hva har jeg råd til?', d:'Maks lånebeløp basert på inntekt, gjeld og egenkapital.', tag:''},
+      {n:'BSU', d:'10 % skattefradrag, opptil 27 500 kr i året — er det fortsatt verdt det?', tag:''},
+      {n:'Bolig vs leie', d:'Sammenlign total kostnad over X år. Når lønner det seg å kjøpe?', tag:''},
+      {n:'Dokumentavgift', d:'2,5 % av salgssum — fritak ved arv og ektefelleskifte.', tag:''},
+      {n:'Refinansiering', d:'Lønner det seg å bytte bank? Beregn break-even-tidspunkt.', tag:'Ny'},
+    ],
+    ref:{
+      title:'Marked i dag',
+      rows:[
+        {l:'Styringsrente', v:'4,50 %', accent:true},
+        {l:'NIBOR 3 mnd', v:'4,68 %'},
+        {l:'Snittrente boliglån', v:'5,42 %'},
+        {l:'Maks belåning', v:'85 %'},
+      ],
+      cta:'Sammenlign banker',
+    },
+  },
+  kalkulator: {
+    title:'<em>Kalkulator</em>',
+    crumb:'Kalkulator',
+    lead:'Fra hverdagsmatte til vitenskapelige funksjoner, valutaomregning og finansielle modeller. Alt regner lokalt i nettleseren.',
+    stats:[ {v:'12', l:'Kalkulatorer'}, {v:'168', l:'Valutaer'} ],
+    tools:[
+      {n:'Vitenskapelig', d:'Sin, cos, log, potenser, fakultet — full RPN-modus tilgjengelig.', tag:''},
+      {n:'Valuta', d:'Regn om mellom 168 valutaer med oppdaterte ECB-kurser.', tag:'Live'},
+      {n:'Finansiell', d:'Nåverdi, fremtidsverdi, annuitet og effektiv rente.', tag:''},
+      {n:'Avskrivning', d:'Saldo og lineær avskrivning — alle grupper A til J.', tag:''},
+      {n:'Feriepenger', d:'10,2 %, 12,0 % og +2,3 % over 60 år — full beregning.', tag:''},
+      {n:'NPV / IRR', d:'Lønnsomhetsanalyse med netto nåverdi og internrente.', tag:''},
+    ],
+    ref:{
+      title:'Faste kurser',
+      rows:[
+        {l:'USD / NOK', v:'10,72', accent:true},
+        {l:'EUR / NOK', v:'11,84'},
+        {l:'GBP / NOK', v:'13,56'},
+        {l:'SEK / NOK', v:'1,02'},
+      ],
+      cta:'Se alle valutaer',
+    },
+  },
+  skatt: {
+    title:'<em>Skatt</em>',
+    crumb:'Skatt',
+    lead:'Trinnskatt, formuesskatt, utbytteskatt og fradrag — for inntektsåret 2026, med direkte henvisninger til skatteloven.',
+    stats:[ {v:'5', l:'Skattetrinn'}, {v:'17,80', u:'%', l:'Toppmarginalskatt'} ],
+    tools:[
+      {n:'Skattkalkulator', d:'Beregn skatt på årsinntekt med trinnskatt og trygdeavgift.', tag:'Populær'},
+      {n:'Trinnskatt', d:'Trinn 1 til 5 — fra 1,7 % opp til 17,8 % over 1 410 750 kr.', tag:''},
+      {n:'Utbytteskatt', d:'Oppjusteringsfaktor 1,72 og skjermingsfradrag forklart.', tag:''},
+      {n:'Formuesskatt', d:'0,7 % stat + 0,3 % kommune over 1,7 mill bunnfradrag.', tag:''},
+      {n:'Reisefradrag', d:'1,76 kr per km over 14 950 kr egenandel.', tag:''},
+      {n:'Foreldrefradrag', d:'25 000 kr for ett barn, 15 000 kr for hvert ekstra.', tag:''},
+    ],
+    ref:{
+      title:'Trinnskatt 2026',
+      rows:[
+        {l:'Trinn 1 (208 050+)', v:'1,7 %'},
+        {l:'Trinn 2 (292 850+)', v:'4,0 %'},
+        {l:'Trinn 3 (670 000+)', v:'13,7 %'},
+        {l:'Trinn 5 (1 410 750+)', v:'17,8 %', accent:true},
+      ],
+      cta:'Skatteloven 2026',
+    },
+  },
+  selskap: {
+    title:'<em>Selskap</em>',
+    crumb:'Selskap',
+    lead:'Fra stiftelse av AS til valg av selskapsform. Praktiske verktøy og oppslagsverk for selskapsrett 2026.',
+    stats:[ {v:'30 000', u:'kr', l:'Min. aksjekapital'}, {v:'22,00', u:'%', l:'Selskapsskatt'} ],
+    tools:[
+      {n:'AS-stiftelse', d:'30 000 kr aksjekapital, registrering hos Brønnøysund — steg for steg.', tag:'Populær'},
+      {n:'Selskapsformer', d:'AS, ENK, ANS, DA, NUF — fordeler og ulemper sammenlignet.', tag:''},
+      {n:'Generalforsamling', d:'Innkalling, stemmeregler og protokoll — krav etter aksjeloven.', tag:''},
+      {n:'Aksjeutvanning', d:'Beregn eierandel ved nyemisjon og opsjonsprogram.', tag:''},
+      {n:'Utbytte vs lønn', d:'Hva lønner seg når du eier ditt eget AS?', tag:''},
+      {n:'Likvidasjon', d:'Avvikling av AS — frister og skattekonsekvenser.', tag:''},
+    ],
+    ref:{
+      title:'AS-nøkkeltall',
+      rows:[
+        {l:'Min. aksjekapital', v:'30 000 kr', accent:true},
+        {l:'Selskapsskatt', v:'22 %'},
+        {l:'Stiftelsesgebyr', v:'5 666 kr'},
+        {l:'Revisjonsplikt', v:'> 7 mill omsetn.'},
+      ],
+      cta:'Brønnøysund-portalen',
+    },
+  },
+  avgift: {
+    title:'<em>Avgift</em>',
+    crumb:'Avgift',
+    lead:'MVA, arbeidsgiveravgift og særavgifter — alle satser fra merverdiavgiftsloven og folketrygdloven 2026.',
+    stats:[ {v:'25,00', u:'%', l:'Standard MVA-sats'}, {v:'14,10', u:'%', l:'Sone I arbeidsgiveravgift'} ],
+    tools:[
+      {n:'MVA-kalkulator', d:'25 %, 15 % og 12 % — legg på eller trekk fra med ett klikk.', tag:'Populær'},
+      {n:'Arbeidsgiveravgift', d:'AGA for alle 7 soner — fra 0 % i Finnmark til 14,1 % i sone I.', tag:''},
+      {n:'Særavgifter', d:'Bil, drivstoff, alkohol, sukker — komplett oversikt for 2026.', tag:''},
+      {n:'Tollkalkulator', d:'Importavgift, MVA og toll på varer fra utlandet.', tag:''},
+      {n:'Importgrense', d:'350 kr-grensen er borte — slik fungerer VOEC-ordningen i dag.', tag:''},
+      {n:'Engangsavgift bil', d:'CO₂, NOx og vekt — beregn engangsavgift på ny bil.', tag:''},
+    ],
+    ref:{
+      title:'MVA-satser 2026',
+      rows:[
+        {l:'Standard', v:'25 %', accent:true},
+        {l:'Næringsmidler', v:'15 %'},
+        {l:'Persontransport / kino', v:'12 %'},
+        {l:'Beløpsgrense', v:'50 000 kr'},
+      ],
+      cta:'Skatteetaten MVA',
+    },
+  },
+};
+
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]})}
+
+function renderPage(key){
+  var p = PAGES[key]; if(!p) return;
+  var statsHtml = p.stats.map(function(s){
+    var unit = s.u ? '<span class="u">'+escapeHtml(s.u)+'</span>' : '';
+    return '<div class="page-stat"><span class="l">'+escapeHtml(s.l)+'</span><span class="v">'+escapeHtml(s.v)+unit+'</span></div>';
+  }).join('');
+
+  var toolsHtml = p.tools.map(function(t){
+    return '<a href="#" class="tool-card">'
+      + '<div class="tc-head"><h3>'+escapeHtml(t.n)+'</h3>'
+      + (t.tag ? '<span class="tc-tag">'+escapeHtml(t.tag)+'</span>' : '')
+      + '</div>'
+      + '<p>'+escapeHtml(t.d)+'</p>'
+      + '<svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>'
+      + '</a>';
+  }).join('');
+
+  var refRows = p.ref.rows.map(function(r){
+    return '<div class="ref-row"><span class="label">'+escapeHtml(r.l)+'</span><span class="val'+(r.accent?' accent':'')+'">'+escapeHtml(r.v)+'</span></div>';
+  }).join('');
+
+  var html = ''
+    + '<section class="page-hero" data-screen-label="'+key+' Hero">'
+    + '  <div class="container">'
+    + '    <div>'
+    + '      <div class="page-eyebrow"><a href="Homepage.html">Forsiden</a><span class="arrow">/</span><span class="current">'+escapeHtml(p.crumb)+'</span></div>'
+    + '      <h1 class="page-title">'+p.title+'</h1>'
+    + '      <p class="page-lead">'+escapeHtml(p.lead)+'</p>'
+    + '    </div>'
+    + '    <div class="page-stats">'+statsHtml+'</div>'
+    + '  </div>'
+    + '</section>'
+    + '<div class="container">'
+    + '  <div class="filter-bar">'
+    + '    <label class="filter-input"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>'
+    + '      <input type="text" placeholder="Filtrer verktøy i denne kategorien…">'
+    + '    </label>'
+    + '    <div class="chip-row">'
+    + '      <button class="chip active">Alle <span class="ct">'+p.tools.length+'</span></button>'
+    + '      <button class="chip">Populære</button>'
+    + '      <button class="chip">Nye</button>'
+    + '    </div>'
+    + '  </div>'
+    + '  <div class="page-grid">'
+    + '    <section class="tools">'
+    + '      <div class="col-head"><h2>Verktøy</h2><span class="count">'+p.tools.length+' tilgjengelige</span></div>'
+    + '      <div class="tool-grid">'+toolsHtml+'</div>'
+    + '    </section>'
+    + '    <aside class="ref-col">'
+    + '      <div class="col-head"><h3>'+escapeHtml(p.ref.title)+'</h3></div>'
+    + '      <div class="ref-panel">'
+    + '        <div class="ref-rows">'+refRows+'</div>'
+    + '      </div>'
+    + '      <a href="#" class="ref-cta"><span>'+escapeHtml(p.ref.cta)+'</span><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg></a>'
+    + '    </aside>'
+    + '  </div>'
+    + '</div>';
+
+  var host = document.getElementById('pageHost');
+  host.innerHTML = '<div class="page-content" data-screen-label="'+key+'">'+html+'</div>';
+
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.setAttribute('aria-selected', t.dataset.tab === key ? 'true' : 'false');
+  });
+  try{ history.replaceState(null, '', '#'+key); }catch(e){}
+  window.scrollTo(0,0);
+}
+
+document.addEventListener('click', function(e){
+  var tab = e.target.closest('.tab');
+  if(!tab) return;
+  e.preventDefault();
+  var key = tab.getAttribute('data-tab');
+  if(key && PAGES[key]) renderPage(key);
+});
+
+window.addEventListener('hashchange', function(){
+  var k = location.hash.replace('#','');
+  if(PAGES[k]) renderPage(k);
+});
+
+var initial = location.hash.replace('#','');
+renderPage(PAGES[initial] ? initial : 'personlig');
+</script>
+
+</body>
+</html>

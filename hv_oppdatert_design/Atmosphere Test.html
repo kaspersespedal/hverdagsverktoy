@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atmosphere — Aurora over ink (Part 1 prototype)</title>
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+/* ───────────────────────────────────────────────
+   ATMOSPHERE — Part 1 prototype
+   Self-contained, drop-in. No mesh gradient.
+   Stack (back→front):
+     L1  Solid ink (#0A0908) + vertical gradient #0F0D0A → #070605
+     L2  Aurora drift — two horizontal soft elliptical bands,
+         counter-phase X/Y oscillation with non-equal periods
+         + slow opacity breathe. mix-blend-mode: screen.
+     L3  Cursor-anchored light — single soft circular gradient,
+         lerp 0.06, lags ~200–400ms. ≥1024px only.
+     L4  Static SVG film grain — feTurbulence, ~3.5% opacity,
+         mix-blend-mode: overlay. Never animated.
+─────────────────────────────────────────────── */
+
+:root{
+  /* Brief's motion tokens — non-negotiable, adopted verbatim. */
+  --ease-out-quart:    cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-expo:     cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-spring-soft:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-micro:  120ms;
+  --dur-fast:   220ms;
+  --dur-base:   420ms;
+  --dur-slow:   720ms;
+  --stag-tight:  40ms;
+  --stag-medium: 80ms;
+  --stag-loose: 140ms;
+}
+
+html, body{ margin:0; padding:0; min-height:100%; }
+body{
+  background:#0A0908;          /* L1 — slightly warmer than pure black */
+  color:#EDE6DA;
+  font-family:var(--font-sans);
+  font-size:var(--fs-body);
+  line-height:var(--lh-base);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+
+/* ── L1 vertical "horizon" — a single static gradient on a fixed layer.
+   Static. No animation. Gives the aurora layer above something to sit on. */
+.atmo-base{
+  position:fixed; inset:0; z-index:-3; pointer-events:none;
+  background:linear-gradient(to bottom, #0F0D0A 0%, #070605 100%);
+}
+
+/* ── L2 + L3 wrapper. isolation:isolate forces a fresh stacking + paint
+   context so blend modes only mix within the atmosphere, not with body. */
+.atmo{
+  position:fixed; inset:0; z-index:-2; pointer-events:none;
+  isolation:isolate;
+  overflow:hidden;
+  contain:layout paint;
+}
+
+/* ── L2 Aurora bands ─────────────────────────────────────
+   Each band is two nested elements:
+     .band       — outer wrapper, X drift only (transform-X)
+     .band-inner — inner gradient + opacity breathe (transform-Y + opacity)
+   Splitting axes lets X/Y use different non-equal periods (38s vs 53s
+   for A; 41s vs 47s for B) so the loop is never visible.
+   Gradients are at FULL alpha; element opacity carries the actual level
+   so the breathing animation maps directly to the brief's numbers. */
+
+.band{
+  position:absolute;
+  pointer-events:none;
+  will-change:transform;
+  mix-blend-mode:screen;        /* brightens ink underneath, never overlays */
+  transform-origin:center;
+}
+.band-inner{
+  position:absolute; inset:0;
+  will-change:transform, opacity;
+  transform-origin:center;
+}
+
+/* Band A — warm cream, primary band, anchored above the headline.
+   Width 140vw / height 30vh. */
+.band-a{
+  width:140vw; height:30vh;
+  left:50%; top:18%;
+  margin-left:-70vw;
+  animation: bandADriftX 38s ease-in-out infinite;
+}
+.band-a .band-inner{
+  background:radial-gradient(ellipse at center,
+    hsl(38, 60%, 75%) 0%,
+    transparent 50%);
+  opacity:.08;                 /* base level — breathing modulates ±~25% */
+  animation:
+    bandADriftY 53s ease-in-out infinite,
+    bandABreathe 24s ease-in-out infinite;
+}
+
+/* Band B — deeper amber, lower note, offset left + slightly lower.
+   Width 110vw / height 22vh. Counter-phase (delays start at half-period). */
+.band-b{
+  width:110vw; height:22vh;
+  left:42%; top:30%;
+  margin-left:-55vw;
+  animation: bandBDriftX 41s ease-in-out infinite;
+  animation-delay: -20.5s;     /* counter-phase from start */
+}
+.band-b .band-inner{
+  background:radial-gradient(ellipse at center,
+    hsl(28, 50%, 55%) 0%,
+    transparent 50%);
+  opacity:.05;
+  animation:
+    bandBDriftY 47s ease-in-out infinite,
+    bandBBreathe 31s ease-in-out infinite;
+  animation-delay: -23.5s, -15.5s;
+}
+
+/* Drift envelopes — translate-only, GPU-composited. Percentage units
+   are fine on transform; resolved against the box's own size. */
+@keyframes bandADriftX{
+  0%, 100% { transform: translate3d(-4%, 0, 0); }
+  50%      { transform: translate3d( 4%, 0, 0); }
+}
+@keyframes bandADriftY{
+  0%, 100% { transform: translate3d(0, -1.5%, 0); }
+  50%      { transform: translate3d(0,  1.5%, 0); }
+}
+@keyframes bandABreathe{
+  0%, 100% { opacity: .08; }
+  50%      { opacity: .10; }
+}
+
+@keyframes bandBDriftX{
+  0%, 100% { transform: translate3d( 4%, 0, 0); }
+  50%      { transform: translate3d(-4%, 0, 0); }
+}
+@keyframes bandBDriftY{
+  0%, 100% { transform: translate3d(0,  1.5%, 0); }
+  50%      { transform: translate3d(0, -1.5%, 0); }
+}
+@keyframes bandBBreathe{
+  0%, 100% { opacity: .05; }
+  50%      { opacity: .07; }
+}
+
+/* ── L3 Cursor-anchored light ─────────────────────────────
+   1200px diameter circular gradient, hsla(38, 70%, 75%, 0.04) at center.
+   JS lerps position at 0.06/frame — light visibly lags the cursor. */
+.cursor-light{
+  position:fixed; left:0; top:0;
+  width:1200px; height:1200px;
+  margin:-600px 0 0 -600px;
+  pointer-events:none;
+  background:radial-gradient(circle,
+    hsla(38, 70%, 75%, 0.04) 0%,
+    transparent 60%);
+  /* Default centered; JS overrides via translate3d. */
+  transform: translate3d(50vw, 50vh, 0);
+  will-change:transform;
+  mix-blend-mode:screen;
+}
+
+/* ── L4 Film grain ────────────────────────────────────────
+   Static SVG fractal noise, on top of everything below foreground.
+   z-index:1 + pointer-events:none + mix-blend-mode:overlay — does not
+   intercept clicks; tints brightness up/down by ±~3.5%. */
+.film-grain{
+  position:fixed; inset:0; z-index:1;
+  pointer-events:none;
+  opacity:.035;
+  mix-blend-mode:overlay;
+  /* Crisp, not blurred — the grain texture is its own anti-aliasing */
+  width:100%; height:100%;
+}
+
+/* Foreground content — sits above grain when needed (most cases the
+   3.5% overlay is fine to apply across, including text). */
+main{
+  position:relative;
+  z-index:2;                   /* above grain so headline isn't muddied */
+  isolation:isolate;
+}
+
+/* ───────────────────────────────────────────────
+   Hero — minimal, mirrors Homepage.html proportions
+─────────────────────────────────────────────── */
+.hero{
+  min-height:100vh;
+  display:grid;
+  align-content:center;
+  padding:96px clamp(24px, 6vw, 80px);
+  max-width:1200px;
+  margin:0 auto;
+}
+.hero h1{
+  font-family:var(--font-serif);
+  font-weight:400;
+  font-size:clamp(48px, 7vw, 92px);
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  color:#EFE6D6;
+  margin:0 0 28px;
+  max-width:18ch;
+  text-wrap:balance;
+}
+.hero h1 em{
+  font-style:italic;
+  color:#E2C29A;
+}
+.hero-tag{
+  display:flex; align-items:center; gap:14px;
+  margin:0 0 28px;
+  color:#A39383;
+  font-size:14px;
+  letter-spacing:.01em;
+}
+.lang-pill{
+  display:inline-flex; align-items:center;
+  padding:6px 12px;
+  border:1px solid rgba(216,173,126,.22);
+  border-radius:999px;
+  background:rgba(216,173,126,.04);
+  color:#D8AD7E;
+  font-size:11.5px; letter-spacing:.18em;
+  text-transform:uppercase;
+  font-weight:500;
+}
+.search-shell{
+  display:flex; align-items:center;
+  max-width:540px;
+  padding:14px 16px;
+  background:rgba(255,255,255,.02);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:10px;
+  transition:border-color var(--dur-base) var(--ease-out-quart);
+}
+.search-shell input{
+  flex:1; background:none; border:0; outline:none;
+  color:#EDE6DA; font-size:15px; font-family:inherit;
+}
+.search-shell input::placeholder{ color:#7E7468; }
+.search-shell:focus-within{
+  border-color:rgba(216,173,126,.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(216,173,126,.18),
+    0 0 0 3px rgba(216,173,126,.08);
+}
+.search-icon{ width:16px; height:16px; opacity:.6; margin-right:10px;
+  color:#C8B49B; flex-shrink:0;
+}
+.search-kbd{ display:flex; gap:4px; opacity:.6; }
+.search-kbd kbd{
+  font-family:var(--font-mono);
+  font-size:11px; padding:2px 6px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:4px;
+  color:#A39383;
+  background:transparent;
+}
+
+/* Probe grid — tiny corner panel so you can see grain overlay on
+   different brightnesses (text on dark, light tile, dark tile). */
+.probe{
+  position:fixed; right:24px; bottom:24px; z-index:3;
+  display:flex; gap:8px;
+  font-size:11px;
+  font-family:var(--font-mono);
+  letter-spacing:.06em;
+  color:#9E9081;
+}
+.probe span{
+  display:block; width:60px; height:60px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,.06);
+  display:grid; place-items:center;
+  text-align:center;
+}
+.probe .p-ink{   background:#0A0908;       color:#9E9081; }
+.probe .p-paper{ background:#EFE6D6;       color:#1B1714; }
+.probe .p-amber{ background:#C89968;       color:#1B1714; }
+
+/* Status read-out — top-right, very subtle */
+.atmo-status{
+  position:fixed; top:18px; right:24px; z-index:3;
+  font-family:var(--font-mono);
+  font-size:10.5px; letter-spacing:.14em;
+  color:#5E574E;
+  text-transform:uppercase;
+}
+
+/* ───────────────────────────────────────────────
+   Reduced motion — collapse the whole atmosphere to static
+─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce){
+  .band, .band-inner{ animation:none !important; }
+  .band-a .band-inner{ opacity:.04; }   /* 0.5x base */
+  .band-b .band-inner{ opacity:.025; }  /* 0.5x base */
+  .cursor-light{ display:none !important; }
+}
+@media (prefers-reduced-data: reduce), (update: slow){
+  .band, .band-inner{ animation:none !important; }
+  .cursor-light{ display:none !important; }
+  .film-grain{ opacity:.02; }
+}
+
+/* ───────────────────────────────────────────────
+   Mobile (≤ 768px) — slower drift, no cursor light, fainter grain
+─────────────────────────────────────────────── */
+@media (max-width: 768px){
+  .band-a{ animation-duration:57s; }
+  .band-a .band-inner{
+    animation-duration: 79s, 36s;
+  }
+  .band-b{ animation-duration:61s; }
+  .band-b .band-inner{
+    animation-duration: 70s, 46s;
+  }
+  /* Disable opacity breathing on mobile — saves repaint cycles */
+  .band-a .band-inner,
+  .band-b .band-inner{
+    /* Keep drift Y, drop breathe by holding it on a still frame */
+    animation-name: bandADriftY, none;
+  }
+  .band-b .band-inner{ animation-name: bandBDriftY, none; }
+  .cursor-light{ display:none; }
+  .film-grain{ opacity:.02; }
+}
+@media (max-width: 1023px){
+  .cursor-light{ display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ───── Atmosphere stack ───── -->
+<div class="atmo-base" aria-hidden="true"></div>
+
+<div class="atmo" aria-hidden="true">
+  <!-- Band A — primary cream -->
+  <div class="band band-a">
+    <div class="band-inner"></div>
+  </div>
+  <!-- Band B — deeper amber, counter-phase -->
+  <div class="band band-b">
+    <div class="band-inner"></div>
+  </div>
+  <!-- Cursor-anchored light — JS-driven, lerp 0.06 -->
+  <div class="cursor-light" id="cursorLight"></div>
+</div>
+
+<!-- L4 — Static film grain. Bytes: ~480.
+     baseFrequency=0.9 = fine grain. seed=4 chosen visually.
+     feColorMatrix isolates alpha so grain reads as ±brightness, not color. -->
+<svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">
+  <filter id="atmoGrain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"
+      stitchTiles="stitch" seed="4"/>
+    <feColorMatrix values="0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0.5 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#atmoGrain)"/>
+</svg>
+
+<!-- ───── Foreground hero (minimal, for visual verification) ───── -->
+<main>
+  <section class="hero">
+    <h1>Praktiske verktøy for <em>privatøkonomi</em>, skatt og lovverk.</h1>
+    <p class="hero-tag">
+      <span class="lang-pill">10 språk</span>
+      <span>Oppdatert til gjeldende regler for 2026.</span>
+    </p>
+    <div class="search-shell">
+      <svg class="search-icon" viewBox="0 0 20 20" fill="none"
+        stroke="currentColor" stroke-width="1.8"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/>
+      </svg>
+      <input type="search" placeholder="Søk etter verktøy, kalkulator eller begrep…"
+             aria-label="Søk">
+      <div class="search-kbd"><kbd>⌘</kbd><kbd>K</kbd></div>
+    </div>
+  </section>
+</main>
+
+<div class="atmo-status" id="atmoStatus">AURORA · LIVE</div>
+<div class="probe" aria-hidden="true">
+  <span class="p-ink">INK</span>
+  <span class="p-paper">PAPER</span>
+  <span class="p-amber">AMBER</span>
+</div>
+
+<script>
+/* ───────────────────────────────────────────────
+   Cursor-anchored light — lerp 0.06, lags 200–400ms.
+   - Disabled below 1024px viewport.
+   - Disabled when prefers-reduced-motion: reduce.
+   - Pauses (last position frozen) on visibilitychange when hidden.
+   - Total JS for the entire atmosphere: ~50 lines including this.
+─────────────────────────────────────────────── */
+(function(){
+  var REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var WIDE   = matchMedia('(min-width: 1024px)').matches;
+  var status = document.getElementById('atmoStatus');
+  var light  = document.getElementById('cursorLight');
+  if(!light) return;
+  if(REDUCE || !WIDE){
+    light.style.display = 'none';
+    if(status) status.textContent = 'AURORA · STATIC';
+    return;
+  }
+
+  // Initial position = viewport center. current trails target.
+  var targetX = window.innerWidth  / 2;
+  var targetY = window.innerHeight / 2;
+  var curX = targetX, curY = targetY;
+  var raf = null, paused = false;
+
+  function tick(){
+    if(paused){ raf = null; return; }
+    // 6% per frame — light lags by ~12 frames to settle, ~200–400ms felt.
+    curX += (targetX - curX) * 0.06;
+    curY += (targetY - curY) * 0.06;
+    light.style.transform =
+      'translate3d(' + curX.toFixed(2) + 'px,' + curY.toFixed(2) + 'px,0)';
+    if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
+      raf = requestAnimationFrame(tick);
+    } else {
+      raf = null;
+    }
+  }
+  function onMove(e){
+    targetX = e.clientX;
+    targetY = e.clientY;
+    if(!raf && !paused) raf = requestAnimationFrame(tick);
+  }
+  window.addEventListener('mousemove', onMove, {passive:true});
+
+  // Pause on hidden — never burn RAF on a backgrounded tab.
+  document.addEventListener('visibilitychange', function(){
+    paused = document.hidden;
+    if(paused){
+      if(raf){ cancelAnimationFrame(raf); raf = null; }
+    } else if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
+      raf = requestAnimationFrame(tick);
+    }
+  });
+
+  // Initial paint at center
+  light.style.transform =
+    'translate3d(' + targetX + 'px,' + targetY + 'px,0)';
+})();
+</script>
+
+</body>
+</html>
