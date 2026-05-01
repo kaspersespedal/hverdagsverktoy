@@ -2,8 +2,8 @@
 <html lang="no" data-theme="carbon">
 <head>
 <meta charset="utf-8">
-<title>Bilkostnad — Personlig økonomi · Hverdagsverktøy</title>
-<meta name="description" content="Beregn hva bilen din faktisk koster per måned og per kilometer — verditap, drivstoff, forsikring, service, dekk, avgift og bompenger.">
+<title>Budsjett — Personlig økonomi · Hverdagsverktøy</title>
+<meta name="description" content="Lag et personlig budsjett med inntekter og utgifter — se sparerate, årlig overskudd og last ned som CSV.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
@@ -316,14 +316,146 @@
     margin-left:4px;
   }
 
+  /* ── FILTER BAR ──────────────────────────────────── */
+  .filter-bar{
+    margin:28px 0 4px;
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  }
+  .filter-input{flex:1;min-width:240px;position:relative}
+  .filter-input input{
+    width:100%;background:var(--surface);
+    border:1px solid var(--line-2);border-radius:6px;
+    padding:12px 14px 12px 40px;
+    color:var(--ink);font:400 14px/1 var(--font-sans);
+    outline:none;
+    transition:border-color .2s var(--ease), background .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .filter-input input::placeholder{color:var(--ink3)}
+  .filter-input input:focus{
+    border-color:var(--line-warm);
+    background:var(--surface-2);
+    box-shadow:0 0 0 3px rgba(200,153,104,.10);
+  }
+  .filter-input svg{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--ink3);pointer-events:none;
+  }
+  .chip-row{display:flex;gap:4px;flex-wrap:wrap}
+  .chip{
+    background:transparent;border:1px solid var(--line-2);
+    color:var(--ink2);font:500 12px/1 var(--font-sans);
+    padding:9px 12px;border-radius:5px;cursor:pointer;
+    transition:all .2s var(--ease);
+    text-decoration:none;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .chip:hover{border-color:var(--line-warm);color:var(--ink)}
+  .chip.active{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink)}
+  .chip .ct{color:var(--ink4);font-weight:500}
+
+  /* ── TOOL CARDS ──────────────────────────────────── */
+  section.tools{padding:0 0 56px}
+  .col-head{
+    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    height:36px;
+    padding-bottom:14px;margin-bottom:18px;
+    border-bottom:1px solid var(--line);
+  }
+  .col-head h2, .col-head h3{
+    font-family:var(--font-sans);font-size:11px;font-weight:600;
+    letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
+    margin:0;
+  }
+  .col-head .count{font-size:12.5px;color:var(--ink3);font-variant-numeric:tabular-nums}
+
+  .tool-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:6px;overflow:hidden;
+  }
+  .tool-card{
+    position:relative;background:var(--surface);padding:22px 24px;
+    text-decoration:none;color:var(--ink);
+    display:flex;flex-direction:column;gap:6px;
+    transition:background .2s var(--ease);
+    min-height:108px;
+  }
+  .tool-card:hover{background:var(--surface-2)}
+  .tool-card .tc-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:2px;
+  }
+  .tool-card h3{
+    font-family:var(--font-serif);font-weight:500;font-size:18px;
+    line-height:1.25;letter-spacing:-.25px;margin:0;color:var(--ink);
+    transition:color .2s var(--ease);
+  }
+  .tool-card:hover h3{color:var(--accent-2)}
+  .tool-card p{
+    font-size:13px;line-height:1.55;color:var(--ink3);margin:0;
+  }
+  .tool-card .tc-tag{
+    font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;
+    color:var(--accent);
+    background:var(--hover-bg);
+    padding:3px 7px;border-radius:3px;
+    flex-shrink:0;
+    border:1px solid var(--line-warm);
+  }
+  .tool-card .arrow{
+    align-self:flex-start;color:var(--ink4);margin-top:2px;
+    transition:color .25s var(--ease), transform .25s var(--ease);
+  }
+  .tool-card:hover .arrow{color:var(--accent);transform:translate(2px,-2px)}
+
+  .tool-card.is-hidden{display:none}
+
+  /* ── REFERENCE PANEL ─────────────────────────────── */
+  .page-grid{
+    display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start;
+    padding-top:24px;
+  }
+  .ref-col{display:flex;flex-direction:column}
+  .ref-panel{
+    background:var(--surface);
+    border:1px solid var(--line);border-radius:6px;
+    padding:6px 20px;
+  }
+  .ref-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:10px 0;border-bottom:1px solid var(--line);
+    font-size:13px;
+  }
+  .ref-row:last-child{border-bottom:none}
+  .ref-row .label{color:var(--ink2)}
+  .ref-row .val{
+    font-family:var(--font-serif);font-weight:500;
+    color:var(--ink);font-variant-numeric:tabular-nums;
+  }
+  .ref-row .val.accent{color:var(--accent-2)}
+
+  .ref-cta{
+    margin-top:16px;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 14px;border-radius:5px;
+    background:transparent;border:1px solid var(--line-2);
+    color:var(--ink2);text-decoration:none;
+    font:600 12px/1 var(--font-sans);letter-spacing:.4px;
+    transition:background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
+  }
+  .ref-cta:hover{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink)}
+  .ref-cta svg{color:var(--accent);transition:transform .2s var(--ease)}
+  .ref-cta:hover svg{transform:translateX(2px)}
+
   /* ── FOOTER ──────────────────────────────────────── */
   footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
   .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
   .foot em{font-style:italic;color:var(--ink4)}
 
   @media (max-width: 880px){
+    .page-grid{grid-template-columns:1fr}
     .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
     .page-stats{align-self:stretch}
+    .tool-grid{grid-template-columns:1fr}
     .tabs-wrap{top:60px}
   }
   @media (max-width: 560px){
@@ -361,81 +493,76 @@
   }
   .back-pill .back-stack{display:flex;flex-direction:column;gap:3px}
 
-  /* ── BIL GRID ────────────────────────────────────── */
-  .bil-grid{
+  /* ── BUDSJETT GRID ───────────────────────────────── */
+  .bud-grid{
     display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;
     padding:8px 0 56px;
   }
-  .bil-form{display:flex;flex-direction:column;gap:24px}
-  .bil-section{
+  .bud-form{display:flex;flex-direction:column;gap:24px}
+  .bud-section{
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
     padding:18px 22px 20px;
   }
-  .bil-section-head{
+  .bud-section-head{
     display:flex;align-items:baseline;justify-content:space-between;gap:16px;
     padding-bottom:12px;margin-bottom:14px;
     border-bottom:1px solid var(--line);
   }
-  .bil-section-head h2{
+  .bud-section-head h2{
     font-family:var(--font-sans);font-size:11px;font-weight:600;
     letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
     margin:0;
   }
+  .bud-add-btn{
+    background:transparent;border:1px solid var(--line-2);
+    color:var(--ink2);font:600 11.5px/1 var(--font-sans);letter-spacing:.3px;
+    padding:7px 11px;border-radius:5px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:5px;
+    transition:all .2s var(--ease);
+  }
+  .bud-add-btn:hover{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink)}
+  .bud-add-btn::before{content:"+";font-weight:700;color:var(--accent)}
 
-  /* form rows */
-  .form-row{
-    display:grid;grid-template-columns:1fr 1fr;gap:14px;
-    margin-bottom:12px;
+  .bud-col-head{
+    display:flex;gap:10px;padding:0 4px 6px;
+    font:600 9.5px/1 var(--font-sans);letter-spacing:1.2px;text-transform:uppercase;color:var(--ink4);
   }
-  .form-row:last-child{margin-bottom:0}
-  .fg{display:flex;flex-direction:column;gap:6px;min-width:0}
-  .flbl{
-    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
-    color:var(--ink3);
+  .bud-col-head .c1{flex:2}
+  .bud-col-head .c2{flex:1;text-align:right}
+  .bud-col-head .c3{width:24px}
+
+  .bud-rows{display:flex;flex-direction:column;gap:7px}
+  .bud-row{
+    display:flex;gap:10px;align-items:center;
   }
-  .fc{
+  .bud-row .bud-cell{flex:2;position:relative}
+  .bud-cat, .bud-amt, .bud-custom{
     width:100%;background:var(--bg);
     border:1px solid var(--line-2);border-radius:5px;
-    padding:10px 12px;
-    color:var(--ink);font:500 13.5px/1.2 var(--font-sans);
+    padding:9px 11px;
+    color:var(--ink);font:500 13px/1.2 var(--font-sans);
     outline:none;
     transition:border-color .2s var(--ease), background .2s var(--ease);
-    font-variant-numeric:tabular-nums;
   }
-  select.fc{
-    appearance:none;-webkit-appearance:none;cursor:pointer;
-    padding-right:32px;
+  .bud-cat{padding-right:30px;appearance:none;-webkit-appearance:none;cursor:pointer;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23797469' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");
-    background-repeat:no-repeat;background-position:right 12px center;
+    background-repeat:no-repeat;background-position:right 10px center;
   }
-  .fc:focus{border-color:var(--line-warm);background:var(--surface-2)}
-  .fhint{
-    font:400 11.5px/1.4 var(--font-sans);
-    color:var(--ink3);margin-top:2px;font-style:italic;min-height:1em;
+  .bud-amt{flex:1;text-align:right;font-variant-numeric:tabular-nums}
+  .bud-custom{margin-top:6px}
+  .bud-cat:focus, .bud-amt:focus, .bud-custom:focus{
+    border-color:var(--line-warm);background:var(--surface-2);
   }
+  .bud-rm{
+    width:28px;height:28px;flex-shrink:0;
+    background:transparent;border:0;border-radius:5px;
+    color:var(--ink4);font-size:18px;line-height:1;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    transition:background .2s var(--ease), color .2s var(--ease);
+  }
+  .bud-rm:hover{background:var(--hover-bg);color:var(--neg)}
 
-  /* manual override (collapsible) */
-  details.bil-manual{margin-top:6px}
-  details.bil-manual > summary{
-    list-style:none;cursor:pointer;
-    font:600 11px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
-    color:var(--ink3);
-    padding:10px 0;
-    display:flex;align-items:center;gap:8px;
-    transition:color .2s var(--ease);
-  }
-  details.bil-manual > summary::-webkit-details-marker{display:none}
-  details.bil-manual > summary:hover{color:var(--ink2)}
-  details.bil-manual > summary::after{
-    content:"";width:8px;height:8px;
-    border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
-    transform:rotate(45deg);transition:transform .2s var(--ease);
-    margin-left:4px;
-  }
-  details.bil-manual[open] > summary::after{transform:rotate(-135deg)}
-  details.bil-manual[open] > summary{margin-bottom:10px;border-bottom:1px solid var(--line);padding-bottom:14px}
-
-  .bil-calc-btn{
+  .bud-calc-btn{
     margin-top:4px;width:100%;
     padding:14px 20px;background:var(--accent);
     border:0;border-radius:6px;cursor:pointer;
@@ -443,14 +570,12 @@
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
     transition:background .2s var(--ease), transform .15s var(--ease);
   }
-  .bil-calc-btn:hover{background:var(--accent-2)}
-  .bil-calc-btn:active{transform:scale(.99)}
-  [data-theme="frost"] .bil-calc-btn,
-  [data-theme="glass"] .bil-calc-btn,
-  [data-theme="pink"] .bil-calc-btn{color:#fff}
+  .bud-calc-btn:hover{background:var(--accent-2)}
+  .bud-calc-btn:active{transform:scale(.99)}
+  [data-theme="frost"] .bud-calc-btn, [data-theme="glass"] .bud-calc-btn, [data-theme="pink"] .bud-calc-btn{color:#fff}
 
   /* ── RESULT (sticky right) ───────────────────────── */
-  .bil-result{
+  .bud-result{
     position:sticky;top:124px;
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
     padding:24px 22px 20px;
@@ -471,9 +596,9 @@
     font-size:38px;line-height:1;letter-spacing:-.8px;color:var(--ink);
     font-variant-numeric:tabular-nums lining-nums;
   }
-  .res-headline .r-sub{
+  .res-headline .r-verdict{
     display:block;margin-top:8px;
-    font-size:12.5px;color:var(--ink3);
+    font-size:12.5px;color:var(--ink3);font-style:italic;
   }
   .res-stats{display:flex;flex-direction:column}
   .res-stat{
@@ -489,10 +614,24 @@
     color:var(--ink);font-variant-numeric:tabular-nums;
   }
   .res-stat .v.dim{color:var(--ink4)}
-  .res-stat.divider{
-    margin-top:6px;padding-top:14px;
-    border-top:1px solid var(--line);
+
+  .res-cta{
+    margin-top:4px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:13px 14px;
+    background:transparent;border:1px solid var(--line-warm);border-radius:6px;
+    color:var(--ink);text-decoration:none;
+    transition:background .2s var(--ease), transform .15s var(--ease);
   }
+  .res-cta:hover{background:var(--hover-bg);transform:translateX(2px)}
+  .res-cta strong{
+    display:block;font:600 13px/1.3 var(--font-sans);color:var(--ink);
+  }
+  .res-cta .desc{
+    display:block;margin-top:2px;
+    font-size:11.5px;color:var(--ink3);
+  }
+  .res-cta .arr{color:var(--accent);font-size:18px;font-weight:300}
 
   .res-csv{
     margin-top:2px;width:100%;
@@ -506,50 +645,45 @@
   .res-csv:hover{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink)}
   .res-csv:disabled{opacity:.4;cursor:not-allowed}
 
-  .res-disclaimer{
-    font-size:11.5px;color:var(--ink3);margin:0;font-style:italic;line-height:1.5;
-  }
-
   /* ── BREAKDOWN (bar chart) ───────────────────────── */
-  .bil-breakdown{
+  .bud-breakdown{
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
     padding:22px 24px 26px;
     margin-bottom:48px;
   }
-  .bil-breakdown.empty{display:none}
-  .bil-breakdown h3{
+  .bud-breakdown.empty{display:none}
+  .bud-breakdown h3{
     font-family:var(--font-sans);font-size:11px;font-weight:600;
     letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
     margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--line);
   }
-  .bil-bar{
-    display:grid;grid-template-columns:160px 1fr 100px;gap:12px;align-items:center;
+  .bud-bar{
+    display:grid;grid-template-columns:140px 1fr 80px;gap:12px;align-items:center;
     padding:6px 0;font-size:13px;
   }
-  .bil-bar .bn{color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .bil-bar .bv{
+  .bud-bar .bn{color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bud-bar .bv{
     font-family:var(--font-serif);font-weight:500;color:var(--ink);
     font-variant-numeric:tabular-nums;text-align:right;
   }
-  .bil-bar .btrack{
+  .bud-bar .btrack{
     background:var(--bg);border:1px solid var(--line);border-radius:4px;
     height:10px;overflow:hidden;
   }
-  .bil-bar .bfill{
+  .bud-bar .bfill{
     height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));
     border-radius:3px;transition:width .5s cubic-bezier(.22,1,.36,1);
   }
 
   @media (max-width: 880px){
-    .bil-grid{grid-template-columns:1fr}
-    .bil-result{position:static;top:auto}
-    .bil-bar{grid-template-columns:120px 1fr 84px;gap:8px}
+    .bud-grid{grid-template-columns:1fr}
+    .bud-result{position:static;top:auto}
+    .bud-bar{grid-template-columns:100px 1fr 72px;gap:8px}
   }
   @media (max-width: 560px){
-    .bil-section{padding:16px 16px 18px}
-    .bil-result{padding:20px 18px 18px}
-    .form-row{grid-template-columns:1fr;gap:12px}
-    .bil-bar{grid-template-columns:100px 1fr 72px;font-size:12px}
+    .bud-section{padding:16px 16px 18px}
+    .bud-result{padding:20px 18px 18px}
+    .bud-bar{grid-template-columns:90px 1fr 64px;font-size:12px}
   }
 
   /* ── T2 site-shell additions (search anchor / footer links / focus / help / howto) ── */
@@ -726,7 +860,7 @@
 
   <div class="container">
     <div class="back-pill-wrap">
-      <a href="/personlig/index-new.html" class="back-pill" aria-label="Tilbake til Personlig økonomi">
+      <a href="/personlig/" class="back-pill" aria-label="Tilbake til Personlig økonomi">
         <span class="arrow-back" aria-hidden="true">
           <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/><line x1="4" y1="7" x2="12" y2="7"/></svg>
         </span>
@@ -738,184 +872,113 @@
     </div>
   </div>
 
-  <section class="page-hero" data-screen-label="Bilkostnad Hero">
+  <section class="page-hero" data-screen-label="Budsjett Hero">
     <div class="container">
       <div>
         <div class="page-eyebrow">
           <a href="/">Forsiden</a>
           <span class="arrow">/</span>
-          <a href="/personlig/index-new.html">Personlig økonomi</a>
+          <a href="/personlig/">Personlig økonomi</a>
           <span class="arrow">/</span>
-          <span class="current">Bilkostnad</span>
+          <span class="current">Budsjett</span>
         </div>
-        <h1 class="page-title"><em data-i18n="bilNTitle">Bilkostnad</em></h1>
-        <p class="page-lead" data-i18n="bilNLead">Hva bilen din faktisk koster — per måned, per kilometer og over hele eiertiden. Verditap, drivstoff, forsikring, service, dekk, trafikkforsikringsavgift og bompenger. Alle beregninger gjøres lokalt i nettleseren.</p>
+        <h1 class="page-title"><em data-i18n="budNTitle">Budsjett</em></h1>
+        <p class="page-lead" data-i18n="budNLead">Legg inn inntekter og utgifter, så regner vi ut månedlig balanse, sparerate og årlig overskudd. Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
       </div>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l" data-i18n="bilNStatMnd">Per måned</span><span class="v" id="hStatMnd">–</span></div>
-        <div class="page-stat"><span class="l" data-i18n="bilNStatKm">Per km</span><span class="v" id="hStatKm">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="budNStatBalance">Beregnet balanse</span><span class="v" id="hStatBalance">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="budNStatSavings">Sparerate</span><span class="v" id="hStatSavings">–</span></div>
       </div>
     </div>
   </section>
 
   <div class="container">
-    <div class="bil-grid">
+    <div class="bud-grid">
 
-      <div class="bil-form">
+      <div class="bud-form">
 
-        <section class="bil-section" aria-labelledby="bilCarHdr">
-          <header class="bil-section-head">
-            <h2 id="bilCarHdr" data-i18n="bilNSecCar">Bilen</h2>
+        <section class="bud-section" aria-labelledby="budIncomeHdr">
+          <header class="bud-section-head">
+            <h2 id="budIncomeHdr" data-i18n="budNIncomeHdr">Inntekter</h2>
+            <button type="button" class="bud-add-btn" data-add="income" data-i18n="budNAddBtn">Legg til</button>
           </header>
-
-          <div class="form-row">
-            <div class="fg">
-              <label class="flbl" for="bil-pris" data-i18n="bilNLblPris">Kjøpspris (kr)</label>
-              <input class="fc" id="bil-pris" inputmode="numeric" type="text" value="400 000">
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bil-tilstand" data-i18n="bilNLblTilstand">Kjøpt som</label>
-              <select class="fc" id="bil-tilstand">
-                <option value="brukt">Brukt</option>
-                <option value="ny">Ny</option>
-              </select>
-            </div>
+          <div class="bud-col-head">
+            <span class="c1" data-i18n="budNColDesc">Beskrivelse</span>
+            <span class="c2" data-i18n="budNColAmount">Beløp (kr/mnd)</span>
+            <span class="c3"></span>
           </div>
-
-          <div class="form-row">
-            <div class="fg">
-              <label class="flbl" for="bil-merke" data-i18n="bilNLblMerke">Bilmerke</label>
-              <select class="fc" id="bil-merke"></select>
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bil-aarsmodell" data-i18n="bilNLblModell">Årsmodell</label>
-              <select class="fc" id="bil-aarsmodell"></select>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="fg">
-              <label class="flbl" for="bil-kjopsaar" data-i18n="bilNLblKjopsaar">Kjøpsår</label>
-              <select class="fc" id="bil-kjopsaar"></select>
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bil-aar" data-i18n="bilNLblAar">Eiertid (år)</label>
-              <input class="fc" id="bil-aar" type="number" min="1" max="20" step="1" value="5">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="fg">
-              <label class="flbl" for="bil-km" data-i18n="bilNLblKm">Årlig kjørelengde (km)</label>
-              <input class="fc" id="bil-km" inputmode="numeric" type="text" value="12 000">
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bil-start-km" data-i18n="bilNLblStartKm">Kilometerstand ved kjøp</label>
-              <input class="fc" id="bil-start-km" inputmode="numeric" type="text" value="0">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="fg">
-              <label class="flbl" for="bil-drivstoff" data-i18n="bilNLblDrivstoff">Drivstoff</label>
-              <select class="fc" id="bil-drivstoff">
-                <option value="bensin">Bensin</option>
-                <option value="diesel">Diesel</option>
-                <option value="elbil">Elbil</option>
-              </select>
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bil-forsikring-type" data-i18n="bilNLblForsType">Forsikringstype</label>
-              <select class="fc" id="bil-forsikring-type">
-                <option value="fullkasko">Fullkasko</option>
-                <option value="delkasko">Delkasko</option>
-                <option value="ansvar">Ansvar</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="fhint" id="bil-ins-hint"></div>
+          <div class="bud-rows" id="budIncomeRows"></div>
         </section>
 
-        <section class="bil-section" aria-labelledby="bilManualHdr">
-          <header class="bil-section-head">
-            <h2 id="bilManualHdr" data-i18n="bilNSecManual">Faktiske kostnader (valgfritt)</h2>
+        <section class="bud-section" aria-labelledby="budExpenseHdr">
+          <header class="bud-section-head">
+            <h2 id="budExpenseHdr" data-i18n="budNExpenseHdr">Utgifter</h2>
+            <button type="button" class="bud-add-btn" data-add="expense" data-i18n="budNAddBtn">Legg til</button>
           </header>
-          <details class="bil-manual">
-            <summary data-i18n="bilNManualSummary">Ser tallene feil ut? Legg inn faktiske kostnader</summary>
-            <div class="form-row">
-              <div class="fg">
-                <label class="flbl" for="bil-resale" data-i18n="bilNLblResale">Forventet salgsverdi (kr)</label>
-                <input class="fc" id="bil-resale" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
-              </div>
-              <div class="fg">
-                <label class="flbl" for="bil-forsikring" data-i18n="bilNLblForsikring">Forsikring (kr/mnd)</label>
-                <input class="fc" id="bil-forsikring" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="fg">
-                <label class="flbl" for="bil-drivstoff-mnd" data-i18n="bilNLblDriMnd">Drivstoff/lading (kr/mnd)</label>
-                <input class="fc" id="bil-drivstoff-mnd" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
-              </div>
-              <div class="fg">
-                <label class="flbl" for="bil-service-mnd" data-i18n="bilNLblServiceMnd">Service og vedlikehold (kr/mnd)</label>
-                <input class="fc" id="bil-service-mnd" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="fg">
-                <label class="flbl" for="bil-bom-mnd" data-i18n="bilNLblBomMnd">Bompenger (kr/mnd)</label>
-                <input class="fc" id="bil-bom-mnd" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
-              </div>
-              <div class="fg"></div>
-            </div>
-          </details>
+          <div class="bud-col-head">
+            <span class="c1" data-i18n="budNColDesc">Beskrivelse</span>
+            <span class="c2" data-i18n="budNColAmount">Beløp (kr/mnd)</span>
+            <span class="c3"></span>
+          </div>
+          <div class="bud-rows" id="budExpenseRows"></div>
         </section>
 
-        <button type="button" id="bilCalcBtn" class="bil-calc-btn">
-          <span data-i18n="bilNBtnCalc">Beregn bilkostnad</span>
+        <button type="button" id="budCalcBtn" class="bud-calc-btn">
+          <span data-i18n="budNBtnCalc">Beregn budsjett</span>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
         </button>
 
       </div>
 
-      <aside class="bil-result" aria-live="polite">
-        <div class="res-headline">
-          <span class="r-lbl" data-i18n="bilNRTotalLbl">Total eierkostnad</span>
-          <span class="r-val" id="rTotal">–</span>
-          <span class="r-sub" id="rTotalSub" data-i18n="bilNRSubInit">Legg inn tall for å se kostnadene</span>
+      <aside class="bud-result" aria-live="polite">
+        <div class="res-headline" id="resHeadline">
+          <span class="r-lbl" data-i18n="budNRBalanceLbl">Månedlig balanse</span>
+          <span class="r-val" id="rBalance">–</span>
+          <span class="r-verdict" id="rVerdict" data-i18n="budNRVerdictInit">Legg inn tall for å se balansen</span>
         </div>
         <div class="res-stats">
-          <div class="res-stat"><span class="l" data-i18n="bilNRMnd">Per måned</span><span class="v" id="rMnd">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="bilNRKm">Per km</span><span class="v" id="rKm">–</span></div>
-          <div class="res-stat divider"><span class="l" data-i18n="bilNRVerditap">Verditap</span><span class="v" id="rVerditap">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="bilNRDriv">Drivstoff/lading</span><span class="v" id="rDriv">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="bilNRFors">Forsikring</span><span class="v" id="rFors">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="bilNRService">Service og vedlikehold</span><span class="v" id="rService">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="bilNRDekk">Dekk</span><span class="v" id="rDekk">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="bilNRAvgift">Trafikkforsikringsavgift</span><span class="v" id="rAvgift">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="bilNRBom">Bompenger</span><span class="v" id="rBom">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="budNRIncome">Sum inntekter</span><span class="v" id="rIncome">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="budNRExpense">Sum utgifter</span><span class="v" id="rExpense">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="budNRSavings">Sparerate</span><span class="v" id="rSavings">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="budNRAnnual">Årlig overskudd</span><span class="v" id="rAnnual">–</span></div>
         </div>
-        <p class="res-disclaimer" data-i18n="bilNResDisclaimer">Røft estimat. Faktiske kostnader varierer med kjøremønster, bosted, forsikringsvilkår og bilens tilstand.</p>
-        <button type="button" id="bilCsvBtn" class="res-csv" disabled>
+        <a href="/boliglan/" class="res-cta">
+          <span>
+            <strong data-i18n="budNCtaTitle">Hva har du råd til å kjøpe?</strong>
+            <span class="desc" data-i18n="budNCtaDesc">Maks lånebeløp basert på inntekten din</span>
+          </span>
+          <span class="arr" aria-hidden="true">→</span>
+        </a>
+        <button type="button" id="budCsvBtn" class="res-csv" disabled>
           <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2 V10"/><polyline points="3.5 6.5 7 10 10.5 6.5"/><line x1="2" y1="12" x2="12" y2="12"/></svg>
-          <span data-i18n="bilNCsvBtn">Last ned (CSV)</span>
+          <span data-i18n="budNCsvBtn">Last ned (CSV)</span>
         </button>
       </aside>
 
     </div>
 
-    <section class="bil-breakdown empty" id="bilBreakdown" aria-labelledby="bilBreakdownHdr">
-      <h3 id="bilBreakdownHdr" data-i18n="bilNBreakdownHdr">Kostnadsfordeling over hele eiertiden</h3>
-      <div id="bilBars"></div>
+    <section class="bud-breakdown empty" id="budBreakdown" aria-labelledby="budBreakdownHdr">
+      <h3 id="budBreakdownHdr" data-i18n="budNBreakdownHdr">Utgiftsfordeling</h3>
+      <div id="budBars"></div>
     </section>
   </div>
 
+
+
+
+
+  <div class="container howto-wrap">
+    <details class="howto" id="howto-budHowto">
+      <summary>
+        <span class="howto-title" data-howto-title="budHowto">Slik bruker du Budsjett</span>
+      </summary>
+      <div class="howto-body" data-howto-prefix="budHowto"></div>
+    </details>
+  </div>
 </main>
 
 <footer>
@@ -1023,63 +1086,36 @@
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 
-  // ── Bilkostnad: form, calc, breakdown, CSV ──
+  // ── Budsjett: rows, calc, breakdown, CSV ──
   (function(){
-    // BIL_MERKER — porter fra shared/core.js (samme tall)
-    var BIL_MERKER = {
-      snitt:      {depr:0.15, service:1.00, cat:'standard',   label:'Gjennomsnitt'},
-      // Japansk
-      toyota:     {depr:0.12, service:0.80, cat:'standard',   label:'Toyota'},
-      lexus:      {depr:0.12, service:1.15, cat:'premium',    label:'Lexus'},
-      honda:      {depr:0.14, service:0.90, cat:'standard',   label:'Honda'},
-      mazda:      {depr:0.13, service:0.85, cat:'standard',   label:'Mazda'},
-      nissan:     {depr:0.14, service:0.95, cat:'standard',   label:'Nissan'},
-      suzuki:     {depr:0.11, service:0.85, cat:'budget',     label:'Suzuki'},
-      mitsubishi: {depr:0.16, service:1.00, cat:'standard',   label:'Mitsubishi'},
-      subaru:     {depr:0.16, service:1.00, cat:'standard',   label:'Subaru'},
-      // Koreansk
-      hyundai:    {depr:0.14, service:0.85, cat:'standard',   label:'Hyundai'},
-      kia:        {depr:0.14, service:0.85, cat:'standard',   label:'Kia'},
-      // Tysk
-      volkswagen: {depr:0.15, service:1.00, cat:'standard',   label:'Volkswagen'},
-      skoda:      {depr:0.14, service:0.85, cat:'standard',   label:'Škoda'},
-      cupra:      {depr:0.17, service:1.05, cat:'standard',   label:'CUPRA / SEAT'},
-      bmw:        {depr:0.18, service:1.35, cat:'premium',    label:'BMW'},
-      mercedes:   {depr:0.19, service:1.40, cat:'premium',    label:'Mercedes-Benz'},
-      audi:       {depr:0.18, service:1.30, cat:'premium',    label:'Audi'},
-      porsche:    {depr:0.20, service:1.60, cat:'luxury',     label:'Porsche'},
-      // Svensk
-      volvo:      {depr:0.16, service:1.05, cat:'standard',   label:'Volvo'},
-      polestar:   {depr:0.16, service:1.05, cat:'premium',    label:'Polestar'},
-      // Fransk
-      peugeot:    {depr:0.19, service:1.15, cat:'standard',   label:'Peugeot'},
-      citroen:    {depr:0.18, service:1.10, cat:'standard',   label:'Citroën'},
-      renault:    {depr:0.20, service:1.10, cat:'standard',   label:'Renault'},
-      dacia:      {depr:0.21, service:0.80, cat:'budget',     label:'Dacia'},
-      // Annet Europa
-      fiat:       {depr:0.16, service:1.00, cat:'standard',   label:'Fiat'},
-      ford:       {depr:0.18, service:1.10, cat:'standard',   label:'Ford'},
-      landrover:  {depr:0.20, service:1.40, cat:'luxury',     label:'Land Rover'},
-      // Elbil
-      tesla:      {depr:0.18, service:0.70, cat:'ev-budget',  label:'Tesla'},
-      byd:        {depr:0.22, service:1.20, cat:'ev-budget',  label:'BYD'},
-      mg:         {depr:0.23, service:1.15, cat:'ev-budget',  label:'MG'}
-    };
-    var BIL_GROUPS = [
-      {label:'Japansk',     keys:['toyota','lexus','honda','mazda','nissan','suzuki','mitsubishi','subaru']},
-      {label:'Koreansk',    keys:['hyundai','kia']},
-      {label:'Tysk',        keys:['volkswagen','skoda','cupra','bmw','mercedes','audi','porsche']},
-      {label:'Svensk',      keys:['volvo','polestar']},
-      {label:'Fransk',      keys:['peugeot','citroen','renault','dacia']},
-      {label:'Annet',       keys:['fiat','ford','landrover']},
-      {label:'Elbilmerker', keys:['tesla','byd','mg']}
+    var INCOME_OPTS = [
+      'Lønn (netto)',
+      'Ekstrajobb/freelance',
+      'Stipend',
+      'Kapitalinntekter',
+      'NAV-ytelser'
     ];
+    var EXPENSE_OPTS = [
+      'Husleie',
+      'Mat og dagligvarer',
+      'Transport',
+      'Strøm',
+      'Forsikring',
+      'Mobil/Internett',
+      'Studielån (nedbetaling)',
+      'Boliglån (terminbeløp)',
+      'Trening',
+      'Streaming/Abonnement',
+      'Klær og personlig',
+      'Sparing/BSU'
+    ];
+    var KEY = 'hv-budsjett-v1';
+    var STATE = { rows: null };
 
-    var KEY = 'hv-bil-v1';
-    var STATE = {};
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
-    function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
-    function fmtInt(n){ return fmtNb.format(n).replace(/ /g, ' '); }
+    function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
+    function fmtPct(n){ return n.toFixed(1).replace('.', ',') + ' %'; }
+    function fmtInt(n){ return fmtNb.format(n).replace(/ /g, ' '); }
     function parseAmt(s){
       if(!s) return 0;
       var raw = String(s).replace(/[^0-9\-]/g, '');
@@ -1087,275 +1123,78 @@
       var n = parseInt(raw, 10);
       return isNaN(n) ? 0 : n;
     }
-    function parseNum(id){
-      var el = document.getElementById(id);
-      if(!el) return 0;
-      return parseAmt(el.value);
-    }
-    function setOutputText(id, v){ var el=document.getElementById(id); if(el) el.textContent = v; }
     function escapeHtml(s){
       return String(s).replace(/[&<>"']/g, function(c){
         return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
       });
     }
 
-    // Build merke dropdown
-    function buildMerkeOptions(){
-      var sel = document.getElementById('bil-merke');
-      sel.innerHTML = '';
-      var avg = document.createElement('option');
-      avg.value = 'snitt'; avg.textContent = 'Gjennomsnitt';
-      sel.appendChild(avg);
-      BIL_GROUPS.forEach(function(g){
-        var og = document.createElement('optgroup');
-        og.label = g.label;
-        g.keys.forEach(function(k){
-          var bp = BIL_MERKER[k]; if(!bp) return;
-          var o = document.createElement('option');
-          o.value = k; o.textContent = bp.label;
-          og.appendChild(o);
-        });
-        sel.appendChild(og);
-      });
-    }
-
-    // Build year dropdowns (last 30 years)
-    function buildYearOptions(){
-      var now = new Date().getFullYear();
-      ['bil-kjopsaar','bil-aarsmodell'].forEach(function(id){
-        var sel = document.getElementById(id);
-        sel.innerHTML = '';
-        for(var y = now; y >= now - 30; y--){
-          var o = document.createElement('option');
-          o.value = y; o.textContent = y;
-          sel.appendChild(o);
-        }
-      });
-      // default: kjøpsår = now, årsmodell = now
-      document.getElementById('bil-kjopsaar').value = now;
-      document.getElementById('bil-aarsmodell').value = now;
-    }
-
-    // Insurance hint
-    function bilUpdateInsHint(){
-      var pris = parseNum('bil-pris') || 400000;
-      var merke = document.getElementById('bil-merke').value || 'snitt';
-      var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
-      var fType = document.getElementById('bil-forsikring-type').value || 'fullkasko';
-      var insTypeBase = fType === 'ansvar' ? 350 : fType === 'delkasko' ? 550 : 800;
-      var catMult = {budget:0.90, standard:1.0, premium:1.35, luxury:1.50, 'ev-budget':1.15};
-      var insBrandMult = catMult[bp.cat] || 1.0;
-      var insValueScale = fType === 'ansvar'
-        ? 0.85 + 0.15 * Math.min(1, pris / 300000)
-        : 0.5 + 0.5 * Math.min(1, pris / 400000);
-      var est = Math.round(insTypeBase * insBrandMult * insValueScale);
-      setOutputText('bil-ins-hint', 'Estimat for forsikring: ~' + est.toLocaleString('nb-NO') + ' kr/mnd');
-    }
-
-    // Clear manual overrides when merke changes
-    function bilUpdateDefaults(){
-      ['bil-forsikring','bil-drivstoff-mnd','bil-service-mnd','bil-bom-mnd','bil-resale'].forEach(function(id){
-        var el = document.getElementById(id);
-        if(el) el.value = '';
-      });
-      bilUpdateInsHint();
-    }
-
-    // Year sync helpers
-    function clampYears(){
-      var modell = document.getElementById('bil-aarsmodell');
-      var kjop = document.getElementById('bil-kjopsaar');
-      if(modell && kjop && +modell.value > +kjop.value){
-        modell.value = kjop.value;
-      }
-    }
-
-    function calcBilkostnad(){
-      var pris = parseNum('bil-pris');
-      if(pris <= 0){
-        clearResult();
-        return;
-      }
-      var aar = Math.max(1, Math.min(20, +document.getElementById('bil-aar').value || 5));
-      var rawKm = parseNum('bil-km') || 12000;
-      var km = Math.max(1000, rawKm);
-      var startKm = Math.max(0, parseNum('bil-start-km') || 0);
-      var merke = document.getElementById('bil-merke').value;
-      var drivstoff = document.getElementById('bil-drivstoff').value;
-
-      var forsEl = document.getElementById('bil-forsikring');
-      var forsikringMnd = parseNum('bil-forsikring');
-      var forsikringUserSet = forsEl && forsEl.value.trim() !== '';
-      var drivstoffMnd = parseNum('bil-drivstoff-mnd');
-      var bomMnd = parseNum('bil-bom-mnd');
-      var serviceMnd = parseNum('bil-service-mnd');
-      var bp = BIL_MERKER[merke] || BIL_MERKER.snitt;
-      var tilstand = document.getElementById('bil-tilstand').value || 'brukt';
-      var resaleInput = parseNum('bil-resale');
-
-      // 1. Verditap (depreciation)
-      var verditap;
-      if(resaleInput > 0){
-        verditap = Math.max(0, pris - resaleInput);
-      } else {
-        var kmFactor = 1 / (1 + startKm / 150000);
-        var adjDepr = tilstand === 'ny' ? bp.depr * kmFactor : bp.depr * 0.55 * kmFactor;
-        var restverdi = pris;
-        for(var i = 0; i < aar; i++) restverdi *= (1 - adjDepr);
-        verditap = pris - restverdi;
-      }
-
-      // 2. Drivstoff/lading
-      // Bensin/diesel 2026-årsgjennomsnitt med veibruksavgift-suspensjon (1.apr–1.sep 2026):
-      //   Diesel: (5×25,08 + 7×27,93)/12 = 26,74 kr/L
-      //   Bensin: (5×21,00 + 7×25,71)/12 = 23,75 kr/L
-      // Kilder: Skatteetaten satser, Lovdata STV-2025-12-18-2759 + LTI/2026-03-26-486.
-      // NB: Oppdater for 2027 — suspensjonen gjelder kun 2026.
-      var drivTotal;
-      if(drivstoffMnd > 0){
-        drivTotal = drivstoffMnd * 12 * aar;
-      } else {
-        var kmWearFactor = 1 + (startKm / 100000) * 0.05;
-        var drivKostPerKm;
-        if(drivstoff === 'elbil') drivKostPerKm = 0.20 * 2.0 * kmWearFactor;
-        else if(drivstoff === 'diesel') drivKostPerKm = 0.06 * 26.74 * kmWearFactor;
-        else drivKostPerKm = 0.07 * 23.75 * kmWearFactor;
-        drivTotal = drivKostPerKm * km * aar;
-      }
-
-      // 3. Forsikring
-      var forsikringType = document.getElementById('bil-forsikring-type').value || 'fullkasko';
-      var forsTotal;
-      if(forsikringUserSet){
-        forsTotal = forsikringMnd * 12 * aar;
-      } else {
-        var insTypeBase = forsikringType === 'ansvar' ? 350 : forsikringType === 'delkasko' ? 550 : 800;
-        var catMult = {budget:0.90, standard:1.0, premium:1.35, luxury:1.50, 'ev-budget':1.15};
-        var insBrandMult = catMult[bp.cat] || 1.0;
-        var insValueScale = forsikringType === 'ansvar'
-          ? 0.85 + 0.15 * Math.min(1, pris / 300000)
-          : 0.5 + 0.5 * Math.min(1, pris / 400000);
-        var autoIns = insTypeBase * insBrandMult * insValueScale;
-        forsTotal = autoIns * 12 * aar;
-      }
-
-      // 4. Service og vedlikehold
-      var serviceTotal;
-      if(serviceMnd > 0){
-        serviceTotal = serviceMnd * 12 * aar;
-      } else {
-        var serviceFlat = drivstoff === 'elbil' ? 5000 : 9000;
-        var avgTotalKm = startKm + (km * aar / 2);
-        var serviceKmFactor = 1 + Math.max(0, avgTotalKm - 60000) / 300000;
-        var priceFactor = Math.min(1, pris / 200000);
-        priceFactor = 0.3 + 0.7 * priceFactor;
-        var servicePerAar = serviceFlat * bp.service * serviceKmFactor * priceFactor;
-        serviceTotal = servicePerAar * aar;
-      }
-
-      // 5. Dekk
-      var dekkPerAar = drivstoff === 'elbil' ? 4500 : 3500;
-      var dekkTotal = dekkPerAar * aar;
-
-      // 6. Trafikkforsikringsavgift (fra 1. mars 2026): fossil 6,52 kr/dag, elbil 9,16 kr/dag
-      var avgiftPerAar = drivstoff === 'elbil' ? 3343 : 2380;
-      var avgiftTotal = avgiftPerAar * aar;
-
-      // 7. Bompenger
-      var bomTotal;
-      if(bomMnd > 0){
-        bomTotal = bomMnd * 12 * aar;
-      } else {
-        var bomPerAar = drivstoff === 'elbil' ? 2500 : 4500;
-        bomTotal = bomPerAar * aar;
-      }
-
-      var totalKostnad = verditap + drivTotal + forsTotal + serviceTotal + dekkTotal + avgiftTotal + bomTotal;
-      var perMnd = totalKostnad / (aar * 12);
-      var totalKm = km * aar;
-      var perKm = totalKostnad / totalKm;
-
-      STATE = {
-        pris: pris,
-        aar: aar,
-        kmAarlig: km,
-        startKm: startKm,
-        merke: merke,
-        merkeLabel: bp.label,
-        drivstoff: drivstoff,
-        forsikringType: forsikringType,
-        verditap: Math.round(verditap),
-        drivTotal: Math.round(drivTotal),
-        forsTotal: Math.round(forsTotal),
-        serviceTotal: Math.round(serviceTotal),
-        dekkTotal: Math.round(dekkTotal),
-        avgiftTotal: Math.round(avgiftTotal),
-        bomTotal: Math.round(bomTotal),
-        totalKostnad: Math.round(totalKostnad),
-        perMnd: perMnd,
-        perKm: perKm
-      };
-
-      setOutputText('rTotal', fmtKr(totalKostnad));
-      setOutputText('rTotalSub', fmtKr(perMnd) + '/mnd · ' + perKm.toFixed(1).replace('.', ',') + ' kr/km · ' + aar + ' år');
-      setOutputText('rMnd', fmtKr(perMnd));
-      setOutputText('rKm', perKm.toFixed(1).replace('.', ',') + ' kr');
-      setOutputText('rVerditap', fmtKr(verditap));
-      setOutputText('rDriv', fmtKr(drivTotal));
-      setOutputText('rFors', fmtKr(forsTotal));
-      setOutputText('rService', fmtKr(serviceTotal));
-      setOutputText('rDekk', fmtKr(dekkTotal));
-      setOutputText('rAvgift', fmtKr(avgiftTotal));
-      setOutputText('rBom', fmtKr(bomTotal));
-
-      setOutputText('hStatMnd', fmtKr(perMnd));
-      setOutputText('hStatKm', perKm.toFixed(1).replace('.', ',') + ' kr');
-
-      // Breakdown bars
-      var bd = document.getElementById('bilBreakdown');
-      var bars = document.getElementById('bilBars');
-      var items = [
-        {name:'Verditap',                   value: STATE.verditap},
-        {name:'Drivstoff/lading',           value: STATE.drivTotal},
-        {name:'Forsikring',                 value: STATE.forsTotal},
-        {name:'Service og vedlikehold',     value: STATE.serviceTotal},
-        {name:'Dekk',                       value: STATE.dekkTotal},
-        {name:'Trafikkforsikringsavgift',   value: STATE.avgiftTotal},
-        {name:'Bompenger',                  value: STATE.bomTotal}
-      ];
-      var maxV = items.reduce(function(m,it){ return Math.max(m, it.value); }, 0);
-      var sortedItems = items.slice().sort(function(a,b){ return b.value - a.value; });
+    function buildOpts(arr, selected){
       var html = '';
-      sortedItems.forEach(function(it){
-        var pctTotal = STATE.totalKostnad > 0 ? (it.value / STATE.totalKostnad) * 100 : 0;
-        var widthPct = maxV > 0 ? (it.value / maxV) * 100 : 0;
-        html += '<div class="bil-bar">' +
-          '<div class="bn">' + escapeHtml(it.name) + '</div>' +
-          '<div class="btrack"><div class="bfill" style="width:' + widthPct.toFixed(1) + '%"></div></div>' +
-          '<div class="bv">' + fmtKr(it.value) + ' <span style="color:var(--ink4);font-size:11px;">(' + pctTotal.toFixed(0) + '%)</span></div>' +
-        '</div>';
-      });
-      bars.innerHTML = html;
-      bd.classList.remove('empty');
-
-      var csvBtn = document.getElementById('bilCsvBtn');
-      csvBtn.disabled = false;
-
-      persist();
+      for(var i=0; i<arr.length; i++){
+        var v = arr[i];
+        html += '<option value="' + escapeHtml(v) + '"' + (v === selected ? ' selected' : '') + '>' + escapeHtml(v) + '</option>';
+      }
+      html += '<option value="__custom__"' + (selected === '__custom__' ? ' selected' : '') + '>Valgfritt …</option>';
+      return html;
     }
 
-    function clearResult(){
-      ['rTotal','rMnd','rKm','rVerditap','rDriv','rFors','rService','rDekk','rAvgift','rBom','hStatMnd','hStatKm'].forEach(function(id){ setOutputText(id, '–'); });
-      setOutputText('rTotalSub', 'Legg inn tall for å se kostnadene');
-      var bd = document.getElementById('bilBreakdown');
-      if(bd) bd.classList.add('empty');
-      var csvBtn = document.getElementById('bilCsvBtn');
-      if(csvBtn) csvBtn.disabled = true;
+    function makeRow(type, preset){
+      preset = preset || {};
+      var row = document.createElement('div');
+      row.className = 'bud-row';
+      var opts = type === 'income' ? INCOME_OPTS : EXPENSE_OPTS;
+      var defaultCat = preset.cat || (type === 'income' ? INCOME_OPTS[0] : EXPENSE_OPTS[0]);
+      var amtVal = preset.amount ? fmtInt(preset.amount) : '';
+      var customVal = preset.cat === '__custom__' && preset.customLabel ? preset.customLabel : '';
+      var catLabel = type === 'income' ? 'Inntektskategori' : 'Utgiftskategori';
+      row.innerHTML =
+        '<div class="bud-cell">' +
+          '<select class="bud-cat" aria-label="' + catLabel + '">' + buildOpts(opts, defaultCat) + '</select>' +
+          (customVal || defaultCat === '__custom__' ?
+            '<input type="text" class="bud-custom" placeholder="Skriv inn …" value="' + escapeHtml(customVal) + '" aria-label="Egendefinert kategori">' : '') +
+        '</div>' +
+        '<input type="text" class="bud-amt" inputmode="numeric" placeholder="0" value="' + escapeHtml(amtVal) + '" aria-label="Beløp i kroner per måned">' +
+        '<button type="button" class="bud-rm" aria-label="Fjern rad" title="Fjern">×</button>';
+      return row;
+    }
+
+    function rowName(row){
+      var sel = row.querySelector('.bud-cat');
+      if(!sel) return '';
+      if(sel.value === '__custom__'){
+        var cu = row.querySelector('.bud-custom');
+        return cu ? cu.value.trim() : '';
+      }
+      return sel.value;
+    }
+
+    function rowAmount(row){
+      var inp = row.querySelector('.bud-amt');
+      return inp ? parseAmt(inp.value) : 0;
+    }
+
+    function onCatChange(sel){
+      var cell = sel.parentElement;
+      var existing = cell.querySelector('.bud-custom');
+      if(sel.value === '__custom__'){
+        if(!existing){
+          var inp = document.createElement('input');
+          inp.type = 'text';
+          inp.className = 'bud-custom';
+          inp.placeholder = 'Skriv inn …';
+          inp.setAttribute('aria-label', 'Egendefinert kategori');
+          cell.appendChild(inp);
+          inp.focus();
+        }
+      } else if(existing){
+        existing.remove();
+      }
     }
 
     function liveFormat(inp){
       var raw = inp.value.replace(/[^0-9\-]/g, '');
-      if(raw === '' || raw === '-') return;
+      if(raw === '' || raw === '-'){ return; }
       var num = parseInt(raw, 10);
       if(isNaN(num)) return;
       var pos = inp.selectionStart;
@@ -1367,25 +1206,23 @@
 
     function persist(){
       try {
-        var snap = {
-          pris: document.getElementById('bil-pris').value,
-          tilstand: document.getElementById('bil-tilstand').value,
-          merke: document.getElementById('bil-merke').value,
-          aarsmodell: document.getElementById('bil-aarsmodell').value,
-          kjopsaar: document.getElementById('bil-kjopsaar').value,
-          aar: document.getElementById('bil-aar').value,
-          km: document.getElementById('bil-km').value,
-          startKm: document.getElementById('bil-start-km').value,
-          drivstoff: document.getElementById('bil-drivstoff').value,
-          forsikringType: document.getElementById('bil-forsikring-type').value,
-          resale: document.getElementById('bil-resale').value,
-          forsikring: document.getElementById('bil-forsikring').value,
-          drivstoffMnd: document.getElementById('bil-drivstoff-mnd').value,
-          serviceMnd: document.getElementById('bil-service-mnd').value,
-          bomMnd: document.getElementById('bil-bom-mnd').value
-        };
+        var snap = { income: snapshot('income'), expense: snapshot('expense') };
         localStorage.setItem(KEY, JSON.stringify(snap));
       } catch(e){}
+    }
+    function snapshot(type){
+      var rows = document.querySelectorAll('#bud' + (type === 'income' ? 'Income' : 'Expense') + 'Rows .bud-row');
+      var out = [];
+      rows.forEach(function(row){
+        var sel = row.querySelector('.bud-cat');
+        var custom = row.querySelector('.bud-custom');
+        out.push({
+          cat: sel ? sel.value : '',
+          customLabel: custom ? custom.value : '',
+          amount: rowAmount(row)
+        });
+      });
+      return out;
     }
     function restore(){
       try {
@@ -1394,55 +1231,117 @@
         return JSON.parse(raw);
       } catch(e){ return null; }
     }
-    function applyRestored(d){
-      if(!d) return;
-      var setVal = function(id, v){ var el=document.getElementById(id); if(el && v != null) el.value = v; };
-      setVal('bil-pris', d.pris);
-      setVal('bil-tilstand', d.tilstand);
-      setVal('bil-merke', d.merke);
-      setVal('bil-aarsmodell', d.aarsmodell);
-      setVal('bil-kjopsaar', d.kjopsaar);
-      setVal('bil-aar', d.aar);
-      setVal('bil-km', d.km);
-      setVal('bil-start-km', d.startKm);
-      setVal('bil-drivstoff', d.drivstoff);
-      setVal('bil-forsikring-type', d.forsikringType);
-      setVal('bil-resale', d.resale);
-      setVal('bil-forsikring', d.forsikring);
-      setVal('bil-drivstoff-mnd', d.drivstoffMnd);
-      setVal('bil-service-mnd', d.serviceMnd);
-      setVal('bil-bom-mnd', d.bomMnd);
+
+    function recalc(){
+      var incomeRows = document.querySelectorAll('#budIncomeRows .bud-row');
+      var expenseRows = document.querySelectorAll('#budExpenseRows .bud-row');
+      var totalIncome = 0, totalExpense = 0;
+      var incomeItems = [], expenseItems = [];
+      incomeRows.forEach(function(row){
+        var name = rowName(row) || 'Inntekt';
+        var amt = rowAmount(row);
+        if(amt > 0){ incomeItems.push({ name: name, amount: amt }); totalIncome += amt; }
+      });
+      expenseRows.forEach(function(row){
+        var name = rowName(row) || 'Utgift';
+        var amt = rowAmount(row);
+        if(amt > 0){ expenseItems.push({ name: name, amount: amt }); totalExpense += amt; }
+      });
+      var balance = totalIncome - totalExpense;
+      var savingsRate = totalIncome > 0 ? (balance / totalIncome) * 100 : 0;
+
+      var hasData = totalIncome > 0 || totalExpense > 0;
+
+      document.getElementById('rBalance').textContent = hasData ? fmtKr(balance) : '–';
+      document.getElementById('rIncome').textContent = totalIncome > 0 ? fmtKr(totalIncome) : '–';
+      document.getElementById('rExpense').textContent = totalExpense > 0 ? fmtKr(totalExpense) : '–';
+      document.getElementById('rSavings').textContent = hasData ? fmtPct(savingsRate) : '–';
+      document.getElementById('rAnnual').textContent = hasData ? fmtKr(balance * 12) : '–';
+
+      document.getElementById('hStatBalance').textContent = hasData ? fmtKr(balance) : '–';
+      document.getElementById('hStatSavings').textContent = hasData ? fmtPct(savingsRate) : '–';
+
+      var verdict = document.getElementById('rVerdict');
+      if(!hasData){ verdict.textContent = 'Legg inn tall for å se balansen'; }
+      else if(balance > 0){ verdict.textContent = 'Du har et månedlig overskudd. Bra jobba.'; }
+      else if(balance === 0){ verdict.textContent = 'Du går akkurat i null.'; }
+      else { verdict.textContent = 'Du bruker mer enn du tjener.'; }
+
+      var bd = document.getElementById('budBreakdown');
+      var bars = document.getElementById('budBars');
+      if(expenseItems.length > 1){
+        bd.classList.remove('empty');
+        var sorted = expenseItems.slice().sort(function(a,b){ return b.amount - a.amount; });
+        var html = '';
+        sorted.forEach(function(it){
+          var pct = totalExpense > 0 ? (it.amount / totalExpense) * 100 : 0;
+          html += '<div class="bud-bar">' +
+            '<div class="bn">' + escapeHtml(it.name) + '</div>' +
+            '<div class="btrack"><div class="bfill" style="width:' + pct.toFixed(1) + '%"></div></div>' +
+            '<div class="bv">' + fmtKr(it.amount) + '</div>' +
+          '</div>';
+        });
+        bars.innerHTML = html;
+      } else {
+        bd.classList.add('empty');
+        bars.innerHTML = '';
+      }
+
+      var csvBtn = document.getElementById('budCsvBtn');
+      csvBtn.disabled = !hasData;
+
+      STATE.totalIncome = totalIncome;
+      STATE.totalExpense = totalExpense;
+      STATE.balance = balance;
+      STATE.savingsRate = savingsRate;
+      STATE.incomeItems = incomeItems;
+      STATE.expenseItems = expenseItems;
+
+      persist();
+    }
+
+    function addRow(type, preset){
+      var cont = document.getElementById('bud' + (type === 'income' ? 'Income' : 'Expense') + 'Rows');
+      var row = makeRow(type, preset);
+      cont.appendChild(row);
+      var sel = row.querySelector('.bud-cat');
+      if(sel && !preset) sel.focus();
+      return row;
     }
 
     function downloadCsv(){
-      if(!STATE || !STATE.totalKostnad) return;
+      var d = STATE;
+      if(!d || (d.totalIncome === 0 && d.totalExpense === 0)) return;
       var sep = ';';
       var rows = [];
       var today = new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
-      rows.push(['Bilkostnad', today]);
+      rows.push(['Personlig budsjett', today]);
       rows.push([]);
-      rows.push(['BILEN', '']);
-      rows.push(['Kjøpspris (kr)', STATE.pris]);
-      rows.push(['Bilmerke', STATE.merkeLabel]);
-      rows.push(['Drivstoff', STATE.drivstoff]);
-      rows.push(['Forsikringstype', STATE.forsikringType]);
-      rows.push(['Eiertid (år)', STATE.aar]);
-      rows.push(['Årlig kjørelengde (km)', STATE.kmAarlig]);
-      rows.push(['Kilometerstand ved kjøp', STATE.startKm]);
+      rows.push(['INNTEKTER', '']);
+      rows.push(['Post', 'Beløp (kr/mnd)']);
+      d.incomeItems.forEach(function(i){ rows.push([i.name, i.amount]); });
+      rows.push(['Totalt', d.totalIncome]);
       rows.push([]);
-      rows.push(['KOSTNADER OVER HELE EIERTIDEN', 'Beløp (kr)']);
-      rows.push(['Verditap', STATE.verditap]);
-      rows.push(['Drivstoff/lading', STATE.drivTotal]);
-      rows.push(['Forsikring', STATE.forsTotal]);
-      rows.push(['Service og vedlikehold', STATE.serviceTotal]);
-      rows.push(['Dekk', STATE.dekkTotal]);
-      rows.push(['Trafikkforsikringsavgift', STATE.avgiftTotal]);
-      rows.push(['Bompenger', STATE.bomTotal]);
-      rows.push(['Total eierkostnad', STATE.totalKostnad]);
+      rows.push(['UTGIFTER', '']);
+      rows.push(['Post', 'Beløp (kr/mnd)']);
+      d.expenseItems.forEach(function(i){ rows.push([i.name, i.amount]); });
+      rows.push(['Totalt', d.totalExpense]);
       rows.push([]);
-      rows.push(['SAMMENDRAG', '']);
-      rows.push(['Per måned', Math.round(STATE.perMnd)]);
-      rows.push(['Per km', STATE.perKm.toFixed(2).replace('.', ',') + ' kr']);
+      if(d.expenseItems.length > 1){
+        rows.push(['UTGIFTSFORDELING', '', '']);
+        rows.push(['Post', 'Beløp', '%']);
+        d.expenseItems.slice().sort(function(a,b){ return b.amount - a.amount; }).forEach(function(it){
+          var pct = d.totalExpense > 0 ? ((it.amount / d.totalExpense) * 100).toFixed(1) : '0';
+          rows.push([it.name, it.amount, pct + '%']);
+        });
+        rows.push([]);
+      }
+      rows.push(['SAMMENDRAG', '', '']);
+      rows.push(['Sum inntekter', '', d.totalIncome]);
+      rows.push(['Sum utgifter', '', d.totalExpense]);
+      rows.push(['Månedlig balanse', '', d.balance]);
+      rows.push(['Sparerate', '', d.savingsRate.toFixed(1) + '%']);
+      rows.push(['Årlig overskudd', '', d.balance * 12]);
       rows.push([]);
       rows.push(['Generert av Hverdagsverktøy']);
 
@@ -1456,66 +1355,63 @@
       var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
-      a.href = url; a.download = 'bilkostnad.csv';
+      a.href = url; a.download = 'budsjett.csv';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
 
-    // Wire events
-    function onAnyInput(){
-      // live-format pris/km/start-km/resale/forsikring/drivstoff-mnd/service-mnd/bom-mnd
-      var formatIds = ['bil-pris','bil-km','bil-start-km','bil-resale','bil-forsikring','bil-drivstoff-mnd','bil-service-mnd','bil-bom-mnd'];
-      formatIds.forEach(function(id){
-        var el = document.getElementById(id);
-        if(el){
-          el.addEventListener('input', function(){
-            liveFormat(el);
-            if(id === 'bil-pris') bilUpdateInsHint();
-            persist();
-          });
-        }
-      });
-      var changeIds = ['bil-tilstand','bil-merke','bil-aarsmodell','bil-kjopsaar','bil-aar','bil-drivstoff','bil-forsikring-type'];
-      changeIds.forEach(function(id){
-        var el = document.getElementById(id);
-        if(el){
-          el.addEventListener('change', function(){
-            if(id === 'bil-merke') bilUpdateDefaults();
-            if(id === 'bil-aarsmodell' || id === 'bil-kjopsaar') clampYears();
-            if(id === 'bil-forsikring-type') bilUpdateInsHint();
-            persist();
-          });
-        }
-      });
-    }
-
-    // Init
-    buildMerkeOptions();
-    buildYearOptions();
-    var saved = restore();
-    if(saved) applyRestored(saved);
-    bilUpdateInsHint();
-    onAnyInput();
-
-    document.getElementById('bilCalcBtn').addEventListener('click', function(){
-      calcBilkostnad();
-      var bd = document.getElementById('bilBreakdown');
-      if(bd && !bd.classList.contains('empty')){
-        bd.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    // ── Wire events ──
+    document.addEventListener('change', function(e){
+      if(e.target.classList && e.target.classList.contains('bud-cat')){
+        onCatChange(e.target);
+        recalc();
       }
     });
-    document.getElementById('bilCsvBtn').addEventListener('click', downloadCsv);
-
-    // Allow Enter key on numeric inputs to trigger calc
+    document.addEventListener('input', function(e){
+      var t = e.target;
+      if(t.classList && (t.classList.contains('bud-amt') || t.classList.contains('bud-custom'))){
+        if(t.classList.contains('bud-amt')) liveFormat(t);
+        recalc();
+      }
+    });
     document.addEventListener('keydown', function(e){
-      if(e.key === 'Enter' && e.target && e.target.classList && e.target.classList.contains('fc') && e.target.tagName === 'INPUT'){
+      if(e.key === 'Enter' && e.target && e.target.classList && e.target.classList.contains('bud-amt')){
         e.preventDefault();
-        calcBilkostnad();
+        recalc();
       }
     });
+    document.addEventListener('click', function(e){
+      var addBtn = e.target.closest && e.target.closest('.bud-add-btn');
+      if(addBtn){
+        addRow(addBtn.getAttribute('data-add'));
+        recalc();
+        return;
+      }
+      var rmBtn = e.target.closest && e.target.closest('.bud-rm');
+      if(rmBtn){
+        var row = rmBtn.closest('.bud-row');
+        if(row){ row.remove(); recalc(); }
+      }
+    });
+    document.getElementById('budCalcBtn').addEventListener('click', function(){
+      recalc();
+      var bd = document.getElementById('budBreakdown');
+      if(bd && !bd.classList.contains('empty')){
+        bd.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    });
+    document.getElementById('budCsvBtn').addEventListener('click', downloadCsv);
 
-    // If we restored, run calc once
-    if(saved && saved.pris) calcBilkostnad();
+    // ── Init ──
+    var saved = restore();
+    if(saved && (saved.income.length || saved.expense.length)){
+      saved.income.forEach(function(p){ addRow('income', p); });
+      saved.expense.forEach(function(p){ addRow('expense', p); });
+    } else {
+      addRow('income');
+      addRow('expense');
+    }
+    recalc();
   })();
 </script>
 

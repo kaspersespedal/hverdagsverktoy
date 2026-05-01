@@ -2,8 +2,8 @@
 <html lang="no" data-theme="carbon">
 <head>
 <meta charset="utf-8">
-<title>Lønn etter skatt — Personlig økonomi · Hverdagsverktøy</title>
-<meta name="description" content="Regn ut hva du faktisk får utbetalt etter skatt — basert på timelønn, timer per uke og alder. Norske 2026-satser. Alt skjer lokalt i nettleseren.">
+<title>Formueskatt — Skatt · Hverdagsverktøy</title>
+<meta name="description" content="Beregn norsk formueskatt for 2026 — med verdsettelsesrabatter for primærbolig, sekundærbolig, fritidsbolig, aksjer, driftsmidler og næringseiendom. Bunnfradrag 1 900 000 kr per person, gjeldsfordeling forholdsmessig.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
@@ -49,7 +49,6 @@
   .skip:focus{top:8px;outline:2px solid var(--ink);outline-offset:2px}
   *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
 
-  /* ── FROST ────────────────────────────────────────── */
   [data-theme="frost"]{
     --ink:#1a1714; --ink2:#5e574e; --ink3:#8a8378; --ink4:#b5ae9f;
     --bg:#fafaf7; --surface:#ffffff; --surface-2:#f3f1ec;
@@ -60,7 +59,6 @@
     --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
   }
 
-  /* ── HENDRIX ──────────────────────────────────────── */
   [data-theme="hendrix"]{
     --ink:#f4e6d3; --ink2:#c7ad8b; --ink3:#937c5e; --ink4:#5f4f3a;
     --bg:#1f110b; --surface:#2a1810; --surface-2:#341f15;
@@ -71,7 +69,6 @@
     --kbd-bg: rgba(244,230,211,.05); --flag-shadow: rgba(0,0,0,.4);
   }
 
-  /* ── DARK (Mørk-Blå) ──────────────────────────────── */
   [data-theme="dark"]{
     --ink:#e6e8ef; --ink2:#9ba0b3; --ink3:#6c7185; --ink4:#444858;
     --bg:#0d0e1a; --surface:#141528; --surface-2:#1c1d34;
@@ -82,7 +79,6 @@
     --kbd-bg: rgba(255,255,255,.04); --flag-shadow: rgba(0,0,0,.4);
   }
 
-  /* ── GLASS ────────────────────────────────────────── */
   [data-theme="glass"]{
     --ink:#1a1d2e; --ink2:#5a6280; --ink3:#8a93ad; --ink4:#b5bdcf;
     --bg:#f0f3fa; --surface:#ffffff; --surface-2:#e8edf6;
@@ -93,7 +89,6 @@
     --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
   }
 
-  /* ── BW (Ray) ─────────────────────────────────────── */
   [data-theme="bw"]{
     --ink:#f5f5f5; --ink2:#b0b0b0; --ink3:#808080; --ink4:#555555;
     --bg:#0a0a0a; --surface:#141414; --surface-2:#1c1c1c;
@@ -104,7 +99,6 @@
     --kbd-bg: rgba(255,255,255,.05); --flag-shadow: rgba(0,0,0,.4);
   }
 
-  /* ── DISCO ────────────────────────────────────────── */
   [data-theme="disco"]{
     --ink:#f5e6f5; --ink2:#c4a8c4; --ink3:#8a6e90; --ink4:#5a445e;
     --bg:#15081a; --surface:#1f0d28; --surface-2:#281033;
@@ -115,7 +109,6 @@
     --kbd-bg: rgba(245,230,245,.05); --flag-shadow: rgba(0,0,0,.4);
   }
 
-  /* ── PINK ─────────────────────────────────────────── */
   [data-theme="pink"]{
     --ink:#2a1a22; --ink2:#6b4a58; --ink3:#9a7585; --ink4:#c4a8b5;
     --bg:#fef1f5; --surface:#ffffff; --surface-2:#fce2eb;
@@ -300,33 +293,8 @@
     font-variant-numeric:tabular-nums lining-nums;
     white-space:nowrap;
   }
-  .page-stat .v .u{
-    font-family:var(--font-sans);font-weight:500;
-    font-size:13px;color:var(--ink3);letter-spacing:0;
-    margin-left:4px;
-  }
 
-  /* ── FOOTER ──────────────────────────────────────── */
-  footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
-  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
-  .foot em{font-style:italic;color:var(--ink4)}
-
-  @media (max-width: 880px){
-    .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
-    .page-stats{align-self:stretch}
-    .tabs-wrap{top:60px}
-  }
-  @media (max-width: 560px){
-    .container{padding:0 22px}
-    .page-hero{padding:36px 0 28px}
-    h1.page-title{font-size:clamp(30px, 8vw, 42px)}
-  }
-  @media (prefers-reduced-motion: reduce){
-    *{transition:none !important;animation:none !important}
-    html{scroll-behavior:auto}
-  }
-
-  /* ── BACK PILL (creative return) ─────────────────── */
+  /* ── BACK PILL ───────────────────────────────────── */
   .back-pill-wrap{margin:24px 0 0}
   .back-pill{
     display:inline-flex;align-items:center;gap:14px;
@@ -351,74 +319,70 @@
   }
   .back-pill .back-stack{display:flex;flex-direction:column;gap:3px}
 
-  /* ── LØNN GRID ───────────────────────────────────── */
-  .lonn-grid{
+  /* ── FOOTER ──────────────────────────────────────── */
+  footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot em{font-style:italic;color:var(--ink4)}
+
+  /* ── FORMUE GRID ─────────────────────────────────── */
+  .formue-grid{
     display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;
     padding:8px 0 56px;
   }
-  .lonn-form{display:flex;flex-direction:column;gap:24px}
-  .lonn-section{
+  .formue-form{display:flex;flex-direction:column;gap:24px}
+  .formue-section{
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
     padding:18px 22px 20px;
   }
-  .lonn-section-head{
+  .formue-section-head{
     display:flex;align-items:baseline;justify-content:space-between;gap:16px;
     padding-bottom:12px;margin-bottom:14px;
     border-bottom:1px solid var(--line);
   }
-  .lonn-section-head h2{
+  .formue-section-head h2{
     font-family:var(--font-sans);font-size:11px;font-weight:600;
     letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
     margin:0;
   }
-  .lonn-section-head .hint{
+  .formue-section-head .hint{
     font-size:11.5px;color:var(--ink3);font-style:italic;
   }
 
-  .lonn-fields{
-    display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;
+  .form-row{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;
   }
-  .lonn-fg{display:flex;flex-direction:column;gap:6px}
-  .lonn-fg.full{grid-column:1 / -1}
-  .lonn-fg label{
-    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
-    color:var(--ink3);
+  .form-row:last-child{margin-bottom:0}
+  .fg{display:flex;flex-direction:column;gap:6px}
+  .fg.full{grid-column:1 / -1}
+  .flbl{
+    font:500 11.5px/1.3 var(--font-sans);
+    letter-spacing:.2px;color:var(--ink2);
   }
-  .lonn-fg input,
-  .lonn-fg select{
+  .fc{
     width:100%;background:var(--bg);
     border:1px solid var(--line-2);border-radius:5px;
-    padding:11px 12px;
-    color:var(--ink);font:500 14px/1.2 var(--font-sans);
+    padding:10px 12px;
+    color:var(--ink);font:500 13.5px/1.2 var(--font-sans);
     outline:none;
     font-variant-numeric:tabular-nums;
     transition:border-color .2s var(--ease), background .2s var(--ease);
   }
-  .lonn-fg input:focus,
-  .lonn-fg select:focus{
-    border-color:var(--line-warm);background:var(--surface-2);
-  }
-  .lonn-fg select{
-    appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:32px;
+  select.fc{
+    appearance:none;-webkit-appearance:none;cursor:pointer;
+    padding-right:32px;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23797469' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");
-    background-repeat:no-repeat;background-position:right 10px center;
+    background-repeat:no-repeat;background-position:right 12px center;
+  }
+  .fc:focus{
+    border-color:var(--line-warm);background:var(--surface-2);
+    box-shadow:0 0 0 3px rgba(200,153,104,.10);
+  }
+  .flbl-rabatt{
+    font-size:10.5px;color:var(--ink4);letter-spacing:.2px;font-weight:400;
+    margin-left:4px;
   }
 
-  .lonn-frikort-hint{
-    font-size:12px;color:var(--ink3);line-height:1.55;margin-top:4px;font-style:italic;
-  }
-
-  .lonn-info-box{
-    margin:0;padding:11px 14px;
-    background:var(--surface-2);
-    border:1px solid var(--line);
-    border-left:2px solid var(--accent);
-    border-radius:5px;
-    font-size:12.5px;color:var(--ink2);line-height:1.55;
-  }
-  .lonn-info-box a{color:var(--accent);text-decoration:underline;font-weight:600}
-
-  .lonn-calc-btn{
+  .calc-btn{
     margin-top:4px;width:100%;
     padding:14px 20px;background:var(--accent);
     border:0;border-radius:6px;cursor:pointer;
@@ -426,14 +390,14 @@
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
     transition:background .2s var(--ease), transform .15s var(--ease);
   }
-  .lonn-calc-btn:hover{background:var(--accent-2)}
-  .lonn-calc-btn:active{transform:scale(.99)}
-  [data-theme="frost"] .lonn-calc-btn,
-  [data-theme="glass"] .lonn-calc-btn,
-  [data-theme="pink"] .lonn-calc-btn{color:#fff}
+  .calc-btn:hover{background:var(--accent-2)}
+  .calc-btn:active{transform:scale(.99)}
+  [data-theme="frost"] .calc-btn,
+  [data-theme="glass"] .calc-btn,
+  [data-theme="pink"] .calc-btn{color:#fff}
 
   /* ── RESULT (sticky right) ───────────────────────── */
-  .lonn-result{
+  .formue-result{
     position:sticky;top:124px;
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
     padding:24px 22px 20px;
@@ -451,12 +415,12 @@
   .res-headline .r-val{
     display:block;
     font-family:var(--font-serif);font-weight:500;
-    font-size:38px;line-height:1;letter-spacing:-.8px;color:var(--ink);
+    font-size:34px;line-height:1.1;letter-spacing:-.6px;color:var(--ink);
     font-variant-numeric:tabular-nums lining-nums;
   }
   .res-headline .r-verdict{
     display:block;margin-top:8px;
-    font-size:12.5px;color:var(--ink3);font-style:italic;
+    font-size:12.5px;color:var(--ink3);font-style:italic;line-height:1.5;
   }
   .res-stats{display:flex;flex-direction:column}
   .res-stat{
@@ -469,128 +433,119 @@
   .res-stat .l{color:var(--ink2);
     font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;}
   .res-stat .v{
-    font-family:var(--font-serif);font-weight:500;font-size:17px;
+    font-family:var(--font-serif);font-weight:500;font-size:16px;
     color:var(--ink);font-variant-numeric:tabular-nums;
+    text-align:right;
   }
   .res-stat .v.dim{color:var(--ink4)}
-  .res-stat.strong .v{font-weight:700;font-size:18px}
 
-  .res-cta{
-    margin-top:4px;
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
-    padding:13px 14px;
-    background:transparent;border:1px solid var(--line-warm);border-radius:6px;
-    color:var(--ink);text-decoration:none;
-    transition:background .2s var(--ease), transform .15s var(--ease);
-  }
-  .res-cta:hover{background:var(--hover-bg);transform:translateX(2px)}
-  .res-cta strong{
-    display:block;font:600 13px/1.3 var(--font-sans);color:var(--ink);
-  }
-  .res-cta .desc{
-    display:block;margin-top:2px;
-    font-size:11.5px;color:var(--ink3);
-  }
-  .res-cta .arr{color:var(--accent);font-size:18px;font-weight:300}
-
-  .res-csv{
-    margin-top:2px;width:100%;
-    padding:11px 14px;
-    background:transparent;border:1px solid var(--line-2);border-radius:5px;
-    color:var(--ink2);font:600 12px/1 var(--font-sans);letter-spacing:.3px;
-    cursor:pointer;
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    transition:all .2s var(--ease);
-  }
-  .res-csv:hover{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink)}
-  .res-csv:disabled{opacity:.4;cursor:not-allowed}
-
-  /* ── BREAKDOWN (skatte-tabell) ───────────────────── */
-  .lonn-breakdown{
+  /* ── BREAKDOWN ───────────────────────────────────── */
+  .formue-breakdown{
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
     padding:22px 24px 26px;
     margin-bottom:48px;
   }
-  .lonn-breakdown.empty{display:none}
-  .lonn-breakdown h3{
+  .formue-breakdown.empty{display:none}
+  .formue-breakdown h3{
     font-family:var(--font-sans);font-size:11px;font-weight:600;
     letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
     margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--line);
   }
-  .lonn-bd-table{
+  .formue-bd-table{
     width:100%;border-collapse:collapse;font-size:13px;
   }
-  .lonn-bd-table tr{border-bottom:1px solid var(--line)}
-  .lonn-bd-table tr:last-child{border-bottom:none}
-  .lonn-bd-table td{padding:10px 4px;color:var(--ink2)}
-  .lonn-bd-table td.v{
+  .formue-bd-table thead th{
+    text-align:left;padding:8px 6px;
+    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
+    color:var(--ink3);border-bottom:1px solid var(--line);
+  }
+  .formue-bd-table thead th.r{text-align:right}
+  .formue-bd-table tbody td{
+    padding:10px 6px;color:var(--ink2);
+    border-bottom:1px solid var(--line);
+  }
+  .formue-bd-table tbody tr:last-child td{border-bottom:none}
+  .formue-bd-table td.l{color:var(--ink)}
+  .formue-bd-table td.mv{
+    text-align:right;color:var(--ink3);
+    font-variant-numeric:tabular-nums;
+  }
+  .formue-bd-table td.sv{
     text-align:right;font-family:var(--font-serif);font-weight:500;
     color:var(--ink);font-variant-numeric:tabular-nums;
   }
-  .lonn-bd-table tr.fradrag td{color:var(--ink3);font-style:italic}
-  .lonn-bd-table tr.fradrag td.v{color:var(--ink3)}
-  .lonn-bd-table tr.total td{
-    font-weight:700;color:var(--ink);font-style:normal;
-    border-top:1px solid var(--line);padding-top:14px;padding-bottom:14px;
-  }
-  .lonn-bd-table tr.total td.v{font-size:15px}
 
-  .lonn-disclaimer{
+  .formue-margin{
+    margin-top:14px;padding:11px 14px;
+    background:var(--surface-2);border:1px solid var(--line);
+    border-left:2px solid var(--accent);border-radius:5px;
+    font-size:12.5px;color:var(--ink2);line-height:1.55;
+  }
+  .formue-margin b{color:var(--ink);font-weight:600}
+
+  .formue-disclaimer{
     margin-top:14px;font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;
   }
 
   @media (max-width: 880px){
-    .lonn-grid{grid-template-columns:1fr}
-    .lonn-result{position:static;top:auto}
+    .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
+    .page-stats{align-self:stretch}
+    .formue-grid{grid-template-columns:1fr}
+    .formue-result{position:static;top:auto}
+    .tabs-wrap{top:60px}
   }
   @media (max-width: 560px){
-    .lonn-section{padding:16px 16px 18px}
-    .lonn-result{padding:20px 18px 18px}
-    .lonn-fields{grid-template-columns:1fr;gap:12px}
+    .container{padding:0 22px}
+    .page-hero{padding:36px 0 28px}
+    h1.page-title{font-size:clamp(30px, 8vw, 42px)}
+    .formue-section{padding:16px 16px 18px}
+    .formue-result{padding:20px 18px 18px}
+    .form-row{grid-template-columns:1fr;gap:12px}
+    .formue-breakdown{padding:18px 16px 20px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;animation:none !important}
+    html{scroll-behavior:auto}
   }
 
-  /* ── T2 site-shell additions (search anchor / footer links / focus / help / howto) ── */
-  #site-search-anchor{display:none}
-  .foot{align-items:center}
-  .foot-links{display:inline-flex;align-items:center;gap:10px;font-size:12.5px}
-  .foot-links a{color:var(--ink3);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}
-  .foot-links a:hover{color:var(--ink);border-bottom-color:var(--line-2)}
-  .foot-sep{color:var(--ink4)}
-  .page-hero-actions{display:flex;gap:8px;margin-top:14px}
+  /* T3: site-shell — help-btn + focus-btn + howto-details + full footer */
+  .formue-section-head{position:relative;}
+  .section-head-actions{display:inline-flex;gap:6px;align-items:center;margin-left:auto;}
   .calc-help-btn,.focus-card-btn{
-    width:32px;height:32px;border:1px solid var(--line);background:transparent;color:var(--ink2);
-    border-radius:50%;font-size:14px;line-height:1;cursor:pointer;
+    background:transparent;border:1px solid var(--line-2);color:var(--ink3);
+    width:26px;height:26px;border-radius:50%;cursor:pointer;padding:0;
     display:inline-flex;align-items:center;justify-content:center;
-    transition:color .18s ease,border-color .18s ease;
+    font:600 13px/1 var(--font-sans);
+    transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease);
   }
-  @media(hover:hover){
-    .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line-2)}
+  @media (hover: hover){
+    .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line);background:var(--hover-bg);}
   }
-  .calc-help-btn:focus-visible,.focus-card-btn:focus-visible{outline:1px solid var(--accent);outline-offset:2px}
-  body.focus-mode > .nav-wrap,
-  body.focus-mode > .tabs-wrap,
-  body.focus-mode > footer{display:none}
-  body.focus-mode .back-pill-wrap{display:none}
-  .howto-wrap{margin:32px 0}
-  details.howto{
-    border:1px solid var(--line);border-radius:10px;padding:18px 22px;background:var(--surface);
+  body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer,body.focus-mode .back-pill-wrap{display:none;}
+  body.focus-mode .page-hero{padding-top:24px;}
+  details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;}
+  details.howto>summary{
+    list-style:none;cursor:pointer;padding:13px 18px;
+    font:600 11px/1.4 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink2);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
   }
-  details.howto > summary{
-    cursor:pointer;font-weight:500;color:var(--ink);list-style:none;
-    display:flex;justify-content:space-between;align-items:center;gap:16px;
-  }
-  details.howto > summary::-webkit-details-marker{display:none}
-  details.howto > summary::after{
-    content:'';width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
-    transform:rotate(45deg);transition:transform .2s ease;flex:0 0 auto
-  }
-  details.howto[open] > summary::after{transform:rotate(-135deg)}
-  details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-  .howto-body{color:var(--ink2);font-size:14.5px;line-height:1.55}
-  .howto-row{padding:10px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:240px 1fr;gap:24px}
-  .howto-row:first-child{border-top:0;padding-top:2px}
-  .howto-row > strong{color:var(--ink);font-weight:500}
-  @media(max-width:640px){.howto-row{grid-template-columns:1fr;gap:4px}.howto-row > strong{margin-bottom:2px}}
+  details.howto>summary::-webkit-details-marker{display:none;}
+  details.howto>summary::after{content:'';width:7px;height:7px;border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);transform:rotate(45deg);transition:transform .15s var(--ease);}
+  details.howto[open]>summary::after{transform:rotate(225deg);}
+  details.howto .howto-body{padding:0 18px 14px;}
+  details.howto .howto-row{padding:9px 0;border-top:1px solid var(--line);}
+  details.howto .howto-row:first-child{border-top:none;}
+  details.howto .howto-row .h-title{font-weight:600;font-size:13px;color:var(--ink);}
+  details.howto .howto-row .h-desc{font-size:12px;color:var(--ink2);margin-top:3px;line-height:1.6;}
+  .site-footer-full{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 32px;background:var(--surface);}
+  .site-footer-full .container{display:flex;flex-direction:column;gap:8px;}
+  .site-footer-full .footer-inner{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:8px;}
+  .site-footer-full .footer-logo{font:600 14px/1 var(--font-sans);color:var(--ink);}
+  .site-footer-full .footer-links{display:flex;gap:18px;}
+  .site-footer-full .footer-links a{font:500 13px/1 var(--font-sans);color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
+  @media (hover: hover){.site-footer-full .footer-links a:hover{color:var(--ink);}}
+  .site-footer-full .footer-author{font-size:12px;color:var(--ink3);}
+  .site-footer-full .footer-copy{font-size:12px;color:var(--ink3);line-height:1.6;}
 </style>
 </head>
 <body>
@@ -662,18 +617,18 @@
         </button>
         <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
           <h5>Hovedspråk</h5>
-          <a href="/personlig/" class="current" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
-          <a href="/en/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
+          <a href="/skatt/" class="current" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
+          <a href="/en/skatt/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
           <h5>Språk i Norge</h5>
-          <a href="/pl/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
-          <a href="/uk/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
-          <a href="/ar/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
-          <a href="/lt/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
-          <a href="/so/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
-          <a href="/ti/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
+          <a href="/pl/skatt/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
+          <a href="/uk/skatt/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
+          <a href="/ar/skatt/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
+          <a href="/lt/skatt/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
+          <a href="/so/skatt/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
+          <a href="/ti/skatt/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
           <h5>Internasjonalt</h5>
-          <a href="/zh/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
-          <a href="/fr/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
+          <a href="/zh/skatt/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
+          <a href="/fr/skatt/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
         </div>
       </div>
     </nav>
@@ -683,7 +638,7 @@
 <div class="tabs-wrap" role="tablist" aria-label="Kategorier">
   <div class="container">
     <div class="tabs">
-      <a href="/personlig/" class="tab" role="tab" aria-selected="true">
+      <a href="/personlig/" class="tab" role="tab" aria-selected="false">
         <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
         Personlig økonomi
       </a>
@@ -695,7 +650,7 @@
         <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>
         Kalkulator
       </a>
-      <a href="/skatt/" class="tab" role="tab" aria-selected="false">
+      <a href="/skatt/" class="tab" role="tab" aria-selected="true">
         <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
         Skatt
       </a>
@@ -723,138 +678,164 @@
 
   <div class="container">
     <div class="back-pill-wrap">
-      <a href="/personlig/index-new.html" class="back-pill" aria-label="Tilbake til Personlig økonomi">
+      <a href="/skatt/" class="back-pill" aria-label="Tilbake til Skatt">
         <span class="arrow-back" aria-hidden="true">
           <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/><line x1="4" y1="7" x2="12" y2="7"/></svg>
         </span>
         <span class="back-stack">
-          <span class="back-eyebrow">Personlig økonomi</span>
+          <span class="back-eyebrow">Skatt</span>
           <span class="back-label">Tilbake til alle verktøy</span>
         </span>
       </a>
     </div>
   </div>
 
-  <section class="page-hero" data-screen-label="Lønn Hero">
+  <section class="page-hero" data-screen-label="Formueskatt Hero">
     <div class="container">
       <div>
         <div class="page-eyebrow">
           <a href="/">Forsiden</a>
           <span class="arrow">/</span>
-          <a href="/personlig/index-new.html">Personlig økonomi</a>
+          <a href="/skatt/">Skatt</a>
           <span class="arrow">/</span>
-          <span class="current">Lønn etter skatt</span>
+          <span class="current">Formueskatt</span>
         </div>
-        <h1 class="page-title" data-i18n-html="lonnTitleHtml"><em>Lønn</em> etter skatt</h1>
-        <p class="page-lead" data-i18n="lonnSubtitle">Skriv inn timelønn, timer per uke og alder — så regner vi ut hva du faktisk får utbetalt etter skatt. Norske 2026-satser (trinnskatt, alminnelig inntektsskatt, trygdeavgift, minstefradrag, personfradrag). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
-      </div>
-      <div class="page-hero-actions">
-        <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
-        <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
+        <h1 class="page-title" data-i18n-html="formueTitleNew"><em>Formue</em>skatt</h1>
+        <p class="page-lead" data-i18n="formueSubtitle">Beregn norsk formueskatt for 2026 — primærbolig (25 % verdsettelse opptil 10 mill., 70 % over), sekundærbolig (100 %), fritidsbolig (30 %), aksjer/fond (80 %), driftsmidler (70 %) og næringseiendom (80 %). Bunnfradrag 1 900 000 kr per person, gjeld fordeles forholdsmessig på eiendelene. Alt skjer lokalt i nettleseren.</p>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l" data-i18n="lonnStatNetto">Netto månedlig</span><span class="v" id="hStatNetto">–</span></div>
-        <div class="page-stat"><span class="l" data-i18n="lonnRlEffektiv">Effektiv skattesats</span><span class="v" id="hStatEffektiv">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="formueHStatSkatt">Total formueskatt</span><span class="v" id="hStatSkatt">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="formueHStatEffektiv">Effektiv sats</span><span class="v" id="hStatEffektiv">–</span></div>
       </div>
     </div>
   </section>
 
   <div class="container">
-    <div class="lonn-grid">
+    <div class="formue-grid">
 
-      <div class="lonn-form">
+      <div class="formue-form">
 
-        <section class="lonn-section" aria-labelledby="lonnInputHdr">
-          <header class="lonn-section-head">
-            <h2 id="lonnInputHdr" data-i18n="lonnSectionInput">Inntekt</h2>
-            <span class="hint" data-i18n="lonnSectionHint">2026-satser</span>
+        <details class="howto" id="formue-howto">
+          <summary data-i18n="formueHowtoSummary">Slik bruker du formueskatt-kalkulatoren</summary>
+          <div class="howto-body">
+            <div class="howto-row"><div class="h-title">Fyll inn verdier</div><div class="h-desc">Skriv inn markedsverdi for bolig, aksjer, bankinnskudd og gjeld. Kalkulatoren bruker verdsettelsesrabattene automatisk.</div></div>
+            <div class="howto-row"><div class="h-title">Verdsettelsesrabatter</div><div class="h-desc">Primærbolig: 25% (70% over 10M). Aksjer/fond: 80%. Bankinnskudd: 100%.</div></div>
+            <div class="howto-row"><div class="h-title">Bunnfradrag</div><div class="h-desc">1 900 000 kr per person (2026). Ektefeller får dobbelt.</div></div>
+            <div class="howto-row"><div class="h-title">Mange betaler ikke</div><div class="h-desc">Med typisk boliglån og primærbolig betaler de fleste null i formueskatt.</div></div>
+            <div class="howto-row"><div class="h-title">Gjeld reduseres</div><div class="h-desc">Gjeldsfradraget justeres proporsjonalt med verdsettelsesrabattene.</div></div>
+          </div>
+        </details>
+
+        <section class="formue-section" aria-labelledby="formueEiendomHdr">
+          <header class="formue-section-head">
+            <h2 id="formueEiendomHdr" data-i18n="formueSectionEiendom">Eiendom</h2>
+            <span class="hint" data-i18n="formueSectionHint">2026-satser</span>
+            <div class="section-head-actions">
+              <button type="button" class="calc-help-btn" data-target="formue-howto" aria-label="Vis veiledning" title="Vis veiledning">?</button>
+              <button type="button" class="focus-card-btn" aria-label="Fokus" title="Fokus">⛶</button>
+            </div>
           </header>
-          <div class="lonn-fields">
-            <div class="lonn-fg">
-              <label for="lonnTimelonn" data-i18n="lonnLTimelonn">Timelønn (kr)</label>
-              <input id="lonnTimelonn" type="text" inputmode="numeric" value="200" autocomplete="off">
+          <div class="form-row">
+            <div class="fg">
+              <label class="flbl" for="formue-primaer"><span data-i18n="formueLblPrimaer">Primærbolig</span> <span class="flbl-rabatt">(25 %)</span></label>
+              <input class="fc" id="formue-primaer" type="text" inputmode="numeric" value="5 000 000" autocomplete="off">
             </div>
-            <div class="lonn-fg">
-              <label for="lonnTimer" data-i18n="lonnLTimer">Timer per uke</label>
-              <input id="lonnTimer" type="number" min="1" max="60" step="1" value="15" autocomplete="off">
+            <div class="fg">
+              <label class="flbl" for="formue-sekundaer"><span data-i18n="formueLblSekundaer">Sekundærbolig</span> <span class="flbl-rabatt">(100 %)</span></label>
+              <input class="fc" id="formue-sekundaer" type="text" inputmode="numeric" value="0" autocomplete="off">
             </div>
-            <div class="lonn-fg">
-              <label for="lonnUker" data-i18n="lonnLUker">Arbeidsuker per år</label>
-              <input id="lonnUker" type="number" min="1" max="52" step="1" value="47" autocomplete="off">
+          </div>
+          <div class="form-row">
+            <div class="fg">
+              <label class="flbl" for="formue-fritid"><span data-i18n="formueLblFritid">Fritidsbolig</span> <span class="flbl-rabatt">(30 %)</span></label>
+              <input class="fc" id="formue-fritid" type="text" inputmode="numeric" value="0" autocomplete="off">
             </div>
-            <div class="lonn-fg">
-              <label for="lonnAlder" data-i18n="lonnLAlder">Alder</label>
-              <select id="lonnAlder">
-                <option value="under18">Under 18 år</option>
-                <option value="18plus" selected>18 år eller eldre</option>
+            <div class="fg">
+              <label class="flbl" for="formue-naering"><span data-i18n="formueLblNaering">Næringseiendom</span> <span class="flbl-rabatt">(80 %)</span></label>
+              <input class="fc" id="formue-naering" type="text" inputmode="numeric" value="0" autocomplete="off">
+            </div>
+          </div>
+        </section>
+
+        <section class="formue-section" aria-labelledby="formueAndreEiendelerHdr">
+          <header class="formue-section-head">
+            <h2 id="formueAndreEiendelerHdr" data-i18n="formueSectionAndre">Andre eiendeler</h2>
+          </header>
+          <div class="form-row">
+            <div class="fg">
+              <label class="flbl" for="formue-aksjer"><span data-i18n="formueLblAksjer">Aksjer og fond</span> <span class="flbl-rabatt">(80 %)</span></label>
+              <input class="fc" id="formue-aksjer" type="text" inputmode="numeric" value="500 000" autocomplete="off">
+            </div>
+            <div class="fg">
+              <label class="flbl" for="formue-driftsmidler"><span data-i18n="formueLblDriftsmidler">Driftsmidler</span> <span class="flbl-rabatt">(70 %)</span></label>
+              <input class="fc" id="formue-driftsmidler" type="text" inputmode="numeric" value="0" autocomplete="off">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="fg">
+              <label class="flbl" for="formue-bank"><span data-i18n="formueLblBank">Bankinnskudd</span> <span class="flbl-rabatt">(100 %)</span></label>
+              <input class="fc" id="formue-bank" type="text" inputmode="numeric" value="200 000" autocomplete="off">
+            </div>
+            <div class="fg">
+              <label class="flbl" for="formue-gjeld" data-i18n="formueLblGjeld">Total gjeld</label>
+              <input class="fc" id="formue-gjeld" type="text" inputmode="numeric" value="3 000 000" autocomplete="off">
+            </div>
+          </div>
+        </section>
+
+        <section class="formue-section" aria-labelledby="formueSubjektHdr">
+          <header class="formue-section-head">
+            <h2 id="formueSubjektHdr" data-i18n="formueSectionSubjekt">Skattesubjekt</h2>
+          </header>
+          <div class="form-row">
+            <div class="fg full">
+              <label class="flbl" for="formue-personer" data-i18n="formueLblPersoner">Hvem skal beregnes</label>
+              <select class="fc" id="formue-personer">
+                <option value="1" selected>Enslig (1 × bunnfradrag)</option>
+                <option value="2">Ektefeller (2 × bunnfradrag)</option>
               </select>
             </div>
           </div>
-          <p class="lonn-frikort-hint">Frikortgrensen for 2026 er 100 000 kr. Tjener du under dette, trekker ikke arbeidsgiver skatt. Du kan fortsatt skylde litt trygdeavgift ved skatteoppgjøret.</p>
         </section>
 
-        <p class="lonn-info-box">
-          Dette er en forenklet beregning. Vil du ha full oversikt over trinnskatt, trygdeavgift, alminnelig inntekt og fradrag?
-          <a href="/skatt/#sal-salary-card">Åpne Skattekalkulatoren →</a>
-        </p>
-
-        <button type="button" id="lonnCalcBtn" class="lonn-calc-btn">
-          <span data-i18n="lonnBtnCalcShort">Beregn lønn</span>
+        <button type="button" id="formueCalcBtn" class="calc-btn">
+          <span data-i18n="formueBtnCalcNew">Beregn formueskatt</span>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
         </button>
 
       </div>
 
-      <aside class="lonn-result" aria-live="polite">
+      <aside class="formue-result" aria-live="polite">
         <div class="res-headline">
-          <span class="r-lbl" data-i18n="lonnRLbl">Utbetalt per måned</span>
-          <span class="r-val" id="rNettoMnd">–</span>
-          <span class="r-verdict" id="rVerdict">Skriv inn timelønn og timer for å se utbetalingen</span>
+          <span class="r-lbl" data-i18n="formueRLbl">Formueskatt</span>
+          <span class="r-val" id="rFormueVal">–</span>
+          <span class="r-verdict" id="rFormueSub">Skriv inn formue og gjeld for å se beregningen</span>
         </div>
         <div class="res-stats">
-          <div class="res-stat"><span class="l" data-i18n="lonnRlBruttoAar">Bruttolønn per år</span><span class="v" id="rBruttoAar">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="lonnRlBruttoMnd">Bruttolønn per måned</span><span class="v" id="rBruttoMnd">–</span></div>
-          <div class="res-stat divide"><span class="l" data-i18n="lonnRlSkatt">Skattetrekk per år</span><span class="v" id="rSkattAar">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="lonnRlSkattMnd">Skattetrekk per måned</span><span class="v" id="rSkattMnd">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="lonnRlEffektiv">Effektiv skattesats</span><span class="v" id="rEffektiv">–</span></div>
-          <div class="res-stat divide"><span class="l" data-i18n="lonnRlFeriepenger">Feriepenger (10,2 %)</span><span class="v" id="rFeriepenger">–</span></div>
-          <div class="res-stat strong"><span class="l" data-i18n="lonnRNettoAarShort">Netto årslønn</span><span class="v" id="rNettoAar">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="lonnRlNettoTime">Netto per time</span><span class="v" id="rNettoTime">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="formueROutBrutto">Brutto skattemessig formue</span><span class="v" id="rBruttoFormue">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="formueROutGjeldJustert">Gjeldsfradrag (justert)</span><span class="v" id="rGjeldJustert">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="formueROutNetto">Netto formue</span><span class="v" id="rNettoFormue">–</span></div>
+          <div class="res-stat divide"><span class="l" data-i18n="formueROutBunnfradrag">Bunnfradrag</span><span class="v" id="rBunnfradrag">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="formueROutSkattepliktig">Skattepliktig formue</span><span class="v" id="rSkattepliktig">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="formueROutEffSats">Effektiv sats</span><span class="v" id="rEffSats">–</span></div>
         </div>
-        <a href="/personlig/budsjett/index-new.html" class="res-cta">
-          <span>
-            <strong>Lag et budsjett av dette</strong>
-            <span class="desc">Se hva du har igjen etter faste utgifter</span>
-          </span>
-          <span class="arr" aria-hidden="true">→</span>
-        </a>
-        <button type="button" id="lonnCsvBtn" class="res-csv" disabled>
-          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2 V10"/><polyline points="3.5 6.5 7 10 10.5 6.5"/><line x1="2" y1="12" x2="12" y2="12"/></svg>
-          Last ned (CSV)
-        </button>
       </aside>
 
     </div>
 
-    <section class="lonn-breakdown empty" id="lonnBreakdown" aria-labelledby="lonnBreakdownHdr">
-      <h3 id="lonnBreakdownHdr">Skatteberegning</h3>
-      <table class="lonn-bd-table" id="lonnBdTable"></table>
-      <p class="lonn-disclaimer">* Forenklet estimat. Faktisk skattetrekk avhenger av skattekortet ditt (tabelltrekk). Feriepenger utbetales normalt i juni året etter, og er ikke inkludert i månedstallet over.</p>
+    <section class="formue-breakdown empty" id="formueBreakdown" aria-labelledby="formueBdHdr">
+      <h3 id="formueBdHdr">Skattemessig verdsettelse</h3>
+      <table class="formue-bd-table">
+        <thead>
+          <tr><th>Eiendel</th><th class="r">Markedsverdi</th><th class="r">Skatteverdi</th></tr>
+        </thead>
+        <tbody id="formueBdBody"></tbody>
+      </table>
+      <div class="formue-margin" id="formueMargin" hidden></div>
+      <p class="formue-disclaimer">Forenklet beregning basert på Skatteloven §§ 4-10 til 4-19. Verdsettelsesrabatter for 2026: primærbolig 25 % opptil 10 mill. (70 % over), sekundærbolig 100 %, fritidsbolig 30 %, aksjer/fond 80 %, driftsmidler 70 %, næringseiendom 80 %. Gjeld fordeles forholdsmessig — gjeld knyttet til rabatterte eiendeler reduseres tilsvarende. Bunnfradrag 1 900 000 kr per person. Skattesatser: kommunal 0,35 % + statlig 0,65 % opp til 21,5 mill. (totalt 1,0 %); 0,75 % statlig over (totalt 1,1 %).</p>
     </section>
   </div>
 
-
-
-
-
-  <div class="container howto-wrap">
-    <details class="howto" id="howto-lonnHowto">
-      <summary>
-        <span class="howto-title" data-howto-title="lonnHowto">Slik bruker du Lønnskalkulatoren</span>
-      </summary>
-      <div class="howto-body" data-howto-prefix="lonnHowto"></div>
-    </details>
-  </div>
 </main>
 
 <footer>
@@ -962,20 +943,18 @@
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 
-  // ── Lønn etter skatt: portet calcLonn-logikk ──
+  // ── Formueskatt: portet calcFormue-logikk (shared/core.js:3501) ──
   (function(){
-    var KEY = 'hv-lonn-v1';
-    var STATE = {};
+    var KEY = 'hv-formue-v1';
 
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
     function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
-    function fmtKr1(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' '); }
-    function fmtPct(n){ return n.toFixed(1).replace('.', ',') + ' %'; }
-    function fmtInt(n){ return fmtNb.format(n).replace(/ /g, ' '); }
+    function fmtPct2(n){ return (Math.round(n*100)/100).toFixed(2).replace('.', ',') + ' %'; }
 
-    function parseAmt(s){
-      if(s == null) return 0;
-      var raw = String(s).replace(/[\s ,]/g, '');
+    function parseAmt(id){
+      var el = document.getElementById(id);
+      if(!el) return 0;
+      var raw = String(el.value || '').replace(/[\s ,]/g, '').replace(',', '.');
       var n = parseFloat(raw);
       return isNaN(n) || n < 0 ? 0 : n;
     }
@@ -985,162 +964,133 @@
       });
     }
 
-    // ── Trygdeavgift med opptrapping (port fra shared/core.js calcTrygdeavgift) ──
-    function calcTrygdeavgift(inntekt, rate){
-      var NEDRE = 99650;
-      if(inntekt <= NEDRE) return 0;
-      var ord = inntekt * rate;
-      var opp = (inntekt - NEDRE) * 0.25;
-      return Math.min(ord, opp);
-    }
-
-    // ── Hovedberegning (port fra shared/core.js calcLonn, ~5747) ──
     function compute(){
-      var timelonn = parseAmt(document.getElementById('lonnTimelonn').value);
-      var timerUke = +(document.getElementById('lonnTimer').value) || 0;
-      var ukerAar  = +(document.getElementById('lonnUker').value)  || 47;
-      var alder    = document.getElementById('lonnAlder').value || '18plus';
+      var pri = parseAmt('formue-primaer');
+      var sek = parseAmt('formue-sekundaer');
+      var fritid = parseAmt('formue-fritid');
+      var naering = parseAmt('formue-naering');
+      var aksjer = parseAmt('formue-aksjer');
+      var driftsmidler = parseAmt('formue-driftsmidler');
+      var bank = parseAmt('formue-bank');
+      var gjeld = parseAmt('formue-gjeld');
+      var sel = document.getElementById('formue-personer');
+      var personer = sel ? +sel.value : 1;
 
-      if(timelonn <= 0 || timerUke <= 0){
-        return { hasData:false, timelonn:timelonn, timerUke:timerUke, ukerAar:ukerAar, alder:alder };
-      }
+      // Verdsettelsesrabatter 2026 (Skatteetaten)
+      var priU10 = Math.min(pri, 10000000);
+      var priO10 = Math.max(pri - 10000000, 0);
+      var priV = priU10 * 0.25 + priO10 * 0.70;          // § 4-10(2)
+      var sekV = sek * 1.00;                              // § 4-10(3)
+      var fritidV = fritid * 0.30;                        // § 4-10(6)
+      var naeringV = naering * 0.80;                      // § 4-10(7)
+      var aksV = aksjer * 0.80;                           // § 4-12
+      var driftV = driftsmidler * 0.70;                   // § 4-17
+      var bankV = bank * 1.00;
+      var bruttoFormue = priV + sekV + fritidV + naeringV + aksV + driftV + bankV;
 
-      var bruttoAar = timelonn * timerUke * ukerAar;
-      var bruttoMnd = bruttoAar / 12;
-
-      var FRIKORTGRENSE = 100000;
-      var mf = Math.min(Math.max(bruttoAar * 0.46, 0), 95700);   // Minstefradrag 2026
-      var pf = 114540;                                            // Personfradrag 2026
-      var almInntekt = Math.max(bruttoAar - mf - pf, 0);
-
-      var totalSkatt = 0;
-      var breakdown = [];
-
-      // Trinnskatt 2026
-      var trinnSteps = [
-        [226100,  318300, 0.017, 'Trinnskatt – Trinn 1 (1,7 %)'],
-        [318300,  725050, 0.040, 'Trinnskatt – Trinn 2 (4,0 %)'],
-        [725050,  980100, 0.137, 'Trinnskatt – Trinn 3 (13,7 %)'],
-        [980100, 1467200, 0.168, 'Trinnskatt – Trinn 4 (16,8 %)'],
-        [1467200, Infinity, 0.178, 'Trinnskatt – Trinn 5 (17,8 %)']
-      ];
-      var trinnskatt = 0;
-      trinnSteps.forEach(function(s){
-        var lo=s[0], hi=s[1], rate=s[2];
-        if(bruttoAar > lo){
-          var amt = (Math.min(bruttoAar, hi) - lo) * rate;
-          if(amt > 0){
-            trinnskatt += amt;
-            breakdown.push({ lbl: s[3], val: amt });
-          }
-        }
-      });
-      totalSkatt += trinnskatt;
-
-      // Alminnelig inntektsskatt 22 %
-      var almSkatt = almInntekt * 0.22;
-      if(almSkatt > 0){
-        totalSkatt += almSkatt;
-        breakdown.push({ lbl: 'Alminnelig inntektsskatt (22 %)', val: almSkatt });
-      }
-
-      // Trygdeavgift 7,6 % for 18+, 0 % for under 18
-      var trygdRate = (alder === 'under18') ? 0 : 0.076;
-      var trygd = trygdRate > 0 ? calcTrygdeavgift(bruttoAar, trygdRate) : 0;
-      if(trygd > 0){
-        totalSkatt += trygd;
-        breakdown.push({ lbl: 'Trygdeavgift (' + (trygdRate*100).toFixed(1).replace('.',',') + ' %)', val: trygd });
-      }
-
-      breakdown.push({ lbl: 'Minstefradrag', val: -mf, isFradrag: true });
-      breakdown.push({ lbl: 'Personfradrag', val: -pf, isFradrag: true });
-
-      var feriepenger = bruttoAar * 0.102;
-      var nettoAar = bruttoAar - totalSkatt;
-      var nettoMnd = nettoAar / 12;
-      var nettoTime = (totalSkatt > 0) ? timelonn * (1 - totalSkatt/bruttoAar) : timelonn;
-      var effSats = bruttoAar > 0 ? (totalSkatt/bruttoAar*100) : 0;
-
-      var verdict;
-      if(bruttoAar <= FRIKORTGRENSE || totalSkatt <= 0){
-        verdict = 'Ingen skatt — inntekten er lav nok til at fradragene dekker alt.';
-      } else if(effSats < 15){
-        verdict = 'Lav skattesats — typisk for deltidsjobb ved siden av studier.';
+      // Gjeldsreduksjon (§ 4-19): forholdsmessig på rabatterte eiendeler
+      var markedTotal = pri + sek + fritid + naering + aksjer + driftsmidler + bank;
+      var gjeldJustert;
+      if(markedTotal > 0){
+        var gjeldAks = gjeld * (aksjer / markedTotal);
+        var gjeldDrift = gjeld * (driftsmidler / markedTotal);
+        var gjeldNaer = gjeld * (naering / markedTotal);
+        var gjeldRest = gjeld - gjeldAks - gjeldDrift - gjeldNaer;
+        gjeldJustert = gjeldRest + (gjeldAks * 0.80) + (gjeldDrift * 0.70) + (gjeldNaer * 0.80);
       } else {
-        verdict = 'Normal skattesats for inntektsnivået ditt.';
+        gjeldJustert = gjeld;
       }
+      var nettoFormue = bruttoFormue - gjeldJustert;
+
+      // Bunnfradrag 2026: 1 900 000 kr per person
+      var bunnfradrag = 1900000 * personer;
+      var skattepliktig = Math.max(nettoFormue - bunnfradrag, 0);
+
+      // Skattesatser 2026
+      var kommunal = skattepliktig * 0.0035;
+      var statGrense = (21500000 - 1900000) * personer;
+      var statBase1 = Math.min(skattepliktig, Math.max(statGrense, 0));
+      var statBase2 = Math.max(skattepliktig - Math.max(statGrense, 0), 0);
+      var stat = statBase1 * 0.0065 + statBase2 * 0.0075;
+      var totalSkatt = kommunal + stat;
+      var effSats = markedTotal > 0 ? (totalSkatt / markedTotal * 100) : 0;
 
       return {
-        hasData: true,
-        timelonn: timelonn, timerUke: timerUke, ukerAar: ukerAar, alder: alder,
-        bruttoAar: bruttoAar, bruttoMnd: bruttoMnd,
-        totalSkatt: totalSkatt, almInntekt: almInntekt, trinnskatt: trinnskatt,
-        almSkatt: almSkatt, trygd: trygd, mf: mf, pf: pf,
-        nettoAar: nettoAar, nettoMnd: nettoMnd, nettoTime: nettoTime,
-        feriepenger: feriepenger, effSats: effSats,
-        verdict: verdict, breakdown: breakdown
+        pri: pri, sek: sek, fritid: fritid, naering: naering,
+        aksjer: aksjer, driftsmidler: driftsmidler, bank: bank, gjeld: gjeld,
+        personer: personer,
+        priV: priV, sekV: sekV, fritidV: fritidV, naeringV: naeringV,
+        aksV: aksV, driftV: driftV, bankV: bankV,
+        bruttoFormue: bruttoFormue, gjeldJustert: gjeldJustert, nettoFormue: nettoFormue,
+        bunnfradrag: bunnfradrag, skattepliktig: skattepliktig,
+        totalSkatt: totalSkatt, effSats: effSats, markedTotal: markedTotal
       };
     }
 
     function recalc(){
       var d = compute();
-      STATE = d;
+      var setText = function(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; };
 
-      var setOutputText = function(id, val){ var el=document.getElementById(id); if(el) el.textContent = val; };
+      var underBunn = d.skattepliktig <= 0;
+      var effStr = fmtPct2(d.effSats);
 
-      if(!d.hasData){
-        setOutputText('rNettoMnd', '–');
-        setOutputText('rVerdict', 'Skriv inn timelønn og timer for å se utbetalingen');
-        setOutputText('rBruttoAar','–'); setOutputText('rBruttoMnd','–');
-        setOutputText('rSkattAar','–'); setOutputText('rSkattMnd','–');
-        setOutputText('rEffektiv','–'); setOutputText('rFeriepenger','–');
-        setOutputText('rNettoAar','–'); setOutputText('rNettoTime','–');
-        setOutputText('hStatNetto','–'); setOutputText('hStatEffektiv','–');
-        var bd = document.getElementById('lonnBreakdown');
-        bd.classList.add('empty');
-        document.getElementById('lonnBdTable').innerHTML = '';
-        document.getElementById('lonnCsvBtn').disabled = true;
-        persist();
-        return;
+      setText('rFormueVal', underBunn ? '0 kr — ingen formueskatt' : fmtKr(d.totalSkatt));
+      setText('rFormueSub', underBunn ? 'Netto formue er under bunnfradraget' : ('Effektiv sats: ' + effStr + ' av markedsverdi'));
+      setText('rBruttoFormue', fmtKr(d.bruttoFormue));
+      setText('rGjeldJustert', '− ' + fmtKr(d.gjeldJustert));
+      setText('rNettoFormue', fmtKr(d.nettoFormue));
+      setText('rBunnfradrag', '− ' + fmtKr(d.bunnfradrag) + ' (' + d.personer + '×' + fmtKr(1900000) + ')');
+      setText('rSkattepliktig', fmtKr(d.skattepliktig));
+      setText('rEffSats', effStr);
+
+      setText('hStatSkatt', underBunn ? '0 kr' : fmtKr(d.totalSkatt));
+      setText('hStatEffektiv', effStr);
+
+      // Breakdown
+      var bdBody = document.getElementById('formueBdBody');
+      var bdSection = document.getElementById('formueBreakdown');
+      var marginEl = document.getElementById('formueMargin');
+      var rows = '';
+      function addRow(label, mv, sv){
+        rows += '<tr><td class="l">' + escapeHtml(label) + '</td><td class="mv">' + fmtKr(mv) + '</td><td class="sv">' + fmtKr(sv) + '</td></tr>';
+      }
+      var hasAny = false;
+      if(d.pri > 0){ addRow('Primærbolig', d.pri, d.priV); hasAny = true; }
+      if(d.sek > 0){ addRow('Sekundærbolig', d.sek, d.sekV); hasAny = true; }
+      if(d.fritid > 0){ addRow('Fritidsbolig', d.fritid, d.fritidV); hasAny = true; }
+      if(d.naering > 0){ addRow('Næringseiendom', d.naering, d.naeringV); hasAny = true; }
+      if(d.aksjer > 0){ addRow('Aksjer/fond', d.aksjer, d.aksV); hasAny = true; }
+      if(d.driftsmidler > 0){ addRow('Driftsmidler', d.driftsmidler, d.driftV); hasAny = true; }
+      if(d.bank > 0){ addRow('Bank', d.bank, d.bankV); hasAny = true; }
+
+      if(hasAny){
+        bdBody.innerHTML = rows;
+        bdSection.classList.remove('empty');
+      } else {
+        bdBody.innerHTML = '';
+        bdSection.classList.add('empty');
       }
 
-      setOutputText('rNettoMnd', fmtKr(d.nettoMnd));
-      setOutputText('rVerdict', d.verdict);
-      setOutputText('rBruttoAar', fmtKr(d.bruttoAar));
-      setOutputText('rBruttoMnd', fmtKr(d.bruttoMnd));
-      setOutputText('rSkattAar', fmtKr(d.totalSkatt));
-      setOutputText('rSkattMnd', fmtKr(d.totalSkatt/12));
-      setOutputText('rEffektiv', fmtPct(d.effSats));
-      setOutputText('rFeriepenger', fmtKr(d.feriepenger));
-      setOutputText('rNettoAar', fmtKr(d.nettoAar));
-      setOutputText('rNettoTime', fmtKr(d.nettoTime));
-      setOutputText('hStatNetto', fmtKr(d.nettoMnd));
-      setOutputText('hStatEffektiv', fmtPct(d.effSats));
-
-      // Breakdown-tabell
-      var bdTable = document.getElementById('lonnBdTable');
-      var rows = '';
-      d.breakdown.forEach(function(item){
-        var cls = item.isFradrag ? ' class="fradrag"' : '';
-        var v = item.isFradrag ? (fmtKr(Math.abs(item.val)) + ' ↓') : fmtKr(item.val);
-        rows += '<tr' + cls + '><td>' + escapeHtml(item.lbl) + '</td><td class="v">' + v + '</td></tr>';
-      });
-      rows += '<tr class="total"><td>Total skatt</td><td class="v">' + fmtKr(d.totalSkatt) + '</td></tr>';
-      bdTable.innerHTML = rows;
-      document.getElementById('lonnBreakdown').classList.remove('empty');
-      document.getElementById('lonnCsvBtn').disabled = false;
+      if(underBunn && hasAny){
+        var mangler = d.bunnfradrag - d.nettoFormue;
+        marginEl.innerHTML = 'Formueskatt inntrer når netto skattemessig formue overstiger <b>' + fmtKr(d.bunnfradrag) + '</b>. Du har <b>' + fmtKr(Math.max(mangler, 0)) + '</b> i margin før formueskatt.';
+        marginEl.hidden = false;
+      } else {
+        marginEl.hidden = true;
+        marginEl.innerHTML = '';
+      }
 
       persist();
     }
 
     function persist(){
       try {
-        var snap = {
-          timelonn: document.getElementById('lonnTimelonn').value,
-          timer:    document.getElementById('lonnTimer').value,
-          uker:     document.getElementById('lonnUker').value,
-          alder:    document.getElementById('lonnAlder').value
-        };
+        var ids = ['formue-primaer','formue-sekundaer','formue-fritid','formue-naering','formue-aksjer','formue-driftsmidler','formue-bank','formue-gjeld','formue-personer'];
+        var snap = {};
+        ids.forEach(function(id){
+          var el = document.getElementById(id);
+          if(el) snap[id] = el.value;
+        });
         localStorage.setItem(KEY, JSON.stringify(snap));
       } catch(e){}
     }
@@ -1149,77 +1099,29 @@
         var raw = localStorage.getItem(KEY);
         if(!raw) return;
         var s = JSON.parse(raw);
-        if(s.timelonn != null) document.getElementById('lonnTimelonn').value = s.timelonn;
-        if(s.timer != null)    document.getElementById('lonnTimer').value = s.timer;
-        if(s.uker != null)     document.getElementById('lonnUker').value = s.uker;
-        if(s.alder != null)    document.getElementById('lonnAlder').value = s.alder;
+        Object.keys(s).forEach(function(id){
+          var el = document.getElementById(id);
+          if(el && s[id] != null) el.value = s[id];
+        });
       } catch(e){}
     }
 
-    function downloadCsv(){
-      var d = STATE;
-      if(!d || !d.hasData) return;
-      var sep = ';';
-      var rows = [];
-      var today = new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
-      rows.push(['Lønn etter skatt', today]);
-      rows.push([]);
-      rows.push(['INNTEKT (input)', '']);
-      rows.push(['Timelønn (kr)', d.timelonn]);
-      rows.push(['Timer per uke', d.timerUke]);
-      rows.push(['Arbeidsuker per år', d.ukerAar]);
-      rows.push(['Alder', d.alder === 'under18' ? 'Under 18 år' : '18 år eller eldre']);
-      rows.push([]);
-      rows.push(['BRUTTOLØNN', '']);
-      rows.push(['Bruttolønn per år', Math.round(d.bruttoAar)]);
-      rows.push(['Bruttolønn per måned', Math.round(d.bruttoMnd)]);
-      rows.push([]);
-      rows.push(['SKATTEBEREGNING', '']);
-      d.breakdown.forEach(function(it){
-        var v = it.isFradrag ? '-' + Math.abs(Math.round(it.val)) : Math.round(it.val);
-        rows.push([it.lbl, v]);
-      });
-      rows.push(['Total skatt', Math.round(d.totalSkatt)]);
-      rows.push([]);
-      rows.push(['UTBETALT', '']);
-      rows.push(['Netto per år', Math.round(d.nettoAar)]);
-      rows.push(['Netto per måned', Math.round(d.nettoMnd)]);
-      rows.push(['Netto per time', Math.round(d.nettoTime)]);
-      rows.push(['Effektiv skattesats', d.effSats.toFixed(1).replace('.', ',') + ' %']);
-      rows.push(['Feriepenger (10,2 %)', Math.round(d.feriepenger)]);
-      rows.push([]);
-      rows.push(['Generert av Hverdagsverktøy']);
-
-      var csv = rows.map(function(r){
-        return r.map(function(c){
-          var s = String(c == null ? '' : c);
-          return (s.indexOf(sep) >= 0 || s.indexOf('"') >= 0) ? '"' + s.replace(/"/g, '""') + '"' : s;
-        }).join(sep);
-      }).join('\r\n');
-
-      var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url; a.download = 'lonn-etter-skatt.csv';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
     // ── Wire events ──
-    ['lonnTimelonn', 'lonnTimer', 'lonnUker'].forEach(function(id){
+    var inputIds = ['formue-primaer','formue-sekundaer','formue-fritid','formue-naering','formue-aksjer','formue-driftsmidler','formue-bank','formue-gjeld'];
+    inputIds.forEach(function(id){
       var el = document.getElementById(id);
       if(el) el.addEventListener('input', recalc);
     });
-    document.getElementById('lonnAlder').addEventListener('change', recalc);
+    var sel = document.getElementById('formue-personer');
+    if(sel) sel.addEventListener('change', recalc);
 
-    document.getElementById('lonnCalcBtn').addEventListener('click', function(){
+    document.getElementById('formueCalcBtn').addEventListener('click', function(){
       recalc();
-      var bd = document.getElementById('lonnBreakdown');
+      var bd = document.getElementById('formueBreakdown');
       if(bd && !bd.classList.contains('empty')){
         bd.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
-    document.getElementById('lonnCsvBtn').addEventListener('click', downloadCsv);
 
     // ── Init ──
     restore();
@@ -1236,94 +1138,6 @@
       navigator.serviceWorker.register('/sw.js').catch(function(){});
     });
   }
-</script>
-
-
-
-
-<script>
-  // ── T2 site-shell wiring (howto render + ? toggle + ⛶ focus) ──
-  (function(){
-    function renderHowto(){
-      var bodies = document.querySelectorAll('[data-howto-prefix]');
-      if(!bodies.length) return;
-      var r = (typeof R === 'function') ? R() : {};
-      bodies.forEach(function(body){
-        var prefix = body.getAttribute('data-howto-prefix'); // e.g. "lonnHowto"
-        var rows = r && r[prefix + 'Rows'];
-        var html = '';
-        if(rows && rows.length){
-          // Rows-array style (lonnHowtoRows, aboHowtoRows, ...)
-          for(var i=0;i<rows.length;i++){
-            var label = rows[i][0]||'';
-            var desc  = rows[i][1]||'';
-            html += '<div class="howto-row"><strong>'+label+'</strong><span>'+desc+'</span></div>';
-          }
-        } else {
-          // Paragraph style (famHowtoP1..P4, sykHowtoLead/P1..PN/Outro, ...)
-          if(r[prefix + 'Lead']) html += '<p>' + r[prefix + 'Lead'] + '</p>';
-          for(var j=1; j<=10; j++){
-            var p = r[prefix + 'P' + j];
-            if(p) html += '<p>' + p + '</p>';
-          }
-          if(r[prefix + 'Helper']) html += '<p class="howto-helper"><em>' + r[prefix + 'Helper'] + '</em></p>';
-          if(r[prefix + 'Outro']) html += '<p>' + r[prefix + 'Outro'] + '</p>';
-        }
-        if(html) body.innerHTML = html;
-      });
-      // Update title text from lang
-      var titles = document.querySelectorAll('[data-howto-title]');
-      titles.forEach(function(t){
-        var prefix = t.getAttribute('data-howto-title');
-        var titleKey = prefix + 'Title';
-        if(r && r[titleKey]) t.textContent = r[titleKey];
-      });
-    }
-    function init(){
-      // ? toggles howto details
-      document.querySelectorAll('.calc-help-btn').forEach(function(b){
-        b.addEventListener('click', function(){
-          var d = document.querySelector('details.howto');
-          if(!d) return;
-          d.open = !d.open;
-          if(d.open) d.scrollIntoView({behavior:'smooth', block:'start'});
-        });
-      });
-      // ⛶ toggles focus mode
-      document.querySelectorAll('.focus-card-btn').forEach(function(b){
-        b.addEventListener('click', function(){
-          document.body.classList.toggle('focus-mode');
-        });
-      });
-      renderHowto();
-    }
-    // Poll-render: lang is loaded async by core.js after DOMContentLoaded.
-    // Keep retrying every 80 ms until R() returns content for the prefix, max ~3 s.
-    function pollRender(){
-      var bodies = document.querySelectorAll('[data-howto-prefix]');
-      if(!bodies.length) return;
-      var attempts = 0;
-      var max = 38; // ~3 s
-      var t = setInterval(function(){
-        attempts++;
-        var r = (typeof R === 'function') ? R() : {};
-        var ready = false;
-        bodies.forEach(function(b){
-          var p = b.getAttribute('data-howto-prefix');
-          if(r[p+'Rows'] || r[p+'Lead'] || r[p+'P1']) ready = true;
-        });
-        if(ready){
-          renderHowto();
-          clearInterval(t);
-        } else if(attempts >= max){
-          clearInterval(t);
-        }
-      }, 80);
-    }
-    if(document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
-    } else { init(); pollRender(); }
-  })();
 </script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
 </body>

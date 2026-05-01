@@ -2,8 +2,8 @@
 <html lang="no" data-theme="carbon">
 <head>
 <meta charset="utf-8">
-<title>Bolig vs leie — hva lønner seg over tid? · Hverdagsverktøy</title>
-<meta name="description" content="Sammenlign total kostnad over X år: eie (rente, vedlikehold, skattefradrag, formue) vs leie (akkumulert leie + alternativ-avkastning på sparepengene). Norske 2026-tall. Alt skjer lokalt i nettleseren.">
+<title>Sykepenger — Personlig økonomi · Hverdagsverktøy</title>
+<meta name="description" content="Hva du faktisk får hvis du blir langtidssyk — og hvor NAV stopper. 6G-taket (≈ 781 000 kr/år i 2026), egenmelding, gradert sykmelding og omsorgspenger. Alt skjer lokalt i nettleseren.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
@@ -44,10 +44,6 @@
     --kbd-bg: rgba(255,255,255,.04);
     --flag-shadow: rgba(0,0,0,.4);
   }
-
-  .skip{position:absolute;top:-100px;left:8px;background:var(--accent);color:var(--bg);padding:8px 14px;border-radius:4px;font:600 13px/1 var(--font-sans);text-decoration:none;z-index:1000;transition:top .2s var(--ease);}
-  .skip:focus{top:8px;outline:2px solid var(--ink);outline-offset:2px}
-  *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
 
   [data-theme="frost"]{
     --ink:#1a1714; --ink2:#5e574e; --ink3:#8a8378; --ink4:#b5ae9f;
@@ -284,6 +280,11 @@
     font-variant-numeric:tabular-nums lining-nums;
     white-space:nowrap;
   }
+  .page-stat .v .u{
+    font-family:var(--font-sans);font-weight:500;
+    font-size:13px;color:var(--ink3);letter-spacing:0;
+    margin-left:4px;
+  }
 
   footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
   .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
@@ -328,39 +329,40 @@
   }
   .back-pill .back-stack{display:flex;flex-direction:column;gap:3px}
 
-  .calc-grid{
+  .skip{position:absolute;top:-100px;left:8px;background:var(--accent);color:var(--bg);padding:8px 14px;border-radius:4px;font:600 13px/1 var(--font-sans);text-decoration:none;z-index:1000;transition:top .2s var(--ease);}
+  .skip:focus{top:8px;outline:2px solid var(--ink);outline-offset:2px}
+  *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+
+  /* ── SYK GRID ────────────────────────────────────── */
+  .syk-grid{
     display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;
     padding:8px 0 56px;
   }
-  .calc-form{display:flex;flex-direction:column;gap:24px}
-  .calc-section{
+  .syk-form{display:flex;flex-direction:column;gap:24px}
+  .syk-section{
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
     padding:18px 22px 20px;
   }
-  .calc-section-head{
+  .syk-section-head{
     display:flex;align-items:baseline;justify-content:space-between;gap:16px;
     padding-bottom:12px;margin-bottom:14px;
     border-bottom:1px solid var(--line);
   }
-  .calc-section-head h2{
+  .syk-section-head h2{
     font-family:var(--font-sans);font-size:11px;font-weight:600;
     letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
     margin:0;
   }
-  .calc-section-head .hint{
+  .syk-section-head .hint{
     font-size:11.5px;color:var(--ink3);font-style:italic;
   }
 
-  .calc-fields{
-    display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;
-  }
-  .fg{display:flex;flex-direction:column;gap:6px}
-  .fg.full{grid-column:1 / -1}
-  .fg label.flbl{
+  .syk-fg{display:flex;flex-direction:column;gap:6px}
+  .syk-fg label{
     font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
     color:var(--ink3);
   }
-  .fg input{
+  .syk-fg input{
     width:100%;background:var(--bg);
     border:1px solid var(--line-2);border-radius:5px;
     padding:11px 12px;
@@ -369,24 +371,51 @@
     font-variant-numeric:tabular-nums;
     transition:border-color .2s var(--ease), background .2s var(--ease);
   }
-  .fg input:focus{
+  .syk-fg input:focus{
     border-color:var(--line-warm);background:var(--surface-2);
   }
-  .fg .hint-line{
-    font-size:11.5px;color:var(--ink3);line-height:1.55;margin-top:2px;font-style:italic;
+  .syk-fg .hint-row{
+    font-size:11.5px;color:var(--ink3);line-height:1.55;margin-top:4px;font-style:italic;
   }
 
-  .info-box{
-    margin:0;padding:11px 14px;
+  /* ── HOWTO (3 faser-guide) ───────────────────────── */
+  .syk-howto{
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:22px 24px 24px;
+  }
+  .syk-howto h3{
+    font-family:var(--font-sans);font-size:11px;font-weight:600;
+    letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
+    margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--line);
+  }
+  .syk-howto-body{font-size:13.5px;color:var(--ink2);line-height:1.7}
+  .syk-howto-body strong{color:var(--ink)}
+  .syk-howto-body em{font-style:italic;color:var(--ink2)}
+  .syk-howto-body p{margin:0 0 14px}
+  .syk-howto-body p:last-child{margin-bottom:0}
+  .syk-howto-body ul{margin:0 0 14px;padding-left:20px}
+  .syk-howto-body ul li{margin-bottom:4px}
+  .syk-howto-body h4{
+    font-family:var(--font-sans);font-size:13px;font-weight:600;
+    color:var(--ink);margin:18px 0 8px;letter-spacing:.1px;
+  }
+  .syk-callout{
     background:var(--surface-2);
     border:1px solid var(--line);
     border-left:2px solid var(--accent);
     border-radius:5px;
-    font-size:12.5px;color:var(--ink2);line-height:1.55;
+    padding:12px 16px;
+    margin:14px 0;
+    font-size:12.5px;line-height:1.6;color:var(--ink2);
   }
-  .info-box a{color:var(--accent);text-decoration:underline;font-weight:600}
+  .syk-callout-title{
+    display:block;text-align:left;
+    font:600 10px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--ink3);margin-bottom:8px;
+  }
 
-  .calc-result{
+  /* ── RESULT (sticky right) ───────────────────────── */
+  .syk-result{
     position:sticky;top:124px;
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
     padding:24px 22px 20px;
@@ -404,7 +433,7 @@
   .res-headline .r-val{
     display:block;
     font-family:var(--font-serif);font-weight:500;
-    font-size:30px;line-height:1.1;letter-spacing:-.5px;color:var(--ink);
+    font-size:38px;line-height:1;letter-spacing:-.8px;color:var(--ink);
     font-variant-numeric:tabular-nums lining-nums;
   }
   .res-headline .r-verdict{
@@ -423,61 +452,64 @@
   .res-stat .v{
     font-family:var(--font-serif);font-weight:500;font-size:17px;
     color:var(--ink);font-variant-numeric:tabular-nums;
+    text-align:right;
   }
-  .res-tip{
-    margin-top:6px;padding:11px 14px;
-    background:var(--surface-2);border:1px solid var(--line);border-left:2px solid var(--accent);
-    border-radius:5px;
-    font-size:12px;color:var(--ink2);line-height:1.6;
+  .res-disclaimer{
+    margin-top:6px;font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;
   }
 
   @media (max-width: 880px){
-    .calc-grid{grid-template-columns:1fr}
-    .calc-result{position:static;top:auto}
+    .syk-grid{grid-template-columns:1fr}
+    .syk-result{position:static;top:auto}
   }
   @media (max-width: 560px){
-    .calc-section{padding:16px 16px 18px}
-    .calc-result{padding:20px 18px 18px}
-    .calc-fields{grid-template-columns:1fr;gap:12px}
+    .syk-section{padding:16px 16px 18px}
+    .syk-howto{padding:18px 18px 20px}
+    .syk-result{padding:20px 18px 18px}
   }
 
-  /* T3: site-shell — help-btn + focus-btn + howto-details + full footer */
-  .section-head-actions{display:inline-flex;gap:6px;align-items:center;margin-left:auto;}
+  /* ── T2 site-shell additions (search anchor / footer links / focus / help / howto) ── */
+  #site-search-anchor{display:none}
+  .foot{align-items:center}
+  .foot-links{display:inline-flex;align-items:center;gap:10px;font-size:12.5px}
+  .foot-links a{color:var(--ink3);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}
+  .foot-links a:hover{color:var(--ink);border-bottom-color:var(--line-2)}
+  .foot-sep{color:var(--ink4)}
+  .page-hero-actions{display:flex;gap:8px;margin-top:14px}
   .calc-help-btn,.focus-card-btn{
-    background:transparent;border:1px solid var(--line-2);color:var(--ink3);
-    width:26px;height:26px;border-radius:50%;cursor:pointer;padding:0;
+    width:32px;height:32px;border:1px solid var(--line);background:transparent;color:var(--ink2);
+    border-radius:50%;font-size:14px;line-height:1;cursor:pointer;
     display:inline-flex;align-items:center;justify-content:center;
-    font:600 13px/1 var(--font-sans);
-    transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease);
+    transition:color .18s ease,border-color .18s ease;
   }
-  @media (hover: hover){
-    .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line);background:var(--hover-bg);}
+  @media(hover:hover){
+    .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line-2)}
   }
-  body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer,body.focus-mode .back-pill-wrap{display:none;}
-  body.focus-mode .page-hero{padding-top:24px;}
-  details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;}
-  details.howto>summary{
-    list-style:none;cursor:pointer;padding:13px 18px;
-    font:600 11px/1.4 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink2);
-    display:flex;align-items:center;justify-content:space-between;gap:12px;
+  .calc-help-btn:focus-visible,.focus-card-btn:focus-visible{outline:1px solid var(--accent);outline-offset:2px}
+  body.focus-mode > .nav-wrap,
+  body.focus-mode > .tabs-wrap,
+  body.focus-mode > footer{display:none}
+  body.focus-mode .back-pill-wrap{display:none}
+  .howto-wrap{margin:32px 0}
+  details.howto{
+    border:1px solid var(--line);border-radius:10px;padding:18px 22px;background:var(--surface);
   }
-  details.howto>summary::-webkit-details-marker{display:none;}
-  details.howto>summary::after{content:'';width:7px;height:7px;border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);transform:rotate(45deg);transition:transform .15s var(--ease);}
-  details.howto[open]>summary::after{transform:rotate(225deg);}
-  details.howto .howto-body{padding:0 18px 14px;}
-  details.howto .howto-row{padding:9px 0;border-top:1px solid var(--line);}
-  details.howto .howto-row:first-child{border-top:none;}
-  details.howto .howto-row .h-title{font-weight:600;font-size:13px;color:var(--ink);}
-  details.howto .howto-row .h-desc{font-size:12px;color:var(--ink2);margin-top:3px;line-height:1.6;}
-  .site-footer-full{margin-top:60px;border-top:1px solid var(--line);padding:36px 0 32px;background:var(--surface);}
-  .site-footer-full .container{display:flex;flex-direction:column;gap:8px;}
-  .site-footer-full .footer-inner{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:8px;}
-  .site-footer-full .footer-logo{font:600 14px/1 var(--font-sans);color:var(--ink);}
-  .site-footer-full .footer-links{display:flex;gap:18px;}
-  .site-footer-full .footer-links a{font:500 13px/1 var(--font-sans);color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
-  @media (hover: hover){.site-footer-full .footer-links a:hover{color:var(--ink);}}
-  .site-footer-full .footer-author{font-size:12px;color:var(--ink3);}
-  .site-footer-full .footer-copy{font-size:12px;color:var(--ink3);line-height:1.6;}
+  details.howto > summary{
+    cursor:pointer;font-weight:500;color:var(--ink);list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+  }
+  details.howto > summary::-webkit-details-marker{display:none}
+  details.howto > summary::after{
+    content:'';width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+    transform:rotate(45deg);transition:transform .2s ease;flex:0 0 auto
+  }
+  details.howto[open] > summary::after{transform:rotate(-135deg)}
+  details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .howto-body{color:var(--ink2);font-size:14.5px;line-height:1.55}
+  .howto-row{padding:10px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:240px 1fr;gap:24px}
+  .howto-row:first-child{border-top:0;padding-top:2px}
+  .howto-row > strong{color:var(--ink);font-weight:500}
+  @media(max-width:640px){.howto-row{grid-template-columns:1fr;gap:4px}.howto-row > strong{margin-bottom:2px}}
 </style>
 </head>
 <body>
@@ -549,18 +581,18 @@
         </button>
         <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
           <h5>Hovedspråk</h5>
-          <a href="/boliglan/" class="current" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
-          <a href="/en/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
+          <a href="/personlig/" class="current" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
+          <a href="/en/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
           <h5>Språk i Norge</h5>
-          <a href="/pl/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
-          <a href="/uk/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
-          <a href="/ar/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
-          <a href="/lt/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
-          <a href="/so/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
-          <a href="/ti/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
+          <a href="/pl/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
+          <a href="/uk/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
+          <a href="/ar/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
+          <a href="/lt/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
+          <a href="/so/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
+          <a href="/ti/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
           <h5>Internasjonalt</h5>
-          <a href="/zh/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
-          <a href="/fr/boliglan/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
+          <a href="/zh/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
+          <a href="/fr/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
         </div>
       </div>
     </nav>
@@ -570,11 +602,11 @@
 <div class="tabs-wrap" role="tablist" aria-label="Kategorier">
   <div class="container">
     <div class="tabs">
-      <a href="/personlig/" class="tab" role="tab" aria-selected="false">
+      <a href="/personlig/" class="tab" role="tab" aria-selected="true">
         <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
         Personlig økonomi
       </a>
-      <a href="/boliglan/" class="tab" role="tab" aria-selected="true">
+      <a href="/boliglan/" class="tab" role="tab" aria-selected="false">
         <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg>
         Boliglån
       </a>
@@ -610,165 +642,153 @@
 
   <div class="container">
     <div class="back-pill-wrap">
-      <a href="/boliglan/index-new.html" class="back-pill" aria-label="Tilbake til Boliglån">
+      <a href="/personlig/" class="back-pill" aria-label="Tilbake til Personlig økonomi">
         <span class="arrow-back" aria-hidden="true">
           <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/><line x1="4" y1="7" x2="12" y2="7"/></svg>
         </span>
         <span class="back-stack">
-          <span class="back-eyebrow">Boliglån</span>
+          <span class="back-eyebrow">Personlig økonomi</span>
           <span class="back-label">Tilbake til alle verktøy</span>
         </span>
       </a>
     </div>
   </div>
 
-  <section class="page-hero" data-screen-label="Bvl Hero">
+  <section class="page-hero" data-screen-label="Sykepenger Hero">
     <div class="container">
       <div>
         <div class="page-eyebrow">
-          <a href="/">Forsiden</a>
+          <a href="/">Hverdagsverktøy</a>
           <span class="arrow">/</span>
-          <a href="/boliglan/index-new.html">Boliglån</a>
+          <a href="/personlig/">Personlig økonomi</a>
           <span class="arrow">/</span>
-          <span class="current">Bolig vs leie</span>
+          <span class="current">Sykepenger</span>
         </div>
-        <h1 class="page-title" data-i18n-html="bvlTitleNew"><em>Bolig</em> vs leie</h1>
-        <p class="page-lead" data-i18n="bvlSubtitle">Sammenlign total kostnad over X år: eie (rente, vedlikehold, skattefradrag, formuesoppbygging) vs leie (akkumulert leie + alternativ-avkastning på sparepengene). Norske 2026-tall. Alt skjer lokalt i nettleseren.</p>
+        <h1 class="page-title"><em data-i18n="sykTitle">Sykepenger</em></h1>
+        <p class="page-lead" data-i18n="sykLead">Hva du faktisk får hvis du blir langtidssyk — og hvor NAV stopper. Tre faser, 6G-taket (≈ 781 000 kr/år i 2026), egenmelding og omsorgspenger. Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
+      </div>
+      <div class="page-hero-actions">
+        <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
+        <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l" data-i18n="bvlHStatVinner">Hva lønner seg</span><span class="v" id="hStatVinner">–</span></div>
-        <div class="page-stat"><span class="l" data-i18n="bvlRFormueLbl">Formue ved eie</span><span class="v" id="hStatFormue">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="sykStatMnd">Per måned fra NAV</span><span class="v" id="hStatMnd">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="sykStatGrunn">Beregningsgrunnlag</span><span class="v" id="hStatGrunn">–</span></div>
       </div>
     </div>
   </section>
 
   <div class="container">
-    <div class="calc-grid">
+    <div class="syk-grid">
 
-      <div class="calc-form">
+      <div class="syk-form">
 
-        <details class="howto" id="bvl-howto">
-          <summary data-i18n="bvlHowtoSummary">Slik bruker du Bolig vs leie</summary>
-          <div class="howto-body">
-            <div class="howto-row"><div class="h-title">Kjøpspris</div><div class="h-desc">Hva boligen koster å kjøpe. Pluss egenkapital = boligbudsjett.</div></div>
-            <div class="howto-row"><div class="h-title">Egenkapital</div><div class="h-desc">Andel du betaler selv. Utlånsforskriften krever min 10%.</div></div>
-            <div class="howto-row"><div class="h-title">Lånerente</div><div class="h-desc">Gjennomsnittlig rente over låneperioden. Bruk dagens rente hvis du er usikker.</div></div>
-            <div class="howto-row"><div class="h-title">Månedlig leie</div><div class="h-desc">Hva en tilsvarende bolig vil koste å leie i dag.</div></div>
-            <div class="howto-row"><div class="h-title">Felleskostnader</div><div class="h-desc">Månedlig felleskostnad for blokk/sameie. Leiligheter har typisk 2-5 000 kr/mnd.</div></div>
-            <div class="howto-row"><div class="h-title">Vedlikehold</div><div class="h-desc">Årlig vedlikehold som andel av boligverdi. Typisk 1% (norsk standard).</div></div>
-            <div class="howto-row"><div class="h-title">Boligprisvekst</div><div class="h-desc">Forventet årlig vekst. Historisk snitt i Norge 1990-2024 er ~5%/år, men svinger.</div></div>
-            <div class="howto-row"><div class="h-title">Alt. avkastning</div><div class="h-desc">Hva EK ville gitt i fond hvis du leide. Indeksfond snitt ~6-7%/år.</div></div>
-            <div class="howto-row"><div class="h-title">Break-even</div><div class="h-desc">Omtrent når eie blir billigere enn leie.</div></div>
-            <div class="howto-row"><div class="h-title">Kort vs lang horisont</div><div class="h-desc">Under 5 år taper eie ofte (transaksjonskostnader). Over 15-20 år vinner eie nesten alltid.</div></div>
-          </div>
-        </details>
-
-        <section class="calc-section" aria-labelledby="bvlInputHdr">
-          <header class="calc-section-head">
-            <h2 id="bvlInputHdr" data-i18n="bvlSectionInput">Bolig og lån</h2>
-            <span class="hint" data-i18n="bvlSectionHint">2026-tall</span>
-            <div class="section-head-actions">
-              <button type="button" class="calc-help-btn" data-target="bvl-howto" aria-label="Vis veiledning" title="Vis veiledning">?</button>
-              <button type="button" class="focus-card-btn" aria-label="Fokus" title="Fokus">⛶</button>
-            </div>
+        <section class="syk-section" aria-labelledby="sykInputHdr">
+          <header class="syk-section-head">
+            <h2 id="sykInputHdr" data-i18n="sykSecInput">Inntekt</h2>
+            <span class="hint" data-i18n="sykSecHint">2026-satser</span>
           </header>
-          <div class="calc-fields">
-            <div class="fg full">
-              <label class="flbl" for="bvl-pris" data-i18n="bvlLPris">Kjøpspris bolig (kr)</label>
-              <input type="text" id="bvl-pris" value="4 000 000" inputmode="numeric" autocomplete="off">
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bvl-ek" data-i18n="bvlLEk">Egenkapital (kr)</label>
-              <input type="text" id="bvl-ek" value="500 000" inputmode="numeric" autocomplete="off">
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bvl-rente" data-i18n="bvlLRente">Lånerente (%)</label>
-              <input type="number" id="bvl-rente" value="5.5" step="0.1">
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bvl-felleskost" data-i18n="bvlLFelleskostShort">Felleskost/mnd (kr)</label>
-              <input type="text" id="bvl-felleskost" value="3 500" inputmode="numeric" autocomplete="off">
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bvl-vedlikehold" data-i18n="bvlLVedlikehold">Vedlikehold (% av verdi/år)</label>
-              <input type="number" id="bvl-vedlikehold" value="1.0" step="0.1">
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bvl-aar" data-i18n="bvlLAar">Tidsperiode (år)</label>
-              <input type="number" id="bvl-aar" value="10" min="1" max="30">
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bvl-lopetid" data-i18n="bvlLLopetidShort">Nedbetalingstid (år)</label>
-              <input type="number" id="bvl-lopetid" value="25" min="10" max="30">
-            </div>
+          <div class="syk-fg">
+            <label for="syk-lonn" data-i18n="sykLblLonn">Årslønn (brutto, kr)</label>
+            <input id="syk-lonn" type="text" inputmode="numeric" value="700 000" autocomplete="off">
+            <p class="hint-row" data-i18n="sykHintRow">Arbeidsgiver dekker de første 16 dagene på full lønn. Sykepenger fra NAV varer inntil 52 uker. 1G = 130 160 kr i 2026, så 6G-taket er 780 960 kr.</p>
           </div>
         </section>
 
-        <section class="calc-section" aria-labelledby="bvlLeieHdr">
-          <header class="calc-section-head">
-            <h2 id="bvlLeieHdr" data-i18n="bvlSectionLeie">Leie og avkastning</h2>
-            <span class="hint" data-i18n="bvlSectionLeieHint">Sammenligningsside</span>
-          </header>
-          <div class="calc-fields">
-            <div class="fg full">
-              <label class="flbl" for="bvl-leie" data-i18n="bvlLLeie">Månedlig leie i dag (kr)</label>
-              <input type="text" id="bvl-leie" value="15 000" inputmode="numeric" autocomplete="off">
-              <span class="hint-line">For en tilsvarende bolig</span>
+        <section class="syk-howto" aria-labelledby="sykHowtoHdr">
+          <h3 id="sykHowtoHdr" data-i18n="sykHowtoTitle">Hvordan fungerer sykepenger?</h3>
+          <div class="syk-howto-body">
+            <p data-i18n-html="sykHowtoLead"><strong>Hvordan fungerer det — 3 faser:</strong></p>
+
+            <p data-i18n-html="sykFase1"><strong>Dag 1–16 — arbeidsgiver betaler:</strong> 100 % av lønnen din, <em>uten tak</em>. Tjener du 1 million, får du full lønn disse to ukene.</p>
+
+            <p data-i18n-html="sykFase2"><strong>Dag 17–365 — NAV tar over:</strong> NAV betaler 100 %, men maks <strong>6G = 780 960 kr/år (≈ 65 080 kr/måned)</strong>. Tjener du mer, taper du det over 6G — med mindre tariffavtalen din dekker mellomlegget (mange offentlige ansatte får det, ikke alle private).</p>
+
+            <p data-i18n-html="sykFase3"><strong>Etter 52 uker:</strong> Sykepengene stopper. Du søker <strong>arbeidsavklaringspenger (AAP)</strong> — 66 % av inntekt opp til 6G, inntil 3 år. Krever minst 50 % nedsatt arbeidsevne.</p>
+
+            <div class="syk-callout" data-i18n-html="sykCallout">
+              <span class="syk-callout-title">Vanlig misforståelse</span>
+              <em>"Jeg får 100 % lønn hele sykeperioden."</em> Feil. Bare de første 16 dagene er uten tak. Tjener du 900 000 og er langtidssyk, får du ca 65 080 kr/mnd fra NAV — ikke 75 000 kr/mnd.
             </div>
-            <div class="fg">
-              <label class="flbl" for="bvl-vekst" data-i18n="bvlLVekst">Boligprisvekst (%/år)</label>
-              <input type="number" id="bvl-vekst" value="3.0" step="0.1">
-            </div>
-            <div class="fg">
-              <label class="flbl" for="bvl-leievekst" data-i18n="bvlLLeievekst">Leievekst (%/år)</label>
-              <input type="number" id="bvl-leievekst" value="3.0" step="0.1">
-            </div>
-            <div class="fg full">
-              <label class="flbl" for="bvl-avk" data-i18n="bvlLAvkLong">Alternativ avkastning EK (%/år)</label>
-              <input type="number" id="bvl-avk" value="6.0" step="0.1">
-              <span class="hint-line">Hvis sparepengene står i fond i stedet for bolig</span>
-            </div>
+
+            <h4 data-i18n="sykH4Egenmelding">Egenmelding (uten legeerklæring)</h4>
+            <ul>
+              <li data-i18n-html="sykEgenVanlig"><strong>Vanlig arbeidsplass:</strong> 3 kalenderdager × inntil 4 ganger/år (etter 2 mnd ansettelse)</li>
+              <li data-i18n-html="sykEgenIA"><strong>IA-bedrift:</strong> 8 kalenderdager × inntil 24 dager/år</li>
+            </ul>
+
+            <h4 data-i18n="sykH4Gradert">Gradert sykmelding</h4>
+            <p data-i18n="sykGradertBody">Minst 20 % og maks 99 % nedsatt arbeidsevne. Du jobber delvis og får sykepenger for resten.</p>
+
+            <h4 data-i18n="sykH4Spesielle">Spesielle regler</h4>
+            <ul>
+              <li data-i18n-html="sykSpesSelv"><strong>Selvstendig næringsdrivende:</strong> 0 kr de første 16 dagene, deretter kun <strong>75 %</strong> fra dag 17 (opp til 6G). Kan kjøpe tilleggsforsikring hos NAV for bedre dekning.</li>
+              <li data-i18n-html="sykSpesFri"><strong>Frilanser:</strong> 0 kr første 16 dager, deretter 100 % opp til 6G.</li>
+              <li data-i18n-html="sykSpes6770"><strong>67–70 år:</strong> Kun <strong>60 sykepengedager</strong> totalt igjen.</li>
+              <li data-i18n-html="sykSpes70"><strong>Over 70 år:</strong> Ingen rett til sykepenger fra folketrygden.</li>
+              <li data-i18n-html="sykSpesOpp"><strong>Opptjeningstid:</strong> Minst 4 ukers ansettelse før sykdomsstart.</li>
+            </ul>
+
+            <h4 data-i18n="sykH4Barn">Sykt barn — egen ordning (omsorgspenger, ikke sykepenger)</h4>
+            <ul>
+              <li data-i18n-html="sykBarnDager"><strong>10 dager/år</strong> for 1–2 barn, <strong>15 dager/år</strong> for 3+ barn (per forelder)</li>
+              <li data-i18n="sykBarnAlene">Dobbel kvote for aleneforeldre</li>
+              <li data-i18n="sykBarnEkstra">+ 10 ekstra dager ved kronisk/langvarig sykt barn</li>
+              <li data-i18n="sykBarnAlder">Gjelder til barnet fyller 12 år (18 år ved kronisk sykdom)</li>
+            </ul>
+
+            <p data-i18n-html="sykHowtoOutro"><strong>Skriv inn årslønn over</strong> — så ser du hva du faktisk får per måned fra NAV og hvor mye du eventuelt taper over 6G-taket.</p>
           </div>
         </section>
-
-        <p class="info-box">
-          Sammenligning baserer seg på annuitetslån over valgt nedbetalingstid, 22 % skattefradrag på renter, og at egenkapitalen alternativt vokser i fond med oppgitt avkastning. Boligprisvekst er en antakelse — historisk snitt i Norge har vært ~5 %/år, men kan svinge mye lokalt.
-        </p>
 
       </div>
 
-      <aside class="calc-result" aria-live="polite">
+      <aside class="syk-result" aria-live="polite">
         <div class="res-headline">
-          <span class="r-lbl" data-i18n="bvlRLbl">Hva lønner seg over perioden</span>
-          <span class="r-val" id="bvl-r-val">–</span>
-          <span class="r-verdict" id="bvl-r-sub">Skriv inn pris, EK og leie</span>
+          <span class="r-lbl" data-i18n="sykRMndLbl">Sykepenger per måned fra NAV</span>
+          <span class="r-val" id="syk-r-mnd">–</span>
+          <span class="r-verdict" id="syk-r-sub">–</span>
         </div>
         <div class="res-stats">
-          <div class="res-stat"><span class="l" id="bvl-r-eie-lbl">Total kostnad ved eie</span><span class="v" id="bvl-r-eie">–</span></div>
-          <div class="res-stat"><span class="l" id="bvl-r-leie-lbl">Total kostnad ved leie</span><span class="v" id="bvl-r-leie">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="bvlRBeLbl">Break-even</span><span class="v" id="bvl-r-be">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="bvlRFormueLbl">Formue ved eie</span><span class="v" id="bvl-r-formue">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="sykRGrunn">Beregningsgrunnlag</span><span class="v" id="syk-r-grunn">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="sykRTak">6G-tak (2026)</span><span class="v" id="syk-r-tak">780 960 kr</span></div>
+          <div class="res-stat"><span class="l" data-i18n="sykRTap">Ikke dekket av NAV</span><span class="v" id="syk-r-tap">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="sykRFull">Full dekning under 6G?</span><span class="v" id="syk-r-full">–</span></div>
         </div>
-        <div class="res-tip" id="bvl-tip">Skriv inn dine egne tall for å se hva som lønner seg i ditt tilfelle.</div>
+        <p class="res-disclaimer" data-i18n="sykResDisclaimer">Arbeidsgiver dekker de første 16 dagene på full lønn. Sykepenger fra NAV varer inntil 52 uker. 1G = 130 160 kr i 2026.</p>
       </aside>
 
     </div>
   </div>
 
+
+
+
+
+  <div class="container howto-wrap">
+    <details class="howto" id="howto-sykHowto">
+      <summary>
+        <span class="howto-title" data-howto-title="sykHowto">Hvordan fungerer sykepenger?</span>
+      </summary>
+      <div class="howto-body" data-howto-prefix="sykHowto"></div>
+    </details>
+  </div>
 </main>
 
-<footer class="site-footer-full">
-  <div class="container">
-    <div class="footer-inner">
-      <div class="footer-logo">Hverdagsverktøy</div>
-      <div class="footer-links"><a href="#" id="fl-priv">Privacy</a><a href="#" id="fl-con">Contact</a></div>
-    </div>
-    <div class="footer-author" id="fl-author">Hverdagsverktøy — gratis norske finanskalkulatorer</div>
-    <div class="footer-copy" id="fl-copy">© 2026 Hverdagsverktøy — Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</div>
+<footer>
+  <div class="container foot">
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
   </div>
 </footer>
 
 <script>
+  // ── Subtle nav border on scroll ──
   (function(){
     var nav = document.getElementById('navWrap');
     if(!nav) return;
@@ -783,6 +803,7 @@
     update();
   })();
 
+  // ── Theme dropdown ──
   (function(){
     var btn = document.getElementById('themeBtn');
     var menu = document.getElementById('themeMenu');
@@ -800,189 +821,115 @@
       disco:   {label:'Disco',    dot:'#b044a2', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
       pink:    {label:'Rosa',     dot:'#e4a0be', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'}
     };
-    function paintTrigger(t){var th=THEMES[t]||THEMES.carbon;dot.style.background=th.dot;dot.style.boxShadow=th.dotShadow;}
-    function markCurrent(t){menu.querySelectorAll('.theme-item').forEach(function(el){if(el.getAttribute('data-theme')===t)el.classList.add('current');else el.classList.remove('current');});}
-    function apply(t){if(!THEMES[t])t='carbon';root.setAttribute('data-theme',t);paintTrigger(t);markCurrent(t);}
-    function close(){btn.setAttribute('aria-expanded','false');menu.classList.remove('open');}
-    function open(){btn.setAttribute('aria-expanded','true');menu.classList.add('open');}
-    var saved;try{saved=localStorage.getItem(KEY);}catch(e){}
-    apply(THEMES[saved]?saved:'carbon');
-    btn.addEventListener('click',function(e){e.stopPropagation();if(btn.getAttribute('aria-expanded')==='true')close();else open();});
-    menu.querySelectorAll('.theme-item').forEach(function(el){el.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var t=el.getAttribute('data-theme');apply(t);try{localStorage.setItem(KEY,t);}catch(e){}close();});});
-    document.addEventListener('click',function(e){if(!menu.contains(e.target)&&!btn.contains(e.target))close();});
-    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+    function paintTrigger(t){
+      var th = THEMES[t] || THEMES.carbon;
+      dot.style.background = th.dot;
+      dot.style.boxShadow = th.dotShadow;
+    }
+    function markCurrent(t){
+      menu.querySelectorAll('.theme-item').forEach(function(el){
+        if(el.getAttribute('data-theme') === t) el.classList.add('current');
+        else el.classList.remove('current');
+      });
+    }
+    function apply(t){
+      if(!THEMES[t]) t = 'carbon';
+      root.setAttribute('data-theme', t);
+      paintTrigger(t);
+      markCurrent(t);
+    }
+    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
+    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
+
+    var saved;
+    try { saved = localStorage.getItem(KEY); } catch(e){}
+    apply(THEMES[saved] ? saved : 'carbon');
+
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
+    });
+    menu.querySelectorAll('.theme-item').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var t = el.getAttribute('data-theme');
+        apply(t);
+        try { localStorage.setItem(KEY, t); } catch(e){}
+        close();
+      });
+    });
+    document.addEventListener('click', function(e){
+      if(!menu.contains(e.target) && !btn.contains(e.target)) close();
+    });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 
+  // ── Language menu ──
   (function(){
     var btn = document.getElementById('langBtn');
     var menu = document.getElementById('langMenu');
     if(!btn || !menu) return;
-    function close(){btn.setAttribute('aria-expanded','false');menu.classList.remove('open');}
-    function open(){btn.setAttribute('aria-expanded','true');menu.classList.add('open');}
-    btn.addEventListener('click',function(e){e.stopPropagation();if(btn.getAttribute('aria-expanded')==='true')close();else open();});
-    document.addEventListener('click',function(e){if(!menu.contains(e.target)&&e.target!==btn&&!btn.contains(e.target))close();});
-    document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
+    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
+    });
+    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 
-  // ── Bolig vs leie: portet calcBvl (shared/core.js:3658) ──
+  // ── Sykepenger: portet calcSyk-logikk (personlig/index.html:1225, byte-for-byte) ──
   (function(){
-    var KEY = 'hv-bvl-v1';
+    var KEY = 'hv-syk-v1';
 
-    function parseNum(id){
-      var el = document.getElementById(id);
-      return el ? +(el.value.replace(/[\s ,]/g,'').replace(',','.')) || 0 : 0;
+    function num(id){
+      var v=document.getElementById(id);
+      if(!v) return 0;
+      return parseFloat(v.value.replace(/\s/g,'').replace(',','.'))||0;
     }
     function fmt(n){
-      return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0})
-        .format(Math.round(n)).replace(/ /g,' ') + ' kr';
-    }
-    function setEl(id, val){
-      var el = document.getElementById(id);
-      if(el) el.textContent = val;
+      return Math.round(n).toLocaleString('no-NO')+' kr';
     }
 
-    function calcBvl(){
-      var pris = parseNum('bvl-pris');
-      if(pris <= 0){
-        setEl('bvl-r-val','–');
-        setEl('bvl-r-sub','Skriv inn pris, EK og leie');
-        setEl('bvl-r-eie','–'); setEl('bvl-r-leie','–');
-        setEl('bvl-r-be','–'); setEl('bvl-r-formue','–');
-        setEl('hStatVinner','–'); setEl('hStatFormue','–');
-        var t0 = document.getElementById('bvl-tip');
-        if(t0) t0.innerHTML = 'Skriv inn dine egne tall for å se hva som lønner seg i ditt tilfelle.';
-        persist();
-        return;
-      }
-      var ek = parseNum('bvl-ek');
-      var renteAr = (parseFloat(document.getElementById('bvl-rente').value)||0)/100;
-      var leieMnd = parseNum('bvl-leie');
-      var fkMnd = parseNum('bvl-felleskost');
-      var vlPct = (parseFloat(document.getElementById('bvl-vedlikehold').value)||0)/100;
-      var aar = parseInt(document.getElementById('bvl-aar').value)||10;
-      var prisVekstAr = (parseFloat(document.getElementById('bvl-vekst').value)||0)/100;
-      var leieVekstAr = (parseFloat(document.getElementById('bvl-leievekst').value)||0)/100;
-      var avkAr = (parseFloat(document.getElementById('bvl-avk').value)||0)/100;
-      var lan = Math.max(0, pris - ek);
-      var lopetidAr = parseInt(document.getElementById('bvl-lopetid') && document.getElementById('bvl-lopetid').value) || 25;
-      if(lopetidAr<10) lopetidAr=10; if(lopetidAr>30) lopetidAr=30;
-      var nMaks = lopetidAr*12, rMnd = renteAr/12;
-      var annuitet = rMnd>0 ? lan * rMnd / (1 - Math.pow(1+rMnd,-nMaks)) : lan/nMaks;
-
-      var totalEie = 0, totalLeie = 0;
-      var lanRest = lan;
-      var boligVerdi = pris;
-      var leieAr = leieMnd*12;
-      var ekAlt = ek;
-      var rentBetaltTot = 0, avdragTot = 0;
-      for(var y=1; y<=aar; y++){
-        var renteAretTotal = 0, avdragAretTotal = 0;
-        for(var m=0; m<12; m++){
-          var renteMnd = lanRest * rMnd;
-          var avdragMnd = annuitet - renteMnd;
-          if(lanRest <= 0){renteMnd=0;avdragMnd=0;}
-          renteAretTotal += renteMnd;
-          avdragAretTotal += Math.min(avdragMnd, lanRest);
-          lanRest = Math.max(0, lanRest - avdragMnd);
-        }
-        rentBetaltTot += renteAretTotal;
-        avdragTot += avdragAretTotal;
-        var fkAretTotal = fkMnd*12;
-        var vlAretTotal = boligVerdi * vlPct;
-        var skattefradragAr = renteAretTotal * 0.22;
-        totalEie += renteAretTotal + fkAretTotal + vlAretTotal - skattefradragAr;
-        totalLeie += leieAr;
-        leieAr *= (1 + leieVekstAr);
-        ekAlt *= (1 + avkAr);
-        boligVerdi *= (1 + prisVekstAr);
-      }
-      var formueEie = boligVerdi - lanRest;
-      var nettoEie = totalEie - (formueEie - ek);
-      var nettoLeie = totalLeie - (ekAlt - ek);
-      var diff = nettoLeie - nettoEie;
-      var vinner = diff >= 0 ? 'eie' : 'leie';
-
-      setEl('bvl-r-val', vinner==='eie'
-        ? 'Eie lønner seg (' + fmt(Math.abs(diff)) + ')'
-        : 'Leie lønner seg (' + fmt(Math.abs(diff)) + ')');
-      setEl('bvl-r-sub', 'Over ' + aar + ' år');
-
-      var eieLbl = nettoEie >= 0 ? 'Total kostnad ved eie' : 'Netto gevinst ved eie';
-      var leieLbl = nettoLeie >= 0 ? 'Total kostnad ved leie' : 'Netto gevinst ved leie';
-      setEl('bvl-r-eie-lbl', eieLbl);
-      setEl('bvl-r-leie-lbl', leieLbl);
-      setEl('bvl-r-eie', fmt(Math.round(Math.abs(nettoEie))));
-      setEl('bvl-r-leie', fmt(Math.round(Math.abs(nettoLeie))));
-
-      var be = '–';
-      if(diff < 0 && prisVekstAr > 0){
-        be = '> ' + aar + ' år';
-      } else if(diff >= 0 && aar <= 5){
-        be = '~' + aar + ' år';
-      } else if(diff >= 0){
-        be = 'Innen perioden';
-      }
-      setEl('bvl-r-be', be);
-      setEl('bvl-r-formue', fmt(Math.round(formueEie)));
-
-      var tip = document.getElementById('bvl-tip');
-      if(tip){
-        tip.innerHTML = vinner==='eie'
-          ? 'Eie lønner seg over ' + aar + ' år når man tar med formuesoppbygging via avdrag og verdiøkning. Skattefradrag på 22 % av renter inkludert. Husk at boligpris-vekst er antakelse — historisk snitt i Norge 1990-2024 er ~5%/år, men kan svinge mye lokalt.'
-          : 'Leie lønner seg i denne perioden — ofte fordi alternativ-avkastning på EK i fond gir mer enn boligprisvekst, eller fordi du selger før verdiøkning hentes inn. Vurder kortere tidsperspektiv eller flytting.';
-      }
-
-      setEl('hStatVinner', vinner==='eie' ? 'Eie' : 'Leie');
-      setEl('hStatFormue', fmt(Math.round(formueEie)));
-
+    window.calcSyk = function(){
+      var lonn=num('syk-lonn');
+      if(lonn<=0){return;}
+      var G=130160, tak=6*G;
+      var grunnlag=Math.min(lonn,tak);
+      var mndNAV=grunnlag/12;
+      var tap=Math.max(0,lonn-tak);
+      var full = lonn<=tak;
+      document.getElementById('syk-r-mnd').textContent=fmt(mndNAV);
+      document.getElementById('syk-r-sub').textContent=full?'dekker full lønn':'lønn over 6G ikke dekket';
+      document.getElementById('syk-r-grunn').textContent=fmt(grunnlag);
+      document.getElementById('syk-r-tap').textContent=fmt(tap)+' /år';
+      document.getElementById('syk-r-full').textContent=full?'Ja':'Nei';
+      // Hero-stats (ekstra mot mal — speiler resultatpanelet, samme tall)
+      var hM=document.getElementById('hStatMnd'); if(hM) hM.textContent=fmt(mndNAV);
+      var hG=document.getElementById('hStatGrunn'); if(hG) hG.textContent=fmt(grunnlag);
       persist();
-    }
+    };
 
     function persist(){
-      try {
-        var snap = {};
-        ['bvl-pris','bvl-ek','bvl-rente','bvl-leie','bvl-felleskost','bvl-vedlikehold','bvl-aar','bvl-lopetid','bvl-vekst','bvl-leievekst','bvl-avk'].forEach(function(id){
-          snap[id] = document.getElementById(id).value;
-        });
-        localStorage.setItem(KEY, JSON.stringify(snap));
-      } catch(e){}
+      try { localStorage.setItem(KEY, document.getElementById('syk-lonn').value); } catch(e){}
     }
     function restore(){
       try {
         var raw = localStorage.getItem(KEY);
-        if(!raw) return;
-        var s = JSON.parse(raw);
-        Object.keys(s).forEach(function(id){
-          var el = document.getElementById(id);
-          if(el && s[id] != null) el.value = s[id];
-        });
+        if(raw != null) document.getElementById('syk-lonn').value = raw;
       } catch(e){}
     }
 
-    ['bvl-pris','bvl-ek','bvl-rente','bvl-leie','bvl-felleskost','bvl-vedlikehold','bvl-aar','bvl-lopetid','bvl-vekst','bvl-leievekst','bvl-avk'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el) el.addEventListener('input', calcBvl);
-    });
+    var input = document.getElementById('syk-lonn');
+    if(input) input.addEventListener('input', window.calcSyk);
 
     restore();
-    calcBvl();
+    window.calcSyk();
   })();
 </script>
 
-<script>
-(function(){
-  document.querySelectorAll('.calc-help-btn').forEach(function(b){
-    b.addEventListener('click',function(){
-      var id=b.getAttribute('data-target'); if(!id) return;
-      var d=document.getElementById(id); if(!d) return;
-      if(d.tagName==='DETAILS'){d.open=!d.open; if(d.open) d.scrollIntoView({behavior:'smooth',block:'nearest'});}
-    });
-  });
-  document.querySelectorAll('.focus-card-btn').forEach(function(b){
-    b.addEventListener('click',function(){document.body.classList.toggle('focus-mode');});
-  });
-})();
-</script>
 <script defer src="/shared/core.js?v=v121"></script>
 <script defer src="/shared/ticker.js?v=v1"></script>
 
@@ -992,6 +939,94 @@
       navigator.serviceWorker.register('/sw.js').catch(function(){});
     });
   }
+</script>
+
+
+
+
+<script>
+  // ── T2 site-shell wiring (howto render + ? toggle + ⛶ focus) ──
+  (function(){
+    function renderHowto(){
+      var bodies = document.querySelectorAll('[data-howto-prefix]');
+      if(!bodies.length) return;
+      var r = (typeof R === 'function') ? R() : {};
+      bodies.forEach(function(body){
+        var prefix = body.getAttribute('data-howto-prefix'); // e.g. "lonnHowto"
+        var rows = r && r[prefix + 'Rows'];
+        var html = '';
+        if(rows && rows.length){
+          // Rows-array style (lonnHowtoRows, aboHowtoRows, ...)
+          for(var i=0;i<rows.length;i++){
+            var label = rows[i][0]||'';
+            var desc  = rows[i][1]||'';
+            html += '<div class="howto-row"><strong>'+label+'</strong><span>'+desc+'</span></div>';
+          }
+        } else {
+          // Paragraph style (famHowtoP1..P4, sykHowtoLead/P1..PN/Outro, ...)
+          if(r[prefix + 'Lead']) html += '<p>' + r[prefix + 'Lead'] + '</p>';
+          for(var j=1; j<=10; j++){
+            var p = r[prefix + 'P' + j];
+            if(p) html += '<p>' + p + '</p>';
+          }
+          if(r[prefix + 'Helper']) html += '<p class="howto-helper"><em>' + r[prefix + 'Helper'] + '</em></p>';
+          if(r[prefix + 'Outro']) html += '<p>' + r[prefix + 'Outro'] + '</p>';
+        }
+        if(html) body.innerHTML = html;
+      });
+      // Update title text from lang
+      var titles = document.querySelectorAll('[data-howto-title]');
+      titles.forEach(function(t){
+        var prefix = t.getAttribute('data-howto-title');
+        var titleKey = prefix + 'Title';
+        if(r && r[titleKey]) t.textContent = r[titleKey];
+      });
+    }
+    function init(){
+      // ? toggles howto details
+      document.querySelectorAll('.calc-help-btn').forEach(function(b){
+        b.addEventListener('click', function(){
+          var d = document.querySelector('details.howto');
+          if(!d) return;
+          d.open = !d.open;
+          if(d.open) d.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      });
+      // ⛶ toggles focus mode
+      document.querySelectorAll('.focus-card-btn').forEach(function(b){
+        b.addEventListener('click', function(){
+          document.body.classList.toggle('focus-mode');
+        });
+      });
+      renderHowto();
+    }
+    // Poll-render: lang is loaded async by core.js after DOMContentLoaded.
+    // Keep retrying every 80 ms until R() returns content for the prefix, max ~3 s.
+    function pollRender(){
+      var bodies = document.querySelectorAll('[data-howto-prefix]');
+      if(!bodies.length) return;
+      var attempts = 0;
+      var max = 38; // ~3 s
+      var t = setInterval(function(){
+        attempts++;
+        var r = (typeof R === 'function') ? R() : {};
+        var ready = false;
+        bodies.forEach(function(b){
+          var p = b.getAttribute('data-howto-prefix');
+          if(r[p+'Rows'] || r[p+'Lead'] || r[p+'P1']) ready = true;
+        });
+        if(ready){
+          renderHowto();
+          clearInterval(t);
+        } else if(attempts >= max){
+          clearInterval(t);
+        }
+      }, 80);
+    }
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
+    } else { init(); pollRender(); }
+  })();
 </script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
 </body>
