@@ -4,6 +4,15 @@
 // https://hverdagsverktoy.com
 // ═══════════════════════════════════════════════════════
 
+// Theme-key migration (pre-launch hvt-theme → post-launch hv-theme).
+// Run before any code reads/writes the theme so old users keep their choice.
+try {
+  var _oldThemeKey = localStorage.getItem('hvt-theme');
+  if (_oldThemeKey && !localStorage.getItem('hv-theme')) {
+    localStorage.setItem('hv-theme', _oldThemeKey);
+  }
+} catch(e){}
+
 const RATES_LAST_UPDATED = '2026-03-19';
 const RATES_YEAR = 2026;
 
@@ -176,7 +185,7 @@ function buildThemePicker(){
 }
 function setTheme(t) {
   document.documentElement.setAttribute('data-theme', t);
-  try { localStorage.setItem('hvt-theme', t); } catch(e){}
+  try { localStorage.setItem('hv-theme', t); } catch(e){}
   buildThemePicker();
   if(typeof buildCalcKeys==='function' && typeof bcMode!=='undefined'){
     const mode = bcMode;
