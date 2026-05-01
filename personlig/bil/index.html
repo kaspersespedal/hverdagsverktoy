@@ -369,6 +369,38 @@
     padding:8px 0 56px;
   }
   .bil-form{display:flex;flex-direction:column;gap:24px}
+
+  /* ── MODE TOGGLE (own / plan) ────────────────────── */
+  .bil-mode-bar{
+    display:grid;grid-template-columns:1fr 1fr;gap:8px;
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:6px;
+  }
+  .bil-mode-btn{
+    background:transparent;border:1px solid transparent;border-radius:5px;
+    padding:11px 14px;
+    color:var(--ink3);font:600 12.5px/1 var(--font-sans);letter-spacing:.2px;
+    cursor:pointer;text-align:center;
+    transition:background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease);
+  }
+  @media(hover:hover){
+    .bil-mode-btn:hover{color:var(--ink2)}
+  }
+  .bil-mode-btn.active{
+    background:var(--bg);border-color:var(--line-warm);color:var(--ink);
+  }
+  .bil-mode-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  /* Hide mode-conditional fields */
+  body[data-bil-mode="plan"] [data-mode="own"]{display:none}
+  body[data-bil-mode="own"] [data-mode="plan"]{display:none}
+
+  /* Eiertid auto-info (only shown in own mode) */
+  .bil-eiertid-info{
+    grid-column:1 / -1;
+    margin-top:-6px;font-size:11.5px;color:var(--ink3);font-style:italic;
+  }
+
   .bil-section{
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
     padding:18px 22px 20px;
@@ -769,6 +801,11 @@
 
       <div class="bil-form">
 
+        <div class="bil-mode-bar" role="tablist" aria-label="Velg modus">
+          <button id="bil-mode-own" class="bil-mode-btn active" type="button" role="tab" aria-selected="true" data-i18n="bilNModeOwn">Bil jeg eier</button>
+          <button id="bil-mode-plan" class="bil-mode-btn" type="button" role="tab" aria-selected="false" data-i18n="bilNModePlan">Vurderer å kjøpe</button>
+        </div>
+
         <section class="bil-section" aria-labelledby="bilCarHdr">
           <header class="bil-section-head">
             <h2 id="bilCarHdr" data-i18n="bilNSecCar">Bilen</h2>
@@ -799,7 +836,7 @@
             </div>
           </div>
 
-          <div class="form-row">
+          <div class="form-row" id="bil-row-eiertid">
             <div class="fg">
               <label class="flbl" for="bil-kjopsaar" data-i18n="bilNLblKjopsaar">Kjøpsår</label>
               <select class="fc" id="bil-kjopsaar"></select>
@@ -808,6 +845,7 @@
               <label class="flbl" for="bil-aar" data-i18n="bilNLblAar">Eiertid (år)</label>
               <input class="fc" id="bil-aar" type="number" min="1" max="20" step="1" value="5">
             </div>
+            <div class="bil-eiertid-info" data-mode="own" id="bil-eiertid-auto" data-i18n="bilNEiertidAuto">Eiertid beregnes automatisk fra kjøpsår.</div>
           </div>
 
           <div class="form-row">
@@ -849,32 +887,32 @@
           </header>
           <details class="bil-manual">
             <summary data-i18n="bilNManualSummary">Ser tallene feil ut? Legg inn faktiske kostnader</summary>
-            <div class="form-row">
+            <div class="form-row" data-mode="own" id="bil-row-resale">
               <div class="fg">
                 <label class="flbl" for="bil-resale" data-i18n="bilNLblResale">Forventet salgsverdi (kr)</label>
                 <input class="fc" id="bil-resale" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
               </div>
+              <div class="fg"></div>
+            </div>
+            <div class="form-row">
               <div class="fg">
                 <label class="flbl" for="bil-forsikring" data-i18n="bilNLblForsikring">Forsikring (kr/mnd)</label>
                 <input class="fc" id="bil-forsikring" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
               </div>
-            </div>
-            <div class="form-row">
               <div class="fg">
                 <label class="flbl" for="bil-drivstoff-mnd" data-i18n="bilNLblDriMnd">Drivstoff/lading (kr/mnd)</label>
                 <input class="fc" id="bil-drivstoff-mnd" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
               </div>
+            </div>
+            <div class="form-row">
               <div class="fg">
                 <label class="flbl" for="bil-service-mnd" data-i18n="bilNLblServiceMnd">Service og vedlikehold (kr/mnd)</label>
                 <input class="fc" id="bil-service-mnd" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
               </div>
-            </div>
-            <div class="form-row">
               <div class="fg">
                 <label class="flbl" for="bil-bom-mnd" data-i18n="bilNLblBomMnd">Bompenger (kr/mnd)</label>
                 <input class="fc" id="bil-bom-mnd" inputmode="numeric" type="text" placeholder="Estimeres automatisk" data-i18n-placeholder="bilNPlaceholderAuto" value="">
               </div>
-              <div class="fg"></div>
             </div>
           </details>
         </section>
@@ -918,6 +956,14 @@
     </section>
   </div>
 
+  <div class="container howto-wrap">
+    <details class="howto" id="howto-bilHowto">
+      <summary>
+        <span class="howto-title" data-howto-title="bilHowto">Slik bruker du Bilkalkulatoren</span>
+      </summary>
+      <div class="howto-body" data-howto-prefix="bilHowto"></div>
+    </details>
+  </div>
 </main>
 
 <footer>
@@ -1078,7 +1124,9 @@
     ];
 
     var KEY = 'hv-bil-v1';
+    var MODE_KEY = 'hv-bil-mode-v1';
     var STATE = {};
+    var bilMode = 'own'; // 'own' | 'plan' — default own ("Bil jeg eier")
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
     function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
     function fmtInt(n){ return fmtNb.format(n).replace(/ /g, ' '); }
@@ -1170,6 +1218,47 @@
       if(modell && kjop && +modell.value > +kjop.value){
         modell.value = kjop.value;
       }
+    }
+
+    // Auto-compute eiertid from kjøpsår (only in own mode)
+    function bilSyncEiertid(){
+      clampYears();
+      if(bilMode !== 'own') return;
+      var kjop = document.getElementById('bil-kjopsaar');
+      var aar = document.getElementById('bil-aar');
+      if(!kjop || !aar) return;
+      var diff = new Date().getFullYear() - (+kjop.value || 0);
+      if(diff >= 0) aar.value = Math.max(1, diff);
+    }
+
+    // Mode-toggle: own = "Bil jeg eier" (kjøpsår selectable, eiertid auto, salgsverdi visible)
+    //              plan = "Vurderer å kjøpe" (kjøpsår låst til i år, eiertid manuell, ingen salgsverdi)
+    function bilSetMode(mode){
+      if(mode !== 'own' && mode !== 'plan') mode = 'own';
+      bilMode = mode;
+      document.body.setAttribute('data-bil-mode', mode);
+      var btnOwn  = document.getElementById('bil-mode-own');
+      var btnPlan = document.getElementById('bil-mode-plan');
+      if(btnOwn)  { btnOwn.classList.toggle('active',  mode === 'own');  btnOwn.setAttribute('aria-selected',  mode === 'own'  ? 'true' : 'false'); }
+      if(btnPlan) { btnPlan.classList.toggle('active', mode === 'plan'); btnPlan.setAttribute('aria-selected', mode === 'plan' ? 'true' : 'false'); }
+      var aar  = document.getElementById('bil-aar');
+      var kjop = document.getElementById('bil-kjopsaar');
+      if(mode === 'own'){
+        // Own mode: eiertid readonly, kjøpsår selectable
+        if(aar)  { aar.readOnly  = true;  aar.setAttribute('aria-readonly','true'); }
+        if(kjop) { kjop.disabled = false; }
+        // Clear resale field when leaving (no — keep so user data persists)
+        bilSyncEiertid();
+      } else {
+        // Plan mode: eiertid manual, kjøpsår låst til i år, ingen resale
+        if(aar)  { aar.readOnly  = false; aar.setAttribute('aria-readonly','false'); }
+        if(kjop) { kjop.value = String(new Date().getFullYear()); kjop.disabled = true; }
+        // Clear resale (ikke relevant når man ikke har bilen ennå)
+        var resale = document.getElementById('bil-resale');
+        if(resale) resale.value = '';
+      }
+      try { localStorage.setItem(MODE_KEY, mode); } catch(e){}
+      calcBilkostnad();
     }
 
     function calcBilkostnad(){
@@ -1483,12 +1572,17 @@
         if(el){
           el.addEventListener('change', function(){
             if(id === 'bil-merke') bilUpdateDefaults();
-            if(id === 'bil-aarsmodell' || id === 'bil-kjopsaar') clampYears();
+            if(id === 'bil-aarsmodell') clampYears();
+            if(id === 'bil-kjopsaar') bilSyncEiertid();
             if(id === 'bil-forsikring-type') bilUpdateInsHint();
             persist();
           });
         }
       });
+      var btnOwn  = document.getElementById('bil-mode-own');
+      var btnPlan = document.getElementById('bil-mode-plan');
+      if(btnOwn)  btnOwn.addEventListener('click',  function(){ bilSetMode('own');  });
+      if(btnPlan) btnPlan.addEventListener('click', function(){ bilSetMode('plan'); });
     }
 
     // Init
@@ -1515,6 +1609,11 @@
         calcBilkostnad();
       }
     });
+
+    // Mode-toggle init: restore saved mode (default 'own')
+    var savedMode = 'own';
+    try { var m = localStorage.getItem(MODE_KEY); if(m === 'own' || m === 'plan') savedMode = m; } catch(e){}
+    bilSetMode(savedMode);
 
     // If we restored, run calc once
     if(saved && saved.pris) calcBilkostnad();
