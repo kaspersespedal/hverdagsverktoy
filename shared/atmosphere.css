@@ -8,10 +8,56 @@
    Mobile: drift slowed x1.5, no cursor light, grain -> 2%.
    Reduced-motion: bands static at 0.5x, no drift, no cursor light.
    Source: hv_oppdatert_design/Homepage.html (v3, 2026-04-30).
+   v2 (E83): atmosphere skjules på lyse themes (frost/glass/hendrix/bw/pink).
+   v3 (E83): atmosphere-farger er nå tokenisert per dark theme.
+     carbon (default) → cognac/amber
+     dark              → kjølig blå/indigo
+     disco             → neon pink/lilla
 ───────────────────────────────────────────────────── */
+:root{
+  --atmo-base-top:#0F0D0A;
+  --atmo-base-bottom:#070605;
+  --atmo-band-a:38, 60%, 75%;   /* hsl triplet — cream */
+  --atmo-band-a-op:.08;
+  --atmo-band-a-op-breathe:.10;
+  --atmo-band-b:28, 50%, 55%;   /* hsl triplet — deep amber */
+  --atmo-band-b-op:.05;
+  --atmo-band-b-op-breathe:.07;
+  --atmo-cursor:38, 70%, 75%;   /* hsl triplet — warm cream */
+  --atmo-cursor-op:.04;
+}
+[data-theme="dark"]{
+  --atmo-base-top:#141520;
+  --atmo-base-bottom:#0a0b14;
+  --atmo-band-a:222, 80%, 72%;          /* cool blue, matcher accent #6c8aef */
+  --atmo-band-a-op:.09;
+  --atmo-band-a-op-breathe:.12;
+  --atmo-band-b:258, 55%, 55%;          /* violet — duotone-kontrast mot bandA */
+  --atmo-band-b-op:.06;
+  --atmo-band-b-op-breathe:.08;
+  --atmo-cursor:222, 80%, 72%;
+  --atmo-cursor-op:.05;
+}
+[data-theme="disco"]{
+  --atmo-base-top:#0d0a18;
+  --atmo-base-bottom:#060410;
+  --atmo-band-a:328, 70%, 70%;  /* neon pink */
+  --atmo-band-a-op:.10;
+  --atmo-band-a-op-breathe:.13;
+  --atmo-band-b:268, 60%, 58%;  /* purple */
+  --atmo-band-b-op:.07;
+  --atmo-band-b-op-breathe:.09;
+  --atmo-cursor:328, 75%, 72%;
+  --atmo-cursor-op:.05;
+}
+html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo-base,
+html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo,
+html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .film-grain{
+  display:none !important;
+}
 .atmo-base{
   position:fixed;inset:0;z-index:-3;pointer-events:none;
-  background:linear-gradient(to bottom, #0F0D0A 0%, #070605 100%);
+  background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
 }
 .atmo{
   position:fixed;inset:0;z-index:-2;pointer-events:none;
@@ -37,8 +83,8 @@
 }
 .band-a .band-inner{
   background:radial-gradient(ellipse at center,
-    hsl(38, 60%, 75%) 0%, transparent 50%);
-  opacity:.08;
+    hsl(var(--atmo-band-a)) 0%, transparent 50%);
+  opacity:var(--atmo-band-a-op);
   animation:
     bandADriftY 53s ease-in-out infinite,
     bandABreathe 24s ease-in-out infinite;
@@ -52,8 +98,8 @@
 }
 .band-b .band-inner{
   background:radial-gradient(ellipse at center,
-    hsl(28, 50%, 55%) 0%, transparent 50%);
-  opacity:.05;
+    hsl(var(--atmo-band-b)) 0%, transparent 50%);
+  opacity:var(--atmo-band-b-op);
   animation:
     bandBDriftY 47s ease-in-out infinite,
     bandBBreathe 31s ease-in-out infinite;
@@ -68,8 +114,8 @@
   50%      { transform: translate3d(0,  1.5%, 0); }
 }
 @keyframes bandABreathe{
-  0%, 100% { opacity: .08; }
-  50%      { opacity: .10; }
+  0%, 100% { opacity: var(--atmo-band-a-op); }
+  50%      { opacity: var(--atmo-band-a-op-breathe); }
 }
 @keyframes bandBDriftX{
   0%, 100% { transform: translate3d( 4%, 0, 0); }
@@ -80,8 +126,8 @@
   50%      { transform: translate3d(0, -1.5%, 0); }
 }
 @keyframes bandBBreathe{
-  0%, 100% { opacity: .05; }
-  50%      { opacity: .07; }
+  0%, 100% { opacity: var(--atmo-band-b-op); }
+  50%      { opacity: var(--atmo-band-b-op-breathe); }
 }
 /* L3 — Cursor-anchored light. Position written by JS via translate3d. */
 .cursor-light{
@@ -89,7 +135,7 @@
   width:1200px;height:1200px;margin:-600px 0 0 -600px;
   pointer-events:none;
   background:radial-gradient(circle,
-    hsla(38, 70%, 75%, 0.04) 0%, transparent 60%);
+    hsla(var(--atmo-cursor), var(--atmo-cursor-op)) 0%, transparent 60%);
   transform: translate3d(50vw, 50vh, 0);
   will-change:transform;mix-blend-mode:screen;
 }
