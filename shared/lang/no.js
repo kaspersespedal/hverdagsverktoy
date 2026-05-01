@@ -942,7 +942,13 @@ REGIONS['no'] = {
       mvalK9:'merverdiavgiftsloven mval kap 9 justering kapitalvarer',
       rskl53:'regnskapsloven rskl 5-3 avskrivning anleggsmidler',
       aksjeloven:'aksjeloven aksjeselskap stiftelse kapital',
-      selskapsloven:'selskapsloven ansvarlig kommandittselskap partnership act'
+      selskapsloven:'selskapsloven ansvarlig kommandittselskap partnership act',
+      skattSection:'skatt skatter inntektsskatt skattetrinn fradrag',
+      boliglanSection:'boliglån lån rente egenkapital nedbetaling bolig',
+      kalkSection:'kalkulator regnemaskin beregne regne ut',
+      avgiftSection:'avgift avgifter mva moms aga arbeidsgiveravgift',
+      selskapSection:'selskap as enk ans ks aksjeselskap bedrift',
+      personligSection:'personlig privat budsjett sparing pensjon lønn'
     },
     searchDn: {
       trinnskatt:'Trinnskatt',
@@ -988,7 +994,13 @@ REGIONS['no'] = {
       mvalK9:'Merverdiavgiftsloven kap. 9 — Justering',
       rskl53:'Regnskapsloven § 5-3 — Avskrivning',
       aksjeloven:'Aksjeloven',
-      selskapsloven:'Selskapsloven'
+      selskapsloven:'Selskapsloven',
+      skattSection:'Skatt',
+      boliglanSection:'Boliglån',
+      kalkSection:'Kalkulator',
+      avgiftSection:'Avgift',
+      selskapSection:'Selskap',
+      personligSection:'Personlig'
     },
     searchDs: {
       trinnskatt:'Progressiv skatt som øker med inntekten — 5 trinn',
@@ -1034,6 +1046,12 @@ REGIONS['no'] = {
       mvalK9:'Kapitalvarer og justeringsperioder',
       rskl53:'Anleggsmidler med begrenset levetid skal avskrives',
       aksjeloven:'Lov om aksjeselskaper — stiftelse, kapital, styre',
-      selskapsloven:'Lov om ansvarlige selskaper og kommandittselskaper'
+      selskapsloven:'Lov om ansvarlige selskaper og kommandittselskaper',
+      skattSection:'Skatteberegning, fradrag og skattetrinn',
+      boliglanSection:'Boliglån, rente og nedbetaling',
+      kalkSection:'Generelle finanskalkulatorer',
+      avgiftSection:'MVA, AGA og andre avgifter',
+      selskapSection:'Selskapsformer og bedriftsskatt',
+      personligSection:'Privatøkonomi, budsjett og sparing'
     }
 };
