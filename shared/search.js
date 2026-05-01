@@ -603,15 +603,15 @@ window.hvtSearchInvalidate = function(){ _i18nHaystacks = null; _i18nLang = null
 function findInjectionPoint(){
   // Priority 1: Dashboard tools title (homepage)
   var toolsTitle = document.getElementById('dash-tools-title');
-  if(toolsTitle) return {parent: toolsTitle.parentNode, before: toolsTitle};
+  if(toolsTitle) return {parent: toolsTitle.parentNode, before: toolsTitle, suppressChips: false};
 
   // Priority 2: Hero dash rule (homepage alt)
   var dashRule2 = document.getElementById('hero-dash-rule2');
-  if(dashRule2) return {parent: dashRule2.parentNode, before: dashRule2};
+  if(dashRule2) return {parent: dashRule2.parentNode, before: dashRule2, suppressChips: false};
 
-  // Priority 3: Editorial prototype anchor (index-new.html landings)
+  // Priority 3: Editorial prototype anchor (index-new.html landings) — skip chips, style.css ikke lastet
   var protoAnchor = document.getElementById('site-search-anchor');
-  if(protoAnchor) return {parent: protoAnchor.parentNode, before: protoAnchor};
+  if(protoAnchor) return {parent: protoAnchor.parentNode, before: protoAnchor, suppressChips: true};
 
   // Subpages: do not inject search
   return null;
@@ -645,7 +645,9 @@ function initSearch(){
   var activeIdx = -1;
 
   // Build suggestion chips (rebuildable on language change)
+  // Skipp paa nye landings (point.suppressChips) — style.css er ikke lastet, chips renderer ustylet
   function buildChips(){
+    if(point.suppressChips){ chips.innerHTML=''; return; }
     var popularLabel = T('searchPopular','Populære:');
     var chipHTML = '<span class="search-chip-label">'+popularLabel+'</span>';
     for(var i=0; i<SUGGESTED.length; i++){
