@@ -1110,7 +1110,13 @@ REGIONS['no'] = {
       kalkToolFerieTitle:'Feriepenger',
       kalkToolFerieDesc:'10,2 %, 12,0 % og +2,3 % over 60 år — full beregning.',
       kalkToolNpvTitle:'NPV / IRR',
-      kalkToolNpvDesc:'Lønnsomhetsanalyse med netto nåverdi og internrente.'
+      kalkToolNpvDesc:'Lønnsomhetsanalyse med netto nåverdi og internrente.',
+      kalkEyebrowHome:'Forsiden',
+      kalkEyebrowCurrent:'Kalkulator',
+      kalkToolLonnUtbytteTitle:'Lønn vs Utbytte',
+      kalkToolLonnUtbytteDesc:'Selskapets kostnad ved lønn (AGA + ferie + OTP) vs utbytte (selskapsskatt) — sammenlign per AGA-sone.',
+      kalkToolLikviditetTitle:'Likviditetsbudsjett',
+      kalkToolLikviditetDesc:'Måned-for-måned cash flow med startbalanse, inntekt og utgift — last ned hele tabellen som CSV.'
     },
 
     // — personlig landing (editorial redesign) —
@@ -1330,9 +1336,13 @@ REGIONS['no'] = {
     skattHeroToolUtbytteDesc:'Oppjusteringsfaktor 1,72 og skjermingsfradrag forklart.',
     skattHeroToolFormueTitle:'Formuesskatt',
     skattHeroToolFormueDesc:'0,7 % stat + 0,3 % kommune over 1,7 mill bunnfradrag.',
+    skattHeroToolReiseTitle:'Reisefradrag',
     skattHeroToolReiseDesc:'1,76 kr per km over 14 950 kr egenandel.',
     skattHeroToolForaTitle:'Foreldrefradrag',
     skattHeroToolForaDesc:'25 000 kr for ett barn, 15 000 kr for hvert ekstra.',
+    skattHeroToolInntektTitle:'Inntektsskatt',
+    skattHeroToolInntektDesc:'Lønn etter skatt — trinnskatt, alminnelig inntektsskatt, trygdeavgift og fradrag for 2026.',
+    skattHeroTagNew:'Ny',
 
     // — avgift landing (editorial redesign) —
     avgiftHeroEyebrowHome:'Forsiden',
@@ -1340,7 +1350,7 @@ REGIONS['no'] = {
     avgiftHeroTitle:'<em>Avgift</em>',
     avgiftHeroSubtitle:'MVA, arbeidsgiveravgift og særavgifter — alle satser fra merverdiavgiftsloven og folketrygdloven 2026.',
     avgiftHeroStatVat:'Standard MVA-sats',
-    avgiftHeroStatAga:'Sone I AGA',
+    avgiftHeroStatAga:'Sone I arbeidsgiveravgift',
     avgiftHeroFilterPlaceholder:'Filtrer verktøy i denne kategorien…',
     avgiftHeroChipAll:'Alle',
     avgiftHeroChipPopular:'Populære',
@@ -1359,7 +1369,8 @@ REGIONS['no'] = {
     avgiftHeroToolVoecTitle:'Importgrense',
     avgiftHeroToolVoecDesc:'350 kr-grensen er borte — slik fungerer VOEC-ordningen i dag.',
     avgiftHeroToolEnganaTitle:'Engangsavgift bil',
-    avgiftHeroToolEnganaDesc:'CO2, NOx og vekt — beregn engangsavgift på ny bil.',
+    avgiftHeroToolEnganaDesc:'CO₂, NOx og vekt — beregn engangsavgift på ny bil.',
+    avgiftHeroToolAgaTitle:'Arbeidsgiveravgift',
 
     // — boliglan landing (editorial redesign) —
     boliglanHeroEyebrowHome:'Forsiden',
