@@ -121,20 +121,20 @@ var SEARCH_DATA = [
   {name:'Selskapsloven',desc:'Lov om ansvarlige selskaper og kommandittselskaper',url:'/selskap/#selskap-ans-card',tags:'selskapsloven lov ansvarlig selskap kommandittselskap ans da ks 1985 partnership act',type:'law',page:'Selskap',sk:'selskapsloven'},
 
   // /lov/ — lovreferanser med /lov/ som landingsside (kapittel-oversikt og lovtekst-portal)
-  {name:'Skatteloven',desc:'Inntektsskatt, formuesskatt og fradragsregler — kapittel-oversikt',url:'/lov/',tags:'skatteloven sktl lov inntektsskatt formuesskatt fradrag tax act',type:'law',page:'Lov'},
-  {name:'Aksjeloven',desc:'Stiftelse, kapitalkrav, styre og generalforsamling for AS',url:'/lov/',tags:'aksjeloven asl lov aksjeselskap as stiftelse kapital styre companies act',type:'law',page:'Lov'},
-  {name:'Merverdiavgiftsloven',desc:'MVA-plikt, fradragsrett og særskilte regler',url:'/lov/',tags:'merverdiavgiftsloven mvaloven mval lov mva merverdiavgift fradragsrett vat act',type:'law',page:'Lov'},
-  {name:'Bokføringsloven',desc:'Bokføringsplikt, dokumentasjon og oppbevaring',url:'/lov/',tags:'bokforingsloven bfl lov bokforing dokumentasjon oppbevaring bookkeeping act',type:'law',page:'Lov'},
-  {name:'Regnskapsloven',desc:'Plikter til årsregnskap og oppstillingsplan',url:'/lov/',tags:'regnskapsloven rskl lov arsregnskap oppstillingsplan accounting act',type:'law',page:'Lov'},
-  {name:'Hvordan lese en paragraf',desc:'Kapittel, paragraf, ledd og bokstav — oppbygning av en lovparagraf',url:'/lov/',tags:'paragraf lov kapittel ledd bokstav lese forklaring how to read law',type:'concept',page:'Lov'},
+  {name:'Skatteloven',desc:'Inntektsskatt, formuesskatt og fradragsregler — kapittel-oversikt',url:'/lov/',tags:'skatteloven sktl lov inntektsskatt formuesskatt fradrag tax act',type:'law',page:'Lov',sk:'skatteloven_portal'},
+  {name:'Aksjeloven',desc:'Stiftelse, kapitalkrav, styre og generalforsamling for AS',url:'/lov/',tags:'aksjeloven asl lov aksjeselskap as stiftelse kapital styre companies act',type:'law',page:'Lov',sk:'aksjeloven_portal'},
+  {name:'Merverdiavgiftsloven',desc:'MVA-plikt, fradragsrett og særskilte regler',url:'/lov/',tags:'merverdiavgiftsloven mvaloven mval lov mva merverdiavgift fradragsrett vat act',type:'law',page:'Lov',sk:'mvaloven_portal'},
+  {name:'Bokføringsloven',desc:'Bokføringsplikt, dokumentasjon og oppbevaring',url:'/lov/',tags:'bokforingsloven bfl lov bokforing dokumentasjon oppbevaring bookkeeping act',type:'law',page:'Lov',sk:'bokforingsloven_portal'},
+  {name:'Regnskapsloven',desc:'Plikter til årsregnskap og oppstillingsplan',url:'/lov/',tags:'regnskapsloven rskl lov arsregnskap oppstillingsplan accounting act',type:'law',page:'Lov',sk:'regnskapsloven_portal'},
+  {name:'Hvordan lese en paragraf',desc:'Kapittel, paragraf, ledd og bokstav — oppbygning av en lovparagraf',url:'/lov/',tags:'paragraf lov kapittel ledd bokstav lese forklaring how to read law',type:'concept',page:'Lov',sk:'hvordanLeseParagraf'},
 
   // /regnskap/ — regnskaps-grunnlag begreper
-  {name:'Standard kontoplan NS 4102',desc:'Norsk standard kontoplan — klasse 1 til 8',url:'/regnskap/',tags:'kontoplan ns4102 ns 4102 regnskap konto klasse standard chart of accounts',type:'concept',page:'Regnskap'},
-  {name:'Debet og kredit',desc:'Grunnregelen for dobbel bokføring — to sider av hver transaksjon',url:'/regnskap/',tags:'debet kredit bokforing dobbel regnskap konto debit credit',type:'concept',page:'Regnskap'},
-  {name:'Regnskapsplikt',desc:'Hvem må føre regnskap etter regnskapsloven',url:'/regnskap/',tags:'regnskapsplikt regnskap plikt foretak as enk accounting obligation',type:'concept',page:'Regnskap'},
-  {name:'Bokføring',desc:'Daglig registrering av bilag og transaksjoner',url:'/regnskap/',tags:'bokforing regnskap bilag transaksjon registrering daglig bookkeeping',type:'concept',page:'Regnskap'},
-  {name:'Årsregnskap',desc:'Resultat, balanse og noter — formell avslutning av året',url:'/regnskap/',tags:'arsregnskap regnskap resultat balanse noter avslutning annual accounts',type:'concept',page:'Regnskap'},
-  {name:'Revisjon',desc:'Når kreves ekstern revisor — terskler og unntak',url:'/regnskap/',tags:'revisjon revisor revisjonsplikt regnskap ekstern audit',type:'concept',page:'Regnskap'},
+  {name:'Standard kontoplan NS 4102',desc:'Norsk standard kontoplan — klasse 1 til 8',url:'/regnskap/',tags:'kontoplan ns4102 ns 4102 regnskap konto klasse standard chart of accounts',type:'concept',page:'Regnskap',sk:'kontoplanNs4102'},
+  {name:'Debet og kredit',desc:'Grunnregelen for dobbel bokføring — to sider av hver transaksjon',url:'/regnskap/',tags:'debet kredit bokforing dobbel regnskap konto debit credit',type:'concept',page:'Regnskap',sk:'debetKredit'},
+  {name:'Regnskapsplikt',desc:'Hvem må føre regnskap etter regnskapsloven',url:'/regnskap/',tags:'regnskapsplikt regnskap plikt foretak as enk accounting obligation',type:'concept',page:'Regnskap',sk:'regnskapsplikt'},
+  {name:'Bokføring',desc:'Daglig registrering av bilag og transaksjoner',url:'/regnskap/',tags:'bokforing regnskap bilag transaksjon registrering daglig bookkeeping',type:'concept',page:'Regnskap',sk:'bokforingConcept'},
+  {name:'Årsregnskap',desc:'Resultat, balanse og noter — formell avslutning av året',url:'/regnskap/',tags:'arsregnskap regnskap resultat balanse noter avslutning annual accounts',type:'concept',page:'Regnskap',sk:'arsregnskap'},
+  {name:'Revisjon',desc:'Når kreves ekstern revisor — terskler og unntak',url:'/regnskap/',tags:'revisjon revisor revisjonsplikt regnskap ekstern audit',type:'concept',page:'Regnskap',sk:'revisjon'},
 
   // ══════ EDITORIAL PROTOTYPES (path-routing — /new-layout/ redesign) ══════
   {name:'Hverdagsverktøy',desc:'Gratis norske verktøy for økonomi',url:'/',tags:'hverdagsverktøy hjem hoved økonomi kalkulator',type:'section',page:'Hjem'},
