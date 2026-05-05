@@ -1957,7 +1957,18 @@
       e.stopPropagation();
       if(btn.getAttribute('aria-expanded')==='true') close(); else open();
     });
-    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn) close(); });
+    menu.addEventListener('click', function(e){
+      var a = e.target.closest('a[data-region]');
+      if(!a) return;
+      e.preventDefault();
+      var r = a.getAttribute('data-region');
+      menu.querySelectorAll('a[data-region]').forEach(function(x){x.classList.toggle('current', x===a);});
+      if(typeof window.setRegion === 'function') {
+        try { window.setRegion(r); } catch(err){ console.warn('[hvt-lang] setRegion failed', err); }
+      }
+      close();
+    });
+    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 
@@ -2002,32 +2013,6 @@
     document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
     syncLabel();
-  })();
-
-  // ── R7: Lang menu click-handler ──
-  (function(){
-    var btn = document.getElementById('langBtn');
-    var menu = document.getElementById('langMenu');
-    if(!btn || !menu) return;
-    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
-    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
-    });
-    menu.addEventListener('click', function(e){
-      var a = e.target.closest('a[data-region]');
-      if(!a) return;
-      e.preventDefault();
-      var r = a.getAttribute('data-region');
-      menu.querySelectorAll('a[data-region]').forEach(function(x){x.classList.toggle('current', x===a);});
-      if(typeof window.setRegion === 'function') {
-        try { window.setRegion(r); } catch(err){ console.warn('[hvt-lang] setRegion failed', err); }
-      }
-      close();
-    });
-    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 </script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
