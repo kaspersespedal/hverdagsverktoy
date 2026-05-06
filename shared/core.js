@@ -212,7 +212,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v45';
+    s.src = '/shared/lang/' + code + '.js?v=v46';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -629,6 +629,7 @@ function destroyDiscoBall3D(){
 
 function updateHero() {
   const r = R();
+  setText('skip-link', r.skipLink || 'Hopp til hovedinnhold'); // T1 split-2026-05-06-r3 — must run before early-return so all pages get a11y i18n
   var _heroH1 = document.getElementById('hero-h1');
   if(!_heroH1) return; // subpages don't have hero
   _heroH1.innerHTML = r.heroH1 || 'Hverdagsverktøy<br><em>Praktiske verktøy for bedrift og privat</em>';

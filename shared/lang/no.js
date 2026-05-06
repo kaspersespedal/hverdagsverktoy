@@ -2018,4 +2018,6 @@ REGIONS['no'] = {
     aksjerFootNote: '* Historiske tall basert på Oslo Børs / MSCI World. Reell avkastning kan bli langt lavere eller høyere — aksjer er volatile, og fortid garanterer ikke fremtid. Skattesatser og skjermingsrenten oppdateres årlig av Skatteetaten.',
     aksjerFooterDisc: 'Veiledende informasjon. Ikke profesjonell rådgivning.',
     // === T1 M1 END ===
+    // === skipLink (T1 split-2026-05-06-r3) ===
+    skipLink: 'Hopp til hovedinnhold',
 };

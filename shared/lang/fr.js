@@ -1498,4 +1498,7 @@ REGIONS['fr'] = {
     maxlanHowtoSummary:`Comment utiliser Combien puis-je me permettre`,
     morHowtoSummary:`Comment utiliser le calculateur de prêt immobilier`,
     valgevNetLabel:`Net après impôt`,
+
+    // === skipLink (T1 split-2026-05-06-r3) ===
+    skipLink: 'Aller au contenu principal',
 };

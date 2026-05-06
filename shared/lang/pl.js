@@ -1465,4 +1465,7 @@ REGIONS['pl'] = {
     maxlanHowtoSummary:`Jak korzystać z Na ile mnie stać`,
     morHowtoSummary:`Jak korzystać z kalkulatora kredytu hipotecznego`,
     valgevNetLabel:`Netto po podatku`,
+
+    // === skipLink (T1 split-2026-05-06-r3) ===
+    skipLink: 'Przejdź do głównej treści',
 };
