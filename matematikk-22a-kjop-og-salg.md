@@ -575,3 +575,231 @@ a) Tenk deg at renten på Emmas konto er 10 % per år. Hvilket av diagrammene ne
 
 b) Omtrent hvor mye penger tror du Emma vil ha på kontoen etter ti år?
 c) Omtrent hvor mye penger tror du Emma vil ha på kontoen etter tjue år?
+
+---
+
+## Side 138 — 22 Personlig økonomi
+
+**OPPGAVE 22.27**
+Anna har spart 3000 kr av de pengene hun har tjent på en sommerjobb. Hun setter pengene i banken med 2,6 % rente per år.
+
+a) Hvor stort beløp har hun i banken etter ett år?
+b) Anna lar sparepengene stå urørt i banken. Hvor mye har hun på kontoen etter 5 år?
+
+*Prøv gjerne å bruke alle de tre strategiene regneark, vekstfaktor og programmering.*
+
+**EKSEMPEL 5**
+Michal setter inn 10 000 kr på sparekonto. Renten på sparekontoen er 0,2 % per måned. Hvor mange måneder går det før beløpet har vokst til 15 000 kr?
+
+**1) Hiyannas løsning: Regneark**
+Jeg lager et regneark og utvider med nye rader til jeg ser at sparebeløpet har oversteget 15 000 kr.
+
+| | A | B | C | D |
+|---|---|---|---|---|
+| 1 | Sparing over flere måneder | | | |
+| 2 | Innskudd | kr 10 000,00 | | |
+| 3 | Rente | 0,2 % | | |
+| 4 | Måned | Beløp ved starten av måneden | Rente | Beløp ved slutten av måneden |
+| 5 | 1 | kr 10 000,00 | kr 20,00 | kr 10 020,00 |
+| 6 | 2 | kr 10 020,00 | kr 20,04 | kr 10 040,04 |
+| 7 | 3 | kr 10 040,04 | kr 20,08 | kr 10 060,12 |
+| 205 | 201 | kr 14 912,29 | kr 29,82 | kr 14 942,11 |
+| 206 | 202 | kr 14 942,11 | kr 29,88 | kr 14 972,00 |
+| 207 | 203 | kr 14 972,00 | kr 29,94 | kr 15 001,94 |
+
+| | A | B | C | D |
+|---|---|---|---|---|
+| 1 | Sparing over flere måneder | | | |
+| 2 | Innskudd | 10000 | | |
+| 3 | Rente | 0,002 | | |
+| 4 | Måned | Beløp ved starten av måneden | Rente | Beløp ved slutten av måneden |
+| 5 | 1 | =B2 | =$B$3*B5 | =B5+C5 |
+| 6 | 2 | =D5 | =$B$3*B6 | =B6+C6 |
+| 7 | 3 | =D6 | =$B$3*B7 | =B7+C7 |
+| 8 | 4 | =D7 | =$B$3*B8 | =B8+C8 |
+| 9 | 5 | =D8 | =$B$3*B9 | =B9+C9 |
+| 10 | 6 | =D9 | =$B$3*B10 | =B10+C10 |
+
+**2) Henriks løsning: Vekstfaktor**
+Rente på 0,2 % tilsvarer at vekstfaktoren er 100 % + 0,2 % = 100,2 % = 1,002.
+
+N = vⁿ · G
+15 000 = 1,002ⁿ · 10 000
+
+| n | 1,002ⁿ · 10 000 | N |
+|---|---|---|
+| 10 | 1,002¹⁰ · 10 000 | 10 202 |
+| 100 | 1,002¹⁰⁰ · 10 000 | 12 212 |
+| 200 | 1,002²⁰⁰ · 10 000 | 14 912 |
+| 205 | 1,002²⁰⁵ · 10 000 | 15 062 |
+| 203 | 1,002²⁰³ · 10 000 | 15 002 |
+| 202 | 1,002²⁰² · 10 000 | 14 972 |
+
+*Jeg prøver meg fram på en systematisk måte med ulike verdier for n for å finne løsningen av likningen.*
+
+---
+
+## Side 139 — 22B Sparing og lån
+
+**EKSEMPEL 5 (forts.)**
+
+**3) Tuvas løsning: Vekstfaktor og likning med CAS**
+Vi bruker x om antall måneder siden det er dette som er ukjent.
+
+N = vˣ · G
+15 000 = 1,002ˣ · 10 000
+
+*Denne likningen kan jeg løse i CAS ved å bruke verktøyet Løs Numerisk.*
+
+**GeoGebra 5**
+```
+1: 15000=1.002^x*10000, x=1
+   NLøs: {x = 202.935}
+```
+
+**GeoGebra 6**
+```
+1: 15000 = 1.002ˣ · 10000
+   NLøs: {x = 202.935}
+```
+
+Alle kommer fram til at det må gå 203 måneder før beløpet overstiger 15 000 kr.
+
+**SNAKKE MATTE**
+a) Forklar strategiene som er vist i eksempel 5.
+b) Hva er fordelene og ulempene med de ulike strategiene?
+c) Hvordan kan vi endre framgangsmåtene hvis vi vet årlig rente, og skal finne ut hvor mange år han må spare?
+
+**SNAKKE MATTE**
+Oppgaven i eksempel 5 kunne også vært løst ved å bruke programmering.
+
+```python
+vekstfaktor = 1.002
+sparebeløp = 10000
+måneder = 0
+
+while sparebeløp < 15000:
+    sparebeløp = vekstfaktor * sparebeløp
+    måneder = måneder + 1
+
+print(måneder)
+```
+
+*Jeg bruker en while-løkke slik at gjentakelsene stopper når sparebeløpet overstiger 15 000.*
+
+a) Forklar hva programmet gjør på hver linje.
+b) Forklar hvorfor det er brukt en while-løkke i stedet for en for-løkke i dette programmet.
+c) Hva skjer hvis vi ikke tar med linje 7 i programmet?
+d) Hva skjer hvis vi ikke tar med linje 6 i programmet?
+
+---
+
+## Side 140 — 22 Personlig økonomi
+
+**OPPGAVE 22.28**
+Da Torjus ble født, fikk han 10 000 kr av mormor. Pengene ble satt inn på sparekonto med 4 % årlig rente. Vi antar at renten er den samme hele tiden, og at det verken settes inn eller tas ut penger av sparekontoen.
+
+a) Hvor stort beløp var det på kontoen da Torjus var 7 år?
+b) Hvor mange år tok det før beløpet på kontoen passerte 15 000 kr?
+c) Hvor mange år tok det før beløpet ble doblet?
+
+### LÅN
+Hvis vi trenger å kjøpe noe vi ikke har nok penger til for øyeblikket, kan vi ta opp et **lån** i banken. Når vi låner penger, må vi betale rente til banken. Renten på lån er som oftest høyere enn renten vi får når vi sparer. Banken kan ikke låne ut penger til personer under 18 år.
+
+*I forbindelse med kjøp av bolig eller bil må de fleste låne penger i banken.*
+
+> **Avdrag** er et beløp som tilbakebetales på et lån. Størrelsen på lånet minker med samme beløp som betales som avdrag.
+>
+> **Den nominelle renten** er den renten banken oppgir uten å ta med diverse gebyrer og andre kostnader. Når gebyrer og andre kostnader tas med, får vi det vi kaller **effektiv rente**. Det er de effektive rentene vi må sammenlikne når vi får ulike tilbud om lån.
+>
+> **Terminbeløpet** er summen av avdraget og renten som betales på et lån. Terminbeløpet betaler vi som oftest hver måned.
+
+**SNAKKE MATTE**
+Forklar med utgangspunkt i diagrammene hva som er forskjellen på serielån og annuitetslån.
+
+*(To søylediagrammer: Serielån — terminbeløpet (rente + avdrag) avtar over termin 1–10 fordi rentedelen krymper. Annuitetslån — terminbeløpet er likt hver termin, men forholdet mellom rente og avdrag endrer seg.)*
+
+---
+
+## Side 141 — 22B Sparing og lån
+
+**SNAKKE MATTE**
+Tabellen viser starten av en nedbetalingsplan for et boliglån fra en bank.
+
+| Dato | Å betale | Renter og gebyrer | Avdrag | Restlån etter denne innbetalingen |
+|---|---|---|---|---|
+| 25.08.2020 | 13 398 kr | 3807 kr | 9591 kr | 2 715 409 kr |
+| 25.09.2020 | 13 398 kr | 3794 kr | 9604 kr | 2 705 804 kr |
+| 25.10.2020 | 13 398 kr | 3781 kr | 9618 kr | 2 696 187 kr |
+| 25.11.2020 | 13 398 kr | 3767 kr | 9631 kr | 2 686 556 kr |
+| 25.12.2020 | 13 398 kr | 3754 kr | 9644 kr | 2 676 912 kr |
+| 25.01.2021 | 13 398 kr | 3741 kr | 9657 kr | 2 667 254 kr |
+| 25.02.2021 | 13 398 kr | 3728 kr | 9671 kr | 2 657 583 kr |
+| 25.03.2021 | 13 398 kr | 3714 kr | 9684 kr | 2 647 900 kr |
+| 25.04.2021 | 13 398 kr | 3701 kr | 9697 kr | 2 638 202 kr |
+| 25.05.2021 | 13 398 kr | 3688 kr | 9711 kr | 2 628 492 kr |
+| 25.06.2021 | 13 398 kr | 3674 kr | 9724 kr | 2 618 768 kr |
+| 25.07.2021 | 13 398 kr | 3661 kr | 9737 kr | 2 609 030 kr |
+| 25.08.2021 | 13 398 kr | 3647 kr | 9751 kr | 2 599 280 kr |
+
+a) Forklar hva som menes med renter, gebyrer, avdrag og restlån.
+b) Er lånet et serielån eller et annuitetslån? Begrunn svaret.
+c) Hvor stort lån ble tatt opp?
+d) Hvor ofte betaler familien? Hvor stort er terminbeløpet?
+
+---
+
+## Side 142 — 22 Personlig økonomi
+
+**EKSEMPEL 6**
+Ida skal kjøpe bolig. Boligen koster 2,8 millioner kroner. Ida har 500 000 kr som egenkapital og ønsker å låne resten. Hun tar opp et **serielån** som skal nedbetales med årlige terminer over 20 år. Det vil si at hun betaler renter og avdrag én gang per år. Den nominelle renten er 3,2 % per år.
+
+*Avdraget er beløpet som tilbakebetales på lånet.*
+
+Et serielån er et lån der vi betaler tilbake et like stort beløp av lånesummen hver termin. Da vil rentene minke ettersom årene går, og terminbeløpet vi må betale, vil bli mindre for hvert år som går.
+
+**1) Løsning med regneark**
+
+| | A | B | C | D | E |
+|---|---|---|---|---|---|
+| 1 | Serielån | | | | |
+| 2 | Lånebeløp | kr 2 300 000,00 | | | |
+| 3 | Antall terminer | 20 | | | |
+| 4 | Rente | 3,2 % | | | |
+| 5 | År | Lån ved starten av året | Avdrag | Rente | Terminbeløp |
+| 6 | 1 | kr 2 300 000,00 | kr 115 000,00 | kr 73 600,00 | kr 188 600,00 |
+| 7 | 2 | kr 2 185 000,00 | kr 115 000,00 | kr 69 920,00 | kr 184 920,00 |
+| 24 | 19 | kr 230 000,00 | kr 115 000,00 | kr 7 360,00 | kr 122 360,00 |
+| 25 | 20 | kr 115 000,00 | kr 115 000,00 | kr 3 680,00 | kr 118 680,00 |
+
+*Her er rad 8 til og med rad 23 i regnearket skjult.*
+
+| | A | B | C | D | E |
+|---|---|---|---|---|---|
+| 1 | Serielån | | | | |
+| 2 | Lånebeløp | 2300000 | | | |
+| 3 | Antall terminer | 20 | | | |
+| 4 | Rente | 0,032 | | | |
+| 5 | År | Lån ved starten av året | Avdrag | Rente | Terminbeløp |
+| 6 | 1 | =B3 | =$B$2/$B$2 | =$B$4*B6 | =C6+D6 |
+| 7 | 2 | =B6-C6 | =$B$2/$B$2 | =$B$4*B7 | =C7+D7 |
+| 24 | 19 | =B23-C23 | =$B$2/$B$2 | =$B$4*B24 | =C24+D24 |
+| 25 | 20 | =B24-C24 | =$B$2/$B$2 | =$B$4*B25 | =C25+D25 |
+
+**2) Løsning med programmering**
+
+```python
+lånesum = 2300000
+perioder = 20
+rentesats = 0.032
+
+avdrag = lånesum/perioder
+
+for år in range(1, perioder + 1):
+    rente = rentesats * lånesum
+    terminbeløp = avdrag + rente
+    lånesum = lånesum - avdrag
+    print(år, int(terminbeløp))
+```
+
+*Vi bruker kommandoen `int` for at terminbeløpet skal skrives til skjermen uten desimaler.*
