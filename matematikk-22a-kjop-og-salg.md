@@ -388,3 +388,190 @@ Vilde og Bente skal på fisketur i Sverige. I fire netter leier de en campinghyt
 **OPPGAVE 22.20**
 a) Lag et regneark som regner om fra britiske pund til norske kroner. Brukeren skal kunne taste inn valutakursen og et beløp i britiske pund.
 b) Lag et program som regner om fra britiske pund til norske kroner. Brukeren skal kunne taste inn valutakursen og et beløp i britiske pund.
+
+---
+
+## Side 133 — Terrengløypa
+
+**OPPGAVE 22.21**
+En vare koster 1000 kr inkludert merverdiavgift.
+Nikolai mener at merverdiavgiften utgjør 250 kr.
+Terese mener at merverdiavgiften utgjør 200 kr.
+
+a) Gjør beregninger, og finn ut om noen av dem har rett.
+b) Vis at hvis merverdiavgiften er 25 %, utgjør den alltid 20 % av salgssummen.
+c) Merverdiavgiften på matvarer er 15 %. Hvor mange prosent av salgssummen utgjør merverdiavgiften for matvarer?
+
+**OPPGAVE 22.22**
+Her ser du priser på ulike varer i Norge og i Brasil. Prisene i Norge er oppgitt i norske kroner (NOK), og prisene i Brasil er oppgitt i brasilianske real (BRL). Valutakursen på brasilianske real er 1,64. Det betyr at 1 BRL = 1,64 NOK.
+
+| Vare | Pris i Norge | Pris i Brasil |
+|---|---|---|
+| Egg | 6 stk. 21,80 NOK | 6 stk. 3,45 BRL |
+| Vann | 1,5 L 23,00 NOK | 1,5 L 3,01 BRL |
+| Poteter | 1 kg 23,00 NOK | 1 kg 4,26 BRL |
+| Bananer | 1 kg 26,50 NOK | 1 kg 4,42 BRL |
+| Melk | 1 L 20,80 NOK | 1 L 3,64 BRL |
+| Basmatiris | 1 kg 30,10 NOK | 1 kg 4,31 BRL |
+| Kyllingfilet | 1 kg 139,30 NOK | 1 kg 13,20 BRL |
+| Loff | 1 stk. 31,20 NOK | 1 stk. 6,03 BRL |
+
+*Data fra: numbeo.com*
+
+a) Vis ved regning at bananer er 3,7 ganger dyrere i Norge enn i Brasil.
+b) Regn ut hvor mange ganger dyrere hver av de andre varene er i Norge sammenliknet med i Brasil.
+c) Lag ett eller flere diagrammer som framstiller informasjonen fra oppgave b. Begrunn valget av diagram.
+
+---
+
+## Side 134 — 22 Personlig økonomi
+
+d) Ta utgangspunkt i varene på forrige side. Foreslå minst to ulike framgangsmåter for å finne ut omtrent hvor mange ganger dyrere mat og drikke er i Norge sammenliknet med Brasil.
+e) Følg de ulike framgangsmåtene fra oppgave d, og finn ut omtrent hvor mange ganger dyrere mat og drikke er i Norge sammenliknet med Brasil. Sammenlikn svarene, og vurder hvilket svar du mener er mest realistisk.
+
+En spørreundersøkelse fra 2012 viser at medianinntekten for en husholdning i Norge var 51 489 USD per år. Samme tall for Brasil var 7 522 USD.
+
+f) Hvor mange ganger bedre inntekt har husholdninger i Norge sammenliknet med Brasil?
+g) I hvilket av disse to landene tror du innbyggerne bruker størst andel av inntekten sin på mat? Begrunn svaret.
+
+**EKSEMPEL 3**
+På Badeland er prisen 120 kr for personer som har fylt 15 år og 80 kr for personer som er yngre enn 15 år. Lag et regneark der brukeren kan skrive inn alderen sin, og så skrives prisen hun skal betale i en celle i regnearket.
+
+**Løsning**
+
+| | A | B |
+|---|---|---|
+| 1 | Hva skal du betale på Badeland? | |
+| 2 | Hva er alderen din? | 12 |
+| 3 | Du skal betale: | kr 80,00 |
+
+| | A | B |
+|---|---|---|
+| 1 | Hva skal du betale på Badeland? | |
+| 2 | Hva er alderen din? | 12 |
+| 3 | Du skal betale: | =HVIS(B2<15;80;120) |
+
+I celle B3 skriver vi en HVIS-formel som inneholder en betingelse. Formelen har tre deler adskilt av semikolon (;). Den første delen er betingelsen, den andre delen er det som skal skje når betingelsen er sann, og den tredje delen er det som skal skje når betingelsen ikke er sann.
+
+*HVIS-formelen fungerer på samme måten som if-setningen i programmering med Python.*
+
+---
+
+## Side 135 — 22A Kjøp og salg
+
+**OPPGAVE 22.23**
+I en fargehandel gir de 10 % rabatt til kunder som handler for over 1500 kr. Live skal handle, og her ser du et regneark som beregner hva hun skal betale.
+
+| | A | B | C | D |
+|---|---|---|---|---|
+| 1 | Vare | Antall | Pris for én | Pris |
+| 2 | Maling | 2 | kr 525,00 | kr 1 050,00 |
+| 3 | Penselsett | 1 | kr 135,00 | kr 135,00 |
+| 4 | | | | kr - |
+| 5 | | | | kr - |
+| 6 | | | | kr - |
+| 7 | Sum | | | kr 1 185,00 |
+| 8 | Rabatt | 0 % | | kr - |
+| 9 | Å betale | | | kr 1 185,00 |
+
+Live kan fylle ut de oransje cellene, i de grå cellene er det formler.
+Lag et slikt regneark, og test med varer som koster mer og mindre enn 1500 kr til sammen.
+
+**OPPGAVE 22.24**
+Siri jobber i en kafé. Hvis kunden kjøper mat og tar den med seg, er merverdiavgiften 15 %. Hvis kunden spiser maten i kafeen, er merverdiavgiften 25 %.
+Lag et regneark der du kan skrive inn vare, antall og pris uten merverdiavgift. Du skal også kunne oppgi om varene skal spises i kafeen. Lag formler som beregner merverdiavgiften og hva kunden skal betale.
+
+**OPPGAVE 22.25**
+a) Lag et program som fungerer som en valutakalkulator. Kalkulatoren skal kunne regne om fra euro, britiske pund og amerikanske dollar til norske kroner. Brukeren skal oppgi hvilken valuta beløpet som skal omregnes er i, og hvor stort beløp det gjelder. Programmet skal beregne og skrive til skjermen hvor mange norske kroner dette tilsvarer.
+b) Utvid programmet slik at det også kan brukes for svenske og danske kroner.
+
+**OPPGAVE 22.26**
+Lag et program som fungerer slik som tollkalkulatoren i oppgave 2 på side 129. Du kan velge hvor mange ulike valutaer du vil kunne bruke. Det er to varekategorier: klær og annet. Det er 10,7 % toll på klær og ingen toll på de andre varene. Kalkulatoren håndterer ikke import av matvarer eller varer det er spesielle avgifter på. Merverdiavgiften er 25 %.
+
+*For å unngå mange desimaler i tallene i utskriften kan du bruke kommandoen `round(tall, 2)` som runder av variabelen `tall` til to desimaler.*
+
+---
+
+## Side 136 — 22 Personlig økonomi
+
+### 22B Sparing og lån
+- Regne ut hvordan et beløp på en **sparekonto** vokser over tid.
+- Forklare og hente ut informasjon fra en **nedbetalingsplan** for et lån.
+- Forklare forskjellen på **serielån** og **annuitetslån**.
+- Regne ut **renter**, **avdrag** og **terminbeløp** for lån ved å bruke regneark og programmering.
+- Forklare forskjellen på **nominell rente** og **effektiv rente**.
+- Forklare hva det vil si å ta opp kredittkortlån og **forbrukslån**.
+
+#### SPARING
+Hvis du har penger til overs, kan du **spare**. Når du sparer ved å ha pengene på konto i banken, får du **renter**. Renten regnes som en prosent av det beløpet som er på kontoen, den kan for eksempel være 2,0 % per år.
+
+**EKSEMPEL 4**
+Emma setter inn 6000 kr på sparekontoen sin. Renten er 2,4 % per år.
+Hvor mye har Emma på kontoen etter 5 år?
+
+**1) Hiyannas løsning: Regneark**
+Når jeg kopierer en formel der jeg skal referere til en bestemt celle i alle formlene, skriver jeg cellereferansen som en absolutt referanse. Når jeg bruker absolutt cellereferanse, bruker jeg $-tegn i cellereferansen.
+
+*Jeg bruker $-tegn fordi celle B3 skal være med i alle formlene i kolonne C.*
+
+| | A | B | C | D |
+|---|---|---|---|---|
+| 1 | Sparing over flere år | | | |
+| 2 | Innskudd | kr 6 000,00 | | |
+| 3 | Rente | 2,40 % | | |
+| 4 | År | Beløp ved starten av året | Rente | Beløp ved slutten av året |
+| 5 | 1 | kr 6 000,00 | kr 144,00 | kr 6 144,00 |
+| 6 | 2 | kr 6 144,00 | kr 147,46 | kr 6 291,46 |
+| 7 | 3 | kr 6 291,46 | kr 150,99 | kr 6 442,45 |
+| 8 | 4 | kr 6 442,45 | kr 154,62 | kr 6 597,07 |
+| 9 | 5 | kr 6 597,07 | kr 158,33 | kr 6 755,40 |
+
+| | A | B | C | D |
+|---|---|---|---|---|
+| 1 | Sparing over flere år | | | |
+| 2 | Innskudd | 6000 | | |
+| 3 | Rente | 0,024 | | |
+| 4 | År | Beløp ved starten av året | Rente | Beløp ved slutten av året |
+| 5 | 1 | =B2 | =$B$3*B5 | =B5+C5 |
+| 6 | 2 | =D5 | =$B$3*B6 | =B6+C6 |
+| 7 | 3 | =D6 | =$B$3*B7 | =B7+C7 |
+| 8 | 4 | =D7 | =$B$3*B8 | =B8+C8 |
+| 9 | 5 | =D8 | =$B$3*B9 | =B9+C9 |
+
+---
+
+## Side 137 — 22B Sparing og lån
+
+**EKSEMPEL 4 (forts.)**
+
+**2) Tuvas løsning: Vekstfaktor**
+Rente på 2,4 % tilsvarer en vekstfaktor på 100 % + 2,4 % = 102,4 % = 1,024.
+Beløpet på konto øker med samme prosent hvert år.
+
+N = vⁿ · G = 1,024⁵ · 6000 = 6755,40
+
+Emma har 6755,40 kr på kontoen etter 5 år.
+
+*Her bruker vi de samme strategiene som vi brukte i kapittel 21B, når vi regnet med gjentatte prosentvise endringer.*
+
+**3) Yonas' løsning: Programmering**
+
+```python
+vekstfaktor = 1.024
+sparebeløp = 6000
+
+for år in range(1, 6):
+    sparebeløp = vekstfaktor * sparebeløp
+
+print(sparebeløp)
+```
+
+**SNAKKE MATTE**
+Se på eksempel 4.
+
+a) Tenk deg at renten på Emmas konto er 10 % per år. Hvilket av diagrammene nedenfor vil best beskrive utviklingen av beløpet på Emmas sparekonto hvis pengene blir stående urørt på kontoen i 16 år?
+
+*(To søylediagrammer fra år 1 til 16 — ett som vokser jevnt/lineært, ett som vokser eksponentielt.)*
+
+b) Omtrent hvor mye penger tror du Emma vil ha på kontoen etter ti år?
+c) Omtrent hvor mye penger tror du Emma vil ha på kontoen etter tjue år?
