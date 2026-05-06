@@ -228,3 +228,163 @@ En familie på tre voksne og ett barn har tenkt å reise til Danmark. De har 800
 | Lommepenger | 100 DKK per person per dag |
 
 Hva har de råd til å gjøre, og hvor lenge kan de være i Danmark?
+
+---
+
+## Side 128/129 — Netthandel
+
+### Netthandel
+Nå trenger vi ikke lenger å dra til butikken eller kjøpesenteret når vi skal handle. Mye av det vi vil ha, kan kjøpes i en nettbutikk. Her møter du Trine og Tore som handler varer på internett. Når vi handler varer på internett, er det viktig å undersøke hvilke avgifter og gebyrer som kommer i tillegg til prisen. Vi kan også få bruk for å gjøre om beløp fra utenlandsk valuta til norske kroner.
+
+**1)** Trine skal kjøpe hobbyartikler i en nettbutikk. Lista viser varene hun har bestilt:
+
+| Vare | Antall | Pris per stk. |
+|---|---|---|
+| Garnnøste | 5 | 35 kr |
+| Strikkepinner | 1 | 67 kr |
+| Akvarellmaling | 1 | 245 kr |
+| Akvarellpapir | 1 | 150 kr |
+| Pensler | 1 | 75 kr |
+
+Frakt på 129 kr kommer i tillegg.
+
+a) Hva må Trine betale?
+b) Frakt er gratis ved kjøp over 1000 kr. Vil det lønne seg for Trine å bestille en vare til selv om hun ikke trenger denne varen?
+c) Lag et regneark som Trine kan bruke til å gjøre beregninger for det hun kjøper i nettbutikken.
+
+**2)** Tore skal kjøpe en jakke fra en nettbutikk i Frankrike. Jakka koster 70 euro inklusive frakt.
+
+a) Regn ut hva prisen på jakka blir i NOK. Du kan enten finne dagens valutakurs for euro på nett, eller du kan bruke 9,6938.
+b) Når vi handler varer på nett fra utlandet, må vi betale merverdiavgift. Den er på 25 %. Regn ut hva merverdiavgiften blir.
+c) Når vi kjøper klær fra utlandet, må vi også betale toll. Tollen er på 10,7 %. Tollen beregnes av prisen på varen inklusive merverdiavgift. Regn ut hvor stort beløp tollen utgjør.
+
+*Toll er en avgift som staten legger på varer vi kjøper fra utlandet. Stortinget bestemmer reglene for hva det betales toll på og hvor mye toll som skal betales.*
+
+d) Pakken sendes med posten. De tar et gebyr på 149 kr for å fortolle varen. Hvor mye må Tore betale for jakka?
+e) Nettstedet toll.no har en importkalkulator. Bruk den og sjekk om du får samme svar som kalkulatoren gir. Hvis ikke, hva kan være grunnen til at du får et annet svar?
+f) Skriv en algoritme som forklarer punktvis hvordan du regner ut hva du må betale hvis du kjøper et klesplagg fra en nettbutikk i utlandet.
+g) Lag et regneark eller et program som kan brukes til å beregne hva det koster å kjøpe varer fra nettbutikker der prisene er oppgitt i euro.
+
+---
+
+## Side 130 — Følg stien
+
+### OVERSLAG OG REGNEARK
+
+**OPPGAVE 22.8**
+Silje skal kjøpe bursdagsgaver til noen venner. Hun tar en tur innom gjenbruksbutikken og finner disse gavene:
+
+| Gave | Antall | Pris per stk. |
+|---|---|---|
+| Kriminalroman | 3 | 25 kr |
+| Redningsvest | 1 | 69 kr |
+| Blomstervase | 1 | 18 kr |
+| Krus | 4 | 12 kr |
+
+a) Gjør et overslag over hvor mye disse gavene koster.
+b) Regn ut nøyaktig hva de koster ved å bruke regneark.
+c) Mor ser på gavene Silje har kjøpt, og mener at hun har kjøpt gavene med et avslag på 80 % i forhold til om hun hadde kjøpt nye varer. Hvor mye mener mor at gavene ville ha kostet om de var nye?
+
+**OPPGAVE 22.9**
+Det er markedsuke, og i en av butikkene i Storgata kan du trekke en lapp når du skal betale i kassa. På lappen står det et tall mellom 0 og 80. Du får så mange prosent avslag i prisen som det tallet du trakk.
+
+*MARKEDSTILBUD — Trekk rabatten din!*
+
+a) Live kjøper varer for 480 kr. Hun trakk en rabatt på 30 %. Hva må hun betale?
+b) Thomas kjøper varer for 947 kr. Han trakk en rabatt på 7 %. Hva må han betale?
+
+**OPPGAVE 22.10**
+
+*LØPEEKSPERTEN — Treningsbukser: 30 % rabatt i dag*
+
+*Supersprek — TRENINGSBUKSER: 3 for 2 i dag! Du får den billigste gratis.*
+
+Vidar har tenkt å kjøpe treningsbukser. Han ser disse to tilbudene i to forskjellige butikker og bestemmer seg for å undersøke prisene. Han finner én bukse som koster 450 kr, og to bukser som koster 295 kr.
+
+a) I hvilken av butikkene blir de tre treningsbuksene billigst?
+b) Hvor mange prosent vil avslaget i butikken Supersprek utgjøre av den opprinnelige prisen?
+
+---
+
+## Side 131 — 22A Kjøp og salg
+
+### MERVERDIAVGIFT
+
+**OPPGAVE 22.11**
+En sykkel koster 4690 kr før merverdiavgiften er lagt til. Den er på 25 %.
+Hva må vi betale for sykkelen?
+
+**OPPGAVE 22.12**
+I 2020 var satsene for merverdiavgift slik:
+- Standardsats: 25 %
+- Matvarer: 15 %
+
+Silje skal handle, og til høyre ser du prisen på varene før merverdiavgiften er lagt til. Hvor mye betaler Silje for varene?
+
+| Vare | Pris |
+|---|---|
+| Ost | 67 kr |
+| Pølser | 45 kr |
+| Tannbørste | 29 kr |
+| Tannkrem | 18 kr |
+
+**OPPGAVE 22.13**
+En støvsuger koster 1299 kr i butikken. Hvor mange kroner utgjør merverdiavgiften?
+
+**OPPGAVE 22.14**
+En rørlegger har installert en ny varmtvannsbereder hos en kunde. Her ser du fakturaen som kunden skal få, men den er ikke helt ferdig. Regn ut hva merverdiavgiften blir, og finn ut hva kunden skal betale.
+
+**FAKTURA**
+
+| Beskrivelse | Beløp |
+|---|---|
+| 1 stk. varmtvannsbereder | kr 4800,– |
+| Arbeid 2 timer à 450 kr | __________ |
+| Til sammen | __________ |
+| Merverdiavgift 25 % | __________ |
+| Å betale | __________ |
+
+*Runde Rør AS*
+
+---
+
+## Side 132 — 22 Personlig økonomi
+
+### VALUTA
+
+**OPPGAVE 22.15**
+På tur til Sverige har Live kjøpt disse varene:
+
+| Vare | Pris |
+|---|---|
+| Joggesko | 499,00 SEK |
+| Skoleransel | 679,00 SEK |
+| Godteri | 49,90 SEK |
+
+*I oppgavene på denne siden kan du finne valutakurser på nett eller bruke valutakursene på side 126.*
+
+Hvor mye betalte hun for varene i NOK?
+
+**OPPGAVE 22.16**
+Tone har kjøpt en ny sykkel til 4999 kr. Hun finner reklame for den samme sykkelen i tre andre land.
+
+| Land | Pris |
+|---|---|
+| Nederland | 510 EUR |
+| Danmark | 5799 DKK |
+| England | 499 GBP |
+
+Ranger landene fra der sykkelen er billigst til der den er dyrest.
+
+**OPPGAVE 22.17**
+Aliza er glad i å lese bøker på engelsk. På ferie i London kommer hun over mange bøker i favorittserien sin. De koster £6,99 per stk. Aliza har 600 NOK som hun kan bruke til å kjøpe bøker. Hvor mange bøker kan hun kjøpe for dette beløpet?
+
+**OPPGAVE 22.18**
+Sigve skal sammen med søsteren og foreldrene på ferie til England. De har funnet ut at de kan få billetter til en fotballkamp for £32 per person. Hvor mye vil billetter til alle fire koste i NOK?
+
+**OPPGAVE 22.19**
+Vilde og Bente skal på fisketur i Sverige. I fire netter leier de en campinghytte som koster 899 SEK per natt. Hva tilsvarer det beløpet de må betale for overnattingene i NOK?
+
+**OPPGAVE 22.20**
+a) Lag et regneark som regner om fra britiske pund til norske kroner. Brukeren skal kunne taste inn valutakursen og et beløp i britiske pund.
+b) Lag et program som regner om fra britiske pund til norske kroner. Brukeren skal kunne taste inn valutakursen og et beløp i britiske pund.
