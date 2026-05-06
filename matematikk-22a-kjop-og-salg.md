@@ -803,3 +803,169 @@ for år in range(1, perioder + 1):
 ```
 
 *Vi bruker kommandoen `int` for at terminbeløpet skal skrives til skjermen uten desimaler.*
+
+---
+
+## Side 143 — 22B Sparing og lån
+
+**OPPGAVE 22.29**
+Ove har tatt opp et serielån på 2 500 000 kr. Lånet skal nedbetales over 10 år med årlige terminer. Den nominelle renten er 2,9 %. Lag en nedbetalingsplan med avdrag, rente og terminbeløp for hvert av de 10 årene. Vi ser i denne oppgaven bort fra gebyrer.
+
+### FORBRUKSLÅN
+Hvis vi skal kjøpe noe som har høy verdi, for eksempel bolig eller en bil, har banken vanligvis **pant** i det vi kjøper. Det betyr at om vi ikke klarer å betale ned lånet, vil banken eie det vi har kjøpt.
+
+**Forbrukslån** og **kredittkortlån** er lån der banken ikke har pant i det vi kjøper. Denne typen lån har vanligvis høy rente. Det betyr at slike lån kan bli svært dyre om vi ikke klarer å betale tilbake ganske raskt. Å bruke **kredittkort** er det samme som å ta opp et forbrukslån. Når vi bruker kredittkort, er renten høyere enn renten på forbrukslån. Det er fordi det er en rentefri periode på et visst antall dager etter kjøpet når vi bruker kredittkort.
+
+**SNAKKE MATTE**
+Anders vil ta opp et forbrukslån på 20 000 kr. Her ser du informasjon fra en lånekalkulator på nett.
+
+*Lånekalkulator:*
+- Velg ønsket lånebeløp: 20 000 kr (skala 10 000 kr – 500 000 kr)
+- Velg nedbetalingstid: 2 år
+- Kostnad per måned: 972 kr
+- [Søk nå]
+- Effektiv rente: 21,87 %
+- Total kostnad: 3318 kr
+- Totalbeløp: 23 318 kr
+
+Forklar hva informasjonen fra lånekalkulatoren betyr.
+
+**SNAKKE MATTE**
+Denne teksten fra banken forklarer hva det koster å ta opp et kredittkortlån.
+
+> Låneeksempel: nom. rente 14,9 %, eff. rente 18,13 %, 45 000 kr o/1 år, kostnad kr: 4 194, totalt 49 194 kr
+
+a) Forklar informasjonen som kommer fram i teksten.
+b) Forklar hvorfor den effektive renten er høyere enn den nominelle renten.
+
+---
+
+## Side 144 — 22 Personlig økonomi
+
+### Følg stien
+
+**OPPGAVE 22.30**
+Trine setter inn 5000 kr på en sparekonto. Renten er 2,0 % per år.
+
+a) Hvor mye har Trine på sparekontoen etter ett år?
+b) Trine lar sparekontoen stå urørt i tre år. Hvor stort beløp er det på kontoen etter tre år?
+c) Hvor mye renter har Trine fått i løpet av disse tre årene?
+d) Vis ved regning at beløpet på Trines konto har vokst med 6,1 % i løpet av de tre årene.
+
+**OPPGAVE 22.31**
+William setter inn 8000 kr på en sparekonto. Renten er 1,8 % per år. Han lar sparekontoen stå urørt i fem år.
+
+a) Hvor stort beløp er det på kontoen etter fem år?
+b) Hvor mye renter har William fått i løpet av disse fem årene?
+c) Hvor mange prosent har beløpet vokst med i løpet av de fem årene?
+
+**OPPGAVE 22.32**
+Enya har spart 4000 kr etter at hun har hatt en sommerjobb. Hun setter pengene inn på en sparekonto og lar dem stå urørt. Renten er 2,5 % per år.
+
+Her ser du et pythonprogram som regner ut hvor mye Enya har på sparekontoen etter fem år.
+
+```python
+sparebeløp = 4000
+n = 5         # antall år
+vekstfaktor = 1.025
+
+for år in range(1, n + 1):
+    sparebeløp = vekstfaktor * sparebeløp
+
+print(sparebeløp)
+```
+
+a) Forklar hva programmet gjør på hver linje.
+b) Endre programmet slik at brukeren kan bestemme hvor stort beløp som settes inn på kontoen, og hvor mange år pengene skal stå urørt.
+
+---
+
+## Side 145 — 22B Sparing og lån
+
+**OPPGAVE 22.33**
+En bank tilbyr forbrukslån med disse betingelsene:
+
+| Beskrivelse | Verdi |
+|---|---|
+| Lån | kr 50 000,00 |
+| Rente per måned | 1,55 % |
+| Antall måneder | 12 |
+| Gebyr per måned | kr 75,00 |
+| Oppstartgebyr | kr 500,00 |
+
+Her ser du en nedbetalingsplan for et lån som er tatt opp med betingelsene ovenfor. Lånet ble tatt opp 20. juli.
+
+| Dato | Å betale | Renter og gebyrer | Avdrag | Restlån etter denne innbetalingen |
+|---|---|---|---|---|
+| 20.aug | kr 5 173,29 | kr 1 350,00 | kr 3 823,29 | kr 46 176,71 |
+| 20.sep | kr 4 673,29 | kr 790,74 | kr 3 882,55 | kr 42 294,16 |
+| 20.okt | kr 4 673,29 | kr 730,56 | kr 3 942,73 | kr 38 351,43 |
+| 20.nov | kr 4 673,29 | kr 669,45 | kr 4 003,84 | kr 34 347,59 |
+| 20.des | kr 4 673,29 | kr 607,39 | kr 4 065,90 | kr 30 281,69 |
+| 20.jan | kr 4 673,29 | kr 544,37 | kr 4 128,92 | kr 26 152,76 |
+| 20.feb | kr 4 673,29 | kr 480,37 | kr 4 192,92 | kr 21 959,84 |
+| 20.mar | kr 4 673,29 | kr 415,38 | kr 4 257,91 | kr 17 701,93 |
+| 20.apr | kr 4 673,29 | kr 349,38 | kr 4 323,91 | kr 13 378,02 |
+| 20.mai | kr 4 673,29 | kr 282,36 | kr 4 390,93 | kr 8 987,09 |
+| 20.jun | kr 4 673,29 | kr 214,30 | kr 4 458,99 | kr 4 528,10 |
+| 20.jul | kr 4 673,29 | kr 145,19 | kr 4 528,10 | kr 0,00 |
+| **Sum** | **kr 56 579,47** | **kr 6 579,47** | **kr 50 000,00** | |
+
+a) Hvor stort er det opprinnelige lånet?
+b) Over hvor mange måneder skal lånet betales tilbake?
+c) Hvor mye betaler kunden i renter den femte måneden?
+d) Hvor mye betaler kunden i avdrag den femte måneden?
+e) Hvor mye betaler kunden til sammen den femte måneden?
+f) Hvor mye betaler kunden i renter den tiende måneden?
+g) Hvor stort er restlånet etter ti måneder?
+h) Er lånet et serielån eller et annuitetslån? Begrunn svaret.
+i) Hvor mange prosent er den årlige effektive renten på dette lånet?
+
+---
+
+## Side 146 — 22 Personlig økonomi
+
+**OPPGAVE 22.34**
+Åse tar opp et lån på 120 000 kr for å kjøpe en bil. Lånet er et serielån med årlige terminer. Renten er 4,2 % per år, og lånet skal nedbetales over 5 år med første innbetaling om ett år. Vi ser i denne oppgaven bort fra gebyrer.
+
+*En nedbetalingsplan viser avdrag, rente, terminbeløp og restlån for hvert år.*
+
+Lag et regneark som viser en nedbetalingsplan for lånet.
+
+**OPPGAVE 22.35**
+Figurene illustrerer nedbetalingen av to like store boliglån.
+
+*(Figur 1: Stablet søylediagram over 20 terminer der den blå avdrags-delen vokser og den oransje rente-delen synker, mens samlet høyde holder seg ganske jevn på rundt kr 400 000–500 000 — annuitetslån.)*
+
+*(Figur 2: Stablet søylediagram over 20 terminer der den blå avdrags-delen er konstant og den oransje rente-delen avtar, slik at samlet høyde synker fra ca. kr 550 000 til ca. kr 250 000 — serielån.)*
+
+a) Hvilket lån er et serielån, og hvilket er annuitetslån? Begrunn svaret.
+b) Hvilket av lånene har det største restlånet etter fire år?
+
+---
+
+## Side 147 — 22B Sparing og lån
+
+### Terrengløypa
+
+**OPPGAVE 22.36**
+a) Vilde setter inn 4500 kr på sparekontoen sin. Renten er 1,8 % per år. Hvor stort er beløpet på sparekontoen etter to år?
+b) Når det er gått to år, setter hun inn 1400 kr. Hvor mye har hun på sparekontoen ett år etter dette?
+c) Fem år etter det første innskuddet tar Vilde ut alt som er på sparekontoen. Hvilket beløp tar Vilde ut av kontoen sin?
+
+**OPPGAVE 22.37**
+Silje har 8675 kr på sparekontoen sin. Renten er 3,2 % per år.
+
+a) Hvor mye har Silje på sparekontoen etter 3 år?
+b) Hvor mange år må Silje ha pengene stående på kontoen for at beløpet skal bli mer enn 12 000 kr?
+
+Silje vurderer å flytte pengene over på en annen sparekonto.
+
+c) Hva kan renten være hvis beløpet på den nye sparekontoen skal passere det dobbelte i løpet av det tjuende året?
+
+**OPPGAVE 22.38**
+Rune har 5000 kr på en sparekonto der renten er 3,2 % per år.
+
+a) Hvor mye vil de 5000 kronene ha vokst til om 10 år?
+b) Hvor lang tid vil det gå før Rune har 12 000 kr på sparekontoen?
+c) Rune regner med at han trenger 20 000 kr om 5 år. Hvor stort beløp må Rune sette inn på kontoen i dag, på den kontoen der det står 5000 kr, hvis han skal ha 20 000 kr på kontoen om 5 år?
