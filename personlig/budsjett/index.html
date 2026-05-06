@@ -795,24 +795,24 @@
           <button type="button" class="theme-item" data-theme="pink"    role="menuitem"><span class="theme-dot" style="background:#e4a0be;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span> Rosa</button>
         </div>
         <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu">
-          <span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span>
-          <span class="lang-label">Norsk</span>
+          <span class="flag"><img id="rf" src="https://flagcdn.com/w80/no.png" alt=""></span>
+          <span id="rn">Norsk</span>
           <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
         </button>
         <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
           <h5>Hovedspråk</h5>
-          <a href="/personlig/" class="current" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
-          <a href="/en/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
+          <a href="/personlig/" class="current" role="menuitem" data-region="no"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
+          <a href="/en/personlig/" role="menuitem" data-region="en"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
           <h5>Språk i Norge</h5>
-          <a href="/pl/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
-          <a href="/uk/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
-          <a href="/ar/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
-          <a href="/lt/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
-          <a href="/so/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
-          <a href="/ti/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
+          <a href="/pl/personlig/" role="menuitem" data-region="pl"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
+          <a href="/uk/personlig/" role="menuitem" data-region="uk"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
+          <a href="/ar/personlig/" role="menuitem" data-region="ar"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
+          <a href="/lt/personlig/" role="menuitem" data-region="lt"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
+          <a href="/so/personlig/" role="menuitem" data-region="so"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
+          <a href="/ti/personlig/" role="menuitem" data-region="ti"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
           <h5>Internasjonalt</h5>
-          <a href="/zh/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
-          <a href="/fr/personlig/" role="menuitem"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
+          <a href="/zh/personlig/" role="menuitem" data-region="zh"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
+          <a href="/fr/personlig/" role="menuitem" data-region="fr"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
         </div>
       </div>
     </nav>
@@ -1418,6 +1418,7 @@
 </script>
 
 <script defer src="/shared/core.js?v=v121"></script>
+<script defer src="/shared/lang/no.js?v=v30"></script>
 <script defer src="/shared/ticker.js?v=v1"></script>
 
 <script>
@@ -1516,5 +1517,21 @@
   })();
 </script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
+<script>
+(function(){
+  var menu = document.getElementById('langMenu');
+  if(!menu) return;
+  menu.addEventListener('click', function(e){
+    var a = e.target.closest('[data-region]');
+    if(!a) return;
+    e.preventDefault();
+    var code = a.getAttribute('data-region');
+    try { window.setRegion && window.setRegion(code); } catch(err){}
+    menu.classList.remove('open');
+    var btn = document.getElementById('langBtn');
+    if(btn) btn.setAttribute('aria-expanded','false');
+  });
+})();
+</script>
 </body>
 </html>
