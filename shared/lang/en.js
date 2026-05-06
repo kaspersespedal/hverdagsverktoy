@@ -1706,4 +1706,6 @@ REGIONS['en'] = {
     homeCatSkattDesc: 'Tax calculations, concepts and the Tax Act',
     homeCatSelskapDesc: 'Limited liability companies, partnerships and company law',
     homeCatAvgiftDesc: 'VAT, the VAT Act and employer NI contribution',
+    // === skipLink (T1 split-2026-05-06-r3) ===
+    skipLink: 'Skip to main content',
 };
