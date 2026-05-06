@@ -1491,4 +1491,7 @@ REGIONS['lt'] = {
     maxlanHowtoSummary:`Kaip naudoti Kiek galiu sau leisti`,
     morHowtoSummary:`Kaip naudoti būsto paskolos skaičiuoklę`,
     valgevNetLabel:`Grynasis po mokesčio`,
+
+    // === skipLink (T1 split-2026-05-06-r3) ===
+    skipLink: 'Pereiti prie pagrindinio turinio',
 };

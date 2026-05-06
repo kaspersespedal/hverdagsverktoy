@@ -1655,4 +1655,6 @@ REGIONS['ti'] = {
     homeCatSkattDesc:`ምሕሳብ ግብሪ፣ ቃላትን ሕጊ ግብሪን`,
     homeCatSelskapDesc:`ኣ.ሽ. (AS)፣ ናይ ሓባር ትካልን ሕጊ ትካልን`,
     homeCatAvgiftDesc:`VAT፣ ሕጊ VAT ን ናይ ወሃቢ ስራሕ ኣበርክቶ`,
+    // === skipLink (T1 split-2026-05-06-r3) ===
+    skipLink: 'ናብ ቀንዲ ትሕዝቶ ኪድ',
 };

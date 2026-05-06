@@ -1449,4 +1449,7 @@ REGIONS['so'] = {
     maxlanHowtoSummary:`Sida loo isticmaalo Intee ayaan awoodaa`,
     morHowtoSummary:`Sida loo isticmaalo xisaabiyaha amaahda guriga`,
     valgevNetLabel:`Saafiga cashuurta ka dib`,
+
+    // === skipLink (T1 split-2026-05-06-r3) ===
+    skipLink: 'U bood macluumaadka ugu muhiimsan',
 };

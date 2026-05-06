@@ -1492,4 +1492,7 @@ tekFootNote:'* 2026年费率。规则可能变化 — 请查阅 skatteetaten.no 
     maxlanHowtoSummary:`如何使用我能负担多少`,
     morHowtoSummary:`如何使用房贷计算器`,
     valgevNetLabel:`税后净额`,
+
+    // === skipLink (T1 split-2026-05-06-r3) ===
+    skipLink: '跳转到主内容',
 };
