@@ -288,6 +288,7 @@ function setRegion(r, e) {
   closeDD();
   loadLang(r).then(function() {
     if(switchId !== _regionSwitchId) return; // stale switch, skip
+    document.documentElement.classList.remove('lang-loading');
     // RTL support for Arabic
     var isRTL = (r === 'ar');
     document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
@@ -6984,7 +6985,10 @@ function initPage(){
       setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); }, 5500);
     }, { once: true });
     return loadLang('no');
-  }).then(function() { _initPageReady(); });
+  }).then(function() {
+    document.documentElement.classList.remove('lang-loading');
+    _initPageReady();
+  });
 }
 function syncCardHeights(){}
 // E30 — Render kompleksitets-indikator (topp-hoyre av info-card, kun collapsed-state).
