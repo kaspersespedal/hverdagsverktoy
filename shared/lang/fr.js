@@ -1501,4 +1501,7 @@ REGIONS['fr'] = {
 
     // === skipLink (T1 split-2026-05-06-r3) ===
     skipLink: 'Aller au contenu principal',
+    // === T1 placeholder-mekanisme (split-2026-05-07) ===
+    placeholderCustom: 'Saisir …',
+    placeholderZero: '0',
 };
