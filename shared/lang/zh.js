@@ -253,7 +253,7 @@ REGIONS['zh'] = {
     salTimeTitle:'收入和扣除的时间确定（第 14 章）', salTimeDesc:'收入期间 · 变现 · 现金原则 · 损失',
     salTimeRows: [['— 收入期间 —','何时应计入收入和扣除？（§ 14-1 和 § 14-2）'],['适用哪个期间?','你每个日历年（1月1日-12月31日）被征税。如果你只在部分时间有税务义务，只适用该期间。','§ 14-1(1–2)'],['收入何时被视为取得?','你实际收到利益的那一年，或你获得对金钱的最终和无条件权利的那一年——以较早者为准。','§ 14-2(1)'],['你什么时候可以扣除成本?','你获得最终付款义务的那一年。对未来工作的承诺不算——只有真实的义务。','§ 14-2(2)'],['— 现金原则 —','对于工资、养老金等（§ 14-3）'],['工资和养老金何时被征税?','当你实际获得付款时。如果你有权提取——但你选择不提取——仍会被征税。','§ 14-3(1)'],['获得此类收入的费用如何?','在你实际支付的那一年扣除。例如：如果你在2025年购买材料，在2025年扣除。','§ 14-3(3)'],['— 有账户义务的企业 —','具有簿记义务的企业的特殊规则（§ 14-4 和 § 14-5）'],['商品库存如何估价?','按购买价格（或制造成本）。对于不可区分的商品使用先进先出法。你不能在税务上上调或下调价值。','§ 14-5(2)'],['你可以扣除客户应收款的损失吗?','可以。根据过去2年的实际损失÷过去2年的信用销售额计算减值因子。新创办企业？3年内应收款金额的2%。','§ 14-5(4) b–d'],['— 损失 —','结转和结回（§ 14-6 和 § 14-7）'],['公司出现亏损?','亏损可以结转到以后年份，并针对未来利润进行扣除。最旧的亏损最先用完。','§ 14-6(1)'],['债务被宽恕（和解）?','可结转的亏损会因被注销的金额而减少。','§ 14-6(2)'],['你停止经营?','停业年（及可能的前一年）未弥补的亏损可以结回到前两年的收入。','§ 14-7(1)']],
     vatIntroTitle:'什么是增值税（VAT）?', vatIntroDesc:'为初来乍到的人提供的简短说明',
-    vatIntroRows: [['— 挪威增值税 —','增值税是一种额外的税，加到你购买的几乎所有东西上——食品、衣服、电子产品、服务。这笔钱交给政府。'],['它是如何运作的?','当你在商店购买东西时，你支付增值税作为价格的一部分。你可以在收据上看到它。商店收集这笔钱并把它转给政府。'],['增值税是多少?','大多数商品和服务为25%。食品和饮料为15%。运输、酒店和电影为12%。有些东西为0%（出口、卫生服务）。'],['例子','你买了一件1,000克朗的夹克。其中200克朗是增值税（25%）。商店保留800克朗，政府获得200克朗。'],['这适用于个人吗?','是的，每次购物时你都要支付增值税。但你不需要做任何事情——它已经包含在价格中。'],['企业呢?','销售商品或服务超过50,000克朗/年的企业必须为增值税注册。'],['企业能拿回增值税吗?','可以！增值税注册的企业可以从他们为企业购买的东西的增值税中扣除。这被称为"进项增值税抵扣"。'],['增值税申报','企业每隔两个月（一年6次）向税务局提交增值税申报。他们报告已收集的增值税数额和可以扣除的金额。']],
+    vatIntroRows: [['— 挪威增值税 —','增值税是一种额外的税，加到你购买的几乎所有东西上——食品、衣服、电子产品、服务。这笔钱交给政府。'],['它是如何运作的?','当你在商店购买东西时，你支付增值税作为价格的一部分。你可以在收据上看到它。商店收集这笔钱并把它转给政府。'],['增值税是多少?','大多数商品和服务为25%。食品和饮料为15%。运输、酒店和电影为12%。有些东西为0%（出口、卫生服务）。'],['例子','你买了一件1,000克朗的夹克。其中200克朗是增值税（25%）。商店保留800克朗，政府获得200克朗。'],['这适用于个人吗?','是的，每次购物时你都要支付增值税。但你不需要做任何事情——它已经包含在价格中。'],['企业呢?','销售商品或服务超过50,000克朗/年的企业必须为增值税注册。'],['企业能拿回增值税吗?','可以！增值税注册的企业可以从他们为企业购买的东西的增值税中扣除。这被称为"进项增值税抵扣"。'],['增值税申报','企业每隔两个月（一年6次）向税务局提交增值税申报。他们报告已收集的增值税数额和可以扣除的金额。'],['企业的核算公式','你已收取的增值税 − 你已支付的增值税 = 你欠政府的金额（如果数字为负则可获退还）。'],['增值税申报表','企业每两个月（每年6次）向挪威税务局提交增值税申报表。在那里他们报告已收取的增值税金额和可以扣除的金额。']],
   
     salAntiRows: [['— 关联方 —','常规交易原则（§ 13-1）'],['什么是关联方关系？','两方拥有共同所有权权益或控制权，影响双方之间的交易','§ 13-1(1)'],['如果价格错误会怎样？','税务机构可以根据估算确定收入/财富 — 如同关联方关系不存在一样','§ 13-1(3)'],['对方在EEA外？','举证责任颠倒 — 您必须证明价格正确','§ 13-1(2)'],['什么是常规交易原则？','关联方之间的交易必须按独立方之间的价格定价','§ 13-1(4)'],['适用哪些指南？','适用OECD转让定价指南','§ 13-1(4)'],['— 反避税规则 —','法定GAAR（§ 13-2）'],['什么是避税？','当处置主要是出于税收利益动机，不符合整体评估标准时','§ 13-2(2)'],['条件1：主要目的？','税收利益必须是该处置的主要目的','§ 13-2(2)a'],['条件2：整体评估？','整体评估该处置 — 商业实质、税收利益规模、是否采取了不恰当的路径，以及规则是否违反目的而被利用','§ 13-2(3) a–f'],['避税会怎样？','根据处置的经济实质进行税务处理 — 而非其形式','§ 13-2(4)'],['仅适用于所得税吗？','否 — 也适用于国家保险缴款、雇主社会保障缴款和金融税','§ 13-2(7)'],['— 无关联的税务地位 —','亏损、正余额等（§ 13-3）'],['什么是一般税务地位？','结转亏损、空正余额、收益/亏损账户余额 — 与特定资产无关的地位','§ 13-3'],['地位何时消失？','在重组（第11章）或所有权变更时，如利用该地位是主要动机','§ 13-3 a'],['税务责任呢？','确认为收入，无权抵消亏损 — 也不能成为集团贡献的基础','§ 13-3 b'],['适用于谁？','§ 2-2下的公司（AS、ASA等），属于重组一方或所有权已变更','§ 13-3']],
     budHowtoTitle:'如何使用预算计算器', budHowtoDesc:'预算编制分步指南',
@@ -819,7 +819,19 @@ REGIONS['zh'] = {
       mvalK9:'增值税调整 资本品 第9章',
       rskl53:'会计法 5-3 折旧',
       aksjeloven:'公司法 有限责任',
-      selskapsloven:'合伙法 合伙企业'
+      selskapsloven:'合伙法 合伙企业',
+      aksjeloven_portal:'股份公司法 asl 法律 门户 股份公司 as 成立 资本 董事会 股东大会',
+      arsregnskap:'年度账目 损益 资产负债 附注 结算 ar',
+      bokforingConcept:'簿记 凭证 交易 登记 日常 会计',
+      bokforingsloven_portal:'簿记法 bfl 法律 门户 簿记 文档 保存',
+      debetKredit:'借方 贷方 复式 簿记 交易 账户',
+      hvordanLeseParagraf:'条款 法律 章 款 项 阅读 解释 结构',
+      kontoplanNs4102:'会计科目表 ns4102 ns 4102 标准 会计 账户 类',
+      mvaloven_portal:'增值税法 mvaloven mval 法律 门户 mva 增值税 抵扣权',
+      regnskapsloven_portal:'会计法 rskl 法律 门户 年度账目 报表 义务',
+      regnskapsplikt:'会计义务 会计 义务 公司 as enk 会计法',
+      revisjon:'审计 审计师 审计义务 外部 门槛 例外',
+      skatteloven_portal:'税法 sktl 法律 门户 章节 概览 所得税 财富税 扣除'
     },
     agaHelpRows: [['— 如何使用本计算器 —','计算员工的年度总成本，包括 AGA、假期工资和 OTP'],['毛工资','税前年薪 — 您与员工约定的金额。'],['AGA 区域','雇主税因公司注册地而异。1 区（奥斯陆、卑尔根）= 14.1%。5 区（芬马克）= 0%。'],['假期工资','标准税率为 10.2%（4 周 + 1 天）。5 周假期的关税 = 12%。60 岁以上：+2.3 个百分点。'],['OTP 费率','强制性职业养老金 — 1G 至 12G 之间工资的最低 2%。许多公司支付更多。'],['— 如何阅读结果 —',''],['年度总成本','员工实际每年花费 — 工资 + 所有附加费。'],['AGA','雇主向国家缴纳的税款 — 按工资 + 假期工资 + OTP 计算。'],['假期工资','员工为下一年假期所赚取的金额。'],['OTP','公司为员工支付的养老金。'],['— 好知道的事 —',''],['AGA 免税额','每年前 850,000 克朗的工资成本在所有区域免征 AGA。'],['区域遵循注册地','区域取决于公司注册地点，而非员工居住地。'],['经验法则','1 区内工资 500,000 克朗的普通员工总共花费公司约 637,000 克朗。']],
     avsCmpNote: '差额 = 会计 − 税务。负差额 → 税务折旧较高 → 账面价值 > 税务价值 → 递延所得税负债。正差额 → 相反 → 递延所得税资产。',
@@ -904,10 +916,64 @@ REGIONS['zh'] = {
     secEmployeeCosts: '员工成本',
 
     searchDn: {
-      trinnskatt:'阶梯税', skatteFradrag:'税收抵免', minstefradrag:'标准扣除', trygdeavgift:'社会保障金', egenkapital:'自有资金', bsu:'BSU — 青年住房储蓄', gjeldsgrad:'债务收入比', stresstest:'压力测试', aksjonarmodellen:'股东模型', foretaksmodellen:'个体企业模型', verdsettelsesrabatt:'估值折扣', saldoavs:'余额递减折旧法', otp:'OTP — 强制性职业养老金', agaBegrep:'雇主缴费（AGA）', rentesRente:'复利', annuitet:'等额本息贷款', serieLan:'等额本金贷款', naeringHobby:'商业还是爱好？', konsernbidrag:'集团贡献', fritaksmetoden:'参股免税制度', deltakerligning:'合伙人征税', selskapsskatt:'公司税', utbytteskatt:'股息税', komplementar:'普通合伙人', kommandittist:'有限合伙人', mvaSatser:'增值税率', omsetning:'增值税登记门槛', fradragsrett:'增值税抵扣权', skatteloven:'挪威税法', sktlK2:'税法第2章 — 纳税义务', sktlK4:'税法第4章 — 财产', sktlK5:'税法第5章 — 收入', sktlK6:'税法第6章 — 扣除', sktlK9:'税法第9章 — 收益和损失', sktlK10:'税法第10章 — 公司', sktlK14:'税法第14章 — 折旧', mvalK2:'增值税法第2章 — 登记', mvalK3:'增值税法第3章 — 豁免', mvalK6:'增值税法第6章 — 零税率', mvalK8:'增值税法第8章 — 扣除', mvalK9:'增值税法第9章 — 调整', rskl53:'会计法第5-3条 — 折旧', aksjeloven:'股份公司法', selskapsloven:'合伙企业法'
+      trinnskatt:'阶梯税', skatteFradrag:'税收抵免', minstefradrag:'标准扣除', trygdeavgift:'社会保障金', egenkapital:'自有资金', bsu:'BSU — 青年住房储蓄', gjeldsgrad:'债务收入比', stresstest:'压力测试', aksjonarmodellen:'股东模型', foretaksmodellen:'个体企业模型', verdsettelsesrabatt:'估值折扣', saldoavs:'余额递减折旧法', otp:'OTP — 强制性职业养老金', agaBegrep:'雇主缴费（AGA）', rentesRente:'复利', annuitet:'等额本息贷款', serieLan:'等额本金贷款', naeringHobby:'商业还是爱好？', konsernbidrag:'集团贡献', fritaksmetoden:'参股免税制度', deltakerligning:'合伙人征税', selskapsskatt:'公司税', utbytteskatt:'股息税', komplementar:'普通合伙人', kommandittist:'有限合伙人', mvaSatser:'增值税率', omsetning:'增值税登记门槛', fradragsrett:'增值税抵扣权', skatteloven:'挪威税法', sktlK2:'税法第2章 — 纳税义务', sktlK4:'税法第4章 — 财产', sktlK5:'税法第5章 — 收入', sktlK6:'税法第6章 — 扣除', sktlK9:'税法第9章 — 收益和损失', sktlK10:'税法第10章 — 公司', sktlK14:'税法第14章 — 折旧', mvalK2:'增值税法第2章 — 登记', mvalK3:'增值税法第3章 — 豁免', mvalK6:'增值税法第6章 — 零税率', mvalK8:'增值税法第8章 — 扣除', mvalK9:'增值税法第9章 — 调整', rskl53:'会计法第5-3条 — 折旧', aksjeloven:'股份公司法', selskapsloven:'合伙企业法',
+      aksjeloven_portal:'股份公司法',
+      arsregnskap:'年度账目',
+      bokforingConcept:'簿记',
+      bokforingsloven_portal:'簿记法',
+      debetKredit:'借方和贷方',
+      hvordanLeseParagraf:'如何阅读条款',
+      kontoplanNs4102:'标准会计科目表 NS 4102',
+      mvaloven_portal:'增值税法',
+      regnskapsloven_portal:'会计法',
+      regnskapsplikt:'会计义务',
+      revisjon:'审计',
+      skatteloven_portal:'税法'
     },
     searchDs: {
-      trinnskatt:'随收入增加的累进税 — 5个档次', skatteFradrag:'直接减少您应缴税款的扣除', minstefradrag:'所有工薪族自动享有的标准扣除', trygdeavgift:'缴纳社会保障基金 — 工资的7.6%', egenkapital:'购房所需的最低自有资金（10%）', bsu:'存款10%的税收抵免，每年最高27,500克朗', gjeldsgrad:'总债务与总收入的比率（最高5倍）', stresstest:'银行检查您能否承受3个百分点的加息', aksjonarmodellen:'面向个人股东的股息征税模型', foretaksmodellen:'个体企业的征税模型', verdsettelsesrabatt:'对股票、住房和经营资产的财产价值折扣', saldoavs:'按残值固定百分比计算的税务折旧', otp:'雇主必须为超过{1G}的工资储蓄至少2%', agaBegrep:'雇主按工资支付的税 — 因地区而异', rentesRente:'收益的收益 — 让储蓄随时间变强大的效应', annuitet:'整个贷款期内每月偿还金额相同的贷款', serieLan:'每月本金偿还金额相同的贷款 — 总成本比等额本息低', naeringHobby:'副业收入何时成为应税商业活动？', konsernbidrag:'同一集团内公司之间的利润转移', fritaksmetoden:'公司获得的股息和股权收益免税', deltakerligning:'利润分配并在每个合伙人处征税 — ANS、DA和KS', selskapsskatt:'对股份公司利润征收22%的税', utbytteskatt:'对个人股东征收37.84%的股息税（上调后）', komplementar:'KS中承担无限个人责任的积极管理人', kommandittist:'KS中的被动投资者 — 责任以出资额为限', mvaSatser:'一般25%，食品15%，交通/文化12%，出口0%', omsetning:'营业额超过50,000克朗时必须登记', fradragsrett:'可从商业采购中抵扣进项增值税的权利', skatteloven:'税法的章节和条款', sktlK2:'谁需要在挪威纳税？', sktlK4:'财产、股票、住房的评估和折扣', sktlK5:'应税收入、工资、资本和免税福利', sktlK6:'标准扣除、债务利息和特别扣除', sktlK9:'变现、房屋销售、遗产、赠与和移居', sktlK10:'股息、股权收益、集团贡献和NOKUS', sktlK14:'折旧组、税率和收益/损失', mvalK2:'集团登记、自愿登记和预先登记', mvalK3:'增值税法的豁免范围', mvalK6:'销项增值税0%，完全抵扣权', mvalK8:'主要规则、混合使用和限制', mvalK9:'资本货物和调整期', rskl53:'使用寿命有限的固定资产须计提折旧', aksjeloven:'有限责任公司法 — 成立、资本、董事会', selskapsloven:'无限合伙和有限合伙企业法'
+      trinnskatt:'随收入增加的累进税 — 5个档次', skatteFradrag:'直接减少您应缴税款的扣除', minstefradrag:'所有工薪族自动享有的标准扣除', trygdeavgift:'缴纳社会保障基金 — 工资的7.6%', egenkapital:'购房所需的最低自有资金（10%）', bsu:'存款10%的税收抵免，每年最高27,500克朗', gjeldsgrad:'总债务与总收入的比率（最高5倍）', stresstest:'银行检查您能否承受3个百分点的加息', aksjonarmodellen:'面向个人股东的股息征税模型', foretaksmodellen:'个体企业的征税模型', verdsettelsesrabatt:'对股票、住房和经营资产的财产价值折扣', saldoavs:'按残值固定百分比计算的税务折旧', otp:'雇主必须为超过{1G}的工资储蓄至少2%', agaBegrep:'雇主按工资支付的税 — 因地区而异', rentesRente:'收益的收益 — 让储蓄随时间变强大的效应', annuitet:'整个贷款期内每月偿还金额相同的贷款', serieLan:'每月本金偿还金额相同的贷款 — 总成本比等额本息低', naeringHobby:'副业收入何时成为应税商业活动？', konsernbidrag:'同一集团内公司之间的利润转移', fritaksmetoden:'公司获得的股息和股权收益免税', deltakerligning:'利润分配并在每个合伙人处征税 — ANS、DA和KS', selskapsskatt:'对股份公司利润征收22%的税', utbytteskatt:'对个人股东征收37.84%的股息税（上调后）', komplementar:'KS中承担无限个人责任的积极管理人', kommandittist:'KS中的被动投资者 — 责任以出资额为限', mvaSatser:'一般25%，食品15%，交通/文化12%，出口0%', omsetning:'营业额超过50,000克朗时必须登记', fradragsrett:'可从商业采购中抵扣进项增值税的权利', skatteloven:'税法的章节和条款', sktlK2:'谁需要在挪威纳税？', sktlK4:'财产、股票、住房的评估和折扣', sktlK5:'应税收入、工资、资本和免税福利', sktlK6:'标准扣除、债务利息和特别扣除', sktlK9:'变现、房屋销售、遗产、赠与和移居', sktlK10:'股息、股权收益、集团贡献和NOKUS', sktlK14:'折旧组、税率和收益/损失', mvalK2:'集团登记、自愿登记和预先登记', mvalK3:'增值税法的豁免范围', mvalK6:'销项增值税0%，完全抵扣权', mvalK8:'主要规则、混合使用和限制', mvalK9:'资本货物和调整期', rskl53:'使用寿命有限的固定资产须计提折旧', aksjeloven:'有限责任公司法 — 成立、资本、董事会', selskapsloven:'无限合伙和有限合伙企业法',
+      aksjeloven_portal:'股份公司的成立、资本要求、董事会和股东大会',
+      arsregnskap:'损益、资产负债和附注——年度的正式结算',
+      bokforingConcept:'凭证和交易的日常登记',
+      bokforingsloven_portal:'簿记义务、文档和保存',
+      debetKredit:'复式记账的基本规则——每笔交易的两面',
+      hvordanLeseParagraf:'章、条、款和项——法律条款的结构',
+      kalkChipAll:'全部',
+      kalkChipNew:'新',
+      kalkChipPopular:'热门',
+      kalkEyebrowCurrent:'计算器',
+      kalkEyebrowHome:'首页',
+      kalkFilterPlaceholder:'在此类别中筛选工具…',
+      kalkHeroSubtitle:'从日常算术到科学函数、货币兑换和金融模型。一切都在浏览器本地计算。',
+      kalkHeroTitle:'计算器',
+      kalkSectionRates:'固定汇率',
+      kalkSectionTools:'工具',
+      kalkSeeAllCurrencies:'查看所有货币',
+      kalkStatCalculators:'计算器',
+      kalkStatCurrencies:'货币',
+      kalkTagLive:'实时',
+      kalkToolAvsDesc:'余额递减法和直线折旧——所有 A 至 J 组别。',
+      kalkToolAvsTitle:'折旧',
+      kalkToolFerieDesc:'10,2 %、12,0 % 和60岁以上+2,3 %——完整计算。',
+      kalkToolFerieTitle:'假期工资',
+      kalkToolFinDesc:'现值、终值、年金和实际利率。',
+      kalkToolFinTitle:'金融',
+      kalkToolLikviditetDesc:'逐月现金流，含期初余额、收入和支出——可下载完整表格为 CSV。',
+      kalkToolLikviditetTitle:'流动性预算',
+      kalkToolLonnUtbytteDesc:'公司支付工资的成本（AGA + 假期工资 + OTP）vs 股息（公司税）——按 AGA 区域比较。',
+      kalkToolLonnUtbytteTitle:'工资 vs 股息',
+      kalkToolNpvDesc:'用净现值和内部收益率分析盈利能力。',
+      kalkToolNpvTitle:'NPV / IRR',
+      kalkToolSciDesc:'正弦、余弦、对数、幂、阶乘——可使用完整的 RPN 模式。',
+      kalkToolSciTitle:'科学',
+      kalkToolValutaDesc:'使用更新的汇率在168种货币之间换算。',
+      kalkToolValutaTitle:'货币',
+      kontoplanNs4102:'挪威标准会计科目表——1 至 8 类',
+      mvaloven_portal:'增值税义务、抵扣权和特殊规则',
+      regnskapsloven_portal:'年度账目和报表的义务',
+      regnskapsplikt:'根据会计法谁必须记账',
+      revisjon:'何时需要外部审计师——门槛和例外',
+      skatteloven_portal:'所得税、财富税和扣除规则——章节概览'
     },
     // /personlig card titles, descs & category headers (ZH)
     fblTitle:'消费贷款', fblDesc:'贷款实际成本——名义利率不是全部真相',
@@ -1492,6 +1558,381 @@ tekFootNote:'* 2026年费率。规则可能变化 — 请查阅 skatteetaten.no 
     maxlanHowtoSummary:`如何使用我能负担多少`,
     morHowtoSummary:`如何使用房贷计算器`,
     valgevNetLabel:`税后净额`,
+
+    // === i18n gap closure r4 (T2 zh) — 186 keys ===
+
+    aksjerAAsk:'在股票储蓄账户（ASK）中，你可以买卖股票和股票基金，从账户提取资金前无需为收益缴税。你可以在ASK内部自由地在不同基金间转换而无需缴税。税款仅在提取时才会产生，递延金额产生的复利效应在15–20年间可能相当可观。',
+
+    aksjerASkjerm:'股票收益的一小部分每年免税——作为对你本可以将资金无风险存放于银行的补偿。2026年的屏蔽利率为购买价的3.25 %。如果你拥有200 000 kr的股票，屏蔽扣除额约为6 500 kr——年度收益的这一部分将免税。',
+
+    aksjerAvkastningP1:'从历史上看，股票市场长期平均每年回报约7 %（奥斯陆证券交易所、全球指数）。但单个年份波动很大——一年+40 %，下一年−30 %。平均值要在10–20年后才会显现。',
+
+    aksjerAvkastningP2:'示例：每月3 000 kr持续20年 = 投入720 000 kr。按7 %平均回报计算，约为155万kr。最终金额的一半以上是复利，而非你自己存入的部分。',
+
+    aksjerBreadCurrent:'股票',
+
+    aksjerBreadHome:'首页',
+
+    aksjerBreadPersonlig:'个人理财',
+
+    aksjerCtaDesc:'看看7 %的平均回报对10–30年的月度储蓄会产生什么影响',
+
+    aksjerCtaTitle:'在储蓄计算器中计算你的储蓄',
+
+    aksjerEyebrowAvkastning:'长期视角',
+
+    aksjerEyebrowFeller:'常见陷阱',
+
+    aksjerEyebrowInntekt:'收入来源',
+
+    aksjerEyebrowRisiko:'波动性',
+
+    aksjerEyebrowSkatt:'2026年税收',
+
+    aksjerEyebrowTips:'实用建议',
+
+    aksjerFactboxFellerHdr:'陷阱',
+
+    aksjerFactboxInntektHdr:'回报的两个来源',
+
+    aksjerFactboxKurs:'2. 价格上涨——股票价值增加，你以高于买入的价格卖出。',
+
+    aksjerFactboxUtbytte:'1. 股息——公司将利润分配给所有者（通常每年股价的1–3 %）。',
+
+    aksjerFelle1:'追逐下一个Apple——专业基金经理也很少跑赢指数。个人投资者做到这一点的概率更低。',
+
+    aksjerFelle2:'下跌时恐慌性抛售——下跌的股票通常会再次上涨。低位卖出 = 锁定亏损。',
+
+    aksjerFelle3:'分散不足——1–5只股票 = 风险极高。30+只股票或一只宽基指数基金 = 安全得多。',
+
+    aksjerFootNote:'* 历史数据基于奥斯陆证券交易所/MSCI World。实际回报可能远低于或高于这些数字——股票具有波动性，过去并不保证未来。税率和屏蔽利率由挪威税务局每年更新。',
+
+    aksjerFooterDisc:'指导性信息。非专业建议。',
+
+    aksjerH2Avkastning:'预期回报',
+
+    aksjerH2Feller:'三个要避免的陷阱',
+
+    aksjerH2Inntekt:'你如何从股票中赚钱？',
+
+    aksjerH2Risiko:'风险有多大？',
+
+    aksjerH2Skatt:'股票税和调整系数',
+
+    aksjerH2Tips:'5个真正有效的建议',
+
+    aksjerQAsk:'为什么很多人用ASK递延税款？',
+
+    aksjerQSkjerm:'什么是屏蔽扣除额？',
+
+    aksjerRisikoP1:'股票具有波动性——价值波动很大，单年可能下跌30–50 %。2008年金融危机带来约−50 %，2020年3月新冠崩盘在几周内带来约−30 %。',
+
+    aksjerRisikoP2:'在15–20年期间，广泛分散的股票储蓄几乎总是跑赢银行存款和债券。但短期投资（5年以下）确实有风险——任意5年期内出现亏损的概率不可忽略。',
+
+    aksjerSkattP1:'个人对股票收益和股息实际缴纳37,84 %的税。这一数字源于收益按调整系数1,72上调后再按一般所得税率（22 %）征税：22 % × 1,72 = 37,84 %。',
+
+    aksjerSkattP2:'也就是说，如果你以100 000 kr的收益卖出，约37 840 kr会作为税款。屏蔽扣除额（见下文）会略微减少这一金额。',
+
+    aksjerTip1:'分散风险——购买指数基金，而不是个股。这样你一次拥有数百家公司。',
+
+    aksjerTip2:'定期投资——每月储蓄能在长期中平滑价格波动（无需"择时"）。',
+
+    aksjerTip3:'长期视角——至少10年，最好15年以上。期限越短 = 不得不在不利时点卖出的风险越高。',
+
+    aksjerTip4:'低成本——指数基金每年成本0,2–0,4 %，主动管理基金为1–2 %。差异长期会侵蚀回报。',
+
+    aksjerTip5:'使用ASK——股票储蓄账户允许在账户内的基金间免税转换。',
+
+    avgiftHeroToolAgaTitle:'雇主社会保险费',
+
+    homeCatAvgiftDesc:'增值税、增值税法和雇主社会保险费',
+
+    homeCatBoliglanDesc:'住房贷款计算器、贷款要求、成本和BSU',
+
+    homeCatKalkulatorDesc:'基础、货币、金融、科学和专业计算器',
+
+    homeCatMeta:'6个领域 · 30+ 计算器',
+
+    homeCatPersonligDesc:'汽车成本、预算和盈利能力',
+
+    homeCatSelskapDesc:'股份公司、有限合伙公司和公司法',
+
+    homeCatSkattDesc:'税款计算、概念和税法',
+
+    homeCatTitle:'浏览工具',
+
+    homeMarketsPairBrent:'布伦特原油',
+
+    homeMarketsPairGold:'黄金',
+
+    homeMarketsPairNibor:'NIBOR 3M',
+
+    homeMarketsPairPolicy:'政策利率',
+
+    homeMarketsStamp:'最后更新 14:32',
+
+    inntektBdColSats:'税率',
+
+    inntektBdColSkatt:'税额',
+
+    inntektBdColTrinn:'阶梯',
+
+    inntektBdHdr:'阶梯税分配',
+
+    inntektBreadCurrent:'所得税',
+
+    inntektBreadHome:'首页',
+
+    inntektBreadSkatt:'税务',
+
+    inntektBtnCalc:'计算税款',
+
+    inntektBtnFlereFradrag:'更多扣除',
+
+    inntektFooterDisc:'基于已知费率的指导性计算。非专业建议。',
+
+    inntektHStatEff:'实际税率',
+
+    inntektHStatSkatt:'总税额',
+
+    inntektHintBrutto:'税前和社会保险费前的工资。包括假期工资和奖金。',
+
+    inntektHintBsu:'10 %直接税收抵免（最高2 750 kr）。',
+
+    inntektHintReise:'通勤。使用通勤扣除计算器计算金额（自付额自动扣除）。',
+
+    inntektHintRente:'住房贷款和消费贷款的利息。按一般税率减少应缴税额。',
+
+    inntektHowtoSummary:'如何使用所得税计算器',
+
+    inntektLblBrutto:'年度毛工资',
+
+    inntektLblBsu:'BSU 存款',
+
+    inntektLblFagforening:'工会会费',
+
+    inntektLblGaver:'向志愿组织的捐赠',
+
+    inntektLblIps:'IPS 存款',
+
+    inntektLblKlasse:'税收类别',
+
+    inntektLblRegion:'地区',
+
+    inntektLblReise:'通勤扣除',
+
+    inntektLblRente:'利息扣除',
+
+    inntektOptKlasse1:'第1类（标准）',
+
+    inntektOptRegionFinnmark:'芬马克 / 北特罗姆斯（18,5 %）',
+
+    inntektOptRegionRest:'挪威其他地区（22 %）',
+
+    inntektRAlm:'一般所得税',
+
+    inntektRBrutto:'毛工资',
+
+    inntektRBsu:'BSU 扣除',
+
+    inntektREff:'实际税率',
+
+    inntektRFradrag:'扣除合计',
+
+    inntektRGrunnlag:'计税基础',
+
+    inntektRLbl:'年度净额',
+
+    inntektRMnd:'每月净额',
+
+    inntektRTotal:'总税额',
+
+    inntektRTrinn:'阶梯税',
+
+    inntektRTrygd:'社会保险费',
+
+    inntektRVerdict:'输入工资以查看计算',
+
+    inntektSectionFradrag:'扣除',
+
+    inntektSectionFradragHint:'自动 + 可选',
+
+    inntektSectionHint:'2026年费率',
+
+    inntektSectionInntekt:'收入',
+
+    inntektSubtitle:'计算2026收入年度的税后工资——阶梯税、一般所得税（22 % / 芬马克和北特罗姆斯18,5 %）、累进社会保险费、最低扣除和个人免税额。包括利息扣除、工会会费、BSU、IPS、捐赠和通勤扣除。',
+
+    inntektTitle:'所得',
+
+    lovGuideEndringer:'修订历史',
+
+    lovGuideHvaErLov:'什么是挪威的法律？',
+
+    lovGuideHvordanLese:'如何阅读条款',
+
+    lovGuideLovVsForskrift:'法律 vs 法规',
+
+    lovGuideLovdata:'主要来源：Lovdata',
+
+    lovGuideSectionTitle:'关于挪威法律',
+
+    lovHeroChipAll:'全部',
+
+    lovHeroChipSoon:'即将上线',
+
+    lovHeroEyebrowCurrent:'法律',
+
+    lovHeroEyebrowHome:'首页',
+
+    lovHeroSectionFigures:'核心法律',
+
+    lovHeroSectionTools:'法律',
+
+    lovHeroTagSoon:'即将上线',
+
+    lovHeroToolAksjelovenDesc:'成立、公司机构、资本要求和股息——逐章解读。',
+
+    lovHeroToolAksjelovenTitle:'股份公司法',
+
+    lovHeroToolBokfLovenDesc:'簿记义务、文档和保存——对会计系统的要求。',
+
+    lovHeroToolBokfLovenTitle:'簿记法',
+
+    lovHeroToolLovsokDesc:'跨所有法律的搜索——通过自然语言查找条款。',
+
+    lovHeroToolLovsokTitle:'法律搜索',
+
+    lovHeroToolMvaLovenDesc:'增值税义务、抵扣权和不同行业的特殊规则。',
+
+    lovHeroToolMvaLovenTitle:'增值税法',
+
+    lovHeroToolRegnLovenDesc:'年度账目和报表的义务——根据公司规模有不同要求。',
+
+    lovHeroToolRegnLovenTitle:'会计法',
+
+    lovHeroToolSkattelovenDesc:'所得税、财富税和扣除规则——搜索整个法律文本。',
+
+    lovHeroToolSkattelovenTitle:'税法',
+
+    personligGuideBudgetTitle:'从你的<em>预算</em>开始',
+
+    personligGuideLonnsomhetTitle:'这值得吗？',
+
+    personligGuideOkonomiTitle:'为什么要计算你的财务？',
+
+    personligGuideSkattepliktigTitle:'应税收入',
+
+    personligGuideSparingTitle:'储蓄目标、BSU 和基金',
+
+    personligHeroChipAll:'全部',
+
+    personligHeroChipNew:'新',
+
+    personligHeroChipPopular:'热门',
+
+    personligHeroEyebrowCurrent:'个人理财',
+
+    personligHeroEyebrowHome:'首页',
+
+    personligHeroSectionGuide:'解释和指南',
+
+    personligHeroSectionTools:'工具',
+
+    personligHeroStatCalcs:'计算器',
+
+    personligHeroStatRates:'更新的费率',
+
+    personligHeroSubtitle:'税后工资、汽车成本、储蓄和预算——适用于你日常经济的所有计算器。',
+
+    personligHeroTagNew:'新',
+
+    personligHeroTagPopular:'热门',
+
+    personligHeroTitle:'个人<em>理财</em>',
+
+    personligHeroToolBilDesc:'燃油、保险、过路费和每月折旧。',
+
+    personligHeroToolBilTitle:'汽车成本',
+
+    personligHeroToolBudsjettDesc:'用所有收入和支出制定个人预算。',
+
+    personligHeroToolBudsjettTitle:'预算',
+
+    personligHeroToolLonnDesc:'你从时薪或年薪中实际能拿到多少。',
+
+    personligHeroToolLonnTitle:'税后工资',
+
+    personligHeroToolPensjonDesc:'国民保险、OTP 和个人储蓄的预期养老金。',
+
+    personligHeroToolPensjonTitle:'养老金',
+
+    personligHeroToolSpareDesc:'看复利如何让你的存款随时间增长。',
+
+    personligHeroToolSpareTitle:'储蓄计算器',
+
+    personligHeroToolStudieDesc:'计算 Lånekassen 的助学金、贷款和还款计划。',
+
+    personligHeroToolStudieTitle:'学生贷款',
+
+    regnskapGuideDebetKredit:'借方和贷方',
+
+    regnskapGuideHvaErRegn:'什么是会计？',
+
+    regnskapGuideKontoplan:'标准会计科目表 NS 4102',
+
+    regnskapGuideRegnPlikt:'会计义务',
+
+    regnskapGuideResVsBal:'损益 vs 资产负债',
+
+    regnskapGuideSectionTitle:'会计基础',
+
+    regnskapHeroChipAll:'全部',
+
+    regnskapHeroChipSoon:'即将上线',
+
+    regnskapHeroEyebrowCurrent:'会计',
+
+    regnskapHeroEyebrowHome:'首页',
+
+    regnskapHeroSectionFigures:'会计关键数据',
+
+    regnskapHeroSectionTools:'工具',
+
+    regnskapHeroTagSoon:'即将上线',
+
+    regnskapHeroToolArsoppDesc:'结账、期间分摊和损益分配——年度结算清单。',
+
+    regnskapHeroToolArsoppTitle:'年度结算',
+
+    regnskapHeroToolBalanseDesc:'资产、权益和负债——建立资产负债表并验证其平衡。',
+
+    regnskapHeroToolBalanseTitle:'资产负债表',
+
+    regnskapHeroToolBokforingDesc:'登记凭证并将交易按标准会计科目表 NS 4102 入账。',
+
+    regnskapHeroToolBokforingTitle:'簿记',
+
+    regnskapHeroToolKontoplanDesc:'可搜索的标准会计科目表 NS 4102，含说明和应用领域。',
+
+    regnskapHeroToolKontoplanTitle:'会计科目表',
+
+    regnskapHeroToolMvaMeldingDesc:'按期增值税申报，含进项和销项增值税。',
+
+    regnskapHeroToolMvaMeldingTitle:'增值税申报',
+
+    regnskapHeroToolResultatDesc:'收入、成本和损益——构建完整的损益表。',
+
+    regnskapHeroToolResultatTitle:'损益表',
+
+    skattHeroTagNew:'新',
+
+    skattHeroToolInntektDesc:'税后工资——2026 年的阶梯税、一般所得税、社会保险费和扣除。',
+
+    skattHeroToolInntektTitle:'所得税',
+
+    skattHeroToolReiseTitle:'通勤扣除',
+
 
     // === skipLink (T1 split-2026-05-06-r3) ===
     skipLink: '跳转到主内容',
