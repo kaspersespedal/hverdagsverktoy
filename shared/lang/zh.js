@@ -1495,4 +1495,7 @@ tekFootNote:'* 2026年费率。规则可能变化 — 请查阅 skatteetaten.no 
 
     // === skipLink (T1 split-2026-05-06-r3) ===
     skipLink: '跳转到主内容',
+    // === T1 placeholder-mekanisme (split-2026-05-07) ===
+    placeholderCustom: '请输入 …',
+    placeholderZero: '0',
 };

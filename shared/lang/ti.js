@@ -1672,4 +1672,7 @@ REGIONS['ti'] = {
     homeCatAvgiftDesc:`VAT፣ ሕጊ VAT ን ናይ ወሃቢ ስራሕ ኣበርክቶ`,
     // === skipLink (T1 split-2026-05-06-r3) ===
     skipLink: 'ናብ ቀንዲ ትሕዝቶ ኪድ',
+    // === T1 placeholder-mekanisme (split-2026-05-07) ===
+    placeholderCustom: 'ጽሓፍ …',
+    placeholderZero: '0',
 };
