@@ -1773,5 +1773,8 @@ REGIONS['ar'] = {
     lonnutStatDiff: 'الفرق',
     lonnutSubtitle: 'قارن تكلفة الشركة لدفع الأموال كراتب (مع مساهمة صاحب العمل وأجر الإجازة و OTP الإلزامي) أو كتوزيعات أرباح (مع ضريبة الشركات 22 %). اختر منطقة AGA والمبلغ الإجمالي — لترى أي شكل هو الأرخص، ومدى الفرق. كل شيء يحدث محلياً في المتصفح.',
     lonnutTitle: 'الراتب مقابل توزيعات الأرباح',
-    lonnutZoneLabel: 'منطقة AGA'
+    lonnutZoneLabel: 'منطقة AGA',
+    // === T1 placeholder-mekanisme (split-2026-05-07) ===
+    placeholderCustom: 'اكتب …',
+    placeholderZero: '0'
 };

@@ -403,7 +403,8 @@ function updateAll() {
   try{updateTabs();}catch(e){_uiErr('updateTabs',e);}
   try{var _th=document.getElementById('tool-h1');if(_th){var _p=location.pathname,_rh=R(),_kh=_p.indexOf('/skatt')>=0?'toolH1Skatt':_p.indexOf('/kalkulator')>=0?'toolH1Kalk':_p.indexOf('/boliglan')>=0?'toolH1Bolig':_p.indexOf('/avgift')>=0?'toolH1Avg':_p.indexOf('/selskap')>=0?'toolH1Sel':_p.indexOf('/personlig')>=0?'toolH1Per':null;if(_kh&&_rh[_kh])_th.textContent=_rh[_kh];}}catch(e){_uiErr('toolH1',e);}
   try{var _ra=R();var _rc=document.querySelector('.region-cur');if(_rc)_rc.setAttribute('aria-label',_ra.a11yLang||'Velg sprak');var _tp=document.getElementById('theme-picker');if(_tp){var _tb=_tp.querySelector('button');if(_tb)_tb.setAttribute('aria-label',_ra.a11yTheme||'Velg tema');}var _chT=_ra.calcHelpAria||'Vis veiledning';document.querySelectorAll('.calc-help-btn').forEach(function(b){b.setAttribute('aria-label',_chT);b.title=_chT;});}catch(e){_uiErr('a11yLbl',e);}
-  try{var _si=document.getElementById('search-input');if(_si){var _r=R();_si.placeholder=_r.searchPlaceholder||'Søk etter verktøy eller begrep...';}}catch(e){}
+  // Generic placeholder-i18n: handled by _updateI18nPh below via [data-i18n-placeholder] (E108).
+  // Hard-coded #search-input handler removed in favor of unified mechanism.
   // Scroll-end class toggle for mask-image fade
   try{var _cnav=document.querySelector('.calc-nav');if(_cnav){var _at=_cnav.querySelector('.calc-tab.active');if(!_cnav._hvtScrollBound){_cnav._hvtScrollBound=true;_cnav.addEventListener('scroll',function(){var atEnd=this.scrollLeft+this.clientWidth>=this.scrollWidth-10;this.classList.toggle('scrolled-end',atEnd);},{passive:true});}
   // Animated pill indicator
@@ -474,6 +475,26 @@ function updateAll() {
   _addLawSubCloseLabel();
   try{_updateI18nHtml(R());}catch(e){_uiErr('i18nHtml',e);}
   try{_updateI18nText(R());}catch(e){_uiErr('i18nText',e);}
+  try{_updateI18nPh(R());}catch(e){_uiErr('i18nPh',e);}
+}
+
+// Swap placeholder-attribute on [data-i18n-placeholder] elements when current lang has an override key.
+// Original NO placeholder caches paa el._hvtI18nPhOrig ved forste kjoring og brukes som fallback
+// naar R() mangler key (f.eks. bytte tilbake til NO etter EN, eller mangler oversettelse).
+// Kjorer ogsa for dynamisk JS-genererte rader (abo/budsjett etc.) — querySelectorAll
+// finner dem nye runder pga DOM-mutation. E108 LANG-placeholder-mekanisme.
+function _updateI18nPh(r){
+  if(!r) return;
+  var els=document.querySelectorAll('[data-i18n-placeholder]');
+  for(var i=0;i<els.length;i++){
+    var el=els[i],key=el.getAttribute('data-i18n-placeholder');
+    if(!key) continue;
+    if(el._hvtI18nPhOrig===undefined) el._hvtI18nPhOrig=el.getAttribute('placeholder')||'';
+    var target=r[key]||el._hvtI18nPhOrig;
+    if(el._hvtI18nPhApplied===target) continue;
+    el.setAttribute('placeholder',target);
+    el._hvtI18nPhApplied=target;
+  }
 }
 
 // Swap innerHTML on [data-i18n-html] elements when current lang has an override key.
