@@ -1492,4 +1492,7 @@ REGIONS['uk'] = {
 
     // === skipLink (T1 split-2026-05-06-r3) ===
     skipLink: 'Перейти до основного вмісту',
+    // === T1 placeholder-mekanisme (split-2026-05-07) ===
+    placeholderCustom: 'Введіть …',
+    placeholderZero: '0',
 };
