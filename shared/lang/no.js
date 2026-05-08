@@ -1526,6 +1526,23 @@ REGIONS['no'] = {
     avsRPeriod:'Periode',
     avsCsvBtn:'Last ned (CSV)',
 
+    // — npv calc (editorial redesign sub-page) —
+    npvHeroTitle:'NPV / IRR',
+    npvHeroLead:'Lønnsomhetsanalyse: er investeringen verdt det? Skriv inn investering, avkastningskrav og forventede inntekter de neste 5 årene — så regner kalkulatoren ut netto nåverdi (NPV), internrente (IRR), tilbakebetalingstid og lønnsomhet per krone. Alt skjer lokalt i nettleseren.',
+    npvSectionInput:'Investering og kontantstrømmer',
+    npvSectionHint:'5 år',
+    npvLInv:'Investering (kr)',
+    npvLRate:'Avkastningskrav (%)',
+    npvLCf1:'Inntekt år 1',
+    npvLCf2:'Inntekt år 2',
+    npvLCf3:'Inntekt år 3',
+    npvLCf4:'Inntekt år 4',
+    npvLCf5:'Inntekt år 5',
+    npvBtnCalc:'Beregn',
+    npvRIrr:'IRR',
+    npvInfoBox:'NPV diskonterer fremtidige kontantstrømmer til dagens verdi med avkastningskravet. Positiv NPV = investeringen gir mer enn kravet. IRR er renten som gjør NPV = 0 — sammenlign med kravet ditt for å se om prosjektet er verdiskapende.',
+    npvPlaceholder:'Skriv inn tall og trykk Beregn',
+
     // — aksjer article (editorial redesign) —
     aksjerTitle:'Aksjer',
     aksjerSubtitle:'Slik fungerer aksjer — hvordan du tjener penger, hva som er forventet avkastning og risiko, og hvordan aksjeskatt og skjermingsfradrag faktisk slår ut. Norske 2026-satser.',
