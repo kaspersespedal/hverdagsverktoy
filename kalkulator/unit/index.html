@@ -1,0 +1,872 @@
+<!doctype html>
+<html lang="no" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Valutakonverter — Kalkulator · Hverdagsverktøy</title>
+<meta name="description" content="Konverter mellom valutaer med oppdaterte kurser. Live ER-API-kurser caches lokalt i 7 dager og oppdateres når du har internett. Alt skjer i nettleseren.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link rel="preconnect" href="https://open.er-api.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://hverdagsverktoy.no/kalkulator/unit/#webpage",
+  "name": "Valutakonverter — Kalkulator · Hverdagsverktøy",
+  "url": "https://hverdagsverktoy.no/kalkulator/unit/",
+  "inLanguage": "no",
+  "isPartOf": { "@id": "https://hverdagsverktoy.no/#website" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.no/" },
+    { "@type": "ListItem", "position": 2, "name": "Kalkulator", "item": "https://hverdagsverktoy.no/kalkulator/" },
+    { "@type": "ListItem", "position": 3, "name": "Valutakonverter", "item": "https://hverdagsverktoy.no/kalkulator/unit/" }
+  ]
+}
+</script>
+<link rel="preload" href="/shared/core.js?v=v124" as="script" fetchpriority="high">
+<script>
+  (function(){
+    try{var t=localStorage.getItem('hv-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+  })();
+</script>
+<script>
+  (function(){
+    try{
+      var l=localStorage.getItem('hvt-lang')||'no';
+      document.documentElement.setAttribute('data-lang',l);
+      if(l!=='no')document.documentElement.classList.add('lang-loading');
+    }catch(e){}
+  })();
+</script>
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v6">
+<link rel="stylesheet" href="/shared/ticker.css?v=v1">
+<style>
+  :root{
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --ink:#ececea; --ink2:#a8a39a; --ink3:#797469; --ink4:#54514a;
+    --bg:#0d0d0c; --surface:#131312; --surface-2:#191917;
+    --accent:#c89968; --accent-2:#d8ad7e;
+    --line:rgba(255,255,255,.06); --line-2:rgba(255,255,255,.10); --line-warm:rgba(200,153,104,.18);
+    --ease: cubic-bezier(.22, 1, .36, 1);
+    --nav-bg: rgba(13,13,12,.78); --mark-bg: #1a1714; --menu-bg: #161513;
+    --hover-bg: rgba(255,255,255,.04); --hover-bg-soft: rgba(255,255,255,.02);
+    --kbd-bg: rgba(255,255,255,.04); --flag-shadow: rgba(0,0,0,.4);
+  }
+
+  .skip{position:absolute;top:-100px;left:8px;background:var(--accent);color:var(--bg);padding:8px 14px;border-radius:4px;font:600 13px/1 var(--font-sans);text-decoration:none;z-index:1000;transition:top .2s var(--ease);}
+  .skip:focus{top:8px;outline:2px solid var(--ink);outline-offset:2px}
+  *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+  [data-theme="frost"]{
+    --ink:#1a1714; --ink2:#5e574e; --ink3:#8a8378; --ink4:#b5ae9f;
+    --bg:#fafaf7; --surface:#ffffff; --surface-2:#f3f1ec;
+    --accent:#a87842; --accent-2:#8d6233;
+    --line:rgba(0,0,0,.08); --line-2:rgba(0,0,0,.14); --line-warm:rgba(168,120,66,.22);
+    --nav-bg: rgba(250,250,247,.82); --mark-bg:#f3eee5; --menu-bg:#ffffff;
+    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
+    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
+  }
+  [data-theme="hendrix"]{
+    --ink:#f4e6d3; --ink2:#c7ad8b; --ink3:#937c5e; --ink4:#5f4f3a;
+    --bg:#1f110b; --surface:#2a1810; --surface-2:#341f15;
+    --accent:#d4794a; --accent-2:#e6926a;
+    --line:rgba(244,230,211,.07); --line-2:rgba(244,230,211,.13); --line-warm:rgba(212,121,74,.22);
+    --nav-bg: rgba(31,17,11,.82); --mark-bg:#34211a; --menu-bg:#2a1810;
+    --hover-bg: rgba(244,230,211,.05); --hover-bg-soft: rgba(244,230,211,.025);
+    --kbd-bg: rgba(244,230,211,.05); --flag-shadow: rgba(0,0,0,.4);
+  }
+  [data-theme="dark"]{
+    --ink:#e6e8ef; --ink2:#9ba0b3; --ink3:#6c7185; --ink4:#444858;
+    --bg:#0d0e1a; --surface:#141528; --surface-2:#1c1d34;
+    --accent:#6c8aef; --accent-2:#94a8f5;
+    --line:rgba(255,255,255,.06); --line-2:rgba(255,255,255,.10); --line-warm:rgba(108,138,239,.20);
+    --nav-bg: rgba(13,14,26,.78); --mark-bg:#1c1d34; --menu-bg:#181a2e;
+    --hover-bg: rgba(255,255,255,.04); --hover-bg-soft: rgba(255,255,255,.02);
+    --kbd-bg: rgba(255,255,255,.04); --flag-shadow: rgba(0,0,0,.4);
+  }
+  [data-theme="glass"]{
+    --ink:#1a1d2e; --ink2:#5a6280; --ink3:#8a93ad; --ink4:#b5bdcf;
+    --bg:#f0f3fa; --surface:#ffffff; --surface-2:#e8edf6;
+    --accent:#6875f5; --accent-2:#5562e5;
+    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(104,117,245,.22);
+    --nav-bg: rgba(240,243,250,.82); --mark-bg:#e8edf6; --menu-bg:#ffffff;
+    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
+    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
+  }
+  [data-theme="bw"]{
+    --ink:#f5f5f5; --ink2:#b0b0b0; --ink3:#808080; --ink4:#555555;
+    --bg:#0a0a0a; --surface:#141414; --surface-2:#1c1c1c;
+    --accent:#ffffff; --accent-2:#e0e0e0;
+    --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.13); --line-warm:rgba(255,255,255,.18);
+    --nav-bg: rgba(10,10,10,.82); --mark-bg:#1c1c1c; --menu-bg:#141414;
+    --hover-bg: rgba(255,255,255,.05); --hover-bg-soft: rgba(255,255,255,.025);
+    --kbd-bg: rgba(255,255,255,.05); --flag-shadow: rgba(0,0,0,.4);
+  }
+  [data-theme="disco"]{
+    --ink:#f5e6f5; --ink2:#c4a8c4; --ink3:#8a6e90; --ink4:#5a445e;
+    --bg:#15081a; --surface:#1f0d28; --surface-2:#281033;
+    --accent:#e91e8c; --accent-2:#ff4ba6;
+    --line:rgba(245,230,245,.06); --line-2:rgba(245,230,245,.10); --line-warm:rgba(233,30,140,.22);
+    --nav-bg: rgba(21,8,26,.82); --mark-bg:#281033; --menu-bg:#1f0d28;
+    --hover-bg: rgba(245,230,245,.05); --hover-bg-soft: rgba(245,230,245,.025);
+    --kbd-bg: rgba(245,230,245,.05); --flag-shadow: rgba(0,0,0,.4);
+  }
+  [data-theme="pink"]{
+    --ink:#2a1a22; --ink2:#6b4a58; --ink3:#9a7585; --ink4:#c4a8b5;
+    --bg:#fef1f5; --surface:#ffffff; --surface-2:#fce2eb;
+    --accent:#e890b2; --accent-2:#d676a0;
+    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(232,144,178,.24);
+    --nav-bg: rgba(254,241,245,.82); --mark-bg:#fce2eb; --menu-bg:#ffffff;
+    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
+    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  html{scroll-behavior:smooth;overflow-x:hidden}
+  html,body{margin:0;padding:0;position:relative}
+  body{background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:15px;line-height:1.55;min-height:100vh;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden;}
+  .container{max-width:1120px;margin:0 auto;padding:0 32px}
+  ::selection{background:rgba(200,153,104,.28);color:#fff}
+
+  .nav-wrap{position:sticky;top:0;z-index:50;background:var(--nav-bg);backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid transparent;transition:border-color .3s var(--ease);}
+  .nav-wrap.scrolled{border-bottom-color:var(--line)}
+  nav.top-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:24px}
+  .brand-row{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
+  .mark{width:28px;height:28px;border-radius:5px;background:var(--mark-bg);border:1px solid var(--line-warm);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .wordmark{font-family:var(--font-serif);font-weight:500;font-size:18px;letter-spacing:-.2px;line-height:1;color:var(--ink);}
+  .nav-right{display:flex;align-items:center;gap:8px;position:relative}
+  .nav-back{font-size:13px;color:var(--ink3);text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:5px;border:1px solid var(--line-2);transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);}
+  .nav-back:hover{color:var(--ink);border-color:var(--line-warm);background:var(--hover-bg)}
+  .theme-btn,.lang-btn{display:flex;align-items:center;gap:8px;background:transparent;border:1px solid var(--line-2);color:var(--ink2);padding:7px 11px;border-radius:5px;font:500 13px/1 var(--font-sans);cursor:pointer;transition:border-color .2s var(--ease), color .2s var(--ease);}
+  .theme-btn:hover,.theme-btn[aria-expanded="true"],.lang-btn:hover,.lang-btn[aria-expanded="true"]{border-color:var(--line-warm);color:var(--ink)}
+  .theme-btn .theme-dot{width:14px;height:14px;border-radius:50%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);flex-shrink:0;}
+  .lang-btn .flag{width:18px;height:13px;border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px var(--flag-shadow)}
+  .lang-btn .flag img{width:100%;height:100%;display:block;object-fit:cover}
+  .chev{opacity:.5;transition:transform .2s var(--ease)}
+  .theme-btn[aria-expanded="true"] .chev,.lang-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+  .theme-menu,.lang-menu{position:absolute;top:calc(100% + 8px);right:0;background:var(--menu-bg);border:1px solid var(--line-2);border-radius:6px;padding:8px;min-width:200px;box-shadow:0 18px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;transform:translateY(-4px);transition:opacity .18s var(--ease), transform .18s var(--ease);z-index:100;}
+  .theme-menu.open,.lang-menu.open{opacity:1;pointer-events:auto;transform:none}
+  .theme-menu h5,.lang-menu h5{margin:6px 8px 4px;font:600 10px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);}
+  .theme-menu h5:not(:first-child),.lang-menu h5:not(:first-child){margin-top:8px}
+  .theme-item,.lang-menu a{display:flex;align-items:center;gap:10px;width:100%;background:transparent;border:0;cursor:pointer;padding:7px 8px;border-radius:4px;color:var(--ink2);text-decoration:none;font:500 13px/1 var(--font-sans);text-align:left;transition:background .15s var(--ease), color .15s var(--ease);}
+  .theme-item:hover,.lang-menu a:hover{background:var(--hover-bg);color:var(--ink)}
+  .theme-item.current,.lang-menu a.current{color:var(--ink);background:var(--hover-bg-soft)}
+  .lang-menu a .flag{width:18px;height:13px;border-radius:2px;overflow:hidden;flex-shrink:0;box-shadow:0 0 0 1px var(--flag-shadow)}
+  .lang-menu a .flag img{width:100%;height:100%;display:block;object-fit:cover}
+
+  .tabs-wrap{border-bottom:1px solid var(--line);background:var(--nav-bg);position:sticky;top:64px;z-index:40;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);}
+  .tabs{display:flex;gap:2px;padding:6px 0;overflow-x:auto;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex-shrink:0;background:transparent;border:0;padding:10px 14px;border-radius:4px;cursor:pointer;font:500 13px/1 var(--font-sans);letter-spacing:-.05px;color:var(--ink3);display:flex;align-items:center;gap:8px;transition:color .2s var(--ease), background .2s var(--ease);position:relative;text-decoration:none;}
+  .tab:hover{color:var(--ink2);background:var(--hover-bg-soft)}
+  .tab[aria-selected="true"]{color:var(--ink)}
+  .tab[aria-selected="true"]::after{content:"";position:absolute;left:14px;right:14px;bottom:-7px;height:2px;background:var(--accent);}
+  .tab .tab-icon{width:14px;height:14px;color:currentColor;opacity:.6}
+  .tab[aria-selected="true"] .tab-icon{opacity:1;color:var(--accent)}
+
+  .page-hero{padding:56px 0 36px;text-align:left;border-bottom:1px solid var(--line);}
+  .page-hero .container{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:end}
+  .page-eyebrow{display:inline-flex;align-items:center;gap:8px;font:600 11px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:18px;}
+  .page-eyebrow a{color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
+  .page-eyebrow a:hover{color:var(--accent)}
+  .page-eyebrow .arrow{color:var(--ink4);font-weight:400}
+  .page-eyebrow .current{color:var(--ink2)}
+  h1.page-title{font-family:var(--font-serif);font-weight:500;font-size:clamp(36px, 4.6vw, 54px);line-height:1.05;letter-spacing:-1.2px;margin:0 0 14px;color:var(--ink);}
+  h1.page-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
+  .page-lead{font-size:14px;line-height:1.55;color:var(--ink2);margin:0;max-width:58ch;}
+  .page-stats{display:flex;flex-direction:column;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .page-stat{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);}
+  .page-stat:last-child{border-bottom:none}
+  .page-stat .l{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;color:var(--ink3);}
+  .page-stat .v{font-family:var(--font-serif);font-weight:500;font-size:30px;line-height:1;letter-spacing:-.6px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;white-space:nowrap;}
+
+  footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
+  .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  .foot em{font-style:italic;color:var(--ink4)}
+
+  @media (max-width: 880px){
+    .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
+    .page-stats{align-self:stretch}
+    .tabs-wrap{top:60px}
+  }
+  @media (max-width: 560px){
+    .container{padding:0 22px}
+    .page-hero{padding:36px 0 28px}
+    h1.page-title{font-size:clamp(30px, 8vw, 42px)}
+  }
+  @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important} html{scroll-behavior:auto}}
+
+  .back-pill-wrap{margin:24px 0 0}
+  .back-pill{display:inline-flex;align-items:center;gap:14px;padding:11px 18px 11px 14px;background:var(--surface);border:1px solid var(--line-2);border-radius:999px;text-decoration:none;color:var(--ink2);transition:background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);}
+  .back-pill:hover{background:var(--surface-2);border-color:var(--line-warm);color:var(--ink);transform:translateX(-3px)}
+  .back-pill .arrow-back{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--hover-bg);color:var(--accent);transition:background .25s var(--ease)}
+  .back-pill:hover .arrow-back{background:var(--hover-bg)}
+  .back-pill .back-eyebrow{font:600 10px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);}
+  .back-pill .back-label{font:500 13px/1 var(--font-sans);color:inherit;}
+  .back-pill .back-stack{display:flex;flex-direction:column;gap:3px}
+
+  .calc-grid{display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;padding:8px 0 56px;}
+  .calc-form{display:flex;flex-direction:column;gap:24px}
+  .calc-section{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px 22px 20px;}
+  .calc-section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding-bottom:12px;margin-bottom:14px;border-bottom:1px solid var(--line);}
+  .calc-section-head h2{font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--ink3);margin:0;}
+  .calc-section-head .hint{font-size:11.5px;color:var(--ink3);font-style:italic;}
+
+  .calc-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;}
+  .calc-fg{display:flex;flex-direction:column;gap:6px}
+  .calc-fg.full{grid-column:1 / -1}
+  .calc-fg label{font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);}
+  .calc-fg input,.calc-fg select{width:100%;background:var(--bg);border:1px solid var(--line-2);border-radius:5px;padding:11px 12px;color:var(--ink);font:500 14px/1.2 var(--font-sans);outline:none;font-variant-numeric:tabular-nums;transition:border-color .2s var(--ease), background .2s var(--ease);}
+  .calc-fg input:focus,.calc-fg select:focus{border-color:var(--line-warm);background:var(--surface-2);}
+  .calc-fg select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:32px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23797469' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");background-repeat:no-repeat;background-position:right 10px center;}
+  .calc-hint{font-size:12px;color:var(--ink3);line-height:1.55;margin:6px 0 0;font-style:italic;}
+
+  .info-box{margin:0;padding:11px 14px;background:var(--surface-2);border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:5px;font-size:12.5px;color:var(--ink2);line-height:1.55;}
+  .info-box a{color:var(--accent);text-decoration:underline;font-weight:600}
+
+  .calc-btn{margin-top:4px;width:100%;padding:14px 20px;background:var(--accent);border:0;border-radius:6px;cursor:pointer;color:var(--surface);font:600 14px/1 var(--font-sans);letter-spacing:.2px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:background .2s var(--ease), transform .15s var(--ease);}
+  .calc-btn:hover{background:var(--accent-2)}
+  .calc-btn:active{transform:scale(.99)}
+  [data-theme="frost"] .calc-btn,[data-theme="glass"] .calc-btn,[data-theme="pink"] .calc-btn{color:#fff}
+
+  .calc-btn-secondary{margin-top:4px;width:100%;padding:11px 14px;background:transparent;border:1px solid var(--line-2);color:var(--ink2);border-radius:5px;cursor:pointer;font:600 12px/1 var(--font-sans);letter-spacing:.3px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:all .2s var(--ease);}
+  .calc-btn-secondary:hover{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink)}
+
+  .calc-result{position:sticky;top:124px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:24px 22px 20px;display:flex;flex-direction:column;gap:16px;}
+  .res-headline{border-bottom:1px solid var(--line);padding-bottom:16px;}
+  .res-headline .r-lbl{display:block;font:600 10px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:8px;}
+  .res-headline .r-val{display:block;font-family:var(--font-serif);font-weight:500;font-size:38px;line-height:1;letter-spacing:-.8px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;word-break:break-word;}
+  .res-headline .r-verdict{display:block;margin-top:8px;font-size:12.5px;color:var(--ink3);font-style:italic;}
+  .res-stats{display:flex;flex-direction:column}
+  .res-stat{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;}
+  .res-stat:last-child{border-bottom:none}
+  .res-stat .l{color:var(--ink2);font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;}
+  .res-stat .v{font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums;}
+
+  .calc-disclaimer{margin-top:14px;font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;}
+
+  @media (max-width: 880px){
+    .calc-grid{grid-template-columns:1fr}
+    .calc-result{position:static;top:auto}
+  }
+  @media (max-width: 560px){
+    .calc-section{padding:16px 16px 18px}
+    .calc-result{padding:20px 18px 18px}
+    .calc-fields{grid-template-columns:1fr;gap:12px}
+  }
+
+  /* ── T2 site-shell additions (search anchor / footer links / focus / help / howto) ── */
+  #site-search-anchor{display:none}
+  .foot{align-items:center}
+  .foot-links{display:inline-flex;align-items:center;gap:10px;font-size:12.5px}
+  .foot-links a{color:var(--ink3);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:1px}
+  .foot-links a:hover{color:var(--ink);border-bottom-color:var(--line-2)}
+  .foot-sep{color:var(--ink4)}
+  .page-hero-actions{display:flex;gap:8px;margin-top:14px}
+  .calc-help-btn,.focus-card-btn{
+    width:32px;height:32px;border:1px solid var(--line);background:transparent;color:var(--ink2);
+    border-radius:50%;font-size:14px;line-height:1;cursor:pointer;
+    display:inline-flex;align-items:center;justify-content:center;
+    transition:color .18s ease,border-color .18s ease;
+  }
+  @media(hover:hover){
+    .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line-2)}
+  }
+  .calc-help-btn:focus-visible,.focus-card-btn:focus-visible{outline:1px solid var(--accent);outline-offset:2px}
+  body.focus-mode > .nav-wrap,
+  body.focus-mode > .tabs-wrap,
+  body.focus-mode > footer{display:none}
+  body.focus-mode .back-pill-wrap{display:none}
+  .howto-wrap{margin:32px 0}
+  details.howto{
+    border:1px solid var(--line);border-radius:10px;padding:18px 22px;background:var(--surface);
+  }
+  details.howto > summary{
+    cursor:pointer;font-weight:500;color:var(--ink);list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+  }
+  details.howto > summary::-webkit-details-marker{display:none}
+  details.howto > summary::after{
+    content:'';width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;
+    transform:rotate(45deg);transition:transform .2s ease;flex:0 0 auto
+  }
+  details.howto[open] > summary::after{transform:rotate(-135deg)}
+  details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+  .howto-body{color:var(--ink2);font-size:14.5px;line-height:1.55}
+  .howto-row{padding:10px 0;border-top:1px solid var(--line);display:grid;grid-template-columns:240px 1fr;gap:24px}
+  .howto-row:first-child{border-top:0;padding-top:2px}
+  .howto-row > strong{color:var(--ink);font-weight:500}
+  @media(max-width:640px){.howto-row{grid-template-columns:1fr;gap:4px}.howto-row > strong{margin-bottom:2px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Hopp til hovedinnhold</a>
+
+<!-- ATMOSPHERE - Aurora over ink. Site-wide, fixed, behind everything. -->
+<div class="atmo-base" aria-hidden="true"></div>
+<div class="atmo" aria-hidden="true">
+  <div class="band band-a"><div class="band-inner"></div></div>
+  <div class="band band-b"><div class="band-inner"></div></div>
+  <div class="cursor-light" id="cursorLight"></div>
+</div>
+<svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">
+  <filter id="atmoGrain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"
+      stitchTiles="stitch" seed="4"/>
+    <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#atmoGrain)"/>
+</svg>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark-g" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8ad7e"/><stop offset="1" stop-color="#a87842"/>
+    </linearGradient>
+    <symbol id="mark-h" viewBox="0 0 64 64">
+      <rect x="14" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="42" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="22" y="28" width="20" height="8" rx="1.5" fill="url(#mark-g)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="nav-wrap" id="navWrap">
+  <div class="container">
+    <nav class="top-nav">
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy hjem">
+        <span class="mark"><svg width="16" height="16"><use href="#mark-h"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+      <div class="nav-right">
+        <div id="site-search-anchor"></div>
+        <a href="/" class="nav-back">
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+          Forsiden
+        </a>
+        <button class="theme-btn" id="themeBtn" aria-haspopup="true" aria-expanded="false" aria-controls="themeMenu">
+          <span class="theme-dot" id="themeDot" style="background:#1e1e1e"></span>
+          <span class="theme-label">Tema</span>
+          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
+        </button>
+        <div class="theme-menu" id="themeMenu" role="menu" aria-labelledby="themeBtn">
+          <h5>Tema</h5>
+          <button type="button" class="theme-item" data-theme="carbon"  role="menuitem"><span class="theme-dot" style="background:#1e1e1e"></span> Mørk</button>
+          <button type="button" class="theme-item" data-theme="frost"   role="menuitem"><span class="theme-dot" style="background:#e8ecf4;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span> Lys</button>
+          <button type="button" class="theme-item" data-theme="dark"    role="menuitem"><span class="theme-dot" style="background:#242740"></span> Mørk-Blå</button>
+          <button type="button" class="theme-item" data-theme="glass"   role="menuitem"><span class="theme-dot" style="background:#7c88f8"></span> Glass</button>
+          <button type="button" class="theme-item" data-theme="hendrix" role="menuitem"><span class="theme-dot" style="background:#9e5c3a"></span> Hendrix</button>
+          <button type="button" class="theme-item" data-theme="bw"      role="menuitem"><span class="theme-dot" style="background:#8a8a8a;box-shadow:inset 0 0 0 1px rgba(0,0,0,.4)"></span> Ray</button>
+          <button type="button" class="theme-item" data-theme="disco"   role="menuitem"><span class="theme-dot" style="background:#b044a2"></span> Disco</button>
+          <button type="button" class="theme-item" data-theme="pink"    role="menuitem"><span class="theme-dot" style="background:#e4a0be;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)"></span> Rosa</button>
+        </div>
+        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu">
+          <span class="flag"><img id="rf" src="https://flagcdn.com/w80/no.png" alt=""></span>
+          <span id="rn">Norsk</span>
+          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
+        </button>
+        <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
+          <h5>Hovedspråk</h5>
+          <a href="/kalkulator/" class="current" role="menuitem" data-region="no"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
+          <a href="/en/kalkulator/" role="menuitem" data-region="en"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
+          <h5>Språk i Norge</h5>
+          <a href="/pl/kalkulator/" role="menuitem" data-region="pl"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
+          <a href="/uk/kalkulator/" role="menuitem" data-region="uk"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
+          <a href="/ar/kalkulator/" role="menuitem" data-region="ar"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
+          <a href="/lt/kalkulator/" role="menuitem" data-region="lt"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
+          <a href="/so/kalkulator/" role="menuitem" data-region="so"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
+          <a href="/ti/kalkulator/" role="menuitem" data-region="ti"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
+          <h5>Internasjonalt</h5>
+          <a href="/zh/kalkulator/" role="menuitem" data-region="zh"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
+          <a href="/fr/kalkulator/" role="menuitem" data-region="fr"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap" role="tablist" aria-label="Kategorier">
+  <div class="container">
+    <div class="tabs">
+      <a href="/personlig/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
+        Personlig økonomi
+      </a>
+      <a href="/boliglan/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg>
+        Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab" role="tab" aria-selected="true">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>
+        Kalkulator
+      </a>
+      <a href="/skatt/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+        Skatt
+      </a>
+      <a href="/selskap/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg>
+        Selskap
+      </a>
+      <a href="/avgift/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+        Avgift
+      </a>
+      <a href="/regnskap/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/><line x1="3" y1="15" x2="21" y2="15"/></svg>
+        Regnskap
+      </a>
+      <a href="/lov/" class="tab" role="tab" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V21"/><path d="M9 21 H15"/><path d="M5 6 H19"/><path d="M2 13 L5 6 L8 13 Z"/><path d="M16 13 L19 6 L22 13 Z"/></svg>
+        Lov
+      </a>
+    </div>
+  </div>
+</div>
+
+<main id="main">
+
+  <div class="container">
+    <div class="back-pill-wrap">
+      <a href="/kalkulator/" class="back-pill" aria-label="Tilbake til alle kalkulatorer">
+        <span class="arrow-back" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/><line x1="4" y1="7" x2="12" y2="7"/></svg>
+        </span>
+        <span class="back-stack">
+          <span class="back-eyebrow">Kalkulator</span>
+          <span class="back-label">Tilbake til alle verktøy</span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <section class="page-hero" data-screen-label="Valutakonverter Hero">
+    <div class="container">
+      <div>
+        <div class="page-eyebrow">
+          <a href="/">Forsiden</a>
+          <span class="arrow">/</span>
+          <a href="/kalkulator/">Kalkulator</a>
+          <span class="arrow">/</span>
+          <span class="current">Valutakonverter</span>
+        </div>
+        <h1 class="page-title"><em data-i18n="unitHeroTitle">Valutakonverter</em></h1>
+        <p class="page-lead" data-i18n="unitHeroLead">Konverter mellom valutaer med oppdaterte kurser. Velg fra-/til-valuta og beløp — kursene hentes live fra ER-API når du har internett, og caches lokalt i 7 dager. Alt skjer i nettleseren.</p>
+      </div>
+      <div class="page-hero-actions">
+        <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
+        <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
+      </div>
+      <div class="page-stats">
+        <div class="page-stat"><span class="l" data-i18n="unitLRes">Resultat</span><span class="v" id="hStatRes">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="unitStatRate">Kurs</span><span class="v" id="hStatRate">–</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="calc-grid">
+
+      <div class="calc-form">
+
+        <section class="calc-section" aria-labelledby="ucInputHdr">
+          <header class="calc-section-head">
+            <h2 id="ucInputHdr" data-i18n="unitSectionInput">Konverter</h2>
+            <span class="hint" data-i18n="kalkTagLive">Live</span>
+          </header>
+          <div class="calc-fields">
+            <div class="calc-fg">
+              <label for="uc-from" id="uc-lbl-from" data-i18n="unitLFrom">Fra</label>
+              <select id="uc-from"></select>
+            </div>
+            <div class="calc-fg">
+              <label for="uc-to" id="uc-lbl-to" data-i18n="unitLTo">Til</label>
+              <select id="uc-to"></select>
+            </div>
+            <div class="calc-fg full">
+              <label for="uc-val" id="uc-lbl-val" data-i18n="unitLVal">Beløp</label>
+              <input id="uc-val" type="number" inputmode="decimal" value="1000" min="0" step="any" autocomplete="off">
+            </div>
+          </div>
+
+          <button type="button" id="cc-swap" class="calc-btn-secondary" aria-label="Bytt fra-/til-valuta">
+            <span aria-hidden="true">⇅</span>
+            <span data-i18n="unitBtnSwap">Bytt</span>
+          </button>
+        </section>
+
+        <p class="info-box">
+          Kursene hentes fra <strong>open.er-api.com</strong> (USD-base, fritt tilgjengelig). Hvis nettverket er nede brukes en lokal mellomlagring (inntil 7 dager gammel) eller en innebygd fallback-tabell. Beregningen skjer i nettleseren.
+        </p>
+      </div>
+
+      <aside class="calc-result" aria-live="polite">
+        <div class="res-headline">
+          <span class="r-lbl" data-i18n="unitLRes">Resultat</span>
+          <span class="r-val" id="uc-res">–</span>
+          <span class="r-verdict" id="uc-rate-info">Skriv inn beløp for å se resultatet</span>
+        </div>
+        <p class="calc-disclaimer" style="margin:0;">Markedskursene varierer kontinuerlig — bruk dette som veiledning. Banker og vekslere tar alltid en spread/gebyr.</p>
+      </aside>
+
+    </div>
+  </div>
+
+
+  <div class="container howto-wrap">
+    <details class="howto" id="howto-unitHowto">
+      <summary>
+        <span class="howto-title" data-howto-title="unitHowto">Slik bruker du Valutakonverteren</span>
+      </summary>
+      <div class="howto-body" data-howto-prefix="unitHowto"></div>
+    </details>
+  </div>
+</main>
+
+<footer>
+  <div class="container foot">
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var nav = document.getElementById('navWrap');
+    if(!nav) return;
+    var ticking = false;
+    function update(){if(window.scrollY > 8) nav.classList.add('scrolled'); else nav.classList.remove('scrolled'); ticking = false;}
+    window.addEventListener('scroll', function(){if(!ticking){ requestAnimationFrame(update); ticking = true; }}, {passive:true});
+    update();
+  })();
+
+  (function(){
+    var btn = document.getElementById('themeBtn');
+    var menu = document.getElementById('themeMenu');
+    var dot = document.getElementById('themeDot');
+    if(!btn || !menu) return;
+    var KEY = 'hv-theme';
+    var root = document.documentElement;
+    var THEMES = {
+      carbon:  {label:'Mørk',     dot:'#1e1e1e', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
+      frost:   {label:'Lys',      dot:'#e8ecf4', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'},
+      dark:    {label:'Mørk-Blå', dot:'#242740', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.10)'},
+      glass:   {label:'Glass',    dot:'#7c88f8', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'},
+      hendrix: {label:'Hendrix',  dot:'#9e5c3a', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
+      bw:      {label:'Ray',      dot:'#8a8a8a', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.4)'},
+      disco:   {label:'Disco',    dot:'#b044a2', dotShadow:'inset 0 0 0 1px rgba(255,255,255,.08)'},
+      pink:    {label:'Rosa',     dot:'#e4a0be', dotShadow:'inset 0 0 0 1px rgba(0,0,0,.08)'}
+    };
+    function paintTrigger(t){var th = THEMES[t] || THEMES.carbon; dot.style.background = th.dot; dot.style.boxShadow = th.dotShadow;}
+    function markCurrent(t){menu.querySelectorAll('.theme-item').forEach(function(el){if(el.getAttribute('data-theme') === t) el.classList.add('current'); else el.classList.remove('current');});}
+    function apply(t){if(!THEMES[t]) t = 'carbon'; root.setAttribute('data-theme', t); paintTrigger(t); markCurrent(t);}
+    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
+    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
+    var saved;
+    try { saved = localStorage.getItem(KEY); } catch(e){}
+    apply(THEMES[saved] ? saved : 'carbon');
+    btn.addEventListener('click', function(e){e.stopPropagation(); if(btn.getAttribute('aria-expanded')==='true') close(); else open();});
+    menu.querySelectorAll('.theme-item').forEach(function(el){el.addEventListener('click', function(e){e.preventDefault(); e.stopPropagation(); var t = el.getAttribute('data-theme'); apply(t); try { localStorage.setItem(KEY, t); } catch(e){} close();});});
+    document.addEventListener('click', function(e){if(!menu.contains(e.target) && !btn.contains(e.target)) close();});
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  })();
+
+  (function(){
+    var btn = document.getElementById('langBtn');
+    var menu = document.getElementById('langMenu');
+    if(!btn || !menu) return;
+    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
+    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
+    btn.addEventListener('click', function(e){e.stopPropagation(); if(btn.getAttribute('aria-expanded')==='true') close(); else open();});
+    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
+  })();
+
+  // ── Valutakonverter: portet ccConvert/ccSwap/ccPopulate/ccFetchRates fra shared/core.js (5111-5205) ──
+  (function(){
+    var CC_CACHE_KEY = 'hvt-cc-rates';
+    var CC_CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+    // Mirror av shared/core.js linje 5111-5113
+    var ccCurrenciesNO = ['Norske kroner','Euro','US Dollar','Britiske pund','Svenske kroner','Danske kroner','Polske zloty','Sveitsiske franc','Japanske yen','Kinesiske yuan','Kanadiske dollar','Australske dollar','Indiske rupi','Tyrkiske lira','Brasilianske real'];
+    var ccCurrencyCodes = ['NOK','EUR','USD','GBP','SEK','DKK','PLN','CHF','JPY','CNY','CAD','AUD','INR','TRY','BRL'];
+    // Last-resort fallback rates vs NOK. Live ER-API erstatter disse innen ~500 ms.
+    var ccRates = {NOK:1,EUR:0.0904,USD:0.0935,GBP:0.0737,SEK:0.9524,DKK:0.6404,PLN:0.3685,CHF:0.0813,JPY:14.02,CNY:0.6618,CAD:0.1267,AUD:0.1435,INR:7.88,TRY:3.39,BRL:0.5356};
+    var ccRatesLoaded = false;
+    var ccRatesCached = false;
+    var ccLastUpdate = '';
+
+    function R_(){ try { return (typeof R === 'function') ? R() : {}; } catch(e){ return {}; } }
+
+    function getCcCurrencies(){
+      var r = R_();
+      var names = r.ccCurrNames || ccCurrenciesNO;
+      return ccCurrencyCodes.map(function(code,i){
+        return [code, code + ' — ' + (names[i] || ccCurrenciesNO[i])];
+      });
+    }
+
+    // Load cached snapshot from localStorage (port av ccLoadCache IIFE i core.js 5127-5139)
+    (function ccLoadCache(){
+      try {
+        var raw = localStorage.getItem(CC_CACHE_KEY);
+        if(!raw) return;
+        var obj = JSON.parse(raw);
+        if(!obj || typeof obj !== 'object' || !obj.rates || !obj.ts) return;
+        if(Date.now() - obj.ts > CC_CACHE_MAX_AGE_MS) return;
+        ccRates = obj.rates;
+        ccRatesCached = true;
+        ccLastUpdate = obj.updatedStr || '';
+      } catch(e){ /* ignore, use fallback */ }
+    })();
+
+    // Port av ccFetchRates (core.js 5141-5162). Bruker NOK-base for direkte rate-lookup.
+    function ccFetchRates(){
+      try {
+        fetch('https://open.er-api.com/v6/latest/NOK').then(function(res){
+          return res.json();
+        }).then(function(data){
+          if(data && data.result === 'success'){
+            ccRates = data.rates;
+            ccRatesLoaded = true;
+            ccRatesCached = false;
+            ccLastUpdate = data.time_last_update_utc ? new Date(data.time_last_update_utc).toLocaleDateString('no') : '';
+            try {
+              localStorage.setItem(CC_CACHE_KEY, JSON.stringify({
+                rates: data.rates,
+                ts: Date.now(),
+                updatedStr: ccLastUpdate
+              }));
+            } catch(e){ /* storage full / private mode */ }
+            ccConvert();
+          }
+        }).catch(function(){ /* network down — keep cached/fallback */ });
+      } catch(e){}
+    }
+
+    // Port av ccPopulate (core.js 5164-5178)
+    function ccPopulate(){
+      var defaults = ['NOK','EUR'];
+      ['uc-from','uc-to'].forEach(function(id, i){
+        var sel = document.getElementById(id);
+        if(!sel) return;
+        var prev = sel.value || defaults[i];
+        sel.innerHTML = '';
+        getCcCurrencies().forEach(function(row){
+          var o = document.createElement('option');
+          o.value = row[0]; o.textContent = row[1];
+          sel.appendChild(o);
+        });
+        sel.value = prev;
+      });
+    }
+
+    // Port av ccConvert (core.js 5180-5198)
+    function ccConvert(){
+      var fromEl = document.getElementById('uc-from');
+      var toEl = document.getElementById('uc-to');
+      var valEl = document.getElementById('uc-val');
+      if(!fromEl || !toEl || !valEl) return;
+      var from = fromEl.value;
+      var to = toEl.value;
+      var val = Math.abs(parseFloat(valEl.value)) || 0;
+      var rateFrom = ccRates[from] || 1;
+      var rateTo = ccRates[to] || 1;
+      var result = val * (rateTo / rateFrom);
+      var rate = (rateTo / rateFrom);
+
+      var resEl = document.getElementById('uc-res');
+      if(resEl){
+        if(val === 0){
+          resEl.textContent = '–';
+        } else {
+          resEl.textContent = result.toLocaleString('no', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + to;
+        }
+      }
+
+      var hStatRes = document.getElementById('hStatRes');
+      if(hStatRes){
+        hStatRes.textContent = (val === 0) ? '–' : result.toLocaleString('no', {minimumFractionDigits:2, maximumFractionDigits:2});
+      }
+      var hStatRate = document.getElementById('hStatRate');
+      if(hStatRate){
+        hStatRate.textContent = rate.toLocaleString('no', {minimumFractionDigits:4, maximumFractionDigits:4});
+      }
+
+      var info = document.getElementById('uc-rate-info');
+      var r = R_();
+      if(info){
+        var stateSuffix;
+        if(ccRatesLoaded) stateSuffix = ' ' + (r.ccLive || '(live)');
+        else if(ccRatesCached) stateSuffix = ' ' + (r.ccCached || '(lagret ' + (ccLastUpdate || '') + ')').trim();
+        else stateSuffix = ' ' + (r.ccApprox || '(ca.)');
+        info.textContent = '1 ' + from + ' = ' + rate.toLocaleString('no', {minimumFractionDigits:4, maximumFractionDigits:4}) + ' ' + to + stateSuffix;
+      }
+    }
+
+    // Port av ccSwap (core.js 5200-5205)
+    function ccSwap(){
+      var f = document.getElementById('uc-from');
+      var t = document.getElementById('uc-to');
+      if(!f || !t) return;
+      var tmp = f.value; f.value = t.value; t.value = tmp;
+      ccConvert();
+    }
+
+    // Init
+    function init(){
+      ccPopulate();
+      // Default: USD → NOK (matcher OLD bc-unit value=1000)
+      var fromEl = document.getElementById('uc-from');
+      var toEl = document.getElementById('uc-to');
+      if(fromEl && !fromEl.dataset.init){ fromEl.value = 'USD'; fromEl.dataset.init = '1'; }
+      if(toEl && !toEl.dataset.init){ toEl.value = 'NOK'; toEl.dataset.init = '1'; }
+      ['uc-from','uc-to'].forEach(function(id){
+        var el = document.getElementById(id);
+        if(el) el.addEventListener('change', ccConvert);
+      });
+      var valEl = document.getElementById('uc-val');
+      if(valEl) valEl.addEventListener('input', ccConvert);
+      var swapBtn = document.getElementById('cc-swap');
+      if(swapBtn) swapBtn.addEventListener('click', ccSwap);
+      ccConvert();
+      ccFetchRates();
+    }
+
+    // Re-populate når språk byttes (R() returnerer nye ccCurrNames)
+    function onLangChange(){
+      ccPopulate();
+      ccConvert();
+    }
+    window.addEventListener('langchange', onLangChange);
+
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  })();
+</script>
+
+<script defer src="/shared/core.js?v=v124"></script>
+<script defer src="/shared/lang/no.js?v=v41"></script>
+<script defer src="/shared/ticker.js?v=v1"></script>
+
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('/sw.js').catch(function(){});
+    });
+  }
+</script>
+
+<script>
+  // ── T2 site-shell wiring (howto render + ? toggle + ⛶ focus) ──
+  (function(){
+    function renderHowto(){
+      var bodies = document.querySelectorAll('[data-howto-prefix]');
+      if(!bodies.length) return;
+      var r = (typeof R === 'function') ? R() : {};
+      bodies.forEach(function(body){
+        var prefix = body.getAttribute('data-howto-prefix');
+        var rows = r && r[prefix + 'Rows'];
+        var html = '';
+        if(rows && rows.length){
+          for(var i=0;i<rows.length;i++){
+            var label = rows[i][0]||'';
+            var desc  = rows[i][1]||'';
+            html += '<div class="howto-row"><strong>'+label+'</strong><span>'+desc+'</span></div>';
+          }
+        } else {
+          if(r[prefix + 'Lead']) html += '<p>' + r[prefix + 'Lead'] + '</p>';
+          for(var j=1; j<=10; j++){
+            var p = r[prefix + 'P' + j];
+            if(p) html += '<p>' + p + '</p>';
+          }
+          if(r[prefix + 'Helper']) html += '<p class="howto-helper"><em>' + r[prefix + 'Helper'] + '</em></p>';
+          if(r[prefix + 'Outro']) html += '<p>' + r[prefix + 'Outro'] + '</p>';
+        }
+        if(html) body.innerHTML = html;
+      });
+      var titles = document.querySelectorAll('[data-howto-title]');
+      titles.forEach(function(t){
+        var prefix = t.getAttribute('data-howto-title');
+        var titleKey = prefix + 'Title';
+        if(r && r[titleKey]) t.textContent = r[titleKey];
+      });
+    }
+    function init(){
+      document.querySelectorAll('.calc-help-btn').forEach(function(b){
+        b.addEventListener('click', function(){
+          var d = document.querySelector('details.howto');
+          if(!d) return;
+          d.open = !d.open;
+          if(d.open) d.scrollIntoView({behavior:'smooth', block:'start'});
+        });
+      });
+      document.querySelectorAll('.focus-card-btn').forEach(function(b){
+        b.addEventListener('click', function(){
+          document.body.classList.toggle('focus-mode');
+        });
+      });
+      renderHowto();
+    }
+    function pollRender(){
+      var bodies = document.querySelectorAll('[data-howto-prefix]');
+      if(!bodies.length) return;
+      var attempts = 0;
+      var max = 38;
+      var t = setInterval(function(){
+        attempts++;
+        var r = (typeof R === 'function') ? R() : {};
+        var ready = false;
+        bodies.forEach(function(b){
+          var p = b.getAttribute('data-howto-prefix');
+          if(r[p+'Rows'] || r[p+'Lead'] || r[p+'P1']) ready = true;
+        });
+        if(ready){
+          renderHowto();
+          clearInterval(t);
+        } else if(attempts >= max){
+          clearInterval(t);
+        }
+      }, 80);
+    }
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
+    } else { init(); pollRender(); }
+  })();
+</script>
+<script src="/shared/atmosphere.js?v=v1" defer></script>
+<script>
+(function(){
+  var menu = document.getElementById('langMenu');
+  if(!menu) return;
+  menu.addEventListener('click', function(e){
+    var a = e.target.closest('[data-region]');
+    if(!a) return;
+    e.preventDefault();
+    var code = a.getAttribute('data-region');
+    try { window.setRegion && window.setRegion(code); } catch(err){}
+    menu.classList.remove('open');
+    var btn = document.getElementById('langBtn');
+    if(btn) btn.setAttribute('aria-expanded','false');
+  });
+})();
+</script>
+</body>
+</html>
