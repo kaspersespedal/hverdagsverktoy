@@ -1526,6 +1526,12 @@ REGIONS['no'] = {
     avsRPeriod:'Periode',
     avsCsvBtn:'Last ned (CSV)',
 
+    // — finance calc sub-page (editorial redesign) —
+    financeHeroTitle:'Finansiell kalkulator',
+    financeHeroLead:'Beregn nåverdi (PV), fremtidsverdi (FV), margin/markup, break-even, renters rente og rabatter. Velg beregningstype, fyll inn tallene og få resultatet med detaljer. Alt skjer lokalt i nettleseren.',
+    financeSectionInput:'Finansiell beregning',
+    financeSectionHint:'5 typer',
+    financeInfoBox:'Finanskalkulatoren dekker fem typiske beregninger: nåverdi/fremtidsverdi (TVM), margin og markup, break-even-punkt, renters rente og rabatter. Resultatene oppdateres lokalt — ingen data sendes ut.',
     // — rente calc (editorial redesign) —
     renteTitle:'Effektiv rente',
     renteSubtitle:'Beregn den ekte årsrenten på lånet ditt — ikke bare den banken annonserer. Inkluderer etableringsavgift og månedlige gebyrer. Sammenlign reelle lånekostnader. Alt skjer lokalt i nettleseren.',
