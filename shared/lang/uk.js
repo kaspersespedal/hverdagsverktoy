@@ -948,7 +948,7 @@ REGIONS['uk'] = {
       kalkToolSciTitle:'Науковий',
       kalkToolSciDesc:'Sin, cos, log, степені, факторіал — доступний повний RPN-режим.',
       kalkToolValutaTitle:'Валюта',
-      kalkToolValutaDesc:'Конвертуйте між 168 валютами з актуальними курсами.',
+      kalkToolValutaDesc:'Конвертуйте між валютами з актуальними курсами. Live ER-API + 7-денний кеш.',
       kalkToolFinTitle:'Фінансовий',
       kalkToolFinDesc:'Теперішня вартість, майбутня вартість, ануїтет та ефективна ставка.',
       kalkToolAvsTitle:'Амортизація',
@@ -1756,4 +1756,14 @@ REGIONS['uk'] = {
     // === T1 placeholder-mekanisme (split-2026-05-07) ===
     placeholderCustom: 'Введіть …',
     placeholderZero: '0',
+    // - unit calc (Valutakonverter - editorial redesign 2026-05-08 T2) -
+    unitHeroTitle: 'Конвертер валют',
+    unitHeroLead: 'Конвертуйте між валютами з актуальними курсами. Виберіть вихідну/цільову валюту та суму - курси отримуються наживо з ER-API, коли ви онлайн, і кешуються локально на 7 днів. Усе працює в браузері.',
+    unitSectionInput: 'Конвертувати',
+    unitStatRate: 'Курс',
+    unitLFrom: 'З',
+    unitLTo: 'На',
+    unitLVal: 'Сума',
+    unitLRes: 'Результат',
+    unitBtnSwap: 'Поміняти',
 };

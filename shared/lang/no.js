@@ -1102,7 +1102,7 @@ REGIONS['no'] = {
       kalkToolSciTitle:'Vitenskapelig',
       kalkToolSciDesc:'Sin, cos, log, potenser, fakultet — full RPN-modus tilgjengelig.',
       kalkToolValutaTitle:'Valuta',
-      kalkToolValutaDesc:'Regn om mellom 168 valutaer med oppdaterte kurser.',
+      kalkToolValutaDesc:'Konverter mellom valutaer med oppdaterte kurser. Live ER-API + 7-dagers cache.',
       kalkToolFinTitle:'Finansiell',
       kalkToolFinDesc:'Nåverdi, fremtidsverdi, annuitet og effektiv rente.',
       kalkToolAvsTitle:'Avskrivning',
@@ -2023,4 +2023,14 @@ REGIONS['no'] = {
     // === T1 placeholder-mekanisme (split-2026-05-07) ===
     placeholderCustom: 'Skriv inn …',
     placeholderZero: '0',
+    // — unit calc (Valutakonverter — editorial redesign 2026-05-08 T2) —
+    unitHeroTitle: 'Valutakonverter',
+    unitHeroLead: 'Konverter mellom valutaer med oppdaterte kurser. Velg fra-/til-valuta og beløp — kursene hentes live fra ER-API når du har internett, og caches lokalt i 7 dager. Alt skjer i nettleseren.',
+    unitSectionInput: 'Konverter',
+    unitStatRate: 'Kurs',
+    unitLFrom: 'Fra',
+    unitLTo: 'Til',
+    unitLVal: 'Beløp',
+    unitLRes: 'Resultat',
+    unitBtnSwap: 'Bytt',
 };
