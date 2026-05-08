@@ -1515,4 +1515,15 @@ REGIONS['lt'] = {
     // === T1 placeholder-mekanisme (split-2026-05-07) ===
     placeholderCustom: 'Įveskite …',
     placeholderZero: '0',
+    kalkToolValutaDesc: 'Konvertuokite tarp valiutų su atnaujintais kursais. Tiesioginis ER-API + 7 dienų talpykla.',
+    // - unit calc (Valutakonverter - editorial redesign 2026-05-08 T2) -
+    unitHeroTitle: 'Valiutų konverteris',
+    unitHeroLead: 'Konvertuokite tarp valiutų su atnaujintais kursais. Pasirinkite valiutą ir sumą - kursai gaunami tiesiogiai iš ER-API, kai esate prisijungę, ir saugomi vietoje 7 dienas. Viskas vyksta naršyklėje.',
+    unitSectionInput: 'Konvertuoti',
+    unitStatRate: 'Kursas',
+    unitLFrom: 'Iš',
+    unitLTo: 'Į',
+    unitLVal: 'Suma',
+    unitLRes: 'Rezultatas',
+    unitBtnSwap: 'Sukeisti',
 };

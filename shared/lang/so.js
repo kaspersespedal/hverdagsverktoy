@@ -1473,4 +1473,15 @@ REGIONS['so'] = {
     // === T1 placeholder-mekanisme (split-2026-05-07) ===
     placeholderCustom: 'Geli …',
     placeholderZero: '0',
+    kalkToolValutaDesc: 'U beddel lacagaha qaayaha la cusbooneysiiyay. ER-API toos ah + kaydka 7-maalmoodka ah.',
+    // - unit calc (Valutakonverter - editorial redesign 2026-05-08 T2) -
+    unitHeroTitle: 'Beddelka Lacagta',
+    unitHeroLead: 'U beddel inta u dhexeysa lacagaha qaayaha la cusbooneysiiyay. Dooro lacagta laga bilaabo/loo beddelo iyo qaddarka - qaayaha waxaa laga soo qaadan ER-API marka aad onlayn tahay, oo waxaa lagu kaydiyaa 7 maalmood. Wax walba waxay ka socdaa daalada.',
+    unitSectionInput: 'Beddel',
+    unitStatRate: 'Heerka',
+    unitLFrom: 'Ka',
+    unitLTo: 'Ku',
+    unitLVal: 'Qaddarka',
+    unitLRes: 'Natiijada',
+    unitBtnSwap: 'Iska weydaarso',
 };
