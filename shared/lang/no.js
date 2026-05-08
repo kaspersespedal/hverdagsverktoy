@@ -1526,6 +1526,22 @@ REGIONS['no'] = {
     avsRPeriod:'Periode',
     avsCsvBtn:'Last ned (CSV)',
 
+    // — npv calc (editorial redesign sub-page) —
+    npvHeroTitle:'NPV / IRR',
+    npvHeroLead:'Lønnsomhetsanalyse: er investeringen verdt det? Skriv inn investering, avkastningskrav og forventede inntekter de neste 5 årene — så regner kalkulatoren ut netto nåverdi (NPV), internrente (IRR), tilbakebetalingstid og lønnsomhet per krone. Alt skjer lokalt i nettleseren.',
+    npvSectionInput:'Investering og kontantstrømmer',
+    npvSectionHint:'5 år',
+    npvLInv:'Investering (kr)',
+    npvLRate:'Avkastningskrav (%)',
+    npvLCf1:'Inntekt år 1',
+    npvLCf2:'Inntekt år 2',
+    npvLCf3:'Inntekt år 3',
+    npvLCf4:'Inntekt år 4',
+    npvLCf5:'Inntekt år 5',
+    npvBtnCalc:'Beregn',
+    npvRIrr:'IRR',
+    npvInfoBox:'NPV diskonterer fremtidige kontantstrømmer til dagens verdi med avkastningskravet. Positiv NPV = investeringen gir mer enn kravet. IRR er renten som gjør NPV = 0 — sammenlign med kravet ditt for å se om prosjektet er verdiskapende.',
+    npvPlaceholder:'Skriv inn tall og trykk Beregn',
     // — finance calc sub-page (editorial redesign) —
     financeHeroTitle:'Finansiell kalkulator',
     financeHeroLead:'Beregn nåverdi (PV), fremtidsverdi (FV), margin/markup, break-even, renters rente og rabatter. Velg beregningstype, fyll inn tallene og få resultatet med detaljer. Alt skjer lokalt i nettleseren.',
