@@ -966,7 +966,7 @@ REGIONS['zh'] = {
       kalkToolNpvTitle:'NPV / IRR',
       kalkToolSciDesc:'正弦、余弦、对数、幂、阶乘——可使用完整的 RPN 模式。',
       kalkToolSciTitle:'科学',
-      kalkToolValutaDesc:'使用更新的汇率在168种货币之间换算。',
+      kalkToolValutaDesc:'使用最新汇率在不同货币之间换算。实时 ER-API + 7 天缓存。',
       kalkToolValutaTitle:'货币',
       kontoplanNs4102:'挪威标准会计科目表——1 至 8 类',
       mvaloven_portal:'增值税义务、抵扣权和特殊规则',
@@ -1957,4 +1957,14 @@ tekFootNote:'* 2026年费率。规则可能变化 — 请查阅 skatteetaten.no 
     // === T1 placeholder-mekanisme (split-2026-05-07) ===
     placeholderCustom: '请输入 …',
     placeholderZero: '0',
+    // - unit calc (Valutakonverter - editorial redesign 2026-05-08 T2) -
+    unitHeroTitle: '货币转换器',
+    unitHeroLead: '使用最新汇率在货币之间换算。选择源货币、目标货币和金额——联网时通过 ER-API 实时获取汇率,本地缓存 7 天。所有计算在浏览器中完成。',
+    unitSectionInput: '转换',
+    unitStatRate: '汇率',
+    unitLFrom: '从',
+    unitLTo: '至',
+    unitLVal: '金额',
+    unitLRes: '结果',
+    unitBtnSwap: '互换',
 };

@@ -938,7 +938,7 @@ REGIONS['en'] = {
       kalkToolSciTitle:'Scientific',
       kalkToolSciDesc:'Sin, cos, log, exponents, factorial — full RPN mode available.',
       kalkToolValutaTitle:'Currency',
-      kalkToolValutaDesc:'Convert between 168 currencies with up-to-date rates.',
+      kalkToolValutaDesc:'Convert between currencies with up-to-date rates. Live ER-API + 7-day cache.',
       kalkToolFinTitle:'Financial',
       kalkToolFinDesc:'Present value, future value, annuity and effective interest rate.',
       kalkToolAvsTitle:'Depreciation',
@@ -1761,4 +1761,14 @@ REGIONS['en'] = {
     // === T1 placeholder-mekanisme (split-2026-05-07) ===
     placeholderCustom: 'Type in …',
     placeholderZero: '0',
+    // - unit calc (Valutakonverter - editorial redesign 2026-05-08 T2) -
+    unitHeroTitle: 'Currency converter',
+    unitHeroLead: 'Convert between currencies with up-to-date rates. Pick from-/to-currency and amount - rates are fetched live from ER-API when you are online and cached locally for 7 days. Everything runs in the browser.',
+    unitSectionInput: 'Convert',
+    unitStatRate: 'Rate',
+    unitLFrom: 'From',
+    unitLTo: 'To',
+    unitLVal: 'Amount',
+    unitLRes: 'Result',
+    unitBtnSwap: 'Swap',
 };
