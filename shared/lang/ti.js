@@ -895,7 +895,7 @@ REGIONS['ti'] = {
     },
     searchDs: {
       trinnskatt:'ምስ እቶት ዝዓቢ ደረጃዊ ቀረጽ — 5 ደረጃታት', skatteFradrag:'ቀረጽ ቀጥታ ዝንኪ ቅነሳ', minstefradrag:'ንኩሎም ደመወዝ ተቐበልቲ ዝወሃብ ናይ ኣውቶማቲክ ቅነሳ', trygdeavgift:'ናይ ማሕበራዊ ውሕስነት ክፍሊት — 7.6% ካብ ደሞዝ', egenkapital:'ንገዛ ምግዛእ ዝድለ ዝተሓተ ናይ ውልቂ ካፒታል (10%)', bsu:'10% ናይ ቀረጽ ቅነሳ ካብ ኣቐማሚጢ፣ ዝለዓለ 27 500 kr/ዓመት', gjeldsgrad:'ዝምድና ጠቕላላ ዕዳን ጠቕላላ እቶትን (ዝለዓለ 5×)', stresstest:'ባንክ ናይ 3 ነጥቢ ምዕባይ ክትጻወር ከም ትኽእል ይምርምር', aksjonarmodellen:'ንውልቃዊ ኣክሲዮን ዋናታት ናይ ዲቪደንድ ቀረጽ ሞዴል', foretaksmodellen:'ንውልቃዊ ትካላት ናይ ቀረጽ ሞዴል', verdsettelsesrabatt:'ኣብ ኣክሲዮን፣ ገዛን ንብረትን ዝወሃብ ቅናሻ', saldoavs:'ብቀዋሚ % ካብ ዝተረፈ ዋጋ ናይ ቀረጽ ውድቀት ዋጋ', otp:'ኣስራሒ እንተ ወሓደ 2% ካብ ደሞዝ ልዕሊ 1G ክቖጥብ ኣለዎ', agaBegrep:'ኣስራሒ ኣብ ደሞዝ ዝኸፍሎ ቀረጽ — ብዞባ ዝፈላለ', rentesRente:'ኣብ ረብሓ ዝውሰኽ ረብሓ — ቁጠባ ብግዜ ሓያል ዝገብር ስምዒት', annuitet:'ንምሉእ ግዜ ማዕረ ወርሓዊ ክፍሊት ዝህብ ልቓሕ', serieLan:'ማዕረ ኣስላ ክፍሊት ዘለዎ ልቓሕ — ብጠቕላላ ካብ ኣኑኢቲ ዝሓሰረ', naeringHobby:'ተወሳኺ እቶት መዓስ ቀረጽ ዝኽፈሎ ንግዲ ይኸውን?', konsernbidrag:'ኣብ መንጎ ኣብ ሓደ ጉጅለ ዘሎዋ ትካላት ምትሕልላፍ ረብሓ', fritaksmetoden:'ትካላት ካብ ናይ ኣክሲዮን ዲቪደንድን ረብሓን ካብ ቀረጽ ነጻ እየን', deltakerligning:'ረብሓ ይምቐልን ኣብ ነፍሲ ወከፍ ተሳታፊ ቀረጽ ይኽፈሎን', selskapsskatt:'22% ቀረጽ ኣብ ረብሓ ኣክሲዮን ትካል', utbytteskatt:'37.84% ቀረጽ ኣብ ዲቪደንድ ንውልቃዊ ኣክሲዮን ዋናታት', komplementar:'ኣብ KS ዘይተሓጽረ ውልቃዊ ሓላፍነት ዘለዎ ንጡፍ መራሒ', kommandittist:'ኣብ KS ናይ ውልቂ ዘይንጡፍ ወፋሪ — ሓላፍነት ኣብ ኣበርክቶ ጥራይ', mvaSatser:'25% ልሙድ፣ 15% ምግቢ፣ 12% መጓዓዝያ/ባህሊ፣ 0% ወጻኢ', omsetning:'ልዕሊ 50 000 kr ሽያጥ ምስ ዝበጽሕ ምዝገባ ግድን', fradragsrett:'ካብ ናይ ንግዲ ግዝኣት ኣታዊ MVA ናይ ምንካይ መሰል', skatteloven:'ምዕራፋትን ዓንቀጻትን ሕጊ ቀረጽ', sktlK2:'ኣብ ኖርወይ ንመን ይምልከት ቀረጽ?', sktlK4:'ናይ ንብረት፣ ኣክሲዮን፣ ገዛን ቅናሻታትን ግምት', sktlK5:'ቀረጽ ዝኽፈሎ እቶት፣ ደሞዝ፣ ካፒታልን ካብ ቀረጽ ነጻ ጥቕምን', sktlK6:'ናይ መባእታ ቅነሳ፣ ወለድን ፍሉይ ቅነሳታትን', sktlK9:'ምግንዛብ፣ ሽያጥ ገዛ፣ ውርሻ፣ ህያብን ምፍላስን', sktlK10:'ዲቪደንድ፣ ናይ ኣክሲዮን ረብሓ፣ ናይ ጉጅለ ኣበርክቶን NOKUS', sktlK14:'ጉጅለታት ውድቀት ዋጋ፣ ተመናትን ረብሓ/ክሳራን', mvalK2:'ናይ ጉጅለ ምዝገባ፣ ድልየታዊን ኣቐዲምካ ምዝገባን', mvalK3:'ካብ ሕጊ MVA እንታይ ተፈልዩ?', mvalK6:'0% ወጻኢ MVA፣ ምሉእ ናይ ቅነሳ መሰል', mvalK8:'ቀንዲ ሕጊ፣ ዝተሓወሰ ኣጠቓቕማን ድርታትን', mvalK9:'ናይ ካፒታል ሸቐጥን ግዜ ምቅንናይን', rskl53:'ዝተሓጽረ ዕድመ ዘለዎ ቀዋሚ ንብረት ውድቀት ዋጋ ክገብር ኣለዎ', aksjeloven:'ሕጊ ናይ ዝተሓጽረ ሓላፍነት ትካላት', selskapsloven:'ሕጊ ናይ ተሓታቲ ትካልን ኮማንዲት ትካልን',
-      /* gap-close T2 split-2026-05-06-r3 */ skatteloven_portal:'ቀረጽ ኣታዊ፣ ቀረጽ ንብረትን ሕግታት ቅነሳን — ናይ ምዕራፍ ዝርዝር', aksjeloven_portal:'ምስረታ፣ ጠለብ ካፒታል፣ ቦርድን ጠቕላላ ኣኼባን ን AS', mvaloven_portal:'ግዴታ ቫት፣ መሰል ቅነሳን ፍሉያት ሕግታትን', bokforingsloven_portal:'ግዴታ ምዝገባ ሕሳብ፣ ሰነዳትን ምዕቃብን', regnskapsloven_portal:'ግዴታታት ናይ ዓመታዊ ሕሳብን መደብ ቅርጺን', hvordanLeseParagraf:'ምዕራፍ፣ ኣንቀጽ፣ ንኡስ ኣንቀጽን ፊደልን — ቅርጺ ኣንቀጽ ሕጊ', kontoplanNs4102:'ናይ ኖርወይ ስታንዳርድ ዝርዝር ሕሳብ — ካብ ክፍሊ 1 ክሳብ 8', debetKredit:'መሰረታዊ ሕጊ ድርብ ምዝገባ ሕሳብ — ክልተ ጎድኒ ናይ ነፍሲ ወከፍ ግብይት', regnskapsplikt:'መን ብመሰረት ሕጊ ሕሳብ ሕሳብ ክሕዝ ኣለዎ', bokforingConcept:'ዕለታዊ ምዝገባ ሰነዳትን ግብይታትን', arsregnskap:'ዉጽኢት፣ ሚዛንን ኣገናዕን — ወግዓዊ ምዕጻው ናይ ዓመት', revisjon:'ወጻኢ ተመራማሪ ሕሳብ መዓስ ይድለ — ደረትን ተኣከብትን', kalkChipAll:'ኩሉ', kalkChipNew:'ሓደስቲ', kalkChipPopular:'ዝፍተዉ', kalkEyebrowCurrent:'ካልኩሌተር', kalkEyebrowHome:'መበቆል', kalkFilterPlaceholder:'መሳርሒታት ኣብዚ ምድብ ኣጻርይ…', kalkHeroSubtitle:'ካብ ናይ ዕለታዊ ሕሳብ ክሳብ ሳይንሳዊ ስርዓታት፣ ምልዋጥ ምንዛሬን ፋይናንሳዊ ሞዴላትን። ኩሉ ኣብ ዌብ ኣሰሳሪ ብኣካል ይሕሰብ።', kalkHeroTitle:'ካልኩሌተር', kalkSectionRates:'ቀዋሚ ተመናት', kalkSectionTools:'መሳርሒታት', kalkSeeAllCurrencies:'ኩሉ ምንዛሬ ርአ', kalkStatCalculators:'ካልኩሌተራት', kalkStatCurrencies:'ምንዛሬታት', kalkTagLive:'ቀጥታ', kalkToolAvsTitle:'ውድቀት ዋጋ', kalkToolAvsDesc:'ሚዛንን ቀጥታዊ ውድቀት ዋጋን — ኩሎም ጉጅለታት A ክሳብ J።', kalkToolFerieTitle:'ናይ ዕረፍቲ ገንዘብ', kalkToolFerieDesc:'10.2%፣ 12.0%ን +2.3% ልዕሊ 60 ዓመትን — ምሉእ ስሌት።', kalkToolFinTitle:'ፋይናንሳዊ', kalkToolFinDesc:'ህሉው ዋጋ፣ ናይ መጻኢ ዋጋ፣ ኣኑኢቲን ውጽኢታዊ ወለድን።', kalkToolLikviditetTitle:'ናይ ገንዘብ ፍሰት ባጀት', kalkToolLikviditetDesc:'ወርሒ ብወርሒ ናይ ገንዘብ ፍሰት ምስ መበገሲ ሚዛን፣ ኣታዊን ወጻኢን — ምሉእ ሰሌዳ ከም CSV ኣራግፍ።', kalkToolLonnUtbytteTitle:'ደሞዝ ኣንጻር ዲቪደንድ', kalkToolLonnUtbytteDesc:'ናይ ትካል ወጻኢ ኣብ ደሞዝ (AGA + ዕረፍቲ + OTP) ኣንጻር ዲቪደንድ (ቀረጽ ትካል) — ብዞባ AGA ኣወዳድር።', kalkToolNpvTitle:'NPV / IRR', kalkToolNpvDesc:'ናይ ረብሕነት ትንታነ ምስ ጽሩይ ህሉው ዋጋን ውሽጣዊ ወለድን።', kalkToolSciTitle:'ሳይንሳዊ', kalkToolSciDesc:'ሳይን፣ ኮሳይን፣ ሎጋሪዝም፣ ሓይልታት፣ ፋክቶሪያል — ምሉእ ናይ RPN ሞድ ይርከብ።', kalkToolValutaTitle:'ምንዛሬ', kalkToolValutaDesc:'ኣብ መንጎ 168 ምንዛሬታት ምስ ሕዱስ ተመናት ቀይር።'
+      /* gap-close T2 split-2026-05-06-r3 */ skatteloven_portal:'ቀረጽ ኣታዊ፣ ቀረጽ ንብረትን ሕግታት ቅነሳን — ናይ ምዕራፍ ዝርዝር', aksjeloven_portal:'ምስረታ፣ ጠለብ ካፒታል፣ ቦርድን ጠቕላላ ኣኼባን ን AS', mvaloven_portal:'ግዴታ ቫት፣ መሰል ቅነሳን ፍሉያት ሕግታትን', bokforingsloven_portal:'ግዴታ ምዝገባ ሕሳብ፣ ሰነዳትን ምዕቃብን', regnskapsloven_portal:'ግዴታታት ናይ ዓመታዊ ሕሳብን መደብ ቅርጺን', hvordanLeseParagraf:'ምዕራፍ፣ ኣንቀጽ፣ ንኡስ ኣንቀጽን ፊደልን — ቅርጺ ኣንቀጽ ሕጊ', kontoplanNs4102:'ናይ ኖርወይ ስታንዳርድ ዝርዝር ሕሳብ — ካብ ክፍሊ 1 ክሳብ 8', debetKredit:'መሰረታዊ ሕጊ ድርብ ምዝገባ ሕሳብ — ክልተ ጎድኒ ናይ ነፍሲ ወከፍ ግብይት', regnskapsplikt:'መን ብመሰረት ሕጊ ሕሳብ ሕሳብ ክሕዝ ኣለዎ', bokforingConcept:'ዕለታዊ ምዝገባ ሰነዳትን ግብይታትን', arsregnskap:'ዉጽኢት፣ ሚዛንን ኣገናዕን — ወግዓዊ ምዕጻው ናይ ዓመት', revisjon:'ወጻኢ ተመራማሪ ሕሳብ መዓስ ይድለ — ደረትን ተኣከብትን', kalkChipAll:'ኩሉ', kalkChipNew:'ሓደስቲ', kalkChipPopular:'ዝፍተዉ', kalkEyebrowCurrent:'ካልኩሌተር', kalkEyebrowHome:'መበቆል', kalkFilterPlaceholder:'መሳርሒታት ኣብዚ ምድብ ኣጻርይ…', kalkHeroSubtitle:'ካብ ናይ ዕለታዊ ሕሳብ ክሳብ ሳይንሳዊ ስርዓታት፣ ምልዋጥ ምንዛሬን ፋይናንሳዊ ሞዴላትን። ኩሉ ኣብ ዌብ ኣሰሳሪ ብኣካል ይሕሰብ።', kalkHeroTitle:'ካልኩሌተር', kalkSectionRates:'ቀዋሚ ተመናት', kalkSectionTools:'መሳርሒታት', kalkSeeAllCurrencies:'ኩሉ ምንዛሬ ርአ', kalkStatCalculators:'ካልኩሌተራት', kalkStatCurrencies:'ምንዛሬታት', kalkTagLive:'ቀጥታ', kalkToolAvsTitle:'ውድቀት ዋጋ', kalkToolAvsDesc:'ሚዛንን ቀጥታዊ ውድቀት ዋጋን — ኩሎም ጉጅለታት A ክሳብ J።', kalkToolFerieTitle:'ናይ ዕረፍቲ ገንዘብ', kalkToolFerieDesc:'10.2%፣ 12.0%ን +2.3% ልዕሊ 60 ዓመትን — ምሉእ ስሌት።', kalkToolFinTitle:'ፋይናንሳዊ', kalkToolFinDesc:'ህሉው ዋጋ፣ ናይ መጻኢ ዋጋ፣ ኣኑኢቲን ውጽኢታዊ ወለድን።', kalkToolLikviditetTitle:'ናይ ገንዘብ ፍሰት ባጀት', kalkToolLikviditetDesc:'ወርሒ ብወርሒ ናይ ገንዘብ ፍሰት ምስ መበገሲ ሚዛን፣ ኣታዊን ወጻኢን — ምሉእ ሰሌዳ ከም CSV ኣራግፍ።', kalkToolLonnUtbytteTitle:'ደሞዝ ኣንጻር ዲቪደንድ', kalkToolLonnUtbytteDesc:'ናይ ትካል ወጻኢ ኣብ ደሞዝ (AGA + ዕረፍቲ + OTP) ኣንጻር ዲቪደንድ (ቀረጽ ትካል) — ብዞባ AGA ኣወዳድር።', kalkToolNpvTitle:'NPV / IRR', kalkToolNpvDesc:'ናይ ረብሕነት ትንታነ ምስ ጽሩይ ህሉው ዋጋን ውሽጣዊ ወለድን።', kalkToolSciTitle:'ሳይንሳዊ', kalkToolSciDesc:'ሳይን፣ ኮሳይን፣ ሎጋሪዝም፣ ሓይልታት፣ ፋክቶሪያል — ምሉእ ናይ RPN ሞድ ይርከብ።', kalkToolValutaTitle:'ምንዛሬ', kalkToolValutaDesc:'ኣብ መንጎ ምንዛሬታት ብዘመናዊ ተመናት ቀይር። ቀጥታ ER-API + ዕቀባ ን7 መዓልቲ።'
     },
     // /personlig card titles, descs & category headers (TI)
     fblTitle:'ናይ ኣዕጹዋ ልቓሕ', fblDesc:'እቲ ልቓሕ ብሓቂ ክንደይ ይኸይደካ — ስም-ወለድ ኩሉ ሓቂ ኣይኮነን',
@@ -1065,6 +1065,24 @@ REGIONS['ti'] = {
     financeSectionInput: 'ናይ ፋይናንስ ሕሳብ',
     financeSectionHint: '5 ዓይነታት',
     financeInfoBox: 'ናይ ፋይናንስ ካልኩለተር ሓሙሽተ ልሙዳት ሕሳባት ይዕቅብ: ህልው/መጻኢ ዋጋ (TVM)፣ ህዳግን ምልዕላን፣ ነጥቢ ዘይምጥፋእ፣ ዝተጠራቐመ ወለድን ቅናሻትን። ውጽኢታት ኣብ ቦታ ይሕደሱ — ሓበሬታ ካብ መሳርሒኻ ኣይወጽእን።',
+    renteTitle: 'ውጽኢታዊ ወለድ',
+    renteSubtitle: 'ሓቀኛ ዓመታዊ ወለድ ናይ ለቓሕካ ኣ\'ቅምር — ባንክ ዘ\'ኣዉጅዎ ጥራይ ኣይኮነን። ናይ ምኽፋት ክፍሊትን ወርሓዊ ክፍሊትን ኣጠቓልል። ሓቀኛ ናይ ለቓሕ ወጻኢ ኣ\'ነጻጸር። ኩሉ ኣብ መርበብካ ይካየድ።',
+    renteSectionInput: 'ዝርዝር ለቓሕ',
+    renteSectionHint: 'ኣኑዊቲ ለቓሕ',
+    renteStatEff: 'ውጽኢታዊ ዓመታዊ ወለድ',
+    renteStatTotal: 'ጠቕላላ ዋጋ',
+    renteBtnCalc: 'ኣ\'ቅምር ውጽኢታዊ ወለድ',
+    renteRVerdict: 'ውጽኢት ንምርኣይ ናይ ለቓሕ መጠንን ወለድን ኣእቱ',
+    renteVerdictAbove: 'ውጽኢታዊ ወለድ ካብ ስም {diff} ሚእታዊ ነጥቢ ይብልጽ — ክፍሊታት ብተወሳኺ ይኽፍለካ።',
+    renteVerdictEqual: 'ውጽኢታዊ ወለድ ምስ ስም ወለድ ይመሳሰል — ዝነኣሰ ክፍሊት።',
+    renteHowtoTitle: 'ንናይ ውጽኢታዊ ወለድ ኣ\'ቅማሪ ብኸመይ ትጥቀመሉ',
+    renteHowtoLead: 'ውጽኢታዊ ወለድ ሓቀኛ ናይ ለቓሕ ወጻኢ እዩ — ባንክ ዘ\'ኣዉጅዎ ስም ወለድ ጥራይ ኣይኮነን። ኩሉ ክፍሊታትን ግብርታትን የጠቓልል።',
+    renteHowtoP1: '<strong>ናይ ለቓሕ መጠን</strong> ዝለቓሕካዮ እዩ። <strong>ስም ወለድ</strong> ባንክ ዝሓቶ፣ ቅድሚ ክፍሊታት እዩ።',
+    renteHowtoP2: '<strong>ናይ ምኽፋት ክፍሊት</strong> ካብ ለቓሕ ኣብ ግዜ ምሃብ ይግደፍ — ካብቲ ዝለቓሕካዮ ዝውሕድ ትቕበል። <strong>ወርሓዊ ክፍሊት</strong> ኣብ ወለድ ኩሉ ወርሒ ይውሰኽ።',
+    renteHowtoP3: 'ውጽኢታዊ ወለድ ብቑጽራዊ ኣገባብ ይፍታሕ፥ ናይ ኩሉ ክፍሊት ህልዊ ዋጋ (ምስ ወርሓዊ ክፍሊት) ምስ ናይ ጽሩይ ምሃብ (ለቓሕ − ናይ ምኽፋት ክፍሊት) ዝመሳሰል ዓመታዊ ወለድ ንረክብ።',
+    renteHowtoP4: 'ኩሉ ግዜ ለቓሕ ብውጽኢታዊ ወለድ ኣ\'ነጻጽር፣ ብስም ኣይኮነን። ናይ 4% ስም ወለድ ምስ ብዙሕ ክፍሊት ዘለዎ ለቓሕ ካብ ናይ 5% ብዘይ ክፍሊት ክብ ክብል ይኽእል።',
+    kalkToolRenteTitle: 'ውጽኢታዊ ወለድ',
+    kalkToolRenteDesc: 'ውጽኢታዊ ዓመታዊ ወለድ ምስ ክፍሊታትን ምኽፋትን ኣ\'ቅምር — ሓቀኛ ናይ ለቓሕ ወጻኢ ኣ\'ነጻጸር።',
     avsRMethod: 'ሜላ',
     avsRPeriod: 'ግዜ',
     avsRPrice: 'ዋጋ ግዝኣት',
@@ -1680,4 +1698,14 @@ REGIONS['ti'] = {
     // === T1 placeholder-mekanisme (split-2026-05-07) ===
     placeholderCustom: 'ጽሓፍ …',
     placeholderZero: '0',
+    // - unit calc (Valutakonverter - editorial redesign 2026-05-08 T2) -
+    unitHeroTitle: 'ምልዋጥ ምንዛሬ',
+    unitHeroLead: 'ኣብ መንጎ ምንዛሬታት ብዘመናዊ ተመናት ቀይር። ምንዛሬ ምንጪ/መዓልቦን መጠንን ምረጽ - ኣብ ኦንላይን እንተኾንካ ተመናት ብቐጥታ ካብ ER-API ይምጾ፣ ኣብቲ መሳርሒ ድማ ን7 መዓልቲ ይዕቀብ። ኩሉ ኣብ ዌብ ኣሰሳሪ ይስራሕ።',
+    unitSectionInput: 'ቀይር',
+    unitStatRate: 'ተመን',
+    unitLFrom: 'ካብ',
+    unitLTo: 'ናብ',
+    unitLVal: 'መጠን',
+    unitLRes: 'ውጽኢት',
+    unitBtnSwap: 'ለውጥ',
 };
