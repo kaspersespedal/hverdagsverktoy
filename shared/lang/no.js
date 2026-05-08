@@ -1526,6 +1526,13 @@ REGIONS['no'] = {
     avsRPeriod:'Periode',
     avsCsvBtn:'Last ned (CSV)',
 
+    // — finance calc sub-page (editorial redesign) —
+    financeHeroTitle:'Finansiell kalkulator',
+    financeHeroLead:'Beregn nåverdi (PV), fremtidsverdi (FV), margin/markup, break-even, renters rente og rabatter. Velg beregningstype, fyll inn tallene og få resultatet med detaljer. Alt skjer lokalt i nettleseren.',
+    financeSectionInput:'Finansiell beregning',
+    financeSectionHint:'5 typer',
+    financeInfoBox:'Finanskalkulatoren dekker fem typiske beregninger: nåverdi/fremtidsverdi (TVM), margin og markup, break-even-punkt, renters rente og rabatter. Resultatene oppdateres lokalt — ingen data sendes ut.',
+
     // — aksjer article (editorial redesign) —
     aksjerTitle:'Aksjer',
     aksjerSubtitle:'Slik fungerer aksjer — hvordan du tjener penger, hva som er forventet avkastning og risiko, og hvordan aksjeskatt og skjermingsfradrag faktisk slår ut. Norske 2026-satser.',
