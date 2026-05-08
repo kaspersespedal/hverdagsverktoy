@@ -1526,6 +1526,26 @@ REGIONS['no'] = {
     avsRPeriod:'Periode',
     avsCsvBtn:'Last ned (CSV)',
 
+    // — rente calc (editorial redesign) —
+    renteTitle:'Effektiv rente',
+    renteSubtitle:'Beregn den ekte årsrenten på lånet ditt — ikke bare den banken annonserer. Inkluderer etableringsavgift og månedlige gebyrer. Sammenlign reelle lånekostnader. Alt skjer lokalt i nettleseren.',
+    renteSectionInput:'Lånedetaljer',
+    renteSectionHint:'Annuitetslån',
+    renteStatEff:'Effektiv årsrente',
+    renteStatTotal:'Total kostnad',
+    renteBtnCalc:'Beregn effektiv rente',
+    renteRVerdict:'Skriv inn lånebeløp og rente for å se beregningen',
+    renteVerdictAbove:'Effektiv rente er {diff} prosentpoeng høyere enn nominell — gebyrene koster deg ekstra.',
+    renteVerdictEqual:'Effektiv rente er praktisk talt lik nominell — minimale gebyrer.',
+    renteHowtoTitle:'Slik bruker du Effektiv rente-kalkulatoren',
+    renteHowtoLead:'Effektiv rente er den faktiske kostnaden ved lånet — ikke bare den nominelle renten banken annonserer. Den inkluderer alle gebyrer og avgifter.',
+    renteHowtoP1:'<strong>Lånebeløp</strong> er det du låner. <strong>Nominell rente</strong> er det banken oppgir, før gebyrer.',
+    renteHowtoP2:'<strong>Etableringsavgift</strong> tas av lånebeløpet ved utbetaling — du får utbetalt mindre enn du låner. <strong>Månedlig gebyr</strong> kommer i tillegg til renten hver måned.',
+    renteHowtoP3:'Effektiv rente løses ut numerisk: vi finner den årlige rentesatsen som gjør at nåverdien av alle terminbetalinger (inkl. mnd.-gebyr) er lik nettoutbetalingen (lånebeløp − etabl.gebyr).',
+    renteHowtoP4:'Alltid sammenlign lån på effektiv rente, ikke nominell. Et lån med 4 % nominell rente og høye gebyrer kan koste mer enn 5 % uten gebyrer.',
+    kalkToolRenteTitle:'Effektiv rente',
+    kalkToolRenteDesc:'Beregn effektiv årsrente inkl. gebyrer og etableringsavgift — sammenlign reelle lånekostnader.',
+
     // — aksjer article (editorial redesign) —
     aksjerTitle:'Aksjer',
     aksjerSubtitle:'Slik fungerer aksjer — hvordan du tjener penger, hva som er forventet avkastning og risiko, og hvordan aksjeskatt og skjermingsfradrag faktisk slår ut. Norske 2026-satser.',
