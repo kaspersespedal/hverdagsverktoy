@@ -121,7 +121,7 @@ var SEARCH_DATA = [
   {name:'Selskapsloven',desc:'Lov om ansvarlige selskaper og kommandittselskaper',url:'/selskap/#selskap-ans-card',tags:'selskapsloven lov ansvarlig selskap kommandittselskap ans da ks 1985 partnership act',type:'law',page:'Selskap',sk:'selskapsloven'},
 
   // /lov/ — lovreferanser med /lov/ som landingsside (kapittel-oversikt og lovtekst-portal)
-  {name:'Skatteloven',desc:'Inntektsskatt, formuesskatt og fradragsregler — kapittel-oversikt',url:'/lov/',tags:'skatteloven sktl lov inntektsskatt formuesskatt fradrag tax act',type:'law',page:'Lov',sk:'skatteloven_portal'},
+  {name:'Skatteloven',desc:'Inntektsskatt, formuesskatt og fradragsregler — kapittel-oversikt',url:'/lov/skattelov/',tags:'skatteloven sktl lov inntektsskatt formuesskatt fradrag tax act',type:'law',page:'Lov',sk:'skatteloven_portal'},
   {name:'Aksjeloven',desc:'Stiftelse, kapitalkrav, styre og generalforsamling for AS',url:'/lov/',tags:'aksjeloven asl lov aksjeselskap as stiftelse kapital styre companies act',type:'law',page:'Lov',sk:'aksjeloven_portal'},
   {name:'Merverdiavgiftsloven',desc:'MVA-plikt, fradragsrett og særskilte regler',url:'/lov/',tags:'merverdiavgiftsloven mvaloven mval lov mva merverdiavgift fradragsrett vat act',type:'law',page:'Lov',sk:'mvaloven_portal'},
   {name:'Bokføringsloven',desc:'Bokføringsplikt, dokumentasjon og oppbevaring',url:'/lov/',tags:'bokforingsloven bfl lov bokforing dokumentasjon oppbevaring bookkeeping act',type:'law',page:'Lov',sk:'bokforingsloven_portal'},
