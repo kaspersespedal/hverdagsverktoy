@@ -1448,6 +1448,26 @@ REGIONS['no'] = {
     selskapHeroToolLikvidTitle:'Likvidasjon',
     selskapHeroToolLikvidDesc:'Avvikling av AS — frister og skattekonsekvenser.',
 
+    // — selskap/aksjeutvanning (sub-page: pre/post-money + opsjon-pool dilution) —
+    selskapAksjeutvHero:'Aksjeutvanning — eierandel ved nyemisjon',
+    selskapAksjeutvLead:'Hvor mye av selskapet ditt sitter du igjen med etter en nyemisjon? Skriv inn pre-money valuation, hvor mye som investeres og en eventuell opsjon-pool — så regner vi ut investor-andel, din nye eierandel og hva andelen er verdt. Aksjeloven 2026. Alt skjer lokalt i nettleseren.',
+    selskapAksjeutvTitleNew:'<em>Aksje</em>utvanning',
+    selskapAksjeutvHStatInvestor:'Investor får',
+    selskapAksjeutvHStatYou:'Du beholder',
+    selskapAksjeutvHowtoSummary:'Slik bruker du aksjeutvanning-kalkulatoren',
+    selskapAksjeutvSectionInput:'Cap-table',
+    selskapAksjeutvSectionHint:'2026-praksis',
+    selskapAksjeutvLblPre:'Pre-money valuation (kr)',
+    selskapAksjeutvLblInvest:'Investor-beløp (kr)',
+    selskapAksjeutvLblExisting:'Din eierandel før (%)',
+    selskapAksjeutvLblPool:'Opsjon-pool post-money (%)',
+    selskapAksjeutvRHero:'Du beholder',
+    selskapAksjeutvROutPre:'Pre-money',
+    selskapAksjeutvROutPost:'Post-money',
+    selskapAksjeutvROutInvestor:'Investor får',
+    selskapAksjeutvROutPool:'Opsjon-pool reservert',
+    selskapAksjeutvROutValue:'Verdi av din andel',
+
     // — personlig/syk (Sykepenger — calc + howto) —
     sykTitle:'Sykepenger',
     sykLead:'Hva du faktisk får hvis du blir langtidssyk — og hvor NAV stopper. Tre faser, 6G-taket (≈ 781 000 kr/år i 2026), egenmelding og omsorgspenger. Alt skjer lokalt i nettleseren — ingen data sendes noe sted.',
