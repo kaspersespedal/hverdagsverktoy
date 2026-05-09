@@ -70,6 +70,7 @@ var SEARCH_DATA = [
   {name:'Andre selskapsformer',desc:'ASA, NUF, SA og stiftelse',url:'/selskap/#selskap-andre-card',tags:'asa nuf sa stiftelse samvirkeforetak allmennaksjeselskap norskregistrert utenlandsk foretak foundation cooperative',type:'tool',page:'Selskap',sk:'andre'},
   {name:'Sammenligning selskapsformer',desc:'ENK, AS, ANS, DA og KS side om side — ansvar, skatt og krav',url:'/selskap/#selskap-compare-card',tags:'sammenligning selskapsformer enk as ans da ks tabell compare company forms',type:'tool',page:'Selskap',sk:'selskapCompare'},
   {name:'Registrere selskap',desc:'Steg-for-steg: slik registrerer du foretak via Altinn',url:'/selskap/#selskap-reg-card',tags:'registrere selskap foretak altinn brønnøysund organisasjonsnummer register company',type:'tool',page:'Selskap',sk:'selskapReg'},
+  {name:'Aksjeutvanning',desc:'Beregn eierandel ved nyemisjon og opsjonsprogram',url:'/selskap/aksjeutvanning/',tags:'aksjeutvanning dilution nyemisjon opsjon emisjon kapital fortynning eier andel pre-money post-money cap-table',type:'tool',page:'Selskap',sk:'aksjeutvanning'},
 
   // ══════ BEGREPER (Nivå 2 — fagtermer) ══════
   {name:'Fradrag',desc:'Beløp som reduserer skattegrunnlaget eller skatten din',url:'/skatt/#sal-ded-card',tags:'fradrag reduksjon skattegrunnlag skatt minstefradrag reisefradrag særfradrag gjeldsrenter deduction',type:'concept',page:'Skatt',sk:'fradrag'},
@@ -255,7 +256,8 @@ var URL_TO_I18N_KEYS = {
   '/selskap/#selskap-andre-card':  ['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-compare-card':['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-skatt-card':  ['tabSelskap','dashDescSelskap'],
-  '/selskap/#selskap-reg-card':    ['tabSelskap','dashDescSelskap']
+  '/selskap/#selskap-reg-card':    ['tabSelskap','dashDescSelskap'],
+  '/selskap/aksjeutvanning/':      ['selskapAksjeutvHero','selskapAksjeutvLead','tabSelskap','dashDescSelskap']
 };
 
 /* ─── URL → display key map ───
@@ -307,7 +309,8 @@ var URL_TO_DISPLAY = {
   '/selskap/#selskap-ks-card':      {title:'selskapKsTitle',      desc:'selskapKsDesc'},
   '/selskap/#selskap-compare-card': {title:'selskapCompareTitle', desc:'selskapCompareDesc'},
   '/selskap/#selskap-reg-card':     {title:'selskapRegTitle',     desc:'selskapRegDesc'},
-  '/selskap/#selskap-andre-card':   {title:'selskapAndreTitle',   desc:'selskapAndreDesc'}
+  '/selskap/#selskap-andre-card':   {title:'selskapAndreTitle',   desc:'selskapAndreDesc'},
+  '/selskap/aksjeutvanning/':       {title:'selskapAksjeutvHero', desc:'selskapAksjeutvLead'}
 };
 
 /* ─── Page label → translation key ───
