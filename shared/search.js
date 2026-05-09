@@ -31,9 +31,9 @@ var SEARCH_DATA = [
   {name:'Aksjer (veiledning)',desc:'Hva er aksjer, risiko, skatt 37,84 % og 5 tips til nybegynnere',url:'/personlig/#invest-wrapper',tags:'aksjer veiledning guide nybegynner risiko skjermingsfradrag utbytte ask aksjesparekonto indeksfond stocks shares investing dividends',type:'concept',page:'Personlig økonomi',sk:'aksjerVeiledning'},
 
   // Boliglån
-  {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/#mor-wrapper',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling månedlig betaling mortgage',type:'tool',page:'Boliglån',sk:'boliglan'},
-  {name:'Hva har jeg råd til?',desc:'Maks lånebeløp basert på inntekt og egenkapital',url:'/boliglan/#maxlan-wrapper',tags:'maks lån hva kan jeg låne inntekt egenkapital gjeldsgrad utlånsforskriften låneramme boliglån max loan',type:'tool',page:'Boliglån',sk:'maxlan'},
-  {name:'Bolig vs leie',desc:'Sammenlign total kostnad over X år — hva lønner seg?',url:'/boliglan/#bvl-wrapper',tags:'bolig vs leie kjøpe leie sammenligne break-even eie rent vs buy investering avkastning',type:'tool',page:'Boliglån',sk:'bvl'},
+  {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/mor/',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling månedlig betaling mortgage',type:'tool',page:'Boliglån',sk:'boliglan'},
+  {name:'Hva har jeg råd til?',desc:'Maks lånebeløp basert på inntekt og egenkapital',url:'/boliglan/maxlan/',tags:'maks lån hva kan jeg låne inntekt egenkapital gjeldsgrad utlånsforskriften låneramme boliglån max loan',type:'tool',page:'Boliglån',sk:'maxlan'},
+  {name:'Bolig vs leie',desc:'Sammenlign total kostnad over X år — hva lønner seg?',url:'/boliglan/bvl/',tags:'bolig vs leie kjøpe leie sammenligne break-even eie rent vs buy investering avkastning',type:'tool',page:'Boliglån',sk:'bvl'},
 
   // Kalkulator (hash handled by switchCalcMode in core.js)
   {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/',tags:'kalkulator regnemaskin pluss minus gange dele prosent calculator',type:'tool',page:'Kalkulator',sk:'kalkBasic'},
@@ -77,10 +77,10 @@ var SEARCH_DATA = [
   {name:'Skattefradrag',desc:'Fradrag som reduserer skatten din direkte',url:'/skatt/#sal-credit-card',tags:'skattefradrag fradrag redusere skatt tax deduction',type:'concept',page:'Skatt',sk:'skatteFradrag'},
   {name:'Minstefradrag',desc:'Standardfradrag alle lønnsmottakere får automatisk',url:'/skatt/#sal-ded-card',tags:'minstefradrag standard fradrag lønn automatisk minimum deduction',type:'concept',page:'Skatt',sk:'minstefradrag'},
   {name:'Trygdeavgift',desc:'Avgift til folketrygden — 7.6% av lønn (2026)',url:'/skatt/#sal-info-card',tags:'trygdeavgift folketrygden nav 7.6 prosent social security',type:'concept',page:'Skatt',sk:'trygdeavgift'},
-  {name:'Egenkapital',desc:'Minimumskapital du må ha ved boligkjøp (10%)',url:'/boliglan/#mor-req-card',tags:'egenkapital 10 prosent boligkjøp krav bank equity down payment',type:'concept',page:'Boliglån',sk:'egenkapital'},
-  {name:'BSU — Boligsparing for ungdom',desc:'Skattefradrag på 10% av innskudd, maks 27 500 kr/år',url:'/boliglan/#mor-bsu-card',tags:'bsu boligsparing ungdom skattefradrag 10 prosent sparing bolig housing savings',type:'concept',page:'Boliglån',sk:'bsu'},
-  {name:'Gjeldsgrad',desc:'Forholdet mellom total gjeld og bruttoinntekt (maks 5x)',url:'/boliglan/#mor-req-card',tags:'gjeldsgrad gjeld inntekt 5 ganger krav bank boliglån debt ratio',type:'concept',page:'Boliglån',sk:'gjeldsgrad'},
-  {name:'Stresstest',desc:'Banken tester om du tåler 3 prosentpoeng renteøkning',url:'/boliglan/#mor-req-card',tags:'stresstest rente økning bank test tåle boliglån stress test',type:'concept',page:'Boliglån',sk:'stresstest'},
+  {name:'Egenkapital',desc:'Minimumskapital du må ha ved boligkjøp (10%)',url:'/boliglan/',tags:'egenkapital 10 prosent boligkjøp krav bank equity down payment',type:'concept',page:'Boliglån',sk:'egenkapital'},
+  {name:'BSU — Boligsparing for ungdom',desc:'Skattefradrag på 10% av innskudd, maks 27 500 kr/år',url:'/boliglan/bsu/',tags:'bsu boligsparing ungdom skattefradrag 10 prosent sparing bolig housing savings',type:'concept',page:'Boliglån',sk:'bsu'},
+  {name:'Gjeldsgrad',desc:'Forholdet mellom total gjeld og bruttoinntekt (maks 5x)',url:'/boliglan/',tags:'gjeldsgrad gjeld inntekt 5 ganger krav bank boliglån debt ratio',type:'concept',page:'Boliglån',sk:'gjeldsgrad'},
+  {name:'Stresstest',desc:'Banken tester om du tåler 3 prosentpoeng renteøkning',url:'/boliglan/',tags:'stresstest rente økning bank test tåle boliglån stress test',type:'concept',page:'Boliglån',sk:'stresstest'},
   {name:'Aksjonærmodellen',desc:'Modell for beskatning av utbytte til personlige aksjonærer',url:'/skatt/#sal-utdeling-card',tags:'aksjonærmodellen utbytte skjermingsfradrag oppjusteringsfaktor aksjonær shareholder model',type:'concept',page:'Skatt',sk:'aksjonarmodellen'},
   {name:'Foretaksmodellen',desc:'Modell for beskatning av enkeltpersonforetak',url:'/skatt/#sal-utdeling-card',tags:'foretaksmodellen enkeltpersonforetak enk selvstending næring sole proprietor',type:'concept',page:'Skatt',sk:'foretaksmodellen'},
   {name:'Verdsettelsesrabatt',desc:'Rabatt på formuesverdi for aksjer, bolig og driftsmidler',url:'/skatt/#formue-wrapper',tags:'verdsettelsesrabatt formue aksjer bolig rabatt reduksjon valuation discount',type:'concept',page:'Skatt',sk:'verdsettelsesrabatt'},
@@ -88,8 +88,8 @@ var SEARCH_DATA = [
   {name:'OTP — Obligatorisk tjenestepensjon',desc:'Arbeidsgiver må spare minst 2% av lønn over 1G til pensjon',url:'/avgift/#aga-wrapper',tags:'otp obligatorisk tjenestepensjon arbeidsgiver 2 prosent 1g pensjon mandatory pension',type:'concept',page:'Avgift',sk:'otp'},
   {name:'Arbeidsgiveravgift (AGA)',desc:'Avgift arbeidsgiver betaler på lønn — varierer etter sone',url:'/avgift/#aga-wrapper',tags:'arbeidsgiveravgift aga sone avgift arbeidsgiver lønn 14.1 employer tax',type:'concept',page:'Avgift',sk:'agaBegrep'},
   {name:'Rentes rente',desc:'Avkastning på avkastning — effekten som gjør sparing kraftig over tid',url:'/personlig/#spare-wrapper',tags:'rentes rente compound interest sparing effekt tid avkastning',type:'concept',page:'Personlig økonomi',sk:'rentesRente'},
-  {name:'Annuitetslån',desc:'Lån med like store månedlige betalinger hele perioden',url:'/boliglan/#mor-wrapper',tags:'annuitetslån annuitet fast betaling like stor måned annuity loan',type:'concept',page:'Boliglån',sk:'annuitet'},
-  {name:'Serielån',desc:'Lån med like store avdrag — totalt billigere enn annuitet',url:'/boliglan/#mor-wrapper',tags:'serielån serie avdrag billigere synkende betaling serial loan',type:'concept',page:'Boliglån',sk:'serieLan'},
+  {name:'Annuitetslån',desc:'Lån med like store månedlige betalinger hele perioden',url:'/boliglan/mor/',tags:'annuitetslån annuitet fast betaling like stor måned annuity loan',type:'concept',page:'Boliglån',sk:'annuitet'},
+  {name:'Serielån',desc:'Lån med like store avdrag — totalt billigere enn annuitet',url:'/boliglan/mor/',tags:'serielån serie avdrag billigere synkende betaling serial loan',type:'concept',page:'Boliglån',sk:'serieLan'},
   {name:'Næring eller hobby?',desc:'Når blir biinntekt skattepliktig næringsvirksomhet?',url:'/skatt/#sal-naering-hobby-card',tags:'næring hobby biinntekt skattepliktig virksomhet grense business hobby',type:'concept',page:'Skatt',sk:'naeringHobby'},
   {name:'Konsernbidrag',desc:'Overføring av overskudd mellom selskaper i samme konsern',url:'/skatt/#sal-corp-card',tags:'konsernbidrag konsern overføring selskap morselskap datterselskap group contribution',type:'concept',page:'Skatt',sk:'konsernbidrag'},
   {name:'Fritaksmetoden',desc:'Selskaper slipper skatt på aksjeutbytte og -gevinst',url:'/skatt/#sal-corp-card',tags:'fritaksmetoden fritak skatt utbytte aksjegevinst selskap participation exemption',type:'concept',page:'Skatt',sk:'fritaksmetoden'},
@@ -169,9 +169,9 @@ var SEARCH_DATA = [
 /* ─── Foreslåtte (popular searches — translated) ─── */
 var SUGGESTED = [
   {labelKey:'suggestLonn',    fallback:'Lønn etter skatt', url:'/personlig/#lonn-wrapper'},
-  {labelKey:'suggestBoliglan',fallback:'Boliglån',         url:'/boliglan/#mor-wrapper'},
+  {labelKey:'suggestBoliglan',fallback:'Boliglån',         url:'/boliglan/mor/'},
   {labelKey:'suggestKalk',    fallback:'Kalkulator',       url:'/kalkulator/'},
-  {labelKey:'suggestBsu',     fallback:'BSU',              url:'/boliglan/#mor-bsu-card'},
+  {labelKey:'suggestBsu',     fallback:'BSU',              url:'/boliglan/bsu/'},
   {labelKey:'suggestMva',     fallback:'MVA',              url:'/avgift/#vat-wrapper'},
   {labelKey:'suggestBilkost', fallback:'Bilkostnad',       url:'/personlig/#bil-wrapper'},
   {labelKey:'suggestFerie',   fallback:'Feriepenger',      url:'/kalkulator/#ferie'},
@@ -219,10 +219,10 @@ var URL_TO_I18N_KEYS = {
   '/personlig/#lonn-wrapper':      ['lonnTitle','lonnDesc','lonnHowtoTitle','lonnHowtoDesc'],
   '/personlig/#abo-wrapper':       ['aboTitle','aboDesc'],
   // Boliglån
-  '/boliglan/#mor-wrapper':        ['morTitle','morDesc','morInfoTitle','morInfoDesc','tabMor'],
-  '/boliglan/#maxlan-wrapper':     ['maxlanTitle','maxlanDesc'],
-  '/boliglan/#bvl-wrapper':        ['bvlTitle','bvlDesc'],
-  '/boliglan/#mor-bsu-card':       ['morBsuTitle','morBsuDesc'],
+  '/boliglan/mor/':        ['morTitle','morDesc','morInfoTitle','morInfoDesc','tabMor'],
+  '/boliglan/maxlan/':     ['maxlanTitle','maxlanDesc'],
+  '/boliglan/bvl/':        ['bvlTitle','bvlDesc'],
+  '/boliglan/bsu/':       ['morBsuTitle','morBsuDesc'],
   // Kalkulator (fagkalkulatorer)
   '/kalkulator/':                  ['tabBasic','cmBasic','cmLabel'],
   '/kalkulator/#scientific':       ['cmScientific'],
@@ -272,10 +272,10 @@ var URL_TO_DISPLAY = {
   '/personlig/#lonn-wrapper':     {title:'lonnTitle',     desc:'lonnDesc'},
   '/personlig/#abo-wrapper':      {title:'aboTitle',      desc:'aboDesc'},
   // Boliglån
-  '/boliglan/#mor-wrapper':       {title:'morTitle',      desc:'morDesc'},
-  '/boliglan/#maxlan-wrapper':    {title:'maxlanTitle',   desc:'maxlanDesc'},
-  '/boliglan/#bvl-wrapper':       {title:'bvlTitle',      desc:'bvlDesc'},
-  '/boliglan/#mor-bsu-card':      {title:'morBsuTitle',   desc:'morBsuDesc'},
+  '/boliglan/mor/':       {title:'morTitle',      desc:'morDesc'},
+  '/boliglan/maxlan/':    {title:'maxlanTitle',   desc:'maxlanDesc'},
+  '/boliglan/bvl/':       {title:'bvlTitle',      desc:'bvlDesc'},
+  '/boliglan/bsu/':      {title:'morBsuTitle',   desc:'morBsuDesc'},
   // Kalkulator
   '/kalkulator/':                 {title:'cmBasic'},
   '/kalkulator/#scientific':      {title:'cmScientific'},
@@ -328,7 +328,7 @@ var PAGE_KEY = {
    Title/desc translation is only applied to tool items — several
    concepts and laws legitimately share a URL with a tool (e.g.
    Annuitetslån concept + Boliglånskalkulator tool both on
-   /boliglan/#mor-wrapper), and we must not collapse those distinct
+   /boliglan/mor/), and we must not collapse those distinct
    entries into the same displayed name. Page label is always
    translated since it's purely a category. */
 function resolveDisplay(item){
@@ -479,7 +479,7 @@ function loadSearchIntents(){
   if(__hvtIntentsLoadStarted || window.SEARCH_INTENTS) return;
   __hvtIntentsLoadStarted = true;
   var s = document.createElement('script');
-  s.src = '/shared/search-intents.js?v=v3';
+  s.src = '/shared/search-intents.js?v=v4';
   s.async = true;
   document.head.appendChild(s);
 }
