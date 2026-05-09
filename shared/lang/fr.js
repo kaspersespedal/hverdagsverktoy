@@ -1600,7 +1600,7 @@ REGIONS['fr'] = {
     homeCatAvgiftDesc: 'TVA, loi sur la TVA et cotisation patronale',
     homeCatBoliglanDesc: 'Calculateur de prêt immobilier, conditions, coûts et BSU',
     homeCatKalkulatorDesc: 'Calculateurs simple, devises, financier, scientifique et professionnels',
-    homeCatMeta: '6 domaines · 30+ calculateurs',
+    homeCatMeta: '8 domaines · 35+ calculateurs',
     homeCatPersonligDesc: 'Coût d\'une voiture, budget et rentabilité',
     homeCatSelskapDesc: 'Société par actions, société en commandite et droit des sociétés',
     homeCatSkattDesc: 'Calcul d\'impôt, concepts et loi fiscale',
