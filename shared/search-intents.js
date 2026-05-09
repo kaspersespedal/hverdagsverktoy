@@ -761,43 +761,43 @@ window.SEARCH_INTENTS = {
       {
         "id": "mor",
         "name": "Boliglånskalkulator",
-        "url": "/boliglan/#mor-wrapper",
+        "url": "/boliglan/mor/",
         "description": "Månedlig kostnad, annuitet vs serielån, stresstest +3pp, gjeldsgrad"
       },
       {
         "id": "dok",
         "name": "Dokumentavgift og tinglysing",
-        "url": "/boliglan/#maxlan-wrapper",
+        "url": "/boliglan/dok/",
         "description": "2,5 % dokumentavgift + tinglysingsgebyr + attestgebyr — se maks-lån-kalkulator for totalkostnad"
       },
       {
         "id": "req",
         "name": "Krav til boliglån",
-        "url": "/boliglan/#mor-req-card",
+        "url": "/boliglan/",
         "description": "Egenkapital, gjeldsgrad (5x inntekt), stresstest, nedbetalingstid"
       },
       {
         "id": "cost",
         "name": "Kostnader ved boligkjøp",
-        "url": "/boliglan/#mor-cost-card",
+        "url": "/boliglan/mor/",
         "description": "Renter, rentefradrag, dokumentavgift, diverse gebyrer"
       },
       {
         "id": "bsu",
         "name": "BSU — Boligsparing for ungdom",
-        "url": "/boliglan/#mor-bsu-card",
+        "url": "/boliglan/bsu/",
         "description": "BSU-ordningen: skattefradrag, sparebeløp, aldersgrense"
       },
       {
         "id": "calcs",
         "name": "Alle kalkulatorer (boliglan)",
-        "url": "/boliglan/#sec-calculators",
+        "url": "/boliglan/",
         "description": "Kalkulatorseksjon"
       },
       {
         "id": "guide",
         "name": "Boligguide",
-        "url": "/boliglan/#sec-guide",
+        "url": "/boliglan/",
         "description": "Guide-seksjon"
       }
     ],
