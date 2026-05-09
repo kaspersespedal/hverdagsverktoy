@@ -122,7 +122,7 @@ var SEARCH_DATA = [
 
   // /lov/ — lovreferanser med /lov/ som landingsside (kapittel-oversikt og lovtekst-portal)
   {name:'Skatteloven',desc:'Inntektsskatt, formuesskatt og fradragsregler — kapittel-oversikt',url:'/lov/skattelov/',tags:'skatteloven sktl lov inntektsskatt formuesskatt fradrag tax act',type:'law',page:'Lov',sk:'skatteloven_portal'},
-  {name:'Aksjeloven',desc:'Stiftelse, kapitalkrav, styre og generalforsamling for AS',url:'/lov/',tags:'aksjeloven asl lov aksjeselskap as stiftelse kapital styre companies act',type:'law',page:'Lov',sk:'aksjeloven_portal'},
+  {name:'Aksjeloven',desc:'Stiftelse, kapitalkrav, styre og generalforsamling for AS',url:'/lov/aksjelov/',tags:'aksjeloven asl lov aksjeselskap as stiftelse kapital styre companies act',type:'law',page:'Lov',sk:'aksjeloven_portal'},
   {name:'Merverdiavgiftsloven',desc:'MVA-plikt, fradragsrett og særskilte regler',url:'/lov/',tags:'merverdiavgiftsloven mvaloven mval lov mva merverdiavgift fradragsrett vat act',type:'law',page:'Lov',sk:'mvaloven_portal'},
   {name:'Bokføringsloven',desc:'Bokføringsplikt, dokumentasjon og oppbevaring',url:'/lov/',tags:'bokforingsloven bfl lov bokforing dokumentasjon oppbevaring bookkeeping act',type:'law',page:'Lov',sk:'bokforingsloven_portal'},
   {name:'Regnskapsloven',desc:'Plikter til årsregnskap og oppstillingsplan',url:'/lov/',tags:'regnskapsloven rskl lov arsregnskap oppstillingsplan accounting act',type:'law',page:'Lov',sk:'regnskapsloven_portal'},
