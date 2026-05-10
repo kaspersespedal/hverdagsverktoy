@@ -140,6 +140,7 @@ var SEARCH_DATA = [
   {name:'Revisjon',desc:'Når kreves ekstern revisor — terskler og unntak',url:'/regnskap/',tags:'revisjon revisor revisjonsplikt regnskap ekstern audit',type:'concept',page:'Regnskap',sk:'revisjon'},
   {name:'Resultatregnskap',desc:'Driftsinntekter, driftskostnader, driftsresultat, finansposter, årsresultat — etter regnskapsloven § 6-1',url:'/regnskap/resultat/',tags:'resultatregnskap resultat regnskap driftsresultat arsresultat skatt regnskapsloven 6-1 oppstillingsplan AS ENK income statement',type:'tool',page:'Regnskap',sk:'resultatregnskap'},
   {name:'MVA-melding',desc:'Termin-vis MVA-oppgjør — utgående og inngående merverdiavgift, 4 satser',url:'/regnskap/mva/',tags:'mva merverdiavgift mvameld melding skattemelding rf-0002 25 15 12 0 prosent termin inngående utgående value added tax',type:'tool',page:'Regnskap',sk:'mvaMelding'},
+  {name:'Balanse',desc:'Eiendeler = EK + Gjeld — sett opp balansen etter regnskapsloven § 6-2 med automatic balance-check',url:'/regnskap/balanse/',tags:'balanse regnskap eiendeler egenkapital gjeld anleggsmidler omlopsmidler regnskapsloven 6-2 oppstillingsplan AS balance sheet',type:'tool',page:'Regnskap',sk:'balanseregn'},
 
   // ══════ EDITORIAL PROTOTYPES (path-routing — /new-layout/ redesign) ══════
   {name:'Hverdagsverktøy',desc:'Gratis norske verktøy for økonomi',url:'/',tags:'hverdagsverktøy hjem hoved økonomi kalkulator',type:'section',page:'Hjem'},
