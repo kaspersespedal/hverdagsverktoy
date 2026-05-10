@@ -2037,6 +2037,38 @@ REGIONS['no'] = {
     regnskapKontoplanCtaTitle: 'Tilbake til regnskap-oversikt',
     regnskapKontoplanCtaBody: 'Fra regnskap-landingen finner du andre verktøy: MVA-melding, resultatregnskap, balanse og bokføring.',
     // --- T1 END ---
+    // --- T3 split-2026-05-09 regnskap-domene: resultatregnskap-sub ---
+    regnskapResultatH1Html: '<em>Resultat</em>regnskap',
+    regnskapResultatLead: 'Bygg opp et resultatregnskap etter regnskapsloven § 6-1 — fra driftsinntekter via driftskostnader og finansposter til årsresultat. AS (22 % skatt) og ENK i samme template. Pedagogisk verktøy for praktisk regnskapsforståelse.',
+    regnskapResultatHStatRes: 'Årsresultat',
+    regnskapResultatHStatDrift: 'Driftsresultat',
+    regnskapResultatHowtoSummary: 'Slik bruker du resultatregnskap-templaten',
+    regnskapResultatSectionMode: 'Selskapsform',
+    regnskapResultatSectionModeHint: 'Velg AS eller ENK',
+    regnskapResultatModeAs: 'AS (22 % skatt)',
+    regnskapResultatModeEnk: 'ENK (skatter privat)',
+    regnskapResultatInnH: 'Driftsinntekter (klasse 3)',
+    regnskapResultatInnHint: 'Omsetning og biinntekter',
+    regnskapResultatSalgLbl: 'Salgsinntekt',
+    regnskapResultatAnnenLbl: 'Annen driftsinntekt (leie, gevinst osv.)',
+    regnskapResultatKostH: 'Driftskostnader (klasse 4-7)',
+    regnskapResultatKostHint: 'Vare, lønn, avskrivning, annet',
+    regnskapResultatVareLbl: 'Varekostnad (klasse 4)',
+    regnskapResultatLonnLbl: 'Lønnskostnad (klasse 5, inkl. AGA)',
+    regnskapResultatAvsLbl: 'Avskrivning (klasse 60)',
+    regnskapResultatAnnDriftLbl: 'Annen driftskostnad (klasse 6-7 ekskl. avskr.)',
+    regnskapResultatFinH: 'Finansposter (klasse 8)',
+    regnskapResultatFinHint: 'Holdes adskilt fra drift',
+    regnskapResultatFinInnLbl: 'Finansinntekt (renter, utbytte)',
+    regnskapResultatFinUtLbl: 'Finanskostnad (rentekostnad lån)',
+    regnskapResultatResSumInn: 'Sum driftsinntekter',
+    regnskapResultatResSumKost: 'Sum driftskostnader',
+    regnskapResultatResDrift: 'Driftsresultat',
+    regnskapResultatResFinNet: 'Netto finansposter',
+    regnskapResultatResPreSkatt: 'Resultat før skatt',
+    regnskapResultatResSkatt: 'Skattekostnad (22 %)',
+    regnskapResultatResAres: 'Årsresultat',
+    // --- T3 END ---
 
     // === T4 R7 END ===
 

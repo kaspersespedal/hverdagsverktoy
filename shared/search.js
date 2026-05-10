@@ -138,6 +138,7 @@ var SEARCH_DATA = [
   {name:'Bokføring',desc:'Daglig registrering av bilag og transaksjoner',url:'/regnskap/',tags:'bokforing regnskap bilag transaksjon registrering daglig bookkeeping',type:'concept',page:'Regnskap',sk:'bokforingConcept'},
   {name:'Årsregnskap',desc:'Resultat, balanse og noter — formell avslutning av året',url:'/regnskap/',tags:'arsregnskap regnskap resultat balanse noter avslutning annual accounts',type:'concept',page:'Regnskap',sk:'arsregnskap'},
   {name:'Revisjon',desc:'Når kreves ekstern revisor — terskler og unntak',url:'/regnskap/',tags:'revisjon revisor revisjonsplikt regnskap ekstern audit',type:'concept',page:'Regnskap',sk:'revisjon'},
+  {name:'Resultatregnskap',desc:'Driftsinntekter, driftskostnader, driftsresultat, finansposter, årsresultat — etter regnskapsloven § 6-1',url:'/regnskap/resultat/',tags:'resultatregnskap resultat regnskap driftsresultat arsresultat skatt regnskapsloven 6-1 oppstillingsplan AS ENK income statement',type:'tool',page:'Regnskap',sk:'resultatregnskap'},
 
   // ══════ EDITORIAL PROTOTYPES (path-routing — /new-layout/ redesign) ══════
   {name:'Hverdagsverktøy',desc:'Gratis norske verktøy for økonomi',url:'/',tags:'hverdagsverktøy hjem hoved økonomi kalkulator',type:'section',page:'Hjem'},
