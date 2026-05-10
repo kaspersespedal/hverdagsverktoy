@@ -1701,7 +1701,7 @@ REGIONS['ti'] = {
     homeMarketsPairBrent:`Brent`,
     homeMarketsPairGold:`ወርቂ`,
     homeCatTitle:`ኣስስ ኣብ መሳሪሒታት`,
-    homeCatMeta:`6 ዓውደ-ስራሕ · 30+ ካልኩሌተራት`,
+    homeCatMeta:`8 ዓውደ-ስራሕ · 35+ ካልኩሌተራት`,
     homeCatPersonligDesc:`ወጻኢ መኪና፣ ባጀትን ምጽዋርን`,
     homeCatBoliglanDesc:`ካልኩሌተር ልቓሕ ቤት፣ ጠለባት፣ ወጻኢታትን BSU`,
     homeCatKalkulatorDesc:`ቀሊል፣ ባዕዳዊ ቅርሲ፣ ፋይናንሳዊ፣ ሳይንሳዊን ሞያዊ ካልኩሌተራትን`,
