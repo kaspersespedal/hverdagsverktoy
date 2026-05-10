@@ -1362,7 +1362,7 @@ REGIONS['no'] = {
     skattHeroToolReiseTitle:'Reisefradrag',
     skattHeroToolReiseDesc:'1,76 kr per km over 14 950 kr egenandel.',
     skattHeroToolForaTitle:'Foreldrefradrag',
-    skattHeroToolForaDesc:'25 000 kr for ett barn, 15 000 kr for hvert ekstra.',
+    skattHeroToolForaDesc:'15 000 kr for ett barn, 10 000 kr for hvert ekstra.',
     skattHeroToolInntektTitle:'Inntektsskatt',
     skattHeroToolInntektDesc:'Lønn etter skatt — trinnskatt, alminnelig inntektsskatt, trygdeavgift og fradrag for 2026.',
     skattHeroTagNew:'Ny',
@@ -1509,7 +1509,7 @@ REGIONS['no'] = {
 
     // — personlig/fam (Foreldrefradrag — calc) —
     famTitle:'<em>Foreldre</em>fradrag',
-    famLead:'Regn ut netto kostnad for barnehage, SFO eller dagmamma etter foreldrefradrag og søskenmoderasjon. Norske 2026-satser (25 000 kr for første barn, 15 000 kr per ekstra barn). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.',
+    famLead:'Regn ut netto kostnad for barnehage, SFO eller dagmamma etter foreldrefradrag og søskenmoderasjon. Norske 2026-satser (15 000 kr for første barn, 10 000 kr per ekstra barn). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.',
     famStatNetto:'Netto kostnad',
     famStatSkatt:'Skatt spart',
     famSecInput:'Familie og barnehage',
@@ -1519,7 +1519,7 @@ REGIONS['no'] = {
     famLblMnd:'Antall måneder i året',
     famDisclaimer:'* Fradraget gjelder dokumenterte barnepassutgifter for barn under 12 år. Kommunal makspris og inntektsgradert moderasjon kommer i tillegg.',
     famHowtoTitle:'Slik bruker du Foreldrefradrag-kalkulatoren',
-    famHowtoP1:'<strong>Foreldrefradrag:</strong> Du kan trekke fra inntil 25 000 kr for første barn og 15 000 kr per ytterligere barn i dokumenterte utgifter til barnepass (barnehage, SFO, dagmamma). Fradraget gis i alminnelig inntekt — 22 % av beløpet spart i skatt.',
+    famHowtoP1:'<strong>Foreldrefradrag:</strong> Du kan trekke fra inntil 15 000 kr for første barn og 10 000 kr per ytterligere barn i dokumenterte utgifter til barnepass (barnehage, SFO, dagmamma). Fradraget gis i alminnelig inntekt — 22 % av beløpet spart i skatt.',
     famHowtoP2:'<strong>Maksimalpris barnehage (2026):</strong> Makspris per måned for heltidsplass (sjekk oppdatert sats fra regjeringen.no). Kommunen kan ha inntektsgradert eller gratis plass.',
     famHowtoP3:'<strong>Søskenmoderasjon:</strong> 30 % rabatt for barn nr. 2, 50 % for barn nr. 3 og flere.',
     famHowtoP4:'Fyll inn antall barn, månedspris og inntekt — så ser du årlig utgift, fradragseffekt og netto kostnad.',
