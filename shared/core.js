@@ -302,8 +302,6 @@ function setRegion(r, e) {
     // rates disclaimer, table cells) updates to new language. Bug: focus-modus tittel/Sist oppdatert/motivasjon
     // vises på forrige språk etter setRegion. Samme mønster som hvtSearchRebuildChips fra commit 3b41e83.
     try { if(typeof window.hvtRebuildVisibleResults==='function') window.hvtRebuildVisibleResults(); } catch(_e){}
-    // Refresh focus mode labels (title, exit button, desktop toggles) after language switch
-    try { _refreshFocusLabels(); } catch(_e){}
   }).catch(function() {
     if(switchId !== _regionSwitchId) return;
     // Fallback: switch to Norwegian if language fails to load
@@ -366,17 +364,6 @@ function hvtRebuildVisibleResults(){
 }
 window.hvtRebuildVisibleResults = hvtRebuildVisibleResults;
 
-// Refresh focus mode labels after language switch — mf-title, exit button, desktop toggles
-function _refreshFocusLabels(){
-  var r=R();
-  // Mobile focus close bar title — re-read from the focused card's updated .card-title
-  var mfTitle=document.querySelector('.mf-title');
-  if(mfTitle){var fc=document.querySelector('.info-card[data-mf-focus]');if(fc){var t=fc.querySelector(':scope > .card-hdr .card-title');if(t)mfTitle.textContent=t.textContent.replace(/[▼⛶✕]/g,'').trim();}}
-  // Mobile focus exit button
-  var mfClose=document.querySelector('.mf-close');if(mfClose)mfClose.textContent='\u2715 '+(r.mobileFocusExit||'Lukk');
-  // Desktop focus toggle labels
-  document.querySelectorAll('.focus-toggle').forEach(function(btn){var lbl=btn.querySelector('.focus-toggle-label');var ex=btn.querySelector('.focus-toggle-exit');if(lbl)lbl.textContent=r.focusLabel||'Fokus';if(ex)ex.textContent=r.focusClose||'Lukk fokus';});
-}
 
 function toggleDD() {
   var el=document.getElementById('rdd');
@@ -2611,10 +2598,6 @@ function updateFagkalkulatorUI() {
   setText('bc-pensjon-label', r.lblPensjon || 'Pensjon');
   // Decimal label
   setText('bc-dec-lbl', r.bcDecLabel || 'Desimaler');
-  // Kalkulator focus mode labels
-  setText('kalk-focus-lbl', r.focusLabel || 'Fokus');
-  setText('kalk-focus-exit', r.focusClose || 'Lukk fokus');
-  var _kfsb=document.getElementById('kalk-focus-switch-lbl');if(_kfsb)_kfsb.textContent=(r.focusSwitchCalc||'Bytt kalkulator')+' \u25BC';
   // Help hints on remaining calculators (lvu, valgevinst still have links)
   const hh = r.calcHelpHint || 'Trenger du hjelp med kalkulatoren? →';
   ['bc-lvu-help'].forEach(id=>{
@@ -5407,279 +5390,13 @@ function updateMobileBar(label){var el=document.getElementById('mobile-mode-labe
   }
 })();
 
-// Desktop focus mode — index-based (supports N columns)
-function toggleDesktopFocus(colIndex){
-  var b=document.body;
-  var grid=document.querySelector('.calc-grid');
-  if(!grid) return;
-  // Exit category-focus mode (used on /personlig) if active
-  if(b.classList.contains('cat-focus')){exitCategoryFocus();return;}
-  if(b.classList.contains('desktop-focus')){
-    if(window._deepLinkFocus){delete window._deepLinkFocus;window.location.href='/';return;}
-    _exitAllFocus();
-  } else if(colIndex!==undefined){
-    // Enter focus on specific column
-    b.classList.add('desktop-focus');
-    b.classList.add('col-focus');
-    Array.from(grid.children).forEach(function(c,i){
-      if(i!==colIndex) c.setAttribute('data-desktop-hidden','true');
-      else c.removeAttribute('data-desktop-hidden');
-    });
-  } else {
-    // Neither class active, no index — user clicked close-bar in a stale state.
-    // Scrub every stale attribute so focus state is clean.
-    _exitAllFocus();
-  }
-}
-// Sentralisert exit — rydder opp ALLE fokus-attributter samtidig sa ingen
-// mellomtilstand kan bli hengende (tidligere regresjon: focus-card-btn
-// inni cat-focus etterlot opened-by-focus + desktop-card-hidden uten
-// body-klasse => sibling-hide-CSS-regler deaktivert men DOM "trodde" fokus).
-function _exitAllFocus(){
-  var b=document.body;
-  b.classList.remove('desktop-focus');
-  b.classList.remove('col-focus');
-  var grid=document.querySelector('.calc-grid');
-  if(grid){
-    grid.querySelectorAll('.info-card:not(.collapsed)').forEach(function(ic){
-      ic.classList.add('collapsed');ic.removeAttribute('data-opened-by-focus');
-    });
-    Array.from(grid.children).forEach(function(c){c.removeAttribute('data-desktop-hidden');});
-    grid.querySelectorAll('[data-desktop-card-hidden]').forEach(function(el){el.removeAttribute('data-desktop-card-hidden');});
-  }
-}
-function _getColIndex(el){
-  var parent=el.closest('.calc-grid > div, .calc-grid > .right-col');
-  var grid=el.closest('.calc-grid');
-  if(!parent||!grid) return 0;
-  return Array.from(grid.children).indexOf(parent);
-}
-// Kategori-fokus (brukt kun på /personlig). Viser valgt .cat-title + neste .card-sibling
-// og .personlig-col som inneholder dem; skjuler de andre.
-function toggleCategoryFocus(catTitle){
-  var b=document.body;
-  if(b.classList.contains('cat-focus')&&catTitle.hasAttribute('data-cat-focused')){exitCategoryFocus();return;}
-  document.querySelectorAll('#personlig-cols [data-cat-focused],#personlig-cols [data-cat-focused-col]').forEach(function(el){
-    el.removeAttribute('data-cat-focused');el.removeAttribute('data-cat-focused-col');
-  });
-  catTitle.setAttribute('data-cat-focused','true');
-  var nxt=catTitle.nextElementSibling;
-  if(nxt&&nxt.classList.contains('card')) nxt.setAttribute('data-cat-focused','true');
-  var col=catTitle.closest('.personlig-col');
-  if(col) col.setAttribute('data-cat-focused-col','true');
-  b.classList.add('cat-focus');
-}
-function exitCategoryFocus(){
-  document.body.classList.remove('cat-focus');
-  document.querySelectorAll('#personlig-cols [data-cat-focused],#personlig-cols [data-cat-focused-col]').forEach(function(el){
-    el.removeAttribute('data-cat-focused');el.removeAttribute('data-cat-focused-col');
-  });
-  // Ogsaa rydd kort-niva attributter (sa exit fra cat-focus er komplett).
-  _exitAllFocus();
-}
-// Hide all info-cards in target's column, except target + its ancestors + descendants
-function _hideCardSiblingsDesktop(card){
-  var grid=card.closest('.calc-grid');
-  var col=card.closest('.calc-grid > div, .calc-grid > .right-col')||grid;
-  if(!col) return;
-  // Skjul andre .calc-grid > div-søsken som ikke inneholder det fokuserte kortet
-  // (f.eks. /skatt har separat Skatteloven-kort utenfor main-calc-kortet)
-  if(grid){
-    Array.from(grid.children).forEach(function(sib){
-      if(sib===col||sib.contains(card)) sib.removeAttribute('data-desktop-hidden');
-      else sib.setAttribute('data-desktop-hidden','true');
-    });
-  }
-  // Skjul info-card-søsken innen aktiv kolonne (eksisterende adferd)
-  col.querySelectorAll('.info-card').forEach(function(ic){
-    if(ic===card||ic.contains(card)||card.contains(ic)) ic.removeAttribute('data-desktop-card-hidden');
-    else ic.setAttribute('data-desktop-card-hidden','true');
-  });
-}
+
 window.openCardInFocus=function(id){
   var card=document.getElementById(id);if(!card)return;
-  var btn=card.querySelector('.focus-card-btn');
-  if(btn){btn.click();return;}
   if(card.classList.contains('collapsed'))card.querySelector('.card-hdr').click();
   card.scrollIntoView({behavior:'smooth',block:'start'});
 };
-// Inline SVG corner-brackets — matches CSS-mask version but renders instantly as DOM child,
-// so the icon appears the moment the button is inserted (no wait for CSS-mask paint).
-var FOCUS_BTN_SVG='<svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none" aria-hidden="true"><path d="M3 6V3h3M13 6V3h-3M3 10v3h3M13 10v3h-3"/></svg>';
-// Idempotent. Called early on DOMContentLoaded (before loadLang) AND from initDesktopFocus,
-// so focus buttons appear as soon as DOM is parsed instead of waiting for the language file.
-function _ensureFocusBtnsOnCards(){
-  document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
-    var card=hdr.parentElement;
-    if(!card||!card.classList.contains('info-card')) return;
-    var idx=(typeof _getColIndex==='function') ? _getColIndex(card) : 0;
-    var btn=hdr.querySelector(':scope > .focus-card-btn');
-    if(!btn){
-      btn=document.createElement('button');
-      btn.className='focus-card-btn';
-      btn.type='button';
-      btn.title='Fokus';
-      btn.setAttribute('aria-label','Fokus');
-      btn.innerHTML=FOCUS_BTN_SVG;
-      hdr.appendChild(btn);
-    }
-    btn.onclick=function(e){
-      e.stopPropagation();
-      if(typeof _isMobile==='function' && _isMobile()){
-        if(typeof enterMobileFocus==='function') enterMobileFocus(card);
-      } else {
-        var b=document.body;
-        var inFocus = b.classList.contains('desktop-focus') || b.classList.contains('cat-focus');
-        if(!inFocus && typeof toggleDesktopFocus==='function'){
-          toggleDesktopFocus(idx);
-        }
-        if(typeof _hideCardSiblingsDesktop==='function') _hideCardSiblingsDesktop(card);
-        if(card.classList.contains('collapsed') && typeof toggleCard==='function'){
-          toggleCard(card);card.setAttribute('data-opened-by-focus','true');
-        }
-        setTimeout(function(){ if(typeof smartScroll==='function') smartScroll(card); },250);
-      }
-    };
-  });
-}
-// Fire as early as possible so buttons exist before loadLang resolves.
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded', function(){_ensureFocusBtnsOnCards();_addLawSubCloseLabel();});
-} else {
-  _ensureFocusBtnsOnCards();
-  _addLawSubCloseLabel();
-}
-function initDesktopFocus(){
-  // Add focus buttons to section title headers
-  document.querySelectorAll('.calc-grid .section-title').forEach(function(h2){
-    if(h2.querySelector('.focus-toggle')) return;
-    h2.style.display='flex';h2.style.alignItems='center';h2.style.justifyContent='space-between';
-    var idx=_getColIndex(h2);
-    var btn=document.createElement('button');
-    btn.className='focus-toggle';
-    btn.onclick=function(e){e.stopPropagation();toggleDesktopFocus(idx);};
-    var _r=R();btn.innerHTML='<span class="focus-toggle-label">'+(_r.focusLabel||'Fokus')+'</span><span class="focus-toggle-exit">'+(_r.focusClose||'Lukk fokus')+'</span>';
-    h2.appendChild(btn);
-  });
-  // /personlig uses .cat-title (h3) per kategori i stedet for én .section-title per kolonne.
-  // Egen kategori-fokus: viser kun valgt kategori, skjuler de andre 5.
-  document.querySelectorAll('#personlig-cols .cat-title').forEach(function(h3){
-    if(h3.querySelector('.focus-toggle')) return;
-    h3.style.display='flex';h3.style.alignItems='center';h3.style.justifyContent='space-between';
-    var btn=document.createElement('button');
-    btn.className='focus-toggle';
-    btn.onclick=function(e){e.stopPropagation();toggleCategoryFocus(h3);};
-    var _r=R();btn.innerHTML='<span class="focus-toggle-label">'+(_r.focusLabel||'Fokus')+'</span><span class="focus-toggle-exit">'+(_r.focusClose||'Lukk fokus')+'</span>';
-    h3.appendChild(btn);
-  });
-  // Add back button to each info-card header — visible only in focus mode (CSS-gated).
-  // Skip howto-cards: they already have their own "Skjul veiledning" close label.
-  document.querySelectorAll('.calc-grid .info-card > .card-hdr').forEach(function(hdr){
-    if(hdr.querySelector('.focus-back-btn')) return;
-    var _c=hdr.parentElement;
-    if(_c && _c.id && (/-howto-card$/.test(_c.id) || _c.id==='mor-help-card')) return;
-    var bbtn=document.createElement('button');
-    bbtn.className='focus-back-btn';
-    bbtn.type='button';
-    bbtn.innerHTML='\u2190';
-    var _rb=R();var bLbl=(_rb.focusClose||'Tilbake');
-    bbtn.title=bLbl;
-    bbtn.setAttribute('aria-label',bLbl);
-    bbtn.onclick=function(e){
-      e.stopPropagation();e.preventDefault();
-      var b=document.body;
-      if(b.classList.contains('mobile-focus-active')){exitMobileFocus();}
-      else if(b.classList.contains('cat-focus')){exitCategoryFocus();}
-      else if(b.classList.contains('desktop-focus')){toggleDesktopFocus();}
-    };
-    hdr.appendChild(bbtn);
-  });
-  // Add small focus circle to each info-card header (idempotent — may already have run early).
-  _ensureFocusBtnsOnCards();
-  // Always start without focus mode
-  document.body.classList.remove('desktop-focus');
-  var grid=document.querySelector('.calc-grid');
-  if(grid) Array.from(grid.children).forEach(function(c){c.removeAttribute('data-desktop-hidden');});
-  // Add global focus close bar before calc-grid
-  if(grid&&!document.getElementById('focus-close-bar')){
-    var bar=document.createElement('div');
-    bar.id='focus-close-bar';
-    var _r2=R();bar.innerHTML='<button onclick="toggleDesktopFocus()" style="background:var(--accent);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;display:flex;align-items:center;gap:6px;"><span style="font-size:15px;line-height:1;">←</span> '+(_r2.focusClose||'Lukk fokus')+'</button>';
-    grid.parentElement.insertBefore(bar,grid);
-  }
-}
 
-// ═══════════════════════════════════════════════════════
-// MOBILE FOCUS MODE — tap ⛶ on a card to go fullscreen
-// ═══════════════════════════════════════════════════════
-function enterMobileFocus(card){
-  if(!card) return;
-  var b=document.body;
-  var grid=card.closest('.calc-grid');
-  if(!grid) return;
-  var col=card.closest('.calc-grid > div, .calc-grid > .right-col');
-  if(!col) return;
-  // Mark active column + card
-  Array.from(grid.children).forEach(function(c){c.removeAttribute('data-mf-visible');});
-  col.setAttribute('data-mf-visible','true');
-  // Mark only this card visible — for nested cards, mark the top-level parent
-  col.querySelectorAll('.info-card').forEach(function(ic){ic.removeAttribute('data-mf-card');ic.removeAttribute('data-mf-focus');ic.classList.remove('mf-has-focus');});
-  var parentCard=card.parentElement&&card.parentElement.closest&&card.parentElement.closest('.info-card');
-  var visibleCard=parentCard||card;
-  visibleCard.setAttribute('data-mf-card','true');
-  // Mark the actual focused nested card (hides parent chrome + siblings)
-  if(card!==visibleCard) { card.setAttribute('data-mf-focus','true'); visibleCard.classList.add('mf-has-focus'); }
-  // Open card if collapsed
-  if(visibleCard.classList.contains('collapsed')){toggleCard(visibleCard);visibleCard.setAttribute('data-opened-by-focus','true');}
-  if(card!==visibleCard&&card.classList.contains('collapsed')){toggleCard(card);card.setAttribute('data-opened-by-focus','true');}
-  // Get title from the target card (not parent)
-  var titleEl=card.querySelector(':scope > .card-hdr .card-title');
-  var titleText=titleEl?titleEl.textContent.replace(/[▼⛶✕]/g,'').trim():'';
-  // Create or show close bar
-  var closeBar=document.getElementById('mobile-focus-close');
-  if(!closeBar){
-    closeBar=document.createElement('div');
-    closeBar.id='mobile-focus-close';
-    closeBar.innerHTML='<span class="mf-title">'+titleText+'</span><button class="mf-close" onclick="exitMobileFocus()">✕ Lukk</button>';
-    grid.parentElement.insertBefore(closeBar,grid);
-  } else {
-    var mfT=closeBar.querySelector('.mf-title'); if(mfT) mfT.textContent=titleText;
-  }
-  _scrollInstant(function(){window.scrollTo(0, 0);});
-  b.classList.add('mobile-focus-active');
-  // Recalculate law chip bar position now that focus-close bar is visible
-  if(visibleCard.id&&visibleCard.id.endsWith('-law-group')){updateLawChapterNav(visibleCard);}
-  else{var lg=visibleCard.closest('[id$="-law-group"]');if(lg)updateLawChapterNav(lg);}
-}
-function exitMobileFocus(){
-  if(window._deepLinkFocus){delete window._deepLinkFocus;window.location.href='/';return;}
-  var b=document.body;
-  b.classList.remove('mobile-focus-active');
-  b.classList.remove('law-focus-chips');
-  var grid=document.querySelector('.calc-grid');
-  if(grid){
-    grid.querySelectorAll('.info-card:not(.collapsed)').forEach(function(ic){
-      ic.classList.add('collapsed');
-      ic.removeAttribute('data-opened-by-focus');
-    });
-    grid.querySelectorAll('.info-card[data-mf-card]').forEach(function(ic){
-      ic.removeAttribute('data-mf-card');
-    });
-    grid.querySelectorAll('.info-card[data-mf-focus]').forEach(function(ic){
-      ic.removeAttribute('data-mf-focus');
-    });
-    grid.querySelectorAll('.mf-has-focus').forEach(function(ic){
-      ic.classList.remove('mf-has-focus');
-    });
-    Array.from(grid.children).forEach(function(c){c.removeAttribute('data-mf-visible');});
-  }
-  // Move chip bars back to body and hide
-  document.querySelectorAll('.law-chapter-nav.visible').forEach(function(nav){nav.classList.remove('visible');nav.style.display='';nav.style.position='';nav.style.top='';if(nav.parentNode!==document.body)document.body.appendChild(nav);});
-  ['sal-law-group','sel-law-group'].forEach(function(id){var g=document.getElementById(id);if(g)g.classList.remove('law-chips-active');});
-}
-function _isMobile(){return window.innerWidth<=900;}
-
-// Mobile section tabs — show/hide navigation (matches desktop focus feel)
 function initMobileFocus(){
   var grid=document.querySelector('.calc-grid');
   if(!grid) return;
@@ -7062,7 +6779,6 @@ function _initPageReady(){
     sel.addEventListener('focus',function(){setTimeout(function(){scrollToEl(sel);},150);});
   });
   // Handle hash-based deep links (cross-page navigation)
-  initDesktopFocus();
   initMobileFocus();
   _handleHashFocus();
 }
@@ -7091,27 +6807,7 @@ function _handleHashFocus(){
       var body=lawGroup.querySelector('.law-group-body');
       if(body){body.style.maxHeight='none';}
     }
-    // Auto-focus the card if it's an info-card — immediate
-    var card=el.classList.contains('info-card')?el:el.closest&&el.closest('.info-card');
-    if(card){
-      window._deepLinkFocus=true;
-      if(card.classList.contains('collapsed')) card.classList.remove('collapsed');
-      // Clear hash to prevent browser auto-scroll
-      history.replaceState(null,'',window.location.pathname);
-      if(_isMobile()){
-        enterMobileFocus(card);
-        _scrollInstant(function(){window.scrollTo(0, 0);});
-        setTimeout(function(){_scrollInstant(function(){window.scrollTo(0, 0);});},0);
-      } else {
-        // Desktop: enter focus mode on column + hide all other cards (keep ancestors/descendants of target)
-        var colIdx=_getColIndex(card);
-        toggleDesktopFocus(colIdx);
-        _hideCardSiblingsDesktop(card);
-        setTimeout(function(){ smartScroll(card); },100);
-      }
-    } else {
-      el.scrollIntoView({block:'start',behavior:'smooth'});
-    }
+    el.scrollIntoView({block:'start',behavior:'smooth'});
   }
   // Handle mode hashes like #lvu, #avs
   if(typeof switchCalcMode==='function'){
