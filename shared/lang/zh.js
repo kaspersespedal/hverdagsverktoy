@@ -1689,7 +1689,7 @@ tekFootNote:'* 2026年费率。规则可能变化 — 请查阅 skatteetaten.no 
 
     homeCatKalkulatorDesc:'基础、货币、金融、科学和专业计算器',
 
-    homeCatMeta:'6个领域 · 30+ 计算器',
+    homeCatMeta:'8个领域 · 35+ 计算器',
 
     homeCatPersonligDesc:'汽车成本、预算和盈利能力',
 

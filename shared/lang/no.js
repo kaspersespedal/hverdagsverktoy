@@ -2047,7 +2047,7 @@ REGIONS['no'] = {
     homeMarketsPairBrent: 'Brent',
     homeMarketsPairGold: 'Gull',
     homeCatTitle: 'Bla i verktøyene',
-    homeCatMeta: '6 områder · 30+ kalkulatorer',
+    homeCatMeta: '8 områder · 35+ kalkulatorer',
     homeCatPersonligDesc: 'Bilkostnad, budsjett og lønnsomhet',
     homeCatBoliglanDesc: 'Boliglånskalkulator, krav til boliglån, kostnader og BSU',
     homeCatKalkulatorDesc: 'Enkel, valuta, finansiell, vitenskapelig og fagkalkulatorer',

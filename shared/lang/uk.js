@@ -1639,7 +1639,7 @@ REGIONS['uk'] = {
     homeMarketsPairBrent: 'Brent',
     homeMarketsPairGold: 'Золото',
     homeCatTitle: 'Перегляньте інструменти',
-    homeCatMeta: '6 областей · 30+ калькуляторів',
+    homeCatMeta: '8 областей · 35+ калькуляторів',
     homeCatPersonligDesc: 'Вартість авто, бюджет і прибутковість',
     homeCatBoliglanDesc: 'Іпотечний калькулятор, вимоги до іпотеки, витрати та BSU',
     homeCatKalkulatorDesc: 'Простий, валютний, фінансовий, науковий та галузеві калькулятори',

@@ -1769,7 +1769,7 @@ REGIONS['en'] = {
 
     // homeCat — category browse section
     homeCatTitle: 'Browse tools by category',
-    homeCatMeta: '6 areas · 30+ calculators',
+    homeCatMeta: '8 areas · 35+ calculators',
     homeCatPersonligDesc: 'Car costs, budget and financial planning',
     homeCatBoliglanDesc: 'Mortgage calculator, lending requirements, costs and BSU',
     homeCatKalkulatorDesc: 'Standard, currency, financial, scientific and specialist calculators',

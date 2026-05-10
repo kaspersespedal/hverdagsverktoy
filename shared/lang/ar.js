@@ -1729,7 +1729,7 @@ REGIONS['ar'] = {
     homeMarketsPairBrent: "برنت",
     homeMarketsPairGold: "الذهب",
     homeCatTitle: "تصفح الأدوات",
-    homeCatMeta: "6 أقسام · 30+ آلة حاسبة",
+    homeCatMeta: "8 أقسام · 35+ آلة حاسبة",
     homeCatPersonligDesc: "تكلفة السيارة، الميزانية والجدوى الاقتصادية",
     homeCatBoliglanDesc: "آلة حاسبة قرض الرهن العقاري، شروط القرض، التكاليف وBSU",
     homeCatKalkulatorDesc: "آلة حاسبة بسيطة، عملات، مالية، علمية ومتخصصة",

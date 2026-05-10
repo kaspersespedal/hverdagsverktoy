@@ -1571,7 +1571,7 @@ REGIONS['pl'] = {
     homeCatAvgiftDesc:'VAT, ustawa o VAT i składka pracodawcy',
     homeCatBoliglanDesc:'Kalkulator kredytu hipotecznego, wymogi kredytowe, koszty i BSU',
     homeCatKalkulatorDesc:'Kalkulator prosty, walutowy, finansowy, naukowy i specjalistyczne',
-    homeCatMeta:'6 obszarów · 30+ kalkulatorów',
+    homeCatMeta:'8 obszarów · 35+ kalkulatorów',
     homeCatPersonligDesc:'Koszt samochodu, budżet i opłacalność',
     homeCatSelskapDesc:'Spółka akcyjna, spółka komandytowa i prawo spółek',
     homeCatSkattDesc:'Obliczanie podatku, pojęcia i ustawa podatkowa',
