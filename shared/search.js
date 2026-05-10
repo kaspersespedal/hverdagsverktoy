@@ -130,7 +130,9 @@ var SEARCH_DATA = [
   {name:'Hvordan lese en paragraf',desc:'Kapittel, paragraf, ledd og bokstav — oppbygning av en lovparagraf',url:'/lov/',tags:'paragraf lov kapittel ledd bokstav lese forklaring how to read law',type:'concept',page:'Lov',sk:'hvordanLeseParagraf'},
 
   // /regnskap/ — regnskaps-grunnlag begreper
-  {name:'Standard kontoplan NS 4102',desc:'Norsk standard kontoplan — klasse 1 til 8',url:'/regnskap/',tags:'kontoplan ns4102 ns 4102 regnskap konto klasse standard chart of accounts',type:'concept',page:'Regnskap',sk:'kontoplanNs4102'},
+  {name:'Standard kontoplan NS 4102',desc:'Norsk standard kontoplan — klasse 1 til 8 (søkbar referanse)',url:'/regnskap/kontoplan/',tags:'kontoplan ns4102 ns 4102 regnskap konto klasse standard chart of accounts kontoklasse eiendeler gjeld driftsinntekt varekostnad lonn debet kredit saf-t',type:'tool',page:'Regnskap',sk:'kontoplanNs4102'},
+  {name:'Kontoklasse 1 — Eiendeler',desc:'Anleggsmidler og omløpsmidler i kontoplanen',url:'/regnskap/kontoplan/',tags:'kontoklasse 1 eiendeler anleggsmidler omlopsmidler bygninger maskiner varelager kundefordringer bank kontoplan',type:'concept',page:'Regnskap',sk:'kontoplanKlasse1'},
+  {name:'Kontoklasse 3 — Salgs- og driftsinntekt',desc:'Inntektskonti i NS 4102 (klasse 3)',url:'/regnskap/kontoplan/',tags:'kontoklasse 3 salgsinntekt driftsinntekt leieinntekt provisjon avgiftspliktig avgiftsfri kontoplan',type:'concept',page:'Regnskap',sk:'kontoplanKlasse3'},
   {name:'Debet og kredit',desc:'Grunnregelen for dobbel bokføring — to sider av hver transaksjon',url:'/regnskap/',tags:'debet kredit bokforing dobbel regnskap konto debit credit',type:'concept',page:'Regnskap',sk:'debetKredit'},
   {name:'Regnskapsplikt',desc:'Hvem må føre regnskap etter regnskapsloven',url:'/regnskap/',tags:'regnskapsplikt regnskap plikt foretak as enk accounting obligation',type:'concept',page:'Regnskap',sk:'regnskapsplikt'},
   {name:'Bokføring',desc:'Daglig registrering av bilag og transaksjoner',url:'/regnskap/',tags:'bokforing regnskap bilag transaksjon registrering daglig bookkeeping',type:'concept',page:'Regnskap',sk:'bokforingConcept'},
