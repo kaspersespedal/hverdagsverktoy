@@ -968,7 +968,18 @@ REGIONS['no'] = {
       regnskapsplikt:'regnskapsplikt regnskap plikt foretak as enk regnskapsloven',
       bokforingConcept:'bokforing bilag transaksjon registrering daglig regnskap',
       arsregnskap:'arsregnskap resultat balanse noter avslutning ar',
-      revisjon:'revisjon revisor revisjonsplikt ekstern terskel unntak'
+      revisjon:'revisjon revisor revisjonsplikt ekstern terskel unntak',
+      aksjerVeiledning:'aksjer veiledning guide nybegynner risiko skjermingsfradrag utbytte ask aksjesparekonto indeksfond',
+      maxlan:'maks lan hva kan jeg lane inntekt egenkapital gjeldsgrad utlansforskriften laneramme boliglan',
+      bvl:'bolig vs leie kjope leie sammenligne break-even eie investering avkastning',
+      andre:'asa nuf sa stiftelse samvirkeforetak allmennaksjeselskap norskregistrert utenlandsk foretak',
+      aksjeutvanning:'aksjeutvanning dilution nyemisjon opsjon emisjon kapital fortynning eier andel pre-money post-money cap-table',
+      fradrag:'fradrag reduksjon skattegrunnlag skatt minstefradrag reisefradrag sarfradrag gjeldsrenter',
+      kontoplanKlasse1:'kontoklasse 1 eiendeler anleggsmidler omlopsmidler bygninger maskiner varelager kundefordringer bank kontoplan',
+      kontoplanKlasse3:'kontoklasse 3 salgsinntekt driftsinntekt leieinntekt provisjon avgiftspliktig avgiftsfri kontoplan',
+      resultatregnskap:'resultatregnskap resultat regnskap driftsresultat arsresultat skatt regnskapsloven 6-1 oppstillingsplan as enk',
+      mvaMelding:'mva merverdiavgift mvameld melding skattemelding rf-0002 25 15 12 0 prosent termin inngaende utgaende',
+      balanseregn:'balanse regnskap eiendeler egenkapital gjeld anleggsmidler omlopsmidler regnskapsloven 6-2 oppstillingsplan'
     },
     searchDn: {
       trinnskatt:'Trinnskatt',
@@ -1026,7 +1037,18 @@ REGIONS['no'] = {
       regnskapsplikt:'Regnskapsplikt',
       bokforingConcept:'Bokføring',
       arsregnskap:'Årsregnskap',
-      revisjon:'Revisjon'
+      revisjon:'Revisjon',
+      aksjerVeiledning:'Aksjer (veiledning)',
+      maxlan:'Hva har jeg råd til?',
+      bvl:'Bolig vs leie',
+      andre:'Andre selskapsformer',
+      aksjeutvanning:'Aksjeutvanning',
+      fradrag:'Fradrag',
+      kontoplanKlasse1:'Kontoklasse 1 — Eiendeler',
+      kontoplanKlasse3:'Kontoklasse 3 — Salgs- og driftsinntekt',
+      resultatregnskap:'Resultatregnskap',
+      mvaMelding:'MVA-melding',
+      balanseregn:'Balanse'
     },
     searchDs: {
       trinnskatt:'Progressiv skatt som øker med inntekten — 5 trinn',
@@ -1085,6 +1107,17 @@ REGIONS['no'] = {
       bokforingConcept:'Daglig registrering av bilag og transaksjoner',
       arsregnskap:'Resultat, balanse og noter — formell avslutning av året',
       revisjon:'Når kreves ekstern revisor — terskler og unntak',
+      aksjerVeiledning:'Hva er aksjer, risiko, skatt 37,84 % og 5 tips til nybegynnere',
+      maxlan:'Maks lånebeløp basert på inntekt og egenkapital',
+      bvl:'Sammenlign total kostnad over X år — hva lønner seg?',
+      andre:'ASA, NUF, SA og stiftelse',
+      aksjeutvanning:'Beregn eierandel ved nyemisjon og opsjonsprogram',
+      fradrag:'Beløp som reduserer skattegrunnlaget eller skatten din',
+      kontoplanKlasse1:'Anleggsmidler og omløpsmidler i kontoplanen',
+      kontoplanKlasse3:'Inntektskonti i NS 4102 (klasse 3)',
+      resultatregnskap:'Driftsinntekter, driftskostnader — etter regnskapsloven § 6-1',
+      mvaMelding:'Termin-vis MVA-oppgjør — utgående og inngående merverdiavgift, 4 satser',
+      balanseregn:'Eiendeler = EK + Gjeld — sett opp balansen etter regnskapsloven § 6-2',
 
       // — kalkulator landing (editorial redesign) —
       kalkHeroTitle:'Kalkulator',
