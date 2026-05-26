@@ -45,6 +45,14 @@
     }catch(e){}
   })();
 </script>
+
+<!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
+<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v1">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v1">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -776,6 +784,25 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .howto-row:first-child{border-top:0;padding-top:2px}
   .howto-row > strong{color:var(--ink);font-weight:500}
   @media(max-width:640px){.howto-row{grid-template-columns:1fr;gap:4px}.howto-row > strong{margin-bottom:2px}}
+
+  /* ── AGA-zones grid (ZIP-redesign 2026-05) ────────── */
+  .aga-zones{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;
+    padding:4px;background:rgba(255,255,255,.025);
+    border:1px solid var(--line-warm);border-radius:6px}
+  .aga-z{padding:12px 12px 11px;background:transparent;border:0;cursor:pointer;
+    text-align:left;border-radius:4px;color:var(--ink3);
+    transition:background .2s var(--ease),color .2s var(--ease)}
+  .aga-z:hover{background:rgba(255,255,255,.03);color:var(--ink2)}
+  .aga-z[aria-pressed="true"]{background:linear-gradient(180deg,rgba(200,153,104,.15),rgba(200,153,104,.06));
+    color:var(--ink);box-shadow:inset 0 0 0 1px rgba(200,153,104,.34)}
+  .aga-z .zk{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .aga-z .zname{font:500 13px/1.2 var(--font-serif);font-style:italic;letter-spacing:-.1px}
+  .aga-z .zsats{font-family:var(--font-serif);font-style:italic;font-weight:500;
+    color:var(--accent);font-size:14px;font-variant-numeric:tabular-nums lining-nums}
+  .aga-z[aria-pressed="false"] .zsats{color:var(--ink3)}
+  .aga-z .zsats.accent{color:var(--accent-2)}
+  .aga-z .zdesc{display:block;font:400 11px/1.4 var(--font-sans);color:var(--ink3);margin-top:3px}
+  @media(max-width:640px){.aga-zones{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -944,81 +971,129 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     </div>
   </section>
 
-  <div class="container">
-    <div class="aga-grid">
+  <div class="calc-wrap">
+    <div class="container">
+      <div class="ks-host">
+        <div class="ks">
 
-      <div class="aga-form">
-
-        <section class="aga-section" aria-labelledby="agaInputHdr">
-          <header class="aga-section-head">
-            <h2 id="agaInputHdr" data-i18n="agaSectionInput">Lønn og sone</h2>
-            <span class="hint" data-i18n="agaSectionHint">2026-satser</span>
-          </header>
-          <div class="aga-fields">
-            <div class="aga-fg full">
-              <label for="aga-salary" data-i18n="agaLblSalary">Brutto lønn per år (kr)</label>
-              <input id="aga-salary" type="text" inputmode="numeric" value="600 000" autocomplete="off">
-            </div>
-            <div class="aga-fg full">
-              <label for="aga-zone" data-i18n="agaZone">AGA-sone</label>
-              <select id="aga-zone">
-                <option value="0.141">Sone I (14,1 %) — byer/sentrale strøk</option>
-                <option value="0.106">Sone Ia/II (10,6 %) — distrikt</option>
-                <option value="0.064">Sone III (6,4 %) — spredt</option>
-                <option value="0.079">Sone IVa (7,9 %) — deler av Nord-Norge</option>
-                <option value="0.051">Sone IV (5,1 %) — Nord-Troms</option>
-                <option value="0">Sone V (0 %) — Finnmark/Nord-Troms</option>
-              </select>
-              <p class="aga-hint">Satsen avhenger av hvor bedriften holder til. F.eks. 14,1 % i Oslo, 0 % i Finnmark.</p>
-            </div>
-            <div class="aga-fg">
-              <label for="aga-ferie" data-i18n="agaFerie">Feriepenger</label>
-              <select id="aga-ferie">
-                <option value="0.102">10,2 % (4 uker ferie)</option>
-                <option value="0.12">12 % (5 uker ferie)</option>
-              </select>
-            </div>
-            <div class="aga-fg">
-              <label for="aga-otp" data-i18n="agaOtp">OTP-rate</label>
-              <select id="aga-otp">
-                <option value="0.02">2 % (lovpålagt minimum)</option>
-                <option value="0.05">5 %</option>
-                <option value="0.07">7 %</option>
-              </select>
-            </div>
-            <div class="aga-fg full">
-              <p class="aga-hint">OTP er pensjon arbeidsgiveren sparer til den ansatte. Minst 2 % av lønn mellom 1G og 12G (1G = 130 160 kr i 2026, jf. innskuddspensjonsloven § 5-2).</p>
-            </div>
+          <div class="ks-strip" id="agaStrip">
+            <div class="ks-strip-cell"><span class="l" data-i18n="agaStripBrutto">Brutto lønn</span><span class="v" id="sBrutto">–</span></div>
+            <div class="ks-strip-cell"><span class="l" data-i18n="agaStripSone">Sone</span><span class="v" id="sZone">I <span class="u">14,1 %</span></span></div>
+            <div class="ks-strip-cell"><span class="l" data-i18n="agaStripExtras">Feriepenger + OTP</span><span class="v" id="sExtras">–</span></div>
+            <div class="ks-strip-cell accent"><span class="l" data-i18n="agaStripTotal">Total årskostnad</span><span class="v" id="sTotal">–</span></div>
           </div>
-        </section>
 
-        <p class="aga-info-box">
-          AGA og feriepenger beregnes på lønn + OTP-grunnlag. Trenger du å se forholdet mellom lønn og utbytte for eierlønn?
-          <a href="/avgift/#lvu-card">Åpne Lønn vs. utbytte →</a>
-        </p>
+          <div class="ks-body">
+            <div class="ks-form">
 
-        <button type="button" id="agaCalcBtn" class="aga-calc-btn">
-          <span data-i18n="agaBtnCalc">Beregn årskostnad</span>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
-        </button>
+              <section class="ks-section" aria-labelledby="agaZoneHdr">
+                <div class="ik-section-head">
+                  <h3 id="agaZoneHdr" data-i18n="agaZone">AGA-sone</h3>
+                  <span class="meta" data-i18n="agaSectionHint">2026-satser</span>
+                </div>
+                <div class="aga-zones" role="radiogroup" aria-labelledby="agaZoneHdr">
+                  <button type="button" class="aga-z" role="radio" aria-checked="true"  aria-pressed="true"  data-sone="I"   data-sats="0.141"><span class="zk"><span class="zname">Sone I</span><span class="zsats">14,1 %</span></span><span class="zdesc" data-i18n="agaZoneI">Oslo, Bergen og sentrale strøk</span></button>
+                  <button type="button" class="aga-z" role="radio" aria-checked="false" aria-pressed="false" data-sone="Ia"  data-sats="0.106"><span class="zk"><span class="zname">Sone Ia</span><span class="zsats">10,6 %</span></span><span class="zdesc" data-i18n="agaZoneIa">Visse omegnskommuner</span></button>
+                  <button type="button" class="aga-z" role="radio" aria-checked="false" aria-pressed="false" data-sone="II"  data-sats="0.106"><span class="zk"><span class="zname">Sone II</span><span class="zsats">10,6 %</span></span><span class="zdesc" data-i18n="agaZoneII">Distrikt</span></button>
+                  <button type="button" class="aga-z" role="radio" aria-checked="false" aria-pressed="false" data-sone="III" data-sats="0.064"><span class="zk"><span class="zname">Sone III</span><span class="zsats">6,4 %</span></span><span class="zdesc" data-i18n="agaZoneIII">Indre Nord-Norge</span></button>
+                  <button type="button" class="aga-z" role="radio" aria-checked="false" aria-pressed="false" data-sone="IVa" data-sats="0.079"><span class="zk"><span class="zname">Sone IVa</span><span class="zsats">7,9 %</span></span><span class="zdesc" data-i18n="agaZoneIVa">Tromsø, Bodø</span></button>
+                  <button type="button" class="aga-z" role="radio" aria-checked="false" aria-pressed="false" data-sone="IV"  data-sats="0.051"><span class="zk"><span class="zname">Sone IV</span><span class="zsats">5,1 %</span></span><span class="zdesc" data-i18n="agaZoneIV">Nordland og Troms</span></button>
+                  <button type="button" class="aga-z" role="radio" aria-checked="false" aria-pressed="false" data-sone="V"   data-sats="0"    ><span class="zk"><span class="zname">Sone V</span><span class="zsats accent">0 %</span></span><span class="zdesc" data-i18n="agaZoneV">Finnmark / Nord-Troms</span></button>
+                </div>
+                <!-- Hidden backing field — JS reads sats fra .aga-z[aria-pressed=true] -->
+                <select id="aga-zone" hidden>
+                  <option value="0.141" selected>Sone I</option>
+                  <option value="0.106">Sone Ia/II</option>
+                  <option value="0.064">Sone III</option>
+                  <option value="0.079">Sone IVa</option>
+                  <option value="0.051">Sone IV</option>
+                  <option value="0">Sone V</option>
+                </select>
+              </section>
 
+              <section class="ks-section" aria-labelledby="agaInputHdr">
+                <div class="ik-section-head">
+                  <h3 id="agaInputHdr" data-i18n="agaSectionInput">Lønn og grunnlag</h3>
+                  <span class="meta" data-i18n="agaSectionInputMeta">grunnlag</span>
+                </div>
+                <div class="ik-row full">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="aga-salary"><span data-i18n="agaLblSalary">Brutto lønn per år</span><span class="cap">kr/år</span></label>
+                    <input id="aga-salary" class="ik-input" type="text" inputmode="numeric" value="600 000" autocomplete="off">
+                  </div>
+                </div>
+                <div class="ik-row" style="margin-top:14px">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="aga-ferie"><span data-i18n="agaFerie">Feriepenger</span></label>
+                    <select id="aga-ferie" class="ik-select">
+                      <option value="0.102">10,2 % (4 uker ferie)</option>
+                      <option value="0.12">12 % (5 uker ferie)</option>
+                    </select>
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="aga-otp"><span data-i18n="agaOtp">OTP-rate</span></label>
+                    <select id="aga-otp" class="ik-select">
+                      <option value="0.02">2 % (lovpålagt minimum)</option>
+                      <option value="0.05">5 %</option>
+                      <option value="0.07">7 %</option>
+                    </select>
+                  </div>
+                </div>
+                <p class="ik-hint" style="margin-top:10px" data-i18n="agaOtpHint">OTP er pensjon arbeidsgiveren sparer til den ansatte. Minst 2 % av lønn mellom 1G og 12G (1G = 130 160 kr i 2026, jf. innskuddspensjonsloven § 5-2).</p>
+              </section>
+
+            </div>
+
+            <aside class="ks-result" aria-live="polite">
+              <div class="ks-r-eyebrow" data-i18n="agaRTotal">Total årskostnad</div>
+              <div class="ks-r-net" id="rTotal">–<span class="unit">kr</span></div>
+              <div class="ks-r-mnd" id="rVerdict" data-i18n="agaRVerdictEmpty">Skriv inn brutto lønn for å se total ansattkostnad</div>
+
+              <div class="ks-r-stats">
+                <div class="ks-r-stat"><span class="l" data-i18n="agaOutPerMonth">Per måned</span><span class="v" id="rPerMonth">–</span></div>
+                <div class="ks-r-stat div"><span class="l" data-i18n="agaRAga">AGA</span><span class="v" id="rAga">–</span></div>
+                <div class="ks-r-stat"><span class="l" data-i18n="agaRFerie">Feriepenger</span><span class="v" id="rFerie">–</span></div>
+                <div class="ks-r-stat"><span class="l" data-i18n="agaROtp">OTP</span><span class="v" id="rOtp">–</span></div>
+                <div class="ks-r-stat"><span class="l" data-i18n="agaRPct">% over brutto</span><span class="v" id="rPct">–</span></div>
+              </div>
+
+              <div class="ks-r-foot" data-i18n="agaRFoot">Innbetales 6 ganger i året (2-månedlige terminer). Sjekk korrekt sone i Skatteetatens kommuneregister.</div>
+              <div class="ks-r-sources">
+                <span class="src">Skatteetaten</span><span class="dot"/>
+                <span class="src">Folketrygdloven</span>
+                <span class="upd" data-i18n="agaRUpdated">Oppdatert <em>2026</em></span>
+              </div>
+            </aside>
+          </div>
+        </div>
       </div>
 
-      <aside class="aga-result" aria-live="polite">
-        <div class="res-headline">
-          <span class="r-lbl" data-i18n="agaRTotal">Total årskostnad</span>
-          <span class="r-val" id="rTotal">–</span>
-          <span class="r-verdict" id="rVerdict">Skriv inn brutto lønn for å se total ansattkostnad</span>
+      <aside class="side-col">
+        <div class="side-card">
+          <h4 data-i18n="agaSideSoner">AGA-soner 2026</h4>
+          <div class="ref-row"><span class="l">Sone I</span><span class="v">14,1<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l">Sone Ia</span><span class="v">10,6<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l">Sone II</span><span class="v">10,6<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l">Sone III</span><span class="v">6,4<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l">Sone IV</span><span class="v">5,1<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l">Sone IVa</span><span class="v">7,9<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l" data-i18n="agaSideSoneV">Sone V (Finnmark/N-T)</span><span class="v accent">0<span class="u">%</span></span></div>
         </div>
-        <div class="res-stats">
-          <div class="res-stat"><span class="l" data-i18n="agaOutPerMonth">Per måned</span><span class="v" id="rPerMonth">–</span></div>
-          <div class="res-stat divide"><span class="l" data-i18n="agaRAga">AGA</span><span class="v" id="rAga">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="agaRFerie">Feriepenger</span><span class="v" id="rFerie">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="agaROtp">OTP</span><span class="v" id="rOtp">–</span></div>
-          <div class="res-stat strong"><span class="l" data-i18n="agaRPct">% over brutto</span><span class="v" id="rPct">–</span></div>
+        <div class="side-card related">
+          <h4 data-i18n="agaSideRelated">Relaterte verktøy</h4>
+          <a href="/avgift/vat/"><span class="name" data-i18n="agaRelatedVat">MVA-kalkulator</span><span class="arr">→</span></a>
+          <a href="/skatt/inntekt/"><span class="name" data-i18n="agaRelatedLonn">Lønn etter skatt</span><span class="arr">→</span></a>
+          <a href="/avgift/#lvu-card"><span class="name" data-i18n="agaRelatedLvU">Lønn vs. utbytte</span><span class="arr">→</span></a>
+        </div>
+        <div class="side-card method">
+          <h4 data-i18n="agaSideMethod">Slik regner vi</h4>
+          <ol class="method-list">
+            <li><span class="n">01</span><span class="t" data-i18n-html="agaMethodStep1"><b>Sone</b> bestemmes av kommunen virksomheten har hovedaktivitet.</span></li>
+            <li><span class="n">02</span><span class="t" data-i18n-html="agaMethodStep2"><b>Grunnlaget</b> er all utbetalt lønn + feriepenger + OTP-grunnlag.</span></li>
+            <li><span class="n">03</span><span class="t" data-i18n-html="agaMethodStep3"><b>OTP-grunnlag</b> = lønn mellom 1G (130 160) og 12G (innskuddspensjonsloven § 5-2).</span></li>
+          </ol>
         </div>
       </aside>
-
     </div>
   </div>
 
@@ -1145,6 +1220,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
     function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
+    function fmtNum(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' '); }
     function fmtPct(n){ return n.toFixed(1).replace('.', ',') + ' %'; }
 
     function parseAmt(id){
@@ -1160,12 +1236,29 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       return isNaN(v) ? (fallback || 0) : v;
     }
     function setOutputText(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; }
+    function setOutputHTML(id, val){ var el=document.getElementById(id); if(el) el.innerHTML=val; }
+
+    // ── Aktiv sone fra aga-z-buttons ──
+    function activeZone(){
+      var btn = document.querySelector('.aga-z[aria-pressed="true"]');
+      if(!btn) btn = document.querySelector('.aga-z');
+      return {
+        sats: parseFloat(btn.getAttribute('data-sats')) || 0,
+        sone: btn.getAttribute('data-sone') || 'I'
+      };
+    }
+    function syncHiddenSelect(){
+      var z = activeZone();
+      var sel = document.getElementById('aga-zone');
+      if(sel) sel.value = String(z.sats);
+    }
 
     // Port av calcAga (core.js:4730) — byte-for-byte matematikk
     function compute(){
       var sal = parseAmt('aga-salary');
       if(sal <= 0) return { hasData:false };
-      var aga = getVal('aga-zone', 0);
+      var z = activeZone();
+      var aga = z.sats;
       var ferie = getVal('aga-ferie', 0);
       var otp = getVal('aga-otp', 0);
       var G = _HVT_G;
@@ -1179,7 +1272,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       return {
         hasData: true,
         sal: sal,
-        agaRate: aga, ferieRate: ferie, otpRate: otp,
+        agaRate: aga, ferieRate: ferie, otpRate: otp, sone: z.sone,
         agaAmt: agaAmt, ferieAmt: ferieAmt, otpAmt: otpAmt,
         total: total, perMonth: total/12, pct: pct
       };
@@ -1187,9 +1280,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     function recalc(){
       var d = compute();
+      var z = activeZone();
+      var satsStr = (z.sats*100).toFixed(1).replace('.',',') + ' %';
 
       if(!d.hasData){
-        setOutputText('rTotal', '–');
+        setOutputHTML('rTotal', '–<span class="unit">kr</span>');
         setOutputText('rVerdict', 'Skriv inn brutto lønn for å se total ansattkostnad');
         setOutputText('rPerMonth', '–');
         setOutputText('rAga', '–');
@@ -1198,11 +1293,15 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         setOutputText('rPct', '–');
         setOutputText('hStatTotal', '–');
         setOutputText('hStatPct', '–');
+        setOutputText('sBrutto', '–');
+        setOutputHTML('sZone', z.sone + ' <span class="u">' + satsStr + '</span>');
+        setOutputText('sExtras', '–');
+        setOutputText('sTotal', '–');
         persist();
         return;
       }
 
-      setOutputText('rTotal', fmtKr(d.total));
+      setOutputHTML('rTotal', fmtNum(d.total) + '<span class="unit">kr</span>');
       setOutputText('rPerMonth', fmtKr(d.perMonth) + ' /mnd');
       setOutputText('rAga', fmtKr(d.agaAmt));
       setOutputText('rFerie', fmtKr(d.ferieAmt));
@@ -1210,6 +1309,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       setOutputText('rPct', d.pct.toFixed(1) + ' %');
       setOutputText('hStatTotal', fmtKr(d.total));
       setOutputText('hStatPct', d.pct.toFixed(1) + ' %');
+      setOutputText('sBrutto', fmtKr(d.sal));
+      setOutputHTML('sZone', d.sone + ' <span class="u">' + satsStr + '</span>');
+      setOutputText('sExtras', fmtKr(d.ferieAmt + d.otpAmt));
+      setOutputText('sTotal', fmtKr(d.total));
 
       var verdict;
       if(d.agaRate === 0){
@@ -1226,9 +1329,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     function persist(){
       try {
+        var z = activeZone();
         var snap = {
           salary: document.getElementById('aga-salary').value,
-          zone: document.getElementById('aga-zone').value,
+          zone: String(z.sats),
+          sone: z.sone,
           ferie: document.getElementById('aga-ferie').value,
           otp: document.getElementById('aga-otp').value
         };
@@ -1241,7 +1346,14 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         if(!raw) return;
         var s = JSON.parse(raw);
         if(s.salary != null) document.getElementById('aga-salary').value = s.salary;
-        if(s.zone != null) document.getElementById('aga-zone').value = s.zone;
+        if(s.sone != null){
+          document.querySelectorAll('.aga-z').forEach(function(b){
+            var on = b.getAttribute('data-sone') === s.sone;
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+            b.setAttribute('aria-checked', on ? 'true' : 'false');
+          });
+          syncHiddenSelect();
+        }
         if(s.ferie != null) document.getElementById('aga-ferie').value = s.ferie;
         if(s.otp != null) document.getElementById('aga-otp').value = s.otp;
       } catch(e){}
@@ -1250,10 +1362,22 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     // ── Wire events ──
     var salEl = document.getElementById('aga-salary');
     if(salEl) salEl.addEventListener('input', recalc);
-    document.getElementById('aga-zone').addEventListener('change', recalc);
     document.getElementById('aga-ferie').addEventListener('change', recalc);
     document.getElementById('aga-otp').addEventListener('change', recalc);
-    document.getElementById('agaCalcBtn').addEventListener('click', recalc);
+
+    // Wire sone-buttons (radio-group)
+    document.querySelectorAll('.aga-z').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.aga-z').forEach(function(b){
+          b.setAttribute('aria-pressed','false');
+          b.setAttribute('aria-checked','false');
+        });
+        btn.setAttribute('aria-pressed','true');
+        btn.setAttribute('aria-checked','true');
+        syncHiddenSelect();
+        recalc();
+      });
+    });
 
     // ── Init ──
     restore();
@@ -1351,6 +1475,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   })();
 </script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
+
+<!-- SHELL scripts — REDESIGN-2026-05 (T1-T4 ported) -->
+<script src="/shared/site-shell.js?v=v1" defer></script>
+<script src="/shared/top-chrome.js?v=v1" defer></script>
+<script src="/shared/veiledning.js?v=v1" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');
