@@ -1784,6 +1784,7 @@ REGIONS['no'] = {
     budNCtaTitle:'Hva har du råd til å kjøpe?',
     budNCtaDesc:'Maks lånebeløp basert på inntekten din',
     budNCsvBtn:'Last ned (CSV)',
+    budPdfBtn:'Last ned PDF',
     budNBreakdownHdr:'Utgiftsfordeling',
 
     // — personlig/teknisk (Teknisk ordliste — content page) —

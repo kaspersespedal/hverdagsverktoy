@@ -30,7 +30,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v124" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v125" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hv-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -1220,6 +1220,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2 V10"/><polyline points="3.5 6.5 7 10 10.5 6.5"/><line x1="2" y1="12" x2="12" y2="12"/></svg>
           <span data-i18n="budNCsvBtn">Last ned (CSV)</span>
         </button>
+        <button type="button" id="bud-pdf-btn" class="res-csv" disabled onclick="generateBudsjettPdf()" data-i18n="budPdfBtn">Last ned PDF</button>
       </aside>
 
     </div>
@@ -1552,6 +1553,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
       var csvBtn = document.getElementById('budCsvBtn');
       csvBtn.disabled = !hasData;
+      var pdfBtn = document.getElementById('bud-pdf-btn');
+      if(pdfBtn) pdfBtn.disabled = !hasData;
 
       STATE.totalIncome = totalIncome;
       STATE.totalExpense = totalExpense;
@@ -1560,7 +1563,23 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       STATE.incomeItems = incomeItems;
       STATE.expenseItems = expenseItems;
 
+      window._budsjettData = aggregateBudgetData();
+
       persist();
+    }
+
+    function aggregateBudgetData(){
+      var d = STATE;
+      if(!d) return null;
+      return {
+        inntekt: (d.incomeItems || []).map(function(i){ return { lbl: i.name, amt: i.amount }; }),
+        utgift:  (d.expenseItems || []).map(function(i){ return { lbl: i.name, amt: i.amount }; }),
+        sumInn:   d.totalIncome  || 0,
+        sumUt:    d.totalExpense || 0,
+        overskudd: d.balance     || 0,
+        sparerate: d.savingsRate || 0,
+        aar:      (d.balance || 0) * 12
+      };
     }
 
     function addRow(type, preset){
@@ -1678,7 +1697,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   })();
 </script>
 
-<script defer src="/shared/core.js?v=v124"></script>
+<script defer src="/shared/core.js?v=v125"></script>
+<script defer src="/shared/pdf-styles.js?v=v1"></script>
 <script defer src="/shared/lang/no.js?v=v40"></script>
 <script defer src="/shared/ticker.js?v=v1"></script>
 
