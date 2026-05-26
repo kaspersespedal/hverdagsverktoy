@@ -63,6 +63,15 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
 <link rel="stylesheet" href="/shared/style.css?v=v141" fetchpriority="high">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v1">
+<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v1">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v1">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<script defer src="/shared/atmosphere.js?v=v1"></script>
+<script defer src="/shared/site-shell.js?v=v1"></script>
+<script defer src="/shared/top-chrome.js?v=v1"></script>
 <script>
 (function(){
   try{var T=['carbon','frost','dark','glass','hendrix','bw','disco','pink'];
@@ -115,52 +124,83 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 <body>
 <a href="#main" class="skip-link">Hopp til hovedinnhold</a>
 
+<!-- ATMOSPHERE - Aurora over ink. Site-wide, fixed, behind everything. -->
+<div class="atmo-base" aria-hidden="true"></div>
+<div class="atmo" aria-hidden="true">
+  <div class="band band-a"><div class="band-inner"></div></div>
+  <div class="band band-b"><div class="band-inner"></div></div>
+  <div class="cursor-light" id="cursorLight"></div>
+</div>
+<svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">
+  <filter id="atmoGrain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"
+      stitchTiles="stitch" seed="4"/>
+    <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#atmoGrain)"/>
+</svg>
 
-<!-- HEADER -->
-<header>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark-g" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8ad7e"/><stop offset="1" stop-color="#a87842"/>
+    </linearGradient>
+    <symbol id="mark-h" viewBox="0 0 64 64">
+      <rect x="14" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="42" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="22" y="28" width="20" height="8" rx="1.5" fill="url(#mark-g)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="nav-wrap">
   <div class="container">
-    <div class="hdr">
-      <a class="logo" href="/" style="text-decoration:none;color:inherit;cursor:pointer">Hverdagsverktøy</a>
-      <div class="hdr-right">
-        <div id="theme-picker" style="display:flex;align-items:center;gap:6px;position:relative;"></div>
-        <div class="region-sel">
-          <button type="button" class="region-cur" onclick="toggleDD()" aria-haspopup="listbox" aria-expanded="false">
-            <img class="flag" id="rf" src="https://flagcdn.com/w80/no.png" alt="" width="20" height="15">
-            <span id="rn">Norsk</span>
-            <span class="chev">▼</span>
-          </button>
-          <div class="region-dd" id="rdd">
-            <div class="region-group-label" id="rg-main">Hovedspråk</div>
-            <button type="button" class="region-opt active" onclick="setRegion('no',event)"><img class="flag" src="https://flagcdn.com/w80/no.png" alt="" loading="lazy" width="20" height="15"><span>Norsk</span></button>
-            <button type="button" class="region-opt" onclick="setRegion('en',event)"><img class="flag" src="https://flagcdn.com/w80/gb.png" alt="" loading="lazy" width="20" height="15"><span>English</span></button>
-            <div class="region-divider"></div>
-            <div class="region-group-label" id="rg-other">Andre språk</div>
-            <button type="button" class="region-opt" onclick="setRegion('pl',event)"><img class="flag" src="https://flagcdn.com/w80/pl.png" alt="" loading="lazy" width="20" height="15"><span>Polski</span></button>
-            <button type="button" class="region-opt" onclick="setRegion('uk',event)"><img class="flag" src="https://flagcdn.com/w80/ua.png" alt="" loading="lazy" width="20" height="15"><span>Українська</span></button>
-            <button type="button" class="region-opt" onclick="setRegion('ar',event)"><img class="flag" src="https://flagcdn.com/w80/sa.png" alt="" loading="lazy" width="20" height="15"><span>العربية</span></button>
-            <button type="button" class="region-opt" onclick="setRegion('lt',event)"><img class="flag" src="https://flagcdn.com/w80/lt.png" alt="" loading="lazy" width="20" height="15"><span>Lietuvių</span></button>
-            <button type="button" class="region-opt" onclick="setRegion('so',event)"><img class="flag" src="https://flagcdn.com/w80/so.png" alt="" loading="lazy" width="20" height="15"><span>Soomaali</span></button>
-            <button type="button" class="region-opt" onclick="setRegion('ti',event)"><img class="flag" src="https://flagcdn.com/w80/er.png" alt="" loading="lazy" width="20" height="15"><span>ትግርኛ</span></button>
-            <button type="button" class="region-opt" onclick="setRegion('zh',event)"><img class="flag" src="https://flagcdn.com/w80/cn.png" alt="" loading="lazy" width="20" height="15"><span>中文</span></button>
-            <button type="button" class="region-opt" onclick="setRegion('fr',event)"><img class="flag" src="https://flagcdn.com/w80/fr.png" alt="" loading="lazy" width="20" height="15"><span>Français</span></button>
-          </div>
-        </div>
-      </div>
+    <nav>
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy hjem">
+        <span class="mark"><svg width="16" height="16"><use href="#mark-h"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap" role="tablist" aria-label="Kategorier">
+  <div class="container">
+    <div class="tabs">
+      <a href="/personlig/" class="tab" role="tab" data-tab="personlig" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
+        Personlig økonomi
+      </a>
+      <a href="/boliglan/" class="tab" role="tab" data-tab="boliglan" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg>
+        Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab" role="tab" data-tab="kalkulator" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>
+        Kalkulator
+      </a>
+      <a href="/skatt/" class="tab" role="tab" data-tab="skatt" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+        Skatt
+      </a>
+      <a href="/selskap/" class="tab" role="tab" data-tab="selskap" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg>
+        Selskap
+      </a>
+      <a href="/avgift/" class="tab" role="tab" data-tab="avgift" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+        Avgift
+      </a>
+      <a href="/regnskap/" class="tab" role="tab" data-tab="regnskap" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg>
+        Regnskap
+      </a>
+      <a href="/lov/" class="tab" role="tab" data-tab="lov" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V20"/><path d="M5 7 L12 5 L19 7"/><path d="M3 13 a3 3 0 0 0 6 0 L6 7 Z"/><path d="M15 13 a3 3 0 0 0 6 0 L18 7 Z"/></svg>
+        Lov
+      </a>
     </div>
   </div>
-</header>
-
-<!-- NAV -->
-<div class="container">
-<nav class="calc-nav">
-  <a href="/" class="calc-tab" id="tab-dashboard" style="text-decoration:none;"><span></span><span id="tl-dash">Hjem</span></a>
-  <a href="/personlig/" class="calc-tab" id="tab-npv" style="text-decoration:none;"><span></span><span id="tl-npv">Personlig økonomi</span></a>
-  <a href="/boliglan/" class="calc-tab" id="tab-mortgage" style="text-decoration:none;"><span></span><span id="tl-mor">Boliglån</span></a>
-  <a href="/kalkulator/" class="calc-tab" id="tab-basic" style="text-decoration:none;"><span></span><span id="tl-basic">Kalkulator</span></a>
-  <a href="/skatt/" class="calc-tab" id="tab-salary" style="text-decoration:none;"><span></span><span id="tl-sal">Skatt</span></a>
-  <a href="/selskap/" class="calc-tab" id="tab-selskap" style="text-decoration:none;"><span></span><span id="tl-selskap">Selskap</span></a>
-  <a href="/avgift/" class="calc-tab" id="tab-vat" style="text-decoration:none;"><span></span><span id="tl-vat">Avgift</span></a>
-</nav>
 </div>
 
 <!-- MAIN CONTENT -->
