@@ -3289,6 +3289,40 @@ window.generateLonnPdf = async function(){
   }
 };
 
+window.generateBudsjettPdf = async function(){
+  var btn = document.getElementById('bud-pdf-btn');
+  if(btn){ btn.disabled = true; btn.textContent = 'Laster…'; }
+  try {
+    await _loadPdfmake();
+    var b = window._budsjettData;
+    if(!b){ if(btn){btn.disabled=false; btn.textContent='Last ned PDF';} return; }
+    if(!window.PDF_STYLES || !window.PDF_STYLES.budgetElite){
+      alert('PDF-stiler lastes enn\xe5. Pr\xf8v igjen om et \xf8yeblikk.'); return;
+    }
+    var today = new Date().toLocaleDateString('nb-NO',{day:'numeric',month:'long',year:'numeric'});
+    var reportId = 'HV-' + Date.now().toString(36).toUpperCase().slice(-6);
+    var meta = { today: today, reportId: reportId };
+    var doc = window.PDF_STYLES.budgetElite(b, meta);
+    var filename = 'budsjett-' + new Date().toISOString().slice(0,10) + '.pdf';
+    await new Promise(function(resolve, reject){
+      pdfMake.createPdf(doc).getBlob(function(blob){
+        try {
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url; a.download = filename; a.style.display = 'none';
+          document.body.appendChild(a); a.click();
+          setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); resolve(); }, 200);
+        } catch(err){ reject(err); }
+      }, reject);
+    });
+  } catch(e){
+    console.error('PDF-feil:', e);
+    alert('Kunne ikke lage PDF: ' + e.message);
+  } finally {
+    if(btn){ btn.disabled = false; btn.textContent = 'Last ned PDF'; }
+  }
+};
+
 function calcMor() {
   const r = R();
   const P = parseNum('m-a');

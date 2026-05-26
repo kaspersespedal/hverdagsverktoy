@@ -2,19 +2,19 @@
 <html lang="no" data-theme="carbon">
 <head>
 <meta charset="utf-8">
-<title>Likviditetsbudsjett — Kalkulator · Hverdagsverktøy</title>
-<meta name="description" content="Måned-for-måned likviditetsbudsjett: startbalanse + inntekter − utgifter = saldo. Se om du går tom for penger noen måned. Last ned som CSV. Alt skjer lokalt i nettleseren.">
+<title>Dekningsbidrag — Kalkulator · Hverdagsverktøy</title>
+<meta name="description" content="Beregn dekningsbidrag (DB), dekningsgrad (DB%) og break-even — hvor mange enheter må du selge for å gå i null? Skriv inn salgspris, variabel kost, antall enheter og faste kostnader.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
-<link rel="preload" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "@id": "https://hverdagsverktoy.no/kalkulator/likviditet/#webpage",
-  "name": "Likviditetsbudsjett — Kalkulator · Hverdagsverktøy",
-  "url": "https://hverdagsverktoy.no/kalkulator/likviditet/",
+  "@id": "https://hverdagsverktoy.no/kalkulator/dekningsbidrag/#webpage",
+  "name": "Dekningsbidrag — Kalkulator · Hverdagsverktøy",
+  "url": "https://hverdagsverktoy.no/kalkulator/dekningsbidrag/",
   "inLanguage": "no",
   "isPartOf": { "@id": "https://hverdagsverktoy.no/#website" }
 }
@@ -26,7 +26,7 @@
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.no/" },
     { "@type": "ListItem", "position": 2, "name": "Kalkulator", "item": "https://hverdagsverktoy.no/kalkulator/" },
-    { "@type": "ListItem", "position": 3, "name": "Likviditetsbudsjett", "item": "https://hverdagsverktoy.no/kalkulator/likviditet/" }
+    { "@type": "ListItem", "position": 3, "name": "Dekningsbidrag", "item": "https://hverdagsverktoy.no/kalkulator/dekningsbidrag/" }
   ]
 }
 </script>
@@ -45,238 +45,7 @@
     }catch(e){}
   })();
 </script>
-<!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
-<style>
-/* ─────────────────────────────────────────────────────
-   ATMOSPHERE — "Aurora over ink" (site-wide)
-   Four-layer stack, fixed, behind everything:
-     L1 .atmo-base    — solid base + vertical gradient
-     L2 .atmo .band   — two horizontal aurora bands, blend:screen
-     L3 .atmo .cursor-light — single soft circular light, lerp 0.06
-     L4 .film-grain   — static SVG fractal noise, blend:overlay, ~3.5%
-   Mobile: drift slowed x1.5, no cursor light, grain -> 2%.
-   Reduced-motion: bands static at 0.5x, no drift, no cursor light.
-   Source: hv_oppdatert_design/Homepage.html (v3, 2026-04-30).
-   v2 (E83): atmosphere skjules på lyse themes (frost/glass/hendrix/bw/pink).
-   v3 (E83): atmosphere-farger er nå tokenisert per dark theme.
-     carbon (default) → cognac/amber
-     dark              → kjølig blå/indigo
-     disco             → neon pink/lilla
-───────────────────────────────────────────────────── */
-/* FOUC-guard during language load — BUG-05 closes (alternativ A).
-   Skjuler oversettbare elementer mens lang-loading-klassen er aktiv på html.
-   Klassen settes synkront av inline head-script og fjernes av core.js etter loadLang resolves. */
-html.lang-loading [data-i18n]{visibility:hidden;}
-:root{
-  --atmo-base-top:#0F0D0A;
-  --atmo-base-bottom:#070605;
-  --atmo-band-a:38, 60%, 75%;   /* hsl triplet — cream */
-  --atmo-band-a-op:.08;
-  --atmo-band-a-op-breathe:.10;
-  --atmo-band-b:28, 50%, 55%;   /* hsl triplet — deep amber */
-  --atmo-band-b-op:.05;
-  --atmo-band-b-op-breathe:.07;
-  --atmo-cursor:38, 70%, 75%;   /* hsl triplet — warm cream */
-  --atmo-cursor-op:.04;
-}
-[data-theme="dark"]{
-  --atmo-base-top:#141520;
-  --atmo-base-bottom:#0a0b14;
-  --atmo-band-a:222, 80%, 72%;          /* cool blue, matcher accent #6c8aef */
-  --atmo-band-a-op:.09;
-  --atmo-band-a-op-breathe:.12;
-  --atmo-band-b:258, 55%, 55%;          /* violet — duotone-kontrast mot bandA */
-  --atmo-band-b-op:.06;
-  --atmo-band-b-op-breathe:.08;
-  --atmo-cursor:222, 80%, 72%;
-  --atmo-cursor-op:.05;
-}
-[data-theme="disco"]{
-  --atmo-base-top:#0d0a18;
-  --atmo-base-bottom:#060410;
-  --atmo-band-a:328, 70%, 70%;  /* neon pink */
-  --atmo-band-a-op:.10;
-  --atmo-band-a-op-breathe:.13;
-  --atmo-band-b:268, 60%, 58%;  /* purple */
-  --atmo-band-b-op:.07;
-  --atmo-band-b-op-breathe:.09;
-  --atmo-cursor:328, 75%, 72%;
-  --atmo-cursor-op:.05;
-}
-html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo-base,
-html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo,
-html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .film-grain{
-  display:none !important;
-}
-.atmo-base{
-  position:fixed;inset:0;z-index:-3;pointer-events:none;
-  background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
-}
-.atmo{
-  position:fixed;inset:0;z-index:-2;pointer-events:none;
-  isolation:isolate;overflow:hidden;contain:layout paint;
-}
-/* Each band uses a two-element nest so X-drift, Y-drift, and the
-   opacity-breathe can each animate without fighting for a single
-   transform property. Non-equal periods (38/53 and 41/47) so the
-   loop is never visible. */
-.band{
-  position:absolute;pointer-events:none;will-change:transform;
-  mix-blend-mode:screen;transform-origin:center;
-}
-.band-inner{
-  position:absolute;inset:0;
-  will-change:transform, opacity;transform-origin:center;
-}
-/* Band A — primary cream, anchored above the headline. */
-.band-a{
-  width:140vw;height:30vh;
-  left:50%;top:18%;margin-left:-70vw;
-  animation: bandADriftX 38s ease-in-out infinite;
-}
-.band-a .band-inner{
-  background:radial-gradient(ellipse at center,
-    hsl(var(--atmo-band-a)) 0%, transparent 50%);
-  opacity:var(--atmo-band-a-op);
-  animation:
-    bandADriftY 53s ease-in-out infinite,
-    bandABreathe 24s ease-in-out infinite;
-}
-/* Band B — deeper amber, lower note, counter-phase from t=0. */
-.band-b{
-  width:110vw;height:22vh;
-  left:42%;top:30%;margin-left:-55vw;
-  animation: bandBDriftX 41s ease-in-out infinite;
-  animation-delay: -20.5s;
-}
-.band-b .band-inner{
-  background:radial-gradient(ellipse at center,
-    hsl(var(--atmo-band-b)) 0%, transparent 50%);
-  opacity:var(--atmo-band-b-op);
-  animation:
-    bandBDriftY 47s ease-in-out infinite,
-    bandBBreathe 31s ease-in-out infinite;
-  animation-delay: -23.5s, -15.5s;
-}
-@keyframes bandADriftX{
-  0%, 100% { transform: translate3d(-4%, 0, 0); }
-  50%      { transform: translate3d( 4%, 0, 0); }
-}
-@keyframes bandADriftY{
-  0%, 100% { transform: translate3d(0, -1.5%, 0); }
-  50%      { transform: translate3d(0,  1.5%, 0); }
-}
-@keyframes bandABreathe{
-  0%, 100% { opacity: var(--atmo-band-a-op); }
-  50%      { opacity: var(--atmo-band-a-op-breathe); }
-}
-@keyframes bandBDriftX{
-  0%, 100% { transform: translate3d( 4%, 0, 0); }
-  50%      { transform: translate3d(-4%, 0, 0); }
-}
-@keyframes bandBDriftY{
-  0%, 100% { transform: translate3d(0,  1.5%, 0); }
-  50%      { transform: translate3d(0, -1.5%, 0); }
-}
-@keyframes bandBBreathe{
-  0%, 100% { opacity: var(--atmo-band-b-op); }
-  50%      { opacity: var(--atmo-band-b-op-breathe); }
-}
-/* L3 — Cursor-anchored light. Position written by JS via translate3d. */
-.cursor-light{
-  position:fixed;left:0;top:0;
-  width:1200px;height:1200px;margin:-600px 0 0 -600px;
-  pointer-events:none;
-  background:radial-gradient(circle,
-    hsla(var(--atmo-cursor), var(--atmo-cursor-op)) 0%, transparent 60%);
-  transform: translate3d(50vw, 50vh, 0);
-  will-change:transform;mix-blend-mode:screen;
-}
-/* L4 — Static SVG fractal grain. z-index: -1 so it sits above the
-   atmosphere (-2/-3) but below unpositioned/sticky foreground content.
-   Keeps text crisp (grain only mixes with atmosphere) and avoids forcing
-   position:relative on every body child — which would break sticky nav. */
-.film-grain{
-  position:fixed;inset:0;z-index:-1;pointer-events:none;
-  opacity:.035;mix-blend-mode:overlay;
-  width:100%;height:100%;
-}
-
-/* Mobile (<= 768px) — drift slowed x1.5, no cursor light, grain -> 2%. */
-@media (max-width: 768px){
-  .band-a{ animation-duration:57s; }
-  .band-a .band-inner{ animation: bandADriftY 79s ease-in-out infinite; }
-  .band-b{ animation-duration:61s; }
-  .band-b .band-inner{ animation: bandBDriftY 70s ease-in-out infinite; }
-  .cursor-light{ display:none; }
-  .film-grain{ opacity:.02; }
-}
-@media (max-width: 1023px){
-  .cursor-light{ display:none; }
-}
-@media (prefers-reduced-motion: reduce){
-  .band, .band-inner{ animation:none !important; }
-  .band-a .band-inner{ opacity:.04 !important; }
-  .band-b .band-inner{ opacity:.025 !important; }
-  .cursor-light{ display:none !important; }
-}
-@media (prefers-reduced-data: reduce), (update: slow){
-  .band, .band-inner{ animation:none !important; }
-  .cursor-light{ display:none !important; }
-  .film-grain{ opacity:.02 !important; }
-}
-
-/* ── E66: Landing-only fallback styling for components that normally live in
-   shared/style.css (which new-layout landings do not load): the global search-box
-   injected by shared/search.js, and bare <a> in <footer>. Without this, both
-   render with default browser styling — see Brain_HV/wiki/kontekst/historikk.md E66. */
-.search-box{
-  display:flex;align-items:center;gap:10px;
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:10px 14px;
-  max-width:520px;margin:0 auto;
-  font:14px/1.4 var(--font-sans);
-}
-.search-icon{color:var(--ink3);flex-shrink:0}
-#search-input{
-  flex:1;min-width:0;
-  background:transparent;border:0;outline:0;
-  color:var(--ink);font:inherit;
-  padding:2px 0;
-}
-#search-input::placeholder{color:var(--ink4)}
-#search-input:focus{outline:0}
-.search-box:focus-within{border-color:var(--line-warm)}
-.search-kbd{
-  font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
-  color:var(--ink3);
-  background:var(--bg);
-  border:1px solid var(--line);
-  padding:3px 7px;border-radius:5px;flex-shrink:0;
-}
-.search-dropdown{
-  position:absolute;z-index:100;
-  margin-top:6px;max-width:520px;width:100%;
-  background:var(--surface-2,var(--surface));
-  border:1px solid var(--line);border-radius:10px;
-  display:none;overflow:hidden;
-}
-.search-dropdown:not(:empty){display:block}
-
-footer a{
-  color:var(--ink3);text-decoration:none;
-  border-bottom:1px solid transparent;
-  transition:color .2s var(--ease,ease),border-color .2s var(--ease,ease);
-}
-@media (hover:hover){
-  footer a:hover{color:var(--ink);border-bottom-color:var(--line-warm)}
-}
-footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
-
-</style>
-<link rel="stylesheet" href="/shared/ticker.css?v=v1">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v6">
 <style>
   :root{
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -511,8 +280,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     font-family:var(--font-serif);font-weight:500;font-size:30px;line-height:1;letter-spacing:-.6px;color:var(--ink);
     font-variant-numeric:tabular-nums lining-nums;white-space:nowrap;
   }
-  .page-stat .v.neg{color:var(--neg)}
-  .page-stat .v.pos{color:var(--pos)}
 
   footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
   .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
@@ -578,8 +345,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .calc-fg{display:flex;flex-direction:column;gap:6px}
   .calc-fg.full{grid-column:1 / -1}
   .calc-fg label{font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);}
-  .calc-fg input,
-  .calc-fg select{
+  .calc-fg input{
     width:100%;background:var(--bg);
     border:1px solid var(--line-2);border-radius:5px;
     padding:11px 12px;
@@ -588,7 +354,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     font-variant-numeric:tabular-nums;
     transition:border-color .2s var(--ease), background .2s var(--ease);
   }
-  .calc-fg input:focus,.calc-fg select:focus{border-color:var(--line-warm);background:var(--surface-2);}
+  .calc-fg input:focus{border-color:var(--line-warm);background:var(--surface-2);}
   .calc-hint{font-size:12px;color:var(--ink3);line-height:1.55;margin:6px 0 0;font-style:italic;}
 
   .info-box{
@@ -599,20 +365,16 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     border-radius:5px;
     font-size:12.5px;color:var(--ink2);line-height:1.55;
   }
-
-  .calc-btn{
-    margin-top:4px;width:100%;
-    padding:14px 20px;background:var(--accent);
-    border:0;border-radius:6px;cursor:pointer;
-    color:var(--surface);font:600 14px/1 var(--font-sans);letter-spacing:.2px;
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    transition:background .2s var(--ease), transform .15s var(--ease);
+  .warn-box{
+    margin:8px 0 0;padding:10px 14px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-left:2px solid var(--ink3);
+    border-radius:5px;
+    font-size:12px;color:var(--ink2);line-height:1.55;
+    display:none;
   }
-  .calc-btn:hover{background:var(--accent-2)}
-  .calc-btn:active{transform:scale(.99)}
-  [data-theme="frost"] .calc-btn,
-  [data-theme="glass"] .calc-btn,
-  [data-theme="pink"] .calc-btn{color:#fff}
+  .warn-box.visible{display:block;}
 
   .calc-result{
     position:sticky;top:124px;
@@ -632,8 +394,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     font-size:34px;line-height:1.05;letter-spacing:-.6px;color:var(--ink);
     font-variant-numeric:tabular-nums lining-nums;
   }
-  .res-headline .r-val.neg{color:var(--neg)}
-  .res-headline .r-val.pos{color:var(--pos)}
   .res-headline .r-verdict{display:block;margin-top:8px;font-size:12.5px;color:var(--ink3);font-style:italic;}
   .res-stats{display:flex;flex-direction:column}
   .res-stat{
@@ -645,45 +405,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .res-stat .l{color:var(--ink2);font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;}
   .res-stat .v{font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);font-variant-numeric:tabular-nums;}
 
-  .res-csv{
-    margin-top:2px;width:100%;
-    padding:11px 14px;
-    background:transparent;border:1px solid var(--line-2);border-radius:5px;
-    color:var(--ink2);font:600 12px/1 var(--font-sans);letter-spacing:.3px;
-    cursor:pointer;
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    transition:all .2s var(--ease);
-  }
-  .res-csv:hover{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink)}
-  .res-csv:disabled{opacity:.4;cursor:not-allowed}
-
-  .calc-breakdown{
-    background:var(--surface);border:1px solid var(--line);border-radius:6px;
-    padding:22px 24px 26px;margin-bottom:48px;
-  }
-  .calc-breakdown.empty{display:none}
-  .calc-breakdown h3{
-    font-family:var(--font-sans);font-size:11px;font-weight:600;
-    letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
-    margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--line);
-  }
-  .bd-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -8px;padding:0 8px;}
-  .bd-table{width:100%;min-width:520px;border-collapse:collapse;font-size:13px;}
-  .bd-table tr{border-bottom:1px solid var(--line)}
-  .bd-table tr:last-child{border-bottom:none}
-  .bd-table tr.row-neg td{color:var(--neg)}
-  .bd-table tr.row-neg td.v{color:var(--neg)}
-  .bd-table td,.bd-table th{padding:8px 6px;color:var(--ink2);text-align:left;}
-  .bd-table th{font:600 10.5px/1 var(--font-sans);letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3);}
-  .bd-table td.v,.bd-table th.v{
-    text-align:right;font-family:var(--font-serif);font-weight:500;
-    color:var(--ink);font-variant-numeric:tabular-nums;
-  }
-  .bd-table th.v{font-family:var(--font-sans);font-weight:600;color:var(--ink3);}
-  .bd-table td.v.bal{font-weight:600}
-
-  .calc-disclaimer{margin-top:14px;font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;}
-
   @media (max-width: 880px){
     .calc-grid{grid-template-columns:1fr}
     .calc-result{position:static;top:auto}
@@ -692,8 +413,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     .calc-section{padding:16px 16px 18px}
     .calc-result{padding:20px 18px 18px}
     .calc-fields{grid-template-columns:1fr;gap:12px}
-    .bd-table{font-size:12px}
-    .bd-table td,.bd-table th{padding:6px 4px}
   }
 
   #site-search-anchor{display:none}
@@ -800,18 +519,18 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         </button>
         <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
           <h5>Hovedspråk</h5>
-          <a href="/kalkulator/" class="current" role="menuitem" data-region="no"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
-          <a href="/en/kalkulator/" role="menuitem" data-region="en"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
+          <a href="/kalkulator/dekningsbidrag/" class="current" role="menuitem" data-region="no"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
+          <a href="/en/kalkulator/dekningsbidrag/" role="menuitem" data-region="en"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
           <h5>Språk i Norge</h5>
-          <a href="/pl/kalkulator/" role="menuitem" data-region="pl"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
-          <a href="/uk/kalkulator/" role="menuitem" data-region="uk"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
-          <a href="/ar/kalkulator/" role="menuitem" data-region="ar"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
-          <a href="/lt/kalkulator/" role="menuitem" data-region="lt"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
-          <a href="/so/kalkulator/" role="menuitem" data-region="so"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
-          <a href="/ti/kalkulator/" role="menuitem" data-region="ti"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
+          <a href="/pl/kalkulator/dekningsbidrag/" role="menuitem" data-region="pl"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
+          <a href="/uk/kalkulator/dekningsbidrag/" role="menuitem" data-region="uk"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
+          <a href="/ar/kalkulator/dekningsbidrag/" role="menuitem" data-region="ar"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
+          <a href="/lt/kalkulator/dekningsbidrag/" role="menuitem" data-region="lt"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
+          <a href="/so/kalkulator/dekningsbidrag/" role="menuitem" data-region="so"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
+          <a href="/ti/kalkulator/dekningsbidrag/" role="menuitem" data-region="ti"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
           <h5>Internasjonalt</h5>
-          <a href="/zh/kalkulator/" role="menuitem" data-region="zh"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
-          <a href="/fr/kalkulator/" role="menuitem" data-region="fr"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
+          <a href="/zh/kalkulator/dekningsbidrag/" role="menuitem" data-region="zh"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
+          <a href="/fr/kalkulator/dekningsbidrag/" role="menuitem" data-region="fr"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
         </div>
       </div>
     </nav>
@@ -867,13 +586,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         </span>
         <span class="back-stack">
           <span class="back-eyebrow">Kalkulator</span>
-          <span class="back-label">Tilbake til alle verktøy</span>
+          <span class="back-label" data-i18n="kalkDekningsbidragBackLabel">Tilbake til alle verktøy</span>
         </span>
       </a>
     </div>
   </div>
 
-  <section class="page-hero" data-screen-label="Likviditetsbudsjett Hero">
+  <section class="page-hero" data-screen-label="Dekningsbidrag Hero">
     <div class="container">
       <div>
         <div class="page-eyebrow">
@@ -881,18 +600,18 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <span class="arrow">/</span>
           <a href="/kalkulator/">Kalkulator</a>
           <span class="arrow">/</span>
-          <span class="current">Likviditetsbudsjett</span>
+          <span class="current" data-i18n="kalkDekningsbidragTitle">Dekningsbidrag</span>
         </div>
-        <h1 class="page-title"><em data-i18n="likvidTitle">Likviditetsbudsjett</em></h1>
-        <p class="page-lead" data-i18n="likvidSubtitle">Måned-for-måned oversikt over hva du har på konto. Startbalanse pluss inntekter minus utgifter — saldoen kumuleres slik at du ser om du går tom for penger noen måned. Last ned hele tabellen som CSV. Alt skjer lokalt i nettleseren.</p>
+        <h1 class="page-title"><em data-i18n="kalkDekningsbidragTitle">Dekningsbidrag</em></h1>
+        <p class="page-lead" data-i18n="kalkDekningsbidragSubtitle">Beregn dekningsbidrag (DB) og dekningsgrad (DB%) per enhet, total DB, resultat før skatt og break-even — hvor mange enheter må du selge for å dekke alle faste kostnader?</p>
         <div class="page-hero-actions">
           <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
           <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
         </div>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l" data-i18n="likvidStatEnd">Endelig saldo</span><span class="v" id="hStatEnd">–</span></div>
-        <div class="page-stat"><span class="l" data-i18n="likvidStatNetMnd">Netto / mnd</span><span class="v" id="hStatNet">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="kalkDekningsbidragStatDb">DB per enhet</span><span class="v" id="hStatDb">–</span></div>
+        <div class="page-stat"><span class="l" data-i18n="kalkDekningsbidragStatDg">Dekningsgrad</span><span class="v" id="hStatDg">–</span></div>
       </div>
     </div>
   </section>
@@ -902,83 +621,70 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
       <div class="calc-form">
 
-        <section class="calc-section" aria-labelledby="likvidInputHdr">
+        <section class="calc-section" aria-labelledby="dbInputHdr">
           <header class="calc-section-head">
-            <h2 id="likvidInputHdr" data-i18n="likvidSectionInput">Likviditetsbudsjett</h2>
-            <span class="hint" data-i18n="likvidSectionHint">Måned for måned</span>
+            <h2 id="dbInputHdr" data-i18n="kalkDekningsbidragSectionInput">Dekningsbidrag</h2>
+            <span class="hint" data-i18n="kalkDekningsbidragSectionHint">Per enhet + totalt</span>
           </header>
 
           <div class="calc-fields">
-            <div class="calc-fg full">
-              <label for="likvid-start" data-i18n="likvidStartLabel">Startbalanse (kr)</label>
-              <input id="likvid-start" type="text" inputmode="numeric" value="50 000" autocomplete="off">
+            <div class="calc-fg">
+              <label for="db-salgspris" data-i18n="kalkDekningsbidragLblSalgspris">Salgspris per enhet (kr)</label>
+              <input id="db-salgspris" type="number" inputmode="decimal" min="0" step="1" value="100" autocomplete="off" oninput="calcDb()">
             </div>
             <div class="calc-fg">
-              <label for="likvid-income" data-i18n="likvidIncomeLabel">Månedlig inntekt (kr)</label>
-              <input id="likvid-income" type="text" inputmode="numeric" value="30 000" autocomplete="off">
+              <label for="db-varkost" data-i18n="kalkDekningsbidragLblVarkost">Variabel kost per enhet (kr)</label>
+              <input id="db-varkost" type="number" inputmode="decimal" min="0" step="1" value="60" autocomplete="off" oninput="calcDb()">
             </div>
             <div class="calc-fg">
-              <label for="likvid-expense" data-i18n="likvidExpenseLabel">Månedlig utgift (kr)</label>
-              <input id="likvid-expense" type="text" inputmode="numeric" value="25 000" autocomplete="off">
+              <label for="db-antall" data-i18n="kalkDekningsbidragLblAntall">Antall enheter solgt</label>
+              <input id="db-antall" type="number" inputmode="decimal" min="0" step="1" value="100" autocomplete="off" oninput="calcDb()">
             </div>
-            <div class="calc-fg full">
-              <label for="likvid-months" data-i18n="likvidMonthsLabel">Antall måneder</label>
-              <input id="likvid-months" type="number" min="1" max="60" step="1" value="12" inputmode="numeric" autocomplete="off">
+            <div class="calc-fg">
+              <label for="db-fixkost" data-i18n="kalkDekningsbidragLblFixkost">Faste kostnader (kr)</label>
+              <input id="db-fixkost" type="number" inputmode="decimal" min="0" step="1" value="2000" autocomplete="off" oninput="calcDb()">
             </div>
           </div>
 
-          <p class="calc-hint">Modellen forutsetter konstant inntekt og utgift hver måned. Negative saldoer markeres rødt — det betyr at du går tom for penger den måneden. CSV-eksporten inneholder hele tabellen.</p>
+          <div class="warn-box" id="dbWarnBox" data-i18n="kalkDekningsbidragWarn">Variabel kost overstiger salgspris — produktet er ikke lønnsomt.</div>
 
-          <button type="button" id="likvidCalcBtn" class="calc-btn">
-            <span data-i18n="likvidBtnCalc">Beregn likviditet</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
-          </button>
         </section>
 
-        <p class="info-box">
-          Et likviditetsbudsjett viser pengestrømmen — ikke regnskapsmessig resultat. Det gir tidlig varsel om hvilke måneder du trenger reservelikvider eller kassakreditt. For næringsvirksomhet er likviditetsbudsjett en sentral del av styringsverktøyet, men prinsippet gjelder også for personlig økonomi.
+        <p class="info-box" data-i18n="kalkDekningsbidragInfoBox">
+          Dekningsbidraget viser hvor mye av salgsinntekten som er igjen til å dekke faste kostnader og fortjeneste — etter at variable kostnader er trukket fra. Break-even er antall enheter du må selge for at total DB dekker alle faste kostnader.
         </p>
       </div>
 
       <aside class="calc-result" aria-live="polite">
         <div class="res-headline">
-          <span class="r-lbl" id="rHeadline" data-i18n="likvidResHeadline">Endelig saldo</span>
-          <span class="r-val" id="rEnd">–</span>
+          <span class="r-lbl" data-i18n="kalkDekningsbidragResHeadline">DB per enhet</span>
+          <span class="r-val" id="rDbPerEnhet">–</span>
           <span class="r-verdict" id="rVerdict">Skriv inn tall for å se beregningen</span>
         </div>
         <div class="res-stats">
-          <div class="res-stat"><span class="l" data-i18n="likvidRStart">Startbalanse</span><span class="v" id="rStart">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="likvidRTotalIn">Total inntekt</span><span class="v" id="rTotalIn">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="likvidRTotalOut">Total utgift</span><span class="v" id="rTotalOut">–</span></div>
-          <div class="res-stat divide"><span class="l" data-i18n="likvidRMonths">Periode</span><span class="v" id="rMonths">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="kalkDekningsbidragResDg">Dekningsgrad (DB%)</span><span class="v" id="rDg">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="kalkDekningsbidragResTotalDb">Total DB</span><span class="v" id="rTotalDb">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="kalkDekningsbidragResResultat">Resultat før skatt</span><span class="v" id="rResultat">–</span></div>
+          <div class="res-stat divide"><span class="l" data-i18n="kalkDekningsbidragResBeEnheter">Break-even (enheter)</span><span class="v" id="rBeEnheter">–</span></div>
+          <div class="res-stat"><span class="l" data-i18n="kalkDekningsbidragResBeOms">Break-even (omsetning)</span><span class="v" id="rBeOms">–</span></div>
         </div>
-        <button type="button" id="likvidCsvBtn" class="res-csv" disabled>
-          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2 V10"/><polyline points="3.5 6.5 7 10 10.5 6.5"/><line x1="2" y1="12" x2="12" y2="12"/></svg>
-          <span data-i18n="likvidCsvBtn">Last ned (CSV)</span>
-        </button>
       </aside>
 
     </div>
-
-    <section class="calc-breakdown empty" id="likvidBreakdown" aria-labelledby="likvidBdHdr">
-      <h3 id="likvidBdHdr"><span id="likvidBdTitle">Måned-for-måned tabell</span></h3>
-      <div class="bd-table-wrap"><div id="likvidBdTable"></div></div>
-      <p class="calc-disclaimer">Forenklet modell. Reelle inntekter og utgifter varierer fra måned til måned (skattetrekk, feriepenger, halvårlige forsikringer, strøm-toppene osv.). Bruk kalkulatoren som utgangspunkt og juster manuelt etter behov.</p>
-    </section>
   </div>
 
-
   <div class="container howto-wrap">
-    <details class="howto" id="howto-likvidHowto">
+    <details class="howto" id="howto-dbHowto">
       <summary>
-        <span class="howto-title" data-howto-title="likvidHowto">Slik bruker du Likviditetsbudsjett-kalkulatoren</span>
+        <span class="howto-title" data-i18n="kalkDekningsbidragHowtoTitle">Slik bruker du Dekningsbidrag-kalkulatoren</span>
       </summary>
-      <div class="howto-body" data-howto-prefix="likvidHowto">
-        <div class="howto-row"><strong>1. Startbalanse</strong><span>Det du har på konto i dag (eller på første dag i perioden du planlegger).</span></div>
-        <div class="howto-row"><strong>2. Månedlig inntekt og utgift</strong><span>Forventet snitt for hele perioden. For et personlig budsjett: nettolønn etter skatt og typiske månedlige kostnader.</span></div>
-        <div class="howto-row"><strong>3. Antall måneder</strong><span>Hvor langt fram du vil planlegge — typisk 12 måneder, men du kan velge opptil 60 måneder.</span></div>
-        <div class="howto-row"><strong>4. Les av tabellen</strong><span>Hver rad viser startsaldo, inntekt, utgift og sluttsaldo for én måned. Negative sluttsaldoer markeres rødt — der trenger du å enten kutte utgifter eller ha reservelikvider klar.</span></div>
-        <div class="howto-row"><strong>5. Last ned CSV</strong><span>Hele tabellen kan lastes ned som CSV-fil og åpnes i Excel eller Google Sheets for videre bearbeiding.</span></div>
+      <div class="howto-body">
+        <div class="howto-row"><strong data-i18n="kalkDekningsbidragHowtoRow1Label">1. Salgspris og variabel kost</strong><span data-i18n="kalkDekningsbidragHowtoRow1Desc">Salgspris er hva du tar betalt per enhet. Variabel kost er alt som varierer med produksjonen — materiell, ingredienser, direkte arbeidstimer, emballasje. DB per enhet = salgspris minus variabel kost.</span></div>
+        <div class="howto-row"><strong data-i18n="kalkDekningsbidragHowtoRow2Label">2. Dekningsgrad (DB%)</strong><span data-i18n="kalkDekningsbidragHowtoRow2Desc">DB% = DB per enhet / salgspris × 100. En dekningsgrad på 40 % betyr at 40 øre av hver krone gått til dekning av faste kostnader og fortjeneste.</span></div>
+        <div class="howto-row"><strong data-i18n="kalkDekningsbidragHowtoRow3Label">3. Antall enheter og total DB</strong><span data-i18n="kalkDekningsbidragHowtoRow3Desc">Total DB = DB per enhet × antall enheter solgt. Dette er beløpet du har igjen etter alle variable kostnader, men før faste kostnader.</span></div>
+        <div class="howto-row"><strong data-i18n="kalkDekningsbidragHowtoRow4Label">4. Faste kostnader og resultat</strong><span data-i18n="kalkDekningsbidragHowtoRow4Desc">Faste kostnader er uavhengig av produsert mengde — husleie, faste lønninger, forsikring, leasing. Resultat før skatt = Total DB minus faste kostnader.</span></div>
+        <div class="howto-row"><strong data-i18n="kalkDekningsbidragHowtoRow5Label">5. Break-even</strong><span data-i18n="kalkDekningsbidragHowtoRow5Desc">Break-even-mengde = faste kostnader / DB per enhet (rundet opp). Det er antall enheter du MÅ selge for å gå i null. Break-even-omsetning = break-even-mengde × salgspris.</span></div>
+        <div class="howto-row"><strong data-i18n="kalkDekningsbidragHowtoRow6Label">6. Negativ DB</strong><span data-i18n="kalkDekningsbidragHowtoRow6Desc">Hvis variabel kost er større enn salgspris er DB negativ. Du taper penger på hvert salg — break-even er uoppnåelig uansett volum. Da må du øke prisen eller redusere variable kostnader.</span></div>
       </div>
     </details>
   </div>
@@ -1086,259 +792,95 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 
-  // ── Likviditetsbudsjett: portet calcLikvid-logikk fra shared/core.js (4995) ──
-  (function(){
-    var KEY = 'hv-likvid-v1';
-    var STATE = { hasData:false };
+  // ── Dekningsbidrag-kalkulator ──
+  function calcDb(){
+    var spEl = document.getElementById('db-salgspris');
+    var vkEl = document.getElementById('db-varkost');
+    var anEl = document.getElementById('db-antall');
+    var fkEl = document.getElementById('db-fixkost');
+    var warnEl = document.getElementById('dbWarnBox');
+
+    var sp = parseFloat(spEl ? spEl.value : 0) || 0;
+    var vk = parseFloat(vkEl ? vkEl.value : 0) || 0;
+    var antall = parseFloat(anEl ? anEl.value : 0) || 0;
+    var fk = parseFloat(fkEl ? fkEl.value : 0) || 0;
 
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
     function fmt(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' '); }
     function fmtKr(n){ return fmt(n) + ' kr'; }
-    function fmtKrSigned(n){ return (n>=0?'+':'−') + fmt(Math.abs(n)) + ' kr'; }
+    function setText(id, val){ var el=document.getElementById(id); if(el) el.textContent = val; }
 
-    function parseAmt(s){
-      if(s == null) return 0;
-      var raw = String(s).replace(/[\s ,]/g, '');
-      var n = parseFloat(raw);
-      return isNaN(n) ? 0 : n;
-    }
-    function parseNum(id){
-      var el = document.getElementById(id); if(!el) return 0;
-      return parseAmt(el.value);
-    }
-    function setOutputText(id, val){ var el=document.getElementById(id); if(el) el.textContent = val; }
+    var dbPerEnhet = sp - vk;
+    var negativeDb = vk >= sp;
 
-    function compute(){
-      var start = parseNum('likvid-start');
-      var income = parseNum('likvid-income');
-      var expense = parseNum('likvid-expense');
-      var monthsEl = document.getElementById('likvid-months');
-      var months = Math.max(1, Math.min(60, parseInt(monthsEl.value, 10) || 12));
-      // Snap input back if user typed out of range
-      if(String(months) !== monthsEl.value && document.activeElement !== monthsEl) {
-        monthsEl.value = months;
+    // Show/hide warning
+    if(warnEl){
+      if(negativeDb && (sp > 0 || vk > 0)){
+        warnEl.classList.add('visible');
+      } else {
+        warnEl.classList.remove('visible');
       }
+    }
 
-      // Gyldig hvis vi har minst én verdi som ikke er 0 — ellers er det meningsløst
-      if(start === 0 && income === 0 && expense === 0){
-        return { hasData:false };
+    // DB per enhet
+    setText('rDbPerEnhet', fmtKr(dbPerEnhet));
+    setText('hStatDb', fmtKr(dbPerEnhet));
+
+    // Dekningsgrad: (DB/salgspris)*100, 1 desimal
+    var dg;
+    if(sp > 0 && !negativeDb){
+      dg = Math.round((dbPerEnhet / sp) * 1000) / 10;
+      setText('rDg', dg.toFixed(1).replace('.', ',') + ' %');
+      setText('hStatDg', dg.toFixed(1).replace('.', ',') + ' %');
+    } else if(sp > 0) {
+      dg = Math.round((dbPerEnhet / sp) * 1000) / 10;
+      setText('rDg', dg.toFixed(1).replace('.', ',') + ' %');
+      setText('hStatDg', dg.toFixed(1).replace('.', ',') + ' %');
+    } else {
+      setText('rDg', '–');
+      setText('hStatDg', '–');
+    }
+
+    // Total DB
+    var totalDb = dbPerEnhet * antall;
+    setText('rTotalDb', fmtKr(totalDb));
+
+    // Resultat
+    var resultat = totalDb - fk;
+    setText('rResultat', fmtKr(resultat));
+
+    // Break-even
+    if(negativeDb || dbPerEnhet <= 0){
+      setText('rBeEnheter', '—');
+      setText('rBeOms', '—');
+      setText('rVerdict', 'Break-even er uoppnåelig — variabel kost overstiger salgspris.');
+    } else if(fk === 0){
+      setText('rBeEnheter', '0 enheter');
+      setText('rBeOms', '0 kr');
+      setText('rVerdict', 'Ingen faste kostnader — lønnsomhet fra første enhet.');
+    } else {
+      var beEnheter = Math.ceil(fk / dbPerEnhet);
+      var beOms = beEnheter * sp;
+      setText('rBeEnheter', fmt(beEnheter) + ' enheter');
+      setText('rBeOms', fmtKr(beOms));
+
+      // Verdict
+      if(resultat > 0){
+        setText('rVerdict', 'Du selger ' + fmt(antall) + ' enheter — ' + fmt(antall - beEnheter) + ' over break-even.');
+      } else if(resultat === 0){
+        setText('rVerdict', 'Du er akkurat i null — ved break-even.');
+      } else {
+        setText('rVerdict', 'Under break-even — trenger ' + fmt(beEnheter - antall) + ' enheter til for å gå i null.');
       }
-
-      // Byte-for-byte port: balance = start; for hver mnd: end = balance + income - expense
-      var balance = start;
-      var rows = [];
-      for(var i=1; i<=months; i++){
-        var endBal = balance + income - expense;
-        rows.push({
-          month: i,
-          start: Math.round(balance),
-          income: Math.round(income),
-          expense: Math.round(expense),
-          end: Math.round(endBal)
-        });
-        balance = endBal;
-      }
-
-      return {
-        hasData: true,
-        startBal: start,
-        income: income,
-        expense: expense,
-        net: income - expense,
-        months: months,
-        endBal: rows.length ? rows[rows.length-1].end : start,
-        rows: rows
-      };
     }
-
-    function buildTable(rows){
-      var table = document.createElement('table');
-      table.className = 'bd-table';
-
-      var thead = document.createElement('thead');
-      var headRow = document.createElement('tr');
-      ['Måned', 'Startsaldo', 'Inntekt', 'Utgift', 'Sluttsaldo'].forEach(function(label, idx){
-        var th = document.createElement('th');
-        th.textContent = label;
-        if(idx > 0) th.className = 'v';
-        headRow.appendChild(th);
-      });
-      thead.appendChild(headRow);
-      table.appendChild(thead);
-
-      var tbody = document.createElement('tbody');
-      rows.forEach(function(r){
-        var tr = document.createElement('tr');
-        if(r.end < 0) tr.className = 'row-neg';
-        var tdMonth = document.createElement('td');
-        tdMonth.textContent = 'Mnd ' + r.month;
-        tr.appendChild(tdMonth);
-
-        [r.start, r.income, r.expense, r.end].forEach(function(val, idx){
-          var td = document.createElement('td');
-          td.className = 'v';
-          if(idx === 3) td.classList.add('bal');
-          td.textContent = fmt(val);
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      });
-      table.appendChild(tbody);
-      return table;
-    }
-
-    function recalc(){
-      var d = compute();
-      STATE = d;
-
-      var bd = document.getElementById('likvidBreakdown');
-      var bdTable = document.getElementById('likvidBdTable');
-      var csvBtn = document.getElementById('likvidCsvBtn');
-
-      if(!d.hasData){
-        var rEndEl = document.getElementById('rEnd');
-        if(rEndEl){ rEndEl.textContent = '–'; rEndEl.classList.remove('neg','pos'); }
-        var hEndEl = document.getElementById('hStatEnd');
-        if(hEndEl){ hEndEl.textContent = '–'; hEndEl.classList.remove('neg','pos'); }
-        setOutputText('rVerdict','Skriv inn tall for å se beregningen');
-        setOutputText('rStart','–'); setOutputText('rTotalIn','–');
-        setOutputText('rTotalOut','–'); setOutputText('rMonths','–');
-        setOutputText('hStatNet','–');
-        bd.classList.add('empty');
-        bdTable.innerHTML = '';
-        csvBtn.disabled = true;
-        persist();
-        return;
-      }
-
-      var rEndEl = document.getElementById('rEnd');
-      rEndEl.textContent = fmtKr(d.endBal);
-      rEndEl.classList.remove('neg','pos');
-      if(d.endBal < 0) rEndEl.classList.add('neg');
-      else if(d.endBal > d.startBal) rEndEl.classList.add('pos');
-
-      var verdict;
-      if(d.endBal < 0) verdict = 'Du går i minus etter ' + d.months + ' mnd — kutt utgifter eller hold reserver klart.';
-      else if(d.net > 0) verdict = 'Saldoen vokser med ' + fmtKr(d.net) + ' / mnd over ' + d.months + ' mnd.';
-      else if(d.net < 0) verdict = 'Saldoen synker med ' + fmtKr(-d.net) + ' / mnd over ' + d.months + ' mnd.';
-      else verdict = 'Saldoen står stille: inntekt = utgift over ' + d.months + ' mnd.';
-      setOutputText('rVerdict', verdict);
-
-      setOutputText('rStart', fmtKr(d.startBal));
-      setOutputText('rTotalIn', fmtKr(d.income * d.months));
-      setOutputText('rTotalOut', fmtKr(d.expense * d.months));
-      setOutputText('rMonths', d.months + ' mnd');
-
-      var hEndEl = document.getElementById('hStatEnd');
-      hEndEl.textContent = fmtKr(d.endBal);
-      hEndEl.classList.remove('neg','pos');
-      if(d.endBal < 0) hEndEl.classList.add('neg');
-      else if(d.endBal > d.startBal) hEndEl.classList.add('pos');
-
-      setOutputText('hStatNet', fmtKrSigned(d.net));
-
-      // DOM-rebygg av tabellen — ingen innerHTML på nested HTML
-      while(bdTable.firstChild) bdTable.removeChild(bdTable.firstChild);
-      bdTable.appendChild(buildTable(d.rows));
-      bd.classList.remove('empty');
-      csvBtn.disabled = false;
-
-      persist();
-    }
-
-    function persist(){
-      try {
-        var snap = {
-          start: document.getElementById('likvid-start').value,
-          income: document.getElementById('likvid-income').value,
-          expense: document.getElementById('likvid-expense').value,
-          months: document.getElementById('likvid-months').value
-        };
-        localStorage.setItem(KEY, JSON.stringify(snap));
-      } catch(e){}
-    }
-    function restore(){
-      try {
-        var raw = localStorage.getItem(KEY);
-        if(!raw) return;
-        var s = JSON.parse(raw);
-        if(s.start != null) document.getElementById('likvid-start').value = s.start;
-        if(s.income != null) document.getElementById('likvid-income').value = s.income;
-        if(s.expense != null) document.getElementById('likvid-expense').value = s.expense;
-        if(s.months != null) document.getElementById('likvid-months').value = s.months;
-      } catch(e){}
-    }
-
-    function downloadCsv(){
-      var d = STATE;
-      if(!d || !d.hasData) return;
-      var sep = ';';
-      var rows = [];
-      var today = new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
-      rows.push(['Likviditetsbudsjett', today]);
-      rows.push([]);
-      rows.push(['INPUT', '']);
-      rows.push(['Startbalanse (kr)', Math.round(d.startBal)]);
-      rows.push(['Månedlig inntekt (kr)', Math.round(d.income)]);
-      rows.push(['Månedlig utgift (kr)', Math.round(d.expense)]);
-      rows.push(['Antall måneder', d.months]);
-      rows.push([]);
-      rows.push(['MÅNED', 'STARTSALDO', 'INNTEKT', 'UTGIFT', 'SLUTTSALDO']);
-      d.rows.forEach(function(r){
-        rows.push(['Mnd ' + r.month, r.start, r.income, r.expense, r.end]);
-      });
-      rows.push([]);
-      rows.push(['Endelig saldo', Math.round(d.endBal)]);
-      rows.push(['Total inntekt', Math.round(d.income * d.months)]);
-      rows.push(['Total utgift', Math.round(d.expense * d.months)]);
-      rows.push([]);
-      rows.push(['Generert av Hverdagsverktøy']);
-
-      var csv = rows.map(function(r){
-        return r.map(function(c){
-          var s = String(c == null ? '' : c);
-          return (s.indexOf(sep) >= 0 || s.indexOf('"') >= 0) ? '"' + s.replace(/"/g, '""') + '"' : s;
-        }).join(sep);
-      }).join('\r\n');
-
-      var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url; a.download = 'likviditet.csv';
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-
-    // Wire events
-    ['likvid-start', 'likvid-income', 'likvid-expense', 'likvid-months'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el) el.addEventListener('input', recalc);
-    });
-    document.getElementById('likvidCalcBtn').addEventListener('click', function(){
-      recalc();
-      var bd = document.getElementById('likvidBreakdown');
-      if(bd && !bd.classList.contains('empty')){
-        bd.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-    document.getElementById('likvidCsvBtn').addEventListener('click', downloadCsv);
-
-    // Init
-    restore();
-    recalc();
-  })();
-</script>
-
-<script defer src="/shared/core.js?v=v124"></script>
-<script defer src="/shared/lang/no.js?v=v40"></script>
-<script defer src="/shared/ticker.js?v=v1"></script>
-
-<script>
-  if('serviceWorker' in navigator){
-    window.addEventListener('load', function(){
-      navigator.serviceWorker.register('/sw.js').catch(function(){});
-    });
   }
+
+  // Init on load
+  (function(){
+    if(document.readyState === 'loading'){
+      document.addEventListener('DOMContentLoaded', calcDb);
+    } else { calcDb(); }
+  })();
 </script>
 
 <script>
@@ -1363,6 +905,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     } else { init(); }
   })();
 </script>
+<script defer src="/shared/core.js?v=v124"></script>
+<script defer src="/shared/lang/no.js?v=v30"></script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
 <script>
 (function(){
@@ -1379,6 +923,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     if(btn) btn.setAttribute('aria-expanded','false');
   });
 })();
+</script>
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('/sw.js').catch(function(){});
+    });
+  }
 </script>
 </body>
 </html>

@@ -1116,7 +1116,72 @@ REGIONS['no'] = {
       kalkToolLonnUtbytteTitle:'Lønn vs Utbytte',
       kalkToolLonnUtbytteDesc:'Selskapets kostnad ved lønn (AGA + ferie + OTP) vs utbytte (selskapsskatt) — sammenlign per AGA-sone.',
       kalkToolLikviditetTitle:'Likviditetsbudsjett',
-      kalkToolLikviditetDesc:'Måned-for-måned cash flow med startbalanse, inntekt og utgift — last ned hele tabellen som CSV.'
+      kalkToolLikviditetDesc:'Måned-for-måned cash flow med startbalanse, inntekt og utgift — last ned hele tabellen som CSV.',
+
+      // === T2 TILBUD START ===
+      kalkToolTilbudTitle:'Tilbud / Anbud',
+      kalkToolTilbudDesc:'Bygg et tilbud med materiell, timer og påslag — komplett med MVA og CSV-eksport.',
+
+      // — tilbud sub-page —
+      kalkTilbudHeroTitle:'Tilbud / Anbud-kalkyle',
+      kalkTilbudHeroDesc:'Bygg et komplett tilbud med materiell-poster, arbeidstimer, påslag og MVA. Last ned ferdig tilbud som CSV. Alt skjer lokalt i nettleseren.',
+      kalkTilbudBackEyebrow:'Kalkulator',
+      kalkTilbudBackLabel:'Tilbake til alle verktøy',
+      kalkTilbudBreadcrumb2:'Kalkulator',
+      kalkTilbudBreadcrumb3:'Tilbud / Anbud',
+      kalkTilbudStatInkl:'Tilbudssum inkl. MVA',
+      kalkTilbudStatEks:'Sum eks. MVA',
+      kalkTilbudMatLabel:'Materiell',
+      kalkTilbudMatHint:'Antall × pris per enhet',
+      kalkTilbudArbLabel:'Arbeid',
+      kalkTilbudArbHint:'Timer × timepris',
+      kalkTilbudPaaslagLabel:'Påslag / risiko',
+      kalkTilbudPaaslagType:'Type',
+      kalkTilbudPaaslagMatPct:'På materiell %',
+      kalkTilbudPaaslagTotalPct:'På totalt %',
+      kalkTilbudPaaslagFlatKr:'Fast kr',
+      kalkTilbudPaaslagVerdi:'Verdi',
+      kalkTilbudMvaLabel:'MVA-sats',
+      kalkTilbudMvaSatsLabel:'Sats',
+      kalkTilbudMva25:'25 % (standard)',
+      kalkTilbudMva15:'15 % (matvarer)',
+      kalkTilbudMva12:'12 % (redusert)',
+      kalkTilbudMva0:'0 % (unntak)',
+      kalkTilbudColDesc:'Beskrivelse',
+      kalkTilbudColAntall:'Antall',
+      kalkTilbudColPris:'Pris / enhet',
+      kalkTilbudColTimer:'Timer',
+      kalkTilbudColTimepris:'Timepris (kr)',
+      kalkTilbudColSubtotal:'Subtotal',
+      kalkTilbudAddMat:'Legg til materiell',
+      kalkTilbudAddArb:'Legg til arbeid',
+      kalkTilbudInfoBox:'Tilbudet beregnes automatisk når du endrer tall. MVA-satser etter norske regler 2026: 25 % standard, 15 % matvarer, 12 % redusert (kollektiv, kultur, idrett), 0 % unntak.',
+      kalkTilbudResHeadline:'Tilbudssum inkl. MVA',
+      kalkTilbudResMat:'Materiell total',
+      kalkTilbudResArb:'Arbeid total',
+      kalkTilbudResPaaslag:'Påslag',
+      kalkTilbudResEks:'Sum eks. MVA',
+      kalkTilbudResMva:'MVA-beløp',
+      kalkTilbudResInkl:'Inkl. MVA',
+      kalkTilbudCsvBtn:'Last ned som CSV',
+      kalkTilbudHowtoTitle:'Slik bruker du Tilbud / Anbud-kalkylen',
+      kalkTilbudHowto1Head:'1. Materiell-poster',
+      kalkTilbudHowto1Body:'Legg inn beskrivelse (f.eks. "Sement 25 kg sekk"), antall og pris per enhet. Subtotalen beregnes automatisk. Legg til fler rader ved behov.',
+      kalkTilbudHowto2Head:'2. Arbeid-poster',
+      kalkTilbudHowto2Body:'Legg inn arbeidsbeskrivelse (f.eks. "Montering"), antall timer og timepris. Subtotalen oppdateres automatisk.',
+      kalkTilbudHowto3Head:'3. Påslagtype',
+      kalkTilbudHowto3Body:'"På materiell %" legger til påslag på materiell-summen alene. "På totalt %" beregner påslagsprosenten av materiell + arbeid. "Fast kr" legger til et fast beløp.',
+      kalkTilbudHowto4Head:'4. MVA-sats',
+      kalkTilbudHowto4Body:'Velg korrekt MVA-sats: 25 % for de fleste varer og tjenester, 15 % for matvarer, 12 % for persontransport / kultur / idrett, 0 % for unntatte tjenester.',
+      kalkTilbudHowto5Head:'5. Tilbudssum',
+      kalkTilbudHowto5Body:'Sumblokken til høyre viser materiell, arbeid, påslag, sum eks. MVA, MVA-beløp og endelig tilbudssum inkl. MVA.',
+      kalkTilbudHowto6Head:'6. CSV-eksport',
+      kalkTilbudHowto6Body:'Klikk "Last ned som CSV" for å laste ned alle poster og summer som CSV-fil. Kan åpnes direkte i Excel eller Google Sheets.',
+      kalkTilbudHowto7Head:'7. Fjerne rader',
+      kalkTilbudHowto7Body:'Klikk ×-knappen til høyre for å fjerne en rad. Siste gjenværende rad per seksjon kan ikke fjernes.',
+      kalkTilbudHowto8Head:'8. Personvern',
+      kalkTilbudHowto8Body:'All beregning skjer lokalt i nettleseren. Ingen data sendes til noen server.'
+      // === T2 TILBUD END ===
     },
 
     // — personlig landing (editorial redesign) —
@@ -1610,6 +1675,43 @@ REGIONS['no'] = {
     renteHowtoP4:'Alltid sammenlign lån på effektiv rente, ikke nominell. Et lån med 4 % nominell rente og høye gebyrer kan koste mer enn 5 % uten gebyrer.',
     kalkToolRenteTitle:'Effektiv rente',
     kalkToolRenteDesc:'Beregn effektiv årsrente inkl. gebyrer og etableringsavgift — sammenlign reelle lånekostnader.',
+    kalkToolDbTitle:'Dekningsbidrag',
+    kalkToolDbDesc:'Beregn dekningsgrad (DB%) og break-even — hvor mange enheter må du selge for å gå i null?',
+
+    // === T1 DB START ===
+    kalkDekningsbidragTitle:'Dekningsbidrag',
+    kalkDekningsbidragSubtitle:'Beregn dekningsbidrag (DB) og dekningsgrad (DB%) per enhet, total DB, resultat før skatt og break-even — hvor mange enheter må du selge for å dekke alle faste kostnader?',
+    kalkDekningsbidragBackLabel:'Tilbake til alle verktøy',
+    kalkDekningsbidragStatDb:'DB per enhet',
+    kalkDekningsbidragStatDg:'Dekningsgrad',
+    kalkDekningsbidragSectionInput:'Dekningsbidrag',
+    kalkDekningsbidragSectionHint:'Per enhet + totalt',
+    kalkDekningsbidragLblSalgspris:'Salgspris per enhet (kr)',
+    kalkDekningsbidragLblVarkost:'Variabel kost per enhet (kr)',
+    kalkDekningsbidragLblAntall:'Antall enheter solgt',
+    kalkDekningsbidragLblFixkost:'Faste kostnader (kr)',
+    kalkDekningsbidragWarn:'Variabel kost overstiger salgspris — produktet er ikke lønnsomt.',
+    kalkDekningsbidragInfoBox:'Dekningsbidraget viser hvor mye av salgsinntekten som er igjen til å dekke faste kostnader og fortjeneste — etter at variable kostnader er trukket fra. Break-even er antall enheter du må selge for at total DB dekker alle faste kostnader.',
+    kalkDekningsbidragResHeadline:'DB per enhet',
+    kalkDekningsbidragResDg:'Dekningsgrad (DB%)',
+    kalkDekningsbidragResTotalDb:'Total DB',
+    kalkDekningsbidragResResultat:'Resultat før skatt',
+    kalkDekningsbidragResBeEnheter:'Break-even (enheter)',
+    kalkDekningsbidragResBeOms:'Break-even (omsetning)',
+    kalkDekningsbidragHowtoTitle:'Slik bruker du Dekningsbidrag-kalkulatoren',
+    kalkDekningsbidragHowtoRow1Label:'1. Salgspris og variabel kost',
+    kalkDekningsbidragHowtoRow1Desc:'Salgspris er hva du tar betalt per enhet. Variabel kost er alt som varierer med produksjonen — materiell, ingredienser, direkte arbeidstimer, emballasje. DB per enhet = salgspris minus variabel kost.',
+    kalkDekningsbidragHowtoRow2Label:'2. Dekningsgrad (DB%)',
+    kalkDekningsbidragHowtoRow2Desc:'DB% = DB per enhet / salgspris × 100. En dekningsgrad på 40 % betyr at 40 øre av hver krone gått til dekning av faste kostnader og fortjeneste.',
+    kalkDekningsbidragHowtoRow3Label:'3. Antall enheter og total DB',
+    kalkDekningsbidragHowtoRow3Desc:'Total DB = DB per enhet × antall enheter solgt. Dette er beløpet du har igjen etter alle variable kostnader, men før faste kostnader.',
+    kalkDekningsbidragHowtoRow4Label:'4. Faste kostnader og resultat',
+    kalkDekningsbidragHowtoRow4Desc:'Faste kostnader er uavhengig av produsert mengde — husleie, faste lønninger, forsikring, leasing. Resultat før skatt = Total DB minus faste kostnader.',
+    kalkDekningsbidragHowtoRow5Label:'5. Break-even',
+    kalkDekningsbidragHowtoRow5Desc:'Break-even-mengde = faste kostnader / DB per enhet (rundet opp). Det er antall enheter du MÅ selge for å gå i null. Break-even-omsetning = break-even-mengde × salgspris.',
+    kalkDekningsbidragHowtoRow6Label:'6. Negativ DB',
+    kalkDekningsbidragHowtoRow6Desc:'Hvis variabel kost er større enn salgspris er DB negativ. Du taper penger på hvert salg — break-even er uoppnåelig uansett volum. Da må du øke prisen eller redusere variable kostnader.',
+    // === T1 DB END ===
 
     // === T3 TIMEPRIS START ===
     kalkToolTimeprisTitle:'Timepris',
@@ -1834,6 +1936,7 @@ REGIONS['no'] = {
     budNCtaTitle:'Hva har du råd til å kjøpe?',
     budNCtaDesc:'Maks lånebeløp basert på inntekten din',
     budNCsvBtn:'Last ned (CSV)',
+    budPdfBtn:'Last ned PDF',
     budNBreakdownHdr:'Utgiftsfordeling',
 
     // — personlig/teknisk (Teknisk ordliste — content page) —
@@ -1870,8 +1973,8 @@ REGIONS['no'] = {
     tekUtbDesc:'Overskudd delt ut til aksjonærer — beskattes hardt i Norge',
     tekUtbBody:'<p>Utbytte er når et selskap <strong>deler ut en bit av overskuddet</strong> til aksjonærene — vanligvis som penger rett inn på kontoen din. I Norge beskattes utbytte til privatpersoner hardt: effektivt 37,84 % i 2026.</p><p class="note">Forenklet: oppjusteringsfaktoren 1,72 gjør at 100 000 kr i utbytte gir 37 840 kr i skatt, minus skjermingsfradrag.</p><p><strong>Eksempel:</strong> Eier du 100 Equinor-aksjer og selskapet betaler 15 kr per aksje i utbytte, får du 1 500 kr — men rundt 570 kr forsvinner i skatt.</p><p><strong>Når møter du det:</strong> Hvert år på skattemeldingen, eller når du ser begrep som "utbytteaksje", "direkteavkastning" eller "ex-dato" på Nordnet.</p>',
     tekSkjTitle:'Skjermingsfradrag',
-    tekSkjDesc:'En liten del av aksjeavkastningen er skattefri hvert år (ca. 3,25 % av kjøpspris)',
-    tekSkjBody:'<p>Skjermingsfradraget betyr at <strong>en liten del av aksjeavkastningen din er skattefri hvert år</strong> — en slags kompensasjon for at du kunne hatt pengene risikofritt i banken. Beregnes automatisk av Skatteetaten.</p><p class="note">Forenklet: skjermingsrenten for 2026 er 3,25 %, ganget med det du kjøpte aksjene for.</p><p><strong>Eksempel:</strong> Har du aksjer for 200 000 kr, blir skjermingsfradraget rundt 6 500 kr i 2026. Får du 10 000 kr i utbytte, skattlegges kun 3 500 kr (etter oppjustering).</p><p><strong>Når møter du det:</strong> På skattemeldingen hvert år, eller når du leser om utbytteskatt og noen nevner at "effektiv skatt er lavere enn 37,84 %".</p>',
+    tekSkjDesc:'En liten del av aksjeavkastningen er skattefri hvert år (skjermingsrente 2025: 3,5 % av kjøpspris)',
+    tekSkjBody:'<p>Skjermingsfradraget betyr at <strong>en liten del av aksjeavkastningen din er skattefri hvert år</strong> — en slags kompensasjon for at du kunne hatt pengene risikofritt i banken. Beregnes automatisk av Skatteetaten.</p><p class="note">Forenklet: skjermingsrenten for 2025 var 3,5 %, ganget med det du kjøpte aksjene for. 2026-satsen kunngjøres januar 2027.</p><p><strong>Eksempel:</strong> Har du aksjer for 200 000 kr, blir skjermingsfradraget rundt 7 000 kr (2025-sats). Får du 10 000 kr i utbytte, skattlegges bare det som overstiger fradraget (etter oppjustering).</p><p><strong>Når møter du det:</strong> På skattemeldingen hvert år, eller når du leser om utbytteskatt og noen nevner at "effektiv skatt er lavere enn 37,84 %".</p>',
     tekFootNote:'* Satser 2026. Regler kan endres — sjekk skatteetaten.no og fondsleverandøren din.'
 ,
     famHowtoBodyHTML:`<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Foreldrefradrag:</strong> Du kan trekke fra inntil 25 000 kr for første barn og 15 000 kr per ytterligere barn i dokumenterte utgifter til barnepass (barnehage, SFO, dagmamma). Fradraget gis i alminnelig inntekt — 22% av beløpet spart i skatt.<br/><br/><strong>Maksimalpris barnehage (2026):</strong> Makspris per måned for heltidsplass (SJEKK oppdatert sats fra regjeringen.no). Kommunen kan ha inntektsgradert eller gratis plass.<br/><br/><strong>Søskenmoderasjon:</strong> 30% rabatt for barn nr. 2, 50% for barn nr. 3 og flere.<br/><br/>Fyll inn antall barn, månedspris og inntekt — så ser du årlig utgift, fradragseffekt og netto kostnad.</div>`,
@@ -1900,7 +2003,7 @@ REGIONS['no'] = {
 
 <div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:12px 16px;margin-bottom:14px;">
 <div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:13px;">Skatt på aksjegevinst og utbytte</div>
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;">Privatpersoner betaler <strong>37,84 %</strong> i skatt på aksjegevinst og utbytte (22 % oppjustert med faktor 1,72). Selger du med 100 000 kr i gevinst, går rundt 38 000 kr til skatt.<br/><br/><strong>Skjermingsfradrag</strong> gjør litt av avkastningen skattefri hvert år — som kompensasjon for at du kunne hatt pengene risikofritt i banken. Skjermingsrenten for 2026 er <strong>3,25 %</strong> av kjøpesummen.<br/><br/><em style="font-size:12px;opacity:.8">Eksempel: aksjer for 200 000 kr → ca. 6 500 kr av årets avkastning skattefri. Resten skattlegges med 37,84 %.</em><br/><br/>Bruker du <strong>ASK</strong> (Aksjesparekonto), utsetter du skatten til du tar pengene <em>ut</em> av kontoen — bytte mellom fond på ASK utløser ikke skatt.</div>
+<div style="font-size:13px;color:var(--ink2);line-height:1.7;">Privatpersoner betaler <strong>37,84 %</strong> i skatt på aksjegevinst og utbytte (22 % oppjustert med faktor 1,72). Selger du med 100 000 kr i gevinst, går rundt 38 000 kr til skatt.<br/><br/><strong>Skjermingsfradrag</strong> gjør litt av avkastningen skattefri hvert år — som kompensasjon for at du kunne hatt pengene risikofritt i banken. Skjermingsrenten for 2025 var <strong>3,5 %</strong> av kjøpesummen (2026-satsen kunngjøres januar 2027).<br/><br/><em style="font-size:12px;opacity:.8">Eksempel: aksjer for 200 000 kr → ca. 7 000 kr av årets avkastning skattefri. Resten skattlegges med 37,84 %.</em><br/><br/>Bruker du <strong>ASK</strong> (Aksjesparekonto), utsetter du skatten til du tar pengene <em>ut</em> av kontoen — bytte mellom fond på ASK utløser ikke skatt.</div>
 </div>
 
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Begreper du bør kjenne:</strong> <em>utbytte, skjermingsfradrag, ASK, indeksfond vs aktivt forvaltet, ETF, shorting, gearing</em> — alle forklart enkelt i <a href="#teknisk-wrapper" onclick="event.preventDefault();var c=document.getElementById('teknisk-wrapper');if(c){if(c.classList.contains('collapsed'))c.querySelector('.card-hdr').click();c.scrollIntoView({behavior:'smooth',block:'start'});}" style="color:var(--accent);text-decoration:underline;">Teknisk ordliste</a> nederst på siden.</div>
@@ -1947,7 +2050,7 @@ REGIONS['no'] = {
 <div class="info-card collapsed" id="tek-short-card" style="margin-top:8px;"><button class="card-hdr" aria-expanded="false" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Shorting (shortsalg) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Tjene penger på at en aksje faller — risikoen er enorm</div></div></button><div class="law-body" style="padding:12px 20px 16px;font-size:13px;color:var(--ink2);line-height:1.7;"><p>Shorting er å <strong>tjene penger på at en aksje faller</strong>. Du låner aksjen av noen, selger den, og håper å kjøpe den billigere tilbake senere.</p><p style="font-size:12px;color:var(--ink3);font-style:italic;">Forenklet: i Norge er kun "dekket" shorting lovlig — du må faktisk ha lånt aksjen først. Risikoen er teoretisk uendelig, fordi en aksje kan stige uendelig.</p><p><strong>Eksempel:</strong> Du tror en aksje på 200 kr skal falle. Du låner 100 aksjer og selger dem for 20 000 kr. Faller de til 150 kr, kjøper du dem tilbake for 15 000 kr og tjener 5 000 kr minus lånekostnad.</p><p><strong>Når møter du det:</strong> Når du leser finansnyheter om "short-interesse" eller om hedgefond som har satset mot et selskap som Norwegian eller GameStop.</p></div></div>
 <div class="info-card collapsed" id="tek-gear-card" style="margin-top:8px;"><button class="card-hdr" aria-expanded="false" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Gearing (belåning) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Lån av megler for å kjøpe flere aksjer — forsterker gevinst og tap</div></div></button><div class="law-body" style="padding:12px 20px 16px;font-size:13px;color:var(--ink2);line-height:1.7;"><p>Gearing betyr at du <strong>låner penger av megleren</strong> for å kjøpe flere aksjer enn du har råd til selv. Både gevinst OG tap blir kraftig forsterket.</p><p style="font-size:12px;color:var(--ink3);font-style:italic;">Forenklet: faller porteføljen for mye, kan megleren tvangsselge aksjene dine ("margin call") — du kan tape mer enn du satte inn.</p><p><strong>Eksempel:</strong> Du har 100 000 kr og låner 100 000 kr til (2x gearing). Stiger aksjene 10 %, tjener du 20 % på egenkapitalen. Faller de 10 %, taper du 20 % — pluss lånerenten.</p><p><strong>Når møter du det:</strong> Når Nordnet tilbyr deg "verdipapirbelåning" eller "investeringskonto Zero", eller når noen snakker om "margin call" på en investorpodcast.</p></div></div>
 <div class="info-card collapsed" id="tek-utb-card" style="margin-top:8px;"><button class="card-hdr" aria-expanded="false" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Utbytte (dividende) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Overskudd delt ut til aksjonærer — beskattes hardt i Norge</div></div></button><div class="law-body" style="padding:12px 20px 16px;font-size:13px;color:var(--ink2);line-height:1.7;"><p>Utbytte er når et selskap <strong>deler ut en bit av overskuddet</strong> til aksjonærene — vanligvis som penger rett inn på kontoen din. I Norge beskattes utbytte til privatpersoner hardt: effektivt 37,84 % i 2026.</p><p style="font-size:12px;color:var(--ink3);font-style:italic;">Forenklet: oppjusteringsfaktoren 1,72 gjør at 100 000 kr i utbytte gir 37 840 kr i skatt, minus skjermingsfradrag.</p><p><strong>Eksempel:</strong> Eier du 100 Equinor-aksjer og selskapet betaler 15 kr per aksje i utbytte, får du 1 500 kr — men rundt 570 kr forsvinner i skatt.</p><p><strong>Når møter du det:</strong> Hvert år på skattemeldingen, eller når du ser begrep som "utbytteaksje", "direkteavkastning" eller "ex-dato" på Nordnet.</p></div></div>
-<div class="info-card collapsed" id="tek-skj-card" style="margin-top:8px;"><button class="card-hdr" aria-expanded="false" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Skjermingsfradrag <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">En liten del av aksjeavkastningen er skattefri hvert år (ca. 3,25 % av kjøpspris)</div></div></button><div class="law-body" style="padding:12px 20px 16px;font-size:13px;color:var(--ink2);line-height:1.7;"><p>Skjermingsfradraget betyr at <strong>en liten del av aksjeavkastningen din er skattefri hvert år</strong> — en slags kompensasjon for at du kunne hatt pengene risikofritt i banken. Beregnes automatisk av Skatteetaten.</p><p style="font-size:12px;color:var(--ink3);font-style:italic;">Forenklet: skjermingsrenten for 2026 er 3,25 %, ganget med det du kjøpte aksjene for.</p><p><strong>Eksempel:</strong> Har du aksjer for 200 000 kr, blir skjermingsfradraget rundt 6 500 kr i 2026. Får du 10 000 kr i utbytte, skattlegges kun 3 500 kr (etter oppjustering).</p><p><strong>Når møter du det:</strong> På skattemeldingen hvert år, eller når du leser om utbytteskatt og noen nevner at "effektiv skatt er lavere enn 37,84 %".</p></div></div>`,
+<div class="info-card collapsed" id="tek-skj-card" style="margin-top:8px;"><button class="card-hdr" aria-expanded="false" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Skjermingsfradrag <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">En liten del av aksjeavkastningen er skattefri hvert år (skjermingsrente 2025: 3,5 % av kjøpspris)</div></div></button><div class="law-body" style="padding:12px 20px 16px;font-size:13px;color:var(--ink2);line-height:1.7;"><p>Skjermingsfradraget betyr at <strong>en liten del av aksjeavkastningen din er skattefri hvert år</strong> — en slags kompensasjon for at du kunne hatt pengene risikofritt i banken. Beregnes automatisk av Skatteetaten.</p><p style="font-size:12px;color:var(--ink3);font-style:italic;">Forenklet: skjermingsrenten for 2025 var 3,5 %, ganget med det du kjøpte aksjene for. 2026-satsen kunngjøres januar 2027.</p><p><strong>Eksempel:</strong> Har du aksjer for 200 000 kr, blir skjermingsfradraget rundt 7 000 kr (2025-sats). Får du 10 000 kr i utbytte, skattlegges bare det som overstiger fradraget (etter oppjustering).</p><p><strong>Når møter du det:</strong> På skattemeldingen hvert år, eller når du leser om utbytteskatt og noen nevner at "effektiv skatt er lavere enn 37,84 %".</p></div></div>`,
 
     bvlHowtoSummary:`Slik bruker du Bolig vs leie`,
     focusBtn:`Skjul distraksjoner`,
@@ -2298,7 +2401,7 @@ REGIONS['no'] = {
     aksjerSkattP1: 'Privatpersoner betaler effektivt 37,84 % i skatt på aksjegevinst og utbytte. Tallet kommer fra at gevinsten oppjusteres med faktor 1,72 før den skattlegges med satsen for alminnelig inntekt (22 %): 22 % × 1,72 = 37,84 %.',
     aksjerSkattP2: 'Selger du med 100 000 kr i gevinst, går altså rundt 37 840 kr til skatt. Skjermingsfradraget (se under) trekker ned dette litt.',
     aksjerQSkjerm: 'Hva er skjermingsfradrag?',
-    aksjerASkjerm: 'En liten del av aksjeavkastningen er skattefri hvert år — som kompensasjon for at du kunne hatt pengene risikofritt i banken. Skjermingsrenten for 2026 er 3,25 % av kjøpesummen din. Har du aksjer for 200 000 kr, blir skjermingsfradraget rundt 6 500 kr — den delen av årets avkastning blir skattefri.',
+    aksjerASkjerm: 'En liten del av aksjeavkastningen er skattefri hvert år — som kompensasjon for at du kunne hatt pengene risikofritt i banken. Skjermingsrenten for 2025 var 3,5 % av kjøpesummen din (2026-satsen kunngjøres januar 2027 av Skatteetaten). Har du aksjer for 200 000 kr, ble skjermingsfradraget for 2025 rundt 7 000 kr — den delen av årets avkastning blir skattefri.',
     aksjerQAsk: 'Hvorfor utsetter mange skatten med ASK?',
     aksjerAAsk: 'På en Aksjesparekonto (ASK) kan du kjøpe og selge aksjer og aksjefond uten å betale skatt på gevinst før du tar pengene ut av kontoen. Du kan flytte fritt mellom fond inne på ASK uten skattesmell. Skatten kommer først ved uttak, og rentes-rente-effekten på det utsatte beløpet kan bli betydelig over 15–20 år.',
     aksjerCtaTitle: 'Regn på sparingen din i Sparekalkulatoren',
