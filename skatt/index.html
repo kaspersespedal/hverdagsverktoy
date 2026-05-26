@@ -32,6 +32,13 @@
     }catch(e){}
   })();
 </script>
+
+<!-- SHELL — T1 tokens, T2 css-shell, T3 js (E135 SHELL fullført 2026-05-26) -->
+<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v1">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v1">
+
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -725,6 +732,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
 
 </style>
+
+<!-- calm-override.css MUST load last so cascade favours it (per file header) -->
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -895,46 +906,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         <span class="mark"><svg width="16" height="16"><use href="#mark-h"/></svg></span>
         <span class="wordmark">Hverdagsverktøy</span>
       </a>
-      <div class="nav-right">
-        <button class="lang-btn theme-btn" id="themeBtn" aria-haspopup="true" aria-expanded="false" aria-controls="themeMenu" aria-label="Velg tema">
-          <span class="theme-dot" id="themeDot" aria-hidden="true"></span>
-          <span id="themeLabel">Carbon</span>
-          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
-        </button>
-        <div class="lang-menu theme-menu" id="themeMenu" role="menu" aria-labelledby="themeBtn">
-          <h5>Mørke</h5>
-          <a href="#" data-theme-set="carbon" role="menuitem"><span class="theme-dot" style="background:#c89968"></span> Carbon</a>
-          <a href="#" data-theme-set="dark" role="menuitem"><span class="theme-dot" style="background:#6c8aef"></span> Mørk-blå</a>
-          <a href="#" data-theme-set="hendrix" role="menuitem"><span class="theme-dot" style="background:#d4794a"></span> Hendrix</a>
-          <a href="#" data-theme-set="bw" role="menuitem"><span class="theme-dot" style="background:#ffffff"></span> Sort/hvit</a>
-          <a href="#" data-theme-set="disco" role="menuitem"><span class="theme-dot" style="background:#e91e8c"></span> Disco</a>
-          <h5>Lyse</h5>
-          <a href="#" data-theme-set="frost" role="menuitem"><span class="theme-dot" style="background:#a87842"></span> Frost</a>
-          <a href="#" data-theme-set="glass" role="menuitem"><span class="theme-dot" style="background:#6875f5"></span> Glass</a>
-          <a href="#" data-theme-set="pink" role="menuitem"><span class="theme-dot" style="background:#e890b2"></span> Rosa</a>
-        </div>
-
-        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu">
-          <span class="flag"><img id="rf" src="https://flagcdn.com/w80/no.png" alt=""></span>
-          <span id="rn">Norsk</span>
-          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
-        </button>
-        <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
-          <h5>Hovedspråk</h5>
-          <a href="#" class="current" role="menuitem" data-region="no"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
-          <a href="#" role="menuitem" data-region="en"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
-          <h5>Språk i Norge</h5>
-          <a href="#" role="menuitem" data-region="pl"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
-          <a href="#" role="menuitem" data-region="uk"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
-          <a href="#" role="menuitem" data-region="ar"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
-          <a href="#" role="menuitem" data-region="lt"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
-          <a href="#" role="menuitem" data-region="so"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
-          <a href="#" role="menuitem" data-region="ti"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
-          <h5>Internasjonalt</h5>
-          <a href="#" role="menuitem" data-region="zh"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
-          <a href="#" role="menuitem" data-region="fr"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
-        </div>
-      </div>
+      <!-- top-chrome.js injects theme + language buttons here (SHELL T3) -->
     </nav>
   </div>
 </div>
@@ -1209,70 +1181,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 </footer>
 
 <script>
-  // ── Language menu ──
-  (function(){
-    var btn = document.getElementById('langBtn');
-    var menu = document.getElementById('langMenu');
-    if(!btn || !menu) return;
-    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
-    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
-    });
-    menu.addEventListener('click', function(e){
-      var a = e.target.closest('a[data-region]');
-      if(!a) return;
-      e.preventDefault();
-      var r = a.getAttribute('data-region');
-      menu.querySelectorAll('a[data-region]').forEach(function(x){x.classList.toggle('current', x===a);});
-      if(typeof window.setRegion === 'function') {
-        try { window.setRegion(r); } catch(err){ console.warn('[hvt-lang] setRegion failed', err); }
-      }
-      close();
-    });
-    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-  })();
-  // ── Theme menu ──
-  (function(){
-    var btn = document.getElementById('themeBtn');
-    var menu = document.getElementById('themeMenu');
-    var label = document.getElementById('themeLabel');
-    var dot = document.getElementById('themeDot');
-    if(!btn || !menu) return;
-    var THEME_NAMES = {carbon:'Carbon',dark:'Mørk-blå',hendrix:'Hendrix',bw:'Sort/hvit',disco:'Disco',frost:'Frost',glass:'Glass',pink:'Rosa'};
-    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
-    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
-    function syncLabel(){
-      var t = document.documentElement.getAttribute('data-theme') || 'carbon';
-      if(label) label.textContent = THEME_NAMES[t] || 'Tema';
-      if(dot){
-        var s = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-        dot.style.background = s || 'var(--accent)';
-      }
-      menu.querySelectorAll('a[data-theme-set]').forEach(function(a){
-        a.classList.toggle('current', a.getAttribute('data-theme-set') === t);
-      });
-    }
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
-    });
-    menu.addEventListener('click', function(e){
-      var a = e.target.closest('a[data-theme-set]');
-      if(!a) return;
-      e.preventDefault();
-      var t = a.getAttribute('data-theme-set');
-      document.documentElement.setAttribute('data-theme', t);
-      try{ localStorage.setItem('hv-theme', t); }catch(err){}
-      syncLabel();
-      close();
-    });
-    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-    syncLabel();
-  })();
+  // Theme + language menus are now injected by top-chrome.js (SHELL T3).
   // ── Filter input (live filter tools) ──
   (function(){
     var input = document.querySelector('.filter-input input');
@@ -1327,6 +1236,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     window.addEventListener('load', populate);
   })();
 </script>
+<!-- SHELL JS (T3) — top-chrome injects theme/lang into .nav-wrap nav -->
+<script src="/shared/site-shell.js?v=v1" defer></script>
+<script src="/shared/top-chrome.js?v=v1" defer></script>
+
+<!-- Existing shared scripts (preserved per spec) -->
 <script src="/shared/core.js?v=v124" defer></script>
 <script src="/shared/lang/no.js?v=v40" defer></script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
