@@ -21,14 +21,7 @@ var SEARCH_DATA = [
   {name:'Personlig økonomi',desc:'Budsjett, bil, sparing og lønnsomhet',url:'/personlig/',tags:'personlig økonomi seksjon personal finance oversikt section',type:'section',page:'Personlig økonomi',sk:'personligSection'},
 
   // ══════ VERKTØY (Nivå 1 — høyest prioritet) ══════
-  // Personlig økonomi
-  {name:'Budsjett',desc:'Lag et personlig budsjett med inntekter og utgifter',url:'/personlig/#budsjett-wrapper',tags:'budsjett økonomi personlig inntekt utgift spare penger husholdning budget',type:'tool',page:'Personlig økonomi',sk:'budsjett'},
-  {name:'Bilkostnad',desc:'Beregn hva bilen din faktisk koster per måned og km',url:'/personlig/#bil-wrapper',tags:'bil bilkostnad bilhold kjøretøy drivstoff forsikring bompenger vedlikehold bensin diesel elbil km kilometer car cost',type:'tool',page:'Personlig økonomi',sk:'bilkostnad'},
-  {name:'Sparekalkulator',desc:'Se kraften i rentes rente over tid',url:'/personlig/#spare-wrapper',tags:'spare sparing rentes rente avkastning fond aksjer investering månedlig savings compound interest',type:'tool',page:'Personlig økonomi',sk:'spare'},
-  {name:'Studielån',desc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen',url:'/personlig/#studie-wrapper',tags:'studielån lånekassen stipend student studie nedbetaling lån utdanning student loan',type:'tool',page:'Personlig økonomi',sk:'studielan'},
-  {name:'Lønn etter skatt',desc:'Se hva du faktisk får utbetalt fra timelønnen din',url:'/personlig/#lonn-wrapper',tags:'lønn timelønn netto brutto utbetalt lønn etter skatt nettolønn hva får jeg salary after tax wage',type:'tool',page:'Personlig økonomi',sk:'lonn'},
-  {name:'Abonnementskalkulator',desc:'Se totalkostnaden for alle abonnementene dine',url:'/personlig/#abo-wrapper',tags:'abonnement streaming netflix spotify hbo viaplay subscription månedskostnad',type:'tool',page:'Personlig økonomi',sk:'abo'},
-  {name:'Aksjer (veiledning)',desc:'Hva er aksjer, risiko, skatt 37,84 % og 5 tips til nybegynnere',url:'/personlig/#invest-wrapper',tags:'aksjer veiledning guide nybegynner risiko skjermingsfradrag utbytte ask aksjesparekonto indeksfond stocks shares investing dividends',type:'concept',page:'Personlig økonomi',sk:'aksjerVeiledning'},
+  // Personlig økonomi — canonical sub-page entries lever lenger ned (block 2)
 
   // Boliglån
   {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/mor/',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling månedlig betaling mortgage',type:'tool',page:'Boliglån',sk:'boliglan'},
@@ -40,25 +33,15 @@ var SEARCH_DATA = [
   {name:'Vitenskapelig kalkulator',desc:'Sin, cos, log, potenser og mer',url:'/kalkulator/#scientific',tags:'vitenskapelig kalkulator sin cos tan log ln potens kvadratrot pi scientific',type:'tool',page:'Kalkulator',sk:'kalkSci'},
   {name:'Valutakonverter',desc:'Konverter mellom valutaer med oppdaterte kurser',url:'/kalkulator/unit/',tags:'valuta valutakonverter valutakalkulator valutaomregner kurs dollar euro pund usd eur gbp sek dkk currency exchange rate kursomregner convert currency',type:'tool',page:'Kalkulator',sk:'kalkValuta'},
   {name:'Finansiell kalkulator',desc:'Nåverdi, fremtidsverdi, margin, break-even, renters rente og rabatter',url:'/kalkulator/finance/',tags:'finansiell kalkulator nåverdi fremtidsverdi annuitet rente perioder margin markup break-even break even renters rente compound discount rabatt PV FV PMT TVM financial',type:'tool',page:'Kalkulator',sk:'kalkFin'},
-  {name:'Ansattkostnad (AGA)',desc:'Beregn total årskostnad for en ansatt inkl. AGA og OTP',url:'/avgift/#aga-wrapper',tags:'ansattkostnad aga arbeidsgiveravgift otp pensjon feriepenger lønn kostnad ansatt arbeidsgiver employee cost',type:'tool',page:'Avgift',sk:'aga'},
-  {name:'Avskrivning',desc:'Regnskapsmessig og skattemessig avskrivning',url:'/kalkulator/#avs',tags:'avskrivning saldoavskrivning lineær saldo avskrivningsgruppe driftsmiddel restverdi levetid anleggsmiddel depreciation',type:'tool',page:'Kalkulator',sk:'avs'},
-  {name:'Feriepenger',desc:'Beregn feriepenger ut fra årslønn og ferieordning',url:'/kalkulator/#ferie',tags:'feriepenger ferie ferielov ferieordning over 60 bonus ferietillegg 10.2 12 prosent holiday pay',type:'tool',page:'Kalkulator',sk:'ferie'},
-  {name:'Effektiv rente',desc:'Se hva lånet faktisk koster inkl. gebyrer',url:'/kalkulator/#rente',tags:'effektiv rente nominell rente gebyr etableringsavgift lånekostnad effective interest rate',type:'tool',page:'Kalkulator',sk:'rente'},
-  {name:'Valutagevinst',desc:'Beregn gevinst eller tap ved kjøp og salg av valuta',url:'/kalkulator/#valgevinst',tags:'valutagevinst valutatap valuta kjøp salg kurs gevinst skatt 22 currency gain',type:'tool',page:'Kalkulator',sk:'valgevinst'},
-  {name:'Likviditetsbudsjett',desc:'Oversikt over penger inn og ut måned for måned',url:'/kalkulator/#likvid',tags:'likviditet likviditetsbudsjett kontantstrøm cashflow inn ut måned balanse liquidity',type:'tool',page:'Kalkulator',sk:'likvid'},
-  {name:'NPV / IRR',desc:'Lønnsomhetsanalyse med netto nåverdi og internrente',url:'/kalkulator/#npv',tags:'npv irr nåverdi internrente investering lønnsomhet kontantstrøm diskonteringsrente tilbakebetalingstid profitability',type:'tool',page:'Kalkulator',sk:'npv'},
+  {name:'Likviditetsbudsjett',desc:'Oversikt over penger inn og ut måned for måned',url:'/kalkulator/likviditet/',tags:'likviditet likviditetsbudsjett kontantstrøm cashflow inn ut måned balanse liquidity',type:'tool',page:'Kalkulator',sk:'likvid'},
   {name:'Pensjonskalkulator',desc:'Beregn forventet pensjon og pensjonssparing',url:'/kalkulator/#pensjon',tags:'pensjon pensjonsalder otp innskuddspensjon alderspensjon folketrygd afp tjenestepensjon pension',type:'tool',page:'Kalkulator',sk:'pensjon'},
-  {name:'Lønn vs Utbytte',desc:'Sammenlign skatt på lønn mot utbytte fra eget AS',url:'/kalkulator/#lvu',tags:'lønn utbytte aksjeselskap as eier utdeling uttak skatt sammenlign optimal salary dividend',type:'tool',page:'Kalkulator',sk:'lvu'},
+  {name:'Lønn vs Utbytte',desc:'Sammenlign skatt på lønn mot utbytte fra eget AS',url:'/kalkulator/lonnut/',tags:'lønn utbytte aksjeselskap as eier utdeling uttak skatt sammenlign optimal salary dividend',type:'tool',page:'Kalkulator',sk:'lvu'},
 
   // Skatt
   {name:'Skattkalkulator',desc:'Beregn skatt på årsinntekt med trinnskatt',url:'/skatt/#sal-salary-card',tags:'skatt skattkalkulator trinnskatt trygdeavgift brutto netto inntektsskatt tax calculator',type:'tool',page:'Skatt',sk:'skatt'},
   {name:'Uttakskalkulator',desc:'Skatt ved uttak av eiendeler fra virksomhet',url:'/skatt/#sal-uttak-card',tags:'uttak skatt virksomhet eiendeler sktl 5-2 withdrawal',type:'tool',page:'Skatt',sk:'uttak'},
   {name:'Effektiv skatt ved utdeling',desc:'Aksjonærmodellen og foretaksmodellen',url:'/skatt/#sal-utdeling-card',tags:'utdeling utbytte aksjonærmodellen foretaksmodellen selskapsskatt effektiv skatt distribution',type:'tool',page:'Skatt',sk:'utdeling'},
-  {name:'Formueskatt',desc:'Beregn formueskatt med verdsettelsesrabatter',url:'/skatt/#formue-wrapper',tags:'formue formueskatt verdsettelsesrabatt bolig aksjer eiendom gjeld bunnfradrag wealth tax',type:'tool',page:'Skatt',sk:'formue'},
-  {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/#reise-wrapper',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger fradrag travel deduction commute',type:'tool',page:'Skatt',sk:'reise'},
-
   // Avgift
-  {name:'MVA-kalkulator',desc:'Beregn MVA-beløp og priser inkl/ekskl. avgift',url:'/avgift/#vat-wrapper',tags:'mva moms merverdiavgift avgift vat 25 15 12 prosent inkludert ekskludert',type:'tool',page:'Avgift',sk:'mva'},
   {name:'Justeringskalkulator',desc:'Justering av inngående MVA ved bruksendring',url:'/avgift/#vat-adj-card',tags:'justering mva inngående bruksendring kapitalvare justeringsperiode mval kap 9',type:'tool',page:'Avgift',sk:'mvajust'},
 
   // Selskap
@@ -146,9 +129,6 @@ var SEARCH_DATA = [
   {name:'Hverdagsverktøy',desc:'Gratis norske verktøy for økonomi',url:'/',tags:'hverdagsverktøy hjem hoved økonomi kalkulator',type:'section',page:'Hjem'},
   {name:'Ansattkostnad (AGA)',desc:'Beregn total årskostnad for en ansatt inkl. AGA og OTP',url:'/avgift/aga/',tags:'ansattkostnad aga arbeidsgiveravgift otp pensjon feriepenger lønn kostnad ansatt',type:'tool',page:'Avgift'},
   {name:'MVA-kalkulator',desc:'Beregn MVA-beløp og priser inkl/ekskl. avgift',url:'/avgift/vat/',tags:'mva moms merverdiavgift avgift vat 25 15 12 prosent',type:'tool',page:'Avgift'},
-  {name:'Bolig vs leie',desc:'Sammenlign total kostnad over X år — hva lønner seg?',url:'/boliglan/bvl/',tags:'bolig vs leie kjøpe leie sammenligne break-even eie rent vs buy investering',type:'tool',page:'Boliglån'},
-  {name:'Hva har jeg råd til?',desc:'Maks lånebeløp basert på inntekt og egenkapital',url:'/boliglan/maxlan/',tags:'maks lån hva kan jeg låne inntekt egenkapital gjeldsgrad utlånsforskriften',type:'tool',page:'Boliglån'},
-  {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/mor/',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling',type:'tool',page:'Boliglån'},
   {name:'Avskrivning',desc:'Regnskapsmessig og skattemessig avskrivning',url:'/kalkulator/avs/',tags:'avskrivning saldoavskrivning lineær saldo avskrivningsgruppe restverdi',type:'tool',page:'Kalkulator'},
   {name:'NPV / IRR',desc:'Lønnsomhetsanalyse med netto nåverdi og internrente',url:'/kalkulator/npv/',tags:'npv irr nåverdi internrente lønnsomhetsanalyse investeringsanalyse tilbakebetalingstid diskonteringsrente wacc',type:'tool',page:'Kalkulator'},
   {name:'Effektiv rente',desc:'Beregn effektiv årsrente inkl. gebyrer og etableringsavgift',url:'/kalkulator/rente/',tags:'effektiv rente rentekalkulator nominell rente lånekalkulator årsrente etableringsavgift annuitetslån',type:'tool',page:'Kalkulator'},
