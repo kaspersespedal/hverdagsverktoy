@@ -8,7 +8,7 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
 <link rel="preconnect" href="https://open.er-api.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap">
+<link rel="preload" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap"></noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -46,7 +46,237 @@
     }catch(e){}
   })();
 </script>
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v6">
+<!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
+<style>
+/* ─────────────────────────────────────────────────────
+   ATMOSPHERE — "Aurora over ink" (site-wide)
+   Four-layer stack, fixed, behind everything:
+     L1 .atmo-base    — solid base + vertical gradient
+     L2 .atmo .band   — two horizontal aurora bands, blend:screen
+     L3 .atmo .cursor-light — single soft circular light, lerp 0.06
+     L4 .film-grain   — static SVG fractal noise, blend:overlay, ~3.5%
+   Mobile: drift slowed x1.5, no cursor light, grain -> 2%.
+   Reduced-motion: bands static at 0.5x, no drift, no cursor light.
+   Source: hv_oppdatert_design/Homepage.html (v3, 2026-04-30).
+   v2 (E83): atmosphere skjules på lyse themes (frost/glass/hendrix/bw/pink).
+   v3 (E83): atmosphere-farger er nå tokenisert per dark theme.
+     carbon (default) → cognac/amber
+     dark              → kjølig blå/indigo
+     disco             → neon pink/lilla
+───────────────────────────────────────────────────── */
+/* FOUC-guard during language load — BUG-05 closes (alternativ A).
+   Skjuler oversettbare elementer mens lang-loading-klassen er aktiv på html.
+   Klassen settes synkront av inline head-script og fjernes av core.js etter loadLang resolves. */
+html.lang-loading [data-i18n]{visibility:hidden;}
+:root{
+  --atmo-base-top:#0F0D0A;
+  --atmo-base-bottom:#070605;
+  --atmo-band-a:38, 60%, 75%;   /* hsl triplet — cream */
+  --atmo-band-a-op:.08;
+  --atmo-band-a-op-breathe:.10;
+  --atmo-band-b:28, 50%, 55%;   /* hsl triplet — deep amber */
+  --atmo-band-b-op:.05;
+  --atmo-band-b-op-breathe:.07;
+  --atmo-cursor:38, 70%, 75%;   /* hsl triplet — warm cream */
+  --atmo-cursor-op:.04;
+}
+[data-theme="dark"]{
+  --atmo-base-top:#141520;
+  --atmo-base-bottom:#0a0b14;
+  --atmo-band-a:222, 80%, 72%;          /* cool blue, matcher accent #6c8aef */
+  --atmo-band-a-op:.09;
+  --atmo-band-a-op-breathe:.12;
+  --atmo-band-b:258, 55%, 55%;          /* violet — duotone-kontrast mot bandA */
+  --atmo-band-b-op:.06;
+  --atmo-band-b-op-breathe:.08;
+  --atmo-cursor:222, 80%, 72%;
+  --atmo-cursor-op:.05;
+}
+[data-theme="disco"]{
+  --atmo-base-top:#0d0a18;
+  --atmo-base-bottom:#060410;
+  --atmo-band-a:328, 70%, 70%;  /* neon pink */
+  --atmo-band-a-op:.10;
+  --atmo-band-a-op-breathe:.13;
+  --atmo-band-b:268, 60%, 58%;  /* purple */
+  --atmo-band-b-op:.07;
+  --atmo-band-b-op-breathe:.09;
+  --atmo-cursor:328, 75%, 72%;
+  --atmo-cursor-op:.05;
+}
+html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo-base,
+html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo,
+html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .film-grain{
+  display:none !important;
+}
+.atmo-base{
+  position:fixed;inset:0;z-index:-3;pointer-events:none;
+  background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
+}
+.atmo{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  isolation:isolate;overflow:hidden;contain:layout paint;
+}
+/* Each band uses a two-element nest so X-drift, Y-drift, and the
+   opacity-breathe can each animate without fighting for a single
+   transform property. Non-equal periods (38/53 and 41/47) so the
+   loop is never visible. */
+.band{
+  position:absolute;pointer-events:none;will-change:transform;
+  mix-blend-mode:screen;transform-origin:center;
+}
+.band-inner{
+  position:absolute;inset:0;
+  will-change:transform, opacity;transform-origin:center;
+}
+/* Band A — primary cream, anchored above the headline. */
+.band-a{
+  width:140vw;height:30vh;
+  left:50%;top:18%;margin-left:-70vw;
+  animation: bandADriftX 38s ease-in-out infinite;
+}
+.band-a .band-inner{
+  background:radial-gradient(ellipse at center,
+    hsl(var(--atmo-band-a)) 0%, transparent 50%);
+  opacity:var(--atmo-band-a-op);
+  animation:
+    bandADriftY 53s ease-in-out infinite,
+    bandABreathe 24s ease-in-out infinite;
+}
+/* Band B — deeper amber, lower note, counter-phase from t=0. */
+.band-b{
+  width:110vw;height:22vh;
+  left:42%;top:30%;margin-left:-55vw;
+  animation: bandBDriftX 41s ease-in-out infinite;
+  animation-delay: -20.5s;
+}
+.band-b .band-inner{
+  background:radial-gradient(ellipse at center,
+    hsl(var(--atmo-band-b)) 0%, transparent 50%);
+  opacity:var(--atmo-band-b-op);
+  animation:
+    bandBDriftY 47s ease-in-out infinite,
+    bandBBreathe 31s ease-in-out infinite;
+  animation-delay: -23.5s, -15.5s;
+}
+@keyframes bandADriftX{
+  0%, 100% { transform: translate3d(-4%, 0, 0); }
+  50%      { transform: translate3d( 4%, 0, 0); }
+}
+@keyframes bandADriftY{
+  0%, 100% { transform: translate3d(0, -1.5%, 0); }
+  50%      { transform: translate3d(0,  1.5%, 0); }
+}
+@keyframes bandABreathe{
+  0%, 100% { opacity: var(--atmo-band-a-op); }
+  50%      { opacity: var(--atmo-band-a-op-breathe); }
+}
+@keyframes bandBDriftX{
+  0%, 100% { transform: translate3d( 4%, 0, 0); }
+  50%      { transform: translate3d(-4%, 0, 0); }
+}
+@keyframes bandBDriftY{
+  0%, 100% { transform: translate3d(0,  1.5%, 0); }
+  50%      { transform: translate3d(0, -1.5%, 0); }
+}
+@keyframes bandBBreathe{
+  0%, 100% { opacity: var(--atmo-band-b-op); }
+  50%      { opacity: var(--atmo-band-b-op-breathe); }
+}
+/* L3 — Cursor-anchored light. Position written by JS via translate3d. */
+.cursor-light{
+  position:fixed;left:0;top:0;
+  width:1200px;height:1200px;margin:-600px 0 0 -600px;
+  pointer-events:none;
+  background:radial-gradient(circle,
+    hsla(var(--atmo-cursor), var(--atmo-cursor-op)) 0%, transparent 60%);
+  transform: translate3d(50vw, 50vh, 0);
+  will-change:transform;mix-blend-mode:screen;
+}
+/* L4 — Static SVG fractal grain. z-index: -1 so it sits above the
+   atmosphere (-2/-3) but below unpositioned/sticky foreground content.
+   Keeps text crisp (grain only mixes with atmosphere) and avoids forcing
+   position:relative on every body child — which would break sticky nav. */
+.film-grain{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  opacity:.035;mix-blend-mode:overlay;
+  width:100%;height:100%;
+}
+
+/* Mobile (<= 768px) — drift slowed x1.5, no cursor light, grain -> 2%. */
+@media (max-width: 768px){
+  .band-a{ animation-duration:57s; }
+  .band-a .band-inner{ animation: bandADriftY 79s ease-in-out infinite; }
+  .band-b{ animation-duration:61s; }
+  .band-b .band-inner{ animation: bandBDriftY 70s ease-in-out infinite; }
+  .cursor-light{ display:none; }
+  .film-grain{ opacity:.02; }
+}
+@media (max-width: 1023px){
+  .cursor-light{ display:none; }
+}
+@media (prefers-reduced-motion: reduce){
+  .band, .band-inner{ animation:none !important; }
+  .band-a .band-inner{ opacity:.04 !important; }
+  .band-b .band-inner{ opacity:.025 !important; }
+  .cursor-light{ display:none !important; }
+}
+@media (prefers-reduced-data: reduce), (update: slow){
+  .band, .band-inner{ animation:none !important; }
+  .cursor-light{ display:none !important; }
+  .film-grain{ opacity:.02 !important; }
+}
+
+/* ── E66: Landing-only fallback styling for components that normally live in
+   shared/style.css (which new-layout landings do not load): the global search-box
+   injected by shared/search.js, and bare <a> in <footer>. Without this, both
+   render with default browser styling — see Brain_HV/wiki/kontekst/historikk.md E66. */
+.search-box{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 14px;
+  max-width:520px;margin:0 auto;
+  font:14px/1.4 var(--font-sans);
+}
+.search-icon{color:var(--ink3);flex-shrink:0}
+#search-input{
+  flex:1;min-width:0;
+  background:transparent;border:0;outline:0;
+  color:var(--ink);font:inherit;
+  padding:2px 0;
+}
+#search-input::placeholder{color:var(--ink4)}
+#search-input:focus{outline:0}
+.search-box:focus-within{border-color:var(--line-warm)}
+.search-kbd{
+  font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
+  color:var(--ink3);
+  background:var(--bg);
+  border:1px solid var(--line);
+  padding:3px 7px;border-radius:5px;flex-shrink:0;
+}
+.search-dropdown{
+  position:absolute;z-index:100;
+  margin-top:6px;max-width:520px;width:100%;
+  background:var(--surface-2,var(--surface));
+  border:1px solid var(--line);border-radius:10px;
+  display:none;overflow:hidden;
+}
+.search-dropdown:not(:empty){display:block}
+
+footer a{
+  color:var(--ink3);text-decoration:none;
+  border-bottom:1px solid transparent;
+  transition:color .2s var(--ease,ease),border-color .2s var(--ease,ease);
+}
+@media (hover:hover){
+  footer a:hover{color:var(--ink);border-bottom-color:var(--line-warm)}
+}
+footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+</style>
 <link rel="stylesheet" href="/shared/ticker.css?v=v1">
 <style>
   :root{

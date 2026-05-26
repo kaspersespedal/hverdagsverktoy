@@ -1,14 +1,15 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v113';
+const CACHE_NAME = 'hverdagsverktoy-v114';
 
 // Files to cache on SW install for offline use.
 // Lang files are NOT precached — they'd add ~2.5 MB to install cost and most users
 // only need 1 of 10. The fetch handler caches them on-demand (stale-while-revalidate).
+// style.css is NOT precached either — only translated subtrees (en/, pl/, ar/, ...)
+// and /om/ load it; norske hovedside-tre har inline CSS. Fetched on-demand for users who navigate there.
 const PRECACHE_URLS = [
   './',
   './manifest.json',
   './shared/core.js',
-  './shared/style.css',
   './shared/search.js',
   './shared/search-intents.js'
 ];
