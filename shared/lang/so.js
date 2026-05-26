@@ -788,7 +788,19 @@ REGIONS['so'] = {
         'regnskapsplikt':'waajibaadka xisaabaadka regnskap wajib goob as enk regnskapsloven',
         'bokforingConcept':'xisaabinta dukumeentiga macamalka diiwaangelinta maalinlaha xisaabaad',
         'arsregnskap':'xisaabta sanadlaha natiijada miisaaniyada khatamka sannadka',
-        'revisjon':'xaqiijinta xisaabaadka diiwaangelinta reviewer waajibaadka ka reebida xadka'
+        'revisjon':'xaqiijinta xisaabaadka diiwaangelinta reviewer waajibaadka ka reebida xadka',
+        /* gap-close T2 split-2026-05-26-search-keys */
+        'aksjerVeiledning':'saamiyada hagaha khatar canshuur 37.84 % talooyin bilow',
+        'maxlan':'amaah ugu badan deyn dakhli maalgelin',
+        'bvl':'iibsasho kiraysasho isbarbardhig kharash faa\'iido',
+        'andre':'qaabab kale shirkad ASA NUF SA dood',
+        'aksjeutvanning':'saami-jeexitaan saamiyada cusub opsiyada qaybta',
+        'fradrag':'jariitaan canshuur dhimid',
+        'kontoplanKlasse1':'fasalka kontoplan 1 hanti anleggsmidler omløpsmidler',
+        'kontoplanKlasse3':'fasalka kontoplan 3 iibinta dakhliga shaqada NS 4102',
+        'resultatregnskap':'xisaabta natiijada dakhliga kharashka rskl § 6-1',
+        'mvaMelding':'warbixinta MVA muddo gelinta saarista RF-0002',
+        'balanseregn':'miisaaniyad hanti maalgelin shakhsi deynta rskl § 6-2',
 },
     agaHelpRows: [['— SIDA LOO ISTICMAALO XISAABIYAHAN —','Xisaabi kharashka guud ee sanadlaha ah ee shaqaale oo ay ku jiraan AGA, lacagta fasaxa iyo OTP'],['Mushahar guud','Mushaharka sanadlaha ah ka hor canshuurta — waxa aad la hesheen shaqaalaha.'],['Aagga AGA','Wax bixinta loo-shaqeeye way ku kala duwan tahay meesha shirkaddu ka diiwaangashan tahay. Aagga 1 (Oslo, Bergen) = 14.1%. Aagga 5 (Finnmark) = 0%.'],['Lacagta fasaxa','Heerka caadiga ah waa 10.2% (4 toddobaad + 1 maalin). Heerka leh 5 toddobaad = 12%. Ka weyn 60 sano: +2.3 dhibic boqolkiiba.'],['Heerka OTP','Hawlgalka hawlgalka qasabka ah — ugu yar 2% mushaharka u dhexeeya 1G iyo 12G. Shirkado badan ayaa bixiya in ka badan.'],['— SIDA LOO AKHRIYO NATIIJOOYINKA —',''],['Kharashka guud ee sanadlaha','Waxa shaqaalaha dhab ahaantii kugu kacayo sannadkii — mushahar + dhammaan kharashyada.'],['AGA','Wax bixinta loo-shaqeeye ee dawladda — waxaa lagu xisaabiyaa mushaharka + lacagta fasaxa + OTP.'],['Lacagta fasaxa','Waxa shaqaalaha u kasbanayo fasaxa sannadka soo socda.'],['OTP','Wax bixinta hawlgalka shirkadda ee shaqaalaha.'],['— WAXYAABO WANAAGSAN OO LA OGAADO —',''],['Ka-dhaafid AGA','850,000 NOK ee ugu horreeya ee kharashaadka mushaharka sanadlaha waxaa laga dhaafay AGA dhammaan aagagga.'],['Aagga waxaa go\'aamisa diiwaangelinta','Aagga wuxuu ku xiran yahay meesha shirkaddu ka diiwaangashan tahay, ma aha meesha shaqaalaha ku noolyahay.'],['Qaanuunka suulka','Shaqaale caadi ah oo ku yaal aagga 1 oo leh 500,000 NOK mushaharka wuxuu shirkadda ku kacayaa ku dhawaad 637,000 NOK wadar ahaan.']],
     avsCmpNote: 'Kala duwanaansho = xisaabiyeed − canshuureed. Taban → dhimista canshuurta sare → qiimaha buugga > qiimaha canshuurta → deyn canshuur dib-u-dhigay. Togan → lid → hanti canshuur dib-u-dhigay.',
@@ -889,7 +901,19 @@ REGIONS['so'] = {
         'regnskapsplikt':'Waajibaadka xisaabaadka',
         'bokforingConcept':'Xisaabinta',
         'arsregnskap':'Xisaabta Sanadlaha',
-        'revisjon':'Xaqiijinta Xisaabaadka'
+        'revisjon':'Xaqiijinta Xisaabaadka',
+        /* gap-close T2 split-2026-05-26-search-keys */
+        'aksjerVeiledning':'Saamiyada (hagaha)',
+        'maxlan':'Inta aan awoodi karo?',
+        'bvl':'Iibso vs Kirayso',
+        'andre':'Qaabab kale oo shirkadeed',
+        'aksjeutvanning':'Jeexitaanka saamiyada',
+        'fradrag':'Jariitaan',
+        'kontoplanKlasse1':'Fasalka kontoplan 1 — Hantida',
+        'kontoplanKlasse3':'Fasalka kontoplan 3 — Iibinta/dakhliga shaqada',
+        'resultatregnskap':'Xisaabta Natiijada',
+        'mvaMelding':'Warbixinta MVA',
+        'balanseregn':'Miisaaniyad',
 },
     searchDs: {
       trinnskatt:'Canshuur horumarsan oo kordha marka dakhliga uu kordho — 5 heer', skatteFradrag:'Dhimis toos ah oo yaraynaya canshuurtaada', minstefradrag:'Dhimis toos ah oo loogu talagalay dhammaan shaqaalaha', trygdeavgift:'Lacag-bixin bulsho — 7.6% mushaharka', egenkapital:'Maalgelinta ugu yar ee loo baahan yahay guriga iibsashada (10%)', bsu:'Dhimis canshuur ah 10% dhibicdaada, ugu badan 27,500 kr/sannadkii', gjeldsgrad:'Saamiga deynta guud iyo dakhliga guud (ugu badan 5×)', stresstest:'Bangiga wuxuu hubiyaa inaad awooddo kororka ribada +3 dhibic', aksjonarmodellen:'Qaabka canshuurta lacagaha dhigaalka ee saamileyda shakhsiyeed', foretaksmodellen:'Qaabka canshuurta ee ganacsi-shakhsiga', verdsettelsesrabatt:'Dhimis qiimaha hantida saamiyada, guryaha iyo qalabka shaqada', saldoavs:'Qiima-dhimista canshuureed oo leh boqolkiiba go\'an', otp:'Shaqo-bixiyaha waa inuu kaydiyo 2% mushaharka ka badan 1G', agaBegrep:'Canshuur uu shaqo-bixiyaha ku bixiyo mushaharka — waxay ku kala duwan tahay aaga', rentesRente:'Faa\'iidada faa\'iidada — saamaynta ka dhigaysa kaydinta mid xoog leh', annuitet:'Amaah leh qisti bille oo isku mid ah xilliga oo dhan', serieLan:'Amaah leh qisti asaas ah oo isku mid ah — guud ahaan ka jaban', naeringHobby:'Goormaa dakhliga dhinaca uu noqdaa ganacsi canshuurtu', konsernbidrag:'Wareejinta macaashka u dhexeeya shirkadaha isla kooxda', fritaksmetoden:'Shirkadaha way ka dhaafan yihiin canshuurta ribada saamiyada', deltakerligning:'Macaashka waxaa loo qaybiyaa oo canshuurta lagu qaado iskaashi kasta', selskapsskatt:'Canshuur 22% faa\'iidada shirkadaha', utbytteskatt:'Canshuur 37.84% macaashka saamileyda shakhsiyeed', komplementar:'Maamule firfircoon oo KS leh mas\'uuliyad shakhsiyeed aan xaddidnayn', kommandittist:'Maalgeliye firfircoon oo KS — mas\'uuliyada way xaddidan tahay gelinta', mvaSatser:'25% guud, 15% cunto, 12% gaadiid/dhaqan, 0% dhoofinta', omsetning:'Diiwaangelinta waxaa loo baahan yahay ka badan 50,000 kr iibka', fradragsrett:'Xuquuqda dhimista MVA gelinta iibsiga ganacsiga', skatteloven:'Cutubyada iyo qodobbada sharciga canshuurta', sktlK2:'Yaa mas\'uul ka ah canshuurta Norway?', sktlK4:'Qiimaynta hantida, saamiyada, guryaha iyo dhimisyada', sktlK5:'Dakhliga canshuurta, mushaharka, raasumaalka iyo faa\'iidooyinka la\'aanta ah', sktlK6:'Dhimista caadiga, ribada iyo dhimisyo gaar ah', sktlK9:'Xaqiijinta, iibinta guriga, dhaxalka, hadiyada iyo hijrooga', sktlK10:'Macaashka, faa\'iidooyinka, tabarruc koox iyo NOKUS', sktlK14:'Kooxaha qiima-dhimista, heerarka iyo faa\'iido/khasaaraha', mvalK2:'Diiwaangelinta kooxeed, mutadawac iyo horudhac', mvalK3:'Maxaa laga saaray sharciga MVA?', mvalK6:'0% MVA la soo saaray, xuquuqda dhimista oo dhammaystiran', mvalK8:'Qaanuunka guud, isticmaalka isku dhaf iyo xaddid', mvalK9:'Hantida raasumaalka iyo xilliyada hagaajinta', rskl53:'Hantida caynka ah oo leh da\' xaddidan waa in la qiima-dhimo', aksjeloven:'Sharciga shirkadaha mas\'uuliyada xaddidan — asaaska, raasumaalka, guddiga', selskapsloven:'Sharciga iskaashiga guud iyo iskaashiga xaddidan'
@@ -935,7 +959,19 @@ REGIONS['so'] = {
         'kalkToolLonnUtbytteTitle':'Mushahar vs Qayb-dhigasho',
         'kalkToolLonnUtbytteDesc':'Kharashka shirkadda mushahar (AGA + fasax + OTP) vs qayb-dhigasho (canshuurta shirkadda) — barbardhig aag kasta.',
         'kalkToolLikviditetTitle':'Miisaaniyadda Lacagta',
-        'kalkToolLikviditetDesc':'Socodka lacagta bil-bil ah oo leh bilowga, dakhliga iyo kharashka — soo degso oo dhan CSV ahaan.'
+        'kalkToolLikviditetDesc':'Socodka lacagta bil-bil ah oo leh bilowga, dakhliga iyo kharashka — soo degso oo dhan CSV ahaan.',
+        /* gap-close T2 split-2026-05-26-search-keys */
+        'aksjerVeiledning':'Maxay yihiin saamiyada, khatarta, canshuur 37.84 % iyo 5 talo bilowga',
+        'maxlan':'Amaahda ugu badan iyada oo lagu salaynayo dakhliga iyo maalgelinta',
+        'bvl':'Isbarbardhig kharashka guud X sano — maxaa faa\'iido leh?',
+        'andre':'ASA, NUF, SA iyo dood',
+        'aksjeutvanning':'Xisaab qayb-saami ka dib soo-saarista cusub iyo barnaamijka opsiyada',
+        'fradrag':'Lacag yarayneysa saldhigga canshuurta ama canshuurtaada',
+        'kontoplanKlasse1':'Hantida joogtada ah iyo wareegga ah ee kontoplan',
+        'kontoplanKlasse3':'Akoonnada dakhliga NS 4102 (fasalka 3)',
+        'resultatregnskap':'Dakhliga shaqada, kharashka shaqada — sida sharciga xisaabaadka § 6-1',
+        'mvaMelding':'Xisaabinta MVA xilliyeed — MVA gelinta iyo saarista, 4 heer',
+        'balanseregn':'Hantida = Maalgelinta shakhsiyeed + Deynta — samaynta miisaaniyadda sida sharciga xisaabaadka § 6-2',
 },
     // /personlig card titles, descs & category headers (SO)
     fblTitle:'Deynta macmiilka', fblDesc:'Waxay deyntu dhab ahaan ku kacdo — heerka magac-yeelka ma aha runta oo dhan',

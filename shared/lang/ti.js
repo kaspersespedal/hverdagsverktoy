@@ -805,7 +805,19 @@ REGIONS['ti'] = {
       regnskapsplikt:'ግዴታ ሕሳብ ትካል AS ENK ሕጊ ሕሳብ',
       bokforingConcept:'ምዝገባ ሕሳብ ሰነድ ግብይት ዕለታዊ ሕሳብ',
       arsregnskap:'ዓመታዊ ሕሳብ ዉጽኢት ሚዛን ኣገናዕ ምዕጻው ዓመት',
-      revisjon:'ምርመራ ሕሳብ ተመራማሪ ግዴታ ምርመራ ወጻኢ ደረት ተኣከብቲ'
+      revisjon:'ምርመራ ሕሳብ ተመራማሪ ግዴታ ምርመራ ወጻኢ ደረት ተኣከብቲ',
+      /* gap-close T2 split-2026-05-26-search-keys */
+      aksjerVeiledning:'ኣክስዮናት መምርሒ ሓደጋ ቀረጽ 37.84 % ምኽሪ ጀመርቲ',
+      maxlan:'ዝለዓለ ልቓሕ እቶት ናይ ውልቂ ካፒታል',
+      bvl:'ምግዛእ ምክራይ ምውድዳር ወጻኢ ረብሓ',
+      andre:'ካልኦት ቅርጺ ትካላት ASA NUF SA መሰረት',
+      aksjeutvanning:'ናይ ኣክስዮን ምቅላል ሓድሽ ልቓሕ option ብጽሒት',
+      fradrag:'ቅነሳ ቀረጽ ምንካይ',
+      kontoplanKlasse1:'ናይ ሕሳብ ክፍሊ 1 ንብረት anleggsmidler omløpsmidler',
+      kontoplanKlasse3:'ናይ ሕሳብ ክፍሊ 3 ሽያጥ ናይ ስራሕ እቶት NS 4102',
+      resultatregnskap:'ናይ ውጽኢት ሕሳብ እቶት ወጻኢ rskl § 6-1',
+      mvaMelding:'ናይ MVA ሪፖርት ግዜ ኣእታዊ ወጻኢ RF-0002',
+      balanseregn:'ሚዛን ንብረት ናይ ውልቂ ካፒታል ዕዳ rskl § 6-2',
     },
     agaHelpRows: [['— ነዚ ሓሳባዊ ከመይ ጌርካ ትጥቀመሉ —','ጠቅላላ ናይ ዓመት ክፍሊት ሰራሕተኛ ምስ AGA፡ ኣክፋል ዕረፍትን OTPን ሓዊስካ ኣስላ'],['ሓለፋ ደሞዝ','ናይ ዓመት ደሞዝ ቅድሚ ግብሪ — እቲ ምስ ሰራሕተኛ ዝተዋዓዓልካዮ።'],['ዞባ AGA','ግብሪ ኣስራሒ ብመዝገብ ቦታ ኩባንያ ይፈላለ። ዞባ 1 (ኦስሎ፡ በርገን) = 14.1%። ዞባ 5 (ፊንማርክ) = 0%።'],['ክፍሊት ዕረፍቲ','ቋሚ ትርፊ 10.2% (4 ሰሙን + 1 መዓልቲ)። ብታሪፍ 5 ሰሙን = 12%። ልዕሊ 60 ዓመት: +2.3 ነጥቢ ፐርሰንት።'],['ትርፊ OTP','ግዴታዊ ናይ ስራሕ ጥሮታ — ዝነኣሰ 2% ደሞዝ ኣብ መንጎ 1G ን 12Gን። ብዙሓት ኩባንያታት ዝያዳ ይኸፍላ።'],['— ከመይ ጌርካ ውጽኢታት ተንብብ —',''],['ጠቅላላ ናይ ዓመት ክፍሊት','እቲ ሰራሕተኛ ኣብ ዓመት ብሓቂ ክንደይ ይወጻልካ — ደሞዝ + ኩሉ ተወሳኺ።'],['AGA','ናይ ኣስራሒ ግብሪ ናብ መንግስቲ — ካብ ደሞዝ + ክፍሊት ዕረፍቲ + OTP ይሕሰብ።'],['ክፍሊት ዕረፍቲ','እቲ ሰራሕተኛ ን ዝመጽእ ዓመት ዕረፍቲ ዝረኽቦ።'],['OTP','ናይ ኩባንያ ክፍሊት ጥሮታ ን ሰራሕተኛ።'],['— ክፍለጥ ዘለዎ —',''],['ኪግለል AGA','ቀዳማይ 850,000 NOK ናይ ዓመት ክፍሊታት ካብ AGA ኣብ ኩሉ ዞባታት ነጻ።'],['ዞባ ብመዝገብ ቦታ ይሰዓብ','ዞባ ኣብቲ ኩባንያ ዝተመዝገበቶ ቦታ እዩ ዝምርኮስ፡ ኣይኮነን ኣብ ምንባር ሰራሕተኛ።'],['ናይ ኢድ ሕጊ','ቀዋሚ ሰራሕተኛ ኣብ ዞባ 1 ብ 500,000 NOK ደሞዝ ንኩባንያ ኣስታት 637,000 NOK ጠቕላላ ይውጽኣ።']],
     avsCmpNote: 'ፍልልይ = ሕሳብ − ግብሪ። ኣሉታዊ ፍልልይ → ናይ ግብሪ ክሳራ ዝለዓለ → ናይ ደብተር ዋጋ > ናይ ግብሪ ዋጋ → ዝተኸወለ ናይ ግብሪ ዕዳ። ኣወንታዊ → ብኣንጻሩ → ዝተኸወለ ናይ ግብሪ ንብረት።',
@@ -891,11 +903,35 @@ REGIONS['ti'] = {
 
     searchDn: {
       trinnskatt:'ደረጃዊ ቀረጽ', skatteFradrag:'ናይ ቀረጽ ቅነሳ', minstefradrag:'ናይ መባእታ ቅነሳ', trygdeavgift:'ናይ ማሕበራዊ ውሕስነት', egenkapital:'ናይ ውልቂ ካፒታል', bsu:'BSU — ንመንእሰያት ናይ ገዛ ቁጠባ', gjeldsgrad:'ዝምድና ዕዳን እቶትን', stresstest:'ናይ ጸቕጢ ፈተና', aksjonarmodellen:'ናይ ኣክሲዮን ዋንነት ሞዴል', foretaksmodellen:'ናይ ውልቃዊ ትካል ሞዴል', verdsettelsesrabatt:'ናይ ግምት ቅናሻ', saldoavs:'ናይ ዝወርድ ሚዛን ውድቀት ዋጋ', otp:'OTP — ግዱድ ናይ ስራሕ ጡረታ', agaBegrep:'ናይ ኣስራሒ ክፍሊት (AGA)', rentesRente:'ናይ ወለድ ወለድ', annuitet:'ኣኑኢቲ ልቓሕ', serieLan:'ሰሪያል ልቓሕ', naeringHobby:'ንግዲ ወይ ሆቢ?', konsernbidrag:'ናይ ጉጅለ ኣበርክቶ', fritaksmetoden:'ናይ ተሳትፎ ነጻነት', deltakerligning:'ናይ ተሳተፍቲ ቀረጽ', selskapsskatt:'ናይ ትካል ቀረጽ', utbytteskatt:'ናይ ዲቪደንድ ቀረጽ', komplementar:'ሓላፊ ኣቦ ቤት', kommandittist:'ኮማንዲቲስት', mvaSatser:'ናይ MVA ተመን', omsetning:'ናይ MVA ምዝገባ ደረት', fradragsrett:'ናይ MVA ቅነሳ መሰል', skatteloven:'ሕጊ ቀረጽ', sktlK2:'ሕጊ ቀረጽ ም. 2 — ናይ ቀረጽ ግዴታ', sktlK4:'ሕጊ ቀረጽ ም. 4 — ንብረት', sktlK5:'ሕጊ ቀረጽ ም. 5 — እቶት', sktlK6:'ሕጊ ቀረጽ ም. 6 — ቅነሳታት', sktlK9:'ሕጊ ቀረጽ ም. 9 — ረብሓን ክሳራን', sktlK10:'ሕጊ ቀረጽ ም. 10 — ትካላት', sktlK14:'ሕጊ ቀረጽ ም. 14 — ውድቀት ዋጋ', mvalK2:'ሕጊ MVA ም. 2 — ምዝገባ', mvalK3:'ሕጊ MVA ም. 3 — ተኣከብቲ', mvalK6:'ሕጊ MVA ም. 6 — ዜሮ ተመን', mvalK8:'ሕጊ MVA ም. 8 — ቅነሳ', mvalK9:'ሕጊ MVA ም. 9 — ምቅንናይ', rskl53:'ሕጊ ሕሳብ § 5-3 — ውድቀት ዋጋ', aksjeloven:'ሕጊ ናይ ኣክሲዮን ትካላት', selskapsloven:'ሕጊ ናይ ውዕል ትካላት',
-      /* gap-close T2 split-2026-05-06-r3 */ skatteloven_portal:'ሕጊ ቀረጽ', aksjeloven_portal:'ሕጊ ኣክሲዮን', mvaloven_portal:'ሕጊ ቫት', bokforingsloven_portal:'ሕጊ ምዝገባ ሕሳብ', regnskapsloven_portal:'ሕጊ ሕሳብ', hvordanLeseParagraf:'ሕጊ ኣንቀጽ ከመይ ይንበብ', kontoplanNs4102:'ስታንዳርድ ዝርዝር ሕሳብ NS 4102', debetKredit:'ዲቤት ን ክሬዲት', regnskapsplikt:'ግዴታ ሕሳብ', bokforingConcept:'ምዝገባ ሕሳብ', arsregnskap:'ዓመታዊ ሕሳብ', revisjon:'ምርመራ ሕሳብ'
+      /* gap-close T2 split-2026-05-06-r3 */ skatteloven_portal:'ሕጊ ቀረጽ', aksjeloven_portal:'ሕጊ ኣክሲዮን', mvaloven_portal:'ሕጊ ቫት', bokforingsloven_portal:'ሕጊ ምዝገባ ሕሳብ', regnskapsloven_portal:'ሕጊ ሕሳብ', hvordanLeseParagraf:'ሕጊ ኣንቀጽ ከመይ ይንበብ', kontoplanNs4102:'ስታንዳርድ ዝርዝር ሕሳብ NS 4102', debetKredit:'ዲቤት ን ክሬዲት', regnskapsplikt:'ግዴታ ሕሳብ', bokforingConcept:'ምዝገባ ሕሳብ', arsregnskap:'ዓመታዊ ሕሳብ', revisjon:'ምርመራ ሕሳብ',
+      /* gap-close T2 split-2026-05-26-search-keys */
+      aksjerVeiledning:'ኣክስዮናት (መምርሒ)',
+      maxlan:'ክንደይ ክልቅሕ እኽእል?',
+      bvl:'ግዛእ ኣንጻር ክራይ',
+      andre:'ካልኦት ቅርጺ ትካላት',
+      aksjeutvanning:'ናይ ኣክስዮን ምቅላል',
+      fradrag:'ቅነሳ',
+      kontoplanKlasse1:'ናይ ሕሳብ ክፍሊ 1 — ንብረታት',
+      kontoplanKlasse3:'ናይ ሕሳብ ክፍሊ 3 — ናይ ሽያጥ/ስራሕ እቶት',
+      resultatregnskap:'ናይ ውጽኢት ሕሳብ',
+      mvaMelding:'ናይ MVA ሪፖርት',
+      balanseregn:'ሚዛን',
     },
     searchDs: {
       trinnskatt:'ምስ እቶት ዝዓቢ ደረጃዊ ቀረጽ — 5 ደረጃታት', skatteFradrag:'ቀረጽ ቀጥታ ዝንኪ ቅነሳ', minstefradrag:'ንኩሎም ደመወዝ ተቐበልቲ ዝወሃብ ናይ ኣውቶማቲክ ቅነሳ', trygdeavgift:'ናይ ማሕበራዊ ውሕስነት ክፍሊት — 7.6% ካብ ደሞዝ', egenkapital:'ንገዛ ምግዛእ ዝድለ ዝተሓተ ናይ ውልቂ ካፒታል (10%)', bsu:'10% ናይ ቀረጽ ቅነሳ ካብ ኣቐማሚጢ፣ ዝለዓለ 27 500 kr/ዓመት', gjeldsgrad:'ዝምድና ጠቕላላ ዕዳን ጠቕላላ እቶትን (ዝለዓለ 5×)', stresstest:'ባንክ ናይ 3 ነጥቢ ምዕባይ ክትጻወር ከም ትኽእል ይምርምር', aksjonarmodellen:'ንውልቃዊ ኣክሲዮን ዋናታት ናይ ዲቪደንድ ቀረጽ ሞዴል', foretaksmodellen:'ንውልቃዊ ትካላት ናይ ቀረጽ ሞዴል', verdsettelsesrabatt:'ኣብ ኣክሲዮን፣ ገዛን ንብረትን ዝወሃብ ቅናሻ', saldoavs:'ብቀዋሚ % ካብ ዝተረፈ ዋጋ ናይ ቀረጽ ውድቀት ዋጋ', otp:'ኣስራሒ እንተ ወሓደ 2% ካብ ደሞዝ ልዕሊ 1G ክቖጥብ ኣለዎ', agaBegrep:'ኣስራሒ ኣብ ደሞዝ ዝኸፍሎ ቀረጽ — ብዞባ ዝፈላለ', rentesRente:'ኣብ ረብሓ ዝውሰኽ ረብሓ — ቁጠባ ብግዜ ሓያል ዝገብር ስምዒት', annuitet:'ንምሉእ ግዜ ማዕረ ወርሓዊ ክፍሊት ዝህብ ልቓሕ', serieLan:'ማዕረ ኣስላ ክፍሊት ዘለዎ ልቓሕ — ብጠቕላላ ካብ ኣኑኢቲ ዝሓሰረ', naeringHobby:'ተወሳኺ እቶት መዓስ ቀረጽ ዝኽፈሎ ንግዲ ይኸውን?', konsernbidrag:'ኣብ መንጎ ኣብ ሓደ ጉጅለ ዘሎዋ ትካላት ምትሕልላፍ ረብሓ', fritaksmetoden:'ትካላት ካብ ናይ ኣክሲዮን ዲቪደንድን ረብሓን ካብ ቀረጽ ነጻ እየን', deltakerligning:'ረብሓ ይምቐልን ኣብ ነፍሲ ወከፍ ተሳታፊ ቀረጽ ይኽፈሎን', selskapsskatt:'22% ቀረጽ ኣብ ረብሓ ኣክሲዮን ትካል', utbytteskatt:'37.84% ቀረጽ ኣብ ዲቪደንድ ንውልቃዊ ኣክሲዮን ዋናታት', komplementar:'ኣብ KS ዘይተሓጽረ ውልቃዊ ሓላፍነት ዘለዎ ንጡፍ መራሒ', kommandittist:'ኣብ KS ናይ ውልቂ ዘይንጡፍ ወፋሪ — ሓላፍነት ኣብ ኣበርክቶ ጥራይ', mvaSatser:'25% ልሙድ፣ 15% ምግቢ፣ 12% መጓዓዝያ/ባህሊ፣ 0% ወጻኢ', omsetning:'ልዕሊ 50 000 kr ሽያጥ ምስ ዝበጽሕ ምዝገባ ግድን', fradragsrett:'ካብ ናይ ንግዲ ግዝኣት ኣታዊ MVA ናይ ምንካይ መሰል', skatteloven:'ምዕራፋትን ዓንቀጻትን ሕጊ ቀረጽ', sktlK2:'ኣብ ኖርወይ ንመን ይምልከት ቀረጽ?', sktlK4:'ናይ ንብረት፣ ኣክሲዮን፣ ገዛን ቅናሻታትን ግምት', sktlK5:'ቀረጽ ዝኽፈሎ እቶት፣ ደሞዝ፣ ካፒታልን ካብ ቀረጽ ነጻ ጥቕምን', sktlK6:'ናይ መባእታ ቅነሳ፣ ወለድን ፍሉይ ቅነሳታትን', sktlK9:'ምግንዛብ፣ ሽያጥ ገዛ፣ ውርሻ፣ ህያብን ምፍላስን', sktlK10:'ዲቪደንድ፣ ናይ ኣክሲዮን ረብሓ፣ ናይ ጉጅለ ኣበርክቶን NOKUS', sktlK14:'ጉጅለታት ውድቀት ዋጋ፣ ተመናትን ረብሓ/ክሳራን', mvalK2:'ናይ ጉጅለ ምዝገባ፣ ድልየታዊን ኣቐዲምካ ምዝገባን', mvalK3:'ካብ ሕጊ MVA እንታይ ተፈልዩ?', mvalK6:'0% ወጻኢ MVA፣ ምሉእ ናይ ቅነሳ መሰል', mvalK8:'ቀንዲ ሕጊ፣ ዝተሓወሰ ኣጠቓቕማን ድርታትን', mvalK9:'ናይ ካፒታል ሸቐጥን ግዜ ምቅንናይን', rskl53:'ዝተሓጽረ ዕድመ ዘለዎ ቀዋሚ ንብረት ውድቀት ዋጋ ክገብር ኣለዎ', aksjeloven:'ሕጊ ናይ ዝተሓጽረ ሓላፍነት ትካላት', selskapsloven:'ሕጊ ናይ ተሓታቲ ትካልን ኮማንዲት ትካልን',
-      /* gap-close T2 split-2026-05-06-r3 */ skatteloven_portal:'ቀረጽ ኣታዊ፣ ቀረጽ ንብረትን ሕግታት ቅነሳን — ናይ ምዕራፍ ዝርዝር', aksjeloven_portal:'ምስረታ፣ ጠለብ ካፒታል፣ ቦርድን ጠቕላላ ኣኼባን ን AS', mvaloven_portal:'ግዴታ ቫት፣ መሰል ቅነሳን ፍሉያት ሕግታትን', bokforingsloven_portal:'ግዴታ ምዝገባ ሕሳብ፣ ሰነዳትን ምዕቃብን', regnskapsloven_portal:'ግዴታታት ናይ ዓመታዊ ሕሳብን መደብ ቅርጺን', hvordanLeseParagraf:'ምዕራፍ፣ ኣንቀጽ፣ ንኡስ ኣንቀጽን ፊደልን — ቅርጺ ኣንቀጽ ሕጊ', kontoplanNs4102:'ናይ ኖርወይ ስታንዳርድ ዝርዝር ሕሳብ — ካብ ክፍሊ 1 ክሳብ 8', debetKredit:'መሰረታዊ ሕጊ ድርብ ምዝገባ ሕሳብ — ክልተ ጎድኒ ናይ ነፍሲ ወከፍ ግብይት', regnskapsplikt:'መን ብመሰረት ሕጊ ሕሳብ ሕሳብ ክሕዝ ኣለዎ', bokforingConcept:'ዕለታዊ ምዝገባ ሰነዳትን ግብይታትን', arsregnskap:'ዉጽኢት፣ ሚዛንን ኣገናዕን — ወግዓዊ ምዕጻው ናይ ዓመት', revisjon:'ወጻኢ ተመራማሪ ሕሳብ መዓስ ይድለ — ደረትን ተኣከብትን', kalkChipAll:'ኩሉ', kalkChipNew:'ሓደስቲ', kalkChipPopular:'ዝፍተዉ', kalkEyebrowCurrent:'ካልኩሌተር', kalkEyebrowHome:'መበቆል', kalkFilterPlaceholder:'መሳርሒታት ኣብዚ ምድብ ኣጻርይ…', kalkHeroSubtitle:'ካብ ናይ ዕለታዊ ሕሳብ ክሳብ ሳይንሳዊ ስርዓታት፣ ምልዋጥ ምንዛሬን ፋይናንሳዊ ሞዴላትን። ኩሉ ኣብ ዌብ ኣሰሳሪ ብኣካል ይሕሰብ።', kalkHeroTitle:'ካልኩሌተር', kalkSectionRates:'ቀዋሚ ተመናት', kalkSectionTools:'መሳርሒታት', kalkSeeAllCurrencies:'ኩሉ ምንዛሬ ርአ', kalkStatCalculators:'ካልኩሌተራት', kalkStatCurrencies:'ምንዛሬታት', kalkTagLive:'ቀጥታ', kalkToolAvsTitle:'ውድቀት ዋጋ', kalkToolAvsDesc:'ሚዛንን ቀጥታዊ ውድቀት ዋጋን — ኩሎም ጉጅለታት A ክሳብ J።', kalkToolFerieTitle:'ናይ ዕረፍቲ ገንዘብ', kalkToolFerieDesc:'10.2%፣ 12.0%ን +2.3% ልዕሊ 60 ዓመትን — ምሉእ ስሌት።', kalkToolFinTitle:'ፋይናንሳዊ', kalkToolFinDesc:'ህሉው ዋጋ፣ ናይ መጻኢ ዋጋ፣ ኣኑኢቲን ውጽኢታዊ ወለድን።', kalkToolLikviditetTitle:'ናይ ገንዘብ ፍሰት ባጀት', kalkToolLikviditetDesc:'ወርሒ ብወርሒ ናይ ገንዘብ ፍሰት ምስ መበገሲ ሚዛን፣ ኣታዊን ወጻኢን — ምሉእ ሰሌዳ ከም CSV ኣራግፍ።', kalkToolLonnUtbytteTitle:'ደሞዝ ኣንጻር ዲቪደንድ', kalkToolLonnUtbytteDesc:'ናይ ትካል ወጻኢ ኣብ ደሞዝ (AGA + ዕረፍቲ + OTP) ኣንጻር ዲቪደንድ (ቀረጽ ትካል) — ብዞባ AGA ኣወዳድር።', kalkToolNpvTitle:'NPV / IRR', kalkToolNpvDesc:'ናይ ረብሕነት ትንታነ ምስ ጽሩይ ህሉው ዋጋን ውሽጣዊ ወለድን።', kalkToolSciTitle:'ሳይንሳዊ', kalkToolSciDesc:'ሳይን፣ ኮሳይን፣ ሎጋሪዝም፣ ሓይልታት፣ ፋክቶሪያል — ምሉእ ናይ RPN ሞድ ይርከብ።', kalkToolValutaTitle:'ምንዛሬ', kalkToolValutaDesc:'ኣብ መንጎ ምንዛሬታት ብዘመናዊ ተመናት ቀይር። ቀጥታ ER-API + ዕቀባ ን7 መዓልቲ።'
+      /* gap-close T2 split-2026-05-06-r3 */ skatteloven_portal:'ቀረጽ ኣታዊ፣ ቀረጽ ንብረትን ሕግታት ቅነሳን — ናይ ምዕራፍ ዝርዝር', aksjeloven_portal:'ምስረታ፣ ጠለብ ካፒታል፣ ቦርድን ጠቕላላ ኣኼባን ን AS', mvaloven_portal:'ግዴታ ቫት፣ መሰል ቅነሳን ፍሉያት ሕግታትን', bokforingsloven_portal:'ግዴታ ምዝገባ ሕሳብ፣ ሰነዳትን ምዕቃብን', regnskapsloven_portal:'ግዴታታት ናይ ዓመታዊ ሕሳብን መደብ ቅርጺን', hvordanLeseParagraf:'ምዕራፍ፣ ኣንቀጽ፣ ንኡስ ኣንቀጽን ፊደልን — ቅርጺ ኣንቀጽ ሕጊ', kontoplanNs4102:'ናይ ኖርወይ ስታንዳርድ ዝርዝር ሕሳብ — ካብ ክፍሊ 1 ክሳብ 8', debetKredit:'መሰረታዊ ሕጊ ድርብ ምዝገባ ሕሳብ — ክልተ ጎድኒ ናይ ነፍሲ ወከፍ ግብይት', regnskapsplikt:'መን ብመሰረት ሕጊ ሕሳብ ሕሳብ ክሕዝ ኣለዎ', bokforingConcept:'ዕለታዊ ምዝገባ ሰነዳትን ግብይታትን', arsregnskap:'ዉጽኢት፣ ሚዛንን ኣገናዕን — ወግዓዊ ምዕጻው ናይ ዓመት', revisjon:'ወጻኢ ተመራማሪ ሕሳብ መዓስ ይድለ — ደረትን ተኣከብትን', kalkChipAll:'ኩሉ', kalkChipNew:'ሓደስቲ', kalkChipPopular:'ዝፍተዉ', kalkEyebrowCurrent:'ካልኩሌተር', kalkEyebrowHome:'መበቆል', kalkFilterPlaceholder:'መሳርሒታት ኣብዚ ምድብ ኣጻርይ…', kalkHeroSubtitle:'ካብ ናይ ዕለታዊ ሕሳብ ክሳብ ሳይንሳዊ ስርዓታት፣ ምልዋጥ ምንዛሬን ፋይናንሳዊ ሞዴላትን። ኩሉ ኣብ ዌብ ኣሰሳሪ ብኣካል ይሕሰብ።', kalkHeroTitle:'ካልኩሌተር', kalkSectionRates:'ቀዋሚ ተመናት', kalkSectionTools:'መሳርሒታት', kalkSeeAllCurrencies:'ኩሉ ምንዛሬ ርአ', kalkStatCalculators:'ካልኩሌተራት', kalkStatCurrencies:'ምንዛሬታት', kalkTagLive:'ቀጥታ', kalkToolAvsTitle:'ውድቀት ዋጋ', kalkToolAvsDesc:'ሚዛንን ቀጥታዊ ውድቀት ዋጋን — ኩሎም ጉጅለታት A ክሳብ J።', kalkToolFerieTitle:'ናይ ዕረፍቲ ገንዘብ', kalkToolFerieDesc:'10.2%፣ 12.0%ን +2.3% ልዕሊ 60 ዓመትን — ምሉእ ስሌት።', kalkToolFinTitle:'ፋይናንሳዊ', kalkToolFinDesc:'ህሉው ዋጋ፣ ናይ መጻኢ ዋጋ፣ ኣኑኢቲን ውጽኢታዊ ወለድን።', kalkToolLikviditetTitle:'ናይ ገንዘብ ፍሰት ባጀት', kalkToolLikviditetDesc:'ወርሒ ብወርሒ ናይ ገንዘብ ፍሰት ምስ መበገሲ ሚዛን፣ ኣታዊን ወጻኢን — ምሉእ ሰሌዳ ከም CSV ኣራግፍ።', kalkToolLonnUtbytteTitle:'ደሞዝ ኣንጻር ዲቪደንድ', kalkToolLonnUtbytteDesc:'ናይ ትካል ወጻኢ ኣብ ደሞዝ (AGA + ዕረፍቲ + OTP) ኣንጻር ዲቪደንድ (ቀረጽ ትካል) — ብዞባ AGA ኣወዳድር።', kalkToolNpvTitle:'NPV / IRR', kalkToolNpvDesc:'ናይ ረብሕነት ትንታነ ምስ ጽሩይ ህሉው ዋጋን ውሽጣዊ ወለድን።', kalkToolSciTitle:'ሳይንሳዊ', kalkToolSciDesc:'ሳይን፣ ኮሳይን፣ ሎጋሪዝም፣ ሓይልታት፣ ፋክቶሪያል — ምሉእ ናይ RPN ሞድ ይርከብ።', kalkToolValutaTitle:'ምንዛሬ', kalkToolValutaDesc:'ኣብ መንጎ ምንዛሬታት ብዘመናዊ ተመናት ቀይር። ቀጥታ ER-API + ዕቀባ ን7 መዓልቲ።',
+      /* gap-close T2 split-2026-05-26-search-keys */
+      aksjerVeiledning:'እንታይ እዮም ኣክስዮናት፣ ሓደጋ፣ ቀረጽ 37.84 % ን 5 ምኽርን ንጀመርቲ',
+      maxlan:'ዝለዓለ ልቓሕ ብእቶትን ናይ ውልቂ ካፒታልን',
+      bvl:'ኣወዳድር ጠቕላላ ወጻኢ ኣብ X ዓመት — እንታይ ይኸስብ?',
+      andre:'ASA, NUF, SA ን መሰረት',
+      aksjeutvanning:'ናይ ዋንነት ብጽሒት ድሕሪ ሓድሽ ምውጻእን ናይ option ፕሮግራምን ሕሰብ',
+      fradrag:'መጠን ዝንኪ ናይ ቀረጽ መሰረት ወይ ቀረጽካ',
+      kontoplanKlasse1:'ቀዋሚን ዘይቀዋሚን ንብረታት ኣብ ናይ ሕሳብ መደብ',
+      kontoplanKlasse3:'ናይ እቶት ሕሳባት ኣብ NS 4102 (ክፍሊ 3)',
+      resultatregnskap:'ናይ ስራሕ እቶት፣ ናይ ስራሕ ወጻኢ — ብመሰረት ሕጊ ሕሳብ § 6-1',
+      mvaMelding:'ግዜኣዊ ናይ MVA ሕሳብ — ኣእታዊን ወጻኢን MVA፣ 4 ተመን',
+      balanseregn:'ንብረት = ናይ ውልቂ ካፒታል + ዕዳ — ሚዛን ኣዳሉ ብመሰረት ሕጊ ሕሳብ § 6-2',
     },
     // /personlig card titles, descs & category headers (TI)
     fblTitle:'ናይ ኣዕጹዋ ልቓሕ', fblDesc:'እቲ ልቓሕ ብሓቂ ክንደይ ይኸይደካ — ስም-ወለድ ኩሉ ሓቂ ኣይኮነን',
