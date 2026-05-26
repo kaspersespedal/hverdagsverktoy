@@ -2227,6 +2227,167 @@ window.SEARCH_INTENTS = {
       }
     ]
   },
+  "lov": {
+    "section": "lov",
+    "base_url": "/lov",
+    "version": "2026-05-26",
+    "targets": [
+      {
+        "id": "skattelov",
+        "name": "Skatteloven",
+        "url": "/lov/skattelov/",
+        "description": "Inntektsskatt, formuesskatt og fradragsregler — kapittel-oversikt"
+      },
+      {
+        "id": "aksjelov",
+        "name": "Aksjeloven",
+        "url": "/lov/aksjelov/",
+        "description": "Stiftelse, kapitalkrav, styre og generalforsamling for AS"
+      },
+      {
+        "id": "mvalov",
+        "name": "Merverdiavgiftsloven",
+        "url": "/lov/mvalov/",
+        "description": "MVA-plikt, fradragsrett og særskilte regler"
+      },
+      {
+        "id": "bokforingslov",
+        "name": "Bokføringsloven",
+        "url": "/lov/bokforingslov/",
+        "description": "Bokføringsplikt, dokumentasjon og oppbevaring"
+      }
+    ],
+    "intents": [
+      {
+        "q": "hvor finner jeg skatteloven",
+        "target": "skattelov"
+      },
+      {
+        "q": "skatteloven kapittel 2 skatteplikt",
+        "target": "skattelov"
+      },
+      {
+        "q": "skatteloven § 5-1 inntekt",
+        "target": "skattelov"
+      },
+      {
+        "q": "sktl kapittel 6 fradrag",
+        "target": "skattelov"
+      },
+      {
+        "q": "hva sier skatteloven om formue",
+        "target": "skattelov"
+      },
+      {
+        "q": "fradrag i skatteloven",
+        "target": "skattelov"
+      },
+      {
+        "q": "skatteloven gevinst salg bolig",
+        "target": "skattelov"
+      },
+      {
+        "q": "sktl § 10 utbytte aksjer",
+        "target": "skattelov"
+      },
+      {
+        "q": "aksjeloven kapital krav",
+        "target": "aksjelov"
+      },
+      {
+        "q": "asl § 2 stiftelse aksjeselskap",
+        "target": "aksjelov"
+      },
+      {
+        "q": "hvilke regler gjelder for AS",
+        "target": "aksjelov"
+      },
+      {
+        "q": "aksjeloven styre og generalforsamling",
+        "target": "aksjelov"
+      },
+      {
+        "q": "hvordan stifte aksjeselskap",
+        "target": "aksjelov"
+      },
+      {
+        "q": "kapitalkrav aksjeloven 30000",
+        "target": "aksjelov"
+      },
+      {
+        "q": "aksjeloven utbytte regler",
+        "target": "aksjelov"
+      },
+      {
+        "q": "asl revisor regnskapsplikt",
+        "target": "aksjelov"
+      },
+      {
+        "q": "merverdiavgiftsloven mva",
+        "target": "mvalov"
+      },
+      {
+        "q": "mvalov § 8 fradrag",
+        "target": "mvalov"
+      },
+      {
+        "q": "hva sier mvaloven om registrering",
+        "target": "mvalov"
+      },
+      {
+        "q": "mval kapittel 6 fritak",
+        "target": "mvalov"
+      },
+      {
+        "q": "merverdiavgiftsloven omsetning 50000",
+        "target": "mvalov"
+      },
+      {
+        "q": "mvalov kapitalvarer justering",
+        "target": "mvalov"
+      },
+      {
+        "q": "fradragsrett mva loven",
+        "target": "mvalov"
+      },
+      {
+        "q": "mval frivillig registrering",
+        "target": "mvalov"
+      },
+      {
+        "q": "bokføringsloven bfl",
+        "target": "bokforingslov"
+      },
+      {
+        "q": "bokføringsplikt regler",
+        "target": "bokforingslov"
+      },
+      {
+        "q": "bfl dokumentasjon oppbevaring 5 år",
+        "target": "bokforingslov"
+      },
+      {
+        "q": "hvor lenge må jeg oppbevare bilag",
+        "target": "bokforingslov"
+      },
+      {
+        "q": "bokføringsloven bilag krav",
+        "target": "bokforingslov"
+      },
+      {
+        "q": "regler for bokføring",
+        "target": "bokforingslov"
+      },
+      {
+        "q": "bfl pliktig regnskapsføring",
+        "target": "bokforingslov"
+      },
+      {
+        "q": "bokføringsloven dokumentasjon",
+        "target": "bokforingslov"
+      }
+    ]
+  },
   "personlig": {
     "section": "personlig",
     "base_url": "/personlig",
@@ -3034,6 +3195,167 @@ window.SEARCH_INTENTS = {
       {
         "q": "hva er obligasjoner",
         "target": "tek"
+      }
+    ]
+  },
+  "regnskap": {
+    "section": "regnskap",
+    "base_url": "/regnskap",
+    "version": "2026-05-26",
+    "targets": [
+      {
+        "id": "kontoplan",
+        "name": "Standard kontoplan NS 4102",
+        "url": "/regnskap/kontoplan/",
+        "description": "Norsk standard kontoplan — klasse 1 til 8 (søkbar referanse)"
+      },
+      {
+        "id": "mva",
+        "name": "MVA-melding",
+        "url": "/regnskap/mva/",
+        "description": "Termin-vis MVA-oppgjør — utgående og inngående, 4 satser"
+      },
+      {
+        "id": "resultat",
+        "name": "Resultatregnskap",
+        "url": "/regnskap/resultat/",
+        "description": "Driftsinntekter, driftskostnader, driftsresultat — etter rskl § 6-1"
+      },
+      {
+        "id": "balanse",
+        "name": "Balanse",
+        "url": "/regnskap/balanse/",
+        "description": "Eiendeler = EK + Gjeld — sett opp balansen etter rskl § 6-2"
+      }
+    ],
+    "intents": [
+      {
+        "q": "standard kontoplan ns 4102",
+        "target": "kontoplan"
+      },
+      {
+        "q": "norsk kontoplan klasser",
+        "target": "kontoplan"
+      },
+      {
+        "q": "kontoklasse 1 eiendeler",
+        "target": "kontoplan"
+      },
+      {
+        "q": "kontoklasse 3 salgsinntekt",
+        "target": "kontoplan"
+      },
+      {
+        "q": "hvilken konto skal jeg bruke for lønn",
+        "target": "kontoplan"
+      },
+      {
+        "q": "kontoplan debet kredit",
+        "target": "kontoplan"
+      },
+      {
+        "q": "konto for bank og kasse",
+        "target": "kontoplan"
+      },
+      {
+        "q": "ns 4102 chart of accounts",
+        "target": "kontoplan"
+      },
+      {
+        "q": "mva-melding hvordan",
+        "target": "mva"
+      },
+      {
+        "q": "termin mva oppgjør",
+        "target": "mva"
+      },
+      {
+        "q": "utgående og inngående mva",
+        "target": "mva"
+      },
+      {
+        "q": "mva-melding rf-0002",
+        "target": "mva"
+      },
+      {
+        "q": "mva satser 25 15 12",
+        "target": "mva"
+      },
+      {
+        "q": "hvordan beregne mva-melding",
+        "target": "mva"
+      },
+      {
+        "q": "mva 2 mnd termin",
+        "target": "mva"
+      },
+      {
+        "q": "skattemelding mva",
+        "target": "mva"
+      },
+      {
+        "q": "resultatregnskap mal",
+        "target": "resultat"
+      },
+      {
+        "q": "lag resultatregnskap as",
+        "target": "resultat"
+      },
+      {
+        "q": "driftsinntekter driftskostnader",
+        "target": "resultat"
+      },
+      {
+        "q": "regnskapsloven 6-1 oppstillingsplan",
+        "target": "resultat"
+      },
+      {
+        "q": "årsresultat formel",
+        "target": "resultat"
+      },
+      {
+        "q": "income statement norge",
+        "target": "resultat"
+      },
+      {
+        "q": "resultat finansposter",
+        "target": "resultat"
+      },
+      {
+        "q": "hva er driftsresultat",
+        "target": "resultat"
+      },
+      {
+        "q": "balanse mal",
+        "target": "balanse"
+      },
+      {
+        "q": "sett opp balanse for as",
+        "target": "balanse"
+      },
+      {
+        "q": "eiendeler egenkapital gjeld",
+        "target": "balanse"
+      },
+      {
+        "q": "regnskapsloven 6-2 balanse",
+        "target": "balanse"
+      },
+      {
+        "q": "balance sheet norsk",
+        "target": "balanse"
+      },
+      {
+        "q": "anleggsmidler omløpsmidler",
+        "target": "balanse"
+      },
+      {
+        "q": "balanse går ikke i null",
+        "target": "balanse"
+      },
+      {
+        "q": "hvordan stille opp balanse",
+        "target": "balanse"
       }
     ]
   },
