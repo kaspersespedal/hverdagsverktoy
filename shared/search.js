@@ -152,6 +152,7 @@ var SEARCH_DATA = [
   {name:'Avskrivning',desc:'Regnskapsmessig og skattemessig avskrivning',url:'/kalkulator/avs/',tags:'avskrivning saldoavskrivning lineær saldo avskrivningsgruppe restverdi',type:'tool',page:'Kalkulator'},
   {name:'NPV / IRR',desc:'Lønnsomhetsanalyse med netto nåverdi og internrente',url:'/kalkulator/npv/',tags:'npv irr nåverdi internrente lønnsomhetsanalyse investeringsanalyse tilbakebetalingstid diskonteringsrente wacc',type:'tool',page:'Kalkulator'},
   {name:'Effektiv rente',desc:'Beregn effektiv årsrente inkl. gebyrer og etableringsavgift',url:'/kalkulator/rente/',tags:'effektiv rente rentekalkulator nominell rente lånekalkulator årsrente etableringsavgift annuitetslån',type:'tool',page:'Kalkulator'},
+  {name:'Dekningsbidrag',desc:'Beregn DB%, break-even-mengde og resultat',url:'/kalkulator/dekningsbidrag/',tags:'dekningsbidrag db dg dekningsgrad break-even break even bedrift kalkyle margin selvkost',type:'tool',page:'Kalkulator',sk:'kalkDekningsbidrag'},
   {name:'Tilbud / Anbud',desc:'Tilbudskalkyle med materiell, timer, påslag og MVA + CSV-eksport',url:'/kalkulator/tilbud/',tags:'tilbud anbud kalkyle pristilbud handverker freelance konsulent prising materiell timer mva',type:'tool',page:'Kalkulator',sk:'kalkTilbud'},
   {name:'Feriepenger',desc:'Beregn feriepenger ut fra årslønn og ferieordning',url:'/kalkulator/ferie/',tags:'feriepenger ferie ferielov ferieordning over 60 bonus ferietillegg',type:'tool',page:'Kalkulator'},
   {name:'Valutagevinst',desc:'Beregn gevinst eller tap ved kjøp og salg av valuta',url:'/kalkulator/valgevinst/',tags:'valutagevinst valutatap valuta kjøp salg kurs gevinst skatt',type:'tool',page:'Kalkulator'},
@@ -242,6 +243,7 @@ var URL_TO_I18N_KEYS = {
   '/kalkulator/#valgevinst':       ['lblValgevinst'],
   '/kalkulator/#likvid':           ['lblLikvid','likvidIntro'],
   '/kalkulator/#npv':              ['npvTitle','npvDesc','cmFcNpv'],
+  '/kalkulator/dekningsbidrag/':  ['kalkDekningsbidragTitle','kalkDekningsbidragSubtitle','kalkToolDbTitle','kalkToolDbDesc'],
   '/kalkulator/#pensjon':          ['lblPensjon','pensjonHint'],
   '/kalkulator/tilbud/':          ['kalkTilbudHeroTitle','kalkTilbudHeroDesc','kalkTilbudHowtoTitle'],
   '/kalkulator/#lvu':              ['lblLvu','lvuRSal','lvuRDiv','lvuGross'],
@@ -297,6 +299,7 @@ var URL_TO_DISPLAY = {
   '/kalkulator/#valgevinst':      {title:'lblValgevinst'},
   '/kalkulator/#likvid':          {title:'lblLikvid',     desc:'likvidIntro'},
   '/kalkulator/#npv':             {title:'npvTitle',      desc:'npvDesc'},
+  '/kalkulator/dekningsbidrag/': {title:'kalkToolDbTitle', desc:'kalkToolDbDesc'},
   '/kalkulator/#pensjon':         {title:'lblPensjon',    desc:'pensjonHint'},
   '/kalkulator/#lvu':             {title:'lblLvu'},
   // Skatt
