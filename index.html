@@ -59,237 +59,17 @@
     }catch(e){}
   })();
 </script>
-<!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
-<style>
-/* ─────────────────────────────────────────────────────
-   ATMOSPHERE — "Aurora over ink" (site-wide)
-   Four-layer stack, fixed, behind everything:
-     L1 .atmo-base    — solid base + vertical gradient
-     L2 .atmo .band   — two horizontal aurora bands, blend:screen
-     L3 .atmo .cursor-light — single soft circular light, lerp 0.06
-     L4 .film-grain   — static SVG fractal noise, blend:overlay, ~3.5%
-   Mobile: drift slowed x1.5, no cursor light, grain -> 2%.
-   Reduced-motion: bands static at 0.5x, no drift, no cursor light.
-   Source: hv_oppdatert_design/Homepage.html (v3, 2026-04-30).
-   v2 (E83): atmosphere skjules på lyse themes (frost/glass/hendrix/bw/pink).
-   v3 (E83): atmosphere-farger er nå tokenisert per dark theme.
-     carbon (default) → cognac/amber
-     dark              → kjølig blå/indigo
-     disco             → neon pink/lilla
-───────────────────────────────────────────────────── */
-/* FOUC-guard during language load — BUG-05 closes (alternativ A).
-   Skjuler oversettbare elementer mens lang-loading-klassen er aktiv på html.
-   Klassen settes synkront av inline head-script og fjernes av core.js etter loadLang resolves. */
-html.lang-loading [data-i18n]{visibility:hidden;}
-:root{
-  --atmo-base-top:#0F0D0A;
-  --atmo-base-bottom:#070605;
-  --atmo-band-a:38, 60%, 75%;   /* hsl triplet — cream */
-  --atmo-band-a-op:.08;
-  --atmo-band-a-op-breathe:.10;
-  --atmo-band-b:28, 50%, 55%;   /* hsl triplet — deep amber */
-  --atmo-band-b-op:.05;
-  --atmo-band-b-op-breathe:.07;
-  --atmo-cursor:38, 70%, 75%;   /* hsl triplet — warm cream */
-  --atmo-cursor-op:.04;
-}
-[data-theme="dark"]{
-  --atmo-base-top:#141520;
-  --atmo-base-bottom:#0a0b14;
-  --atmo-band-a:222, 80%, 72%;          /* cool blue, matcher accent #6c8aef */
-  --atmo-band-a-op:.09;
-  --atmo-band-a-op-breathe:.12;
-  --atmo-band-b:258, 55%, 55%;          /* violet — duotone-kontrast mot bandA */
-  --atmo-band-b-op:.06;
-  --atmo-band-b-op-breathe:.08;
-  --atmo-cursor:222, 80%, 72%;
-  --atmo-cursor-op:.05;
-}
-[data-theme="disco"]{
-  --atmo-base-top:#0d0a18;
-  --atmo-base-bottom:#060410;
-  --atmo-band-a:328, 70%, 70%;  /* neon pink */
-  --atmo-band-a-op:.10;
-  --atmo-band-a-op-breathe:.13;
-  --atmo-band-b:268, 60%, 58%;  /* purple */
-  --atmo-band-b-op:.07;
-  --atmo-band-b-op-breathe:.09;
-  --atmo-cursor:328, 75%, 72%;
-  --atmo-cursor-op:.05;
-}
-html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo-base,
-html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo,
-html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .film-grain{
-  display:none !important;
-}
-.atmo-base{
-  position:fixed;inset:0;z-index:-3;pointer-events:none;
-  background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
-}
-.atmo{
-  position:fixed;inset:0;z-index:-2;pointer-events:none;
-  isolation:isolate;overflow:hidden;contain:layout paint;
-}
-/* Each band uses a two-element nest so X-drift, Y-drift, and the
-   opacity-breathe can each animate without fighting for a single
-   transform property. Non-equal periods (38/53 and 41/47) so the
-   loop is never visible. */
-.band{
-  position:absolute;pointer-events:none;will-change:transform;
-  mix-blend-mode:screen;transform-origin:center;
-}
-.band-inner{
-  position:absolute;inset:0;
-  will-change:transform, opacity;transform-origin:center;
-}
-/* Band A — primary cream, anchored above the headline. */
-.band-a{
-  width:140vw;height:30vh;
-  left:50%;top:18%;margin-left:-70vw;
-  animation: bandADriftX 38s ease-in-out infinite;
-}
-.band-a .band-inner{
-  background:radial-gradient(ellipse at center,
-    hsl(var(--atmo-band-a)) 0%, transparent 50%);
-  opacity:var(--atmo-band-a-op);
-  animation:
-    bandADriftY 53s ease-in-out infinite,
-    bandABreathe 24s ease-in-out infinite;
-}
-/* Band B — deeper amber, lower note, counter-phase from t=0. */
-.band-b{
-  width:110vw;height:22vh;
-  left:42%;top:30%;margin-left:-55vw;
-  animation: bandBDriftX 41s ease-in-out infinite;
-  animation-delay: -20.5s;
-}
-.band-b .band-inner{
-  background:radial-gradient(ellipse at center,
-    hsl(var(--atmo-band-b)) 0%, transparent 50%);
-  opacity:var(--atmo-band-b-op);
-  animation:
-    bandBDriftY 47s ease-in-out infinite,
-    bandBBreathe 31s ease-in-out infinite;
-  animation-delay: -23.5s, -15.5s;
-}
-@keyframes bandADriftX{
-  0%, 100% { transform: translate3d(-4%, 0, 0); }
-  50%      { transform: translate3d( 4%, 0, 0); }
-}
-@keyframes bandADriftY{
-  0%, 100% { transform: translate3d(0, -1.5%, 0); }
-  50%      { transform: translate3d(0,  1.5%, 0); }
-}
-@keyframes bandABreathe{
-  0%, 100% { opacity: var(--atmo-band-a-op); }
-  50%      { opacity: var(--atmo-band-a-op-breathe); }
-}
-@keyframes bandBDriftX{
-  0%, 100% { transform: translate3d( 4%, 0, 0); }
-  50%      { transform: translate3d(-4%, 0, 0); }
-}
-@keyframes bandBDriftY{
-  0%, 100% { transform: translate3d(0,  1.5%, 0); }
-  50%      { transform: translate3d(0, -1.5%, 0); }
-}
-@keyframes bandBBreathe{
-  0%, 100% { opacity: var(--atmo-band-b-op); }
-  50%      { opacity: var(--atmo-band-b-op-breathe); }
-}
-/* L3 — Cursor-anchored light. Position written by JS via translate3d. */
-.cursor-light{
-  position:fixed;left:0;top:0;
-  width:1200px;height:1200px;margin:-600px 0 0 -600px;
-  pointer-events:none;
-  background:radial-gradient(circle,
-    hsla(var(--atmo-cursor), var(--atmo-cursor-op)) 0%, transparent 60%);
-  transform: translate3d(50vw, 50vh, 0);
-  will-change:transform;mix-blend-mode:screen;
-}
-/* L4 — Static SVG fractal grain. z-index: -1 so it sits above the
-   atmosphere (-2/-3) but below unpositioned/sticky foreground content.
-   Keeps text crisp (grain only mixes with atmosphere) and avoids forcing
-   position:relative on every body child — which would break sticky nav. */
-.film-grain{
-  position:fixed;inset:0;z-index:-1;pointer-events:none;
-  opacity:.035;mix-blend-mode:overlay;
-  width:100%;height:100%;
-}
 
-/* Mobile (<= 768px) — drift slowed x1.5, no cursor light, grain -> 2%. */
-@media (max-width: 768px){
-  .band-a{ animation-duration:57s; }
-  .band-a .band-inner{ animation: bandADriftY 79s ease-in-out infinite; }
-  .band-b{ animation-duration:61s; }
-  .band-b .band-inner{ animation: bandBDriftY 70s ease-in-out infinite; }
-  .cursor-light{ display:none; }
-  .film-grain{ opacity:.02; }
-}
-@media (max-width: 1023px){
-  .cursor-light{ display:none; }
-}
-@media (prefers-reduced-motion: reduce){
-  .band, .band-inner{ animation:none !important; }
-  .band-a .band-inner{ opacity:.04 !important; }
-  .band-b .band-inner{ opacity:.025 !important; }
-  .cursor-light{ display:none !important; }
-}
-@media (prefers-reduced-data: reduce), (update: slow){
-  .band, .band-inner{ animation:none !important; }
-  .cursor-light{ display:none !important; }
-  .film-grain{ opacity:.02 !important; }
-}
+<!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
+<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v1">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v1">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
 
-/* ── E66: Landing-only fallback styling for components that normally live in
-   shared/style.css (which new-layout landings do not load): the global search-box
-   injected by shared/search.js, and bare <a> in <footer>. Without this, both
-   render with default browser styling — see Brain_HV/wiki/kontekst/historikk.md E66. */
-.search-box{
-  display:flex;align-items:center;gap:10px;
-  background:var(--surface);
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:10px 14px;
-  max-width:520px;margin:0 auto;
-  font:14px/1.4 var(--font-sans);
-}
-.search-icon{color:var(--ink3);flex-shrink:0}
-#search-input{
-  flex:1;min-width:0;
-  background:transparent;border:0;outline:0;
-  color:var(--ink);font:inherit;
-  padding:2px 0;
-}
-#search-input::placeholder{color:var(--ink4)}
-#search-input:focus{outline:0}
-.search-box:focus-within{border-color:var(--line-warm)}
-.search-kbd{
-  font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;
-  color:var(--ink3);
-  background:var(--bg);
-  border:1px solid var(--line);
-  padding:3px 7px;border-radius:5px;flex-shrink:0;
-}
-.search-dropdown{
-  position:absolute;z-index:100;
-  margin-top:6px;max-width:520px;width:100%;
-  background:var(--surface-2,var(--surface));
-  border:1px solid var(--line);border-radius:10px;
-  display:none;overflow:hidden;
-}
-.search-dropdown:not(:empty){display:block}
+<!-- FOUC-guard during language load — keeps i18n elements hidden until core.js resolves loadLang. -->
+<style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
 
-footer a{
-  color:var(--ink3);text-decoration:none;
-  border-bottom:1px solid transparent;
-  transition:color .2s var(--ease,ease),border-color .2s var(--ease,ease);
-}
-@media (hover:hover){
-  footer a:hover{color:var(--ink);border-bottom-color:var(--line-warm)}
-}
-footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
-
-</style>
 <style>
   :root{
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -300,7 +80,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     --ink2:#a8a39a;
     --ink3:#797469;
     --ink4:#54514a;
-    --bg:#0d0d0c;
+    --bg:#0A0908;
     --surface:#131312;
     --surface-2:#191917;
     --accent:#c89968;
@@ -309,11 +89,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     --line-2:rgba(255,255,255,.10);
     --line-warm:rgba(200,153,104,.18);
 
-    --pos:#5fa978;
-    --neg:#c46a6a;
+    --pos:#e6e1d8;
+    --neg:#a8a39a;
     /* Soft, near-monochrome variants for ticker / micro-deltas */
-    --pos-soft:rgba(150,180,158,.78);
-    --neg-soft:rgba(190,150,150,.78);
+    --pos-soft:rgba(220,214,202,.78);
+    --neg-soft:rgba(168,163,154,.78);
     --flat-soft:rgba(168,163,154,.65);
 
     /* ── Motion design tokens ───────────────────────
@@ -334,134 +114,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     /* Legacy alias — keep existing rules working */
     --ease: var(--ease-out-quart);
-
-    /* Themable surface aliases — overridden per theme */
-    --nav-bg: rgba(13,13,12,.78);
-    --mark-bg: #1a1714;
-    --menu-bg: #161513;
-    --hover-bg: rgba(255,255,255,.04);
-    --hover-bg-soft: rgba(255,255,255,.02);
-    --kbd-bg: rgba(255,255,255,.04);
-    --flag-shadow: rgba(0,0,0,.4);
-    --ticker-bg: #0a0a09;
-    --select-bg: rgba(200,153,104,.28);
-  }
-
-  /* ── CARBON (default — same as :root) ───────────── */
-  [data-theme="carbon"]{
-    --ink:#ececea; --ink2:#a8a39a; --ink3:#797469; --ink4:#54514a;
-    --bg:#0d0d0c; --surface:#131312; --surface-2:#191917;
-    --accent:#c89968; --accent-2:#d8ad7e;
-    --line:rgba(255,255,255,.06); --line-2:rgba(255,255,255,.10); --line-warm:rgba(200,153,104,.18);
-    --pos:#5fa978; --neg:#c46a6a;
-    --pos-soft:rgba(150,180,158,.78); --neg-soft:rgba(190,150,150,.78); --flat-soft:rgba(168,163,154,.65);
-    --nav-bg: rgba(13,13,12,.78); --mark-bg:#1a1714; --menu-bg:#161513;
-    --hover-bg: rgba(255,255,255,.04); --hover-bg-soft: rgba(255,255,255,.02);
-    --kbd-bg: rgba(255,255,255,.04); --flag-shadow: rgba(0,0,0,.4);
-    --ticker-bg:#0a0a09; --select-bg:rgba(200,153,104,.28);
-  }
-
-  /* ── FROST (warm cream paper) ───────────────────── */
-  [data-theme="frost"]{
-    --ink:#1a1714; --ink2:#5e574e; --ink3:#8a8378; --ink4:#b5ae9f;
-    --bg:#fafaf7; --surface:#ffffff; --surface-2:#f3f1ec;
-    --accent:#a87842; --accent-2:#8d6233;
-    --line:rgba(0,0,0,.08); --line-2:rgba(0,0,0,.14); --line-warm:rgba(168,120,66,.22);
-    --pos:#3a8a55; --neg:#b8504e;
-    --pos-soft:rgba(58,138,85,.85); --neg-soft:rgba(184,80,78,.85); --flat-soft:rgba(120,114,104,.7);
-    --nav-bg: rgba(250,250,247,.82); --mark-bg:#f3eee5; --menu-bg:#ffffff;
-    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
-    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
-    --ticker-bg:#f1ede4; --select-bg:rgba(168,120,66,.20);
-  }
-
-  /* ── HENDRIX (deep mahogany) ────────────────────── */
-  [data-theme="hendrix"]{
-    --ink:#f4e6d3; --ink2:#c7ad8b; --ink3:#937c5e; --ink4:#5f4f3a;
-    --bg:#1f110b; --surface:#2a1810; --surface-2:#341f15;
-    --accent:#d4794a; --accent-2:#e6926a;
-    --line:rgba(244,230,211,.07); --line-2:rgba(244,230,211,.13); --line-warm:rgba(212,121,74,.22);
-    --pos:#7ab46f; --neg:#d36a5a;
-    --pos-soft:rgba(122,180,111,.78); --neg-soft:rgba(211,106,90,.78); --flat-soft:rgba(168,148,120,.65);
-    --nav-bg: rgba(31,17,11,.82); --mark-bg:#34211a; --menu-bg:#2a1810;
-    --hover-bg: rgba(244,230,211,.05); --hover-bg-soft: rgba(244,230,211,.025);
-    --kbd-bg: rgba(244,230,211,.05); --flag-shadow: rgba(0,0,0,.4);
-    --ticker-bg:#180c07; --select-bg:rgba(212,121,74,.30);
-  }
-
-  /* ── DARK (cool indigo) ─────────────────────────── */
-  [data-theme="dark"]{
-    --ink:#e6e8ef; --ink2:#9ba0b3; --ink3:#6c7185; --ink4:#444858;
-    --bg:#0d0e1a; --surface:#141528; --surface-2:#1c1d34;
-    --accent:#6c8aef; --accent-2:#94a8f5;
-    --line:rgba(255,255,255,.06); --line-2:rgba(255,255,255,.10); --line-warm:rgba(108,138,239,.20);
-    --pos:#5fa978; --neg:#c46a6a;
-    --pos-soft:rgba(150,180,158,.78); --neg-soft:rgba(190,150,150,.78); --flat-soft:rgba(168,163,178,.65);
-    --nav-bg: rgba(13,14,26,.78); --mark-bg:#1c1d34; --menu-bg:#181a2e;
-    --hover-bg: rgba(255,255,255,.04); --hover-bg-soft: rgba(255,255,255,.02);
-    --kbd-bg: rgba(255,255,255,.04); --flag-shadow: rgba(0,0,0,.4);
-    --ticker-bg:#0a0b15; --select-bg:rgba(108,138,239,.28);
-  }
-
-  /* ── GLASS (light periwinkle) ───────────────────── */
-  [data-theme="glass"]{
-    --ink:#1a1d2e; --ink2:#5a6280; --ink3:#8a93ad; --ink4:#b5bdcf;
-    --bg:#f0f3fa; --surface:#ffffff; --surface-2:#e8edf6;
-    --accent:#6875f5; --accent-2:#5562e5;
-    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(104,117,245,.22);
-    --pos:#3a8a55; --neg:#b8504e;
-    --pos-soft:rgba(58,138,85,.85); --neg-soft:rgba(184,80,78,.85); --flat-soft:rgba(138,147,173,.7);
-    --nav-bg: rgba(240,243,250,.82); --mark-bg:#e8edf6; --menu-bg:#ffffff;
-    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
-    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
-    --ticker-bg:#e8ecf5; --select-bg:rgba(104,117,245,.22);
-  }
-
-  /* ── BW (Swiss minimalist) ──────────────────────── */
-  [data-theme="bw"]{
-    --ink:#f5f5f5; --ink2:#b0b0b0; --ink3:#808080; --ink4:#555555;
-    --bg:#0a0a0a; --surface:#141414; --surface-2:#1c1c1c;
-    --accent:#ffffff; --accent-2:#e0e0e0;
-    --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.13); --line-warm:rgba(255,255,255,.18);
-    --pos:#9aa39a; --neg:#c2a5a5;
-    --pos-soft:rgba(154,163,154,.78); --neg-soft:rgba(194,165,165,.78); --flat-soft:rgba(168,168,168,.65);
-    --nav-bg: rgba(10,10,10,.82); --mark-bg:#1c1c1c; --menu-bg:#141414;
-    --hover-bg: rgba(255,255,255,.05); --hover-bg-soft: rgba(255,255,255,.025);
-    --kbd-bg: rgba(255,255,255,.05); --flag-shadow: rgba(0,0,0,.4);
-    --ticker-bg:#070707; --select-bg:rgba(255,255,255,.22);
-  }
-
-  /* ── DISCO (neon nightclub) ─────────────────────── */
-  [data-theme="disco"]{
-    --ink:#f5e6f5; --ink2:#c4a8c4; --ink3:#8a6e90; --ink4:#5a445e;
-    --bg:#15081a; --surface:#1f0d28; --surface-2:#281033;
-    --accent:#e91e8c; --accent-2:#ff4ba6;
-    --line:rgba(245,230,245,.06); --line-2:rgba(245,230,245,.10); --line-warm:rgba(233,30,140,.22);
-    --pos:#5fa978; --neg:#ff7a8a;
-    --pos-soft:rgba(150,180,158,.78); --neg-soft:rgba(255,122,138,.78); --flat-soft:rgba(168,138,168,.65);
-    --nav-bg: rgba(21,8,26,.82); --mark-bg:#281033; --menu-bg:#1f0d28;
-    --hover-bg: rgba(245,230,245,.05); --hover-bg-soft: rgba(245,230,245,.025);
-    --kbd-bg: rgba(245,230,245,.05); --flag-shadow: rgba(0,0,0,.4);
-    --ticker-bg:#0e0414; --select-bg:rgba(233,30,140,.30);
-  }
-
-  /* ── PINK (warm rose) ───────────────────────────── */
-  [data-theme="pink"]{
-    --ink:#2a1a22; --ink2:#6b4a58; --ink3:#9a7585; --ink4:#c4a8b5;
-    --bg:#fef1f5; --surface:#ffffff; --surface-2:#fce2eb;
-    --accent:#e890b2; --accent-2:#d676a0;
-    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(232,144,178,.24);
-    --pos:#3a8a55; --neg:#d36a73;
-    --pos-soft:rgba(58,138,85,.85); --neg-soft:rgba(211,106,115,.85); --flat-soft:rgba(154,117,133,.7);
-    --nav-bg: rgba(254,241,245,.82); --mark-bg:#fce2eb; --menu-bg:#ffffff;
-    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
-    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
-    --ticker-bg:#fbe1ea; --select-bg:rgba(232,144,178,.28);
   }
 
   *,*::before,*::after{box-sizing:border-box}
-  html{scroll-behavior:smooth;overflow-x:hidden}
-  html,body{margin:0;padding:0;position:relative}
+  html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
   body{
     background:var(--bg);
     color:var(--ink);
@@ -472,8 +129,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
     overflow-x:hidden;
-    width:100%;
-    max-width:100vw;
   }
   .container{max-width:1120px;margin:0 auto;padding:0 32px}
 
@@ -485,28 +140,22 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
      100% line-height up to 0. JS measures and adds .ready when fonts are
      resolved + adds .play after a 200ms settle. ease-out-expo, slow. */
   [data-headline]{
-    /* Wraps will be injected by JS. Keep tight line-height so the mask
-       crops cleanly. */
     line-height:1.05;
   }
   [data-headline] .word-mask{
     display:inline-block;
     overflow:hidden;
     vertical-align:bottom;
-    /* Line-height matches h1 */
     line-height:1.05;
-    /* Kill the trailing whitespace gap; we re-insert spaces between masks */
     white-space:nowrap;
+    padding-bottom:.14em;
+    margin-bottom:-.14em;
   }
   [data-headline] .word-inner{
     display:inline-block;
     transform:translateY(110%);
     opacity:0;
     will-change:transform, opacity;
-    /* Tail-end opacity rise alongside the slow mask reveal — adds a hint
-       of cinematic crispness without going per-character. The opacity
-       transition fires faster (--dur-base) so it lands ~300ms before
-       the transform settles. */
     transition:
       transform var(--dur-slow) var(--ease-out-expo),
       opacity   var(--dur-base) var(--ease-out-quart);
@@ -537,8 +186,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
   [data-headline].play .shimmer{
     animation:shimmer 600ms cubic-bezier(.5, 0, .25, 1) 1 forwards;
-    /* Shimmer fires after the italic word lands. JS sets the delay var
-       to (italicWordDelay + 280ms). */
     animation-delay:var(--shimmer-d, 0ms);
   }
   @keyframes shimmer{
@@ -546,8 +193,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     100% { background-position:160% 0%; }
   }
 
-  /* Subline + search rise — fade + 12px translate-y, base, ease-out-quart.
-     Triggered after the headline finishes (~ headline duration + tail). */
+  /* Subline + search rise — fade + 12px translate-y, base, ease-out-quart. */
   .rise{
     opacity:0;
     transform:translateY(12px);
@@ -558,7 +204,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   body.heroLanded .rise{
     opacity:1;
     transform:translateY(0);
-    /* Stagger: data-rise-d = 0..N → delay = N * --stag-loose */
   }
   body.heroLanded .rise[data-rise-d="0"]{ transition-delay: 0ms; }
   body.heroLanded .rise[data-rise-d="1"]{ transition-delay: var(--stag-loose); }
@@ -577,23 +222,22 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     100% { opacity:1; transform:translateY(0); }
   }
 
-  /* Ticker initial entry — 600ms blur-in before the marquee starts.
-     Set on aside.ticker-top. The track itself stays paused until .live. */
+  /* Ticker initial entry — matches the .rise system used by the search bar. */
   aside.ticker-top{
     opacity:0;
-    filter:blur(2px);
-    transition:opacity 600ms var(--ease-out-quart),
-               filter  600ms var(--ease-out-quart);
+    transform:translateY(12px);
+    transition:opacity var(--dur-base) var(--ease-out-quart),
+               transform var(--dur-base) var(--ease-out-quart);
+    will-change:transform, opacity;
   }
   aside.ticker-top.live{
     opacity:1;
-    filter:blur(0);
+    transform:translateY(0);
   }
-  /* Hold the marquee until tickerLive — prevents motion during entry */
   .ticker-track{ animation-play-state: paused; }
   aside.ticker-top.live .ticker-track{ animation-play-state: running; }
 
-  /* Keyboard focus — institutional cognac ring, never dull blue */
+  /* Keyboard focus — institutional cognac ring */
   :focus{outline:none}
   :focus-visible{
     outline:1px solid var(--accent);
@@ -621,7 +265,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   /* ── NAV ─────────────────────────────────────────── */
   .nav-wrap{
     position:sticky;top:0;z-index:50;
-    background:var(--nav-bg);
+    background:rgba(13,13,12,.78);
     backdrop-filter:blur(14px) saturate(140%);
     -webkit-backdrop-filter:blur(14px) saturate(140%);
     border-bottom:1px solid transparent;
@@ -641,168 +285,94 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     font-size:18px;letter-spacing:-.2px;line-height:1;color:var(--ink);
   }
   .nav-right{display:flex;align-items:center;gap:8px;position:relative}
-  .lang-btn{
-    display:flex;align-items:center;gap:8px;background:transparent;
-    border:1px solid var(--line-2);color:var(--ink2);
-    padding:7px 11px;border-radius:5px;font:500 13px/1 var(--font-sans);cursor:pointer;
-    transition:border-color .2s var(--ease), color .2s var(--ease);
-  }
-  .lang-btn:hover,.lang-btn[aria-expanded="true"]{border-color:var(--line-warm);color:var(--ink)}
-  .lang-btn .flag{width:18px;height:13px;border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px var(--flag-shadow)}
-  .theme-dot{
-    width:13px;height:13px;border-radius:50%;background:var(--accent);
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.08);flex-shrink:0;
-  }
-  .theme-menu{min-width:200px}
-  .theme-menu a .theme-dot{width:14px;height:14px}
-  .lang-btn .flag img{width:100%;height:100%;display:block;object-fit:cover}
-  .lang-btn .chev{opacity:.5;transition:transform .2s var(--ease)}
-  .lang-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
-  .lang-menu{
-    position:absolute;top:calc(100% + 8px);right:0;
-    background:var(--menu-bg);
-    border:1px solid var(--line-2);
-    border-radius:6px;padding:8px;min-width:240px;
-    box-shadow:0 18px 40px rgba(0,0,0,.5);
-    transform-origin:top right;
-    opacity:0;visibility:hidden;
-    transform:translateY(-4px) scale(.985);
-    transition:
-      opacity var(--dur-fast) var(--ease-out-quart),
-      transform var(--dur-fast) var(--ease-out-quart),
-      visibility var(--dur-fast);
-    z-index:60;
-  }
-  .lang-menu.open{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
-  .lang-menu h5{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;color:var(--ink3);margin:10px 8px 4px}
-  .lang-menu h5:first-child{margin-top:2px}
-  .lang-menu a{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:4px;text-decoration:none;color:var(--ink2);font-size:13px;line-height:1;transition:background .15s, color .15s}
-  .lang-menu a:hover{background:var(--hover-bg);color:var(--ink)}
-  .lang-menu a.current{color:var(--ink)}
-  .lang-menu a.current::after{content:"";margin-left:auto;width:5px;height:5px;border-radius:50%;background:var(--accent)}
-  .lang-menu a .flag{width:18px;height:13px;border-radius:2px;overflow:hidden;box-shadow:0 0 0 1px rgba(0,0,0,.4);flex-shrink:0}
-  .lang-menu a .flag img{width:100%;height:100%;display:block;object-fit:cover}
 
   /* ── HERO — quiet, editorial ─────────────────────── */
-  .hero{padding:96px 0 56px;text-align:left;position:relative;isolation:isolate;z-index:2}
-  .search-wrap{position:relative;z-index:45}
+  .hero{padding:96px 0 24px;text-align:left;position:relative}
 
-  /* Hero backdrop — three layered cognac/cream orbs at different sizes,
-     anchors, drift periods (non-rational so they never re-sync), and depths.
-     Cursor parallax is depth-differentiated: back orb barely moves, front
-     orb moves most, giving a quiet sense of dimension on hover.
-     A faint horizon hairline lives beneath them.
-     Everything is transform/opacity — fully composited. */
-  .hero-bg{
-    position:absolute;inset:-180px 0 -80px;z-index:-1;pointer-events:none;
-    overflow:hidden;
+  /* ─────────────────────────────────────────────────────
+     ATMOSPHERE — "Aurora over ink" (site-wide)
+  ───────────────────────────────────────────────────── */
+  .atmo-base{
+    position:fixed;inset:0;z-index:-3;pointer-events:none;
+    background:linear-gradient(to bottom, #0F0D0A 0%, #070605 100%);
   }
-  /* The orb wrapper handles cursor parallax (transform on parent),
-     the inner pseudo-element handles ambient drift + breathing. Nesting
-     keeps the two motions independent so neither resets the other. */
-  .hero-bg .orb{
-    position:absolute;
-    transform: translate3d(
-      calc(var(--mx, 0) * var(--depth, 12px)),
-      calc(var(--my, 0) * var(--depth, 12px)),
-      0
-    );
-    transition: transform 1.6s cubic-bezier(.25, 1, .5, 1);
-    will-change: transform;
+  .atmo{
+    position:fixed;inset:0;z-index:-2;pointer-events:none;
+    isolation:isolate;overflow:hidden;contain:layout paint;
   }
-  .hero-bg .orb::before{
-    content:"";position:absolute;inset:0;
-    background: var(--orb-tint, radial-gradient(
-      circle at center,
-      rgba(216,173,126,.06) 0%,
-      rgba(200,153,104,.028) 32%,
-      rgba(200,153,104,.008) 56%,
-      transparent 74%
-    ));
-    will-change: transform;
-    animation: var(--orb-anim, none);
+  .band{
+    position:absolute;pointer-events:none;will-change:transform;
+    mix-blend-mode:screen;transform-origin:center;
   }
-
-  /* Orb A — primary hero glow, centered behind the headline.
-     Largest, warmest, drifts in a 36px envelope. Opacity-breathes alongside
-     drift (separate property — no transform conflict). */
-  .hero-bg .orb-a{
-    left:50%;top:42%;
-    width:1180px;height:1180px;
-    margin-left:-590px;margin-top:-590px;
-    --depth: 18px; /* foreground = strongest parallax follow */
+  .band-inner{
+    position:absolute;inset:0;
+    will-change:transform, opacity;transform-origin:center;
   }
-  .hero-bg .orb-a::before{
-    --orb-tint: radial-gradient(
-      circle at center,
-      rgba(216,173,126,.075) 0%,
-      rgba(200,153,104,.038) 28%,
-      rgba(200,153,104,.012) 54%,
-      transparent 72%
-    );
-    --orb-anim: orbDriftA 24s linear infinite, orbBreathe 17s ease-in-out infinite;
+  .band-a{
+    width:140vw;height:30vh;
+    left:50%;top:18%;margin-left:-70vw;
+    animation: bandADriftX 38s ease-in-out infinite;
   }
-
-  /* Orb B — left, mid-depth, cooler cream tone, 31s drift. */
-  .hero-bg .orb-b{
-    left:18%;top:30%;
-    width:760px;height:760px;
-    margin-left:-380px;margin-top:-380px;
-    --depth: 11px;
+  .band-a .band-inner{
+    background:radial-gradient(ellipse at center,
+      hsl(38, 60%, 75%) 0%, transparent 50%);
+    opacity:.08;
+    animation:
+      bandADriftY 53s ease-in-out infinite,
+      bandABreathe 24s ease-in-out infinite;
   }
-  .hero-bg .orb-b::before{
-    --orb-tint: radial-gradient(
-      circle at center,
-      rgba(238,210,170,.045) 0%,
-      rgba(220,190,150,.020) 30%,
-      transparent 64%
-    );
-    --orb-anim: orbDriftB 31s linear infinite;
+  .band-b{
+    width:110vw;height:22vh;
+    left:42%;top:30%;margin-left:-55vw;
+    animation: bandBDriftX 41s ease-in-out infinite;
+    animation-delay: -20.5s;
   }
-
-  /* Orb C — right, deepest layer, smallest, dim amber, 19s drift.
-     Sits behind everything, barely registers. */
-  .hero-bg .orb-c{
-    left:82%;top:62%;
-    width:640px;height:640px;
-    margin-left:-320px;margin-top:-320px;
-    --depth: 6px; /* background = weakest follow */
+  .band-b .band-inner{
+    background:radial-gradient(ellipse at center,
+      hsl(28, 50%, 55%) 0%, transparent 50%);
+    opacity:.05;
+    animation:
+      bandBDriftY 47s ease-in-out infinite,
+      bandBBreathe 31s ease-in-out infinite;
+    animation-delay: -23.5s, -15.5s;
   }
-  .hero-bg .orb-c::before{
-    --orb-tint: radial-gradient(
-      circle at center,
-      rgba(180,130,80,.035) 0%,
-      rgba(180,130,80,.014) 36%,
-      transparent 68%
-    );
-    --orb-anim: orbDriftC 19s linear infinite;
+  @keyframes bandADriftX{
+    0%, 100% { transform: translate3d(-4%, 0, 0); }
+    50%      { transform: translate3d( 4%, 0, 0); }
   }
-
-  /* Drift envelopes — each ≤ 40px on either axis. Different shapes so the
-     orbs never trace the same loop. */
-  @keyframes orbDriftA{
-    0%   { transform: translate3d(-18px,  -6px, 0) rotate(0deg); }
-    25%  { transform: translate3d(  8px, -18px, 0) rotate(0deg); }
-    50%  { transform: translate3d( 18px,   6px, 0) rotate(0deg); }
-    75%  { transform: translate3d( -8px,  18px, 0) rotate(0deg); }
-    100% { transform: translate3d(-18px,  -6px, 0) rotate(0deg); }
+  @keyframes bandADriftY{
+    0%, 100% { transform: translate3d(0, -1.5%, 0); }
+    50%      { transform: translate3d(0,  1.5%, 0); }
   }
-  @keyframes orbDriftB{
-    0%   { transform: translate3d( 14px,  10px, 0); }
-    33%  { transform: translate3d(-12px,  16px, 0); }
-    66%  { transform: translate3d(-16px, -10px, 0); }
-    100% { transform: translate3d( 14px,  10px, 0); }
+  @keyframes bandABreathe{
+    0%, 100% { opacity: .08; }
+    50%      { opacity: .10; }
   }
-  @keyframes orbDriftC{
-    0%   { transform: translate3d(-10px,  12px, 0); }
-    50%  { transform: translate3d( 16px, -10px, 0); }
-    100% { transform: translate3d(-10px,  12px, 0); }
+  @keyframes bandBDriftX{
+    0%, 100% { transform: translate3d( 4%, 0, 0); }
+    50%      { transform: translate3d(-4%, 0, 0); }
   }
-  /* Sub-pixel breathing on the primary orb — opacity-based so it composes
-     freely with the drift transform. Barely felt, never seen. */
-  @keyframes orbBreathe{
-    0%, 100% { opacity: .82; }
-    50%      { opacity: 1;   }
+  @keyframes bandBDriftY{
+    0%, 100% { transform: translate3d(0,  1.5%, 0); }
+    50%      { transform: translate3d(0, -1.5%, 0); }
+  }
+  @keyframes bandBBreathe{
+    0%, 100% { opacity: .05; }
+    50%      { opacity: .07; }
+  }
+  .cursor-light{
+    position:fixed;left:0;top:0;
+    width:1200px;height:1200px;margin:-600px 0 0 -600px;
+    pointer-events:none;
+    background:radial-gradient(circle,
+      hsla(38, 70%, 75%, 0.04) 0%, transparent 60%);
+    transform: translate3d(50vw, 50vh, 0);
+    will-change:transform;mix-blend-mode:screen;
+  }
+  .film-grain{
+    position:fixed;inset:0;z-index:-1;pointer-events:none;
+    opacity:.035;mix-blend-mode:overlay;
+    width:100%;height:100%;
   }
 
   h1{
@@ -830,75 +400,179 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);
   }
 
-  /* ── SEARCH ──────────────────────────────────────── */
+  /* ── SEARCH ─────────────────────────────────── */
   .search-wrap{
-    margin:32px 0 0;position:relative;
+    margin:32px 0 0;
+    position:relative;
+    z-index:45;
   }
+  .search-wrap.is-open{ z-index:120; }
   .search-shell{
     position:relative;
-    background:var(--surface);
+    background:linear-gradient(180deg, var(--surface) 0%, #111110 100%);
     border:1px solid var(--line-2);
-    border-radius:6px;
-    transition:border-color var(--dur-fast) var(--ease-out-quart),
-               background var(--dur-fast) var(--ease-out-quart);
-  }
-  .search-shell:hover{border-color:rgba(255,255,255,.22)}
-  /* Focus: cream/gold border + a 1px inner glow ring expanding 0→1px over base.
-     Box-shadow inset is the glow ring; outer 3px halo at 8% alpha is the
-     "I'm getting out of your way" cue. */
-  .search-shell.focused{
-    border-color:rgba(200,153,104,.55);
-    background:var(--surface-2);
+    border-radius:8px;
     box-shadow:
-      inset 0 0 0 1px rgba(216,173,126,.22),
-      0 0 0 3px rgba(200,153,104,.08);
-    transition:border-color var(--dur-fast) var(--ease-out-quart),
-               background    var(--dur-fast) var(--ease-out-quart),
-               box-shadow    var(--dur-base) var(--ease-out-quart);
+      inset 0 1px 0 rgba(255,255,255,.025),
+      0 1px 0 rgba(0,0,0,.35);
+    transition:
+      border-color var(--dur-fast) var(--ease-out-quart),
+      background   var(--dur-fast) var(--ease-out-quart),
+      box-shadow   var(--dur-base) var(--ease-out-quart);
+  }
+  .search-shell:hover{
+    border-color:rgba(255,255,255,.22);
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.04),
+      0 1px 0 rgba(0,0,0,.45);
+  }
+  .search-shell.focused{
+    border-color:rgba(200,153,104,.5);
+    background:linear-gradient(180deg, var(--surface-2) 0%, #14130f 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(216,173,126,.08),
+      inset 0 0 0 1px rgba(216,173,126,.18),
+      0 0 0 4px rgba(200,153,104,.07),
+      0 8px 22px -10px rgba(0,0,0,.6);
   }
   .search-shell input{
     width:100%;background:transparent;border:0;outline:0;
-    color:var(--ink);font:400 15px/1 var(--font-sans);letter-spacing:-.05px;
-    padding:16px 56px 16px 48px;
+    color:var(--ink);
+    font:400 15.5px/1 var(--font-sans);letter-spacing:-.1px;
+    padding:18px 64px 18px 50px;
     text-align:left;
   }
-  .search-shell input::placeholder{color:var(--ink3)}
-  .search-icon{
-    position:absolute;left:16px;top:50%;transform:translateY(-50%);
-    color:var(--ink3);pointer-events:none;
-    transition:color var(--dur-fast) var(--ease-out-quart);
+  .search-shell input::placeholder{
+    color:var(--ink3);
+    transition:color var(--dur-fast) var(--ease-out-quart),
+               opacity var(--dur-fast) var(--ease-out-quart);
   }
-  .search-shell.focused .search-icon{color:var(--accent)}
+  .search-shell.focused input::placeholder{ color:var(--ink4); }
+  .search-icon{
+    position:absolute;left:18px;top:50%;transform:translateY(-50%);
+    color:var(--ink3);pointer-events:none;
+    transition:color var(--dur-fast) var(--ease-out-quart),
+               transform var(--dur-base) var(--ease-out-quart);
+  }
+  .search-shell.focused .search-icon{
+    color:var(--accent);
+    transform:translateY(-50%) scale(1.04);
+  }
   .search-kbd{
     position:absolute;right:14px;top:50%;
     transform:translateY(-50%) translateX(0);
-    display:flex;gap:3px;align-items:center;
+    display:inline-flex;gap:4px;align-items:center;
+    padding-left:12px;
     pointer-events:none;
     transition:opacity var(--dur-fast) var(--ease-out-quart),
                transform var(--dur-fast) var(--ease-out-quart);
   }
+  .search-kbd::before{
+    content:"";position:absolute;left:0;top:50%;
+    width:1px;height:18px;margin-top:-9px;
+    background:var(--line-2);
+  }
   .search-shell.focused .search-kbd{
     opacity:0;
-    transform:translateY(-50%) translateX(2px);
+    transform:translateY(-50%) translateX(4px);
   }
   .search-kbd kbd{
     font:600 10.5px/1 var(--font-sans);
-    color:var(--ink3);background:rgba(255,255,255,.04);
+    color:var(--ink2);
+    background:rgba(255,255,255,.035);
     border:1px solid var(--line-2);
-    border-radius:3px;padding:4px 6px;
+    border-radius:4px;padding:5px 6px;
     letter-spacing:.4px;
+    min-width:18px;text-align:center;
+    box-shadow:inset 0 -1px 0 rgba(0,0,0,.25);
+  }
+
+  /* ── QUICK CATEGORIES — fast access strip under search ──────────── */
+  .quick-cats{
+    margin-top:20px;
+    display:grid;
+    grid-template-columns:repeat(9, minmax(0,1fr));
+    gap:0;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .qc{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:9px;
+    padding:18px 8px 15px;
+    text-decoration:none;color:var(--ink2);
+    border-right:1px solid var(--line);
+    background:transparent;
+    position:relative;
+    transition:background .2s var(--ease),
+               color .2s var(--ease);
+  }
+  .qc:last-child{border-right:0}
+  .qc::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;
+    height:1px;background:var(--accent-2);
+    transform:scaleX(0);transform-origin:center;
+    transition:transform .25s var(--ease);
+  }
+  .qc:hover{
+    background:rgba(255,255,255,.018);
+    color:var(--ink);
+  }
+  .qc:hover::after{transform:scaleX(.5)}
+  .qc-ico{
+    width:24px;height:24px;display:flex;align-items:center;justify-content:center;
+    color:var(--ink3);
+    transition:color .2s var(--ease), transform .25s var(--ease);
+  }
+  .qc-ico svg{width:22px;height:22px;display:block}
+  .qc:hover .qc-ico{ color:var(--accent-2); transform:translateY(-1px); }
+  .qc-lbl{
+    font:500 11.5px/1 var(--font-sans);
+    letter-spacing:-.05px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    max-width:100%;
+  }
+  @media (max-width:900px){
+    .quick-cats{grid-template-columns:repeat(5, minmax(0,1fr))}
+    .qc:nth-child(5){border-right:0}
+    .qc:nth-child(n+6){border-top:1px solid var(--line)}
+    .qc-lbl{font-size:11px}
+  }
+  @media (max-width:560px){
+    .quick-cats{
+      margin-top:14px;
+      grid-template-columns:none;
+      grid-auto-flow:column;
+      grid-auto-columns:88px;
+      overflow-x:auto;overflow-y:hidden;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      border-radius:6px;
+    }
+    .quick-cats::-webkit-scrollbar{display:none}
+    .qc{scroll-snap-align:start;padding:14px 6px 12px;border-top:0}
+    .qc:nth-child(5){border-right:1px solid var(--line)}
+    .qc-lbl{font-size:10.5px}
   }
 
   .search-panel{
-    position:absolute;top:calc(100% + 6px);left:0;right:0;
-    background:var(--menu-bg);
+    position:absolute;top:calc(100% + 8px);left:0;right:0;
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(200,153,104,.04), transparent 55%),
+      linear-gradient(180deg, #181715 0%, #141311 100%);
     border:1px solid var(--line-2);
-    border-radius:6px;
-    box-shadow:0 24px 56px rgba(0,0,0,.55);
+    border-radius:8px;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,.04) inset,
+      0 28px 60px -8px rgba(0,0,0,.55),
+      0 8px 18px -4px rgba(0,0,0,.45);
     text-align:left;
     transform-origin:top center;
     opacity:0;visibility:hidden;
-    transform:translateY(-4px) scale(.992);
+    transform:translateY(-6px) scale(.992);
     transition:
       opacity   var(--dur-base) var(--ease-out-quart),
       transform var(--dur-base) var(--ease-out-quart),
@@ -907,6 +581,21 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     scrollbar-width:thin;
     scrollbar-color:rgba(255,255,255,.16) transparent;
   }
+  .search-panel::before{
+    content:"";position:sticky;top:0;left:0;right:0;
+    display:block;height:1px;
+    background:linear-gradient(90deg,
+      transparent 0%,
+      rgba(200,153,104,.35) 18%,
+      rgba(216,173,126,.55) 50%,
+      rgba(200,153,104,.35) 82%,
+      transparent 100%);
+    opacity:0;
+    transition:opacity var(--dur-base) var(--ease-out-quart);
+    z-index:1;
+    margin:-1px -1px 0;
+  }
+  .search-panel.open::before{opacity:1}
   .search-panel::-webkit-scrollbar{width:8px}
   .search-panel::-webkit-scrollbar-track{background:transparent}
   .search-panel::-webkit-scrollbar-thumb{
@@ -918,6 +607,93 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
   .panel-section{padding:12px 12px 6px}
   .panel-section + .panel-section{border-top:1px solid var(--line)}
+
+  /* ── Two-pane idle layout ────────────────────────── */
+  .panel-split{
+    display:grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+  .panel-split > .panel-col{
+    min-width:0;
+    display:flex;flex-direction:column;
+  }
+  .panel-split > .panel-col + .panel-col{
+    border-left:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(255,255,255,.012) 0%, transparent 40%);
+  }
+  .panel-col .panel-section + .panel-section{border-top:1px solid var(--line)}
+  .panel-col.right .panel-section{padding:14px 14px 8px}
+  .panel-col.left .panel-section{padding:14px 14px 8px}
+
+  .pop-list{display:flex;flex-direction:column;gap:1px;margin:0 -6px}
+  .pop-item{
+    display:grid;
+    grid-template-columns: 22px 1fr auto;
+    align-items:center;gap:12px;
+    padding:9px 10px;border-radius:4px;
+    text-decoration:none;color:var(--ink);
+    transition:background .15s var(--ease-out-quart);
+  }
+  .pop-item:hover,.pop-item.active{background:rgba(255,255,255,.035)}
+  .pop-item .pop-text{min-width:0}
+  .pop-item .pop-rank{
+    font-family:var(--font-sans);
+    font-size:10.5px;font-weight:600;color:var(--ink4);
+    letter-spacing:1.2px;font-variant-numeric:tabular-nums;
+    text-align:left;
+    transition:color .15s;
+  }
+  .pop-item:hover .pop-rank{color:var(--accent)}
+  .pop-item .pop-name{
+    font:500 13.5px/1.25 var(--font-sans);letter-spacing:-.1px;color:var(--ink);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    margin:0 0 1px;
+  }
+  .pop-item .pop-meta{
+    font-size:11px;color:var(--ink3);letter-spacing:.1px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .pop-item .pop-cat{
+    font-size:10px;font-weight:600;letter-spacing:1.3px;
+    text-transform:uppercase;color:var(--ink4);
+    transition:color .15s;
+  }
+  .pop-item:hover .pop-cat{color:var(--ink2)}
+
+  .panel-tips{
+    margin-top:auto;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:11px 14px;
+    border-top:1px solid var(--line);
+    background:rgba(255,255,255,.012);
+    font-size:11px;color:var(--ink3);letter-spacing:.1px;
+  }
+  .panel-tips .tip-row{display:inline-flex;align-items:center;gap:14px}
+  .panel-tips .tip{display:inline-flex;align-items:center;gap:6px}
+  .panel-tips kbd{
+    font:600 9.5px/1 var(--font-sans);color:var(--ink2);
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--line-2);
+    border-radius:3px;padding:3px 5px;letter-spacing:.4px;
+    min-width:18px;text-align:center;
+  }
+  .panel-tips .tip-meta{
+    display:inline-flex;align-items:center;gap:7px;
+    font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;
+    color:var(--ink4);font-weight:600;
+  }
+  .panel-tips .tip-meta::before{
+    content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);opacity:.65;
+  }
+
+  @media (max-width: 880px){
+    .panel-split{grid-template-columns:1fr}
+    .panel-split > .panel-col + .panel-col{
+      border-left:none;
+      border-top:1px solid var(--line);
+      background:none;
+    }
+  }
   .panel-label{
     font-size:10.5px;letter-spacing:1.8px;text-transform:uppercase;font-weight:600;
     color:var(--ink3);padding:0 8px 8px;display:flex;align-items:center;justify-content:space-between;
@@ -925,6 +701,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .panel-label .count{color:var(--ink4);letter-spacing:.5px;text-transform:none;font-size:11px}
 
   .sg-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .panel-col.left .sg-grid{grid-template-columns:1fr}
   .sg-chip{
     display:flex;align-items:center;gap:10px;
     padding:9px 10px;border-radius:4px;
@@ -971,7 +748,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
   /* ── DATA STRIP — institutional, no chrome ──────── */
   section.daily{
-    padding:32px 0 8px;position:relative;
+    padding:16px 0 8px;position:relative;
   }
   .daily-frame{
     background:var(--surface);
@@ -1001,10 +778,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     display:grid;grid-template-columns:repeat(4, 1fr);
   }
   .widget{
-    padding:20px 22px;
+    padding:18px 22px 14px;
     border-right:1px solid var(--line);
-    display:flex;flex-direction:column;gap:8px;
-    min-height:124px;position:relative;
+    display:flex;flex-direction:column;gap:6px;
+    min-height:172px;position:relative;
     text-decoration:none;color:var(--ink);
     transition:background .2s var(--ease);
   }
@@ -1012,57 +789,85 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .widget-value{transition:color .3s var(--ease)}
   .widget:hover .widget-value{color:var(--accent-2)}
   .widget:last-child{border-right:none}
+
+  .widget-top{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    min-height:14px;
+  }
   .widget-label{
     font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;
     color:var(--ink3);
   }
+  .widget-trend{
+    display:inline-flex;align-items:center;gap:5px;
+    font-family:var(--font-sans);font-weight:500;
+    font-size:11.5px;letter-spacing:-.05px;line-height:1;
+    font-variant-numeric:tabular-nums;
+    color:var(--ink2);
+  }
+  .widget-trend i{font-style:normal;font-size:.82em;color:var(--ink3);margin-left:.5px}
+  .widget-trend .trend-arrow,
+  .widget-trend .trend-glyph{
+    width:11px;height:11px;display:block;flex-shrink:0;
+  }
+  .widget-trend.trend-up{color:var(--accent-2)}
+  .widget-trend.trend-up i{color:rgba(216,173,126,.7)}
+  .widget-trend.trend-down{color:var(--ink2)}
+  .widget-trend.trend-flat{color:var(--ink3)}
+  .widget-trend.trend-weather{color:var(--ink2);font-size:11px;letter-spacing:.1px}
+  .widget-trend.trend-weather .trend-glyph{width:13px;height:13px;color:var(--accent-2);opacity:.9}
+
+  .widget-spark-wrap{
+    margin-top:auto;
+    padding-top:8px;
+    display:flex;flex-direction:column;gap:3px;
+  }
+  .widget-spark{
+    display:block;width:100%;height:30px;
+    color:var(--ink3);
+    transition:color .3s var(--ease);
+    overflow:visible;
+  }
+  .widget:hover .widget-spark{color:var(--accent-2)}
+  .widget-spark .spark-now{
+    fill:var(--accent-2);
+    transform-box:fill-box;
+  }
+  .widget-spark.spark-bars rect{shape-rendering:crispEdges}
+  .widget-spark .bar-now{fill:var(--accent-2);opacity:.95}
+  .widget-axis{
+    display:flex;justify-content:space-between;
+    font:600 8.5px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
+    color:var(--ink4);
+    font-variant-numeric:tabular-nums;
+  }
   .widget-value{
     font-family:var(--font-serif);font-weight:500;
     font-size:30px;line-height:1;letter-spacing:-.5px;color:var(--ink);
-    display:flex;align-items:baseline;gap:6px;
-    font-variant-numeric:tabular-nums;
+    display:flex;align-items:baseline;
+    font-variant-numeric:tabular-nums lining-nums;
     margin-top:2px;
+  }
+  .widget-value .dec{
+    font-family:var(--font-serif);font-weight:500;
+    font-size:.6em;letter-spacing:-.2px;color:var(--ink2);
+    margin-left:1px;
   }
   .widget-value .unit{
     font-family:var(--font-sans);font-weight:500;
-    font-size:12px;letter-spacing:.3px;color:var(--ink3);
+    font-size:11.5px;letter-spacing:.1px;color:var(--ink3);
     text-transform:none;
+    margin-left:6px;
   }
   .widget-sub{
     font-size:12.5px;line-height:1.4;color:var(--ink3);margin:0;
     display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums;
   }
-  /* Micro-deltas: neutral text, faintest possible directional hint */
   .widget-sub .delta-up,.widget-sub .delta-down,.widget-sub .delta-flat{font-weight:500}
   .widget-sub .delta-up{color:var(--pos-soft)}
   .widget-sub .delta-down{color:var(--neg-soft)}
   .widget-sub .delta-flat{color:var(--flat-soft)}
   .widget-sub .ctx{color:var(--ink4)}
-
-  .data-foot{
-    display:flex;justify-content:space-between;gap:16px;
-    padding:12px 22px;
-    border-top:1px solid var(--line);
-    font-size:11.5px;color:var(--ink3);
-    font-variant-numeric:tabular-nums;
-  }
-  .data-foot .pair-row{display:flex;gap:22px;flex-wrap:wrap}
-  .data-foot .pair{display:inline-flex;align-items:center;gap:6px}
-  .data-foot .pair b{color:var(--ink2);font-weight:600;letter-spacing:.3px}
-  .data-foot .up,.data-foot .down,.data-foot .flat{font-weight:500;font-size:11.5px}
-  .data-foot .up{color:var(--pos-soft)}
-  .data-foot .down{color:var(--neg-soft)}
-  .data-foot .flat{color:var(--flat-soft)}
-  .data-foot .up::before,.data-foot .down::before,.data-foot .flat::before{
-    display:inline-block;margin-right:4px;font-size:8.5px;line-height:1;
-    transform:translateY(-1px);opacity:.9;
-  }
-  .data-foot .up::before{content:"▲"}
-  .data-foot .down::before{content:"▼"}
-  .data-foot .flat::before{content:"–";transform:translateY(-2px)}
-  .data-foot .src{color:var(--ink4)}
-  .data-foot .src a{color:var(--ink3);text-decoration:none;border-bottom:1px solid var(--line-2)}
-  .data-foot .src a:hover{color:var(--ink2);border-bottom-color:rgba(200,153,104,.5)}
 
   /* ── TOOLS ───────────────────────────────────────── */
   section.tools{padding:64px 0 88px}
@@ -1095,8 +900,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     text-decoration:none;color:var(--ink);
     display:flex;flex-direction:column;gap:6px;min-height:160px;
     border:1px solid transparent;
-    /* Cards lift on hover. Translate only, no scale, no shadow expansion.
-       Border tweens to a warmer cream tone. */
     transition:background var(--dur-fast) var(--ease-out-quart),
                transform  var(--dur-fast) var(--ease-out-quart),
                border-color var(--dur-fast) var(--ease-out-quart);
@@ -1113,6 +916,21 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     transition:transform var(--dur-base) var(--ease-out-quart);
   }
   .card:hover::after,.card:focus-visible::after{transform:scaleX(1)}
+  .card .card-head{
+    display:flex;align-items:center;gap:10px;
+    margin-bottom:14px;
+  }
+  .card .card-head .num{margin-bottom:0}
+  .card .cat-ico{
+    width:16px;height:16px;flex-shrink:0;
+    color:var(--ink3);opacity:.55;
+    transition:opacity var(--dur-fast) var(--ease-out-quart),
+               color var(--dur-fast) var(--ease-out-quart);
+  }
+  .card:hover .cat-ico,.card:focus-visible .cat-ico{
+    color:var(--accent);opacity:1;
+  }
+
   .card .num{
     font-family:var(--font-sans);font-size:11px;font-weight:600;
     color:var(--ink4);letter-spacing:1.4px;
@@ -1136,17 +954,16 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
   .card:hover .arrow,.card:focus-visible .arrow{color:var(--accent);transform:translate(2px,-2px)}
 
-  /* ── TICKER tape (top of page) ───────────────────── */
+  /* ── TICKER tape ───────────────────── */
   aside.ticker-top{
     position:relative;
     padding:9px 0;
-    background:var(--ticker-bg);
+    background:#0a0a09;
     border-bottom:1px solid var(--line);
     overflow:hidden;
     z-index:55;
   }
   aside.ticker-top::after{
-    /* hairline cognac accent under the bar */
     content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
     background:linear-gradient(90deg, transparent, rgba(200,153,104,.35), transparent);
     opacity:.6;
@@ -1193,7 +1010,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .ti em.down::before{content:"▼"}
   .ti em.flat::before{content:"–";transform:translateY(-2px)}
 
-  /* Live badge — small fixed indicator on the right */
   .ticker-badge{
     position:absolute;top:50%;right:18px;transform:translateY(-50%);
     display:inline-flex;align-items:center;gap:7px;
@@ -1201,17 +1017,16 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     letter-spacing:1.6px;text-transform:uppercase;
     color:var(--ink3);
     padding:4px 9px 4px 8px;
-    background:linear-gradient(90deg, transparent, var(--ticker-bg) 35%);
+    background:linear-gradient(90deg, transparent, #0a0a09 35%);
     pointer-events:none;
   }
   .ticker-badge::before{
     content:"";width:6px;height:6px;border-radius:50%;
     background:var(--pos);
-    box-shadow:0 0 0 0 rgba(95,169,120,0);
+    box-shadow:0 0 0 0 rgba(168,163,154,0);
   }
   aside.ticker-top.live .ticker-badge::before{
     animation:livePulseOnce var(--dur-slow) var(--ease-out-quart) 1 forwards;
-    /* Fires once when the ticker goes live */
     animation-delay:200ms;
   }
   @media (max-width:560px){
@@ -1220,8 +1035,78 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     .ti{font-size:11.5px;gap:7px}
     .ti .val{font-size:12px}
     .ticker-badge{display:none}
-    .search-kbd{display:none}
-    .search-shell input{padding-right:16px}
+  }
+
+  /* ── Inline ticker ───── */
+  aside.ticker-top.ticker-inline{
+    position:relative;
+    margin-top:10px;
+    padding:0;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    overflow:hidden;
+    z-index:auto;
+    display:flex;
+    align-items:stretch;
+    min-height:40px;
+  }
+  aside.ticker-top.ticker-inline::after{display:none}
+  aside.ticker-top.ticker-inline .ticker-inline-label{
+    flex:0 0 auto;
+    display:inline-flex;align-items:center;
+    padding:0 14px;
+    font:600 10px/1 var(--font-sans);
+    letter-spacing:1.6px;text-transform:uppercase;
+    color:var(--ink3);
+    background:var(--surface-2, rgba(0,0,0,.015));
+    border-right:1px solid var(--line);
+    white-space:nowrap;
+  }
+  aside.ticker-top.ticker-inline .ticker-mask{
+    flex:1 1 auto;
+    -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 80px), transparent 100%);
+            mask-image:linear-gradient(90deg, transparent 0, #000 32px, #000 calc(100% - 80px), transparent 100%);
+  }
+  aside.ticker-top.ticker-inline .ticker-track{
+    gap:36px;
+    padding:13px 0;
+    animation-duration:80s;
+  }
+  aside.ticker-top.ticker-inline .ti{font-size:12px}
+  aside.ticker-top.ticker-inline .ti b{font-size:9.5px;letter-spacing:1.4px}
+  aside.ticker-top.ticker-inline .ti .val{font-size:12.5px}
+  aside.ticker-top.ticker-inline .ti em{font-size:11px}
+  aside.ticker-top.ticker-inline .ticker-badge{
+    right:10px;
+    padding:3px 8px;
+    font-size:9.5px;
+    letter-spacing:1.4px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:3px;
+    color:var(--ink3);
+  }
+  @media (max-width:560px){
+    aside.ticker-top.ticker-inline{min-height:36px;margin-top:8px}
+    aside.ticker-top.ticker-inline .ticker-inline-label{padding:0 10px;font-size:9.5px;letter-spacing:1.4px}
+    aside.ticker-top.ticker-inline .ticker-track{padding:11px 0;gap:28px}
+    aside.ticker-top.ticker-inline .ticker-badge{display:inline-flex}
+  }
+
+  .daily-frame > aside.ticker-top.ticker-inline.ticker-embedded{
+    margin-top:0;
+    border:0;
+    border-top:1px solid var(--line);
+    border-radius:0;
+    background:transparent;
+    min-height:44px;
+  }
+  .daily-frame > aside.ticker-top.ticker-inline.ticker-embedded .ticker-inline-label{
+    background:rgba(0,0,0,.02);
+  }
+  @media (max-width:560px){
+    .daily-frame > aside.ticker-top.ticker-inline.ticker-embedded{min-height:38px;margin-top:0}
   }
   footer{border-top:1px solid var(--line);padding:36px 0 40px;color:var(--ink4);font-size:12.5px}
   .foot-top{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:24px}
@@ -1237,41 +1122,31 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
                transform var(--dur-slow) var(--ease-out-expo);
   }
   .reveal.in{opacity:1;transform:translateY(0)}
-
-  /* Stagger via index var on each .reveal child — uses --stag-loose */
   .reveal{transition-delay:calc(var(--i, 0) * var(--stag-loose))}
 
-  /* Live pulse — single ping on mount, no infinite anxiety. JS adds .ping
-     to the pulse element when it should fire. */
   .daily-head .stamp{display:inline-flex;align-items:center;gap:8px}
   .daily-head .stamp::before{
     content:"";width:6px;height:6px;border-radius:50%;
     background:var(--pos);
-    box-shadow:0 0 0 0 rgba(95,169,120,0);
+    box-shadow:0 0 0 0 rgba(168,163,154,0);
   }
   .daily-head .stamp.ping::before{
     animation:livePulseOnce var(--dur-slow) var(--ease-out-quart) 1 forwards;
   }
   @keyframes livePulseOnce{
     0%   { transform:scale(1);   box-shadow:0 0 0 0   rgba(95,169,120,.55); }
-    60%  { transform:scale(1.4); box-shadow:0 0 0 7px rgba(95,169,120,0);   }
-    100% { transform:scale(1);   box-shadow:0 0 0 0   rgba(95,169,120,0);   }
+    60%  { transform:scale(1.4); box-shadow:0 0 0 7px rgba(168,163,154,0);   }
+    100% { transform:scale(1);   box-shadow:0 0 0 0   rgba(168,163,154,0);   }
   }
 
-  /* Hero entrance handled via [data-headline] mask reveal + .rise system */
-
-  /* Brand mark — quiet hover. Border warms; no rotation, no scale. */
   .brand-row .mark{
     transition:border-color var(--dur-fast) var(--ease-out-quart);
   }
   .brand-row:hover .mark{ border-color:rgba(200,153,104,.4); }
 
-  /* Lang pill dot — static. No infinite pulse. */
-  .hero-tag .lang-pill::before{ /* static dot */ }
-
-  /* Count-up — keep tabular alignment while animating */
   .count-up{font-variant-numeric:tabular-nums}
 
+  /* ── RESPONSIVE ───────────────────────────── */
   @media (max-width: 880px){
     .grid{grid-template-columns:repeat(2,1fr)}
     .daily-grid{grid-template-columns:repeat(2,1fr)}
@@ -1279,17 +1154,98 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     .widget:nth-child(1),.widget:nth-child(2){border-bottom:1px solid var(--line)}
     .hero{padding:64px 0 40px}
     .sg-grid{grid-template-columns:1fr}
-    .about-grid{grid-template-columns:1fr;gap:24px}
-    .data-foot{flex-direction:column;align-items:flex-start;gap:8px}
+    section.tools{padding:48px 0 64px}
+    section.daily{padding:12px 0 4px}
   }
-  @media (max-width: 560px){
-    .grid{grid-template-columns:1fr}
+
+  @media (max-width: 640px){
+    .container{padding:0 20px}
+    nav{padding:14px 0;gap:12px}
+    .wordmark{font-size:16.5px}
+    .mark{width:26px;height:26px}
+    .hero{padding:44px 0 28px}
+    h1{
+      font-size:clamp(34px, 8.6vw, 44px);
+      line-height:1.08;letter-spacing:-1px;
+      max-width:none;
+    }
+    .hero-tag{
+      gap:10px;font-size:13px;margin-top:18px;
+    }
+    .hero-tag .lang-pill{font-size:10.5px;padding:3px 8px}
+    .search-wrap{margin-top:24px}
+    .search-shell input{
+      padding:14px 18px 14px 44px;font-size:14.5px;
+    }
+    .search-icon{left:14px}
+    .search-kbd{display:none}
+    .daily-frame{border-radius:5px}
+    .daily-head{
+      flex-direction:column;align-items:flex-start;gap:8px;
+      padding:12px 18px 11px;
+    }
+    .daily-head .stamp{font-size:10.5px}
     .daily-grid{grid-template-columns:1fr}
-    .widget{border-right:none !important;border-bottom:1px solid var(--line)}
+    .widget{
+      padding:16px 18px;
+      border-right:none !important;
+      border-bottom:1px solid var(--line);
+    }
     .widget:last-child{border-bottom:none}
-    .container{padding:0 22px}
-    .daily-head{flex-direction:column;align-items:flex-start;gap:6px;padding:12px 18px}
-    .daily-head .title{flex-wrap:wrap;row-gap:4px}
+    .widget-value{font-size:26px}
+    .widget-sub{font-size:12px}
+    section.tools{padding:40px 0 56px}
+    .section-head{
+      flex-direction:column;align-items:flex-start;gap:10px;
+      padding-bottom:14px;margin-bottom:20px;
+    }
+    .section-head h2{font-size:22px;letter-spacing:-.3px}
+    .section-head .label{font-size:10.5px}
+    .grid{grid-template-columns:1fr;border-radius:5px}
+    .card{padding:22px 20px 22px}
+    .card h3{font-size:18px}
+    .card p{font-size:13px;max-width:none}
+    .card .arrow{top:22px;right:20px}
+    footer{padding:28px 0 32px}
+    .foot-top{
+      flex-direction:column;align-items:flex-start;gap:18px;margin-bottom:20px;
+    }
+    .foot-links{flex-wrap:wrap;gap:2px;margin-left:-12px}
+    .foot-bottom{
+      flex-direction:column;gap:8px;
+      padding-top:16px;font-size:11px;
+    }
+    aside.ticker-top{padding:7px 0}
+    .ticker-track{gap:32px}
+    .ti{font-size:11.5px;gap:7px}
+    .ti .val{font-size:12px}
+    .ticker-badge{display:none}
+  }
+
+  @media (max-width: 480px){
+    .container{padding:0 16px}
+    .hero{padding:36px 0 22px}
+    h1{font-size:clamp(30px, 9.4vw, 38px);letter-spacing:-.6px}
+    .hero-tag{font-size:12.5px;gap:8px}
+    .search-shell input{padding:13px 16px 13px 40px;font-size:14px}
+    .search-icon{left:12px;width:16px;height:16px}
+    .daily-head{padding:11px 16px 10px}
+    .widget{padding:14px 16px}
+    .widget-value{font-size:24px}
+    .card{padding:20px 18px}
+    .card .num{font-size:10.5px}
+    .card h3{font-size:17px}
+    .card .arrow{top:20px;right:18px}
+    .foot-links a{font-size:12.5px;padding:5px 10px}
+  }
+
+  @media (max-width: 380px){
+    .container{padding:0 14px}
+    h1{font-size:28px;letter-spacing:-.4px}
+    .wordmark{font-size:15.5px}
+    .mark{width:24px;height:24px}
+    .widget-value{font-size:22px}
+    .card h3{font-size:16.5px}
   }
   @media (prefers-reduced-motion: reduce){
     *{ transition-duration: var(--dur-micro) !important; animation:none !important; }
@@ -1302,14 +1258,174 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       -webkit-text-fill-color:var(--accent-2) !important;
       background:none !important;
     }
-    aside.ticker-top{ opacity:1 !important; filter:none !important; }
+    aside.ticker-top{ opacity:1 !important; filter:none !important; transform:none !important; }
     .ticker-track{ animation:none !important; transform:none !important; }
-    .hero-bg .orb{ transform:none !important; transition:none !important; }
-    .hero-bg .orb::before{ animation:none !important; transform:none !important; opacity:1 !important; }
+    .band, .band-inner{ animation:none !important; }
+    .band-a .band-inner{ opacity:.04 !important; }
+    .band-b .band-inner{ opacity:.025 !important; }
+    .cursor-light{ display:none !important; }
     .scroll-progress{ display:none !important; }
     html{ scroll-behavior:auto; }
   }
+  @media (max-width: 768px){
+    .band-a{ animation-duration:57s; }
+    .band-a .band-inner{
+      animation: bandADriftY 79s ease-in-out infinite;
+    }
+    .band-b{ animation-duration:61s; }
+    .band-b .band-inner{
+      animation: bandBDriftY 70s ease-in-out infinite;
+    }
+    .cursor-light{ display:none; }
+    .film-grain{ opacity:.02; }
+  }
+  @media (max-width: 1023px){
+    .cursor-light{ display:none; }
+  }
+  @media (prefers-reduced-data: reduce), (update: slow){
+    .band, .band-inner{ animation:none !important; }
+    .cursor-light{ display:none !important; }
+    .film-grain{ opacity:.02 !important; }
+  }
 </style>
+
+<!-- =====================================================================
+     REFINE-2026-05 — Typography & numerals polish
+===================================================================== -->
+<style id="refine-2026-05">
+  :root{
+    --refine-feat-num: "tnum" 1, "lnum" 1, "zero" 1, "kern" 1;
+    --refine-feat-text: "kern" 1, "calt" 1, "liga" 1,
+                        "cv01" 1, "cv05" 1, "cv11" 1, "ss03" 1;
+  }
+
+  html{
+    text-rendering: optimizeLegibility;
+    -webkit-font-feature-settings: var(--refine-feat-text);
+            font-feature-settings: var(--refine-feat-text);
+  }
+
+  .ti, .ti .val, .ti em,
+  .widget-value, .widget-value .unit, .widget-sub,
+  .data-foot, .data-foot .pair, .data-foot .pair b,
+  .card .num,
+  .section-head .meta,
+  .daily-head .title b, .daily-head .stamp,
+  .count-up,
+  [data-tabular]{
+    font-variant-numeric: tabular-nums lining-nums slashed-zero;
+    -webkit-font-feature-settings: var(--refine-feat-num);
+            font-feature-settings: var(--refine-feat-num);
+  }
+
+  .section-head .label,
+  .widget-label,
+  .daily-head .title,
+  .panel-label,
+  .ti b,
+  .ticker-badge{
+    -webkit-font-feature-settings: "kern" 1, "case" 1, "cpsp" 1, "tnum" 1;
+            font-feature-settings: "kern" 1, "case" 1, "cpsp" 1, "tnum" 1;
+  }
+
+  h1#heroH1{
+    font-size: clamp(46px, 5.8vw, 72px);
+    letter-spacing: -1.6px;
+  }
+  h1#heroH1 em{
+    letter-spacing: -1.2px;
+  }
+
+  .hero-tag{
+    font-size: 14px;
+    letter-spacing: -.05px;
+  }
+  .hero-tag .lang-pill{
+    font-size: 10.5px;
+    letter-spacing: 1.4px;
+    font-weight: 600;
+  }
+
+  .section-head h2{
+    font-size: clamp(24px, 2.6vw, 30px);
+    letter-spacing: -.5px;
+  }
+  .section-head .label{
+    font-size: 10.5px;
+    letter-spacing: 2.2px;
+  }
+
+  .card .num{
+    font-size: 11px;
+    letter-spacing: 1.8px;
+    color: var(--ink4);
+  }
+  .card h3{
+    font-size: 21px;
+    letter-spacing: -.4px;
+    line-height: 1.18;
+  }
+  .card p{
+    font-size: 13.5px;
+    letter-spacing: -.05px;
+  }
+
+  .widget-value{
+    font-size: 32px;
+    letter-spacing: -.6px;
+  }
+  .widget-value .dec{
+    font-size: .58em;
+    letter-spacing: -.2px;
+    color: var(--ink2);
+  }
+  .widget-value .unit{
+    font-size: 12px;
+    letter-spacing: .1px;
+    text-transform: none;
+    font-weight: 500;
+    color: var(--ink3);
+    align-self: baseline;
+  }
+  .widget-sub{
+    font-size: 12px;
+    letter-spacing: -.05px;
+  }
+
+  .data-foot{
+    font-size: 11.5px;
+    letter-spacing: -.05px;
+  }
+  .data-foot .pair b{
+    letter-spacing: .4px;
+  }
+
+  .ti{ font-size: 12.5px; }
+  .ti .val{
+    font-size: 13px;
+    letter-spacing: -.1px;
+    -webkit-font-feature-settings: "tnum" 1, "lnum" 1, "zero" 1, "ss01" 1, "kern" 1;
+            font-feature-settings: "tnum" 1, "lnum" 1, "zero" 1, "ss01" 1, "kern" 1;
+  }
+  .ti b{ letter-spacing: 1.6px; font-size: 9.5px; }
+  .ti em{ font-size: 11.5px; letter-spacing: .05px; }
+
+  footer .foot-bottom{
+    letter-spacing: -.05px;
+  }
+  footer .foot-bottom em{
+    letter-spacing: .1px;
+  }
+
+  @media (max-width: 640px){
+    h1#heroH1{
+      font-size: clamp(36px, 9vw, 46px);
+      letter-spacing: -1.1px;
+    }
+    .widget-value{ font-size: 27px; letter-spacing: -.5px; }
+  }
+</style>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1340,10 +1456,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 <link rel="preload" href="/shared/core.js?v=v124" as="script" fetchpriority="high">
 <script src="/shared/core.js?v=v124" defer></script>
 <script src="/shared/lang/no.js?v=v40" defer></script>
+<script src="/shared/site-shell.js?v=v1" defer></script>
+<script src="/shared/top-chrome.js?v=v1" defer></script>
+<script src="/shared/atmosphere.js?v=v1" defer></script>
 </head>
 <body>
 
-<a class="skip" href="#main" id="skip-link">Hopp til hovedinnhold</a>
+<a class="skip" href="#main">Hopp til hovedinnhold</a>
 
 <!-- ATMOSPHERE — Aurora over ink. Site-wide, fixed, behind everything. -->
 <div class="atmo-base" aria-hidden="true"></div>
@@ -1356,7 +1475,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   <filter id="atmoGrain">
     <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"
       stitchTiles="stitch" seed="4"/>
-    <feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0"/>
+    <feColorMatrix values="0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0.5 0"/>
   </filter>
   <rect width="100%" height="100%" filter="url(#atmoGrain)"/>
 </svg>
@@ -1376,108 +1498,14 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
 <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
-<aside class="ticker-top" data-screen-label="00 Markedsdata" aria-label="Markedsdata — rullende oversikt">
-  <div class="ticker-mask">
-    <div class="ticker-track" id="tickerTrack">
-      <!-- Set A -->
-      <span class="ti"><b>OBX</b> <span class="val">1 045,21</span> <em class="up">+0,38 %</em></span>
-      <span class="ti"><b>OSEAX</b> <span class="val">1 612,40</span> <em class="up">+0,29 %</em></span>
-      <span class="ti"><b>S&amp;P 500</b> <span class="val">5 218,11</span> <em class="down">−0,12 %</em></span>
-      <span class="ti"><b>Nasdaq</b> <span class="val">16 847,30</span> <em class="up">+0,21 %</em></span>
-      <span class="ti"><b>DAX</b> <span class="val">18 042,55</span> <em class="up">+0,18 %</em></span>
-      <span class="ti"><b>FTSE 100</b> <span class="val">8 124,90</span> <em class="flat">±0,02 %</em></span>
-      <span class="ti"><b>Nikkei</b> <span class="val">39 280,40</span> <em class="down">−0,44 %</em></span>
-      <span class="ti"><b>Styringsrente</b> <span class="val">4,50 %</span> <em class="flat">±0,00</em></span>
-      <span class="ti"><b>NIBOR 3M</b> <span class="val">4,68</span> <em class="flat">±0,00</em></span>
-      <span class="ti"><b>EUR / NOK</b> <span class="val">11,84</span> <em class="up">+0,06</em></span>
-      <span class="ti"><b>GBP / NOK</b> <span class="val">13,56</span> <em class="up">+0,04</em></span>
-      <span class="ti"><b>SEK / NOK</b> <span class="val">1,02</span> <em class="flat">±0,00</em></span>
-      <span class="ti"><b>USD / NOK</b> <span class="val">10,72</span> <em class="up">+0,03</em></span>
-      <span class="ti"><b>BTC</b> <span class="val">$ 67 240</span> <em class="down">−1,8 %</em></span>
-      <span class="ti"><b>ETH</b> <span class="val">$ 3 412</span> <em class="up">+0,9 %</em></span>
-      <span class="ti"><b>Brent</b> <span class="val">$ 84,30</span> <em class="down">−0,8 %</em></span>
-      <span class="ti"><b>WTI</b> <span class="val">$ 80,15</span> <em class="down">−0,9 %</em></span>
-      <span class="ti"><b>Gull</b> <span class="val">26 410</span> <em class="up">+0,4 %</em></span>
-      <span class="ti"><b>Sølv</b> <span class="val">312,40</span> <em class="up">+0,7 %</em></span>
-      <span class="ti"><b>Kobber</b> <span class="val">$ 4,28</span> <em class="up">+0,3 %</em></span>
-      <span class="ti"><b>Equinor</b> <span class="val">312,80</span> <em class="down">−0,5 %</em></span>
-      <span class="ti"><b>DNB</b> <span class="val">218,40</span> <em class="up">+0,2 %</em></span>
-      <span class="ti"><b>Telenor</b> <span class="val">128,60</span> <em class="flat">±0,0 %</em></span>
-      <!-- Set B (duplicate for seamless loop) -->
-      <span class="ti" aria-hidden="true"><b>OBX</b> <span class="val">1 045,21</span> <em class="up">+0,38 %</em></span>
-      <span class="ti" aria-hidden="true"><b>OSEAX</b> <span class="val">1 612,40</span> <em class="up">+0,29 %</em></span>
-      <span class="ti" aria-hidden="true"><b>S&amp;P 500</b> <span class="val">5 218,11</span> <em class="down">−0,12 %</em></span>
-      <span class="ti" aria-hidden="true"><b>Nasdaq</b> <span class="val">16 847,30</span> <em class="up">+0,21 %</em></span>
-      <span class="ti" aria-hidden="true"><b>DAX</b> <span class="val">18 042,55</span> <em class="up">+0,18 %</em></span>
-      <span class="ti" aria-hidden="true"><b>FTSE 100</b> <span class="val">8 124,90</span> <em class="flat">±0,02 %</em></span>
-      <span class="ti" aria-hidden="true"><b>Nikkei</b> <span class="val">39 280,40</span> <em class="down">−0,44 %</em></span>
-      <span class="ti" aria-hidden="true"><b>Styringsrente</b> <span class="val">4,50 %</span> <em class="flat">±0,00</em></span>
-      <span class="ti" aria-hidden="true"><b>NIBOR 3M</b> <span class="val">4,68</span> <em class="flat">±0,00</em></span>
-      <span class="ti" aria-hidden="true"><b>EUR / NOK</b> <span class="val">11,84</span> <em class="up">+0,06</em></span>
-      <span class="ti" aria-hidden="true"><b>GBP / NOK</b> <span class="val">13,56</span> <em class="up">+0,04</em></span>
-      <span class="ti" aria-hidden="true"><b>SEK / NOK</b> <span class="val">1,02</span> <em class="flat">±0,00</em></span>
-      <span class="ti" aria-hidden="true"><b>USD / NOK</b> <span class="val">10,72</span> <em class="up">+0,03</em></span>
-      <span class="ti" aria-hidden="true"><b>BTC</b> <span class="val">$ 67 240</span> <em class="down">−1,8 %</em></span>
-      <span class="ti" aria-hidden="true"><b>ETH</b> <span class="val">$ 3 412</span> <em class="up">+0,9 %</em></span>
-      <span class="ti" aria-hidden="true"><b>Brent</b> <span class="val">$ 84,30</span> <em class="down">−0,8 %</em></span>
-      <span class="ti" aria-hidden="true"><b>WTI</b> <span class="val">$ 80,15</span> <em class="down">−0,9 %</em></span>
-      <span class="ti" aria-hidden="true"><b>Gull</b> <span class="val">26 410</span> <em class="up">+0,4 %</em></span>
-      <span class="ti" aria-hidden="true"><b>Sølv</b> <span class="val">312,40</span> <em class="up">+0,7 %</em></span>
-      <span class="ti" aria-hidden="true"><b>Kobber</b> <span class="val">$ 4,28</span> <em class="up">+0,3 %</em></span>
-      <span class="ti" aria-hidden="true"><b>Equinor</b> <span class="val">312,80</span> <em class="down">−0,5 %</em></span>
-      <span class="ti" aria-hidden="true"><b>DNB</b> <span class="val">218,40</span> <em class="up">+0,2 %</em></span>
-      <span class="ti" aria-hidden="true"><b>Telenor</b> <span class="val">128,60</span> <em class="flat">±0,0 %</em></span>
-    </div>
-  </div>
-  <span class="ticker-badge" aria-hidden="true">Live</span>
-</aside>
-
 <div class="nav-wrap enter" id="navWrap" style="--enter-d:0ms">
   <div class="container">
     <nav data-screen-label="01 Nav">
-      <a href="./" class="brand-row" aria-label="Hverdagsverktøy hjem">
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy hjem">
         <span class="mark"><svg width="16" height="16"><use href="#mark-h"/></svg></span>
         <span class="wordmark">Hverdagsverktøy</span>
       </a>
       <div class="nav-right">
-        <button class="lang-btn theme-btn" id="themeBtn" aria-haspopup="true" aria-expanded="false" aria-controls="themeMenu" aria-label="Velg tema">
-          <span class="theme-dot" id="themeDot" aria-hidden="true"></span>
-          <span id="themeLabel">Carbon</span>
-          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
-        </button>
-        <div class="lang-menu theme-menu" id="themeMenu" role="menu" aria-labelledby="themeBtn">
-          <h5>Mørke</h5>
-          <a href="#" data-theme-set="carbon" role="menuitem"><span class="theme-dot" style="background:#c89968"></span> Carbon</a>
-          <a href="#" data-theme-set="dark" role="menuitem"><span class="theme-dot" style="background:#6c8aef"></span> Mørk-blå</a>
-          <a href="#" data-theme-set="hendrix" role="menuitem"><span class="theme-dot" style="background:#d4794a"></span> Hendrix</a>
-          <a href="#" data-theme-set="bw" role="menuitem"><span class="theme-dot" style="background:#ffffff"></span> Sort/hvit</a>
-          <a href="#" data-theme-set="disco" role="menuitem"><span class="theme-dot" style="background:#e91e8c"></span> Disco</a>
-          <h5>Lyse</h5>
-          <a href="#" data-theme-set="frost" role="menuitem"><span class="theme-dot" style="background:#a87842"></span> Frost</a>
-          <a href="#" data-theme-set="glass" role="menuitem"><span class="theme-dot" style="background:#6875f5"></span> Glass</a>
-          <a href="#" data-theme-set="pink" role="menuitem"><span class="theme-dot" style="background:#e890b2"></span> Rosa</a>
-        </div>
-
-        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-controls="langMenu">
-          <span class="flag"><img id="rf" src="https://flagcdn.com/w80/no.png" alt=""></span>
-          <span id="rn">Norsk</span>
-          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>
-        </button>
-        <div class="lang-menu" id="langMenu" role="menu" aria-labelledby="langBtn">
-          <h5>Hovedspråk</h5>
-          <a href="#" class="current" role="menuitem" data-region="no"><span class="flag"><img src="https://flagcdn.com/w80/no.png" alt=""></span> Norsk</a>
-          <a href="#" role="menuitem" data-region="en"><span class="flag"><img src="https://flagcdn.com/w80/gb.png" alt=""></span> English</a>
-          <h5>Språk i Norge</h5>
-          <a href="#" role="menuitem" data-region="pl"><span class="flag"><img src="https://flagcdn.com/w80/pl.png" alt=""></span> Polski</a>
-          <a href="#" role="menuitem" data-region="uk"><span class="flag"><img src="https://flagcdn.com/w80/ua.png" alt=""></span> Українська</a>
-          <a href="#" role="menuitem" data-region="ar"><span class="flag"><img src="https://flagcdn.com/w80/sa.png" alt=""></span> العربية</a>
-          <a href="#" role="menuitem" data-region="lt"><span class="flag"><img src="https://flagcdn.com/w80/lt.png" alt=""></span> Lietuvių</a>
-          <a href="#" role="menuitem" data-region="so"><span class="flag"><img src="https://flagcdn.com/w80/so.png" alt=""></span> Soomaali</a>
-          <a href="#" role="menuitem" data-region="ti"><span class="flag"><img src="https://flagcdn.com/w80/er.png" alt=""></span> ትግርኛ</a>
-          <h5>Internasjonalt</h5>
-          <a href="#" role="menuitem" data-region="zh"><span class="flag"><img src="https://flagcdn.com/w80/cn.png" alt=""></span> 中文</a>
-          <a href="#" role="menuitem" data-region="fr"><span class="flag"><img src="https://flagcdn.com/w80/fr.png" alt=""></span> Français</a>
-        </div>
       </div>
     </nav>
   </div>
@@ -1486,13 +1514,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 <main id="main">
 
   <section class="hero" data-screen-label="02 Hero">
-    <div class="hero-bg" aria-hidden="true">
-      <span class="orb orb-a" id="heroOrbA"></span>
-      <span class="orb orb-b" id="heroOrbB"></span>
-      <span class="orb orb-c" id="heroOrbC"></span>
-    </div>
     <div class="container">
-      <h1 id="heroH1" data-headline data-i18n-html="homeHeroTitle">Praktiske verktøy for <em>privatøkonomi,</em> skatt og lovverk.</h1>
+      <h1 id="heroH1" data-headline>Praktiske verktøy for <em>privatøkonomi</em>, skatt og lovverk.</h1>
       <p class="hero-tag rise" data-rise-d="0"><span class="lang-pill" data-i18n="homeHeroLangPill">10 språk</span><span data-i18n="homeHeroSubtitle">Oppdatert til gjeldende regler for 2026.</span></p>
 
       <div class="search-wrap rise" data-rise-d="1">
@@ -1502,12 +1525,50 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           </svg>
           <input id="searchInput" type="text" autocomplete="off" spellcheck="false"
             placeholder="Søk etter verktøy, kalkulator eller begrep…"
-            data-i18n-placeholder="searchPlaceholder"
             aria-label="Søk" aria-autocomplete="list" aria-controls="searchPanel" aria-expanded="false">
           <div class="search-kbd"><kbd>⌘</kbd><kbd>K</kbd></div>
         </div>
         <div class="search-panel" id="searchPanel" role="listbox"></div>
       </div>
+
+      <nav class="quick-cats rise" data-rise-d="2" aria-label="Hurtigtilgang til kategorier">
+        <a href="/personlig/budsjett/" class="qc">
+          <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg></span>
+          <span class="qc-lbl">Budsjett</span>
+        </a>
+        <a href="/personlig/" class="qc">
+          <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg></span>
+          <span class="qc-lbl">Privatøkonomi</span>
+        </a>
+        <a href="/boliglan/" class="qc">
+          <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg></span>
+          <span class="qc-lbl">Boliglån</span>
+        </a>
+        <a href="/kalkulator/" class="qc">
+          <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="8" y1="7.5" x2="16" y2="7.5"/><circle cx="9" cy="13" r=".6" fill="currentColor"/><circle cx="12" cy="13" r=".6" fill="currentColor"/><circle cx="15" cy="13" r=".6" fill="currentColor"/><circle cx="9" cy="17" r=".6" fill="currentColor"/><circle cx="15" cy="17" r=".6" fill="currentColor"/></svg></span>
+          <span class="qc-lbl">Kalkulator</span>
+        </a>
+        <a href="/skatt/" class="qc">
+          <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 H14 L18 7 V21 H6 Z"/><path d="M14 3 V7 H18"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></span>
+          <span class="qc-lbl">Skatt</span>
+        </a>
+        <a href="/selskap/" class="qc">
+          <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/></svg></span>
+          <span class="qc-lbl">Selskap</span>
+        </a>
+        <a href="/avgift/" class="qc">
+          <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="2"/><circle cx="16" cy="16" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg></span>
+          <span class="qc-lbl">Avgift</span>
+        </a>
+        <a href="/regnskap/" class="qc">
+          <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg></span>
+          <span class="qc-lbl">Regnskap</span>
+        </a>
+        <a href="/lov/" class="qc">
+          <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4 V20"/><path d="M5 21 H19"/><path d="M4 9 L12 5 L20 9"/><path d="M6 9 L4 14 a3 3 0 0 0 4 0 L6 9"/><path d="M18 9 L16 14 a3 3 0 0 0 4 0 L18 9"/></svg></span>
+          <span class="qc-lbl">Lov</span>
+        </a>
+      </nav>
     </div>
   </section>
 
@@ -1516,46 +1577,183 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       <div class="daily-frame reveal">
         <header class="daily-head">
           <div class="title"><span data-i18n="homeMarketTitle">Markedsdata</span><span class="sep"></span><b id="dailyDate">Fredag 25. april 2026</b></div>
-          <div class="stamp" id="dailyStamp" data-i18n="homeMarketsStamp">Sist oppdatert 14:32</div>
+          <div class="stamp" id="dailyStamp">Sist oppdatert 14:32</div>
         </header>
 
         <div class="daily-grid">
 
           <a class="widget reveal" style="--i:1" href="#" aria-label="Vær i Oslo">
-            <span class="widget-label">Oslo</span>
+            <div class="widget-top">
+              <span class="widget-label">Oslo</span>
+              <span class="widget-trend trend-weather" aria-hidden="true">
+                <svg class="trend-glyph" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="5.5" cy="7" r="2.6"/>
+                  <path d="M5.5,2.3 v1.2 M2,7 H.8 M3.05,3.55 L2.2,2.7 M8,3.55 L8.85,2.7"/>
+                  <path d="M7.4,11.4 a3 3 0 1 1 4.2 -4.2 a2.5 2.5 0 0 1 1.4 4.2 z" fill="currentColor" fill-opacity=".18"/>
+                </svg>
+                <span>Lett skyet</span>
+              </span>
+            </div>
             <div class="widget-value"><span class="count-up" data-to="12">12</span><span class="unit">°C</span></div>
-            <p class="widget-sub"><span>Lett skyet</span> <span class="ctx">· 4 m/s SV</span></p>
+            <p class="widget-sub"><span class="ctx">Maks 14° · Min 4° · 4 m/s SV</span></p>
+            <div class="widget-spark-wrap">
+              <svg class="widget-spark" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
+                <defs><linearGradient id="sp-oslo" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="currentColor" stop-opacity=".22"/>
+                  <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+                </linearGradient></defs>
+                <path d="M0,17.1 L8.7,19.3 L17.4,19.3 L26.1,21.5 L34.8,23.6 L43.5,25.8 L52.2,25.8 L60.9,23.6 L69.6,19.3 L78.3,14.9 L87,10.5 L95.7,8.4 L104.3,6.2 L113,4 L121.7,4 L130.4,6.2 L139.1,8.4 L147.8,12.7 L156.5,14.9 L165.2,17.1 L173.9,17.1 L182.6,17.1 L191.3,17.1 L200,17.1 L200,30 L0,30 Z" fill="url(#sp-oslo)" stroke="none"/>
+                <path d="M0,17.1 L8.7,19.3 L17.4,19.3 L26.1,21.5 L34.8,23.6 L43.5,25.8 L52.2,25.8 L60.9,23.6 L69.6,19.3 L78.3,14.9 L87,10.5 L95.7,8.4 L104.3,6.2 L113,4 L121.7,4 L130.4,6.2 L139.1,8.4 L147.8,12.7 L156.5,14.9 L165.2,17.1 L173.9,17.1 L182.6,17.1 L191.3,17.1 L200,17.1" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                <circle class="spark-now" cx="139.1" cy="8.4" r="2.2"/>
+              </svg>
+              <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>nå</span></div>
+            </div>
           </a>
 
           <a class="widget reveal" style="--i:2" href="#" aria-label="Oslo Børs hovedindeks">
-            <span class="widget-label">OSEBX</span>
-            <div class="widget-value"><span class="count-up" data-to="1543" data-format="space">1 543</span><span class="unit">,82</span></div>
-            <p class="widget-sub"><span class="delta-up">+0,42 %</span> <span class="ctx">i dag</span></p>
+            <div class="widget-top">
+              <span class="widget-label">OSEBX</span>
+              <span class="widget-trend trend-up" aria-hidden="true">
+                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,8 L8,2 M4,2 L8,2 L8,6"/></svg>
+                <span>+0,42<i>%</i></span>
+              </span>
+            </div>
+            <div class="widget-value"><span class="count-up" data-to="1543.82" data-decimals="2" data-decimal-sep="," data-format="space" data-dec-class="dec">1 543<span class="dec">,82</span></span></div>
+            <p class="widget-sub"><span class="ctx">Sist 16:06 · Volum 4,2 Md</span></p>
+            <div class="widget-spark-wrap">
+              <svg class="widget-spark spark-up" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
+                <defs><linearGradient id="sp-osebx" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="currentColor" stop-opacity=".28"/>
+                  <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+                </linearGradient></defs>
+                <path d="M0,22 L13.3,23 L26.6,21 L40,24 L53.3,22 L66.6,20 L80,18 L93.3,19 L106.6,17 L120,14 L133.3,15 L146.6,13 L160,11 L173.3,10 L186.6,9 L200,7 L200,30 L0,30 Z" fill="url(#sp-osebx)" stroke="none"/>
+                <path d="M0,22 L13.3,23 L26.6,21 L40,24 L53.3,22 L66.6,20 L80,18 L93.3,19 L106.6,17 L120,14 L133.3,15 L146.6,13 L160,11 L173.3,10 L186.6,9 L200,7" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                <circle class="spark-now" cx="200" cy="7" r="2.2"/>
+              </svg>
+              <div class="widget-axis"><span>09:00</span><span>12:00</span><span>16:06</span></div>
+            </div>
           </a>
 
           <a class="widget reveal" style="--i:3" href="#" aria-label="Strømpris i Sør-Norge">
-            <span class="widget-label">Strøm NO1</span>
+            <div class="widget-top">
+              <span class="widget-label">Strøm NO1</span>
+              <span class="widget-trend trend-down" aria-hidden="true">
+                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,2 L8,8 M4,8 L8,8 L8,4"/></svg>
+                <span>−12<i>%</i></span>
+              </span>
+            </div>
             <div class="widget-value"><span class="count-up" data-to="68">68</span><span class="unit">øre/kWh</span></div>
-            <p class="widget-sub"><span class="delta-down">−12 %</span> <span class="ctx">vs. i går</span></p>
+            <p class="widget-sub"><span class="ctx">Topp 18:00 · 91 øre · NO2 71 øre</span></p>
+            <div class="widget-spark-wrap">
+              <svg class="widget-spark spark-bars" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
+                <g fill="currentColor" opacity=".55">
+                  <rect x="1.04" y="22" width="6.25" height="6"/>
+                  <rect x="9.38" y="23" width="6.25" height="5"/>
+                  <rect x="17.71" y="23" width="6.25" height="5"/>
+                  <rect x="26.04" y="22" width="6.25" height="6"/>
+                  <rect x="34.38" y="21" width="6.25" height="7"/>
+                  <rect x="42.71" y="19" width="6.25" height="9"/>
+                  <rect x="51.04" y="14" width="6.25" height="14"/>
+                  <rect x="59.38" y="8" width="6.25" height="20"/>
+                  <rect x="67.71" y="6" width="6.25" height="22"/>
+                  <rect x="76.04" y="10" width="6.25" height="18"/>
+                  <rect x="84.38" y="13" width="6.25" height="15"/>
+                  <rect x="92.71" y="14" width="6.25" height="14"/>
+                  <rect x="101.04" y="15" width="6.25" height="13"/>
+                  <rect x="109.38" y="14" width="6.25" height="14"/>
+                  <rect x="117.71" y="12" width="6.25" height="16"/>
+                  <rect x="126.04" y="10" width="6.25" height="18"/>
+                </g>
+                <rect class="bar-now" x="134.38" y="7" width="6.25" height="21"/>
+                <g fill="currentColor" opacity=".32">
+                  <rect x="142.71" y="4" width="6.25" height="24"/>
+                  <rect x="151.04" y="3" width="6.25" height="25"/>
+                  <rect x="159.38" y="5" width="6.25" height="23"/>
+                  <rect x="167.71" y="10" width="6.25" height="18"/>
+                  <rect x="176.04" y="14" width="6.25" height="14"/>
+                  <rect x="184.38" y="18" width="6.25" height="10"/>
+                  <rect x="192.71" y="20" width="6.25" height="8"/>
+                </g>
+              </svg>
+              <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>nå</span><span>23</span></div>
+            </div>
           </a>
 
           <a class="widget reveal" style="--i:4" href="#" aria-label="Valutakurs">
-            <span class="widget-label">USD / NOK</span>
+            <div class="widget-top">
+              <span class="widget-label">USD / NOK</span>
+              <span class="widget-trend trend-flat" aria-hidden="true">
+                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
+                <span>+0,03</span>
+              </span>
+            </div>
             <div class="widget-value"><span class="count-up" data-to="10.72" data-decimals="2" data-decimal-sep=",">10,72</span><span class="unit">kr</span></div>
-            <p class="widget-sub"><span class="delta-flat">+0,03</span> <span class="ctx">EUR 11,84 · GBP 13,56</span></p>
+            <p class="widget-sub"><span class="ctx">EUR 11,84 · GBP 13,56 · SEK 1,02</span></p>
+            <div class="widget-spark-wrap">
+              <svg class="widget-spark" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
+                <defs><linearGradient id="sp-usd" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="currentColor" stop-opacity=".18"/>
+                  <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+                </linearGradient></defs>
+                <path d="M0,17 L6.9,16 L13.8,17 L20.7,15 L27.6,16 L34.5,17 L41.4,15 L48.3,16 L55.2,15 L62.1,14 L69,15 L75.9,16 L82.8,15 L89.7,16 L96.6,14 L103.4,15 L110.3,16 L117.2,15 L124.1,14 L131,15 L137.9,16 L144.8,14 L151.7,13 L158.6,14 L165.5,15 L172.4,13 L179.3,14 L186.2,13 L193.1,12 L200,11 L200,30 L0,30 Z" fill="url(#sp-usd)" stroke="none"/>
+                <path d="M0,17 L6.9,16 L13.8,17 L20.7,15 L27.6,16 L34.5,17 L41.4,15 L48.3,16 L55.2,15 L62.1,14 L69,15 L75.9,16 L82.8,15 L89.7,16 L96.6,14 L103.4,15 L110.3,16 L117.2,15 L124.1,14 L131,15 L137.9,16 L144.8,14 L151.7,13 L158.6,14 L165.5,15 L172.4,13 L179.3,14 L186.2,13 L193.1,12 L200,11" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                <circle class="spark-now" cx="200" cy="11" r="2.2"/>
+              </svg>
+              <div class="widget-axis"><span>30d</span><span>14d</span><span>7d</span><span>nå</span></div>
+            </div>
           </a>
 
         </div>
 
-        <div class="data-foot">
-          <div class="pair-row">
-            <span class="pair"><b data-i18n="homeMarketsPairPolicy">Styringsrente</b> 4,50 % <span class="flat">±0,0</span></span>
-            <span class="pair"><b data-i18n="homeMarketsPairNibor">NIBOR 3M</b> 4,68 <span class="flat">±0,0</span></span>
-            <span class="pair"><b data-i18n="homeMarketsPairBrent">Brent</b> $84,30 <span class="down">−0,8 %</span></span>
-            <span class="pair"><b data-i18n="homeMarketsPairGold">Gull</b> 26 410 <span class="up">+0,4 %</span></span>
+        <aside class="ticker-top ticker-inline ticker-embedded reveal" data-screen-label="04 Aksjer" aria-label="Aksjer og marked — rullende oversikt">
+        <span class="ticker-inline-label" aria-hidden="true">Aksjer &amp; marked</span>
+        <div class="ticker-mask">
+          <div class="ticker-track" id="tickerTrack">
+            <!-- Set A -->
+            <span class="ti"><b>OBX</b> <span class="val">1 045,21</span> <em class="up">+0,38 %</em></span>
+            <span class="ti"><b>OSEAX</b> <span class="val">1 612,40</span> <em class="up">+0,29 %</em></span>
+            <span class="ti"><b>S&amp;P 500</b> <span class="val">5 218,11</span> <em class="down">−0,12 %</em></span>
+            <span class="ti"><b>Nasdaq</b> <span class="val">16 847,30</span> <em class="up">+0,21 %</em></span>
+            <span class="ti"><b>DAX</b> <span class="val">18 042,55</span> <em class="up">+0,18 %</em></span>
+            <span class="ti"><b>FTSE 100</b> <span class="val">8 124,90</span> <em class="flat">±0,02 %</em></span>
+            <span class="ti"><b>Nikkei</b> <span class="val">39 280,40</span> <em class="down">−0,44 %</em></span>
+            <span class="ti"><b data-i18n="homeMarketsPairPolicy">Styringsrente</b> <span class="val">4,50 %</span> <em class="flat">±0,0</em></span>
+            <span class="ti"><b data-i18n="homeMarketsPairNibor">NIBOR 3M</b> <span class="val">4,68</span> <em class="flat">±0,0</em></span>
+            <span class="ti"><b data-i18n="homeMarketsPairBrent">Brent</b> <span class="val">$ 84,30</span> <em class="down">−0,8 %</em></span>
+            <span class="ti"><b data-i18n="homeMarketsPairGold">Gull</b> <span class="val">26 410</span> <em class="up">+0,4 %</em></span>
+            <span class="ti"><b>BTC</b> <span class="val">$ 67 240</span> <em class="down">−1,8 %</em></span>
+            <span class="ti"><b>ETH</b> <span class="val">$ 3 412</span> <em class="up">+0,9 %</em></span>
+            <span class="ti"><b>WTI</b> <span class="val">$ 80,15</span> <em class="down">−0,9 %</em></span>
+            <span class="ti"><b>Sølv</b> <span class="val">312,40</span> <em class="up">+0,7 %</em></span>
+            <span class="ti"><b>Kobber</b> <span class="val">$ 4,28</span> <em class="up">+0,3 %</em></span>
+            <span class="ti"><b>Equinor</b> <span class="val">312,80</span> <em class="down">−0,5 %</em></span>
+            <span class="ti"><b>DNB</b> <span class="val">218,40</span> <em class="up">+0,2 %</em></span>
+            <span class="ti"><b>Telenor</b> <span class="val">128,60</span> <em class="flat">±0,0 %</em></span>
+            <!-- Set B (duplicate for seamless loop) -->
+            <span class="ti" aria-hidden="true"><b>OBX</b> <span class="val">1 045,21</span> <em class="up">+0,38 %</em></span>
+            <span class="ti" aria-hidden="true"><b>OSEAX</b> <span class="val">1 612,40</span> <em class="up">+0,29 %</em></span>
+            <span class="ti" aria-hidden="true"><b>S&amp;P 500</b> <span class="val">5 218,11</span> <em class="down">−0,12 %</em></span>
+            <span class="ti" aria-hidden="true"><b>Nasdaq</b> <span class="val">16 847,30</span> <em class="up">+0,21 %</em></span>
+            <span class="ti" aria-hidden="true"><b>DAX</b> <span class="val">18 042,55</span> <em class="up">+0,18 %</em></span>
+            <span class="ti" aria-hidden="true"><b>FTSE 100</b> <span class="val">8 124,90</span> <em class="flat">±0,02 %</em></span>
+            <span class="ti" aria-hidden="true"><b>Nikkei</b> <span class="val">39 280,40</span> <em class="down">−0,44 %</em></span>
+            <span class="ti" aria-hidden="true"><b>Styringsrente</b> <span class="val">4,50 %</span> <em class="flat">±0,0</em></span>
+            <span class="ti" aria-hidden="true"><b>NIBOR 3M</b> <span class="val">4,68</span> <em class="flat">±0,0</em></span>
+            <span class="ti" aria-hidden="true"><b>Brent</b> <span class="val">$ 84,30</span> <em class="down">−0,8 %</em></span>
+            <span class="ti" aria-hidden="true"><b>Gull</b> <span class="val">26 410</span> <em class="up">+0,4 %</em></span>
+            <span class="ti" aria-hidden="true"><b>BTC</b> <span class="val">$ 67 240</span> <em class="down">−1,8 %</em></span>
+            <span class="ti" aria-hidden="true"><b>ETH</b> <span class="val">$ 3 412</span> <em class="up">+0,9 %</em></span>
+            <span class="ti" aria-hidden="true"><b>WTI</b> <span class="val">$ 80,15</span> <em class="down">−0,9 %</em></span>
+            <span class="ti" aria-hidden="true"><b>Sølv</b> <span class="val">312,40</span> <em class="up">+0,7 %</em></span>
+            <span class="ti" aria-hidden="true"><b>Kobber</b> <span class="val">$ 4,28</span> <em class="up">+0,3 %</em></span>
+            <span class="ti" aria-hidden="true"><b>Equinor</b> <span class="val">312,80</span> <em class="down">−0,5 %</em></span>
+            <span class="ti" aria-hidden="true"><b>DNB</b> <span class="val">218,40</span> <em class="up">+0,2 %</em></span>
+            <span class="ti" aria-hidden="true"><b>Telenor</b> <span class="val">128,60</span> <em class="flat">±0,0 %</em></span>
           </div>
-          <div class="src">Kilde: <a href="#">Norges Bank</a> · <a href="#">Oslo Børs</a></div>
         </div>
+        <span class="ticker-badge" aria-hidden="true">Live</span>
+      </aside>
+
       </div>
     </div>
   </section>
@@ -1567,53 +1765,86 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <div class="label" style="margin-bottom:10px" data-i18n="homeSectionCategories">Kategorier</div>
           <h2 data-i18n="homeCatTitle">Bla i verktøyene</h2>
         </div>
-        <div class="meta" data-i18n="homeCatMeta">8 områder · 35+ kalkulatorer</div>
+        <div class="meta" data-i18n="homeCatMeta">9 områder · 30+ kalkulatorer</div>
       </div>
       <div class="grid">
-        <a href="personlig/" class="card reveal" style="--i:0">
-          <span class="num">01</span>
-          <h3 data-i18n="homeCardPersonlig">Personlig økonomi</h3>
+        <a href="/personlig/budsjett/" class="card reveal" style="--i:0">
+          <div class="card-head">
+            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg>
+            <span class="num">01</span>
+          </div>
+          <h3>Budsjett</h3>
+          <p>Månedlig oversikt over inntekt, faste og variable utgifter</p>
+          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
+        </a>
+        <a href="/personlig/" class="card reveal" style="--i:1">
+          <div class="card-head">
+            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
+            <span class="num">02</span>
+          </div>
+          <h3 data-i18n="homeCardPersonlig">Privatøkonomi</h3>
           <p data-i18n="homeCatPersonligDesc">Bilkostnad, budsjett og lønnsomhet</p>
           <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
         </a>
-        <a href="boliglan/" class="card reveal" style="--i:1">
-          <span class="num">02</span>
+        <a href="/boliglan/" class="card reveal" style="--i:2">
+          <div class="card-head">
+            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg>
+            <span class="num">03</span>
+          </div>
           <h3 data-i18n="homeCardBoliglan">Boliglån</h3>
           <p data-i18n="homeCatBoliglanDesc">Boliglånskalkulator, krav til boliglån, kostnader og BSU</p>
           <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
         </a>
-        <a href="kalkulator/" class="card reveal" style="--i:2">
-          <span class="num">03</span>
+        <a href="/kalkulator/" class="card reveal" style="--i:3">
+          <div class="card-head">
+            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="8" y1="7.5" x2="16" y2="7.5"/><circle cx="9" cy="13" r=".6" fill="currentColor"/><circle cx="12" cy="13" r=".6" fill="currentColor"/><circle cx="15" cy="13" r=".6" fill="currentColor"/><circle cx="9" cy="17" r=".6" fill="currentColor"/><circle cx="15" cy="17" r=".6" fill="currentColor"/></svg>
+            <span class="num">04</span>
+          </div>
           <h3 data-i18n="homeCardKalkulator">Kalkulator</h3>
           <p data-i18n="homeCatKalkulatorDesc">Enkel, valuta, finansiell, vitenskapelig og fagkalkulatorer</p>
           <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
         </a>
-        <a href="skatt/" class="card reveal" style="--i:3">
-          <span class="num">04</span>
+        <a href="/skatt/" class="card reveal" style="--i:4">
+          <div class="card-head">
+            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 H14 L18 7 V21 H6 Z"/><path d="M14 3 V7 H18"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
+            <span class="num">05</span>
+          </div>
           <h3 data-i18n="homeCardSkatt">Skatt</h3>
           <p data-i18n="homeCatSkattDesc">Utregning av skatt, begreper og skatteloven</p>
           <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
         </a>
-        <a href="selskap/" class="card reveal" style="--i:4">
-          <span class="num">05</span>
+        <a href="/selskap/" class="card reveal" style="--i:5">
+          <div class="card-head">
+            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/></svg>
+            <span class="num">06</span>
+          </div>
           <h3 data-i18n="homeCardSelskap">Selskap</h3>
           <p data-i18n="homeCatSelskapDesc">Aksjeselskap, kommandittselskap og selskapsrett</p>
           <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
         </a>
-        <a href="avgift/" class="card reveal" style="--i:5">
-          <span class="num">06</span>
+        <a href="/avgift/" class="card reveal" style="--i:6">
+          <div class="card-head">
+            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="2"/><circle cx="16" cy="16" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+            <span class="num">07</span>
+          </div>
           <h3 data-i18n="homeCardAvgift">Avgift</h3>
           <p data-i18n="homeCatAvgiftDesc">MVA, merverdiavgiftsloven og arbeidsgiveravgift</p>
           <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
         </a>
-        <a href="regnskap/" class="card reveal" style="--i:6">
-          <span class="num">07</span>
+        <a href="/regnskap/" class="card reveal" style="--i:7">
+          <div class="card-head">
+            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg>
+            <span class="num">08</span>
+          </div>
           <h3 data-i18n="homeCardRegnskap">Regnskap</h3>
           <p data-i18n="homeCatRegnskapDesc">Bokføring, balanse, resultatregnskap og kontoplan</p>
           <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
         </a>
-        <a href="lov/" class="card reveal" style="--i:7">
-          <span class="num">08</span>
+        <a href="/lov/" class="card reveal" style="--i:8">
+          <div class="card-head">
+            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4 V20"/><path d="M5 21 H19"/><path d="M4 9 L12 5 L20 9"/><path d="M6 9 L4 14 a3 3 0 0 0 4 0 L6 9"/><path d="M18 9 L16 14 a3 3 0 0 0 4 0 L18 9"/></svg>
+            <span class="num">09</span>
+          </div>
           <h3 data-i18n="homeCardLov">Lov</h3>
           <p data-i18n="homeCatLovDesc">Skatteloven, aksjeloven, MVA-loven og bokføringsloven</p>
           <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
@@ -1632,13 +1863,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         <span class="wordmark">Hverdagsverktøy</span>
       </div>
       <div class="foot-links">
-        <a href="#" id="fl-priv">Personvern</a>
-        <a href="#" id="fl-con">Kontakt</a>
+        <a href="#" data-i18n="footPrivacy">Personvern</a>
+        <a href="#" data-i18n="footContact">Kontakt</a>
       </div>
     </div>
     <div class="foot-bottom">
-      <span id="fl-copy">© 2026 Hverdagsverktøy — Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</span>
-      <em id="fl-author">Hverdagsverktøy — gratis norske finanskalkulatorer</em>
+      <span>© 2026 Hverdagsverktøy</span>
+      <em data-i18n="footDisclaimer">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
     </div>
   </div>
 </footer>
@@ -1649,22 +1880,14 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   var IS_MOBILE = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
 
   // ── Headline mask reveal ─────────────────────────
-  // Per-word, slow + ease-out-expo, --stag-medium between words.
-  // Italic word arrives last with extra 180ms gap and fires a 600ms gold
-  // shimmer sweep (.shimmer class). One-shot. Fires after document.fonts.ready
-  // + 200ms settle.
   (function(){
     var h = document.querySelector('[data-headline]');
     if(!h) return;
 
-    // Walk children; preserve <em>. Build word-masks per word, marking
-    // descendants of <em> with the .shimmer class.
     function splitNodes(parent, isItalic){
       var out = [];
       Array.prototype.forEach.call(parent.childNodes, function(node){
-        if(node.nodeType === 3){ // text
-          // Split on whitespace runs; emit a token per word (preserving
-          // attached punctuation like commas and periods).
+        if(node.nodeType === 3){
           var text = node.nodeValue;
           var tokens = text.split(/(\s+)/);
           tokens.forEach(function(tok){
@@ -1673,7 +1896,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
             else { out.push({type:'word', text:tok, italic:!!isItalic}); }
           });
         } else if(node.nodeType === 1 && node.tagName === 'EM'){
-          // Recurse, marking words italic
           out = out.concat(splitNodes(node, true));
         }
       });
@@ -1683,13 +1905,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     var tokens = splitNodes(h, false);
     h.innerHTML = '';
 
-    // Build markup: each word becomes
-    //   <span class="word-mask"><span class="word-inner [shimmer]" style="--w-d:N">word</span></span>
-    // followed by a space text node.
     var wordIdx = 0;
     var italicLastIdx = -1;
-    // First pass — find the index of the last italic word, so we can
-    // give it the loose extra delay + shimmer.
     var wordCount = tokens.filter(function(t){return t.type==='word'}).length;
     tokens.forEach(function(t){
       if(t.type !== 'word') return;
@@ -1697,9 +1914,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       wordIdx++;
     });
 
-    var STAG_MEDIUM = 80;   // ms — keep in sync with --stag-medium
-    var STAG_LOOSE  = 140;  // ms — extra gap before italic word
-    var ITALIC_GAP  = 180;  // ms — brief: italic arrives last with extra delay
+    var STAG_MEDIUM = 80;
+    var STAG_LOOSE  = 140;
+    var ITALIC_GAP  = 180;
 
     wordIdx = 0;
     var italicDelay = 0;
@@ -1714,7 +1931,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       inner.className = 'word-inner' + (t.italic ? ' shimmer' : '');
       inner.textContent = t.text;
       var d = wordIdx * STAG_MEDIUM;
-      // If this is the last italic word, push it back a bit further
       if(t.italic && wordIdx === italicLastIdx){
         d += ITALIC_GAP;
         italicDelay = d;
@@ -1725,22 +1941,18 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       wordIdx++;
     });
 
-    // Shimmer fires after the italic word lands (delay + slow duration tail)
     if(italicLastIdx >= 0){
       h.style.setProperty('--shimmer-d', (italicDelay + 280) + 'ms');
     }
 
     function trigger(){
-      // Total animation length used to schedule the .rise stagger
       var total = (wordCount - 1) * STAG_MEDIUM + (italicLastIdx >= 0 ? ITALIC_GAP : 0) + 720;
       h.classList.add('play');
-      // Tail before the subline + search rise — let the headline mostly land
-      var riseAt = Math.max(420, total - 400); // 400ms before headline finish
+      var riseAt = Math.max(420, total - 400);
       setTimeout(function(){ document.body.classList.add('heroLanded'); }, riseAt);
     }
 
     if(REDUCE_MOTION){
-      // Replace with instant reveal — 120ms fade
       Array.prototype.forEach.call(h.querySelectorAll('.word-inner'), function(el){
         el.style.transition = 'opacity 120ms linear';
         el.style.transform = 'none';
@@ -1750,13 +1962,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       return;
     }
 
-    // Wait for fonts so the mask crops the right glyph metrics
     var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
     ready.then(function(){
-      // 200ms settle as per brief
       setTimeout(trigger, 200);
     });
-    // Safety net — if fonts.ready never resolves, force trigger after 1.4s
     setTimeout(function(){
       if(!h.classList.contains('play')) trigger();
     }, 1400);
@@ -1768,78 +1977,26 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     if(!t) return;
     if(REDUCE_MOTION){ t.classList.add('live'); return; }
 
-    // Per-symbol count-up on first paint — each value tweens from a slightly
-    // randomized start to its real value over 800ms with ease-out-quart.
-    // Only animates the FIRST set (Set A); the duplicate Set B is aria-hidden
-    // and serves only the seamless loop, so it doesn't need to count.
-    var values = t.querySelectorAll('.ticker-track > .ti:not([aria-hidden="true"]) .val');
-    var nbsp = '\u202F'; // narrow non-breaking space, matches existing thousands sep
-    function parseNumber(text){
-      // Extract: optional currency prefix ($, kr), digits w/ space/.-/, decimal
-      var m = text.match(/^(\$\s?|kr\s?)?([\d\u202F\u00A0 .]+)([,.]\d+)?(\s?%)?$/);
-      if(!m) return null;
-      var prefix = m[1] || '';
-      var intRaw = m[2].replace(/[\u202F\u00A0 ]/g, '');
-      var dec = m[3] || '';
-      var suffix = m[4] || '';
-      // Number value: combine int + decimal (replace , with .)
-      var num = parseFloat(intRaw + dec.replace(',', '.'));
-      if(isNaN(num)) return null;
-      var decimals = dec ? dec.length - 1 : 0;
-      var hasThousandSpace = /[\u202F\u00A0 ]/.test(m[2]);
-      return { prefix: prefix, num: num, decimals: decimals,
-               suffix: suffix, hasThousandSpace: hasThousandSpace };
-    }
-    function formatNumber(parsed, current){
-      var fixed = current.toFixed(parsed.decimals);
-      var parts = fixed.split('.');
-      var intPart = parts[0];
-      if(parsed.hasThousandSpace){
-        intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, nbsp);
-      }
-      var out = parsed.prefix + intPart;
-      if(parsed.decimals > 0) out += ',' + parts[1];
-      out += parsed.suffix;
-      return out;
-    }
-    var tweens = [];
-    Array.prototype.forEach.call(values, function(el){
-      var parsed = parseNumber(el.textContent.trim());
-      if(!parsed) return;
-      // Randomized start: 88–96% of final, mild offset so each symbol tweens
-      // a different distance and they don't all hit at the exact same beat.
-      var startNum = parsed.num * (0.88 + Math.random() * 0.08);
-      // Pre-fill so we don't flash the final value on first paint
-      el.textContent = formatNumber(parsed, startNum);
-      tweens.push({ el: el, parsed: parsed, from: startNum, to: parsed.num });
-    });
+    var TICKER_TAIL = 1800;
 
-    // Start a beat after page paint so it doesn't compete with the headline.
-    setTimeout(function(){
-      t.classList.add('live');
+    function go(){
+      setTimeout(function(){ t.classList.add('live'); }, TICKER_TAIL);
+    }
 
-      // Now tween each value — staggered by ~25ms for a soft cascade across
-      // the visible bar. Total tween 800ms, ease-out-quart.
-      var DUR = 800;
-      var STAG = 25;
-      tweens.forEach(function(tw, i){
-        var startTs = null;
-        var delay = i * STAG;
-        function step(ts){
-          if(startTs === null) startTs = ts;
-          var elapsed = ts - startTs - delay;
-          if(elapsed < 0){ requestAnimationFrame(step); return; }
-          var p = Math.min(1, elapsed / DUR);
-          // ease-out-quart
-          var e = 1 - Math.pow(1 - p, 4);
-          var v = tw.from + (tw.to - tw.from) * e;
-          tw.el.textContent = formatNumber(tw.parsed, v);
-          if(p < 1) requestAnimationFrame(step);
-          else tw.el.textContent = formatNumber(tw.parsed, tw.to);
+    if(document.body.classList.contains('heroLanded')){
+      go();
+    } else {
+      var obs = new MutationObserver(function(){
+        if(document.body.classList.contains('heroLanded')){
+          obs.disconnect();
+          go();
         }
-        requestAnimationFrame(step);
       });
-    }, 320);
+      obs.observe(document.body, {attributes:true, attributeFilter:['class']});
+      setTimeout(function(){
+        if(!t.classList.contains('live')){ obs.disconnect(); go(); }
+      }, 4000);
+    }
   })();
 
   // ── Live-dot single ping (data-frame stamp) ───────────────
@@ -1855,62 +2012,42 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     io.observe(stamp);
   })();
 
-  // ── Hero orbs — depth-differentiated cursor parallax ──────
-  // Three layered orbs (back/mid/front) each get the same normalized -1..1
-  // pointer vector, but apply their own --depth multiplier so the front
-  // moves more than the back. Lerp at 0.05 — very smooth, no perceptible
-  // tracking. Inputs are clamped; outputs are pushed only when delta > 0.001.
+  // ── Cursor-anchored light — lerp 0.06, lags 200–400ms ─────
   (function(){
-    if(REDUCE_MOTION || IS_MOBILE) return;
-    var orbs = [
-      document.getElementById('heroOrbA'),
-      document.getElementById('heroOrbB'),
-      document.getElementById('heroOrbC')
-    ].filter(Boolean);
-    var hero = document.querySelector('.hero');
-    if(!orbs.length || !hero) return;
+    var WIDE = matchMedia('(min-width: 1024px)').matches;
+    var light = document.getElementById('cursorLight');
+    if(!light) return;
+    if(REDUCE_MOTION || !WIDE){ light.style.display = 'none'; return; }
 
-    var targetX = 0, targetY = 0;
-    var curX = 0, curY = 0;
-    var raf = null;
+    var targetX = window.innerWidth  / 2;
+    var targetY = window.innerHeight / 2;
+    var curX = targetX, curY = targetY;
+    var raf = null, paused = false;
 
-    function onMove(e){
-      var r = hero.getBoundingClientRect();
-      var cx = r.left + r.width  / 2;
-      var cy = r.top  + r.height / 2;
-      // Normalize to roughly -1..1 inside the hero rect, clamped wider
-      // so the parallax only reaches its limits when the cursor is well
-      // outside the hero (subtle).
-      var nx = (e.clientX - cx) / (r.width  * 1.4);
-      var ny = (e.clientY - cy) / (r.height * 1.4);
-      if(nx < -1) nx = -1; else if(nx > 1) nx = 1;
-      if(ny < -1) ny = -1; else if(ny > 1) ny = 1;
-      targetX = nx;
-      targetY = ny;
-      if(!raf) raf = requestAnimationFrame(tick);
-    }
     function tick(){
-      // Lerp at 0.05 — extremely smooth follow, lower than typical (0.08).
-      curX += (targetX - curX) * 0.05;
-      curY += (targetY - curY) * 0.05;
-      var sx = curX.toFixed(4);
-      var sy = curY.toFixed(4);
-      for(var i = 0; i < orbs.length; i++){
-        orbs[i].style.setProperty('--mx', sx);
-        orbs[i].style.setProperty('--my', sy);
-      }
-      if(Math.abs(targetX - curX) > 0.0008 || Math.abs(targetY - curY) > 0.0008){
+      if(paused){ raf = null; return; }
+      curX += (targetX - curX) * 0.06;
+      curY += (targetY - curY) * 0.06;
+      light.style.transform =
+        'translate3d(' + curX.toFixed(2) + 'px,' + curY.toFixed(2) + 'px,0)';
+      if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
         raf = requestAnimationFrame(tick);
-      } else {
-        raf = null;
-      }
+      } else { raf = null; }
     }
-
+    function onMove(e){
+      targetX = e.clientX; targetY = e.clientY;
+      if(!raf && !paused) raf = requestAnimationFrame(tick);
+    }
     window.addEventListener('mousemove', onMove, {passive:true});
-    window.addEventListener('pagehide', function(){
-      window.removeEventListener('mousemove', onMove);
-      if(raf) cancelAnimationFrame(raf);
-    }, {once:true});
+    document.addEventListener('visibilitychange', function(){
+      paused = document.hidden;
+      if(paused){ if(raf){ cancelAnimationFrame(raf); raf = null; } }
+      else if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
+        raf = requestAnimationFrame(tick);
+      }
+    });
+    light.style.transform =
+      'translate3d(' + targetX + 'px,' + targetY + 'px,0)';
   })();
 
   // ── Localized date ──
@@ -1931,9 +2068,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     el.textContent = 'Sist oppdatert ' + hh + ':' + mn;
   })();
 
-  // ── Search index ──
+  // ── Search index (page-local fallback; shared/search.js may override) ──
   var SEARCH_DATA = [
-    {n:'Personlig økonomi',d:'Bilkostnad, budsjett og lønnsomhet',u:'/personlig/',c:'Personlig',type:'section'},
+    {n:'Privatøkonomi',d:'Bilkostnad, budsjett og lønnsomhet',u:'/personlig/',c:'Privatøkonomi',type:'section'},
     {n:'Boliglån',d:'Boliglånskalkulator, krav, kostnader og BSU',u:'/boliglan/',c:'Boliglån',type:'section'},
     {n:'Kalkulator',d:'Enkel, valuta, finansiell, vitenskapelig',u:'/kalkulator/',c:'Kalkulator',type:'section'},
     {n:'Skatt',d:'Utregning av skatt, begreper og skatteloven',u:'/skatt/',c:'Skatt',type:'section'},
@@ -1946,24 +2083,12 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     {n:'Lønn etter skatt',d:'Hva du faktisk får utbetalt fra timelønnen',u:'/personlig/lonn/',c:'Personlig',k:'lønn timelønn netto brutto',type:'tool'},
     {n:'Boliglånskalkulator',d:'Månedlig betaling, rente og totalkostnad',u:'/boliglan/mor/',c:'Boliglån',k:'lån bolig hus annuitet serielån avdrag',type:'tool'},
     {n:'Hva har jeg råd til?',d:'Maks lånebeløp basert på inntekt og egenkapital',u:'/boliglan/maxlan/',c:'Boliglån',k:'maks lån egenkapital gjeldsgrad',type:'tool'},
-    {n:'BSU',d:'10 % skattefradrag og opptil 27 500 kr per år',u:'/boliglan/',c:'Boliglån',k:'boligsparing ungdom skattefradrag',type:'tool'},
     {n:'Bolig vs leie',d:'Sammenlign total kostnad over X år',u:'/boliglan/bvl/',c:'Boliglån',k:'kjøpe leie sammenligne break-even',type:'tool'},
-    {n:'Dokumentavgift',d:'2,5 % av salgssum, fritak ved arv',u:'/boliglan/',c:'Boliglån',k:'tinglysing avgift bolig',type:'tool'},
-    {n:'Vitenskapelig kalkulator',d:'Sin, cos, log, potenser og mer',u:'/kalkulator/',c:'Kalkulator',k:'sin cos tan log scientific',type:'tool'},
-    {n:'Valutakalkulator',d:'Regn om mellom valutaer med oppdaterte kurser',u:'/kalkulator/',c:'Kalkulator',k:'valuta kurs dollar euro pund',type:'tool'},
-    {n:'Finansiell kalkulator',d:'Nåverdi, fremtidsverdi og annuitet',u:'/kalkulator/',c:'Kalkulator',k:'nåverdi annuitet rente',type:'tool'},
     {n:'Avskrivning',d:'Saldo og lineær — gruppe A til J',u:'/kalkulator/avs/',c:'Kalkulator',k:'saldoavskrivning lineær gruppe',type:'tool'},
     {n:'Feriepenger',d:'10,2 %, 12,0 % og +2,3 % over 60',u:'/kalkulator/ferie/',c:'Kalkulator',k:'ferie ferielov bonus',type:'tool'},
-    {n:'NPV / IRR',d:'Lønnsomhetsanalyse med netto nåverdi og internrente',u:'/kalkulator/',c:'Kalkulator',k:'investering kontantstrøm diskontering',type:'tool'},
-    {n:'Pensjonskalkulator',d:'Beregn forventet pensjon og pensjonssparing',u:'/kalkulator/',c:'Kalkulator',k:'pensjon otp folketrygd afp',type:'tool'},
-    {n:'Skattkalkulator',d:'Beregn skatt på årsinntekt med trinnskatt',u:'/skatt/',c:'Skatt',k:'skatt trinnskatt trygdeavgift',type:'tool'},
-    {n:'Utbytteskatt',d:'Oppjusteringsfaktor 1,72 og skjermingsfradrag',u:'/skatt/utbytte/',c:'Skatt',k:'utbytte aksjer skjerming',type:'tool'},
-    {n:'Trinnskatt',d:'Trinn 1–5 med satser fra 1,7 % til 17,8 %',u:'/skatt/',c:'Skatt',k:'trinn skattetrinn',type:'tool'},
-    {n:'Uttaksbeskatning',d:'§ 5-2 — skatt ved uttak fra ENK eller AS',u:'/skatt/uttak/',c:'Skatt',k:'uttak markedsverdi enk as',type:'tool'},
-    {n:'AS-stiftelse',d:'30 000 kr aksjekapital, registrering hos Brønnøysund',u:'/selskap/',c:'Selskap',k:'aksjeselskap brønnøysund stiftelse',type:'tool'},
-    {n:'Selskapsformer',d:'AS, ENK, ANS, DA, NUF — sammenligning',u:'/selskap/',c:'Selskap',k:'enk ans da nuf',type:'tool'},
+    {n:'Skatt',d:'Beregn skatt på årsinntekt med trinnskatt',u:'/skatt/inntekt/',c:'Skatt',k:'skatt trinnskatt trygdeavgift',type:'tool'},
     {n:'MVA-kalkulator',d:'25 %, 15 % og 12 % — alle satser',u:'/avgift/vat/',c:'Avgift',k:'mva merverdi moms',type:'tool'},
-    {n:'Arbeidsgiveravgift',d:'AGA for alle 7 soner',u:'/avgift/aga/',c:'Avgift',k:'aga ansatt',type:'tool'},
+    {n:'Arbeidsgiveravgift',d:'AGA for alle 7 soner',u:'/avgift/aga/',c:'Avgift',k:'aga ansatt',type:'tool'}
   ];
 
   var SUGGESTED = [
@@ -1971,15 +2096,18 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     {label:'Boliglånskalkulator', q:'boliglånskalkulator'},
     {label:'BSU', q:'bsu'},
     {label:'MVA',  q:'mva'},
-    {label:'Pensjon', q:'pensjon'},
-    {label:'Sparekalkulator', q:'sparekalkulator'},
+    {label:'Sparekalkulator', q:'sparekalkulator'}
   ];
 
-  function norm(s){
-    return (s||'').toString().toLowerCase().trim()
-      .normalize('NFD').replace(/[̀-ͯ]/g,'')
-      .replace(/å/g,'a').replace(/ø/g,'o').replace(/æ/g,'ae');
-  }
+  var POPULAR = [
+    {n:'Lønn etter skatt',         c:'Skatt',         meta:'Beregn nettolønn',           u:'/personlig/lonn/'},
+    {n:'Boliglånskalkulator',      c:'Boliglån',      meta:'Månedlig betaling',          u:'/boliglan/mor/'},
+    {n:'Bilkostnad per måned',     c:'Privatøkonomi', meta:'Inkl. drivstoff, forsikring',u:'/personlig/bil/'},
+    {n:'MVA-kalkulator',           c:'Avgift',        meta:'Alle satser 25 / 15 / 12 %', u:'/avgift/vat/'},
+    {n:'Avskrivning',              c:'Kalkulator',    meta:'Saldo + lineær',             u:'/kalkulator/avs/'}
+  ];
+
+  function norm(s){return (s||'').toLowerCase().trim()}
   function score(item, q){
     var qn = norm(q); if(!qn) return 0;
     var n = norm(item.n), d = norm(item.d), k = norm(item.k||''), c = norm(item.c);
@@ -2016,22 +2144,53 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]})}
 
   function renderSuggested(){
-    var html = '';
-    html += '<div class="panel-section">';
-    html += '<div class="panel-label"><span>Forslag</span><span class="count">Begynn å skrive for å søke</span></div>';
-    html += '<div class="sg-grid">';
+    var leftHtml  = '';
+    var rightHtml = '';
+
+    leftHtml += '<div class="panel-section">';
+    leftHtml += '<div class="panel-label"><span>Forslag</span><span class="count">Begynn å skrive for å søke</span></div>';
+    leftHtml += '<div class="sg-grid">';
     SUGGESTED.forEach(function(s){
-      html += '<a href="#" class="sg-chip" data-q="'+escapeHtml(s.q)+'">';
-      html += '<span class="dot" aria-hidden="true"></span><span>'+escapeHtml(s.label)+'</span>';
-      html += '</a>';
+      leftHtml += '<a href="#" class="sg-chip" data-q="'+escapeHtml(s.q)+'">';
+      leftHtml += '<span class="dot" aria-hidden="true"></span><span>'+escapeHtml(s.label)+'</span>';
+      leftHtml += '</a>';
     });
-    html += '</div></div>';
-    html += '<div class="panel-section"><div class="panel-label"><span>Hopp til kategori</span></div><div class="sr-list">';
+    leftHtml += '</div></div>';
+
+    leftHtml += '<div class="panel-section"><div class="panel-label"><span>Hopp til kategori</span></div><div class="sr-list">';
     SEARCH_DATA.filter(function(i){return i.type==='section'}).forEach(function(it){
-      html += '<a href="'+it.u+'" class="sr-item"><div class="sr-text"><div class="sr-name">'+escapeHtml(it.n)+'</div><div class="sr-desc">'+escapeHtml(it.d)+'</div></div><svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg></a>';
+      leftHtml += '<a href="'+it.u+'" class="sr-item"><div class="sr-text"><div class="sr-name">'+escapeHtml(it.n)+'</div><div class="sr-desc">'+escapeHtml(it.d)+'</div></div><svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg></a>';
     });
-    html += '</div></div>';
-    panel.innerHTML = html;
+    leftHtml += '</div></div>';
+
+    rightHtml += '<div class="panel-section">';
+    rightHtml += '<div class="panel-label"><span>Populært</span></div>';
+    rightHtml += '<div class="pop-list">';
+    POPULAR.forEach(function(p, i){
+      var rank = (i+1).toString().padStart(2,'0');
+      rightHtml += '<a href="'+p.u+'" class="pop-item">';
+      rightHtml += '<span class="pop-rank">'+rank+'</span>';
+      rightHtml += '<div class="pop-text"><div class="pop-name">'+escapeHtml(p.n)+'</div><div class="pop-meta">'+escapeHtml(p.meta)+'</div></div>';
+      rightHtml += '<span class="pop-cat">'+escapeHtml(p.c)+'</span>';
+      rightHtml += '</a>';
+    });
+    rightHtml += '</div></div>';
+
+    rightHtml += '<div class="panel-tips">';
+    rightHtml += '<div class="tip-row">';
+    rightHtml += '<span class="tip"><kbd>↵</kbd><span>Åpne</span></span>';
+    rightHtml += '<span class="tip"><kbd>↑</kbd><kbd>↓</kbd><span>Bla</span></span>';
+    rightHtml += '<span class="tip"><kbd>Esc</kbd><span>Lukk</span></span>';
+    rightHtml += '</div>';
+    rightHtml += '<span class="tip-meta">Indeksert i dag</span>';
+    rightHtml += '</div>';
+
+    panel.innerHTML =
+      '<div class="panel-split">' +
+        '<div class="panel-col left">'  + leftHtml  + '</div>' +
+        '<div class="panel-col right">' + rightHtml + '</div>' +
+      '</div>';
+
     currentItems = [];
     bindSuggested();
   }
@@ -2084,41 +2243,49 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     nodes[activeIdx].scrollIntoView({block:'nearest'});
   }
 
-  function open(){
+  function openPanel(){
+    if(!shell || !input || !panel) return;
     shell.classList.add('focused');
     panel.classList.add('open');
+    var wrap = shell.closest('.search-wrap');
+    if(wrap) wrap.classList.add('is-open');
     input.setAttribute('aria-expanded','true');
     if(!input.value.trim()) renderSuggested();
   }
-  function close(){
+  function closePanel(){
+    if(!shell || !panel) return;
     shell.classList.remove('focused');
     panel.classList.remove('open');
-    input.setAttribute('aria-expanded','false');
+    var wrap = shell.closest('.search-wrap');
+    if(wrap) wrap.classList.remove('is-open');
+    if(input) input.setAttribute('aria-expanded','false');
   }
 
-  input.addEventListener('focus', open);
-  input.addEventListener('input', function(){
-    var q = input.value;
-    if(!q.trim()) renderSuggested();
-    else renderResults(q);
-  });
-  input.addEventListener('keydown', function(e){
-    if(e.key==='ArrowDown'){ e.preventDefault(); if(currentItems.length) setActive(activeIdx+1); }
-    else if(e.key==='ArrowUp'){ e.preventDefault(); if(currentItems.length) setActive(activeIdx-1); }
-    else if(e.key==='Enter'){
-      var nodes = panel.querySelectorAll('.sr-item');
-      if(activeIdx>=0 && nodes[activeIdx]){ e.preventDefault(); window.location.href = nodes[activeIdx].getAttribute('href'); }
-    }
-    else if(e.key==='Escape'){ input.blur(); close(); }
-  });
-  document.addEventListener('click', function(e){
-    if(!shell.contains(e.target) && !panel.contains(e.target)) close();
-  });
-  document.addEventListener('keydown', function(e){
-    if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='k'){
-      e.preventDefault(); input.focus(); input.select();
-    }
-  });
+  if(input && shell && panel){
+    input.addEventListener('focus', openPanel);
+    input.addEventListener('input', function(){
+      var q = input.value;
+      if(!q.trim()) renderSuggested();
+      else renderResults(q);
+    });
+    input.addEventListener('keydown', function(e){
+      if(e.key==='ArrowDown'){ e.preventDefault(); if(currentItems.length) setActive(activeIdx+1); }
+      else if(e.key==='ArrowUp'){ e.preventDefault(); if(currentItems.length) setActive(activeIdx-1); }
+      else if(e.key==='Enter'){
+        var nodes = panel.querySelectorAll('.sr-item');
+        if(activeIdx>=0 && nodes[activeIdx]){ e.preventDefault(); window.location.href = nodes[activeIdx].getAttribute('href'); }
+      }
+      else if(e.key==='Escape'){ input.blur(); closePanel(); }
+    });
+    document.addEventListener('click', function(e){
+      if(!shell.contains(e.target) && !panel.contains(e.target)) closePanel();
+    });
+    document.addEventListener('keydown', function(e){
+      if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='k'){
+        e.preventDefault(); input.focus(); input.select();
+      }
+    });
+  }
 
   // ── Subtle nav border on scroll + scroll progress hairline ──
   (function(){
@@ -2160,8 +2327,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     }, {rootMargin:'0px 0px -8% 0px', threshold:0.15});
     els.forEach(function(el){io.observe(el)});
 
-    // Belt-and-suspenders: anything already in viewport on load gets revealed
-    // immediately, in case the IO callback is delayed.
     requestAnimationFrame(function(){
       var vh = window.innerHeight || 0;
       els.forEach(function(el){
@@ -2170,8 +2335,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         if(r.top < vh && r.bottom > 0){ el.classList.add('in'); }
       });
     });
-    // Final safety net — after 600ms, force-reveal anything still hidden
-    // (covers reduced-motion edge cases or stalled observers).
     setTimeout(function(){
       els.forEach(function(el){ el.classList.add('in'); });
     }, 600);
@@ -2183,14 +2346,18 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     var nodes = document.querySelectorAll('.count-up');
     if(!nodes.length) return;
 
-    function format(n, decimals, decimalSep, thousandsFmt){
+    function format(n, decimals, decimalSep, thousandsFmt, decClass){
       var fixed = n.toFixed(decimals);
       var parts = fixed.split('.');
       var intPart = parts[0];
       if(thousandsFmt === 'space'){
-        intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '\u202F');
+        intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
       }
-      return decimals > 0 ? intPart + decimalSep + parts[1] : intPart;
+      if(decimals === 0) return intPart;
+      var decPart = decimalSep + parts[1];
+      return decClass
+        ? intPart + '<span class="' + decClass + '">' + decPart + '</span>'
+        : intPart + decPart;
     }
 
     function animate(el){
@@ -2198,105 +2365,50 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       var decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
       var decSep = el.getAttribute('data-decimal-sep') || ',';
       var fmt = el.getAttribute('data-format') || (to >= 1000 ? 'space' : '');
+      var decClass = el.getAttribute('data-dec-class') || '';
       if(isNaN(to)) return;
-      if(prefersReduce){ el.textContent = format(to, decimals, decSep, fmt); return; }
 
-      var dur = 720; // --dur-slow
+      var write = decClass
+        ? function(s){ el.innerHTML = s; }
+        : function(s){ el.textContent = s; };
+
+      if(prefersReduce){ write(format(to, decimals, decSep, fmt, decClass)); return; }
+
+      var from = to * 0.82;
+      var dur = 1200;
+      function ease(t){ return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+
       var start = null;
       function step(ts){
         if(start === null) start = ts;
         var t = Math.min(1, (ts - start) / dur);
-        // ease-out-quart: 1 - (1-t)^4
-        var e = 1 - Math.pow(1 - t, 4);
-        el.textContent = format(to * e, decimals, decSep, fmt);
+        var v = from + (to - from) * ease(t);
+        write(format(v, decimals, decSep, fmt, decClass));
         if(t < 1) requestAnimationFrame(step);
-        else el.textContent = format(to, decimals, decSep, fmt);
+        else write(format(to, decimals, decSep, fmt, decClass));
       }
       requestAnimationFrame(step);
     }
 
-    if(!('IntersectionObserver' in window)){
-      nodes.forEach(animate);
-      return;
-    }
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if(en.isIntersecting){ animate(en.target); io.unobserve(en.target); }
-      });
-    }, {threshold:0.4});
-    nodes.forEach(function(el){ io.observe(el); });
-  })();
-
-  // ── Language menu ──
-  (function(){
-    var btn = document.getElementById('langBtn');
-    var menu = document.getElementById('langMenu');
-    if(!btn || !menu) return;
-    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
-    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
-    });
-    menu.addEventListener('click', function(e){
-      var a = e.target.closest('a[data-region]');
-      if(!a) return;
-      e.preventDefault();
-      var r = a.getAttribute('data-region');
-      menu.querySelectorAll('a[data-region]').forEach(function(x){x.classList.toggle('current', x===a);});
-      if(typeof window.setRegion === 'function') {
-        try { window.setRegion(r); } catch(err){ console.warn('[hvt-lang] setRegion failed', err); }
-      }
-      close();
-    });
-    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-  })();
-
-  // ── Theme menu ──
-  (function(){
-    var btn = document.getElementById('themeBtn');
-    var menu = document.getElementById('themeMenu');
-    var label = document.getElementById('themeLabel');
-    var dot = document.getElementById('themeDot');
-    if(!btn || !menu) return;
-    var THEME_NAMES = {
-      carbon:'Carbon', dark:'Mørk-blå', hendrix:'Hendrix', bw:'Sort/hvit',
-      disco:'Disco', frost:'Frost', glass:'Glass', pink:'Rosa'
-    };
-    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
-    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
-    function syncLabel(){
-      var t = document.documentElement.getAttribute('data-theme') || 'carbon';
-      if(label) label.textContent = THEME_NAMES[t] || 'Tema';
-      if(dot){
-        var s = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-        dot.style.background = s || 'var(--accent)';
-      }
-      menu.querySelectorAll('a[data-theme-set]').forEach(function(a){
-        a.classList.toggle('current', a.getAttribute('data-theme-set') === t);
+    function trigger(){
+      nodes.forEach(function(el, i){
+        setTimeout(function(){ animate(el); }, i * 90);
       });
     }
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
-    });
-    menu.addEventListener('click', function(e){
-      var a = e.target.closest('a[data-theme-set]');
-      if(!a) return;
-      e.preventDefault();
-      var t = a.getAttribute('data-theme-set');
-      document.documentElement.setAttribute('data-theme', t);
-      try{ localStorage.setItem('hv-theme', t); }catch(err){}
-      syncLabel();
-      close();
-    });
-    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-    syncLabel();
+
+    if(document.body.classList.contains('heroLanded')){
+      setTimeout(trigger, 120);
+    } else {
+      var obs = new MutationObserver(function(){
+        if(document.body.classList.contains('heroLanded')){
+          obs.disconnect();
+          setTimeout(trigger, 220);
+        }
+      });
+      obs.observe(document.body, {attributes:true, attributeFilter:['class']});
+    }
   })();
 </script>
-<script src="/shared/atmosphere.js?v=v1" defer></script>
 
 </body>
 </html>
