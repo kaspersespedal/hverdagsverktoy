@@ -153,6 +153,7 @@ var SEARCH_DATA = [
   {name:'NPV / IRR',desc:'Lønnsomhetsanalyse med netto nåverdi og internrente',url:'/kalkulator/npv/',tags:'npv irr nåverdi internrente lønnsomhetsanalyse investeringsanalyse tilbakebetalingstid diskonteringsrente wacc',type:'tool',page:'Kalkulator'},
   {name:'Effektiv rente',desc:'Beregn effektiv årsrente inkl. gebyrer og etableringsavgift',url:'/kalkulator/rente/',tags:'effektiv rente rentekalkulator nominell rente lånekalkulator årsrente etableringsavgift annuitetslån',type:'tool',page:'Kalkulator'},
   {name:'Dekningsbidrag',desc:'Beregn DB%, break-even-mengde og resultat',url:'/kalkulator/dekningsbidrag/',tags:'dekningsbidrag db dg dekningsgrad break-even break even bedrift kalkyle margin selvkost',type:'tool',page:'Kalkulator',sk:'kalkDekningsbidrag'},
+  {name:'Tilbud / Anbud',desc:'Tilbudskalkyle med materiell, timer, påslag og MVA + CSV-eksport',url:'/kalkulator/tilbud/',tags:'tilbud anbud kalkyle pristilbud handverker freelance konsulent prising materiell timer mva',type:'tool',page:'Kalkulator',sk:'kalkTilbud'},
   {name:'Feriepenger',desc:'Beregn feriepenger ut fra årslønn og ferieordning',url:'/kalkulator/ferie/',tags:'feriepenger ferie ferielov ferieordning over 60 bonus ferietillegg',type:'tool',page:'Kalkulator'},
   {name:'Valutagevinst',desc:'Beregn gevinst eller tap ved kjøp og salg av valuta',url:'/kalkulator/valgevinst/',tags:'valutagevinst valutatap valuta kjøp salg kurs gevinst skatt',type:'tool',page:'Kalkulator'},
   {name:'Lov',desc:'Skatteloven, aksjeloven, merverdiavgiftsloven og bokføringsloven',url:'/lov/',tags:'lov skatteloven aksjeloven merverdiavgiftsloven bokføringsloven lovverk',type:'section',page:'Lov'},
@@ -244,6 +245,7 @@ var URL_TO_I18N_KEYS = {
   '/kalkulator/#npv':              ['npvTitle','npvDesc','cmFcNpv'],
   '/kalkulator/dekningsbidrag/':  ['kalkDekningsbidragTitle','kalkDekningsbidragSubtitle','kalkToolDbTitle','kalkToolDbDesc'],
   '/kalkulator/#pensjon':          ['lblPensjon','pensjonHint'],
+  '/kalkulator/tilbud/':          ['kalkTilbudHeroTitle','kalkTilbudHeroDesc','kalkTilbudHowtoTitle'],
   '/kalkulator/#lvu':              ['lblLvu','lvuRSal','lvuRDiv','lvuGross'],
   // Skatt
   '/skatt/#sal-salary-card':       ['salTitle','salDesc','tabSal','cmFcSal'],
