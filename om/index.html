@@ -60,10 +60,162 @@ header{position:sticky;top:0;z-index:200;background:var(--surface);border-bottom
 .calc-nav{display:flex;gap:4px;position:sticky;top:65px;z-index:100;background:var(--surface);border:1.5px solid var(--border,#e0e8f4);border-radius:13px;padding:5px;margin-bottom:28px;overflow-x:auto;scrollbar-width:none}
 .calc-tab{flex:1 1 0;padding:10px 16px;border:none;background:transparent;border-radius:9px;font-size:13px;font-weight:700;white-space:nowrap;cursor:pointer;color:var(--ink2)}
 .hvt-loading{opacity:0}.hvt-ready{opacity:1;transition:opacity .12s ease-out}
+
+/* ─────────────────────────────────────────────────────
+   ATMOSPHERE — "Aurora over ink" (site-wide)
+   atmosphere.css inlined for perf (saves 1 render-blocking req).
+   Source: shared/atmosphere.css v3 (theme-tokenized per dark theme:
+   carbon→cognac/amber, dark→blå/indigo, disco→neon pink/lilla).
+───────────────────────────────────────────────────── */
+html.lang-loading [data-i18n]{visibility:hidden;}
+:root{
+  --atmo-base-top:#0F0D0A;
+  --atmo-base-bottom:#070605;
+  --atmo-band-a:38, 60%, 75%;
+  --atmo-band-a-op:.08;
+  --atmo-band-a-op-breathe:.10;
+  --atmo-band-b:28, 50%, 55%;
+  --atmo-band-b-op:.05;
+  --atmo-band-b-op-breathe:.07;
+  --atmo-cursor:38, 70%, 75%;
+  --atmo-cursor-op:.04;
+}
+[data-theme="dark"]{
+  --atmo-base-top:#141520;
+  --atmo-base-bottom:#0a0b14;
+  --atmo-band-a:222, 80%, 72%;
+  --atmo-band-a-op:.09;
+  --atmo-band-a-op-breathe:.12;
+  --atmo-band-b:258, 55%, 55%;
+  --atmo-band-b-op:.06;
+  --atmo-band-b-op-breathe:.08;
+  --atmo-cursor:222, 80%, 72%;
+  --atmo-cursor-op:.05;
+}
+[data-theme="disco"]{
+  --atmo-base-top:#0d0a18;
+  --atmo-base-bottom:#060410;
+  --atmo-band-a:328, 70%, 70%;
+  --atmo-band-a-op:.10;
+  --atmo-band-a-op-breathe:.13;
+  --atmo-band-b:268, 60%, 58%;
+  --atmo-band-b-op:.07;
+  --atmo-band-b-op-breathe:.09;
+  --atmo-cursor:328, 75%, 72%;
+  --atmo-cursor-op:.05;
+}
+html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo-base,
+html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo,
+html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .film-grain{
+  display:none !important;
+}
+.atmo-base{
+  position:fixed;inset:0;z-index:-3;pointer-events:none;
+  background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
+}
+.atmo{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  isolation:isolate;overflow:hidden;contain:layout paint;
+}
+.band{
+  position:absolute;pointer-events:none;will-change:transform;
+  mix-blend-mode:screen;transform-origin:center;
+}
+.band-inner{
+  position:absolute;inset:0;
+  will-change:transform, opacity;transform-origin:center;
+}
+.band-a{
+  width:140vw;height:30vh;
+  left:50%;top:18%;margin-left:-70vw;
+  animation: bandADriftX 38s ease-in-out infinite;
+}
+.band-a .band-inner{
+  background:radial-gradient(ellipse at center,
+    hsl(var(--atmo-band-a)) 0%, transparent 50%);
+  opacity:var(--atmo-band-a-op);
+  animation:
+    bandADriftY 53s ease-in-out infinite,
+    bandABreathe 24s ease-in-out infinite;
+}
+.band-b{
+  width:110vw;height:22vh;
+  left:42%;top:30%;margin-left:-55vw;
+  animation: bandBDriftX 41s ease-in-out infinite;
+  animation-delay: -20.5s;
+}
+.band-b .band-inner{
+  background:radial-gradient(ellipse at center,
+    hsl(var(--atmo-band-b)) 0%, transparent 50%);
+  opacity:var(--atmo-band-b-op);
+  animation:
+    bandBDriftY 47s ease-in-out infinite,
+    bandBBreathe 31s ease-in-out infinite;
+  animation-delay: -23.5s, -15.5s;
+}
+@keyframes bandADriftX{
+  0%, 100% { transform: translate3d(-4%, 0, 0); }
+  50%      { transform: translate3d( 4%, 0, 0); }
+}
+@keyframes bandADriftY{
+  0%, 100% { transform: translate3d(0, -1.5%, 0); }
+  50%      { transform: translate3d(0,  1.5%, 0); }
+}
+@keyframes bandABreathe{
+  0%, 100% { opacity: var(--atmo-band-a-op); }
+  50%      { opacity: var(--atmo-band-a-op-breathe); }
+}
+@keyframes bandBDriftX{
+  0%, 100% { transform: translate3d( 4%, 0, 0); }
+  50%      { transform: translate3d(-4%, 0, 0); }
+}
+@keyframes bandBDriftY{
+  0%, 100% { transform: translate3d(0,  1.5%, 0); }
+  50%      { transform: translate3d(0, -1.5%, 0); }
+}
+@keyframes bandBBreathe{
+  0%, 100% { opacity: var(--atmo-band-b-op); }
+  50%      { opacity: var(--atmo-band-b-op-breathe); }
+}
+.cursor-light{
+  position:fixed;left:0;top:0;
+  width:1200px;height:1200px;margin:-600px 0 0 -600px;
+  pointer-events:none;
+  background:radial-gradient(circle,
+    hsla(var(--atmo-cursor), var(--atmo-cursor-op)) 0%, transparent 60%);
+  transform: translate3d(50vw, 50vh, 0);
+  will-change:transform;mix-blend-mode:screen;
+}
+.film-grain{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+  opacity:.035;mix-blend-mode:overlay;
+  width:100%;height:100%;
+}
+@media (max-width: 768px){
+  .band-a{ animation-duration:57s; }
+  .band-a .band-inner{ animation: bandADriftY 79s ease-in-out infinite; }
+  .band-b{ animation-duration:61s; }
+  .band-b .band-inner{ animation: bandBDriftY 70s ease-in-out infinite; }
+  .cursor-light{ display:none; }
+  .film-grain{ opacity:.02; }
+}
+@media (max-width: 1023px){
+  .cursor-light{ display:none; }
+}
+@media (prefers-reduced-motion: reduce){
+  .band, .band-inner{ animation:none !important; }
+  .band-a .band-inner{ opacity:.04 !important; }
+  .band-b .band-inner{ opacity:.025 !important; }
+  .cursor-light{ display:none !important; }
+}
+@media (prefers-reduced-data: reduce), (update: slow){
+  .band, .band-inner{ animation:none !important; }
+  .cursor-light{ display:none !important; }
+  .film-grain{ opacity:.02 !important; }
+}
 </style>
 <noscript><style>.hvt-loading{opacity:1}</style></noscript>
 <link rel="stylesheet" href="/shared/style.css?v=v141" fetchpriority="high">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v1">
 <link rel="stylesheet" href="/shared/themes.css?v=v1">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
 <link rel="stylesheet" href="/shared/components.css?v=v1">
