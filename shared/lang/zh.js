@@ -1072,6 +1072,8 @@ homeCardKalkulator:'计算器',
 homeCardSkatt:'税务',
 homeCardSelskap:'公司',
 homeCardAvgift:'税费',
+homeCardRegnskap:'会计',
+homeCardLov:'法律',
 vatTitleNew:'<em>增值税（MVA）</em>计算器',
 vatSubtitle:'输入金额并选择税率 — 我们将计算含税或不含税的价格。挪威2026年税率（25%标准、15%食品、12%运输/酒店/电影院、0%免税）。所有计算都在您的浏览器本地进行 — 数据不会发送到任何地方。',
 vatHStatVat:'增值税额',
@@ -1730,7 +1732,17 @@ tekFootNote:'* 2026年费率。规则可能变化 — 请查阅 skatteetaten.no 
 
     homeCatSkattDesc:'税款计算、概念和税法',
 
+    homeCatRegnskapDesc:'记账、资产负债表、损益表和会计科目表',
+
+    homeCatLovDesc:'税法、公司法、增值税法和会计法',
+
     homeCatTitle:'浏览工具',
+
+    footPrivacy:'隐私',
+
+    footContact:'联系',
+
+    footDisclaimer:'基于已知税率的指示性计算。非专业建议。',
 
     homeMarketsPairBrent:'布伦特原油',
 

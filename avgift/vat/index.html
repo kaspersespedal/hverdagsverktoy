@@ -36,6 +36,14 @@
     try{var t=localStorage.getItem('hv-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
   })();
 </script>
+
+<!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
+<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v1">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v1">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -774,6 +782,57 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .howto-row:first-child{border-top:0;padding-top:2px}
   .howto-row > strong{color:var(--ink);font-weight:500}
   @media(max-width:640px){.howto-row{grid-template-columns:1fr;gap:4px}.howto-row > strong{margin-bottom:2px}}
+
+  /* ── MVA-skall (ZIP-redesign 2026-05) ─────────────── */
+  .mva-modes{display:grid;grid-template-columns:1fr 1fr;gap:0;
+    border:1px solid var(--line-2);border-radius:6px;overflow:hidden;
+    background:rgba(255,255,255,.02);margin-bottom:22px}
+  .mva-mode{padding:14px 16px;background:transparent;border:0;cursor:pointer;
+    color:var(--ink3);text-align:left;border-right:1px solid var(--line-2);
+    transition:background .2s var(--ease),color .2s var(--ease)}
+  .mva-mode:last-child{border-right:0}
+  .mva-mode:hover{background:rgba(255,255,255,.02);color:var(--ink2)}
+  .mva-mode[aria-pressed="true"]{background:rgba(200,153,104,.08);color:var(--ink)}
+  .mva-mode[aria-pressed="true"] .ttl{color:var(--accent-2)}
+  .mva-mode .ttl{display:block;font:500 13px/1.2 var(--font-serif);font-style:italic;
+    letter-spacing:-.1px;margin-bottom:3px}
+  .mva-mode .desc{display:block;font:400 11px/1.4 var(--font-sans);color:var(--ink3)}
+
+  .mva-rate{display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    margin:2px 0}
+  .mva-rate button{padding:14px 8px 12px;border:0;background:transparent;cursor:pointer;
+    color:var(--ink3);position:relative;text-align:center;
+    transition:color .2s var(--ease)}
+  .mva-rate button + button{border-left:1px solid var(--line)}
+  .mva-rate button:hover{color:var(--ink2)}
+  .mva-rate button strong{display:block;font-family:var(--font-serif);
+    font-style:italic;font-weight:500;font-size:22px;color:inherit;
+    letter-spacing:-.4px;margin-bottom:5px;line-height:1;
+    font-variant-numeric:tabular-nums lining-nums}
+  .mva-rate button .lab{display:block;font:500 10.5px/1 var(--font-sans);
+    color:var(--ink4);letter-spacing:.1px;text-transform:none;
+    transition:color .2s var(--ease)}
+  .mva-rate button[aria-pressed="true"]{color:var(--ink)}
+  .mva-rate button[aria-pressed="true"] strong{color:var(--ink)}
+  .mva-rate button[aria-pressed="true"] .lab{color:var(--accent)}
+  .mva-rate button[aria-pressed="true"]::after{content:'';position:absolute;
+    left:14px;right:14px;bottom:-1px;height:1.5px;background:var(--accent)}
+
+  .mva-bd{display:grid;grid-template-columns:repeat(2,1fr);gap:0;width:100%;margin:18px 0 8px;
+    border:1px solid var(--line-warm);border-radius:6px;overflow:hidden}
+  .mva-bd > div{padding:18px 16px;text-align:center;
+    background:rgba(255,255,255,.02);position:relative}
+  .mva-bd > div + div{border-left:1px solid var(--line-warm)}
+  .mva-bd > div.hi{background:rgba(200,153,104,.08)}
+  .mva-bd .l{font:600 9.5px/1 var(--font-sans);letter-spacing:1.6px;
+    text-transform:uppercase;color:var(--ink4);margin-bottom:8px;display:block}
+  .mva-bd .v{font-family:var(--font-serif);font-style:italic;font-weight:500;
+    font-size:24px;color:var(--ink);letter-spacing:-.5px;
+    font-variant-numeric:tabular-nums lining-nums;display:inline-flex;align-items:baseline;gap:4px}
+  .mva-bd .v .u{font:500 10px/1 var(--font-sans);font-style:normal;
+    color:var(--ink4);letter-spacing:.4px;text-transform:lowercase}
+  .mva-bd .hi .v{color:var(--accent-2)}
 </style>
 </head>
 <body>
@@ -942,65 +1001,128 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     </div>
   </section>
 
-  <div class="container">
-    <div class="vat-grid">
+  <div class="calc-wrap">
+    <div class="container">
+      <div class="ks-host">
+        <div class="ks">
 
-      <div class="vat-form">
-
-        <section class="vat-section" aria-labelledby="vatInputHdr">
-          <header class="vat-section-head">
-            <h2 id="vatInputHdr" data-i18n="vatSectionInput">Beregning</h2>
-            <span class="hint" data-i18n="vatSectionHint">2026-satser</span>
-          </header>
-          <div class="vat-fields">
-            <div class="vat-fg full">
-              <label for="v-a" data-i18n="vatLblAmt">Beløp (kr)</label>
-              <input id="v-a" type="text" inputmode="numeric" value="10 000" autocomplete="off">
-            </div>
-            <div class="vat-fg">
-              <label for="v-r" data-i18n="vatLblRate">MVA-sats</label>
-              <select id="v-r">
-                <option value="25">25 % Standard – varer og tjenester (§ 5-1)</option>
-                <option value="15">15 % Næringsmidler (§ 5-2)</option>
-                <option value="12">12 % Transport, hotell, kino (§ 5-3/5-5/5-6)</option>
-                <option value="0">0 % Fritatt – aviser, bøker, utførsel (kap. 6)</option>
-              </select>
-            </div>
-            <div class="vat-fg">
-              <label for="v-t" data-i18n="vatLblType">Beløpet er</label>
-              <select id="v-t">
-                <option value="ex">Uten MVA → Legg til MVA</option>
-                <option value="inc">Med MVA → Trekk fra MVA</option>
-              </select>
-            </div>
+          <div class="ks-strip">
+            <div class="ks-strip-cell"><span class="l" data-i18n="vatStripNetto">Pris uten MVA</span><span class="v" id="sNetto">–</span></div>
+            <div class="ks-strip-cell"><span class="l" data-i18n="vatStripMva">MVA-beløp</span><span class="v" id="sMva">–</span></div>
+            <div class="ks-strip-cell"><span class="l" data-i18n="vatStripSats">Sats</span><span class="v" id="sSats">25 <span class="u">%</span></span></div>
+            <div class="ks-strip-cell accent"><span class="l" data-i18n="vatStripBrutto">Pris med MVA</span><span class="v" id="sBrutto">–</span></div>
           </div>
-        </section>
 
-        <p class="vat-info-box">
-          Trenger du å justere et MVA-fradrag (kap. 9 — kapitalvarer, bygg, maskiner)?
-          <a href="#vat-adj-section" data-i18n="vatAdjJump">Hopp til Justeringskalkulator ↓</a>
-        </p>
+          <div class="ks-body">
+            <div class="ks-form">
 
-        <button type="button" id="vatCalcBtn" class="vat-calc-btn">
-          <span data-i18n="vatBtnCalc">Beregn MVA</span>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
-        </button>
+              <div class="mva-modes" role="tablist" aria-label="Beregningsmodus">
+                <button type="button" class="mva-mode" role="tab" aria-pressed="true"  data-mode="ex">
+                  <span class="ttl" data-i18n="vatModeAdd">Legg til MVA</span>
+                  <span class="desc" data-i18n="vatModeAddDesc">Du har nettopris → finn brutto</span>
+                </button>
+                <button type="button" class="mva-mode" role="tab" aria-pressed="false" data-mode="inc">
+                  <span class="ttl" data-i18n="vatModeSub">Trekk fra MVA</span>
+                  <span class="desc" data-i18n="vatModeSubDesc">Du har bruttopris → finn netto</span>
+                </button>
+              </div>
 
+              <section class="ks-section" aria-labelledby="vatRateHdr">
+                <div class="ik-section-head">
+                  <h3 id="vatRateHdr" data-i18n="vatLblRate">MVA-sats</h3>
+                  <span class="meta" id="vatRateDesc" data-i18n="vatRateDescDefault">Klær, elektronikk, byggetjenester</span>
+                </div>
+                <div class="mva-rate" role="radiogroup" aria-labelledby="vatRateHdr">
+                  <button type="button" role="radio" aria-checked="true"  aria-pressed="true"  data-rate="25" data-desc-i18n="vatRateDesc25"><strong>25 %</strong><span class="lab" data-i18n="vatRateLab25">Hovedsats</span></button>
+                  <button type="button" role="radio" aria-checked="false" aria-pressed="false" data-rate="15" data-desc-i18n="vatRateDesc15"><strong>15 %</strong><span class="lab" data-i18n="vatRateLab15">Næringsmiddel</span></button>
+                  <button type="button" role="radio" aria-checked="false" aria-pressed="false" data-rate="12" data-desc-i18n="vatRateDesc12"><strong>12 %</strong><span class="lab" data-i18n="vatRateLab12">Lav sats</span></button>
+                  <button type="button" role="radio" aria-checked="false" aria-pressed="false" data-rate="0"  data-desc-i18n="vatRateDesc0" ><strong>0 %</strong><span class="lab" data-i18n="vatRateLab0">Fritak</span></button>
+                </div>
+                <!-- Hidden backing fields — JS leser fra .mva-mode/.mva-rate -->
+                <select id="v-r" hidden>
+                  <option value="25" selected>25 %</option>
+                  <option value="15">15 %</option>
+                  <option value="12">12 %</option>
+                  <option value="0">0 %</option>
+                </select>
+                <select id="v-t" hidden>
+                  <option value="ex" selected>Uten MVA → Legg til MVA</option>
+                  <option value="inc">Med MVA → Trekk fra MVA</option>
+                </select>
+              </section>
+
+              <section class="ks-section" aria-labelledby="vatInputHdr">
+                <div class="ik-section-head">
+                  <h3 id="vatInputHdr" data-i18n="vatSectionInput">Beløp</h3>
+                  <span class="meta" id="vatInputMeta" data-i18n="vatInputMetaEx">uten MVA</span>
+                </div>
+                <div class="ik-row full">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="v-a"><span id="vatAmtLbl" data-i18n="vatLblAmtEx">Pris uten MVA</span><span class="cap">kr</span></label>
+                    <input id="v-a" class="ik-input" type="text" inputmode="numeric" value="10 000" autocomplete="off">
+                  </div>
+                </div>
+              </section>
+
+              <p class="ik-hint" style="margin-top:6px;">
+                <span data-i18n="vatAdjJumpLead">Trenger du å justere et MVA-fradrag (kap. 9 — kapitalvarer, bygg, maskiner)?</span>
+                <a href="#vat-adj-section" style="color:var(--accent-2);text-decoration:underline;" data-i18n="vatAdjJump">Hopp til Justeringskalkulator ↓</a>
+              </p>
+
+            </div>
+
+            <aside class="ks-result" aria-live="polite">
+              <div class="ks-r-eyebrow" id="rMainLbl" data-i18n="vatRMainLblInc">Pris med MVA</div>
+              <div class="ks-r-net" id="rMain">–<span class="unit">kr</span></div>
+              <div class="ks-r-mnd" id="rVerdict" data-i18n="vatRVerdictEmpty">Skriv inn beløp og velg sats for å beregne</div>
+
+              <div class="mva-bd">
+                <div><span class="l" id="rL1" data-i18n="vatRBdNetto">Netto</span><span class="v" id="rExc">–</span></div>
+                <div class="hi"><span class="l" id="rBdMvaLbl" data-i18n="vatRBdMvaPlus">+ MVA 25 %</span><span class="v" id="rVat">–</span></div>
+              </div>
+
+              <div class="ks-r-stats">
+                <div class="ks-r-stat"><span class="l" data-i18n="vatRStatPerMonth">Per måned (snitt)</span><span class="v" id="rPerMonth">–</span></div>
+                <div class="ks-r-stat"><span class="l" data-i18n="vatRStatOfBrutto">Av brutto</span><span class="v" id="rPctOfBrutto">–</span></div>
+                <div class="ks-r-stat div"><span class="l" data-i18n="vatRPctShort">Sats</span><span class="v" id="rPct">–</span></div>
+                <div class="ks-r-stat"><span class="l" data-i18n="vatRStatThreshold">Reg.-terskel</span><span class="v dim">50 000 kr / 12 mnd</span></div>
+              </div>
+
+              <div class="ks-r-foot" data-i18n="vatRFoot">Næringsdrivende registrerer seg ved omsetning over 50 000 kr siste 12 måneder.</div>
+              <div class="ks-r-sources">
+                <span class="src">Skatteetaten</span><span class="dot"/>
+                <span class="src">Merverdiavgiftsloven</span>
+                <span class="upd" data-i18n="vatRUpdated">Oppdatert <em>2026</em></span>
+              </div>
+            </aside>
+          </div>
+        </div>
       </div>
 
-      <aside class="vat-result" aria-live="polite">
-        <div class="res-headline">
-          <span class="r-lbl" id="rMainLbl">Pris inkl. MVA</span>
-          <span class="r-val" id="rMain">–</span>
-          <span class="r-verdict" id="rVerdict">Skriv inn beløp og velg sats for å beregne</span>
+      <aside class="side-col">
+        <div class="side-card">
+          <h4 data-i18n="vatSideSats">MVA-satser 2026</h4>
+          <div class="ref-row"><span class="l" data-i18n="vatSideHovedsats">Hovedsats</span><span class="v">25<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l" data-i18n="vatSideMat">Næringsmiddel</span><span class="v">15<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l" data-i18n="vatSideTransp">Persontransport, kino</span><span class="v">12<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l" data-i18n="vatSideBoker">Aviser, bøker</span><span class="v accent">0<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l" data-i18n="vatSideTerskel">Reg. terskel</span><span class="v">50 000<span class="u">kr</span></span></div>
         </div>
-        <div class="res-stats">
-          <div class="res-stat"><span class="l" id="rL1">Pris ekskl. MVA</span><span class="v" id="rExc">–</span></div>
-          <div class="res-stat"><span class="l" data-i18n="vatRVat">MVA-beløp</span><span class="v" id="rVat">–</span></div>
-          <div class="res-stat strong"><span class="l" data-i18n="vatRPctShort">Sats</span><span class="v" id="rPct">–</span></div>
+        <div class="side-card related">
+          <h4 data-i18n="vatSideRelated">Relaterte verktøy</h4>
+          <a href="/avgift/aga/"><span class="name" data-i18n="vatRelatedAga">Arbeidsgiveravgift</span><span class="arr">→</span></a>
+          <a href="/regnskap/mva/"><span class="name" data-i18n="vatRelatedMva">MVA-melding (regnskap)</span><span class="arr">→</span></a>
+          <a href="/skatt/"><span class="name" data-i18n="vatRelatedSkatt">Skatt</span><span class="arr">→</span></a>
+        </div>
+        <div class="side-card method">
+          <h4 data-i18n="vatSideMethod">Slik regner vi</h4>
+          <ol class="method-list">
+            <li><span class="n">01</span><span class="t" data-i18n-html="vatMethodStep1"><b>Legg til MVA</b> — pris × (1 + sats).</span></li>
+            <li><span class="n">02</span><span class="t" data-i18n-html="vatMethodStep2"><b>Trekk fra MVA</b> — bruttopris ÷ (1 + sats) gir nettopris.</span></li>
+            <li><span class="n">03</span><span class="t" data-i18n-html="vatMethodStep3"><b>Inngående MVA</b> kan trekkes fra om du er MVA-registrert.</span></li>
+          </ol>
         </div>
       </aside>
-
     </div>
   </div>
 
@@ -1212,55 +1334,89 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     function setOutputText(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; }
 
+    function setOutputHTML(id, val){ var el=document.getElementById(id); if(el) el.innerHTML=val; }
+    function fmtNum(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' '); }
+
+    var RATE_DESCS = {'25':'Klær, elektronikk, byggetjenester','15':'Mat og alkoholfri drikke','12':'Transport, kino, kultur, hotell','0':'Aviser, bøker, helse, undervisning'};
+
+    function activeMode(){ var b=document.querySelector('.mva-mode[aria-pressed="true"]'); return b?b.getAttribute('data-mode'):'ex'; }
+    function activeRate(){ var b=document.querySelector('.mva-rate button[aria-pressed="true"]'); return b?parseFloat(b.getAttribute('data-rate')):25; }
+    function syncHiddenSelects(){
+      var t=document.getElementById('v-t'); if(t) t.value=activeMode();
+      var r=document.getElementById('v-r'); if(r) r.value=String(activeRate());
+    }
+    function paintRateDesc(){
+      var r=activeRate();
+      var el=document.getElementById('vatRateDesc'); if(el) el.textContent=RATE_DESCS[String(r)]||'';
+      var lbl=document.getElementById('rBdMvaLbl'); if(lbl) lbl.textContent='+ MVA '+r+' %';
+    }
+    function paintAmtMeta(){
+      var tp=activeMode();
+      var meta=document.getElementById('vatInputMeta');
+      var lbl=document.getElementById('vatAmtLbl');
+      if(tp==='ex'){ if(meta)meta.textContent='uten MVA'; if(lbl)lbl.textContent='Pris uten MVA'; }
+      else { if(meta)meta.textContent='med MVA'; if(lbl)lbl.textContent='Pris med MVA'; }
+    }
+
     // Port av calcVat (core.js:4169) — byte-for-byte matematikk
     function compute(){
       var a = parseAmt('v-a');
       if(a <= 0) return { hasData:false };
-      var vr = document.getElementById('v-r');
-      var s = vr && vr.value ? +vr.value/100 : 0.25;
-      var vt = document.getElementById('v-t');
-      var tp = vt ? vt.value : 'ex';
+      var rate = activeRate();
+      var s = rate/100;
+      var tp = activeMode();
       var ex, vat, inc;
       if(tp === 'ex'){ ex = a; vat = ex * s; inc = ex + vat; }
       else { inc = a; ex = inc / (1 + s); vat = inc - ex; }
-      return { hasData:true, a:a, s:s*100, tp:tp, ex:ex, vat:vat, inc:inc };
+      return { hasData:true, a:a, rate:rate, s:rate, tp:tp, ex:ex, vat:vat, inc:inc };
     }
 
     function recalc(){
+      paintRateDesc();
+      paintAmtMeta();
       var d = compute();
+      var r = activeRate();
 
       if(!d.hasData){
-        setOutputText('rMainLbl', 'Pris inkl. MVA');
-        setOutputText('rMain', '–');
+        setOutputText('rMainLbl', activeMode()==='ex' ? 'Pris med MVA' : 'Pris uten MVA');
+        setOutputHTML('rMain', '–<span class="unit">kr</span>');
         setOutputText('rVerdict', 'Skriv inn beløp og velg sats for å beregne');
-        setOutputText('rL1', 'Pris ekskl. MVA');
         setOutputText('rExc', '–');
         setOutputText('rVat', '–');
         setOutputText('rPct', '–');
+        setOutputText('rPerMonth', '–');
+        setOutputText('rPctOfBrutto', '–');
         setOutputText('hStatVat', '–');
         setOutputText('hStatRate', '–');
+        setOutputText('sNetto', '–');
+        setOutputText('sMva', '–');
+        setOutputHTML('sSats', r + ' <span class="u">%</span>');
+        setOutputText('sBrutto', '–');
         persist();
         return;
       }
 
-      // Hovedresultat: input var ekskl. → vis inkl. som main, og motsatt
+      // Hovedresultat: mode=ex (input uten MVA) → vis brutto som main
       if(d.tp === 'ex'){
-        setOutputText('rMainLbl', 'Pris inkl. MVA');
-        setOutputText('rMain', fmtKr(d.inc));
-        setOutputText('rL1', 'Pris ekskl. MVA (din input)');
-        setOutputText('rExc', fmtKr(d.ex));
+        setOutputText('rMainLbl', 'Pris med MVA');
+        setOutputHTML('rMain', fmtNum(d.inc) + '<span class="unit">kr</span>');
         setOutputText('rVerdict', 'MVA er lagt til på beløpet du skrev inn.');
       } else {
-        setOutputText('rMainLbl', 'Pris ekskl. MVA');
-        setOutputText('rMain', fmtKr(d.ex));
-        setOutputText('rL1', 'Pris inkl. MVA (din input)');
-        setOutputText('rExc', fmtKr(d.inc));
+        setOutputText('rMainLbl', 'Pris uten MVA');
+        setOutputHTML('rMain', fmtNum(d.ex) + '<span class="unit">kr</span>');
         setOutputText('rVerdict', 'MVA er trukket fra beløpet du skrev inn.');
       }
+      setOutputText('rExc', fmtKr(d.ex));
       setOutputText('rVat', fmtKr(d.vat));
       setOutputText('rPct', fmtPct(d.s));
+      setOutputText('rPerMonth', fmtKr(d.vat/12));
+      setOutputText('rPctOfBrutto', d.inc > 0 ? fmtPct(d.vat/d.inc*100) : '–');
       setOutputText('hStatVat', fmtKr(d.vat));
       setOutputText('hStatRate', fmtPct(d.s));
+      setOutputText('sNetto', fmtKr(d.ex));
+      setOutputText('sMva', fmtKr(d.vat));
+      setOutputHTML('sSats', r + ' <span class="u">%</span>');
+      setOutputText('sBrutto', fmtKr(d.inc));
 
       persist();
     }
@@ -1269,8 +1425,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       try {
         var snap = {
           a: document.getElementById('v-a').value,
-          r: document.getElementById('v-r').value,
-          t: document.getElementById('v-t').value
+          rate: activeRate(),
+          mode: activeMode()
         };
         localStorage.setItem(KEY, JSON.stringify(snap));
       } catch(e){}
@@ -1281,17 +1437,46 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         if(!raw) return;
         var s = JSON.parse(raw);
         if(s.a != null) document.getElementById('v-a').value = s.a;
-        if(s.r != null) document.getElementById('v-r').value = s.r;
-        if(s.t != null) document.getElementById('v-t').value = s.t;
+        if(s.rate != null){
+          document.querySelectorAll('.mva-rate button').forEach(function(b){
+            var on = parseFloat(b.getAttribute('data-rate')) === parseFloat(s.rate);
+            b.setAttribute('aria-pressed', on?'true':'false');
+            b.setAttribute('aria-checked', on?'true':'false');
+          });
+        }
+        if(s.mode != null){
+          document.querySelectorAll('.mva-mode').forEach(function(b){
+            b.setAttribute('aria-pressed', b.getAttribute('data-mode') === s.mode ? 'true' : 'false');
+          });
+        }
+        syncHiddenSelects();
       } catch(e){}
     }
 
     // ── Wire events ──
     var aEl = document.getElementById('v-a');
     if(aEl) aEl.addEventListener('input', recalc);
-    document.getElementById('v-r').addEventListener('change', recalc);
-    document.getElementById('v-t').addEventListener('change', recalc);
-    document.getElementById('vatCalcBtn').addEventListener('click', recalc);
+
+    document.querySelectorAll('.mva-mode').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.mva-mode').forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+        btn.setAttribute('aria-pressed','true');
+        syncHiddenSelects();
+        recalc();
+      });
+    });
+    document.querySelectorAll('.mva-rate button').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        document.querySelectorAll('.mva-rate button').forEach(function(b){
+          b.setAttribute('aria-pressed','false');
+          b.setAttribute('aria-checked','false');
+        });
+        btn.setAttribute('aria-pressed','true');
+        btn.setAttribute('aria-checked','true');
+        syncHiddenSelects();
+        recalc();
+      });
+    });
 
     // ── Init ──
     restore();
@@ -1536,6 +1721,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   })();
 </script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
+
+<!-- SHELL scripts — REDESIGN-2026-05 (T1-T4 ported) -->
+<script src="/shared/site-shell.js?v=v1" defer></script>
+<script src="/shared/top-chrome.js?v=v1" defer></script>
+<script src="/shared/veiledning.js?v=v1" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');

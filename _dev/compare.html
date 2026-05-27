@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<title>Design Compare — Hverdagsverktøy</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,-apple-system,sans-serif;background:#0a0908;color:#ecebe7;height:100vh;display:flex;flex-direction:column}
+  header{padding:10px 16px;border-bottom:1px solid #2a2520;background:#15140f;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  header h1{font-size:14px;font-weight:600;color:#d1a276}
+  header .tabs{display:flex;gap:4px;flex-wrap:wrap}
+  header button{background:#1f1c18;color:#ecebe7;border:1px solid #2a2520;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px}
+  header button:hover{background:#2a2520}
+  header button.active{background:#b88a5e;color:#0a0908;border-color:#b88a5e;font-weight:600}
+  header .label{font-size:12px;color:#9d978c;margin-left:8px}
+  main{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:2px;background:#2a2520;overflow:hidden}
+  .pane{display:flex;flex-direction:column;background:#0a0908;min-height:0}
+  .pane-head{padding:8px 14px;background:#15140f;border-bottom:1px solid #2a2520;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+  .pane-head .url{color:#9d978c;font-weight:400;font-size:11px;margin-left:8px;text-transform:none;letter-spacing:0}
+  .pane.current .pane-head{color:#f0a8a8}
+  .pane.target .pane-head{color:#a8d1a8}
+  iframe{flex:1;border:0;width:100%;background:#0a0908}
+</style>
+</head>
+<body>
+<header>
+  <h1>HV Design Compare</h1>
+  <div class="tabs" id="tabs"></div>
+  <span class="label" id="label"></span>
+</header>
+<main>
+  <section class="pane current">
+    <div class="pane-head">Nåværende <span class="url" id="urlCurrent"></span></div>
+    <iframe id="ifCurrent" src=""></iframe>
+  </section>
+  <section class="pane target">
+    <div class="pane-head">Mål (Claude Design) <span class="url" id="urlTarget"></span></div>
+    <iframe id="ifTarget" src=""></iframe>
+  </section>
+</main>
+<script>
+  var PAGES = [
+    {key:'personlig', label:'Personlig økonomi', current:'/personlig/'},
+    {key:'boliglan',  label:'Boliglån',          current:'/boliglan/'},
+    {key:'kalkulator',label:'Kalkulator',        current:'/kalkulator/'},
+    {key:'skatt',     label:'Skatt',             current:'/skatt/'},
+    {key:'selskap',   label:'Selskap',           current:'/selskap/'},
+    {key:'avgift',    label:'Avgift',            current:'/avgift/'},
+    {key:'regnskap',  label:'Regnskap',          current:'/regnskap/'},
+    {key:'lov',       label:'Lov',               current:'/lov/'},
+    {key:'home',      label:'Hjem',              current:'/', target:'/_incoming/claude-design/Homepage.html'}
+  ];
+  var TARGET_BASE = '/_incoming/claude-design/Subpage%20Preview.html#';
+
+  var tabsEl = document.getElementById('tabs');
+  var ifC = document.getElementById('ifCurrent');
+  var ifT = document.getElementById('ifTarget');
+  var urlC = document.getElementById('urlCurrent');
+  var urlT = document.getElementById('urlTarget');
+  var labelEl = document.getElementById('label');
+
+  function load(p){
+    var target = p.target || (TARGET_BASE + p.key);
+    ifC.src = p.current;
+    ifT.src = target;
+    urlC.textContent = p.current;
+    urlT.textContent = target;
+    labelEl.textContent = p.label;
+    document.querySelectorAll('#tabs button').forEach(function(b){
+      b.classList.toggle('active', b.dataset.key === p.key);
+    });
+    history.replaceState(null,'','#'+p.key);
+  }
+
+  PAGES.forEach(function(p){
+    var b = document.createElement('button');
+    b.textContent = p.label;
+    b.dataset.key = p.key;
+    b.addEventListener('click', function(){ load(p); });
+    tabsEl.appendChild(b);
+  });
+
+  var initial = location.hash.replace('#','');
+  var start = PAGES.find(function(p){ return p.key === initial; }) || PAGES[0];
+  load(start);
+</script>
+</body>
+</html>
