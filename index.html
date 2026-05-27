@@ -1293,18 +1293,34 @@
      REFINE-2026-05 — Typography & numerals polish
 ===================================================================== -->
 <style id="refine-2026-05">
+  /* ───── REFINE-2026-05 BEGIN ───── */
+
   :root{
+    /* Numeric figures: tabular metrics, lining (cap-height) figures,
+       slashed zero so 0 reads as 0 not O. */
     --refine-feat-num: "tnum" 1, "lnum" 1, "zero" 1, "kern" 1;
+    /* Inter character variants — these unlock the "modern" Inter look:
+         cv11 = single-storey a   cv05 = l with tail
+         cv01 = 1 without footer  ss03 = curved characters
+         calt + kern = contextual alternates + kerning
+       Source Serif ignores unknown features safely. */
     --refine-feat-text: "kern" 1, "calt" 1, "liga" 1,
                         "cv01" 1, "cv05" 1, "cv11" 1, "ss03" 1;
   }
 
+  /* Baseline: kerning + ligatures + Inter variants on the whole page.
+     text-rendering bumps Safari/Chrome to LCD-friendly hinting. */
   html{
     text-rendering: optimizeLegibility;
     -webkit-font-feature-settings: var(--refine-feat-text);
             font-feature-settings: var(--refine-feat-text);
   }
 
+  /* ─── Numerical surfaces ───────────────────────────────────────
+     One rule, every place a number appears. tabular-nums alone is
+     not enough — we also pin lnum + zero so digits never swap to
+     oldstyle on Source Serif and the 0 never collides visually
+     with O in tickers / KPI rows. */
   .ti, .ti .val, .ti em,
   .widget-value, .widget-value .unit, .widget-sub,
   .data-foot, .data-foot .pair, .data-foot .pair b,
@@ -1318,9 +1334,12 @@
             font-feature-settings: var(--refine-feat-num);
   }
 
+  /* Uppercase micro-labels — case + cpsp gives proper cap-spacing
+     so SOMETHING IN ALL CAPS doesn't read as cramped. */
   .section-head .label,
   .widget-label,
   .daily-head .title,
+  .lang-menu h5,
   .panel-label,
   .ti b,
   .ticker-badge{
@@ -1328,14 +1347,21 @@
             font-feature-settings: "kern" 1, "case" 1, "cpsp" 1, "tnum" 1;
   }
 
+  /* ─── Hero headline ───────────────────────────────────────────
+     Bump optical scale by ~4px at the cap, tighten tracking from
+     -1.4px → -1.6px so the italic em settles into the line.
+     Source Serif 4's variable opsz axis already responds to size,
+     this just nudges it into a more confident range. */
   h1#heroH1{
     font-size: clamp(46px, 5.8vw, 72px);
     letter-spacing: -1.6px;
   }
   h1#heroH1 em{
+    /* Italic Source Serif handles its own kerning; ease tracking */
     letter-spacing: -1.2px;
   }
 
+  /* Hero subline — one notch up so it carries the headline's weight */
   .hero-tag{
     font-size: 14px;
     letter-spacing: -.05px;
@@ -1346,6 +1372,7 @@
     font-weight: 600;
   }
 
+  /* ─── Section heads ───────────────────────────────────────── */
   .section-head h2{
     font-size: clamp(24px, 2.6vw, 30px);
     letter-spacing: -.5px;
@@ -1355,6 +1382,13 @@
     letter-spacing: 2.2px;
   }
 
+  /* ─── Cards ───────────────────────────────────────────────────
+     Card numerals (01 … 06) get the proper editorial treatment:
+     tnum + case + cpsp, slightly more tracking, and they inherit
+     the slashed-zero rule above so 06 reads cleanly.
+
+     Titles bump 20px → 21px and tighten -0.3 → -0.4 letter-spacing
+     so Source Serif's tighter kerning pairs settle in. */
   .card .num{
     font-size: 11px;
     letter-spacing: 1.8px;
@@ -1370,6 +1404,10 @@
     letter-spacing: -.05px;
   }
 
+  /* ─── Markedsdata widget ──────────────────────────────────────
+     Big serif numerals: 30 → 32px with -.6 letter-spacing so the
+     digits sit closer and feel "set", not "typed".
+     Decimals are a serif continuation; units are a quiet sans tag. */
   .widget-value{
     font-size: 32px;
     letter-spacing: -.6px;
@@ -1392,6 +1430,7 @@
     letter-spacing: -.05px;
   }
 
+  /* Data-foot pairs — micro figures consistent with the widgets */
   .data-foot{
     font-size: 11.5px;
     letter-spacing: -.05px;
@@ -1400,6 +1439,9 @@
     letter-spacing: .4px;
   }
 
+  /* ─── Ticker ──────────────────────────────────────────────────
+     Force tnum on the val span (it already had it inline; this
+     guarantees the cascade wins after our :root override). */
   .ti{ font-size: 12.5px; }
   .ti .val{
     font-size: 13px;
@@ -1410,6 +1452,7 @@
   .ti b{ letter-spacing: 1.6px; font-size: 9.5px; }
   .ti em{ font-size: 11.5px; letter-spacing: .05px; }
 
+  /* ─── Footer ──────────────────────────────────────────────── */
   footer .foot-bottom{
     letter-spacing: -.05px;
   }
@@ -1417,6 +1460,8 @@
     letter-spacing: .1px;
   }
 
+  /* Mobile — pull the hero clamp back in line with the new desktop
+     ceiling so the smallest viewport doesn't outgrow what we set. */
   @media (max-width: 640px){
     h1#heroH1{
       font-size: clamp(36px, 9vw, 46px);
@@ -1424,6 +1469,8 @@
     }
     .widget-value{ font-size: 27px; letter-spacing: -.5px; }
   }
+
+  /* ───── REFINE-2026-05 END ───── */
 </style>
 
 <script type="application/ld+json">
