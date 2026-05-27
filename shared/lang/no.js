@@ -1255,6 +1255,8 @@ REGIONS['no'] = {
     homeCardSkatt:'Skatt',
     homeCardSelskap:'Selskap',
     homeCardAvgift:'Avgift',
+    homeCardRegnskap:'Regnskap',
+    homeCardLov:'Lov',
 
     // — vat calc (editorial redesign) —
     vatTitleNew:'<em>MVA</em>-kalkulator',
@@ -2347,6 +2349,11 @@ REGIONS['no'] = {
     homeCatSkattDesc: 'Utregning av skatt, begreper og skatteloven',
     homeCatSelskapDesc: 'Aksjeselskap, kommandittselskap og selskapsrett',
     homeCatAvgiftDesc: 'MVA, merverdiavgiftsloven og arbeidsgiveravgift',
+    homeCatRegnskapDesc: 'Bokføring, balanse, resultatregnskap og kontoplan',
+    homeCatLovDesc: 'Skatteloven, aksjeloven, MVA-loven og bokføringsloven',
+    footPrivacy: 'Personvern',
+    footContact: 'Kontakt',
+    footDisclaimer: 'Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.',
     // === T1 R7 END ===
 
     // === T1 H3 — skatt/inntekt i18n keys ===

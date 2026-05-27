@@ -1293,7 +1293,9 @@ REGIONS['ar'] = {
     homeCardAvgift: 'الرسوم',
     homeCardBoliglan: 'قرض الرهن العقاري',
     homeCardKalkulator: 'الحاسبة',
+    homeCardLov: 'القانون',
     homeCardPersonlig: 'الاقتصاد الشخصي',
+    homeCardRegnskap: 'المحاسبة',
     homeCardSelskap: 'الشركة',
     homeCardSkatt: 'الضرائب',
     homeCategoriesCount: '6 أقسام',
@@ -1747,6 +1749,11 @@ REGIONS['ar'] = {
     homeCatSkattDesc: "حساب الضريبة، المفاهيم والقانون الضريبي",
     homeCatSelskapDesc: "الشركة المساهمة، شركة التوصية وقانون الشركات",
     homeCatAvgiftDesc: "MVA، قانون ضريبة القيمة المضافة واشتراك صاحب العمل",
+    homeCatRegnskapDesc: "مسك الدفاتر، الميزانية، حساب الأرباح والخسائر ودليل الحسابات",
+    homeCatLovDesc: "قانون الضرائب، قانون الشركات، قانون ضريبة القيمة المضافة وقانون مسك الدفاتر",
+    footPrivacy: 'الخصوصية',
+    footContact: 'اتصل بنا',
+    footDisclaimer: 'حسابات إرشادية بناءً على الأسعار المعروفة. ليست نصيحة مهنية.',
     // === skipLink (T1 split-2026-05-06-r3) ===
     skipLink: 'تخطي إلى المحتوى الرئيسي',
 
