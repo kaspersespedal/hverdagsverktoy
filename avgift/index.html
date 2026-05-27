@@ -1015,70 +1015,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 </footer>
 
 <script>
-  // ── Language menu ──
-  (function(){
-    var btn = document.getElementById('langBtn');
-    var menu = document.getElementById('langMenu');
-    if(!btn || !menu) return;
-    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
-    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
-    });
-    menu.addEventListener('click', function(e){
-      var a = e.target.closest('a[data-region]');
-      if(!a) return;
-      e.preventDefault();
-      var r = a.getAttribute('data-region');
-      menu.querySelectorAll('a[data-region]').forEach(function(x){x.classList.toggle('current', x===a);});
-      if(typeof window.setRegion === 'function') {
-        try { window.setRegion(r); } catch(err){ console.warn('[hvt-lang] setRegion failed', err); }
-      }
-      close();
-    });
-    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-  })();
-  // ── Theme menu ──
-  (function(){
-    var btn = document.getElementById('themeBtn');
-    var menu = document.getElementById('themeMenu');
-    var label = document.getElementById('themeLabel');
-    var dot = document.getElementById('themeDot');
-    if(!btn || !menu) return;
-    var THEME_NAMES = {carbon:'Carbon',dark:'Mørk-blå',hendrix:'Hendrix',bw:'Sort/hvit',disco:'Disco',frost:'Frost',glass:'Glass',pink:'Rosa'};
-    function close(){btn.setAttribute('aria-expanded','false'); menu.classList.remove('open');}
-    function open(){btn.setAttribute('aria-expanded','true'); menu.classList.add('open');}
-    function syncLabel(){
-      var t = document.documentElement.getAttribute('data-theme') || 'carbon';
-      if(label) label.textContent = THEME_NAMES[t] || 'Tema';
-      if(dot){
-        var s = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-        dot.style.background = s || 'var(--accent)';
-      }
-      menu.querySelectorAll('a[data-theme-set]').forEach(function(a){
-        a.classList.toggle('current', a.getAttribute('data-theme-set') === t);
-      });
-    }
-    btn.addEventListener('click', function(e){
-      e.stopPropagation();
-      if(btn.getAttribute('aria-expanded')==='true') close(); else open();
-    });
-    menu.addEventListener('click', function(e){
-      var a = e.target.closest('a[data-theme-set]');
-      if(!a) return;
-      e.preventDefault();
-      var t = a.getAttribute('data-theme-set');
-      document.documentElement.setAttribute('data-theme', t);
-      try{ localStorage.setItem('hv-theme', t); }catch(err){}
-      syncLabel();
-      close();
-    });
-    document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
-    document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
-    syncLabel();
-  })();
+  // Theme + language menus are now injected by top-chrome.js (K-D T2).
   // ── Filter input (live filter tools) ──
   (function(){
     var input = document.querySelector('.filter-input input');
