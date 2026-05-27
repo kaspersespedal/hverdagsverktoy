@@ -1296,6 +1296,8 @@ REGIONS['uk'] = {
     homeCardPersonlig: 'Особисті фінанси',
     homeCardSelskap: 'Компанія',
     homeCardSkatt: 'Податок',
+    homeCardRegnskap: 'Бухгалтерський облік',
+    homeCardLov: 'Закон',
     homeCategoriesCount: '6 розділів',
     homeHeroLangPill: '10 мов',
     homeHeroSubtitle: 'Оновлено до чинних правил 2026.',
@@ -1682,6 +1684,11 @@ REGIONS['uk'] = {
     homeCatSkattDesc: 'Розрахунок податку, поняття та податковий кодекс',
     homeCatSelskapDesc: 'Акціонерне товариство, командитне товариство та корпоративне право',
     homeCatAvgiftDesc: 'ПДВ, закон про ПДВ і внесок роботодавця',
+    homeCatRegnskapDesc: 'Бухгалтерський облік, баланс, звіт про прибутки та збитки і план рахунків',
+    homeCatLovDesc: 'Податковий кодекс, закон про компанії, закон про ПДВ і закон про бухгалтерський облік',
+    footPrivacy: 'Конфіденційність',
+    footContact: 'Контакт',
+    footDisclaimer: 'Орієнтовні розрахунки на основі відомих ставок. Не є професійною консультацією.',
 
     // — skatt/inntekt subpage —
     inntektBreadHome: 'Головна',

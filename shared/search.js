@@ -784,9 +784,14 @@ function initSearch(){
     }
   });
 
-  // Keyboard shortcut: "/" to focus search
+  // Keyboard shortcut: "/" or Cmd+K (macOS) / Ctrl+K (Windows/Linux) to focus search
   document.addEventListener('keydown', function(e){
     if(e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'SELECT'){
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+    if((e.metaKey || e.ctrlKey) && e.key === 'k' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA' && document.activeElement.tagName !== 'SELECT'){
       e.preventDefault();
       input.focus();
       input.select();

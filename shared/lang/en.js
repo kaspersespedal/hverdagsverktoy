@@ -1347,7 +1347,9 @@ REGIONS['en'] = {
     homeCardAvgift: 'Fees',
     homeCardBoliglan: 'Mortgage',
     homeCardKalkulator: 'Calculators',
+    homeCardLov: 'Law',
     homeCardPersonlig: 'Personal finance',
+    homeCardRegnskap: 'Accounting',
     homeCardSelskap: 'Companies',
     homeCardSkatt: 'Tax',
     homeCategoriesCount: '6 sections',
@@ -1788,6 +1790,11 @@ REGIONS['en'] = {
     homeCatSkattDesc: 'Tax calculations, concepts and the Tax Act',
     homeCatSelskapDesc: 'Limited liability companies, partnerships and company law',
     homeCatAvgiftDesc: 'VAT, the VAT Act and employer NI contribution',
+    homeCatRegnskapDesc: 'Bookkeeping, balance sheet, profit & loss and chart of accounts',
+    homeCatLovDesc: 'Tax Act, Companies Act, VAT Act and Bookkeeping Act',
+    footPrivacy: 'Privacy',
+    footContact: 'Contact',
+    footDisclaimer: 'Indicative calculations based on known rates. Not professional advice.',
     // === skipLink (T1 split-2026-05-06-r3) ===
     skipLink: 'Skip to main content',
     // === T1 placeholder-mekanisme (split-2026-05-07) ===
