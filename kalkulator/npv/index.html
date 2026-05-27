@@ -693,6 +693,18 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .howto-row:first-child{border-top:0;padding-top:2px}
   .howto-row > strong{color:var(--ink);font-weight:500}
   @media(max-width:640px){.howto-row{grid-template-columns:1fr;gap:4px}.howto-row > strong{margin-bottom:2px}}
+
+  /* Side-col port (claude-design 2026-05-27) — 3-col on wide, full-width 3-card row on medium */
+  @media(min-width:1201px){
+    .calc-grid.has-side-col{grid-template-columns:1.4fr 1fr 240px}
+  }
+  @media(min-width:901px) and (max-width:1200px){
+    .calc-grid.has-side-col > .side-col{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .calc-grid.has-side-col > .side-col > .side-card{margin:0}
+  }
+  @media(max-width:900px){
+    .calc-grid.has-side-col > .side-col{grid-column:1/-1}
+  }
 </style>
 </head>
 <body>
@@ -862,7 +874,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   </section>
 
   <div class="container">
-    <div class="calc-grid">
+    <div class="calc-grid has-side-col">
 
       <div class="calc-form">
 
@@ -925,6 +937,32 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <div class="res-stat"><span class="l" data-i18n="npvRPay">Tilbakebetalingstid</span><span class="v" id="n-pay">–</span></div>
           <div class="res-stat"><span class="l" data-i18n="npvRSum">Totale inntekter</span><span class="v" id="n-sum">–</span></div>
           <div class="res-stat"><span class="l" data-i18n="npvRPi">Lønnsomhet per krone</span><span class="v" id="n-pi">–</span></div>
+        </div>
+      </aside>
+
+      <aside class="side-col">
+        <div class="side-card">
+          <h4 data-i18n="npvSideTolking">Tolking av resultatet</h4>
+          <div class="ref-row"><span class="l">NPV &gt; 0</span><span class="v accent" data-i18n="npvSideLonnsomt">Lønnsomt</span></div>
+          <div class="ref-row"><span class="l">NPV = 0</span><span class="v" data-i18n="npvSideAkkurat">Akkurat krav</span></div>
+          <div class="ref-row"><span class="l">NPV &lt; 0</span><span class="v" data-i18n="npvSideIkkeLonn">Ikke lønnsomt</span></div>
+          <div class="ref-row"><span class="l">IRR &gt; r<sub>krav</sub></span><span class="v accent" data-i18n="npvSideAnbefal">Anbefal</span></div>
+          <div class="ref-row"><span class="l" data-i18n="npvSidePayback">Payback</span><span class="v" data-i18n="npvSidePaybackV">Tid til BE</span></div>
+        </div>
+        <div class="side-card related">
+          <h4 data-i18n="npvSideRelated">Relaterte verktøy</h4>
+          <a href="/kalkulator/finance/"><span class="name" data-i18n="npvRelatedFinance">Finansiell kalkulator</span><span class="arr">→</span></a>
+          <a href="/personlig/spare/"><span class="name" data-i18n="npvRelatedSpare">Sparekalkulator</span><span class="arr">→</span></a>
+          <a href="/kalkulator/avs/"><span class="name" data-i18n="npvRelatedAvs">Avskrivninger</span><span class="arr">→</span></a>
+        </div>
+        <div class="side-card method">
+          <h4 data-i18n="npvSideMethod">Slik bruker du tallene</h4>
+          <ol class="method-list">
+            <li><span class="n">01</span><span class="t" data-i18n-html="npvMethodStep1">År <b>0</b> er investeringen — typisk negativ (du betaler ut). Senere år er positive innbetalinger.</span></li>
+            <li><span class="n">02</span><span class="t" data-i18n-html="npvMethodStep2">Renten reflekterer hva du <em>ellers</em> kunne fått — markedsrente, WACC eller risikojustert avkastning.</span></li>
+            <li><span class="n">03</span><span class="t" data-i18n-html="npvMethodStep3"><b>NPV positiv</b> = prosjektet slår kravet. <b>NPV negativ</b> = hold pengene.</span></li>
+            <li><span class="n">04</span><span class="t" data-i18n-html="npvMethodStep4"><b>IRR</b> er renten som ville gjort NPV = 0. Sammenlign mot kravet ditt direkte.</span></li>
+          </ol>
         </div>
       </aside>
 
