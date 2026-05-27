@@ -1316,6 +1316,8 @@ REGIONS['ti'] = {
     homeCardPersonlig: 'ናይ ግሊ ገንዘብ',
     homeCardSelskap: 'ኩባንያ',
     homeCardSkatt: 'ግብሪ',
+    homeCardRegnskap: 'ሕሳብ',
+    homeCardLov: 'ሕጊ',
     homeCategoriesCount: '6 ምድብታት',
     homeHeroLangPill: '10 ቋንቋታት',
     homeHeroSubtitle: 'ብመሰረት ናይ ሎሚ ሕግታት 2026 ዝተሓደሰ።',
@@ -1744,6 +1746,11 @@ REGIONS['ti'] = {
     homeCatSkattDesc:`ምሕሳብ ግብሪ፣ ቃላትን ሕጊ ግብሪን`,
     homeCatSelskapDesc:`ኣ.ሽ. (AS)፣ ናይ ሓባር ትካልን ሕጊ ትካልን`,
     homeCatAvgiftDesc:`VAT፣ ሕጊ VAT ን ናይ ወሃቢ ስራሕ ኣበርክቶ`,
+    homeCatRegnskapDesc:`ሕሳብ፣ ሚዛን፣ መግለጺ ኣታዊን ወጻኢን ከምኡውን መደብ ሕሳባት`,
+    homeCatLovDesc:`ሕጊ ግብሪ፣ ሕጊ ኣክሲዮናዊ ሕብረት፣ ሕጊ ቫትን ሕጊ ሕሳብን`,
+    footPrivacy: 'ብሕታውነት',
+    footContact: 'ርክብ',
+    footDisclaimer: 'መርሕ ስሌታት ኣብ ዝፍለጡ ዋጋታት ተመስሪቱ። ሞያዊ ምኽሪ ኣይኮነን።',
     // === skipLink (T1 split-2026-05-06-r3) ===
     skipLink: 'ናብ ቀንዲ ትሕዝቶ ኪድ',
     // === T1 placeholder-mekanisme (split-2026-05-07) ===
