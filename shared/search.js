@@ -34,7 +34,7 @@ var SEARCH_DATA = [
   {name:'Valutakonverter',desc:'Konverter mellom valutaer med oppdaterte kurser',url:'/kalkulator/unit/',tags:'valuta valutakonverter valutakalkulator valutaomregner kurs dollar euro pund usd eur gbp sek dkk currency exchange rate kursomregner convert currency',type:'tool',page:'Kalkulator',sk:'kalkValuta'},
   {name:'Finansiell kalkulator',desc:'Nåverdi, fremtidsverdi, margin, break-even, renters rente og rabatter',url:'/kalkulator/finance/',tags:'finansiell kalkulator nåverdi fremtidsverdi annuitet rente perioder margin markup break-even break even renters rente compound discount rabatt PV FV PMT TVM financial',type:'tool',page:'Kalkulator',sk:'kalkFin'},
   {name:'Likviditetsbudsjett',desc:'Oversikt over penger inn og ut måned for måned',url:'/kalkulator/likviditet/',tags:'likviditet likviditetsbudsjett kontantstrøm cashflow inn ut måned balanse liquidity',type:'tool',page:'Kalkulator',sk:'likvid'},
-  {name:'Pensjonskalkulator',desc:'Beregn forventet pensjon og pensjonssparing',url:'/kalkulator/#pensjon',tags:'pensjon pensjonsalder otp innskuddspensjon alderspensjon folketrygd afp tjenestepensjon pension',type:'tool',page:'Kalkulator',sk:'pensjon'},
+  {name:'Pensjonskalkulator',desc:'Beregn forventet pensjon og pensjonssparing',url:'/personlig/pensjon/',tags:'pensjon pensjonsalder otp innskuddspensjon alderspensjon folketrygd afp tjenestepensjon pension',type:'tool',page:'Personlig økonomi',sk:'pensjon'},
   {name:'Lønn vs Utbytte',desc:'Sammenlign skatt på lønn mot utbytte fra eget AS',url:'/kalkulator/lonnut/',tags:'lønn utbytte aksjeselskap as eier utdeling uttak skatt sammenlign optimal salary dividend',type:'tool',page:'Kalkulator',sk:'lvu'},
 
   // Skatt
@@ -227,7 +227,7 @@ var URL_TO_I18N_KEYS = {
   '/kalkulator/#likvid':           ['lblLikvid','likvidIntro'],
   '/kalkulator/#npv':              ['npvTitle','npvDesc','cmFcNpv'],
   '/kalkulator/dekningsbidrag/':  ['kalkDekningsbidragTitle','kalkDekningsbidragSubtitle','kalkToolDbTitle','kalkToolDbDesc'],
-  '/kalkulator/#pensjon':          ['lblPensjon','pensjonHint'],
+  '/personlig/pensjon/':           ['lblPensjon','pensjonHint'],
   '/kalkulator/tilbud/':          ['kalkTilbudHeroTitle','kalkTilbudHeroDesc','kalkTilbudHowtoTitle'],
   '/kalkulator/#lvu':              ['lblLvu','lvuRSal','lvuRDiv','lvuGross'],
   // Skatt
@@ -283,7 +283,7 @@ var URL_TO_DISPLAY = {
   '/kalkulator/#likvid':          {title:'lblLikvid',     desc:'likvidIntro'},
   '/kalkulator/#npv':             {title:'npvTitle',      desc:'npvDesc'},
   '/kalkulator/dekningsbidrag/': {title:'kalkToolDbTitle', desc:'kalkToolDbDesc'},
-  '/kalkulator/#pensjon':         {title:'lblPensjon',    desc:'pensjonHint'},
+  '/personlig/pensjon/':          {title:'lblPensjon',    desc:'pensjonHint'},
   '/kalkulator/#lvu':             {title:'lblLvu'},
   // Skatt
   '/skatt/#sal-salary-card':      {title:'salTitle',      desc:'salDesc'},
