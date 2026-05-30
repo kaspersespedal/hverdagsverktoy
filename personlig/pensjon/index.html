@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="no" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Pensjonskalkulator 2026 — folketrygd, OTP og egen sparing · Hverdagsverktøy</title>
+<meta name="description" content="Estimer pensjonen din ved 67 år — folketrygd, innskuddspensjon (OTP) fra arbeidsgiver og egen sparing. Se erstatningsgrad og månedlig pensjon. Forenklet, veiledende beregning. Alt skjer lokalt i nettleseren.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://hverdagsverktoy.com/personlig/pensjon/">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://hverdagsverktoy.com/personlig/pensjon/#webpage",
+  "name": "Pensjonskalkulator 2026 — folketrygd, OTP og egen sparing · Hverdagsverktøy",
+  "url": "https://hverdagsverktoy.com/personlig/pensjon/",
+  "inLanguage": "no",
+  "isPartOf": { "@id": "https://hverdagsverktoy.com/#website" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Privatøkonomi", "item": "https://hverdagsverktoy.com/personlig/" },
+    { "@type": "ListItem", "position": 3, "name": "Pensjon", "item": "https://hverdagsverktoy.com/personlig/pensjon/" }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<script>
+  (function(){try{var t=localStorage.getItem('hv-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<script>
+  (function(){
+    try{
+      var l=localStorage.getItem('hvt-lang')||'no';
+      document.documentElement.setAttribute('data-lang',l);
+      if(l!=='no')document.documentElement.classList.add('lang-loading');
+    }catch(e){}
+  })();
+</script>
+<style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
+<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v1">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v1">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+body > main{flex:1 0 auto}
+body > footer{flex-shrink:0}
+
+.calc-wrap{padding:36px 0 64px}
+.calc-wrap .container{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start}
+@media(max-width:980px){.calc-wrap .container{grid-template-columns:1fr}}
+
+/* Tre-pilar-fordeling (folketrygd / tjeneste / privat) */
+.pen-stack{display:flex;flex-direction:column;gap:8px;width:100%;margin:18px 0 8px}
+.pen-row{display:grid;grid-template-columns:118px 1fr auto;align-items:center;gap:14px;padding:9px 0;font-size:12px}
+.pen-row .lab{color:var(--ink3);font:600 10px/1.2 var(--font-sans);letter-spacing:.12em;text-transform:uppercase}
+.pen-row .bar{height:8px;border-radius:2px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.pen-row .bar > span{display:block;height:100%;transition:width .35s var(--ease,ease)}
+.pen-row.folk .bar > span{background:color-mix(in srgb,var(--accent) 38%,transparent)}
+.pen-row.tjeneste .bar > span{background:color-mix(in srgb,var(--accent) 62%,transparent)}
+.pen-row.privat .bar > span{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.pen-row .v{font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main" data-i18n="skipLink">Hopp til innhold</a>
+
+<div class="nav-wrap">
+  <div class="container">
+    <nav>
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy — forside">
+        <span class="mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1.2"/><rect x="14" y="4" width="4" height="16" rx="1.2"/><rect x="10" y="10" width="4" height="4" rx=".6"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="container">
+    <div class="tabs" role="tablist">
+      <a href="/personlig/" class="tab" aria-selected="true" data-i18n="tabPersonlig">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>Privatøkonomi
+      </a>
+      <a href="/boliglan/" class="tab" data-i18n="tabBoliglan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/></svg>Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab" data-i18n="tabKalkulator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/></svg>Kalkulator
+      </a>
+      <a href="/skatt/" class="tab" data-i18n="tabSkatt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/></svg>Skatt
+      </a>
+      <a href="/selskap/" class="tab" data-i18n="tabSelskap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/></svg>Selskap
+      </a>
+      <a href="/avgift/" class="tab" data-i18n="tabAvgift">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>Avgift
+      </a>
+      <a href="/regnskap/" class="tab" data-i18n="tabRegnskap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg>Regnskap
+      </a>
+      <a href="/lov/" class="tab" data-i18n="tabLov">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V20"/><path d="M5 7 L12 5 L19 7"/><path d="M3 13 a3 3 0 0 0 6 0 L6 7 Z"/><path d="M15 13 a3 3 0 0 0 6 0 L18 7 Z"/></svg>Lov
+      </a>
+    </div>
+  </div>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div>
+      <div class="crumb">
+        <a href="/personlig/" class="crumb-back" aria-label="Tilbake">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+        </a>
+        <a href="/">Hverdagsverktøy</a>
+        <span class="sep"></span>
+        <a href="/personlig/">Privatøkonomi</a>
+        <span class="sep"></span>
+        <span class="here">Pensjon</span>
+      </div>
+      <h1 class="page-title"><em>Pensjons</em>kalkulator</h1>
+      <p class="page-lead">Estimat av pensjonen din ved 67 år — folketrygd, innskuddspensjon fra arbeidsgiver, og det du sparer selv. Tallene er forenklede, veiledende beregninger.</p>
+    </div>
+    <div class="page-stats">
+      <div class="page-stat"><span class="l">1 G (folketrygd)</span><span class="v">130 160<span class="u">kr</span></span></div>
+      <div class="page-stat"><span class="l">Pensjonsalder</span><span class="v">62–75<span class="u">år</span></span></div>
+      <div class="page-stat"><span class="l">Maks opptjening</span><span class="v">7,1<span class="u">G</span></span></div>
+    </div>
+  </div>
+</section>
+
+<main id="main">
+<div class="calc-wrap">
+  <div class="container">
+
+    <div class="ks-host">
+      <div class="ks">
+        <div class="ks-strip">
+          <div class="ks-strip-cell"><span class="l">År til pensjon</span><span class="v" id="rAar">0</span></div>
+          <div class="ks-strip-cell"><span class="l">Total beholdning</span><span class="v" id="rBeholdning">0 kr</span></div>
+          <div class="ks-strip-cell"><span class="l">Erstatningsgrad</span><span class="v" id="rRatio">0 %</span></div>
+          <div class="ks-strip-cell accent"><span class="l">Pensjon / mnd</span><span class="v" id="rMnd">0 kr</span></div>
+        </div>
+
+        <div class="ks-body">
+          <div class="ks-form">
+
+            <section class="ks-section">
+              <div class="ik-section-head"><h3>Du i dag</h3><span class="meta">utgangspunkt</span></div>
+              <div class="ik-stack">
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="p-alder"><span>Din alder</span> <span class="cap">(år)</span></label>
+                    <input id="p-alder" class="ik-input" type="text" inputmode="numeric" value="35" autocomplete="off">
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="p-lonn"><span>Brutto årslønn</span> <span class="cap">(kr)</span></label>
+                    <input id="p-lonn" class="ik-input" type="text" inputmode="numeric" value="650 000" autocomplete="off">
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="ks-section">
+              <div class="ik-section-head"><h3>Tjenestepensjon</h3><span class="meta">arbeidsgiver</span></div>
+              <div class="ik-stack">
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="p-innsk"><span>Innskudd fra AG</span> <span class="cap">(% av lønn)</span></label>
+                    <input id="p-innsk" class="ik-input" type="text" inputmode="decimal" value="5" autocomplete="off">
+                    <div class="ik-hint">Minstekravet (OTP) er 2 %. Mange har 5–7 %.</div>
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="p-avk"><span>Forventet avkastning</span> <span class="cap">(% / år)</span></label>
+                    <input id="p-avk" class="ik-input" type="text" inputmode="decimal" value="5" autocomplete="off">
+                    <div class="ik-hint">Historisk snitt for pensjonsfond er ca. 5–7 %.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="ks-section">
+              <div class="ik-section-head"><h3>Privat sparing</h3><span class="meta">IPS / fond</span></div>
+              <div class="ik-stack">
+                <div class="ik-row full">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="p-priv"><span>Du sparer i måneden</span> <span class="cap">(kr)</span></label>
+                    <input id="p-priv" class="ik-input" type="text" inputmode="numeric" value="1 500" autocomplete="off">
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <aside class="ks-result">
+            <div class="ks-r-eyebrow">Pensjon / mnd ved 67 år</div>
+            <div class="ks-r-net"><span id="rMndBig">0</span><span class="unit">kr</span></div>
+            <div class="ks-r-mnd">≈ <b id="rAarSum">0 kr</b> per år · <b id="rRatio2">0 %</b> av dagens lønn</div>
+
+            <div class="pen-stack">
+              <div class="pen-row folk">
+                <span class="lab">Folketrygd</span>
+                <div class="bar"><span id="barFolk" style="width:0%"></span></div>
+                <span class="v" id="vFolk">0 kr</span>
+              </div>
+              <div class="pen-row tjeneste">
+                <span class="lab">Tjenestepensjon</span>
+                <div class="bar"><span id="barTj" style="width:0%"></span></div>
+                <span class="v" id="vTj">0 kr</span>
+              </div>
+              <div class="pen-row privat">
+                <span class="lab">Privat sparing</span>
+                <div class="bar"><span id="barPriv" style="width:0%"></span></div>
+                <span class="v" id="vPriv">0 kr</span>
+              </div>
+            </div>
+
+            <div class="ks-r-stats">
+              <div class="ks-r-stat"><span class="l">Folketrygd</span><span class="v" id="sFolk">0 kr</span></div>
+              <div class="ks-r-stat"><span class="l">Tjenestepensjon</span><span class="v" id="sTj">0 kr</span></div>
+              <div class="ks-r-stat"><span class="l">Privat sparing</span><span class="v" id="sPriv">0 kr</span></div>
+              <div class="ks-r-stat div"><span class="l">Sum årlig pensjon</span><span class="v" id="sSum">0 kr</span></div>
+            </div>
+
+            <div class="ks-r-foot">Forenklet modell. Faktisk pensjon avhenger av AFP, livslengde (delingstall), når du tar ut pensjon og avkastningen underveis.</div>
+            <div class="ks-r-sources">
+              <span class="src">NAV</span>
+              <span class="dot"></span>
+              <span class="src">Norsk Pensjon</span>
+              <span class="upd">Oppdatert <em>2026</em></span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-card">
+        <h4>Folketrygdens nøkler</h4>
+        <div class="ref-row"><span class="l">Grunnbeløp (G)</span><span class="v">130 160<span class="u">kr</span></span></div>
+        <div class="ref-row"><span class="l">Maks opptjeningstak</span><span class="v">7,1<span class="u">G</span></span></div>
+        <div class="ref-row"><span class="l">Opptjeningssats</span><span class="v">18,1<span class="u">%</span></span></div>
+        <div class="ref-row"><span class="l">Pensjonsalder</span><span class="v accent">62–75</span></div>
+        <div class="ref-row"><span class="l">OTP-minstekrav</span><span class="v">2<span class="u">%</span></span></div>
+      </div>
+      <div class="side-card related">
+        <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
+        <a href="/personlig/spare/"><span class="name">Sparekalkulator</span><span class="arr">→</span></a>
+        <a href="/skatt/inntekt/"><span class="name">Lønn etter skatt</span><span class="arr">→</span></a>
+        <a href="/personlig/foreldrepenger/"><span class="name">Foreldrepenger</span><span class="arr">→</span></a>
+      </div>
+      <div class="side-card method">
+        <h4 data-i18n="sideMethod">De tre pilarene</h4>
+        <ol class="method-list">
+          <li><span class="n">01</span><span class="t"><b>Folketrygd</b> — opptjent av all arbeidsinntekt opp til 7,1 G, 18,1 % per år.</span></li>
+          <li><span class="n">02</span><span class="t"><b>Tjenestepensjon</b> — arbeidsgivers innskudd (OTP), minst 2 %, typisk 5–7 % av lønn.</span></li>
+          <li><span class="n">03</span><span class="t"><b>Privat sparing</b> — IPS, fond eller annen sparing du gjør selv.</span></li>
+        </ol>
+      </div>
+    </aside>
+
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="container foot">
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+  </div>
+</footer>
+
+<script defer src="/shared/site-shell.js?v=v1"></script>
+<script defer src="/shared/top-chrome.js?v=v1"></script>
+<script defer src="/shared/veiledning.js?v=v1"></script>
+<script defer src="/shared/core.js?v=v126"></script>
+<script defer src="/shared/search.js?v=v40"></script>
+<script defer src="/shared/lang/no.js?v=v40"></script>
+<script src="/shared/atmosphere.js?v=v1" defer></script>
+
+<script>
+// ── Pensjonskalkulator 2026: vanilla-port av "Pensjon on Site.html" (design-system ZIP)
+// 3-pilar forenklet modell. G bundet til 130 160 (= _HVT_G i core.js, ikke ZIP-ens utdaterte 124 028).
+// Kilder: NAV (folketrygd 18,1 % / 7,1 G), Norsk Pensjon. Forenklet — se disclaimer.
+(function(){
+  var G = 130160;  // 1G 2026 — samme som _HVT_G i core.js / syk / ferie
+
+  var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
+  function fmtKr(n){ if(!isFinite(n)) return '–'; return fmtNb.format(Math.round(n)) + ' kr'; }
+  function fmtKrPlain(n){ if(!isFinite(n)) return '0'; return fmtNb.format(Math.round(n)); }
+  function parseKr(s){ if(s == null) return 0; return parseInt(String(s).replace(/[^\d]/g, ''), 10) || 0; }
+  function parseDec(s){ if(s == null) return 0; var v = String(s).replace(',', '.').replace(/[^\d.]/g, ''); return parseFloat(v) || 0; }
+  var $ = function(id){ return document.getElementById(id); };
+
+  var state = { alder:35, lonn:650000, innskudd:5, avk:5, privat:1500 };
+
+  function calcPensjon(s){
+    var aar = Math.max(1, 67 - s.alder);
+    var lonnK = Math.min(s.lonn, 7.1 * G);
+    // Folketrygd: 18,1 % av inntekt (kappet 7,1 G), forenklet 40 års opptjening, utbetalt over 20 år
+    var folkeBeholdning = lonnK * 0.181 * Math.min(40, s.alder + aar - 17);
+    var folkeAar = folkeBeholdning / 20;
+    // Tjenestepensjon: arbeidsgivers innskudd akkumulert med avkastning
+    var innskudd = s.lonn * (s.innskudd / 100);
+    var r = (s.avk || 0) / 100;
+    var tjeneste = r === 0 ? innskudd * aar : innskudd * ((Math.pow(1 + r, aar) - 1) / r);
+    var tjenesteAar = tjeneste / 20;
+    // Privat sparing: månedlig spart, akkumulert med avkastning
+    var privat = r === 0 ? s.privat * 12 * aar : s.privat * 12 * ((Math.pow(1 + r, aar) - 1) / r);
+    var privatAar = privat / 20;
+    var totalAar = folkeAar + tjenesteAar + privatAar;
+    var ratio = totalAar / Math.max(1, s.lonn);
+    return {
+      folkeAar: folkeAar, tjenesteAar: tjenesteAar, privatAar: privatAar,
+      totalAar: totalAar, ratio: ratio, aar: aar,
+      total: folkeBeholdning + tjeneste + privat
+    };
+  }
+
+  function liveFormatKr(inp){
+    var raw = inp.value.replace(/[^\d]/g, '');
+    if(!raw) return;
+    var num = parseInt(raw, 10);
+    if(isNaN(num)) return;
+    var pos = inp.selectionStart, oldLen = inp.value.length;
+    inp.value = fmtKrPlain(num);
+    var newLen = inp.value.length;
+    try { inp.setSelectionRange(pos + (newLen - oldLen), pos + (newLen - oldLen)); } catch(_e){}
+  }
+
+  function render(){
+    state.alder    = Math.max(20, Math.min(67, parseKr($('p-alder').value) || 0));
+    state.lonn     = parseKr($('p-lonn').value);
+    state.innskudd = parseDec($('p-innsk').value);
+    state.avk      = parseDec($('p-avk').value);
+    state.privat   = parseKr($('p-priv').value);
+
+    var r = calcPensjon(state);
+    var max = Math.max(r.folkeAar, r.tjenesteAar, r.privatAar) || 1;
+
+    $('rAar').textContent        = r.aar;
+    $('rBeholdning').textContent = fmtKr(r.total);
+    $('rRatio').textContent      = Math.round(r.ratio * 100) + ' %';
+    $('rMnd').textContent        = fmtKr(r.totalAar / 12);
+
+    $('rMndBig').textContent = fmtKrPlain(r.totalAar / 12) + ' ';
+    $('rAarSum').textContent = fmtKr(r.totalAar);
+    $('rRatio2').textContent = Math.round(r.ratio * 100) + ' %';
+
+    $('barFolk').style.width = (r.folkeAar / max * 100) + '%';
+    $('barTj').style.width   = (r.tjenesteAar / max * 100) + '%';
+    $('barPriv').style.width = (r.privatAar / max * 100) + '%';
+    $('vFolk').textContent = fmtKr(r.folkeAar);
+    $('vTj').textContent   = fmtKr(r.tjenesteAar);
+    $('vPriv').textContent = fmtKr(r.privatAar);
+
+    $('sFolk').textContent = fmtKr(r.folkeAar);
+    $('sTj').textContent   = fmtKr(r.tjenesteAar);
+    $('sPriv').textContent = fmtKr(r.privatAar);
+    $('sSum').textContent  = fmtKr(r.totalAar);
+  }
+
+  ['p-lonn','p-priv'].forEach(function(id){
+    var el = $(id); if(!el) return;
+    el.addEventListener('input', function(){ liveFormatKr(this); render(); });
+  });
+  ['p-alder','p-innsk','p-avk'].forEach(function(id){
+    var el = $(id); if(!el) return;
+    el.addEventListener('input', render);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
