@@ -3,7 +3,8 @@
    so handoff to Claude Code is unambiguous.
 
    USAGE  Auto-runs on DOMContentLoaded. Reads <html data-theme="…">,
-          persists via localStorage('hv-theme', 'hv-lang').
+          persists theme via localStorage('hv-theme'). Language defers to
+          core.js (setRegion → 'hvt-lang') so the real i18n re-render fires.
           To disable per-page: <body data-no-topchrome>.
    ─────────────────────────────────────────────────────────────── */
 (function(){
@@ -58,8 +59,14 @@
     broadcastTheme(t);
   }
   function applyLang(l){
+    // core.js owns the real i18n pipeline: setRegion persists 'hvt-lang',
+    // loads the language file, flips dir/lang, rebuilds search and re-renders
+    // every translated string. This picker was cosmetic until now (the design
+    // handoff left "translation copy is the next step") — so delegate to it.
+    if (typeof window.setRegion === 'function'){ window.setRegion(l); return; }
+    // Fallback if core.js isn't on the page: flip lang + persist for next load.
     document.documentElement.setAttribute('lang', l === 'no' ? 'nb' : l);
-    setStored('hv-lang', l);
+    setStored('hvt-lang', l);
   }
 
   // Apply persisted theme ASAP (idempotent — html may already have it).
@@ -355,7 +362,7 @@
     var navEl = document.querySelector('.nav-wrap nav');
     if (!navEl) return;
     var curTheme = document.documentElement.getAttribute('data-theme') || 'carbon';
-    var curLang = getStored('hv-lang','no');
+    var curLang = getStored('hvt-lang','no');
     var curLangObj = LANGS.find(function(x){return x.k===curLang;}) || LANGS[0];
 
     // Build a single theme row: mini palette preview + label + subtitle + check.
