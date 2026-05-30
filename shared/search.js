@@ -43,6 +43,7 @@ var SEARCH_DATA = [
   {name:'Effektiv skatt ved utdeling',desc:'Aksjonærmodellen og foretaksmodellen',url:'/skatt/#sal-utdeling-card',tags:'utdeling utbytte aksjonærmodellen foretaksmodellen selskapsskatt effektiv skatt distribution',type:'tool',page:'Skatt',sk:'utdeling'},
   // Avgift
   {name:'Justeringskalkulator',desc:'Justering av inngående MVA ved bruksendring',url:'/avgift/#vat-adj-card',tags:'justering mva inngående bruksendring kapitalvare justeringsperiode mval kap 9',type:'tool',page:'Avgift',sk:'mvajust'},
+  {name:'Engangsavgift bil',desc:'Avgift ved registrering — vekt, CO₂ og NOx',url:'/avgift/engangsavgift/',tags:'engangsavgift bil registreringsavgift vektavgift co2 nox utslipp elbil fritak hybrid vrakpant import registration tax car',type:'tool',page:'Avgift',sk:'engangsavgift'},
 
   // Selskap
   {name:'Velg selskapsform',desc:'Hvilken selskapsform passer for deg? ENK, AS, ANS, DA eller KS',url:'/selskap/#selskap-velg-card',tags:'selskapsform velge starte bedrift virksomhet enk as ans da ks company form choose',type:'tool',page:'Selskap',sk:'selskapVelg'},
@@ -149,6 +150,7 @@ var SEARCH_DATA = [
   {name:'Sparekalkulator',desc:'Se kraften i rentes rente over tid',url:'/personlig/spare/',tags:'spare sparing rentes rente avkastning fond aksjer investering månedlig',type:'tool',page:'Personlig økonomi'},
   {name:'Studielån',desc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen',url:'/personlig/studie/',tags:'studielån lånekassen stipend student studie nedbetaling lån utdanning',type:'tool',page:'Personlig økonomi'},
   {name:'Sykepenger og NAV',desc:'Oversikt over sykepenger, dagpenger og NAV-ytelser',url:'/personlig/syk/',tags:'sykepenger nav dagpenger utbetaling arbeidsløs',type:'section',page:'Personlig økonomi'},
+  {name:'Foreldrepenger',desc:'NAV-sats per måned ved 100 % og 80 % uttak, med 6G-tak',url:'/personlig/foreldrepenger/',tags:'foreldrepenger nav foreldrepermisjon fødselspenger mødrekvote fedrekvote fellesperiode 6g uttak permisjon barn parental benefit',type:'tool',page:'Personlig økonomi'},
   {name:'Teknisk økonomi',desc:'Oversikt over tekniske økonomi-kalkulatorer',url:'/personlig/teknisk/',tags:'teknisk økonomi likvid cashflow nåverdi internrente npv irr',type:'section',page:'Personlig økonomi'},
   {name:'Regnskap',desc:'Verktøy og kalkulator for regnskap og bokføring',url:'/regnskap/',tags:'regnskap bokføring regnskapsføring avskrivning driftsmiddel',type:'section',page:'Regnskap'},
   {name:'Formueskatt',desc:'Beregn formueskatt med verdsettelsesrabatter',url:'/skatt/formue/',tags:'formue formueskatt verdsettelsesrabatt bolig aksjer eiendom gjeld',type:'tool',page:'Skatt'},
