@@ -232,3 +232,36 @@ footer a{
   footer a:hover{color:var(--ink);border-bottom-color:var(--line-warm)}
 }
 footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* ─────────────────────────────────────────────────────
+   ATMO-ON opt-in — re-enable the living aurora on calc sub-pages.
+   These pages load calm-override.css + site-shell.css, which BOTH disable
+   atmosphere (`display:none !important`), flatten .atmo-base to a solid fill,
+   and paint body with an opaque var(--bg) — so the fixed atmosphere (z-index
+   -2/-3) never shows. A page opts back in with <body class="atmo-on">.
+   Higher specificity (body.atmo-on …) + !important, and this file loads AFTER
+   calm-override on those pages, so the cascade favours these rules.
+   Body/html go transparent so the fixed atmosphere behind them is visible;
+   content cards keep their own var(--surface) fills, so text stays crisp.
+   Opacity stays theme-native (matches the forside) — warm/cream on carbon,
+   cool/blue on dark. (2026-05-30) */
+html:has(body.atmo-on){ background:transparent !important; }
+body.atmo-on{ background:transparent !important; }
+body.atmo-on .atmo,
+body.atmo-on .atmo-base,
+body.atmo-on .band,
+body.atmo-on .band-a,
+body.atmo-on .band-b,
+body.atmo-on .film-grain{ display:block !important; }
+body.atmo-on .atmo-base{
+  background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%) !important;
+}
+/* Dark ("Mørk-blå") theme: cool blue pigment on a blue-black base reads far
+   fainter than carbon's warm cream on near-black, so the native .09/.06 is
+   almost invisible. Lift the opacity tokens (these feed both the static state
+   and the breathe keyframes) so the aurora is actually perceptible on dark.
+   Carbon/disco keep their native, already-legible levels. */
+html[data-theme="dark"] body.atmo-on{
+  --atmo-band-a-op:.20; --atmo-band-a-op-breathe:.26;
+  --atmo-band-b-op:.13; --atmo-band-b-op-breathe:.17;
+}
