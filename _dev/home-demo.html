@@ -70,6 +70,22 @@
 <!-- FOUC-guard during language load — keeps i18n elements hidden until core.js resolves loadLang. -->
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
 
+<!-- ════ DEMO ADDITION: spotlight dot-grid (the background you liked) ════ -->
+<style>
+  .spot-grid{
+    position:fixed;inset:0;z-index:-2;pointer-events:none;
+    background-image:radial-gradient(circle, rgba(190,205,235,.55) 1px, transparent 1.5px);
+    background-size:34px 34px;
+    opacity:0;
+    -webkit-mask-image:radial-gradient(circle 15rem at var(--mx,50%) var(--my,38%), #000 0%, transparent 70%);
+            mask-image:radial-gradient(circle 15rem at var(--mx,50%) var(--my,38%), #000 0%, transparent 70%);
+    transition:opacity 1.2s var(--ease, ease);
+  }
+  body.heroLanded .spot-grid{opacity:.55}
+  @media (prefers-reduced-motion: reduce){ .spot-grid{display:none} }
+  @media (hover: none){ .spot-grid{display:none} }
+</style>
+
 <style>
   :root{
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -1459,25 +1475,52 @@
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v1" defer></script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
+<!-- ════ DEMO ADDITION: lush reveals + page-load flare (ported from design Subpage Preview.html) ════ -->
 <style>
-/* GLØD-FIX (2026-05-31): calm-override.css + site-shell.css disable the atmosphere
-   site-wide (display:none !important) and paint body opaque, so the forside was flat.
-   Re-enable it here (body.atmo-on = higher specificity + !important beats those rules)
-   and make body/html transparent so the fixed aurora behind shows through. Dark theme:
-   lift band opacity so the cream aurora is visible on the blue-black base. */
-html:has(body.atmo-on){ background:transparent !important; }
-body.atmo-on{ background:transparent !important; }
-body.atmo-on .atmo,
-body.atmo-on .atmo-base,
-body.atmo-on .band,
-body.atmo-on .band-a,
-body.atmo-on .band-b,
-body.atmo-on .film-grain{ display:block !important; }
-html[data-theme="dark"] body.atmo-on .band-a .band-inner{ opacity:.20 !important; }
-html[data-theme="dark"] body.atmo-on .band-b .band-inner{ opacity:.14 !important; }
+  /* The design's reveals blur in + rise further + settle on a slow expo curve.
+     The live reveals are present but understated — this makes them lush.
+     We only augment .rise/.reveal; the headline keeps its own word-mask reveal. */
+  .rise{
+    transform:translateY(22px);
+    filter:blur(8px);
+    transition:
+      opacity   .9s var(--ease-out-expo),
+      transform 1s  var(--ease-out-expo),
+      filter    .7s var(--ease-out-expo);
+  }
+  body.heroLanded .rise{ transform:none; filter:blur(0); }
+
+  .reveal{
+    opacity:0; transform:translateY(30px); filter:blur(10px);
+    transition:
+      opacity   .85s var(--ease-out-expo),
+      transform .95s var(--ease-out-expo),
+      filter    .65s var(--ease-out-expo);
+    transition-delay:calc(var(--i, 0) * 90ms);
+  }
+  .reveal.in{ opacity:1; transform:none; filter:blur(0); }
+
+  /* Page-load flare — a soft accent light sweeps down from the top, once. */
+  .page-flare{
+    position:fixed; left:0; right:0; top:0; height:100vh;
+    pointer-events:none; z-index:-1; opacity:0;
+    background:radial-gradient(60% 40% at 50% 0%,
+      color-mix(in srgb, var(--accent) 12%, transparent) 0%, transparent 70%);
+    animation:pageFlare 1.8s var(--ease-out-expo) both .1s;
+  }
+  @keyframes pageFlare{
+    0%   { opacity:0; transform:translateY(-22px); }
+    35%  { opacity:1; }
+    100% { opacity:0; transform:translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .rise, .reveal{ filter:none !important; transform:none !important; }
+    .page-flare{ display:none; }
+  }
 </style>
 </head>
-<body class="atmo-on">
+<body>
 
 <a class="skip" href="#main">Hopp til hovedinnhold</a>
 
@@ -1488,6 +1531,10 @@ html[data-theme="dark"] body.atmo-on .band-b .band-inner{ opacity:.14 !important
   <div class="band band-b"><div class="band-inner"></div></div>
   <div class="cursor-light" id="cursorLight"></div>
 </div>
+<!-- DEMO ADDITION: spotlight dot-grid layer -->
+<div class="spot-grid" aria-hidden="true"></div>
+<!-- DEMO ADDITION: page-load flare sweep -->
+<div class="page-flare" aria-hidden="true"></div>
 <svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">
   <filter id="atmoGrain">
     <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2"
@@ -2425,6 +2472,22 @@ html[data-theme="dark"] body.atmo-on .band-b .band-inner{ opacity:.14 !important
       obs.observe(document.body, {attributes:true, attributeFilter:['class']});
     }
   })();
+</script>
+
+<!-- ════ DEMO ADDITION: cursor tracking for the spotlight dot-grid ════ -->
+<script>
+(function(){
+  if(matchMedia('(hover:none)').matches || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var rx=innerWidth/2, ry=innerHeight*0.38, tx=rx, ty=ry, raf=null;
+  function loop(){
+    rx += (tx-rx)*.12; ry += (ty-ry)*.12;
+    var s=document.documentElement.style;
+    s.setProperty('--mx', (rx/innerWidth*100).toFixed(2)+'%');
+    s.setProperty('--my', (ry/innerHeight*100).toFixed(2)+'%');
+    raf = (Math.abs(tx-rx)>.5 || Math.abs(ty-ry)>.5) ? requestAnimationFrame(loop) : null;
+  }
+  addEventListener('pointermove', function(e){ tx=e.clientX; ty=e.clientY; if(!raf) raf=requestAnimationFrame(loop); }, {passive:true});
+})();
 </script>
 
 </body>
