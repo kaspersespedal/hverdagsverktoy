@@ -115,6 +115,13 @@ html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [dat
 html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .film-grain{
   display:none !important;
 }
+/* GLOW-2026-05-31 — aurora visible on this inline-atmosphere page.
+   The atmosphere CSS above renders, but inline html,body{background:var(--bg)}
+   painted over the fixed layers. Make body transparent on dark-family themes so
+   the aurora shows; light themes already hide it (block above) and keep --bg.
+   Dark theme reads faint (cool blue on blue-black) — lift the opacity tokens. */
+html:not(:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"])) body:not(.embed){background:transparent}
+html[data-theme="dark"]{--atmo-band-a-op:.20;--atmo-band-a-op-breathe:.26;--atmo-band-b-op:.13;--atmo-band-b-op-breathe:.17}
 .atmo-base{
   position:fixed;inset:0;z-index:-3;pointer-events:none;
   background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
@@ -726,6 +733,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 <div class="tabs-wrap" role="tablist" aria-label="Kategorier">
   <div class="container">
     <div class="tabs">
+      <a href="/personlig/budsjett/" class="tab" role="tab" data-tab="budsjett" aria-selected="false">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg>Budsjett
+      </a>
       <a href="/personlig/" class="tab" role="tab" aria-selected="false">
         <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
         Personlig økonomi

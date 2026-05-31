@@ -51,6 +51,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v1">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v1">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v120">
 <style>
 /* Budsjett-spesifikk — fra ZIP "Budsjett on Site.html" */
 .bud-wrap{padding:36px 0 64px}
@@ -251,7 +252,25 @@ body > footer{flex-shrink:0}
 }
 </style>
 </head>
-<body>
+<body class="atmo-on">
+
+<!-- ATMOSPHERE — Aurora over ink. Site-wide, fixed, behind everything. -->
+<div class="atmo-base" aria-hidden="true"></div>
+<div class="atmo" aria-hidden="true">
+  <div class="band band-a"><div class="band-inner"></div></div>
+  <div class="band band-b"><div class="band-inner"></div></div>
+  <div class="cursor-light" id="cursorLight"></div>
+</div>
+<svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">
+  <filter id="atmoGrain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" seed="4"/>
+    <feColorMatrix values="0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0.5 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#atmoGrain)"/>
+</svg>
 
 <a class="skip" href="#main" data-i18n="skipLink">Hopp til innhold</a>
 
@@ -269,7 +288,10 @@ body > footer{flex-shrink:0}
 <div class="tabs-wrap">
   <div class="container">
     <div class="tabs" role="tablist">
-      <a href="/personlig/" class="tab" aria-selected="true" data-i18n="tabPersonlig">
+      <a href="/personlig/budsjett/" class="tab" aria-selected="true" data-i18n="tabBudsjett">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg>Budsjett
+      </a>
+      <a href="/personlig/" class="tab" data-i18n="tabPersonlig">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
         Privatøkonomi
       </a>
