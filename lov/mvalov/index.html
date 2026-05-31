@@ -115,6 +115,13 @@ html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [dat
 html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .film-grain{
   display:none !important;
 }
+/* GLOW-2026-05-31 — aurora visible on this inline-atmosphere page.
+   The atmosphere CSS above renders, but inline html,body{background:var(--bg)}
+   painted over the fixed layers. Make body transparent on dark-family themes so
+   the aurora shows; light themes already hide it (block above) and keep --bg.
+   Dark theme reads faint (cool blue on blue-black) — lift the opacity tokens. */
+html:not(:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"])) body:not(.embed){background:transparent}
+html[data-theme="dark"]{--atmo-band-a-op:.20;--atmo-band-a-op-breathe:.26;--atmo-band-b-op:.13;--atmo-band-b-op-breathe:.17}
 .atmo-base{
   position:fixed;inset:0;z-index:-3;pointer-events:none;
   background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
