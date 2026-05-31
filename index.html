@@ -1459,8 +1459,25 @@
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v1" defer></script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
+<style>
+/* GLØD-FIX (2026-05-31): calm-override.css + site-shell.css disable the atmosphere
+   site-wide (display:none !important) and paint body opaque, so the forside was flat.
+   Re-enable it here (body.atmo-on = higher specificity + !important beats those rules)
+   and make body/html transparent so the fixed aurora behind shows through. Dark theme:
+   lift band opacity so the cream aurora is visible on the blue-black base. */
+html:has(body.atmo-on){ background:transparent !important; }
+body.atmo-on{ background:transparent !important; }
+body.atmo-on .atmo,
+body.atmo-on .atmo-base,
+body.atmo-on .band,
+body.atmo-on .band-a,
+body.atmo-on .band-b,
+body.atmo-on .film-grain{ display:block !important; }
+html[data-theme="dark"] body.atmo-on .band-a .band-inner{ opacity:.20 !important; }
+html[data-theme="dark"] body.atmo-on .band-b .band-inner{ opacity:.14 !important; }
+</style>
 </head>
-<body>
+<body class="atmo-on">
 
 <a class="skip" href="#main">Hopp til hovedinnhold</a>
 
