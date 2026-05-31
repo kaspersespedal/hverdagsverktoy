@@ -19,9 +19,17 @@ html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
 ::selection{background:rgba(200,153,104,.28);color:#fff}
 .container{max-width:1180px;margin:0 auto;padding:0 32px}
 
-/* Background — flat (atmosphere/grain removed for calm professional tone) */
-.atmo-base{position:fixed;inset:0;z-index:-3;pointer-events:none;background:var(--bg)}
-.atmo,.band,.band-a,.band-b,.grain{display:none}
+/* ATMOSPHERE — aurora ON site-wide (2026-05-31). Reverses the earlier "flat
+   calm" experiment. The aurora markup + atmosphere.js + per-theme tokens are
+   present on every editorial page, so we let it render. Base keeps a gradient;
+   body goes transparent (dark-family themes only) so the fixed aurora shows.
+   Light themes (frost/glass/hendrix/bw/pink) hide the aurora elsewhere and keep
+   their opaque --bg. Embed widgets stay flat (rules below). */
+.atmo-base{position:fixed;inset:0;z-index:-3;pointer-events:none;
+  background:linear-gradient(to bottom, var(--atmo-base-top, var(--bg)) 0%, var(--atmo-base-bottom, var(--bg)) 100%)}
+html:not(:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"])) body:not(.embed){background:transparent}
+/* Dark ("Mørk-blå") theme reads faint — lift band opacity tokens. */
+html[data-theme="dark"]{--atmo-band-a-op:.20;--atmo-band-a-op-breathe:.26;--atmo-band-b-op:.13;--atmo-band-b-op-breathe:.17}
 
 /* Embed mode — used when this page is loaded in a focus iframe.
    Hides site chrome so only the calculator shows. Parent sets body.embed via contentDocument. */
