@@ -3,7 +3,7 @@
    so handoff to Claude Code is unambiguous.
 
    USAGE  Auto-runs on DOMContentLoaded. Reads <html data-theme="…">,
-          persists theme via localStorage('hv-theme'). Language defers to
+          persists theme via localStorage('hvt-theme'). Language defers to
           core.js (setRegion → 'hvt-lang') so the real i18n re-render fires.
           To disable per-page: <body data-no-topchrome>.
    ─────────────────────────────────────────────────────────────── */
@@ -55,7 +55,7 @@
     // Inside an embed we don't want to clobber the parent's localStorage value
     // with whatever the embedded page happened to start at — only persist when
     // top-level OR when the change originated from a user action here.
-    if (!IN_IFRAME || (opts && opts.persist)) setStored('hv-theme', t);
+    if (!IN_IFRAME || (opts && opts.persist)) setStored('hvt-theme', t);
     broadcastTheme(t);
   }
   function applyLang(l){
@@ -75,7 +75,7 @@
   applyTheme(
     IN_IFRAME
       ? (document.documentElement.getAttribute('data-theme') || 'carbon')
-      : getStored('hv-theme', document.documentElement.getAttribute('data-theme') || 'carbon')
+      : getStored('hvt-theme', document.documentElement.getAttribute('data-theme') || 'carbon')
   );
 
   // Receive theme pushes from a host page (Subpage Preview etc.).
