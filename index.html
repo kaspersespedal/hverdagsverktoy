@@ -409,7 +409,7 @@
   .search-wrap.is-open{ z-index:120; }
   .search-shell{
     position:relative;
-    background:linear-gradient(180deg, var(--surface) 0%, #111110 100%);
+    background:linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
     border:1px solid var(--line-2);
     border-radius:8px;
     box-shadow:
@@ -427,12 +427,12 @@
       0 1px 0 rgba(0,0,0,.45);
   }
   .search-shell.focused{
-    border-color:rgba(200,153,104,.5);
-    background:linear-gradient(180deg, var(--surface-2) 0%, #14130f 100%);
+    border-color:rgba(var(--glow-rgb),.5);
+    background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%);
     box-shadow:
-      inset 0 1px 0 rgba(216,173,126,.08),
-      inset 0 0 0 1px rgba(216,173,126,.18),
-      0 0 0 4px rgba(200,153,104,.07),
+      inset 0 1px 0 rgba(var(--glow-rgb),.08),
+      inset 0 0 0 1px rgba(var(--glow-rgb),.18),
+      0 0 0 4px rgba(var(--glow-rgb),.07),
       0 8px 22px -10px rgba(0,0,0,.6);
   }
   .search-shell input{
@@ -562,7 +562,7 @@
     position:absolute;top:calc(100% + 8px);left:0;right:0;
     background:
       radial-gradient(120% 80% at 50% -10%, rgba(200,153,104,.04), transparent 55%),
-      linear-gradient(180deg, #181715 0%, #141311 100%);
+      linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
     border:1px solid var(--line-2);
     border-radius:8px;
     box-shadow:
@@ -1475,6 +1475,14 @@ body.atmo-on .band-b,
 body.atmo-on .film-grain{ display:block !important; }
 html[data-theme="dark"] body.atmo-on .band-a .band-inner{ opacity:.20 !important; }
 html[data-theme="dark"] body.atmo-on .band-b .band-inner{ opacity:.14 !important; }
+/* Light themes (frost/glass/hendrix/bw/pink): the aurora is a dark-only flourish.
+   The GLØD-FIX above force-shows it on every theme, so on a light theme the dark
+   .atmo-base bled through the transparent hero. Hide every atmosphere layer and
+   restore the solid light background so the forside matches the rest of the site.
+   Mirrors shared/atmosphere.css:64; higher specificity wins over the re-enable. */
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"]):has(body.atmo-on),
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"]) body.atmo-on{ background:var(--bg) !important; }
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"]) body.atmo-on :is(.atmo,.atmo-base,.band,.band-a,.band-b,.film-grain,.cursor-light){ display:none !important; }
 </style>
 </head>
 <body class="atmo-on">
