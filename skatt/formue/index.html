@@ -756,6 +756,56 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     margin-top:14px;font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;
   }
 
+  /* ─────────────────────────────────────────────────────
+     RE-SKIN 2026-06 — summary-stripe + 3-sone grid + sidebar + data-viz.
+     Nytt «on Site»-design lagt over eksisterende funksjonell kjerne.
+     Kun nøytrale tema-tokens (ingen-ekstra-farger-regel); 6px-radius som resten.
+  ───────────────────────────────────────────────────── */
+  .formue-summary{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:6px;
+    overflow:hidden;margin:0 0 28px;
+  }
+  .formue-summary .sum-card{background:var(--surface);padding:15px 18px;display:flex;flex-direction:column;gap:7px;}
+  .formue-summary .sum-l{font:600 10px/1.3 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);}
+  .formue-summary .sum-v{font-family:var(--font-serif);font-weight:500;font-size:21px;line-height:1;letter-spacing:-.4px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;}
+  .formue-summary .sum-card.accent .sum-v{color:var(--accent);}
+
+  .formue-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,.82fr);gap:24px;}
+
+  .formue-side{display:flex;flex-direction:column;gap:16px;align-self:start;position:sticky;top:124px;}
+  .side-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;}
+  .side-card .side-h{margin:0 0 10px;font:600 10px/1.3 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);}
+  .side-rate{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;border-top:1px solid var(--line);}
+  .side-rate:first-of-type{border-top:none;}
+  .side-rate .l{font-size:12px;color:var(--ink2);}
+  .side-rate .v{font-family:var(--font-serif);font-weight:500;font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .side-link{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
+  .side-link:first-of-type{border-top:none;}
+  .side-link .arr{color:var(--ink4);transition:color .15s var(--ease),transform .15s var(--ease);}
+  @media (hover:hover){.side-link:hover{color:var(--ink);} .side-link:hover .arr{color:var(--accent);transform:translateX(2px);}}
+  .side-how{display:flex;flex-direction:column;gap:12px;}
+  .side-step{display:flex;gap:10px;font-size:12px;color:var(--ink2);line-height:1.55;}
+  .side-step .n{flex-shrink:0;width:18px;height:18px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line-2);font:600 10px/17px var(--font-sans);text-align:center;color:var(--ink3);}
+  .side-step b{color:var(--ink);font-weight:600;}
+
+  .formue-viz{margin:0 0 20px;}
+  .formue-viz .viz-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}
+  .formue-viz .viz-t{font:600 10px/1.3 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);}
+  .formue-viz .viz-sum{font-family:var(--font-serif);font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums;}
+  .formue-viz .viz-bar{display:flex;height:13px;border-radius:7px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);}
+  .formue-viz .viz-seg{height:100%;background:var(--accent);min-width:2px;transition:width .35s var(--ease);}
+  .formue-viz .viz-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:11px;}
+  .formue-viz .lg{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink2);}
+  .formue-viz .lg .sw{width:9px;height:9px;border-radius:2px;background:var(--accent);flex-shrink:0;}
+  .formue-viz.empty{display:none;}
+
+  @media (max-width: 980px){
+    .formue-summary{grid-template-columns:repeat(2,1fr);}
+    .formue-grid{grid-template-columns:1fr;}
+    .formue-side{position:static;top:auto;}
+  }
+
   @media (max-width: 880px){
     .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
     .page-stats{align-self:stretch}
@@ -947,6 +997,15 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   </section>
 
   <div class="container">
+    <div class="formue-summary" id="formueSummary">
+      <div class="sum-card"><span class="sum-l">Skattemessig formue</span><span class="sum-v" id="rSumBrutto">–</span></div>
+      <div class="sum-card"><span class="sum-l">Netto formue</span><span class="sum-v" id="rSumNetto">–</span></div>
+      <div class="sum-card"><span class="sum-l">Skattepliktig</span><span class="sum-v" id="rSumSkattepliktig">–</span></div>
+      <div class="sum-card accent"><span class="sum-l">Formueskatt 2026</span><span class="sum-v" id="rSumSkatt">–</span></div>
+    </div>
+  </div>
+
+  <div class="container">
     <div class="formue-grid">
 
       <div class="formue-form">
@@ -1057,10 +1116,43 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         </div>
       </aside>
 
+      <aside class="formue-side" aria-label="Satser og relaterte verktøy">
+        <div class="side-card">
+          <h3 class="side-h">Satser 2026</h3>
+          <div class="side-rate"><span class="l">Bunnfradrag, enslig</span><span class="v">1 900 000 kr</span></div>
+          <div class="side-rate"><span class="l">Bunnfradrag, ektefeller</span><span class="v">3 800 000 kr</span></div>
+          <div class="side-rate"><span class="l">Trinn 1 · 1,9–21,5 mill</span><span class="v">1,00 %</span></div>
+          <div class="side-rate"><span class="l">Trinn 2 · over 21,5 mill</span><span class="v">1,10 %</span></div>
+          <div class="side-rate"><span class="l">Herav kommune</span><span class="v">0,35 %</span></div>
+          <div class="side-rate"><span class="l">Herav stat · trinn 1 / 2</span><span class="v">0,65 / 0,75 %</span></div>
+        </div>
+        <div class="side-card">
+          <h3 class="side-h">Relaterte verktøy</h3>
+          <a class="side-link" href="/skatt/inntekt/">Inntektsskatt <span class="arr" aria-hidden="true">→</span></a>
+          <a class="side-link" href="/skatt/utbytte/">Utbytteskatt <span class="arr" aria-hidden="true">→</span></a>
+          <a class="side-link" href="/skatt/reise/">Reisefradrag <span class="arr" aria-hidden="true">→</span></a>
+          <a class="side-link" href="/skatt/">Alle skatteverktøy <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+        <div class="side-card">
+          <h3 class="side-h">Slik regner vi</h3>
+          <div class="side-how">
+            <div class="side-step"><span class="n">1</span><span><b>Verdsettelsesrabatt</b> — hver eiendel verdsettes for seg (aksjer 80 %, primærbolig 25 % / 70 % over 10 mill).</span></div>
+            <div class="side-step"><span class="n">2</span><span><b>Gjeld</b> trekkes fra forholdsmessig på de rabatterte eiendelene.</span></div>
+            <div class="side-step"><span class="n">3</span><span><b>Bunnfradrag</b> (1,9 mill enslig / 3,8 mill ektefeller) trekkes fra netto formue.</span></div>
+            <div class="side-step"><span class="n">4</span><span><b>Skatt</b> 1,00 % opp til 21,5 mill, 1,10 % over (kommune 0,35 % + stat).</span></div>
+          </div>
+        </div>
+      </aside>
+
     </div>
 
     <section class="formue-breakdown empty" id="formueBreakdown" aria-labelledby="formueBdHdr">
       <h3 id="formueBdHdr">Skattemessig verdsettelse</h3>
+      <div class="formue-viz empty" id="formueViz">
+        <div class="viz-head"><span class="viz-t">Sammensetning · skatteverdi</span><span class="viz-sum" id="vizSum">–</span></div>
+        <div class="viz-bar" id="vizBar"></div>
+        <div class="viz-legend" id="vizLegend"></div>
+      </div>
       <table class="formue-bd-table">
         <thead>
           <tr><th>Eiendel</th><th class="r">Markedsverdi</th><th class="r">Skatteverdi</th></tr>
@@ -1282,6 +1374,12 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       setText('hStatSkatt', underBunn ? '0 kr' : fmtKr(d.totalSkatt));
       setText('hStatEffektiv', effStr);
 
+      // Summary-stripe (nytt design — verdiene finnes allerede i d)
+      setText('rSumBrutto', fmtKr(d.bruttoFormue));
+      setText('rSumNetto', fmtKr(d.nettoFormue));
+      setText('rSumSkattepliktig', fmtKr(d.skattepliktig));
+      setText('rSumSkatt', underBunn ? '0 kr' : fmtKr(d.totalSkatt));
+
       // Breakdown
       var bdBody = document.getElementById('formueBdBody');
       var bdSection = document.getElementById('formueBreakdown');
@@ -1305,6 +1403,33 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       } else {
         bdBody.innerHTML = '';
         bdSection.classList.add('empty');
+      }
+
+      // Data-viz: formue-sammensetning etter verdsettelsesrabatt (monokrom aksent-opasitet)
+      var vizEl = document.getElementById('formueViz');
+      if(vizEl){
+        var segs = [
+          {l:'Primærbolig', v:d.priV}, {l:'Sekundærbolig', v:d.sekV},
+          {l:'Fritidsbolig', v:d.fritidV}, {l:'Næringseiendom', v:d.naeringV},
+          {l:'Aksjer/fond', v:d.aksV}, {l:'Driftsmidler', v:d.driftV},
+          {l:'Bank', v:d.bankV}
+        ].filter(function(s){ return s.v > 0; });
+        if(hasAny && d.bruttoFormue > 0 && segs.length){
+          var ops = [1, .74, .56, .42, .32, .24, .18];
+          var barHtml = '', legHtml = '';
+          segs.forEach(function(s, i){
+            var pct = s.v / d.bruttoFormue * 100;
+            var op = ops[i % ops.length];
+            barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + escapeHtml(s.l) + ': ' + fmtKr(s.v) + '"></div>';
+            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + escapeHtml(s.l) + ' ' + Math.round(pct) + ' %</span>';
+          });
+          document.getElementById('vizBar').innerHTML = barHtml;
+          document.getElementById('vizLegend').innerHTML = legHtml;
+          setText('vizSum', fmtKr(d.bruttoFormue));
+          vizEl.classList.remove('empty');
+        } else {
+          vizEl.classList.add('empty');
+        }
       }
 
       if(underBunn && hasAny){
