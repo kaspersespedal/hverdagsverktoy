@@ -255,9 +255,9 @@ function setEl(id, val) { var el=document.getElementById(id); if(el) el.textCont
 function getVal(id, fallback) { var el=document.getElementById(id); var v=el?+el.value:NaN; return isNaN(v)?(fallback||0):v; }
 function getChk(id) { var el=document.getElementById(id); return el?!!el.checked:false; }
 // V12 Fase 3 K12-M5: Sentral G-konstant (DRY-fix for 4 hardkodede 130160 i calcFormue/calcAga/calcFerie/calcPensjon).
-// 1G fastsettes av NAV per 1. mai. Gjelder fra 2025-05-01 t.o.m. 2026-04-30.
-// NB: Oppdater 1. mai 2026 til ny verdi (varslet justering på vårparten).
-var _HVT_G = 130160;
+// 1G fastsettes av NAV per 1. mai. Gjelder fra 2026-05-01 t.o.m. 2027-04-30 (trygdeoppgjøret, +4,91 %).
+// NB: Oppdater 1. mai 2027 til ny verdi.
+var _HVT_G = 136549;
 
 // Live-format number inputs
 document.addEventListener('input', function(e) {
