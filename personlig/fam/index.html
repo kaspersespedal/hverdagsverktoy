@@ -900,7 +900,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <span class="current">Foreldrefradrag</span>
         </div>
         <h1 class="page-title" data-i18n-html="famTitle"><em>Foreldre</em>fradrag</h1>
-        <p class="page-lead" data-i18n="famLead">Regn ut netto kostnad for barnehage, SFO eller dagmamma etter foreldrefradrag og søskenmoderasjon. Norske 2026-satser (25 000 kr for første barn, 15 000 kr per ekstra barn). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
+        <p class="page-lead" data-i18n="famLead">Regn ut netto kostnad for barnehage, SFO eller dagmamma etter foreldrefradrag og søskenmoderasjon. Norske 2026-satser (15 000 kr for første barn, 10 000 kr per ekstra barn). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
       </div>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
@@ -942,9 +942,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
         <section class="fam-howto" aria-labelledby="famHowtoHdr">
           <h2 id="famHowtoHdr" data-i18n="famHowtoTitle">Slik bruker du Foreldrefradrag-kalkulatoren</h2>
-          <p data-i18n-html="famHowtoP1"><strong>Foreldrefradrag:</strong> Du kan trekke fra inntil 25 000 kr for første barn og 15 000 kr per ytterligere barn i dokumenterte utgifter til barnepass (barnehage, SFO, dagmamma). Fradraget gis i alminnelig inntekt — 22 % av beløpet spart i skatt.</p>
+          <p data-i18n-html="famHowtoP1"><strong>Foreldrefradrag:</strong> Du kan trekke fra inntil 15 000 kr for første barn og 10 000 kr per ytterligere barn i dokumenterte utgifter til barnepass (barnehage, SFO, dagmamma). Fradraget gis i alminnelig inntekt — 22 % av beløpet spart i skatt.</p>
           <p data-i18n-html="famHowtoP2"><strong>Maksimalpris barnehage (2026):</strong> Makspris per måned for heltidsplass (sjekk oppdatert sats fra regjeringen.no). Kommunen kan ha inntektsgradert eller gratis plass.</p>
-          <p data-i18n-html="famHowtoP3"><strong>Søskenmoderasjon:</strong> 30 % rabatt for barn nr. 2, 50 % for barn nr. 3 og flere.</p>
+          <p data-i18n-html="famHowtoP3"><strong>Søskenmoderasjon:</strong> 30 % rabatt for barn nr. 2, og gratis (100 %) for barn nr. 3 og flere.</p>
           <p data-i18n="famHowtoP4">Fyll inn antall barn, månedspris og inntekt — så ser du årlig utgift, fradragseffekt og netto kostnad.</p>
         </section>
 
@@ -1096,15 +1096,15 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     window.calcFam=function(){
       var n=num('fam-barn'), pris=num('fam-pris'), mnd=num('fam-mnd');
       if(n<=0||pris<=0){return;}
-      // søskenmoderasjon: 100%, 70%, 50%, 50%...
-      var faktorer=[1,0.7,0.5,0.5,0.5,0.5];
+      // søskenmoderasjon barnehage: barn 1 full, barn 2 −30 %, barn 3+ gratis (forskrift om foreldrebetaling § 3a, fra 1.8.2023)
+      var faktorer=[1,0.7,0,0,0,0];
       var sumMnd=0;
       for(var i=0;i<n && i<faktorer.length;i++){sumMnd += pris*faktorer[i];}
-      if(n>faktorer.length){sumMnd += (n-faktorer.length)*pris*0.5;}
+      if(n>faktorer.length){/* barn utover 6: også gratis (faktor 0) */}
       var brutto = sumMnd*mnd;
       var fullBrutto = n*pris*mnd;
       var mod = fullBrutto - brutto;
-      var maksFrad = n>=1 ? 25000 + Math.max(0,n-1)*15000 : 0;
+      var maksFrad = n>=1 ? 15000 + Math.max(0,n-1)*10000 : 0;
       var frad = Math.min(brutto, maksFrad);
       var skatt = frad*0.22;
       var netto = brutto - skatt;
