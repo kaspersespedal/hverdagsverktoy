@@ -393,6 +393,16 @@
 
 <!-- calm-override.css MUST load last so cascade favours it (per file header) -->
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<!-- atmosphere.css loads AFTER calm-override: its body.atmo-on rules (!important)
+     re-enable the theme-aware aurora — carbon=warm, Mørk-blå=blå, disco=rosa.
+     Matches the calc sub-pages (timepris/tilbud/dekningsbidrag). -->
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v124">
+<style>
+  /* Light themes stay flat: atmosphere.css' atmo-on re-enable would otherwise leak the
+     dark aurora through the transparent body on frost/glass/hendrix/bw/pink. Mirrors forside. */
+  html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"]) body.atmo-on{ background:var(--bg) !important; }
+  html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"]) body.atmo-on :is(.atmo,.atmo-base,.band,.band-a,.band-b,.film-grain,.cursor-light){ display:none !important; }
+</style>
 
 <script type="application/ld+json">
 {
@@ -422,11 +432,11 @@
 }
 </script>
 </head>
-<body>
+<body class="atmo-on">
 
 <a class="skip" href="#main" id="skip-link">Hopp til hovedinnhold</a>
 
-<!-- ATMOSPHERE — hidden by calm-override.css, kept for cross-page consistency -->
+<!-- ATMOSPHERE — theme-aware aurora, re-enabled via body.atmo-on + atmosphere.css (loaded after calm-override) -->
 <div class="atmo-base" aria-hidden="true"></div>
 <div class="atmo" aria-hidden="true">
   <div class="band band-a"><div class="band-inner"></div></div>
