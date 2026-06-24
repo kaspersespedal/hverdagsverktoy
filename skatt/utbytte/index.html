@@ -789,6 +789,56 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   details.howto .howto-row:first-child{border-top:none;}
   details.howto .howto-row .h-title{font-weight:600;font-size:13px;color:var(--ink);}
   details.howto .howto-row .h-desc{font-size:12px;color:var(--ink2);margin-top:3px;line-height:1.6;}
+
+  /* ─────────────────────────────────────────────────────
+     RE-SKIN 2026-06 — summary-stripe + 3-sone grid + sidebar + data-viz.
+     Additivt over eksisterende funksjonell kjerne (formue PR #121-mønster).
+     Kun nøytrale tema-tokens (ingen-ekstra-farger-regel); 6px-radius som resten.
+  ───────────────────────────────────────────────────── */
+  .rs-summary{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:6px;
+    overflow:hidden;margin:0 0 28px;
+  }
+  .rs-summary .sum-card{background:var(--surface);padding:15px 18px;display:flex;flex-direction:column;gap:7px;}
+  .rs-summary .sum-l{font:600 10px/1.3 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);}
+  .rs-summary .sum-v{font-family:var(--font-serif);font-weight:500;font-size:21px;line-height:1;letter-spacing:-.4px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;}
+  .rs-summary .sum-card.accent .sum-v{color:var(--accent);}
+
+  .rs-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,.82fr);gap:24px;}
+
+  .rs-side{display:flex;flex-direction:column;gap:16px;align-self:start;position:sticky;top:124px;}
+  .rs-side .side-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;}
+  .rs-side .side-h{margin:0 0 10px;font:600 10px/1.3 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);}
+  .rs-side .side-rate{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;border-top:1px solid var(--line);}
+  .rs-side .side-rate:first-of-type{border-top:none;}
+  .rs-side .side-rate .l{font-size:12px;color:var(--ink2);}
+  .rs-side .side-rate .v{font-family:var(--font-serif);font-weight:500;font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .rs-side .side-link{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
+  .rs-side .side-link:first-of-type{border-top:none;}
+  .rs-side .side-link .arr{color:var(--ink4);transition:color .15s var(--ease),transform .15s var(--ease);}
+  @media (hover:hover){.rs-side .side-link:hover{color:var(--ink);} .rs-side .side-link:hover .arr{color:var(--accent);transform:translateX(2px);}}
+  .rs-side .side-how{display:flex;flex-direction:column;gap:12px;}
+  .rs-side .side-step{display:flex;gap:10px;font-size:12px;color:var(--ink2);line-height:1.55;}
+  .rs-side .side-step .n{flex-shrink:0;width:18px;height:18px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line-2);font:600 10px/17px var(--font-sans);text-align:center;color:var(--ink3);}
+  .rs-side .side-step b{color:var(--ink);font-weight:600;}
+
+  .rs-viz{margin:0;}
+  .rs-viz .viz-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}
+  .rs-viz .viz-t{font:600 10px/1.3 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);}
+  .rs-viz .viz-sum{font-family:var(--font-serif);font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums;}
+  .rs-viz .viz-bar{display:flex;height:13px;border-radius:7px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);}
+  .rs-viz .viz-seg{height:100%;background:var(--accent);min-width:2px;transition:width .35s var(--ease);}
+  .rs-viz .viz-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:11px;}
+  .rs-viz .lg{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink2);}
+  .rs-viz .lg .sw{width:9px;height:9px;border-radius:2px;background:var(--accent);flex-shrink:0;}
+  .rs-viz.empty{display:none;}
+
+  @media (max-width: 880px){
+    .rs-summary{grid-template-columns:repeat(2,1fr);}
+    .rs-grid{grid-template-columns:1fr;}
+    .rs-side{position:static;top:auto;}
+  }
 </style>
 </head>
 <body>
@@ -921,7 +971,16 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   </section>
 
   <div class="container">
-    <div class="utbytte-grid">
+    <div class="rs-summary" id="rsSummary">
+      <div class="sum-card"><span class="sum-l">Overskudd før skatt</span><span class="sum-v" id="rsSumOverskudd">–</span></div>
+      <div class="sum-card"><span class="sum-l">Total skatt</span><span class="sum-v" id="rsSumSkatt">–</span></div>
+      <div class="sum-card"><span class="sum-l">Netto til eier</span><span class="sum-v" id="rsSumNetto">–</span></div>
+      <div class="sum-card accent"><span class="sum-l">Effektiv sats</span><span class="sum-v" id="rsSumEff">–</span></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="utbytte-grid rs-grid">
 
       <div class="utbytte-form">
 
@@ -981,6 +1040,12 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <span class="r-verdict" id="rVerdict">Velg selskapsform og skriv inn overskudd for å se beregningen</span>
         </div>
 
+        <div class="rs-viz empty" id="rsViz">
+          <div class="viz-head"><span class="viz-t">Fordeling · overskudd</span><span class="viz-sum" id="rsVizSum">–</span></div>
+          <div class="viz-bar" id="rsVizBar"></div>
+          <div class="viz-legend" id="rsVizLegend"></div>
+        </div>
+
         <!-- AS breakdown -->
         <div class="res-stats" id="utbytte-as-grid">
           <div class="res-section-hdr">Selskapsnivå</div>
@@ -1015,6 +1080,33 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <div class="res-stat total"><span class="l" data-i18n="skattUtbytteResultTotal">Total skattebelastning</span><span class="v" id="rEnkTotal">–</span></div>
           <div class="res-stat"><span class="l">Netto til eier</span><span class="v" id="rEnkNetto">–</span></div>
           <div class="res-stat"><span class="l" data-i18n="skattUtbytteResultEff">Effektiv skattesats</span><span class="v" id="rEnkEff">–</span></div>
+        </div>
+      </aside>
+
+      <aside class="rs-side" aria-label="Satser og relaterte verktøy">
+        <div class="side-card">
+          <h3 class="side-h">Satser 2026</h3>
+          <div class="side-rate"><span class="l">Selskapsskatt (AS)</span><span class="v">22 %</span></div>
+          <div class="side-rate"><span class="l">Oppjusteringsfaktor</span><span class="v">1,72</span></div>
+          <div class="side-rate"><span class="l">Utbytteskatt aksjonær</span><span class="v">37,84 %</span></div>
+          <div class="side-rate"><span class="l">Eff. sats AS samlet</span><span class="v">~51,5 %</span></div>
+          <div class="side-rate"><span class="l">Trygdeavgift næring (ENK)</span><span class="v">10,8 %</span></div>
+        </div>
+        <div class="side-card">
+          <h3 class="side-h">Relaterte verktøy</h3>
+          <a class="side-link" href="/selskap/">Selskapsformer (AS/ENK) <span class="arr" aria-hidden="true">→</span></a>
+          <a class="side-link" href="/skatt/inntekt/">Inntektsskatt <span class="arr" aria-hidden="true">→</span></a>
+          <a class="side-link" href="/skatt/formue/">Formuesskatt <span class="arr" aria-hidden="true">→</span></a>
+          <a class="side-link" href="/skatt/">Alle skatteverktøy <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+        <div class="side-card">
+          <h3 class="side-h">Slik regner vi</h3>
+          <div class="side-how">
+            <div class="side-step"><span class="n">1</span><span><b>Selskapsskatt</b> 22 % trekkes fra overskuddet (AS).</span></div>
+            <div class="side-step"><span class="n">2</span><span><b>Skjermingsfradrag</b> trekkes fra det som er igjen.</span></div>
+            <div class="side-step"><span class="n">3</span><span><b>Resten oppjusteres ×1,72</b> og beskattes 22 % på eiers hånd.</span></div>
+            <div class="side-step"><span class="n">4</span><span><b>ENK:</b> alminnelig 22 % + trygd 10,8 % + trinnskatt i stedet.</span></div>
+          </div>
         </div>
       </aside>
 
@@ -1241,6 +1333,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         setText('hStatTotal', '–');
         setText('hStatEff', '–');
         setText('rVerdict', 'Skriv inn overskudd over 0 for å se beregningen');
+        setText('rsSumOverskudd', '–');
+        setText('rsSumSkatt', '–');
+        setText('rsSumNetto', '–');
+        setText('rsSumEff', '–');
+        var vzEmpty = document.getElementById('rsViz'); if(vzEmpty) vzEmpty.classList.add('empty');
         persist();
         return;
       }
@@ -1254,6 +1351,36 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       setText('hStatTotal', totalStr);
       setText('hStatEff', effStr);
       setText('rVerdict', modeStr + ' · effektiv sats ' + effStr + ' · netto til eier ' + nettoStr);
+
+      // ── RE-SKIN: summary-stripe + data-viz (verdier finnes i d, begge modeller) ──
+      setText('rsSumOverskudd', fmtKr(d.overskudd));
+      setText('rsSumSkatt', totalStr);
+      setText('rsSumNetto', nettoStr);
+      setText('rsSumEff', effStr);
+
+      var vizEl = document.getElementById('rsViz');
+      if(vizEl){
+        var segs = d.type === 'as'
+          ? [ {l:'Netto til eier', v:d.netto}, {l:'Selskapsskatt', v:d.selskapsskatt}, {l:'Utbytteskatt', v:d.utbytteskatt} ]
+          : [ {l:'Netto til eier', v:d.netto}, {l:'Alm. skatt', v:d.almSkatt}, {l:'Trygdeavgift', v:d.trygd}, {l:'Trinnskatt', v:d.trinn} ];
+        segs = segs.filter(function(s){ return s.v > 0; });
+        if(d.overskudd > 0 && segs.length){
+          var ops = [1, .56, .4, .28];
+          var barHtml = '', legHtml = '';
+          segs.forEach(function(s, i){
+            var pct = s.v / d.overskudd * 100;
+            var op = ops[i % ops.length];
+            barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + s.l + ': ' + fmtKr(s.v) + '"></div>';
+            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + s.l + ' ' + Math.round(pct) + ' %</span>';
+          });
+          document.getElementById('rsVizBar').innerHTML = barHtml;
+          document.getElementById('rsVizLegend').innerHTML = legHtml;
+          setText('rsVizSum', fmtKr(d.overskudd));
+          vizEl.classList.remove('empty');
+        } else {
+          vizEl.classList.add('empty');
+        }
+      }
 
       if(d.type === 'as'){
         asGrid.classList.remove('hidden');
