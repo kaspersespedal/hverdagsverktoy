@@ -292,9 +292,30 @@
   /* ─────────────────────────────────────────────────────
      ATMOSPHERE — "Aurora over ink" (site-wide)
   ───────────────────────────────────────────────────── */
+  /* Theme-tokenised aurora colours — mirror of shared/atmosphere.css so the
+     glow follows the active theme: carbon=warm cream/amber, dark=cool blue,
+     disco=neon pink. Light themes hide the atmosphere entirely (see below). */
+  :root{
+    --atmo-base-top:#0F0D0A; --atmo-base-bottom:#070605;
+    --atmo-band-a:38, 60%, 75%;   /* cream */
+    --atmo-band-b:28, 50%, 55%;   /* deep amber */
+    --atmo-cursor:38, 70%, 75%;
+  }
+  [data-theme="dark"]{
+    --atmo-base-top:#141520; --atmo-base-bottom:#0a0b14;
+    --atmo-band-a:222, 80%, 72%;  /* cool blue — matcher accent */
+    --atmo-band-b:258, 55%, 55%;  /* violet */
+    --atmo-cursor:222, 80%, 72%;
+  }
+  [data-theme="disco"]{
+    --atmo-base-top:#0d0a18; --atmo-base-bottom:#060410;
+    --atmo-band-a:328, 70%, 70%;  /* neon pink */
+    --atmo-band-b:268, 60%, 58%;  /* purple */
+    --atmo-cursor:328, 75%, 72%;
+  }
   .atmo-base{
     position:fixed;inset:0;z-index:-3;pointer-events:none;
-    background:linear-gradient(to bottom, #0F0D0A 0%, #070605 100%);
+    background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
   }
   .atmo{
     position:fixed;inset:0;z-index:-2;pointer-events:none;
@@ -315,7 +336,7 @@
   }
   .band-a .band-inner{
     background:radial-gradient(ellipse at center,
-      hsl(38, 60%, 75%) 0%, transparent 50%);
+      hsl(var(--atmo-band-a)) 0%, transparent 50%);
     opacity:.08;
     animation:
       bandADriftY 53s ease-in-out infinite,
@@ -329,7 +350,7 @@
   }
   .band-b .band-inner{
     background:radial-gradient(ellipse at center,
-      hsl(28, 50%, 55%) 0%, transparent 50%);
+      hsl(var(--atmo-band-b)) 0%, transparent 50%);
     opacity:.05;
     animation:
       bandBDriftY 47s ease-in-out infinite,
@@ -365,7 +386,7 @@
     width:1200px;height:1200px;margin:-600px 0 0 -600px;
     pointer-events:none;
     background:radial-gradient(circle,
-      hsla(38, 70%, 75%, 0.04) 0%, transparent 60%);
+      hsla(var(--atmo-cursor), 0.04) 0%, transparent 60%);
     transform: translate3d(50vw, 50vh, 0);
     will-change:transform;mix-blend-mode:screen;
   }
