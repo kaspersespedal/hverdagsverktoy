@@ -772,6 +772,56 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .howto-row:first-child{border-top:0;padding-top:2px}
   .howto-row > strong{color:var(--ink);font-weight:500}
   @media(max-width:640px){.howto-row{grid-template-columns:1fr;gap:4px}.howto-row > strong{margin-bottom:2px}}
+
+  /* ─────────────────────────────────────────────────────
+     RE-SKIN 2026-06 — summary-stripe + 3-sone grid + sidebar + data-viz.
+     Additivt over eksisterende funksjonell kjerne (formue PR #121-mønster).
+     Kun nøytrale tema-tokens (ingen-ekstra-farger-regel); 6px-radius som resten.
+  ───────────────────────────────────────────────────── */
+  .rs-summary{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:6px;
+    overflow:hidden;margin:0 0 28px;
+  }
+  .rs-summary .sum-card{background:var(--surface);padding:15px 18px;display:flex;flex-direction:column;gap:7px;}
+  .rs-summary .sum-l{font:600 10px/1.3 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);}
+  .rs-summary .sum-v{font-family:var(--font-serif);font-weight:500;font-size:21px;line-height:1;letter-spacing:-.4px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;}
+  .rs-summary .sum-card.accent .sum-v{color:var(--accent);}
+
+  .rs-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,.82fr);gap:24px;}
+
+  .rs-side{display:flex;flex-direction:column;gap:16px;align-self:start;position:sticky;top:124px;}
+  .rs-side .side-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px;}
+  .rs-side .side-h{margin:0 0 10px;font:600 10px/1.3 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3);}
+  .rs-side .side-rate{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:7px 0;border-top:1px solid var(--line);}
+  .rs-side .side-rate:first-of-type{border-top:none;}
+  .rs-side .side-rate .l{font-size:12px;color:var(--ink2);}
+  .rs-side .side-rate .v{font-family:var(--font-serif);font-weight:500;font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .rs-side .side-link{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 0;border-top:1px solid var(--line);font-size:13px;color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
+  .rs-side .side-link:first-of-type{border-top:none;}
+  .rs-side .side-link .arr{color:var(--ink4);transition:color .15s var(--ease),transform .15s var(--ease);}
+  @media (hover:hover){.rs-side .side-link:hover{color:var(--ink);} .rs-side .side-link:hover .arr{color:var(--accent);transform:translateX(2px);}}
+  .rs-side .side-how{display:flex;flex-direction:column;gap:12px;}
+  .rs-side .side-step{display:flex;gap:10px;font-size:12px;color:var(--ink2);line-height:1.55;}
+  .rs-side .side-step .n{flex-shrink:0;width:18px;height:18px;border-radius:50%;background:var(--surface-2);border:1px solid var(--line-2);font:600 10px/17px var(--font-sans);text-align:center;color:var(--ink3);}
+  .rs-side .side-step b{color:var(--ink);font-weight:600;}
+
+  .rs-viz{margin:0;}
+  .rs-viz .viz-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px;}
+  .rs-viz .viz-t{font:600 10px/1.3 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--ink3);}
+  .rs-viz .viz-sum{font-family:var(--font-serif);font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums;}
+  .rs-viz .viz-bar{display:flex;height:13px;border-radius:7px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);}
+  .rs-viz .viz-seg{height:100%;background:var(--accent);min-width:2px;transition:width .35s var(--ease);}
+  .rs-viz .viz-legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:11px;}
+  .rs-viz .lg{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink2);}
+  .rs-viz .lg .sw{width:9px;height:9px;border-radius:2px;background:var(--accent);flex-shrink:0;}
+  .rs-viz.empty{display:none;}
+
+  @media (max-width: 880px){
+    .rs-summary{grid-template-columns:repeat(2,1fr);}
+    .rs-grid{grid-template-columns:1fr;}
+    .rs-side{position:static;top:auto;}
+  }
 </style>
 </head>
 <body>
@@ -908,7 +958,16 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   </section>
 
   <div class="container">
-    <div class="reise-grid">
+    <div class="rs-summary" id="rsSummary">
+      <div class="sum-card"><span class="sum-l">Brutto reisekostnad</span><span class="sum-v" id="rsSumBrutto">–</span></div>
+      <div class="sum-card"><span class="sum-l">Egenandel</span><span class="sum-v" id="rsSumEgen">–</span></div>
+      <div class="sum-card"><span class="sum-l">Årlig fradrag</span><span class="sum-v" id="rsSumFradrag">–</span></div>
+      <div class="sum-card accent"><span class="sum-l">Skattebesparelse</span><span class="sum-v" id="rsSumBesparelse">–</span></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="reise-grid rs-grid">
 
       <div class="reise-form">
 
@@ -957,6 +1016,38 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <div class="res-stat"><span class="l" data-i18n="reiseROutEgenandel">Egenandel (nedre grense)</span><span class="v" id="rEgenandel">–</span></div>
           <div class="res-stat divide"><span class="l" data-i18n="reiseROutBesparelse">Skattebesparelse (22 %)</span><span class="v" id="rBesparelse">–</span></div>
           <div class="res-stat"><span class="l" data-i18n="reiseROutPerMnd">Per måned</span><span class="v" id="rPerMnd">–</span></div>
+        </div>
+
+        <div class="rs-viz empty" id="rsViz">
+          <div class="viz-head"><span class="viz-t">Fordeling · reisekostnad</span><span class="viz-sum" id="rsVizSum">–</span></div>
+          <div class="viz-bar" id="rsVizBar"></div>
+          <div class="viz-legend" id="rsVizLegend"></div>
+        </div>
+      </aside>
+
+      <aside class="rs-side" aria-label="Satser og relaterte verktøy">
+        <div class="side-card">
+          <h3 class="side-h">Satser 2026</h3>
+          <div class="side-rate"><span class="l">Sats per km</span><span class="v">1,90 kr</span></div>
+          <div class="side-rate"><span class="l">Egenandel (nedre grense)</span><span class="v">12 000 kr</span></div>
+          <div class="side-rate"><span class="l">Maks fradragsgrunnlag</span><span class="v">120 000 kr</span></div>
+          <div class="side-rate"><span class="l">Skattesats (besparelse)</span><span class="v">22 %</span></div>
+        </div>
+        <div class="side-card">
+          <h3 class="side-h">Relaterte verktøy</h3>
+          <a class="side-link" href="/skatt/inntekt/">Inntektsskatt <span class="arr" aria-hidden="true">→</span></a>
+          <a class="side-link" href="/personlig/bil/">Bilkostnad <span class="arr" aria-hidden="true">→</span></a>
+          <a class="side-link" href="/kalkulator/lonnut/">Lønn ut (timer) <span class="arr" aria-hidden="true">→</span></a>
+          <a class="side-link" href="/skatt/">Alle skatteverktøy <span class="arr" aria-hidden="true">→</span></a>
+        </div>
+        <div class="side-card">
+          <h3 class="side-h">Slik regner vi</h3>
+          <div class="side-how">
+            <div class="side-step"><span class="n">1</span><span><b>Reisekostnad</b> = avstand × 2 × arbeidsdager × 1,90 kr/km, pluss bom/ferge.</span></div>
+            <div class="side-step"><span class="n">2</span><span><b>Fradragsgrunnlaget</b> kuttes ved 120 000 kr.</span></div>
+            <div class="side-step"><span class="n">3</span><span><b>Egenandel</b> 12 000 kr trekkes fra før skatten reduseres.</span></div>
+            <div class="side-step"><span class="n">4</span><span><b>Skattebesparelse</b> = netto fradrag × 22 %.</span></div>
+          </div>
         </div>
       </aside>
 
@@ -1141,6 +1232,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         setText('rPerMnd', '–');
         setText('hStatFradrag', '–');
         setText('hStatBesparelse', '–');
+        setText('rsSumBrutto', '–');
+        setText('rsSumEgen', '–');
+        setText('rsSumFradrag', '–');
+        setText('rsSumBesparelse', '–');
+        var vzEmpty = document.getElementById('rsViz'); if(vzEmpty) vzEmpty.classList.add('empty');
         persist();
         return;
       }
@@ -1159,6 +1255,37 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       setText('rPerMnd', fmtKr(d.perMnd));
       setText('hStatFradrag', fmtKr(d.fradrag));
       setText('hStatBesparelse', fmtKr(d.besparelse));
+
+      // ── RE-SKIN: summary-stripe + data-viz (verdier finnes allerede i d) ──
+      setText('rsSumBrutto', fmtKr(d.brutto));
+      setText('rsSumEgen', '− ' + fmtKr(d.nedreGrense));
+      setText('rsSumFradrag', fmtKr(d.fradrag));
+      setText('rsSumBesparelse', fmtKr(d.besparelse));
+
+      var vizEl = document.getElementById('rsViz');
+      if(vizEl){
+        var egen = Math.min(d.nedreGrense, d.brutto);
+        var segs = [
+          {l:'Egenandel', v:egen},
+          {l:'Fradrag', v:d.fradrag}
+        ].filter(function(s){ return s.v > 0; });
+        if(d.brutto > 0 && segs.length){
+          var ops = [.42, 1];
+          var barHtml = '', legHtml = '';
+          segs.forEach(function(s, i){
+            var pct = s.v / d.brutto * 100;
+            var op = ops[i % ops.length];
+            barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + s.l + ': ' + fmtKr(s.v) + '"></div>';
+            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + s.l + ' ' + Math.round(pct) + ' %</span>';
+          });
+          document.getElementById('rsVizBar').innerHTML = barHtml;
+          document.getElementById('rsVizLegend').innerHTML = legHtml;
+          setText('rsVizSum', fmtKr(d.brutto));
+          vizEl.classList.remove('empty');
+        } else {
+          vizEl.classList.add('empty');
+        }
+      }
 
       persist();
     }
