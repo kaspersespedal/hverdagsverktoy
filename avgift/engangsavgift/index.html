@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="no" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Engangsavgift bil 2026 — vekt og CO₂ · Hverdagsverktøy</title>
+<meta name="description" content="Beregn engangsavgift ved første gangs registrering av personbil i Norge for 2026 — vektavgift og CO₂-avgift etter de nye satsene. NOx-leddet er fjernet. Alt skjer lokalt i nettleseren.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://hverdagsverktoy.com/avgift/engangsavgift/">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://hverdagsverktoy.com/avgift/engangsavgift/#webpage",
+  "name": "Engangsavgift bil 2026 — vekt og CO₂ · Hverdagsverktøy",
+  "description": "Beregn engangsavgift for personbil i Norge 2026. Vektavgift (12,71 kr/kg over 500 kg for alle, pluss 260 kr/kg over 1200 kg for forbrenningsmotor) og progressiv CO₂-avgift fra første gram. NOx-leddet er avskaffet.",
+  "url": "https://hverdagsverktoy.com/avgift/engangsavgift/",
+  "inLanguage": "no",
+  "isPartOf": { "@id": "https://hverdagsverktoy.com/#website" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Avgift", "item": "https://hverdagsverktoy.com/avgift/" },
+    { "@type": "ListItem", "position": 3, "name": "Engangsavgift", "item": "https://hverdagsverktoy.com/avgift/engangsavgift/" }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<script>
+  (function(){try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<script>
+  (function(){
+    try{
+      var l=localStorage.getItem('hvt-lang')||'no';
+      document.documentElement.setAttribute('data-lang',l);
+      if(l!=='no')document.documentElement.classList.add('lang-loading');
+    }catch(e){}
+  })();
+</script>
+<style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
+<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v1">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v1">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v120">
+<style>
+body{min-height:100vh;display:flex;flex-direction:column}
+body > main{flex:1 0 auto}
+body > footer{flex-shrink:0}
+
+.calc-wrap{padding:36px 0 64px}
+.calc-wrap .container{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start}
+@media(max-width:980px){.calc-wrap .container{grid-template-columns:1fr}}
+
+/* Drivstoff-velger (4 knapper) */
+.bil-fuel{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:4px;
+  background:var(--surface-2);border:1px solid var(--line-2);border-radius:6px}
+.bil-fuel button{padding:13px 6px;border:0;cursor:pointer;background:transparent;
+  color:var(--ink3);border-radius:4px;font:500 12px/1.1 var(--font-sans);
+  transition:background .2s var(--ease,ease),color .2s var(--ease,ease);
+  display:flex;flex-direction:column;align-items:center;gap:6px}
+.bil-fuel button:hover{background:color-mix(in srgb,var(--accent) 5%,var(--surface));color:var(--ink2)}
+.bil-fuel button[aria-pressed="true"]{background:color-mix(in srgb,var(--accent) 10%,var(--surface));
+  color:var(--ink);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 34%,transparent)}
+.bil-fuel .ic{width:22px;height:22px;opacity:.7}
+.bil-fuel button[aria-pressed="true"] .ic{opacity:1;color:var(--accent-2)}
+
+/* Komponent-sammendrag (Vekt | CO₂) */
+.bil-comp{display:grid;grid-template-columns:1fr 1fr;gap:0;width:100%;margin:18px 0 8px;
+  border:1px solid var(--line-2);border-radius:6px;overflow:hidden}
+.bil-comp > div{padding:14px 16px;background:var(--surface-2);text-align:center}
+.bil-comp > div + div{border-left:1px solid var(--line-2)}
+.bil-comp .l{font:600 9.5px/1 var(--font-sans);letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink4);margin-bottom:6px;display:block}
+.bil-comp .v{font-family:var(--font-serif);font-weight:500;font-size:18px;color:var(--ink);
+  letter-spacing:-.3px;font-variant-numeric:tabular-nums lining-nums}
+</style>
+</head>
+<body class="atmo-on">
+
+<!-- ATMOSPHERE — Aurora over ink. Site-wide, fixed, behind everything. -->
+<div class="atmo-base" aria-hidden="true"></div>
+<div class="atmo" aria-hidden="true">
+  <div class="band band-a"><div class="band-inner"></div></div>
+  <div class="band band-b"><div class="band-inner"></div></div>
+  <div class="cursor-light" id="cursorLight"></div>
+</div>
+<svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">
+  <filter id="atmoGrain">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" seed="4"/>
+    <feColorMatrix values="0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0 0
+                           0 0 0 0.5 0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#atmoGrain)"/>
+</svg>
+
+<a class="skip" href="#main" data-i18n="skipLink">Hopp til innhold</a>
+
+<div class="nav-wrap">
+  <div class="container">
+    <nav>
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy — forside">
+        <span class="mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1.2"/><rect x="14" y="4" width="4" height="16" rx="1.2"/><rect x="10" y="10" width="4" height="4" rx=".6"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="container">
+    <div class="tabs" role="tablist">
+      <a href="/personlig/budsjett/" class="tab" data-i18n="tabBudsjett">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg>Budsjett
+      </a>
+      <a href="/personlig/" class="tab" data-i18n="tabPersonlig">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>Privatøkonomi
+      </a>
+      <a href="/boliglan/" class="tab" data-i18n="tabBoliglan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/></svg>Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab" data-i18n="tabKalkulator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/></svg>Kalkulator
+      </a>
+      <a href="/skatt/" class="tab" data-i18n="tabSkatt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/></svg>Skatt
+      </a>
+      <a href="/selskap/" class="tab" data-i18n="tabSelskap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/></svg>Selskap
+      </a>
+      <a href="/avgift/" class="tab" aria-selected="true" data-i18n="tabAvgift">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>Avgift
+      </a>
+      <a href="/regnskap/" class="tab" data-i18n="tabRegnskap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg>Regnskap
+      </a>
+      <a href="/lov/" class="tab" data-i18n="tabLov">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V20"/><path d="M5 7 L12 5 L19 7"/><path d="M3 13 a3 3 0 0 0 6 0 L6 7 Z"/><path d="M15 13 a3 3 0 0 0 6 0 L18 7 Z"/></svg>Lov
+      </a>
+    </div>
+  </div>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div>
+      <div class="crumb">
+        <a href="/avgift/" class="crumb-back" aria-label="Tilbake">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+        </a>
+        <a href="/">Hverdagsverktøy</a>
+        <span class="sep"></span>
+        <a href="/avgift/">Avgift</a>
+        <span class="sep"></span>
+        <span class="here">Engangsavgift bil</span>
+      </div>
+      <h1 class="page-title"><em>Engangs</em>avgift bil</h1>
+      <p class="page-lead">Avgiften ved første gangs registrering av personbil i Norge. Fra 2026 er den forenklet til to ledd — en vektavgift og en CO₂-avgift, mens NOx-leddet er fjernet. Bil med forbrenningsmotor betaler begge; elbil betaler kun vektavgift på vekt over 500 kg.</p>
+    </div>
+    <div class="page-stats">
+      <div class="page-stat"><span class="l">Vekt over 1200 kg</span><span class="v">260<span class="u">kr/kg</span></span></div>
+      <div class="page-stat"><span class="l">CO₂ fra første gram</span><span class="v">800<span class="u">kr/g</span></span></div>
+      <div class="page-stat"><span class="l">Vrakpant</span><span class="v">2 400<span class="u">kr</span></span></div>
+    </div>
+  </div>
+</section>
+
+<main id="main">
+<div class="calc-wrap">
+  <div class="container">
+
+    <div class="ks-host">
+      <div class="ks">
+        <div class="ks-strip">
+          <div class="ks-strip-cell"><span class="l">Vektavgift</span><span class="v" id="rVekt">0 kr</span></div>
+          <div class="ks-strip-cell"><span class="l">CO₂-avgift</span><span class="v" id="rCo2">0 kr</span></div>
+          <div class="ks-strip-cell"><span class="l">Vrakpant</span><span class="v" id="rVrak">0 kr</span></div>
+          <div class="ks-strip-cell accent"><span class="l">Total engangsavgift</span><span class="v" id="rSum">0 kr</span></div>
+        </div>
+
+        <div class="ks-body">
+          <div class="ks-form">
+
+            <section class="ks-section">
+              <div class="ik-section-head"><h3>Drivstoff</h3><span class="meta" id="fuelMeta">full beregning</span></div>
+              <div class="bil-fuel">
+                <button type="button" data-fuel="bensin" aria-pressed="true">
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 L8 9 L9 11 L10 9 L11 11 L13 9 L13 19 L5 19 Z"/></svg>
+                  <span>Bensin</span>
+                </button>
+                <button type="button" data-fuel="diesel" aria-pressed="false">
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 14 H19 V19 H5 Z M7 12 V14 M11 12 V14 M15 12 V14"/></svg>
+                  <span>Diesel</span>
+                </button>
+                <button type="button" data-fuel="hybrid" aria-pressed="false">
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12 H19 M5 16 H19 M9 8 V20 M15 8 V20"/></svg>
+                  <span>Hybrid</span>
+                </button>
+                <button type="button" data-fuel="el" aria-pressed="false">
+                  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3 L7 13 H11 L9 21 L17 11 H13 Z"/></svg>
+                  <span>Elbil</span>
+                </button>
+              </div>
+            </section>
+
+            <section class="ks-section">
+              <div class="ik-section-head"><h3>Spesifikasjoner</h3><span class="meta">fra typegodkjenning</span></div>
+              <div class="ik-stack">
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="e-vekt"><span>Egenvekt</span> <span class="cap">(kg)</span></label>
+                    <input id="e-vekt" class="ik-input" type="text" inputmode="numeric" value="1 500" autocomplete="off">
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="e-co2"><span>CO₂-utslipp</span> <span class="cap">(g/km, WLTP)</span></label>
+                    <input id="e-co2" class="ik-input" type="text" inputmode="numeric" value="125" autocomplete="off">
+                  </div>
+                </div>
+                <div class="ik-row full">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="e-pris"><span>Importpris</span> <span class="cap">(kr, eksl. avg.)</span></label>
+                    <input id="e-pris" class="ik-input" type="text" inputmode="numeric" value="450 000" autocomplete="off">
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <aside class="ks-result">
+            <div class="ks-r-eyebrow">Engangsavgift</div>
+            <div class="ks-r-net"><span id="rSumBig">0</span><span class="unit">kr</span></div>
+            <div class="ks-r-mnd">total registreringspris ≈ <b id="rTotalPris">0 kr</b></div>
+
+            <div class="bil-comp">
+              <div><span class="l">Vekt</span><span class="v" id="rcVekt">0 kr</span></div>
+              <div><span class="l">CO₂</span><span class="v" id="rcCo2">0 kr</span></div>
+            </div>
+
+            <div class="ks-r-stats">
+              <div class="ks-r-stat"><span class="l">Vektavgift</span><span class="v" id="rsVekt">0 kr</span></div>
+              <div class="ks-r-stat"><span class="l">CO₂-avgift</span><span class="v" id="rsCo2">0 kr</span></div>
+              <div class="ks-r-stat"><span class="l">Vrakpant</span><span class="v" id="rsVrak">0 kr</span></div>
+              <div class="ks-r-stat div"><span class="l">Sum engangsavgift</span><span class="v" id="rsSum">0 kr</span></div>
+              <div class="ks-r-stat"><span class="l">Avgift av importpris</span><span class="v" id="rsPct">0 %</span></div>
+            </div>
+
+            <div class="ks-r-foot">Veiledende. CO₂-avgift betales fra første gram — det er ikke lenger noe lavutslippsfradrag. Elbil betaler kun vektavgift på vekt over 500 kg, ikke CO₂- eller §3-vektavgift.</div>
+            <div class="ks-r-sources">
+              <span class="src">Stortingsvedtak 2026</span>
+              <span class="dot"></span>
+              <span class="src">Skatteetaten</span>
+              <span class="upd">Oppdatert <em>2026</em></span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-card">
+        <h4>Komponenter 2026</h4>
+        <div class="ref-row"><span class="l">Vekt over 500 kg (alle)</span><span class="v">12,71<span class="u">kr/kg</span></span></div>
+        <div class="ref-row"><span class="l">Vekt over 1200 kg (forbr.)</span><span class="v">260<span class="u">kr/kg</span></span></div>
+        <div class="ref-row"><span class="l">CO₂ fra 0 g/km</span><span class="v">800–5 000<span class="u">kr/g</span></span></div>
+        <div class="ref-row"><span class="l">NOx</span><span class="v">Fjernet</span></div>
+        <div class="ref-row"><span class="l">Vrakpant</span><span class="v">2 400<span class="u">kr</span></span></div>
+      </div>
+      <div class="side-card related">
+        <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
+        <a href="/avgift/vat/"><span class="name">MVA-kalkulator</span><span class="arr">→</span></a>
+        <a href="/personlig/bil/"><span class="name">Bilkostnad</span><span class="arr">→</span></a>
+        <a href="/boliglan/dok/"><span class="name">Dokumentavgift</span><span class="arr">→</span></a>
+      </div>
+      <div class="side-card method">
+        <h4 data-i18n="sideMethod">Slik regner vi</h4>
+        <ol class="method-list">
+          <li><span class="n">01</span><span class="t"><b>Vektavgift (alle)</b> — egenvekt over 500 kg × 12,71 kr/kg. Gjelder også elbil (§ 2).</span></li>
+          <li><span class="n">02</span><span class="t"><b>Vektavgift (forbrenning)</b> — egenvekt over 1200 kg × 260 kr/kg. Kun bensin, diesel og hybrid (§ 3).</span></li>
+          <li><span class="n">03</span><span class="t"><b>CO₂-avgift</b> — utslipp i g/km, progressiv per trinn (800 / 1 600 / 3 200 / 5 000 kr/g) fra første gram. Kun forbrenningsmotor.</span></li>
+          <li><span class="n">04</span><span class="t"><b>Vrakpant</b> — fast 2 400 kr på alle biler. NOx-leddet er fjernet fra 2026.</span></li>
+        </ol>
+      </div>
+    </aside>
+
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="container foot">
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+  </div>
+</footer>
+
+<script defer src="/shared/site-shell.js?v=v1"></script>
+<script defer src="/shared/top-chrome.js?v=v1"></script>
+<script defer src="/shared/veiledning.js?v=v1"></script>
+<script defer src="/shared/core.js?v=v126"></script>
+<script defer src="/shared/search.js?v=v40"></script>
+<script defer src="/shared/lang/no.js?v=v40"></script>
+<script src="/shared/atmosphere.js?v=v1" defer></script>
+
+<script>
+// ── Engangsavgift personbil (avgiftsgruppe a) — 2026-satser
+// Kilde: Stortingsvedtak om engangsavgift på motorvogner mv. for 2026 (STV-2025-12-18-2755),
+//   §§ 2-3. Triangulert mot OFV, NAF og Skatteetaten (research_v2/2026-06-24).
+// Struktur fra 1.1.2026: vekt + CO₂. NOx-komponenten er AVSKAFFET.
+(function(){
+  // § 2 — vektavgift som gjelder ALLE biler i gruppe a (også elbil):
+  //   12,71 kr/kg for den delen av egenvekten som overstiger 500 kg.
+  var VEKT2_GRENSE = 500;
+  var VEKT2_SATS   = 12.71;
+
+  // § 3 — kun motorvogn med stempeldrevet forbrenningsmotor (bensin/diesel/hybrid):
+  //   vektavgift 260 kr/kg over 1200 kg + progressiv CO₂-avgift fra første gram.
+  var VEKT3_GRENSE = 1200;
+  var VEKT3_SATS   = 260;
+  // CO₂: marginale (progressive) trinn — hvert gram i et intervall avgiftslegges
+  // med intervallets sats. Intet lavutslippsfradrag fra 2026 — avgift fra første gram.
+  var CO2_TRINN = [
+    { fra:0,   til:100,      sats:800 },
+    { fra:100, til:150,      sats:1600 },
+    { fra:150, til:225,      sats:3200 },
+    { fra:225, til:Infinity, sats:5000 }
+  ];
+
+  var VRAKPANT = 2400; // kr, eks. mva — alle biler.
+
+  function vektBasis(vekt){            // § 2 — alle biler
+    return Math.max(0, vekt - VEKT2_GRENSE) * VEKT2_SATS;
+  }
+  function vektForbrenning(vekt){      // § 3 — kun forbrenningsmotor
+    return Math.max(0, vekt - VEKT3_GRENSE) * VEKT3_SATS;
+  }
+  function co2Avgift(co2){             // § 3 — progressiv per trinn, fra første gram
+    var sum = 0;
+    for(var i=0;i<CO2_TRINN.length;i++){
+      var t = CO2_TRINN[i];
+      if(co2 <= t.fra) break;
+      sum += (Math.min(co2, t.til) - t.fra) * t.sats;
+    }
+    return sum;
+  }
+
+  var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
+  function fmtKr(n){ if(!isFinite(n)) return '–'; return fmtNb.format(Math.round(n)) + ' kr'; }
+  function fmtKrPlain(n){ if(!isFinite(n)) return '0'; return fmtNb.format(Math.round(n)); }
+  function fmtPct(n, d){ if(!isFinite(n)) return '–'; return (n*100).toFixed(d == null ? 1 : d).replace('.', ',') + ' %'; }
+  function parseKr(s){ if(s == null) return 0; return parseInt(String(s).replace(/[^\d]/g, ''), 10) || 0; }
+  var $ = function(id){ return document.getElementById(id); };
+
+  var state = { fuel:'bensin', vekt:1500, co2:125, pris:450000 };
+
+  function liveFormatKr(inp){
+    var raw = inp.value.replace(/[^\d]/g, '');
+    if(!raw) return;
+    var num = parseInt(raw, 10);
+    if(isNaN(num)) return;
+    var pos = inp.selectionStart, oldLen = inp.value.length;
+    inp.value = fmtKrPlain(num);
+    var newLen = inp.value.length;
+    try { inp.setSelectionRange(pos + (newLen - oldLen), pos + (newLen - oldLen)); } catch(_e){}
+  }
+
+  function render(){
+    state.vekt = parseKr($('e-vekt').value);
+    state.pris = parseKr($('e-pris').value);
+    state.co2  = parseKr($('e-co2').value);
+
+    var isEl = state.fuel === 'el';
+    // § 2-vektavgiften gjelder alle biler (også elbil).
+    var vekt2   = vektBasis(state.vekt);
+    // § 3 (260/1200 + CO₂) gjelder kun forbrenningsmotor.
+    var vekt3   = isEl ? 0 : vektForbrenning(state.vekt);
+    var co2Avg  = isEl ? 0 : co2Avgift(state.co2);
+    var vektAvg = vekt2 + vekt3;
+    var sum = vektAvg + co2Avg + VRAKPANT;
+    var totalPris = state.pris + sum;
+
+    $('rVekt').textContent = fmtKr(vektAvg);
+    $('rCo2').textContent  = fmtKr(co2Avg);
+    $('rVrak').textContent = fmtKr(VRAKPANT);
+    $('rSum').textContent  = fmtKr(sum);
+
+    $('rSumBig').textContent   = fmtKrPlain(sum) + ' ';
+    $('rTotalPris').textContent = fmtKr(totalPris);
+    $('rcVekt').textContent    = fmtKr(vektAvg);
+    $('rcCo2').textContent     = fmtKr(co2Avg);
+
+    $('rsVekt').textContent = fmtKr(vektAvg);
+    $('rsCo2').textContent  = fmtKr(co2Avg);
+    $('rsVrak').textContent = fmtKr(VRAKPANT);
+    $('rsSum').textContent  = fmtKr(sum);
+    $('rsPct').textContent  = fmtPct(sum / Math.max(1, state.pris));
+
+    $('fuelMeta').textContent = isEl ? 'kun vektavgift (§ 2)' : 'full beregning';
+  }
+
+  document.querySelectorAll('.bil-fuel button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      state.fuel = btn.getAttribute('data-fuel');
+      document.querySelectorAll('.bil-fuel button').forEach(function(b){
+        b.setAttribute('aria-pressed', b.getAttribute('data-fuel') === state.fuel ? 'true' : 'false');
+      });
+      render();
+    });
+  });
+  ['e-vekt','e-pris','e-co2'].forEach(function(id){
+    var el = $(id);
+    if(!el) return;
+    el.addEventListener('input', function(){ liveFormatKr(this); render(); });
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
