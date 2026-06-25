@@ -123,7 +123,7 @@
 
   // ── Style injection ──────────────────────────────────
   var css = `
-  .tc-actions{display:flex;align-items:center;gap:14px;margin-left:auto}
+  .tc-actions{display:flex;align-items:center;gap:14px;margin-left:auto;position:relative}
   .tc-btn{display:inline-flex;align-items:center;gap:8px;
     background:transparent;border:0;
     color:var(--ink3);padding:5px 0;border-radius:0;
@@ -185,7 +185,8 @@
     box-shadow:inset 0 0 0 1px rgba(0,0,0,.18);
     flex-shrink:0}
   .tc-menu .flag img{width:100%;height:100%;display:block;object-fit:cover}
-  .tc-wrap{position:relative}
+  /* static + tc-actions:relative → begge dropdown-menyene anker til klyngens høyre kant (symmetrisk flush-right) */
+  .tc-wrap{position:static}
 
   /* ── Theme menu — refined: wider, mini-card preview per row ── */
   .tc-theme-menu{min-width:268px;padding:5px}
