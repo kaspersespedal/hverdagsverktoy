@@ -1708,6 +1708,14 @@ REGIONS['no'] = {
     renteHowtoP2:'<strong>Etableringsavgift</strong> tas av lånebeløpet ved utbetaling — du får utbetalt mindre enn du låner. <strong>Månedlig gebyr</strong> kommer i tillegg til renten hver måned.',
     renteHowtoP3:'Effektiv rente løses ut numerisk: vi finner den årlige rentesatsen som gjør at nåverdien av alle terminbetalinger (inkl. mnd.-gebyr) er lik nettoutbetalingen (lånebeløp − etabl.gebyr).',
     renteHowtoP4:'Alltid sammenlign lån på effektiv rente, ikke nominell. Et lån med 4 % nominell rente og høye gebyrer kan koste mer enn 5 % uten gebyrer.',
+    lonnutHowtoTitle:'Slik bruker du Lønn ut-kalkulatoren',
+    lonnutHowtoRows:[
+      ['Velg modus','Vet du årslønnen, bruk «Jeg vet brutto». Har du timelønn, velg «Jeg har timelønn» og fyll inn timepris, timer per uke og uker per år — så regnes årslønnen ut for deg.'],
+      ['Fyll inn lønn og region','Skriv inn brutto årslønn. Velg region — Finnmark og Nord-Troms har lavere sats på alminnelig inntekt (18,5 % mot 22 %).'],
+      ['Legg til fradrag','Rente- og reisefradrag trekkes fra inntekten. Under «Flere fradrag» finner du fagforeningskontingent, BSU, IPS og gaver til frivillige.'],
+      ['Les av resultatet','Netto per måned og år vises øverst og i resultatpanelet. Søylen viser hvordan brutto fordeler seg på netto, trinnskatt, alminnelig skatt og trygdeavgift.'],
+      ['Slik regnes det','Minstefradrag (46 %, maks 95 700 kr) og personfradrag (114 540 kr) trekkes fra før alminnelig skatt på 22 %. Trinnskatt og trygdeavgift (7,6 %) beregnes av brutto lønn. Alle satser er for 2026.']
+    ],
     kalkToolRenteTitle:'Effektiv rente',
     kalkToolRenteDesc:'Beregn effektiv årsrente inkl. gebyrer og etableringsavgift — sammenlign reelle lånekostnader.',
     kalkToolDbTitle:'Dekningsbidrag',
