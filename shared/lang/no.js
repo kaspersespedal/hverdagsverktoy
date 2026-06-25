@@ -2529,4 +2529,92 @@ REGIONS['no'] = {
     skattUttakInfoExc5: '<b>Privat bruk av selskapets eiendeler:</b> Løpende bruk (f.eks. bolig, båt, bil) beskattes som utbytte hos aksjonæren etter aksjonærmodellen',
     skattUttakInfoSource: 'Kilde: Skatteloven § 5-2, § 5-3 og kap. 9 (lov-1999-03-26-14). Kalkulatoren er veiledende — kontakt revisor for konkrete vurderinger.',
     skattUttakInfoDisclaimer: 'Forenklet beregning. Trinnskatt 2026: trinn 1 (1,7 %), 2 (4,0 %), 3 (13,7 %), 4 (16,8 %), 5 (17,8 %). Trygdeavgift med nedre grense 99 650 kr og opptrappingsregel 25 %.',
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Kalkulator-reskin i18n-påfyll (oppfølging av .ks-reskin, PR #135).
+    // Phase 1: howto-tekst for de 5 sidene med TOM data-howto-prefix-body
+    //   (avs, ferie, finance, valgevinst, unit). refi/likviditet/dok har
+    //   hardkodet howto i HTML og virker allerede; npv/maxlan/bvl var keyet fra før.
+    // Phase 2: sidekort-/breadcrumb-/relaterte-lenke-nøkler (verbatim fra HTML-
+    //   default = norsk kildetekst for senere oversettelse til de 9 andre språkene).
+    // ─────────────────────────────────────────────────────────────────────────
+
+    // ── Phase 1: Howto — avs (Avskrivning) ──
+    avsHowtoTitle:'Slik bruker du Avskrivnings-kalkulatoren', avsHowtoDesc:'Steg for steg: regnskapsmessig (lineær) og skattemessig (saldo) avskrivning',
+    avsHowtoRows:[['— SLIK BRUKER DU KALKULATOREN —','Velg metode og se avskrivning år for år'],['Metode: Regnskap','Lineær avskrivning etter rskl. § 5-3 — like store beløp hvert år over forventet utnyttbar levetid.'],['Metode: Skatt','Saldoavskrivning etter sktl. §§ 14-40 til 14-48 — fast prosent av gjenværende verdi (saldo) hvert år.'],['Metode: Sammenlign','Viser begge metodene side om side, pluss midlertidige forskjeller og utsatt skatt.'],['Kjøpesum','Det eiendelen kostet å anskaffe (inngangsverdi). Påkost legges til saldoen.'],['Avskrivningsgruppe (skatt)','Velg saldogruppe a–j. Maks-satser: a 30 %, b 20 %, c 24 %, d 20 %, e 14 %, f 12 %, g 5 %, h 4 %, i 2 %, j 10 %.'],['Levetid og sats (regnskap)','Oppgi utnyttbar levetid i år, eller sett avskrivningssatsen direkte. Restverdi (%) er verdien etter perioden.'],['— SLIK LESER DU RESULTATENE —',''],['Total avskrivning','Summen som er avskrevet over hele perioden.'],['Verdi etter periode','Gjenværende bokført verdi (saldo) ved slutten av perioden.'],['År-for-år tabell','Viser avskrivning og restverdi for hvert år. Kan lastes ned som CSV.'],['— GODT Å VITE —',''],['30 000-grensen','Driftsmidler under 30 000 kr eller med levetid under 3 år kan utgiftsføres direkte i stedet for å avskrives.'],['Restsaldo under 30 000 kr','Skattemessig kan en restsaldo under 30 000 kr fradragsføres direkte.'],['Maks-satsen er et tak','Du kan avskrive med lavere sats enn maks om du har lite overskudd å avskrive mot.']],
+
+    // ── Phase 1: Howto — ferie (Feriepenger) ──
+    ferieHowtoTitle:'Slik bruker du Feriepenger-kalkulatoren', ferieHowtoDesc:'Regn ut feriepenger etter Ferieloven § 10',
+    ferieHowtoRows:[['— SLIK BRUKER DU KALKULATOREN —','Regn ut feriepenger av fjorårets lønn'],['Årslønn (grunnlag)','Feriepengegrunnlaget — normalt all arbeidsinntekt i opptjeningsåret (året før). Utbytte og forrige års feriepenger teller ikke med.'],['Ferietype','4 uker gir lovens minimum 10,2 %. 5 uker (tariff/avtale) gir 12 %.'],['Over 60 år','Gir et tillegg på 2,3 % (samlet 14,3 % ved 5 uker), men kun på grunnlag opptil 6G.'],['— SLIK LESER DU RESULTATENE —',''],['Feriepenger','Grunnlag × sats. Dette er det du får utbetalt, vanligvis i juni året etter.'],['Daglig sats','Feriepenger delt på antall feriedager — nyttig hvis du tar ut ferie utenom hovedferien.'],['— GODT Å VITE —',''],['Skattefri i juni?','Det trekkes ikke skatt i utbetalingsmåneden, men feriepenger ER skattepliktig inntekt — skatten er allerede fordelt på årets øvrige måneder.'],['1G fra mai 2026','1G = 136 549 kr, så 6G-taket for 60+-tillegget er 819 294 kr.'],['Bytter du jobb?','Du har krav på opptjente feriepenger utbetalt ved sluttoppgjør.']],
+
+    // ── Phase 1: Howto — finance (Finansiell kalkulator) ──
+    financeHowtoTitle:'Slik bruker du Finansiell kalkulator', financeHowtoDesc:'Fem finansberegninger: nåverdi, fremtidsverdi, margin, break-even og effektiv rente',
+    financeHowtoRows:[['— SLIK BRUKER DU KALKULATOREN —','Velg beregningstype og fyll inn tallene'],['Beregningstype','Velg én av fem: nåverdi/fremtidsverdi (TVM), margin/markup, break-even, renters rente eller rabatt. Feltene tilpasser seg valget.'],['Nåverdi / fremtidsverdi','TVM — verdien av penger over tid. FV = hva et beløp vokser til; PV = hva et fremtidig beløp er verdt i dag.'],['Margin og markup','Margin = fortjeneste i prosent av salgspris. Markup = påslag i prosent av kostpris. Det er ikke det samme.'],['Break-even','Antall enheter du må selge for å dekke faste kostnader, gitt dekningsbidrag per enhet.'],['Renters rente','Hvordan en sum vokser med rente på rente over flere perioder.'],['Rabatt','Pris etter ett eller flere prosentvise avslag.'],['— SLIK LESER DU RESULTATENE —',''],['Resultat','Hovedtallet for valgt beregning vises øverst, med underlag og mellomregninger under.'],['— GODT Å VITE —',''],['Effektiv vs. nominell rente','Effektiv rente tar hensyn til antall terminer per år og gebyrer — sammenlign alltid lån og sparing på effektiv rente.'],['Margin er ikke markup','40 % markup på kostpris gir bare ca. 29 % margin. Vær bevisst på hvilken du oppgir.'],['Alt regnes lokalt','Ingen tall sendes ut av nettleseren.']],
+
+    // ── Phase 1: Howto — valgevinst (Valutagevinst) ──
+    valgevinstHowtoTitle:'Slik bruker du Valutagevinst-kalkulatoren', valgevinstHowtoDesc:'Regn ut gevinst eller tap ved kjøp og salg av valuta (sktl. § 9-9)',
+    valgevinstHowtoRows:[['— SLIK BRUKER DU KALKULATOREN —','Gevinst eller tap ved valutahandel'],['Valuta','Velg valutaen du kjøpte og solgte. Bruk «Annen valuta» hvis den ikke står i listen.'],['Antall enheter','Hvor mange enheter av valutaen du kjøpte (f.eks. 10 000 EUR).'],['Kjøpskurs','NOK per enhet på kjøpstidspunktet — bruk Norges Banks dagskurs.'],['Salgskurs','NOK per enhet på salgstidspunktet.'],['— SLIK LESER DU RESULTATENE —',''],['Gevinst / tap','(Salgskurs − kjøpskurs) × antall enheter.'],['Skatt (22 %)','Gevinst beskattes som alminnelig inntekt med 22 %.'],['Netto etter skatt','Gevinst minus skatt — det du sitter igjen med.'],['— GODT Å VITE —',''],['Hjemmel','Valutagevinst er skattepliktig og tap fradragsberettiget etter sktl. § 9-9.'],['Tap gir fradrag','Et tap kan trekkes fra mot annen alminnelig inntekt og gir 22 % skatteeffekt.'],['Noteres per 100 (JPY)','For valutaer som ofte noteres per 100 (f.eks. JPY), juster kursen tilsvarende ved input.'],['Gjelder også valutakonto','Gevinst/tap på vanlige bankkonti i utenlandsk valuta omfattes også — ikke bare kontanthandel.']],
+
+    // ── Phase 1: Howto — unit (Valutakonverter) ──
+    unitHowtoTitle:'Slik bruker du Valutakonverteren', unitHowtoDesc:'Konverter mellom valutaer med oppdaterte kurser',
+    unitHowtoRows:[['— SLIK BRUKER DU KALKULATOREN —','Konverter et beløp mellom to valutaer'],['Fra-valuta','Valutaen du har eller vil veksle fra.'],['Til-valuta','Valutaen du vil regne om til.'],['Beløp','Hvor mye du vil konvertere.'],['Bytt-knappen','Snur fra og til, så du raskt ser kursen begge veier.'],['— SLIK LESER DU RESULTATENE —',''],['Resultat','Beløpet omregnet til til-valutaen.'],['Kurs','Vekslingskursen som ble brukt (1 enhet fra-valuta uttrykt i til-valuta).'],['— GODT Å VITE —',''],['Live kurser','Kursene hentes fra open.er-api.com når du er på nett, og caches lokalt i inntil 7 dager.'],['Offline','Uten nett brukes sist lagrede kurs eller en innebygd fallback-tabell — da kan kursen være litt utdatert.'],['Markedskurs','Dette er markedskurs til veiledning. Banker og vekslere legger på en spread eller et gebyr, så du får litt mindre i praksis.']],
+
+    // ── Phase 2: Delte nav-/footer-nøkler (verbatim fra HTML-default) ──
+    sideRelated:'Relaterte verktøy',
+    footerDisc:'Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.',
+    crumbKalk:'Kalkulator', crumbBoliglan:'Boliglån',
+
+    // ── Phase 2: Relaterte-lenke-etiketter (ikke-konfliktende) ──
+    relBudsjett:'Budsjett', relSpare:'Sparekalkulator', relMaxlan:'Hvor mye kan jeg låne?',
+    relBsu:'BSU', relBil:'Bilkostnad', relRegnskap:'Regnskap', relLikviditet:'Likviditet',
+    relVat:'Merverdiavgift', relAksjer:'Aksjegevinst', relFinance:'Finanskalkulator', relSyk:'Sykepenger',
+    renteCrumb:'Effektiv rente',
+    // MERK: relLonn, relLonnut og relBoliglan er BEVISST utelatt — samme nøkkel
+    // brukes med ulik tekst på tvers av sider (f.eks. relLonn = «Lønn etter skatt»
+    // på 4 sider, men «Brutto/netto lønn» på timepris). Å samle dem ville endret
+    // norsk tekst på minoritetssiden. Bør fikses ved å gi unik nøkkel i HTML først.
+
+    // ── Phase 2: Sidespesifikke breadcrumbs ──
+    ferieCrumb:'Feriepenger', dokCrumb:'Dokumentavgift', bvlCrumb:'Bolig vs leie',
+
+    // ── Phase 2: Sidekort-prosa (verbatim fra HTML-default) ──
+    // ferie
+    ferieSideSatser:'Feriepengesatser', ferieSideWhat:'Hva er feriepenger?',
+    ferieSideWhatBody:'Feriepenger er lovbestemt etter Ferieloven § 10. Arbeidsgiver kan ikke gi mindre enn 10,2 %, men tariffavtaler kan gi mer (typisk 12 % for 5 ukers ferie). De utbetales normalt i juni året etter opptjening og er skattepliktig inntekt, selv om det ikke trekkes skatt ved utbetaling.',
+    // dekningsbidrag
+    kalkDekningsbidragSideWhat:'Hva er dekningsbidrag?',
+    kalkDekningsbidragSideWhatBody:'Dekningsbidrag (DB) er salgspris minus variabel kost per enhet — det som er igjen til å dekke faste kostnader og gi fortjeneste. Break-even er antallet enheter du må selge før total DB dekker alle faste kostnader.',
+    // likviditet
+    likvidSideWhat:'Hva er et likviditetsbudsjett?',
+    likvidSideWhatBody:'En oversikt over pengestrømmen din måned for måned — ikke regnskapsmessig resultat. Startsaldo pluss inntekter minus utgifter, kumulert. Det viser tidlig hvilke måneder du kan gå tom for penger og trenger reserver.',
+    // bvl (bolig vs leie)
+    bvlSideWhat:'Eie eller leie?',
+    bvlSideWhatBody:'Over korte horisonter taper eie ofte — transaksjonskostnader (dokumentavgift + megler ved salg) spiser opp gevinsten. Over 15–20 år vinner eie nesten alltid, fordi verdiøkning og formuesoppbygging via avdrag samler seg opp. Tallene her inkluderer 22 % skattefradrag på renter.',
+    // dok (dokumentavgift)
+    dokSideAvgifter:'Avgifter ved kjøp', dokSideMethod:'Slik regner vi',
+    // avs (avskrivning) — saldogrupper + metode
+    avsSideSaldo:'Saldogrupper 2026', avsSideMethod:'Saldo eller lineær?',
+    avsMethod1B:'Saldoavskrivning', avsMethod1:'er hovedregel for skatt — fast prosent av gjenværende verdi hvert år.',
+    avsMethod2B:'Lineær avskrivning', avsMethod2:'brukes i regnskapet når levetiden er kjent — like store beløp hvert år.',
+    avsMethod3:'Et driftsmiddel over 30 000 kr og forventet levetid over 3 år', avsMethod3B:'skal aktiveres og avskrives',
+    avsMethod4B:'Påkost', avsMethod4:'aktiveres på saldoen, salg/skroting trekkes fra. Negativ saldo gir gevinst.',
+    avsMethod5:'Maks-satsen er valgfri — du kan avskrive med lavere sats om du har lite overskudd.',
+    // valgevinst (valutagevinst) — kurs + metode
+    valgevSideKurs:'Kurs og skatt', valgevSideMethod:'Slik regner vi',
+    valgevMethod1B:'Kjøpskurs', valgevMethod1:'— NOK per enhet på kjøpstidspunktet (Norges Banks dagskurs).',
+    valgevMethod2B:'Salgskurs', valgevMethod2:'— NOK per enhet på salgstidspunktet.',
+    valgevMethod3B:'Gevinst/tap', valgevMethod3:'= (salgskurs − kjøpskurs) × antall enheter.',
+    valgevMethod4B:'Skatt', valgevMethod4:'— 22 % av gevinst som alminnelig inntekt; tap er fradragsberettiget.',
+    // finance — formler + metode
+    financeSideFormler:'Formler', financeSideAnnuitet:'Annuitet', financeSideFV:'Fremtidsverdi',
+    financeSidePV:'Nåverdi', financeSideEff:'Effektiv rente', financeSideMethod:'Når bruker du hva?',
+    financeSideRelated:'Relaterte verktøy', financeRelatedBolig:'Boliglån', financeRelatedSpare:'Sparekalkulator', financeRelatedAvs:'Avskrivninger',
+    financeMethodStep1:'<b>Annuitet</b> — fast månedlig terminbeløp, typisk lån.',
+    financeMethodStep2:'<b>Sparing</b> — fremtidsverdi av et månedlig innskudd over tid.',
+    financeMethodStep3:'<b>Nåverdi</b> — hva en fremtidig kontantstrøm er verdt i dag.',
+    financeMethodStep4:'<b>Effektiv rente</b> — slik renten faktisk virker med terminer og gebyr.',
+    // npv — tolkning + relaterte
+    npvSideTolking:'Tolking av resultatet', npvSideLonnsomt:'Lønnsomt', npvSideAkkurat:'Akkurat krav',
+    npvSideIkkeLonn:'Ikke lønnsomt', npvSideAnbefal:'Anbefal', npvSidePayback:'Payback', npvSidePaybackV:'Tid til BE',
+    npvSideRelated:'Relaterte verktøy', npvRelatedFinance:'Finansiell kalkulator', npvRelatedSpare:'Sparekalkulator', npvRelatedAvs:'Avskrivninger',
 };
