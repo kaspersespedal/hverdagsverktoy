@@ -144,6 +144,18 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .bud-add .plus::before{left:50%;top:0;bottom:0;width:1px;transform:translateX(-50%)}
 .bud-add .plus::after{top:50%;left:0;right:0;height:1px;transform:translateY(-50%)}
 
+/* «Legg til post»-meny med forslag (festet til body → klippes ikke av grid-overflow) */
+.bud-menu{position:fixed;z-index:120;min-width:216px;max-width:280px;background:var(--menu-bg);border:1px solid var(--line-2);border-radius:9px;box-shadow:0 14px 38px rgba(0,0,0,.42);padding:6px;display:flex;flex-direction:column;gap:1px;animation:budMenuIn .15s var(--ease)}
+@keyframes budMenuIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.bud-menu-head{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);font-weight:600;padding:8px 10px 7px}
+.bud-menu-item{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:transparent;border:0;color:var(--ink);font:500 13.5px/1.2 var(--font-sans);text-align:left;padding:9px 11px;border-radius:5px;cursor:pointer;transition:background .12s var(--ease),color .12s var(--ease)}
+.bud-menu-item:hover,.bud-menu-item:focus-visible{background:var(--hover-bg)}
+.bud-menu-sep{height:1px;background:var(--line);margin:5px 6px}
+.bud-menu-custom{color:var(--ink2)}
+.bud-menu-custom:hover,.bud-menu-custom:focus-visible{color:var(--accent)}
+.bud-menu-plus{font-size:15px;line-height:1;color:var(--ink3)}
+.bud-menu-custom:hover .bud-menu-plus{color:var(--accent)}
+
 footer{border-top:1px solid var(--line);padding:32px 0;margin-top:32px}
 footer .foot{display:flex;align-items:center;justify-content:space-between;gap:18px;font:400 12.5px/1.4 var(--font-sans);color:var(--ink3);flex-wrap:wrap}
 footer .foot-links{display:flex;gap:14px;align-items:center}
@@ -334,6 +346,14 @@ footer em{font-style:italic}
     {key:'variable', title:'Utgifter som varierer',placeholder:'Ny utgift som varierer'}
   ];
 
+  // Forslag til vanlige poster — vises i meny når man trykker «Legg til post»
+  var BUD_SUGGEST = {
+    inntekt:  ['Lønn etter skatt','Feriepenger','Barnetrygd','Bostøtte','Leieinntekt','Pensjon','Stipend','Annen inntekt'],
+    faste:    ['Husleie','Boliglån','Strøm','Internett','Mobil','Forsikring','Barnehage / SFO','Strømmetjenester','Kollektivkort'],
+    variable: ['Dagligvarer','Klær & sko','Drivstoff','Restaurant','Helse / medisin','Fritid','Gaver','Reise']
+  };
+  var BUD_MENU_HEAD = {inntekt:'Vanlig inntekt', faste:'Vanlig fast utgift', variable:'Vanlig utgift'};
+
   var host = document.getElementById('budGrid');
 
   function renderBudget(){
@@ -395,24 +415,101 @@ footer em{font-style:italic}
     }
   }, true);
 
+  // ── «Legg til post»-meny med forslag ──
+  var budMenu = null, budMenuBtn = null;
+
+  function addRow(key, label){
+    budState[key].push({l: label || '', v:0});
+    saveBudget(budState);
+    renderBudget();
+    requestAnimationFrame(function(){
+      var col = host.querySelectorAll('.bud-col')[budCols.findIndex(function(c){return c.key===key;})];
+      if(!col) return;
+      var rows = col.querySelectorAll('.bud-row');
+      var newRow = rows[rows.length-1];
+      if(!newRow) return;
+      // forhåndsutfylt etikett → hopp rett til beløp; ellers fokus på etiketten
+      var input = newRow.querySelector(label ? 'input[data-field="v"]' : 'input[data-field="l"]');
+      if(input){ try{ input.focus({preventScroll:true}); }catch(_){ input.focus(); } }
+      newRow.classList.add('bud-flash');
+      setTimeout(function(){ newRow.classList.remove('bud-flash'); }, 1000);
+    });
+  }
+
+  function closeBudMenu(){
+    if(!budMenu) return;
+    budMenu.remove(); budMenu = null; budMenuBtn = null;
+    document.removeEventListener('click', onBudMenuOutside, true);
+    document.removeEventListener('keydown', onBudMenuKey, true);
+    window.removeEventListener('scroll', closeBudMenu, true);
+    window.removeEventListener('resize', closeBudMenu, true);
+  }
+  function onBudMenuOutside(e){ if(budMenu && !budMenu.contains(e.target)) closeBudMenu(); }
+  function onBudMenuKey(e){
+    if(e.key === 'Escape'){ e.preventDefault(); var b = budMenuBtn; closeBudMenu(); if(b) b.focus(); return; }
+    if(!budMenu) return;
+    if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
+      e.preventDefault();
+      var items = Array.prototype.slice.call(budMenu.querySelectorAll('.bud-menu-item'));
+      var i = items.indexOf(document.activeElement);
+      i = e.key === 'ArrowDown' ? (i+1) % items.length : (i-1+items.length) % items.length;
+      if(items[i]) items[i].focus();
+    }
+  }
+  function positionBudMenu(){
+    if(!budMenu || !budMenuBtn) return;
+    var r = budMenuBtn.getBoundingClientRect();
+    var mw = budMenu.offsetWidth, mh = budMenu.offsetHeight, pad = 12;
+    var left = Math.max(pad, Math.min(r.left, window.innerWidth - mw - pad));
+    var top  = (r.bottom + mh + 8 <= window.innerHeight) ? r.bottom + 6 : r.top - mh - 6;
+    if(top < pad) top = pad;
+    budMenu.style.left = Math.round(left) + 'px';
+    budMenu.style.top  = Math.round(top)  + 'px';
+  }
+  function openBudMenu(key, btn){
+    closeBudMenu();
+    var used = {};
+    (budState[key] || []).forEach(function(r){ if(r.l) used[r.l.trim().toLowerCase()] = 1; });
+    var sugg = (BUD_SUGGEST[key] || []).filter(function(s){ return !used[s.toLowerCase()]; });
+
+    var menu = document.createElement('div');
+    menu.className = 'bud-menu';
+    menu.setAttribute('role', 'menu');
+    var html = '<div class="bud-menu-head">' + escapeHtml(BUD_MENU_HEAD[key] || 'Vanlige poster') + '</div>';
+    html += sugg.map(function(s){
+      return '<button class="bud-menu-item" type="button" role="menuitem" data-pick="'+escapeHtml(s)+'">'+escapeHtml(s)+'</button>';
+    }).join('');
+    if(sugg.length) html += '<div class="bud-menu-sep" aria-hidden="true"></div>';
+    html += '<button class="bud-menu-item bud-menu-custom" type="button" role="menuitem" data-pick="">'
+          + '<span>Egendefinert post</span><span class="bud-menu-plus" aria-hidden="true">+</span></button>';
+    menu.innerHTML = html;
+
+    menu.addEventListener('click', function(e){
+      var it = e.target.closest('[data-pick]');
+      if(!it) return;
+      var label = it.getAttribute('data-pick');
+      closeBudMenu();
+      addRow(key, label);
+    });
+
+    document.body.appendChild(menu);
+    budMenu = menu; budMenuBtn = btn;
+    positionBudMenu();
+    var first = menu.querySelector('.bud-menu-item');
+    if(first){ try{ first.focus({preventScroll:true}); }catch(_){ first.focus(); } }
+
+    setTimeout(function(){
+      document.addEventListener('click', onBudMenuOutside, true);
+      document.addEventListener('keydown', onBudMenuKey, true);
+      window.addEventListener('scroll', closeBudMenu, true);
+      window.addEventListener('resize', closeBudMenu, true);
+    }, 0);
+  }
+
   host.addEventListener('click', function(e){
     var add = e.target.closest('.bud-add');
     if(add){
-      var key = add.getAttribute('data-add');
-      budState[key].push({l:'', v:0});
-      saveBudget(budState);
-      renderBudget();
-      requestAnimationFrame(function(){
-        var col = host.querySelectorAll('.bud-col')[budCols.findIndex(function(c){return c.key===key;})];
-        if(!col) return;
-        var rows = col.querySelectorAll('.bud-row');
-        var newRow = rows[rows.length-1];
-        if(!newRow) return;
-        var lbl = newRow.querySelector('input[data-field="l"]');
-        if(lbl){ try{ lbl.focus({preventScroll:true}); }catch(_){ lbl.focus(); } }
-        newRow.classList.add('bud-flash');
-        setTimeout(function(){ newRow.classList.remove('bud-flash'); }, 1000);
-      });
+      openBudMenu(add.getAttribute('data-add'), add);
       return;
     }
     var rm = e.target.closest('[data-act="rm"]');
