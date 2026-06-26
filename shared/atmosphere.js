@@ -4,6 +4,24 @@
 (function(){
   var REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
   var WIDE   = matchMedia('(min-width: 1024px)').matches;
+
+  /* The .ks template ships without aurora markup (CSS + tokens live in the
+     shared stack). Inject it once if missing so every .ks page animates.
+     Pages that already have inline atmosphere keep theirs (guard below). */
+  if(document.body && !document.querySelector('.atmo') && !document.body.classList.contains('embed')){
+    document.body.insertAdjacentHTML('afterbegin',
+      '<div class="atmo-base" aria-hidden="true"></div>'+
+      '<div class="atmo" aria-hidden="true">'+
+        '<div class="band band-a"><div class="band-inner"></div></div>'+
+        '<div class="band band-b"><div class="band-inner"></div></div>'+
+        '<div class="cursor-light" id="cursorLight"></div>'+
+      '</div>'+
+      '<svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">'+
+        '<filter id="atmoGrain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0"/></filter>'+
+        '<rect width="100%" height="100%" filter="url(#atmoGrain)"/>'+
+      '</svg>');
+  }
+
   var light  = document.getElementById('cursorLight');
   if(!light) return;
   if(REDUCE || !WIDE){ light.style.display = 'none'; return; }
