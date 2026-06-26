@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Enkel kalkulator — Kalkulator · Hverdagsverktøy</title>
-<meta name="description" content="Rask hverdagsmatte: prosent av et beløp, hvor mange prosent en del er av helheten, prosentendring, rabatt, påslag/MVA og dele likt. Alt skjer lokalt i nettleseren.">
+<meta name="description" content="En helt vanlig kalkulator for hverdagsregning: pluss, minus, gange, dele og prosent. Trykk på knappene eller bruk tastaturet. Alt skjer lokalt i nettleseren.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/kalkulator/enkel/">
@@ -53,7 +53,7 @@
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v6">
 <style>
-/* Enkel kalkulator — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/unit/) */
+/* Enkel kalkulator — vanlig tall-kalkulator (number pad). Hardkodet norsk i calc-body. */
 body{min-height:100vh;display:flex;flex-direction:column}
 body > main{flex:1 0 auto}
 body > footer{flex-shrink:0}
@@ -72,62 +72,32 @@ body.focus-mode > .tabs-wrap,
 body.focus-mode > footer{display:none}
 
 .calc-wrap{padding:28px 0 56px}
-.calc-wrap .container{display:grid;grid-template-columns:1fr 260px;gap:28px;align-items:start}
-@media(max-width:980px){.calc-wrap .container{grid-template-columns:1fr}}
+.calc-wrap > .container{display:grid;grid-template-columns:1fr 260px;gap:28px;align-items:start}
+@media(max-width:980px){.calc-wrap > .container{grid-template-columns:1fr}}
 
-.ks-host{min-width:0}
-.ks{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+/* ── Kalkulator-kortet ── */
+.calc-host{min-width:0;display:flex;justify-content:center}
+.calc{width:100%;max-width:430px;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
 
-.ks-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
-.ks-strip-cell{background:var(--surface);padding:18px 22px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.ks-strip-cell .l{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);font-weight:500}
-.ks-strip-cell .v{font-family:var(--font-serif);font-weight:500;font-size:22px;line-height:1;font-variant-numeric:tabular-nums lining-nums;color:var(--ink)}
-.ks-strip-cell.accent{background:color-mix(in srgb, var(--accent) 6%, var(--surface))}
-.ks-strip-cell.accent .v{color:var(--accent-2)}
-@media(max-width:780px){.ks-strip{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
-@media(max-width:560px){.ks-strip-cell{padding:14px 14px}.ks-strip-cell .v{font-size:17px}}
+.calc-display{padding:30px 24px 20px;text-align:right;border-bottom:1px solid var(--line);min-height:108px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px}
+.calc-expr{font:400 13px/1.4 'JetBrains Mono',var(--font-sans,sans-serif);color:var(--ink3);letter-spacing:.02em;min-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calc-now{font-family:var(--font-serif);font-weight:500;font-size:42px;line-height:1.08;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:font-size .1s ease}
 
-.ks-body{display:grid;grid-template-columns:1fr 340px;gap:1px;background:var(--line)}
-@media(max-width:980px){.ks-body{grid-template-columns:1fr}}
-
-.ks-form{background:var(--surface);padding:22px 26px;min-width:0}
-.ks-section{margin-bottom:22px}
-.ks-section:last-child{margin-bottom:0}
-.ik-section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
-.ik-section-head h3{margin:0;font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);letter-spacing:-.2px}
-.ik-section-head .meta{font-size:11px;letter-spacing:.04em;color:var(--ink3)}
-.ik-stack{display:flex;flex-direction:column;gap:12px}
-.ik-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.ik-row.full{grid-template-columns:1fr}
-@media(max-width:580px){.ik-row{grid-template-columns:1fr}}
-
-.ik-fg{display:flex;flex-direction:column;gap:5px;min-width:0}
-.ik-lbl{font:500 11.5px/1.3 var(--font-sans);letter-spacing:.02em;color:var(--ink2)}
-.ik-lbl .cap{color:var(--ink4);font-weight:400}
-.ik-input,.ik-select{
-  background:var(--surface-2);border:1px solid var(--line-2);
-  color:var(--ink);font:inherit;font-size:14px;
-  padding:9px 12px;border-radius:4px;outline:none;width:100%;
-  font-variant-numeric:tabular-nums;
-  transition:border-color .15s, background .15s;
+.calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
+.key{appearance:none;background:var(--surface);border:0;color:var(--ink);font:500 19px/1 var(--font-sans);padding:19px 0;cursor:pointer;font-variant-numeric:tabular-nums;-webkit-tap-highlight-color:transparent;user-select:none;transition:background .12s ease,color .12s ease}
+@media(hover:hover){.key:hover{background:var(--surface-2)}}
+.key:active{background:var(--line-2)}
+.key:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;position:relative;z-index:1}
+.key-fn{color:var(--ink2);font-size:15px;font-weight:600;letter-spacing:.04em}
+.key-op{color:var(--accent-2);font-size:23px;font-weight:500}
+.key-eq{background:var(--accent);color:#16130f;font-weight:700;font-size:22px}
+@media(hover:hover){.key-eq:hover{background:var(--accent-2)}}
+.key-eq:active{background:var(--accent-2)}
+@media(max-width:560px){
+  .calc-display{padding:24px 18px 16px;min-height:94px}
+  .calc-now{font-size:36px}
+  .key{padding:17px 0;font-size:18px}
 }
-.ik-input:focus,.ik-select:focus{border-color:var(--accent);background:var(--surface)}
-.ik-select{appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:32px;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23797469' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");background-repeat:no-repeat;background-position:right 10px center;}
-.ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
-.ik-note a{color:var(--accent-2);text-decoration:none}
-@media(hover:hover){.ik-note a:hover{text-decoration:underline}}
-
-.ks-result{background:var(--surface);padding:22px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.ks-r-eyebrow{font:500 10px/1 var(--font-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
-.ks-r-net{font-family:var(--font-serif);font-weight:500;font-size:40px;color:var(--accent-2);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.7px;line-height:1.05}
-.ks-r-net .unit{font-size:15px;color:var(--ink3);font-style:normal;margin-left:4px;letter-spacing:0}
-.ks-r-mnd{font-size:12px;color:var(--ink3);line-height:1.5}
-
-.ks-r-stats{display:flex;flex-direction:column;gap:7px;padding-top:12px;border-top:1px solid var(--line)}
-.ks-r-stat{display:flex;align-items:baseline;justify-content:space-between;gap:14px;font-size:13px;color:var(--ink2)}
-.ks-r-stat .l{color:var(--ink3);font-size:11.5px;letter-spacing:.04em}
-.ks-r-stat .v{color:var(--ink);font-variant-numeric:tabular-nums lining-nums;font-weight:500}
-.ks-r-stat.div{padding-top:8px;margin-top:4px;border-top:1px solid var(--line)}
 
 /* Side col */
 .side-col{display:flex;flex-direction:column;gap:12px;min-width:0}
@@ -154,6 +124,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
+.howto-body kbd{font:600 12px/1 'JetBrains Mono',monospace;background:var(--surface-2);border:1px solid var(--line-2);border-radius:4px;padding:2px 6px;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -213,18 +184,18 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <span class="sep"></span>
         <a href="/kalkulator/" data-i18n="crumbKalk">Kalkulator</a>
         <span class="sep"></span>
-        <span class="here" data-i18n="enkelCrumb">Enkel kalkulator</span>
+        <span class="here">Enkel kalkulator</span>
       </div>
-      <h1 class="page-title" data-i18n-html="enkelTitleNew"><em>Enkel</em> kalkulator</h1>
-      <p class="page-lead" data-i18n="enkelSubtitle">Rask hverdagsmatte uten oppsett. Regn ut prosent av et beløp, hvor mange prosent en del utgjør, prosentendring, rabatt, påslag/MVA eller del et beløp likt. Velg type, skriv inn tallene — svaret kommer mens du skriver.</p>
+      <h1 class="page-title"><em>Enkel</em> kalkulator</h1>
+      <p class="page-lead">En helt vanlig kalkulator for hverdagsregning — pluss, minus, gange, dele og prosent. Trykk på knappene eller bruk tastaturet på PC. Alt skjer lokalt i nettleseren, ingenting lagres.</p>
       <div class="page-hero-actions">
-        <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
-        <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
+        <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning">?</button>
+        <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner">⛶</button>
       </div>
     </div>
     <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="enkelStatResult">Resultat</span><span class="v" id="hStatResult">–</span></div>
-      <div class="page-stat"><span class="l" data-i18n="prosentModeLabel">Beregningstype</span><span class="v" id="hStatMode">–</span></div>
+      <div class="page-stat"><span class="l">Svar</span><span class="v" id="hStatResult">0</span></div>
+      <div class="page-stat"><span class="l">Regnestykke</span><span class="v" id="hStatExpr">–</span></div>
     </div>
   </div>
 </section>
@@ -233,71 +204,66 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <div class="calc-wrap">
   <div class="container">
 
-    <div class="ks-host">
-      <div class="ks">
-        <div class="ks-strip">
-          <div class="ks-strip-cell"><span class="l" id="enkel-s0-l">Grunnbeløp</span><span class="v" id="enkel-s0-v">–</span></div>
-          <div class="ks-strip-cell"><span class="l" id="enkel-s1-l">Prosentsats</span><span class="v" id="enkel-s1-v">–</span></div>
-          <div class="ks-strip-cell"><span class="l" id="enkel-s2-l">Resten</span><span class="v" id="enkel-s2-v">–</span></div>
-          <div class="ks-strip-cell accent"><span class="l" id="enkel-s3-l">Resultat</span><span class="v" id="enkel-s3-v">–</span></div>
+    <div class="calc-host">
+      <div class="calc" role="group" aria-label="Kalkulator">
+        <div class="calc-display">
+          <div class="calc-expr" id="calcExpr" aria-hidden="true"></div>
+          <div class="calc-now" id="calcNow" aria-live="polite" aria-atomic="true">0</div>
         </div>
+        <div class="calc-keys" id="calcKeys">
+          <button type="button" class="key key-fn" data-act="clear" aria-label="Nullstill">AC</button>
+          <button type="button" class="key key-fn" data-act="back" aria-label="Slett siste siffer">⌫</button>
+          <button type="button" class="key key-fn" data-act="percent" aria-label="Prosent">%</button>
+          <button type="button" class="key key-op" data-act="op" data-op="/" aria-label="Delt på">÷</button>
 
-        <div class="ks-body">
-          <div class="ks-form">
-            <section class="ks-section">
-              <div class="ik-section-head">
-                <h3 data-i18n="enkelFormHead">Regn ut</h3>
-                <span class="meta" data-i18n="enkelFormMeta">Hverdagsmatte</span>
-              </div>
-              <div class="ik-stack">
-                <div class="ik-row full">
-                  <div class="ik-fg">
-                    <label class="ik-lbl" for="enkel-mode" data-i18n="prosentModeLabel">Beregningstype</label>
-                    <select id="enkel-mode" class="ik-select" aria-label="Beregningstype"></select>
-                  </div>
-                </div>
-                <div id="enkel-fields"></div>
-              </div>
-              <div id="enkel-note"></div>
-            </section>
-          </div>
+          <button type="button" class="key" data-act="digit" data-d="7">7</button>
+          <button type="button" class="key" data-act="digit" data-d="8">8</button>
+          <button type="button" class="key" data-act="digit" data-d="9">9</button>
+          <button type="button" class="key key-op" data-act="op" data-op="*" aria-label="Ganget med">×</button>
 
-          <aside class="ks-result" aria-live="polite">
-            <div class="ks-r-eyebrow" id="enkelEyebrow" data-i18n="enkelResultLabel">Resultat</div>
-            <div class="ks-r-net"><span id="enkelNet">–</span></div>
-            <div class="ks-r-mnd" id="enkelVerdict" data-i18n="enkelPrompt">Velg beregningstype og fyll inn feltene for å se svaret.</div>
+          <button type="button" class="key" data-act="digit" data-d="4">4</button>
+          <button type="button" class="key" data-act="digit" data-d="5">5</button>
+          <button type="button" class="key" data-act="digit" data-d="6">6</button>
+          <button type="button" class="key key-op" data-act="op" data-op="-" aria-label="Minus">−</button>
 
-            <div class="ks-r-stats" id="enkelStats"></div>
-          </aside>
+          <button type="button" class="key" data-act="digit" data-d="1">1</button>
+          <button type="button" class="key" data-act="digit" data-d="2">2</button>
+          <button type="button" class="key" data-act="digit" data-d="3">3</button>
+          <button type="button" class="key key-op" data-act="op" data-op="+" aria-label="Pluss">+</button>
+
+          <button type="button" class="key key-fn" data-act="sign" aria-label="Bytt fortegn">±</button>
+          <button type="button" class="key" data-act="digit" data-d="0">0</button>
+          <button type="button" class="key" data-act="decimal" aria-label="Komma">,</button>
+          <button type="button" class="key key-eq" data-act="equals" aria-label="Er lik">=</button>
         </div>
       </div>
     </div>
 
     <aside class="side-col">
       <div class="side-card">
-        <h4 data-i18n="enkelSideTitle">Slik regner du prosent</h4>
-        <p data-i18n="enkelSideBody">Prosent betyr «av hundre». X % av et beløp = beløp × X ÷ 100. Vil du finne hvor mange prosent en del er av helheten: del ÷ helhet × 100. Prosentendring fra gammel til ny verdi: (ny − gammel) ÷ gammel × 100.</p>
+        <h4>Tips</h4>
+        <p>På PC kan du skrive rett fra tastaturet: tall, <strong>+ − * /</strong> og <strong>Enter</strong> for «=». <strong>%</strong> regner prosent, <strong>±</strong> bytter fortegn, <strong>⌫</strong> sletter siste siffer og <strong>Esc</strong> nullstiller.</p>
       </div>
       <div class="side-card related">
-        <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
-        <a href="/kalkulator/unit/"><span class="name" data-i18n="kalkCatFeatValutaName">Valuta</span><span class="arr">→</span></a>
-        <a href="/avgift/vat/"><span class="name" data-i18n="enkelRelMva">MVA-kalkulator</span><span class="arr">→</span></a>
-        <a href="/kalkulator/finance/"><span class="name" data-i18n="kalkCatFeatFinName">Finansiell</span><span class="arr">→</span></a>
+        <h4>Relaterte verktøy</h4>
+        <a href="/kalkulator/unit/"><span class="name">Valuta og enheter</span><span class="arr">→</span></a>
+        <a href="/avgift/vat/"><span class="name">MVA-kalkulator</span><span class="arr">→</span></a>
+        <a href="/kalkulator/finance/"><span class="name">Finansiell kalkulator</span><span class="arr">→</span></a>
       </div>
     </aside>
 
   </div>
 
   <div class="container howto-wrap">
-    <details class="howto" id="howto-enkelHowto">
+    <details class="howto" id="howto-enkel">
       <summary>
-        <span class="howto-title" data-howto-title="enkelHowto">Slik bruker du Enkel-kalkulatoren</span>
+        <span class="howto-title">Slik bruker du kalkulatoren</span>
       </summary>
-      <div class="howto-body" data-howto-prefix="enkelHowto">
-        <div class="howto-row"><strong>Velg beregningstype</strong><span>Bytt mellom prosent av beløp, andel i prosent, prosentendring, rabatt, påslag/MVA og del likt i nedtrekksmenyen.</span></div>
-        <div class="howto-row"><strong>Skriv inn tallene</strong><span>Resultatet oppdateres mens du skriver — det er ingen «beregn»-knapp.</span></div>
-        <div class="howto-row"><strong>Les av svaret</strong><span>Det store tallet er svaret. Stripa øverst og listen til høyre viser mellomregningene.</span></div>
-        <div class="howto-row"><strong>Trenger du full MVA?</strong><span>For å trekke MVA fra en pris, eller bruke 15 % og 12 %, bruk den egne MVA-kalkulatoren.</span></div>
+      <div class="howto-body">
+        <div class="howto-row"><strong>Tall og regnearter</strong><span>Trykk sifrene og <strong>+ − × ÷</strong>, så <strong>=</strong> for svaret. Du kan regne videre på svaret — trykk en regneart rett etter «=».</span></div>
+        <div class="howto-row"><strong>Prosent (%)</strong><span>«200 + 10 %» gir 10 % av 200 (= 20), så «=» blir 220. Trykker du «%» alene, deles tallet på 100.</span></div>
+        <div class="howto-row"><strong>± og ⌫</strong><span><strong>±</strong> bytter mellom pluss og minus. <strong>⌫</strong> sletter siste siffer. <strong>AC</strong> nullstiller alt.</span></div>
+        <div class="howto-row"><strong>Tastatur</strong><span>På PC: skriv <kbd>0</kbd>–<kbd>9</kbd>, <kbd>+</kbd> <kbd>-</kbd> <kbd>*</kbd> <kbd>/</kbd>, <kbd>Enter</kbd> for «=», <kbd>Backspace</kbd> for ⌫ og <kbd>Esc</kbd> for å nullstille.</span></div>
       </div>
     </details>
   </div>
@@ -324,310 +290,192 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script src="/shared/atmosphere.js?v=v1" defer></script>
 
 <script>
-// ── Enkel kalkulator: 6 hverdagsmoduser (prosent/andel/endring/rabatt/påslag/del likt) ──
-// Hardkodet norsk i calc-body (delt mønster med aga/vat); data-i18n kun på delt chrome.
-// Matte: 10.-klasse pensum (matematikk-22a). Rabatt/påslag portet fra core.js fcCalc.
+// ── Enkel kalkulator: vanlig tall-kalkulator (pluss/minus/gange/dele/prosent) ──
+// Hardkodet norsk. Tastatur-støtte. Ingen lagring — ren hverdagsregning.
 (function(){
-  var KEY = 'hv-enkel-v1';
-  var nf = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 2 });
-  var nf4 = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 4 });
+  var exprEl = document.getElementById('calcExpr');
+  var nowEl  = document.getElementById('calcNow');
+  var keys   = document.getElementById('calcKeys');
+  var hVal   = document.getElementById('hStatResult');
+  var hExpr  = document.getElementById('hStatExpr');
+  if(!nowEl || !keys) return;
 
-  function fmtKr(n){ return isFinite(n) ? nf.format(n) + ' kr' : '–'; }
-  function fmtNum(n){ return isFinite(n) ? nf.format(n) : '–'; }
-  function fmtFactor(n){ return isFinite(n) ? nf4.format(n) : '–'; }
-  function fmtPct(n){
-    if(!isFinite(n)) return '–';
-    var s = n < 0 ? '−' : '';
-    var str = Math.abs(n).toFixed(2).replace(/\.?0+$/, '').replace('.', ',');
-    return s + str + ' %';
-  }
-  function fmtPctSigned(n){
-    if(!isFinite(n)) return '–';
-    return (n > 0 ? '+' : '') + fmtPct(n);
-  }
-  function parseNum(id){
-    var el = document.getElementById(id);
-    if(!el) return NaN;
-    var raw = String(el.value || '').trim();
-    if(!raw) return NaN;
-    raw = raw.replace(/[\s ]/g, '').replace(',', '.');
-    var n = parseFloat(raw);
-    return isNaN(n) ? NaN : n;
+  var OPSYM = { '+':'+', '-':'−', '*':'×', '/':'÷' };
+
+  var current = '0';        // kanonisk inntastet tall: sifre, ',' som desimal, evt. ledende '-'
+  var previous = null;      // venstre operand (number)
+  var operator = null;      // ventende regneart
+  var freshOperand = true;  // neste siffer starter et nytt tall
+  var lastWasEquals = false;
+  var lastResult = null;    // full-presisjon resultat etter «=» (unngår avrundings-drift ved videreregning)
+  var errored = false;
+
+  function toNumber(str){ return parseFloat(String(str).replace(',', '.')); }
+
+  function numToCanonical(n){
+    if(!isFinite(n)) return '0';
+    if(Math.abs(n) >= 1e15) return n.toString().replace('.', ',');
+    var s = n.toFixed(10).replace(/0+$/,'').replace(/\.$/,'');
+    return s.replace('.', ',');
   }
 
-  // ── Modus-definisjoner. Hver calc() returnerer alltid {net, verdict, modeName, strip[4], stats[]} ──
-  var MODES = {
-    pctOf: {
-      label: 'Hva er X % av Y?', i18n: 'prosentOpt1',
-      fields: [
-        { id:'e-pct',  lbl:'Prosent',  cap:'%',  val:'25',  im:'decimal' },
-        { id:'e-base', lbl:'Av beløp', cap:'kr', val:'200', im:'decimal' }
-      ],
-      calc: function(){
-        var pct = parseNum('e-pct'), base = parseNum('e-base');
-        var ok = isFinite(pct) && isFinite(base);
-        var res = ok ? base * pct / 100 : NaN;
-        var rest = ok ? base - res : NaN;
-        return {
-          net: fmtKr(res),
-          verdict: ok ? (fmtPct(pct) + ' av ' + fmtKr(base) + ' er ' + fmtKr(res) + '.')
-                      : 'Skriv inn prosent og beløp.',
-          modeName: 'Prosent av beløp',
-          strip: [['Grunnbeløp', fmtKr(base)], ['Prosentsats', fmtPct(pct)], ['Resten', fmtKr(rest)], ['Resultat', fmtKr(res)]],
-          stats: [['Grunnbeløp', fmtKr(base)], ['Prosentsats', fmtPct(pct)], ['Resultat', fmtKr(res)], ['Resten' + (ok ? ' (' + fmtPct(100 - pct) + ')' : ''), fmtKr(rest)]]
-        };
-      }
-    },
-    share: {
-      label: 'X er hvor mange % av Y?', i18n: 'prosentOpt2',
-      fields: [
-        { id:'e-del',    lbl:'Del',       cap:'kr', val:'50',  im:'decimal' },
-        { id:'e-helhet', lbl:'Av helhet', cap:'kr', val:'200', im:'decimal' }
-      ],
-      calc: function(){
-        var del = parseNum('e-del'), helhet = parseNum('e-helhet');
-        var ok = isFinite(del) && isFinite(helhet) && helhet !== 0;
-        var res = ok ? del / helhet * 100 : NaN;
-        var rest = ok ? helhet - del : NaN;
-        return {
-          net: fmtPct(res),
-          verdict: ok ? (fmtKr(del) + ' er ' + fmtPct(res) + ' av ' + fmtKr(helhet) + '.')
-                      : 'Skriv inn del og helhet (helhet kan ikke være 0).',
-          modeName: 'Andel i prosent',
-          strip: [['Del', fmtKr(del)], ['Helhet', fmtKr(helhet)], ['Resterende', fmtKr(rest)], ['Andel', fmtPct(res)]],
-          stats: [['Del', fmtKr(del)], ['Helhet', fmtKr(helhet)], ['Andel', fmtPct(res)], ['Resterende' + (ok ? ' (' + fmtPct(100 - res) + ')' : ''), fmtKr(rest)]]
-        };
-      }
-    },
-    change: {
-      label: 'Prosentendring fra X til Y', i18n: 'prosentOpt3',
-      fields: [
-        { id:'e-fra', lbl:'Fra (start)', cap:'verdi', val:'200', im:'decimal' },
-        { id:'e-til', lbl:'Til (slutt)', cap:'verdi', val:'225', im:'decimal' }
-      ],
-      calc: function(){
-        var fra = parseNum('e-fra'), til = parseNum('e-til');
-        var ok = isFinite(fra) && isFinite(til) && fra !== 0;
-        var res = ok ? (til - fra) / fra * 100 : NaN;
-        var diff = ok ? til - fra : NaN;
-        var vekst = ok ? 1 + res / 100 : NaN;
-        var ord = !ok ? '' : (res > 0 ? 'en økning' : (res < 0 ? 'en reduksjon' : 'ingen endring'));
-        return {
-          net: fmtPctSigned(res),
-          verdict: ok ? ('Fra ' + fmtNum(fra) + ' til ' + fmtNum(til) + ' er ' + ord + ' på ' + fmtPct(Math.abs(res)) + ' (vekstfaktor ' + fmtFactor(vekst) + ').')
-                      : 'Skriv inn start- og sluttverdi (start kan ikke være 0).',
-          modeName: 'Prosentendring',
-          strip: [['Fra', fmtNum(fra)], ['Til', fmtNum(til)], ['Differanse', ok ? (diff > 0 ? '+' : '') + fmtNum(diff) : '–'], ['Endring', fmtPctSigned(res)]],
-          stats: [['Fra', fmtNum(fra)], ['Til', fmtNum(til)], ['Endring', fmtPctSigned(res)], ['Vekstfaktor', fmtFactor(vekst)]]
-        };
-      }
-    },
-    rabatt: {
-      label: 'Rabatt — pris etter avslag', i18n: 'enkelOptRabatt',
-      fields: [
-        { id:'e-pris', lbl:'Pris før rabatt', cap:'kr', val:'1 000', im:'decimal' },
-        { id:'e-rab',  lbl:'Rabatt',          cap:'%',  val:'30',    im:'decimal' }
-      ],
-      calc: function(){
-        var pris = parseNum('e-pris'), rabRaw = parseNum('e-rab');
-        var ok = isFinite(pris) && isFinite(rabRaw);
-        var rab = ok ? Math.min(Math.max(rabRaw, 0), 100) : NaN;   // port av core.js discount-clamp
-        var saved = ok ? pris * rab / 100 : NaN;
-        var final = ok ? pris - saved : NaN;
-        return {
-          net: fmtKr(final),
-          verdict: ok ? (fmtPct(rab) + ' avslag på ' + fmtKr(pris) + ' — du sparer ' + fmtKr(saved) + ' og betaler ' + fmtKr(final) + '.')
-                      : 'Skriv inn pris og rabatt.',
-          modeName: 'Rabatt',
-          strip: [['Pris før', fmtKr(pris)], ['Rabatt', fmtPct(rab)], ['Du sparer', fmtKr(saved)], ['Du betaler', fmtKr(final)]],
-          stats: [['Pris før rabatt', fmtKr(pris)], ['Du sparer', fmtKr(saved)], ['Du betaler' + (ok ? ' (' + fmtPct(100 - rab) + ' av prisen)' : ''), fmtKr(final)], ['Rabatt', fmtPct(rab)]]
-        };
-      }
-    },
-    paaslag: {
-      label: 'Påslag / MVA på beløp', i18n: 'enkelOptPaaslag',
-      fields: [
-        { id:'e-belop', lbl:'Beløp uten',  cap:'kr', val:'200', im:'decimal' },
-        { id:'e-sats',  lbl:'Påslag/MVA',  cap:'%',  val:'25',  im:'decimal' }
-      ],
-      calc: function(){
-        var belop = parseNum('e-belop'), sats = parseNum('e-sats');
-        var ok = isFinite(belop) && isFinite(sats);
-        var added = ok ? belop * sats / 100 : NaN;
-        var total = ok ? belop + added : NaN;
-        var andelUten = (ok && total > 0) ? belop / total * 100 : NaN;
-        return {
-          net: fmtKr(total),
-          verdict: ok ? (fmtKr(belop) + ' + ' + fmtPct(sats) + ' = ' + fmtKr(total) + '. Beløpet uten utgjør ' + fmtPct(andelUten) + ' av totalen.')
-                      : 'Skriv inn beløp og påslag/MVA-sats.',
-          modeName: 'Påslag / MVA',
-          strip: [['Uten', fmtKr(belop)], ['Sats', fmtPct(sats)], ['Påslag', fmtKr(added)], ['Med', fmtKr(total)]],
-          stats: [['Beløp uten', fmtKr(belop)], ['Påslag/MVA', fmtKr(added)], ['Med påslag', fmtKr(total)], ['Uten utgjør', fmtPct(andelUten)]]
-        };
-      }
-    },
-    delLikt: {
-      label: 'Del likt på antall', i18n: 'enkelOptDel',
-      fields: [
-        { id:'e-sum', lbl:'Beløp',  cap:'kr',  val:'860', im:'decimal' },
-        { id:'e-ant', lbl:'Antall', cap:'stk', val:'4',   im:'numeric' }
-      ],
-      calc: function(){
-        var sum = parseNum('e-sum'), antRaw = parseNum('e-ant');
-        var ant = isFinite(antRaw) ? Math.floor(antRaw) : NaN;
-        var ok = isFinite(sum) && isFinite(ant) && ant >= 1;
-        var per = ok ? sum / ant : NaN;
-        var perOpp = ok ? Math.ceil(per) : NaN;
-        return {
-          net: fmtKr(per),
-          verdict: ok ? (fmtKr(sum) + ' delt på ' + fmtNum(ant) + ' blir ' + fmtKr(per) + ' per del.')
-                      : 'Skriv inn beløp og antall (minst 1).',
-          modeName: 'Del likt',
-          strip: [['Totalbeløp', fmtKr(sum)], ['Antall', fmtNum(ant)], ['Rundet opp', fmtKr(perOpp)], ['Per stk', fmtKr(per)]],
-          stats: [['Totalbeløp', fmtKr(sum)], ['Antall', fmtNum(ant)], ['Per stk', fmtKr(per)], ['Rundet opp', fmtKr(perOpp)]]
-        };
-      }
+  // Grupperer heltallsdelen med tynt mellomrom, beholder komma/desimaler som de er.
+  function groupStr(str){
+    var neg = str.charAt(0) === '-';
+    if(neg) str = str.slice(1);
+    var parts = str.split(',');
+    var grouped = (parts[0] || '0').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    var out = grouped;
+    if(parts.length > 1) out += ',' + parts[1];
+    return (neg ? '−' : '') + out;
+  }
+  function disp(n){ return groupStr(numToCanonical(n)); }
+
+  function render(){
+    var s = groupStr(current);
+    nowEl.textContent = s;
+    var len = s.replace(/ /g, '').length;
+    nowEl.style.fontSize = len > 16 ? '24px' : len > 11 ? '32px' : '';
+    if(hVal) hVal.textContent = s;
+  }
+  function setExpr(t){
+    if(exprEl) exprEl.textContent = t || '';
+    if(hExpr) hExpr.textContent = t || '–';
+  }
+
+  function reset(){
+    current = '0'; previous = null; operator = null;
+    freshOperand = true; lastWasEquals = false; lastResult = null; errored = false;
+    setExpr(''); render();
+  }
+  function showError(msg){
+    errored = true; nowEl.textContent = msg; nowEl.style.fontSize = '24px';
+    setExpr(''); if(hVal) hVal.textContent = '–';
+  }
+
+  function inputDigit(d){
+    if(errored) reset();
+    if(lastWasEquals){ current = '0'; previous = null; operator = null; lastWasEquals = false; freshOperand = false; setExpr(''); }
+    if(freshOperand){ current = d; freshOperand = false; }
+    else if(current === '0'){ current = d; }
+    else if(current === '-0'){ current = '-' + d; }
+    else { current += d; }
+    render();
+  }
+  function inputDecimal(){
+    if(errored) reset();
+    if(lastWasEquals){ current = '0'; previous = null; operator = null; lastWasEquals = false; setExpr(''); }
+    if(freshOperand){ current = '0'; freshOperand = false; }
+    if(current.indexOf(',') === -1) current += ',';
+    render();
+  }
+
+  function compute(){
+    var a = previous, b = toNumber(current), r;
+    switch(operator){
+      case '+': r = a + b; break;
+      case '-': r = a - b; break;
+      case '*': r = a * b; break;
+      case '/':
+        if(b === 0){ showError('Kan ikke dele på 0'); return false; }
+        r = a / b; break;
+      default: return false;
     }
-  };
-  var ORDER = ['pctOf', 'share', 'change', 'rabatt', 'paaslag', 'delLikt'];
-
-  var sel = document.getElementById('enkel-mode');
-  var fieldsBox = document.getElementById('enkel-fields');
-  var noteBox = document.getElementById('enkel-note');
-
-  function R_(){ return (typeof R === 'function') ? R() : {}; }
-  function setEl(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; }
-
-  // Bygg modus-meny (norsk fallback + data-i18n for fremtidig oversettelse)
-  function buildMenu(){
-    var r = R_();
-    sel.innerHTML = '';
-    ORDER.forEach(function(k){
-      var o = document.createElement('option');
-      o.value = k;
-      o.setAttribute('data-i18n', MODES[k].i18n);
-      o.textContent = (r && r[MODES[k].i18n]) || MODES[k].label;
-      sel.appendChild(o);
-    });
+    previous = r;
+    current = numToCanonical(r);
+    render();
+    return true;
   }
 
-  function renderFields(mode){
-    var cfg = MODES[mode] || MODES.pctOf;
-    var html = '<div class="ik-row">';
-    cfg.fields.forEach(function(f){
-      html += '<div class="ik-fg">' +
-        '<label class="ik-lbl" for="' + f.id + '"><span>' + f.lbl + '</span> <span class="cap">(' + f.cap + ')</span></label>' +
-        '<input id="' + f.id + '" class="ik-input" type="text" inputmode="' + f.im + '" value="' + f.val + '" autocomplete="off">' +
-        '</div>';
-    });
-    html += '</div>';
-    fieldsBox.innerHTML = html;
-    noteBox.innerHTML = (mode === 'paaslag')
-      ? '<p class="ik-note">Trenger du å trekke MVA <em>fra</em> en pris, eller bruke 15 % eller 12 %? Bruk <a href="/avgift/vat/">MVA-kalkulatoren</a>.</p>'
-      : '';
-  }
-
-  function recalc(){
-    var mode = sel.value;
-    var cfg = MODES[mode] || MODES.pctOf;
-    var d = cfg.calc();
-
-    setEl('enkelNet', d.net);
-    setEl('enkelVerdict', d.verdict);
-    setEl('hStatResult', d.net);
-    setEl('hStatMode', d.modeName);
-
-    for(var i = 0; i < 4; i++){
-      setEl('enkel-s' + i + '-l', d.strip[i][0]);
-      setEl('enkel-s' + i + '-v', d.strip[i][1]);
+  function chooseOp(op){
+    if(errored) return;
+    if(operator !== null && !freshOperand){
+      if(!compute()) return;       // kjede: regn ut det forrige først
+    } else if(previous === null){
+      previous = (lastWasEquals && lastResult !== null) ? lastResult : toNumber(current);
     }
+    operator = op;
+    freshOperand = true;
+    lastWasEquals = false;
+    setExpr(disp(previous) + ' ' + OPSYM[op]);
+  }
 
-    var statsBox = document.getElementById('enkelStats');
-    if(statsBox){
-      statsBox.innerHTML = d.stats.map(function(s, idx){
-        var cls = idx === d.stats.length - 1 ? 'ks-r-stat div' : 'ks-r-stat';
-        return '<div class="' + cls + '"><span class="l">' + s[0] + '</span><span class="v">' + s[1] + '</span></div>';
-      }).join('');
+  function equals(){
+    if(errored || operator === null || previous === null) return;
+    var aDisp = disp(previous);
+    var bDisp = disp(toNumber(current));
+    var opSym = OPSYM[operator];
+    if(!compute()) return;
+    setExpr(aDisp + ' ' + opSym + ' ' + bDisp + ' =');
+    lastResult = previous;
+    operator = null; previous = null;
+    freshOperand = true; lastWasEquals = true;
+  }
+
+  function percent(){
+    if(errored) return;
+    var val = toNumber(current);
+    if(operator !== null && previous !== null) val = previous * val / 100;
+    else val = val / 100;
+    current = numToCanonical(val);
+    freshOperand = false;
+    render();
+  }
+
+  function sign(){
+    if(errored) return;
+    if(current === '0' || current === '0,') return;
+    current = current.charAt(0) === '-' ? current.slice(1) : '-' + current;
+    render();
+  }
+
+  function backspace(){
+    if(errored){ reset(); return; }
+    if(lastWasEquals || freshOperand) return;
+    if(current.length <= 1 || (current.length === 2 && current.charAt(0) === '-')) current = '0';
+    else current = current.slice(0, -1);
+    if(current === '-') current = '0';
+    render();
+  }
+
+  keys.addEventListener('click', function(e){
+    var b = e.target.closest('button.key'); if(!b) return;
+    switch(b.getAttribute('data-act')){
+      case 'digit':   inputDigit(b.getAttribute('data-d')); break;
+      case 'decimal': inputDecimal(); break;
+      case 'op':      chooseOp(b.getAttribute('data-op')); break;
+      case 'equals':  equals(); break;
+      case 'percent': percent(); break;
+      case 'sign':    sign(); break;
+      case 'back':    backspace(); break;
+      case 'clear':   reset(); break;
     }
-    persist();
-  }
+  });
 
-  function persist(){
-    try {
-      var store = JSON.parse(localStorage.getItem(KEY) || '{}');
-      store.mode = sel.value;
-      store.vals = store.vals || {};
-      fieldsBox.querySelectorAll('.ik-input').forEach(function(el){ store.vals[el.id] = el.value; });
-      localStorage.setItem(KEY, JSON.stringify(store));
-    } catch(e){}
-  }
-  function restore(){
-    var store = {};
-    try { store = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e){}
-    if(store.mode && MODES[store.mode]) sel.value = store.mode;
-    renderFields(sel.value);
-    if(store.vals){
-      fieldsBox.querySelectorAll('.ik-input').forEach(function(el){
-        if(store.vals[el.id] != null) el.value = store.vals[el.id];
-      });
-    }
-  }
+  window.addEventListener('keydown', function(e){
+    var t = e.target;
+    if(t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if(e.ctrlKey || e.metaKey || e.altKey) return;
+    var k = e.key;
+    if(k >= '0' && k <= '9') inputDigit(k);
+    else if(k === ',' || k === '.') inputDecimal();
+    else if(k === '+' || k === '-') chooseOp(k);
+    else if(k === '*') chooseOp('*');
+    else if(k === '/'){ e.preventDefault(); chooseOp('/'); }
+    else if(k === 'Enter' || k === '='){ e.preventDefault(); equals(); }
+    else if(k === '%') percent();
+    else if(k === 'Backspace'){ e.preventDefault(); backspace(); }
+    else if(k === 'Escape') reset();
+    else return;
+  });
 
-  // Event-delegasjon på fields-container (overlever innerHTML-bytte)
-  fieldsBox.addEventListener('input', recalc);
-  sel.addEventListener('change', function(){ renderFields(sel.value); recalc(); });
-
-  buildMenu();
-  restore();
-  recalc();
-
-  // Re-bygg menyen når oversettelser (R) er klare — bevarer valgt modus.
-  (function(){
-    var n = 0;
-    var t = setInterval(function(){
-      n++;
-      var r = R_();
-      if((r && r.prosentOpt1) || n > 40){
-        var cur = sel.value;
-        buildMenu();
-        sel.value = cur;
-        clearInterval(t);
-      }
-    }, 80);
-  })();
+  reset();
 })();
 </script>
 
 <script>
-// ── Howto-render + ? toggle + ⛶ fokusmodus ──
+// ── ? veiledning + ⛶ fokusmodus ──
 (function(){
-  function renderHowto(){
-    var bodies = document.querySelectorAll('[data-howto-prefix]');
-    if(!bodies.length) return;
-    var r = (typeof R === 'function') ? R() : {};
-    bodies.forEach(function(body){
-      var prefix = body.getAttribute('data-howto-prefix');
-      var rows = r && r[prefix + 'Rows'];
-      var html = '';
-      if(rows && rows.length){
-        for(var i=0;i<rows.length;i++){
-          var label = rows[i][0]||'';
-          var desc  = rows[i][1]||'';
-          html += '<div class="howto-row"><strong>'+label+'</strong><span>'+desc+'</span></div>';
-        }
-      } else {
-        if(r[prefix + 'Lead']) html += '<p>' + r[prefix + 'Lead'] + '</p>';
-        for(var j=1; j<=10; j++){ var p = r[prefix + 'P' + j]; if(p) html += '<p>' + p + '</p>'; }
-        if(r[prefix + 'Helper']) html += '<p class="howto-helper"><em>' + r[prefix + 'Helper'] + '</em></p>';
-        if(r[prefix + 'Outro']) html += '<p>' + r[prefix + 'Outro'] + '</p>';
-      }
-      if(html) body.innerHTML = html;
-    });
-    document.querySelectorAll('[data-howto-title]').forEach(function(t){
-      var titleKey = t.getAttribute('data-howto-title') + 'Title';
-      if(r && r[titleKey]) t.textContent = r[titleKey];
-    });
-  }
   function init(){
     document.querySelectorAll('.calc-help-btn').forEach(function(b){
       b.addEventListener('click', function(){
@@ -639,27 +487,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     document.querySelectorAll('.focus-card-btn').forEach(function(b){
       b.addEventListener('click', function(){ document.body.classList.toggle('focus-mode'); });
     });
-    renderHowto();
   }
-  function pollRender(){
-    var bodies = document.querySelectorAll('[data-howto-prefix]');
-    if(!bodies.length) return;
-    var attempts = 0, max = 38;
-    var t = setInterval(function(){
-      attempts++;
-      var r = (typeof R === 'function') ? R() : {};
-      var ready = false;
-      bodies.forEach(function(b){
-        var p = b.getAttribute('data-howto-prefix');
-        if(r[p+'Rows'] || r[p+'Lead'] || r[p+'P1']) ready = true;
-      });
-      if(ready){ renderHowto(); clearInterval(t); }
-      else if(attempts >= max){ clearInterval(t); }
-    }, 80);
-  }
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
-  } else { init(); pollRender(); }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
 })();
 </script>
 
