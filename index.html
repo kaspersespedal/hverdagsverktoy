@@ -856,6 +856,8 @@
   }
   .widget-spark.spark-bars rect{shape-rendering:geometricPrecision;rx:1px}
   .widget-spark .bar-now{fill:var(--accent-2);opacity:.95}
+  .widget-spark .bar-cheap{fill:var(--ink);opacity:.8}
+  .widget-spark .bar-cheap-mark{fill:var(--ink);opacity:.9}
   .widget-spark .sk-stroke-a{stop-color:var(--ink3)}
   .widget-spark .sk-stroke-b{stop-color:var(--accent-2)}
   .widget-spark .sk-area-a{stop-color:var(--accent-2);stop-opacity:.14}
@@ -868,6 +870,20 @@
     color:var(--ink4);
     font-variant-numeric:tabular-nums;
   }
+  /* Værmeldings-stripe (erstatter temp-sparkline på værkortet) */
+  .wx-fc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-height:48px}
+  .wx-fc-cell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:7px}
+  .wx-fc-cell:first-child{background:rgba(216,173,126,.10)}
+  .wx-fc-ico{display:flex;color:var(--ink3);transition:color .3s var(--ease)}
+  .wx-fc-ico svg{width:15px;height:15px;display:block}
+  .widget:hover .wx-fc-cell:first-child .wx-fc-ico{color:var(--accent-2)}
+  .wx-fc-temp{font-family:var(--font-serif);font-weight:500;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+  .wx-fc-time{font:600 8.5px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink4);font-variant-numeric:tabular-nums}
+  /* Neste rentemøte (erstatter rente-sparkline) */
+  .sr-next{display:flex;flex-direction:column;gap:4px}
+  .sr-next-lbl{font:600 8.5px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;color:var(--ink4)}
+  .sr-next-val{font-family:var(--font-serif);font-weight:500;font-size:18px;color:var(--ink2);letter-spacing:-.2px;font-variant-numeric:tabular-nums lining-nums;transition:color .3s var(--ease)}
+  .widget:hover .sr-next-val{color:var(--accent-2)}
   .widget-value{
     font-family:var(--font-serif);font-weight:500;
     font-size:30px;line-height:1;letter-spacing:-.5px;color:var(--ink);
@@ -1521,7 +1537,7 @@
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v1" defer></script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
-<script src="/shared/markedsdata.js?v=v1" defer></script>
+<script src="/shared/markedsdata.js?v=v2" defer></script>
 <style>
 /* GLØD-FIX (2026-05-31): calm-override.css + site-shell.css disable the atmosphere
    site-wide (display:none !important) and paint body opaque, so the forside was flat.
@@ -1693,16 +1709,12 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
             <div class="widget-value"><span class="count-up" id="wxTemp">12</span><span class="unit">°C</span></div>
             <p class="widget-sub"><span class="ctx" id="wxSub">Maks 14° · Min 4° · 4 m/s SV</span></p>
             <div class="widget-spark-wrap">
-              <svg class="widget-spark" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
-                <defs><linearGradient id="sp-oslo" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="currentColor" stop-opacity=".22"/>
-                  <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
-                </linearGradient></defs>
-                <path d="M0,17.1 L8.7,19.3 L17.4,19.3 L26.1,21.5 L34.8,23.6 L43.5,25.8 L52.2,25.8 L60.9,23.6 L69.6,19.3 L78.3,14.9 L87,10.5 L95.7,8.4 L104.3,6.2 L113,4 L121.7,4 L130.4,6.2 L139.1,8.4 L147.8,12.7 L156.5,14.9 L165.2,17.1 L173.9,17.1 L182.6,17.1 L191.3,17.1 L200,17.1 L200,30 L0,30 Z" fill="url(#sp-oslo)" stroke="none"/>
-                <path d="M0,17.1 L8.7,19.3 L17.4,19.3 L26.1,21.5 L34.8,23.6 L43.5,25.8 L52.2,25.8 L60.9,23.6 L69.6,19.3 L78.3,14.9 L87,10.5 L95.7,8.4 L104.3,6.2 L113,4 L121.7,4 L130.4,6.2 L139.1,8.4 L147.8,12.7 L156.5,14.9 L165.2,17.1 L173.9,17.1 L182.6,17.1 L191.3,17.1 L200,17.1" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-                <circle class="spark-now" cx="139.1" cy="8.4" r="2.2"/>
-              </svg>
-              <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>nå</span></div>
+              <div class="wx-fc" id="wxForecast" aria-hidden="true">
+                <div class="wx-fc-cell"><span class="wx-fc-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1.6v1.6M8 12.8v1.6M1.6 8h1.6M12.8 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"/></svg></span><b class="wx-fc-temp">25°</b><span class="wx-fc-time">nå</span></div>
+                <div class="wx-fc-cell"><span class="wx-fc-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 11.5h7a2.5 2.5 0 0 0 .2-5a3.5 3.5 0 0 0-6.7-1A2.7 2.7 0 0 0 4.6 11.5Z"/></svg></span><b class="wx-fc-temp">24°</b><span class="wx-fc-time">15</span></div>
+                <div class="wx-fc-cell"><span class="wx-fc-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 11.5h7a2.5 2.5 0 0 0 .2-5a3.5 3.5 0 0 0-6.7-1A2.7 2.7 0 0 0 4.6 11.5Z"/></svg></span><b class="wx-fc-temp">21°</b><span class="wx-fc-time">17</span></div>
+                <div class="wx-fc-cell"><span class="wx-fc-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 9.4h7a2.4 2.4 0 0 0 .2-4.8a3.4 3.4 0 0 0-6.5-.9A2.6 2.6 0 0 0 4.6 9.4Z"/><path d="M6 11.3l-.8 2M9 11.3l-.8 2"/></svg></span><b class="wx-fc-temp">18°</b><span class="wx-fc-time">19</span></div>
+              </div>
             </div>
           </div>
 
@@ -1717,16 +1729,10 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
             <div class="widget-value"><span class="count-up" id="srVal">4,25</span><span class="unit">%</span></div>
             <p class="widget-sub"><span class="ctx" id="srSub">Norges Bank · styringsrenta</span></p>
             <div class="widget-spark-wrap">
-              <svg class="widget-spark" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
-                <defs><linearGradient id="sp-sr" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="currentColor" stop-opacity=".24"/>
-                  <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
-                </linearGradient></defs>
-                <path d="M0,8 L200,8 L200,30 L0,30 Z" fill="url(#sp-sr)" stroke="none"/>
-                <path d="M0,8 L200,8" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-                <circle class="spark-now" cx="200" cy="8" r="2.2"/>
-              </svg>
-              <div class="widget-axis"><span>18 mnd</span><span>9 mnd</span><span>nå</span></div>
+              <div class="sr-next">
+                <span class="sr-next-lbl" id="srNextLbl">Neste rentemøte</span>
+                <b class="sr-next-val" id="srNext">13. aug. 2026</b>
+              </div>
             </div>
           </div>
 
@@ -1771,7 +1777,7 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
                   <rect x="192.71" y="20" width="6.25" height="8"/>
                 </g>
               </svg>
-              <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>nå</span><span>23</span></div>
+              <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>
             </div>
           </div>
 
@@ -1795,7 +1801,7 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
                 <path d="M0,17 L6.9,16 L13.8,17 L20.7,15 L27.6,16 L34.5,17 L41.4,15 L48.3,16 L55.2,15 L62.1,14 L69,15 L75.9,16 L82.8,15 L89.7,16 L96.6,14 L103.4,15 L110.3,16 L117.2,15 L124.1,14 L131,15 L137.9,16 L144.8,14 L151.7,13 L158.6,14 L165.5,15 L172.4,13 L179.3,14 L186.2,13 L193.1,12 L200,11" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
                 <circle class="spark-now" cx="200" cy="11" r="2.2"/>
               </svg>
-              <div class="widget-axis"><span>30d</span><span>14d</span><span>7d</span><span>nå</span></div>
+              <div class="widget-axis"><span id="fxAx0">30d</span><span id="fxAx1">14d</span><span id="fxAx2">i dag</span></div>
             </div>
           </div>
 
