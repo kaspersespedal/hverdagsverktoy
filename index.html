@@ -1180,6 +1180,32 @@
   }
   .brand-row:hover .mark{ border-color:rgba(200,153,104,.4); }
 
+  /* ── Live markedsdata: stedvelger, oppdater-knapp, kilder ── */
+  .wx-place-wrap{display:inline-flex;align-items:center;gap:5px}
+  .wx-place{display:inline-flex;align-items:center;gap:4px;background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;cursor:pointer}
+  .wx-caret{width:9px;height:9px;opacity:.5;transition:transform .2s var(--ease)}
+  .wx-place[aria-expanded="true"] .wx-caret{transform:rotate(180deg)}
+  .wx-geo{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;border:0;background:none;color:var(--ink3);cursor:pointer;opacity:.65;transition:opacity .2s,color .2s}
+  .wx-geo svg{width:13px;height:13px}
+  .wx-geo.busy{animation:wxpulse 1s ease-in-out infinite}
+  @keyframes wxpulse{0%,100%{opacity:.35}50%{opacity:.85}}
+  @media(hover:hover){.wx-place:hover .widget-label,.wx-geo:hover{color:var(--accent-2);opacity:1}}
+  .wx-search{position:absolute;left:14px;right:14px;top:48px;z-index:9;background:var(--surface2,#1b1714);border:1px solid var(--line);border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.5);padding:8px}
+  .wx-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:7px;color:var(--ink);font:inherit;font-size:13px;padding:8px 10px}
+  .wx-input:focus{outline:none;border-color:var(--accent-2)}
+  .wx-results{list-style:none;margin:6px 0 0;padding:0;max-height:208px;overflow-y:auto}
+  .wx-result{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:8px 9px;border-radius:6px;cursor:pointer}
+  .wx-result small{color:var(--ink3);font-size:11px;white-space:nowrap}
+  .wx-result:hover,.wx-result:focus-visible{background:rgba(255,255,255,.06);outline:none}
+  .wx-empty{padding:8px 9px;color:var(--ink3);font-size:12px}
+  .stamp{display:inline-flex;align-items:center;gap:8px}
+  .daily-refresh{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;border:0;background:none;color:var(--ink3);cursor:pointer;opacity:.65;transition:opacity .2s,color .2s,transform .4s var(--ease)}
+  .daily-refresh svg{width:13px;height:13px}
+  @media(hover:hover){.daily-refresh:hover{color:var(--accent-2);opacity:1;transform:rotate(90deg)}}
+  .daily-credits{margin:16px 0 0;padding:13px 4px 2px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--ink3)}
+  .daily-credits a{color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18)}
+  @media(hover:hover){.daily-credits a:hover{color:var(--accent-2);border-bottom-color:currentColor}}
+  .daily-disclaimer{display:block;margin-top:5px;opacity:.8}
   .count-up{font-variant-numeric:tabular-nums}
 
   /* ── RESPONSIVE ───────────────────────────── */
@@ -1495,6 +1521,7 @@
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v1" defer></script>
 <script src="/shared/atmosphere.js?v=v1" defer></script>
+<script src="/shared/markedsdata.js?v=v1" defer></script>
 <style>
 /* GLØD-FIX (2026-05-31): calm-override.css + site-shell.css disable the atmosphere
    site-wide (display:none !important) and paint body opaque, so the forside was flat.
@@ -1638,25 +1665,33 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
       <div class="daily-frame reveal">
         <header class="daily-head">
           <div class="title"><span data-i18n="homeMarketTitle">Markedsdata</span><span class="sep"></span><b id="dailyDate">Fredag 25. april 2026</b></div>
-          <div class="stamp" id="dailyStamp">Sist oppdatert 14:32</div>
+          <div class="stamp" id="dailyStamp">Sist oppdatert —</div>
         </header>
 
         <div class="daily-grid">
 
-          <a class="widget reveal" style="--i:1" href="#" aria-label="Vær i Oslo">
+          <div class="widget widget-wx reveal" style="--i:1" id="wxCard" aria-label="Vær">
             <div class="widget-top">
-              <span class="widget-label">Oslo</span>
+              <span class="wx-place-wrap">
+                <button type="button" class="wx-place" id="wxPlaceBtn" aria-haspopup="listbox" aria-expanded="false">
+                  <span class="widget-label" id="wxPlaceName">Oslo</span>
+                  <svg class="wx-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5,4 L5,6.5 L7.5,4"/></svg>
+                </button>
+                <button type="button" class="wx-geo" id="wxGeoBtn" title="Bruk min posisjon" aria-label="Bruk min posisjon">
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8,1.6 C5.2,1.6 3.1,3.7 3.1,6.4 C3.1,9.6 8,14.4 8,14.4 C8,14.4 12.9,9.6 12.9,6.4 C12.9,3.7 10.8,1.6 8,1.6 Z"/><circle cx="8" cy="6.3" r="1.9"/></svg>
+                </button>
+              </span>
               <span class="widget-trend trend-weather" aria-hidden="true">
                 <svg class="trend-glyph" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
                   <circle cx="5.5" cy="7" r="2.6"/>
                   <path d="M5.5,2.3 v1.2 M2,7 H.8 M3.05,3.55 L2.2,2.7 M8,3.55 L8.85,2.7"/>
                   <path d="M7.4,11.4 a3 3 0 1 1 4.2 -4.2 a2.5 2.5 0 0 1 1.4 4.2 z" fill="currentColor" fill-opacity=".18"/>
                 </svg>
-                <span>Lett skyet</span>
+                <span id="wxCond">Lett skyet</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" data-to="12">12</span><span class="unit">°C</span></div>
-            <p class="widget-sub"><span class="ctx">Maks 14° · Min 4° · 4 m/s SV</span></p>
+            <div class="widget-value"><span class="count-up" id="wxTemp" data-to="12">12</span><span class="unit">°C</span></div>
+            <p class="widget-sub"><span class="ctx" id="wxSub">Maks 14° · Min 4° · 4 m/s SV</span></p>
             <div class="widget-spark-wrap">
               <svg class="widget-spark" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
                 <defs><linearGradient id="sp-oslo" x1="0" y1="0" x2="0" y2="1">
@@ -1669,42 +1704,42 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
               </svg>
               <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>nå</span></div>
             </div>
-          </a>
+          </div>
 
-          <a class="widget reveal" style="--i:2" href="#" aria-label="Oslo Børs hovedindeks">
+          <div class="widget reveal" style="--i:2" id="srCard" aria-label="Norges Banks styringsrente">
             <div class="widget-top">
-              <span class="widget-label">OSEBX</span>
-              <span class="widget-trend trend-up" aria-hidden="true">
-                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,8 L8,2 M4,2 L8,2 L8,6"/></svg>
-                <span>+0,42<i>%</i></span>
+              <span class="widget-label">Styringsrente</span>
+              <span class="widget-trend trend-flat" id="srTrend" aria-hidden="true">
+                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
+                <span>±0,00</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" data-to="1543.82" data-decimals="2" data-decimal-sep="," data-format="space" data-dec-class="dec">1 543<span class="dec">,82</span></span></div>
-            <p class="widget-sub"><span class="ctx">Sist 16:06 · Volum 4,2 Md</span></p>
+            <div class="widget-value"><span class="count-up" id="srVal">4,25</span><span class="unit">%</span></div>
+            <p class="widget-sub"><span class="ctx" id="srSub">Norges Bank · styringsrenta</span></p>
             <div class="widget-spark-wrap">
-              <svg class="widget-spark spark-up" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
-                <defs><linearGradient id="sp-osebx" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="currentColor" stop-opacity=".28"/>
+              <svg class="widget-spark" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
+                <defs><linearGradient id="sp-sr" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="currentColor" stop-opacity=".24"/>
                   <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
                 </linearGradient></defs>
-                <path d="M0,22 L13.3,23 L26.6,21 L40,24 L53.3,22 L66.6,20 L80,18 L93.3,19 L106.6,17 L120,14 L133.3,15 L146.6,13 L160,11 L173.3,10 L186.6,9 L200,7 L200,30 L0,30 Z" fill="url(#sp-osebx)" stroke="none"/>
-                <path d="M0,22 L13.3,23 L26.6,21 L40,24 L53.3,22 L66.6,20 L80,18 L93.3,19 L106.6,17 L120,14 L133.3,15 L146.6,13 L160,11 L173.3,10 L186.6,9 L200,7" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-                <circle class="spark-now" cx="200" cy="7" r="2.2"/>
+                <path d="M0,8 L200,8 L200,30 L0,30 Z" fill="url(#sp-sr)" stroke="none"/>
+                <path d="M0,8 L200,8" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                <circle class="spark-now" cx="200" cy="8" r="2.2"/>
               </svg>
-              <div class="widget-axis"><span>09:00</span><span>12:00</span><span>16:06</span></div>
+              <div class="widget-axis"><span>18 mnd</span><span>9 mnd</span><span>nå</span></div>
             </div>
-          </a>
+          </div>
 
-          <a class="widget reveal" style="--i:3" href="#" aria-label="Strømpris i Sør-Norge">
+          <div class="widget reveal" style="--i:3" id="stCard" aria-label="Strømpris">
             <div class="widget-top">
-              <span class="widget-label">Strøm NO1</span>
-              <span class="widget-trend trend-down" aria-hidden="true">
+              <span class="widget-label" id="stSone">Strøm NO1</span>
+              <span class="widget-trend trend-down" id="stTrend" aria-hidden="true">
                 <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,2 L8,8 M4,8 L8,8 L8,4"/></svg>
                 <span>−12<i>%</i></span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" data-to="68">68</span><span class="unit">øre/kWh</span></div>
-            <p class="widget-sub"><span class="ctx">Topp 18:00 · 91 øre · NO2 71 øre</span></p>
+            <div class="widget-value"><span class="count-up" id="stVal" data-to="68">68</span><span class="unit">øre/kWh</span></div>
+            <p class="widget-sub"><span class="ctx" id="stSub">Topp 18:00 · 91 øre · NO2 71 øre</span></p>
             <div class="widget-spark-wrap">
               <svg class="widget-spark spark-bars" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
                 <g fill="currentColor" opacity=".55">
@@ -1738,18 +1773,18 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
               </svg>
               <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>nå</span><span>23</span></div>
             </div>
-          </a>
+          </div>
 
-          <a class="widget reveal" style="--i:4" href="#" aria-label="Valutakurs">
+          <div class="widget reveal" style="--i:4" id="fxCard" aria-label="Valutakurs">
             <div class="widget-top">
               <span class="widget-label">USD / NOK</span>
-              <span class="widget-trend trend-flat" aria-hidden="true">
+              <span class="widget-trend trend-flat" id="fxTrend" aria-hidden="true">
                 <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
                 <span>+0,03</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" data-to="10.72" data-decimals="2" data-decimal-sep=",">10,72</span><span class="unit">kr</span></div>
-            <p class="widget-sub"><span class="ctx">EUR 11,84 · GBP 13,56 · SEK 1,02</span></p>
+            <div class="widget-value"><span class="count-up" id="fxVal" data-to="10.72" data-decimals="2" data-decimal-sep=",">10,72</span><span class="unit">kr</span></div>
+            <p class="widget-sub"><span class="ctx" id="fxSub">EUR 11,84 · GBP 13,56 · SEK 1,02</span></p>
             <div class="widget-spark-wrap">
               <svg class="widget-spark" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
                 <defs><linearGradient id="sp-usd" x1="0" y1="0" x2="0" y2="1">
@@ -1762,7 +1797,7 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
               </svg>
               <div class="widget-axis"><span>30d</span><span>14d</span><span>7d</span><span>nå</span></div>
             </div>
-          </a>
+          </div>
 
         </div>
 
@@ -1814,6 +1849,14 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
         </div>
         <span class="ticker-badge" aria-hidden="true">Live</span>
       </aside>
+
+      <p class="daily-credits">
+        Vær: <a href="https://www.met.no/" target="_blank" rel="noopener">MET Norway</a> ·
+        Valuta og styringsrente: <a href="https://www.norges-bank.no/" target="_blank" rel="noopener">Norges Bank</a> ·
+        Strøm: <a href="https://www.hvakosterstrommen.no/" target="_blank" rel="noopener">hvakosterstrømmen.no</a> ·
+        Sted: <a href="https://www.kartverket.no/" target="_blank" rel="noopener">© Kartverket</a>.
+        <span class="daily-disclaimer">Veiledende, muligens forsinkede tall — ikke investeringsrådgivning.</span>
+      </p>
 
       </div>
     </div>
@@ -2120,14 +2163,7 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
     var mm = ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
     el.textContent = dd[d.getDay()] + ' ' + d.getDate() + '. ' + mm[d.getMonth()] + ' ' + d.getFullYear();
   })();
-  (function(){
-    var el = document.getElementById('dailyStamp');
-    if(!el) return;
-    var d = new Date();
-    var hh = String(d.getHours()).padStart(2,'0');
-    var mn = String(d.getMinutes()).padStart(2,'0');
-    el.textContent = 'Sist oppdatert ' + hh + ':' + mn;
-  })();
+  // dailyStamp eies nå av shared/markedsdata.js (ekte hentetidspunkt + oppdater-knapp)
 
   // ── Search index (page-local fallback; shared/search.js may override) ──
   var SEARCH_DATA = [
