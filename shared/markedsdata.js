@@ -123,6 +123,27 @@
     return '<svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="' + d + '"/></svg>';
   }
 
+  /* Egen count-up — animerer opp til den EKTE verdien (forsidens generiske
+     count-up-IIFE hoppes over fordi vi fjernet data-to på disse feltene).
+     Animerer kun ved første visning per felt; senere oppdateringer settes direkte. */
+  var COUNTED = {};
+  function countUp(id, target, dec) {
+    var el = $(id);
+    if (!el || typeof target !== 'number' || isNaN(target)) return;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (COUNTED[id] || reduce) { el.textContent = nb(target, dec); COUNTED[id] = true; return; }
+    COUNTED[id] = true;
+    var from = target * 0.82, dur = 1100, t0 = null;
+    function ease(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+    function step(ts) {
+      if (t0 === null) t0 = ts;
+      var t = Math.min(1, (ts - t0) / dur);
+      el.textContent = nb(from + (target - from) * ease(t), dec);
+      if (t < 1) requestAnimationFrame(step); else el.textContent = nb(target, dec);
+    }
+    requestAnimationFrame(step);
+  }
+
   function stampNow() {
     var el = $('dailyStampTxt'); if (!el) return;
     var d = new Date();
@@ -146,7 +167,7 @@
     return WX[sym.replace(/_(day|night|polartwilight)$/, '')] || 'Vær';
   }
   function renderWeather(d) {
-    setText('wxTemp', nb(Math.round(d.temp)));
+    countUp('wxTemp', Math.round(d.temp), 0);
     setText('wxCond', wxText(d.sym));
     var sub = 'Maks ' + Math.round(d.max) + '° · Min ' + Math.round(d.min) + '°';
     if (typeof d.wind === 'number') sub += ' · ' + nb(d.wind, 1) + ' m/s' + (d.dir != null ? ' ' + compass(d.dir) : '');
@@ -199,7 +220,7 @@
   }
   function renderFx(d) {
     if (!d.USD) return;
-    setText('fxVal', nb(d.USD.last, 2));
+    countUp('fxVal', d.USD.last, 2);
     var sub = [];
     if (d.EUR) sub.push('EUR ' + nb(d.EUR.last, 2));
     if (d.GBP) sub.push('GBP ' + nb(d.GBP.last, 2));
@@ -238,7 +259,7 @@
              changeDate: dates[ci], prevLevel: ci > 0 ? vals[ci - 1] : last };
   }
   function renderRate(d) {
-    setText('srVal', nb(d.last, 2));
+    countUp('srVal', d.last, 2);
     setText('srSub', 'Norges Bank · sist endret ' + nbDate(d.changeDate));
     var span = $('srTrend');
     if (span) {
@@ -267,7 +288,7 @@
   /* ═══════════════════ STRØM (hvakosterstrømmen.no) ══════════════════ */
   function renderStrom(d, sone) {
     setText('stSone', 'Strøm ' + sone);
-    setText('stVal', nb(Math.round(d.now * 100)));
+    countUp('stVal', Math.round(d.now * 100), 0);
     setText('stSub', 'Topp kl ' + d.peakHour + ' · ' + Math.round(d.peak * 100) + ' øre · snitt ' + Math.round(d.avg * 100) + ' øre');
     var span = $('stTrend');
     if (span) {
