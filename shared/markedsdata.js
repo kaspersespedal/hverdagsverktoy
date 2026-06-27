@@ -60,6 +60,18 @@
 
   var DEFAULT_PLACE = { navn: 'Oslo', lat: 59.9133, lon: 10.7389, kommunenr: '0301', fylkesnr: '03', sone: 'NO1' };
 
+  /* Norges Banks rentemøter (rentebeslutning-datoer). Verifisert mot norges-bank.no
+     2026-06-27 — 8 møter/år. 2027-datoene er ikke publisert ennå; når lista går tom
+     skjules «neste møte»-linja heller enn å vise en gal dato. Oppdater ved årsskiftet. */
+  var NB_MEETINGS = ['2026-08-13', '2026-09-24', '2026-11-05', '2026-12-17'];
+  function nextMeeting() {
+    var t = new Date(); t.setHours(0, 0, 0, 0);
+    for (var i = 0; i < NB_MEETINGS.length; i++) {
+      if (new Date(NB_MEETINGS[i] + 'T00:00:00') >= t) return NB_MEETINGS[i];
+    }
+    return null;
+  }
+
   /* ── Småhjelpere ───────────────────────────────────────────── */
   function $(id) { return document.getElementById(id); }
   function setText(id, t) { var el = $(id); if (el) el.textContent = t; }
@@ -80,6 +92,11 @@
     if (!iso) return '';
     var p = iso.split('-');
     return parseInt(p[2], 10) + '. ' + MND[parseInt(p[1], 10) - 1] + ' ' + p[0];
+  }
+  function nbShort(iso) { // 'YYYY-MM-DD' -> '24. jun.'
+    if (!iso) return '';
+    var p = iso.split('-');
+    return parseInt(p[2], 10) + '. ' + MND[parseInt(p[1], 10) - 1];
   }
 
   /* ── Cache (localStorage) ──────────────────────────────────── */
@@ -166,14 +183,44 @@
     if (!sym) return 'Vær';
     return WX[sym.replace(/_(day|night|polartwilight)$/, '')] || 'Vær';
   }
+  /* Minimal linjeikoner (matcher sidens outline-stil) for værmeldings-stripa. */
+  var WX_ICONS = {
+    sun: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1.6v1.6M8 12.8v1.6M1.6 8h1.6M12.8 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"/></svg>',
+    cloud: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 11.5h7a2.5 2.5 0 0 0 .2-5a3.5 3.5 0 0 0-6.7-1A2.7 2.7 0 0 0 4.6 11.5Z"/></svg>',
+    rain: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 9.4h7a2.4 2.4 0 0 0 .2-4.8a3.4 3.4 0 0 0-6.5-.9A2.6 2.6 0 0 0 4.6 9.4Z"/><path d="M6 11.3l-.8 2M9 11.3l-.8 2"/></svg>',
+    snow: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 9.4h7a2.4 2.4 0 0 0 .2-4.8a3.4 3.4 0 0 0-6.5-.9A2.6 2.6 0 0 0 4.6 9.4Z"/><circle cx="6" cy="12.3" r=".55" fill="currentColor" stroke="none"/><circle cx="9" cy="12.3" r=".55" fill="currentColor" stroke="none"/></svg>'
+  };
+  function wxIcon(sym) {
+    var s = (sym || '').replace(/_(day|night|polartwilight)$/, '');
+    var g = 'cloud';
+    if (/snow/.test(s)) g = 'snow';
+    else if (/sleet|rain|thunder/.test(s)) g = 'rain';
+    else if (/clearsky|fair/.test(s)) g = 'sun';
+    return WX_ICONS[g] || WX_ICONS.cloud;
+  }
   function renderWeather(d) {
     countUp('wxTemp', Math.round(d.temp), 0);
     setText('wxCond', wxText(d.sym));
     var sub = 'Maks ' + Math.round(d.max) + '° · Min ' + Math.round(d.min) + '°';
     if (typeof d.wind === 'number') sub += ' · ' + nb(d.wind, 1) + ' m/s' + (d.dir != null ? ' ' + compass(d.dir) : '');
     setText('wxSub', sub);
-    applySpark($('wxCard'), d.temps);
+    buildForecast(d.hours);
     stampNow();
+  }
+  /* Værmeldings-stripe: «nå» + neste timer framover (klokke + symbol + grad).
+     Erstatter den gamle baklengs temp-sparklinen. */
+  function buildForecast(hours) {
+    var el = $('wxForecast'); if (!el || !hours || !hours.length) return;
+    var html = '';
+    for (var i = 0; i < hours.length; i++) {
+      var h = hours[i], hh = h.h < 10 ? '0' + h.h : '' + h.h;
+      html += '<div class="wx-fc-cell">' +
+        '<span class="wx-fc-ico">' + wxIcon(h.sym) + '</span>' +
+        '<b class="wx-fc-temp">' + Math.round(h.temp) + '°</b>' +
+        '<span class="wx-fc-time">' + (i === 0 ? 'nå' : hh) + '</span>' +
+        '</div>';
+    }
+    el.innerHTML = html;
   }
   function loadWeather(place, force) {
     var key = 'wx_' + place.lat.toFixed(3) + '_' + place.lon.toFixed(3);
@@ -192,8 +239,16 @@
                       .map(function (e) { return e.data.instant.details.air_temperature; })
                       .filter(function (v) { return typeof v === 'number'; });
         if (!temps.length) temps = [now.air_temperature];
+        // Neste timer framover (nå, +2t, +4t, +6t) til værmeldings-stripa. Lokal klokketid.
+        var hours = [];
+        for (var k = 0; k <= 6 && k < ts.length; k += 2) {
+          var e2 = ts[k], det = e2.data.instant.details, nh = e2.data;
+          var s2 = (nh.next_1_hours && nh.next_1_hours.summary.symbol_code) ||
+                   (nh.next_6_hours && nh.next_6_hours.summary.symbol_code) || sym;
+          hours.push({ h: new Date(e2.time).getHours(), temp: det.air_temperature, sym: s2 });
+        }
         var d = { temp: now.air_temperature, wind: now.wind_speed, dir: now.wind_from_direction,
-                  sym: sym, max: Math.max.apply(null, temps), min: Math.min.apply(null, temps), temps: temps };
+                  sym: sym, max: Math.max.apply(null, temps), min: Math.min.apply(null, temps), temps: temps, hours: hours };
         cacheSet(key, d); renderWeather(d);
       })
       .catch(function () { /* behold cachet/HTML-verdi */ });
@@ -207,6 +262,7 @@
     var aDefs = st.attributes.series || [];
     var umPos = aDefs.findIndex(function (a) { return a.id === 'UNIT_MULT'; });
     var umVals = umPos >= 0 ? aDefs[umPos].values.map(function (v) { return v.id; }) : null;
+    var obsTimes = (st.dimensions.observation[0].values || []).map(function (v) { return v.id; });
     var series = j.data.dataSets[0].series, out = {};
     for (var key in series) {
       var idx = key.split(':').map(Number), cur = baseVals[idx[basePos]], ser = series[key];
@@ -214,7 +270,8 @@
       if (umVals && ser.attributes) { var um = umVals[ser.attributes[umPos]]; mult = Math.pow(10, parseInt(um, 10) || 0); }
       var ok = Object.keys(ser.observations).sort(function (a, b) { return a - b; });
       var vals = ok.map(function (k) { return parseFloat(ser.observations[k][0]) / mult; });
-      out[cur] = { last: vals[vals.length - 1], prev: vals[vals.length - 2], series: vals };
+      var dates = ok.map(function (k) { return obsTimes[parseInt(k, 10)]; });
+      out[cur] = { last: vals[vals.length - 1], prev: vals[vals.length - 2], series: vals, dates: dates };
     }
     return out;
   }
@@ -231,6 +288,12 @@
       var diff = d.USD.last - d.USD.prev, dir = Math.abs(diff) < 0.0005 ? 0 : diff > 0 ? 1 : -1;
       trendClass(span, dir);
       span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) + '</span>';
+    }
+    var dts = d.USD.dates;
+    if (dts && dts.length) {
+      setText('fxAx0', nbShort(dts[0]));
+      setText('fxAx1', nbShort(dts[Math.floor((dts.length - 1) / 2)]));
+      setText('fxAx2', 'i dag');
     }
     applySpark($('fxCard'), d.USD.series);
     stampNow();
@@ -267,11 +330,12 @@
       trendClass(span, dir);
       span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) + '<i> pp</i></span>';
     }
-    // glattet til ~60 punkter for spark
-    var s = d.series, step = Math.max(1, Math.ceil(s.length / 60)), thin = [];
-    for (var i = 0; i < s.length; i += step) thin.push(s[i]);
-    if (thin[thin.length - 1] !== s[s.length - 1]) thin.push(s[s.length - 1]);
-    applySpark($('srCard'), thin);
+    // En rente som endres ~4 ggr/år sier lite som sparkline → vis neste rentemøte i stedet.
+    var nm = nextMeeting(), lbl = $('srNextLbl'), val = $('srNext');
+    if (lbl && val) {
+      if (nm) { lbl.textContent = 'Neste rentemøte'; val.textContent = nbShort(nm) + ' ' + nm.slice(0, 4); }
+      else { lbl.textContent = ''; val.textContent = ''; }
+    }
     stampNow();
   }
   function loadRate(force) {
@@ -289,17 +353,24 @@
   function renderStrom(d, sone) {
     setText('stSone', 'Strøm ' + sone);
     countUp('stVal', Math.round(d.now * 100), 0);
-    setText('stSub', 'Topp kl ' + d.peakHour + ' · ' + Math.round(d.peak * 100) + ' øre · snitt ' + Math.round(d.avg * 100) + ' øre');
+    // Utled billigste time defensivt (eldre cache fra forrige versjon mangler feltet).
+    if (typeof d.cheapHour !== 'number' && d.prices) {
+      d.cheapHour = 0;
+      for (var ci = 1; ci < d.prices.length; ci++) if (d.prices[ci] < d.prices[d.cheapHour]) d.cheapHour = ci;
+      d.cheap = d.prices[d.cheapHour];
+    }
+    var ch = d.cheapHour < 10 ? '0' + d.cheapHour : d.cheapHour;
+    setText('stSub', 'Billigst kl ' + ch + ' · ' + Math.round(d.cheap * 100) + ' øre · snitt ' + Math.round(d.avg * 100) + ' øre');
     var span = $('stTrend');
     if (span) {
       var pct = d.avg ? (d.now - d.avg) / d.avg * 100 : 0, dir = Math.abs(pct) < 0.5 ? 0 : pct > 0 ? 1 : -1;
       trendClass(span, dir);
       span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + Math.round(Math.abs(pct)) + '<i>%</i></span>';
     }
-    buildStromBars(d.prices, d.hour);
+    buildStromBars(d.prices, d.hour, d.cheapHour);
     stampNow();
   }
-  function buildStromBars(prices, nowHour) {
+  function buildStromBars(prices, nowHour, cheapHour) {
     var card = $('stCard'); if (!card) return;
     var svg = card.querySelector('.spark-bars'); if (!svg) return;
     while (svg.firstChild) svg.removeChild(svg.firstChild);
@@ -314,7 +385,14 @@
       rect.setAttribute('x', x.toFixed(2)); rect.setAttribute('y', y.toFixed(2));
       rect.setAttribute('width', bw.toFixed(2)); rect.setAttribute('height', h.toFixed(2));
       if (i === nowHour) { rect.setAttribute('class', 'bar-now'); svg.appendChild(rect); }
+      else if (i === cheapHour) { rect.setAttribute('class', 'bar-cheap'); svg.appendChild(rect); }
       else (i < nowHour ? gPast : gFut).appendChild(rect);
+      if (i === cheapHour) { // liten markør over billigste time
+        var mk = document.createElementNS(NS, 'circle');
+        mk.setAttribute('cx', (x + bw / 2).toFixed(2)); mk.setAttribute('cy', Math.max(2, y - 3).toFixed(2));
+        mk.setAttribute('r', '1.7'); mk.setAttribute('class', 'bar-cheap-mark');
+        svg.appendChild(mk);
+      }
     });
     svg.insertBefore(gPast, svg.firstChild); svg.appendChild(gFut);
   }
@@ -328,10 +406,14 @@
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (arr) {
         var prices = arr.map(function (o) { return o.NOK_per_kWh; });
-        var hour = Math.min(d.getHours(), prices.length - 1), peak = 0;
-        for (var i = 1; i < prices.length; i++) if (prices[i] > prices[peak]) peak = i;
+        var hour = Math.min(d.getHours(), prices.length - 1), peak = 0, cheap = 0;
+        for (var i = 1; i < prices.length; i++) {
+          if (prices[i] > prices[peak]) peak = i;
+          if (prices[i] < prices[cheap]) cheap = i;
+        }
         var avg = prices.reduce(function (a, b) { return a + b; }, 0) / prices.length;
-        var out = { now: prices[hour], hour: hour, prices: prices, peakHour: peak, peak: prices[peak], avg: avg };
+        var out = { now: prices[hour], hour: hour, prices: prices, peakHour: peak, peak: prices[peak],
+                    cheapHour: cheap, cheap: prices[cheap], avg: avg };
         cacheSet(key, out); renderStrom(out, sone);
       })
       .catch(function () {});
