@@ -95,7 +95,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 /* ── cat-hero: boks/eyebrow/tittel/lead styles fra shared/components.css ──
    Her legges KUN budsjett-tillegget: live nøkkeltall-rad (speiler .ch-feats) */
 .cat-hero h2 em{font-style:italic;color:var(--accent-2)}
-.bud-sum{display:grid;grid-template-columns:repeat(3,1fr);margin-top:36px;border-top:1px solid var(--line)}
+.bud-sum{display:grid;grid-template-columns:repeat(5,1fr);margin-top:36px;border-top:1px solid var(--line)}
 .bud-sum-cell{padding:22px 18px;text-align:center;border-right:1px solid var(--line);min-width:0;display:flex;flex-direction:column;gap:9px}
 .bud-sum-cell:last-child{border-right:none}
 .bud-sum-cell .l{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink3);font-weight:500}
@@ -110,6 +110,8 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .page-content .cat-hero .bud-sum-cell:nth-child(1){animation-delay:.82s}
 .page-content .cat-hero .bud-sum-cell:nth-child(2){animation-delay:.94s}
 .page-content .cat-hero .bud-sum-cell:nth-child(3){animation-delay:1.06s}
+.page-content .cat-hero .bud-sum-cell:nth-child(4){animation-delay:1.18s}
+.page-content .cat-hero .bud-sum-cell:nth-child(5){animation-delay:1.30s}
 .page-content .bud-tool{animation:hvRiseSm 1s var(--ease-soft,cubic-bezier(.16,1,.3,1)) both .95s}
 
 /* ── Budsjett-verktøy (redigerbart grid under hero) ── */
@@ -145,7 +147,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .bud-add .plus::after{top:50%;left:0;right:0;height:1px;transform:translateY(-50%)}
 
 /* «Legg til post»-meny med forslag (festet til body → klippes ikke av grid-overflow) */
-.bud-menu{position:fixed;z-index:120;min-width:216px;max-width:280px;background:var(--menu-bg);border:1px solid var(--line-2);border-radius:9px;box-shadow:0 14px 38px rgba(0,0,0,.42);padding:6px;display:flex;flex-direction:column;gap:1px;animation:budMenuIn .15s var(--ease)}
+.bud-menu{position:fixed;z-index:120;min-width:216px;max-width:280px;max-height:min(72vh,440px);overflow-y:auto;background:var(--menu-bg);border:1px solid var(--line-2);border-radius:9px;box-shadow:0 14px 38px rgba(0,0,0,.42);padding:6px;display:flex;flex-direction:column;gap:1px;animation:budMenuIn .15s var(--ease)}
 @keyframes budMenuIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
 .bud-menu-head{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);font-weight:600;padding:8px 10px 7px}
 .bud-menu-item{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;background:transparent;border:0;color:var(--ink);font:500 13.5px/1.2 var(--font-sans);text-align:left;padding:9px 11px;border-radius:5px;cursor:pointer;transition:background .12s var(--ease),color .12s var(--ease)}
@@ -221,6 +223,53 @@ footer em{font-style:italic}
   .bud-sum-cell{border-right:none;border-bottom:1px solid var(--line)}
   .bud-sum-cell:last-child{border-bottom:none}
   .bud-row{grid-template-columns:minmax(0,1fr) 88px}
+}
+
+/* ── Sum-stripe: 5 celler responsivt ── */
+@media (max-width: 960px){
+  .bud-sum-cell .v{font-size:22px}
+  .bud-sum-cell{padding:20px 12px}
+}
+@media (max-width: 760px){
+  .bud-sum{grid-template-columns:1fr}
+  .bud-sum-cell{border-right:none;border-bottom:1px solid var(--line);padding:22px 18px}
+  .bud-sum-cell:last-child{border-bottom:none}
+  .bud-sum-cell .v{font-size:25px}
+}
+
+/* ── Innsikt: utgiftsfordeling + 50/30/20 ── */
+.bud-insight{margin:0 0 64px}
+.bud-insight[hidden]{display:none}
+.bud-insight-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.bud-insight-head h3{margin:0;font-family:var(--font-serif);font-weight:500;font-size:19px;letter-spacing:-.2px;color:var(--ink)}
+.bud-insight-sub{font:400 12px/1.4 var(--font-sans);color:var(--ink4)}
+.bud-breakdown{display:flex;flex-direction:column;gap:2px;margin-bottom:26px}
+.bd-row{display:grid;grid-template-columns:minmax(86px,1.15fr) minmax(0,2.4fr) auto 48px;gap:14px;align-items:center;padding:9px 2px;border-bottom:1px solid color-mix(in srgb,var(--ink) 5%,transparent)}
+.bd-row:last-child{border-bottom:none}
+.bd-label{font:500 13px/1.3 var(--font-sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.bd-bar{height:8px;border-radius:5px;background:var(--mark-bg);overflow:hidden;min-width:0}
+.bd-fill{display:block;height:100%;border-radius:5px;background:color-mix(in srgb,var(--accent) 36%,transparent);transition:width .35s var(--ease)}
+.bd-row.bd-top .bd-fill{background:var(--accent)}
+.bd-val{font:500 13px/1 var(--font-sans);font-variant-numeric:tabular-nums;color:var(--ink2);text-align:right;white-space:nowrap}
+.bd-pct{font:400 12px/1 var(--font-sans);font-variant-numeric:tabular-nums;color:var(--ink4);text-align:right;white-space:nowrap}
+.bud-rule{border:1px solid var(--line);border-radius:9px;padding:18px 20px;background:var(--hover-bg-soft)}
+.bud-rule[hidden]{display:none}
+.br-head{font:600 11px/1.3 var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);margin-bottom:15px}
+.br-head span{text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink4)}
+.br-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+.br-cell{display:flex;flex-direction:column;gap:6px;text-align:center;padding:2px 14px;border-right:1px solid var(--line)}
+.br-cell:last-child{border-right:none}
+.br-l{font:500 11px/1.3 var(--font-sans);color:var(--ink3)}
+.br-v{font-family:var(--font-serif);font-weight:500;font-size:24px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+.br-mal{font:400 11px/1 var(--font-sans);color:var(--ink4)}
+.br-note{font:400 11.5px/1.5 var(--font-sans);color:var(--ink4);margin-top:15px;max-width:72ch}
+@media (max-width:560px){
+  .bd-row{grid-template-columns:minmax(70px,1fr) auto 44px;gap:10px}
+  .bd-bar{display:none}
+  .br-cells{grid-template-columns:1fr;gap:0}
+  .br-cell{border-right:none;border-bottom:1px solid var(--line);flex-direction:row;justify-content:space-between;align-items:baseline;padding:11px 0;text-align:left}
+  .br-cell:last-child{border-bottom:none}
+  .br-v{font-size:19px}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
 </style>
@@ -309,6 +358,8 @@ footer em{font-style:italic}
         <div class="bud-sum-cell"><span class="l" data-i18n="budColInntekt">Inntekt</span><span class="v" id="bs-inn">0 kr</span></div>
         <div class="bud-sum-cell"><span class="l" data-i18n="budColUtgift">Utgift</span><span class="v" id="bs-ut">0 kr</span></div>
         <div class="bud-sum-cell accent"><span class="l" data-i18n="budRDispLbl">Til disp / sparing</span><span class="v" id="bs-diff">0 kr</span></div>
+        <div class="bud-sum-cell"><span class="l">Sparerate</span><span class="v" id="bs-rate">0 %</span></div>
+        <div class="bud-sum-cell"><span class="l">Per år</span><span class="v" id="bs-aar">0 kr</span></div>
       </div>
     </section>
 
@@ -328,6 +379,15 @@ footer em{font-style:italic}
 
       <div class="bud-grid" id="budGrid"></div>
       <div id="budCalcWrap" aria-live="polite"></div>
+    </section>
+
+    <section class="bud-insight" id="budInsight" aria-label="Innsikt i budsjettet" hidden>
+      <div class="bud-insight-head">
+        <h3>Slik fordeler budsjettet seg</h3>
+        <span class="bud-insight-sub">Oppdateres mens du fyller inn</span>
+      </div>
+      <div class="bud-breakdown" id="budBreakdown"></div>
+      <div class="bud-rule" id="budRule" hidden></div>
     </section>
 
   </div>
@@ -394,8 +454,8 @@ footer em{font-style:italic}
 
   // Forslag til vanlige poster — vises i meny når man trykker «Legg til post»
   var BUD_SUGGEST = {
-    inntekt:  ['Lønn etter skatt','Feriepenger','Barnetrygd','Bostøtte','Leieinntekt','Pensjon','Stipend','Annen inntekt'],
-    faste:    ['Husleie','Boliglån','Strøm','Internett','Mobil','Forsikring','Barnehage / SFO','Strømmetjenester','Kollektivkort'],
+    inntekt:  ['Lønn etter skatt','Feriepenger','Barnetrygd','Bostøtte','Leieinntekt','Pensjon','Sykepenger','Foreldrepenger','Stipend','Annen inntekt'],
+    faste:    ['Husleie','Boliglån','Forbrukslån','Strøm','Internett','Mobil','Forsikring','Bil (alle kostnader)','Barnehage / SFO','Strømmetjenester','Kollektivkort','Sparing','Årlig regning'],
     variable: ['Dagligvarer','Klær & sko','Drivstoff','Restaurant','Helse / medisin','Fritid','Gaver','Reise']
   };
   var BUD_MENU_HEAD = {inntekt:'Vanlig inntekt', faste:'Vanlig fast utgift', variable:'Vanlig utgift'};
@@ -561,6 +621,196 @@ footer em{font-style:italic}
           {l:'Per mil (10 km)', v: fmtKr(km>0 ? aarlig/(km/10) : 0)}
         ]};
       }
+    },
+    {
+      id:'pensjon', col:'inntekt', label:'Pensjon',
+      eyebrow:'Inntekt', title:'Alderspensjon per måned',
+      blurb:'Grovt anslag på alderspensjon ved 67 år: folketrygd (18,1 % opptjening opp til 7,1 G) pluss tjenestepensjon (OTP). Forenklet og veiledende — privat sparing og avkastning er holdt utenfor.',
+      resLabel:'Pensjon per måned', resSub:'Dette legges inn som inntekt',
+      source:{href:'/personlig/pensjon/', text:'Åpne full pensjonskalkulator'},
+      fields:[
+        {id:'lonn', label:'Brutto årslønn', unit:'kr/år', def:650000, money:true},
+        {id:'aar', label:'Opptjeningsår (yrkeskarriere)', type:'select', def:'40', options:[
+          {v:'40', label:'Full karriere (40 år)'}, {v:'35', label:'35 år'}, {v:'30', label:'30 år'}, {v:'25', label:'25 år'}
+        ]},
+        {id:'otp', label:'Tjenestepensjon (OTP)', type:'select', def:'5', options:[
+          {v:'2', label:'Minstekrav (2 %)'}, {v:'5', label:'Vanlig (5 %)'}, {v:'7', label:'Maks innskudd (7 %)'}, {v:'0', label:'Ingen tjenestepensjon'}
+        ]}
+      ],
+      compute:function(v){
+        var G = 136549;
+        var lonn = Math.max(0, v.lonn);
+        var aar = parseInt(v.aar, 10) || 40;
+        var otp = parseFloat(v.otp) || 0;
+        var lonnK = Math.min(lonn, 7.1 * G);
+        var folkeAar = (lonnK * 0.181 * aar) / 20;
+        var otpAar = (lonn * (otp / 100) * aar) / 20;
+        var totalAar = folkeAar + otpAar;
+        var ratio = lonn > 0 ? Math.round(totalAar / lonn * 100) : 0;
+        return { amount: totalAar/12, lines:[
+          {l:'Folketrygd', v: fmtKr(folkeAar/12)},
+          {l:'Tjenestepensjon (OTP)', v: fmtKr(otpAar/12)},
+          {l:'Erstatningsgrad', v: ratio + ' %'}
+        ]};
+      }
+    },
+    {
+      id:'syk', col:'inntekt', label:'Sykepenger',
+      eyebrow:'Inntekt', title:'Sykepenger fra NAV',
+      blurb:'Blir du langtidssyk dekker NAV 100 % av lønnen — men bare opp til 6G-taket (819 294 kr/år i 2026). De første 16 dagene dekkes av arbeidsgiver.',
+      resLabel:'Sykepenger per måned', resSub:'Legges inn som inntekt',
+      source:{href:'/personlig/syk/', text:'Åpne full sykepenger-kalkulator'},
+      fields:[ {id:'brutto', label:'Brutto årslønn', unit:'kr/år', def:600000, money:true} ],
+      compute:function(v){
+        var brutto = Math.max(0, v.brutto);
+        var SIX_G = 819294;
+        var grunnlag = Math.min(brutto, SIX_G);
+        var lines = [
+          {l:'Sykepengegrunnlag', v: fmtKr(grunnlag)},
+          {l:'Dekningsgrad', v:'100 %'}
+        ];
+        if(brutto > SIX_G){ lines.push({l:'Over 6G-taket', v: fmtKr(brutto - SIX_G) + '/år dekkes ikke'}); }
+        else { lines.push({l:'Arbeidsgiver dekker', v:'de første 16 dagene'}); }
+        return { amount: grunnlag/12, lines: lines };
+      }
+    },
+    {
+      id:'foreldre', col:'inntekt', label:'Foreldrepenger',
+      eyebrow:'Inntekt', title:'Foreldrepenger fra NAV',
+      blurb:'NAV utbetaler en månedlig sats i hele stønadsperioden. 100 % gir full sats over 49 uker, 80 % gir lavere sats over 59 uker. Grunnlaget er begrenset til 6G (819 294 kr i 2026).',
+      resLabel:'Per måned fra NAV', resSub:'Legges inn som inntekt i stønadsperioden',
+      source:{href:'/personlig/foreldrepenger/', text:'Åpne full foreldrepenger-kalkulator'},
+      fields:[
+        {id:'brutto', label:'Brutto årslønn', unit:'kr/år', def:620000, money:true},
+        {id:'dekning', label:'Dekningsgrad', type:'select', def:'100', options:[
+          {v:'100', label:'100 % — 49 uker (full sats)'}, {v:'80', label:'80 % — 59 uker (lavere sats)'}
+        ]}
+      ],
+      compute:function(v){
+        var brutto = Math.max(0, v.brutto);
+        var SIX_G = 819294;
+        var pct = parseInt(v.dekning, 10) === 80 ? 80 : 100;
+        var grunnlag = Math.min(brutto, SIX_G);
+        var aarSats = pct === 100 ? grunnlag : grunnlag * 0.80;
+        var over6G = Math.max(0, brutto - SIX_G);
+        var lines = [
+          {l:'Grunnlag (maks 6G)', v: fmtKr(grunnlag)},
+          {l:'Dekningsgrad', v: pct + ' %'},
+          {l:'Lengde', v: (pct === 100 ? 49 : 59) + ' uker'}
+        ];
+        if(over6G > 0){ lines.push({l:'Over 6G (ikke dekket)', v: fmtKr(over6G)}); }
+        return { amount: aarSats/12, lines: lines };
+      }
+    },
+    {
+      id:'forbruk', col:'faste', label:'Forbrukslån',
+      eyebrow:'Fast utgift', title:'Forbrukslån — månedlig terminbeløp',
+      blurb:'Annuitetslån med høy rente og kort løpetid. Tallet er det du betaler långiveren hver måned — terminbeløp pluss terminomkostning.',
+      resLabel:'Terminbeløp per måned', resSub:'Legges inn som fast utgift',
+      source:{href:'/personlig/fbl/', text:'Åpne full forbrukslån-kalkulator'},
+      fields:[
+        {id:'belop', label:'Lånebeløp', unit:'kr', def:100000, money:true},
+        {id:'rente', label:'Nominell rente', unit:'% per år', def:12},
+        {id:'aar', label:'Nedbetalingstid', type:'select', def:'5', options:[
+          {v:'1',label:'1 år'},{v:'2',label:'2 år'},{v:'3',label:'3 år'},{v:'4',label:'4 år'},{v:'5',label:'5 år'}
+        ]},
+        {id:'termin', label:'Terminomkostning', unit:'kr/mnd', def:65, money:true}
+      ],
+      compute:function(v){
+        var belop = Math.max(0, v.belop);
+        var rente = Math.max(0, v.rente);
+        var aar = parseInt(v.aar, 10) || 5;
+        var termin = Math.max(0, v.termin);
+        var a = annuitet(belop, rente, aar);
+        var mndTotal = a.mnd + termin;
+        return { amount: mndTotal, lines:[
+          {l:'Herav terminbeløp (lån)', v: fmtKr(a.mnd)},
+          {l:'Herav terminomkostning', v: fmtKr(termin)},
+          {l:'Totalt betalt', v: fmtKr(mndTotal * a.n)},
+          {l:'Antall terminer', v: String(a.n)}
+        ]};
+      }
+    },
+    {
+      id:'sparing', col:'faste', label:'Sparing',
+      eyebrow:'Fast utgift', title:'Sparemål — månedlig sparebeløp',
+      blurb:'Sett et sparemål: hvor mye du vil ha spart, om hvor mange år, og forventet avkastning. Vi regner ut hvor mye du må sette av hver måned (med rentes rente).',
+      resLabel:'Spar per måned', resSub:'Legges inn som fast overføring',
+      source:{href:'/personlig/spare/', text:'Åpne full sparekalkulator'},
+      fields:[
+        {id:'mal', label:'Sparemål', unit:'kr', def:300000, money:true},
+        {id:'aar', label:'Spar i', unit:'år', def:10},
+        {id:'avk', label:'Forventet avkastning', type:'select', def:'7', options:[
+          {v:'3.75', label:'Sparekonto (3,75 %)'}, {v:'7', label:'Aksjefond, snitt (7 %)'}, {v:'8.5', label:'Indeksfond, lang (8,5 %)'}, {v:'0', label:'Ingen avkastning (0 %)'}
+        ]}
+      ],
+      compute:function(v){
+        var mal = Math.max(0, v.mal);
+        var aar = v.aar > 0 ? Math.min(v.aar, 60) : 1;
+        var rateAnnual = Math.max(0, parseNum(v.avk));
+        var r = rateAnnual / 100 / 12;
+        var n = aar * 12;
+        var pmt = r === 0 ? mal / n : mal * r / (Math.pow(1 + r, n) - 1);
+        var innskutt = pmt * n;
+        return { amount: pmt, lines:[
+          {l:'Du sparer totalt', v: fmtKr(innskutt)},
+          {l:'Avkastning (rentes rente)', v: fmtKr(Math.max(0, mal - innskutt))},
+          {l:'Antall innskudd', v: String(n)}
+        ]};
+      }
+    },
+    {
+      id:'bil', col:'faste', label:'Bil (alle kostnader)',
+      eyebrow:'Fast utgift', title:'Bil — total kostnad per måned',
+      blurb:'Hele bilholdet samlet: drivstoff, forsikring, verditap, service/dekk og bom/parkering. Velg drivlinje, så fyller vi inn typiske 2026-tall du kan justere.',
+      resLabel:'Total per måned', resSub:'Legges inn som fast utgift',
+      source:{href:'/personlig/bil/', text:'Åpne full bilkostnad-kalkulator'},
+      fields:[
+        {id:'type', label:'Drivlinje', type:'select', def:'bensin',
+          options:[ {v:'bensin', label:'Bensin'}, {v:'diesel', label:'Diesel'}, {v:'el', label:'Elbil'}, {v:'hybrid', label:'Hybrid'} ],
+          presets:{ bensin:{forbruk:6.5, pris:21.5}, diesel:{forbruk:5.2, pris:19.8}, el:{forbruk:16, pris:1.8}, hybrid:{forbruk:4.5, pris:21.5} }
+        },
+        {id:'km', label:'Kjørelengde', unit:'km/år', def:14000, money:true},
+        {id:'forbruk', label:'Forbruk', unit:'per 100 km', def:6.5},
+        {id:'pris', label:'Pris', unit:'kr/L eller kr/kWh', def:21.5},
+        {id:'verditap', label:'Verditap (anslag)', unit:'kr/år', def:40000, money:true},
+        {id:'forsikring', label:'Forsikring + trafikkforsikringsavg.', unit:'kr/år', def:12860, money:true},
+        {id:'vedlikehold', label:'Service, dekk og vedlikehold', unit:'kr/år', def:8400, money:true},
+        {id:'bom', label:'Bom + parkering', unit:'kr/mnd', def:600, money:true}
+      ],
+      compute:function(v){
+        var km = Math.max(0, v.km);
+        var drivAar = (km * Math.max(0,v.forbruk) / 100) * Math.max(0,v.pris);
+        var fasteAar = Math.max(0,v.forsikring) + Math.max(0,v.bom) * 12;
+        var totAar = drivAar + Math.max(0,v.verditap) + fasteAar + Math.max(0,v.vedlikehold);
+        return { amount: totAar/12, lines:[
+          {l:'Drivstoff / år', v: fmtKr(drivAar)},
+          {l:'Verditap / år', v: fmtKr(Math.max(0,v.verditap))},
+          {l:'Forsikring + bom / år', v: fmtKr(fasteAar)},
+          {l:'Vedlikehold / år', v: fmtKr(Math.max(0,v.vedlikehold))},
+          {l:'Sum per år', v: fmtKr(totAar)}
+        ]};
+      }
+    },
+    {
+      id:'arlig', col:'faste', label:'Årlig regning',
+      eyebrow:'Fast utgift', title:'Årlig utgift → per måned',
+      blurb:'Regninger som kommer sjelden — bilforsikring, NRK, medlemskap, julegaver — koster også per måned. Skriv inn beløpet og hvor ofte det kommer, så fordeler vi det jevnt.',
+      resLabel:'Tilsvarer per måned', resSub:'Beløpet fordelt jevnt utover',
+      fields:[
+        {id:'belop', label:'Beløp per gang', unit:'kr', def:6000, money:true},
+        {id:'frekvens', label:'Hvor ofte', type:'select', def:'12', options:[
+          {v:'12', label:'Én gang i året'}, {v:'6', label:'Hvert halvår'}, {v:'3', label:'Hvert kvartal'}, {v:'24', label:'Annethvert år'}
+        ]}
+      ],
+      compute:function(v){
+        var belop = Math.max(0, v.belop);
+        var d = parseInt(v.frekvens, 10) || 12;
+        return { amount: belop / d, lines:[
+          {l:'Beløp per gang', v: fmtKr(belop)},
+          {l:'Tilsvarer per år', v: fmtKr(belop * (12 / d))}
+        ]};
+      }
     }
   ];
   var CALC_BY_KEY = {};
@@ -586,10 +836,11 @@ footer em{font-style:italic}
   }
 
   function recalcBudget(){
-    var inn = 0, ut = 0;
-    (budState.inntekt || []).forEach(function(r){ inn += (parseInt(r.v,10)||0); });
-    (budState.faste    || []).forEach(function(r){ ut  += (parseInt(r.v,10)||0); });
-    (budState.variable || []).forEach(function(r){ ut  += (parseInt(r.v,10)||0); });
+    var inn = 0, fasteSum = 0, varSum = 0;
+    (budState.inntekt || []).forEach(function(r){ inn      += (parseInt(r.v,10)||0); });
+    (budState.faste    || []).forEach(function(r){ fasteSum += (parseInt(r.v,10)||0); });
+    (budState.variable || []).forEach(function(r){ varSum   += (parseInt(r.v,10)||0); });
+    var ut = fasteSum + varSum;
     var diff = inn - ut;
     var neg  = diff < 0;
     var sign = neg ? '−' : '';
@@ -600,6 +851,75 @@ footer em{font-style:italic}
     if(d){
       d.textContent = sign + fmtKrPlain(Math.abs(diff)) + ' kr';
       d.classList.toggle('neg', neg);
+    }
+    var rate = inn > 0 ? Math.round(diff / inn * 100) : 0;
+    var rEl = document.getElementById('bs-rate');
+    if(rEl){
+      rEl.textContent = (rate < 0 ? '−' : '') + Math.abs(rate) + ' %';
+      rEl.classList.toggle('neg', rate < 0);
+    }
+    var aEl = document.getElementById('bs-aar');
+    if(aEl){
+      aEl.textContent = sign + fmtKrPlain(Math.abs(diff * 12)) + ' kr';
+      aEl.classList.toggle('neg', neg);
+    }
+    renderInsight(inn, fasteSum, varSum, diff);
+  }
+
+  // ── Innsikt: utgiftsfordeling (sorterte søyler) + 50/30/20-tommelregel ──
+  function renderInsight(inn, fasteSum, varSum, diff){
+    var section = document.getElementById('budInsight');
+    if(!section) return;
+    var ut = fasteSum + varSum;
+    if(ut <= 0){ section.hidden = true; return; }
+    section.hidden = false;
+
+    var posts = [];
+    ['faste','variable'].forEach(function(k){
+      (budState[k] || []).forEach(function(r){
+        var val = parseInt(r.v,10) || 0;
+        if(val > 0) posts.push({ l: (r.l && r.l.trim()) ? r.l : '(uten navn)', v: val });
+      });
+    });
+    posts.sort(function(a,b){ return b.v - a.v; });
+    var rows = posts.slice(0, 8);
+    var restSum = posts.slice(8).reduce(function(s,p){ return s + p.v; }, 0);
+    if(restSum > 0) rows.push({ l:'Øvrige poster', v: restSum });
+    var maxV = rows.length ? rows[0].v : 1;
+
+    var bd = document.getElementById('budBreakdown');
+    if(bd){
+      bd.innerHTML = rows.map(function(p, i){
+        var pct = Math.round(p.v / ut * 100);
+        var w = Math.max(3, Math.round(p.v / maxV * 100));
+        return '<div class="bd-row'+(i === 0 ? ' bd-top' : '')+'">'
+          + '<span class="bd-label">'+escapeHtml(p.l)+'</span>'
+          + '<span class="bd-bar"><span class="bd-fill" style="width:'+w+'%"></span></span>'
+          + '<span class="bd-val">'+fmtKr(p.v)+'</span>'
+          + '<span class="bd-pct">'+pct+' %</span>'
+          + '</div>';
+      }).join('');
+    }
+
+    var rule = document.getElementById('budRule');
+    if(rule){
+      if(inn <= 0){ rule.hidden = true; rule.innerHTML = ''; return; }
+      rule.hidden = false;
+      var pF = Math.round(fasteSum / inn * 100);
+      var pV = Math.round(varSum / inn * 100);
+      var pS = Math.round(diff / inn * 100);
+      var cells = [
+        ['Faste (behov)', pF, 'mål ≤ 50 %'],
+        ['Variable (ønsker)', pV, 'mål ≤ 30 %'],
+        ['Til sparing', pS, 'mål ≥ 20 %']
+      ].map(function(c){
+        return '<div class="br-cell"><span class="br-l">'+c[0]+'</span>'
+          + '<span class="br-v">'+(c[1] < 0 ? '−' : '')+Math.abs(c[1])+' %</span>'
+          + '<span class="br-mal">'+c[2]+'</span></div>';
+      }).join('');
+      rule.innerHTML = '<div class="br-head">Tommelregel 50/30/20 <span>— veiledende fordeling av inntekten</span></div>'
+        + '<div class="br-cells">'+cells+'</div>'
+        + '<div class="br-note">En forenklet tommelregel basert på dine tre kolonner — ikke en fasit. Lån og avdrag regnes vanligvis som «behov».</div>';
     }
   }
 
