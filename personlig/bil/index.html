@@ -226,6 +226,135 @@ footer em{font-style:italic}
 <!-- NEW SHELL JS -->
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v1"></script>
+<style>
+/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
+.lonn-learn{padding:8px 0 12px}
+.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
+.lc-sec:first-child{border-top:none;padding-top:24px}
+.lc-head{max-width:640px;margin:0 0 32px}
+.lc-kicker{
+  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
+  text-transform:uppercase;color:var(--accent);margin-bottom:15px;
+}
+.lc-title{
+  font-family:var(--font-serif);font-weight:500;
+  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
+  color:var(--ink);margin:0 0 14px;
+}
+.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
+.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
+.lc-intro a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
+.lc-intro a:hover{color:var(--accent-2)}
+
+/* ── Anatomi-ledger (de 5 delene av skatten) ── */
+.lc-ledger{border-top:1px solid var(--line)}
+.lc-led{
+  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
+  padding:20px 0;border-bottom:1px solid var(--line);
+}
+.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
+.lc-led .tag{
+  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
+  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
+}
+.lc-led .fig{
+  font-family:var(--font-serif);font-weight:500;font-size:25px;line-height:1;
+  letter-spacing:-.5px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0}
+.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
+
+/* ── Satser: spec-kort + trinn-tabell ── */
+.lc-rates{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px}
+.lc-card .ttl{
+  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--ink3);padding:16px 0 4px;
+}
+.lc-kv{
+  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
+  padding:13px 0;border-top:1px solid var(--line);
+}
+.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4}
+.lc-kv .v{
+  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
+  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
+}
+.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
+.lc-trinn{width:100%;border-collapse:collapse}
+.lc-trinn caption{
+  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--ink3);padding:16px 0 12px;
+}
+.lc-trinn th{
+  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
+  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
+}
+.lc-trinn th.r,.lc-trinn td.r{text-align:right}
+.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.lc-trinn tbody tr:last-child td{border-bottom:none}
+.lc-trinn td .step{color:var(--ink);font-weight:500}
+.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* ── Praktiske punkter (venstre-aksent) ── */
+.lc-notes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.lc-note{
+  padding:18px 20px;background:var(--surface);
+  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
+}
+.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
+.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
+.lc-note a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line-warm)}
+.lc-note a:hover{color:var(--accent-2)}
+
+/* ── FAQ-trekkspill ── */
+.lc-faq{border-top:1px solid var(--line)}
+details.lc-q{border-bottom:1px solid var(--line)}
+details.lc-q > summary{
+  cursor:pointer;list-style:none;padding:18px 0;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  font:500 15px/1.45 var(--font-sans);color:var(--ink);
+}
+details.lc-q > summary::-webkit-details-marker{display:none}
+details.lc-q > summary::after{
+  content:'';flex:0 0 auto;width:9px;height:9px;
+  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
+  transform:rotate(45deg);transition:transform .25s var(--ease);
+}
+details.lc-q[open] > summary::after{transform:rotate(-135deg)}
+details.lc-q[open] > summary{color:var(--ink)}
+details.lc-q .a{padding:0 0 20px;max-width:70ch}
+details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
+details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line-warm)}
+
+/* ── Relaterte verktøy ── */
+.lc-links{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.lc-link{
+  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
+}
+.lc-link .ar{
+  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);
+}
+.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
+.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
+@media(hover:hover){
+  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
+}
+
+@media(max-width:820px){
+  .lc-rates{grid-template-columns:1fr}
+  .lc-notes{grid-template-columns:1fr}
+  .lc-links{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .lc-sec{padding:40px 0}
+  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
+  .lc-led .fig{font-size:22px}
+}
+</style>
 </head>
 <body>
 
@@ -363,6 +492,76 @@ footer em{font-style:italic}
       </aside>
     </div>
   </div>
+
+<!-- =============== LAER-INNHOLD: personlig-bil =============== -->
+<div class="container">
+  <div class="lonn-learn">
+    <section class="lc-sec" aria-labelledby="lcA-personlig-bil">
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-bil">De fire kostnadene bak månedsbeløpet</h2><p class="lc-intro">Kalkulatoren legger sammen fire grupper med utgifter og deler på 12 for å finne hva bilen koster per måned. Dette er nøyaktig de samme linjene du ser i beregningen over — bare forklart. Til slutt deles årskostnaden på kjørelengden for å finne pris per kilometer.</p></div>
+      <div class="lc-ledger">
+        <div class="lc-led"><span class="nm"><b>Verditap</b><span class="tag">Komponent</span></span><span class="fig">kjøpesum − restverdi<span class="u">kr</span></span><p class="dsc">Forskjellen mellom hva du betalte og hva du tror du får ved salg, fordelt jevnt over eieperioden. Med standardtallene 450 000 kr i kjøpesum og 220 000 kr i restverdi blir det 230 000 kr fordelt over 5 år.</p></div>
+        <div class="lc-led"><span class="nm"><b>Drivstoff</b><span class="tag">Formel</span></span><span class="fig">km × forbruk ÷ 100 × pris<span class="u">kr/år</span></span><p class="dsc">Kjørelengde ganget med forbruk per 100 km, ganget med literpris eller kWh-pris. Standard er 14 000 km i året med 6,5 L per 100 km til 21,50 kr literen.</p></div>
+        <div class="lc-led"><span class="nm"><b>Faste utgifter</b><span class="tag">Komponent</span></span><span class="fig">forsikring + avgift + (bom + parkering) × 12<span class="u">kr/år</span></span><p class="dsc">Forsikring og trafikkforsikringsavgift er årsbeløp, mens bompenger og parkering legges inn per måned og ganges med 12.</p></div>
+        <div class="lc-led"><span class="nm"><b>Vedlikehold</b><span class="tag">Komponent</span></span><span class="fig">service + dekk + diverse<span class="u">kr/år</span></span><p class="dsc">Service og EU-kontroll, dekk og småting som vask og reparasjoner. Standardtallene er 4 500 kr service, 2 400 kr dekk og 1 500 kr diverse.</p></div>
+        <div class="lc-led"><span class="nm"><b>Pris per kilometer</b><span class="tag">Formel</span></span><span class="fig">årskostnad ÷ km per år<span class="u">kr/km</span></span><p class="dsc">Hele årskostnaden delt på hvor mange kilometer du kjører. Jo lengre du kjører, jo billigere blir hver kilometer, fordi verditap og faste utgifter spres på flere mil.</p></div>
+      </div>
+    </section>
+    <section class="lc-sec" aria-labelledby="lcB-personlig-bil">
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-bil">Satsene kalkulatoren bruker</h2><p class="lc-intro">Disse tallene fylles inn automatisk når du velger drivlinje, og vises i nøkkeltall-kortet ved siden av kalkulatoren. Du kan overstyre alle sammen med dine egne tall.</p></div>
+      <div class="lc-rates">
+      <div class="lc-card">
+        <span class="ttl">Nokkeltall</span>
+        <div class="lc-kv"><span class="k">Bensin, snittpris</span><span class="v">21,50<span class="u">kr/L</span></span></div>
+        <div class="lc-kv"><span class="k">Diesel, snittpris</span><span class="v">19,80<span class="u">kr/L</span></span></div>
+        <div class="lc-kv"><span class="k">Strøm, snittpris</span><span class="v">1,80<span class="u">kr/kWh</span></span></div>
+        <div class="lc-kv"><span class="k">Trafikkforsikringsavgift</span><span class="v">3 060<span class="u">kr/år</span></span></div>
+        <div class="lc-kv"><span class="k">Statens sats per km</span><span class="v">3,50<span class="u">kr/km</span></span></div>
+      </div>
+      <div class="lc-card">
+        <table class="lc-trinn">
+          <caption>Forhåndsutfylt forbruk og pris per drivlinje</caption>
+          <thead><tr><th>Drivlinje</th><th class="r">Forbruk</th><th class="r">Pris</th></tr></thead>
+          <tbody>
+            <tr><td><span class="step">Bensin</span></td><td class="r">6,5 L/100km</td><td class="r">21,50 kr/L</td></tr>
+            <tr><td><span class="step">Diesel</span></td><td class="r">5,2 L/100km</td><td class="r">19,80 kr/L</td></tr>
+            <tr><td><span class="step">Elektrisk</span></td><td class="r">16 kWh/100km</td><td class="r">1,80 kr/kWh</td></tr>
+            <tr><td><span class="step">Hybrid</span></td><td class="r">4,5 L/100km</td><td class="r">21,50 kr/L</td></tr>
+          </tbody>
+        </table>
+      </div>
+      </div>
+    </section>
+    <section class="lc-sec" aria-labelledby="lcC-personlig-bil">
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-bil">Slik tolker du resultatet</h2><p class="lc-intro">Noen ting er verdt å huske når du leser tallene kalkulatoren gir deg.</p></div>
+      <div class="lc-notes">
+        <div class="lc-note"><h3>Verditap er jevnt fordelt</h3><p>Kalkulatoren sprer verditapet likt over alle årene. I virkeligheten taper en bil mest verdi de første årene — derfor regnes det med 15 % verditap allerede første år. Et nyere kjøp koster altså mer i starten enn snittet viser.</p></div>
+        <div class="lc-note"><h3>To moduser, samme regnestykke</h3><p>Du kan velge mellom «vurderer å kjøpe» og «bil jeg allerede har». De endrer bare overskriften — selve utregningen er den samme. Tallene blir like uansett hvilken du velger.</p></div>
+        <div class="lc-note"><h3>Restverdien styrer mye</h3><p>Hva du tror bilen er verdt ved salg påvirker månedskostnaden kraftig, fordi verditapet er kjøpesum minus restverdi. Et forsiktig anslag her gir et tryggere budsjett.</p></div>
+        <div class="lc-note"><h3>Statens sats er noe annet</h3><p>Satsen på 3,50 kr/km er det du kan få utbetalt skattefritt når du kjører for jobben. Den dekker mer enn de rene kostnadene kalkulatoren regner ut, så ikke bland disse to tallene.</p></div>
+      </div>
+    </section>
+    <section class="lc-sec" aria-labelledby="lcD-personlig-bil">
+      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-personlig-bil">Det folk lurer mest på</h2></div>
+      <div class="lc-faq">
+        <details class="lc-q"><summary>Hva koster en vanlig bil i måneden?</summary><div class="a"><p>Med standardtallene i kalkulatoren — 450 000 kr i kjøpesum, 14 000 km i året og bensin — havner månedskostnaden rundt det siden oppgir som snitt, cirka 7 800 kr. Legger du inn dine egne tall, endrer beløpet seg mens du skriver.</p></div></details>
+        <details class="lc-q"><summary>Hvorfor er verditap den største utgiften?</summary><div class="a"><p>Fordi forskjellen mellom kjøpesum og restverdi ofte er den klart største summen. Med 450 000 kr inn og 220 000 kr ut taper du 230 000 kr på fem år — mer enn drivstoff og forsikring til sammen.</p></div></details>
+        <details class="lc-q"><summary>Hva legger jeg inn under restverdi?</summary><div class="a"><p>Hva du tror du får hvis du selger bilen etter eieperioden. Er du usikker, sett et forsiktig anslag. Vet du ikke, husk at en bil taper typisk mest verdi tidlig (ofte rundt 15–20 % det første året).</p></div></details>
+        <details class="lc-q"><summary>Skal bom og parkering legges inn per måned eller år?</summary><div class="a"><p>Per måned. Kalkulatoren ganger dem automatisk med 12 før de legges til de faste utgiftene. Forsikring og trafikkforsikringsavgift legges derimot inn som årsbeløp.</p></div></details>
+        <details class="lc-q"><summary>Hvorfor blir pris per kilometer lavere når jeg kjører mer?</summary><div class="a"><p>Fordi verditap og faste utgifter er omtrent like store uansett hvor mye du kjører. Kjører du flere kilometer, fordeles de samme kronene på flere mil, og hver kilometer blir billigere.</p></div></details>
+        <details class="lc-q"><summary>Er tallene for drivstoffpris oppdatert?</summary><div class="a"><p>Kalkulatoren fyller inn snittpriser — 21,50 kr/L for bensin, 19,80 kr/L for diesel og 1,80 kr/kWh for strøm. Priser svinger, så bytt dem gjerne ut med det du faktisk betaler for et mer presist svar.</p></div></details>
+      </div>
+    </section>
+    <section class="lc-sec" aria-labelledby="lcE-personlig-bil">
+      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-personlig-bil">Relaterte verktøy</h2></div>
+      <div class="lc-links">
+        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Lag et budsjett</h3><p>Legg bilkostnaden inn blant de faste utgiftene og se hva du sitter igjen med hver måned.</p></a>
+        <a class="lc-link" href="/skatt/reise/"><span class="ar">Reisefradrag →</span><h3>Reisefradrag</h3><p>Kjører du langt til jobb, kan du ha rett på fradrag. Se hvordan avstand og dager regnes om til kroner.</p></a>
+        <a class="lc-link" href="/personlig/lonn/"><span class="ar">Lønn etter skatt →</span><h3>Lønn etter skatt</h3><p>Se hvor mye du faktisk har til rådighet før du regner inn hva bilen koster.</p></a>
+      </div>
+    </section>
+  </div>
+</div>
+
 </main>
 
 <footer>
