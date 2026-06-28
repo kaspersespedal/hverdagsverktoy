@@ -304,6 +304,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     --line:rgba(255,255,255,.06);
     --line-2:rgba(255,255,255,.10);
     --line-warm:rgba(200,153,104,.18);
+    --accent-deep:#a87842;
+    --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    --shadow-rest: 0 1px 2px rgba(0,0,0,.2), 0 10px 30px rgba(0,0,0,.16);
 
     --ease: cubic-bezier(.22, 1, .36, 1);
 
@@ -531,7 +534,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media(hover:hover){
     .crumb-back:hover{background:rgba(255,255,255,.03);border-color:var(--line-warm);color:var(--ink) !important;transform:translateX(-2px)}
   }
-  .page-hero-actions{display:flex;gap:8px;margin-top:18px}
 
   h1.page-title{
     font-family:var(--font-serif);font-style:normal;font-weight:500;
@@ -840,7 +842,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
   <section class="page-hero" data-screen-label="Kontantstrøm Hero">
     <div class="container">
-      <div>
+      <div class="rr-col">
         <div class="crumb">
           <a href="/regnskap/" class="crumb-back" aria-label="Tilbake til Regnskap">
             <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
@@ -851,187 +853,153 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
           <span class="sep"></span>
           <span class="here">Kontantstrøm</span>
         </div>
-        <h1 class="page-title"><em>Kontantstrøm</em>oppstilling</h1>
+        <h1 class="page-title">Kontantstrømoppstilling</h1>
         <p class="page-lead">Fra årsresultat til faktiske penger inn og ut. Bygg en kontantstrømoppstilling etter den indirekte modellen (regnskapsloven § 6-4), se de tre aktivitetene henge sammen, og kontroller at oppstillingen avstemmer mot balansen. Pedagogisk verktøy med ferdig lærebok-eksempel.</p>
-        <div class="page-hero-actions">
-          <button type="button" class="calc-help-btn" data-target="kontant-howto" aria-label="Vis veiledning" title="Vis veiledning">?</button>
-          <button type="button" class="focus-card-btn" aria-label="Fokus" title="Fokus">⛶</button>
-        </div>
       </div>
     </div>
   </section>
 
   <style>
-    /* ── Kontantstrømoppstilling — indirekte-modell-bygger (2026-06-28) ──
-       Reuses the resultat "living statement" shell: each line is a signed cash
-       effect input (+ styrker / − svekker), with live subtotals per activity, a
-       bold "netto endring i kontanter" band, and a reconciliation box that turns
-       green when IB + netto endring meets the balance-sheet UB. Neutral theme
-       tokens only; --accent reserved for the bottom line and a successful avstem. */
-    /* The page is the statement: one centered, document-width column. */
-    .stmt-wrap{padding:8px 0 56px;max-width:740px;margin:0 auto;}
+    /* ── Kontantstrøm — Claude Design premium reskin (sw v169, 2026-06-28).
+       Brings kontantstrøm into the same document-style ledger as resultat +
+       balanse: one centred 680px column, signed cash-effect lines, a premium
+       "Netto endring i kontanter" band, an accent reconciliation band, a KPI
+       panel and the signature waterfall bridge (IB → drift → investering →
+       finansiering → UB). Cash flow is a *derived* statement → no konto-numre.
+       Neutral tokens only; --accent reserved for the bridge destination, positive
+       steps, the net change and a balanced avstemming. ── */
+    .page-hero .container{display:block}
+    .rr-col{max-width:680px;margin:0 auto}
+    .rr-wrap{display:flex;flex-direction:column;gap:18px;padding:30px 0 40px}
+    .rr-eyebrow{font:600 10px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink4)}
 
-    /* Example presets */
-    .stmt-presets{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
-    .stmt-presets .presets-lbl{font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);}
-    .stmt-presets .presets-btns{display:flex;gap:8px;flex-wrap:wrap;}
-    .preset-btn{background:var(--surface);color:var(--ink2);border:1px solid var(--line-2);border-radius:999px;padding:8px 15px;cursor:pointer;font:500 12.5px/1 var(--font-sans);transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease);}
-    @media (hover:hover){.preset-btn:hover{color:var(--ink);border-color:var(--line-warm);background:var(--surface-2);}}
-    .preset-btn.ghost{background:transparent;color:var(--ink3);}
+    /* Intro — the three statements */
+    .intro-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .intro-cell{background:color-mix(in srgb,var(--accent) 2.5%,var(--surface));border:1px solid var(--line);border-radius:10px;padding:15px 16px}
+    .intro-cell.is-here{border-color:var(--line-warm);background:color-mix(in srgb,var(--accent) 6%,transparent)}
+    .intro-cell .q{display:block;font:600 9px/1.3 var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink4);margin-bottom:7px}
+    .intro-cell h3{font:500 14px/1.2 var(--font-serif);color:var(--ink);margin:0 0 6px}
+    .intro-cell.is-here h3{color:var(--accent-2)}
+    .intro-cell p{font:400 12px/1.5 var(--font-sans);color:var(--ink2);margin:0}
 
-    .stmt-card{
-      background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;
-    }
+    /* Toolbar — examples */
+    .rr-toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+    .hv-btn--pill{background:var(--surface);color:var(--ink2);border:1px solid var(--line-2);border-radius:999px;padding:8px 15px;cursor:pointer;font:500 12.5px/1 var(--font-sans);transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease)}
+    @media (hover:hover){.hv-btn--pill:hover{color:var(--ink);border-color:var(--line-warm);background:var(--surface-2)}}
+    .hv-btn--pill.ghost{background:transparent;color:var(--ink3)}
 
-    /* Card header band — model label + sign legend */
-    .stmt-mode{
-      display:flex;align-items:center;gap:14px;flex-wrap:wrap;
-      padding:13px 24px;border-bottom:1px solid var(--line);
-      background:var(--surface-2);
-    }
-    .stmt-mode .mode-lbl{
-      font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
-      color:var(--ink3);flex-shrink:0;
-    }
+    /* Statement card */
+    .rr-card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest)}
+    .rr-stmt{padding:clamp(22px,3.4vw,32px) clamp(20px,4vw,38px) clamp(20px,3vw,28px)}
+    .rr-stmt-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+    .rr-stmt-title{font:500 20px/1.1 var(--font-serif);color:var(--ink);margin-top:6px}
+    .rr-stmt-meta1{font:500 13px/1.2 var(--font-sans);color:var(--ink)}
+    .rr-stmt-meta2{font:400 11.5px/1.2 var(--font-sans);color:var(--ink4);margin-top:4px}
+    .kx-legend{font:400 11.5px/1.45 var(--font-sans);color:var(--ink4);margin:12px 0 0}
+    .kx-legend b{color:var(--ink2);font-weight:600}
 
-    /* Statement body */
-    .stmt-body{padding:6px 24px 22px;}
-    .stmt-group{
-      font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-      color:var(--ink3);margin:22px 0 6px;
-    }
-    .stmt-group:first-child{margin-top:14px;}
+    .rr-group{font:600 10px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink4);margin:18px 0 2px}
+    .rr-group.gap{margin-top:22px}
+    .kx-hint{font:400 11.5px/1.45 var(--font-sans);font-style:italic;color:var(--ink4);margin:2px 0 4px}
+    .rr-line{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 0}
+    .rr-name{display:flex;align-items:baseline;gap:9px;min-width:0}
+    .rr-lab{font:400 13.5px/1.45 var(--font-sans);color:var(--ink2)}
+    .rr-amtcell{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;width:184px;flex:none}
+    .rr-kr{font:400 11px/1 var(--font-sans);color:var(--ink4);width:16px;text-align:left}
+    .rr-out{font-variant-numeric:tabular-nums lining-nums;text-align:right;min-width:132px;color:var(--ink)}
+    input.rr-num{width:132px;text-align:right;font:500 14px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);background:rgba(255,248,232,.025);border:1px solid var(--line-2);border-radius:6px;padding:8px 11px;outline:none;transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease)}
+    input.rr-num:focus{border-color:var(--accent);background:var(--surface-2);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+    input.rr-num::-webkit-outer-spin-button,input.rr-num::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+    input.rr-num[type=number]{-moz-appearance:textfield}
 
-    /* Every row shares one grid so label/amount columns align perfectly,
-       whether the amount is an input or a computed value. */
-    .stmt-row{
-      display:grid;grid-template-columns:1fr 188px;align-items:center;gap:16px;
-      padding:7px 0;
-    }
-    .stmt-row .lab{font-size:13.5px;color:var(--ink2);line-height:1.4;}
-    .amt{position:relative;display:block;}
-    .amt input{
-      display:block;width:100%;text-align:right;
-      background:var(--bg);border:1px solid var(--line-2);border-radius:6px;
-      padding:9px 32px 9px 12px;
-      color:var(--ink);font:500 14px/1.2 var(--font-sans);
-      font-variant-numeric:tabular-nums;outline:none;
-      transition:border-color .15s var(--ease), background .15s var(--ease);
-    }
-    .amt input:focus{border-color:var(--line-warm);background:var(--surface-2);}
-    .amt input::-webkit-outer-spin-button,
-    .amt input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
-    .amt input[type=number]{-moz-appearance:textfield;}
-    .amt .u{
-      position:absolute;right:12px;top:50%;transform:translateY(-50%);
-      font-size:12px;color:var(--ink3);pointer-events:none;
-    }
-    /* Computed values share the inputs' right edge (padding-right matches the
-       "kr" suffix gutter) so every amount and unit lines up in one column. */
-    .amt .val{
-      display:block;width:100%;text-align:right;padding-right:12px;
-      font-family:var(--font-serif);font-weight:500;
-      font-variant-numeric:tabular-nums lining-nums;color:var(--ink);
-    }
+    .rr-sub{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:11px 0 7px;margin-top:4px;border-top:1px solid var(--line-2)}
+    .rr-sub .lbl{font:600 13px/1.4 var(--font-sans);color:var(--ink)}
+    .rr-sub .rr-out{font:600 15px/1 var(--font-serif);color:var(--ink);letter-spacing:-.2px}
 
-    /* Subtotal rows — thin rule above */
-    .stmt-row.sub{border-top:1px solid var(--line);margin-top:5px;padding-top:11px;}
-    .stmt-row.sub .lab{font:600 11.5px/1.3 var(--font-sans);color:var(--ink2);}
-    .stmt-row.sub .val{font-size:15px;}
+    /* Netto endring — premium accent band */
+    .rr-arsband{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 18px;margin-top:16px;padding:18px 20px;border-radius:9px;background:color-mix(in srgb,var(--accent) 7%,transparent);border:1px solid var(--line-warm)}
+    .rr-arseyebrow{font:500 9.5px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink4)}
+    .rr-arslabel{font:500 19px/1 var(--font-serif);color:var(--ink);letter-spacing:-.2px}
+    .rr-arstag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font:500 11px/1 var(--font-sans);letter-spacing:.02em}
+    .rr-arstag.pos{background:color-mix(in srgb,var(--accent) 13%,transparent);border:1px solid var(--line-warm);color:var(--accent-2)}
+    .rr-arstag.neg{background:rgba(255,248,232,.05);border:1px solid var(--line-2);color:var(--ink2)}
+    .rr-arsnum{font:600 clamp(28px,5vw,34px)/1 var(--font-serif);font-variant-numeric:tabular-nums lining-nums;color:var(--accent-2);letter-spacing:-1px}
+    .rr-arskr{font:400 13px/1 var(--font-sans);color:var(--ink3)}
 
-    /* Major totals — heavier rule, bolder */
-    .stmt-row.total{border-top:1.5px solid var(--line-2);margin-top:8px;padding-top:13px;}
-    .stmt-row.total .lab{font:600 12.5px/1.3 var(--font-sans);color:var(--ink);}
-    .stmt-row.total .val{font-size:18px;font-weight:600;}
+    /* Avstemming — neutral until balanced, then accent (mirrors balanse) */
+    .kx-avstem{margin-top:14px}
+    .kx-anum{font:600 clamp(22px,4vw,26px)/1 var(--font-serif);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);letter-spacing:-.5px}
+    .kx-avstem.ok{background:color-mix(in srgb,var(--accent) 9%,transparent);border-color:var(--accent)}
+    .kx-avstem.ok .kx-anum{color:var(--accent-2)}
+    .kx-anote{flex-basis:100%;font:400 12px/1.55 var(--font-sans);color:var(--ink3);margin:0}
+    .kx-avstem.ok .kx-anote{color:var(--ink2)}
 
-    /* Bunnlinje — netto endring, lifted into its own band */
-    .stmt-row.grand{
-      grid-template-columns:1fr auto;align-items:baseline;
-      margin-top:14px;padding:15px 18px;
-      background:var(--surface-2);border:1px solid var(--line-2);border-left:3px solid var(--accent);border-radius:7px;
-    }
-    .stmt-row.grand .lab{font:600 12px/1.2 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink);}
-    .stmt-row.grand .grand-amt{display:flex;flex-direction:column;align-items:flex-end;gap:3px;}
-    .stmt-row.grand .val{width:auto;padding-right:0;font-size:30px;font-weight:600;color:var(--ink);letter-spacing:-.6px;}
-    .stmt-row.grand .grand-tag{font:600 9.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);}
+    /* Analysis panels */
+    .rr-panel{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:clamp(18px,3vw,26px) clamp(18px,3.4vw,30px)}
+    .rr-panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .rr-panel-title{font:500 17px/1.1 var(--font-serif);color:var(--ink);font-style:italic}
+    .rr-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px}
+    .rr-kpi{display:flex;flex-direction:column;gap:9px;padding:15px 16px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--accent) 2.5%,var(--surface))}
+    .rr-kpi .l{font:500 9.5px/1.2 var(--font-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink4)}
+    .rr-kpi .v{font:500 20px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);letter-spacing:-.4px}
 
-    .stmt-verdict{font-size:12.5px;color:var(--ink3);font-style:italic;line-height:1.5;margin:12px 2px 0;text-align:right;}
+    /* Waterfall bridge */
+    .kx-fall{display:flex;flex-direction:column;gap:9px}
+    .kx-fall-row{display:grid;grid-template-columns:124px 1fr 96px;align-items:center;gap:12px}
+    .kx-fall-lab{font:500 12px/1.3 var(--font-sans);color:var(--ink2)}
+    .kx-fall-track{position:relative;height:26px;background:rgba(255,248,232,.03);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+    .kx-fall-track::before{content:"";position:absolute;top:0;bottom:0;left:var(--zero,0%);width:1px;background:var(--line-2)}
+    .kx-fall-bar{position:absolute;top:4px;bottom:4px;border-radius:3px;min-width:2px}
+    .kx-fall-bar.base{background:var(--ink3)}
+    .kx-fall-bar.up{background:linear-gradient(90deg,var(--accent-deep),var(--accent-2))}
+    .kx-fall-bar.down{background:var(--ink4)}
+    .kx-fall-bar.dest{background:linear-gradient(90deg,var(--accent-deep),var(--accent-2))}
+    .kx-fall-val{font:500 12.5px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);text-align:right}
+    .kx-fall-empty{font:400 12.5px/1.55 var(--font-sans);color:var(--ink3)}
 
-    /* Nøkkeltall — horizontal band beneath the statement (was a right sidebar).
-       Always-visible content is value + label; the longer explanations live in
-       the collapsed "Nøkkeltallene forklart"-dropdown so the band stays calm. */
-    .metrics{margin-top:34px;}
-    .side-h{font:600 10px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;color:var(--ink3);margin:0 0 10px;}
-    .kpi-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);
-      gap:1px;background:var(--line);
-      border:1px solid var(--line);border-radius:8px;overflow:hidden;
-    }
-    .kpi-cell{background:var(--surface);padding:16px 18px 15px;}
-    .kpi-v{font-family:var(--font-serif);font-weight:500;font-size:25px;line-height:1;letter-spacing:-.4px;color:var(--ink);font-variant-numeric:tabular-nums;}
-    .kpi-l{font:600 11px/1.3 var(--font-sans);color:var(--ink2);margin-top:7px;}
+    /* Tegnmønster */
+    .kx-pattern{display:flex;align-items:center;gap:16px;margin-top:16px;padding:14px 16px;background:color-mix(in srgb,var(--accent) 2.5%,var(--surface));border:1px solid var(--line);border-radius:9px}
+    .kx-pattern .glyph{font:600 22px/1 var(--font-serif);letter-spacing:.14em;color:var(--accent-2);white-space:nowrap}
+    .kx-pattern .ptxt{font:400 12.5px/1.5 var(--font-sans);color:var(--ink2)}
+    .kx-pattern .ptxt b{color:var(--ink);font-weight:600}
 
-    /* Live note + source + educational dropdowns under the statement */
-    .stmt-note{margin:18px 0 0;}
-    .stmt-src{margin:14px 0 0;}
+    /* Activities table */
+    .actv-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .actv{width:100%;min-width:440px;border-collapse:collapse}
+    .actv th,.actv td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5;font-size:12.5px}
+    .actv tr:last-child td{border-bottom:none}
+    .actv th{font:600 9.5px/1.3 var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink4)}
+    .actv td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
+    .actv td{color:var(--ink2)}
+
+    /* Explanations */
+    .rr-explain{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:6px clamp(18px,3.4vw,28px)}
+    .rr-explain details > summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+    .rr-explain details:last-child > summary{border-bottom:none}
+    .rr-explain summary .q{font:500 14px/1.3 var(--font-sans);color:var(--ink)}
+    .rr-explain .ans{padding:4px 0 16px;font:400 13px/1.65 var(--font-sans);color:var(--ink2);max-width:60ch}
+    details > summary{list-style:none;cursor:pointer}
+    details > summary::-webkit-details-marker{display:none}
+    .rr-chev{transition:transform .2s var(--ease);color:var(--ink4);flex:none}
+    details[open] .rr-chev{transform:rotate(180deg)}
+
+    .rr-source{font:400 11.5px/1.65 var(--font-sans);color:var(--ink4);margin:2px auto 0;text-align:center;max-width:62ch}
+    .hidden{display:none}
 
     @media (max-width: 560px){
-      .stmt-mode,.stmt-body{padding-left:16px;padding-right:16px;}
-      .stmt-mode{flex-direction:column;align-items:stretch;gap:9px;}
-      .stmt-row{grid-template-columns:1fr 124px;gap:10px;}
-      .amt input{padding-right:28px;}
-      .stmt-row.grand{padding:14px 14px;}
-      .stmt-row.grand .val{font-size:25px;}
-      .kpi-grid{grid-template-columns:1fr 1fr;}
-    }
-
-    /* ── Kontantstrøm-spesifikke tillegg ── */
-    /* Intro: resultat / balanse / kontantstrøm side om side */
-    .intro-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:0 0 26px;}
-    .intro-cell{background:var(--surface);padding:16px 18px 17px;}
-    .intro-cell .q{display:block;font:600 9.5px/1.3 var(--font-sans);letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
-    .intro-cell h3{font:600 12px/1.3 var(--font-sans);letter-spacing:.2px;color:var(--ink);margin:0 0 6px;}
-    .intro-cell p{font-size:12px;line-height:1.55;color:var(--ink2);margin:0;}
-    .intro-cell.is-here{background:var(--surface-2);border-left:3px solid var(--accent);}
-
-    /* Fortegns-hint under en gruppeoverskrift */
-    .kx-hint{font-size:11.5px;color:var(--ink3);font-style:italic;line-height:1.5;margin:-2px 0 6px;}
-
-    /* Avstemming (reconciliation) — speiler balanse-sidens balance-check */
-    .avstem{margin:18px 0 0;padding:15px 18px;border-radius:7px;border:1px solid var(--line-2);background:var(--surface-2);transition:border-color .2s var(--ease);}
-    .avstem.ok{border-color:var(--accent);}
-    .avstem .l{display:block;font:600 10px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;color:var(--ink3);margin-bottom:7px;}
-    .avstem .v{display:block;font-family:var(--font-serif);font-weight:500;font-size:23px;line-height:1.05;letter-spacing:-.5px;color:var(--ink);font-variant-numeric:tabular-nums;}
-    .avstem.ok .v{color:var(--accent);}
-    .avstem .d{display:block;font-size:12px;color:var(--ink3);font-style:italic;line-height:1.5;margin-top:6px;}
-
-    /* Tegnmønster-dom (+/−/−) */
-    .pattern{margin-top:18px;display:flex;align-items:center;gap:16px;padding:13px 16px;background:var(--surface);border:1px solid var(--line);border-radius:8px;}
-    .pattern .glyph{font-family:var(--font-serif);font-weight:600;font-size:22px;letter-spacing:3px;color:var(--ink);white-space:nowrap;}
-    .pattern .ptxt{font-size:12.5px;color:var(--ink2);line-height:1.5;}
-    .pattern .ptxt b{color:var(--ink);font-weight:600;}
-
-    /* Aktivitets-definisjonstabell. Wrapper scroller horisontalt på smal skjerm
-       i stedet for å skjule 3. kolonne (a11y: display:none skjuler også for
-       skjermlesere → informasjonstap). Scrollen er innelukket, ingen side-overflow. */
-    .actv-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
-    .actv{width:100%;min-width:460px;border-collapse:collapse;margin:2px 0 0;}
-    .actv th,.actv td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.5;font-size:12.5px;}
-    .actv tr:last-child td{border-bottom:none;}
-    .actv th{font:600 9.5px/1.3 var(--font-sans);letter-spacing:1.2px;text-transform:uppercase;color:var(--ink3);}
-    .actv td:first-child{color:var(--ink);font-weight:600;white-space:nowrap;}
-    .actv td{color:var(--ink2);}
-
-    /* Mobil: intro-kortene stables (denne må komme etter base-regelen over
-       siden begge har lik spesifisitet — kilderekkefølge avgjør). */
-    @media (max-width: 560px){
-      .intro-cards{grid-template-columns:1fr;}
+      .intro-cards{grid-template-columns:1fr}
+      .rr-amtcell{width:150px}
+      input.rr-num{width:106px}
+      .rr-out{min-width:106px}
+      .kx-fall-row{grid-template-columns:92px 1fr 78px;gap:8px}
+      .kx-fall-lab{font-size:11px}
     }
   </style>
 
   <div class="container">
-    <div class="stmt-wrap">
+    <div class="rr-col rr-wrap">
 
+      <!-- INTRO — the three statements -->
       <div class="intro-cards" aria-label="Tre regnskapsoppstillinger">
         <div class="intro-cell">
           <span class="q">Tjente vi penger?</span>
@@ -1050,176 +1018,123 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
         </div>
       </div>
 
-      <div class="stmt-presets">
-        <span class="presets-lbl">Fyll inn eksempel</span>
-        <div class="presets-btns">
-          <button type="button" class="preset-btn" data-preset="laerebok">Lærebok-eksempel (oppg. 9.11)</button>
-          <button type="button" class="preset-btn ghost" data-preset="clear">Tøm</button>
+      <!-- TOOLBAR — examples -->
+      <div class="rr-toolbar">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span class="rr-eyebrow">Fyll inn eksempel</span>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <button type="button" class="hv-btn--pill" data-preset="laerebok">Lærebok-eksempel (oppg. 9.11)</button>
+            <button type="button" class="hv-btn--pill ghost" data-preset="clear">Tøm</button>
+          </div>
         </div>
       </div>
 
-      <details class="howto" id="kontant-howto">
-        <summary>Slik bruker du modell-byggeren</summary>
-        <div class="howto-body">
-          <div class="howto-row"><div class="h-title">Tall som kontant-effekt</div><div class="h-desc">Skriv hver linje som virkningen på kontantbeholdningen: <strong>+</strong> styrker kassen (penger inn / frigjort kapital), <strong>−</strong> svekker den (penger ut / bundet kapital). Hovedregelen: anskaffet kapital plusses, anvendt kapital trekkes fra.</div></div>
-          <div class="howto-row"><div class="h-title">Indirekte modell</div><div class="h-desc">Starter med ordinært resultat før skatt og «vasker» det rent for poster som ikke er faktiske inn-/utbetalinger, til du står igjen med netto kontantstrøm fra drift.</div></div>
-          <div class="howto-row"><div class="h-title">Fortegn på arbeidskapital</div><div class="h-desc">Eiendel <em>øker</em> → − (kapital bindes). Eiendel <em>synker</em> → +. Gjeld <em>øker</em> → +. Gjeld <em>synker</em> → −. Eks.: økte kundefordringer svekker kontantstrømmen, økt leverandørgjeld styrker den.</div></div>
-          <div class="howto-row"><div class="h-title">Avskrivninger og nedskrivninger</div><div class="h-desc">Legges <em>tilbake</em> (+) — de reduserte resultatet, men ingen kroner forlot kassen i år (pengene gikk ut da driftsmidlet ble kjøpt).</div></div>
-          <div class="howto-row"><div class="h-title">Gevinst/tap ved salg</div><div class="h-desc">Gevinst trekkes <em>ut</em> av drift (−), tap legges til (+). Hele salgssummen føres i stedet under investering, så samme krone ikke telles to ganger.</div></div>
-          <div class="howto-row"><div class="h-title">Avstemming</div><div class="h-desc">Skriv inn kontanter ved årets start (IB) og kontanter i balansen ved årets slutt (UB). Når de tre nettostrømmene + IB treffer balansens UB, lyser avstemmingen grønt.</div></div>
+      <!-- STATEMENT -->
+      <div class="rr-card rr-stmt">
+        <div class="rr-stmt-head">
+          <div>
+            <div class="rr-eyebrow">Oppstilling § 6-4</div>
+            <div class="rr-stmt-title">Kontantstrøm</div>
+          </div>
+          <div style="text-align:right">
+            <div class="rr-stmt-meta1">Indirekte modell</div>
+            <div class="rr-stmt-meta2">Regnskapsåret 2026 · NOK</div>
+          </div>
         </div>
-      </details>
+        <p class="kx-legend"><b>+</b> styrker kassen (penger inn / frigjort kapital) &middot; <b>−</b> svekker kassen (penger ut / bundet kapital)</p>
 
-      <div class="stmt-card">
-        <div class="stmt-mode">
-          <span class="mode-lbl">Indirekte modell</span>
-          <span class="hint" style="font-size:11.5px;color:var(--ink3);font-style:italic;">+ styrker kassen · − svekker kassen · tall i kr</span>
-        </div>
+        <div style="display:flex;flex-direction:column">
 
-        <div class="stmt-body">
-
-          <div class="stmt-group">Operasjonelle aktiviteter</div>
+          <div class="rr-group">Operasjonelle aktiviteter</div>
           <p class="kx-hint">Driften: resultatet justert for ikke-kontante poster og endring i arbeidskapital.</p>
-          <div class="stmt-row">
-            <label class="lab" for="opRes">Ordinært resultat før skattekostnad</label>
-            <div class="amt"><input type="number" id="opRes" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="opSkatt">Periodens betalte skatter</label>
-            <div class="amt"><input type="number" id="opSkatt" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="opGevinst">− Gevinst / + tap ved salg av anleggsmidler</label>
-            <div class="amt"><input type="number" id="opGevinst" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="opAvskr">+ Ordinære avskrivninger</label>
-            <div class="amt"><input type="number" id="opAvskr" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="opNedskr">+ Nedskrivninger</label>
-            <div class="amt"><input type="number" id="opNedskr" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="opVarelager">Endring varelager</label>
-            <div class="amt"><input type="number" id="opVarelager" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="opKunde">Endring kundefordringer</label>
-            <div class="amt"><input type="number" id="opKunde" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="opLevgjeld">Endring leverandørgjeld</label>
-            <div class="amt"><input type="number" id="opLevgjeld" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="opAnnet">Endring andre tidsavgrensningsposter</label>
-            <div class="amt"><input type="number" id="opAnnet" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row total">
-            <div class="lab">Netto kontantstrøm fra drift</div>
-            <div class="amt"><span class="val" id="opNet">0 kr</span></div>
-          </div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opRes">Ordinært resultat før skattekostnad</label></span><span class="rr-amtcell"><input class="rr-num" id="opRes" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opSkatt">Periodens betalte skatter</label></span><span class="rr-amtcell"><input class="rr-num" id="opSkatt" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opGevinst">− Gevinst / + tap ved salg av anleggsmidler</label></span><span class="rr-amtcell"><input class="rr-num" id="opGevinst" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opAvskr">+ Ordinære avskrivninger</label></span><span class="rr-amtcell"><input class="rr-num" id="opAvskr" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opNedskr">+ Nedskrivninger</label></span><span class="rr-amtcell"><input class="rr-num" id="opNedskr" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opVarelager">Endring varelager</label></span><span class="rr-amtcell"><input class="rr-num" id="opVarelager" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opKunde">Endring kundefordringer</label></span><span class="rr-amtcell"><input class="rr-num" id="opKunde" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opLevgjeld">Endring leverandørgjeld</label></span><span class="rr-amtcell"><input class="rr-num" id="opLevgjeld" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opAnnet">Endring andre tidsavgrensningsposter</label></span><span class="rr-amtcell"><input class="rr-num" id="opAnnet" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-sub"><span class="lbl">Netto kontantstrøm fra drift</span><span class="rr-amtcell"><span class="rr-out" id="opNet">0</span><span class="rr-kr">kr</span></span></div>
 
-          <div class="stmt-group">Investeringsaktiviteter</div>
+          <div class="rr-group gap">Investeringsaktiviteter</div>
           <p class="kx-hint">Kjøp og salg av eiendeler utenfor varekretsløpet — driftsmidler og aksjer.</p>
-          <div class="stmt-row">
-            <label class="lab" for="invSalg">+ Salg av varige driftsmidler</label>
-            <div class="amt"><input type="number" id="invSalg" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="invKjop">− Kjøp av varige driftsmidler</label>
-            <div class="amt"><input type="number" id="invKjop" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="invAksjer">Salg / kjøp av aksjer og andeler</label>
-            <div class="amt"><input type="number" id="invAksjer" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row total">
-            <div class="lab">Netto kontantstrøm fra investering</div>
-            <div class="amt"><span class="val" id="invNet">0 kr</span></div>
-          </div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="invSalg">+ Salg av varige driftsmidler</label></span><span class="rr-amtcell"><input class="rr-num" id="invSalg" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="invKjop">− Kjøp av varige driftsmidler</label></span><span class="rr-amtcell"><input class="rr-num" id="invKjop" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="invAksjer">Salg / kjøp av aksjer og andeler</label></span><span class="rr-amtcell"><input class="rr-num" id="invAksjer" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-sub"><span class="lbl">Netto kontantstrøm fra investering</span><span class="rr-amtcell"><span class="rr-out" id="invNet">0</span><span class="rr-kr">kr</span></span></div>
 
-          <div class="stmt-group">Finansieringsaktiviteter</div>
+          <div class="rr-group gap">Finansieringsaktiviteter</div>
           <p class="kx-hint">Lån og egenkapital — opptak, nedbetaling, emisjon og utbytte.</p>
-          <div class="stmt-row">
-            <label class="lab" for="finGjeld">Endring langsiktig gjeld (netto)</label>
-            <div class="amt"><input type="number" id="finGjeld" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="finKasse">Endring kassekreditt</label>
-            <div class="amt"><input type="number" id="finKasse" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="finEk">Innbetaling / tilbakebetaling av egenkapital</label>
-            <div class="amt"><input type="number" id="finEk" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="finUtbytte">− Utbetalt utbytte (fjorårets avsatte)</label>
-            <div class="amt"><input type="number" id="finUtbytte" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row total">
-            <div class="lab">Netto kontantstrøm fra finansiering</div>
-            <div class="amt"><span class="val" id="finNet">0 kr</span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finGjeld">Endring langsiktig gjeld (netto)</label></span><span class="rr-amtcell"><input class="rr-num" id="finGjeld" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finKasse">Endring kassekreditt</label></span><span class="rr-amtcell"><input class="rr-num" id="finKasse" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finEk">Innbetaling / tilbakebetaling av egenkapital</label></span><span class="rr-amtcell"><input class="rr-num" id="finEk" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finUtbytte">− Utbetalt utbytte (fjorårets avsatte)</label></span><span class="rr-amtcell"><input class="rr-num" id="finUtbytte" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-sub"><span class="lbl">Netto kontantstrøm fra finansiering</span><span class="rr-amtcell"><span class="rr-out" id="finNet">0</span><span class="rr-kr">kr</span></span></div>
+
+          <!-- NETTO ENDRING -->
+          <div class="rr-arsband">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span class="rr-arseyebrow">Sum av de tre aktivitetene</span>
+              <div style="display:flex;align-items:center;gap:11px">
+                <span class="rr-arslabel">Netto endring i kontanter</span>
+                <span class="rr-arstag pos hidden" id="netTag">Økning</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:7px">
+              <span class="rr-arsnum" id="netChange">0</span><span class="rr-arskr">kr</span>
+            </div>
           </div>
 
-          <div class="stmt-row grand" aria-live="polite">
-            <div class="lab">Netto endring i kontanter</div>
-            <div class="grand-amt"><span class="val" id="netChange">0 kr</span><span class="grand-tag" id="netTag"></span></div>
-          </div>
+          <!-- AVSTEMMING -->
+          <div class="rr-group gap">Avstemming mot balansen</div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="kontIB">Kontanter ved periodens begynnelse (IB)</label></span><span class="rr-amtcell"><input class="rr-num" id="kontIB" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="kontBalUB">Kontanter ifølge balansen ved slutt (UB)</label></span><span class="rr-amtcell"><input class="rr-num" id="kontBalUB" type="number" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-sub"><span class="lbl">Beregnet kontanter ved slutt (IB + netto endring)</span><span class="rr-amtcell"><span class="rr-out" id="kontUB">0</span><span class="rr-kr">kr</span></span></div>
 
-          <div class="stmt-group">Avstemming mot balansen</div>
-          <div class="stmt-row">
-            <label class="lab" for="kontIB">Kontanter ved periodens begynnelse (IB)</label>
-            <div class="amt"><input type="number" id="kontIB" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="kontBalUB">Kontanter ifølge balansen ved slutt (UB)</label>
-            <div class="amt"><input type="number" id="kontBalUB" placeholder="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row sub">
-            <div class="lab">Beregnet kontanter ved slutt (IB + netto endring)</div>
-            <div class="amt"><span class="val" id="kontUB">0 kr</span></div>
-          </div>
-
-          <div class="avstem" id="avstemBox" aria-live="polite">
-            <span class="l">Avstemming</span>
-            <span class="v" id="avstemV">–</span>
-            <span class="d" id="avstemD">Skriv inn tallene, eller last lærebok-eksempelet, for å sjekke at oppstillingen avstemmer.</span>
+          <div class="rr-arsband kx-avstem" id="avstemBox" aria-live="polite">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span class="rr-arseyebrow">Avstemming</span>
+              <span class="rr-arslabel" id="avstemLabel">Beregnet sluttbeholdning</span>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:7px">
+              <span class="kx-anum" id="avstemV">–</span><span class="rr-arskr">kr</span>
+            </div>
+            <p class="kx-anote" id="avstemD">Skriv inn tallene, eller last lærebok-eksempelet, for å sjekke at oppstillingen avstemmer.</p>
           </div>
 
         </div>
       </div>
 
-      <p class="info-box stmt-note" id="kxNote">Last «Lærebok-eksempel (oppg. 9.11)» for å se en ferdig, fullt avstemt indirekte oppstilling — eller bygg din egen linje for linje.</p>
-
-      <section class="metrics">
-        <h3 class="side-h">Nøkkeltall</h3>
-        <div class="kpi-grid">
-          <div class="kpi-cell"><div class="kpi-v" id="kOpNet">–</div><div class="kpi-l">Netto fra drift</div></div>
-          <div class="kpi-cell"><div class="kpi-v" id="kFcf">–</div><div class="kpi-l">Fri kontantstrøm</div></div>
-          <div class="kpi-cell"><div class="kpi-v" id="kNet">–</div><div class="kpi-l">Netto endring</div></div>
-          <div class="kpi-cell"><div class="kpi-v" id="kKval">–</div><div class="kpi-l">Kvalitet på drift</div></div>
+      <!-- WATERFALL BRIDGE -->
+      <div class="rr-panel">
+        <div class="rr-panel-head">
+          <span class="rr-panel-title">Kontantbroen</span>
+          <span class="rr-eyebrow">Fra inngående til utgående</span>
         </div>
+        <div class="kx-fall hidden" id="kxFallRows"></div>
+        <div class="kx-fall-empty" id="kxFallEmpty">Fyll inn tallene, eller last lærebok-eksempelet, for å se broen fra inngående til utgående beholdning.</div>
+      </div>
 
-        <div class="pattern" id="patternBox" hidden>
+      <!-- KPIs + tegnmønster -->
+      <div class="rr-panel">
+        <div class="rr-eyebrow" style="margin-bottom:16px">Nøkkeltall</div>
+        <div class="rr-kpis">
+          <div class="rr-kpi"><span class="l">Netto fra drift</span><span class="v" id="kOpNet">—</span></div>
+          <div class="rr-kpi"><span class="l">Fri kontantstrøm</span><span class="v" id="kFcf">—</span></div>
+          <div class="rr-kpi"><span class="l">Netto endring</span><span class="v" id="kNet">—</span></div>
+          <div class="rr-kpi"><span class="l">Kvalitet på drift</span><span class="v" id="kKval">—</span></div>
+        </div>
+        <div class="kx-pattern hidden" id="patternBox">
           <span class="glyph" id="patGlyph">– – –</span>
           <span class="ptxt" id="patTxt"></span>
         </div>
+      </div>
 
-        <details class="howto" style="margin:14px 0 0;">
-          <summary>Nøkkeltallene forklart</summary>
-          <div class="howto-body">
-            <div class="howto-row"><div class="h-title">Netto fra drift</div><div class="h-desc">Netto kontantstrøm fra operasjonelle aktiviteter. Vedvarende positiv operasjonell kontantstrøm er et sterkere helsetegn enn et høyt resultat.</div></div>
-            <div class="howto-row"><div class="h-title">Fri kontantstrøm (FCF)</div><div class="h-desc">Netto fra drift pluss netto investering (capex). Det som er igjen til eiere og långivere etter at driften har reinvestert. Grunnlaget for DCF-verdsettelse.</div></div>
-            <div class="howto-row"><div class="h-title">Netto endring</div><div class="h-desc">Summen av de tre strømmene — like stor som endringen i bankbeholdningen fra IB til UB.</div></div>
-            <div class="howto-row"><div class="h-title">Kvalitet på drift</div><div class="h-desc">Netto fra drift delt på ordinært resultat før skatt. Nær eller over 100 % betyr at resultatet faktisk blir til kontanter. Vedvarende lavt = varsel om svak inntjeningskvalitet.</div></div>
-          </div>
-        </details>
-      </section>
-
-      <section class="metrics" style="margin-top:30px;">
-        <h3 class="side-h">De tre aktivitetene</h3>
+      <!-- ACTIVITIES -->
+      <div class="rr-panel">
+        <div class="rr-eyebrow" style="margin-bottom:14px">De tre aktivitetene</div>
         <div class="actv-wrap">
           <table class="actv">
             <thead><tr><th scope="col">Aktivitet</th><th scope="col">Hva det er</th><th scope="col">Typiske poster</th></tr></thead>
@@ -1230,33 +1145,35 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
             </tbody>
           </table>
         </div>
-      </section>
+      </div>
 
-      <details class="howto" style="margin:26px 0 0;">
-        <summary>Indirekte vs. direkte modell</summary>
-        <div class="howto-body">
-          <div class="howto-row"><div class="h-title">Indirekte modell</div><div class="h-desc">Starter med resultatet og justerer for ikke-kontante poster og arbeidskapital. Mest brukt i Norge fordi den er enklest å lage fra et ferdig regnskap. Det er denne byggeren over bruker.</div></div>
-          <div class="howto-row"><div class="h-title">Direkte modell</div><div class="h-desc">Viser brutto innbetalinger fra kunder og utbetalinger til leverandører og ansatte direkte. NRS og IAS 7 <em>anbefaler</em> denne, men den krever mer detaljert tallgrunnlag.</div></div>
-          <div class="howto-row"><div class="h-title">Samme svar</div><div class="h-desc">Bare den operasjonelle delen ser ulik ut — investering og finansiering er identisk, og netto kontantstrøm fra drift blir nøyaktig den samme uansett metode.</div></div>
-          <div class="howto-row"><div class="h-title">Hvem må lage den?</div><div class="h-desc">Etter regnskapsloven § 3-2 må mellomstore og store foretak ha kontantstrømoppstilling. Små foretak (§ 1-5) er unntatt. Børsnoterte konsern følger IAS 7.</div></div>
-        </div>
-      </details>
+      <!-- EXPLANATIONS -->
+      <div class="rr-explain">
+        <details>
+          <summary><span class="q">Hva er en kontantstrømoppstilling?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Den viser faktiske kroner inn og ut gjennom året, fordelt på tre aktiviteter — drift, investering og finansiering — og forklarer hvorfor bankbeholdningen endret seg. Et selskap kan ha overskudd og likevel tom kasse; kontantstrømmen avslører det. Settes opp etter regnskapsloven § 6-4.</div>
+        </details>
+        <details>
+          <summary><span class="q">Slik setter du fortegn</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Hver linje er en kontant-effekt: + styrker kassen, − svekker den. Avskrivninger og nedskrivninger legges tilbake (+) — de reduserte resultatet, men ingen kroner forlot kassen i år. Gevinst ved salg trekkes ut av drift (−), og hele salgssummen føres i stedet under investering. Arbeidskapital: eiendel øker → −, eiendel synker → +, gjeld øker → +, gjeld synker → −.</div>
+        </details>
+        <details>
+          <summary><span class="q">Indirekte eller direkte modell?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Den indirekte modellen — som byggeren over bruker — starter med resultatet og justerer for ikke-kontante poster og arbeidskapital. Den direkte modellen viser brutto inn- og utbetalinger. NRS og IAS 7 anbefaler den direkte, men den indirekte er mest brukt i Norge fordi den er enklest å lage fra et ferdig regnskap. Investering og finansiering er like i begge, og netto fra drift blir nøyaktig den samme.</div>
+        </details>
+        <details>
+          <summary><span class="q">Vanlige fallgruver</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Fortegnsfeil på arbeidskapital er den klassiske — økt kundefordring skal være −, økt leverandørgjeld +. Glemmer du å reversere gevinst/tap, telles samme krone to ganger. Utbyttet som betales i år er fjorårets avsatte, ikke årets. Under norsk god regnskapsskikk er trukket kassekreditt finansiering (gjeld), ikke et fradrag i kontanter — motsatt av IAS 7.</div>
+        </details>
+        <details>
+          <summary><span class="q">Hvem må lage den?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Etter regnskapsloven § 3-2 må mellomstore og store foretak ha kontantstrømoppstilling. Små foretak (§ 1-5) er unntatt. Børsnoterte konsern følger den internasjonale standarden IAS 7.</div>
+        </details>
+      </div>
 
-      <details class="howto" style="margin:16px 0 0;">
-        <summary>Vanlige fallgruver</summary>
-        <div class="howto-body">
-          <div class="howto-row"><div class="h-title">Fortegnsfeil på arbeidskapital</div><div class="h-desc">Den klassiske: økt kundefordring skal være −, økt leverandørgjeld +. Bytter du fortegn, sprekker avstemmingen.</div></div>
-          <div class="howto-row"><div class="h-title">Glemmer å reversere gevinst/tap</div><div class="h-desc">Gevinst ved salg må trekkes ut av drift, og hele salgssummen føres under investering — ellers dobbelttelling.</div></div>
-          <div class="howto-row"><div class="h-title">Utbytte- og skatte-timing</div><div class="h-desc">Det som betales i år er fjorårets avsetning. Å føre årets avsatte utbytte som kontantstrøm er en vanlig glipp.</div></div>
-          <div class="howto-row"><div class="h-title">Kassekreditt</div><div class="h-desc">Under norsk god regnskapsskikk er trukket kassekreditt finansiering (gjeld) — ikke et fradrag i kontanter. (Motsatt av IAS 7.)</div></div>
-          <div class="howto-row"><div class="h-title">Neste steg</div><div class="h-desc">Se hvordan tallene henger sammen med <a href="/regnskap/resultat/">resultatregnskapet</a> og <a href="/regnskap/balanse/">balansen</a>.</div></div>
-        </div>
-      </details>
-
-      <p class="res-note stmt-src">Kilde: Regnskapsloven § 6-4 (kontantstrømoppstilling) og § 3-2 (regnskapsplikt), NRS(F) Kontantstrømoppstilling og IAS 7. Lærebok-eksempelet er oppgave 9.11. Veiledende, pedagogisk verktøy — kontakt regnskapsfører for konkrete vurderinger.</p>
+      <p class="rr-source">Kilde: Regnskapsloven § 6-4 (kontantstrømoppstilling) og § 3-2 (regnskapsplikt) · NRS(F) Kontantstrømoppstilling · IAS 7. Lærebok-eksempelet er oppgave 9.11. Veiledende, pedagogisk verktøy — ikke profesjonell rådgivning.</p>
 
     </div>
-
   </div>
 
 
@@ -1440,7 +1357,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
   // ── Kontantstrømoppstilling — indirekte modell (rskl § 6-4) ──
   (function(){
-    var KEY = 'hv-kontantstrom-v1';
+    var KEY = 'hv-kontantstrom-v2';
 
     // Inputs grouped by activity. Each value is a signed cash effect (kr):
     // + styrker kassen, − svekker kassen.
@@ -1457,23 +1374,66 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       var v = parseFloat(s);
       return isFinite(v) ? v : 0;
     }
-    function fmt(n){
+    function fmtN(n){
       var sign = n < 0 ? '−' : '';
       var abs = Math.abs(Math.round(n));
-      return sign + new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(abs) + ' kr';
+      return sign + new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(abs);
     }
+    function fmt(n){ return fmtN(n) + ' kr'; }
     function setEl(id,val){ var el=document.getElementById(id); if(el) el.textContent=val; }
     function sumIds(ids){ var t=0; ids.forEach(function(id){ t+=parseNum(id); }); return t; }
     function glyph(n){ return n>0 ? '+' : (n<0 ? '−' : '0'); }
 
     function patternText(op,inv,fin){
-      // Tegnmønster på de tre strømmene → livsfase-tolkning.
       if(op>0 && inv<0 && fin<0) return '<b>Moden, sunn drift.</b> Driften finansierer både reinvestering og tilbakebetaling til eiere og långivere.';
       if(op>0 && inv<0 && fin>0) return '<b>Vekst.</b> Driften går bra, men ekspansjonen krever ekstern kapital i tillegg.';
       if(op>0 && inv>0)          return '<b>Frigjør kapital.</b> Positiv drift og salg av eiendeler — ofte omstrukturering eller nedbygging.';
       if(op<0 && fin>0)          return '<b>Drift i minus dekkes av finansiering.</b> Lån eller emisjon holder selskapet i gang — følg nøye med på likviditeten.';
       if(op<0 && inv>0)          return '<b>Selger seg ut av problemer.</b> Driften taper penger, og eiendeler selges for å dekke forpliktelser.';
       return 'Tre strømmer satt sammen — tegnene forteller hvilken fase selskapet er i.';
+    }
+
+    // Waterfall bridge: IB → drift → investering → finansiering → UB.
+    function renderFall(ib, drift, inv, fin){
+      var rows = document.getElementById('kxFallRows');
+      var empty = document.getElementById('kxFallEmpty');
+      if(!rows) return;
+      var c1 = ib + drift, c2 = c1 + inv, c3 = c2 + fin;
+      var pts = [0, ib, c1, c2, c3];
+      var lo = Math.min.apply(null, pts), hi = Math.max.apply(null, pts);
+      var range = (hi - lo) || 1;
+      function seg(a, b){
+        var l = Math.min(a, b), h = Math.max(a, b);
+        var left = (l - lo) / range * 100;
+        var w = (h - l) / range * 100;
+        if(w > 0 && w < 1.4) w = 1.4;
+        return 'left:' + left.toFixed(2) + '%;width:' + w.toFixed(2) + '%';
+      }
+      var zero = ((0 - lo) / range * 100).toFixed(2);
+      var lanes = [
+        {lab:'Kontanter 01.01', cls:'base', style:seg(0, ib),  val:ib},
+        {lab:'+ Drift',         cls:(drift>=0?'up':'down'), style:seg(ib, c1), val:drift},
+        {lab:'± Investering',   cls:(inv>=0?'up':'down'),   style:seg(c1, c2), val:inv},
+        {lab:'± Finansiering',  cls:(fin>=0?'up':'down'),   style:seg(c2, c3), val:fin},
+        {lab:'Kontanter 31.12', cls:'dest', style:seg(0, c3), val:c3}
+      ];
+      var html = '';
+      lanes.forEach(function(r){
+        html += '<div class="kx-fall-row">'
+          + '<span class="kx-fall-lab">' + r.lab + '</span>'
+          + '<div class="kx-fall-track" style="--zero:' + zero + '%">'
+            + '<span class="kx-fall-bar ' + r.cls + '" style="' + r.style + '"></span></div>'
+          + '<span class="kx-fall-val">' + fmtN(r.val) + '</span></div>';
+      });
+      rows.innerHTML = html;
+      rows.classList.remove('hidden');
+      if(empty) empty.classList.add('hidden');
+    }
+    function clearFall(){
+      var rows = document.getElementById('kxFallRows');
+      var empty = document.getElementById('kxFallEmpty');
+      if(rows){ rows.innerHTML = ''; rows.classList.add('hidden'); }
+      if(empty) empty.classList.remove('hidden');
     }
 
     function compute(){
@@ -1485,20 +1445,29 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       var balUB = parseNum('kontBalUB');
       var calcUB = ib + net;
 
-      setEl('opNet',  fmt(op));
-      setEl('invNet', fmt(inv));
-      setEl('finNet', fmt(fin));
-      setEl('netChange', fmt(net));
-      setEl('kontUB', fmt(calcUB));
+      setEl('opNet',  fmtN(op));
+      setEl('invNet', fmtN(inv));
+      setEl('finNet', fmtN(fin));
+      setEl('netChange', fmtN(net));
+      setEl('kontUB', fmtN(calcUB));
 
       var anyInput = false;
       ALL.forEach(function(id){ if(parseNum(id)!==0) anyInput=true; });
 
-      // Netto endring-merkelapp
+      // Netto endring-merkelapp (pos = accent, neg = neutral; ingen rød/grønn)
       var netTag = document.getElementById('netTag');
-      if(netTag) netTag.textContent = !anyInput ? '' : (net>0 ? 'Økning' : (net<0 ? 'Reduksjon' : 'Uendret'));
+      if(netTag){
+        if(!anyInput){ netTag.classList.add('hidden'); }
+        else {
+          netTag.classList.remove('hidden');
+          var up = net>=0;
+          netTag.textContent = net>0 ? 'Økning' : (net<0 ? 'Reduksjon' : 'Uendret');
+          netTag.classList.toggle('pos', up);
+          netTag.classList.toggle('neg', !up);
+        }
+      }
 
-      // Avstemming mot balansen — grønt når beregnet UB treffer balansens UB.
+      // Avstemming mot balansen — accent når beregnet UB treffer balansens UB.
       var box = document.getElementById('avstemBox');
       var balEl = document.getElementById('kontBalUB');
       var hasBal = balEl && (balEl.value||'').trim() !== '';
@@ -1506,52 +1475,49 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       if(box){
         if(!anyInput){
           box.classList.remove('ok');
+          setEl('avstemLabel','Beregnet sluttbeholdning');
           setEl('avstemV','–');
           setEl('avstemD','Skriv inn tallene, eller last lærebok-eksempelet, for å sjekke at oppstillingen avstemmer.');
         } else if(!hasBal){
           box.classList.remove('ok');
-          setEl('avstemV', fmt(calcUB));
-          setEl('avstemD','Beregnet kontanter ved slutt. Skriv inn kontanter ifølge balansen for å kontrollere avstemmingen.');
+          setEl('avstemLabel','Beregnet sluttbeholdning');
+          setEl('avstemV', fmtN(calcUB));
+          setEl('avstemD','Skriv inn kontanter ifølge balansen for å kontrollere avstemmingen.');
         } else if(Math.abs(diff) < 0.5){
           box.classList.add('ok');
-          setEl('avstemV', fmt(calcUB));
-          setEl('avstemD','Avstemmer ✓  Beregnet sluttbeholdning er lik kontantene i balansen — oppstillingen er konsistent.');
+          setEl('avstemLabel','Avstemmer');
+          setEl('avstemV', fmtN(calcUB));
+          setEl('avstemD','Beregnet sluttbeholdning er lik kontantene i balansen — oppstillingen er konsistent.');
         } else {
           box.classList.remove('ok');
-          setEl('avstemV', fmt(diff));
-          setEl('avstemD','Avvik mot balansen. Sjekk fortegn på arbeidskapital, at gevinst er reversert, og at utbytte er fjorårets avsatte.');
+          setEl('avstemLabel','Avvik mot balansen');
+          setEl('avstemV', fmtN(diff));
+          setEl('avstemD','Sjekk fortegn på arbeidskapital, at gevinst er reversert, og at utbytte er fjorårets avsatte.');
         }
       }
 
       // Nøkkeltall
       var resFor = parseNum('opRes');
-      setEl('kOpNet', anyInput ? fmt(op) : '–');
-      setEl('kFcf',   anyInput ? fmt(op + inv) : '–');
-      setEl('kNet',   anyInput ? fmt(net) : '–');
-      setEl('kKval',  (anyInput && resFor>0) ? (new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(op/resFor*100)+' %') : '–');
+      setEl('kOpNet', anyInput ? fmt(op) : '—');
+      setEl('kFcf',   anyInput ? fmt(op + inv) : '—');
+      setEl('kNet',   anyInput ? fmt(net) : '—');
+      setEl('kKval',  (anyInput && resFor>0) ? (new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(op/resFor*100)+' %') : '—');
 
       // Tegnmønster-dom
       var pat = document.getElementById('patternBox');
       if(pat){
         if(anyInput){
-          pat.hidden = false;
-          setEl('patGlyph', glyph(op)+'  '+glyph(inv)+'  '+glyph(fin));
+          pat.classList.remove('hidden');
+          setEl('patGlyph', glyph(op)+'   '+glyph(inv)+'   '+glyph(fin));
           var ptxt = document.getElementById('patTxt');
           if(ptxt) ptxt.innerHTML = patternText(op,inv,fin);
         } else {
-          pat.hidden = true;
+          pat.classList.add('hidden');
         }
       }
 
-      // Live note
-      var note = document.getElementById('kxNote');
-      if(note){
-        if(!anyInput){
-          note.textContent = 'Last «Lærebok-eksempel (oppg. 9.11)» for å se en ferdig, fullt avstemt indirekte oppstilling — eller bygg din egen linje for linje.';
-        } else {
-          note.textContent = 'Netto fra drift ' + fmt(op) + ' · investering ' + fmt(inv) + ' · finansiering ' + fmt(fin) + ' → netto endring i kontanter ' + fmt(net) + '.';
-        }
-      }
+      // Waterfall
+      if(anyInput) renderFall(ib, op, inv, fin); else clearFall();
 
       persist();
     }
@@ -1593,7 +1559,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       });
       compute();
     }
-    document.querySelectorAll('.preset-btn').forEach(function(b){
+    document.querySelectorAll('[data-preset]').forEach(function(b){
       b.addEventListener('click', function(){ applyPreset(b.getAttribute('data-preset')); });
     });
 
