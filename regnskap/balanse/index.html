@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Balanse-template med balance-check — rskl § 6-2 · Hverdagsverktøy</title>
-<meta name="description" content="Sett opp balansen og kontroller at Eiendeler = Egenkapital + Gjeld (regnskapsloven § 6-2). Anleggsmidler, omløpsmidler, EK, langsiktig og kortsiktig gjeld. Pedagogisk template med automatic balance-check.">
+<meta name="description" content="Sett opp balansen og kontroller at Eiendeler = Egenkapital + Gjeld (regnskapsloven § 6-2). Anleggsmidler, omløpsmidler, egenkapital, langsiktig og kortsiktig gjeld med konto­numre, nøkkeltall og automatisk balanse-kontroll. Pedagogisk verktøy.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
@@ -115,6 +115,10 @@ html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [dat
    Dark theme reads faint (cool blue on blue-black) — lift the opacity tokens. */
 html:not(:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"])) body:not(.embed){background:transparent}
 html[data-theme="dark"]{--atmo-band-a-op:.20;--atmo-band-a-op-breathe:.26;--atmo-band-b-op:.13;--atmo-band-b-op-breathe:.17}
+/* GLOW-CARBON (2026-06-27) — carbon (default) never got the dark-theme aurora lift,
+   so the animated aurora was nearly invisible behind the content. Mirror the dark
+   rule for carbon so the moving bands read clearly, staying within the token system. */
+html:is(:not([data-theme]),[data-theme="carbon"]){--atmo-band-a-op:.18;--atmo-band-a-op-breathe:.24;--atmo-band-b-op:.11;--atmo-band-b-op-breathe:.15}
 .atmo-base{
   position:fixed;inset:0;z-index:-3;pointer-events:none;
   background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
@@ -300,6 +304,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     --line:rgba(255,255,255,.06);
     --line-2:rgba(255,255,255,.10);
     --line-warm:rgba(200,153,104,.18);
+    --accent-deep:#a87842;
+    --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    --shadow-rest: 0 1px 2px rgba(0,0,0,.2), 0 10px 30px rgba(0,0,0,.16);
 
     --ease: cubic-bezier(.22, 1, .36, 1);
 
@@ -512,46 +519,30 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
   .page-hero .container{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:end}
 
-  .page-eyebrow{
-    display:inline-flex;align-items:center;gap:8px;
-    font:600 11px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
-    color:var(--ink3);margin-bottom:18px;
+  /* Breadcrumb + round back-button — matcher de andre verktøysidene (site-shell.css .crumb) */
+  .crumb{display:inline-flex;align-items:center;gap:10px;font:500 12px/1 var(--font-sans);
+    letter-spacing:0;color:var(--ink3);margin-bottom:18px}
+  .crumb a{color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
+  .crumb a:hover{color:var(--ink)}
+  .crumb .sep{width:3px;height:3px;border-radius:50%;background:var(--ink4)}
+  .crumb .here{color:var(--ink)}
+  .crumb-back{display:inline-flex;align-items:center;justify-content:center;
+    width:22px;height:22px;border-radius:50%;
+    background:transparent;border:1px solid var(--line-2);
+    color:var(--ink2) !important;margin-right:4px;
+    transition:background .2s var(--ease),transform .2s var(--ease),border-color .2s var(--ease)}
+  @media(hover:hover){
+    .crumb-back:hover{background:rgba(255,255,255,.03);border-color:var(--line-warm);color:var(--ink) !important;transform:translateX(-2px)}
   }
-  .page-eyebrow a{color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
-  .page-eyebrow a:hover{color:var(--accent)}
-  .page-eyebrow .arrow{color:var(--ink4);font-weight:400}
-  .page-eyebrow .current{color:var(--ink2)}
-
   h1.page-title{
-    font-family:var(--font-serif);font-weight:500;
-    font-size:clamp(36px, 4.6vw, 54px);line-height:1.05;letter-spacing:-1.2px;
+    font-family:var(--font-serif);font-style:normal;font-weight:500;
+    font-size:clamp(34px, 4vw, 46px);line-height:1.08;letter-spacing:-1px;
     margin:0 0 14px;color:var(--ink);
   }
-  h1.page-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
+  /* Plain title to match the other tool pages (site-shell) — no italic accent */
+  h1.page-title em{font-style:normal;font-weight:500;color:var(--ink)}
   .page-lead{
-    font-size:14px;line-height:1.55;color:var(--ink2);margin:0;max-width:58ch;
-  }
-
-  .page-stats{
-    display:flex;flex-direction:column;
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-  }
-  .page-stat{
-    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
-    padding:14px 0;
-    border-bottom:1px solid var(--line);
-  }
-  .page-stat:last-child{border-bottom:none}
-  .page-stat .l{
-    font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;
-    color:var(--ink3);
-  }
-  .page-stat .v{
-    font-family:var(--font-serif);font-weight:500;
-    font-size:30px;line-height:1;letter-spacing:-.6px;color:var(--ink);
-    font-variant-numeric:tabular-nums lining-nums;
-    white-space:nowrap;
+    font-size:14px;line-height:1.6;color:var(--ink2);margin:0;max-width:58ch;
   }
 
   footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
@@ -566,93 +557,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media (max-width: 560px){
     .container{padding:0 22px}
     .page-hero{padding:36px 0 28px}
-    h1.page-title{font-size:clamp(30px, 8vw, 42px)}
   }
   @media (prefers-reduced-motion: reduce){
     *{transition:none !important;animation:none !important}
     html{scroll-behavior:auto}
   }
-
-  .back-pill-wrap{margin:24px 0 0}
-  .back-pill{
-    display:inline-flex;align-items:center;gap:14px;
-    padding:11px 18px 11px 14px;
-    background:var(--surface);border:1px solid var(--line-2);border-radius:999px;
-    text-decoration:none;color:var(--ink2);
-    transition:background .25s var(--ease), border-color .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
-  }
-  .back-pill:hover{background:var(--surface-2);border-color:var(--line-warm);color:var(--ink);transform:translateX(-3px)}
-  .back-pill .arrow-back{
-    width:24px;height:24px;border-radius:50%;
-    display:inline-flex;align-items:center;justify-content:center;
-    background:var(--hover-bg);color:var(--accent);
-    transition:background .25s var(--ease)}
-  .back-pill:hover .arrow-back{background:var(--hover-bg)}
-  .back-pill .back-eyebrow{
-    font:600 10px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-    color:var(--ink3);
-  }
-  .back-pill .back-label{
-    font:500 13px/1 var(--font-sans);color:inherit;
-  }
-  .back-pill .back-stack{display:flex;flex-direction:column;gap:3px}
-
-  .calc-grid{
-    display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;
-    padding:8px 0 56px;
-  }
-  .calc-form{display:flex;flex-direction:column;gap:24px}
-  .calc-section{
-    background:var(--surface);border:1px solid var(--line);border-radius:6px;
-    padding:18px 22px 20px;
-  }
-  .calc-section-head{
-    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
-    padding-bottom:12px;margin-bottom:14px;
-    border-bottom:1px solid var(--line);
-  }
-  .calc-section-head h2{
-    font-family:var(--font-sans);font-size:11px;font-weight:600;
-    letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
-    margin:0;
-  }
-  .calc-section-head .hint{
-    font-size:11.5px;color:var(--ink3);font-style:italic;
-  }
-
-  .calc-fields{
-    display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;
-  }
-  .fg{display:flex;flex-direction:column;gap:6px}
-  .fg.full{grid-column:1 / -1}
-  .fg label.flbl{
-    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
-    color:var(--ink3);
-  }
-  .fg input,
-  .fg select{
-    width:100%;background:var(--bg);
-    border:1px solid var(--line-2);border-radius:5px;
-    padding:11px 12px;
-    color:var(--ink);font:500 14px/1.2 var(--font-sans);
-    outline:none;
-    font-variant-numeric:tabular-nums;
-    transition:border-color .2s var(--ease), background .2s var(--ease);
-  }
-  .fg input:focus,
-  .fg select:focus{
-    border-color:var(--line-warm);background:var(--surface-2);
-  }
-  .fg select{
-    appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:32px;
-    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23797469' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");
-    background-repeat:no-repeat;background-position:right 10px center;
-  }
-  .fg .hint-line{
-    font-size:11.5px;color:var(--ink3);line-height:1.55;margin-top:2px;font-style:italic;
-  }
-  .check-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer}
-  .check-row input{width:16px;height:16px;cursor:pointer;accent-color:var(--accent);background:transparent}
 
   .info-box{
     margin:0;padding:11px 14px;
@@ -664,68 +573,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
   .info-box a{color:var(--accent);text-decoration:underline;font-weight:600}
 
-  .calc-result{
-    position:sticky;top:124px;
-    background:var(--surface);border:1px solid var(--line);border-radius:6px;
-    padding:24px 22px 20px;
-    display:flex;flex-direction:column;gap:16px;
-  }
-  .res-headline{
-    border-bottom:1px solid var(--line);
-    padding-bottom:16px;
-  }
-  .res-headline .r-lbl{
-    display:block;
-    font:600 10px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
-    color:var(--ink3);margin-bottom:8px;
-  }
-  .res-headline .r-val{
-    display:block;
-    font-family:var(--font-serif);font-weight:500;
-    font-size:38px;line-height:1;letter-spacing:-.8px;color:var(--ink);
-    font-variant-numeric:tabular-nums lining-nums;
-  }
-  .res-headline .r-verdict{
-    display:block;margin-top:8px;
-    font-size:12.5px;color:var(--ink3);font-style:italic;
-  }
-  .res-stats{display:flex;flex-direction:column}
-  .res-stat{
-    display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-    padding:11px 0;border-bottom:1px solid var(--line);
-    font-size:13px;
-  }
-  .res-stat:last-child{border-bottom:none}
-  .res-stat.divide{border-top:1px solid var(--line);margin-top:4px;padding-top:14px}
-  .res-stat .l{color:var(--ink2);
-    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;}
-  .res-stat .v{
-    font-family:var(--font-serif);font-weight:500;font-size:17px;
-    color:var(--ink);font-variant-numeric:tabular-nums;
-  }
-  .res-stat.strong .v{font-weight:700;font-size:18px}
-  .res-section-h{
-    font:600 10px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-    color:var(--ink3);margin:8px 0 -2px;
-  }
   .res-note{
     font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;
     margin:6px 0 0;
   }
   .hidden{display:none}
 
-  @media (max-width: 880px){
-    .calc-grid{grid-template-columns:1fr}
-    .calc-result{position:static;top:auto}
-  }
-  @media (max-width: 560px){
-    .calc-section{padding:16px 16px 18px}
-    .calc-result{padding:20px 18px 18px}
-    .calc-fields{grid-template-columns:1fr;gap:12px}
-  }
-
   /* T3: site-shell — help-btn + focus-btn + howto-details + full footer */
-  .section-head-actions{display:inline-flex;gap:6px;align-items:center;margin-left:auto;}
   .calc-help-btn,.focus-card-btn{
     background:transparent;border:1px solid var(--line-2);color:var(--ink3);
     width:26px;height:26px;border-radius:50%;cursor:pointer;padding:0;
@@ -736,7 +590,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media (hover: hover){
     .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line);background:var(--hover-bg);}
   }
-  body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer,body.focus-mode .back-pill-wrap{display:none;}
+  body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer{display:none;}
   body.focus-mode .page-hero{padding-top:24px;}
   details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;}
   details.howto>summary{
@@ -858,205 +712,342 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
 <main id="main">
 
-  <div class="container">
-    <div class="back-pill-wrap">
-      <a href="/regnskap/" class="back-pill" aria-label="Tilbake til Regnskap">
-        <span class="arrow-back" aria-hidden="true">
-          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/><line x1="4" y1="7" x2="12" y2="7"/></svg>
-        </span>
-        <span class="back-stack">
-          <span class="back-eyebrow">Regnskap</span>
-          <span class="back-label">Tilbake til alle verktøy</span>
-        </span>
-      </a>
-    </div>
-  </div>
-
   <section class="page-hero" data-screen-label="Balanse Hero">
     <div class="container">
-      <div>
-        <div class="page-eyebrow">
-          <a href="/">Forsiden</a>
-          <span class="arrow">/</span>
+      <div class="rr-col">
+        <div class="crumb">
+          <a href="/regnskap/" class="crumb-back" aria-label="Tilbake til Regnskap">
+            <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+          </a>
+          <a href="/">Hverdagsverktøy</a>
+          <span class="sep"></span>
           <a href="/regnskap/">Regnskap</a>
-          <span class="arrow">/</span>
-          <span class="current">Balanse</span>
+          <span class="sep"></span>
+          <span class="here">Balanse</span>
         </div>
-        <h1 class="page-title" data-i18n-html="regnskapBalanseH1Html"><em>Balanse</em></h1>
-        <p class="page-lead" data-i18n="regnskapBalanseLead">Sett opp balansen og kontroller at Eiendeler = Egenkapital + Gjeld (regnskapsloven § 6-2). Anleggsmidler, omløpsmidler, EK, langsiktig og kortsiktig gjeld i en pedagogisk template med automatic balance-check.</p>
-      </div>
-      <div class="page-stats">
-        <div class="page-stat"><span class="l" data-i18n="regnskapBalanseHStatTotal">Sum balanse</span><span class="v" id="hStatTotal">–</span></div>
-        <div class="page-stat"><span class="l" data-i18n="regnskapBalanseHStatStatus">Status</span><span class="v" id="hStatStatus">–</span></div>
+        <h1 class="page-title">Balanse</h1>
+        <p class="page-lead">Sett opp balansen post for post — så summeres eiendelene mot egenkapital og gjeld, og kontrollen viser om de to sidene går i null. Etter regnskapsloven § 6-2.</p>
       </div>
     </div>
   </section>
 
   <style>
-    .balanse-grid{
-      display:grid;grid-template-columns:1fr 1fr;gap:18px;
-    }
-    .bal-col{
-      background:var(--surface);border:1px solid var(--line);border-radius:6px;
-      padding:18px 22px 18px;
-    }
-    .bal-col h3.section-h{
-      font-family:var(--font-sans);font-size:11px;font-weight:600;
-      letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
-      margin:0 0 14px;padding-bottom:12px;
-      border-bottom:1px solid var(--line);
-    }
-    .bal-col h4{
-      margin:14px 0 8px;color:var(--ink2);
-      font:600 11.5px/1.2 var(--font-sans);
-      letter-spacing:.6px;text-transform:uppercase;
-    }
-    .bal-col .fg{margin-bottom:10px;}
-    .balanse-result{
-      background:var(--surface);border:1px solid var(--line);border-radius:6px;
-      padding:24px 22px 18px;display:flex;flex-direction:column;gap:14px;
-      margin-top:18px;
-    }
-    .balance-check{
-      padding:14px 18px;border-radius:6px;
-      border:1px solid var(--line-2);
-      transition:border-color .2s var(--ease), background .2s var(--ease);
-    }
-    .balance-check.balanced{
-      border-color:var(--accent);
-      background:var(--surface-2);
-    }
-    .balance-check.unbalanced{
-      border-color:var(--ink3);
-      background:var(--surface-2);
-    }
-    .balance-check .l{
-      display:block;font:600 10px/1 var(--font-sans);letter-spacing:1.8px;
-      text-transform:uppercase;color:var(--ink3);margin-bottom:6px;
-    }
-    .balance-check .v{
-      display:block;
-      font-family:var(--font-serif);font-weight:500;
-      font-size:32px;line-height:1;letter-spacing:-.6px;color:var(--ink);
-      font-variant-numeric:tabular-nums;
-    }
-    .balance-check.balanced .v{color:var(--accent);}
-    .bal-breakdown{
-      background:var(--surface-2);border:1px solid var(--line);border-radius:5px;
-      padding:0;
-    }
-    .bal-breakdown summary{
-      cursor:pointer;list-style:none;padding:11px 16px;
-      font:600 11px/1.2 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink2);
-      display:flex;align-items:center;justify-content:space-between;
-    }
-    .bal-breakdown summary::-webkit-details-marker{display:none;}
-    .bal-breakdown summary::after{
-      content:'';width:7px;height:7px;
-      border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-      transform:rotate(45deg);transition:transform .15s var(--ease);
-    }
-    .bal-breakdown[open] summary::after{transform:rotate(225deg);}
-    .bal-breakdown .breakdown-body{padding:0 16px 14px;}
+    /* ── Balanse — Claude Design premium reskin (sw v167, 2026-06-28).
+       Same document-style ledger as resultatregnskap: konto-numre in mono,
+       one centred 680px column. Two sections (Eiendeler, Egenkapital og gjeld)
+       that must sum to the same total — a balance-check band confirms it.
+       Keeps the site chrome + atmosphere; neutral tokens only, --accent reserved
+       for the balanced state and the equity share of the funding bar. ── */
+    .page-hero .container{display:block}
+    .rr-col{max-width:680px;margin:0 auto}
+    .rr-wrap{display:flex;flex-direction:column;gap:18px;padding:30px 0 40px}
+    .rr-eyebrow{font:600 10px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink4)}
 
-    @media (max-width: 880px){
-      .balanse-grid{grid-template-columns:1fr;}
-    }
+    /* Toolbar — eksempler */
+    .rr-toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 24px}
+    .hv-btn--pill{background:var(--surface);color:var(--ink2);border:1px solid var(--line-2);border-radius:999px;padding:8px 15px;cursor:pointer;font:500 12.5px/1 var(--font-sans);transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease)}
+    @media (hover:hover){.hv-btn--pill:hover{color:var(--ink);border-color:var(--line-warm);background:var(--surface-2)}}
+
+    /* Statement card */
+    .rr-card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest)}
+    .rr-stmt{padding:clamp(22px,3.4vw,32px) clamp(20px,4vw,38px) clamp(20px,3vw,28px)}
+    .rr-stmt-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:18px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+    .rr-stmt-title{font:500 20px/1.1 var(--font-serif);color:var(--ink);margin-top:6px}
+    .rr-stmt-meta1{font:500 13px/1.2 var(--font-sans);color:var(--ink)}
+    .rr-stmt-meta2{font:400 11.5px/1.2 var(--font-sans);color:var(--ink4);margin-top:4px}
+
+    /* Section header (Eiendeler / Egenkapital og gjeld) */
+    .rr-sect{font:600 11px/1 var(--font-sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin:20px 0 2px;padding-bottom:9px;border-bottom:1px solid var(--line-2)}
+    .rr-sect:first-of-type{margin-top:4px}
+
+    .rr-group{font:600 10px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink4);margin:14px 0 4px}
+    .rr-group.gap{margin-top:20px}
+    .rr-line{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:7px 0}
+    .rr-name{display:flex;align-items:baseline;gap:9px;min-width:0}
+    .rr-konto{font:400 10.5px/1 var(--font-mono);color:var(--ink4);min-width:40px}
+    .rr-lab{font:400 13.5px/1.45 var(--font-sans);color:var(--ink2)}
+    .rr-lab .sub{color:var(--ink4);font-size:11px}
+    .rr-amtcell{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;width:184px;flex:none}
+    .rr-kr{font:400 11px/1 var(--font-sans);color:var(--ink4);width:16px;text-align:left}
+    .rr-out{font-variant-numeric:tabular-nums lining-nums;text-align:right;min-width:132px}
+    input.rr-num{width:132px;text-align:right;font:500 14px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);background:rgba(255,248,232,.025);border:1px solid var(--line-2);border-radius:6px;padding:8px 11px;outline:none;transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease)}
+    input.rr-num:focus{border-color:var(--accent);background:var(--surface-2);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+    input.rr-num::-webkit-outer-spin-button,input.rr-num::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+    .rr-sub{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:10px 0 7px;margin-top:3px;border-top:1px solid var(--line)}
+    .rr-sub .lbl{font:500 13px/1.4 var(--font-sans);color:var(--ink)}
+    .rr-sub .rr-out{font:600 15px/1 var(--font-serif);color:var(--ink);letter-spacing:-.2px}
+    .rr-sub.muted .rr-out{color:var(--ink2)}
+    .rr-total{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:12px 0 9px;margin-top:4px;border-top:1px solid var(--line-2)}
+    .rr-total .lbl{font:600 14px/1.3 var(--font-sans);color:var(--ink)}
+    .rr-total .rr-out{font:600 17px/1 var(--font-serif);color:var(--ink);letter-spacing:-.3px}
+
+    /* Balanse-kontroll band — neutral by default, accent when the two sides match */
+    .rr-arsband{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 18px;margin-top:16px;padding:18px 20px;border-radius:9px;background:rgba(255,248,232,.04);border:1px solid var(--line-2);transition:background .2s var(--ease),border-color .2s var(--ease)}
+    .rr-arsband.ok{background:color-mix(in srgb,var(--accent) 7%,transparent);border-color:var(--line-warm)}
+    .rr-arseyebrow{font:500 9.5px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink4)}
+    .rr-arslabel{font:500 19px/1 var(--font-serif);color:var(--ink);letter-spacing:-.2px}
+    .rr-arstag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font:500 11px/1 var(--font-sans);letter-spacing:.02em}
+    .rr-arstag.pos{background:color-mix(in srgb,var(--accent) 13%,transparent);border:1px solid var(--line-warm);color:var(--accent-2)}
+    .rr-arstag.neg{background:rgba(255,248,232,.05);border:1px solid var(--line-2);color:var(--ink2)}
+    .rr-arsnum{font:600 clamp(28px,5vw,34px)/1 var(--font-serif);font-variant-numeric:tabular-nums lining-nums;color:var(--ink2);letter-spacing:-1px;transition:color .2s var(--ease)}
+    .rr-arsband.ok .rr-arsnum{color:var(--accent-2)}
+    .rr-arskr{font:400 13px/1 var(--font-sans);color:var(--ink3)}
+
+    /* Imbalance note */
+    .rr-loss{display:flex;gap:9px;align-items:flex-start;margin-top:12px;padding:11px 13px;border:1px solid var(--line-warm);border-radius:7px;background:color-mix(in srgb,var(--accent) 4%,transparent);font:400 12px/1.55 var(--font-sans);color:var(--ink2)}
+    .rr-loss svg{flex:none;width:15px;height:15px;color:var(--accent-2);margin-top:1px}
+
+    /* Analysis panels */
+    .rr-panel{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:clamp(18px,3vw,26px) clamp(18px,3.4vw,30px)}
+    .rr-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px}
+    .rr-kpi{display:flex;flex-direction:column;gap:9px;padding:15px 16px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--accent) 2.5%,var(--surface))}
+    .rr-kpi .l{font:500 9.5px/1.2 var(--font-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink4)}
+    .rr-kpi .v{font:500 21px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);letter-spacing:-.4px}
+    .rr-panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .rr-cost-title{font:500 17px/1.1 var(--font-serif);color:var(--ink);font-style:italic}
+    .rr-bar{display:flex;height:34px;border-radius:8px;overflow:hidden;background:rgba(255,248,232,.04);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(0,0,0,.2)}
+    .rr-bar .seg{height:100%;min-width:0}
+    .rr-legend{display:flex;flex-direction:column;margin-top:8px}
+    .rr-leg{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums lining-nums}
+    .rr-leg .dot{width:9px;height:9px;border-radius:2px;flex:none}
+    .rr-leg .nm{flex:1;min-width:0;font:400 12.5px/1.2 var(--font-sans);color:var(--ink2)}
+    .rr-leg.acc .nm{color:var(--accent-2)}
+    .rr-leg .amt{font:500 12.5px/1 var(--font-sans);color:var(--ink);min-width:82px;text-align:right}
+    .rr-leg.acc .amt{color:var(--accent-2)}
+    .rr-leg .pc{font:400 11.5px/1 var(--font-sans);color:var(--ink4);min-width:42px;text-align:right}
+    .rr-cost-empty{padding:18px 4px;font:400 12.5px/1.55 var(--font-sans);color:var(--ink3)}
+
+    /* Explanations */
+    .rr-explain{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:6px clamp(18px,3.4vw,28px)}
+    .rr-explain details > summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+    .rr-explain details:last-child > summary{border-bottom:none}
+    .rr-explain summary .q{font:500 14px/1.3 var(--font-sans);color:var(--ink)}
+    .rr-explain .ans{padding:4px 0 16px;font:400 13px/1.65 var(--font-sans);color:var(--ink2);max-width:60ch}
+    details > summary{list-style:none;cursor:pointer}
+    details > summary::-webkit-details-marker{display:none}
+    .rr-chev{transition:transform .2s var(--ease);color:var(--ink4);flex:none}
+    details[open] .rr-chev{transform:rotate(180deg)}
+
+    .rr-source{font:400 11.5px/1.65 var(--font-sans);color:var(--ink4);margin:2px auto 0;text-align:center;max-width:62ch}
+    .hidden{display:none}
+
     @media (max-width: 560px){
-      .bal-col{padding:16px 16px 16px;}
+      .rr-amtcell{width:150px}
+      input.rr-num{width:106px}
+      .rr-out{min-width:106px}
     }
   </style>
 
   <div class="container">
+    <div class="rr-col rr-wrap">
 
-    <details class="howto" id="balanse-howto" style="margin-top:18px;">
-      <summary data-i18n="regnskapBalanseHowtoSummary">Slik bruker du balanse-templaten</summary>
-      <div class="howto-body">
-        <div class="howto-row"><div class="h-title">Anleggsmidler</div><div class="h-desc">Eiendeler selskapet eier i mer enn 1 år: bygninger, maskiner, langsiktige investeringer. Aktiveres i balansen og avskrives over levetiden.</div></div>
-        <div class="howto-row"><div class="h-title">Omløpsmidler</div><div class="h-desc">Kortsiktige eiendeler: varelager, kundefordringer, bankinnskudd. Forventes omsatt i drift innen 12 måneder.</div></div>
-        <div class="howto-row"><div class="h-title">Egenkapital</div><div class="h-desc">Aksjekapital (innskutt), overkurs (innskutt utover pålydende), opptjent egenkapital (akkumulert overskudd). Eierens andel av selskapet.</div></div>
-        <div class="howto-row"><div class="h-title">Langsiktig gjeld</div><div class="h-desc">Lån som skal tilbakebetales etter mer enn 1 år: banklån for boligkjøp, obligasjonslån, pensjonsforpliktelser.</div></div>
-        <div class="howto-row"><div class="h-title">Kortsiktig gjeld</div><div class="h-desc">Skylder som forfaller innen 12 måneder: leverandørgjeld, skatte- og avgiftsgjeld, skyldig lønn.</div></div>
-        <div class="howto-row"><div class="h-title">Eiendeler = EK + Gjeld</div><div class="h-desc">Regnskapets grunnregel — to sider av samme medalje. Eiendelene er hva selskapet har, EK + gjeld er hvor pengene kom fra.</div></div>
-        <div class="howto-row"><div class="h-title">Differanse</div><div class="h-desc">Hvis Eiendeler ≠ EK + Gjeld er det en feil i regnskapet. Sjekk fortegn (gjeld er positiv, ikke negativ) og at alle poster er ført.</div></div>
-      </div>
-    </details>
-
-    <div class="balanse-grid" style="margin-top:18px;">
-
-      <section class="bal-col" aria-labelledby="balEiendH">
-        <h3 id="balEiendH" class="section-h" data-i18n="regnskapBalanseEiendH">Eiendeler</h3>
-
-        <h4 data-i18n="regnskapBalanseAnlH">Anleggsmidler</h4>
-        <div class="fg full"><label class="flbl" for="bAnlForsk" data-i18n="regnskapBalanseAnlForsk">Forskning og utvikling</label><input type="number" id="bAnlForsk" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bAnlEiend" data-i18n="regnskapBalanseAnlEiend">Tomter, bygninger, eiendom</label><input type="number" id="bAnlEiend" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bAnlMask" data-i18n="regnskapBalanseAnlMask">Maskiner og utstyr</label><input type="number" id="bAnlMask" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bAnlInv" data-i18n="regnskapBalanseAnlInv">Investeringer (aksjer, andeler)</label><input type="number" id="bAnlInv" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-
-        <h4 data-i18n="regnskapBalanseOmlH">Omløpsmidler</h4>
-        <div class="fg full"><label class="flbl" for="bOmlVare" data-i18n="regnskapBalanseOmlVare">Varelager</label><input type="number" id="bOmlVare" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bOmlKund" data-i18n="regnskapBalanseOmlKund">Kundefordringer og andre fordringer</label><input type="number" id="bOmlKund" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bOmlBank" data-i18n="regnskapBalanseOmlBank">Bankinnskudd og kontanter</label><input type="number" id="bOmlBank" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-      </section>
-
-      <section class="bal-col" aria-labelledby="balEkGjeldH">
-        <h3 id="balEkGjeldH" class="section-h" data-i18n="regnskapBalanseEkGjeldH">Egenkapital og gjeld</h3>
-
-        <h4 data-i18n="regnskapBalanseEkH">Egenkapital</h4>
-        <div class="fg full"><label class="flbl" for="bEkAks" data-i18n="regnskapBalanseEkAks">Aksjekapital (innskutt)</label><input type="number" id="bEkAks" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bEkOver" data-i18n="regnskapBalanseEkOver">Annen innskutt EK (overkurs)</label><input type="number" id="bEkOver" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bEkOpp" data-i18n="regnskapBalanseEkOpp">Opptjent EK (akkumulerte resultater)</label><input type="number" id="bEkOpp" placeholder="0" inputmode="numeric" step="any"></div>
-
-        <h4 data-i18n="regnskapBalanseGLH">Langsiktig gjeld</h4>
-        <div class="fg full"><label class="flbl" for="bGLBank" data-i18n="regnskapBalanseGLBank">Lån fra bank/kredittinstitusjon</label><input type="number" id="bGLBank" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bGLAnnen" data-i18n="regnskapBalanseGLAnnen">Annen langsiktig gjeld</label><input type="number" id="bGLAnnen" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-
-        <h4 data-i18n="regnskapBalanseGKH">Kortsiktig gjeld</h4>
-        <div class="fg full"><label class="flbl" for="bGKLev" data-i18n="regnskapBalanseGKLev">Leverandørgjeld</label><input type="number" id="bGKLev" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bGKSkat" data-i18n="regnskapBalanseGKSkat">Skatte- og avgiftsgjeld</label><input type="number" id="bGKSkat" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-        <div class="fg full"><label class="flbl" for="bGKAnnen" data-i18n="regnskapBalanseGKAnnen">Annen kortsiktig gjeld</label><input type="number" id="bGKAnnen" placeholder="0" inputmode="numeric" min="0" step="any"></div>
-      </section>
-
-    </div>
-
-    <div class="balanse-result" aria-live="polite">
-      <div class="res-stats">
-        <div class="res-stat"><span class="l" data-i18n="regnskapBalanseSumEiend">Sum eiendeler</span><span class="v" id="rSumEiend">0 kr</span></div>
-        <div class="res-stat"><span class="l" data-i18n="regnskapBalanseSumEkGjeld">Sum EK + gjeld</span><span class="v" id="rSumEkGjeld">0 kr</span></div>
-      </div>
-
-      <div class="balance-check" id="rBalCheck">
-        <span class="l" id="rBalLbl">Differanse</span>
-        <strong class="v" id="rBalDiff">0 kr</strong>
-      </div>
-
-      <p class="info-box" id="rBalNote" data-i18n="regnskapBalanseStartNote">Begynn å fylle inn beløp for å se om balansen stemmer.</p>
-
-      <details class="bal-breakdown">
-        <summary data-i18n="regnskapBalanseShowDetails">Vis underdeling</summary>
-        <div class="breakdown-body">
-          <div class="res-stat"><span class="l" data-i18n="regnskapBalanseAnlH">Anleggsmidler</span><span class="v" id="rAnl">0 kr</span></div>
-          <div class="res-stat"><span class="l" data-i18n="regnskapBalanseOmlH">Omløpsmidler</span><span class="v" id="rOml">0 kr</span></div>
-          <div class="res-stat"><span class="l" data-i18n="regnskapBalanseEkH">Egenkapital</span><span class="v" id="rEk">0 kr</span></div>
-          <div class="res-stat"><span class="l" data-i18n="regnskapBalanseGLH">Langsiktig gjeld</span><span class="v" id="rGL">0 kr</span></div>
-          <div class="res-stat"><span class="l" data-i18n="regnskapBalanseGKH">Kortsiktig gjeld</span><span class="v" id="rGK">0 kr</span></div>
+      <!-- TOOLBAR — eksempler -->
+      <div class="rr-toolbar">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span class="rr-eyebrow">Eksempler</span>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <button type="button" class="hv-btn--pill" data-preset="liten">Liten AS</button>
+            <button type="button" class="hv-btn--pill" data-preset="oppstart">Oppstart</button>
+            <button type="button" class="hv-btn--pill" data-preset="etablert">Etablert AS</button>
+            <button type="button" class="hv-btn--pill" data-preset="tom">Tøm</button>
+          </div>
         </div>
-      </details>
+      </div>
+
+      <!-- STATEMENT -->
+      <div class="rr-card rr-stmt">
+        <div class="rr-stmt-head">
+          <div>
+            <div class="rr-eyebrow" style="letter-spacing:.18em">Oppstilling § 6-2</div>
+            <div class="rr-stmt-title">Balanse</div>
+          </div>
+          <div style="text-align:right">
+            <div class="rr-stmt-meta1">Eiendeler = EK + gjeld</div>
+            <div class="rr-stmt-meta2">Per 31.12.2026 · NOK</div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column">
+
+          <!-- EIENDELER -->
+          <div class="rr-sect">Eiendeler</div>
+
+          <div class="rr-group">Anleggsmidler</div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">1000</span><span class="rr-lab">Forskning og utvikling</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bAnlForsk" aria-label="Forskning og utvikling" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">1100</span><span class="rr-lab">Tomter, bygninger og eiendom</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bAnlEiend" aria-label="Tomter, bygninger og eiendom" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">1200</span><span class="rr-lab">Maskiner og utstyr</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bAnlMask" aria-label="Maskiner og utstyr" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">1350</span><span class="rr-lab">Investeringer <span class="sub">aksjer, andeler</span></span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bAnlInv" aria-label="Investeringer i aksjer og andeler" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-sub muted">
+            <span class="lbl">Sum anleggsmidler</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSumAnl">0</span><span class="rr-kr">kr</span></span>
+          </div>
+
+          <div class="rr-group gap">Omløpsmidler</div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">1400</span><span class="rr-lab">Varelager</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bOmlVare" aria-label="Varelager" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">1500</span><span class="rr-lab">Kundefordringer <span class="sub">og andre fordringer</span></span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bOmlKund" aria-label="Kundefordringer og andre fordringer" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">1920</span><span class="rr-lab">Bankinnskudd og kontanter</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bOmlBank" aria-label="Bankinnskudd og kontanter" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-sub muted">
+            <span class="lbl">Sum omløpsmidler</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSumOml">0</span><span class="rr-kr">kr</span></span>
+          </div>
+
+          <div class="rr-total">
+            <span class="lbl">Sum eiendeler</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSumEiend">0</span><span class="rr-kr">kr</span></span>
+          </div>
+
+          <!-- EGENKAPITAL OG GJELD -->
+          <div class="rr-sect" style="margin-top:26px">Egenkapital og gjeld</div>
+
+          <div class="rr-group">Egenkapital</div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">2000</span><span class="rr-lab">Aksjekapital <span class="sub">innskutt</span></span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bEkAks" aria-label="Aksjekapital" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">2020</span><span class="rr-lab">Overkurs <span class="sub">annen innskutt EK</span></span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bEkOver" aria-label="Overkurs" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">2050</span><span class="rr-lab">Opptjent egenkapital <span class="sub">kan være negativ</span></span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bEkOpp" aria-label="Opptjent egenkapital" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-sub muted">
+            <span class="lbl">Sum egenkapital</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSumEk">0</span><span class="rr-kr">kr</span></span>
+          </div>
+
+          <div class="rr-group gap">Langsiktig gjeld</div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">2220</span><span class="rr-lab">Gjeld til kredittinstitusjoner</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bGLBank" aria-label="Gjeld til kredittinstitusjoner" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">2290</span><span class="rr-lab">Annen langsiktig gjeld</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bGLAnnen" aria-label="Annen langsiktig gjeld" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-sub muted">
+            <span class="lbl">Sum langsiktig gjeld</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSumGl">0</span><span class="rr-kr">kr</span></span>
+          </div>
+
+          <div class="rr-group gap">Kortsiktig gjeld</div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">2400</span><span class="rr-lab">Leverandørgjeld</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bGKLev" aria-label="Leverandørgjeld" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">2600</span><span class="rr-lab">Skatte- og avgiftsgjeld</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bGKSkat" aria-label="Skatte- og avgiftsgjeld" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">2900</span><span class="rr-lab">Annen kortsiktig gjeld</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="bGKAnnen" aria-label="Annen kortsiktig gjeld" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-sub muted">
+            <span class="lbl">Sum kortsiktig gjeld</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSumGk">0</span><span class="rr-kr">kr</span></span>
+          </div>
+
+          <div class="rr-total">
+            <span class="lbl">Sum egenkapital og gjeld</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSumEkGjeld">0</span><span class="rr-kr">kr</span></span>
+          </div>
+
+          <!-- BALANSE-KONTROLL -->
+          <div class="rr-arsband" id="balBand" aria-live="polite" aria-atomic="true">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span class="rr-arseyebrow" id="oBalEyebrow">Kontroll § 6-2</span>
+              <div style="display:flex;align-items:center;gap:11px">
+                <span class="rr-arslabel" id="oBalLabel">Fyll inn balansen</span>
+                <span class="rr-arstag pos hidden" id="oBalTag">Balansert</span>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+              <span class="rr-arseyebrow">Differanse</span>
+              <div style="display:flex;align-items:baseline;gap:7px">
+                <span class="rr-arsnum" id="oBalDiff">0</span><span class="rr-arskr">kr</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="rr-loss hidden" id="boxBal" aria-live="polite">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 4.3 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0Z"/></svg>
+            <span id="oBalNote"></span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ANALYSIS -->
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="rr-panel">
+          <div class="rr-eyebrow" style="letter-spacing:.18em;margin-bottom:16px">Nøkkeltall</div>
+          <div class="rr-kpis">
+            <div class="rr-kpi"><span class="l">Egenkapitalandel</span><span class="v" id="kSol">—</span></div>
+            <div class="rr-kpi"><span class="l">Likviditetsgrad 1</span><span class="v" id="kLik">—</span></div>
+            <div class="rr-kpi"><span class="l">Gjeldsgrad</span><span class="v" id="kGjg">—</span></div>
+            <div class="rr-kpi"><span class="l">Arbeidskapital</span><span class="v" id="kArb">—</span></div>
+          </div>
+        </div>
+        <div class="rr-panel">
+          <div class="rr-panel-head">
+            <span class="rr-cost-title">Finansieringskilder</span>
+            <span class="rr-eyebrow">Hvor pengene kom fra</span>
+          </div>
+          <div id="srcWrap">
+            <div class="rr-bar" id="srcBar"></div>
+            <div class="rr-legend" id="srcLegend"></div>
+          </div>
+          <div class="rr-cost-empty hidden" id="srcEmpty">Fyll inn egenkapital og gjeld for å se hvordan eiendelene er finansiert.</div>
+        </div>
+      </div>
+
+      <!-- EXPLANATIONS -->
+      <div class="rr-explain">
+        <details>
+          <summary><span class="q">Hva er en balanse?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Balansen er et øyeblikksbilde av selskapets økonomi på et bestemt tidspunkt — som regel 31. desember. Den ene siden viser hva selskapet eier (eiendeler), den andre hvordan det er finansiert (egenkapital og gjeld). Den settes opp etter oppstillingsplanen i regnskapsloven § 6-2.</div>
+        </details>
+        <details>
+          <summary><span class="q">Hvorfor må Eiendeler = EK + gjeld?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Hver krone selskapet eier må ha kommet fra et sted — enten fra eierne (egenkapital) eller fra noen selskapet skylder (gjeld). Derfor er de to sidene alltid like store. Det er kjernen i dobbel bokføring, og kontrollen nederst viser om oppstillingen din faktisk går opp.</div>
+        </details>
+        <details>
+          <summary><span class="q">Anleggsmidler eller omløpsmidler?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Anleggsmidler eies og brukes over flere år — bygninger, maskiner og langsiktige investeringer. Omløpsmidler er kortsiktige og snus i driften innen et år — varelager, kundefordringer og bankinnskudd. Skillet kreves av regnskapsloven § 5-1.</div>
+        </details>
+        <details>
+          <summary><span class="q">Hva er egenkapitalandel (soliditet)?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Egenkapitalandelen viser hvor stor del av eiendelene som er finansiert med egne penger framfor lån — egenkapital delt på sum eiendeler. Høy andel betyr et solid selskap som tåler tap. Opptjent egenkapital er summen av alle årsresultater fra resultatregnskapet, minus utbetalt utbytte.</div>
+        </details>
+      </div>
+
+      <p class="rr-source">Kilde: Regnskapsloven §§ 5-1 og 6-2 · Oppstillingsplan for balansen · Kontonumre etter NS 4102. Forenklet oppstilling — et fullstendig årsregnskap krever noter (kapittel 7) og at årsresultatet fra resultatregnskapet er overført til opptjent egenkapital. Veiledende, ikke profesjonell rådgivning.</p>
+
     </div>
-
-    <article class="content-card" style="margin-top:24px;">
-      <h3>Hva forteller balansen?</h3>
-      <ul>
-        <li><strong>Eiendeler:</strong> hva selskapet eier — anleggsmidler (langsiktig) og omløpsmidler (kortsiktig). Skillet kreves av regnskapsloven § 5-1.</li>
-        <li><strong>Egenkapital:</strong> eiernes andel — aksjekapital + opptjent overskudd minus utbetalt utbytte.</li>
-        <li><strong>Gjeld:</strong> lånte penger som må tilbakebetales — langsiktig (over 1 år) og kortsiktig (under 1 år).</li>
-        <li><strong>Eiendeler = EK + Gjeld:</strong> regnskapets grunnregel og dobbel bokførings-prinsippet i praksis.</li>
-        <li><strong>Lenke til resultat:</strong> årsresultatet fra <a href="/regnskap/resultat/">resultatregnskapet</a> legges til opptjent egenkapital her — det er der resultat og balanse møtes.</li>
-      </ul>
-      <p class="footnote">Forenklet template — det fullstendige balanse-oppstillingen for AS skal følge oppstillingsplan i rskl. § 6-2, og noter (rskl. § 7) skal forklare uvanlige poster. Hvis balansen ikke stemmer: sjekk fortegn (gjeld er positiv), se at alle poster er ført, og kontrollér at årsresultatet fra resultatregnskapet er overført til opptjent EK.</p>
-      <p class="src">Kilde: Regnskapsloven (LOV-1998-07-17-56) §§ 5-1, 5-2, 6-2, 7.</p>
-    </article>
-
   </div>
 
 </main>
@@ -1165,132 +1156,149 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 
-  // ── Balanse-template med balance-check (rskl § 6-2) ──
+  // ── Balanse — Claude Design reskin (vanilla; drives the ledger + balance-check) ──
   (function(){
     var KEY = 'hv-balanse-v1';
+    var ANL = ['bAnlForsk','bAnlEiend','bAnlMask','bAnlInv'];
+    var OML = ['bOmlVare','bOmlKund','bOmlBank'];
+    var EK  = ['bEkAks','bEkOver','bEkOpp'];
+    var GL  = ['bGLBank','bGLAnnen'];
+    var GK  = ['bGKLev','bGKSkat','bGKAnnen'];
+    var INPUTS = ANL.concat(OML, EK, GL, GK);
 
-    function parseNum(id){
-      var el = document.getElementById(id);
-      if(!el) return 0;
-      var s = String(el.value || '').replace(/[\s ]/g,'').replace(',','.');
-      var v = parseFloat(s);
-      return isFinite(v) ? v : 0;
+    function el(id){ return document.getElementById(id); }
+    // Negative-aware parse — opptjent egenkapital can be a deficit (minus).
+    function parse(v){
+      var s = String(v==null?'':v).replace(/\s/g,'').replace(',','.').replace(/[^0-9.\-]/g,'');
+      var neg = s.charAt(0)==='-';
+      s = s.replace(/-/g,'');
+      var n = parseFloat(s);
+      if(!isFinite(n)) n = 0;
+      return neg ? -n : n;
     }
-    function fmt(n){
-      var sign = n < 0 ? '−' : '';
-      var abs = Math.abs(Math.round(n));
-      return sign + new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0})
-        .format(abs).replace(/ /g,' ') + ' kr';
-    }
-    function setEl(id, val){
-      var el = document.getElementById(id);
-      if(el) el.textContent = val;
-    }
+    function num(id){ var e=el(id); return e?parse(e.value):0; }
+    function sumIds(ids){ var s=0; for(var i=0;i<ids.length;i++) s+=num(ids[i]); return s; }
+    function fmt(n){ if(!isFinite(n)) return '–'; var sign=n<0?'−':''; return sign + Math.round(Math.abs(n)).toLocaleString('nb-NO').replace(/ /g,' ').replace(/,/g,' '); }
+    function pct(a,b){ if(!(b>0)) return '—'; return Math.round(a/b*100) + ' %'; }
+    function ratio(a,b){ if(!(b>0)) return '—'; return (a/b).toFixed(1).replace('.',',') + '×'; }
+    function set(id,v){ var e=el(id); if(e) e.textContent=v; }
+    function show(id,on){ var e=el(id); if(e) e.classList.toggle('hidden', !on); }
 
-    var ANL_IDS = ['bAnlForsk','bAnlEiend','bAnlMask','bAnlInv'];
-    var OML_IDS = ['bOmlVare','bOmlKund','bOmlBank'];
-    var EK_IDS  = ['bEkAks','bEkOver','bEkOpp'];
-    var GL_IDS  = ['bGLBank','bGLAnnen'];
-    var GK_IDS  = ['bGKLev','bGKSkat','bGKAnnen'];
-    var ALL_IDS = ANL_IDS.concat(OML_IDS, EK_IDS, GL_IDS, GK_IDS);
-
-    function sumIds(ids){
-      var s = 0;
-      for(var i = 0; i < ids.length; i++) s += parseNum(ids[i]);
-      return s;
+    // Funding sources — accent gradient for equity (the owned share), neutral ink for debt.
+    var SEGS = [
+      {key:'ek', l:'Egenkapital',      bg:'linear-gradient(90deg,var(--accent-deep),var(--accent-2))', acc:true},
+      {key:'gl', l:'Langsiktig gjeld', bg:'rgba(255,248,232,.22)', acc:false},
+      {key:'gk', l:'Kortsiktig gjeld', bg:'rgba(255,248,232,.12)', acc:false}
+    ];
+    function renderSources(amt){
+      var bar=el('srcBar'), leg=el('srcLegend'), wrap=el('srcWrap'), empty=el('srcEmpty');
+      if(!bar||!leg) return;
+      var active = SEGS.filter(function(s){ return amt[s.key] > 0; });
+      var base = 0; active.forEach(function(s){ base += amt[s.key]; });
+      if(!active.length || base<=0){
+        if(wrap) wrap.classList.add('hidden');
+        if(empty) empty.classList.remove('hidden');
+        return;
+      }
+      if(wrap) wrap.classList.remove('hidden');
+      if(empty) empty.classList.add('hidden');
+      var barHtml='', legHtml='';
+      active.forEach(function(s){
+        var v=amt[s.key];
+        var p = base>0 ? v/base*100 : 0;
+        barHtml += '<div class="seg" style="flex:'+v+' 1 0;background:'+s.bg+'"></div>';
+        legHtml += '<div class="rr-leg'+(s.acc?' acc':'')+'">'
+          + '<span class="dot" style="background:'+s.bg+'"></span>'
+          + '<span class="nm">'+s.l+'</span>'
+          + '<span class="amt">'+fmt(v)+'</span>'
+          + '<span class="pc">'+Math.round(p)+' %</span></div>';
+      });
+      bar.innerHTML=barHtml; leg.innerHTML=legHtml;
     }
 
     function compute(){
-      var anl = sumIds(ANL_IDS);
-      var oml = sumIds(OML_IDS);
-      var ek  = sumIds(EK_IDS);
-      var gl  = sumIds(GL_IDS);
-      var gk  = sumIds(GK_IDS);
+      var anl=sumIds(ANL), oml=sumIds(OML), ek=sumIds(EK), gl=sumIds(GL), gk=sumIds(GK);
+      var sumEiend = anl+oml;
+      var gjeld = gl+gk;
+      var sumEkGjeld = ek+gjeld;
+      var diff = sumEiend-sumEkGjeld;
+      var isEmpty = sumEiend===0 && sumEkGjeld===0;
+      var balanced = Math.abs(diff) < 1;
 
-      var sumEiend = anl + oml;
-      var sumEkGjeld = ek + gl + gk;
-      var diff = sumEiend - sumEkGjeld;
+      set('oSumAnl', fmt(anl));
+      set('oSumOml', fmt(oml));
+      set('oSumEiend', fmt(sumEiend));
+      set('oSumEk', fmt(ek));
+      set('oSumGl', fmt(gl));
+      set('oSumGk', fmt(gk));
+      set('oSumEkGjeld', fmt(sumEkGjeld));
+      set('oBalDiff', fmt(Math.abs(diff)));
 
-      // Render aggregates
-      setEl('rSumEiend', fmt(sumEiend));
-      setEl('rSumEkGjeld', fmt(sumEkGjeld));
-      setEl('rAnl', fmt(anl));
-      setEl('rOml', fmt(oml));
-      setEl('rEk', fmt(ek));
-      setEl('rGL', fmt(gl));
-      setEl('rGK', fmt(gk));
-
-      // Hero stats
-      setEl('hStatTotal', fmt(sumEiend));
-
-      var checkEl = document.getElementById('rBalCheck');
-      var lblEl = document.getElementById('rBalLbl');
-      var diffEl = document.getElementById('rBalDiff');
-      var noteEl = document.getElementById('rBalNote');
-      var hStatStatusEl = document.getElementById('hStatStatus');
-
-      if(!checkEl || !lblEl || !diffEl) return;
-
-      // Empty state
-      if(sumEiend === 0 && sumEkGjeld === 0){
-        checkEl.classList.remove('balanced','unbalanced');
-        lblEl.textContent = 'Differanse';
-        diffEl.textContent = '0 kr';
-        if(noteEl) noteEl.textContent = 'Begynn å fylle inn beløp for å se om balansen stemmer.';
-        if(hStatStatusEl) hStatStatusEl.textContent = '–';
-      } else if(Math.abs(diff) < 1){
-        checkEl.classList.add('balanced');
-        checkEl.classList.remove('unbalanced');
-        lblEl.textContent = '✓ Balansen stemmer';
-        diffEl.textContent = '0 kr';
-        if(noteEl) noteEl.textContent = 'Eiendeler = EK + Gjeld. Regnskapets grunnregel er oppfylt.';
-        if(hStatStatusEl) hStatStatusEl.textContent = '✓';
+      var band=el('balBand'), tag=el('oBalTag');
+      if(isEmpty){
+        set('oBalEyebrow', 'Kontroll § 6-2');
+        set('oBalLabel', 'Fyll inn balansen');
+        if(band) band.classList.remove('ok');
+        if(tag) tag.classList.add('hidden');
+        show('boxBal', false);
+      } else if(balanced){
+        set('oBalEyebrow', 'Kontroll § 6-2 · eiendeler = EK + gjeld');
+        set('oBalLabel', 'Balansen stemmer');
+        if(band) band.classList.add('ok');
+        if(tag){ tag.classList.remove('hidden'); tag.textContent='Balansert'; tag.classList.add('pos'); tag.classList.remove('neg'); }
+        show('boxBal', false);
       } else {
-        checkEl.classList.add('unbalanced');
-        checkEl.classList.remove('balanced');
-        lblEl.textContent = '⚠ Balansen stemmer ikke';
-        diffEl.textContent = fmt(Math.abs(diff));
-        var leaning = diff > 0
-          ? 'Eiendelene er ' + fmt(Math.abs(diff)) + ' større enn EK + gjeld'
-          : 'EK + gjeld er ' + fmt(Math.abs(diff)) + ' større enn eiendelene';
-        if(noteEl) noteEl.textContent = leaning + '. Sjekk fortegn (gjeld er positiv, ikke negativ) og at alle poster er ført. Hvis du har nettopp avsluttet et regnskapsår: husk å overføre årsresultatet fra resultatregnskapet til opptjent egenkapital.';
-        if(hStatStatusEl) hStatStatusEl.textContent = '⚠';
+        set('oBalEyebrow', 'Kontroll § 6-2 · avvik');
+        set('oBalLabel', 'Balansen stemmer ikke');
+        if(band) band.classList.remove('ok');
+        if(tag){ tag.classList.remove('hidden'); tag.textContent='Avvik'; tag.classList.add('neg'); tag.classList.remove('pos'); }
+        set('oBalNote', (diff>0
+          ? 'Eiendelene er ' + fmt(Math.abs(diff)) + ' kr større enn egenkapital + gjeld.'
+          : 'Egenkapital + gjeld er ' + fmt(Math.abs(diff)) + ' kr større enn eiendelene.')
+          + ' Sjekk at gjeld er ført positivt, at alle poster er med, og at årsresultatet fra resultatregnskapet er lagt til opptjent egenkapital.');
+        show('boxBal', true);
       }
 
+      set('kSol', pct(ek, sumEiend));
+      set('kLik', ratio(oml, gk));
+      set('kGjg', ratio(gjeld, ek));
+      set('kArb', (oml!==0 || gk!==0) ? fmt(oml-gk) + ' kr' : '—');
+
+      renderSources({ek:ek, gl:gl, gk:gk});
       persist();
     }
 
     function persist(){
-      try {
-        var snap = {};
-        ALL_IDS.forEach(function(id){
-          var el = document.getElementById(id);
-          if(el) snap[id] = el.value;
-        });
+      try{
+        var snap={};
+        INPUTS.forEach(function(id){ var e=el(id); if(e) snap[id]=e.value; });
         localStorage.setItem(KEY, JSON.stringify(snap));
-      } catch(e){}
+      }catch(e){}
     }
     function restore(){
-      try {
-        var raw = localStorage.getItem(KEY);
-        if(!raw) return;
-        var s = JSON.parse(raw);
-        ALL_IDS.forEach(function(id){
-          if(s[id] != null){
-            var el = document.getElementById(id);
-            if(el) el.value = s[id];
-          }
-        });
-      } catch(e){}
+      try{
+        var raw=localStorage.getItem(KEY); if(!raw) return;
+        var s=JSON.parse(raw);
+        INPUTS.forEach(function(id){ if(s[id]!=null){ var e=el(id); if(e) e.value=s[id]; } });
+      }catch(e){}
     }
 
-    // Bind input events
-    ALL_IDS.forEach(function(id){
-      var el = document.getElementById(id);
-      if(el) el.addEventListener('input', compute);
+    INPUTS.forEach(function(id){ var e=el(id); if(e) e.addEventListener('input', compute); });
+
+    var PRESETS = {
+      liten:    {bAnlEiend:1500000, bAnlMask:300000, bOmlVare:400000, bOmlKund:250000, bOmlBank:550000, bEkAks:100000, bEkOpp:900000, bGLBank:1500000, bGKLev:350000, bGKSkat:150000},
+      oppstart: {bAnlMask:150000, bOmlBank:310000, bEkAks:500000, bEkOpp:-120000, bGKLev:80000},
+      etablert: {bAnlEiend:4000000, bAnlMask:800000, bAnlInv:300000, bOmlVare:600000, bOmlKund:900000, bOmlBank:700000, bEkAks:1000000, bEkOver:500000, bEkOpp:2800000, bGLBank:2000000, bGKLev:600000, bGKSkat:400000},
+      tom:      {}
+    };
+    document.querySelectorAll('.hv-btn--pill').forEach(function(b){
+      b.addEventListener('click', function(){
+        var p=PRESETS[b.getAttribute('data-preset')]; if(!p) return;
+        INPUTS.forEach(function(id){ var e=el(id); if(e){ var v=p[id]; e.value=(v==null)?'':v; } });
+        compute();
+      });
     });
 
-    // Init
     restore();
     compute();
   })();
