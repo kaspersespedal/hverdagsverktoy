@@ -304,6 +304,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     --line:rgba(255,255,255,.06);
     --line-2:rgba(255,255,255,.10);
     --line-warm:rgba(200,153,104,.18);
+    --accent-deep:#a87842;
+    --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
+    --shadow-rest: 0 1px 2px rgba(0,0,0,.2), 0 10px 30px rgba(0,0,0,.16);
 
     --ease: cubic-bezier(.22, 1, .36, 1);
 
@@ -531,8 +534,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media(hover:hover){
     .crumb-back:hover{background:rgba(255,255,255,.03);border-color:var(--line-warm);color:var(--ink) !important;transform:translateX(-2px)}
   }
-  .page-hero-actions{display:flex;gap:8px;margin-top:18px}
-
   h1.page-title{
     font-family:var(--font-serif);font-style:normal;font-weight:500;
     font-size:clamp(34px, 4vw, 46px);line-height:1.08;letter-spacing:-1px;
@@ -542,28 +543,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   h1.page-title em{font-style:normal;font-weight:500;color:var(--ink)}
   .page-lead{
     font-size:14px;line-height:1.6;color:var(--ink2);margin:0;max-width:58ch;
-  }
-
-  .page-stats{
-    display:flex;flex-direction:column;
-    border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line);
-  }
-  .page-stat{
-    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
-    padding:14px 0;
-    border-bottom:1px solid var(--line);
-  }
-  .page-stat:last-child{border-bottom:none}
-  .page-stat .l{
-    font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;
-    color:var(--ink3);
-  }
-  .page-stat .v{
-    font-family:var(--font-serif);font-weight:500;
-    font-size:30px;line-height:1;letter-spacing:-.6px;color:var(--ink);
-    font-variant-numeric:tabular-nums lining-nums;
-    white-space:nowrap;
   }
 
   footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
@@ -735,7 +714,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
   <section class="page-hero" data-screen-label="Resultatregnskap Hero">
     <div class="container">
-      <div>
+      <div class="rr-col">
         <div class="crumb">
           <a href="/regnskap/" class="crumb-back" aria-label="Tilbake til Regnskap">
             <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
@@ -746,339 +725,303 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <span class="sep"></span>
           <span class="here">Resultatregnskap</span>
         </div>
-        <h1 class="page-title" data-i18n-html="regnskapResultatH1Html"><em>Resultat</em>regnskap</h1>
-        <p class="page-lead" data-i18n="regnskapResultatLead">Bygg opp et resultatregnskap etter regnskapsloven § 6-1 — fra driftsinntekter via driftskostnader og finansposter til årsresultat. AS (22 % skatt) og ENK i samme template. Pedagogisk verktøy for praktisk regnskapsforståelse.</p>
-        <div class="page-hero-actions">
-          <button type="button" class="calc-help-btn" data-target="resultat-howto" aria-label="Vis veiledning" title="Vis veiledning">?</button>
-          <button type="button" class="focus-card-btn" aria-label="Fokus" title="Fokus">⛶</button>
-        </div>
-      </div>
-      <div class="page-stats">
-        <div class="page-stat"><span class="l" data-i18n="regnskapResultatHStatRes">Årsresultat</span><span class="v" id="hStatAres">–</span></div>
-        <div class="page-stat"><span class="l" data-i18n="regnskapResultatHStatDrift">Driftsresultat</span><span class="v" id="hStatDrift">–</span></div>
+        <h1 class="page-title">Resultatregnskap</h1>
+        <p class="page-lead">Fyll inn tallene for ett regnskapsår — så bygger oppstillingen seg selv, fra driftsinntekter via kostnader og finansposter ned til årsresultatet. Etter regnskapsloven § 6-1.</p>
       </div>
     </div>
   </section>
 
   <style>
-    /* ── Resultatregnskap — wide "statement + insights" rebuild (2026-06-27) ──
-       Left: the resultatregnskap reads top-to-bottom like the real document, with
-       input fields on each line and live subtotals/totals (costs/tax shown with a
-       leading "−" so the column reads as a running calculation down to one bold
-       Årsresultat). Right: a sticky Nøkkeltall panel + cost-structure bar. Neutral
-       theme tokens only; --accent reserved for the bottom line and the kept share. */
-    .stmt-wrap{padding:8px 0 56px;}
+    /* ── Resultatregnskap — Claude Design premium reskin (sw v166, 2026-06-28).
+       A document-style ledger: konto-numre in mono, deductions in parentheses,
+       one centred 680px column ending in an accent Årsresultat band. Keeps the
+       site chrome + atmosphere; neutral tokens only, --accent reserved for the
+       bottom line and the "kept" share of the cost bar. ── */
+    .page-hero .container{display:block}
+    .rr-col{max-width:680px;margin:0 auto}
+    .rr-wrap{display:flex;flex-direction:column;gap:18px;padding:30px 0 40px}
+    .rr-eyebrow{font:600 10px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink4)}
 
-    /* Example presets */
-    .stmt-presets{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;}
-    .stmt-presets .presets-lbl{font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);}
-    .stmt-presets .presets-btns{display:flex;gap:8px;flex-wrap:wrap;}
-    .preset-btn{background:var(--surface);color:var(--ink2);border:1px solid var(--line-2);border-radius:999px;padding:8px 15px;cursor:pointer;font:500 12.5px/1 var(--font-sans);transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease);}
-    @media (hover:hover){.preset-btn:hover{color:var(--ink);border-color:var(--line-warm);background:var(--surface-2);}}
-    .preset-btn.ghost{background:transparent;color:var(--ink3);}
+    /* Toolbar — selskapsform + eksempler */
+    .rr-toolbar{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 24px}
+    .ks-modes{display:flex;gap:8px}
+    .ks-mode{flex:1;display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;border:1px solid var(--line-2);border-radius:8px;padding:10px 14px;cursor:pointer;background:transparent;transition:border-color .15s var(--ease),background .15s var(--ease)}
+    @media (hover:hover){.ks-mode:hover{border-color:var(--line-warm)}}
+    .ks-mode[aria-pressed="true"]{border-color:var(--line-warm);background:var(--surface-2)}
+    .ks-mode .mtitle{font:500 13px/1.2 var(--font-sans);color:var(--ink)}
+    .ks-mode .mdesc{font:400 11px/1.2 var(--font-sans);color:var(--ink4)}
+    .hv-btn--pill{background:var(--surface);color:var(--ink2);border:1px solid var(--line-2);border-radius:999px;padding:8px 15px;cursor:pointer;font:500 12.5px/1 var(--font-sans);transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease)}
+    @media (hover:hover){.hv-btn--pill:hover{color:var(--ink);border-color:var(--line-warm);background:var(--surface-2)}}
 
-    /* Two-zone layout: statement left, insights sidebar right */
-    .stmt-layout{display:grid;grid-template-columns:minmax(0,1fr) 304px;gap:24px;align-items:start;}
+    /* Statement card */
+    .rr-card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest)}
+    .rr-stmt{padding:clamp(22px,3.4vw,32px) clamp(20px,4vw,38px) clamp(20px,3vw,28px)}
+    .rr-stmt-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:18px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+    .rr-stmt-title{font:500 20px/1.1 var(--font-serif);color:var(--ink);margin-top:6px}
+    .rr-stmt-meta1{font:500 13px/1.2 var(--font-sans);color:var(--ink)}
+    .rr-stmt-meta2{font:400 11.5px/1.2 var(--font-sans);color:var(--ink4);margin-top:4px}
 
-    .stmt-card{
-      background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;
-    }
+    .rr-group{font:600 10px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink4);margin:14px 0 4px}
+    .rr-group.gap{margin-top:20px}
+    .rr-line{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:7px 0}
+    .rr-name{display:flex;align-items:baseline;gap:9px;min-width:0}
+    .rr-konto{font:400 10.5px/1 var(--font-mono);color:var(--ink4);min-width:40px}
+    .rr-lab{font:400 13.5px/1.45 var(--font-sans);color:var(--ink2)}
+    .rr-lab .sub{color:var(--ink4);font-size:11px}
+    .rr-amtcell{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;width:184px;flex:none}
+    .rr-kr{font:400 11px/1 var(--font-sans);color:var(--ink4);width:16px;text-align:left}
+    .rr-out{font-variant-numeric:tabular-nums lining-nums;text-align:right;min-width:132px}
+    input.rr-num{width:132px;text-align:right;font:500 14px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);background:rgba(255,248,232,.025);border:1px solid var(--line-2);border-radius:6px;padding:8px 11px;outline:none;transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease)}
+    input.rr-num:focus{border-color:var(--accent);background:var(--surface-2);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+    input.rr-num::-webkit-outer-spin-button,input.rr-num::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
 
-    /* Selskapsform toggle — labelled segmented control */
-    .stmt-mode{
-      display:flex;align-items:center;gap:14px;
-      padding:13px 24px;border-bottom:1px solid var(--line);
-      background:var(--surface-2);
-    }
-    .stmt-mode .mode-lbl{
-      font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
-      color:var(--ink3);flex-shrink:0;
-    }
-    .mode-toggle{display:flex;gap:8px;flex:1;}
-    .mode-btn{
-      flex:1;background:transparent;color:var(--ink2);
-      border:1px solid var(--line-2);border-radius:5px;
-      padding:9px 14px;cursor:pointer;
-      font:500 13px/1 var(--font-sans);
-      transition:color .15s var(--ease), border-color .15s var(--ease), background .15s var(--ease);
-    }
-    @media (hover: hover){
-      .mode-btn:hover{color:var(--ink);border-color:var(--line-warm);}
-    }
-    .mode-btn.active{
-      color:var(--ink);background:var(--surface);border-color:var(--line-warm);
-    }
+    .rr-sub{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:10px 0 7px;margin-top:3px;border-top:1px solid var(--line)}
+    .rr-sub .lbl{font:500 13px/1.4 var(--font-sans);color:var(--ink)}
+    .rr-sub .rr-out{font:600 15px/1 var(--font-serif);color:var(--ink);letter-spacing:-.2px}
+    .rr-sub.muted .rr-out{color:var(--ink2)}
+    .rr-total{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:12px 0 9px;margin-top:4px;border-top:1px solid var(--line-2)}
+    .rr-total .lbl{font:600 14px/1.3 var(--font-sans);color:var(--ink)}
+    .rr-total .ebit{font:400 11px/1 var(--font-mono);color:var(--ink4);letter-spacing:.04em}
+    .rr-total .rr-out{font:600 17px/1 var(--font-serif);color:var(--ink);letter-spacing:-.3px}
+    .rr-taxrow .rr-out{font:500 14px/1 var(--font-serif);color:var(--ink2)}
+    .rr-enknote .rr-lab{color:var(--ink3);font-size:13px}
 
-    /* Statement body */
-    .stmt-body{padding:6px 24px 22px;}
-    .stmt-group{
-      font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-      color:var(--ink3);margin:22px 0 6px;
-    }
-    .stmt-group:first-child{margin-top:14px;}
+    /* Årsresultat band */
+    .rr-arsband{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 18px;margin-top:14px;padding:18px 20px;border-radius:9px;background:color-mix(in srgb,var(--accent) 7%,transparent);border:1px solid var(--line-warm)}
+    .rr-arseyebrow{font:500 9.5px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink4)}
+    .rr-arslabel{font:500 19px/1 var(--font-serif);color:var(--ink);letter-spacing:-.2px}
+    .rr-arstag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font:500 11px/1 var(--font-sans);letter-spacing:.02em}
+    .rr-arstag.pos{background:color-mix(in srgb,var(--accent) 13%,transparent);border:1px solid var(--line-warm);color:var(--accent-2)}
+    .rr-arstag.neg{background:rgba(255,248,232,.05);border:1px solid var(--line-2);color:var(--ink2)}
+    .rr-arsnum{font:600 clamp(28px,5vw,34px)/1 var(--font-serif);font-variant-numeric:tabular-nums lining-nums;color:var(--accent-2);letter-spacing:-1px}
+    .rr-arskr{font:400 13px/1 var(--font-sans);color:var(--ink3)}
 
-    /* Every row shares one grid so label/amount columns align perfectly,
-       whether the amount is an input or a computed value. */
-    .stmt-row{
-      display:grid;grid-template-columns:1fr 188px;align-items:center;gap:16px;
-      padding:7px 0;
-    }
-    .stmt-row .lab{font-size:13.5px;color:var(--ink2);line-height:1.4;}
-    .amt{position:relative;display:block;}
-    .amt input{
-      display:block;width:100%;text-align:right;
-      background:var(--bg);border:1px solid var(--line-2);border-radius:6px;
-      padding:9px 32px 9px 12px;
-      color:var(--ink);font:500 14px/1.2 var(--font-sans);
-      font-variant-numeric:tabular-nums;outline:none;
-      transition:border-color .15s var(--ease), background .15s var(--ease);
-    }
-    .amt input:focus{border-color:var(--line-warm);background:var(--surface-2);}
-    .amt input::-webkit-outer-spin-button,
-    .amt input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
-    .amt input[type=number]{-moz-appearance:textfield;}
-    .amt .u{
-      position:absolute;right:12px;top:50%;transform:translateY(-50%);
-      font-size:12px;color:var(--ink3);pointer-events:none;
-    }
-    /* Computed values share the inputs' right edge (padding-right matches the
-       "kr" suffix gutter) so every amount and unit lines up in one column. */
-    .amt .val{
-      display:block;width:100%;text-align:right;padding-right:12px;
-      font-family:var(--font-serif);font-weight:500;
-      font-variant-numeric:tabular-nums lining-nums;color:var(--ink);
-    }
+    /* Loss note */
+    .rr-loss{display:flex;gap:9px;align-items:flex-start;margin-top:12px;padding:11px 13px;border:1px solid var(--line-warm);border-radius:7px;background:color-mix(in srgb,var(--accent) 4%,transparent);font:400 12px/1.55 var(--font-sans);color:var(--ink2)}
+    .rr-loss svg{flex:none;width:15px;height:15px;color:var(--accent-2);margin-top:1px}
 
-    /* Subtotal rows — thin rule above */
-    .stmt-row.sub{border-top:1px solid var(--line);margin-top:5px;padding-top:11px;}
-    .stmt-row.sub .lab{font:600 11.5px/1.3 var(--font-sans);color:var(--ink2);}
-    .stmt-row.sub .val{font-size:15px;}
+    /* Analysis panels */
+    .rr-panel{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:clamp(18px,3vw,26px) clamp(18px,3.4vw,30px)}
+    .rr-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px}
+    .rr-kpi{display:flex;flex-direction:column;gap:9px;padding:15px 16px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--accent) 2.5%,var(--surface))}
+    .rr-kpi .l{font:500 9.5px/1.2 var(--font-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink4)}
+    .rr-kpi .v{font:500 21px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);letter-spacing:-.4px}
+    .rr-panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .rr-cost-title{font:500 17px/1.1 var(--font-serif);color:var(--ink);font-style:italic}
+    .rr-bar{display:flex;height:34px;border-radius:8px;overflow:hidden;background:rgba(255,248,232,.04);border:1px solid var(--line);box-shadow:inset 0 1px 0 rgba(0,0,0,.2)}
+    .rr-bar .seg{height:100%;min-width:0}
+    .rr-legend{display:flex;flex-direction:column;margin-top:8px}
+    .rr-leg{display:flex;align-items:center;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums lining-nums}
+    .rr-leg .dot{width:9px;height:9px;border-radius:2px;flex:none}
+    .rr-leg .nm{flex:1;min-width:0;font:400 12.5px/1.2 var(--font-sans);color:var(--ink2)}
+    .rr-leg.acc .nm{color:var(--accent-2)}
+    .rr-leg .amt{font:500 12.5px/1 var(--font-sans);color:var(--ink);min-width:82px;text-align:right}
+    .rr-leg.acc .amt{color:var(--accent-2)}
+    .rr-leg .pc{font:400 11.5px/1 var(--font-sans);color:var(--ink4);min-width:42px;text-align:right}
+    .rr-cost-empty{padding:18px 4px;font:400 12.5px/1.55 var(--font-sans);color:var(--ink3)}
 
-    /* Major totals — heavier rule, bolder */
-    .stmt-row.total{border-top:1.5px solid var(--line-2);margin-top:8px;padding-top:13px;}
-    .stmt-row.total .lab{font:600 12.5px/1.3 var(--font-sans);color:var(--ink);}
-    .stmt-row.total .val{font-size:18px;font-weight:600;}
+    /* Explanations */
+    .rr-explain{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:6px clamp(18px,3.4vw,28px)}
+    .rr-explain details > summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+    .rr-explain details:last-child > summary{border-bottom:none}
+    .rr-explain summary .q{font:500 14px/1.3 var(--font-sans);color:var(--ink)}
+    .rr-explain .ans{padding:4px 0 16px;font:400 13px/1.65 var(--font-sans);color:var(--ink2);max-width:60ch}
+    details > summary{list-style:none;cursor:pointer}
+    details > summary::-webkit-details-marker{display:none}
+    .rr-chev{transition:transform .2s var(--ease);color:var(--ink4);flex:none}
+    details[open] .rr-chev{transform:rotate(180deg)}
 
-    /* Micro-context line under a major total */
-    .stmt-context{font-size:11.5px;color:var(--ink3);font-style:italic;line-height:1.5;margin:5px 0 2px;}
+    .rr-source{font:400 11.5px/1.65 var(--font-sans);color:var(--ink4);margin:2px auto 0;text-align:center;max-width:62ch}
+    .hidden{display:none}
 
-    /* Bunnlinje — årsresultat, lifted into its own band */
-    .stmt-row.grand{
-      grid-template-columns:1fr auto;align-items:baseline;
-      margin-top:14px;padding:15px 18px;
-      background:var(--surface-2);border:1px solid var(--line-2);border-left:3px solid var(--accent);border-radius:7px;
-    }
-    .stmt-row.grand .lab{font:600 12px/1.2 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink);}
-    .stmt-row.grand .grand-amt{display:flex;flex-direction:column;align-items:flex-end;gap:3px;}
-    .stmt-row.grand .val{width:auto;padding-right:0;font-size:30px;font-weight:600;color:var(--ink);letter-spacing:-.6px;}
-    .stmt-row.grand .grand-tag{font:600 9.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);}
-
-    .stmt-verdict{font-size:12.5px;color:var(--ink3);font-style:italic;line-height:1.5;margin:12px 2px 0;text-align:right;}
-
-    /* Insights sidebar */
-    .stmt-side{display:flex;flex-direction:column;gap:18px;position:sticky;top:120px;}
-    .side-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px 20px 20px;}
-    .side-h{font:600 10px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;color:var(--ink3);margin:0 0 4px;}
-    .kpi{display:flex;flex-direction:column;}
-    .kpi-row{padding:13px 0;border-top:1px solid var(--line);}
-    .kpi-row:first-of-type{border-top:none;}
-    .kpi-v{font-family:var(--font-serif);font-weight:500;font-size:25px;line-height:1;letter-spacing:-.4px;color:var(--ink);font-variant-numeric:tabular-nums;}
-    .kpi-l{font:600 11px/1.2 var(--font-sans);color:var(--ink2);margin-top:6px;}
-    .kpi-d{font-size:11px;color:var(--ink3);line-height:1.5;margin-top:3px;}
-
-    /* Cost-structure bar — neutral ink tones; accent = kept share */
-    .coststack{display:flex;height:13px;border-radius:4px;overflow:hidden;margin:12px 0 14px;background:var(--bg);}
-    .coststack .seg{height:100%;min-width:2px;transition:width .3s var(--ease);}
-    .coststack-legend{display:flex;flex-direction:column;gap:7px;}
-    .cl-row{display:flex;align-items:center;gap:9px;font-size:12px;}
-    .cl-dot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
-    .cl-name{color:var(--ink2);flex:1;}
-    .cl-val{color:var(--ink3);font-variant-numeric:tabular-nums;}
-    .side-empty{font-size:12px;color:var(--ink3);line-height:1.5;font-style:italic;margin:0;}
-
-    /* Live note + source + educational dropdowns under the layout */
-    .stmt-note{margin:20px 0 0;}
-    .stmt-src{margin:9px 0 0;}
-    .explain-section{margin-top:26px;display:flex;flex-direction:column;gap:12px;}
-    .explain-section .howto{margin-bottom:0;}
-
-    @media (max-width: 920px){
-      .stmt-layout{grid-template-columns:1fr;}
-      .stmt-side{position:static;top:auto;}
-    }
     @media (max-width: 560px){
-      .stmt-mode,.stmt-body{padding-left:16px;padding-right:16px;}
-      .stmt-mode{flex-direction:column;align-items:stretch;gap:9px;}
-      .stmt-row{grid-template-columns:1fr 124px;gap:10px;}
-      .amt input{padding-right:28px;}
-      .stmt-row.grand{padding:14px 14px;}
-      .stmt-row.grand .val{font-size:25px;}
+      .rr-amtcell{width:150px}
+      input.rr-num{width:106px}
+      .rr-out{min-width:106px}
+      .ks-modes{flex-direction:column}
     }
   </style>
 
   <div class="container">
-    <div class="stmt-wrap">
+    <div class="rr-col rr-wrap">
 
-      <div class="stmt-presets">
-        <span class="presets-lbl">Fyll inn eksempel</span>
-        <div class="presets-btns">
-          <button type="button" class="preset-btn" data-preset="butikk">Liten butikk (AS)</button>
-          <button type="button" class="preset-btn" data-preset="konsulent">Konsulent (ENK)</button>
-          <button type="button" class="preset-btn" data-preset="vekst">Vekstbedrift (underskudd)</button>
-          <button type="button" class="preset-btn ghost" data-preset="clear">Tøm</button>
+      <!-- TOOLBAR — selskapsform + eksempler -->
+      <div class="rr-toolbar">
+        <div style="display:flex;flex-direction:column;gap:8px;min-width:280px;flex:1">
+          <span class="rr-eyebrow">Selskapsform</span>
+          <div class="ks-modes" role="tablist">
+            <button type="button" class="ks-mode" data-mode="as" aria-pressed="true">
+              <span class="mtitle">Aksjeselskap (AS)</span><span class="mdesc">22 % selskapsskatt</span>
+            </button>
+            <button type="button" class="ks-mode" data-mode="enk" aria-pressed="false">
+              <span class="mtitle">Enkeltpersonforetak</span><span class="mdesc">Skatter privat</span>
+            </button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span class="rr-eyebrow">Eksempler</span>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <button type="button" class="hv-btn--pill" data-preset="butikk">Liten butikk</button>
+            <button type="button" class="hv-btn--pill" data-preset="konsulent">Konsulent</button>
+            <button type="button" class="hv-btn--pill" data-preset="vekst">Vekstbedrift</button>
+            <button type="button" class="hv-btn--pill" data-preset="tom">Tøm</button>
+          </div>
         </div>
       </div>
 
-      <details class="howto" id="resultat-howto">
-        <summary data-i18n="regnskapResultatHowtoSummary">Slik bruker du resultatregnskap-templaten</summary>
-        <div class="howto-body">
-          <div class="howto-row"><div class="h-title">AS vs ENK</div><div class="h-desc">AS betaler 22 % selskapsskatt på resultatet før skatt. ENK skatter ikke i selve foretaket — overskuddet legges til eiers personinntekt og beskattes der.</div></div>
-          <div class="howto-row"><div class="h-title">Driftsinntekter (klasse 3)</div><div class="h-desc">Salgsinntekt og andre inntekter fra driften. Skill mellom kjernevirksomhet (salg) og biinntekter (leie, gevinst).</div></div>
-          <div class="howto-row"><div class="h-title">Varekostnad (klasse 4)</div><div class="h-desc">Innkjøp av varer og tjenester for produksjon eller videresalg. Kun det som er solgt i perioden — ikke det som ligger på lager.</div></div>
-          <div class="howto-row"><div class="h-title">Lønnskostnad (klasse 5)</div><div class="h-desc">Lønn til ansatte, feriepenger, arbeidsgiveravgift og annen personalkostnad. Inkluder AGA og pensjonsinnskudd.</div></div>
-          <div class="howto-row"><div class="h-title">Avskrivning (klasse 60)</div><div class="h-desc">Verdireduksjon av varige driftsmidler — typisk over 3–10 år for utstyr, 50 år for bygninger.</div></div>
-          <div class="howto-row"><div class="h-title">Annen driftskostnad (klasse 6-7)</div><div class="h-desc">Leie, vedlikehold, energi, frakt, reise, salg, kontor og lignende — alt som ikke er vare eller lønn.</div></div>
-          <div class="howto-row"><div class="h-title">Finansposter (klasse 8)</div><div class="h-desc">Renter på bankinnskudd og utbytte er finansinntekt. Rentekostnad på lån er finanskostnad. Holdes adskilt fra drift for å gi rene driftsmål.</div></div>
-          <div class="howto-row"><div class="h-title">Underskudd</div><div class="h-desc">Negativt resultat før skatt gir 0 i skattekostnad. Underskuddet kan fremføres til motregning mot fremtidige overskudd.</div></div>
-        </div>
-      </details>
-
-      <div class="stmt-layout">
-
-      <div class="stmt-card">
-        <div class="stmt-mode">
-          <span class="mode-lbl" data-i18n="regnskapResultatSectionMode">Selskapsform</span>
-          <div class="mode-toggle">
-            <button type="button" class="mode-btn active" data-mode="as" aria-pressed="true" data-i18n="regnskapResultatModeAs">AS (22 % skatt)</button>
-            <button type="button" class="mode-btn" data-mode="enk" aria-pressed="false" data-i18n="regnskapResultatModeEnk">ENK (skatter privat)</button>
+      <!-- STATEMENT -->
+      <div class="rr-card rr-stmt">
+        <div class="rr-stmt-head">
+          <div>
+            <div class="rr-eyebrow" style="letter-spacing:.18em">Oppstilling § 6-1</div>
+            <div class="rr-stmt-title">Resultatregnskap</div>
+          </div>
+          <div style="text-align:right">
+            <div class="rr-stmt-meta1" id="oFormLabel">Aksjeselskap</div>
+            <div class="rr-stmt-meta2">Regnskapsåret 2026 · NOK</div>
           </div>
         </div>
 
-        <div class="stmt-body">
+        <div style="display:flex;flex-direction:column">
 
-          <div class="stmt-group" data-i18n="regnskapResultatInnH">Driftsinntekter (klasse 3)</div>
-          <div class="stmt-row">
-            <label class="lab" for="rSalg" data-i18n="regnskapResultatSalgLbl">Salgsinntekt</label>
-            <div class="amt"><input type="number" id="rSalg" placeholder="0" inputmode="numeric" min="0" step="any"><span class="u">kr</span></div>
+          <div class="rr-group">Driftsinntekter</div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">3000</span><span class="rr-lab">Salgsinntekt</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="rSalg" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
-          <div class="stmt-row">
-            <label class="lab" for="rAnnen" data-i18n="regnskapResultatAnnenLbl">Annen driftsinntekt (leie, gevinst osv.)</label>
-            <div class="amt"><input type="number" id="rAnnen" placeholder="0" inputmode="numeric" min="0" step="any"><span class="u">kr</span></div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">3900</span><span class="rr-lab">Annen driftsinntekt</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="rAnnen" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
-          <div class="stmt-row sub">
-            <div class="lab" data-i18n="regnskapResultatResSumInn">Sum driftsinntekter</div>
-            <div class="amt"><span class="val" id="rSumInn">0 kr</span></div>
-          </div>
-
-          <div class="stmt-group" data-i18n="regnskapResultatKostH">Driftskostnader (klasse 4-7)</div>
-          <div class="stmt-row">
-            <label class="lab" for="rVare" data-i18n="regnskapResultatVareLbl">Varekostnad (klasse 4)</label>
-            <div class="amt"><input type="number" id="rVare" placeholder="0" inputmode="numeric" min="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="rLonn" data-i18n="regnskapResultatLonnLbl">Lønnskostnad (klasse 5, inkl. AGA)</label>
-            <div class="amt"><input type="number" id="rLonn" placeholder="0" inputmode="numeric" min="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="rAvs" data-i18n="regnskapResultatAvsLbl">Avskrivning (klasse 60)</label>
-            <div class="amt"><input type="number" id="rAvs" placeholder="0" inputmode="numeric" min="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row">
-            <label class="lab" for="rAnnDrift" data-i18n="regnskapResultatAnnDriftLbl">Annen driftskostnad (klasse 6-7 ekskl. avskr.)</label>
-            <div class="amt"><input type="number" id="rAnnDrift" placeholder="0" inputmode="numeric" min="0" step="any"><span class="u">kr</span></div>
-          </div>
-          <div class="stmt-row sub">
-            <div class="lab" data-i18n="regnskapResultatResSumKost">Sum driftskostnader</div>
-            <div class="amt"><span class="val" id="rSumKost">0 kr</span></div>
+          <div class="rr-sub">
+            <span class="lbl">Sum driftsinntekter</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSumDrift">0</span><span class="rr-kr">kr</span></span>
           </div>
 
-          <div class="stmt-row total">
-            <div class="lab" data-i18n="regnskapResultatResDrift">Driftsresultat</div>
-            <div class="amt"><span class="val" id="rDriftRes">0 kr</span></div>
+          <div class="rr-group gap">Driftskostnader</div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">4000</span><span class="rr-lab">Varekostnad</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="rVare" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
-          <p class="stmt-context">Det bedriften tjener på selve driften — før renter og skatt (kalles også EBIT).</p>
-
-          <div class="stmt-group" data-i18n="regnskapResultatFinH">Finansposter (klasse 8)</div>
-          <div class="stmt-row">
-            <label class="lab" for="rFinInn" data-i18n="regnskapResultatFinInnLbl">Finansinntekt (renter, utbytte)</label>
-            <div class="amt"><input type="number" id="rFinInn" placeholder="0" inputmode="numeric" min="0" step="any"><span class="u">kr</span></div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">5000</span><span class="rr-lab">Lønnskostnad<span class="sub"> inkl. AGA</span></span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="rLonn" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
-          <div class="stmt-row">
-            <label class="lab" for="rFinUt" data-i18n="regnskapResultatFinUtLbl">Finanskostnad (rentekostnad lån)</label>
-            <div class="amt"><input type="number" id="rFinUt" placeholder="0" inputmode="numeric" min="0" step="any"><span class="u">kr</span></div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">6000</span><span class="rr-lab">Avskrivning</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="rAvskr" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
-          <div class="stmt-row sub">
-            <div class="lab" data-i18n="regnskapResultatResFinNet">Netto finansposter</div>
-            <div class="amt"><span class="val" id="rFinNet">0 kr</span></div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">6790</span><span class="rr-lab">Annen driftskostnad</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="rAnnenKost" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
-
-          <div class="stmt-row total" id="preSkattRow">
-            <div class="lab" data-i18n="regnskapResultatResPreSkatt">Resultat før skatt</div>
-            <div class="amt"><span class="val" id="rPreSkatt">0 kr</span></div>
-          </div>
-          <div class="stmt-row sub" id="skattRow">
-            <div class="lab" data-i18n="regnskapResultatResSkatt">Skattekostnad (22 %)</div>
-            <div class="amt"><span class="val" id="rSkatt">0 kr</span></div>
+          <div class="rr-sub muted">
+            <span class="lbl">Sum driftskostnader</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSumKost">0</span><span class="rr-kr">kr</span></span>
           </div>
 
-          <div class="stmt-row grand" aria-live="polite">
-            <div class="lab" id="aresLbl">Årsresultat</div>
-            <div class="grand-amt"><span class="val" id="rAres">0 kr</span><span class="grand-tag" id="rAresTag"></span></div>
+          <div class="rr-total">
+            <span class="lbl">Driftsresultat <span class="ebit">EBIT</span></span>
+            <span class="rr-amtcell"><span class="rr-out" id="oDriftsres">0</span><span class="rr-kr">kr</span></span>
           </div>
-          <p class="stmt-verdict" id="rVerdict" aria-live="polite">Skriv inn omsetning og kostnader for å starte.</p>
+
+          <div class="rr-group gap">Finansposter</div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">8050</span><span class="rr-lab">Finansinntekt</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="rFinInnt" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line">
+            <span class="rr-name"><span class="rr-konto">8150</span><span class="rr-lab">Finanskostnad</span></span>
+            <span class="rr-amtcell"><input class="rr-num" id="rFinKost" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-sub">
+            <span class="lbl">Netto finansposter</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oNettoFinans">0</span><span class="rr-kr">kr</span></span>
+          </div>
+
+          <div class="rr-total">
+            <span class="lbl">Resultat før skatt</span>
+            <span class="rr-amtcell"><span class="rr-out" id="oResForSkatt">0</span><span class="rr-kr">kr</span></span>
+          </div>
+
+          <div class="rr-line rr-taxrow" id="rowSkatt">
+            <span class="rr-name"><span class="rr-konto">8300</span><span class="rr-lab" id="oSkattLabel">Skattekostnad (22 %)</span></span>
+            <span class="rr-amtcell"><span class="rr-out" id="oSkatt">0</span><span class="rr-kr">kr</span></span>
+          </div>
+          <div class="rr-line rr-enknote hidden" id="rowEnk">
+            <span class="rr-name"><span class="rr-konto"></span><span class="rr-lab">Skattlegges på eierens hånd (ENK)</span></span>
+            <span class="rr-amtcell"><span class="rr-out" style="color:var(--ink4)">–</span><span class="rr-kr"></span></span>
+          </div>
+
+          <!-- ÅRSRESULTAT -->
+          <div class="rr-arsband">
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <span class="rr-arseyebrow" id="oEyebrow">Årsresultat etter skatt</span>
+              <div style="display:flex;align-items:center;gap:11px">
+                <span class="rr-arslabel">Årsresultat</span>
+                <span class="rr-arstag pos hidden" id="oResultTag">Overskudd</span>
+              </div>
+            </div>
+            <div style="display:flex;align-items:baseline;gap:7px">
+              <span class="rr-arsnum" id="oArsresultat">0</span><span class="rr-arskr">kr</span>
+            </div>
+          </div>
+
+          <div class="rr-loss hidden" id="boxLoss">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 4.3 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 4.3a2 2 0 0 0-3.4 0Z"/></svg>
+            <span id="oLossNote"></span>
+          </div>
 
         </div>
       </div>
 
-      <aside class="stmt-side">
-        <div class="side-card">
-          <h3 class="side-h">Nøkkeltall</h3>
-          <div class="kpi">
-            <div class="kpi-row"><div class="kpi-v" id="kDrift">–</div><div class="kpi-l">Driftsmargin</div><div class="kpi-d">Hvor mye av hver salgskrone som er igjen etter driftskostnadene.</div></div>
-            <div class="kpi-row"><div class="kpi-v" id="kEbitda">–</div><div class="kpi-l">EBITDA-margin</div><div class="kpi-d">Driftslønnsomhet før avskrivninger.</div></div>
-            <div class="kpi-row"><div class="kpi-v" id="kNetto">–</div><div class="kpi-l">Resultatgrad</div><div class="kpi-d">Hvor mye som til slutt blir igjen på bunnlinjen, av omsetningen.</div></div>
-            <div class="kpi-row"><div class="kpi-v" id="kKost">–</div><div class="kpi-l">Kostnadsandel</div><div class="kpi-d">Driftskostnader som andel av driftsinntektene.</div></div>
+      <!-- ANALYSIS -->
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="rr-panel">
+          <div class="rr-eyebrow" style="letter-spacing:.18em;margin-bottom:16px">Nøkkeltall</div>
+          <div class="rr-kpis">
+            <div class="rr-kpi"><span class="l">Driftsmargin</span><span class="v" id="kDrift">—</span></div>
+            <div class="rr-kpi"><span class="l">EBITDA-margin</span><span class="v" id="kEbitda">—</span></div>
+            <div class="rr-kpi"><span class="l">Resultatgrad</span><span class="v" id="kNetto">—</span></div>
+            <div class="rr-kpi"><span class="l">Kostnadsandel</span><span class="v" id="kKost">—</span></div>
           </div>
         </div>
-        <div class="side-card">
-          <h3 class="side-h">Kostnadsstruktur</h3>
-          <div class="coststack" id="costStack"></div>
-          <div class="coststack-legend" id="costLegend"><p class="side-empty">Fyll inn tall for å se hvor pengene går.</p></div>
+        <div class="rr-panel">
+          <div class="rr-panel-head">
+            <span class="rr-cost-title">Kostnadsstruktur</span>
+            <span class="rr-eyebrow">Hvor hver krone går</span>
+          </div>
+          <div id="costWrap">
+            <div class="rr-bar" id="costBar"></div>
+            <div class="rr-legend" id="costLegend"></div>
+          </div>
+          <div class="rr-cost-empty hidden" id="costEmpty">Fyll inn omsetning og kostnader for å se hvordan hver krone fordeler seg.</div>
         </div>
-      </aside>
-
       </div>
 
-      <p class="info-box stmt-note" id="rNote">Skriv inn omsetning og kostnader for å se driftsresultat, skatt og årsresultat.</p>
-      <p class="res-note stmt-src">Kilde: Regnskapsloven § 6-1 (oppstillingsplan) og Stortingsvedtak om skatt § 3-3 (22 % selskapsskatt 2026), jf. skatteloven § 15-1. Veiledende beregning — kontakt regnskapsfører for konkrete vurderinger.</p>
+      <!-- EXPLANATIONS -->
+      <div class="rr-explain">
+        <details>
+          <summary><span class="q">Hva er et resultatregnskap?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Resultatregnskapet viser hva selskapet tjente og brukte gjennom året, og ender på årsresultatet — overskuddet eller underskuddet. Det settes opp etter en fast oppstillingsplan i regnskapsloven § 6-1.</div>
+        </details>
+        <details>
+          <summary><span class="q">Driftsresultat eller årsresultat?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Driftsresultatet (EBIT) måler kjernedriften alene — inntekter minus driftskostnader. Årsresultatet kommer etter at finansposter og skatt er trukket fra, og er det som faktisk blir igjen til eierne.</div>
+        </details>
+        <details>
+          <summary><span class="q">AS eller enkeltpersonforetak?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Et AS betaler 22 % selskapsskatt på et positivt resultat, og skattekostnaden føres i regnskapet. I et enkeltpersonforetak skattlegges overskuddet på eierens hånd sammen med øvrig inntekt — derfor står det ingen skattekostnad i selskapsregnskapet.</div>
+        </details>
+        <details>
+          <summary><span class="q">Hvorfor er avskrivning med?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
+          <div class="ans">Avskrivning fordeler kostnaden ved et varig driftsmiddel over årene det brukes, i stedet for å belaste hele kjøpet ett år. Den er en kostnad i resultatet, men ingen utbetaling i året — derfor legges den tilbake i EBITDA-marginen.</div>
+        </details>
+      </div>
+
+      <p class="rr-source">Kilde: Regnskapsloven § 6-1 · Selskapsskatt 22 % (Stortingets skattevedtak § 3-3) · Oppdatert 2026. Forenklet oppstilling — et fullstendig årsregnskap krever noter, kontantstrøm og balanse. Veiledende beregning, ikke profesjonell rådgivning.</p>
 
     </div>
-
-      <div class="explain-section">
-
-        <details class="howto">
-          <summary>Nøkkeltallene forklart</summary>
-          <div class="howto-body">
-            <div class="howto-row"><div class="h-title">Driftsmargin</div><div class="h-desc">Driftsresultat delt på driftsinntekter. Viser hvor lønnsom selve driften er, før renter og skatt. Høyere er bedre.</div></div>
-            <div class="howto-row"><div class="h-title">EBITDA-margin</div><div class="h-desc">Som driftsmargin, men før avskrivninger (driftsresultat + avskrivning, delt på driftsinntekter). Nyttig når bedriften har mye utstyr og dermed store avskrivninger.</div></div>
-            <div class="howto-row"><div class="h-title">Resultatgrad (nettomargin)</div><div class="h-desc">Årsresultat delt på driftsinntekter. Hvor mye av omsetningen som til slutt blir igjen etter at renter og skatt er trukket fra.</div></div>
-            <div class="howto-row"><div class="h-title">Kostnadsandel</div><div class="h-desc">Sum driftskostnader delt på driftsinntekter. Jo lavere, jo mer effektiv drift. Over 100 % betyr at driften går i underskudd.</div></div>
-          </div>
-        </details>
-
-        <details class="howto">
-          <summary>Resultat vs. balanse</summary>
-          <div class="howto-body">
-            <div class="howto-row"><div class="h-title">Resultatregnskap</div><div class="h-desc">Viser inntekter og kostnader gjennom hele året. Bunnlinjen er årsresultatet — det bedriften tjente eller tapte. Som en film av året.</div></div>
-            <div class="howto-row"><div class="h-title">Balanse</div><div class="h-desc">Viser hva bedriften eier og skylder på én bestemt dag (typisk 31.12) — som et øyeblikksbilde.</div></div>
-            <div class="howto-row"><div class="h-title">Sammenhengen</div><div class="h-desc">Årsresultatet legges til opptjent egenkapital i balansen. Underskudd reduserer egenkapitalen tilsvarende.</div></div>
-            <div class="howto-row"><div class="h-title">Disponering</div><div class="h-desc">Styret bestemmer hvor mye av overskuddet som tas ut som utbytte, og hvor mye som blir igjen i selskapet som tilbakeholdt overskudd.</div></div>
-            <div class="howto-row"><div class="h-title">Neste steg</div><div class="h-desc">Fortsett med <a href="/regnskap/balanse/">balanse-templaten</a> for å se hvordan årsresultatet påvirker egenkapitalen. Kilde: regnskapsloven (LOV-1998-07-17-56) og skatteloven (LOV-1999-03-26-14).</div></div>
-          </div>
-        </details>
-
-      </div>
-
   </div>
 
 </main>
@@ -1187,244 +1130,154 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 
-  // ── Resultatregnskap-template (rskl § 6-1) ──
+  // ── Resultatregnskap — Claude Design reskin (vanilla; drives the ledger) ──
   (function(){
-    var KEY = 'hv-resultat-v1';
-    var SKATT_AS = 0.22;            // 22 % alminnelig selskapsskatt for AS (Stortingsvedtak om skatt § 3-3, hjemlet i skatteloven § 15-1)
-    var mode = 'as';                // 'as' eller 'enk'
+    var KEY = 'hv-rr-v2';
+    var RATE = 0.22;                // 22 % selskapsskatt (Stortingets skattevedtak § 3-3)
+    var INPUTS = ['rSalg','rAnnen','rVare','rLonn','rAvskr','rAnnenKost','rFinInnt','rFinKost'];
+    var mode = 'as';
 
-    function parseNum(id){
-      var el = document.getElementById(id);
-      if(!el) return 0;
-      var s = String(el.value || '').replace(/[\s ]/g,'').replace(',','.');
-      var v = parseFloat(s);
-      return isFinite(v) ? v : 0;
-    }
-    function fmt(n){
-      var sign = n < 0 ? '−' : '';
-      var abs = Math.abs(Math.round(n));
-      return sign + new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0})
-        .format(abs).replace(/ /g,' ') + ' kr';
-    }
-    function setEl(id, val){
-      var el = document.getElementById(id);
-      if(el) el.textContent = val;
-    }
-    function fmtPct(num, den){
-      if(!(den > 0)) return '–';
-      return new Intl.NumberFormat('nb-NO',{minimumFractionDigits:1,maximumFractionDigits:1})
-        .format(num / den * 100) + ' %';
-    }
-    // Kostnadsstruktur-stripe — nøytrale ink-toner; --accent for "igjen til drift".
-    function renderCostStack(sumInn, vare, lonn, avs, annDrift, driftRes){
-      var stack = document.getElementById('costStack');
-      var legend = document.getElementById('costLegend');
-      if(!stack || !legend) return;
-      var overskudd = driftRes > 0 ? driftRes : 0;
-      var total = vare + lonn + avs + annDrift + overskudd;
-      if(!(total > 0)){
-        stack.innerHTML = '';
-        legend.innerHTML = '<p class="side-empty">Fyll inn tall for å se hvor pengene går.</p>';
+    function el(id){ return document.getElementById(id); }
+    function parse(v){ return +String(v==null?'':v).replace(/[^\d]/g,'') || 0; }
+    function num(id){ var e=el(id); return e?parse(e.value):0; }
+    function fmt(n){ if(!isFinite(n)) return '–'; return Math.round(n).toLocaleString('nb-NO').replace(/ /g,' ').replace(/,/g,' '); }
+    function paren(n){ return '(' + fmt(Math.abs(n)) + ')'; }
+    function pct(a,b){ if(!(b>0)) return '—'; return (a/b*100).toFixed(1).replace('.',',') + ' %'; }
+    function set(id,v){ var e=el(id); if(e) e.textContent=v; }
+    function show(id,on){ var e=el(id); if(e) e.classList.toggle('hidden', !on); }
+
+    // Cost structure — neutral ink shades for costs, accent gradient for the kept share.
+    var SEGS = [
+      {key:'vare',  l:'Varekostnad',         bg:'rgba(255,248,232,.30)', acc:false},
+      {key:'lonn',  l:'Lønnskostnad',        bg:'rgba(255,248,232,.21)', acc:false},
+      {key:'avskr', l:'Avskrivning',         bg:'rgba(255,248,232,.13)', acc:false},
+      {key:'annen', l:'Annen driftskostnad', bg:'rgba(255,248,232,.08)', acc:false},
+      {key:'kept',  l:'Igjen til drift',     bg:'linear-gradient(90deg,var(--accent-deep),var(--accent-2))', acc:true}
+    ];
+    function renderCost(sumDrift, amt){
+      var bar=el('costBar'), leg=el('costLegend'), wrap=el('costWrap'), empty=el('costEmpty');
+      if(!bar||!leg) return;
+      var base = Math.max(sumDrift, amt.vare+amt.lonn+amt.avskr+amt.annen);
+      var active = SEGS.filter(function(s){ return amt[s.key] > 0; });
+      if(!active.length){
+        if(wrap) wrap.classList.add('hidden');
+        if(empty) empty.classList.remove('hidden');
         return;
       }
-      var segs = [
-        {n:'Varekostnad', v:vare, op:1, accent:false},
-        {n:'Lønnskostnad', v:lonn, op:0.7, accent:false},
-        {n:'Avskrivning', v:avs, op:0.48, accent:false},
-        {n:'Annen driftskostnad', v:annDrift, op:0.32, accent:false}
-      ];
-      if(overskudd > 0) segs.push({n:'Igjen til drift', v:overskudd, op:1, accent:true});
-      var bar = '', leg = '';
-      segs.forEach(function(s){
-        if(!(s.v > 0)) return;
-        var w = (s.v / total * 100).toFixed(2);
-        var bg = s.accent ? 'var(--accent)' : 'var(--ink2)';
-        bar += '<div class="seg" style="width:' + w + '%;background:' + bg + ';opacity:' + s.op + '"></div>';
-        var ofInn = sumInn > 0 ? Math.round(s.v / sumInn * 100) : 0;
-        leg += '<div class="cl-row"><span class="cl-dot" style="background:' + bg + ';opacity:' + s.op + '"></span>'
-             + '<span class="cl-name">' + s.n + '</span><span class="cl-val">' + ofInn + ' %</span></div>';
+      if(wrap) wrap.classList.remove('hidden');
+      if(empty) empty.classList.add('hidden');
+      var barHtml='', legHtml='';
+      active.forEach(function(s){
+        var v=amt[s.key];
+        var p = base>0 ? v/base*100 : 0;
+        barHtml += '<div class="seg" style="flex:'+v+' 1 0;background:'+s.bg+'"></div>';
+        legHtml += '<div class="rr-leg'+(s.acc?' acc':'')+'">'
+          + '<span class="dot" style="background:'+s.bg+'"></span>'
+          + '<span class="nm">'+s.l+'</span>'
+          + '<span class="amt">'+fmt(v)+'</span>'
+          + '<span class="pc">'+Math.round(p)+' %</span></div>';
       });
-      stack.innerHTML = bar;
-      legend.innerHTML = leg;
+      bar.innerHTML=barHtml; leg.innerHTML=legHtml;
     }
 
     function compute(){
-      var sumInn = parseNum('rSalg') + parseNum('rAnnen');
-      var vare = parseNum('rVare'), lonn = parseNum('rLonn'), avs = parseNum('rAvs'), annDrift = parseNum('rAnnDrift');
-      var sumKost = vare + lonn + avs + annDrift;
-      var driftRes = sumInn - sumKost;
-      var finNet = parseNum('rFinInn') - parseNum('rFinUt');
-      var preSkatt = driftRes + finNet;
+      var salg=num('rSalg'), annen=num('rAnnen'), vare=num('rVare'), lonn=num('rLonn'),
+          avskr=num('rAvskr'), annenKost=num('rAnnenKost'), finInnt=num('rFinInnt'), finKost=num('rFinKost');
+      var isAS = mode==='as';
+      var sumDrift = salg+annen;
+      var sumKost = vare+lonn+avskr+annenKost;
+      var driftsres = sumDrift-sumKost;
+      var nettoFinans = finInnt-finKost;
+      var resForSkatt = driftsres+nettoFinans;
+      var skatt = isAS ? Math.max(0,resForSkatt)*RATE : 0;
+      var arsresultat = resForSkatt-skatt;
+      var isEmpty = sumDrift===0 && sumKost===0 && nettoFinans===0;
+      var isLoss = arsresultat<0;
 
-      var skatt = 0;
-      var aresLbl = 'Årsresultat';
-      var note = '';
-      var verdict = 'Skriv inn omsetning og kostnader for å starte.';
+      set('oSumDrift', fmt(sumDrift));
+      set('oSumKost', paren(sumKost));
+      set('oDriftsres', fmt(driftsres));
+      set('oNettoFinans', fmt(nettoFinans));
+      set('oResForSkatt', fmt(resForSkatt));
+      set('oSkatt', paren(skatt));
+      set('oArsresultat', fmt(arsresultat));
+      set('oFormLabel', isAS ? 'Aksjeselskap' : 'Enkeltpersonforetak');
+      set('oEyebrow', isAS ? 'Årsresultat etter skatt' : 'Årsresultat — før privat skatt');
 
-      if(mode === 'as'){
-        skatt = preSkatt > 0 ? preSkatt * SKATT_AS : 0;
-        aresLbl = 'Årsresultat (etter skatt)';
-        if(preSkatt > 0){
-          note = 'AS betaler 22 % selskapsskatt på resultatet før skatt. Årsresultatet legges til opptjent egenkapital i balansen.';
-          verdict = 'Etter skatt — overskudd disponeres til utbytte eller egenkapital.';
-        } else if(preSkatt < 0){
-          note = 'Underskudd — ingen selskapsskatt. Underskuddet kan fremføres til motregning mot fremtidige overskudd (skatteloven § 14-6).';
-          verdict = 'Underskudd — kan fremføres mot fremtidige overskudd.';
+      show('rowSkatt', isAS);
+      show('rowEnk', !isAS);
+
+      var tag=el('oResultTag');
+      if(tag){
+        if(isEmpty){ tag.classList.add('hidden'); }
+        else {
+          tag.classList.remove('hidden');
+          var pos = arsresultat>=0;
+          tag.textContent = pos ? 'Overskudd' : 'Underskudd';
+          tag.classList.toggle('pos', pos);
+          tag.classList.toggle('neg', !pos);
         }
-      } else {
-        // ENK: ingen selskapsskatt; resultat overføres til personinntekt.
-        skatt = 0;
-        aresLbl = 'Driftsresultat før personskatt';
-        note = 'ENK skatter ikke i foretaket. Resultat før skatt overføres til eiers personinntekt og beskattes der (alminnelig 22 % + trinnskatt + trygdeavgift 11,1 %). Bruk /skatt/inntekt/ for personlig beregning.';
-        if(preSkatt > 0) verdict = 'Overført til eiers personinntekt — beskattes hos eier.';
-        else if(preSkatt < 0) verdict = 'Underskudd kan fremføres til neste år.';
       }
 
-      var ares = preSkatt - skatt;
+      if(isLoss && !isEmpty){
+        set('oLossNote', isAS
+          ? 'Underskudd i år gir ingen skattekostnad — det kan fremføres mot senere overskudd (skatteloven § 14-6).'
+          : 'Underskudd i enkeltpersonforetak kan samordnes mot eierens øvrige inntekt samme år.');
+        show('boxLoss', true);
+      } else { show('boxLoss', false); }
 
-      // Render — the column reads as a running calculation, so deductions
-      // (sum driftskostnader, skattekostnad) show with a leading minus.
-      setEl('rSumInn', fmt(sumInn));
-      setEl('rSumKost', fmt(-sumKost));
-      setEl('rDriftRes', fmt(driftRes));
-      setEl('rFinNet', fmt(finNet));
-      setEl('rPreSkatt', fmt(preSkatt));
-      setEl('rSkatt', fmt(-skatt));
-      setEl('rAres', fmt(ares));
+      set('kDrift', pct(driftsres, sumDrift));
+      set('kEbitda', pct(driftsres+avskr, sumDrift));
+      set('kNetto', pct(resForSkatt, sumDrift));
+      set('kKost', pct(sumKost, sumDrift));
 
-      var aresLblEl = document.getElementById('aresLbl');
-      if(aresLblEl) aresLblEl.textContent = aresLbl;
-
-      // Mode-dependent rows: ENK has no selskapsskatt, so the company-level
-      // "resultat før skatt" and "skattekostnad" lines fold into the bottom line.
-      var skattRow = document.getElementById('skattRow');
-      var preSkattRow = document.getElementById('preSkattRow');
-      if(skattRow)    skattRow.style.display    = mode === 'as' ? '' : 'none';
-      if(preSkattRow) preSkattRow.style.display = mode === 'as' ? '' : 'none';
-
-      // Hero stats
-      setEl('hStatAres', fmt(ares));
-      setEl('hStatDrift', fmt(driftRes));
-
-      // Empty-state guard
-      var anyInput = (sumInn + sumKost + Math.abs(finNet)) > 0;
-      var verdictEl = document.getElementById('rVerdict');
-      var noteEl = document.getElementById('rNote');
-      if(!anyInput){
-        if(verdictEl) verdictEl.textContent = 'Skriv inn omsetning og kostnader for å starte.';
-        if(noteEl)    noteEl.textContent    = 'Skriv inn omsetning og kostnader for å se driftsresultat, skatt og årsresultat.';
-      } else {
-        if(verdictEl) verdictEl.textContent = verdict;
-        if(noteEl)    noteEl.textContent    = note;
-      }
-
-      // Nøkkeltall — alle som andel av driftsinntekter ('–' når inntekter = 0)
-      setEl('kDrift',  fmtPct(driftRes, sumInn));
-      setEl('kEbitda', fmtPct(driftRes + avs, sumInn));
-      setEl('kNetto',  fmtPct(ares, sumInn));
-      setEl('kKost',   fmtPct(sumKost, sumInn));
-
-      renderCostStack(sumInn, vare, lonn, avs, annDrift, driftRes);
-
-      // Overskudd/Underskudd-merkelapp på bunnlinjen
-      var aresTagEl = document.getElementById('rAresTag');
-      if(aresTagEl) aresTagEl.textContent = !anyInput ? '' : (ares > 0 ? 'Overskudd' : (ares < 0 ? 'Underskudd' : ''));
+      renderCost(sumDrift, {vare:vare,lonn:lonn,avskr:avskr,annen:annenKost,kept:Math.max(0,driftsres)});
 
       persist();
     }
 
     function persist(){
-      try {
-        var snap = {
-          mode: mode,
-          salg: document.getElementById('rSalg').value,
-          annen: document.getElementById('rAnnen').value,
-          vare: document.getElementById('rVare').value,
-          lonn: document.getElementById('rLonn').value,
-          avs: document.getElementById('rAvs').value,
-          annDrift: document.getElementById('rAnnDrift').value,
-          finInn: document.getElementById('rFinInn').value,
-          finUt: document.getElementById('rFinUt').value
-        };
+      try{
+        var snap={mode:mode};
+        INPUTS.forEach(function(id){ var e=el(id); if(e) snap[id]=e.value; });
         localStorage.setItem(KEY, JSON.stringify(snap));
-      } catch(e){}
+      }catch(e){}
+    }
+    function syncModes(){
+      document.querySelectorAll('.ks-mode').forEach(function(b){
+        b.setAttribute('aria-pressed', b.getAttribute('data-mode')===mode ? 'true':'false');
+      });
     }
     function restore(){
-      try {
-        var raw = localStorage.getItem(KEY);
-        if(!raw) return;
-        var s = JSON.parse(raw);
-        if(s.mode === 'enk' || s.mode === 'as') mode = s.mode;
-        var map = {salg:'rSalg', annen:'rAnnen', vare:'rVare', lonn:'rLonn', avs:'rAvs',
-                   annDrift:'rAnnDrift', finInn:'rFinInn', finUt:'rFinUt'};
-        Object.keys(map).forEach(function(k){
-          if(s[k] != null){
-            var el = document.getElementById(map[k]);
-            if(el) el.value = s[k];
-          }
-        });
-        // Sync mode-buttons to restored mode
-        document.querySelectorAll('.mode-btn').forEach(function(btn){
-          if(btn.getAttribute('data-mode') === mode){
-            btn.classList.add('active');
-            btn.setAttribute('aria-pressed','true');
-          } else {
-            btn.classList.remove('active');
-            btn.setAttribute('aria-pressed','false');
-          }
-        });
-      } catch(e){}
+      try{
+        var raw=localStorage.getItem(KEY); if(!raw) return;
+        var s=JSON.parse(raw);
+        if(s.mode==='as'||s.mode==='enk') mode=s.mode;
+        INPUTS.forEach(function(id){ if(s[id]!=null){ var e=el(id); if(e) e.value=s[id]; } });
+        syncModes();
+      }catch(e){}
     }
 
-    // Bind mode-buttons
-    document.querySelectorAll('.mode-btn').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        document.querySelectorAll('.mode-btn').forEach(function(b){
-          b.classList.remove('active');
-          b.setAttribute('aria-pressed','false');
-        });
-        btn.classList.add('active');
-        btn.setAttribute('aria-pressed','true');
-        mode = btn.getAttribute('data-mode') || 'as';
+    INPUTS.forEach(function(id){ var e=el(id); if(e) e.addEventListener('input', compute); });
+    document.querySelectorAll('.ks-mode').forEach(function(b){
+      b.addEventListener('click', function(){ mode=b.getAttribute('data-mode')||'as'; syncModes(); compute(); });
+    });
+
+    var PRESETS = {
+      butikk:    {mode:'as',  rSalg:2400000, rAnnen:0,     rVare:1320000, rLonn:620000,  rAvskr:45000,  rAnnenKost:290000, rFinInnt:4000,  rFinKost:22000},
+      konsulent: {mode:'enk', rSalg:1150000, rAnnen:0,     rVare:40000,   rLonn:0,       rAvskr:18000,  rAnnenKost:180000, rFinInnt:2000,  rFinKost:0},
+      vekst:     {mode:'as',  rSalg:3100000, rAnnen:60000, rVare:980000,  rLonn:2350000, rAvskr:380000, rAnnenKost:720000, rFinInnt:12000, rFinKost:240000},
+      tom:       {rSalg:'', rAnnen:'', rVare:'', rLonn:'', rAvskr:'', rAnnenKost:'', rFinInnt:'', rFinKost:''}
+    };
+    document.querySelectorAll('.hv-btn--pill').forEach(function(b){
+      b.addEventListener('click', function(){
+        var p=PRESETS[b.getAttribute('data-preset')]; if(!p) return;
+        if(p.mode){ mode=p.mode; syncModes(); }
+        INPUTS.forEach(function(id){ var e=el(id); if(e){ var v=p[id]; e.value=(v===''||v==null)?'':v; } });
         compute();
       });
     });
 
-    // Bind input events
-    ['rSalg','rAnnen','rVare','rLonn','rAvs','rAnnDrift','rFinInn','rFinUt'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el) el.addEventListener('input', compute);
-    });
-
-    // Example presets — fyll inn et realistisk regnskap brukeren kan redigere fra
-    var PRESETS = {
-      butikk:    {mode:'as',  salg:4200000, annen:0,     vare:2730000, lonn:900000,  avs:70000,  annDrift:360000, finInn:5000, finUt:45000},
-      konsulent: {mode:'enk', salg:1100000, annen:0,     vare:60000,   lonn:0,       avs:20000,  annDrift:230000, finInn:2000, finUt:8000},
-      vekst:     {mode:'as',  salg:2000000, annen:50000, vare:700000,  lonn:1300000, avs:150000, annDrift:250000, finInn:3000, finUt:60000},
-      clear:     {mode:'as',  salg:'', annen:'', vare:'', lonn:'', avs:'', annDrift:'', finInn:'', finUt:''}
-    };
-    var presetMap = {salg:'rSalg', annen:'rAnnen', vare:'rVare', lonn:'rLonn', avs:'rAvs',
-                     annDrift:'rAnnDrift', finInn:'rFinInn', finUt:'rFinUt'};
-    function applyPreset(key){
-      var p = PRESETS[key];
-      if(!p) return;
-      mode = p.mode || 'as';
-      Object.keys(presetMap).forEach(function(k){
-        var el = document.getElementById(presetMap[k]);
-        if(el){ var v = p[k]; el.value = (v === '' || v == null) ? '' : v; }
-      });
-      document.querySelectorAll('.mode-btn').forEach(function(b){
-        var on = b.getAttribute('data-mode') === mode;
-        b.classList.toggle('active', on);
-        b.setAttribute('aria-pressed', on ? 'true' : 'false');
-      });
-      compute();
-    }
-    document.querySelectorAll('.preset-btn').forEach(function(b){
-      b.addEventListener('click', function(){ applyPreset(b.getAttribute('data-preset')); });
-    });
-
-    // Init
     restore();
     compute();
   })();
