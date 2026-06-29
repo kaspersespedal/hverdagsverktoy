@@ -536,6 +536,8 @@ REGIONS['no'] = {
     searchKbdHint:'Trykk / for å fokusere søket',
     searchPopular:'Foreslåtte',
     searchNoResults:'Ingen treff',
+    searchGroupHere:'På denne siden',
+    searchGroupElse:'Ellers på hverdagsverktøy',
     searchMissing:'Savner du noe?',
     searchTagTool:'Verktøy',
     searchTagConcept:'Begrep',

@@ -481,6 +481,8 @@ REGIONS['zh'] = {
     searchKbdHint:'按 / 键聚焦搜索框',
     searchPopular:'推荐',
     searchNoResults:'无结果',
+    searchGroupHere:'本页',
+    searchGroupElse:'网站其他部分',
     searchMissing:'缺少什么？',
     searchTagTool:'工具',
     searchTagConcept:'概念',

@@ -482,6 +482,8 @@ REGIONS['lt'] = {
     searchKbdHint:'Paspauskite /, kad aktyvuotumėte paiešką',
     searchPopular:'Siūlomi',
     searchNoResults:'Rezultatų nerasta',
+    searchGroupHere:'Šiame puslapyje',
+    searchGroupElse:'Kitur svetainėje',
     searchMissing:'Kažko trūksta?',
     searchTagTool:'Įrankis',
     searchTagConcept:'Sąvoka',

@@ -479,6 +479,8 @@ REGIONS['so'] = {
     searchKbdHint:'Taabo / si aad u xulato raadinta',
     searchPopular:'La soo jeediyey',
     searchNoResults:'Natiijo la ma helin',
+    searchGroupHere:'Boggan',
+    searchGroupElse:'Meel kale oo shabakadda ah',
     searchMissing:'Ma wax baa ka maqan?',
     searchTagTool:'Qalab',
     searchTagConcept:'Fikrad',
