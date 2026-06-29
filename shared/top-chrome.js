@@ -16,6 +16,7 @@
   var THEMES = [
     {k:'carbon',  l:'Carbon',    group:'dark',  sub:'Bek og messing',     pv:{bg:'#0f0e0d', ink:'#ecebe7', accent:'#b88a5e'}},
     {k:'dark',    l:'Mørk-blå',  group:'dark',  sub:'Kjølig natt',        pv:{bg:'#11172a', ink:'#e9edf4', accent:'#8aa3c8'}},
+    {k:'nordlys', l:'Nordlys',   group:'dark',  sub:'Aurora over fjord',  pv:{bg:'#0c1416', ink:'#e6f0ec', accent:'#4ec9a0'}},
     {k:'hendrix', l:'Hendrix',   group:'dark',  sub:'Fillmore-plakat',    pv:{bg:'#fdf1e3', ink:'#2a0d3d', accent:'#d6248f'}},
     {k:'bw',      l:'Sort/hvit', group:'dark',  sub:'Høy kontrast',       pv:{bg:'#0a0a0a', ink:'#fafafa', accent:'#fafafa'}},
     {k:'disco',   l:'Disco',     group:'dark',  sub:'Neon-nattklubb',     pv:{bg:'#161226', ink:'#f0e6ff', accent:'#e91e8c'}},
@@ -142,6 +143,12 @@
   .tc-btn .chev{opacity:.45;transition:transform .2s var(--ease),opacity .18s var(--ease)}
   .tc-btn:hover .chev,.tc-btn[aria-expanded="true"] .chev{opacity:.8}
   .tc-btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+  /* Keyboard focus — visible accent ring on triggers and menu rows
+     (mouse clicks use :focus-visible's UA heuristics → no ring on click). */
+  .tc-btn:focus-visible{outline:2px solid var(--accent);outline-offset:4px;
+    border-radius:4px;color:var(--ink)}
+  .tc-menu a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;
+    background:color-mix(in srgb, var(--ink) 7%, transparent);color:var(--ink)}
   .tc-divider{width:1px;height:14px;background:var(--line);opacity:.6}
   .tc-kbd{display:inline-flex;align-items:center;gap:3px;
     color:var(--ink3);font:500 10.5px/1 var(--font-sans);
@@ -157,9 +164,13 @@
                0 8px 20px -8px rgba(0,0,0,.4);
     opacity:0;visibility:hidden;transform:translateY(-4px) scale(.985);
     transform-origin:top right;
-    transition:opacity .16s var(--ease),transform .18s var(--ease),visibility .16s;
+    /* On close, delay the visibility flip by .16s so the menu stays visible
+       through the opacity/transform fade-out. On open (.open below) it flips
+       instantly so rows are immediately focusable for keyboard users. */
+    transition:opacity .16s var(--ease),transform .18s var(--ease),visibility 0s linear .16s;
     z-index:60}
-  .tc-menu.open{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+  .tc-menu.open{opacity:1;visibility:visible;transform:translateY(0) scale(1);
+    transition:opacity .16s var(--ease),transform .18s var(--ease),visibility 0s}
   /* Section labels — inline divider rule, no big borders, no caps shouting */
   .tc-menu h5{font:500 10.5px/1 var(--font-sans);letter-spacing:.02em;
     text-transform:none;color:var(--ink4);
@@ -240,6 +251,7 @@
   /* Per-theme swatch colors for the picker preview */
   .sw-carbon{background:#c89968}
   .sw-dark{background:#8aa3c8}
+  .sw-nordlys{background:linear-gradient(135deg,#4ec9a0 0%,#2e9472 52%,#7b5cc4 100%)}
   .sw-hendrix{background:linear-gradient(135deg,#ff5b1f 0%,#c0188a 60%,#ffc24a 100%)}
   .sw-bw{background:#fafafa}
   .sw-disco{background:#e91e8c}
@@ -275,6 +287,19 @@
   .tc-ticker-badge::before{content:"";width:5px;height:5px;border-radius:50%;
     background:var(--accent);animation:tcPulse 2s ease-in-out infinite}
   @keyframes tcPulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+  /* ── Theme switch: View-Transitions circular reveal ──────────
+     The new theme is painted on top and wiped in via a growing circle
+     anchored at the theme button. We kill the default cross-fade so the
+     clip-path (set in JS) is the only motion. Falls back to an instant
+     swap where startViewTransition is unsupported or motion is reduced. */
+  ::view-transition-old(root),
+  ::view-transition-new(root){ animation:none; mix-blend-mode:normal }
+  ::view-transition-new(root){ z-index:9999 }
+  ::view-transition-old(root){ z-index:1 }
+  @media (prefers-reduced-motion:reduce){
+    ::view-transition-group(root){ animation-duration:.001ms !important }
+  }
   `;
   var styleEl = document.createElement('style');
   styleEl.id = 'tc-styles';
@@ -374,7 +399,7 @@
       var styleBg = 'background:'+pv.bg+';';
       var styleBar = 'background:'+pv.ink+';';
       var styleDot = 'background:'+pv.accent+';';
-      return '<a role="menuitemradio" data-theme="'+x.k+'" aria-checked="'+(x.k===cur?'true':'false')+'" class="'+(x.k===cur?'current':'')+'">'+
+      return '<a role="menuitemradio" data-tk="'+x.k+'" aria-checked="'+(x.k===cur?'true':'false')+'" class="'+(x.k===cur?'current':'')+'">'+
           '<span class="tc-pv" style="'+styleBg+'">'+
             '<span class="tc-pv-bar" style="'+styleBar+'"></span>'+
             '<span class="tc-pv-bar tc-pv-bar-short" style="'+styleBar+'"></span>'+
@@ -417,62 +442,153 @@
         '<div class="tc-menu" id="tc-lang-menu" role="menu">'+
           '<h5>Hovedspråk</h5>'+
           LANGS.filter(function(x){return x.group==='main';}).map(function(x){
-            return '<a data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
+            return '<a role="menuitemradio" aria-checked="'+(x.k===curLang?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
           }).join('')+
           '<h5>Språk i Norge</h5>'+
           LANGS.filter(function(x){return x.group==='norway';}).map(function(x){
-            return '<a data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
+            return '<a role="menuitemradio" aria-checked="'+(x.k===curLang?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
           }).join('')+
           '<h5>Internasjonalt</h5>'+
           LANGS.filter(function(x){return x.group==='intl';}).map(function(x){
-            return '<a data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
+            return '<a role="menuitemradio" aria-checked="'+(x.k===curLang?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
           }).join('')+
         '</div>'+
       '</div>';
     navEl.appendChild(actions);
 
     // ── Menu wiring ──────────────────────────────────
+    // Full keyboard support per the ARIA menu pattern: the trigger is a real
+    // <button>; the popup is a role="menu" of role="menuitemradio" rows. We use
+    // a roving tabindex (current row = 0, rest = -1) and handle Arrow/Home/End/
+    // Enter/Escape. Focus returns to the trigger on close so Tab order is sane.
     function wireMenu(btnId, menuId, onPick, dataAttr){
       var btn = document.getElementById(btnId);
       var menu = document.getElementById(menuId);
+      btn.setAttribute('aria-controls', menuId);
+
+      var raf = window.requestAnimationFrame || function(f){ return setTimeout(f, 16); };
+      function items(){ return Array.prototype.slice.call(menu.querySelectorAll('a['+dataAttr+']')); }
+      // Self-correcting focus: try now, and if it didn't land (e.g. the menu is
+      // still mid-reveal in a browser that delays focusability), retry next
+      // frame until it sticks or we give up. Succeeds synchronously once visible.
+      function focusWhenVisible(row, tries){
+        if(!row) return;
+        tries = tries || 0;
+        row.focus();
+        if(document.activeElement === row || tries > 10) return;
+        raf(function(){ focusWhenVisible(row, tries + 1); });
+      }
+      function focusRow(row){
+        if(!row) return;
+        items().forEach(function(a){ a.tabIndex = -1; });
+        row.tabIndex = 0;
+        focusWhenVisible(row);
+      }
+      function roveTo(list, i){
+        if(!list.length) return;
+        focusRow(list[(i + list.length) % list.length]);
+      }
+      function openMenu(focus){   // focus: false | 'current' | 'last'
+        // Close any other open menu first.
+        document.querySelectorAll('.tc-menu.open').forEach(function(m){
+          if(m!==menu){ m.classList.remove('open');
+            var sb = document.getElementById(m.id.replace('-menu','-btn'));
+            if(sb) sb.setAttribute('aria-expanded','false'); }
+        });
+        menu.classList.add('open');
+        btn.setAttribute('aria-expanded','true');
+        var its = items();
+        its.forEach(function(a){ a.tabIndex = -1; });
+        var target = its[0];
+        if(focus==='current') target = menu.querySelector('a.current') || its[0];
+        else if(focus==='last') target = its[its.length-1];
+        if(target){ target.tabIndex = 0; if(focus) focusRow(target); }
+      }
+      function closeMenu(refocus){
+        menu.classList.remove('open');
+        btn.setAttribute('aria-expanded','false');
+        if(refocus) btn.focus();
+      }
+
       btn.addEventListener('click', function(e){
         e.stopPropagation();
-        var open = menu.classList.toggle('open');
-        btn.setAttribute('aria-expanded', open?'true':'false');
-        // Close the sibling menu
-        document.querySelectorAll('.tc-menu.open').forEach(function(m){
-          if(m!==menu){m.classList.remove('open');
-            var sb = document.querySelector('[aria-controls="'+m.id+'"],#'+m.id.replace('-menu','-btn'));
-            if(sb) sb.setAttribute('aria-expanded','false');}
-        });
+        if(menu.classList.contains('open')) closeMenu(false); else openMenu(false);
+      });
+      btn.addEventListener('keydown', function(e){
+        if(e.key==='ArrowDown' || e.key==='Enter' || e.key===' '){
+          e.preventDefault(); openMenu('current');
+        } else if(e.key==='ArrowUp'){
+          e.preventDefault(); openMenu('last');
+        }
       });
       menu.addEventListener('click', function(e){
         var a = e.target.closest('a['+dataAttr+']');
         if(!a) return;
         e.preventDefault();
         onPick(a.getAttribute(dataAttr));
-        menu.classList.remove('open');
-        btn.setAttribute('aria-expanded','false');
+        closeMenu(true);
+      });
+      menu.addEventListener('keydown', function(e){
+        var its = items();
+        var idx = its.indexOf(document.activeElement);
+        switch(e.key){
+          case 'ArrowDown': e.preventDefault(); roveTo(its, idx<0?0:idx+1); break;
+          case 'ArrowUp':   e.preventDefault(); roveTo(its, idx<0?its.length-1:idx-1); break;
+          case 'Home':      e.preventDefault(); roveTo(its, 0); break;
+          case 'End':       e.preventDefault(); roveTo(its, its.length-1); break;
+          case 'Enter': case ' ':
+            if(idx>=0){ e.preventDefault(); onPick(its[idx].getAttribute(dataAttr)); closeMenu(true); }
+            break;
+          case 'Escape': e.preventDefault(); closeMenu(true); break;
+          case 'Tab':    closeMenu(false); break;
+        }
       });
     }
     wireMenu('tc-theme-btn', 'tc-theme-menu', function(t){
-      applyTheme(t, {persist:true});
-      document.getElementById('tc-theme-label').textContent = (THEMES.find(function(x){return x.k===t;})||THEMES[0]).l;
-      document.querySelectorAll('#tc-theme-menu a').forEach(function(a){
-        var on = a.getAttribute('data-theme')===t;
-        a.classList.toggle('current', on);
-        a.setAttribute('aria-checked', on ? 'true' : 'false');
-      });
-      var sw = document.querySelector('#tc-theme-btn .swatch');
-      sw.className = 'swatch sw-'+t;
-    }, 'data-theme');
+      // The actual DOM mutation — applied either instantly or inside a
+      // View Transition so the new palette wipes in as a growing circle.
+      function swap(){
+        applyTheme(t, {persist:true});
+        document.getElementById('tc-theme-label').textContent = (THEMES.find(function(x){return x.k===t;})||THEMES[0]).l;
+        document.querySelectorAll('#tc-theme-menu a').forEach(function(a){
+          var on = a.getAttribute('data-tk')===t;
+          a.classList.toggle('current', on);
+          a.setAttribute('aria-checked', on ? 'true' : 'false');
+        });
+        var sw = document.querySelector('#tc-theme-btn .swatch');
+        if (sw) sw.className = 'swatch sw-'+t;
+        // Close the menu inside the swap so it dissolves with the wipe.
+        var menu = document.getElementById('tc-theme-menu');
+        if (menu) menu.classList.remove('open');
+      }
+
+      var reduce = false;
+      try{ reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(_e){}
+      if (typeof document.startViewTransition !== 'function' || reduce){ swap(); return; }
+
+      // Anchor the reveal at the theme button (fall back to top-right corner).
+      var x = window.innerWidth - 60, y = 40;
+      var btn = document.getElementById('tc-theme-btn');
+      if (btn){ var r = btn.getBoundingClientRect(); x = r.left + r.width/2; y = r.top + r.height/2; }
+      var endR = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+
+      var vt = document.startViewTransition(swap);
+      vt.ready.then(function(){
+        document.documentElement.animate(
+          { clipPath:['circle(0px at '+x+'px '+y+'px)', 'circle('+endR+'px at '+x+'px '+y+'px)'] },
+          { duration:520, easing:'cubic-bezier(.4,0,.2,1)', pseudoElement:'::view-transition-new(root)' }
+        );
+      }).catch(function(){});
+    }, 'data-tk');
     wireMenu('tc-lang-btn', 'tc-lang-menu', function(l){
       applyLang(l);
       var obj = LANGS.find(function(x){return x.k===l;}) || LANGS[0];
       document.getElementById('tc-lang-label').textContent = obj.l;
       document.querySelector('#tc-lang-btn .flag img').src = 'https://flagcdn.com/w80/'+obj.flag+'.png';
       document.querySelectorAll('#tc-lang-menu a').forEach(function(a){
-        a.classList.toggle('current', a.getAttribute('data-lang')===l);
+        var on = a.getAttribute('data-lang')===l;
+        a.classList.toggle('current', on);
+        a.setAttribute('aria-checked', on ? 'true' : 'false');
       });
     }, 'data-lang');
 
