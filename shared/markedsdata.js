@@ -13,6 +13,11 @@
   var frame = document.querySelector('.daily-frame');
   if (!frame) return;
 
+  /* Live-ticker state: «Valuta & rente»-stripa fylles fra de ekte FX- og
+     styringsrente-feedene under (Norges Bank). Ingen hardkodede tall — den
+     gamle fake «Aksjer & marked»-stripa er fjernet (E-fix 2026-06-29). */
+  var _fx = null, _rate = null;
+
   /* ── Strømsone-kart (NVE/Statnett prisområder). Slås opp fra Geonorge-treffets
      kommunenummer, med fylke som fallback. Oppslag:
      KOMMUNE_SONE[kommunenr] || FYLKE_SONE[fylkesnr] || 'NO1'.
@@ -167,6 +172,49 @@
     el.textContent = 'Sist oppdatert ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
   }
 
+  /* ════════════════ LIVE-TICKER («Valuta & rente»-stripa) ════════════════ */
+  /* Oversatt label via i18n (R()) med norsk fallback — bygges ved build-time
+     fordi stripa fylles etter at core.js sin data-i18n-swap har kjørt. */
+  function tlabel(key, fb) {
+    try { var r = (typeof R === 'function') ? R() : null; return (r && r[key]) ? r[key] : fb; }
+    catch (e) { return fb; }
+  }
+  function tickerItems() {
+    var items = [];
+    if (_fx) {
+      [['USD', 'USD / NOK'], ['EUR', 'EUR / NOK'], ['GBP', 'GBP / NOK'], ['SEK', 'SEK / NOK']].forEach(function (p) {
+        var c = _fx[p[0]]; if (!c || c.last == null) return;
+        var diff = (c.prev != null) ? c.last - c.prev : 0;
+        var dir = Math.abs(diff) < 0.0005 ? 0 : diff > 0 ? 1 : -1;
+        items.push({ lbl: p[1], val: nb(c.last, 2),
+          dir: dir, delta: (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) });
+      });
+    }
+    if (_rate && _rate.last != null) {
+      var rd = (_rate.prevLevel != null) ? _rate.last - _rate.prevLevel : 0;
+      var rdir = Math.abs(rd) < 0.001 ? 0 : rd > 0 ? 1 : -1;
+      items.push({ lbl: tlabel('homeMarketsPairPolicy', 'Styringsrente'), val: nb(_rate.last, 2) + ' %',
+        dir: rdir, delta: (rdir > 0 ? '+' : rdir < 0 ? '−' : '±') + nb(Math.abs(rd), 2) + ' pp' });
+    }
+    return items;
+  }
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function buildTicker() {
+    var track = $('tickerTrack'); if (!track) return;
+    var items = tickerItems(); if (!items.length) return;
+    function cls(d) { return d > 0 ? 'up' : d < 0 ? 'down' : 'flat'; }
+    function span(it, hidden) {
+      return '<span class="ti"' + (hidden ? ' aria-hidden="true"' : '') + '><b>' + esc(it.lbl) +
+        '</b> <span class="val">' + esc(it.val) + '</span> <em class="' + cls(it.dir) + '">' + esc(it.delta) + '</em></span>';
+    }
+    var html = '';
+    items.forEach(function (it) { html += span(it, false); }); // Set A (lest av skjermleser)
+    items.forEach(function (it) { html += span(it, true); });  // Set B (duplikat for sømløs loop)
+    track.innerHTML = html;
+    // Skaler marquee-fart til antall elementer (originalen var ~4,8s/element).
+    track.style.animationDuration = (items.length * 4.8).toFixed(0) + 's';
+  }
+
   /* ════════════════════════════ VÆR (MET) ════════════════════════════ */
   var WX = {
     clearsky: 'Klarvær', fair: 'Lettskyet', partlycloudy: 'Delvis skyet', cloudy: 'Skyet', fog: 'Tåke',
@@ -296,6 +344,7 @@
       setText('fxAx2', 'i dag');
     }
     applySpark($('fxCard'), d.USD.series);
+    _fx = d; buildTicker();
     stampNow();
   }
   function loadFx(force) {
@@ -336,6 +385,7 @@
       if (nm) { lbl.textContent = 'Neste rentemøte'; val.textContent = nbShort(nm) + ' ' + nm.slice(0, 4); }
       else { lbl.textContent = ''; val.textContent = ''; }
     }
+    _rate = d; buildTicker();
     stampNow();
   }
   function loadRate(force) {
