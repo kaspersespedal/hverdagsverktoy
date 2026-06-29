@@ -657,6 +657,8 @@ REGIONS['ar'] = {
     searchKbdHint:'اضغط / للتركيز على البحث',
     searchPopular:'مقترحات',
     searchNoResults:'لا توجد نتائج',
+    searchGroupHere:'في هذه الصفحة',
+    searchGroupElse:'في مكان آخر من الموقع',
     searchMissing:'هل ينقصك شيء؟',
     searchTagTool:'أداة',
     searchTagConcept:'مفهوم',

@@ -197,6 +197,31 @@ function norm(s){
   return out.replace(/\s+/g,' ').trim();
 }
 
+/* ─── Section detection (E192 — section-first search) ───
+   Each tool/concept URL begins with its section prefix. We use this both to
+   detect which section the *current page* belongs to, and to group results so
+   the page's own tools surface first. Returns the canonical `page` label used
+   in SEARCH_DATA, or null for the homepage / unknown paths. */
+var SECTION_BY_PREFIX = [
+  ['/personlig/', 'Privatøkonomi'],
+  ['/skatt/',     'Skatt'],
+  ['/avgift/',    'Avgift'],
+  ['/boliglan/',  'Boliglån'],
+  ['/selskap/',   'Selskap'],
+  ['/kalkulator/','Kalkulator'],
+  ['/regnskap/',  'Regnskap'],
+  ['/lov/',       'Lov']
+];
+function sectionFromUrl(url){
+  if(!url) return null;
+  for(var i=0;i<SECTION_BY_PREFIX.length;i++){
+    if(url.indexOf(SECTION_BY_PREFIX[i][0]) === 0) return SECTION_BY_PREFIX[i][1];
+  }
+  return null;
+}
+// Section of the page the search bar lives on — set once in initSearch().
+var CURRENT_SECTION = null;
+
 /* ─── URL → translation key map ───
    Maps each tool URL to a list of keys in R() whose translated values should
    be included in the item's multilingual search haystack. Keeps SEARCH_DATA
@@ -464,6 +489,10 @@ function scoreItem(item, q, itemIdx, hays){
   else if(item.type === 'tool') score += 15;
   else if(item.type === 'concept') score += 5;
 
+  // Section-first boost (E192): nudge the current page's own tools up so they
+  // survive the result cap. Final here/else ordering is enforced by grouping.
+  if(CURRENT_SECTION && sectionFromUrl(item.url) === CURRENT_SECTION) score += 25;
+
   return score;
 }
 
@@ -607,7 +636,9 @@ function search(q){
       seen[key] = true;
     }
   }
-  return results.slice(0, 6);
+  // Return a wider candidate set; renderResults() dedupes, groups by section
+  // and applies the final per-group display caps.
+  return results.slice(0, 12);
 }
 // Invalidate translated haystacks when language changes — core.js should call
 // this after setRegion(), but we also detect lazily on each search.
@@ -631,10 +662,112 @@ function findInjectionPoint(){
   return null;
 }
 
+/* ─── Inject the search component stylesheet (E192) ───
+   The full dropdown styling historically lived only in shared/style.css, which
+   the canonical (new-design) pages do NOT load — so the box got an inline
+   fallback but the results dropdown rendered with raw browser defaults. The
+   search component now owns its own presentation: one injected <style> covers
+   every page that loads search.js (canonical landings, self-contained sub-pages
+   and language copies alike), using canonical design tokens with fallbacks so
+   it resolves on all themes. */
+function injectSearchStyles(){
+  if(document.getElementById('hvt-search-styles')) return;
+  var css =
+  '#site-search{position:relative;max-width:520px;margin:0 auto;width:100%;font:14px/1.45 var(--font-sans,"Inter",system-ui,sans-serif);}' +
+  '.search-box{position:relative;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;transition:border-color .2s,box-shadow .2s;}' +
+  '.search-box:focus-within{border-color:var(--line-warm,var(--accent));box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent);}' +
+  '.search-icon{color:var(--ink3);flex-shrink:0;transition:color .2s;}' +
+  '.search-box:focus-within .search-icon{color:var(--accent);}' +
+  '#search-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font:inherit;padding:2px 0;}' +
+  '#search-input::placeholder{color:var(--ink4,var(--ink3));}' +
+  '.search-kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink3);background:var(--bg);border:1px solid var(--line);padding:3px 7px;border-radius:6px;flex-shrink:0;}' +
+  '.search-box:focus-within .search-kbd{display:none;}' +
+  '.search-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:100;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh-lg,0 12px 32px -8px rgba(0,0,0,.45));max-height:min(70vh,440px);overflow-y:auto;display:none;padding:6px;}' +
+  '.search-dropdown.visible{display:block;}' +
+  '.search-group-label{font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);opacity:.72;padding:9px 12px 4px;}' +
+  '.search-result{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:8px;text-decoration:none;color:inherit;transition:background .12s;}' +
+  '.search-result:hover,.search-result-active{background:var(--surface-2,var(--surface));}' +
+  '.search-result-left{flex:1;min-width:0;}' +
+  '.search-result-name{font-size:14px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}' +
+  '.search-result-name mark{background:color-mix(in srgb,var(--accent) 22%,transparent);color:var(--accent);border-radius:2px;padding:0 1px;}' +
+  '.search-result-desc{font-size:12px;color:var(--ink3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}' +
+  '.search-result-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;}' +
+  '.search-result-tag{font-size:9.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;padding:2px 6px;border-radius:4px;line-height:1.3;color:var(--ink3);background:var(--surface-2,var(--bg));}' +
+  '.search-result-page{font-size:10px;color:var(--ink3);opacity:.62;}' +
+  '.search-no-results{padding:16px 12px;text-align:center;}' +
+  '.search-no-results-text{font-size:13px;color:var(--ink2,var(--ink3));}' +
+  '.search-missing-link{display:inline-block;margin-top:8px;font-size:12.5px;color:var(--accent);text-decoration:none;}' +
+  '.search-missing-link:hover{text-decoration:underline;}' +
+  '.search-suggestions{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;margin-top:10px;opacity:0;max-height:0;overflow:hidden;transition:opacity .2s,max-height .2s;}' +
+  '.search-suggestions.visible{opacity:1;max-height:140px;}' +
+  '.search-chip-label{font-size:11px;color:var(--ink3);font-weight:500;opacity:.65;flex:0 0 100%;text-align:center;margin-bottom:2px;}' +
+  '.search-chip{font-size:12px;font-weight:500;color:var(--ink2,var(--ink));background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:4px 12px;text-decoration:none;transition:border-color .15s,color .15s;white-space:nowrap;}' +
+  '.search-chip:hover{border-color:var(--accent);color:var(--accent);}' +
+  '@media (max-width:560px){.search-result-right{display:none;}.search-dropdown{max-height:min(60vh,360px);}}';
+  var st = document.createElement('style');
+  st.id = 'hvt-search-styles';
+  st.textContent = css;
+  document.head.appendChild(st);
+}
+
+/* ─── Render one flat list of result rows ─── */
+function groupRowsHtml(results, q){
+  var html = '';
+  for(var i=0; i<results.length; i++){
+    var r = results[i].item;
+    var d = resolveDisplay(r);
+    var tag = typeLabel(r.type);
+    html += '<a href="'+r.url+'" class="search-result" data-idx="'+i+'">' +
+      '<div class="search-result-left">' +
+        '<div class="search-result-name">'+highlight(d.name, q)+'</div>' +
+        '<div class="search-result-desc">'+escHtml(d.desc||'')+'</div>' +
+      '</div>' +
+      '<div class="search-result-right">' +
+        (tag ? '<span class="search-result-tag">'+escHtml(tag)+'</span>' : '') +
+        (d.page ? '<span class="search-result-page">'+escHtml(d.page)+'</span>' : '') +
+      '</div>' +
+    '</a>';
+  }
+  return html;
+}
+
+/* ─── Render results, section-first (E192) ───
+   On a section page, the page's own tools render under "På denne siden" and the
+   rest of the site under "Ellers på hverdagsverktøy". Dedupes by display name
+   first (kills near-duplicate intent + index entries), then groups. Falls back
+   to a single flat, unlabelled list on the homepage or when one group is empty. */
+function renderResults(results, q){
+  // Dedupe by resolved display name, preferring the entry that carries a page label.
+  var seen = {}, deduped = [];
+  for(var i=0; i<results.length; i++){
+    var dn = norm(resolveDisplay(results[i].item).name);
+    if(seen[dn] == null){ seen[dn] = deduped.length; deduped.push(results[i]); }
+    else if(!resolveDisplay(deduped[seen[dn]].item).page && resolveDisplay(results[i].item).page){
+      deduped[seen[dn]] = results[i];
+    }
+  }
+  if(!CURRENT_SECTION || deduped.length === 0) return groupRowsHtml(deduped.slice(0,7), q);
+
+  var here = [], rest = [];
+  for(var k=0; k<deduped.length; k++){
+    if(sectionFromUrl(deduped[k].item.url) === CURRENT_SECTION) here.push(deduped[k]);
+    else rest.push(deduped[k]);
+  }
+  if(here.length && rest.length){
+    return '<div class="search-group-label">'+escHtml(T('searchGroupHere','På denne siden'))+'</div>' +
+           groupRowsHtml(here.slice(0,5), q) +
+           '<div class="search-group-label">'+escHtml(T('searchGroupElse','Ellers på hverdagsverktøy'))+'</div>' +
+           groupRowsHtml(rest.slice(0,4), q);
+  }
+  return groupRowsHtml(deduped.slice(0,7), q);
+}
+
 /* ─── Build and inject the search bar ─── */
 function initSearch(){
   var point = findInjectionPoint();
   if(!point) return;
+  injectSearchStyles();
+  CURRENT_SECTION = sectionFromUrl(location.pathname);
 
   var wrap = document.createElement('div');
   wrap.id = 'site-search';
@@ -723,22 +856,7 @@ function initSearch(){
       return;
     }
 
-    var html = '';
-    for(var i=0; i<results.length; i++){
-      var r = results[i].item;
-      var d = resolveDisplay(r);
-      html += '<a href="'+r.url+'" class="search-result" data-idx="'+i+'">' +
-        '<div class="search-result-left">' +
-          '<div class="search-result-name">'+highlight(d.name, q)+'</div>' +
-          '<div class="search-result-desc">'+d.desc+'</div>' +
-        '</div>' +
-        '<div class="search-result-right">' +
-          '<span class="search-result-tag search-tag-'+r.type+'">'+typeLabel(r.type)+'</span>' +
-          '<span class="search-result-page">'+d.page+'</span>' +
-        '</div>' +
-      '</a>';
-    }
-    dropdown.innerHTML = html;
+    dropdown.innerHTML = renderResults(results, q);
     dropdown.classList.add('visible');
   });
 

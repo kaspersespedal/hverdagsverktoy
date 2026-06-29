@@ -481,6 +481,8 @@ REGIONS['ti'] = {
     searchKbdHint:'ንመድላይ ንምፍላይ / ጠውቑ',
     searchPopular:'ዝተጠቐሱ',
     searchNoResults:'ውጽኢት የለን',
+    searchGroupHere:'ኣብዚ ገጽ',
+    searchGroupElse:'ካልእ ኣብ መርበብ',
     searchMissing:'ገለ ይጎድል ኣሎ?',
     searchTagTool:'መሳርሒ',
     searchTagConcept:'ኣምር',
