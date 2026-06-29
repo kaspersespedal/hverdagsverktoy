@@ -2748,6 +2748,10 @@ function updateFooter() {
   setText('fl-con', r.footerCon||'Contact');
   setText('fl-author', r.footerAuthor||'Hverdagsverktøy — gratis norske finanskalkulatorer');
   setText('fl-copy', (r.footerCopy||'© 2026 Hverdagsverktøy').replace(/2026/g, yr));
+  // footerCopy already carries the full disclaimer — hide the standalone fl-disc so the
+  // "Veiledende beregninger … ikke profesjonell rådgivning" line isn't shown twice.
+  const discEl = document.getElementById('fl-disc');
+  if(discEl) discEl.style.display = 'none';
   // Wire privacy link
   const privLink = document.getElementById('fl-priv');
   if(privLink) privLink.onclick = function(e){ e.preventDefault(); openPrivacy(); };
@@ -3065,7 +3069,7 @@ function updateDashLabels() {
   el('dash-t-mor', r.tabMor || 'Boliglån');
   el('dash-t-vat', r.tabVat || 'Avgift');
   el('dash-t-selskap', r.tabSelskap || 'Selskap');
-  el('dash-t-npv', r.tabNpv || 'Personlig økonomi');
+  el('dash-t-npv', r.tabNpv || 'Privatøkonomi');
   el('dash-t-basic-d', r.dashDescBasic || 'Enkel, valuta, finansiell, vitenskapelig og fagkalkulatorer');
   el('dash-t-sal-d', r.dashDescSal || 'Utregning av skatt, begreper og skatteloven');
   el('dash-t-mor-d', r.dashDescMor || 'Boliglånskalkulator, krav til boliglån, kostnader og BSU');

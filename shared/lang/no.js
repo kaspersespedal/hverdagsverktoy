@@ -7,7 +7,7 @@ REGIONS['no'] = {
     salRegions: [['0.22','Standard (hele landet)'],['0.185','Finnmark / Nord-Troms (tiltakssonen)']],
     salInfoRows: [['Personfradrag','114 540 kr'],['Minstefradrag (maks)','95 700 kr'],['Trinnskatt 1 (226k+)','1.7%'],['Trinnskatt 2 (318k+)','4.0%'],['Trinnskatt 3 (725k+)','13.7%'],['Trinnskatt 4 (980k+)','16.8%'],['Trinnskatt 5 (1 467k+)','17.8%'],['Trygdeavgift','7.6%'],['Alminnelig skatt','22%']],
     salLawRows: [['— HVA ER SKATTEPLIKTIG INNTEKT? —','Hovedregelen i § 5-1'],['Tjener du penger?','Enhver fordel vunnet ved arbeid, kapital eller virksomhet er skattepliktig','§ 5-1'],['Pensjon, føderåd, livrente?','Også skattepliktig','§ 5-1'],['Solgte du noe med fortjeneste?','Gevinsten er skattepliktig','§ 5-1(2), kap. 9'],['Tar du varer fra bedriften til privat bruk?','Regnes som inntekt til omsetningsverdi','§ 5-2'],['— HVA BESKATTES FRA JOBBEN? —','§ 5-10 til 5-14'],['Lønn, honorar, feriepenger','Skattepliktig','§ 5-10'],['Styrehonorar, tantieme, tips','Skattepliktig','§ 5-10'],['Dagpenger, sykepenger, foreldrepenger?','Beskattes som lønn — offentlige ytelser som erstatter lønn','§ 5-10'],['Sluttvederlag ved oppsigelse?','Skattepliktig','§ 5-10 d'],['Goder fra arbeidsgiver (telefon, forsikring)?','Skattepliktig til omsetningsverdi','§ 5-12 — naturalytelser'],['Lån fra arbeidsgiver under markedsrente?','Du skattes av differansen mellom normrente og faktisk rente','§ 5-12(4)'],['Har du firmabil?','30 % av listepris beskattes (20 % over terskel, 75 % for bil over 3 år)','§ 5-13'],['Aksjeopsjoner fra jobben?','Beskattes når du bruker eller selger opsjonen — ikke når du får den','§ 5-14'],['Opsjoner i oppstartsselskap?','Gunstigere regler for ansatte i selskaper under 6 år','§ 5-14(2)'],['— HVA MED KAPITALINNTEKTER? —','§ 5-20 til 5-22'],['Leieinntekter?','Skattepliktig — gjelder bolig, hytte og løsøre','§ 5-20'],['Renter, utbytte, aksjegevinst?','Skattepliktig','§ 5-20'],['Bruker du andres ting gratis?','Regnes som skattepliktig inntekt','§ 5-20'],['Låner du penger fra eget AS?','Behandles som utbytte og oppjusteres ×1,72','§ 5-22'],['— HVA ER SKATTEFRITT? —','§ 5-15, § 5-43'],['Barnetrygd, kontantstøtte, sosialhjelp','Skattefri','§ 5-43'],['Grunnstønad, hjelpestønad, gravferdsstønad','Skattefri','§ 5-43'],['Menerstatning og oppreisning','Skattefri','§ 5-43'],['Barnebidrag','Skattefri','§ 5-43'],['Gevinst fra Norsk Tipping, Rikstoto?','Skattefri','§ 5-15'],['Andre gevinster (private lotterier o.l.)?','Skattepliktig over 10 000 kr','§ 5-50'],['Selger du brukte private ting?','Skattefritt — møbler, klær, bil o.l.','§ 5-21']],
-    salDedRows: [['— HVA KAN DU TREKKE FRA? —','Hovedregelen i § 6-1'],['Kostnader for å tjene penger?','Fradragsberettiget — gjelder alt som trengs for å erverve, vedlikeholde eller sikre inntekt','§ 6-1'],['Private utgifter (bolig, mat)?','Aldri fradrag','§ 6-1'],['Solgte du noe med tap?','Fradrag etter reglene i kap. 9','§ 6-2'],['Kunder som ikke betaler?','Fradrag ved endelig konstatert tap på fordring i virksomhet','§ 6-2(2)'],['Gikk bedriften i minus?','Underskuddet motregnes mot annen inntekt, eller fremføres til senere år','§ 6-3, § 14-6'],['— MINSTEFRADRAG —','Automatisk fradrag du slipper å dokumentere'],['Lønnsinntekt','46 % av lønn, maks 95 700 kr','§ 6-30/32'],['Pensjonsinntekt','40 % av pensjon','§ 6-30/32'],['Hva dekker det?','Erstatter de fleste fradrag for arbeidskostnader — du trenger ikke kvitteringer','§ 6-30'],['Hva kommer i tillegg?','Fagforeningskontingent og pendlerkostnader kan trekkes fra utover minstefradrag'],['— VANLIGE FRADRAG —',''],['Fagforeningskontingent?','Maks 8 700 kr','§ 6-20'],['Lang reisevei til jobb?','Fradrag over 12 000 kr, maks 120 000 kr (over 37 km én vei)','§ 6-44'],['Barnehage, SFO, dagmamma?','Foreldrefradrag for barn under 12 år','§ 6-48'],['Gir du til veldedige organisasjoner?','Fradrag 500–25 000 kr til godkjente org.','§ 6-50'],['Barnepensjon?','Fradrag inntil 32 600 kr','§ 6-49'],['— GJELDSRENTER —','Renter du betaler gir 22 % tilbake på skatten'],['Boliglån, studielån, billån?','Fullt fradrag — 22 % skatteeffekt','§ 6-40'],['Lån mellom selskaper i konsern?','Begrenset til 25 % av EBITDA (terskel 25M / 5M)','§ 6-41'],['Avskåret rente?','Kan fremføres i 10 år','§ 6-41'],['— FRADRAG I VIRKSOMHET —',''],['Maskiner, kjøretøy, utstyr?','Avskrives over flere år etter saldometoden','§ 6-10'],['Vedlikehold og forsikring?','Fradrag for driftsmidler','§ 6-11'],['Forskning og utvikling?','Kan aktiveres og avskrives over tid','§ 6-25'],['Investerer du i oppstartsselskap?','Fradrag inntil 1M kr (selskap ≤ 6 år, ≥ 3 års eiertid)','§ 6-53'],['— HVA GIR ALDRI FRADRAG? —',''],['Kundemiddager og representasjon','Aldri fradrag','§ 6-21'],['Bestikkelse','Aldri fradrag','§ 6-22'],['Foreningskontingent (generelt)','Ikke fradrag — unntak for bransje- og yrkesforeninger','§ 6-18/19/20'],['— BETALING VIA BANK —',''],['Betaling over 10 000 kr?','Må gå via bank for å få fradrag — kontant gir ikke fradragsrett','§ 6-51'],['— YRKESFRADRAG —',''],['Fisker?','30 %, maks 160 000 kr (minst 130 dager)','§ 6-60'],['Sjømann?','30 %, maks 86 300 kr (minst 130 dager)','§ 6-61']],
+    salDedRows: [['— HVA KAN DU TREKKE FRA? —','Hovedregelen i § 6-1'],['Kostnader for å tjene penger?','Fradragsberettiget — gjelder alt som trengs for å erverve, vedlikeholde eller sikre inntekt','§ 6-1'],['Private utgifter (bolig, mat)?','Aldri fradrag','§ 6-1'],['Solgte du noe med tap?','Fradrag etter reglene i kap. 9','§ 6-2'],['Kunder som ikke betaler?','Fradrag ved endelig konstatert tap på fordring i virksomhet','§ 6-2(2)'],['Gikk bedriften i minus?','Underskuddet motregnes mot annen inntekt, eller fremføres til senere år','§ 6-3, § 14-6'],['— MINSTEFRADRAG —','Automatisk fradrag du slipper å dokumentere'],['Lønnsinntekt','46 % av lønn, maks 95 700 kr','§ 6-30/32'],['Pensjonsinntekt','40 % av pensjon','§ 6-30/32'],['Hva dekker det?','Erstatter de fleste fradrag for arbeidskostnader — du trenger ikke kvitteringer','§ 6-30'],['Hva kommer i tillegg?','Fagforeningskontingent og pendlerkostnader kan trekkes fra utover minstefradrag'],['— VANLIGE FRADRAG —',''],['Fagforeningskontingent?','Maks 8 700 kr','§ 6-20'],['Lang reisevei til jobb?','Fradrag over 12 000 kr, maks 120 000 kr (ca. 14 km én vei)','§ 6-44'],['Barnehage, SFO, dagmamma?','Foreldrefradrag for barn under 12 år','§ 6-48'],['Gir du til veldedige organisasjoner?','Fradrag 500–25 000 kr til godkjente org.','§ 6-50'],['Barnepensjon?','Fradrag inntil 32 600 kr','§ 6-49'],['— GJELDSRENTER —','Renter du betaler gir 22 % tilbake på skatten'],['Boliglån, studielån, billån?','Fullt fradrag — 22 % skatteeffekt','§ 6-40'],['Lån mellom selskaper i konsern?','Begrenset til 25 % av EBITDA (terskel 25M / 5M)','§ 6-41'],['Avskåret rente?','Kan fremføres i 10 år','§ 6-41'],['— FRADRAG I VIRKSOMHET —',''],['Maskiner, kjøretøy, utstyr?','Avskrives over flere år etter saldometoden','§ 6-10'],['Vedlikehold og forsikring?','Fradrag for driftsmidler','§ 6-11'],['Forskning og utvikling?','Kan aktiveres og avskrives over tid','§ 6-25'],['Investerer du i oppstartsselskap?','Fradrag inntil 1M kr (selskap ≤ 6 år, ≥ 3 års eiertid)','§ 6-53'],['— HVA GIR ALDRI FRADRAG? —',''],['Kundemiddager og representasjon','Aldri fradrag','§ 6-21'],['Bestikkelse','Aldri fradrag','§ 6-22'],['Foreningskontingent (generelt)','Ikke fradrag — unntak for bransje- og yrkesforeninger','§ 6-18/19/20'],['— BETALING VIA BANK —',''],['Betaling over 10 000 kr?','Må gå via bank for å få fradrag — kontant gir ikke fradragsrett','§ 6-51'],['— YRKESFRADRAG —',''],['Fisker?','30 %, maks 160 000 kr (minst 130 dager)','§ 6-60'],['Sjømann?','30 %, maks 86 300 kr (minst 130 dager)','§ 6-61']],
     salRealRows: [['— NÅR HAR DU REALISERT? —','Hovedregelen i § 9-1 og § 9-2'],['Hva utløser gevinstbeskatning?','Salg, bytte, innløsning av aksjer, ekspropriasjon, ødeleggelse — enhver overføring mot vederlag','§ 9-2(1)'],['Gir du bort noe?','Gave er ikke realisasjon — ingen skatt for giver','§ 9-2(3)'],['Arv?','Ikke realisasjon — ingen gevinstskatt ved arv','§ 9-2(3)'],['Skifte mellom ektefeller?','Ikke realisasjon — heller ikke ved separasjon/skilsmisse','§ 9-2(3)'],['Hva med tvangsinnløsning?','Regnes som realisasjon — skatteplikt utløses','§ 9-2(1)'],['— SKATTEFRITAK PÅ BOLIG —','§ 9-3: Når slipper du gevinstskatt?'],['Solgt egen bolig?','Skattefritt hvis du har eid i minst 1 år og bodd der i minst 1 av de 2 siste årene','§ 9-3(2)'],['Solgt fritidsbolig?','Skattefritt hvis du har eid i minst 5 år og brukt den i minst 5 av de siste 8 årene','§ 9-3(4)'],['Solgt innbo og løsøre?','Skattefritt — personlige eiendeler','§ 9-3(1)a'],['Tomtegevinst?','Skattefritt bare hvis tomten er ubetydelig — ellers beskattes det som tomtesalg selv om huset er fritatt','§ 9-3(8): Tomteunntaket'],['Tap på bolig som ville vært fritatt?','Ingen fradrag — symmetriprinsippet: fritatt gevinst = ikke fradrag for tap','§ 9-4'],['— TAP GIR FRADRAG —','§ 9-4: Symmetriprinsippet'],['Solgt noe med tap?','Fradrag i samme utstrekning som tilsvarende gevinst ville vært skattepliktig','§ 9-4(1)'],['Solgt aksjer med tap?','Fullt fradrag — oppjusteres ×1,72 som gevinst','§ 9-4, § 10-31'],['— INNGANGSVERDI VED ARV OG GAVE —','§ 9-7: Kontinuitetsprinsippet'],['Arvet du noe?','Du trer inn i arvelaters inngangsverdi — ikke markedsverdi på arvstidspunktet','§ 9-7(1)'],['Fikk du gave?','Samme prinsipp — givers inngangsverdi overtas','§ 9-7(1)'],['Unntak ved arvelaters skattefritak?','Hvis arvelater selv kunne solgt skattefritt (bolig), settes inngangsverdi til markedsverdi','§ 9-7(2)'],['— UTTAK FRA NORSK BESKATNINGSOMRÅDE —','§ 9-14: Exit-skatt på eiendeler'],['Flytter du eiendeler ut av Norge?','Latent gevinst beskattes som om eiendelen var solgt til markedsverdi','§ 9-14(1)'],['Gjelder det også immaterielle rettigheter?','Ja — patenter, lisenser, varemerker o.l.','§ 9-14(2)'],['Kan skatten utsettes?','Ja, innen EØS — men krav om sikkerhetsstillelse kan gjelde','§ 9-14(4)']],
     salCorpRows: [['— KONSERNBIDRAG —','Hvordan jevne ut resultater i et konsern?'],['Hva er konsernbidrag?','Overføring mellom konsernselskaper — fradrag for giver, skattepliktig for mottaker','§ 10-2'],['Krav til eierskap?','Morselskap må eie over 90 % av aksjene og stemmene ved utløpet av inntektsåret. Eierkravet er skattemessig — ikke selskapsrettslig','§ 10-4'],['— UTBYTTE OG SKJERMING —','Hvordan beskattes utbytte til personlige aksjonærer?'],['Mottar du utbytte?','Oppjusteres ×1,72 før beskatning med 22 %','§ 10-11'],['Hva er skjermingsfradrag?','Du skatter ikke på den delen av utbyttet som tilsvarer risikofri rente','§ 10-12'],['Hvordan fastsettes skjermingsrenten?','Basert på statskasseveksler etter skatt — fastsettes årlig','§ 10-12'],['Utbytte mellom selskaper?','Skattefritt etter fritaksmetoden','§ 2-38'],['3 %-regelen?','Selskapet inntektsfører likevel 3 % — effektiv skatt 0,66 %','§ 2-38(6)'],['— AKSJEGEVINST OG -TAP —','Hva skjer når du selger aksjer?'],['Solgte du aksjer med gevinst?','Oppjusteres ×1,72 — effektiv skatt ca. 37,84 %','§ 10-31'],['Solgte du med tap?','Fradragsberettiget — oppjusteres tilsvarende ×1,72','§ 10-31(2)'],['Hva er inngangsverdien?','Det du betalte + eventuelt ubenyttet skjermingsfradrag','§ 10-32'],['Hvilke aksjer anses solgt først?','FIFO — først kjøpt, først solgt','§ 10-36'],['— VERDIPAPIRFOND OG ASK —','Sparing i fond og aksjesparekonto'],['Hvordan beskattes fond?','Aksjedel følger aksjonærmodellen, rentedel beskattes som alminnelig inntekt','§ 10-20'],['Aksjesparekonto (ASK)?','Du kan kjøpe og selge innenfor kontoen uten å utløse skatt','§ 10-21'],['Når skatter du på ASK?','Først når du tar ut mer enn du har satt inn','§ 10-21(4)'],['— ANS, KS OG DELTAKERFASTSETTING —','Slik beskattes deltakere i ansvarlige selskaper'],['Hvem skatter av overskuddet?','Hver deltaker skatter for sin andel (nettometoden)','§ 10-41'],['Utdeling til personlig deltaker?','Skattepliktig — oppjusteres ×1,72 som utbytte','§ 10-42'],['Salg av andel?','Skattepliktig — beregnes ut fra inngangsverdi med justeringer','§ 10-44'],['— SAMVIRKEFORETAK —',''],['Etterbetalinger til medlemmer?','Fradrag for foretaket — basert på omsetning med medlemmene','§ 10-50'],['— NOKUS OG LAVSKATTLAND —','Norske eiere i utenlandske selskaper'],['Eier du selskap i lavskattland?','Du skattlegges løpende i Norge (NOKUS-reglene)','§ 10-60'],['Hva er et lavskattland?','Land med effektiv skatt under ca. 14,67 % (2/3 av norsk skatt)','§ 10-63'],['Kontrollkrav?','Norske eiere må ha minst 50 % samlet','§ 10-62'],['Betalt skatt i utlandet?','Kreditfradrag — unngår dobbeltbeskatning','§ 10-65'],['— UTFLYTTINGSSKATT —','Flytter du eller selskapet fra Norge?'],['Latente gevinster på aksjer?','Skattepliktig ved utflytting','§ 10-70'],['Kan skatten utsettes?','Ja, innen EØS — men sikkerhetsstillelse kan kreves','§ 10-70(7)'],['Faller skatten bort?','Etter 5 år uten realisasjon','§ 10-70(9)'],['— KILDESKATT —','Skatt for utenlandske aksjonærer og mottakere'],['Utbytte til utenlandsk aksjonær?','15–25 % kildeskatt — avhenger av skatteavtale','§ 10-80 til 10-82'],['Renter/royalty til lavskattland?','Kildeskatt etter egne regler','§ 10-80']],
     salReorgRows: [['— FUSJON —','Slå sammen selskaper uten skatt'],['Fusjon av AS?','Skattefri når fusjonen følger aksjeloven kap. 13','§ 11-2'],['Samvirkeforetak?','Skattefri etter samvirkeloven kap. 8','§ 11-2(2)'],['ANS, KS og lignende?','Skattefri ved samme selskaps- og ansvarsform (maks 20 % kontantvederlag)','§ 11-3'],['— FISJON —','Dele opp et selskap uten skatt'],['Fisjon av AS?','Skattefri når fisjonen følger aksjeloven kap. 14','§ 11-4'],['ANS, KS og lignende?','Skattefri ved samme selskaps- og ansvarsform (maks 20 % i annet vederlag)','§ 11-5'],['— VILKÅR OG PRINSIPPER —','Hva gjelder ved fusjon og fisjon?'],['Får aksjonærene kontanter?','Kontantvederlag er skattepliktig — kun aksjer/andeler er skattefrie','§ 11-6'],['Hva skjer med skatteposisjonene?','Videreføres uendret til overtakende selskap (kontinuitet)','§ 11-7'],['Hvordan fordeles posisjoner ved fisjon?','Etter nettoverdier','§ 11-8'],['Hva skjer med overdragende selskap?','Må oppløses etter overdragelsen','§ 11-9'],['Når får det virkning?','Fra selskapsrettslig ikrafttredelse','§ 11-10'],['— OVER LANDEGRENSENE —','Fusjon, fisjon og aksjebytte innen EØS'],['Fusjon/fisjon med utenlandsk selskap?','Skattefri innen EØS med kontinuitet','§ 11-11'],['Aksjebytte?','Skattefri ved overføring av minst 90 % av aksjene (maks 20 % kontant)','§ 11-11(4)'],['Mot lavskattland?','Skattefritaket gjelder ikke — unntak hvis reelt etablert i EØS','§ 11-11(7)'],['— OMDANNING —','Endre selskapsform skattefritt'],['ENK, ANS eller DA til AS?','Kan omdannes skattefritt — verdier og posisjoner videreføres','§ 11-20'],['Overføring innen konsern?','Skattefri når morselskap eier over 90 %','§ 11-21'],['Rasjonalisering?','Departementet kan gi skattefritak ved salg av eiendom, virksomhet eller aksjer','§ 11-22']],
@@ -63,8 +63,8 @@ REGIONS['no'] = {
     heroH1:'Hverdagsverktøy<br><em>Praktiske verktøy for privatøkonomi</em>',
     heroP:'',
     heroKickerTb:'✦ Gratis finanskalkulatorer',
-    tabSal:'Skatt', tabMor:'Boliglån', tabNpv:'Personlig økonomi', tabVat:'Avgift', tabSelskap:'Selskap', dashDescSelskap:'Aksjeselskap, kommandittselskap og selskapsrett',
-    tabBasic:'Kalkulator', cmLabel:'Kalkulatortype', cmBasic:'Enkel', cmFinance:'Finansiell', cmScientific:'Vitenskapelig', cmUnit:'Valuta', cmFinCalcs:'Finanskalkulatorer', cmFcSal:'Lønn etter skatt', cmFcMor:'Boliglån', cmFcNpv:'Personlig økonomi', cmFcVat:'Avgift',
+    tabSal:'Skatt', tabMor:'Boliglån', tabNpv:'Privatøkonomi', tabVat:'Avgift', tabSelskap:'Selskap', dashDescSelskap:'Aksjeselskap, kommandittselskap og selskapsrett',
+    tabBasic:'Kalkulator', cmLabel:'Kalkulatortype', cmBasic:'Enkel', cmFinance:'Finansiell', cmScientific:'Vitenskapelig', cmUnit:'Valuta', cmFinCalcs:'Finanskalkulatorer', cmFcSal:'Lønn etter skatt', cmFcMor:'Boliglån', cmFcNpv:'Privatøkonomi', cmFcVat:'Avgift',
     fcLblType:'Beregningstype', fcTvm:'Nåverdi / Fremtidsverdi (TVM)', fcMargin:'Margin & Markup', fcBe:'Break-even', fcCompound:'Renters rente', fcDiscount:'Rabattberegning', fcPv:'Nåverdi (PV)', fcRate:'Årlig rente (%)', fcYears:'Antall år', fcPmt:'Årlig innbetaling', fcCost:'Kostpris', fcSell:'Salgspris', fcFixed:'Faste kostnader', fcPriceU:'Salgspris per enhet', fcVarCost:'Variabel kostnad per enhet', fcPrinc:'Startbeløp', fcFreq:'Renteutbetalinger per år', fcOrig:'Opprinnelig pris', fcDiscPct:'Rabatt (%)', fcBtn:'Beregn →', fcResLbl:'Resultat',
     fcRFv:'Fremtidsverdi (FV)', fcRAfter:'Etter', fcRYr:'år', fcRStart:'Startbeløp', fcRTotalPmt:'Innbetalinger totalt', fcRInterest:'Opptjent rente', fcRReturn:'Total avkastning', fcRProfit:'Fortjeneste', fcRRevenue:'Nødvendig omsetning', fcRContrib:'Dekningsbidrag/enhet', fcRContribMarg:'Dekningsgrad', fcRBePoint:'Break-even punkt', fcRUnits:'enheter', fcREndVal:'Sluttverdi', fcRMonthly:'med månedlig rente', fcRDoubling:'Dobling etter', fcRDiscPrice:'Pris etter rabatt', fcRSaved:'Du sparer', fcRDiscount:'Rabatt', fcRYouPay:'Du betaler', fcROfPrice:'av prisen',
     ucLblCat:'Kategori', ucLength:'Lengde', ucWeight:'Vekt', ucTemp:'Temperatur', ucArea:'Areal', ucVolume:'Volum', ucSpeed:'Hastighet', ucFrom:'Fra', ucTo:'Til', ucValue:'Verdi', ucResult:'Resultat',
@@ -221,7 +221,7 @@ REGIONS['no'] = {
     uttakOptEnk:'Enkeltpersonforetak (ENK)', uttakOptAs:'Aksjeselskap (AS)',
     uttakOptJa:'Ja — virksomhetsinntekt (trinnskatt + trygdeavgift)', uttakOptNei:'Nei — kun alminnelig inntekt',
     uttakRLbl:'Skatt ved uttak', uttakRGevinst:'Uttaksgevinst',
-    uttakRAlm:'Alminnelig inntektsskatt (22%)', uttakRTrygd:'Trygdeavgift (7,6%)',
+    uttakRAlm:'Alminnelig inntektsskatt (22%)', uttakRTrygd:'Trygdeavgift (10,8%)',
     uttakRTrinn:'Trinnskatt', uttakRSelskap:'Selskapsskatt (22%)', uttakRUtbytte:'Utbytteskatt aksjonær',
     adjOfTotal:' av ',
     hs1:'Kalkulatorer', hs2:'Regioner',
@@ -313,7 +313,7 @@ REGIONS['no'] = {
     lblGroupModus:'Kalkulator-modus', lblGroupValuta:'Valuta', lblGroupLonn:'Lønn & Arbeidsgiver', lblGroupInvest:'Investering & Analyse', lblLvu:'Lønn vs Utbytte', lblAga:'Ansattkostnad', lblAvs:'Avskrivning', lblFerie:'Feriepenger', lblRente:'Effektiv Rente', lblProsent:'Prosent', lblValgevinst:'Valutagevinst', lblLikvid:'Likviditet', lblPensjon:'Pensjon',
     mobileSwitch:'Bytt kalkulator', mobileFocus:'Fokus', mobileFocusExit:'Lukk',
     focusLabel:'Fokus', focusClose:'Lukk fokus', focusSwitchCalc:'Bytt kalkulator',
-    toolH1Skatt:'Skattekalkulator 2026 — lønn, trinnskatt, utbytte og effektiv skatt', toolH1Kalk:'Kalkulator — enkel, valuta, finansiell og vitenskapelig', toolH1Bolig:'Boliglånskalkulator — månedlig betaling, BSU og totale kostnader', toolH1Avg:'Avgiftskalkulator — MVA, arbeidsgiveravgift og andre avgifter', toolH1Sel:'Selskapsformer i Norge — AS, ENK, ANS, DA og KS', toolH1Per:'Personlig økonomi — bilkostnad, budsjett og lønnsomhet',
+    toolH1Skatt:'Skattekalkulator 2026 — lønn, trinnskatt, utbytte og effektiv skatt', toolH1Kalk:'Kalkulator — enkel, valuta, finansiell og vitenskapelig', toolH1Bolig:'Boliglånskalkulator — månedlig betaling, BSU og totale kostnader', toolH1Avg:'Avgiftskalkulator — MVA, arbeidsgiveravgift og andre avgifter', toolH1Sel:'Selskapsformer i Norge — AS, ENK, ANS, DA og KS', toolH1Per:'Privatøkonomi — bilkostnad, budsjett og lønnsomhet',
     a11yLang:'Velg språk', a11yTheme:'Velg tema', calcHelpAria:'Vis veiledning', closeHelp:'Skjul veiledning',
     btnCsv:'Last ned CSV',
     csvGenerated:'Generert av Hverdagsverktøy',
@@ -391,13 +391,13 @@ REGIONS['no'] = {
     dokBorettslagSub:'Borettslag er fritatt for dokumentavgift',
     dokTipBorettslag:'I borettslag eier du en andel, ikke eiendommen direkte. Dokumentavgift påløper ikke — du betaler kun tinglysingsgebyr og attestgebyr.',
     dokTipSelveier:'Dokumentavgift beregnes av eiendommens markedsverdi på tinglysingstidspunktet. Borettslag er fritatt. Nybygg fra utbygger kan ha lavere grunnlag (kun tomteverdi).',
-    formueTitle:'Formueskatt', formueDesc:'Beregn formueskatt med verdsettelsesrabatter',
+    formueTitle:'Formuesskatt', formueDesc:'Beregn formuesskatt med verdsettelsesrabatter',
     formueLPrimaer:'Primærbolig (markedsverdi)', formueLSekundaer:'Sekundærbolig (markedsverdi)',
     formueLAksjer:'Aksjer og fond', formueLBank:'Bankinnskudd',
     formueLGjeld:'Total gjeld', formueLPersoner:'Skattesubjekt',
     formueOptEn:'Enslig (1 × bunnfradrag)', formueOptTo:'Ektefeller (2 × bunnfradrag)',
-    formueBtnCalc:'Beregn formueskatt →',
-    formueRLbl:'Formueskatt', formueRlBrutto:'Brutto skattemessig formue',
+    formueBtnCalc:'Beregn formuesskatt →',
+    formueRLbl:'Formuesskatt', formueRlBrutto:'Brutto skattemessig formue',
     formueRlGjeld:'Gjeldsfradrag (justert)', formueRlNetto:'Netto formue',
     formueRlBunnfradrag:'Bunnfradrag', formueRlSkattepliktig:'Skattepliktig formue',
     formueRlEffsats:'Effektiv skattesats',
@@ -432,7 +432,7 @@ REGIONS['no'] = {
     sjekkSummaryLbl:'Estimert potensiell besparelse',
     sjekkNote:'Estimatene er veiledende. Faktisk besparelse avhenger av din totale inntekt og skattesituasjon.',
     sjekkTips:[
-      'Reisefradrag: Bor du mer enn 27 km fra jobb kan du ha krav på fradrag. Bruk reisefradragskalkulatoren!',
+      'Reisefradrag: Bor du mer enn ca. 14 km fra jobb kan du ha krav på fradrag. Bruk reisefradragskalkulatoren!',
       'Rentefradrag: Du får 22% av renteutgifter tilbake på skatten. Sjekk at alle lån er med i skattemeldingen.',
       'Fagforening: Maks 8 700 kr i fradrag. Sjekk at beløpet er forhåndsutfylt korrekt.',
       'BSU: 10% skattefradrag (maks 2 750 kr/år). Gjelder t.o.m. året du fyller 33 år og ikke eier bolig.',
@@ -813,7 +813,7 @@ REGIONS['no'] = {
       ['Forkjøpsrett','Aksjonærer har forkjøpsrett ved salg av aksjer, med mindre vedtektene sier noe annet.','asl. § 4-19'],
       ['Styresamtykke ved overdragelse','Erverv av aksje krever samtykke fra styret, med mindre vedtektene bestemmer noe annet.','asl. § 4-15'],
       ['Aksjeoverføring','Aksjer overføres ved melding til selskapet. Erververen får rettigheter fra det tidspunkt ervervet er meldt.','asl. § 4-12'],
-      ['Innløsning av aksjer','Aksjonær kan kreve innløsning ved vesentlig misbruk av posisjon av flertallet — «tvangsinnløsning».','asl. § 4-24'],
+      ['Innløsning av aksjer','En minoritetsaksjonær kan kreve seg innløst (kjøpt ut) hvis flertallet vesentlig misbruker sin posisjon.','asl. § 4-24'],
       ['Egne aksjer','Selskapet kan erverve inntil 10 % av egne aksjer etter fullmakt fra generalforsamlingen.','asl. § 9-2']
     ],
 
@@ -902,7 +902,7 @@ REGIONS['no'] = {
       skatt:'skatt trinnskatt trygdeavgift brutto netto inntektsskatt skattesats',
       uttak:'uttak virksomhet eiendel sktl 5-2 skatt',
       utdeling:'utdeling utbytte aksjonærmodellen foretaksmodellen selskapsskatt effektiv skatt',
-      formue:'formue formueskatt verdsettelsesrabatt bunnfradrag bolig aksjer gjeld',
+      formue:'formue formuesskatt verdsettelsesrabatt bunnfradrag bolig aksjer gjeld',
       reise:'reisefradrag pendler reise arbeid kilometer bompenger fradrag',
       mva:'mva moms merverdiavgift inkludert ekskludert',
       mvajust:'justering mva inngående bruksendring kapitalvare justeringsperiode',
@@ -1219,7 +1219,7 @@ REGIONS['no'] = {
 
     // — personlig landing (editorial redesign) —
     persEyebrowHome:'Forsiden',
-    persEyebrowCurrent:'Personlig økonomi',
+    persEyebrowCurrent:'Privatøkonomi',
     persHeroTitle:'Personlig <em>økonomi</em>',
     persHeroSubtitle:'Lønn etter skatt, bilkostnad, sparing og budsjett — alle kalkulatorer for hverdagsøkonomien din. Kjører lokalt, ingen tracking.',
     persStatTools:'Kalkulatorer',
@@ -1249,7 +1249,7 @@ REGIONS['no'] = {
     homeMarketTitle:'Markedsdata',
     homeSectionCategories:'Kategorier',
     homeCategoriesCount:'6 seksjoner',
-    homeCardPersonlig:'Personlig økonomi',
+    homeCardPersonlig:'Privatøkonomi',
     homeCardBoliglan:'Boliglån',
     homeCardKalkulator:'Kalkulator',
     homeCardSkatt:'Skatt',
@@ -1316,9 +1316,9 @@ REGIONS['no'] = {
     bvlLAvkLong:'Alternativ avkastning EK (%/år)',
 
     // — formue calc (editorial redesign) —
-    formueTitleNew:'<em>Formue</em>skatt',
-    formueSubtitle:'Beregn norsk formueskatt for 2026 — primærbolig (25 % verdsettelse opptil 10 mill., 70 % over), sekundærbolig (100 %), fritidsbolig (30 %), aksjer/fond (80 %), driftsmidler (70 %) og næringseiendom (80 %). Bunnfradrag 1 900 000 kr per person, gjeld fordeles forholdsmessig på eiendelene. Alt skjer lokalt i nettleseren.',
-    formueHStatSkatt:'Total formueskatt',
+    formueTitleNew:'<em>Formues</em>skatt',
+    formueSubtitle:'Beregn norsk formuesskatt for 2026 — primærbolig (25 % verdsettelse opptil 10 mill., 70 % over), sekundærbolig (100 %), fritidsbolig (30 %), aksjer/fond (80 %), driftsmidler (70 %) og næringseiendom (80 %). Bunnfradrag 1 900 000 kr per person, gjeld fordeles forholdsmessig på eiendelene. Alt skjer lokalt i nettleseren.',
+    formueHStatSkatt:'Total formuesskatt',
     formueHStatEffektiv:'Effektiv sats',
     formueSectionEiendom:'Eiendom',
     formueSectionHint:'2026-satser',
@@ -1333,7 +1333,7 @@ REGIONS['no'] = {
     formueLblBank:'Bankinnskudd',
     formueLblGjeld:'Total gjeld',
     formueLblPersoner:'Hvem skal beregnes',
-    formueBtnCalcNew:'Beregn formueskatt',
+    formueBtnCalcNew:'Beregn formuesskatt',
     formueROutBrutto:'Brutto skattemessig formue',
     formueROutGjeldJustert:'Gjeldsfradrag (justert)',
     formueROutNetto:'Netto formue',
@@ -1458,9 +1458,9 @@ REGIONS['no'] = {
     skattHeroToolUtbytteTitle:'Utbytteskatt',
     skattHeroToolUtbytteDesc:'Oppjusteringsfaktor 1,72 og skjermingsfradrag forklart.',
     skattHeroToolFormueTitle:'Formuesskatt',
-    skattHeroToolFormueDesc:'0,7 % stat + 0,3 % kommune over 1,7 mill bunnfradrag.',
+    skattHeroToolFormueDesc:'0,7 % stat + 0,3 % kommune over 1,9 mill bunnfradrag.',
     skattHeroToolReiseTitle:'Reisefradrag',
-    skattHeroToolReiseDesc:'1,76 kr per km over 14 950 kr egenandel.',
+    skattHeroToolReiseDesc:'1,90 kr per km over 12 000 kr egenandel.',
     skattHeroToolForaTitle:'Foreldrefradrag',
     skattHeroToolForaDesc:'15 000 kr for ett barn, 10 000 kr for hvert ekstra.',
     skattHeroToolInntektTitle:'Inntektsskatt',
@@ -1737,7 +1737,7 @@ REGIONS['no'] = {
     kalkDekningsbidragHowtoRow1Label:'1. Salgspris og variabel kost',
     kalkDekningsbidragHowtoRow1Desc:'Salgspris er hva du tar betalt per enhet. Variabel kost er alt som varierer med produksjonen — materiell, ingredienser, direkte arbeidstimer, emballasje. DB per enhet = salgspris minus variabel kost.',
     kalkDekningsbidragHowtoRow2Label:'2. Dekningsgrad (DB%)',
-    kalkDekningsbidragHowtoRow2Desc:'DB% = DB per enhet / salgspris × 100. En dekningsgrad på 40 % betyr at 40 øre av hver krone gått til dekning av faste kostnader og fortjeneste.',
+    kalkDekningsbidragHowtoRow2Desc:'DB% = DB per enhet / salgspris × 100. En dekningsgrad på 40 % betyr at 40 øre av hver krone går til å dekke faste kostnader og fortjeneste.',
     kalkDekningsbidragHowtoRow3Label:'3. Antall enheter og total DB',
     kalkDekningsbidragHowtoRow3Desc:'Total DB = DB per enhet × antall enheter solgt. Dette er beløpet du har igjen etter alle variable kostnader, men før faste kostnader.',
     kalkDekningsbidragHowtoRow4Label:'4. Faste kostnader og resultat',
@@ -2022,7 +2022,7 @@ REGIONS['no'] = {
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;">1. <strong>Utbytte</strong> — selskapet deler overskudd med eierne (typisk 1–3 % per år)<br/>2. <strong>Kursstigning</strong> — aksjen øker i verdi, du selger dyrere enn du kjøpte</div>
 </div>
 
-<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Forventet avkastning:</strong> Historisk har aksjemarkedet gitt rundt <strong>7 % årlig i snitt</strong> over lange perioder (Oslo Børs, globale indekser). Men enkeltår svinger enormt — +40 % det ene året, −30 % det neste.<br/><br/><em style="font-size:12px;opacity:.8">Eksempel: 3 000 kr/mnd i 20 år = 720 000 kr innskutt. Med 7 % snitt-avkastning blir det ca. 1,55 mill. Bruk <a href="#spare-wrapper" onclick="event.preventDefault();openCardInFocus('spare-wrapper')" style="color:var(--accent);text-decoration:underline;">sparekalkulatoren</a> for å regne ulike scenarioer.</em></div>
+<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Forventet avkastning:</strong> Historisk har aksjemarkedet gitt rundt <strong>7 % årlig i snitt</strong> over lange perioder (Oslo Børs, globale indekser). Men enkeltår svinger enormt — +40 % det ene året, −30 % det neste.<br/><br/><em style="font-size:12px;opacity:.8">Eksempel: 3 000 kr/mnd i 20 år = 720 000 kr innskutt. Med 7 % snittavkastning blir det ca. 1,55 mill. Bruk <a href="#spare-wrapper" onclick="event.preventDefault();openCardInFocus('spare-wrapper')" style="color:var(--accent);text-decoration:underline;">sparekalkulatoren</a> for å regne ulike scenarioer.</em></div>
 
 <div style="background:color-mix(in srgb,rgba(220,120,60,1) 8%,transparent);border:1px solid color-mix(in srgb,rgba(220,120,60,1) 20%,var(--border));border-radius:8px;padding:12px 16px;margin-bottom:14px;">
 <div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:13px;">Hvor stor risiko?</div>
@@ -2089,7 +2089,7 @@ REGIONS['no'] = {
 
     bvlHowtoSummary:`Slik bruker du Bolig vs leie`,
     focusBtn:`Skjul distraksjoner`,
-    formueHowtoSummary:`Slik bruker du formueskatt-kalkulatoren`,
+    formueHowtoSummary:`Slik bruker du formuesskatt-kalkulatoren`,
     howtoBtn:`Vis veiledning`,
     maxlanHowtoSummary:`Slik bruker du Hva har jeg råd til`,
     morHowtoSummary:`Slik bruker du boliglånskalkulatoren`,
@@ -2097,7 +2097,7 @@ REGIONS['no'] = {
 
     // === T3 R7 — personlig keys ===
     personligHeroEyebrowHome: 'Forsiden',
-    personligHeroEyebrowCurrent: 'Personlig økonomi',
+    personligHeroEyebrowCurrent: 'Privatøkonomi',
     personligHeroTitle: 'Personlig <em>økonomi</em>',
     personligHeroSubtitle: 'Lønn etter skatt, bilkostnad, sparing og budsjett — alle kalkulatorer for hverdagsøkonomien din.',
     personligHeroStatCalcs: 'Kalkulatorer',
@@ -2270,7 +2270,7 @@ REGIONS['no'] = {
     regnskapMvaUtgHint: 'Salget før MVA',
     regnskapMvaSale25Lbl: 'Omsetning 25 % (alminnelig)',
     regnskapMvaSale15Lbl: 'Omsetning 15 % (næringsmidler)',
-    regnskapMvaSale12Lbl: 'Omsetning 12 % (transport, overnatting, kino)',
+    regnskapMvaSale12Lbl: 'Omsetning 12 % (persontransport, overnatting, kino)',
     regnskapMvaSale0Lbl: 'Omsetning 0 % (eksport, aviser, bøker)',
     regnskapMvaInnH: 'Inngående MVA — fradragsberettiget',
     regnskapMvaInnHint: 'MVA på egne kjøp',
@@ -2336,7 +2336,7 @@ REGIONS['no'] = {
     // === T4 R7 END ===
 
     // === T1 R7 — homepage keys (gjenbruker eksisterende home* der mulig, kun nye keys her) ===
-    homeMarketsStamp: 'Sist oppdatert 14:32',
+    homeMarketsStamp: 'Veiledende tall',
     homeMarketsPairPolicy: 'Styringsrente',
     homeMarketsPairNibor: 'NIBOR 3M',
     homeMarketsPairBrent: 'Brent',
@@ -2408,7 +2408,7 @@ REGIONS['no'] = {
 
     // === T1 M1 — personlig/aksjer i18n keys ===
     aksjerBreadHome: 'Forsiden',
-    aksjerBreadPersonlig: 'Personlig økonomi',
+    aksjerBreadPersonlig: 'Privatøkonomi',
     aksjerBreadCurrent: 'Aksjer',
     aksjerEyebrowInntekt: 'Inntektskilder',
     aksjerH2Inntekt: 'Hvordan tjener du penger på aksjer?',
@@ -2445,7 +2445,7 @@ REGIONS['no'] = {
     aksjerQAsk: 'Hvorfor utsetter mange skatten med ASK?',
     aksjerAAsk: 'På en Aksjesparekonto (ASK) kan du kjøpe og selge aksjer og aksjefond uten å betale skatt på gevinst før du tar pengene ut av kontoen. Du kan flytte fritt mellom fond inne på ASK uten skattesmell. Skatten kommer først ved uttak, og rentes-rente-effekten på det utsatte beløpet kan bli betydelig over 15–20 år.',
     aksjerCtaTitle: 'Regn på sparingen din i Sparekalkulatoren',
-    aksjerCtaDesc: 'Se hva 7 % snitt-avkastning gjør med månedlig sparing over 10–30 år',
+    aksjerCtaDesc: 'Se hva 7 % snittavkastning gjør med månedlig sparing over 10–30 år',
     aksjerFootNote: '* Historiske tall basert på Oslo Børs / MSCI World. Reell avkastning kan bli langt lavere eller høyere — aksjer er volatile, og fortid garanterer ikke fremtid. Skattesatser og skjermingsrenten oppdateres årlig av Skatteetaten.',
     aksjerFooterDisc: 'Veiledende informasjon. Ikke profesjonell rådgivning.',
     // === T1 M1 END ===
@@ -2464,6 +2464,8 @@ REGIONS['no'] = {
     unitLVal: 'Beløp',
     unitLRes: 'Resultat',
     unitBtnSwap: 'Bytt',
+    unitSideTitle: 'Slik fungerer det',
+    unitSideBody: 'Kursene er markedskurser og varierer kontinuerlig — bruk dette som veiledning. Banker og vekslere tar alltid en spread eller et gebyr i tillegg.',
     // — skatt/uttak (Uttaksbeskatning § 5-2 — editorial redesign 2026-05-08 T3) —
     skattUttakHeroTitle: 'Uttaks<em>beskatning</em>',
     skattUttakHeroSubtitle: '§ 5-2 — skatt ved uttak fra ENK eller AS for 2026. Markedsverdi minus skattemessig nedskrevet verdi, andel privat, skjermingsfradrag for AS. Alt skjer lokalt i nettleseren.',
@@ -2525,10 +2527,10 @@ REGIONS['no'] = {
     skattUttakInfoExc1: '<b>ENK-vilkår (§ 5-2(1)):</b> Uttaksbeskatning gjelder bare der kostprisen er helt eller delvis fradragsført',
     skattUttakInfoExc2: '<b>Virksomhetsoverdragelse (§ 9-7(4)):</b> Unntak ved gave der mottaker overtar virksomheten og fortsetter driften',
     skattUttakInfoExc3: '<b>Fritaksmetoden (§ 2-38):</b> Selskap som eier aksjer i annet selskap — uttak av slike aksjer kan være skattefritt på selskapets hånd',
-    skattUttakInfoExc4: '<b>Konsernforhold:</b> Ved uttak fra datterselskap til aksjonær, er det datterselskapet som er subjekt for uttaksbeskatning',
+    skattUttakInfoExc4: '<b>Konsernforhold:</b> Ved uttak fra datterselskap til aksjonær, er det datterselskapet som skattlegges for uttaket',
     skattUttakInfoExc5: '<b>Privat bruk av selskapets eiendeler:</b> Løpende bruk (f.eks. bolig, båt, bil) beskattes som utbytte hos aksjonæren etter aksjonærmodellen',
     skattUttakInfoSource: 'Kilde: Skatteloven § 5-2, § 5-3 og kap. 9 (lov-1999-03-26-14). Kalkulatoren er veiledende — kontakt revisor for konkrete vurderinger.',
-    skattUttakInfoDisclaimer: 'Forenklet beregning. Trinnskatt 2026: trinn 1 (1,7 %), 2 (4,0 %), 3 (13,7 %), 4 (16,8 %), 5 (17,8 %). Trygdeavgift med nedre grense 99 650 kr og opptrappingsregel 25 %.',
+    skattUttakInfoDisclaimer: 'Forenklet beregning. Trinnskatt 2026: trinn 1 (1,7 %), 2 (4 %), 3 (13,7 %), 4 (16,8 %), 5 (17,8 %). Trygdeavgift med nedre grense 99 650 kr og opptrappingsregel 25 %.',
 
     // ─────────────────────────────────────────────────────────────────────────
     // Kalkulator-reskin i18n-påfyll (oppfølging av .ks-reskin, PR #135).

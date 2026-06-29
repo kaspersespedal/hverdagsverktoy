@@ -18,10 +18,10 @@ var SEARCH_DATA = [
   {name:'Kalkulator',desc:'Enkel, valuta, finansiell, vitenskapelig og fagkalkulatorer',url:'/kalkulator/',tags:'kalkulator seksjon calculator oversikt section',type:'section',page:'Kalkulator',sk:'kalkSection'},
   {name:'Avgift',desc:'MVA, merverdiavgiftsloven og arbeidsgiveravgift',url:'/avgift/',tags:'avgift seksjon mva vat oversikt section',type:'section',page:'Avgift',sk:'avgiftSection'},
   {name:'Selskap',desc:'Aksjeselskap, kommandittselskap og selskapsrett',url:'/selskap/',tags:'selskap seksjon company selskapsform oversikt section',type:'section',page:'Selskap',sk:'selskapSection'},
-  {name:'Personlig økonomi',desc:'Budsjett, bil, sparing og lønnsomhet',url:'/personlig/',tags:'personlig økonomi seksjon personal finance oversikt section',type:'section',page:'Personlig økonomi',sk:'personligSection'},
+  {name:'Privatøkonomi',desc:'Budsjett, bil, sparing og lønnsomhet',url:'/personlig/',tags:'personlig økonomi seksjon personal finance oversikt section',type:'section',page:'Privatøkonomi',sk:'personligSection'},
 
   // ══════ VERKTØY (Nivå 1 — høyest prioritet) ══════
-  // Personlig økonomi — canonical sub-page entries lever lenger ned (block 2)
+  // Privatøkonomi — canonical sub-page entries lever lenger ned (block 2)
 
   // Boliglån
   {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/mor/',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling månedlig betaling mortgage',type:'tool',page:'Boliglån',sk:'boliglan'},
@@ -34,8 +34,8 @@ var SEARCH_DATA = [
   {name:'Valutakonverter',desc:'Konverter mellom valutaer med oppdaterte kurser',url:'/kalkulator/unit/',tags:'valuta valutakonverter valutakalkulator valutaomregner kurs dollar euro pund usd eur gbp sek dkk currency exchange rate kursomregner convert currency',type:'tool',page:'Kalkulator',sk:'kalkValuta'},
   {name:'Finansiell kalkulator',desc:'Nåverdi, fremtidsverdi, margin, break-even, renters rente og rabatter',url:'/kalkulator/finance/',tags:'finansiell kalkulator nåverdi fremtidsverdi annuitet rente perioder margin markup break-even break even renters rente compound discount rabatt PV FV PMT TVM financial',type:'tool',page:'Kalkulator',sk:'kalkFin'},
   {name:'Likviditetsbudsjett',desc:'Oversikt over penger inn og ut måned for måned',url:'/kalkulator/likviditet/',tags:'likviditet likviditetsbudsjett kontantstrøm cashflow inn ut måned balanse liquidity',type:'tool',page:'Kalkulator',sk:'likvid'},
-  {name:'Pensjonskalkulator',desc:'Beregn forventet pensjon og pensjonssparing',url:'/personlig/pensjon/',tags:'pensjon pensjonsalder otp innskuddspensjon alderspensjon folketrygd afp tjenestepensjon pension',type:'tool',page:'Personlig økonomi',sk:'pensjon'},
-  {name:'Foreldrepenger',desc:'NAV-sats per måned ved 100% og 80% uttak, med 6G-tak',url:'/personlig/foreldrepenger/',tags:'foreldrepenger nav permisjon foreldrepermisjon mødrekvote fedrekvote fellesperiode 6g uttak parental leave',type:'tool',page:'Personlig økonomi'},
+  {name:'Pensjonskalkulator',desc:'Beregn forventet pensjon og pensjonssparing',url:'/personlig/pensjon/',tags:'pensjon pensjonsalder otp innskuddspensjon alderspensjon folketrygd afp tjenestepensjon pension',type:'tool',page:'Privatøkonomi',sk:'pensjon'},
+  {name:'Foreldrepenger',desc:'NAV-sats per måned ved 100% og 80% uttak, med 6G-tak',url:'/personlig/foreldrepenger/',tags:'foreldrepenger nav permisjon foreldrepermisjon mødrekvote fedrekvote fellesperiode 6g uttak parental leave',type:'tool',page:'Privatøkonomi'},
   {name:'Lønn vs Utbytte',desc:'Sammenlign skatt på lønn mot utbytte fra eget AS',url:'/kalkulator/lonnut/',tags:'lønn utbytte aksjeselskap as eier utdeling uttak skatt sammenlign optimal salary dividend',type:'tool',page:'Kalkulator',sk:'lvu'},
 
   // Skatt
@@ -72,7 +72,7 @@ var SEARCH_DATA = [
   {name:'Saldoavskrivning',desc:'Skattemessig avskrivning med fast prosent av restverdi',url:'/kalkulator/#avs',tags:'saldoavskrivning skattemessig avskrivning saldo degressiv restverdi saldogruppe declining balance',type:'concept',page:'Kalkulator',sk:'saldoavs'},
   {name:'OTP — Obligatorisk tjenestepensjon',desc:'Arbeidsgiver må spare minst 2% av lønn over 1G til pensjon',url:'/avgift/#aga-wrapper',tags:'otp obligatorisk tjenestepensjon arbeidsgiver 2 prosent 1g pensjon mandatory pension',type:'concept',page:'Avgift',sk:'otp'},
   {name:'Arbeidsgiveravgift (AGA)',desc:'Avgift arbeidsgiver betaler på lønn — varierer etter sone',url:'/avgift/#aga-wrapper',tags:'arbeidsgiveravgift aga sone avgift arbeidsgiver lønn 14.1 employer tax',type:'concept',page:'Avgift',sk:'agaBegrep'},
-  {name:'Rentes rente',desc:'Avkastning på avkastning — effekten som gjør sparing kraftig over tid',url:'/personlig/#spare-wrapper',tags:'rentes rente compound interest sparing effekt tid avkastning',type:'concept',page:'Personlig økonomi',sk:'rentesRente'},
+  {name:'Rentes rente',desc:'Avkastning på avkastning — effekten som gjør sparing kraftig over tid',url:'/personlig/#spare-wrapper',tags:'rentes rente compound interest sparing effekt tid avkastning',type:'concept',page:'Privatøkonomi',sk:'rentesRente'},
   {name:'Annuitetslån',desc:'Lån med like store månedlige betalinger hele perioden',url:'/boliglan/mor/',tags:'annuitetslån annuitet fast betaling like stor måned annuity loan',type:'concept',page:'Boliglån',sk:'annuitet'},
   {name:'Serielån',desc:'Lån med like store avdrag — totalt billigere enn annuitet',url:'/boliglan/mor/',tags:'serielån serie avdrag billigere synkende betaling serial loan',type:'concept',page:'Boliglån',sk:'serieLan'},
   {name:'Næring eller hobby?',desc:'Når blir biinntekt skattepliktig næringsvirksomhet?',url:'/skatt/#sal-naering-hobby-card',tags:'næring hobby biinntekt skattepliktig virksomhet grense business hobby',type:'concept',page:'Skatt',sk:'naeringHobby'},
@@ -140,18 +140,18 @@ var SEARCH_DATA = [
   {name:'Valutagevinst',desc:'Beregn gevinst eller tap ved kjøp og salg av valuta',url:'/kalkulator/valgevinst/',tags:'valutagevinst valutatap valuta kjøp salg kurs gevinst skatt',type:'tool',page:'Kalkulator'},
   {name:'Timepris-kalkulator',desc:'Fra nettoårsinntekt til brutto timepris — freelance, konsulent, selvstendig',url:'/kalkulator/timepris/',tags:'timepris time pris freelance konsulent selvstendig naeringsdrivende reverse kalk netto brutto fakturerbar overhead skatt ferie',type:'tool',page:'Kalkulator',sk:'kalkTimepris'},
   {name:'Lov',desc:'Skatteloven, aksjeloven, merverdiavgiftsloven og bokføringsloven',url:'/lov/',tags:'lov skatteloven aksjeloven merverdiavgiftsloven bokføringsloven lovverk',type:'section',page:'Lov'},
-  {name:'Abonnementskalkulator',desc:'Se totalkostnaden for alle abonnementene dine',url:'/personlig/abo/',tags:'abonnement streaming netflix spotify hbo viaplay subscription månedskostnad',type:'tool',page:'Personlig økonomi'},
-  {name:'Aksjer (veiledning)',desc:'Hva er aksjer, risiko, skatt 37,84 % og 5 tips til nybegynnere',url:'/personlig/aksjer/',tags:'aksjer veiledning guide nybegynner risiko skjermingsfradrag utbytte ask aksjesparekonto',type:'concept',page:'Personlig økonomi'},
-  {name:'Bilkostnad',desc:'Beregn hva bilen din faktisk koster per måned og km',url:'/personlig/bil/',tags:'bil bilkostnad bilhold kjøretøy drivstoff forsikring bompenger vedlikehold bensin diesel',type:'tool',page:'Personlig økonomi'},
-  {name:'Budsjett',desc:'Lag et personlig budsjett med inntekter og utgifter',url:'/personlig/budsjett/',tags:'budsjett økonomi personlig inntekt utgift spare penger husholdning',type:'tool',page:'Personlig økonomi'},
-  {name:'Familie',desc:'Kalkulatorer og informasjon for familieøkonomi',url:'/personlig/fam/',tags:'familie familieøkonomi barn barnestipend barnetrygd foreldrepenger',type:'section',page:'Personlig økonomi'},
-  {name:'Forbrukslån',desc:'Beregn kostnad ved forbrukslån og sammenlikn renter',url:'/personlig/fbl/',tags:'forbrukslån forbruk lån rente effektivrente kostnad',type:'tool',page:'Personlig økonomi'},
-  {name:'Bankkonto',desc:'Oversikt over bankkonti, sparkekonto og spareavtaler',url:'/personlig/konto/',tags:'bankkonto sparkekonto rente spareavtale bank innskudd',type:'section',page:'Personlig økonomi'},
-  {name:'Lønn etter skatt',desc:'Se hva du faktisk får utbetalt fra timelønnen din',url:'/personlig/lonn/',tags:'lønn timelønn netto brutto utbetalt lønn etter skatt nettolønn',type:'tool',page:'Personlig økonomi'},
-  {name:'Sparekalkulator',desc:'Se kraften i rentes rente over tid',url:'/personlig/spare/',tags:'spare sparing rentes rente avkastning fond aksjer investering månedlig',type:'tool',page:'Personlig økonomi'},
-  {name:'Studielån',desc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen',url:'/personlig/studie/',tags:'studielån lånekassen stipend student studie nedbetaling lån utdanning',type:'tool',page:'Personlig økonomi'},
-  {name:'Sykepenger og NAV',desc:'Oversikt over sykepenger, dagpenger og NAV-ytelser',url:'/personlig/syk/',tags:'sykepenger nav dagpenger utbetaling arbeidsløs',type:'section',page:'Personlig økonomi'},
-  {name:'Teknisk økonomi',desc:'Oversikt over tekniske økonomi-kalkulatorer',url:'/personlig/teknisk/',tags:'teknisk økonomi likvid cashflow nåverdi internrente npv irr',type:'section',page:'Personlig økonomi'},
+  {name:'Abonnementskalkulator',desc:'Se totalkostnaden for alle abonnementene dine',url:'/personlig/abo/',tags:'abonnement streaming netflix spotify hbo viaplay subscription månedskostnad',type:'tool',page:'Privatøkonomi'},
+  {name:'Aksjer (veiledning)',desc:'Hva er aksjer, risiko, skatt 37,84 % og 5 tips til nybegynnere',url:'/personlig/aksjer/',tags:'aksjer veiledning guide nybegynner risiko skjermingsfradrag utbytte ask aksjesparekonto',type:'concept',page:'Privatøkonomi'},
+  {name:'Bilkostnad',desc:'Beregn hva bilen din faktisk koster per måned og km',url:'/personlig/bil/',tags:'bil bilkostnad bilhold kjøretøy drivstoff forsikring bompenger vedlikehold bensin diesel',type:'tool',page:'Privatøkonomi'},
+  {name:'Budsjett',desc:'Lag et personlig budsjett med inntekter og utgifter',url:'/personlig/budsjett/',tags:'budsjett økonomi personlig inntekt utgift spare penger husholdning',type:'tool',page:'Privatøkonomi'},
+  {name:'Familie',desc:'Kalkulatorer og informasjon for familieøkonomi',url:'/personlig/fam/',tags:'familie familieøkonomi barn barnestipend barnetrygd foreldrepenger',type:'section',page:'Privatøkonomi'},
+  {name:'Forbrukslån',desc:'Beregn kostnad ved forbrukslån og sammenlikn renter',url:'/personlig/fbl/',tags:'forbrukslån forbruk lån rente effektivrente kostnad',type:'tool',page:'Privatøkonomi'},
+  {name:'Bankkonto',desc:'Oversikt over bankkonti, sparkekonto og spareavtaler',url:'/personlig/konto/',tags:'bankkonto sparkekonto rente spareavtale bank innskudd',type:'section',page:'Privatøkonomi'},
+  {name:'Lønn etter skatt',desc:'Se hva du faktisk får utbetalt fra timelønnen din',url:'/personlig/lonn/',tags:'lønn timelønn netto brutto utbetalt lønn etter skatt nettolønn',type:'tool',page:'Privatøkonomi'},
+  {name:'Sparekalkulator',desc:'Se kraften i rentes rente over tid',url:'/personlig/spare/',tags:'spare sparing rentes rente avkastning fond aksjer investering månedlig',type:'tool',page:'Privatøkonomi'},
+  {name:'Studielån',desc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen',url:'/personlig/studie/',tags:'studielån lånekassen stipend student studie nedbetaling lån utdanning',type:'tool',page:'Privatøkonomi'},
+  {name:'Sykepenger og NAV',desc:'Oversikt over sykepenger, dagpenger og NAV-ytelser',url:'/personlig/syk/',tags:'sykepenger nav dagpenger utbetaling arbeidsløs',type:'section',page:'Privatøkonomi'},
+  {name:'Teknisk økonomi',desc:'Oversikt over tekniske økonomi-kalkulatorer',url:'/personlig/teknisk/',tags:'teknisk økonomi likvid cashflow nåverdi internrente npv irr',type:'section',page:'Privatøkonomi'},
   {name:'Regnskap',desc:'Verktøy og kalkulator for regnskap og bokføring',url:'/regnskap/',tags:'regnskap bokføring regnskapsføring avskrivning driftsmiddel',type:'section',page:'Regnskap'},
   {name:'Formueskatt',desc:'Beregn formueskatt med verdsettelsesrabatter',url:'/skatt/formue/',tags:'formue formueskatt verdsettelsesrabatt bolig aksjer eiendom gjeld',type:'tool',page:'Skatt'},
   {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/reise/',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger',type:'tool',page:'Skatt'}
@@ -202,7 +202,7 @@ function norm(s){
    be included in the item's multilingual search haystack. Keeps SEARCH_DATA
    clean and makes it trivial to add more mappings later. */
 var URL_TO_I18N_KEYS = {
-  // Personlig økonomi
+  // Privatøkonomi
   '/personlig/#budsjett-wrapper': ['budsjettTitle','budsjettDesc','budsjettHowtoTitle','budsjettHowtoDesc','tabPerso','dashDescPerso'],
   '/personlig/#bil-wrapper':       ['bilTitle','bilDesc'],
   '/personlig/#spare-wrapper':     ['spareTitle','spareDesc'],
@@ -258,7 +258,7 @@ var URL_TO_I18N_KEYS = {
    dropdown respects the active UI language. Falls back to the
    hardcoded Norwegian name/desc when a key is missing or empty. */
 var URL_TO_DISPLAY = {
-  // Personlig økonomi
+  // Privatøkonomi
   '/personlig/#budsjett-wrapper': {title:'budsjettTitle', desc:'budsjettDesc'},
   '/personlig/#bil-wrapper':      {title:'bilTitle',      desc:'bilDesc'},
   '/personlig/#spare-wrapper':    {title:'spareTitle',    desc:'spareDesc'},
@@ -311,7 +311,7 @@ var URL_TO_DISPLAY = {
    translation keys so the "page" chip in each result also
    follows the active UI language. */
 var PAGE_KEY = {
-  'Personlig økonomi': 'tabNpv',
+  'Privatøkonomi': 'tabNpv',
   'Boliglån':          'tabMor',
   'Kalkulator':        'tabBasic',
   'Skatt':             'tabSal',
