@@ -1680,7 +1680,7 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
     <div class="container">
       <div class="daily-frame reveal">
         <header class="daily-head">
-          <div class="title"><span data-i18n="homeMarketTitle">Markedsdata</span><span class="sep"></span><b id="dailyDate">Fredag 25. april 2026</b></div>
+          <div class="title"><span data-i18n="homeMarketTitle">Markedsdata</span><span class="sep"></span><b id="dailyDate">Fredag 25. april 2026</b><span class="sep"></span><b id="dailyWeek">Uke 18</b></div>
           <div class="stamp" id="dailyStamp">Sist oppdatert —</div>
         </header>
 
@@ -2129,6 +2129,16 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
     var dd = ['Søndag','Mandag','Tirsdag','Onsdag','Torsdag','Fredag','Lørdag'];
     var mm = ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
     el.textContent = dd[d.getDay()] + ' ' + d.getDate() + '. ' + mm[d.getMonth()] + ' ' + d.getFullYear();
+    // ISO 8601-ukenummer (uke starter mandag; uke 1 = uka med årets første torsdag) — som Norge bruker.
+    var w = document.getElementById('dailyWeek');
+    if (w) {
+      var u = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      var dayNum = u.getUTCDay() || 7;          // man=1 … søn=7
+      u.setUTCDate(u.getUTCDate() + 4 - dayNum); // hopp til torsdagen i samme uke
+      var yearStart = new Date(Date.UTC(u.getUTCFullYear(), 0, 1));
+      var week = Math.ceil(((u - yearStart) / 864e5 + 1) / 7);
+      w.textContent = 'Uke ' + week;
+    }
   })();
   // dailyStamp eies nå av shared/markedsdata.js (ekte hentetidspunkt + oppdater-knapp)
 
