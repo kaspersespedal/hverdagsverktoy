@@ -650,6 +650,34 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .content-card .src a{color:var(--ink2);text-decoration:underline;text-decoration-color:var(--line-2);text-underline-offset:3px;transition:color .2s var(--ease), text-decoration-color .2s var(--ease)}
   .content-card .src a:hover{color:var(--ink);text-decoration-color:var(--line-warm)}
 
+  /* ── SØK I LOVEN (filter kort + highlight) ── */
+  .lov-search{
+    margin:0 0 20px;display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);
+    border:1px solid var(--line);border-radius:8px;transition:border-color .2s var(--ease), background .2s var(--ease);
+  }
+  .lov-search:focus-within{border-color:var(--line-warm);background:var(--bg)}
+  .lov-search svg{color:var(--ink3);flex-shrink:0}
+  .lov-search:focus-within svg{color:var(--accent)}
+  .lov-search input{flex:1;min-width:0;background:transparent;border:0;outline:none;font:400 15px/1.2 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
+  .lov-search input::placeholder{color:var(--ink3)}
+  .lov-search .lov-count{
+    font:600 10px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);
+    white-space:nowrap;padding-left:14px;border-left:1px solid var(--line);
+  }
+  .lov-search .lov-count b{color:var(--accent);font-weight:600}
+  .lov-search .lov-clear{
+    border:0;background:none;cursor:pointer;color:var(--ink3);padding:4px;display:none;
+    align-items:center;justify-content:center;border-radius:50%;
+  }
+  .lov-search.has-q .lov-clear{display:inline-flex}
+  .lov-search .lov-clear:hover{color:var(--accent)}
+  .content-card mark{background:color-mix(in srgb, var(--accent) 22%, transparent);color:var(--ink);padding:1px 2px;border-radius:2px}
+  .content-card.is-hidden{display:none !important}
+  .lov-empty{
+    padding:48px 32px;text-align:center;font-family:var(--font-serif);font-style:italic;font-size:18px;color:var(--ink3);display:none;
+  }
+  .lov-empty.show{display:block}
+
   /* ── LAW-TABLE (rows rendered from vatXxxRows) ── */
   .law-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
   .law-table td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--ink2);line-height:1.5}
@@ -835,6 +863,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     <section class="content-section" aria-labelledby="mvalov-heading">
       <h2 id="mvalov-heading" class="group-label">Kapittel-oversikt</h2>
+      <div class="lov-search">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>
+        <input type="search" class="lov-q" placeholder="Søk i loven — paragraf, ord eller tema" autocomplete="off" spellcheck="false" aria-label="Søk i merverdiavgiftsloven">
+        <button type="button" class="lov-clear" aria-label="Tøm søk"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="3" x2="11" y2="11"/><line x1="11" y1="3" x2="3" y2="11"/></svg></button>
+        <span class="lov-count"><b>6</b> emner</span>
+      </div>
+      <div class="lov-empty">Ingen treff. Prøv et annet søkeord.</div>
       <div class="content-grid">
 
         <article class="content-card" id="card-def">
@@ -1043,6 +1078,75 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     }
     // Re-render when language changes (core.js dispatches setRegion)
     document.addEventListener('hvt-region-change', render);
+  })();
+
+  // ── Søk i loven: filter kort + highlight ──
+  (function(){
+    var sec = document.querySelector('.content-section');
+    if(!sec) return;
+    var q = sec.querySelector('.lov-q');
+    if(!q) return;
+    var bar = sec.querySelector('.lov-search');
+    var clear = sec.querySelector('.lov-clear');
+    var countEl = sec.querySelector('.lov-count b');
+    var empty = sec.querySelector('.lov-empty');
+    var cards = [].slice.call(sec.querySelectorAll('.content-card'));
+    var total = cards.length;
+
+    function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+    function norm(s){ return (s||'').toLowerCase().replace(/§\s*/g,'').replace(/\s+/g,' '); }
+    function unmark(el){
+      el.querySelectorAll('mark').forEach(function(m){
+        m.parentNode.replaceChild(document.createTextNode(m.textContent), m);
+      });
+      el.normalize();
+    }
+    function highlight(el, re){
+      var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null);
+      var nodes = [], n;
+      while((n = walker.nextNode())){ if(n.nodeValue.trim() && !/SCRIPT|STYLE|MARK/.test(n.parentNode.tagName)) nodes.push(n); }
+      nodes.forEach(function(node){
+        if(!re.test(node.nodeValue)) return;
+        var frag = document.createDocumentFragment();
+        var last = 0, txt = node.nodeValue, m; re.lastIndex = 0;
+        while((m = re.exec(txt))){
+          if(m.index > last) frag.appendChild(document.createTextNode(txt.slice(last, m.index)));
+          var mk = document.createElement('mark'); mk.textContent = m[0]; frag.appendChild(mk);
+          last = m.index + m[0].length;
+          if(m.index === re.lastIndex) re.lastIndex++;
+        }
+        if(last < txt.length) frag.appendChild(document.createTextNode(txt.slice(last)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    }
+    function runSearch(){
+      var raw = (q.value||'').trim();
+      cards.forEach(unmark);
+      if(!raw){
+        bar.classList.remove('has-q');
+        cards.forEach(function(c){ c.classList.remove('is-hidden'); });
+        countEl.textContent = total;
+        empty.classList.remove('show');
+        return;
+      }
+      bar.classList.add('has-q');
+      var qNorm = norm(raw);
+      var re = new RegExp(escapeRe(raw), 'gi');
+      var hits = 0;
+      cards.forEach(function(card){
+        if(norm(card.textContent).indexOf(qNorm) >= 0){
+          card.classList.remove('is-hidden'); highlight(card, re); hits++;
+        } else {
+          card.classList.add('is-hidden');
+        }
+      });
+      countEl.textContent = hits;
+      empty.classList.toggle('show', hits === 0);
+    }
+    q.addEventListener('input', runSearch);
+    clear.addEventListener('click', function(){ q.value=''; runSearch(); q.focus(); });
+    // språkbytte re-rendrer innhold + fjerner marks → kjør filteret på nytt
+    document.addEventListener('hvt-region-change', function(){ setTimeout(runSearch, 60); });
   })();
 </script>
 
