@@ -196,6 +196,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .bc-insert:hover{filter:brightness(1.07)}
 .bc-skip{background:transparent;border:none;color:var(--ink3);font:400 12px/1 var(--font-sans);cursor:pointer;text-decoration:underline;text-underline-offset:2px;padding:2px}
 .bc-skip:hover{color:var(--ink2)}
+.bc-note{font:400 12px/1.55 var(--font-sans);color:var(--ink3);border-left:2px solid color-mix(in srgb,var(--accent) 45%,transparent);padding:2px 0 2px 12px}
 .bc-source{font-size:11px;color:var(--ink4)}
 .bc-source a{color:var(--ink3);text-decoration:none;border-bottom:1px solid var(--line-2)}
 .bc-source a:hover{color:var(--accent)}
@@ -506,10 +507,14 @@ footer em{font-style:italic}
     {
       id:'ferie', col:'inntekt', label:'Feriepenger',
       eyebrow:'Inntekt', title:'Feriepenger',
-      blurb:'Feriepenger beregnes av fjorårets lønn og utbetales som regel i juni. Her fordeler vi beløpet jevnt på 12 måneder.',
-      resLabel:'Tilsvarer per måned', resSub:'Beløpet fordelt på 12 mnd',
+      blurb:'Feriepenger beregnes av fjorårets lønn og utbetales som regel i juni. Som standard viser vi hele engangsbeløpet — men du kan velge å fordele det jevnt på 12 måneder.',
+      resLabel:'Feriepenger i år', resSub:'Engangsutbetaling — kommer typisk i juni',
       source:{href:'/kalkulator/ferie/', text:'Åpne feriepenger-kalkulator'},
       fields:[
+        {id:'mode', label:'Hvordan vil du se den?', type:'select', def:'hele', options:[
+          {v:'hele', label:'Hele beløpet (engang)'},
+          {v:'mnd', label:'Fordel på 12 måneder'}
+        ]},
         {id:'sal', label:'Brutto årslønn (i fjor)', unit:'kr', def:500000, money:true},
         {id:'rate', label:'Ferieavtale', type:'select', def:'0.102', options:[
           {v:'0.102', label:'4 uker + 1 dag (10,2 %)'},
@@ -520,10 +525,23 @@ footer em{font-style:italic}
         var sal = Math.max(0, v.sal);
         var rate = parseFloat(v.rate) || 0.102;
         var total = sal * rate;
-        return { amount: total/12, lines:[
-          {l:'Feriepenger totalt', v: fmtKr(total)},
-          {l:'Utbetales typisk', v:'i juni'}
-        ]};
+        var mnd = total / 12;
+        if(v.mode === 'mnd'){
+          return { amount: mnd,
+            resLabel:'Tilsvarer per måned', resSub:'Beløpet fordelt på 12 mnd',
+            lines:[
+              {l:'Feriepenger totalt', v: fmtKr(total)},
+              {l:'Utbetales typisk', v:'i juni'}
+            ]};
+        }
+        return { amount: total, oneTime:true,
+          resLabel:'Feriepenger i år', resSub:'Engangsutbetaling — kommer typisk i juni',
+          note:'Feriepenger er et engangsbeløp og passer dårlig i et fast månedsbudsjett — den erstatter som regel junilønna. Vil du likevel jevne den ut over året, velg «Fordel på 12 måneder» øverst.',
+          lines:[
+            {l:'Grunnlag (fjorårets lønn)', v: fmtKr(sal)},
+            {l:'Sats', v:(rate*100).toFixed(1).replace('.',',')+' %'},
+            {l:'Tilsvarer per måned', v: fmtKr(mnd)}
+          ]};
       }
     },
     {
@@ -1094,8 +1112,24 @@ footer em{font-style:italic}
     var amt = isFinite(res.amount) ? Math.max(0, res.amount) : 0;
     var amtEl = calcPanel.querySelector('[data-res="amount"]');
     if(amtEl) amtEl.textContent = fmtKr(amt);
+    // La compute overstyre etikett/undertekst (f.eks. feriepenger: hele beløpet vs. per måned)
+    var labEl = calcPanel.querySelector('[data-res="label"]');
+    if(labEl && res.resLabel != null) labEl.textContent = res.resLabel;
+    var subEl = calcPanel.querySelector('[data-res="sub"]');
+    if(subEl && res.resSub != null) subEl.textContent = res.resSub;
+    // Engangsbeløp (oneTime): skjul innsett-knappene og vis en forklarende note i stedet
     var insBtn = calcPanel.querySelector('.bc-insert');
-    if(insBtn) insBtn.textContent = 'Sett inn i budsjett (' + fmtKr(amt) + ')';
+    var skipBtn = calcPanel.querySelector('.bc-skip');
+    var noteEl = calcPanel.querySelector('[data-res="note"]');
+    if(res.oneTime){
+      if(insBtn) insBtn.style.display = 'none';
+      if(skipBtn) skipBtn.style.display = 'none';
+      if(noteEl){ noteEl.textContent = res.note || ''; noteEl.hidden = false; }
+    } else {
+      if(insBtn){ insBtn.style.display = ''; insBtn.textContent = 'Sett inn i budsjett (' + fmtKr(amt) + ')'; }
+      if(skipBtn) skipBtn.style.display = '';
+      if(noteEl){ noteEl.hidden = true; noteEl.textContent = ''; }
+    }
     var linesEl = calcPanel.querySelector('[data-res="lines"]');
     if(linesEl){
       linesEl.innerHTML = (res.lines||[]).map(function(ln){
@@ -1144,6 +1178,7 @@ footer em{font-style:italic}
     var col = calcCol, label = calcDef.label;
     if(a === 'insert'){
       var res = calcDef.compute(calcVals);
+      if(res && res.oneTime) return; // engangsbeløp — hører ikke hjemme i månedsbudsjettet
       var amt = (res && isFinite(res.amount)) ? Math.max(0, res.amount) : 0;
       closeCalcPanel();
       addRow(col, label, amt);
@@ -1183,13 +1218,14 @@ footer em{font-style:italic}
       + '<div class="bud-calc-body">'
       +   '<div class="bud-calc-fields">' + def.fields.map(buildCalcField).join('') + '</div>'
       +   '<div class="bud-calc-result">'
-      +     '<div class="bc-res-label">'+escapeHtml(def.resLabel)+'</div>'
+      +     '<div class="bc-res-label" data-res="label">'+escapeHtml(def.resLabel)+'</div>'
       +     '<div class="bc-res-amount" data-res="amount">0 kr</div>'
-      +     '<div class="bc-res-sub">'+escapeHtml(def.resSub||'')+'</div>'
+      +     '<div class="bc-res-sub" data-res="sub">'+escapeHtml(def.resSub||'')+'</div>'
       +     '<ul class="bc-lines" data-res="lines"></ul>'
       +     '<div class="bud-calc-actions">'
       +       '<button type="button" class="bc-insert" data-act="insert">Sett inn i budsjett</button>'
       +       '<button type="button" class="bc-skip" data-act="skip">Legg til posten uten beregning</button>'
+      +       '<div class="bc-note" data-res="note" hidden></div>'
       +       (def.source ? '<div class="bc-source"><a href="'+escapeHtml(def.source.href)+'">'+escapeHtml(def.source.text)+' →</a></div>' : '')
       +     '</div>'
       +   '</div>'
