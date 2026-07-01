@@ -17,12 +17,12 @@
     {k:'carbon',  l:'Carbon',    group:'dark',  sub:'Bek og messing',     pv:{bg:'#0f0e0d', ink:'#ecebe7', accent:'#b88a5e'}},
     {k:'dark',    l:'Mørk-blå',  group:'dark',  sub:'Kjølig natt',        pv:{bg:'#11172a', ink:'#e9edf4', accent:'#8aa3c8'}},
     {k:'nordlys', l:'Nordlys',   group:'dark',  sub:'Aurora over fjord',  pv:{bg:'#0c1416', ink:'#e6f0ec', accent:'#4ec9a0'}},
-    {k:'hendrix', l:'Hendrix',   group:'dark',  sub:'Fillmore-plakat',    pv:{bg:'#fdf1e3', ink:'#2a0d3d', accent:'#d6248f'}},
     {k:'bw',      l:'Sort/hvit', group:'dark',  sub:'Høy kontrast',       pv:{bg:'#0a0a0a', ink:'#fafafa', accent:'#fafafa'}},
     {k:'disco',   l:'Disco',     group:'dark',  sub:'Neon-nattklubb',     pv:{bg:'#161226', ink:'#f0e6ff', accent:'#e91e8c'}},
     {k:'frost',   l:'Frost',     group:'light', sub:'Lys morgen',         pv:{bg:'#f7f9fc', ink:'#0f172a', accent:'#4f5fe5'}},
     {k:'glass',   l:'Glass',     group:'light', sub:'Glass og dis',       pv:{bg:'#e8edf6', ink:'#1a1a2e', accent:'#6875f5'}},
-    {k:'pink',    l:'Rosa',      group:'light', sub:'Mykt blush',         pv:{bg:'#fffbfc', ink:'#3a2030', accent:'#d4748e'}}
+    {k:'pink',    l:'Rosa',      group:'light', sub:'Mykt blush',         pv:{bg:'#fffbfc', ink:'#3a2030', accent:'#d4748e'}},
+    {k:'hendrix', l:'Hendrix',   group:'light', sub:'Fillmore-plakat',    pv:{bg:'#fdf1e3', ink:'#2a0d3d', accent:'#d6248f'}}
   ];
   var LANGS = [
     {k:'no', l:'Norsk',       flag:'no', group:'main'},
