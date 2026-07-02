@@ -615,116 +615,166 @@ html{scrollbar-color:rgba(255,255,255,.1) transparent;scrollbar-width:thin}
    anchor — the nav-anchor pages (anchor inside .nav-right) never match. */
 .container:has(> #site-search-anchor){ min-height:72px; }
 
-/* Wrapper does the soft fade only — no transform, so children own their
-   own translate/blur/scale without compounding. */
-.page-content{ animation: pageIn .65s var(--ease-soft) both; }
-@keyframes pageIn{ from{opacity:0} to{opacity:1} }
+/* ═══════════════════════════════════════════════════════════════
+   PAGE-ENTRY CHOREOGRAPHY v2 — «ett åndedrag» (jank-fri, 2026-07-02)
+   Designprinsipper:
+   · KUN transform + opacity i alle keyframes. Eneste unntak er
+     hero-tittelen (ETT element per side) som får dempet blur(8px)→0
+     på desktop — mobil bruker blur-fri hvxTitleLite.
+   · Total koreografi ferdig ≤ 1,2 s (før: 2,2 s). Stagger 40-50 ms.
+   · Nye keyframe-navn (hvx*): 5 landings redefinerer @keyframes pageIn
+     inline (sist definerte @keyframes vinner globalt) — nye navn kan
+     ikke kapres av inline-kopiene.
+   · body-prefiksede selektorer: slår inline-kopienes
+     `.page-content{animation:pageIn …}` på spesifisitet (0,1,1 > 0,1,0).
+   · body.hv-entered settes av støtteskriptet i atmosphere.js (~1,4 s)
+     og fjerner flare-laget (fixed ::before) når entreen er over —
+     backdrop-filter-barene slipper å re-sample et levende fullskjermlag.
+   · Reisedistanser kortet ned (28→18 px) — mindre paint-areal per
+     frame, mykere opplevd bevegelse med samme expo-out-ease.
+   Eases ligger i colors_and_type.css (--ease-soft, --ease-glide).
+   ═══════════════════════════════════════════════════════════════ */
 
-/* Atmosphere flourish: accent light flares briefly behind the new page,
-   then settles. Anchored on .page-content so it re-fires per load. */
-.page-content::before{
-  content:"";
-  position:fixed;left:0;right:0;top:0;height:100vh;
-  pointer-events:none;z-index:-1;
-  background:radial-gradient(60% 40% at 50% 0%,
-    color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 70%);
-  opacity:0;
-  animation: pageFlare 1.6s var(--ease-soft) both .05s;
-}
-@keyframes pageFlare{
-  0%{ opacity:0; transform:translateY(-20px) }
-  35%{ opacity:1 }
-  100%{ opacity:0; transform:translateY(0) }
-}
-
-@keyframes hvRise{
-  from{ opacity:0; transform:translate3d(0,28px,0); filter:blur(6px) }
-  60%{ filter:blur(0) }
-  to{ opacity:1; transform:none; filter:blur(0) }
-}
-@keyframes hvRiseSm{
-  from{ opacity:0; transform:translate3d(0,14px,0); filter:blur(3px) }
-  to{ opacity:1; transform:none; filter:blur(0) }
-}
-@keyframes hvTitle{
-  from{ opacity:0; transform:translate3d(0,20px,0) scale(.96); filter:blur(14px) }
-  55%{ filter:blur(0) }
-  to{ opacity:1; transform:none; filter:blur(0) }
-}
+/* ── Kompat-shims: gamle keyframe-navn beholdes fordi
+      personlig/budsjett/index.html refererer hvRise/hvRiseSm/hvLine
+      inline — men de er redefinert UTEN filter:blur. Blur-animasjon
+      på mange elementer = repaint-storm.
+      IKKE bruk disse i ny kode — bruk hvx*-settet under. ── */
+@keyframes hvRise{ from{opacity:0; transform:translate3d(0,18px,0)} to{opacity:1; transform:none} }
+@keyframes hvRiseSm{ from{opacity:0; transform:translate3d(0,10px,0)} to{opacity:1; transform:none} }
+@keyframes hvTitle{ from{opacity:0; transform:translate3d(0,16px,0) scale(.985)} to{opacity:1; transform:none} }
 @keyframes hvFade{ from{opacity:0} to{opacity:1} }
 @keyframes hvLine{ from{opacity:0; transform:scaleX(0)} to{opacity:1; transform:scaleX(1)} }
 
-/* ── Hero (categorized landings — cat-hero) ── */
-.page-content .cat-hero .ch-eyebrow{ animation: hvRiseSm .9s var(--ease-soft) both .15s; }
-.page-content .cat-hero h2{ animation: hvTitle 1.3s var(--ease-soft) both .28s; }
-.page-content .cat-hero .ch-sub{ animation: hvRiseSm .95s var(--ease-soft) both .50s; }
-.page-content .cat-hero .ch-feats{ animation: hvLine 1.1s var(--ease-soft) both .68s; transform-origin:center top; }
-.page-content .cat-hero .ch-feat{ animation: hvRise 1s var(--ease-soft) both; opacity:0; }
-.page-content .cat-hero .ch-feat:nth-child(1){ animation-delay:.82s }
-.page-content .cat-hero .ch-feat:nth-child(2){ animation-delay:.94s }
-.page-content .cat-hero .ch-feat:nth-child(3){ animation-delay:1.06s }
+/* ── Nye keyframes (hvx*) — kun transform + opacity ── */
+@keyframes hvxPageIn{ from{opacity:0} to{opacity:1} }
+@keyframes hvxRise{ from{opacity:0; transform:translate3d(0,18px,0)} to{opacity:1; transform:none} }
+@keyframes hvxRiseSm{ from{opacity:0; transform:translate3d(0,10px,0)} to{opacity:1; transform:none} }
+@keyframes hvxTitle{ /* SYSTEMETS ENESTE blur — ett heroelement per side, kun desktop */
+  from{ opacity:0; transform:translate3d(0,16px,0) scale(.985); filter:blur(8px) }
+  60%{ filter:blur(0) }
+  to{ opacity:1; transform:none; filter:blur(0) }
+}
+@keyframes hvxTitleLite{ /* mobil-variant — identisk bevegelse, ingen blur */
+  from{ opacity:0; transform:translate3d(0,16px,0) scale(.985) }
+  to{ opacity:1; transform:none }
+}
+@keyframes hvxFade{ from{opacity:0} to{opacity:1} }
+@keyframes hvxLine{ from{opacity:0; transform:scaleX(0)} to{opacity:1; transform:scaleX(1)} }
+@keyframes hvxFlare{
+  0%{ opacity:0; transform:translateY(-14px) }
+  40%{ opacity:1 }
+  100%{ opacity:0; transform:translateY(0) }
+}
+@keyframes hvxPageOut{ to{ opacity:0; transform:translate3d(0,-6px,0) } }
 
-/* ── Hero (fallback page-hero layout) ── */
-.page-content .page-hero .page-eyebrow{ animation: hvRiseSm .85s var(--ease-soft) both .15s; }
-.page-content .page-hero h1.page-title{ animation: hvTitle 1.3s var(--ease-soft) both .28s; }
-.page-content .page-hero .page-lead{ animation: hvRiseSm .95s var(--ease-soft) both .52s; }
-.page-content .page-hero .page-stats{ animation: hvRise 1s var(--ease-soft) both .68s; }
-.page-content .page-hero .page-stat{ animation: hvFade .7s var(--ease-soft) both; opacity:0; }
-.page-content .page-hero .page-stat:nth-child(1){ animation-delay:.82s }
-.page-content .page-hero .page-stat:nth-child(2){ animation-delay:.92s }
-.page-content .page-hero .page-stat:nth-child(3){ animation-delay:1.02s }
-.page-content .page-hero .page-stat:nth-child(4){ animation-delay:1.12s }
+/* Wrapper: ren fade — barna eier egen translate/scale (ingen kompounding) */
+body .page-content{ animation: hvxPageIn .4s var(--ease-soft) both; }
 
-/* Section header above the grid */
-.page-content .calc-deck > .col-head,
-.page-content section.tools > .container > .col-head{ animation: hvRiseSm .85s var(--ease-soft) both 1.00s; }
+/* Atmosphere-flare: kort aksentlys bak toppen av siden.
+   60vh (ikke 100vh) og 1,0 s (ikke 1,6 s) — og laget FJERNES helt av
+   body.hv-entered når entreen er over. */
+body .page-content::before{
+  content:"";
+  position:fixed; left:0; right:0; top:0; height:60vh;
+  pointer-events:none; z-index:-1;
+  background:radial-gradient(60% 55% at 50% 0%,
+    color-mix(in srgb, var(--accent) 10%, transparent) 0%, transparent 70%);
+  opacity:0;
+  animation: hvxFlare 1s var(--ease-soft) both .05s;
+}
+body.hv-entered .page-content::before{ content:none; }
 
-/* Category grid (large cards) — slower cascade, ~120ms apart */
-.page-content .cat-grid > .cat-card{ animation: hvRise 1s var(--ease-soft) both; opacity:0; }
-.page-content .cat-grid > .cat-card:nth-child(1){ animation-delay:1.12s }
-.page-content .cat-grid > .cat-card:nth-child(2){ animation-delay:1.24s }
-.page-content .cat-grid > .cat-card:nth-child(3){ animation-delay:1.36s }
-.page-content .cat-grid > .cat-card:nth-child(4){ animation-delay:1.48s }
-.page-content .cat-grid > .cat-card:nth-child(5){ animation-delay:1.60s }
-.page-content .cat-grid > .cat-card:nth-child(6){ animation-delay:1.72s }
-.page-content .cat-grid > .cat-card:nth-child(7){ animation-delay:1.84s }
-.page-content .cat-grid > .cat-card:nth-child(n+8){ animation-delay:1.96s }
+/* Slutt-tilstand: når entreen er over (eller siden lastes i en skjult
+   fane og hopper rett hit), skal ingen entrance-elementer stå og vente
+   på opacity:0. animation:none + opacity:1 = identisk med fill-forwards-
+   sluttbildet for synlige faner, og øyeblikkelig synlig innhold for
+   faner som åpnes i bakgrunnen. Treffer KUN entrance-elementene —
+   ikke UI-keyframes (budflash, spark-pulse osv.). */
+body.hv-entered .page-content .cat-hero .ch-feat,
+body.hv-entered .page-content .page-hero .page-stat,
+body.hv-entered .page-content .cat-grid > .cat-card,
+body.hv-entered .page-content section.tools .tool-grid > .tool-card,
+body.hv-entered .page-content .veil-grid > .veil-card{ animation:none; opacity:1; }
 
-/* Tool grid — ~90ms apart */
-.page-content section.tools .tool-grid > .tool-card{ animation: hvRise .95s var(--ease-soft) both; opacity:0; }
-.page-content section.tools .tool-grid > .tool-card:nth-child(1){ animation-delay:1.12s }
-.page-content section.tools .tool-grid > .tool-card:nth-child(2){ animation-delay:1.21s }
-.page-content section.tools .tool-grid > .tool-card:nth-child(3){ animation-delay:1.30s }
-.page-content section.tools .tool-grid > .tool-card:nth-child(4){ animation-delay:1.39s }
-.page-content section.tools .tool-grid > .tool-card:nth-child(5){ animation-delay:1.48s }
-.page-content section.tools .tool-grid > .tool-card:nth-child(6){ animation-delay:1.57s }
-.page-content section.tools .tool-grid > .tool-card:nth-child(n+7){ animation-delay:1.66s }
+/* ── Beat 1 · Hero (0-0,55 s) — cat-hero-landings ── */
+body .page-content .cat-hero .ch-eyebrow{ animation: hvxRiseSm .5s var(--ease-soft) both .04s; }
+body .page-content .cat-hero h2{ animation: hvxTitle .7s var(--ease-soft) both .10s; }
+body .page-content .cat-hero .ch-sub{ animation: hvxRiseSm .5s var(--ease-soft) both .20s; }
+body .page-content .cat-hero .ch-feats{ animation: hvxLine .6s var(--ease-soft) both .28s; transform-origin:center top; }
+body .page-content .cat-hero .ch-feat{ animation: hvxRise .5s var(--ease-soft) both; opacity:0; }
+body .page-content .cat-hero .ch-feat:nth-child(1){ animation-delay:.34s }
+body .page-content .cat-hero .ch-feat:nth-child(2){ animation-delay:.40s }
+body .page-content .cat-hero .ch-feat:nth-child(3){ animation-delay:.46s }
 
-/* Reference panel (right-side card on tool-grid pages) */
-.page-content .ref-col{ animation: hvRiseSm .95s var(--ease-soft) both 1.20s; }
+/* ── Beat 1 · Hero-fallback (page-hero) ── */
+body .page-content .page-hero .page-eyebrow{ animation: hvxRiseSm .5s var(--ease-soft) both .04s; }
+body .page-content .page-hero h1.page-title{ animation: hvxTitle .7s var(--ease-soft) both .10s; }
+body .page-content .page-hero .page-lead{ animation: hvxRiseSm .5s var(--ease-soft) both .20s; }
+body .page-content .page-hero .page-stats{ animation: hvxRise .5s var(--ease-soft) both .28s; }
+body .page-content .page-hero .page-stat{ animation: hvxFade .4s var(--ease-soft) both; opacity:0; }
+body .page-content .page-hero .page-stat:nth-child(1){ animation-delay:.32s }
+body .page-content .page-hero .page-stat:nth-child(2){ animation-delay:.38s }
+body .page-content .page-hero .page-stat:nth-child(3){ animation-delay:.44s }
+body .page-content .page-hero .page-stat:nth-child(4){ animation-delay:.50s }
 
-/* Veiledning — lands after the main grid has settled */
-.page-content .veil-section{ animation: hvFade .8s var(--ease-soft) both 1.65s; }
-.page-content .veil-section .col-head{ animation: hvRiseSm .75s var(--ease-soft) both 1.70s; }
-.page-content .veil-grid > .veil-card{ animation: hvRise .85s var(--ease-soft) both; opacity:0; }
-.page-content .veil-grid > .veil-card:nth-child(1){ animation-delay:1.78s }
-.page-content .veil-grid > .veil-card:nth-child(2){ animation-delay:1.86s }
-.page-content .veil-grid > .veil-card:nth-child(3){ animation-delay:1.94s }
-.page-content .veil-grid > .veil-card:nth-child(4){ animation-delay:2.02s }
-.page-content .veil-grid > .veil-card:nth-child(5){ animation-delay:2.10s }
-.page-content .veil-grid > .veil-card:nth-child(6){ animation-delay:2.18s }
+/* ── Beat 2 · Grids (0,30-1,19 s) ── */
+body .page-content .calc-deck > .col-head,
+body .page-content section.tools > .container > .col-head{ animation: hvxRiseSm .5s var(--ease-soft) both .30s; }
 
-/* Budget hero (Personlig) — slides in below the hero trio */
-.page-content .bud-hero{ animation: hvRise 1.1s var(--ease-soft) both .95s; }
+/* Kategori-grid — 45 ms stagger (før: 120 ms, start 1,12 s) */
+body .page-content .cat-grid > .cat-card{ animation: hvxRise .5s var(--ease-soft) both; opacity:0; }
+body .page-content .cat-grid > .cat-card:nth-child(1){ animation-delay:.38s }
+body .page-content .cat-grid > .cat-card:nth-child(2){ animation-delay:.42s }
+body .page-content .cat-grid > .cat-card:nth-child(3){ animation-delay:.47s }
+body .page-content .cat-grid > .cat-card:nth-child(4){ animation-delay:.51s }
+body .page-content .cat-grid > .cat-card:nth-child(5){ animation-delay:.56s }
+body .page-content .cat-grid > .cat-card:nth-child(6){ animation-delay:.60s }
+body .page-content .cat-grid > .cat-card:nth-child(7){ animation-delay:.65s }
+body .page-content .cat-grid > .cat-card:nth-child(n+8){ animation-delay:.69s }
 
-/* Exit — fired by JS via .is-leaving on tab switch (optional, phase 2) */
-.page-content.is-leaving{ animation: pageOut .32s var(--ease-glide) forwards; pointer-events:none; }
-@keyframes pageOut{
-  from{ opacity:1; transform:none; filter:blur(0) }
-  to{ opacity:0; transform:translate3d(0,-8px,0) scale(.995); filter:blur(4px) }
+/* Tool-grid — samme takt */
+body .page-content section.tools .tool-grid > .tool-card{ animation: hvxRise .5s var(--ease-soft) both; opacity:0; }
+body .page-content section.tools .tool-grid > .tool-card:nth-child(1){ animation-delay:.38s }
+body .page-content section.tools .tool-grid > .tool-card:nth-child(2){ animation-delay:.42s }
+body .page-content section.tools .tool-grid > .tool-card:nth-child(3){ animation-delay:.47s }
+body .page-content section.tools .tool-grid > .tool-card:nth-child(4){ animation-delay:.51s }
+body .page-content section.tools .tool-grid > .tool-card:nth-child(5){ animation-delay:.56s }
+body .page-content section.tools .tool-grid > .tool-card:nth-child(6){ animation-delay:.60s }
+body .page-content section.tools .tool-grid > .tool-card:nth-child(n+7){ animation-delay:.65s }
+
+/* Referansepanel + budsjett-hero */
+body .page-content .ref-col{ animation: hvxRiseSm .5s var(--ease-soft) both .55s; }
+body .page-content .bud-hero{ animation: hvxRise .55s var(--ease-soft) both .45s; }
+
+/* ── Beat 3 · Veiledning (0,55-1,20 s) ── */
+body .page-content .veil-section{ animation: hvxFade .4s var(--ease-soft) both .55s; }
+body .page-content .veil-section .col-head{ animation: hvxRiseSm .45s var(--ease-soft) both .58s; }
+body .page-content .veil-grid > .veil-card{ animation: hvxRise .4s var(--ease-soft) both; opacity:0; }
+body .page-content .veil-grid > .veil-card:nth-child(1){ animation-delay:.60s }
+body .page-content .veil-grid > .veil-card:nth-child(2){ animation-delay:.64s }
+body .page-content .veil-grid > .veil-card:nth-child(3){ animation-delay:.68s }
+body .page-content .veil-grid > .veil-card:nth-child(4){ animation-delay:.72s }
+body .page-content .veil-grid > .veil-card:nth-child(5){ animation-delay:.76s }
+body .page-content .veil-grid > .veil-card:nth-child(n+6){ animation-delay:.80s }
+
+/* Below-fold-optimalisering: hopp over layout/paint for veiledningen
+   til den nærmer seg viewport. «auto 640px» = husk målt høyde etter
+   første render → ingen scrollbar-hopp ved gjenbesøk. */
+body .page-content .veil-section{ content-visibility:auto; contain-intrinsic-size:auto 640px; }
+
+/* Exit — fyres av JS via .is-leaving ved fanebytte (blur fjernet) */
+body .page-content.is-leaving{ animation: hvxPageOut .28s var(--ease-glide) forwards; pointer-events:none; }
+
+/* Mobil (<768 px): dropp systemets ene blur også — samme bevegelse */
+@media (max-width:767px){
+  body .page-content .cat-hero h2,
+  body .page-content .page-hero h1.page-title{ animation-name: hvxTitleLite; }
 }
 
+/* Reduced motion: alt statisk, flare-laget lages aldri */
 @media (prefers-reduced-motion: reduce){
-  .page-content,
-  .page-content *{ animation:none !important; opacity:1 !important; transform:none !important; }
+  body .page-content,
+  body .page-content *{ animation:none !important; opacity:1 !important; transform:none !important; }
+  body .page-content::before{ content:none; }
 }
