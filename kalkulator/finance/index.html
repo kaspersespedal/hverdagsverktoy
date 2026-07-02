@@ -90,6 +90,8 @@ body.focus-mode > footer{display:none}
 .ks-strip-cell.accent .v{color:var(--accent-2)}
 @media(max-width:780px){.ks-strip{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
 @media(max-width:560px){.ks-strip-cell{padding:14px 14px}.ks-strip-cell .v{font-size:17px}}
+/* Beregningstype-etiketten er lang tekst (ikke et tall) → la den brytes på mobil så hero-stat ikke overflyter */
+@media(max-width:780px){#hStatType{white-space:normal}}
 
 .ks-body{display:grid;grid-template-columns:1fr 340px;gap:1px;background:var(--line)}
 @media(max-width:980px){.ks-body{grid-template-columns:1fr}}
@@ -640,8 +642,15 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     var n = 0;
     var t = setInterval(function(){
       n++;
-      var ready = (typeof fcCalc === 'function') && el('fc-fields') && el('fc-fields').children.length > 0;
-      if(ready){ clearInterval(t); run(); }
+      var fieldsReady = (typeof fcCalc === 'function') && el('fc-fields') && el('fc-fields').children.length > 0;
+      // core.js bygger select + felt-etiketter med engelske fallbacks FØR språkfila (no.js) lastes.
+      // Vent til R() har finance-nøklene, re-render select + felter på riktig språk, kjør så beregning + speiling.
+      var langReady = (typeof R === 'function') && R() && R().fcTvm;
+      if(fieldsReady && langReady){
+        clearInterval(t);
+        try { if(typeof fcPopulateSelect === 'function') fcPopulateSelect(); if(typeof fcUpdateFields === 'function') fcUpdateFields(); } catch(e){}
+        run();
+      }
       else if(n > 60){ clearInterval(t); run(); }
     }, 80);
   })();
