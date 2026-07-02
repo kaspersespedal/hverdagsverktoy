@@ -1,5 +1,5 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v180';
+const CACHE_NAME = 'hverdagsverktoy-v181';
 
 // Files to cache on SW install for offline use.
 // Lang files are NOT precached — they'd add ~2.5 MB to install cost and most users
@@ -91,11 +91,16 @@ self.addEventListener('fetch', event => {
         if (cached) {
           // Return cache but update in background (stale-while-revalidate).
           // Store under the actual requested URL (with query) so next lookup is a fast hit.
-          fetch(event.request).then(response => {
-            if (response.ok) {
-              caches.open(CACHE_NAME).then(cache => cache.put(event.request, response).catch(() => {}));
-            }
-          }).catch(() => {});
+          // Versjonerte assets (?v=) hoppes over: de oppdateres via CACHE_NAME-bump
+          // ved deploy uansett, og bakgrunns-refetch av core.js/no.js/CSS på hvert
+          // gjenbesøk konkurrerte med fonter og markedsdata-API-ene i lastevinduet.
+          if (event.request.url.indexOf('?v=') === -1) {
+            fetch(event.request).then(response => {
+              if (response.ok) {
+                caches.open(CACHE_NAME).then(cache => cache.put(event.request, response).catch(() => {}));
+              }
+            }).catch(() => {});
+          }
           return cached;
         }
         // Not in cache — fetch and cache

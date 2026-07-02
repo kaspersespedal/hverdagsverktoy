@@ -18,6 +18,11 @@
      gamle fake «Aksjer & marked»-stripa er fjernet (E-fix 2026-06-29). */
   var _fx = null, _rate = null;
 
+  /* Render-signaturer: minutt-pulsen re-rendrer fra cache hvert 60. sekund,
+     men DOM som bærer animasjon (marquee, søylediagram, værstripe) skal kun
+     bygges om når innholdet faktisk er endret — ellers restarter loopen synlig. */
+  var _tickerSig = '', _stromSig = '', _fcSig = '';
+
   /* ── Strømsone-kart (NVE/Statnett prisområder). Slås opp fra Geonorge-treffets
      kommunenummer, med fylke som fallback. Oppslag:
      KOMMUNE_SONE[kommunenr] || FYLKE_SONE[fylkesnr] || 'NO1'.
@@ -202,6 +207,9 @@
   function buildTicker() {
     var track = $('tickerTrack'); if (!track) return;
     var items = tickerItems(); if (!items.length) return;
+    var sig = JSON.stringify(items);
+    if (sig === _tickerSig) return; // uendret — ikke restart marquee-animasjonen
+    _tickerSig = sig;
     function cls(d) { return d > 0 ? 'up' : d < 0 ? 'down' : 'flat'; }
     function span(it, hidden) {
       return '<span class="ti"' + (hidden ? ' aria-hidden="true"' : '') + '><b>' + esc(it.lbl) +
@@ -259,6 +267,9 @@
      Erstatter den gamle baklengs temp-sparklinen. */
   function buildForecast(hours) {
     var el = $('wxForecast'); if (!el || !hours || !hours.length) return;
+    var sig = JSON.stringify(hours);
+    if (sig === _fcSig) return; // uendret værmelding — la stripa stå
+    _fcSig = sig;
     var html = '';
     for (var i = 0; i < hours.length; i++) {
       var h = hours[i], hh = h.h < 10 ? '0' + h.h : '' + h.h;
@@ -349,7 +360,9 @@
   }
   function loadFx(force) {
     var c = cacheGet('fx');
-    if (!force && fresh(c, 6 * 3600 * 1000)) { renderFx(c.d); return; }
+    /* 1 t TTL (var 6 t): Norges Bank publiserer ~16:00 — med minutt-pulsen
+       plukkes ny dagskurs opp senest en time etter publisering. */
+    if (!force && fresh(c, 3600 * 1000)) { renderFx(c.d); return; }
     if (c) renderFx(c.d);
     fetch('https://data.norges-bank.no/api/data/EXR/B.USD+EUR+GBP+SEK.NOK.SP?lastNObservations=30&format=sdmx-json&locale=en')
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -390,7 +403,7 @@
   }
   function loadRate(force) {
     var c = cacheGet('rate');
-    if (!force && fresh(c, 12 * 3600 * 1000)) { renderRate(c.d); return; }
+    if (!force && fresh(c, 3600 * 1000)) { renderRate(c.d); return; } // 1 t TTL (var 12 t)
     if (c) renderRate(c.d);
     var start = new Date(Date.now() - 18 * 30 * 864e5).toISOString().slice(0, 10);
     fetch('https://data.norges-bank.no/api/data/IR/B.KPRA.SD.R?startPeriod=' + start + '&format=sdmx-json&locale=en')
@@ -401,6 +414,13 @@
 
   /* ═══════════════════ STRØM (hvakosterstrømmen.no) ══════════════════ */
   function renderStrom(d, sone) {
+    /* «Nå»-timen beregnes ved render (ikke ved fetch) — cachet dagsdata skal
+       ikke vise forrige times pris når panelet står åpent over et timeskifte
+       eller siden åpnes med gammel cache. */
+    if (d.prices && d.prices.length) {
+      d.hour = Math.min(new Date().getHours(), d.prices.length - 1);
+      d.now = d.prices[d.hour];
+    }
     setText('stSone', 'Strøm ' + sone);
     countUp('stVal', Math.round(d.now * 100), 0);
     // Utled billigste time defensivt (eldre cache fra forrige versjon mangler feltet).
@@ -417,7 +437,8 @@
       trendClass(span, dir);
       span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + Math.round(Math.abs(pct)) + '<i>%</i></span>';
     }
-    buildStromBars(d.prices, d.hour, d.cheapHour);
+    var sig = sone + '|' + d.hour + '|' + d.cheapHour + '|' + (d.prices ? d.prices.length + ':' + d.prices[0] : '');
+    if (sig !== _stromSig) { _stromSig = sig; buildStromBars(d.prices, d.hour, d.cheapHour); }
     stampNow();
   }
   function buildStromBars(prices, nowHour, cheapHour) {
@@ -579,14 +600,35 @@
     return (o && o.d && typeof o.d.lat === 'number') ? o.d : DEFAULT_PLACE;
   }
 
+  /* ── Minutt-puls ─────────────────────────────────────────────────
+     Panelet sjekker alle kilder hvert 60. sekund og ved retur til fanen.
+     Nettverk brukes kun når cache-TTL er utløpt (vær 30 min per MET-vilkårene,
+     valuta/rente 1 t, strøm 1 t) — men strøm-«nå»-timen og tidsstempelet
+     re-rendres lokalt hver puls, så tallene aldri står og blir gamle. */
+  function tick() {
+    if (document.hidden) return;
+    var p = getPlace();
+    loadWeather(p, false); loadFx(false); loadRate(false); loadStrom(p, false);
+  }
+
   /* ── Init ────────────────────────────────────────────────────── */
   function init() {
     var place = getPlace();
     setText('wxPlaceName', place.navn);
     buildStamp(); buildPicker(); buildGeo();
     loadWeather(place, false); loadFx(false); loadRate(false); loadStrom(place, false);
+    setInterval(tick, 60 * 1000);
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once: true });
-  else init();
+  /* Idle-gate: utsett init (fetch + DOM-skriv + count-up) til etter
+     entrance-koreografien (~1,2 s) så markedsdata-oppdateringene ikke
+     kolliderer med hero-animasjonen. Panelet viser HTML-fallback/cache
+     imens — aldri blankt. Timeout 2 s = øvre grense på utsettelsen. */
+  function kick() {
+    if ('requestIdleCallback' in window) requestIdleCallback(function () { init(); }, { timeout: 2000 });
+    else setTimeout(init, 1200);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', kick, { once: true });
+  else kick();
 })();
