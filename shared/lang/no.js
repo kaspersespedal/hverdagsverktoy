@@ -17,7 +17,7 @@ REGIONS['no'] = {
     morReqRows: [['Maks lån','Samlet gjeld maks 5× årsinntekt','All gjeld teller — boliglån, studielån, billån, kredittkort'],['Egenkapital','Minst 10%','Du må ha spart opp minst 10% av boligprisen selv (utlånsforskriften § 3)'],['Stresstest','Høyeste av 7% og rente + 3 pp','Banken sjekker at du har råd selv om renta går opp'],['Avdrag','Min. 2,5% per år over 60% belåning','Har du lånt mer enn 60% av boligverdien må du betale avdrag'],['Fleksibilitetskvote','Banken kan avvike i 10% av lån','I Oslo: maks 8% — betyr at banken kan si ja selv om du ikke oppfyller alle krav']],
     morCostRows: [['Rente','Flytende (sjekk din bank)'],['Skattefradrag','22% av rentekostnadene','Du får igjen 22% av rentene du betaler på skatten'],['Dokumentavgift','2,5% av markedsverdi','Betales ved kjøp av fast eiendom — unntak for nybygg og borettslagsleiligheter']],
     morBsuRows: [['Maks sparing per år','27 500 kr'],['Maks totalbeløp','300 000 kr'],['Skattefradrag','10% av innbetalt — opptil 2 750 kr/år'],['Aldersgrense','T.o.m. det året du fyller 33'],['Krav for skattefradrag','Du må ha skattepliktig arbeidsinntekt og ikke eie bolig'],['Hva kan pengene brukes til?','Kjøp, nedbetaling, påkostning eller vedlikehold av egen bolig'],['Brudd på vilkår?','Bruker du pengene til annet enn bolig må du tilbakebetale alt skattefradrag']],
-    morBsuTitle:'BSU — Boligsparing for ungdom (13–33 år)', morBsuDesc:'Skattefradrag, sparebeløp, aldersgrense, bruksvilkår',
+    morBsuTitle:'BSU — Boligsparing for ungdom (t.o.m. året du fyller 33)', morBsuDesc:'Skattefradrag, sparebeløp, aldersgrense, bruksvilkår',
     morReqTitle:'Krav til boliglån', morReqDesc:'Egenkapital, gjeldsgrad, stresstest, avdrag',
     morCostTitle:'Kostnader ved boligkjøp', morCostDesc:'Renter, skattefradrag, dokumentavgift',
     vatSubjRows: [['— GRUNNVILKÅR —','Tre ting må være oppfylt for mva-plikt'],['1. Næringsdrivende','Du må drive næringsvirksomhet — ikke hobby eller lønnstakerforhold','§ 2-1(1)'],['2. Omsetning av varer/tjenester','Det må skje en transaksjon — levering mot vederlag (betaling)','§ 1-3(1)a'],['3. Omsetningsgrense','Omsetning over 50 000 kr i løpet av 12 måneder','§ 2-1(1)'],['— HVEM MÅ REGISTRERE SEG? —',''],['Næringsdrivende over 50 000 kr','Registreringsplikt i Merverdiavgiftsregisteret','§ 2-1(1)'],['Veldedige organisasjoner','Høyere grense: 140 000 kr','§ 2-1(1)'],['Idrettsarrangementer','Egen grense: 3 000 000 kr','§ 2-1(1)'],['— BEGREPER FORKLART —',''],['Hva er «næring»?','Selvstendig, varig aktivitet med økonomisk karakter og egnet til overskudd. Hobby og enkeltoppdrag er normalt ikke næring.'],['Hva er «omsetning»?','Levering av varer eller tjenester mot vederlag. Gave, erstatning og tilskudd er normalt ikke omsetning.','§ 1-3(1)a'],['Hva er «avgiftssubjekt»?','Den som er registrert (eller skulle vært registrert) i Merverdiavgiftsregisteret og plikter å beregne og betale mva.','§ 1-3(1)d'],['Frivillig registrering?','Utleier av næringseiendom kan registrere seg frivillig for å få fradragsrett på inngående mva.','§ 2-3']],
@@ -234,7 +234,7 @@ REGIONS['no'] = {
     uttakExDiff:'Forskjell mellom ENK og AS',
     uttakExEnk:'Enkeltpersonforetak (ENK)',
     uttakExEnk1:'Skatt: Alminnelig inntekt 22%',
-    uttakExEnk2:'+ Trygdeavgift 7,6%',
+    uttakExEnk2:'+ Trygdeavgift 10,8%',
     uttakExEnk3:'+ Trinnskatt (hvis personinntekt)',
     uttakExEnkcond:'Vilkår: Kostpris helt/delvis fradragsført (§ 5-2(1))',
     uttakExAs:'Aksjeselskap (AS)',
@@ -662,7 +662,7 @@ REGIONS['no'] = {
       +'<div style="font-weight:700;color:var(--ink);margin-bottom:8px;font-size:14px;">Nøkkelfakta</div>'
       +'<div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px;">'
       +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Registreringsgebyr</span><span style="font-weight:700;color:var(--ink);">3 883 kr</span></div>'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Kommandittistkapital (minimum)</span><span style="font-weight:700;color:var(--ink);">Fastsatt i selskapsavtalen</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Kommandittistkapital (minimum)</span><span style="font-weight:700;color:var(--ink);">20 000 kr per kommandittist</span></div>'
       +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Beskatning</span><span style="font-weight:700;color:var(--ink);">Deltakerligning (som ANS/DA)</span></div>'
       +'<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;font-size:12px;"><span style="color:var(--ink2);">Antall deltakere</span><span style="font-weight:700;color:var(--ink);">Minst 2 (1 kompl. + 1 komm.)</span></div>'
       +'</div>'
@@ -673,7 +673,7 @@ REGIONS['no'] = {
       +'<div style="font-size:12px;color:var(--ink2);line-height:1.6;">Kommandittisten blander seg i ledelsen av selskapet. Da kan vedkommende bli ansett som komplementar og hefte personlig for gjelden (selskapsloven § 3-9).</div>'
       +'</div>'
       +'<div style="background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--ink3);line-height:1.5;">'
-      +'<b>Lovverk:</b> Selskapsloven kap. 3 (LOV-1985-06-21-83). Kommandittistens ansvar i § 3-7. Komplementarens ansvar i § 3-8.'
+      +'<b>Lovverk:</b> Selskapsloven kap. 3 (LOV-1985-06-21-83). Kommandittistens ansvar i § 3-7. Komplementarens ansvar i § 2-4 (solidaransvar).'
       +'</div>',
 
     // --- Sammenligning ---
@@ -684,7 +684,7 @@ REGIONS['no'] = {
       +'<tbody>'
       +'<tr><td>Ansvar</td><td><span class="cmp-pill amber">Ubegr.</span></td><td><span class="cmp-pill green">Begr.</span></td><td><span class="cmp-pill amber">Ubegr.</span></td><td><span class="cmp-pill amber">K: ubegr.</span><br><span class="cmp-pill green">K: begr.</span></td></tr>'
       +'<tr><td>Eiere</td><td>1</td><td>1+</td><td>2+</td><td>2+</td></tr>'
-      +'<tr><td>Startkapital</td><td><span class="cmp-pill green">Ingen</span></td><td>30 000 kr</td><td><span class="cmp-pill green">Ingen</span></td><td>Valgfritt</td></tr>'
+      +'<tr><td>Startkapital</td><td><span class="cmp-pill green">Ingen</span></td><td>30 000 kr</td><td><span class="cmp-pill green">Ingen</span></td><td>20 000 kr</td></tr>'
       +'<tr><td>Reg.gebyr</td><td><span class="cmp-pill green">Gratis</span></td><td>6 825 kr</td><td>3 883 kr</td><td>3 883 kr</td></tr>'
       +'<tr><td>Beskatning</td><td>Personlig</td><td><span class="cmp-pill blue">22 % + utbytte</span></td><td>Deltakerlignet</td><td>Deltakerlignet</td></tr>'
       +'<tr><td>Lovverk</td><td>Alm. regler</td><td>Aksjeloven</td><td>Selskapsloven</td><td>Sel.loven kap. 3</td></tr>'
@@ -862,7 +862,7 @@ REGIONS['no'] = {
       ['Hva er et kommandittselskap?','Et selskap med minst én komplementar (ubegrenset ansvar) og minst én kommandittist (begrenset til innskudd).','sel. § 3-1'],
       ['Komplementarens rolle','Har ubegrenset personlig ansvar og leder selskapets virksomhet. Ofte et AS som er komplementar.','sel. § 3-1 og § 3-9'],
       ['Kommandittistens ansvar','Hefter kun for sitt avtalte innskudd. Kan ikke delta i ledelsen uten å miste begrensningen.','sel. § 3-1 og § 3-7'],
-      ['Innskuddskrav','Kommandittisten må innbetale avtalt innskudd. Innskuddet kan ikke settes til under 20 000 kr per kommandittist.','sel. § 3-1 (2)'],
+      ['Innskuddskrav','Kommandittisten må innbetale avtalt innskudd. Innskuddet kan ikke settes til under 20 000 kr per kommandittist.','sel. § 3-5 (1)'],
       ['Forvaltning i KS','Komplementaren forvalter selskapet. Kommandittisten kan delta i selskapsmøte men har ikke forvaltningsrett uten avtale.','sel. § 3-9'],
       ['Deltakerligning','KS beskattes gjennom deltakerligning — overskudd/underskudd skattlegges direkte hos deltakerne, ikke i selskapet.','sktl. § 10-40 flg.']
     ],

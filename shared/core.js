@@ -2420,7 +2420,7 @@ function updateUttakUI() {
   setText('uttak-ex-diff', r.uttakExDiff || 'Difference between sole proprietorship and limited company');
   setText('uttak-ex-enk', r.uttakExEnk || 'Sole proprietorship (ENK)');
   setText('uttak-ex-enk1', r.uttakExEnk1 || 'Tax: Ordinary income 22%');
-  setText('uttak-ex-enk2', r.uttakExEnk2 || '+ National insurance 7.6%');
+  setText('uttak-ex-enk2', r.uttakExEnk2 || '+ National insurance 10.8%');
   setText('uttak-ex-enk3', r.uttakExEnk3 || '+ Bracket tax (if personal income)');
   setText('uttak-ex-enkcond', r.uttakExEnkcond || 'Condition: Cost price wholly/partly deducted (§ 5-2(1))');
   setText('uttak-ex-as', r.uttakExAs || 'Limited company (AS)');
