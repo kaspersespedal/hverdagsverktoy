@@ -632,6 +632,12 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       if(Math.abs(f) < 0.01) break;
     }
     if(isNaN(irr) || !isFinite(irr)) irrValid = false;
+    // Konvergenssjekk: NPV ved løst IRR må være ~0, ellers finnes ingen reell internrente
+    if(irrValid){
+      var npvChk = -inv;
+      for(var k=0; k<cfs.length; k++){ npvChk += cfs[k] / Math.pow(1+irr, k+1); }
+      if(!isFinite(npvChk) || Math.abs(npvChk) > 0.5) irrValid = false;
+    }
 
     var sum = cfs.reduce(function(a,b){ return a+b; }, 0);
     var pi = inv > 0 ? (npv + inv) / inv : 0;
