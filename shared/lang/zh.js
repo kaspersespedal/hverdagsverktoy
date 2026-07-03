@@ -1066,16 +1066,32 @@ homeHeroTitle:'<em>个人理财</em>、税务和法律的实用工具。',
 homeHeroLangPill:'10种语言',
 homeHeroSubtitle:'已更新至2026年现行规则。',
 homeMarketTitle:'每日概览',
-homeSectionCategories:'类别',
+    "fr.kicker": "即将到来",
+    "fr.title": "重要截止日期",
+    "fr.context": "— 与你相关的近期日期，按日期排序",
+    "fr.see_all": "查看所有截止日期",
+    "fr.see_all_wheel": "查看所有截止日期 & 年度日历",
+    "fr.verify": "已核对 <b>Skatteetaten</b>、<b>Brønnøysund</b>、<b>NAV</b> & <b>Lovdata</b> · 周末 → 下一个工作日",
+    "fr.next": "下一个截止日期",
+    "fr.in": "还有",
+    "fr.days": "天",
+    "fr.miss": "若你错过",
+    "fr.src": "来源",
+    "m.title": "2026 年截止日期",
+    "m.sub": "年度日历、搜索和所有日期 — 每个截止日期均附来源。",
+    "m.close": "关闭",
+    "m.search": "搜索截止日期、适用对象或来源 …",
+    "m.f.all": "全部",
+    "m.f.privat": "个人",
+    "m.f.bedrift": "企业",
+    "m.f.student": "学生",
+    "m.f.bilbolig": "汽车 & 住房",
+    "m.f.arbeid": "工作",
+    "m.wheel": "2026 年年度日历",
+    "m.cats": "按类别列出的所有截止日期",
+    "m.empty": "没有截止日期与<b>搜索</b>匹配。",
+    "m.reset": "重置筛选",
 homeCategoriesCount:'6个版块',
-homeCardPersonlig:'个人理财',
-homeCardBoliglan:'住房贷款',
-homeCardKalkulator:'计算器',
-homeCardSkatt:'税务',
-homeCardSelskap:'公司',
-homeCardAvgift:'税费',
-homeCardRegnskap:'会计',
-homeCardLov:'法律',
 vatTitleNew:'<em>增值税（MVA）</em>计算器',
 vatSubtitle:'输入金额并选择税率 — 我们将计算含税或不含税的价格。挪威2026年税率（25%标准、15%食品、12%运输/酒店/电影院、0%免税）。所有计算都在您的浏览器本地进行 — 数据不会发送到任何地方。',
 vatHStatVat:'增值税额',
@@ -1720,25 +1736,15 @@ tekFootNote:'* 2026年费率。规则可能变化 — 请查阅 skatteetaten.no 
 
     avgiftHeroToolAgaTitle:'雇主社会保险费',
 
-    homeCatAvgiftDesc:'增值税、增值税法和雇主社会保险费',
 
-    homeCatBoliglanDesc:'住房贷款计算器、贷款要求、成本和BSU',
 
-    homeCatKalkulatorDesc:'基础、货币、金融、科学和专业计算器',
 
-    homeCatMeta:'8个领域 · 35+ 计算器',
 
-    homeCatPersonligDesc:'汽车成本、预算和盈利能力',
 
-    homeCatSelskapDesc:'股份公司、有限合伙公司和公司法',
 
-    homeCatSkattDesc:'税款计算、概念和税法',
 
-    homeCatRegnskapDesc:'记账、资产负债表、损益表和会计科目表',
 
-    homeCatLovDesc:'税法、公司法、增值税法和会计法',
 
-    homeCatTitle:'浏览工具',
 
     footPrivacy:'隐私',
 
