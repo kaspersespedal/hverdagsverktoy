@@ -717,7 +717,7 @@ function groupRowsHtml(results, q){
     var r = results[i].item;
     var d = resolveDisplay(r);
     var tag = typeLabel(r.type);
-    html += '<a href="'+r.url+'" class="search-result" data-idx="'+i+'">' +
+    html += '<a href="'+r.url+'" class="search-result" data-idx="'+i+'" role="option" aria-selected="false">' +
       '<div class="search-result-left">' +
         '<div class="search-result-name">'+highlight(d.name, q)+'</div>' +
         '<div class="search-result-desc">'+escHtml(d.desc||'')+'</div>' +
@@ -791,6 +791,13 @@ function initSearch(){
   var chips    = document.getElementById('search-suggestions');
   var activeIdx = -1;
 
+  // Combobox open/close — holder aria-expanded synk med dropdownen (a11y H9)
+  function setOpen(open){
+    dropdown.classList.toggle('visible', open);
+    input.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if(!open) input.removeAttribute('aria-activedescendant');
+  }
+
   // Build suggestion chips (rebuildable on language change)
   // Skipp paa nye landings (point.suppressChips) — style.css er ikke lastet, chips renderer ustylet
   function buildChips(){
@@ -813,7 +820,7 @@ function initSearch(){
     var rdd=document.getElementById('rdd');if(rdd)rdd.classList.remove('open');
     if(!input.value.trim()){
       chips.classList.add('visible');
-      dropdown.classList.remove('visible');
+      setOpen(false);
     }
   });
   // Backup: load intents at idle time even if user never focuses search
@@ -827,9 +834,10 @@ function initSearch(){
   input.addEventListener('input', function(){
     var q = input.value.trim();
     activeIdx = -1;
+    input.removeAttribute('aria-activedescendant');
 
     if(!q){
-      dropdown.classList.remove('visible');
+      setOpen(false);
       chips.classList.add('visible');
       return;
     }
@@ -852,12 +860,12 @@ function initSearch(){
           if(typeof openContactWithSuggestion === 'function') openContactWithSuggestion(this.dataset.missingQuery || '');
         });
       }
-      dropdown.classList.add('visible');
+      setOpen(true);
       return;
     }
 
     dropdown.innerHTML = renderResults(results, q);
-    dropdown.classList.add('visible');
+    setOpen(true);
   });
 
   // Keyboard navigation
@@ -882,24 +890,30 @@ function initSearch(){
       }
     } else if(e.key === 'Escape'){
       input.blur();
-      dropdown.classList.remove('visible');
+      setOpen(false);
       chips.classList.remove('visible');
     }
   });
 
   function updateActive(items){
     for(var i=0; i<items.length; i++){
-      items[i].classList.toggle('search-result-active', i === activeIdx);
+      var on = (i === activeIdx);
+      items[i].classList.toggle('search-result-active', on);
+      if(!items[i].id) items[i].id = 'search-opt-' + i;
+      items[i].setAttribute('aria-selected', on ? 'true' : 'false');
     }
     if(activeIdx >= 0 && items[activeIdx]){
+      input.setAttribute('aria-activedescendant', items[activeIdx].id);
       items[activeIdx].scrollIntoView({block:'nearest'});
+    } else {
+      input.removeAttribute('aria-activedescendant');
     }
   }
 
   // Close on click outside
   document.addEventListener('click', function(e){
     if(!wrap.contains(e.target)){
-      dropdown.classList.remove('visible');
+      setOpen(false);
       chips.classList.remove('visible');
     }
   });
