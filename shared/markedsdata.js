@@ -416,7 +416,7 @@
           '<div class="wx-kicker">I dag · time for time</div>' +
           '<p class="wx-graph-sub" id="wxGraphSub"></p>' +
           '<div class="wx-graph-wrap"><div id="wxGraphHost"></div><div class="wx-scrub" id="wxScrub" aria-hidden="true"></div></div>' +
-          '<p class="wx-graph-caption" id="wxGraphCap"></p>' +
+          '<div class="wx-stats" id="wxStats"></div>' +
           '<section class="wx-week"><div class="wx-kicker">Neste 7 dager</div><ul class="wx-week-list" id="wxWeekHost"></ul></section>' +
         '</div>' +
       '</div>';
@@ -424,7 +424,7 @@
     _modalEls = {
       bd: bd, modal: bd.querySelector('.wx-modal'), close: $('wxModalClose'),
       graphHost: $('wxGraphHost'), weekHost: $('wxWeekHost'), scrub: $('wxScrub'),
-      sub: $('wxGraphSub'), cap: $('wxGraphCap'), sr: $('wxModalSr'), stamp: $('wxModalStamp')
+      sub: $('wxGraphSub'), stats: $('wxStats'), sr: $('wxModalSr'), stamp: $('wxModalStamp')
     };
     _modalEls.close.addEventListener('click', closeWxModal);
     bd.addEventListener('click', function (e) { if (e.target === bd) closeWxModal(); });
@@ -448,7 +448,8 @@
   function modalStamp() {
     if (!_modalEls) return;
     var d = new Date();
-    _modalEls.stamp.textContent = 'Sist oppdatert ' +
+    var cond = (_lastWx && _lastWx.sym) ? wxText(_lastWx.sym) : '';
+    _modalEls.stamp.textContent = (cond ? cond + ' · ' : '') + 'oppdatert ' +
       String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
   }
 
@@ -465,8 +466,8 @@
     modalStamp();
     if (_lastWx) { renderDayGraph(_lastWx); renderWeek(_lastWx); }
     else {
-      els.graphHost.innerHTML = '<svg class="wx-graph" viewBox="0 0 720 230" role="img" aria-label="Værdata lastes"><text class="g-empty" x="40" y="120">Værdata lastes …</text></svg>';
-      els.sub.textContent = ''; els.cap.textContent = ''; els.weekHost.innerHTML = '';
+      els.graphHost.innerHTML = '<svg class="wx-graph" viewBox="0 0 760 300" role="img" aria-label="Værdata lastes"><text class="g-empty" x="34" y="150">Værdata lastes …</text></svg>';
+      els.sub.textContent = ''; els.stats.innerHTML = ''; els.weekHost.innerHTML = '';
     }
     els.bd.hidden = false;
     void els.bd.offsetWidth; // tvinger reflow så .in-transisjonen faktisk kjører fra opacity:0/translate
@@ -490,8 +491,60 @@
     if (_wxReturnFocus && _wxReturnFocus.focus) _wxReturnFocus.focus();
   }
 
-  /* Stor time-for-time-graf: temperaturkurve (helt) + nedbørsøyler (nøytral)
-     + symbolrad + rutenett + «nå»-markør. Bygges fra cachet d.dayHours. */
+  /* Glatt temperaturkurve: cardinal-spline (Catmull-Rom) → kubiske bezier-segmenter.
+     Kontrollpunkt = P[i] ± tangent/3, ensidig tangent i endene. Passerer alle punkter. */
+  function smoothPath(pts) {
+    var n = pts.length;
+    if (!n) return '';
+    if (n === 1) return 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+    function tan(i) {
+      var a = pts[i === 0 ? 0 : i - 1], b = pts[i === n - 1 ? n - 1 : i + 1];
+      var div = (i === 0 || i === n - 1) ? 1 : 2;
+      return [(b[0] - a[0]) / div, (b[1] - a[1]) / div];
+    }
+    var d = 'M' + pts[0][0].toFixed(1) + ',' + pts[0][1].toFixed(1);
+    for (var i = 0; i < n - 1; i++) {
+      var mi = tan(i), mj = tan(i + 1);
+      var c1x = pts[i][0] + mi[0] / 3, c1y = pts[i][1] + mi[1] / 3;
+      var c2x = pts[i + 1][0] - mj[0] / 3, c2y = pts[i + 1][1] - mj[1] / 3;
+      d += ' C' + c1x.toFixed(1) + ',' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ',' + c2y.toFixed(1) +
+           ' ' + pts[i + 1][0].toFixed(1) + ',' + pts[i + 1][1].toFixed(1);
+    }
+    return d;
+  }
+  /* Rutelinje-verdier på pene heltall innenfor [lo,hi] (maks 3-4 linjer). */
+  function niceTicks(lo, hi) {
+    var span = (hi - lo) || 1;
+    var step = span >= 20 ? 10 : span >= 8 ? 5 : span >= 3 ? 2 : 1;
+    var ticks = [], v;
+    for (v = Math.ceil(lo / step) * step; v <= hi + 1e-6 && ticks.length < 5; v += step) ticks.push(v);
+    if (ticks.length < 2) ticks = [hi, (hi + lo) / 2, lo];
+    if (ticks.length > 4) ticks = [ticks[0], ticks[Math.floor(ticks.length / 2)], ticks[ticks.length - 1]];
+    return ticks.map(function (t) { return Math.round(t); });
+  }
+  /* Nøkkeltall-rad: Nå · Maks · Min · Vind (erstatter tekst-caption). */
+  function statCell(lbl, val, unit, dir, isNow) {
+    return '<div class="wx-stat"><div class="wx-stat-lbl">' + lbl + '</div>' +
+      '<div class="wx-stat-val' + (isNow ? ' is-now' : '') + '"><span>' + val + '</span>' +
+      (unit ? '<span class="u">' + unit + '</span>' : '') +
+      (dir ? '<span class="d">' + dir + '</span>' : '') + '</div></div>';
+  }
+  function renderStats(hrs, d) {
+    var els = _modalEls; if (!els) return;
+    if (!hrs.length) { els.stats.innerHTML = ''; return; }
+    var temps = hrs.map(function (h) { return h.temp; });
+    var tmax = Math.round(Math.max.apply(null, temps)), tmin = Math.round(Math.min.apply(null, temps));
+    var windOk = d && typeof d.wind === 'number';
+    els.stats.innerHTML =
+      statCell('Nå', Math.round(hrs[0].temp) + '°', '', '', true) +
+      statCell('Maks', tmax + '°', '', '', false) +
+      statCell('Min', tmin + '°', '', '', false) +
+      statCell('Vind', windOk ? String(Math.round(d.wind)) : '–', windOk ? 'm/s' : '',
+               (windOk && d.dir != null) ? compass(d.dir) : '', false);
+  }
+
+  /* Stor time-for-time-graf: glatt temperaturkurve + nedbørsøyler (nøytral) + symbolrad
+     + pene rutelinjer + myk «nå»-halo. Bygges fra cachet d.dayHours. */
   function renderDayGraph(d) {
     var els = _modalEls; if (!els) return;
     // Filtrer bort punkter uten gyldig temperatur (null/undefined/NaN/Infinity fra
@@ -503,33 +556,33 @@
     var today = new Date();
     els.sub.textContent = DAGER_FULL[today.getDay()] + ' ' + today.getDate() + '. ' + MND_LONG[today.getMonth()];
     if (hrs.length < 2) {
-      els.graphHost.innerHTML = '<svg class="wx-graph" viewBox="0 0 720 230" role="img" aria-label="Værdata lastes"><text class="g-empty" x="40" y="120">Værdata lastes …</text></svg>';
-      els.cap.textContent = ''; els.sr.textContent = ''; _graphGeo = null; return;
+      els.graphHost.innerHTML = '<svg class="wx-graph" viewBox="0 0 760 300" role="img" aria-label="Værdata lastes"><text class="g-empty" x="34" y="150">Værdata lastes …</text></svg>';
+      els.stats.innerHTML = ''; els.sr.textContent = ''; _graphGeo = null; return;
     }
-    var W = 720, H = 230, PADL = 40, PADR = 16, plotW = W - PADL - PADR;
-    var TT = 34, TB = 150, PBASE = 188; // temp-bånd 34→150, nedbør-baseline 188
+    var W = 760, H = 300, PADL = 34, PADR = 14, plotW = W - PADL - PADR;
+    var TT = 68, TB = 192, ABASE = 200, PBASE = 250; // temp-bånd 68→192, area-baseline 200, nedbør-baseline 250
     var n = hrs.length;
     function X(i) { return n <= 1 ? PADL : PADL + (i / (n - 1)) * plotW; }
     var temps = hrs.map(function (h) { return h.temp; }); // alle endelige tall (filtrert over)
-    var tmin = Math.min.apply(null, temps), tmax = Math.max.apply(null, temps);
-    var lo = Math.floor(tmin - 1), hi = Math.ceil(tmax + 1);
-    if (hi === lo) hi = lo + 1;
-    function Y(t) { return TT + (1 - (t - lo) / (hi - lo)) * (TB - TT); }
+    var tmin0 = Math.min.apply(null, temps), tmax0 = Math.max.apply(null, temps); // faktiske
+    var tmin = tmin0, tmax = tmax0;
+    if (tmax - tmin < 1) { tmax += 1; tmin -= 1; } // flat dag → gi båndet høyde
+    function Y(t) { return TT + (tmax - t) / (tmax - tmin) * (TB - TT); }
     var precs = hrs.map(function (h) { return h.precip || 0; });
     var maxP = Math.max.apply(null, precs), anyP = maxP > 0.05, wettest = 0;
     for (var wi = 1; wi < precs.length; wi++) if (precs[wi] > precs[wettest]) wettest = wi;
     var dense = (window.matchMedia && window.matchMedia('(max-width:640px)').matches) ? 4 : 3;
 
-    var linePts = hrs.map(function (h, i) { return X(i).toFixed(1) + ',' + Y(h.temp).toFixed(1); });
-    var line = 'M' + linePts.join(' L');
-    var area = line + ' L' + X(n - 1).toFixed(1) + ',' + TB + ' L' + X(0).toFixed(1) + ',' + TB + ' Z';
+    // glatt kurve + fylt areal ned til area-baseline
+    var pts = hrs.map(function (h, i) { return [X(i), Y(h.temp)]; });
+    var line = smoothPath(pts);
+    var area = line + ' L' + X(n - 1).toFixed(1) + ',' + ABASE + ' L' + X(0).toFixed(1) + ',' + ABASE + ' Z';
 
     var g = '';
-    // horisontale rutelinjer + serif-etiketter (maks / midt / min)
-    [hi, Math.round((hi + lo) / 2), lo].forEach(function (v) {
-      var gy = Y(v).toFixed(1);
-      g += '<line class="g-grid" x1="' + PADL + '" y1="' + gy + '" x2="' + (W - PADR) + '" y2="' + gy + '"/>';
-      g += '<text class="y-lbl" x="' + (PADL - 6) + '" y="' + (Y(v) + 3).toFixed(1) + '" text-anchor="end">' + v + '°</text>';
+    niceTicks(tmin0, tmax0).forEach(function (v) {
+      var gy = Y(v);
+      g += '<line class="g-grid" x1="' + PADL + '" y1="' + gy.toFixed(1) + '" x2="' + (W - PADR) + '" y2="' + gy.toFixed(1) + '"/>';
+      g += '<text class="y-lbl" x="' + (PADL - 8) + '" y="' + (gy + 3.5).toFixed(1) + '" text-anchor="end">' + v + '°</text>';
     });
     g += '<path class="g-area" d="' + area + '" fill="url(#wxGraphFill)"/>';
     g += '<path class="g-line" d="' + line + '"/>';
@@ -541,40 +594,40 @@
         var bh = Math.max(2, Math.min(30, p / maxP * 30));
         g += '<rect class="g-precip" x="' + (X(i) - 3).toFixed(1) + '" y="' + (PBASE - bh).toFixed(1) + '" width="6" height="' + bh.toFixed(1) + '" rx="1"/>';
       });
-      g += '<text class="p-cap" x="' + PADL + '" y="202">Nedbør</text>';
-      g += '<text class="p-lbl" x="' + X(wettest).toFixed(1) + '" y="' + (PBASE - 30 - 3).toFixed(1) + '" text-anchor="middle">' + nb(maxP, 1) + ' mm</text>';
+      g += '<text class="p-cap" x="' + PADL + '" y="' + (PBASE - 34) + '">Nedbør</text>';
+      g += '<text class="p-lbl" x="' + X(wettest).toFixed(1) + '" y="' + (PBASE - 34) + '" text-anchor="middle">' + nb(maxP, 1) + ' mm</text>';
     }
-    // symbolrad (hver 3./4. time), «nå» aksentfarget. Nested SVG MÅ ha eksplisitt
-    // width/height/x/y — ellers rendrer den i full viewBox-størrelse (16→720u).
+    // symbolrad (hver 3./4. time), «nå» aksentfarget. Nested SVG MÅ ha eksplisitt størrelse.
     hrs.forEach(function (h, i) {
       if (i % dense !== 0) return;
-      var ic = wxIcon(h.sym).replace('<svg ', '<svg width="18" height="18" x="' + (X(i) - 9).toFixed(1) + '" y="0" ');
+      var ic = wxIcon(h.sym).replace('<svg ', '<svg width="20" height="20" x="' + (X(i) - 10).toFixed(1) + '" y="9" ');
       g += '<g class="g-sym' + (i === 0 ? ' is-now' : '') + '">' + ic + '</g>';
     });
-    // time-etiketter
+    // time-etiketter («nå» aksentfarget)
     hrs.forEach(function (h, i) {
       if (i % dense !== 0) return;
       var lbl = i === 0 ? 'nå' : String(h.hour).padStart(2, '0');
-      g += '<text class="x-lbl" x="' + X(i).toFixed(1) + '" y="216" text-anchor="middle">' + lbl + '</text>';
+      g += '<text class="x-lbl' + (i === 0 ? ' x-now' : '') + '" x="' + X(i).toFixed(1) + '" y="272" text-anchor="middle">' + lbl + '</text>';
     });
-    // «nå»-markør (stiplet + prikk på kurven)
-    g += '<line class="g-now" x1="' + X(0).toFixed(1) + '" y1="28" x2="' + X(0).toFixed(1) + '" y2="' + PBASE + '"/>';
-    g += '<circle class="g-now-dot" cx="' + X(0).toFixed(1) + '" cy="' + Y(hrs[0].temp).toFixed(1) + '" r="3"/>';
     // skjult skrubbe-linje (hover-avlesning)
-    g += '<line class="g-scrub" id="wxScrubLine" x1="0" y1="28" x2="0" y2="' + PBASE + '"/>';
+    g += '<line class="g-scrub" id="wxScrubLine" x1="0" y1="' + TT + '" x2="0" y2="' + PBASE + '"/>';
+    // «nå»-markør: myk halo-prikk (3 konsentriske sirkler) på kurven
+    var nx = X(0).toFixed(1), ny = Y(hrs[0].temp).toFixed(1);
+    g += '<circle class="g-now-halo" cx="' + nx + '" cy="' + ny + '" r="6.5"/>' +
+         '<circle class="g-now-mid" cx="' + nx + '" cy="' + ny + '" r="4.5"/>' +
+         '<circle class="g-now-dot" cx="' + nx + '" cy="' + ny + '" r="3"/>';
 
     var aria = 'Temperatur time for time. Nå ' + Math.round(hrs[0].temp) + ' grader, maks ' +
-      Math.round(tmax) + ', min ' + Math.round(tmin) + ' grader' + (anyP ? ', noe nedbør' : '');
+      Math.round(tmax0) + ', min ' + Math.round(tmin0) + ' grader' + (anyP ? ', noe nedbør' : '');
     els.graphHost.innerHTML =
       '<svg class="wx-graph" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + esc(aria) + '">' +
         '<defs><linearGradient id="wxGraphFill" x1="0" y1="0" x2="0" y2="1">' +
           '<stop offset="0" class="gf-a"/><stop offset="1" class="gf-b"/>' +
         '</linearGradient></defs>' + g + '</svg>';
     els.sr.textContent = aria;
-    els.cap.textContent = 'Nå ' + Math.round(hrs[0].temp) + '° · Maks ' + Math.round(tmax) + '° · Min ' + Math.round(tmin) + '°' +
-      (typeof d.wind === 'number' ? ' · Vind ' + nb(d.wind, 1) + ' m/s' + (d.dir != null ? ' ' + compass(d.dir) : '') : '');
+    renderStats(hrs, d);
 
-    var geo = { n: n, xs: [], ys: [], hours: hrs };
+    var geo = { n: n, xs: [], ys: [], hours: hrs, vbW: W, vbH: H };
     for (var gi = 0; gi < n; gi++) { geo.xs.push(X(gi)); geo.ys.push(Y(hrs[gi].temp)); }
     _graphGeo = geo;
   }
@@ -594,7 +647,7 @@
       var name = i === 0 ? 'I dag' : DAGER_FULL[w.dow];
       var L = (w.min - gMin) / gRng * 100, Wd = (w.max - w.min) / gRng * 100;
       if (Wd < 4) Wd = 4;
-      html += '<li class="wx-week-row">' +
+      html += '<li class="wx-week-row' + (i === 0 ? ' is-today' : '') + '">' +
         '<span class="wx-week-day">' + name + '</span>' +
         '<span class="wx-week-ico">' + wxIcon(w.sym) + '</span>' +
         '<span class="wx-week-range"><i style="left:' + L.toFixed(1) + '%;width:' + Wd.toFixed(1) + '%"></i></span>' +
@@ -623,8 +676,8 @@
       var h = _graphGeo.hours[best];
       els.scrub.innerHTML = '<b>' + (best === 0 ? 'nå' : String(h.hour).padStart(2, '0') + ':00') + '</b> · ' +
         Math.round(h.temp) + '°' + (h.precip > 0.05 ? ' · <span class="mut">' + nb(h.precip, 1) + ' mm</span>' : '');
-      els.scrub.style.left = ((rect.left - wrapRect.left) + _graphGeo.xs[best] / 720 * rect.width) + 'px';
-      els.scrub.style.top = ((rect.top - wrapRect.top) + _graphGeo.ys[best] / 230 * rect.height) + 'px';
+      els.scrub.style.left = ((rect.left - wrapRect.left) + _graphGeo.xs[best] / _graphGeo.vbW * rect.width) + 'px';
+      els.scrub.style.top = ((rect.top - wrapRect.top) + _graphGeo.ys[best] / _graphGeo.vbH * rect.height) + 'px';
       els.scrub.classList.add('on');
     });
     wrap.addEventListener('pointerleave', function () {
