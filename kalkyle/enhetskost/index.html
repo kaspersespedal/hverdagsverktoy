@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="no" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Enhetskost-kalkulator — Divisjon og ekvivalens · Hverdagsverktøy</title>
+<meta name="description" content="Regn ut kostnad per enhet med enkel divisjon, eller med ekvivalenstall når produktvariantene bruker ulikt med ressurser. For masseproduksjon og produktserier.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://hverdagsverktoy.com/kalkyle/enhetskost/">
+<meta property="og:title" content="Enhetskost — Hverdagsverktøy">
+<meta property="og:description" content="Kostnad per enhet — også når variantene er ulikt krevende.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hverdagsverktoy.com/kalkyle/enhetskost/">
+<meta property="og:locale" content="nb_NO">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://hverdagsverktoy.com/kalkyle/enhetskost/#webpage",
+  "name": "Enhetskost — Hverdagsverktøy",
+  "url": "https://hverdagsverktoy.com/kalkyle/enhetskost/",
+  "inLanguage": "no",
+  "isPartOf": { "@id": "https://hverdagsverktoy.com/#website" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Kalkyle", "item": "https://hverdagsverktoy.com/kalkyle/" },
+    { "@type": "ListItem", "position": 3, "name": "Enhetskost", "item": "https://hverdagsverktoy.com/kalkyle/enhetskost/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Hva er et ekvivalenstall?", "acceptedAnswer": { "@type": "Answer", "text": "Et forholdstall som sier hvor mye ressurser en variant bruker sammenlignet med referansen. Referansen settes til 1,00 — en variant som krever dobbelt så mye får 2,00." } },
+    { "@type": "Question", "name": "Når holder det med enkel divisjon?", "acceptedAnswer": { "@type": "Answer", "text": "Når alle enhetene er like og bruker like mye ressurser. Da er ekvivalenstallet 1,00 for alt, og divisjon gir samme svar som ekvivalensmetoden." } },
+    { "@type": "Question", "name": "Hvordan finner jeg riktige ekvivalenstall?", "acceptedAnswer": { "@type": "Answer", "text": "Se på hva som driver kostnaden — maskintid, materialforbruk eller arbeidstimer per enhet. Forholdet mellom variantene på den viktigste kostnadsdriveren gir ekv-tallet." } }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/inter/files/inter-latin-400-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/inter/files/inter-latin-600-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
+<link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap">
+<script>
+  (function(){try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<script>
+  (function(){
+    try{
+      var l=localStorage.getItem('hvt-lang')||'no';
+      document.documentElement.setAttribute('data-lang',l);
+      if(l!=='no')document.documentElement.classList.add('lang-loading');
+    }catch(e){}
+  })();
+</script>
+<style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
+<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v3">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v2">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v6">
+<style>
+/* Enhetskost — kalkulator-skall (delt mønster med Kalkyle-seksjonen) */
+body{min-height:100vh;display:flex;flex-direction:column}
+body > main{flex:1 0 auto}
+body > footer{flex-shrink:0}
+body.focus-mode > .nav-wrap,
+body.focus-mode > .tabs-wrap,
+body.focus-mode > footer{display:none}
+
+.kk-dash{width:48px;height:2px;background:var(--accent);opacity:.9;margin-bottom:20px}
+
+.kk-picker-strip-wrap{padding:18px 0 6px}
+.kk-picker-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.kk-picker-strip::-webkit-scrollbar{display:none}
+.kk-chip{flex-shrink:0;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+  background:transparent;color:var(--ink3);font:500 12.5px/1 var(--font-sans);text-decoration:none;
+  transition:color .18s ease,border-color .18s ease,background .18s ease}
+.kk-chip.is-active{border-color:var(--line-warm);background:color-mix(in srgb, var(--accent) 12%, transparent);color:var(--ink)}
+@media(hover:hover){.kk-chip:not(.is-active):hover{color:var(--ink2);border-color:var(--line-2)}}
+
+.mg-seg-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(max-width:480px){.mg-seg-row{grid-template-columns:1fr}}
+.mg-seg{appearance:none;-webkit-appearance:none;border:1px solid var(--line-2);cursor:pointer;
+  padding:9px 10px;border-radius:5px;font:500 12.5px/1.2 var(--font-sans);letter-spacing:-.05px;
+  background:var(--surface-2);color:var(--ink2);text-align:center;
+  transition:background .18s ease,color .18s ease,border-color .18s ease}
+.mg-seg[aria-pressed="true"]{background:color-mix(in srgb, var(--accent) 14%, transparent);color:var(--ink);border-color:var(--line-warm)}
+@media(hover:hover){.mg-seg:not([aria-pressed="true"]):hover{color:var(--ink);border-color:var(--line-2)}}
+
+.kk-mode-view{display:none}
+.kk-mode-view.is-active{display:block}
+
+/* Variant rows (dynamisk) */
+.vr-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.vr-head,.vr{display:grid;grid-template-columns:1fr 92px 96px 28px;gap:8px;align-items:center}
+.vr-head{font:600 9.5px/1 var(--font-sans);letter-spacing:.6px;text-transform:uppercase;color:var(--ink4);padding:0 2px 8px}
+.vr-head .num{text-align:right}
+.vr{margin-bottom:8px}
+.vr .ik-input{padding:8px 10px;font-size:13px}
+.vr .ik-input.num{text-align:right;font-variant-numeric:tabular-nums lining-nums}
+.vr-x{width:28px;height:28px;border:1px solid var(--line-2);border-radius:5px;background:transparent;color:var(--ink4);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;
+  transition:color .15s,border-color .15s}
+@media(hover:hover){.vr-x:hover{color:var(--accent-2);border-color:var(--line-warm)}}
+.vr-x[hidden]{visibility:hidden}
+.vr-add{margin-top:4px;display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px dashed var(--line-2);
+  border-radius:6px;padding:8px 12px;color:var(--ink3);font:500 12.5px/1 var(--font-sans);cursor:pointer;
+  transition:color .15s,border-color .15s}
+@media(hover:hover){.vr-add:hover{color:var(--ink);border-color:var(--line-warm)}}
+
+.rt{width:100%;border-collapse:collapse}
+.rt th{font:600 9.5px/1 var(--font-sans);letter-spacing:.5px;text-transform:uppercase;color:var(--ink4);text-align:left;padding:0 0 7px}
+.rt th.num,.rt td.num{text-align:right;font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
+.rt td{font:400 13px/1.4 var(--font-sans);color:var(--ink2);padding:7px 0;border-top:1px solid var(--line)}
+.rt td.num{color:var(--ink);font-weight:500}
+.rt td.name{color:var(--ink);font-weight:500}
+.rt td .u{color:var(--ink4);font-weight:400;margin-left:2px;font-size:11px}
+.rt tfoot td{border-top:1px solid var(--line-2);color:var(--ink);font-weight:600;padding-top:9px}
+
+.lg{display:flex;flex-direction:column}
+.lg-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:8px 0}
+.lg-row .l{font:400 13px/1.45 var(--font-sans);color:var(--ink2)}
+.lg-row .v{font:500 14px/1 var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums lining-nums;white-space:nowrap}
+.lg-row .v .u{color:var(--ink4);font-weight:400;margin-left:3px;font-size:11px}
+.lg-sum{border-top:1px solid var(--line-2);margin-top:3px;padding-top:10px}
+.lg-final .v{color:var(--accent-2);font-size:20px;font-weight:600;font-family:var(--font-serif)}
+
+.kk-examples{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:820px){.kk-examples{grid-template-columns:1fr}}
+.kk-ex{display:flex;flex-direction:column;gap:6px}
+.kk-ex .lbl{font:600 12px/1.3 var(--font-sans);color:var(--ink2)}
+.kk-ex .desc{font-size:13px;line-height:1.55;color:var(--ink3)}
+
+.kk-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
+.kk-steps li{display:flex;gap:14px;align-items:flex-start}
+.kk-steps .n{flex-shrink:0;font:500 12px/1.6 var(--font-mono);color:var(--ink4);width:18px}
+.kk-steps span:last-child{font-size:15px;line-height:1.65;color:var(--ink2)}
+.kk-steps b{color:var(--ink);font-weight:600}
+</style>
+<style>
+.lonn-learn{padding:8px 0 12px}
+.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
+.lc-sec:first-child{border-top:none;padding-top:24px}
+.lc-head{max-width:640px;margin:0 0 32px}
+.lc-kicker{display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;text-transform:uppercase;color:var(--accent);margin-bottom:15px}
+.lc-title{font-family:var(--font-serif);font-weight:500;font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;color:var(--ink);margin:0 0 14px}
+.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0 0 20px;max-width:60ch}
+.lc-trinn{width:100%;border-collapse:collapse}
+.lc-trinn th{font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left}
+.lc-trinn th.r,.lc-trinn td.r{text-align:right}
+.lc-trinn td{padding:11px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.lc-trinn tbody tr.is-sum td{color:var(--ink);font-weight:600}
+.lc-trinn tbody tr:last-child td{border-bottom:none}
+.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lc-trinn td .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
+.lc-faq{border-top:1px solid var(--line)}
+details.lc-q{border-bottom:1px solid var(--line)}
+details.lc-q > summary{cursor:pointer;list-style:none;padding:18px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;font:500 15px/1.45 var(--font-sans);color:var(--ink)}
+details.lc-q > summary::-webkit-details-marker{display:none}
+details.lc-q > summary::after{content:'';flex:0 0 auto;width:9px;height:9px;border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);transform:rotate(45deg);transition:transform .25s var(--ease)}
+details.lc-q[open] > summary::after{transform:rotate(-135deg)}
+details.lc-q[open] > summary{color:var(--ink)}
+details.lc-q .a{padding:0 0 20px;max-width:70ch}
+details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
+.lc-links{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.lc-link{display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease)}
+.lc-link .ar{font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}
+.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
+.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
+@media(hover:hover){.lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}}
+@media(max-width:820px){.lc-links{grid-template-columns:1fr}}
+@media(max-width:560px){.lc-sec{padding:40px 0}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main" data-i18n="skipLink">Hopp til innhold</a>
+
+<div class="nav-wrap">
+  <div class="container">
+    <nav>
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy — forside">
+        <span class="mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1.2"/><rect x="14" y="4" width="4" height="16" rx="1.2"/><rect x="10" y="10" width="4" height="4" rx=".6"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="container">
+    <div class="tabs" role="tablist">
+      <a href="/personlig/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>Privatøkonomi
+      </a>
+      <a href="/boliglan/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/></svg>Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>Kalkulator
+      </a>
+      <a href="/skatt/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>Skatt
+      </a>
+      <a href="/selskap/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg>Selskap
+      </a>
+      <a href="/avgift/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>Avgift
+      </a>
+      <a href="/regnskap/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg>Regnskap
+      </a>
+      <a href="/lov/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V20"/><path d="M5 7 L12 5 L19 7"/><path d="M3 13 a3 3 0 0 0 6 0 L6 7 Z"/><path d="M15 13 a3 3 0 0 0 6 0 L18 7 Z"/></svg>Lov
+      </a>
+    </div>
+  </div>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div>
+      <div class="crumb">
+        <a href="/kalkyle/" class="crumb-back" aria-label="Tilbake">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+        </a>
+        <a href="/">Hverdagsverktøy</a>
+        <span class="sep"></span>
+        <a href="/kalkyle/" data-i18n="kalkyleTitle">Kalkyle</a>
+        <span class="sep"></span>
+        <span class="here" data-i18n="kalkEnhetskostTitle">Enhetskost</span>
+      </div>
+      <div class="kk-dash" aria-hidden="true"></div>
+      <h1 class="page-title"><em data-i18n="kalkEnhetskostTitle">Enhetskost</em></h1>
+      <p class="page-lead" data-i18n="kalkEnhetskostSubtitle">Kostnad per enhet — også når variantene er ulikt krevende.</p>
+    </div>
+    <div class="page-stats">
+      <div class="page-stat"><span class="l" data-i18n="kalkEnhetskostStatKost">Kr / ekv-enhet</span><span class="v" id="hStatKost">214,94 kr</span></div>
+      <div class="page-stat"><span class="l" data-i18n="kalkEnhetskostStatEkv">Ekvivalensenheter</span><span class="v" id="hStatEkv">4 620</span></div>
+    </div>
+  </div>
+</section>
+
+<main id="main">
+<div class="calc-wrap">
+  <div class="container kk-picker-strip-wrap">
+    <div class="kk-picker-strip">
+      <a href="/kalkyle/margin/" class="kk-chip" data-i18n="kalkyleDestMargin">Margin &amp; påslag</a>
+      <a href="/kalkyle/selvkost/" class="kk-chip" data-i18n="kalkyleDestSk">Selvkost</a>
+      <a href="/kalkyle/enhetskost/" class="kk-chip is-active" data-i18n="kalkyleDestEk">Enhetskost</a>
+      <a href="/kalkyle/foodcost/" class="kk-chip" data-i18n="kalkyleDestFc">Food cost</a>
+      <a href="/kalkyle/landedcost/" class="kk-chip" data-i18n="kalkyleDestLk">Innførselskost</a>
+      <a href="/kalkyle/netthandel/" class="kk-chip" data-i18n="kalkyleDestNh">Netthandel</a>
+      <a href="/kalkulator/dekningsbidrag/" class="kk-chip" data-i18n="kalkyleDestBe">Dekningsbidrag</a>
+      <a href="/kalkulator/timepris/" class="kk-chip" data-i18n="kalkyleDestTp">Timepris</a>
+      <a href="/kalkulator/tilbud/" class="kk-chip" data-i18n="kalkyleDestTilbud">Tilbud</a>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="ks-host">
+      <div class="ks">
+        <div class="ks-strip">
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkEnhetskostResDiv">Enhetskost (divisjon)</span><span class="v" id="ekStripDiv">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkEnhetskostResEkv">Ekvivalensenheter</span><span class="v" id="ekStripEkv">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkEnhetskostResKost">Kostnad / ekv-enhet</span><span class="v" id="ekStripKost">–</span></div>
+          <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkEnhetskostResSelv">Selvkost per variant (A)</span><span class="v" id="ekStripSelv">–</span></div>
+        </div>
+
+        <div class="ks-body">
+          <div class="ks-form">
+            <section class="ks-section">
+              <span class="ik-lbl" data-i18n="kalkEnhetskostModeLbl">Metode</span>
+              <div class="mg-seg-row" role="group" aria-label="Velg metode" style="margin-top:8px">
+                <button type="button" class="mg-seg" id="ekSegDiv" aria-pressed="false" data-i18n="kalkEnhetskostModeDiv">Enkel divisjon</button>
+                <button type="button" class="mg-seg" id="ekSegEkv" aria-pressed="true" data-i18n="kalkEnhetskostModeEkv">Ekvivalens (varianter)</button>
+              </div>
+            </section>
+
+            <section class="ks-section kk-mode-view" id="ekViewDiv">
+              <div class="ik-section-head">
+                <h3 data-i18n="kalkEnhetskostSectionDiv">Enkel divisjon</h3>
+                <span class="meta" data-i18n="kalkEnhetskostSectionDivHint">Én ensartet vare</span>
+              </div>
+              <div class="ik-stack">
+                <div class="ik-fg">
+                  <label class="ik-lbl" for="ek-divtot"><span data-i18n="kalkEnhetskostLblDivtot">Totale kostnader i perioden</span> <span class="cap">(kr)</span></label>
+                  <input class="ik-input" id="ek-divtot" type="text" inputmode="decimal" autocomplete="off" value="993 000">
+                </div>
+                <div class="ik-fg">
+                  <label class="ik-lbl" for="ek-divant"><span data-i18n="kalkEnhetskostLblDivant">Produsert antall</span> <span class="cap" data-i18n="kalkEnhetskostLblDivantCap">(enheter)</span></label>
+                  <input class="ik-input" id="ek-divant" type="text" inputmode="decimal" autocomplete="off" value="3 800">
+                </div>
+              </div>
+            </section>
+
+            <section class="ks-section kk-mode-view is-active" id="ekViewEkv">
+              <div class="ik-section-head">
+                <h3 data-i18n="kalkEnhetskostSectionEkv">Varianter</h3>
+                <span class="meta" data-i18n="kalkEnhetskostSectionEkvHint">Ekvivalenstall — referanse = 1,00</span>
+              </div>
+              <div class="vr-wrap">
+                <div class="vr-head">
+                  <span data-i18n="kalkEnhetskostColVariant">Variant</span>
+                  <span class="num" data-i18n="kalkEnhetskostColMengde">Mengde</span>
+                  <span class="num" data-i18n="kalkEnhetskostColEkvtall">Ekv-tall</span>
+                  <span></span>
+                </div>
+                <div id="ekVariantRows"></div>
+              </div>
+              <button type="button" class="vr-add" id="ekAddVariant">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span data-i18n="kalkEnhetskostAddVariant">Legg til variant</span>
+              </button>
+              <div class="ik-fg" style="margin-top:14px">
+                <label class="ik-lbl" for="ek-ekvtot"><span data-i18n="kalkEnhetskostLblEkvtot">Totalkostnad</span> <span class="cap" data-i18n="kalkEnhetskostLblEkvtotCap">(kr, hele produksjonen)</span></label>
+                <input class="ik-input" id="ek-ekvtot" type="text" inputmode="decimal" autocomplete="off" value="993 000">
+              </div>
+            </section>
+          </div>
+
+          <aside class="ks-result" aria-live="polite">
+            <div class="ks-r-eyebrow" data-i18n="kalkEnhetskostResHeadline">Resultat</div>
+
+            <div class="kk-mode-view" id="ekResultDiv">
+              <div class="lg" style="margin-top:6px">
+                <div class="lg-row"><span class="l" data-i18n="kalkEnhetskostPTotal">Totale kostnader</span><span class="v" id="ekPDivTotal">–</span></div>
+                <div class="lg-row"><span class="l" data-i18n="kalkEnhetskostPAntall">Produsert antall</span><span class="v" id="ekPDivAntall">–</span></div>
+                <div class="lg-row lg-sum lg-final"><span class="l" data-i18n="kalkEnhetskostPEnhet">Enhetskost</span><span class="v" id="ekPDivEnhet">–</span></div>
+              </div>
+              <p class="ik-note" style="border-top:0;margin-top:12px;padding-top:0" data-i18n="kalkEnhetskostDivNote">Fordeler alle periodens kostnader likt på hver produserte enhet.</p>
+            </div>
+
+            <div class="kk-mode-view is-active" id="ekResultEkv">
+              <table class="rt">
+                <thead><tr><th data-i18n="kalkEnhetskostColVariant">Variant</th><th class="num" data-i18n="kalkEnhetskostColMengde">Mengde</th><th class="num" data-i18n="kalkEnhetskostColEkvtall">Ekv-tall</th><th class="num" data-i18n="kalkEnhetskostColEkvenh">Ekv-enh.</th></tr></thead>
+                <tbody id="ekResultRows"></tbody>
+                <tfoot><tr><td data-i18n="kalkEnhetskostSumEkv">Sum ekv-enheter</td><td class="num"></td><td class="num"></td><td class="num" id="ekSumEkvCell">–</td></tr></tfoot>
+              </table>
+              <div class="lg" style="margin-top:14px">
+                <div class="lg-row lg-sum lg-final"><span class="l" data-i18n="kalkEnhetskostPKostEkv">Kostnad / ekv-enhet</span><span class="v" id="ekPKostPerEkv">–</span></div>
+              </div>
+              <div style="margin-top:16px">
+                <span style="display:block;font:600 9.5px/1 var(--font-sans);letter-spacing:.5px;text-transform:uppercase;color:var(--ink4);margin-bottom:2px" data-i18n="kalkEnhetskostSelvPerVariant">Selvkost per variant</span>
+                <table class="rt"><tbody id="ekSelvkostRows"></tbody></table>
+              </div>
+              <p class="ik-note" style="border-top:0;margin-top:12px;padding-top:0" data-i18n="kalkEnhetskostEkvNote">Ekvivalenstall vekter kostnaden — tunge varianter bærer mer per enhet.</p>
+            </div>
+          </aside>
+        </div>
+
+        <details class="howto" style="border-top:1px solid var(--line);border-radius:0;border-left:0;border-right:0;border-bottom:0">
+          <summary style="padding:14px 22px"><span class="howto-title" data-i18n="kalkEnhetskostFormelToggle">Vis formel</span></summary>
+          <div class="howto-body" style="padding:0 22px 22px">
+            <div style="display:flex;flex-direction:column;gap:8px;font:500 13px/1.7 var(--font-mono);color:var(--ink2)">
+              <span data-i18n="kalkEnhetskostF1">Enkel divisjon: Enhetskost = Totale kostnader / Produsert antall</span>
+              <span data-i18n="kalkEnhetskostF2">Ekvivalensenheter = Σ (Mengde × Ekvivalenstall)</span>
+              <span data-i18n="kalkEnhetskostF3">Kostnad per ekvivalensenhet = Totale kostnader / Ekvivalensenheter</span>
+              <span data-i18n="kalkEnhetskostF4">Selvkost variant = Kostnad per ekvivalensenhet × Ekvivalenstall</span>
+            </div>
+            <p style="margin:16px 0 0;max-width:64ch" data-i18n="kalkEnhetskostFNote">«Ekvivalenstall vekter variantene etter hvor mye ressurser de bruker — så en tung variant bærer mer av kostnaden.»</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="container">
+  <div class="lonn-learn">
+    <section class="lc-sec" aria-labelledby="lcA-kalkyle-enhetskost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkEnhetskostGuideKicker">Slik regner du</span><h2 class="lc-title" id="lcA-kalkyle-enhetskost" data-i18n="kalkEnhetskostGuideTitle">Divisjon når varene er like — ekvivalens når de ikke er det</h2></div>
+      <ol class="kk-steps">
+        <li><span class="n">01</span><span data-i18n-html="kalkEnhetskostStep1"><b>Enkel divisjon.</b> Lager du én ensartet vare, deler du periodens totale kostnader på antall produserte enheter. Ferdig.</span></li>
+        <li><span class="n">02</span><span data-i18n-html="kalkEnhetskostStep2"><b>Ekvivalenstall.</b> Har du varianter som bruker ulikt med ressurser, gir du hver et tall relativt til referansen (= 1,00). En variant som koster 40 % mer å lage får 1,40.</span></li>
+        <li><span class="n">03</span><span data-i18n-html="kalkEnhetskostStep3"><b>Ekvivalensenheter.</b> Gang mengde med ekv-tall og summér. Del totalkostnaden på summen — så gir du hver variant sin andel etter ekv-tallet.</span></li>
+      </ol>
+    </section>
+
+    <section class="lc-sec" aria-labelledby="lcB-kalkyle-enhetskost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleExKicker">Regnet ut</span><h2 class="lc-title" id="lcB-kalkyle-enhetskost" data-i18n="kalkEnhetskostTableTitle">Eksempelet i tabellform</h2><p class="lc-intro" data-i18n="kalkEnhetskostTableIntro">993 000 kr / 4 620 ekv-enheter = 214,94 kr per ekvivalensenhet. Hver variants selvkost er dette tallet ganget med sitt ekv-tall.</p></div>
+      <table class="lc-trinn">
+        <thead><tr><th data-i18n="kalkEnhetskostColVariant">Variant</th><th class="r" data-i18n="kalkEnhetskostColMengde">Mengde</th><th class="r" data-i18n="kalkEnhetskostColEkvtall">Ekv-tall</th><th class="r" data-i18n="kalkEnhetskostColEkvenh">Ekv-enheter</th><th class="r" data-i18n="kalkEnhetskostColSelvEnh">Selvkost/enhet</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="kalkEnhetskostRowA">A (referanse)</td><td class="r">2 500</td><td class="r">1,00</td><td class="r">2 500</td><td class="r">214,94<span class="u">kr</span></td></tr>
+          <tr><td>B</td><td class="r">800</td><td class="r">1,40</td><td class="r">1 120</td><td class="r">300,91<span class="u">kr</span></td></tr>
+          <tr><td>C</td><td class="r">500</td><td class="r">2,00</td><td class="r">1 000</td><td class="r">429,87<span class="u">kr</span></td></tr>
+          <tr class="is-sum"><td data-i18n="kalkEnhetskostRowSum">Sum</td><td class="r">3 800</td><td class="r">—</td><td class="r">4 620</td><td class="r">993 000<span class="u">kr</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="lc-sec" aria-labelledby="lcC-kalkyle-enhetskost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkEnhetskostWhoKicker">Hvem bruker den</span><h2 class="lc-title" id="lcC-kalkyle-enhetskost" data-i18n="kalkEnhetskostWhoTitle">Tre typiske tilfeller</h2></div>
+      <div class="kk-examples">
+        <div class="kk-ex"><span class="lbl" data-i18n="kalkEnhetskostWho1Lbl">Masseproduksjon</span><span class="desc" data-i18n="kalkEnhetskostWho1Desc">Én vare i stort volum — enkel divisjon gir kostnad per enhet direkte.</span></div>
+        <div class="kk-ex"><span class="lbl" data-i18n="kalkEnhetskostWho2Lbl">Produktserie</span><span class="desc" data-i18n="kalkEnhetskostWho2Desc">Samme prosess, ulike størrelser — ekvivalenstall fordeler kostnaden rettferdig.</span></div>
+        <div class="kk-ex"><span class="lbl" data-i18n="kalkEnhetskostWho3Lbl">Prosessindustri</span><span class="desc" data-i18n="kalkEnhetskostWho3Desc">Bryggeri, meieri, støperi — varianter som deler samme anlegg, men krever ulikt.</span></div>
+      </div>
+    </section>
+
+    <section class="lc-sec" aria-labelledby="lcD-kalkyle-enhetskost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleFaqKicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-kalkyle-enhetskost" data-i18n="kalkyleFaqTitle">Vanlige spørsmål</h2></div>
+      <div class="lc-faq">
+        <details class="lc-q"><summary data-i18n="kalkEnhetskostFaqQ1">Hva er et ekvivalenstall?</summary><div class="a"><p data-i18n="kalkEnhetskostFaqA1">Et forholdstall som sier hvor mye ressurser en variant bruker sammenlignet med referansen. Referansen settes til 1,00 — en variant som krever dobbelt så mye får 2,00.</p></div></details>
+        <details class="lc-q"><summary data-i18n="kalkEnhetskostFaqQ2">Når holder det med enkel divisjon?</summary><div class="a"><p data-i18n="kalkEnhetskostFaqA2">Når alle enhetene er like og bruker like mye ressurser. Da er ekvivalenstallet 1,00 for alt, og divisjon gir samme svar som ekvivalensmetoden.</p></div></details>
+        <details class="lc-q"><summary data-i18n="kalkEnhetskostFaqQ3">Hvordan finner jeg riktige ekvivalenstall?</summary><div class="a"><p data-i18n="kalkEnhetskostFaqA3">Se på hva som driver kostnaden — maskintid, materialforbruk eller arbeidstimer per enhet. Forholdet mellom variantene på den viktigste kostnadsdriveren gir ekv-tallet.</p></div></details>
+      </div>
+    </section>
+
+    <section class="lc-sec" aria-labelledby="lcE-kalkyle-enhetskost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleRelKicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkyle-enhetskost" data-i18n="kalkyleRelTitle">Relaterte verktøy</h2></div>
+      <div class="lc-links">
+        <a class="lc-link" href="/kalkyle/selvkost/"><span class="ar" data-i18n="kalkyleDestSk">Selvkost →</span><h3 data-i18n="kalkyleDestSk">Selvkost</h3><p data-i18n="kalkEnhetskostRel1Desc">Full kalkyle fra materiale til pris med tillegg og fortjeneste.</p></a>
+        <a class="lc-link" href="/kalkyle/margin/"><span class="ar" data-i18n="kalkyleDestMargin">Margin &amp; påslag →</span><h3 data-i18n="kalkyleDestMargin">Margin &amp; påslag</h3><p data-i18n="kalkEnhetskostRel2Desc">Sett riktig pris fra kostnaden per enhet.</p></a>
+        <a class="lc-link" href="/kalkulator/timepris/"><span class="ar" data-i18n="kalkyleDestTp">Timepris →</span><h3 data-i18n="kalkyleDestTp">Timepris</h3><p data-i18n="kalkEnhetskostRel3Desc">Fra ønsket lønn til hva du faktisk må fakturere per time.</p></a>
+      </div>
+    </section>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="container foot">
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc" data-i18n="footerDisc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+  </div>
+</footer>
+
+<script defer src="/shared/site-shell.js?v=v1"></script>
+<script defer src="/shared/top-chrome.js?v=v1"></script>
+<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/search.js?v=v126"></script>
+<script defer src="/shared/lang/no.js?v=v126"></script>
+<script src="/shared/atmosphere.js?v=v5" defer></script>
+
+<script>
+// ── Enhetskost: enkel divisjon + ekvivalensmetode (matte verifisert mot research) ──
+(function(){
+  var KEY = 'hv-kalkyle-enhetskost-v1';
+  var mode = 'ekv'; // 'div' | 'ekv'
+
+  var fmtNb0 = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
+  function fmtKr(n){ if(!isFinite(n)) return '–'; return fmtNb0.format(Math.round(n)) + ' kr'; }
+  function fmtNum(n){ if(!isFinite(n)) return '–'; return fmtNb0.format(Math.round(n)); }
+  function fmtDec(n, dec){ if(!isFinite(n)) return '–'; return n.toFixed(dec==null?2:dec).replace('.', ','); }
+  function parseAmt(s){
+    if(s == null) return 0;
+    var raw = String(s).trim().replace(/[\s ]/g, '').replace(',', '.');
+    var n = parseFloat(raw);
+    return isNaN(n) ? 0 : n;
+  }
+  function setTxt(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; }
+  function escAttr(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  var divTotEl = document.getElementById('ek-divtot');
+  var divAntEl = document.getElementById('ek-divant');
+  var ekvTotEl = document.getElementById('ek-ekvtot');
+  var variantRowsEl = document.getElementById('ekVariantRows');
+
+  function makeVariantRow(name, mengde, tall){
+    var row = document.createElement('div');
+    row.className = 'vr';
+    row.innerHTML =
+      '<input type="text" class="ik-input vr-name" autocomplete="off" value="' + escAttr(name||'') + '">' +
+      '<input type="text" class="ik-input num vr-mengde" inputmode="decimal" autocomplete="off" value="' + escAttr(mengde||'') + '">' +
+      '<input type="text" class="ik-input num vr-tall" inputmode="decimal" autocomplete="off" value="' + escAttr(tall||'') + '">' +
+      '<button type="button" class="vr-x" aria-label="Fjern variant">&times;</button>';
+    return row;
+  }
+
+  function nextLetter(){
+    var used = Array.prototype.map.call(variantRowsEl.querySelectorAll('.vr-name'), function(el){ return el.value; });
+    for(var c = 65; c < 91; c++){
+      var letter = String.fromCharCode(c);
+      if(used.indexOf(letter) === -1) return letter;
+    }
+    return 'X';
+  }
+
+  function updateRmVisibility(){
+    var rows = variantRowsEl.querySelectorAll('.vr');
+    var hide = rows.length <= 2;
+    rows.forEach(function(r){
+      var btn = r.querySelector('.vr-x');
+      if(hide) btn.setAttribute('hidden',''); else btn.removeAttribute('hidden');
+    });
+  }
+
+  function getVariants(){
+    return Array.prototype.map.call(variantRowsEl.querySelectorAll('.vr'), function(row){
+      return {
+        name: row.querySelector('.vr-name').value || '',
+        mengde: parseAmt(row.querySelector('.vr-mengde').value),
+        tall: parseAmt(row.querySelector('.vr-tall').value)
+      };
+    });
+  }
+
+  function setMode(newMode){
+    mode = newMode;
+    document.getElementById('ekSegDiv').setAttribute('aria-pressed', mode === 'div' ? 'true' : 'false');
+    document.getElementById('ekSegEkv').setAttribute('aria-pressed', mode === 'ekv' ? 'true' : 'false');
+    document.getElementById('ekViewDiv').classList.toggle('is-active', mode === 'div');
+    document.getElementById('ekViewEkv').classList.toggle('is-active', mode === 'ekv');
+    document.getElementById('ekResultDiv').classList.toggle('is-active', mode === 'div');
+    document.getElementById('ekResultEkv').classList.toggle('is-active', mode === 'ekv');
+    recalc();
+  }
+
+  function recalc(){
+    var divTotal = parseAmt(divTotEl.value);
+    var divAntall = parseAmt(divAntEl.value);
+    var divEnhet = divAntall ? divTotal / divAntall : NaN;
+
+    var ekvTotal = parseAmt(ekvTotEl.value);
+    var variants = getVariants();
+    var rows = variants.map(function(v){ return { name: v.name, mengde: v.mengde, tall: v.tall, ekv: v.mengde * v.tall }; });
+    var totalEkv = rows.reduce(function(a, r){ return a + r.ekv; }, 0);
+    var kostPerEkv = totalEkv ? ekvTotal / totalEkv : NaN;
+
+    if(mode === 'div'){
+      setTxt('ekStripDiv', isFinite(divEnhet) ? fmtDec(divEnhet) + ' kr' : '–');
+      setTxt('ekStripEkv', '–');
+      setTxt('ekStripKost', '–');
+      setTxt('ekStripSelv', '–');
+      setTxt('hStatKost', isFinite(divEnhet) ? fmtDec(divEnhet) + ' kr' : '–');
+      setTxt('hStatEkv', '–');
+    } else {
+      setTxt('ekStripDiv', '–');
+      setTxt('ekStripEkv', fmtNum(totalEkv));
+      setTxt('ekStripKost', isFinite(kostPerEkv) ? fmtDec(kostPerEkv) + ' kr' : '–');
+      setTxt('ekStripSelv', (rows.length && isFinite(kostPerEkv)) ? fmtDec(kostPerEkv * rows[0].tall) + ' kr' : '–');
+      setTxt('hStatKost', isFinite(kostPerEkv) ? fmtDec(kostPerEkv) + ' kr' : '–');
+      setTxt('hStatEkv', fmtNum(totalEkv));
+    }
+
+    setTxt('ekPDivTotal', fmtKr(divTotal));
+    setTxt('ekPDivAntall', fmtNum(divAntall));
+    setTxt('ekPDivEnhet', isFinite(divEnhet) ? fmtDec(divEnhet) + ' kr' : '–');
+
+    var tbody = document.getElementById('ekResultRows');
+    tbody.innerHTML = rows.map(function(r){
+      return '<tr><td class="name">' + escAttr(r.name) + '</td><td class="num">' + fmtNum(r.mengde) + '</td><td class="num">' + fmtDec(r.tall) + '</td><td class="num">' + fmtNum(r.ekv) + '</td></tr>';
+    }).join('');
+    setTxt('ekSumEkvCell', fmtNum(totalEkv));
+    setTxt('ekPKostPerEkv', isFinite(kostPerEkv) ? fmtDec(kostPerEkv) + ' kr' : '–');
+
+    var selvBody = document.getElementById('ekSelvkostRows');
+    selvBody.innerHTML = rows.map(function(r){
+      var sk = kostPerEkv * r.tall;
+      return '<tr><td class="name">' + escAttr(r.name) + '</td><td class="num" style="width:1%">' + (isFinite(sk) ? fmtDec(sk) : '–') + '<span class="u">kr</span></td></tr>';
+    }).join('');
+
+    persist();
+  }
+
+  function persist(){
+    try {
+      localStorage.setItem(KEY, JSON.stringify({
+        mode: mode, divTot: divTotEl.value, divAnt: divAntEl.value, ekvTot: ekvTotEl.value,
+        variants: getVariants().map(function(v){ return { name: v.name, mengde: v.mengde, tall: v.tall }; })
+      }));
+    } catch(e){}
+  }
+
+  document.getElementById('ekSegDiv').addEventListener('click', function(){ setMode('div'); });
+  document.getElementById('ekSegEkv').addEventListener('click', function(){ setMode('ekv'); });
+  [divTotEl, divAntEl, ekvTotEl].forEach(function(el){ el.addEventListener('input', recalc); });
+
+  variantRowsEl.addEventListener('input', function(e){
+    if(e.target.classList.contains('vr-name') || e.target.classList.contains('vr-mengde') || e.target.classList.contains('vr-tall')) recalc();
+  });
+  variantRowsEl.addEventListener('click', function(e){
+    var btn = e.target.closest && e.target.closest('.vr-x');
+    if(!btn) return;
+    var row = btn.closest('.vr');
+    if(variantRowsEl.querySelectorAll('.vr').length <= 2) return;
+    row.remove();
+    updateRmVisibility();
+    recalc();
+  });
+  document.getElementById('ekAddVariant').addEventListener('click', function(){
+    var row = makeVariantRow(nextLetter(), '0', '1,00');
+    variantRowsEl.appendChild(row);
+    updateRmVisibility();
+    recalc();
+  });
+
+  // Seed initial 3 variants (A/B/C worked example)
+  variantRowsEl.appendChild(makeVariantRow('A', '2 500', '1,00'));
+  variantRowsEl.appendChild(makeVariantRow('B', '800', '1,40'));
+  variantRowsEl.appendChild(makeVariantRow('C', '500', '2,00'));
+  updateRmVisibility();
+
+  setMode('ekv');
+})();
+</script>
+
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('/sw.js').catch(function(){});
+    });
+  }
+</script>
+</body>
+</html>
