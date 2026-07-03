@@ -8,19 +8,19 @@ window.SEARCH_INTENTS = {
       {
         "id": "vat",
         "name": "MVA-kalkulator",
-        "url": "/avgift/#vat-wrapper",
+        "url": "/avgift/vat/",
         "description": "Merverdiavgift: 25%, 15% (mat), 12% (transport, kultur, rom)"
       },
       {
         "id": "adj",
         "name": "MVA-justering (Kap. 9)",
-        "url": "/avgift/#vat-adj-card",
+        "url": "/avgift/vat/",
         "description": "Justering av fradragsført MVA på kapitalvarer (bygg, maskiner)"
       },
       {
         "id": "aga",
         "name": "AGA-kalkulator",
-        "url": "/avgift/#aga-wrapper",
+        "url": "/avgift/aga/",
         "description": "Arbeidsgiveravgift: 7 soner, 0–14,1 %"
       },
       {
@@ -38,37 +38,37 @@ window.SEARCH_INTENTS = {
       {
         "id": "vat-def",
         "name": "MVA-definisjoner",
-        "url": "/avgift/#vat-def-card",
+        "url": "/avgift/vat/",
         "description": "Definisjoner og begreper"
       },
       {
         "id": "vat-reg",
         "name": "MVA-registrering",
-        "url": "/avgift/#vat-reg-card",
+        "url": "/avgift/vat/",
         "description": "50 000 kr-grensen, frivillig registrering"
       },
       {
         "id": "vat-exempt",
         "name": "MVA-unntak",
-        "url": "/avgift/#vat-exempt-card",
+        "url": "/avgift/vat/",
         "description": "Unntatte og fritatte omsetninger"
       },
       {
         "id": "vat-zero",
         "name": "Nullsats / fritak",
-        "url": "/avgift/#vat-zero-card",
+        "url": "/avgift/vat/",
         "description": "Fritak fra MVA"
       },
       {
         "id": "vat-ded",
         "name": "MVA-fradrag",
-        "url": "/avgift/#vat-ded-card",
+        "url": "/avgift/vat/",
         "description": "Fradrag for inngående MVA"
       },
       {
         "id": "vat-calc-card",
         "name": "MVA-beregning",
-        "url": "/avgift/#vat-calc-card",
+        "url": "/avgift/vat/",
         "description": "Hvordan beregne MVA"
       },
       {
@@ -80,19 +80,19 @@ window.SEARCH_INTENTS = {
       {
         "id": "adj-info",
         "name": "MVA-justeringsinfo",
-        "url": "/avgift/#vat-adj-info-card",
+        "url": "/avgift/vat/",
         "description": "Når skal kapitalvare justeres"
       },
       {
         "id": "calcs",
         "name": "Alle avgift-kalkulatorer",
-        "url": "/avgift/#sec-calculators",
+        "url": "/avgift/",
         "description": "Kalkulator-seksjon"
       },
       {
         "id": "guide",
         "name": "Avgiftsguide",
-        "url": "/avgift/#sec-guide",
+        "url": "/avgift/",
         "description": "Guide-seksjon"
       }
     ],
@@ -1496,84 +1496,84 @@ window.SEARCH_INTENTS = {
     "section": "kalkulator",
     "base_url": "/kalkulator",
     "version": "2026-04-20",
-    "note": "Kalkulator bruker mode-switch via switchCalcMode(). Core.js hash-handler matcher hash = modus-navn direkte (uten cm- prefiks) og kaller switchCalcMode automatisk.",
+    "note": "Hvert kalkulator-verktøy er nå en egen underside (/kalkulator/<verktøy>/). Tidligere hash-mode-switch (switchCalcMode) er erstattet; url-ene peker direkte på undersidene. Pensjon ligger under /personlig/, ansattkost (aga) under /avgift/.",
     "targets": [
       {
         "id": "basic",
         "name": "Basic kalkulator",
-        "url": "/kalkulator",
+        "url": "/kalkulator/enkel/",
         "description": "Standard regnekalkulator (default — ingen hash)"
       },
       {
         "id": "fin",
         "name": "Finanskalkulator",
-        "url": "/kalkulator/#finance",
+        "url": "/kalkulator/finance/",
         "description": "Nåverdi, fremtidsverdi, annuitet"
       },
       {
         "id": "sci",
         "name": "Vitenskapelig kalkulator",
-        "url": "/kalkulator/#scientific",
+        "url": "/kalkulator/scientific/",
         "description": "sin/cos/tan/log/pi"
       },
       {
         "id": "unit",
         "name": "Valuta/enhet",
-        "url": "/kalkulator/#unit",
+        "url": "/kalkulator/unit/",
         "description": "Valuta- og enhetskonverter"
       },
       {
         "id": "valgevinst",
         "name": "Valutagevinst (skatt)",
-        "url": "/kalkulator/#valgevinst",
+        "url": "/kalkulator/valgevinst/",
         "description": "Skatt på valutagevinst"
       },
       {
         "id": "lvu",
         "name": "Lønn vs Utbytte",
-        "url": "/kalkulator/#lvu",
+        "url": "/skatt/utbytte/",
         "description": "Sammenlign skatt på lønn vs utbytte fra eget AS"
       },
       {
         "id": "ferie",
         "name": "Feriepengekalkulator",
-        "url": "/kalkulator/#ferie",
+        "url": "/kalkulator/ferie/",
         "description": "Feriepenger: 10,2% / 12%"
       },
       {
         "id": "pensjon",
         "name": "Pensjonsprojeksjon",
-        "url": "/kalkulator/#pensjon",
+        "url": "/personlig/pensjon/",
         "description": "Framskriving av pensjonssparing"
       },
       {
         "id": "npv",
         "name": "NPV / IRR",
-        "url": "/kalkulator/#npv",
+        "url": "/kalkulator/npv/",
         "description": "Nåverdi og internrente for investeringer"
       },
       {
         "id": "rente",
         "name": "Effektiv rente",
-        "url": "/kalkulator/#rente",
+        "url": "/kalkulator/rente/",
         "description": "Nominell til effektiv rente, gebyrer inkl."
       },
       {
         "id": "likvid",
         "name": "Likviditetsbudsjett",
-        "url": "/kalkulator/#likvid",
+        "url": "/kalkulator/likviditet/",
         "description": "Likviditetsstyring for bedrift"
       },
       {
         "id": "avs",
         "name": "Avskrivning",
-        "url": "/kalkulator/#avs",
+        "url": "/kalkulator/avs/",
         "description": "Saldogrupper a-j, regnskapsmessig vs skattemessig"
       },
       {
         "id": "aga-ref",
         "name": "AGA (ansattkost)",
-        "url": "/avgift/#aga-wrapper",
+        "url": "/avgift/aga/",
         "description": "Ansattkost ligger på /avgift, ikke kalkulator — men er ofte søkt fra Kalkulator-kontekst"
       }
     ],
@@ -2396,73 +2396,73 @@ window.SEARCH_INTENTS = {
       {
         "id": "bud",
         "name": "Budsjett (SIFO)",
-        "url": "/personlig/#budsjett-wrapper",
+        "url": "/personlig/budsjett/",
         "description": "Husholdningsbudsjett basert på SIFO referansebudsjett"
       },
       {
         "id": "abo",
         "name": "Abonnement-tracker",
-        "url": "/personlig/#abo-wrapper",
+        "url": "/personlig/abo/",
         "description": "Oversikt og sum av faste abonnementer"
       },
       {
         "id": "bil",
         "name": "Bilkostnadskalkulator",
-        "url": "/personlig/#bil-wrapper",
+        "url": "/personlig/bil/",
         "description": "Totalkostnad for bil: drivstoff, forsikring, service, avskrivning"
       },
       {
         "id": "studie",
         "name": "Studielån (Lånekassen)",
-        "url": "/personlig/#studie-wrapper",
+        "url": "/personlig/studie/",
         "description": "Nedbetaling av studielån, rentetabell, plan"
       },
       {
         "id": "fbl",
         "name": "Forbrukslånskalkulator",
-        "url": "/personlig/#fbl-wrapper",
+        "url": "/personlig/fbl/",
         "description": "Forbrukslån med høy rente, nedbetalingsplan"
       },
       {
         "id": "spare",
         "name": "Sparekalkulator / renters rente",
-        "url": "/personlig/#spare-wrapper",
+        "url": "/personlig/spare/",
         "description": "Sparing over tid, renters rente, månedlig sparing"
       },
       {
         "id": "lonn",
         "name": "Netto lønn",
-        "url": "/personlig/#lonn-wrapper",
+        "url": "/personlig/lonn/",
         "description": "Hva sitter du igjen med etter skatt"
       },
       {
         "id": "syk",
         "name": "Sykepenger",
-        "url": "/personlig/#syk-wrapper",
+        "url": "/personlig/syk/",
         "description": "Sykepenger-beregning fra NAV"
       },
       {
         "id": "fam",
         "name": "Familie / barnetrygd",
-        "url": "/personlig/#fam-wrapper",
+        "url": "/personlig/fam/",
         "description": "Barnetrygd, kontantstøtte og familieytelser"
       },
       {
         "id": "invest",
         "name": "Investering",
-        "url": "/personlig/#invest-wrapper",
+        "url": "/personlig/aksjer/",
         "description": "Investeringskonto og avkastning"
       },
       {
         "id": "konto",
         "name": "Kontotype",
-        "url": "/personlig/#konto-wrapper",
+        "url": "/personlig/konto/",
         "description": "Sammenligning av kontotyper (ASK, IPS, Fondskonto)"
       },
       {
         "id": "tek",
         "name": "Tekniske produkter",
-        "url": "/personlig/#teknisk-wrapper",
+        "url": "/personlig/teknisk/",
         "description": "IPS, obligasjoner, opsjoner, ETF, shortsalg, giring, utbytte"
       }
     ],
@@ -3403,49 +3403,49 @@ window.SEARCH_INTENTS = {
       {
         "id": "skatt",
         "name": "Skatt for selskap",
-        "url": "/selskap/#selskap-skatt-card",
+        "url": "/selskap/",
         "description": "Hvordan beskattes hver selskapsform"
       },
       {
         "id": "reg",
         "name": "Registrering",
-        "url": "/selskap/#selskap-reg-card",
+        "url": "/selskap/",
         "description": "Hvordan registrere i Brønnøysundregistrene"
       },
       {
         "id": "andre",
         "name": "Andre selskapsformer (NUF m.m.)",
-        "url": "/selskap/#selskap-andre-card",
+        "url": "/selskap/",
         "description": "NUF, samvirkeforetak, stiftelser"
       },
       {
         "id": "asl-stift",
         "name": "Aksjeloven: Stiftelse",
-        "url": "/selskap/#sel-asl-stift-card",
+        "url": "/lov/aksjelov/",
         "description": "Stiftelsesprosedyre AS"
       },
       {
         "id": "asl-kapital",
         "name": "Aksjeloven: Kapital",
-        "url": "/selskap/#sel-asl-kapital-card",
+        "url": "/lov/aksjelov/",
         "description": "Aksjekapital, egenkapital"
       },
       {
         "id": "asl-ledelse",
         "name": "Aksjeloven: Ledelse",
-        "url": "/selskap/#sel-asl-ledelse-card",
+        "url": "/lov/aksjelov/",
         "description": "Styret, daglig leder"
       },
       {
         "id": "asl-aksjer",
         "name": "Aksjeloven: Aksjer og utbytte",
-        "url": "/selskap/#sel-asl-aksjer-card",
+        "url": "/lov/aksjelov/",
         "description": "Aksjer, aksjonærrettigheter, utbytte"
       },
       {
         "id": "asl-fusjon",
         "name": "Aksjeloven: Fusjon",
-        "url": "/selskap/#sel-asl-fusjon-card",
+        "url": "/lov/aksjelov/",
         "description": "Fusjon og fisjon av AS"
       }
     ],
@@ -4088,43 +4088,43 @@ window.SEARCH_INTENTS = {
       {
         "id": "salary",
         "name": "Netto lønn etter skatt",
-        "url": "/skatt/#sal-salary-card",
+        "url": "/skatt/inntekt/",
         "description": "Trinnskatt, trygdeavgift, alminnelig skatt"
       },
       {
         "id": "uttak",
         "name": "Uttaksskatt (ENK)",
-        "url": "/skatt/#sal-uttak-card",
+        "url": "/skatt/uttak/",
         "description": "Uttak fra enkeltpersonforetak"
       },
       {
         "id": "utdeling",
         "name": "Effektiv utbytteskatt (AS vs ENK)",
-        "url": "/skatt/#sal-utdeling-card",
+        "url": "/skatt/utbytte/",
         "description": "Selskapsskatt + utbytteskatt sammen"
       },
       {
         "id": "formue",
         "name": "Formuesskatt",
-        "url": "/skatt/#formue-wrapper",
+        "url": "/skatt/formue/",
         "description": "Formuesskatt med verdsettelsesrabatter"
       },
       {
         "id": "reise",
         "name": "Reisefradrag (pendler)",
-        "url": "/skatt/#reise-wrapper",
+        "url": "/skatt/reise/",
         "description": "Reisefradrag for pendling mellom hjem og arbeid"
       },
       {
         "id": "sjekk",
         "name": "Skattesjekk / næring-hobby",
-        "url": "/skatt/#sjekk-card",
+        "url": "/skatt/#cc-sjekk",
         "description": "Er det næring eller hobby?"
       },
       {
         "id": "guide",
         "name": "Skatteguide",
-        "url": "/skatt/#sec-guide",
+        "url": "/skatt/#cc-princ",
         "description": "Prinsipper, fradrag, loverk"
       }
     ],

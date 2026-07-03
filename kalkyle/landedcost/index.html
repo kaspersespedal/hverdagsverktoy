@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="no" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Innførselskost-kalkulator — Landed cost for import · Hverdagsverktøy</title>
+<meta name="description" content="Regn ut hva en importert vare faktisk koster inn — varekost, frakt, toll, forsikring, klareringsgebyr og emballasje per enhet. Med valgfri veiledende utsalgspris.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://hverdagsverktoy.com/kalkyle/landedcost/">
+<meta property="og:title" content="Innførselskost — Hverdagsverktøy">
+<meta property="og:description" content="Hva varen faktisk koster inn — frakt, toll og gebyr medregnet.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hverdagsverktoy.com/kalkyle/landedcost/">
+<meta property="og:locale" content="nb_NO">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://hverdagsverktoy.com/kalkyle/landedcost/#webpage",
+  "name": "Innførselskost — Hverdagsverktøy",
+  "url": "https://hverdagsverktoy.com/kalkyle/landedcost/",
+  "inLanguage": "no",
+  "isPartOf": { "@id": "https://hverdagsverktoy.com/#website" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Kalkyle", "item": "https://hverdagsverktoy.com/kalkyle/" },
+    { "@type": "ListItem", "position": 3, "name": "Innførselskost", "item": "https://hverdagsverktoy.com/kalkyle/landedcost/" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    { "@type": "Question", "name": "Hva er innførselskost?", "acceptedAnswer": { "@type": "Answer", "text": "Det varen faktisk koster deg inn på lager — varekost pluss frakt, toll, forsikring, klareringsgebyr og emballasje, fordelt per enhet. Det er dette tallet prisen skal bygges på, ikke leverandørfakturaen alene." } },
+    { "@type": "Question", "name": "Skal mva regnes med?", "acceptedAnswer": { "@type": "Answer", "text": "MVA på import nøytraliseres normalt (inn = ut) for mva-pliktige, så den holdes utenfor selve vareselvkosten. Kalkylen regnes eks. mva; mva legges på først i utsalgsprisen til sluttkunden." } },
+    { "@type": "Question", "name": "Hvordan fordeler jeg frakt og gebyr?", "acceptedAnswer": { "@type": "Answer", "text": "Enkleste metode er å dele totalen på antall enheter i sendingen. Har du varer av svært ulik verdi eller volum, kan du heller fordele etter verdi eller vekt — men per enhet er godt nok for de fleste." } }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/inter/files/inter-latin-400-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/inter/files/inter-latin-600-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
+<link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap">
+<script>
+  (function(){try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<script>
+  (function(){
+    try{
+      var l=localStorage.getItem('hvt-lang')||'no';
+      document.documentElement.setAttribute('data-lang',l);
+      if(l!=='no')document.documentElement.classList.add('lang-loading');
+    }catch(e){}
+  })();
+</script>
+<style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
+<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v3">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v2">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v6">
+<style>
+/* Innførselskost — kalkulator-skall (delt mønster med Kalkyle-seksjonen) */
+body{min-height:100vh;display:flex;flex-direction:column}
+body > main{flex:1 0 auto}
+body > footer{flex-shrink:0}
+body.focus-mode > .nav-wrap,
+body.focus-mode > .tabs-wrap,
+body.focus-mode > footer{display:none}
+
+.kk-dash{width:48px;height:2px;background:var(--accent);opacity:.9;margin-bottom:20px}
+
+.kk-picker-strip-wrap{padding:18px 0 6px}
+.kk-picker-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.kk-picker-strip::-webkit-scrollbar{display:none}
+.kk-chip{flex-shrink:0;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+  background:transparent;color:var(--ink3);font:500 12.5px/1 var(--font-sans);text-decoration:none;
+  transition:color .18s ease,border-color .18s ease,background .18s ease}
+.kk-chip.is-active{border-color:var(--line-warm);background:color-mix(in srgb, var(--accent) 12%, transparent);color:var(--ink)}
+@media(hover:hover){.kk-chip:not(.is-active):hover{color:var(--ink2);border-color:var(--line-2)}}
+
+.kk-examples{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:820px){.kk-examples{grid-template-columns:1fr}}
+.kk-ex{display:flex;flex-direction:column;gap:6px}
+.kk-ex .lbl{font:600 12px/1.3 var(--font-sans);color:var(--ink2)}
+.kk-ex .desc{font-size:13px;line-height:1.55;color:var(--ink3)}
+
+.kk-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
+.kk-steps li{display:flex;gap:14px;align-items:flex-start}
+.kk-steps .n{flex-shrink:0;font:500 12px/1.6 var(--font-mono);color:var(--ink4);width:18px}
+.kk-steps span:last-child{font-size:15px;line-height:1.65;color:var(--ink2)}
+.kk-steps b{color:var(--ink);font-weight:600}
+</style>
+<style>
+.lonn-learn{padding:8px 0 12px}
+.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
+.lc-sec:first-child{border-top:none;padding-top:24px}
+.lc-head{max-width:640px;margin:0 0 32px}
+.lc-kicker{display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;text-transform:uppercase;color:var(--accent);margin-bottom:15px}
+.lc-title{font-family:var(--font-serif);font-weight:500;font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;color:var(--ink);margin:0 0 14px}
+.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0 0 20px;max-width:60ch}
+.lc-trinn{width:100%;border-collapse:collapse}
+.lc-trinn th{font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left}
+.lc-trinn th.r,.lc-trinn td.r{text-align:right}
+.lc-trinn td{padding:11px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.lc-trinn tbody tr.is-sum td{color:var(--ink);font-weight:600}
+.lc-trinn tbody tr:last-child td{border-bottom:none}
+.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lc-trinn td .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
+.lc-faq{border-top:1px solid var(--line)}
+details.lc-q{border-bottom:1px solid var(--line)}
+details.lc-q > summary{cursor:pointer;list-style:none;padding:18px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;font:500 15px/1.45 var(--font-sans);color:var(--ink)}
+details.lc-q > summary::-webkit-details-marker{display:none}
+details.lc-q > summary::after{content:'';flex:0 0 auto;width:9px;height:9px;border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);transform:rotate(45deg);transition:transform .25s var(--ease)}
+details.lc-q[open] > summary::after{transform:rotate(-135deg)}
+details.lc-q[open] > summary{color:var(--ink)}
+details.lc-q .a{padding:0 0 20px;max-width:70ch}
+details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
+.lc-links{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.lc-link{display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease)}
+.lc-link .ar{font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)}
+.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
+.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
+@media(hover:hover){.lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}}
+@media(max-width:820px){.lc-links{grid-template-columns:1fr}}
+@media(max-width:560px){.lc-sec{padding:40px 0}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main" data-i18n="skipLink">Hopp til innhold</a>
+
+<div class="nav-wrap">
+  <div class="container">
+    <nav>
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy — forside">
+        <span class="mark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16" rx="1.2"/><rect x="14" y="4" width="4" height="16" rx="1.2"/><rect x="10" y="10" width="4" height="4" rx=".6"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="container">
+    <div class="tabs" role="tablist">
+      <a href="/personlig/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>Privatøkonomi
+      </a>
+      <a href="/boliglan/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/></svg>Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>Kalkulator
+      </a>
+      <a href="/skatt/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>Skatt
+      </a>
+      <a href="/selskap/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg>Selskap
+      </a>
+      <a href="/avgift/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>Avgift
+      </a>
+      <a href="/regnskap/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg>Regnskap
+      </a>
+      <a href="/lov/" class="tab">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V20"/><path d="M5 7 L12 5 L19 7"/><path d="M3 13 a3 3 0 0 0 6 0 L6 7 Z"/><path d="M15 13 a3 3 0 0 0 6 0 L18 7 Z"/></svg>Lov
+      </a>
+    </div>
+  </div>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div>
+      <div class="crumb">
+        <a href="/kalkyle/" class="crumb-back" aria-label="Tilbake">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+        </a>
+        <a href="/">Hverdagsverktøy</a>
+        <span class="sep"></span>
+        <a href="/kalkyle/" data-i18n="kalkyleTitle">Kalkyle</a>
+        <span class="sep"></span>
+        <span class="here" data-i18n="kalkLandedcostTitle">Innførselskost</span>
+      </div>
+      <div class="kk-dash" aria-hidden="true"></div>
+      <h1 class="page-title"><em data-i18n="kalkLandedcostTitle">Innførselskost</em></h1>
+      <p class="page-lead" data-i18n="kalkLandedcostSubtitle">Hva varen faktisk koster inn — frakt, toll og gebyr medregnet.</p>
+    </div>
+    <div class="page-stats">
+      <div class="page-stat"><span class="l" data-i18n="kalkLandedcostStatLanded">Innførselskost i eksempelet</span><span class="v" id="hStatLanded">142 kr</span></div>
+      <div class="page-stat"><span class="l" data-i18n="kalkLandedcostStatFrakt">Frakt per enhet</span><span class="v" id="hStatFrakt">30 kr</span></div>
+    </div>
+  </div>
+</section>
+
+<main id="main">
+<div class="calc-wrap">
+  <div class="container kk-picker-strip-wrap">
+    <div class="kk-picker-strip">
+      <a href="/kalkyle/margin/" class="kk-chip" data-i18n="kalkyleDestMargin">Margin &amp; påslag</a>
+      <a href="/kalkyle/selvkost/" class="kk-chip" data-i18n="kalkyleDestSk">Selvkost</a>
+      <a href="/kalkyle/enhetskost/" class="kk-chip" data-i18n="kalkyleDestEk">Enhetskost</a>
+      <a href="/kalkyle/foodcost/" class="kk-chip" data-i18n="kalkyleDestFc">Food cost</a>
+      <a href="/kalkyle/landedcost/" class="kk-chip is-active" data-i18n="kalkyleDestLk">Innførselskost</a>
+      <a href="/kalkyle/netthandel/" class="kk-chip" data-i18n="kalkyleDestNh">Netthandel</a>
+      <a href="/kalkulator/dekningsbidrag/" class="kk-chip" data-i18n="kalkyleDestBe">Dekningsbidrag</a>
+      <a href="/kalkulator/timepris/" class="kk-chip" data-i18n="kalkyleDestTp">Timepris</a>
+      <a href="/kalkulator/tilbud/" class="kk-chip" data-i18n="kalkyleDestTilbud">Tilbud</a>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <div class="ks-host">
+      <div class="ks">
+        <div class="ks-strip">
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkLandedcostStatFrakt">Frakt per enhet</span><span class="v" id="lkStripFrakt">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkLandedcostResToll">Toll per enhet</span><span class="v" id="lkStripToll">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkLandedcostResLanded">Innførselskost per enhet</span><span class="v" id="lkStripLanded">–</span></div>
+          <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkLandedcostResPris">Veiledende pris</span><span class="v" id="lkStripPris">–</span></div>
+        </div>
+
+        <div class="ks-body">
+          <div class="ks-form">
+            <section class="ks-section">
+              <div class="ik-section-head">
+                <h3 data-i18n="kalkLandedcostSectionVare">Vare og sending</h3>
+                <span class="meta" data-i18n="kalkLandedcostSectionVareHint">Varekost per enhet + frakt fordelt på antall</span>
+              </div>
+              <div class="ik-stack">
+                <div class="ik-fg">
+                  <label class="ik-lbl" for="lcVare"><span data-i18n="kalkLandedcostLblVare">Varekost per enhet</span> <span class="cap">(kr, eks. mva)</span></label>
+                  <input class="ik-input" id="lcVare" type="text" inputmode="decimal" autocomplete="off" value="100">
+                </div>
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="lcFrakt"><span data-i18n="kalkLandedcostLblFrakt">Total fraktkostnad</span> <span class="cap">(kr)</span></label>
+                    <input class="ik-input" id="lcFrakt" type="text" inputmode="decimal" autocomplete="off" value="15 000">
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="lcAntall"><span data-i18n="kalkLandedcostLblAntall">Antall enheter</span> <span class="cap" data-i18n="kalkLandedcostLblAntallCap">(i sendingen)</span></label>
+                    <input class="ik-input" id="lcAntall" type="text" inputmode="decimal" autocomplete="off" value="500">
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="ks-section">
+              <div class="ik-section-head">
+                <h3 data-i18n="kalkLandedcostSectionToll">Toll, avgifter og gebyr</h3>
+                <span class="meta" data-i18n="kalkLandedcostSectionTollHint">Andeler regnes av varekost · gebyr fordeles på sendingen</span>
+              </div>
+              <div class="ik-stack">
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="lcToll"><span data-i18n="kalkLandedcostLblToll">Toll</span> <span class="cap">(%)</span></label>
+                    <input class="ik-input" id="lcToll" type="text" inputmode="decimal" autocomplete="off" value="5">
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="lcFors"><span data-i18n="kalkLandedcostLblFors">Forsikring</span> <span class="cap">(%)</span></label>
+                    <input class="ik-input" id="lcFors" type="text" inputmode="decimal" autocomplete="off" value="2">
+                  </div>
+                </div>
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="lcGebyr"><span data-i18n="kalkLandedcostLblGebyr">Tollklarering / gebyr</span> <span class="cap" data-i18n="kalkLandedcostLblGebyrCap">(kr for sendingen)</span></label>
+                    <input class="ik-input" id="lcGebyr" type="text" inputmode="decimal" autocomplete="off" value="2 500">
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="lcEmb"><span data-i18n="kalkLandedcostLblEmb">Emballasje per enhet</span> <span class="cap">(kr)</span></label>
+                    <input class="ik-input" id="lcEmb" type="text" inputmode="decimal" autocomplete="off" value="0">
+                  </div>
+                </div>
+              </div>
+            </section>
+            <section class="ks-section">
+              <div class="ik-section-head">
+                <h3><span data-i18n="kalkLandedcostSectionPris">Prissetting</span> <span style="font:500 11px/1 var(--font-sans);color:var(--ink4);margin-left:6px" data-i18n="kalkLandedcostSectionPrisOptional">valgfritt</span></h3>
+                <span class="meta" data-i18n="kalkLandedcostSectionPrisHint">Ønsket margin gir veiledende utsalgspris</span>
+              </div>
+              <div class="ik-fg">
+                <label class="ik-lbl" for="lcMargin"><span data-i18n="kalkLandedcostLblMargin">Ønsket margin</span> <span class="cap">(%)</span></label>
+                <input class="ik-input" id="lcMargin" type="text" inputmode="decimal" autocomplete="off" value="35">
+                <span class="ik-hint" data-i18n="kalkLandedcostMarginHint">La stå tom for å bare regne innførselskost.</span>
+              </div>
+            </section>
+          </div>
+
+          <aside class="ks-result" aria-live="polite">
+            <div class="ks-r-eyebrow" data-i18n="kalkLandedcostResHeadline">Resultat</div>
+            <div class="ks-r-stats" style="border-top:0;padding-top:0">
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkLandedcostLblVare">Varekost per enhet</span><span class="v" id="lkROutVare">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkLandedcostStatFrakt">Frakt per enhet</span><span class="v" id="lkROutFrakt">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkLandedcostResToll">Toll per enhet</span><span class="v" id="lkROutToll">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkLandedcostResFors">Forsikring per enhet</span><span class="v" id="lkROutFors">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkLandedcostResGebyr">Gebyr per enhet</span><span class="v" id="lkROutGebyr">–</span></div>
+              <div class="ks-r-stat div"><span class="l" data-i18n="kalkLandedcostLblEmb">Emballasje per enhet</span><span class="v" id="lkROutEmb">–</span></div>
+              <div class="ks-r-stat div"><span class="l" data-i18n="kalkLandedcostResLanded">Innførselskost per enhet</span><span class="v" id="lkROutLanded">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkLandedcostResPrisEks">Veiledende pris eks. mva</span><span class="v" id="lkROutPrisEks">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkLandedcostResPrisInkl">Veiledende pris inkl. mva</span><span class="v" id="lkROutPrisInkl">–</span></div>
+            </div>
+            <p class="ik-note" id="lkPriceNote" data-i18n="kalkLandedcostNoteWithMargin">Veiledende pris regnes fra innførselskost og ønsket margin, eks. mva. Mva legges på til sluttkunden — sats 25 %.</p>
+          </aside>
+        </div>
+
+        <details class="howto" style="border-top:1px solid var(--line);border-radius:0;border-left:0;border-right:0;border-bottom:0">
+          <summary style="padding:14px 22px"><span class="howto-title" data-i18n="kalkLandedcostFormelToggle">Vis formel</span></summary>
+          <div class="howto-body" style="padding:0 22px 22px">
+            <div style="display:flex;flex-direction:column;gap:8px;font:500 13px/1.7 var(--font-mono);color:var(--ink2)">
+              <span data-i18n="kalkLandedcostF1">Frakt per enhet = Total frakt / Antall enheter</span>
+              <span data-i18n="kalkLandedcostF2">Toll per enhet = Varekost × toll%</span>
+              <span data-i18n="kalkLandedcostF3">Innførselskost = Varekost + Frakt/enhet + Toll + Forsikring + Gebyr/enhet + Emballasje</span>
+              <span data-i18n="kalkLandedcostF4">Veiledende pris eks. mva = Innførselskost / (1 − margin)</span>
+            </div>
+            <p style="margin:16px 0 0;max-width:64ch" data-i18n="kalkLandedcostFNote">«MVA på import nøytraliseres normalt (inn = ut) for mva-pliktige, så den holdes utenfor selve vareselvkosten.»</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="container">
+  <div class="lonn-learn">
+    <section class="lc-sec" aria-labelledby="lcA-kalkyle-landedcost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkLandedcostGuideKicker">Slik regner du</span><h2 class="lc-title" id="lcA-kalkyle-landedcost" data-i18n="kalkLandedcostGuideTitle">Fra varekost til landet kost</h2></div>
+      <ol class="kk-steps">
+        <li><span class="n">01</span><span data-i18n-html="kalkLandedcostStep1"><b>Fordel frakten på antall enheter.</b> Total frakt delt på antall gir frakt per enhet — 15 000 kr på 500 enheter blir 30 kr stk.</span></li>
+        <li><span class="n">02</span><span data-i18n-html="kalkLandedcostStep2"><b>Legg til toll, forsikring og gebyr.</b> Toll og forsikring regnes av varekosten. Klareringsgebyret fordeles på sendingen på samme måte som frakten.</span></li>
+        <li><span class="n">03</span><span data-i18n-html="kalkLandedcostStep3"><b>Sett veiledende pris fra margin.</b> Del innførselskosten på (1 − margin) for pris eks. mva. Legg på mva til sluttkunden.</span></li>
+      </ol>
+    </section>
+
+    <section class="lc-sec" aria-labelledby="lcB-kalkyle-landedcost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleExKicker">Regnet ut</span><h2 class="lc-title" id="lcB-kalkyle-landedcost" data-i18n="kalkLandedcostTableTitle">Eksempelet steg for steg</h2></div>
+      <table class="lc-trinn">
+        <thead><tr><th data-i18n="kalkFoodcostColSteg">Ledd</th><th data-i18n="kalkyleColFormel">Formel</th><th class="r" data-i18n="kalkyleColEksempel">Eksempel</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="kalkLandedcostStatFrakt">Frakt per enhet</td><td>15 000 / 500</td><td class="r">30,00<span class="u">kr</span></td></tr>
+          <tr><td data-i18n="kalkLandedcostResToll">Toll per enhet</td><td>100 × 5 %</td><td class="r">5,00<span class="u">kr</span></td></tr>
+          <tr><td data-i18n="kalkLandedcostResFors">Forsikring per enhet</td><td>100 × 2 %</td><td class="r">2,00<span class="u">kr</span></td></tr>
+          <tr><td data-i18n="kalkLandedcostResGebyr">Gebyr per enhet</td><td>2 500 / 500</td><td class="r">5,00<span class="u">kr</span></td></tr>
+          <tr class="is-sum"><td data-i18n="kalkLandedcostResLanded">Innførselskost</td><td>100 + 30 + 5 + 2 + 5 + 0</td><td class="r">142,00<span class="u">kr</span></td></tr>
+        </tbody>
+      </table>
+      <p class="lc-intro" style="margin-top:16px" data-i18n="kalkLandedcostTableNote">Varen koster 100 kr fra leverandøren, men lander på 142 kr per enhet når frakt, toll, forsikring og klarering er med. Det er tallet du skal prise ut fra — ikke fakturaprisen.</p>
+    </section>
+
+    <section class="lc-sec" aria-labelledby="lcC-kalkyle-landedcost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkLandedcostWhoKicker">Hvem bruker den</span><h2 class="lc-title" id="lcC-kalkyle-landedcost" data-i18n="kalkLandedcostWhoTitle">Tre typiske tilfeller</h2></div>
+      <div class="kk-examples">
+        <div class="kk-ex"><span class="lbl" data-i18n="kalkLandedcostWho1Lbl">Importør · containerlast</span><span class="desc" data-i18n="kalkLandedcostWho1Desc">Stor frakt fordelt på mange enheter gir lav fraktandel per stk — men gebyr og toll teller likevel.</span></div>
+        <div class="kk-ex"><span class="lbl" data-i18n="kalkLandedcostWho2Lbl">Nettbutikk · småsendinger</span><span class="desc" data-i18n="kalkLandedcostWho2Desc">Få enheter per sending betyr at frakt og klarering slår hardt ut per vare. Pris deretter.</span></div>
+        <div class="kk-ex"><span class="lbl" data-i18n="kalkLandedcostWho3Lbl">Grossist · reprising</span><span class="desc" data-i18n="kalkLandedcostWho3Desc">Landet kost inn i marginkalkylen gir en veiledende utsalgspris som faktisk holder.</span></div>
+      </div>
+    </section>
+
+    <section class="lc-sec" aria-labelledby="lcD-kalkyle-landedcost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleFaqKicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-kalkyle-landedcost" data-i18n="kalkyleFaqTitle">Vanlige spørsmål</h2></div>
+      <div class="lc-faq">
+        <details class="lc-q"><summary data-i18n="kalkLandedcostFaqQ1">Hva er innførselskost?</summary><div class="a"><p data-i18n="kalkLandedcostFaqA1">Det varen faktisk koster deg inn på lager — varekost pluss frakt, toll, forsikring, klareringsgebyr og emballasje, fordelt per enhet. Det er dette tallet prisen skal bygges på, ikke leverandørfakturaen alene.</p></div></details>
+        <details class="lc-q"><summary data-i18n="kalkLandedcostFaqQ2">Skal mva regnes med?</summary><div class="a"><p data-i18n="kalkLandedcostFaqA2">MVA på import nøytraliseres normalt (inn = ut) for mva-pliktige, så den holdes utenfor selve vareselvkosten. Kalkylen regnes eks. mva; mva legges på først i utsalgsprisen til sluttkunden.</p></div></details>
+        <details class="lc-q"><summary data-i18n="kalkLandedcostFaqQ3">Hvordan fordeler jeg frakt og gebyr?</summary><div class="a"><p data-i18n="kalkLandedcostFaqA3">Enkleste metode er å dele totalen på antall enheter i sendingen. Har du varer av svært ulik verdi eller volum, kan du heller fordele etter verdi eller vekt — men per enhet er godt nok for de fleste.</p></div></details>
+      </div>
+    </section>
+
+    <section class="lc-sec" aria-labelledby="lcE-kalkyle-landedcost">
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleRelKicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkyle-landedcost" data-i18n="kalkyleRelTitle">Relaterte verktøy</h2></div>
+      <div class="lc-links">
+        <a class="lc-link" href="/kalkyle/selvkost/"><span class="ar" data-i18n="kalkyleDestSk">Selvkost →</span><h3 data-i18n="kalkyleDestSk">Selvkost</h3><p data-i18n="kalkLandedcostRel1Desc">Full kalkyle fra materiale til pris med tillegg og fortjeneste.</p></a>
+        <a class="lc-link" href="/kalkyle/margin/"><span class="ar" data-i18n="kalkyleDestMargin">Margin &amp; påslag →</span><h3 data-i18n="kalkyleDestMargin">Margin &amp; påslag</h3><p data-i18n="kalkLandedcostRel2Desc">Sett riktig utsalgspris fra kostnaden per enhet.</p></a>
+        <a class="lc-link" href="/kalkyle/enhetskost/"><span class="ar" data-i18n="kalkyleDestEk">Enhetskost →</span><h3 data-i18n="kalkyleDestEk">Enhetskost</h3><p data-i18n="kalkLandedcostRel3Desc">Kostnad per enhet — også når variantene er ulikt krevende.</p></a>
+      </div>
+    </section>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="container foot">
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc" data-i18n="footerDisc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+  </div>
+</footer>
+
+<script defer src="/shared/site-shell.js?v=v1"></script>
+<script defer src="/shared/top-chrome.js?v=v1"></script>
+<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/search.js?v=v126"></script>
+<script defer src="/shared/lang/no.js?v=v126"></script>
+<script src="/shared/atmosphere.js?v=v5" defer></script>
+
+<script>
+// ── Innførselskost (landed cost): varekost + frakt + toll + forsikring + gebyr + emballasje (matte verifisert mot research) ──
+(function(){
+  var KEY = 'hv-kalkyle-landedcost-v1';
+  var MVA = 0.25;
+
+  function fmtKr(n, dec){ if(!isFinite(n)) return '–'; return n.toFixed(dec==null?2:dec).replace('.', ',') + ' kr'; }
+  function parseAmt(s){
+    if(s == null) return NaN;
+    var raw = String(s).trim().replace(/[\s ]/g, '').replace(',', '.');
+    if(raw === '') return NaN;
+    var n = parseFloat(raw);
+    return isNaN(n) ? NaN : n;
+  }
+  function setTxt(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; }
+
+  var ids = ['lcVare','lcFrakt','lcAntall','lcToll','lcFors','lcGebyr','lcEmb','lcMargin'];
+  var els = {}; ids.forEach(function(id){ els[id] = document.getElementById(id); });
+
+  function recalc(){
+    var vare = parseAmt(els.lcVare.value);
+    var frakt = parseAmt(els.lcFrakt.value);
+    var antall = parseAmt(els.lcAntall.value);
+    var tollP = parseAmt(els.lcToll.value);
+    var forsP = parseAmt(els.lcFors.value);
+    var gebyr = parseAmt(els.lcGebyr.value);
+    var emb = parseAmt(els.lcEmb.value);
+    var marginP = parseAmt(els.lcMargin.value);
+
+    var fraktEnhet = (isFinite(frakt) && isFinite(antall) && antall > 0) ? frakt / antall : NaN;
+    var gebyrEnhet = (isFinite(gebyr) && isFinite(antall) && antall > 0) ? gebyr / antall : (isFinite(gebyr) ? NaN : 0);
+    var tollEnhet = (isFinite(vare) && isFinite(tollP)) ? vare * tollP / 100 : NaN;
+    var forsEnhet = (isFinite(vare) && isFinite(forsP)) ? vare * forsP / 100 : NaN;
+    var embEnhet = isFinite(emb) ? emb : 0;
+
+    var parts = [vare, fraktEnhet, tollEnhet, forsEnhet, gebyrEnhet, embEnhet];
+    var landedOk = isFinite(vare);
+    var landed = parts.reduce(function(a, b){ return a + (isFinite(b) ? b : 0); }, 0);
+
+    var m = marginP / 100;
+    var hasMargin = isFinite(m) && m >= 0 && m < 1;
+    var prisEks = (landedOk && hasMargin) ? landed / (1 - m) : NaN;
+    var prisInkl = isFinite(prisEks) ? prisEks * (1 + MVA) : NaN;
+
+    setTxt('lkStripFrakt', fmtKr(fraktEnhet));
+    setTxt('lkStripToll', fmtKr(tollEnhet));
+    setTxt('lkStripLanded', landedOk ? fmtKr(landed) : '–');
+    setTxt('lkStripPris', hasMargin ? fmtKr(prisEks) : '–');
+
+    setTxt('lkROutVare', fmtKr(vare));
+    setTxt('lkROutFrakt', fmtKr(fraktEnhet));
+    setTxt('lkROutToll', fmtKr(tollEnhet));
+    setTxt('lkROutFors', fmtKr(forsEnhet));
+    setTxt('lkROutGebyr', fmtKr(gebyrEnhet));
+    setTxt('lkROutEmb', fmtKr(embEnhet));
+    setTxt('lkROutLanded', landedOk ? fmtKr(landed) : '–');
+    setTxt('lkROutPrisEks', hasMargin ? fmtKr(prisEks) : '–');
+    setTxt('lkROutPrisInkl', hasMargin ? fmtKr(prisInkl) : '–');
+
+    setTxt('hStatLanded', landedOk ? fmtKr(landed) : '–');
+    setTxt('hStatFrakt', fmtKr(fraktEnhet));
+
+    var r = (typeof R === 'function') ? R() : {};
+    var noteEl = document.getElementById('lkPriceNote');
+    if(noteEl) noteEl.textContent = hasMargin
+      ? (r.kalkLandedcostNoteWithMargin || 'Veiledende pris regnes fra innførselskost og ønsket margin, eks. mva. Mva legges på til sluttkunden — sats 25 %.')
+      : (r.kalkLandedcostNoteNoMargin || 'Kalkylen regnes eks. mva. Fyll inn ønsket margin for å få en veiledende utsalgspris.');
+
+    persist();
+  }
+
+  function persist(){
+    try {
+      var s = {};
+      ids.forEach(function(id){ s[id] = els[id].value; });
+      localStorage.setItem(KEY, JSON.stringify(s));
+    } catch(e){}
+  }
+  function restore(){
+    try {
+      var raw = localStorage.getItem(KEY); if(!raw) return;
+      var s = JSON.parse(raw);
+      ids.forEach(function(id){ if(s[id] != null) els[id].value = s[id]; });
+    } catch(e){}
+  }
+
+  ids.forEach(function(id){ els[id].addEventListener('input', recalc); });
+
+  restore();
+  recalc();
+})();
+</script>
+
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('/sw.js').catch(function(){});
+    });
+  }
+</script>
+</body>
+</html>

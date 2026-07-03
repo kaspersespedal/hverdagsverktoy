@@ -80,6 +80,30 @@ body.focus-mode > .nav-wrap,
 body.focus-mode > .tabs-wrap,
 body.focus-mode > footer{display:none}
 
+/* ── Kalkyle picker-strip («Bytt kalkyle») ── */
+.kk-picker-strip-wrap{padding-bottom:14px}
+.kk-picker-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.kk-picker-strip::-webkit-scrollbar{display:none}
+.kk-chip{flex-shrink:0;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+  background:transparent;color:var(--ink3);font:500 12.5px/1 var(--font-sans);text-decoration:none;
+  transition:color .18s ease,border-color .18s ease,background .18s ease}
+.kk-chip.is-active{border-color:var(--line-warm);background:color-mix(in srgb, var(--accent) 12%, transparent);color:var(--ink)}
+@media(hover:hover){.kk-chip:not(.is-active):hover{color:var(--ink2);border-color:var(--line-2)}}
+
+/* ── Frilans / håndverker modus-toggle ── */
+.mg-seg-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+@media(max-width:480px){.mg-seg-row{grid-template-columns:1fr}}
+.mg-seg{appearance:none;-webkit-appearance:none;border:1px solid var(--line-2);cursor:pointer;
+  padding:9px 10px;border-radius:5px;font:500 12.5px/1.2 var(--font-sans);letter-spacing:-.05px;
+  background:var(--surface-2);color:var(--ink2);text-align:center;
+  transition:background .18s ease,color .18s ease,border-color .18s ease}
+.mg-seg[aria-pressed="true"]{background:color-mix(in srgb, var(--accent) 14%, transparent);color:var(--ink);border-color:var(--line-warm)}
+@media(hover:hover){.mg-seg:not([aria-pressed="true"]):hover{color:var(--ink);border-color:var(--line-2)}}
+.kk-mode-view{display:none}
+.kk-mode-view.is-active{display:block}
+.ks-strip.kk-mode-view{display:none}
+.ks-strip.kk-mode-view.is-active{display:grid}
+
 .calc-wrap{padding:28px 0 56px}
 .calc-wrap .container{display:grid;grid-template-columns:1fr 260px;gap:28px;align-items:start}
 @media(max-width:980px){.calc-wrap .container{grid-template-columns:1fr}}
@@ -383,19 +407,51 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <main id="main">
 <div class="calc-wrap">
+  <div class="container kk-picker-strip-wrap">
+    <div class="kk-picker-strip">
+      <a href="/kalkyle/margin/" class="kk-chip" data-i18n="kalkyleDestMargin">Margin &amp; påslag</a>
+      <a href="/kalkyle/selvkost/" class="kk-chip" data-i18n="kalkyleDestSk">Selvkost</a>
+      <a href="/kalkyle/enhetskost/" class="kk-chip" data-i18n="kalkyleDestEk">Enhetskost</a>
+      <a href="/kalkyle/foodcost/" class="kk-chip" data-i18n="kalkyleDestFc">Food cost</a>
+      <a href="/kalkyle/landedcost/" class="kk-chip" data-i18n="kalkyleDestLk">Innførselskost</a>
+      <a href="/kalkyle/netthandel/" class="kk-chip" data-i18n="kalkyleDestNh">Netthandel</a>
+      <a href="/kalkulator/dekningsbidrag/" class="kk-chip" data-i18n="kalkyleDestBe">Dekningsbidrag</a>
+      <a href="/kalkulator/timepris/" class="kk-chip is-active" data-i18n="kalkyleDestTp">Timepris</a>
+      <a href="/kalkulator/tilbud/" class="kk-chip" data-i18n="kalkyleDestTilbud">Tilbud</a>
+    </div>
+  </div>
+
   <div class="container">
 
     <div class="ks-host">
       <div class="ks">
-        <div class="ks-strip">
+        <div class="ks-strip kk-mode-view is-active" id="tpStripFrilans">
           <div class="ks-strip-cell"><span class="l" data-i18n="kalkTimeprisResOmsetning">Brutto omsetning</span><span class="v" id="tpStripOms">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="kalkTimeprisResEffektiv">Effektiv timepris</span><span class="v" id="tpStripEff">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="kalkTimeprisStatInkl">Timepris inkl. MVA</span><span class="v" id="tpStripInkl">–</span></div>
           <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkTimeprisStatEks">Timepris eks. MVA</span><span class="v" id="tpStripEks">–</span></div>
         </div>
+        <div class="ks-strip kk-mode-view" id="tpStripHandverker">
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkTimeprisHvSelvkost">Selvkost per time</span><span class="v" id="hvStripSelvkost">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkTimeprisStatEks">Timepris eks. MVA</span><span class="v" id="hvStripEks">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkTimeprisStatInkl">Timepris inkl. MVA</span><span class="v" id="hvStripInkl">–</span></div>
+          <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkTimeprisHvDb">Dekningsbidrag per time</span><span class="v" id="hvStripDb">–</span></div>
+        </div>
 
         <div class="ks-body">
           <div class="ks-form">
+            <section class="ks-section">
+              <div class="ik-section-head">
+                <h3 data-i18n="kalkTimeprisModusTitle">Modus</h3>
+                <span class="meta" data-i18n="kalkTimeprisModusHint">Velg fakturering</span>
+              </div>
+              <div class="mg-seg-row" role="group" aria-label="Velg modus">
+                <button type="button" class="mg-seg" id="tpSegFrilans" aria-pressed="true" data-i18n="kalkTimeprisModusFrilans">Frilans / konsulent</button>
+                <button type="button" class="mg-seg" id="tpSegHandverker" aria-pressed="false" data-i18n="kalkTimeprisModusHandverker">Håndverker</button>
+              </div>
+            </section>
+
+            <div class="kk-mode-view is-active" id="tpFormFrilans">
             <section class="ks-section">
               <div class="ik-section-head">
                 <h3 data-i18n="kalkTimeprisSectionInntekt">Inntekt og mål</h3>
@@ -447,9 +503,49 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
               <p class="ik-warning" id="tp-warning" role="alert" data-i18n="kalkTimeprisWarning">Sett fakturerbare timer &gt; 0 for å beregne timepris.</p>
               <p class="ik-note" data-i18n="kalkTimeprisInfoBox">Kalkulatoren beregner omsetningen du trenger for å sitte igjen med ønsket netto. Over 50 000 kr omsetning plikter du MVA-registrering.</p>
             </section>
+            </div>
+
+            <div class="kk-mode-view" id="tpFormHandverker">
+            <section class="ks-section">
+              <div class="ik-section-head">
+                <h3 data-i18n="kalkTimeprisHvSectionTitle">Håndverker — selvkost per time</h3>
+                <span class="meta" data-i18n="kalkTimeprisHvSectionHint">Bygg opp fra montørlønn</span>
+              </div>
+              <div class="ik-stack">
+                <div class="ik-fg">
+                  <label class="ik-lbl" for="hv-lonn"><span data-i18n="kalkTimeprisHvLblLonn">Montørlønn</span> <span class="cap">(kr/t)</span></label>
+                  <input id="hv-lonn" class="ik-input" type="text" inputmode="decimal" value="300" autocomplete="off">
+                </div>
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="hv-sosial"><span data-i18n="kalkTimeprisHvLblSosial">Sosiale kostnader</span> <span class="cap">(%)</span></label>
+                    <input id="hv-sosial" class="ik-input" type="text" inputmode="decimal" value="30" autocomplete="off">
+                    <span class="ik-hint" data-i18n="kalkTimeprisHvSosialHint">Arbeidsgiveravgift, feriepenger, OTP.</span>
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="hv-indirekte"><span data-i18n="kalkTimeprisHvLblIndirekte">Indirekte kostnader</span> <span class="cap">(%)</span></label>
+                    <input id="hv-indirekte" class="ik-input" type="text" inputmode="decimal" value="25" autocomplete="off">
+                    <span class="ik-hint" data-i18n="kalkTimeprisHvIndirekteHint">Verktøy, bil, forsikring, administrasjon.</span>
+                  </div>
+                </div>
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="hv-fakt"><span data-i18n="kalkTimeprisHvLblFakt">Faktureringsgrad</span> <span class="cap">(%)</span></label>
+                    <input id="hv-fakt" class="ik-input" type="text" inputmode="decimal" value="80" autocomplete="off">
+                    <span class="ik-hint" data-i18n="kalkTimeprisHvFaktHint">Andel av arbeidstiden som er fakturerbar.</span>
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="hv-fort"><span data-i18n="kalkTimeprisHvLblFort">Fortjeneste</span> <span class="cap">(%)</span></label>
+                    <input id="hv-fort" class="ik-input" type="text" inputmode="decimal" value="20" autocomplete="off">
+                  </div>
+                </div>
+              </div>
+              <p class="ik-note" data-i18n="kalkTimeprisHvNote">Bruk fakturerbare timer, ikke totale — faktureringsgraden fanger opp ledig kapasitet, admin og reisetid.</p>
+            </section>
+            </div>
           </div>
 
-          <aside class="ks-result" aria-live="polite">
+          <aside class="ks-result kk-mode-view is-active" id="tpResultFrilans" aria-live="polite">
             <div class="ks-r-eyebrow" data-i18n="kalkTimeprisResHeadline">Timepris eks. MVA</div>
             <div class="ks-r-net"><span id="rTimeprisEks">–</span></div>
             <div class="ks-r-mnd" id="rVerdict">Fyll inn netto mål og timer for å se beregningen.</div>
@@ -465,6 +561,20 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
               <div class="ks-r-stat div"><span class="l" data-i18n="kalkTimeprisResOmsetning">Brutto omsetning</span><span class="v" id="rOmsetning">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="kalkTimeprisResInkl">Timepris inkl. 25 % MVA</span><span class="v" id="rTimeprisInkl">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="kalkTimeprisResEffektiv">Effektiv timepris (netto/time)</span><span class="v" id="rEffektiv">–</span></div>
+            </div>
+          </aside>
+
+          <aside class="ks-result kk-mode-view" id="tpResultHandverker" aria-live="polite">
+            <div class="ks-r-eyebrow" data-i18n="kalkTimeprisHvSelvkost">Selvkost per time</div>
+            <div class="ks-r-net"><span id="hvSelvkostNet">–</span></div>
+            <div class="ks-r-mnd" id="hvVerdict">—</div>
+            <div class="ks-r-stats">
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkTimeprisHvResLonnkost">Lønnskostnad</span><span class="v" id="hvOutLonnkost">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkTimeprisHvResBrutto">Bruttokost / arbeidet time</span><span class="v" id="hvOutBrutto">–</span></div>
+              <div class="ks-r-stat div"><span class="l" data-i18n="kalkTimeprisHvSelvkost">Selvkost / fakturerbar time</span><span class="v" id="hvOutSelvkost">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkTimeprisStatEks">Timepris eks. MVA</span><span class="v" id="hvOutEks">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkTimeprisStatInkl">Timepris inkl. MVA</span><span class="v" id="hvOutInkl">–</span></div>
+              <div class="ks-r-stat div"><span class="l" data-i18n="kalkTimeprisHvDb">Dekningsbidrag per time</span><span class="v" id="hvOutDb">–</span></div>
             </div>
           </aside>
         </div>
@@ -602,7 +712,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 <script defer src="/shared/top-chrome.js?v=v1"></script>
 <script defer src="/shared/core.js?v=v127"></script>
 <script defer src="/shared/search.js?v=v126"></script>
-<script defer src="/shared/lang/no.js?v=v125"></script>
+<script defer src="/shared/lang/no.js?v=v126"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -755,6 +865,102 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       if((typeof R==='function' && R().kalkTimeprisResDefault) || n>40){ clearInterval(t); calcTimepris(); }
     }, 80);
   })();
+})();
+</script>
+
+<script>
+// ── Håndverker-modus: selvkost/time bygget opp fra montørlønn (ny, frilans-logikk uendret) ──
+(function(){
+  var KEY_HV = 'hv-timepris-handverker-v1';
+  var mode = 'frilans'; // 'frilans' | 'handverker'
+
+  var fmtNb0 = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
+  function fmtKr(n){ if(!isFinite(n)) return '–'; return fmtNb0.format(Math.round(n)) + ' kr'; }
+  function parseAmt(s){
+    if(s == null) return NaN;
+    var raw = String(s).trim().replace(/[\s ]/g, '').replace(',', '.');
+    if(raw === '') return NaN;
+    var n = parseFloat(raw);
+    return isNaN(n) ? NaN : n;
+  }
+  function setTxt(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; }
+
+  var hvIds = ['hv-lonn','hv-sosial','hv-indirekte','hv-fakt','hv-fort'];
+  var hvEls = {}; hvIds.forEach(function(id){ hvEls[id] = document.getElementById(id); });
+
+  function computeHandverker(){
+    var lonn = parseAmt(hvEls['hv-lonn'].value);
+    var sosialP = parseAmt(hvEls['hv-sosial'].value);
+    var indirekteP = parseAmt(hvEls['hv-indirekte'].value);
+    var faktP = parseAmt(hvEls['hv-fakt'].value);
+    var fortP = parseAmt(hvEls['hv-fort'].value);
+
+    // Ledger-stil: hvert trinn rundes til hel krone (matcher fakturakonvensjon), så divisjon på faktureringsgrad blir eksakt
+    var lonnskost = Math.round(lonn * (1 + sosialP / 100));
+    var indirekteTillegg = Math.round(lonnskost * indirekteP / 100);
+    var bruttokost = lonnskost + indirekteTillegg;
+    var faktBrok = faktP / 100;
+    var selvkost = (faktBrok > 0) ? Math.round(bruttokost / faktBrok) : NaN;
+    var eks = Math.round(selvkost * (1 + fortP / 100));
+    var inkl = Math.round(eks * 1.25);
+    var db = eks - selvkost;
+
+    return { lonn: lonn, lonnskost: lonnskost, indirekteTillegg: indirekteTillegg, bruttokost: bruttokost, selvkost: selvkost, eks: eks, inkl: inkl, db: db, ok: isFinite(lonn) && faktBrok > 0 };
+  }
+
+  function recalcHandverker(){
+    var r = computeHandverker();
+    setTxt('hvStripSelvkost', r.ok ? fmtKr(r.selvkost) : '–');
+    setTxt('hvStripEks', r.ok ? fmtKr(r.eks) : '–');
+    setTxt('hvStripInkl', r.ok ? fmtKr(r.inkl) : '–');
+    setTxt('hvStripDb', r.ok ? fmtKr(r.db) : '–');
+
+    setTxt('hvSelvkostNet', r.ok ? r.selvkost + ' kr' : '–');
+    setTxt('hvOutLonnkost', r.ok ? fmtKr(r.lonnskost) : '–');
+    setTxt('hvOutBrutto', r.ok ? fmtKr(r.bruttokost) : '–');
+    setTxt('hvOutSelvkost', r.ok ? fmtKr(r.selvkost) : '–');
+    setTxt('hvOutEks', r.ok ? fmtKr(r.eks) : '–');
+    setTxt('hvOutInkl', r.ok ? fmtKr(r.inkl) : '–');
+    setTxt('hvOutDb', r.ok ? fmtKr(r.db) : '–');
+
+    var verdictEl = document.getElementById('hvVerdict');
+    if(verdictEl) verdictEl.textContent = r.ok ? 'Kunden faktureres ' + fmtKr(r.inkl) + ' inkl. MVA' : 'Fyll inn montørlønn og faktureringsgrad.';
+
+    persistHandverker();
+  }
+
+  function persistHandverker(){
+    try {
+      var s = { mode: mode };
+      hvIds.forEach(function(id){ s[id] = hvEls[id].value; });
+      localStorage.setItem(KEY_HV, JSON.stringify(s));
+    } catch(e){}
+  }
+  function restoreHandverker(){
+    try {
+      var raw = localStorage.getItem(KEY_HV); if(!raw) return;
+      var s = JSON.parse(raw);
+      hvIds.forEach(function(id){ if(s[id] != null) hvEls[id].value = s[id]; });
+      if(s.mode) mode = s.mode;
+    } catch(e){}
+  }
+
+  function setMode(newMode){
+    mode = newMode;
+    document.getElementById('tpSegFrilans').setAttribute('aria-pressed', mode === 'frilans' ? 'true' : 'false');
+    document.getElementById('tpSegHandverker').setAttribute('aria-pressed', mode === 'handverker' ? 'true' : 'false');
+    ['tpStripFrilans','tpFormFrilans','tpResultFrilans'].forEach(function(id){ document.getElementById(id).classList.toggle('is-active', mode === 'frilans'); });
+    ['tpStripHandverker','tpFormHandverker','tpResultHandverker'].forEach(function(id){ document.getElementById(id).classList.toggle('is-active', mode === 'handverker'); });
+    if(mode === 'handverker') recalcHandverker();
+    persistHandverker();
+  }
+
+  document.getElementById('tpSegFrilans').addEventListener('click', function(){ setMode('frilans'); });
+  document.getElementById('tpSegHandverker').addEventListener('click', function(){ setMode('handverker'); });
+  hvIds.forEach(function(id){ hvEls[id].addEventListener('input', recalcHandverker); });
+
+  restoreHandverker();
+  setMode(mode);
 })();
 </script>
 

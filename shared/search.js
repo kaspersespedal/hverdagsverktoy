@@ -504,7 +504,7 @@ function loadSearchIntents(){
   if(__hvtIntentsLoadStarted || window.SEARCH_INTENTS) return;
   __hvtIntentsLoadStarted = true;
   var s = document.createElement('script');
-  s.src = '/shared/search-intents.js?v=v4';
+  s.src = '/shared/search-intents.js?v=v5';
   s.async = true;
   document.head.appendChild(s);
 }
