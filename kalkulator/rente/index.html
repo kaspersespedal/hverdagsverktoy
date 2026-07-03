@@ -600,7 +600,10 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       var mid = (lo + hi) / 2;
       if(pvAtRate(mid) > netProceeds) lo = mid; else hi = mid;
     }
-    var eff = (lo + hi) / 2 * 100;
+    // Bisection løser for nominell årsrente (månedsraten = r/12). Effektiv
+    // rente kapitaliserer månedlig: (1 + i_mnd)^12 − 1.
+    var nomAnnual = (lo + hi) / 2;
+    var eff = (Math.pow(1 + nomAnnual / 12, 12) - 1) * 100;
     var totalFees = est + monthlyFee * n;
     var totalCost = annuity * n + monthlyFee * n + est;
     var renter = annuity * n - amt;

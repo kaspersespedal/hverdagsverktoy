@@ -300,6 +300,18 @@
   @media (prefers-reduced-motion:reduce){
     ::view-transition-group(root){ animation-duration:.001ms !important }
   }
+
+  /* ── Mobil-kollaps @≤480px ────────────────────────────────────
+     Tekst-labelene på tema/språk-knappene + den redundante «Forsiden»-
+     lenken sprengte toppbaren på 375px (på lov-sidene havnet språk-
+     knappen helt utenfor viewport, uttilgjengelig). Kollaps til ikon-
+     knapper (behold swatch/flagg/chevron); dropp nav-back — logoen
+     lenker allerede hjem, og undersidene har brødsmule under. */
+  @media(max-width:480px){
+    #tc-theme-label,#tc-lang-label{display:none}
+    .tc-actions{gap:10px}
+    nav .nav-back{display:none}
+  }
   `;
   var styleEl = document.createElement('style');
   styleEl.id = 'tc-styles';
