@@ -3393,7 +3393,7 @@ html[data-theme="bw"].awow-on body.atmo-on{ background:transparent !important; }
     '  float xx = x + warp*.65 + seed + t*.008;',
     '  float edge = base + (fbm(vec2(xx*1.05, t*.042+seed*1.7)) - .5)*.38;',
     '  float e = y - edge;',
-    '  float body = smoothstep(-.012,.06,e) * exp(-max(e,0.)*3.4);',
+    '  float body = smoothstep(-.012,.06,e) * exp(-max(e,0.)*2.5);',
     '  if(body < .003) return vec3(0.);',
     '  float rays = fbm(vec2(xx*6., t*.11+seed*5.));',
     '  rays = .30 + 1.05*rays*rays;',
@@ -3409,10 +3409,13 @@ html[data-theme="bw"].awow-on body.atmo-on{ background:transparent !important; }
     '  float x = uv.x * aspect;',
     '  float t = uTime;',
     '  vec3 c = vec3(0.);',
-    '  c += curtain(x, uv.y, t,      0.,   .52, 1.);',   /* hovedgardin */
-    '  c += curtain(x, uv.y, t*.8,   17.3, .70, .45);',  /* bakre, roligere */
-    '  c += curtain(x, uv.y, t*1.15, 8.9,  .38, .30);',  /* lav, svak */
+    '  c += curtain(x, uv.y, t,      0.,   .46, 1.0);',  /* hovedgardin */
+    '  c += curtain(x, uv.y, t*.8,   17.3, .70, .46);',  /* bakre crown */
+    '  c += curtain(x, uv.y, t*1.15, 8.9,  .24, .62);',  /* lav gardin */
+    '  c += curtain(x, uv.y, t*.62,  29.1, .84, .30);',  /* høy topp */
+    '  c += curtain(x, uv.y, t*.92,  41.7, .06, .46);',  /* bakke-glød — fyller ned */
     '  c *= .8 + .45*fbm(vec2(t*.05, 7.3));',            /* langsom "surge" */
+    '  c += (uColA*.55 + uColB*.45) * .04 * (.5 + .5*fbm(vec2(x*.5+9., t*.03)));', /* svak helhøyde-dis */
     /* stjerner — øvre himmel, dempes bak lysende gardin */
     '  vec2 g = vec2(x,uv.y)*110.;',
     '  vec2 id = floor(g);',
@@ -3423,7 +3426,7 @@ html[data-theme="bw"].awow-on body.atmo-on{ background:transparent !important; }
     '    float s = exp(-dot(f,f)*90.) * tw * smoothstep(.30,.62,uv.y);',
     '    c += vec3(.75,.82,.95) * s * uStars * .7 * (1.-clamp((c.r+c.g+c.b)*1.5,0.,1.));',
     '  }',
-    '  c *= uAmp * smoothstep(.02,.30,uv.y);',                  /* roligere nedre kant */
+    '  c *= uAmp * smoothstep(-.04,.12,uv.y);',                 /* fyller nesten til bunn */
     '  c = 1. - exp(-c*1.5);',                                  /* myk rolloff */
     '  c += (hash21(gl_FragCoord.xy+fract(t)*7.) - .5)/128.;',  /* dither mot banding */
     '  gl_FragColor = vec4(max(c,vec3(0.)), 1.);',
