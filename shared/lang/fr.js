@@ -995,7 +995,7 @@ REGIONS['fr'] = {
     homeHeroTitle: 'Outils pratiques pour la <em>finance personnelle</em>, la fiscalité et le droit.',
     homeHeroLangPill: '10 langues',
     homeHeroSubtitle: 'Mis à jour selon les règles en vigueur pour 2026.',
-    homeMarketTitle: 'Données de marché',
+    homeMarketTitle: 'Aperçu du jour',
     homeSectionCategories: 'Catégories',
     homeCategoriesCount: '6 sections',
     homeCardPersonlig: 'Finance personnelle',

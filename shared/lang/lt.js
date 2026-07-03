@@ -1317,7 +1317,7 @@ REGIONS['lt'] = {
     homeHeroLangPill: '10 kalbų',
     homeHeroSubtitle: 'Atnaujinta pagal galiojančias 2026 m. taisykles.',
     homeHeroTitle: 'Praktiški įrankiai <em>asmeniniams finansams</em>, mokesčiams ir teisei.',
-    homeMarketTitle: 'Rinkos duomenys',
+    homeMarketTitle: 'Dienos apžvalga',
     homeSectionCategories: 'Kategorijos',
     kontoAfAktivt: '<strong>Aktyviai valdomas fondas</strong> — fondų valdytojas akcijas renka rankiniu būdu. Didesni mokesčiai (1–2 %), kurie suvalgo grąžą.',
     kontoAfIndeks: '<strong>Indeksinis fondas</strong> — pasyviai seka visą biržą (pvz., Oslo Børs arba pasaulį). Maži mokesčiai (0,2–0,4 %), ir dažniausiai aplenkia aktyvius fondus per laiką.',

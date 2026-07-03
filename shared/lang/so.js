@@ -1276,7 +1276,7 @@ REGIONS['so'] = {
     homeHeroLangPill: '10 luqadood',
     homeHeroSubtitle: 'Loo cusboonaysiiyey xeerarka hadda ee 2026.',
     homeHeroTitle: `Qalab wax-ku-ool ah oo loogu talagalay <em>maaliyadda gaarka ah</em>, canshuurta iyo sharciga.`,
-    homeMarketTitle: 'Xogta suuqa',
+    homeMarketTitle: 'Guudmarka maalinlaha',
     homeSectionCategories: 'Qaybaha',
     kontoAfAktivt: `<strong>Sanduuq si firfircoon loo maamulo</strong> — maamulaha sanduuqu wuxuu gacanta ku doortaa saamiyada. Khidmado sare (1–2 %) oo cuna faa'iidada.`,
     kontoAfIndeks: `<strong>Sanduuqa tusmada</strong> — wuxuu si la xakameyn la'aan u raacaa suuq dhan (tusaale Oslo Børs ama adduunka). Khidmado hooseeya (0,2–0,4 %), badanaa wuxuu ka adkaadaa sanduuqyada firfircoon waqti dheer.`,
