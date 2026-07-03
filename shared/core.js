@@ -246,7 +246,7 @@ function fmt(n) {
   return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(Math.round(n)).replace(/\u00a0/g,' ')+' '+(r.currency||'kr');
 }
 function pct(n) { return n.toFixed(1).replace('.',',')+' %'; }
-function parseNum(id) { const el=document.getElementById(id); return el ? +(el.value.replace(/[\s\u00a0,]/g,'').replace(',','.')) || 0 : 0; }
+function parseNum(id) { const el=document.getElementById(id); return el ? +(el.value.replace(/[\s\u00a0]/g,'').replace(',','.')) || 0 : 0; }
 function fmtInput(n) { return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(n).replace(/\u00a0/g,' '); }
 function setEl(id, val) { var el=document.getElementById(id); if(el) el.textContent=val; }
 // V12 Fase 3 helpers (Pattern B null-check epidemi):
@@ -5304,7 +5304,7 @@ function fcCalc(){
   var _ft=document.getElementById('fc-type');
   if(!_ft) return;
   const type = _ft.value;
-  const g = id => { var el=document.getElementById(id); return el?(parseFloat(el.value.replace(/[\s\u00a0,]/g,''))||0):0; };
+  const g = id => { var el=document.getElementById(id); return el?(parseFloat(el.value.replace(/[\s\u00a0]/g,'').replace(',','.'))||0):0; };
   const resLbl = document.getElementById('fc-res-lbl');
   const resVal = document.getElementById('fc-res-val');
   const resSub = document.getElementById('fc-res-sub');
