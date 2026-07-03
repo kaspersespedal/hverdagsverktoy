@@ -21,7 +21,13 @@
   /* Render-signaturer: minutt-pulsen re-rendrer fra cache hvert 60. sekund,
      men DOM som bærer animasjon (marquee, søylediagram, værstripe) skal kun
      bygges om når innholdet faktisk er endret — ellers restarter loopen synlig. */
-  var _tickerSig = '', _stromSig = '', _fcSig = '';
+  var _tickerSig = '', _stromSig = '', _fcSig = '', _graphSig = '', _weekSig = '';
+
+  /* Fullskjerm-værmelding-state: modal-DOM bygges lazy ved første åpning,
+     _lastWx holder siste rendrede vær-data (mates til grafen ved åpning),
+     _graphGeo holder graf-geometri til hover-avlesningen. */
+  var _modalEls = null, _modalOpen = false, _wxReturnFocus = null,
+      _lastWx = null, _graphGeo = null, _prevHtmlOverflow = '';
 
   /* ── Strømsone-kart (NVE/Statnett prisområder). Slås opp fra Geonorge-treffets
      kommunenummer, med fylke som fallback. Oppslag:
@@ -254,13 +260,18 @@
     else if (/clearsky|fair/.test(s)) g = 'sun';
     return WX_ICONS[g] || WX_ICONS.cloud;
   }
+  var DAGER_FULL = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag']; // Date.getDay(): 0 = søndag
+  var MND_LONG = ['januar', 'februar', 'mars', 'april', 'mai', 'juni',
+                  'juli', 'august', 'september', 'oktober', 'november', 'desember'];
   function renderWeather(d) {
+    _lastWx = d;
     countUp('wxTemp', Math.round(d.temp), 0);
     setText('wxCond', wxText(d.sym));
     var sub = 'Maks ' + Math.round(d.max) + '° · Min ' + Math.round(d.min) + '°';
     if (typeof d.wind === 'number') sub += ' · ' + nb(d.wind, 1) + ' m/s' + (d.dir != null ? ' ' + compass(d.dir) : '');
     setText('wxSub', sub);
     buildForecast(d.hours);
+    if (_modalOpen) { renderDayGraph(d); renderWeek(d); modalStamp(); } // live-oppdater åpen modal
     stampNow();
   }
   /* Værmeldings-stripe: «nå» + neste timer framover (klokke + symbol + grad).
@@ -280,6 +291,57 @@
         '</div>';
     }
     el.innerHTML = html;
+  }
+  /* Grupperer hele MET-timeserien på lokal kalenderdag og finner maks/min +
+     et symbol representativt for dagen (målepunktet nærmest kl. 13 lokal tid). */
+  function buildWeek(ts) {
+    var byDate = {}, order = [];
+    for (var i = 0; i < ts.length; i++) {
+      var dt = new Date(ts[i].time);
+      var key = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+      if (!byDate[key]) { byDate[key] = []; order.push(key); }
+      byDate[key].push(ts[i]);
+    }
+    var week = [];
+    for (var di = 0; di < order.length && week.length < 7; di++) {
+      var entries = byDate[order[di]];
+      var temps = entries.map(function (e) { return e.data.instant.details.air_temperature; })
+                          .filter(function (v) { return typeof v === 'number'; });
+      if (!temps.length) continue;
+      var best = entries[0], bestDiff = Math.abs(new Date(entries[0].time).getHours() - 13);
+      for (var j = 1; j < entries.length; j++) {
+        var diff = Math.abs(new Date(entries[j].time).getHours() - 13);
+        if (diff < bestDiff) { bestDiff = diff; best = entries[j]; }
+      }
+      var nx = best.data;
+      var sym = (nx.next_1_hours && nx.next_1_hours.summary.symbol_code) ||
+                (nx.next_6_hours && nx.next_6_hours.summary.symbol_code) || '';
+      week.push({ dow: new Date(entries[0].time).getDay(), sym: sym,
+                  max: Math.max.apply(null, temps), min: Math.min.apply(null, temps) });
+    }
+    return week;
+  }
+  /* Full time-for-time-serie framover (til den store dag-grafen i fullskjerm).
+     Tar de neste ~24 time-oppløste punktene fra «nå» (MET gir 1-t-oppløsning
+     ~2,5 døgn framover, så dette fylles uansett klokkeslett). Hver post har
+     temp + nedbør (next_1_hours) + symbol + vind. */
+  function buildDayHours(ts) {
+    var out = [];
+    for (var i = 0; i < ts.length && out.length < 24; i++) {
+      var e = ts[i], det = e.data.instant.details, n1 = e.data.next_1_hours;
+      if (!n1) break; // forbi 1-t-sonen → stopp (6-t-blokker egner seg ikke til time-graf)
+      if (typeof det.air_temperature !== 'number' || isNaN(det.air_temperature)) continue; // hopp over hull (som buildWeek)
+      out.push({
+        t: e.time,
+        hour: new Date(e.time).getHours(),
+        temp: det.air_temperature,
+        precip: (n1.details && typeof n1.details.precipitation_amount === 'number') ? n1.details.precipitation_amount : 0,
+        sym: (n1.summary && n1.summary.symbol_code) || '',
+        wind: det.wind_speed,
+        dir: det.wind_from_direction
+      });
+    }
+    return out;
   }
   function loadWeather(place, force) {
     var key = 'wx_' + place.lat.toFixed(3) + '_' + place.lon.toFixed(3);
@@ -307,10 +369,269 @@
           hours.push({ h: new Date(e2.time).getHours(), temp: det.air_temperature, sym: s2 });
         }
         var d = { temp: now.air_temperature, wind: now.wind_speed, dir: now.wind_from_direction,
-                  sym: sym, max: Math.max.apply(null, temps), min: Math.min.apply(null, temps), temps: temps, hours: hours };
+                  sym: sym, max: Math.max.apply(null, temps), min: Math.min.apply(null, temps), temps: temps, hours: hours,
+                  week: buildWeek(ts), dayHours: buildDayHours(ts) };
         cacheSet(key, d); renderWeather(d);
       })
       .catch(function () { /* behold cachet/HTML-verdi */ });
+  }
+
+  /* ═══════════ FULLSKJERM VÆRMELDING (dag-graf + neste 7 dager) ═══════════
+     «Utvid»-knapp på værkortet åpner en modal med (1) stor time-for-time-graf
+     for i dag/neste 24t og (2) de neste 7 dagene. All data er allerede hentet
+     og cachet (d.dayHours + d.week) — modalen gjør ingen egne nettverkskall. */
+
+  /* Utvid-knapp: legges i værkortets tall-rad (til høyre for temperaturen). */
+  function buildExpand() {
+    var card = $('wxCard'); if (!card) return;
+    var row = card.querySelector('.widget-value') || card;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'wx-expand';
+    btn.id = 'wxExpandBtn';
+    btn.setAttribute('aria-haspopup', 'dialog');
+    btn.setAttribute('aria-label', 'Åpne full værmelding – i dag time for time og neste 7 dager');
+    btn.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5H3.5V5 M10 2.5H12.5V5 M6 13.5H3.5V11 M10 13.5H12.5V11"/></svg>';
+    btn.addEventListener('click', function (e) { e.stopPropagation(); openWxModal(); });
+    row.appendChild(btn);
+  }
+
+  /* Bygger modal-DOM én gang (lazy), gjenbrukes deretter. */
+  function buildWxModal() {
+    if (_modalEls) return _modalEls;
+    var bd = document.createElement('div');
+    bd.className = 'wx-modal-backdrop';
+    bd.hidden = true;
+    bd.innerHTML =
+      '<div class="wx-modal" role="dialog" aria-modal="true" aria-labelledby="wxModalPlace" tabindex="-1">' +
+        '<header class="wx-modal-head">' +
+          '<div><h2 class="wx-modal-place" id="wxModalPlace">Vær</h2>' +
+          '<span class="wx-modal-stamp" id="wxModalStamp"></span></div>' +
+          '<button type="button" class="wx-modal-close" id="wxModalClose" aria-label="Lukk værmelding">' +
+            '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>' +
+          '</button>' +
+        '</header>' +
+        '<div class="wx-modal-scroll">' +
+          '<p class="sr-only" id="wxModalSr"></p>' +
+          '<div class="wx-kicker">I dag · time for time</div>' +
+          '<p class="wx-graph-sub" id="wxGraphSub"></p>' +
+          '<div class="wx-graph-wrap"><div id="wxGraphHost"></div><div class="wx-scrub" id="wxScrub" aria-hidden="true"></div></div>' +
+          '<p class="wx-graph-caption" id="wxGraphCap"></p>' +
+          '<section class="wx-week"><div class="wx-kicker">Neste 7 dager</div><ul class="wx-week-list" id="wxWeekHost"></ul></section>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(bd);
+    _modalEls = {
+      bd: bd, modal: bd.querySelector('.wx-modal'), close: $('wxModalClose'),
+      graphHost: $('wxGraphHost'), weekHost: $('wxWeekHost'), scrub: $('wxScrub'),
+      sub: $('wxGraphSub'), cap: $('wxGraphCap'), sr: $('wxModalSr'), stamp: $('wxModalStamp')
+    };
+    _modalEls.close.addEventListener('click', closeWxModal);
+    bd.addEventListener('click', function (e) { if (e.target === bd) closeWxModal(); });
+    _modalEls.modal.addEventListener('keydown', onModalKeydown);
+    wireScrub();
+    return _modalEls;
+  }
+
+  function onModalKeydown(e) {
+    if (e.key === 'Escape') { e.preventDefault(); closeWxModal(); return; }
+    if (e.key !== 'Tab') return;
+    var f = _modalEls.modal.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])');
+    var list = [];
+    for (var i = 0; i < f.length; i++) if (f[i].offsetParent !== null) list.push(f[i]);
+    if (!list.length) return;
+    var first = list[0], last = list[list.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  function modalStamp() {
+    if (!_modalEls) return;
+    var d = new Date();
+    _modalEls.stamp.textContent = 'Sist oppdatert ' +
+      String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  function openWxModal() {
+    var els = buildWxModal();
+    // Forankre fokus-retur til selve utvid-knappen: Safari/Firefox-macOS gir ikke
+    // <button> fokus ved musseklikk, så document.activeElement er da <body>.
+    var ae = document.activeElement;
+    _wxReturnFocus = (ae && ae !== document.body) ? ae : $('wxExpandBtn');
+    _modalOpen = true;
+    _prevHtmlOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = 'hidden';
+    setText('wxModalPlace', getPlace().navn || 'Vær');
+    modalStamp();
+    if (_lastWx) { renderDayGraph(_lastWx); renderWeek(_lastWx); }
+    else {
+      els.graphHost.innerHTML = '<svg class="wx-graph" viewBox="0 0 720 230" role="img" aria-label="Værdata lastes"><text class="g-empty" x="40" y="120">Værdata lastes …</text></svg>';
+      els.sub.textContent = ''; els.cap.textContent = ''; els.weekHost.innerHTML = '';
+    }
+    els.bd.hidden = false;
+    void els.bd.offsetWidth; // tvinger reflow så .in-transisjonen faktisk kjører fra opacity:0/translate
+    els.bd.classList.add('in');
+    els.close.focus();
+  }
+
+  function closeWxModal() {
+    if (!_modalEls || !_modalOpen) return;
+    _modalOpen = false;
+    var els = _modalEls;
+    els.bd.classList.remove('in');
+    document.documentElement.style.overflow = _prevHtmlOverflow || '';
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Guard mot rask lukk→åpne-race: skjul KUN hvis modalen fortsatt er lukket
+    // når exit-transisjonen (eller 600ms-fallbacken) fyrer.
+    function done() { els.modal.removeEventListener('transitionend', te); if (!_modalOpen) els.bd.hidden = true; }
+    function te(e) { if (e.target === els.modal) done(); }
+    if (reduce) { done(); }
+    else { els.modal.addEventListener('transitionend', te); setTimeout(done, 600); }
+    if (_wxReturnFocus && _wxReturnFocus.focus) _wxReturnFocus.focus();
+  }
+
+  /* Stor time-for-time-graf: temperaturkurve (helt) + nedbørsøyler (nøytral)
+     + symbolrad + rutenett + «nå»-markør. Bygges fra cachet d.dayHours. */
+  function renderDayGraph(d) {
+    var els = _modalEls; if (!els) return;
+    // Filtrer bort punkter uten gyldig temperatur (null/undefined/NaN/Infinity fra
+    // delvis/korrupt cache) — ellers forgifter ett hull hele Y-skalaen.
+    var hrs = ((d && d.dayHours) || []).filter(function (h) { return h && typeof h.temp === 'number' && isFinite(h.temp); });
+    var sig = JSON.stringify(hrs);
+    if (sig === _graphSig) return; // uendret data (minutt-puls) — ikke bygg SVG på nytt (bevarer hover-scrub)
+    _graphSig = sig;
+    var today = new Date();
+    els.sub.textContent = DAGER_FULL[today.getDay()] + ' ' + today.getDate() + '. ' + MND_LONG[today.getMonth()];
+    if (hrs.length < 2) {
+      els.graphHost.innerHTML = '<svg class="wx-graph" viewBox="0 0 720 230" role="img" aria-label="Værdata lastes"><text class="g-empty" x="40" y="120">Værdata lastes …</text></svg>';
+      els.cap.textContent = ''; els.sr.textContent = ''; _graphGeo = null; return;
+    }
+    var W = 720, H = 230, PADL = 40, PADR = 16, plotW = W - PADL - PADR;
+    var TT = 34, TB = 150, PBASE = 188; // temp-bånd 34→150, nedbør-baseline 188
+    var n = hrs.length;
+    function X(i) { return n <= 1 ? PADL : PADL + (i / (n - 1)) * plotW; }
+    var temps = hrs.map(function (h) { return h.temp; }); // alle endelige tall (filtrert over)
+    var tmin = Math.min.apply(null, temps), tmax = Math.max.apply(null, temps);
+    var lo = Math.floor(tmin - 1), hi = Math.ceil(tmax + 1);
+    if (hi === lo) hi = lo + 1;
+    function Y(t) { return TT + (1 - (t - lo) / (hi - lo)) * (TB - TT); }
+    var precs = hrs.map(function (h) { return h.precip || 0; });
+    var maxP = Math.max.apply(null, precs), anyP = maxP > 0.05, wettest = 0;
+    for (var wi = 1; wi < precs.length; wi++) if (precs[wi] > precs[wettest]) wettest = wi;
+    var dense = (window.matchMedia && window.matchMedia('(max-width:640px)').matches) ? 4 : 3;
+
+    var linePts = hrs.map(function (h, i) { return X(i).toFixed(1) + ',' + Y(h.temp).toFixed(1); });
+    var line = 'M' + linePts.join(' L');
+    var area = line + ' L' + X(n - 1).toFixed(1) + ',' + TB + ' L' + X(0).toFixed(1) + ',' + TB + ' Z';
+
+    var g = '';
+    // horisontale rutelinjer + serif-etiketter (maks / midt / min)
+    [hi, Math.round((hi + lo) / 2), lo].forEach(function (v) {
+      var gy = Y(v).toFixed(1);
+      g += '<line class="g-grid" x1="' + PADL + '" y1="' + gy + '" x2="' + (W - PADR) + '" y2="' + gy + '"/>';
+      g += '<text class="y-lbl" x="' + (PADL - 6) + '" y="' + (Y(v) + 3).toFixed(1) + '" text-anchor="end">' + v + '°</text>';
+    });
+    g += '<path class="g-area" d="' + area + '" fill="url(#wxGraphFill)"/>';
+    g += '<path class="g-line" d="' + line + '"/>';
+    // nedbør: baseline + søyler (nøytral ink)
+    g += '<line class="g-grid" x1="' + PADL + '" y1="' + PBASE + '" x2="' + (W - PADR) + '" y2="' + PBASE + '"/>';
+    if (anyP) {
+      hrs.forEach(function (h, i) {
+        var p = h.precip || 0; if (p <= 0.05) return;
+        var bh = Math.max(2, Math.min(30, p / maxP * 30));
+        g += '<rect class="g-precip" x="' + (X(i) - 3).toFixed(1) + '" y="' + (PBASE - bh).toFixed(1) + '" width="6" height="' + bh.toFixed(1) + '" rx="1"/>';
+      });
+      g += '<text class="p-cap" x="' + PADL + '" y="202">Nedbør</text>';
+      g += '<text class="p-lbl" x="' + X(wettest).toFixed(1) + '" y="' + (PBASE - 30 - 3).toFixed(1) + '" text-anchor="middle">' + nb(maxP, 1) + ' mm</text>';
+    }
+    // symbolrad (hver 3./4. time), «nå» aksentfarget. Nested SVG MÅ ha eksplisitt
+    // width/height/x/y — ellers rendrer den i full viewBox-størrelse (16→720u).
+    hrs.forEach(function (h, i) {
+      if (i % dense !== 0) return;
+      var ic = wxIcon(h.sym).replace('<svg ', '<svg width="18" height="18" x="' + (X(i) - 9).toFixed(1) + '" y="0" ');
+      g += '<g class="g-sym' + (i === 0 ? ' is-now' : '') + '">' + ic + '</g>';
+    });
+    // time-etiketter
+    hrs.forEach(function (h, i) {
+      if (i % dense !== 0) return;
+      var lbl = i === 0 ? 'nå' : String(h.hour).padStart(2, '0');
+      g += '<text class="x-lbl" x="' + X(i).toFixed(1) + '" y="216" text-anchor="middle">' + lbl + '</text>';
+    });
+    // «nå»-markør (stiplet + prikk på kurven)
+    g += '<line class="g-now" x1="' + X(0).toFixed(1) + '" y1="28" x2="' + X(0).toFixed(1) + '" y2="' + PBASE + '"/>';
+    g += '<circle class="g-now-dot" cx="' + X(0).toFixed(1) + '" cy="' + Y(hrs[0].temp).toFixed(1) + '" r="3"/>';
+    // skjult skrubbe-linje (hover-avlesning)
+    g += '<line class="g-scrub" id="wxScrubLine" x1="0" y1="28" x2="0" y2="' + PBASE + '"/>';
+
+    var aria = 'Temperatur time for time. Nå ' + Math.round(hrs[0].temp) + ' grader, maks ' +
+      Math.round(tmax) + ', min ' + Math.round(tmin) + ' grader' + (anyP ? ', noe nedbør' : '');
+    els.graphHost.innerHTML =
+      '<svg class="wx-graph" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + esc(aria) + '">' +
+        '<defs><linearGradient id="wxGraphFill" x1="0" y1="0" x2="0" y2="1">' +
+          '<stop offset="0" class="gf-a"/><stop offset="1" class="gf-b"/>' +
+        '</linearGradient></defs>' + g + '</svg>';
+    els.sr.textContent = aria;
+    els.cap.textContent = 'Nå ' + Math.round(hrs[0].temp) + '° · Maks ' + Math.round(tmax) + '° · Min ' + Math.round(tmin) + '°' +
+      (typeof d.wind === 'number' ? ' · Vind ' + nb(d.wind, 1) + ' m/s' + (d.dir != null ? ' ' + compass(d.dir) : '') : '');
+
+    var geo = { n: n, xs: [], ys: [], hours: hrs };
+    for (var gi = 0; gi < n; gi++) { geo.xs.push(X(gi)); geo.ys.push(Y(hrs[gi].temp)); }
+    _graphGeo = geo;
+  }
+
+  /* Neste 7 dager: typografisk tabell (dag · symbol · maks/min-stolpe · temp). */
+  function renderWeek(d) {
+    var els = _modalEls; if (!els) return;
+    var wk = (d && d.week) || [];
+    var wsig = JSON.stringify(wk);
+    if (wsig === _weekSig) return; // uendret ukesvarsel (minutt-puls) — ikke bygg på nytt
+    _weekSig = wsig;
+    if (!wk.length) { els.weekHost.innerHTML = ''; return; }
+    var gMin = Infinity, gMax = -Infinity;
+    wk.forEach(function (w) { if (w.min < gMin) gMin = w.min; if (w.max > gMax) gMax = w.max; });
+    var gRng = (gMax - gMin) || 1, html = '';
+    wk.forEach(function (w, i) {
+      var name = i === 0 ? 'I dag' : DAGER_FULL[w.dow];
+      var L = (w.min - gMin) / gRng * 100, Wd = (w.max - w.min) / gRng * 100;
+      if (Wd < 4) Wd = 4;
+      html += '<li class="wx-week-row">' +
+        '<span class="wx-week-day">' + name + '</span>' +
+        '<span class="wx-week-ico">' + wxIcon(w.sym) + '</span>' +
+        '<span class="wx-week-range"><i style="left:' + L.toFixed(1) + '%;width:' + Wd.toFixed(1) + '%"></i></span>' +
+        '<span class="wx-week-t">' + Math.round(w.max) + '°<span class="sl">/</span><span class="mn">' + Math.round(w.min) + '°</span></span>' +
+        '</li>';
+    });
+    els.weekHost.innerHTML = html;
+  }
+
+  /* Hover-avlesning (kun presise pekere): snapper en tynn linje + en liten
+     chip til nærmeste time. Ingen touch-scrubbing (så mobil-arket scroller fritt). */
+  function wireScrub() {
+    var els = _modalEls; if (!els) return;
+    var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    if (!fine) return;
+    var wrap = els.graphHost.parentNode;
+    wrap.addEventListener('pointermove', function (e) {
+      if (!_graphGeo) return;
+      var svg = els.graphHost.querySelector('svg'); if (!svg) return;
+      var rect = svg.getBoundingClientRect(), wrapRect = wrap.getBoundingClientRect();
+      var vbx = (e.clientX - rect.left) / rect.width * 720;
+      var best = 0, bd = Infinity;
+      for (var i = 0; i < _graphGeo.n; i++) { var dd = Math.abs(_graphGeo.xs[i] - vbx); if (dd < bd) { bd = dd; best = i; } }
+      var line = svg.querySelector('#wxScrubLine');
+      if (line) { line.setAttribute('x1', _graphGeo.xs[best].toFixed(1)); line.setAttribute('x2', _graphGeo.xs[best].toFixed(1)); line.classList.add('on'); }
+      var h = _graphGeo.hours[best];
+      els.scrub.innerHTML = '<b>' + (best === 0 ? 'nå' : String(h.hour).padStart(2, '0') + ':00') + '</b> · ' +
+        Math.round(h.temp) + '°' + (h.precip > 0.05 ? ' · <span class="mut">' + nb(h.precip, 1) + ' mm</span>' : '');
+      els.scrub.style.left = ((rect.left - wrapRect.left) + _graphGeo.xs[best] / 720 * rect.width) + 'px';
+      els.scrub.style.top = ((rect.top - wrapRect.top) + _graphGeo.ys[best] / 230 * rect.height) + 'px';
+      els.scrub.classList.add('on');
+    });
+    wrap.addEventListener('pointerleave', function () {
+      els.scrub.classList.remove('on');
+      var svg = els.graphHost.querySelector('svg'), line = svg && svg.querySelector('#wxScrubLine');
+      if (line) line.classList.remove('on');
+    });
   }
 
   /* ════════════════════ VALUTA (Norges Bank EXR) ═════════════════════ */
@@ -518,6 +839,7 @@
     p.sone = soneFor(p.kommunenr, p.fylkesnr);
     cacheSet('place', p);
     setText('wxPlaceName', p.navn);
+    setText('wxModalPlace', p.navn); // hold fullskjerm-tittelen i synk (no-op om modal ikke bygd)
     loadWeather(p, true);
     loadStrom(p, true);
   }
@@ -615,7 +937,7 @@
   function init() {
     var place = getPlace();
     setText('wxPlaceName', place.navn);
-    buildStamp(); buildPicker(); buildGeo();
+    buildStamp(); buildPicker(); buildGeo(); buildExpand();
     loadWeather(place, false); loadFx(false); loadRate(false); loadStrom(place, false);
     setInterval(tick, 60 * 1000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
