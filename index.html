@@ -876,6 +876,7 @@
   }
   /* Værmeldings-stripe (erstatter temp-sparkline på værkortet) */
   .wx-fc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-height:48px}
+  .wx-fc[hidden]{display:none}
   .wx-fc-cell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:7px}
   .wx-fc-cell:first-child{background:rgba(216,173,126,.10)}
   .wx-fc-ico{display:flex;color:var(--ink3);transition:color .3s var(--ease)}
@@ -883,6 +884,117 @@
   .widget:hover .wx-fc-cell:first-child .wx-fc-ico{color:var(--accent-2)}
   .wx-fc-temp{font-family:var(--font-serif);font-weight:500;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
   .wx-fc-time{font:600 8.5px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink4);font-variant-numeric:tabular-nums}
+
+  /* ══ Fullskjerm værmelding — dag-graf + neste 7 dager ══════════ */
+  .wx-expand{
+    margin-left:auto;align-self:center;flex-shrink:0;
+    width:30px;height:30px;display:grid;place-items:center;
+    border:0;border-radius:6px;background:transparent;color:var(--ink4);
+    cursor:pointer;transition:color var(--dur-fast) var(--ease-out-quart);
+  }
+  .wx-expand svg{width:16px;height:16px}
+  @media(hover:hover){.wx-expand:hover{color:var(--accent-2)}}
+  .wx-expand:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .wx-modal-backdrop{
+    position:fixed;inset:0;z-index:4000;
+    background:rgba(10,9,8,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    opacity:0;transition:opacity var(--dur-fast) var(--ease-out-quart);
+  }
+  .wx-modal-backdrop.in{opacity:1}
+  .wx-modal-backdrop[hidden]{display:none}
+  .wx-modal{
+    position:fixed;inset:0;margin:auto;
+    width:min(760px, 100vw - 32px);max-height:min(88vh, 880px);
+    display:flex;flex-direction:column;
+    background:var(--surface);border:1px solid var(--line-2);border-radius:12px;
+    box-shadow:0 24px 64px rgba(0,0,0,.6);overflow:hidden;
+    opacity:0;transform:translateY(12px) scale(.985);
+    transition:opacity var(--dur-base) var(--ease-out-expo), transform var(--dur-base) var(--ease-out-expo);
+  }
+  .wx-modal-backdrop.in .wx-modal{opacity:1;transform:none}
+  .wx-modal-head{
+    position:sticky;top:0;z-index:2;
+    display:flex;align-items:flex-start;gap:14px;
+    padding:20px 34px 16px;background:var(--surface);border-bottom:1px solid var(--line);
+  }
+  .wx-modal-place{font-family:var(--font-serif);font-weight:500;font-size:24px;color:var(--ink);letter-spacing:-.4px;margin:0;line-height:1.15}
+  .wx-modal-stamp{display:block;margin-top:3px;font-size:10.5px;letter-spacing:.3px;color:var(--ink4);font-variant-numeric:tabular-nums}
+  .wx-modal-close{
+    margin-left:auto;flex-shrink:0;width:34px;height:34px;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:none;border:1px solid var(--line);border-radius:6px;color:var(--ink3);cursor:pointer;
+    transition:color var(--dur-fast) var(--ease-out-quart),border-color var(--dur-fast) var(--ease-out-quart);
+  }
+  .wx-modal-close svg{width:15px;height:15px}
+  @media(hover:hover){.wx-modal-close:hover{color:var(--accent-2);border-color:var(--line-2)}}
+  .wx-modal-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .wx-modal-scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:24px 34px 34px}
+  .wx-kicker{font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3)}
+  .wx-graph-sub{font-family:var(--font-serif);font-size:14px;color:var(--ink2);margin:5px 0 0}
+
+  .wx-graph-wrap{position:relative;margin-top:14px}
+  .wx-graph{display:block;width:100%;height:auto;font-variant-numeric:tabular-nums lining-nums}
+  .wx-graph text{font-family:var(--font-sans)}
+  .wx-graph .g-area{stroke:none}
+  .wx-graph .gf-a{stop-color:var(--accent-2);stop-opacity:.14}
+  .wx-graph .gf-b{stop-color:var(--accent-2);stop-opacity:0}
+  .wx-graph .g-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+  .wx-graph .g-grid{stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke}
+  .wx-graph .g-now{stroke:var(--accent-2);stroke-width:1;stroke-dasharray:2 3;opacity:.85;vector-effect:non-scaling-stroke}
+  .wx-graph .g-now-dot{fill:var(--accent-2)}
+  .wx-graph .g-precip{fill:var(--ink3);opacity:.5}
+  .wx-graph .g-sym{color:var(--ink3)}
+  .wx-graph .g-sym.is-now{color:var(--accent-2)}
+  .wx-graph .y-lbl{font-family:var(--font-serif);font-weight:500;font-size:10px;fill:var(--ink4)}
+  .wx-graph .x-lbl{font-weight:600;font-size:9.5px;letter-spacing:.5px;fill:var(--ink4)}
+  .wx-graph .p-cap{font-weight:600;font-size:8.5px;letter-spacing:1px;fill:var(--ink4);text-transform:uppercase}
+  .wx-graph .p-lbl{font-weight:600;font-size:8px;fill:var(--ink3)}
+  .wx-graph .g-empty{font-family:var(--font-serif);font-size:14px;fill:var(--ink3)}
+  .wx-graph .g-scrub{stroke:var(--ink2);stroke-width:1;vector-effect:non-scaling-stroke;opacity:0}
+  .wx-graph .g-scrub.on{opacity:.8}
+  .wx-graph-caption{font-family:var(--font-serif);font-size:13px;color:var(--ink2);margin:12px 0 0;font-variant-numeric:tabular-nums}
+  .wx-scrub{
+    position:absolute;left:0;top:0;transform:translate(-50%,calc(-100% - 8px));
+    pointer-events:none;opacity:0;transition:opacity var(--dur-micro) var(--ease-out-quart);
+    background:var(--surface-2);border:1px solid var(--line-2);border-radius:6px;padding:5px 8px;
+    font-family:var(--font-serif);font-size:12px;color:var(--ink);white-space:nowrap;
+    font-variant-numeric:tabular-nums lining-nums;z-index:3;
+  }
+  .wx-scrub.on{opacity:1}
+  .wx-scrub .mut{color:var(--ink3)}
+
+  .wx-week{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+  .wx-week-list{list-style:none;margin:12px 0 0;padding:0}
+  .wx-week-row{display:grid;grid-template-columns:110px 24px 1fr auto;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .wx-week-row:last-child{border-bottom:0}
+  .wx-week-day{font-family:var(--font-serif);font-size:15px;color:var(--ink)}
+  .wx-week-ico{color:var(--ink3);display:flex}
+  .wx-week-ico svg{width:18px;height:18px}
+  .wx-week-range{height:3px;background:var(--line);border-radius:2px;position:relative;max-width:200px}
+  .wx-week-range i{position:absolute;top:0;height:100%;background:var(--accent);opacity:.5;border-radius:2px}
+  .wx-week-t{font-family:var(--font-serif);font-size:16px;color:var(--ink);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums lining-nums}
+  .wx-week-t .sl{color:var(--ink4);margin:0 3px}
+  .wx-week-t .mn{color:var(--ink3)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  @media (max-width:640px){
+    .wx-modal{
+      width:100vw;max-width:none;max-height:92vh;
+      border-radius:14px 14px 0 0;border-left:0;border-right:0;border-bottom:0;
+      inset:auto 0 0 0;margin:0;transform:translateY(100%);
+    }
+    .wx-modal-backdrop.in .wx-modal{transform:none}
+    .wx-modal-head{padding:16px 20px}
+    .wx-modal-place{font-size:20px}
+    .wx-modal-scroll{padding:20px 20px 28px}
+    .wx-week-row{grid-template-columns:64px 20px 1fr auto;gap:12px}
+    .wx-week-range{max-width:120px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .wx-modal-backdrop,.wx-modal{transition:none!important}
+    .wx-modal,.wx-modal-backdrop.in .wx-modal{transform:none!important}
+  }
   /* Neste rentemøte (erstatter rente-sparkline) */
   .sr-next{display:flex;flex-direction:column;gap:4px}
   .sr-next-lbl{font:600 8.5px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;color:var(--ink4)}
@@ -1548,7 +1660,7 @@
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v1" defer></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
-<script src="/shared/markedsdata.js?v=v4" defer></script>
+<script src="/shared/markedsdata.js?v=v6" defer></script>
 <style>
 /* GLØD-FIX (2026-05-31): calm-override.css + site-shell.css disable the atmosphere
    site-wide (display:none !important) and paint body opaque, so the forside was flat.
@@ -1878,7 +1990,7 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
 }
 
 /* ── Seksjon-ramme ── */
-.frister{padding:clamp(38px,5.5vw,68px) 0;border-top:1px solid var(--fline);
+.frister{padding:clamp(38px,5.5vw,68px) 0;
   position:relative;font-family:var(--fsans);color:var(--fink)}
 .fr-inner{max-width:1120px;margin:0 auto;padding:0 clamp(18px,4vw,32px)}
 .fr-panel{background:var(--fsurf);border:1px solid var(--fline);border-radius:20px;
