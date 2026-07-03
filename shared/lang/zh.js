@@ -1065,7 +1065,7 @@ persToolAksjerDesc:'股票收益税、调整系数1.72和屏蔽扣除额 — 完
 homeHeroTitle:'<em>个人理财</em>、税务和法律的实用工具。',
 homeHeroLangPill:'10种语言',
 homeHeroSubtitle:'已更新至2026年现行规则。',
-homeMarketTitle:'市场数据',
+homeMarketTitle:'每日概览',
 homeSectionCategories:'类别',
 homeCategoriesCount:'6个版块',
 homeCardPersonlig:'个人理财',

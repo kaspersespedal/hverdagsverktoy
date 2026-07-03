@@ -1412,7 +1412,7 @@ REGIONS['pl'] = {
     homeHeroLangPill:'10 języków',
     homeHeroSubtitle:'Zaktualizowane do obowiązujących przepisów na 2026.',
     homeHeroTitle:'Praktyczne narzędzia do <em>finansów osobistych</em>, podatków i prawa.',
-    homeMarketTitle:'Dane rynkowe',
+    homeMarketTitle:'Przegląd dnia',
     homeSectionCategories:'Kategorie',
     kontoAfAktivt:'<strong>Fundusz aktywnie zarządzany</strong> — zarządzający wybiera akcje ręcznie. Wyższe opłaty (1–2%), które zjadają zwrot.',
     kontoAfIndeks:'<strong>Fundusz indeksowy</strong> — pasywnie śledzi całą giełdę (np. Oslo Børs lub świat). Niskie opłaty (0,2–0,4%) i najczęściej bije aktywne fundusze w długim okresie.',

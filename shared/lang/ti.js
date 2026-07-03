@@ -1324,7 +1324,7 @@ REGIONS['ti'] = {
     homeHeroLangPill: '10 ቋንቋታት',
     homeHeroSubtitle: 'ብመሰረት ናይ ሎሚ ሕግታት 2026 ዝተሓደሰ።',
     homeHeroTitle: `ተግባራዊ መሳሪሒታት ንናይ <em>ግሊ ገንዘብ</em>፣ ግብርን ሕግን።`,
-    homeMarketTitle: 'ናይ ዕዳጋ ዳታ',
+    homeMarketTitle: 'ናይ ዕለት ጽማቝ',
     homeSectionCategories: 'ምድብታት',
     kontoAfAktivt: `<strong>ብንጥፈት ዝመሓደር ፈንድ</strong> — መሓዳዳሪ ፈንድ ኣክስዮናት ብኢድ ይመርጽ። ላዕለዋይ ክፍሊታት (1–2 %) ረብሓ ይውሕጥ።`,
     kontoAfIndeks: `<strong>ናይ ኢንዴክስ ፈንድ</strong> — ብዘይ ኩለንተናዊ ተቆጻጻርነት ምሉእ ዕዳጋ (ንኣብነት Oslo Børs ወይ ዓለም) ይኽተል። ትሑት ክፍሊታት (0,2–0,4 %)፣ ኣብ ነዊሕ ግዜ መብዛሕትኡ ግዜ ካብ ብንጥፈት ዝመሓደር ፈንድ ይበልጽ።`,

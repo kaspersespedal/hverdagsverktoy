@@ -1481,7 +1481,7 @@ REGIONS['ar'] = {
     homeHeroLangPill: '10 لغات',
     homeHeroSubtitle: 'محدّث وفق قواعد 2026 الحالية.',
     homeHeroTitle: 'أدوات عملية لـ <em>الاقتصاد الشخصي</em>، الضرائب والقانون.',
-    homeMarketTitle: 'بيانات السوق',
+    homeMarketTitle: 'نظرة عامة يومية',
     homeSectionCategories: 'الفئات',
     // --- konto ---
     kontoAfAktivt: '<strong>صندوق مُدار بنشاط</strong> — مدير الصندوق يختار الأسهم يدويًا. رسوم أعلى (1–2٪) تأكل العائد.',

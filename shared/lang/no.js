@@ -1248,7 +1248,7 @@ REGIONS['no'] = {
     homeHeroTitle:'Praktiske verktøy for <em>privatøkonomi</em>, skatt og lovverk.',
     homeHeroLangPill:'10 språk',
     homeHeroSubtitle:'Oppdatert til gjeldende regler for 2026.',
-    homeMarketTitle:'Markedsdata',
+    homeMarketTitle:'Dagsoversikt',
     homeSectionCategories:'Kategorier',
     homeCategoriesCount:'6 seksjoner',
     homeCardPersonlig:'Privatøkonomi',

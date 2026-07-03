@@ -1535,7 +1535,7 @@ REGIONS['en'] = {
     homeHeroLangPill: '10 languages',
     homeHeroSubtitle: 'Updated to current rules for 2026.',
     homeHeroTitle: 'Practical tools for <em>personal finance</em>, tax and law.',
-    homeMarketTitle: 'Market data',
+    homeMarketTitle: 'Daily overview',
     homeSectionCategories: 'Categories',
     kontoAfAktivt: '<strong>Actively managed fund</strong> — the fund manager picks shares manually. Higher fees (1–2%) that eat into returns.',
     kontoAfIndeks: '<strong>Index fund</strong> — passively tracks an entire exchange (e.g. Oslo Stock Exchange or the world). Low fees (0.2–0.4%), and most often beats active funds over time.',
