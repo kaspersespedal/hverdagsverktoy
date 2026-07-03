@@ -1847,97 +1847,338 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
     </div>
   </section>
 
-  <section class="tools" data-screen-label="05 Verktøy">
-    <div class="container">
-      <div class="section-head reveal">
-        <div>
-          <div class="label" style="margin-bottom:10px" data-i18n="homeSectionCategories">Kategorier</div>
-          <h2 data-i18n="homeCatTitle">Bla i verktøyene</h2>
+  <style>
+/* ══ Frister-seksjon — forside-scoped stil (Claude Design → hverdagsverktoy.com) ══
+   Arver sidens CSS-variabler (var(--bg) osv.). Ingen emoji, ingen nye hues —
+   viktighet kodes via vekt/fyll/opacity på cognac-aksenten. */
+.frister *,.frister *::before,.frister *::after,
+.frmodal *,.frmodal *::before,.frmodal *::after{box-sizing:border-box}
+
+/* Token-alias: arv sidens tokens, fall tilbake til spesifiserte verdier */
+.frister,.frmodal{
+  --fbg:var(--bg,#161616);
+  --fsurf:var(--surface,#1e1e1e);
+  --fsurf2:var(--surface2,var(--surface-2,#262626));
+  --fink:var(--ink,#e8e8e8);
+  --fink2:var(--ink2,#a8a8a8);
+  --fink3:var(--ink3,#6f6f6f);
+  --fink4:var(--ink4,#565350);
+  --facc:var(--accent,#c89968);
+  --faccl:var(--accent-l,var(--accent-2,#e6c09a));
+  --faccd:var(--accent-d,var(--accent-deep,#b8885a));
+  --fline:var(--hairline,rgba(232,232,232,.10));
+  --fline2:var(--line-2,rgba(232,232,232,.17));
+  --fglow:var(--glow-rgb,200,153,104);
+  --fsig:var(--accent-d,#b8885a);
+  --fserif:'Source Serif 4',Georgia,serif;
+  --fsans:'Inter',system-ui,sans-serif;
+  --fease:cubic-bezier(.22,1,.36,1);
+  --fexpo:cubic-bezier(.16,1,.3,1);
+  --fnum:tabular-nums lining-nums slashed-zero;
+}
+
+/* ── Seksjon-ramme ── */
+.frister{padding:clamp(38px,5.5vw,68px) 0;border-top:1px solid var(--fline);
+  position:relative;font-family:var(--fsans);color:var(--fink)}
+.fr-inner{max-width:1120px;margin:0 auto;padding:0 clamp(18px,4vw,32px)}
+.fr-panel{background:var(--fsurf);border:1px solid var(--fline);border-radius:20px;
+  padding:clamp(20px,3vw,30px);
+  box-shadow:0 1px 0 rgba(255,255,255,.02),0 30px 70px -34px rgba(0,0,0,.62)}
+
+/* ── Panel-header ── */
+.fr-ph{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
+  flex-wrap:wrap;padding-bottom:18px;margin-bottom:clamp(18px,2.6vw,24px);
+  border-bottom:1px solid var(--fline)}
+.fr-eyebrow{font:600 10px/1 var(--fsans);letter-spacing:.2em;text-transform:uppercase;color:var(--fink3)}
+.fr-htitle{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:11px}
+.fr-title{font-family:var(--fserif);font-weight:500;font-size:clamp(23px,3vw,29px);
+  letter-spacing:-.6px;line-height:1;color:var(--fink);margin:0}
+.fr-context{font:400 13px/1.4 var(--fsans);color:var(--fink3)}
+
+/* ── Knapper / lenker ── */
+.fr-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 17px;border-radius:999px;
+  border:1px solid var(--fline2);background:transparent;color:var(--fink2);
+  font:600 12px/1 var(--fsans);letter-spacing:.02em;cursor:pointer;text-decoration:none;
+  transition:color .2s var(--fease),border-color .2s var(--fease),background .2s var(--fease),transform .14s var(--fease)}
+.fr-btn svg,.fr-link svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;transition:transform .2s var(--fease)}
+@media(hover:hover){.fr-btn:hover{color:var(--fink);
+  border-color:color-mix(in srgb,var(--facc) 50%,transparent);
+  background:color-mix(in srgb,var(--facc) 7%,transparent)}
+  .fr-btn:hover svg{transform:translateX(2px)}}
+.fr-btn:active{transform:translateY(1px)}
+.fr-btn:focus-visible,.fr-link:focus-visible{outline:none;
+  box-shadow:0 0 0 2px var(--fbg),0 0 0 4px var(--facc);border-radius:999px}
+
+/* ── Dato-flak ── */
+.fr-flak{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;flex-shrink:0}
+.fr-flak .d{font-family:var(--fserif);font-weight:500;line-height:.82;color:var(--fink);
+  font-variant-numeric:var(--fnum);letter-spacing:-1px}
+.fr-flak .mo{font:600 9px/1 var(--fsans);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--fink3);margin-top:7px}
+.fr-flak.lg .d{font-size:clamp(38px,5vw,48px)}
+.fr-flak.sm .d{font-size:26px;letter-spacing:-.6px}
+.fr-flak.sm .mo{font-size:8.5px;margin-top:5px}
+
+/* ── Fremhevet «neste frist»-band ── */
+.fr-feat{position:relative;overflow:hidden;display:grid;
+  grid-template-columns:auto 1px minmax(0,1fr) auto;align-items:center;
+  gap:clamp(14px,2.4vw,26px);padding:clamp(16px,2.4vw,22px) clamp(16px,2.4vw,24px);
+  margin-bottom:14px;border:1px solid var(--fline2);border-radius:15px;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--facc) 6%,var(--fsurf2)),var(--fsurf2))}
+.fr-feat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--facc);opacity:.6}
+.fr-feat::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(120% 150% at 10% 0%,rgba(var(--fglow),.11),transparent 58%);
+  opacity:.75;animation:frBreath 17s ease-in-out infinite}
+.fr-feat>*{position:relative;z-index:1}
+.fr-div{width:1px;align-self:stretch;background:var(--fline2);margin:5px 0}
+.fr-feat-mid{min-width:0}
+.fr-feat-mid .fr-eyebrow{color:var(--faccl)}
+.fr-feat-name{font-family:var(--fserif);font-weight:500;font-size:clamp(17px,2.2vw,21px);
+  letter-spacing:-.3px;line-height:1.16;color:var(--fink);margin:8px 0 5px}
+.fr-feat-who{font:400 12.5px/1.4 var(--fsans);color:var(--fink2);margin:0}
+.fr-feat-date{font:500 11.5px/1 var(--fsans);color:var(--fink3);margin-top:8px;font-variant-numeric:var(--fnum)}
+.fr-feat-cd{display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:5px;flex-shrink:0}
+.fr-cd-lead{font:600 9px/1 var(--fsans);letter-spacing:.2em;text-transform:uppercase;color:var(--fink3)}
+.fr-cd-big{display:flex;align-items:baseline;gap:6px}
+.fr-cd-num{font-family:var(--fserif);font-weight:500;font-size:clamp(30px,4.2vw,44px);line-height:.86;
+  color:var(--fink2);font-variant-numeric:var(--fnum);letter-spacing:-1.6px}
+.fr-cd-word{font-family:var(--fserif);font-weight:500;font-size:clamp(22px,3vw,30px);color:var(--faccl);line-height:1}
+.fr-feat-cd.soon .fr-cd-num{color:var(--faccl)}
+.fr-cd-unit{font:500 12px/1 var(--fsans);color:var(--fink3)}
+.fr-feat-cd .fr-aud{margin-top:4px}
+.fr-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--fline);z-index:1}
+.fr-bar i{display:block;height:100%;width:var(--fill,0%);border-radius:0 2px 2px 0;
+  background:linear-gradient(90deg,var(--faccd),var(--faccl));transition:width .95s var(--fexpo)}
+.fr-feat.haster .fr-bar i{background:linear-gradient(90deg,var(--fsig),var(--faccl))}
+
+/* ── Liste (2 kolonner) ── */
+.fr-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.fr-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;
+  padding:13px 15px;border:1px solid var(--fline);border-radius:13px;
+  background:color-mix(in srgb,var(--fsurf2) 45%,transparent);
+  transition:border-color .25s var(--fease),background .25s var(--fease),transform .2s var(--fease)}
+@media(hover:hover){.fr-row:hover{transform:translateY(-2px);border-color:var(--fline2);background:var(--fsurf2)}}
+.fr-row-mid{min-width:0}
+.fr-row-name{display:block;font-family:var(--fserif);font-weight:500;font-size:15px;letter-spacing:-.2px;
+  color:var(--fink);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr-row-who{display:block;font:400 11.5px/1.3 var(--fsans);color:var(--fink3);margin-top:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fr-row-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.fr-row-cd{font:500 12px/1 var(--fsans);color:var(--fink2);font-variant-numeric:var(--fnum);white-space:nowrap}
+.fr-row-cd.soon{color:var(--faccl);font-weight:600}
+
+/* ── Tag / chip ── */
+.fr-aud{display:inline-flex;align-items:center;font:600 8.5px/1 var(--fsans);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--fink2);border:1px solid var(--fline2);padding:4px 7px;
+  border-radius:999px;white-space:nowrap}
+
+/* ── Panel-fot ── */
+.fr-foot{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;
+  margin-top:clamp(16px,2.4vw,20px);padding-top:16px;border-top:1px solid var(--fline)}
+.fr-verify{font:400 11.5px/1.55 var(--fsans);color:var(--fink3);max-width:64ch}
+.fr-verify b{color:var(--fink2);font-weight:500}
+.fr-link{display:inline-flex;align-items:center;gap:6px;font:600 12px/1 var(--fsans);color:var(--faccl);
+  text-decoration:none;cursor:pointer;background:none;border:none;letter-spacing:.01em;padding:2px 0;
+  transition:color .2s var(--fease)}
+@media(hover:hover){.fr-link:hover{color:var(--fink)}.fr-link:hover svg{transform:translateX(3px)}}
+
+/* ── Reveal (sidens .reveal-mønster, skopet til seksjonen) ── */
+.frister .reveal,.frmodal .reveal{opacity:0;transform:translateY(18px);
+  transition:opacity .7s var(--fexpo),transform .7s var(--fexpo);
+  transition-delay:calc(var(--d,0)*70ms)}
+.frister .reveal.in,.frmodal .reveal.in{opacity:1;transform:none}
+
+/* ══ MODAL ══════════════════════════════════════════════════════════ */
+.frmodal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
+  padding:clamp(0px,3vw,40px);font-family:var(--fsans);color:var(--fink);
+  background:color-mix(in srgb,var(--fbg) 55%,transparent);
+  backdrop-filter:blur(13px) saturate(120%);-webkit-backdrop-filter:blur(13px) saturate(120%);
+  opacity:0;transition:opacity .28s var(--fease);overflow:hidden;overscroll-behavior:contain}
+.frmodal[hidden]{display:none}
+.frmodal.open{opacity:1}
+.fr-sheet{width:min(1080px,100%);max-height:92vh;background:var(--fbg);border:1px solid var(--fline2);
+  border-radius:18px;box-shadow:0 0 0 1px rgba(0,0,0,.5),0 50px 100px -30px rgba(0,0,0,.78);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform:translateY(18px) scale(.99);opacity:.5;
+  transition:transform .32s var(--fexpo),opacity .3s var(--fease)}
+.frmodal.open .fr-sheet{transform:none;opacity:1}
+
+.fr-mhead{position:relative;flex-shrink:0;padding:18px clamp(16px,3vw,26px) 15px;
+  border-bottom:1px solid var(--fline);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--fink) 3%,transparent),transparent)}
+.fr-mhead::before{content:"";position:absolute;left:0;top:0;height:60px;width:2px;background:var(--facc);opacity:.5}
+.fr-mtop{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.fr-mtitle{font-family:var(--fserif);font-weight:500;font-size:clamp(20px,2.6vw,26px);
+  letter-spacing:-.5px;line-height:1;color:var(--fink);margin:0}
+.fr-msub{font:400 12.5px/1.45 var(--fsans);color:var(--fink3);margin:8px 0 0;max-width:60ch}
+.fr-close{flex-shrink:0;width:34px;height:34px;border-radius:8px;border:1px solid var(--fline2);
+  background:transparent;color:var(--fink2);display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:color .18s var(--fease),border-color .18s var(--fease),background .18s var(--fease),transform .14s var(--fease)}
+.fr-close svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+@media(hover:hover){.fr-close:hover{color:var(--fink);
+  border-color:color-mix(in srgb,var(--facc) 50%,transparent);
+  background:color-mix(in srgb,var(--facc) 8%,transparent)}}
+.fr-close:active{transform:translateY(1px)}
+.fr-close:focus-visible,.fr-pill:focus-visible,.fr-src:focus-visible,.fr-search input:focus-visible{
+  outline:none;box-shadow:0 0 0 2px var(--fbg),0 0 0 4px var(--facc)}
+
+.fr-tools{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.fr-search{position:relative;display:flex;align-items:center}
+.fr-search svg{position:absolute;left:13px;width:15px;height:15px;stroke:var(--fink3);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+.fr-search input{width:100%;padding:11px 14px 11px 39px;
+  background:color-mix(in srgb,var(--fink) 3%,transparent);border:1px solid var(--fline2);
+  border-radius:10px;color:var(--fink);font:400 14px/1.2 var(--fsans);outline:none;
+  transition:border-color .2s var(--fease),background .2s var(--fease),box-shadow .2s var(--fease)}
+.fr-search input::placeholder{color:var(--fink3)}
+.fr-search input:focus{border-color:var(--facc);background:var(--fsurf);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--facc) 20%,transparent)}
+.fr-pills{display:flex;flex-wrap:wrap;gap:8px}
+.fr-pill{padding:8px 13px;border-radius:999px;border:1px solid var(--fline2);background:transparent;
+  color:var(--fink2);font:600 10.5px/1 var(--fsans);letter-spacing:.1em;text-transform:uppercase;
+  cursor:pointer;transition:color .18s var(--fease),border-color .18s var(--fease),background .18s var(--fease),transform .14s var(--fease)}
+@media(hover:hover){.fr-pill:hover{color:var(--fink);border-color:color-mix(in srgb,var(--facc) 45%,transparent)}}
+.fr-pill:active{transform:translateY(1px)}
+.fr-pill[aria-pressed="true"]{background:linear-gradient(180deg,var(--faccl),var(--facc));color:var(--fbg);
+  border-color:transparent;box-shadow:0 3px 12px -3px color-mix(in srgb,var(--facc) 55%,transparent)}
+
+.fr-mbody{flex:1;min-height:0;overflow:auto;
+  padding:clamp(18px,3vw,26px) clamp(16px,3vw,26px) clamp(26px,4vw,36px)}
+.fr-mbody::-webkit-scrollbar{width:10px}
+.fr-mbody::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:5px;
+  border:2px solid transparent;background-clip:padding-box}
+.fr-mbody::-webkit-scrollbar-thumb:hover{background:color-mix(in srgb,var(--facc) 45%,transparent);
+  background-clip:padding-box;border:2px solid transparent}
+.fr-sec-eyebrow{font:600 10px/1 var(--fsans);letter-spacing:.2em;text-transform:uppercase;
+  color:var(--fink3);margin:0 0 15px;display:flex;align-items:center;gap:12px}
+.fr-sec-eyebrow::after{content:"";flex:1;height:1px;background:var(--fline)}
+
+/* ── Årshjul ── */
+.fr-wheel{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:clamp(28px,4.5vw,40px)}
+.fr-mon{background:var(--fsurf);border:1px solid var(--fline);border-radius:12px;
+  padding:12px 12px 11px;display:flex;flex-direction:column;gap:9px;min-height:106px;min-width:0}
+.fr-mon.cur{border-color:color-mix(in srgb,var(--facc) 42%,transparent);
+  background:linear-gradient(180deg,color-mix(in srgb,var(--facc) 9%,var(--fsurf)),var(--fsurf))}
+.fr-mon h4{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0;
+  font:600 9.5px/1 var(--fsans);letter-spacing:.16em;text-transform:uppercase;color:var(--fink3)}
+.fr-mon.cur h4{color:var(--faccl)}
+.fr-mon h4 .c{font-variant-numeric:var(--fnum);font-size:9px;color:var(--fink4);letter-spacing:.04em}
+.fr-mon.cur h4 .c{color:var(--faccl)}
+.fr-mon ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.fr-mon li{display:flex;align-items:baseline;gap:8px;font-size:11.5px;line-height:1.25;color:var(--fink2)}
+.fr-mon li .dd{flex-shrink:0;width:17px;text-align:right;font:600 11px/1.25 var(--fsans);
+  color:var(--faccl);font-variant-numeric:var(--fnum)}
+.fr-mon li .nn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fr-mon li.empty{color:var(--fink4)}
+.fr-mon li.empty .dd{color:var(--fink4)}
+
+/* ── Kategori-seksjoner ── */
+.fr-cat{margin-bottom:clamp(22px,3.5vw,32px)}
+.fr-cat:last-child{margin-bottom:0}
+.fr-cat-h{display:flex;align-items:baseline;gap:11px;padding-bottom:11px;margin-bottom:14px;
+  border-bottom:1px solid var(--fline)}
+.fr-cat-h h3{font-family:var(--fserif);font-weight:500;font-size:clamp(16px,2vw,19px);
+  letter-spacing:-.3px;color:var(--fink);margin:0}
+.fr-badge{font:600 10px/1 var(--fsans);color:var(--faccl);
+  background:color-mix(in srgb,var(--facc) 12%,transparent);
+  border:1px solid color-mix(in srgb,var(--facc) 24%,transparent);
+  padding:4px 8px;border-radius:999px;font-variant-numeric:var(--fnum)}
+.fr-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+
+/* ── Frist-kort ── */
+.fr-card{position:relative;overflow:hidden;background:var(--fsurf);border:1px solid var(--fline);
+  border-radius:13px;padding:16px 17px;display:flex;flex-direction:column;gap:9px;
+  transition:border-color .25s var(--fease),transform .22s var(--fease),box-shadow .3s var(--fease)}
+@media(hover:hover){.fr-card:hover{transform:translateY(-3px);border-color:var(--fline2);
+  box-shadow:0 18px 40px -22px rgba(0,0,0,.85),0 0 0 1px rgba(var(--fglow),.14)}}
+.fr-card.imp-k::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--fsig);opacity:.7}
+.fr-card-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.fr-card-name{font-family:var(--fserif);font-weight:500;font-size:15.5px;letter-spacing:-.2px;
+  line-height:1.25;color:var(--fink);margin:0;flex:1;min-width:0}
+.fr-imp{flex-shrink:0;font:600 8.5px/1 var(--fsans);letter-spacing:.13em;text-transform:uppercase;
+  padding:5px 8px;border-radius:6px;white-space:nowrap}
+.fr-imp.k{background:linear-gradient(180deg,var(--faccl),var(--facc));color:var(--fbg)}
+.fr-imp.h{background:transparent;color:var(--faccl);border:1px solid color-mix(in srgb,var(--facc) 42%,transparent)}
+.fr-imp.m{background:transparent;color:var(--fink3);border:1px solid var(--fline2)}
+.fr-card-who{font:400 12px/1.4 var(--fsans);color:var(--fink2)}
+.fr-drule{font:400 12.5px/1.5 var(--fsans);color:var(--fink2);font-variant-numeric:var(--fnum)}
+.fr-drule b{color:var(--faccl);font-weight:600}
+.fr-card-meta{display:flex;flex-wrap:wrap;align-items:center;gap:7px}
+.fr-freq{font:500 10px/1 var(--fsans);letter-spacing:.02em;color:var(--fink2);
+  background:color-mix(in srgb,var(--fink) 5%,transparent);border:1px solid var(--fline);
+  padding:4px 9px;border-radius:999px;text-transform:lowercase}
+.fr-miss{font:400 11.5px/1.5 var(--fsans);color:var(--fink3);padding-top:9px;border-top:1px solid var(--fline)}
+.fr-miss-l{font-weight:600;color:var(--fink2);text-transform:uppercase;letter-spacing:.1em;font-size:9px;margin-right:6px}
+.fr-src{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;
+  font:500 11.5px/1.3 var(--fsans);color:var(--fink2);text-decoration:none;border-radius:4px;
+  transition:color .18s var(--fease)}
+.fr-src-l{color:var(--fink3);text-transform:uppercase;letter-spacing:.1em;font-size:9px;font-weight:600;margin-right:2px}
+.fr-src svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;
+  stroke-linejoin:round;opacity:.72;transition:transform .18s var(--fease)}
+@media(hover:hover){.fr-src:hover{color:var(--faccl)}.fr-src:hover svg{transform:translate(1px,-1px)}}
+
+/* ── Tom-tilstand ── */
+.fr-empty{display:none;flex-direction:column;align-items:center;gap:16px;text-align:center;
+  padding:56px 20px 42px;color:var(--fink3)}
+.fr-empty.show{display:flex}
+.fr-empty p{margin:0;font:400 14px/1.5 var(--fsans)}
+.fr-empty b{color:var(--fink);font-weight:500}
+
+@keyframes frBreath{0%,100%{opacity:.5}50%{opacity:.95}}
+
+/* ── Responsivt ── */
+@media(max-width:720px){
+  .fr-wheel{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .fr-cards{grid-template-columns:1fr}
+}
+@media(max-width:640px){
+  .fr-grid{grid-template-columns:1fr}
+  .fr-feat{display:flex;flex-direction:column;align-items:stretch;gap:14px}
+  .fr-div{display:none}
+  .fr-feat-cd{align-items:baseline;text-align:left;flex-direction:row;gap:10px;flex-wrap:wrap}
+  .fr-feat-cd .fr-aud{margin-top:0}
+  .frmodal{padding:0;align-items:stretch}
+  .fr-sheet{width:100%;max-height:100dvh;height:100dvh;border-radius:0;border:none}
+}
+
+/* ── Redusert bevegelse ── */
+@media (prefers-reduced-motion:reduce){
+  .frister .reveal,.frmodal .reveal{opacity:1;transform:none;transition:none}
+  .fr-feat::after{animation:none;opacity:.6}
+  .frmodal,.fr-sheet,.fr-bar i{transition:opacity .01ms}
+  .fr-sheet{transform:none}
+}
+  </style>
+
+  <section class="frister" data-frister-root data-screen-label="05 Frister" data-count="6" data-featured="true" aria-labelledby="fr-title">
+    <div class="fr-inner">
+      <div class="fr-panel">
+        <div class="fr-ph reveal" style="--d:0">
+          <div>
+            <span class="fr-eyebrow" data-i18n="fr.kicker">Kommende</span>
+            <div class="fr-htitle">
+              <h2 class="fr-title" id="fr-title" data-i18n="fr.title">Viktige frister</h2>
+              <span class="fr-context" data-i18n="fr.context">— de neste som gjelder deg, sortert etter dato</span>
+            </div>
+          </div>
+          <button type="button" class="fr-btn" data-fr-open aria-haspopup="dialog">
+            <span data-i18n="fr.see_all">Se alle frister</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg>
+          </button>
         </div>
-        <div class="meta" data-i18n="homeCatMeta">9 områder · 30+ kalkulatorer</div>
-      </div>
-      <div class="grid">
-        <a href="/personlig/budsjett/" class="card reveal" style="--i:0">
-          <div class="card-head">
-            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg>
-            <span class="num">01</span>
-          </div>
-          <h3>Budsjett</h3>
-          <p>Månedlig oversikt over inntekt, faste og variable utgifter</p>
-          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
-        </a>
-        <a href="/personlig/" class="card reveal" style="--i:1">
-          <div class="card-head">
-            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
-            <span class="num">02</span>
-          </div>
-          <h3 data-i18n="homeCardPersonlig">Privatøkonomi</h3>
-          <p data-i18n="homeCatPersonligDesc">Bilkostnad, budsjett og lønnsomhet</p>
-          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
-        </a>
-        <a href="/boliglan/" class="card reveal" style="--i:2">
-          <div class="card-head">
-            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg>
-            <span class="num">03</span>
-          </div>
-          <h3 data-i18n="homeCardBoliglan">Boliglån</h3>
-          <p data-i18n="homeCatBoliglanDesc">Boliglånskalkulator, krav til boliglån, kostnader og BSU</p>
-          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
-        </a>
-        <a href="/kalkulator/" class="card reveal" style="--i:3">
-          <div class="card-head">
-            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="8" y1="7.5" x2="16" y2="7.5"/><circle cx="9" cy="13" r=".6" fill="currentColor"/><circle cx="12" cy="13" r=".6" fill="currentColor"/><circle cx="15" cy="13" r=".6" fill="currentColor"/><circle cx="9" cy="17" r=".6" fill="currentColor"/><circle cx="15" cy="17" r=".6" fill="currentColor"/></svg>
-            <span class="num">04</span>
-          </div>
-          <h3 data-i18n="homeCardKalkulator">Kalkulator</h3>
-          <p data-i18n="homeCatKalkulatorDesc">Enkel, valuta, finansiell, vitenskapelig og fagkalkulatorer</p>
-          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
-        </a>
-        <a href="/skatt/" class="card reveal" style="--i:4">
-          <div class="card-head">
-            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 H14 L18 7 V21 H6 Z"/><path d="M14 3 V7 H18"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>
-            <span class="num">05</span>
-          </div>
-          <h3 data-i18n="homeCardSkatt">Skatt</h3>
-          <p data-i18n="homeCatSkattDesc">Utregning av skatt, begreper og skatteloven</p>
-          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
-        </a>
-        <a href="/selskap/" class="card reveal" style="--i:5">
-          <div class="card-head">
-            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="1"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/></svg>
-            <span class="num">06</span>
-          </div>
-          <h3 data-i18n="homeCardSelskap">Selskap</h3>
-          <p data-i18n="homeCatSelskapDesc">Aksjeselskap, kommandittselskap og selskapsrett</p>
-          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
-        </a>
-        <a href="/avgift/" class="card reveal" style="--i:6">
-          <div class="card-head">
-            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="2"/><circle cx="16" cy="16" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
-            <span class="num">07</span>
-          </div>
-          <h3 data-i18n="homeCardAvgift">Avgift</h3>
-          <p data-i18n="homeCatAvgiftDesc">MVA, merverdiavgiftsloven og arbeidsgiveravgift</p>
-          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
-        </a>
-        <a href="/regnskap/" class="card reveal" style="--i:7">
-          <div class="card-head">
-            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg>
-            <span class="num">08</span>
-          </div>
-          <h3 data-i18n="homeCardRegnskap">Regnskap</h3>
-          <p data-i18n="homeCatRegnskapDesc">Bokføring, balanse, resultatregnskap og kontoplan</p>
-          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
-        </a>
-        <a href="/lov/" class="card reveal" style="--i:8">
-          <div class="card-head">
-            <svg class="cat-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4 V20"/><path d="M5 21 H19"/><path d="M4 9 L12 5 L20 9"/><path d="M6 9 L4 14 a3 3 0 0 0 4 0 L6 9"/><path d="M18 9 L16 14 a3 3 0 0 0 4 0 L18 9"/></svg>
-            <span class="num">09</span>
-          </div>
-          <h3 data-i18n="homeCardLov">Lov</h3>
-          <p data-i18n="homeCatLovDesc">Skatteloven, aksjeloven, MVA-loven og bokføringsloven</p>
-          <svg class="arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg>
-        </a>
+
+        <div data-fr-featured></div>
+        <ul class="fr-grid" data-fr-list></ul>
+
+        <div class="fr-foot reveal" style="--d:8">
+          <p class="fr-verify" data-i18n-html="fr.verify">Verifisert mot <b>Skatteetaten</b>, <b>Brønnøysund</b>, <b>NAV</b> &amp; <b>Lovdata</b> · helg → neste virkedag</p>
+          <button type="button" class="fr-link" data-fr-open aria-haspopup="dialog">
+            <span data-i18n="fr.see_all_wheel">Se alle frister &amp; årshjul</span>
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"></path></svg>
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -2563,5 +2804,380 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
   })();
 </script>
 
+
+<div class="frmodal" data-frister-modal hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="fr-mtitle">
+  <div class="fr-sheet">
+    <header class="fr-mhead">
+      <div class="fr-mtop">
+        <div>
+          <h2 class="fr-mtitle" id="fr-mtitle" data-i18n="m.title">Frister 2026</h2>
+          <p class="fr-msub" data-i18n="m.sub">Årshjul, søk og alle datoer — med kilde for hver frist.</p>
+        </div>
+        <button type="button" class="fr-close" data-fr-close aria-label="Lukk" data-i18n-aria="m.close">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"></path></svg>
+        </button>
+      </div>
+      <div class="fr-tools">
+        <div class="fr-search">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="4.5"></circle><path d="M11 11l3 3"></path></svg>
+          <input type="text" data-fr-search placeholder="Søk i frister, hvem det gjelder eller kilde …" data-i18n-placeholder="m.search" aria-label="Søk i frister">
+        </div>
+        <div class="fr-pills" role="group" aria-label="Filtrer på målgruppe">
+          <button type="button" class="fr-pill" data-fr-filter="alle" aria-pressed="true" data-i18n="m.f.all">Alle</button>
+          <button type="button" class="fr-pill" data-fr-filter="privat" aria-pressed="false" data-i18n="m.f.privat">Privat</button>
+          <button type="button" class="fr-pill" data-fr-filter="bedrift" aria-pressed="false" data-i18n="m.f.bedrift">Bedrift</button>
+          <button type="button" class="fr-pill" data-fr-filter="student" aria-pressed="false" data-i18n="m.f.student">Student</button>
+          <button type="button" class="fr-pill" data-fr-filter="bilbolig" aria-pressed="false" data-i18n="m.f.bilbolig">Bil &amp; bolig</button>
+          <button type="button" class="fr-pill" data-fr-filter="arbeid" aria-pressed="false" data-i18n="m.f.arbeid">Arbeid</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="fr-mbody">
+      <section data-fr-wheelsec>
+        <h3 class="fr-sec-eyebrow" data-i18n="m.wheel">Årshjul 2026</h3>
+        <div class="fr-wheel" data-fr-wheel></div>
+      </section>
+
+      <h3 class="fr-sec-eyebrow" data-i18n="m.cats">Alle frister etter kategori</h3>
+      <div data-fr-cats></div>
+
+      <div class="fr-empty" data-fr-empty>
+        <p data-i18n-html="m.empty">Ingen frister matcher <b>søket</b>.</p>
+        <button type="button" class="fr-pill" data-fr-clear data-i18n="m.reset">Nullstill filtre</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+/* ══ Frister-seksjon — logikk (hverdagsverktoy.com) ══════════════════
+   Dynamiske nedtellinger fra dagens dato, søk + målgruppe-filter,
+   årshjul og modal. Ingen avhengigheter. Data verifisert 2026-07-03 mot
+   Skatteetaten, Altinn, Brønnøysund, NAV, Lånekassen, Kartverket,
+   Statens vegvesen, Tolletaten og Lovdata (research/frister/). */
+(function(){
+  "use strict";
+
+  /* ═══ Datamodell — 73 verifiserte frister ═══
+     n=navn short=kortnavn w=hvem d=dato/regel(HTML) f=frekvens i=viktighet(k/h/m)
+     c=kategori a=målgrupper mo/dm=fast måned+dag (mo:0 = ingen fast dato) p=konsekvens s/u=kilde */
+  var D=[
+    /* ── MVA ── */
+    {n:"MVA-melding 1. termin (jan–feb)",short:"MVA 1. termin",w:"Mva-registrerte",d:"<b>10. april 2026</b>",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:4,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 2. termin (mar–apr)",short:"MVA 2. termin",w:"Mva-registrerte",d:"<b>10. juni 2026</b>",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:6,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 3. termin (mai–jun)",short:"MVA 3. termin",w:"Mva-registrerte",d:"<b>31. august 2026</b> (sommertermin)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:8,dm:31,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 4. termin (jul–aug)",short:"MVA 4. termin",w:"Mva-registrerte",d:"<b>12. oktober 2026</b> (10. = lørdag)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:10,dm:12,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 5. termin (sep–okt)",short:"MVA 5. termin",w:"Mva-registrerte",d:"<b>10. desember 2026</b>",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:12,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 6. termin (nov–des)",short:"MVA 6. termin",w:"Mva-registrerte",d:"<b>10. februar 2026</b> (for nov–des i fjor)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:2,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA årsoppgave",short:"MVA årsoppgave",w:"Omsetning < 1 mill. (årstermin)",d:"<b>10. mars 2026</b> (for hele fjoråret)",f:"årlig",i:"h",c:"mva",a:["bedrift"],mo:3,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"Søknad om MVA-årstermin",short:"Søknad MVA-årstermin",w:"Vil levere årlig i stedet",d:"<b>1. februar 2026</b> (vindu 10. des–1. feb)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:2,dm:1,p:"Mister årstermin dette året",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/registrere/"},
+    {n:"MVA primærnæring",short:"MVA primærnæring",w:"Jord / skog / fiske",d:"<b>10. april 2026</b> (for hele fjoråret)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:4,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-registrering ved 50 000 kr",short:"MVA-registrering (50 000)",w:"Nystartet ENK / AS",d:"Straks omsetningen passerer <b>50 000 kr</b> siste 12 mnd",f:"hendelse",i:"h",c:"mva",a:["bedrift"],mo:0,p:"Etterberegning; feilfakturert mva",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/registrere/"},
+
+    /* ── Skattemelding & skatteoppgjør ── */
+    {n:"Skattemelding — privatperson",short:"Skattemelding (privat)",w:"Lønn / pensjon / uføre",d:"<b>30. april 2026</b>",f:"årlig",i:"k",c:"skm",a:["privat"],mo:4,dm:30,p:"Tvangsmulkt; mister rett til å rette selv",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/"},
+    {n:"Skattemelding — næring & selskap",short:"Skattemelding (næring)",w:"ENK, AS",d:"<b>31. mai</b> → søndag, i praksis <b>1. juni 2026</b>",f:"årlig",i:"k",c:"skm",a:["bedrift"],mo:6,dm:1,p:"Tvangsmulkt",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/skattemelding/naringsdrivende/"},
+    {n:"Utsatt skattemelding — privat",short:"Utsettelse (privat)",w:"Trenger mer tid",d:"Søk før <b>30. april 2026</b> → +1 mnd",f:"årlig",i:"h",c:"skm",a:["privat"],mo:4,dm:30,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsatt-frist/"},
+    {n:"Utsatt skattemelding — næring",short:"Utsettelse (næring)",w:"ENK, selskap, regnskapsfører",d:"Søk før <b>31. mai</b> → ny frist <b>30. juni 2026</b>",f:"årlig",i:"h",c:"skm",a:["bedrift"],mo:5,dm:31,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsatt-frist/"},
+    {n:"Egenretting av skattemelding",short:"Egenretting (3 år)",w:"Oppdaget feil selv",d:"<b>3 år</b> fra leveringsfristen",f:"hendelse",i:"m",c:"skm",a:["privat","bedrift"],mo:0,p:"Kan ikke lenger endre meldingen selv",s:"Skatteforvaltningsloven §9-4",u:"https://lovdata.no/lov/2016-05-27-14/§9-4"},
+    {n:"Skatteoppgjør — penger til gode",short:"Skatteoppgjør til gode",w:"Alle",d:"Løpende; alle senest <b>1. desember 2026</b>",f:"årlig",i:"h",c:"skm",a:["privat","bedrift"],mo:12,dm:1,p:"Har du restskatt, løper det rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/"},
+    {n:"Skattekort for neste år",short:"Skattekort neste år",w:"Alle m/ lønn eller pensjon",d:"Klart ca. <b>15. desember 2026</b>",f:"årlig",i:"m",c:"skm",a:["privat"],mo:12,dm:15,p:"Feil skattekort gir feil trekk fra januar",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort-og-forskuddsskatt/"},
+
+    /* ── Forskuddsskatt & restskatt ── */
+    {n:"Forskuddsskatt ENK/privat — 1. termin",short:"Forskuddsskatt 1. termin",w:"ENK, ANS/DA, privat",d:"<b>16. mars 2026</b> (15. = søndag)",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:3,dm:16,p:"Forsinkelsesrente; restskatt m/ rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort-og-forskuddsskatt/forskuddsskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 2. termin",short:"Forskuddsskatt 2. termin",w:"ENK, ANS/DA, privat",d:"<b>15. juni 2026</b>",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:6,dm:15,p:"Forsinkelsesrente; restskatt m/ rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort-og-forskuddsskatt/forskuddsskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 3. termin",short:"Forskuddsskatt 3. termin",w:"ENK, ANS/DA, privat",d:"<b>15. september 2026</b>",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:9,dm:15,p:"Forsinkelsesrente; restskatt m/ rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort-og-forskuddsskatt/forskuddsskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 4. termin",short:"Forskuddsskatt 4. termin",w:"ENK, ANS/DA, privat",d:"<b>15. desember 2026</b>",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:12,dm:15,p:"Forsinkelsesrente; restskatt m/ rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort-og-forskuddsskatt/forskuddsskatt/"},
+    {n:"Forskuddsskatt AS — 1. termin",short:"Forskuddsskatt AS 1.",w:"AS / upersonlige",d:"<b>16. februar 2026</b> (15. = søndag)",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:2,dm:16,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/skatt-for-bedrift/forskuddsskatt/forskuddsskatt-for-aksjeselskap-mv/"},
+    {n:"Forskuddsskatt AS — 2. termin",short:"Forskuddsskatt AS 2.",w:"AS / upersonlige",d:"<b>15. april 2026</b>",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:4,dm:15,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/skatt-for-bedrift/forskuddsskatt/forskuddsskatt-for-aksjeselskap-mv/"},
+    {n:"Tilleggsforskudd (unngå rente)",short:"Tilleggsforskudd",w:"Venter restskatt",d:"<b>31. mai</b> → betal innen <b>1. juni 2026</b>",f:"årlig",i:"m",c:"fsk",a:["privat","bedrift"],mo:5,dm:31,p:"Rente på restskatt du kunne unngått",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/skatt-for-bedrift/forskuddsskatt/tilleggsforskudd/"},
+    {n:"Restskatt — 1. faktura",short:"Restskatt 1. faktura",w:"Skylder skatt fra i fjor",d:"Oppgjør ≤ juni → <b>20. august 2026</b>",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:8,dm:20,p:"HELE restskatten forfaller straks + rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
+    {n:"Restskatt — 2. faktura",short:"Restskatt 2. faktura",w:"Restskatt over 1 000 kr",d:"Oppgjør ≤ juni → <b>24. september 2026</b>",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:9,dm:24,p:"Forsinkelsesrente på restbeløpet",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
+
+    /* ── Årsregnskap & selskap ── */
+    {n:"Årsregnskap til Regnskapsregisteret",short:"Årsregnskap",w:"Regnskapspliktige",d:"<b>31. juli 2026</b> — kan IKKE forlenges",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:7,dm:31,p:"Forsinkelsesgebyr; styreansvar",s:"Brønnøysund",u:"https://www.brreg.no/en/submission-of-annual-accounts/"},
+    {n:"Ordinær generalforsamling AS",short:"Generalforsamling AS",w:"Alle AS / ASA",d:"<b>30. juni 2026</b> (6 mnd etter årsslutt)",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:6,dm:30,p:"Brudd på aksjeloven §5-5",s:"Aksjeloven §5-5",u:"https://lovdata.no/dokument/NL/lov/1997-06-13-44/KAPITTEL_5"},
+    {n:"Aksjonærregisteroppgaven (RF-1086)",short:"Aksjonærregisteroppgaven",w:"AS / ASA, sparebanker",d:"<b>31. januar 2026</b> (for i fjor)",f:"årlig",i:"h",c:"reg",a:["bedrift"],mo:1,dm:31,p:"Tvangsmulkt; feil skatt for aksjonærene",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/forms/aksjonarregisteroppgaven/"},
+    {n:"SkatteFUNN — søknad",short:"SkatteFUNN",w:"AS / næring med FoU",d:"<b>1. september 2026</b> (garantifrist)",f:"årlig",i:"m",c:"reg",a:["bedrift"],mo:9,dm:1,p:"Mister garantert behandling for året",s:"Forskningsrådet",u:"https://www.forskningsradet.no/skattefunn/"},
+    {n:"Oppbevaring — primærdokumentasjon",short:"Oppbevaring primærdok.",w:"Bokføringspliktige",d:"<b>5 år</b> etter regnskapsårets slutt",f:"løpende",i:"m",c:"reg",a:["bedrift"],mo:0,p:"Bokføringsovertredelse; gebyr",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/rettskilder/type/kunngjoringer/oppbevaringstiden-for-regnskapsmateriale-endres-fra-ti-ar-til-fem-ar/"},
+    {n:"Oppbevaring — sekundærdokumentasjon",short:"Oppbevaring sekundærdok.",w:"Bokføringspliktige",d:"<b>3 år 6 mnd</b> etter regnskapsårets slutt",f:"løpende",i:"m",c:"reg",a:["bedrift"],mo:0,p:"Bokføringsovertredelse",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/rettskilder/type/kunngjoringer/oppbevaringstiden-for-regnskapsmateriale-endres-fra-ti-ar-til-fem-ar/"},
+
+    /* ── A-melding & arbeidsgiver ── */
+    {n:"A-melding (lønn, trekk, aga)",short:"A-melding",w:"Alle arbeidsgivere",d:"<b>Den 5.</b> måneden etter (helg → virkedag)",f:"månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,p:"Tvangsmulkt (dagbøter)",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling/"},
+    {n:"Betaling av forskuddstrekk (nytt 2026)",short:"Forskuddstrekk",w:"Trekker skatt av lønn",d:"<b>Første virkedag etter lønn</b> (skattetrekkskonto avvikles)",f:"månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,p:"Skattetrekk skal betales straks",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/arbeidsgiveravgift/betaling-av-forskuddstrekk-og-arbeidsgiveravgift/"},
+    {n:"Betaling av arbeidsgiveravgift",short:"Arbeidsgiveravgift",w:"Alle arbeidsgivere",d:"<b>Den 15.</b> jan / mar / mai / jul / sep / nov",f:"2-månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/arbeidsgiveravgift/betaling-av-forskuddstrekk-og-arbeidsgiveravgift/"},
+    {n:"Feriepenger til ansatte",short:"Feriepenger",w:"Arbeidsgivere",d:"Siste lønningsdag før ferie; senest <b>1 uke</b> før",f:"årlig",i:"h",c:"amld",a:["bedrift"],mo:0,p:"Brudd på ferieloven §11",s:"Ferieloven §11",u:"https://lovdata.no/lov/1988-04-29-21/§11"},
+    {n:"Sykepengerefusjon fra NAV",short:"Sykepengerefusjon",w:"Har forskuttert sykepenger",d:"Kun fravær inntil <b>3 mnd</b> før kravmåneden",f:"hendelse",i:"h",c:"amld",a:["bedrift"],mo:0,p:"Taper refusjon for eldre fravær",s:"NAV",u:"https://www.nav.no/arbeidsgiver/sykepenger-etter-arbeidsgiverperioden"},
+    {n:"Opprette obligatorisk tjenestepensjon (OTP)",short:"OTP opprette",w:"OTP-pliktige bedrifter",d:"Innen <b>6 mnd</b> etter at plikten oppstod",f:"hendelse",i:"m",c:"amld",a:["bedrift"],mo:0,p:"Etterbetaling + mulig gebyr",s:"Lovdata (OTP-loven)",u:"https://lovdata.no/lov/2005-12-21-124"},
+    {n:"Yrkesskadeforsikring",short:"Yrkesskadeforsikring",w:"Har ansatte",d:"Fra <b>første ansettelse</b> (løpende plikt)",f:"løpende",i:"h",c:"amld",a:["bedrift"],mo:0,p:"Arbeidsgiver hefter personlig for skader",s:"Lovdata (yrkesskadeforsikringsloven)",u:"https://lovdata.no/lov/1989-06-16-65"},
+
+    /* ── Privatøkonomi ── */
+    {n:"BSU — innskudd for årets fradrag",short:"BSU-innskudd",w:"T.o.m. året du fyller 33",d:"<b>31. desember 2026</b> — 10 % fradrag",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets skattefradrag",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/bank-og-lan/bsu/"},
+    {n:"IPS — innbetaling",short:"IPS-innbetaling",w:"18–75 år",d:"<b>31. desember 2026</b> — inntil 25 000 kr",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets utsatt-skatt-fordel",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/arbeid-trygd-og-pensjon/pensjon-og-uforetrygd/individuell-sparing-til-pensjon/"},
+    {n:"Frikort → bytt til skattekort",short:"Frikortgrense (100 000)",w:"Lav inntekt",d:"Bytt før du passerer <b>100 000 kr</b> (feriepenger teller med)",f:"hendelse",i:"h",c:"priv",a:["privat"],mo:0,p:"For lite trekk → restskatt",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort-og-forskuddsskatt/frikort/"},
+    {n:"Salg av aksjer/fond før nyttår",short:"Aksjesalg før nyttår",w:"Verdipapirer utenfor ASK",d:"<b>31. desember 2026</b> — realisering treffer årets skatt",f:"årlig",i:"m",c:"priv",a:["privat"],mo:12,dm:31,p:"Gevinst/tap havner på neste års skatt",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/aksjer-og-verdipapirer/"},
+    {n:"Lånekassen — hovedsøknad (høst)",short:"Lånekassen (høst)",w:"Studenter / elever",d:"<b>15. november 2026</b> (høstsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:11,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
+    {n:"Lånekassen — hovedsøknad (vår)",short:"Lånekassen (vår)",w:"Studenter / elever",d:"<b>15. mars 2026</b> (vårsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:3,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
+    {n:"Lånekassen — inntektsgrense",short:"Lånekassen inntektsgrense",w:"Mottar støtte",d:"2026: <b>234 821 kr</b> (helår) / 587 053 kr (≤ 7 mnd)",f:"årlig",i:"m",c:"priv",a:["student"],mo:0,p:"Stipend gjøres om til lån",s:"Lånekassen",u:"https://lanekassen.no/nb-NO/stipend-og-lan/norge/inntekt-og-formue/"},
+    {n:"Lånekassen — nedbetaling",short:"Lånekassen nedbetaling",w:"Tidligere studenter",d:"Fast forfall hver måned (standard <b>den 15.</b>)",f:"månedlig",i:"m",c:"priv",a:["privat","student"],mo:0,p:"Purregebyr og renter",s:"Lånekassen",u:"https://lanekassen.no/"},
+
+    /* ── Juridiske frister ── */
+    {n:"Klage på skatteoppgjør",short:"Klage skatteoppgjør (6 uker)",w:"Fått skattevedtak",d:"<b>6 uker</b> fra vedtaket (ytre grense 1 år)",f:"hendelse",i:"h",c:"jur",a:["privat"],mo:0,p:"Klageretten faller bort",s:"Skatteetaten",u:"https://www.skatteetaten.no/rettskilder/type/handboker/skatteforvaltningshandboken/gjeldende/kapittel-13-klage/ID-13-4.001/"},
+    {n:"Forvaltningsklage",short:"Forvaltningsklage (3 uker)",w:"Vedtak fra det offentlige",d:"<b>3 uker</b> fra vedtaket kom fram",f:"hendelse",i:"h",c:"jur",a:["privat"],mo:0,p:"Vedtaket blir endelig",s:"Forvaltningsloven §29",u:"https://lovdata.no/lov/1967-02-10/§29"},
+    {n:"Klage på vedtak fra NAV",short:"Klage NAV (6 uker)",w:"NAV-mottakere",d:"<b>6 uker</b> (men <b>3 uker</b> for sosialhjelp)",f:"hendelse",i:"h",c:"jur",a:["privat"],mo:0,p:"Klagen kan avvises",s:"NAV",u:"https://www.nav.no/klagerettigheter"},
+    {n:"Foreldelse — vanlig krav",short:"Foreldelse (3 år)",w:"Faktura, privatlån",d:"<b>3 år</b> for vanlige pengekrav",f:"hendelse",i:"h",c:"jur",a:["privat"],mo:0,p:"Kravet kan ikke lenger tvangsinndrives",s:"Foreldelsesloven",u:"https://lovdata.no/lov/1979-05-18-18"},
+    {n:"Foreldelse — gjeldsbrev & dom",short:"Foreldelse (10 år)",w:"Gjeldsbrev, rettskraftig dom",d:"<b>10 år</b> for gjeldsbrev og dommer",f:"hendelse",i:"m",c:"jur",a:["privat"],mo:0,p:"Kravet foreldes",s:"Foreldelsesloven",u:"https://lovdata.no/lov/1979-05-18-18"},
+    {n:"Reklamasjon — forbrukerkjøp",short:"Reklamasjon (kjøp)",w:"Kjøpt av næringsdrivende",d:"<b>2 år / 5 år</b> + «innen rimelig tid» (min. 2 mnd)",f:"hendelse",i:"h",c:"jur",a:["privat"],mo:0,p:"Mister retten til å klage på mangel",s:"Forbrukerkjøpsloven §27",u:"https://lovdata.no/lov/2002-06-21-34/§27"},
+    {n:"Reklamasjon — håndverkertjeneste",short:"Reklamasjon (håndverker)",w:"Håndverkertjeneste",d:"<b>2 år</b> (ting) / <b>5 år</b> (fast eiendom)",f:"hendelse",i:"h",c:"jur",a:["privat"],mo:0,p:"Mister retten til å klage",s:"Håndverkertjenesteloven §22",u:"https://lovdata.no/lov/1989-06-16-63/§22"},
+    {n:"Angrerett — netthandel & dørsalg",short:"Angrerett (14 dager)",w:"Fjernsalg (nett/telefon/stand)",d:"<b>14 dager</b> fra du fikk varen (12 mnd uten info)",f:"hendelse",i:"h",c:"jur",a:["privat"],mo:0,p:"Mister retten til å angre",s:"Angrerettloven §21",u:"https://lovdata.no/lov/2014-06-20-27/§21"},
+    {n:"Inkassovarsel — ny betalingsfrist",short:"Inkassovarsel (14 dager)",w:"Skylder en faktura",d:"Minst <b>14 dagers</b> ny frist før inkasso",f:"hendelse",i:"h",c:"jur",a:["privat"],mo:0,p:"Saken går til inkasso med gebyrer",s:"Inkassoloven",u:"https://lovdata.no/lov/1988-05-13-26"},
+    {n:"Søksmål etter Forbrukerklageutvalget",short:"Søksmål forbrukerklage",w:"Uenig i utvalgets vedtak",d:"<b>1 måned</b> på å bringe saken inn for domstolen",f:"hendelse",i:"m",c:"jur",a:["privat"],mo:0,p:"Vedtaket blir bindende",s:"Forbrukerklageloven",u:"https://lovdata.no/lov/2020-06-23-98"},
+
+    /* ── Arbeidsliv, leie & bolig ── */
+    {n:"Oppsigelsestid i arbeidsforhold",short:"Oppsigelsestid arbeid",w:"Arbeidstaker / arbeidsgiver",d:"<b>1 mnd</b> → <b>2 mnd</b> (5 år) → <b>3 mnd</b> (10 år)",f:"hendelse",i:"h",c:"arb",a:["arbeid"],mo:0,p:"Feil oppsigelsestid kan gi erstatning",s:"Arbeidsmiljøloven §15-3",u:"https://lovdata.no/lov/2005-06-17-62/§15-3"},
+    {n:"Krav om forhandling ved oppsigelse",short:"Krav om forhandling (2 uker)",w:"Bestride oppsigelse",d:"<b>2 uker</b> etter oppsigelsen",f:"hendelse",i:"h",c:"arb",a:["arbeid"],mo:0,p:"Mister retten til forhandlingsmøte",s:"Arbeidsmiljøloven §17-3",u:"https://lovdata.no/lov/2005-06-17-62/§17-3"},
+    {n:"Søksmålsfrist ved oppsigelse",short:"Søksmål oppsigelse",w:"Ta oppsigelsen til retten",d:"<b>8 uker</b> (usaklig) / <b>6 mnd</b> (erstatning)",f:"hendelse",i:"h",c:"arb",a:["arbeid"],mo:0,p:"Mister retten til å reise sak",s:"Arbeidsmiljøloven §17-4",u:"https://lovdata.no/lov/2005-06-17-62/§17-4"},
+    {n:"Permitteringsvarsel",short:"Permitteringsvarsel (14 dager)",w:"Arbeidsgiver som permitterer",d:"<b>14 dager</b> (2 dager ved uforutsett)",f:"hendelse",i:"h",c:"arb",a:["arbeid","bedrift"],mo:0,p:"Lønnsplikten forlenges",s:"Arbeidstilsynet",u:"https://www.arbeidstilsynet.no/arbeidsforhold/permittering/"},
+    {n:"Ferie — varsel om tidspunkt",short:"Ferievarsel (2 mnd)",w:"Arbeidstaker",d:"Vite ferietidspunkt senest <b>2 mnd før</b>",f:"hendelse",i:"m",c:"arb",a:["arbeid"],mo:0,p:"Kan kreve varselet flyttet",s:"Ferieloven §6",u:"https://lovdata.no/lov/1988-04-29-21/§6"},
+    {n:"Oppsigelse av leiebolig",short:"Oppsigelse leie (3 mnd)",w:"Leietaker / utleier",d:"<b>3 mnd</b> til utløp av måned (1 mnd hybel m/ felles)",f:"hendelse",i:"h",c:"arb",a:["bilbolig","privat"],mo:0,p:"Ekstra måned med leieplikt",s:"Husleieloven §9-6",u:"https://lovdata.no/lov/1999-03-26-17/§9-6"},
+    {n:"Depositum — utleiers frist",short:"Depositum (5 uker)",w:"Depositumskonto",d:"<b>5 uker</b> etter varsel fra banken",f:"hendelse",i:"h",c:"arb",a:["bilbolig","privat"],mo:0,p:"Depositumet utbetales til leietaker",s:"Husleieloven §3-5",u:"https://lovdata.no/lov/1999-03-26-17/§3-5"},
+    {n:"Privat skifte av dødsbo",short:"Privat skifte (60 dager)",w:"Arvinger",d:"<b>60 dager</b> fra dødsfallet",f:"hendelse",i:"m",c:"arb",a:["privat"],mo:0,p:"Kan ende i offentlig skifte",s:"Arveloven",u:"https://lovdata.no/lov/2019-06-14-21"},
+
+    /* ── Bil, avgift & eiendom ── */
+    {n:"Salgsmelding ved bilsalg",short:"Salgsmelding bil (3 dager)",w:"Selger av kjøretøy",d:"<b>3 dager</b> etter salget",f:"hendelse",i:"h",c:"bil",a:["bilbolig","privat"],mo:0,p:"Selger står fortsatt som ansvarlig eier",s:"Statens vegvesen",u:"https://www.vegvesen.no/kjoretoy/eie-og-vedlikeholde/kjop-og-salg-av-kjoretoy/"},
+    {n:"EU-kontroll (periodisk kjøretøykontroll)",short:"EU-kontroll",w:"Kjøretøyeiere",d:"Første innen <b>4 år</b>, deretter hvert <b>2. år</b>",f:"løpende",i:"h",c:"bil",a:["bilbolig","privat"],mo:0,p:"Bruksforbud på kjøretøyet",s:"Statens vegvesen",u:"https://www.vegvesen.no/kjoretoy/eie-og-vedlikeholde/eu-kontroll/"},
+    {n:"Omregistreringsavgift",short:"Omregistreringsavgift",w:"Kjøper brukt kjøretøy",d:"Betales <b>før</b> registrering på ny eier",f:"hendelse",i:"m",c:"bil",a:["bilbolig","privat"],mo:0,p:"Kjøretøyet blir ikke omregistrert",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/avgifter/bil/eierskifte/"},
+    {n:"Trafikkforsikringsavgift",short:"Trafikkforsikringsavgift",w:"Forsikringspliktig kjøretøy",d:"Løpende via <b>bilforsikringen</b>",f:"løpende",i:"h",c:"bil",a:["bilbolig","privat"],mo:0,p:"Dagsgebyr for uforsikret kjøretøy",s:"Skatteetaten",u:"https://www.skatteetaten.no/satser/trafikkforsikringsavgift/"},
+    {n:"Dokumentavgift ved boligkjøp",short:"Dokumentavgift (2,5 %)",w:"Kjøper av eiendom",d:"<b>2,5 %</b> ved tinglysing, <b>14 dagers</b> frist",f:"hendelse",i:"h",c:"bil",a:["bilbolig","privat"],mo:0,p:"Skjøtet blir ikke tinglyst",s:"Kartverket",u:"https://www.kartverket.no/eiendom/dokumentavgift-og-gebyr/dokumentavgift-ved-overforing-av-fast-eigedom"},
+    {n:"Eiendomsskatt — kommunal",short:"Eiendomsskatt",w:"Boligeiere (kommuner m/ eskatt)",d:"<b>2–4 terminer/år</b> — varierer per kommune",f:"løpende",i:"m",c:"bil",a:["bilbolig","privat"],mo:0,p:"Purregebyr og renter",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/bolig-og-eiendeler/bolig-eiendom-tomt/eiendomsskatt/"},
+    {n:"Klage på eiendomsskattetakst",short:"Klage eiendomsskatt (6 uker)",w:"Uenig i taksten",d:"<b>6 uker</b> fra takstene legges ut (~medio april)",f:"hendelse",i:"m",c:"bil",a:["bilbolig","privat"],mo:0,p:"Taksten blir stående",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/bolig-og-eiendeler/bolig-eiendom-tomt/eiendomsskatt/"},
+    {n:"Fortolling ved privat import",short:"Fortolling (import)",w:"Privat innførsel",d:"<b>Før</b> frigivelse; midlertidig import gjenutføres innen <b>1 år</b>",f:"hendelse",i:"m",c:"bil",a:["privat"],mo:0,p:"Varen holdes tilbake; tilleggsavgift",s:"Tolletaten",u:"https://www.toll.no/no/bedrift/import/midlertidig-import/"}
+  ];
+
+  var CATS=[
+    {id:"mva",t:"MVA"},
+    {id:"skm",t:"Skattemelding & skatteoppgjør"},
+    {id:"fsk",t:"Forskuddsskatt & restskatt"},
+    {id:"reg",t:"Årsregnskap & selskap"},
+    {id:"amld",t:"A-melding & arbeidsgiver"},
+    {id:"priv",t:"Privatøkonomi"},
+    {id:"jur",t:"Juridiske frister"},
+    {id:"arb",t:"Arbeidsliv, leie & bolig"},
+    {id:"bil",t:"Bil, avgift & eiendom"}
+  ];
+  var AUD={privat:"Privat",bedrift:"Bedrift",student:"Student",bilbolig:"Bil & bolig",arbeid:"Arbeid"};
+  var IMP={k:{s:"Kritisk",f:"Kritisk frist"},h:{s:"Høy",f:"Høy prioritet"},m:{s:"Middels",f:"Middels prioritet"}};
+  var MO=["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"];
+  var MOF=["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"];
+  var MOL=["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
+  var WK=["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"];
+  var WHEEL_YEAR=2026;
+
+  /* ═══ Hjelpere ═══ */
+  function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+  function d0(dt){return Date.UTC(dt.getFullYear(),dt.getMonth(),dt.getDate());}
+  function days(a,b){return Math.round((d0(b)-d0(a))/86400000);}
+  function audLabel(a){return esc(AUD[a]||a);}
+  function catTitle(id){for(var i=0;i<CATS.length;i++){if(CATS[i].id===id)return CATS[i].t;}return "";}
+  function strip(s){return String(s).replace(/<[^>]+>/g,"");}
+
+  function makeState(){return {q:"",filter:"alle",today:new Date(),count:6,feat:true,prevOverflow:"",trigger:null};}
+
+  function nextDate(x,today){
+    var y=today.getFullYear();
+    var d=new Date(y,x.mo-1,x.dm);
+    if(d0(d)<d0(today))d=new Date(y+1,x.mo-1,x.dm);
+    return d;
+  }
+  function upcoming(st){
+    return D.filter(function(x){return x.mo;}).map(function(x){
+      var dt=nextDate(x,st.today);
+      var o={};for(var k in x){o[k]=x[k];}
+      o.date=dt;o.days=days(st.today,dt);
+      return o;
+    }).sort(function(a,b){return a.date-b.date;});
+  }
+  function passes(x,st){
+    if(st.filter!=="alle" && x.a.indexOf(st.filter)<0)return false;
+    if(st.q){
+      var hay=(x.n+" "+x.w+" "+x.short+" "+strip(x.d)+" "+x.s+" "+x.f+" "+catTitle(x.c)+" "+x.a.map(function(a){return AUD[a]||a;}).join(" ")).toLowerCase();
+      if(hay.indexOf(st.q)<0)return false;
+    }
+    return true;
+  }
+
+  /* ═══ Widget-byggere ═══ */
+  function renderFeatured(x){
+    var mi=x.date.getMonth(),day=x.date.getDate();
+    var soon=x.days<=30,haster=x.days<=14;
+    var fill=Math.max(8,Math.min(100,Math.round((1-x.days/120)*100)));
+    var cd;
+    if(x.days<=0)cd='<span class="fr-cd-word">I dag</span>';
+    else if(x.days===1)cd='<span class="fr-cd-word">I morgen</span>';
+    else cd='<span class="fr-cd-lead" data-i18n="fr.in">om</span><span class="fr-cd-big"><span class="fr-cd-num">'+x.days+'</span><span class="fr-cd-unit" data-i18n="fr.days">dager</span></span>';
+    var full=WK[x.date.getDay()]+" "+day+". "+MOL[mi]+" "+x.date.getFullYear();
+    return '<div class="fr-feat reveal '+(haster?'haster':'')+'" style="--d:1;--fill:'+fill+'%">'
+      +'<div class="fr-flak lg"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
+      +'<span class="fr-div"></span>'
+      +'<div class="fr-feat-mid"><span class="fr-eyebrow" data-i18n="fr.next">Neste frist</span>'
+        +'<h3 class="fr-feat-name">'+esc(x.n)+'</h3>'
+        +'<p class="fr-feat-who">'+esc(x.w)+'</p>'
+        +'<p class="fr-feat-date">'+esc(full)+'</p></div>'
+      +'<div class="fr-feat-cd '+(soon?'soon':'')+'">'+cd+'<span class="fr-aud">'+audLabel(x.a[0])+'</span></div>'
+      +'<div class="fr-bar"><i></i></div>'
+    +'</div>';
+  }
+  function renderRow(x,i){
+    var mi=x.date.getMonth(),day=x.date.getDate();
+    var soon=x.days<=30;
+    var t=x.days<=0?"i dag":x.days===1?"i morgen":("om "+x.days+" dager");
+    return '<li class="fr-row reveal" style="--d:'+(i+2)+'">'
+      +'<div class="fr-flak sm"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
+      +'<div class="fr-row-mid"><span class="fr-row-name">'+esc(x.short)+'</span>'
+        +'<span class="fr-row-who">'+esc(x.w)+'</span></div>'
+      +'<div class="fr-row-right"><span class="fr-row-cd '+(soon?'soon':'')+'">'+t+'</span>'
+        +'<span class="fr-aud">'+audLabel(x.a[0])+'</span></div>'
+    +'</li>';
+  }
+  function buildWidget(root,st){
+    var fw=root.querySelector("[data-fr-featured]");
+    var grid=root.querySelector("[data-fr-list]");
+    var up=upcoming(st),start=0;
+    if(st.feat && up.length){fw.innerHTML=renderFeatured(up[0]);start=1;}else{fw.innerHTML="";}
+    grid.innerHTML=up.slice(start,st.count).map(renderRow).join("");
+  }
+
+  /* ═══ Modal-byggere ═══ */
+  function renderWheel(st){
+    var cur=(st.today.getFullYear()===WHEEL_YEAR)?st.today.getMonth():-1;
+    var out="";
+    for(var m=0;m<12;m++){
+      var items=D.filter(function(x){return x.mo===m+1 && passes(x,st);}).sort(function(a,b){return a.dm-b.dm;});
+      var lis=items.length
+        ? items.map(function(x){return '<li><span class="dd">'+x.dm+'</span><span class="nn">'+esc(x.short)+'</span></li>';}).join("")
+        : '<li class="empty"><span class="dd">—</span></li>';
+      out+='<div class="fr-mon'+(m===cur?' cur':'')+'"><h4><span>'+MOF[m]+'</span><span class="c">'+(items.length||"")+'</span></h4><ul>'+lis+'</ul></div>';
+    }
+    return out;
+  }
+  function renderCard(x){
+    var im=IMP[x.i];
+    return '<article class="fr-card imp-'+x.i+'">'
+      +'<div class="fr-card-h"><h4 class="fr-card-name">'+esc(x.n)+'</h4>'
+        +'<span class="fr-imp '+x.i+'" title="'+esc(im.f)+'">'+esc(im.s)+'</span></div>'
+      +'<div class="fr-card-who">'+esc(x.w)+'</div>'
+      +'<div class="fr-drule">'+x.d+'</div>'
+      +'<div class="fr-card-meta"><span class="fr-freq">'+esc(x.f)+'</span>'
+        +x.a.map(function(a){return '<span class="fr-aud">'+audLabel(a)+'</span>';}).join("")+'</div>'
+      +'<div class="fr-miss"><span class="fr-miss-l" data-i18n="fr.miss">Bommer du</span>'+esc(x.p)+'</div>'
+      +'<a class="fr-src" href="'+esc(x.u)+'" target="_blank" rel="noopener noreferrer">'
+        +'<span class="fr-src-l" data-i18n="fr.src">Kilde</span>'+esc(x.s)
+        +' <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></svg></a>'
+    +'</article>';
+  }
+  function renderCats(st){
+    var html="",any=false;
+    CATS.forEach(function(cat){
+      var items=D.filter(function(x){return x.c===cat.id && passes(x,st);});
+      if(!items.length)return;
+      any=true;
+      html+='<section class="fr-cat"><div class="fr-cat-h"><h3>'+esc(cat.t)+'</h3>'
+        +'<span class="fr-badge">'+items.length+'</span></div>'
+        +'<div class="fr-cards">'+items.map(renderCard).join("")+'</div></section>';
+    });
+    return {html:html,any:any};
+  }
+  function renderModal(modal,st){
+    modal.querySelector("[data-fr-wheel]").innerHTML=renderWheel(st);
+    var cats=renderCats(st);
+    modal.querySelector("[data-fr-cats]").innerHTML=cats.html;
+    var empty=modal.querySelector("[data-fr-empty]");
+    var wheelSec=modal.querySelector("[data-fr-wheelsec]");
+    empty.classList.toggle("show",!cats.any);
+    wheelSec.style.display=cats.any?"":"none";
+  }
+
+  /* ═══ Reveal (sidens .reveal-mønster) ═══ */
+  function setupReveal(root){
+    var els=root.querySelectorAll(".reveal");
+    if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in");});return;}
+    var io=new IntersectionObserver(function(ent){ent.forEach(function(en){
+      if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);}
+    });},{rootMargin:"0px 0px -8% 0px",threshold:.15});
+    els.forEach(function(e){io.observe(e);});
+    requestAnimationFrame(function(){
+      var vh=window.innerHeight||0;
+      els.forEach(function(e){if(e.classList.contains("in"))return;var r=e.getBoundingClientRect();if(r.top<vh&&r.bottom>0)e.classList.add("in");});
+    });
+    setTimeout(function(){els.forEach(function(e){e.classList.add("in");});},700);
+  }
+
+  /* ═══ Init ═══ */
+  function init(root){
+    var st=makeState();
+    var ts=root.getAttribute("data-today");
+    if(ts && /^\d{4}-\d{2}-\d{2}$/.test(ts)){var p=ts.split("-");st.today=new Date(+p[0],+p[1]-1,+p[2]);}
+    var cnt=parseInt(root.getAttribute("data-count"),10);if(!isNaN(cnt)&&cnt>0)st.count=cnt;
+    if(root.getAttribute("data-featured")==="false")st.feat=false;
+
+    var modal=document.querySelector("[data-frister-modal]");
+    if(!modal)return;
+    buildWidget(root,st);
+    setupReveal(root);
+
+    function openModal(e){
+      if(e){e.preventDefault();st.trigger=e.currentTarget;}
+      if(st.hideTimer){clearTimeout(st.hideTimer);st.hideTimer=null;}
+      renderModal(modal,st);
+      modal.hidden=false;modal.setAttribute("aria-hidden","false");
+      requestAnimationFrame(function(){modal.classList.add("open");});
+      st.prevOverflow=document.body.style.overflow;document.body.style.overflow="hidden";
+      var si=modal.querySelector("[data-fr-search]");
+      setTimeout(function(){try{si.focus();}catch(_){}},60);
+    }
+    function closeModal(){
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden","true");
+      document.body.style.overflow=st.prevOverflow||"";
+      if(st.hideTimer)clearTimeout(st.hideTimer);
+      st.hideTimer=setTimeout(function(){modal.hidden=true;st.hideTimer=null;},280);
+      if(st.trigger){try{st.trigger.focus();}catch(_){}}
+    }
+
+    root.querySelectorAll("[data-fr-open]").forEach(function(b){b.addEventListener("click",openModal);});
+    modal.querySelectorAll("[data-fr-close]").forEach(function(b){b.addEventListener("click",closeModal);});
+    modal.addEventListener("mousedown",function(e){if(e.target===modal)closeModal();});
+
+    var si=modal.querySelector("[data-fr-search]");
+    si.addEventListener("input",function(){st.q=si.value.trim().toLowerCase();renderModal(modal,st);});
+
+    modal.querySelectorAll("[data-fr-filter]").forEach(function(pill){
+      pill.addEventListener("click",function(){
+        st.filter=pill.getAttribute("data-fr-filter");
+        modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q===pill?"true":"false");});
+        renderModal(modal,st);
+      });
+    });
+    modal.querySelectorAll("[data-fr-clear]").forEach(function(b){
+      b.addEventListener("click",function(){
+        st.q="";st.filter="alle";si.value="";
+        modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q.getAttribute("data-fr-filter")==="alle"?"true":"false");});
+        renderModal(modal,st);
+      });
+    });
+    document.addEventListener("keydown",function(e){
+      if(e.key==="Escape" && modal.classList.contains("open"))closeModal();
+    });
+  }
+
+  function boot(){
+    var roots=document.querySelectorAll("[data-frister-root]");
+    if(!roots.length){return;}
+    roots.forEach(function(r){if(r.__frInit)return;r.__frInit=true;init(r);});
+  }
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);
+  else boot();
+})();
+</script>
 </body>
 </html>
