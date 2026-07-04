@@ -1985,14 +1985,13 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
 .frister,.frmodal{
   --fbg:var(--bg,#161616);
   --fsurf:var(--surface,#1e1e1e);
-  --fsurf2:var(--surface2,var(--surface-2,#262626));
+  --fsurf2:var(--surface-2,var(--surface2,#191917));
   --fink:var(--ink,#e8e8e8);
   --fink2:var(--ink2,#a8a8a8);
   --fink3:var(--ink3,#6f6f6f);
   --fink4:var(--ink4,#565350);
   --facc:var(--accent,#c89968);
-  --faccl:var(--accent-l,var(--accent-2,#e6c09a));
-  --faccd:var(--accent-d,var(--accent-deep,#b8885a));
+  --faccl:var(--accent-2,var(--accent-l,#d8ad7e));
   --fline:var(--hairline,rgba(232,232,232,.10));
   --fline2:var(--line-2,rgba(232,232,232,.17));
   --fglow:var(--glow-rgb,200,153,104);
@@ -2054,7 +2053,7 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
   gap:clamp(14px,2.4vw,26px);padding:clamp(16px,2.4vw,22px) clamp(16px,2.4vw,24px);
   margin-bottom:14px;border:1px solid var(--fline2);border-radius:15px;
   background:linear-gradient(180deg,color-mix(in srgb,var(--facc) 6%,var(--fsurf2)),var(--fsurf2))}
-.fr-feat::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--facc);opacity:.6}
+.fr-feat::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:2px;border-radius:2px;background:var(--facc);opacity:.55}
 .fr-feat::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:radial-gradient(120% 150% at 10% 0%,rgba(var(--fglow),.11),transparent 58%);
   opacity:.75;animation:frBreath 17s ease-in-out infinite}
@@ -2075,10 +2074,6 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
 .fr-feat-cd.soon .fr-cd-num{color:var(--faccl)}
 .fr-cd-unit{font:500 12px/1 var(--fsans);color:var(--fink3)}
 .fr-feat-cd .fr-aud{margin-top:4px}
-.fr-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--fline);z-index:1}
-.fr-bar i{display:block;height:100%;width:var(--fill,0%);border-radius:0 2px 2px 0;
-  background:linear-gradient(90deg,var(--faccd),var(--faccl));transition:width .95s var(--fexpo)}
-.fr-feat.haster .fr-bar i{background:linear-gradient(90deg,var(--fsig),var(--faccl))}
 
 /* ── Liste (2 kolonner) ── */
 .fr-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -2274,7 +2269,7 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
 @media (prefers-reduced-motion:reduce){
   .frister .reveal,.frmodal .reveal{opacity:1;transform:none;transition:none}
   .fr-feat::after{animation:none;opacity:.6}
-  .frmodal,.fr-sheet,.fr-bar i{transition:opacity .01ms}
+  .frmodal,.fr-sheet{transition:opacity .01ms}
   .fr-sheet{transform:none}
 }
   </style>
@@ -3136,14 +3131,13 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
   /* ═══ Widget-byggere ═══ */
   function renderFeatured(x){
     var mi=x.date.getMonth(),day=x.date.getDate();
-    var soon=x.days<=30,haster=x.days<=14;
-    var fill=Math.max(8,Math.min(100,Math.round((1-x.days/120)*100)));
+    var soon=x.days<=30;
     var cd;
     if(x.days<=0)cd='<span class="fr-cd-word">I dag</span>';
     else if(x.days===1)cd='<span class="fr-cd-word">I morgen</span>';
     else cd='<span class="fr-cd-lead" data-i18n="fr.in">om</span><span class="fr-cd-big"><span class="fr-cd-num">'+x.days+'</span><span class="fr-cd-unit" data-i18n="fr.days">dager</span></span>';
     var full=WK[x.date.getDay()]+" "+day+". "+MOL[mi]+" "+x.date.getFullYear();
-    return '<div class="fr-feat reveal '+(haster?'haster':'')+'" style="--d:1;--fill:'+fill+'%">'
+    return '<div class="fr-feat reveal" style="--d:1">'
       +'<div class="fr-flak lg"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
       +'<span class="fr-div"></span>'
       +'<div class="fr-feat-mid"><span class="fr-eyebrow" data-i18n="fr.next">Neste frist</span>'
@@ -3151,7 +3145,6 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
         +'<p class="fr-feat-who">'+esc(x.w)+'</p>'
         +'<p class="fr-feat-date">'+esc(full)+'</p></div>'
       +'<div class="fr-feat-cd '+(soon?'soon':'')+'">'+cd+'<span class="fr-aud">'+audLabel(x.a[0])+'</span></div>'
-      +'<div class="fr-bar"><i></i></div>'
     +'</div>';
   }
   function renderRow(x,i){
