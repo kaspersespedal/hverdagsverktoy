@@ -856,6 +856,9 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     }
 
     function csvEscape(s, sep){
+      // Tall skrives med norsk desimal-komma (;-separert CSV → komma er trygt).
+      // Uten tusenskille, ellers ville norsk Excel tolke «2.5» som dato / brekke tallparsing.
+      if(typeof s === 'number') s = isFinite(s) ? (Math.round(s * 100) / 100).toString().replace('.', ',') : '';
       var str = String(s == null ? '' : s);
       // Escape CSV injection: prepend ' if string starts with =, +, -, @, tab, CR
       if(/^[=+\-@\t\r]/.test(str)) str = "'" + str;
