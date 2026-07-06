@@ -373,6 +373,10 @@ footer em{font-style:italic}
       <div class="bud-toolbar">
         <span class="bud-toolbar-hint" data-i18n="budToolbarHint">Klikk i feltene for å redigere. Beløp i kr/mnd. Alt lagres automatisk i nettleseren.</span>
         <div class="bud-toolbar-actions">
+          <button class="bud-act" type="button" id="budImport" title="Importer kontoutskrift (CSV) fra nettbanken — filen leses lokalt og forlater aldri nettleseren din">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12V4M3.5 7.5L7 4l3.5 3.5M2.5 2h9"/></svg><span>Importer</span>
+          </button>
+          <input type="file" id="budImportFile" accept=".csv,text/csv,text/plain" style="display:none" aria-hidden="true">
           <button class="bud-act" type="button" id="budCsv" title="Last ned som CSV" data-i18n-title="budCsvTitle">
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v8M3.5 6.5L7 10l3.5-3.5M2.5 12h9"/></svg><span data-i18n="budCsvShort">CSV</span>
           </button>
@@ -1298,6 +1302,219 @@ footer em{font-style:italic}
     document.body.appendChild(a); a.click();
     setTimeout(function(){URL.revokeObjectURL(a.href); a.remove();}, 100);
   });
+
+  // ── Importer kontoutskrift (CSV) — ALT skjer lokalt, filen forlater aldri nettleseren ──
+  (function(){
+    var fileInput = document.getElementById('budImportFile');
+    var importBtn = document.getElementById('budImport');
+    if(!fileInput || !importBtn) return;
+
+    // Nøkkelord i posteringstekst → {kolonne, kategori}. Rekkefølge: spesifikk før generell.
+    var BANK_RULES = [
+      {re:/barnetrygd/i, col:'inntekt', cat:'Barnetrygd'},
+      {re:/bostøtte|husbanken bostøtte/i, col:'inntekt', cat:'Bostøtte'},
+      {re:/\bnav\b|sykepeng|foreldrepeng|dagpeng|uføretrygd|arbeidsavklaring/i, col:'inntekt', cat:'Sykepenger'},
+      {re:/lønn|salary|\blonn\b|godtgj[øo]relse/i, col:'inntekt', cat:'Lønn etter skatt'},
+      {re:/lånekassen|stipend/i, col:'inntekt', cat:'Stipend'},
+      {re:/netflix|spotify|\bhbo\b|max\.com|viaplay|disney|storytel|nrk tv|apple\.?com\/?bill|youtube ?premium|tv ?2 play|podme|readly/i, col:'faste', cat:'Strømmetjenester'},
+      {re:/husleie|boligutleie/i, col:'faste', cat:'Husleie'},
+      {re:/boliglån|husbanken|bolig ?lån|nedbetaling lån|termin lån/i, col:'faste', cat:'Boliglån'},
+      {re:/\bstrøm\b|elvia|tibber|fjordkraft|fortum|hafslund|glitre|\blede\b|agva|smart energi|å strøm/i, col:'faste', cat:'Strøm'},
+      {re:/telenor|telia|\bice\b|onecall|talkmore|chilimobil|mobilabonnement|release mobil/i, col:'faste', cat:'Mobil'},
+      {re:/altibox|canal digital|bredbånd|internett|homenet|telia bredb/i, col:'faste', cat:'Internett'},
+      {re:/gjensidige|\btryg\b|fremtind|storebrand fors|forsikring|frende|eika fors|\bcodan\b|if\.no|if skade/i, col:'faste', cat:'Forsikring'},
+      {re:/\bruter\b|kolumbus|\bskyss\b|\batb\b|\bvy\b|kollektiv|månedskort|\bbrakar\b|\bfarte\b/i, col:'faste', cat:'Kollektivkort'},
+      {re:/barnehage|\bsfo\b|\baks\b/i, col:'faste', cat:'Barnehage / SFO'},
+      {re:/\brema\b|\bkiwi\b|\bcoop\b|\bmeny\b|\bextra\b|bunnpris|\bspar\b|\bjoker\b|\bobs\b|europris|matkroken|oda\.com|holdbart|nærbutikk/i, col:'variable', cat:'Dagligvarer'},
+      {re:/circle ?k|\bshell\b|\besso\b|uno-?x|\byx\b|best stasjon|drivstoff|bensin|diesel|ladeoperat|recharge|eviny|elton/i, col:'variable', cat:'Drivstoff'},
+      {re:/restaurant|\bcafe\b|\bkafe\b|mcdonald|burger|pizza|sushi|foodora|\bwolt\b|kebab|dolly|\begon\b|peppes|espresso/i, col:'variable', cat:'Restaurant'},
+      {re:/apotek|vitusapotek|boots apotek|\blege\b|tannlege|\bfysio\b|\bhelse\b|farmasi/i, col:'variable', cat:'Helse / medisin'},
+      {re:/h&m|hm\.com|\bzara\b|\bcubus\b|dressmann|\bnike\b|adidas|zalando|\bxxl\b|\bsport\b|bik bok|kappahl/i, col:'variable', cat:'Klær & sko'},
+      {re:/vinmonopolet|\bkino\b|\bsteam\b|nintendo|playstation|gaming|treningssenter|\bsats\b|\belixia\b|platekompaniet/i, col:'variable', cat:'Fritid'}
+    ];
+
+    function parseAmount(s){
+      s = String(s == null ? '' : s).replace(/[\s "]/g,'').replace(/kr$/i,'');
+      if(!s) return NaN;
+      // Norsk: '.' = tusenskille, ',' = desimal. Har begge → fjern '.', bytt ',' → '.'.
+      if(s.indexOf(',') >= 0 && s.indexOf('.') >= 0){ s = s.replace(/\./g,'').replace(',', '.'); }
+      else if(s.indexOf(',') >= 0){ s = s.replace(',', '.'); }
+      var n = parseFloat(s.replace(/[^0-9.\-]/g,''));
+      return isFinite(n) ? n : NaN;
+    }
+    function isDate(v){ return /^\d{1,4}[.\/-]\d{1,2}[.\/-]\d{1,4}$/.test(v.trim()); }
+    function detectDelim(text){
+      var line = (text.split(/\r?\n/).filter(function(l){return l.trim();})[0] || '');
+      var c = {';':(line.match(/;/g)||[]).length, '\t':(line.match(/\t/g)||[]).length, ',':(line.match(/,/g)||[]).length};
+      if(c['\t'] > c[';'] && c['\t'] > c[',']) return '\t';
+      return c[';'] >= c[','] ? ';' : ',';
+    }
+    function splitLine(line, delim){
+      var out=[], cur='', q=false;
+      for(var i=0;i<line.length;i++){ var ch=line[i];
+        if(ch === '"'){ if(q && line[i+1]==='"'){ cur+='"'; i++; } else q=!q; }
+        else if(ch === delim && !q){ out.push(cur); cur=''; }
+        else cur += ch;
+      }
+      out.push(cur); return out;
+    }
+    function parseCsv(text){
+      var delim = detectDelim(text);
+      var all = text.split(/\r?\n/).filter(function(l){return l.trim();}).map(function(l){return splitLine(l, delim);});
+      if(all.length < 2) return {error:'Fant for få rader i filen. Er dette en kontoutskrift eksportert som CSV?'};
+      var ncol = Math.max.apply(null, all.map(function(r){return r.length;}));
+      var scan = all.slice(1); // hopp over header
+      var numScore=[], textLen=[];
+      for(var c=0;c<ncol;c++){ numScore[c]=0; textLen[c]=0; }
+      scan.forEach(function(r){ for(var c=0;c<ncol;c++){ var v=(r[c]||'').trim();
+        if(v && /[0-9]/.test(v) && !isDate(v) && isFinite(parseAmount(v))) numScore[c]++;
+        if(v && !isDate(v)) textLen[c] += v.replace(/[0-9.,;:\-\s]/g,'').length;
+      }});
+      var amtCol = numScore.indexOf(Math.max.apply(null, numScore));
+      var tl = textLen.slice(); tl[amtCol] = -1;
+      var descCol = tl.indexOf(Math.max.apply(null, tl));
+      if(amtCol < 0 || descCol < 0 || amtCol === descCol || numScore[amtCol] === 0)
+        return {error:'Klarte ikke å kjenne igjen beløp- og tekstkolonner automatisk. Sjekk at filen har en tekst-kolonne og en beløp-kolonne.'};
+      var txns=[];
+      scan.forEach(function(r){
+        var amt = parseAmount(r[amtCol]||''), desc = (r[descCol]||'').trim();
+        if(isFinite(amt) && amt !== 0 && desc) txns.push({amount:amt, desc:desc});
+      });
+      if(!txns.length) return {error:'Fant ingen transaksjoner med beløp og tekst i filen.'};
+      return {txns:txns};
+    }
+    function categorize(txns){
+      var b = {};
+      txns.forEach(function(t){
+        var col, cat, rules;
+        if(t.amount > 0){ rules = BANK_RULES.filter(function(x){return x.col==='inntekt';}); col='inntekt'; cat='Annen inntekt'; }
+        else { rules = BANK_RULES.filter(function(x){return x.col!=='inntekt';}); col='variable'; cat='Ukategorisert'; }
+        for(var i=0;i<rules.length;i++){ if(rules[i].re.test(t.desc)){ col=rules[i].col; cat=rules[i].cat; break; } }
+        var k = col+'|'+cat;
+        if(!b[k]) b[k] = {col:col, cat:cat, sum:0, n:0, include:true};
+        b[k].sum += Math.abs(t.amount); b[k].n++;
+      });
+      return Object.keys(b).map(function(k){return b[k];}).sort(function(x,y){
+        if(x.col !== y.col) return x.col==='inntekt' ? -1 : (y.col==='inntekt' ? 1 : (x.col==='faste'?-1:1));
+        return y.sum - x.sum;
+      });
+    }
+
+    var COLNAME = {inntekt:'Inntekt', faste:'Fast utgift', variable:'Variabel utgift'};
+    var overlay = null;
+    function closeModal(){ if(overlay){ document.removeEventListener('keydown', onKey, true); overlay.remove(); overlay=null; importBtn.focus(); } }
+    function onKey(e){ if(e.key==='Escape'){ e.preventDefault(); closeModal(); } }
+
+    function showModal(result){
+      closeModal();
+      overlay = document.createElement('div');
+      overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true'); overlay.setAttribute('aria-label','Importert kontoutskrift');
+      overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:16px';
+      var panel = document.createElement('div');
+      panel.style.cssText = 'background:var(--surface,#1a1714);color:var(--ink,#f2ede4);border:1px solid var(--line,rgba(255,255,255,.1));border-radius:16px;max-width:560px;width:100%;max-height:88vh;overflow:auto;padding:24px 24px 20px;box-shadow:0 24px 60px rgba(0,0,0,.5);font-family:system-ui,sans-serif';
+      overlay.appendChild(panel);
+
+      if(result.error){
+        panel.innerHTML = '<h2 style="font:600 18px/1.3 Georgia,serif;margin:0 0 10px">Kunne ikke importere</h2>'
+          + '<p style="color:var(--ink2,#b8b0a4);font-size:14px;line-height:1.6;margin:0 0 18px">'+result.error.replace(/</g,'&lt;')+'</p>'
+          + '<p style="color:var(--ink3,#8a8378);font-size:12.5px;line-height:1.6;margin:0 0 18px">Tips: de fleste nettbanker lar deg eksportere transaksjoner som CSV/Excel. Filen bør ha én kolonne med beløp og én med posteringstekst.</p>';
+        var cls = document.createElement('button'); cls.textContent='Lukk';
+        cls.style.cssText = btnStyle(true); cls.addEventListener('click', closeModal); panel.appendChild(cls);
+        document.body.appendChild(overlay); document.addEventListener('keydown', onKey, true); cls.focus();
+        return;
+      }
+
+      var buckets = categorize(result.txns);
+      var head = document.createElement('div');
+      head.innerHTML = '<h2 style="font:600 18px/1.3 Georgia,serif;margin:0 0 6px">Importert kontoutskrift</h2>'
+        + '<p style="color:var(--ink2,#b8b0a4);font-size:13px;line-height:1.55;margin:0 0 4px">'+result.txns.length+' transaksjoner lest, gruppert i '+buckets.length+' kategorier. Fjern haken på det du ikke vil ta med (f.eks. overføringer mellom egne kontoer).</p>'
+        + '<p style="color:var(--accent,#c89968);font-size:12px;line-height:1.5;margin:0 0 16px">🔒 Filen ble lest lokalt i nettleseren din og forlater aldri enheten.</p>';
+      panel.appendChild(head);
+
+      var list = document.createElement('div');
+      list.style.cssText = 'display:flex;flex-direction:column;gap:2px;margin-bottom:16px';
+      buckets.forEach(function(bk, idx){
+        var row = document.createElement('label');
+        row.style.cssText = 'display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:12px;padding:9px 10px;border-radius:9px;cursor:pointer;border:1px solid transparent';
+        row.onmouseenter=function(){row.style.background='rgba(255,255,255,.03)';};
+        row.onmouseleave=function(){row.style.background='';};
+        var cb = document.createElement('input'); cb.type='checkbox'; cb.checked=true;
+        cb.style.cssText='width:16px;height:16px;accent-color:var(--accent,#c89968);cursor:pointer';
+        cb.addEventListener('change', function(){ bk.include = cb.checked; updateTotal(); });
+        bk._cb = cb;
+        var mid = document.createElement('div');
+        mid.innerHTML = '<div style="font-size:14px;font-weight:600">'+esc(bk.cat)+'</div>'
+          + '<div style="font-size:11.5px;color:var(--ink3,#8a8378);text-transform:uppercase;letter-spacing:.04em">'+COLNAME[bk.col]+' · '+bk.n+' transaksjon'+(bk.n===1?'':'er')+'</div>';
+        var amt = document.createElement('div');
+        amt.style.cssText='font:600 15px/1 system-ui;font-variant-numeric:tabular-nums;color:'+(bk.col==='inntekt'?'var(--ink,#f2ede4)':'var(--ink,#f2ede4)');
+        amt.textContent = fmtKrPlain(Math.round(bk.sum))+' kr';
+        row.appendChild(cb); row.appendChild(mid); row.appendChild(amt);
+        list.appendChild(row);
+      });
+      panel.appendChild(list);
+
+      var totalEl = document.createElement('div');
+      totalEl.style.cssText = 'display:flex;justify-content:space-between;align-items:baseline;padding:12px 10px 16px;border-top:1px solid var(--line,rgba(255,255,255,.1));font-size:13px;color:var(--ink2,#b8b0a4)';
+      panel.appendChild(totalEl);
+      function updateTotal(){
+        var inn=0, ut=0;
+        buckets.forEach(function(bk){ if(!bk.include) return; if(bk.col==='inntekt') inn+=bk.sum; else ut+=bk.sum; });
+        totalEl.innerHTML = '<span>Inntekt <b style="color:var(--ink,#f2ede4)">'+fmtKrPlain(Math.round(inn))+' kr</b></span>'
+          + '<span>Utgifter <b style="color:var(--ink,#f2ede4)">'+fmtKrPlain(Math.round(ut))+' kr</b></span>'
+          + '<span>Igjen <b style="color:var(--accent,#c89968)">'+fmtKrPlain(Math.round(inn-ut))+' kr</b></span>';
+      }
+      updateTotal();
+
+      var actions = document.createElement('div');
+      actions.style.cssText='display:flex;gap:10px;justify-content:flex-end';
+      var cancel = document.createElement('button'); cancel.textContent='Avbryt'; cancel.style.cssText=btnStyle(false); cancel.addEventListener('click', closeModal);
+      var apply = document.createElement('button'); apply.textContent='Legg til i budsjett'; apply.style.cssText=btnStyle(true);
+      apply.addEventListener('click', function(){ applyBuckets(buckets); closeModal(); });
+      actions.appendChild(cancel); actions.appendChild(apply);
+      panel.appendChild(actions);
+
+      document.body.appendChild(overlay);
+      document.addEventListener('keydown', onKey, true);
+      overlay.addEventListener('mousedown', function(e){ if(e.target===overlay) closeModal(); });
+      apply.focus();
+    }
+    function btnStyle(primary){
+      return 'padding:10px 18px;font:600 13.5px/1 system-ui;border-radius:9px;cursor:pointer;border:1px solid '
+        + (primary ? 'var(--accent,#c89968);background:var(--accent,#c89968);color:#1a1410' : 'var(--line,rgba(255,255,255,.15));background:transparent;color:var(--ink2,#b8b0a4)');
+    }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+
+    function applyBuckets(buckets){
+      var added = 0;
+      buckets.forEach(function(bk){
+        if(!bk.include) return;
+        var val = Math.round(bk.sum);
+        if(val <= 0) return;
+        var existing = budState[bk.col].filter(function(r){ return (r.l||'').trim().toLowerCase() === bk.cat.toLowerCase(); })[0];
+        if(existing){ existing.v = (parseInt(existing.v,10)||0) + val; }
+        else { budState[bk.col].push({l:bk.cat, v:val}); }
+        added++;
+      });
+      // fjern tomme standard-rader hvis vi la til ekte poster
+      if(added){
+        ['inntekt','faste','variable'].forEach(function(k){
+          if(budState[k].length > 1) budState[k] = budState[k].filter(function(r){ return (r.l && r.l.trim()) || (parseInt(r.v,10)||0) > 0; });
+          if(!budState[k].length) budState[k] = [{l:'', v:0}];
+        });
+      }
+      saveBudget(budState);
+      renderBudget();
+    }
+
+    importBtn.addEventListener('click', function(){ fileInput.value=''; fileInput.click(); });
+    fileInput.addEventListener('change', function(){
+      var f = fileInput.files && fileInput.files[0]; if(!f) return;
+      var reader = new FileReader();
+      reader.onload = function(){ try{ showModal(parseCsv(String(reader.result||''))); }catch(err){ showModal({error:'Uventet feil ved lesing av filen.'}); } };
+      reader.onerror = function(){ showModal({error:'Kunne ikke lese filen.'}); };
+      reader.readAsText(f, 'utf-8');
+    });
+  })();
 
   document.getElementById('budPdf').addEventListener('click', function(){
     var w = window.open('', '_blank');
