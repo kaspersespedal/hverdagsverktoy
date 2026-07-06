@@ -58,7 +58,7 @@
 <link rel="stylesheet" href="/shared/themes.css?v=v1">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
 <link rel="stylesheet" href="/shared/components.css?v=v3">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v2">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v3">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v6">
 <style>
@@ -188,7 +188,8 @@ body.focus-mode > footer{display:none}
 .side-card.related a:hover .arr{color:var(--accent)}
 
 /* Howto */
-.howto-wrap{margin:0 0 40px}
+.howto-wrap{margin:0 0 40px;display:none}
+.howto-wrap.howto-open{display:block}
 details.howto{border:1px solid var(--line);border-radius:10px;padding:18px 22px;background:var(--surface)}
 details.howto > summary{cursor:pointer;font-weight:500;color:var(--ink);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
 details.howto > summary::-webkit-details-marker{display:none}
@@ -998,8 +999,12 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     document.querySelectorAll('.calc-help-btn').forEach(function(b){
       b.addEventListener('click', function(){
         var d = document.querySelector('details.howto'); if(!d) return;
-        d.open = !d.open;
-        if(d.open) d.scrollIntoView({behavior:'smooth', block:'start'});
+        var w = d.closest('.howto-wrap') || d;
+        var show = !w.classList.contains('howto-open');
+        w.classList.toggle('howto-open', show);
+        d.open = show;
+        b.setAttribute('aria-expanded', show ? 'true' : 'false');
+        if(show) w.scrollIntoView({behavior:'smooth', block:'start'});
       });
     });
     document.querySelectorAll('.focus-card-btn').forEach(function(b){
