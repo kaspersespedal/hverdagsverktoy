@@ -419,7 +419,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function percent(){
     if(errored) return;
     var val = toNumber(current);
-    if(operator !== null && previous !== null) val = previous * val / 100;
+    // For + og − betyr «10 %» prosent AV venstre operand (200 + 10 % = 220).
+    // For × og ÷ (og uten operator) betyr «10 %» ren brøk 0,10 (200 × 10 % = 20).
+    if((operator === '+' || operator === '-') && previous !== null) val = previous * val / 100;
     else val = val / 100;
     current = numToCanonical(val);
     freshOperand = false;
