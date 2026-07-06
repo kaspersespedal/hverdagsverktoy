@@ -1697,12 +1697,52 @@ html[data-theme="dark"] body.atmo-on .band-b .band-inner{ opacity:.14 !important
    .atmo-base bled through the transparent hero. Hide every atmosphere layer and
    restore the solid light background so the forside matches the rest of the site.
    Mirrors shared/atmosphere.css:64; higher specificity wins over the re-enable. */
-html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"]):has(body.atmo-on),
-html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"]) body.atmo-on{ background:var(--bg) !important; }
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="pink"]):has(body.atmo-on),
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="pink"]) body.atmo-on{ background:var(--bg) !important; }
 html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"]) body.atmo-on :is(.atmo,.atmo-base,.band,.band-a,.band-b,.film-grain,.cursor-light){ display:none !important; }
+</style>
+<style id="nordlysCSS">
+#nordlysCanvas{position:fixed;inset:0;z-index:-2;width:100%;height:100%;display:block;opacity:0;transition:opacity 1.4s ease .2s;pointer-events:none}
+body.nordlys-on{background:transparent!important}
+/* Lyse temaer: ingen WebGL-aurora (som i produksjon). Canvas ligger på z-index:-2 bak body,
+   så en opak --bg-bakgrunn dekker den helt — tekst forblir lesbar, ingen resize-bug ved temabytte. */
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="pink"]) body.nordlys-on{background:var(--bg)!important}
+/* Carbon = som live-siden: kun CSS-auroraen (.a5), ingen WebGL-nordlys. Skjul canvas via opacity
+   (IKKE display:none → nuller ResizeObserver = 2×2-bug ved temabytte). !important slår JS-inline opacity:1. */
+html[data-theme="carbon"] #nordlysCanvas{opacity:0!important}
+/* bw = smokey-jazz noir forside: ellers lyst tema (lys bg/sort tekst), her flippet
+   til mork jazzklubb - dyp sort, drivende WebGL-royk, lys serif-tekst. Token-drevet
+   forside -> hero/kort/linjer folger token-overrideet. !important slar themes.css. */
+html[data-theme="bw"], body[data-theme="bw"]{
+  --bg:#070708 !important;
+  --surface:rgba(16,16,18,.55) !important;
+  --surface2:rgba(16,16,18,.55) !important;
+  --surface-2:#17171b !important;
+  --surface-3:#202024 !important;
+  --ink:#f3efe7 !important;
+  --ink2:#c3beb3 !important;
+  --ink3:#8f8a80 !important;
+  --ink4:#5a564e !important;
+  --line:rgba(255,255,255,.10) !important;
+  --line-2:rgba(255,255,255,.14) !important;
+  --line-warm:rgba(255,255,255,.16) !important;
+  --border:rgba(255,255,255,.12) !important;
+  --border2:rgba(255,255,255,.18) !important;
+  --accent:#ece6da !important;
+  --accent-2:#ffffff !important;
+  --accent-l:#d8d2c8 !important;
+  --accent-deep:#c2bcb2 !important;
+  --accent-d:#f4f0e8 !important;
+  --glow-rgb:236,230,218 !important;
+  background:#070708 !important;
+}
+[data-theme="bw"] .hero-tag,
+[data-theme="bw"] .qc-lbl,
+[data-theme="bw"] .widget-label{ color:#b4afa4 !important; }
 </style>
 </head>
 <body class="atmo-on">
+<canvas id="nordlysCanvas" aria-hidden="true"></canvas>
 
 <a class="skip" href="#main">Hopp til hovedinnhold</a>
 
@@ -3299,5 +3339,585 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
   else boot();
 })();
 </script>
+
+<script id="nordlysEngine">
+/* ============================================================================
+ * Nordlys (WebGL) — standalone vanilla-port fra Claude Design-draften.
+ * To-pass shader: (1) aurora-gardiner -> lavoppløst tekstur, (2) skarpe
+ * stjerner + kompositt i full oppløsning. Tema-farger følger <html data-theme>.
+ * Fallback: hvis WebGL mangler ELLER prefers-reduced-motion -> CSS .band-aurora
+ * beholdes (denne motoren tegner da kun ETT statisk bilde, ingen animasjon).
+ * Kilde: "Hverdagsverktoy Forside.html" (dc-runtime-komponent), portert til
+ * ren JS uten React/DCLogic. Aktiv kun på forsiden; andre sider bruker
+ * CSS-auroraen fra shared/atmosphere.
+ * ==========================================================================*/
+(function () {
+  'use strict';
+
+  /* ── Justeringsknotter (dette er det du finpusser) ───────────────────── */
+  var CONFIG = {
+    INTENSITY: 0.62,   // uAmp — aurora-styrke
+    SPEED: 1.0,        // tids-multiplikator (0 = frys)
+    STARS: true        // stjernelag av/på
+  };
+
+  /* ── Nordlys-paletter per tema (speiler draftens THEMES) ─────────────── */
+  var THEMES = {
+    nordlys: { light: 0, sky: ['#030409', '#070a0e'], edge: '#4dffa0', mid: '#19b37a', top: '#0d5c5e', fringe: '#8b60d6', star: '#b8d2e6' },
+    carbon:  { light: 0, sky: ['#0a0806', '#050403'], edge: '#f2e2c6', mid: '#c69a63', top: '#7d5a34', fringe: '#b98a55', star: '#d9c6a4' },
+    dark:    { light: 0, sky: ['#0b0d16', '#161a28'], edge: '#a3b8ff', mid: '#6c8aef', top: '#3d3490', fringe: '#9a6cf0', star: '#bcc8f0' },
+    frost:   { light: 1, sky: ['#dfe6f6', '#f7f9fc'], edge: '#4f5fe5', mid: '#7d88f0', top: '#c8cff8', fringe: '#7a5bd8', star: '#ffffff' },
+    glass:   { light: 1, sky: ['#d5deee', '#e8edf6'], edge: '#5b69ea', mid: '#8b95ff', top: '#c5cbf5', fringe: '#8a76f2', star: '#ffffff' },
+    hendrix: { light: 1, sky: ['#f8e8cf', '#fffdf9'], edge: '#c4501f', mid: '#8e3390', top: '#e8c060', fringe: '#d1518f', star: '#ffffff' },
+    bw:      { light: 0, sky: ['#0a0a0b', '#050505'], edge: '#eef0f2', mid: '#6e7176', top: '#f3ead9', fringe: '#17161a', star: '#ffffff' },
+    disco:   { light: 0, sky: ['#0a0714', '#151021'], edge: '#ff5cb2', mid: '#28c0dc', top: '#45208f', fringe: '#9a4df0', star: '#e0c0ff' },
+    pink:    { light: 1, sky: ['#f9e3ec', '#fffbfc'], edge: '#c25574', mid: '#d4748e', top: '#f0c8d6', fringe: '#a13d6d', star: '#ffffff' }
+  };
+
+  var canvas = document.getElementById('nordlysCanvas');
+  if (!canvas) return;
+
+  function hex2v(hex) {
+    var h = String(hex).replace('#', '');
+    return [parseInt(h.substr(0, 2), 16) / 255, parseInt(h.substr(2, 2), 16) / 255, parseInt(h.substr(4, 2), 16) / 255];
+  }
+  function themeKey() {
+    var k = document.documentElement.getAttribute('data-theme') || 'carbon';
+    return THEMES[k] ? k : 'carbon';
+  }
+
+  var gl = null, progA = null, progC = null, uA = null, uC = null, tex = null, fbo = null;
+  var raf = 0, last = 0, t = 20 + Math.random() * 80, shown = false;
+  var ampNow = CONFIG.INTENSITY, revealT0 = -1, revealDone = false;
+  var mx = 0.5, my = 0.35, tmx = 0.5, tmy = 0.35, mAmt = 0, tmAmt = 0;
+  var aw = 2, ah = 2;
+  var cc = null, ct = null, lastTheme = null;
+  var isSmoke = false;
+  var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var isStatic = mq.matches;
+  var ro = null;
+
+  function syncTheme() {
+    var k = themeKey();
+    isSmoke = (k === 'bw');
+    if (k === lastTheme && cc && cc.fringe) return;
+    var T = THEMES[k];
+    ct = {
+      skyTop: hex2v(T.sky[0]), skyBot: hex2v(T.sky[1]),
+      edge: hex2v(T.edge), mid: hex2v(T.mid), top: hex2v(T.top),
+      fringe: hex2v(T.fringe), star: hex2v(T.star), light: [T.light]
+    };
+    if (!cc || isStatic) cc = JSON.parse(JSON.stringify(ct));
+    else if (!cc.fringe) cc.fringe = ct.fringe.slice();
+    lastTheme = k;
+    if (isStatic) drawOnce();
+  }
+
+  function initGL() {
+    try {
+      gl = canvas.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'low-power', preserveDrawingBuffer: true });
+    } catch (e) { gl = null; }
+    if (!gl) return false; // CSS-fallback (.band) blir stående
+
+    var vsrc = 'attribute vec2 aPos; void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }';
+    var NOISE = [
+      'float hash21(vec2 p){',
+      '  p = fract(p * vec2(127.1, 311.7));',
+      '  p += dot(p, p + 34.23);',
+      '  return fract(p.x * p.y);',
+      '}',
+      'float vnoise(vec2 p){',
+      '  vec2 i = floor(p);',
+      '  vec2 f = fract(p);',
+      '  f = f * f * (3.0 - 2.0 * f);',
+      '  float a = hash21(i);',
+      '  float b = hash21(i + vec2(1.0, 0.0));',
+      '  float c = hash21(i + vec2(0.0, 1.0));',
+      '  float d = hash21(i + vec2(1.0, 1.0));',
+      '  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);',
+      '}',
+      'float fbm(vec2 p){',
+      '  float v = 0.0;',
+      '  float a = 0.5;',
+      '  mat2 r = mat2(0.8, -0.6, 0.6, 0.8);',
+      '  for(int i = 0; i < 5; i++){',
+      '    v += a * vnoise(p);',
+      '    p = r * p * 2.03;',
+      '    a *= 0.5;',
+      '  }',
+      '  return v;',
+      '}'
+    ].join('\n');
+    var auroraSrc = [
+      'precision highp float;',
+      'uniform vec2  uRes;',
+      'uniform float uTime;',
+      'uniform float uAmp;',
+      'uniform float uLight;',
+      'uniform float uMode;',
+      'uniform vec3  uSmk;',
+      'uniform vec3  uSkyTop;',
+      'uniform vec3  uSkyBot;',
+      'uniform vec3  uCEdge;',
+      'uniform vec3  uCMid;',
+      'uniform vec3  uCTop;',
+      'uniform vec3  uCFringe;',
+      '// ---------- self-contained value noise (WebGL1-safe) ----------',
+      'float hash21(vec2 p){',
+      '    p = fract(p * vec2(123.34, 345.45));',
+      '    p += dot(p, p + 34.345);',
+      '    return fract(p.x * p.y);',
+      '}',
+      'float vnoise(vec2 p){',
+      '    vec2 i = floor(p), f = fract(p);',
+      '    f = f*f*(3.0-2.0*f);',
+      '    float a = hash21(i);',
+      '    float b = hash21(i+vec2(1.0,0.0));',
+      '    float c = hash21(i+vec2(0.0,1.0));',
+      '    float d = hash21(i+vec2(1.0,1.0));',
+      '    return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);',
+      '}',
+      '// 3-octave fbm, constant bound, rotated to break axis banding',
+      'float fbm(vec2 p){',
+      '    float s = 0.0, a = 0.5;',
+      '    mat2 r = mat2(0.80, -0.60, 0.60, 0.80);',
+      '    for(int i=0;i<3;i++){',
+      '        s += a*vnoise(p);',
+      '        p = r*p*2.03 + 11.1;',
+      '        a *= 0.5;',
+      '    }',
+      '    return s;',
+      '}',
+      '// altitude -> palette band, driven ENTIRELY by uniforms.',
+      '// h: 0 = sharp bright lower edge .. 1 = diffuse crown top.',
+      'vec3 auroraColor(float h){',
+      '    vec3 lowCore = mix(uCFringe, uCEdge, smoothstep(0.0, 0.16, h));',
+      '    vec3 c = mix(lowCore, uCMid, smoothstep(0.14, 0.52, h));',
+      '    c = mix(c, uCTop, smoothstep(0.58, 1.0, h));',
+      '    return c;',
+      '}',
+      '// one curtain sheet -> density; lower-edge fringe glow returned via out fr.',
+      'float curtain(vec2 uv, float t, float seed, float drift,',
+      '              float warpAmt, float rayFreq, float rayPow, float edgeSoft,',
+      '              out float h, out float fr){',
+      '    float fold = fbm(vec2(uv.x*0.9 + seed*17.0, t*0.05*drift + seed));',
+      '    float w = (fold - 0.5) * 1.1',
+      '            + (vnoise(vec2(uv.x*2.4 + seed*29.0, 4.0 + t*0.09*drift)) - 0.5) * 0.32;',
+      '    float x = uv.x + w*warpAmt - t*0.018*drift;',
+      '    float base = 0.70 + 0.10*sin(x*2.1 + t*0.06*drift + seed) + (fold - 0.5)*0.22;',
+      '    float dist = uv.y - base;',
+      '    h = clamp(dist / 0.42, 0.0, 1.0);',
+      '    float lowerEdge = smoothstep(-0.018, 0.02 + edgeSoft, dist);',
+      '    float topFade   = exp(-max(dist, 0.0) * (5.0 - edgeSoft*6.0));',
+      '    float drape = lowerEdge * topFade;',
+      '    float limb = 0.80 + 0.45*abs(fold - 0.5);',
+      '    drape *= limb;',
+      '    float rx = x*rayFreq + seed*97.0;',
+      '    float rays = fbm(vec2(rx - t*0.06*drift, dist*2.4 + t*0.16*drift)) * 0.72',
+      '               + vnoise(vec2(rx*2.3 + 11.0, dist*3.2 + t*0.24*drift)) * 0.28;',
+      '    rays = pow(max(rays, 0.0), rayPow) * 1.9;',
+      '    float surge = 0.66 + 0.34*(0.6*sin(t*0.047 + seed*7.1) + 0.4*sin(t*0.113 + seed*2.3));',
+      '    float fd = (dist + 0.016) * 22.0;',
+      '    float frBand = exp(-fd * fd);',
+      '    fr = frBand * (0.22 + rays*0.80) * surge;',
+      '    return drape * (0.12 + rays) * surge;',
+      '}',
+      '// ---- SMOKE (bw / smokey-jazz noir) v2 - volumetrisk royk: stigende royksoyler,',
+      '// ambient dis (ulyst=mork, anti-gra), coverage-map, fine filamenter, god-lys-straler.',
+      '// Syntetisert av smokey-jazz-enhance workflow (coverage A + detalj/curl B + lys C). ~17 taps.',
+      'float smk_field(vec2 q, float z, float t) {',
+      '    vec2 zc = vec2(z * 1.9, -z * 1.3 + t * 0.018);',
+      '    return vnoise(q * 1.7 + zc);',
+      '}',
+      'vec3 smokeScene(vec2 frag, vec2 uv, float t) {',
+      '    float aspect = uRes.x / uRes.y;',
+      '    vec2 p = vec2((frag.x - 0.5) * aspect, frag.y);',
+      '    p += vec2(53.17, 11.7);',
+      '    vec2 spotP = vec2((0.72 - 0.5) * aspect, 0.66);',
+      '    float r = smoothstep(0.16, 0.62, uAmp);',
+      '    float reveal = 0.15 + 0.85 * r;',
+      '    vec2 tc = (frag - vec2(0.30, 0.62)) / vec2(0.32, 0.26);',
+      '    float titleMask = 1.0 - smoothstep(0.7, 1.15, length(tc));',
+      '    float ySample = p.y - t * 0.020;',
+      '    float drift = 0.045 * sin(t * 0.11 + p.y * 1.3) + 0.020 * t * 0.006;',
+      '    float xSample = p.x + drift;',
+      '    vec2 q0 = vec2(xSample, ySample);',
+      '    vec2 warp = vec2(fbm(q0 * 1.6 + vec2(0.0, t * 0.05)), fbm(q0 * 1.6 + vec2(5.2, t * 0.04 + 9.1)));',
+      '    warp = warp - 0.5;',
+      '    vec2 curl = vec2(warp.y, -warp.x);',
+      '    float curlMag = length(curl);',
+      '    float warpAmt = 0.55;',
+      '    warpAmt *= mix(0.7, 1.25, frag.y);',
+      '    warpAmt *= (0.6 + 0.4 * r);',
+      '    warpAmt *= mix(1.0, 0.6, titleMask);',
+      '    float curlAmt = 0.9 * mix(0.7, 1.4, frag.y);',
+      '    vec2 q = q0 + (warp + curl * curlAmt) * warpAmt;',
+      '    float detail = vnoise(q * 6.3 + vec2(0.0, -t * 0.04));',
+      '    float yRise = p.y - t * mix(0.055, 0.018, frag.y);',
+      '    float plume = fbm(vec2(p.x * 1.5 + 0.3 * sin(yRise * 1.7 + t * 0.12), yRise * 1.15));',
+      '    float columnPhase = 0.6 + 0.4 * sin(p.x * 2.3 + t * 0.05);',
+      '    float source = smoothstep(0.42, 0.0, frag.y) * columnPhase;',
+      '    float tendril = mix(1.0, 1.0 + 0.5 * curlMag, smoothstep(0.3, 0.8, frag.y));',
+      '    plume *= tendril;',
+      '    float haze = smoothstep(0.30, 0.75, plume);',
+      '    float sd = length((p - spotP) * vec2(1.0, 1.15));',
+      '    float spot = exp(-sd * sd * uSmk.y);',
+      '    spot += 0.45 * exp(-sd * 1.25);',
+      '    spot = clamp(spot, 0.0, 1.5);',
+      '    float baseFill = 0.34;',
+      '    float plumeBoost = smoothstep(0.55, 0.0, frag.y) * (0.6 + 0.4 * smoothstep(0.7, 0.15, frag.x));',
+      '    float plumeCover = plume * source * plumeBoost;',
+      '    float coverage = clamp(baseFill * uSmk.z * 3.0 + plumeCover + spot * 0.5, 0.0, 1.3);',
+      '    vec2 dir = (p - spotP) / (sd + 1e-4);',
+      '    float ang = atan(dir.y, dir.x);',
+      '    float beamNoise = vnoise(vec2(ang * 3.5, sd * 4.0 - t * 0.10)) * 0.6 + vnoise(vec2(ang * 7.0 + 5.0, sd * 2.0 - t * 0.06)) * 0.4;',
+      '    float shaft = smoothstep(0.45, 0.85, beamNoise) * exp(-sd * 1.6);',
+      '    float trans = 1.0;',
+      '    float dens = 0.0;',
+      '    float litAccum = 0.0;',
+      '    float rawMax = 0.0;',
+      '    for (int i = 0; i < 4; i++) {',
+      '        float fi = float(i);',
+      '        float z = fi * 0.25;',
+      '        vec2 par = vec2(0.10 - z * 0.05, -z * 0.03);',
+      '        float n = smk_field(q + par, z, t);',
+      '        float edgeBand = smoothstep(0.35, 0.62, n) * (1.0 - smoothstep(0.62, 0.85, n));',
+      '        n = n + (detail - 0.5) * 0.22 * (0.4 + 0.6 * edgeBand) * (1.0 - 0.12 * fi);',
+      '        n = mix(n, max(n, coverage * 0.9), 0.55);',
+      '        float sh = smoothstep(0.40 + 0.04 * fi, 0.80, n);',
+      '        rawMax = max(rawMax, n * (1.0 - 0.06 * fi));',
+      '        float op = mix(0.60, 0.28, z / 0.75);',
+      '        float slice = sh * op;',
+      '        float inLight = spot * trans;',
+      '        litAccum += slice * inLight * trans;',
+      '        dens += slice * trans;',
+      '        trans *= (1.0 - slice * 0.9);',
+      '    }',
+      '    dens = clamp(dens, 0.0, 1.0);',
+      '    dens = smoothstep(0.24, 0.66, dens);',
+      '    dens = pow(dens, 1.05);',
+      '    float occ = 1.0 - 0.45 * smoothstep(0.5, 0.95, rawMax) * (1.0 - spot);',
+      '    dens *= occ;',
+      '    dens *= mix(1.0, 0.55, titleMask);',
+      '    float shaftLit = shaft * dens * spot;',
+      '    vec3 smokeCol = mix(uCMid, uCEdge, smoothstep(0.22, 0.85, dens));',
+      '    float scatter = dens * (spot * 0.9 + 0.15);',
+      '    scatter = max(scatter, litAccum * 0.9);',
+      '    float rim = smoothstep(0.15, 0.45, dens) * (1.0 - smoothstep(0.45, 0.8, dens));',
+      '    vec3 lit_smoke = smokeCol * (scatter * 1.7 + rim * spot * 0.75);',
+      '    float hazeContribution = haze * uSmk.z * 0.9 * (0.4 + 0.6 * spot) * reveal;',
+      '    lit_smoke += smokeCol * hazeContribution;',
+      '    lit_smoke += mix(uCMid, uCTop, 0.5) * shaftLit * 0.85 * reveal;',
+      '    lit_smoke *= uSmk.x;',
+      '    vec3 sky = mix(uSkyBot, uSkyTop, smoothstep(0.0, 1.0, frag.y));',
+      '    sky += mix(uCTop, vec3(1.0), 0.4) * exp(-sd * sd * 5.0) * 0.10;',
+      '    vec3 lit = sky + lit_smoke;',
+      '    vec2 vc = (frag - 0.5) * vec2(1.05, 1.25);',
+      '    float vig = 1.0 - dot(vc, vc) * 1.15;',
+      '    vig = clamp(vig, 0.0, 1.0);',
+      '    vig = pow(vig, 1.5);',
+      '    vig = max(vig, smoothstep(0.18, 0.0, frag.y) * 0.7);',
+      '    lit *= mix(0.30, 1.0, vig);',
+      '    lit *= mix(1.0, 0.70, titleMask);',
+      '    lit *= reveal;',
+      '    float bloom = smoothstep(0.55, 1.1, scatter) * 0.22;',
+      '    bloom += smoothstep(0.5, 1.0, litAccum) * 0.10;',
+      '    bloom += smoothstep(0.5, 0.9, shaftLit) * 0.14;',
+      '    float surge = smoothstep(0.45, 0.75, uAmp);',
+      '    bloom *= (0.7 + 0.8 * surge);',
+      '    float exposure = 1.3;',
+      '    vec3 col = vec3(1.0) - exp(-lit * exposure);',
+      '    col = pow(max(col - 0.006, 0.0), vec3(1.22));',
+      '    float L = dot(col, vec3(0.299, 0.587, 0.114));',
+      '    col = mix(col, vec3(L), 0.68);',
+      '    col += mix(uCTop, vec3(1.0), 0.35) * bloom;',
+      '    col += (hash21(frag * uRes) - 0.5) * (1.5 / 255.0);',
+      '    return col;',
+      '}',
+      'void main(){',
+      '    vec2 frag = gl_FragCoord.xy / uRes;',
+      '    float aspect = uRes.x / uRes.y;',
+      '    vec2 uv = vec2((frag.x - 0.5)*aspect + 37.73, frag.y);',
+      '    float t = uTime;',
+      '    if (uMode > 0.5) { gl_FragColor = vec4(smokeScene(frag, frag, t), 1.0); return; }',
+      '    vec3 sky = mix(uSkyBot, uSkyTop, smoothstep(0.05, 0.95, frag.y));',
+      '    float hN, hM, hF, fN, fM, fF;',
+      '    float near = curtain(uv,                          t, 1.0,  1.00, 1.0, 6.8, 1.9, 0.000, hN, fN);',
+      '    float mid  = curtain(vec2(uv.x*1.35 + 2.7, uv.y), t, 7.0,  0.78, 0.9, 5.4, 1.7, 0.020, hM, fM) * 0.55;',
+      '    float far  = curtain(vec2(uv.x*0.80 - 1.9, uv.y), t, 13.0, 0.62, 0.8, 4.2, 1.5, 0.045, hF, fF) * 0.32;',
+      '    vec3 aur = auroraColor(hN) * near;',
+      '    aur     += auroraColor(hM) * mid;',
+      '    aur     += mix(auroraColor(hF), uCTop, 0.30) * far;',
+      '    aur += uCFringe * (fN*0.32 + fM*0.10) * (1.0 - uLight*0.55);',
+      '    float airglow = exp(-abs(frag.y - 0.13) * 5.2) * 0.05',
+      '                  * (0.4 + 0.6*fbm(vec2(uv.x*0.7, t*0.02)));',
+      '    aur += mix(uCMid, uCFringe, 0.5) * airglow;',
+      '    aur *= uAmp * 2.0;',
+      '    aur *= (1.0 - uLight*0.92);',
+      '    float aurLum = dot(aur, vec3(0.34, 0.55, 0.30));',
+      '    float exposure = 1.22;',
+      '    vec3 lit = sky + aur;',
+      '    vec3 col = 1.0 - exp(-lit * exposure);',
+      '    float L = dot(col, vec3(0.299, 0.587, 0.114));',
+      '    col = mix(col, vec3(L), smoothstep(0.5, 1.0, L) * 0.42);',
+      '    float bloom = max(aurLum - 0.55, 0.0);',
+      '    col += mix(uCEdge, vec3(1.0), 0.38) * bloom * 0.30;',
+      '    vec3 darkCol = pow(max(col - 0.010, 0.0), vec3(1.05));',
+      '    col = mix(darkCol, col, uLight);',
+      '    col += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (2.0 / 255.0);',
+      '    float alpha = clamp(aurLum * 1.3, 0.0, 1.0);',
+      '    gl_FragColor = vec4(col, alpha);',
+      '}'
+    ].join('\n');
+    var compSrc = [
+      'precision highp float;',
+      'uniform vec2 uRes;',
+      'uniform float uTime;',
+      'uniform float uStarAmt;',
+      'uniform float uLight;',
+      'uniform vec2 uMouse;',
+      'uniform float uMouseAmt;',
+      'uniform vec3 uCMid;',
+      'uniform vec3 uStarTint;',
+      'uniform sampler2D uTex;',
+      NOISE,
+      'float starLayer(vec2 px, float scale, float keep, float szMul, float t, float twk, out float temp){',
+      '  vec2 sp = px / uRes.y * scale;',
+      '  vec2 cell = floor(sp);',
+      '  vec2 f = fract(sp);',
+      '  float rnd = hash21(cell);',
+      '  vec2 spos = vec2(hash21(cell + 11.0), hash21(cell + 23.0)) * 0.8 + 0.1;',
+      '  vec2 d = f - spos;',
+      '  float dist = length(d);',
+      '  float mag = pow(hash21(cell + 31.0), 5.0);',
+      '  float szPx = max((0.75 + 2.1 * mag) * szMul * uRes.y * 0.00092, 0.85);',
+      '  float sz = szPx * scale / uRes.y;',
+      '  float core = exp(-(dist * dist) / (sz * sz));',
+      '  float halo = exp(-dist / (sz * 2.6)) * 0.17 * (0.2 + mag);',
+      '  float spd = 0.4 + hash21(cell + 43.0) * 0.8;',
+      '  float n1 = vnoise(vec2(t * spd, rnd * 93.0));',
+      '  float n2 = vnoise(vec2(t * spd * 2.6 + 7.0, rnd * 57.0));',
+      '  float twAmp = mix(0.42, 0.10, mag) * twk;',
+      '  float tw = 1.0 - twAmp * (0.7 * n1 + 0.3 * n2);',
+      '  float sel = step(keep, rnd);',
+      '  float spikeAmt = smoothstep(0.82, 0.97, mag);',
+      '  float spike = (1.0 - smoothstep(0.0, sz * 10.0, abs(d.x))) * (1.0 - smoothstep(0.0, sz * 0.6, abs(d.y)));',
+      '  spike += (1.0 - smoothstep(0.0, sz * 10.0, abs(d.y))) * (1.0 - smoothstep(0.0, sz * 0.6, abs(d.x)));',
+      '  temp = hash21(cell + 5.0);',
+      '  float lim = min(min(spos.x, 1.0 - spos.x), min(spos.y, 1.0 - spos.y));',
+      '  float win = 1.0 - smoothstep(lim * 0.45, lim * 0.95, dist);',
+      '  return ((core + halo) * (0.8 + 1.25 * mag) + spike * spikeAmt * 0.45) * tw * sel * win;',
+      '}',
+      'void main(){',
+      '  vec2 frag = gl_FragCoord.xy / uRes;',
+      '  float aspect = uRes.x / uRes.y;',
+      '  vec4 aur = texture2D(uTex, frag);',
+      '  vec3 col = aur.rgb;',
+      '  float occl = exp(-aur.a * 5.2);',
+      '  float t = uTime;',
+      '',
+      '  float tempA; float tempB; float tempC;',
+      '  float sA = starLayer(gl_FragCoord.xy, 30.0, 0.955, 1.0, t, 1.0, tempA);',
+      '  float sB = starLayer(gl_FragCoord.xy + vec2(157.0, 61.0), 11.0, 0.945, 1.35, t * 0.9, 0.65, tempB);',
+      '  float sC = starLayer(gl_FragCoord.xy + vec2(83.0, 211.0), 64.0, 0.900, 0.8, t * 1.15, 1.0, tempC);',
+      '  float clus = 0.55 + 0.9 * vnoise(vec2(frag.x * aspect, frag.y) * 3.1 + 17.0);',
+      '  vec3 cool = vec3(0.78, 0.86, 1.0);',
+      '  vec3 warm = vec3(1.0, 0.90, 0.74);',
+      '  vec3 stA = mix(mix(cool, warm, smoothstep(0.2, 0.8, tempA)), uStarTint, 0.30);',
+      '  vec3 stB = mix(mix(cool, warm, smoothstep(0.2, 0.8, tempB)), uStarTint, 0.30);',
+      '  vec3 stC = mix(mix(cool, warm, smoothstep(0.2, 0.8, tempC)), uStarTint, 0.30);',
+      '  float horizon = smoothstep(0.22, 0.60, frag.y);',
+      '  vec3 stars = stA * sA * 0.62 + stB * sB * 1.0 + stC * sC * 0.34 * clus;',
+      '  col += stars * horizon * uStarAmt * (1.0 - uLight) * occl;',
+      '',
+      '  vec2 m = vec2(uMouse.x, 1.0 - uMouse.y);',
+      '  vec2 md = (frag - m) * vec2(aspect, 1.0);',
+      '  col += uCMid * exp(-dot(md, md) * 5.5) * 0.05 * uMouseAmt * (1.0 - uLight);',
+      '',
+      '  vec2 vq = (frag - vec2(0.5, 0.55)) * vec2(1.0, 1.25);',
+      '  col *= 1.0 - mix(0.16, 0.05, uLight) * dot(vq, vq);',
+      '  col += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (3.0 / 255.0);',
+      '',
+      '  gl_FragColor = vec4(col, 1.0);',
+      '}'
+    ].join('\n');
+
+    function compile(type, src) {
+      var s = gl.createShader(type);
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.warn('Nordlys shader: ' + gl.getShaderInfoLog(s)); return null; }
+      return s;
+    }
+    function linkProg(fsSrc) {
+      var vs = compile(gl.VERTEX_SHADER, vsrc);
+      var fs = compile(gl.FRAGMENT_SHADER, fsSrc);
+      if (!vs || !fs) return null;
+      var prog = gl.createProgram();
+      gl.attachShader(prog, vs); gl.attachShader(prog, fs);
+      gl.bindAttribLocation(prog, 0, 'aPos');
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.warn('Nordlys link: ' + gl.getProgramInfoLog(prog)); return null; }
+      return prog;
+    }
+    progA = linkProg(auroraSrc);
+    progC = linkProg(compSrc);
+    if (!progA || !progC) return false;
+
+    var buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+    tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    fbo = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    function U(prog, names) { var o = {}; for (var i = 0; i < names.length; i++) o[names[i]] = gl.getUniformLocation(prog, names[i]); return o; }
+    uA = U(progA, ['uRes', 'uTime', 'uAmp', 'uLight', 'uMode', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe']);
+    uC = U(progC, ['uRes', 'uTime', 'uStarAmt', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex']);
+
+    canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); cancelAnimationFrame(raf); raf = 0; });
+    canvas.addEventListener('webglcontextrestored', function () { progA = null; gl = null; if (initGL()) { resize(); if (isStatic) drawOnce(); else resume(); } });
+
+    if (!ro) { ro = new ResizeObserver(resize); ro.observe(canvas); }
+    resize();
+
+    if (window.matchMedia('(pointer: fine)').matches) {
+      window.addEventListener('pointermove', function (e) {
+        var r = canvas.getBoundingClientRect();
+        tmx = (e.clientX - r.left) / Math.max(1, r.width);
+        tmy = (e.clientY - r.top) / Math.max(1, r.height);
+        tmAmt = 1;
+      }, { passive: true });
+    }
+    return true;
+  }
+
+  function resize() {
+    if (!gl || !tex) return;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = Math.max(2, Math.round(canvas.clientWidth * dpr));
+    var h = Math.max(2, Math.round(canvas.clientHeight * dpr));
+    var cap = 3.4e6;
+    if (w * h > cap) { var s = Math.sqrt(cap / (w * h)); w = Math.round(w * s); h = Math.round(h * s); }
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w; canvas.height = h;
+      aw = Math.max(2, Math.round(canvas.clientWidth * 0.5));
+      ah = Math.max(2, Math.round(canvas.clientHeight * 0.5));
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, aw, ah, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      if (isStatic) drawOnce();
+    }
+  }
+
+  function resume() {
+    if (gl && !raf && !isStatic && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(tick); }
+  }
+
+  function tick(now) {
+    raf = requestAnimationFrame(tick);
+    var dt = Math.min(now - last, 100);
+    if (dt < 28) return; // ~33 fps
+    last = now;
+    t += dt * 0.001 * CONFIG.SPEED;
+    // Intro-reveal (wow-on-load): aurora ignites dim -> rises -> brightness-surges -> settles to idle.
+    // Driven entirely through uAmp; layered over the canvas' 1.4s CSS opacity fade-in.
+    if (revealT0 < 0) revealT0 = now;
+    if (!revealDone) {
+      var rr = (now - revealT0) / 1500;
+      if (rr >= 1) { revealDone = true; ampNow = CONFIG.INTENSITY; }
+      else {
+        var rise;
+        if (rr <= 0.73) { var q = rr / 0.73; rise = 0.16 + (0.90 - 0.16) * (1 - Math.pow(1 - q, 3)); }
+        else { rise = 0.90 + (CONFIG.INTENSITY - 0.90) * ((rr - 0.73) / 0.27); }
+        var sw = Math.max(0, Math.min((rr - 0.6) / 0.4, 1));
+        ampNow = rise + Math.sin(sw * Math.PI) * 0.28; // surge peaks ~1.2s
+      }
+    } else {
+      ampNow = CONFIG.INTENSITY;
+    }
+    mx += (tmx - mx) * 0.045;
+    my += (tmy - my) * 0.045;
+    mAmt += (tmAmt - mAmt) * 0.05;
+    if (cc && ct) {
+      var k = 0.08;
+      for (var key in ct) { var a = cc[key], b = ct[key]; for (var i = 0; i < b.length; i++) a[i] += (b[i] - a[i]) * k; }
+    }
+    draw();
+  }
+
+  function draw() {
+    if (!gl || !cc || !progA || !cc.fringe) return;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+    gl.viewport(0, 0, aw || 2, ah || 2);
+    gl.useProgram(progA);
+    gl.uniform2f(uA.uRes, aw || 2, ah || 2);
+    gl.uniform1f(uA.uTime, t);
+    gl.uniform1f(uA.uAmp, ampNow);
+    gl.uniform1f(uA.uLight, cc.light[0]);
+    gl.uniform1f(uA.uMode, isSmoke ? 1 : 0);
+    var W = window.__smk || {};
+    gl.uniform3f(uA.uSmk, W.gain != null ? W.gain : 2.0, W.spot != null ? W.spot : 1.55, W.amb != null ? W.amb : 0.17);
+    gl.uniform3f(uA.uSkyTop, cc.skyTop[0], cc.skyTop[1], cc.skyTop[2]);
+    gl.uniform3f(uA.uSkyBot, cc.skyBot[0], cc.skyBot[1], cc.skyBot[2]);
+    gl.uniform3f(uA.uCEdge, cc.edge[0], cc.edge[1], cc.edge[2]);
+    gl.uniform3f(uA.uCMid, cc.mid[0], cc.mid[1], cc.mid[2]);
+    gl.uniform3f(uA.uCTop, cc.top[0], cc.top[1], cc.top[2]);
+    gl.uniform3f(uA.uCFringe, cc.fringe[0], cc.fringe[1], cc.fringe[2]);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.useProgram(progC);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, tex);
+    gl.uniform1i(uC.uTex, 0);
+    gl.uniform2f(uC.uRes, canvas.width, canvas.height);
+    gl.uniform1f(uC.uTime, t);
+    gl.uniform1f(uC.uStarAmt, (CONFIG.STARS && !isSmoke) ? 1 : 0);
+    gl.uniform1f(uC.uLight, cc.light[0]);
+    gl.uniform2f(uC.uMouse, mx, my);
+    gl.uniform1f(uC.uMouseAmt, mAmt);
+    gl.uniform3f(uC.uCMid, cc.mid[0], cc.mid[1], cc.mid[2]);
+    gl.uniform3f(uC.uStarTint, cc.star[0], cc.star[1], cc.star[2]);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+    if (!shown) { shown = true; canvas.style.opacity = '1'; }
+  }
+  function drawOnce() { draw(); }
+
+  /* ── Oppstart ────────────────────────────────────────────────────────── */
+  if (!initGL()) return; // WebGL utilgjengelig → CSS .band-aurora beholdes
+  document.body.classList.add('nordlys-on'); // skjuler CSS-bandene, canvas overtar
+  syncTheme();
+
+  // Tema-bytte → re-sync farger (lerpes mykt i tick)
+  new MutationObserver(function () { syncTheme(); if (isStatic) drawOnce(); })
+    .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // Redusert bevegelse på/av live
+  if (mq.addEventListener) mq.addEventListener('change', function () {
+    isStatic = mq.matches;
+    if (isStatic) { cancelAnimationFrame(raf); raf = 0; if (ct) cc = JSON.parse(JSON.stringify(ct)); drawOnce(); }
+    else resume();
+  });
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else resume();
+  });
+
+  if (isStatic) drawOnce(); else resume();
+})();
+
+</script>
+
 </body>
 </html>
