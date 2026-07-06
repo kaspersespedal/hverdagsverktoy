@@ -630,6 +630,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       '      <div class="ks-r-eyebrow" data-i18n="aboResHdr">Din månedskost</div>',
       '      <div class="ks-r-net"><span data-ab="resMnd">–</span><span class="unit">kr</span></div>',
       '      <div class="ks-r-mnd"><span data-i18n="aboResAarPrefix">tilsvarer</span> <b><span data-ab="resAar">–</span> kr</b> <span data-i18n="aboResAarSuffix">i året</span> <span data-ab="resAllExtra"></span></div>',
+      '      <button type="button" id="aboCsvBtn" style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:2px;padding:7px 12px;font:600 12px/1 system-ui,sans-serif;color:var(--accent);background:transparent;border:1px solid var(--line);border-radius:8px;cursor:pointer" title="Last ned abonnementer som CSV"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v7M4 6.5L7 9.5l3-3M2.5 12h9"/></svg>Last ned CSV</button>',
       '      <div class="ab-rank">',
       '        <div class="ab-rank-head" data-i18n="aboRankHdr">Sortert etter månedskost</div>',
       '        <div id="ab-rank-list"></div>',
@@ -731,6 +732,15 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     $('[data-ab="iAarLbl"]').textContent = invest.aar;
     $('[data-ab="iFv"]').textContent = fmtKr(r.fv);
     $('[data-ab="iVekst"]').textContent = r.totMndPP > 0 ? fmtPct(avk / Math.max(1, innskutt)) : '–';
+
+    // Eksport-state for aboCsv() (core.js) — fulle månedspriser + total
+    window._aboData = {
+      items: r.items.map(function(it){ return {name: it.name || '—', amount: Math.round(it.mnd)}; }),
+      totalMnd: Math.round(r.totMndAll),
+      totalAar: Math.round(r.totAarAll),
+      antall: r.items.length,
+      snitt: r.items.length ? r.totMndAll / r.items.length : 0
+    };
   }
 
   function renderRows(){
@@ -783,6 +793,25 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     });
   }
 
+  function downloadAboCsv(){
+    var d = window._aboData;
+    if(!d || typeof window.downloadCSV !== 'function') return;
+    var dt = new Date().toLocaleDateString('nb-NO', {year:'numeric', month:'long', day:'numeric'});
+    var rows = [];
+    rows.push(['Abonnementsoversikt', dt]);
+    rows.push([]);
+    rows.push(['Tjeneste', 'Beløp/mnd (kr)']);
+    d.items.forEach(function(i){ rows.push([i.name, i.amount]); });
+    rows.push([]);
+    rows.push(['Totalt per måned', d.totalMnd]);
+    rows.push(['Totalt per år', d.totalAar]);
+    rows.push(['Antall abonnementer', d.antall]);
+    rows.push(['Snitt per abonnement', Math.round(d.snitt)]);
+    rows.push([]);
+    rows.push(['Generert av Hverdagsverktøy']);
+    window.downloadCSV(rows, 'abonnementer.csv');
+  }
+
   function mount(){
     host = document.getElementById('ab-host');
     if(!host) return;
@@ -794,6 +823,8 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       items = items.concat([{id:nextId++, name:'', kr:0, freq:'mnd', delt:1, kat:'Annet'}]);
       renderRows();
     });
+    var _aboCsvBtn = $('#aboCsvBtn');
+    if(_aboCsvBtn) _aboCsvBtn.addEventListener('click', downloadAboCsv);
     $('#ab-rente').addEventListener('input', function(){
       invest.rente = parseDec(this.value);
       render();
