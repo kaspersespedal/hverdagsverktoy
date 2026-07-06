@@ -803,6 +803,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       '      <div class="ks-r-eyebrow" data-i18n="bilResEyebrow">Total per måned</div>',
       '      <div class="ks-r-net"><span data-bil="totMnd2">–</span><span class="unit">kr</span></div>',
       '      <div class="ks-r-mnd"><b><span data-bil="krPerKm2">–</span> kr</b> <span data-i18n="bilResPerKm">per km</span> · <b><span data-bil="totAar2">–</span> kr</b> <span data-i18n="bilResPerAar">per år</span></div>',
+      '      <button type="button" id="bilCsvBtn" style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:2px;padding:7px 12px;font:600 12px/1 system-ui,sans-serif;color:var(--accent);background:transparent;border:1px solid var(--line);border-radius:8px;cursor:pointer" title="Last ned bilkostnad som CSV"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v7M4 6.5L7 9.5l3-3M2.5 12h9"/></svg>Last ned CSV</button>',
       '',
       '      <div class="ks-bar">',
       '        <div class="ks-bar-track" id="bil-bar-track"></div>',
@@ -911,6 +912,25 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     render();
   }
 
+  function downloadBilCsv(){
+    if(typeof window.bilCalc !== 'function' || typeof window.downloadCSV !== 'function') return;
+    var r = window.bilCalc(state);
+    var rows = [];
+    rows.push(['Bilkostnad', new Date().toLocaleDateString('nb-NO', {year:'numeric', month:'long', day:'numeric'})]);
+    rows.push([]);
+    rows.push(['Kategori', 'Per år (kr)', 'Per måned (kr)']);
+    rows.push(['Verditap', Math.round(r.verditap.aar), Math.round(r.verditap.mnd)]);
+    rows.push(['Drivstoff/lading', Math.round(r.drivstoff.aar), Math.round(r.drivstoff.mnd)]);
+    rows.push(['Faste kostnader', Math.round(r.faste.aar), Math.round(r.faste.mnd)]);
+    rows.push(['Vedlikehold', Math.round(r.vedlikehold.aar), Math.round(r.vedlikehold.mnd)]);
+    rows.push([]);
+    rows.push(['Total eierkostnad', Math.round(r.totAar), Math.round(r.totMnd)]);
+    rows.push(['Pris per km', '', (Math.round(r.krPerKm * 100) / 100).toString().replace('.', ',')]);
+    rows.push([]);
+    rows.push(['Generert av Hverdagsverktøy']);
+    window.downloadCSV(rows, 'bilkostnad.csv');
+  }
+
   function bind(){
     // Inputs
     $$('input[data-field]').forEach(function(inp){
@@ -937,6 +957,9 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       this.setAttribute('aria-expanded', moreOpen ? 'true' : 'false');
       $('#bil-more').classList.toggle('open', moreOpen);
     });
+    // CSV-eksport
+    var _bilCsvBtn = $('#bilCsvBtn');
+    if(_bilCsvBtn) _bilCsvBtn.addEventListener('click', downloadBilCsv);
     // Mode toggle
     $$('.ks-mode[data-mode]').forEach(function(b){
       b.addEventListener('click', function(){
