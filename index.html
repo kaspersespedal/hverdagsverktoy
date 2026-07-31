@@ -3385,6 +3385,12 @@ html[data-theme="bw"], body[data-theme="bw"]{
     var k = document.documentElement.getAttribute('data-theme') || 'carbon';
     return THEMES[k] ? k : 'carbon';
   }
+  // Kun disse temaene VISER canvaset. carbon (default) er opacity:0, og de lyse
+  // temaene (frost/glass/hendrix/pink) dekkes av en opak body-bakgrunn — der er
+  // WebGL-tegning ren bortkastet GPU (perf-sluk på mobil). På de temaene lar vi
+  // CSS-.a5-auroraen (allerede mobil-tunet) stå for bakgrunnen i stedet.
+  var CANVAS_THEMES = { nordlys: 1, dark: 1, disco: 1, bw: 1 };
+  function canvasVisible() { return !!CANVAS_THEMES[themeKey()]; }
 
   var gl = null, progA = null, progC = null, uA = null, uC = null, tex = null, fbo = null;
   var raf = 0, last = 0, t = 20 + Math.random() * 80, shown = false;
@@ -3820,7 +3826,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
   }
 
   function resume() {
-    if (gl && !raf && !isStatic && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(tick); }
+    if (gl && !raf && !isStatic && !document.hidden && canvasVisible()) { last = performance.now(); raf = requestAnimationFrame(tick); }
   }
 
   function tick(now) {
@@ -3900,9 +3906,15 @@ html[data-theme="bw"], body[data-theme="bw"]{
   document.body.classList.add('nordlys-on'); // skjuler CSS-bandene, canvas overtar
   syncTheme();
 
-  // Tema-bytte → re-sync farger (lerpes mykt i tick)
-  new MutationObserver(function () { syncTheme(); if (isStatic) drawOnce(); })
-    .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  // Tema-bytte → re-sync farger (lerpes mykt i tick) + start/stopp loopen
+  // avhengig av om det nye temaet faktisk viser canvaset (unngår frossen canvas
+  // ved bytte carbon→mørkt, og stopper bortkastet tegning ved bytte til carbon).
+  new MutationObserver(function () {
+    syncTheme();
+    if (isStatic) { drawOnce(); return; }
+    if (canvasVisible()) resume();
+    else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // Redusert bevegelse på/av live
   if (mq.addEventListener) mq.addEventListener('change', function () {
