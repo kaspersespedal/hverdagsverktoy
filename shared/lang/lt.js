@@ -54,7 +54,7 @@ REGIONS['lt'] = {
     conBtn:'Siųsti žinutę →', conSuccessH:'Ačiū!', conSuccessP:'Jūsų el. pašto klientas bus atidarytas su iš anksto užpildyta žinute. Spustelėkite „Siųsti" el. pašto kliente, kad užbaigtumėte.',
     conAltH:'Tiesioginis kontaktas', conAltP:'Taip pat galite siųsti el. laišką tiesiogiai adresu',
     footerAuthor:'Hverdagsverktøy',
-    footerCopy:'© 2026 Hverdagsverktøy — Orientaciniai skaičiavimai pagal žinomus tarifus 2026 m. kovą. Tarifai atnaujinami rankiniu būdu ir gali skirtis nuo galiojančių taisyklių. Visada tikrinkite skatteetaten.no dėl oficialių tarifų. Tai nėra profesionali finansinė ar teisinė konsultacija.',
+    footerCopy:'© 2026 Hverdagsverktøy — Orientaciniai skaičiavimai pagal žinomus tarifus 2026 m. liepą. Tarifai atnaujinami rankiniu būdu ir gali skirtis nuo galiojančių taisyklių. Visada tikrinkite skatteetaten.no dėl oficialių tarifų. Tai nėra profesionali finansinė ar teisinė konsultacija.',
     ratesDisclaimer:'Tarifai: Mokestiniai metai',ratesUpdated:'Paskutinį kartą atnaujinta',ratesStale:'Tarifai buvo paskutinį kartą atnaujinti prieš daugiau nei 6 mėnesius ir gali būti pasenę.',
     secCalc:'Skaičiuotuvai',secGuideTax:'Mokesčių gidas',secGuideMor:'Būsto gidas',secGuideVat:'Mokesčių ir rinkliavų gidas',secGuidePerso:'Vadovai',
     heroKicker:'✦ Kasdieniai įrankiai',

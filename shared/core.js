@@ -2747,17 +2747,31 @@ function updateFooter() {
   setText('fl-priv', r.footerPriv||'Privacy');
   setText('fl-con', r.footerCon||'Contact');
   setText('fl-author', r.footerAuthor||'Hverdagsverktøy — gratis norske finanskalkulatorer');
-  setText('fl-copy', (r.footerCopy||'© 2026 Hverdagsverktøy').replace(/2026/g, yr));
+  // Bytt KUN copyright-året. footerCopy inneholder også et sats-år ("… per mars 2026"),
+  // og en global /2026/g rullet begge — fra 1.1. ville alle sidene påstått "per mars 2027"
+  // uten at én sats var oppdatert. Alle 10 språkfiler starter strengen med "© 2026 ".
+  setText('fl-copy', (r.footerCopy||'© 2026 Hverdagsverktøy').replace(/(©\s*)\d{4}/, '$1'+yr));
   // footerCopy already carries the full disclaimer — hide the standalone fl-disc so the
   // "Veiledende beregninger … ikke profesjonell rådgivning" line isn't shown twice.
   const discEl = document.getElementById('fl-disc');
   if(discEl) discEl.style.display = 'none';
-  // Wire privacy link
-  const privLink = document.getElementById('fl-priv');
-  if(privLink) privLink.onclick = function(e){ e.preventDefault(); openPrivacy(); };
-  // Wire contact link
-  const conLink = document.getElementById('fl-con');
-  if(conLink) conLink.onclick = function(e){ e.preventDefault(); openContact(); };
+  // Fot-lenkene skal peke på ekte sider. Markupen varierer mellom sidene:
+  // landings bruker id="fl-con", kalkulatorsidene id="fl-cont", og fire sider har
+  // bare data-i18n — derfor treffes alle variantene her, så ingen av de 65 HTML-filene
+  // må redigeres. De frosne språkkopiene har fortsatt modal-markupen i seg; der beholdes
+  // klikk-bindingen, ellers ville en engelsk side sendt brukeren til en norsk side.
+  const hasPrivModal = !!document.getElementById('priv-overlay');
+  const hasConModal  = !!document.getElementById('contact-overlay');
+  document.querySelectorAll('#fl-priv,[data-i18n="footerPriv"]').forEach(function(a){
+    if(hasPrivModal){ a.onclick = function(e){ e.preventDefault(); openPrivacy(); }; return; }
+    a.onclick = null;
+    a.setAttribute('href', '/personvern/');
+  });
+  document.querySelectorAll('#fl-con,#fl-cont,[data-i18n="footerCon"]').forEach(function(a){
+    if(hasConModal){ a.onclick = function(e){ e.preventDefault(); openContact(); }; return; }
+    a.onclick = null;
+    a.setAttribute('href', '/personvern/#kontakt');
+  });
   setText('seo-toggle', r.seoToggle||'Om denne siden');
 }
 

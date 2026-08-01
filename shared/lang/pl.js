@@ -231,7 +231,7 @@ REGIONS['pl'] = {
     conBtn:'Wyślij wiadomość →', conSuccessH:'Dziękujemy!', conSuccessP:'Twój klient poczty otworzy się z wstępnie wypełnioną wiadomością. Kliknij „Wyślij" w kliencie poczty, aby zakończyć.',
     conAltH:'Bezpośredni kontakt', conAltP:'Możesz również wysłać e-mail bezpośrednio na adres',
     footerAuthor:'Hverdagsverktøy',
-    footerCopy:'© 2026 Hverdagsverktøy — Orientacyjne obliczenia na podstawie znanych stawek na marzec 2026. Stawki są aktualizowane ręcznie i mogą różnić się od obowiązujących przepisów. Zawsze sprawdzaj skatteetaten.no w celu uzyskania oficjalnych stawek. Nie stanowi profesjonalnej porady finansowej ani prawnej.',
+    footerCopy:'© 2026 Hverdagsverktøy — Orientacyjne obliczenia na podstawie znanych stawek na lipiec 2026. Stawki są aktualizowane ręcznie i mogą różnić się od obowiązujących przepisów. Zawsze sprawdzaj skatteetaten.no w celu uzyskania oficjalnych stawek. Nie stanowi profesjonalnej porady finansowej ani prawnej.',
     ratesDisclaimer:'Stawki: Rok podatkowy',ratesUpdated:'Ostatnia aktualizacja',ratesStale:'Stawki zostały ostatnio zaktualizowane ponad 6 miesięcy temu i mogą być nieaktualne.',
     secCalc:'Kalkulatory',secGuideTax:'Przewodnik podatkowy',secGuideMor:'Przewodnik mieszkaniowy',secGuideVat:'Przewodnik po opłatach',secGuidePerso:'Poradniki',
     heroKicker:'✦ Narzędzia codzienne',

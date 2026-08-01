@@ -54,7 +54,7 @@ REGIONS['so'] = {
     conBtn:'Dir fariinta →', conSuccessH:'Waad ku mahadsan tahay!', conSuccessP:'Barnaamijka iimaylkaaga ayaa la furi doonaa fariinta oo diyaar ah. Guji "Dir" barnaamijka iimaylka si aad u dhamaystirto.',
     conAltH:'Xiriir toos ah', conAltP:'Waad sidoo kale toos ugu diri kartaa iimaylka',
     footerAuthor:'Hverdagsverktøy',
-    footerCopy:'© 2026 Hverdagsverktøy — Xisaabinno hagis ah oo ku salaysan heerarka la yaqaan ilaa Maarso 2026. Heerarka waxaa gacanta lagu cusboonaysiiyaa waxaana laga yaabaa inay ka duwan yihiin xeerarka hadda jira. Had iyo jeer ka hubi skatteetaten.no heerarka rasmiga ah. Ma aha talo maaliyadeed ama sharci oo xirfadeed ah.',
+    footerCopy:'© 2026 Hverdagsverktøy — Xisaabinno hagis ah oo ku salaysan heerarka la yaqaan ilaa Luulyo 2026. Heerarka waxaa gacanta lagu cusboonaysiiyaa waxaana laga yaabaa inay ka duwan yihiin xeerarka hadda jira. Had iyo jeer ka hubi skatteetaten.no heerarka rasmiga ah. Ma aha talo maaliyadeed ama sharci oo xirfadeed ah.',
     ratesDisclaimer:'Heerarka: Sannadka canshuurta',ratesUpdated:'Markii ugu dambeysay la cusboonaysiiyay',ratesStale:'Heerarka waxaa markii ugu dambeysay la cusboonaysiiyay in ka badan 6 bilood oo soo socda waxaana laga yaabaa inay duugoobeen.',
     secCalc:'Xisaabiyeyaasha',secGuideTax:'Hagaha cashuurta',secGuideMor:'Hagaha guriga',secGuideVat:'Hagaha kharashka',secGuidePerso:'Hagayaasha',
     heroKicker:'✦ Qalab Maalinle ah',
