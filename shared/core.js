@@ -2697,9 +2697,9 @@ function updateFagkalkulatorUI() {
     const linkText = r.agaZoneLinkText || 'Se alle soner →';
     agaZoneHintEl.innerHTML = (r.agaZoneHint || 'AGA = arbeidsgiveravgift. Satsen avhenger av hvor bedriften holder til.') + ' <a href="javascript:void(0)" onclick="goToAgaCard()" style="color:var(--accent);text-decoration:underline;opacity:.8;">' + linkText + '</a>';
   }
-  var _otpHint=(r.agaOtpHint||'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G ({1G}) til pensjon.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
+  var _otpHint=(r.agaOtpHint||'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn fra første krone opp til 12G.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
   setText('aga-hint-otp',_otpHint);
-  var _pensjonHint=(r.pensjonHint||'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over {1G}). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
+  var _pensjonHint=(r.pensjonHint||'OTP = obligatorisk tjenestepensjon (minst 2% av lønn fra første krone opp til 12G, der 1G = {1G}). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
   setText('pensjon-hint', _pensjonHint);
   // --- Additional valgevinst labels ---
   setText('valgevinst-l-currency', r.valgevinCurrencyLabel || 'Valuta');
@@ -4774,7 +4774,7 @@ function buildCalcKeys(mode){
 // LVU: Lønn vs Utbytte — sammenligner selskapskostnad for begge
 function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseNum('lvu-zone');
   // Lønn: selskapet betaler brutto + feriepenger + OTP + AGA (på hele grunnlaget)
-  const G=_HVT_G;const ferie=g*0.12;const otpBase=Math.max(0,Math.min(g,12*G)-G);const otp=otpBase*0.02;const agaBase=g+ferie+otp;const agaAmt=agaBase*aga;
+  const G=_HVT_G;const ferie=g*0.12;const otpBase=Math.min(g,12*G);const otp=otpBase*0.02;const agaBase=g+ferie+otp;const agaAmt=agaBase*aga;
   const salCost=g+ferie+otp+agaAmt;
   // Utbytte: selskapet trenger nok overskudd før skatt til å dele ut g
   const divPreTax=g/(1-0.22);
@@ -4789,9 +4789,9 @@ function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseN
 }
 
 // AGA: Ansattkostnad
-// OTP-grunnlag per innskuddspensjonsloven § 5-2: kun lønn mellom 1G og 12G er pensjonsgivende
-// (Verifisert via research_v1/kalkulator-avgift-satser — kodens tidligere "§ 4-7" finnes ikke;
-// korrekt er § 5-2 i kap. 5 Innskuddsplanen.)
+// OTP-grunnlag per OTP-loven § 4: lønn fra første krone opp til 12G er pensjonsgivende.
+// (1G-gulvet ble opphevet av lov 2021-12-22-164 «pensjon fra første krone», i kraft 1.1.2022
+// med overgangsfrist 30.6.2022. Verifisert mot Lovdata 2026-07-31.)
 function calcAga(){
   const sal=parseNum('aga-salary');if(sal<=0)return;
   // V12 Fase 3 Pattern B: getVal/setEl er null-safe
@@ -4799,7 +4799,7 @@ function calcAga(){
   const ferie=getVal('aga-ferie',0);
   const otp=getVal('aga-otp',0);
   const G=_HVT_G; // 1G — sentralisert i _HVT_G (V12 Fase 3 K12-M5)
-  const otpBase=Math.max(0, Math.min(sal, 12*G) - 1*G);
+  const otpBase=Math.min(sal, 12*G);
   const ferieAmt=sal*ferie;
   const otpAmt=otpBase*otp;
   const agaBase=sal+ferieAmt+otpAmt;
@@ -5043,10 +5043,10 @@ function calcPensjon(){
   // V12 Fase 3 Pattern B: getVal er null-safe
   const age=getVal('pensjon-age',0),retire=getVal('pensjon-retire',0),sal=parseNum('pensjon-salary'),otpRate=getVal('pensjon-otp',0),retRate=getVal('pensjon-return',0)/100;
   const years=retire-age;if(years<=0)return;
-  // Innskuddspensjonsloven § 5-2: OTP-grunnlag kun lønn mellom 1G og 12G
-  // (Verifisert via research_v1/kalkulator-avgift-satser)
+  // OTP-loven § 4: OTP-grunnlag er lønn fra første krone opp til 12G
+  // (1G-gulvet opphevet av lov 2021-12-22-164, i kraft 1.1.2022)
   const G=_HVT_G; // 1G — sentralisert i _HVT_G (V12 Fase 3 K12-M5)
-  const otpBase=Math.max(0, Math.min(sal, 12*G) - 1*G);
+  const otpBase=Math.min(sal, 12*G);
   let pot=0;
   for(let y=0;y<years;y++){pot=(pot+otpBase*otpRate)*(1+retRate);}
   // Utbetaling over 20 år med fortsatt avkastning (annuitet)
