@@ -2116,7 +2116,7 @@ REGIONS['no'] = {
     // === T3 R7 — personlig keys ===
     personligHeroEyebrowHome: 'Forsiden',
     personligHeroEyebrowCurrent: 'Privatøkonomi',
-    personligHeroTitle: 'Personlig <em>økonomi</em>',
+    personligHeroTitle: 'Privat<em>økonomi</em>',
     personligHeroSubtitle: 'Lønn etter skatt, bilkostnad, sparing og budsjett — alle kalkulatorer for hverdagsøkonomien din.',
     personligHeroStatCalcs: 'Kalkulatorer',
     personligHeroStatRates: 'Oppdaterte satser',
