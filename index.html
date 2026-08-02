@@ -874,6 +874,13 @@
     color:var(--ink4);
     font-variant-numeric:tabular-nums;
   }
+  /* Fotnote i et widget-kort (strøm: hva tallet ikke inneholder).
+     --ink3, ikke --ink4: dette er en presisering som skal kunne leses. */
+  .widget-note{
+    margin:7px 0 0;
+    font-size:10.5px;line-height:1.35;letter-spacing:0;
+    color:var(--ink3);
+  }
   /* Værmeldings-stripe (erstatter temp-sparkline på værkortet) */
   .wx-fc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-height:48px}
   .wx-fc[hidden]{display:none}
@@ -1212,6 +1219,11 @@
     animation:livePulseOnce var(--dur-slow) var(--ease-out-quart) 1 forwards;
     animation-delay:200ms;
   }
+  /* «Live» skal bare stå der når stripa faktisk har hentet tall — merkelappen
+     starter skjult i HTML og vises av dagsoversikt-skriptet når sporet fylles.
+     Høy nok spesifisitet til å slå .ticker-inline-reglene lenger nede. */
+  aside.ticker-top.ticker-inline .ticker-badge[hidden],
+  .ticker-badge[hidden]{display:none}
   @media (max-width:560px){
     aside.ticker-top{padding:7px 0}
     .ticker-track{gap:32px}
@@ -1881,17 +1893,17 @@ html[data-theme="bw"], body[data-theme="bw"]{
                   <path d="M5.5,2.3 v1.2 M2,7 H.8 M3.05,3.55 L2.2,2.7 M8,3.55 L8.85,2.7"/>
                   <path d="M7.4,11.4 a3 3 0 1 1 4.2 -4.2 a2.5 2.5 0 0 1 1.4 4.2 z" fill="currentColor" fill-opacity=".18"/>
                 </svg>
-                <span id="wxCond">Lett skyet</span>
+                <span id="wxCond">—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="wxTemp">12</span><span class="unit">°C</span></div>
-            <p class="widget-sub"><span class="ctx" id="wxSub">Maks 14° · Min 4° · 4 m/s SV</span></p>
+            <div class="widget-value"><span class="count-up" id="wxTemp">—</span><span class="unit">°C</span></div>
+            <p class="widget-sub"><span class="ctx" id="wxSub">Henter værdata …</span></p>
             <div class="widget-spark-wrap">
               <div class="wx-fc" id="wxForecast" aria-hidden="true">
-                <div class="wx-fc-cell"><span class="wx-fc-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1.6v1.6M8 12.8v1.6M1.6 8h1.6M12.8 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"/></svg></span><b class="wx-fc-temp">25°</b><span class="wx-fc-time">nå</span></div>
-                <div class="wx-fc-cell"><span class="wx-fc-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 11.5h7a2.5 2.5 0 0 0 .2-5a3.5 3.5 0 0 0-6.7-1A2.7 2.7 0 0 0 4.6 11.5Z"/></svg></span><b class="wx-fc-temp">24°</b><span class="wx-fc-time">15</span></div>
-                <div class="wx-fc-cell"><span class="wx-fc-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 11.5h7a2.5 2.5 0 0 0 .2-5a3.5 3.5 0 0 0-6.7-1A2.7 2.7 0 0 0 4.6 11.5Z"/></svg></span><b class="wx-fc-temp">21°</b><span class="wx-fc-time">17</span></div>
-                <div class="wx-fc-cell"><span class="wx-fc-ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 9.4h7a2.4 2.4 0 0 0 .2-4.8a3.4 3.4 0 0 0-6.5-.9A2.6 2.6 0 0 0 4.6 9.4Z"/><path d="M6 11.3l-.8 2M9 11.3l-.8 2"/></svg></span><b class="wx-fc-temp">18°</b><span class="wx-fc-time">19</span></div>
+                <div class="wx-fc-cell"><b class="wx-fc-temp">—</b></div>
+                <div class="wx-fc-cell"><b class="wx-fc-temp">—</b></div>
+                <div class="wx-fc-cell"><b class="wx-fc-temp">—</b></div>
+                <div class="wx-fc-cell"><b class="wx-fc-temp">—</b></div>
               </div>
             </div>
           </div>
@@ -1901,15 +1913,15 @@ html[data-theme="bw"], body[data-theme="bw"]{
               <span class="widget-label">Styringsrente</span>
               <span class="widget-trend trend-flat" id="srTrend" aria-hidden="true">
                 <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
-                <span>±0,00</span>
+                <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="srVal">4,25</span><span class="unit">%</span></div>
+            <div class="widget-value"><span class="count-up" id="srVal">—</span><span class="unit">%</span></div>
             <p class="widget-sub"><span class="ctx" id="srSub">Norges Bank · styringsrenta</span></p>
             <div class="widget-spark-wrap">
               <div class="sr-next">
                 <span class="sr-next-lbl" id="srNextLbl">Neste rentemøte</span>
-                <b class="sr-next-val" id="srNext">13. aug. 2026</b>
+                <b class="sr-next-val" id="srNext">—</b>
               </div>
             </div>
           </div>
@@ -1917,46 +1929,19 @@ html[data-theme="bw"], body[data-theme="bw"]{
           <div class="widget reveal" style="--i:3" id="stCard" aria-label="Strømpris">
             <div class="widget-top">
               <span class="widget-label" id="stSone">Strøm NO1</span>
-              <span class="widget-trend trend-down" id="stTrend" aria-hidden="true">
-                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,2 L8,8 M4,8 L8,8 L8,4"/></svg>
-                <span>−12<i>%</i></span>
+              <span class="widget-trend trend-flat" id="stTrend" aria-hidden="true">
+                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
+                <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="stVal">68</span><span class="unit">øre/kWh</span></div>
-            <p class="widget-sub"><span class="ctx" id="stSub">Topp 18:00 · 91 øre · NO2 71 øre</span></p>
+            <div class="widget-value"><span class="count-up" id="stVal">—</span><span class="unit">øre/kWh</span></div>
+            <p class="widget-sub"><span class="ctx" id="stSub">Henter strømpris …</span></p>
             <div class="widget-spark-wrap">
-              <svg class="widget-spark spark-bars" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
-                <g fill="currentColor" opacity=".55">
-                  <rect x="1.04" y="22" width="6.25" height="6"/>
-                  <rect x="9.38" y="23" width="6.25" height="5"/>
-                  <rect x="17.71" y="23" width="6.25" height="5"/>
-                  <rect x="26.04" y="22" width="6.25" height="6"/>
-                  <rect x="34.38" y="21" width="6.25" height="7"/>
-                  <rect x="42.71" y="19" width="6.25" height="9"/>
-                  <rect x="51.04" y="14" width="6.25" height="14"/>
-                  <rect x="59.38" y="8" width="6.25" height="20"/>
-                  <rect x="67.71" y="6" width="6.25" height="22"/>
-                  <rect x="76.04" y="10" width="6.25" height="18"/>
-                  <rect x="84.38" y="13" width="6.25" height="15"/>
-                  <rect x="92.71" y="14" width="6.25" height="14"/>
-                  <rect x="101.04" y="15" width="6.25" height="13"/>
-                  <rect x="109.38" y="14" width="6.25" height="14"/>
-                  <rect x="117.71" y="12" width="6.25" height="16"/>
-                  <rect x="126.04" y="10" width="6.25" height="18"/>
-                </g>
-                <rect class="bar-now" x="134.38" y="7" width="6.25" height="21"/>
-                <g fill="currentColor" opacity=".32">
-                  <rect x="142.71" y="4" width="6.25" height="24"/>
-                  <rect x="151.04" y="3" width="6.25" height="25"/>
-                  <rect x="159.38" y="5" width="6.25" height="23"/>
-                  <rect x="167.71" y="10" width="6.25" height="18"/>
-                  <rect x="176.04" y="14" width="6.25" height="14"/>
-                  <rect x="184.38" y="18" width="6.25" height="10"/>
-                  <rect x="192.71" y="20" width="6.25" height="8"/>
-                </g>
-              </svg>
+              <!-- Søylene bygges av shared/markedsdata.js (buildStromBars). Tom til data er hentet. -->
+              <svg class="widget-spark spark-bars" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true"></svg>
               <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>
             </div>
+            <p class="widget-note">Ren spotpris. Nettleie og avgifter kommer i tillegg.</p>
           </div>
 
           <div class="widget reveal" style="--i:4" id="fxCard" aria-label="Valutakurs">
@@ -1964,20 +1949,21 @@ html[data-theme="bw"], body[data-theme="bw"]{
               <span class="widget-label">USD / NOK</span>
               <span class="widget-trend trend-flat" id="fxTrend" aria-hidden="true">
                 <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
-                <span>+0,03</span>
+                <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="fxVal">10,72</span><span class="unit">kr</span></div>
-            <p class="widget-sub"><span class="ctx" id="fxSub">EUR 11,84 · GBP 13,56 · SEK 1,02</span></p>
+            <div class="widget-value"><span class="count-up" id="fxVal">—</span><span class="unit">kr</span></div>
+            <p class="widget-sub"><span class="ctx" id="fxSub">Henter valutakurser …</span></p>
             <div class="widget-spark-wrap">
               <svg class="widget-spark" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
                 <defs><linearGradient id="sp-usd" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0" stop-color="currentColor" stop-opacity=".18"/>
                   <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
                 </linearGradient></defs>
-                <path d="M0,17 L6.9,16 L13.8,17 L20.7,15 L27.6,16 L34.5,17 L41.4,15 L48.3,16 L55.2,15 L62.1,14 L69,15 L75.9,16 L82.8,15 L89.7,16 L96.6,14 L103.4,15 L110.3,16 L117.2,15 L124.1,14 L131,15 L137.9,16 L144.8,14 L151.7,13 L158.6,14 L165.5,15 L172.4,13 L179.3,14 L186.2,13 L193.1,12 L200,11 L200,30 L0,30 Z" fill="url(#sp-usd)" stroke="none"/>
-                <path d="M0,17 L6.9,16 L13.8,17 L20.7,15 L27.6,16 L34.5,17 L41.4,15 L48.3,16 L55.2,15 L62.1,14 L69,15 L75.9,16 L82.8,15 L89.7,16 L96.6,14 L103.4,15 L110.3,16 L117.2,15 L124.1,14 L131,15 L137.9,16 L144.8,14 L151.7,13 L158.6,14 L165.5,15 L172.4,13 L179.3,14 L186.2,13 L193.1,12 L200,11" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-                <circle class="spark-now" cx="200" cy="11" r="2.2"/>
+                <!-- Kurven tegnes av shared/markedsdata.js (applySpark). Tom til data er hentet. -->
+                <path d="" fill="url(#sp-usd)" stroke="none"/>
+                <path d="" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
+                <circle class="spark-now" cx="200" cy="15" r="2.2"/>
               </svg>
               <div class="widget-axis"><span id="fxAx0">30d</span><span id="fxAx1">14d</span><span id="fxAx2">i dag</span></div>
             </div>
@@ -1992,7 +1978,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
           <!-- Fylles live av shared/markedsdata.js (Norges Bank: FX + styringsrente). Tom til data er hentet. -->
           <div class="ticker-track" id="tickerTrack"></div>
         </div>
-        <span class="ticker-badge" aria-hidden="true">Live</span>
+        <span class="ticker-badge" id="tickerBadge" aria-hidden="true" hidden>Live</span>
       </aside>
 
       <div class="daily-credits">
@@ -2562,6 +2548,51 @@ html[data-theme="bw"], body[data-theme="bw"]{
     }
   })();
   // dailyStamp eies nå av shared/markedsdata.js (ekte hentetidspunkt + oppdater-knapp)
+
+  // ── Dagsoversikt: ærlig tom- og feiltilstand ──────────────
+  // Tallene i HTML er nøytrale plassholdere («—»); shared/markedsdata.js fyller
+  // dem med ekte data. Kommer det ingen data (offline eller kilde nede) svelger
+  // fetch-kallene feilen stille — da sier kortet fra her i stedet for å stå og
+  // se ut som det laster i det uendelige. Kommer data seinere, overskriver
+  // markedsdata.js beskjeden med de ekte tallene.
+  (function(){
+    var PH = '—';
+    var FELT = [
+      {val:'wxTemp', sub:'wxSub', txt:'Fikk ikke hentet værdata nå.'},
+      {val:'srVal',  sub:'srSub', txt:'Fikk ikke hentet styringsrenta nå.'},
+      {val:'stVal',  sub:'stSub', txt:'Fikk ikke hentet strømprisen nå.'},
+      {val:'fxVal',  sub:'fxSub', txt:'Fikk ikke hentet valutakursene nå.'}
+    ];
+    var badge = document.getElementById('tickerBadge');
+    var track = document.getElementById('tickerTrack');
+    if(badge && track){
+      var syncBadge = function(){ badge.hidden = !track.firstChild; };
+      syncBadge();
+      if('MutationObserver' in window){
+        new MutationObserver(syncBadge).observe(track, {childList:true});
+      }
+    }
+    function meld(){
+      // Fanen må ha vært synlig først: i bakgrunnsfaner står requestAnimationFrame
+      // stille, og da rekker ikke count-up-en i markedsdata.js å skrive tallet —
+      // det ville sett ut som en hentefeil selv om data kom fint fram.
+      if(document.hidden){
+        document.addEventListener('visibilitychange', function once(){
+          if(document.hidden) return;
+          document.removeEventListener('visibilitychange', once);
+          setTimeout(meld, 3000);
+        });
+        return;
+      }
+      FELT.forEach(function(f){
+        var v = document.getElementById(f.val);
+        if(!v || v.textContent.trim() !== PH) return; // ekte tall er på plass
+        var s = document.getElementById(f.sub);
+        if(s) s.textContent = f.txt;
+      });
+    }
+    setTimeout(meld, 12000);
+  })();
 
   // ── Search index (page-local fallback; shared/search.js may override) ──
   var SEARCH_DATA = [
@@ -3385,6 +3416,12 @@ html[data-theme="bw"], body[data-theme="bw"]{
     var k = document.documentElement.getAttribute('data-theme') || 'carbon';
     return THEMES[k] ? k : 'carbon';
   }
+  // Kun disse temaene VISER canvaset. carbon (default) er opacity:0, og de lyse
+  // temaene (frost/glass/hendrix/pink) dekkes av en opak body-bakgrunn — der er
+  // WebGL-tegning ren bortkastet GPU (perf-sluk på mobil). På de temaene lar vi
+  // CSS-.a5-auroraen (allerede mobil-tunet) stå for bakgrunnen i stedet.
+  var CANVAS_THEMES = { nordlys: 1, dark: 1, disco: 1, bw: 1 };
+  function canvasVisible() { return !!CANVAS_THEMES[themeKey()]; }
 
   var gl = null, progA = null, progC = null, uA = null, uC = null, tex = null, fbo = null;
   var raf = 0, last = 0, t = 20 + Math.random() * 80, shown = false;
@@ -3820,7 +3857,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
   }
 
   function resume() {
-    if (gl && !raf && !isStatic && !document.hidden) { last = performance.now(); raf = requestAnimationFrame(tick); }
+    if (gl && !raf && !isStatic && !document.hidden && canvasVisible()) { last = performance.now(); raf = requestAnimationFrame(tick); }
   }
 
   function tick(now) {
@@ -3900,9 +3937,15 @@ html[data-theme="bw"], body[data-theme="bw"]{
   document.body.classList.add('nordlys-on'); // skjuler CSS-bandene, canvas overtar
   syncTheme();
 
-  // Tema-bytte → re-sync farger (lerpes mykt i tick)
-  new MutationObserver(function () { syncTheme(); if (isStatic) drawOnce(); })
-    .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  // Tema-bytte → re-sync farger (lerpes mykt i tick) + start/stopp loopen
+  // avhengig av om det nye temaet faktisk viser canvaset (unngår frossen canvas
+  // ved bytte carbon→mørkt, og stopper bortkastet tegning ved bytte til carbon).
+  new MutationObserver(function () {
+    syncTheme();
+    if (isStatic) { drawOnce(); return; }
+    if (canvasVisible()) resume();
+    else if (raf) { cancelAnimationFrame(raf); raf = 0; }
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // Redusert bevegelse på/av live
   if (mq.addEventListener) mq.addEventListener('change', function () {

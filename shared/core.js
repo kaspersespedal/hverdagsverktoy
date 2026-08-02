@@ -2697,9 +2697,9 @@ function updateFagkalkulatorUI() {
     const linkText = r.agaZoneLinkText || 'Se alle soner →';
     agaZoneHintEl.innerHTML = (r.agaZoneHint || 'AGA = arbeidsgiveravgift. Satsen avhenger av hvor bedriften holder til.') + ' <a href="javascript:void(0)" onclick="goToAgaCard()" style="color:var(--accent);text-decoration:underline;opacity:.8;">' + linkText + '</a>';
   }
-  var _otpHint=(r.agaOtpHint||'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn over 1G ({1G}) til pensjon.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
+  var _otpHint=(r.agaOtpHint||'OTP = obligatorisk tjenestepensjon. Arbeidsgiver må spare minst 2% av lønn fra første krone opp til 12G.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
   setText('aga-hint-otp',_otpHint);
-  var _pensjonHint=(r.pensjonHint||'OTP = obligatorisk tjenestepensjon (minst 2% av lønn over {1G}). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
+  var _pensjonHint=(r.pensjonHint||'OTP = obligatorisk tjenestepensjon (minst 2% av lønn fra første krone opp til 12G, der 1G = {1G}). Avkastning er forventet årlig avkastning på pensjonsfond — historisk snitt ca. 5-7%.').replace('{1G}',_HVT_G.toLocaleString('nb-NO')+' kr');
   setText('pensjon-hint', _pensjonHint);
   // --- Additional valgevinst labels ---
   setText('valgevinst-l-currency', r.valgevinCurrencyLabel || 'Valuta');
@@ -2747,17 +2747,31 @@ function updateFooter() {
   setText('fl-priv', r.footerPriv||'Privacy');
   setText('fl-con', r.footerCon||'Contact');
   setText('fl-author', r.footerAuthor||'Hverdagsverktøy — gratis norske finanskalkulatorer');
-  setText('fl-copy', (r.footerCopy||'© 2026 Hverdagsverktøy').replace(/2026/g, yr));
+  // Bytt KUN copyright-året. footerCopy inneholder også et sats-år ("… per mars 2026"),
+  // og en global /2026/g rullet begge — fra 1.1. ville alle sidene påstått "per mars 2027"
+  // uten at én sats var oppdatert. Alle 10 språkfiler starter strengen med "© 2026 ".
+  setText('fl-copy', (r.footerCopy||'© 2026 Hverdagsverktøy').replace(/(©\s*)\d{4}/, '$1'+yr));
   // footerCopy already carries the full disclaimer — hide the standalone fl-disc so the
   // "Veiledende beregninger … ikke profesjonell rådgivning" line isn't shown twice.
   const discEl = document.getElementById('fl-disc');
   if(discEl) discEl.style.display = 'none';
-  // Wire privacy link
-  const privLink = document.getElementById('fl-priv');
-  if(privLink) privLink.onclick = function(e){ e.preventDefault(); openPrivacy(); };
-  // Wire contact link
-  const conLink = document.getElementById('fl-con');
-  if(conLink) conLink.onclick = function(e){ e.preventDefault(); openContact(); };
+  // Fot-lenkene skal peke på ekte sider. Markupen varierer mellom sidene:
+  // landings bruker id="fl-con", kalkulatorsidene id="fl-cont", og fire sider har
+  // bare data-i18n — derfor treffes alle variantene her, så ingen av de 65 HTML-filene
+  // må redigeres. De frosne språkkopiene har fortsatt modal-markupen i seg; der beholdes
+  // klikk-bindingen, ellers ville en engelsk side sendt brukeren til en norsk side.
+  const hasPrivModal = !!document.getElementById('priv-overlay');
+  const hasConModal  = !!document.getElementById('contact-overlay');
+  document.querySelectorAll('#fl-priv,[data-i18n="footerPriv"]').forEach(function(a){
+    if(hasPrivModal){ a.onclick = function(e){ e.preventDefault(); openPrivacy(); }; return; }
+    a.onclick = null;
+    a.setAttribute('href', '/personvern/');
+  });
+  document.querySelectorAll('#fl-con,#fl-cont,[data-i18n="footerCon"]').forEach(function(a){
+    if(hasConModal){ a.onclick = function(e){ e.preventDefault(); openContact(); }; return; }
+    a.onclick = null;
+    a.setAttribute('href', '/personvern/#kontakt');
+  });
   setText('seo-toggle', r.seoToggle||'Om denne siden');
 }
 
@@ -4774,7 +4788,7 @@ function buildCalcKeys(mode){
 // LVU: Lønn vs Utbytte — sammenligner selskapskostnad for begge
 function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseNum('lvu-zone');
   // Lønn: selskapet betaler brutto + feriepenger + OTP + AGA (på hele grunnlaget)
-  const G=_HVT_G;const ferie=g*0.12;const otpBase=Math.max(0,Math.min(g,12*G)-G);const otp=otpBase*0.02;const agaBase=g+ferie+otp;const agaAmt=agaBase*aga;
+  const G=_HVT_G;const ferie=g*0.12;const otpBase=Math.min(g,12*G);const otp=otpBase*0.02;const agaBase=g+ferie+otp;const agaAmt=agaBase*aga;
   const salCost=g+ferie+otp+agaAmt;
   // Utbytte: selskapet trenger nok overskudd før skatt til å dele ut g
   const divPreTax=g/(1-0.22);
@@ -4789,9 +4803,9 @@ function calcLvu(){const g=parseNum('lvu-gross');if(g<=0)return;const aga=parseN
 }
 
 // AGA: Ansattkostnad
-// OTP-grunnlag per innskuddspensjonsloven § 5-2: kun lønn mellom 1G og 12G er pensjonsgivende
-// (Verifisert via research_v1/kalkulator-avgift-satser — kodens tidligere "§ 4-7" finnes ikke;
-// korrekt er § 5-2 i kap. 5 Innskuddsplanen.)
+// OTP-grunnlag per OTP-loven § 4: lønn fra første krone opp til 12G er pensjonsgivende.
+// (1G-gulvet ble opphevet av lov 2021-12-22-164 «pensjon fra første krone», i kraft 1.1.2022
+// med overgangsfrist 30.6.2022. Verifisert mot Lovdata 2026-07-31.)
 function calcAga(){
   const sal=parseNum('aga-salary');if(sal<=0)return;
   // V12 Fase 3 Pattern B: getVal/setEl er null-safe
@@ -4799,7 +4813,7 @@ function calcAga(){
   const ferie=getVal('aga-ferie',0);
   const otp=getVal('aga-otp',0);
   const G=_HVT_G; // 1G — sentralisert i _HVT_G (V12 Fase 3 K12-M5)
-  const otpBase=Math.max(0, Math.min(sal, 12*G) - 1*G);
+  const otpBase=Math.min(sal, 12*G);
   const ferieAmt=sal*ferie;
   const otpAmt=otpBase*otp;
   const agaBase=sal+ferieAmt+otpAmt;
@@ -5043,10 +5057,10 @@ function calcPensjon(){
   // V12 Fase 3 Pattern B: getVal er null-safe
   const age=getVal('pensjon-age',0),retire=getVal('pensjon-retire',0),sal=parseNum('pensjon-salary'),otpRate=getVal('pensjon-otp',0),retRate=getVal('pensjon-return',0)/100;
   const years=retire-age;if(years<=0)return;
-  // Innskuddspensjonsloven § 5-2: OTP-grunnlag kun lønn mellom 1G og 12G
-  // (Verifisert via research_v1/kalkulator-avgift-satser)
+  // OTP-loven § 4: OTP-grunnlag er lønn fra første krone opp til 12G
+  // (1G-gulvet opphevet av lov 2021-12-22-164, i kraft 1.1.2022)
   const G=_HVT_G; // 1G — sentralisert i _HVT_G (V12 Fase 3 K12-M5)
-  const otpBase=Math.max(0, Math.min(sal, 12*G) - 1*G);
+  const otpBase=Math.min(sal, 12*G);
   let pot=0;
   for(let y=0;y<years;y++){pot=(pot+otpBase*otpRate)*(1+retRate);}
   // Utbetaling over 20 år med fortsatt avkastning (annuitet)
