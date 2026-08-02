@@ -2743,6 +2743,28 @@ function updateFagkalkulatorUI() {
 function updateFooter() {
   const r = R();
   const yr = new Date().getFullYear();
+  // De frosne språkkopiene har fortsatt de gamle modalene i markupen; de skal
+  // beholde sin egen oppførsel (se lenkefiksen lenger ned).
+  const hasPrivModal = !!document.getElementById('priv-overlay');
+  const hasConModal  = !!document.getElementById('contact-overlay');
+  // «Om» sto ikke i footer-markupen på noen kanonisk side, så /om/ hadde null
+  // inngående lenker og var usynlig for både brukere og søkemotorer. Lenka
+  // settes inn her — ikke i 65 HTML-filer — og får id-en setText allerede
+  // fyller tekst i. Hopper over de frosne kopiene: der finnes ingen /xx/om/.
+  if(!hasPrivModal){
+    document.querySelectorAll('.foot-links').forEach(function(box){
+      if(box.querySelector('#fl-about')) return;
+      const first = box.querySelector('a'); if(!first) return;
+      const a = document.createElement('a');
+      a.id = 'fl-about';
+      a.href = '/om/';
+      // Matcher separator-stilen siden bruker: <span class="foot-sep"> eller ren tekst.
+      const sepSrc = box.querySelector('.foot-sep');
+      const sep = sepSrc ? sepSrc.cloneNode(true) : document.createTextNode(' · ');
+      box.insertBefore(sep, first);
+      box.insertBefore(a, sep);
+    });
+  }
   setText('fl-about', r.footerAbout||'About');
   setText('fl-priv', r.footerPriv||'Privacy');
   setText('fl-con', r.footerCon||'Contact');
@@ -2760,8 +2782,6 @@ function updateFooter() {
   // bare data-i18n — derfor treffes alle variantene her, så ingen av de 65 HTML-filene
   // må redigeres. De frosne språkkopiene har fortsatt modal-markupen i seg; der beholdes
   // klikk-bindingen, ellers ville en engelsk side sendt brukeren til en norsk side.
-  const hasPrivModal = !!document.getElementById('priv-overlay');
-  const hasConModal  = !!document.getElementById('contact-overlay');
   document.querySelectorAll('#fl-priv,[data-i18n="footerPriv"]').forEach(function(a){
     if(hasPrivModal){ a.onclick = function(e){ e.preventDefault(); openPrivacy(); }; return; }
     a.onclick = null;
