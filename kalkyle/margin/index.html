@@ -373,10 +373,10 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
           </summary>
           <div class="howto-body" style="padding:0 22px 22px">
             <div style="display:flex;flex-direction:column;gap:8px;font:500 13px/1.7 var(--font-mono);color:var(--ink2)">
-              <span data-i18n="kalkMarginF1">Bruttofortjeneste = Pris − Varekost</span>
+              <span data-i18n="kalkMarginF1b">Bruttofortjeneste = Pris − Varekost − Andre variable kostn.</span>
               <span data-i18n="kalkMarginF2">Margin = Bruttofortjeneste / Pris × 100</span>
               <span data-i18n="kalkMarginF3">Avanse = Bruttofortjeneste / Varekost × 100</span>
-              <span data-i18n="kalkMarginF4">Pris = Varekost / (1 − margin)</span>
+              <span data-i18n="kalkMarginF4b">Pris = (Varekost + Andre variable kostn.) / (1 − margin)</span>
               <span data-i18n="kalkMarginF5">margin = påslag / (1 + påslag)</span>
               <span data-i18n="kalkMarginF6">påslag = margin / (1 − margin)</span>
               <span data-i18n="kalkMarginF7">MVA inkl. = eks. × 1,25</span>
@@ -407,10 +407,10 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       <table class="lc-trinn">
         <thead><tr><th data-i18n="kalkyleColBegrep">Begrep</th><th data-i18n="kalkyleColFormel">Formel</th><th class="r" data-i18n="kalkyleColEksempel">Eksempel</th></tr></thead>
         <tbody>
-          <tr><td><span class="step" data-i18n="kalkMarginResBrutto">Bruttofortjeneste</span></td><td data-i18n="kalkMarginTF1">Pris − Varekost</td><td class="r">160 − 100 = 60<span class="u">kr</span></td></tr>
+          <tr><td><span class="step" data-i18n="kalkMarginResBrutto">Bruttofortjeneste</span></td><td data-i18n="kalkMarginTF1b">Pris − Varekost − Andre variable</td><td class="r">160 − 100 − 0 = 60<span class="u">kr</span></td></tr>
           <tr><td><span class="step" data-i18n="kalkMarginTBegrepDg">Dekningsgrad</span></td><td data-i18n="kalkMarginTF2">Bruttofortj. / Pris × 100</td><td class="r">60 / 160 = 37,5<span class="u">%</span></td></tr>
           <tr><td><span class="step" data-i18n="kalkMarginTBegrepAv">Avanse</span></td><td data-i18n="kalkMarginTF3">Bruttofortj. / Varekost × 100</td><td class="r">60 / 100 = 60,0<span class="u">%</span></td></tr>
-          <tr><td><span class="step" data-i18n="kalkMarginTBegrepPm">Pris fra margin</span></td><td data-i18n="kalkMarginTF4">Varekost / (1 − margin)</td><td class="r">100 / 0,625 = 160<span class="u">kr</span></td></tr>
+          <tr><td><span class="step" data-i18n="kalkMarginTBegrepPm">Pris fra margin</span></td><td data-i18n="kalkMarginTF4b">(Varekost + Andre variable) / (1 − margin)</td><td class="r">(100 + 0) / 0,625 = 160<span class="u">kr</span></td></tr>
           <tr><td><span class="step" data-i18n="kalkMarginTBegrepPi">Pris inkl. mva</span></td><td data-i18n="kalkMarginTF5">Pris eks. × 1,25</td><td class="r">160 × 1,25 = 200<span class="u">kr</span></td></tr>
         </tbody>
       </table>
@@ -520,11 +520,19 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     }
   }
 
+  // Verdien brukeren selv har tastet huskes per modus. Et beregnet tall fylles bare
+  // inn første gang en modus tas i bruk — ellers ville avrunding gjort at tallene
+  // drev litt for hvert bytte frem og tilbake.
+  var modeVals = {};
+
   function setMode(newMode){
+    if(newMode === mode) return;
     var res = compute();
-    if(newMode === 'pris' && isFinite(res.pris)) valEl.value = String(Math.round(res.pris * 100) / 100).replace('.', ',');
-    if(newMode === 'margin' && isFinite(res.margin)) valEl.value = res.margin.toFixed(1).replace('.', ',');
-    if(newMode === 'paaslag' && isFinite(res.avanse)) valEl.value = res.avanse.toFixed(1).replace('.', ',');
+    modeVals[mode] = valEl.value;
+    if(modeVals[newMode] != null) valEl.value = modeVals[newMode];
+    else if(newMode === 'pris' && isFinite(res.pris)) valEl.value = String(Math.round(res.pris * 100) / 100).replace('.', ',');
+    else if(newMode === 'margin' && isFinite(res.margin)) valEl.value = res.margin.toFixed(1).replace('.', ',');
+    else if(newMode === 'paaslag' && isFinite(res.avanse)) valEl.value = res.avanse.toFixed(1).replace('.', ',');
     mode = newMode;
     segPris.setAttribute('aria-pressed', mode === 'pris' ? 'true' : 'false');
     segMargin.setAttribute('aria-pressed', mode === 'margin' ? 'true' : 'false');
@@ -545,10 +553,10 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       pris = val;
     } else if(mode === 'margin'){
       var m = val / 100;
-      pris = (isFinite(m) && m < 1) ? varekost / (1 - m) : NaN;
+      pris = (isFinite(m) && m < 1) ? (varekost + andre) / (1 - m) : NaN;
     } else {
       var p = val / 100;
-      pris = isFinite(p) ? varekost * (1 + p) : NaN;
+      pris = isFinite(p) ? varekost * (1 + p) + andre : NaN;
     }
 
     var brutto = pris - varekost - andre;

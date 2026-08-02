@@ -775,9 +775,15 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
         stressN = (years - ioYearsForStress) * 12;
       }
     }
-    var stressMnd = stressRate === 0
-      ? P / stressN
-      : P * stressRate * Math.pow(1 + stressRate, stressN) / (Math.pow(1 + stressRate, stressN) - 1);
+    var stressMnd;
+    if(loanType === 'serial'){
+      // Serielån: sammenlign førstebetaling mot førstebetaling (avdrag + rente av full hovedstol)
+      stressMnd = P / stressN + P * stressRate;
+    } else {
+      stressMnd = stressRate === 0
+        ? P / stressN
+        : P * stressRate * Math.pow(1 + stressRate, stressN) / (Math.pow(1 + stressRate, stressN) - 1);
+    }
     var stressDiff = stressMnd - mnd;
     setEl('m-stress-mth', fmt(stressMnd));
     setEl('m-stress-diff', '+ ' + fmt(stressDiff));
