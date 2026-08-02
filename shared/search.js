@@ -30,7 +30,7 @@ var SEARCH_DATA = [
 
   // Kalkulator (hash handled by switchCalcMode in core.js)
   {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/',tags:'kalkulator regnemaskin pluss minus gange dele prosent calculator',type:'tool',page:'Kalkulator',sk:'kalkBasic'},
-  {name:'Vitenskapelig kalkulator',desc:'Sin, cos, log, potenser og mer',url:'/kalkulator/#scientific',tags:'vitenskapelig kalkulator sin cos tan log ln potens kvadratrot pi scientific',type:'tool',page:'Kalkulator',sk:'kalkSci'},
+  {name:'Vitenskapelig kalkulator',desc:'Sin, cos, log, potenser og mer',url:'/kalkulator/scientific/',tags:'vitenskapelig kalkulator sin cos tan log ln potens kvadratrot pi scientific',type:'tool',page:'Kalkulator',sk:'kalkSci'},
   {name:'Valutakonverter',desc:'Konverter mellom valutaer med oppdaterte kurser',url:'/kalkulator/unit/',tags:'valuta valutakonverter valutakalkulator valutaomregner kurs dollar euro pund usd eur gbp sek dkk currency exchange rate kursomregner convert currency',type:'tool',page:'Kalkulator',sk:'kalkValuta'},
   {name:'Finansiell kalkulator',desc:'Nåverdi, fremtidsverdi, margin, break-even, renters rente og rabatter',url:'/kalkulator/finance/',tags:'finansiell kalkulator nåverdi fremtidsverdi annuitet rente perioder margin markup break-even break even renters rente compound discount rabatt PV FV PMT TVM financial',type:'tool',page:'Kalkulator',sk:'kalkFin'},
   {name:'Likviditetsbudsjett',desc:'Oversikt over penger inn og ut måned for måned',url:'/kalkulator/likviditet/',tags:'likviditet likviditetsbudsjett kontantstrøm cashflow inn ut måned balanse liquidity',type:'tool',page:'Kalkulator',sk:'likvid'},
@@ -39,11 +39,11 @@ var SEARCH_DATA = [
   {name:'Lønn vs Utbytte',desc:'Sammenlign skatt på lønn mot utbytte fra eget AS',url:'/kalkulator/lonnut/',tags:'lønn utbytte aksjeselskap as eier utdeling uttak skatt sammenlign optimal salary dividend',type:'tool',page:'Kalkulator',sk:'lvu'},
 
   // Skatt
-  {name:'Skattkalkulator',desc:'Beregn skatt på årsinntekt med trinnskatt',url:'/skatt/#sal-salary-card',tags:'skatt skattkalkulator trinnskatt trygdeavgift brutto netto inntektsskatt tax calculator',type:'tool',page:'Skatt',sk:'skatt'},
-  {name:'Uttakskalkulator',desc:'Skatt ved uttak av eiendeler fra virksomhet',url:'/skatt/#sal-uttak-card',tags:'uttak skatt virksomhet eiendeler sktl 5-2 withdrawal',type:'tool',page:'Skatt',sk:'uttak'},
-  {name:'Effektiv skatt ved utdeling',desc:'Aksjonærmodellen og foretaksmodellen',url:'/skatt/#sal-utdeling-card',tags:'utdeling utbytte aksjonærmodellen foretaksmodellen selskapsskatt effektiv skatt distribution',type:'tool',page:'Skatt',sk:'utdeling'},
+  {name:'Skattkalkulator',desc:'Beregn skatt på årsinntekt med trinnskatt',url:'/skatt/inntekt/',tags:'skatt skattkalkulator trinnskatt trygdeavgift brutto netto inntektsskatt tax calculator',type:'tool',page:'Skatt',sk:'skatt'},
+  {name:'Uttakskalkulator',desc:'Skatt ved uttak av eiendeler fra virksomhet',url:'/skatt/uttak/',tags:'uttak skatt virksomhet eiendeler sktl 5-2 withdrawal',type:'tool',page:'Skatt',sk:'uttak'},
+  {name:'Effektiv skatt ved utdeling',desc:'Aksjonærmodellen og foretaksmodellen',url:'/skatt/utbytte/',tags:'utdeling utbytte aksjonærmodellen foretaksmodellen selskapsskatt effektiv skatt distribution',type:'tool',page:'Skatt',sk:'utdeling'},
   // Avgift
-  {name:'Justeringskalkulator',desc:'Justering av inngående MVA ved bruksendring',url:'/avgift/#vat-adj-card',tags:'justering mva inngående bruksendring kapitalvare justeringsperiode mval kap 9',type:'tool',page:'Avgift',sk:'mvajust'},
+  {name:'Justeringskalkulator',desc:'Justering av inngående MVA ved bruksendring',url:'/avgift/vat/',tags:'justering mva inngående bruksendring kapitalvare justeringsperiode mval kap 9',type:'tool',page:'Avgift',sk:'mvajust'},
 
   // Selskap
   {name:'Velg selskapsform',desc:'Hvilken selskapsform passer for deg? ENK, AS, ANS, DA eller KS',url:'/selskap/#selskap-velg-card',tags:'selskapsform velge starte bedrift virksomhet enk as ans da ks company form choose',type:'tool',page:'Selskap',sk:'selskapVelg'},
@@ -51,58 +51,58 @@ var SEARCH_DATA = [
   {name:'Aksjeselskap (AS)',desc:'Begrenset ansvar, aksjekapital og profesjonell drift',url:'/selskap/#selskap-as-card',tags:'aksjeselskap as stiftelse styret generalforsamling aksjekapital vedtekter 30000 company limited',type:'tool',page:'Selskap',sk:'as'},
   {name:'Ansvarlig selskap (ANS / DA)',desc:'Partnerskap med personlig ansvar — solidarisk eller delt',url:'/selskap/#selskap-ans-card',tags:'ansvarlig selskap ans da partnerskap solidarisk delt ansvar selskapsavtale partnership',type:'tool',page:'Selskap',sk:'ans'},
   {name:'Kommandittselskap (KS)',desc:'To typer deltakere med ulik risiko — komplementar og kommandittist',url:'/selskap/#selskap-ks-card',tags:'kommandittselskap ks komplementar kommandittist limited partnership begrenset ansvar',type:'tool',page:'Selskap',sk:'ks'},
-  {name:'Andre selskapsformer',desc:'ASA, NUF, SA og stiftelse',url:'/selskap/#selskap-andre-card',tags:'asa nuf sa stiftelse samvirkeforetak allmennaksjeselskap norskregistrert utenlandsk foretak foundation cooperative',type:'tool',page:'Selskap',sk:'andre'},
+  {name:'Andre selskapsformer',desc:'ASA, NUF, SA og stiftelse',url:'/selskap/',tags:'asa nuf sa stiftelse samvirkeforetak allmennaksjeselskap norskregistrert utenlandsk foretak foundation cooperative',type:'tool',page:'Selskap',sk:'andre'},
   {name:'Sammenligning selskapsformer',desc:'ENK, AS, ANS, DA og KS side om side — ansvar, skatt og krav',url:'/selskap/#selskap-compare-card',tags:'sammenligning selskapsformer enk as ans da ks tabell compare company forms',type:'tool',page:'Selskap',sk:'selskapCompare'},
-  {name:'Registrere selskap',desc:'Steg-for-steg: slik registrerer du foretak via Altinn',url:'/selskap/#selskap-reg-card',tags:'registrere selskap foretak altinn brønnøysund organisasjonsnummer register company',type:'tool',page:'Selskap',sk:'selskapReg'},
+  {name:'Registrere selskap',desc:'Steg-for-steg: slik registrerer du foretak via Altinn',url:'/selskap/',tags:'registrere selskap foretak altinn brønnøysund organisasjonsnummer register company',type:'tool',page:'Selskap',sk:'selskapReg'},
   {name:'Aksjeutvanning',desc:'Beregn eierandel ved nyemisjon og opsjonsprogram',url:'/selskap/aksjeutvanning/',tags:'aksjeutvanning dilution nyemisjon opsjon emisjon kapital fortynning eier andel pre-money post-money cap-table',type:'tool',page:'Selskap',sk:'aksjeutvanning'},
 
   // ══════ BEGREPER (Nivå 2 — fagtermer) ══════
-  {name:'Fradrag',desc:'Beløp som reduserer skattegrunnlaget eller skatten din',url:'/skatt/#sal-ded-card',tags:'fradrag reduksjon skattegrunnlag skatt minstefradrag reisefradrag særfradrag gjeldsrenter deduction',type:'concept',page:'Skatt',sk:'fradrag'},
-  {name:'Trinnskatt',desc:'Progressiv skatt som øker med inntekten — 5 trinn',url:'/skatt/#sal-info-card',tags:'trinnskatt trinn progressiv skatt inntekt sats bracket tax',type:'concept',page:'Skatt',sk:'trinnskatt'},
-  {name:'Skattefradrag',desc:'Fradrag som reduserer skatten din direkte',url:'/skatt/#sal-credit-card',tags:'skattefradrag fradrag redusere skatt tax deduction',type:'concept',page:'Skatt',sk:'skatteFradrag'},
-  {name:'Minstefradrag',desc:'Standardfradrag alle lønnsmottakere får automatisk',url:'/skatt/#sal-ded-card',tags:'minstefradrag standard fradrag lønn automatisk minimum deduction',type:'concept',page:'Skatt',sk:'minstefradrag'},
-  {name:'Trygdeavgift',desc:'Avgift til folketrygden — 7.6% av lønn (2026)',url:'/skatt/#sal-info-card',tags:'trygdeavgift folketrygden nav 7.6 prosent social security',type:'concept',page:'Skatt',sk:'trygdeavgift'},
+  {name:'Fradrag',desc:'Beløp som reduserer skattegrunnlaget eller skatten din',url:'/lov/skattelov/#kap-skatteloven-6',tags:'fradrag reduksjon skattegrunnlag skatt minstefradrag reisefradrag særfradrag gjeldsrenter deduction',type:'concept',page:'Skatt',sk:'fradrag'},
+  {name:'Trinnskatt',desc:'Progressiv skatt som øker med inntekten — 5 trinn',url:'/skatt/inntekt/',tags:'trinnskatt trinn progressiv skatt inntekt sats bracket tax',type:'concept',page:'Skatt',sk:'trinnskatt'},
+  {name:'Skattefradrag',desc:'Fradrag som reduserer skatten din direkte',url:'/skatt/inntekt/',tags:'skattefradrag fradrag redusere skatt tax deduction',type:'concept',page:'Skatt',sk:'skatteFradrag'},
+  {name:'Minstefradrag',desc:'Standardfradrag alle lønnsmottakere får automatisk',url:'/lov/skattelov/#kap-skatteloven-6',tags:'minstefradrag standard fradrag lønn automatisk minimum deduction',type:'concept',page:'Skatt',sk:'minstefradrag'},
+  {name:'Trygdeavgift',desc:'Avgift til folketrygden — 7.6% av lønn (2026)',url:'/skatt/inntekt/',tags:'trygdeavgift folketrygden nav 7.6 prosent social security',type:'concept',page:'Skatt',sk:'trygdeavgift'},
   {name:'Egenkapital',desc:'Minimumskapital du må ha ved boligkjøp (10%)',url:'/boliglan/',tags:'egenkapital 10 prosent boligkjøp krav bank equity down payment',type:'concept',page:'Boliglån',sk:'egenkapital'},
   {name:'BSU — Boligsparing for ungdom',desc:'Skattefradrag på 10% av innskudd, maks 27 500 kr/år',url:'/boliglan/bsu/',tags:'bsu boligsparing ungdom skattefradrag 10 prosent sparing bolig housing savings',type:'concept',page:'Boliglån',sk:'bsu'},
   {name:'Gjeldsgrad',desc:'Forholdet mellom total gjeld og bruttoinntekt (maks 5x)',url:'/boliglan/',tags:'gjeldsgrad gjeld inntekt 5 ganger krav bank boliglån debt ratio',type:'concept',page:'Boliglån',sk:'gjeldsgrad'},
   {name:'Stresstest',desc:'Banken tester om du tåler 3 prosentpoeng renteøkning',url:'/boliglan/',tags:'stresstest rente økning bank test tåle boliglån stress test',type:'concept',page:'Boliglån',sk:'stresstest'},
-  {name:'Aksjonærmodellen',desc:'Modell for beskatning av utbytte til personlige aksjonærer',url:'/skatt/#sal-utdeling-card',tags:'aksjonærmodellen utbytte skjermingsfradrag oppjusteringsfaktor aksjonær shareholder model',type:'concept',page:'Skatt',sk:'aksjonarmodellen'},
-  {name:'Foretaksmodellen',desc:'Modell for beskatning av enkeltpersonforetak',url:'/skatt/#sal-utdeling-card',tags:'foretaksmodellen enkeltpersonforetak enk selvstending næring sole proprietor',type:'concept',page:'Skatt',sk:'foretaksmodellen'},
-  {name:'Verdsettelsesrabatt',desc:'Rabatt på formuesverdi for aksjer, bolig og driftsmidler',url:'/skatt/#formue-wrapper',tags:'verdsettelsesrabatt formue aksjer bolig rabatt reduksjon valuation discount',type:'concept',page:'Skatt',sk:'verdsettelsesrabatt'},
-  {name:'Saldoavskrivning',desc:'Skattemessig avskrivning med fast prosent av restverdi',url:'/kalkulator/#avs',tags:'saldoavskrivning skattemessig avskrivning saldo degressiv restverdi saldogruppe declining balance',type:'concept',page:'Kalkulator',sk:'saldoavs'},
-  {name:'OTP — Obligatorisk tjenestepensjon',desc:'Arbeidsgiver må spare minst 2% av lønn fra første krone opp til 12G',url:'/avgift/#aga-wrapper',tags:'otp obligatorisk tjenestepensjon arbeidsgiver 2 prosent 1g pensjon mandatory pension',type:'concept',page:'Avgift',sk:'otp'},
-  {name:'Arbeidsgiveravgift (AGA)',desc:'Avgift arbeidsgiver betaler på lønn — varierer etter sone',url:'/avgift/#aga-wrapper',tags:'arbeidsgiveravgift aga sone avgift arbeidsgiver lønn 14.1 employer tax',type:'concept',page:'Avgift',sk:'agaBegrep'},
-  {name:'Rentes rente',desc:'Avkastning på avkastning — effekten som gjør sparing kraftig over tid',url:'/personlig/#spare-wrapper',tags:'rentes rente compound interest sparing effekt tid avkastning',type:'concept',page:'Privatøkonomi',sk:'rentesRente'},
+  {name:'Aksjonærmodellen',desc:'Modell for beskatning av utbytte til personlige aksjonærer',url:'/skatt/utbytte/',tags:'aksjonærmodellen utbytte skjermingsfradrag oppjusteringsfaktor aksjonær shareholder model',type:'concept',page:'Skatt',sk:'aksjonarmodellen'},
+  {name:'Foretaksmodellen',desc:'Modell for beskatning av enkeltpersonforetak',url:'/skatt/utbytte/',tags:'foretaksmodellen enkeltpersonforetak enk selvstending næring sole proprietor',type:'concept',page:'Skatt',sk:'foretaksmodellen'},
+  {name:'Verdsettelsesrabatt',desc:'Rabatt på formuesverdi for aksjer, bolig og driftsmidler',url:'/skatt/formue/',tags:'verdsettelsesrabatt formue aksjer bolig rabatt reduksjon valuation discount',type:'concept',page:'Skatt',sk:'verdsettelsesrabatt'},
+  {name:'Saldoavskrivning',desc:'Skattemessig avskrivning med fast prosent av restverdi',url:'/kalkulator/avs/',tags:'saldoavskrivning skattemessig avskrivning saldo degressiv restverdi saldogruppe declining balance',type:'concept',page:'Kalkulator',sk:'saldoavs'},
+  {name:'OTP — Obligatorisk tjenestepensjon',desc:'Arbeidsgiver må spare minst 2% av lønn fra første krone opp til 12G',url:'/avgift/aga/',tags:'otp obligatorisk tjenestepensjon arbeidsgiver 2 prosent 1g pensjon mandatory pension',type:'concept',page:'Avgift',sk:'otp'},
+  {name:'Arbeidsgiveravgift (AGA)',desc:'Avgift arbeidsgiver betaler på lønn — varierer etter sone',url:'/avgift/aga/',tags:'arbeidsgiveravgift aga sone avgift arbeidsgiver lønn 14.1 employer tax',type:'concept',page:'Avgift',sk:'agaBegrep'},
+  {name:'Rentes rente',desc:'Avkastning på avkastning — effekten som gjør sparing kraftig over tid',url:'/personlig/spare/',tags:'rentes rente compound interest sparing effekt tid avkastning',type:'concept',page:'Privatøkonomi',sk:'rentesRente'},
   {name:'Annuitetslån',desc:'Lån med like store månedlige betalinger hele perioden',url:'/boliglan/mor/',tags:'annuitetslån annuitet fast betaling like stor måned annuity loan',type:'concept',page:'Boliglån',sk:'annuitet'},
   {name:'Serielån',desc:'Lån med like store avdrag — totalt billigere enn annuitet',url:'/boliglan/mor/',tags:'serielån serie avdrag billigere synkende betaling serial loan',type:'concept',page:'Boliglån',sk:'serieLan'},
-  {name:'Næring eller hobby?',desc:'Når blir biinntekt skattepliktig næringsvirksomhet?',url:'/skatt/#sal-naering-hobby-card',tags:'næring hobby biinntekt skattepliktig virksomhet grense business hobby',type:'concept',page:'Skatt',sk:'naeringHobby'},
-  {name:'Konsernbidrag',desc:'Overføring av overskudd mellom selskaper i samme konsern',url:'/skatt/#sal-corp-card',tags:'konsernbidrag konsern overføring selskap morselskap datterselskap group contribution',type:'concept',page:'Skatt',sk:'konsernbidrag'},
-  {name:'Fritaksmetoden',desc:'Selskaper slipper skatt på aksjeutbytte og -gevinst',url:'/skatt/#sal-corp-card',tags:'fritaksmetoden fritak skatt utbytte aksjegevinst selskap participation exemption',type:'concept',page:'Skatt',sk:'fritaksmetoden'},
-  {name:'Deltakerligning',desc:'Overskudd fordeles og beskattes hos hver deltaker — ANS, DA og KS',url:'/selskap/#selskap-skatt-card',tags:'deltakerligning deltakermodellen ansvarlig selskap kommandittselskap fordeling partner taxation',type:'concept',page:'Selskap',sk:'deltakerligning'},
-  {name:'Selskapsskatt',desc:'22 % skatt på overskudd i aksjeselskap',url:'/selskap/#selskap-skatt-card',tags:'selskapsskatt 22 prosent overskudd aksjeselskap as corporate tax',type:'concept',page:'Selskap',sk:'selskapsskatt'},
-  {name:'Utbytteskatt',desc:'37,84 % skatt på utbytte til personlige aksjonærer (oppjustert)',url:'/selskap/#selskap-skatt-card',tags:'utbytteskatt utbytte aksjonær oppjustert 37.84 1.72 dividend tax',type:'concept',page:'Selskap',sk:'utbytteskatt'},
+  {name:'Næring eller hobby?',desc:'Når blir biinntekt skattepliktig næringsvirksomhet?',url:'/skatt/',tags:'næring hobby biinntekt skattepliktig virksomhet grense business hobby',type:'concept',page:'Skatt',sk:'naeringHobby'},
+  {name:'Konsernbidrag',desc:'Overføring av overskudd mellom selskaper i samme konsern',url:'/lov/skattelov/#kap-skatteloven-10',tags:'konsernbidrag konsern overføring selskap morselskap datterselskap group contribution',type:'concept',page:'Skatt',sk:'konsernbidrag'},
+  {name:'Fritaksmetoden',desc:'Selskaper slipper skatt på aksjeutbytte og -gevinst',url:'/lov/skattelov/#kap-skatteloven-10',tags:'fritaksmetoden fritak skatt utbytte aksjegevinst selskap participation exemption',type:'concept',page:'Skatt',sk:'fritaksmetoden'},
+  {name:'Deltakerligning',desc:'Overskudd fordeles og beskattes hos hver deltaker — ANS, DA og KS',url:'/selskap/#selskap-ans-card',tags:'deltakerligning deltakermodellen ansvarlig selskap kommandittselskap fordeling partner taxation',type:'concept',page:'Selskap',sk:'deltakerligning'},
+  {name:'Selskapsskatt',desc:'22 % skatt på overskudd i aksjeselskap',url:'/skatt/utbytte/',tags:'selskapsskatt 22 prosent overskudd aksjeselskap as corporate tax',type:'concept',page:'Selskap',sk:'selskapsskatt'},
+  {name:'Utbytteskatt',desc:'37,84 % skatt på utbytte til personlige aksjonærer (oppjustert)',url:'/skatt/utbytte/',tags:'utbytteskatt utbytte aksjonær oppjustert 37.84 1.72 dividend tax',type:'concept',page:'Selskap',sk:'utbytteskatt'},
   {name:'Komplementar',desc:'Aktiv leder i KS med ubegrenset personlig ansvar',url:'/selskap/#selskap-ks-card',tags:'komplementar ks kommandittselskap aktiv leder ubegrenset ansvar general partner',type:'concept',page:'Selskap',sk:'komplementar'},
   {name:'Kommandittist',desc:'Passiv investor i KS — ansvar begrenset til innskuddet',url:'/selskap/#selskap-ks-card',tags:'kommandittist ks investor passiv begrenset ansvar innskudd limited partner',type:'concept',page:'Selskap',sk:'kommandittist'},
   {name:'MVA-satser',desc:'25% generell, 15% mat, 12% transport/kultur, 0% eksport',url:'/avgift/#vat-info-card',tags:'mva satser 25 15 12 0 prosent mat transport kultur eksport vat rates',type:'concept',page:'Avgift',sk:'mvaSatser'},
   {name:'Omsetningsgrense MVA',desc:'Registreringsplikt ved omsetning over 50 000 kr',url:'/avgift/#vat-subj-card',tags:'omsetningsgrense mva registrering 50000 plikt næring turnover threshold',type:'concept',page:'Avgift',sk:'omsetning'},
-  {name:'Fradragsrett MVA',desc:'Rett til å trekke fra inngående MVA på bedriftskjøp',url:'/avgift/#vat-ded-card',tags:'fradragsrett mva inngående utgående trekke fra bedrift input vat deduction',type:'concept',page:'Avgift',sk:'fradragsrett'},
+  {name:'Fradragsrett MVA',desc:'Rett til å trekke fra inngående MVA på bedriftskjøp',url:'/lov/mvalov/#card-ded',tags:'fradragsrett mva inngående utgående trekke fra bedrift input vat deduction',type:'concept',page:'Avgift',sk:'fradragsrett'},
 
   // ══════ LOVHENVISNINGER (Nivå 3) ══════
-  {name:'Skatteloven',desc:'Kapitler og paragrafer fra skatteloven',url:'/skatt/#sal-law-group',tags:'skatteloven lov skatt kapittel paragraf tax act',type:'law',page:'Skatt',sk:'skatteloven'},
-  {name:'Skatteloven kap. 2 — Skatteplikt',desc:'Hvem er skattepliktige til Norge?',url:'/skatt/#sal-subj-card',tags:'skatteloven kap 2 skatteplikt bosted selskap tax liability',type:'law',page:'Skatt',sk:'sktlK2'},
-  {name:'Skatteloven kap. 4 — Formue',desc:'Verdsettelse av formue, aksjer, bolig og rabatter',url:'/skatt/#sal-wealth-card',tags:'skatteloven kap 4 formue verdsettelse bolig aksjer wealth',type:'law',page:'Skatt',sk:'sktlK4'},
-  {name:'Skatteloven kap. 5 — Inntekt',desc:'Skattepliktig inntekt, lønn, kapital og skattefrie ytelser',url:'/skatt/#sal-law-card',tags:'skatteloven kap 5 inntekt lønn kapital ytelser income',type:'law',page:'Skatt',sk:'sktlK5'},
-  {name:'Skatteloven kap. 6 — Fradrag',desc:'Minstefradrag, gjeldsrenter og særfradrag',url:'/skatt/#sal-ded-card',tags:'skatteloven kap 6 fradrag minstefradrag gjeldsrenter deductions',type:'law',page:'Skatt',sk:'sktlK6'},
-  {name:'Skatteloven kap. 9 — Gevinst og tap',desc:'Realisasjon, boligsalg, arv, gave og utflytting',url:'/skatt/#sal-real-card',tags:'skatteloven kap 9 gevinst tap realisasjon boligsalg arv gains losses',type:'law',page:'Skatt',sk:'sktlK9'},
-  {name:'Skatteloven kap. 10 — Selskaper',desc:'Utbytte, aksjegevinst, konsernbidrag og NOKUS',url:'/skatt/#sal-corp-card',tags:'skatteloven kap 10 selskaper utbytte aksjegevinst konsernbidrag nokus companies',type:'law',page:'Skatt',sk:'sktlK10'},
-  {name:'Skatteloven kap. 14 — Saldoavskrivning',desc:'Saldogrupper, satser og gevinst/tap ved realisasjon',url:'/skatt/#sal-depr-card',tags:'skatteloven kap 14 saldoavskrivning saldogrupper avskrivningssatser depreciation',type:'law',page:'Skatt',sk:'sktlK14'},
-  {name:'Merverdiavgiftsloven kap. 2 — Registrering',desc:'Fellesregistrering, frivillig registrering og forhåndsregistrering',url:'/avgift/#vat-reg-card',tags:'merverdiavgiftsloven mval kap 2 registrering fellesregistrering vat registration',type:'law',page:'Avgift',sk:'mvalK2'},
-  {name:'Merverdiavgiftsloven kap. 3 — Unntak',desc:'Hva er unntatt fra MVA-loven?',url:'/avgift/#vat-exempt-card',tags:'merverdiavgiftsloven mval kap 3 unntak uttak innførsel exemptions',type:'law',page:'Avgift',sk:'mvalK3'},
-  {name:'Merverdiavgiftsloven kap. 6 — Fritak',desc:'Nullsats — 0% utgående, full fradragsrett',url:'/avgift/#vat-zero-card',tags:'merverdiavgiftsloven mval kap 6 fritak nullsats eksport zero rate',type:'law',page:'Avgift',sk:'mvalK6'},
-  {name:'Merverdiavgiftsloven kap. 8 — Fradrag',desc:'Hovedregel, delt bruk og begrensninger',url:'/avgift/#vat-ded-card',tags:'merverdiavgiftsloven mval kap 8 fradrag delt bruk input deduction',type:'law',page:'Avgift',sk:'mvalK8'},
-  {name:'Merverdiavgiftsloven kap. 9 — Justering',desc:'Kapitalvarer og justeringsperioder',url:'/avgift/#vat-adj-info-card',tags:'merverdiavgiftsloven mval kap 9 justering kapitalvarer adjustment',type:'law',page:'Avgift',sk:'mvalK9'},
-  {name:'Regnskapsloven § 5-3 — Avskrivning',desc:'Anleggsmidler med begrenset levetid skal avskrives',url:'/kalkulator/#avs',tags:'regnskapsloven rskl 5-3 avskrivning anleggsmidler levetid accounting act',type:'law',page:'Kalkulator',sk:'rskl53'},
-  {name:'Aksjeloven',desc:'Lov om aksjeselskaper — stiftelse, kapital, styre og generalforsamling',url:'/selskap/#selskap-as-card',tags:'aksjeloven lov aksjeselskap as 1997 stiftelse kapital companies act',type:'law',page:'Selskap',sk:'aksjeloven'},
+  {name:'Skatteloven',desc:'Kapitler og paragrafer fra skatteloven',url:'/lov/skattelov/',tags:'skatteloven lov skatt kapittel paragraf tax act',type:'law',page:'Skatt',sk:'skatteloven'},
+  {name:'Skatteloven kap. 2 — Skatteplikt',desc:'Hvem er skattepliktige til Norge?',url:'/lov/skattelov/#kap-skatteloven-2',tags:'skatteloven kap 2 skatteplikt bosted selskap tax liability',type:'law',page:'Skatt',sk:'sktlK2'},
+  {name:'Skatteloven kap. 4 — Formue',desc:'Verdsettelse av formue, aksjer, bolig og rabatter',url:'/skatt/formue/',tags:'skatteloven kap 4 formue verdsettelse bolig aksjer wealth',type:'law',page:'Skatt',sk:'sktlK4'},
+  {name:'Skatteloven kap. 5 — Inntekt',desc:'Skattepliktig inntekt, lønn, kapital og skattefrie ytelser',url:'/lov/skattelov/#kap-skatteloven-5',tags:'skatteloven kap 5 inntekt lønn kapital ytelser income',type:'law',page:'Skatt',sk:'sktlK5'},
+  {name:'Skatteloven kap. 6 — Fradrag',desc:'Minstefradrag, gjeldsrenter og særfradrag',url:'/lov/skattelov/#kap-skatteloven-6',tags:'skatteloven kap 6 fradrag minstefradrag gjeldsrenter deductions',type:'law',page:'Skatt',sk:'sktlK6'},
+  {name:'Skatteloven kap. 9 — Gevinst og tap',desc:'Realisasjon, boligsalg, arv, gave og utflytting',url:'/lov/skattelov/#kap-skatteloven-9',tags:'skatteloven kap 9 gevinst tap realisasjon boligsalg arv gains losses',type:'law',page:'Skatt',sk:'sktlK9'},
+  {name:'Skatteloven kap. 10 — Selskaper',desc:'Utbytte, aksjegevinst, konsernbidrag og NOKUS',url:'/lov/skattelov/#kap-skatteloven-10',tags:'skatteloven kap 10 selskaper utbytte aksjegevinst konsernbidrag nokus companies',type:'law',page:'Skatt',sk:'sktlK10'},
+  {name:'Skatteloven kap. 14 — Saldoavskrivning',desc:'Saldogrupper, satser og gevinst/tap ved realisasjon',url:'/kalkulator/avs/',tags:'skatteloven kap 14 saldoavskrivning saldogrupper avskrivningssatser depreciation',type:'law',page:'Skatt',sk:'sktlK14'},
+  {name:'Merverdiavgiftsloven kap. 2 — Registrering',desc:'Fellesregistrering, frivillig registrering og forhåndsregistrering',url:'/lov/mvalov/#card-reg',tags:'merverdiavgiftsloven mval kap 2 registrering fellesregistrering vat registration',type:'law',page:'Avgift',sk:'mvalK2'},
+  {name:'Merverdiavgiftsloven kap. 3 — Unntak',desc:'Hva er unntatt fra MVA-loven?',url:'/lov/mvalov/#card-unntak-fritak',tags:'merverdiavgiftsloven mval kap 3 unntak uttak innførsel exemptions',type:'law',page:'Avgift',sk:'mvalK3'},
+  {name:'Merverdiavgiftsloven kap. 6 — Fritak',desc:'Nullsats — 0% utgående, full fradragsrett',url:'/lov/mvalov/#card-unntak-fritak',tags:'merverdiavgiftsloven mval kap 6 fritak nullsats eksport zero rate',type:'law',page:'Avgift',sk:'mvalK6'},
+  {name:'Merverdiavgiftsloven kap. 8 — Fradrag',desc:'Hovedregel, delt bruk og begrensninger',url:'/lov/mvalov/#card-ded',tags:'merverdiavgiftsloven mval kap 8 fradrag delt bruk input deduction',type:'law',page:'Avgift',sk:'mvalK8'},
+  {name:'Merverdiavgiftsloven kap. 9 — Justering',desc:'Kapitalvarer og justeringsperioder',url:'/lov/mvalov/#card-adj',tags:'merverdiavgiftsloven mval kap 9 justering kapitalvarer adjustment',type:'law',page:'Avgift',sk:'mvalK9'},
+  {name:'Regnskapsloven § 5-3 — Avskrivning',desc:'Anleggsmidler med begrenset levetid skal avskrives',url:'/kalkulator/avs/',tags:'regnskapsloven rskl 5-3 avskrivning anleggsmidler levetid accounting act',type:'law',page:'Kalkulator',sk:'rskl53'},
+  {name:'Aksjeloven',desc:'Lov om aksjeselskaper — stiftelse, kapital, styre og generalforsamling',url:'/lov/aksjelov/',tags:'aksjeloven lov aksjeselskap as 1997 stiftelse kapital companies act',type:'law',page:'Selskap',sk:'aksjeloven'},
   {name:'Selskapsloven',desc:'Lov om ansvarlige selskaper og kommandittselskaper',url:'/selskap/#selskap-ans-card',tags:'selskapsloven lov ansvarlig selskap kommandittselskap ans da ks 1985 partnership act',type:'law',page:'Selskap',sk:'selskapsloven'},
 
   // /lov/ — lovreferanser med /lov/ som landingsside (kapittel-oversikt og lovtekst-portal)
@@ -126,6 +126,21 @@ var SEARCH_DATA = [
   {name:'MVA-melding',desc:'Termin-vis MVA-oppgjør — utgående og inngående merverdiavgift, 4 satser',url:'/regnskap/mva/',tags:'mva merverdiavgift mvameld melding skattemelding rf-0002 25 15 12 0 prosent termin inngående utgående value added tax',type:'tool',page:'Regnskap',sk:'mvaMelding'},
   {name:'Balanse',desc:'Eiendeler = EK + Gjeld — sett opp balansen etter regnskapsloven § 6-2 med automatic balance-check',url:'/regnskap/balanse/',tags:'balanse regnskap eiendeler egenkapital gjeld anleggsmidler omlopsmidler regnskapsloven 6-2 oppstillingsplan AS balance sheet',type:'tool',page:'Regnskap',sk:'balanseregn'},
 
+  // ══════ KALKYLE (bedriftskalkyle — seksjonen manglet helt i søket) ══════
+  {name:'Kalkyle',desc:'Margin, selvkost, enhetskost, food cost og innførselskost',url:'/kalkyle/',tags:'kalkyle bedrift pris prissetting margin selvkost kostnad kalkulasjon costing section',type:'section',page:'Kalkyle',sk:'kalkyleSection'},
+  {name:'Margin og påslag',desc:'Pris, margin og påslag fra varekost — avanse vs. dekningsgrad',url:'/kalkyle/margin/',tags:'margin påslag avanse dekningsgrad bruttofortjeneste varekost innkjøpspris utsalgspris prissetting markup margin',type:'tool',page:'Kalkyle'},
+  {name:'Selvkost',desc:'Selvkost steg for steg — materiale, lønn og tillegg',url:'/kalkyle/selvkost/',tags:'selvkost selvkostkalkyle tilvirkningskost direkte materiale direkte lønn materialtillegg tilvirkningstillegg full cost',type:'tool',page:'Kalkyle'},
+  {name:'Enhetskost',desc:'Kostnad per enhet — med divisjon eller ekvivalenstall',url:'/kalkyle/enhetskost/',tags:'enhetskost kostnad per enhet divisjonskalkyle ekvivalenstall stykkpris produksjon unit cost',type:'tool',page:'Kalkyle'},
+  {name:'Food cost',desc:'Menypris fra råvarekost — eller food cost fra gitt menypris',url:'/kalkyle/foodcost/',tags:'food cost foodcost meny menypris råvarekost restaurant kafé porsjonspris svinn kjøkken bidrag',type:'tool',page:'Kalkyle'},
+  {name:'Innførselskost',desc:'Hva en importert vare faktisk koster inn — frakt, toll og gebyr',url:'/kalkyle/landedcost/',tags:'innførselskost landed cost import toll frakt forsikring klarering emballasje varekost import',type:'tool',page:'Kalkyle'},
+  {name:'Netthandel og enhetsøkonomi',desc:'Dekningsbidrag og break-even ROAS per ordre, LTV og churn',url:'/kalkyle/netthandel/',tags:'netthandel nettbutikk enhetsøkonomi unit economics roas cac ltv churn abonnement saas ordre dekningsbidrag ecommerce',type:'tool',page:'Kalkyle'},
+
+  // ══════ SIDER SOM MANGLET I INDEKSEN ══════
+  {name:'Refinansiering',desc:'Lønner det seg å refinansiere boliglånet? Sammenlign gammel og ny rente',url:'/boliglan/refi/',tags:'refinansiering refinansiere boliglån omstarte lån bytte bank ny rente besparelse gebyr refinance',type:'tool',page:'Boliglån'},
+  {name:'Kontantstrømoppstilling',desc:'Fra årsresultat til faktiske penger inn og ut — regnskapsloven § 6-4',url:'/regnskap/kontantstrom/',tags:'kontantstrøm kontantstrømoppstilling indirekte modell drift investering finansiering regnskapsloven 6-4 cash flow',type:'tool',page:'Regnskap'},
+  {name:'Personvern',desc:'Hva som lagres i nettleseren din, og hvordan du sletter alt',url:'/personvern/',tags:'personvern gdpr data lagring localstorage informasjonskapsler cookies slette data privacy kontakt',type:'concept',page:'Hjem'},
+  {name:'Om Hverdagsverktøy',desc:'Hvem står bak, hvordan satsene verifiseres og hva siden er',url:'/om/',tags:'om oss hvem står bak kilder satser verifisert kontakt about',type:'concept',page:'Hjem'},
+
   // ══════ EDITORIAL PROTOTYPES (path-routing — /new-layout/ redesign) ══════
   {name:'Hverdagsverktøy',desc:'Gratis norske verktøy for økonomi',url:'/',tags:'hverdagsverktøy hjem hoved økonomi kalkulator',type:'section',page:'Hjem'},
   {name:'Ansattkostnad (AGA)',desc:'Beregn total årskostnad for en ansatt inkl. AGA og OTP',url:'/avgift/aga/',tags:'ansattkostnad aga arbeidsgiveravgift otp pensjon feriepenger lønn kostnad ansatt',type:'tool',page:'Avgift'},
@@ -144,14 +159,14 @@ var SEARCH_DATA = [
   {name:'Aksjer (veiledning)',desc:'Hva er aksjer, risiko, skatt 37,84 % og 5 tips til nybegynnere',url:'/personlig/aksjer/',tags:'aksjer veiledning guide nybegynner risiko skjermingsfradrag utbytte ask aksjesparekonto',type:'concept',page:'Privatøkonomi'},
   {name:'Bilkostnad',desc:'Beregn hva bilen din faktisk koster per måned og km',url:'/personlig/bil/',tags:'bil bilkostnad bilhold kjøretøy drivstoff forsikring bompenger vedlikehold bensin diesel',type:'tool',page:'Privatøkonomi'},
   {name:'Budsjett',desc:'Lag et personlig budsjett med inntekter og utgifter',url:'/personlig/budsjett/',tags:'budsjett økonomi personlig inntekt utgift spare penger husholdning',type:'tool',page:'Privatøkonomi'},
-  {name:'Familie',desc:'Kalkulatorer og informasjon for familieøkonomi',url:'/personlig/fam/',tags:'familie familieøkonomi barn barnestipend barnetrygd foreldrepenger',type:'section',page:'Privatøkonomi'},
+  {name:'Foreldrefradrag',desc:'Netto kostnad for barnehage og SFO etter fradrag og søskenmoderasjon',url:'/personlig/fam/',tags:'foreldrefradrag barnehage sfo aks barn søskenmoderasjon familie familieøkonomi barnepass fradrag childcare',type:'tool',page:'Privatøkonomi'},
   {name:'Forbrukslån',desc:'Beregn kostnad ved forbrukslån og sammenlikn renter',url:'/personlig/fbl/',tags:'forbrukslån forbruk lån rente effektivrente kostnad',type:'tool',page:'Privatøkonomi'},
-  {name:'Bankkonto',desc:'Oversikt over bankkonti, sparkekonto og spareavtaler',url:'/personlig/konto/',tags:'bankkonto sparkekonto rente spareavtale bank innskudd',type:'section',page:'Privatøkonomi'},
+  {name:'Fond og ASK',desc:'Aksjesparekonto, IPS eller vanlig fondskonto — hva passer for deg?',url:'/personlig/konto/',tags:'fond aksjefond ask aksjesparekonto ips fondskonto indeksfond sparing skatt konto bank investering funds',type:'tool',page:'Privatøkonomi'},
   {name:'Lønn etter skatt',desc:'Se hva du faktisk får utbetalt fra timelønnen din',url:'/personlig/lonn/',tags:'lønn timelønn netto brutto utbetalt lønn etter skatt nettolønn',type:'tool',page:'Privatøkonomi'},
   {name:'Sparekalkulator',desc:'Se kraften i rentes rente over tid',url:'/personlig/spare/',tags:'spare sparing rentes rente avkastning fond aksjer investering månedlig',type:'tool',page:'Privatøkonomi'},
   {name:'Studielån',desc:'Beregn stipend, lån og nedbetalingsplan fra Lånekassen',url:'/personlig/studie/',tags:'studielån lånekassen stipend student studie nedbetaling lån utdanning',type:'tool',page:'Privatøkonomi'},
   {name:'Sykepenger og NAV',desc:'Oversikt over sykepenger, dagpenger og NAV-ytelser',url:'/personlig/syk/',tags:'sykepenger nav dagpenger utbetaling arbeidsløs',type:'section',page:'Privatøkonomi'},
-  {name:'Teknisk økonomi',desc:'Oversikt over tekniske økonomi-kalkulatorer',url:'/personlig/teknisk/',tags:'teknisk økonomi likvid cashflow nåverdi internrente npv irr',type:'section',page:'Privatøkonomi'},
+  {name:'Teknisk ordliste',desc:'Investeringsbegreper forklart — ETF, opsjoner, obligasjoner, shorting og gearing',url:'/personlig/teknisk/',tags:'ordliste begreper teknisk ips obligasjon opsjon etf shorting gearing utbytte skjermingsfradrag investering glossary',type:'concept',page:'Privatøkonomi'},
   {name:'Regnskap',desc:'Verktøy og kalkulator for regnskap og bokføring',url:'/regnskap/',tags:'regnskap bokføring regnskapsføring avskrivning driftsmiddel',type:'section',page:'Regnskap'},
   {name:'Formueskatt',desc:'Beregn formueskatt med verdsettelsesrabatter',url:'/skatt/formue/',tags:'formue formueskatt verdsettelsesrabatt bolig aksjer eiendom gjeld',type:'tool',page:'Skatt'},
   {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/reise/',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger',type:'tool',page:'Skatt'}
@@ -159,15 +174,15 @@ var SEARCH_DATA = [
 
 /* ─── Foreslåtte (popular searches — translated) ─── */
 var SUGGESTED = [
-  {labelKey:'suggestLonn',    fallback:'Lønn etter skatt', url:'/personlig/#lonn-wrapper'},
+  {labelKey:'suggestLonn',    fallback:'Lønn etter skatt', url:'/personlig/lonn/'},
   {labelKey:'suggestBoliglan',fallback:'Boliglån',         url:'/boliglan/mor/'},
   {labelKey:'suggestKalk',    fallback:'Kalkulator',       url:'/kalkulator/'},
   {labelKey:'suggestBsu',     fallback:'BSU',              url:'/boliglan/bsu/'},
-  {labelKey:'suggestMva',     fallback:'MVA',              url:'/avgift/#vat-wrapper'},
-  {labelKey:'suggestBilkost', fallback:'Bilkostnad',       url:'/personlig/#bil-wrapper'},
-  {labelKey:'suggestFerie',   fallback:'Feriepenger',      url:'/kalkulator/#ferie'},
-  {labelKey:'suggestBudsjett',fallback:'Budsjett',         url:'/personlig/#budsjett-wrapper'},
-  {labelKey:'suggestStudie',  fallback:'Studielån',        url:'/personlig/#studie-wrapper'}
+  {labelKey:'suggestMva',     fallback:'MVA',              url:'/avgift/vat/'},
+  {labelKey:'suggestBilkost', fallback:'Bilkostnad',       url:'/personlig/bil/'},
+  {labelKey:'suggestFerie',   fallback:'Feriepenger',      url:'/kalkulator/ferie/'},
+  {labelKey:'suggestBudsjett',fallback:'Budsjett',         url:'/personlig/budsjett/'},
+  {labelKey:'suggestStudie',  fallback:'Studielån',        url:'/personlig/studie/'}
 ];
 
 /* ─── Type labels (translated) ─── */
@@ -210,7 +225,8 @@ var SECTION_BY_PREFIX = [
   ['/selskap/',   'Selskap'],
   ['/kalkulator/','Kalkulator'],
   ['/regnskap/',  'Regnskap'],
-  ['/lov/',       'Lov']
+  ['/lov/',       'Lov'],
+  ['/kalkyle/',   'Kalkyle']
 ];
 function sectionFromUrl(url){
   if(!url) return null;
