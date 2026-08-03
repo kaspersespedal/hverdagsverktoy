@@ -10,6 +10,9 @@
   --line-2:rgba(255,255,255,.10);
   --line-warm:rgba(200,153,104,.14);
   --pos:#e6e1d8; --neg:#a8a39a;
+  /* Feiltone — dempet leire, ikke alarmrød. Skal lese som "se her" uten å
+     bryte den rolige paletten. Lyse temaer dypner den (themes.css). */
+  --err:#cc7a66;
   --ease:cubic-bezier(.22,1,.36,1);
 }
 *,*::before,*::after{box-sizing:border-box}
@@ -182,6 +185,27 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   background-repeat:no-repeat;background-position:right 14px center;
   background-color:rgba(255,255,255,.025);border-color:var(--line-2)}
 .ik-select:hover{background-color:rgba(255,255,255,.04);border-color:var(--line-warm)}
+
+/* ── Feiltilstand på felt ──────────────────────────────────────
+   Slås på med .is-error på feltet, eller native [aria-invalid="true"].
+   Hvile = leire-kant + svak leire-vask. Fokus dypner SAMME tone, så feilen
+   leses gjennom fokusringen istedenfor å bli overdøvet av den (fokus-
+   geometrien er den samme 3px + 20px-bloomen som .ik-input:focus over).
+   .ik-err er inline-meldingen under feltet — samme plass som .ik-hint. */
+.ik-input.is-error,.ik-select.is-error,
+.ik-input[aria-invalid="true"],.ik-select[aria-invalid="true"]{
+  border-color:color-mix(in srgb, var(--err) 62%, var(--line-2));
+  background:color-mix(in srgb, var(--err) 6%, var(--surface))}
+.ik-input.is-error:focus,.ik-select.is-error:focus,
+.ik-input[aria-invalid="true"]:focus,.ik-select[aria-invalid="true"]:focus{
+  border-color:var(--err);
+  background:color-mix(in srgb, var(--err) 7%, var(--surface-2));
+  box-shadow:0 0 0 3px color-mix(in srgb, var(--err) 26%, transparent),
+             0 0 20px -2px color-mix(in srgb, var(--err) 18%, transparent)}
+.ik-fg.is-error .ik-lbl{color:color-mix(in srgb, var(--err) 66%, var(--ink2))}
+.ik-err{display:flex;align-items:center;gap:6px;
+  font:500 11.5px/1.4 var(--font-sans);color:var(--err);letter-spacing:0}
+.ik-err svg{flex:none;width:13px;height:13px;stroke:currentColor}
 
 /* Read-only derived value — mirrors ik-input shape but with accent + label inside */
 .ik-derived{
