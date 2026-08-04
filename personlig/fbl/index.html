@@ -546,7 +546,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v1"></script>
-<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/core.js?v=v128"></script>
 <script defer src="/shared/search.js?v=v126"></script>
 <script defer src="/shared/lang/no.js?v=v126"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
@@ -561,11 +561,19 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     function num(id){var v=document.getElementById(id);if(!v)return 0;return parseFloat(v.value.replace(/\s/g,'').replace(',','.'))||0;}
     function fmt(n){return Math.round(n).toLocaleString('no-NO')+' kr';}
     function fmtPct(n){return n.toFixed(2).replace('.',',')+'%';}
+    // Tømmer brukeren feltene skal svaret bli «–», ikke bli stående med
+    // forrige beregning — et gammelt tall ser ferskt ut og lyver.
+    function blank(){
+      ['fbl-r-eff','fbl-r-mnd','fbl-r-total','fbl-r-kost','fbl-r-nom','hStatEff','hStatMnd']
+        .forEach(function(id){var e=document.getElementById(id); if(e) e.textContent='–';});
+      var s=document.getElementById('fbl-r-sub');
+      if(s) s.textContent='Skriv inn lånebeløp, rente og løpetid';
+    }
 
     // ── Forbrukslån — effektiv rente (APR via IRR-iterasjon) ──
     window.calcFbl=function(){
       var P=num('fbl-beloep'), rNom=num('fbl-rente'), etab=num('fbl-etablering'), term=num('fbl-termin'), n=num('fbl-mnd');
-      if(P<=0||n<=0||rNom<=0){return;}
+      if(P<=0||n<=0||rNom<=0){ blank(); persist(); return; }
       var iNom=rNom/100/12;
       var pmt = P*iNom/(1-Math.pow(1+iNom,-n)) + term;
       var total = pmt*n + etab;

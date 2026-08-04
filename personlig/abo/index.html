@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v127" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v128" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -190,7 +190,7 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
 
 <script defer src="/shared/atmosphere.js?v=v5"></script>
-<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/core.js?v=v128"></script>
 <script defer src="/shared/lang/no.js?v=v126"></script>
 <script defer src="/shared/search-intents.js?v=v124"></script>
 <script defer src="/shared/search.js?v=v126"></script>
@@ -634,7 +634,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       '      </div>',
       '      <div class="ab-invest-knobs">',
       '        <label><span data-i18n="aboInvestRente">Avkastning</span><input type="text" inputmode="decimal" id="ab-rente" value="7,0"><span style="color:var(--ink4)">%/år</span></label>',
-      '        <label><span data-i18n="aboInvestAarLbl">i</span><input type="number" min="1" max="50" id="ab-aar" value="10"><span style="color:var(--ink4)" data-i18n="aboInvestAarSuf">år</span></label>',
+      '        <label><span data-i18n="aboInvestAarLbl">i</span><input type="text" inputmode="numeric" min="1" max="50" id="ab-aar" value="10"><span style="color:var(--ink4)" data-i18n="aboInvestAarSuf">år</span></label>',
       '      </div>',
       '    </div>',
       '    <div class="ab-invest-grid">',
@@ -673,7 +673,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       '    <select data-f="freq">'+freqOpts+'</select>',
       '  </div>',
       '  <div class="ab-cell num">',
-      '    <input type="number" min="1" max="20" value="'+it.delt+'" data-f="delt">',
+      '    <input type="text" inputmode="numeric" min="1" max="20" value="'+it.delt+'" data-f="delt">',
       '  </div>',
       '  <button class="ab-del" type="button" data-action="del" title="Fjern" aria-label="Fjern abonnement">',
       '    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h10M6.5 5V3.5h3V5M5 5l.5 8h5L11 5"/></svg>',
@@ -749,7 +749,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
           var it = items.find(function(x){return x.id === id;});
           if(!it) return;
           if(f === 'kr') it.kr = parseKr(el.value);
-          else if(f === 'delt') it.delt = Math.max(1, +el.value || 1);
+          else if(f === 'delt') it.delt = Math.max(1, parseKr(el.value) || 1);
           else if(f === 'name') it.name = el.value;
           else it[f] = el.value;
           render();
@@ -819,7 +819,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       render();
     });
     $('#ab-aar').addEventListener('input', function(){
-      invest.aar = Math.max(1, Math.min(50, +this.value || 1));
+      invest.aar = Math.max(1, Math.min(50, parseKr(this.value) || 1));
       render();
     });
   }

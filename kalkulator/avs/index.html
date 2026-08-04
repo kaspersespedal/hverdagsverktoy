@@ -491,17 +491,17 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                   <div class="ik-row">
                     <div class="ik-fg" id="avs-life-wrap">
                       <label class="ik-lbl" for="avs-life" data-i18n="avsLifeLabel">Utnyttbar levetid (år)</label>
-                      <input id="avs-life" class="ik-input" type="number" min="1" max="100" step="1" value="10" inputmode="numeric" autocomplete="off">
+                      <input id="avs-life" class="ik-input" type="text" min="1" max="100" step="1" value="10" inputmode="numeric" autocomplete="off">
                     </div>
                     <div class="ik-fg" id="avs-regpct-wrap">
                       <label class="ik-lbl" for="avs-reg-pct" data-i18n="avsRegPctLabel">Avskrivningssats (%)</label>
-                      <input id="avs-reg-pct" class="ik-input" type="number" min="0.1" max="100" step="0.1" value="10" inputmode="decimal" autocomplete="off">
+                      <input id="avs-reg-pct" class="ik-input" type="text" min="0.1" max="100" step="0.1" value="10" inputmode="decimal" autocomplete="off">
                     </div>
                   </div>
                   <div class="ik-row full" id="avs-scrap-wrap">
                     <div class="ik-fg">
                       <label class="ik-lbl" for="avs-scrap" data-i18n="avsScrapLabel">Restverdi (%)</label>
-                      <input id="avs-scrap" class="ik-input" type="number" min="0" max="100" step="1" value="0" inputmode="decimal" autocomplete="off">
+                      <input id="avs-scrap" class="ik-input" type="text" min="0" max="100" step="1" value="0" inputmode="decimal" autocomplete="off">
                     </div>
                   </div>
                 </div>
@@ -677,7 +677,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v1"></script>
-<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/core.js?v=v128"></script>
 <script defer src="/shared/search.js?v=v126"></script>
 <script defer src="/shared/lang/no.js?v=v126"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
@@ -762,7 +762,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
   }
 
   function avsLifeChanged(){
-    var life = Math.max(1, +(document.getElementById('avs-life').value) || 10);
+    var life = Math.max(1, parseNum('avs-life') || 10);
     document.getElementById('avs-reg-pct').value = +(100/life).toFixed(1);
   }
 
@@ -774,8 +774,8 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       return { hasData:false, mode:mode, price:price };
     }
     var taxRate = parseFloat(String(document.getElementById('avs-group').value).split('-').pop()) || 0.20;
-    var regPct = Math.max(0.1, +(document.getElementById('avs-reg-pct').value) || 10) / 100;
-    var scrapPct = Math.max(0, Math.min(100, +(document.getElementById('avs-scrap').value) || 0)) / 100;
+    var regPct = Math.max(0.1, parseNum('avs-reg-pct') || 10) / 100;
+    var scrapPct = Math.max(0, Math.min(100, parseNum('avs-scrap'))) / 100;
     var scrapValue = price * scrapPct;
     var depBase = price - scrapValue;
     var annualLinear = depBase * regPct;

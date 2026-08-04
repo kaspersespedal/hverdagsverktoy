@@ -407,7 +407,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bvl-rente"><span data-i18n="bvlLRente">Lånerente</span> <span class="cap">(%)</span></label>
-                    <input id="bvl-rente" class="ik-input" type="number" min="0" max="50" step="0.1" value="5.5" inputmode="decimal" autocomplete="off">
+                    <input id="bvl-rente" class="ik-input" type="text" min="0" max="50" step="0.1" value="5.5" inputmode="decimal" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row">
@@ -417,17 +417,17 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bvl-vedlikehold"><span data-i18n="bvlLVedlikehold">Vedlikehold</span> <span class="cap">(% av verdi/år)</span></label>
-                    <input id="bvl-vedlikehold" class="ik-input" type="number" min="0" max="20" step="0.1" value="1.0" inputmode="decimal" autocomplete="off">
+                    <input id="bvl-vedlikehold" class="ik-input" type="text" min="0" max="20" step="0.1" value="1.0" inputmode="decimal" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bvl-aar"><span data-i18n="bvlLAar">Tidsperiode</span> <span class="cap">(år)</span></label>
-                    <input id="bvl-aar" class="ik-input" type="number" min="1" max="30" step="1" value="10" inputmode="numeric" autocomplete="off">
+                    <input id="bvl-aar" class="ik-input" type="text" min="1" max="30" step="1" value="10" inputmode="numeric" autocomplete="off">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bvl-lopetid"><span data-i18n="bvlLLopetidShort">Nedbetalingstid</span> <span class="cap">(år)</span></label>
-                    <input id="bvl-lopetid" class="ik-input" type="number" min="10" max="30" step="1" value="25" inputmode="numeric" autocomplete="off">
+                    <input id="bvl-lopetid" class="ik-input" type="text" min="10" max="30" step="1" value="25" inputmode="numeric" autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -449,17 +449,17 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bvl-vekst"><span data-i18n="bvlLVekst">Boligprisvekst</span> <span class="cap">(%/år)</span></label>
-                    <input id="bvl-vekst" class="ik-input" type="number" min="-20" max="30" step="0.1" value="3.0" inputmode="decimal" autocomplete="off">
+                    <input id="bvl-vekst" class="ik-input" type="text" min="-20" max="30" step="0.1" value="3.0" inputmode="decimal" autocomplete="off">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bvl-leievekst"><span data-i18n="bvlLLeievekst">Leievekst</span> <span class="cap">(%/år)</span></label>
-                    <input id="bvl-leievekst" class="ik-input" type="number" min="-20" max="30" step="0.1" value="3.0" inputmode="decimal" autocomplete="off">
+                    <input id="bvl-leievekst" class="ik-input" type="text" min="-20" max="30" step="0.1" value="3.0" inputmode="decimal" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row full">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bvl-avk"><span data-i18n="bvlLAvkLong">Alternativ avkastning EK</span> <span class="cap">(%/år)</span></label>
-                    <input id="bvl-avk" class="ik-input" type="number" min="-20" max="30" step="0.1" value="6.0" inputmode="decimal" autocomplete="off">
+                    <input id="bvl-avk" class="ik-input" type="text" min="-20" max="30" step="0.1" value="6.0" inputmode="decimal" autocomplete="off">
                     <span class="ik-hint" data-i18n="bvlAvkHint">Hvis sparepengene står i fond i stedet for bolig</span>
                   </div>
                 </div>
@@ -592,7 +592,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v1"></script>
-<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/core.js?v=v128"></script>
 <script defer src="/shared/search.js?v=v126"></script>
 <script defer src="/shared/lang/no.js?v=v126"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
@@ -620,16 +620,16 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     var pris = parseNum('bvl-pris');
     if(pris <= 0){ return { hasData:false }; }
     var ek = parseNum('bvl-ek');
-    var renteAr = (parseFloat(document.getElementById('bvl-rente').value)||0)/100;
+    var renteAr = parseNum('bvl-rente')/100;
     var leieMnd = parseNum('bvl-leie');
     var fkMnd = parseNum('bvl-felleskost');
-    var vlPct = (parseFloat(document.getElementById('bvl-vedlikehold').value)||0)/100;
-    var aar = parseInt(document.getElementById('bvl-aar').value)||10;
-    var prisVekstAr = (parseFloat(document.getElementById('bvl-vekst').value)||0)/100;
-    var leieVekstAr = (parseFloat(document.getElementById('bvl-leievekst').value)||0)/100;
-    var avkAr = (parseFloat(document.getElementById('bvl-avk').value)||0)/100;
+    var vlPct = parseNum('bvl-vedlikehold')/100;
+    var aar = Math.round(parseNum('bvl-aar'))||10;
+    var prisVekstAr = parseNum('bvl-vekst')/100;
+    var leieVekstAr = parseNum('bvl-leievekst')/100;
+    var avkAr = parseNum('bvl-avk')/100;
     var lan = Math.max(0, pris - ek);
-    var lopetidAr = parseInt(document.getElementById('bvl-lopetid') && document.getElementById('bvl-lopetid').value) || 25;
+    var lopetidAr = Math.round(parseNum('bvl-lopetid')) || 25;
     if(lopetidAr<10) lopetidAr=10; if(lopetidAr>30) lopetidAr=30;
     var nMaks = lopetidAr*12, rMnd = renteAr/12;
     var annuitet = rMnd>0 ? lan * rMnd / (1 - Math.pow(1+rMnd,-nMaks)) : lan/nMaks;

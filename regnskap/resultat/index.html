@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v127" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v128" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -1148,7 +1148,15 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     var mode = 'as';
 
     function el(id){ return document.getElementById(id); }
-    function parse(v){ return +String(v==null?'':v).replace(/[^\d]/g,'') || 0; }
+    // Negative beløp er gyldige (f.eks. netto finanstap ført som finansinntekt).
+    // Minustegnet MÅ overleve — [^\d] spiste det og gjorde −50 000 til +50 000.
+    function parse(v){
+      var n = parseFloat(String(v==null?'':v)
+        .replace(/[−‒-―]/g,'-')   // unicode-minus/tankestrek → ASCII
+        .replace(/[\s ]/g,'').replace(',','.')
+        .replace(/[^0-9.\-]/g,''));
+      return isNaN(n) ? 0 : n;
+    }
     function num(id){ var e=el(id); return e?parse(e.value):0; }
     function fmt(n){ if(!isFinite(n)) return '–'; return Math.round(n).toLocaleString('nb-NO').replace(/ /g,' ').replace(/,/g,' '); }
     function paren(n){ return '(' + fmt(Math.abs(n)) + ')'; }
@@ -1308,7 +1316,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 })();
 </script>
 <script src="/shared/top-chrome.js?v=v1" defer></script>
-<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/core.js?v=v128"></script>
 <script defer src="/shared/lang/no.js?v=v126"></script>
 
 <script>

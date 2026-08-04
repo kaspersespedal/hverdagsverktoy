@@ -546,7 +546,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v1"></script>
-<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/core.js?v=v128"></script>
 <script defer src="/shared/search.js?v=v126"></script>
 <script defer src="/shared/lang/no.js?v=v126"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
@@ -558,10 +558,19 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
     function num(id){var v=document.getElementById(id);if(!v)return 0;return parseFloat(v.value.replace(/\s/g,'').replace(',','.'))||0;}
     function fmt(n){return Math.round(n).toLocaleString('no-NO')+' kr';}
+    // Tømmer brukeren feltene skal svaret bli «–», ikke bli stående med
+    // forrige beregning — et gammelt tall ser ferskt ut og lyver.
+    function blank(){
+      ['fam-r-netto','fam-r-brutto','fam-r-mod','fam-r-frad','fam-r-skatt',
+       'hStatNetto','hStatSkatt','rsSumBrutto','rsSumMod','rsSumFrad','rsSumNetto']
+        .forEach(function(id){var e=document.getElementById(id); if(e) e.textContent='–';});
+      var s=document.getElementById('fam-r-sub');
+      if(s) s.textContent='Skriv inn antall barn og månedspris';
+    }
 
     window.calcFam=function(){
       var n=num('fam-barn'), pris=num('fam-pris'), mnd=num('fam-mnd');
-      if(n<=0||pris<=0){return;}
+      if(n<=0||pris<=0){ blank(); persist(); return; }
       // søskenmoderasjon barnehage: barn 1 full, barn 2 −30 %, barn 3+ gratis (forskrift om foreldrebetaling § 3a, fra 1.8.2023)
       var faktorer=[1,0.7,0,0,0,0];
       var sumMnd=0;

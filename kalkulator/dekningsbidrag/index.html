@@ -414,21 +414,21 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="db-salgspris" data-i18n="kalkDekningsbidragLblSalgspris">Salgspris per enhet (kr)</label>
-                    <input id="db-salgspris" class="ik-input" type="number" inputmode="decimal" min="0" step="1" value="100" autocomplete="off">
+                    <input id="db-salgspris" class="ik-input" type="text" inputmode="decimal" min="0" step="1" value="100" autocomplete="off">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="db-varkost" data-i18n="kalkDekningsbidragLblVarkost">Variabel kost per enhet (kr)</label>
-                    <input id="db-varkost" class="ik-input" type="number" inputmode="decimal" min="0" step="1" value="60" autocomplete="off">
+                    <input id="db-varkost" class="ik-input" type="text" inputmode="decimal" min="0" step="1" value="60" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="db-antall" data-i18n="kalkDekningsbidragLblAntall">Antall enheter solgt</label>
-                    <input id="db-antall" class="ik-input" type="number" inputmode="decimal" min="0" step="1" value="100" autocomplete="off">
+                    <input id="db-antall" class="ik-input" type="text" inputmode="decimal" min="0" step="1" value="100" autocomplete="off">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="db-fixkost" data-i18n="kalkDekningsbidragLblFixkost">Faste kostnader (kr)</label>
-                    <input id="db-fixkost" class="ik-input" type="number" inputmode="decimal" min="0" step="1" value="2000" autocomplete="off">
+                    <input id="db-fixkost" class="ik-input" type="text" inputmode="decimal" min="0" step="1" value="2000" autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -566,7 +566,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v1"></script>
-<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/core.js?v=v128"></script>
 <script defer src="/shared/search.js?v=v126"></script>
 <script defer src="/shared/lang/no.js?v=v126"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
@@ -580,19 +580,21 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
   function fmt(n){ return fmtNb.format(Math.round(n)); }
   function fmtKr(n){ return fmt(n) + ' kr'; }
   function setText(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; }
+  // Norsk desimalkomma + tusenskille-mellomrom må tåles (feltene er type="text").
+  function parseNum(id){
+    var el = document.getElementById(id); if(!el) return 0;
+    var n = parseFloat(String(el.value).replace(/[\s ]/g,'').replace(',','.'));
+    return isNaN(n) ? 0 : n;
+  }
 
   // ── Hovedberegning (matte uendret fra opprinnelig calcDb) ──
   function recalc(){
-    var spEl = document.getElementById('db-salgspris');
-    var vkEl = document.getElementById('db-varkost');
-    var anEl = document.getElementById('db-antall');
-    var fkEl = document.getElementById('db-fixkost');
     var warnEl = document.getElementById('dbWarnBox');
 
-    var sp = parseFloat(spEl ? spEl.value : 0) || 0;
-    var vk = parseFloat(vkEl ? vkEl.value : 0) || 0;
-    var antall = parseFloat(anEl ? anEl.value : 0) || 0;
-    var fk = parseFloat(fkEl ? fkEl.value : 0) || 0;
+    var sp = parseNum('db-salgspris');
+    var vk = parseNum('db-varkost');
+    var antall = parseNum('db-antall');
+    var fk = parseNum('db-fixkost');
 
     var dbPerEnhet = sp - vk;
     var negativeDb = vk >= sp;

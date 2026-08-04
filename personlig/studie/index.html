@@ -471,7 +471,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="borte" data-i18n="studieLBorte">Antall år borteboer</label>
-                    <input class="ik-input" id="borte" type="number" min="0" max="6" step="1" value="3">
+                    <input class="ik-input" id="borte" type="text" inputmode="numeric" min="0" max="6" step="1" value="3">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="mnd" data-i18n="studieLMnd">Utbetalingsmåneder per år</label>
@@ -529,11 +529,11 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="rente" data-i18n="studieLRente">Rente (% per år)</label>
-                    <input class="ik-input" id="rente" type="number" min="0" max="15" step="0.1" value="5.0">
+                    <input class="ik-input" id="rente" type="text" inputmode="decimal" min="0" max="15" step="0.1" value="5.0">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="nedbtid" data-i18n="studieLNedbtid">Nedbetalingstid (år)</label>
-                    <input class="ik-input" id="nedbtid" type="number" min="1" max="30" step="1" value="20">
+                    <input class="ik-input" id="nedbtid" type="text" inputmode="numeric" min="1" max="30" step="1" value="20">
                   </div>
                 </div>
               </div>
@@ -727,7 +727,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v1"></script>
-<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/core.js?v=v128"></script>
 <script defer src="/shared/search.js?v=v126"></script>
 <script defer src="/shared/lang/no.js?v=v126"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
@@ -749,6 +749,12 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       var raw = String(s).replace(/[^0-9\-]/g, '');
       if(!raw || raw === '-') return 0;
       var n = parseInt(raw, 10);
+      return isNaN(n) ? 0 : n;
+    }
+    function parseDec(s){
+      if(s == null) return 0;
+      var v = String(s).replace(/[\s ]/g, '').replace(',', '.');
+      var n = parseFloat(v);
       return isNaN(n) ? 0 : n;
     }
     function fmtInt(n){ return fmtNb.format(n).replace(/ /g, ' '); }
@@ -785,7 +791,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
         mnd: num('mnd') || 11,
         skolepenger: parseAmt(val('skolepenger')),
         tilleggslan: parseAmt(val('tilleggslan')),
-        rente: +val('rente') || 0,
+        rente: parseDec(val('rente')),
         nedbtid: num('nedbtid') || 20
       };
     }

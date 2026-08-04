@@ -247,7 +247,10 @@ function fmt(n) {
 }
 function pct(n) { return n.toFixed(1).replace('.',',')+' %'; }
 function parseNum(id) { const el=document.getElementById(id); return el ? +(el.value.replace(/[\s\u00a0]/g,'').replace(',','.')) || 0 : 0; }
-function fmtInput(n) { return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(n).replace(/\u00a0/g,' '); }
+// NB: nb-NO formaterer negative tall med U+2212 MINUS SIGN. Verdien her skrives
+// tilbake INN i skjemafelt, og ingen av parserne p\u00e5 nettstedet kjenner U+2212 \u2014
+// derfor ble \u2212250 000 lest som 0 (eller +250 000). Skriv ASCII-bindestrek.
+function fmtInput(n) { return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(n).replace(/\u00a0/g,' ').replace(/\u2212/g,'-'); }
 function setEl(id, val) { var el=document.getElementById(id); if(el) el.textContent=val; }
 // V12 Fase 3 helpers (Pattern B null-check epidemi):
 // getVal — null-safe raw value getter (returnerer fallback hvis element mangler eller value er falsy)
@@ -263,7 +266,9 @@ var _HVT_G = 136549;
 document.addEventListener('input', function(e) {
   const el = e.target;
   if(el.inputMode !== 'numeric') return;
-  const raw = el.value.replace(/[^0-9\-]/g,'');
+  // Unicode-minus/tankestrek (limt inn fra Excel/PDF) må bli ASCII, ellers
+  // spises minustegnet av strippingen under og −50 000 blir +50 000.
+  const raw = el.value.replace(/[−‒-―]/g,'-').replace(/[^0-9\-]/g,'');
   if(raw === '' || raw === '-') return;
   const num = parseInt(raw, 10);
   if(isNaN(num)) return;
@@ -271,7 +276,8 @@ document.addEventListener('input', function(e) {
   const oldLen = el.value.length;
   el.value = fmtInput(num);
   const newLen = el.value.length;
-  el.setSelectionRange(pos + newLen - oldLen, pos + newLen - oldLen);
+  // setSelectionRange kaster på felttyper som ikke støtter markørposisjon.
+  try { el.setSelectionRange(pos + newLen - oldLen, pos + newLen - oldLen); } catch(_e){}
 });
 
 // ═══════════════════════════════════════════════════════

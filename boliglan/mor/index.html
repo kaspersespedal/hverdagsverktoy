@@ -417,11 +417,11 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="m-r" data-i18n="morLblRate">Rente (%)</label>
-                    <input type="number" id="m-r" class="ik-input" value="5.13" step="0.1" inputmode="decimal">
+                    <input type="text" id="m-r" class="ik-input" value="5.13" step="0.1" inputmode="decimal">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="m-y" data-i18n="morLblYears">Løpetid (år)</label>
-                    <input type="number" id="m-y" class="ik-input" value="25" max="30" inputmode="numeric">
+                    <input type="text" id="m-y" class="ik-input" value="25" max="30" inputmode="numeric">
                   </div>
                 </div>
                 <div class="ik-row full">
@@ -440,7 +440,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                 <div class="ik-row full hidden" id="m-io-fields">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="m-io-yrs" data-i18n="morLblIoYrs">Avdragsfri periode (år)</label>
-                    <input type="number" id="m-io-yrs" class="ik-input" value="5" min="1" max="30" inputmode="numeric">
+                    <input type="text" id="m-io-yrs" class="ik-input" value="5" min="1" max="30" inputmode="numeric">
                   </div>
                 </div>
               </div>
@@ -618,7 +618,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v1"></script>
-<script defer src="/shared/core.js?v=v127"></script>
+<script defer src="/shared/core.js?v=v128"></script>
 <script defer src="/shared/search.js?v=v126"></script>
 <script defer src="/shared/lang/no.js?v=v126"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
@@ -639,7 +639,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
   }
   function getVal(id, fb){
     var el = document.getElementById(id);
-    var v = el ? +el.value : NaN;
+    var v = el ? +(String(el.value).replace(/[\s ]/g,'').replace(',','.')) : NaN;
     return isNaN(v) ? (fb||0) : v;
   }
   function setEl(id, val){
@@ -724,7 +724,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     // Avdragsfri-beregning
     var ioCheck = document.getElementById('m-io-check');
     if(ioCheck && ioCheck.checked){
-      var ioYears = +(document.getElementById('m-io-yrs').value) || 5;
+      var ioYears = parseNum('m-io-yrs') || 5;
       if(ioYears < years){
         var ioMonths = ioYears * 12;
         var remainMonths = n - ioMonths;
@@ -770,7 +770,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     var stressRate = stressYearlyPct / 100 / 12;
     var stressN = n;
     if(ioCheck && ioCheck.checked){
-      var ioYearsForStress = +(document.getElementById('m-io-yrs').value) || 5;
+      var ioYearsForStress = parseNum('m-io-yrs') || 5;
       if(ioYearsForStress > 0 && ioYearsForStress < years){
         stressN = (years - ioYearsForStress) * 12;
       }
@@ -799,7 +799,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     setEl('mStripEff', effRate.toFixed(2).replace('.', ',') + ' %');
 
     // Eksport-state for morCsv() (core.js) — nedbetalingsplan gjenskapes fra disse
-    var _ioYExp = (ioCheck && ioCheck.checked) ? ((+document.getElementById('m-io-yrs').value) || 5) : 0;
+    var _ioYExp = (ioCheck && ioCheck.checked) ? (parseNum('m-io-yrs') || 5) : 0;
     window._mor = { P:P, rate:yearlyRate, years:years, type:loanType, mnd:mnd, rnt:rnt, fees:feesPerMonth, ioYears:(_ioYExp < years ? _ioYExp : 0) };
 
     persist();
