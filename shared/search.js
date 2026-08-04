@@ -29,7 +29,7 @@ var SEARCH_DATA = [
   {name:'Bolig vs leie',desc:'Sammenlign total kostnad over X år — hva lønner seg?',url:'/boliglan/bvl/',tags:'bolig vs leie kjøpe leie sammenligne break-even eie rent vs buy investering avkastning',type:'tool',page:'Boliglån',sk:'bvl'},
 
   // Kalkulator (hash handled by switchCalcMode in core.js)
-  {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/',tags:'kalkulator regnemaskin pluss minus gange dele prosent calculator',type:'tool',page:'Kalkulator',sk:'kalkBasic'},
+  {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/enkel/',tags:'kalkulator regnemaskin pluss minus gange dele prosent calculator',type:'tool',page:'Kalkulator',sk:'kalkBasic'},
   {name:'Vitenskapelig kalkulator',desc:'Sin, cos, log, potenser og mer',url:'/kalkulator/scientific/',tags:'vitenskapelig kalkulator sin cos tan log ln potens kvadratrot pi scientific',type:'tool',page:'Kalkulator',sk:'kalkSci'},
   {name:'Valutakonverter',desc:'Konverter mellom valutaer med oppdaterte kurser',url:'/kalkulator/unit/',tags:'valuta valutakonverter valutakalkulator valutaomregner kurs dollar euro pund usd eur gbp sek dkk currency exchange rate kursomregner convert currency',type:'tool',page:'Kalkulator',sk:'kalkValuta'},
   {name:'Finansiell kalkulator',desc:'Nåverdi, fremtidsverdi, margin, break-even, renters rente og rabatter',url:'/kalkulator/finance/',tags:'finansiell kalkulator nåverdi fremtidsverdi annuitet rente perioder margin markup break-even break even renters rente compound discount rabatt PV FV PMT TVM financial',type:'tool',page:'Kalkulator',sk:'kalkFin'},
@@ -169,8 +169,18 @@ var SEARCH_DATA = [
   {name:'Teknisk ordliste',desc:'Investeringsbegreper forklart — ETF, opsjoner, obligasjoner, shorting og gearing',url:'/personlig/teknisk/',tags:'ordliste begreper teknisk ips obligasjon opsjon etf shorting gearing utbytte skjermingsfradrag investering glossary',type:'concept',page:'Privatøkonomi'},
   {name:'Regnskap',desc:'Verktøy og kalkulator for regnskap og bokføring',url:'/regnskap/',tags:'regnskap bokføring regnskapsføring avskrivning driftsmiddel',type:'section',page:'Regnskap'},
   {name:'Formueskatt',desc:'Beregn formueskatt med verdsettelsesrabatter',url:'/skatt/formue/',tags:'formue formueskatt verdsettelsesrabatt bolig aksjer eiendom gjeld',type:'tool',page:'Skatt'},
-  {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/reise/',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger',type:'tool',page:'Skatt'}
+  {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/reise/',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger',type:'tool',page:'Skatt'},
+  // De to eneste sidene i sitemap som manglet oppføring — «dokumentavgift» ga
+  // «Ingen treff» selv om kalkulatoren har ligget ute lenge.
+  {name:'Dokumentavgift og tinglysing',desc:'Dokumentavgift 2,5 % og tinglysingsgebyr ved boligkjøp',url:'/boliglan/dok/',tags:'dokumentavgift tinglysing tinglysingsgebyr boligkjøp borettslag nybygg arv fritak omkostninger',type:'tool',page:'Boliglån'}
 ];
+
+/* Forsiden har sin egen søke-UI og kjørte på en lokal 19-treffs kopi av dette
+   registeret — 14 av 18 verktøynavn ga «Ingen treff» fra hovedinngangen.
+   Registeret eksponeres her så forsiden kan lese det samme, uten at det
+   finnes to lister som driver fra hverandre. Hele fila er en IIFE, så uten
+   dette er SEARCH_DATA utilgjengelig utenfra. */
+window.HVT_SEARCH_DATA = SEARCH_DATA;
 
 /* ─── Foreslåtte (popular searches — translated) ─── */
 var SUGGESTED = [
