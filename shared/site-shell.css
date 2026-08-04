@@ -805,3 +805,60 @@ body .page-content.is-leaving{ animation: hvxPageOut .28s var(--ease-glide) forw
   body .page-content *{ animation:none !important; opacity:1 !important; transform:none !important; }
   body .page-content::before{ content:none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   MOBIL SCROLL-YTELSE — «animasjonen henger igjen» (2026-08-04)
+   Symptom: på telefon hakket scrollen og bakgrunnen slepte etter
+   innholdet — på ALLE temaer, altså ikke WebGL-nordlyset alene
+   (det er av på carbon og de lyse temaene).
+   Tre kilder, alle kun aktuelle på små skjermer:
+     1. De sticky barene har backdrop-filter:blur(). Et blur-lag må
+        re-sample HELE siden bak seg for hver scroll-frame — den
+        dyreste operasjonen som finnes under scroll på en mobil-GPU,
+        og den som gir «bakgrunnen henger etter»: blur-laget rekker
+        ikke å følge innholdet som glir under det. Samme innsikt som
+        PAGE-ENTRY v2 over (~linje 657), nå brukt på det permanente
+        laget og ikke bare på entré-flaren.
+     2. Lagene bak alt er inset:0 på position:fixed. Når adresselinja
+        skjules ved scroll NED vokser viewporten → hele stabelen får
+        ny høyde og må legges om + tegnes på nytt midt i scrollen.
+        100lvh = «stor viewport», konstant uansett adresselinje.
+        Gjelder også #nordlysCanvas: uten dette fyrer ResizeObserver
+        og reallokerer WebGL-teksturen akkurat idet du scroller ned.
+     3. Kornlaget er allerede nede i 2 % opacity på mobil — usynlig på
+        en telefonskjerm — men koster et fullskjerms SVG-turbulens-
+        filter med mix-blend-mode:overlay på et fixed lag.
+   Auroraen selv står urørt — kun kostnaden er fjernet.
+   body-prefiks slår landingssidenes inline-kopier (0,1,1 > 0,1,0).
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width:768px){
+  /* 1 — ingen live-blur under scroll. Barene holdes nesten opake i
+     stedet, fortsatt avledet fra var(--bg) så alle temaer følger med. */
+  body .nav-wrap{
+    background:color-mix(in srgb, var(--bg) 97%, transparent);
+    backdrop-filter:none; -webkit-backdrop-filter:none;
+  }
+  body .tabs-wrap{
+    background:color-mix(in srgb, var(--bg) 96%, transparent);
+    backdrop-filter:none; -webkit-backdrop-filter:none;
+  }
+
+  /* 2 — fast høyde, så adresselinja kan skjules uten omlegging.
+     height vinner over bottom når top+height+bottom alle er satt, så
+     inset:0 blir stående som fallback uten lvh-støtte. */
+  body .atmo-base,
+  body .atmo,
+  body #nordlysCanvas{ height:100lvh; }
+
+  /* 3 — usynlig på mobil, men dyrt å tegne. Trenger både !important og
+     html-prefiks: forsiden/atmo-sidene tvinger display:block!important
+     via `body.atmo-on .film-grain` (0,2,1), så vi må over den (0,2,2). */
+  html body .film-grain,
+  html body.atmo-on .film-grain{ display:none !important; }
+
+  /* Eget kompositor-lag → ingen repaint per scroll-frame. Trygt her:
+     .cursor-light er allerede display:none under 1023 px, og .atmo er
+     uansett containing block via contain:paint. */
+  body .atmo-base,
+  body .atmo{ transform:translateZ(0); }
+}
