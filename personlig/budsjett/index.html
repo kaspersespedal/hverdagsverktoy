@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="no" data-theme="carbon">
+<html lang="nb" data-theme="carbon">
 <head>
 <meta charset="utf-8">
 <title>Budsjett — Privatøkonomi · Hverdagsverktøy</title>
@@ -23,7 +23,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v128" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v129" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -87,7 +87,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 
 /* ── cat-hero: boks/eyebrow/tittel/lead styles fra shared/components.css ──
    Her legges KUN budsjett-tillegget: live nøkkeltall-rad (speiler .ch-feats) */
-.cat-hero h2 em{font-style:italic;color:var(--accent-2)}
+.cat-hero h1 em,.cat-hero h2 em{font-style:italic;color:var(--accent-2)}
 .bud-sum{display:grid;grid-template-columns:repeat(5,1fr);margin-top:36px;border-top:1px solid var(--line)}
 .bud-sum-cell{padding:22px 18px;text-align:center;border-right:1px solid var(--line);min-width:0;display:flex;flex-direction:column;gap:9px}
 .bud-sum-cell:last-child{border-right:none}
@@ -277,10 +277,10 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
 
 <script defer src="/shared/atmosphere.js?v=v5"></script>
-<script defer src="/shared/core.js?v=v128"></script>
-<script defer src="/shared/lang/no.js?v=v126"></script>
+<script defer src="/shared/core.js?v=v129"></script>
+<script defer src="/shared/lang/no.js?v=v127"></script>
 <script defer src="/shared/search-intents.js?v=v124"></script>
-<script defer src="/shared/search.js?v=v127"></script>
+<script defer src="/shared/search.js?v=v128"></script>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v2"></script>
@@ -347,7 +347,9 @@ footer em{font-style:italic}
     <section class="cat-hero">
       <div class="ch-head">
         <div class="ch-eyebrow" data-i18n="budEyebrow">Verktøy</div>
-        <h2><em data-i18n="budNTitle">Budsjett</em> <span data-i18n="budHeadingSuffix">— månedlig oversikt</span></h2>
+        <!-- a11y/SEO: siden hadde ingen h1 i det hele tatt — sidetittelen lå
+             som h2, så overskriftsnivå 1 manglet på hele siden. -->
+        <h1><em data-i18n="budNTitle">Budsjett</em> <span data-i18n="budHeadingSuffix">— månedlig oversikt</span></h1>
         <div class="ch-sub" data-i18n="budNLead">Legg inn inntekter og utgifter, så regner vi ut månedlig balanse, sparerate og årlig overskudd. Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</div>
       </div>
       <div class="bud-sum" id="budSummary">
@@ -841,8 +843,10 @@ footer em{font-style:italic}
       var rows = (budState[col.key] || []).map(function(r,i){
         return '<div class="bud-row" data-col="'+col.key+'" data-idx="'+i+'">'
           + '<button class="bud-remove" type="button" aria-label="Fjern post" data-act="rm">×</button>'
-          + '<input class="bud-label" type="text" data-field="l" value="'+escapeHtml(r.l)+'" placeholder="'+escapeHtml(col.placeholder)+'">'
-          + '<input type="text" inputmode="numeric" data-field="v" value="'+fmtKrPlain(r.v)+'">'
+          // aria-label per rad: uten den er alle radene bare «tekstfelt» for en
+          // skjermleser, og kolonnen (Inntekt / Faste / Variable) går tapt.
+          + '<input class="bud-label" type="text" data-field="l" aria-label="'+escapeHtml(col.title)+' — navn på post '+(i+1)+'" value="'+escapeHtml(r.l)+'" placeholder="'+escapeHtml(col.placeholder)+'">'
+          + '<input type="text" inputmode="numeric" data-field="v" aria-label="'+escapeHtml(col.title)+' — beløp for post '+(i+1)+' i kroner" value="'+fmtKrPlain(r.v)+'">'
           + '</div>';
       }).join('');
       return '<div class="bud-col" data-col="'+col.key+'"><h4>'+escapeHtml(col.title)+'</h4>'+rows
@@ -1393,7 +1397,20 @@ footer em{font-style:italic}
     var COLNAME = {inntekt:'Inntekt', faste:'Fast utgift', variable:'Variabel utgift'};
     var overlay = null;
     function closeModal(){ if(overlay){ document.removeEventListener('keydown', onKey, true); overlay.remove(); overlay=null; importBtn.focus(); } }
-    function onKey(e){ if(e.key==='Escape'){ e.preventDefault(); closeModal(); } }
+    // Fokusfelle: uten den kan Tab vandre ut av modalen og ned i siden bak,
+    // som fortsatt er der og fullt fokuserbar. Samme mønster som
+    // markedsdata.js onModalKeydown.
+    function onKey(e){
+      if(e.key==='Escape'){ e.preventDefault(); closeModal(); return; }
+      if(e.key!=='Tab' || !overlay) return;
+      var all = overlay.querySelectorAll('button,[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+      var list = [];
+      for(var i=0;i<all.length;i++) if(all[i].offsetParent !== null && !all[i].disabled) list.push(all[i]);
+      if(!list.length) return;
+      var first = list[0], last = list[list.length-1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
 
     function showModal(result){
       closeModal();

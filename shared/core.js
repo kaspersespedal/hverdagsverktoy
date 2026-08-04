@@ -5334,7 +5334,9 @@ function fcUpdateFields(){
   container.innerHTML = '';
   cfg.fields.forEach(f => {
     const isRate = f.id.includes('rate');
-    container.innerHTML += `<div class="fg"><label class="flbl">${f.label}</label><input class="fc" type="text" ${isRate?'':'inputmode="numeric"'} id="${f.id}" value="${isRate ? f.val : fmtInput(f.val)}"></div>`;
+    // for=/id= kobler etiketten til feltet — uten den hadde de 4 feltene på
+    // /kalkulator/finance/ ingen tilgjengelig navn i det hele tatt.
+    container.innerHTML += `<div class="fg"><label class="flbl" for="${f.id}">${f.label}</label><input class="fc" type="text" ${isRate?'':'inputmode="numeric"'} id="${f.id}" value="${isRate ? f.val : fmtInput(f.val)}"></div>`;
   });
   document.getElementById('fc-result').classList.add('hidden');
 }

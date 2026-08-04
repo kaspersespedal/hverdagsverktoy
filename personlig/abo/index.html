@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="no" data-theme="carbon">
+<html lang="nb" data-theme="carbon">
 <head>
 <meta charset="utf-8">
 <title>Abonnement-oversikt — Privatøkonomi · Hverdagsverktøy</title>
@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v128" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v129" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -190,10 +190,10 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
 
 <script defer src="/shared/atmosphere.js?v=v5"></script>
-<script defer src="/shared/core.js?v=v128"></script>
-<script defer src="/shared/lang/no.js?v=v126"></script>
+<script defer src="/shared/core.js?v=v129"></script>
+<script defer src="/shared/lang/no.js?v=v127"></script>
 <script defer src="/shared/search-intents.js?v=v124"></script>
-<script defer src="/shared/search.js?v=v127"></script>
+<script defer src="/shared/search.js?v=v128"></script>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v2"></script>
@@ -561,6 +561,8 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
   function fmtKr(n){ if(!isFinite(n)) return '–'; return Math.round(n).toLocaleString('nb-NO').replace(/,/g,' ').replace(/ /g,' '); }
   function fmtPct(p, d){ if(!isFinite(p)) return '–'; return (p*100).toFixed(d == null ? 1 : d).replace('.',',') + ' %'; }
+  // Trygt navn i aria-label: tomt felt skal ikke gi «Beløp for »
+  function escAria(v){ v=String(v||'').replace(/"/g,'').trim(); return v || 'nytt abonnement'; }
   function parseKr(s){ if(s == null) return 0; return +String(s).replace(/[^\d]/g,'') || 0; }
   function parseDec(s){ if(s == null) return 0; return +String(s).replace(/\s/g,'').replace(',','.').replace(/[^\d.]/g,'') || 0; }
 
@@ -670,19 +672,19 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     return [
       '<div class="ab-row" data-id="'+it.id+'">',
       '  <div class="ab-cell name">',
-      '    <input type="text" placeholder="Tjeneste-navn" value="'+(it.name || '').replace(/"/g,'&quot;')+'" data-f="name">',
+      '    <input type="text" aria-label="Tjeneste-navn" placeholder="Tjeneste-navn" value="'+(it.name || '').replace(/"/g,'&quot;')+'" data-f="name">',
       '  </div>',
       '  <div class="ab-cell">',
-      '    <select data-f="kat">'+katOpts+'</select>',
+      '    <select data-f="kat" aria-label="Kategori for '+escAria(it.name)+'">'+katOpts+'</select>',
       '  </div>',
       '  <div class="ab-cell num">',
-      '    <input type="text" inputmode="numeric" placeholder="0" value="'+krDisplay+'" data-f="kr">',
+      '    <input type="text" inputmode="numeric" aria-label="Beløp for '+escAria(it.name)+'" placeholder="0" value="'+krDisplay+'" data-f="kr">',
       '  </div>',
       '  <div class="ab-cell">',
-      '    <select data-f="freq">'+freqOpts+'</select>',
+      '    <select data-f="freq" aria-label="Betalingsfrekvens for '+escAria(it.name)+'">'+freqOpts+'</select>',
       '  </div>',
       '  <div class="ab-cell num">',
-      '    <input type="text" inputmode="numeric" min="1" max="20" value="'+it.delt+'" data-f="delt">',
+      '    <input type="text" inputmode="numeric" aria-label="Antall som deler '+escAria(it.name)+'" min="1" max="20" value="'+it.delt+'" data-f="delt">',
       '  </div>',
       '  <button class="ab-del" type="button" data-action="del" title="Fjern" aria-label="Fjern abonnement">',
       '    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h10M6.5 5V3.5h3V5M5 5l.5 8h5L11 5"/></svg>',
