@@ -561,7 +561,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v2"></script>
-<script defer src="/shared/core.js?v=v129"></script>
+<script defer src="/shared/core.js?v=v130"></script>
 <script defer src="/shared/lang/no.js?v=v127"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
@@ -618,18 +618,18 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
   function fmtKr(n){ if(!isFinite(n)) return '–'; return fmtNb.format(Math.round(n)) + ' kr'; }
   function fmtKrPlain(n){ if(!isFinite(n)) return '0'; return fmtNb.format(Math.round(n)); }
   function fmtPct(n, d){ if(!isFinite(n)) return '–'; return (n*100).toFixed(d == null ? 1 : d).replace('.', ',') + ' %'; }
-  function parseKr(s){ if(s == null) return 0; return parseInt(String(s).replace(/[^\d]/g, ''), 10) || 0; }
+  function parseKr(s){ if(s == null) return 0; return parseFloat(String(s).replace(/[−‒-―]/g,'-').replace(/[\s ]/g,'').replace(',','.').replace(/[^0-9.\-]/g,'')) || 0; }
   var $ = function(id){ return document.getElementById(id); };
 
   var state = { fuel:'bensin', vekt:1500, co2:125, pris:450000, range:100 };
 
   function liveFormatKr(inp){
-    var raw = inp.value.replace(/[^\d]/g, '');
-    if(!raw) return;
-    var num = parseInt(raw, 10);
-    if(isNaN(num)) return;
+    // fmtLiveNum (core.js) grupperer kun heltallsdelen og lar desimalene stå.
+    // Den gamle strippingen gjorde «1000,50» til 100 050 — 100× for høyt.
+    var out = window.fmtLiveNum ? fmtLiveNum(inp.value, fmtKrPlain) : null;
+    if(out === null || out === inp.value) return;
     var pos = inp.selectionStart, oldLen = inp.value.length;
-    inp.value = fmtKrPlain(num);
+    inp.value = out;
     var newLen = inp.value.length;
     try { inp.setSelectionRange(pos + (newLen - oldLen), pos + (newLen - oldLen)); } catch(_e){}
   }
