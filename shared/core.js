@@ -251,6 +251,22 @@ function parseNum(id) { const el=document.getElementById(id); return el ? +(el.v
 // tilbake INN i skjemafelt, og ingen av parserne p\u00e5 nettstedet kjenner U+2212 \u2014
 // derfor ble \u2212250 000 lest som 0 (eller +250 000). Skriv ASCII-bindestrek.
 function fmtInput(n) { return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(n).replace(/\u00a0/g,' ').replace(/\u2212/g,'-'); }
+// Live-formatering av tall som skrives INN i et felt. Deler på det første
+// desimalskillet, grupperer kun heltallsdelen og lar desimalene stå som skrevet.
+// Uten dette spiste strippingen komma: «1000,50» ble til 100 050 — 100× for
+// høyt, uten varsel. group() er sidens egen tusenskille-formatterer.
+// Returnerer null når det ikke finnes noe å formatere ennå («», «-», «,»).
+function fmtLiveNum(value, group) {
+  var s = String(value).replace(/[−‒-―]/g,'-');
+  var neg = /^\s*-/.test(s);
+  var i = s.search(/[.,]/);
+  var intPart = (i < 0 ? s : s.slice(0, i)).replace(/\D/g,'');
+  var decPart = i < 0 ? null : s.slice(i + 1).replace(/\D/g,'');
+  if(intPart === '' && !decPart) return null;
+  return (neg ? '-' : '')
+    + (group || fmtInput)(intPart === '' ? 0 : parseInt(intPart, 10))
+    + (decPart === null ? '' : ',' + decPart);
+}
 function setEl(id, val) { var el=document.getElementById(id); if(el) el.textContent=val; }
 // V12 Fase 3 helpers (Pattern B null-check epidemi):
 // getVal — null-safe raw value getter (returnerer fallback hvis element mangler eller value er falsy)
@@ -266,15 +282,13 @@ var _HVT_G = 136549;
 document.addEventListener('input', function(e) {
   const el = e.target;
   if(el.inputMode !== 'numeric') return;
-  // Unicode-minus/tankestrek (limt inn fra Excel/PDF) må bli ASCII, ellers
-  // spises minustegnet av strippingen under og −50 000 blir +50 000.
-  const raw = el.value.replace(/[−‒-―]/g,'-').replace(/[^0-9\-]/g,'');
-  if(raw === '' || raw === '-') return;
-  const num = parseInt(raw, 10);
-  if(isNaN(num)) return;
+  // Unicode-minus/tankestrek (limt inn fra Excel/PDF) håndteres i fmtLiveNum,
+  // som også bevarer desimalene i stedet for å strippe komma.
+  const out = fmtLiveNum(el.value);
+  if(out === null || out === el.value) return;
   const pos = el.selectionStart;
   const oldLen = el.value.length;
-  el.value = fmtInput(num);
+  el.value = out;
   const newLen = el.value.length;
   // setSelectionRange kaster på felttyper som ikke støtter markørposisjon.
   try { el.setSelectionRange(pos + newLen - oldLen, pos + newLen - oldLen); } catch(_e){}

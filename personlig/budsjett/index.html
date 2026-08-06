@@ -23,7 +23,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v129" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v130" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -277,7 +277,7 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
 
 <script defer src="/shared/atmosphere.js?v=v5"></script>
-<script defer src="/shared/core.js?v=v129"></script>
+<script defer src="/shared/core.js?v=v130"></script>
 <script defer src="/shared/lang/no.js?v=v127"></script>
 <script defer src="/shared/search-intents.js?v=v124"></script>
 <script defer src="/shared/search.js?v=v128"></script>
@@ -954,8 +954,8 @@ footer em{font-style:italic}
     if(field === 'l'){
       budState[col][idx].l = e.target.value;
     } else if(field === 'v'){
-      var raw = (e.target.value || '').replace(/[^\d\-]/g,'');
-      budState[col][idx].v = parseInt(raw,10) || 0;
+      // parseNum kjenner komma; den gamle strippingen gjorde «1000,50» til 100 050.
+      budState[col][idx].v = parseNum(e.target.value);
       recalcBudget();
     }
     saveBudget(budState);
