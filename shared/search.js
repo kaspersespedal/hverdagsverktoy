@@ -29,7 +29,7 @@ var SEARCH_DATA = [
   {name:'Bolig vs leie',desc:'Sammenlign total kostnad over X år — hva lønner seg?',url:'/boliglan/bvl/',tags:'bolig vs leie kjøpe leie sammenligne break-even eie rent vs buy investering avkastning',type:'tool',page:'Boliglån',sk:'bvl'},
 
   // Kalkulator (hash handled by switchCalcMode in core.js)
-  {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/',tags:'kalkulator regnemaskin pluss minus gange dele prosent calculator',type:'tool',page:'Kalkulator',sk:'kalkBasic'},
+  {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/enkel/',tags:'kalkulator regnemaskin pluss minus gange dele prosent calculator',type:'tool',page:'Kalkulator',sk:'kalkBasic'},
   {name:'Vitenskapelig kalkulator',desc:'Sin, cos, log, potenser og mer',url:'/kalkulator/scientific/',tags:'vitenskapelig kalkulator sin cos tan log ln potens kvadratrot pi scientific',type:'tool',page:'Kalkulator',sk:'kalkSci'},
   {name:'Valutakonverter',desc:'Konverter mellom valutaer med oppdaterte kurser',url:'/kalkulator/unit/',tags:'valuta valutakonverter valutakalkulator valutaomregner kurs dollar euro pund usd eur gbp sek dkk currency exchange rate kursomregner convert currency',type:'tool',page:'Kalkulator',sk:'kalkValuta'},
   {name:'Finansiell kalkulator',desc:'Nåverdi, fremtidsverdi, margin, break-even, renters rente og rabatter',url:'/kalkulator/finance/',tags:'finansiell kalkulator nåverdi fremtidsverdi annuitet rente perioder margin markup break-even break even renters rente compound discount rabatt PV FV PMT TVM financial',type:'tool',page:'Kalkulator',sk:'kalkFin'},
@@ -169,8 +169,18 @@ var SEARCH_DATA = [
   {name:'Teknisk ordliste',desc:'Investeringsbegreper forklart — ETF, opsjoner, obligasjoner, shorting og gearing',url:'/personlig/teknisk/',tags:'ordliste begreper teknisk ips obligasjon opsjon etf shorting gearing utbytte skjermingsfradrag investering glossary',type:'concept',page:'Privatøkonomi'},
   {name:'Regnskap',desc:'Verktøy og kalkulator for regnskap og bokføring',url:'/regnskap/',tags:'regnskap bokføring regnskapsføring avskrivning driftsmiddel',type:'section',page:'Regnskap'},
   {name:'Formueskatt',desc:'Beregn formueskatt med verdsettelsesrabatter',url:'/skatt/formue/',tags:'formue formueskatt verdsettelsesrabatt bolig aksjer eiendom gjeld',type:'tool',page:'Skatt'},
-  {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/reise/',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger',type:'tool',page:'Skatt'}
+  {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/reise/',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger',type:'tool',page:'Skatt'},
+  // De to eneste sidene i sitemap som manglet oppføring — «dokumentavgift» ga
+  // «Ingen treff» selv om kalkulatoren har ligget ute lenge.
+  {name:'Dokumentavgift og tinglysing',desc:'Dokumentavgift 2,5 % og tinglysingsgebyr ved boligkjøp',url:'/boliglan/dok/',tags:'dokumentavgift tinglysing tinglysingsgebyr boligkjøp borettslag nybygg arv fritak omkostninger',type:'tool',page:'Boliglån'}
 ];
+
+/* Forsiden har sin egen søke-UI og kjørte på en lokal 19-treffs kopi av dette
+   registeret — 14 av 18 verktøynavn ga «Ingen treff» fra hovedinngangen.
+   Registeret eksponeres her så forsiden kan lese det samme, uten at det
+   finnes to lister som driver fra hverandre. Hele fila er en IIFE, så uten
+   dette er SEARCH_DATA utilgjengelig utenfra. */
+window.HVT_SEARCH_DATA = SEARCH_DATA;
 
 /* ─── Foreslåtte (popular searches — translated) ─── */
 var SUGGESTED = [
@@ -691,7 +701,10 @@ function injectSearchStyles(){
   var css =
   '#site-search{position:relative;max-width:520px;margin:0 auto;width:100%;font:14px/1.45 var(--font-sans,"Inter",system-ui,sans-serif);}' +
   '.search-box{position:relative;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;transition:border-color .2s,box-shadow .2s;}' +
-  '.search-box:focus-within{border-color:var(--line-warm,var(--accent));box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent);}' +
+  // --line-warm er en hårlinje på 14 % alpha og målte 1,13–1,48:1 mot flaten —
+  // langt under WCAG 2.2 sitt krav på 3:1 for fokusmarkering, og #search-input
+  // har outline:0. Temaets --accent gir 3,1–17,7:1 i alle ni temaer.
+  '.search-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 32%,transparent);}' +
   '.search-icon{color:var(--ink3);flex-shrink:0;transition:color .2s;}' +
   '.search-box:focus-within .search-icon{color:var(--accent);}' +
   '#search-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font:inherit;padding:2px 0;}' +

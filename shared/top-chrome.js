@@ -623,8 +623,24 @@
     });
   }
 
+  // ── Fanerekka: rull aktiv fane inn i bildet ──────────
+  // .tabs er en horisontal scroller (overflow-x:auto), men på 360px vises
+  // bare 2 av 9 faner — og aktiv fane er nr. 9 av 9 på /lov/. Uten dette
+  // ser brukeren aldri hvor hen er, og at rekka i det hele tatt kan skyves.
+  // Ingen smooth-scroll: dette skjer ved sidelast og skal ikke animere.
+  function revealActiveTab(){
+    var tabs = document.querySelector('.tabs');
+    if (!tabs) return;
+    if (tabs.scrollWidth <= tabs.clientWidth + 1) return;   // alt får plass
+    var active = tabs.querySelector('[aria-selected="true"], .tab.active, .tab[aria-current]');
+    if (!active) return;
+    // Sentrer fanen i stedet for å klistre den til kanten, så det er synlig
+    // at det finnes faner på begge sider.
+    var target = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2;
+    tabs.scrollLeft = Math.max(0, target);
+  }
+
   if (document.readyState === 'loading')
-    document.addEventListener('DOMContentLoaded', render);
-  else
-    render();
+    document.addEventListener('DOMContentLoaded', function(){ render(); revealActiveTab(); });
+  else { render(); revealActiveTab(); }
 })();
