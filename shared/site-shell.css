@@ -122,9 +122,15 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .tab[aria-selected="true"] svg{opacity:1;color:var(--accent)}
 
 .page-hero{padding:48px 0 28px;border-bottom:1px solid var(--line)}
-.page-hero .container{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:end}
-.crumb{display:inline-flex;align-items:center;gap:10px;font:500 12px/1 var(--font-sans);
-  letter-spacing:0;color:var(--ink3);margin-bottom:18px}
+/* minmax(0,…) + min-width:0 — grid-barn har min-width:auto som default, så
+   sporet kunne ikke krympe under innholdets min-content. På 375px ble
+   hero-kolonnen 403px bred og dro hele siden ut i sidelengs scroll. */
+.page-hero .container{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:32px;align-items:end}
+.page-hero .container > *{min-width:0}
+/* flex-wrap: brødsmulen er inline-flex og kunne ikke krympe — på 375px dro
+   den siden 9px ut i sidelengs scroll på alle undersider med langt navn. */
+.crumb{display:inline-flex;align-items:center;flex-wrap:wrap;gap:10px;font:500 12px/1 var(--font-sans);
+  letter-spacing:0;color:var(--ink3);margin-bottom:18px;max-width:100%}
 .crumb a{color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
 .crumb a:hover{color:var(--ink)}
 .crumb .sep{width:3px;height:3px;border-radius:50%;background:var(--ink4)}
@@ -137,9 +143,11 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 @media(hover: hover){
 .crumb-back:hover{background:rgba(255,255,255,.03);border-color:var(--line-warm);color:var(--ink) !important;transform:translateX(-2px)}
 }
+/* overflow-wrap: norske sammensatte ord («Refinansieringskalkulator») er
+   lengre enn en telefonskjerm og brekker ikke av seg selv — 60px overflow. */
 h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   font-size:clamp(34px,4vw,46px);line-height:1.08;letter-spacing:-1px;
-  margin:0 0 14px;color:var(--ink)}
+  margin:0 0 14px;color:var(--ink);overflow-wrap:break-word}
 .page-lead{font-size:14px;line-height:1.6;color:var(--ink2);margin:0;max-width:58ch}
 .page-stats{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line)}
 .page-stat{display:flex;align-items:baseline;justify-content:space-between;
@@ -439,7 +447,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);fo
 @media (max-width:1024px){
   .calc-wrap .container{grid-template-columns:1fr}
   .side-col{position:static}
-  .page-hero .container{grid-template-columns:1fr}
+  .page-hero .container{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:768px){
   .ks-body{grid-template-columns:1fr}
@@ -861,4 +869,36 @@ body .page-content.is-leaving{ animation: hvxPageOut .28s var(--ease-glide) forw
      uansett containing block via contain:paint. */
   body .atmo-base,
   body .atmo{ transform:translateZ(0); }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   iOS SAFARI ZOOMER PÅ FELT UNDER 16px — OG ZOOMER IKKE UT IGJEN
+   Hvert eneste skjemafelt på nettstedet lå på 13–14px, så hvert
+   trykk i et felt på iPhone hoppet visningen inn. Målt ved 375px:
+   33 felt på personlig/abo, 18 på regnskap/kontantstrom, 12 på
+   skatt/inntekt — samtlige under grensen.
+
+   16px gjelder kun under 768px; desktop beholder sin typografi.
+
+   !important er bevisst her. Feltstørrelsen settes lokalt på ~50 sider
+   med selektorer som `#fc-fields .fc` (1,1,0) og `.ab-cell select`
+   (0,1,1), og de lastes etter denne fila. Uten !important måtte hver
+   av de 50 sidene rettes for hånd — og neste kopi ville falt utenfor
+   igjen. Ingen side har legitim grunn til mindre enn 16px på mobil.
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width:768px){
+  body input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=hidden]),
+  body select,
+  body textarea{
+    font-size:16px !important;
+  }
+
+  /* Fanerekka rommer 2 av 9 faner på 360px. Den er allerede en scroller,
+     men `scrollbar-width:none` gjorde at ingenting antydet det — rekka så
+     bare avkuttet ut. Uttoning mot høyre kant sier «det er mer her».
+     Aktiv fane rulles inn i bildet av top-chrome.js. */
+  .tabs{
+    -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 26px),transparent);
+            mask-image:linear-gradient(to right,#000 calc(100% - 26px),transparent);
+  }
 }

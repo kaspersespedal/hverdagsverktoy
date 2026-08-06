@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="no" data-theme="carbon">
+<html lang="nb" data-theme="carbon">
 <head>
 <meta charset="utf-8">
 <title>MVA-melding — termin-vis MVA-oppgjør · Hverdagsverktøy</title>
@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v127" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v129" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -48,10 +48,10 @@
 </script>
 
 <!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
-<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/themes.css?v=v2">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
 <link rel="stylesheet" href="/shared/components.css?v=v3">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v5">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v6">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
 
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
@@ -828,8 +828,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 .lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
 
 /* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px}
+.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
 .lc-card .ttl{
   display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
   color:var(--ink3);padding:16px 0 4px;
@@ -838,12 +838,16 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   display:flex;align-items:baseline;justify-content:space-between;gap:18px;
   padding:13px 0;border-top:1px solid var(--line);
 }
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4}
+.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
 .lc-kv .v{
   font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
   font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
 }
 .lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
+/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
+   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
+   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
+.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
 .lc-trinn{width:100%;border-collapse:collapse}
 .lc-trinn caption{
   text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
@@ -860,7 +864,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 .lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 
 /* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .lc-note{
   padding:18px 20px;background:var(--surface);
   border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
@@ -891,7 +895,7 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line-warm)}
 
 /* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .lc-link{
   display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
   background:var(--surface);border:1px solid var(--line);border-radius:10px;
@@ -907,9 +911,9 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 }
 
 @media(max-width:820px){
-  .lc-rates{grid-template-columns:1fr}
-  .lc-notes{grid-template-columns:1fr}
-  .lc-links{grid-template-columns:1fr}
+  .lc-rates{grid-template-columns:minmax(0,1fr)}
+  .lc-notes{grid-template-columns:minmax(0,1fr)}
+  .lc-links{grid-template-columns:minmax(0,1fr)}
 }
 @media(max-width:560px){
   .lc-sec{padding:40px 0}
@@ -1007,6 +1011,10 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
         <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V21"/><path d="M9 21 H15"/><path d="M5 6 H19"/><path d="M2 13 L5 6 L8 13 Z"/><path d="M16 13 L19 6 L22 13 Z"/></svg>
         Lov
       </a>
+      <a href="/kalkyle/" class="tab" role="tab" aria-selected="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 3 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6Z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>
+        Kalkyle
+      </a>
     </div>
   </div>
 </div>
@@ -1088,19 +1096,19 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
           <div class="calc-fields">
             <div class="fg full">
               <label class="flbl" for="mvaSale25" data-i18n="regnskapMvaSale25Lbl">Omsetning 25 % (alminnelig)</label>
-              <input type="number" id="mvaSale25" placeholder="0" inputmode="numeric" min="0" step="any">
+              <input type="text" id="mvaSale25" placeholder="0" inputmode="numeric" min="0" step="any">
             </div>
             <div class="fg full">
               <label class="flbl" for="mvaSale15" data-i18n="regnskapMvaSale15Lbl">Omsetning 15 % (næringsmidler)</label>
-              <input type="number" id="mvaSale15" placeholder="0" inputmode="numeric" min="0" step="any">
+              <input type="text" id="mvaSale15" placeholder="0" inputmode="numeric" min="0" step="any">
             </div>
             <div class="fg full">
               <label class="flbl" for="mvaSale12" data-i18n="regnskapMvaSale12Lbl">Omsetning 12 % (transport, overnatting, kino)</label>
-              <input type="number" id="mvaSale12" placeholder="0" inputmode="numeric" min="0" step="any">
+              <input type="text" id="mvaSale12" placeholder="0" inputmode="numeric" min="0" step="any">
             </div>
             <div class="fg full">
               <label class="flbl" for="mvaSale0" data-i18n="regnskapMvaSale0Lbl">Omsetning 0 % (eksport, aviser, bøker)</label>
-              <input type="number" id="mvaSale0" placeholder="0" inputmode="numeric" min="0" step="any">
+              <input type="text" id="mvaSale0" placeholder="0" inputmode="numeric" min="0" step="any">
               <span class="hint-line">Nullsatset omsetning rapporteres, men gir 0 kr i utgående MVA.</span>
             </div>
           </div>
@@ -1114,16 +1122,16 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
           <div class="calc-fields">
             <div class="fg full">
               <label class="flbl" for="mvaPurchase25" data-i18n="regnskapMvaP25Lbl">Inngående MVA 25 %</label>
-              <input type="number" id="mvaPurchase25" placeholder="0" inputmode="numeric" min="0" step="any">
+              <input type="text" id="mvaPurchase25" placeholder="0" inputmode="numeric" min="0" step="any">
               <span class="hint-line">Allerede beregnet beløp fra fakturaer du har mottatt.</span>
             </div>
             <div class="fg full">
               <label class="flbl" for="mvaPurchase15" data-i18n="regnskapMvaP15Lbl">Inngående MVA 15 %</label>
-              <input type="number" id="mvaPurchase15" placeholder="0" inputmode="numeric" min="0" step="any">
+              <input type="text" id="mvaPurchase15" placeholder="0" inputmode="numeric" min="0" step="any">
             </div>
             <div class="fg full">
               <label class="flbl" for="mvaPurchase12" data-i18n="regnskapMvaP12Lbl">Inngående MVA 12 %</label>
-              <input type="number" id="mvaPurchase12" placeholder="0" inputmode="numeric" min="0" step="any">
+              <input type="text" id="mvaPurchase12" placeholder="0" inputmode="numeric" min="0" step="any">
             </div>
           </div>
         </section>
@@ -1136,7 +1144,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
           <div class="calc-fields">
             <div class="fg full">
               <label class="flbl" for="mvaAdjust" data-i18n="regnskapMvaAdjustLbl">Justering forrige termin (+/−)</label>
-              <input type="number" id="mvaAdjust" placeholder="0" inputmode="numeric" step="any">
+              <input type="text" id="mvaAdjust" placeholder="0" inputmode="numeric" step="any">
               <span class="hint-line">Positivt beløp = økt MVA-skyld. Negativt = redusert.</span>
             </div>
           </div>
@@ -1240,6 +1248,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
         <div class="lc-kv"><span class="k">Leveringsfrist</span><span class="v">1 mnd + 10 dager<span class="u">etter terminslutt</span></span></div>
       </div>
       <div class="lc-card">
+        <div class="lc-tblwrap">
         <table class="lc-trinn">
           <caption>MVA-satser og frister per termin</caption>
           <thead><tr><th>Termin</th><th class="r">Periode</th><th class="r">Frist</th></tr></thead>
@@ -1252,6 +1261,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
             <tr><td><span class="step">6</span></td><td class="r">nov–des</td><td class="r">10. februar</td></tr>
           </tbody>
         </table>
+        </div>
       </div>
       </div>
     </section>
@@ -1404,7 +1414,8 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     function parseNum(id){
       var el = document.getElementById(id);
       if(!el) return 0;
-      var s = String(el.value || '').replace(/[\s ]/g,'').replace(',','.');
+      // nb-NO-minus (U+2212) fra live-formatereren må bli ASCII før parseFloat.
+      var s = String(el.value || '').replace(/[−‒-―]/g,'-').replace(/[\s ]/g,'').replace(',','.');
       var v = parseFloat(s);
       return isFinite(v) ? v : 0;
     }
@@ -1550,8 +1561,8 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
   });
 })();
 </script>
-<script defer src="/shared/core.js?v=v127"></script>
-<script defer src="/shared/lang/no.js?v=v126"></script>
+<script defer src="/shared/core.js?v=v129"></script>
+<script defer src="/shared/lang/no.js?v=v127"></script>
 
 <script>
   if('serviceWorker' in navigator){
@@ -1561,10 +1572,13 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
   }
 </script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
+<!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
+     boksen kunne derfor aldri rendres. -->
+<script src="/shared/search.js?v=v128" defer></script>
 
 <!-- SHELL scripts — REDESIGN-2026-05 (T1-T4 ported) -->
 <script src="/shared/site-shell.js?v=v1" defer></script>
-<script src="/shared/top-chrome.js?v=v1" defer></script>
+<script src="/shared/top-chrome.js?v=v2" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');

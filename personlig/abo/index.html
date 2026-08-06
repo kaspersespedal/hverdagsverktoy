@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="no" data-theme="carbon">
+<html lang="nb" data-theme="carbon">
 <head>
 <meta charset="utf-8">
 <title>Abonnement-oversikt — Privatøkonomi · Hverdagsverktøy</title>
@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v127" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v129" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -104,7 +104,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .side-card.related a:last-child{border-bottom:none}
 .side-card.related a:hover{color:var(--accent-2)}
 .side-card.related a .arr{opacity:.5;transition:transform .15s var(--ease)}
-.side-card.related a:hover .arr{transform:translateX(3px);opacity:1}
+@media(hover:hover){.side-card.related a:hover .arr{transform:translateX(3px);opacity:1}}
 
 .ab-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.012)}
 .ab-list-head, .ab-row{display:grid;grid-template-columns:minmax(180px,2.4fr) minmax(120px,1.2fr) .9fr .65fr .55fr 32px;gap:0;align-items:stretch}
@@ -183,20 +183,20 @@ footer em{font-style:italic}
 </style>
 
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v124">
-<link rel="stylesheet" href="/shared/themes.css?v=v1">
+<link rel="stylesheet" href="/shared/themes.css?v=v2">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v1">
 <link rel="stylesheet" href="/shared/components.css?v=v3">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v5">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v6">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v1">
 
 <script defer src="/shared/atmosphere.js?v=v5"></script>
-<script defer src="/shared/core.js?v=v127"></script>
-<script defer src="/shared/lang/no.js?v=v126"></script>
+<script defer src="/shared/core.js?v=v129"></script>
+<script defer src="/shared/lang/no.js?v=v127"></script>
 <script defer src="/shared/search-intents.js?v=v124"></script>
-<script defer src="/shared/search.js?v=v126"></script>
+<script defer src="/shared/search.js?v=v128"></script>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v1"></script>
+<script defer src="/shared/top-chrome.js?v=v2"></script>
 <style>
 /* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
 .lonn-learn{padding:8px 0 12px}
@@ -237,8 +237,8 @@ footer em{font-style:italic}
 .lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
 
 /* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px}
+.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
 .lc-card .ttl{
   display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
   color:var(--ink3);padding:16px 0 4px;
@@ -247,12 +247,16 @@ footer em{font-style:italic}
   display:flex;align-items:baseline;justify-content:space-between;gap:18px;
   padding:13px 0;border-top:1px solid var(--line);
 }
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4}
+.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
 .lc-kv .v{
   font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
   font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
 }
 .lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
+/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
+   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
+   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
+.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
 .lc-trinn{width:100%;border-collapse:collapse}
 .lc-trinn caption{
   text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
@@ -269,7 +273,7 @@ footer em{font-style:italic}
 .lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 
 /* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .lc-note{
   padding:18px 20px;background:var(--surface);
   border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
@@ -300,7 +304,7 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line-warm)}
 
 /* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .lc-link{
   display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
   background:var(--surface);border:1px solid var(--line);border-radius:10px;
@@ -316,9 +320,13 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 }
 
 @media(max-width:820px){
-  .lc-rates{grid-template-columns:1fr}
-  .lc-notes{grid-template-columns:1fr}
-  .lc-links{grid-template-columns:1fr}
+  /* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap), så
+     de dro hele siden ut i sidelengs scroll — opptil 380px på finance.
+     Samme scroll-wrapper-mønster som .bd-table-wrap/.pv-tblwrap. */
+  .lc-trinn{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .lc-rates{grid-template-columns:minmax(0,1fr)}
+  .lc-notes{grid-template-columns:minmax(0,1fr)}
+  .lc-links{grid-template-columns:minmax(0,1fr)}
 }
 @media(max-width:560px){
   .lc-sec{padding:40px 0}
@@ -374,6 +382,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       <a href="/avgift/" class="tab" role="tab" data-tab="avgift"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg><span data-i18n="tabAvgift">Avgift</span></a>
       <a href="/regnskap/" class="tab" role="tab" data-tab="regnskap"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/><line x1="15" y1="9" x2="15" y2="21"/><line x1="3" y1="15" x2="21" y2="15"/></svg><span data-i18n="tabRegnskap">Regnskap</span></a>
       <a href="/lov/" class="tab" role="tab" data-tab="lov"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V20"/><path d="M5 7 L12 5 L19 7"/></svg><span data-i18n="tabLov">Lov</span></a>
+      <a href="/kalkyle/" class="tab" role="tab" data-tab="kalkyle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 3 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6Z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg><span data-i18n="tabKalkyle">Kalkyle</span></a>
     </div>
   </div>
 </div>
@@ -552,6 +561,8 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
   function fmtKr(n){ if(!isFinite(n)) return '–'; return Math.round(n).toLocaleString('nb-NO').replace(/,/g,' ').replace(/ /g,' '); }
   function fmtPct(p, d){ if(!isFinite(p)) return '–'; return (p*100).toFixed(d == null ? 1 : d).replace('.',',') + ' %'; }
+  // Trygt navn i aria-label: tomt felt skal ikke gi «Beløp for »
+  function escAria(v){ v=String(v||'').replace(/"/g,'').trim(); return v || 'nytt abonnement'; }
   function parseKr(s){ if(s == null) return 0; return +String(s).replace(/[^\d]/g,'') || 0; }
   function parseDec(s){ if(s == null) return 0; return +String(s).replace(/\s/g,'').replace(',','.').replace(/[^\d.]/g,'') || 0; }
 
@@ -634,7 +645,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       '      </div>',
       '      <div class="ab-invest-knobs">',
       '        <label><span data-i18n="aboInvestRente">Avkastning</span><input type="text" inputmode="decimal" id="ab-rente" value="7,0"><span style="color:var(--ink4)">%/år</span></label>',
-      '        <label><span data-i18n="aboInvestAarLbl">i</span><input type="number" min="1" max="50" id="ab-aar" value="10"><span style="color:var(--ink4)" data-i18n="aboInvestAarSuf">år</span></label>',
+      '        <label><span data-i18n="aboInvestAarLbl">i</span><input type="text" inputmode="numeric" min="1" max="50" id="ab-aar" value="10"><span style="color:var(--ink4)" data-i18n="aboInvestAarSuf">år</span></label>',
       '      </div>',
       '    </div>',
       '    <div class="ab-invest-grid">',
@@ -661,19 +672,19 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     return [
       '<div class="ab-row" data-id="'+it.id+'">',
       '  <div class="ab-cell name">',
-      '    <input type="text" placeholder="Tjeneste-navn" value="'+(it.name || '').replace(/"/g,'&quot;')+'" data-f="name">',
+      '    <input type="text" aria-label="Tjeneste-navn" placeholder="Tjeneste-navn" value="'+(it.name || '').replace(/"/g,'&quot;')+'" data-f="name">',
       '  </div>',
       '  <div class="ab-cell">',
-      '    <select data-f="kat">'+katOpts+'</select>',
+      '    <select data-f="kat" aria-label="Kategori for '+escAria(it.name)+'">'+katOpts+'</select>',
       '  </div>',
       '  <div class="ab-cell num">',
-      '    <input type="text" inputmode="numeric" placeholder="0" value="'+krDisplay+'" data-f="kr">',
+      '    <input type="text" inputmode="numeric" aria-label="Beløp for '+escAria(it.name)+'" placeholder="0" value="'+krDisplay+'" data-f="kr">',
       '  </div>',
       '  <div class="ab-cell">',
-      '    <select data-f="freq">'+freqOpts+'</select>',
+      '    <select data-f="freq" aria-label="Betalingsfrekvens for '+escAria(it.name)+'">'+freqOpts+'</select>',
       '  </div>',
       '  <div class="ab-cell num">',
-      '    <input type="number" min="1" max="20" value="'+it.delt+'" data-f="delt">',
+      '    <input type="text" inputmode="numeric" aria-label="Antall som deler '+escAria(it.name)+'" min="1" max="20" value="'+it.delt+'" data-f="delt">',
       '  </div>',
       '  <button class="ab-del" type="button" data-action="del" title="Fjern" aria-label="Fjern abonnement">',
       '    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h10M6.5 5V3.5h3V5M5 5l.5 8h5L11 5"/></svg>',
@@ -749,7 +760,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
           var it = items.find(function(x){return x.id === id;});
           if(!it) return;
           if(f === 'kr') it.kr = parseKr(el.value);
-          else if(f === 'delt') it.delt = Math.max(1, +el.value || 1);
+          else if(f === 'delt') it.delt = Math.max(1, parseKr(el.value) || 1);
           else if(f === 'name') it.name = el.value;
           else it[f] = el.value;
           render();
@@ -819,7 +830,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       render();
     });
     $('#ab-aar').addEventListener('input', function(){
-      invest.aar = Math.max(1, Math.min(50, +this.value || 1));
+      invest.aar = Math.max(1, Math.min(50, parseKr(this.value) || 1));
       render();
     });
   }
