@@ -112,7 +112,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .syk-band-title{font:500 12px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
 .syk-band-sub{font:500 13px/1 var(--font-mono);color:var(--ink2);font-variant-numeric:tabular-nums lining-nums}
 .syk-bar{display:flex;height:36px;border-radius:5px;overflow:hidden;border:1px solid var(--line)}
-.syk-bar-seg{display:flex;align-items:center;justify-content:flex-start;gap:8px;padding:0 12px;font:500 11.5px/1 var(--font-sans);letter-spacing:.04em;color:#fff;min-width:0;transition:flex .25s var(--ease)}
+.syk-bar-seg{display:flex;align-items:center;justify-content:flex-start;gap:8px;padding:0 12px;font:500 11.5px/1 var(--font-sans);letter-spacing:.04em;color:#fff;min-width:0;overflow:hidden;transition:flex .25s var(--ease)}
 .syk-bar-seg.arb{background:linear-gradient(90deg,#c89968,#d8ad7e);color:#1a1612}
 .syk-bar-seg.nav{background:rgba(200,153,104,.45)}
 .syk-bar-seg.tom{background:rgba(255,255,255,.04);color:var(--ink4)}
@@ -217,6 +217,12 @@ footer em{font-style:italic}
   display:flex;align-items:baseline;justify-content:space-between;gap:18px;
   padding:13px 0;border-top:1px solid var(--line);
 }
+/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
+   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
+   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
+   får plass er helt uendret. */
+.lc-kv{flex-wrap:wrap}
+.lc-kv .k{flex:1 1 auto}
 .lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
 .lc-kv .v{
   font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
@@ -691,16 +697,36 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     var bar = $('#syk-bar');
     var parts = [];
     if(arbFlex > 0){
-      parts.push('<div class="syk-bar-seg arb" style="flex:'+arbFlex+'"><span class="syk-bar-label">Arbg.</span>'+(arbFlex > 8 ? r.arbDays+' d' : '')+'</div>');
+      parts.push('<div class="syk-bar-seg arb" style="flex:'+arbFlex+'"><span class="syk-bar-label">Arbg.</span><span class="syk-bar-days">'+(arbFlex > 8 ? r.arbDays+' d' : '')+'</span></div>');
     }
     if(navFlex > 0){
-      parts.push('<div class="syk-bar-seg nav" style="flex:'+navFlex+'"><span class="syk-bar-label">NAV</span>'+(navFlex > 16 ? r.navDays+' d' : '')+'</div>');
+      parts.push('<div class="syk-bar-seg nav" style="flex:'+navFlex+'"><span class="syk-bar-label">NAV</span><span class="syk-bar-days">'+(navFlex > 16 ? r.navDays+' d' : '')+'</span></div>');
     }
     if(restFlex > 0){
       parts.push('<div class="syk-bar-seg tom" style="flex:'+restFlex+'">'+(restFlex > 40 ? 'Ikke benyttet' : '')+'</div>');
     }
     bar.innerHTML = parts.join('');
+    fitBarLabels(bar);
   }
+
+  /* Bolkene er proporsjonale, så på smal skjerm blir arbeidsgiverbolken bare
+     noen få piksler bred og teksten fløt inn over NAV-feltet. Dagtallet, og om
+     nødvendig hele etiketten, skjules når den ikke får plass i sin egen bolk.
+     Fargene forklares uansett av .syk-legend rett under stolpen. */
+  function fitBarLabels(bar){
+    Array.prototype.forEach.call(bar.querySelectorAll('.syk-bar-seg'), function(seg){
+      var days  = seg.querySelector('.syk-bar-days');
+      var label = seg.querySelector('.syk-bar-label');
+      if(days)  days.style.display = '';
+      if(label) label.style.display = '';
+      if(days && seg.scrollWidth > seg.clientWidth) days.style.display = 'none';
+      if(label && seg.scrollWidth > seg.clientWidth) label.style.display = 'none';
+    });
+  }
+  window.addEventListener('resize', function(){
+    var bar = $('#syk-bar');
+    if(bar) fitBarLabels(bar);
+  });
 
   function renderOverflowCap(r){
     var box = $('#syk-overflow-cap');

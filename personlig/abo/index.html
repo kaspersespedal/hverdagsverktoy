@@ -177,6 +177,12 @@ footer em{font-style:italic}
   .page-hero{padding:36px 0 24px}
   .ab-list-head, .ab-row{grid-template-columns:1.6fr 1fr .8fr .5fr 30px}
   .ab-list-head > div:nth-child(5), .ab-cell:nth-child(5){display:none}
+  /* Kolonnene kunne ikke krympe under sitt eget innhold, så raden ble 300px i
+     et 251px felt: "Kategori" rant inn i "Pris", og slett-knappen ble klippet
+     bort av .ks{overflow:hidden} — abonnementer kunne ikke fjernes på mobil.
+     Lar lista scrolle sidelengs i stedet, slik at alle kolonnene er i behold. */
+  .ab-list{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .ab-list-head, .ab-row{min-width:320px}
   .ab-invest-grid{grid-template-columns:1fr 1fr}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
@@ -247,6 +253,12 @@ footer em{font-style:italic}
   display:flex;align-items:baseline;justify-content:space-between;gap:18px;
   padding:13px 0;border-top:1px solid var(--line);
 }
+/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
+   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
+   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
+   får plass er helt uendret. */
+.lc-kv{flex-wrap:wrap}
+.lc-kv .k{flex:1 1 auto}
 .lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
 .lc-kv .v{
   font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
