@@ -109,6 +109,13 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .tabs-wrap{border-bottom:1px solid var(--line);
   background:color-mix(in srgb, var(--bg) 72%, transparent);
   position:sticky;top:64px;z-index:40;backdrop-filter:blur(10px)}
+/* --nav-h = nav-padding*2 + .mark-høyde + 1px bunnstrek. Fanerekka fester seg
+   til denne, ikke til et hardkodet tall — de to hadde drevet fra hverandre
+   (nav måler 65px, mens .tabs-wrap sto på top:64px her og top:60px i 17 siders
+   inline-kopier), så fanerekka la seg noen piksler feil i forhold til baren
+   over. body-prefiks (0,1,1) slår både regelen over og inline-kopiene (0,1,0). */
+:root{--nav-h:65px}
+body .tabs-wrap{top:var(--nav-h)}
 .tabs{display:flex;gap:2px;padding:6px 0;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex-shrink:0;padding:10px 14px;border-radius:4px;
@@ -908,4 +915,25 @@ body .page-content.is-leaving{ animation: hvxPageOut .28s var(--ease-glide) forw
     -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 26px),transparent);
             mask-image:linear-gradient(to right,#000 calc(100% - 26px),transparent);
   }
+}
+
+/* ── Merkevaren i samme størrelse på alle sider (2026-08-07) ──
+   Forsiden krympet nav, logo og ordmerke på små skjermer; ingen annen side
+   gjorde det. Toppen hoppet derfor fra 55px til 65px — og logoen fra 26px til
+   28px — hver gang du klikket deg inn fra forsiden. Verdiene her er forsidens,
+   løftet opp i det delte skallet så alle sider følger samme trapp.
+   --nav-h følger med, ellers driver fanerekka fra nav-høyden igjen.
+   body-prefiks: mange sider har en inline-kopi av `nav{…padding:18px 0}` og
+   `.mark{width:28px…}`, og inline <style> kommer etter <link> i kaskaden —
+   uten prefikset ville disse sidene ignorert hele blokka. */
+@media (max-width:640px){
+  :root{--nav-h:55px}
+  body nav{padding:14px 0;gap:12px}
+  body .mark{width:26px;height:26px}
+  body .wordmark{font-size:16.5px}
+}
+@media (max-width:380px){
+  :root{--nav-h:53px}
+  body .mark{width:24px;height:24px}
+  body .wordmark{font-size:15.5px}
 }

@@ -514,6 +514,26 @@ function _updateI18nHtml(r){
 // _updateI18nHtml: original NO caches paa el._hvtI18nTextOrig, brukes naar R() mangler key.
 // Bruker textContent (ikke innerHTML) — XSS-trygt + bevarer ikke barn-elementer.
 // For oversettelser med inline-markup, bruk data-i18n-html i stedet.
+// Skriv teksten uten å ødelegge et eventuelt <svg>-ikon inne i elementet.
+// Bakgrunn: fanerekka på 7 sider markerer hver fane med data-i18n, og fanene
+// har formen <a data-i18n="tabX"><svg>…</svg>Etikett</a>. `textContent = …`
+// sletter alle barn-noder, så ikonene forsvant ~150 ms etter sidelast — hele
+// fanerekka så annerledes ut på de sidene enn på de øvrige 63.
+// Elementer som IKKE bare har svg-barn beholder nøyaktig gammel oppførsel.
+function _setI18nText(el, target){
+  var kids = el.children, onlySvg = kids.length > 0;
+  for(var k=0; k<kids.length; k++){
+    if(String(kids[k].nodeName).toLowerCase() !== 'svg'){ onlySvg = false; break; }
+  }
+  if(!onlySvg){ el.textContent = target; return; }
+  // Bare ikoner som barn: bytt tekstnoden, la ikonet stå. (En <svg> bidrar ikke
+  // med tekst, så _hvtI18nTextOrig fanget uansett bare etiketten.)
+  for(var n = el.lastChild; n; n = n.previousSibling){
+    if(n.nodeType === 3 && n.nodeValue.trim()){ n.nodeValue = target; return; }
+  }
+  el.appendChild(document.createTextNode(target));
+}
+
 function _updateI18nText(r){
   if(!r) return;
   var els=document.querySelectorAll('[data-i18n]:not([data-i18n-html])');
@@ -523,7 +543,7 @@ function _updateI18nText(r){
     if(el._hvtI18nTextOrig===undefined) el._hvtI18nTextOrig=el.textContent;
     var target=r[key]||el._hvtI18nTextOrig;
     if(el._hvtI18nTextApplied===target) continue;
-    el.textContent=target;
+    _setI18nText(el, target);
     el._hvtI18nTextApplied=target;
   }
 }

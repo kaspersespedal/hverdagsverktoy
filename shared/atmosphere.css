@@ -256,8 +256,16 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
    Body/html go transparent so the fixed atmosphere behind them is visible;
    content cards keep their own var(--surface) fills, so text stays crisp.
    Opacity stays theme-native (matches the forside) — warm/cream on carbon,
-   cool/blue on dark. (2026-05-30) */
-html:has(body.atmo-on){ background:transparent !important; }
+   cool/blue on dark. (2026-05-30)
+
+   MOBIL-HVIT (2026-08-07): html må BEHOLDE en heldekkende var(--bg). Bare
+   body trenger å være gjennomsiktig — html-bakgrunnen forplantes til lerretet
+   og males FØR negative z-index-lag (CSS 2.1 App. E), så auroraen (z-index
+   -3/-2) ligger fortsatt oppå. Med html transparent hadde lerretet ingen
+   farge, og alt det fixede atmosfærelaget ikke rakk over — gummistrikk-scroll
+   på iOS, adresselinje som trekker seg inn, og repaint-etterslep under rask
+   scroll på mobil — slo gjennom som hvitt. */
+html:has(body.atmo-on){ background:var(--bg) !important; }
 body.atmo-on{ background:transparent !important; }
 body.atmo-on .atmo,
 body.atmo-on .atmo-base,

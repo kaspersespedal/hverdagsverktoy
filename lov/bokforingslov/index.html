@@ -38,7 +38,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v129" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v215" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -133,6 +133,12 @@ html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [dat
    painted over the fixed layers. Make body transparent on dark-family themes so
    the aurora shows; light themes already hide it (block above) and keep --bg.
    Dark theme reads faint (cool blue on blue-black) — lift the opacity tokens. */
+/* MOBIL-HVIT (2026-08-07): denne sida er sjolvberga (lastar ikkje site-shell.css),
+   so html fekk aldri ein bakgrunn — berre body, og regelen under gjer body
+   gjennomsiktig. Da stod lerretet utan farge og slo gjennom som HVITT ved
+   overscroll og under rask scroll på mobil. html-bakgrunnen malast før
+   negative z-index-lag, so auroraen (z-index -3/-2) ligg framleis oppa. */
+html{background:var(--bg)}
 html:not(:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"])) body:not(.embed){background:transparent}
 html[data-theme="dark"]{--atmo-band-a-op:.20;--atmo-band-a-op-breathe:.26;--atmo-band-b-op:.13;--atmo-band-b-op-breathe:.17}
 .atmo-base{
@@ -463,6 +469,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     border:1px solid var(--line-warm);
     display:flex;align-items:center;justify-content:center;flex-shrink:0;
   }
+  /* Samme trapp som resten av nettstedet (shared/site-shell.css). Uten denne
+     ble logoruta staaende paa 28px her mens den krympet til 26/24px overalt
+     ellers — merket skiftet stoerrelse naar man klikket seg inn hit.
+     Kun .mark: ordmerket har en egen 420px-tuning paa disse sidene som
+     hindrer at soekeboksen dytter tema-/spraakknappene ut av skjermen. */
+  @media (max-width:640px){ .mark{width:26px;height:26px} }
+  @media (max-width:380px){ .mark{width:24px;height:24px} }
   .wordmark{
     font-family:var(--font-serif);font-weight:500;
     font-size:18px;letter-spacing:-.2px;line-height:1;color:var(--ink);
@@ -530,7 +543,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .tabs-wrap{
     border-bottom:1px solid var(--line);
     background:var(--nav-bg);
-    position:sticky;top:64px;z-index:40;
+    /* --nav-h settes til den maalte nav-hoyden av shared/top-chrome.js.
+       64px staar igjen som fallback uten JS. Nav-hoyden her er innholds-
+       styrt (soekeboks + Forsiden-lenke + tema/spraak bryter til flere
+       linjer), saa et fast tall traff aldri. */
+    position:sticky;top:var(--nav-h,64px);z-index:40;
     backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   }
   .tabs{
@@ -712,7 +729,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media (max-width: 880px){
     .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
     .page-stats{align-self:stretch}
-    .tabs-wrap{top:60px}
+    .tabs-wrap{top:var(--nav-h,60px)}
   }
   @media (max-width: 560px){
     .container{padding:0 22px}
@@ -1111,8 +1128,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   })();
 </script>
 
-<script src="/shared/top-chrome.js?v=v2" defer></script>
-<script defer src="/shared/core.js?v=v129"></script>
+<script src="/shared/top-chrome.js?v=v215" defer></script>
+<script defer src="/shared/core.js?v=v215"></script>
 <script defer src="/shared/lang/no.js?v=v127"></script>
 
 <script>

@@ -640,7 +640,47 @@
     tabs.scrollLeft = Math.max(0, target);
   }
 
+  // ── --nav-h: hold fanerekka festet til den EKTE nav-høyden ──────────
+  // Fanerekka er sticky mot et hardkodet tall (top:64px i site-shell, top:60px
+  // i 17 siders inline-kopier). Nav-høyden er derimot innholdsstyrt og traff
+  // aldri: 65px på mobil, men 73px på 560px og 93px på skrivebord når søkeboks,
+  // «Forsiden»-lenka og tema-/språkklyngen bryter til flere linjer. Klyngen
+  // legges dessuten til AV DENNE FILA etter DOMContentLoaded, så høyden endrer
+  // seg etter at siden er malt — det var derfor toppen «lastet inn annerledes».
+  // Vi måler i stedet den faktiske høyden og skriver den til --nav-h; CSS-verdiene
+  // blir stående som fallback for sider uten JS.
+  var __navObs = null;   // må holdes i live: en ResizeObserver uten referanse
+                         // kan bli samlet inn, og da slutter den å fyre.
+  function syncNavHeight(){
+    var nw = document.querySelector('.nav-wrap');
+    if (!nw) return;
+    var h = Math.round(nw.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty('--nav-h', h + 'px');
+  }
+  function watchNavHeight(){
+    syncNavHeight();
+    var nw = document.querySelector('.nav-wrap');
+    if (nw && window.ResizeObserver){
+      try {
+        __navObs = new ResizeObserver(syncNavHeight);
+        __navObs.observe(nw);
+        var inner = nw.querySelector('nav');
+        if (inner) __navObs.observe(inner);
+      } catch(_e){}
+    }
+    // Baren vokser etter første måling: språkmenyens flagg lastes fra nettet og
+    // serif-fonten byttes inn, og på mellombrede skjermer brytes søkeboksen og
+    // «Forsiden»-lenka til en ny linje. Uten disse re-målingene ble --nav-h
+    // stående på oppstartsverdien (73px mens baren faktisk var 93px).
+    window.addEventListener('resize', syncNavHeight);
+    window.addEventListener('orientationchange', syncNavHeight);
+    window.addEventListener('load', syncNavHeight);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncNavHeight).catch(function(){});
+    setTimeout(syncNavHeight, 300);
+    setTimeout(syncNavHeight, 1200);
+  }
+
   if (document.readyState === 'loading')
-    document.addEventListener('DOMContentLoaded', function(){ render(); revealActiveTab(); });
-  else { render(); revealActiveTab(); }
+    document.addEventListener('DOMContentLoaded', function(){ render(); revealActiveTab(); watchNavHeight(); });
+  else { render(); revealActiveTab(); watchNavHeight(); }
 })();
