@@ -505,7 +505,11 @@
   .quick-cats{
     margin-top:20px;
     display:grid;
-    grid-template-columns:repeat(9, minmax(0,1fr));
+    /* Kolonnetallet MÅ følge antall .qc-kort (10). Da Kalkyle ble lagt til som
+       kort nr. 10 sto denne på 9, og kortet brakk ned på en egen rad alene i
+       1/9 bredde — uten topp-kantlinje, siden den bare settes på 5-kolonners
+       breakpointet. */
+    grid-template-columns:repeat(10, minmax(0,1fr));
     gap:0;
     background:var(--surface);
     border:1px solid var(--line);
@@ -548,7 +552,9 @@
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     max-width:100%;
   }
-  @media (max-width:900px){
+  /* 1060px, ikke 900px: under dette gir 10 kolonner ~84px tekstbredde og
+     "Privatøkonomi" (~78px) begynner å bli ellipset. 5×2 er like symmetrisk. */
+  @media (max-width:1060px){
     .quick-cats{grid-template-columns:repeat(5, minmax(0,1fr))}
     .qc:nth-child(5){border-right:0}
     .qc:nth-child(n+6){border-top:1px solid var(--line)}
