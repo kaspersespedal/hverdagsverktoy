@@ -407,6 +407,12 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
   .nav-wrap.scrolled{border-bottom-color:var(--line)}
   nav.top-nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:24px}
+  /* På 320px-skjermer var logo + 24px mellomrom + tema/språk bredere enn
+     navlinja, så tema- og språkknappene havnet utenfor skjermkanten. */
+  @media (max-width:420px){
+    nav.top-nav{gap:12px}
+    .wordmark{font-size:15px}
+  }
   .brand-row{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
   .mark{
     width:28px;height:28px;border-radius:5px;
@@ -559,6 +565,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media (max-width: 560px){
     .container{padding:0 22px}
     .page-hero{padding:36px 0 28px}
+    /* Søkeboksen ligger inne i navbaren på disse sidene og krympet ikke —
+       den dyttet tema- og språkknappene ut til x=566 på en 375px skjerm,
+       altså utenfor synlig område. Samme grep som lov-undersidene bruker. */
+    #site-search-anchor,#site-search{display:none}
     h1.page-title{font-size:clamp(30px, 8vw, 42px)}
   }
   @media (prefers-reduced-motion: reduce){
@@ -567,7 +577,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
 
   .crumb{
-    display:inline-flex;align-items:center;gap:10px;
+    display:inline-flex;align-items:center;flex-wrap:wrap;row-gap:5px;gap:10px;
     font:500 12px/1 var(--font-sans);letter-spacing:0;
     color:var(--ink3);margin:0 0 18px;
   }
@@ -838,6 +848,12 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   display:flex;align-items:baseline;justify-content:space-between;gap:18px;
   padding:13px 0;border-top:1px solid var(--line);
 }
+/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
+   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
+   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
+   får plass er helt uendret. */
+.lc-kv{flex-wrap:wrap}
+.lc-kv .k{flex:1 1 auto}
 .lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
 .lc-kv .v{
   font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
