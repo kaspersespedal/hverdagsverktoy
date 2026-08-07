@@ -279,6 +279,10 @@
   padding: 38px 32px 28px;
   position: relative;
   display: grid;
+  /* Uten en eksplisitt kolonne fikk kortet et implisitt auto-spor på bredden
+     til det lengste ordet ("Merverdiavgiftsloven" = 276px) og sprakk ut av
+     sitt eget innholdsfelt på 235px. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto auto 1fr auto;
   gap: 16px;
   min-height: 240px;
@@ -360,5 +364,11 @@
   .cat-hero .ch-feats { grid-template-columns: 1fr; }
   .ch-feat { border-right: none; border-bottom: 1px solid var(--line); padding: 16px 14px; }
   .ch-feat:last-child { border-bottom: none; }
-  .cat-grid { grid-template-columns: 1fr; }
+  /* minmax(0,1fr) — bar 1fr gir sporet en automatisk minstebredde lik kortets
+     min-content (340px på /lov/), som sprengte det 309px brede rutenettet og
+     ble klippet bort av .cat-grid{overflow:hidden} på mobil. */
+  .cat-grid { grid-template-columns: minmax(0, 1fr); }
+  /* Siste skanse: lange sammensatte ord uten brytepunkt (norsk har mange)
+     skal brekke i stedet for å bli klippet av .cat-grid{overflow:hidden}. */
+  .cat-card h4 { overflow-wrap: break-word; }
 }

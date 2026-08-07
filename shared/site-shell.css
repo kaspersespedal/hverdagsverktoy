@@ -452,7 +452,14 @@ footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);fo
 @media (max-width:768px){
   .ks-body{grid-template-columns:1fr}
   .ks-form{border-right:none;border-bottom:1px solid var(--line)}
-  .ks-strip{grid-template-columns:repeat(2,1fr)}
+  /* minmax(0,…) — bare 1fr gir sporet en minstebredde lik cellens min-content,
+     så en lang verdi som "Største post" presset stripen 11px ut av .ks og ble
+     klippet bort av .ks{overflow:hidden}. */
+  .ks-strip{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  /* Verdien er inline-flex uten min-width:0 og målte derfor max-content — en
+     lang tekstverdi (f.eks. navnet på største abonnement) stakk ut av cellen. */
+  .ks-strip-cell .v{max-width:100%;flex-wrap:wrap;overflow-wrap:anywhere}
+  .ks-strip-cell .v > *{min-width:0}
 }
 
 /* ── Help dot + popover (?-veiledning ved seksjonshoder) ────── */
