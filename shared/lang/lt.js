@@ -1312,6 +1312,7 @@ REGIONS['lt'] = {
     homeNavSearch: 'Ieškoti',
     homeHeroTitle: 'Praktiški įrankiai <em>asmeniniams finansams</em>, mokesčiams ir teisei.',
     homeMarketTitle: 'Dienos apžvalga',
+    homeFxConvLabel: 'Valiutų konverteris',
     "fr.kicker": "Artėja",
     "fr.title": "Svarbūs terminai",
     "fr.context": "— artimiausi, taikomi jums, surūšiuoti pagal datą",

@@ -1530,6 +1530,7 @@ REGIONS['en'] = {
     homeNavSearch: 'Search',
     homeHeroTitle: 'Practical tools for <em>personal finance</em>, tax and law.',
     homeMarketTitle: 'Daily overview',
+    homeFxConvLabel: 'Currency converter',
     "fr.kicker": "Upcoming",
     "fr.title": "Important deadlines",
     "fr.context": "— the next ones that apply to you, sorted by date",

@@ -1476,6 +1476,7 @@ REGIONS['ar'] = {
     homeNavSearch: 'بحث',
     homeHeroTitle: 'أدوات عملية لـ <em>الاقتصاد الشخصي</em>، الضرائب والقانون.',
     homeMarketTitle: 'نظرة عامة يومية',
+    homeFxConvLabel: 'محوّل العملات',
     "fr.kicker": "قادمة",
     "fr.title": "مواعيد نهائية مهمة",
     "fr.context": "— التالية التي تخصك، مرتبة حسب التاريخ",
