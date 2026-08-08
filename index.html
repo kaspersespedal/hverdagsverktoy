@@ -2515,8 +2515,13 @@ html[data-theme="bw"], body[data-theme="bw"]{
           var tokens = text.split(/(\s+)/);
           tokens.forEach(function(tok){
             if(!tok) return;
-            if(/^\s+$/.test(tok)){ out.push({type:'space', text:' '}); }
-            else { out.push({type:'word', text:tok, italic:!!isItalic}); }
+            if(/^\s+$/.test(tok)){ out.push({type:'space', text:' '}); return; }
+            /* Tegnsetting rett etter <em> ligger i neste tekstnode og ble et eget
+               ord — kommaet etter «privatøkonomi» kunne derfor havne alene på
+               ny linje på mobil. Heng den på forrige ord i stedet. */
+            var prev = out[out.length - 1];
+            if(prev && prev.type === 'word'){ prev.tail = (prev.tail || '') + tok; return; }
+            out.push({type:'word', text:tok, italic:!!isItalic});
           });
         } else if(node.nodeType === 1 && node.tagName === 'EM'){
           out = out.concat(splitNodes(node, true));
@@ -2560,6 +2565,15 @@ html[data-theme="bw"], body[data-theme="bw"]{
       }
       inner.style.setProperty('--w-d', d + 'ms');
       mask.appendChild(inner);
+      if(t.tail){
+        /* Eget inner-span så tegnsettingen slipper gull-gradienten, men samme
+           mask (white-space:nowrap) så den ikke kan brekke fra ordet. */
+        var tail = document.createElement('span');
+        tail.className = 'word-inner';
+        tail.textContent = t.tail;
+        tail.style.setProperty('--w-d', d + 'ms');
+        mask.appendChild(tail);
+      }
       h.appendChild(mask);
       wordIdx++;
     });
