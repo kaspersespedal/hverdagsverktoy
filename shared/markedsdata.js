@@ -13,18 +13,17 @@
   var frame = document.querySelector('.daily-frame');
   if (!frame) return;
 
-  /* Live-ticker state: «Valuta & rente»-stripa fylles fra de ekte FX- og
-     styringsrente-feedene under (Norges Bank). Ingen hardkodede tall — den
-     gamle fake «Aksjer & marked»-stripa er fjernet (E-fix 2026-06-29). */
-  var _fx = null, _rate = null;
+  /* Siste valutadata fra Norges Bank + valutaen brukeren har valgt.
+     Valutakortet og omregner-stripa deler ett valg — se VALUTAVALG under. */
+  var _fx = null, _fxCode = 'USD';
 
   /* Siste strømdata — leses av scrub-chipen på søylediagrammet. */
   var _strom = null;
 
   /* Render-signaturer: minutt-pulsen re-rendrer fra cache hvert 60. sekund,
-     men DOM som bærer animasjon (marquee, søylediagram, værstripe) skal kun
-     bygges om når innholdet faktisk er endret — ellers restarter loopen synlig. */
-  var _tickerSig = '', _stromSig = '', _fcSig = '', _graphSig = '', _weekSig = '';
+     men DOM som bærer animasjon (søylediagram, værstripe) skal kun bygges om
+     når innholdet faktisk er endret — ellers restarter animasjonen synlig. */
+  var _stromSig = '', _fcSig = '', _graphSig = '', _weekSig = '';
 
   /* Fullskjerm-værmelding-state: modal-DOM bygges lazy ved første åpning,
      _lastWx holder siste rendrede vær-data (mates til grafen ved åpning),
@@ -222,51 +221,110 @@
     el.textContent = 'Sist oppdatert ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
   }
 
-  /* ════════════════ LIVE-TICKER («Valuta & rente»-stripa) ════════════════ */
-  /* Oversatt label via i18n (R()) med norsk fallback — bygges ved build-time
-     fordi stripa fylles etter at core.js sin data-i18n-swap har kjørt. */
-  function tlabel(key, fb) {
-    try { var r = (typeof R === 'function') ? R() : null; return (r && r[key]) ? r[key] : fb; }
-    catch (e) { return fb; }
-  }
-  function tickerItems() {
-    var items = [];
-    if (_fx) {
-      ['USD', 'EUR', 'GBP', 'SEK', 'DKK', 'CHF', 'JPY'].forEach(function (code) {
-        var c = _fx[code]; if (!c || c.last == null) return;
-        var m = c.mult || 1;
-        var diff = (c.prev != null) ? (c.last - c.prev) * m : 0;
-        var dir = Math.abs(diff) < 0.0005 ? 0 : diff > 0 ? 1 : -1;
-        items.push({ lbl: fxUnit(c, code) + ' / NOK', val: fxQuote(c),
-          dir: dir, delta: (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) });
-      });
-    }
-    if (_rate && _rate.last != null) {
-      var rd = (_rate.prevLevel != null) ? _rate.last - _rate.prevLevel : 0;
-      var rdir = Math.abs(rd) < 0.001 ? 0 : rd > 0 ? 1 : -1;
-      items.push({ lbl: tlabel('homeMarketsPairPolicy', 'Styringsrente'), val: nb(_rate.last, 2) + ' %',
-        dir: rdir, delta: (rdir > 0 ? '+' : rdir < 0 ? '−' : '±') + nb(Math.abs(rd), 2) + ' pp' });
-    }
-    return items;
-  }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
-  function buildTicker() {
-    var track = $('tickerTrack'); if (!track) return;
-    var items = tickerItems(); if (!items.length) return;
-    var sig = JSON.stringify(items);
-    if (sig === _tickerSig) return; // uendret — ikke restart marquee-animasjonen
-    _tickerSig = sig;
-    function cls(d) { return d > 0 ? 'up' : d < 0 ? 'down' : 'flat'; }
-    function span(it, hidden) {
-      return '<span class="ti"' + (hidden ? ' aria-hidden="true"' : '') + '><b>' + esc(it.lbl) +
-        '</b> <span class="val">' + esc(it.val) + '</span> <em class="' + cls(it.dir) + '">' + esc(it.delta) + '</em></span>';
+
+  /* ════════════════════════ VALUTAVALG ════════════════════════════════
+     Valutakortet viste før alltid USD, og under panelet rullet en stripe
+     som gjentok de samme kursene. Nå velger brukeren selv valuta, og
+     stripa er blitt en omregner (under). Valget deles av begge og lagres. */
+  var FX_CODES = ['USD', 'EUR', 'GBP', 'SEK', 'DKK', 'CHF', 'JPY', 'PLN'];
+
+  function getFxCode() {
+    var o = cacheGet('fxcode');
+    return (o && FX_CODES.indexOf(o.d) >= 0) ? o.d : 'USD';
+  }
+  function setFxCode(code) {
+    if (FX_CODES.indexOf(code) < 0 || code === _fxCode) return;
+    _fxCode = code;
+    cacheSet('fxcode', code);
+    if (_fx) renderFx(_fx);
+    renderConv();
+  }
+
+  /* Nedtrekksmeny med de åtte valutaene og dagens kurs. Samme meny brukes av
+     kortets etikett og av omregnerens valuta-brikke — begge setter _fxCode,
+     så de to står alltid på samme valuta. Kursen står i menyen i stedet for
+     valutanavnet: det er mer nyttig, og trenger ingen oversettelse. */
+  function buildCurMenu(btn, anchor) {
+    if (!btn || !anchor) return;
+    var menu = document.createElement('ul');
+    menu.className = 'fx-menu'; menu.hidden = true;
+    menu.setAttribute('role', 'listbox');
+    FX_CODES.forEach(function (code) {
+      var li = document.createElement('li');
+      li.className = 'fx-opt'; li.setAttribute('role', 'option'); li.tabIndex = 0;
+      li.innerHTML = '<b>' + code + '</b><small></small>';
+      function pick() { setFxCode(code); close(); btn.focus(); }
+      li.addEventListener('click', pick);
+      li.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); }
+      });
+      menu.appendChild(li);
+    });
+    anchor.appendChild(menu);
+
+    function open() {
+      for (var i = 0; i < FX_CODES.length; i++) {
+        var code = FX_CODES[i], li = menu.children[i], c = _fx && _fx[code];
+        li.classList.toggle('on', code === _fxCode);
+        li.setAttribute('aria-selected', code === _fxCode ? 'true' : 'false');
+        /* Noteringsenheten hører til koden («100 SEK»), kursen står for seg. */
+        li.querySelector('b').textContent = c ? fxUnit(c, code) : code;
+        li.querySelector('small').textContent = c ? fxQuote(c) + ' kr' : '';
+      }
+      menu.hidden = false; btn.setAttribute('aria-expanded', 'true');
     }
-    var html = '';
-    items.forEach(function (it) { html += span(it, false); }); // Set A (lest av skjermleser)
-    items.forEach(function (it) { html += span(it, true); });  // Set B (duplikat for sømløs loop)
-    track.innerHTML = html;
-    // Skaler marquee-fart til antall elementer (originalen var ~4,8s/element).
-    track.style.animationDuration = (items.length * 4.8).toFixed(0) + 's';
+    function close() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
+    btn.addEventListener('click', function (e) { e.stopPropagation(); menu.hidden ? open() : close(); });
+    document.addEventListener('click', function (e) { if (!menu.hidden && !anchor.contains(e.target)) close(); });
+    menu.addEventListener('keydown', function (e) { if (e.key === 'Escape') { close(); btn.focus(); } });
+  }
+
+  /* ══════════════════════ VALUTAOMREGNER ══════════════════════════════
+     Stripa nederst i panelet. Regner mellom valgt valuta og kroner på
+     kursene som allerede er hentet — ingen ekstra nettverkskall.
+     Retningen snus med byttekapp-knappen og huskes. */
+  var _convDir = 1;              // 1: valuta → NOK, −1: NOK → valuta
+  var _convPick = null, _convNok = null;
+
+  /* Skjemafeltet tar både «1 234,5» og «1234.5». Tomt/ugyldig gir null. */
+  function parseAmt(s) {
+    var t = String(s == null ? '' : s).replace(/[\s ]/g, '').replace(',', '.');
+    if (!/^\d*\.?\d*$/.test(t)) return null;
+    var n = parseFloat(t);
+    return isNaN(n) ? null : n;
+  }
+
+  /* Brikken som kan klikkes står alltid på valuta-siden; NOK-siden er ren
+     tekst. Ved retningsbytte flyttes de to nodene mellom feltene. */
+  function applyConvDir() {
+    var a = $('fxcSlotA'), b = $('fxcSlotB');
+    if (!a || !b || !_convPick || !_convNok) return;
+    a.appendChild(_convDir > 0 ? _convPick : _convNok);
+    b.appendChild(_convDir > 0 ? _convNok : _convPick);
+  }
+
+  function renderConv() {
+    var out = $('fxcOut'); if (!out) return;
+    setText('fxcCode', _fxCode);
+    var c = _fx && _fx[_fxCode], amt = parseAmt($('fxcAmt') && $('fxcAmt').value);
+    if (!c || c.last == null) { out.textContent = '—'; setText('fxcRate', ''); return; }
+    setText('fxcRate', '1 ' + _fxCode + ' = ' + nb(c.last, 4) + ' kr');
+    out.textContent = (amt == null) ? '—' : nb(_convDir > 0 ? amt * c.last : amt / c.last, 2);
+  }
+
+  function buildConverter() {
+    var root = $('fxConv'), pick = $('fxcPick'), nok = $('fxcNok'), amt = $('fxcAmt'), swap = $('fxcSwap');
+    if (!root || !pick || !nok || !amt || !swap) return;
+    _convPick = pick; _convNok = nok;
+    var o = cacheGet('fxdir'); if (o && o.d === -1) _convDir = -1;
+    buildCurMenu(pick, root);
+    swap.addEventListener('click', function () {
+      _convDir = -_convDir; cacheSet('fxdir', _convDir);
+      applyConvDir(); renderConv();
+    });
+    amt.addEventListener('input', renderConv);
+    applyConvDir(); renderConv();
   }
 
   /* ════════════════════════════ VÆR (MET) ════════════════════════════ */
@@ -751,33 +809,50 @@
     }
     return out;
   }
+  /* Y-akse-tall: aldri mer enn fem tegn, ellers sprenger de margen.
+     9,94 · 100,3 · 1174 — presisjonen som får plass, ikke mer. */
+  function axNum(v) { return nb(v, v >= 1000 ? 0 : v >= 100 ? 1 : 2); }
   /* «SEK» → «100 SEK» når banken noterer per 100. */
   function fxUnit(c, code) { var m = (c && c.mult) || 1; return (m > 1 ? m + ' ' : '') + code; }
   function fxQuote(c, dec) { return nb(c.last * ((c && c.mult) || 1), dec == null ? 2 : dec); }
   function renderFx(d) {
-    if (!d.USD) return;
-    countUp('fxVal', d.USD.last, 2);
+    var code = _fxCode, c = d[code];
+    if (!c) { code = 'USD'; c = d.USD; }   // valgt valuta manglet i feeden
+    if (!c) return;
+    var m = c.mult || 1;
+    /* Tall og etikett siteres i Norges Banks egen noteringsenhet, slik at
+       yen står som «100 JPY = 7,02» og ikke «1 JPY = 0,07». */
+    setText('fxPairName', fxUnit(c, code) + ' / NOK');
+    countUp('fxVal', c.last * m, 2);
+    /* Undertittelen viser de tre neste i lista — den valgte står i tallet over. */
     var sub = [];
-    ['EUR', 'GBP', 'SEK'].forEach(function (code) {
-      var c = d[code]; if (c) sub.push(fxUnit(c, code) + ' ' + fxQuote(c));
+    FX_CODES.forEach(function (k) {
+      if (k === code || sub.length >= 3) return;
+      var o = d[k]; if (o) sub.push(fxUnit(o, k) + ' ' + fxQuote(o));
     });
     setText('fxSub', sub.join(' · '));
     var span = $('fxTrend');
-    if (span && d.USD.prev != null) {
-      var diff = d.USD.last - d.USD.prev, dir = Math.abs(diff) < 0.0005 ? 0 : diff > 0 ? 1 : -1;
+    if (span && c.prev != null) {
+      var diff = (c.last - c.prev) * m, dir = Math.abs(diff) < 0.0005 ? 0 : diff > 0 ? 1 : -1;
       trendClass(span, dir);
       span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) + '</span>';
     }
-    var dts = d.USD.dates;
+    var dts = c.dates;
     if (dts && dts.length) {
       var lastI = dts.length - 1;
       setText('fxAx0', nbShort(dts[0]));
-      setText('fxAx1', nbShort(dts[Math.round(lastI / 3)]));
-      setText('fxAx2', nbShort(dts[Math.round(lastI * 2 / 3)]));
-      setText('fxAx3', 'i dag');
+      setText('fxAx1', nbShort(dts[Math.round(lastI / 2)]));
+      setText('fxAx2', 'i dag');
     }
-    applySpark($('fxCard'), d.USD.series);
-    _fx = d; buildTicker();
+    /* Y-akse. Kurven autoskalerer mellom periodens laveste og høyeste verdi,
+       så uten disse to tallene er den umulig å måle. Samme noteringsenhet
+       som tallet over («100 JPY»), ellers ville aksen sagt 0,06. */
+    if (c.series && c.series.length) {
+      setText('fxYMax', axNum(Math.max.apply(null, c.series) * m));
+      setText('fxYMin', axNum(Math.min.apply(null, c.series) * m));
+    }
+    applySpark($('fxCard'), c.series);
+    _fx = d; renderConv();
     stampNow();
   }
   function loadFx(force) {
@@ -786,7 +861,7 @@
        plukkes ny dagskurs opp senest en time etter publisering. */
     if (!force && fresh(c, 3600 * 1000)) { renderFx(c.d); return; }
     if (c) renderFx(c.d);
-    fetch('https://data.norges-bank.no/api/data/EXR/B.USD+EUR+GBP+SEK+DKK+CHF+JPY.NOK.SP?lastNObservations=30&format=sdmx-json&locale=en')
+    fetch('https://data.norges-bank.no/api/data/EXR/B.USD+EUR+GBP+SEK+DKK+CHF+JPY+PLN.NOK.SP?lastNObservations=30&format=sdmx-json&locale=en')
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (j) { var d = parseExr(j); cacheSet('fx', d); renderFx(d); })
       .catch(function () {});
@@ -834,7 +909,6 @@
       }
       else { lbl.textContent = ''; val.textContent = ''; }
     }
-    _rate = d; buildTicker();
     stampNow();
   }
   function loadRate(force) {
@@ -872,6 +946,13 @@
       var pct = d.avg ? (d.now - d.avg) / d.avg * 100 : 0, dir = Math.abs(pct) < 0.5 ? 0 : pct > 0 ? 1 : -1;
       trendClass(span, dir);
       span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + Math.round(Math.abs(pct)) + '<i>%</i></span>';
+    }
+    /* Y-akse: dyreste og billigste time i øre. Søylene skaleres mot dagens
+       maks, og med spenn som 143:1 blir de billige timene 2 px høye — da er
+       tallene det eneste som forteller hva bunnen faktisk er. */
+    if (d.prices && d.prices.length) {
+      setText('stYMax', String(Math.round(Math.max.apply(null, d.prices) * 100)));
+      setText('stYMin', String(Math.round(Math.min.apply(null, d.prices) * 100)));
     }
     _strom = d;
     var sig = sone + '|' + d.hour + '|' + d.cheapHour + '|' + (d.prices ? d.prices.length + ':' + d.prices[0] : '');
@@ -1050,10 +1131,10 @@
              Math.round(p[i] * 100) + ' øre';
     });
     bindScrub('fxSpark', 'fxScrub', 'fxScrubTxt', function (frac) {
-      var u = _fx && _fx.USD; if (!u || !u.series || !u.series.length) return '';
+      var u = _fx && _fx[_fxCode]; if (!u || !u.series || !u.series.length) return '';
       var i = Math.min(u.series.length - 1, Math.round(frac * (u.series.length - 1)));
       var dt = u.dates && u.dates[i] ? nbShort(u.dates[i]) : '';
-      return (dt ? '<span class="mut">' + dt + '</span> · ' : '') + nb(u.series[i], 2) + ' kr';
+      return (dt ? '<span class="mut">' + dt + '</span> · ' : '') + nb(u.series[i] * (u.mult || 1), 2) + ' kr';
     });
   }
 
@@ -1071,8 +1152,10 @@
   /* ── Init ────────────────────────────────────────────────────── */
   function init() {
     var place = getPlace();
+    _fxCode = getFxCode();
     setText('wxPlaceName', place.navn);
     buildStamp(); buildPicker(); buildGeo(); buildExpand(); buildScrubs();
+    buildCurMenu($('fxPickBtn'), $('fxCard')); buildConverter();
     loadWeather(place, false); loadFx(false); loadRate(false); loadStrom(place, false);
     setInterval(tick, 60 * 1000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });

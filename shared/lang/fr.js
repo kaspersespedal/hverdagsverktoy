@@ -998,6 +998,7 @@ REGIONS['fr'] = {
     homeHeroFree: 'Gratuit — tout s\'exécute localement dans votre navigateur.',
     homeNavSearch: 'Rechercher',
     homeMarketTitle: 'Aperçu du jour',
+    homeFxConvLabel: 'Convertisseur de devises',
     "fr.kicker": "À venir",
     "fr.title": "Échéances importantes",
     "fr.context": "— les prochaines qui vous concernent, triées par date",

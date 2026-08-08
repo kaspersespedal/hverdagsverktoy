@@ -1251,6 +1251,7 @@ REGIONS['no'] = {
     homeHeroFree:'Gratis — alt kjører lokalt i nettleseren.',
     homeNavSearch:'Søk',
     homeMarketTitle:'Dagsoversikt',
+    homeFxConvLabel: 'Valutaomregner',
     'fr.kicker':'Kommende',
     'fr.title':'Viktige frister',
     'fr.context':'— de neste som gjelder deg, sortert etter dato',
