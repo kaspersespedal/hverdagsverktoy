@@ -1271,6 +1271,7 @@ REGIONS['so'] = {
     homeNavSearch: 'Raadi',
     homeHeroTitle: `Qalab wax-ku-ool ah oo loogu talagalay <em>maaliyadda gaarka ah</em>, canshuurta iyo sharciga.`,
     homeMarketTitle: 'Guudmarka maalinlaha',
+    homeFxConvLabel: 'Beddelaha lacagaha',
     "fr.kicker": "Soo socda",
     "fr.title": "Wakhtiyo muhiim ah",
     "fr.context": "— kuwa xiga ee ku khuseeya, waxaa loo kala saaray taariikhda",

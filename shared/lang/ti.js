@@ -1319,6 +1319,7 @@ REGIONS['ti'] = {
     homeNavSearch: 'ድሌ',
     homeHeroTitle: `ተግባራዊ መሳሪሒታት ንናይ <em>ግሊ ገንዘብ</em>፣ ግብርን ሕግን።`,
     homeMarketTitle: 'ናይ ዕለት ጽማቝ',
+    homeFxConvLabel: 'መቅቀየሪ ባጠራ',
     "fr.kicker": "ዝመጽእ ዘሎ",
     "fr.title": "ኣገደስቲ ግዜ-ገደባት",
     "fr.context": "— እቶም ንዓኻ ዝምልከቱ ቀጻሎት፡ ብዕለት ተሰሪዖም",

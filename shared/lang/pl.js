@@ -1407,6 +1407,7 @@ REGIONS['pl'] = {
     homeNavSearch:'Szukaj',
     homeHeroTitle:'Praktyczne narzędzia do <em>finansów osobistych</em>, podatków i prawa.',
     homeMarketTitle:'Przegląd dnia',
+    homeFxConvLabel: 'Przelicznik walut',
     "fr.kicker": "Nadchodzące",
     "fr.title": "Ważne terminy",
     "fr.context": "— najbliższe, które Cię dotyczą, według daty",
