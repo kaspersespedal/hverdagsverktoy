@@ -1,4 +1,4 @@
-/* Hverdagsverktøy — top chrome: theme menu, language menu, ⌘K hint, ticker.
+/* Hverdagsverktøy — top chrome: theme menu, language menu, ⌘K hint.
    Loaded after site-shell.js. Mirrors the feature surface of hverdagsverktoy.com
    so handoff to Claude Code is unambiguous.
 
@@ -259,35 +259,6 @@
   .sw-glass{background:linear-gradient(135deg,#8b95ff,#e8edf6)}
   .sw-pink{background:#d4748e}
 
-  /* ── Ticker tape ──────────────────────────── */
-  .tc-ticker{position:relative;padding:8px 0;
-    background:color-mix(in srgb, var(--bg) 90%, transparent);
-    border-bottom:1px solid var(--line);
-    overflow:hidden;font:500 12px/1 var(--font-sans);
-    font-variant-numeric:tabular-nums lining-nums}
-  .tc-ticker-mask{
-    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 60px,#000 calc(100% - 100px),transparent 100%);
-    mask-image:linear-gradient(90deg,transparent 0,#000 60px,#000 calc(100% - 100px),transparent 100%);
-    overflow:hidden}
-  .tc-ticker-track{display:flex;align-items:center;gap:36px;
-    width:max-content;animation:tcScroll 120s linear infinite}
-  .tc-ticker:hover .tc-ticker-track{animation-play-state:paused}
-  @media (prefers-reduced-motion:reduce){.tc-ticker-track{animation:none}}
-  @keyframes tcScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  .tc-ti{display:inline-flex;align-items:baseline;gap:6px;color:var(--ink2);white-space:nowrap}
-  .tc-ti b{font-weight:500;color:var(--ink3);font-size:11px;letter-spacing:0}
-  .tc-ti .val{color:var(--ink);font-weight:500}
-  .tc-ti em{font-style:normal;color:var(--ink3);font-size:11px}
-  .tc-ti em.up{color:var(--pos)}
-  .tc-ti em.dn{color:var(--neg)}
-  .tc-ticker-badge{position:absolute;top:50%;right:14px;transform:translateY(-50%);
-    display:inline-flex;align-items:center;gap:6px;
-    font:500 10px/1 var(--font-sans);letter-spacing:.5px;
-    color:var(--ink3);background:var(--bg);padding:0 8px;z-index:2}
-  .tc-ticker-badge::before{content:"";width:5px;height:5px;border-radius:50%;
-    background:var(--accent);animation:tcPulse 2s ease-in-out infinite}
-  @keyframes tcPulse{0%,100%{opacity:.4}50%{opacity:1}}
-
   /* ── Theme switch: View-Transitions circular reveal ──────────
      The new theme is painted on top and wiped in via a growing circle
      anchored at the theme button. We kill the default cross-fade so the
@@ -321,7 +292,6 @@
   // ── Render top chrome ────────────────────────────────
   function render(){
     if (document.body.hasAttribute('data-no-topchrome')) return;
-    if (document.getElementById('tc-ticker')) return; // idempotent
     // Embed mode: when iframed, hide chrome and let calculator fill the frame
     // Skipped in the design-preview project — the whole site lives in an iframe.
     try{
@@ -330,7 +300,7 @@
         document.body.classList.add('embed');
         var es = document.createElement('style');
         es.textContent =
-          '.nav-wrap,.tabs-wrap,footer,.page-hero,aside.ticker-top,#tc-ticker{display:none !important}'+
+          '.nav-wrap,.tabs-wrap,footer,.page-hero{display:none !important}'+
           '.side-col{display:none !important}'+
           '.calc-wrap{padding:18px 0 24px !important}'+
           '.calc-wrap .container{grid-template-columns:1fr !important;padding:0 18px !important;max-width:none !important}'+
@@ -356,47 +326,11 @@
         // Also re-report on input changes (calc results may shift layout)
         document.addEventListener('input', function(){ setTimeout(reportH, 50); });
         document.addEventListener('click', function(){ setTimeout(reportH, 50); });
-        return; // skip injecting ticker/nav when embedded
+        return; // skip injecting nav when embedded
       }
     }catch(_e){}
-    // Skip ticker injection if page already has its own (Homepage)
-    var hasNativeTicker = document.querySelector('aside.ticker-top');
 
-    // 1) Ticker tape (above nav)
-    var tickerItems = [
-      ['OBX','1 045,21','+0,38 %','up'],['OSEAX','1 612,40','+0,29 %','up'],
-      ['S&P 500','5 218,11','−0,12 %','dn'],['Nasdaq','16 847,30','+0,21 %','up'],
-      ['DAX','18 042,55','+0,18 %','up'],['FTSE 100','8 124,90','±0,02 %',''],
-      ['Nikkei','39 280,40','−0,44 %','dn'],['Styringsrente','4,50 %','±0,00',''],
-      ['NIBOR 3M','4,68','±0,00',''],['EUR / NOK','11,84','+0,06','up'],
-      ['GBP / NOK','13,56','+0,04','up'],['SEK / NOK','1,02','±0,00',''],
-      ['USD / NOK','10,72','+0,03','up'],['BTC','$ 67 240','−1,8 %','dn'],
-      ['ETH','$ 3 412','+0,9 %','up'],['Brent','$ 84,30','−0,8 %','dn'],
-      ['WTI','$ 80,15','−0,9 %','dn'],['Gull','26 410','+0,4 %','up'],
-      ['Sølv','312,40','+0,7 %','up'],['Kobber','$ 4,28','+0,3 %','up'],
-      ['Equinor','312,80','−0,5 %','dn'],['DNB','218,40','+0,2 %','up'],
-      ['Telenor','128,60','±0,0 %','']
-    ];
-    function tiHtml(arr){
-      return arr.map(function(t){
-        return '<span class="tc-ti"><b>'+t[0]+'</b> <span class="val">'+t[1]+'</span>'+
-          (t[2] ? ' <em class="'+(t[3]||'')+'">'+t[2]+'</em>' : '')+'</span>';
-      }).join('');
-    }
-    var ticker = document.createElement('aside');
-    ticker.className = 'tc-ticker';
-    ticker.id = 'tc-ticker';
-    ticker.setAttribute('aria-label','Markedsdata');
-    ticker.innerHTML =
-      '<div class="tc-ticker-mask"><div class="tc-ticker-track">'+
-        tiHtml(tickerItems)+tiHtml(tickerItems)+
-      '</div></div>'+
-      '<span class="tc-ticker-badge">Live</span>';
-    // Ticker only shows on Homepage (native). Subpages omit it entirely.
-    if (!hasNativeTicker) { /* skip — no ticker on subpages */ }
-    else { document.body.insertBefore(ticker, document.body.firstChild); ticker.remove(); }
-
-    // 2) Theme + language buttons → inject into nav
+    // Theme + language buttons → inject into nav
     var navEl = document.querySelector('.nav-wrap nav');
     if (!navEl) return;
     var curTheme = document.documentElement.getAttribute('data-theme') || 'carbon';
