@@ -18,6 +18,9 @@
      gamle fake «Aksjer & marked»-stripa er fjernet (E-fix 2026-06-29). */
   var _fx = null, _rate = null;
 
+  /* Siste strømdata — leses av scrub-chipen på søylediagrammet. */
+  var _strom = null;
+
   /* Render-signaturer: minutt-pulsen re-rendrer fra cache hvert 60. sekund,
      men DOM som bærer animasjon (marquee, søylediagram, værstripe) skal kun
      bygges om når innholdet faktisk er endret — ellers restarter loopen synlig. */
@@ -125,9 +128,12 @@
   }
   function fresh(o, ttl) { return o && (Date.now() - o.t) < ttl; }
 
-  /* ── Sparkline-bygger (200×30 viewBox) ─────────────────────── */
+  /* ── Sparkline-bygger (200×48 viewBox) ─────────────────────────
+     Høyden speiler .widget-spark{height:48px} 1:1, så kurven ikke
+     strekkes vertikalt av preserveAspectRatio="none". */
+  var SPARK_H = 48;
   function sparkPaths(vals, pad) {
-    var W = 200, H = 30; pad = pad || 4;
+    var W = 200, H = SPARK_H; pad = pad || 6;
     var clean = (vals || []).filter(function (v) { return typeof v === 'number' && !isNaN(v); });
     if (clean.length < 2) return null;
     var mn = Math.min.apply(null, clean), mx = Math.max.apply(null, clean), rng = (mx - mn) || 1, n = clean.length;
@@ -145,6 +151,30 @@
     if (paths[0]) paths[0].setAttribute('d', sp.area);
     if (paths[1]) paths[1].setAttribute('d', sp.line);
     if (dot) { dot.setAttribute('cx', sp.last[0].toFixed(1)); dot.setAttribute('cy', sp.last[1].toFixed(1)); }
+    // Forsidens kurve-forbedrer (glatting, gradient, startlinje, halo) kan først
+    // kjøre nå — den har ingen punkter å jobbe med før dette.
+    try { svg.dispatchEvent(new CustomEvent('hv:spark', { bubbles: true })); } catch (e) {}
+  }
+
+  /* ── Scrub-chip: verdien under pekeren, festet til .widget-spark-wrap ──
+     Kun peker-enheter — CSS skjuler chipen på @media(hover:none). */
+  function bindScrub(svgId, chipId, txtId, read) {
+    var svg = $(svgId), chip = $(chipId), txt = $(txtId);
+    if (!svg || !chip || !txt) return;
+    var wrap = chip.parentElement;
+    svg.addEventListener('pointermove', function (e) {
+      if (e.pointerType === 'touch') return;
+      var r = svg.getBoundingClientRect(); if (!r.width) return;
+      var frac = Math.max(0, Math.min(0.9999, (e.clientX - r.left) / r.width));
+      var html = read(frac);
+      if (!html) { chip.classList.remove('on'); return; }
+      txt.innerHTML = html;
+      var wr = wrap.getBoundingClientRect();
+      chip.style.left = (e.clientX - wr.left) + 'px';
+      chip.style.top = (r.top - wr.top) + 'px';
+      chip.classList.add('on');
+    }, { passive: true });
+    svg.addEventListener('pointerleave', function () { chip.classList.remove('on'); });
   }
   function trendClass(span, dir) { // dir: 1 up, -1 down, 0 flat
     if (!span) return;
@@ -164,15 +194,24 @@
     var el = $(id);
     if (!el || typeof target !== 'number' || isNaN(target)) return;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (COUNTED[id] || reduce) { el.textContent = nb(target, dec); COUNTED[id] = true; return; }
+    /* Desimalene settes i egen .dec-span: mindre grad, dempet farge — heltallet
+       skal bære blikket. CSS-en (.widget-value .dec) har ligget der ubrukt. */
+    var isValue = el.parentNode && el.parentNode.classList.contains('widget-value');
+    function write(v) {
+      var s = nb(v, dec);
+      var i = dec ? s.lastIndexOf(',') : -1;
+      if (isValue && i > 0) el.innerHTML = esc(s.slice(0, i)) + '<span class="dec">' + esc(s.slice(i)) + '</span>';
+      else el.textContent = s;
+    }
+    if (COUNTED[id] || reduce) { write(target); COUNTED[id] = true; return; }
     COUNTED[id] = true;
     var from = target * 0.82, dur = 1100, t0 = null;
     function ease(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
     function step(ts) {
       if (t0 === null) t0 = ts;
       var t = Math.min(1, (ts - t0) / dur);
-      el.textContent = nb(from + (target - from) * ease(t), dec);
-      if (t < 1) requestAnimationFrame(step); else el.textContent = nb(target, dec);
+      write(from + (target - from) * ease(t));
+      if (t < 1) requestAnimationFrame(step); else write(target);
     }
     requestAnimationFrame(step);
   }
@@ -193,11 +232,12 @@
   function tickerItems() {
     var items = [];
     if (_fx) {
-      [['USD', 'USD / NOK'], ['EUR', 'EUR / NOK'], ['GBP', 'GBP / NOK'], ['SEK', 'SEK / NOK']].forEach(function (p) {
-        var c = _fx[p[0]]; if (!c || c.last == null) return;
-        var diff = (c.prev != null) ? c.last - c.prev : 0;
+      ['USD', 'EUR', 'GBP', 'SEK', 'DKK', 'CHF', 'JPY'].forEach(function (code) {
+        var c = _fx[code]; if (!c || c.last == null) return;
+        var m = c.mult || 1;
+        var diff = (c.prev != null) ? (c.last - c.prev) * m : 0;
         var dir = Math.abs(diff) < 0.0005 ? 0 : diff > 0 ? 1 : -1;
-        items.push({ lbl: p[1], val: nb(c.last, 2),
+        items.push({ lbl: fxUnit(c, code) + ' / NOK', val: fxQuote(c),
           dir: dir, delta: (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) });
       });
     }
@@ -704,17 +744,23 @@
       var ok = Object.keys(ser.observations).sort(function (a, b) { return a - b; });
       var vals = ok.map(function (k) { return parseFloat(ser.observations[k][0]) / mult; });
       var dates = ok.map(function (k) { return obsTimes[parseInt(k, 10)]; });
-      out[cur] = { last: vals[vals.length - 1], prev: vals[vals.length - 2], series: vals, dates: dates };
+      /* mult = Norges Banks noteringsenhet (SEK/DKK/JPY noteres per 100).
+         Verdiene lagres per 1 enhet; mult tas vare på så etikettene kan
+         sitere i bankens egen enhet («100 JPY 7,02») i stedet for «0,07». */
+      out[cur] = { last: vals[vals.length - 1], prev: vals[vals.length - 2], series: vals, dates: dates, mult: mult };
     }
     return out;
   }
+  /* «SEK» → «100 SEK» når banken noterer per 100. */
+  function fxUnit(c, code) { var m = (c && c.mult) || 1; return (m > 1 ? m + ' ' : '') + code; }
+  function fxQuote(c, dec) { return nb(c.last * ((c && c.mult) || 1), dec == null ? 2 : dec); }
   function renderFx(d) {
     if (!d.USD) return;
     countUp('fxVal', d.USD.last, 2);
     var sub = [];
-    if (d.EUR) sub.push('EUR ' + nb(d.EUR.last, 2));
-    if (d.GBP) sub.push('GBP ' + nb(d.GBP.last, 2));
-    if (d.SEK) sub.push('SEK ' + nb(d.SEK.last, 2));
+    ['EUR', 'GBP', 'SEK'].forEach(function (code) {
+      var c = d[code]; if (c) sub.push(fxUnit(c, code) + ' ' + fxQuote(c));
+    });
     setText('fxSub', sub.join(' · '));
     var span = $('fxTrend');
     if (span && d.USD.prev != null) {
@@ -724,9 +770,11 @@
     }
     var dts = d.USD.dates;
     if (dts && dts.length) {
+      var lastI = dts.length - 1;
       setText('fxAx0', nbShort(dts[0]));
-      setText('fxAx1', nbShort(dts[Math.floor((dts.length - 1) / 2)]));
-      setText('fxAx2', 'i dag');
+      setText('fxAx1', nbShort(dts[Math.round(lastI / 3)]));
+      setText('fxAx2', nbShort(dts[Math.round(lastI * 2 / 3)]));
+      setText('fxAx3', 'i dag');
     }
     applySpark($('fxCard'), d.USD.series);
     _fx = d; buildTicker();
@@ -738,7 +786,7 @@
        plukkes ny dagskurs opp senest en time etter publisering. */
     if (!force && fresh(c, 3600 * 1000)) { renderFx(c.d); return; }
     if (c) renderFx(c.d);
-    fetch('https://data.norges-bank.no/api/data/EXR/B.USD+EUR+GBP+SEK.NOK.SP?lastNObservations=30&format=sdmx-json&locale=en')
+    fetch('https://data.norges-bank.no/api/data/EXR/B.USD+EUR+GBP+SEK+DKK+CHF+JPY.NOK.SP?lastNObservations=30&format=sdmx-json&locale=en')
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (j) { var d = parseExr(j); cacheSet('fx', d); renderFx(d); })
       .catch(function () {});
@@ -769,7 +817,21 @@
     // En rente som endres ~4 ggr/år sier lite som sparkline → vis neste rentemøte i stedet.
     var nm = nextMeeting(), lbl = $('srNextLbl'), val = $('srNext');
     if (lbl && val) {
-      if (nm) { lbl.textContent = 'Neste rentemøte'; val.textContent = nbShort(nm) + ' ' + nm.slice(0, 4); }
+      if (nm) {
+        lbl.textContent = 'Neste rentemøte';
+        val.textContent = nbShort(nm) + ' ' + nm.slice(0, 4);
+        // Datoen alene sier lite — vis avstanden i dager ved siden av.
+        var t = new Date(), md = nm.split('-').map(Number);
+        var diff = Math.round((Date.UTC(md[0], md[1] - 1, md[2]) -
+                               Date.UTC(t.getFullYear(), t.getMonth(), t.getDate())) / 864e5);
+        var word = diff > 1 ? 'om ' + diff + ' dager' : diff === 1 ? 'i morgen' : diff === 0 ? 'i dag' : '';
+        if (word) {
+          var s = document.createElement('span');
+          s.className = 'in-days'; s.textContent = word;
+          val.appendChild(document.createTextNode(' ')); // skiller ordene for skjermlesere
+          val.appendChild(s);
+        }
+      }
       else { lbl.textContent = ''; val.textContent = ''; }
     }
     _rate = d; buildTicker();
@@ -811,6 +873,7 @@
       trendClass(span, dir);
       span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + Math.round(Math.abs(pct)) + '<i>%</i></span>';
     }
+    _strom = d;
     var sig = sone + '|' + d.hour + '|' + d.cheapHour + '|' + (d.prices ? d.prices.length + ':' + d.prices[0] : '');
     if (sig !== _stromSig) { _stromSig = sig; buildStromBars(d.prices, d.hour, d.cheapHour); }
     stampNow();
@@ -824,8 +887,9 @@
     var gPast = document.createElementNS(NS, 'g'), gFut = document.createElementNS(NS, 'g');
     gPast.setAttribute('fill', 'currentColor'); gPast.setAttribute('opacity', '.5');
     gFut.setAttribute('fill', 'currentColor'); gFut.setAttribute('opacity', '.3');
+    var BASE = SPARK_H - 2, MAXH = SPARK_H - 4; // grunnlinje/topp i 200×48-rommet
     prices.forEach(function (p, i) {
-      var h = Math.max(2, (p / mx) * 26), y = 28 - h, x = i * slot + (slot - bw) / 2;
+      var h = Math.max(2, (p / mx) * MAXH), y = BASE - h, x = i * slot + (slot - bw) / 2;
       var rect = document.createElementNS(NS, 'rect');
       rect.setAttribute('x', x.toFixed(2)); rect.setAttribute('y', y.toFixed(2));
       rect.setAttribute('width', bw.toFixed(2)); rect.setAttribute('height', h.toFixed(2));
@@ -975,6 +1039,24 @@
     return (o && o.d && typeof o.d.lat === 'number') ? o.d : DEFAULT_PLACE;
   }
 
+  /* ── Scrub-avlesning på strøm- og valutakurven ────────────────────
+     Bindes én gang; leser fra _strom/_fx så chipen alltid viser
+     gjeldende data uten å måtte re-bindes ved hver render. */
+  function buildScrubs() {
+    bindScrub('stSpark', 'stScrub', 'stScrubTxt', function (frac) {
+      var p = _strom && _strom.prices; if (!p || !p.length) return '';
+      var i = Math.min(p.length - 1, Math.floor(frac * p.length));
+      return '<span class="mut">' + String(i).padStart(2, '0') + ':00</span> · ' +
+             Math.round(p[i] * 100) + ' øre';
+    });
+    bindScrub('fxSpark', 'fxScrub', 'fxScrubTxt', function (frac) {
+      var u = _fx && _fx.USD; if (!u || !u.series || !u.series.length) return '';
+      var i = Math.min(u.series.length - 1, Math.round(frac * (u.series.length - 1)));
+      var dt = u.dates && u.dates[i] ? nbShort(u.dates[i]) : '';
+      return (dt ? '<span class="mut">' + dt + '</span> · ' : '') + nb(u.series[i], 2) + ' kr';
+    });
+  }
+
   /* ── Minutt-puls ─────────────────────────────────────────────────
      Panelet sjekker alle kilder hvert 60. sekund og ved retur til fanen.
      Nettverk brukes kun når cache-TTL er utløpt (vær 30 min per MET-vilkårene,
@@ -990,7 +1072,7 @@
   function init() {
     var place = getPlace();
     setText('wxPlaceName', place.navn);
-    buildStamp(); buildPicker(); buildGeo(); buildExpand();
+    buildStamp(); buildPicker(); buildGeo(); buildExpand(); buildScrubs();
     loadWeather(place, false); loadFx(false); loadRate(false); loadStrom(place, false);
     setInterval(tick, 60 * 1000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
