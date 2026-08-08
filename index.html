@@ -728,6 +728,9 @@
     text-decoration:none;color:var(--ink2);
     font-size:13.5px;line-height:1.2;
     transition:background .15s, color .15s;
+    /* Forslags-chipene er handlinger (fyller sokefeltet), ikke lenker -> <button>. */
+    background:none;border:0;width:100%;text-align:left;cursor:pointer;
+    font-family:var(--font-sans);
   }
   .sg-chip:hover,.sg-chip.active{
     background:rgba(255,255,255,.04);
@@ -1562,6 +1565,7 @@
   h1#heroH1{
     font-size: clamp(46px, 5.8vw, 72px);
     letter-spacing: -1.6px;
+    text-wrap: balance; /* jevner ut raggen — samme grep som .cat-hero h1 i components.css */
   }
   h1#heroH1 em{
     letter-spacing: -1.2px;
@@ -1657,6 +1661,120 @@
   }
 </style>
 
+<!-- =====================================================================
+     REF-2026-08 — Forsiden, raffinert
+     Portert fra Claude Design-referansen «Hverdagsverktøy — Forside».
+     Kun det referansen tilfører: nav-søkepille, stille hero-linje,
+     scrub-chip på sparklines, nedtelling til rentemøtet, treff-utheving
+     og strammere frist-terskel. Atmosfæren (nordlys + aurora) er sidens
+     egen og røres IKKE — referansen mangler den.
+===================================================================== -->
+<style id="ref-2026-08">
+  /* ── Nav: kompakt søkepille, dukker opp når hero-søket har rullet forbi ──
+     .tc-actions (tema + språk, injisert av top-chrome.js) har margin-left:auto.
+     Uten å nulle den ville to auto-marginer delt det ledige feltet mellom seg
+     og parkert pilla midt i baren — den skal stå inntil tema/språk-klyngen. */
+  nav .nav-right{margin-left:auto}
+  nav .tc-actions{margin-left:0}
+  .nav-wrap.scrolled{box-shadow:0 8px 24px -18px rgba(0,0,0,.7)}
+  .nav-search-pill{
+    display:inline-flex;align-items:center;gap:9px;
+    background:transparent;border:1px solid var(--line-2);color:var(--ink3);
+    padding:7px 12px;border-radius:6px;font:500 12.5px/1 var(--font-sans);cursor:pointer;
+    opacity:0;transform:translateY(-4px);pointer-events:none;
+    transition:opacity var(--dur-fast) var(--ease-out-quart),
+               transform var(--dur-fast) var(--ease-out-quart),
+               border-color .2s var(--ease),color .2s var(--ease);
+  }
+  .nav-search-pill.show{opacity:1;transform:translateY(0);pointer-events:auto}
+  .nav-search-pill svg{width:13px;height:13px;color:var(--ink3);transition:color .2s var(--ease)}
+  @media(hover:hover){
+    .nav-search-pill:hover{border-color:rgba(255,255,255,.22);color:var(--ink)}
+    .nav-search-pill:hover svg{color:var(--accent)}
+  }
+  .nav-search-pill kbd{
+    font:600 9.5px/1 var(--font-sans);color:var(--ink3);
+    background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:3px;
+    padding:3px 5px;letter-spacing:.4px;
+  }
+
+  /* ── Hero: skillepunkt + stille tilleggslinje ── */
+  .hero-tag .tagsep{width:3px;height:3px;border-radius:50%;background:var(--ink4);flex-shrink:0}
+  .hero-tag .quiet{color:var(--ink3)}
+
+  /* ── Scrub-chip: time + verdi under pekeren på strømsøyler og valutakurve ── */
+  .widget-spark-wrap{position:relative}
+  .spark-scrub{
+    position:absolute;left:0;top:0;transform:translate(-50%,calc(-100% - 6px));
+    pointer-events:none;opacity:0;transition:opacity var(--dur-micro) var(--ease-out-quart);
+    background:var(--surface-2);border:1px solid var(--line-2);border-radius:6px;padding:5px 8px;
+    font-family:var(--font-serif);font-size:12px;color:var(--ink);white-space:nowrap;
+    font-variant-numeric:tabular-nums lining-nums;z-index:3;
+    box-shadow:0 8px 20px rgba(0,0,0,.45);
+  }
+  .spark-scrub.on{opacity:1}
+  .spark-scrub .mut{color:var(--ink3)}
+
+  /* ── Nedtelling til neste rentemøte, ved siden av datoen ── */
+  .sr-next-val .in-days{
+    font-family:var(--font-sans);font-weight:500;font-size:11px;
+    color:var(--ink4);margin-left:7px;letter-spacing:0;
+  }
+
+  /* ── Søk: treff-utheving og «tøm»-knapp for nylige søk ── */
+  .sr-item .sr-name mark{
+    background:none;color:var(--accent-2);
+    text-decoration:underline;text-decoration-color:rgba(216,173,126,.45);
+    text-underline-offset:3px;text-decoration-thickness:1px;
+  }
+  .panel-label .clear-btn{
+    background:none;border:0;cursor:pointer;padding:0;
+    color:var(--ink4);font:500 11px/1 var(--font-sans);letter-spacing:.2px;text-transform:none;
+    transition:color .15s;
+  }
+  @media(hover:hover){.panel-label .clear-btn:hover{color:var(--accent-2)}}
+
+  /* Nye numeriske/versal-flater arver typografi-featurene fra REFINE-2026-05.
+     Frist-tallene hadde font-variant-numeric, men ikke OpenType-fallbacken. */
+  .spark-scrub,.sr-next-val,.wx-fc-temp,.wx-fc-time,
+  .fr-cd-num,.fr-row-cd,.fr-flak .d,.fr-feat-date{
+    -webkit-font-feature-settings: var(--refine-feat-num);
+            font-feature-settings: var(--refine-feat-num);
+  }
+  .nav-search-pill kbd,.sr-item .sr-cat,.pop-item .pop-cat{
+    -webkit-font-feature-settings: "kern" 1, "case" 1, "cpsp" 1, "tnum" 1;
+            font-feature-settings: "kern" 1, "case" 1, "cpsp" 1, "tnum" 1;
+  }
+
+  /* ── Dagsoversikt-headeren: samme aksent-hårstrek som frist-seksjonen ── */
+  .daily-head{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 4%,transparent) 0%,transparent 100%)}
+  .daily-head .title::before{content:"";width:15px;height:1px;background:var(--accent);opacity:.7;flex-shrink:0}
+  /* «Kilder» er en bryter, ikke brødtekst — gi den mikro-etikett-typografien. */
+  .daily-sources-toggle{
+    font-weight:600;font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);
+  }
+
+  /* ── Widget-tallet: 32px som i referansen, og en mobil-trapp som faktisk
+     får virke. h1#heroH1 og .widget-value settes i REFINE-2026-05 under
+     max-width:640 — de mindre stegene der lå etter i kilden og ble aldri
+     brukt. Her kommer de sist, med samme spesifisitet, så de vinner. ── */
+  .widget-value{font-size:32px;letter-spacing:-.6px}
+  @media (max-width: 640px){
+    .nav-search-pill .nav-search-lbl,.nav-search-pill kbd{display:none}
+    .widget-value{font-size:27px;letter-spacing:-.5px}
+  }
+  @media (max-width: 480px){
+    h1#heroH1{font-size:clamp(30px,9.4vw,38px);letter-spacing:-.6px}
+    .widget-value{font-size:24px}
+  }
+  @media (max-width: 380px){
+    h1#heroH1{font-size:28px;letter-spacing:-.4px}
+    .widget-value{font-size:22px}
+  }
+  /* Scrub er en peker-affordanse — ingen hover på touch. */
+  @media (hover: none){ .spark-scrub{display:none} }
+</style>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -1684,13 +1802,13 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v215" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v215" defer></script>
-<script src="/shared/lang/no.js?v=v127" defer></script>
+<link rel="preload" href="/shared/core.js?v=v216" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v216" defer></script>
+<script src="/shared/lang/no.js?v=v128" defer></script>
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v215" defer></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
-<script src="/shared/markedsdata.js?v=v7" defer></script>
+<script src="/shared/markedsdata.js?v=v8" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -1810,6 +1928,11 @@ html[data-theme="bw"], body[data-theme="bw"]{
         <span class="wordmark">Hverdagsverktøy</span>
       </a>
       <div class="nav-right">
+        <button type="button" class="nav-search-pill" id="navSearchPill" aria-label="Åpne søk">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/></svg>
+          <span class="nav-search-lbl" data-i18n="homeNavSearch">Søk</span>
+          <kbd>⌘K</kbd>
+        </button>
       </div>
     </nav>
   </div>
@@ -1820,9 +1943,9 @@ html[data-theme="bw"], body[data-theme="bw"]{
   <section class="hero" data-screen-label="02 Hero">
     <div class="container">
       <h1 id="heroH1" data-headline>Praktiske verktøy for <em>privatøkonomi</em>, skatt og lovverk.</h1>
-      <p class="hero-tag rise" data-rise-d="0"><span class="lang-pill" data-i18n="homeHeroLangPill">10 språk</span><span data-i18n="homeHeroSubtitle">Oppdatert til gjeldende regler for 2026.</span></p>
+      <p class="hero-tag rise" data-rise-d="0"><span class="lang-pill" data-i18n="homeHeroLangPill">10 språk</span><span data-i18n="homeHeroSubtitle">Oppdatert til gjeldende regler for 2026.</span><span class="tagsep" aria-hidden="true"></span><span class="quiet" data-i18n="homeHeroFree">Gratis — alt kjører lokalt i nettleseren.</span></p>
 
-      <div class="search-wrap rise" data-rise-d="1">
+      <div class="search-wrap rise" data-rise-d="1" id="searchWrap">
         <div class="search-shell" id="searchShell">
           <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/>
@@ -1935,7 +2058,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
             <div class="widget-spark-wrap">
               <div class="sr-next">
                 <span class="sr-next-lbl" id="srNextLbl">Neste rentemøte</span>
-                <b class="sr-next-val" id="srNext">—</b>
+                <b class="sr-next-val" id="srNext">—</b><!-- «om N dager» legges til av markedsdata.js -->
               </div>
             </div>
           </div>
@@ -1952,7 +2075,8 @@ html[data-theme="bw"], body[data-theme="bw"]{
             <p class="widget-sub"><span class="ctx" id="stSub">Henter strømpris …</span></p>
             <div class="widget-spark-wrap">
               <!-- Søylene bygges av shared/markedsdata.js (buildStromBars). Tom til data er hentet. -->
-              <svg class="widget-spark spark-bars" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <svg class="widget-spark spark-bars" id="stSpark" viewBox="0 0 200 48" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="spark-scrub" id="stScrub" aria-hidden="true"><span id="stScrubTxt"></span></div>
               <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>
             </div>
             <p class="widget-note">Ren spotpris. Nettleie og avgifter kommer i tillegg.</p>
@@ -1969,7 +2093,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
             <div class="widget-value"><span class="count-up" id="fxVal">—</span><span class="unit">kr</span></div>
             <p class="widget-sub"><span class="ctx" id="fxSub">Henter valutakurser …</span></p>
             <div class="widget-spark-wrap">
-              <svg class="widget-spark" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">
+              <svg class="widget-spark" id="fxSpark" viewBox="0 0 200 48" preserveAspectRatio="none" aria-hidden="true">
                 <defs><linearGradient id="sp-usd" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0" stop-color="currentColor" stop-opacity=".18"/>
                   <stop offset="1" stop-color="currentColor" stop-opacity="0"/>
@@ -1977,9 +2101,10 @@ html[data-theme="bw"], body[data-theme="bw"]{
                 <!-- Kurven tegnes av shared/markedsdata.js (applySpark). Tom til data er hentet. -->
                 <path d="" fill="url(#sp-usd)" stroke="none"/>
                 <path d="" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>
-                <circle class="spark-now" cx="200" cy="15" r="2.2"/>
+                <circle class="spark-now" cx="200" cy="24" r="2.2"/>
               </svg>
-              <div class="widget-axis"><span id="fxAx0">30d</span><span id="fxAx1">14d</span><span id="fxAx2">i dag</span></div>
+              <div class="spark-scrub" id="fxScrub" aria-hidden="true"><span id="fxScrubTxt"></span></div>
+              <div class="widget-axis"><span id="fxAx0">30d</span><span id="fxAx1">14d</span><span id="fxAx2">7d</span><span id="fxAx3">i dag</span></div>
             </div>
           </div>
 
@@ -2032,10 +2157,12 @@ html[data-theme="bw"], body[data-theme="bw"]{
   --fink4:var(--ink4,#565350);
   --facc:var(--accent,#c89968);
   --faccl:var(--accent-2,var(--accent-l,#d8ad7e));
-  --fline:var(--hairline,rgba(232,232,232,.10));
+  /* Kanoniske hyphen-tokens først. --hairline finnes ikke noe sted i repoet,
+     så linjefargen falt alltid tilbake på en hardkodet grå og fulgte ikke temaet. */
+  --fline:var(--line,rgba(232,232,232,.10));
   --fline2:var(--line-2,rgba(232,232,232,.17));
   --fglow:var(--glow-rgb,200,153,104);
-  --fsig:var(--accent-d,#b8885a);
+  --fsig:var(--accent-deep,var(--accent-d,#b8885a));
   --fserif:'Source Serif 4',Georgia,serif;
   --fsans:'Inter',system-ui,sans-serif;
   --fease:cubic-bezier(.22,1,.36,1);
@@ -2047,7 +2174,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
 .frister{padding:clamp(38px,5.5vw,68px) 0;
   position:relative;font-family:var(--fsans);color:var(--fink)}
 .fr-inner{max-width:1120px;margin:0 auto;padding:0 clamp(18px,4vw,32px)}
-.fr-panel{background:var(--fsurf);border:1px solid var(--fline);border-radius:20px;
+.fr-panel{background:var(--fsurf);border:1px solid var(--fline);border-radius:6px;
   padding:clamp(20px,3vw,30px);
   box-shadow:0 1px 0 rgba(255,255,255,.02),0 30px 70px -34px rgba(0,0,0,.62)}
 
@@ -2055,7 +2182,11 @@ html[data-theme="bw"], body[data-theme="bw"]{
 .fr-ph{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;
   flex-wrap:wrap;padding-bottom:18px;margin-bottom:clamp(18px,2.6vw,24px);
   border-bottom:1px solid var(--fline)}
-.fr-eyebrow{font:600 10px/1 var(--fsans);letter-spacing:.2em;text-transform:uppercase;color:var(--fink3)}
+/* Samme aksent-hårstrek som «Dagsoversikt»-tittelen — knytter seksjonene sammen. */
+.fr-eyebrow{font:600 10px/1 var(--fsans);letter-spacing:.2em;text-transform:uppercase;color:var(--fink3);
+  display:inline-flex;align-items:center;gap:11px}
+.fr-eyebrow::before{content:"";width:15px;height:1px;background:var(--facc);opacity:.7;flex-shrink:0}
+.fr-feat-mid .fr-eyebrow::before{display:none}
 .fr-htitle{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:11px}
 .fr-title{font-family:var(--fserif);font-weight:500;font-size:clamp(23px,3vw,29px);
   letter-spacing:-.6px;line-height:1;color:var(--fink);margin:0}
@@ -2091,7 +2222,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
 .fr-feat{position:relative;overflow:hidden;display:grid;
   grid-template-columns:auto 1px minmax(0,1fr) auto;align-items:center;
   gap:clamp(14px,2.4vw,26px);padding:clamp(16px,2.4vw,22px) clamp(16px,2.4vw,24px);
-  margin-bottom:14px;border:1px solid var(--fline2);border-radius:15px;
+  margin-bottom:14px;border:1px solid var(--fline2);border-radius:6px;
   background:linear-gradient(180deg,color-mix(in srgb,var(--facc) 6%,var(--fsurf2)),var(--fsurf2))}
 .fr-feat::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:2px;border-radius:2px;background:var(--facc);opacity:.55}
 .fr-feat::after{content:"";position:absolute;inset:0;pointer-events:none;
@@ -2118,7 +2249,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
 /* ── Liste (2 kolonner) ── */
 .fr-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 .fr-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;
-  padding:13px 15px;border:1px solid var(--fline);border-radius:13px;
+  padding:13px 15px;border:1px solid var(--fline);border-radius:6px;
   background:color-mix(in srgb,var(--fsurf2) 45%,transparent);
   transition:border-color .25s var(--fease),background .25s var(--fease),transform .2s var(--fease)}
 @media(hover:hover){.fr-row:hover{transform:translateY(-2px);border-color:var(--fline2);background:var(--fsurf2)}}
@@ -2161,7 +2292,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
 .frmodal[hidden]{display:none}
 .frmodal.open{opacity:1}
 .fr-sheet{width:min(1080px,100%);max-height:92vh;background:var(--fbg);border:1px solid var(--fline2);
-  border-radius:18px;box-shadow:0 0 0 1px rgba(0,0,0,.5),0 50px 100px -30px rgba(0,0,0,.78);
+  border-radius:10px;box-shadow:0 0 0 1px rgba(0,0,0,.5),0 50px 100px -30px rgba(0,0,0,.78);
   display:flex;flex-direction:column;overflow:hidden;
   transform:translateY(18px) scale(.99);opacity:.5;
   transition:transform .32s var(--fexpo),opacity .3s var(--fease)}
@@ -2192,7 +2323,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
   stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 .fr-search input{width:100%;padding:11px 14px 11px 39px;
   background:color-mix(in srgb,var(--fink) 3%,transparent);border:1px solid var(--fline2);
-  border-radius:10px;color:var(--fink);font:400 14px/1.2 var(--fsans);outline:none;
+  border-radius:8px;color:var(--fink);font:400 14px/1.2 var(--fsans);outline:none;
   transition:border-color .2s var(--fease),background .2s var(--fease),box-shadow .2s var(--fease)}
 .fr-search input::placeholder{color:var(--fink3)}
 .fr-search input:focus{border-color:var(--facc);background:var(--fsurf);
@@ -2219,7 +2350,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
 
 /* ── Årshjul ── */
 .fr-wheel{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:clamp(28px,4.5vw,40px)}
-.fr-mon{background:var(--fsurf);border:1px solid var(--fline);border-radius:12px;
+.fr-mon{background:var(--fsurf);border:1px solid var(--fline);border-radius:6px;
   padding:12px 12px 11px;display:flex;flex-direction:column;gap:9px;min-height:106px;min-width:0}
 .fr-mon.cur{border-color:color-mix(in srgb,var(--facc) 42%,transparent);
   background:linear-gradient(180deg,color-mix(in srgb,var(--facc) 9%,var(--fsurf)),var(--fsurf))}
@@ -2251,7 +2382,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
 
 /* ── Frist-kort ── */
 .fr-card{position:relative;overflow:hidden;background:var(--fsurf);border:1px solid var(--fline);
-  border-radius:13px;padding:16px 17px;display:flex;flex-direction:column;gap:9px;
+  border-radius:6px;padding:16px 17px;display:flex;flex-direction:column;gap:9px;
   transition:border-color .25s var(--fease),transform .22s var(--fease),box-shadow .3s var(--fease)}
 @media(hover:hover){.fr-card:hover{transform:translateY(-3px);border-color:var(--fline2);
   box-shadow:0 18px 40px -22px rgba(0,0,0,.85),0 0 0 1px rgba(var(--fglow),.14)}}
@@ -2696,28 +2827,65 @@ html[data-theme="bw"], body[data-theme="bw"]{
 
   function escapeHtml(s){return String(s).replace(/[&<>"']/g,function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]})}
 
+  /* Uthev den delen av treffnavnet som faktisk matcher det du skrev. */
+  function highlight(name, q){
+    var i = norm(name).indexOf(norm(q));
+    if(i < 0 || !q.trim()) return escapeHtml(name);
+    return escapeHtml(name.slice(0,i)) + '<mark>' + escapeHtml(name.slice(i, i+q.length)) + '</mark>' +
+           escapeHtml(name.slice(i+q.length));
+  }
+
+  /* Nylig søkt — de fem siste søkene, lagret lokalt i nettleseren. */
+  var RECENT_KEY = 'hv-forside-recents';
+  function getRecents(){
+    try{ var a = JSON.parse(localStorage.getItem(RECENT_KEY)||'[]'); return Array.isArray(a) ? a.slice(0,5) : []; }
+    catch(e){ return []; }
+  }
+  function pushRecent(q){
+    if(!q || !q.trim()) return;
+    q = q.trim();
+    try{
+      var r = getRecents().filter(function(x){ return x !== q; });
+      r.unshift(q);
+      localStorage.setItem(RECENT_KEY, JSON.stringify(r.slice(0,5)));
+    }catch(e){}
+  }
+
   function renderSuggested(){
     var leftHtml  = '';
     var rightHtml = '';
+    var recents   = getRecents();
 
     leftHtml += '<div class="panel-section">';
-    leftHtml += '<div class="panel-label"><span>Forslag</span><span class="count">Begynn å skrive for å søke</span></div>';
-    leftHtml += '<div class="sg-grid">';
-    SUGGESTED.forEach(function(s){
-      leftHtml += '<a href="#" class="sg-chip" data-q="'+escapeHtml(s.q)+'">';
-      leftHtml += '<span class="dot" aria-hidden="true"></span><span>'+escapeHtml(s.label)+'</span>';
-      leftHtml += '</a>';
-    });
+    if(recents.length){
+      leftHtml += '<div class="panel-label"><span>Nylig søkt</span>'+
+        '<button type="button" class="clear-btn" data-clear-recents="1">Tøm</button></div>';
+      leftHtml += '<div class="sg-grid">';
+      recents.forEach(function(q){
+        leftHtml += '<button type="button" class="sg-chip" data-q="'+escapeHtml(q)+'">';
+        leftHtml += '<span class="dot" aria-hidden="true"></span><span>'+escapeHtml(q)+'</span>';
+        leftHtml += '</button>';
+      });
+    } else {
+      leftHtml += '<div class="panel-label"><span>Forslag</span><span class="count">Begynn å skrive for å søke</span></div>';
+      leftHtml += '<div class="sg-grid">';
+      SUGGESTED.forEach(function(s){
+        leftHtml += '<button type="button" class="sg-chip" data-q="'+escapeHtml(s.q)+'">';
+        leftHtml += '<span class="dot" aria-hidden="true"></span><span>'+escapeHtml(s.label)+'</span>';
+        leftHtml += '</button>';
+      });
+    }
     leftHtml += '</div></div>';
 
     leftHtml += '<div class="panel-section"><div class="panel-label"><span>Hopp til kategori</span></div><div class="sr-list">';
-    activeIndex().filter(function(i){return i.type==='section'}).forEach(function(it){
+    // Ikke tilby «hopp til» forsiden når du allerede står på den.
+    activeIndex().filter(function(i){return i.type==='section' && i.u !== '/'}).forEach(function(it){
       leftHtml += '<a href="'+it.u+'" class="sr-item"><div class="sr-text"><div class="sr-name">'+escapeHtml(it.n)+'</div><div class="sr-desc">'+escapeHtml(it.d)+'</div></div><svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg></a>';
     });
     leftHtml += '</div></div>';
 
     rightHtml += '<div class="panel-section">';
-    rightHtml += '<div class="panel-label"><span>Populært</span></div>';
+    rightHtml += '<div class="panel-label"><span>Populært akkurat nå</span><span class="count">'+isoWeekLabel()+'</span></div>';
     rightHtml += '<div class="pop-list">';
     POPULAR.forEach(function(p, i){
       var rank = (i+1).toString().padStart(2,'0');
@@ -2735,7 +2903,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
     rightHtml += '<span class="tip"><kbd>↑</kbd><kbd>↓</kbd><span>Bla</span></span>';
     rightHtml += '<span class="tip"><kbd>Esc</kbd><span>Lukk</span></span>';
     rightHtml += '</div>';
-    rightHtml += '<span class="tip-meta">Indeksert i dag</span>';
+    rightHtml += '<span class="tip-meta">'+activeIndex().length+' verktøy indeksert</span>';
     rightHtml += '</div>';
 
     panel.innerHTML =
@@ -2758,6 +2926,20 @@ html[data-theme="bw"], body[data-theme="bw"]{
         input.focus();
       });
     });
+    var clear = panel.querySelector('[data-clear-recents]');
+    if(clear) clear.addEventListener('click', function(){
+      try{ localStorage.removeItem(RECENT_KEY); }catch(e){}
+      renderSuggested();
+    });
+  }
+
+  /* Uke-nummeret bak «Populært akkurat nå» — ISO 8601 (torsdagsregelen). */
+  function isoWeekLabel(){
+    var d = new Date();
+    var u = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    u.setUTCDate(u.getUTCDate() + 4 - (u.getUTCDay() || 7));
+    var ys = new Date(Date.UTC(u.getUTCFullYear(), 0, 1));
+    return 'Uke ' + Math.ceil((((u - ys) / 864e5) + 1) / 7);
   }
 
   function renderResults(q){
@@ -2770,8 +2952,8 @@ html[data-theme="bw"], body[data-theme="bw"]{
     }
     var html = '<div class="panel-section"><div class="panel-label"><span>Treff</span><span class="count">'+items.length+'</span></div><div class="sr-list">';
     items.forEach(function(it,i){
-      html += '<a href="'+it.u+'" class="sr-item'+(i===0?' active':'')+'" data-i="'+i+'">';
-      html += '<div class="sr-text"><div class="sr-name">'+escapeHtml(it.n)+'</div><div class="sr-desc">'+escapeHtml(it.d)+'</div></div>';
+      html += '<a href="'+it.u+'" class="sr-item'+(i===0?' active':'')+'" data-i="'+i+'" data-q="'+escapeHtml(q)+'">';
+      html += '<div class="sr-text"><div class="sr-name">'+highlight(it.n, q)+'</div><div class="sr-desc">'+escapeHtml(it.d)+'</div></div>';
       html += '<span class="sr-cat">'+escapeHtml(it.c)+'</span>';
       html += '<svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>';
       html += '</a>';
@@ -2784,6 +2966,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
         el.classList.add('active');
         activeIdx = parseInt(el.getAttribute('data-i'),10);
       });
+      el.addEventListener('click', function(){ pushRecent(el.getAttribute('data-q')); });
     });
   }
 
@@ -2826,16 +3009,29 @@ html[data-theme="bw"], body[data-theme="bw"]{
       else if(e.key==='ArrowUp'){ e.preventDefault(); if(currentItems.length) setActive(activeIdx-1); }
       else if(e.key==='Enter'){
         var nodes = panel.querySelectorAll('.sr-item');
-        if(activeIdx>=0 && nodes[activeIdx]){ e.preventDefault(); window.location.href = nodes[activeIdx].getAttribute('href'); }
+        if(activeIdx>=0 && nodes[activeIdx]){ e.preventDefault(); pushRecent(input.value); window.location.href = nodes[activeIdx].getAttribute('href'); }
       }
-      else if(e.key==='Escape'){ input.blur(); closePanel(); }
+      else if(e.key==='Escape'){
+        // Første Esc tømmer søket, andre lukker panelet.
+        if(input.value){ input.value=''; renderSuggested(); }
+        else { input.blur(); closePanel(); }
+      }
     });
     document.addEventListener('click', function(e){
       if(!shell.contains(e.target) && !panel.contains(e.target)) closePanel();
     });
     document.addEventListener('keydown', function(e){
       if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='k'){
-        e.preventDefault(); input.focus(); input.select();
+        // Samme tast åpner og lukker — ellers blir snarveien en enveisdør.
+        e.preventDefault();
+        if(panel.classList.contains('open')){ input.blur(); closePanel(); }
+        else { input.focus(); input.select(); }
+      }
+      // «/» som snarvei til søket — men ikke mens du skriver i et felt.
+      else if(e.key==='/' && document.activeElement !== input &&
+              !/^(INPUT|TEXTAREA|SELECT)$/.test((document.activeElement||{}).tagName||'') &&
+              !(document.activeElement||{}).isContentEditable){
+        e.preventDefault(); input.focus();
       }
     });
   }
@@ -2866,6 +3062,25 @@ html[data-theme="bw"], body[data-theme="bw"]{
       if(!ticking){ requestAnimationFrame(update); ticking = true; }
     }, {passive:true});
     update();
+  })();
+
+  // ── Nav-søkepille: vises når hero-søket har rullet ut av synet ──
+  (function(){
+    var pill  = document.getElementById('navSearchPill');
+    var wrap  = document.getElementById('searchWrap');
+    var input = document.getElementById('searchInput');
+    if(!pill || !wrap || !input) return;
+    if('IntersectionObserver' in window){
+      new IntersectionObserver(function(entries){
+        entries.forEach(function(en){ pill.classList.toggle('show', !en.isIntersecting); });
+      }, {threshold:0}).observe(wrap);
+    } else {
+      pill.classList.add('show');
+    }
+    pill.addEventListener('click', function(){
+      window.scrollTo({top:0, behavior: REDUCE_MOTION ? 'auto' : 'smooth'});
+      setTimeout(function(){ input.focus(); }, REDUCE_MOTION ? 0 : 380);
+    });
   })();
 
   // ── Reveal on scroll ──
@@ -2963,9 +3178,9 @@ html[data-theme="bw"], body[data-theme="bw"]{
   })();
 
   // ── Sparklines: smooth monotone curves + cognac warming ──
+  // Kurvene finnes ikke ved parse-tid — markedsdata.js tegner dem når Norges
+  // Bank-dataene er hentet, og varsler oss med 'hv:spark' per SVG.
   (function(){
-    var sparks = document.querySelectorAll('.widget-spark:not(.spark-bars)');
-    if(!sparks.length) return;
     var NS = 'http://www.w3.org/2000/svg', uid = 0;
     function pts(d){
       var nums = (String(d).match(/-?\d*\.?\d+/g) || []).map(Number), out = [];
@@ -2996,31 +3211,50 @@ html[data-theme="bw"], body[data-theme="bw"]{
     }
     function mk(name, attrs){ var e = document.createElementNS(NS, name); for(var k in attrs) e.setAttribute(k, attrs[k]); return e; }
 
-    sparks.forEach(function(svg){
+    function enhance(svg){
       try {
         var paths = svg.querySelectorAll('path'); if(paths.length < 2) return;
         var area = paths[0], line = paths[1];
-        var P = pts(line.getAttribute('d')); if(P.length < 3) return;
+        var raw = line.getAttribute('d') || '';
+        // Bare rå polylinjer glattes — en allerede glattet kurve ville fått
+        // sine kontrollpunkter lest som måledata.
+        if(/[CcQqSsTtAa]/.test(raw)) return;
+        var P = pts(raw); if(P.length < 3) return;
         var d = smooth(P); if(!d) return;
+        // Fyllflaten må lukkes mot SVG-ens egen bunn, ikke et hardkodet tall.
+        var vb = (svg.getAttribute('viewBox') || '0 0 200 48').split(/\s+/);
+        var bottom = parseFloat(vb[3]) || 48;
+        // Minutt-pulsen tegner på nytt — rydd forrige runde så lagene ikke stables.
+        svg.querySelectorAll('.spark-base,.spark-halo,[data-sk]').forEach(function(n){
+          n.parentNode.removeChild(n);
+        });
         var lastX = P[P.length-1][0], firstX = P[0][0], y0 = P[0][1], id = 's' + (uid++);
         var defs = svg.querySelector('defs'); if(!defs){ defs = mk('defs', {}); svg.insertBefore(defs, svg.firstChild); }
-        var sg = mk('linearGradient', {id:'st'+id, x1:'0', y1:'0', x2:'1', y2:'0'});
+        var sg = mk('linearGradient', {id:'st'+id, x1:'0', y1:'0', x2:'1', y2:'0', 'data-sk':'1'});
         sg.appendChild(mk('stop', {offset:'0', 'class':'sk-stroke-a'}));
         sg.appendChild(mk('stop', {offset:'1', 'class':'sk-stroke-b'}));
-        var ag = mk('linearGradient', {id:'ar'+id, x1:'0', y1:'0', x2:'0', y2:'1'});
+        var ag = mk('linearGradient', {id:'ar'+id, x1:'0', y1:'0', x2:'0', y2:'1', 'data-sk':'1'});
         ag.appendChild(mk('stop', {offset:'0', 'class':'sk-area-a'}));
         ag.appendChild(mk('stop', {offset:'1', 'class':'sk-area-b'}));
         defs.appendChild(sg); defs.appendChild(ag);
-        area.setAttribute('d', d + 'L' + lastX.toFixed(2) + ',30 L' + firstX.toFixed(2) + ',30 Z');
+        area.setAttribute('d', d + 'L' + lastX.toFixed(2) + ',' + bottom + ' L' + firstX.toFixed(2) + ',' + bottom + ' Z');
         area.setAttribute('fill', 'url(#ar' + id + ')');
         line.setAttribute('d', d);
         line.setAttribute('stroke', 'url(#st' + id + ')');
         line.setAttribute('stroke-width', '1.35');
+        // Stiplet startnivå: viser hvor kursen lå for 30 dager siden.
         svg.insertBefore(mk('line', {x1:'0', y1:y0.toFixed(2), x2:'200', y2:y0.toFixed(2), 'class':'spark-base'}), line);
         var now = svg.querySelector('.spark-now');
         if(now) svg.insertBefore(mk('circle', {cx:now.getAttribute('cx'), cy:now.getAttribute('cy'), r:'4.6', 'class':'spark-halo'}), now);
       } catch(e){}
+    }
+
+    document.addEventListener('hv:spark', function(e){
+      var svg = e.target;
+      if(svg && svg.classList && !svg.classList.contains('spark-bars')) enhance(svg);
     });
+    // Skulle en kurve allerede stå i markup (cache-render før lytteren), ta den nå.
+    document.querySelectorAll('.widget-spark:not(.spark-bars)').forEach(enhance);
   })();
 </script>
 
@@ -3123,9 +3357,9 @@ html[data-theme="bw"], body[data-theme="bw"]{
     {n:"Oppbevaring — sekundærdokumentasjon",short:"Oppbevaring sekundærdok.",w:"Bokføringspliktige",d:"<b>3 år 6 mnd</b> etter regnskapsårets slutt",f:"løpende",i:"m",c:"reg",a:["bedrift"],mo:0,p:"Bokføringsovertredelse",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/rettskilder/type/kunngjoringer/oppbevaringstiden-for-regnskapsmateriale-endres-fra-ti-ar-til-fem-ar/"},
 
     /* ── A-melding & arbeidsgiver ── */
-    {n:"A-melding (lønn, trekk, aga)",short:"A-melding",w:"Alle arbeidsgivere",d:"<b>Den 5.</b> måneden etter (helg → virkedag)",f:"månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,p:"Tvangsmulkt (dagbøter)",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling/"},
+    {n:"A-melding (lønn, trekk, aga)",short:"A-melding",w:"Alle arbeidsgivere",d:"<b>Den 5.</b> måneden etter (helg → virkedag)",f:"månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,monthly:5,p:"Tvangsmulkt (dagbøter)",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling/"},
     {n:"Betaling av forskuddstrekk (nytt 2026)",short:"Forskuddstrekk",w:"Trekker skatt av lønn",d:"<b>Første virkedag etter lønn</b> (skattetrekkskonto avvikles)",f:"månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,p:"Skattetrekk skal betales straks",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/arbeidsgiveravgift/betaling-av-forskuddstrekk-og-arbeidsgiveravgift/"},
-    {n:"Betaling av arbeidsgiveravgift",short:"Arbeidsgiveravgift",w:"Alle arbeidsgivere",d:"<b>Den 15.</b> jan / mar / mai / jul / sep / nov",f:"2-månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/arbeidsgiveravgift/betaling-av-forskuddstrekk-og-arbeidsgiveravgift/"},
+    {n:"Betaling av arbeidsgiveravgift",short:"Arbeidsgiveravgift",w:"Alle arbeidsgivere",d:"<b>Den 15.</b> jan / mar / mai / jul / sep / nov",f:"2-månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,terms:[[1,15],[3,15],[5,15],[7,15],[9,15],[11,15]],p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/arbeidsgiveravgift/betaling-av-forskuddstrekk-og-arbeidsgiveravgift/"},
     {n:"Feriepenger til ansatte",short:"Feriepenger",w:"Arbeidsgivere",d:"Siste lønningsdag før ferie; senest <b>1 uke</b> før",f:"årlig",i:"h",c:"amld",a:["bedrift"],mo:0,p:"Brudd på ferieloven §11",s:"Ferieloven §11",u:"https://lovdata.no/lov/1988-04-29-21/§11"},
     {n:"Sykepengerefusjon fra NAV",short:"Sykepengerefusjon",w:"Har forskuttert sykepenger",d:"Kun fravær inntil <b>3 mnd</b> før kravmåneden",f:"hendelse",i:"h",c:"amld",a:["bedrift"],mo:0,p:"Taper refusjon for eldre fravær",s:"NAV",u:"https://www.nav.no/arbeidsgiver/sykepenger-etter-arbeidsgiverperioden"},
     {n:"Opprette obligatorisk tjenestepensjon (OTP)",short:"OTP opprette",w:"OTP-pliktige bedrifter",d:"Innen <b>6 mnd</b> etter at plikten oppstod",f:"hendelse",i:"m",c:"amld",a:["bedrift"],mo:0,p:"Etterbetaling + mulig gebyr",s:"Lovdata (OTP-loven)",u:"https://lovdata.no/lov/2005-12-21-124"},
@@ -3139,7 +3373,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
     {n:"Lånekassen — hovedsøknad (høst)",short:"Lånekassen (høst)",w:"Studenter / elever",d:"<b>15. november 2026</b> (høstsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:11,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
     {n:"Lånekassen — hovedsøknad (vår)",short:"Lånekassen (vår)",w:"Studenter / elever",d:"<b>15. mars 2026</b> (vårsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:3,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
     {n:"Lånekassen — inntektsgrense",short:"Lånekassen inntektsgrense",w:"Mottar støtte",d:"2026: <b>234 821 kr</b> (helår) / 587 053 kr (≤ 7 mnd)",f:"årlig",i:"m",c:"priv",a:["student"],mo:0,p:"Stipend gjøres om til lån",s:"Lånekassen",u:"https://lanekassen.no/nb-NO/stipend-og-lan/norge/inntekt-og-formue/"},
-    {n:"Lånekassen — nedbetaling",short:"Lånekassen nedbetaling",w:"Tidligere studenter",d:"Fast forfall hver måned (standard <b>den 15.</b>)",f:"månedlig",i:"m",c:"priv",a:["privat","student"],mo:0,p:"Purregebyr og renter",s:"Lånekassen",u:"https://lanekassen.no/"},
+    {n:"Lånekassen — nedbetaling",short:"Lånekassen nedbetaling",w:"Tidligere studenter",d:"Fast forfall hver måned (standard <b>den 15.</b>)",f:"månedlig",i:"m",c:"priv",a:["privat","student"],mo:0,monthly:15,p:"Purregebyr og renter",s:"Lånekassen",u:"https://lanekassen.no/"},
 
     /* ── Juridiske frister ── */
     {n:"Klage på skatteoppgjør",short:"Klage skatteoppgjør (6 uker)",w:"Fått skattevedtak",d:"<b>6 uker</b> fra vedtaket (ytre grense 1 år)",f:"hendelse",i:"h",c:"jur",a:["privat"],mo:0,p:"Klageretten faller bort",s:"Skatteetaten",u:"https://www.skatteetaten.no/rettskilder/type/handboker/skatteforvaltningshandboken/gjeldende/kapittel-13-klage/ID-13-4.001/"},
@@ -3186,7 +3420,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
     {id:"bil",t:"Bil, avgift & eiendom"}
   ];
   var AUD={privat:"Privat",bedrift:"Bedrift",student:"Student",bilbolig:"Bil & bolig",arbeid:"Arbeid"};
-  var IMP={k:{s:"Kritisk",f:"Kritisk frist"},h:{s:"Høy",f:"Høy prioritet"},m:{s:"Middels",f:"Middels prioritet"}};
+  var IMP={k:{s:"Kritisk",f:"Kritisk frist"},h:{s:"Viktig",f:"Viktig frist"},m:{s:"Vanlig",f:"Vanlig frist"}};
   var MO=["Jan","Feb","Mar","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Des"];
   var MOF=["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"];
   var MOL=["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
@@ -3203,19 +3437,46 @@ html[data-theme="bw"], body[data-theme="bw"]{
 
   function makeState(){return {q:"",filter:"alle",today:new Date(),count:6,feat:true,prevOverflow:"",trigger:null};}
 
+  /* Helg → neste virkedag. Gjelder kun de gjentakende fristene under;
+     de faste mo/dm-datoene i D er allerede notert med riktig virkedag. */
+  function workday(d){
+    while(d.getDay()===6||d.getDay()===0)d.setDate(d.getDate()+1);
+    return d;
+  }
+  /* De hyppigste fristene (A-melding, arbeidsgiveravgift, studielån) har ingen
+     enkelt mo/dm og falt derfor helt ut av «neste frister» — de gjentar seg
+     månedlig eller over flere terminer i året. */
   function nextDate(x,today){
-    var y=today.getFullYear();
-    var d=new Date(y,x.mo-1,x.dm);
+    var y=today.getFullYear(),d,k;
+    if(x.monthly){
+      for(k=0;k<14;k++){
+        d=workday(new Date(y,today.getMonth()+k,x.monthly));
+        if(d0(d)>=d0(today))return d;
+      }
+      return null;
+    }
+    if(x.terms){
+      var best=null;
+      x.terms.forEach(function(t){
+        for(var yy=y;yy<=y+1;yy++){
+          var c=workday(new Date(yy,t[0]-1,t[1]));
+          if(d0(c)>=d0(today)){ if(!best||c<best)best=c; break; }
+        }
+      });
+      return best;
+    }
+    d=new Date(y,x.mo-1,x.dm);
     if(d0(d)<d0(today))d=new Date(y+1,x.mo-1,x.dm);
     return d;
   }
   function upcoming(st){
-    return D.filter(function(x){return x.mo;}).map(function(x){
+    return D.filter(function(x){return x.mo||x.monthly||x.terms;}).map(function(x){
       var dt=nextDate(x,st.today);
+      if(!dt)return null;
       var o={};for(var k in x){o[k]=x[k];}
       o.date=dt;o.days=days(st.today,dt);
       return o;
-    }).sort(function(a,b){return a.date-b.date;});
+    }).filter(Boolean).sort(function(a,b){return a.date-b.date;});
   }
   function passes(x,st){
     if(st.filter!=="alle" && x.a.indexOf(st.filter)<0)return false;
@@ -3227,18 +3488,26 @@ html[data-theme="bw"], body[data-theme="bw"]{
   }
 
   /* ═══ Widget-byggere ═══ */
+  /* «Snart» = innen to uker. Over det er fristen notert, ikke påtrengende —
+     med 30 dager lyste nesten hele lista opp og skillet mistet mening. */
+  var SOON_DAYS=14;
+
   function renderFeatured(x){
     var mi=x.date.getMonth(),day=x.date.getDate();
-    var soon=x.days<=30;
+    var soon=x.days<=SOON_DAYS;
     var cd;
-    if(x.days<=0)cd='<span class="fr-cd-word">I dag</span>';
-    else if(x.days===1)cd='<span class="fr-cd-word">I morgen</span>';
+    // Samme to-raders form uansett: etikett over tall, ellers hopper kolonnen
+    // i høyde de to dagene fristen er «i dag» eller «i morgen».
+    if(x.days<=1)cd='<span class="fr-cd-lead" data-i18n="fr.due">Frist</span><span class="fr-cd-big"><span class="fr-cd-word">'
+      +(x.days<=0?'I dag':'I morgen')+'</span></span>';
     else cd='<span class="fr-cd-lead" data-i18n="fr.in">om</span><span class="fr-cd-big"><span class="fr-cd-num">'+x.days+'</span><span class="fr-cd-unit" data-i18n="fr.days">dager</span></span>';
     var full=WK[x.date.getDay()]+" "+day+". "+MOL[mi]+" "+x.date.getFullYear();
+    // Konsekvensen hører hjemme her: det er den som gjør fristen verdt å merke seg.
+    if(x.p) full+=" · "+x.p;
     return '<div class="fr-feat reveal" style="--d:1">'
       +'<div class="fr-flak lg"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
       +'<span class="fr-div"></span>'
-      +'<div class="fr-feat-mid"><span class="fr-eyebrow" data-i18n="fr.next">Neste frist</span>'
+      +'<div class="fr-feat-mid"><span class="fr-eyebrow" data-i18n="fr.next">Neste viktige frist</span>'
         +'<h3 class="fr-feat-name">'+esc(x.n)+'</h3>'
         +'<p class="fr-feat-who">'+esc(x.w)+'</p>'
         +'<p class="fr-feat-date">'+esc(full)+'</p></div>'
@@ -3247,7 +3516,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
   }
   function renderRow(x,i){
     var mi=x.date.getMonth(),day=x.date.getDate();
-    var soon=x.days<=30;
+    var soon=x.days<=SOON_DAYS;
     var t=x.days<=0?"i dag":x.days===1?"i morgen":("om "+x.days+" dager");
     return '<li class="fr-row reveal" style="--d:'+(i+2)+'">'
       +'<div class="fr-flak sm"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
@@ -3260,9 +3529,16 @@ html[data-theme="bw"], body[data-theme="bw"]{
   function buildWidget(root,st){
     var fw=root.querySelector("[data-fr-featured]");
     var grid=root.querySelector("[data-fr-list]");
-    var up=upcoming(st),start=0;
-    if(st.feat && up.length){fw.innerHTML=renderFeatured(up[0]);start=1;}else{fw.innerHTML="";}
-    grid.innerHTML=up.slice(start,st.count).map(renderRow).join("");
+    var up=upcoming(st);
+    if(st.feat && up.length){
+      // Løft fram første frist med reell konsekvens — en «vanlig» frist (i:"m")
+      // fortjener ikke hovedplassen når en kritisk/viktig ligger rett bak.
+      var fi=0;
+      for(var j=0;j<up.length;j++){ if(up[j].i!=="m"){ fi=j; break; } }
+      fw.innerHTML=renderFeatured(up[fi]);
+      up=up.filter(function(_,j){return j!==fi;});
+    } else { fw.innerHTML=""; }
+    grid.innerHTML=up.slice(0,st.count).map(renderRow).join("");
   }
 
   /* ═══ Modal-byggere ═══ */
@@ -3272,7 +3548,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
     for(var m=0;m<12;m++){
       var items=D.filter(function(x){return x.mo===m+1 && passes(x,st);}).sort(function(a,b){return a.dm-b.dm;});
       var lis=items.length
-        ? items.map(function(x){return '<li><span class="dd">'+x.dm+'</span><span class="nn">'+esc(x.short)+'</span></li>';}).join("")
+        ? items.map(function(x){return '<li><span class="dd">'+x.dm+'.</span><span class="nn">'+esc(x.short)+'</span></li>';}).join("")
         : '<li class="empty"><span class="dd">—</span></li>';
       out+='<div class="fr-mon'+(m===cur?' cur':'')+'"><h4><span>'+MOF[m]+'</span><span class="c">'+(items.length||"")+'</span></h4><ul>'+lis+'</ul></div>';
     }
