@@ -406,6 +406,15 @@
     // Build a single theme row: mini palette preview + label + subtitle + check.
     // The preview tile is a real mockup of the theme (bg + ink "text" bar + accent dot)
     // so users see what they're picking, not an abstract dot.
+    // i18n for the theme/language menus. The rows carry data-i18n so core.js's generic
+    // _updateI18nText picks them up on every language switch — no re-render hook needed.
+    // tcT() fills in the right text at build time; if a key is missing anywhere we fall
+    // back to the Norwegian label that is already in THEMES, so the menu can never blank.
+    function tcKey(k, pre){ return pre + k.charAt(0).toUpperCase() + k.slice(1); }
+    function tcT(key, fallback){
+      try { var r = (typeof R === 'function') ? R() : null; if (r && r[key]) return r[key]; } catch(_e){}
+      return fallback;
+    }
     function themeRowHtml(x, cur){
       var pv = x.pv || {};
       var styleBg = 'background:'+pv.bg+';';
@@ -418,15 +427,15 @@
             '<span class="tc-pv-dot" style="'+styleDot+'"></span>'+
           '</span>'+
           '<span class="tc-row-text">'+
-            '<span class="tc-row-name">'+x.l+'</span>'+
-            '<span class="tc-row-sub">'+(x.sub||'')+'</span>'+
+            '<span class="tc-row-name" data-i18n="'+tcKey(x.k,'tcTheme')+'">'+tcT(tcKey(x.k,'tcTheme'), x.l)+'</span>'+
+            '<span class="tc-row-sub" data-i18n="'+tcKey(x.k,'tcSub')+'">'+tcT(tcKey(x.k,'tcSub'), (x.sub||''))+'</span>'+
           '</span>'+
           '<svg class="tc-check" width="11" height="9" viewBox="0 0 11 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4.8 4.2 7.8 10 1.5"/></svg>'+
         '</a>';
     }
-    function themeGroupHtml(label, items, cur){
+    function themeGroupHtml(label, items, cur, key){
       return '<div class="tc-group">'+
-          '<h5><span>'+label+'</span><i class="tc-rule"></i></h5>'+
+          '<h5><span data-i18n="'+key+'">'+tcT(key, label)+'</span><i class="tc-rule"></i></h5>'+
           items.map(function(x){return themeRowHtml(x, cur);}).join('')+
         '</div>';
     }
@@ -437,12 +446,12 @@
       '<div class="tc-wrap">'+
         '<button class="tc-btn" id="tc-theme-btn" aria-expanded="false" aria-haspopup="menu">'+
           '<span class="swatch sw-'+curTheme+'"></span>'+
-          '<span id="tc-theme-label">'+(THEMES.find(function(x){return x.k===curTheme;})||THEMES[0]).l+'</span>'+
+          '<span id="tc-theme-label" data-i18n="'+tcKey((THEMES.find(function(x){return x.k===curTheme;})||THEMES[0]).k,'tcTheme')+'">'+tcT(tcKey((THEMES.find(function(x){return x.k===curTheme;})||THEMES[0]).k,'tcTheme'), (THEMES.find(function(x){return x.k===curTheme;})||THEMES[0]).l)+'</span>'+
           '<svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>'+
         '</button>'+
         '<div class="tc-menu tc-theme-menu" id="tc-theme-menu" role="menu">'+
-          themeGroupHtml('Mørke',  THEMES.filter(function(x){return x.group==='dark';}),  curTheme)+
-          themeGroupHtml('Lyse',   THEMES.filter(function(x){return x.group==='light';}), curTheme)+
+          themeGroupHtml('Mørke',  THEMES.filter(function(x){return x.group==='dark';}),  curTheme, 'tcGroupDark')+
+          themeGroupHtml('Lyse',   THEMES.filter(function(x){return x.group==='light';}), curTheme, 'tcGroupLight')+
         '</div>'+
       '</div>'+
       '<div class="tc-wrap">'+
@@ -452,15 +461,15 @@
           '<svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>'+
         '</button>'+
         '<div class="tc-menu" id="tc-lang-menu" role="menu">'+
-          '<h5>Hovedspråk</h5>'+
+          '<h5 data-i18n="rgMain">'+tcT('rgMain','Hovedspråk')+'</h5>'+
           LANGS.filter(function(x){return x.group==='main';}).map(function(x){
             return '<a role="menuitemradio" aria-checked="'+(x.k===curLang?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
           }).join('')+
-          '<h5>Språk i Norge</h5>'+
+          '<h5 data-i18n="rgNorway">'+tcT('rgNorway','Språk i Norge')+'</h5>'+
           LANGS.filter(function(x){return x.group==='norway';}).map(function(x){
             return '<a role="menuitemradio" aria-checked="'+(x.k===curLang?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
           }).join('')+
-          '<h5>Internasjonalt</h5>'+
+          '<h5 data-i18n="rgIntl">'+tcT('rgIntl','Internasjonalt')+'</h5>'+
           LANGS.filter(function(x){return x.group==='intl';}).map(function(x){
             return '<a role="menuitemradio" aria-checked="'+(x.k===curLang?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
           }).join('')+
@@ -561,7 +570,13 @@
       // View Transition so the new palette wipes in as a growing circle.
       function swap(){
         applyTheme(t, {persist:true});
-        document.getElementById('tc-theme-label').textContent = (THEMES.find(function(x){return x.k===t;})||THEMES[0]).l;
+        var pick = THEMES.find(function(x){return x.k===t;})||THEMES[0];
+        var lblEl = document.getElementById('tc-theme-label'), lblKey = tcKey(pick.k,'tcTheme');
+        // The key changes with the theme, so drop core.js's per-element i18n cache —
+        // otherwise it would keep re-applying the previous theme's cached text.
+        lblEl.setAttribute('data-i18n', lblKey);
+        delete lblEl._hvtI18nTextOrig; delete lblEl._hvtI18nTextApplied;
+        lblEl.textContent = tcT(lblKey, pick.l);
         document.querySelectorAll('#tc-theme-menu a').forEach(function(a){
           var on = a.getAttribute('data-tk')===t;
           a.classList.toggle('current', on);
