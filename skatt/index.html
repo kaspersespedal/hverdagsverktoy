@@ -23,7 +23,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:400,500,600,700|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:400,500,600,700|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v217" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v223" as="script" fetchpriority="high">
 <script>
   (function(){try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
@@ -1130,7 +1130,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       if(count) count.textContent = shown + ' tilgjengelige';
     });
   })();
-  // ── Render content rows from REGIONS.no (loaded via no.js) ──
+  // ── Render content rows from the language the user has picked ──
   window.REGIONS = window.REGIONS || {};
   (function(){
     function renderRows(rows){
@@ -1146,8 +1146,16 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         return '<div class="cc-row"><span class="cc-q">'+label+'</span><span class="cc-a">'+val+refHtml+'</span></div>';
       }).join('');
     }
+    // <html lang> er 'nb' for norsk, ellers språkkoden. core.js setter den i
+    // setRegion etter at språkfila er lastet, så REGIONS[lang] finnes her.
+    function activeData(){
+      var l = document.documentElement.getAttribute('lang') || 'no';
+      if(l === 'nb') l = 'no';
+      var R = window.REGIONS || {};
+      return R[l] || R.no || {};
+    }
     function populate(){
-      var data = (window.REGIONS && window.REGIONS.no) || {};
+      var data = activeData();
       document.querySelectorAll('[data-rows-key]').forEach(function(el){
         var key = el.getAttribute('data-rows-key');
         var rows = data[key];
@@ -1163,14 +1171,18 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       document.addEventListener('DOMContentLoaded', populate);
     } else { populate(); }
     window.addEventListener('load', populate);
+    // Bytter brukeren språk, endrer core.js <html lang> — tegn radene på nytt.
+    if(typeof MutationObserver === 'function'){
+      new MutationObserver(populate).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+    }
   })();
 </script>
 <!-- SHELL JS (T3) — top-chrome injects theme/lang into .nav-wrap nav -->
 <script src="/shared/site-shell.js?v=v1" defer></script>
-<script src="/shared/top-chrome.js?v=v217" defer></script>
+<script src="/shared/top-chrome.js?v=v223" defer></script>
 
 <!-- Existing shared scripts (preserved per spec) -->
-<script src="/shared/core.js?v=v217" defer></script>
+<script src="/shared/core.js?v=v223" defer></script>
 <script src="/shared/lang/no.js?v=v129" defer></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <script src="/shared/search.js?v=v128" defer></script>
