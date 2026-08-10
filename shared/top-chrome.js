@@ -24,18 +24,22 @@
     {k:'pink',    l:'Rosa',      group:'light', sub:'Mykt blush',         pv:{bg:'#fffbfc', ink:'#3a2030', accent:'#d4748e'}},
     {k:'hendrix', l:'Hendrix',   group:'light', sub:'Fillmore-plakat',    pv:{bg:'#fdf1e3', ink:'#2a0d3d', accent:'#d6248f'}}
   ];
+  // `hidden:true` tar språket ut av velgeren uten å fjerne koden: språkfila,
+  // /<kode>/-sidene og ?lang=<kode> fungerer fortsatt for den som har lenka.
+  // Skjult 2026-08-09 fordi oversettelsene der lå for langt bak til å vises.
   var LANGS = [
     {k:'no', l:'Norsk',       flag:'no', group:'main'},
     {k:'en', l:'English',     flag:'gb', group:'main'},
     {k:'pl', l:'Polski',      flag:'pl', group:'norway'},
     {k:'uk', l:'Українська',  flag:'ua', group:'norway'},
     {k:'ar', l:'العربية',     flag:'sa', group:'norway'},
-    {k:'lt', l:'Lietuvių',    flag:'lt', group:'norway'},
-    {k:'so', l:'Soomaali',    flag:'so', group:'norway'},
-    {k:'ti', l:'ትግርኛ',       flag:'er', group:'norway'},
-    {k:'zh', l:'中文',         flag:'cn', group:'intl'},
+    {k:'lt', l:'Lietuvių',    flag:'lt', group:'norway', hidden:true},
+    {k:'so', l:'Soomaali',    flag:'so', group:'norway', hidden:true},
+    {k:'ti', l:'ትግርኛ',       flag:'er', group:'norway', hidden:true},
+    {k:'zh', l:'中文',         flag:'cn', group:'intl',   hidden:true},
     {k:'fr', l:'Français',    flag:'fr', group:'intl'}
   ];
+  function langGroup(g){ return LANGS.filter(function(x){ return x.group===g && !x.hidden; }); }
 
   function getStored(k, fb){ try{ return localStorage.getItem(k) || fb; }catch(e){ return fb; } }
   function setStored(k, v){ try{ localStorage.setItem(k, v); }catch(e){} }
@@ -439,6 +443,15 @@
           items.map(function(x){return themeRowHtml(x, cur);}).join('')+
         '</div>';
     }
+    // Språkgruppe. Er hele gruppa skjult (se `hidden` i LANGS) droppes overskrifta
+    // også, så menyen ikke får en tom «Internasjonalt»-rubrikk.
+    function langGroupHtml(key, label, items, cur){
+      if(!items.length) return '';
+      return '<h5 data-i18n="'+key+'">'+tcT(key, label)+'</h5>'+
+        items.map(function(x){
+          return '<a role="menuitemradio" aria-checked="'+(x.k===cur?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===cur?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
+        }).join('');
+    }
 
     var actions = document.createElement('div');
     actions.className = 'tc-actions';
@@ -461,18 +474,9 @@
           '<svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 1.5 4.5 5 8 1.5"/></svg>'+
         '</button>'+
         '<div class="tc-menu" id="tc-lang-menu" role="menu">'+
-          '<h5 data-i18n="rgMain">'+tcT('rgMain','Hovedspråk')+'</h5>'+
-          LANGS.filter(function(x){return x.group==='main';}).map(function(x){
-            return '<a role="menuitemradio" aria-checked="'+(x.k===curLang?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
-          }).join('')+
-          '<h5 data-i18n="rgNorway">'+tcT('rgNorway','Språk i Norge')+'</h5>'+
-          LANGS.filter(function(x){return x.group==='norway';}).map(function(x){
-            return '<a role="menuitemradio" aria-checked="'+(x.k===curLang?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
-          }).join('')+
-          '<h5 data-i18n="rgIntl">'+tcT('rgIntl','Internasjonalt')+'</h5>'+
-          LANGS.filter(function(x){return x.group==='intl';}).map(function(x){
-            return '<a role="menuitemradio" aria-checked="'+(x.k===curLang?'true':'false')+'" data-lang="'+x.k+'" class="'+(x.k===curLang?'current':'')+'"><span class="flag"><img src="https://flagcdn.com/w80/'+x.flag+'.png" alt=""></span>'+x.l+'</a>';
-          }).join('')+
+          langGroupHtml('rgMain',   'Hovedspråk',    langGroup('main'),   curLang)+
+          langGroupHtml('rgNorway', 'Språk i Norge', langGroup('norway'), curLang)+
+          langGroupHtml('rgIntl',   'Internasjonalt',langGroup('intl'),   curLang)+
         '</div>'+
       '</div>';
     navEl.appendChild(actions);

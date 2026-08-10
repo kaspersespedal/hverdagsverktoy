@@ -212,7 +212,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v49';
+    s.src = '/shared/lang/' + code + '.js?v=v223';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -470,6 +470,7 @@ function updateAll() {
   try{_updateI18nHtml(R());}catch(e){_uiErr('i18nHtml',e);}
   try{_updateI18nText(R());}catch(e){_uiErr('i18nText',e);}
   try{_updateI18nPh(R());}catch(e){_uiErr('i18nPh',e);}
+  try{_phObserve();_phSweepAll();}catch(e){_uiErr('phraseSweep',e);}
 }
 
 // Swap placeholder-attribute on [data-i18n-placeholder] elements when current lang has an override key.
@@ -546,6 +547,122 @@ function _updateI18nText(r){
     _setI18nText(el, target);
     el._hvtI18nTextApplied=target;
   }
+}
+
+// ═══════════════════════════════════════════════════════
+// FRASE-i18n — oversetter tekst som ikke har data-i18n-nøkkel
+// ═══════════════════════════════════════════════════════
+// Bakgrunn (2026-08-09): de tre mekanismene over dekker bare elementer som er
+// merket i HTML. Editorial-redesignen la inn ~4 000 norske tekster i de 71
+// kanoniske sidene UTEN merking, så en engelsk bruker så norsk overalt. Å merke
+// hvert element ville betydd ~4 000 attributt-innsettinger i 71 filer, og
+// elementer som JS skriver resultater inn i måtte ekskluderes manuelt.
+//
+// I stedet: hver språkfil har en ordbok `_ph` der NØKKELEN er den norske teksten
+// («Slik regnes det ut») og verdien er oversettelsen. Vi går over tekstnodene og
+// bytter dem som står i ordboka.
+//
+// Hvorfor det ikke kan ødelegge noe:
+//  · Vi husker kildeteksten per node (_hvPhSrc) og hva vi selv skrev (_hvPhOut).
+//    Har noen andre (en kalkulator, en render-funksjon) skrevet til noden siden
+//    sist, er cur ≠ _hvPhOut, og vi tar den nye teksten som ny kilde. Vi
+//    overskriver derfor aldri et regnet resultat med en gammel plassholder.
+//  · Treff krever eksakt match på hele den trimmede teksten. Tall og beløp som
+//    JS lager, står ikke i ordboka og blir stående.
+//  · Mangler oversettelsen, blir norsk stående. Ingenting blir tomt.
+// Kjører etter de nøkkelbaserte passene, så et ekte data-i18n-treff vinner.
+var _phBusy=false, _phObs=null, _phQueued=false, _phRoots=[];
+function _phDict(){ var r=R(); return (r && r._ph) || null; }
+
+// Bytt ut teksten, men behold whitespace rundt (linjeskift/innrykk i HTML-kilden).
+function _phSwap(src, hit){
+  var key=src.trim(), i=src.indexOf(key);
+  return src.slice(0,i) + hit + src.slice(i+key.length);
+}
+
+var _PH_SKIP_PARENT={SCRIPT:1,STYLE:1,TEXTAREA:1,NOSCRIPT:1,TEMPLATE:1,CODE:1,svg:1,title:1};
+function _phText(node, dict){
+  var cur=node.nodeValue;
+  if(node._hvPhOut!==cur) node._hvPhSrc=cur;   // noen andre skrev til noden → ny kilde
+  var src=node._hvPhSrc, key=src.trim();
+  if(key.length<2) return;
+  var hit=dict && dict[key];
+  var next=hit ? _phSwap(src,hit) : src;
+  if(next!==cur) node.nodeValue=next;
+  node._hvPhOut=next;
+}
+
+var _PH_ATTRS=['placeholder','aria-label','title','alt'];
+function _phAttrs(el, dict){
+  for(var a=0;a<_PH_ATTRS.length;a++){
+    var name=_PH_ATTRS[a];
+    if(!el.hasAttribute(name)) continue;
+    // data-i18n-placeholder eier placeholder-attributtet på de feltene som har den.
+    if(name==='placeholder' && el.hasAttribute('data-i18n-placeholder')) continue;
+    var store='_hvPhA_'+a, cur=el.getAttribute(name);
+    if(el[store+'o']!==cur) el[store]=cur;
+    var src=el[store], key=(src||'').trim();
+    if(key.length<2) continue;
+    var hit=dict && dict[key];
+    var next=hit ? _phSwap(src,hit) : src;
+    if(next!==cur) el.setAttribute(name,next);
+    el[store+'o']=next;
+  }
+}
+
+function _phSweep(root, dict){
+  if(!root) return;
+  if(root.nodeType===3){ if(!_PH_SKIP_PARENT[root.parentNode&&root.parentNode.nodeName]) _phText(root,dict); return; }
+  if(root.nodeType!==1 && root.nodeType!==9) return;
+  var walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode:function(n){
+      return _PH_SKIP_PARENT[n.parentNode&&n.parentNode.nodeName] ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  for(var n=walker.nextNode(); n; n=walker.nextNode()) _phText(n,dict);
+  if(root.nodeType===1) _phAttrs(root,dict);
+  var els=root.querySelectorAll('[placeholder],[aria-label],[title],[alt]');
+  for(var i=0;i<els.length;i++) _phAttrs(els[i],dict);
+}
+
+function _phSweepAll(roots){
+  var dict=_phDict();
+  // Ingen ordbok (norsk, eller språk uten `_ph`): kjør likevel én gang for å
+  // føre tilbake det vi eventuelt har oversatt tidligere i økta.
+  _phBusy=true;
+  try{
+    var list=roots&&roots.length?roots:[document.body];
+    for(var i=0;i<list.length;i++) _phSweep(list[i],dict);
+    if(document.title){
+      if(document._hvPhOut!==document.title) document._hvPhSrc=document.title;
+      var t=dict&&dict[document._hvPhSrc.trim()];
+      document.title=document._hvPhOut=(t?_phSwap(document._hvPhSrc,t):document._hvPhSrc);
+    }
+  }catch(e){ _uiErr('phraseI18n',e); }
+  finally{ if(_phObs) _phObs.takeRecords(); _phBusy=false; }
+}
+
+// Kalkulatorene bygger resultat-DOM etter at siden er lastet. Observatøren fanger
+// den nye teksten. Egne skrivinger drenerer vi ut via takeRecords() over, så det
+// blir ingen evig runddans.
+function _phObserve(){
+  if(_phObs || typeof MutationObserver!=='function' || !document.body) return;
+  _phObs=new MutationObserver(function(muts){
+    if(_phBusy) return;
+    for(var i=0;i<muts.length;i++){
+      var m=muts[i];
+      if(m.type==='characterData') _phRoots.push(m.target);
+      else for(var j=0;j<m.addedNodes.length;j++) _phRoots.push(m.addedNodes[j]);
+    }
+    if(!_phRoots.length || _phQueued) return;
+    _phQueued=true;
+    requestAnimationFrame(function(){
+      _phQueued=false;
+      var roots=_phRoots; _phRoots=[];
+      if(_phDict()) _phSweepAll(roots);
+    });
+  });
+  _phObs.observe(document.body,{childList:true,subtree:true,characterData:true});
 }
 
 // Three.js disco ball
@@ -6815,6 +6932,12 @@ function syncCardHeights(){}
 function renderComplexityDots(){}
 
 function _initPageReady(){
+  // Fortell nettleseren hvilket språk siden faktisk vises på. setRegion gjorde
+  // dette ved språkbytte, men ikke ved sidelast — så en engelsk bruker fikk
+  // lang="nb" fra HTML-fila. Skjermlesere leste da engelsk tekst med norsk
+  // uttale, og sider som leser attributtet for å velge innhold traff norsk.
+  document.documentElement.setAttribute('lang', region === 'no' ? 'nb' : region);
+  document.documentElement.setAttribute('dir', region === 'ar' ? 'rtl' : 'ltr');
   // Sync region selector UI with saved language
   var _rf=document.getElementById('rf');if(_rf)setFlagSrc(_rf,R().flag);
   var _rn=document.getElementById('rn');if(_rn)_rn.textContent=R().name;
