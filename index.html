@@ -830,8 +830,11 @@
   .widget-trend .trend-glyph{
     width:11px;height:11px;display:block;flex-shrink:0;
   }
-  .widget-trend.trend-up{color:var(--accent-2)}
-  .widget-trend.trend-up i{color:rgba(216,173,126,.7)}
+  /* Retningen ligger i pila, ikke i fargen. Opp var aksentfarget mens ned og
+     flat var nøytrale, så «+0,25 pp» lyste opp ved siden av «−31 %» uten at
+     det betyr noe mer. Alle tre deler nå samme nøytrale tone; enheten arver
+     --ink3 fra .widget-trend i (som var overstyrt med hardkodet cognac). */
+  .widget-trend.trend-up,
   .widget-trend.trend-down{color:var(--ink2)}
   .widget-trend.trend-flat{color:var(--ink3)}
   .widget-trend.trend-weather{color:var(--ink2);font-size:11px;letter-spacing:.1px}
@@ -894,7 +897,9 @@
   .wx-fc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-height:48px}
   .wx-fc[hidden]{display:none}
   .wx-fc-cell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:7px}
-  .wx-fc-cell:first-child{background:rgba(216,173,126,.10)}
+  /* Hardkodet cognac ble liggende igjen som varm flekk i de åtte andre
+     temaene — --glow-rgb er samme aksent per tema. */
+  .wx-fc-cell:first-child{background:rgba(var(--glow-rgb),.10)}
   .wx-fc-ico{display:flex;color:var(--ink3);transition:color .3s var(--ease)}
   .wx-fc-ico svg{width:15px;height:15px;display:block}
   @media(hover:hover){.widget:hover .wx-fc-cell:first-child .wx-fc-ico{color:var(--accent-2)}}
@@ -2105,7 +2110,6 @@ html[data-theme="bw"], body[data-theme="bw"]{
         <details class="daily-sources">
           <summary>
             <span class="daily-sources-toggle">Kilder</span>
-            <span class="daily-disclaimer">Veiledende, muligens forsinkede tall — ikke investeringsrådgivning.</span>
           </summary>
           <p>
             Vær: <a href="https://www.met.no/" target="_blank" rel="noopener">MET Norway</a> ·
@@ -2113,6 +2117,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
             Strøm: <a href="https://www.hvakosterstrommen.no/" target="_blank" rel="noopener">hvakosterstrømmen.no</a> ·
             Sted: <a href="https://www.kartverket.no/" target="_blank" rel="noopener">© Kartverket</a>.
           </p>
+          <p class="daily-disclaimer">Veiledende, muligens forsinkede tall — ikke investeringsrådgivning.</p>
         </details>
       </div>
 
