@@ -8,45 +8,94 @@
 
 /* Dark group ────────────────────────────────────────────── */
 
+/* Carbon — «bek og messing». Hele stigen er bygget i OKLCH med LÅST fargetone
+   64° (= aksentens egen tone) og jevne lyshetstrinn. Bakgrunnen for ombyggingen
+   (målt 2026-08-13, ikke skjønn):
+
+   · TONEDRIFT. De gamle nøytralene lå på 68°→98°→85°→95°→83°→87°. Et sprang på
+     30° betyr at surface-2 var olivengul mens bakgrunnen var ravbrun, og
+     aksenten sto på 64°. Ingen enkeltverdi var stygg; det var uenigheten mellom
+     dem som gjorde at temaet leste som «gråbrunt», ikke som ett lys i ett rom.
+   · FLAT ETASJESTIGE. Lyshetstrinnene var .041 / .026 / .028. GitHub dark,
+     Stripe dark og Linear dark ligger alle på ~.033-.058 per trinn. De to øverste
+     trinnene våre var altså halvparten av bransjenormen — kort avstand er ikke
+     «diskré», det er usynlig: et .ks-kort hadde 1,05 i kontrast mot siden bak
+     seg, og på toppen av siden var --atmo-base-top (#0F0D0A) faktisk LYSERE enn
+     --surface (#0f0e0d), så kortet forsvant helt. Nå: .068 / .042 / .046.
+   · KOLLAPSET BLEKKRINN. --ink3 (#807c73) og --ink4 (#7f7a6f) lå .006 fra
+     hverandre — samme farge for øyet, altså et bortkastet trinn i stigen.
+     Nå .056 / .058 fra hverandre, og alle fire består WCAG AA på --bg,
+     --surface og --surface-2.
+   · KROMA GIKK FEIL VEI. --surface hadde LAVERE kroma (.003) enn --bg (.004),
+     så kortet var kaldere enn siden det lå på. Varme flater blir varmere når de
+     løftes mot lyset, ikke gråere. Kroma stiger nå monotont med lysheten.
+
+   --glow-rgb eies ellers av colors_and_type.css, som har en helt annen palett
+   for de samme temanavnene. Den fila har lavere spesifisitet (0,1,0) enn denne
+   (0,1,1), men vinner likevel når tokenet ikke finnes her — og bw fikk dermed en
+   nesten svart fokusring (26,26,26) på svart bakgrunn. Verdien følger temaets
+   eget --accent. */
 html[data-theme="carbon"]{
-  --bg:#070605; --surface:#0f0e0d; --surface-2:#15140f; --surface-3:#1c1a16;
-  --ink:#ecebe7; --ink2:#9d978c; --ink3:#807c73; --ink4:#7f7a6f;
-  --accent:#b88a5e; --accent-2:#d1a276; --accent-deep:#8a6336;
-  /* --glow-rgb eies av colors_and_type.css, som har en helt annen palett
-     for de samme temanavnene. Den fila har lavere spesifisitet (0,1,0) enn
-     denne (0,1,1), men vinner likevel fordi tokenet ikke fantes her — og
-     bw fikk dermed en nesten svart fokusring (26,26,26) på svart bakgrunn.
-     Verdien følger temaets eget --accent. */
-  --glow-rgb:184, 138, 94;
-  --line:rgba(255,248,232,.05); --line-2:rgba(255,248,232,.09);
-  --line-warm:rgba(184,138,94,.14);
-  --pos:#e6e1d8; --neg:#9d978c;
-  /* aurora atmosphere — cream over deep amber (matches inline-atmosphere pages) */
-  --atmo-base-top:#0F0D0A; --atmo-base-bottom:#070605;
-  --atmo-band-a:38,60%,75%; --atmo-band-a-op:.08; --atmo-band-a-op-breathe:.10;
-  --atmo-band-b:28,50%,55%; --atmo-band-b-op:.05; --atmo-band-b-op-breathe:.07;
-  --atmo-cursor:38,70%,75%; --atmo-cursor-op:.04;
+  /* Flater — OKLCH L .118 / .186 / .216 / .262, kroma .006→.014, tone 64° */
+  --bg:#070504; --surface:#16120e; --surface-2:#1e1914; --surface-3:#29231e;
+  /* Blekk — L .940 / .706 / .648 / .592. Kontrast på --bg: 17,1 / 7,8 / 6,2 / 5,0 */
+  --ink:#edebe7; --ink2:#a59f98; --ink3:#948d86; --ink4:#837d75;
+  /* Messing — samme tone som nøytralene, men kroma .096 i stedet for .006.
+     Den gamle aksenten lå på .082 og leste som støvet beige; .096 er fortsatt
+     langt under et rent gull (~.13), så den gløder uten å bli oransje. */
+  --accent:#c58e5a; --accent-2:#e3af7e; --accent-deep:#976a35;
+  --glow-rgb:197, 142, 90;
+  /* Hårstreker: varm krem (tone ~64°), ikke den gamle gulgrønne #fff8e8.
+     .07/.12 gir 1,17 og 1,35 i kontrast mot --surface — samme vekt som
+     GitHub darks border-default. På .05/.09 var de under 1,13 og forsvant. */
+  --line:rgba(255,232,200,.07); --line-2:rgba(255,232,200,.12);
+  --line-warm:rgba(197,142,90,.18);
+  --pos:#e9e3d9; --neg:#a59f98;
+  /* aurora atmosphere — krem over dyp rav. --atmo-base-top ligger nå UNDER
+     --surface i lyshet (L .148 mot .186), ellers forsvinner kortene i toppen
+     av siden. Båndtonene er trukket inn mot aksentens HSL-tone (29°). */
+  --atmo-base-top:#0d0a07; --atmo-base-bottom:#070504;
+  --atmo-band-a:34,60%,75%; --atmo-band-a-op:.08; --atmo-band-a-op-breathe:.10;
+  --atmo-band-b:26,50%,55%; --atmo-band-b-op:.05; --atmo-band-b-op-breathe:.07;
+  --atmo-cursor:34,70%,75%; --atmo-cursor-op:.04;
+  /* Vasketonen på felt, hover-flater og scrollbar. site-shell.css bruker kald
+     hvit som standard; på et varmt tema gjør den flatene gråere jo mer det
+     interageres med dem. Alphaene ligger på bruksstedene og er uendret —
+     her byttes bare tonen. Se --wash-rgb-kommentaren i site-shell.css. */
+  --wash-rgb:255,232,200;
   color-scheme:dark;
 }
 
 /* Carbon — subtle warm glow + hairline shine on cards.
    A single off-center radial bloom in deep amber pools behind content,
-   reading as faint candlelight rather than a gradient. The ::after on
-   surfaces lays a 1px top highlight (like brushed metal catching light). */
+   reading as faint candlelight rather than a gradient. */
 html[data-theme="carbon"] body::before{
   content:""; position:fixed; inset:0; z-index:-4; pointer-events:none;
   background:
-    radial-gradient(70vw 60vh at 18% -6%, rgba(184,138,94,.07), transparent 62%),
-    radial-gradient(60vw 50vh at 92% 110%, rgba(138,99,54,.05), transparent 60%);
+    radial-gradient(70vw 60vh at 18% -6%, rgba(197,142,90,.07), transparent 62%),
+    radial-gradient(60vw 50vh at 92% 110%, rgba(151,106,53,.05), transparent 60%);
 }
+/* Kortet får lys ovenfra og skygge under — samme logikk som en fysisk flate.
+   På nesten-svart gjør en svart slagskygge lite av seg, så dybden må komme fra
+   at flaten faktisk er lysere enn siden (se lyshetsstigen over). Skyggen er
+   likevel dyp nok til å telle i toppen av siden der --atmo-base-top løfter
+   bakgrunnen, og topplyset (1px krem) gir kanten samme «børstet messing»-glimt
+   som resten av temaet. */
+/* Logoflisen var hardkodet #1a1714 i site-shell.css — den eneste flaten i
+   toppen som ikke fulgte paletten. Standardverdien står igjen der (de lyse
+   temaene bruker den som en mørk merkeflis med vilje); carbon knytter den til
+   sin egen stige i stedet, så flisen løftes tydelig fra den nesten svarte
+   navigasjonsraden. */
+html[data-theme="carbon"] .mark{ background:var(--surface-3); }
+
 html[data-theme="carbon"] .ks{
   background:
-    linear-gradient(180deg, rgba(255,236,210,.025) 0%, transparent 22%),
+    linear-gradient(180deg, rgba(255,232,200,.030) 0%, transparent 26%),
     var(--surface) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,236,210,.045),
-    0 1px 0 rgba(0,0,0,.4),
-    0 20px 48px -16px rgba(0,0,0,.55) !important;
+    inset 0 1px 0 rgba(255,232,200,.055),
+    0 1px 0 rgba(0,0,0,.5),
+    0 24px 56px -20px rgba(0,0,0,.7) !important;
 }
 
 html[data-theme="dark"]{ /* Mørk-blå — same restraint as carbon, cool side */
