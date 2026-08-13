@@ -9,6 +9,14 @@
   --line:rgba(255,255,255,.06);
   --line-2:rgba(255,255,255,.10);
   --line-warm:rgba(200,153,104,.14);
+  /* Vasketonen — fargen på de nesten usynlige lagene som ligger på felt,
+     hover-flater og scrollbaren. Den var hardkodet til kald hvit overalt, og på
+     et varmt tema trekker kald hvit flatene mot grått nettopp der brukeren tar
+     på dem: jo mer du interagerer, jo kaldere blir siden.
+     Bare TONEN ligger i tokenet — hvert brukssted beholder sin egen alpha, så
+     de ni andre temaene rendrer bit for bit uendret med standardverdien her.
+     carbon overstyrer den til varm krem i themes.css. */
+  --wash-rgb:255,255,255;
   --pos:#e6e1d8; --neg:#a8a39a;
   /* Feiltone — dempet leire, ikke alarmrød. Skal lese som "se her" uten å
      bryte den rolige paletten. Lyse temaer dypner den (themes.css). */
@@ -19,7 +27,12 @@
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
   font:400 15px/1.55 var(--font-sans);
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
-::selection{background:rgba(200,153,104,.28);color:#fff}
+/* Markering fulgte ikke temaet: bakgrunnen var carbons cognac uansett tema, og
+   teksten var hardkodet hvit. På de lyse temaene ga det hvit tekst på en lys
+   sandfarget markering — ~1,3 i kontrast, altså praktisk talt usynlig markert
+   tekst. colors_and_type.css hadde allerede den riktige regelen, men denne fila
+   lastes etter og overstyrte den med samme spesifisitet. */
+::selection{background:rgba(var(--glow-rgb),.28);color:var(--ink)}
 .container{max-width:1180px;margin:0 auto;padding:0 32px}
 
 /* ATMOSPHERE — aurora ON site-wide (2026-05-31). Reverses the earlier "flat
@@ -122,7 +135,7 @@ body .tabs-wrap{top:var(--nav-h)}
   font:500 13px/1 var(--font-sans);color:var(--ink3);text-decoration:none;
   display:flex;align-items:center;gap:8px;position:relative;
   transition:color .2s var(--ease),background .2s var(--ease)}
-.tab:hover{color:var(--ink2);background:rgba(255,255,255,.03)}
+.tab:hover{color:var(--ink2);background:rgba(var(--wash-rgb),.03)}
 .tab[aria-selected="true"]{color:var(--ink)}
 .tab[aria-selected="true"]::after{content:"";position:absolute;left:14px;right:14px;bottom:-7px;height:2px;background:var(--accent)}
 .tab svg{width:14px;height:14px;color:currentColor;opacity:.6}
@@ -148,7 +161,7 @@ body .tabs-wrap{top:var(--nav-h)}
   color:var(--ink2) !important;margin-right:4px;
   transition:background .2s var(--ease),transform .2s var(--ease),border-color .2s var(--ease)}
 @media(hover: hover){
-.crumb-back:hover{background:rgba(255,255,255,.03);border-color:var(--line-warm);color:var(--ink) !important;transform:translateX(-2px)}
+.crumb-back:hover{background:rgba(var(--wash-rgb),.03);border-color:var(--line-warm);color:var(--ink) !important;transform:translateX(-2px)}
 }
 /* overflow-wrap: norske sammensatte ord («Refinansieringskalkulator») er
    lengre enn en telefonskjerm og brekker ikke av seg selv — 60px overflow. */
@@ -185,7 +198,7 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .ik-lbl .cap{font:400 11px/1 var(--font-sans);color:var(--ink4);letter-spacing:0}
 .ik-input,.ik-select{
-  width:100%;background:rgba(255,255,255,.025);border:1px solid var(--line-2);border-radius:5px;
+  width:100%;background:rgba(var(--wash-rgb),.025);border:1px solid var(--line-2);border-radius:5px;
   padding:11px 13px;color:var(--ink);
   font:500 14px/1.2 var(--font-sans);outline:none;
   font-variant-numeric:tabular-nums lining-nums;letter-spacing:0;
@@ -198,8 +211,8 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 .ik-select{appearance:none;cursor:pointer;padding-right:36px;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23a8a39a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");
   background-repeat:no-repeat;background-position:right 14px center;
-  background-color:rgba(255,255,255,.025);border-color:var(--line-2)}
-.ik-select:hover{background-color:rgba(255,255,255,.04);border-color:var(--line-warm)}
+  background-color:rgba(var(--wash-rgb),.025);border-color:var(--line-2)}
+.ik-select:hover{background-color:rgba(var(--wash-rgb),.04);border-color:var(--line-warm)}
 
 /* ── Feiltilstand på felt ──────────────────────────────────────
    Slås på med .is-error på feltet, eller native [aria-invalid="true"].
@@ -239,7 +252,7 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 .ik-derived .v .u{font:400 11px/1 var(--font-sans);color:var(--ink3);margin-left:2px}
 
 .ik-segs{display:grid;grid-template-columns:repeat(var(--segs,4),1fr);gap:4px;
-  padding:3px;background:rgba(255,255,255,.025);
+  padding:3px;background:rgba(var(--wash-rgb),.025);
   border:1px solid var(--line-2);border-radius:5px}
 .ik-seg{position:relative;padding:10px 8px 9px;border:0;cursor:pointer;
   background:transparent;color:var(--ink3);text-align:center;border-radius:3px;
@@ -250,10 +263,10 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   transition:opacity .2s var(--ease),color .2s var(--ease)}
 .ik-seg .glyph svg{width:100%;height:100%}
 .ik-seg .lab{font:500 12px/1 var(--font-sans);letter-spacing:0}
-.ik-seg:hover{color:var(--ink2);background:rgba(255,255,255,.025)}
+.ik-seg:hover{color:var(--ink2);background:rgba(var(--wash-rgb),.025)}
 .ik-seg:hover .glyph{opacity:1}
 .ik-seg[aria-pressed="true"]{
-  background:rgba(200,153,104,.10);color:var(--ink);
+  background:rgba(var(--glow-rgb),.10);color:var(--ink);
   box-shadow:inset 0 0 0 1px var(--line-warm)}
 .ik-seg[aria-pressed="true"] .glyph{opacity:1;color:var(--accent-2)}
 .ik-hint{font-size:11.5px;color:var(--ink3);line-height:1.45}
@@ -304,8 +317,8 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   transition:background .2s var(--ease),color .2s var(--ease);
   border-right:1px solid var(--line)}
 .ks-mode:last-child{border-right:0}
-.ks-mode:hover{color:var(--ink2);background:rgba(255,255,255,.02)}
-.ks-mode[aria-pressed="true"]{background:rgba(200,153,104,.06);color:var(--ink);position:relative}
+.ks-mode:hover{color:var(--ink2);background:rgba(var(--wash-rgb),.02)}
+.ks-mode[aria-pressed="true"]{background:rgba(var(--glow-rgb),.06);color:var(--ink);position:relative}
 .ks-mode[aria-pressed="true"]::after{
   content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--accent);
 }
@@ -357,9 +370,13 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 .ks-bar-track{display:flex;gap:1px;height:6px;border-radius:1px;overflow:hidden;background:var(--bg)}
 .ks-bar-seg{height:100%;transition:flex-basis .35s var(--ease)}
 .ks-bar-seg.s-net{background:var(--accent)}
-.ks-bar-seg.s-trinn{background:rgba(200,153,104,.55)}
-.ks-bar-seg.s-alm{background:rgba(200,153,104,.32)}
-.ks-bar-seg.s-trygd{background:rgba(200,153,104,.18)}
+/* Stolpen var det tydeligste stedet hardkodingen kunne ses: .s-net tok temaets
+   --accent mens de tre andre segmentene sto på carbons gamle cognac. På carbon
+   lå to ulike messingtoner rett ved siden av hverandre i samme stolpe, og på
+   f.eks. nordlys ble en grønn aksent fulgt av tre brune segmenter. */
+.ks-bar-seg.s-trinn{background:rgba(var(--glow-rgb),.55)}
+.ks-bar-seg.s-alm{background:rgba(var(--glow-rgb),.32)}
+.ks-bar-seg.s-trygd{background:rgba(var(--glow-rgb),.18)}
 .ks-bar-legend{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 18px;
   margin:12px 0 0;font-size:12px;color:var(--ink3)}
 .ks-bar-legend .row{display:flex;align-items:center;gap:8px;
@@ -433,7 +450,7 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   background:transparent;border-top:1px solid var(--line);
   display:flex;align-items:center;gap:14px;text-decoration:none;
   transition:background .2s var(--ease)}
-.ks-import:hover{background:rgba(255,255,255,.015)}
+.ks-import:hover{background:rgba(var(--wash-rgb),.015)}
 .ks-import .ic{display:none}
 .ks-import .body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .ks-import .ttl{font:500 13.5px/1.2 var(--font-sans);font-style:normal;
@@ -503,7 +520,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);fo
 .help-pop b,.help-pop strong{color:var(--ink);font-weight:500}
 .help-pop code,.help-pop .formula{
   font:500 11.5px/1.4 var(--font-mono);color:var(--accent-2);
-  background:rgba(200,153,104,.08);padding:1px 5px;border-radius:2px;
+  background:rgba(var(--glow-rgb),.08);padding:1px 5px;border-radius:2px;
 }
 .help-dot:focus-visible .help-pop,
 .help-dot[aria-expanded="true"] .help-pop{
@@ -519,12 +536,15 @@ footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);fo
 *::-webkit-scrollbar{width:10px;height:10px}
 *::-webkit-scrollbar-track{background:transparent}
 *::-webkit-scrollbar-thumb{
-  background:rgba(255,255,255,.06);border-radius:5px;
+  background:rgba(var(--wash-rgb),.06);border-radius:5px;
   border:2px solid transparent;background-clip:padding-box;
 }
-*::-webkit-scrollbar-thumb:hover{background:rgba(217,119,87,.35);background-clip:padding-box;border:2px solid transparent}
+/* Hover-tonen var rgb(217,119,87) — en oransjerød som ikke finnes i noen av de
+   ti palettene. Scrollbaren var altså det ene stedet på nettstedet med en helt
+   egen farge, uansett tema. Følger nå aksenten. */
+*::-webkit-scrollbar-thumb:hover{background:rgba(var(--glow-rgb),.35);background-clip:padding-box;border:2px solid transparent}
 *::-webkit-scrollbar-corner{background:transparent}
-html{scrollbar-color:rgba(255,255,255,.1) transparent;scrollbar-width:thin}
+html{scrollbar-color:rgba(var(--wash-rgb),.1) transparent;scrollbar-width:thin}
 
 /* ── Embed-mode "Legg til i budsjettet" CTA ───────────────────
    Injected by site-shell.js when ?embed=1&budgetAdd=1. Lives inside
