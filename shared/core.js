@@ -2886,15 +2886,20 @@ function updateFagkalkulatorUI() {
 function updateFooter() {
   const r = R();
   const yr = new Date().getFullYear();
-  // De frosne språkkopiene har fortsatt de gamle modalene i markupen; de skal
+  // De frosne språkkopiene har fortsatt kontakt-modalen i markupen; den skal
   // beholde sin egen oppførsel (se lenkefiksen lenger ned).
-  const hasPrivModal = !!document.getElementById('priv-overlay');
   const hasConModal  = !!document.getElementById('contact-overlay');
+  // Frosne språkkopier ligger under /xx/ og har ingen egen /xx/om/-side.
+  // De ble tidligere gjenkjent på at de hadde personvern-modalen i markupen;
+  // den er fjernet (den påsto at ingen data forlater enheten, noe som var galt),
+  // så kopiene må nå gjenkjennes eksplisitt på stien.
+  const _p1 = window.location.pathname.split('/')[1] || '';
+  const isFrozenCopy = _p1.length === 2 && VALID_LANGS.indexOf(_p1) >= 0;
   // «Om» sto ikke i footer-markupen på noen kanonisk side, så /om/ hadde null
   // inngående lenker og var usynlig for både brukere og søkemotorer. Lenka
   // settes inn her — ikke i 65 HTML-filer — og får id-en setText allerede
   // fyller tekst i. Hopper over de frosne kopiene: der finnes ingen /xx/om/.
-  if(!hasPrivModal){
+  if(!isFrozenCopy){
     document.querySelectorAll('.foot-links').forEach(function(box){
       if(box.querySelector('#fl-about')) return;
       const first = box.querySelector('a'); if(!first) return;
@@ -2923,10 +2928,9 @@ function updateFooter() {
   // Fot-lenkene skal peke på ekte sider. Markupen varierer mellom sidene:
   // landings bruker id="fl-con", kalkulatorsidene id="fl-cont", og fire sider har
   // bare data-i18n — derfor treffes alle variantene her, så ingen av de 65 HTML-filene
-  // må redigeres. De frosne språkkopiene har fortsatt modal-markupen i seg; der beholdes
-  // klikk-bindingen, ellers ville en engelsk side sendt brukeren til en norsk side.
+  // må redigeres. Personvern peker nå alltid på /personvern/ — den er eneste
+  // kilde til sannhet og oversettes i drift.
   document.querySelectorAll('#fl-priv,[data-i18n="footerPriv"]').forEach(function(a){
-    if(hasPrivModal){ a.onclick = function(e){ e.preventDefault(); openPrivacy(); }; return; }
     a.onclick = null;
     a.setAttribute('href', '/personvern/');
   });
@@ -2974,31 +2978,6 @@ function _hvtModalClose(){
   if(_hvtModalState.keyHandler){ document.removeEventListener('keydown', _hvtModalState.keyHandler); _hvtModalState.keyHandler=null; }
   if(_hvtModalState.prev && _hvtModalState.prev.focus){ try{ _hvtModalState.prev.focus(); }catch(e){} }
   _hvtModalState.el = null; _hvtModalState.prev = null;
-}
-
-function openPrivacy() { updatePrivacyUI(); _hvtModalOpen('priv-overlay','priv-h1'); }
-function closePrivacy() { _hvtModalClose(); }
-
-function updatePrivacyUI() {
-  const r = R();
-  setText('priv-back', r.privBack||'Tilbake');
-  setText('priv-h1', r.privH1||'Personvernerklæring');
-  setText('priv-updated', r.privUpdated||'Sist oppdatert: mars 2026');
-  setText('priv-intro', r.privIntro||'Hverdagsverktøy er en gratis finanskalkulator som kjører helt og holdent i nettleseren din. Vi tar personvernet ditt på alvor — og den enkleste måten å beskytte det på er å aldri samle inn data i utgangspunktet.');
-  setText('priv-h-nodata', r.privHNodata||'Ingen datainnsamling');
-  setText('priv-p-nodata', r.privPNodata||'Vi samler ikke inn, lagrer eller sender noen form for personopplysninger. Alle beregninger skjer lokalt i nettleseren din. Ingen data forlater enheten din.');
-  setText('priv-h-cookies', r.privHCookies||'Ingen informasjonskapsler (cookies)');
-  setText('priv-p-cookies', r.privPCookies||'Denne nettsiden bruker ingen cookies — verken til analyse, sporing eller reklame. Det finnes ingen cookie-banner fordi det ikke finnes noen cookies.');
-  setText('priv-h-thirdparty', r.privHThirdparty||'Ingen tredjepartstjenester');
-  setText('priv-p-thirdparty', r.privPThirdparty||'Vi bruker ingen analysetjenester (Google Analytics, Facebook Pixel e.l.), ingen annonseringsnettverk og ingen sporing av noe slag. Eneste eksterne ressurs er Bunny Fonts for skrifttyper.');
-  setText('priv-h-storage', r.privHStorage||'Minimal lokal lagring');
-  setText('priv-p-storage', r.privPStorage||'Kalkulatoren bruker localStorage kun for å huske dine valg av tema og språk. Ingen personopplysninger lagres. Du kan slette disse når som helst via nettleserinnstillingene.');
-  setText('priv-h-children', r.privHChildren||'Barn');
-  setText('priv-p-children', r.privPChildren||'Siden vi ikke samler inn noen data, er tjenesten trygg å bruke for alle aldersgrupper.');
-  setText('priv-h-changes', r.privHChanges||'Endringer');
-  setText('priv-p-changes', r.privPChanges||'Dersom vi endrer denne erklæringen, oppdaterer vi datoen øverst. Siden vi ikke samler inn data, forventer vi ingen vesentlige endringer.');
-  setText('priv-h-contact', r.privHContact||'Kontakt');
-  setText('priv-p-contact', r.privPContact||'Har du spørsmål om personvern? Send en e-post til kontakt@hverdagsverktoy.com.');
 }
 
 function openContact() { updateContactUI(); document.getElementById('contact-form').style.display=''; document.getElementById('con-success').classList.remove('show'); _hvtModalOpen('contact-overlay','con-h1'); }
