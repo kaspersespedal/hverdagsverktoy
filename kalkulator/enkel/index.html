@@ -75,44 +75,119 @@ body.focus-mode > .nav-wrap,
 body.focus-mode > .tabs-wrap,
 body.focus-mode > footer{display:none}
 
-.calc-wrap{padding:28px 0 56px}
-.calc-wrap > .container{display:grid;grid-template-columns:1fr 260px;gap:28px;align-items:start}
-@media(max-width:980px){.calc-wrap > .container{grid-template-columns:1fr}}
+.calc-wrap{padding:34px 0 64px}
+.calc-wrap > .container{display:grid;grid-template-columns:minmax(0,430px) minmax(0,288px);gap:30px;align-items:start;justify-content:center}
+@media(max-width:980px){.calc-wrap > .container{grid-template-columns:minmax(0,430px)}}
 
 /* ── Kalkulator-kortet ── */
-.calc-host{min-width:0;display:flex;justify-content:center}
-.calc{width:100%;max-width:430px;background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+/* Alle farger avledes av tema-tokens (--surface/--ink/--accent/--bg/--glow-rgb),
+   slik at kortet holder seg i alle temaene — også de lyse. */
+.calc-host{min-width:0}
+.calc{
+  /* --accent-2 er LYSERE enn --accent og forsvinner mot hvit flate. På de fire
+     lyse temaene byttes derfor hele aksent-trioen ned et hakk — samme grep som
+     --err-overstyringen i themes.css. */
+  --calc-glyph:var(--accent-2);      /* ÷ × − + i ro */
+  --calc-fill-a:var(--accent);       /* fyll: armert regneart + topp av =  */
+  --calc-fill-b:var(--accent-deep);  /* bunn av = -gradienten */
+  width:100%;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:10px;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 7%, transparent),
+    0 1px 2px rgba(0,0,0,.16),
+    0 26px 56px -28px rgba(0,0,0,.5);
+}
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]) .calc{
+  --calc-glyph:var(--accent-deep);
+  --calc-fill-a:var(--accent-deep);
+  --calc-fill-b:color-mix(in srgb, var(--accent-deep) 88%, var(--ink));
+}
 
-.calc-display{padding:30px 24px 20px;text-align:right;border-bottom:1px solid var(--line);min-height:108px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px}
-.calc-expr{font:400 13px/1.4 'JetBrains Mono',var(--font-sans,sans-serif);color:var(--ink3);letter-spacing:.02em;min-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.calc-now{font-family:var(--font-serif);font-weight:500;font-size:42px;line-height:1.08;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:font-size .1s ease}
+/* Skjermen ligger nedsenket i kortet, med et svakt aksent-skjær i øvre hjørne. */
+.calc-display{
+  position:relative;overflow:hidden;border-radius:12px;
+  border:1px solid var(--line);margin:0 0 10px;
+  padding:26px 22px 20px;text-align:right;min-height:120px;
+  display:flex;flex-direction:column;justify-content:flex-end;gap:8px;
+  background:
+    radial-gradient(120% 150% at 100% 0%, rgba(var(--glow-rgb),.09), transparent 60%),
+    color-mix(in srgb, var(--bg) 62%, var(--surface));
+  box-shadow:inset 0 1px 4px rgba(0,0,0,.18);
+}
+.calc-expr{font:500 12.5px/1.5 'JetBrains Mono',var(--font-sans,sans-serif);color:var(--ink3);letter-spacing:.04em;min-height:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calc-now{font-family:var(--font-serif);font-weight:500;font-size:46px;line-height:1.06;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-1.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:font-size .12s ease}
+@keyframes calcPop{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}
+.calc-now.pop{animation:calcPop .22s ease-out}
 
-.calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
-.key{appearance:none;background:var(--surface);border:0;color:var(--ink);font:500 19px/1 var(--font-sans);padding:19px 0;cursor:pointer;font-variant-numeric:tabular-nums;-webkit-tap-highlight-color:transparent;user-select:none;transition:background .12s ease,color .12s ease}
-@media(hover:hover){.key:hover{background:var(--surface-2)}}
-.key:active{background:var(--line-2)}
-.key:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;position:relative;z-index:1}
-.key-fn{color:var(--ink2);font-size:15px;font-weight:600;letter-spacing:.04em}
-.key-op{color:var(--accent-2);font-size:23px;font-weight:500}
-.key-eq{background:var(--accent);color:#16130f;font-weight:700;font-size:22px}
-@media(hover:hover){.key-eq:hover{background:var(--accent-2)}}
-.key-eq:active{background:var(--accent-2)}
+/* ── Tastene ── */
+.calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.key{
+  appearance:none;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:12px;color:var(--ink);font:500 20px/1 var(--font-sans);
+  padding:18px 0;cursor:pointer;font-variant-numeric:tabular-nums;
+  -webkit-tap-highlight-color:transparent;user-select:none;
+  box-shadow:inset 0 1px 0 color-mix(in srgb, var(--ink) 6%, transparent);
+  transition:background .14s ease,color .14s ease,border-color .14s ease,box-shadow .14s ease,transform .07s ease;
+}
+@media(hover:hover){.key:hover{background:var(--surface-3);border-color:var(--line-2)}}
+.key:active,.key.is-press{transform:translateY(1px);background:var(--surface-3);box-shadow:inset 0 2px 5px rgba(0,0,0,.18)}
+.key:focus-visible{outline:2px solid var(--accent);outline-offset:2px;position:relative;z-index:1}
+
+.key-fn{background:color-mix(in srgb, var(--ink) 4%, transparent);color:var(--ink2);font-size:15px;font-weight:600;letter-spacing:.06em}
+@media(hover:hover){.key-fn:hover{background:color-mix(in srgb, var(--ink) 9%, transparent);color:var(--ink)}}
+
+.key-op{
+  background:color-mix(in srgb, var(--accent) 13%, transparent);
+  border-color:color-mix(in srgb, var(--accent) 20%, transparent);
+  color:var(--calc-glyph);font-size:24px;font-weight:500;
+}
+@media(hover:hover){.key-op:hover{background:color-mix(in srgb, var(--accent) 21%, transparent);border-color:color-mix(in srgb, var(--accent) 32%, transparent)}}
+/* uten denne faller trykket tilbake på .key:active og blinker grått */
+.key-op:active,.key-op.is-press{background:color-mix(in srgb, var(--accent) 30%, transparent)}
+/* Ventende regneart lyser opp, så du ser hva kalkulatoren står i */
+.key-op[aria-pressed="true"]{
+  background:var(--calc-fill-a);border-color:transparent;color:var(--bg);
+  box-shadow:0 6px 18px -9px rgba(var(--glow-rgb),.7);
+}
+
+.key-eq{
+  background:linear-gradient(180deg, var(--calc-fill-a), var(--calc-fill-b));
+  border-color:transparent;color:var(--bg);font-weight:700;font-size:23px;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 22%, transparent),
+    0 8px 22px -11px rgba(var(--glow-rgb),.75);
+}
+@media(hover:hover){
+  .key-eq:hover,.key-op[aria-pressed="true"]:hover{filter:brightness(1.08)}
+}
+.key-eq:active,.key-eq.is-press{background:var(--calc-fill-b);box-shadow:inset 0 2px 6px rgba(0,0,0,.28)}
+
 @media(max-width:560px){
-  .calc-display{padding:24px 18px 16px;min-height:94px}
-  .calc-now{font-size:36px}
-  .key{padding:17px 0;font-size:18px}
+  .calc{padding:8px;border-radius:16px}
+  .calc-display{padding:22px 18px 16px;min-height:104px}
+  .calc-now{font-size:38px}
+  .calc-keys{gap:7px}
+  .key{padding:16px 0;font-size:19px}
+}
+@media(prefers-reduced-motion:reduce){
+  .calc-now.pop{animation:none}
+  .key{transition:none}
+  .key:active,.key.is-press{transform:none}
 }
 
 /* Side col */
 .side-col{display:flex;flex-direction:column;gap:12px;min-width:0}
-.side-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px}
-.side-card h4{margin:0 0 10px;font:600 11px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);padding-bottom:8px;border-bottom:1px solid var(--line)}
-.side-card p{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink2)}
-.side-card.related a{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid color-mix(in srgb, var(--ink) 5%, transparent);color:var(--ink2);text-decoration:none;font-size:13px;transition:color .15s}
+.side-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:17px 19px;box-shadow:inset 0 1px 0 color-mix(in srgb, var(--ink) 5%, transparent)}
+.side-card h4{margin:0 0 11px;font:600 11px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);padding-bottom:9px;border-bottom:1px solid var(--line)}
+.side-card p{margin:0;font-size:12.5px;line-height:1.65;color:var(--ink2)}
+.side-card p strong{color:var(--ink);font-weight:600}
+.side-card.related a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid color-mix(in srgb, var(--ink) 5%, transparent);color:var(--ink2);text-decoration:none;font-size:13px;transition:color .15s}
 .side-card.related a:last-child{border-bottom:0}
-.side-card.related a:hover{color:var(--accent)}
-.side-card.related .arr{color:var(--ink4)}
-.side-card.related a:hover .arr{color:var(--accent)}
+.side-card.related .arr{color:var(--ink4);transition:color .15s ease,transform .15s ease}
+@media(hover:hover){
+  .side-card.related a:hover{color:var(--accent)}
+  .side-card.related a:hover .arr{color:var(--accent);transform:translateX(2px)}
+}
 
 /* Howto */
 .howto-wrap{margin:0 0 40px;display:none}
@@ -238,22 +313,22 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           <button type="button" class="key key-fn" data-act="clear" aria-label="Nullstill">AC</button>
           <button type="button" class="key key-fn" data-act="back" aria-label="Slett siste siffer">⌫</button>
           <button type="button" class="key key-fn" data-act="percent" aria-label="Prosent">%</button>
-          <button type="button" class="key key-op" data-act="op" data-op="/" aria-label="Delt på">÷</button>
+          <button type="button" class="key key-op" data-act="op" data-op="/" aria-label="Delt på" aria-pressed="false">÷</button>
 
           <button type="button" class="key" data-act="digit" data-d="7">7</button>
           <button type="button" class="key" data-act="digit" data-d="8">8</button>
           <button type="button" class="key" data-act="digit" data-d="9">9</button>
-          <button type="button" class="key key-op" data-act="op" data-op="*" aria-label="Ganget med">×</button>
+          <button type="button" class="key key-op" data-act="op" data-op="*" aria-label="Ganget med" aria-pressed="false">×</button>
 
           <button type="button" class="key" data-act="digit" data-d="4">4</button>
           <button type="button" class="key" data-act="digit" data-d="5">5</button>
           <button type="button" class="key" data-act="digit" data-d="6">6</button>
-          <button type="button" class="key key-op" data-act="op" data-op="-" aria-label="Minus">−</button>
+          <button type="button" class="key key-op" data-act="op" data-op="-" aria-label="Minus" aria-pressed="false">−</button>
 
           <button type="button" class="key" data-act="digit" data-d="1">1</button>
           <button type="button" class="key" data-act="digit" data-d="2">2</button>
           <button type="button" class="key" data-act="digit" data-d="3">3</button>
-          <button type="button" class="key key-op" data-act="op" data-op="+" aria-label="Pluss">+</button>
+          <button type="button" class="key key-op" data-act="op" data-op="+" aria-label="Pluss" aria-pressed="false">+</button>
 
           <button type="button" class="key key-fn" data-act="sign" aria-label="Bytt fortegn">±</button>
           <button type="button" class="key" data-act="digit" data-d="0">0</button>
@@ -366,14 +441,33 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(hExpr) hExpr.textContent = t || '–';
   }
 
+  // Lyser opp regnearten som venter, så det er synlig hva kalkulatoren står i.
+  var opKeys = keys.querySelectorAll('.key-op');
+  function syncOps(){
+    for(var i = 0; i < opKeys.length; i++){
+      opKeys[i].setAttribute('aria-pressed', (!errored && opKeys[i].getAttribute('data-op') === operator) ? 'true' : 'false');
+    }
+  }
+  // Kort blink på tasten når den trykkes fra tastaturet.
+  function flash(sel){
+    var b = keys.querySelector(sel); if(!b) return;
+    b.classList.add('is-press');
+    setTimeout(function(){ b.classList.remove('is-press'); }, 110);
+  }
+  function pop(){
+    nowEl.classList.remove('pop');
+    void nowEl.offsetWidth;
+    nowEl.classList.add('pop');
+  }
+
   function reset(){
     current = '0'; previous = null; operator = null;
     freshOperand = true; lastWasEquals = false; lastResult = null; errored = false;
-    setExpr(''); render();
+    setExpr(''); syncOps(); render();
   }
   function showError(msg){
     errored = true; nowEl.textContent = msg; nowEl.style.fontSize = '24px';
-    setExpr(''); if(hVal) hVal.textContent = '–';
+    setExpr(''); syncOps(); if(hVal) hVal.textContent = '–';
   }
 
   function inputDigit(d){
@@ -421,6 +515,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     freshOperand = true;
     lastWasEquals = false;
     setExpr(disp(previous) + ' ' + OPSYM[op]);
+    syncOps();
   }
 
   function equals(){
@@ -433,6 +528,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     lastResult = previous;
     operator = null; previous = null;
     freshOperand = true; lastWasEquals = true;
+    syncOps(); pop();
   }
 
   function percent(){
@@ -482,15 +578,15 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
     if(e.ctrlKey || e.metaKey || e.altKey) return;
     var k = e.key;
-    if(k >= '0' && k <= '9') inputDigit(k);
-    else if(k === ',' || k === '.') inputDecimal();
-    else if(k === '+' || k === '-') chooseOp(k);
-    else if(k === '*') chooseOp('*');
-    else if(k === '/'){ e.preventDefault(); chooseOp('/'); }
-    else if(k === 'Enter' || k === '='){ e.preventDefault(); equals(); }
-    else if(k === '%') percent();
-    else if(k === 'Backspace'){ e.preventDefault(); backspace(); }
-    else if(k === 'Escape') reset();
+    if(k >= '0' && k <= '9'){ inputDigit(k); flash('[data-d="' + k + '"]'); }
+    else if(k === ',' || k === '.'){ inputDecimal(); flash('[data-act="decimal"]'); }
+    else if(k === '+' || k === '-'){ chooseOp(k); flash('[data-op="' + k + '"]'); }
+    else if(k === '*'){ chooseOp('*'); flash('[data-op="*"]'); }
+    else if(k === '/'){ e.preventDefault(); chooseOp('/'); flash('[data-op="/"]'); }
+    else if(k === 'Enter' || k === '='){ e.preventDefault(); equals(); flash('[data-act="equals"]'); }
+    else if(k === '%'){ percent(); flash('[data-act="percent"]'); }
+    else if(k === 'Backspace'){ e.preventDefault(); backspace(); flash('[data-act="back"]'); }
+    else if(k === 'Escape'){ reset(); flash('[data-act="clear"]'); }
     else return;
   });
 
