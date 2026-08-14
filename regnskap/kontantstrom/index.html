@@ -46,6 +46,10 @@
     }catch(e){}
   })();
 </script>
+<!-- Temapaletten. Denne siden er ellers selvforsynt, men paletten lå her som en
+     inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
+     mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
+<link rel="stylesheet" href="/shared/themes.css?v=v3">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -68,42 +72,10 @@
    Skjuler oversettbare elementer mens lang-loading-klassen er aktiv på html.
    Klassen settes synkront av inline head-script og fjernes av core.js etter loadLang resolves. */
 html.lang-loading [data-i18n]{visibility:hidden;}
-:root{
-  --atmo-base-top:#0F0D0A;
-  --atmo-base-bottom:#070605;
-  --atmo-band-a:38, 60%, 75%;   /* hsl triplet — cream */
-  --atmo-band-a-op:.08;
-  --atmo-band-a-op-breathe:.10;
-  --atmo-band-b:28, 50%, 55%;   /* hsl triplet — deep amber */
-  --atmo-band-b-op:.05;
-  --atmo-band-b-op-breathe:.07;
-  --atmo-cursor:38, 70%, 75%;   /* hsl triplet — warm cream */
-  --atmo-cursor-op:.04;
-}
-[data-theme="dark"]{
-  --atmo-base-top:#141520;
-  --atmo-base-bottom:#0a0b14;
-  --atmo-band-a:222, 80%, 72%;          /* cool blue, matcher accent #6c8aef */
-  --atmo-band-a-op:.09;
-  --atmo-band-a-op-breathe:.12;
-  --atmo-band-b:258, 55%, 55%;          /* violet — duotone-kontrast mot bandA */
-  --atmo-band-b-op:.06;
-  --atmo-band-b-op-breathe:.08;
-  --atmo-cursor:222, 80%, 72%;
-  --atmo-cursor-op:.05;
-}
-[data-theme="disco"]{
-  --atmo-base-top:#0d0a18;
-  --atmo-base-bottom:#060410;
-  --atmo-band-a:328, 70%, 70%;  /* neon pink */
-  --atmo-band-a-op:.10;
-  --atmo-band-a-op-breathe:.13;
-  --atmo-band-b:268, 60%, 58%;  /* purple */
-  --atmo-band-b-op:.07;
-  --atmo-band-b-op-breathe:.09;
-  --atmo-cursor:328, 75%, 72%;
-  --atmo-cursor-op:.05;
-}
+/* Atmosfære-tokens (--atmo-base-*, --atmo-band-*, --atmo-cursor-*) kommer fra
+   shared/themes.css, som dekker alle fire mørke temaer. De lå tidligere inline
+   her for carbon, dark og disco — nordlys manglet, og falt derfor tilbake på
+   carbons varme krem/rav bak et grønt tema. */
 html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo-base,
 html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .atmo,
 html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .film-grain{
@@ -122,6 +94,8 @@ html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [dat
 html{background:var(--bg)}
 html:not(:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"])) body:not(.embed){background:transparent}
 html[data-theme="dark"]{--atmo-band-a-op:.20;--atmo-band-a-op-breathe:.26;--atmo-band-b-op:.13;--atmo-band-b-op-breathe:.17}
+html[data-theme="nordlys"]{--atmo-band-a-op:.26;--atmo-band-a-op-breathe:.34;--atmo-band-b-op:.17;--atmo-band-b-op-breathe:.23}
+html[data-theme="disco"]{--atmo-band-a-op:.22;--atmo-band-a-op-breathe:.29;--atmo-band-b-op:.15;--atmo-band-b-op-breathe:.20}
 /* GLOW-CARBON (2026-06-27) — carbon (default) never got the dark-theme aurora lift,
    so the animated aurora was nearly invisible behind the content. Mirror the dark
    rule for carbon so the moving bands read clearly, staying within the token system. */
@@ -307,109 +281,37 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
     --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
 
-    --ink:#ececea;
-    --ink2:#a8a39a;
-    --ink3:#797469;
-    --ink4:#817d72;
-    --bg:#0d0d0c;
-    --surface:#131312;
-    --surface-2:#191917;
-    --accent:#c89968;
-    --accent-2:#d8ad7e;
-    --line:rgba(255,255,255,.06);
-    --line-2:rgba(255,255,255,.10);
-    --line-warm:rgba(200,153,104,.18);
-    --accent-deep:#a87842;
     --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Consolas, monospace;
     --shadow-rest: 0 1px 2px rgba(0,0,0,.2), 0 10px 30px rgba(0,0,0,.16);
 
     --ease: cubic-bezier(.22, 1, .36, 1);
-
-    --nav-bg: rgba(13,13,12,.78);
-    --mark-bg: #1a1714;
-    --menu-bg: #161513;
-    --hover-bg: rgba(255,255,255,.04);
-    --hover-bg-soft: rgba(255,255,255,.02);
-    --kbd-bg: rgba(255,255,255,.04);
+    /* Vasketonen paa felt og flater. Carbon overstyrer den i themes.css; her staar
+       bare standarden, slik shared/site-shell.css gjoer for resten av nettstedet. */
+    --wash-rgb:255,255,255;
+    /* Chrome-tokens som shared/themes.css ikke eier. Avledet fra --bg/--ink slik
+       at de følger ethvert tema — de sto hardkodet til carbon her, og ble derfor
+       liggende igjen som varm brunfarge når man valgte nordlys, dark eller disco. */
+    --nav-bg: color-mix(in srgb, var(--bg) 78%, transparent);
+    --mark-bg: var(--surface-2);
+    --menu-bg: var(--surface);
+    --hover-bg: color-mix(in srgb, var(--ink) 4%, transparent);
+    --hover-bg-soft: color-mix(in srgb, var(--ink) 2%, transparent);
+    --kbd-bg: color-mix(in srgb, var(--ink) 4%, transparent);
     --flag-shadow: rgba(0,0,0,.4);
   }
+  html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]){
+    --flag-shadow: rgba(0,0,0,.18);
+  }
+  /* Temapalettene lå her som ni inline-kopier og hadde drevet fra de kanoniske:
+     hendrix var mørk brun selv om det er et LYST tema, carbon sto på verdiene fra
+     før OKLCH-ombyggingen, og nordlys manglet atmosfære-tokens helt — derfor lå
+     den varme carbon-auroraen bak et grønt tema. Paletten kommer nå fra
+     shared/themes.css, som er den eneste kilden resten av nettstedet bruker. */
 
   .skip{position:absolute;top:-100px;left:8px;background:var(--accent);color:var(--bg);padding:8px 14px;border-radius:4px;font:600 13px/1 var(--font-sans);text-decoration:none;z-index:1000;transition:top .2s var(--ease);}
   .skip:focus{top:8px;outline:2px solid var(--ink);outline-offset:2px}
   *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
 
-  [data-theme="frost"]{
-    --ink:#1a1714; --ink2:#5e574e; --ink3:#8a8378; --ink4:#7f7562;
-    --bg:#fafaf7; --surface:#ffffff; --surface-2:#f3f1ec;
-    --accent:#a87842; --accent-2:#8d6233;
-    --line:rgba(0,0,0,.08); --line-2:rgba(0,0,0,.14); --line-warm:rgba(168,120,66,.22);
-    --nav-bg: rgba(250,250,247,.82); --mark-bg:#f3eee5; --menu-bg:#ffffff;
-    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
-    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
-  }
-  [data-theme="hendrix"]{
-    --ink:#f4e6d3; --ink2:#c7ad8b; --ink3:#937c5e; --ink4:#99805e;
-    --bg:#1f110b; --surface:#2a1810; --surface-2:#341f15;
-    --accent:#d4794a; --accent-2:#e6926a;
-    --line:rgba(244,230,211,.07); --line-2:rgba(244,230,211,.13); --line-warm:rgba(212,121,74,.22);
-    --nav-bg: rgba(31,17,11,.82); --mark-bg:#34211a; --menu-bg:#2a1810;
-    --hover-bg: rgba(244,230,211,.05); --hover-bg-soft: rgba(244,230,211,.025);
-    --kbd-bg: rgba(244,230,211,.05); --flag-shadow: rgba(0,0,0,.4);
-  }
-  [data-theme="dark"]{
-    --ink:#e6e8ef; --ink2:#9ba0b3; --ink3:#6c7185; --ink4:#787f97;
-    --bg:#0d0e1a; --surface:#141528; --surface-2:#1c1d34;
-    --accent:#6c8aef; --accent-2:#94a8f5;
-    --line:rgba(255,255,255,.06); --line-2:rgba(255,255,255,.10); --line-warm:rgba(108,138,239,.20);
-    --nav-bg: rgba(13,14,26,.78); --mark-bg:#1c1d34; --menu-bg:#181a2e;
-    --hover-bg: rgba(255,255,255,.04); --hover-bg-soft: rgba(255,255,255,.02);
-    --kbd-bg: rgba(255,255,255,.04); --flag-shadow: rgba(0,0,0,.4);
-  }
-  [data-theme="glass"]{
-    --ink:#1a1d2e; --ink2:#5a6280; --ink3:#8a93ad; --ink4:#66769c;
-    --bg:#f0f3fa; --surface:#ffffff; --surface-2:#e8edf6;
-    --accent:#6875f5; --accent-2:#5562e5;
-    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(104,117,245,.22);
-    --nav-bg: rgba(240,243,250,.82); --mark-bg:#e8edf6; --menu-bg:#ffffff;
-    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
-    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
-  }
-  [data-theme="bw"]{
-    --ink:#f5f5f5; --ink2:#b0b0b0; --ink3:#808080; --ink4:#7e7e7e;
-    --bg:#0a0a0a; --surface:#141414; --surface-2:#1c1c1c;
-    --accent:#ffffff; --accent-2:#e0e0e0;
-    --line:rgba(255,255,255,.07); --line-2:rgba(255,255,255,.13); --line-warm:rgba(255,255,255,.18);
-    --nav-bg: rgba(10,10,10,.82); --mark-bg:#1c1c1c; --menu-bg:#141414;
-    --hover-bg: rgba(255,255,255,.05); --hover-bg-soft: rgba(255,255,255,.025);
-    --kbd-bg: rgba(255,255,255,.05); --flag-shadow: rgba(0,0,0,.4);
-  }
-  [data-theme="disco"]{
-    --ink:#f5e6f5; --ink2:#c4a8c4; --ink3:#8a6e90; --ink4:#947399;
-    --bg:#15081a; --surface:#1f0d28; --surface-2:#281033;
-    --accent:#e91e8c; --accent-2:#ff4ba6;
-    --line:rgba(245,230,245,.06); --line-2:rgba(245,230,245,.10); --line-warm:rgba(233,30,140,.22);
-    --nav-bg: rgba(21,8,26,.82); --mark-bg:#281033; --menu-bg:#1f0d28;
-    --hover-bg: rgba(245,230,245,.05); --hover-bg-soft: rgba(245,230,245,.025);
-    --kbd-bg: rgba(245,230,245,.05); --flag-shadow: rgba(0,0,0,.4);
-  }
-  [data-theme="nordlys"]{
-    --ink:#e6f0ec; --ink2:#a7bcb2; --ink3:#6f8579; --ink4:#6b8276;
-    --bg:#050a0c; --surface:#0c1416; --surface-2:#111c1e;
-    --accent:#4ec9a0; --accent-2:#74dcb6;
-    --line:rgba(190,255,232,.06); --line-2:rgba(190,255,232,.10); --line-warm:rgba(78,201,160,.20);
-    --nav-bg: rgba(5,10,12,.80); --mark-bg:#10201c; --menu-bg:#0c1416;
-    --hover-bg: rgba(190,255,232,.05); --hover-bg-soft: rgba(190,255,232,.025);
-    --kbd-bg: rgba(190,255,232,.05); --flag-shadow: rgba(0,0,0,.4);
-  }
-  [data-theme="pink"]{
-    --ink:#2a1a22; --ink2:#6b4a58; --ink3:#9a7585; --ink4:#99687f;
-    --bg:#fef1f5; --surface:#ffffff; --surface-2:#fce2eb;
-    --accent:#e890b2; --accent-2:#d676a0;
-    --line:rgba(0,0,0,.06); --line-2:rgba(0,0,0,.12); --line-warm:rgba(232,144,178,.24);
-    --nav-bg: rgba(254,241,245,.82); --mark-bg:#fce2eb; --menu-bg:#ffffff;
-    --hover-bg: rgba(0,0,0,.045); --hover-bg-soft: rgba(0,0,0,.022);
-    --kbd-bg: rgba(0,0,0,.045); --flag-shadow: rgba(0,0,0,.18);
-  }
 
   *,*::before,*::after{box-sizing:border-box}
   html{scroll-behavior:smooth;overflow-x:hidden}
@@ -425,7 +327,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     max-width:100vw;
   }
   .container{max-width:1120px;margin:0 auto;padding:0 32px}
-  ::selection{background:rgba(200,153,104,.28);color:#fff}
+  ::selection{background:rgba(var(--glow-rgb),.28);color:var(--ink)}
 
   .nav-wrap{
     position:sticky;top:0;z-index:50;
@@ -969,7 +871,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     .rr-amtcell{display:flex;align-items:baseline;justify-content:flex-end;gap:6px;width:184px;flex:none}
     .rr-kr{font:400 11px/1 var(--font-sans);color:var(--ink4);width:16px;text-align:left}
     .rr-out{font-variant-numeric:tabular-nums lining-nums;text-align:right;min-width:132px;color:var(--ink)}
-    input.rr-num{width:132px;text-align:right;font:500 14px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);background:rgba(255,248,232,.025);border:1px solid var(--line-2);border-radius:6px;padding:8px 11px;outline:none;transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease)}
+    input.rr-num{width:132px;text-align:right;font:500 14px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);background:rgba(var(--wash-rgb),.025);border:1px solid var(--line-2);border-radius:6px;padding:8px 11px;outline:none;transition:border-color .18s var(--ease),box-shadow .18s var(--ease),background .18s var(--ease)}
     input.rr-num:focus{border-color:var(--accent);background:var(--surface-2);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
 
     .rr-sub{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:11px 0 7px;margin-top:4px;border-top:1px solid var(--line-2)}
@@ -982,7 +884,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     .rr-arslabel{font:500 19px/1 var(--font-serif);color:var(--ink);letter-spacing:-.2px}
     .rr-arstag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font:500 11px/1 var(--font-sans);letter-spacing:.02em}
     .rr-arstag.pos{background:color-mix(in srgb,var(--accent) 13%,transparent);border:1px solid var(--line-warm);color:var(--accent-2)}
-    .rr-arstag.neg{background:rgba(255,248,232,.05);border:1px solid var(--line-2);color:var(--ink2)}
+    .rr-arstag.neg{background:rgba(var(--wash-rgb),.05);border:1px solid var(--line-2);color:var(--ink2)}
     .rr-arsnum{font:600 clamp(28px,5vw,34px)/1 var(--font-serif);font-variant-numeric:tabular-nums lining-nums;color:var(--accent-2);letter-spacing:-1px}
     .rr-arskr{font:400 13px/1 var(--font-sans);color:var(--ink3)}
 
@@ -1007,7 +909,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
     .kx-fall{display:flex;flex-direction:column;gap:9px}
     .kx-fall-row{display:grid;grid-template-columns:124px 1fr 96px;align-items:center;gap:12px}
     .kx-fall-lab{font:500 12px/1.3 var(--font-sans);color:var(--ink2)}
-    .kx-fall-track{position:relative;height:26px;background:rgba(255,248,232,.03);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+    .kx-fall-track{position:relative;height:26px;background:rgba(var(--wash-rgb),.03);border:1px solid var(--line);border-radius:6px;overflow:hidden}
     .kx-fall-track::before{content:"";position:absolute;top:0;bottom:0;left:var(--zero,0%);width:1px;background:var(--line-2)}
     .kx-fall-bar{position:absolute;top:4px;bottom:4px;border-radius:3px;min-width:2px}
     .kx-fall-bar.base{background:var(--ink3)}
