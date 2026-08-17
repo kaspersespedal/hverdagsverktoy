@@ -30,6 +30,7 @@ var SEARCH_DATA = [
 
   // Kalkulator (hash handled by switchCalcMode in core.js)
   {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/enkel/',tags:'kalkulator regnemaskin pluss minus gange dele prosent calculator',type:'tool',page:'Kalkulator',sk:'kalkBasic'},
+  {name:'Nedtelling',desc:'Timer og nedtelling fra 1 til 50 minutter med rolig klang når tiden er ute',url:'/kalkulator/timer/',tags:'timer nedtelling nedtellingsur eggeklokke stoppeklokke minutter alarm varsel pomodoro pause countdown egg timer',type:'tool',page:'Kalkulator',sk:'kalkTimer'},
   {name:'Vitenskapelig kalkulator',desc:'Sin, cos, log, potenser og mer',url:'/kalkulator/scientific/',tags:'vitenskapelig kalkulator sin cos tan log ln potens kvadratrot pi scientific',type:'tool',page:'Kalkulator',sk:'kalkSci'},
   {name:'Valutakonverter',desc:'Konverter mellom valutaer med oppdaterte kurser',url:'/kalkulator/unit/',tags:'valuta valutakonverter valutakalkulator valutaomregner kurs dollar euro pund usd eur gbp sek dkk currency exchange rate kursomregner convert currency',type:'tool',page:'Kalkulator',sk:'kalkValuta'},
   {name:'Finansiell kalkulator',desc:'Nåverdi, fremtidsverdi, margin, break-even, renters rente og rabatter',url:'/kalkulator/finance/',tags:'finansiell kalkulator nåverdi fremtidsverdi annuitet rente perioder margin markup break-even break even renters rente compound discount rabatt PV FV PMT TVM financial',type:'tool',page:'Kalkulator',sk:'kalkFin'},
@@ -322,6 +323,7 @@ var URL_TO_DISPLAY = {
   '/boliglan/bvl/':       {title:'bvlTitle',      desc:'bvlDesc'},
   '/boliglan/bsu/':      {title:'morBsuTitle',   desc:'morBsuDesc'},
   // Kalkulator
+  '/kalkulator/timer/':           {title:'timerTitle',    desc:'timerSearchDesc'},
   '/kalkulator/':                 {title:'cmBasic'},
   '/kalkulator/#scientific':      {title:'cmScientific'},
   '/kalkulator/#unit':            {title:'cmUnit'},
