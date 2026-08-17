@@ -248,18 +248,12 @@ var CSS = [
 '.tmr-link svg{width:14px;height:14px;flex:0 0 auto}',
 '.tmr-link[disabled]{opacity:.45;cursor:default}',
 
-/* — pille + popover på forsiden — */
-'.tmr-popwrap{position:relative;display:inline-flex}',
-/* Speiler .nav-search-pill i index.html — samme høyde, radius og typografi.
-   Forskjellen: timer-pilla er alltid synlig, og viser nedtellingen når den går. */
-'.tmr-pill{display:inline-flex;align-items:center;gap:8px;background:transparent;',
-'  border:1px solid var(--line-2);color:var(--ink3);padding:7px 12px;border-radius:6px;',
-'  font:500 12.5px/1 var(--font-sans);cursor:pointer;',
-'  transition:border-color .2s ease,color .2s ease}',
-'.tmr-pill svg{width:13px;height:13px;color:var(--ink3);transition:color .2s ease}',
-'.tmr-pill-t{font-variant-numeric:tabular-nums lining-nums}',
-'.tmr-pill.is-live{color:var(--ink);border-color:var(--line-warm)}',
-'.tmr-pill.is-live svg{color:var(--tmr-accent)}',
+/* — popover på forsiden — */
+/* Pilla (.tmr-popwrap / .tmr-pill) styles IKKE herfra. Den markupen står i
+   index.html, og denne fila lastes med `defer` — stilen ville kommet etter
+   første maling, med en 63 px klokke og en sprukken navrad i mellomtiden.
+   Pille-stilen bor derfor sammen med markupen, ved siden av .nav-search-pill
+   som den speiler. Panelet under er bygget av JS og hører hjemme her. */
 '.tmr-pop{position:absolute;top:calc(100% + 11px);right:0;z-index:60;',
 '  width:min(320px, calc(100vw - 28px));background:var(--surface);border:1px solid var(--line-2);',
 '  border-radius:13px;padding:17px 18px 15px;text-align:left;',
@@ -300,12 +294,14 @@ var CSS = [
 '  .tmr-btn:not(.primary):hover:not([disabled]){border-color:var(--line-warm);',
 '    background:color-mix(in srgb, var(--ink) 5%, transparent)}',
 '  .tmr-btn.primary:hover:not([disabled]){filter:brightness(1.07)}',
-'  .tmr-pill:hover{color:var(--ink);border-color:var(--line-warm)}',
-'  .tmr-pill:hover svg{color:var(--tmr-accent)}',
 '  .tmr-mute:hover,.tmr-x:hover{color:var(--ink)}',
 '  .tmr-link:hover{color:var(--tmr-accent)}}',
+/* --tmr-accent settes på .tmr, altså på panelet. Pilla står utenfor panelet og
+   så aldri tokenet: hele outline-erklæringen falt derfor bort som ugyldig, og
+   tastaturfokus på pilla ble helt usynlig. Den er tatt ut av lista her og
+   arver i stedet sidens egen :focus-visible-ring, som alle andre knapper. */
 '.tmr-btn:focus-visible,.tmr-chip:focus-visible,.tmr-step:focus-visible,.tmr-mute:focus-visible,',
-'.tmr-pill:focus-visible,.tmr-link:focus-visible,.tmr-x:focus-visible,.tmr-range:focus-visible{',
+'.tmr-link:focus-visible,.tmr-x:focus-visible,.tmr-range:focus-visible{',
 '  outline:2px solid var(--tmr-accent);outline-offset:2px;border-radius:6px}',
 
 '@media(prefers-reduced-motion:reduce){',
@@ -653,6 +649,11 @@ function mount(el){
     pill = wrap.querySelector('[data-tmr-toggle]');
     pillTxt = wrap.querySelector('[data-tmr-pill-label]');
     if(pillTxt) label(pillTxt, 'timerTitle', 'Nedtelling');
+    /* Pilla har ligget usynlig i en ferdig reservert boks siden første maling
+       (se .tmr-pill i index.html). Nå står etiketten på riktig språk og
+       tema/språk-klyngen er på plass, så den kan tones inn — ferdig plassert,
+       uten hopp. */
+    if(pill) pill.classList.add('show');
     /* To bilder ut: nå er den lukkede tilstanden malt, og overgangen kan
        trygt kobles på uten å spille av seg selv ved sidelast. */
     requestAnimationFrame(function(){
