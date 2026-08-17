@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="nb" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Nedtelling — Kalkulator · Hverdagsverktøy</title>
+<meta name="description" content="Nedtellingstimer fra 1 til 50 minutter med en rolig klang når tiden er ute. Velg minutter, trykk start — alt kjører lokalt i nettleseren.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://hverdagsverktoy.com/kalkulator/timer/">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://hverdagsverktoy.com/kalkulator/timer/#webpage",
+  "name": "Nedtelling — Kalkulator · Hverdagsverktøy",
+  "url": "https://hverdagsverktoy.com/kalkulator/timer/",
+  "inLanguage": "no",
+  "isPartOf": { "@id": "https://hverdagsverktoy.com/#website" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Kalkulator", "item": "https://hverdagsverktoy.com/kalkulator/" },
+    { "@type": "ListItem", "position": 3, "name": "Nedtelling", "item": "https://hverdagsverktoy.com/kalkulator/timer/" }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/inter/files/inter-latin-400-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/inter/files/inter-latin-600-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
+<link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap">
+<script>
+  (function(){try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<script>
+  (function(){
+    try{
+      var l=localStorage.getItem('hvt-lang')||'no';
+      document.documentElement.setAttribute('data-lang',l);
+      if(l!=='no')document.documentElement.classList.add('lang-loading');
+    }catch(e){}
+  })();
+</script>
+<style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
+<link rel="stylesheet" href="/shared/themes.css?v=v3">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v3">
+<link rel="stylesheet" href="/shared/components.css?v=v3">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v216">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<style>
+/* Timer-siden. Selve timeren (urskive, taster, lyd) bygges av shared/timer.js
+   og tar med seg sin egen stil — her ligger kun sidens ramme rundt den, med
+   samme oppsett som enkel-kalkulatoren. */
+body{min-height:100vh;display:flex;flex-direction:column}
+body > main{flex:1 0 auto}
+body > footer{flex-shrink:0}
+
+.page-hero-actions{display:flex;gap:8px;margin-top:18px}
+.calc-help-btn,.focus-card-btn{
+  width:32px;height:32px;border:1px solid var(--line);background:transparent;color:var(--ink2);
+  border-radius:50%;font-size:14px;line-height:1;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:color .18s ease,border-color .18s ease;
+}
+@media(hover:hover){.calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line-2)}}
+.calc-help-btn:focus-visible,.focus-card-btn:focus-visible{outline:1px solid var(--accent);outline-offset:2px}
+body.focus-mode > .nav-wrap,
+body.focus-mode > .tabs-wrap,
+body.focus-mode > footer{display:none}
+
+.timer-wrap{padding:34px 0 64px}
+.timer-wrap > .container{display:grid;grid-template-columns:minmax(0,430px) minmax(0,288px);gap:30px;align-items:start;justify-content:center}
+@media(max-width:980px){.timer-wrap > .container{grid-template-columns:minmax(0,430px)}}
+.timer-host{min-width:0}
+
+/* Side col */
+.side-col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.side-card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:17px 19px;box-shadow:inset 0 1px 0 color-mix(in srgb, var(--ink) 5%, transparent)}
+.side-card h4{margin:0 0 11px;font:600 11px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);padding-bottom:9px;border-bottom:1px solid var(--line)}
+.side-card p{margin:0;font-size:12.5px;line-height:1.65;color:var(--ink2)}
+.side-card p + p{margin-top:9px}
+.side-card p strong{color:var(--ink);font-weight:600}
+.side-card.related a{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid color-mix(in srgb, var(--ink) 5%, transparent);color:var(--ink2);text-decoration:none;font-size:13px;transition:color .15s}
+.side-card.related a:last-child{border-bottom:0}
+.side-card.related .arr{color:var(--ink4);transition:color .15s ease,transform .15s ease}
+@media(hover:hover){
+  .side-card.related a:hover{color:var(--accent)}
+  .side-card.related a:hover .arr{color:var(--accent);transform:translateX(2px)}
+}
+
+/* Howto */
+.howto-wrap{margin:0 0 40px;display:none}
+.howto-wrap.howto-open{display:block}
+details.howto{border:1px solid var(--line);border-radius:10px;padding:18px 22px;background:var(--surface)}
+details.howto > summary{cursor:pointer;font-weight:500;color:var(--ink);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+details.howto > summary::-webkit-details-marker{display:none}
+details.howto > summary::after{content:'';width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform .2s ease;flex:0 0 auto}
+details.howto[open] > summary::after{transform:rotate(-135deg)}
+details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.howto-body{color:var(--ink2);font-size:14.5px;line-height:1.6}
+.howto-body p{margin:0 0 10px}
+.howto-body p:last-child{margin:0}
+.howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
+.howto-body .howto-row strong{color:var(--ink);font-weight:600}
+.howto-body strong{color:var(--ink);font-weight:500}
+.howto-body kbd{font:600 12px/1 'JetBrains Mono',monospace;background:var(--surface-2);border:1px solid var(--line-2);border-radius:4px;padding:2px 6px;color:var(--ink)}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main" data-i18n="skipLink">Hopp til innhold</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark-g" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8ad7e"/><stop offset="1" stop-color="#a87842"/>
+    </linearGradient>
+    <symbol id="mark-h" viewBox="0 0 64 64">
+      <rect x="14" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="42" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="22" y="28" width="20" height="8" rx="1.5" fill="url(#mark-g)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="nav-wrap">
+  <div class="container">
+    <nav>
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy — forside">
+        <span class="mark"><svg width="16" height="16"><use href="#mark-h"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <div class="container">
+    <div class="tabs" role="tablist">
+      <a href="/personlig/budsjett/" class="tab" data-i18n="tabBudsjett">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg>Budsjett
+      </a>
+      <a href="/personlig/" class="tab" data-i18n="tabPersonlig">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>Privatøkonomi
+      </a>
+      <a href="/boliglan/" class="tab" data-i18n="tabBoliglan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/></svg>Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab" aria-selected="true" data-i18n="tabKalkulator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>Kalkulator
+      </a>
+      <a href="/skatt/" class="tab" data-i18n="tabSkatt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>Skatt
+      </a>
+      <a href="/selskap/" class="tab" data-i18n="tabSelskap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg>Selskap
+      </a>
+      <a href="/avgift/" class="tab" data-i18n="tabAvgift">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>Avgift
+      </a>
+      <a href="/regnskap/" class="tab" data-i18n="tabRegnskap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg>Regnskap
+      </a>
+      <a href="/lov/" class="tab" data-i18n="tabLov">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V20"/><path d="M5 7 L12 5 L19 7"/><path d="M3 13 a3 3 0 0 0 6 0 L6 7 Z"/><path d="M15 13 a3 3 0 0 0 6 0 L18 7 Z"/></svg>Lov
+      </a>
+      <a href="/kalkyle/" class="tab" data-i18n="tabKalkyle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 3 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6Z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>Kalkyle
+      </a>
+    </div>
+  </div>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div>
+      <div class="crumb">
+        <a href="/kalkulator/" class="crumb-back" aria-label="Tilbake">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+        </a>
+        <a href="/">Hverdagsverktøy</a>
+        <span class="sep"></span>
+        <a href="/kalkulator/" data-i18n="crumbKalk">Kalkulator</a>
+        <span class="sep"></span>
+        <span class="here" data-i18n="crumbHereKalkulatorTimer">Nedtelling</span>
+      </div>
+      <h1 class="page-title"><em>Nedtelling</em> — timer med rolig varsel</h1>
+      <p class="page-lead">Sett en tid fra 1 til 50 minutter, trykk start, og hold øye med ringen. Når tiden er ute kommer en dempet klang — ingen alarm. Timeren kjører lokalt i nettleseren, og du finner den også som en knapp øverst på forsiden.</p>
+      <div class="page-hero-actions">
+        <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning">?</button>
+        <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner">⛶</button>
+      </div>
+    </div>
+    <div class="page-stats">
+      <div class="page-stat"><span class="l">Lengde</span><span class="v">1–50<span class="u">min</span></span></div>
+      <div class="page-stat"><span class="l">Varsel</span><span class="v">Klang</span></div>
+    </div>
+  </div>
+</section>
+
+<main id="main">
+<div class="timer-wrap">
+  <div class="container">
+
+    <div class="timer-host">
+      <!-- shared/timer.js bygger urskiven, tastene og lyden inn her -->
+      <div data-hv-timer data-variant="full" aria-label="Nedtelling"></div>
+    </div>
+
+    <aside class="side-col">
+      <div class="side-card">
+        <h4>Tips</h4>
+        <p>På PC starter og pauser du med <strong>mellomrom</strong>, og nullstiller med <strong>R</strong>. Tiden som gjenstår vises også i fanetittelen, så du ser den mens du jobber i et annet vindu.</p>
+        <p>Klangen er planlagt på lydkortets egen klokke. Den kommer derfor presis selv om fanen ligger i bakgrunnen — men fanen må være åpen.</p>
+      </div>
+      <div class="side-card related">
+        <h4>Relaterte verktøy</h4>
+        <a href="/kalkulator/timepris/"><span class="name">Timepris</span><span class="arr">→</span></a>
+        <a href="/kalkulator/enkel/"><span class="name">Enkel kalkulator</span><span class="arr">→</span></a>
+        <a href="/kalkulator/unit/"><span class="name">Valuta og enheter</span><span class="arr">→</span></a>
+      </div>
+    </aside>
+
+  </div>
+
+  <div class="container howto-wrap">
+    <details class="howto" id="howto-timer">
+      <summary>
+        <span class="howto-title">Slik bruker du timeren</span>
+      </summary>
+      <div class="howto-body">
+        <div class="howto-row"><strong>Velg tid</strong><span>Dra i linjen, bruk <strong>−</strong> og <strong>+</strong> for ett minutt om gangen, eller trykk et av hurtigvalgene. Alt mellom 1 og 50 minutter går.</span></div>
+        <div class="howto-row"><strong>Start, pause, nullstill</strong><span><strong>Start</strong> setter den i gang. Underveis blir knappen til <strong>Pause</strong>, og <strong>Nullstill</strong> setter den tilbake til tiden du valgte.</span></div>
+        <div class="howto-row"><strong>Lyden</strong><span>En dempet klokkeklang som gjentas tre ganger. <strong>Lyd på/av</strong> husker valget til neste gang, og <strong>Hør lyden</strong> lar deg sjekke volumet på forhånd. På mobil vibrerer telefonen i tillegg hvis nettleseren tillater det.</span></div>
+        <div class="howto-row"><strong>Tastatur</strong><span><kbd>Mellomrom</kbd> starter og pauser, <kbd>R</kbd> nullstiller.</span></div>
+        <div class="howto-row"><strong>Timeren lever i fanen</strong><span>Den fortsetter når du bytter til en annen side her på Hverdagsverktøy, og den tåler at fanen ligger i bakgrunnen. Men lukker du fanen eller nettleseren, stopper den — det finnes ingen varsling utenfor siden.</span></div>
+      </div>
+    </details>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="container foot">
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc" data-i18n="footerDisc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+  </div>
+</footer>
+
+<script defer src="/shared/site-shell.js?v=v1"></script>
+<script defer src="/shared/top-chrome.js?v=v223"></script>
+<script defer src="/shared/core.js?v=v223"></script>
+<script defer src="/shared/lang/no.js?v=v130"></script>
+<script src="/shared/atmosphere.js?v=v5" defer></script>
+<script src="/shared/timer.js?v=v1" defer></script>
+
+<script>
+// ── ? veiledning + ⛶ fokusmodus (samme som på enkel-kalkulatoren) ──
+(function(){
+  function init(){
+    document.querySelectorAll('.calc-help-btn').forEach(function(b){
+      b.addEventListener('click', function(){
+        var d = document.querySelector('details.howto'); if(!d) return;
+        var w = d.closest('.howto-wrap') || d;
+        var show = !w.classList.contains('howto-open');
+        w.classList.toggle('howto-open', show);
+        d.open = show;
+        b.setAttribute('aria-expanded', show ? 'true' : 'false');
+        if(show) w.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+    });
+    document.querySelectorAll('.focus-card-btn').forEach(function(b){
+      b.addEventListener('click', function(){ document.body.classList.toggle('focus-mode'); });
+    });
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+
+<script>
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register('/sw.js').catch(function(){});
+    });
+  }
+</script>
+</body>
+</html>
