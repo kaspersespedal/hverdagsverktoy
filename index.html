@@ -1628,6 +1628,36 @@
     padding:3px 5px;letter-spacing:.4px;
   }
 
+  /* ── Timer-pilla: samme skinn og samme entré som søkepilla ───────
+     Stilen MÅ stå her og ikke i shared/timer.js. Markupen står i denne fila,
+     mens timer.js er `defer` og injiserer stilen sin først etter at siden er
+     malt: klokka ble derfor tegnet 63 px stor og navraden sprakk til ~600 px
+     høyde i det halve sekundet før skriptet rakk å kjøre.
+     Boksen er reservert fra første maling, men pilla holdes usynlig til
+     timer.js melder seg (.show) — top-chrome.js legger tema/språk-klyngen inn
+     rett før, og uten dette ville pilla stått ferdig malt og så glidd 190 px
+     mot venstre når klyngen dukket opp.
+     Panelet under pilla bygges av JS og beholder stilen sin der. */
+  .tmr-popwrap{position:relative;display:inline-flex}
+  .tmr-pill{
+    display:inline-flex;align-items:center;gap:8px;
+    background:transparent;border:1px solid var(--line-2);color:var(--ink3);
+    padding:7px 12px;border-radius:6px;font:500 12.5px/1 var(--font-sans);cursor:pointer;
+    opacity:0;transform:translateY(-4px);pointer-events:none;
+    transition:opacity var(--dur-fast) var(--ease-out-quart),
+               transform var(--dur-fast) var(--ease-out-quart),
+               border-color .2s var(--ease),color .2s var(--ease);
+  }
+  .tmr-pill.show{opacity:1;transform:translateY(0);pointer-events:auto}
+  .tmr-pill svg{width:13px;height:13px;color:var(--ink3);transition:color .2s var(--ease)}
+  .tmr-pill-t{font-variant-numeric:tabular-nums lining-nums}
+  .tmr-pill.is-live{color:var(--ink);border-color:var(--line-warm)}
+  .tmr-pill.is-live svg{color:var(--accent)}
+  @media(hover:hover){
+    .tmr-pill:hover{color:var(--ink);border-color:var(--line-warm)}
+    .tmr-pill:hover svg{color:var(--accent)}
+  }
+
   /* ── Scrub-chip: time + verdi under pekeren på strømsøyler og valutakurve ── */
   .widget-spark-wrap{position:relative}
   .spark-scrub{
@@ -1687,6 +1717,12 @@
   .widget-value{font-size:32px;letter-spacing:-.6px}
   @media (max-width: 640px){
     .nav-search-pill .nav-search-lbl,.nav-search-pill kbd{display:none}
+    /* Timer-pilla faller til bare ikonet, som søkepilla ved siden av. Med
+       «Nedtelling» utskrevet ble navraden 408 px bred i en 337 px container:
+       siden lot seg dra sidelengs, og tema/språk-knappene havnet delvis
+       utenfor skjermkanten. Nedtellingen er ikke borte — den står i
+       fanetittelen og i panelet, og pilla lyser opp mens den går. */
+    .tmr-pill .tmr-pill-t{display:none}
     .widget-value{font-size:27px;letter-spacing:-.5px}
   }
   @media (max-width: 480px){
@@ -1741,7 +1777,7 @@
 <script src="/shared/search.js?v=v129" defer></script>
 <!-- Timeren i toppen. Samme fil som /kalkulator/timer/ bruker — der i full
      størrelse, her som popover under pilla. -->
-<script src="/shared/timer.js?v=v1" defer></script>
+<script src="/shared/timer.js?v=v2" defer></script>
 <style>
 /* GLØD-FIX (2026-05-31): calm-override.css + site-shell.css disable the atmosphere
    site-wide (display:none !important) and paint body opaque, so the forside was flat.
