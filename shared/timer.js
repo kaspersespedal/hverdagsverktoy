@@ -26,8 +26,8 @@
 (function(){
 'use strict';
 
-var MIN_M = 1, MAX_M = 50, DEF_M = 10;
-var PRESETS = [5, 10, 15, 25, 45];
+var MIN_M = 1, MAX_M = 50, DEF_M = 20;
+var PRESETS = [5, 10, 15, 20, 25, 45];
 var LS_STATE = 'hvt-timer', LS_SOUND = 'hvt-timer-snd';
 var TICK_MS = 200;
 var R_RING = 44, C_RING = 2 * Math.PI * R_RING;
@@ -61,12 +61,12 @@ function fmt(ms){
 }
 
 /* ═══════════════ LYD ═══════════════════════════════════════
-   En myk klokke: durtreklang som stiger, så en oktav som får
-   klinge ut. Hver tone er grunntone + to overtoner (den tredje
-   litt urein, som i en ekte klokke) gjennom et lavpassfilter,
-   med kort anslag og lang eksponentiell utklang. Frasen
-   gjentas tre ganger med avtagende styrke — hørbart uten å
-   være en alarm. */
+   To toner, en ren kvint fra hverandre, som får klinge ut —
+   og så det samme én gang til, litt svakere. Det er hele lyden.
+   Hver tone er grunntone + to svake overtoner (den øverste litt
+   urein, som i en ekte klokke) gjennom et lavpassfilter som tar
+   av det skarpeste. Anslaget er mykt nok til at den ikke smeller
+   i gang, og utklangen lang nok til at den forsvinner av seg selv. */
 var ctx = null, soundNodes = [], armed = null;
 
 function audio(){
@@ -84,19 +84,17 @@ function wake(){
 
 var PHRASE = [
   {f: 523.25, t: 0.00, g: 1.00},   // C5
-  {f: 659.25, t: 0.34, g: 0.92},   // E5
-  {f: 783.99, t: 0.68, g: 0.86},   // G5
-  {f: 1046.50, t: 1.06, g: 0.72}   // C6 — får klinge ut alene
+  {f: 783.99, t: 0.55, g: 0.88}    // G5 — ren kvint over, får klinge ut alene
 ];
-var PARTIALS = [[1, 1], [2, 0.26], [3.01, 0.11]];
-var REPEATS = [{t: 0.0, g: 1.0}, {t: 2.9, g: 0.82}, {t: 5.8, g: 0.66}];
-var PEAK = 0.20, DECAY = 2.3;
+var PARTIALS = [[1, 1], [2, 0.18], [3.01, 0.06]];
+var REPEATS = [{t: 0.0, g: 1.0}, {t: 3.2, g: 0.74}];
+var PEAK = 0.19, DECAY = 3.2, ATTACK = 0.03;
 
 function scheduleChime(c, t0){
   var out = c.createGain();
   out.gain.value = 1;
   var lp = c.createBiquadFilter();
-  lp.type = 'lowpass'; lp.frequency.value = 2900; lp.Q.value = 0.7;
+  lp.type = 'lowpass'; lp.frequency.value = 2300; lp.Q.value = 0.6;
   lp.connect(out); out.connect(c.destination);
   soundNodes.push(out, lp);
 
@@ -107,7 +105,7 @@ function scheduleChime(c, t0){
       var peak = PEAK * note.g * REPEATS[r].g;
       var env = c.createGain();
       env.gain.setValueAtTime(0.0001, at);
-      env.gain.exponentialRampToValueAtTime(peak, at + 0.014);
+      env.gain.exponentialRampToValueAtTime(peak, at + ATTACK);
       env.gain.exponentialRampToValueAtTime(0.0001, at + DECAY);
       env.connect(lp);
       soundNodes.push(env);
@@ -214,7 +212,10 @@ var CSS = [
 '.tmr-range[disabled]{opacity:.4;cursor:default}',
 
 /* — hurtigvalg — */
-'.tmr-presets{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:13px}',
+/* Rutenett, ikke flex-wrap: seks hurtigvalg får ikke plass på én linje, og
+   fri flyt satte det siste alene på rad to. Tre like kolonner gir et jevnt
+   2×3-felt i begge varianter. */
+'.tmr-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:13px}',
 '.tmr-chip{font:500 12px/1 var(--font-sans);padding:7px 13px;border-radius:99px;background:transparent;',
 '  border:1px solid var(--line);color:var(--ink2);cursor:pointer;font-variant-numeric:tabular-nums lining-nums;',
 '  transition:color .15s ease,border-color .15s ease,background .15s ease}',
@@ -353,7 +354,7 @@ function build(el, variant){
     '</div>',
     '<div class="tmr-set">',
       '<button type="button" class="tmr-step" data-r="minus" aria-label="Ett minutt mindre" title="Ett minutt mindre">&#8722;</button>',
-      '<span class="tmr-val"><span data-r="num">10</span><span class="tmr-unit" data-r="unit">min</span></span>',
+      '<span class="tmr-val"><span data-r="num">' + DEF_M + '</span><span class="tmr-unit" data-r="unit">min</span></span>',
       '<button type="button" class="tmr-step" data-r="plus" aria-label="Ett minutt mer" title="Ett minutt mer">+</button>',
     '</div>',
     '<input type="range" class="tmr-range" data-r="range" min="' + MIN_M + '" max="' + MAX_M + '" step="1" value="' + DEF_M + '" aria-label="Minutter">',
