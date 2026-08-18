@@ -54,7 +54,7 @@
 </script>
 
 <!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
-<link rel="stylesheet" href="/shared/themes.css?v=v4">
+<link rel="stylesheet" href="/shared/themes.css?v=v5">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v3">
 <link rel="stylesheet" href="/shared/components.css?v=v3">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v219">
@@ -1764,11 +1764,11 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v224" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v224" defer></script>
-<script src="/shared/lang/no.js?v=v131" defer></script>
+<link rel="preload" href="/shared/core.js?v=v225" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v225" defer></script>
+<script src="/shared/lang/no.js?v=v132" defer></script>
 <script src="/shared/site-shell.js?v=v1" defer></script>
-<script src="/shared/top-chrome.js?v=v224" defer></script>
+<script src="/shared/top-chrome.js?v=v225" defer></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <script src="/shared/markedsdata.js?v=v12" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
@@ -1843,9 +1843,257 @@ html[data-theme="bw"], body[data-theme="bw"]{
 }
 [data-theme="bw"] .qc-lbl,
 [data-theme="bw"] .widget-label{ color:#b4afa4 !important; }
+
+/* Noir — gjennomgående persienne-motiv. Samme lysretning som WebGL-scenen:
+   hårfine skrå striper (nesten usynlige) over hele siden + stille toppglans på
+   rammene. Enkeltvis umerkelig; sammen leses temaet som gjennomført. */
+html[data-theme="bw"] body.atmo-on::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:repeating-linear-gradient(127deg,
+    rgba(243,239,231,.05) 0px, rgba(243,239,231,.05) 1px,
+    transparent 1px, transparent 11px);
+  -webkit-mask-image:radial-gradient(135% 110% at 10% -6%, rgba(0,0,0,.85) 0%, rgba(0,0,0,.22) 46%, transparent 76%);
+  mask-image:radial-gradient(135% 110% at 10% -6%, rgba(0,0,0,.85) 0%, rgba(0,0,0,.22) 46%, transparent 76%);
+}
+html[data-theme="bw"] .daily-frame{
+  box-shadow:inset 0 1px 0 rgba(243,239,231,.07), 0 1px 0 rgba(0,0,0,.55),
+             0 30px 70px -32px rgba(0,0,0,.85);
+}
+html[data-theme="bw"] .fr-panel{
+  box-shadow:inset 0 1px 0 rgba(243,239,231,.06), 0 1px 0 rgba(255,255,255,.02),
+             0 30px 70px -34px rgba(0,0,0,.78);
+}
+html[data-theme="bw"] .widget{ box-shadow:inset 0 1px 0 rgba(243,239,231,.05); }
+/* Timer-panelet er en flytende popover — den ligger OPPÅ innholdet, ikke i
+   flyten slik korta gjør. Den halvgjennomsiktige --surface over er med vilje for
+   korta (røyken skal drive bak dem), men her leser man rett gjennom nedtellinga
+   og ned i teksten bak. Samme tone, full dekkevne. */
+html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
+</style>
+<style id="introCSS">/* ══ HV-INTRO — koreografert lastesekvens ═══════════════════
+   Fem akter:
+   0  Lysteppe — dekker font-/skriptoppstart, åpner som en blender.
+   1  Merkevare — merket smetter på plass, ordmerket fokuseres, nav-knappene faller inn.
+   2  Tittel — ordmaskene (finnes fra før) + linsefokus over hele linja + glød bak kursiven.
+   3  Søk + kategorier — skallet får ett lys-sveip, strek-ikonene TEGNER seg selv.
+   4  Dagsoversikt — ramma lander med skala, widgetene kaskaderer innvendig
+      (etikett → tall → kontekst → graf) i stedet for å slås på samtidig.
+
+   Token-drevet (--glow-rgb, --ease-*), så sekvensen følger det aktive temaet og
+   gjelder ALLE ni temaene — ingen farger er hardkodet her.
+
+   Aktvinduet styres av body.introAct (settes/fjernes i #introBoot nedenfor), slik
+   at scroll-avsløringer ETTER introen beholder sin vanlige, raske oppførsel.
+   Alt dør under prefers-reduced-motion. */
+
+/* ── Akt 0: Lysteppe ── */
+.intro-veil{
+  position:fixed;inset:0;z-index:80;pointer-events:none;
+  background:radial-gradient(130% 90% at 50% 6%,
+    color-mix(in srgb, var(--bg,#0A0908) 86%, rgb(var(--glow-rgb,200,153,104))) 0%,
+    var(--bg,#0A0908) 74%);
+  animation:hvVeilOut 1.05s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) .4s both;
+}
+@keyframes hvVeilOut{0%{opacity:1}100%{opacity:0;visibility:hidden}}
+
+/* ── Akt 1: Merkevare + nav-knapper ──
+   Alt her ligger inne i body.introAct. Det er ikke kosmetikk: reglene setter
+   opacity:0 og lar animasjonen bære elementet tilbake til synlig. Uten scopet
+   ville logo, ordmerke og topp-knappene blitt stående usynlige den dagen
+   animasjonen ikke kjører (animasjoner slått av i nettleseren, eller et element
+   som monteres av et skript etter at introen er over). Når #introBoot fjerner
+   introAct, faller de tilbake til sin egen, synlige tilstand. */
+body.introAct .nav-wrap .brand-row .mark{
+  opacity:0;
+  animation:hvMarkIn .65s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) .18s both;
+}
+@keyframes hvMarkIn{
+  0%{opacity:0;transform:scale(.5) rotate(-12deg)}
+  55%{opacity:1}
+  100%{opacity:1;transform:scale(1) rotate(0deg)}
+}
+body.introAct .nav-wrap .wordmark{
+  opacity:0;
+  animation:hvWordmarkIn .6s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) .32s both;
+}
+@keyframes hvWordmarkIn{
+  0%{opacity:0;transform:translateX(-7px);filter:blur(6px)}
+  100%{opacity:1;transform:none;filter:blur(0)}
+}
+/* Sidens egne topp-knapper (timer-pilla m.fl.) — markupen røres ikke, de faller
+   bare inn etter ordmerket.
+   .nav-search-pill er holdt UTENFOR med vilje: den er skjult til man har scrollet
+   forbi hero-søket (.show settes av scroll-lytteren). En animasjon med both-fill
+   slår vanlige deklarasjoner, så uten :not() ville pilla blitt tvunget synlig i
+   de fem sekundene aktvinduet står åpent — og så forsvunnet igjen. */
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill){opacity:0;animation:hvNavItemIn .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) both}
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(1){animation-delay:.44s}
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(2){animation-delay:.50s}
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(3){animation-delay:.56s}
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(4){animation-delay:.62s}
+@keyframes hvNavItemIn{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:none}}
+
+/* ── Akt 2: Tittel — linsefokus over hele linja mens ordmaskene løper ── */
+body.introAct [data-headline].play{animation:hvH1Focus .9s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) both}
+@keyframes hvH1Focus{0%{filter:blur(10px)}100%{filter:blur(0)}}
+/* Kursivordet: behold original shimmer + varm glød-bloom bak glyfene. */
+body.introAct [data-headline].play .shimmer{
+  animation:shimmer 600ms cubic-bezier(.5,0,.25,1) 1 forwards,
+            hvEmBloom 1.15s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) 1 both;
+  animation-delay:var(--shimmer-d,0ms),var(--shimmer-d,0ms);
+}
+@keyframes hvEmBloom{
+  0%{text-shadow:0 0 0 rgba(var(--glow-rgb,216,173,126),0)}
+  30%{text-shadow:0 0 30px rgba(var(--glow-rgb,216,173,126),.5)}
+  100%{text-shadow:0 0 0 rgba(var(--glow-rgb,216,173,126),0)}
+}
+
+/* ── Akt 3a: Søkeskallet — lys-sveip + ikon som tegner seg + ⌘K-pop ── */
+.search-shell::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
+  background:linear-gradient(105deg,transparent 40%,rgba(var(--glow-rgb,216,173,126),.13) 50%,transparent 60%);
+  background-size:240% 100%;background-position:0% 0;
+}
+body.introAct.heroLanded .search-shell::after{
+  animation:hvSweep 1.15s cubic-bezier(.6,.05,.3,1) .5s 1 both;
+}
+@keyframes hvSweep{
+  0%{opacity:0;background-position:0% 0}
+  14%{opacity:1}
+  86%{opacity:1}
+  100%{opacity:0;background-position:170% 0}
+}
+body.introDraw .search-icon .i-draw{
+  transition:stroke-dashoffset .8s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) .3s;
+}
+body.introDraw.heroLanded .search-icon .i-draw{stroke-dashoffset:0 !important}
+body.introAct.heroLanded .search-shell .search-kbd{
+  animation:hvKbdIn .55s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) .85s backwards;
+}
+@keyframes hvKbdIn{
+  0%{opacity:0;transform:scale(.55)}
+  100%{opacity:1;transform:scale(1)}
+}
+
+/* ── Akt 3b: Kategoriene — kaskade + selvtegnende strek-ikoner ── */
+body.introAct .quick-cats .qc{opacity:0;transform:translateY(13px) scale(.98)}
+body.introAct.heroLanded .quick-cats .qc{
+  opacity:1;transform:none;
+  transition:opacity .55s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) var(--qcd,230ms),
+             transform .6s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) var(--qcd,230ms);
+}
+body.introAct .quick-cats .qc:nth-child(1){--qcd:230ms}
+body.introAct .quick-cats .qc:nth-child(2){--qcd:272ms}
+body.introAct .quick-cats .qc:nth-child(3){--qcd:314ms}
+body.introAct .quick-cats .qc:nth-child(4){--qcd:356ms}
+body.introAct .quick-cats .qc:nth-child(5){--qcd:398ms}
+body.introAct .quick-cats .qc:nth-child(6){--qcd:440ms}
+body.introAct .quick-cats .qc:nth-child(7){--qcd:482ms}
+body.introAct .quick-cats .qc:nth-child(8){--qcd:524ms}
+body.introAct .quick-cats .qc:nth-child(9){--qcd:566ms}
+body.introAct .quick-cats .qc:nth-child(10){--qcd:608ms}
+body.introAct.introDraw .qc-ico .i-draw{
+  transition:stroke-dashoffset .85s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--qcd,230ms) + 140ms);
+}
+body.introAct.introDraw.heroLanded .qc-ico .i-draw{stroke-dashoffset:0 !important}
+body.introAct.introDraw .qc-ico .i-dot{opacity:0}
+body.introAct.introDraw.heroLanded .qc-ico .i-dot{
+  opacity:1;
+  transition:opacity .45s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--qcd,230ms) + 480ms);
+}
+
+/* ── Akt 4: Dagsoversikten — porten er heroLanded, ikke scroll ── */
+body.introAct .daily .reveal{transition-delay:calc(var(--i,0) * 120ms + 330ms)}
+body.introAct:not(.heroLanded) .daily .reveal{
+  opacity:0 !important;transform:translateY(20px) !important;transition:none !important;
+}
+body.introAct .daily #fxConv{--i:5}
+
+/* Ramma lander med et hint av skala */
+.daily .daily-frame{position:relative}
+body.introAct .daily .daily-frame.reveal{transform:translateY(20px) scale(.988)}
+body.introAct .daily .daily-frame.reveal.in{transform:none}
+
+/* Ett stille lys-sveip over ramma når den har landet */
+.daily-frame::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;z-index:1;
+  background:linear-gradient(115deg,transparent 42%,rgba(var(--glow-rgb,216,173,126),.07) 50%,transparent 58%);
+  background-size:240% 100%;background-position:0% 0;
+}
+body.introAct.heroLanded .daily .daily-frame.reveal.in::after{
+  animation:hvSweep 1.5s cubic-bezier(.6,.05,.3,1) 1.05s 1 both;
+}
+
+/* Topplinja i ramma */
+body.introAct .daily .daily-head .title,
+body.introAct .daily .daily-head .stamp{opacity:0;transform:translateY(7px)}
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .title{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) 430ms,
+             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) 430ms;
+}
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .stamp{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) 510ms,
+             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) 510ms;
+}
+
+/* Innvendig widget-kaskade: etikett → tall → kontekst → graf → fotnote */
+body.introAct .daily .widget.reveal{--wd:calc(var(--i,0) * 120ms + 330ms)}
+body.introAct .daily .widget.reveal :is(.widget-top,.widget-value,.widget-sub,.widget-spark-wrap,.widget-note){
+  opacity:0;transform:translateY(8px);
+}
+body.introAct.heroLanded .daily .widget.reveal.in .widget-top{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 90ms),
+             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 90ms);
+}
+body.introAct.heroLanded .daily .widget.reveal.in .widget-value{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 170ms),
+             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 170ms);
+}
+body.introAct.heroLanded .daily .widget.reveal.in .widget-sub{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 250ms),
+             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 250ms);
+}
+body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 330ms),
+             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 330ms);
+}
+body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 400ms),
+             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 400ms);
+}
+
+/* ── Mobil: samme koreografi, men uten tunge blur-filtre ── */
+@media (max-width:768px){
+  body.introAct [data-headline].play{animation:none}
+  body.introAct .nav-wrap .wordmark{animation-name:hvNavItemIn}
+}
+
+/* ── Redusert bevegelse: alt av intro av, alt synlig ── */
+/* Redusert bevegelse: #introBoot setter aldri introAct da, så hele koreografien
+   er allerede ute av spill. Igjen står bare de to uskopede ::after-dekorasjonene. */
+@media (prefers-reduced-motion:reduce){
+  .intro-veil{display:none !important}
+  .search-shell::after,.daily-frame::after{display:none !important}
+}
 </style>
 </head>
 <body class="atmo-on">
+<script>/* Lysteppe + introAct FØR første maling — se #introCSS. Settes her og ikke i
+   #introBoot fordi kategoriene ellers rekker å males ferdige og deretter skjule
+   seg igjen når klassen kommer på. */
+(function(){
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.body.classList.add('introAct');
+  document.body.insertAdjacentHTML('afterbegin', '<div class="intro-veil" aria-hidden="true"></div>');
+})();
+</script>
 <canvas id="nordlysCanvas" aria-hidden="true"></canvas>
 
 <a class="skip" href="#main" data-i18n="skipLink">Hopp til hovedinnhold</a>
@@ -3658,11 +3906,50 @@ html[data-theme="bw"], body[data-theme="bw"]{
 })();
 </script>
 
+<script id="introBoot">
+/* Strek-ikonene tegner seg selv: mål hver strek og sett dasharray/-offset, så
+   overtar overgangene i #introCSS. Gjøres i JS (ikke i markupen) fordi lengden
+   må måles per ikon — ingen SVG-er er endret for dette.
+   Aktvinduet lukkes etter 5 s: introAct/introDraw fjernes og strekene leveres
+   tilbake til sin egen styling, slik at scroll-avsløringer lenger nede på siden
+   oppfører seg nøyaktig som før. */
+(function(){
+  if(!document.body.classList.contains('introAct')) return;
+  document.querySelectorAll('.qc-ico svg, .search-shell .search-icon').forEach(function(svg){
+    svg.querySelectorAll('path,line,circle,rect,polyline,polygon').forEach(function(el){
+      if(el.getAttribute('fill') === 'currentColor'){ el.classList.add('i-dot'); return; }
+      try{
+        var L = el.getTotalLength();
+        if(!L) return;
+        el.style.strokeDasharray = L + ' ' + L;
+        el.style.strokeDashoffset = L;
+        el.classList.add('i-draw');
+      }catch(e){}
+    });
+  });
+  document.body.classList.add('introDraw');
+  setTimeout(function(){
+    document.body.classList.remove('introAct');
+    document.body.classList.remove('introDraw');
+    document.querySelectorAll('.i-draw').forEach(function(el){
+      el.style.strokeDasharray = ''; el.style.strokeDashoffset = ''; el.classList.remove('i-draw');
+    });
+    document.querySelectorAll('.i-dot').forEach(function(el){ el.classList.remove('i-dot'); });
+    var veil = document.querySelector('.intro-veil');
+    if(veil && veil.parentNode) veil.parentNode.removeChild(veil);
+  }, 5000);
+})();
+</script>
+
 <script id="nordlysEngine">
 /* ============================================================================
  * Nordlys (WebGL) — standalone vanilla-port fra Claude Design-draften.
- * To-pass shader: (1) aurora-gardiner -> lavoppløst tekstur, (2) skarpe
- * stjerner + kompositt i full oppløsning. Tema-farger følger <html data-theme>.
+ * To-pass shader: (1) tema-scene -> lavoppløst tekstur, (2) skarpe stjerner
+ * + kompositt i full oppløsning. Hvert tema har sin egen scene (uMode):
+ * 0 nordlys-gardiner (også disco) · 1 bw-noir (persiennelys) ·
+ * 4 dark-månenatt. Tema-farger følger <html data-theme>.
+ * Carbon står med vilje uten scene — canvaset er opacity:0 der (se nordlysCSS),
+ * og CSS-auroraen .a5 tegner bakgrunnen, akkurat som før.
  * Fallback: hvis WebGL mangler ELLER prefers-reduced-motion -> CSS .band-aurora
  * beholdes (denne motoren tegner da kun ETT statisk bilde, ingen animasjon).
  * Kilde: "Hverdagsverktoy Forside.html" (dc-runtime-komponent), portert til
@@ -3683,7 +3970,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
   var THEMES = {
     nordlys: { light: 0, sky: ['#030409', '#070a0e'], edge: '#4dffa0', mid: '#19b37a', top: '#0d5c5e', fringe: '#8b60d6', star: '#b8d2e6' },
     carbon:  { light: 0, sky: ['#0a0806', '#050403'], edge: '#f2e2c6', mid: '#c69a63', top: '#7d5a34', fringe: '#b98a55', star: '#d9c6a4' },
-    dark:    { light: 0, sky: ['#0b0d16', '#161a28'], edge: '#a3b8ff', mid: '#6c8aef', top: '#3d3490', fringe: '#9a6cf0', star: '#bcc8f0' },
+    dark:    { light: 0, sky: ['#0c0f19', '#171b2a'], edge: '#a3b8ff', mid: '#6c8aef', top: '#3d3490', fringe: '#9a6cf0', star: '#bcc8f0' },
     frost:   { light: 1, sky: ['#dfe6f6', '#f7f9fc'], edge: '#4f5fe5', mid: '#7d88f0', top: '#c8cff8', fringe: '#7a5bd8', star: '#ffffff' },
     glass:   { light: 1, sky: ['#d5deee', '#e8edf6'], edge: '#5b69ea', mid: '#8b95ff', top: '#c5cbf5', fringe: '#8a76f2', star: '#ffffff' },
     hendrix: { light: 1, sky: ['#f8e8cf', '#fffdf9'], edge: '#c4501f', mid: '#8e3390', top: '#e8c060', fringe: '#d1518f', star: '#ffffff' },
@@ -3699,6 +3986,33 @@ html[data-theme="bw"], body[data-theme="bw"]{
     var h = String(hex).replace('#', '');
     return [parseInt(h.substr(0, 2), 16) / 255, parseInt(h.substr(2, 2), 16) / 255, parseInt(h.substr(4, 2), 16) / 255];
   }
+  /* HSL-verktøy for levende paletter (disco/nordlys hue-sykling) */
+  function rgb2hsl(c) {
+    var r = c[0], g = c[1], b = c[2], mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+    var h = 0, s = 0, l = (mx + mn) / 2, d = mx - mn;
+    if (d > 1e-5) {
+      s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+      if (mx === r) h = (g - b) / d + (g < b ? 6 : 0);
+      else if (mx === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h /= 6;
+    }
+    return [h, s, l];
+  }
+  function hue2c(p, q, t) {
+    if (t < 0) t += 1; if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  }
+  function hsl2rgb(h, s, l) {
+    if (s < 1e-5) return [l, l, l];
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+    h = h - Math.floor(h);
+    return [hue2c(p, q, h + 1 / 3), hue2c(p, q, h), hue2c(p, q, h - 1 / 3)];
+  }
+  function hueRot(v, deg) { var h = rgb2hsl(v); return hsl2rgb(h[0] + deg / 360, h[1], h[2]); }
   function themeKey() {
     var k = document.documentElement.getAttribute('data-theme') || 'carbon';
     return THEMES[k] ? k : 'carbon';
@@ -3715,8 +4029,9 @@ html[data-theme="bw"], body[data-theme="bw"]{
   var ampNow = CONFIG.INTENSITY, revealT0 = -1, revealDone = false;
   var mx = 0.5, my = 0.35, tmx = 0.5, tmy = 0.35, mAmt = 0, tmAmt = 0;
   var aw = 2, ah = 2;
-  var cc = null, ct = null, lastTheme = null;
-  var isSmoke = false;
+  var cc = null, ct = null, bt = null, lastTheme = null;
+  // disco står ikke i MODE og faller derfor til 0 = gardin-scenen, som før.
+  var isSmoke = false, mode = 0, MODE = { nordlys: 0, bw: 1, dark: 4 };
   var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
   var isStatic = mq.matches;
   var ro = null;
@@ -3724,6 +4039,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
   function syncTheme() {
     var k = themeKey();
     isSmoke = (k === 'bw');
+    mode = MODE[k] != null ? MODE[k] : 0;
     if (k === lastTheme && cc && cc.fringe) return;
     var T = THEMES[k];
     ct = {
@@ -3731,6 +4047,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
       edge: hex2v(T.edge), mid: hex2v(T.mid), top: hex2v(T.top),
       fringe: hex2v(T.fringe), star: hex2v(T.star), light: [T.light]
     };
+    bt = { edge: hex2v(T.edge), mid: hex2v(T.mid), fringe: hex2v(T.fringe), star: hex2v(T.star) };
     if (!cc || isStatic) cc = JSON.parse(JSON.stringify(ct));
     else if (!cc.fringe) cc.fringe = ct.fringe.slice();
     lastTheme = k;
@@ -3801,11 +4118,11 @@ html[data-theme="bw"], body[data-theme="bw"]{
       '    float d = hash21(i+vec2(1.0,1.0));',
       '    return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);',
       '}',
-      '// 3-octave fbm, constant bound, rotated to break axis banding',
+      '// 4-octave fbm, constant bound, rotated to break axis banding',
       'float fbm(vec2 p){',
       '    float s = 0.0, a = 0.5;',
       '    mat2 r = mat2(0.80, -0.60, 0.60, 0.80);',
-      '    for(int i=0;i<3;i++){',
+      '    for(int i=0;i<4;i++){',
       '        s += a*vnoise(p);',
       '        p = r*p*2.03 + 11.1;',
       '        a *= 0.5;',
@@ -3837,132 +4154,135 @@ html[data-theme="bw"], body[data-theme="bw"]{
       '    float limb = 0.80 + 0.45*abs(fold - 0.5);',
       '    drape *= limb;',
       '    float rx = x*rayFreq + seed*97.0;',
-      '    float rays = fbm(vec2(rx - t*0.06*drift, dist*2.4 + t*0.16*drift)) * 0.72',
-      '               + vnoise(vec2(rx*2.3 + 11.0, dist*3.2 + t*0.24*drift)) * 0.28;',
+      '    float rays = fbm(vec2(rx - t*0.06*drift, dist*2.4 + t*0.16*drift)) * 0.54',
+      '               + vnoise(vec2(rx*2.3 + 11.0, dist*3.2 + t*0.24*drift)) * 0.24',
+      '               + vnoise(vec2(rx*4.9 + 31.0, dist*5.4 + t*0.30*drift)) * 0.14',
+      '               + vnoise(vec2(rx*9.7 + 57.0, dist*7.8 + t*0.36*drift)) * 0.08;',
       '    rays = pow(max(rays, 0.0), rayPow) * 1.9;',
       '    float surge = 0.66 + 0.34*(0.6*sin(t*0.047 + seed*7.1) + 0.4*sin(t*0.113 + seed*2.3));',
       '    float fd = (dist + 0.016) * 22.0;',
       '    float frBand = exp(-fd * fd);',
-      '    fr = frBand * (0.22 + rays*0.80) * surge;',
-      '    return drape * (0.12 + rays) * surge;',
+      '    float wave = 0.78 + 0.22*sin(x*1.35 - t*0.40*drift + seed*3.0);',
+      '    fr = frBand * (0.22 + rays*0.80) * surge * wave;',
+      '    return drape * (0.12 + rays*wave) * surge;',
       '}',
-      '// ---- SMOKE (bw / smokey-jazz noir) v2 - volumetrisk royk: stigende royksoyler,',
-      '// ambient dis (ulyst=mork, anti-gra), coverage-map, fine filamenter, god-lys-straler.',
-      '// Syntetisert av smokey-jazz-enhance workflow (coverage A + detalj/curl B + lys C). ~17 taps.',
-      'float smk_field(vec2 q, float z, float t) {',
-      '    vec2 zc = vec2(z * 1.9, -z * 1.3 + t * 0.018);',
-      '    return vnoise(q * 1.7 + zc);',
-      '}',
+      '// ---- NOIR (bw) - persiennelys: skraa lysspalter fra ovre venstre, royk og stov.',
+      '// Film noir-motivet (lys gjennom persienner) holdt saa lavt at det leses som',
+      '// atmosfaere, ikke effekt. Sakte sig (~2-3 min per spalte), monokrom, vignettert.',
       'vec3 smokeScene(vec2 frag, vec2 uv, float t) {',
       '    float aspect = uRes.x / uRes.y;',
       '    vec2 p = vec2((frag.x - 0.5) * aspect, frag.y);',
-      '    p += vec2(53.17, 11.7);',
-      '    vec2 spotP = vec2((0.72 - 0.5) * aspect, 0.66);',
-      '    float r = smoothstep(0.16, 0.62, uAmp);',
-      '    float reveal = 0.15 + 0.85 * r;',
-      '    vec2 tc = (frag - vec2(0.30, 0.62)) / vec2(0.32, 0.26);',
-      '    float titleMask = 1.0 - smoothstep(0.7, 1.15, length(tc));',
-      '    float ySample = p.y - t * 0.020;',
-      '    float drift = 0.045 * sin(t * 0.11 + p.y * 1.3) + 0.020 * t * 0.006;',
-      '    float xSample = p.x + drift;',
-      '    vec2 q0 = vec2(xSample, ySample);',
-      '    vec2 warp = vec2(fbm(q0 * 1.6 + vec2(0.0, t * 0.05)), fbm(q0 * 1.6 + vec2(5.2, t * 0.04 + 9.1)));',
-      '    warp = warp - 0.5;',
-      '    vec2 curl = vec2(warp.y, -warp.x);',
-      '    float curlMag = length(curl);',
-      '    float warpAmt = 0.55;',
-      '    warpAmt *= mix(0.7, 1.25, frag.y);',
-      '    warpAmt *= (0.6 + 0.4 * r);',
-      '    warpAmt *= mix(1.0, 0.6, titleMask);',
-      '    float curlAmt = 0.9 * mix(0.7, 1.4, frag.y);',
-      '    vec2 q = q0 + (warp + curl * curlAmt) * warpAmt;',
-      '    float detail = vnoise(q * 6.3 + vec2(0.0, -t * 0.04));',
-      '    float yRise = p.y - t * mix(0.055, 0.018, frag.y);',
-      '    float plume = fbm(vec2(p.x * 1.5 + 0.3 * sin(yRise * 1.7 + t * 0.12), yRise * 1.15));',
-      '    float columnPhase = 0.6 + 0.4 * sin(p.x * 2.3 + t * 0.05);',
-      '    float source = smoothstep(0.42, 0.0, frag.y) * columnPhase;',
-      '    float tendril = mix(1.0, 1.0 + 0.5 * curlMag, smoothstep(0.3, 0.8, frag.y));',
-      '    plume *= tendril;',
-      '    float haze = smoothstep(0.30, 0.75, plume);',
-      '    float sd = length((p - spotP) * vec2(1.0, 1.15));',
-      '    float spot = exp(-sd * sd * uSmk.y);',
-      '    spot += 0.45 * exp(-sd * 1.25);',
-      '    spot = clamp(spot, 0.0, 1.5);',
-      '    float baseFill = 0.34;',
-      '    float plumeBoost = smoothstep(0.55, 0.0, frag.y) * (0.6 + 0.4 * smoothstep(0.7, 0.15, frag.x));',
-      '    float plumeCover = plume * source * plumeBoost;',
-      '    float coverage = clamp(baseFill * uSmk.z * 3.0 + plumeCover + spot * 0.5, 0.0, 1.3);',
-      '    vec2 dir = (p - spotP) / (sd + 1e-4);',
-      '    float ang = atan(dir.y, dir.x);',
-      '    float beamNoise = vnoise(vec2(ang * 3.5, sd * 4.0 - t * 0.10)) * 0.6 + vnoise(vec2(ang * 7.0 + 5.0, sd * 2.0 - t * 0.06)) * 0.4;',
-      '    float shaft = smoothstep(0.45, 0.85, beamNoise) * exp(-sd * 1.6);',
-      '    float trans = 1.0;',
-      '    float dens = 0.0;',
-      '    float litAccum = 0.0;',
-      '    float rawMax = 0.0;',
-      '    for (int i = 0; i < 4; i++) {',
-      '        float fi = float(i);',
-      '        float z = fi * 0.25;',
-      '        vec2 par = vec2(0.10 - z * 0.05, -z * 0.03);',
-      '        float n = smk_field(q + par, z, t);',
-      '        float edgeBand = smoothstep(0.35, 0.62, n) * (1.0 - smoothstep(0.62, 0.85, n));',
-      '        n = n + (detail - 0.5) * 0.22 * (0.4 + 0.6 * edgeBand) * (1.0 - 0.12 * fi);',
-      '        n = mix(n, max(n, coverage * 0.9), 0.55);',
-      '        float sh = smoothstep(0.40 + 0.04 * fi, 0.80, n);',
-      '        rawMax = max(rawMax, n * (1.0 - 0.06 * fi));',
-      '        float op = mix(0.60, 0.28, z / 0.75);',
-      '        float slice = sh * op;',
-      '        float inLight = spot * trans;',
-      '        litAccum += slice * inLight * trans;',
-      '        dens += slice * trans;',
-      '        trans *= (1.0 - slice * 0.9);',
-      '    }',
-      '    dens = clamp(dens, 0.0, 1.0);',
-      '    dens = smoothstep(0.24, 0.66, dens);',
-      '    dens = pow(dens, 1.05);',
-      '    float occ = 1.0 - 0.45 * smoothstep(0.5, 0.95, rawMax) * (1.0 - spot);',
-      '    dens *= occ;',
-      '    dens *= mix(1.0, 0.55, titleMask);',
-      '    float shaftLit = shaft * dens * spot;',
-      '    vec3 smokeCol = mix(uCMid, uCEdge, smoothstep(0.22, 0.85, dens));',
-      '    float scatter = dens * (spot * 0.9 + 0.15);',
-      '    scatter = max(scatter, litAccum * 0.9);',
-      '    float rim = smoothstep(0.15, 0.45, dens) * (1.0 - smoothstep(0.45, 0.8, dens));',
-      '    vec3 lit_smoke = smokeCol * (scatter * 1.7 + rim * spot * 0.75);',
-      '    float hazeContribution = haze * uSmk.z * 0.9 * (0.4 + 0.6 * spot) * reveal;',
-      '    lit_smoke += smokeCol * hazeContribution;',
-      '    lit_smoke += mix(uCMid, uCTop, 0.5) * shaftLit * 0.85 * reveal;',
-      '    lit_smoke *= uSmk.x;',
       '    vec3 sky = mix(uSkyBot, uSkyTop, smoothstep(0.0, 1.0, frag.y));',
-      '    sky += mix(uCTop, vec3(1.0), 0.4) * exp(-sd * sd * 5.0) * 0.10;',
-      '    vec3 lit = sky + lit_smoke;',
-      '    vec2 vc = (frag - 0.5) * vec2(1.05, 1.25);',
-      '    float vig = 1.0 - dot(vc, vc) * 1.15;',
-      '    vig = clamp(vig, 0.0, 1.0);',
-      '    vig = pow(vig, 1.5);',
-      '    vig = max(vig, smoothstep(0.18, 0.0, frag.y) * 0.7);',
-      '    lit *= mix(0.30, 1.0, vig);',
-      '    lit *= mix(1.0, 0.70, titleMask);',
-      '    lit *= reveal;',
-      '    float bloom = smoothstep(0.55, 1.1, scatter) * 0.22;',
-      '    bloom += smoothstep(0.5, 1.0, litAccum) * 0.10;',
-      '    bloom += smoothstep(0.5, 0.9, shaftLit) * 0.14;',
-      '    float surge = smoothstep(0.45, 0.75, uAmp);',
-      '    bloom *= (0.7 + 0.8 * surge);',
-      '    float exposure = 1.3;',
-      '    vec3 col = vec3(1.0) - exp(-lit * exposure);',
-      '    col = pow(max(col - 0.006, 0.0), vec3(1.22));',
-      '    float L = dot(col, vec3(0.299, 0.587, 0.114));',
-      '    col = mix(col, vec3(L), 0.68);',
-      '    col += mix(uCTop, vec3(1.0), 0.35) * bloom;',
-      '    col += (hash21(frag * uRes) - 0.5) * (1.5 / 255.0);',
-      '    return col;',
+      '    float reveal = 0.20 + 0.80 * smoothstep(0.16, 0.62, uAmp);',
+      '    vec2 L = normalize(vec2(0.60, -0.80));',
+      '    vec2 o = vec2(-0.62 * aspect, 1.18);',
+      '    vec2 rel = p - o;',
+      '    float along = dot(rel, L);',
+      '    float across = dot(rel, vec2(-L.y, L.x));',
+      '    float bend = (fbm(vec2(along * 1.1, t * 0.016)) - 0.5) * 0.10;',
+      '    float ph = fract(across * 4.2 + t * 0.006 + bend);',
+      '    float slat = smoothstep(0.10, 0.30, ph) * (1.0 - smoothstep(0.56, 0.86, ph));',
+      '    slat = pow(slat, 1.2);',
+      '    float attn = exp(-max(along - 0.15, 0.0) * 1.05);',
+      '    float dep = fbm(vec2(p.x * 1.5 - t * 0.012, p.y * 1.8 + t * 0.008));',
+      '    float vol = 0.42 + 0.58 * smoothstep(0.22, 0.85, dep);',
+      '    float shaft = slat * attn * vol;',
+      '    vec2 tc = (frag - vec2(0.45, 0.68)) / vec2(0.40, 0.22);',
+      '    float titleMask = 1.0 - smoothstep(0.7, 1.15, length(tc));',
+      '    shaft *= mix(1.0, 0.45, titleMask);',
+      '    vec2 pv = rel * vec2(0.8, 1.0);',
+      '    float pool = exp(-dot(pv, pv) * 0.9);',
+      '    vec3 lightC = mix(uCEdge, vec3(1.0), 0.22);',
+      '    vec3 col = sky;',
+      '    col += lightC * (shaft * 0.140 + pool * 0.032) * reveal * uSmk.x * 0.85;',
+      '    // royk: to plan drivende jazzroyk — domenevridd fbm som kroller seg sakte',
+      '    // oppover. Synligst der spaltelyset treffer, saavidt tilstede i skyggen.',
+      '    vec2 sq = vec2(p.x * 1.05 + t * 0.011, frag.y * 1.5 - t * 0.024);',
+      '    float smB = fbm(sq + (fbm(sq * 1.8 + vec2(0.0, t * 0.007)) - 0.5) * 1.15);',
+      '    float body = smoothstep(0.40, 0.94, smB);',
+      '    vec2 sq2 = vec2(p.x * 2.0 - t * 0.008, frag.y * 3.0 - t * 0.033);',
+      '    float smC = fbm(sq2 + (fbm(sq2 * 1.6 + vec2(t * 0.005, 0.0)) - 0.5) * 0.85);',
+      '    float curl = smoothstep(0.56, 0.96, smC);',
+      '    float litAmt = slat * attn;',
+      '    float smoke = body * (litAmt * 0.55 + 0.070) + curl * (litAmt * 0.42 + 0.045);',
+      '    smoke *= mix(1.0, 0.55, titleMask);',
+      '    col += lightC * smoke * 0.26 * reveal * uSmk.x;',
+      '    vec2 vc = (frag - vec2(0.5, 0.54)) * vec2(1.02, 1.22);',
+      '    float vig = clamp(1.0 - dot(vc, vc) * 0.95, 0.0, 1.0);',
+      '    col *= mix(0.52, 1.0, pow(vig, 1.35));',
+      '    col *= 0.988 + 0.012 * sin(t * 0.107) + 0.006 * sin(t * 0.37 + 1.3);',
+      '    vec3 outc = 1.0 - exp(-col * 1.28);',
+      '    outc = pow(max(outc - 0.006, 0.0), vec3(1.16));',
+      '    float Lm = dot(outc, vec3(0.299, 0.587, 0.114));',
+      '    outc = mix(outc, vec3(Lm), 0.80);',
+      '    outc += (hash21(frag * uRes) - 0.5) * (1.5 / 255.0);',
+      '    return outc;',
+      '}',
+      '// ---- MAANENATT (dark) - maane med hav og halo-ring, cirrus, bakketaake, airglow',
+      'vec4 nightScene(vec2 frag, float t){',
+      '    float aspect = uRes.x / uRes.y;',
+      '    vec2 p = vec2((frag.x - 0.5) * aspect, frag.y);',
+      '    vec3 sky = mix(uSkyBot, uSkyTop, smoothstep(0.05, 0.95, frag.y));',
+      '    float amp = uAmp * 1.5;',
+      '    vec2 mp = vec2(aspect * 0.31, 0.76);',
+      '    float md = length(p - mp);',
+      '    float halo = exp(-md * md * 150.0) * 0.30 + exp(-md * md * 24.0) * 0.15 + exp(-md * 2.3) * 0.11;',
+      '    float rw = (md - 0.145) * 34.0;',
+      '    float ring = exp(-rw * rw) * 0.05;',
+      '    vec3 ringC = mix(vec3(1.07, 0.94, 0.83), vec3(0.85, 0.94, 1.10), clamp(rw * 0.5 + 0.5, 0.0, 1.0));',
+      '    vec2 q1 = vec2(p.x * 0.9 - t * 0.010, frag.y * 1.35 + 2.0);',
+      '    float n1 = fbm(q1 + (fbm(q1 * 1.5 + vec2(t * 0.006, 0.0)) - 0.5) * 0.8);',
+      '    vec2 q2 = vec2(p.x * 1.7 + t * 0.014, frag.y * 2.6 + 9.0);',
+      '    float n2 = fbm(q2);',
+      '    float neb = smoothstep(0.46, 0.88, n1 * 0.72 + n2 * 0.28);',
+      '    float nebHi = smoothstep(0.60, 0.95, n1);',
+      '    float moonLight = exp(-md * 1.9);',
+      '    vec3 nebC = mix(uCMid, uCFringe, nebHi);',
+      '    vec3 col = sky;',
+      '    // ekko av live-sidens hero-spotlight: svak indigo kuppel midt-oppe',
+      '    vec2 hs = (frag - vec2(0.5, 1.12)) * vec2(1.15, 1.55);',
+      '    col += uCMid * exp(-dot(hs, hs) * 2.6) * 0.045 * amp;',
+      '    col += nebC * neb * (0.11 + 0.16 * moonLight) * amp;',
+      '    float cir = fbm(vec2(p.x * 2.1 + t * 0.013, p.y * 7.0 + 3.0));',
+      '    float cw = (frag.y - 0.78) * 5.5;',
+      '    float cirBand = smoothstep(0.55, 0.85, cir) * exp(-cw * cw);',
+      '    float occl = 1.0 - 0.62 * neb;',
+      '    float occ2 = 1.0 - 0.45 * cirBand;',
+      '    vec3 moonC = mix(uCEdge, vec3(1.0), 0.6);',
+      '    col += moonC * halo * 0.60 * occl * occ2 * (0.75 + 0.25 * amp);',
+      '    col += moonC * ringC * ring * occl * 0.55 * amp;',
+      '    col += moonC * cirBand * moonLight * 0.13 * amp;',
+      '    float fog1 = fbm(vec2(p.x * 1.3 - t * 0.009, frag.y * 6.5 + 1.0));',
+      '    float fogA = smoothstep(0.48, 0.90, fog1) * exp(-abs(frag.y - 0.06) * 10.0);',
+      '    float fog2 = fbm(vec2(p.x * 2.1 + t * 0.006, frag.y * 9.0 + 5.0));',
+      '    float fogB = smoothstep(0.52, 0.95, fog2) * exp(-abs(frag.y - 0.13) * 12.0);',
+      '    col += mix(uCMid, uCFringe, 0.35) * (fogA * 0.11 + fogB * 0.07) * amp;',
+      '    // taake: drivende maanebelyste banker i to plan — domenevridd fbm, sakte sig;',
+      '    // banken under maanen faanger lyset (pool2), ellers kjolig og nesten usynlig.',
+      '    vec2 tq = vec2(p.x * 0.80 - t * 0.0085, frag.y * 3.1 + 7.0);',
+      '    float tb = fbm(tq + (fbm(tq * 1.7 + vec2(0.0, t * 0.005)) - 0.5) * 0.9);',
+      '    float bank = smoothstep(0.44, 0.88, tb) * exp(-max(frag.y - 0.03, 0.0) * 4.6);',
+      '    vec2 tq2 = vec2(p.x * 1.5 + t * 0.006, frag.y * 5.0 + 13.0);',
+      '    float tb2 = fbm(tq2 + (fbm(tq2 * 1.5 - vec2(t * 0.004, 0.0)) - 0.5) * 0.7);',
+      '    float bank2 = smoothstep(0.52, 0.94, tb2) * exp(-max(frag.y - 0.015, 0.0) * 7.5);',
+      '    float pool2 = exp(-length(p - vec2(mp.x, 0.10)) * 1.6);',
+      '    vec3 fogC = mix(mix(uCMid, uCFringe, 0.30), moonC, 0.22 + 0.42 * pool2);',
+      '    col += fogC * (bank * 0.075 + bank2 * 0.050) * (0.65 + 0.55 * pool2) * amp;',
+      '    col += mix(uCMid, uCFringe, 0.5) * exp(-abs(frag.y - 0.10) * 6.0) * 0.045 * amp',
+      '         * (0.5 + 0.5 * fbm(vec2(p.x * 0.8, t * 0.02)));',
+      '    vec3 outc = 1.0 - exp(-col * 1.22);',
+      '    float L = dot(outc, vec3(0.299, 0.587, 0.114));',
+      '    outc = mix(outc, vec3(L), smoothstep(0.5, 1.0, L) * 0.4);',
+      '    outc = pow(max(outc - 0.010, 0.0), vec3(1.05));',
+      '    outc += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (2.0 / 255.0);',
+      '    return vec4(outc, clamp(neb * 0.6 + cirBand * 0.5 + fogA * 0.4 + bank * 0.35, 0.0, 1.0));',
       '}',
       'void main(){',
       '    vec2 frag = gl_FragCoord.xy / uRes;',
       '    float aspect = uRes.x / uRes.y;',
       '    vec2 uv = vec2((frag.x - 0.5)*aspect + 37.73, frag.y);',
       '    float t = uTime;',
+      '    if (uMode > 3.5) { gl_FragColor = nightScene(frag, t); return; }',
       '    if (uMode > 0.5) { gl_FragColor = vec4(smokeScene(frag, frag, t), 1.0); return; }',
       '    vec3 sky = mix(uSkyBot, uSkyTop, smoothstep(0.05, 0.95, frag.y));',
       '    float hN, hM, hF, fN, fM, fF;',
@@ -3976,11 +4296,38 @@ html[data-theme="bw"], body[data-theme="bw"]{
       '    float airglow = exp(-abs(frag.y - 0.13) * 5.2) * 0.05',
       '                  * (0.4 + 0.6*fbm(vec2(uv.x*0.7, t*0.02)));',
       '    aur += mix(uCMid, uCFringe, 0.5) * airglow;',
+      '    // lyssoyler: smale vertikale sokk fra horisonten, i rolige vinduer',
+      '    float pil = 0.0;',
+      '    float pxx = (frag.x - 0.5) * aspect;',
+      '    for (int pi = 0; pi < 2; pi++) {',
+      '        float fi = float(pi);',
+      '        float pper = 23.0 + 9.0 * fi;',
+      '        float pci = floor((t + fi * 11.0) / pper);',
+      '        float pph = fract((t + fi * 11.0) / pper);',
+      '        float prn = hash21(vec2(pci, 5.1 + fi));',
+      '        float pon = step(0.5, prn) * sin(clamp(pph * 2.6, 0.0, 1.0) * 3.14159);',
+      '        float px = (hash21(vec2(pci, 9.7 + fi)) - 0.5) * aspect * 1.25;',
+      '        float pw = 0.016 + 0.020 * prn;',
+      '        float dx = pxx - px;',
+      '        pil += exp(-dx * dx / (pw * pw)) * exp(-max(frag.y - 0.05, 0.0) * 3.2) * pon * (0.65 + 0.35 * vnoise(vec2(px * 7.0 + fi * 3.0, t * 0.35)));',
+      '    }',
+      '    aur += mix(uCEdge, uCMid, 0.45) * pil * 0.12;',
       '    aur *= uAmp * 2.0;',
       '    aur *= (1.0 - uLight*0.92);',
       '    float aurLum = dot(aur, vec3(0.34, 0.55, 0.30));',
+      '    float ridgeH = 0.070 + 0.045*fbm(vec2(uv.x*1.05, 2.7)) + 0.010*sin(uv.x*0.9 + 1.3);',
+      '    // Horisonten er ATMOSFAERE, ikke silhuett: kanten toner ut over ~0.05 av',
+      '    // hoyden (var 0.009 = knivkant midt i siden) og faar dis + spredt aurora over seg.',
+      '    float soft = 0.040 + 0.030*fbm(vec2(uv.x*0.55 + 8.3, 4.1));',
+      '    float ground = 1.0 - smoothstep(ridgeH - soft, ridgeH + soft*1.6, frag.y);',
+      '    ground = pow(ground, 1.30);',
+      '    float haze = exp(-max(frag.y - ridgeH, 0.0) * 6.5);',
+      '    float snow = exp(-max(ridgeH - frag.y, 0.0) * 13.0) * ground;',
       '    float exposure = 1.22;',
       '    vec3 lit = sky + aur;',
+      '    vec3 groundCol = mix(mix(uSkyBot, uCTop, 0.16) * 1.10, uSkyBot * 0.42, smoothstep(ridgeH, -0.09, frag.y));',
+      '    lit = mix(lit, groundCol, ground * 0.80);',
+      '    lit += mix(uCMid, uCEdge, 0.45) * aurLum * (0.34 * snow + 0.26 * haze);',
       '    vec3 col = 1.0 - exp(-lit * exposure);',
       '    float L = dot(col, vec3(0.299, 0.587, 0.114));',
       '    col = mix(col, vec3(L), smoothstep(0.5, 1.0, L) * 0.42);',
@@ -3989,7 +4336,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
       '    vec3 darkCol = pow(max(col - 0.010, 0.0), vec3(1.05));',
       '    col = mix(darkCol, col, uLight);',
       '    col += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (2.0 / 255.0);',
-      '    float alpha = clamp(aurLum * 1.3, 0.0, 1.0);',
+      '    float alpha = clamp(max(aurLum * 1.3, max(ground, haze * 0.35)), 0.0, 1.0);',
       '    gl_FragColor = vec4(col, alpha);',
       '}'
     ].join('\n');
@@ -4003,8 +4350,28 @@ html[data-theme="bw"], body[data-theme="bw"]{
       'uniform float uMouseAmt;',
       'uniform vec3 uCMid;',
       'uniform vec3 uStarTint;',
+      'uniform float uDust;',
+      'uniform float uMoon;',
+      'uniform vec3 uCEdge;',
+      'uniform vec3 uFx;',
       'uniform sampler2D uTex;',
       NOISE,
+      '// satellitt (maanenatt): et lite blinkende punkt som seiler sakte over himmelen',
+      'float satDot(vec2 frag, float aspect, float t){',
+      '  float per = 47.0;',
+      '  float ci = floor(t / per);',
+      '  float ph = fract(t / per);',
+      '  float rn = hash21(vec2(ci, 3.9));',
+      '  float on = step(0.30, rn);',
+      '  float y0 = 0.58 + 0.30 * hash21(vec2(ci, 11.3));',
+      '  float dirS = mix(-1.0, 1.0, step(0.5, rn));',
+      '  vec2 p = vec2((frag.x - 0.5) * aspect, frag.y);',
+      '  vec2 pos = vec2(dirS * (ph - 0.5) * 1.3 * aspect, y0 + (rn - 0.5) * 0.22 * ph);',
+      '  vec2 rel = p - pos;',
+      '  float blink = 0.55 + 0.45 * sin(t * 2.6 + rn * 30.0);',
+      '  float edgeFade = sin(ph * 3.14159);',
+      '  return exp(-dot(rel, rel) / 0.0000042) * on * blink * edgeFade;',
+      '}',
       'float starLayer(vec2 px, float scale, float keep, float szMul, float t, float twk, out float temp){',
       '  vec2 sp = px / uRes.y * scale;',
       '  vec2 cell = floor(sp);',
@@ -4016,21 +4383,61 @@ html[data-theme="bw"], body[data-theme="bw"]{
       '  float mag = pow(hash21(cell + 31.0), 5.0);',
       '  float szPx = max((0.75 + 2.1 * mag) * szMul * uRes.y * 0.00092, 0.85);',
       '  float sz = szPx * scale / uRes.y;',
-      '  float core = exp(-(dist * dist) / (sz * sz));',
-      '  float halo = exp(-dist / (sz * 2.6)) * 0.17 * (0.2 + mag);',
+      '  float core = 0.72 * exp(-(dist * dist) / (sz * sz)) + 0.55 * exp(-(dist * dist) / (sz * sz * 0.28));',
+      '  float halo = exp(-dist / (sz * 1.7)) * 0.10 * (0.2 + mag);',
       '  float spd = 0.4 + hash21(cell + 43.0) * 0.8;',
       '  float n1 = vnoise(vec2(t * spd, rnd * 93.0));',
       '  float n2 = vnoise(vec2(t * spd * 2.6 + 7.0, rnd * 57.0));',
-      '  float twAmp = mix(0.42, 0.10, mag) * twk;',
+      '  float twAmp = mix(0.30, 0.08, mag) * twk;',
       '  float tw = 1.0 - twAmp * (0.7 * n1 + 0.3 * n2);',
       '  float sel = step(keep, rnd);',
       '  float spikeAmt = smoothstep(0.82, 0.97, mag);',
-      '  float spike = (1.0 - smoothstep(0.0, sz * 10.0, abs(d.x))) * (1.0 - smoothstep(0.0, sz * 0.6, abs(d.y)));',
-      '  spike += (1.0 - smoothstep(0.0, sz * 10.0, abs(d.y))) * (1.0 - smoothstep(0.0, sz * 0.6, abs(d.x)));',
+      '  float spike = (1.0 - smoothstep(0.0, sz * 9.0, abs(d.x))) * (1.0 - smoothstep(0.0, sz * 0.42, abs(d.y)));',
+      '  spike += (1.0 - smoothstep(0.0, sz * 9.0, abs(d.y))) * (1.0 - smoothstep(0.0, sz * 0.42, abs(d.x)));',
       '  temp = hash21(cell + 5.0);',
       '  float lim = min(min(spos.x, 1.0 - spos.x), min(spos.y, 1.0 - spos.y));',
       '  float win = 1.0 - smoothstep(lim * 0.45, lim * 0.95, dist);',
-      '  return ((core + halo) * (0.8 + 1.25 * mag) + spike * spikeAmt * 0.45) * tw * sel * win;',
+      '  return ((core + halo) * (0.8 + 1.25 * mag) + spike * spikeAmt * 0.34) * tw * sel * win;',
+      '}',
+      '// maane: ellipse-avstand (kvadrert) for mare-basseng og krater',
+      'float mQ(vec2 p, vec2 c, vec2 r){ vec2 d = (p - c) / r; return dot(d, d); }',
+      '// haandplasserte mare-basseng = ekte naerside (nord opp): Crisium hoyre rand,',
+      '// Serenitatis/Tranquillitatis midt, Imbrium oppe-venstre, Procellarum venstre',
+      'float mMare(vec2 q){',
+      '  float m = 0.0;',
+      '  m += 0.95 * smoothstep(1.30, 0.62, mQ(q, vec2(0.60, 0.30), vec2(0.145, 0.115)));',
+      '  m += 0.72 * smoothstep(1.35, 0.60, mQ(q, vec2(0.45, -0.04), vec2(0.16, 0.21)));',
+      '  m += 0.70 * smoothstep(1.30, 0.60, mQ(q, vec2(0.26, -0.20), vec2(0.11, 0.12)));',
+      '  m += 0.90 * smoothstep(1.35, 0.55, mQ(q, vec2(0.26, 0.10), vec2(0.22, 0.18)));',
+      '  m += 0.88 * smoothstep(1.30, 0.55, mQ(q, vec2(0.08, 0.33), vec2(0.17, 0.16)));',
+      '  m += 0.92 * smoothstep(1.30, 0.55, mQ(q, vec2(-0.22, 0.38), vec2(0.235, 0.185)));',
+      '  m += 0.55 * smoothstep(1.40, 0.55, mQ(q, vec2(-0.10, 0.63), vec2(0.32, 0.075)));',
+      '  m += 0.85 * smoothstep(1.45, 0.55, mQ(q, vec2(-0.49, 0.06), vec2(0.21, 0.33)));',
+      '  m += 0.62 * smoothstep(1.30, 0.55, mQ(q, vec2(-0.40, -0.33), vec2(0.10, 0.10)));',
+      '  m += 0.66 * smoothstep(1.30, 0.55, mQ(q, vec2(-0.17, -0.31), vec2(0.15, 0.12)));',
+      '  m += 0.55 * smoothstep(1.25, 0.50, mQ(q, vec2(0.02, 0.13), vec2(0.075, 0.07)));',
+      '  return m;',
+      '}',
+      '// albedo + hoydefelt: dempet, malerisk clair-de-lune — mare/krater kun antydet',
+      'float moonAlb(vec2 sp, out float hgt){',
+      '  vec2 w = sp + (vec2(fbm(sp * 3.3 + vec2(11.7, 3.1)), fbm(sp * 3.3 + vec2(4.2, 8.9))) - 0.5) * 0.10;',
+      '  float mar = clamp(mMare(w), 0.0, 1.15);',
+      '  float g1 = fbm(sp * 6.0 + vec2(2.0, 5.0));',
+      '  float g2 = fbm(sp * 12.5 + vec2(9.0, 1.0));',
+      '  float alb = 1.0 - 0.16 * mar;',
+      '  alb *= 0.962 + 0.055 * g1;',
+      '  alb *= 0.989 + 0.021 * g2;',
+      '  vec2 tv = sp - vec2(0.05, -0.62);',
+      '  float tl = length(tv);',
+      '  float ta = atan(tv.y, tv.x);',
+      '  float rayN = vnoise(vec2(ta * 3.9, 1.7)) * 0.75 + vnoise(vec2(ta * 9.7, 6.3)) * 0.45;',
+      '  float rays = pow(max(rayN - 0.55, 0.0) * 2.4, 1.8) * exp(-tl * 2.1) * smoothstep(0.035, 0.12, tl);',
+      '  alb += exp(-mQ(sp, vec2(0.05, -0.62), vec2(0.030, 0.030)) * 2.6) * 0.15 + rays * 0.045;',
+      '  alb += exp(-mQ(sp, vec2(-0.20, 0.02), vec2(0.035, 0.035)) * 2.2) * 0.095;',
+      '  alb += exp(-mQ(sp, vec2(-0.44, 0.10), vec2(0.022, 0.022)) * 2.2) * 0.065;',
+      '  alb += exp(-mQ(sp, vec2(-0.52, 0.28), vec2(0.020, 0.020)) * 2.2) * 0.085;',
+      '  hgt = -0.30 * mar + 0.16 * g1 + 0.09 * g2;',
+      '  return alb;',
       '}',
       'void main(){',
       '  vec2 frag = gl_FragCoord.xy / uRes;',
@@ -4052,7 +4459,49 @@ html[data-theme="bw"], body[data-theme="bw"]{
       '  vec3 stC = mix(mix(cool, warm, smoothstep(0.2, 0.8, tempC)), uStarTint, 0.30);',
       '  float horizon = smoothstep(0.22, 0.60, frag.y);',
       '  vec3 stars = stA * sA * 0.62 + stB * sB * 1.0 + stC * sC * 0.34 * clus;',
-      '  col += stars * horizon * uStarAmt * (1.0 - uLight) * occl;',
+      '  vec2 mv = vec2((frag.x - 0.5) * aspect, frag.y) - vec2(aspect * 0.31, 0.76);',
+      '  float mdd = length(mv);',
+      '  float moonMask = 1.0 - uMoon * 0.85 * exp(-mdd * mdd * 22.0);',
+      '  col += stars * horizon * uStarAmt * (1.0 - uLight) * occl * moonMask;',
+      '  if (uMoon > 0.5) {',
+      '    float R = 0.033;',
+      '    float cloudAmt = clamp(aur.a, 0.0, 1.0);',
+      '    vec3 mC = mix(uCEdge, vec3(1.0), 0.74) * vec3(0.975, 0.995, 1.065);',
+      '    // stram fullopplost glans rett utenfor randen — bro mellom skive og lavopplost halo',
+      '    float rimD = max(mdd - R, 0.0);',
+      '    float glare = exp(-rimD * 40.0) * 0.115 + exp(-rimD * 8.5) * 0.062 + exp(-rimD * 3.2) * 0.028;',
+      '    float gDir = 0.76 + 0.24 * (0.5 + 0.5 * dot(mv / max(mdd, 1e-4), vec2(0.974, 0.227)));',
+      '    col += mC * glare * gDir * (1.0 - 0.62 * cloudAmt) * smoothstep(R - 0.002, R + 0.004, mdd);',
+      '    if (mdd < R + 0.02) {',
+      '      // sky-mykning: randen slorer nar cirrus driver forbi',
+      '      float aa = (2.4 + 10.0 * cloudAmt) / uRes.y;',
+      '      float mdisc = 1.0 - smoothstep(R - aa, R + aa, mdd);',
+      '      if (mdisc > 0.001) {',
+      '        vec2 sp = mv / R;',
+      '        float r2 = min(dot(sp, sp), 1.0);',
+      '        float nz = sqrt(1.0 - r2);',
+      '        float h0; float hX; float hY;',
+      '        float aC = moonAlb(sp, h0);',
+      '        float e = 0.075;',
+      '        moonAlb(sp + vec2(e, 0.0), hX);',
+      '        moonAlb(sp + vec2(0.0, e), hY);',
+      '        // bump-perturbert normal: relieff biter langs terminatoren, flatt i fullt lys',
+      '        vec3 N = normalize(vec3(sp + vec2(hX - h0, hY - h0) * (0.013 / e), nz));',
+      '        vec3 Ld = normalize(vec3(0.86, 0.18, 0.52));',
+      '        float shade = pow(smoothstep(-0.34, 0.54, dot(N, Ld)), 1.0);',
+      '        // maane-fotometri: regolitt gir nesten ingen randmorkning — flat, ikke ballaktig',
+      '        float flatf = 0.82 + 0.18 * nz + pow(1.0 - nz, 3.0) * 0.10;',
+      '        float cloud = 1.0 - 0.85 * cloudAmt;',
+      '        vec3 discC = mC * (0.72 * shade * aC * flatf + 0.135 * aC + 0.030);',
+      '        // jordskinn: natsiden svakt synlig, kjoligere i tonen',
+      '        discC = mix(discC, discC * vec3(0.80, 0.89, 1.16), (1.0 - shade) * 0.72);',
+      '        col = mix(col, discC, mdisc * cloud);',
+      '      }',
+      '    }',
+      '  }',
+      '',
+      '  // -- himmel-hendelse: satellitt (kun maanenatt, uFx.z) --',
+      '  col += mix(uStarTint, vec3(1.0), 0.4) * satDot(frag, aspect, t) * uFx.z * occl * 0.5 * (1.0 - uLight);',
       '',
       '  vec2 m = vec2(uMouse.x, 1.0 - uMouse.y);',
       '  vec2 md = (frag - m) * vec2(aspect, 1.0);',
@@ -4060,7 +4509,9 @@ html[data-theme="bw"], body[data-theme="bw"]{
       '',
       '  vec2 vq = (frag - vec2(0.5, 0.55)) * vec2(1.0, 1.25);',
       '  col *= 1.0 - mix(0.16, 0.05, uLight) * dot(vq, vq);',
-      '  col += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (3.0 / 255.0);',
+      '  // bw: temporalt korn (kinoprojektor) - ellers statisk som foer',
+      '  vec2 gsd = gl_FragCoord.xy * 1.7 + uDust * vec2(fract(t * 9.13) * 53.0, fract(t * 5.71) * 91.0);',
+      '  col += (hash21(gsd) - 0.5) * ((3.0 + uDust * 1.6) / 255.0);',
       '',
       '  gl_FragColor = vec4(col, 1.0);',
       '}'
@@ -4107,7 +4558,7 @@ html[data-theme="bw"], body[data-theme="bw"]{
 
     function U(prog, names) { var o = {}; for (var i = 0; i < names.length; i++) o[names[i]] = gl.getUniformLocation(prog, names[i]); return o; }
     uA = U(progA, ['uRes', 'uTime', 'uAmp', 'uLight', 'uMode', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe']);
-    uC = U(progC, ['uRes', 'uTime', 'uStarAmt', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex']);
+    uC = U(progC, ['uRes', 'uTime', 'uStarAmt', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx']);
 
     canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); cancelAnimationFrame(raf); raf = 0; });
     canvas.addEventListener('webglcontextrestored', function () { progA = null; gl = null; if (initGL()) { resize(); if (isStatic) drawOnce(); else resume(); } });
@@ -4131,12 +4582,13 @@ html[data-theme="bw"], body[data-theme="bw"]{
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     var w = Math.max(2, Math.round(canvas.clientWidth * dpr));
     var h = Math.max(2, Math.round(canvas.clientHeight * dpr));
-    var cap = 3.4e6;
+    var cap = 4.6e6;
     if (w * h > cap) { var s = Math.sqrt(cap / (w * h)); w = Math.round(w * s); h = Math.round(h * s); }
     if (canvas.width !== w || canvas.height !== h) {
       canvas.width = w; canvas.height = h;
-      aw = Math.max(2, Math.round(canvas.clientWidth * 0.5));
-      ah = Math.max(2, Math.round(canvas.clientHeight * 0.5));
+      var ss = Math.min(0.85, 1680 / Math.max(1, canvas.clientWidth));
+      aw = Math.max(2, Math.round(canvas.clientWidth * ss));
+      ah = Math.max(2, Math.round(canvas.clientHeight * ss));
       gl.bindTexture(gl.TEXTURE_2D, tex);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, aw, ah, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
       if (isStatic) drawOnce();
@@ -4167,11 +4619,21 @@ html[data-theme="bw"], body[data-theme="bw"]{
         ampNow = rise + Math.sin(sw * Math.PI) * 0.28; // surge peaks ~1.2s
       }
     } else {
-      ampNow = CONFIG.INTENSITY;
+      // Levende puls: flerfrekvent pust + sporadisk oppbluss (aldri statisk)
+      var br = 0.945 + 0.05 * Math.sin(t * 0.21) + 0.033 * Math.sin(t * 0.083 + 1.7) + 0.022 * Math.sin(t * 0.31 + 0.6);
+      var sg = Math.sin(t * 0.041 + 2.1); sg = sg > 0 ? sg * sg * sg : 0;
+      ampNow = CONFIG.INTENSITY * (br + sg * 0.26);
     }
     mx += (tmx - mx) * 0.045;
     my += (tmy - my) * 0.045;
     mAmt += (tmAmt - mAmt) * 0.05;
+    // Levende palett: nordlys vandrer subtilt i tone (aldri statisk)
+    if (ct && bt && lastTheme === 'nordlys') {
+      var rotA = 11 * Math.sin(t * 0.05) + 4 * Math.sin(t * 0.013 + 0.7);
+      ct.edge = hueRot(bt.edge, rotA);
+      ct.mid = hueRot(bt.mid, -0.6 * rotA);
+      ct.fringe = hueRot(bt.fringe, 0.5 * rotA);
+    }
     if (cc && ct) {
       var k = 0.08;
       for (var key in ct) { var a = cc[key], b = ct[key]; for (var i = 0; i < b.length; i++) a[i] += (b[i] - a[i]) * k; }
@@ -4188,9 +4650,9 @@ html[data-theme="bw"], body[data-theme="bw"]{
     gl.uniform1f(uA.uTime, t);
     gl.uniform1f(uA.uAmp, ampNow);
     gl.uniform1f(uA.uLight, cc.light[0]);
-    gl.uniform1f(uA.uMode, isSmoke ? 1 : 0);
+    gl.uniform1f(uA.uMode, mode);
     var W = window.__smk || {};
-    gl.uniform3f(uA.uSmk, W.gain != null ? W.gain : 2.0, W.spot != null ? W.spot : 1.55, W.amb != null ? W.amb : 0.17);
+    gl.uniform3f(uA.uSmk, W.gain != null ? W.gain : 1.15, W.spot != null ? W.spot : 1.55, W.amb != null ? W.amb : 0.10);
     gl.uniform3f(uA.uSkyTop, cc.skyTop[0], cc.skyTop[1], cc.skyTop[2]);
     gl.uniform3f(uA.uSkyBot, cc.skyBot[0], cc.skyBot[1], cc.skyBot[2]);
     gl.uniform3f(uA.uCEdge, cc.edge[0], cc.edge[1], cc.edge[2]);
@@ -4208,6 +4670,12 @@ html[data-theme="bw"], body[data-theme="bw"]{
     gl.uniform2f(uC.uRes, canvas.width, canvas.height);
     gl.uniform1f(uC.uTime, t);
     gl.uniform1f(uC.uStarAmt, (CONFIG.STARS && !isSmoke) ? 1 : 0);
+    gl.uniform1f(uC.uDust, isSmoke ? 1 : 0);
+    gl.uniform1f(uC.uMoon, mode === 4 ? 1 : 0);
+    // Stjerneskudd og blitzlys er fjernet på alle temaer (brukervalg).
+    // Kun satellitten på månenatt (mørk) er igjen; null ved reduced-motion.
+    gl.uniform3f(uC.uFx, 0, 0, (!isStatic && mode === 4) ? 1 : 0);
+    gl.uniform3f(uC.uCEdge, cc.edge[0], cc.edge[1], cc.edge[2]);
     gl.uniform1f(uC.uLight, cc.light[0]);
     gl.uniform2f(uC.uMouse, mx, my);
     gl.uniform1f(uC.uMouseAmt, mAmt);
@@ -4228,9 +4696,14 @@ html[data-theme="bw"], body[data-theme="bw"]{
   // avhengig av om det nye temaet faktisk viser canvaset (unngår frossen canvas
   // ved bytte carbon→mørkt, og stopper bortkastet tegning ved bytte til carbon).
   new MutationObserver(function () {
+    var prevK = lastTheme;
     syncTheme();
     if (isStatic) { drawOnce(); return; }
-    if (canvasVisible()) resume();
+    if (canvasVisible()) {
+      // Re-tenning: nytt tema annonserer seg med samme ignite-kurve som ved last
+      if (lastTheme !== prevK) { revealT0 = -1; revealDone = false; }
+      resume();
+    }
     else if (raf) { cancelAnimationFrame(raf); raf = 0; }
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 

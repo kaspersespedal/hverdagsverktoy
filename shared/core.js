@@ -62,7 +62,7 @@ const THEMES = [
   {id:'glass',labelKey:'themeGlass',fallback:'Glass',dot:'#7c88f8',ring:'#6875f5',dotBorder:'rgba(0,0,0,.06)'},
   {id:'hendrix',labelKey:'themeHendrix',fallback:'Hendrix',dot:'#9e5c3a',ring:'#7b2d8e',dotBorder:'rgba(0,0,0,.08)'},
   {id:'bw',labelKey:'themeBw',fallback:'Ray',dot:'#8a8a8a',ring:'#1a1a1a',dotBorder:'rgba(0,0,0,.12)'},
-  {id:'disco',labelKey:'themeDisco',fallback:'Disco',dot:'#b044a2',ring:'#e91e8c',dotBorder:'rgba(176,68,162,.2)'},
+  {id:'disco',labelKey:'themeDisco',fallback:'Kosmisk',dot:'#b044a2',ring:'#e91e8c',dotBorder:'rgba(176,68,162,.2)'},
   {id:'pink',labelKey:'themePink',fallback:'Rosa',dot:'#e4a0be',ring:'#e890b2',dotBorder:'rgba(0,0,0,.06)'}
 ];
 function themeLabel(t){try{var r=typeof R==='function'&&typeof region!=='undefined'?R():null;return r&&r[t.labelKey]?r[t.labelKey]:t.fallback;}catch(e){return t.fallback;}}

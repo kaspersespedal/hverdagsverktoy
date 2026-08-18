@@ -98,20 +98,48 @@ html[data-theme="carbon"] .ks{
     0 24px 56px -20px rgba(0,0,0,.7) !important;
 }
 
-html[data-theme="dark"]{ /* Mørk-blå — same restraint as carbon, cool side */
-  --bg:#0b0f1a; --surface:#11172a; --surface-2:#161e36; --surface-3:#1d2746;
-  --ink:#e9edf4; --ink2:#9aa4ba; --ink3:#7a8397; --ink4:#75809a;
-  --accent:#8aa3c8; --accent-2:#a3bcdf; --accent-deep:#6a87b0;
-  --glow-rgb:138, 163, 200;
+html[data-theme="dark"]{ /* Mørk — dyp navy trukket subtilt mot forsidens indigo (#141520 / #6c8aef) */
+  /* Flatene lå tidligere på #0b0f1a/#11172a/#161e36/#1d2746 — en anelse for
+     grå og for langt fra --atmo-base-top (#141520), så toppen av siden hadde
+     et synlig fargebrudd mellom atmosfæren og kortene. Stigen er trukket mot
+     samme indigo som WebGL-månenatten bruker, slik at bakgrunn, atmosfære og
+     flate leser som ett rom. */
+  --bg:#0e111c; --surface:#141a2c; --surface-2:#1a2138; --surface-3:#222b49;
+  --ink:#e9edf4; --ink2:#a1aabf; --ink3:#7a8397; --ink4:#75809a;
+  /* Aksenten er løftet fra det støvete #8aa3c8 mot forsidens egen indigo
+     (#6c8aef). Fortsatt dempet — den gløder uten å bli en knallblå lenkefarge. */
+  --accent:#7f9ad6; --accent-2:#9db6e8; --accent-deep:#607dc0;
+  --glow-rgb:127, 154, 214;
   --line:rgba(255,255,255,.06); --line-2:rgba(255,255,255,.10);
-  --line-warm:rgba(138,163,200,.16);
-  --pos:#dde3ef; --neg:#9aa4ba;
-  /* aurora atmosphere — cool blue + violet (op lifted in site-shell.css) */
+  --line-warm:rgba(127,154,214,.16);
+  --pos:#dde3ef; --neg:#a1aabf;
+  /* aurora atmosphere — cool indigo + violet (op lifted in site-shell.css) */
   --atmo-base-top:#141520; --atmo-base-bottom:#0a0b14;
-  --atmo-band-a:222,80%,72%; --atmo-band-a-op:.09; --atmo-band-a-op-breathe:.12;
+  --atmo-band-a:225,76%,72%; --atmo-band-a-op:.09; --atmo-band-a-op-breathe:.12;
   --atmo-band-b:258,55%,55%; --atmo-band-b-op:.06; --atmo-band-b-op-breathe:.08;
-  --atmo-cursor:222,80%,72%; --atmo-cursor-op:.05;
+  --atmo-cursor:225,76%,72%; --atmo-cursor-op:.05;
   color-scheme:dark;
+}
+
+/* Mørk — stille ekko av forsidens hero-spotlight (indigo, topp-sentrert) og
+   samme kort-sheen som nordlys. Gløden ligger bak WebGL-scenen og bærer derfor
+   fallback/redusert bevegelse; ekkoet i drift ligger i selve nattscenen. */
+html[data-theme="dark"] body::before{
+  content:""; position:fixed; inset:0; z-index:-4; pointer-events:none;
+  background:
+    radial-gradient(88vw 60vh at 50% -10%, rgba(108,138,239,.07), transparent 64%),
+    radial-gradient(56vw 48vh at 90% 112%, rgba(122,92,220,.05), transparent 60%);
+}
+/* Kortet får lys ovenfra og skygge under — samme fysikk som carbon og nordlys,
+   men i kjølig tone. Uten dette lå .ks helt flatt på den nye, lysere flaten. */
+html[data-theme="dark"] .ks{
+  background:
+    linear-gradient(180deg, rgba(214,226,255,.024) 0%, transparent 22%),
+    var(--surface) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(214,226,255,.045),
+    0 1px 0 rgba(0,0,0,.4),
+    0 20px 48px -16px rgba(0,0,0,.55) !important;
 }
 
 html[data-theme="hendrix"]{ /* LIGHT 60s psychedelic — Fillmore-poster cream */
