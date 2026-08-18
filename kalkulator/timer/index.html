@@ -97,16 +97,24 @@ body.focus-mode > footer{display:none}
   .side-card.related a:hover .arr{color:var(--accent);transform:translateX(2px)}
 }
 
-/* Howto */
-.howto-wrap{margin:0 0 40px;display:none}
-.howto-wrap.howto-open{display:block}
-details.howto{border:1px solid var(--line);border-radius:10px;padding:18px 22px;background:var(--surface)}
-details.howto > summary{cursor:pointer;font-weight:500;color:var(--ink);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px}
+/* Howto — en dempet fotnote, ikke et panel.
+   Den lå med fylt flate og nesten hvit overskrift i full containerbredde
+   (1116 px) mens innholdet over er 748 px, og ropte dermed høyere enn
+   selve timeren. Nå: samme bredde som innholdet over, ingen fyll, og
+   samme stille etikett som «Tips»-kortet ved siden av.
+   Bredden må settes her og ikke via `display:none` — .timer-wrap > .container
+   har to klasser og slår .howto-wrap på ett, så seksjonen har hele tiden
+   ligget synlig som et grid-felt uansett hva denne regelen sa. */
+.timer-wrap > .howto-wrap{display:block;max-width:812px;margin:0 auto 40px}
+@media(max-width:980px){.timer-wrap > .howto-wrap{max-width:494px}}
+details.howto{border:1px solid var(--line);border-radius:10px;padding:14px 18px;background:transparent}
+details.howto > summary{cursor:pointer;color:var(--ink3);font:600 11px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:16px;transition:color .15s ease}
+@media(hover:hover){details.howto > summary:hover{color:var(--ink2)}}
 details.howto > summary::-webkit-details-marker{display:none}
 details.howto > summary::after{content:'';width:8px;height:8px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform .2s ease;flex:0 0 auto}
 details.howto[open] > summary::after{transform:rotate(-135deg)}
 details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
-.howto-body{color:var(--ink2);font-size:14.5px;line-height:1.6}
+.howto-body{color:var(--ink2);font-size:13px;line-height:1.65}
 .howto-body p{margin:0 0 10px}
 .howto-body p:last-child{margin:0}
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
@@ -274,13 +282,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function init(){
     document.querySelectorAll('.calc-help-btn').forEach(function(b){
       b.addEventListener('click', function(){
+        // Veiledningen står alltid på siden nå, så «?» åpner selve trekkspillet
+        // og ruller dit. Klasse-vekslingen som lå her styrte en display-regel
+        // som aldri vant, og speilet heller ikke om folk åpnet trekkspillet selv.
         var d = document.querySelector('details.howto'); if(!d) return;
-        var w = d.closest('.howto-wrap') || d;
-        var show = !w.classList.contains('howto-open');
-        w.classList.toggle('howto-open', show);
+        var show = !d.open;
         d.open = show;
         b.setAttribute('aria-expanded', show ? 'true' : 'false');
-        if(show) w.scrollIntoView({behavior:'smooth', block:'start'});
+        if(show) d.scrollIntoView({behavior:'smooth', block:'start'});
       });
     });
     document.querySelectorAll('.focus-card-btn').forEach(function(b){
