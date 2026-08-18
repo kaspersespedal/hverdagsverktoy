@@ -109,13 +109,14 @@ body.embed .calc-wrap .container{grid-template-columns:1fr;padding:0;max-width:n
 .skip{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--accent);color:var(--bg);padding:10px 16px;border-radius:0 0 8px 0;text-decoration:none;font-weight:600;font-size:14px}
 .skip:focus{left:0;outline:2px solid var(--ink);outline-offset:-4px}
 
-/* Dekningen var 78 %/72 %: alt som scrollet under baren var fortsatt
-   lesbart gjennom den, og på timer-siden lyste den store ringen og gløden
-   rett gjennom fanerekka. Blurren blir stående for kanten, men flatene
-   dekker nå. Mobil ligger allerede på 97 %/96 % (se media-blokka under). */
+/* Barene dekker helt. 96 % holdt ikke: de 4 prosentene som slapp gjennom
+   var nok til at en stor overskrift leste som spøkelsestekst når den gled
+   under fanerekka — målt på /kalkulator/timer/, der h1 (46px) ligger på
+   y 66–116 og baren på 65–112. Blurren fulgte med ut: den kan ikke sees
+   gjennom en ugjennomsiktig flate, så den var bare en fullskjerms
+   re-sampling per scroll-frame. Mobil hadde den allerede av. */
 .nav-wrap{position:sticky;top:0;z-index:50;
-  background:color-mix(in srgb, var(--bg) 96%, transparent);
-  backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
+  background:var(--bg);
   border-bottom:1px solid var(--line)}
 nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:24px}
 .brand-row{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
@@ -124,8 +125,8 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .wordmark{font-family:var(--font-serif);font-weight:500;font-size:18px;letter-spacing:-.2px;line-height:1}
 
 .tabs-wrap{border-bottom:1px solid var(--line);
-  background:color-mix(in srgb, var(--bg) 96%, transparent);
-  position:sticky;top:64px;z-index:40;backdrop-filter:blur(10px)}
+  background:var(--bg);
+  position:sticky;top:64px;z-index:40}
 /* --nav-h = nav-padding*2 + .mark-høyde + 1px bunnstrek. Fanerekka fester seg
    til denne, ikke til et hardkodet tall — de to hadde drevet fra hverandre
    (nav måler 65px, mens .tabs-wrap sto på top:64px her og top:60px i 17 siders
@@ -133,6 +134,18 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
    over. body-prefiks (0,1,1) slår både regelen over og inline-kopiene (0,1,0). */
 :root{--nav-h:65px}
 body .tabs-wrap{top:var(--nav-h)}
+/* 13 av sidene som laster dette arket har i tillegg egen kopi av de to
+   reglene over i <style>, med sin egen --nav-bg og sin egen blur — to av
+   dem (forsiden og /kalkulator/) står fortsatt på 78 %/72 %. Kopiene er
+   (0,1,0) og taper mot body-prefikset (0,1,1), så dekningen bor her.
+   Verdiene som ble stående der har ingen virkning lenger.
+   De 8 sidene som IKKE laster dette arket — lov/{aksjelov,bokforingslov,
+   mvalov,skattelov} og regnskap/{balanse,kontantstrom,kontoplan,resultat}
+   — er rettet i sin egen fil; de kan ikke nås herfra. */
+body .nav-wrap,
+body .tabs-wrap{
+  background:var(--bg);
+  backdrop-filter:none; -webkit-backdrop-filter:none}
 .tabs{display:flex;gap:2px;padding:6px 0;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tab{flex-shrink:0;padding:10px 14px;border-radius:4px;
@@ -864,7 +877,8 @@ body .page-content.is-leaving{ animation: hvxPageOut .28s var(--ease-glide) forw
         og den som gir «bakgrunnen henger etter»: blur-laget rekker
         ikke å følge innholdet som glir under det. Samme innsikt som
         PAGE-ENTRY v2 over (~linje 657), nå brukt på det permanente
-        laget og ikke bare på entré-flaren.
+        laget og ikke bare på entré-flaren. Siden 18.08.2026 er blurren
+        borte på alle bredder — se grunnregelen, ikke her.
      2. Lagene bak alt er inset:0 på position:fixed. Når adresselinja
         skjules ved scroll NED vokser viewporten → hele stabelen får
         ny høyde og må legges om + tegnes på nytt midt i scrollen.
@@ -878,16 +892,8 @@ body .page-content.is-leaving{ animation: hvxPageOut .28s var(--ease-glide) forw
    body-prefiks slår landingssidenes inline-kopier (0,1,1 > 0,1,0).
    ═══════════════════════════════════════════════════════════════ */
 @media (max-width:768px){
-  /* 1 — ingen live-blur under scroll. Barene holdes nesten opake i
-     stedet, fortsatt avledet fra var(--bg) så alle temaer følger med. */
-  body .nav-wrap{
-    background:color-mix(in srgb, var(--bg) 97%, transparent);
-    backdrop-filter:none; -webkit-backdrop-filter:none;
-  }
-  body .tabs-wrap{
-    background:color-mix(in srgb, var(--bg) 96%, transparent);
-    backdrop-filter:none; -webkit-backdrop-filter:none;
-  }
+  /* 1 — flyttet ut herfra (~linje 116): barene er nå ugjennomsiktige og
+     blurfrie på alle bredder, så mobil trenger ingen egen versjon. */
 
   /* 2 — fast høyde, så adresselinja kan skjules uten omlegging.
      height vinner over bottom når top+height+bottom alle er satt, så
