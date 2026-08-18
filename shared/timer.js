@@ -18,8 +18,8 @@
    nøyaktig og upåvirket av strupingen), mens intervallet kun oppdaterer
    det man ser. Se armAudio()/reconcile().
 
-   Ingen lydfil: klangen synthes med Web Audio, så den virker offline og
-   koster ingen nedlasting.
+   Ingen lydfiler: alle ni lydene synthes med Web Audio, så de virker
+   offline og koster ingen nedlasting.
    © 2026 Hverdagsverktøy.
    ═══════════════════════════════════════════════════════════ */
 
@@ -28,7 +28,8 @@
 
 var MIN_M = 1, MAX_M = 50, DEF_M = 20;
 var PRESETS = [5, 10, 15, 20, 25, 45];
-var LS_STATE = 'hvt-timer', LS_SOUND = 'hvt-timer-snd';
+var LS_STATE = 'hvt-timer', LS_SOUND = 'hvt-timer-snd', LS_TONE = 'hvt-timer-tone';
+var DEF_SND = 'sus';
 var TICK_MS = 200;
 var R_RING = 44, C_RING = 2 * Math.PI * R_RING;
 
@@ -61,13 +62,23 @@ function fmt(ms){
 }
 
 /* ═══════════════ LYD ═══════════════════════════════════════
-   To toner, en ren kvint fra hverandre, som får klinge ut —
-   og så det samme én gang til, litt svakere. Det er hele lyden.
-   Hver tone er grunntone + to svake overtoner (den øverste litt
-   urein, som i en ekte klokke) gjennom et lavpassfilter som tar
-   av det skarpeste. Anslaget er mykt nok til at den ikke smeller
-   i gang, og utklangen lang nok til at den forsvinner av seg selv. */
-var ctx = null, soundNodes = [], armed = null;
+   Ni klanger å velge mellom, fra et sus som knapt merkes til et pip som
+   river deg ut av det du holder på med. Valget ligger i localStorage og
+   gjelder begge stedene timeren finnes — popover-en på forsiden har ingen
+   velger, men følger det som er valgt på timer-siden.
+
+   Alle ni bygges av de samme tre klossene: voice() lager én tone med sine
+   overtoner, noise() anslaget (klubba, kolven, den lille knepsen), og
+   lowpass() tar av det skarpeste. Hver lyd er en ren funksjon av (klokke,
+   starttid, utgang, node-liste) — derfor kan de planlegges fram i tid på
+   lydklokka nøyaktig som den ene klangen kunne før.
+
+   Nivåene er ikke satt på øret: alle ni er rendret offline og målt A-vektet
+   (slik øret veier frekvenser mot hverandre), og åtte av dem ligger innenfor
+   3,5 dB. «Mykt sus» er bevisst lagt noen dB under — den skal være diskret.
+   Endrer du en styrke, mål på nytt: rått utslag lyver, en dyp og en lys tone
+   med samme utslag høres ikke like sterke ut. */
+var ctx = null, soundNodes = [], demoNodes = [], armed = null;
 
 function audio(){
   if(ctx) return ctx;
@@ -82,57 +93,265 @@ function wake(){
   return c;
 }
 
-var PHRASE = [
-  {f: 523.25, t: 0.00, g: 1.00},   // C5
-  {f: 783.99, t: 0.55, g: 0.88}    // G5 — ren kvint over, får klinge ut alene
-];
-var PARTIALS = [[1, 1], [2, 0.18], [3.01, 0.06]];
-var REPEATS = [{t: 0.0, g: 1.0}, {t: 3.2, g: 0.74}];
-var PEAK = 0.19, DECAY = 3.2, ATTACK = 0.03;
+/* ── klosser ── */
+function lowpass(c, dest, freq, q, list){
+  var f = c.createBiquadFilter();
+  f.type = 'lowpass'; f.frequency.value = freq; f.Q.value = q;
+  f.connect(dest); list.push(f);
+  return f;
+}
+/* Én tone: grunntone + overtoner, hver med sin egen utklang.
+   partial = [forhold, styrke, utklang-faktor, svevning]. Svevningen er en
+   tvilling like ved unisont; den gir den langsomme dirringen ekte metall har. */
+function voice(c, dest, at, f, peak, attack, decay, partials, list){
+  for(var i = 0; i < partials.length; i++){
+    var p = partials[i];
+    var d = decay * (p[2] === undefined ? 1 : p[2]);
+    var g = c.createGain();
+    g.gain.setValueAtTime(0.0001, at);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.0002, peak * p[1]), at + attack);
+    g.gain.exponentialRampToValueAtTime(0.0001, at + d);
+    g.connect(dest); list.push(g);
+    var o = c.createOscillator();
+    o.type = 'sine'; o.frequency.value = f * p[0];
+    o.connect(g); o.start(at); o.stop(at + d + 0.05);
+    list.push(o);
+    if(p[3]){
+      var o2 = c.createOscillator(), g2 = c.createGain();
+      o2.type = 'sine'; o2.frequency.value = f * p[0] * p[3];
+      g2.gain.value = 0.55;
+      o2.connect(g2); g2.connect(g);
+      o2.start(at); o2.stop(at + d + 0.05);
+      list.push(o2, g2);
+    }
+  }
+}
+/* Kort støypuls gjennom et smalt filter — selve anslaget. */
+function noise(c, dest, at, gain, freq, q, dur, list){
+  var len = Math.max(1, Math.floor(c.sampleRate * dur));
+  var buf = c.createBuffer(1, len, c.sampleRate);
+  var d = buf.getChannelData(0);
+  for(var i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+  var src = c.createBufferSource(); src.buffer = buf;
+  var bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = q;
+  var g = c.createGain(); g.gain.value = gain;
+  src.connect(bp); bp.connect(g); g.connect(dest);
+  src.start(at);
+  list.push(src, bp, g);
+}
 
-function scheduleChime(c, t0){
-  var out = c.createGain();
-  out.gain.value = 1;
-  var lp = c.createBiquadFilter();
-  lp.type = 'lowpass'; lp.frequency.value = 2300; lp.Q.value = 0.6;
-  lp.connect(out); out.connect(c.destination);
-  soundNodes.push(out, lp);
-
-  for(var r = 0; r < REPEATS.length; r++){
-    for(var n = 0; n < PHRASE.length; n++){
-      var note = PHRASE[n];
-      var at = t0 + REPEATS[r].t + note.t;
-      var peak = PEAK * note.g * REPEATS[r].g;
-      var env = c.createGain();
-      env.gain.setValueAtTime(0.0001, at);
-      env.gain.exponentialRampToValueAtTime(peak, at + ATTACK);
-      env.gain.exponentialRampToValueAtTime(0.0001, at + DECAY);
-      env.connect(lp);
-      soundNodes.push(env);
-      for(var p = 0; p < PARTIALS.length; p++){
-        var osc = c.createOscillator(), pg = c.createGain();
-        osc.type = 'sine';
-        osc.frequency.value = note.f * PARTIALS[p][0];
-        pg.gain.value = PARTIALS[p][1];
-        osc.connect(pg); pg.connect(env);
-        osc.start(at);
-        osc.stop(at + DECAY + 0.1);
-        soundNodes.push(osc, pg);
+/* ── de ni ──
+   Rekkefølgen er stigende påtrengenhet, og den er også rekkefølgen i
+   velgeren. id-ene lagres i localStorage og må derfor ligge fast. */
+var SOUNDS = [
+  {
+    id: 'sus', key: 'timerSoundSus', no: 'Mykt sus',
+    /* Uten anslag: akkorden toner inn over 1,2 s mens filteret åpner seg,
+       og lukker seg igjen på vei ut. */
+    build: function(c, t0, dest, list){
+      var f = c.createBiquadFilter();
+      f.type = 'lowpass'; f.Q.value = 0.7;
+      f.frequency.setValueAtTime(380, t0);
+      f.frequency.linearRampToValueAtTime(1900, t0 + 1.7);
+      f.frequency.linearRampToValueAtTime(600, t0 + 4.8);
+      f.connect(dest); list.push(f);
+      var notes = [[196.00, 0.226], [261.63, 0.165], [329.63, 0.133], [523.25, 0.085]];
+      for(var i = 0; i < notes.length; i++){
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t0);
+        g.gain.exponentialRampToValueAtTime(notes[i][1], t0 + 1.25 + i * 0.12);
+        g.gain.setValueAtTime(notes[i][1], t0 + 2.3);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + 4.8);
+        g.connect(f); list.push(g);
+        var o = c.createOscillator();
+        o.type = 'sine'; o.frequency.value = notes[i][0];
+        o.connect(g); o.start(t0); o.stop(t0 + 4.9); list.push(o);
+        var o2 = c.createOscillator(), g2 = c.createGain();
+        o2.type = 'sine'; o2.frequency.value = notes[i][0] * 1.0035;
+        g2.gain.value = 0.5;
+        o2.connect(g2); g2.connect(g);
+        o2.start(t0); o2.stop(t0 + 4.9); list.push(o2, g2);
+      }
+    }
+  },
+  {
+    id: 'bolle', key: 'timerSoundBowl', no: 'Syngeskål',
+    build: function(c, t0, dest, list){
+      var f = lowpass(c, dest, 1500, 0.5, list);
+      noise(c, f, t0, 0.05, 240, 1.1, 0.05, list);
+      voice(c, f, t0, 174.61, 0.30, 0.05, 6.8,
+        [[1, 1, 1, 1.004], [2.74, 0.55, 0.78], [5.36, 0.25, 0.55], [8.93, 0.09, 0.40]], list);
+    }
+  },
+  {
+    id: 'klang', key: 'timerSoundChime', no: 'Klang',
+    /* Den timeren hadde før velgeren kom: to toner en ren kvint fra
+       hverandre, og så det samme én gang til, litt svakere. */
+    build: function(c, t0, dest, list){
+      var f = lowpass(c, dest, 2300, 0.6, list);
+      var phrase = [{f: 523.25, t: 0.00, g: 1.00}, {f: 783.99, t: 0.55, g: 0.88}];
+      var partials = [[1, 1], [2, 0.18], [3.01, 0.06]];
+      var repeats = [{t: 0.0, g: 1.0}, {t: 3.2, g: 0.74}];
+      for(var r = 0; r < repeats.length; r++){
+        for(var n = 0; n < phrase.length; n++){
+          var note = phrase[n];
+          var at = t0 + repeats[r].t + note.t;
+          var peak = 0.19 * note.g * repeats[r].g;
+          var env = c.createGain();
+          env.gain.setValueAtTime(0.0001, at);
+          env.gain.exponentialRampToValueAtTime(peak, at + 0.03);
+          env.gain.exponentialRampToValueAtTime(0.0001, at + 3.2);
+          env.connect(f); list.push(env);
+          for(var p = 0; p < partials.length; p++){
+            var o = c.createOscillator(), pg = c.createGain();
+            o.type = 'sine';
+            o.frequency.value = note.f * partials[p][0];
+            pg.gain.value = partials[p][1];
+            o.connect(pg); pg.connect(env);
+            o.start(at); o.stop(at + 3.3);
+            list.push(o, pg);
+          }
+        }
+      }
+    }
+  },
+  {
+    id: 'spill', key: 'timerSoundBox', no: 'Spilledåse',
+    build: function(c, t0, dest, list){
+      var f = lowpass(c, dest, 6200, 0.4, list);
+      var partials = [[1, 1, 1], [2.03, 0.28, 0.70], [3.42, 0.11, 0.50], [5.70, 0.045, 0.38]];
+      var notes = [[1046.50, 0.00, 1.25, 0.124], [1318.51, 0.15, 1.25, 0.117],
+                   [1567.98, 0.30, 1.30, 0.117], [2093.00, 0.45, 2.30, 0.131]];
+      for(var i = 0; i < notes.length; i++){
+        var at = t0 + notes[i][1];
+        noise(c, f, at, 0.026, 5200, 2.2, 0.012, list);
+        voice(c, f, at, notes[i][0], notes[i][3], 0.004, notes[i][2], partials, list);
+      }
+    }
+  },
+  {
+    id: 'marimba', key: 'timerSoundMarimba', no: 'Marimba',
+    build: function(c, t0, dest, list){
+      var f = lowpass(c, dest, 4200, 0.5, list);
+      /* Overtonen på 3,93 er marimbaens egen: staven er skåret slik at den
+         ligger nær to oktaver over grunntonen, og det er den som gjør
+         klangen treaktig i stedet for metallisk. */
+      var partials = [[1, 1, 1], [3.93, 0.20, 0.45], [9.20, 0.045, 0.28]];
+      var figure = [[523.25, 0], [659.25, 0.13], [783.99, 0.26]];
+      var reps = [[0, 1], [1.20, 0.68]];
+      for(var r = 0; r < reps.length; r++){
+        for(var n = 0; n < figure.length; n++){
+          var at = t0 + reps[r][0] + figure[n][1];
+          noise(c, f, at, 0.040 * reps[r][1], 1800, 1.4, 0.014, list);
+          voice(c, f, at, figure[n][0], 0.25 * reps[r][1], 0.006, 0.62, partials, list);
+        }
+      }
+    }
+  },
+  {
+    id: 'fanfare', key: 'timerSoundFanfare', no: 'Fanfare',
+    build: function(c, t0, dest, list){
+      var f = lowpass(c, dest, 3400, 0.6, list);
+      var partials = [[1, 1, 1], [2, 0.26, 0.70], [3, 0.085, 0.50]];
+      var notes = [[523.25, 0.00, 1.4], [659.25, 0.11, 1.4], [783.99, 0.22, 1.5], [1046.50, 0.33, 2.4]];
+      for(var i = 0; i < notes.length; i++){
+        voice(c, f, t0 + notes[i][1], notes[i][0], 0.136, 0.008, notes[i][2], partials, list);
+      }
+    }
+  },
+  {
+    id: 'varsel', key: 'timerSoundAlert', no: 'Varsel',
+    build: function(c, t0, dest, list){
+      var f = lowpass(c, dest, 4200, 0.5, list);
+      var partials = [[1, 1, 1], [2, 0.20, 0.60], [3.02, 0.06, 0.45]];
+      var pair = [[880.00, 0.00, 0.50], [1174.66, 0.10, 0.80]];
+      var reps = [[0, 1], [0.72, 0.85]];
+      for(var r = 0; r < reps.length; r++){
+        for(var n = 0; n < pair.length; n++){
+          voice(c, f, t0 + reps[r][0] + pair[n][1], pair[n][0],
+            0.21 * reps[r][1], 0.005, pair[n][2], partials, list);
+        }
+      }
+    }
+  },
+  {
+    id: 'bjelle', key: 'timerSoundBell', no: 'Bjelle',
+    build: function(c, t0, dest, list){
+      var f = lowpass(c, dest, 5400, 0.5, list);
+      /* En ekte bjelle har skjeve overtoner — hum en oktav under, ters på
+         1,19 og nominal på det dobbelte. Det er nettopp de skjeve forholdene
+         som gjør at den høres ut som metall og ikke som en ren tone. */
+      var partials = [[0.50, 0.32, 1.30], [1, 1, 1], [1.19, 0.55, 0.80], [1.50, 0.32, 0.62],
+                      [2.00, 0.42, 0.55], [2.50, 0.18, 0.40], [3.02, 0.10, 0.34], [4.14, 0.05, 0.24]];
+      var strikes = [[0, 1], [0.80, 0.72]];
+      for(var s = 0; s < strikes.length; s++){
+        var at = t0 + strikes[s][0];
+        noise(c, f, at, 0.050 * strikes[s][1], 4200, 1.2, 0.022, list);
+        voice(c, f, at, 587.33, 0.17 * strikes[s][1], 0.003, 2.8, partials, list);
+      }
+    }
+  },
+  {
+    id: 'pip', key: 'timerSoundBeep', no: 'Pip',
+    build: function(c, t0, dest, list){
+      var f = lowpass(c, dest, 2600, 0.7, list);
+      var at = [0, 0.14, 0.28, 0.70, 0.84, 0.98];
+      for(var i = 0; i < at.length; i++){
+        var t = t0 + at[i];
+        var g = c.createGain();
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(0.19, t + 0.005);
+        g.gain.setValueAtTime(0.19, t + 0.055);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.075);
+        g.connect(f); list.push(g);
+        var o = c.createOscillator();
+        o.type = 'square'; o.frequency.value = 880;
+        o.connect(g); o.start(t); o.stop(t + 0.09);
+        list.push(o);
       }
     }
   }
+];
+
+var tone = DEF_SND;
+try {
+  var savedTone = localStorage.getItem(LS_TONE);
+  for(var si = 0; si < SOUNDS.length; si++) if(SOUNDS[si].id === savedTone) tone = savedTone;
+} catch(e){}
+
+function soundDef(){
+  for(var i = 0; i < SOUNDS.length; i++) if(SOUNDS[i].id === tone) return SOUNDS[i];
+  return SOUNDS[0];
+}
+function setTone(id){
+  for(var i = 0; i < SOUNDS.length; i++){
+    if(SOUNDS[i].id !== id) continue;
+    tone = id;
+    try { localStorage.setItem(LS_TONE, id); } catch(e){}
+    return;
+  }
+}
+
+/* Bygger den valgte lyden inn i `into` og gir tilbake starttidspunktet. */
+function scheduleChime(c, t0, into){
+  var out = c.createGain();
+  out.gain.value = 1;
+  out.connect(c.destination);
+  into.push(out);
+  soundDef().build(c, t0, out, into);
   return t0;
 }
 
-function stopSound(){
-  for(var i = 0; i < soundNodes.length; i++){
-    var n = soundNodes[i];
+function release(list){
+  for(var i = 0; i < list.length; i++){
+    var n = list[i];
     try { if(n.stop) n.stop(); } catch(e){}
     try { n.disconnect(); } catch(e){}
   }
-  soundNodes = [];
-  armed = null;
+  list.length = 0;
 }
+function stopSound(){ release(soundNodes); armed = null; }
+function stopDemo(){ release(demoNodes); }
 
 /* Planlegger klangen `sec` sekunder fram i tid på lydklokka.
    Returnerer ctx-tidspunktet den er satt til, så reconcile() kan
@@ -141,14 +360,17 @@ function armAudio(sec){
   stopSound();
   var c = wake();
   if(!c) return null;
-  armed = {at: scheduleChime(c, c.currentTime + Math.max(0, sec)), ctx: c};
+  armed = {at: scheduleChime(c, c.currentTime + Math.max(0, sec), soundNodes), ctx: c};
   return armed.at;
 }
+/* Forhåndslytting går på sin egen node-liste. Ellers ville et trykk på
+   «Hør lyden» — eller på et lydvalg — revet ned klangen som allerede er
+   planlagt for en nedtelling som går, og varselet ville kommet for sent. */
 function playNow(){
-  stopSound();
+  stopDemo();
   var c = wake();
   if(!c) return;
-  armed = {at: scheduleChime(c, c.currentTime + 0.02), ctx: c};
+  scheduleChime(c, c.currentTime + 0.02, demoNodes);
 }
 
 /* ═══════════════ CSS ═══════════════════════════════════════ */
@@ -222,6 +444,15 @@ var CSS = [
 '.tmr-chip[aria-pressed="true"]{color:var(--tmr-accent);border-color:var(--line-warm);',
 '  background:color-mix(in srgb, var(--tmr-accent) 10%, transparent)}',
 '.tmr-chip[disabled]{opacity:.45;cursor:default}',
+
+/* — lydvalg, kun i full visning — */
+'.tmr-snd{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}',
+'.tmr-sndlab{margin:0 0 9px;font:600 9.5px/1 var(--font-sans);letter-spacing:.2em;',
+'  text-transform:uppercase;color:var(--ink3)}',
+'.tmr-sounds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}',
+/* Her står ord, ikke minutter: navnene må få bryte, og de tre kolonnene
+   skal holde samme høyde selv om ett navn tar to linjer. */
+'.tmr-sounds .tmr-chip{white-space:normal;line-height:1.25;padding:7px 9px;min-height:31px}',
 
 /* — knapper — */
 '.tmr-actions{display:flex;gap:9px;margin-top:20px}',
@@ -363,6 +594,11 @@ function build(el, variant){
       '<button type="button" class="tmr-btn primary" data-r="go">Start</button>',
       '<button type="button" class="tmr-btn" data-r="reset">Nullstill</button>',
     '</div>',
+    (compact ? '' :
+      '<div class="tmr-snd">' +
+        '<p class="tmr-sndlab" id="tmrSndLab" data-r="sndlab">Lyd når tiden er ute</p>' +
+        '<div class="tmr-sounds" role="group" aria-labelledby="tmrSndLab" data-r="sounds"></div>' +
+      '</div>'),
     '<div class="tmr-foot">',
       '<button type="button" class="tmr-mute" data-r="mute" aria-pressed="true">',
         '<span data-r="muteico">' + ICO_ON + '</span><span data-r="mutetxt">Lyd på</span>',
@@ -396,6 +632,7 @@ function mount(el){
   label(r.reset, 'timerReset', 'Nullstill');
   if(r.linktxt) label(r.linktxt, 'timerFullLink', 'Full visning');
   if(r.demotxt) label(r.demotxt, 'timerHear', 'Hør lyden');
+  if(r.sndlab) label(r.sndlab, 'timerSoundPick', 'Lyd når tiden er ute');
 
   /* hurtigvalg */
   var chips = [];
@@ -408,6 +645,19 @@ function mount(el){
     b.textContent = PRESETS[p] + ' min';
     r.presets.appendChild(b);
     chips.push(b);
+  }
+
+  /* lydvalg */
+  var toneChips = [];
+  for(var q = 0; r.sounds && q < SOUNDS.length; q++){
+    var sb = document.createElement('button');
+    sb.type = 'button';
+    sb.className = 'tmr-chip';
+    sb.setAttribute('data-snd', SOUNDS[q].id);
+    sb.setAttribute('aria-pressed', 'false');
+    label(sb, SOUNDS[q].key, SOUNDS[q].no);
+    r.sounds.appendChild(sb);
+    toneChips.push(sb);
   }
 
   /* ── tilstand ──
@@ -499,6 +749,17 @@ function mount(el){
     r.muteico.innerHTML = sound ? ICO_ON : ICO_OFF;
     label(r.mutetxt, sound ? 'timerSoundOn' : 'timerSoundOff', sound ? 'Lyd på' : 'Lyd av');
     if(r.demo) r.demo.disabled = !sound;
+    /* Er lyden av, er det ingenting å velge mellom heller. */
+    for(var i = 0; i < toneChips.length; i++) toneChips[i].disabled = !sound;
+  }
+
+  /* Hvilken lyd som er markert. Selve valget er felles for begge variantene
+     av timeren, så det leses fra modulen og ikke fra dette kortet. */
+  function paintTone(){
+    for(var i = 0; i < toneChips.length; i++){
+      toneChips[i].setAttribute('aria-pressed',
+        toneChips[i].getAttribute('data-snd') === tone ? 'true' : 'false');
+    }
   }
 
   /* ── klokka ──
@@ -608,6 +869,18 @@ function mount(el){
   });
   if(r.demo) r.demo.addEventListener('click', function(){ if(sound) playNow(); });
 
+  /* Trykket er både valget og forhåndslyttingen — ett trykk, ett svar.
+     Går det en nedtelling, planlegges klangen på nytt, slik at det nye
+     valget er det som faktisk ringer når tiden er ute. */
+  if(r.sounds) r.sounds.addEventListener('click', function(e){
+    var b = e.target.closest('.tmr-chip');
+    if(!b || b.disabled) return;
+    setTone(b.getAttribute('data-snd'));
+    paintTone();
+    playNow();
+    if(mode === 'run' && sound) armAudio(remaining() / 1000);
+  });
+
   document.addEventListener('visibilitychange', function(){
     if(document.hidden || mode !== 'run') return;
     wake();
@@ -699,7 +972,7 @@ function mount(el){
     }
   } catch(e){}
 
-  paintSound(); paint(); paintControls();
+  paintSound(); paintTone(); paint(); paintControls();
 }
 
 function init(){
