@@ -481,6 +481,18 @@
       '</div>';
     navEl.appendChild(actions);
 
+    /* Timer-knappen skal finnes i toppen på hver side. Å legge en
+       <script>-tagg i 296 HTML-filer ville vært samme linje 296 ganger; i
+       stedet lastes den herfra, som allerede kjører overalt. Sidene som har
+       taggen selv (forsiden, /kalkulator/timer/) hoppes over, ellers ville
+       fila blitt hentet to ganger. Rekkefølgen er trygg: klyngen over er
+       lagt inn før dette, så .tc-actions finnes når timer.js kaller init(). */
+    if(!document.querySelector('script[src*="/shared/timer.js"]')){
+      var timerScript = document.createElement('script');
+      timerScript.src = '/shared/timer.js?v=v5';
+      document.head.appendChild(timerScript);
+    }
+
     // ── Menu wiring ──────────────────────────────────
     // Full keyboard support per the ARIA menu pattern: the trigger is a real
     // <button>; the popup is a role="menu" of role="menuitemradio" rows. We use
