@@ -54,11 +54,11 @@
 </script>
 
 <!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
-<link rel="stylesheet" href="/shared/themes.css?v=v5">
+<link rel="stylesheet" href="/shared/themes.css?v=v6">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v3">
-<link rel="stylesheet" href="/shared/components.css?v=v3">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v219">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v5">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v220">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
 
 <!-- FOUC-guard during language load — keeps i18n elements hidden until core.js resolves loadLang. -->
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
@@ -124,8 +124,6 @@
     overflow-x:hidden;
   }
   .container{max-width:1120px;margin:0 auto;padding:0 32px}
-
-  ::selection{background:rgba(200,153,104,.28);color:#fff}
 
   /* ── Sequenced page load ─────────────────────────── */
 
@@ -236,7 +234,11 @@
   }
   .scroll-progress.on{opacity:.85}
 
-  .skip{position:absolute;left:-999px;top:0;background:var(--accent);color:#1a0e05;padding:8px 14px;border-radius:4px;z-index:100;font:600 13px var(--font-sans)}
+  /* Fargeparet er --ink på --bg med vilje. Aksenten er en mellomtone på de
+     lyse temaene og gir ikke AA-kontrast mot verken lys eller mørk tekst —
+     målt til 3,06–4,19:1 på frost, glass, rosa og hendrix. --ink er per
+     definisjon lesbar mot --bg, så paret holder på alle ni temaene. */
+  .skip{position:absolute;left:-999px;top:0;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:4px;z-index:100;font:600 13px var(--font-sans)}
   .skip:focus{left:12px;top:12px}
 
   /* ── NAV ─────────────────────────────────────────── */
@@ -401,11 +403,13 @@
       background   var(--dur-fast) var(--ease-out-quart),
       box-shadow   var(--dur-base) var(--ease-out-quart);
   }
-  .search-shell:hover{
-    border-color:rgba(255,255,255,.22);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,.04),
-      0 1px 0 rgba(0,0,0,.45);
+  @media(hover:hover){
+    .search-shell:hover{
+      border-color:rgba(var(--wash-rgb),.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.04),
+        0 1px 0 rgba(0,0,0,.45);
+    }
   }
   .search-shell.focused{
     border-color:rgba(var(--glow-rgb),.5);
@@ -1764,17 +1768,17 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v225" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v225" defer></script>
-<script src="/shared/lang/no.js?v=v132" defer></script>
+<link rel="preload" href="/shared/core.js?v=v226" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v226" defer></script>
+<script src="/shared/lang/no.js?v=v226" defer></script>
 <script src="/shared/site-shell.js?v=v1" defer></script>
-<script src="/shared/top-chrome.js?v=v225" defer></script>
+<script src="/shared/top-chrome.js?v=v226" defer></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <script src="/shared/markedsdata.js?v=v12" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
-<script src="/shared/search.js?v=v129" defer></script>
+<script src="/shared/search.js?v=v130" defer></script>
 <!-- Timeren i toppen. Samme fil som /kalkulator/timer/ bruker — der i full
      størrelse, her som popover under pilla. -->
 <script src="/shared/timer.js?v=v5" defer></script>
@@ -2729,13 +2733,13 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         <span class="wordmark">Hverdagsverktøy</span>
       </div>
       <div class="foot-links">
-        <a href="#" data-i18n="footPrivacy">Personvern</a>
-        <a href="#" data-i18n="footContact">Kontakt</a>
+        <a href="/personvern/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+        <a href="/personvern/#kontakt" id="fl-con" data-i18n="footerCon">Kontakt</a>
       </div>
     </div>
     <div class="foot-bottom">
-      <span>© 2026 Hverdagsverktøy</span>
-      <em data-i18n="footDisclaimer">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+      <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+      <em id="fl-disc" data-i18n="footDisclaimer">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
     </div>
   </div>
 </footer>

@@ -13,8 +13,14 @@
   // ── State / persistence ──────────────────────────────
   // Each theme carries a tiny palette for the menu preview tile so users see
   // the actual mood of the theme (bg + ink + accent), not just one swatch.
+  // `accent` er en speiling av --accent i shared/themes.css og må endres i
+  // samme slengen som den — ellers viser prikken i menyen en annen farge
+  // enn temaet faktisk gir. Unntaket er de fire lov-undersidene
+  // (lov/{aksjelov,bokforingslov,mvalov,skattelov}), som laster denne fila
+  // men ikke themes.css: de har sin egen palett inline og faller derfor
+  // utenfor speilingen — det kan ikke rettes herfra.
   var THEMES = [
-    {k:'carbon',  l:'Carbon',    group:'dark',  sub:'Bek og messing',     pv:{bg:'#0f0e0d', ink:'#ecebe7', accent:'#b88a5e'}},
+    {k:'carbon',  l:'Carbon',    group:'dark',  sub:'Bek og messing',     pv:{bg:'#0f0e0d', ink:'#ecebe7', accent:'#c58e5a'}},
     {k:'dark',    l:'Mørk-blå',  group:'dark',  sub:'Kjølig natt',        pv:{bg:'#141a2c', ink:'#e9edf4', accent:'#7f9ad6'}},
     {k:'nordlys', l:'Nordlys',   group:'dark',  sub:'Aurora over fjord',  pv:{bg:'#0c1416', ink:'#e6f0ec', accent:'#4ec9a0'}},
     {k:'bw',      l:'Sort/hvit', group:'dark',  sub:'Høy kontrast',       pv:{bg:'#0a0a0a', ink:'#fafafa', accent:'#fafafa'}},
@@ -160,8 +166,14 @@
   .tc-kbd:hover{opacity:1;color:var(--ink2)}
   .tc-kbd kbd{font:500 10.5px/1 var(--font-mono);color:inherit;
     background:transparent;border:0;padding:0}
+  /* Glass er det ene temaet med halvgjennomsiktig --surface (hvit .62). Et
+     flytende panel må være ugjennomsiktig for å være lesbart — menyen har
+     ingen backdrop-filter, så med --surface leser sideinnholdet rett gjennom
+     menyteksten. --menu-bg (shared/themes.css) er tokenet som bærer dette;
+     fallbacken til --surface holder de åtte andre temaene — og sider som ikke
+     definerer --menu-bg — uendret. */
   .tc-menu{position:absolute;top:calc(100% + 10px);right:0;min-width:212px;
-    background:var(--surface);border:1px solid var(--line-2);border-radius:8px;
+    background:var(--menu-bg,var(--surface));border:1px solid var(--line-2);border-radius:8px;
     padding:4px;
     box-shadow:0 1px 0 rgba(255,255,255,.04) inset,
                0 24px 60px -12px rgba(0,0,0,.55),
@@ -252,15 +264,20 @@
     transition:opacity .15s var(--ease)}
   .tc-theme-menu a.current .tc-check{opacity:1}
 
-  /* Per-theme swatch colors for the picker preview */
-  .sw-carbon{background:#c89968}
-  .sw-dark{background:#8aa3c8}
+  /* Per-theme swatch colors for the picker preview.
+     Verdiene er speilinger av --accent i shared/themes.css: de flate
+     swatchene ER --accent, gradientene starter på --accent og fortsetter i
+     temaets egne tokens (--accent-2/--accent-deep, nordlys sitt fiolette
+     motbånd, glass sin --bg). Endres --accent der, må fargen her endres i
+     samme slengen — ellers viser prikken en annen farge enn temaet gir. */
+  .sw-carbon{background:#c58e5a}
+  .sw-dark{background:#7f9ad6}
   .sw-nordlys{background:linear-gradient(135deg,#4ec9a0 0%,#2e9472 52%,#7b5cc4 100%)}
-  .sw-hendrix{background:linear-gradient(135deg,#ff5b1f 0%,#c0188a 60%,#ffc24a 100%)}
+  .sw-hendrix{background:linear-gradient(135deg,#d6248f 0%,#ff6a1a 60%,#7c1aa8 100%)}
   .sw-bw{background:#fafafa}
   .sw-disco{background:#e91e8c}
   .sw-frost{background:#4f5fe5}
-  .sw-glass{background:linear-gradient(135deg,#8b95ff,#e8edf6)}
+  .sw-glass{background:linear-gradient(135deg,#6875f5,#e8edf6)}
   .sw-pink{background:#d4748e}
 
   /* ── Ticker tape ──────────────────────────── */
@@ -305,13 +322,20 @@
     ::view-transition-group(root){ animation-duration:.001ms !important }
   }
 
-  /* ── Mobil-kollaps @≤480px ────────────────────────────────────
+  /* ── Mobil-kollaps @≤640px ────────────────────────────────────
      Tekst-labelene på tema/språk-knappene + den redundante «Forsiden»-
      lenken sprengte toppbaren på 375px (på lov-sidene havnet språk-
      knappen helt utenfor viewport, uttilgjengelig). Kollaps til ikon-
      knapper (behold swatch/flagg/chevron); dropp nav-back — logoen
-     lenker allerede hjem, og undersidene har brødsmule under. */
-  @media(max-width:480px){
+     lenker allerede hjem, og undersidene har brødsmule under.
+     Grensa sto på 480px og var for lav: nav.top-nav er nowrap, og .tc-actions
+     er en SØSKEN av .nav-right, så den dyttes ut av viewport i stedet for å
+     bryte. html/body har overflow-x:hidden, så overflyten klippes stille —
+     ingen scrollbar avslører at knappene er borte. Målt fra 481px og opp kom
+     full-label-knappene (260px) og .nav-back (94px) tilbake samtidig:
+     regnskap-undersidene var klippet helt til 630px, lov-undersidene til 526px.
+     640px dekker begge, og fra 641px er raden målt innenfor på alle sider. */
+  @media(max-width:640px){
     #tc-theme-label,#tc-lang-label{display:none}
     .tc-actions{gap:10px}
     nav .nav-back{display:none}

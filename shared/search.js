@@ -713,7 +713,14 @@ function injectSearchStyles(){
   '#search-input::placeholder{color:var(--ink4,var(--ink3));}' +
   '.search-kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink3);background:var(--bg);border:1px solid var(--line);padding:3px 7px;border-radius:6px;flex-shrink:0;}' +
   '.search-box:focus-within .search-kbd{display:none;}' +
-  '.search-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:100;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh-lg,0 12px 32px -8px rgba(0,0,0,.45));max-height:min(70vh,440px);overflow-y:auto;display:none;padding:6px;}' +
+  // Glass er det ene temaet med halvgjennomsiktig --surface (hvit .62). Et
+  // flytende panel må være ugjennomsiktig for å være lesbart — nedtrekket har
+  // ingen backdrop-filter, så med --surface leser sideinnholdet rett gjennom
+  // trefflista. --menu-bg (shared/themes.css) er tokenet som bærer dette;
+  // fallbacken til --surface holder de åtte andre temaene — og sider som ikke
+  // definerer --menu-bg — uendret. Søkeboksen over ligger i normal flyt og
+  // beholder --surface med vilje.
+  '.search-dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:100;background:var(--menu-bg,var(--surface));border:1px solid var(--line);border-radius:12px;box-shadow:var(--sh-lg,0 12px 32px -8px rgba(0,0,0,.45));max-height:min(70vh,440px);overflow-y:auto;display:none;padding:6px;}' +
   '.search-dropdown.visible{display:block;}' +
   '.search-group-label{font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--ink3);opacity:.72;padding:9px 12px 4px;}' +
   '.search-result{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px;border-radius:8px;text-decoration:none;color:inherit;transition:background .12s;}' +

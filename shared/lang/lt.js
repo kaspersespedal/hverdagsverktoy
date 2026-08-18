@@ -1431,6 +1431,8 @@ REGIONS['lt'] = {
     morLblIoYrs: 'Atidėto mokėjimo laikotarpis (metai)',
     morLblRate: 'Palūkanos (%)',
     morLblType: 'Paskolos tipas',
+    morAnnuityLong: 'Anuiteto paskola — vienoda mėnesinė įmoka',
+    morSerialLong: 'Serijinė paskola — fiksuota amortizacija, mažėjanti įmoka',
     morLblYears: 'Terminas (metai)',
     morRMonthly: 'Mėnesinė įmoka',
     morROutEff: 'Efektyvi palūkanų norma',

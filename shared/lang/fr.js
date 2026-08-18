@@ -1077,6 +1077,8 @@ REGIONS['fr'] = {
     morSectionInput: 'Conditions du prêt',
     morSectionHint: 'Pratique 2026',
     morLblType: 'Type de prêt',
+    morAnnuityLong: 'Prêt à annuités — mensualité fixe',
+    morSerialLong: 'Prêt à amortissement constant — capital fixe, mensualité décroissante',
     morLblAmt: 'Montant emprunté (kr)',
     morLblRate: 'Taux (%)',
     morLblYears: 'Durée (années)',

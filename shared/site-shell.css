@@ -15,7 +15,10 @@
      på dem: jo mer du interagerer, jo kaldere blir siden.
      Bare TONEN ligger i tokenet — hvert brukssted beholder sin egen alpha, så
      de ni andre temaene rendrer bit for bit uendret med standardverdien her.
-     carbon overstyrer den til varm krem i themes.css. */
+     carbon overstyrer den til varm krem i themes.css.
+     Standardverdien her gjelder de MØRKE temaene. De fire lyse (frost, glass,
+     pink, hendrix) setter 0,0,0 i themes.css — kald hvit på en lys flate ble
+     hvit-på-hvit, så scrollbar-tommelen og alle hover-flatene var usynlige. */
   --wash-rgb:255,255,255;
   --pos:#e6e1d8; --neg:#a8a39a;
   /* Feiltone — dempet leire, ikke alarmrød. Skal lese som "se her" uten å
@@ -106,8 +109,15 @@ body.embed .calc-wrap{padding:0}
 body.embed .calc-wrap .container{grid-template-columns:1fr;padding:0;max-width:none}
 
 /* A11y: skip-to-main link — off-screen until keyboard focus (was only styled in legacy style.css as .skip-link) */
-.skip{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--accent);color:var(--bg);padding:10px 16px;border-radius:0 0 8px 0;text-decoration:none;font-weight:600;font-size:14px}
-.skip:focus{left:0;outline:2px solid var(--ink);outline-offset:-4px}
+/* Fargeparet er --ink på --bg, ikke --accent på --bg. Aksenten er en mellomtone
+   på de lyse temaene, så hvit tekst på den ga 3,06:1 på rosa og 3,28:1 på glass
+   — under AA, og det på nettopp den lenka som bare finnes for tastaturbrukere.
+   --ink er per definisjon lesbar mot --bg; målt 14,3–17,6:1 på alle ni temaene.
+   Fokusringen må ha --bg av samme grunn: med --ink som bakgrunn ville en ring i
+   --ink vært bit-identisk med flata, og outline-offset er negativ så ringen
+   tegnes inne i elementet. */
+.skip{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:0 0 8px 0;text-decoration:none;font-weight:600;font-size:14px}
+.skip:focus{left:0;outline:2px solid var(--bg);outline-offset:-4px}
 
 /* Barene dekker helt. 96 % holdt ikke: de 4 prosentene som slapp gjennom
    var nok til at en stor overskrift leste som spøkelsestekst når den gled
@@ -120,7 +130,13 @@ body.embed .calc-wrap .container{grid-template-columns:1fr;padding:0;max-width:n
   border-bottom:1px solid var(--line)}
 nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:24px}
 .brand-row{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
-.mark{width:28px;height:28px;border-radius:5px;background:#1a1714;
+/* Flisa bak logomerket. Fargen eies av --mark-bg i themes.css, som setter den
+   for alle ni temaene — mørke temaer løfter flisa fra den nesten svarte
+   navraden, lyse temaer gjør den mørk så messingmerket ikke forsvinner.
+   Fallbacken beholdes med vilje: laster en side dette arket uten themes.css,
+   står flisa igjen med den verdien den hadde før tokenet fantes, i stedet for
+   å bli helt bakgrunnsløs. */
+.mark{width:28px;height:28px;border-radius:5px;background:var(--mark-bg,#1a1714);
   border:1px solid var(--line-warm);display:flex;align-items:center;justify-content:center}
 .wordmark{font-family:var(--font-serif);font-weight:500;font-size:18px;letter-spacing:-.2px;line-height:1}
 

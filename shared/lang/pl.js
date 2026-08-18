@@ -1526,6 +1526,8 @@ REGIONS['pl'] = {
     morLblIoYrs:'Okres karencji (lata)',
     morLblRate:'Oprocentowanie (%)',
     morLblType:'Rodzaj kredytu',
+    morAnnuityLong:'Kredyt annuitetowy — stała rata miesięczna',
+    morSerialLong:'Kredyt z ratami malejącymi — stała rata kapitałowa, malejąca rata',
     morLblYears:'Okres spłaty (lata)',
     morRMonthly:'Rata miesięczna',
     morROutEff:'Oprocentowanie efektywne',
