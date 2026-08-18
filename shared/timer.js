@@ -480,6 +480,21 @@ var CSS = [
 '.tmr-link svg{width:14px;height:14px;flex:0 0 auto}',
 '.tmr-link[disabled]{opacity:.45;cursor:default}',
 
+/* — timer-knapp i toppen på sider som ikke har en egen (se mountNavTimer).
+   Forsiden eier sin egen pille i HTML og styles der (E247); denne bygges av
+   JS og styles derfor herfra. Den låner .tc-btn fra top-chrome.js, så den ser
+   ut som naboene sine — tema- og språkknappen — i stedet for å innføre en
+   tredje knappeform i samme klynge. */
+'.tmr-navwrap{position:relative;display:inline-flex}',
+'.tmr-navbtn svg{width:13px;height:13px;flex:0 0 auto;color:var(--ink3);transition:color .18s ease}',
+'.tmr-navtxt{font-variant-numeric:tabular-nums lining-nums}',
+'.tmr-navbtn.is-live{color:var(--ink)}',
+'.tmr-navbtn.is-live svg{color:var(--accent)}',
+'@media(hover:hover){.tmr-navbtn:hover svg{color:var(--accent)}}',
+/* Samme brekkpunkt som top-chrome bruker for sine egne etiketter, så hele
+   klyngen kollapser til ikoner samtidig i stedet for i to trinn. */
+'@media(max-width:480px){.tmr-navtxt{display:none}}',
+
 /* — popover på forsiden — */
 /* Pilla (.tmr-popwrap / .tmr-pill) styles IKKE herfra. Den markupen står i
    index.html, og denne fila lastes med `defer` — stilen ville kommet etter
@@ -975,7 +990,35 @@ function mount(el){
   paintSound(); paintTone(); paint(); paintControls();
 }
 
+/* Timeren skal være innen rekkevidde overalt, ikke bare på forsiden.
+   Sider som allerede har en timer i markupen hoppes over: forsiden har pilla
+   si, og /kalkulator/timer/ er timeren. To monterte kopier på samme side
+   ville dessuten delt localStorage uten å dele tilstand — start i den ene,
+   og den andre ville fortsatt stått på «Klar».
+   Knappen legges først i .tc-actions (tema/språk-klyngen), som top-chrome.js
+   bygger på hver side. Den fila laster også denne, og gjør det etter at
+   klyngen er på plass, så elementet finnes når vi kommer hit. */
+function mountNavTimer(){
+  if(document.querySelector('[data-hv-timer]')) return;
+  var actions = document.querySelector('.tc-actions');
+  if(!actions) return;
+  var navn = T('timerTitle', 'Nedtelling');
+  var wrap = document.createElement('div');
+  wrap.className = 'tmr-navwrap';
+  wrap.setAttribute('data-hv-timer-pop', '');
+  wrap.innerHTML =
+    '<button type="button" class="tc-btn tmr-navbtn" data-tmr-toggle' +
+      ' aria-expanded="false" aria-haspopup="dialog" aria-label="' + navn + '">' +
+      ICO_CLOCK +
+      '<span class="tmr-navtxt" data-tmr-pill-label>' + navn + '</span>' +
+    '</button>' +
+    '<div class="tmr-pop" data-hv-timer data-variant="compact" role="dialog"' +
+      ' aria-label="' + navn + '"></div>';
+  actions.insertBefore(wrap, actions.firstChild);
+}
+
 function init(){
+  mountNavTimer();
   var els = document.querySelectorAll('[data-hv-timer]');
   for(var i = 0; i < els.length; i++) mount(els[i]);
 }
