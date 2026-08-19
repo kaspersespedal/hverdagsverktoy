@@ -28,7 +28,7 @@
     {k:'frost',   l:'Frost',     group:'light', sub:'Lys morgen',         pv:{bg:'#f7f9fc', ink:'#0f172a', accent:'#4f5fe5'}},
     {k:'glass',   l:'Glass',     group:'light', sub:'Glass og dis',       pv:{bg:'#e8edf6', ink:'#1a1a2e', accent:'#6875f5'}},
     {k:'pink',    l:'Rosa',      group:'light', sub:'Mykt blush',         pv:{bg:'#fffbfc', ink:'#3a2030', accent:'#d4748e'}},
-    {k:'hendrix', l:'Hendrix',   group:'light', sub:'Fillmore-plakat',    pv:{bg:'#fdf1e3', ink:'#2a0d3d', accent:'#d6248f'}}
+    {k:'hendrix', l:'Hendrix',   group:'light', sub:'Fillmore-plakat',    pv:{bg:'#fdf0d9', ink:'#2b0b3f', accent:'#cf0f7d'}}
   ];
   // `hidden:true` tar språket ut av velgeren uten å fjerne koden: språkfila,
   // /<kode>/-sidene og ?lang=<kode> fungerer fortsatt for den som har lenka.
@@ -273,7 +273,7 @@
   .sw-carbon{background:#c58e5a}
   .sw-dark{background:#7f9ad6}
   .sw-nordlys{background:linear-gradient(135deg,#4ec9a0 0%,#2e9472 52%,#7b5cc4 100%)}
-  .sw-hendrix{background:linear-gradient(135deg,#d6248f 0%,#ff6a1a 60%,#7c1aa8 100%)}
+  .sw-hendrix{background:linear-gradient(135deg,#cf0f7d 0%,#dd4f0a 58%,#6a12a3 100%)}
   .sw-bw{background:#fafafa}
   .sw-disco{background:#e91e8c}
   .sw-frost{background:#4f5fe5}

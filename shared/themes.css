@@ -142,46 +142,149 @@ html[data-theme="dark"] .ks{
     0 20px 48px -16px rgba(0,0,0,.55) !important;
 }
 
-html[data-theme="hendrix"]{ /* LIGHT 60s psychedelic — Fillmore-poster cream */
-  --bg:#fdf1e3; --surface:#fff8ec; --surface-2:#f8e3cc; --surface-3:#f0d2b3;
-  --ink:#2a0d3d;       /* deep aubergine — readable on cream */
-  --ink2:#5b2766;
-  --ink3:#90589d;
-  --ink4:#9d59a6;
-  --accent:#d6248f;        /* hot rose-magenta — Hendrix scarf pink */
-  --glow-rgb:214, 36, 143;
-  --accent-2:#ff6a1a;      /* electric orange */
-  --accent-deep:#7c1aa8;   /* deep violet */
-  --line:rgba(42,13,61,.08);
-  --line-2:rgba(42,13,61,.14);
-  --line-warm:rgba(214,36,143,.22);
-  --pos:#2a0d3d; --neg:#7a3d8a;
+/* Hendrix — Fillmore-plakat på krempapir, med lysshowet bak.
+   Temaet het «60s psychedelic» før, men gjorde lite for å fortjene det: en
+   blek krembakgrunn og tre svake, helt stillestående radialgradienter. To ting
+   manglet, og begge er selve Hendrix-ikonografien:
+
+   · OVERTRYKKET. Plakatene til Wes Wilson og Bonnie MacLean (Fillmore
+     Auditorium 1966-68) er trykt med gjennomsiktig magenta, tangerin og fiolett
+     oppå hverandre på billig varmt papir. Der to farger overlapper blir det
+     MØRKERE, ikke lysere. Lagene her ligger derfor på mix-blend-mode:multiply,
+     ikke normal — det er hele forskjellen mellom «gradient» og «trykk».
+   · OLJEHJULENE. Bak Hendrix på Fillmore sto to lysprojektorer med olje og
+     vann mellom urglass, som ble varmet og vridd for hånd. Formene fløt sakte,
+     aldri i takt, aldri likt to ganger. Derfor to lag her — ett varmt (magenta
+     + tangerin) og ett kaldt (påfugl + fiolett) — som driver, roterer og puster
+     på 71 s og 97 s. Periodene er innbyrdes primiske med vilje: minste felles
+     multiplum er nesten to timer, så mønsteret gjentar seg aldri synlig.
+
+   Paletten er samtidig løftet ut av «pastell» og opp i plakat-blekk. Kontrast
+   mot --bg, gammel -> ny:
+     --ink3   4,64 -> 7,82     --ink4      4,28 -> 7,06
+     --accent 4,19 -> 4,64     --accent-2  2,57 -> 3,59
+     hvit på --accent 4,66 -> 5,23   hvit på --accent-2 2,87 -> 4,04
+   Alle fire blekktrinn består nå AA på --bg, --surface, --surface-2 OG
+   --surface-3. Den gamle gjorde det bare på --bg og --surface.
+
+   ⚠️ Lag-opasitetene (.22 og .18) er MÅLT, ikke valgt på skjønn. Vasken ligger
+   bak all tekst som ikke står på et kort, så den setter et gulv for hele
+   temaet. Regnestykket er backdrop-en i det teoretisk verste punktet — der alle
+   fem gradientene topper samtidig — komponert gjennom multiply:
+     gammel (normal blend, .28/.32/.20):  #e6909b -> --ink3 2,17 · --ink4 2,00
+     ny     (multiply, .22/.18):          #e3c0bc -> --ink3 5,26 · --ink4 4,75
+   Den gamle vasken kunne altså dra stillferdig tekst helt ned i 2:1. Skrus
+   opasitetene opp igjen, må --ink3/--ink4 måles på nytt mot det nye punktet.
+   Se også --on-accent-blokka lenger ned — hvit gjelder fortsatt. */
+html[data-theme="hendrix"]{
+  /* Papiret: varmere og gulere enn før (#fdf1e3 var rosa-krem, plakatstokken
+     var syrlig krem). --surface er nesten hvitt, som det upåtrykte feltet. */
+  --bg:#fdf0d9; --surface:#fffaf0; --surface-2:#f7e3bd; --surface-3:#eed3a2;
+  /* Blekket: dyp aubergine — plakatenes «svart» var nesten alltid fiolett. */
+  --ink:#2b0b3f;
+  --ink2:#57206b;
+  --ink3:#6d3080;
+  --ink4:#763589;
+  --accent:#cf0f7d;        /* hot magenta — skjerfet */
+  --glow-rgb:207, 15, 125;
+  /* Tangerinen er MÅLT ned fra #ff6a1a, ikke smaksjustert. --accent-2 er ment
+     som «lysere trinn» av aksenten, og det stemmer på de fem mørke temaene —
+     men på et lyst tema betyr lysere det motsatte av leselig. Sveip over 137
+     tekstnoder på forsiden: alle fire lyse temaer bruker --accent-2 som
+     TEKSTfarge (fr-eyebrow, fr-row-cd.soon, fr-link, resultattallene på
+     personlig/abo), og alle fire falt under AA — pink 2,07 · glass 2,52 ·
+     frost 3,62 · hendrix 2,71. #c2470f gir 4,80 på --surface (grunnen den
+     faktisk brukes på) og 4,44 på --bg, og hvit tekst OPPÅ den går fra 2,87
+     til 5,00. De tre andre lyse temaene har samme feil og er IKKE rørt her —
+     det er en egen, tema-overgripende avgjørelse. */
+  --accent-2:#c2470f;      /* tangerin */
+  --accent-deep:#6a12a3;   /* purple haze */
+  --line:rgba(43,11,63,.09);
+  --line-2:rgba(43,11,63,.15);
+  --line-warm:rgba(207,15,125,.24);
+  --pos:#2b0b3f; --neg:#57206b;
   color-scheme:light;
 }
 
-/* Hendrix — psychedelic poster glow on cream.
-   Three offset pastel-saturated gradients (rose + tangerine + violet)
-   bloom over the warm cream base for that vintage poster vibrance. */
-html[data-theme="hendrix"] body::before{
-  content:""; position:fixed; inset:0; z-index:-4; pointer-events:none;
-  background:
-    radial-gradient(58vw 48vh at 8%  4%,  rgba(214,36,143,.28), transparent 64%),
-    radial-gradient(68vw 56vh at 96% 14%, rgba(255,160,40,.32), transparent 62%),
-    radial-gradient(78vw 64vh at 58% 108%, rgba(124,26,168,.20), transparent 60%);
-  filter:saturate(1.08);
+/* Rasteret. To forskjøvne punktskjermer (fiolett + magenta) i 3 px-rutenett
+   gir rosetten man ser i offsettrykk når man går nær nok. Den ligger i selve
+   body-bakgrunnen og ikke i et eget lag — ett lag mindre å komponere, og
+   blekket i oljehjulene multipliseres da riktig oppå rasteret, slik ekte
+   overtrykk gjør. Slått av under 768 px (E228: store, repeterende flater er
+   det som får rullingen til å slepe på telefon). */
+html[data-theme="hendrix"] body{
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(rgba(43,11,63,.055) .6px, transparent .7px),
+    radial-gradient(rgba(207,15,125,.05) .6px, transparent .7px);
+  background-size:3px 3px,3px 3px;
+  background-position:0 0,1.5px 1.5px;
 }
-/* Nav/faner hadde 78 %/72 % her for at blurren skulle lese mot krem.
-   Barene er ugjennomsiktige og blurfrie nå (site-shell.css ~linje 116),
-   så unntaket ville bare gjort de lyse temaene gjennomsiktige igjen. */
+
+/* Oljehjul 1 — varmt (magenta + tangerin). */
+html[data-theme="hendrix"] body::before{
+  content:"";position:fixed;inset:-45%;z-index:-4;pointer-events:none;
+  background:
+    radial-gradient(38vmax 31vmax at 24% 27%, rgba(255,47,160,.62), transparent 62%),
+    radial-gradient(45vmax 34vmax at 77% 17%, rgba(255,122,31,.56), transparent 60%),
+    radial-gradient(34vmax 40vmax at 58% 95%, rgba(255,196,26,.40), transparent 58%);
+  mix-blend-mode:multiply;opacity:.22;
+  animation:hxWheelA 71s ease-in-out infinite;
+}
+/* Oljehjul 2 — kaldt (påfugl + fiolett). Motsatt rotasjonsretning, annen
+   periode. Påfuglgrønnen er den ene fargen som IKKE finnes i palett-tokenene:
+   den er komplementærfargen magenta vibrerer mot på plakatene, og den hører
+   derfor hjemme i lyset — ikke i tekst, streker eller flater. */
+html[data-theme="hendrix"] body::after{
+  content:"";position:fixed;inset:-45%;z-index:-3;pointer-events:none;
+  background:
+    radial-gradient(41vmax 33vmax at 29% 86%, rgba(22,178,196,.48), transparent 58%),
+    radial-gradient(47vmax 31vmax at 83% 72%, rgba(122,26,190,.52), transparent 60%);
+  mix-blend-mode:multiply;opacity:.18;
+  animation:hxWheelB 97s ease-in-out infinite;
+}
+@keyframes hxWheelA{
+  0%  {transform:translate3d(-3%,-2%,0) rotate(0deg)  scale(1)}
+  30% {transform:translate3d(4%,3%,0)   rotate(6deg)  scale(1.13)}
+  62% {transform:translate3d(-2%,5%,0)  rotate(-5deg) scale(1.06)}
+  100%{transform:translate3d(-3%,-2%,0) rotate(0deg)  scale(1)}
+}
+@keyframes hxWheelB{
+  0%  {transform:translate3d(3%,2%,0)   rotate(0deg)   scale(1.05)}
+  35% {transform:translate3d(-4%,-3%,0) rotate(-7deg)  scale(1)}
+  70% {transform:translate3d(2%,-5%,0)  rotate(5deg)   scale(1.11)}
+  100%{transform:translate3d(3%,2%,0)   rotate(0deg)   scale(1.05)}
+}
+
+/* Kortene: papir løftet av bordet, med magenta i skyggen i stedet for grå. */
 html[data-theme="hendrix"] .ks{
   background:var(--surface) !important;
-  box-shadow:0 1px 0 rgba(124,26,168,.04), 0 12px 32px rgba(214,36,143,.10) !important;
+  box-shadow:0 1px 0 rgba(106,18,163,.05), 0 14px 34px rgba(207,15,125,.12) !important;
 }
 html[data-theme="hendrix"] .ik-input,
 html[data-theme="hendrix"] .ik-select{
   background:var(--surface) !important; color:var(--ink) !important;
 }
 html[data-theme="hendrix"] .ik-segs{ background:var(--surface-2) !important; }
+
+/* Nav/faner hadde 78 %/72 % her for at blurren skulle lese mot krem.
+   Barene er ugjennomsiktige og blurfrie nå (site-shell.css ~linje 116),
+   så unntaket ville bare gjort de lyse temaene gjennomsiktige igjen. */
+
+/* Mobil: ett hjul i stedet for to, halv fart, uten raster. */
+@media (max-width:768px){
+  html[data-theme="hendrix"] body{background-image:none}
+  html[data-theme="hendrix"] body::after{display:none}
+  html[data-theme="hendrix"] body::before{
+    opacity:.20;animation-duration:106s;
+  }
+}
+/* Redusert bevegelse: hjulene fryser i sin egen utgangsstilling — bildet står,
+   fargen blir igjen. */
+@media (prefers-reduced-motion:reduce){
+  html[data-theme="hendrix"] body::before,
+  html[data-theme="hendrix"] body::after{animation:none}
+}
 
 html[data-theme="bw"]{ /* Sort/hvit — high contrast monochrome */
   --bg:#0a0a0a; --surface:#141414; --surface-2:#1a1a1a; --surface-3:#222;
