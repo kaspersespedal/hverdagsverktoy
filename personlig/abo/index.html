@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v225" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v226" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -189,21 +189,66 @@ footer em{font-style:italic}
 </style>
 
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
-<link rel="stylesheet" href="/shared/themes.css?v=v5">
+<link rel="stylesheet" href="/shared/themes.css?v=v6">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v3">
-<link rel="stylesheet" href="/shared/components.css?v=v3">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v219">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v1">
+<link rel="stylesheet" href="/shared/components.css?v=v5">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v220">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
 
 <script defer src="/shared/atmosphere.js?v=v5"></script>
-<script defer src="/shared/core.js?v=v225"></script>
-<script defer src="/shared/lang/no.js?v=v132"></script>
+<script defer src="/shared/core.js?v=v226"></script>
+<script defer src="/shared/lang/no.js?v=v226"></script>
 <script defer src="/shared/search-intents.js?v=v124"></script>
-<script defer src="/shared/search.js?v=v129"></script>
+<script defer src="/shared/search.js?v=v130"></script>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v225"></script>
+<script defer src="/shared/top-chrome.js?v=v226"></script>
 <style>
+/* ════════ KASKADE-FIKS — må bli stående i DENNE blokka ════════
+   Sidas hovedstil ligger i <style>-blokka FØR <link ... site-shell.css>, så
+   alt der taper mot de delte arkene ved lik spesifisitet. Reglene under er
+   nettopp de som tapte: skjemaet ble 345px bredt på en 1920px-skjerm, og de
+   tre siste kolonnene i abonnement-tabellen delte 13px mellom seg. Ikke rydd
+   dem opp til de andre layout-reglene — der blir de døde på nytt.
+   Media-vakten er nødvendig: site-shell kollapser .calc-wrap .container ved
+   1024px og .ks-body ved 768px, og siden media-spørsmål ikke gir spesifisitet
+   ville reglene ellers vinne på mobil og hindre stablingen. */
+@media(min-width:1025px){
+  .calc-wrap .container{grid-template-columns:minmax(0,1fr) 260px;gap:28px}
+  .ks-body{grid-template-columns:minmax(0,1fr) 340px}
+  /* .container har max-width:1180px, så lista blir aldri bredere enn 427px i
+     to-kolonne-layouten. Et gulv på 520px kunne derfor per definisjon aldri
+     innfris, og den vannrette rullelista var normaltilstanden på desktop —
+     både "Delt på" og slett-knappen krevde sidelengs scroll på ALLE bredder.
+     Gulvet er senket til det raden faktisk trenger:
+     32px slett + ~55px "Delt på" + ~52px "Pr." + ~52px "Pris" = 191px låst.
+     425 - 191 = 234px igjen til Tjeneste og Kategori, og 130 + 95 går akkurat
+     opp. Målt: rullefeltet er borte fra ~1190px og oppover (lista 427px, rad
+     427px). Mellom 1025 og ~1187px er lista selv smalere enn 425px (337px ved
+     1100, 262px ved 1025) fordi .container ikke har nådd max-width ennå — der
+     ruller lista fortsatt, men overflow-x:auto under er da en sikkerhetsventil
+     for et smalt vindusbånd i stedet for standardtilstanden. */
+  .ab-list-head,.ab-row{grid-template-columns:minmax(130px,2.4fr) minmax(95px,1.2fr) .9fr .65fr .55fr 32px;min-width:425px}
+}
+/* Under ~1188px har .container ikke nadd max-width:1180px enna, sa lista krymper
+   med vinduet: 337px ved 1100, 262px ved 1025. Da far raden ikke plass uansett
+   hvor lavt gulvet settes — malt uten gulv i det hele tatt kollapser de tre
+   smale kolonnene til 1,3-2,1px, altsa nøyaktig feilen vi kom fra. Losningen er
+   a gi skjemaet hele bredden i det bandet i stedet: resultatpanelet stables
+   under, slik site-shell allerede gjor lenger nede. Det gir 614px ved 1025 og
+   689px ved 1100 — raden pa 425px far god plass, og den vannrette rullelista
+   forsvinner helt pa desktop. Nedre grense er 1025px fordi site-shell da
+   uansett kollapser .calc-wrap .container. */
+@media(min-width:1025px) and (max-width:1187px){
+  .ks-body{grid-template-columns:minmax(0,1fr)}
+}
+/* Samme mobil-redning som i @media(max-width:640px), men på alle bredder. */
+.ab-list{overflow-x:auto}
+/* .side-card får background:var(--surface) i blokka over, men site-shell setter
+   background:transparent og vinner — kortene ble gjennomsiktige. Samme verdi
+   som søstersidene (personlig/fam, personlig/fbl m.fl.) bruker. */
+.side-card{background:var(--surface)}
+
 /* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
 .lonn-learn{padding:8px 0 12px}
 .lc-sec{padding:54px 0;border-top:1px solid var(--line)}
@@ -522,13 +567,13 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <footer>
   <div class="container foot">
-    <span>© 2026 Hverdagsverktøy</span>
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
     <span class="foot-links">
       <a href="/" data-i18n="footerPriv">Personvern</a>
       <span class="foot-sep" aria-hidden="true">·</span>
       <a href="/" data-i18n="footerCon">Kontakt</a>
     </span>
-    <em data-i18n="footerDisc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+    <em id="fl-disc" data-i18n="footerDisc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
   </div>
 </footer>
 

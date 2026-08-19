@@ -1390,6 +1390,8 @@ REGIONS['so'] = {
     morLblIoYrs: 'Muddada aan bixinta lahayn (sannadood)',
     morLblRate: 'Dulsaar (%)',
     morLblType: 'Nooca amaahda',
+    morAnnuityLong: 'Amaah annuity — lacag isku mid ah bishiiba',
+    morSerialLong: 'Amaah taxane — lacag-celin isku mid ah, lacag-bixin hoos u dhacaysa',
     morLblYears: 'Muddada (sannadood)',
     morRMonthly: 'Bixinta bille',
     morROutEff: 'Dulsaarta wax-ku-oolka ah',

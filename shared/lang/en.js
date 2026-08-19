@@ -1649,6 +1649,8 @@ REGIONS['en'] = {
     morLblIoYrs: 'Interest-only period (years)',
     morLblRate: 'Interest rate (%)',
     morLblType: 'Loan type',
+    morAnnuityLong: 'Annuity loan — fixed monthly payment',
+    morSerialLong: 'Serial loan — fixed principal repayment, falling instalments',
     morLblYears: 'Loan term (years)',
     morRMonthly: 'Monthly payment',
     morROutEff: 'Effective rate',

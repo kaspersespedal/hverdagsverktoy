@@ -1438,6 +1438,8 @@ REGIONS['ti'] = {
     morLblIoYrs: 'ናይ ዘይምክፋል ግዜ (ዓመታት)',
     morLblRate: 'ወለድ (%)',
     morLblType: 'ዓይነት ልቓሕ',
+    morAnnuityLong: 'ኣኑይቲ ልቓሕ — ማዕረ ወርሓዊ ክፍሊት',
+    morSerialLong: 'ተኸታታሊ ልቓሕ — ማዕረ ምኽፋል፣ ዝጎድል ክፍሊት',
     morLblYears: 'ግዜ (ዓመታት)',
     morRMonthly: 'ናይ ወርሒ ክፍሊት',
     morROutEff: 'ተግባር ወለድ',

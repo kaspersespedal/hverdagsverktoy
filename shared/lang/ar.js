@@ -1599,6 +1599,8 @@ REGIONS['ar'] = {
     morLblIoYrs: 'فترة بدون أقساط (سنوات)',
     morLblRate: 'الفائدة (٪)',
     morLblType: 'نوع القرض',
+    morAnnuityLong: 'قرض بأقساط ثابتة — دفعة شهرية ثابتة',
+    morSerialLong: 'قرض بأقساط أصل ثابتة — قسط أصل ثابت ودفعة متناقصة',
     morLblYears: 'المدة (سنوات)',
     morRMonthly: 'الدفعة الشهرية',
     morROutEff: 'الفائدة الفعلية',
