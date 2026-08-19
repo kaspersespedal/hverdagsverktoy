@@ -1334,6 +1334,8 @@ REGIONS['no'] = {
     morSectionInput:'Lånevilkår',
     morSectionHint:'2026-praksis',
     morLblType:'Lånetype',
+    morAnnuityLong:'Annuitetslån — fast månedlig betaling',
+    morSerialLong:'Serielån — fast avdrag, synkende terminbeløp',
     morLblAmt:'Lånebeløp (kr)',
     morLblRate:'Rente (%)',
     morLblYears:'Løpetid (år)',

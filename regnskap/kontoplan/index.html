@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v225" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v226" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -49,7 +49,7 @@
 <!-- Temapaletten. Denne siden er ellers selvforsynt, men paletten lå her som en
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
-<link rel="stylesheet" href="/shared/themes.css?v=v5">
+<link rel="stylesheet" href="/shared/themes.css?v=v6">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -493,6 +493,17 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
   .foot em{font-style:italic;color:var(--ink4)}
 
+  @media (max-width: 980px){
+    /* Søkeboksen ligger inne i navbaren og krymper ikke. nav.top-nav er
+       nowrap, så .tc-actions (tema-, språk- og timerknappen) blir dyttet ut
+       og klippet stille av overflow-x:hidden. Denne sida har i tillegg
+       .nav-back i topplinja, så raden er 94px bredere enn på lov-undersidene:
+       målt høyre kant på .tc-actions er 914px, og først fra 961px viewport
+       får raden plass innenfor containeren. 980px gir margin over den grensa.
+       Regelen lå tidligere på 560px, som lot hele båndet 561-960px stå med
+       utilgjengelige knapper. */
+    #site-search-anchor,#site-search{display:none}
+  }
   @media (max-width: 880px){
     .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
     .page-stats{align-self:stretch}
@@ -501,10 +512,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media (max-width: 560px){
     .container{padding:0 22px}
     .page-hero{padding:36px 0 28px}
-    /* Søkeboksen ligger inne i navbaren på disse sidene og krympet ikke —
-       den dyttet tema- og språkknappene ut til x=566 på en 375px skjerm,
-       altså utenfor synlig område. Samme grep som lov-undersidene bruker. */
-    #site-search-anchor,#site-search{display:none}
     h1.page-title{font-size:clamp(30px, 8vw, 42px)}
   }
   @media (prefers-reduced-motion: reduce){
@@ -658,9 +665,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
   /* T3: site-shell — help-btn + focus-btn + howto-details + full footer */
   .section-head-actions{display:inline-flex;gap:6px;align-items:center;margin-left:auto;}
+  .page-hero-actions{display:flex;gap:8px;margin-top:14px;}
   .calc-help-btn,.focus-card-btn{
     background:transparent;border:1px solid var(--line-2);color:var(--ink3);
-    width:26px;height:26px;border-radius:50%;cursor:pointer;padding:0;
+    width:32px;height:32px;border-radius:50%;cursor:pointer;padding:0;
     display:inline-flex;align-items:center;justify-content:center;
     font:600 13px/1 var(--font-sans);
     transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease);
@@ -668,12 +676,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media (hover: hover){
     .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line);background:var(--hover-bg);}
   }
+  .calc-help-btn:focus-visible,.focus-card-btn:focus-visible{outline:1px solid var(--accent);outline-offset:2px;}
   body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer,body.focus-mode .crumb{display:none;}
   body.focus-mode .page-hero{padding-top:24px;}
   details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;}
   details.howto>summary{
     list-style:none;cursor:pointer;padding:13px 18px;
-    font:600 11px/1.4 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink2);
+    font:600 13px/1.4 var(--font-sans);letter-spacing:0;color:var(--ink2);
     display:flex;align-items:center;justify-content:space-between;gap:12px;
   }
   details.howto>summary::-webkit-details-marker{display:none;}
@@ -688,9 +697,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .site-footer-full .container{display:flex;flex-direction:column;gap:8px;}
   .site-footer-full .footer-inner{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:8px;}
   .site-footer-full .footer-logo{font:600 14px/1 var(--font-sans);color:var(--ink);}
-  .site-footer-full .footer-links{display:flex;gap:18px;}
-  .site-footer-full .footer-links a{font:500 13px/1 var(--font-sans);color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
-  @media (hover: hover){.site-footer-full .footer-links a:hover{color:var(--ink);}}
+  .site-footer-full .foot-links{display:flex;gap:18px;}
+  .site-footer-full .foot-links a{font:500 13px/1 var(--font-sans);color:var(--ink2);text-decoration:none;transition:color .15s var(--ease);}
+  @media (hover: hover){.site-footer-full .foot-links a:hover{color:var(--ink);}}
   .site-footer-full .footer-author{font-size:12px;color:var(--ink3);}
   .site-footer-full .footer-copy{font-size:12px;color:var(--ink3);line-height:1.6;}
 </style>
@@ -809,6 +818,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         </div>
         <h1 class="page-title" data-i18n-html="regnskapKontoplanH1Html">Standard <em>kontoplan</em> NS 4102</h1>
         <p class="page-lead" data-i18n="regnskapKontoplanLead">Norsk Standard kontoplan med klasse 1 til 8 — søk konto-nummer eller navn for å finne riktig konto for transaksjonen din. Bygger på SAF-T-strukturen som brukes i offisiell rapportering.</p>
+        <div class="page-hero-actions">
+          <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
+        </div>
       </div>
       <div class="page-stats">
         <div class="page-stat"><span class="l" data-i18n="regnskapKontoplanHStatKlasser">Konto-klasser</span><span class="v" id="hStatKlasser">8</span></div>
@@ -1145,7 +1157,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   <div class="container">
     <div class="footer-inner">
       <div class="footer-logo">Hverdagsverktøy</div>
-      <div class="footer-links"><a href="#" id="fl-priv">Privacy</a><a href="#" id="fl-con">Contact</a></div>
+      <div class="foot-links"><a href="#" id="fl-priv" data-i18n="footerPriv">Personvern</a><a href="#" id="fl-con" data-i18n="footerCon">Kontakt</a></div>
     </div>
     <div class="footer-author" id="fl-author">Hverdagsverktøy — gratis norske finanskalkulatorer</div>
     <div class="footer-copy" id="fl-copy">© 2026 Hverdagsverktøy — Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</div>
@@ -1339,9 +1351,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   });
 })();
 </script>
-<script src="/shared/top-chrome.js?v=v225" defer></script>
-<script defer src="/shared/core.js?v=v225"></script>
-<script defer src="/shared/lang/no.js?v=v132"></script>
+<script src="/shared/top-chrome.js?v=v226" defer></script>
+<script defer src="/shared/core.js?v=v226"></script>
+<script defer src="/shared/lang/no.js?v=v226"></script>
 
 <script>
   if('serviceWorker' in navigator){
@@ -1353,7 +1365,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
-<script src="/shared/search.js?v=v129" defer></script>
+<script src="/shared/search.js?v=v130" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');

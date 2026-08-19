@@ -81,12 +81,12 @@ html[data-theme="carbon"] body::before{
    likevel dyp nok til å telle i toppen av siden der --atmo-base-top løfter
    bakgrunnen, og topplyset (1px krem) gir kanten samme «børstet messing»-glimt
    som resten av temaet. */
-/* Logoflisen var hardkodet #1a1714 i site-shell.css — den eneste flaten i
-   toppen som ikke fulgte paletten. Standardverdien står igjen der (de lyse
-   temaene bruker den som en mørk merkeflis med vilje); carbon knytter den til
-   sin egen stige i stedet, så flisen løftes tydelig fra den nesten svarte
-   navigasjonsraden. */
-html[data-theme="carbon"] .mark{ background:var(--surface-3); }
+/* Logoflisen hadde tidligere sitt eget carbon-unntak her, fordi flisen ellers
+   var hardkodet #1a1714 i site-shell.css — den eneste flaten i toppen som ikke
+   fulgte paletten. Unntaket er borte: flisen får nå fargen sin fra .mark-reglene
+   nederst i denne fila, som dekker alle ni temaene. Carbon lander på nøyaktig
+   samme verdi som før (--surface-3), men nå som én regel som gjelder hele
+   stigen i stedet for én verdi pluss ett unntak. */
 
 html[data-theme="carbon"] .ks{
   background:
@@ -296,6 +296,76 @@ html[data-theme="frost"] .ik-select, html[data-theme="glass"] .ik-select, html[d
 }
 html[data-theme="frost"] .ik-segs, html[data-theme="glass"] .ik-segs, html[data-theme="pink"] .ik-segs{
   background:var(--surface-2) !important;
+}
+
+/* Chrome-tokens — topplinjas egne flater ─────────────────────
+   De seks tokenene under (--menu-bg, --hover-bg, --hover-bg-soft, --kbd-bg,
+   --select-bg, --flag-shadow) styrer nedtrekksmenyene, hover-flatene,
+   ⌘K-hintet, markert tekst og flagg-kanten i toppen av siden.
+
+   De hørte ikke hjemme noe sted: hver av de 21 sidene som tegner sin egen
+   topplinje hadde kopiert HELE settet inn i sin egen <style>, per tema. Kopiene
+   har drevet fra hverandre, og nordlys mangler helt i de fleste av dem — derfor
+   kunne to sider i samme tema tegne toppen ulikt. Tokenene bor her nå, avledet
+   fra hvert temas egen palett.
+
+   Selektoren er html[data-theme="X"] (0,1,1) med vilje: den slår de innebygde
+   kopiene, som alle står på bare [data-theme="X"] (0,1,0), uansett hvilken
+   rekkefølge stilarkene lastes i. Poenget er at ingen side lenger KAN mangle
+   et tema — verdiene finnes for alle ni så snart denne fila er lastet. */
+html:is([data-theme="carbon"],[data-theme="dark"],[data-theme="bw"],[data-theme="disco"],[data-theme="nordlys"]){
+  --menu-bg:var(--surface);
+  --hover-bg:color-mix(in srgb, var(--ink) 4%, transparent);
+  --hover-bg-soft:color-mix(in srgb, var(--ink) 2%, transparent);
+  --kbd-bg:color-mix(in srgb, var(--ink) 4%, transparent);
+  --select-bg:rgba(var(--glow-rgb),.28);
+  --flag-shadow:rgba(0,0,0,.4);
+}
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]){
+  --menu-bg:var(--surface);
+  --hover-bg:color-mix(in srgb, var(--ink) 4.5%, transparent);
+  --hover-bg-soft:color-mix(in srgb, var(--ink) 2.2%, transparent);
+  --kbd-bg:color-mix(in srgb, var(--ink) 4.5%, transparent);
+  --select-bg:rgba(var(--glow-rgb),.22);
+  --flag-shadow:rgba(0,0,0,.18);
+  /* Vasketonen står som kald hvit i site-shell.css fordi de mørke temaene
+     trenger den. På en lys flate ble hvit-på-hvit usynlig: scrollbar-tommelen
+     forsvant og alle hover-flatene sluttet å vise seg. Her snus den. */
+  --wash-rgb:0,0,0;
+}
+/* Glass er det ene temaet med halvgjennomsiktig --surface (hvit .62), så
+   var(--menu-bg) ville gjort nedtrekksmenyene gjennomsiktige — og .lang-menu
+   har ingen backdrop-filter, så sideinnholdet ville lest rett gjennom
+   menyteksten. Menyen holdes ugjennomsiktig på samme hvit som frost og pink
+   allerede bruker som --surface. */
+html[data-theme="glass"]{ --menu-bg:#fff; }
+
+/* Logoflisa — den ene chrome-flaten som IKKE styres av et token ────
+   Merket inni flisa er en messinggradient (#d8ad7e → #a87842). På et MØRKT
+   tema ligger navraden nesten svart, så flisa må LØFTES (--surface-3) for at
+   messingen skal være synlig i det hele tatt. På et LYST tema må flisa være
+   MØRK — ellers forsvinner messingen mot en lys bakgrunn.
+   color-mix(--ink 88%, --bg) gir hvert lyst tema sin egen dype tone
+   (frost: mørkt marineblått, pink: mørk plomme, hendrix: dyp aubergine)
+   i stedet for én felles brun.
+
+   Avgjørelsen ligger med vilje på .mark-ELEMENTET og ikke på --mark-bg-
+   tokenet: det tokenet betyr allerede noe helt annet på rundt 20 sider —
+   «svak flate-vask», typisk rgba(255,255,255,.04). To av dem legger det bak
+   TEKST (personlig/index.html .hub-cta, personlig/budsjett/index.html
+   .bc-input/.bc-select/.bc-chip), så å sette tokenet her ville dratt de
+   flatene med seg og gjort innskrevet tekst uleselig på de lyse temaene.
+   Tokenet eies fortsatt av sidene selv.
+
+   Spesifisiteten (0,2,1) er poenget: den slår både .mark i site-shell.css og
+   sidenes egne .mark-regler (begge (0,1,0)) uansett lasterekkefølge — enten
+   de står på var(--mark-bg) eller den hardkodede #1a1714 — så flisa blir lik
+   på alle sider som laster denne fila, uten å røre et eneste annet element. */
+html:is([data-theme="carbon"],[data-theme="dark"],[data-theme="bw"],[data-theme="disco"],[data-theme="nordlys"]) .mark{
+  background:var(--surface-3);
+}
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]) .mark{
+  background:color-mix(in srgb, var(--ink) 88%, var(--bg));
 }
 
 /* Theme + language menus, ⌘K hint, ticker — see top-chrome.js */

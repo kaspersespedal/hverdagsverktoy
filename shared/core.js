@@ -212,7 +212,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v224';
+    s.src = '/shared/lang/' + code + '.js?v=v226';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -464,7 +464,10 @@ function updateAll() {
   // set defaults (only if elements exist)
   const d = R().salDefaults;
   var sg=document.getElementById('s-g');if(sg)sg.value = fmtInput(d.gross);
-  var ma=document.getElementById('m-a');if(ma)ma.value = fmtInput(3000000);
+  // Standardbeløpet skal kun fylle et TOMT felt. Uten !ma.value overskrev updateAll()
+  // brukerens lagrede lånebeløp ved hver sidelast (ikke bare ved språkbytte) på
+  // boliglan/mor/, mens resultatpanelet fortsatt viste tall regnet på det gamle beløpet.
+  var ma=document.getElementById('m-a');if(ma && !ma.value)ma.value = fmtInput(3000000);
   _renameHowtoArrows();
   _addLawSubCloseLabel();
   try{_updateI18nHtml(R());}catch(e){_uiErr('i18nHtml',e);}
@@ -883,14 +886,14 @@ function updateTabs() {
   }
   // Mortgage loan type (boliglan.html only)
   var _mlt=document.getElementById('mor-l-type');if(_mlt)_mlt.textContent = r.morLType || 'Loan type';
-  if(document.getElementById('m-type')) morPopulateType();
+  if(morLegacyPresent()) morPopulateType();
   // V12 Fase 3 H4 fix: alle event-binding-helpers nedenfor er gjort idempotente
   // via __hvtBound-flagg for å hindre lineær listener-vekst per updateAll-kjøring.
   // Tidligere: hver språkbytte la til 1 ny listener per element → 10 språkbytter
   // = 10 stacked listeners → calc kalt 10× per change-event.
   var _ioChk=document.getElementById('m-io-check');
-  if(_ioChk && !_ioChk.__hvtBound){_ioChk.__hvtBound=true;_ioChk.addEventListener('change',function(){document.getElementById('m-io-fields').classList.toggle('hidden',!this.checked);if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});}
-  var _mtSel=document.getElementById('m-type');if(_mtSel){if(!_mtSel.__hvtBound){_mtSel.__hvtBound=true;_mtSel.addEventListener('change',function(){morUpdateHint();if(!document.getElementById('m-res').classList.contains('hidden'))calcMor();});}morUpdateHint();}
+  if(_ioChk && !_ioChk.__hvtBound){_ioChk.__hvtBound=true;_ioChk.addEventListener('change',function(){document.getElementById('m-io-fields').classList.toggle('hidden',!this.checked);var _mr=document.getElementById('m-res');if(_mr&&!_mr.classList.contains('hidden'))calcMor();});}
+  var _mtSel=document.getElementById('m-type');if(_mtSel){if(!_mtSel.__hvtBound){_mtSel.__hvtBound=true;_mtSel.addEventListener('change',function(){morUpdateHint();var _mr=document.getElementById('m-res');if(_mr&&!_mr.classList.contains('hidden'))calcMor();});}morUpdateHint();}
   // Auto-recalc on dropdown change for ALL calculators (idempotent)
   function autoRecalc(selId, resId, calcFn){var s=document.getElementById(selId);if(s && !s.__hvtRecalcBound){s.__hvtRecalcBound=true;s.addEventListener('change',function(){var r=document.getElementById(resId);if(r&&!r.classList.contains('hidden'))calcFn();});}}
   // Salary (skatt.html)
@@ -943,9 +946,19 @@ function updateTabs() {
   autoRecalc('studie-borte-aar','studie-res',calcStudielan);
   autoRecalc('studie-grad','studie-res',calcStudielan);
   autoRecalcInput(['studie-rente','studie-nedbtid','studie-skolepenger','studie-tilleggslan'],'studie-res',calcStudielan);
-  // Enter-key handler for mortgage inputs — triggers calcMor() (idempotent)
+  // Enter-key handler for mortgage inputs — triggers calcMor() (idempotent).
+  // Gates på det gamle oppsettet: boliglan/mor/ har sin egen calcMor og ville ellers
+  // kalt den globale, som klipper løpetida og krasjer på manglende #m-serial-range.
   function bindEnter(ids, fn){ids.forEach(function(id){var el=document.getElementById(id);if(el && !el.__hvtEnterBound){el.__hvtEnterBound=true;el.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fn();}});}});}
-  bindEnter(['m-a','m-r','m-y','m-fees','m-io-yrs'], function(){ if(typeof calcMor==='function') calcMor(); });
+  if(morLegacyPresent()) bindEnter(['m-a','m-r','m-y','m-fees','m-io-yrs'], function(){ if(typeof calcMor==='function') calcMor(); });
+}
+// Felles sjekkpunkt for det gamle m-*-navnerommet. Den gamle boliglånskalkulatoren finnes
+// bare på boliglan/index-old.html og de frosne språkkopiene — der er #m-type tom og må
+// fylles av morPopulateType(). Sub-sida boliglan/mor/ gjenbruker felt-ID-ene (m-a, m-r,
+// m-type …), men har egen calcMor, ferdig utfylte lånetype-valg og verken #m-res eller
+// #m-serial-range. Alt som rører det gamle oppsettet må derfor gates på denne.
+function morLegacyPresent(){
+  return !!(document.getElementById('m-res') && document.getElementById('m-serial-range'));
 }
 function morUpdateHint(){
   var sel=document.getElementById('m-type');var hint=document.getElementById('m-type-hint');
@@ -5634,7 +5647,7 @@ ccPopulate();
 // Skip network fetch if localStorage cache is < 1 hour old (perf: saves 1 request per page load)
 if(!ccRatesCached || (function(){ try { var r=localStorage.getItem(CC_CACHE_KEY); if(!r) return true; var o=JSON.parse(r); return !o||!o.ts||Date.now()-o.ts>3600000; } catch(e){ return true; } })()) ccFetchRates();
 vgPopulate();
-if(document.getElementById('m-type')) morPopulateType();
+if(morLegacyPresent()) morPopulateType();
 // Restore theme from localStorage
 // ═══════════════════════════════════════════════════════
 // ENTER KEY → CALCULATE
