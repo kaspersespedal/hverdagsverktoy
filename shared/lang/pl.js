@@ -8130,7 +8130,7 @@ REGIONS['pl']._ph = {
 "— 22 % på opptjente renter (utenfor BSU/aksjesparekonto).":"— 22 % od naliczonych odsetek (poza BSU/aksjesparekonto).",
 "— Du eier 100 % av et AS verdt 5 mill. En investor skyter inn 1 mill mot 16,67 % av selskapet. Post-money valuation = 6 mill. Du eier 83,33 % av et selskap som er verdt 6 mill — andelen din er verdt 5 mill, samme som før, men du har fått 1 mill ny kapital inn i selskapet.":"— Masz 100 % AS wartego 5 mln. Inwestor wkłada 1 mln za 16,67 % spółki. Post-money valuation = 6 mln. Masz 83,33 % spółki wartej 6 mln — twój udział jest wart 5 mln, tyle samo co wcześniej, ale do spółki wpłynął 1 mln nowego kapitału.",
 "— GODT Å VITE —":"— WARTO WIEDZIEĆ —",
-"— Investoren får 33,33 %, du beholder 66,67 % av et selskap verdt 15 mill. Andelen din er verdt 10 mill, samme nominelle verdi som hele selskapet før emisjonen.":"— Inwestor dostaje 33,33 %, ty zachowujesz 66,67 % spółki wartej 15 mln. Twój udział jest wart 14 mln, tyle samo nominalnie co cała spółka przed emisją.",
+"— Investoren får 33,33 %, du beholder 66,67 % av et selskap verdt 15 mill. Andelen din er verdt 10 mill, samme nominelle verdi som hele selskapet før emisjonen.":"— Inwestor dostaje 33,33 %, ty zachowujesz 66,67 % spółki wartej 15 mln. Twój udział jest wart 10 mln, tyle samo nominalnie co cała spółka przed emisją.",
 "— Kun startbeløp.":"— Tylko kwota początkowa.",
 "— Kun startbeløp. Renten alene jobber for deg.":"— Tylko kwota początkowa. Same odsetki pracują dla ciebie.",
 "— MVA, arbeidsgiver og særavgifter":"— MVA, pracodawca i akcyza",

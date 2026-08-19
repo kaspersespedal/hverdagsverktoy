@@ -7516,7 +7516,7 @@ REGIONS['uk']._ph = {
 "— 22 % på opptjente renter (utenfor BSU/aksjesparekonto).":"— 22 % на нараховані відсотки (поза BSU/aksjesparekonto).",
 "— Du eier 100 % av et AS verdt 5 mill. En investor skyter inn 1 mill mot 16,67 % av selskapet. Post-money valuation = 6 mill. Du eier 83,33 % av et selskap som er verdt 6 mill — andelen din er verdt 5 mill, samme som før, men du har fått 1 mill ny kapital inn i selskapet.":"— Ви володієте 100 % AS вартістю 5 млн. Інвестор вкладає 1 млн за 16,67 % компанії. Post-money valuation = 6 млн. Ви володієте 83,33 % компанії вартістю 6 млн — ваша частка коштує 5 млн, стільки ж, як раніше, але в компанію надійшов 1 млн нового капіталу.",
 "— GODT Å VITE —":"— КОРИСНО ЗНАТИ —",
-"— Investoren får 33,33 %, du beholder 66,67 % av et selskap verdt 15 mill. Andelen din er verdt 10 mill, samme nominelle verdi som hele selskapet før emisjonen.":"— Інвестор отримує 33,33 %, ви зберігаєте 66,67 % компанії вартістю 15 млн. Ваша частка коштує 14 млн — та сама номінальна вартість, що й уся компанія до емісії.",
+"— Investoren får 33,33 %, du beholder 66,67 % av et selskap verdt 15 mill. Andelen din er verdt 10 mill, samme nominelle verdi som hele selskapet før emisjonen.":"— Інвестор отримує 33,33 %, ви зберігаєте 66,67 % компанії вартістю 15 млн. Ваша частка коштує 10 млн — та сама номінальна вартість, що й уся компанія до емісії.",
 "— Kun startbeløp.":"— Лише початкова сума.",
 "— Kun startbeløp. Renten alene jobber for deg.":"— Лише початкова сума. Відсотки працюють самі.",
 "— MVA, arbeidsgiver og særavgifter":"— MVA, роботодавець і спецзбори",

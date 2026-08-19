@@ -8178,7 +8178,7 @@ REGIONS['en']._ph = {
 "— 22 % på opptjente renter (utenfor BSU/aksjesparekonto).":"— 22 % on the interest you earn (outside BSU/share savings account).",
 "— Du eier 100 % av et AS verdt 5 mill. En investor skyter inn 1 mill mot 16,67 % av selskapet. Post-money valuation = 6 mill. Du eier 83,33 % av et selskap som er verdt 6 mill — andelen din er verdt 5 mill, samme som før, men du har fått 1 mill ny kapital inn i selskapet.":"— You own 100 % of an AS worth 5 million. An investor puts in 1 million for 16,67 % of the company. Post-money valuation = 6 million. You own 83,33 % of a company worth 6 million — your stake is worth 5 million, the same as before, but you have brought 1 million of new capital into the company.",
 "— GODT Å VITE —":"— GOOD TO KNOW —",
-"— Investoren får 33,33 %, du beholder 66,67 % av et selskap verdt 15 mill. Andelen din er verdt 10 mill, samme nominelle verdi som hele selskapet før emisjonen.":"— The investor gets 33,33 %, you keep 66,67 % of a company worth 15 million. Your stake is worth 14 million, the same nominal value as the whole company before the issue.",
+"— Investoren får 33,33 %, du beholder 66,67 % av et selskap verdt 15 mill. Andelen din er verdt 10 mill, samme nominelle verdi som hele selskapet før emisjonen.":"— The investor gets 33,33 %, you keep 66,67 % of a company worth 15 million. Your stake is worth 10 million, the same nominal value as the whole company before the issue.",
 "— Kun startbeløp.":"— Initial amount only.",
 "— Kun startbeløp. Renten alene jobber for deg.":"— Starting amount only. The interest alone works for you.",
 "— MVA, arbeidsgiver og særavgifter":"— VAT (MVA), employers and excise duties",

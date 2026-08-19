@@ -8203,7 +8203,7 @@ REGIONS['ar']._ph = {
 "— 22 % på opptjente renter (utenfor BSU/aksjesparekonto).":"— 22 % على الفوائد المكتسبة (خارج BSU/حساب ادخار الأسهم).",
 "— Du eier 100 % av et AS verdt 5 mill. En investor skyter inn 1 mill mot 16,67 % av selskapet. Post-money valuation = 6 mill. Du eier 83,33 % av et selskap som er verdt 6 mill — andelen din er verdt 5 mill, samme som før, men du har fått 1 mill ny kapital inn i selskapet.":"— تملك 100 % من AS قيمته 5 ملايين. يضخّ مستثمر 1 مليون مقابل 16,67 % من الشركة. Post-money valuation = 6 ملايين. تملك 83,33 % من شركة قيمتها 6 ملايين — حصتك تساوي 5 ملايين، كما كانت، لكنك أدخلت 1 مليون رأس مال جديد إلى الشركة.",
 "— GODT Å VITE —":"— من الجيد معرفته —",
-"— Investoren får 33,33 %, du beholder 66,67 % av et selskap verdt 15 mill. Andelen din er verdt 10 mill, samme nominelle verdi som hele selskapet før emisjonen.":"— يحصل المستثمر على 33,33 %، وتحتفظ أنت بـ 66,67 % من شركة قيمتها 15 مليونًا. حصتك تساوي 14 ملايين، وهي نفس القيمة الاسمية للشركة كلها قبل الإصدار.",
+"— Investoren får 33,33 %, du beholder 66,67 % av et selskap verdt 15 mill. Andelen din er verdt 10 mill, samme nominelle verdi som hele selskapet før emisjonen.":"— يحصل المستثمر على 33,33 %، وتحتفظ أنت بـ 66,67 % من شركة قيمتها 15 مليونًا. حصتك تساوي 10 ملايين، وهي نفس القيمة الاسمية للشركة كلها قبل الإصدار.",
 "— Kun startbeløp.":"— المبلغ الأولي فقط.",
 "— Kun startbeløp. Renten alene jobber for deg.":"— المبلغ الأولي فقط. الفائدة وحدها تعمل لصالحك.",
 "— MVA, arbeidsgiver og særavgifter":"— MVA وصاحب العمل والرسوم الخاصة",
