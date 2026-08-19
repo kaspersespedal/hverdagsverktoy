@@ -440,6 +440,26 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     scrollbar-width:none;
   }
   .tabs::-webkit-scrollbar{display:none}
+  /* Fanerekka er en scroller — paa 360px rommer den 2 av 10 faner. Denne
+     sida laster ikke site-shell.css, saa reglene som gir de andre 63 sidene
+     en uttoning mot kanten maa staa her for at rekka skal oppfoere seg likt.
+     data-fade-l/-r og --tabs-bleed settes av top-chrome.js: uttoning bare paa
+     den sida som faktisk skjuler faner, og negativ margin lik .container sin
+     luft slik at rekka gaar kant til kant mens foerste og siste fane fortsatt
+     hviler paa gutteren. Uten JS staar bleed paa 0px og rekka er som foer. */
+  @media (max-width:768px){
+    body .tabs{
+      margin-inline:calc(var(--tabs-bleed, 0px) * -1);
+      padding-inline:var(--tabs-bleed, 0px);
+      --fade-l:0px; --fade-r:0px;
+      -webkit-mask-image:linear-gradient(to right,transparent,#000 var(--fade-l),
+        #000 calc(100% - var(--fade-r)),transparent);
+              mask-image:linear-gradient(to right,transparent,#000 var(--fade-l),
+        #000 calc(100% - var(--fade-r)),transparent);
+    }
+    body .tabs[data-fade-l="1"]{--fade-l:26px}
+    body .tabs[data-fade-r="1"]{--fade-r:26px}
+  }
   .tab{
     flex-shrink:0;background:transparent;border:0;
     padding:10px 14px;border-radius:4px;cursor:pointer;
@@ -453,7 +473,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .tab:hover{color:var(--ink2);background:var(--hover-bg-soft)}
   .tab[aria-selected="true"]{color:var(--ink)}
   .tab[aria-selected="true"]::after{
-    content:"";position:absolute;left:14px;right:14px;bottom:-7px;height:2px;
+    content:"";position:absolute;left:14px;right:14px;bottom:-6px;height:2px;
     background:var(--accent);
   }
   .tab .tab-icon{width:14px;height:14px;color:currentColor;opacity:.6}
@@ -1271,7 +1291,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   });
 })();
 </script>
-<script src="/shared/top-chrome.js?v=v227" defer></script>
+<script src="/shared/top-chrome.js?v=v241" defer></script>
 <script defer src="/shared/core.js?v=v227"></script>
 <script defer src="/shared/lang/no.js?v=v227"></script>
 

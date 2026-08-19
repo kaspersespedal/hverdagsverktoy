@@ -57,7 +57,7 @@
 <link rel="stylesheet" href="/shared/themes.css?v=v9">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v221">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v2">
 
 <!-- FOUC-guard during language load — keeps i18n elements hidden until core.js resolves loadLang. -->
@@ -1772,7 +1772,7 @@
 <script src="/shared/core.js?v=v227" defer></script>
 <script src="/shared/lang/no.js?v=v227" defer></script>
 <script src="/shared/site-shell.js?v=v1" defer></script>
-<script src="/shared/top-chrome.js?v=v227" defer></script>
+<script src="/shared/top-chrome.js?v=v241" defer></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <script src="/shared/markedsdata.js?v=v12" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
@@ -4380,7 +4380,16 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '    vec2 p = vec2((frag.x - 0.5) * aspect, frag.y);',
       '    vec3 sky = mix(uSkyBot, uSkyTop, smoothstep(0.05, 0.95, frag.y));',
       '    float amp = uAmp * 1.5;',
-      '    vec2 mp = vec2(aspect * 0.31, 0.76);',
+      '    // 0.31 av bredden er maanens plass paa liggende skjerm. Staaende skjerm',
+      '    // har ikke bredde til den: halo-ringen maaler 0.145 av HOYDEN, altsaa',
+      '    // 118px paa en 375x812-telefon, mens det bare sto 71px igjen til hoyre.',
+      '    // Ringen ble derfor skaaret tvert av skjermkanten og maanen sto klemt',
+      '    // opp i hjornet. Klemmen holder minst 0.20 (ring + litt luft) inn fra',
+      '    // kanten. Over aspect 1.05 er min() aldri bindende — alt liggende er',
+      '    // uendret, ned til 1024x700. max(...,0.0) hindrer at ekstremt hoye',
+      '    // vinduer skyver maanen forbi midten og klipper ringen paa venstre side.',
+      '    float mpx = min(aspect * 0.31, max(aspect * 0.5 - 0.20, 0.0));',
+      '    vec2 mp = vec2(mpx, 0.76);',
       '    float md = length(p - mp);',
       '    float halo = exp(-md * md * 150.0) * 0.30 + exp(-md * md * 24.0) * 0.15 + exp(-md * 2.3) * 0.11;',
       '    float rw = (md - 0.145) * 34.0;',
@@ -4615,7 +4624,10 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '  vec3 stC = mix(mix(cool, warm, smoothstep(0.2, 0.8, tempC)), uStarTint, 0.30);',
       '  float horizon = smoothstep(0.22, 0.60, frag.y);',
       '  vec3 stars = stA * sA * 0.62 + stB * sB * 1.0 + stC * sC * 0.34 * clus;',
-      '  vec2 mv = vec2((frag.x - 0.5) * aspect, frag.y) - vec2(aspect * 0.31, 0.76);',
+      '  // samme klemme som i nightScene(): skiva og haloen maa dele senter,',
+      '  // ellers glir maaneskiva ut av sin egen glans paa staaende skjerm.',
+      '  float mpx = min(aspect * 0.31, max(aspect * 0.5 - 0.20, 0.0));',
+      '  vec2 mv = vec2((frag.x - 0.5) * aspect, frag.y) - vec2(mpx, 0.76);',
       '  float mdd = length(mv);',
       '  float moonMask = 1.0 - uMoon * 0.85 * exp(-mdd * mdd * 22.0);',
       '  col += stars * horizon * uStarAmt * (1.0 - uLight) * occl * moonMask;',

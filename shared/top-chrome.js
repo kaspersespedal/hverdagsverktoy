@@ -680,7 +680,7 @@
 
   // ── Fanerekka: rull aktiv fane inn i bildet ──────────
   // .tabs er en horisontal scroller (overflow-x:auto), men på 360px vises
-  // bare 2 av 9 faner — og aktiv fane er nr. 9 av 9 på /lov/. Uten dette
+  // bare 2 av 10 faner — og aktiv fane er nr. 9 av 10 på /lov/. Uten dette
   // ser brukeren aldri hvor hen er, og at rekka i det hele tatt kan skyves.
   // Ingen smooth-scroll: dette skjer ved sidelast og skal ikke animere.
   function revealActiveTab(){
@@ -691,8 +691,71 @@
     if (!active) return;
     // Sentrer fanen i stedet for å klistre den til kanten, så det er synlig
     // at det finnes faner på begge sider.
-    var target = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2;
+    // Målt fra scrollerens egen venstrekant, ikke fra offsetLeft: .tabs-wrap
+    // er position:sticky og dermed offsetParent for fanene, så offsetLeft bar
+    // med seg .container sin luft (22px på /skatt/, 14–32px ellers). Den luften
+    // finnes ikke i scrollLeft, så fanen havnet en gutter-bredde for langt
+    // til venstre — merkbart nettopp på de smale skjermene dette er til for.
+    var target = tabs.scrollLeft
+      + (active.getBoundingClientRect().left - tabs.getBoundingClientRect().left)
+      - (tabs.clientWidth - active.offsetWidth) / 2;
     tabs.scrollLeft = Math.max(0, target);
+  }
+
+  // ── Fanerekka: uttoning bare der det faktisk finnes mer ──────────
+  // Masken i site-shell.css lå fast på høyre side. Ruller du helt ut, lå
+  // siste fane fortsatt under den og løste seg opp — rekka så avkuttet ut
+  // selv når den ikke var det — og venstre side ble klippet tvert av uten
+  // noe varsel. Her settes data-fade-l/-r etter faktisk rulleposisjon, så
+  // hver kant bare tones når den skjuler noe.
+  // --tabs-bleed leses av .container sin egen luft, slik at scrolleren kan gå
+  // kant til kant uten at gutter-bredden hardkodes to steder; den varierer
+  // både per side og per breddetrinn (32/20/16/14px).
+  var __tabObs = null;   // samme grunn som __navObs: må holdes i live.
+  function setAttrIfChanged(el, name, val){
+    if (el.getAttribute(name) !== val) el.setAttribute(name, val);
+  }
+  function syncTabRow(){
+    var tabs = document.querySelector('.tabs');
+    if (!tabs || !tabs.firstElementChild) return;
+    var host = tabs.parentElement;
+    var hostPad = host ? parseFloat(getComputedStyle(host).paddingLeft) || 0 : 0;
+    if (tabs.style.getPropertyValue('--tabs-bleed') !== hostPad + 'px')
+      tabs.style.setProperty('--tabs-bleed', hostPad + 'px');
+    // Måles på ytterfanene mot scrollerens polstringsboks, ikke på scrollLeft:
+    // arabisk setter dir="rtl", og der teller scrollLeft nedover fra 0 mot
+    // -max. Et fortegnsbasert regnestykke ville låst uttoningen fast på høyre
+    // side der — nøyaktig feilen dette skal fjerne. Geometrien er lik begge
+    // veier, og polstringsboksen faller sammen med gutteren enten --tabs-bleed
+    // er i spill (mobil) eller ikke (skrivebord).
+    var cs = getComputedStyle(tabs);
+    var padL = parseFloat(cs.paddingLeft) || 0, padR = parseFloat(cs.paddingRight) || 0;
+    var box = tabs.getBoundingClientRect();
+    var a = tabs.firstElementChild.getBoundingClientRect();
+    var b = tabs.lastElementChild.getBoundingClientRect();
+    // 2px slingringsmonn: subpiksel-scroll og zoom gjør at kantene sjelden
+    // lander blankt på hverandre, og uten monnet blir uttoningen stående igjen.
+    setAttrIfChanged(tabs, 'data-fade-l',
+      (box.left + padL) - Math.min(a.left, b.left) > 2 ? '1' : '0');
+    setAttrIfChanged(tabs, 'data-fade-r',
+      Math.max(a.right, b.right) - (box.right - padR) > 2 ? '1' : '0');
+  }
+  function watchTabRow(){
+    var tabs = document.querySelector('.tabs');
+    if (!tabs) return;
+    syncTabRow();
+    tabs.addEventListener('scroll', syncTabRow, { passive: true });
+    window.addEventListener('resize', syncTabRow);
+    window.addEventListener('orientationchange', syncTabRow);
+    if (window.ResizeObserver){
+      try { __tabObs = new ResizeObserver(syncTabRow); __tabObs.observe(tabs); } catch(_e){}
+    }
+    // Rekka skifter bredde etter første måling: serif-fonten byttes inn, og
+    // fanenavnene byttes ut når språket skifter. Ingen av delene fyrer en
+    // scroll-hendelse, så vi måler om på samme punkter som --nav-h gjør.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncTabRow).catch(function(){});
+    setTimeout(syncTabRow, 300);
+    setTimeout(syncTabRow, 1200);
   }
 
   // ── --nav-h: hold fanerekka festet til den EKTE nav-høyden ──────────
@@ -735,7 +798,10 @@
     setTimeout(syncNavHeight, 1200);
   }
 
+  // syncTabRow FØR revealActiveTab: den legger på --tabs-bleed, som endrer
+  // scrollerens bredde. Sentreringen må regne på den ferdige geometrien.
+  function bootTopChrome(){ render(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); }
   if (document.readyState === 'loading')
-    document.addEventListener('DOMContentLoaded', function(){ render(); revealActiveTab(); watchNavHeight(); });
-  else { render(); revealActiveTab(); watchNavHeight(); }
+    document.addEventListener('DOMContentLoaded', bootTopChrome);
+  else bootTopChrome();
 })();

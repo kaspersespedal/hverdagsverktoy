@@ -174,7 +174,16 @@ body .tabs-wrap{
   transition:color .2s var(--ease),background .2s var(--ease)}
 .tab:hover{color:var(--ink2);background:rgba(var(--wash-rgb),.03)}
 .tab[aria-selected="true"]{color:var(--ink)}
-.tab[aria-selected="true"]::after{content:"";position:absolute;left:14px;right:14px;bottom:-7px;height:2px;background:var(--accent)}
+.tab[aria-selected="true"]::after{content:"";position:absolute;left:14px;right:14px;bottom:-6px;height:2px;background:var(--accent)}
+/* -6px, ikke -7px: .tabs har 6px bunnpolstring, så en strek på -7px stakk
+   én piksel forbi scrollerens polstringsboks. Det ga .tabs 1px vertikal
+   scroll (scrollHeight 47 mot clientHeight 46) — nok til at et skrått sveip
+   på mobil dro hele fanerekka en piksel opp mens du dro den bortover, og
+   til at streken var klippet i halv høyde resten av tiden. -6px legger den
+   flush mot bunnkanten: samme sted visuelt, ingen overflow.
+   Egen body-regel fordi alle 20 inline-kopiene gjentar -7px med samme
+   spesifisitet (0,2,0) og ligger etter <link> i kaskaden. */
+body .tab[aria-selected="true"]::after{bottom:-6px}
 .tab svg{width:14px;height:14px;color:currentColor;opacity:.6}
 .tab[aria-selected="true"] svg{opacity:1;color:var(--accent)}
 
@@ -957,14 +966,44 @@ body .page-content.is-leaving{ animation: hvxPageOut .28s var(--ease-glide) forw
     font-size:16px !important;
   }
 
-  /* Fanerekka rommer 2 av 9 faner på 360px. Den er allerede en scroller,
+  /* Fanerekka rommer 2 av 10 faner på 360px. Den er allerede en scroller,
      men `scrollbar-width:none` gjorde at ingenting antydet det — rekka så
-     bare avkuttet ut. Uttoning mot høyre kant sier «det er mer her».
-     Aktiv fane rulles inn i bildet av top-chrome.js. */
-  .tabs{
-    -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 26px),transparent);
-            mask-image:linear-gradient(to right,#000 calc(100% - 26px),transparent);
+     bare avkuttet ut. Uttoning mot kanten sier «det er mer her».
+     Aktiv fane rulles inn i bildet av top-chrome.js.
+
+     Uttoningen lå fast på høyre side, og bare der. Det ga to utslag som
+     begge leste som at rekka oppførte seg ulikt alt etter hvilken vei du dro:
+     · Ruller du helt ut, lå siste fane («Kalkyle») fortsatt under uttoningen
+       og løste seg opp — den kunne ikke sees hel uansett hvor langt du dro,
+       og rekka så avkuttet ut selv når det ikke var mer å hente.
+     · Venstre side hadde ingen uttoning i det hele tatt, så der ble fanene
+       klippet tvert av midt i ordet.
+     top-chrome.js setter nå data-fade-l/-r etter faktisk rulleposisjon, så
+     hver kant tones bare når den faktisk skjuler noe.
+
+     --tabs-bleed: scrolleren lå inne i .container sin luft, så en fane
+     forsvant en gutter-bredde før skjermkanten og uttoningen døde ut i en
+     stripe ensfarget bakgrunn. Negativ margin + samme verdi som polstring
+     gir en scroller som går kant til kant, mens første og siste fane
+     fortsatt hviler på gutteren når rekka står i ro. Verdien måles av
+     top-chrome.js fordi .container har ulik luft per side og breddetrinn
+     (32/20/16/14px); uten JS står den på 0px og rekka er som før.
+
+     body-prefiks: 20 sider har egen inline-kopi av `.tabs{…padding:6px 0…}`,
+     og inline <style> kommer etter <link> i kaskaden. Uten prefikset ville
+     padding-shorthanden deres nullet ut polstringen mens den negative
+     marginen ble stående — da hadde rekka stukket ut over skjermkanten. */
+  body .tabs{
+    margin-inline:calc(var(--tabs-bleed, 0px) * -1);
+    padding-inline:var(--tabs-bleed, 0px);
+    --fade-l:0px; --fade-r:0px;
+    -webkit-mask-image:linear-gradient(to right,transparent,#000 var(--fade-l),
+      #000 calc(100% - var(--fade-r)),transparent);
+            mask-image:linear-gradient(to right,transparent,#000 var(--fade-l),
+      #000 calc(100% - var(--fade-r)),transparent);
   }
+  body .tabs[data-fade-l="1"]{--fade-l:26px}
+  body .tabs[data-fade-r="1"]{--fade-r:26px}
 }
 
 /* ── Merkevaren i samme størrelse på alle sider (2026-08-07) ──
