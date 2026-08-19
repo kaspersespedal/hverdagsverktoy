@@ -54,7 +54,7 @@
 </script>
 
 <!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
-<link rel="stylesheet" href="/shared/themes.css?v=v7">
+<link rel="stylesheet" href="/shared/themes.css?v=v8">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v4">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v221">
@@ -1772,7 +1772,7 @@
 <script src="/shared/core.js?v=v226" defer></script>
 <script src="/shared/lang/no.js?v=v226" defer></script>
 <script src="/shared/site-shell.js?v=v1" defer></script>
-<script src="/shared/top-chrome.js?v=v226" defer></script>
+<script src="/shared/top-chrome.js?v=v227" defer></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <script src="/shared/markedsdata.js?v=v12" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
@@ -2530,6 +2530,105 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   transition-delay:calc(var(--d,0)*70ms)}
 .frister .reveal.in,.frmodal .reveal.in{opacity:1;transform:none}
 
+/* ── Innlastings-koreografi ────────────────────────────────────────────
+   Seksjonen hadde .reveal-klassene fra før, men koreografien ble aldri sett:
+   setupReveal() satte .in på ALT etter 700 ms — altså mens panelet fortsatt lå
+   ~1070 px under skjermkanten. Overgangen brant av utenfor synsfeltet, og den
+   som scrollet ned møtte et ferdig panel. Failsafe-en er nå avgrenset til det
+   som faktisk står i viewporten (se setupReveal), og under ligger selve
+   koreografien: samme oppbygning som Dagsoversikten — ramma lander først, så
+   kaskaderer innholdet innenfra og ut.
+
+   De indre trinnene er ANIMASJONER, ikke overganger, og med fill «backwards».
+   Det er ikke stilvalg: .fr-btn og .fr-row har egne transition-erklæringer for
+   hover, og en `transition:`-linje her ville overskrevet dem for godt. Med
+   backwards holdes startbildet under forsinkelsen, og når animasjonen er ferdig
+   faller elementet tilbake til sin egen, vanlige stil — hover intakt. Derfor er
+   hviletilstanden også skrevet som .reveal:not(.in) og ikke .reveal: ellers
+   ville opacity:0 tatt over igjen i det animasjonen slapp taket. */
+
+.frister .reveal{--fd:calc(var(--d,0)*70ms)}
+
+/* Ramma lander med et hint av skala — samme grep som .daily-frame */
+.fr-panel{position:relative}
+.frister .fr-panel.reveal{transform:translateY(22px) scale(.99)}
+.frister .fr-panel.reveal.in{transform:none}
+
+/* Ett stille lys-sveip over panelet når det har landet */
+.fr-panel::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;z-index:3;
+  background:linear-gradient(115deg,transparent 42%,rgba(var(--fglow),.07) 50%,transparent 58%);
+  background-size:240% 100%;background-position:0% 0}
+.frister .fr-panel.reveal.in::after{animation:frSweep 1.5s cubic-bezier(.6,.05,.3,1) .6s 1 both}
+
+@keyframes frSweep{
+  0%{opacity:0;background-position:0% 0}
+  14%{opacity:1}
+  86%{opacity:1}
+  100%{opacity:0;background-position:170% 0}}
+@keyframes frInUp{0%{opacity:0;transform:translateY(9px)}100%{opacity:1;transform:none}}
+@keyframes frInNum{
+  0%{opacity:0;transform:translateY(10px) scale(.92);filter:blur(5px)}
+  100%{opacity:1;transform:none;filter:blur(0)}}
+@keyframes frPop{0%{opacity:0;transform:scale(.72)}100%{opacity:1;transform:none}}
+@keyframes frGrowY{0%{transform:scaleY(0)}100%{transform:scaleY(1)}}
+@keyframes frGrowX{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+
+/* ── Panel-header ── */
+.frister .fr-ph.reveal:not(.in) :is(.fr-eyebrow,.fr-htitle,.fr-btn){opacity:0}
+.frister .fr-ph.reveal:not(.in) .fr-eyebrow::before{transform:scaleX(0)}
+.frister .fr-ph.reveal.in .fr-eyebrow{animation:frInUp .5s var(--fease) calc(var(--fd) + 40ms) backwards}
+.frister .fr-ph.reveal.in .fr-eyebrow::before{
+  transform-origin:left center;
+  animation:frGrowX .55s var(--fexpo) calc(var(--fd) + 90ms) backwards}
+.frister .fr-ph.reveal.in .fr-htitle{animation:frInUp .58s var(--fexpo) calc(var(--fd) + 110ms) backwards}
+.frister .fr-ph.reveal.in .fr-btn{animation:frPop .5s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) calc(var(--fd) + 220ms) backwards}
+
+/* ── Fremhevet «neste frist»-band ──
+   ::after (glødet) er bevisst urørt: den bærer frBreath-loopen, og forelderens
+   egen .reveal-fade tar den med seg inn uansett. */
+.frister .fr-feat.reveal:not(.in) :is(.fr-flak .d,.fr-flak .mo,.fr-eyebrow,.fr-feat-name,.fr-feat-who,.fr-feat-date,.fr-cd-lead,.fr-cd-big,.fr-cd-unit,.fr-aud){opacity:0}
+.frister .fr-feat.reveal:not(.in)::before{transform:scaleY(0)}
+.frister .fr-feat.reveal:not(.in) .fr-div{transform:scaleY(0)}
+.frister .fr-feat.reveal.in::before{
+  transform-origin:top center;
+  animation:frGrowY .6s var(--fexpo) calc(var(--fd) + 40ms) backwards}
+.frister .fr-feat.reveal.in .fr-div{
+  animation:frGrowY .55s var(--fexpo) calc(var(--fd) + 120ms) backwards}
+.frister .fr-feat.reveal.in .fr-flak .d{animation:frInNum .62s var(--fexpo) calc(var(--fd) + 90ms) backwards}
+.frister .fr-feat.reveal.in .fr-flak .mo{animation:frInUp .5s var(--fease) calc(var(--fd) + 150ms) backwards}
+.frister .fr-feat.reveal.in .fr-eyebrow{animation:frInUp .5s var(--fease) calc(var(--fd) + 130ms) backwards}
+.frister .fr-feat.reveal.in .fr-feat-name{animation:frInUp .55s var(--fexpo) calc(var(--fd) + 190ms) backwards}
+.frister .fr-feat.reveal.in .fr-feat-who{animation:frInUp .5s var(--fease) calc(var(--fd) + 250ms) backwards}
+.frister .fr-feat.reveal.in .fr-feat-date{animation:frInUp .5s var(--fease) calc(var(--fd) + 300ms) backwards}
+.frister .fr-feat.reveal.in .fr-cd-lead{animation:frInUp .5s var(--fease) calc(var(--fd) + 230ms) backwards}
+.frister .fr-feat.reveal.in .fr-cd-big{animation:frInNum .65s var(--fexpo) calc(var(--fd) + 290ms) backwards}
+.frister .fr-feat.reveal.in .fr-cd-unit{animation:frInUp .5s var(--fease) calc(var(--fd) + 350ms) backwards}
+.frister .fr-feat.reveal.in .fr-aud{animation:frPop .48s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) calc(var(--fd) + 390ms) backwards}
+
+/* ── Listeradene ── */
+.frister .fr-row.reveal:not(.in) :is(.fr-flak .d,.fr-flak .mo,.fr-row-name,.fr-row-who,.fr-row-cd,.fr-aud){opacity:0}
+.frister .fr-row.reveal.in .fr-flak .d{animation:frInNum .55s var(--fexpo) calc(var(--fd) + 50ms) backwards}
+.frister .fr-row.reveal.in .fr-flak .mo{animation:frInUp .45s var(--fease) calc(var(--fd) + 95ms) backwards}
+.frister .fr-row.reveal.in .fr-row-name{animation:frInUp .5s var(--fexpo) calc(var(--fd) + 100ms) backwards}
+.frister .fr-row.reveal.in .fr-row-who{animation:frInUp .45s var(--fease) calc(var(--fd) + 150ms) backwards}
+.frister .fr-row.reveal.in .fr-row-cd{animation:frInUp .45s var(--fease) calc(var(--fd) + 190ms) backwards}
+.frister .fr-row.reveal.in .fr-aud{animation:frPop .42s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) calc(var(--fd) + 240ms) backwards}
+
+/* ── Panel-fot ── */
+.frister .fr-foot.reveal:not(.in) :is(.fr-verify,.fr-link){opacity:0}
+.frister .fr-foot.reveal.in .fr-verify{animation:frInUp .5s var(--fease) calc(var(--fd) + 30ms) backwards}
+.frister .fr-foot.reveal.in .fr-link{animation:frInUp .5s var(--fease) calc(var(--fd) + 110ms) backwards}
+
+/* Mobil: samme kaskade, men uten blur-filteret (E228 — filtre på store flater
+   er det som får scrollingen til å slepe på telefon). */
+@media(max-width:768px){
+  @keyframes frInNum{
+    0%{opacity:0;transform:translateY(10px) scale(.92)}
+    100%{opacity:1;transform:none}}
+  .frister .fr-panel.reveal.in::after{animation:none}
+}
+
 /* ══ MODAL ══════════════════════════════════════════════════════════ */
 .frmodal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
   padding:clamp(0px,3vw,40px);font-family:var(--fsans);color:var(--fink);
@@ -2687,6 +2786,14 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 @media (prefers-reduced-motion:reduce){
   .frister .reveal,.frmodal .reveal{opacity:1;transform:none;transition:none}
   .fr-feat::after{animation:none;opacity:.6}
+  /* Koreografien er animasjonsbasert, ikke overgangsbasert. Uten dette blir
+     hviletilstandens opacity:0 stående på barna og halve seksjonen usynlig. */
+  .frister .reveal :is(.fr-eyebrow,.fr-htitle,.fr-btn,.fr-flak .d,.fr-flak .mo,
+    .fr-feat-name,.fr-feat-who,.fr-feat-date,.fr-cd-lead,.fr-cd-big,.fr-cd-unit,
+    .fr-aud,.fr-row-name,.fr-row-who,.fr-row-cd,.fr-verify,.fr-link,.fr-div){
+    opacity:1 !important;transform:none !important;filter:none !important;animation:none !important}
+  .frister .fr-eyebrow::before,.frister .fr-feat::before{transform:none !important;animation:none !important}
+  .fr-panel::after{display:none !important}
   .frmodal,.fr-sheet{transition:opacity .01ms}
   .fr-sheet{transform:none}
 }
@@ -2694,8 +2801,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 
   <section class="frister" data-frister-root data-screen-label="05 Frister" data-count="6" data-featured="true" aria-labelledby="fr-title">
     <div class="fr-inner">
-      <div class="fr-panel">
-        <div class="fr-ph reveal" style="--d:0">
+      <div class="fr-panel reveal" style="--d:0">
+        <div class="fr-ph reveal" style="--d:1">
           <div>
             <span class="fr-eyebrow" data-i18n="fr.kicker">Kommende</span>
             <div class="fr-htitle">
@@ -2712,7 +2819,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         <div data-fr-featured></div>
         <ul class="fr-grid" data-fr-list></ul>
 
-        <div class="fr-foot reveal" style="--d:8">
+        <div class="fr-foot reveal" style="--d:10">
           <p class="fr-verify" data-i18n-html="fr.verify">Verifisert mot <b>Skatteetaten</b>, <b>Brønnøysund</b>, <b>NAV</b> &amp; <b>Lovdata</b> · helg → neste virkedag</p>
           <button type="button" class="fr-link" data-fr-open aria-haspopup="dialog">
             <span data-i18n="fr.see_all_wheel">Se alle frister &amp; årshjul</span>
@@ -3319,17 +3426,24 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     }, {rootMargin:'0px 0px -8% 0px', threshold:0.15});
     els.forEach(function(el){io.observe(el)});
 
-    requestAnimationFrame(function(){
+    /* Sveip over det som ALLEREDE står i viewporten. Kjøres to ganger: med det
+       samme, og igjen etter 600 ms for elementer som har flyttet seg mens
+       markedsdata og skrifter lastet.
+       ⚠️ Sveipet må avgrenses til viewporten. Den gamle varianten satte .in på
+       ALT etter 600 ms, altså også på seksjoner langt nede på siden — deres
+       avsløring brant av utenfor synsfeltet, og man møtte et ferdig panel når
+       man endelig scrollet ned. Frister-seksjonen ligger ~1070 px under
+       skjermkanten ved sidelast og mistet hele koreografien sin på dette. */
+    function sweep(){
       var vh = window.innerHeight || 0;
       els.forEach(function(el){
         if(el.classList.contains('in')) return;
         var r = el.getBoundingClientRect();
         if(r.top < vh && r.bottom > 0){ el.classList.add('in'); }
       });
-    });
-    setTimeout(function(){
-      els.forEach(function(el){ el.classList.add('in'); });
-    }, 600);
+    }
+    requestAnimationFrame(sweep);
+    setTimeout(sweep, 600);
   })();
 
   // ── Count-up on market data widgets ──
@@ -3728,7 +3842,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     var full=WK[x.date.getDay()]+" "+day+". "+MOL[mi]+" "+x.date.getFullYear();
     // Konsekvensen hører hjemme her: det er den som gjør fristen verdt å merke seg.
     if(x.p) full+=" · "+x.p;
-    return '<div class="fr-feat reveal" style="--d:1">'
+    return '<div class="fr-feat reveal" style="--d:2">'
       +'<div class="fr-flak lg"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
       +'<span class="fr-div"></span>'
       +'<div class="fr-feat-mid"><span class="fr-eyebrow" data-i18n="fr.next">Neste viktige frist</span>'
@@ -3742,7 +3856,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     var mi=x.date.getMonth(),day=x.date.getDate();
     var soon=x.days<=SOON_DAYS;
     var t=x.days<=0?"i dag":x.days===1?"i morgen":("om "+x.days+" dager");
-    return '<li class="fr-row reveal" style="--d:'+(i+2)+'">'
+    return '<li class="fr-row reveal" style="--d:'+(i+3)+'">'
       +'<div class="fr-flak sm"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
       +'<div class="fr-row-mid"><span class="fr-row-name">'+esc(x.short)+'</span>'
         +'<span class="fr-row-who">'+esc(x.w)+'</span></div>'
@@ -3816,18 +3930,56 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   }
 
   /* ═══ Reveal (sidens .reveal-mønster) ═══ */
+  var REDUCED=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+
+  /* Nedtellingstallet i det fremhevede bandet teller opp når bandet lander.
+     Starten er lagt til 430 ms fordi CSS-en holder .fr-cd-big skjult til da —
+     uten forsinkelsen ville halve opptellingen skjedd bak et usynlig tall.
+     Trygt mot i18n: elementet har ingen data-i18n-nøkkel, og innholdet er rene
+     siffer, så verken språkbytteren eller _ph-ordboka rører det underveis. */
+  function countUp(el){
+    if(REDUCED||!el||!el.querySelector)return;
+    var n=el.querySelector(".fr-cd-num");
+    if(!n||n.__frCount)return;
+    var target=parseInt(n.textContent,10);
+    if(isNaN(target)||target<2)return;
+    n.__frCount=true;
+    var from=Math.max(0,target-60),t0=0,dur=800;
+    setTimeout(function(){
+      requestAnimationFrame(function step(ts){
+        if(!t0)t0=ts;
+        var p=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-p,3);
+        n.textContent=String(Math.round(from+(target-from)*e));
+        if(p<1)requestAnimationFrame(step);else n.textContent=String(target);
+      });
+    },430);
+  }
+
   function setupReveal(root){
     var els=root.querySelectorAll(".reveal");
-    if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in");});return;}
+    function show(e){e.classList.add("in");countUp(e);}
+    if(!("IntersectionObserver" in window)){els.forEach(show);return;}
     var io=new IntersectionObserver(function(ent){ent.forEach(function(en){
-      if(en.isIntersecting){en.target.classList.add("in");io.unobserve(en.target);}
+      if(en.isIntersecting){show(en.target);io.unobserve(en.target);}
     });},{rootMargin:"0px 0px -8% 0px",threshold:.15});
     els.forEach(function(e){io.observe(e);});
-    requestAnimationFrame(function(){
+    /* Fanger opp det som ALLEREDE står i viewporten. Kjøres to ganger: én gang
+       med det samme, og én gang etter 700 ms i tilfelle observatøren bommet på
+       noe som ble bygget eller flyttet rett etter init.
+       ⚠️ Den skal avgrenses til viewporten. Den gamle varianten satte .in på
+       ALT etter 700 ms, og siden panelet ligger ~1070 px under skjermkanten ved
+       sidelast brant hele koreografien av utenfor synsfeltet — seksjonen sto
+       ferdig avslørt når man endelig scrollet ned til den. */
+    function sweep(){
       var vh=window.innerHeight||0;
-      els.forEach(function(e){if(e.classList.contains("in"))return;var r=e.getBoundingClientRect();if(r.top<vh&&r.bottom>0)e.classList.add("in");});
-    });
-    setTimeout(function(){els.forEach(function(e){e.classList.add("in");});},700);
+      els.forEach(function(e){
+        if(e.classList.contains("in"))return;
+        var r=e.getBoundingClientRect();
+        if(r.top<vh&&r.bottom>0)show(e);
+      });
+    }
+    requestAnimationFrame(sweep);
+    setTimeout(sweep,700);
   }
 
   /* ═══ Init ═══ */
