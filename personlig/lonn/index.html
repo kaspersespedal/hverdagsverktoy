@@ -509,8 +509,9 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
                   <div class="ik-fg">
                     <label class="ik-lbl" for="lonnAlder" data-i18n="lonnLAlder">Alder</label>
                     <select id="lonnAlder" class="ik-select">
-                      <option value="under18">Under 18 år</option>
-                      <option value="18plus" selected>18 år eller eldre</option>
+                      <option value="u17">Under 17 år</option>
+                      <option value="17_69" selected>17–69 år</option>
+                      <option value="70plus">70 år eller eldre</option>
                     </select>
                   </div>
                 </div>
@@ -579,7 +580,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       </div>
       <div class="side-card">
         <h4>Slik regner vi</h4>
-        <p>Bruttolønn = timelønn × timer × uker. Fra dette trekkes minstefradrag og personfradrag, så regnes alminnelig inntektsskatt (22 %), trinnskatt og trygdeavgift (7,6 % for 18+). Netto = brutto − total skatt.</p>
+        <p>Bruttolønn = timelønn × timer × uker. Fra dette trekkes minstefradrag og personfradrag, så regnes alminnelig inntektsskatt (22 %), trinnskatt og trygdeavgift (7,6 % for 17–69 år, 5,1 % ellers). Netto = brutto − total skatt.</p>
       </div>
     </aside>
 
@@ -625,7 +626,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
           <div class="lc-led">
             <span class="nm"><b>Trygdeavgift</b><span class="tag">Skatt</span></span>
             <span class="fig">7,6<span class="u">%</span></span>
-            <p class="dsc">Går til folketrygden. 7,6 % av lønnen for deg over 18 år — er du under 18, betaler du ingenting.</p>
+            <p class="dsc">Går til folketrygden. 7,6 % av lønnen når du er mellom 17 og 69 år. Er du yngre enn 17 eller eldre enn 69, er satsen 5,1 %. Tjener du under 99 650 kr, betaler du ingen trygdeavgift.</p>
           </div>
         </div>
       </section>
@@ -770,8 +771,8 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v227"></script>
-<script defer src="/shared/core.js?v=v226"></script>
-<script defer src="/shared/lang/no.js?v=v226"></script>
+<script defer src="/shared/core.js?v=v227"></script>
+<script defer src="/shared/lang/no.js?v=v227"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -857,8 +858,12 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
         breakdown.push({ lbl: 'Alminnelig inntektsskatt (22 %)', val: almSkatt });
       }
 
-      // Trygdeavgift 7,6 % for 18+, 0 % for under 18
-      var trygdRate = (alder === 'under18') ? 0 : 0.076;
+      // Trygdeavgift har TRE bånd, og ingen av dem er null (Skatteetaten,
+      // «Tabeller og satser: Trygdeavgift»): 17–69 år betaler 7,6 %, mens både
+      // de under 17 og de over 69 betaler 5,1 %. Feltet hadde tidligere bare
+      // «under 18» = 0 %, som ga en 17-åring med 250 000 kr i lønn ca. 19 000 kr
+      // for lite i beregnet skatt — og en 16-åring 0 i stedet for 5,1 %.
+      var trygdRate = (alder === 'u17' || alder === '70plus') ? 0.051 : 0.076;
       var trygd = trygdRate > 0 ? calcTrygdeavgift(bruttoAar, trygdRate) : 0;
       if(trygd > 0){
         totalSkatt += trygd;
@@ -995,7 +1000,14 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
         if(s.timelonn != null) document.getElementById('lonnTimelonn').value = s.timelonn;
         if(s.timer != null)    document.getElementById('lonnTimer').value = s.timer;
         if(s.uker != null)     document.getElementById('lonnUker').value = s.uker;
-        if(s.alder != null)    document.getElementById('lonnAlder').value = s.alder;
+        // Feltet hadde tidligere verdiene «under18»/«18plus». Begge peker nå på
+        // 17–69-båndet: det er riktig sats for en 17-åring (som var det vanligste
+        // «under 18»-tilfellet) og uendret for alle som sto på 18plus. En 16-åring
+        // må velge på nytt — men da med et valg som faktisk finnes.
+        if(s.alder != null){
+          var a = (s.alder === 'under18' || s.alder === '18plus') ? '17_69' : s.alder;
+          document.getElementById('lonnAlder').value = a;
+        }
       } catch(e){}
     }
 
@@ -1011,7 +1023,7 @@ details.lc-q .a a{color:var(--accent);text-decoration:none;border-bottom:1px sol
       rows.push(['Timelønn (kr)', d.timelonn]);
       rows.push(['Timer per uke', d.timerUke]);
       rows.push(['Arbeidsuker per år', d.ukerAar]);
-      rows.push(['Alder', d.alder === 'under18' ? 'Under 18 år' : '18 år eller eldre']);
+      rows.push(['Alder', d.alder === 'u17' ? 'Under 17 år' : d.alder === '70plus' ? '70 år eller eldre' : '17–69 år']);
       rows.push([]);
       rows.push(['BRUTTOLØNN', '']);
       rows.push(['Bruttolønn per år', Math.round(d.bruttoAar)]);
