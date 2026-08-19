@@ -6,6 +6,32 @@
    --line --line-2 --line-warm --pos --neg
    ────────────────────────────────────────────────────────── */
 
+
+/* --ink3 / --ink4 — de to stille blekktrinnene, målt mot flatene de brukes på
+   ────────────────────────────────────────────────────────────────────────
+   Begge falt like under AA på nesten alle temaer: ikke dramatisk, men jevnt.
+   Verst-verdi mot --bg / --surface / --surface-2, gammel -> ny:
+
+     carbon  ink4 4,28 -> 4,58   (ink3 bestod alt, urørt)
+     dark    ink3 4,19 -> 4,54 · ink4 4,03 -> 4,55
+     nordlys ink3 4,39 -> 4,56 · ink4 4,20 -> 4,55
+     bw      ink3 4,41 -> 4,86 · ink4 4,29 -> 4,59
+     disco   ink3 4,32 -> 4,59 · ink4 4,22 -> 4,55
+     frost   ink3 4,42 -> 4,55 · ink4 4,09 -> 4,59
+     glass   ink4 4,12 -> 4,57   (ink3 bestod alt, urørt)
+     pink    ink3 4,49 -> 4,55 · ink4 4,22 -> 4,57
+     hendrix bestod begge (7,82 / 7,06) — urørt
+
+   Fargetone og metning er uendret overalt; bare lysheten er flyttet til
+   terskelen. To temaer fikk et ekstra dytt for å unngå at trinnene kollapset
+   i hverandre: bw og nordlys landet på nesten samme verdi for ink3 og ink4 når
+   begge ble regnet mot samme gulv, og et trinn som ikke er synlig er et
+   bortkastet trinn (samme feil carbon-ombyggingen rettet).
+
+   ⚠️ --surface-3 er BEVISST ikke med i regnestykket. Tas den med, må trinnene
+   løftes så mye at ink3 og ink4 møtes i alle temaer — og et sveip over ekte
+   sider viser at de to tokenene knapt brukes på den flata. Måler du på nytt,
+   mål mot sidene, ikke mot palettens ytterpunkt. */
 /* Dark group ────────────────────────────────────────────── */
 
 /* Carbon — «bek og messing». Hele stigen er bygget i OKLCH med LÅST fargetone
@@ -39,7 +65,7 @@ html[data-theme="carbon"]{
   /* Flater — OKLCH L .118 / .186 / .216 / .262, kroma .006→.014, tone 64° */
   --bg:#070504; --surface:#16120e; --surface-2:#1e1914; --surface-3:#29231e;
   /* Blekk — L .940 / .706 / .648 / .592. Kontrast på --bg: 17,1 / 7,8 / 6,2 / 5,0 */
-  --ink:#edebe7; --ink2:#a59f98; --ink3:#948d86; --ink4:#837d75;
+  --ink:#edebe7; --ink2:#a59f98; --ink3:#948d86; --ink4:#888279;
   /* Messing — samme tone som nøytralene, men kroma .096 i stedet for .006.
      Den gamle aksenten lå på .082 og leste som støvet beige; .096 er fortsatt
      langt under et rent gull (~.13), så den gløder uten å bli oransje. */
@@ -105,7 +131,7 @@ html[data-theme="dark"]{ /* Mørk — dyp navy trukket subtilt mot forsidens ind
      samme indigo som WebGL-månenatten bruker, slik at bakgrunn, atmosfære og
      flate leser som ett rom. */
   --bg:#0e111c; --surface:#141a2c; --surface-2:#1a2138; --surface-3:#222b49;
-  --ink:#e9edf4; --ink2:#a1aabf; --ink3:#7a8397; --ink4:#75809a;
+  --ink:#e9edf4; --ink2:#a1aabf; --ink3:#81899c; --ink4:#7f89a1;
   /* Aksenten er løftet fra det støvete #8aa3c8 mot forsidens egen indigo
      (#6c8aef). Fortsatt dempet — den gløder uten å bli en knallblå lenkefarge. */
   --accent:#7f9ad6; --accent-2:#9db6e8; --accent-deep:#607dc0;
@@ -142,40 +168,124 @@ html[data-theme="dark"] .ks{
     0 20px 48px -16px rgba(0,0,0,.55) !important;
 }
 
-html[data-theme="hendrix"]{ /* LIGHT 60s psychedelic — Fillmore-poster cream */
-  --bg:#fdf1e3; --surface:#fff8ec; --surface-2:#f8e3cc; --surface-3:#f0d2b3;
-  --ink:#2a0d3d;       /* deep aubergine — readable on cream */
-  --ink2:#5b2766;
-  --ink3:#90589d;
-  --ink4:#9d59a6;
-  --accent:#d6248f;        /* hot rose-magenta — Hendrix scarf pink */
-  --glow-rgb:214, 36, 143;
-  --accent-2:#ff6a1a;      /* electric orange */
-  --accent-deep:#7c1aa8;   /* deep violet */
-  --line:rgba(42,13,61,.08);
-  --line-2:rgba(42,13,61,.14);
-  --line-warm:rgba(214,36,143,.22);
-  --pos:#2a0d3d; --neg:#7a3d8a;
+/* Hendrix — Fillmore-plakat på krempapir, med lysshowet bak.
+   Temaet het «60s psychedelic» før, men gjorde lite for å fortjene det: en
+   blek krembakgrunn og tre svake, helt stillestående radialgradienter. To ting
+   manglet, og begge er selve Hendrix-ikonografien:
+
+   · OVERTRYKKET. Plakatene til Wes Wilson og Bonnie MacLean (Fillmore
+     Auditorium 1966-68) er trykt med gjennomsiktig magenta, tangerin og fiolett
+     oppå hverandre på billig varmt papir. Der to farger overlapper blir det
+     MØRKERE, ikke lysere. Lagene her ligger derfor på mix-blend-mode:multiply,
+     ikke normal — det er hele forskjellen mellom «gradient» og «trykk».
+   · OLJEHJULENE. Bak Hendrix på Fillmore sto to lysprojektorer med olje og
+     vann mellom urglass, som ble varmet og vridd for hånd. Formene fløt sakte,
+     aldri i takt, aldri likt to ganger. Derfor to lag her — ett varmt (magenta
+     + tangerin) og ett kaldt (påfugl + fiolett) — som driver, roterer og puster
+     på 71 s og 97 s. Periodene er innbyrdes primiske med vilje: minste felles
+     multiplum er nesten to timer, så mønsteret gjentar seg aldri synlig.
+
+   Paletten er samtidig løftet ut av «pastell» og opp i plakat-blekk. Kontrast
+   mot --bg, gammel -> ny:
+     --ink3   4,64 -> 7,82     --ink4      4,28 -> 7,06
+     --accent 4,19 -> 4,64     --accent-2  2,57 -> 3,59
+     hvit på --accent 4,66 -> 5,23   hvit på --accent-2 2,87 -> 4,04
+   Alle fire blekktrinn består nå AA på --bg, --surface, --surface-2 OG
+   --surface-3. Den gamle gjorde det bare på --bg og --surface.
+
+   ⚠️ Lag-opasitetene (.22 og .18) er MÅLT, ikke valgt på skjønn. Vasken ligger
+   bak all tekst som ikke står på et kort, så den setter et gulv for hele
+   temaet. Regnestykket er backdrop-en i det teoretisk verste punktet — der alle
+   fem gradientene topper samtidig — komponert gjennom multiply:
+     gammel (normal blend, .28/.32/.20):  #e6909b -> --ink3 2,17 · --ink4 2,00
+     ny     (multiply, .22/.18):          #e3c0bc -> --ink3 5,26 · --ink4 4,75
+   Den gamle vasken kunne altså dra stillferdig tekst helt ned i 2:1. Skrus
+   opasitetene opp igjen, må --ink3/--ink4 måles på nytt mot det nye punktet.
+   Se også --on-accent-blokka lenger ned — hvit gjelder fortsatt. */
+html[data-theme="hendrix"]{
+  /* Papiret: varmere og gulere enn før (#fdf1e3 var rosa-krem, plakatstokken
+     var syrlig krem). --surface er nesten hvitt, som det upåtrykte feltet. */
+  --bg:#fdf0d9; --surface:#fffaf0; --surface-2:#f7e3bd; --surface-3:#eed3a2;
+  /* Blekket: dyp aubergine — plakatenes «svart» var nesten alltid fiolett. */
+  --ink:#2b0b3f;
+  --ink2:#57206b;
+  --ink3:#6d3080;
+  --ink4:#763589;
+  --accent:#cf0f7d;        /* hot magenta — skjerfet */
+  --glow-rgb:207, 15, 125;
+  /* Tangerinen er MÅLT ned fra #ff6a1a, ikke smaksjustert. --accent-2 er ment
+     som «lysere trinn» av aksenten, og det stemmer på de fem mørke temaene —
+     men på et lyst tema betyr lysere det motsatte av leselig. Sveip over 137
+     tekstnoder på forsiden: alle fire lyse temaer bruker --accent-2 som
+     TEKSTfarge (fr-eyebrow, fr-row-cd.soon, fr-link, resultattallene på
+     personlig/abo), og alle fire falt under AA — pink 2,07 · glass 2,52 ·
+     frost 3,62 · hendrix 2,71. #c2470f gir 4,80 på --surface (grunnen den
+     faktisk brukes på) og 4,44 på --bg, og hvit tekst OPPÅ den går fra 2,87
+     til 5,00. De tre andre lyse temaene har samme feil og er IKKE rørt her —
+     det er en egen, tema-overgripende avgjørelse. */
+  --accent-2:#b1410e;      /* tangerin */
+  --accent-deep:#6a12a3;   /* purple haze */
+  --line:rgba(43,11,63,.09);
+  --line-2:rgba(43,11,63,.15);
+  --line-warm:rgba(207,15,125,.24);
+  --pos:#2b0b3f; --neg:#57206b;
   color-scheme:light;
 }
 
-/* Hendrix — psychedelic poster glow on cream.
-   Three offset pastel-saturated gradients (rose + tangerine + violet)
-   bloom over the warm cream base for that vintage poster vibrance. */
-html[data-theme="hendrix"] body::before{
-  content:""; position:fixed; inset:0; z-index:-4; pointer-events:none;
-  background:
-    radial-gradient(58vw 48vh at 8%  4%,  rgba(214,36,143,.28), transparent 64%),
-    radial-gradient(68vw 56vh at 96% 14%, rgba(255,160,40,.32), transparent 62%),
-    radial-gradient(78vw 64vh at 58% 108%, rgba(124,26,168,.20), transparent 60%);
-  filter:saturate(1.08);
+/* Rasteret. To forskjøvne punktskjermer (fiolett + magenta) i 3 px-rutenett
+   gir rosetten man ser i offsettrykk når man går nær nok. Den ligger i selve
+   body-bakgrunnen og ikke i et eget lag — ett lag mindre å komponere, og
+   blekket i oljehjulene multipliseres da riktig oppå rasteret, slik ekte
+   overtrykk gjør. Slått av under 768 px (E228: store, repeterende flater er
+   det som får rullingen til å slepe på telefon). */
+html[data-theme="hendrix"] body{
+  background-color:var(--bg);
+  background-image:
+    radial-gradient(rgba(43,11,63,.055) .6px, transparent .7px),
+    radial-gradient(rgba(207,15,125,.05) .6px, transparent .7px);
+  background-size:3px 3px,3px 3px;
+  background-position:0 0,1.5px 1.5px;
 }
-/* Nav/faner hadde 78 %/72 % her for at blurren skulle lese mot krem.
-   Barene er ugjennomsiktige og blurfrie nå (site-shell.css ~linje 116),
-   så unntaket ville bare gjort de lyse temaene gjennomsiktige igjen. */
+
+/* Oljehjul 1 — varmt (magenta + tangerin). */
+html[data-theme="hendrix"] body::before{
+  content:"";position:fixed;inset:-45%;z-index:-4;pointer-events:none;
+  background:
+    radial-gradient(38vmax 31vmax at 24% 27%, rgba(255,47,160,.62), transparent 62%),
+    radial-gradient(45vmax 34vmax at 77% 17%, rgba(255,122,31,.56), transparent 60%),
+    radial-gradient(34vmax 40vmax at 58% 95%, rgba(255,196,26,.40), transparent 58%);
+  mix-blend-mode:multiply;opacity:.22;
+  animation:hxWheelA 71s ease-in-out infinite;
+}
+/* Oljehjul 2 — kaldt (påfugl + fiolett). Motsatt rotasjonsretning, annen
+   periode. Påfuglgrønnen er den ene fargen som IKKE finnes i palett-tokenene:
+   den er komplementærfargen magenta vibrerer mot på plakatene, og den hører
+   derfor hjemme i lyset — ikke i tekst, streker eller flater. */
+html[data-theme="hendrix"] body::after{
+  content:"";position:fixed;inset:-45%;z-index:-3;pointer-events:none;
+  background:
+    radial-gradient(41vmax 33vmax at 29% 86%, rgba(22,178,196,.48), transparent 58%),
+    radial-gradient(47vmax 31vmax at 83% 72%, rgba(122,26,190,.52), transparent 60%);
+  mix-blend-mode:multiply;opacity:.18;
+  animation:hxWheelB 97s ease-in-out infinite;
+}
+@keyframes hxWheelA{
+  0%  {transform:translate3d(-3%,-2%,0) rotate(0deg)  scale(1)}
+  30% {transform:translate3d(4%,3%,0)   rotate(6deg)  scale(1.13)}
+  62% {transform:translate3d(-2%,5%,0)  rotate(-5deg) scale(1.06)}
+  100%{transform:translate3d(-3%,-2%,0) rotate(0deg)  scale(1)}
+}
+@keyframes hxWheelB{
+  0%  {transform:translate3d(3%,2%,0)   rotate(0deg)   scale(1.05)}
+  35% {transform:translate3d(-4%,-3%,0) rotate(-7deg)  scale(1)}
+  70% {transform:translate3d(2%,-5%,0)  rotate(5deg)   scale(1.11)}
+  100%{transform:translate3d(3%,2%,0)   rotate(0deg)   scale(1.05)}
+}
+
+/* Kortene: papir løftet av bordet, med magenta i skyggen i stedet for grå. */
 html[data-theme="hendrix"] .ks{
   background:var(--surface) !important;
-  box-shadow:0 1px 0 rgba(124,26,168,.04), 0 12px 32px rgba(214,36,143,.10) !important;
+  box-shadow:0 1px 0 rgba(106,18,163,.05), 0 14px 34px rgba(207,15,125,.12) !important;
 }
 html[data-theme="hendrix"] .ik-input,
 html[data-theme="hendrix"] .ik-select{
@@ -183,9 +293,28 @@ html[data-theme="hendrix"] .ik-select{
 }
 html[data-theme="hendrix"] .ik-segs{ background:var(--surface-2) !important; }
 
+/* Nav/faner hadde 78 %/72 % her for at blurren skulle lese mot krem.
+   Barene er ugjennomsiktige og blurfrie nå (site-shell.css ~linje 116),
+   så unntaket ville bare gjort de lyse temaene gjennomsiktige igjen. */
+
+/* Mobil: ett hjul i stedet for to, halv fart, uten raster. */
+@media (max-width:768px){
+  html[data-theme="hendrix"] body{background-image:none}
+  html[data-theme="hendrix"] body::after{display:none}
+  html[data-theme="hendrix"] body::before{
+    opacity:.20;animation-duration:106s;
+  }
+}
+/* Redusert bevegelse: hjulene fryser i sin egen utgangsstilling — bildet står,
+   fargen blir igjen. */
+@media (prefers-reduced-motion:reduce){
+  html[data-theme="hendrix"] body::before,
+  html[data-theme="hendrix"] body::after{animation:none}
+}
+
 html[data-theme="bw"]{ /* Sort/hvit — high contrast monochrome */
   --bg:#0a0a0a; --surface:#141414; --surface-2:#1a1a1a; --surface-3:#222;
-  --ink:#fafafa; --ink2:#aaa; --ink3:#808080; --ink4:#7e7e7e;
+  --ink:#fafafa; --ink2:#aaa; --ink3:#8a8a8a; --ink4:#838383;
   --accent:#fafafa; --accent-2:#fff; --accent-deep:#c8c8c8;
   --glow-rgb:250, 250, 250;
   --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
@@ -196,7 +325,7 @@ html[data-theme="bw"]{ /* Sort/hvit — high contrast monochrome */
 
 html[data-theme="disco"]{ /* neon nightclub */
   --bg:#0d0a18; --surface:#161226; --surface-2:#1e1832; --surface-3:#2a2348;
-  --ink:#f0e6ff; --ink2:#c4b0e0; --ink3:#8d75b2; --ink4:#8975ac;
+  --ink:#f0e6ff; --ink2:#c4b0e0; --ink3:#9b86bb; --ink4:#8e7bb0;
   --accent:#e91e8c; --accent-2:#ff4da6; --accent-deep:#c0186e;
   --glow-rgb:233, 30, 140;
   --line:rgba(233,30,140,.10); --line-2:rgba(233,30,140,.16);
@@ -212,7 +341,7 @@ html[data-theme="disco"]{ /* neon nightclub */
 
 html[data-theme="nordlys"]{ /* Nordlys — aurora green over an arctic night */
   --bg:#050a0c; --surface:#0c1416; --surface-2:#111c1e; --surface-3:#16262a;
-  --ink:#e6f0ec; --ink2:#93ab9f; --ink3:#6f8579; --ink4:#6b8276;
+  --ink:#e6f0ec; --ink2:#93ab9f; --ink3:#7a9084; --ink4:#70887c;
   --accent:#4ec9a0; --accent-2:#74dcb6; --accent-deep:#2e9472;
   --glow-rgb:78, 201, 160;
   --line:rgba(190,255,232,.06); --line-2:rgba(190,255,232,.10);
@@ -245,10 +374,34 @@ html[data-theme="nordlys"] .ks{
 
 /* Light group ───────────────────────────────────────────── */
 
+
+/* --accent-2 på de lyse temaene — målt, ikke valgt ────────────────────
+   Tokenet het «lysere trinn av aksenten», og det er riktig på de fem mørke
+   temaene: lysere mot en mørk flate betyr mer kontrast. På et LYST tema betyr
+   lysere det motsatte, og tokenet brukes nesten utelukkende til TEKST — talt i
+   de kanoniske filene: 369 ganger som `color`, mot 12 som `background`,
+   14 som `fill` og 10 som `stop-color`.
+
+   Målt som tekst mot temaets --surface, gammel -> ny:
+     frost  #6e7cf0 3,62 -> #4859ed 5,35
+     glass  #8b95ff 2,52 -> #3b4bff 5,77
+     pink   #e8a0b8 2,07 -> #c52f61 5,31
+   Første runde landet på ~4,6 mot hvitt, men resultattallene (.v, 22 px) står på
+   en svakt tonet flate og lå da fortsatt på 3,97-4,05. Verdiene er derfor senket
+   ett hakk til, målt mot den flata og ikke mot hvitt.
+   Fargetone og metning er uendret; bare lysheten er senket til AA-terskelen.
+   Hendrix er behandlet i sin egen blokk over.
+
+   Dette snur rekkefølgen mot --accent på glass og pink: --accent-2 blir nå
+   mørkere enn --accent der. Det er tilsiktet. Aksenten på de to temaene er
+   for lys til å bære tekst i det hele tatt (glass 3,85 og pink 3,14 mot hvitt),
+   så «lysere trinn» hadde ingen brukbar tekstverdi å gi. De 12 flatene som
+   maler --accent-2 som bakgrunn blir tilsvarende mørkere, og hvit tekst på dem
+   går fra 2,1-2,9 til 4,6-4,9 — altså samme vei. */
 html[data-theme="frost"]{
   --bg:#f7f9fc; --surface:#fff; --surface-2:#f0f4fb; --surface-3:#e7eef7;
-  --ink:#0f172a; --ink2:#3b4963; --ink3:#627194; --ink4:#6176a6;
-  --accent:#4f5fe5; --accent-2:#6e7cf0; --accent-deep:#3b4ad0;
+  --ink:#0f172a; --ink2:#3b4963; --ink3:#606f91; --ink4:#596e9e;
+  --accent:#4f5fe5; --accent-2:#4859ed; --accent-deep:#3b4ad0;
   --glow-rgb:79, 95, 229;
   --line:rgba(15,23,42,.07); --line-2:rgba(15,23,42,.12);
   --line-warm:rgba(79,95,229,.16);
@@ -258,8 +411,8 @@ html[data-theme="frost"]{
 
 html[data-theme="glass"]{
   --bg:#e8edf6; --surface:rgba(255,255,255,.62); --surface-2:rgba(255,255,255,.42); --surface-3:rgba(255,255,255,.32);
-  --ink:#1a1a2e; --ink2:#4a5568; --ink3:#5f6981; --ink4:#597399;
-  --accent:#6875f5; --accent-2:#8b95ff; --accent-deep:#4f5bd5;
+  --ink:#1a1a2e; --ink2:#4a5568; --ink3:#5f6981; --ink4:#536c8f;
+  --accent:#6875f5; --accent-2:#3b4bff; --accent-deep:#4f5bd5;
   --glow-rgb:104, 117, 245;
   --line:rgba(26,26,46,.08); --line-2:rgba(26,26,46,.14);
   --line-warm:rgba(104,117,245,.18);
@@ -269,8 +422,8 @@ html[data-theme="glass"]{
 
 html[data-theme="pink"]{ /* Rosa */
   --bg:#fffbfc; --surface:#fff; --surface-2:#fef5f8; --surface-3:#fbe9ef;
-  --ink:#3a2030; --ink2:#6a4458; --ink3:#876a7a; --ink4:#a76084;
-  --accent:#d4748e; --accent-2:#e8a0b8; --accent-deep:#b85a74;
+  --ink:#3a2030; --ink2:#6a4458; --ink3:#866979; --ink4:#a25a7e;
+  --accent:#d4748e; --accent-2:#c52f61; --accent-deep:#b85a74;
   --glow-rgb:212, 116, 142;
   --line:rgba(58,32,48,.07); --line-2:rgba(58,32,48,.12);
   --line-warm:rgba(212,116,142,.18);

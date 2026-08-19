@@ -39,7 +39,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v226" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v227" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -374,14 +374,63 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
 
   [data-theme="hendrix"]{
-    --ink:#2a0d3d; --ink2:#5b2766; --ink3:#90589d; --ink4:#9d59a6;
-    --bg:#fdf1e3; --surface:#fff8ec; --surface-2:#f8e3cc;
-    --accent:#d6248f; --accent-2:#ff6a1a; --glow-rgb:214, 36, 143;
-    --line:rgba(42,13,61,.08); --line-2:rgba(42,13,61,.14); --line-warm:rgba(214,36,143,.22);
-    --nav-bg: rgba(253,241,227,.96); --mark-bg:#f8e3cc; --menu-bg:#fff8ec;
-    --hover-bg: rgba(42,13,61,.05); --hover-bg-soft: rgba(42,13,61,.025);
-    --kbd-bg: rgba(42,13,61,.05); --flag-shadow: rgba(0,0,0,.18);
+    /* Fillmore-plakat — speiler shared/themes.css. Denne sida laster ingen
+       delte stilark, så paletten MÅ oppdateres her samtidig; ellers står
+       lov-undersidene igjen på den gamle pastellversjonen. */
+    --ink:#2b0b3f; --ink2:#57206b; --ink3:#6d3080; --ink4:#763589;
+    --bg:#fdf0d9; --surface:#fffaf0; --surface-2:#f7e3bd;
+    --accent:#cf0f7d; --accent-2:#c2470f; --glow-rgb:207, 15, 125;
+    --line:rgba(43,11,63,.09); --line-2:rgba(43,11,63,.15); --line-warm:rgba(207,15,125,.24);
+    /* Logoflisa skal være MØRK på et lyst tema, ellers forsvinner messingmerket
+       inni den. #442651 = color-mix(--ink 88%, --bg), samme verdi de 68 sidene
+       som laster themes.css regner seg fram til. */
+    --nav-bg: rgba(253,240,217,.96); --mark-bg:#442651; --menu-bg:#fffaf0;
+    --hover-bg: rgba(43,11,63,.05); --hover-bg-soft: rgba(43,11,63,.025);
+    --kbd-bg: rgba(43,11,63,.05); --flag-shadow: rgba(0,0,0,.18);
     color-scheme:light;
+  }
+
+  /* Oljehjulene — to lysprojektorer, ett varmt og ett kaldt, som driver forbi
+     hverandre på 71 s og 97 s. Identisk med shared/themes.css; duplisert fordi
+     denne sida er selvberget. Rasteret (punktskjermen) er utelatt her: sidene
+     setter sin egen body-bakgrunn lenger nede, og en background-image ville
+     kollidert med den. */
+  html[data-theme="hendrix"] body::before{
+    content:"";position:fixed;inset:-45%;z-index:-4;pointer-events:none;
+    background:
+      radial-gradient(38vmax 31vmax at 24% 27%, rgba(255,47,160,.62), transparent 62%),
+      radial-gradient(45vmax 34vmax at 77% 17%, rgba(255,122,31,.56), transparent 60%),
+      radial-gradient(34vmax 40vmax at 58% 95%, rgba(255,196,26,.40), transparent 58%);
+    mix-blend-mode:multiply;opacity:.22;
+    animation:hxWheelA 71s ease-in-out infinite;
+  }
+  html[data-theme="hendrix"] body::after{
+    content:"";position:fixed;inset:-45%;z-index:-3;pointer-events:none;
+    background:
+      radial-gradient(41vmax 33vmax at 29% 86%, rgba(22,178,196,.48), transparent 58%),
+      radial-gradient(47vmax 31vmax at 83% 72%, rgba(122,26,190,.52), transparent 60%);
+    mix-blend-mode:multiply;opacity:.18;
+    animation:hxWheelB 97s ease-in-out infinite;
+  }
+  @keyframes hxWheelA{
+    0%  {transform:translate3d(-3%,-2%,0) rotate(0deg)  scale(1)}
+    30% {transform:translate3d(4%,3%,0)   rotate(6deg)  scale(1.13)}
+    62% {transform:translate3d(-2%,5%,0)  rotate(-5deg) scale(1.06)}
+    100%{transform:translate3d(-3%,-2%,0) rotate(0deg)  scale(1)}
+  }
+  @keyframes hxWheelB{
+    0%  {transform:translate3d(3%,2%,0)   rotate(0deg)   scale(1.05)}
+    35% {transform:translate3d(-4%,-3%,0) rotate(-7deg)  scale(1)}
+    70% {transform:translate3d(2%,-5%,0)  rotate(5deg)   scale(1.11)}
+    100%{transform:translate3d(3%,2%,0)   rotate(0deg)   scale(1.05)}
+  }
+  @media (max-width:768px){
+    html[data-theme="hendrix"] body::after{display:none}
+    html[data-theme="hendrix"] body::before{opacity:.20;animation-duration:106s}
+  }
+  @media (prefers-reduced-motion:reduce){
+    html[data-theme="hendrix"] body::before,
+    html[data-theme="hendrix"] body::after{animation:none}
   }
 
   [data-theme="nordlys"]{
@@ -1200,9 +1249,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   })();
 </script>
 
-<script src="/shared/top-chrome.js?v=v226" defer></script>
-<script defer src="/shared/core.js?v=v226"></script>
-<script defer src="/shared/lang/no.js?v=v226"></script>
+<script src="/shared/top-chrome.js?v=v227" defer></script>
+<script defer src="/shared/core.js?v=v227"></script>
+<script defer src="/shared/lang/no.js?v=v227"></script>
 
 
 <script src="/shared/atmosphere.js?v=v5" defer></script>

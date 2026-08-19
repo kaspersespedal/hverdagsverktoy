@@ -3740,8 +3740,10 @@ function calcFormue(){
   var gjeld=parseNum('formue-gjeld');
   var sel=document.getElementById('formue-personer');var personer=sel?+sel.value:1;
   // Verdsettelsesrabatter 2026 (Skatteetaten)
-  var priU10=Math.min(pri,10000000),priO10=Math.max(pri-10000000,0);
-  var priV=priU10*0.25+priO10*0.70;// Primærbolig: 25% under 10M, 70% over (§ 4-10(2))
+  // Terskelen ble hevet fra 10 til 14 mill. for inntektsåret 2026 (Skatteetaten,
+  // «Formuesverdi boligeiendom»). Navnene fulgte det gamle tallet.
+  var priU14=Math.min(pri,14000000),priO14=Math.max(pri-14000000,0);
+  var priV=priU14*0.25+priO14*0.70;// Primærbolig: 25% under 14M, 70% over (§ 4-10(2))
   var sekV=sek*1.00;// Sekundærbolig: 100% (§ 4-10(3))
   var fritidV=fritid*0.30;// Fritidsbolig: maks 30% av markedsverdi (§ 4-10(6))
   var naeringV=naering*0.80;// Næringseiendom: 80% av utleieverdi (§ 4-10(7))
