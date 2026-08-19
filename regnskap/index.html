@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
-<link rel="preload" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Playfair+Display:ital,wght@1,500;1,700&family=Source+Serif+4:wght@400;500;600&display=swap"></noscript>
+<link rel="preload" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Source+Serif+4:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700&family=Source+Serif+4:wght@400;500;600&display=swap"></noscript>
 <link rel="preload" href="/shared/core.js?v=v226" as="script" fetchpriority="high">
 <script>
   (function(){
@@ -251,7 +251,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
      den varme carbon-auroraen bak et grønt tema. Paletten kommer nå fra
      shared/themes.css, som er den eneste kilden resten av nettstedet bruker. */
 
-    .skip{position:absolute;top:-100px;left:8px;background:var(--accent);color:var(--bg);padding:8px 14px;border-radius:4px;font:600 13px/1 var(--font-sans);text-decoration:none;z-index:1000;transition:top .2s var(--ease);}
+    /* --ink/--bg, ikke --accent/--bg: aksenten er en mellomtone på de lyse
+     temaene og ga 3,06:1 på rosa. --ink er per definisjon lesbar mot --bg —
+     målt 14,3-17,6:1 på alle ni. Samme par som shared/site-shell.css. */
+  .skip{position:absolute;top:-100px;left:8px;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:4px;font:600 13px/1 var(--font-sans);text-decoration:none;z-index:1000;transition:top .2s var(--ease);}
   .skip:focus{top:8px;outline:2px solid var(--ink);outline-offset:2px}
   *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
 
@@ -514,45 +517,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     border:1px solid var(--line);
     border-radius:6px;overflow:hidden;
   }
-  .tool-card{
-    position:relative;background:var(--surface);padding:22px 24px;
-    text-decoration:none;color:var(--ink);
-    display:flex;flex-direction:column;gap:6px;
-    transition:background .2s var(--ease);
-    min-height:108px;
-  }
-  .tool-card:hover{background:var(--surface-2)}
-  .tool-card .tc-head{
-    display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:2px;
-  }
-  .tool-card h3{
-    font-family:var(--font-serif);font-weight:500;font-size:18px;
-    line-height:1.25;letter-spacing:-.25px;margin:0;color:var(--ink);
-    transition:color .2s var(--ease);
-  }
-  .tool-card:hover h3{color:var(--accent-2)}
-  .tool-card p{
-    font-size:13px;line-height:1.55;color:var(--ink3);margin:0;
-  }
-  .tool-card .tc-tag{
-    font-size:10px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;
-    color:var(--accent);
-    background:var(--hover-bg);
-    padding:3px 7px;border-radius:3px;
-    flex-shrink:0;
-    border:1px solid var(--line-warm);
-  }
-  .tool-card .tc-tag.soon{
-    color:var(--ink3);
-    border-color:var(--line-2);
-  }
-  .tool-card .arrow{
-    align-self:flex-start;color:var(--ink4);margin-top:2px;
-    transition:color .25s var(--ease), transform .25s var(--ease);
-  }
-  @media(hover:hover){.tool-card:hover .arrow{color:var(--accent);transform:translate(2px,-2px)}}
-
-  .tool-card.is-hidden{display:none}
+  /* .tool-card-reglene sto her. Kort-gridden de stylet ble fjernet, og det
+     finnes ingen class="tool-card" igjen i markupen. */
 
   /* ── REFERENCE PANEL ─────────────────────────────── */
   .page-grid{
@@ -686,10 +652,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     html{scroll-behavior:auto}
   }
 </style>
-<link rel="stylesheet" href="/shared/themes.css?v=v6">
-<link rel="stylesheet" href="/shared/colors_and_type.css?v=v3">
-<link rel="stylesheet" href="/shared/components.css?v=v5">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v220">
+<link rel="stylesheet" href="/shared/themes.css?v=v7">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v4">
+<link rel="stylesheet" href="/shared/components.css?v=v6">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v221">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v2">
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v226"></script>
@@ -1090,57 +1056,15 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
 
-  // ── Tool filter (text + chips) ──
-  (function(){
-    var input = document.getElementById('toolFilter');
-    var grid = document.getElementById('toolGrid');
-    var chips = document.querySelectorAll('#chipRow .chip');
-    var countEl = document.getElementById('toolCount');
-    if(!input || !grid) return;
+  // Verktoyfilteret ble fjernet sammen med kort-gridden: #toolFilter, #toolGrid
+  // og #chipRow finnes ikke lenger i markupen, sa IIFE-en her returnerte med en
+  // gang og gjorde ingenting.
 
-    var cards = Array.prototype.slice.call(grid.querySelectorAll('.tool-card'));
-    var activeFilter = 'all';
-
-    function norm(s){return (s||'').toLowerCase().trim()}
-
-    function apply(){
-      var q = norm(input.value);
-      var visible = 0;
-      cards.forEach(function(c){
-        var name = norm(c.getAttribute('data-name'));
-        var desc = norm(c.querySelector('p') ? c.querySelector('p').textContent : '');
-        var tags = (c.getAttribute('data-tags') || '').split(/\s+/).filter(Boolean);
-        var matchText = !q || name.indexOf(q) >= 0 || desc.indexOf(q) >= 0;
-        var matchTag = activeFilter === 'all' || tags.indexOf(activeFilter) >= 0;
-        var show = matchText && matchTag;
-        c.classList.toggle('is-hidden', !show);
-        if(show) visible++;
-      });
-      if(countEl) countEl.textContent = visible + (visible === 1 ? ' på vei' : ' på vei');
-    }
-
-    input.addEventListener('input', apply);
-    chips.forEach(function(chip){
-      chip.addEventListener('click', function(){
-        chips.forEach(function(c){c.classList.remove('active')});
-        chip.classList.add('active');
-        activeFilter = chip.getAttribute('data-filter') || 'all';
-        apply();
-      });
-    });
-  })();
 </script>
 
 <script defer src="/shared/core.js?v=v226"></script>
 <script defer src="/shared/lang/no.js?v=v226"></script>
 
-<script>
-  if('serviceWorker' in navigator){
-    window.addEventListener('load', function(){
-      navigator.serviceWorker.register('/sw.js').catch(function(){});
-    });
-  }
-</script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <script src="/shared/search.js?v=v130" defer></script>
 </body>

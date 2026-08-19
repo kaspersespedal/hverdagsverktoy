@@ -340,6 +340,29 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-them
    allerede bruker som --surface. */
 html[data-theme="glass"]{ --menu-bg:#fff; }
 
+/* --on-accent — lesbar tekst OPPÅ en aksentfylt flate ──────────────
+   Knapper, valgte faner og badges maler var(--accent) og legger tekst på den.
+   Fargen var hardkodet nesten-svart på noen sider og var(--bg) på andre, og
+   INGEN av delene holder på tvers av temaene: aksenten er nesten svart-lesbar
+   på de fem mørke temaene, men en MELLOMTONE på de lyse. Målt mot flat
+   var(--accent), verste tilfelle per tema:
+
+     var(--bg)   carbon 7,16  dark 6,72  bw 18,97  disco 4,68  nordlys 9,65
+                 frost 4,86   glass 3,28  pink 3,06  hendrix 4,19
+     #ffffff     frost 5,12   glass 3,85  pink 3,14  hendrix 4,66
+     #0a0a0a     glass 5,14   pink 6,31
+
+   Derfor: seks temaer klarer seg med sin egen --bg, glass og pink trenger en
+   dyp nøytral, og hendrix trenger hvit (aksenten der er en mettet magenta som
+   er for mørk for svart tekst og lys nok for hvit). Alle ni lander over 4,5.
+
+   MERK gradienter: flater som går fra --accent til --accent-2 faller under AA
+   på frost (3,43) og hendrix (2,87) uansett tekstfarge, fordi --accent-2 er et
+   lysere trinn. Slike flater må være FLATE var(--accent) — ikke en gradient —
+   når det ligger tekst på dem. */
+html:is([data-theme="glass"],[data-theme="pink"]){ --on-accent:#0a0a0a; }
+html[data-theme="hendrix"]{ --on-accent:#ffffff; }
+
 /* Logoflisa — den ene chrome-flaten som IKKE styres av et token ────
    Merket inni flisa er en messinggradient (#d8ad7e → #a87842). På et MØRKT
    tema ligger navraden nesten svart, så flisa må LØFTES (--surface-3) for at
