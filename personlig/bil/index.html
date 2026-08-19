@@ -489,7 +489,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <div class="page-stats">
         <div class="page-stat"><span class="l" data-i18n="bilHeroStat1L">Snitt månedlig kostnad</span><span class="v">7 800<span class="u">kr</span></span></div>
         <div class="page-stat"><span class="l" data-i18n="bilHeroStat2L">Verditap første år</span><span class="v">15<span class="u">%</span></span></div>
-        <div class="page-stat"><span class="l" data-i18n="bilHeroStat3L">Trafikkforsikringsavgift</span><span class="v">3 060<span class="u">kr</span></span></div>
+        <div class="page-stat"><span class="l" data-i18n="bilHeroStat3L">Trafikkforsikringsavgift</span><span class="v">2 380<span class="u">kr</span></span></div>
       </div>
     </div>
   </section>
@@ -504,7 +504,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <div class="ref-row"><span class="l" data-i18n="bilSideKeyBensin">Bensin (snitt)</span><span class="v accent">21,50<span class="u">kr/L</span></span></div>
           <div class="ref-row"><span class="l" data-i18n="bilSideKeyDiesel">Diesel (snitt)</span><span class="v">19,80<span class="u">kr/L</span></span></div>
           <div class="ref-row"><span class="l" data-i18n="bilSideKeyStrom">Strøm (snitt)</span><span class="v">1,80<span class="u">kr/kWh</span></span></div>
-          <div class="ref-row"><span class="l" data-i18n="bilSideKeyTrafAvg">Trafikkforsikr.avg.</span><span class="v">3 060<span class="u">kr/år</span></span></div>
+          <div class="ref-row"><span class="l" data-i18n="bilSideKeyTrafAvg">Trafikkforsikr.avg.</span><span class="v">2 380<span class="u">kr/år</span></span></div>
+          <div class="ref-row"><span class="l">Samme, elbil</span><span class="v">3 343<span class="u">kr/år</span></span></div>
           <div class="ref-row"><span class="l" data-i18n="bilSideKeyStatKm">Statens sats km</span><span class="v">3,50<span class="u">kr/km</span></span></div>
         </div>
         <div class="side-card related">
@@ -539,7 +540,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <div class="lc-kv"><span class="k">Bensin, snittpris</span><span class="v">21,50<span class="u">kr/L</span></span></div>
         <div class="lc-kv"><span class="k">Diesel, snittpris</span><span class="v">19,80<span class="u">kr/L</span></span></div>
         <div class="lc-kv"><span class="k">Strøm, snittpris</span><span class="v">1,80<span class="u">kr/kWh</span></span></div>
-        <div class="lc-kv"><span class="k">Trafikkforsikringsavgift</span><span class="v">3 060<span class="u">kr/år</span></span></div>
+        <div class="lc-kv"><span class="k">Trafikkforsikringsavgift, bensin/diesel</span><span class="v">2 380<span class="u">kr/år</span></span></div>
+        <div class="lc-kv"><span class="k">Trafikkforsikringsavgift, elbil</span><span class="v">3 343<span class="u">kr/år</span></span></div>
         <div class="lc-kv"><span class="k">Statens sats per km</span><span class="v">3,50<span class="u">kr/km</span></span></div>
       </div>
       <div class="lc-card">
@@ -670,11 +672,17 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     return +String(s).replace(/\s/g,'').replace(',','.').replace(/[^\d.]/g,'') || 0;
   }
 
+  // avg = trafikkforsikringsavgift per år = døgnsatsen × 365 (Skatteetaten,
+  // «Trafikkforsikringsavgift», satser fra 1. mars 2026). Elbil har HØYERE sats
+  // enn bensin og diesel — 9,16 mot 6,52 kr/døgn — så én flat verdi for alle
+  // drivlinjer var feil begge veier. Diesel uten fabrikkmontert partikkelfilter
+  // ligger på 8,10 kr/døgn (≈2 957 kr); her brukes filter-satsen, som gjelder
+  // alle nyere dieselbiler. Feltet kan uansett overstyres av brukeren.
   var PRESETS = {
-    bensin:{forbruk:6.5, pris:21.5, label:'Bensin',     unit:'L/100km',   priceUnit:'kr/L'},
-    diesel:{forbruk:5.2, pris:19.8, label:'Diesel',     unit:'L/100km',   priceUnit:'kr/L'},
-    el:    {forbruk:16,  pris:1.8,  label:'Elektrisk',  unit:'kWh/100km', priceUnit:'kr/kWh'},
-    hybrid:{forbruk:4.5, pris:21.5, label:'Hybrid',     unit:'L/100km',   priceUnit:'kr/L'}
+    bensin:{forbruk:6.5, pris:21.5, avg:2380, label:'Bensin',     unit:'L/100km',   priceUnit:'kr/L'},
+    diesel:{forbruk:5.2, pris:19.8, avg:2380, label:'Diesel',     unit:'L/100km',   priceUnit:'kr/L'},
+    el:    {forbruk:16,  pris:1.8,  avg:3343, label:'Elektrisk',  unit:'kWh/100km', priceUnit:'kr/kWh'},
+    hybrid:{forbruk:4.5, pris:21.5, avg:2380, label:'Hybrid',     unit:'L/100km',   priceUnit:'kr/L'}
   };
 
   // SVG glyphs for the drivlinje-segs (inlined to avoid extra requests)
@@ -689,7 +697,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   var state = {
     pris:450000, restverdi:220000, aar:5, kmAar:14000,
     drivstoffType:'bensin', forbruk:6.5, drivPris:21.5,
-    forsikring:9800, aarsavg:3060,
+    forsikring:9800, aarsavg:2380,
     bom:600, parkering:0,
     service:4500, dekk:2400, div:1500
   };
@@ -925,6 +933,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       state.drivstoffType = v;
       state.forbruk = pre.forbruk;
       state.drivPris = pre.pris;
+      state.aarsavg = pre.avg;
       // Update segs aria
       $$('.ik-seg[data-fuel]').forEach(function(b){
         b.setAttribute('aria-pressed', b.getAttribute('data-fuel') === v ? 'true' : 'false');
