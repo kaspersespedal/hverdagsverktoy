@@ -1,4 +1,12 @@
-/* PDF-stiler for Hverdagsverktoy — lonn-etter-skatt rapport.
+/* IKKE DØD KODE — men heller ikke koblet til.
+   Ingen side laster denne fila per 2026-08-19, så window.PDF_STYLES er
+   undefined og generateLonnPdf() i shared/core.js finner ingenting å kalle.
+   Motoren er ferdig og skal gjenkobles (PDF-eksport fra lønn-kalkulatoren);
+   den er derfor bevisst IKKE arkivert sammen med shared/ticker.* og
+   shared/veiledning.js. Legg inn <script defer src="/shared/pdf-styles.js">
+   på personlig/lonn/ når eksporten skal tilbake.
+
+   PDF-stiler for Hverdagsverktoy — lonn-etter-skatt rapport.
    Kalles fra shared/core.js generateLonnPdf() via window.PDF_STYLES[key](s, meta).
    s   = window._sal (full breakdown fra calcSal)
    meta = { today, regionLbl, reportId, almSats } */

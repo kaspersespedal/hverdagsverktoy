@@ -38,10 +38,10 @@
 </script>
 
 <!-- SHELL — T1 tokens, T2 css-shell, T3 js (E135 SHELL fullført 2026-05-26) -->
-<link rel="stylesheet" href="/shared/themes.css?v=v6">
-<link rel="stylesheet" href="/shared/colors_and_type.css?v=v3">
-<link rel="stylesheet" href="/shared/components.css?v=v5">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v220">
+<link rel="stylesheet" href="/shared/themes.css?v=v7">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v4">
+<link rel="stylesheet" href="/shared/components.css?v=v6">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v221">
 
 <style>
   /* FOUC-guard for i18n */
@@ -63,7 +63,10 @@
   body{min-height:100vh;overflow-x:hidden;width:100%;max-width:100vw}
   .container{max-width:1180px;margin:0 auto;padding:0 32px}
 
-  .skip{position:absolute;top:-100px;left:8px;background:var(--accent);color:var(--bg);padding:8px 14px;border-radius:4px;font:600 13px/1 var(--font-sans);text-decoration:none;z-index:1000;transition:top .2s var(--ease)}
+  /* --ink/--bg, ikke --accent/--bg: aksenten er en mellomtone på de lyse
+     temaene og ga 3,06:1 på rosa. --ink er per definisjon lesbar mot --bg —
+     målt 14,3-17,6:1 på alle ni. Samme par som shared/site-shell.css. */
+  .skip{position:absolute;top:-100px;left:8px;background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:4px;font:600 13px/1 var(--font-sans);text-decoration:none;z-index:1000;transition:top .2s var(--ease)}
   .skip:focus{top:8px;outline:2px solid var(--ink);outline-offset:2px}
   *:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 
@@ -202,15 +205,15 @@
   .key.op{color:var(--accent);font-family:var(--font-serif);font-weight:500;
     font-size:22px;background:var(--surface)}
   .key.op:hover{color:var(--accent-2);background:var(--surface-2)}
-  /* Glyffen på =-tasten står med vilje som hardkodet mørk verdi, ikke var(--bg):
-     var(--bg) ble målt til 2,02–3,43:1 mot aksent-gradienten på de fire lyse temaene
-     (pink/glass/hendrix/frost), altså under AA-kravet på 4,5:1 for 18px/600.
-     Riktig løsning er et eget --on-accent-token i shared/themes.css — utsatt til
-     en egen kontrast-runde. */
-  .key.eq{color:#1a0e05;font-weight:600;
-    background:linear-gradient(180deg,var(--accent-2),var(--accent));
+  /* Flaten er FLAT var(--accent), ikke en gradient opp mot var(--accent-2).
+     Gradienten falt under AA på frost (3,43) og hendrix (2,87) uansett tekstfarge,
+     fordi --accent-2 er et lysere trinn. Med flat aksent + var(--on-accent) holder
+     alle ni temaene: 4,68-18,97:1. Glyffen er 18px/600, altså normal tekst (4,5-kravet).
+     Hover løfter til --accent-2 uten tekst-krav-brudd fordi glyffen følger med. */
+  .key.eq{color:var(--on-accent);font-weight:600;
+    background:var(--accent);
     grid-row:span 2;height:auto}
-  .key.eq:hover{background:var(--accent-2)}
+  .key.eq:hover{background:var(--accent-2);color:var(--on-accent)}
   .key.zero{grid-column:span 2}
 
   .dock-side{padding:28px 28px;display:flex;flex-direction:column;gap:24px;
