@@ -711,12 +711,21 @@
   // --tabs-bleed leses av .container sin egen luft, slik at scrolleren kan gå
   // kant til kant uten at gutter-bredden hardkodes to steder; den varierer
   // både per side og per breddetrinn (32/20/16/14px).
+  // Forsiden har ingen .tabs — der er kategori-raden (.quick-cats) den eneste
+  // vannrette scrolleren, og den satt igjen med den gamle oppførselen mens
+  // fanerekka fikk den nye. Samme mekanikk gjelder begge: en scroller med
+  // ytterelementer å måle på, og en vert hvis luft bestemmer bleed-en.
+  var TAB_ROWS = '.tabs, .quick-cats';
   var __tabObs = null;   // samme grunn som __navObs: må holdes i live.
+  function tabRows(){ return document.querySelectorAll(TAB_ROWS); }
   function setAttrIfChanged(el, name, val){
     if (el.getAttribute(name) !== val) el.setAttribute(name, val);
   }
   function syncTabRow(){
-    var tabs = document.querySelector('.tabs');
+    var rows = tabRows();
+    for (var i = 0; i < rows.length; i++) syncOneRow(rows[i]);
+  }
+  function syncOneRow(tabs){
     if (!tabs || !tabs.firstElementChild) return;
     var host = tabs.parentElement;
     var hostPad = host ? parseFloat(getComputedStyle(host).paddingLeft) || 0 : 0;
@@ -741,14 +750,18 @@
       Math.max(a.right, b.right) - (box.right - padR) > 2 ? '1' : '0');
   }
   function watchTabRow(){
-    var tabs = document.querySelector('.tabs');
-    if (!tabs) return;
+    var rows = tabRows();
+    if (!rows.length) return;
     syncTabRow();
-    tabs.addEventListener('scroll', syncTabRow, { passive: true });
+    for (var i = 0; i < rows.length; i++)
+      rows[i].addEventListener('scroll', syncTabRow, { passive: true });
     window.addEventListener('resize', syncTabRow);
     window.addEventListener('orientationchange', syncTabRow);
     if (window.ResizeObserver){
-      try { __tabObs = new ResizeObserver(syncTabRow); __tabObs.observe(tabs); } catch(_e){}
+      try {
+        __tabObs = new ResizeObserver(syncTabRow);
+        for (var j = 0; j < rows.length; j++) __tabObs.observe(rows[j]);
+      } catch(_e){}
     }
     // Rekka skifter bredde etter første måling: serif-fonten byttes inn, og
     // fanenavnene byttes ut når språket skifter. Ingen av delene fyrer en
