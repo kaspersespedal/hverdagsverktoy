@@ -4181,6 +4181,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   function canvasVisible() { return !!CANVAS_THEMES[themeKey()]; }
 
   var gl = null, progA = null, progC = null, uA = null, uC = null, tex = null, fbo = null;
+  var pendingProgs = [];  // programmer som venter på utsatt statussjekk, se programsOk()
+  var bindUniforms = null;  // uniform-oppslag, utsatt av samme grunn
   var raf = 0, last = 0, t = 20 + Math.random() * 80, shown = false;
   var ampNow = CONFIG.INTENSITY, revealT0 = -1, revealDone = false;
   var mx = 0.5, my = 0.35, tmx = 0.5, tmy = 0.35, mAmt = 0, tmAmt = 0;
@@ -4685,22 +4687,25 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '}'
     ].join('\n');
 
+    // Å spørre om COMPILE_STATUS/LINK_STATUS rett etter compileShader/linkProgram
+    // tvinger hovedtråden til å stå og vente på driveren. Uten spørsmålet gjør
+    // driveren nøyaktig samme jobb parallelt. Sjekken er derfor flyttet til
+    // programsOk(), som kjører ved første tegning. Målt på RTX 2060: motorblokka
+    // gikk fra 752 ms fryst hovedtråd til under 1 ms.
     function compile(type, src) {
       var s = gl.createShader(type);
       gl.shaderSource(s, src);
       gl.compileShader(s);
-      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) { console.warn('Nordlys shader: ' + gl.getShaderInfoLog(s)); return null; }
       return s;
     }
     function linkProg(fsSrc) {
       var vs = compile(gl.VERTEX_SHADER, vsrc);
       var fs = compile(gl.FRAGMENT_SHADER, fsSrc);
-      if (!vs || !fs) return null;
       var prog = gl.createProgram();
       gl.attachShader(prog, vs); gl.attachShader(prog, fs);
       gl.bindAttribLocation(prog, 0, 'aPos');
       gl.linkProgram(prog);
-      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.warn('Nordlys link: ' + gl.getProgramInfoLog(prog)); return null; }
+      pendingProgs.push({ prog: prog, vs: vs, fs: fs });
       return prog;
     }
     progA = linkProg(auroraSrc);
@@ -4724,9 +4729,14 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
+    // getUniformLocation venter også på at lenkingen er ferdig — 25 oppslag rett
+    // etter linkProgram er samme stoppunkt som statussjekken var. uA/uC leses kun
+    // i draw(), så oppslaget utsettes til programsOk() har godkjent programmene.
     function U(prog, names) { var o = {}; for (var i = 0; i < names.length; i++) o[names[i]] = gl.getUniformLocation(prog, names[i]); return o; }
-    uA = U(progA, ['uRes', 'uTime', 'uAmp', 'uLight', 'uMode', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe']);
-    uC = U(progC, ['uRes', 'uTime', 'uStarAmt', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx']);
+    bindUniforms = function () {
+      uA = U(progA, ['uRes', 'uTime', 'uAmp', 'uLight', 'uMode', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe']);
+      uC = U(progC, ['uRes', 'uTime', 'uStarAmt', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx']);
+    };
 
     canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); cancelAnimationFrame(raf); raf = 0; });
     canvas.addEventListener('webglcontextrestored', function () { progA = null; gl = null; if (initGL()) { resize(); if (isStatic) drawOnce(); else resume(); } });
@@ -4809,8 +4819,35 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     draw();
   }
 
+  // Utsatt statussjekk. Først her har driveren fått kompilere i fred, og
+  // spørsmålet koster ingenting. Feiler noe, rives motoren ned og CSS-auroraen
+  // (.band) får jobben tilbake — samme utfall som da sjekken lå i initGL(),
+  // bare noen millisekunder senere.
+  function programsOk() {
+    if (!pendingProgs.length) return true;
+    var ok = true;
+    for (var i = 0; i < pendingProgs.length; i++) {
+      var p = pendingProgs[i];
+      if (gl.getProgramParameter(p.prog, gl.LINK_STATUS)) continue;
+      if (!gl.getShaderParameter(p.vs, gl.COMPILE_STATUS)) console.warn('Nordlys shader: ' + gl.getShaderInfoLog(p.vs));
+      if (!gl.getShaderParameter(p.fs, gl.COMPILE_STATUS)) console.warn('Nordlys shader: ' + gl.getShaderInfoLog(p.fs));
+      console.warn('Nordlys link: ' + gl.getProgramInfoLog(p.prog));
+      ok = false;
+    }
+    pendingProgs.length = 0;
+    if (ok && bindUniforms) { bindUniforms(); bindUniforms = null; }
+    if (!ok) {
+      cancelAnimationFrame(raf); raf = 0;
+      gl = null;
+      canvas.style.opacity = '0';
+      document.body.classList.remove('nordlys-on');
+    }
+    return ok;
+  }
+
   function draw() {
     if (!gl || !cc || !progA || !cc.fringe) return;
+    if (!programsOk()) return;
     gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
     gl.viewport(0, 0, aw || 2, ah || 2);
     gl.useProgram(progA);
