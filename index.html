@@ -532,6 +532,17 @@
     .qc-lbl{font-size:11px}
   }
   @media (max-width:560px){
+    /* Kategori-raden er forsidens svar på fanerekka — den eneste tingen her
+       du blar sidelengs i. Den var bygget som et innrammet kort: strek på
+       alle fire sider og runde hjørner, mens fanerekka på de 71 andre sidene
+       er en bar rad med én hårstrek under. Det ga to vannrette streker der
+       resten av nettstedet har én, og forskjellen leste tydeligst nettopp
+       når raden ble dratt med fingeren. Kortet er derfor løst opp her; bare
+       bunnstreken står igjen.
+
+       --tabs-bleed og data-fade-l/-r settes av shared/top-chrome.js, samme
+       mekanikk fanerekka fikk. Uten JS står bleed på 0px og begge fade-ene
+       på 0px — da er raden nøyaktig som før, ikke halvveis ombygd. */
     .quick-cats{
       margin-top:14px;
       grid-template-columns:none;
@@ -541,8 +552,26 @@
       scroll-snap-type:x mandatory;
       -webkit-overflow-scrolling:touch;
       scrollbar-width:none;
-      border-radius:6px;
+      border:0;
+      border-bottom:1px solid var(--line);
+      border-radius:0;
+      margin-inline:calc(var(--tabs-bleed, 0px) * -1);
+      padding-inline:var(--tabs-bleed, 0px);
+      /* Snappingen må kjenne til polstringen. Uten dette låser
+         scroll-snap-align:start første kort flush mot skjermkanten i stedet
+         for mot gutteren, og hvilestillingen blir scrollLeft:14 i stedet for
+         0 — da tror uttoningen at det ligger et kort til venstre, og venstre
+         kant tones ned med én gang. Nøyaktig den falske «det er mer her»
+         fanerekka ble kvitt i forrige runde. */
+      scroll-padding-inline:var(--tabs-bleed, 0px);
+      --fade-l:0px; --fade-r:0px;
+      -webkit-mask-image:linear-gradient(to right,transparent,#000 var(--fade-l),
+        #000 calc(100% - var(--fade-r)),transparent);
+              mask-image:linear-gradient(to right,transparent,#000 var(--fade-l),
+        #000 calc(100% - var(--fade-r)),transparent);
     }
+    .quick-cats[data-fade-l="1"]{--fade-l:26px}
+    .quick-cats[data-fade-r="1"]{--fade-r:26px}
     .quick-cats::-webkit-scrollbar{display:none}
     .qc{scroll-snap-align:start;padding:14px 6px 12px;border-top:0}
     .qc:nth-child(5){border-right:1px solid var(--line)}
@@ -1772,7 +1801,7 @@
 <script src="/shared/core.js?v=v227" defer></script>
 <script src="/shared/lang/no.js?v=v227" defer></script>
 <script src="/shared/site-shell.js?v=v1" defer></script>
-<script src="/shared/top-chrome.js?v=v241" defer></script>
+<script src="/shared/top-chrome.js?v=v243" defer></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <script src="/shared/markedsdata.js?v=v12" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
