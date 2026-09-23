@@ -2,9 +2,9 @@
 <html lang="nb" data-theme="carbon">
 <head>
 <meta charset="utf-8">
-<title>Standard kontoplan NS 4102 — søkbar referanse · Hverdagsverktøy</title>
-<meta name="description" content="Norsk Standard kontoplan NS 4102 med klasse 1 til 8. Søk konto-nummer eller navn for å finne riktig konto for transaksjonen din. Eiendeler, gjeld, inntekter, kostnader og finans.">
-<link rel="canonical" href="https://hverdagsverktoy.com/regnskap/kontoplan/">
+<title>Skatteavstemming — avstem skattekostnaden mot resultatet · Hverdagsverktøy</title>
+<meta name="description" content="Avstem bokført skattekostnad mot 22 % av resultat før skatt. Legg inn permanente forskjeller, fjorårskorreksjon og satsendring, og se hva som blir stående uforklart. Alt regnes ut lokalt i nettleseren.">
+<link rel="canonical" href="https://hverdagsverktoy.com/regnskap/skatteavstemming/">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://fonts.bunny.net" crossorigin>
@@ -13,9 +13,9 @@
 {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  "@id": "https://hverdagsverktoy.com/regnskap/kontoplan/#webpage",
-  "name": "Standard kontoplan NS 4102 — søkbar referanse · Hverdagsverktøy",
-  "url": "https://hverdagsverktoy.com/regnskap/kontoplan/",
+  "@id": "https://hverdagsverktoy.com/regnskap/skatteavstemming/#webpage",
+  "name": "Skatteavstemming — avstem skattekostnaden mot resultatet · Hverdagsverktøy",
+  "url": "https://hverdagsverktoy.com/regnskap/skatteavstemming/",
   "inLanguage": "no",
   "isPartOf": { "@id": "https://hverdagsverktoy.com/#website" }
 }
@@ -27,7 +27,7 @@
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.com/" },
     { "@type": "ListItem", "position": 2, "name": "Regnskap", "item": "https://hverdagsverktoy.com/regnskap/" },
-    { "@type": "ListItem", "position": 3, "name": "Kontoplan NS 4102", "item": "https://hverdagsverktoy.com/regnskap/kontoplan/" }
+    { "@type": "ListItem", "position": 3, "name": "Skatteavstemming", "item": "https://hverdagsverktoy.com/regnskap/skatteavstemming/" }
   ]
 }
 </script>
@@ -46,10 +46,14 @@
     }catch(e){}
   })();
 </script>
-<!-- Temapaletten. Denne siden er ellers selvforsynt, men paletten lå her som en
-     inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
-     mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
+
+<!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
 <link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
+<link rel="stylesheet" href="/shared/components.css?v=v6">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
+<link rel="stylesheet" href="/shared/bok/bok-render.css?v=v1">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -81,21 +85,6 @@ html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [dat
 html:is([data-theme="frost"], [data-theme="glass"], [data-theme="hendrix"], [data-theme="bw"], [data-theme="pink"]) .film-grain{
   display:none !important;
 }
-/* GLOW-2026-05-31 — aurora visible on this inline-atmosphere page.
-   The atmosphere CSS above renders, but inline html,body{background:var(--bg)}
-   painted over the fixed layers. Make body transparent on dark-family themes so
-   the aurora shows; light themes already hide it (block above) and keep --bg.
-   Dark theme reads faint (cool blue on blue-black) — lift the opacity tokens. */
-/* MOBIL-HVIT (2026-08-07): denne sida er sjolvberga (lastar ikkje site-shell.css),
-   so html fekk aldri ein bakgrunn — berre body, og regelen under gjer body
-   gjennomsiktig. Da stod lerretet utan farge og slo gjennom som HVITT ved
-   overscroll og under rask scroll på mobil. html-bakgrunnen malast før
-   negative z-index-lag, so auroraen (z-index -3/-2) ligg framleis oppa. */
-html{background:var(--bg)}
-html:not(:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="bw"],[data-theme="pink"])) body:not(.embed){background:transparent}
-html[data-theme="dark"]{--atmo-band-a-op:.20;--atmo-band-a-op-breathe:.26;--atmo-band-b-op:.13;--atmo-band-b-op-breathe:.17}
-html[data-theme="nordlys"]{--atmo-band-a-op:.26;--atmo-band-a-op-breathe:.34;--atmo-band-b-op:.17;--atmo-band-b-op-breathe:.23}
-html[data-theme="disco"]{--atmo-band-a-op:.22;--atmo-band-a-op-breathe:.29;--atmo-band-b-op:.15;--atmo-band-b-op-breathe:.20}
 .atmo-base{
   position:fixed;inset:0;z-index:-3;pointer-events:none;
   background:linear-gradient(to bottom, var(--atmo-base-top) 0%, var(--atmo-base-bottom) 100%);
@@ -263,14 +252,6 @@ footer a{
 }
 footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
 
-    /* A11y: iOS Safari zoomer inn på felt under 16px og zoomer ikke ut
-       igjen. Denne siden er selvstendig (laster ikke site-shell.css), så
-       regelen må stå lokalt. */
-    @media (max-width:768px){
-      body input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=hidden]),
-      body select,
-      body textarea{font-size:16px!important}
-    }
 </style>
 <style>
   :root{
@@ -279,9 +260,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
 
     --ease: cubic-bezier(.22, 1, .36, 1);
-    /* Vasketonen paa felt og flater. Carbon overstyrer den i themes.css; her staar
-       bare standarden, slik shared/site-shell.css gjoer for resten av nettstedet. */
-    --wash-rgb:255,255,255;
     /* Chrome-tokens som shared/themes.css ikke eier. Avledet fra --bg/--ink slik
        at de følger ethvert tema — de sto hardkodet til carbon her, og ble derfor
        liggende igjen som varm brunfarge når man valgte nordlys, dark eller disco. */
@@ -326,11 +304,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .container{max-width:1120px;margin:0 auto;padding:0 32px}
   ::selection{background:rgba(var(--glow-rgb),.28);color:var(--ink)}
 
-  /* Ugjennomsiktig, som i shared/site-shell.css — se begrunnelsen der.
-     Denne siden laster ikke det arket, så verdien må stå her. */
   .nav-wrap{
     position:sticky;top:0;z-index:50;
-    background:var(--bg);
+    background:var(--nav-bg);
+    backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
     border-bottom:1px solid transparent;
     transition:border-color .3s var(--ease);
   }
@@ -349,13 +326,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     border:1px solid var(--line-warm);
     display:flex;align-items:center;justify-content:center;flex-shrink:0;
   }
-  /* Samme trapp som resten av nettstedet (shared/site-shell.css). Uten denne
-     ble logoruta staaende paa 28px her mens den krympet til 26/24px overalt
-     ellers — merket skiftet stoerrelse naar man klikket seg inn hit.
-     Kun .mark: ordmerket har en egen 420px-tuning paa disse sidene som
-     hindrer at soekeboksen dytter tema-/spraakknappene ut av skjermen. */
-  @media (max-width:640px){ .mark{width:26px;height:26px} }
-  @media (max-width:380px){ .mark{width:24px;height:24px} }
   .wordmark{
     font-family:var(--font-serif);font-weight:500;
     font-size:18px;letter-spacing:-.2px;line-height:1;color:var(--ink);
@@ -421,12 +391,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
   .tabs-wrap{
     border-bottom:1px solid var(--line);
-    background:var(--bg);
-    /* --nav-h settes til den maalte nav-hoyden av shared/top-chrome.js.
-       64px staar igjen som fallback uten JS. Nav-hoyden her er innholds-
-       styrt (soekeboks + Forsiden-lenke + tema/spraak bryter til flere
-       linjer), saa et fast tall traff aldri. */
-    position:sticky;top:var(--nav-h,64px);z-index:40;
+    background:var(--nav-bg);
+    position:sticky;top:64px;z-index:40;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   }
   .tabs{
     display:flex;gap:2px;padding:6px 0;
@@ -434,26 +401,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     scrollbar-width:none;
   }
   .tabs::-webkit-scrollbar{display:none}
-  /* Fanerekka er en scroller — paa 360px rommer den 2 av 10 faner. Denne
-     sida laster ikke site-shell.css, saa reglene som gir de andre 63 sidene
-     en uttoning mot kanten maa staa her for at rekka skal oppfoere seg likt.
-     data-fade-l/-r og --tabs-bleed settes av top-chrome.js: uttoning bare paa
-     den sida som faktisk skjuler faner, og negativ margin lik .container sin
-     luft slik at rekka gaar kant til kant mens foerste og siste fane fortsatt
-     hviler paa gutteren. Uten JS staar bleed paa 0px og rekka er som foer. */
-  @media (max-width:768px){
-    body .tabs{
-      margin-inline:calc(var(--tabs-bleed, 0px) * -1);
-      padding-inline:var(--tabs-bleed, 0px);
-      --fade-l:0px; --fade-r:0px;
-      -webkit-mask-image:linear-gradient(to right,transparent,#000 var(--fade-l),
-        #000 calc(100% - var(--fade-r)),transparent);
-              mask-image:linear-gradient(to right,transparent,#000 var(--fade-l),
-        #000 calc(100% - var(--fade-r)),transparent);
-    }
-    body .tabs[data-fade-l="1"]{--fade-l:26px}
-    body .tabs[data-fade-r="1"]{--fade-r:26px}
-  }
   .tab{
     flex-shrink:0;background:transparent;border:0;
     padding:10px 14px;border-radius:4px;cursor:pointer;
@@ -467,7 +414,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .tab:hover{color:var(--ink2);background:var(--hover-bg-soft)}
   .tab[aria-selected="true"]{color:var(--ink)}
   .tab[aria-selected="true"]::after{
-    content:"";position:absolute;left:14px;right:14px;bottom:-6px;height:2px;
+    content:"";position:absolute;left:14px;right:14px;bottom:-7px;height:2px;
     background:var(--accent);
   }
   .tab .tab-icon{width:14px;height:14px;color:currentColor;opacity:.6}
@@ -530,7 +477,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media (max-width: 880px){
     .page-hero .container{grid-template-columns:1fr;align-items:start;gap:24px}
     .page-stats{align-self:stretch}
-    .tabs-wrap{top:var(--nav-h,60px)}
+    .tabs-wrap{top:60px}
   }
   @media (max-width: 560px){
     .container{padding:0 22px}
@@ -676,6 +623,33 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
   .hidden{display:none}
 
+  .content-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+    padding:22px 24px 20px;
+  }
+  .content-card h3{
+    font-family:var(--font-serif);font-weight:500;font-size:22px;line-height:1.2;
+    letter-spacing:-.4px;margin:0 0 10px;color:var(--ink);
+  }
+  .content-card p{margin:0 0 10px;font-size:14px;line-height:1.65;color:var(--ink2)}
+  .content-card p:last-child{margin-bottom:0}
+  .content-card .ref-cta{
+    display:inline-flex;align-items:center;gap:6px;
+    color:var(--accent);text-decoration:none;font-weight:600;font-size:13.5px;
+    border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
+    padding-bottom:1px;
+    transition:color .2s var(--ease), border-color .2s var(--ease);
+  }
+  .content-card .ref-cta:hover{color:var(--accent-2);border-bottom-color:var(--accent-2)}
+
+  .content-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:18px;
+    padding:0 0 56px;
+  }
+  @media (max-width:880px){
+    .content-grid{grid-template-columns:1fr}
+  }
+
   @media (max-width: 880px){
     .calc-grid{grid-template-columns:1fr}
     .calc-result{position:static;top:auto}
@@ -687,7 +661,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
 
   /* T3: site-shell — help-btn + focus-btn + howto-details + full footer */
-  .section-head-actions{display:inline-flex;gap:6px;align-items:center;margin-left:auto;}
   .page-hero-actions{display:flex;gap:8px;margin-top:14px;}
   .calc-help-btn,.focus-card-btn{
     background:transparent;border:1px solid var(--line-2);color:var(--ink3);
@@ -702,7 +675,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .calc-help-btn:focus-visible,.focus-card-btn:focus-visible{outline:1px solid var(--accent);outline-offset:2px;}
   body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer,body.focus-mode .crumb{display:none;}
   body.focus-mode .page-hero{padding-top:24px;}
-  details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;}
+  details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;display:none;}
+  details.howto.howto-open{display:block;}
   details.howto>summary{
     list-style:none;cursor:pointer;padding:13px 18px;
     font:600 13px/1.4 var(--font-sans);letter-spacing:0;color:var(--ink2);
@@ -725,6 +699,157 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media (hover: hover){.site-footer-full .foot-links a:hover{color:var(--ink);}}
   .site-footer-full .footer-author{font-size:12px;color:var(--ink3);}
   .site-footer-full .footer-copy{font-size:12px;color:var(--ink3);line-height:1.6;}
+
+  /* Side-col port (claude-design 2026-05-27) — 3-col on wide, full-width 3-card row on medium */
+  @media(min-width:1201px){
+    .calc-grid.has-side-col{grid-template-columns:1.4fr 1fr 240px}
+  }
+  @media(min-width:901px) and (max-width:1200px){
+    .calc-grid.has-side-col > .side-col{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .calc-grid.has-side-col > .side-col > .side-card{margin:0}
+  }
+  @media(max-width:900px){
+    .calc-grid.has-side-col > .side-col{grid-column:1/-1}
+  }
+</style>
+<style>
+/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
+.lonn-learn{padding:8px 0 12px}
+.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
+.lc-sec:first-child{border-top:none;padding-top:24px}
+.lc-head{max-width:640px;margin:0 0 32px}
+.lc-kicker{
+  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
+  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
+}
+.lc-title{
+  font-family:var(--font-serif);font-weight:500;
+  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
+  color:var(--ink);margin:0 0 14px;
+}
+.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
+.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
+.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
+.lc-intro a:hover{color:var(--accent-2)}
+
+/* ── Anatomi-ledger (de 5 delene av skatten) ── */
+.lc-ledger{border-top:1px solid var(--line)}
+.lc-led{
+  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
+  padding:20px 0;border-bottom:1px solid var(--line);
+}
+.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
+.lc-led .tag{
+  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
+  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
+}
+.lc-led .fig{
+  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
+  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
+}
+.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
+.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
+
+/* ── Satser: spec-kort + trinn-tabell ── */
+.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
+.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
+.lc-card .ttl{
+  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--ink3);padding:16px 0 4px;
+}
+.lc-kv{
+  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
+  padding:13px 0;border-top:1px solid var(--line);
+}
+/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
+   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
+   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
+   får plass er helt uendret. */
+.lc-kv{flex-wrap:wrap}
+.lc-kv .k{flex:1 1 auto}
+.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
+.lc-kv .v{
+  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
+  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
+}
+.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
+/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
+   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
+   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
+.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.lc-trinn{width:100%;border-collapse:collapse}
+.lc-trinn caption{
+  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
+  color:var(--ink3);padding:16px 0 12px;
+}
+.lc-trinn th{
+  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
+  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
+}
+.lc-trinn th.r,.lc-trinn td.r{text-align:right}
+.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
+.lc-trinn tbody tr:last-child td{border-bottom:none}
+.lc-trinn td .step{color:var(--ink);font-weight:500}
+.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* ── Praktiske punkter (venstre-aksent) ── */
+.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+.lc-note{
+  padding:18px 20px;background:var(--surface);
+  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
+}
+.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
+.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
+.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
+.lc-note a:hover{color:var(--accent-2)}
+
+/* ── FAQ-trekkspill ── */
+.lc-faq{border-top:1px solid var(--line)}
+details.lc-q{border-bottom:1px solid var(--line)}
+details.lc-q > summary{
+  cursor:pointer;list-style:none;padding:18px 0;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  font:500 15px/1.45 var(--font-sans);color:var(--ink);
+}
+details.lc-q > summary::-webkit-details-marker{display:none}
+details.lc-q > summary::after{
+  content:'';flex:0 0 auto;width:9px;height:9px;
+  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
+  transform:rotate(45deg);transition:transform .25s var(--ease);
+}
+details.lc-q[open] > summary::after{transform:rotate(-135deg)}
+details.lc-q[open] > summary{color:var(--ink)}
+details.lc-q .a{padding:0 0 20px;max-width:70ch}
+details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
+details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
+
+/* ── Relaterte verktøy ── */
+.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.lc-link{
+  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
+  background:var(--surface);border:1px solid var(--line);border-radius:10px;
+  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
+}
+.lc-link .ar{
+  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
+}
+.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
+.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
+@media(hover:hover){
+  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
+}
+
+@media(max-width:820px){
+  .lc-rates{grid-template-columns:minmax(0,1fr)}
+  .lc-notes{grid-template-columns:minmax(0,1fr)}
+  .lc-links{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:560px){
+  .lc-sec{padding:40px 0}
+  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
+  .lc-led .fig{font-size:22px}
+}
 </style>
 </head>
 <body>
@@ -826,7 +951,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
 <main id="main">
 
-  <section class="page-hero" data-screen-label="Kontoplan Hero">
+  <section class="page-hero" data-screen-label="Skatteavstemming Hero">
     <div class="container">
       <div>
         <div class="crumb">
@@ -837,342 +962,188 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <span class="sep"></span>
           <a href="/regnskap/" data-i18n="tabRegnskap">Regnskap</a>
           <span class="sep"></span>
-          <span class="here" data-i18n="crumbHereRegnskapKontoplan">Kontoplan NS 4102</span>
+          <span class="here">Skatteavstemming</span>
         </div>
-        <h1 class="page-title" data-i18n-html="regnskapKontoplanH1Html">Standard <em>kontoplan</em> NS 4102</h1>
-        <p class="page-lead" data-i18n="regnskapKontoplanLead">Norsk Standard kontoplan med klasse 1 til 8 — søk konto-nummer eller navn for å finne riktig konto for transaksjonen din. Bygger på SAF-T-strukturen som brukes i offisiell rapportering.</p>
+        <h1 class="page-title"><em>Skatte</em>avstemming</h1>
+        <p class="page-lead">Avstem bokført skattekostnad mot det resultatet skulle gitt. Alt regnes ut lokalt i nettleseren, og tallene forlater aldri maskinen din.</p>
         <div class="page-hero-actions">
-          <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
+          <button type="button" class="calc-help-btn" data-target="sav-howto" aria-label="Vis veiledning" title="Vis veiledning" aria-expanded="false">?</button>
+          <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner">⛶</button>
         </div>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l" data-i18n="regnskapKontoplanHStatKlasser">Konto-klasser</span><span class="v" id="hStatKlasser">8</span></div>
-        <div class="page-stat"><span class="l" data-i18n="regnskapKontoplanHStatTreff">Treff</span><span class="v" id="hStatTreff">–</span></div>
+        <div class="page-stat"><span class="l">Uforklart avvik</span><span class="v" id="hStatDiff">–</span></div>
+        <div class="page-stat"><span class="l">Effektiv sats</span><span class="v" id="hStatEtr">–</span></div>
       </div>
     </div>
   </section>
 
-  <style>
-    .visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
-    .kontoplan-wrap{display:flex;flex-direction:column;gap:24px;padding:8px 0 56px;}
-    .kp-search{display:flex;flex-direction:column;gap:14px;}
-    .kp-search input{
-      width:100%;background:var(--bg);
-      border:1px solid var(--line-2);border-radius:5px;
-      padding:14px 16px;
-      color:var(--ink);font:500 15px/1.2 var(--font-sans);
-      outline:none;
-      transition:border-color .2s var(--ease), background .2s var(--ease);
-    }
-    .kp-search input:focus{border-color:var(--line-warm);background:var(--surface-2)}
-    .kp-search input::placeholder{color:var(--ink3)}
-    .kp-pills{display:flex;flex-wrap:wrap;gap:8px}
-    .kp-pill{
-      background:transparent;color:var(--ink2);
-      border:1px solid var(--line-2);border-radius:999px;
-      padding:7px 14px;cursor:pointer;
-      font:500 12.5px/1 var(--font-sans);
-      transition:color .15s var(--ease), border-color .15s var(--ease), background .15s var(--ease);
-    }
-    @media (hover: hover){
-      .kp-pill:hover{color:var(--ink);border-color:var(--line-warm);background:var(--hover-bg-soft)}
-    }
-    .kp-pill.active{
-      color:var(--ink);background:var(--surface-2);border-color:var(--line-warm);
-    }
-    .kp-pill.active::before{
-      content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
-      background:var(--accent);margin-right:8px;vertical-align:middle;
-    }
-    .konto-grid{
-      display:grid;grid-template-columns:1fr 1fr;gap:18px;
-    }
-    .konto-class{
-      background:var(--surface);border:1px solid var(--line);border-radius:6px;
-      padding:18px 22px 18px;
-    }
-    .konto-class-head{
-      display:flex;align-items:flex-start;gap:14px;
-      padding-bottom:14px;margin-bottom:12px;
-      border-bottom:1px solid var(--line);
-    }
-    .konto-class-num{
-      flex-shrink:0;
-      width:44px;height:44px;border-radius:5px;
-      background:var(--surface-2);border:1px solid var(--line-warm);
-      display:flex;align-items:center;justify-content:center;
-      font-family:var(--font-serif);font-weight:500;font-size:22px;color:var(--accent);
-      font-variant-numeric:tabular-nums;
-    }
-    .konto-class-head h3{
-      font-family:var(--font-sans);font-size:14px;font-weight:600;
-      letter-spacing:.4px;color:var(--ink);margin:0 0 3px;line-height:1.25;
-    }
-    .konto-class-head p{font-size:12px;color:var(--ink2);margin:0;line-height:1.5;}
-    .konto-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1px;}
-    .konto-list li{
-      display:flex;align-items:baseline;gap:12px;
-      padding:7px 0;
-      border-top:1px solid var(--line);
-      font-size:13px;
-    }
-    .konto-list li:first-child{border-top:none;padding-top:2px;}
-    .konto-list .kn{
-      flex-shrink:0;width:28px;
-      font:600 12px/1 var(--font-sans);color:var(--accent);
-      font-variant-numeric:tabular-nums;letter-spacing:.4px;
-    }
-    .konto-list .kt{color:var(--ink2);line-height:1.5;}
-    .konto-class[hidden],.konto-list li[hidden]{display:none !important;}
-
-    .kp-content{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
-    .kp-content-card{
-      background:var(--surface);border:1px solid var(--line);border-radius:6px;
-      padding:20px 22px 18px;
-    }
-    .kp-content-card h2{
-      font-family:var(--font-sans);font-size:11px;font-weight:600;
-      letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
-      margin:0 0 10px;
-    }
-    .kp-content-card p{font-size:13.5px;color:var(--ink2);line-height:1.65;margin:0;}
-    .kp-content-card p + p{margin-top:10px}
-    .kp-content-card a{color:var(--accent);text-decoration:underline;font-weight:600}
-
-    .kp-empty{
-      display:none;background:var(--surface-2);
-      border:1px solid var(--line);border-radius:5px;
-      padding:18px;text-align:center;color:var(--ink2);font-size:13px;font-style:italic;
-    }
-    .kp-empty.show{display:block}
-
-    @media (max-width: 880px){
-      .konto-grid{grid-template-columns:1fr}
-      .kp-content{grid-template-columns:1fr}
-    }
-    @media (max-width: 560px){
-      .konto-class{padding:16px 16px 16px}
-      .kp-search input{font-size:14px;padding:12px 14px}
-    }
-  </style>
-
   <div class="container">
-    <div class="kontoplan-wrap">
 
-      <section class="calc-section kp-search" aria-labelledby="kpSearchHdr">
-        <header class="calc-section-head">
-          <h2 id="kpSearchHdr" data-i18n="regnskapKontoplanSearchHdr">Søk i kontoplanen</h2>
-          <span class="hint" data-i18n="regnskapKontoplanSearchHint">8 klasser · ca. 80 konto-grupper</span>
-        </header>
-        <label class="visually-hidden" for="kontoSearch" data-i18n="regnskapKontoplanSearchLbl">Søk konto-nummer eller navn</label>
-        <input type="search" id="kontoSearch" placeholder="Søk konto-nummer eller navn..." data-i18n-ph="regnskapKontoplanSearchPh" autocomplete="off" inputmode="search">
-        <div class="kp-pills" role="tablist" aria-label="Filtrer på konto-klasse">
-          <button type="button" class="kp-pill active" data-class="all" data-i18n="regnskapKontoplanFilterAll">Alle klasser</button>
-          <button type="button" class="kp-pill" data-class="1" data-i18n="regnskapKontoplanFilterK1">1 — Eiendeler</button>
-          <button type="button" class="kp-pill" data-class="2" data-i18n="regnskapKontoplanFilterK2">2 — EK + gjeld</button>
-          <button type="button" class="kp-pill" data-class="3" data-i18n="regnskapKontoplanFilterK3">3 — Inntekt</button>
-          <button type="button" class="kp-pill" data-class="4" data-i18n="regnskapKontoplanFilterK4">4 — Varekost</button>
-          <button type="button" class="kp-pill" data-class="5" data-i18n="regnskapKontoplanFilterK5">5 — Lønn</button>
-          <button type="button" class="kp-pill" data-class="6" data-i18n="regnskapKontoplanFilterK6">6 — Drift I</button>
-          <button type="button" class="kp-pill" data-class="7" data-i18n="regnskapKontoplanFilterK7">7 — Drift II</button>
-          <button type="button" class="kp-pill" data-class="8" data-i18n="regnskapKontoplanFilterK8">8 — Finans</button>
+    <section id="svar" class="bok-svar" aria-label="Svaret først">
+      <p><strong>Skattekostnaden skal være 22 % av resultat før skatt</strong>, pluss 22 % av de permanente forskjellene, pluss eller minus feil i fjorårets avsetning og effekten av endret sats. Det som blir stående igjen, er uforklart.</p>
+      <p>Legg inn tallene dine, så settes de inn i oppstillingen linje for linje. <strong>Står det noe annet enn null i uforklart-raden, er det en feil du må finne</strong> — ikke en restpost du kan la stå.</p>
+    </section>
+
+    <div class="bok-beviser-ikke">
+      <h3>Hva en nullstilt avstemming ikke beviser</h3>
+      <p>Går avstemmingen i null, betyr det at tallene du la inn henger sammen med hverandre. Det betyr <strong>ikke</strong> at:</p>
+      <ul>
+        <li>skattekostnaden er riktig beregnet — legger du inn feil bokført skattekostnad og en permanent forskjell som er like feil, går avstemmingen i null med to feil,</li>
+        <li>du har funnet alle permanente forskjellene — en glemt bot gir null avvik hvis du også har glemt den i tallet du avstemmer mot,</li>
+        <li>de midlertidige forskjellene er riktige — de påvirker ikke denne oppstillingen i det hele tatt, og kan være vilkårlig gale uten at det synes her,</li>
+        <li>utsatt skattefordel er riktig balanseført — sannsynlighetsvurderingen er et skjønn, ikke et regnestykke, og denne siden tester den ikke,</li>
+        <li>forskjellene er avstemt mot næringsspesifikasjonen — det er en egen kontroll,</li>
+        <li>skattemeldingen er riktig — dette er en regnskapskontroll og et notekrav.</li>
+      </ul>
+    </div>
+
+    <div id="regelsett" class="bok-regelsett">
+      <strong>Regelsett:</strong> Selve avstemmingen regnes likt i norsk GAAP og IFRS. Forskjellen ligger i notekravet, ikke i mekanikken — derfor har denne siden ingen regelsett-velger. Se <a href="#side-om-side">regelen side om side</a>.
+    </div>
+
+    <div class="bok-satsvarsel" id="bokSatsvarsel" hidden></div>
+
+    <div class="calc-grid has-side-col">
+
+      <div class="calc-form">
+
+        <details class="howto" id="sav-howto">
+          <summary>Slik bruker du skatteavstemmingen</summary>
+          <div class="howto-body">
+            <div class="howto-row"><div class="h-title">Grunnlag eller skattebeløp?</div><div class="h-desc">De fire øverste beløpsfeltene er <em>grunnlag</em> i kroner — siden ganger dem med satsen selv. De fire nederste er allerede <em>skattebeløp</em>. Blander du dem, bommer avviket med rundt 4,5 ganger.</div></div>
+            <div class="howto-row"><div class="h-title">Fortegn</div><div class="h-desc">Underskudd og netto skatteinntekt tastes med minus. Er avviket nøyaktig to ganger et beløp du kjenner igjen, er det et fortegn som står feil vei.</div></div>
+            <div class="howto-row"><div class="h-title">Tallene dine</div><div class="h-desc">De lagres bare så lenge fanen er åpen, og sendes aldri noe sted.</div></div>
+          </div>
+        </details>
+
+        <section class="calc-section" aria-labelledby="savInputHdr">
+          <header class="calc-section-head">
+            <h2 id="savInputHdr">Tallene dine</h2>
+            <span class="hint">Regnes lokalt</span>
+          </header>
+          <div class="calc-fields" id="bokFelt"></div>
+        </section>
+
+        <section class="calc-section" id="regnestykket" aria-labelledby="savStegHdr">
+          <header class="calc-section-head">
+            <h2 id="savStegHdr">Regnestykket, linje for linje</h2>
+            <span class="hint">Med dine egne tall</span>
+          </header>
+          <div class="bok-steg" id="bokSteg"></div>
+        </section>
+
+        <p class="info-box">
+          Satsen på 22 % følger av Stortingets skattevedtak for inntektsåret 2026 § 3-3 første ledd. Annet ledd gir 25 % for selskap som svarer finansskatt på lønn etter folketrygdloven § 23-2 a. Treprosentregelen står i skatteloven § 2-38 sjette ledd.
+        </p>
+
+      </div>
+
+      <aside class="calc-result" aria-live="polite">
+        <div class="res-section-h">Avstemming</div>
+        <div class="bok-avst" id="bokAvstemming"></div>
+
+        <div class="res-section-h">Nøkkeltall</div>
+        <div class="bok-avst" id="bokNokkeltall"></div>
+
+        <p class="res-note">Veiledende. Kontroller mot eget regnskap og næringsspesifikasjon. Tallene dine sendes aldri noe sted.</p>
+      </aside>
+
+      <aside class="side-col">
+        <div class="side-card">
+          <h4>Satser 2026</h4>
+          <div class="ref-row"><span class="l">Alminnelig inntekt</span><span class="v">22<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l">Finansskatt på lønn</span><span class="v">25<span class="u">%</span></span></div>
+          <div class="ref-row"><span class="l">Treprosentregelen</span><span class="v">3<span class="u">%</span></span></div>
         </div>
-      </section>
-
-      <p class="kp-empty" id="kpEmpty" data-i18n="regnskapKontoplanEmpty">Ingen treff. Prøv et annet søkeord eller en annen klasse.</p>
-
-      <section class="konto-grid" id="kontoGrid" aria-label="Kontoplan NS 4102">
-
-        <article class="konto-class" data-class="1">
-          <header class="konto-class-head">
-            <span class="konto-class-num">1</span>
-            <div>
-              <h3 data-i18n="regnskapKontoplanK1H">Eiendeler</h3>
-              <p data-i18n="regnskapKontoplanK1Lead">Anleggsmidler og omløpsmidler — det selskapet eier.</p>
-            </div>
-          </header>
-          <ul class="konto-list">
-            <li data-num="10" data-name="forskning utvikling fou"><span class="kn">10</span><span class="kt">Forskning og utvikling</span></li>
-            <li data-num="11" data-name="tomter bygninger eiendom"><span class="kn">11</span><span class="kt">Tomter, bygninger og annen fast eiendom</span></li>
-            <li data-num="12" data-name="maskiner inventar transportmidler"><span class="kn">12</span><span class="kt">Maskiner, inventar, transportmidler</span></li>
-            <li data-num="13" data-name="langsiktige investeringer aksjer andeler"><span class="kn">13</span><span class="kt">Langsiktige investeringer (aksjer, andeler)</span></li>
-            <li data-num="14" data-name="varelager"><span class="kn">14</span><span class="kt">Varelager</span></li>
-            <li data-num="15" data-name="kortsiktige fordringer kunder"><span class="kn">15</span><span class="kt">Kortsiktige fordringer (kundefordringer)</span></li>
-            <li data-num="16" data-name="mva offentlige avgifter krav"><span class="kn">16</span><span class="kt">MVA og offentlige avgifter (krav)</span></li>
-            <li data-num="17" data-name="forskuddsbetalte kostnader opptjente inntekter"><span class="kn">17</span><span class="kt">Forskuddsbetalte kostnader, opptjente inntekter</span></li>
-            <li data-num="18" data-name="kortsiktige investeringer aksjer"><span class="kn">18</span><span class="kt">Kortsiktige investeringer (markedspapirer)</span></li>
-            <li data-num="19" data-name="bankinnskudd kontanter"><span class="kn">19</span><span class="kt">Bankinnskudd, kontanter og lignende</span></li>
-          </ul>
-        </article>
-
-        <article class="konto-class" data-class="2">
-          <header class="konto-class-head">
-            <span class="konto-class-num">2</span>
-            <div>
-              <h3 data-i18n="regnskapKontoplanK2H">Egenkapital og gjeld</h3>
-              <p data-i18n="regnskapKontoplanK2Lead">Innskutt og opptjent egenkapital, langsiktig og kortsiktig gjeld.</p>
-            </div>
-          </header>
-          <ul class="konto-list">
-            <li data-num="20" data-name="egenkapital aksjekapital"><span class="kn">20</span><span class="kt">Egenkapital (aksjekapital, opptjent EK)</span></li>
-            <li data-num="21" data-name="avsetning forpliktelser pensjon"><span class="kn">21</span><span class="kt">Avsetning for forpliktelser (pensjon, garanti)</span></li>
-            <li data-num="22" data-name="annen langsiktig gjeld lan"><span class="kn">22</span><span class="kt">Annen langsiktig gjeld (lån over 1 år)</span></li>
-            <li data-num="23" data-name="kortsiktige konvertible lan"><span class="kn">23</span><span class="kt">Kortsiktige konvertible lån, obligasjoner</span></li>
-            <li data-num="24" data-name="leverandorgjeld kreditt"><span class="kn">24</span><span class="kt">Leverandørgjeld</span></li>
-            <li data-num="25" data-name="betalbar skatt"><span class="kn">25</span><span class="kt">Betalbar skatt</span></li>
-            <li data-num="26" data-name="skyldige offentlige avgifter aga"><span class="kn">26</span><span class="kt">Skyldige offentlige avgifter (AGA, forskuddstrekk)</span></li>
-            <li data-num="27" data-name="skyldig mva merverdiavgift"><span class="kn">27</span><span class="kt">Skyldig MVA</span></li>
-            <li data-num="28" data-name="avsatt utbytte"><span class="kn">28</span><span class="kt">Avsatt utbytte</span></li>
-            <li data-num="29" data-name="annen kortsiktig gjeld"><span class="kn">29</span><span class="kt">Annen kortsiktig gjeld</span></li>
-          </ul>
-        </article>
-
-        <article class="konto-class" data-class="3">
-          <header class="konto-class-head">
-            <span class="konto-class-num">3</span>
-            <div>
-              <h3 data-i18n="regnskapKontoplanK3H">Salgs- og driftsinntekt</h3>
-              <p data-i18n="regnskapKontoplanK3Lead">Omsetning og andre inntekter fra driften.</p>
-            </div>
-          </header>
-          <ul class="konto-list">
-            <li data-num="30" data-name="salgsinntekt avgiftspliktig"><span class="kn">30</span><span class="kt">Salgsinntekt og uttak (avgiftspliktig)</span></li>
-            <li data-num="31" data-name="salgsinntekt avgiftsfri"><span class="kn">31</span><span class="kt">Salgsinntekt (avgiftsfri)</span></li>
-            <li data-num="32" data-name="salgsinntekt utenfor avgiftsomradet"><span class="kn">32</span><span class="kt">Salgsinntekt (utenfor avgiftsområdet)</span></li>
-            <li data-num="33" data-name="offentlig avgift omsetning"><span class="kn">33</span><span class="kt">Offentlig avgift vedrørende omsetning</span></li>
-            <li data-num="34" data-name="offentlig tilskudd refusjon"><span class="kn">34</span><span class="kt">Offentlig tilskudd og refusjon</span></li>
-            <li data-num="36" data-name="leieinntekt"><span class="kn">36</span><span class="kt">Leieinntekt</span></li>
-            <li data-num="37" data-name="provisjonsinntekt"><span class="kn">37</span><span class="kt">Provisjonsinntekt</span></li>
-            <li data-num="38" data-name="gevinst salg anleggsmidler"><span class="kn">38</span><span class="kt">Gevinst ved salg av anleggsmidler</span></li>
-            <li data-num="39" data-name="annen driftsinntekt"><span class="kn">39</span><span class="kt">Annen driftsinntekt</span></li>
-          </ul>
-        </article>
-
-        <article class="konto-class" data-class="4">
-          <header class="konto-class-head">
-            <span class="konto-class-num">4</span>
-            <div>
-              <h3 data-i18n="regnskapKontoplanK4H">Varekostnad</h3>
-              <p data-i18n="regnskapKontoplanK4Lead">Innkjøp av varer og tjenester for produksjon eller videresalg.</p>
-            </div>
-          </header>
-          <ul class="konto-list">
-            <li data-num="40" data-name="forbruk ravarer halvfabrikat"><span class="kn">40</span><span class="kt">Forbruk av råvarer og innkjøpte halvfabrikat</span></li>
-            <li data-num="41" data-name="forbruk varer tilvirkning"><span class="kn">41</span><span class="kt">Forbruk av varer under tilvirkning</span></li>
-            <li data-num="42" data-name="forbruk ferdigvarer egentilvirkede"><span class="kn">42</span><span class="kt">Forbruk av ferdige egentilvirkede varer</span></li>
-            <li data-num="43" data-name="forbruk innkjopte varer videresalg"><span class="kn">43</span><span class="kt">Forbruk av innkjøpte varer for videresalg</span></li>
-            <li data-num="45" data-name="fremmedytelser underentrepriser"><span class="kn">45</span><span class="kt">Fremmedytelser og underentrepriser</span></li>
-            <li data-num="49" data-name="beholdningsendring"><span class="kn">49</span><span class="kt">Beholdningsendring</span></li>
-          </ul>
-        </article>
-
-        <article class="konto-class" data-class="5">
-          <header class="konto-class-head">
-            <span class="konto-class-num">5</span>
-            <div>
-              <h3 data-i18n="regnskapKontoplanK5H">Lønnskostnad</h3>
-              <p data-i18n="regnskapKontoplanK5Lead">Lønn, feriepenger, AGA og andre personalkostnader.</p>
-            </div>
-          </header>
-          <ul class="konto-list">
-            <li data-num="50" data-name="lonn ansatte feriepenger"><span class="kn">50</span><span class="kt">Lønn til ansatte (inkl. feriepenger)</span></li>
-            <li data-num="51" data-name="lonn styre styrehonorar"><span class="kn">51</span><span class="kt">Lønn til styre (styrehonorar)</span></li>
-            <li data-num="52" data-name="fordel firmabil naturalytelse"><span class="kn">52</span><span class="kt">Fordel ved firmabil og naturalytelser</span></li>
-            <li data-num="53" data-name="annen oppgavepliktig godtgjorelse"><span class="kn">53</span><span class="kt">Annen oppgavepliktig godtgjørelse</span></li>
-            <li data-num="54" data-name="arbeidsgiveravgift aga pensjon"><span class="kn">54</span><span class="kt">Arbeidsgiveravgift og pensjonskostnad</span></li>
-            <li data-num="56" data-name="arbeidsgodtgjorelse eier enk"><span class="kn">56</span><span class="kt">Arbeidsgodtgjørelse til eiere (ENK)</span></li>
-            <li data-num="58" data-name="offentlig refusjon arbeidskraft sykepenger"><span class="kn">58</span><span class="kt">Offentlig refusjon (sykepenger m.m.)</span></li>
-            <li data-num="59" data-name="annen personalkostnad velferd"><span class="kn">59</span><span class="kt">Annen personalkostnad (velferd, kurs)</span></li>
-          </ul>
-        </article>
-
-        <article class="konto-class" data-class="6">
-          <header class="konto-class-head">
-            <span class="konto-class-num">6</span>
-            <div>
-              <h3 data-i18n="regnskapKontoplanK6H">Annen driftskostnad I</h3>
-              <p data-i18n="regnskapKontoplanK6Lead">Avskrivning, leie, vedlikehold og andre faste driftskostnader.</p>
-            </div>
-          </header>
-          <ul class="konto-list">
-            <li data-num="60" data-name="avskrivning varige driftsmidler"><span class="kn">60</span><span class="kt">Avskrivning på varige driftsmidler</span></li>
-            <li data-num="61" data-name="frakt transportkostnad"><span class="kn">61</span><span class="kt">Frakt og transportkostnad</span></li>
-            <li data-num="62" data-name="energi brensel vann strom"><span class="kn">62</span><span class="kt">Energi, brensel og vann (strøm m.m.)</span></li>
-            <li data-num="63" data-name="kostnad lokaler husleie renhold"><span class="kn">63</span><span class="kt">Kostnad lokaler (leie, renhold)</span></li>
-            <li data-num="64" data-name="leie maskiner inventar"><span class="kn">64</span><span class="kt">Leie av maskiner, inventar og lignende</span></li>
-            <li data-num="65" data-name="verktoy inventar driftsmateriell"><span class="kn">65</span><span class="kt">Verktøy, inventar og driftsmateriell</span></li>
-            <li data-num="66" data-name="reparasjon vedlikehold"><span class="kn">66</span><span class="kt">Reparasjon og vedlikehold</span></li>
-            <li data-num="67" data-name="fremmedtjenester regnskap revisjon advokat"><span class="kn">67</span><span class="kt">Fremmedtjenester (regnskap, revisjon, advokat)</span></li>
-            <li data-num="68" data-name="kontorkostnad trykksaker rekvisita"><span class="kn">68</span><span class="kt">Kontorkostnad, trykksaker, rekvisita</span></li>
-            <li data-num="69" data-name="telefon porto datakommunikasjon"><span class="kn">69</span><span class="kt">Telefon, porto og datakommunikasjon</span></li>
-          </ul>
-        </article>
-
-        <article class="konto-class" data-class="7">
-          <header class="konto-class-head">
-            <span class="konto-class-num">7</span>
-            <div>
-              <h3 data-i18n="regnskapKontoplanK7H">Annen driftskostnad II</h3>
-              <p data-i18n="regnskapKontoplanK7Lead">Reise, salg, kontorkostnader og varierende driftskostnader.</p>
-            </div>
-          </header>
-          <ul class="konto-list">
-            <li data-num="70" data-name="kostnad transportmidler bil drivstoff"><span class="kn">70</span><span class="kt">Kostnad transportmidler (drivstoff, vedlikehold)</span></li>
-            <li data-num="71" data-name="reisekostnader diett bilgodtgjorelse"><span class="kn">71</span><span class="kt">Reisekostnad, diett, bilgodtgjørelse</span></li>
-            <li data-num="72" data-name="provisjonskostnad"><span class="kn">72</span><span class="kt">Provisjonskostnad</span></li>
-            <li data-num="73" data-name="salg reklame representasjon markedsforing"><span class="kn">73</span><span class="kt">Salgs-, reklame- og representasjonskostnad</span></li>
-            <li data-num="74" data-name="kontingent gave"><span class="kn">74</span><span class="kt">Kontingenter og gaver</span></li>
-            <li data-num="75" data-name="forsikring garanti tap"><span class="kn">75</span><span class="kt">Forsikring og garantikostnad</span></li>
-            <li data-num="76" data-name="lisens patent royalty"><span class="kn">76</span><span class="kt">Lisens- og patentkostnad</span></li>
-            <li data-num="77" data-name="annen kostnad"><span class="kn">77</span><span class="kt">Annen kostnad</span></li>
-            <li data-num="78" data-name="tap pa fordringer"><span class="kn">78</span><span class="kt">Tap (på fordringer m.m.)</span></li>
-            <li data-num="79" data-name="tap salg anleggsmidler"><span class="kn">79</span><span class="kt">Tap ved salg av anleggsmidler</span></li>
-          </ul>
-        </article>
-
-        <article class="konto-class" data-class="8">
-          <header class="konto-class-head">
-            <span class="konto-class-num">8</span>
-            <div>
-              <h3 data-i18n="regnskapKontoplanK8H">Finans og skatt</h3>
-              <p data-i18n="regnskapKontoplanK8Lead">Finansinntekter, finanskostnader, skattekostnad og resultatdisponering.</p>
-            </div>
-          </header>
-          <ul class="konto-list">
-            <li data-num="80" data-name="finansinntekt rente utbytte"><span class="kn">80</span><span class="kt">Finansinntekt (rente, utbytte)</span></li>
-            <li data-num="81" data-name="finanskostnad rentekostnad lan"><span class="kn">81</span><span class="kt">Finanskostnad (rentekostnad lån)</span></li>
-            <li data-num="83" data-name="skattekostnad ordinart resultat"><span class="kn">83</span><span class="kt">Skattekostnad på ordinært resultat</span></li>
-            <li data-num="85" data-name="ekstraordinaer inntekt"><span class="kn">85</span><span class="kt">Ekstraordinær inntekt</span></li>
-            <li data-num="86" data-name="ekstraordinaer kostnad"><span class="kn">86</span><span class="kt">Ekstraordinær kostnad</span></li>
-            <li data-num="87" data-name="skattekostnad ekstraordinart resultat"><span class="kn">87</span><span class="kt">Skattekostnad på ekstraordinært resultat</span></li>
-            <li data-num="88" data-name="arsresultat"><span class="kn">88</span><span class="kt">Årsresultat</span></li>
-            <li data-num="89" data-name="overforinger disponeringer utbytte"><span class="kn">89</span><span class="kt">Overføringer og disponeringer (utbytte, fond)</span></li>
-          </ul>
-        </article>
-
-      </section>
-
-      <section class="kp-content">
-        <article class="kp-content-card">
-          <h2 data-i18n="regnskapKontoplanWhatTitle">Hva er NS 4102?</h2>
-          <p data-i18n="regnskapKontoplanWhatBody">Norsk Standard 4102 er bransjestandarden for kontoplaner i Norge — et felles oppslagsverk som gjør at regnskap fra ulike bedrifter kan sammenlignes. SAF-T-rapporteringen til Skatteetaten bygger på samme struktur, og de fleste regnskapssystemer leveres med NS 4102 som utgangspunkt.</p>
-        </article>
-        <article class="kp-content-card">
-          <h2 data-i18n="regnskapKontoplanHowTitle">Hvordan velge riktig konto?</h2>
-          <p data-i18n="regnskapKontoplanHowBody">Spør først hvilken klasse transaksjonen tilhører: er det en eiendel (1), gjeld eller egenkapital (2), inntekt (3), vare- eller lønnskostnad (4 eller 5), driftskostnad (6 eller 7), eller finans/skatt (8)? Innenfor klassen finner du den 2-sifrede gruppen som best beskriver posten.</p>
-        </article>
-        <article class="kp-content-card">
-          <h2 data-i18n="regnskapKontoplanDebKredTitle">Debet og kredit</h2>
-          <p data-i18n="regnskapKontoplanDebKredBody">Hver transaksjon registreres med debet på én konto og kredit på en annen — beløpene må alltid være like. Dette kalles dobbel bokføring og er grunnregelen for at balansen alltid stemmer.</p>
-        </article>
-        <article class="kp-content-card">
-          <h2 data-i18n="regnskapKontoplanCtaTitle">Tilbake til regnskap-oversikt</h2>
-          <p data-i18n="regnskapKontoplanCtaBody">Fra <a href="/regnskap/">regnskap-landingen</a> finner du andre verktøy: <a href="/regnskap/mva/">MVA-melding</a>, <a href="/regnskap/resultat/">resultatregnskap</a>, <a href="/regnskap/balanse/">balanse</a> og bokføring.</p>
-        </article>
-      </section>
+        <div class="side-card related">
+          <h4>Relaterte verktøy</h4>
+          <a href="/regnskap/resultat/"><span class="name">Resultatregnskap</span><span class="arr">→</span></a>
+          <a href="/regnskap/balanse/"><span class="name">Balanse</span><span class="arr">→</span></a>
+          <a href="/regnskap/mva/"><span class="name">MVA-melding</span><span class="arr">→</span></a>
+        </div>
+      </aside>
 
     </div>
+
   </div>
+
+<div class="container">
+  <div class="lonn-learn">
+
+    <section class="lc-sec" id="side-om-side" aria-labelledby="lcA-sav">
+      <div class="lc-head"><span class="lc-kicker">Regelen side om side</span><h2 class="lc-title" id="lcA-sav">Hva <em>regelsettet</em> endrer</h2><p class="lc-intro">Selve regnestykket er det samme uansett regelsett. Det som skiller dem, er om avstemmingen må stå i note, og hvor detaljert.</p></div>
+      <div class="lc-tblwrap">
+        <table class="lc-trinn">
+          <thead><tr><th>Regelsett</th><th>Krav til avstemming i note</th></tr></thead>
+          <tbody>
+            <tr><td>Norsk GAAP, øvrige foretak</td><td>Regnskapsloven § 7-23 «Skattekostnad» krever noteopplysning om skattekostnaden. NRS(F) Resultatskatt utdyper hva spesifikasjonen skal inneholde.</td></tr>
+            <tr><td>Små foretak</td><td>§ 7-23 står blant noteopplysningene som <strong>ikke</strong> er obligatoriske for små foretak. Avstemmingen er like nyttig som kontroll, men kreves ikke i noten.</td></tr>
+            <tr><td>Forenklet IFRS</td><td>Måling følger IFRS, mens presentasjon og noter følger regnskapsloven. Avstemmingen gjøres på samme måte.</td></tr>
+            <tr><td>Full IFRS</td><td>IAS 12 krever en formell avstemming mellom skattekostnad og regnskapsmessig resultat i note. <span class="bok-usikker">avsnitt ikke etterprøvd</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="lc-notes">
+        <p class="lc-note">Alle fire står her samtidig med vilje. Et verktøy som viser forskjellen ved å skjule tre av fire, demonstrerer ingenting.</p>
+        <p class="lc-note">Merknaden på IAS 12: henvisningen til hvilket avsnitt som hjemler kravet stammer fra en annenhåndskilde og er ikke kontrollert mot standarden selv. Selve kravet er godt belagt; avsnittsnummeret oppgir vi derfor ikke.</p>
+      </div>
+    </section>
+
+    <section class="lc-sec" id="hjemmel" aria-labelledby="lcB-sav">
+      <div class="lc-head"><span class="lc-kicker">Hjemmel</span><h2 class="lc-title" id="lcB-sav">Hvor det <em>står</em></h2><p class="lc-intro">Lovtekst kan gjengis fritt. Regnskapsstandarder er opphavsrettsbeskyttet, og omtales derfor bare ved nummer og med egne ord.</p></div>
+      <ul class="bok-liste">
+        <li><strong>Regnskapsloven § 7-23 Skattekostnad</strong> — noteopplysning om skattekostnaden. Ikke obligatorisk for små foretak.</li>
+        <li><strong>Stortingets skattevedtak for inntektsåret 2026 § 3-3</strong> — første ledd gir 22 %, annet ledd gir 25 % for selskap som svarer finansskatt på lønn.</li>
+        <li><strong>Folketrygdloven § 23-2 a</strong> — finansskatt på lønn. Det er lønnsplikten som utløser den høye satsen, ikke at foretaket kalles et finansforetak.</li>
+        <li><strong>Skatteloven § 2-38 sjette ledd</strong> — treprosentregelen i fritaksmetoden. Bokstav a gjelder utbytte, ikke gevinster. Bokstav c gjør unntak innenfor skattekonsern.</li>
+        <li><strong>NRS(F) Resultatskatt</strong> — den norske standarden for skatt i regnskapet. Omtales her, gjengis ikke.</li>
+        <li><strong>IAS 12 Inntektsskatt</strong> — den internasjonale standarden. Omtales her, gjengis ikke.</li>
+      </ul>
+      <div class="lc-links">
+        <a class="lc-link" href="/lov/skattelov/"><span class="name">Skatteloven</span><span class="arr">→</span></a>
+        <a class="lc-link" href="/lov/bokforingslov/#card-dokumentasjon"><span class="name">Bokføringsloven — dokumentasjon</span><span class="arr">→</span></a>
+      </div>
+    </section>
+
+    <section class="lc-sec" id="feil" aria-labelledby="lcC-sav">
+      <div class="lc-head"><span class="lc-kicker">Vanlige feil</span><h2 class="lc-title" id="lcC-sav">Det som <em>oftest</em> går galt</h2><p class="lc-intro">Avviket forteller deg ofte hvilken av disse det er. Del avviket på satsen, eller på to, og se om tallet blir kjent.</p></div>
+      <ul class="bok-liste">
+        <li><strong>Blander permanente og midlertidige forskjeller.</strong> Midlertidige forskjeller hører i utsatt skatt og skal ikke inn i denne oppstillingen. Avviket blir da satsen ganget med forskjellen.</li>
+        <li><strong>Glemmer korreksjonen fra fjorårets fastsetting.</strong> Differansen mellom endelig fastsatt skatt og det som ble avsatt, føres i år som estimatendring — ikke mot egenkapitalen.</li>
+        <li><strong>Viser ikke effekten av endret skattesats på egen linje.</strong> Er satsen endret, må hele den inngående netto forskjellen regnes om. Uten linjen går avstemmingen aldri i null.</li>
+        <li><strong>Avstemmer ikke de midlertidige forskjellene mot næringsspesifikasjonen.</strong> Denne siden fanger det ikke opp — det er en egen kontroll.</li>
+        <li><strong>Nettofører utsatt skattefordel og utsatt skatt</strong> uten at vilkårene for motregning er oppfylt.</li>
+        <li><strong>Legger inn et skattebeløp der det skal stå et grunnlag,</strong> eller omvendt. Avviket blir da rundt 4,5 ganger for stort, eller rundt 0,22 ganger.</li>
+      </ul>
+    </section>
+
+    <section class="lc-sec" id="dokumentasjon" aria-labelledby="lcD-sav">
+      <div class="lc-head"><span class="lc-kicker">Dokumentasjon</span><h2 class="lc-title" id="lcD-sav">Hva revisor <em>spør om</em></h2><p class="lc-intro">Dette er hva som pleier å bli etterspurt. Det er ikke en sjekkliste du kan hake av og dermed ha dokumentert noe — listen sier hva du bør ha, ikke at du har det.</p></div>
+      <ul class="bok-liste">
+        <li>Grunnlaget for hver permanente forskjell, spesifisert — ikke bare summen.</li>
+        <li>Avstemming av de midlertidige forskjellene mot næringsspesifikasjonen.</li>
+        <li>Dokumentasjon av fjorårskorreksjonen: endelig fastsatt skatt mot avsatt beløp.</li>
+        <li>Grunnlaget for at utsatt skattefordel er balanseført, eller for at den ikke er det.</li>
+        <li>Beregningen bak effekten av endret skattesats, dersom satsen er endret.</li>
+      </ul>
+    </section>
+
+    <section class="lc-sec" id="naboer" aria-labelledby="lcE-sav">
+      <div class="lc-head"><span class="lc-kicker">Videre</span><h2 class="lc-title" id="lcE-sav">Beslektede <em>oppslag</em></h2><p class="lc-intro">Dette er det første oppslaget i bokføringsserien. Flere kommer.</p></div>
+      <div class="lc-links">
+        <a class="lc-link" href="/regnskap/"><span class="name">Alle regnskapsverktøy</span><span class="arr">→</span></a>
+        <a class="lc-link" href="/regnskap/resultat/"><span class="name">Resultatregnskap</span><span class="arr">→</span></a>
+        <a class="lc-link" href="/regnskap/mva/"><span class="name">MVA-melding</span><span class="arr">→</span></a>
+      </div>
+    </section>
+
+  </div>
+
+  <p class="bok-bunn">
+    Satser kontrollert <span id="bokKontrollert">–</span> mot primærkilde. Utløpsvarselet leser klokka på din egen maskin, så en maskin med feil dato kan få varselet for tidlig eller for sent. Siden er foreløpig bare på norsk.
+  </p>
+</div>
 
 </main>
 
@@ -1279,94 +1250,24 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     document.addEventListener('click', function(e){ if(!menu.contains(e.target) && e.target!==btn && !btn.contains(e.target)) close(); });
     document.addEventListener('keydown', function(e){ if(e.key==='Escape') close(); });
   })();
-
-  // ── Kontoplan-filter (NS 4102 søk + klasse-pill) ──
-  (function(){
-    var input = document.getElementById('kontoSearch');
-    var grid  = document.getElementById('kontoGrid');
-    var empty = document.getElementById('kpEmpty');
-    var pills = document.querySelectorAll('.kp-pill');
-    var hStatTreff = document.getElementById('hStatTreff');
-    if(!input || !grid) return;
-
-    var classFilter = 'all';
-
-    function norm(s){
-      return (s||'').toString().toLowerCase()
-        .replace(/[øö]/g,'o').replace(/[æä]/g,'a').replace(/å/g,'a')
-        .trim();
-    }
-
-    function applyFilter(){
-      var q = norm(input.value);
-      var classes = grid.querySelectorAll('.konto-class');
-      var totalVisible = 0;
-      var visibleClasses = 0;
-
-      classes.forEach(function(cls){
-        var cnum = cls.getAttribute('data-class');
-        var classMatch = (classFilter === 'all' || cnum === classFilter);
-        if(!classMatch){
-          cls.hidden = true;
-          return;
-        }
-
-        var items = cls.querySelectorAll('li');
-        var anyHit = false;
-        items.forEach(function(li){
-          if(!q){
-            li.hidden = false;
-            anyHit = true;
-            totalVisible++;
-            return;
-          }
-          var num  = (li.getAttribute('data-num') || '').toLowerCase();
-          var name = norm(li.getAttribute('data-name'));
-          var hit  = (num.indexOf(q) === 0) || (name.indexOf(q) !== -1);
-          li.hidden = !hit;
-          if(hit){ anyHit = true; totalVisible++; }
-        });
-
-        cls.hidden = !anyHit;
-        if(anyHit) visibleClasses++;
-      });
-
-      if(empty){
-        if(totalVisible === 0) empty.classList.add('show');
-        else empty.classList.remove('show');
-      }
-      if(hStatTreff){
-        hStatTreff.textContent = q || classFilter !== 'all' ? String(totalVisible) : '–';
-      }
-    }
-
-    if(input) input.addEventListener('input', applyFilter);
-
-    pills.forEach(function(p){
-      p.addEventListener('click', function(){
-        pills.forEach(function(x){
-          x.classList.remove('active');
-          x.setAttribute('aria-pressed','false');
-        });
-        p.classList.add('active');
-        p.setAttribute('aria-pressed','true');
-        classFilter = p.getAttribute('data-class') || 'all';
-        applyFilter();
-      });
-    });
-
-    // Init: ingen filter, alle synlige
-    applyFilter();
-  })();
 </script>
 
+<!-- Bokføringsmotoren. Kjører synkront her, altså før core.js, og er derfor
+     selvforsynt med parsing og formatering. Rekkefølgen er data, motor, modell. -->
+<script src="/shared/bok/bok-data.js?v=v1"></script>
+<script src="/shared/bok/bok-engine.js?v=v1"></script>
+<script src="/shared/bok/models/l6-skatteavstemming.js?v=v1"></script>
 <script>
 (function(){
   document.querySelectorAll('.calc-help-btn').forEach(function(b){
     b.addEventListener('click',function(){
       var id=b.getAttribute('data-target'); if(!id) return;
       var d=document.getElementById(id); if(!d) return;
-      if(d.tagName==='DETAILS'){d.open=!d.open; if(d.open) d.scrollIntoView({behavior:'smooth',block:'nearest'});}
+      var show=!d.classList.contains('howto-open');
+      d.classList.toggle('howto-open', show);
+      if(d.tagName==='DETAILS') d.open=show;
+      b.setAttribute('aria-expanded', show?'true':'false');
+      if(show) d.scrollIntoView({behavior:'smooth',block:'nearest'});
     });
   });
   document.querySelectorAll('.focus-card-btn').forEach(function(b){
@@ -1374,7 +1275,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   });
 })();
 </script>
-<script src="/shared/top-chrome.js?v=v243" defer></script>
 <script defer src="/shared/core.js?v=v228"></script>
 <script defer src="/shared/lang/no.js?v=v228"></script>
 
@@ -1382,6 +1282,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
 <script src="/shared/search.js?v=v131" defer></script>
+
+<!-- SHELL scripts — REDESIGN-2026-05 (T1-T4 ported) -->
+<script src="/shared/site-shell.js?v=v1" defer></script>
+<script src="/shared/top-chrome.js?v=v243" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');
