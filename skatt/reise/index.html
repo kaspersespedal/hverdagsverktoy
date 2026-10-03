@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Reisefradrag — kalkulator-skall (delt mønster med /skatt/inntekt/ + /kalkulator/rente/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -175,149 +176,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body strong{color:var(--ink);font-weight:500}
 
 .calc-wrap > .container + .container{margin-top:24px}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  /* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap), så
-     de dro hele siden ut i sidelengs scroll — opptil 380px på finance.
-     Samme scroll-wrapper-mønster som .bd-table-wrap/.pv-tblwrap. */
-  .lc-trinn{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -507,46 +365,99 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: skatt-reise =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-skatt-reise">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-reise">Veien fra kjørte kilometer til spart skatt</h2><p class="lc-intro">Reiser du 35 km hver vei i 230 dager, blir reisekostnaden 30 590 kr. Egenandelen på 12 000 kr trekkes fra, så fradraget blir 18 590 kr. Det gir 4 090 kr mindre i skatt.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Kilometersats</b><span class="tag">Sats</span></span><span class="fig">1,90<span class="u">kr/km</span></span><p class="dsc">Hver kilometer mellom hjem og jobb gir 1,90 kr i reisekostnad. Du trenger ikke vise kvitteringer — satsen gjelder uansett hvordan du faktisk reiser.</p></div>
-        <div class="lc-led"><span class="nm"><b>Tur-retur</b><span class="tag">Faktor</span></span><span class="fig">2<span class="u">×</span></span><p class="dsc">Avstanden du skriver inn er én vei, men du kjører frem og tilbake. Derfor ganges kilometerne med 2 før de multipliseres med antall arbeidsdager.</p></div>
-        <div class="lc-led"><span class="nm"><b>Egenandel</b><span class="tag">Grense</span></span><span class="fig">12 000<span class="u">kr</span></span><p class="dsc">En fast nedre grense som alltid trekkes fra reisekostnaden. De første 12 000 kronene gir ikke fradrag — bare det som ligger over teller.</p></div>
-        <div class="lc-led"><span class="nm"><b>Maks fradragsgrunnlag</b><span class="tag">Grense</span></span><span class="fig">120 000<span class="u">kr</span></span><p class="dsc">Et tak på reisekostnaden før egenandelen trekkes fra. Reiser du så langt at kostnaden passerer 120 000 kr, stopper grunnlaget der.</p></div>
-        <div class="lc-led"><span class="nm"><b>Skattebesparelse</b><span class="tag">Skatt</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Fradraget reduserer skatten med 22 % av beløpet — ikke hele beløpet. Et fradrag på 10 000 kr gir altså 2 200 kr mindre skatt.</p></div>
-        <div class="lc-led"><span class="nm"><b>Bompenger og ferge</b><span class="tag">Faktor</span></span><span class="fig">0<span class="u">kr/dag</span></span><p class="dsc">Daglige bom- og fergeutgifter legges til reisekostnaden per arbeidsdag. De teller med i grunnlaget, men rammes av det samme taket på 120 000 kr.</p></div>
+  <div class="lrn" id="lrn-rs">
+    <section class="lrn-sec" aria-labelledby="lrn-rs-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-rs-h">Egenandelen spiser de første kilometerne</h2>
+        <p class="lrn-lede">Hver kilometer mellom hjem og jobb gir 1,90&nbsp;kr, tur-retur, hver arbeidsdag. Men en fast egenandel gir ikke fradrag, og det du får, er 22&nbsp;% av fradraget i lavere skatt.</p>
+      </div>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+      </div>
+      <div class="lrn-figrow lrn-rs-row">
+        <div class="lrn-rs-col">
+          <figure class="lrn-fig" aria-describedby="lrn-rs-sum">
+            <figcaption class="lrn-cap">Kilometer én vei, og mindre skatt per år i kroner</figcaption>
+            <div class="lrn-plot is-static" dir="ltr">
+              <svg aria-hidden="true" focusable="false">
+                <defs>
+                  <pattern id="lrn-rs-ph" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-rs-phl" x1="0" y1="0" x2="0" y2="5"/></pattern>
+                  <pattern id="lrn-rs-pd" width="5" height="5" patternUnits="userSpaceOnUse"><circle class="lrn-rs-pdc" cx="2.5" cy="2.5" r="1.1"/></pattern>
+                </defs>
+                <path class="lrn-grid" data-p="grid"/>
+                <path class="lrn-rs-base" data-p="base"/>
+                <path class="lrn-rs-z0" data-p="dead"/>
+                <path fill="url(#lrn-rs-ph)" data-p="deadp"/>
+                <path class="lrn-rs-z1" data-p="mid"/>
+                <path class="lrn-rs-z0" data-p="cap"/>
+                <path fill="url(#lrn-rs-pd)" data-p="capp"/>
+                <path class="lrn-rs-band" data-p="band"/>
+                <path class="lrn-rs-band" data-p="tick"/>
+                <path class="lrn-rs-capl" data-p="capline"/>
+                <path class="lrn-rs-curve" data-p="curve"/>
+                <path class="lrn-rs-dot" data-p="dots"/>
+                <path class="lrn-rs-ydash" data-p="youdash"/>
+                <path class="lrn-rs-yline" data-p="youline"/>
+                <path class="lrn-rs-yend" data-p="youend"/>
+                <path class="lrn-rs-ydot" data-p="youdot"/>
+              </svg>
+              <div class="lrn-labels lrn-rs-labels" data-lrn="labels"></div>
+            </div>
+          </figure>
+          <div class="lrn-rs-sl">
+            <label for="lrn-rs-km" data-lrn="slbl"></label>
+            <input id="lrn-rs-km" type="range" min="1" max="160" step="1" value="35" data-lrn="slider">
+          </div>
+        </div>
+        <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+      </div>
+      <div class="lrn-card lrn-rs-card" aria-live="polite">
+        <span class="lrn-card-l" data-lrn="fkm"></span>
+        <div class="lrn-f n"><span data-lrn="f1a"></span><span>× 2</span><span data-lrn="f1d"></span><span>× 1,90&nbsp;kr</span><span>=</span><b data-lrn="f1r"></b></div>
+        <div class="lrn-f n" data-lrn="fbom" hidden><span data-lrn="f2a"></span><span data-lrn="f2b"></span><span>=</span><b data-lrn="f2r"></b></div>
+        <div class="lrn-f n" data-lrn="fcap" hidden><span>tak på grunnlaget</span><span>=</span><b>120&nbsp;000&nbsp;kr</b></div>
+        <div class="lrn-f n" data-lrn="fnorm"><span data-lrn="f4a"></span><span>=</span><b data-lrn="f4r"></b></div>
+        <div class="lrn-f n" data-lrn="fdead" hidden><span data-lrn="f5"></span><span>=</span><b>0 kr fradrag</b></div>
+        <div class="lrn-f n"><span data-lrn="f6a"></span><span>=</span><b data-lrn="f6r"></b></div>
+        <span class="lrn-fine" data-lrn="f7"></span>
+      </div>
+      <details class="lrn-tbl">
+        <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+        <div><table>
+          <caption>Kroner per år, ved egenandel og tak</caption>
+          <thead><tr><th scope="col" class="s">Km én vei</th><th scope="col">Reisekostnad</th><th scope="col">Fradrag</th><th scope="col">Mindre skatt</th></tr></thead>
+          <tbody data-lrn="rows"></tbody>
+        </table></div>
+      </details>
+      <p class="lrn-sr" id="lrn-rs-sum" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-rs-s2" aria-labelledby="lrn-rs-b">
+      <h3 class="lrn-h3" id="lrn-rs-b">Bom og ferge</h3>
+      <div class="lrn-rs-bom">
+        <p class="lrn-p">Daglige bom- og fergeutgifter legges til per arbeidsdag og teller innenfor samme tak på 120&nbsp;000&nbsp;kr. Skatteetaten kan be om dokumentasjon, så ta vare på kvitteringene.</p>
+        <p class="lrn-p" data-lrn="bomlive" hidden></p>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-skatt-reise">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-skatt-reise">Før du stoler på tallet</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Egenandelen spiser de korte reisene</h3><p>Reisekostnaden må over 12 000 kr før du får noe fradrag i det hele tatt. Bor du nær jobben, kan det bli null igjen — det er helt normalt.</p></div>
-        <div class="lc-note"><h3>230 dager er bare et utgangspunkt</h3><p>Standardverdien tilsvarer ca. 46 uker (52 minus 5 ferieuker og 1 uke helligdager). Jobber du deltid, hjemmekontor eller turnus, bør du justere antall dager selv.</p></div>
-        <div class="lc-note"><h3>Du sparer 22 % av fradraget</h3><p>Reisefradraget senker bare den alminnelige inntektsskatten på 22 %. Trinnskatt og trygdeavgift blir ikke lavere. Bor du i Finnmark eller Nord-Troms, er satsen 18,5 %, og da sparer du litt mindre enn tallet her.</p></div>
-        <div class="lc-note"><h3>Bom og ferge krever dokumentasjon</h3><p>Daglige bom- og fergeutgifter teller med i grunnlaget, men Skatteetaten kan be om kvittering eller dokumentasjon. Ta vare på belegget.</p></div>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-rs-q">
+      <h3 class="lrn-h3" id="lrn-rs-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvorfor får jeg ikke noe fradrag?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Reisekostnaden din er trolig under egenandelen på 12&nbsp;000&nbsp;kr. Med 230 arbeidsdager betyr det under 13,7&nbsp;km én vei. Se hvor du står på veien over.</p></div></details>
+        <details><summary>Får jeg igjen hele fradragsbeløpet?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Nei. Fradraget reduserer skatten med 22&nbsp;% av beløpet. Et fradrag på 20&nbsp;000&nbsp;kr betyr 4&nbsp;400&nbsp;kr mindre i skatt, ikke 20&nbsp;000&nbsp;kr tilbake på konto.</p></div></details>
+        <details><summary>Teller det hvordan jeg faktisk reiser?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Nei. Satsen på 1,90&nbsp;kr per kilometer gjelder uansett om du kjører bil, tar buss eller sykler. Det er avstanden og antall dager som styrer beløpet.</p></div></details>
+        <details><summary>Skal jeg skrive inn avstanden én eller begge veier?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Skriv inn avstanden én vei. Kalkulatoren ganger automatisk med 2 fordi du reiser frem og tilbake hver arbeidsdag.</p></div></details>
+        <details><summary>Hva er taket på 120&nbsp;000&nbsp;kr?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det er en øvre grense for reisekostnaden før egenandelen trekkes fra. Reiser du så langt at kostnaden passerer 120&nbsp;000&nbsp;kr, regnes grunnlaget ut fra taket og ikke fra det høyere beløpet. Fradraget stopper da på 108&nbsp;000&nbsp;kr, som gir 23&nbsp;760&nbsp;kr mindre skatt. Kilde: Skatteetaten, satser for reisefradrag 2026.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcD-skatt-reise">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-skatt-reise">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvorfor får jeg ikke noe fradrag?</summary><div class="a"><p>Reisekostnaden din er sannsynligvis under egenandelen på 12 000 kr. Fradraget gjelder bare det som ligger over denne grensen, så korte reiser gir ofte null.</p></div></details>
-        <details class="lc-q"><summary>Får jeg igjen hele fradragsbeløpet?</summary><div class="a"><p>Nei. Fradraget reduserer skatten med 22 % av beløpet. Et fradrag på 20 000 kr betyr 4 400 kr mindre i skatt — ikke 20 000 kr tilbake på konto.</p></div></details>
-        <details class="lc-q"><summary>Teller det hvordan jeg faktisk reiser?</summary><div class="a"><p>Nei. Satsen på 1,90 kr per kilometer gjelder uansett om du kjører bil, tar buss eller sykler. Det er avstanden og antall dager som styrer beløpet.</p></div></details>
-        <details class="lc-q"><summary>Skal jeg skrive inn avstanden én eller begge veier?</summary><div class="a"><p>Skriv inn avstanden én vei. Kalkulatoren ganger automatisk med 2 fordi du reiser frem og tilbake hver arbeidsdag.</p></div></details>
-        <details class="lc-q"><summary>Hva er taket på 120 000 kr?</summary><div class="a"><p>Det er en øvre grense for reisekostnaden før egenandelen trekkes fra. Reiser du så langt at kostnaden passerer 120 000 kr, regnes grunnlaget ut fra taket og ikke fra det høyere beløpet.</p></div></details>
-        <details class="lc-q"><summary>Må jeg legge ved bompenger og ferge selv?</summary><div class="a"><p>Du kan skrive inn daglige bom- eller fergeutgifter, så legges de til reisekostnaden. Husk at de inngår i det samme taket og at du kan måtte dokumentere dem.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-skatt-reise">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-skatt-reise">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/skatt/inntekt/"><span class="ar">Inntektsskatt →</span><h3>Se hele skatten din</h3><p>Reisefradraget er én linje. Her ser du hvordan inntekt, fradrag og skatt henger sammen samlet.</p></a>
-        <a class="lc-link" href="/personlig/bil/"><span class="ar">Bilkostnader →</span><h3>Hva koster bilen å eie</h3><p>Reisefradraget dekker ikke alt. Regn ut de faktiske kostnadene ved å kjøre til jobb hver dag.</p></a>
-        <a class="lc-link" href="/personlig/lonn/"><span class="ar">Lønn etter skatt →</span><h3>Se hva du sitter igjen med</h3><p>Fra bruttolønn til kontobeløp — hvordan fradrag og skattetrekk påvirker det du faktisk får utbetalt.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-rs-r">
+      <h3 class="lrn-h3" id="lrn-rs-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/skatt/inntekt/"><span><span class="t">Inntektsskatt</span><span class="d">Reisefradraget senker bare den alminnelige skatten på 22&nbsp;%.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/bil/"><span><span class="t">Bilkostnad</span><span class="d">Hva én kilometer faktisk koster, sammenlignet med 1,90&nbsp;kr.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -568,6 +479,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <script defer src="/shared/top-chrome.js?v=v245"></script>
 <script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -620,6 +532,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     function recalc(){
       var d = compute();
+      window._reise = {km:d.km, dager:d.dager, bom:d.bom};
+      if(window.hvtLearn) hvtLearn.update('skatt-reise', window._reise);
       var setText = function(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; };
 
       if(!d.hasData){
@@ -782,6 +696,247 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
   } else { init(); pollRender(); }
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Egenandelen spiser de første kilometerne»: mindre skatt per år etter avstand
+//    én vei. Veien under grafen viser de tre sonene: egenandel (ingen fradrag), fradrag (rett linje)
+//    og tak. Glidebryteren prøver en annen avstand. Samme regnestykke som compute() på siden
+//    (Skatteetaten, satser 2026: 1,90 kr/km, egenandel 12 000 kr, tak 120 000 kr). ──
+(function(){
+  var KEY = 'skatt-reise';
+  var DEF = {km:35, dager:230, bom:0};
+  var SATS = 1.90, EGEN = 12000, TAK = 120000, SKATT = 0.22;
+  var SANS = 'Inter, system-ui, sans-serif';
+  var NB = ' ';
+  var root, plot, svg, raw = null, lastW = 0, queued = false, ctx, skm = null, skKey = '';
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setD(name, d){ svg.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function circ(cx, cy, r){ return 'M' + f1(cx - r) + ',' + f1(cy) + ' a' + r + ',' + r + ' 0 1,0 ' + 2 * r + ',0 a' + r + ',' + r + ' 0 1,0 ' + (-2 * r) + ',0 '; }
+  function nice(v, parts){
+    var e0 = Math.floor(Math.log10(Math.max(v, 1))) - 2, fs = [1, 2, 2.5, 5];
+    for(var e = e0; e < e0 + 6; e++) for(var i = 0; i < fs.length; i++){ var st = fs[i] * Math.pow(10, e), n = Math.ceil(v / st - 1e-9); if(n <= parts) return {step:st, max:n * st}; }
+    return {step:v, max:v};
+  }
+
+  function render(d){
+    var L = window.hvtLearn, t = L.t, ph = L.ph;
+    raw = d;
+    var inp = d && d.km > 0 ? d : DEF;
+    var mine = !!d && d.km > 0 && !(d.km === DEF.km && d.dager === DEF.dager && d.bom === DEF.bom);
+    var W = plot.clientWidth;
+    if(!W){ lastW = 0; return; }
+    lastW = W;
+    var MOB = W < 560;
+    var G = MOB ? {H:296, x0:4, x1:W - 46, y0:232, plotH:190, bandTop:246, bandH:20, tickTop:272, ms:18, fz:11, rightX:W - 44}
+                : {H:366, x0:20, x1:W - 64, y0:296, plotH:250, bandTop:312, bandH:24, tickTop:344, ms:18, fz:12, rightX:W - 54};
+    function fmt(v){ return L.kr(v); }
+    function kr(v){ return L.kr(v) + NB + 'kr'; }
+    function kmTxt(v){ return Math.abs(v - Math.round(v)) < 0.05 ? String(Math.round(v)) : L.dec(v, 1); }
+    var dager = inp.dager > 0 ? inp.dager : 230, bom = inp.bom > 0 ? inp.bom : 0;
+    function calc(k){
+      var reisekost = k * 2 * dager * SATS, bomTotal = bom * dager, sumFor = reisekost + bomTotal;
+      var brutto = Math.min(sumFor, TAK), fradrag = Math.max(brutto - EGEN, 0);
+      return {reisekost:reisekost, sumFor:sumFor, brutto:brutto, capped:sumFor > TAK, fradrag:fradrag, besparelse:fradrag * SKATT, perMnd:fradrag * SKATT / 12};
+    }
+    var perKm = 2 * SATS * dager;
+    var km0 = Math.max(0, (EGEN / dager - bom) / (2 * SATS)), kmCap = Math.max(0, (TAK / dager - bom) / (2 * SATS));
+    var MAXSAV = (TAK - EGEN) * SKATT;
+    // Aksen: 0–160 km, utvidet når taket eller avstanden ligger lenger ut
+    var need = Math.max(kmCap * 1.06, inp.km * 1.03, 160);
+    var kmMax = [160, 200, 240, 300, 400, 500, 600, 800, 1000, 1500].filter(function(o){ return o >= need; })[0] || Math.ceil(need / 100) * 100;
+    // Prøveavstanden følger glidebryteren, og nullstilles når kalkulatoren endres
+    var key = [inp.km, dager, bom].join('|');
+    if(key !== skKey){ skKey = key; skm = null; }
+    var km = Math.max(1, Math.min(kmMax, skm === null ? inp.km : skm)), you = calc(km);
+    function X(k){ return G.x0 + k / kmMax * (G.x1 - G.x0); }
+    function Y(v){ return G.y0 - v / 25000 * G.plotH; }
+    var bandBot = G.bandTop + G.bandH;
+    // ── Kurven, veien og rutenettet ──
+    var pts = [0];
+    if(km0 > 0 && km0 < kmMax) pts.push(km0);
+    if(kmCap > km0 && kmCap < kmMax) pts.push(kmCap);
+    pts.push(kmMax);
+    var curve = '';
+    pts.forEach(function(k, i){ curve += (i ? ' L' : 'M') + f1(X(k)) + ',' + f1(Y(calc(k).besparelse)); });
+    function rb(a, b){ return b - a > 0.05 ? 'M' + f1(X(a)) + ',' + G.bandTop + ' H' + f1(X(b)) + ' V' + bandBot + ' H' + f1(X(a)) + ' Z' : ''; }
+    var z0 = Math.min(km0, kmMax), z1 = Math.min(Math.max(kmCap, z0), kmMax);
+    setD('dead', rb(0, z0)); setD('deadp', rb(0, z0)); setD('mid', rb(z0, z1)); setD('cap', rb(z1, kmMax)); setD('capp', rb(z1, kmMax));
+    setD('band', 'M' + f1(X(0)) + ',' + G.bandTop + ' H' + f1(X(kmMax)) + ' V' + bandBot + ' H' + f1(X(0)) + ' Z');
+    var grid = '', lab = '', placed = [];
+    for(var v = 0; v <= 25000; v += 5000){
+      if(v > 0) grid += 'M' + G.x0 + ',' + f1(Y(v)) + ' H' + f1(G.x1) + ' ';
+      if(MOB && (v === 0 || v === 25000)) continue;
+      var tw0 = textW(fmt(v), G.fz + 'px ' + SANS);
+      lab += '<span class="lrn-tick" style="left:' + f1(G.rightX) + 'px;top:' + f1(Y(v) - 8) + 'px">' + fmt(v) + '</span>';
+      placed.push({x:G.rightX, y:Y(v) - 8, w:tw0, h:16});
+    }
+    setD('grid', grid);
+    setD('base', 'M' + G.x0 + ',' + f1(Y(0)) + ' H' + f1(G.x1));
+    setD('capline', kmCap < kmMax ? 'M' + f1(X(kmCap)) + ',' + f1(Y(MAXSAV)) + ' V' + (G.bandTop - 1) : '');
+    setD('curve', curve);
+    // km-aksen: faste tall under veien, og grensene som egne etiketter
+    var nz = nice(kmMax, MOB ? 4 : 8), specials = [];
+    if(km0 > 0.3 && km0 < kmMax) specials.push(km0);
+    if(kmCap < kmMax - 0.3) specials.push(kmCap);
+    var tick = '', lastTick = Math.floor(kmMax / nz.step + 1e-9) * nz.step, TF = G.fz + 'px ' + SANS;
+    for(var k = 0; k <= kmMax + 1e-6; k += nz.step){
+      tick += 'M' + f1(X(k)) + ',' + bandBot + ' V' + (bandBot + 5) + ' ';
+      var lbl = fmt(k) + (Math.abs(k - lastTick) < 1e-6 ? NB + 'km' : ''), lw = textW(lbl, TF) / 2;
+      var clash = specials.some(function(s){ return Math.abs(X(k) - X(s)) < lw + 19; });
+      if(!clash && X(k) + lw <= W + 14){ lab += '<span class="lrn-tick x" style="left:' + f1(X(k) - 28) + 'px;top:' + G.tickTop + 'px;width:56px">' + lbl + '</span>'; placed.push({x:X(k) - lw, y:G.tickTop, w:lw * 2, h:16}); }
+    }
+    specials.forEach(function(s){
+      var tx = kmTxt(s), w = textW(tx, '600 ' + TF) + 12;
+      lab += '<span class="lrn-rs-chip" style="left:' + f1(X(s) - w / 2) + 'px;top:' + (G.tickTop - 1) + 'px">' + tx + '</span>';
+      placed.push({x:X(s) - w / 2, y:G.tickTop - 1, w:w, h:18});
+      tick += 'M' + f1(X(s)) + ',' + bandBot + ' V' + (bandBot + 5) + ' ';
+    });
+    setD('tick', tick);
+    // ── Merknadene ──
+    var uker = Math.round(dager / 5), perKmSkatt = perKm * SKATT, hasBoundary = km0 >= 3 && km0 < kmMax;
+    var notes = [];
+    notes.push(km0 > 0 ? t('lrnRsNDead', 'Egenandelen på {e} spiser de første {km} km.', {e:kr(EGEN), km:kmTxt(km0)}) : t('lrnRsNDead0', 'Bom og ferge alene er over egenandelen på {e}, så fradraget starter fra første kilometer.', {e:kr(EGEN)}));
+    var nDead = 1, nBound = 0;
+    if(hasBoundary){ notes.push(t('lrnRsNBound', 'Med {d} dager, omtrent {u} uker. Jobber du hjemme noen dager, flytter grensa utover.', {d:dager, u:uker})); nBound = 2; }
+    notes.push(t('lrnRsNSlope', 'Hver km over: {a} mer fradrag, {b} mindre skatt.', {a:kr(perKm), b:kr(perKmSkatt)}));
+    var nSlope = notes.length;
+    notes.push(t('lrnRsNCap', 'Taket: grunnlaget stopper på {t}. Lengre reise gir ikke mer.', {t:kr(TAK)}));
+    var nCap = notes.length;
+    // ── Plassering: hver etikett prøver noen kandidater og tar den første som ikke krasjer ──
+    var ms = G.ms, lh = MOB ? 16 : 18, xu = X(km), yu = Y(you.besparelse), yBase = Y(0);
+    var poly = [];
+    for(var i = 0; i + 1 < pts.length; i++){
+      var xa = X(pts[i]), ya = Y(calc(pts[i]).besparelse), xb = X(pts[i + 1]), yb = Y(calc(pts[i + 1]).besparelse);
+      var nS = Math.max(2, Math.ceil(Math.abs(xb - xa) / 3));
+      for(var qq = 0; qq <= nS; qq++) poly.push([xa + (xb - xa) * qq / nS, ya + (yb - ya) * qq / nS]);
+    }
+    function overl(a, b){ return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h; }
+    function inside(r){ return r.x >= 2 && r.y >= 2 && r.x + r.w <= W - 2 && r.y + r.h <= G.H - 2; }
+    function hitsCurve(r){ return poly.some(function(p){ return p[0] > r.x - 2 && p[0] < r.x + r.w + 2 && p[1] > r.y - 2 && p[1] < r.y + r.h + 2; }); }
+    function hitsDu(r){ return xu > r.x - 3 && xu < r.x + r.w + 3 && r.y < G.bandTop && r.y + r.h > 20; }
+    function fits(r){ return inside(r) && !placed.some(function(p){ return overl(r, p); }) && !hitsCurve(r) && !hitsDu(r); }
+    function fitsBand(r){ return inside(r) && !placed.some(function(p){ return p.id !== 'band' && overl(r, p); }) && !(xu > r.x - 8 && xu < r.x + r.w + 8); }
+    function take(cands, ok){ for(var j = 0; j < cands.length; j++) if(ok(cands[j])){ placed.push(cands[j]); return cands[j]; } return null; }
+    placed.push({id:'band', x:G.x0 - 4, y:G.bandTop - 2, w:X(kmMax) - G.x0 + 8, h:G.bandH + 4});
+    var marks = [];
+    function mk(num, r){ marks.push([num, r.x, r.y]); }
+    var youTxt = t('lrnRsYou', 'Du · {km} km · {belop}', {km:kmTxt(km), belop:kr(you.besparelse)});
+    var youW = textW(youTxt, '600 12px ' + SANS) + 14, youLeft = Math.max(0, Math.min(W - youW, xu - youW / 2));
+    placed.push({x:youLeft, y:0, w:youW, h:18});
+    lab += '<span class="lrn-rs-you" style="left:' + f1(youLeft) + 'px;top:0">' + esc(youTxt) + '</span>';
+    // Taket: merke over den flate delen av kurven, og etikett (bare på brede skjermer)
+    var capY = Y(MAXSAV), xm = kmCap < kmMax ? (X(kmCap) + X(kmMax)) / 2 - ms / 2 : X(kmMax) - 30, c4 = [];
+    [0, 24, -24, 48, -48, 72, -72].forEach(function(dd){ c4.push({x:xm + dd, y:capY - ms - 8, w:ms, h:ms}); });
+    c4.push({x:X(Math.min(kmCap, kmMax)) + 6, y:capY - ms - 8, w:ms, h:ms}, {x:X(Math.min(kmCap, kmMax)) - ms - 6, y:capY + 8, w:ms, h:ms}, {x:xm, y:capY + 8, w:ms, h:ms});
+    mk(nCap, take(c4, fits) || c4[0]);
+    if(!MOB && kmCap < kmMax - 6){
+      var capTxt = t('lrnRsCapLbl', 'Tak: {belop}', {belop:kr(MAXSAV)}), capW = textW(capTxt, '600 ' + TF) + 12;
+      var rc = take([{x:X(kmCap) - capW - 8, y:capY - 24, w:capW, h:lh}, {x:X(kmCap) + 8, y:capY - 24, w:capW, h:lh}, {x:X(kmCap) - capW - 8, y:capY + 8, w:capW, h:lh}], fits);
+      if(rc) lab += '<span class="lrn-rs-pill b" style="left:' + f1(rc.x) + 'px;top:' + f1(rc.y) + 'px">' + esc(capTxt) + '</span>';
+    }
+    // Merke 1 og 2: på veien i egenandelssonen og ved sonegrensa. Reserve: over grunnlinjen, øverst i plottet.
+    var by = G.bandTop + (G.bandH - ms) / 2, deadW = X(z0) - X(0), topRow = G.y0 - G.plotH - ms - 6;
+    function above(x){ return [{x:x, y:yBase - 34, w:ms, h:ms}, {x:x, y:yBase - 62, w:ms, h:ms}, {x:x, y:topRow, w:ms, h:ms}]; }
+    var c1 = [];
+    if(deadW >= ms + 6) c1.push({x:X(0) + 3, y:by, w:ms, h:ms}, {x:X(0) + (deadW - ms) / 2, y:by, w:ms, h:ms}, {x:X(z0) - ms - 3, y:by, w:ms, h:ms});
+    mk(nDead, take(c1, fitsBand) || take([].concat(above(X(0) + 3), above(X(0) + ms + 10), above(X(0) + 2 * ms + 18)), fits) || {x:X(0) + 3, y:topRow});
+    if(hasBoundary){
+      var c2 = [{x:X(z0) + 3, y:by, w:ms, h:ms}, {x:X(z0) + ms + 7, y:by, w:ms, h:ms}, {x:X(z0) + 2 * ms + 11, y:by, w:ms, h:ms}];
+      mk(nBound, take(c2, fitsBand) || take([].concat(above(X(z0) + 3), above(X(z0) + ms + 10)), fits) || {x:X(z0) + 3, y:topRow});
+    }
+    // Merke 3: under kurven i fradragssonen
+    var c3 = [];
+    [0.55, 0.42, 0.68, 0.3, 0.8, 0.2, 0.9].forEach(function(fr){ var kk = z0 + (z1 - z0) * fr; c3.push({x:X(kk) + 6, y:Y(calc(kk).besparelse) + 8, w:ms, h:ms}); });
+    mk(nSlope, take(c3, fits) || c3[0]);
+    // Merker på kurven ved 20, 50 og 100 km, og sonenavn på veien (bare på brede skjermer)
+    var dots = '';
+    if(!MOB){
+      [50, 100, 20].forEach(function(kk){
+        var sv = calc(kk).besparelse;
+        if(!(sv > 1 && sv < MAXSAV - 1) || Math.abs(kk - km) < 6 || kk >= kmMax) return;
+        var t1 = kk + NB + 'km', t2 = kr(sv), w = Math.max(textW(t1, '11.5px ' + SANS), textW(t2, '600 ' + TF)) + 12, h = 33, px = X(kk), py = Y(sv);
+        var rq = take([{x:px - 7 - w, y:py - 7 - h, w:w, h:h, r:1}, {x:px + 8, y:py + 7, w:w, h:h}, {x:px - 8 - w, y:py + 7, w:w, h:h, r:1}], fits);
+        if(!rq) return;
+        dots += circ(px, py, 3.5);
+        lab += '<span class="lrn-rs-cp' + (rq.r ? ' r' : '') + '" style="left:' + f1(rq.x) + 'px;top:' + f1(rq.y) + 'px;width:' + f1(w) + 'px"><span>' + t1 + '</span><b>' + t2 + '</b></span>';
+      });
+      [[0, z0, ph('Egenandel')], [z0, z1, ph('Fradrag')], [z1, kmMax, ph('Tak')]].forEach(function(z){
+        var w = textW(z[2], '600 ' + TF) + 12, zw = X(z[1]) - X(z[0]);
+        var rz = {x:(X(z[0]) + X(z[1])) / 2 - w / 2, y:G.bandTop + (G.bandH - lh) / 2, w:w, h:lh};
+        if(zw >= w + 6 && !placed.some(function(p){ return p.id !== 'band' && overl(rz, p); }) && !(xu > rz.x - 8 && xu < rz.x + rz.w + 8)) lab += '<span class="lrn-rs-pill b" style="left:' + f1(rz.x) + 'px;top:' + f1(rz.y) + 'px">' + esc(z[2]) + '</span>';
+      });
+    }
+    setD('dots', dots);
+    setD('youline', 'M' + f1(xu) + ',' + f1(bandBot) + ' V' + f1(yu));
+    setD('youdash', 'M' + f1(xu) + ',22 V' + f1(yu));
+    setD('youend', 'M' + f1(xu) + ',' + (G.bandTop - 4) + ' V' + (bandBot + 4));
+    setD('youdot', circ(xu, yu, 4.5));
+    marks.forEach(function(m0){ lab += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(m0[1]) + 'px;top:' + f1(m0[2]) + 'px">' + m0[0] + '</span>'; });
+    q('labels').innerHTML = lab;
+    plot.style.height = G.H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + G.H);
+    q('notes').innerHTML = notes.map(function(n0, j){ return '<li><span class="lrn-mk" aria-hidden="true">' + (j + 1) + '</span><span>' + esc(n0) + '</span></li>'; }).join('');
+    // Glidebryteren
+    var sl = q('slider'); sl.max = kmMax; sl.value = Math.round(km);
+    set('slbl', t('lrnRsSlider', 'Dra for å prøve en annen avstand (1–{max} km)', {max:fmt(kmMax)}));
+
+    // ── Regnestykket ──
+    set('fkm', t('lrnRsFKm', 'Regnestykket for {km} km', {km:kmTxt(km)}));
+    set('f1a', kmTxt(km) + NB + 'km'); set('f1d', '× ' + t('lrnRsDays', '{d} dager', {d:dager, n:dager})); set('f1r', fmt(you.reisekost) + NB + 'kr');
+    q('fbom').hidden = !(bom > 0);
+    if(bom > 0){ set('f2a', fmt(you.reisekost)); set('f2b', '+ ' + fmt(bom) + NB + 'kr × ' + t('lrnRsDays', '{d} dager', {d:dager, n:dager})); set('f2r', fmt(you.sumFor) + NB + 'kr'); }
+    q('fcap').hidden = !you.capped;
+    q('fnorm').hidden = !(you.fradrag > 0); q('fdead').hidden = you.fradrag > 0;
+    set('f4a', fmt(you.brutto) + ' − 12' + NB + '000'); set('f4r', t('lrnRsFrad', '{belop} kr fradrag', {belop:fmt(you.fradrag)}));
+    set('f5', t('lrnRsUnder', '{belop} kr er under egenandelen på 12 000 kr', {belop:fmt(you.brutto)}));
+    set('f6a', fmt(you.fradrag) + ' × 22' + NB + '%'); set('f6r', t('lrnRsLess', '{belop} kr mindre skatt', {belop:fmt(you.besparelse)}));
+    set('f7', t('lrnRsPerMnd', '{belop} kr i måneden', {belop:fmt(you.perMnd)}));
+
+    // ── Tabellen: faste avstander, pluss din ──
+    var base = [10, km0, 20, 50, 100, kmCap, 150].filter(function(x){ return x > 0.3; });
+    if(!base.some(function(x){ return Math.abs(x - km) < 0.05; })) base.push(km);
+    base.sort(function(a, b){ return a - b; });
+    q('rows').innerHTML = base.slice(0, 9).map(function(x){
+      var r = calc(x), me = Math.abs(x - km) < 0.05;
+      return '<tr' + (me ? ' class="is-sel"' : '') + '><th scope="row">' + kmTxt(x) + (me ? ' <span class="lrn-rs-du">' + esc(ph('Du')) + '</span>' : '') + '</th><td>' + fmt(r.brutto) + '</td><td>' + fmt(r.fradrag) + '</td><td>' + fmt(r.besparelse) + '</td></tr>';
+    }).join('');
+
+    // ── Tekstene ──
+    var sum = you.fradrag > 0
+      ? t('lrnRsSum', 'Ved {km} km og {d} dager får du {f} i fradrag, som gir {s} mindre skatt.', {km:kmTxt(km), d:dager, f:kr(you.fradrag), s:kr(you.besparelse)})
+      : t('lrnRsSumDead', 'Ved {km} km og {d} dager er reisekostnaden {k}, under egenandelen på {e}, så du får ikke fradrag.', {km:kmTxt(km), d:dager, k:kr(you.sumFor), e:kr(EGEN)});
+    set('sr', sum + ' ' + t('lrnRsSr', 'Fradraget starter ved {a} km og stopper på taket ved {b} km, der du får {m} mindre skatt per år. Hver kilometer imellom gir {p} mindre skatt.', {a:kmTxt(km0), b:kmTxt(kmCap), m:kr(MAXSAV), p:kr(perKmSkatt)}));
+    var km0Uten = EGEN / dager / (2 * SATS);
+    var bomLive = q('bomlive');
+    bomLive.hidden = !(bom > 0);
+    if(bom > 0) bomLive.textContent = t('lrnRsBom', 'Med {b} per dag i bom og ferge er sonen uten fradrag {a} km i stedet for {u} km.', {b:kr(bom), a:kmTxt(km0), u:kmTxt(km0Uten)});
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    set('stateText', t('lrnRsState', '{km} km · {d} arbeidsdager · {b}', {km:kmTxt(inp.km), d:dager, n:dager, b:bom > 0 ? t('lrnRsStateBom', '{belop} i bom og ferge per dag', {belop:kr(bom)}) : ph('ingen bom')}));
+  }
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+  function init(){
+    root = document.getElementById('lrn-rs');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
+    q('slider').addEventListener('input', function(){ skm = +this.value; render(raw); });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._reise || null);
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 
