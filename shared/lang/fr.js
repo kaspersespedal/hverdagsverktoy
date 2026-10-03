@@ -3574,6 +3574,12 @@ REGIONS['fr'] = {
     lrnSpSr: 'Après {n} ans, il y a {inn} de versements, {ri} d\'intérêts sur les versements et {rr} d\'intérêts sur les intérêts. Après 22 % d\'impôt sur le rendement, il reste {netto}.',
     lrnSpStateFlow: '{start} + {amt} {i}',
     lrnSpStateLump: '{start} sans versements',
+    /* Forklaringsblokker (lrn): kalkyle/selvkost */
+    lrnSkNote: '{p} {of} ({base}) donne {belop}.',
+    lrnSkAnn: '{tusen} de plus en main-d\'œuvre directe donnent {a} de plus en coût de revient. En machines, les mêmes 1 000 kr donnent {b}.',
+    lrnSkSum: 'Les majorations représentent {t} du coût de revient de {sk}.',
+    lrnSkSr: 'Le prix de vente HT est de {eks} kr. Le coût de production est de {tvk} kr, le coût de revient de {sk} kr et le bénéfice de {fort} kr. Les majorations représentent {t} kr du coût de revient.',
+    lrnSkState: '{dm} kr de matières · {lonn} kr de main-d\'œuvre · {maskin} kr de machines · majorations {mat} / {drift} / {adm} %, bénéfice {fort} %',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -8815,6 +8821,32 @@ REGIONS['fr']._ph = {
 "Kvartalet etter":"Le trimestre suivant",
 "Halvåret etter":"Le semestre suivant",
 "Året etter":"L'année suivante",
+"Hvert tillegg har sitt eget grunnlag":"Chaque majoration a sa propre base",
+"Materialtillegget regnes av materialet og driftstillegget av lønna. Salgs- og administrasjonstillegget og fortjenesten regnes av alt som ligger under, så en krone i direkte lønn drar med seg to tillegg.":"Les frais sur matières se calculent sur les matières et les frais de fabrication sur la main-d'œuvre. Les frais de vente et d'administration et le bénéfice se calculent sur tout ce qui se trouve en dessous, si bien qu'une couronne de main-d'œuvre directe entraîne deux majorations.",
+"Kroner per ordre eller serie, fra materiale til salgspris eks. mva":"Couronnes par commande ou série, des matières au prix de vente HT",
+"Selvkost eller dekningsbidrag?":"Coût de revient ou marge sur coûts variables ?",
+"Selvkost er prisgulvet på lang sikt: den må dekkes for at driften skal lønne seg. For kortsiktige beslutninger, som å ta en ekstra ordre med ledig kapasitet, bruker du heller":"Le coût de revient est le prix plancher à long terme : il doit être couvert pour que l'activité soit rentable. Pour les décisions à court terme, comme accepter une commande supplémentaire avec une capacité libre, utilisez plutôt la",
+"dekningsbidrag":"marge sur coûts variables",
+"Tilvirkningskost er det produktet koster å lage. Selvkost legger til salgs- og administrasjonstillegget og skal dekke alle kostnadene i bedriften.":"Le coût de production est ce que coûte la fabrication du produit. Le coût de revient ajoute les frais de vente et d'administration et doit couvrir tous les coûts de l'entreprise.",
+"Nei, ikke hele. Varelager vurderes til tilvirkningskost etter IAS 2. Salgs- og administrasjonstillegget holdes normalt utenfor lagerverdien og kostnadsføres i perioden.":"Non, pas en totalité. Les stocks sont évalués au coût de production selon IAS 2. Les frais de vente et d'administration restent normalement hors de la valeur des stocks et sont comptabilisés en charges de la période.",
+"Dekningsbidrag & break-even":"Marge sur coûts variables et seuil de rentabilité",
+"Kortsiktig prisgulv: hva dekker de variable kostnadene?":"Prix plancher à court terme : que couvrent les coûts variables ?",
+"Fortjenesten her er et påslag på selvkost, ikke en margin.":"Le bénéfice est ici une majoration du coût de revient, pas une marge.",
+"Timepris":"Taux horaire",
+"Direkte materiale":"Matières directes",
+"Materialtillegg":"Frais sur matières",
+"Maskin / andre direkte":"Machines / autres directs",
+"Tilvirkningstillegg":"Frais de fabrication",
+"Fortjeneste":"Bénéfice",
+"Tilvirkningskost":"Coût de production",
+"Selvkost":"Coût de revient",
+"Salgspris eks. mva":"Prix de vente HT",
+"av materialet":"des matières",
+"av direkte lønn":"de la main-d'œuvre directe",
+"av tilvirkningskost":"du coût de production",
+"av selvkost":"du coût de revient",
+"Materiale og maskin regnes ikke med i grunnlaget.":"Les matières et les machines ne sont pas incluses dans la base.",
+"Klammene blir lengre oppover. De siste tilleggene vokser med alt som ligger under.":"Les accolades s'allongent vers le haut. Les dernières majorations grandissent avec tout ce qui se trouve en dessous.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

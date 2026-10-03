@@ -2496,6 +2496,12 @@ REGIONS['uk'] = {
     lrnSpSr: 'Через {n} років маємо {inn} внесків, {ri} відсотків на внески і {rr} відсотків на відсотки. Після податку 22 % від прибутку залишається {netto}.',
     lrnSpStateFlow: '{start} + {amt} {i}',
     lrnSpStateLump: '{start} без внесків',
+    /* Forklaringsblokker (lrn): kalkyle/selvkost */
+    lrnSkNote: '{p} {of} ({base}) дає {belop}.',
+    lrnSkAnn: 'На {tusen} більше прямої зарплати дає {a} більше повної собівартості. У машинах ті самі 1 000 kr дають {b}.',
+    lrnSkSum: 'Надбавки становлять {t} з повної собівартості {sk}.',
+    lrnSkSr: 'Ціна продажу без ПДВ — {eks} kr. Виробнича собівартість — {tvk} kr, повна — {sk} kr, прибуток — {fort} kr. Надбавки становлять {t} kr повної собівартості.',
+    lrnSkState: '{dm} kr матеріали · {lonn} kr зарплата · {maskin} kr машини · надбавки {mat} / {drift} / {adm} %, прибуток {fort} %',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -8123,6 +8129,22 @@ REGIONS['uk']._ph = {
 "Kvartalet etter":"Наступного кварталу",
 "Halvåret etter":"Наступного півріччя",
 "Året etter":"Наступного року",
+"Hvert tillegg har sitt eget grunnlag":"Кожна надбавка має власну базу",
+"Materialtillegget regnes av materialet og driftstillegget av lønna. Salgs- og administrasjonstillegget og fortjenesten regnes av alt som ligger under, så en krone i direkte lønn drar med seg to tillegg.":"Надбавку на матеріали рахують від матеріалів, а виробничу — від зарплати. Надбавку на збут і адміністрацію та прибуток рахують від усього, що нижче, тож одна крона прямої зарплати тягне за собою дві надбавки.",
+"Kroner per ordre eller serie, fra materiale til salgspris eks. mva":"Крони на замовлення або серію, від матеріалів до ціни продажу без ПДВ",
+"Selvkost eller dekningsbidrag?":"Повна собівартість чи маржинальний дохід?",
+"Selvkost er prisgulvet på lang sikt: den må dekkes for at driften skal lønne seg. For kortsiktige beslutninger, som å ta en ekstra ordre med ledig kapasitet, bruker du heller":"Повна собівартість — це мінімальна ціна в довгостроковій перспективі: її треба покривати, щоб діяльність окупалася. Для короткострокових рішень, як-от узяти додаткове замовлення за вільних потужностей, краще використовуйте",
+"dekningsbidrag":"маржинальний дохід",
+"Tilvirkningskost er det produktet koster å lage. Selvkost legger til salgs- og administrasjonstillegget og skal dekke alle kostnadene i bedriften.":"Виробнича собівартість — це те, скільки коштує виготовити продукт. Повна собівартість додає надбавку на збут і адміністрацію й має покривати всі витрати підприємства.",
+"Nei, ikke hele. Varelager vurderes til tilvirkningskost etter IAS 2. Salgs- og administrasjonstillegget holdes normalt utenfor lagerverdien og kostnadsføres i perioden.":"Ні, не повністю. Запаси оцінюються за виробничою собівартістю згідно з IAS 2. Надбавка на збут і адміністрацію зазвичай не входить у вартість запасів і списується у витрати періоду.",
+"Kortsiktig prisgulv: hva dekker de variable kostnadene?":"Короткострокова мінімальна ціна: що покривають змінні витрати?",
+"Fortjenesten her er et påslag på selvkost, ikke en margin.":"Прибуток тут — це націнка на повну собівартість, а не маржа.",
+"av materialet":"від матеріалів",
+"av direkte lønn":"від прямої зарплати",
+"av tilvirkningskost":"від виробничої собівартості",
+"av selvkost":"від повної собівартості",
+"Materiale og maskin regnes ikke med i grunnlaget.":"Матеріали й машини до бази не входять.",
+"Klammene blir lengre oppover. De siste tilleggene vokser med alt som ligger under.":"Дужки стають довшими догори. Останні надбавки ростуть разом з усім, що під ними.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

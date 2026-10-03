@@ -3603,6 +3603,12 @@ REGIONS['en'] = {
     lrnSpSr: 'After {n} years there are {inn} of deposits, {ri} of interest on deposits and {rr} of interest on interest. Tax of 22 % on the return leaves {netto}.',
     lrnSpStateFlow: '{start} + {amt} {i}',
     lrnSpStateLump: '{start} with no deposits',
+    /* Forklaringsblokker (lrn): kalkyle/selvkost */
+    lrnSkNote: '{p} {of} ({base}) gives {belop}.',
+    lrnSkAnn: '{tusen} more in direct labour gives {a} more in full cost. In machine, the same 1 000 kr gives {b}.',
+    lrnSkSum: 'The add-ons make up {t} of the full cost of {sk}.',
+    lrnSkSr: 'The selling price excl. VAT is {eks} kr. Cost of manufacture is {tvk} kr, full cost {sk} kr and the profit {fort} kr. The add-ons make up {t} kr of the full cost.',
+    lrnSkState: '{dm} kr materials · {lonn} kr labour · {maskin} kr machine · add-ons {mat} / {drift} / {adm} %, profit {fort} %',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -8851,6 +8857,32 @@ REGIONS['en']._ph = {
 "Kvartalet etter":"The quarter after",
 "Halvåret etter":"The half-year after",
 "Året etter":"The year after",
+"Hvert tillegg har sitt eget grunnlag":"Each add-on has its own basis",
+"Materialtillegget regnes av materialet og driftstillegget av lønna. Salgs- og administrasjonstillegget og fortjenesten regnes av alt som ligger under, så en krone i direkte lønn drar med seg to tillegg.":"The materials add-on is calculated on materials and the overhead add-on on labour. The selling and administrative add-on and the profit are calculated on everything below them, so one krone of direct labour pulls two add-ons along with it.",
+"Kroner per ordre eller serie, fra materiale til salgspris eks. mva":"Kroner per order or batch, from materials to selling price excl. VAT",
+"Selvkost eller dekningsbidrag?":"Full cost or contribution margin?",
+"Selvkost er prisgulvet på lang sikt: den må dekkes for at driften skal lønne seg. For kortsiktige beslutninger, som å ta en ekstra ordre med ledig kapasitet, bruker du heller":"Full cost is the price floor in the long run: it has to be covered for the business to pay off. For short-term decisions, such as taking an extra order with spare capacity, use the",
+"dekningsbidrag":"contribution margin",
+"Tilvirkningskost er det produktet koster å lage. Selvkost legger til salgs- og administrasjonstillegget og skal dekke alle kostnadene i bedriften.":"Cost of manufacture is what the product costs to make. Full cost adds the selling and administrative add-on and should cover all the costs of the business.",
+"Nei, ikke hele. Varelager vurderes til tilvirkningskost etter IAS 2. Salgs- og administrasjonstillegget holdes normalt utenfor lagerverdien og kostnadsføres i perioden.":"No, not all of it. Inventory is measured at cost of manufacture under IAS 2. The selling and administrative add-on is normally kept out of the inventory value and expensed in the period.",
+"Dekningsbidrag & break-even":"Contribution margin & break-even",
+"Kortsiktig prisgulv: hva dekker de variable kostnadene?":"Short-term price floor: what do the variable costs cover?",
+"Fortjenesten her er et påslag på selvkost, ikke en margin.":"The profit here is a mark-up on full cost, not a margin.",
+"Timepris":"Hourly rate",
+"Direkte materiale":"Direct materials",
+"Materialtillegg":"Materials add-on",
+"Maskin / andre direkte":"Machine / other direct",
+"Tilvirkningstillegg":"Manufacturing add-on",
+"Fortjeneste":"Profit",
+"Tilvirkningskost":"Cost of manufacture",
+"Selvkost":"Full cost",
+"Salgspris eks. mva":"Selling price excl. VAT",
+"av materialet":"of materials",
+"av direkte lønn":"of direct labour",
+"av tilvirkningskost":"of cost of manufacture",
+"av selvkost":"of full cost",
+"Materiale og maskin regnes ikke med i grunnlaget.":"Materials and machine are not included in the basis.",
+"Klammene blir lengre oppover. De siste tilleggene vokser med alt som ligger under.":"The brackets get longer towards the top. The last add-ons grow with everything below them.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

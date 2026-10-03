@@ -3575,6 +3575,12 @@ REGIONS['pl'] = {
     lrnSpSr: 'Po {n} latach jest {inn} wpłat, {ri} odsetek od wpłat i {rr} odsetek od odsetek. Po 22 % podatku od zysku zostaje {netto}.',
     lrnSpStateFlow: '{start} + {amt} {i}',
     lrnSpStateLump: '{start} bez wpłat',
+    /* Forklaringsblokker (lrn): kalkyle/selvkost */
+    lrnSkNote: '{p} {of} ({base}) daje {belop}.',
+    lrnSkAnn: '{tusen} więcej płac bezpośrednich daje {a} więcej kosztu własnego. W maszynach te same 1 000 kr dają {b}.',
+    lrnSkSum: 'Narzuty stanowią {t} z kosztu własnego wynoszącego {sk}.',
+    lrnSkSr: 'Cena sprzedaży bez VAT wynosi {eks} kr. Koszt wytworzenia to {tvk} kr, koszt własny {sk} kr, a zysk {fort} kr. Narzuty stanowią {t} kr kosztu własnego.',
+    lrnSkState: '{dm} kr materiały · {lonn} kr płace · {maskin} kr maszyny · narzuty {mat} / {drift} / {adm} %, zysk {fort} %',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -8821,6 +8827,32 @@ REGIONS['pl']._ph = {
 "Kvartalet etter":"W następnym kwartale",
 "Halvåret etter":"W następnym półroczu",
 "Året etter":"W następnym roku",
+"Hvert tillegg har sitt eget grunnlag":"Każdy narzut ma własną podstawę",
+"Materialtillegget regnes av materialet og driftstillegget av lønna. Salgs- og administrasjonstillegget og fortjenesten regnes av alt som ligger under, så en krone i direkte lønn drar med seg to tillegg.":"Narzut materiałowy liczy się od materiałów, a narzut produkcyjny od płac. Narzut sprzedaży i administracji oraz zysk liczy się od wszystkiego, co jest pod nimi, więc jedna korona płacy bezpośredniej pociąga za sobą dwa narzuty.",
+"Kroner per ordre eller serie, fra materiale til salgspris eks. mva":"Korony na zamówienie lub serię, od materiałów do ceny sprzedaży bez VAT",
+"Selvkost eller dekningsbidrag?":"Koszt własny czy marża na pokrycie?",
+"Selvkost er prisgulvet på lang sikt: den må dekkes for at driften skal lønne seg. For kortsiktige beslutninger, som å ta en ekstra ordre med ledig kapasitet, bruker du heller":"Koszt własny to minimalna cena w długim okresie: musi być pokryty, żeby działalność się opłacała. Przy decyzjach krótkoterminowych, np. przyjęciu dodatkowego zamówienia przy wolnych mocach, używaj raczej",
+"dekningsbidrag":"marży na pokrycie",
+"Tilvirkningskost er det produktet koster å lage. Selvkost legger til salgs- og administrasjonstillegget og skal dekke alle kostnadene i bedriften.":"Koszt wytworzenia to tyle, ile kosztuje wytworzenie produktu. Koszt własny dodaje narzut sprzedaży i administracji i ma pokryć wszystkie koszty firmy.",
+"Nei, ikke hele. Varelager vurderes til tilvirkningskost etter IAS 2. Salgs- og administrasjonstillegget holdes normalt utenfor lagerverdien og kostnadsføres i perioden.":"Nie w całości. Zapasy wycenia się według kosztu wytworzenia zgodnie z IAS 2. Narzut sprzedaży i administracji zwykle pozostaje poza wartością zapasów i jest ujmowany w kosztach okresu.",
+"Dekningsbidrag & break-even":"Marża na pokrycie i próg rentowności",
+"Kortsiktig prisgulv: hva dekker de variable kostnadene?":"Krótkoterminowa cena minimalna: co pokrywają koszty zmienne?",
+"Fortjenesten her er et påslag på selvkost, ikke en margin.":"Zysk to tutaj narzut na koszt własny, a nie marża.",
+"Timepris":"Stawka godzinowa",
+"Direkte materiale":"Materiały bezpośrednie",
+"Materialtillegg":"Narzut materiałowy",
+"Maskin / andre direkte":"Maszyny / inne bezpośrednie",
+"Tilvirkningstillegg":"Narzut produkcyjny",
+"Fortjeneste":"Zysk",
+"Tilvirkningskost":"Koszt wytworzenia",
+"Selvkost":"Koszt własny",
+"Salgspris eks. mva":"Cena sprzedaży bez VAT",
+"av materialet":"od materiałów",
+"av direkte lønn":"od płac bezpośrednich",
+"av tilvirkningskost":"od kosztu wytworzenia",
+"av selvkost":"od kosztu własnego",
+"Materiale og maskin regnes ikke med i grunnlaget.":"Materiały i maszyny nie wchodzą do podstawy.",
+"Klammene blir lengre oppover. De siste tilleggene vokser med alt som ligger under.":"Klamry wydłużają się ku górze. Ostatnie narzuty rosną razem ze wszystkim, co jest pod nimi.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

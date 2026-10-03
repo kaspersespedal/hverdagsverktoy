@@ -3630,6 +3630,12 @@ REGIONS['ar'] = {
     lrnSpSr: 'بعد {n} سنة توجد {inn} إيداعات و{ri} فائدة على الإيداعات و{rr} فائدة على الفائدة. وبعد ضريبة 22 % على العائد يتبقى {netto}.',
     lrnSpStateFlow: '{start} + {amt} {i}',
     lrnSpStateLump: '{start} بلا إيداعات',
+    /* Forklaringsblokker (lrn): kalkyle/selvkost */
+    lrnSkNote: '{p} {of} ({base}) يعطي {belop}.',
+    lrnSkAnn: 'زيادة {tusen} في الأجور المباشرة تعطي {a} زيادة في التكلفة الكلية. وفي الآلات تعطي الـ1 000 kr نفسها {b}.',
+    lrnSkSum: 'تشكّل التحميلات {t} من التكلفة الكلية البالغة {sk}.',
+    lrnSkSr: 'سعر البيع دون الضريبة {eks} kr. تكلفة التصنيع {tvk} kr، والتكلفة الكلية {sk} kr، والربح {fort} kr. وتشكّل التحميلات {t} kr من التكلفة الكلية.',
+    lrnSkState: '{dm} kr مواد · {lonn} kr أجور · {maskin} kr آلات · تحميلات {mat} / {drift} / {adm} %، ربح {fort} %',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -8884,6 +8890,32 @@ REGIONS['ar']._ph = {
 "Kvartalet etter":"في الربع التالي",
 "Halvåret etter":"في النصف التالي",
 "Året etter":"في العام التالي",
+"Hvert tillegg har sitt eget grunnlag":"لكل تحميل أساسه الخاص",
+"Materialtillegget regnes av materialet og driftstillegget av lønna. Salgs- og administrasjonstillegget og fortjenesten regnes av alt som ligger under, så en krone i direkte lønn drar med seg to tillegg.":"يُحسب تحميل المواد من المواد، وتحميل التشغيل من الأجور. أما تحميل البيع والإدارة والربح فيُحسبان من كل ما تحتهما، لذا تجرّ كل كرونة من الأجور المباشرة معها تحميلين.",
+"Kroner per ordre eller serie, fra materiale til salgspris eks. mva":"بالكرونة لكل طلب أو دفعة، من المواد إلى سعر البيع دون ضريبة القيمة المضافة",
+"Selvkost eller dekningsbidrag?":"التكلفة الكلية أم هامش المساهمة؟",
+"Selvkost er prisgulvet på lang sikt: den må dekkes for at driften skal lønne seg. For kortsiktige beslutninger, som å ta en ekstra ordre med ledig kapasitet, bruker du heller":"التكلفة الكلية هي الحد الأدنى للسعر على المدى الطويل: يجب تغطيتها كي يكون العمل مربحًا. وللقرارات قصيرة الأجل، مثل قبول طلب إضافي مع طاقة غير مستغلة، استخدم بدلًا منها",
+"dekningsbidrag":"هامش المساهمة",
+"Tilvirkningskost er det produktet koster å lage. Selvkost legger til salgs- og administrasjonstillegget og skal dekke alle kostnadene i bedriften.":"تكلفة التصنيع هي ما يكلفه صنع المنتج. أما التكلفة الكلية فتضيف تحميل البيع والإدارة، ويجب أن تغطي كل تكاليف المنشأة.",
+"Nei, ikke hele. Varelager vurderes til tilvirkningskost etter IAS 2. Salgs- og administrasjonstillegget holdes normalt utenfor lagerverdien og kostnadsføres i perioden.":"لا، ليس كلها. يُقيَّم المخزون بتكلفة التصنيع وفق IAS 2. ويُستبعد تحميل البيع والإدارة عادةً من قيمة المخزون ويُحمَّل على مصاريف الفترة.",
+"Dekningsbidrag & break-even":"هامش المساهمة ونقطة التعادل",
+"Kortsiktig prisgulv: hva dekker de variable kostnadene?":"الحد الأدنى للسعر على المدى القصير: ما الذي تغطيه التكاليف المتغيرة؟",
+"Fortjenesten her er et påslag på selvkost, ikke en margin.":"الربح هنا هامش إضافة على التكلفة الكلية، لا هامش ربح.",
+"Timepris":"سعر الساعة",
+"Direkte materiale":"المواد المباشرة",
+"Materialtillegg":"تحميل المواد",
+"Maskin / andre direkte":"الآلات / مباشرة أخرى",
+"Tilvirkningstillegg":"تحميل التصنيع",
+"Fortjeneste":"الربح",
+"Tilvirkningskost":"تكلفة التصنيع",
+"Selvkost":"التكلفة الكلية",
+"Salgspris eks. mva":"سعر البيع دون الضريبة",
+"av materialet":"من المواد",
+"av direkte lønn":"من الأجور المباشرة",
+"av tilvirkningskost":"من تكلفة التصنيع",
+"av selvkost":"من التكلفة الكلية",
+"Materiale og maskin regnes ikke med i grunnlaget.":"المواد والآلات لا تدخل في الأساس.",
+"Klammene blir lengre oppover. De siste tilleggene vokser med alt som ligger under.":"تطول الأقواس كلما صعدنا. التحميلات الأخيرة تنمو مع كل ما تحتها.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så
