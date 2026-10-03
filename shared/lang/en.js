@@ -3734,6 +3734,18 @@ REGIONS['en'] = {
     lrnFcStateMeny: '{kost} kr ingredients · menu price {v} kr incl. VAT · VAT {m}',
     lrnFcSum: 'Dine-in gives {a} kr and takeaway {b} kr on the menu, but both give {db} kr in contribution margin.',
     lrnFcSumOver: 'The ingredients cost more than the price without VAT, so each dish gives {db} kr in contribution margin.',
+    /* Forklaringsblokker (lrn): kalkyle/enhetskost */
+    lrnEkCalc: '{q} pcs × {f} = {e} converted units',
+    lrnEkEnh: '{n} converted units',
+    lrnEkForAll: '{per} kr for all',
+    lrnEkSame: 'All have factor 1,00: the equivalence method and simple division give the same answer.',
+    lrnEkSimple: 'Simple division: {total} kr ÷ {antall} pcs = {per} kr for all',
+    lrnEkSr: 'With the factors, {liste} per unit. Simple division gives {per} kr for all.',
+    lrnEkSrSame: 'All have factor 1,00: the equivalence method and simple division give the same answer, {per} kr per unit.',
+    lrnEkState: '{n} variants · {antall} pcs · total cost {total} kr',
+    lrnEkSum: 'The total is {total} in both cases. The factors only move cost from the light variants to the heavy ones.',
+    lrnEkTooLittle: '{n} would get {belop} too little',
+    lrnEkTooMuch: '{n} would carry {belop} too much per unit',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -9062,6 +9074,28 @@ REGIONS['en']._ph = {
 "Råvarene koster mer enn prisen uten mva":"The ingredients cost more than the price without VAT",
 "Din sats":"Your rate",
 "Samme rett og samme food cost. Bare kanten er forskjellig.":"Same dish and same food cost. Only the rim is different.",
+"Med lik pris per enhet betaler de lette variantene for de tunge":"With one price per unit, the light variants pay for the heavy ones",
+"Faktorene flytter kostnaden dit ressursene brukes. Summen er den samme, men fordelingen mellom variantene endres.":"The factors move the cost to where the resources are used. The total is the same, but the split between the variants changes.",
+"Grafen viser variantene fra fanen «Varianter (ekvivalens)».":"The chart shows the variants from the «Variants (equivalence)» tab.",
+"Mengde bortover, kostnad per enhet oppover i kroner (venstre) og som faktor (høyre). Arealet av hver kloss er variantens kostnad.":"Quantity across, cost per unit up, in kroner (left) and as a factor (right). The area of each block is the cost of the variant.",
+"Kostnad per omregnet enhet":"Cost per converted unit",
+"totalkostnad":"total cost",
+"sum omregnede enheter":"sum of converted units",
+"Arealet av klossene summerer til totalkostnaden":"The areas of the blocks add up to the total cost",
+"Variant":"Variant",
+"Mengde":"Quantity",
+"Omregnede enheter":"Converted units",
+"Kostnad per enhet":"Cost per unit",
+"Enkel divisjon":"Simple division",
+"Forskjell":"Difference",
+"Kostnad i alt":"Total cost",
+"Et forholdstall som sier hvor mye ressurser en variant bruker sammenlignet med referansen. Referansen settes til 1,00, og en variant som krever dobbelt så mye, får 2,00. I kalkulatoren heter det faktor.":"A ratio that says how much resource a variant uses compared with the reference. The reference is set to 1,00, and a variant that needs twice as much gets 2,00. In the calculator it is called the factor.",
+"Når alle enhetene er like og bruker like mye ressurser. Da er faktoren 1,00 for alt, og enkel divisjon gir samme svar som ekvivalensmetoden.":"When all units are the same and use the same resources. Then the factor is 1,00 for everything, and simple division gives the same answer as the equivalence method.",
+"Hvordan finner jeg riktig faktor?":"How do I find the right factor?",
+"Se på hva som driver kostnaden, som maskintid, materialforbruk eller arbeidstimer per enhet. Forholdet mellom variantene på den viktigste kostnadsdriveren gir faktoren.":"Look at what drives the cost, such as machine time, material use or labour hours per unit. The ratio between the variants on the most important cost driver gives the factor.",
+"Når kostnaden per enhet skal videre til pris med tillegg.":"When the cost per unit is to be carried on to a price with surcharges.",
+"Sett utsalgspris per variant.":"Set the selling price per variant.",
+"referanse":"reference",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

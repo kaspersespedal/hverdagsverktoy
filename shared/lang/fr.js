@@ -3704,6 +3704,18 @@ REGIONS['fr'] = {
     lrnFcStateMeny: 'matières {kost} kr · prix à la carte {v} kr TTC · TVA {m}',
     lrnFcSum: 'Sur place, la carte affiche {a} kr et à emporter {b} kr, mais les deux donnent {db} kr de marge.',
     lrnFcSumOver: 'Les matières coûtent plus que le prix HT, donc chaque plat donne {db} kr de marge.',
+    /* Forklaringsblokker (lrn): kalkyle/enhetskost */
+    lrnEkCalc: '{q} pcs × {f} = {e} unités converties',
+    lrnEkEnh: '{n} unités converties',
+    lrnEkForAll: '{per} kr pour toutes',
+    lrnEkSame: 'Toutes ont un coefficient de 1,00 : la méthode d\'équivalence et la division simple donnent le même résultat.',
+    lrnEkSimple: 'Division simple : {total} kr ÷ {antall} pcs = {per} kr pour toutes',
+    lrnEkSr: 'Avec les coefficients, le coût unitaire est : {liste}. La division simple donne {per} kr pour toutes.',
+    lrnEkSrSame: 'Toutes ont un coefficient de 1,00 : la méthode d\'équivalence et la division simple donnent le même résultat, {per} kr par unité.',
+    lrnEkState: '{n} variantes · {antall} pcs · coût total {total} kr',
+    lrnEkSum: 'Le total est de {total} dans les deux cas. Les coefficients déplacent seulement le coût des variantes légères vers les lourdes.',
+    lrnEkTooLittle: '{n} recevrait {belop} de trop peu',
+    lrnEkTooMuch: '{n} porterait {belop} de trop par unité',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -9026,6 +9038,28 @@ REGIONS['fr']._ph = {
 "Råvarene koster mer enn prisen uten mva":"Les matières coûtent plus que le prix HT",
 "Din sats":"Votre taux",
 "Samme rett og samme food cost. Bare kanten er forskjellig.":"Même plat et même food cost. Seul le bord change.",
+"Med lik pris per enhet betaler de lette variantene for de tunge":"Avec un même prix unitaire, les variantes légères paient pour les lourdes",
+"Faktorene flytter kostnaden dit ressursene brukes. Summen er den samme, men fordelingen mellom variantene endres.":"Les coefficients déplacent le coût là où les ressources sont utilisées. Le total reste le même, mais la répartition entre les variantes change.",
+"Grafen viser variantene fra fanen «Varianter (ekvivalens)».":"Le graphique montre les variantes de l'onglet « Variantes (équivalence) ».",
+"Mengde bortover, kostnad per enhet oppover i kroner (venstre) og som faktor (høyre). Arealet av hver kloss er variantens kostnad.":"La quantité en abscisse, le coût unitaire en ordonnée, en couronnes (à gauche) et en coefficient (à droite). L'aire de chaque bloc est le coût de la variante.",
+"Kostnad per omregnet enhet":"Coût par unité convertie",
+"totalkostnad":"coût total",
+"sum omregnede enheter":"somme des unités converties",
+"Arealet av klossene summerer til totalkostnaden":"Les aires des blocs s'additionnent pour donner le coût total",
+"Variant":"Variante",
+"Mengde":"Quantité",
+"Omregnede enheter":"Unités converties",
+"Kostnad per enhet":"Coût unitaire",
+"Enkel divisjon":"Division simple",
+"Forskjell":"Écart",
+"Kostnad i alt":"Coût total",
+"Et forholdstall som sier hvor mye ressurser en variant bruker sammenlignet med referansen. Referansen settes til 1,00, og en variant som krever dobbelt så mye, får 2,00. I kalkulatoren heter det faktor.":"Un rapport qui indique combien de ressources une variante utilise par rapport à la référence. La référence vaut 1,00, et une variante qui en demande deux fois plus reçoit 2,00. Dans le calculateur, on l'appelle le coefficient.",
+"Når alle enhetene er like og bruker like mye ressurser. Da er faktoren 1,00 for alt, og enkel divisjon gir samme svar som ekvivalensmetoden.":"Quand toutes les unités sont identiques et utilisent autant de ressources. Le coefficient vaut alors 1,00 partout, et la division simple donne le même résultat que la méthode d'équivalence.",
+"Hvordan finner jeg riktig faktor?":"Comment trouver le bon coefficient ?",
+"Se på hva som driver kostnaden, som maskintid, materialforbruk eller arbeidstimer per enhet. Forholdet mellom variantene på den viktigste kostnadsdriveren gir faktoren.":"Regardez ce qui génère le coût, comme le temps machine, la consommation de matière ou les heures de travail par unité. Le rapport entre les variantes sur le principal inducteur de coût donne le coefficient.",
+"Når kostnaden per enhet skal videre til pris med tillegg.":"Quand le coût unitaire doit déboucher sur un prix avec majorations.",
+"Sett utsalgspris per variant.":"Fixez le prix de vente par variante.",
+"referanse":"référence",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

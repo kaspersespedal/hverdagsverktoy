@@ -2637,6 +2637,18 @@ REGIONS['uk'] = {
     lrnFcStateMeny: 'сировина {kost} kr · ціна в меню {v} kr з ПДВ · ПДВ {m}',
     lrnFcSum: 'У залі ціна в меню {a} kr, з собою {b} kr, але обидві дають {db} kr маржинального доходу.',
     lrnFcSumOver: 'Сировина коштує більше, ніж ціна без ПДВ, тож кожна страва дає {db} kr маржинального доходу.',
+    /* Forklaringsblokker (lrn): kalkyle/enhetskost */
+    lrnEkCalc: '{q} шт. × {f} = {e} перерахованих одиниць',
+    lrnEkEnh: '{n} перерахованих одиниць',
+    lrnEkForAll: '{per} kr для всіх',
+    lrnEkSame: 'Усі мають коефіцієнт 1,00: метод еквівалентності й просте ділення дають ту саму відповідь.',
+    lrnEkSimple: 'Просте ділення: {total} kr ÷ {antall} шт. = {per} kr для всіх',
+    lrnEkSr: 'З коефіцієнтами витрати на одиницю: {liste}. Просте ділення дає {per} kr для всіх.',
+    lrnEkSrSame: 'Усі мають коефіцієнт 1,00: метод еквівалентності й просте ділення дають ту саму відповідь, {per} kr за одиницю.',
+    lrnEkState: 'варіантів: {n} · {antall} шт. · загальні витрати {total} kr',
+    lrnEkSum: 'Сума становить {total} в обох випадках. Коефіцієнти лише переносять витрати з легких варіантів на важкі.',
+    lrnEkTooLittle: '{n} отримав би на {belop} замало',
+    lrnEkTooMuch: '{n} ніс би на {belop} забагато на одиницю',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -8324,6 +8336,24 @@ REGIONS['uk']._ph = {
 "Råvarene koster mer enn prisen uten mva":"Сировина коштує більше, ніж ціна без ПДВ",
 "Din sats":"Ваша ставка",
 "Samme rett og samme food cost. Bare kanten er forskjellig.":"Та сама страва й той самий food cost. Відрізняється лише обідок.",
+"Med lik pris per enhet betaler de lette variantene for de tunge":"За однакової ціни за одиницю легкі варіанти платять за важкі",
+"Faktorene flytter kostnaden dit ressursene brukes. Summen er den samme, men fordelingen mellom variantene endres.":"Коефіцієнти переносять витрати туди, де використовуються ресурси. Сума та сама, але розподіл між варіантами змінюється.",
+"Grafen viser variantene fra fanen «Varianter (ekvivalens)».":"Графік показує варіанти з вкладки «Варіанти (еквівалентність)».",
+"Mengde bortover, kostnad per enhet oppover i kroner (venstre) og som faktor (høyre). Arealet av hver kloss er variantens kostnad.":"Кількість по горизонталі, витрати на одиницю по вертикалі, у кронах (ліворуч) і як коефіцієнт (праворуч). Площа кожного блока — це витрати варіанта.",
+"Kostnad per omregnet enhet":"Витрати на перераховану одиницю",
+"totalkostnad":"загальні витрати",
+"sum omregnede enheter":"сума перерахованих одиниць",
+"Arealet av klossene summerer til totalkostnaden":"Площі блоків разом дають загальні витрати",
+"Omregnede enheter":"Перераховані одиниці",
+"Forskjell":"Різниця",
+"Kostnad i alt":"Витрати разом",
+"Et forholdstall som sier hvor mye ressurser en variant bruker sammenlignet med referansen. Referansen settes til 1,00, og en variant som krever dobbelt så mye, får 2,00. I kalkulatoren heter det faktor.":"Відносне число, яке показує, скільки ресурсів використовує варіант порівняно з еталоном. Еталон має 1,00, а варіант, що потребує вдвічі більше, отримує 2,00. У калькуляторі це називається коефіцієнтом.",
+"Når alle enhetene er like og bruker like mye ressurser. Da er faktoren 1,00 for alt, og enkel divisjon gir samme svar som ekvivalensmetoden.":"Коли всі одиниці однакові й використовують однаково ресурсів. Тоді коефіцієнт — 1,00 для всього, і просте ділення дає ту саму відповідь, що й метод еквівалентності.",
+"Hvordan finner jeg riktig faktor?":"Як знайти правильний коефіцієнт?",
+"Se på hva som driver kostnaden, som maskintid, materialforbruk eller arbeidstimer per enhet. Forholdet mellom variantene på den viktigste kostnadsdriveren gir faktoren.":"Подивіться, що визначає витрати, наприклад машинний час, витрати матеріалу чи робочі години на одиницю. Співвідношення між варіантами за найважливішим чинником витрат і дає коефіцієнт.",
+"Når kostnaden per enhet skal videre til pris med tillegg.":"Коли витрати на одиницю треба перевести в ціну з надбавками.",
+"Sett utsalgspris per variant.":"Встановіть ціну продажу для кожного варіанта.",
+"referanse":"еталон",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

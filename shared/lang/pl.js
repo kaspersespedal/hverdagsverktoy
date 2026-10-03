@@ -3710,6 +3710,18 @@ REGIONS['pl'] = {
     lrnFcStateMeny: 'surowce {kost} kr · cena w menu {v} kr z VAT · VAT {m}',
     lrnFcSum: 'Na miejscu daje {a} kr, a na wynos {b} kr w menu, ale oba dają {db} kr marży na pokrycie.',
     lrnFcSumOver: 'Surowce kosztują więcej niż cena bez VAT, więc każde danie daje {db} kr marży na pokrycie.',
+    /* Forklaringsblokker (lrn): kalkyle/enhetskost */
+    lrnEkCalc: '{q} szt. × {f} = {e} jednostek przeliczeniowych',
+    lrnEkEnh: '{n} jednostek przeliczeniowych',
+    lrnEkForAll: '{per} kr dla wszystkich',
+    lrnEkSame: 'Wszystkie mają współczynnik 1,00: metoda ekwiwalencji i prosty podział dają ten sam wynik.',
+    lrnEkSimple: 'Prosty podział: {total} kr ÷ {antall} szt. = {per} kr dla wszystkich',
+    lrnEkSr: 'Ze współczynnikami koszt na sztukę wynosi: {liste}. Prosty podział daje {per} kr dla wszystkich.',
+    lrnEkSrSame: 'Wszystkie mają współczynnik 1,00: metoda ekwiwalencji i prosty podział dają ten sam wynik, {per} kr za sztukę.',
+    lrnEkState: 'wariantów: {n} · {antall} szt. · koszt całkowity {total} kr',
+    lrnEkSum: 'Suma wynosi {total} w obu przypadkach. Współczynniki tylko przenoszą koszt z lekkich wariantów na ciężkie.',
+    lrnEkTooLittle: '{n} dostałby o {belop} za mało',
+    lrnEkTooMuch: '{n} niósłby o {belop} za dużo na sztukę',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -9037,6 +9049,28 @@ REGIONS['pl']._ph = {
 "Råvarene koster mer enn prisen uten mva":"Surowce kosztują więcej niż cena bez VAT",
 "Din sats":"Twoja stawka",
 "Samme rett og samme food cost. Bare kanten er forskjellig.":"To samo danie i ten sam food cost. Różni się tylko krawędź.",
+"Med lik pris per enhet betaler de lette variantene for de tunge":"Przy jednej cenie za sztukę lekkie warianty płacą za ciężkie",
+"Faktorene flytter kostnaden dit ressursene brukes. Summen er den samme, men fordelingen mellom variantene endres.":"Współczynniki przenoszą koszt tam, gdzie zużywa się zasoby. Suma jest ta sama, ale zmienia się podział między wariantami.",
+"Grafen viser variantene fra fanen «Varianter (ekvivalens)».":"Wykres pokazuje warianty z karty «Warianty (ekwiwalencja)».",
+"Mengde bortover, kostnad per enhet oppover i kroner (venstre) og som faktor (høyre). Arealet av hver kloss er variantens kostnad.":"Ilość w poziomie, koszt na sztukę w pionie, w koronach (z lewej) i jako współczynnik (z prawej). Pole każdego bloku to koszt wariantu.",
+"Kostnad per omregnet enhet":"Koszt na jednostkę przeliczeniową",
+"totalkostnad":"koszt całkowity",
+"sum omregnede enheter":"suma jednostek przeliczeniowych",
+"Arealet av klossene summerer til totalkostnaden":"Pola bloków sumują się do kosztu całkowitego",
+"Variant":"Wariant",
+"Mengde":"Ilość",
+"Omregnede enheter":"Jednostki przeliczeniowe",
+"Kostnad per enhet":"Koszt na sztukę",
+"Enkel divisjon":"Prosty podział",
+"Forskjell":"Różnica",
+"Kostnad i alt":"Koszt łącznie",
+"Et forholdstall som sier hvor mye ressurser en variant bruker sammenlignet med referansen. Referansen settes til 1,00, og en variant som krever dobbelt så mye, får 2,00. I kalkulatoren heter det faktor.":"Liczba względna, która mówi, ile zasobów zużywa wariant w porównaniu z wariantem odniesienia. Odniesienie ma 1,00, a wariant, który wymaga dwa razy więcej, dostaje 2,00. W kalkulatorze nazywa się to współczynnikiem.",
+"Når alle enhetene er like og bruker like mye ressurser. Da er faktoren 1,00 for alt, og enkel divisjon gir samme svar som ekvivalensmetoden.":"Gdy wszystkie sztuki są takie same i zużywają tyle samo zasobów. Wtedy współczynnik wynosi 1,00 dla wszystkiego, a prosty podział daje ten sam wynik co metoda ekwiwalencji.",
+"Hvordan finner jeg riktig faktor?":"Jak znaleźć właściwy współczynnik?",
+"Se på hva som driver kostnaden, som maskintid, materialforbruk eller arbeidstimer per enhet. Forholdet mellom variantene på den viktigste kostnadsdriveren gir faktoren.":"Sprawdź, co napędza koszt, np. czas pracy maszyn, zużycie materiału albo godziny pracy na sztukę. Stosunek między wariantami dla najważniejszego czynnika kosztowego daje współczynnik.",
+"Når kostnaden per enhet skal videre til pris med tillegg.":"Gdy koszt na sztukę ma przejść w cenę z narzutami.",
+"Sett utsalgspris per variant.":"Ustal cenę sprzedaży dla każdego wariantu.",
+"referanse":"odniesienie",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

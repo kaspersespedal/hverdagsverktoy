@@ -3775,6 +3775,18 @@ REGIONS['ar'] = {
     lrnFcStateMeny: 'المكونات {kost} kr · سعر القائمة {v} kr شاملة MVA · MVA ‏{m}',
     lrnFcSum: 'يعطي الأكل في المطعم {a} kr والطلب الخارجي {b} kr في القائمة، لكن كليهما يعطي {db} kr هامش مساهمة.',
     lrnFcSumOver: 'المكونات تكلّف أكثر من السعر بدون MVA، لذا يعطي كل طبق {db} kr هامش مساهمة.',
+    /* Forklaringsblokker (lrn): kalkyle/enhetskost */
+    lrnEkCalc: '{q} قطعة × {f} = {e} وحدة محوّلة',
+    lrnEkEnh: '{n} وحدة محوّلة',
+    lrnEkForAll: '{per} kr للجميع',
+    lrnEkSame: 'لجميعها المعامل 1,00: تعطي طريقة التكافؤ والقسمة البسيطة النتيجة نفسها.',
+    lrnEkSimple: 'قسمة بسيطة: {total} kr ÷ {antall} قطعة = {per} kr للجميع',
+    lrnEkSr: 'مع المعاملات تكون التكلفة لكل وحدة: {liste}. وتعطي القسمة البسيطة {per} kr للجميع.',
+    lrnEkSrSame: 'لجميعها المعامل 1,00: تعطي طريقة التكافؤ والقسمة البسيطة النتيجة نفسها، {per} kr للوحدة.',
+    lrnEkState: 'عدد المتغيرات {n} · {antall} قطعة · التكلفة الإجمالية {total} kr',
+    lrnEkSum: 'المجموع {total} في الحالتين. والمعاملات تنقل التكلفة فقط من المتغيرات الخفيفة إلى الثقيلة.',
+    lrnEkTooLittle: 'كان {n} سيحمل أقل بمقدار {belop}',
+    lrnEkTooMuch: 'كان {n} سيحمل أكثر بمقدار {belop} لكل وحدة',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -9109,6 +9121,28 @@ REGIONS['ar']._ph = {
 "Råvarene koster mer enn prisen uten mva":"المكونات تكلّف أكثر من السعر بدون MVA",
 "Din sats":"نسبتك",
 "Samme rett og samme food cost. Bare kanten er forskjellig.":"الطبق نفسه وتكلفة الطعام نفسها. الحافة وحدها مختلفة.",
+"Med lik pris per enhet betaler de lette variantene for de tunge":"بسعر واحد لكل وحدة، تدفع المتغيرات الخفيفة عن الثقيلة",
+"Faktorene flytter kostnaden dit ressursene brukes. Summen er den samme, men fordelingen mellom variantene endres.":"تنقل المعاملات التكلفة إلى حيث تُستهلك الموارد. المجموع نفسه، لكن التوزيع بين المتغيرات يتغير.",
+"Grafen viser variantene fra fanen «Varianter (ekvivalens)».":"يعرض الرسم البياني المتغيرات من تبويب «متغيرات (التكافؤ)».",
+"Mengde bortover, kostnad per enhet oppover i kroner (venstre) og som faktor (høyre). Arealet av hver kloss er variantens kostnad.":"الكمية أفقيًا، والتكلفة لكل وحدة رأسيًا، بالكرونة (يسارًا) وكمعامل (يمينًا). ومساحة كل كتلة هي تكلفة المتغير.",
+"Kostnad per omregnet enhet":"التكلفة لكل وحدة محوّلة",
+"totalkostnad":"التكلفة الإجمالية",
+"sum omregnede enheter":"مجموع الوحدات المحوّلة",
+"Arealet av klossene summerer til totalkostnaden":"مجموع مساحات الكتل يساوي التكلفة الإجمالية",
+"Variant":"المتغير",
+"Mengde":"الكمية",
+"Omregnede enheter":"الوحدات المحوّلة",
+"Kostnad per enhet":"التكلفة لكل وحدة",
+"Enkel divisjon":"قسمة بسيطة",
+"Forskjell":"الفرق",
+"Kostnad i alt":"التكلفة الكلية",
+"Et forholdstall som sier hvor mye ressurser en variant bruker sammenlignet med referansen. Referansen settes til 1,00, og en variant som krever dobbelt så mye, får 2,00. I kalkulatoren heter det faktor.":"نسبة تبيّن مقدار الموارد التي يستهلكها متغير مقارنةً بالمرجع. يُضبط المرجع على 1,00، والمتغير الذي يحتاج الضعف يأخذ 2,00. وفي الحاسبة يُسمّى المعامل.",
+"Når alle enhetene er like og bruker like mye ressurser. Da er faktoren 1,00 for alt, og enkel divisjon gir samme svar som ekvivalensmetoden.":"عندما تكون كل الوحدات متماثلة وتستهلك الموارد نفسها. عندها يكون المعامل 1,00 للجميع، وتعطي القسمة البسيطة النتيجة نفسها التي تعطيها طريقة التكافؤ.",
+"Hvordan finner jeg riktig faktor?":"كيف أجد المعامل الصحيح؟",
+"Se på hva som driver kostnaden, som maskintid, materialforbruk eller arbeidstimer per enhet. Forholdet mellom variantene på den viktigste kostnadsdriveren gir faktoren.":"انظر إلى ما يحرّك التكلفة، مثل وقت الآلات أو استهلاك المواد أو ساعات العمل لكل وحدة. والنسبة بين المتغيرات في أهم محرّك للتكلفة تعطي المعامل.",
+"Når kostnaden per enhet skal videre til pris med tillegg.":"عندما تُحمَّل التكلفة لكل وحدة إلى سعر مع إضافات.",
+"Sett utsalgspris per variant.":"حدد سعر البيع لكل متغير.",
+"referanse":"المرجع",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så
