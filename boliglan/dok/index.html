@@ -56,6 +56,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Dokumentavgift — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/ferie/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -172,145 +173,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -531,71 +393,98 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: boliglan-dok =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-boliglan-dok">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-dok">Hva som ligger bak totalen</h2><p class="lc-intro">Totalen har to deler: dokumentavgift, som er en prosent av prisen, og et fast gebyr per dokument som tinglyses. En selveier til 4&nbsp;000&nbsp;000&nbsp;kr gir 100&nbsp;000&nbsp;kr i avgift og 545&nbsp;kr i gebyr. Boligtype og fritak avgjør om du betaler avgiften.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Dokumentavgift</b><span class="tag">Sats</span></span><span class="fig">2,5<span class="u">%</span></span><p class="dsc">Selve avgiften til staten — 2,5 % av grunnlaget. På selveierbolig er grunnlaget salgssummen, på nybygg fra utbygger er det tomteverdien. Borettslag og fritakstilfeller gir 0 kr her.</p></div>
-        <div class="lc-led"><span class="nm"><b>Tinglysingsgebyr</b><span class="tag">Gebyr</span></span><span class="fig">545<span class="u">kr</span></span><p class="dsc">Et fast beløp Statens kartverk tar per dokument som tinglyses. Det påløper alltid — også på borettslag, nybygg og fritakstilfeller.</p></div>
-        <div class="lc-led"><span class="nm"><b>Antall dokumenter</b><span class="tag">Faktor</span></span><span class="fig">1–5<span class="u">stk</span></span><p class="dsc">Gebyret ganges med antall dokumenter. Skjøtet er ett, pant fra banken legger til ett. Kalkulatoren godtar minst 1 og maks 5.</p></div>
-        <div class="lc-led"><span class="nm"><b>Boligtype</b><span class="tag">Vilkår</span></span><span class="fig">3<span class="u">valg</span></span><p class="dsc">Selveierbolig gir 2,5 % av salgssummen. Borettslag gir 0 % — du kjøper en andel, ikke fast eiendom. Nybygg fra utbygger gir 2,5 % av tomteverdien.</p></div>
-        <div class="lc-led"><span class="nm"><b>Fritak</b><span class="tag">Unntak</span></span><span class="fig">0<span class="u">% avgift</span></span><p class="dsc">Huk av for ektefelle ved skifte, eller for din egen arveandel ved arv etter loven, så settes dokumentavgiften til null. Gebyret betaler du fortsatt.</p></div>
-        <div class="lc-led"><span class="nm"><b>Effektiv sats</b><span class="tag">Resultat</span></span><span class="fig">total ÷ pris<span class="u">%</span></span><p class="dsc">Total avgift delt på salgssummen, vist i prosent. På selveier ligger den rett over 2,5 %; uten dokumentavgift blir den bare gebyret delt på prisen.</p></div>
+  <div class="lrn" id="lrn-dok">
+    <section class="lrn-sec" aria-labelledby="lrn-dok-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-dok-h">Eierformen avgjør avgiften, ikke prisen</h2>
+        <p class="lrn-lede">Dokumentavgiften er 2,5&nbsp;%, men av ulikt grunnlag: hele kjøpesummen for selveier, ingenting i borettslag og bare tomteverdien for nybygg. Tinglysingen kommer i tillegg uansett.</p>
       </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-boliglan-dok">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-boliglan-dok">Satsene kalkulatoren bruker</h2><p class="lc-intro">Satser for 2026. Avgiften følger lov om dokumentavgift, gebyret er satt av Statens kartverk.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Tinglysingsgebyr</span><span class="v">545<span class="u">kr per dokument</span></span></div>
-        <div class="lc-kv"><span class="k">Skjøte og pant (2 dokumenter)</span><span class="v">1 090<span class="u">kr</span></span></div>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">4&nbsp;000&nbsp;000 kr · selveier · 1 dokument</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
       </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Avgift etter boligtype</caption>
-          <thead><tr><th>Boligtype</th><th>Dokumentavgift</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Selveier / eierseksjon</span></td><td>2,5 % av salgssum</td></tr>
-            <tr><td><span class="step">Borettslagsleilighet</span></td><td>0 %</td></tr>
-            <tr><td><span class="step">Nybygg fra utbygger</span></td><td>2,5 % av tomteverdien</td></tr>
-            <tr><td><span class="step">Arv etter loven (egen arveandel)</span></td><td>0 %</td></tr>
-            <tr><td><span class="step">Ektefelle ved skifte (fritak)</span></td><td>0 %</td></tr>
-          </tbody>
-        </table>
+      <figure class="lrn-fig" aria-describedby="lrn-dok-sum">
+        <figcaption class="lrn-cap" data-lrn="cap">Hver strek er kjøpesummen på 4&nbsp;000&nbsp;000 kr. Det fylte er grunnlaget avgiften regnes av.</figcaption>
+        <div class="lrn-bills">
+          <section class="lrn-bill is-sel" data-t="selveier" aria-labelledby="lrn-dok-k1">
+            <div class="lrn-bill-h"><h3 id="lrn-dok-k1">Selveier</h3><span class="lrn-pick">Ditt valg</span></div>
+            <div class="lrn-meter" aria-hidden="true"><i data-f="bar" style="width:100%"></i></div>
+            <p class="lrn-bill-g">Grunnlag: <strong data-f="grunnlag">4&nbsp;000&nbsp;000 kr</strong></p>
+            <dl>
+              <dt><b>Dokumentavgift</b><span>2,5&nbsp;% av grunnlaget</span></dt>
+              <dd><b data-f="dok">100&nbsp;000 kr</b><span data-f="ellers"></span></dd>
+              <dt><b>Tinglysing</b><span data-f="tingSub">1 × 545 kr</span></dt>
+              <dd><b data-f="ting">545 kr</b></dd>
+            </dl>
+            <div class="lrn-bill-sum"><span>Sum</span><b data-f="sum">100&nbsp;545 kr</b></div>
+            <div class="lrn-bill-eff"><span>Effektiv sats</span><span data-f="eff">2,51 %</span></div>
+            <p class="lrn-bill-note">Avgiften regnes av salgssummen i kontrakten.</p>
+          </section>
+          <section class="lrn-bill" data-t="borettslag" aria-labelledby="lrn-dok-k2">
+            <div class="lrn-bill-h"><h3 id="lrn-dok-k2">Borettslag</h3><span class="lrn-pick">Ditt valg</span></div>
+            <div class="lrn-meter" aria-hidden="true"><i data-f="bar" style="width:0%"></i></div>
+            <p class="lrn-bill-g">Grunnlag: <strong data-f="grunnlag">0 kr</strong></p>
+            <dl>
+              <dt><b>Dokumentavgift</b><span>2,5&nbsp;% av grunnlaget</span></dt>
+              <dd><b data-f="dok">0 kr</b><span data-f="ellers"></span></dd>
+              <dt><b>Tinglysing</b><span data-f="tingSub">1 × 545 kr</span></dt>
+              <dd><b data-f="ting">545 kr</b></dd>
+            </dl>
+            <div class="lrn-bill-sum"><span>Sum</span><b data-f="sum">545 kr</b></div>
+            <div class="lrn-bill-eff"><span>Effektiv sats</span><span data-f="eff">0,01 %</span></div>
+            <p class="lrn-bill-note">Du kjøper en andel, ikke fast eiendom.</p>
+          </section>
+          <section class="lrn-bill" data-t="nybygg" aria-labelledby="lrn-dok-k3">
+            <div class="lrn-bill-h"><h3 id="lrn-dok-k3">Nybygg fra utbygger</h3><span class="lrn-pick">Ditt valg</span></div>
+            <div class="lrn-meter" aria-hidden="true"><i data-f="bar" style="width:30%"></i></div>
+            <p class="lrn-bill-g">Grunnlag: <strong data-f="grunnlag">1&nbsp;200&nbsp;000 kr</strong></p>
+            <dl>
+              <dt><b>Dokumentavgift</b><span>2,5&nbsp;% av grunnlaget</span></dt>
+              <dd><b data-f="dok">30&nbsp;000 kr</b><span data-f="ellers"></span></dd>
+              <dt><b>Tinglysing</b><span data-f="tingSub">1 × 545 kr</span></dt>
+              <dd><b data-f="ting">545 kr</b></dd>
+            </dl>
+            <div class="lrn-bill-sum"><span>Sum</span><b data-f="sum">30&nbsp;545 kr</b></div>
+            <div class="lrn-bill-eff"><span>Effektiv sats</span><span data-f="eff">0,76 %</span></div>
+            <p class="lrn-bill-note">Bygget er fritatt når skjøtet tinglyses før det er tatt i bruk.</p>
+          </section>
         </div>
+      </figure>
+      <div class="lrn-ps">
+        <div class="lrn-line"><span data-lrn="pant">Med boliglån kommer pantet som dokument nr. 2</span><b data-lrn="pantAmt">+ 545 kr</b></div>
+        <p class="lrn-p" data-lrn="fritak">Fritak: egen arveandel ved arv etter loven, og ektefelle ved skifte. Tinglysingen betales også da.</p>
+        <p class="lrn-fine">Hjemmel: lov om dokumentavgift (§&nbsp;8 for ektefelle) og Stortingets vedtak om dokumentavgift (§&nbsp;2 for arv, §&nbsp;3 for nybygg). Tinglysingsgebyret er satt av Statens kartverk for 2026. Fellesgjeld i borettslag er ikke med.</p>
       </div>
+      <details class="lrn-tbl">
+        <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+        <div>
+          <table>
+            <caption data-lrn="tblCap">Kroner for 4&nbsp;000&nbsp;000 kr i kjøpesum</caption>
+            <thead><tr><td></td><th scope="col">Selveier</th><th scope="col">Borettslag</th><th scope="col">Nybygg fra utbygger</th></tr></thead>
+            <tbody data-lrn="rows"></tbody>
+          </table>
+        </div>
+      </details>
+      <p class="lrn-sr" id="lrn-dok-sum" data-lrn="sum"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-dok-q">
+      <h3 class="lrn-h3" id="lrn-dok-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvor mye er dokumentavgiften?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>2,5&nbsp;% av salgssummen på selveierbolig og eierseksjon. Kjøper du for 3 millioner, blir avgiften 75&nbsp;000 kr. På toppen kommer tinglysingsgebyret på 545 kr per dokument.</p></div></details>
+        <details><summary>Hvorfor betaler jeg ingen dokumentavgift på borettslag?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Fordi du kjøper en andel i borettslaget, ikke fast eiendom. Da er det ingen overdragelse av tinglyst eierskap, og avgiften blir 0 kr. Du betaler likevel tinglysingsgebyret på 545 kr for å registrere andelen.</p></div></details>
+        <details><summary>Slipper jeg avgift ved arv?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Bare for din egen del av arven. Fritaket følger av Stortingets årlige vedtak om dokumentavgift §&nbsp;2 og gjelder den ideelle arveandelen du har etter loven. Er dere tre arvinger og du overtar hele boligen, er to tredeler avgiftspliktig. På en bolig til 4&nbsp;000&nbsp;000 kr blir det 2,5&nbsp;% av 2&nbsp;666&nbsp;667 kr, altså cirka 66&nbsp;667 kr. Testamentsarv utover det du uansett arver etter loven, avkall på arv og forskudd på arv er ikke fritatt. Overføring til ektefelle er fritatt etter lov om dokumentavgift §&nbsp;8.</p></div></details>
+        <details><summary>Hvorfor er det flere dokumenter enn ett?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Skjøtet er ett dokument. Tar du opp boliglån, tinglyser banken pant som et eget dokument. Hvert dokument koster 545 kr, så to dokumenter blir 1&nbsp;090 kr. Kalkulatoren regner fra 1 til 5 dokumenter.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-boliglan-dok">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-dok">Verdt å huske før kjøpet</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Avgiften regnes av salgssummen</h3><p>Grunnlaget er markedsverdien banken og Statens kartverk legger til grunn — vanligvis kjøpesummen i kontrakten. Skriver du inn 4&nbsp;000&nbsp;000&nbsp;kr på en selveierbolig, blir dokumentavgiften 100&nbsp;000&nbsp;kr.</p></div>
-        <div class="lc-note"><h3>Borettslag slipper avgiften</h3><p>I et borettslag kjøper du en andel, ikke fast eiendom. Derfor blir dokumentavgiften 0 kr — men andelen må fortsatt registreres, så tinglysingsgebyret på 545 kr per dokument påløper.</p></div>
-        <div class="lc-note"><h3>Gebyret betales selv ved fritak</h3><p>Velger du fritak for arv eller ektefelleskifte, faller dokumentavgiften bort, men tinglysingsgebyret gjør ikke det. Dokumentet må uansett registreres hos Statens kartverk.</p></div>
-        <div class="lc-note"><h3>Pant fra banken er et eget dokument</h3><p>Skjøtet er ett dokument. Tar du opp lån, tinglyser banken pant — det er ett dokument til. Da står du på 2 og gebyret blir 1 090 kr. Kalkulatoren regner opptil 5 dokumenter.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-boliglan-dok">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-boliglan-dok">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvor mye er dokumentavgiften?</summary><div class="a"><p>2,5 % av salgssummen på selveierbolig og eierseksjon. Kjøper du for 3 millioner, blir avgiften 75 000 kr. På toppen kommer tinglysingsgebyret på 545 kr per dokument.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor betaler jeg ingen dokumentavgift på borettslag?</summary><div class="a"><p>Fordi du kjøper en andel i borettslaget, ikke fast eiendom. Da er det ingen overdragelse av tinglyst eierskap, og avgiften blir 0 kr. Du betaler likevel tinglysingsgebyret på 545 kr for å registrere andelen.</p></div></details>
-        <details class="lc-q"><summary>Hva er tinglysingsgebyret?</summary><div class="a"><p>Et fast beløp Statens kartverk tar for å registrere et dokument — 545 kr per dokument i 2026. Det påløper på alle kjøp, også borettslag, nybygg og fritakstilfeller.</p></div></details>
-        <details class="lc-q"><summary>Slipper jeg avgift ved arv?</summary><div class="a"><p>Bare for din egen del av arven. Fritaket følger av Stortingets årlige vedtak om dokumentavgift § 2 og gjelder den ideelle arveandelen du har etter loven. Er dere tre arvinger og du overtar hele boligen, er to tredeler avgiftspliktig — på en bolig til 4 000 000 kr blir det 2,5 % av 2 666 667 kr, altså cirka 66 667 kr. Testamentsarv utover det du uansett arver etter loven, avkall på arv og forskudd på arv er ikke fritatt. Overføring til ektefelle er fritatt etter lov om dokumentavgift § 8.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor er det flere dokumenter enn ett?</summary><div class="a"><p>Skjøtet er ett dokument. Tar du opp boliglån, tinglyser banken pant som et eget dokument. Hvert dokument koster 545 kr, så to dokumenter blir 1 090 kr. Kalkulatoren regner fra 1 til 5 dokumenter.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr effektiv sats?</summary><div class="a"><p>Det er total avgift delt på salgssummen, vist i prosent. På en selveierbolig ligger den litt over 2,5 % fordi gebyret kommer i tillegg. Er det ingen dokumentavgift, blir effektiv sats bare gebyret delt på prisen — altså svært lav.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-boliglan-dok">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-boliglan-dok">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/boliglan/maxlan/"><span class="ar">Maks lån →</span><h3>Se hvor mye du kan låne</h3><p>Husk at avgift og gebyr kommer i tillegg til boligprisen — regn ut hvor stort lån inntekt og egenkapital gir rom for.</p></a>
-        <a class="lc-link" href="/boliglan/bsu/"><span class="ar">BSU →</span><h3>Spar til egenkapital</h3><p>BSU-sparing bygger opp egenkapitalen du trenger før kjøp, inkludert pengene som går til avgift og tinglysing.</p></a>
-        <a class="lc-link" href="/boliglan/mor/"><span class="ar">Nedbetaling →</span><h3>Se hva lånet koster</h3><p>Når boligen er kjøpt, regn ut månedlig avdrag og rente over hele nedbetalingstiden.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-dok-r">
+      <h3 class="lrn-h3" id="lrn-dok-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/boliglan/maxlan/"><span><span class="t">Hva har jeg råd til?</span><span class="d">Avgift og gebyr kommer i tillegg til prisen. Regn ut hvor stort lån inntekt og egenkapital gir rom for.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/bsu/"><span><span class="t">BSU</span><span class="d">Spar til egenkapitalen, som også må dekke avgiften.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/mor/"><span><span class="t">Boliglånskalkulator</span><span class="d">Når boligen er kjøpt, regn ut månedlig avdrag og rente over hele nedbetalingstiden.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -617,6 +506,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <script defer src="/shared/top-chrome.js?v=v245"></script>
 <script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -681,6 +571,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       setEl('hStatTotal','–');
       setEl('hStatEff','–');
       setTip('');
+      window._dok = null;
+      if(window.hvtLearn) hvtLearn.update('boliglan-dok', null);
       persist();
       return;
     }
@@ -742,6 +634,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     }
     setTip(tipText);
 
+    window._dok = {pris:pris, tomt:tomt, type:type, fritak:fritak, ftype:fritakTypeEl ? fritakTypeEl.value : 'arv', docs:numDocs};
+    if(window.hvtLearn) hvtLearn.update('boliglan-dok', window._dok);
     persist();
   }
 
@@ -808,6 +702,88 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     show('dok-fritak-fields', true);
   }
   calcDok();
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Eierformen avgjør avgiften, ikke prisen»: samme kjøpesum regnet som selveier,
+//    borettslag og nybygg, med grunnlaget som andel av kjøpesummen. Tallene kommer fra calcDok. ──
+(function(){
+  var KEY = 'boliglan-dok';
+  // Standardverdiene i feltene over. Så lenge alle står slik, er merket «Eksempel».
+  var DEF = {pris:4000000, tomt:1200000, type:'selveier', fritak:false, ftype:'arv', docs:1};
+  var RATE = 0.025, GEBYR = 545, TYPES = ['selveier', 'borettslag', 'nybygg'];
+  var root;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setHtml(name, s){ var el = q(name); if(el) el.innerHTML = s; }
+
+  // Samme regnestykke som calcDok() over: 2,5 % av grunnlaget og 545 kr per dokument
+  function calc(pris, tomt, type, fritak, docs){
+    var g = type === 'selveier' ? pris : (type === 'nybygg' ? tomt : 0), ellers = g * RATE, dok = fritak ? 0 : ellers, ting = docs * GEBYR;
+    return {g:g, ellers:ellers, dok:dok, ting:ting, total:dok + ting, eff:pris > 0 ? (dok + ting) / pris * 100 : 0};
+  }
+
+  function render(d){
+    var L = window.hvtLearn, kr = L.kr, t = L.t, ph = L.ph;
+    var mine = !!d && !(d.pris === DEF.pris && d.tomt === DEF.tomt && d.type === DEF.type && d.fritak === DEF.fritak && d.docs === DEF.docs);
+    if(!d) d = DEF;
+    var R = {}, pct = function(x){ return L.dec(x, 2) + ' %'; };
+    TYPES.forEach(function(ty){ R[ty] = calc(d.pris, d.tomt, ty, d.fritak, d.docs); });
+    var fri0 = ph('0 kr (fritak)'), tingSub = d.docs + ' × ' + GEBYR + ' kr';
+
+    // Ett kort per boligtype. Det valgte får blekkramme og «Ditt valg».
+    root.querySelectorAll('.lrn-bill').forEach(function(card){
+      var ty = card.getAttribute('data-t'), r = R[ty];
+      function f(name, text){ card.querySelector('[data-f="' + name + '"]').textContent = text; }
+      card.classList.toggle('is-sel', ty === d.type);
+      var bar = card.querySelector('[data-f="bar"]');
+      bar.style.width = (d.pris > 0 ? Math.max(0, Math.min(1, r.g / d.pris)) * 100 : 0).toFixed(2) + '%';
+      bar.parentNode.classList.toggle('is-off', d.fritak);
+      f('grunnlag', kr(r.g) + ' kr');
+      f('dok', d.fritak ? fri0 : kr(r.dok) + ' kr');
+      f('ellers', d.fritak && r.ellers > 0 ? t('lrnDokEllers', 'ellers {belop} kr', {belop:kr(r.ellers)}) : '');
+      f('tingSub', tingSub); f('ting', kr(r.ting) + ' kr'); f('sum', kr(r.total) + ' kr'); f('eff', pct(r.eff));
+    });
+    set('cap', t('lrnDokCap', 'Hver strek er kjøpesummen på {pris} kr. Det fylte er grunnlaget avgiften regnes av.', {pris:kr(d.pris)}));
+
+    // Pantet som dokument nr. 2, og hva fritaket dekker
+    set('pant', d.docs === 1 ? ph('Med boliglån kommer pantet som dokument nr. 2')
+      : t('lrnDokPantN', 'Du har regnet med {n} dokumenter. Skjøtet er ett, og pantet fra banken legger til ett.', {n:d.docs}));
+    set('pantAmt', d.docs === 1 ? '+ ' + kr(GEBYR) + ' kr' : '');
+    set('fritak', !d.fritak ? ph('Fritak: egen arveandel ved arv etter loven, og ektefelle ved skifte. Tinglysingen betales også da.')
+      : d.ftype === 'ektefelle' ? ph('Overføring til ektefelle er fritatt for dokumentavgift. Tinglysingen betales likevel.')
+      : ph('Arv etter loven gjelder bare din egen arveandel.'));
+
+    // Tabellen og teksttilsvarende versjon
+    function row(lbl, fn){ return '<tr><th scope="row">' + lbl + '</th>' + TYPES.map(function(ty){ return '<td>' + fn(R[ty]) + '</td>'; }).join('') + '</tr>'; }
+    set('tblCap', t('lrnDokTblCap', 'Kroner for {pris} kr i kjøpesum', {pris:kr(d.pris)}));
+    setHtml('rows',
+      row(ph('Grunnlag'), function(r){ return kr(r.g) + ' kr'; }) +
+      row(ph('Dokumentavgift, 2,5 %'), function(r){ return d.fritak ? fri0 : kr(r.dok) + ' kr'; }) +
+      row(t('lrnDokTblTing', 'Tinglysing, {n} × 545 kr', {n:d.docs}), function(r){ return kr(r.ting) + ' kr'; }) +
+      row(ph('Sum'), function(r){ return kr(r.total) + ' kr'; }) +
+      row(ph('Effektiv sats'), function(r){ return pct(r.eff); }));
+    var names = {selveier:ph('Selveier'), borettslag:ph('Borettslag'), nybygg:ph('Nybygg fra utbygger')};
+    set('sum', t('lrnDokSum', 'For {pris} kr blir avgiften {a} kr som selveier, {b} kr i borettslag og {c} kr som nybygg med tomteverdi {tomt} kr.',
+        {pris:kr(d.pris), a:kr(R.selveier.total), b:kr(R.borettslag.total), c:kr(R.nybygg.total), tomt:kr(d.tomt)})
+      + (d.fritak ? ' ' + ph('Dokumentavgiften er fritatt.') : '') + ' ' + t('lrnDokSumValg', 'Valgt boligtype: {type}.', {type:names[d.type]}));
+
+    // Merket
+    var lower = {selveier:ph('selveier'), borettslag:ph('borettslag'), nybygg:ph('nybygg fra utbygger')};
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    set('stateText', kr(d.pris) + ' kr · ' + lower[d.type] + ' · ' + t('lrnDokDocs', d.docs === 1 ? '{n} dokument' : '{n} dokumenter', {n:d.docs}) + (d.fritak ? ' · ' + ph('fritak') : ''));
+  }
+
+  function init(){
+    root = document.getElementById('lrn-dok');
+    if(!root || !window.hvtLearn) return;
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._dok || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 
