@@ -3716,6 +3716,27 @@ REGIONS['fr'] = {
     lrnEkSum: 'Le total est de {total} dans les deux cas. Les coefficients déplacent seulement le coût des variantes légères vers les lourdes.',
     lrnEkTooLittle: '{n} recevrait {belop} de trop peu',
     lrnEkTooMuch: '{n} porterait {belop} de trop par unité',
+    /* Forklaringsblokker (lrn): kalkulator/likviditet */
+    lrnLqMonths: '{n} mois',
+    lrnLqMnd: '{m} mois',
+    lrnLqN1: 'Solde de départ {belop} = {m} mois de dépenses.',
+    lrnLqN1b: 'Solde de départ {belop}.',
+    lrnLqN2: '{netto} kr par mois (revenus − dépenses).',
+    lrnLqN3: '{belop} = {m} mois de dépenses.',
+    lrnLqExtTom: 'À ce rythme, le compte est vide au mois {m}, après la période choisie.',
+    lrnLqExtUt: 'À ce rythme, le compte sort du rouge au mois {m}, après la période choisie.',
+    lrnLqLateTom: 'À ce rythme, il passe dans le rouge au mois {m}.',
+    lrnLqLateUt: 'À ce rythme, il sort du rouge au mois {m}.',
+    lrnLqTom: 'Le compte passe dans le rouge au mois {m}.',
+    lrnLqUt: 'Le compte sort du rouge au mois {m}.',
+    lrnLqYouTom: 'Vide au mois {m} ({belop})',
+    lrnLqYouUt: 'Sorti du rouge au mois {m}',
+    lrnLqSrUp: 'Le solde monte de {fra} à {til} en {mnd}.',
+    lrnLqSrDown: 'Le solde baisse de {fra} à {til} en {mnd}.',
+    lrnLqSrFlat: 'Le solde reste stable à {fra}.',
+    lrnLqSrM: 'Cela correspond à {m} mois de dépenses.',
+    lrnLqSrExt: 'La ligne est prolongée en pointillés jusqu\'au mois {m}.',
+    lrnLqState: 'Solde de départ {start} · revenus {inn} · dépenses {ut} · {mnd}',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -9060,6 +9081,20 @@ REGIONS['fr']._ph = {
 "Når kostnaden per enhet skal videre til pris med tillegg.":"Quand le coût unitaire doit déboucher sur un prix avec majorations.",
 "Sett utsalgspris per variant.":"Fixez le prix de vente par variante.",
 "referanse":"référence",
+"Startbalansen kjøper tid, nettoen bestemmer retningen":"Le solde de départ fait gagner du temps, le net fixe la direction",
+"Linjen viser saldoen din måned for måned. Høyre akse regner den om til hvor mange måneder med utgifter du har på konto.":"La ligne montre votre solde mois par mois. L'axe de droite le convertit en nombre de mois de dépenses que vous avez sur le compte.",
+"Saldo i kroner ved slutten av hver måned. Måned 0 er startbalansen.":"Solde en couronnes à la fin de chaque mois. Le mois 0 est le solde de départ.",
+"Likviditet er ikke resultat":"La trésorerie n'est pas le bénéfice",
+"Likviditet er pengene på konto. Resultat er inntekter minus kostnader i regnskapet. Du kan gå med overskudd og likevel gå tom for penger en måned.":"La trésorerie, c'est l'argent sur le compte. Le bénéfice, ce sont les produits moins les charges en comptabilité. Vous pouvez dégager un excédent et quand même manquer d'argent un mois donné.",
+"Tom konto":"Compte vide",
+"Måneder med utgifter":"Mois de dépenses",
+"Saldoen står stille.":"Le solde reste stable.",
+"Rett linje: samme inntekt og utgift hver måned. Skattetrekk, feriepenger, halvårlige forsikringer og strømtopper gir hakk som modellen ikke ser.":"Ligne droite : les mêmes revenus et dépenses chaque mois. Le prélèvement d'impôt, l'indemnité de congés, les assurances semestrielles et les pics d'électricité créent des creux que le modèle ne voit pas.",
+"Her trenger du reserver eller kassakreditt.":"Ici, il vous faut des réserves ou un découvert autorisé.",
+"Kontoen holder hele perioden.":"Le compte tient toute la période.",
+"Kontoen står i minus hele perioden.":"Le compte est dans le rouge toute la période.",
+"Kontoen holder hele perioden, og saldoen står stille.":"Le compte tient toute la période, et le solde reste stable.",
+"Den holder perioden ut, men ikke lenger.":"Il tient jusqu'à la fin de la période, mais pas plus.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så
