@@ -50,11 +50,11 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <style>
 /* Studielån — kalkulator-skall (delt mønster med /skatt/reise/ + /personlig/spare/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -122,15 +122,6 @@ select.ik-input{
   background-repeat:no-repeat;background-position:right 12px center;
 }
 
-/* Live total-preview (beholdt fra opprinnelig kalkulator, nøytrale tokens) */
-.ik-preview{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:14px 16px;margin-top:14px}
-.ik-preview .tp-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:6px 0;font-size:13px}
-.ik-preview .tp-row + .tp-row{border-top:1px dashed var(--line)}
-.ik-preview .tp-l{color:var(--ink2);font-weight:500}
-.ik-preview .tp-v{font-family:var(--font-serif);font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums}
-.ik-preview .tp-v.accent{color:var(--accent-2)}
-.ik-preview .tp-hint{font-size:11.5px;color:var(--ink3);font-style:italic;margin-top:8px;line-height:1.5}
-
 /* Extra-toggle (skolepenger / ekstra lån) */
 .extra-toggle{margin:0;padding:0}
 .extra-toggle summary{
@@ -142,20 +133,6 @@ select.ik-input{
 .extra-toggle summary::before{content:"+";color:var(--accent);font-weight:700;font-size:14px;line-height:1;width:14px;display:inline-flex;justify-content:center}
 .extra-toggle[open] summary::before{content:"−"}
 .extra-toggle .extra-body{margin-top:10px}
-
-.ik-cta{
-  margin-top:6px;width:100%;
-  padding:12px 18px;background:var(--accent);
-  border:0;border-radius:5px;cursor:pointer;
-  color:var(--surface);font:600 13.5px/1 var(--font-sans);letter-spacing:.2px;
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  transition:background .2s ease, transform .15s ease;
-}
-.ik-cta:hover{background:var(--accent-2)}
-.ik-cta:active{transform:scale(.99)}
-[data-theme="frost"] .ik-cta, [data-theme="glass"] .ik-cta, [data-theme="pink"] .ik-cta{color:#fff}
-
-.ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 
 .ks-result{background:var(--surface);padding:22px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .ks-r-eyebrow{font:500 10px/1 var(--font-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
@@ -189,8 +166,7 @@ select.ik-input{
 .side-card .method-step b{color:var(--ink);font-weight:600}
 
 /* Tabeller under skallet (rente-sammenligning + nedbetalingsplan) — nøytrale tokens */
-.studie-tables{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:28px 0 0}
-@media(max-width:780px){.studie-tables{grid-template-columns:1fr}}
+.studie-tables{display:grid;grid-template-columns:1fr;gap:24px;margin:28px 0 0}
 .table-card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px 22px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .table-card h3{font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin:0 0 4px;padding-bottom:10px;border-bottom:1px solid var(--line)}
 .table-card .table-wrap{border:1px solid var(--line);border-radius:5px;overflow:hidden}
@@ -212,6 +188,14 @@ select.ik-input{
 .studie-tbl tbody tr.active td{background:color-mix(in srgb, var(--accent) 9%, transparent);font-weight:700}
 .studie-tbl tbody tr.active td.r{font-weight:700}
 .studie-tbl tbody tr.last td.r{font-weight:700}
+/* Beløpene står uten «kr» (enheten står i kolonneoverskriften), så de får plass på én linje */
+.studie-tbl td,.studie-tbl th{white-space:nowrap}
+@media(max-width:560px){
+  .table-card{padding:16px 14px 18px}
+  .studie-tbl thead th{white-space:normal;letter-spacing:.04em;padding:8px 6px}
+  .studie-tbl tbody td{padding:8px 6px}
+}
+@media(max-width:480px){.studie-tbl .hide-sm{display:none}}
 
 /* Howto */
 .howto-wrap{margin:0 0 40px;display:none}
@@ -228,8 +212,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-
-.calc-disclaimer{font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;margin:0 0 32px}
 </style>
 <style>
 /* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
@@ -502,6 +484,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                       <option value="ja" selected>Ja — fullført grad</option>
                       <option value="nei">Nei — enkeltemner</option>
                     </select>
+                    <div class="ik-hint">Fullført grad gir 40&nbsp;% stipend, ellers 15&nbsp;%. Gjelder bare borteboer-delen.</div>
                   </div>
                 </div>
                 <div class="ik-row">
@@ -517,21 +500,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                     </select>
                   </div>
                 </div>
-              </div>
-              <div class="ik-preview" id="totalPreview" aria-live="polite">
-                <div class="tp-row">
-                  <span class="tp-l">Total basisstøtte gjennom studiet</span>
-                  <span class="tp-v accent" id="pTotal">–</span>
-                </div>
-                <div class="tp-row">
-                  <span class="tp-l" id="pStipendLbl">Du mottar som stipend</span>
-                  <span class="tp-v" id="pStipend">–</span>
-                </div>
-                <div class="tp-row">
-                  <span class="tp-l">Du må betale tilbake</span>
-                  <span class="tp-v" id="pLaan">–</span>
-                </div>
-                <div class="tp-hint" id="pOmgjInfo">Bor du borte og fullfører graden: 40 % av borteboer-lånet blir stipend — penger du ikke må betale tilbake. Uten fullført grad: bare 15 %.</div>
               </div>
             </section>
 
@@ -565,7 +533,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="rente" data-i18n="studieLRente">Rente (% per år)</label>
-                    <input class="ik-input" id="rente" type="text" inputmode="decimal" min="0" max="15" step="0.1" value="5.0">
+                    <input class="ik-input" id="rente" type="text" inputmode="decimal" min="0" max="15" step="0.1" value="5,0">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="nedbtid" data-i18n="studieLNedbtid">Nedbetalingstid (år)</label>
@@ -573,13 +541,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                   </div>
                 </div>
               </div>
-
-              <button type="button" id="calcBtn" class="ik-cta">
-                <span data-i18n="studieBtnCalc">Beregn studielån</span>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
-              </button>
-
-              <p class="ik-note">Basislån 15 169 kr/mnd (Lånekassen 2025–26), samme sats for borte- og hjemmeboere. Kun borteboer-delen kan omgjøres til stipend — 40 % ved fullført grad, 15 % uten. Annuitetslån over valgt nedbetalingstid, med 22 % skattefradrag på rentene.</p>
             </section>
           </div>
 
@@ -589,17 +550,13 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
             <div class="ks-r-mnd" id="rVerdict">Endre tall for å se nedbetalingsplan</div>
 
             <div class="ks-r-stats">
-              <div class="ks-r-stat"><span class="l" data-i18n="studieRTotal">Total basisstøtte</span><span class="v" id="rTotal">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="studieRStipend">Omgjort til stipend</span><span class="v" id="rStipend">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="studieREkstra">Tillegg (skole + ekstra)</span><span class="v" id="rEkstra">–</span></div>
-              <div class="ks-r-stat div emphasis"><span class="l" data-i18n="studieRlGjeld">Gjeld ved studieslutt</span><span class="v" id="rGjeld">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="studieRRente">Rente</span><span class="v" id="rRente">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="studieRTid">Nedbetalingstid</span><span class="v" id="rTid">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="studieRTotbet">Totalt tilbakebetalt</span><span class="v" id="rTotbet">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="studieRTotRente">Herav renter</span><span class="v" id="rTotRente">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="studieRlSkattefradrag">Skattefradrag (22 %)</span><span class="v" id="rSkatt">–</span></div>
               <div class="ks-r-stat div emphasis"><span class="l" data-i18n="studieRReell">Reell kostnad etter skatt</span><span class="v" id="rReell">–</span></div>
             </div>
+            <div class="ks-r-foot">Hvor mye som blir stipend, avhenger også av beståtte studiepoeng, inntekt og formue. Termingebyret (18 kr/mnd, 0 kr med eFaktura) er ikke med.</div>
           </aside>
         </div>
       </div>
@@ -612,9 +569,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <thead>
                 <tr>
                   <th>Rente</th>
-                  <th class="r">Mnd. betaling</th>
-                  <th class="r">Total rente</th>
-                  <th class="r">Totalt betalt</th>
+                  <th class="r">Mnd. betaling (kr)</th>
+                  <th class="r hide-sm">Total rente (kr)</th>
+                  <th class="r">Totalt betalt (kr)</th>
                 </tr>
               </thead>
               <tbody id="renteBody"></tbody>
@@ -628,10 +585,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <thead>
                 <tr>
                   <th>År</th>
-                  <th class="r">Betaling</th>
-                  <th class="r">Renter</th>
-                  <th class="r">Avdrag</th>
-                  <th class="r">Restgjeld</th>
+                  <th class="r">Betaling (kr)</th>
+                  <th class="r">Renter (kr)</th>
+                  <th class="r">Avdrag (kr)</th>
+                  <th class="r">Restgjeld (kr)</th>
                 </tr>
               </thead>
               <tbody id="planBody"></tbody>
@@ -645,8 +602,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <div class="side-card">
         <h4>Satser 2025–26</h4>
         <div class="ref-row"><span class="l">Basislån</span><span class="v">15 169<span class="u">kr/mnd</span></span></div>
-        <div class="ref-row"><span class="l">Stipend m/ grad</span><span class="v accent">40<span class="u">%</span></span></div>
-        <div class="ref-row"><span class="l">Stipend u/ grad</span><span class="v">15<span class="u">%</span></span></div>
+        <div class="ref-row"><span class="l">Stipend med grad (borteboer)</span><span class="v accent">40<span class="u">%</span></span></div>
+        <div class="ref-row"><span class="l">Stipend uten grad (borteboer)</span><span class="v">15<span class="u">%</span></span></div>
         <div class="ref-row"><span class="l">Rentefradrag</span><span class="v accent">22<span class="u">%</span></span></div>
       </div>
       <div class="side-card related">
@@ -654,14 +611,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <a href="/personlig/spare/"><span class="name">Sparekalkulator</span><span class="arr">→</span></a>
         <a href="/boliglan/mor/"><span class="name">Boliglån</span><span class="arr">→</span></a>
         <a href="/skatt/inntekt/"><span class="name">Inntektsskatt</span><span class="arr">→</span></a>
-        <a href="/personlig/"><span class="name">Alle personlige verktøy</span><span class="arr">→</span></a>
+        <a href="/personlig/"><span class="name">Alt i Privatøkonomi</span><span class="arr">→</span></a>
       </div>
     </aside>
 
-  </div>
-
-  <div class="container">
-    <p class="calc-disclaimer">Basert på Lånekassens basislån 2025–2026 (15 169 kr/mnd, samme sats for borte- og hjemmeboere). Faktisk stipendandel avhenger av beståtte studiepoeng og inntekt/formue — kun borteboer-delen kan omgjøres til stipend. Annuitetslån, termingebyr 18 kr/mnd (0 kr med eFaktura) er ikke inkludert. Veiledende beregninger.</p>
   </div>
 
   <div class="container howto-wrap">
@@ -678,40 +631,38 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-personlig-studie">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-studie">Fra basislån til månedlig nedbetaling</h2><p class="lc-intro">Kalkulatoren gjør jobben i to trinn. Først bygger den opp hvor mye støtte du får og hvor mye av den som blir lån. Deretter regner den lånet om til et annuitetslån du betaler ned måned for måned. Dette er de samme komponentene du ser i beregningen over — bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-studie">Fra basislån til månedlig nedbetaling</h2><p class="lc-intro">Først regnes det ut hvor mye du får, og hvor mye av det som blir stipend. Resten er et annuitetslån: du betaler samme beløp hver måned til lånet er nedbetalt.</p></div>
       <div class="lc-ledger">
         <div class="lc-led"><span class="nm"><b>Basislån</b><span class="tag">Sats</span></span><span class="fig">15 169<span class="u">kr/mnd</span></span><p class="dsc">Grunnbeløpet Lånekassen gir per måned i studieåret 2025–26. Samme sats enten du bor hjemme eller borte. Ganges med antall utbetalingsmåneder og antall studieår.</p></div>
         <div class="lc-led"><span class="nm"><b>Utbetalingsmåneder</b><span class="tag">Faktor</span></span><span class="fig">11<span class="u">mnd/år</span></span><p class="dsc">Hvor mange måneder i året du får utbetaling. Standard er 11; du kan velge 10. Færre måneder gir mindre samlet støtte — og dermed mindre lån.</p></div>
-        <div class="lc-led"><span class="nm"><b>Stipend ved fullført grad</b><span class="tag">Faktor</span></span><span class="fig">40<span class="u">%</span></span><p class="dsc">Av borteboer-delen av lånet gjøres 40 % om til stipend du slipper å betale tilbake (25 % for å fullføre graden, pluss 15 % for beståtte studiepoeng). Bare borteboer-delen kan omgjøres.</p></div>
+        <div class="lc-led"><span class="nm"><b>Stipend ved fullført grad</b><span class="tag">Faktor</span></span><span class="fig">40<span class="u">%</span></span><p class="dsc">Av borteboer-delen av lånet gjøres 40 % om til stipend du slipper å betale tilbake (25 % for å fullføre graden, pluss 15 % for beståtte studiepoeng).</p></div>
         <div class="lc-led"><span class="nm"><b>Stipend uten grad</b><span class="tag">Faktor</span></span><span class="fig">15<span class="u">%</span></span><p class="dsc">Tar du enkeltemner uten å fullføre en grad, omgjøres bare 15 % av borteboer-lånet til stipend — kun andelen for beståtte studiepoeng.</p></div>
         <div class="lc-led"><span class="nm"><b>Nedbetalingstid</b><span class="tag">Faktor</span></span><span class="fig">20<span class="u">år</span></span><p class="dsc">Standard løpetid for et annuitetslån fra Lånekassen. Lengre tid gir lavere månedsbeløp, men mer renter totalt. Du kan justere mellom 1 og 30 år.</p></div>
         <div class="lc-led"><span class="nm"><b>Rentefradrag</b><span class="tag">Fradrag</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Rentene du betaler gir 22 % skattefradrag. Kalkulatoren trekker dette fra og viser deg «reell kostnad etter skatt» — det lånet faktisk koster når fradraget er regnet med.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcB-personlig-studie">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-studie">Satsene for 2025–26</h2><p class="lc-intro">Disse verdiene ligger fast i kalkulatoren. Renten setter du selv — standardverdien er et eksempel, ikke en garantert sats fra Lånekassen.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-studie">Satsene for 2025–26</h2><p class="lc-intro">Satsene gjelder studieåret 2025–26. Renten på 5 % er bare et eksempel, ikke Lånekassens sats. Legg inn renten du får.</p></div>
       <div class="lc-rates">
       <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
+        <span class="ttl">Nøkkeltall</span>
         <div class="lc-kv"><span class="k">Basislån</span><span class="v">15 169<span class="u">kr/mnd</span></span></div>
-        <div class="lc-kv"><span class="k">Utbetalingsmåneder (standard)</span><span class="v">11<span class="u">mnd/år</span></span></div>
         <div class="lc-kv"><span class="k">Stipendandel med fullført grad</span><span class="v">40<span class="u">%</span></span></div>
         <div class="lc-kv"><span class="k">Stipendandel uten grad</span><span class="v">15<span class="u">%</span></span></div>
         <div class="lc-kv"><span class="k">Standard nedbetalingstid</span><span class="v">20<span class="u">år</span></span></div>
         <div class="lc-kv"><span class="k">Skattefradrag på renter</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Standardrente i kalkulatoren</span><span class="v">5,0<span class="u">%</span></span></div>
         <div class="lc-kv"><span class="k">Termingebyr (ikke medregnet)</span><span class="v">18<span class="u">kr/mnd</span></span></div>
       </div>
       <div class="lc-card">
         <div class="lc-tblwrap">
         <table class="lc-trinn">
-          <caption>Slik fordeles stipendandelen på 40 % (kun borteboer-delen)</caption>
-          <thead><tr><th>Del</th><th class="r">Andel</th><th class="r">Krav</th></tr></thead>
+          <caption>Stipendandelen (bare borteboer-delen)</caption>
+          <thead><tr><th>Vilkår</th><th class="r">Andel</th></tr></thead>
           <tbody>
-            <tr><td><span class="step">For fullført grad</span></td><td class="r">25 %</td><td class="r">Du fullfører en hel grad, f.eks. bachelor eller master</td></tr>
-            <tr><td><span class="step">For beståtte studiepoeng</span></td><td class="r">15 %</td><td class="r">Du består emnene du tar underveis</td></tr>
-            <tr><td><span class="step">Sum med fullført grad</span></td><td class="r">40 %</td><td class="r">Begge deler oppfylt</td></tr>
-            <tr><td><span class="step">Uten fullført grad</span></td><td class="r">15 %</td><td class="r">Bare beståtte studiepoeng teller</td></tr>
+            <tr><td><span class="step">Fullført grad</span></td><td class="r">25 %</td></tr>
+            <tr><td><span class="step">Beståtte studiepoeng</span></td><td class="r">15 %</td></tr>
+            <tr><td><span class="step">Til sammen med grad</span></td><td class="r">40 %</td></tr>
+            <tr><td><span class="step">Uten fullført grad</span></td><td class="r">15 %</td></tr>
           </tbody>
         </table>
         </div>
@@ -719,7 +670,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-personlig-studie">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-studie">Det som avgjør hvor mye som blir gratis</h2><p class="lc-intro">Kalkulatoren viser et veiledende anslag. Disse punktene forklarer hva som faktisk styrer hvor mye av lånet du slipper å betale tilbake.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-studie">Det som avgjør hvor mye som blir gratis</h2></div>
       <div class="lc-notes">
         <div class="lc-note"><h3>Bare borteboer-delen kan bli stipend</h3><p>Basislånet er likt enten du bor hjemme eller borte. Men det er kun delen for årene du bor borte som kan gjøres om til stipend. Bor du hjemme hele studiet, blir hele lånet et lån du må betale tilbake.</p></div>
         <div class="lc-note"><h3>Stipendet kommer ikke før poengene er bestått</h3><p>Du får først lånet utbetalt. Etter hvert som du består studiepoeng — og til slutt fullfører graden — gjøres deler av borteboer-lånet om til stipend. Stryker du, blir den delen stående som lån.</p></div>
@@ -764,9 +715,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -851,7 +802,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       if(s.mnd) $('mnd').value = String(s.mnd);
       if(typeof s.skolepenger === 'number') $('skolepenger').value = s.skolepenger ? fmtInt(s.skolepenger) : '0';
       if(typeof s.tilleggslan === 'number') $('tilleggslan').value = s.tilleggslan ? fmtInt(s.tilleggslan) : '0';
-      if(typeof s.rente === 'number') $('rente').value = String(s.rente);
+      if(typeof s.rente === 'number') $('rente').value = String(s.rente).replace('.', ',');
       if(s.nedbtid) $('nedbtid').value = String(s.nedbtid);
     }
 
@@ -874,17 +825,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var ekstraLan = (st.skolepenger + st.tilleggslan) * aar;
       var gjeld = laanFraStotte + ekstraLan;
 
-      // ── Live preview ──
-      $('pTotal').textContent = fmtKr(totalStotte);
-      $('pStipend').textContent = fmtKr(stipend) + ' (' + (stipendPct * 100).toFixed(0) + ' %)';
-      $('pLaan').textContent = fmtKr(laanFraStotte);
-      $('pStipendLbl').textContent = grad
-        ? 'Du mottar som stipend (40 % av borteboer-lån)'
-        : 'Du mottar som stipend (15 % uten grad)';
-      $('pOmgjInfo').textContent = grad
-        ? 'Stipendandel: 25 % for fullført grad + 15 % for beståtte studiepoeng = 40 %. Kun borteboer-delen kan omgjøres.'
-        : 'Uten fullført grad får du kun 15 % omgjort til stipend (for beståtte studiepoeng). Fullfør en grad for å få 40 %.';
-
       // ── Annuitetslån ──
       var rente = st.rente;
       var nedbtid = st.nedbtid;
@@ -904,12 +844,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
       // ── Result panel ──
       $('rMnd').textContent = gjeld > 0 ? fmtKr(mndBet) : fmtKr(0);
-      $('rTotal').textContent = fmtKr(totalStotte);
-      $('rStipend').textContent = stipend > 0 ? fmtKr(stipend) : fmtKr(0);
       $('rEkstra').textContent = fmtKr(ekstraLan);
-      $('rGjeld').textContent = fmtKr(gjeld);
-      $('rRente').textContent = rente.toFixed(1).replace('.', ',') + ' %';
-      $('rTid').textContent = nedbtid + ' år';
       $('rTotbet').textContent = fmtKr(totBetalt);
       $('rTotRente').textContent = fmtKr(totRente);
       $('rSkatt').textContent = fmtKr(skatt);
@@ -921,15 +856,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
       // Verdict
       var v = $('rVerdict');
-      if(gjeld <= 0){
-        v.textContent = 'Ingen gjeld å betale tilbake.';
-      } else if(mndBet < 2000){
-        v.textContent = 'Overkommelig — lavere enn de fleste abonnementstjenester.';
-      } else if(mndBet < 3500){
-        v.textContent = 'Moderat — omtrent som en strømregning.';
-      } else {
-        v.textContent = 'Høy månedskostnad — vurder lengre nedbetalingstid.';
-      }
+      var t = (typeof R === 'function') ? R() : {};
+      v.textContent = gjeld <= 0
+        ? 'Ingen gjeld å betale tilbake.'
+        : (t.studieVerdictTid || 'Lengre nedbetalingstid gir lavere beløp hver måned, men mer renter totalt.');
 
       // ── Rente-sammenligning ──
       var renteRater = [2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0];
@@ -952,10 +882,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         if(i % 2 === 0) cls.push('even');
         if(isActive) cls.push('active');
         html += '<tr' + (cls.length ? ' class="' + cls.join(' ') + '"' : '') + '>' +
-          '<td>' + r.toFixed(1).replace('.', ',') + ' %' + (isActive ? ' ←' : '') + '</td>' +
-          '<td class="r">' + fmtKr(mb) + '</td>' +
-          '<td class="r">' + fmtKr(tr2) + '</td>' +
-          '<td class="r">' + fmtKr(tb) + '</td>' +
+          '<td>' + r.toFixed(1).replace('.', ',') + ' %</td>' +
+          '<td class="r">' + fmtInt(Math.round(mb)) + '</td>' +
+          '<td class="r hide-sm">' + fmtInt(Math.round(tr2)) + '</td>' +
+          '<td class="r">' + fmtInt(Math.round(tb)) + '</td>' +
         '</tr>';
       }
       renteBody.innerHTML = html;
@@ -980,10 +910,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         if(y === nedbtid) rowCls.push('last');
         planHtml += '<tr' + (rowCls.length ? ' class="' + rowCls.join(' ') + '"' : '') + '>' +
           '<td>' + y + '</td>' +
-          '<td class="r">' + fmtKr(aarRente + aarAvdrag) + '</td>' +
-          '<td class="r">' + fmtKr(aarRente) + '</td>' +
-          '<td class="r">' + fmtKr(aarAvdrag) + '</td>' +
-          '<td class="r">' + fmtKr(rest) + '</td>' +
+          '<td class="r">' + fmtInt(Math.round(aarRente + aarAvdrag)) + '</td>' +
+          '<td class="r">' + fmtInt(Math.round(aarRente)) + '</td>' +
+          '<td class="r">' + fmtInt(Math.round(aarAvdrag)) + '</td>' +
+          '<td class="r">' + fmtInt(Math.round(rest)) + '</td>' +
         '</tr>';
         if(rest <= 0) break;
       }
@@ -1010,12 +940,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         }
         recalc();
       });
-    });
-
-    $('calcBtn').addEventListener('click', function(){
-      recalc();
-      var t = document.getElementById('studieTables');
-      if(t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     // ── Init ──
@@ -1095,6 +1019,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       if(ready){ renderHowto(); clearInterval(t); }
       else if(attempts >= max){ clearInterval(t); }
     }, 80);
+  }
+  // Språkfila (uk.js o.l.) kommer ofte etter at panelet er tegnet med norsk,
+  // og ved språkbytte tegnes det aldri på nytt. core.js setter <html lang>
+  // rett etter at språkfila er lastet — både ved sidelast og ved bytte.
+  if(window.MutationObserver){
+    new MutationObserver(renderHowto).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
   }
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });

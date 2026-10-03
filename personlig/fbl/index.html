@@ -50,11 +50,11 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <style>
 /* Forbrukslån — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -121,6 +121,7 @@ body.focus-mode > footer{display:none}
 .ks-r-eyebrow{font:500 10px/1 var(--font-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
 .ks-r-net{font-family:var(--font-serif);font-weight:500;font-size:40px;color:var(--accent-2);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.7px;line-height:1.05}
 .ks-r-mnd{font-size:12px;color:var(--ink3);line-height:1.5;font-style:italic}
+.ks-r-mnd:empty{display:none}
 
 .ks-r-stats{display:flex;flex-direction:column;gap:7px;padding-top:12px;border-top:1px solid var(--line)}
 .ks-r-stat{display:flex;align-items:baseline;justify-content:space-between;gap:14px;font-size:13px;color:var(--ink2)}
@@ -138,10 +139,6 @@ body.focus-mode > footer{display:none}
 .side-card.related a:hover{color:var(--accent)}
 .side-card.related .arr{color:var(--ink4)}
 .side-card.related a:hover .arr{color:var(--accent)}
-.side-card .method-how{display:flex;flex-direction:column;gap:11px}
-.side-card .method-step{display:flex;gap:10px;font-size:12.5px;color:var(--ink2);line-height:1.55}
-.side-card .method-step .n{flex-shrink:0;font:600 10px/1.6 var(--font-mono);color:var(--accent)}
-.side-card .method-step b{color:var(--ink);font-weight:600}
 
 /* Howto */
 .howto-wrap{margin:0 0 40px;display:none}
@@ -158,8 +155,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-
-.calc-disclaimer{font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;margin:0 0 32px}
 </style>
 <style>
 /* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
@@ -445,7 +440,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                   </div>
                 </div>
               </div>
-              <p class="ik-note" data-i18n="fblHowtoP2">To lån med samme nominelle rente kan ha svært ulik effektiv rente om gebyrene er forskjellige. Alltid sammenlign på effektiv rente, ikke nominell.</p>
+              <p class="ik-note" data-i18n="fblHowtoP2">To lån med samme nominelle rente kan koste ulikt når gebyrene er forskjellige. Sammenlign derfor effektiv rente.</p>
             </section>
           </div>
 
@@ -455,11 +450,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
             <div class="ks-r-mnd" id="fbl-r-sub">–</div>
 
             <div class="ks-r-stats">
-              <div class="ks-r-stat"><span class="l" data-i18n="fblRMnd">Månedlig betaling</span><span class="v" id="fbl-r-mnd">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="fblRTotal">Totalt betalt</span><span class="v" id="fbl-r-total">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="fblRKost">Totale renter + gebyrer</span><span class="v" id="fbl-r-kost">–</span></div>
-              <div class="ks-r-stat div"><span class="l" data-i18n="fblRNom">Nominell rente</span><span class="v" id="fbl-r-nom">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="fblRNom">Nominell rente</span><span class="v" id="fbl-r-nom">–</span></div>
             </div>
+            <div class="ks-r-foot" data-i18n="fblDisclaimer">Regnet som annuitetslån, altså likt beløp hver måned. Etableringsgebyret trekkes fra det du får utbetalt, og terminomkostningen legges på hver betaling. Veiledende – vilkårene varierer mellom långivere.</div>
           </aside>
         </div>
       </div>
@@ -471,22 +464,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <a href="/boliglan/maxlan/"><span class="name">Maks lån</span><span class="arr">→</span></a>
         <a href="/personlig/budsjett/"><span class="name">Budsjett</span><span class="arr">→</span></a>
         <a href="/personlig/spare/"><span class="name">Sparekalkulator</span><span class="arr">→</span></a>
-        <a href="/personlig/"><span class="name">Alle personlig-verktøy</span><span class="arr">→</span></a>
-      </div>
-      <div class="side-card">
-        <h4 data-i18n="fblHowtoTitle">Slik bruker du kalkulatoren</h4>
-        <div class="method-how">
-          <div class="method-step"><span class="n">01</span><span><b>Nominell rente</b> er den rentesatsen banken annonserer.</span></div>
-          <div class="method-step"><span class="n">02</span><span><b>Effektiv rente</b> inkluderer gebyrer og viser den faktiske kostnaden per år.</span></div>
-          <div class="method-step"><span class="n">03</span><span>Skriv inn beløp, rente, gebyrer og løpetid — sammenlign alltid på <b>effektiv rente</b>.</span></div>
-        </div>
+        <a href="/personlig/"><span class="name">Alt i Privatøkonomi</span><span class="arr">→</span></a>
       </div>
     </aside>
 
-  </div>
-
-  <div class="container">
-    <p class="calc-disclaimer" data-i18n="fblDisclaimer">Effektiv rente beregnes ved å iterere fram den månedlige renten som gjør at netto utbetaling (lånebeløp minus etableringsgebyr) er lik nåverdien av alle terminbetalinger inkl. terminomkostning. Standard annuitetslån. Veiledende beregning — faktiske vilkår kan variere mellom långivere.</p>
   </div>
 
   <div class="container howto-wrap">
@@ -503,53 +484,28 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-personlig-fbl">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-fbl">Fra nominell rente til den faktiske kostnaden</h2><p class="lc-intro">Banken annonserer en nominell rente, men det er ikke hele regningen. Kalkulatoren legger på etableringsgebyr og terminomkostninger, regner ut hva du faktisk betaler hver måned, og finner deretter den effektive renten — den ene prosenten som inkluderer alt. Dette er nøyaktig linjene du ser i beregningen over, bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-fbl">Fra nominell rente til den faktiske kostnaden</h2><p class="lc-intro">Banken oppgir en nominell rente, men gebyrene kommer i tillegg. Her legges etableringsgebyr og terminomkostninger til, og alt samles i én prosent: den effektive renten. Med standardtallene blir 12 % nominelt til 14,60 % effektivt.</p></div>
       <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Lånebeløp</b><span class="tag">Beløp</span></span><span class="fig">100 000<span class="u">kr</span></span><p class="dsc">Hvor mye du låner. Dette er utgangspunktet for hele beregningen — alt annet regnes som en prosent eller et tillegg på toppen av dette.</p></div>
+        <div class="lc-led"><span class="nm"><b>Lånebeløp</b><span class="tag">Beløp</span></span><span class="fig">100 000<span class="u">kr</span></span><p class="dsc">Hvor mye du låner.</p></div>
         <div class="lc-led"><span class="nm"><b>Nominell rente</b><span class="tag">Sats</span></span><span class="fig">12<span class="u">% per år</span></span><p class="dsc">Rentesatsen banken annonserer. Kalkulatoren deler den på tolv for å finne den månedlige renten som brukes i nedbetalingsplanen.</p></div>
-        <div class="lc-led"><span class="nm"><b>Etableringsgebyr</b><span class="tag">Gebyr</span></span><span class="fig">950<span class="u">kr</span></span><p class="dsc">Et engangsgebyr du betaler når lånet settes opp. Det gjør at du i praksis får mindre utbetalt enn du låner, og driver derfor opp den effektive renten.</p></div>
+        <div class="lc-led"><span class="nm"><b>Etableringsgebyr</b><span class="tag">Gebyr</span></span><span class="fig">950<span class="u">kr</span></span><p class="dsc">Et engangsgebyr når lånet settes opp. Du får utbetalt lånet minus gebyret, men betaler renter av hele lånet. Derfor driver det opp den effektive renten.</p></div>
         <div class="lc-led"><span class="nm"><b>Terminomkostning</b><span class="tag">Gebyr</span></span><span class="fig">65<span class="u">kr/mnd</span></span><p class="dsc">Et fast gebyr som legges på hver eneste månedsbetaling. Over en lang løpetid blir summen av disse småbeløpene merkbar.</p></div>
         <div class="lc-led"><span class="nm"><b>Løpetid</b><span class="tag">Tid</span></span><span class="fig">60<span class="u">måneder</span></span><p class="dsc">Hvor mange måneder du betaler ned over. Lengre løpetid gir lavere månedsbeløp, men du betaler renter og terminomkostninger flere ganger.</p></div>
-        <div class="lc-led"><span class="nm"><b>Effektiv rente</b><span class="tag">Resultat</span></span><span class="fig">(1+r)^12 − 1<span class="u">% per år</span></span><p class="dsc">Tallet kalkulatoren leter seg fram til: den årlige renten som inkluderer rente, etableringsgebyr og terminomkostninger samlet. Dette er det eneste tallet du bør sammenligne lån på.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-personlig-fbl">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-fbl">Standardverdiene i kalkulatoren</h2><p class="lc-intro">Disse verdiene står ferdig utfylt når du åpner siden, og er typiske for et forbrukslån. Bytt dem ut med tallene fra ditt eget lånetilbud for å se din egen effektive rente.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
-        <div class="lc-kv"><span class="k">Lånebeløp (standard)</span><span class="v">100 000<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Nominell rente (standard)</span><span class="v">12<span class="u">% per år</span></span></div>
-        <div class="lc-kv"><span class="k">Etableringsgebyr (standard)</span><span class="v">950<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Terminomkostning (standard)</span><span class="v">65<span class="u">kr/mnd</span></span></div>
-      </div>
-      <div class="lc-card">
-        <span class="ttl">Mer</span>
-        <div class="lc-kv"><span class="k">Løpetid (standard)</span><span class="v">60<span class="u">måneder</span></span></div>
-        <div class="lc-kv"><span class="k">Netto utbetalt</span><span class="v">Lånebeløp − etableringsgebyr</span></div>
-        <div class="lc-kv"><span class="k">Månedlig rente</span><span class="v">Nominell rente / 12</span></div>
-        <div class="lc-kv"><span class="k">Lånetype</span><span class="v">Annuitetslån (likt månedsbeløp)</span></div>
-      </div>
+        <div class="lc-led"><span class="nm"><b>Effektiv rente</b><span class="tag">Resultat</span></span><span class="fig">14,60<span class="u">% per år</span></span><p class="dsc">Årskostnaden i prosent når renten legges til hver måned og alle gebyrer er med. Sammenlign lån på dette tallet.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-personlig-fbl">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-fbl">Slik leser du tallene riktig</h2><p class="lc-intro">Effektiv rente finnes for å gjøre lån sammenlignbare. Her er det viktigste å ha i bakhodet når du tolker resultatet.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-fbl">Slik leser du tallene riktig</h2><p class="lc-intro">Effektiv rente finnes for å gjøre lån sammenlignbare.</p></div>
       <div class="lc-notes">
-        <div class="lc-note"><h3>Sammenlign alltid på effektiv rente</h3><p>To lån med samme nominelle rente kan koste ulikt om gebyrene er forskjellige. Den effektive renten samler rente og gebyrer i ett tall, så det er det eneste som gir en ærlig sammenligning.</p></div>
         <div class="lc-note"><h3>Gebyrene betyr mest på små lån</h3><p>Et etableringsgebyr på 950 kr veier tungt på et lite lån og lite på et stort. Derfor kan den effektive renten bli høy på et lite forbrukslån selv om den nominelle renten ser grei ut.</p></div>
         <div class="lc-note"><h3>Lengre løpetid er ikke gratis</h3><p>Å strekke nedbetalingen over flere måneder senker månedsbeløpet, men du betaler både renter og terminomkostninger flere ganger. «Totalt betalt» og «totale renter + gebyrer» viser hva det faktisk koster.</p></div>
-        <div class="lc-note"><h3>Veiledende, ikke et tilbud</h3><p>Kalkulatoren bruker et standard annuitetslån og tallene du skriver inn. Faktiske vilkår kan variere mellom långivere — bruk den til å forstå og sammenligne, ikke som en bindende pris.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcD-personlig-fbl">
       <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-personlig-fbl">Det folk lurer mest på</h2></div>
       <div class="lc-faq">
-        <details class="lc-q"><summary>Hva er forskjellen på nominell og effektiv rente?</summary><div class="a"><p>Nominell rente er bare renten banken annonserer. Effektiv rente legger på etableringsgebyr og terminomkostninger, slik at den viser hva lånet faktisk koster deg per år. Effektiv rente er alltid høyere enn nominell når det finnes gebyrer.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor er effektiv rente høyere enn renten banken oppgir?</summary><div class="a"><p>Fordi gebyrene regnes med. Du betaler et etableringsgebyr i starten og en terminomkostning hver måned. Disse beløpene gjør at den reelle årlige kostnaden blir høyere enn den rene rentesatsen.</p></div></details>
-        <details class="lc-q"><summary>Hvilket tall bør jeg sammenligne lån på?</summary><div class="a"><p>Den effektive renten. Den er det eneste tallet som samler rente og alle gebyrer, så to lån blir direkte sammenlignbare. Å sammenligne på nominell rente kan lure deg hvis gebyrene er ulike.</p></div></details>
+        <details class="lc-q"><summary>Hva er forskjellen på nominell og effektiv rente?</summary><div class="a"><p>Nominell rente er renten banken oppgir. Effektiv rente er årskostnaden når alle gebyrer er med og renten legges til hver måned. Derfor er den høyere, selv uten gebyrer: 12 % nominelt blir 12,68 % effektivt.</p></div></details>
         <details class="lc-q"><summary>Hvorfor får jeg mindre utbetalt enn jeg låner?</summary><div class="a"><p>Fordi etableringsgebyret ofte trekkes fra ved oppstart. Låner du 100 000 kr med et gebyr på 950 kr, har du i praksis bare 99 050 kr å rutte med — men du betaler renter av hele beløpet. Det er en del av hvorfor effektiv rente blir høyere.</p></div></details>
-        <details class="lc-q"><summary>Lønner det seg å velge lengre løpetid?</summary><div class="a"><p>Lengre løpetid gir lavere månedsbeløp, men du betaler renter og det faste månedsgebyret flere ganger. Totalsummen blir derfor høyere. Se på «totalt betalt» for å vurdere om den lavere månedsbetalingen er verdt prisen.</p></div></details>
-        <details class="lc-q"><summary>Er beregningen et bindende lånetilbud?</summary><div class="a"><p>Nei. Den er veiledende og bygger på et standard annuitetslån og tallene du skriver inn selv. Faktiske vilkår, gebyrer og rente avtales med långiveren.</p></div></details>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcE-personlig-fbl">
@@ -578,9 +534,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -592,11 +548,11 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     // ── Helpers (port byte-for-byte fra source) ──
     function num(id){var v=document.getElementById(id);if(!v)return 0;return parseFloat(v.value.replace(/\s/g,'').replace(',','.'))||0;}
     function fmt(n){return Math.round(n).toLocaleString('no-NO')+' kr';}
-    function fmtPct(n){return n.toFixed(2).replace('.',',')+'%';}
+    function fmtPct(n){return n.toFixed(2).replace('.',',')+'\u00a0%';}
     // Tømmer brukeren feltene skal svaret bli «–», ikke bli stående med
     // forrige beregning — et gammelt tall ser ferskt ut og lyver.
     function blank(){
-      ['fbl-r-eff','fbl-r-mnd','fbl-r-total','fbl-r-kost','fbl-r-nom','hStatEff','hStatMnd']
+      ['fbl-r-eff','fbl-r-nom','ksMnd','ksTotal','ksKost','ksEff','hStatEff','hStatMnd']
         .forEach(function(id){var e=document.getElementById(id); if(e) e.textContent='–';});
       var s=document.getElementById('fbl-r-sub');
       if(s) s.textContent='Skriv inn lånebeløp, rente og løpetid';
@@ -618,11 +574,15 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       for(var i=0;i<60;i++){mid=(lo+hi)/2; var p=pv(mid); if(p>net){lo=mid;}else{hi=mid;} }
       var eff = (Math.pow(1+mid,12)-1)*100;
       document.getElementById('fbl-r-eff').textContent=fmtPct(eff);
-      document.getElementById('fbl-r-sub').textContent='(nominell '+fmtPct(rNom)+')';
-      document.getElementById('fbl-r-mnd').textContent=fmt(pmt);
-      document.getElementById('fbl-r-total').textContent=fmt(total);
-      document.getElementById('fbl-r-kost').textContent=fmt(kost);
+      // Nominell rente står i raden under, og betalingene i stripa øverst —
+      // underlinja er bare i bruk i tom tilstand.
+      document.getElementById('fbl-r-sub').textContent='';
       document.getElementById('fbl-r-nom').textContent=fmtPct(rNom);
+      // Stripa øverst i kortet
+      var sM=document.getElementById('ksMnd'); if(sM) sM.textContent=fmt(pmt);
+      var sT=document.getElementById('ksTotal'); if(sT) sT.textContent=fmt(total);
+      var sK=document.getElementById('ksKost'); if(sK) sK.textContent=fmt(kost);
+      var sE=document.getElementById('ksEff'); if(sE) sE.textContent=fmtPct(eff);
       // Hero stats
       var hEff=document.getElementById('hStatEff'); if(hEff) hEff.textContent=fmtPct(eff);
       var hMnd=document.getElementById('hStatMnd'); if(hMnd) hMnd.textContent=fmt(pmt);
@@ -651,29 +611,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     // ── Init ──
     restore();
     window.calcFbl();
-  })();
-</script>
-
-<script>
-  // ── RE-SKIN: summary-stripe speiler resultatpanelet (rører IKKE calcFbl-mattens) ──
-  (function(){
-    var MAP = [
-      ['fbl-r-mnd','ksMnd'],
-      ['fbl-r-total','ksTotal'],
-      ['fbl-r-kost','ksKost'],
-      ['fbl-r-eff','ksEff']
-    ];
-    function syncStrip(){
-      MAP.forEach(function(p){
-        var src=document.getElementById(p[0]), dst=document.getElementById(p[1]);
-        if(src && dst) dst.textContent = src.textContent;
-      });
-    }
-    ['fbl-beloep','fbl-rente','fbl-etablering','fbl-termin','fbl-mnd'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el) el.addEventListener('input', syncStrip);
-    });
-    syncStrip();
   })();
 </script>
 
@@ -724,25 +661,13 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       });
       renderHowto();
     }
-    function pollRender(){
-      var bodies = document.querySelectorAll('[data-howto-prefix]');
-      if(!bodies.length) return;
-      var attempts = 0, max = 38;
-      var t = setInterval(function(){
-        attempts++;
-        var r = (typeof R === 'function') ? R() : {};
-        var ready = false;
-        bodies.forEach(function(b){
-          var p = b.getAttribute('data-howto-prefix');
-          if(r[p+'Rows'] || r[p+'Lead'] || r[p+'P1']) ready = true;
-        });
-        if(ready){ renderHowto(); clearInterval(t); }
-        else if(attempts >= max){ clearInterval(t); }
-      }, 80);
-    }
+    // Språkfila (en.js o.l.) kommer etter at siden er klar, og R() gir norsk
+    // så lenge den mangler. core.js setter <html lang> først når fila er lastet,
+    // både ved sidelast og ved språkbytte, så boksen tegnes på nytt da.
+    new MutationObserver(renderHowto).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
     if(document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
-    } else { init(); pollRender(); }
+      document.addEventListener('DOMContentLoaded', init);
+    } else { init(); }
   })();
 </script>
 

@@ -2,8 +2,8 @@
 <html lang="nb" data-theme="carbon">
 <head>
 <meta charset="utf-8">
-<title>NPV / IRR — Kalkulator · Hverdagsverktøy</title>
-<meta name="description" content="Lønnsomhetsanalyse med netto nåverdi (NPV), internrente (IRR) og tilbakebetalingstid. Alt skjer lokalt i nettleseren.">
+<title>Nåverdi (NPV/IRR) — Kalkulator · Hverdagsverktøy</title>
+<meta name="description" content="Se om en investering lønner seg: netto nåverdi (NPV), internrente (IRR), tilbakebetalingstid og lønnsomhet per krone.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/kalkulator/npv/">
@@ -14,7 +14,7 @@
   "@context": "https://schema.org",
   "@type": "WebPage",
   "@id": "https://hverdagsverktoy.com/kalkulator/npv/#webpage",
-  "name": "NPV / IRR — Kalkulator · Hverdagsverktøy",
+  "name": "Nåverdi (NPV/IRR) — Kalkulator · Hverdagsverktøy",
   "url": "https://hverdagsverktoy.com/kalkulator/npv/",
   "inLanguage": "no",
   "isPartOf": { "@id": "https://hverdagsverktoy.com/#website" }
@@ -27,7 +27,7 @@
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.com/" },
     { "@type": "ListItem", "position": 2, "name": "Kalkulator", "item": "https://hverdagsverktoy.com/kalkulator/" },
-    { "@type": "ListItem", "position": 3, "name": "NPV / IRR", "item": "https://hverdagsverktoy.com/kalkulator/npv/" }
+    { "@type": "ListItem", "position": 3, "name": "Nåverdi (NPV/IRR)", "item": "https://hverdagsverktoy.com/kalkulator/npv/" }
   ]
 }
 </script>
@@ -50,12 +50,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* NPV / IRR — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/lonnut/ + /skatt/inntekt/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -200,48 +200,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
 .lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
 
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
 /* ── Praktiske punkter (venstre-aksent) ── */
 .lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .lc-note{
@@ -290,7 +248,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 }
 
 @media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
   .lc-notes{grid-template-columns:minmax(0,1fr)}
   .lc-links{grid-template-columns:minmax(0,1fr)}
 }
@@ -377,10 +334,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="sep"></span>
         <a href="/kalkulator/" data-i18n="crumbKalk">Kalkulator</a>
         <span class="sep"></span>
-        <span class="here" data-i18n="npvHeroTitle">NPV / IRR</span>
+        <span class="here" data-i18n="npvHeroTitle">Nåverdi (NPV/IRR)</span>
       </div>
-      <h1 class="page-title"><em data-i18n="npvHeroTitle">NPV / IRR</em></h1>
-      <p class="page-lead" data-i18n="npvHeroLead">Lønnsomhetsanalyse: er investeringen verdt det? Skriv inn investering, avkastningskrav og forventede inntekter de neste 5 årene — så regner kalkulatoren ut netto nåverdi (NPV), internrente (IRR), tilbakebetalingstid og lønnsomhet per krone. Alt skjer lokalt i nettleseren.</p>
+      <h1 class="page-title" data-i18n-html="npvTitleHtml"><em>Nåverdi</em> — lønner investeringen seg?</h1>
+      <p class="page-lead" data-i18n="npvHeroLead">Se om en investering lønner seg: du får nåverdi (NPV), internrente (IRR), tilbakebetalingstid og lønnsomhet per krone. Skriv inn hva den koster, avkastningskravet ditt og kontantstrømmen hvert år i fem år.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
@@ -428,32 +385,32 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="n-c1"><span data-i18n="npvLCf1">Inntekt år 1</span></label>
+                    <label class="ik-lbl" for="n-c1"><span data-i18n="npvLCf1">Kontantstrøm år 1</span></label>
                     <input id="n-c1" class="ik-input" type="text" inputmode="numeric" value="300 000" autocomplete="off">
                   </div>
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="n-c2"><span data-i18n="npvLCf2">Inntekt år 2</span></label>
+                    <label class="ik-lbl" for="n-c2"><span data-i18n="npvLCf2">Kontantstrøm år 2</span></label>
                     <input id="n-c2" class="ik-input" type="text" inputmode="numeric" value="350 000" autocomplete="off">
                   </div>
                 </div>
+                <p class="ik-hint" data-i18n="npvCfHint" style="margin:0">Kontantstrøm er penger inn minus penger ut det året.</p>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="n-c3"><span data-i18n="npvLCf3">Inntekt år 3</span></label>
+                    <label class="ik-lbl" for="n-c3"><span data-i18n="npvLCf3">Kontantstrøm år 3</span></label>
                     <input id="n-c3" class="ik-input" type="text" inputmode="numeric" value="400 000" autocomplete="off">
                   </div>
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="n-c4"><span data-i18n="npvLCf4">Inntekt år 4</span></label>
+                    <label class="ik-lbl" for="n-c4"><span data-i18n="npvLCf4">Kontantstrøm år 4</span></label>
                     <input id="n-c4" class="ik-input" type="text" inputmode="numeric" value="400 000" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row full">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="n-c5"><span data-i18n="npvLCf5">Inntekt år 5</span></label>
+                    <label class="ik-lbl" for="n-c5"><span data-i18n="npvLCf5">Kontantstrøm år 5</span></label>
                     <input id="n-c5" class="ik-input" type="text" inputmode="numeric" value="500 000" autocomplete="off">
                   </div>
                 </div>
               </div>
-              <p class="ik-note" data-i18n="npvInfoBox">NPV diskonterer fremtidige kontantstrømmer til dagens verdi med avkastningskravet. Positiv NPV = investeringen gir mer enn kravet. IRR er renten som gjør NPV = 0 — sammenlign med kravet ditt for å se om prosjektet er verdiskapende.</p>
             </section>
           </div>
 
@@ -465,7 +422,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
             <div class="ks-r-stats">
               <div class="ks-r-stat"><span class="l" data-i18n="npvRIrr">IRR</span><span class="v" id="n-irr">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="npvRPay">Tilbakebetalingstid</span><span class="v" id="n-pay">–</span></div>
-              <div class="ks-r-stat div"><span class="l" data-i18n="npvRSum">Totale inntekter</span><span class="v" id="n-sum">–</span></div>
+              <div class="ks-r-stat div"><span class="l" data-i18n="npvRSum">Sum kontantstrøm</span><span class="v" id="n-sum">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="npvRPi">Lønnsomhet per krone</span><span class="v" id="n-pi">–</span></div>
             </div>
           </aside>
@@ -479,8 +436,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <div class="ref-row"><span class="l">NPV &gt; 0</span><span class="v accent" data-i18n="npvSideLonnsomt">Lønnsomt</span></div>
         <div class="ref-row"><span class="l">NPV = 0</span><span class="v" data-i18n="npvSideAkkurat">Akkurat krav</span></div>
         <div class="ref-row"><span class="l">NPV &lt; 0</span><span class="v" data-i18n="npvSideIkkeLonn">Ikke lønnsomt</span></div>
-        <div class="ref-row"><span class="l">IRR &gt; r<sub>krav</sub></span><span class="v accent" data-i18n="npvSideAnbefal">Anbefal</span></div>
-        <div class="ref-row"><span class="l" data-i18n="npvSidePayback">Payback</span><span class="v" data-i18n="npvSidePaybackV">Tid til BE</span></div>
+        <div class="ref-row"><span class="l">IRR over kravet</span><span class="v accent" data-i18n="npvSideAnbefal">Lønnsomt</span></div>
+        <div class="ref-row"><span class="l" data-i18n="npvSidePayback">Tilbakebetalingstid</span><span class="v" data-i18n="npvSidePaybackV">År til pengene er tilbake</span></div>
       </div>
       <div class="side-card related">
         <h4 data-i18n="npvSideRelated">Relaterte verktøy</h4>
@@ -506,54 +463,23 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-kalkulator-npv">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-npv">Hva kalkulatoren gjør med tallene dine</h2><p class="lc-intro">Du skriver inn hva investeringen koster i dag, hvilket avkastningskrav du har, og hva du venter å tjene de neste fem årene. Så gjør kalkulatoren fem ting med de tallene – nøyaktig de samme linjene du ser i resultatet over, bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-npv">Hva kalkulatoren gjør med tallene dine</h2><p class="lc-intro">Eksemplene bygger på standardtallene: 1&nbsp;million kr i dag, 10&nbsp;% avkastningskrav og 300&nbsp;000–500&nbsp;000 kr i året.</p></div>
       <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Diskontering</b><span class="tag">Mekanisme</span></span><span class="fig">5<span class="u">år</span></span><p class="dsc">Hver fremtidig inntekt deles på (1 + avkastningskrav) opphøyd i antall år. Penger du får om fem år teller mindre i dag enn penger du får neste år. Kalkulatoren regner fem år fram.</p></div>
+        <div class="lc-led"><span class="nm"><b>Diskontering</b><span class="tag">Mekanisme</span></span><span class="fig">5<span class="u">år</span></span><p class="dsc">Hvert års kontantstrøm deles på (1 + avkastningskravet) opphøyd i antall år. Med 10&nbsp;% krav er 300&nbsp;000 kr om ett år verdt 272&nbsp;727 kr i dag. Kalkulatoren regner fem år fram.</p></div>
         <div class="lc-led"><span class="nm"><b>Avkastningskrav</b><span class="tag">Sats</span></span><span class="fig">10<span class="u">%</span></span><p class="dsc">Renten investeringen måles mot. Standardverdien er 10 %, men du kan endre den. Jo høyere krav, jo strengere blir vurderingen og jo lavere blir nåverdien.</p></div>
-        <div class="lc-led"><span class="nm"><b>Netto nåverdi (NPV)</b><span class="tag">Resultat</span></span><span class="fig">0<span class="u">kr-grense</span></span><p class="dsc">Alle de diskonterte inntektene lagt sammen, minus investeringen. Er summen over 0 kr, gir prosjektet mer enn avkastningskravet ditt. Er den under 0 kr, gir det mindre.</p></div>
-        <div class="lc-led"><span class="nm"><b>Internrente (IRR)</b><span class="tag">Sats</span></span><span class="fig">300<span class="u">iterasjoner</span></span><p class="dsc">Den renten som gjør at nåverdien blir akkurat 0. Kalkulatoren finner den ved å prøve seg fram opptil 300 ganger. Er IRR høyere enn avkastningskravet, er prosjektet verdiskapende.</p></div>
-        <div class="lc-led"><span class="nm"><b>Tilbakebetalingstid</b><span class="tag">Mekanisme</span></span><span class="fig">0<span class="u">kr passert</span></span><p class="dsc">Hvor lang tid det tar før de oppsummerte inntektene har dekket investeringen. Her telles kronene rett opp uten diskontering, så tallet er litt for optimistisk.</p></div>
-        <div class="lc-led"><span class="nm"><b>Lønnsomhet per krone</b><span class="tag">Faktor</span></span><span class="fig">1,00<span class="u">x-grense</span></span><p class="dsc">Nåverdien av inntektene delt på investeringen. Over 1,00x betyr at hver investerte krone gir mer enn én krone tilbake i dagens verdi. Akkurat 1,00x betyr at den går i null.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-kalkulator-npv">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-kalkulator-npv">Standardverdier og grenser i kalkulatoren</h2><p class="lc-intro">Disse tallene ligger inne som utgangspunkt når du åpner siden, eller styrer hvordan beregningen oppfører seg. Alt kan endres bortsett fra de tekniske grensene.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
-        <div class="lc-kv"><span class="k">Investering (standard)</span><span class="v">1 000 000<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Avkastningskrav (standard)</span><span class="v">10<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Avkastningskrav – laveste</span><span class="v">0<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Avkastningskrav – høyeste</span><span class="v">100<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Antall år som regnes</span><span class="v">5<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Grense for lønnsomt prosjekt</span><span class="v">0<span class="u">kr (NPV)</span></span></div>
-        <div class="lc-kv"><span class="k">IRR – laveste mulige svar</span><span class="v">-99<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">IRR – høyeste mulige svar</span><span class="v">1000<span class="u">%</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Standard inntekter per år (kan endres)</caption>
-          <thead><tr><th>År</th><th class="r">Forventet inntekt</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">År 1</span></td><td class="r">300 000 kr</td></tr>
-            <tr><td><span class="step">År 2</span></td><td class="r">350 000 kr</td></tr>
-            <tr><td><span class="step">År 3</span></td><td class="r">400 000 kr</td></tr>
-            <tr><td><span class="step">År 4</span></td><td class="r">400 000 kr</td></tr>
-            <tr><td><span class="step">År 5</span></td><td class="r">500 000 kr</td></tr>
-          </tbody>
-        </table>
-        </div>
-      </div>
+        <div class="lc-led"><span class="nm"><b>Netto nåverdi (NPV)</b><span class="tag">Resultat</span></span><span class="fig">446 175<span class="u">kr</span></span><p class="dsc">Kontantstrømmene i dagens verdi lagt sammen, minus investeringen. Er summen over 0&nbsp;kr, gir investeringen mer enn avkastningskravet ditt. Er den under 0&nbsp;kr, gir den mindre.</p></div>
+        <div class="lc-led"><span class="nm"><b>Internrente (IRR)</b><span class="tag">Sats</span></span><span class="fig">24,8<span class="u">%</span></span><p class="dsc">Renten som gjør nåverdien akkurat 0. Er den høyere enn kravet ditt, lønner investeringen seg.</p></div>
+        <div class="lc-led"><span class="nm"><b>Tilbakebetalingstid</b><span class="tag">Mekanisme</span></span><span class="fig">2,9<span class="u">år</span></span><p class="dsc">Hvor lang tid det tar før kontantstrømmene til sammen har dekket investeringen. Her telles kronene rett opp uten diskontering, så tallet er litt for optimistisk.</p></div>
+        <div class="lc-led"><span class="nm"><b>Lønnsomhet per krone</b><span class="tag">Faktor</span></span><span class="fig">1,45<span class="u">x</span></span><p class="dsc">Nåverdien av kontantstrømmene delt på investeringen. Over 1,00x betyr at hver investerte krone gir mer enn én krone tilbake i dagens verdi. Akkurat 1,00x betyr at den går i null.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-kalkulator-npv">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-npv">Det som er lurt å ha i bakhodet</h2><p class="lc-intro">Kalkulatoren gir deg fire tall raskt, men de betyr ulike ting. Her er noen praktiske poenger før du tolker svaret.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-npv">Det som er lurt å ha i bakhodet</h2></div>
       <div class="lc-notes">
-        <div class="lc-note"><h3>NPV og IRR svarer på samme spørsmål</h3><p>Begge måler om prosjektet slår avkastningskravet ditt. Er NPV over 0 kr, er IRR alltid høyere enn kravet. De peker i samme retning – IRR sier det bare som en prosent i stedet for kroner.</p></div>
+        <div class="lc-note"><h3>NPV og IRR svarer på samme spørsmål</h3><p>Begge måler om investeringen slår avkastningskravet ditt. Kommer investeringen først og er årene etter positive, peker de samme vei: NPV over 0&nbsp;kr betyr IRR over kravet. NPV svarer i kroner, IRR i prosent.</p></div>
         <div class="lc-note"><h3>Avkastningskravet styrer alt</h3><p>Det er tallet du må tenke nøyest gjennom. Setter du det for lavt, ser nesten alt lønnsomt ut. Et vanlig utgangspunkt er hva du ellers kunne fått ved å plassere pengene et annet sted med samme risiko.</p></div>
         <div class="lc-note"><h3>Tilbakebetalingstid forteller ikke alt</h3><p>To prosjekter kan ha lik tilbakebetalingstid, men svært ulik nåverdi. Et prosjekt kan tjene inn investeringen raskt og så stoppe, mens et annet fortsetter å gi inntekt i mange år. Bruk den som tilleggsinfo, ikke som hovedsvar.</p></div>
-        <div class="lc-note"><h3>Inntektene dine er anslag</h3><p>Resultatet er aldri sikrere enn tallene du skriver inn. Er du usikker på inntektene om fire–fem år, prøv både et forsiktig og et optimistisk sett og se hvor mye svaret endrer seg.</p></div>
+        <div class="lc-note"><h3>Kontantstrømmene er anslag</h3><p>Resultatet er aldri sikrere enn tallene du skriver inn. Er du usikker på tallene om fire–fem år, prøv både et forsiktig og et optimistisk sett og se hvor mye svaret endrer seg.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcD-kalkulator-npv">
@@ -571,7 +497,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkulator-npv">Relaterte verktøy</h2></div>
       <div class="lc-links">
         <a class="lc-link" href="/personlig/spare/"><span class="ar">Sparing →</span><h3>Se penger vokse over tid</h3><p>Samme grunnidé andre veien: hvordan et beløp vokser år for år med en gitt rente i stedet for å diskonteres tilbake.</p></a>
-        <a class="lc-link" href="/kalkulator/rente/"><span class="ar">Renters rente →</span><h3>Forstå hvordan rente bygger seg opp</h3><p>Diskontering er renters rente baklengs. Her ser du hvordan en rente vokser et beløp fremover, så blir nåverdi lettere å forstå.</p></a>
+        <a class="lc-link" href="/kalkulator/finance/"><span class="ar">Renters rente →</span><h3>Forstå hvordan rente bygger seg opp</h3><p>Diskontering er renters rente baklengs. Her ser du hvordan en rente vokser et beløp fremover, så blir nåverdi lettere å forstå.</p></a>
         <a class="lc-link" href="/kalkulator/dekningsbidrag/"><span class="ar">Dekningsbidrag →</span><h3>Regn ut lønnsomheten i driften</h3><p>Før du diskonterer fremtidige inntekter er det nyttig å vite hva hvert salg faktisk bidrar med etter de variable kostnadene.</p></a>
       </div>
     </section>
@@ -593,9 +519,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -695,7 +621,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     if(!d.hasData){
       ['nStripNpv','nStripIrr','nStripPay','nStripPi','hStatNpv','hStatPay','n-npv','n-irr','n-pay','n-sum','n-pi'].forEach(function(id){ setOutputText(id, '–'); });
       var verdEl0 = document.getElementById('npvVerdict');
-      if(verdEl0){ verdEl0.textContent = r.npvPlaceholder || 'Skriv inn tall for å se beregningen.'; }
+      if(verdEl0){ verdEl0.textContent = r.npvPlaceholder || 'Skriv inn hva investeringen koster for å se beregningen.'; }
       persist();
       return;
     }
@@ -722,8 +648,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     var verdEl = document.getElementById('npvVerdict');
     if(verdEl){
       verdEl.textContent = d.npv >= 0
-        ? (r.npvPos || '✓ Lønnsom investering – aksepter')
-        : (r.npvNeg || '✗ Ulønnsom investering – forkast');
+        ? (r.npvPos || 'Lønnsom: gir minst avkastningskravet ditt.')
+        : (r.npvNeg || 'Ulønnsom: gir mindre enn avkastningskravet ditt.');
     }
 
     persist();
@@ -767,11 +693,11 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   // ── Init ──
   restore();
   recalc();
-  // Re-render once translations (R) are available so verdict text matches the chosen language.
+  // Re-render once the chosen language (not just no.js) is loaded so verdict text matches it.
   (function(){
     var n=0; var t=setInterval(function(){
       n++;
-      if((typeof R==='function' && R().npvPos) || n>40){ clearInterval(t); recalc(); }
+      if((typeof R==='function' && typeof REGIONS!=='undefined' && REGIONS[region] && R().npvPos) || n>150){ clearInterval(t); recalc(); }
     }, 80);
   })();
 })();
@@ -827,7 +753,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   function pollRender(){
     var bodies = document.querySelectorAll('[data-howto-prefix]');
     if(!bodies.length) return;
-    var attempts = 0, max = 38;
+    var attempts = 0, max = 150;
     var t = setInterval(function(){
       attempts++;
       var r = (typeof R === 'function') ? R() : {};
@@ -836,7 +762,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         var p = b.getAttribute('data-howto-prefix');
         if(r[p+'Rows'] || r[p+'Lead'] || r[p+'P1']) ready = true;
       });
-      if(ready){ renderHowto(); clearInterval(t); }
+      // Vent på det valgte språket: R() gir no.js til en.js/pl.js … er hentet.
+      if(ready && typeof REGIONS !== 'undefined' && REGIONS[region]){ renderHowto(); clearInterval(t); }
       else if(attempts >= max){ clearInterval(t); }
     }, 80);
   }

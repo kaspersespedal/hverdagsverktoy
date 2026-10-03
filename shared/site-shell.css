@@ -120,8 +120,8 @@ body.embed .calc-wrap .container{grid-template-columns:1fr;padding:0;max-width:n
    Fokusringen må ha --bg av samme grunn: med --ink som bakgrunn ville en ring i
    --ink vært bit-identisk med flata, og outline-offset er negativ så ringen
    tegnes inne i elementet. */
-.skip{position:absolute;left:-9999px;top:0;z-index:1000;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:0 0 8px 0;text-decoration:none;font-weight:600;font-size:14px}
-.skip:focus{left:0;outline:2px solid var(--bg);outline-offset:-4px}
+.skip{position:absolute;inset-inline-start:0;top:0;transform:translateY(-120%);z-index:1000;background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:0 0 8px 0;text-decoration:none;font-weight:600;font-size:14px}
+.skip:focus{transform:none;outline:2px solid var(--bg);outline-offset:-4px}
 
 /* Barene dekker helt. 96 % holdt ikke: de 4 prosentene som slapp gjennom
    var nok til at en stor overskrift leste som spøkelsestekst når den gled
@@ -239,7 +239,11 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 .ik-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .ik-row.full > *{grid-column:1 / -1}
 .ik-row.three{grid-template-columns:repeat(3,1fr)}
+@media(max-width:580px){.ik-row{grid-template-columns:1fr}}
 .ik-fg{display:flex;flex-direction:column;gap:6px;min-width:0}
+/* Skjulte felt: display:grid/flex over overstyrer ellers hidden-attributtet */
+.hidden{display:none !important}
+.ik-row[hidden],.ik-row.is-hidden,.ik-fg[hidden],.ik-fg.is-hidden,.ks-r-stat[hidden],.ks-section[hidden]{display:none}
 .ik-lbl{font:500 12px/1.3 var(--font-sans);color:var(--ink2);
   display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .ik-lbl .cap{font:400 11px/1 var(--font-sans);color:var(--ink4);letter-spacing:0}
@@ -316,10 +320,12 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   box-shadow:inset 0 0 0 1px var(--line-warm)}
 .ik-seg[aria-pressed="true"] .glyph{opacity:1;color:var(--accent-2)}
 .ik-hint{font-size:11.5px;color:var(--ink3);line-height:1.45}
+.ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .ik-section-head{display:flex;align-items:baseline;gap:14px;
   padding-bottom:10px;margin-bottom:14px;border-bottom:1px solid var(--line)}
 .ik-section-head h3{font:500 13px/1 var(--font-sans);letter-spacing:0;color:var(--ink2);margin:0}
 .ik-section-head .meta{margin-left:auto;font-style:normal;font-size:12px;color:var(--ink3)}
+@media(max-width:560px){.ik-section-head{flex-wrap:wrap;row-gap:4px}}
 .ik-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;
   width:100%;background:transparent;border:0;cursor:pointer;
   padding:6px 0;color:var(--ink2);font:500 12.5px/1 var(--font-sans);text-align:left}
@@ -513,6 +519,22 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);font-size:12.5px;margin-top:32px}
 .foot{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
 .foot em{font-style:normal;color:var(--ink4)}
+footer a{color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
+@media(hover:hover){footer a:hover{color:var(--ink)}}
+footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+
+/* ── Lær-seksjonene: formel-ledger og satstabeller ──
+   41 sider har en identisk inline-kopi med tallkolonne 130px og tekstkolonne 1fr,
+   og tabellceller uten luft mellom kolonnene. To klasser slår inline-kopien.
+   Tre-kolonnene krever at ledgeren selv er minst 900px bred: på lonn står den i
+   en 764px smal kolonne, og der ville teksten blitt klemt til 278px. */
+.lc-ledger{container-type:inline-size}
+@container (min-width:900px){.lc-ledger .lc-led{grid-template-columns:190px 240px minmax(0,560px)}}
+.lc-ledger .lc-led .fig{text-wrap:balance}
+@media(max-width:900px){.lc-ledger .lc-led{grid-template-columns:170px minmax(0,1fr)}.lc-ledger .lc-led .dsc{grid-column:1 / -1}}
+@media(max-width:560px){.lc-ledger .lc-led{grid-template-columns:1fr}}
+.lc-tblwrap .lc-trinn :is(th,td) + :is(th,td){padding-left:14px}
+.lc-rates > :only-child{grid-column:1 / -1}
 
 @media (max-width:1024px){
   .calc-wrap .container{grid-template-columns:1fr}
@@ -526,6 +548,7 @@ footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);fo
      så en lang verdi som "Største post" presset stripen 11px ut av .ks og ble
      klippet bort av .ks{overflow:hidden}. */
   .ks-strip{grid-template-columns:repeat(2, minmax(0, 1fr))}
+  .ks-strip-cell:nth-child(2n+1)::before{display:none}
   /* Verdien er inline-flex uten min-width:0 og målte derfor max-content — en
      lang tekstverdi (f.eks. navnet på største abonnement) stakk ut av cellen. */
   .ks-strip-cell .v{max-width:100%;flex-wrap:wrap;overflow-wrap:anywhere}

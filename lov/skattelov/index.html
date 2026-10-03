@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Skatteloven — Lov · Hverdagsverktøy</title>
-<meta name="description" content="Skatteloven (LOV-1999-03-26-14) — hovedloven for norsk inntektsskatt og formuesskatt. Søkbart oppslagsverk over kapitler og paragrafer i skatteloven, organisert i fire hovedtema: grunnleggende prinsipper, inntekt og formue, gevinst og selskaper, og avanserte regler.">
+<meta name="description" content="Utdrag av skatteloven (LOV-1999-03-26-14) med korte forklaringer: skatteplikt, inntekt, fradrag, gevinst, aksjonærmodellen, personinntekt, tidfesting og personfradrag. Søkbart, med lenke til hele loven på Lovdata.">
 <link rel="canonical" href="https://hverdagsverktoy.com/lov/skattelov/">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
@@ -32,7 +32,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v228" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v229" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -714,7 +714,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     font-size:340px;line-height:1;color:var(--accent);opacity:.04;
     pointer-events:none;letter-spacing:-.04em;z-index:0;
   }
-  .lov-shell .lov-doc{position:relative;z-index:1;padding:64px 96px 0}
+  .lov-shell .lov-doc{position:relative;z-index:1;padding:56px 48px 0}
   .lov-doc{position:relative}
   /* Centered editorial masthead — book frontispiece */
   .lov-doc .lov-mast{text-align:center;padding:0 0 44px;margin:0 auto 56px;max-width:640px;position:relative}
@@ -776,7 +776,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
   .lov-empty.show{display:block}
 
-  .lov-grid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:48px;align-items:start}
+  .lov-grid{display:grid;grid-template-columns:240px minmax(0,1fr);gap:40px;align-items:start}
   .lov-toc{
     display:block;min-width:0;position:sticky;top:78px;padding:20px 18px 14px;
     background:linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, var(--accent) 4%) 0%, var(--surface) 100%);
@@ -844,7 +844,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .par-grid{display:flex;flex-direction:column;gap:0;background:transparent;border:none;border-radius:0;overflow:visible}
   /* Paragraphs — classic law-book: § number rail + law text + italic gloss */
   .par{
-    background:transparent;display:grid;grid-template-columns:118px 1fr;column-gap:32px;row-gap:0;
+    background:transparent;display:grid;grid-template-columns:96px minmax(0,1fr);column-gap:24px;row-gap:0;
     align-items:start;padding:30px 0 32px;border-bottom:1px solid var(--line);position:relative;
   }
   .par:first-child{padding-top:10px}
@@ -856,7 +856,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   }
   .par .par-id .ref{font:500 9px/1 var(--font-sans);letter-spacing:.28em;text-transform:uppercase;color:var(--ink4);padding:0;border:0}
   .par .par-body{min-width:0;max-width:62ch;margin:0}
-  .par .par-marg{font:500 10.5px/1 var(--font-sans);letter-spacing:.24em;text-transform:uppercase;color:var(--ink3);margin:0 0 14px}
+  .par .par-marg{font:500 10.5px/1.45 var(--font-sans);letter-spacing:.24em;text-transform:uppercase;color:var(--ink3);margin:0 0 14px}
   .par .par-quote{
     font-family:var(--font-serif);font-size:17px;line-height:1.72;color:var(--ink);padding:0;margin:0;
     font-feature-settings:"liga" 1, "kern" 1;text-wrap:pretty;
@@ -889,7 +889,16 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     .lov-shell::before{font-size:200px;top:80px}
     .lov-grid{grid-template-columns:minmax(0,1fr);gap:28px}
     .lov-toc{position:static;max-height:none;overflow:visible}
-    .lov-toc ol{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0 14px}
+    /* Innholdsfortegnelsen som én rad med kapittel-chips som blar sidelengs.
+       Som liste var den 472px høy og skjøv første paragraf nesten to skjermer ned. */
+    .lov-toc{padding:10px}
+    .lov-toc .toc-head{display:none}
+    .lov-toc ol{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+    .lov-toc ol::-webkit-scrollbar{display:none}
+    .lov-toc li{border:0;flex:0 0 auto}
+    .lov-toc a{display:flex;gap:6px;padding:8px 12px;border:1px solid var(--line);border-radius:999px;white-space:nowrap}
+    .lov-toc a::before{display:none}
+    .lov-toc a .cn{font-size:15px}
     .par{grid-template-columns:1fr;column-gap:0;row-gap:10px;padding:24px 0 26px}
     .par .par-id{flex-direction:row;align-items:baseline;gap:14px;padding-top:0}
     .par .par-id .sym{font-size:24px}
@@ -927,9 +936,15 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   @media (max-width: 560px){
     .container{padding:0 22px}
     .ref-cta{min-width:0;width:100%}
-    /* To kolonner ga 110px spor — kapittelnavn som "Skattepliktssubjekt"
-       stakk 72px ut av sin egen kolonne og over i nabokolonnen. */
-    .lov-toc ol{grid-template-columns:minmax(0,1fr)}
+    /* Kort inni kort ga lovteksten bare 288px på en 390px skjerm. På telefon
+       står lovleseren rett på sida uten egen ramme. */
+    .lov-shell{border:0;border-radius:0;box-shadow:none;background:none;padding-bottom:0}
+    .lov-shell::before{display:none}
+    .lov-shell .lov-doc{padding:20px 0 0}
+    .lov-doc .lov-eyebrow{letter-spacing:.14em;flex-wrap:wrap}
+    .lov-doc .lov-eyebrow span{white-space:nowrap}
+    /* Antallet tok plassen fra søkefeltet («Søk i love»). Det vises igjen når du søker. */
+    .lov-search:not(.has-q) .lov-count{display:none}
   }
   @media (prefers-reduced-motion: reduce){
     *{transition:none !important;animation:none !important}
@@ -1050,9 +1065,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         <header class="lov-mast">
           <div class="lov-eyebrow"><span>Norges lover</span><span class="sep"></span><span class="lov-id">LOV-1999-03-26-14</span></div>
           <h1 class="lov-title">Skatteloven</h1>
-          <p class="lov-sub">Lov om skatt av formue og inntekt — slik den lyder for inntektsåret 2026, med marginalia og forklaringer.</p>
+          <p class="lov-sub">Utdrag av loven om skatt av formue og inntekt, for inntektsåret 2026. Lovteksten er forkortet, og hver paragraf har en kort forklaring.</p>
           <div class="lov-mast-meta">
-            <span><b>19</b> kapitler</span>
+            <span><b>8</b> av 19 kapitler</span>
             <span class="pearl"></span>
             <span><b>15</b> paragrafer i utdrag</span>
             <span class="pearl"></span>
@@ -1064,7 +1079,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <nav class="lov-toc" aria-label="Kapitler">
             <div class="toc-head">
               <p class="toc-label">Innhold</p>
-              <span class="toc-count"><b>19</b> kapitler &nbsp;·&nbsp; <b>15</b> paragrafer</span>
+              <span class="toc-count"><b>8</b> av 19 kapitler<span aria-hidden="true">&nbsp;&nbsp;·&nbsp; </span><b>15</b>&nbsp;paragrafer</span>
             </div>
             <ol>
         <li><a href="#kap-skatteloven-2"><span class="cn">2</span><span class="cl">Skattepliktssubjekt</span><svg class="ca" width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="11" x2="11" y2="3"/><polyline points="5 3 11 3 11 9"/></svg></a></li>
@@ -1097,7 +1112,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
             <div class="par-body">
               <h3 class="par-marg">Personlig skatteplikt</h3>
               <blockquote class="par-quote">Plikt til å svare skatt har enhver person som er bosatt i riket.</blockquote>
-              <p class="par-note">Bostedet avgjør om man er skattepliktig her — ikke statsborgerskap. 183-dagersregelen er hovedregelen.</p>
+              <p class="par-note">Det er bosted, ikke statsborgerskap, som avgjør. Du regnes som bosatt hvis du er i Norge mer enn 183 dager på 12 måneder, eller mer enn 270 dager på 36 måneder.</p>
             </div>
           </article>
           <article class="par">
@@ -1122,7 +1137,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
             <div class="par-body">
               <h3 class="par-marg">Hovedregel — inntekt</h3>
               <blockquote class="par-quote">Som skattepliktig inntekt anses enhver fordel vunnet ved arbeid, kapital eller virksomhet.</blockquote>
-              <p class="par-note">Trekantformelen: arbeid · kapital · virksomhet. All øvrig inntekt må kunne plasseres her.</p>
+              <p class="par-note">Dette kalles trekantformelen: inntekt fra arbeid, kapital eller virksomhet er skattepliktig. Gevinst ved salg av eiendeler er som hovedregel også skattepliktig (annet ledd).</p>
             </div>
           </article>
           <article class="par">
@@ -1528,9 +1543,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   })();
 </script>
 
-<script src="/shared/top-chrome.js?v=v243" defer></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script src="/shared/top-chrome.js?v=v245" defer></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <script src="/shared/search.js?v=v131" defer></script>

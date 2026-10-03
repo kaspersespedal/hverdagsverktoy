@@ -50,12 +50,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 body{min-height:100vh;display:flex;flex-direction:column}
 body > main{flex:1 0 auto}
@@ -101,6 +101,12 @@ body > footer{flex-shrink:0}
 .fp-cap.alert .fp-cap-glyph{border-color:var(--line-warm);background:color-mix(in srgb,var(--accent) 8%,transparent)}
 .fp-cap-text{font:400 12.5px/1.5 var(--font-sans);color:var(--ink2)}
 .fp-cap-text b{color:var(--ink);font-weight:500}
+/* Mobil: to valgknapper side om side ga 125 px smale kolonner. Stables. */
+@media(max-width:580px){
+  .ks-modes{grid-template-columns:1fr}
+  .ks-mode{border-right:0;border-bottom:1px solid var(--line)}
+  .ks-mode:last-child{border-bottom:0}
+}
 /* Hjelp (?) + fokusmodus + howto — lagt til for konsistens med ovrige sider */
 .page-hero-actions{display:flex;gap:8px;margin-top:18px}
 .calc-help-btn,.focus-card-btn{width:32px;height:32px;border:1px solid var(--line);background:transparent;color:var(--ink2);border-radius:50%;font-size:14px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:color .18s ease,border-color .18s ease}
@@ -202,6 +208,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .lc-trinn tbody tr:last-child td{border-bottom:none}
 .lc-trinn td .step{color:var(--ink);font-weight:500}
 .lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lc-trinn caption{line-height:1.4}
+/* Kolonnenavn inni cellen — vises bare når uttakstabellen stables på mobil.
+   aria-hidden: skjermlesere har allerede kolonneoverskriftene i thead. */
+.fp-l{display:none}
 
 /* ── Praktiske punkter (venstre-aksent) ── */
 .lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
@@ -259,6 +269,13 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   .lc-sec{padding:40px 0}
   .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
   .lc-led .fig{font-size:22px}
+  /* Uttakstabellen stables: ett uttaksvalg per blokk, kolonnenavnet som etikett. */
+  .fp-uttak,.fp-uttak tbody,.fp-uttak tr,.fp-uttak td,.fp-uttak caption{display:block}
+  .fp-uttak thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .fp-uttak tr{padding:12px 0;border-bottom:1px solid var(--line)}
+  .fp-uttak tbody tr:last-child{border-bottom:none}
+  .lc-tblwrap .lc-trinn.fp-uttak td{border:0;padding:2px 0;text-align:left;white-space:normal}
+  .fp-l{display:block;font:600 10px/1.4 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-top:8px}
 }
 </style>
 </head>
@@ -359,7 +376,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="crumbHerePersonligForeldrepenger">Foreldrepenger</span>
       </div>
       <h1 class="page-title"><em>Foreldre</em>penger</h1>
-      <p class="page-lead">Beregn hva NAV utbetaler per måned, og se hvordan 100 %- og 80 %-uttaket fordeler seg over kvoter og fellesperiode — etter folketrygdloven kapittel 14.</p>
+      <p class="page-lead">Se hva NAV utbetaler per måned, og hvordan 100&nbsp;%- og 80&nbsp;%-uttaket fordeler seg på kvoter og fellesperiode.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner">⛶</button>
@@ -368,7 +385,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     <div class="page-stats">
       <div class="page-stat"><span class="l">Grunnbeløp (G)</span><span class="v">136 549<span class="u">kr</span></span></div>
       <div class="page-stat"><span class="l">6G-tak</span><span class="v">819 294<span class="u">kr</span></span></div>
-      <div class="page-stat"><span class="l">Maks lengde</span><span class="v">59<span class="u">uker</span></span></div>
+      <div class="page-stat"><span class="l">Maks lengde</span><span class="v">61<span class="u">uker og 1 dag</span></span></div>
     </div>
   </div>
 </section>
@@ -406,12 +423,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <div class="ik-section-head"><h3>Uttak</h3><span class="meta">100 % eller 80 %</span></div>
               <div class="ks-modes" role="tablist">
                 <button type="button" class="ks-mode" data-uttak="100" aria-pressed="true">
-                  <span class="mtitle">100 % — 49 uker</span>
-                  <span class="mdesc">Full sats hver uke. Kortere permisjon, høyere månedlig.</span>
+                  <span class="mtitle">100 % sats</span>
+                  <span class="mdesc">49 uker. Mest per måned.</span>
                 </button>
                 <button type="button" class="ks-mode" data-uttak="80" aria-pressed="false">
-                  <span class="mtitle">80 % — 61 uker og 1 dag</span>
-                  <span class="mdesc">80 % av sats over drøyt 12 ekstra uker. Lavere per måned, lengre permisjon.</span>
+                  <span class="mtitle">80 % sats</span>
+                  <span class="mdesc">61 uker og 1 dag. Mindre per måned.</span>
                 </button>
               </div>
               <div class="fp-cap" id="capUnder">
@@ -469,13 +486,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
             <div class="ks-r-stats">
               <div class="ks-r-stat"><span class="l">Brutto årslønn</span><span class="v" id="rBrutto">0 kr</span></div>
-              <div class="ks-r-stat"><span class="l">Grunnlag (maks 6G)</span><span class="v" id="rsGrunnlag">0 kr</span></div>
-              <div class="ks-r-stat"><span class="l">Uke-sats</span><span class="v" id="rsUke">0 kr</span></div>
-              <div class="ks-r-stat"><span class="l">Måned-sats</span><span class="v" id="rsMnd">0 kr</span></div>
               <div class="ks-r-stat" id="rowOver" style="display:none"><span class="l">Over 6G (ikke NAV)</span><span class="v dim" id="rsOver">0 kr</span></div>
               <div class="ks-r-stat" id="rowArb" style="display:none"><span class="l">Fra arbeidsgiver / mnd</span><span class="v pos" id="rsArb">0 kr</span></div>
-              <div class="ks-r-stat div"><span class="l">Sum per måned</span><span class="v" id="rsSum">0 kr</span></div>
-              <div class="ks-r-stat"><span class="l">Total NAV</span><span class="v" id="rsTotalNav">0 kr</span></div>
+              <div class="ks-r-stat div" id="rowSum" style="display:none"><span class="l">Sum per måned</span><span class="v" id="rsSum">0 kr</span></div>
             </div>
 
             <div class="ks-r-foot">Tallene gjelder ved sammenhengende uttak. Gradert uttak, fleksibelt uttak og uttak før termin kan endre månedsbeløpet. Foreldrepenger beskattes som vanlig lønn.</div>
@@ -497,10 +510,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <div class="ref-row"><span class="l">6G-tak</span><span class="v">819 294<span class="u">kr</span></span></div>
         <div class="ref-row"><span class="l">100 % uttak</span><span class="v">49<span class="u">uker</span></span></div>
         <div class="ref-row"><span class="l">80 % uttak</span><span class="v">61<span class="u">uker og 1 dag</span></span></div>
-        <div class="ref-row"><span class="l">Før fødsel (mor)</span><span class="v">3<span class="u">uker</span></span></div>
-        <div class="ref-row"><span class="l">Mødrekvote (100 %)</span><span class="v">15<span class="u">uker</span></span></div>
-        <div class="ref-row"><span class="l">Fedrekvote (100 %)</span><span class="v">15<span class="u">uker</span></span></div>
-        <div class="ref-row"><span class="l">Fellesperiode (100 %)</span><span class="v accent">16<span class="u">uker</span></span></div>
       </div>
       <div class="side-card related">
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
@@ -516,7 +525,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <summary><span class="howto-title">Hvordan virker det?</span></summary>
       <div class="howto-body">
         <div class="howto-row"><strong>01</strong><span>NAV beregner grunnlaget av siste 3 fullførte kalendermåneder før uttak — gjennomsnittlig brutto, omregnet til årslønn.</span></div>
-        <div class="howto-row"><strong>6G-tak:</strong><span>har du lønn over 819 294 kr, kompenserer NAV kun opp til taket. Mange arbeidsgivere dekker resten.</span></div>
+        <div class="howto-row"><strong>02</strong><span>6G-tak: har du lønn over 819 294 kr, betaler NAV bare opp til taket. Mange arbeidsgivere dekker resten.</span></div>
         <div class="howto-row"><strong>03</strong><span>Du velger <b>100 % uttak</b> (49 uker, full sats) eller <b>80 % uttak</b> (61 uker og 1 dag, 80 % av sats).</span></div>
         <div class="howto-row"><strong>04</strong><span>Mødre- og fedrekvote er <b>forbeholdt</b> hver av foreldrene — fellesperioden fordeles fritt. I tillegg må mor ta ut 3 uker før fødsel.</span></div>
       </div>
@@ -528,39 +537,33 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-personlig-foreldrepenger">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-foreldrepenger">Veien fra årslønn til månedsbeløp</h2><p class="lc-intro">Kalkulatoren tar bruttolønnen din, kapper den ved 6G-taket, og deler resten på uker og måneder. Det er nøyaktig de samme linjene du ser i beregningen over — bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-foreldrepenger">Veien fra årslønn til månedsbeløp</h2><p class="lc-intro">NAV regner med lønnen din opp til 6G-taket. Ved 100 % uttak deles dette grunnlaget på 12: 620 000 kr i årslønn gir 51 667 kr i måneden.</p></div>
       <div class="lc-ledger">
         <div class="lc-led"><span class="nm"><b>Grunnbeløpet (G)</b><span class="tag">Sats</span></span><span class="fig">136 549<span class="u">kr</span></span><p class="dsc">Folketrygdens måleenhet. Alt i foreldrepenger bygger på G — taket settes til seks ganger dette beløpet.</p></div>
         <div class="lc-led"><span class="nm"><b>6G-taket</b><span class="tag">Grense</span></span><span class="fig">819 294<span class="u">kr</span></span><p class="dsc">Tjener du mer enn dette, regner NAV likevel bare med 819 294 kr. Lønn over taket teller ikke i beregningen.</p></div>
         <div class="lc-led"><span class="nm"><b>80 %-faktor</b><span class="tag">Faktor</span></span><span class="fig">0,80<span class="u">× grunnlag</span></span><p class="dsc">Velger du 80 %-uttak, ganges grunnlaget med 0,80 før det deles på uker. Du får mindre per uke, men over flere uker.</p></div>
         <div class="lc-led"><span class="nm"><b>Ukesats</b><span class="tag">Faktor</span></span><span class="fig">÷ 52<span class="u">uker</span></span><p class="dsc">Årsgrunnlaget deles på 52 for å finne hva du får per uke. Denne ukesatsen ganges deretter med antall uker du tar ut.</p></div>
         <div class="lc-led"><span class="nm"><b>Månedssats</b><span class="tag">Faktor</span></span><span class="fig">÷ 12<span class="u">mnd</span></span><p class="dsc">Det store tallet «per måned fra NAV» er årsgrunnlaget delt på 12 — beløpet du ser på kontoen hver måned i permisjonen.</p></div>
-        <div class="lc-led"><span class="nm"><b>Mellomlegg fra arbeidsgiver</b><span class="tag">Faktor</span></span><span class="fig">÷ 12<span class="u">mnd</span></span><p class="dsc">Lønn over taket deles på 12 og legges til hvis du krysser av for at arbeidsgiver dekker mellomlegget. NAV betaler aldri denne delen.</p></div>
+        <div class="lc-led"><span class="nm"><b>Mellomlegg fra arbeidsgiver</b><span class="tag">Faktor</span></span><span class="fig">÷ 12<span class="u">mnd</span></span><p class="dsc">Lønn over taket deles på 12 og legges til hvis du velger «Dekker mellomlegget». NAV betaler aldri denne delen.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcB-personlig-foreldrepenger">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-foreldrepenger">Satsene for 2026</h2><p class="lc-intro">Disse verdiene ligger fast i kalkulatoren. De følger NAV og folketrygdloven kapittel 14 for 2026.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-foreldrepenger">Satsene for 2026</h2><p class="lc-intro">Satsene gjelder for 2026 og følger folketrygdloven kapittel 14.</p></div>
       <div class="lc-rates">
       <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
+        <span class="ttl">Nøkkeltall</span>
         <div class="lc-kv"><span class="k">Grunnbeløp (G)</span><span class="v">136 549<span class="u">kr</span></span></div>
         <div class="lc-kv"><span class="k">6G-tak (maks grunnlag)</span><span class="v">819 294<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">100 % uttak</span><span class="v">49<span class="u">uker</span></span></div>
-        <div class="lc-kv"><span class="k">80 % uttak</span><span class="v">61<span class="u">uker og 1 dag</span></span></div>
         <div class="lc-kv"><span class="k">Før fødsel (mor)</span><span class="v">3<span class="u">uker</span></span></div>
-        <div class="lc-kv"><span class="k">Mødrekvote (100 %)</span><span class="v">15<span class="u">uker</span></span></div>
-        <div class="lc-kv"><span class="k">Fedrekvote (100 %)</span><span class="v">15<span class="u">uker</span></span></div>
-        <div class="lc-kv"><span class="k">Fellesperiode (100 %)</span><span class="v">16<span class="u">uker</span></span></div>
-        <div class="lc-kv"><span class="k">Sats ved 80 %-uttak</span><span class="v">80<span class="u">% av grunnlag</span></span></div>
       </div>
       <div class="lc-card">
         <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>De to uttaksvalgene side om side</caption>
-          <thead><tr><th>Uttak</th><th class="r">Lengde</th><th class="r">Sats per uke</th><th class="r">Før fødsel + mor + felles + far</th></tr></thead>
+        <table class="lc-trinn fp-uttak">
+          <caption>De to uttaksvalgene (lengden inkluderer 3 uker før fødsel)</caption>
+          <thead><tr><th>Uttak</th><th class="r">Lengde</th><th>Mor / felles / far</th></tr></thead>
           <tbody>
-            <tr><td><span class="step">100 %</span></td><td class="r">49 uker</td><td class="r">Full sats</td><td class="r">3 + 15 + 16 + 15 uker</td></tr>
-            <tr><td><span class="step">80 %</span></td><td class="r">61 uker og 1 dag</td><td class="r">80 % av sats</td><td class="r">3 + 19 + 20 uker 1 dag + 19</td></tr>
+            <tr><td><span class="step">100 %</span></td><td class="r"><span class="fp-l" aria-hidden="true">Lengde</span>49 uker</td><td><span class="fp-l" aria-hidden="true">Mor / felles / far</span>15 / 16 / 15 uker</td></tr>
+            <tr><td><span class="step">80 %</span></td><td class="r"><span class="fp-l" aria-hidden="true">Lengde</span>61 uker og 1 dag</td><td><span class="fp-l" aria-hidden="true">Mor / felles / far</span>19 / 20 uker og 1 dag / 19 uker</td></tr>
           </tbody>
         </table>
         </div>
@@ -568,10 +571,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-personlig-foreldrepenger">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-foreldrepenger">Før du planlegger permisjonen</h2><p class="lc-intro">Noen praktiske ting kalkulatoren ikke viser direkte, men som påvirker hva du faktisk sitter igjen med.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-foreldrepenger">Før du planlegger permisjonen</h2></div>
       <div class="lc-notes">
         <div class="lc-note"><h3>100 % gir ikke mer penger totalt</h3><p>Begge valg utbetaler omtrent samme grunnlag — 80 % strekker det samme beløpet over drøyt 12 ekstra uker. Du får lavere månedsbeløp, ikke mer til sammen.</p></div>
-        <div class="lc-note"><h3>Taket gjelder bare NAV</h3><p>Tjener du over 819 294 kr, stopper NAV ved taket. Mange arbeidsgivere, særlig i offentlig sektor, dekker mellomlegget — kryss av for det i kalkulatoren for å se hele månedsbeløpet.</p></div>
+        <div class="lc-note"><h3>Taket gjelder bare NAV</h3><p>Tjener du over 819 294 kr, betaler NAV bare opp til taket. Mange arbeidsgivere dekker resten, særlig i offentlig sektor. Velg «Dekker mellomlegget» for å se hele månedsbeløpet.</p></div>
         <div class="lc-note"><h3>Kvotene er forbeholdt hver forelder</h3><p>Ved 100 %-uttak er 15 uker reservert mor og 15 uker far; ved 80 %-uttak er det 19 uker hver. I tillegg må mor ta ut 3 uker før fødsel. Bare fellesperioden kan dere fordele fritt mellom dere.</p></div>
         <div class="lc-note"><h3>Beløpet beskattes som lønn</h3><p>Foreldrepenger er skattepliktig inntekt. Tallet kalkulatoren viser er før skatt — det trekkes skatt som på vanlig lønn.</p></div>
       </div>
@@ -613,9 +616,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -726,11 +729,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       ? ' · + ' + fmtKr(r.arbTopUp) + ' fra arbeidsgiver' : '';
 
     $('rBrutto').textContent    = fmtKr(state.brutto);
-    $('rsGrunnlag').textContent = fmtKr(r.grunnlag);
-    $('rsUke').textContent      = fmtKr(r.ukeSats);
-    $('rsMnd').textContent      = fmtKr(r.mndSats);
     $('rsSum').textContent      = fmtKr(r.mndTotal);
-    $('rsTotalNav').textContent = fmtKr(r.totalNAV);
 
     if(r.overGrense){
       $('rowOver').style.display = '';
@@ -740,9 +739,11 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     }
     if(r.overGrense && state.arbDekker){
       $('rowArb').style.display = '';
+      $('rowSum').style.display = '';
       $('rsArb').textContent = '+' + fmtKr(r.arbTopUp);
     } else {
       $('rowArb').style.display = 'none';
+      $('rowSum').style.display = 'none';
     }
   }
 

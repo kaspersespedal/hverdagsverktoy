@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Bolig vs leie — hva lønner seg over tid? · Hverdagsverktøy</title>
-<meta name="description" content="Sammenlign total kostnad over X år: eie (rente, vedlikehold, skattefradrag, formue) vs leie (akkumulert leie + alternativ-avkastning på sparepengene). Norske 2026-tall. Alt skjer lokalt i nettleseren.">
+<meta name="description" content="Se om det lønner seg å eie eller leie bolig over perioden du velger. Regner med renter, rentefradrag, felleskost, vedlikehold og verdistigning mot husleie og fondsavkastning på egenkapitalen.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/boliglan/bvl/">
@@ -50,12 +50,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Bolig vs leie — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -107,7 +107,6 @@ body.focus-mode > footer{display:none}
 
 .ik-fg{display:flex;flex-direction:column;gap:5px;min-width:0}
 .ik-lbl{font:500 11.5px/1.3 var(--font-sans);letter-spacing:.02em;color:var(--ink2)}
-.ik-lbl .cap{color:var(--ink4);font-weight:400}
 .ik-input{
   background:var(--surface-2);border:1px solid var(--line-2);
   color:var(--ink);font:inherit;font-size:14px;
@@ -125,19 +124,10 @@ body.focus-mode > footer{display:none}
 .ks-r-net .unit{font-size:15px;color:var(--ink3);font-style:normal;margin-left:4px;letter-spacing:0}
 .ks-r-mnd{font-size:12px;color:var(--ink3);line-height:1.5}
 
-.ks-bar{margin-top:6px}
-.ks-bar-track{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--line);margin-bottom:10px}
-.ks-bar-seg{transition:flex .3s var(--ease, ease)}
-.ks-bar-legend{display:flex;flex-direction:column;gap:6px;font-size:11.5px;color:var(--ink2)}
-.ks-bar-legend .row{display:flex;align-items:baseline;gap:8px}
-.ks-bar-legend .dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
-.ks-bar-legend b{margin-left:auto;color:var(--ink);font-variant-numeric:tabular-nums}
-
 .ks-r-stats{display:flex;flex-direction:column;gap:7px;padding-top:12px;border-top:1px solid var(--line)}
 .ks-r-stat{display:flex;align-items:baseline;justify-content:space-between;gap:14px;font-size:13px;color:var(--ink2)}
 .ks-r-stat .l{color:var(--ink3);font-size:11.5px;letter-spacing:.04em}
 .ks-r-stat .v{color:var(--ink);font-variant-numeric:tabular-nums lining-nums;font-weight:500}
-.ks-r-stat.div{padding-top:8px;margin-top:4px;border-top:1px solid var(--line)}
 
 /* Side col */
 .side-col{display:flex;flex-direction:column;gap:12px;min-width:0}
@@ -393,7 +383,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="bvlCrumb">Bolig vs leie</span>
       </div>
       <h1 class="page-title" data-i18n-html="bvlTitleNew"><em>Bolig</em> vs leie</h1>
-      <p class="page-lead" data-i18n="bvlSubtitle">Sammenlign total kostnad over X år: eie (rente, vedlikehold, skattefradrag, formuesoppbygging) vs leie (akkumulert leie + alternativ-avkastning på sparepengene). Norske 2026-tall. Alt skjer lokalt i nettleseren.</p>
+      <p class="page-lead" data-i18n="bvlSubtitle">Se om det lønner seg å eie eller leie bolig over perioden du velger. Eie koster renter, felleskost og vedlikehold, minus rentefradrag og verdistigning. Leie koster husleie, minus det egenkapitalen kunne tjent i fond.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
@@ -429,37 +419,37 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <div class="ik-stack">
                 <div class="ik-row full">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-pris"><span data-i18n="bvlLPris">Kjøpspris bolig</span> <span class="cap">(kr)</span></label>
+                    <label class="ik-lbl" for="bvl-pris"><span data-i18n="bvlLPris">Kjøpspris bolig (kr)</span></label>
                     <input id="bvl-pris" class="ik-input" type="text" inputmode="numeric" value="4 000 000" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-ek"><span data-i18n="bvlLEk">Egenkapital</span> <span class="cap">(kr)</span></label>
+                    <label class="ik-lbl" for="bvl-ek"><span data-i18n="bvlLEk">Egenkapital (kr)</span></label>
                     <input id="bvl-ek" class="ik-input" type="text" inputmode="numeric" value="500 000" autocomplete="off">
                   </div>
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-rente"><span data-i18n="bvlLRente">Lånerente</span> <span class="cap">(%)</span></label>
-                    <input id="bvl-rente" class="ik-input" type="text" min="0" max="50" step="0.1" value="5.5" inputmode="decimal" autocomplete="off">
+                    <label class="ik-lbl" for="bvl-rente"><span data-i18n="bvlLRente">Lånerente (%)</span></label>
+                    <input id="bvl-rente" class="ik-input" type="text" min="0" max="50" step="0.1" value="5,5" inputmode="decimal" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-felleskost"><span data-i18n="bvlLFelleskostShort">Felleskost/mnd</span> <span class="cap">(kr)</span></label>
+                    <label class="ik-lbl" for="bvl-felleskost"><span data-i18n="bvlLFelleskostShort">Felleskost/mnd (kr)</span></label>
                     <input id="bvl-felleskost" class="ik-input" type="text" inputmode="numeric" value="3 500" autocomplete="off">
                   </div>
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-vedlikehold"><span data-i18n="bvlLVedlikehold">Vedlikehold</span> <span class="cap">(% av verdi/år)</span></label>
-                    <input id="bvl-vedlikehold" class="ik-input" type="text" min="0" max="20" step="0.1" value="1.0" inputmode="decimal" autocomplete="off">
+                    <label class="ik-lbl" for="bvl-vedlikehold"><span data-i18n="bvlLVedlikehold">Vedlikehold (% av verdi/år)</span></label>
+                    <input id="bvl-vedlikehold" class="ik-input" type="text" min="0" max="20" step="0.1" value="1,0" inputmode="decimal" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-aar"><span data-i18n="bvlLAar">Tidsperiode</span> <span class="cap">(år)</span></label>
+                    <label class="ik-lbl" for="bvl-aar"><span data-i18n="bvlLAar">Tidsperiode (år)</span></label>
                     <input id="bvl-aar" class="ik-input" type="text" min="1" max="30" step="1" value="10" inputmode="numeric" autocomplete="off">
                   </div>
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-lopetid"><span data-i18n="bvlLLopetidShort">Nedbetalingstid</span> <span class="cap">(år)</span></label>
+                    <label class="ik-lbl" for="bvl-lopetid"><span data-i18n="bvlLLopetidShort">Nedbetalingstid (år)</span></label>
                     <input id="bvl-lopetid" class="ik-input" type="text" min="10" max="30" step="1" value="25" inputmode="numeric" autocomplete="off">
                   </div>
                 </div>
@@ -474,48 +464,41 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <div class="ik-stack">
                 <div class="ik-row full">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-leie"><span data-i18n="bvlLLeie">Månedlig leie i dag</span> <span class="cap">(kr)</span></label>
+                    <label class="ik-lbl" for="bvl-leie"><span data-i18n="bvlLLeie">Månedlig leie i dag (kr)</span></label>
                     <input id="bvl-leie" class="ik-input" type="text" inputmode="numeric" value="15 000" autocomplete="off">
                     <span class="ik-hint" data-i18n="bvlLeieHint">For en tilsvarende bolig</span>
                   </div>
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-vekst"><span data-i18n="bvlLVekst">Boligprisvekst</span> <span class="cap">(%/år)</span></label>
-                    <input id="bvl-vekst" class="ik-input" type="text" min="-20" max="30" step="0.1" value="3.0" inputmode="decimal" autocomplete="off">
+                    <label class="ik-lbl" for="bvl-vekst"><span data-i18n="bvlLVekst">Boligprisvekst (%/år)</span></label>
+                    <input id="bvl-vekst" class="ik-input" type="text" min="-20" max="30" step="0.1" value="3,0" inputmode="decimal" autocomplete="off">
                   </div>
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-leievekst"><span data-i18n="bvlLLeievekst">Leievekst</span> <span class="cap">(%/år)</span></label>
-                    <input id="bvl-leievekst" class="ik-input" type="text" min="-20" max="30" step="0.1" value="3.0" inputmode="decimal" autocomplete="off">
+                    <label class="ik-lbl" for="bvl-leievekst"><span data-i18n="bvlLLeievekst">Leievekst (%/år)</span></label>
+                    <input id="bvl-leievekst" class="ik-input" type="text" min="-20" max="30" step="0.1" value="3,0" inputmode="decimal" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row full">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bvl-avk"><span data-i18n="bvlLAvkLong">Alternativ avkastning EK</span> <span class="cap">(%/år)</span></label>
-                    <input id="bvl-avk" class="ik-input" type="text" min="-20" max="30" step="0.1" value="6.0" inputmode="decimal" autocomplete="off">
+                    <label class="ik-lbl" for="bvl-avk"><span data-i18n="bvlLAvkLong">Alternativ avkastning EK (%/år)</span></label>
+                    <input id="bvl-avk" class="ik-input" type="text" min="-20" max="30" step="0.1" value="6,0" inputmode="decimal" autocomplete="off">
                     <span class="ik-hint" data-i18n="bvlAvkHint">Hvis sparepengene står i fond i stedet for bolig</span>
                   </div>
                 </div>
               </div>
-              <p class="ik-note" data-i18n="bvlFormNote">Sammenligning baserer seg på annuitetslån over valgt nedbetalingstid, 22 % skattefradrag på renter, og at egenkapitalen alternativt vokser i fond med oppgitt avkastning. Boligprisvekst er en antakelse — historisk snitt i Norge har vært ~5 %/år, men kan svinge mye lokalt.</p>
+              <p class="ik-note" data-i18n="bvlFormNote">Forutsetter annuitetslån og 22 % skattefradrag på renter. Leier du, antas egenkapitalen å stå i fond. Dokumentavgift og megler er ikke med. Boligprisveksten er et anslag: historisk rundt 5 % i året, men den varierer mye fra sted til sted.</p>
             </section>
           </div>
 
           <aside class="ks-result" aria-live="polite">
-            <div class="ks-r-eyebrow" data-i18n="bvlRLbl">Hva lønner seg over perioden</div>
+            <div class="ks-r-eyebrow" id="bvl-r-eyebrow">Hva lønner seg over perioden</div>
             <div class="ks-r-net"><span id="bvl-r-val">–</span></div>
-            <div class="ks-r-mnd" id="bvlVerdict">Skriv inn pris, EK og leie for å se beregningen.</div>
-
-            <div class="ks-bar">
-              <div class="ks-bar-track" id="ksBarTrack"></div>
-              <div class="ks-bar-legend" id="ksBarLegend"></div>
-            </div>
+            <div class="ks-r-mnd" id="bvlVerdict">Skriv inn kjøpspris for å se hva som lønner seg.</div>
 
             <div class="ks-r-stats">
-              <div class="ks-r-stat"><span class="l" id="bvl-r-eie-lbl" data-i18n="bvlREieLbl">Total kostnad ved eie</span><span class="v" id="bvl-r-eie">–</span></div>
-              <div class="ks-r-stat"><span class="l" id="bvl-r-leie-lbl" data-i18n="bvlRLeieLbl">Total kostnad ved leie</span><span class="v" id="bvl-r-leie">–</span></div>
-              <div class="ks-r-stat div"><span class="l" data-i18n="bvlRBeLbl">Break-even</span><span class="v" id="bvl-r-be">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="bvlRFormueLbl">Formue ved eie</span><span class="v" id="bvl-r-formue">–</span></div>
+              <div class="ks-r-stat"><span class="l" id="bvl-r-eie-lbl">Nettokostnad ved eie</span><span class="v" id="bvl-r-eie">–</span></div>
+              <div class="ks-r-stat"><span class="l" id="bvl-r-leie-lbl">Nettokostnad ved leie</span><span class="v" id="bvl-r-leie">–</span></div>
             </div>
           </aside>
         </div>
@@ -524,8 +507,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     <aside class="side-col">
       <div class="side-card">
-        <h4 data-i18n="bvlSideWhat">Eie eller leie?</h4>
-        <p data-i18n="bvlSideWhatBody">Over korte horisonter taper eie ofte — transaksjonskostnader (dokumentavgift + megler ved salg) spiser opp gevinsten. Over 15–20 år vinner eie nesten alltid, fordi verdiøkning og formuesoppbygging via avdrag samler seg opp. Tallene her inkluderer 22 % skattefradrag på renter.</p>
+        <h4 data-i18n="bvlSideWhat">Ikke med i tallene</h4>
+        <p data-i18n="bvlSideWhatBody">Dokumentavgift og megler er ikke regnet med. På en selveier til 4&nbsp;mill. er dokumentavgiften alene 100&nbsp;000&nbsp;kr. Flytter du innen få år, kan det snu svaret.</p>
       </div>
       <div class="side-card related">
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
@@ -551,39 +534,32 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-boliglan-bvl">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-bvl">Hva som skjer når kalkulatoren sammenligner</h2><p class="lc-intro">Kalkulatoren bygger to regnestykker og setter dem opp mot hverandre. På eie-siden samles renter, felleskostnader og vedlikehold opp, minus skattefradrag, og så trekkes verdien du bygger opp i boligen fra. På leie-siden samles all leie opp, minus det egenkapitalen kunne gitt i fond. Dette er nøyaktig de samme linjene du ser i beregningen over — bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-bvl">Hva som skjer når kalkulatoren sammenligner</h2><p class="lc-intro">Kalkulatoren setter opp to regnestykker. Eie: renter, felleskost og vedlikehold, minus rentefradrag og verdistigningen på boligen. Leie: all husleie, minus det egenkapitalen kunne tjent i fond. Det som koster minst netto, lønner seg. Med standardtallene er eie 831 675 kr billigere over 10 år.</p></div>
       <div class="lc-ledger">
         <div class="lc-led"><span class="nm"><b>Lånebeløp</b><span class="tag">Faktor</span></span><span class="fig">Pris − EK<span class="u">kr</span></span><p class="dsc">Det du faktisk låner = kjøpspris minus egenkapital. Med standardtallene (4 mill. − 500 000) blir lånet 3,5 mill. kr, og alt videre regnes ut fra dette.</p></div>
         <div class="lc-led"><span class="nm"><b>Annuitetslån</b><span class="tag">Faktor</span></span><span class="fig">25<span class="u">år</span></span><p class="dsc">Lånet betales ned med like store terminbeløp hver måned over nedbetalingstiden (standard 25 år). I starten er mest renter, mot slutten mest avdrag.</p></div>
         <div class="lc-led"><span class="nm"><b>Skattefradrag på renter</b><span class="tag">Fradrag</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Du får 22 % av renteutgiftene tilbake på skatten. Kalkulatoren trekker dette fra eie-kostnaden hvert år, så den reelle rentekostnaden blir lavere enn satsen tilsier.</p></div>
         <div class="lc-led"><span class="nm"><b>Vedlikehold</b><span class="tag">Sats</span></span><span class="fig">1,0<span class="u">% av verdi/år</span></span><p class="dsc">En årlig kostnad som andel av boligens verdi. Standard er 1 % (norsk tommelfinger-regel) — på en bolig verdt 4 mill. blir det 40 000 kr i året.</p></div>
-        <div class="lc-led"><span class="nm"><b>Formuesoppbygging</b><span class="tag">Faktor</span></span><span class="fig">Verdi − restgjeld<span class="u">kr</span></span><p class="dsc">Det du sitter igjen med ved eie: boligens verdi minus det som er igjen av lånet. Verdien vokser med boligprisveksten, gjelden synker med avdragene.</p></div>
+        <div class="lc-led"><span class="nm"><b>Verdistigning</b><span class="tag">Faktor</span></span><span class="fig">1 375 666<span class="u">kr</span></span><p class="dsc">Det boligen stiger i verdi i perioden, trukket fra eie-kostnaden. Med 3 % i året blir 4 mill. til 5,38 mill. på 10 år. Avdragene teller ikke som gevinst: de er dine egne penger, flyttet fra konto til bolig.</p></div>
         <div class="lc-led"><span class="nm"><b>Alternativ avkastning</b><span class="tag">Sats</span></span><span class="fig">6,0<span class="u">%/år</span></span><p class="dsc">Hvis du leier i stedet, antar kalkulatoren at egenkapitalen står i fond og vokser med denne satsen (standard 6 %). Den gevinsten trekkes fra leie-kostnaden.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcB-boliglan-bvl">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-boliglan-bvl">Satsene og standardverdiene kalkulatoren bruker</h2><p class="lc-intro">Disse tallene ligger inne som standard når du åpner siden. Alt kan endres i feltene — men disse verdiene er utgangspunktet, og er valgt for å speile norske 2026-forhold.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-boliglan-bvl">Satser og referansetall</h2></div>
       <div class="lc-rates">
       <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
+        <span class="ttl">Nøkkeltall</span>
         <div class="lc-kv"><span class="k">Skattefradrag på renter</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Vedlikehold (standard)</span><span class="v">1,0<span class="u">% av verdi/år</span></span></div>
-        <div class="lc-kv"><span class="k">Lånerente (standard)</span><span class="v">5,5<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Boligprisvekst (standard)</span><span class="v">3,0<span class="u">%/år</span></span></div>
-      </div>
-      <div class="lc-card">
-        <span class="ttl">Mer</span>
-        <div class="lc-kv"><span class="k">Leievekst (standard)</span><span class="v">3,0<span class="u">%/år</span></span></div>
-        <div class="lc-kv"><span class="k">Alternativ avkastning EK (standard)</span><span class="v">6,0<span class="u">%/år</span></span></div>
-        <div class="lc-kv"><span class="k">Nedbetalingstid (standard)</span><span class="v">25<span class="u">år</span></span></div>
+        <div class="lc-kv"><span class="k">Krav til egenkapital</span><span class="v">10<span class="u">%</span></span></div>
+        <div class="lc-kv"><span class="k">Boligprisvekst, historisk snitt</span><span class="v">ca. 5<span class="u">%/år</span></span></div>
       </div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-boliglan-bvl">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-bvl">Det som avgjør hvilken vei det tipper</h2><p class="lc-intro">Sammenligningen er følsom for noen få forutsetninger. Disse er verdt å forstå før du stoler for mye på ett enkelt svar.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-bvl">Det som avgjør hvilken vei det tipper</h2></div>
       <div class="lc-notes">
         <div class="lc-note"><h3>Kort horisont straffer eie</h3><p>Flytter du innen 5 år, taper eie ofte. Transaksjonskostnader — dokumentavgift pluss megler ved salg — spiser opp gevinsten før verdiøkningen rekker å samle seg opp.</p></div>
-        <div class="lc-note"><h3>Lang horisont favoriserer eie</h3><p>Over 15–20 år vinner eie nesten alltid. Da har avdrag og verdiøkning bygget opp nok formue til å slå leie, selv med transaksjonskostnadene.</p></div>
+        <div class="lc-note"><h3>Lang horisont favoriserer eie</h3><p>Over 15–20 år vinner eie som regel. Da har verdistigningen rukket å veie opp for renter, vedlikehold og transaksjonskostnader.</p></div>
         <div class="lc-note"><h3>Boligprisvekst er en antakelse</h3><p>Standard er 3 %/år, men historisk snitt i Norge har vært rundt 5 %/år. Tallet svinger mye lokalt, så prøv flere verdier og se hvor følsomt svaret er.</p></div>
         <div class="lc-note"><h3>Avkastningen på sparepengene teller med</h3><p>Hvis du leier, antas egenkapitalen å vokse i fond (standard 6 %/år). Når denne avkastningen er høyere enn boligprisveksten, kan leie vinne — selv over lengre tid.</p></div>
       </div>
@@ -591,7 +567,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     <section class="lc-sec" aria-labelledby="lcD-boliglan-bvl">
       <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-boliglan-bvl">Det folk lurer mest på</h2></div>
       <div class="lc-faq">
-        <details class="lc-q"><summary>Hva betyr break-even her?</summary><div class="a"><p>Det er omtrent når eie blir billigere enn å leie. Før det punktet ligger leie best fordi transaksjonskostnader og renter dominerer; etter det har formuesoppbyggingen tatt igjen forspranget.</p></div></details>
+        <details class="lc-q"><summary>Hva betyr break-even her?</summary><div class="a"><p>Det er året der eie blir billigere enn leie og holder seg billigere ut perioden. Dokumentavgift (2,5 % for selveier) og megler er ikke med, så i virkeligheten kommer break-even senere.</p></div></details>
         <details class="lc-q"><summary>Hvorfor lønner leie seg noen ganger i kalkulatoren?</summary><div class="a"><p>Som regel fordi den alternative avkastningen på egenkapitalen i fond (standard 6 %/år) gir mer enn boligprisveksten, eller fordi tidsperioden er for kort til at verdiøkning hentes inn. Prøv lengre tidsperiode og se hva som skjer.</p></div></details>
         <details class="lc-q"><summary>Hvor mye egenkapital må jeg ha?</summary><div class="a"><p>Utlånsforskriften krever minst 10 % egenkapital. Med en bolig til 4 mill. betyr det minst 400 000 kr du må stille med selv før banken låner ut resten.</p></div></details>
         <details class="lc-q"><summary>Er skattefradraget på renter regnet med?</summary><div class="a"><p>Ja. Kalkulatoren trekker 22 % av renteutgiftene fra eie-kostnaden hvert år, slik skattereglene gir. Det gjør den reelle rentekostnaden lavere enn lånerenten alene.</p></div></details>
@@ -625,13 +601,13 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
-// ── Bolig vs leie: portet calcBvl-logikk (matte uendret fra shared/core.js calcBvl), nå live + ks-skall ──
+// ── Bolig vs leie: portet calcBvl-logikk fra shared/core.js, nå live + ks-skall ──
 (function(){
   var KEY = 'hv-bvl-v1';
 
@@ -648,7 +624,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     if(el) el.textContent = val;
   }
 
-  // ── Hovedberegning (matte uendret fra opprinnelig calcBvl) ──
+  // ── Hovedberegning ──
+  // Avdrag er egne penger som flyttes inn i boligen: de er verken kostnad eller gevinst.
+  // Derfor trekkes bare verdistigningen (verdi − kjøpspris) fra eie-kostnaden.
   function compute(){
     var pris = parseNum('bvl-pris');
     if(pris <= 0){ return { hasData:false }; }
@@ -673,6 +651,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     var leieAr = leieMnd*12;
     var ekAlt = ek;
     var rentBetaltTot = 0, avdragTot = 0;
+    var eieBilligst = [];
     for(var y=1; y<=aar; y++){
       var renteAretTotal = 0, avdragAretTotal = 0;
       for(var m=0; m<12; m++){
@@ -693,88 +672,68 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       leieAr *= (1 + leieVekstAr);
       ekAlt *= (1 + avkAr);
       boligVerdi *= (1 + prisVekstAr);
+      eieBilligst.push(totalEie - (boligVerdi - pris) <= totalLeie - (ekAlt - ek));
     }
     var formueEie = boligVerdi - lanRest;
-    var nettoEie = totalEie - (formueEie - ek);
+    var nettoEie = totalEie - (boligVerdi - pris);
     var nettoLeie = totalLeie - (ekAlt - ek);
     var diff = nettoLeie - nettoEie;
     var vinner = diff >= 0 ? 'eie' : 'leie';
+    // Break-even: første år eie er billigst og forblir det ut perioden (0 = ikke innen perioden)
+    var beAar = 0;
+    for(var i=eieBilligst.length-1; i>=0 && eieBilligst[i]; i--) beAar = i+1;
 
     return {
       hasData: true, vinner: vinner, diff: diff,
       nettoEie: nettoEie, nettoLeie: nettoLeie,
       formueEie: formueEie, lan: lan, aar: aar,
-      prisVekstAr: prisVekstAr
+      beAar: beAar
     };
-  }
-
-  // Kostnadsbar: eie netto vs leie netto (absoluttverdier, nøytrale accent-tokens).
-  function renderBar(d){
-    var r = (typeof R === 'function') ? R() : {};
-    var segs = [
-      { v: Math.abs(d.nettoEie),  l: r.bvlBarEie  || 'Netto eie',  c:'linear-gradient(90deg,var(--accent),var(--accent-2))' },
-      { v: Math.abs(d.nettoLeie), l: r.bvlBarLeie || 'Netto leie', c:'color-mix(in srgb, var(--accent) 30%, transparent)' }
-    ];
-    var total = segs.reduce(function(a,b){return a+b.v;}, 0) || 1;
-    var track = document.getElementById('ksBarTrack');
-    var legend = document.getElementById('ksBarLegend');
-    if(track) track.innerHTML = segs.map(function(s){
-      return '<div class="ks-bar-seg" style="flex:'+(Math.max(0,s.v)/total)+' 0 0;background:'+s.c+'"></div>';
-    }).join('');
-    if(legend) legend.innerHTML = segs.map(function(s){
-      return '<div class="row"><span class="dot" style="background:'+s.c+'"></span>'+s.l+'<b>'+fmt(s.v)+'</b></div>';
-    }).join('');
-  }
-  function clearBar(){
-    var track = document.getElementById('ksBarTrack'); if(track) track.innerHTML = '';
-    var legend = document.getElementById('ksBarLegend'); if(legend) legend.innerHTML = '';
   }
 
   function recalc(){
     var d = compute();
     var r = (typeof R === 'function') ? R() : {};
     if(!d.hasData){
-      ['bvl-r-val','bvl-r-eie','bvl-r-leie','bvl-r-be','bvl-r-formue','bvlStripLan','bvlStripFormue','bvlStripBe','bvlStripVinner','hStatVinner','hStatFormue'].forEach(function(id){ setEl(id, '–'); });
-      setEl('bvl-r-eie-lbl', r.bvlREieLbl || 'Total kostnad ved eie');
-      setEl('bvl-r-leie-lbl', r.bvlRLeieLbl || 'Total kostnad ved leie');
+      ['bvl-r-val','bvl-r-eie','bvl-r-leie','bvlStripLan','bvlStripFormue','bvlStripBe','bvlStripVinner','hStatVinner','hStatFormue'].forEach(function(id){ setEl(id, '–'); });
+      setEl('bvl-r-eyebrow', r.bvlRLbl || 'Hva lønner seg over perioden');
+      setEl('bvl-r-eie-lbl', r.bvlREieLbl || 'Nettokostnad ved eie');
+      setEl('bvl-r-leie-lbl', r.bvlRLeieLbl || 'Nettokostnad ved leie');
       var v0 = document.getElementById('bvlVerdict');
-      if(v0) v0.textContent = r.bvlVerdictEmpty || 'Skriv inn pris, EK og leie for å se beregningen.';
-      clearBar();
+      if(v0) v0.textContent = r.bvlVerdictEmpty || 'Skriv inn kjøpspris for å se hva som lønner seg.';
       persist();
       return;
     }
 
-    // Vinner-verdict (stort tall) — dynamisk JS-satt, ingen data-i18n
+    // Vinner i eyebrow, forskjellen som stort tall — dynamisk JS-satt, ingen data-i18n
     var vinnerTxt = d.vinner==='eie'
       ? (r.bvlVinnerEie || 'Eie lønner seg')
       : (r.bvlVinnerLeie || 'Leie lønner seg');
-    setEl('bvl-r-val', vinnerTxt + ' (' + fmt(Math.abs(d.diff)) + ')');
+    setEl('bvl-r-eyebrow', vinnerTxt);
+    setEl('bvl-r-val', fmt(Math.abs(d.diff)));
 
     // Verdict-undertekst
     var subOver = r.bvlSubOver || 'Over';
     var subAr = r.bvlSubAr || 'år';
     var verdEl = document.getElementById('bvlVerdict');
     if(verdEl){
-      verdEl.textContent = d.vinner==='eie'
-        ? (r.bvlVerdictEie || 'Eie lønner seg over perioden når formuesoppbygging via avdrag og verdiøkning tas med. Skattefradrag på 22 % av renter inkludert.')
-        : (r.bvlVerdictLeie || 'Leie lønner seg i denne perioden — ofte fordi alternativ-avkastning på EK i fond gir mer enn boligprisvekst. Vurder kortere tidsperspektiv.');
+      verdEl.textContent = (d.vinner==='eie'
+        ? (r.bvlVerdictEie || 'Så mye billigere er det å eie enn å leie over {n} år.')
+        : (r.bvlVerdictLeie || 'Så mye billigere er det å leie enn å eie over {n} år.')).replace('{n}', d.aar);
     }
 
     // Resultat-stats (eie/leie kan vise kostnad ELLER gevinst — etikett byttes som i gammel matte)
-    var eieLbl = d.nettoEie >= 0 ? (r.bvlREieLbl || 'Total kostnad ved eie') : (r.bvlREieGevinst || 'Netto gevinst ved eie');
-    var leieLbl = d.nettoLeie >= 0 ? (r.bvlRLeieLbl || 'Total kostnad ved leie') : (r.bvlRLeieGevinst || 'Netto gevinst ved leie');
+    var eieLbl = d.nettoEie >= 0 ? (r.bvlREieLbl || 'Nettokostnad ved eie') : (r.bvlREieGevinst || 'Nettogevinst ved eie');
+    var leieLbl = d.nettoLeie >= 0 ? (r.bvlRLeieLbl || 'Nettokostnad ved leie') : (r.bvlRLeieGevinst || 'Nettogevinst ved leie');
     setEl('bvl-r-eie-lbl', eieLbl);
     setEl('bvl-r-leie-lbl', leieLbl);
     setEl('bvl-r-eie', fmt(Math.round(Math.abs(d.nettoEie))));
     setEl('bvl-r-leie', fmt(Math.round(Math.abs(d.nettoLeie))));
 
-    // Break-even (samme logikk som gammel side)
-    var be = '–';
-    if(d.diff < 0 && d.prisVekstAr > 0){ be = '> ' + d.aar + ' ' + subAr; }
-    else if(d.diff >= 0 && d.aar <= 5){ be = '~' + d.aar + ' ' + subAr; }
-    else if(d.diff >= 0){ be = (r.bvlBeRask || 'Innen perioden'); }
-    setEl('bvl-r-be', be);
-    setEl('bvl-r-formue', fmt(Math.round(d.formueEie)));
+    // Break-even: året eie blir billigst for godt, ellers «> N år»
+    var be = d.beAar
+      ? (r.bvlBeAar || 'År {n}').replace('{n}', d.beAar)
+      : '> ' + d.aar + ' ' + subAr;
 
     // Strip
     setEl('bvlStripLan', fmt(Math.round(d.lan)));
@@ -786,7 +745,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     setEl('hStatVinner', d.vinner==='eie' ? (r.bvlStripEie || 'Eie') : (r.bvlStripLeie || 'Leie'));
     setEl('hStatFormue', fmt(Math.round(d.formueEie)));
 
-    renderBar(d);
     persist();
   }
 
@@ -822,7 +780,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   (function(){
     var n=0; var t=setInterval(function(){
       n++;
-      if((typeof R==='function' && R().bvlVinnerEie) || n>40){ clearInterval(t); recalc(); }
+      if((typeof R==='function' && R().bvlVinnerEie && !document.documentElement.classList.contains('lang-loading')) || n>150){ clearInterval(t); recalc(); }
     }, 80);
   })();
 })();
@@ -878,12 +836,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   function pollRender(){
     var bodies = document.querySelectorAll('[data-howto-prefix]');
     if(!bodies.length) return;
-    var attempts = 0, max = 38;
+    var attempts = 0, max = 150;
     var t = setInterval(function(){
       attempts++;
       var r = (typeof R === 'function') ? R() : {};
       var ready = false;
-      bodies.forEach(function(b){
+      if(!document.documentElement.classList.contains('lang-loading')) bodies.forEach(function(b){
         var p = b.getAttribute('data-howto-prefix');
         if(r[p+'Rows'] || r[p+'Lead'] || r[p+'P1']) ready = true;
       });

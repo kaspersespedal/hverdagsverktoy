@@ -50,12 +50,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Dekningsbidrag — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/avs/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -87,6 +87,7 @@ body.focus-mode > footer{display:none}
 
 .calc-wrap{padding:28px 0 56px}
 .calc-wrap .container{display:grid;grid-template-columns:1fr 260px;gap:28px;align-items:start}
+.calc-wrap .container.kk-picker-strip-wrap{display:block}
 @media(max-width:980px){.calc-wrap .container{grid-template-columns:1fr}}
 
 .ks-host{min-width:0}
@@ -126,7 +127,6 @@ body.focus-mode > footer{display:none}
   transition:border-color .15s, background .15s;
 }
 .ik-input:focus{border-color:var(--accent);background:var(--surface)}
-.ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .ik-warn{
   margin:14px 0 0;padding:10px 14px;
   background:var(--surface-2);border:1px solid var(--line);border-left:2px solid var(--ink3);
@@ -212,48 +212,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
 .lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
 
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
 /* ── Praktiske punkter (venstre-aksent) ── */
 .lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .lc-note{
@@ -302,11 +260,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 }
 
 @media(max-width:820px){
-  /* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap), så
-     de dro hele siden ut i sidelengs scroll — opptil 380px på finance.
-     Samme scroll-wrapper-mønster som .bd-table-wrap/.pv-tblwrap. */
-  .lc-trinn{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
   .lc-notes{grid-template-columns:minmax(0,1fr)}
   .lc-links{grid-template-columns:minmax(0,1fr)}
 }
@@ -396,7 +349,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="kalkDekningsbidragTitle">Dekningsbidrag</span>
       </div>
       <h1 class="page-title"><em data-i18n="kalkDekningsbidragTitle">Dekningsbidrag</em></h1>
-      <p class="page-lead" data-i18n="kalkDekningsbidragSubtitle">Beregn dekningsbidrag (DB) og dekningsgrad (DB%) per enhet, total DB, resultat før skatt og break-even — hvor mange enheter må du selge for å dekke alle faste kostnader?</p>
+      <p class="page-lead" data-i18n="kalkDekningsbidragSubtitle">Se hvor mye hver solgte enhet gir deg etter variable kostnader. Det kalles dekningsbidrag (DB). Du ser også hvor mange du må selge for å gå i null (break-even).</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
@@ -466,7 +419,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                 </div>
               </div>
               <div class="ik-warn" id="dbWarnBox" data-i18n="kalkDekningsbidragWarn">Variabel kost overstiger salgspris — produktet er ikke lønnsomt.</div>
-              <p class="ik-note" data-i18n="kalkDekningsbidragInfoBox">Dekningsbidraget viser hvor mye av salgsinntekten som er igjen til å dekke faste kostnader og fortjeneste — etter at variable kostnader er trukket fra. Break-even er antall enheter du må selge for at total DB dekker alle faste kostnader.</p>
             </section>
           </div>
 
@@ -490,7 +442,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     <aside class="side-col">
       <div class="side-card">
         <h4 data-i18n="kalkDekningsbidragSideWhat">Hva er dekningsbidrag?</h4>
-        <p data-i18n="kalkDekningsbidragSideWhatBody">Dekningsbidrag (DB) er salgspris minus variabel kost per enhet — det som er igjen til å dekke faste kostnader og gi fortjeneste. Break-even er antallet enheter du må selge før total DB dekker alle faste kostnader.</p>
+        <p data-i18n="kalkDekningsbidragSideWhatBody">DB er pris minus variabel kost per enhet. Selger du for 100 kr og varen koster deg 60 kr, er DB 40 kr.</p>
       </div>
       <div class="side-card related">
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
@@ -523,37 +475,18 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-kalkulator-dekningsbidrag">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-dekningsbidrag">De fire tallene som blir til DB og break-even</h2><p class="lc-intro">Kalkulatoren tar fire tall du skriver inn og regner seg fram til dekningsbidrag, dekningsgrad og break-even. Dette er nøyaktig de samme linjene du ser i beregningen over — bare forklart. Standardverdiene under er eksemplet kalkulatoren starter med.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-dekningsbidrag">De fire tallene som blir til DB og break-even</h2><p class="lc-intro">Eksemplet bruker startverdiene: pris 100 kr, variabel kost 60 kr, 100 solgte enheter og 2 000 kr i faste kostnader.</p></div>
       <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>DB per enhet</b><span class="tag">Formel</span></span><span class="fig">Salgspris − variabel kost<span class="u">kr</span></span><p class="dsc">Hjertet i hele regnestykket: salgspris minus variabel kost per enhet. Med eksempelverdiene 100 kr og 60 kr blir DB per enhet 40 kr — det som er igjen av hver solgte enhet til å dekke faste kostnader og fortjeneste.</p></div>
-        <div class="lc-led"><span class="nm"><b>Dekningsgrad (DB%)</b><span class="tag">Formel</span></span><span class="fig">DB / salgspris × 100<span class="u">%</span></span><p class="dsc">Dekningsbidraget regnet om til prosent av salgsprisen, med én desimal. 40 kr DB på en pris på 100 kr gir 40,0 %. Den sier hvor stor andel av hver krone i omsetning som blir igjen.</p></div>
-        <div class="lc-led"><span class="nm"><b>Total DB</b><span class="tag">Formel</span></span><span class="fig">DB per enhet × antall<span class="u">kr</span></span><p class="dsc">DB per enhet ganget med antall enheter solgt. Dette er hele potten du har igjen etter alle variable kostnader, men før de faste trekkes fra.</p></div>
-        <div class="lc-led"><span class="nm"><b>Resultat før skatt</b><span class="tag">Formel</span></span><span class="fig">Total DB − faste kostnader<span class="u">kr</span></span><p class="dsc">Total DB minus de faste kostnadene. Med standardverdiene blir det 4 000 kr total DB minus 2 000 kr faste = 2 000 kr i resultat før skatt.</p></div>
-        <div class="lc-led"><span class="nm"><b>Break-even (enheter)</b><span class="tag">Formel</span></span><span class="fig">Faste kostnader / DB per enhet<span class="u">enheter</span></span><p class="dsc">Faste kostnader delt på DB per enhet, alltid rundet OPP til neste hele enhet. Det er antallet du må selge for å gå nøyaktig i null. Med 2 000 kr faste og 40 kr DB blir det 50 enheter.</p></div>
-        <div class="lc-led"><span class="nm"><b>Break-even (omsetning)</b><span class="tag">Formel</span></span><span class="fig">Break-even-enheter × salgspris<span class="u">kr</span></span><p class="dsc">Samme nullpunkt målt i kroner: antall break-even-enheter ganget med salgsprisen. 50 enheter à 100 kr gir en break-even-omsetning på 5 000 kr.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-kalkulator-dekningsbidrag">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-kalkulator-dekningsbidrag">Verdiene kalkulatoren bruker</h2><p class="lc-intro">Dekningsbidrag har ingen offentlige satser — alt avhenger av tallene du selv skriver inn. Under er standardeksempelet kalkulatoren åpner med, og de faste reglene den følger.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
-        <div class="lc-kv"><span class="k">Salgspris per enhet (standard)</span><span class="v">100<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Variabel kost per enhet (standard)</span><span class="v">60<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Antall enheter solgt (standard)</span><span class="v">100<span class="u">enheter</span></span></div>
-        <div class="lc-kv"><span class="k">Faste kostnader (standard)</span><span class="v">2 000<span class="u">kr</span></span></div>
-      </div>
-      <div class="lc-card">
-        <span class="ttl">Mer</span>
-        <div class="lc-kv"><span class="k">DB per enhet i eksempelet</span><span class="v">40<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Dekningsgrad i eksempelet</span><span class="v">40,0<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Break-even i eksempelet</span><span class="v">50<span class="u">enheter</span></span></div>
-        <div class="lc-kv"><span class="k">Avrunding break-even</span><span class="v">Alltid opp til hel enhet</span></div>
-      </div>
+        <div class="lc-led"><span class="nm"><b>DB per enhet</b><span class="tag">Formel</span></span><span class="fig">Pris − variabel kost<span class="u">kr</span></span><p class="dsc">100 − 60 = 40 kr. Det er dette hver solgte enhet bidrar med til faste kostnader og overskudd.</p></div>
+        <div class="lc-led"><span class="nm"><b>Dekningsgrad (DB%)</b><span class="tag">Formel</span></span><span class="fig">DB ÷ pris<span class="u">%</span></span><p class="dsc">40 ÷ 100 = 40,0 %. Av hver krone du selger for, blir 40 øre igjen til faste kostnader og overskudd.</p></div>
+        <div class="lc-led"><span class="nm"><b>Total DB</b><span class="tag">Formel</span></span><span class="fig">DB × antall<span class="u">kr</span></span><p class="dsc">DB per enhet ganget med antall enheter solgt. Dette er hele potten du har igjen etter alle variable kostnader, men før de faste trekkes fra.</p></div>
+        <div class="lc-led"><span class="nm"><b>Resultat før skatt</b><span class="tag">Formel</span></span><span class="fig">Total DB − faste<span class="u">kr</span></span><p class="dsc">Total DB minus de faste kostnadene. Med standardverdiene blir det 4 000 kr total DB minus 2 000 kr faste = 2 000 kr i resultat før skatt.</p></div>
+        <div class="lc-led"><span class="nm"><b>Break-even (enheter)</b><span class="tag">Formel</span></span><span class="fig">Faste ÷ DB per enhet<span class="u">enheter</span></span><p class="dsc">2 000 ÷ 40 = 50 enheter. Så mange må du selge for å gå i null. Svaret rundes alltid opp til hel enhet.</p></div>
+        <div class="lc-led"><span class="nm"><b>Break-even (omsetning)</b><span class="tag">Formel</span></span><span class="fig">Break-even × pris<span class="u">kr</span></span><p class="dsc">Samme nullpunkt målt i kroner: antall break-even-enheter ganget med salgsprisen. 50 enheter à 100 kr gir en break-even-omsetning på 5 000 kr.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-kalkulator-dekningsbidrag">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-dekningsbidrag">Slik tolker du tallene</h2><p class="lc-intro">Noen praktiske poeng som gjør det lettere å lese resultatet riktig.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-dekningsbidrag">Slik tolker du tallene</h2></div>
       <div class="lc-notes">
         <div class="lc-note"><h3>Skill mellom variable og faste kostnader</h3><p>Variable kostnader følger produksjonen — materiell, ingredienser, emballasje, direkte arbeidstimer. Faste kostnader løper uansett om du selger null eller tusen — husleie, forsikring, leasing, faste lønninger. Legger du en fast kostnad i feil felt, blir både DB og break-even feil.</p></div>
         <div class="lc-note"><h3>Negativt dekningsbidrag betyr stopp</h3><p>Er variabel kost større enn eller lik salgsprisen, blir DB negativ. Da viser kalkulatoren en advarsel og setter break-even til en strek — du taper på hvert eneste salg, og mer volum gjør det bare verre. Løsningen er høyere pris eller lavere variabel kost, ikke å selge mer.</p></div>
@@ -562,7 +495,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcD-kalkulator-dekningsbidrag">
-      <div class="lc-head"><span class="lc-kicker">Sporsmal og svar</span><h2 class="lc-title" id="lcD-kalkulator-dekningsbidrag">Det folk lurer mest pa</h2></div>
+      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-kalkulator-dekningsbidrag">Det folk lurer mest på</h2></div>
       <div class="lc-faq">
         <details class="lc-q"><summary>Hva er forskjellen på dekningsbidrag og fortjeneste?</summary><div class="a"><p>Dekningsbidrag er det som er igjen etter variable kostnader, men FØR faste kostnader. Fortjenesten (her: resultat før skatt) får du først når du også har trukket fra de faste kostnadene. Total DB kan være høy selv om resultatet er negativt — hvis de faste kostnadene er større enn total DB.</p></div></details>
         <details class="lc-q"><summary>Hva betyr break-even?</summary><div class="a"><p>Break-even er nullpunktet — antall enheter du må selge for at total DB akkurat dekker alle faste kostnader. Selger du under break-even, går du i minus. Over break-even tjener du penger. Kalkulatoren regner det som faste kostnader delt på DB per enhet.</p></div></details>
@@ -573,7 +506,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcE-kalkulator-dekningsbidrag">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkulator-dekningsbidrag">Relaterte verktoy</h2></div>
+      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkulator-dekningsbidrag">Relaterte verktøy</h2></div>
       <div class="lc-links">
         <a class="lc-link" href="/avgift/vat/"><span class="ar">MVA →</span><h3>Merverdiavgift</h3><p>Se hvordan mva legges på og trekkes fra, så du vet hvilke nettobeløp du skal bruke i dekningsbidraget.</p></a>
         <a class="lc-link" href="/regnskap/resultat/"><span class="ar">Resultat →</span><h3>Resultatregnskap</h3><p>Se hvordan inntekter, variable og faste kostnader til slutt ender opp som resultat i et fullt regnskap.</p></a>
@@ -598,9 +531,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -726,6 +659,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
   restore();
   recalc();
+
+  // Aktiv kalkyle-chip rulles inn i synsfeltet (på mobil lå den utenfor)
+  var s=document.querySelector('.kk-picker-strip'),a=s&&s.querySelector('.is-active');if(a)s.scrollLeft=a.offsetLeft-s.offsetLeft-16;
 })();
 </script>
 

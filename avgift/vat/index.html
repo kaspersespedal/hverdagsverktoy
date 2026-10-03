@@ -50,11 +50,11 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 
 <style>
 /* MVA-kalkulator — kalkulator-skall (delt .ks-mønster med /skatt/inntekt/ + /skatt/reise/) */
@@ -96,7 +96,7 @@ body.focus-mode > footer{display:none}
   letter-spacing:-.1px;margin-bottom:3px}
 .mva-mode .desc{display:block;font:400 11px/1.4 var(--font-sans);color:var(--ink3)}
 
-.mva-rate{display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+.mva-rate{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;
   border-top:1px solid var(--line);border-bottom:1px solid var(--line);
   margin:2px 0}
 .mva-rate button{padding:14px 8px 12px;border:0;background:transparent;cursor:pointer;
@@ -106,7 +106,7 @@ body.focus-mode > footer{display:none}
 .mva-rate button:hover{color:var(--ink2)}
 .mva-rate button strong{display:block;font-family:var(--font-serif);
   font-weight:500;font-size:22px;color:inherit;
-  letter-spacing:-.4px;margin-bottom:5px;line-height:1;
+  letter-spacing:-.4px;margin-bottom:5px;line-height:1;white-space:nowrap;
   font-variant-numeric:tabular-nums lining-nums}
 .mva-rate button .lab{display:block;font:500 10.5px/1 var(--font-sans);
   color:var(--ink4);letter-spacing:.1px;text-transform:none;
@@ -134,6 +134,17 @@ body.focus-mode > footer{display:none}
 
 .ks-r-net .unit{font:500 12px/1 var(--font-sans);color:var(--ink3);margin-left:6px;letter-spacing:0}
 .ik-hint{font-size:11.5px;color:var(--ink3);line-height:1.45}
+
+/* Regneeksempel under justeringsskjemaet — lukket til brukeren åpner det */
+details.adj-eks{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+details.adj-eks > summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:8px;
+  font:500 12px/1.3 var(--font-sans);color:var(--ink2)}
+details.adj-eks > summary::-webkit-details-marker{display:none}
+details.adj-eks > summary::after{content:'';width:6px;height:6px;border-right:1.5px solid currentColor;
+  border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform .2s ease}
+details.adj-eks[open] > summary::after{transform:rotate(-135deg)}
+details.adj-eks > summary:focus-visible{outline:1px solid var(--accent);outline-offset:2px}
+details.adj-eks p{margin:10px 0 0;font-size:12px;line-height:1.55;color:var(--ink3)}
 
 /* ── Howto ──────────────────────────────────────────────────────── */
 .howto-wrap{margin:0 0 40px;display:none}
@@ -229,6 +240,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .lc-trinn tbody tr:last-child td{border-bottom:none}
 .lc-trinn td .step{color:var(--ink);font-weight:500}
 .lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lc-trinn td:first-child{white-space:nowrap}
 
 /* ── Praktiske punkter (venstre-aksent) ── */
 .lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
@@ -286,6 +298,13 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   .lc-sec{padding:40px 0}
   .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
   .lc-led .fig{font-size:22px}
+  /* Satstabellen stables: sats og navn på én linje, varene under. */
+  .lc-trinn,.lc-trinn tbody,.lc-trinn caption{display:block}
+  .lc-trinn thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .lc-trinn tr{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:14px;row-gap:4px;padding:12px 0;border-bottom:1px solid var(--line)}
+  .lc-trinn tbody tr:last-child{border-bottom:none}
+  .lc-tblwrap .lc-trinn tbody td{padding:0;border:0}
+  .lc-trinn td:nth-child(3){grid-column:1 / -1}
 }
 </style>
 </head>
@@ -368,7 +387,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="vatTitle">MVA-kalkulator</span>
       </div>
       <h1 class="page-title" data-i18n-html="vatTitleNew"><em>MVA</em>-kalkulator</h1>
-      <p class="page-lead" data-i18n="vatSubtitle">Skriv inn et beløp og velg sats — så regner vi ut prisen med eller uten merverdiavgift. Norske 2026-satser (25 % standard, 15 % næringsmidler, 12 % transport/hotell/kino, 0 % fritak). Alt skjer lokalt i nettleseren — ingen data sendes noe sted.</p>
+      <p class="page-lead" data-i18n="vatSubtitle">Legg MVA på en pris, eller finn hvor mye MVA som ligger i en pris du allerede har. Lenger ned regner du ut justering av MVA-fradrag for bygg og maskiner.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
@@ -412,11 +431,11 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <section class="ks-section" aria-labelledby="vatRateHdr">
                 <div class="ik-section-head">
                   <h3 id="vatRateHdr" data-i18n="vatLblRate">MVA-sats</h3>
-                  <span class="meta" id="vatRateDesc" data-i18n="vatRateDescDefault">Klær, elektronikk, byggetjenester</span>
+                  <span class="meta" id="vatRateDesc">Klær, elektronikk, byggetjenester</span>
                 </div>
                 <div class="mva-rate" role="radiogroup" aria-labelledby="vatRateHdr">
                   <button type="button" role="radio" aria-checked="true"  aria-pressed="true"  data-rate="25" data-desc-i18n="vatRateDesc25"><strong>25 %</strong><span class="lab" data-i18n="vatRateLab25">Hovedsats</span></button>
-                  <button type="button" role="radio" aria-checked="false" aria-pressed="false" data-rate="15" data-desc-i18n="vatRateDesc15"><strong>15 %</strong><span class="lab" data-i18n="vatRateLab15">Næringsmiddel</span></button>
+                  <button type="button" role="radio" aria-checked="false" aria-pressed="false" data-rate="15" data-desc-i18n="vatRateDesc15"><strong>15 %</strong><span class="lab" data-i18n="vatRateLab15">Mat</span></button>
                   <button type="button" role="radio" aria-checked="false" aria-pressed="false" data-rate="12" data-desc-i18n="vatRateDesc12"><strong>12 %</strong><span class="lab" data-i18n="vatRateLab12">Lav sats</span></button>
                   <button type="button" role="radio" aria-checked="false" aria-pressed="false" data-rate="0"  data-desc-i18n="vatRateDesc0" ><strong>0 %</strong><span class="lab" data-i18n="vatRateLab0">Fritak</span></button>
                 </div>
@@ -436,38 +455,36 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <section class="ks-section" aria-labelledby="vatInputHdr">
                 <div class="ik-section-head">
                   <h3 id="vatInputHdr" data-i18n="vatSectionInput">Beløp</h3>
-                  <span class="meta" id="vatInputMeta" data-i18n="vatInputMetaEx">uten MVA</span>
+                  <span class="meta" id="vatInputMeta">uten MVA</span>
                 </div>
                 <div class="ik-row full">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="v-a"><span id="vatAmtLbl" data-i18n="vatLblAmtEx">Pris uten MVA</span><span class="cap">kr</span></label>
+                    <label class="ik-lbl" for="v-a"><span id="vatAmtLbl">Pris uten MVA</span><span class="cap">kr</span></label>
                     <input id="v-a" class="ik-input" type="text" inputmode="numeric" value="10 000" autocomplete="off">
                   </div>
                 </div>
               </section>
 
               <p class="ik-hint" style="margin-top:6px;">
-                <span data-i18n="vatAdjJumpLead">Trenger du å justere et MVA-fradrag (kap. 9 — kapitalvarer, bygg, maskiner)?</span>
-                <a href="#vat-adj-section" style="color:var(--accent-2);text-decoration:underline;" data-i18n="vatAdjJump">Hopp til Justeringskalkulator ↓</a>
+                <span data-i18n="vatAdjJumpLead">Endret bruk av bygg eller maskin?</span>
+                <a href="#vat-adj-section" style="color:var(--accent-2);text-decoration:underline;" data-i18n="vatAdjJump">Se justeringskalkulatoren ↓</a>
               </p>
 
             </div>
 
             <aside class="ks-result" aria-live="polite">
-              <div class="ks-r-eyebrow" id="rMainLbl" data-i18n="vatRMainLblInc">Pris med MVA</div>
+              <div class="ks-r-eyebrow" id="rMainLbl">Pris med MVA</div>
               <div class="ks-r-net" id="rMain">–<span class="unit">kr</span></div>
-              <div class="ks-r-mnd" id="rVerdict" data-i18n="vatRVerdictEmpty">Skriv inn beløp og velg sats for å beregne</div>
+              <div class="ks-r-mnd" id="rVerdict">Skriv inn beløp og velg sats for å beregne</div>
 
               <div class="mva-bd">
                 <div><span class="l" id="rL1" data-i18n="vatRBdNetto">Netto</span><span class="v" id="rExc">–</span></div>
-                <div class="hi"><span class="l" id="rBdMvaLbl" data-i18n="vatRBdMvaPlus">+ MVA 25 %</span><span class="v" id="rVat">–</span></div>
+                <div class="hi"><span class="l" id="rBdMvaLbl">+ MVA 25 %</span><span class="v" id="rVat">–</span></div>
               </div>
 
               <div class="ks-r-stats">
                 <div class="ks-r-stat"><span class="l" data-i18n="vatRStatPerMonth">Per måned (snitt)</span><span class="v" id="rPerMonth">–</span></div>
                 <div class="ks-r-stat"><span class="l" data-i18n="vatRStatOfBrutto">Av brutto</span><span class="v" id="rPctOfBrutto">–</span></div>
-                <div class="ks-r-stat div"><span class="l" data-i18n="vatRPctShort">Sats</span><span class="v" id="rPct">–</span></div>
-                <div class="ks-r-stat"><span class="l" data-i18n="vatRStatThreshold">Reg.-terskel</span><span class="v dim">50 000 kr / 12 mnd</span></div>
               </div>
 
               <div class="ks-r-foot" data-i18n="vatRFoot">Næringsdrivende registrerer seg ved omsetning over 50 000 kr siste 12 måneder.</div>
@@ -506,7 +523,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span style="color:var(--ink3);font:600 10px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;" data-i18n="vatAdjEyebrow">MVA-loven kap. 9</span>
       </div>
       <h2 style="font-family:var(--font-serif);font-weight:500;font-size:32px;line-height:1.1;letter-spacing:-.6px;color:var(--ink);margin:0 0 12px;"><em data-i18n="vatAdjTitleEm">Justerings</em><span data-i18n="vatAdjTitleRest">kalkulator</span></h2>
-      <p style="font-size:14.5px;line-height:1.6;color:var(--ink2);margin:0;max-width:62ch;" data-i18n="vatAdjLead">Juster MVA-fradraget hvis bruken endres etter at du tok fradraget — bygg, maskiner og inventar (§ 9-1). Norske 2026-regler. Alt skjer lokalt i nettleseren.</p>
+      <p style="font-size:14.5px;line-height:1.6;color:var(--ink2);margin:0;max-width:62ch;" data-i18n="vatAdjLead">Har bruken av et bygg eller en maskin endret seg? Regn ut hvor mye MVA-fradrag du må betale tilbake, eller kan kreve i tillegg.</p>
     </div>
 
     <div class="ks-host">
@@ -527,47 +544,54 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                 <h3 id="vatAdjInputHdr" data-i18n="vatAdjSectionInput">Justeringsdata</h3>
                 <span class="meta" data-i18n="vatAdjSectionHint">§ 9-5 (kap. 9)</span>
               </div>
-              <div class="ik-row full">
-                <div class="ik-fg">
-                  <label class="ik-lbl" for="adj-type" data-i18n="vatAdjLblType">Type kapitalvare</label>
-                  <select id="adj-type" class="ik-select">
-                    <option value="eiendom" selected data-i18n="vatAdjOptProp">Bygg og tomter — periode 10 år (terskel 100 000 kr)</option>
-                    <option value="maskin" data-i18n="vatAdjOptMach">Maskiner og inventar (§ 9-1 a) — periode 5 år (terskel 50 000 kr)</option>
-                  </select>
+              <div class="ik-stack">
+                <div class="ik-row full">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="adj-type" data-i18n="vatAdjLblType">Type kapitalvare</label>
+                    <select id="adj-type" class="ik-select" aria-describedby="adj-type-hint">
+                      <option value="eiendom" selected data-i18n="vatAdjOptProp">Bygg — 10 år</option>
+                      <option value="maskin" data-i18n="vatAdjOptMach">Maskiner og inventar — 5 år</option>
+                    </select>
+                    <span class="ik-hint" id="adj-type-hint" data-i18n="vatAdjTypeHint">Krever minst 100 000 kr (bygg) eller 50 000 kr (maskiner) i MVA (§ 9-1).</span>
+                  </div>
                 </div>
-              </div>
-              <div class="ik-row full">
-                <div class="ik-fg">
-                  <label class="ik-lbl" for="adj-mva"><span data-i18n="vatAdjLblMva">Total inngående MVA</span><span class="cap">kr</span></label>
-                  <input id="adj-mva" class="ik-input" type="text" inputmode="numeric" value="2 500 000" autocomplete="off">
+                <div class="ik-row full">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="adj-mva"><span data-i18n="vatAdjLblMva">Total inngående MVA</span><span class="cap">kr</span></label>
+                    <input id="adj-mva" class="ik-input" type="text" inputmode="numeric" value="2 500 000" autocomplete="off">
+                  </div>
                 </div>
-              </div>
-              <div class="ik-row full">
-                <div class="ik-fg">
-                  <label class="ik-lbl" for="adj-years" data-i18n="vatAdjLblYears">Hele år siden fradraget ble tatt</label>
-                  <input id="adj-years" class="ik-input" type="text" inputmode="numeric" value="4" autocomplete="off">
+                <div class="ik-row full">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="adj-years" data-i18n="vatAdjLblYears">Hele år siden fradraget ble tatt</label>
+                    <input id="adj-years" class="ik-input" type="text" inputmode="numeric" value="4" autocomplete="off">
+                  </div>
                 </div>
-              </div>
-              <div class="ik-row">
-                <div class="ik-fg">
-                  <label class="ik-lbl" for="adj-old"><span data-i18n="vatAdjLblOld">Gammel andel</span><span class="cap">%</span></label>
-                  <input id="adj-old" class="ik-input" type="text" inputmode="decimal" value="100" autocomplete="off">
-                </div>
-                <div class="ik-fg">
-                  <label class="ik-lbl" for="adj-new"><span data-i18n="vatAdjLblNew">Ny andel</span><span class="cap">%</span></label>
-                  <input id="adj-new" class="ik-input" type="text" inputmode="decimal" value="60" autocomplete="off">
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="adj-old"><span data-i18n="vatAdjLblOld">Gammel andel</span><span class="cap">%</span></label>
+                    <input id="adj-old" class="ik-input" type="text" inputmode="decimal" value="100" autocomplete="off">
+                  </div>
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="adj-new"><span data-i18n="vatAdjLblNew">Ny andel</span><span class="cap">%</span></label>
+                    <input id="adj-new" class="ik-input" type="text" inputmode="decimal" value="60" autocomplete="off">
+                  </div>
                 </div>
               </div>
             </section>
 
-            <p class="ik-hint" data-i18n="vatAdjFormulaNote" style="margin-top:2px;">Formel: Årlig justering = (inngående MVA ÷ periode) × (ny andel − gammel andel). Total = årlig × gjenværende år. Bagatellgrense: ingen justering hvis endringen er under 10 prosentpoeng (§ 9-5 tredje ledd).</p>
+            <p class="ik-hint" data-i18n="vatAdjFormulaNote" style="margin-top:2px;">Endringer under 10 prosentpoeng skal ikke justeres (§ 9-5 tredje ledd).</p>
+            <details class="adj-eks">
+              <summary data-i18n="vatAdjExSummary">Slik regnes det</summary>
+              <p data-i18n="vatAdjExBody">Eksempel: 2 500 000 kr i MVA på et bygg fordeles på 10 år, altså 250 000 kr per år. Faller avgiftspliktig bruk fra 100 % til 60 %, betaler du tilbake 40 % av 250 000 kr, altså 100 000 kr per år. Holder bruken seg slik de 6 årene som er igjen, blir det 600 000 kr.</p>
+            </details>
 
           </div>
 
           <aside class="ks-result" aria-live="polite">
-            <div class="ks-r-eyebrow" id="adjRMainLbl" data-i18n="vatAdjRMainLbl">Justeringsbeløp</div>
+            <div class="ks-r-eyebrow" id="adjRMainLbl">Justeringsbeløp</div>
             <div class="ks-r-net small" id="adjRMain">–</div>
-            <div class="ks-r-mnd" id="adjRVerdict" data-i18n="vatAdjRVerdictInit">Fyll inn feltene for å beregne justeringen.</div>
+            <div class="ks-r-mnd" id="adjRVerdict">Fyll inn feltene for å beregne justeringen.</div>
 
             <div class="ks-r-stats">
               <div class="ks-r-stat"><span class="l" data-i18n="vatAdjRBase">Årlig grunnbeløp</span><span class="v" id="adjRBase">–</span></div>
@@ -601,38 +625,30 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-avgift-vat">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-avgift-vat">Hva kalkulatoren gjør med beløpet ditt</h2><p class="lc-intro">MVA er en prosent som legges oppå prisen. Kalkulatoren gjør to ting: enten legger den MVA til en pris uten avgift, eller den finner ut hvor mye MVA som allerede ligger i en pris som inkluderer avgift. Dette er nøyaktig de samme linjene du ser i beregningen over — bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-avgift-vat">Hva kalkulatoren gjør med beløpet ditt</h2><p class="lc-intro">MVA er en prosent som legges oppå prisen uten avgift. Med 25 % blir 10 000 kr til 12 500 kr, og 2 500 kr av det er MVA.</p></div>
       <div class="lc-ledger">
         <div class="lc-led"><span class="nm"><b>Hovedsats</b><span class="tag">Sats</span></span><span class="fig">25<span class="u">%</span></span><p class="dsc">Standardsatsen som gjelder for de fleste varer og tjenester — klær, elektronikk og byggetjenester. Velger du denne, ganges netto­prisen med 0,25.</p></div>
         <div class="lc-led"><span class="nm"><b>Næringsmiddel-sats</b><span class="tag">Sats</span></span><span class="fig">15<span class="u">%</span></span><p class="dsc">Den reduserte satsen for mat og alkoholfri drikke. Lavere fordi det regnes som dagligvarer alle trenger.</p></div>
         <div class="lc-led"><span class="nm"><b>Lav sats</b><span class="tag">Sats</span></span><span class="fig">12<span class="u">%</span></span><p class="dsc">Gjelder persontransport, kino, kultur og hotell­overnatting. Den laveste positive satsen i kalkulatoren.</p></div>
-        <div class="lc-led"><span class="nm"><b>Fritak (nullsats)</b><span class="tag">Sats</span></span><span class="fig">0<span class="u">%</span></span><p class="dsc">Aviser, bøker, helse og undervisning. Da legges ingen MVA til, men selgeren får likevel trekke fra MVA på sine egne innkjøp.</p></div>
+        <div class="lc-led"><span class="nm"><b>Fritak (nullsats)</b><span class="tag">Sats</span></span><span class="fig">0<span class="u">%</span></span><p class="dsc">Aviser, bøker og eksport. Du legger ikke MVA på salget, men får likevel fradrag for MVA på innkjøp.</p></div>
         <div class="lc-led"><span class="nm"><b>Legg til MVA</b><span class="tag">Faktor</span></span><span class="fig">× (1 + sats)</span><p class="dsc">Har du en pris uten MVA, ganges den med 1 pluss satsen. 10 000 kr med 25 % blir 10 000 × 1,25 = 12 500 kr.</p></div>
         <div class="lc-led"><span class="nm"><b>Trekk fra MVA</b><span class="tag">Faktor</span></span><span class="fig">÷ (1 + sats)</span><p class="dsc">Har du en pris som inkluderer MVA, deles den på 1 pluss satsen for å finne netto. 12 500 kr / 1,25 = 10 000 kr, og MVA-en er differansen.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcB-avgift-vat">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-avgift-vat">Satsene og grensene for 2026</h2><p class="lc-intro">Dette er tallene kalkulatoren bygger på. De fire satsene velger du med knappene, og terskelen avgjør om en virksomhet i det hele tatt skal beregne MVA.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-avgift-vat">Satsene og grensene for 2026</h2></div>
       <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
-        <div class="lc-kv"><span class="k">Hovedsats</span><span class="v">25<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Næringsmidler (mat)</span><span class="v">15<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Persontransport, kino, hotell</span><span class="v">12<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Aviser, bøker, helse, undervisning</span><span class="v">0<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Registreringsterskel</span><span class="v">50 000<span class="u">kr / 12 mnd</span></span></div>
-      </div>
       <div class="lc-card">
         <div class="lc-tblwrap">
         <table class="lc-trinn">
           <caption>MVA-satser 2026 og hva de gjelder</caption>
-          <thead><tr><th>Sats</th><th class="r">Navn</th><th class="r">Typiske varer og tjenester</th></tr></thead>
+          <thead><tr><th>Sats</th><th>Navn</th><th>Typiske varer og tjenester</th></tr></thead>
           <tbody>
-            <tr><td><span class="step">25 %</span></td><td class="r">Hovedsats</td><td class="r">Klær, elektronikk, byggetjenester</td></tr>
-            <tr><td><span class="step">15 %</span></td><td class="r">Næringsmiddel</td><td class="r">Mat og alkoholfri drikke</td></tr>
-            <tr><td><span class="step">12 %</span></td><td class="r">Lav sats</td><td class="r">Transport, kino, kultur, hotell</td></tr>
-            <tr><td><span class="step">0 %</span></td><td class="r">Fritak</td><td class="r">Aviser, tidsskrift, bøker, eksport</td></tr>
-            <tr><td><span class="step">—</span></td><td class="r">Unntak</td><td class="r">Helse, undervisning, finans, utleie av fast eiendom</td></tr>
+            <tr><td><span class="step">25 %</span></td><td>Hovedsats</td><td>Klær, elektronikk, byggetjenester</td></tr>
+            <tr><td><span class="step">15 %</span></td><td>Næringsmiddel</td><td>Mat og alkoholfri drikke</td></tr>
+            <tr><td><span class="step">12 %</span></td><td>Lav sats</td><td>Transport, kino, kultur, hotell</td></tr>
+            <tr><td><span class="step">0 %</span></td><td>Fritak</td><td>Aviser, tidsskrift, bøker, eksport</td></tr>
+            <tr><td><span class="step">—</span></td><td>Unntak</td><td>Helse, undervisning, finans, utleie av fast eiendom</td></tr>
           </tbody>
         </table>
         </div>
@@ -640,7 +656,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-avgift-vat">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-avgift-vat">Praktiske ting om MVA</h2><p class="lc-intro">Noen poenger som ikke kommer fram av selve tallet, men som forklarer hvorfor kalkulatoren regner som den gjør.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-avgift-vat">Praktiske ting om MVA</h2></div>
       <div class="lc-notes">
         <div class="lc-note"><h3>Terskelen på 50 000 kr gjelder omsetning, ikke overskudd</h3><p>En næringsdrivende skal registrere seg i MVA-registeret når salget passerer 50 000 kr i løpet av siste 12 måneder. Det er summen du selger for som teller — ikke det du sitter igjen med.</p></div>
         <div class="lc-note"><h3>0 % fritak er ikke det samme som «ingen MVA i det hele tatt»</h3><p>Ved fritak (nullsats) legger du 0 % på kundens pris, men du får likevel trekke fra MVA på dine egne innkjøp. Det er forskjellig fra varer som står helt utenfor MVA-systemet.</p></div>
@@ -707,8 +723,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     function setOutputHTML(id, val){ var el=document.getElementById(id); if(el) el.innerHTML=val; }
     function fmtNum(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' '); }
+    // Tekst med tall hentes fra språkfila (R()); fast tekst skrives på norsk og oversettes av _ph.
+    function t(k, fb){ var r = (typeof R === 'function') ? R() : null; return (r && r[k]) || fb; }
 
-    var RATE_DESCS = {'25':'Klær, elektronikk, byggetjenester','15':'Mat og alkoholfri drikke','12':'Transport, kino, kultur, hotell','0':'Aviser, bøker, helse, undervisning'};
+    var RATE_DESCS = {'25':'Klær, elektronikk, byggetjenester','15':'Mat og alkoholfri drikke','12':'Transport, kino, kultur, hotell','0':'Aviser, bøker, eksport'};
 
     function activeMode(){ var b=document.querySelector('.mva-mode[aria-pressed="true"]'); return b?b.getAttribute('data-mode'):'ex'; }
     function activeRate(){ var b=document.querySelector('.mva-rate button[aria-pressed="true"]'); return b?parseFloat(b.getAttribute('data-rate')):25; }
@@ -719,7 +737,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     function paintRateDesc(){
       var r=activeRate();
       var el=document.getElementById('vatRateDesc'); if(el) el.textContent=RATE_DESCS[String(r)]||'';
-      var lbl=document.getElementById('rBdMvaLbl'); if(lbl) lbl.textContent='+ MVA '+r+' %';
+      var lbl=document.getElementById('rBdMvaLbl'); if(lbl) lbl.textContent=t('vatRBdMvaTpl','+ MVA {r} %').replace('{r}', r);
     }
     function paintAmtMeta(){
       var tp=activeMode();
@@ -754,7 +772,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         setOutputText('rVerdict', 'Skriv inn beløp og velg sats for å beregne');
         setOutputText('rExc', '–');
         setOutputText('rVat', '–');
-        setOutputText('rPct', '–');
         setOutputText('rPerMonth', '–');
         setOutputText('rPctOfBrutto', '–');
         setOutputText('hStatVat', '–');
@@ -779,7 +796,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       }
       setOutputText('rExc', fmtKr(d.ex));
       setOutputText('rVat', fmtKr(d.vat));
-      setOutputText('rPct', fmtPct(d.s));
       setOutputText('rPerMonth', fmtKr(d.vat/12));
       setOutputText('rPctOfBrutto', d.inc > 0 ? fmtPct(d.vat/d.inc*100) : '–');
       setOutputText('hStatVat', fmtKr(d.vat));
@@ -852,6 +868,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     // ── Init ──
     restore();
     recalc();
+    // core.js laster språkfila etter dette skriptet, og på nytt ved språkbytte.
+    // Begge gangene settes lang på <html>; da skrives etikettene på valgt språk.
+    try {
+      new MutationObserver(function(){ recalc(); })
+        .observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+    } catch(e){}
   })();
 
   // ── Justeringskalkulator (port av calcAdj fra shared/core.js:4222) ──
@@ -859,7 +881,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     var KEY = 'hv-vat-adj-v1';
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
     function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
-    function fmtPct(n){ return n.toFixed(1).replace('.', ',') + ' %'; }
     function parseAmt(id){
       var el = document.getElementById(id);
       if(!el) return 0;
@@ -868,6 +889,14 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       return isNaN(n) || n < 0 ? 0 : n;
     }
     function setText(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; }
+    function t(k, fb){ var r = (typeof R === 'function') ? R() : null; return (r && r[k]) || fb; }
+    // Endring mellom to andeler er prosentpoeng, ikke prosent. x er i prosentpoeng.
+    function fmtPp(x, utenFortegn){
+      var v = Math.round(x * 10) / 10;
+      var s = Math.abs(v).toFixed(1).replace('.', ',').replace(/,0$/, '');
+      var fortegn = utenFortegn ? '' : (v > 0 ? '+' : v < 0 ? '−' : '');
+      return fortegn + s + ' ' + t('vatAdjPpUnit', 'prosentpoeng');
+    }
 
     // Sammendragsstripa øverst (speiler resultatet — som MVA-kalkulatoren over)
     function paintStrip(d){
@@ -878,7 +907,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       setText('adjSRemain', hasBase ? (remaining + ' / ' + d.periode) : '–');
       var amt = '–';
       if(d.state === 'justering') amt = fmtKr(Math.abs(d.justering));
-      else if(d.state === 'expired' || d.state === 'bagatell') amt = '0 kr';
+      else if(d.state === 'expired' || d.state === 'bagatell' || d.state === 'under-terskel') amt = '0 kr';
       setText('adjSAmount', amt);
     }
 
@@ -905,7 +934,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       if(totalMva <= 0){ d.state = 'empty'; return d; }
       if(totalMva < terskel){ d.state = 'under-terskel'; return d; }
       if(aarBrukt >= periode){ d.state = 'expired'; return d; }
-      if(Math.round(Math.abs(endring) * 100) < 10){ d.state = 'bagatell'; return d; }
+      if(Math.abs(endring) < 0.1 - 1e-9){ d.state = 'bagatell'; return d; }
 
       d.gjenstaende = periode - aarBrukt;
       d.justering = arligBeloep * endring * d.gjenstaende;
@@ -916,23 +945,24 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     function recalc(){
       var d = compute();
-      var ofT = ' av ';
+      var ofT = t('adjOfTotal', ' av ');
       paintStrip(d);
 
       if(d.state === 'empty'){
-        setText('adjRMainLbl', 'Justeringsbeløp');
+        setText('adjRMainLbl', t('vatAdjRMainLbl', 'Justeringsbeløp'));
         setText('adjRMain', '–');
-        setText('adjRVerdict', 'Fyll inn feltene for å beregne justeringen.');
+        setText('adjRVerdict', t('vatAdjRVerdictInit', 'Fyll inn feltene for å beregne justeringen.'));
         setText('adjRBase', '–'); setText('adjRAnnual', '–');
         setText('adjRRemain', '–'); setText('adjRChange', '–');
         persist();
         return;
       }
 
+      // Under terskelen gjelder ikke justeringsreglene: beløpet er 0, ikke terskelen.
       if(d.state === 'under-terskel'){
-        setText('adjRMainLbl', 'Under terskelverdi');
-        setText('adjRMain', fmtKr(d.terskel));
-        setText('adjRVerdict', 'Inngående MVA må overstige ' + fmtKr(d.terskel) + ' for justeringsplikt.');
+        setText('adjRMainLbl', t('adjUnder', 'Under terskelverdi'));
+        setText('adjRMain', '0 kr');
+        setText('adjRVerdict', t('vatAdjRUnderSub', 'Ingen justering. Inngående MVA må være minst {t}.').replace('{t}', fmtKr(d.terskel)));
         setText('adjRBase', '–'); setText('adjRAnnual', '–');
         setText('adjRRemain', '–'); setText('adjRChange', '–');
         persist();
@@ -940,40 +970,40 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       }
 
       if(d.state === 'expired'){
-        setText('adjRMainLbl', 'Justeringsperioden utløpt');
+        setText('adjRMainLbl', t('adjExpired', 'Justeringsperioden utløpt'));
         setText('adjRMain', '0 kr');
-        setText('adjRVerdict', 'Alle ' + d.periode + ' år er brukt — ingen justering nødvendig.');
+        setText('adjRVerdict', t('adjExpiredSub', 'Alle {p} år er brukt — ingen justering nødvendig').replace('{p}', d.periode) + '.');
         setText('adjRBase', fmtKr(d.arligBeloep));
         setText('adjRAnnual', '0 kr');
         setText('adjRRemain', '0' + ofT + d.periode);
-        setText('adjRChange', fmtPct((d.nyAndel - d.gammelAndel) * 100));
+        setText('adjRChange', fmtPp(d.endring * 100));
         persist();
         return;
       }
 
       if(d.state === 'bagatell'){
-        setText('adjRMainLbl', 'Under bagatellgrensen (§ 9-5 tredje ledd)');
+        setText('adjRMainLbl', t('adjBagatell', 'Under bagatellgrensen (§ 9-5 tredje ledd)'));
         setText('adjRMain', '0 kr');
-        setText('adjRVerdict', 'Endring på ' + fmtPct(Math.abs(d.endring) * 100) + ' er under 10 prosentpoeng — ingen justeringsplikt.');
+        setText('adjRVerdict', t('vatAdjRBagatellSub', 'Endringen er {p}. Under 10 prosentpoeng skal du ikke justere.').replace('{p}', fmtPp(d.endring * 100, true)));
         setText('adjRBase', fmtKr(d.arligBeloep));
         setText('adjRAnnual', '0 kr');
         setText('adjRRemain', (d.periode - d.aarBrukt) + ofT + d.periode);
-        setText('adjRChange', fmtPct(d.endring * 100));
+        setText('adjRChange', fmtPp(d.endring * 100));
         persist();
         return;
       }
 
-      // Faktisk justering
+      // Faktisk justering. Beløpet står stort; dommen sier hva det betyr.
       var erTilbake = d.justering < 0;
-      setText('adjRMainLbl', erTilbake ? 'Tilbakebetaling til staten' : 'Økt fradrag');
+      setText('adjRMainLbl', erTilbake ? t('adjRepay', 'Tilbakebetaling til staten') : t('adjIncrease', 'Økt fradrag'));
       setText('adjRMain', fmtKr(Math.abs(d.justering)));
       setText('adjRVerdict', erTilbake
-        ? 'Du må tilbakebetale ' + fmtKr(Math.abs(d.justering)) + ' i tidligere fradragsført MVA.'
-        : 'Du kan kreve ' + fmtKr(d.justering) + ' i ekstra MVA-fradrag.');
+        ? t('vatAdjRRepayVerdict', 'Du betaler det tilbake år for år resten av perioden. Beløpet forutsetter at den nye bruken varer.')
+        : t('vatAdjRIncreaseVerdict', 'Du får det i fradrag år for år resten av perioden. Beløpet forutsetter at den nye bruken varer.'));
       setText('adjRBase', fmtKr(d.arligBeloep));
       setText('adjRAnnual', fmtKr(d.arligJustering));
       setText('adjRRemain', d.gjenstaende + ofT + d.periode);
-      setText('adjRChange', (d.endring > 0 ? '+' : '') + fmtPct(d.endring * 100));
+      setText('adjRChange', fmtPp(d.endring * 100));
       persist();
     }
 
@@ -1011,6 +1041,11 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     restore();
     recalc();
+    // Samme som over: regn ut igjen når språkfila er lastet eller byttet.
+    try {
+      new MutationObserver(function(){ recalc(); })
+        .observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+    } catch(e){}
   })();
 </script>
 
@@ -1097,9 +1132,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </script>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 </body>
 </html>

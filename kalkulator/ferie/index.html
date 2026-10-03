@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Feriepenger — Kalkulator · Hverdagsverktøy</title>
-<meta name="description" content="Regn ut feriepengene dine etter Ferieloven § 10 — 10,2 % grunnsats, 12 % ved 5 ukers ferie, +2,3 % bonus over 60 år (opp til 6G). Alt skjer lokalt i nettleseren.">
+<meta name="description" content="Regn ut feriepengene dine: 10,2 % av fjorårets lønn, eller 12 % ved fem ukers ferie. Fyller du 60 i år eller er eldre, får du 2,3 prosentpoeng ekstra på lønn opp til 6G.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/kalkulator/ferie/">
@@ -50,12 +50,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Feriepenger — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/lonnut/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -121,6 +121,7 @@ select.ik-input{appearance:none;-webkit-appearance:none;cursor:pointer;padding-r
 .ik-check input{cursor:pointer;width:16px;height:16px;accent-color:var(--accent);flex-shrink:0}
 .ik-check label{flex:1;cursor:pointer;font:500 12.5px/1.4 var(--font-sans);color:var(--ink)}
 .ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.ik-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
 
 .ks-result{background:var(--surface);padding:22px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .ks-r-eyebrow{font:500 10px/1 var(--font-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
@@ -147,7 +148,6 @@ select.ik-input{appearance:none;-webkit-appearance:none;cursor:pointer;padding-r
 .side-col{display:flex;flex-direction:column;gap:12px;min-width:0}
 .side-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px}
 .side-card h4{margin:0 0 10px;font:600 11px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);padding-bottom:8px;border-bottom:1px solid var(--line)}
-.side-card p{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink2)}
 .side-card .ref-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
 .side-card .ref-row .v{color:var(--ink);font-weight:500}
 .side-card .ref-row .v.accent{color:var(--accent-2)}
@@ -393,7 +393,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="ferieCrumb">Feriepenger</span>
       </div>
       <h1 class="page-title"><em data-i18n="ferieTitle">Feriepenger</em></h1>
-      <p class="page-lead" data-i18n="ferieSubtitle">Regn ut feriepengene dine etter Ferieloven § 10 — 10,2 % grunnsats (4 ukers ferie) eller 12 % (5 ukers ferie). Over 60 år gir et tillegg på 2,3 prosentpoeng på grunnlag opp til 6G (Ferieloven § 10 nr. 3). Alt skjer lokalt i nettleseren.</p>
+      <p class="page-lead" data-i18n="ferieSubtitle">Feriepengene er 10,2 % av det du tjente i fjor, eller 12 % hvis du har fem ukers ferie. Fyller du 60 i år eller er eldre, får du 2,3 prosentpoeng ekstra på lønn opp til 6G (seks ganger grunnbeløpet).</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
@@ -443,13 +443,16 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                   </div>
                 </div>
                 <div class="ik-row full">
-                  <div class="ik-check">
-                    <input type="checkbox" id="ferie-over60">
-                    <label for="ferie-over60" data-i18n="ferieLblOver60">Over 60 år (+2,3 % bonus, opptil 6G)</label>
+                  <div class="ik-fg">
+                    <div class="ik-check">
+                      <input type="checkbox" id="ferie-over60" aria-describedby="ferie-over60-hint">
+                      <label for="ferie-over60" data-i18n="ferieLblOver60">60 år eller eldre i år</label>
+                    </div>
+                    <span class="ik-hint" id="ferie-over60-hint" data-i18n="ferieHintOver60">Gjelder fra året du fyller 60. Gir 2,3 prosentpoeng ekstra, bare på lønn opp til 6G.</span>
                   </div>
                 </div>
               </div>
-              <p class="ik-note">Feriepenger betales året etter opptjeningsåret. Grunnlag er normalt arbeidsinntekt — ikke feriepenger fra forrige år, ikke utbytte. Bonusen for 60+ gjelder kun grunnlag opp til 6G (1G = 136&nbsp;549 kr fra mai 2026). Skal du beregne hva du faktisk får utbetalt etter skatt? <a href="/personlig/lonn/">Bruk Lønn etter skatt →</a></p>
+              <p class="ik-note">Skriv inn lønnen fra i fjor. Feriepengene du fikk i fjor og utbytte skal ikke med. Vil du se beløpet etter skatt? <a href="/personlig/lonn/">Bruk Lønn etter skatt →</a></p>
             </section>
           </div>
 
@@ -468,8 +471,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <div class="ks-r-stat"><span class="l" data-i18n="ferieRRate">Sats</span><span class="v" id="rRate">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="ferieRDays">Antall feriedager</span><span class="v" id="rDays">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="ferieDailyLabel">Daglig sats</span><span class="v" id="rDaily">–</span></div>
-              <div class="ks-r-stat div" id="rBonusRow" hidden><span class="l" data-i18n="ferieRBonus">Bonus 60+ (2,3 %)</span><span class="v" id="rBonus">–</span></div>
-              <div class="ks-r-stat" id="rWithBonusRow" hidden><span class="l" data-i18n="ferieOver60Result">Med 60+ bonus</span><span class="v" id="rWithBonus">–</span></div>
+              <div class="ks-r-stat div" id="rBonusRow" hidden><span class="l" data-i18n="ferieRBonus">Tillegg 60+ (2,3 prosentpoeng)</span><span class="v" id="rBonus">–</span></div>
+              <div class="ks-r-stat" id="rWithBonusRow" hidden><span class="l" data-i18n="ferieOver60Result">Med tillegg 60+</span><span class="v" id="rWithBonus">–</span></div>
             </div>
           </aside>
         </div>
@@ -481,17 +484,13 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <h4 data-i18n="ferieSideSatser">Feriepengesatser</h4>
         <div class="ref-row"><span class="l">Lovbestemt min. (4u)</span><span class="v">10,2<span class="u">%</span></span></div>
         <div class="ref-row"><span class="l">Tariff (5 uker)</span><span class="v">12,0<span class="u">%</span></span></div>
-        <div class="ref-row"><span class="l">Over 60 år (5u)</span><span class="v accent">14,3<span class="u">%</span></span></div>
+        <div class="ref-row"><span class="l">5 uker + tillegg 60+</span><span class="v accent">14,3<span class="u">%</span></span></div>
         <div class="ref-row"><span class="l">Skattetrekk juni</span><span class="v">0<span class="u">%</span></span></div>
-      </div>
-      <div class="side-card">
-        <h4 data-i18n="ferieSideWhat">Hva er feriepenger?</h4>
-        <p data-i18n="ferieSideWhatBody">Feriepenger er lovbestemt etter Ferieloven § 10. Arbeidsgiver kan ikke gi mindre enn 10,2 %, men tariffavtaler kan gi mer (typisk 12 % for 5 ukers ferie). De utbetales normalt i juni året etter opptjening og er skattepliktig inntekt, selv om det ikke trekkes skatt ved utbetaling.</p>
       </div>
       <div class="side-card related">
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
         <a href="/skatt/inntekt/"><span class="name" data-i18n="relLonn">Lønn etter skatt</span><span class="arr">→</span></a>
-        <a href="/kalkulator/lonnut/"><span class="name" data-i18n="relLonnut">Lønn ut (timer)</span><span class="arr">→</span></a>
+        <a href="/kalkulator/lonnut/"><span class="name" data-i18n="relLonnut">Lønn ut</span><span class="arr">→</span></a>
         <a href="/personlig/syk/"><span class="name" data-i18n="relSyk">Sykepenger</span><span class="arr">→</span></a>
       </div>
     </aside>
@@ -512,27 +511,27 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-kalkulator-ferie">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-ferie">Hva som skjer fra lønn til feriepenger</h2><p class="lc-intro">Feriepenger regnes som en prosent av det du tjente året før. Kalkulatoren tar grunnlaget ditt, ganger med satsen for ferietypen din, og deler på antall feriedager for å vise en daglig sats. Er du over 60, legges det på et lite tillegg. Dette er nøyaktig de samme linjene du ser i beregningen over — bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-ferie">Hva som skjer fra lønn til feriepenger</h2><p class="lc-intro">Feriepengene er en prosent av det du tjente i fjor. Daglig sats er feriepengene delt på antall feriedager. Fyller du 60 i år eller er eldre, får du et tillegg.</p></div>
       <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Grunnsats 4 uker</b><span class="tag">Sats</span></span><span class="fig">10,2<span class="u">%</span></span><p class="dsc">Lovens minimum etter Ferieloven § 10. Tjente du 500 000 kr i fjor, blir feriepengene 51 000 kr.</p></div>
+        <div class="lc-led"><span class="nm"><b>Grunnsats 4 uker</b><span class="tag">Sats</span></span><span class="fig">10,2<span class="u">%</span></span><p class="dsc">Lovens minimum etter Ferieloven § 10. Tjente du 500 000 kr i fjor, blir feriepengene 51&nbsp;000 kr.</p></div>
         <div class="lc-led"><span class="nm"><b>Sats 5 uker</b><span class="tag">Sats</span></span><span class="fig">12,0<span class="u">%</span></span><p class="dsc">Brukes når du har fem ukers ferie, ofte gjennom tariffavtale. Litt høyere sats fordi du tar ut flere feriedager.</p></div>
-        <div class="lc-led"><span class="nm"><b>Bonus over 60 år</b><span class="tag">Faktor</span></span><span class="fig">2,3<span class="u">prosentpoeng</span></span><p class="dsc">Legges oppå grunnsatsen hvis du krysser av for over 60 år. Et eget ekstra feriepengetillegg etter Ferieloven § 10 nr. 3.</p></div>
-        <div class="lc-led"><span class="nm"><b>6G-tak for bonus</b><span class="tag">Grense</span></span><span class="fig">819 294<span class="u">kr</span></span><p class="dsc">Bonusen for 60+ regnes bare av grunnlag opp til seks ganger grunnbeløpet (6 × 136 549 kr). Tjener du mer, teller ikke det over taket for bonusen.</p></div>
+        <div class="lc-led"><span class="nm"><b>Tillegg 60+</b><span class="tag">Faktor</span></span><span class="fig">2,3<span class="u">prosentpoeng</span></span><p class="dsc">Gjelder fra året du fyller 60 (ferieloven § 10 nr. 3). Legges oppå satsen: 2,3 % av 500&nbsp;000 kr gir 11&nbsp;500 kr ekstra.</p></div>
+        <div class="lc-led"><span class="nm"><b>6G-tak for tillegget</b><span class="tag">Grense</span></span><span class="fig">819 294<span class="u">kr</span></span><p class="dsc">Tillegget regnes bare av lønn opp til seks ganger grunnbeløpet (6G). Grunnbeløpet er det som gjaldt 31. desember i året du tjente pengene. 819 294 kr (6 × 136 549 kr) gjelder lønn i 2026. For lønn i 2025 er taket lavere.</p></div>
         <div class="lc-led"><span class="nm"><b>Feriedager, lovens minimum</b><span class="tag">Faktor</span></span><span class="fig">21<span class="u">dager</span></span><p class="dsc">Ferieloven gir 25 virkedager, og virkedager teller også lørdager. Jobber du mandag til fredag, blir det fire uker pluss én dag — altså 21 arbeidsdager, ikke 20. Feriepengene deles på dette for å vise hva én feriedag er verdt.</p></div>
         <div class="lc-led"><span class="nm"><b>Feriedager, fem uker</b><span class="tag">Faktor</span></span><span class="fig">25<span class="u">dager</span></span><p class="dsc">Fem ukers ferie er 30 virkedager, som blir 25 arbeidsdager mandag til fredag. Brukes når du velger 12 %-satsen, og gir daglig sats = feriepenger delt på 25.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcB-kalkulator-ferie">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-kalkulator-ferie">Satsene kalkulatoren bruker</h2><p class="lc-intro">Disse satsene og grensene ligger bak utregningen. Hvilken sats som gjelder deg avhenger av hvor mange ukers ferie du har, og om du er over 60.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-kalkulator-ferie">Satsene kalkulatoren bruker</h2></div>
       <div class="lc-rates">
       <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
+        <span class="ttl">Nøkkeltall</span>
         <div class="lc-kv"><span class="k">Grunnsats (4 uker)</span><span class="v">10,2<span class="u">%</span></span></div>
         <div class="lc-kv"><span class="k">Sats (5 uker)</span><span class="v">12,0<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Bonus over 60 år</span><span class="v">2,3<span class="u">prosentpoeng</span></span></div>
+        <div class="lc-kv"><span class="k">Tillegg 60+</span><span class="v">2,3<span class="u">prosentpoeng</span></span></div>
         <div class="lc-kv"><span class="k">Kombinert sats 60+ (5 uker)</span><span class="v">14,3<span class="u">%</span></span></div>
         <div class="lc-kv"><span class="k">Grunnbeløp (1G) fra mai 2026</span><span class="v">136 549<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">6G-tak for 60+-bonus</span><span class="v">819 294<span class="u">kr</span></span></div>
+        <div class="lc-kv"><span class="k">6G-tak for tillegget (lønn 2026)</span><span class="v">819 294<span class="u">kr</span></span></div>
         <div class="lc-kv"><span class="k">Feriedager, lovens minimum</span><span class="v">21<span class="u">dager</span></span></div>
         <div class="lc-kv"><span class="k">Skattetrekk i juni</span><span class="v">0<span class="u">%</span></span></div>
       </div>
@@ -542,7 +541,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <caption>Feriepengesatser etter ferietype</caption>
           <thead><tr><th>Ferietype</th><th class="r">Sats</th><th class="r">Feriedager</th><th class="r">Sats med 60+</th></tr></thead>
           <tbody>
-            <tr><td><span class="step">4 uker (lovens minimum)</span></td><td class="r">10,2 %</td><td class="r">20</td><td class="r">12,5 %</td></tr>
+            <tr><td><span class="step">4 uker (lovens minimum)</span></td><td class="r">10,2 %</td><td class="r">21</td><td class="r">12,5 %</td></tr>
             <tr><td><span class="step">5 uker (tariff)</span></td><td class="r">12,0 %</td><td class="r">25</td><td class="r">14,3 %</td></tr>
           </tbody>
         </table>
@@ -551,12 +550,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-kalkulator-ferie">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-ferie">Det som er lett å misforstå</h2><p class="lc-intro">Feriepenger fungerer litt annerledes enn vanlig lønn. Her er de tingene folk oftest blander sammen.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-ferie">Det som er lett å misforstå</h2></div>
       <div class="lc-notes">
         <div class="lc-note"><h3>Du tjener opp i fjor, får utbetalt i år</h3><p>Feriepengene du får i år regnes av det du tjente i opptjeningsåret — altså fjoråret. Begynte du i jobb i år, får du derfor lite eller ingen feriepenger denne sommeren.</p></div>
         <div class="lc-note"><h3>Det trekkes ikke skatt i juni</h3><p>Ved utbetaling trekkes 0 % skatt, så summen ser stor ut. Men feriepenger er skattepliktig inntekt — skatten er allerede bakt inn i trekket resten av året.</p></div>
         <div class="lc-note"><h3>Riktig grunnlag er vanlig arbeidsinntekt</h3><p>Grunnlaget er det du fikk i lønn — ikke feriepengene fra forrige år og ikke utbytte. Legg inn årslønnen din fra opptjeningsåret for et riktig tall.</p></div>
-        <div class="lc-note"><h3>Bonusen for 60+ har et tak</h3><p>Tillegget på 2,3 prosentpoeng gjelder bare grunnlag opp til 6G (819 294 kr). Tjener du mer enn det, gir ikke kalkulatoren ekstra bonus på den delen som ligger over.</p></div>
+        <div class="lc-note"><h3>Tillegget for 60+ har et tak</h3><p>Tillegget på 2,3 prosentpoeng gjelder bare lønn opp til 6G (819 294 kr for lønn i 2026). Tjener du mer, får du ikke tillegg på det som ligger over.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcD-kalkulator-ferie">
@@ -564,7 +563,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <div class="lc-faq">
         <details class="lc-q"><summary>Hvorfor får jeg ikke feriepenger første sommeren i ny jobb?</summary><div class="a"><p>Feriepenger regnes av det du tjente året før. Hadde du ingen inntekt hos arbeidsgiveren i fjor, er grunnlaget null, og da blir det heller ingen feriepenger denne sommeren.</p></div></details>
         <details class="lc-q"><summary>Er det 10,2 % eller 12 % som gjelder for meg?</summary><div class="a"><p>10,2 % er lovens minimum og gjelder hvis du har fire ukers ferie. Har du fem ukers ferie — ofte gjennom tariffavtale — er satsen 12 %. Velg ferietypen din i kalkulatoren.</p></div></details>
-        <details class="lc-q"><summary>Hva er bonusen for over 60 år?</summary><div class="a"><p>Er du over 60, får du et ekstra feriepengetillegg på 2,3 prosentpoeng. Det regnes bare av grunnlag opp til 6G (819 294 kr), så på et grunnlag over dette stopper bonusen ved taket.</p></div></details>
+        <details class="lc-q"><summary>Hva er tillegget for 60 år og eldre?</summary><div class="a"><p>Fyller du 60 i år eller er eldre, får du 2,3 prosentpoeng ekstra i feriepenger. Tillegget regnes bare av lønn opp til 6G (819 294 kr for lønn i 2026).</p></div></details>
         <details class="lc-q"><summary>Betaler jeg skatt av feriepengene?</summary><div class="a"><p>Ja, feriepenger er skattepliktig inntekt. Men det trekkes 0 % skatt i juni-utbetalingen. Skatten er fordelt på de andre månedene gjennom et høyere trekk ellers i året.</p></div></details>
         <details class="lc-q"><summary>Hva er daglig sats i resultatet?</summary><div class="a"><p>Det er feriepengene dine delt på antall feriedager — 21 dager på lovens minimum, 25 dager ved fem uker. Ferieloven regner i virkedager (som teller lørdag), og 25 virkedager blir 21 arbeidsdager for en mandag-til-fredag-uke.</p></div></details>
         <details class="lc-q"><summary>Hvor mye er feriepengene mine etter skatt?</summary><div class="a"><p>Denne kalkulatoren viser bruttobeløpet før skatt. Vil du se hva som faktisk lander på konto, bruk Lønn etter skatt, som regner inn trekkene dine.</p></div></details>
@@ -575,7 +574,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <div class="lc-links">
         <a class="lc-link" href="/personlig/lonn/"><span class="ar">Lønn etter skatt →</span><h3>Se beløpet etter skatt</h3><p>Feriepenger er skattepliktig. Regn ut hva som faktisk blir igjen når skatten er trukket.</p></a>
         <a class="lc-link" href="/kalkulator/lonnut/"><span class="ar">Lønn ut →</span><h3>Fra timer til lønn</h3><p>Regn ut bruttolønn fra timepris og antall timer — grunnlaget feriepengene bygger på.</p></a>
-        <a class="lc-link" href="/personlig/syk/"><span class="ar">Sykepenger →</span><h3>Sykepenger og 6G</h3><p>Sykepenger har samme 6G-tak som ferieboonusen. Se hvordan grunnbeløpet setter grensen.</p></a>
+        <a class="lc-link" href="/personlig/syk/"><span class="ar">Sykepenger →</span><h3>Sykepenger og 6G</h3><p>Sykepenger har samme 6G-tak som tillegget for 60+. Se hvordan grunnbeløpet setter grensen.</p></a>
       </div>
     </section>
   </div>
@@ -596,9 +595,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -659,7 +658,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   function renderBar(d){
     var segs = [
       { v: d.amt,   l:'Feriepenger', c:'linear-gradient(90deg,var(--accent),var(--accent-2))' },
-      { v: d.bonus, l:'60+ bonus',   c:'color-mix(in srgb, var(--accent) 35%, transparent)' }
+      { v: d.bonus, l:'Tillegg 60+', c:'color-mix(in srgb, var(--accent) 35%, transparent)' }
     ];
     var total = segs.reduce(function(a,b){return a+b.v;}, 0) || 1;
     var track = document.getElementById('ksBarTrack');
@@ -697,7 +696,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     // ks-strip
     setEl('fStripBase', fmtKr(d.sal));
-    setEl('fStripRate', rateLbl);
+    setEl('fStripRate', d.type >= 0.12 ? '12 %' : '10,2 %');
     setEl('fStripDaily', fmtKr(d.daily));
     setEl('fStripAmt', fmtKr(d.amt));
 
@@ -717,7 +716,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     if(verdEl){
       var r = (typeof R === 'function') ? R() : {};
       if(d.over60){
-        var tplA = r.ferieVerdictOver60 || 'Inkludert 60+ bonus får du {amt} i feriepenger.';
+        var tplA = r.ferieVerdictOver60 || 'Med tillegget for 60+ får du {amt} i feriepenger.';
         verdEl.textContent = tplA.replace('{amt}', fmtKr(d.withBonus));
       } else {
         verdEl.textContent = r.ferieVerdictBase || 'Feriepengene utbetales normalt i juni året etter opptjening.';

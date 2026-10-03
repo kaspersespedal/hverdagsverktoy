@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Utbytteskatt — Skatt · Hverdagsverktøy</title>
-<meta name="description" content="Beregn utbytteskatt for AS og marginalskatt for ENK 2026 — oppjusteringsfaktor 1,72, skjermingsfradrag, selskapsskatt 22 %. Aksjonærmodellen og foretaksmodellen side om side.">
+<meta name="description" content="Regn ut samlet skatt på overskuddet i AS eller ENK for 2026: selskapsskatt 22 % og utbytteskatt med oppjusteringsfaktor 1,72 og skjermingsfradrag, eller trygdeavgift og trinnskatt.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/skatt/utbytte/">
@@ -50,11 +50,11 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <style>
 /* Utbytteskatt — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -77,6 +77,8 @@ body.focus-mode > footer{display:none}
 .calc-wrap{padding:28px 0 56px}
 .calc-wrap .container{display:grid;grid-template-columns:1fr 260px;gap:28px;align-items:start}
 @media(max-width:980px){.calc-wrap .container{grid-template-columns:1fr}}
+/* Luft mellom kalkulatoren (med sidekolonnen) og boksen under */
+.calc-wrap > .container + .container:not(.howto-wrap){margin-top:24px}
 
 .ks-host{min-width:0}
 .ks{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
@@ -137,6 +139,11 @@ select.ik-input{
 .ks-r-stat .v{color:var(--ink);font-variant-numeric:tabular-nums lining-nums;font-weight:500}
 .ks-r-stat.total .l{color:var(--ink);font-weight:600}
 .ks-r-stat.total .v{font-size:15px}
+/* Utregningen ledd for ledd står under skjema + svar (som lonn), i to kolonner */
+.ks-breakdown{padding:18px 26px 20px;border-top:1px solid var(--line)}
+.ks-breakdown .ks-r-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;margin:0;padding-top:0;border-top:0}
+@media(max-width:780px){.ks-breakdown .ks-r-stats{grid-template-columns:minmax(0,1fr)}.ks-breakdown .ks-bd-col + .ks-bd-col .ks-r-shdr{margin-top:10px;padding-top:8px;border-top:1px solid var(--line)}}
+@media(max-width:560px){.ks-breakdown{padding:16px 18px 18px}}
 
 /* Resultat-data-viz (fordeling overskudd) — beholdt fra opprinnelig kalkulator, nøytrale tokens */
 .rs-viz{margin-top:6px;padding-top:12px;border-top:1px solid var(--line)}
@@ -191,8 +198,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .utbytte-info h3{font-family:var(--font-sans);font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin:0 0 14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
 .utbytte-info p{margin:0 0 12px;font-size:13.5px;line-height:1.65;color:var(--ink2)}
 .utbytte-info p:last-child{margin-bottom:0}
-.utbytte-info b{color:var(--ink);font-weight:600}
-.utbytte-disclaimer{margin-top:14px;padding:11px 14px;background:var(--surface-2);border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:5px;font-size:12.5px;color:var(--ink2);line-height:1.55;font-style:italic}
 
 .hidden{display:none !important}
 </style>
@@ -415,7 +420,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="skattUtbytteHeroEyebrowCurrent">Utbytteskatt</span>
       </div>
       <h1 class="page-title" data-i18n-html="skattUtbytteHeroTitle"><em>Utbytte</em>skatt</h1>
-      <p class="page-lead" data-i18n="skattUtbytteHeroSubtitle">AS aksjonærmodellen og ENK foretaksmodellen — oppjusteringsfaktor 1,72 og skjermingsfradrag. Beregn samlet skattebelastning når overskudd deles ut til eier.</p>
+      <p class="page-lead" data-i18n="skattUtbytteHeroSubtitle">Se samlet skatt på overskuddet i et AS eller et enkeltpersonforetak. For AS regner vi som om hele overskuddet deles ut som utbytte.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
@@ -483,43 +488,39 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <div class="viz-bar" id="rsVizBar"></div>
               <div class="viz-legend" id="rsVizLegend"></div>
             </div>
+          </aside>
+        </div>
 
-            <!-- AS breakdown -->
-            <div class="ks-r-stats" id="utbytte-as-grid">
+        <div class="ks-breakdown">
+          <!-- AS breakdown -->
+          <div class="ks-r-stats" id="utbytte-as-grid">
+            <div class="ks-bd-col">
               <div class="ks-r-shdr">Selskapsnivå</div>
-              <div class="ks-r-stat"><span class="l">Overskudd før skatt</span><span class="v" id="rAsOverskudd">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="skattUtbytteResultSelskap">Selskapsskatt (22 %)</span><span class="v" id="rAsSelskap">–</span></div>
               <div class="ks-r-stat"><span class="l">Etter selskapsskatt</span><span class="v" id="rAsEtter">–</span></div>
-
+            </div>
+            <div class="ks-bd-col">
               <div class="ks-r-shdr">Aksjonærnivå</div>
               <div class="ks-r-stat"><span class="l">− Skjermingsfradrag</span><span class="v" id="rAsSkjerming">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="skattUtbytteResultOppjustert">Oppjustert beløp (×1,72)</span><span class="v" id="rAsOppjustert">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="skattUtbytteResultUtbytteskatt">Utbytteskatt aksjonær (22 %)</span><span class="v" id="rAsUtbytte">–</span></div>
-
-              <div class="ks-r-shdr">Samlet</div>
-              <div class="ks-r-stat total"><span class="l" data-i18n="skattUtbytteResultTotal">Total skattebelastning</span><span class="v" id="rAsTotal">–</span></div>
-              <div class="ks-r-stat"><span class="l">Netto til eier</span><span class="v" id="rAsNetto">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="skattUtbytteResultEff">Effektiv skattesats</span><span class="v" id="rAsEff">–</span></div>
             </div>
+          </div>
 
-            <!-- ENK breakdown -->
-            <div class="ks-r-stats hidden" id="utbytte-enk-grid">
+          <!-- ENK breakdown -->
+          <div class="ks-r-stats hidden" id="utbytte-enk-grid">
+            <div class="ks-bd-col">
               <div class="ks-r-shdr">Alminnelig inntekt</div>
-              <div class="ks-r-stat"><span class="l">Overskudd (næringsinntekt)</span><span class="v" id="rEnkOverskudd">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="skattUtbytteResultAlmskatt">Alminnelig inntektsskatt (22 %)</span><span class="v" id="rEnkAlm">–</span></div>
-              <div class="ks-r-stat"><span class="l">− Skjermingsfradrag</span><span class="v" id="rEnkSkjerming">–</span></div>
-
+            </div>
+            <div class="ks-bd-col">
               <div class="ks-r-shdr">Personinntekt</div>
+              <div class="ks-r-stat"><span class="l">− Skjermingsfradrag</span><span class="v" id="rEnkSkjerming">–</span></div>
               <div class="ks-r-stat"><span class="l">= Beregnet personinntekt</span><span class="v" id="rEnkPerson">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="skattUtbytteResultTrygd">Trygdeavgift næring (10,8 %)</span><span class="v" id="rEnkTrygd">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="skattUtbytteResultTrinn">Trinnskatt</span><span class="v" id="rEnkTrinn">–</span></div>
-
-              <div class="ks-r-shdr">Samlet</div>
-              <div class="ks-r-stat total"><span class="l" data-i18n="skattUtbytteResultTotal">Total skattebelastning</span><span class="v" id="rEnkTotal">–</span></div>
-              <div class="ks-r-stat"><span class="l">Netto til eier</span><span class="v" id="rEnkNetto">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="skattUtbytteResultEff">Effektiv skattesats</span><span class="v" id="rEnkEff">–</span></div>
             </div>
-          </aside>
+          </div>
         </div>
       </div>
     </div>
@@ -546,11 +547,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
   <div class="container">
     <section class="utbytte-info" aria-labelledby="utbytteInfoHdr">
-      <h3 id="utbytteInfoHdr">Symmetriprinsippet — AS vs ENK</h3>
-      <p>Kalkulatoren viser den samlede skattebelastningen når overskudd deles ut til eier. For <b>AS</b> (aksjonærmodellen): selskapsskatt 22 % + utbytteskatt 37,84 % = <b>~51,5 %</b> effektiv sats. For <b>ENK</b> (foretaksmodellen): alminnelig inntekt 22 % + trygdeavgift 10,8 % + trinnskatt = opptil <b>~50,6 %</b> marginalskatt.</p>
-      <p><b>Symmetriprinsippet</b> sikrer at valg av selskapsform ikke gir skattefordel i seg selv — total skattebelastning er omtrent lik i begge modeller.</p>
-      <p><b>Fritaksmetoden (sktl. § 2-38):</b> Utbytte og aksjegevinst <b>mellom selskaper</b> er i hovedsak skattefritt. Et holdingselskap kan motta utbytte fra et datterselskap uten å betale skatt — det er først når pengene deles ut videre til en <i>personlig</i> aksjonær at utbytteskatten slår inn. Kalkulatoren over viser nettopp dette siste leddet.</p>
-      <div class="utbytte-disclaimer" data-i18n="skattUtbytteDisclaimer">ENK-visningen er en forenklet pedagogisk illustrasjon — faktisk skatt påvirkes også av personfradrag og minstefradrag.</div>
+      <h3 id="utbytteInfoHdr">AS eller ENK: nesten lik skatt</h3>
+      <p>Tar du ut hele overskuddet, blir skatten nesten lik i AS og ENK. I AS går 51,5 % av hver ekstra krone til skatt. I ENK er det opptil 50,6 %, på de høyeste inntektene. Reglene er laget slik med vilje (symmetriprinsippet).</p>
+      <p>AS: selskapet betaler 22 %, og du betaler 37,84 % utbytteskatt av det som deles ut. ENK: du betaler 22 % inntektsskatt, 10,8 % trygdeavgift og trinnskatt av overskuddet.</p>
+      <p>Eier et holdingselskap aksjene, er utbytte og aksjegevinst i hovedsak skattefritt der (fritaksmetoden, skatteloven § 2-38). Utbytteskatten kommer først når pengene betales ut til deg personlig.</p>
     </section>
   </div>
 
@@ -572,21 +572,21 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-skatt-utbytte">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-utbytte">Veien fra overskudd til penger på eierens konto</h2><p class="lc-intro">Når et selskap tjener penger og eieren vil ta dem ut, skattlegges overskuddet i to ledd. Kalkulatoren regner enten aksjonærmodellen (AS) eller foretaksmodellen (ENK) — her er linjene bak begge, akkurat slik de står i beregningen over.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-utbytte">Veien fra overskudd til penger på eierens konto</h2><p class="lc-intro">I et AS skattlegges overskuddet to ganger: først i selskapet, så hos deg når det deles ut. Av 1 mill. kr i overskudd går da 515 152 kr til skatt. I et ENK skattlegges overskuddet hos deg med en gang.</p></div>
       <div class="lc-ledger">
         <div class="lc-led"><span class="nm"><b>Selskapsskatt (AS)</b><span class="tag">Skatt</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Første ledd for et AS: selskapet betaler 22 % skatt på overskuddet før noe deles ut til eier.</p></div>
         <div class="lc-led"><span class="nm"><b>Skjermingsfradrag</b><span class="tag">Fradrag</span></span><span class="fig">0<span class="u">kr</span></span><p class="dsc">Trekkes fra før utbyttet skattlegges. Står som 0 til du skriver inn et tall — Skatteetaten beregner det ut fra innskutt kapital.</p></div>
         <div class="lc-led"><span class="nm"><b>Oppjusteringsfaktor</b><span class="tag">Faktor</span></span><span class="fig">1,72<span class="u">×</span></span><p class="dsc">Utbyttet etter selskapsskatt og skjerming ganges med 1,72 før det skattlegges. Dette løfter den reelle utbytteskatten over de nominelle 22 %.</p></div>
         <div class="lc-led"><span class="nm"><b>Utbytteskatt aksjonær</b><span class="tag">Sats</span></span><span class="fig">37,84<span class="u">%</span></span><p class="dsc">Andre ledd for et AS: 22 % av det oppjusterte beløpet tilsvarer 37,84 % effektiv skatt på selve utbyttet (22 % × 1,72).</p></div>
-        <div class="lc-led"><span class="nm"><b>Trygdeavgift næring (ENK)</b><span class="tag">Sats</span></span><span class="fig">10,8<span class="u">%</span></span><p class="dsc">For ENK i stedet for utbytteskatt: 10,8 % trygdeavgift på personinntekten, men bare på den delen over nedre grense.</p></div>
+        <div class="lc-led"><span class="nm"><b>Trygdeavgift næring (ENK)</b><span class="tag">Sats</span></span><span class="fig">10,8<span class="u">%</span></span><p class="dsc">For ENK betaler du 10,8 % trygdeavgift av personinntekten i stedet for utbytteskatt. Under 99 650 kr betaler du ingenting, og like over grensen trappes avgiften gradvis opp.</p></div>
         <div class="lc-led"><span class="nm"><b>Trinnskatt (ENK)</b><span class="tag">Skatt</span></span><span class="fig">17,8<span class="u">% topp</span></span><p class="dsc">For ENK legges trinnskatt oppå, i fem trinn fra 1,7 % og opp til 17,8 % på den høyeste delen av personinntekten.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcB-skatt-utbytte">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-skatt-utbytte">Satsene kalkulatoren bruker for 2026</h2><p class="lc-intro">Disse verdiene ligger fast i beregningen. AS-modellen bruker de tre øverste; ENK-modellen bruker personfradrag, trygdeavgift og trinnskatt-trinnene under.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-skatt-utbytte">Satsene kalkulatoren bruker for 2026</h2></div>
       <div class="lc-rates">
       <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
+        <span class="ttl">Nøkkeltall</span>
         <div class="lc-kv"><span class="k">Selskapsskatt (AS)</span><span class="v">22<span class="u">%</span></span></div>
         <div class="lc-kv"><span class="k">Oppjusteringsfaktor utbytte</span><span class="v">1,72<span class="u">×</span></span></div>
         <div class="lc-kv"><span class="k">Utbytteskatt aksjonær (effektiv)</span><span class="v">37,84<span class="u">%</span></span></div>
@@ -614,11 +614,11 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-skatt-utbytte">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-skatt-utbytte">Det som er lett å misforstå</h2><p class="lc-intro">Fire ting verdt å ha klart før du tolker tallene.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-skatt-utbytte">Det som er lett å misforstå</h2></div>
       <div class="lc-notes">
         <div class="lc-note"><h3>Hvorfor utbytteskatten er 37,84 % og ikke 22 %</h3><p>Utbyttet ganges først med oppjusteringsfaktoren 1,72, deretter tas 22 % skatt. Resultatet tilsvarer 37,84 % skatt på selve utbyttet. Det er denne faktoren som gjør at AS og ENK havner på omtrent samme samlede skatt.</p></div>
         <div class="lc-note"><h3>To skatter for AS, ikke én</h3><p>Selskapet betaler 22 % først, og eieren betaler utbytteskatt på det som er igjen. Begge ledd ganget sammen gir en effektiv sats på rundt 51,5 % på overskuddet — ikke 22 %.</p></div>
-        <div class="lc-note"><h3>ENK-tallet er forenklet</h3><p>ENK-visningen er en pedagogisk illustrasjon. Den fanger ikke alle detaljer rundt minstefradrag, så bruk den til å forstå størrelsesordenen, ikke som eksakt selvangivelse.</p></div>
+        <div class="lc-note"><h3>ENK-tallet er et anslag</h3><p>Det regnes som om overskuddet er din eneste inntekt. Andre fradrag enn personfradrag og skjerming er ikke med. Bruk tallet til å se nivået, ikke til å fylle ut skattemeldingen.</p></div>
         <div class="lc-note"><h3>Skjermingsfradrag kan stå på 0</h3><p>Lar du feltet stå på 0 får du et tall som hvis du ikke har skjerming. Har du innskutt kapital, beregner Skatteetaten skjermingen for deg — legg den inn for et mer presist resultat.</p></div>
       </div>
     </section>
@@ -630,13 +630,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <details class="lc-q"><summary>Er det forskjell på AS og ENK i skatt?</summary><div class="a"><p>Nesten ikke. AS lander på ~51,5 % og ENK på opptil ~50,6 % marginalskatt. Det er meningen — symmetriprinsippet sørger for at selve selskapsformen ikke gir noen skattefordel.</p></div></details>
         <details class="lc-q"><summary>Hva er skjermingsfradraget?</summary><div class="a"><p>Et fradrag som skjermer en del av utbyttet fra skatt. Det beregnes ut fra hvor mye kapital du har skutt inn, ganget med en skjermingsrente. Er du usikker, la feltet stå på 0.</p></div></details>
         <details class="lc-q"><summary>Hva betyr fritaksmetoden?</summary><div class="a"><p>Utbytte mellom selskaper er i hovedsak skattefritt. Et holdingselskap kan motta utbytte fra et datterselskap uten skatt. Utbytteskatten slår først inn når pengene deles ut til en privatperson — og det er det leddet kalkulatoren viser.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor er ENK-tallet bare en illustrasjon?</summary><div class="a"><p>ENK-modellen i kalkulatoren er forenklet for å vise hovedtrekkene. Faktisk skatt påvirkes også av minstefradrag og andre fradrag som ikke er med, så bruk den til å forstå nivået, ikke til den siste kronen.</p></div></details>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcE-skatt-utbytte">
       <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-skatt-utbytte">Relaterte verktøy</h2></div>
       <div class="lc-links">
-        <a class="lc-link" href="/skatt/uttak/"><span class="ar">Lønn vs utbytte →</span><h3>Lønn eller utbytte?</h3><p>Sammenlign hva du sitter igjen med når du tar penger ut som lønn mot som utbytte.</p></a>
+        <a class="lc-link" href="/skatt/uttak/"><span class="ar">Uttak →</span><h3>Uttaksbeskatning</h3><p>Se skatten når du tar en eiendel ut av firmaet til privat bruk.</p></a>
         <a class="lc-link" href="/selskap/"><span class="ar">Selskap →</span><h3>Velg selskapsform</h3><p>Se forskjellene på AS, ENK og andre former før du bestemmer hvordan du organiserer driften.</p></a>
         <a class="lc-link" href="/skatt/inntekt/"><span class="ar">Inntektsskatt →</span><h3>Beregn inntektsskatt</h3><p>Se hvordan alminnelig inntekt, trygdeavgift og trinnskatt slår ut på vanlig lønn.</p></a>
       </div>
@@ -659,9 +658,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -774,6 +773,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         setText('rsSumSkatt', '–');
         setText('rsSumNetto', '–');
         setText('rsSumEff', '–');
+        ['rAsSelskap','rAsEtter','rAsSkjerming','rAsOppjustert','rAsUtbytte',
+         'rEnkAlm','rEnkSkjerming','rEnkPerson','rEnkTrygd','rEnkTrinn'].forEach(function(id){ setText(id, '–'); });
         var vzEmpty = document.getElementById('rsViz'); if(vzEmpty) vzEmpty.classList.add('empty');
         persist();
         return;
@@ -782,12 +783,15 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var totalStr = fmtKr(d.totalSkatt);
       var effStr = fmtPct2(d.effSats);
       var nettoStr = fmtKr(d.netto);
-      var modeStr = d.type === 'as' ? 'Aksjonærmodellen' : 'Foretaksmodellen (ENK)';
+      // Hele setningen er én tekstnode, så _ph-ordboka oversetter den
+      var verdictStr = d.type === 'as'
+        ? 'Selskapsskatt 22 %, pluss utbytteskatt på det som deles ut.'
+        : 'Inntektsskatt, trygdeavgift og trinnskatt på overskuddet.';
 
       setText('rTotal', totalStr);
       setText('hStatTotal', totalStr);
       setText('hStatEff', effStr);
-      setText('rVerdict', modeStr + ' · effektiv sats ' + effStr + ' · netto til eier ' + nettoStr);
+      setText('rVerdict', verdictStr);
 
       // ── RE-SKIN: summary-stripe + data-viz (verdier finnes i d, begge modeller) ──
       setText('rsSumOverskudd', fmtKr(d.overskudd));
@@ -822,27 +826,19 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       if(d.type === 'as'){
         asGrid.classList.remove('hidden');
         enkGrid.classList.add('hidden');
-        setText('rAsOverskudd', fmtKr(d.overskudd));
         setText('rAsSelskap', fmtKr(d.selskapsskatt));
         setText('rAsEtter', fmtKr(d.etterSelskap));
         setText('rAsSkjerming', fmtKr(d.skjerming));
         setText('rAsOppjustert', fmtKr(d.oppjustert));
         setText('rAsUtbytte', fmtKr(d.utbytteskatt));
-        setText('rAsTotal', totalStr);
-        setText('rAsNetto', nettoStr);
-        setText('rAsEff', effStr);
       } else {
         asGrid.classList.add('hidden');
         enkGrid.classList.remove('hidden');
-        setText('rEnkOverskudd', fmtKr(d.overskudd));
         setText('rEnkAlm', fmtKr(d.almSkatt));
         setText('rEnkSkjerming', fmtKr(d.skjerming));
         setText('rEnkPerson', fmtKr(d.personinntekt));
         setText('rEnkTrygd', fmtKr(d.trygd));
         setText('rEnkTrinn', fmtKr(d.trinn));
-        setText('rEnkTotal', totalStr);
-        setText('rEnkNetto', nettoStr);
-        setText('rEnkEff', effStr);
       }
 
       persist();

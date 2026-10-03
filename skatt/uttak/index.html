@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Uttaksbeskatning — Skatt · Hverdagsverktøy</title>
-<meta name="description" content="§ 5-2 — skatt ved uttak fra ENK eller AS for 2026. Markedsverdi minus skattemessig nedskrevet verdi, andel privat, skjermingsfradrag for AS. Alt skjer lokalt i nettleseren.">
+<meta name="description" content="Regn ut skatten når du tar en eiendel ut av ENK eller AS til privat bruk i 2026. Uttaket skattlegges som et salg til markedsverdi (skatteloven § 5-2).">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/skatt/uttak/">
@@ -50,11 +50,11 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <style>
 /* Uttaksbeskatning — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -77,6 +77,9 @@ body.focus-mode > footer{display:none}
 .calc-wrap{padding:28px 0 56px}
 .calc-wrap .container{display:grid;grid-template-columns:1fr 260px;gap:28px;align-items:start}
 @media(max-width:980px){.calc-wrap .container{grid-template-columns:1fr}}
+/* Luft mellom kalkulatoren (med sidekolonnen) og boksen under; åpen veiledning har egen bunnmarg */
+.calc-wrap > .container + .container{margin-top:24px}
+.calc-wrap > .container.howto-wrap.howto-open + .container{margin-top:0}
 
 .ks-host{min-width:0}
 .ks{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
@@ -121,7 +124,6 @@ select.ik-input{
   background-repeat:no-repeat;background-position:right 12px center;
 }
 .ik-input:focus{border-color:var(--accent);background:var(--surface)}
-.ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 
 .ks-result{background:var(--surface);padding:22px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .ks-r-eyebrow{font:500 10px/1 var(--font-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
@@ -132,8 +134,7 @@ select.ik-input{
 .ks-r-stat{display:flex;align-items:baseline;justify-content:space-between;gap:14px;font-size:13px;color:var(--ink2)}
 .ks-r-stat.hidden{display:none}
 .ks-r-stat .l{color:var(--ink3);font-size:11.5px;letter-spacing:.04em}
-.ks-r-stat .v{color:var(--ink);font-variant-numeric:tabular-nums lining-nums;font-weight:500}
-.ks-r-stat.div{padding-top:8px;margin-top:4px;border-top:1px solid var(--line)}
+.ks-r-stat .v{color:var(--ink);font-variant-numeric:tabular-nums lining-nums;font-weight:500;white-space:nowrap}
 
 /* Resultat-data-viz (fordeling uttaksverdi) — beholdt fra opprinnelig kalkulator, nøytrale tokens */
 .rs-viz{margin-top:6px;padding-top:12px;border-top:1px solid var(--line)}
@@ -161,10 +162,6 @@ select.ik-input{
 .side-card.related a:hover{color:var(--accent)}
 .side-card.related .arr{color:var(--ink4)}
 .side-card.related a:hover .arr{color:var(--accent)}
-.side-card .method-how{display:flex;flex-direction:column;gap:11px}
-.side-card .method-step{display:flex;gap:10px;font-size:12.5px;color:var(--ink2);line-height:1.55}
-.side-card .method-step .n{flex-shrink:0;font:600 10px/1.6 var(--font-mono, var(--font-sans));color:var(--accent)}
-.side-card .method-step b{color:var(--ink);font-weight:600}
 
 /* § 5-2 forklaring */
 .uttak-info{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:24px 28px 28px;margin:0 0 40px}
@@ -181,9 +178,8 @@ select.ik-input{
 .uttak-info .info-card .ic-cond{margin-top:6px;font-size:11.5px;color:var(--ink3);font-style:italic}
 .uttak-info ul.info-list{margin:6px 0 14px;padding:0 0 0 20px;color:var(--ink2);font-size:12.5px;line-height:1.8}
 .uttak-info ul.info-list li{margin-bottom:5px}
-.uttak-info ul.info-list li b{color:var(--ink);font-weight:600}
+.uttak-info h4{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--ink3);margin:0 0 8px}
 .uttak-info .info-source{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink4);font-style:italic;line-height:1.55}
-.uttak-info .info-disclaimer{margin-top:8px;font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic}
 
 /* Howto */
 .howto-wrap{margin:0 0 40px;display:none}
@@ -419,7 +415,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="skattUttakHeroEyebrowCurrent">Uttaksbeskatning</span>
       </div>
       <h1 class="page-title" data-i18n-html="skattUttakHeroTitle">Uttaks<em>beskatning</em></h1>
-      <p class="page-lead" data-i18n="skattUttakHeroSubtitle">§ 5-2 — skatt ved uttak fra ENK eller AS for 2026. Markedsverdi minus skattemessig nedskrevet verdi, andel privat, skjermingsfradrag for AS. Alt skjer lokalt i nettleseren.</p>
+      <p class="page-lead" data-i18n="skattUttakHeroSubtitle">Tar du noe ut av firmaet til privat bruk, skattlegges det som et salg til markedsverdi. Se skatten for enkeltpersonforetak og AS i 2026. Alt skjer lokalt i nettleseren.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
@@ -504,13 +500,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                   <div class="ik-fg">
                     <label class="ik-lbl" for="uttak-personinntekt" data-i18n="skattUttakFormPersoninntekt">Er uttaket personinntekt?</label>
                     <select class="ik-input" id="uttak-personinntekt">
-                      <option value="ja" selected data-i18n="skattUttakFormPersoninntektJa">Ja — virksomhetsinntekt (trinnskatt + trygd)</option>
-                      <option value="nei" data-i18n="skattUttakFormPersoninntektNei">Nei — kun alminnelig inntekt</option>
+                      <option value="ja" selected data-i18n="skattUttakFormPersoninntektJa">Ja (trinnskatt og trygdeavgift)</option>
+                      <option value="nei" data-i18n="skattUttakFormPersoninntektNei">Nei (bare 22 %)</option>
                     </select>
                   </div>
                 </div>
               </div>
-              <p class="ik-note" data-i18n="skattUttakInfoDisclaimer">Forenklet beregning. Trinnskatt 2026: trinn 1 (1,7 %), 2 (4,0 %), 3 (13,7 %), 4 (16,8 %), 5 (17,8 %). Trygdeavgift med nedre grense 99 650 kr og opptrappingsregel 25 %.</p>
             </section>
           </div>
 
@@ -520,13 +515,11 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
             <div class="ks-r-mnd" id="rUttakSub">Velg virksomhetstype og fyll inn verdier for å se beregningen</div>
 
             <div class="ks-r-stats">
-              <div class="ks-r-stat" id="rRowGevinst"><span class="l" data-i18n="skattUttakResultGevinst">Uttaksgevinst</span><span class="v" id="rGevinst">–</span></div>
-              <div class="ks-r-stat" id="rRowAlm"><span class="l" data-i18n="skattUttakResultAlm">Alminnelig inntektsskatt (22 %)</span><span class="v" id="rAlm">–</span></div>
+              <div class="ks-r-stat" id="rRowAlm"><span class="l" data-i18n="skattUttakResultAlm">Inntektsskatt (22 %)</span><span class="v" id="rAlm">–</span></div>
               <div class="ks-r-stat" id="rRowTrygd"><span class="l" data-i18n="skattUttakResultTrygd">Trygdeavgift</span><span class="v" id="rTrygd">–</span></div>
               <div class="ks-r-stat" id="rRowTrinn"><span class="l" data-i18n="skattUttakResultTrinn">Trinnskatt</span><span class="v" id="rTrinn">–</span></div>
               <div class="ks-r-stat" id="rRowSelskap"><span class="l" data-i18n="skattUttakResultSelskap">Selskapsskatt (22 %)</span><span class="v" id="rSelskap">–</span></div>
               <div class="ks-r-stat" id="rRowUtbytte"><span class="l" data-i18n="skattUttakResultUtbytte">Utbytteskatt aksjonær</span><span class="v" id="rUtbytte">–</span></div>
-              <div class="ks-r-stat div" id="rRowNetto"><span class="l" data-i18n="skattUttakResultNetto">Nettoverdi etter skatt</span><span class="v" id="rNetto">–</span></div>
             </div>
 
             <div class="rs-viz empty" id="rsViz">
@@ -554,15 +547,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <a href="/selskap/"><span class="name">Selskapsformer (AS/ENK)</span><span class="arr">→</span></a>
         <a href="/skatt/inntekt/"><span class="name">Inntektsskatt</span><span class="arr">→</span></a>
         <a href="/skatt/"><span class="name">Alle skatteverktøy</span><span class="arr">→</span></a>
-      </div>
-      <div class="side-card">
-        <h4>Slik regner vi</h4>
-        <div class="method-how">
-          <div class="method-step"><span class="n">01</span><span><b>Uttaksgevinst</b> = (markedsverdi − skattemessig verdi) × andel privat.</span></div>
-          <div class="method-step"><span class="n">02</span><span><b>ENK:</b> alminnelig 22 % (+ trygd 10,8 % + trinnskatt hvis personinntekt).</span></div>
-          <div class="method-step"><span class="n">03</span><span><b>AS nivå 1:</b> selskapsskatt 22 % av gevinsten.</span></div>
-          <div class="method-step"><span class="n">04</span><span><b>AS nivå 2:</b> resten oppjusteres ×1,72 og beskattes 22 % (utbytte).</span></div>
-        </div>
       </div>
     </aside>
 
@@ -608,17 +592,16 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         </div>
       </div>
 
-      <p data-i18n="skattUttakInfoExcLead"><b>Unntak og særregler:</b></p>
+      <h4 data-i18n="skattUttakInfoExcLead">Unntak og særregler</h4>
       <ul class="info-list">
-        <li data-i18n-html="skattUttakInfoExc1"><b>ENK-vilkår (§ 5-2(1)):</b> Uttaksbeskatning gjelder bare der kostprisen er helt eller delvis fradragsført</li>
-        <li data-i18n-html="skattUttakInfoExc2"><b>Virksomhetsoverdragelse (§ 9-7(4)):</b> Unntak ved gave der mottaker overtar virksomheten og fortsetter driften</li>
-        <li data-i18n-html="skattUttakInfoExc3"><b>Fritaksmetoden (§ 2-38):</b> Selskap som eier aksjer i annet selskap — uttak av slike aksjer kan være skattefritt på selskapets hånd</li>
-        <li data-i18n-html="skattUttakInfoExc4"><b>Konsernforhold:</b> Ved uttak fra datterselskap til aksjonær, er det datterselskapet som er subjekt for uttaksbeskatning</li>
-        <li data-i18n-html="skattUttakInfoExc5"><b>Privat bruk av selskapets eiendeler:</b> Løpende bruk (f.eks. bolig, båt, bil) beskattes som utbytte hos aksjonæren etter aksjonærmodellen</li>
+        <li data-i18n-html="skattUttakInfoExc1">I et ENK skattlegges uttaket bare hvis du har fått fradrag for kostprisen, helt eller delvis (§ 5-2(1)).</li>
+        <li data-i18n-html="skattUttakInfoExc2">Gir du bort virksomheten, og mottakeren driver den videre, skattlegges ikke uttaket (§ 9-7(4)).</li>
+        <li data-i18n-html="skattUttakInfoExc3">Tar et selskap ut aksjer det eier i et annet selskap, kan uttaket være skattefritt for selskapet (fritaksmetoden, § 2-38).</li>
+        <li data-i18n-html="skattUttakInfoExc4">Går uttaket fra et datterselskap til en aksjonær, er det datterselskapet som skattlegges for uttaket.</li>
+        <li data-i18n-html="skattUttakInfoExc5">Bruker du selskapets bolig, båt eller bil privat, skattlegges fordelen hos deg: normalt som utbytte, men som lønn hvis du får den som ansatt (aksjonærmodellen).</li>
       </ul>
 
-      <div class="info-source" data-i18n="skattUttakInfoSource">Kilde: Skatteloven § 5-2, § 5-3 og kap. 9 (lov-1999-03-26-14). Kalkulatoren er veiledende — kontakt revisor for konkrete vurderinger.</div>
-      <div class="info-disclaimer" data-i18n="skattUttakInfoDisclaimer">Forenklet beregning. Trinnskatt 2026: trinn 1 (1,7 %), 2 (4,0 %), 3 (13,7 %), 4 (16,8 %), 5 (17,8 %). Trygdeavgift med nedre grense 99 650 kr og opptrappingsregel 25 %.</div>
+      <div class="info-source" data-i18n="skattUttakInfoSource">Kilde: skatteloven § 5-2, § 5-3 og kap. 9. Veiledende beregning.</div>
     </section>
   </div>
 </div>
@@ -627,33 +610,33 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-uttak">Hva som skjer naar du tar ut en eiendel</h2><p class="lc-intro">Naar du tar en eiendel ut av virksomheten til privat bruk, later skatten som om du har solgt den til deg selv til markedsverdi. Forst regnes selve gevinsten, deretter legges skattene oppaa - akkurat de samme linjene du ser i beregningen over, bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-uttak">Hva som skjer når du tar ut en eiendel</h2><p class="lc-intro">Tar du en eiendel ut av virksomheten til privat bruk, regnes det som om du solgte den til deg selv til markedsverdi. Først regnes gevinsten, så legges skattene på.</p></div>
       <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Uttaksgevinst</b><span class="tag">Grunnlag</span></span><span class="fig">MV - SV<span class="u">x andel</span></span><p class="dsc">Markedsverdi minus skattemessig nedskrevet verdi, ganget med hvor stor andel du tar ut til privat. Det er denne differansen, ikke hele verdien, som beskattes.</p></div>
-        <div class="lc-led"><span class="nm"><b>Alminnelig inntektsskatt</b><span class="tag">Sats</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Grunnskatten paa gevinsten. Gjelder baade ENK (direkte paa deg) og som forste niva i et AS (selskapsskatt).</p></div>
-        <div class="lc-led"><span class="nm"><b>Trygdeavgift naering</b><span class="tag">Sats</span></span><span class="fig">10,8<span class="u">%</span></span><p class="dsc">Legges paa for ENK naar uttaket regnes som personinntekt. Beregnes ikke under en nedre grense paa 99 650 kr, og trappes opp med 25 % rett over grensen.</p></div>
-        <div class="lc-led"><span class="nm"><b>Trinnskatt</b><span class="tag">Sats</span></span><span class="fig">1,7-17,8<span class="u">%</span></span><p class="dsc">Ekstra skatt i fem trinn for ENK med personinntekt. Satsen stiger jo hoyere inntekten er, og treffer bare belopet over hver grense.</p></div>
-        <div class="lc-led"><span class="nm"><b>Oppjusteringsfaktor</b><span class="tag">Faktor</span></span><span class="fig">1,72<span class="u">x</span></span><p class="dsc">For AS ganges utbyttedelen med 1,72 for den skattlegges. Det er denne oppjusteringen som loefter den reelle utbytteskatten over 22 %.</p></div>
-        <div class="lc-led"><span class="nm"><b>Utbytteskatt aksjonaer</b><span class="tag">Sats</span></span><span class="fig">37,84<span class="u">%</span></span><p class="dsc">Det andre nivaaet for AS. Etter at selskapet har betalt 22 %, beskattes resten hos deg som aksjonaer - 1,72 x 22 % gir effektivt 37,84 %.</p></div>
+        <div class="lc-led"><span class="nm"><b>Uttaksgevinst</b><span class="tag">Grunnlag</span></span><span class="fig">600 000<span class="u">kr</span></span><p class="dsc">Markedsverdi minus skattemessig nedskrevet verdi, ganget med andelen du tar ut privat. Med 1 mill. og 400 000 kr blir gevinsten 600 000 kr. Det er gevinsten, ikke hele verdien, som skattlegges.</p></div>
+        <div class="lc-led"><span class="nm"><b>Alminnelig inntektsskatt</b><span class="tag">Sats</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Grunnskatten på gevinsten. Gjelder både ENK (direkte på deg) og som første nivå i et AS (selskapsskatt).</p></div>
+        <div class="lc-led"><span class="nm"><b>Trygdeavgift næring</b><span class="tag">Sats</span></span><span class="fig">10,8<span class="u">%</span></span><p class="dsc">Legges på for ENK når uttaket regnes som personinntekt. Under 99 650 kr betaler du ingenting, og like over grensen trappes avgiften gradvis opp (25 % av beløpet over grensen).</p></div>
+        <div class="lc-led"><span class="nm"><b>Trinnskatt</b><span class="tag">Sats</span></span><span class="fig">1,7–17,8<span class="u">%</span></span><p class="dsc">Ekstra skatt i fem trinn for ENK med personinntekt. Satsen stiger jo høyere inntekten er, og treffer bare beløpet over hver grense.</p></div>
+        <div class="lc-led"><span class="nm"><b>Oppjusteringsfaktor</b><span class="tag">Faktor</span></span><span class="fig">1,72<span class="u">×</span></span><p class="dsc">For AS ganges utbyttedelen med 1,72 før den skattlegges. Det er denne oppjusteringen som løfter den reelle utbytteskatten over 22 %.</p></div>
+        <div class="lc-led"><span class="nm"><b>Utbytteskatt aksjonær</b><span class="tag">Sats</span></span><span class="fig">37,84<span class="u">%</span></span><p class="dsc">Det andre nivået for AS. Etter at selskapet har betalt 22 %, skattlegges resten hos deg som aksjonær: 1,72 × 22 % gir 37,84 %.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcB-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-skatt-uttak">Satsene for 2026</h2><p class="lc-intro">Dette er de faste tallene kalkulatoren bruker. Satsene er for inntektsaaret 2026 og hentet rett fra beregningen.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-skatt-uttak">Satsene for 2026</h2></div>
       <div class="lc-rates">
       <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
+        <span class="ttl">Nøkkeltall</span>
         <div class="lc-kv"><span class="k">Alminnelig inntekt</span><span class="v">22<span class="u">%</span></span></div>
         <div class="lc-kv"><span class="k">Selskapsskatt (AS)</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Oppjusteringsfaktor utbytte</span><span class="v">1,72<span class="u">x</span></span></div>
-        <div class="lc-kv"><span class="k">Utbytteskatt aksjonaer</span><span class="v">37,84<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Trygdeavgift naering (ENK)</span><span class="v">10,8<span class="u">%</span></span></div>
+        <div class="lc-kv"><span class="k">Oppjusteringsfaktor utbytte</span><span class="v">1,72<span class="u">×</span></span></div>
+        <div class="lc-kv"><span class="k">Utbytteskatt aksjonær</span><span class="v">37,84<span class="u">%</span></span></div>
+        <div class="lc-kv"><span class="k">Trygdeavgift næring (ENK)</span><span class="v">10,8<span class="u">%</span></span></div>
         <div class="lc-kv"><span class="k">Nedre grense trygdeavgift</span><span class="v">99 650<span class="u">kr</span></span></div>
         <div class="lc-kv"><span class="k">Opptrappingssats trygdeavgift</span><span class="v">25<span class="u">%</span></span></div>
       </div>
       <div class="lc-card">
         <div class="lc-tblwrap">
         <table class="lc-trinn">
-          <caption>Trinnskatt 2026 - sats paa inntekt over hver grense</caption>
+          <caption>Trinnskatt 2026 – sats på inntekt over hver grense</caption>
           <thead><tr><th>Trinn</th><th class="r">Inntekt over</th><th class="r">Sats</th></tr></thead>
           <tbody>
             <tr><td><span class="step">Trinn 1</span></td><td class="r">226 100 kr</td><td class="r">1,7 %</td></tr>
@@ -668,31 +651,31 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Godt aa vite</span><h2 class="lc-title" id="lcC-skatt-uttak">Det som er lett aa gaa glipp av</h2><p class="lc-intro">Noen praktiske poenger som forklarer hvorfor tallet kan bli som det blir.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-skatt-uttak">Det som er lett å gå glipp av</h2></div>
       <div class="lc-notes">
-        <div class="lc-note"><h3>Det er gevinsten som beskattes, ikke hele verdien</h3><p>Skatten regnes av differansen mellom markedsverdi og skattemessig nedskrevet verdi. Er den nedskrevne verdien lik eller hoyere enn markedsverdien, er det ingen gevinst - og da blir det ingen uttaksbeskatning.</p></div>
-        <div class="lc-note"><h3>AS beskattes i to lag</h3><p>Forst betaler selskapet 22 % selskapsskatt av gevinsten. Det som er igjen, regnes som utbytte til deg og beskattes en gang til. Derfor blir den effektive satsen for AS hoyere enn for et ENK.</p></div>
-        <div class="lc-note"><h3>Skjermingsfradrag trekker fra utbyttegrunnlaget</h3><p>For AS kan du legge inn et skjermingsfradrag. Det reduserer belopet som regnes som utbytte for oppjusteringen paa 1,72 og de siste 22 % slaar inn. Hele gevinsten betaler fortsatt selskapsskatt.</p></div>
-        <div class="lc-note"><h3>Andel privat styrer hele regnestykket</h3><p>Tar du ut en eiendel bare delvis til privat bruk, setter du andelen lavere enn 100 %. Baade gevinst og bruttouttak skaleres ned tilsvarende, saa skatten foelger den andelen du faktisk tar ut.</p></div>
+        <div class="lc-note"><h3>Det er gevinsten som skattlegges, ikke hele verdien</h3><p>Skatten regnes av forskjellen mellom markedsverdi og skattemessig nedskrevet verdi. Er den nedskrevne verdien like høy som markedsverdien eller høyere, er det ingen gevinst. Da viser kalkulatoren ingen skatt.</p></div>
+        <div class="lc-note"><h3>AS skattlegges i to lag</h3><p>Først betaler selskapet 22 % selskapsskatt av gevinsten. Det som er igjen, regnes som utbytte til deg og skattlegges en gang til. Derfor blir den effektive satsen for AS som regel høyere enn for et ENK.</p></div>
+        <div class="lc-note"><h3>Skjermingsfradraget trekkes fra utbyttet</h3><p>For AS kan du legge inn et skjermingsfradrag. Det trekkes fra utbyttet før det ganges med 1,72 og skattlegges med 22 %. Hele gevinsten betaler fortsatt selskapsskatt.</p></div>
+        <div class="lc-note"><h3>Andelen privat bruk styrer regnestykket</h3><p>Bruker du eiendelen bare delvis privat, setter du andelen lavere enn 100 %. Gevinsten og verdien skaleres ned like mye, så skatten følger andelen du tar ut.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcD-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Sporsmal og svar</span><h2 class="lc-title" id="lcD-skatt-uttak">Det folk lurer mest paa</h2></div>
+      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-skatt-uttak">Det folk lurer mest på</h2></div>
       <div class="lc-faq">
-        <details class="lc-q"><summary>Hva er uttaksbeskatning?</summary><div class="a"><p>Naar du tar en eiendel, vare eller tjeneste ut av virksomheten til privat bruk, behandles det skattemessig som om du solgte den til deg selv til markedsverdi. Gevinsten beskattes etter vanlige regler.</p></div></details>
-        <details class="lc-q"><summary>Hvordan regnes selve gevinsten?</summary><div class="a"><p>Gevinst = (markedsverdi - skattemessig nedskrevet verdi) x andel privat. Er markedsverdien lik eller lavere enn den nedskrevne verdien, er gevinsten null og det blir ingen skatt.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor er skatten hoyere for AS enn for ENK?</summary><div class="a"><p>Et AS beskattes i to lag: 22 % selskapsskatt forst, deretter utbytteskatt hos deg som aksjonaer. Utbyttedelen ganges med 1,72 for de siste 22 %, saa effektiv utbytteskatt blir 37,84 %. Et ENK beskattes bare en gang.</p></div></details>
-        <details class="lc-q"><summary>Naar faar jeg trygdeavgift og trinnskatt paa toppen?</summary><div class="a"><p>Det skjer for ENK naar du markerer at uttaket er personinntekt (virksomhetsinntekt). Da legges trygdeavgift paa 10,8 % og trinnskatt til i tillegg til de 22 %. Velger du at det ikke er personinntekt, blir det bare 22 %.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr skjermingsfradraget for AS?</summary><div class="a"><p>Skjermingsfradraget reduserer belopet som regnes som utbytte. Du trekker det fra etter selskapsskatten, og bare resten ganges med 1,72 og beskattes med 22 %. Selskapsskatten paa 22 % paavirkes ikke.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr den effektive satsen?</summary><div class="a"><p>Det er total skatt delt paa uttaksgevinsten. Den viser hvor stor del av gevinsten som faktisk gaar til skatt naar alle lagene er lagt sammen - nyttig for aa sammenligne ENK og AS.</p></div></details>
+        <details class="lc-q"><summary>Hva er uttaksbeskatning?</summary><div class="a"><p>Tar du en eiendel, vare eller tjeneste ut av virksomheten til privat bruk, regnes det som om du solgte den til deg selv til markedsverdi. Gevinsten skattlegges etter vanlige regler.</p></div></details>
+        <details class="lc-q"><summary>Hvordan regnes selve gevinsten?</summary><div class="a"><p>Gevinst = (markedsverdi − skattemessig nedskrevet verdi) × andel privat. Er markedsverdien like høy som den nedskrevne verdien eller lavere, er gevinsten null, og kalkulatoren viser ingen skatt.</p></div></details>
+        <details class="lc-q"><summary>Hvorfor er skatten høyere for AS enn for ENK?</summary><div class="a"><p>Et AS skattlegges i to lag: 22 % selskapsskatt først, så utbytteskatt hos deg som aksjonær. Utbyttet ganges med 1,72 før skatten på 22 %, så utbytteskatten blir 37,84 %. Et ENK skattlegges bare én gang.</p></div></details>
+        <details class="lc-q"><summary>Når får jeg trygdeavgift og trinnskatt i tillegg?</summary><div class="a"><p>For ENK, når du velger at uttaket er personinntekt. Da kommer 10,8 % trygdeavgift og trinnskatt i tillegg til de 22 %. Er det ikke personinntekt, blir det bare 22 %.</p></div></details>
+        <details class="lc-q"><summary>Hva betyr skjermingsfradraget for AS?</summary><div class="a"><p>Skjermingsfradraget gjør utbyttet som skattlegges mindre. Det trekkes fra etter selskapsskatten, og bare resten ganges med 1,72 og skattlegges med 22 %. Selskapsskatten på 22 % endres ikke.</p></div></details>
+        <details class="lc-q"><summary>Hva betyr den effektive satsen?</summary><div class="a"><p>Det er total skatt delt på uttaksgevinsten. Den viser hvor stor del av gevinsten som går til skatt når alle lagene er lagt sammen. Den gjør det lett å sammenligne ENK og AS.</p></div></details>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcE-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-skatt-uttak">Relaterte verktoy</h2></div>
+      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-skatt-uttak">Relaterte verktøy</h2></div>
       <div class="lc-links">
-        <a class="lc-link" href="/skatt/utbytte/"><span class="ar">Utbytteskatt -&gt;</span><h3>Utbytteskatt</h3><p>Se hvordan oppjusteringen paa 1,72 og 22 % gir effektiv utbytteskatt naar du tar utbytte fra eget AS.</p></a>
-        <a class="lc-link" href="/skatt/inntekt/"><span class="ar">Inntektsskatt -&gt;</span><h3>Inntektsskatt</h3><p>Regn ut hvordan trinnskatt og trygdeavgift slaar inn paa vanlig inntekt, de samme satsene som brukes for ENK her.</p></a>
-        <a class="lc-link" href="/selskap/"><span class="ar">Selskap -&gt;</span><h3>Selskapsformer (AS/ENK)</h3><p>Sammenlign hvordan ENK og AS beskattes forskjellig for du bestemmer hvilken form som passer.</p></a>
+        <a class="lc-link" href="/skatt/utbytte/"><span class="ar">Utbytteskatt →</span><h3>Utbytteskatt</h3><p>Se hvordan oppjusteringen på 1,72 og 22 % gir utbytteskatten når du tar utbytte fra eget AS.</p></a>
+        <a class="lc-link" href="/skatt/inntekt/"><span class="ar">Inntektsskatt →</span><h3>Inntektsskatt</h3><p>Se hvordan trinnskatt og trygdeavgift slår inn på vanlig inntekt. Det er de samme satsene som brukes for ENK her.</p></a>
+        <a class="lc-link" href="/selskap/"><span class="ar">Selskap →</span><h3>Selskapsformer (AS/ENK)</h3><p>Sammenlign hvordan ENK og AS skattlegges før du bestemmer hvilken form som passer.</p></a>
       </div>
     </section>
   </div>
@@ -713,9 +696,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -842,22 +825,22 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var setHidden = function(id, hidden){ var el = document.getElementById(id); if(el) el.classList.toggle('hidden', hidden); };
 
       var noGain = d.gevinst <= 0;
-      var totalStr = noGain ? '0 kr — ingen uttaksbeskatning' : fmtKr(d.total);
-      setText('rUttakVal', totalStr);
+      // Stort tall = bare beløpet. Setningen under er én tekstnode, så _ph-ordboka oversetter den.
+      setText('rUttakVal', noGain ? '0 kr' : fmtKr(d.total));
       var subStr;
       if(noGain){
-        subStr = 'Skattemessig verdi ≥ markedsverdi · ingen gevinst å beskatte';
+        subStr = 'Ingen gevinst: skattemessig verdi er like høy som markedsverdien eller høyere.';
       } else if(d.type === 'enk'){
-        subStr = 'Effektiv: ' + fmtPct2(d.effSats) + ' · Netto etter skatt: ' + fmtKr(d.netto);
+        subStr = d.personinntekt
+          ? 'Inntektsskatt, trygdeavgift og trinnskatt på gevinsten.'
+          : 'Bare 22 % inntektsskatt på gevinsten.';
       } else {
-        subStr = 'Selskap + aksjonær · Effektiv: ' + fmtPct2(d.effSats) + ' · Netto: ' + fmtKr(d.netto);
+        subStr = 'Selskapsskatt i AS, pluss utbytteskatt hos deg.';
       }
       setText('rUttakSub', subStr);
 
       setText('hStatTotal', noGain ? '0 kr' : fmtKr(d.total));
       setText('hStatEffektiv', noGain ? '0,00 %' : fmtPct2(d.effSats));
-
-      setText('rGevinst', fmtKr(d.gevinst));
 
       var isEnk = d.type === 'enk';
       // ENK-rows
@@ -874,12 +857,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       // AS-rows
       setHidden('rRowSelskap', isEnk);
       setHidden('rRowUtbytte', isEnk);
-      setHidden('rRowNetto', isEnk);
 
       if(!isEnk){
         setText('rSelskap', noGain ? '–' : fmtKr(d.selskapsskatt));
         setText('rUtbytte', noGain ? '–' : fmtKr(d.utbytteskatt));
-        setText('rNetto', noGain ? '–' : fmtKr(d.netto));
       }
 
       // ── RE-SKIN: summary-stripe + data-viz ──

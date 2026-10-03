@@ -212,7 +212,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v228';
+    s.src = '/shared/lang/' + code + '.js?v=v229';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -448,6 +448,7 @@ function updateAll() {
   if(document.getElementById('calc-vat'))try{updateVatUI();}catch(e){_uiErr('updateVatUI',e);}
   if(document.getElementById('calc-selskap'))try{updateSelskapUI();}catch(e){_uiErr('updateSelskapUI',e);}
   if(document.getElementById('calc-basic'))try{updateFagkalkulatorUI();ccPopulate();vgPopulate();}catch(e){_uiErr('updateFagkalkulatorUI',e);}
+  else if(document.getElementById('valgevinst-currency'))try{vgPopulate();}catch(e){_uiErr('vgPopulate',e);}
   try{updateFooter();}catch(e){_uiErr('updateFooter',e);}
   try{buildThemePicker();}catch(e){_uiErr('buildThemePicker',e);}
   // Section titles
@@ -547,6 +548,8 @@ function _updateI18nText(r){
     if(el._hvtI18nTextOrig===undefined) el._hvtI18nTextOrig=el.textContent;
     var target=r[key]||el._hvtI18nTextOrig;
     if(el._hvtI18nTextApplied===target) continue;
+    // Samme synlige tekst: ikke skriv, ellers forsvinner lenker/<strong>/<em> i elementet.
+    if(el.children.length && el.textContent.replace(/\s+/g,' ').trim() === String(target).replace(/\s+/g,' ').trim()){ el._hvtI18nTextApplied=target; continue; }
     _setI18nText(el, target);
     el._hvtI18nTextApplied=target;
   }
@@ -584,6 +587,8 @@ function _phSwap(src, hit){
 }
 
 var _PH_SKIP_PARENT={SCRIPT:1,STYLE:1,TEXTAREA:1,NOSCRIPT:1,TEMPLATE:1,CODE:1,svg:1,title:1};
+// Innhold som bare finnes på norsk merkes data-ph-skip, så enkeltord ikke oversettes midt i norsk tekst.
+function _phSkip(n){ var p=n&&n.parentNode; return !!(p && (_PH_SKIP_PARENT[p.nodeName] || (p.closest && p.closest('[data-ph-skip]')))); }
 function _phText(node, dict){
   var cur=node.nodeValue;
   if(node._hvPhOut!==cur) node._hvPhSrc=cur;   // noen andre skrev til noden → ny kilde
@@ -615,17 +620,17 @@ function _phAttrs(el, dict){
 
 function _phSweep(root, dict){
   if(!root) return;
-  if(root.nodeType===3){ if(!_PH_SKIP_PARENT[root.parentNode&&root.parentNode.nodeName]) _phText(root,dict); return; }
+  if(root.nodeType===3){ if(!_phSkip(root)) _phText(root,dict); return; }
   if(root.nodeType!==1 && root.nodeType!==9) return;
   var walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode:function(n){
-      return _PH_SKIP_PARENT[n.parentNode&&n.parentNode.nodeName] ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+      return _phSkip(n) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
     }
   });
   for(var n=walker.nextNode(); n; n=walker.nextNode()) _phText(n,dict);
-  if(root.nodeType===1) _phAttrs(root,dict);
+  if(root.nodeType===1 && !(root.closest && root.closest('[data-ph-skip]'))) _phAttrs(root,dict);
   var els=root.querySelectorAll('[placeholder],[aria-label],[title],[alt]');
-  for(var i=0;i<els.length;i++) _phAttrs(els[i],dict);
+  for(var i=0;i<els.length;i++) if(!els[i].closest('[data-ph-skip]')) _phAttrs(els[i],dict);
 }
 
 function _phSweepAll(roots){
@@ -2919,11 +2924,18 @@ function updateFooter() {
       const a = document.createElement('a');
       a.id = 'fl-about';
       a.href = '/om/';
-      // Matcher separator-stilen siden bruker: <span class="foot-sep"> eller ren tekst.
+      // Matcher separator-stilen siden bruker: <span class="foot-sep"> med mellomrom
+      // rundt, « · » som tekst, eller ingen separator (da styrer gap/padding avstanden).
       const sepSrc = box.querySelector('.foot-sep');
-      const sep = sepSrc ? sepSrc.cloneNode(true) : document.createTextNode(' · ');
-      box.insertBefore(sep, first);
-      box.insertBefore(a, sep);
+      const hadDot = box.textContent.indexOf('·') >= 0;
+      box.insertBefore(a, first);
+      if (sepSrc) {
+        box.insertBefore(document.createTextNode(' '), first);
+        box.insertBefore(sepSrc.cloneNode(true), first);
+        box.insertBefore(document.createTextNode(' '), first);
+      } else if (hadDot) {
+        box.insertBefore(document.createTextNode(' · '), first);
+      }
     });
   }
   setText('fl-about', r.footerAbout||'About');
@@ -5512,7 +5524,7 @@ function fcCalc(){
     resVal.textContent = fmt(profit);
     resGrid.innerHTML = `
       <div class="rt"><div class="rt-lbl">Margin</div><div class="rt-val">${pct(margin)}</div></div>
-      <div class="rt"><div class="rt-lbl">Markup</div><div class="rt-val">${pct(markup)}</div></div>
+      <div class="rt"><div class="rt-lbl">Påslag</div><div class="rt-val">${pct(markup)}</div></div>
       <div class="rt"><div class="rt-lbl">${r.fcCost||'Cost price'}</div><div class="rt-val">${fmt(cost)}</div></div>
       <div class="rt"><div class="rt-lbl">${r.fcSell||'Selling price'}</div><div class="rt-val">${fmt(sell)}</div></div>`;
   }
@@ -5522,7 +5534,7 @@ function fcCalc(){
     const units = contribution > 0 ? Math.ceil(fixed / contribution) : Infinity;
     const revenue = units * price;
     resLbl.textContent = r.fcRBePoint||'Break-even point';
-    resVal.textContent = units === Infinity ? '∞' : units.toLocaleString('en') + ' ' + (r.fcRUnits||'units');
+    resVal.textContent = units === Infinity ? '∞' : fmtInput(units) + ' ' + (r.fcRUnits||'units');
     resGrid.innerHTML = `
       <div class="rt"><div class="rt-lbl">${r.fcRRevenue||'Required revenue'}</div><div class="rt-val">${fmt(revenue)}</div></div>
       <div class="rt"><div class="rt-lbl">${r.fcRContrib||'Contribution per unit'}</div><div class="rt-val">${fmt(contribution)}</div></div>

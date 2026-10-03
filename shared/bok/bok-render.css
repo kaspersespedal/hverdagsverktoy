@@ -11,36 +11,6 @@
    @media (hover: hover) — uten det trigges :hover ved scroll på touch.
    ────────────────────────────────────────────────────────────────────────── */
 
-/* ── Seksjon 1: svaret først ──────────────────────────────────────────── */
-.bok-svar{
-  margin:0 0 18px;padding:18px 20px;
-  border:1px solid var(--line);border-left:3px solid var(--accent);
-  background:var(--surface);border-radius:4px;
-}
-.bok-svar p{margin:0 0 10px;font:400 15px/1.65 var(--font-sans);color:var(--ink);}
-.bok-svar p:last-child{margin-bottom:0;}
-
-/* Bremsen. Står alltid, også når avviket er null. Ikke en utslåbar seksjon. */
-.bok-beviser-ikke{
-  margin:0 0 22px;padding:16px 18px;
-  border:1px solid var(--line);background:var(--surface-2);border-radius:4px;
-}
-.bok-beviser-ikke h3{
-  margin:0 0 8px;font:600 13px/1.3 var(--font-sans);
-  letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);
-}
-.bok-beviser-ikke p{margin:0 0 8px;font:400 14px/1.6 var(--font-sans);color:var(--ink2);}
-.bok-beviser-ikke ul{margin:0;padding-left:20px;}
-.bok-beviser-ikke li{font:400 14px/1.6 var(--font-sans);color:var(--ink2);margin-bottom:5px;}
-
-/* ── Seksjon 2: regelsettstripen ──────────────────────────────────────── */
-.bok-regelsett{
-  margin:0 0 20px;padding:11px 16px;
-  border:1px solid var(--line);border-radius:4px;background:var(--surface);
-  font:500 13px/1.5 var(--font-sans);color:var(--ink2);
-}
-.bok-regelsett strong{color:var(--ink);font-weight:600;}
-
 /* ── Satsvarsel — settes av motoren, ikke av et menneske ──────────────── */
 .bok-satsvarsel{
   margin:0 0 18px;padding:14px 16px;
@@ -49,49 +19,134 @@
 }
 
 /* ── Inndatafelt ──────────────────────────────────────────────────────── */
-/* .fg{flex-direction:column} står i den inline <style>-blokka, som lastes ETTER
-   dette stilarket. Samme spesifisitet taper på kilderekkefølge, så disse reglene
-   må stå på .fg.bok-fg-kryss (0,2,0) for å vinne. Ikke senk dem til én klasse,
-   og ikke flytt <style> under <link> — det vekker 20-40 sovende regler per fil. */
-.fg.bok-fg-kryss{flex-direction:row;align-items:flex-start;gap:10px;flex-wrap:wrap;}
-.fg.bok-fg-kryss .flbl{order:2;flex:1 1 0;min-width:0;margin:0;cursor:pointer;}
-.fg.bok-fg-kryss input[type=checkbox]{order:1;width:16px;height:16px;margin-top:2px;flex:none;accent-color:var(--accent);}
-.fg.bok-fg-kryss .hint-line{order:3;flex:1 1 100%;min-width:0;}
 .bok-skjonn{
   display:block;margin-top:5px;font:500 12px/1.5 var(--font-sans);color:var(--ink3);
 }
-
-/* ── Felttypen «knapper» (fase 1b) ────────────────────────────────────────
-   Samme spesifisitetsfelle som over, og verre: den inline <style>-blokka har
-   .fg input (0,1,1) med width:100%, padding og ramme. Radioknappen skjules
-   derfor på .fg.bok-fg-knapper .bok-knapp input (0,3,1). Ikke senk dem. */
-fieldset.fg.bok-fg-knapper{border:0;margin:0;padding:0;min-width:0;}
-.fg.bok-fg-knapper legend{
-  padding:0;margin:0 0 10px;
-  font:600 14.5px/1.45 var(--font-sans);color:var(--ink);
+/* Utdyping bak en summary: egen trykkflate på minst 32 px. */
+.bok-mer > summary{
+  list-style:none;cursor:pointer;margin-top:4px;min-height:32px;
+  display:flex;align-items:center;gap:8px;
+  font:500 12px/1.4 var(--font-sans);color:var(--ink3);
 }
-.fg.bok-fg-knapper .bok-knapper{display:flex;flex-wrap:wrap;gap:8px;}
-.fg.bok-fg-knapper .bok-knapp{position:relative;display:inline-flex;cursor:pointer;}
-.fg.bok-fg-knapper .bok-knapp input{
+.bok-mer > summary::-webkit-details-marker{display:none;}
+.bok-mer > summary::after{
+  content:'';flex:none;width:6px;height:6px;
+  border-right:1.4px solid var(--ink3);border-bottom:1.4px solid var(--ink3);
+  transform:rotate(45deg);transition:transform .15s var(--ease);
+}
+.bok-mer[open] > summary::after{transform:rotate(225deg);}
+.bok-mer p{margin:2px 0 0;font:400 12.5px/1.55 var(--font-sans);color:var(--ink2);}
+
+/* ── Felttypen «knapper» ──────────────────────────────────────────────────
+   Et fieldset.ik-fg: spørsmålet i legend, knappene i et grid, hint og
+   utdyping under. Radioknappen ligger usynlig over flata (.bk-f), så
+   input:checked + .bk-f treffer hele knappen. Ja/Nei strekkes ikke over
+   hele kolonnen (maks 280 px); knapper med tekst under står under
+   hverandre på alle bredder, én rad per knapp. */
+fieldset.bok-fg-knapper{border:0;margin:0;padding:0;min-width:0;}
+.bok-fg-knapper .bok-sp{
+  padding:0;margin:0 0 8px;
+  font:600 13.5px/1.4 var(--font-sans);color:var(--ink);
+}
+.bok-fg-knapper > .ik-hint{display:block;margin-top:2px;}
+.bok-knapper{
+  display:grid;grid-template-columns:repeat(var(--n,2),minmax(0,1fr));
+  gap:6px;max-width:280px;
+}
+.bok-knapper.bok-knapper-rader{grid-template-columns:minmax(0,1fr);max-width:none;}
+.bok-knapp{position:relative;display:block;cursor:pointer;}
+.bok-fg-knapper .bok-knapp input{
   position:absolute;inset:0;width:100%;height:100%;
   margin:0;padding:0;border:0;opacity:0;cursor:pointer;
 }
-.fg.bok-fg-knapper .bok-knapp span{
-  display:inline-block;padding:9px 14px;
-  border:1px solid var(--line-2);border-radius:5px;background:var(--bg);
-  font:500 14px/1.3 var(--font-sans);color:var(--ink);
+.bk-f{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:44px;padding:8px 10px;text-align:center;
+  border:1px solid var(--line-2);border-radius:5px;background:var(--bg);color:var(--ink);
   transition:border-color .2s var(--ease), background .2s var(--ease);
 }
+.bok-knapper-rader .bk-f{
+  flex-direction:row;flex-wrap:wrap;justify-content:space-between;
+  align-items:baseline;align-content:center;gap:2px 12px;
+  text-align:left;padding:10px 14px;
+}
+.bk-t{font:600 14px/1.3 var(--font-sans);}
+/* Samme farge som .bk-t (arves fra flata), også på valgt knapp. Aldri
+   opacity for å dempe: det feller AA på de lyse temaene. */
+.bk-u{font:400 12px/1.35 var(--font-sans);}
+.bok-knapper-rader .bk-u{text-align:right;}
 /* Valgt knapp er FLAT var(--accent) med --on-accent som tekst — aldri en
    gradient mot --accent-2, som faller under AA på frost og hendrix. Seks av
    temaene bruker sin egen --bg som tekstfarge, derav reserveverdien. */
-.fg.bok-fg-knapper .bok-knapp input:checked + span{
+.bok-fg-knapper .bok-knapp input:checked + .bk-f{
   background:var(--accent);border-color:var(--accent);color:var(--on-accent, var(--bg));
 }
-.fg.bok-fg-knapper .bok-knapp input:focus-visible + span{outline:2px solid var(--accent);outline-offset:2px;}
+.bok-fg-knapper .bok-knapp input:focus-visible + .bk-f{outline:2px solid var(--accent);outline-offset:2px;}
 @media (hover:hover){
-  .fg.bok-fg-knapper .bok-knapp:hover span{border-color:var(--line-warm);}
-  .fg.bok-fg-knapper .bok-knapp:hover input:checked + span{border-color:var(--accent);}
+  .bok-knapp:hover .bk-f{border-color:var(--line-warm);}
+  .bok-fg-knapper .bok-knapp:hover input:checked + .bk-f{border-color:var(--accent);}
+}
+
+/* ── ks-oppsettet (fase 1c) ───────────────────────────────────────────────
+   Lønn-sidens skall (.ks, .ik-*, .ks-r-*) står i site-shell.css og i sidens
+   inline-blokk. Her står bare det bokføringssidene trenger i tillegg. Den
+   inline-blokka lastes etter dette arket, så regler som skal vinne over den
+   har minst to klasser (0,2,0). */
+.ks-section .bok-sek-hint{margin:-4px 0 12px;}
+.ks-section .ik-toggle{min-height:44px;margin-top:6px;}
+.ks-section .ik-collapse{margin-top:8px;}
+/* Krysset står på høyde med nabofeltets inndata, ikke med etiketten. */
+.ik-fg.bok-ik-kryss{padding-top:22px;}
+.bok-kryss-boks{display:flex;align-items:center;gap:10px;min-height:42px;}
+.bok-kryss-boks input[type=checkbox]{width:16px;height:16px;margin:0;flex:none;accent-color:var(--accent);cursor:pointer;}
+.bok-kryss-boks label{font:500 13px/1.35 var(--font-sans);color:var(--ink2);cursor:pointer;}
+@media (max-width:580px){
+  .ik-fg.bok-ik-kryss{padding-top:0;}
+}
+/* Et talleksempel på fem korte setninger: rett og 12,5 px, ikke lønn-sidens
+   kursive 11,5 px-note. */
+.ik-note.bok-note{margin:14px 0 0;font-style:normal;font-size:12.5px;line-height:1.55;color:var(--ink2);}
+.ik-note.bok-note a,
+.ks-r-mnd a,
+.bok-satsvarsel a{color:var(--accent-2);text-decoration:underline;text-underline-offset:2px;}
+
+/* Svarkortet */
+.ks-r-stat .l .cap{display:block;margin-top:2px;font-size:11px;color:var(--ink3);}
+.ks-result .bok-merknad{margin:12px 0 0;font:400 12px/1.5 var(--font-sans);color:var(--ink2);}
+.bok-aarsaker{
+  margin-top:14px;padding-top:12px;border-top:1px solid var(--line);
+  font:400 12.5px/1.55 var(--font-sans);color:var(--ink2);
+}
+.bok-aarsaker .bok-aarsaker-t{margin:0;font-weight:600;color:var(--ink);}
+.bok-aarsaker ol{margin:6px 0 0;padding-left:18px;}
+.bok-aarsaker li{margin-bottom:6px;}
+.bok-aarsaker strong{color:var(--ink);font-weight:600;}
+
+/* Under kortet, men inne i .ks: regnestykket som bånd og «Hva beviser 0 kr». */
+.ks-steg{border-top:1px solid var(--line);padding:18px 26px 22px;background:var(--surface);}
+.ks-steg .ik-section-head{flex-wrap:wrap;row-gap:4px;}
+/* Egen klasse, ikke details.howto: den inline details.howto{display:none}
+   ville skjult boksen. */
+details.ks-more{border-top:1px solid var(--line);}
+details.ks-more > summary{
+  list-style:none;cursor:pointer;padding:14px 26px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  font:500 13px/1.4 var(--font-sans);color:var(--ink2);
+}
+details.ks-more > summary::-webkit-details-marker{display:none;}
+details.ks-more > summary::after{
+  content:'';flex:none;width:7px;height:7px;
+  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
+  transform:rotate(45deg);transition:transform .15s var(--ease);
+}
+details.ks-more[open] > summary::after{transform:rotate(225deg);}
+.ks-more .body{padding:0 26px 20px;}
+.ks-more .body p{margin:0 0 8px;font:400 14px/1.6 var(--font-sans);color:var(--ink2);}
+.ks-more .body p strong{color:var(--ink);}
+@media (max-width:560px){
+  .ks-steg{padding:16px 16px 18px;}
+  details.ks-more > summary{padding:14px 16px;}
+  .ks-more .body{padding:0 16px 18px;}
 }
 
 /* ── Seksjon 4: regnestykket med brukerens egne tall ──────────────────── */
@@ -114,84 +169,37 @@ fieldset.fg.bok-fg-knapper{border:0;margin:0;padding:0;min-width:0;}
 .bok-steg-rad.er-sum .bs-lbl,
 .bok-steg-rad.er-sum .bs-val{font-weight:700;color:var(--ink);}
 
-/* ── Avstemmingsskallet — gjenbrukes av flere oppslag senere ──────────── */
-.bok-avst{margin:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;}
-.bok-avst-rad{
-  display:flex;justify-content:space-between;align-items:baseline;gap:16px;
-  padding:11px 16px;border-bottom:1px solid var(--line);
+/* ── Type 2: utfallet i ks-kortet ─────────────────────────────────────────
+   Alle utfall står alltid i stripa. Bare markeringen flytter seg: aksent-
+   cella OG et tekstmerke — ikke farge alene, og ingen «riktig/galt»-farger.
+   Linja over stripa sier at cellene er utfall, ikke faner. */
+.bok-strip-cap{
+  margin:0;padding:10px 22px;border-bottom:1px solid var(--line);
+  font:500 12px/1.4 var(--font-sans);color:var(--ink3);
 }
-.bok-avst-rad:last-child{border-bottom:0;}
-.bok-avst-rad .l{font:400 14px/1.5 var(--font-sans);color:var(--ink2);}
-.bok-avst-rad .v{
-  font:600 15px/1.4 var(--font-sans);color:var(--ink);
-  font-variant-numeric:tabular-nums lining-nums;white-space:nowrap;
-}
-.bok-avst-rad.er-krav{background:var(--surface-2);border-top:1px solid var(--line);}
-.bok-avst-rad.er-krav .l{font-weight:600;color:var(--ink);}
-.bok-avst-rad.er-krav .v{font-size:19px;font-weight:700;}
-.bok-avst-hjelp{
-  padding:14px 16px;border-top:1px solid var(--line);background:var(--surface);
-  font:400 14px/1.65 var(--font-sans);color:var(--ink2);
-}
-.bok-avst-hjelp ol{margin:8px 0 0;padding-left:20px;}
-.bok-avst-hjelp li{margin-bottom:6px;}
-.bok-avst-hjelp strong{color:var(--ink);}
-
-/* ── Type 2: utfallspanelet (fase 1b) ─────────────────────────────────────
-   Alle utfall står alltid i listen. Bare markeringen flytter seg. Det
-   aktive skilles ut med flate, aksentkant OG et tekstmerke — ikke med farge
-   alene, og ingen «riktig/galt»-farger. */
-.bok-konklusjon{margin:0;font:400 14px/1.55 var(--font-sans);color:var(--ink2);}
-.bok-konklusjon strong{
-  display:block;margin-top:6px;
-  font-family:var(--font-serif);font-weight:500;font-size:28px;line-height:1.1;
-  letter-spacing:-.5px;color:var(--ink);
-}
-.bok-grunn{margin:12px 0 0;font:400 14px/1.6 var(--font-sans);color:var(--ink2);}
-.bok-utfall-liste{
-  list-style:none;margin:16px 0 0;padding:0;
-  border:1px solid var(--line);border-radius:4px;overflow:hidden;
-}
-.bok-utfall-rad{
-  display:flex;flex-direction:column;gap:3px;padding:10px 14px;
-  border-bottom:1px solid var(--line);border-left:3px solid transparent;
-}
-.bok-utfall-rad:last-child{border-bottom:0;}
-.bok-utfall-rad .nm{
-  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
-  font:600 13.5px/1.4 var(--font-sans);color:var(--ink2);
-}
-.bok-utfall-rad .hva{font:400 13px/1.5 var(--font-sans);color:var(--ink2);}
-.bok-utfall-rad.er-aktiv{background:var(--surface-2);border-left-color:var(--accent);}
-.bok-utfall-rad.er-aktiv .nm{color:var(--ink);}
+.ks-strip-cell .bok-merke{margin-top:4px;align-self:flex-start;}
 .bok-merke{
   flex:none;padding:2px 7px;border:1px solid var(--accent);border-radius:3px;
   font:600 10px/1.4 var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink);
 }
+/* Grunnen står under dom-linja og er svakere enn den. */
+.bok-grunn{margin:10px 0 0;font:400 13px/1.6 var(--font-sans);color:var(--ink2);}
 
-/* «Slik kom svaret fram» — type 2 sitt regnestykke linje for linje. */
-.bok-kjede{
-  list-style:none;margin:0;padding:0;
-  border:1px solid var(--line);border-radius:4px;overflow:hidden;
+/* «Slik kom svaret fram» — type 2 sitt regnestykke linje for linje, som
+   stat-rader i svarkortet. Raden som avgjorde har aksentkant og ordet
+   «Avgjorde.» (eller «Oppfylt.» når alle svarene avgjorde sammen). */
+.ks-r-stats.bok-kjede{list-style:none;margin:0;padding-left:0;}
+.ks-r-stat.bok-kj{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:baseline;
+  padding:9px 10px;border-left:2px solid transparent;
 }
-.bok-kjede li{
-  display:grid;grid-template-columns:1fr auto;gap:3px 16px;align-items:baseline;
-  padding:11px 16px;border-bottom:1px solid var(--line);border-left:3px solid transparent;
-}
-.bok-kjede li:last-child{border-bottom:0;}
-.bok-kjede .kj-sp{font:400 14px/1.5 var(--font-sans);color:var(--ink2);}
-.bok-kjede .kj-sv{font:600 14px/1.5 var(--font-sans);color:var(--ink);text-align:right;}
-.bok-kjede .kj-fo{grid-column:1/-1;font:400 13px/1.55 var(--font-sans);color:var(--ink2);}
-.bok-kjede li.er-avgjorende{background:var(--surface-2);border-left-color:var(--accent);}
+.bok-kj-fo{grid-column:1/-1;font:400 12px/1.5 var(--font-sans);color:var(--ink3);}
+.bok-kj.er-avgjorende{border-left-color:var(--accent);background:var(--surface-2);}
+.bok-kj.er-avgjorende .bok-kj-fo{color:var(--ink2);}
+.bok-kj-fo strong{color:var(--ink);font-weight:600;}
 
-/* Begrepsboksen: påløpt kostnad, avsetning eller betinget forpliktelse. */
-.bok-skille{
-  margin:28px 0 0;padding:18px 20px 8px;
-  border:1px solid var(--line);border-radius:4px;background:var(--surface);
-}
-.bok-skille h2{margin:0 0 6px;font:600 16px/1.35 var(--font-sans);color:var(--ink);}
-.bok-skille > p{margin:0 0 4px;font:400 14px/1.6 var(--font-sans);color:var(--ink2);}
-/* Tre kort, ikke en tabell: fire kolonner ble 87 px for brede på 375 px. */
+/* Begrepskortene: påløpt kostnad, avsetning eller betinget forpliktelse.
+   Tre kort, ikke en tabell: fire kolonner ble 87 px for brede på 375 px. */
 .bok-begreper{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0;}
 .bok-begrep{padding:14px 16px;border:1px solid var(--line);border-radius:4px;background:var(--surface-2);}
 .bok-begrep h3{margin:0 0 6px;font:600 14px/1.35 var(--font-sans);color:var(--ink);}
@@ -225,11 +233,16 @@ fieldset.fg.bok-fg-knapper{border:0;margin:0;padding:0;min-width:0;}
   font:400 13px/1.6 var(--font-sans);color:var(--ink3);
 }
 
+/* Innholdet finnes bare på norsk og er merket dir="ltr". På en side som
+   ellers går høyre-til-venstre (arabisk) står ingressen da i samme
+   venstrekant som tittelen. Ingen virkning på norsk. */
+.page-lead[dir="ltr"]{margin-right:auto;}
+
 @media (max-width:640px){
   .bok-steg-rad{grid-template-columns:1fr auto;gap:4px 12px;}
   .bok-steg-rad .bs-lbl{grid-column:1/-1;}
   .bok-steg-rad .bs-utt{text-align:left;white-space:normal;}
-  .bok-kjede li{grid-template-columns:1fr;}
-  .bok-kjede .kj-sv{text-align:left;}
-  .bok-skille{padding:16px 16px 6px;}
+}
+@media (max-width:560px){
+  .bok-strip-cap{padding:10px 14px;}
 }

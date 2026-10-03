@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>BSU-kalkulator — beregn skattefradrag og spar mer · Hverdagsverktøy</title>
-<meta name="description" content="Regn ut hvor mye du sparer på BSU vs vanlig sparekonto. 10 % skattefradrag, maks 27 500 kr/år, maks 300 000 kr totalt, aldersgrense 33 år. Norske 2026-regler. Alt skjer lokalt i nettleseren.">
+<meta name="description" content="Regn ut hvor mye du sparer på BSU vs vanlig sparekonto. 10 % skattefradrag, maks 27 500 kr/år, maks 300 000 kr totalt, til og med året du fyller 33.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/boliglan/bsu/">
@@ -50,12 +50,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* BSU — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -395,7 +395,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="crumbHereBoliglanBsu">BSU-kalkulator</span>
       </div>
       <h1 class="page-title"><em data-i18n="bsuTitleNew">BSU-kalkulator</em></h1>
-      <p class="page-lead" data-i18n="bsuSubtitle">Skriv inn månedlig sparing, antall år og marginalskatt — så regner vi ut hvor mye du tjener på BSU vs vanlig sparekonto. 10 % skattefradrag, maks 27 500 kr per år, maks 300 000 kr totalt, aldersgrense til og med året du fyller 33 år. Norske 2026-regler. Alt skjer lokalt i nettleseren.</p>
+      <p class="page-lead" data-i18n="bsuSubtitle">Se hvor mye mer du sitter igjen med på BSU enn på en vanlig sparekonto. Du får 10 % av innskuddet i fradrag på skatten, opptil 2 750 kr i året, til og med året du fyller 33.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
@@ -433,7 +433,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bsu-monthly"><span data-i18n="bsuLblMonthly">Månedlig sparing</span> <span class="cap">(kr)</span></label>
                     <input id="bsu-monthly" class="ik-input" type="text" inputmode="numeric" value="2 291" autocomplete="off">
-                    <span class="ik-hint">Maks 27 500 kr per år gir fradrag (≈ 2 291 kr/mnd). Sparer du mer går overskuddet til vanlig sparekonto i kalkulasjonen.</span>
+                    <span class="ik-hint">Bare 27 500 kr i året (ca. 2 291 kr/mnd) gir fradrag. Kalkulatoren regner ikke med det du sparer utover.</span>
                   </div>
                 </div>
                 <div class="ik-row">
@@ -442,22 +442,23 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                     <input id="bsu-years" class="ik-input" type="text" value="10" min="1" max="15" inputmode="numeric" autocomplete="off">
                   </div>
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bsu-tax-rate"><span data-i18n="bsuLblTaxRate">Marginalskatt</span> <span class="cap">(%)</span></label>
-                    <input id="bsu-tax-rate" class="ik-input" type="text" value="22" step="0.5" min="0" max="55" inputmode="decimal" autocomplete="off">
+                    <label class="ik-lbl" for="bsu-tax-rate"><span data-i18n="bsuLblTaxRate">Fradrag du får brukt</span> <span class="cap">(%)</span></label>
+                    <input id="bsu-tax-rate" class="ik-input" type="text" value="100" step="1" min="0" max="100" inputmode="decimal" autocomplete="off">
+                    <span class="ik-hint">100 % hvis skatten din er minst like stor som fradraget.</span>
                   </div>
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bsu-alt-rate"><span data-i18n="bsuLblAltRate">Alt. rente</span> <span class="cap">(%)</span></label>
-                    <input id="bsu-alt-rate" class="ik-input" type="text" value="4.0" step="0.1" min="0" max="20" inputmode="decimal" autocomplete="off">
+                    <label class="ik-lbl" for="bsu-alt-rate"><span data-i18n="bsuLblAltRate">Rente vanlig sparekonto</span> <span class="cap">(%)</span></label>
+                    <input id="bsu-alt-rate" class="ik-input" type="text" value="4,0" step="0.1" min="0" max="20" inputmode="decimal" autocomplete="off">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bsu-bsu-rate"><span data-i18n="bsuLblBsuRate">BSU-rente</span> <span class="cap">(%)</span></label>
-                    <input id="bsu-bsu-rate" class="ik-input" type="text" value="4.5" step="0.1" min="0" max="20" inputmode="decimal" autocomplete="off">
+                    <input id="bsu-bsu-rate" class="ik-input" type="text" value="4,5" step="0.1" min="0" max="20" inputmode="decimal" autocomplete="off">
                   </div>
                 </div>
               </div>
-              <p class="ik-note">Total saldo (innskudd) kan ikke overstige 300 000 kr. Aldersgrensen er året du fyller 33 år — siste året du kan gjøre nye innskudd. BSU er regulert i <strong>Skatteloven § 16-10</strong>. Fradraget er begrenset til skatt du faktisk betaler.</p>
+              <p class="ik-note">Tak: 300 000 kr i innskudd totalt. Siste år med fradrag er året du fyller 33. Hjemmel: skatteloven § 16-10.</p>
             </section>
           </div>
 
@@ -472,12 +473,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
             </div>
 
             <div class="ks-r-stats">
-              <div class="ks-r-stat"><span class="l" data-i18n="bsuROutSpart">Total innskudd (BSU)</span><span class="v" id="bsu-r-spart">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="bsuROutBsuBalance">BSU-saldo etter renter</span><span class="v" id="bsu-r-bsu-balance">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="bsuROutAltBalance">Vanlig konto-saldo</span><span class="v" id="bsu-r-alt-balance">–</span></div>
-              <div class="ks-r-stat div"><span class="l" data-i18n="bsuROutBsuRenter">BSU-renter</span><span class="v" id="bsu-r-bsu-renter">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="bsuROutAltRenter">Vanlig sparing-renter</span><span class="v" id="bsu-r-alt-renter">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="bsuROutTaxBenefit">Skattefradrag samlet</span><span class="v" id="bsu-r-tax-benefit">–</span></div>
             </div>
 
             <p class="ks-r-note" id="bsu-tip">10 % av årets innskudd trekkes fra skatten din. Eksempel: 27 500 kr innskudd → 2 750 kr i lavere skatt.</p>
@@ -513,8 +510,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <div class="howto-body">
         <div class="howto-row"><strong>Månedlig sparing</strong><span>Det du legger inn på BSU-kontoen hver måned. Maks 27 500 kr per år (≈ 2 291 kr/mnd) gir fradrag.</span></div>
         <div class="howto-row"><strong>Antall år</strong><span>Hvor lenge du planlegger å spare. BSU har aldersgrense — siste innskudd er året du fyller 33 år.</span></div>
-        <div class="howto-row"><strong>Marginalskatt</strong><span>Skattesatsen på dine siste tjente kroner. Vanligvis 22 % for studenter og lavere lønn, høyere ved alminnelig inntekt over ca. 670 000 kr.</span></div>
-        <div class="howto-row"><strong>Alternativ rente</strong><span>Renten du ville fått på en vanlig sparekonto hvis du ikke valgte BSU. Brukes til sammenligning.</span></div>
+        <div class="howto-row"><strong>Fradrag du får brukt</strong><span>Hvor stor del av fradraget du får trukket fra skatten. 100 % hvis skatten din er minst like stor som fradraget.</span></div>
+        <div class="howto-row"><strong>Rente vanlig sparekonto</strong><span>Renten du ville fått på en vanlig sparekonto hvis du ikke valgte BSU. Brukes til sammenligning.</span></div>
         <div class="howto-row"><strong>BSU-rente</strong><span>Renten banken gir på BSU-kontoen din. Ofte litt høyere enn vanlig sparekonto siden bankene konkurrerer om unge kunder.</span></div>
         <div class="howto-row"><strong>10 % skattefradrag</strong><span>Du får 10 % av årets innskudd direkte trukket fra skatten. Eksempel: 27 500 kr innskudd → 2 750 kr lavere skatt (forutsatt at du har skatt å trekke fra).</span></div>
         <div class="howto-row"><strong>300 000 kr-grensen</strong><span>Total BSU-saldo (innskudd) kan ikke overstige 300 000 kr. Etter det må resten spares andre steder.</span></div>
@@ -529,39 +526,20 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-boliglan-bsu">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-bsu">Hva kalkulatoren gjør med innskuddet ditt</h2><p class="lc-intro">Kalkulatoren bygger to sparekontoer side om side: én BSU-konto og én vanlig sparekonto med samme innskudd. Hvert år legger den på renter og regner skattefradraget på BSU. Til slutt sammenligner den de to. Dette er de samme linjene du ser i resultatet over - bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-bsu">Hva kalkulatoren gjør med innskuddet ditt</h2><p class="lc-intro">Kalkulatoren følger to kontoer med samme innskudd: én BSU og én vanlig sparekonto. Begge får renter hvert år, og for BSU regner den i tillegg ut skattefradraget. Fordelen din er forskjellen i saldo pluss fradraget. Med standardtallene (2 291 kr i måneden i 10 år) blir fordelen 37 247 kr.</p></div>
       <div class="lc-ledger">
         <div class="lc-led"><span class="nm"><b>Skattefradrag</b><span class="tag">Fradrag</span></span><span class="fig">10<span class="u">%</span></span><p class="dsc">Du får 10 % av årets BSU-innskudd trukket rett fra skatten. Setter du inn 27 500 kr, blir skatten 2 750 kr lavere det året.</p></div>
-        <div class="lc-led"><span class="nm"><b>Maks innskudd per år</b><span class="tag">Grense</span></span><span class="fig">27 500<span class="u">kr</span></span><p class="dsc">Bare de første 27 500 kr du sparer i året gir fradrag. Sparer du mer, regner kalkulatoren overskuddet som vanlig sparing i stedet.</p></div>
+        <div class="lc-led"><span class="nm"><b>Maks innskudd per år</b><span class="tag">Grense</span></span><span class="fig">27 500<span class="u">kr</span></span><p class="dsc">Bare de første 27 500 kr du sparer i året gir fradrag. Sparer du mer, regner ikke kalkulatoren med det overskytende.</p></div>
         <div class="lc-led"><span class="nm"><b>Maks total saldo</b><span class="tag">Grense</span></span><span class="fig">300 000<span class="u">kr</span></span><p class="dsc">Samlede innskudd kan ikke overstige 300 000 kr. Når du når taket, stopper nye BSU-innskudd og resten må spares andre steder.</p></div>
         <div class="lc-led"><span class="nm"><b>BSU-rente</b><span class="tag">Sats</span></span><span class="fig">4,5<span class="u">%</span></span><p class="dsc">Standardverdien for renten banken gir på BSU-kontoen. Du kan endre den selv. Renten legges på hele saldoen hvert år.</p></div>
-        <div class="lc-led"><span class="nm"><b>Alternativ rente</b><span class="tag">Sats</span></span><span class="fig">4,0<span class="u">%</span></span><p class="dsc">Renten du ville fått på en vanlig sparekonto uten BSU. Den brukes bare til å sammenligne de to alternativene.</p></div>
-        <div class="lc-led"><span class="nm"><b>Marginalskatt</b><span class="tag">Faktor</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Brukes som mål på hvor mye skatt du faktisk har å trekke fra. 22 % gir full utnyttelse av fradraget. Lavere tall antar at du ikke har nok skatt til å bruke hele fradraget.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-boliglan-bsu">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-boliglan-bsu">Grensene for BSU i 2026</h2><p class="lc-intro">Disse tallene styrer hele regnestykket. De er låst i kalkulatoren, mens rentene og antall år kan du justere selv.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
-        <div class="lc-kv"><span class="k">Skattefradrag</span><span class="v">10<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Maks innskudd per år</span><span class="v">27 500<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Maks innskudd per måned (gir fradrag)</span><span class="v">2 291<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Maks total saldo</span><span class="v">300 000<span class="u">kr</span></span></div>
-      </div>
-      <div class="lc-card">
-        <span class="ttl">Mer</span>
-        <div class="lc-kv"><span class="k">Maks skattefradrag per år</span><span class="v">2 750<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Aldersgrense (siste innskuddsår)</span><span class="v">33<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Antall år du kan regne på</span><span class="v">1-15<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Beste BSU-rente (referanse)</span><span class="v">5,75<span class="u">%</span></span></div>
-      </div>
+        <div class="lc-led"><span class="nm"><b>Rente vanlig sparekonto</b><span class="tag">Sats</span></span><span class="fig">4,0<span class="u">%</span></span><p class="dsc">Renten du ville fått på en vanlig sparekonto uten BSU. Den brukes bare til å sammenligne de to alternativene.</p></div>
+        <div class="lc-led"><span class="nm"><b>Fradrag du får brukt</b><span class="tag">Faktor</span></span><span class="fig">100<span class="u">%</span></span><p class="dsc">Fradraget trekkes fra skatten du betaler. Betaler du mindre skatt enn fradraget, får du bare brukt en del av det.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-boliglan-bsu">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-bsu">Det som er lett å overse</h2><p class="lc-intro">Fire ting som ofte overrasker folk når de regner på BSU.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-bsu">Det som er lett å overse</h2></div>
       <div class="lc-notes">
-        <div class="lc-note"><h3>Fradraget krever at du betaler skatt</h3><p>10 %-fradraget trekkes fra skatten din, ikke fra inntekten. Har du ingen eller veldig lav skatt - for eksempel som student uten lønn - får du ikke utnyttet hele fradraget. Derfor lar kalkulatoren deg sette marginalskatt lavere enn 22 % for å simulere dette.</p></div>
+        <div class="lc-note"><h3>Fradraget krever at du betaler skatt</h3><p>10 %-fradraget trekkes fra skatten din, ikke fra inntekten. Har du ingen eller veldig lav skatt - for eksempel som student uten lønn - får du ikke utnyttet hele fradraget. Sett «Fradrag du får brukt» lavere enn 100 % hvis du betaler lite skatt.</p></div>
         <div class="lc-note"><h3>27 500-grensen er per år, ikke per måned</h3><p>Du kan fordele innskuddet fritt gjennom året. 27 500 kr tilsvarer rundt 2 291 kr i måneden, men du kan også sette inn alt på én gang. Sparer du mer enn 27 500 kr i året, gir bare de første 27 500 kr fradrag.</p></div>
         <div class="lc-note"><h3>Pengene må brukes til bolig</h3><p>BSU-saldoen er bundet til kjøp av egen bolig eller nedbetaling av boliglån. Tar du pengene ut til noe annet, mister du fradragene du har fått - de må betales tilbake.</p></div>
         <div class="lc-note"><h3>Året du fyller 33 er siste sjanse</h3><p>Aldersgrensen er året du fyller 33 år. Etter det kan du ikke gjøre nye innskudd som gir fradrag. Pengene du allerede har spart blir stående, men taket på 300 000 kr i samlede innskudd gjelder uansett.</p></div>
@@ -604,9 +582,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -637,12 +615,15 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     var el = document.getElementById(id);
     if(el) el.textContent = val;
   }
+  // Tekst med tall hentes fra språkfila (R()); norsk er reserve til den er lastet.
+  function t(k, fb){ var r = (typeof R === 'function') ? R() : null; return (r && r[k]) || fb; }
 
-  // ── Hovedberegning (matte uendret fra opprinnelig calcBsu) ──
+  // ── Hovedberegning ──
   function compute(){
     var monthly = parseNum('bsu-monthly');
     var years   = Math.max(1, Math.min(getVal('bsu-years', 10), 15));
-    var taxRate = Math.max(0, getVal('bsu-tax-rate', 22));
+    // «Fradrag du får brukt» i prosent: 100 = hele fradraget går til fratrekk i skatten
+    var fradragBrukt = Math.max(0, getVal('bsu-tax-rate', 100));
     var altRate = Math.max(0, getVal('bsu-alt-rate', 4.0));
     var bsuRate = Math.max(0, getVal('bsu-bsu-rate', 4.5));
 
@@ -674,21 +655,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         }
       }
 
-      // Skattefradrag: 10 % av innskudd × marginalskatt
-      // (Eksempel: 27 500 → fradrag 2 750 kr → tax-benefit = 2 750 × 22 % = 605 kr/år ved skatte-modellering;
-      //  men politisk er 10 % et DIREKTE fradrag i skatt, ikke i alminnelig inntekt.
-      //  Skatteloven § 16-10 sier "fradrag i skatt" = direkte reduksjon av skatt, opp til 2 750 kr/år.
-      //  Vi skalerer derfor med marginalskatt = 100 % — men UI viser også
-      //  hvor mye fradrag-rommet er, ved å bruke marginalskatt-input som verktøy
-      //  for de som vil simulere lavere effektivt fradrag (f.eks. lav inntekt).
-      //
-      //  Forenklet: hvis taxRate = 100, gir vi full 10 %-fradrag.
-      //  Hvis taxRate < 22, antar vi delvis utnyttelse (bruker har ikke nok skatt å trekke fra).
-      //  Default 22 % gir tilnærmet "normal" utnyttelse.
-      // )
+      // Skattefradrag: 10 % av årets innskudd trekkes direkte fra skatten (skatteloven § 16-10),
+      // opp til 2 750 kr. Har du mindre skatt enn fradraget, får du bare brukt en del av det.
       var fradragRoom = thisYearInvest * BSU_FRADRAG_RATE;  // 10 %, opp til 2 750 kr
-      // Skala: utnyttelse = min(taxRate/22, 1) — bruker 22 % som "full utnyttelse"-baseline
-      var utilization = Math.min(taxRate / 22, 1);
+      var utilization = Math.min(fradragBrukt / 100, 1);
       var taxBenefit = fradragRoom * utilization;
       totalTaxBenefit += taxBenefit;
 
@@ -741,7 +711,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   function recalc(){
     var d = compute();
     if(!d.hasData){
-      ['bsuStripSpart','bsuStripBalance','bsuStripTax','bsuStripFordel','hStatFordel','hStatTax','bsu-r-fordel','bsu-r-spart','bsu-r-bsu-balance','bsu-r-alt-balance','bsu-r-bsu-renter','bsu-r-alt-renter','bsu-r-tax-benefit'].forEach(function(id){ setEl(id, '–'); });
+      ['bsuStripSpart','bsuStripBalance','bsuStripTax','bsuStripFordel','hStatFordel','hStatTax','bsu-r-fordel','bsu-r-alt-balance','bsu-r-alt-renter'].forEach(function(id){ setEl(id, '–'); });
       setEl('bsuVerdict', 'Skriv inn månedlig sparing for å starte');
       setEl('bsu-tip', '10 % av årets innskudd trekkes fra skatten din. Eksempel: 27 500 kr innskudd → 2 750 kr i lavere skatt.');
       clearBar();
@@ -761,35 +731,31 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     // Result
     setEl('bsu-r-fordel', fmt(d.bsuTotalFordel));
-    setEl('bsu-r-spart', fmt(d.totalInvested));
-    setEl('bsu-r-bsu-balance', fmt(d.bsuBalance));
     setEl('bsu-r-alt-balance', fmt(d.altBalance));
-    setEl('bsu-r-bsu-renter', fmt(d.bsuRenter));
     setEl('bsu-r-alt-renter', fmt(d.altRenter));
-    setEl('bsu-r-tax-benefit', fmt(d.totalTaxBenefit));
 
     renderBar(d);
 
-    // Verdict-tekst i result (kort variant) — JS-satt, ingen data-i18n
+    // Dommen sier hva tallet betyr; selve beløpet står stort over.
     if(d.bsuTotalFordel > 0){
-      setEl('bsuVerdict', 'Du tjener ' + fmt(d.bsuTotalFordel) + ' mer på BSU over ' + d.years + ' år');
+      setEl('bsuVerdict', t('bsuVerdictPos', 'BSU lønner seg over {n} år, med skattefradraget regnet med.').replace('{n}', d.years));
     } else if(d.bsuTotalFordel < 0){
-      setEl('bsuVerdict', 'BSU lønner seg ikke i dette tilfellet — sjekk renteforskjellen og skattesats');
+      setEl('bsuVerdict', t('bsuVerdictNeg', 'BSU lønner seg ikke her. Sjekk rentene og hvor mye av fradraget du får brukt.'));
     } else {
-      setEl('bsuVerdict', 'BSU og vanlig sparing er likt over ' + d.years + ' år');
+      setEl('bsuVerdict', t('bsuVerdictZero', 'BSU og vanlig sparing gir det samme over {n} år.').replace('{n}', d.years));
     }
 
     // Tip-box (dynamisk forklaring)
     var tipText;
     if(d.capReachedYear){
-      tipText = 'Du nådde 300 000 kr-grensen i år ' + d.capReachedYear + '. Etter det kan du ikke spare mer på BSU — overskuddet må gå til vanlig sparekonto.';
+      tipText = t('bsuTipCap', 'Du når taket på 300 000 kr i år {y}. Kalkulatoren regner ikke med innskudd etter det.').replace('{y}', d.capReachedYear);
     } else if(d.yearly > BSU_MAX_PER_YEAR){
       var overshoot = d.yearly - BSU_MAX_PER_YEAR;
-      tipText = 'Du sparer ' + fmt(d.yearly) + '/år, men maks BSU-innskudd som gir fradrag er 27 500 kr. De ' + fmt(overshoot) + ' overskytende per år regnes som vanlig sparing i kalkulasjonen.';
+      tipText = t('bsuTipOver', 'Du sparer {a} i året, men bare 27 500 kr gir fradrag. Kalkulatoren regner ikke med de {b} du sparer utover.').replace('{a}', fmt(d.yearly)).replace('{b}', fmt(overshoot));
     } else if(d.bsuRate <= d.altRate && d.bsuTotalFordel > 0){
-      tipText = 'BSU lønner seg her hovedsakelig på grunn av skattefradraget (' + fmt(d.totalTaxBenefit) + ' over ' + d.years + ' år), siden BSU-renten er lik eller lavere enn vanlig sparing.';
+      tipText = t('bsuTipTax', 'BSU lønner seg her på grunn av skattefradraget: {a} over {n} år. BSU-renten er ikke høyere enn vanlig rente.').replace('{a}', fmt(d.totalTaxBenefit)).replace('{n}', d.years);
     } else {
-      tipText = 'BSU gir ' + fmt(d.totalTaxBenefit) + ' i samlet skattefradrag over ' + d.years + ' år, pluss eventuell renteforskjell. Pengene må brukes til bolig — ellers mister du fradragene.';
+      tipText = t('bsuTipDefault', 'BSU gir {a} i skattefradrag over {n} år, pluss eventuell renteforskjell. Pengene må brukes til bolig, ellers mister du fradragene.').replace('{a}', fmt(d.totalTaxBenefit)).replace('{n}', d.years);
     }
     setEl('bsu-tip', tipText);
 
@@ -813,7 +779,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var snap = {
         monthly:  document.getElementById('bsu-monthly').value,
         years:    document.getElementById('bsu-years').value,
-        taxRate:  document.getElementById('bsu-tax-rate').value,
+        fradragPct: document.getElementById('bsu-tax-rate').value,
         altRate:  document.getElementById('bsu-alt-rate').value,
         bsuRate:  document.getElementById('bsu-bsu-rate').value
       };
@@ -827,7 +793,13 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var s = JSON.parse(raw);
       if(s.monthly  != null) document.getElementById('bsu-monthly').value = s.monthly;
       if(s.years    != null) document.getElementById('bsu-years').value   = s.years;
-      if(s.taxRate  != null) document.getElementById('bsu-tax-rate').value = s.taxRate;
+      if(s.fradragPct != null){
+        document.getElementById('bsu-tax-rate').value = s.fradragPct;
+      } else if(s.taxRate != null){
+        // Eldre lagring: feltet var «marginalskatt», der 22 betydde hele fradraget brukt.
+        var gml = +(String(s.taxRate).replace(',', '.'));
+        if(!isNaN(gml)) document.getElementById('bsu-tax-rate').value = String(Math.round(Math.min(Math.max(gml, 0) / 22, 1) * 100));
+      }
       if(s.altRate  != null) document.getElementById('bsu-alt-rate').value = s.altRate;
       if(s.bsuRate  != null) document.getElementById('bsu-bsu-rate').value = s.bsuRate;
     } catch(e){}
@@ -842,6 +814,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   // ── Init ──
   restore();
   recalc();
+  // core.js laster språkfila etter dette skriptet, og på nytt ved språkbytte.
+  // Begge gangene settes lang på <html>; da skrives dom og tips på valgt språk.
+  try {
+    new MutationObserver(function(){ recalc(); })
+      .observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+  } catch(e){}
 })();
 </script>
 
