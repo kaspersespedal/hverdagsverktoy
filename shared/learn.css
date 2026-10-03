@@ -68,6 +68,21 @@ html[data-theme="bw"] .lrn{
 .lrn-figrow{display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:36px;align-items:start}
 .lrn-fig{margin:0;display:flex;flex-direction:column;gap:10px;min-width:0}
 .lrn-cap{font:500 12.5px/1.3 var(--font-sans);color:var(--ink3)}
+/* Nøkkeltallet over en graf: stort tall og enheten etter */
+.lrn-kpi{margin:4px 0 2px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.lrn-kpi b{font:500 44px/1 var(--font-serif);letter-spacing:-1px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+.lrn-kpi span{font:500 15px/1.3 var(--font-sans);color:var(--ink2)}
+/* To figurer side om side: hovedfiguren og en sammenligning bak en hårstrek */
+.lrn-figrow.duo{grid-template-columns:minmax(0,560px) minmax(0,1fr);gap:48px}
+.lrn-fig.cmp{padding-left:32px;border-left:1px solid var(--line-2)}
+.lrn-fig.cmp > figcaption{font:600 15.5px/1.35 var(--font-sans);color:var(--ink)}
+.lrn-fig .lrn-p.s{font-size:14px;line-height:1.5;font-variant-numeric:tabular-nums;text-wrap:pretty}
+.lrn-fig .lrn-p.s strong{font-weight:600;color:var(--ink)}
+.lrn-fig .lrn-p.k{padding-left:48px;max-width:300px}
+/* Tekst under en graf (smal skjerm), på linje med rutene */
+.lrn-after{display:flex;flex-direction:column;gap:6px;padding-left:46px;font-size:13px;line-height:1.45;color:var(--ink2);font-variant-numeric:tabular-nums}
+.lrn-after strong{font-weight:600;color:var(--ink)}
+.lrn-after:empty{display:none}
 .lrn-plot{position:relative;width:100%;height:424px;touch-action:pan-y;cursor:crosshair}
 .lrn-plot svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 /* Graf uten sikte (bare merknader): vanlig peker */
@@ -86,6 +101,10 @@ html[data-theme="bw"] .lrn{
 .lrn-l2{fill:none;stroke:var(--lrn-line-2);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round}
 /* Grensen som binder (det laveste taket): blekk, 3 px. Den andre grensen er .lrn-dash. */
 .lrn-lk{fill:none;stroke:var(--ink);stroke-width:3;shape-rendering:crispEdges}
+/* Ruter (én per måned): tomme ruter og spøkelsesruter etter lånets slutt som omriss, merket som blekklinje */
+.lrn-cell0{fill:none;stroke:var(--line-2);stroke-width:1}
+.lrn-ghost{fill:none;stroke:var(--ink3);stroke-width:1;stroke-dasharray:3 2}
+.lrn-mark{fill:none;stroke:var(--ink);stroke-width:1.5}
 /* Referanser: 1 px. Stresstesten stiplet, annuiteten prikket, krysningen prikket. */
 .lrn-dash{fill:none;stroke:var(--lrn-ref);stroke-width:1;stroke-dasharray:4 3}
 .lrn-ref{fill:none;stroke:var(--lrn-ref);stroke-width:1.25;stroke-dasharray:1 3;stroke-linecap:round}
@@ -118,6 +137,8 @@ html[data-theme="bw"] .lrn{
 /* Etikett som brytes over flere linjer innenfor bredden den får */
 .lrn-lab.txt{font-weight:400;font-size:12px;line-height:17px;color:var(--ink2);white-space:normal;text-wrap:pretty;font-variant-numeric:tabular-nums}
 .lrn-lab b{font-weight:600;color:var(--ink)}
+/* Stor verdi i en etikett (netto etter siste rute) */
+.lrn-lab.big{font:500 22px/1 var(--font-serif);letter-spacing:-.3px;font-variant-numeric:tabular-nums lining-nums}
 /* Etikettblokk: navn, utregning og spaker stablet under hverandre, festet med top eller bottom */
 .lrn-lbk{position:absolute;display:flex;flex-direction:column;align-items:flex-start;gap:1px}
 .lrn-lbk .lrn-lab{position:static;white-space:normal;line-height:17px}
@@ -175,6 +196,7 @@ html[data-theme="bw"] .lrn{
 .lrn-also ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px}
 .lrn-also li{margin:0;font-size:15px;line-height:1.6;color:var(--ink2);text-wrap:pretty}
 .lrn-also strong{font-weight:600;color:var(--ink)}
+.lrn-ps{display:flex;flex-direction:column;gap:14px}
 
 /* ── Inline seksjon (regnestykket): fortsetter seksjonen over med en hårstrek ── */
 .lrn-calc{border-top:1px solid var(--line-2);padding-top:32px}
@@ -237,6 +259,8 @@ details[open] > summary .lrn-chev{transform:rotate(180deg)}
 
 @media(max-width:960px){
   .lrn-figrow{grid-template-columns:minmax(0,1fr);gap:20px}
+  .lrn-figrow.duo{grid-template-columns:minmax(0,1fr);gap:40px}
+  .lrn-fig.cmp{padding:20px 0 0;border-left:0;border-top:1px solid var(--line-2)}
   .lrn-notes{padding:0;gap:12px}
   .lrn-scrub{grid-template-columns:minmax(0,1fr);gap:14px}
 }
@@ -270,6 +294,12 @@ details[open] > summary .lrn-chev{transform:rotate(180deg)}
   .lrn-box .lrn-f b{font-size:22px}
   .lrn-box .lrn-p{font-size:14.5px}
   .lrn-also{padding-top:24px;gap:14px}
+  .lrn-ps{gap:12px}
+  .lrn-kpi{margin:2px 0 6px}
+  .lrn-kpi b{font-size:36px}
+  .lrn-kpi span{font-size:14.5px}
+  .lrn-fig.cmp > figcaption{font-size:15px}
+  .lrn-fig .lrn-p.k{padding-left:46px;max-width:312px}
   .lrn-also ul{grid-template-columns:minmax(0,1fr);gap:14px}
   .lrn-calc{border-bottom:1px solid var(--line);padding-top:0}
   .lrn-calc > summary{min-height:56px;padding:14px 0;box-sizing:border-box}
