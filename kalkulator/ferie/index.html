@@ -56,6 +56,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Feriepenger — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/lonnut/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -173,145 +174,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -509,74 +371,104 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: kalkulator-ferie =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-kalkulator-ferie">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-ferie">Hva som skjer fra lønn til feriepenger</h2><p class="lc-intro">Feriepengene er en prosent av det du tjente i fjor. Daglig sats er feriepengene delt på antall feriedager. Fyller du 60 i år eller er eldre, får du et tillegg.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Grunnsats 4 uker</b><span class="tag">Sats</span></span><span class="fig">10,2<span class="u">%</span></span><p class="dsc">Lovens minimum etter Ferieloven § 10. Tjente du 500 000 kr i fjor, blir feriepengene 51&nbsp;000 kr.</p></div>
-        <div class="lc-led"><span class="nm"><b>Sats 5 uker</b><span class="tag">Sats</span></span><span class="fig">12,0<span class="u">%</span></span><p class="dsc">Brukes når du har fem ukers ferie, ofte gjennom tariffavtale. Litt høyere sats fordi du tar ut flere feriedager.</p></div>
-        <div class="lc-led"><span class="nm"><b>Tillegg 60+</b><span class="tag">Faktor</span></span><span class="fig">2,3<span class="u">prosentpoeng</span></span><p class="dsc">Gjelder fra året du fyller 60 (ferieloven § 10 nr. 3). Legges oppå satsen: 2,3 % av 500&nbsp;000 kr gir 11&nbsp;500 kr ekstra.</p></div>
-        <div class="lc-led"><span class="nm"><b>6G-tak for tillegget</b><span class="tag">Grense</span></span><span class="fig">819 294<span class="u">kr</span></span><p class="dsc">Tillegget regnes bare av lønn opp til seks ganger grunnbeløpet (6G). Grunnbeløpet er det som gjaldt 31. desember i året du tjente pengene. 819 294 kr (6 × 136 549 kr) gjelder lønn i 2026. For lønn i 2025 er taket lavere.</p></div>
-        <div class="lc-led"><span class="nm"><b>Feriedager, lovens minimum</b><span class="tag">Faktor</span></span><span class="fig">21<span class="u">dager</span></span><p class="dsc">Ferieloven gir 25 virkedager, og virkedager teller også lørdager. Jobber du mandag til fredag, blir det fire uker pluss én dag — altså 21 arbeidsdager, ikke 20. Feriepengene deles på dette for å vise hva én feriedag er verdt.</p></div>
-        <div class="lc-led"><span class="nm"><b>Feriedager, fem uker</b><span class="tag">Faktor</span></span><span class="fig">25<span class="u">dager</span></span><p class="dsc">Fem ukers ferie er 30 virkedager, som blir 25 arbeidsdager mandag til fredag. Brukes når du velger 12 %-satsen, og gir daglig sats = feriepenger delt på 25.</p></div>
+  <div class="lrn" id="lrn-fe">
+    <section class="lrn-sec" aria-labelledby="lrn-fe-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-fe-h">Du tjener dem i år og får dem neste sommer</h2>
+        <p class="lrn-lede">Hver lønning i år setter av en prosent til feriepenger. Potten betales ut i juni året etter, så det er fjorårets lønn som bestemmer beløpet.</p>
       </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-kalkulator-ferie">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-kalkulator-ferie">Satsene kalkulatoren bruker</h2></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Grunnsats (4 uker)</span><span class="v">10,2<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Sats (5 uker)</span><span class="v">12,0<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Tillegg 60+</span><span class="v">2,3<span class="u">prosentpoeng</span></span></div>
-        <div class="lc-kv"><span class="k">Kombinert sats 60+ (5 uker)</span><span class="v">14,3<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Grunnbeløp (1G) fra mai 2026</span><span class="v">136 549<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">6G-tak for tillegget (lønn 2026)</span><span class="v">819 294<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Feriedager, lovens minimum</span><span class="v">21<span class="u">dager</span></span></div>
-        <div class="lc-kv"><span class="k">Skattetrekk i juni</span><span class="v">0<span class="u">%</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Feriepengesatser etter ferietype</caption>
-          <thead><tr><th>Ferietype</th><th class="r">Sats</th><th class="r">Feriedager</th><th class="r">Sats med 60+</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">4 uker (lovens minimum)</span></td><td class="r">10,2 %</td><td class="r">21</td><td class="r">12,5 %</td></tr>
-            <tr><td><span class="step">5 uker (tariff)</span></td><td class="r">12,0 %</td><td class="r">25</td><td class="r">14,3 %</td></tr>
-          </tbody>
-        </table>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">500&nbsp;000&nbsp;kr i opptjeningsåret · 4 uker (10,2 %) · under 60 år</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-segs">
+          <div class="lrn-seg" role="group" aria-label="Ferietype" data-lrn="segT">
+            <button type="button" data-v="4" aria-pressed="true">4 uker (10,2 %)</button>
+            <button type="button" data-v="5" aria-pressed="false">5 uker (12 %)</button>
+          </div>
+          <div class="lrn-seg" role="group" aria-label="Alder" data-lrn="segA">
+            <button type="button" data-v="u" aria-pressed="true">Under 60 år</button>
+            <button type="button" data-v="o" aria-pressed="false">Over 60 år</button>
+          </div>
         </div>
       </div>
+      <figure class="lrn-fig" aria-describedby="lrn-fe-sum">
+        <figcaption class="lrn-cap">Feriepenger i kroner: det du tjener opp i ett år, og det du får utbetalt neste juni</figcaption>
+        <div class="lrn-plot is-static" dir="ltr">
+          <svg aria-hidden="true" focusable="false">
+            <defs>
+              <pattern id="lrn-fe-ps" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-ps-a" x1="0" y1="0" x2="0" y2="5"/><line class="lrn-pat" x1="0" y1="0" x2="0" y2="5"/></pattern>
+            </defs>
+            <path class="lrn-a1s lrn-gh" data-p="gBase"/>
+            <path class="lrn-a3 lrn-gh" data-p="gBonus"/>
+            <path class="lrn-gh" fill="url(#lrn-fe-ps)" data-p="gBonusp"/>
+            <path class="lrn-a1s" data-p="base"/>
+            <path class="lrn-a3" data-p="bonus"/>
+            <path fill="url(#lrn-fe-ps)" data-p="bonusp"/>
+            <path class="lrn-sep" data-p="sep"/>
+            <path class="lrn-ovr" data-p="over"/>
+            <path class="lrn-a1s" data-p="payBase"/>
+            <path class="lrn-a3" data-p="payBonus"/>
+            <path fill="url(#lrn-fe-ps)" data-p="payBonusp"/>
+            <path class="lrn-ovr" data-p="payOver"/>
+            <path class="lrn-thin" data-p="line1"/>
+            <path class="lrn-thin" data-p="line2"/>
+            <path class="lrn-arw2" data-p="arrow"/>
+            <path class="lrn-arw2" data-p="head"/>
+            <path class="lrn-dashbox" data-p="ghost"/>
+            <path class="lrn-thin" data-p="lead"/>
+          </svg>
+          <div class="lrn-labels" data-lrn="labels"></div>
+        </div>
+      </figure>
+      <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes" hidden></ol>
+      <p class="lrn-cmp" data-lrn="sum"></p>
+      <div class="lrn-calcrow top">
+        <div class="lrn-card">
+          <span class="lrn-card-l">Utbetalingen i juni</span>
+          <div class="lrn-f"><i>feriepenger</i><span>=</span><span><i>grunnlag</i> × <i>sats</i></span></div>
+          <div class="lrn-f n"><span data-lrn="fN">500&nbsp;000&nbsp;kr × 10,2&nbsp;%</span><span>=</span><b data-lrn="fAmt">51&nbsp;000&nbsp;kr</b></div>
+          <div class="lrn-f n" data-lrn="f60" hidden><span data-lrn="f60N"></span><span>=</span><b data-lrn="fBonus"></b></div>
+          <p class="lrn-p" data-lrn="f60t" hidden></p>
+          <div class="lrn-f n"><span data-lrn="fDays">÷ 21 feriedager</span><span>=</span><b data-lrn="fDaily">2&nbsp;429&nbsp;kr</b><span>per feriedag</span><span class="lrn-mk" aria-hidden="true">4</span></div>
+          <span class="lrn-fine" data-lrn="f60n" hidden>Dagsatsen regnes av feriepengene uten 60+-tillegget, slik kalkulatoren gjør.</span>
+          <span class="lrn-fine" data-lrn="fOver" hidden></span>
+        </div>
+        <ol class="lrn-notes" aria-label="Merknad til regnestykket"><li><span class="lrn-mk" aria-hidden="true">4</span><span data-lrn="virke">25 virkedager, der lørdag teller, blir 21 arbeidsdager mandag–fredag.</span></li></ol>
+      </div>
+      <p class="lrn-sr" id="lrn-fe-sum" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-fe-s">
+      <h3 class="lrn-h3" id="lrn-fe-s">Satsene</h3>
+      <div class="lrn-tbl is-flat"><div><table>
+        <thead><tr><th scope="col" class="s">Ferietype</th><th scope="col">Sats</th><th scope="col">Feriedager</th><th scope="col">Sats med 60+</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">4 uker</th><td>10,2&nbsp;%</td><td>21</td><td>12,5&nbsp;%</td></tr>
+          <tr><th scope="row">5 uker</th><td>12&nbsp;%</td><td>25</td><td>14,3&nbsp;%</td></tr>
+        </tbody>
+      </table></div></div>
+      <p class="lrn-fine">60+-tillegget regnes bare av grunnlag opp til 6G. Kalkulatoren bruker 6 × 136&nbsp;549 kr = 819&nbsp;294 kr, grunnbeløpet fra mai 2026. Loven bruker grunnbeløpet som gjaldt 31. desember i opptjeningsåret, så for lønn tjent i 2025 er taket lavere. Kilde: ferieloven § 10.</p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-fe-q">
+      <h3 class="lrn-h3" id="lrn-fe-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvorfor får jeg ikke feriepenger første sommeren i ny jobb?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Feriepenger regnes av det du tjente året før. Tidslinjen over viser det: juni i opptjeningsåret betaler ut fjorårets pott, og er du ny, er den tom.</p></div></details>
+        <details><summary>Er det 10,2 % eller 12 % som gjelder for meg?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>10,2 % er lovens minimum og gjelder fire ukers ferie. Har du fem uker, ofte gjennom tariffavtale, er satsen 12 %. Velg ferietypen i kalkulatoren eller i bryteren over tidslinjen.</p></div></details>
+        <details><summary>Hva er tillegget for over 60 år?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Over 60 år får du 2,3 prosentpoeng ekstra, men bare av grunnlag opp til 6G. Tabellen under tidslinjen viser satsene, og tidslinjen viser hvor tillegget stopper når lønna ligger over taket.</p></div></details>
+        <details><summary>Betaler jeg skatt av feriepengene?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja, feriepenger er skattepliktig inntekt. Med tabelltrekk trekkes det vanligvis ikke skatt i juni, fordi skatten er fordelt på resten av året.</p></div></details>
+        <details><summary>Hva er daglig sats i resultatet?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Feriepengene delt på antall feriedager: 21 ved fire uker og 25 ved fem. Ferieloven regner i virkedager, der lørdag teller, og 25 virkedager blir 21 arbeidsdager mandag til fredag. Dagsatsen kan bli lavere med fem uker enn med fire (2&nbsp;400 kr mot 2&nbsp;429 kr ved 500&nbsp;000 kr), fordi feriepengene deles på flere dager.</p></div></details>
+        <details><summary>Hvor mye er feriepengene mine etter skatt?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren viser beløpet før skatt. Hvor mye som trekkes i juni, avhenger av skattekortet ditt, og <a href="/kalkulator/lonnut/">Lønn ut</a> viser hvordan juni ser ut over et helt år.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-kalkulator-ferie">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-ferie">Det som er lett å misforstå</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Du tjener opp i fjor, får utbetalt i år</h3><p>Feriepengene du får i år regnes av det du tjente i opptjeningsåret — altså fjoråret. Begynte du i jobb i år, får du derfor lite eller ingen feriepenger denne sommeren.</p></div>
-        <div class="lc-note"><h3>Det trekkes ikke skatt i juni</h3><p>Ved utbetaling trekkes 0 % skatt, så summen ser stor ut. Men feriepenger er skattepliktig inntekt — skatten er allerede bakt inn i trekket resten av året.</p></div>
-        <div class="lc-note"><h3>Riktig grunnlag er vanlig arbeidsinntekt</h3><p>Grunnlaget er det du fikk i lønn — ikke feriepengene fra forrige år og ikke utbytte. Legg inn årslønnen din fra opptjeningsåret for et riktig tall.</p></div>
-        <div class="lc-note"><h3>Tillegget for 60+ har et tak</h3><p>Tillegget på 2,3 prosentpoeng gjelder bare lønn opp til 6G (819 294 kr for lønn i 2026). Tjener du mer, får du ikke tillegg på det som ligger over.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-kalkulator-ferie">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-kalkulator-ferie">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvorfor får jeg ikke feriepenger første sommeren i ny jobb?</summary><div class="a"><p>Feriepenger regnes av det du tjente året før. Hadde du ingen inntekt hos arbeidsgiveren i fjor, er grunnlaget null, og da blir det heller ingen feriepenger denne sommeren.</p></div></details>
-        <details class="lc-q"><summary>Er det 10,2 % eller 12 % som gjelder for meg?</summary><div class="a"><p>10,2 % er lovens minimum og gjelder hvis du har fire ukers ferie. Har du fem ukers ferie — ofte gjennom tariffavtale — er satsen 12 %. Velg ferietypen din i kalkulatoren.</p></div></details>
-        <details class="lc-q"><summary>Hva er tillegget for 60 år og eldre?</summary><div class="a"><p>Fyller du 60 i år eller er eldre, får du 2,3 prosentpoeng ekstra i feriepenger. Tillegget regnes bare av lønn opp til 6G (819 294 kr for lønn i 2026).</p></div></details>
-        <details class="lc-q"><summary>Betaler jeg skatt av feriepengene?</summary><div class="a"><p>Ja, feriepenger er skattepliktig inntekt. Men det trekkes 0 % skatt i juni-utbetalingen. Skatten er fordelt på de andre månedene gjennom et høyere trekk ellers i året.</p></div></details>
-        <details class="lc-q"><summary>Hva er daglig sats i resultatet?</summary><div class="a"><p>Det er feriepengene dine delt på antall feriedager — 21 dager på lovens minimum, 25 dager ved fem uker. Ferieloven regner i virkedager (som teller lørdag), og 25 virkedager blir 21 arbeidsdager for en mandag-til-fredag-uke.</p></div></details>
-        <details class="lc-q"><summary>Hvor mye er feriepengene mine etter skatt?</summary><div class="a"><p>Denne kalkulatoren viser bruttobeløpet før skatt. Vil du se hva som faktisk lander på konto, bruk Lønn etter skatt, som regner inn trekkene dine.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-kalkulator-ferie">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkulator-ferie">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/personlig/lonn/"><span class="ar">Lønn etter skatt →</span><h3>Se beløpet etter skatt</h3><p>Feriepenger er skattepliktig. Regn ut hva som faktisk blir igjen når skatten er trukket.</p></a>
-        <a class="lc-link" href="/kalkulator/lonnut/"><span class="ar">Lønn ut →</span><h3>Fra timer til lønn</h3><p>Regn ut bruttolønn fra timepris og antall timer — grunnlaget feriepengene bygger på.</p></a>
-        <a class="lc-link" href="/personlig/syk/"><span class="ar">Sykepenger →</span><h3>Sykepenger og 6G</h3><p>Sykepenger har samme 6G-tak som tillegget for 60+. Se hvordan grunnbeløpet setter grensen.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-fe-r">
+      <h3 class="lrn-h3" id="lrn-fe-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/kalkulator/lonnut/"><span><span class="t">Lønn ut</span><span class="d">Se hvorfor junilønna skiller seg fra de andre.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/lonn/"><span><span class="t">Lønn etter skatt</span><span class="d">Feriepengegrunnlaget står på lønnsslippen.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/syk/"><span><span class="t">Sykepenger</span><span class="d">Samme 6G-tak som 60+-tillegget.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -598,6 +490,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <script defer src="/shared/top-chrome.js?v=v245"></script>
 <script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -688,6 +581,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var bonusRow0 = document.getElementById('rBonusRow'); if(bonusRow0) bonusRow0.hidden = true;
       var withRow0 = document.getElementById('rWithBonusRow'); if(withRow0) withRow0.hidden = true;
       clearBar();
+      window._ferie = null;
+      if(window.hvtLearn) hvtLearn.update('kalkulator-ferie', null);
       persist();
       return;
     }
@@ -735,6 +630,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       if(withRow) withRow.hidden = true;
     }
 
+    window._ferie = {sal:d.sal, typ5:d.type >= 0.12, o60:d.over60};
+    if(window.hvtLearn) hvtLearn.update('kalkulator-ferie', window._ferie);
     persist();
   }
 
@@ -776,6 +673,197 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       if((typeof R==='function' && (R().ferieVerdictBase || R().ferieTypeOpts)) || n>40){ clearInterval(t); recalc(); }
     }, 80);
   })();
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Du tjener dem i år og får dem neste sommer»: to tidslinjer. Øverst vokser potten
+//    én lønning om gangen gjennom opptjeningsåret; nederst betales den ut i juni i ferieåret, mens neste
+//    pott vokser svakt i bakgrunnen. Bryterne følger kalkulatoren, men kan vise det andre valget.
+//    Tallene kommer fra recalc via hvtLearn. ──
+(function(){
+  var KEY = 'kalkulator-ferie';
+  // Tallene kalkulatoren starter med. Så lenge de står slik, er merket «Eksempel».
+  var DEF = {sal:500000, typ5:false, o60:false};
+  var SIXG = 6 * 136549;  // samme tak som kalkulatoren (grunnbeløpet fra mai 2026)
+  var SANS = 'Inter, system-ui, sans-serif', SERIF = '"Source Serif 4", Georgia, serif';
+  var root, plot, svg, raw = null, lastW = 0, queued = false, ctx, vt5 = null, vo60 = null, viewKey = null;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setHtml(name, s){ var el = q(name); if(el) el.innerHTML = s; }
+  function setD(name, d){ svg.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  function months(narrow){
+    var lang = document.documentElement.lang || 'nb', out = [];
+    for(var m = 0; m < 12; m++){
+      var s;
+      try { s = new Intl.DateTimeFormat(lang, {month:narrow ? 'narrow' : 'short'}).format(new Date(2026, m, 15)); } catch(e){ s = String(m + 1); }
+      out.push(s.replace(/\.$/, ''));
+    }
+    return out;
+  }
+
+  function render(d){
+    var L = window.hvtLearn, kr = L.kr, t = L.t, ph = L.ph;
+    raw = d;
+    var ok = !!d && d.sal > 0, p = ok ? d : DEF;
+    var key = [p.sal, p.typ5, p.o60].join('|');
+    if(key !== viewKey){ vt5 = null; vo60 = null; viewKey = key; }
+    var typ5 = vt5 !== null ? vt5 : p.typ5, o60 = vo60 !== null ? vo60 : p.o60;
+    var mine = ok && !(p.sal === DEF.sal && p.typ5 === DEF.typ5 && p.o60 === DEF.o60);
+    var W = plot.clientWidth;
+    if(!W){ lastW = 0; return; }
+    lastW = W;
+    function krs(v){ return kr(v) + ' kr'; }
+    // Samme regnestykke som compute() over: grunnlag × sats, tillegg 60+ av grunnlag opp til 6G
+    var sal = p.sal, rate = typ5 ? 0.12 : 0.102, amt = sal * rate, days = typ5 ? 25 : 21, daily = amt / days;
+    var capped = Math.min(sal, SIXG), bonus = o60 ? capped * 0.023 : 0, over = o60 && sal > SIXG ? (sal - SIXG) * 0.023 : 0, total = amt + bonus;
+    var mA = amt / 12, mB = bonus / 12, mO = over / 12;
+
+    root.querySelectorAll('[data-lrn="segT"] button').forEach(function(b){ b.setAttribute('aria-pressed', (b.getAttribute('data-v') === '5') === typ5 ? 'true' : 'false'); });
+    root.querySelectorAll('[data-lrn="segA"] button').forEach(function(b){ b.setAttribute('aria-pressed', (b.getAttribute('data-v') === 'o') === o60 ? 'true' : 'false'); });
+
+    var mob = W < 700;
+    var G = mob ? {H:332, x0:4, y1B:118, y2B:296, hBox:66, ms:20, gutter:0} : {H:426, x0:150, y1B:168, y2B:396, hBox:118, ms:18, gutter:134};
+    G.slot = (W - G.x0 - (mob ? 10 : 60)) / 12; G.colW = Math.round(G.slot * (mob ? 0.78 : 0.84));
+    var scale = G.hBox / (sal * 0.12 + Math.min(sal, SIXG) * 0.023);
+    function colX(i){ return G.x0 + i * G.slot + (G.slot - G.colW) / 2; }
+    function cxm(i){ return colX(i) + G.colW / 2; }
+    function rect(x, yTop, h){ return h > 0.05 ? 'M' + f1(x) + ',' + f1(yTop) + ' h' + G.colW + ' v' + f1(h) + ' h-' + G.colW + ' z ' : ''; }
+    var P = {base:'', bonus:'', over:'', sep:'', gBase:'', gBonus:'', payBase:'', payBonus:'', payOver:'', line1:'', line2:'', arrow:'', head:'', ghost:'', lead:''};
+    var top1 = [], i, k;
+    for(i = 0; i < 12; i++){
+      var hb = (i + 1) * mA * scale, hn = (i + 1) * mB * scale, ho = (i + 1) * mO * scale;
+      P.base += rect(colX(i), G.y1B - hb, hb); P.bonus += rect(colX(i), G.y1B - hb - hn, hn); P.over += rect(colX(i), G.y1B - hb - hn - ho, ho);
+      P.gBase += rect(colX(i), G.y2B - hb, hb); P.gBonus += rect(colX(i), G.y2B - hb - hn, hn);
+      top1.push(G.y1B - hb - hn - ho);
+      for(k = 1; k <= i; k++){ var yk = G.y1B - k * mA * scale; if(mA * scale >= 3.2) P.sep += 'M' + f1(colX(i)) + ',' + f1(yk) + ' h' + G.colW + ' '; }
+    }
+    // Utbetalingen i juni, ferieåret
+    var jx = colX(5), hpb = amt * scale, hpn = bonus * scale, hpo = over * scale;
+    P.payBase = rect(jx, G.y2B - hpb, hpb); P.payBonus = rect(jx, G.y2B - hpb - hpn, hpn); P.payOver = rect(jx, G.y2B - hpb - hpn - hpo, hpo);
+    var payTop = G.y2B - hpb - hpn - hpo;
+    P.line1 = 'M' + f1(G.x0) + ',' + G.y1B + ' H' + f1(colX(11) + G.colW + 4);
+    P.line2 = 'M' + f1(G.x0) + ',' + G.y2B + ' H' + f1(colX(11) + G.colW + 4);
+
+    // Merkelapper: summen så langt over hver kolonne, og utbetalingen i juni
+    var lab = '', BIG = '500 ' + (mob ? 20 : 24) + 'px ' + SERIF;
+    for(i = 0; i < 12; i++){
+      var v = (i + 1) * (mA + mB);
+      if(i === 11){
+        var tb = krs(v), wb = textW(tb, BIG);
+        lab += '<span class="lrn-big" style="left:' + f1(Math.min(W - wb - 2, cxm(i) - wb / 2)) + 'px;top:' + f1(top1[i] - (mob ? 28 : 40)) + 'px">' + tb + '</span>';
+      } else if(!mob){
+        var ts = kr(v);
+        lab += '<span class="lrn-tick" style="left:' + f1(cxm(i)) + 'px;top:' + f1(top1[i] - 18) + 'px;transform:translateX(-50%);color:var(--ink2)">' + ts + '</span>';
+      }
+    }
+    var tp = krs(total), wp = textW(tp, BIG), payL = Math.max(2, Math.min(W - wp - 2, jx + G.colW / 2 - wp / 2));
+    lab += '<span class="lrn-big" style="left:' + f1(payL) + 'px;top:' + f1(payTop - (mob ? 28 : 34)) + 'px">' + tp + '</span>';
+    var MND = months(mob);
+    for(i = 0; i < 12; i++) [G.y1B, G.y2B].forEach(function(y){
+      lab += '<span class="lrn-tick x" style="left:' + f1(cxm(i) - 24) + 'px;top:' + (y + 6) + 'px' + (i === 5 ? ';color:var(--ink);font-weight:600' : '') + '">' + MND[i] + '</span>';
+    });
+
+    // Pila fra slutten av potten ned til juni
+    var lastR = colX(11) + G.colW, gapY = G.y1B + (mob ? 36 : 30), arrowTop = Math.max(payTop - (mob ? 34 : 40), gapY + (mob ? 30 : 34));
+    var p0 = [lastR + 5, (G.y1B + top1[11]) / 2], jc = jx + G.colW / 2, bend = mob ? 12 : 30;
+    P.arrow = 'M' + f1(p0[0]) + ',' + f1(p0[1]) + ' C' + f1(p0[0] + bend) + ',' + f1(p0[1]) + ' ' + f1(p0[0] + bend) + ',' + f1(gapY) + ' ' + f1(p0[0] - 12) + ',' + f1(gapY)
+      + ' L' + f1(jc + 14) + ',' + f1(gapY) + ' C' + f1(jc) + ',' + f1(gapY) + ' ' + f1(jc) + ',' + f1(gapY + 8) + ' ' + f1(jc) + ',' + f1(gapY + 22) + ' L' + f1(jc) + ',' + f1(arrowTop);
+    P.head = 'M' + f1(jc - 5) + ',' + f1(arrowTop - 7) + ' L' + f1(jc) + ',' + f1(arrowTop) + ' L' + f1(jc + 5) + ',' + f1(arrowTop - 7);
+
+    // Merknadene: på tegningen på bred skjerm, nummererte merker og liste på telefon
+    var n1 = ph('Grunnlaget er lønna di dette året. Ikke fjorårets feriepenger, ikke utbytte.');
+    var n2 = ph('Denne juniutbetalingen ble tjent opp året før. Ny i jobben? Da er den tom.');
+    var n3 = ph('Med tabelltrekk trekkes det vanligvis ikke skatt i juni. Skatten er fordelt på resten av året.');
+    var link = '<a href="/kalkulator/lonnut/">' + ph('Se hele året i Lønn ut →') + '</a>';
+    var notes = [];
+    function rowLbl(x, y, a, b, w){ lab += '<span class="lrn-rowl" style="left:' + f1(x) + 'px;top:' + f1(y) + 'px' + (w ? ';width:' + w + 'px' : '') + '"><b>' + a + '</b>' + (b ? '<span>' + b + '</span>' : '') + '</span>'; }
+    function call(x, y, w, text, align){ lab += '<span class="lrn-call" style="left:' + f1(x) + 'px;top:' + f1(y) + 'px;width:' + w + 'px' + (align ? ';text-align:' + align : '') + '">' + text + '</span>'; }
+    function mk(n, x, y){ lab += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(x) + 'px;top:' + f1(y) + 'px">' + n + '</span>'; }
+    if(mob){
+      rowLbl(2, 4, ph('Opptjeningsåret'));
+      rowLbl(2, gapY + 10, ph('Ferieåret'));
+      mk(1, Math.min(W - G.ms - 2, textW(ph('Opptjeningsåret'), '600 13.5px ' + SANS) + 12), 2);
+      P.ghost = 'M' + f1(jx) + ',' + f1(top1[5] - 8 - G.ms - 4) + ' h' + G.colW + ' v' + (G.ms + 4) + ' h-' + G.colW + ' z';
+      mk(2, jc - G.ms / 2, top1[5] - 8 - G.ms - 2);
+      mk(3, Math.min(W - G.ms - 2, payL + wp + 6), payTop - 31);
+      notes = [n1, n2, n3 + ' ' + link];
+    } else {
+      rowLbl(0, G.y1B - 78, ph('Opptjeningsåret'), ph('Du tjener det opp'), G.gutter);
+      rowLbl(0, G.y2B - 100, ph('Ferieåret'), ph('Du får det utbetalt'), G.gutter);
+      call(G.x0 + 6, 10, Math.min(300, jx - G.x0 - 18), n1);
+      P.ghost = 'M' + f1(jx) + ',12 h' + G.colW + ' v36 h-' + G.colW + ' z';
+      call(jx + G.colW + 12, 10, Math.min(250, W - jx - G.colW - 14), n2);
+      var c3w = Math.min(320, jx - 36 - G.x0);
+      call(jx - 36 - c3w, payTop - 14, c3w, n3 + '<br>' + link, 'end');
+      P.lead = 'M' + f1(jx - 32) + ',' + f1(payTop + 12) + ' H' + f1(jx - 4) + ' ';
+      call(0, G.y2B - 58, G.gutter, ph('Samtidig tjener du opp neste sommers feriepenger.'));
+    }
+    // Delen over 6G: omriss uten fyll i potten, merket ved utbetalingen
+    if(over > 0){
+      if(mob){
+        var right = payL - 8, o1 = ph('Over 6G: ikke noe tillegg');
+        lab += '<span class="lrn-lab ref" style="left:' + f1(Math.max(2, right - textW(o1, '500 11px ' + SANS) - 4)) + 'px;top:' + f1(payTop - 8) + 'px;white-space:normal;width:' + f1(Math.min(right - 2, 120)) + 'px;text-align:end">' + o1 + '</span>';
+        P.lead += 'M' + f1(right + 2) + ',' + f1(payTop + 2) + ' H' + f1(jx - 2) + ' ';
+      } else {
+        lab += '<span class="lrn-lab ref" style="left:' + f1(jx + G.colW + 18) + 'px;top:' + f1(payTop + 5) + 'px">' + ph('Over 6G: ikke noe tillegg') + '</span>';
+        P.lead += 'M' + f1(jx + G.colW + 2) + ',' + f1(payTop + 13) + ' H' + f1(jx + G.colW + 12) + ' ';
+      }
+    }
+    for(var nm in P) setD(nm, P[nm]);
+    setD('bonusp', P.bonus); setD('payBonusp', P.payBonus); setD('gBonusp', P.gBonus);
+    q('labels').innerHTML = lab;
+    plot.style.height = G.H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + G.H);
+    q('notes').innerHTML = notes.map(function(s, i){ return '<li><span class="lrn-mk" aria-hidden="true">' + (i + 1) + '</span><span>' + s + '</span></li>'; }).join('');
+    q('notes').hidden = !notes.length;
+
+    // Tekstene og regnestykket
+    var sv = {sal:krs(sal), amt:krs(amt), dag:krs(daily), bonus:krs(bonus), total:krs(total)};
+    set('sum', t('lrnFeSum', 'Tjener du {sal} i opptjeningsåret, får du {amt} i feriepenger i juni året etter, eller {dag} per feriedag.', sv) + (o60 ? ' ' + t('lrnFeSum60', 'Tillegget for over 60 år er {bonus}, så juniutbetalingen blir {total}.', sv) : ''));
+    set('fN', krs(sal) + ' × ' + L.dec(rate * 100, typ5 ? 0 : 1) + ' %'); set('fAmt', krs(amt));
+    q('f60').hidden = !o60; q('f60t').hidden = !o60; q('f60n').hidden = !o60;
+    set('f60N', t('lrnFe60N', '+ 60+-tillegg: {grunnlag} × 2,3 %', {grunnlag:krs(capped)})); set('fBonus', krs(bonus));
+    setHtml('f60t', t('lrnFeTotal', 'Samlet utbetaling i juni: {total}', {total:'<strong>' + krs(total) + '</strong>'}));
+    set('fDays', t('lrnFeDays', '÷ {n} feriedager', {n:days})); set('fDaily', krs(daily));
+    q('fOver').hidden = !(over > 0);
+    set('fOver', t('lrnFeOver', 'Over 6G: ikke noe tillegg på lønn over taket. Uten taket ville tillegget vært {belop} høyere. Den delen er tegnet som omriss.', {belop:krs(over)}));
+    set('virke', typ5 ? ph('30 virkedager, der lørdag teller, blir 25 arbeidsdager mandag–fredag.') : ph('25 virkedager, der lørdag teller, blir 21 arbeidsdager mandag–fredag.'));
+    var permonth = krs(mA + mB);
+    set('sr', t('lrnFeSr', 'Tidslinje over to år. I opptjeningsåret legges {mnd} til potten hver måned, til {total} i desember. Potten betales ut i juni i ferieåret, {total}. Dagsatsen er {dag}.', {mnd:permonth, total:krs(total), dag:krs(daily)}));
+
+    // Merket
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    set('stateText', t('lrnFeState', '{sal} i opptjeningsåret · {type} · {alder}', {sal:krs(p.sal), type:ph(p.typ5 ? '5 uker (12 %)' : '4 uker (10,2 %)'), alder:ph(p.o60 ? 'over 60 år' : 'under 60 år')}));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+  function init(){
+    root = document.getElementById('lrn-fe');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
+    q('segT').addEventListener('click', function(e){ var b = e.target.closest && e.target.closest('button'); if(!b) return; vt5 = b.getAttribute('data-v') === '5'; render(raw); });
+    q('segA').addEventListener('click', function(e){ var b = e.target.closest && e.target.closest('button'); if(!b) return; vo60 = b.getAttribute('data-v') === 'o'; render(raw); });
+    var list = q('notes');
+    list.addEventListener('mouseover', function(e){
+      var li = e.target.closest && e.target.closest('li'); if(!li) return;
+      var i = Array.prototype.indexOf.call(list.children, li);
+      root.querySelectorAll('.lrn-labels .lrn-mk').forEach(function(m, j){ m.classList.toggle('is-hot', j === i); });
+    });
+    list.addEventListener('mouseleave', function(){ root.querySelectorAll('.lrn-labels .lrn-mk.is-hot').forEach(function(m){ m.classList.remove('is-hot'); }); });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._ferie || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 
