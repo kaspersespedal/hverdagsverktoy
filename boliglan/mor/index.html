@@ -56,6 +56,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/shared/learn.css?v=v1">
 <style>
 /* Boliglånskalkulator — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -173,157 +174,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
-/* Lånetype-tabellen stables som kort på mobil. Kolonnenavnet står som liten
-   etikett i cellen; aria-hidden fordi skjermlesere har thead. */
-.mor-tl{display:none}
-@media(max-width:560px){
-  .mor-types,.mor-types tbody,.mor-types tr,.mor-types td{display:block}
-  .mor-types caption{display:block}
-  .mor-types thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  .mor-types tr{padding:12px 0;border-bottom:1px solid var(--line)}
-  .mor-types tbody tr:last-child{border-bottom:none}
-  .lc-tblwrap .lc-trinn.mor-types td{border:0;padding:2px 0}
-  .mor-tl{display:block;font:600 10px/1.4 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-top:8px}
-}
 </style>
 </head>
 <body>
@@ -571,72 +421,118 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: boliglan-mor =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-boliglan-mor">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-mor">Hva som skjer hver måned du betaler</h2><p class="lc-intro">Hver månedsbetaling er renter pluss avdrag. Renter er det banken tjener, avdrag er det du betaler ned på lånet. Med annuitetslån er beløpet likt hver måned: 3&nbsp;000&nbsp;000&nbsp;kr over 25 år til 5,13&nbsp;% gir 17&nbsp;766&nbsp;kr. Med serielån er avdraget likt, så beløpet synker.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Månedlig rente</b><span class="tag">Sats</span></span><span class="fig">÷ 12</span><p class="dsc">Årsrenten du skriver inn deles på 12 for å finne renten per måned. Renten regnes av det du fortsatt skylder, så den synker etter hvert som lånet betales ned.</p></div>
-        <div class="lc-led"><span class="nm"><b>Annuitetslån</b><span class="tag">Faktor</span></span><span class="fig">Likt beløp</span><p class="dsc">Samme månedsbeløp hele løpetiden. I starten er det mest renter og lite avdrag; mot slutten snur det. Forutsigbart for budsjettet.</p></div>
-        <div class="lc-led"><span class="nm"><b>Serielån</b><span class="tag">Faktor</span></span><span class="fig">Likt avdrag</span><p class="dsc">Du betaler like mye avdrag hver måned, og rente i tillegg. Beløpet er høyest i starten og synker jevnt. Kalkulatoren viser både første og siste måned.</p></div>
-        <div class="lc-led"><span class="nm"><b>Skattefradrag på renter</b><span class="tag">Fradrag</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Du får 22 % av renteutgiftene tilbake på skatten. Kalkulatoren ganger totale renter med 0,22 og viser hva staten i praksis betaler av rentene dine.</p></div>
-        <div class="lc-led"><span class="nm"><b>Effektiv rente</b><span class="tag">Sats</span></span><span class="fig">5,25<span class="u">%</span></span><p class="dsc">Effektiv rente er årskostnaden i prosent når renten legges til hver måned og alle gebyrer er med. Her er gebyrene ikke med. Da blir 5,13&nbsp;% nominell rente 5,25&nbsp;%.</p></div>
-        <div class="lc-led"><span class="nm"><b>Stresstest</b><span class="tag">Grense</span></span><span class="fig">8,13<span class="u">%</span></span><p class="dsc">Kalkulatoren regner månedsbeløpet på nytt med renten pluss 3 prosentpoeng, minst 7&nbsp;%. Med 5,13&nbsp;% rente blir det 8,13&nbsp;%. Du ser hvor mye dyrere måneden blir.</p></div>
+  <div class="lrn" id="lrn-mor">
+    <section class="lrn-sec" aria-labelledby="lrn-mor-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-mor-h">Først betaler du for å låne, så betaler du for boligen</h2>
+        <p class="lrn-lede">Månedsbeløpet på et annuitetslån er likt hele veien, men innholdet skifter. I starten går det meste til renter, mot slutten nesten alt til avdrag.</p>
       </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-boliglan-mor">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-boliglan-mor">Grensene kalkulatoren bruker</h2></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Skattefradrag på renter</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Stresstest, renteøkning (§ 5)</span><span class="v">3<span class="u">prosentpoeng</span></span></div>
-        <div class="lc-kv"><span class="k">Stresstest, minste rente (§ 5)</span><span class="v">7<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Maks løpetid</span><span class="v">30<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Krav om egenkapital</span><span class="v">10<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Avdragskrav over</span><span class="v">60<span class="u">% belåning</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn mor-types">
-          <caption>Annuitet eller serie</caption>
-          <thead><tr><th>Lånetype</th><th>Månedsbeløp</th><th>Renter totalt</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Annuitetslån</span></td><td><span class="mor-tl" aria-hidden="true">Månedsbeløp</span>Likt hele veien</td><td><span class="mor-tl" aria-hidden="true">Renter totalt</span>Litt høyere</td></tr>
-            <tr><td><span class="step">Serielån</span></td><td><span class="mor-tl" aria-hidden="true">Månedsbeløp</span>Høyest i start, synker</td><td><span class="mor-tl" aria-hidden="true">Renter totalt</span>Litt lavere</td></tr>
-          </tbody>
-        </table>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">3&nbsp;000&nbsp;000 kr · 5,13 % · 25 år</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-seg" role="group" aria-label="Lånetype i grafen">
+          <button type="button" data-type="annuity" aria-pressed="true">Annuitet</button>
+          <button type="button" data-type="serial" aria-pressed="false">Serie</button>
         </div>
       </div>
+      <div class="lrn-figrow">
+        <figure class="lrn-fig" aria-describedby="lrn-mor-sum">
+          <figcaption class="lrn-cap">Kroner per måned gjennom hele løpetiden</figcaption>
+          <div class="lrn-plot" dir="ltr">
+            <svg aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lrn-mor-pr" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-pat" x1="0" y1="0" x2="0" y2="6"/></pattern>
+                <pattern id="lrn-mor-ps" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-ps-a" x1="0" y1="0" x2="0" y2="4"/><line class="lrn-ps-b" x1="0" y1="0" x2="4" y2="0"/></pattern>
+              </defs>
+              <path class="lrn-grid" data-p="grid"/>
+              <path class="lrn-a2" data-p="a2"/>
+              <path class="lrn-a1" data-p="a1"/>
+              <path fill="url(#lrn-mor-pr)" data-p="a1p"/>
+              <path fill="url(#lrn-mor-ps)" data-p="tax"/>
+              <path class="lrn-a3" data-p="fee"/>
+              <path class="lrn-base" data-p="base"/>
+              <path class="lrn-cross" data-p="cross"/>
+              <path class="lrn-ref" data-p="ref"/>
+              <path class="lrn-dash" data-p="stress"/>
+              <path class="lrn-l2" data-p="lpr"/>
+              <path class="lrn-l1" data-p="lpay"/>
+              <path class="lrn-lead" data-p="lead"/>
+              <path class="lrn-anchor" data-p="anchors"/>
+              <path class="lrn-sight" data-p="sight"/>
+              <circle class="lrn-sight-dot" r="4" data-p="dot2"/>
+              <circle class="lrn-sight-dot d1" r="4" data-p="dot1"/>
+            </svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+      </div>
+      <div class="lrn-scrub">
+        <div class="lrn-scrub-c">
+          <label for="lrn-mor-mnd">Dra for å se en bestemt måned</label>
+          <input id="lrn-mor-mnd" type="range" min="1" max="300" step="1" value="60">
+        </div>
+        <dl class="lrn-dl" aria-live="polite">
+          <div><dt>Måned</dt><dd><span data-lrn="sMnd">60</span> <span class="lrn-u" data-lrn="sAar">år 5</span></dd></div>
+          <div><dt><i class="lrn-sw lrn-sw-a1" aria-hidden="true"></i>Renter</dt><dd><span data-lrn="sInt">–</span> <span class="lrn-u">kr</span></dd></div>
+          <div><dt><i class="lrn-sw lrn-sw-a2" aria-hidden="true"></i>Avdrag</dt><dd><span data-lrn="sPr">–</span> <span class="lrn-u">kr</span></dd></div>
+          <div><dt>Restgjeld</dt><dd><span data-lrn="sBal">–</span> <span class="lrn-u">kr</span></dd></div>
+        </dl>
+      </div>
+      <p class="lrn-cmp" data-lrn="cmp"></p>
+      <p class="lrn-sr" id="lrn-mor-sum" data-lrn="sum"></p>
+      <div class="lrn-sr"><table>
+        <caption>Renter, avdrag og restgjeld per år</caption>
+        <thead><tr><th scope="col">År</th><th scope="col">Renter</th><th scope="col">Avdrag</th><th scope="col">Restgjeld</th></tr></thead>
+        <tbody data-lrn="rows"></tbody>
+      </table></div>
+    </section>
+
+    <details class="lrn-calc">
+      <summary><h3 class="lrn-h3" data-lrn="calcH">Regnestykket bak 17&nbsp;766 kr</h3><svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+      <div class="lrn-calc-b">
+        <div class="lrn-cards">
+          <div class="lrn-card">
+            <span class="lrn-card-l">Annuitetslån</span>
+            <div class="lrn-f"><i>månedsbeløp</i><span>=</span><span class="lrn-frac"><span><i>lånebeløp</i> × <i>månedsrente</i></span><span>1 − (1 + <i>månedsrente</i>)<sup>−<i>antall måneder</i></sup></span></span></div>
+            <div class="lrn-f n" data-lrn="fAnn"><span>=</span><span class="lrn-frac"><span><span data-lrn="fP">3&nbsp;000&nbsp;000</span> × <span data-lrn="fR">0,004275</span></span><span>1 − <span data-lrn="fG">1,004275</span><sup>−<span data-lrn="fN">300</span></sup></span></span><span>=</span><b data-lrn="fPay">17&nbsp;766 kr</b></div>
+          </div>
+          <div class="lrn-card">
+            <span class="lrn-card-l">Serielån</span>
+            <div class="lrn-fs">
+              <div class="lrn-f"><i>avdrag</i><span>=</span><i>lånebeløp</i><span>÷</span><i>antall måneder</i></div>
+              <div class="lrn-f n"><span>=</span><span data-lrn="fP2">3&nbsp;000&nbsp;000</span><span>÷</span><span data-lrn="fN2">300</span><span>=</span><b data-lrn="fSer">10&nbsp;000 kr</b></div>
+            </div>
+            <div class="lrn-fs">
+              <div class="lrn-f"><i>rente</i><span>=</span><i>restgjeld</i><span>×</span><i>månedsrente</i></div>
+              <div class="lrn-f n"><span>Første måned:</span><span data-lrn="fP3">3&nbsp;000&nbsp;000</span><span>×</span><span data-lrn="fR3">0,004275</span><span>=</span><b data-lrn="fInt">12&nbsp;825 kr</b></div>
+            </div>
+          </div>
+        </div>
+        <p class="lrn-p" data-lrn="eff">Renten legges til hver måned, så 5,13 % nominelt blir 5,25 % effektivt. Hvordan gebyrer slår inn, ser du i <a href="/kalkulator/rente/">Effektiv rente-kalkulatoren</a>.</p>
+      </div>
+    </details>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-mor-q">
+      <h3 class="lrn-h3" id="lrn-mor-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hva er forskjellen på annuitetslån og serielån?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Annuitetslån har likt månedsbeløp hele veien. Serielån har fast avdrag pluss rente av det du skylder, så det starter høyere, synker jevnt og koster litt mindre i renter totalt.</p></div></details>
+        <details><summary>Hvorfor blir rentene så store til sammen?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Du betaler rente hver måned av det du fortsatt skylder, og de første årene synker gjelden sakte. 3&nbsp;000&nbsp;000 kr over 25 år til 5,13&nbsp;% gir 2&nbsp;329&nbsp;702 kr i renter. Over 30 år blir det 2&nbsp;883&nbsp;782 kr.</p></div></details>
+        <details><summary>Hva betyr stresstesten på +3 prosentpoeng?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Banken sjekker at du klarer en høyere rente før de låner deg penger. Kalkulatoren regner med 7&nbsp;% eller din rente pluss 3 prosentpoeng, det høyeste av de to, og viser hvor mye dyrere måneden ville bli.</p></div></details>
+        <details><summary>Hvor mye får jeg igjen på skatten?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Du får 22&nbsp;% av renteutgiftene tilbake. Betaler du 100&nbsp;000 kr i renter ett år, blir skatten 22&nbsp;000 kr lavere. Kalkulatoren viser både totalt og for første år.</p></div></details>
+        <details><summary>Lønner det seg å velge avdragsfri periode?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Månedsbeløpet blir lavere mens du bare betaler renter, men gjelden står stille og lånet blir dyrere totalt. Kalkulatoren viser hva utsettelsen koster som «ekstra rentekostnad».</p></div></details>
+        <details><summary>Hvor lenge kan jeg ha lånet?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren bruker maks 30 år, som er vanlig bankpraksis. Lengre løpetid gir lavere månedsbeløp, men mer renter totalt.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-boliglan-mor">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-mor">Før du stoler på tallet</h2><p class="lc-intro"></p></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Stresstesten er ikke valgfri</h3><p>Tåler du ikke månedsbeløpet i stresstesten, får du som regel ikke lånet. Regelen står i utlånsforskriften §&nbsp;5.</p></div>
-        <div class="lc-note"><h3>Avdragsfrihet gjør lånet dyrere</h3><p>Krysser du av for avdragsfri periode betaler du bare renter i den tiden, så lånet står stille. Kalkulatoren viser «ekstra rentekostnad» — pengene du betaler ekstra fordi du utsatte avdragene.</p></div>
-        <div class="lc-note"><h3>Skattefradraget er ikke penger i hånden nå</h3><p>De 22 % av rentene får du tilbake via skatteoppgjøret eller et lavere skattetrekk gjennom året — ikke som en utbetaling fra banken. Tallet viser hvor mye lavere den reelle rentekostnaden blir.</p></div>
-        <div class="lc-note"><h3>Omkostninger kommer i tillegg</h3><p>Termingebyr og andre lånegebyrer regnes ikke inn automatisk. Skriver du dem inn i «månedlige omkostninger», legger kalkulatoren dem oppå månedsbeløpet og i totalen.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-boliglan-mor">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-boliglan-mor">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hva er forskjellen på annuitetslån og serielån?</summary><div class="a"><p>Annuitetslån har likt månedsbeløp hele veien — forutsigbart. Serielån har fast avdrag pluss rente, så beløpet er høyest i starten og synker. Serielån koster vanligvis litt mindre i renter totalt, men krever at du tåler høyere betaling i begynnelsen.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor er totale renter ofte større enn selve lånet?</summary><div class="a"><p>Over 25–30 år rekker rentene å bli store fordi du betaler rente hver måned på det som gjenstår. Jo lengre løpetid og jo høyere rente, desto mer betaler du totalt. Kalkulatoren viser «totalt tilbakebetalt» så du ser hva lånet faktisk koster.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr stresstesten på +3 prosentpoeng?</summary><div class="a"><p>Banken sjekker at du tåler renten pluss 3 prosentpoeng, minst 7&nbsp;%, før du får lånet. Med 5,13&nbsp;% rente regner kalkulatoren med 8,13&nbsp;%. Med 3&nbsp;% rente regner den med 7&nbsp;%. Du ser hvor mye dyrere måneden blir.</p></div></details>
-        <details class="lc-q"><summary>Hvor mye får jeg igjen på skatten?</summary><div class="a"><p>Du får 22 % av renteutgiftene tilbake. Betaler du 100 000 kr i renter ett år, blir det 22 000 kr lavere skatt. Kalkulatoren viser både totalt og for første år.</p></div></details>
-        <details class="lc-q"><summary>Lønner det seg å velge avdragsfri periode?</summary><div class="a"><p>Det gir lavere månedsbeløp en periode fordi du bare betaler renter, men lånet blir dyrere totalt siden gjelden ikke synker imens. Kalkulatoren viser «ekstra rentekostnad» så du ser hva utsettelsen koster.</p></div></details>
-        <details class="lc-q"><summary>Hvor lenge kan jeg ha lånet?</summary><div class="a"><p>Kalkulatoren bruker maks 30 år, som er vanlig bankpraksis. Skriver du inn mer, settes det automatisk ned til 30. Lengre løpetid gir lavere månedsbeløp, men mer renter totalt.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-boliglan-mor">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-boliglan-mor">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/boliglan/maxlan/"><span class="ar">Maks lån →</span><h3>Hva har du råd til?</h3><p>Se hvor stort lån inntekten og egenkapitalen gir rom for etter utlånsforskriften.</p></a>
-        <a class="lc-link" href="/boliglan/refi/"><span class="ar">Refinansiering →</span><h3>Lønner det seg å bytte bank?</h3><p>Sammenlign dagens lån med et nytt og se hva en lavere rente betyr over løpetiden.</p></a>
-        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Tåler budsjettet betalingen?</h3><p>Legg månedsbeløpet inn i et budsjett og se hva du sitter igjen med etter faste utgifter.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-mor-r">
+      <h3 class="lrn-h3" id="lrn-mor-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/boliglan/maxlan/"><span><span class="t">Hva har du råd til?</span><span class="d">Regn ut hvor stort lån inntekten din bærer, med samme stresstest banken bruker.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/refi/"><span><span class="t">Lønner det seg å bytte bank?</span><span class="d">Se hvor mange måneder det tar før byttegebyret er tjent inn.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/kalkulator/rente/"><span><span class="t">Effektiv rente</span><span class="d">Se hva gebyrene gjør med renten du faktisk betaler.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/budsjett/"><span><span class="t">Tåler budsjettet betalingen?</span><span class="d">Legg månedsbeløpet inn i budsjettet og se hva du sitter igjen med.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -656,8 +552,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v245"></script>
-<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/core.js?v=v230"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -698,6 +595,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       setEl('hStatMnd','–'); setEl('hStatRnt','–');
       setEl('mStripMnd','–'); setEl('mStripTot','–'); setEl('mStripInt','–'); setEl('mStripEff','–');
       show('m-last-row',false);
+      if(window.hvtLearn) hvtLearn.update('boliglan-mor', null);
       show('m-io-res',false); show('m-fees-cell',false);
       persist();
       return;
@@ -842,6 +740,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     // Eksport-state for morCsv() (core.js) — nedbetalingsplan gjenskapes fra disse
     var _ioYExp = (ioCheck && ioCheck.checked) ? (parseNum('m-io-yrs') || 5) : 0;
     window._mor = { P:P, rate:yearlyRate, years:years, type:loanType, mnd:mnd, rnt:rnt, fees:feesPerMonth, ioYears:(_ioYExp < years ? _ioYExp : 0) };
+    if(window.hvtLearn) hvtLearn.update('boliglan-mor', window._mor);
 
     persist();
   }
@@ -928,6 +827,359 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     show('m-io-fields', true);
   }
   calcMor();
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Hvem får kronene dine»: flatediagram over hele løpetiden som deler
+//    hver månedsbetaling i avdrag og rente. Tallene kommer fra calcMor via hvtLearn. ──
+(function(){
+  var KEY = 'boliglan-mor';
+  // Standardverdiene i feltene over. Så lenge alle står slik, er merket «Eksempel».
+  var DEF = {P:3000000, rate:5.13, years:25, type:'annuity', fees:0, ioYears:0};
+  var UNITS = [100,200,250,500,1000,2000,2500,5000,10000,20000,25000,50000,100000,200000,250000,500000];
+  var MOTION = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  var root, plot, svg, range, raw = null, view = null, lastType = null, mnd = 60, home = 60, S = null, lastW = 0, queued = false, anim = 0, ctx;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setHtml(name, s){ var el = q(name); if(el) el.innerHTML = s; }
+  function setD(name, d){ svg.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function sumInt(s, x){ return s + x.int; }
+  function sumPr(s, x){ return s + x.pr; }
+  function yr(m){ return Math.ceil(m / 12); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function b(s){ return '<b>' + s + '</b>'; }
+  function first(arr, test){ for(var k = 0; k < arr.length; k++) if(test(arr[k], k)) return k + 1; return 0; }
+  function at(arr, k){ return arr[Math.max(0, Math.min(arr.length - 1, Math.floor(k)))]; }
+  function overlap(a, c){ return a.x < c.x + c.w && c.x < a.x + a.w && a.y < c.y + c.h && c.y < a.y + a.h; }
+  // Bredden på en etikett, så den kan plasseres der den får plass
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  function annuitet(P, r, m){ return r === 0 ? P / m : P * r / (1 - Math.pow(1 + r, -m)); }
+
+  // Én rad per måned med rente, avdrag, betaling og restgjeld. Samme regnemåte som calcMor.
+  function plan(P, rAar, years, type, ioYears){
+    var n = years * 12, r = rAar / 100 / 12, io = ioYears * 12;
+    var fast = annuitet(P, r, n - io), serAvdrag = P / (n - io), rows = [], bal = P;
+    for(var i = 1; i <= n; i++){
+      var int = bal * r, pr = 0;
+      if(i > io) pr = type === 'annuity' ? fast - int : serAvdrag;
+      if(i === n) pr = bal;
+      rows.push({i:i, int:int, pr:pr, pay:int + pr, bal0:bal, bal1:bal - pr});
+      bal -= pr;
+    }
+    return rows;
+  }
+
+  // Y-skala rundet opp til en hel enhet (35 000 kr i standardeksempelet), med høyst fire rutenettlinjer
+  function scale(maxV){
+    var u = UNITS[UNITS.length - 1], i;
+    for(i = 0; i < UNITS.length; i++) if(maxV / UNITS[i] <= 8){ u = UNITS[i]; break; }
+    var top = Math.ceil(maxV / u) * u, step = top;
+    for(i = 0; i < UNITS.length; i++) if(UNITS[i] >= u && top / UNITS[i] <= 4){ step = UNITS[i]; break; }
+    return {top:top, step:step};
+  }
+
+  // Tallene for begge lånetypene. Samme y-skala for begge, så et bytte ikke flytter aksene.
+  function model(d){
+    var m = {P:d.P, rA:d.rate, aar:d.years, ioA:d.ioYears || 0, fees:d.fees > 0 ? d.fees : 0};
+    m.n = m.aar * 12; m.io = m.ioA * 12; m.r = m.rA / 100 / 12;
+    // Stresstest: det høyeste av 7 % og rente + 3 prosentpoeng. I en avdragsfri periode bare renter.
+    m.rsA = Math.max(m.rA + 3, 7);
+    var rs = m.rsA / 100 / 12, sFast = annuitet(m.P, rs, m.n - m.io);
+    m.ann = plan(m.P, m.rA, m.aar, 'annuity', m.ioA);
+    m.ser = plan(m.P, m.rA, m.aar, 'serial', m.ioA);
+    function stressOf(rx, type){ return rx.map(function(x){ return x.i <= m.io ? m.P * rs : (type === 'annuity' ? sFast : m.P / (m.n - m.io) + x.bal0 * rs); }); }
+    m.sAnn = stressOf(m.ann, 'annuity'); m.sSer = stressOf(m.ser, 'serial');
+    var maxV = 0;
+    [m.sAnn, m.sSer].forEach(function(a){ a.forEach(function(v){ if(v > maxV) maxV = v; }); });
+    [m.ann, m.ser].forEach(function(a){ a.forEach(function(x){ if(x.pay + m.fees > maxV) maxV = x.pay + m.fees; }); });
+    m.sc = scale(maxV);
+    return m;
+  }
+
+  // Geometri fra faktisk bredde: én SVG-enhet er én piksel, så HTML-etikettene treffer
+  function geo(m){
+    var W = plot.clientWidth || 856, wide = W >= 600;
+    var g = {W:W, wide:wide, H:Math.max(252, Math.min(424, Math.round(W * 0.495))), x0:wide ? 50 : 44, y0:wide ? 12 : 8};
+    g.gw = W - g.x0 - 8; g.y1 = g.H - (wide ? 28 : 24); g.gh = g.y1 - g.y0;
+    g.X = function(k){ return g.x0 + k / m.n * g.gw; };
+    g.Y = function(v){ return g.y1 - v / m.sc.top * g.gh; };
+    return g;
+  }
+
+  // Flatene og de to datalinjene for et sett måneder. Brukes også i hvert bilde av overgangen.
+  // Én verdi per måned, tegnet gjennom midten av måneden, med flate ender ved start og slutt.
+  function shapes(g, rows, stress, fees){
+    var X = g.X, Y = g.Y, n = rows.length;
+    function line(v){ var s = 'M' + f1(X(0)) + ',' + f1(Y(v[0])); for(var k = 0; k < n; k++) s += ' L' + f1(X(k + 0.5)) + ',' + f1(Y(v[k])); return s + ' L' + f1(X(n)) + ',' + f1(Y(v[n - 1])); }
+    function back(v){ var s = ' L' + f1(X(n)) + ',' + f1(Y(v[n - 1])); for(var k = n - 1; k >= 0; k--) s += ' L' + f1(X(k + 0.5)) + ',' + f1(Y(v[k])); return s + ' L' + f1(X(0)) + ',' + f1(Y(v[0])) + ' Z'; }
+    var pr = rows.map(function(x){ return x.pr; }), pay = rows.map(function(x){ return x.pay; });
+    var base = f1(g.y1), lpr = line(pr), lpay = line(pay), a1 = lpay + back(pr);
+    setD('a2', 'M' + f1(X(0)) + ',' + base + lpr.replace(/^M/, ' L') + ' L' + f1(X(n)) + ',' + base + ' Z');
+    setD('a1', a1); setD('a1p', a1);
+    setD('tax', lpay + back(rows.map(function(x){ return x.pay - 0.22 * x.int; })));
+    setD('fee', fees ? line(pay.map(function(v){ return v + fees; })) + back(pay) : '');
+    setD('lpr', lpr); setD('lpay', lpay);
+    setD('stress', line(stress));
+  }
+
+  function render(d){
+    var L = window.hvtLearn, kr = L.kr, t = L.t;
+    anim++; plot.classList.remove('is-moving');
+    raw = d;
+    var mine = !!d && !(d.P === DEF.P && d.rate === DEF.rate && d.years === DEF.years && d.type === DEF.type && !d.fees && !d.ioYears);
+    if(!d) d = DEF;
+    // Bryteren følger lånetypen i kalkulatoren, men kan vise den andre typen uten å endre den
+    if(d.type !== lastType){ view = d.type; lastType = d.type; }
+    var m = model(d), g = geo(m), isAnn = view === 'annuity';
+    var rows = isAnn ? m.ann : m.ser, stress = isAnn ? m.sAnn : m.sSer;
+    var X = g.X, Y = g.Y, n = m.n, io = m.io, P = m.P, right = g.x0 + g.gw;
+    plot.style.height = g.H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + g.W + ' ' + g.H);
+    lastW = g.W;
+    shapes(g, rows, stress, m.fees);
+
+    var grid = '';
+    for(var v = m.sc.step; v <= m.sc.top; v += m.sc.step) grid += 'M' + g.x0 + ',' + f1(Y(v)) + ' H' + right + ' ';
+    setD('grid', grid);
+    setD('base', 'M' + g.x0 + ',' + f1(g.y1) + ' H' + right);
+    var annPay = m.ann[io] ? m.ann[io].pay : m.ann[0].pay;   // første måned med avdrag
+    setD('ref', isAnn ? '' : 'M' + f1(X(0)) + ',' + f1(Y(m.ann[0].pay)) + (io ? ' H' + f1(X(io)) + ' V' + f1(Y(annPay)) : '') + ' H' + f1(X(n)));
+    var cross = first(rows, function(x){ return x.i > io && x.pr > x.int; });
+    var half = first(rows, function(x){ return x.bal1 < P / 2; });
+    var below = first(m.ser, function(x, k){ return x.i > io && x.pay < m.ann[k].pay - 0.5; });
+    var firstRow = rows[io] || rows[0];
+    // Krysningslinja går bare fra x-aksen opp til grensepunktet, så den ikke forveksles med siktet
+    setD('cross', (isAnn && !io && cross) ? 'M' + f1(X(cross - 0.5)) + ',' + f1(g.y1) + ' V' + f1(Y(rows[cross - 1].pr)) : '');
+
+    var lab = '', boxes = [], notes = [], months = [], marks = '', lead = '', dots = '';
+    // Referanse-etiketter med verdien, høyrejustert over enden av linja (venstre for serielånets stresslinje)
+    var RF = (g.wide ? '500 12px' : '500 11px') + ' Inter, system-ui, sans-serif';
+    function refLabel(s, x, y, alignRight){
+      var w = textW(s, RF) + 2, box = {x:alignRight ? x - w : x, y:y - 20, w:w, h:16};
+      boxes.push(box);
+      lab += '<span class="lrn-lab ref" style="left:' + f1(box.x) + 'px;top:' + f1(box.y) + 'px">' + s + '</span>';
+    }
+    if(isAnn){
+      refLabel(t('lrnMorLblPay', 'Terminbeløp {belop} kr', {belop:kr(rows[n - 1].pay)}), right, Y(rows[n - 1].pay), true);
+      refLabel(t('lrnMorLblStress', 'Stresstest {belop} kr', {belop:kr(stress[n - 1])}), right, Y(stress[n - 1]), true);
+    } else {
+      refLabel(t('lrnMorLblStress', 'Stresstest {belop} kr', {belop:kr(stress[io])}), X(io) + 4, Y(stress[io]), false);
+      refLabel(t('lrnMorLblAnn', 'Annuitet {belop} kr', {belop:kr(annPay)}), right, Y(annPay), true);
+    }
+
+    // Merknad: punktet på grafen, en tynn linje og den nummererte sirkelen litt unna.
+    // Treffer sirkelen en etikett, prøves motsatt side.
+    var ms = g.wide ? 18 : 20, R = ms / 2, off = g.wide ? 16 : 14;
+    function note(text, ax, ay, dx, dy, month){
+      notes.push(text); months.push(month);
+      function spot(sy){
+        var cx = Math.max(g.x0 + R + 2, Math.min(right - R - 2, ax + dx)), cy = Math.max(R + 2, Math.min(g.y1 - R - 2, ay + sy));
+        return {cx:cx, cy:cy, box:{x:cx - R - 4, y:cy - R - 4, w:ms + 8, h:ms + 8}};
+      }
+      var s = spot(dy);
+      if(dy && boxes.some(function(bx){ return overlap(s.box, bx); })) s = spot(-dy);
+      boxes.push(s.box);
+      var len = Math.sqrt((s.cx - ax) * (s.cx - ax) + (s.cy - ay) * (s.cy - ay));
+      if(len > R + 3){
+        lead += 'M' + f1(ax) + ',' + f1(ay) + ' L' + f1(s.cx - (s.cx - ax) / len * R) + ',' + f1(s.cy - (s.cy - ay) / len * R) + ' ';
+        dots += 'M' + f1(ax - 2) + ',' + f1(ay) + ' a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0 ';
+      }
+      marks += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(s.cx - R) + 'px;top:' + f1(s.cy - R) + 'px">' + notes.length + '</span>';
+    }
+    if(io){
+      var extra = rows.reduce(sumInt, 0) - plan(P, m.rA, m.aar, view, 0).reduce(sumInt, 0);
+      note(t('lrnMorIo1', m.ioA === 1 ? 'Det første året betaler du bare renter, {rente} i måneden. Gjelden står på {laan}.' : 'De første {n} årene betaler du bare renter, {rente} i måneden. Gjelden står på {laan}.', {n:m.ioA, rente:b(kr(rows[0].int) + ' kr'), laan:b(kr(P) + ' kr')}), X(io / 2), Y(rows[0].int / 2), 0, 0, 1);
+      note(t('lrnMorIo2', 'Når avdragene starter i år {aar}, stiger beløpet til {belop}. Utsettelsen koster {ekstra} ekstra i renter.', {aar:m.ioA + 1, belop:b(kr(firstRow.pay) + ' kr'), ekstra:b(kr(extra) + ' kr')}), X(io + 0.5), Y(firstRow.pay), off, -off, io + 1);
+    } else if(isAnn){
+      note(t('lrnMorAnn1', 'Måned 1: {rente} går til renter og {avdrag} til avdrag.', {rente:b(kr(firstRow.int) + ' kr'), avdrag:b(kr(firstRow.pr) + ' kr')}), X(0.5), Y(firstRow.pr), off, -off, 1);
+      if(cross) note(t('lrnMorAnn2', 'Fra måned {mnd} (år {aar}) går mer til avdrag enn til renter.', {mnd:b(cross), aar:yr(cross)}), X(cross - 0.5), Y(rows[cross - 1].pr), -off, -off, cross);
+    } else {
+      note(t('lrnMorSer1', 'Måned 1: {belop}, der {rente} er renter.', {belop:b(kr(firstRow.pay) + ' kr'), rente:b(kr(firstRow.int) + ' kr')}), X(0.5), Y(firstRow.pr), off, -off, 1);
+      if(cross) note(t('lrnMorSer2', 'Fra måned {mnd} (år {aar}) er avdraget større enn renten.', {mnd:b(cross), aar:yr(cross)}), X(cross - 0.5), Y(rows[cross - 1].pr), -off, -off, cross);
+    }
+    if(isAnn){
+      if(half) note(t('lrnMorAnn3', 'Først i år {aar} skylder du under halvparten av lånet.', {aar:b(yr(half))}), X(half - 0.5), g.y1, 0, -off - 4, half);
+    } else if(below){
+      note(t('lrnMorSer3', 'Prikket linje er annuitetslånet, {belop}. Fra måned {mnd} (år {aar}) er serielånet billigst per måned.', {belop:b(kr(annPay) + ' kr'), mnd:b(below), aar:yr(below)}), X(below - 0.5), Y(annPay), 0, -off, below);
+    }
+    var kS = Math.floor(n * (isAnn ? 0.42 : 0.3));
+    note(isAnn
+      ? t('lrnMorStressAnn', 'Stiplet linje: stresstesten med {sats} % rente gir {belop} i måneden.', {sats:L.dec(m.rsA, 2), belop:b(kr(at(stress, io + 1)) + ' kr')})
+      : t('lrnMorStressSer', 'Stiplet linje: stresstesten med {sats} % rente, {forste} i første måned med avdrag og {siste} i den siste.', {sats:L.dec(m.rsA, 2), forste:b(kr(stress[io]) + ' kr'), siste:b(kr(stress[n - 1]) + ' kr')}),
+      X(kS + 0.5), Y(at(stress, kS)), 0, -off, kS + 1);
+    var kT = Math.floor(n * 0.12), tRow = at(rows, kT), tY = Y(tRow.pay - 0.11 * tRow.int);
+    note(t('lrnMorTax', 'Det skraverte er 22 % av rentene. Det får du tilbake på skatten, {belop} det første året.', {belop:b(kr(0.22 * rows.slice(0, 12).reduce(sumInt, 0)) + ' kr')}), X(kT + 0.5), tY, 0, Y(tRow.pay) - off - tY, kT + 1);
+    setD('lead', lead); setD('anchors', dots);
+
+    // «Renter» og «Avdrag» direkte i båndet der det er tykkest under hele etikettbredden (minst 6 px luft)
+    var LF = (g.wide ? '600 13px' : '600 12px') + ' Inter, system-ui, sans-serif';
+    function bandLabel(s, lo, hi, fromRight){
+      var w = textW(s, LF) + 2, h = 16, best = null, step = Math.max(1, Math.round(n / 90)), ks = [];
+      for(var k = 0; k < n; k += step) ks.push(k);
+      if(fromRight) ks.reverse();
+      ks.forEach(function(k){
+        var x = X(k) + 4; if(x < g.x0 + 28 || x + w > right - 4) return;   // fri av y-tallene til venstre
+        var k2 = Math.min(n - 1, Math.floor((x + w - g.x0) / g.gw * n)), top = -1e9, bot = 1e9;
+        for(var j = k; j <= k2; j++){ top = Math.max(top, hi(j)); bot = Math.min(bot, lo(j)); }
+        var room = bot - top;
+        if(room < h + 12) return;
+        var box = {x:x, y:(top + bot) / 2 - h / 2, w:w, h:h};
+        if(boxes.some(function(bx){ return overlap(box, bx); })) return;
+        if(!best || room > best.room + 0.5) best = {box:box, room:room};
+      });
+      if(!best) return;
+      boxes.push(best.box);
+      lab += '<span class="lrn-lab" style="left:' + f1(best.box.x) + 'px;top:' + f1(best.box.y) + 'px">' + s + '</span>';
+    }
+    bandLabel(L.ph('Renter'), function(j){ return Y(rows[j].pr); }, function(j){ return Y(rows[j].pay - 0.22 * rows[j].int); }, false);
+    bandLabel(L.ph('Avdrag'), function(){ return g.y1; }, function(j){ return Y(rows[j].pr); }, true);
+    if(m.fees) refLabel(L.ph('Omkostninger'), X(n * 0.04), Y(rows[0].pay + m.fees), false);
+
+    // Akser: bare vannrette rutenettlinjer, tall til venstre, år under (hvert tiende år på smal skjerm)
+    var k;
+    for(v = 0; v <= m.sc.top; v += m.sc.step) lab += '<span class="lrn-tick y" style="top:' + (f1(Y(v)) - 8) + 'px;width:' + (g.x0 - 8) + 'px">' + kr(v) + '</span>';
+    var every = g.wide ? 5 : 10;
+    function xTick(x, s){ return '<span class="lrn-tick x" style="left:' + (f1(x) - 24) + 'px;top:' + (g.y1 + 8) + 'px">' + s + '</span>'; }
+    for(k = 0; k < m.aar - every / 2; k += every) lab += xTick(X(k * 12), String(k));
+    lab += xTick(X(n), t('lrnYears', '{n} år', {n:m.aar}));
+    q('labels').innerHTML = lab + marks;
+    q('notes').innerHTML = notes.map(function(s, i){ return '<li data-m="' + months[i] + '"><span class="lrn-mk" aria-hidden="true">' + (i + 1) + '</span><span>' + s + '</span></li>'; }).join('');
+
+    // Siktet tegnes for seg, så det kan flyttes uten å regne om hele grafen
+    S = {m:m, g:g, rows:rows};
+    sight();
+
+    // Sammenligningsraden og teksttilsvarende versjon
+    var serFirst = m.ser[io] ? m.ser[io].pay : m.ser[0].pay;
+    setHtml('cmp', t(io ? 'lrnMorCmpIo' : 'lrnMorCmp', io
+      ? 'Serielånet koster <strong>{renter} kr</strong> mindre i renter totalt, men første måned med avdrag er <strong>{forste} kr</strong> dyrere.'
+      : 'Serielånet koster <strong>{renter} kr</strong> mindre i renter totalt, men første måned er <strong>{forste} kr</strong> dyrere.',
+      {renter:kr(m.ann.reduce(sumInt, 0) - m.ser.reduce(sumInt, 0)), forste:kr(serFirst - annPay)}));
+    set('sum', t(io ? 'lrnMorSumIo' : 'lrnMorSum', io
+      ? 'Av {belop} kr går {rente} kr til renter i første måned med avdrag. Fra måned {mnd} går mer til avdrag enn til renter.'
+      : 'Av {belop} kr går {rente} kr til renter i måned 1. Fra måned {mnd} går mer til avdrag enn til renter.',
+      {belop:kr(firstRow.pay), rente:kr(firstRow.int), mnd:cross}));
+    var tb = '';
+    for(k = 0; k < m.aar; k++){
+      var yRows = rows.slice(k * 12, k * 12 + 12);
+      tb += '<tr><td>' + (k + 1) + '</td><td>' + kr(yRows.reduce(sumInt, 0)) + '</td><td>' + kr(yRows.reduce(sumPr, 0)) + '</td><td>' + kr(yRows[yRows.length - 1].bal1) + '</td></tr>';
+    }
+    setHtml('rows', tb);
+
+    // Merket og bryteren
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    set('stateText', kr(P) + ' kr · ' + L.dec(m.rA, 2) + ' % · ' + t('lrnYears', '{n} år', {n:m.aar}) + (m.ioA ? ' · ' + t('lrnMorIoBadge', 'avdragsfri i {n} år', {n:m.ioA}) : ''));
+    pressed();
+
+    // Regnestykket med leserens tall
+    function dec6(x){ return x.toFixed(6).replace(/0+$/, '').replace(/\.$/, '').replace('.', ','); }
+    set('calcH', t('lrnMorCalcH', 'Regnestykket bak {belop} kr', {belop:kr(annPay)}));
+    q('fAnn').hidden = m.r === 0;
+    set('fP', kr(P)); set('fR', dec6(m.r)); set('fG', dec6(1 + m.r)); set('fN', String(n - io)); set('fPay', kr(annPay) + ' kr');
+    set('fP2', kr(P)); set('fN2', String(n - io)); set('fSer', kr(P / (n - io)) + ' kr');
+    set('fP3', kr(P)); set('fR3', dec6(m.r)); set('fInt', kr(P * m.r) + ' kr');
+    setHtml('eff', t('lrnMorEff', 'Renten legges til hver måned, så {nom} % nominelt blir {eff} % effektivt. Hvordan gebyrer slår inn, ser du i <a href="/kalkulator/rente/">Effektiv rente-kalkulatoren</a>.',
+      {nom:L.dec(m.rA, 2), eff:L.dec((Math.pow(1 + m.r, 12) - 1) * 100, 2)}));
+  }
+
+  function pressed(){
+    root.querySelectorAll('.lrn-seg button').forEach(function(bt){ bt.setAttribute('aria-pressed', bt.getAttribute('data-type') === view ? 'true' : 'false'); });
+  }
+
+  // Sikte: én bestemt måned
+  function sight(){
+    var t = window.hvtLearn.t, kr = window.hvtLearn.kr, g = S.g, n = S.m.n;
+    mnd = Math.max(1, Math.min(mnd, n));
+    var sm = S.rows[mnd - 1], sx = f1(g.X(mnd - 0.5));
+    setD('sight', 'M' + sx + ',' + g.y0 + ' V' + f1(g.y1));
+    var d1 = svg.querySelector('[data-p="dot1"]'), d2 = svg.querySelector('[data-p="dot2"]');
+    d1.setAttribute('cx', sx); d1.setAttribute('cy', f1(g.Y(sm.pay)));
+    d2.setAttribute('cx', sx); d2.setAttribute('cy', f1(g.Y(sm.pr)));
+    range.max = n; range.value = mnd;
+    range.setAttribute('aria-valuetext', t('lrnMorSight', 'Måned {mnd}, år {aar}: renter {rente} kr, avdrag {avdrag} kr', {mnd:mnd, aar:yr(mnd), rente:kr(sm.int), avdrag:kr(sm.pr)}));
+    set('sMnd', String(mnd)); set('sAar', t('lrnMorYearN', 'år {n}', {n:yr(mnd)}));
+    set('sInt', kr(sm.int)); set('sPr', kr(sm.pr)); set('sBal', kr(sm.bal1));
+  }
+
+  // Bytte av lånetype: månedstallene glir over på 700 ms med myk start og slutt, så hvert
+  // mellombilde er en gyldig stabel. Aksene står stille, etikettene toner ut og inn igjen.
+  function lerpRows(a, c, e){ return a.map(function(x, k){ var y = c[k]; return {int:x.int + (y.int - x.int) * e, pr:x.pr + (y.pr - x.pr) * e, pay:x.pay + (y.pay - x.pay) * e}; }); }
+  function lerp(a, c, e){ return a.map(function(v, k){ return v + (c[k] - v) * e; }); }
+  function ease(x){ return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function switchTo(type){
+    if(type === view) return;
+    if(!S || !MOTION || document.hidden){ view = type; render(raw); return; }
+    var m = S.m, g = S.g, isAnn = view === 'annuity';
+    var from = isAnn ? m.ann : m.ser, to = isAnn ? m.ser : m.ann, sFrom = isAnn ? m.sAnn : m.sSer, sTo = isAnn ? m.sSer : m.sAnn;
+    view = type; pressed();
+    plot.classList.add('is-moving');
+    var t0 = performance.now(), id = ++anim;
+    requestAnimationFrame(function frame(now){
+      if(id !== anim) return;
+      var x = Math.min(1, (now - t0) / 700), e = ease(x);
+      shapes(g, lerpRows(from, to, e), lerp(sFrom, sTo, e), m.fees);
+      if(x < 1) requestAnimationFrame(frame); else render(raw);
+    });
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+  // Sikte med mus eller finger: måneden under pekeren
+  function pointAt(e){
+    if(!S) return;
+    var rect = plot.getBoundingClientRect(), g = S.g;
+    var m = Math.max(1, Math.min(S.m.n, Math.ceil((e.clientX - rect.left - g.x0) / g.gw * S.m.n)));
+    if(m !== mnd){ mnd = m; sight(); }
+  }
+
+  function init(){
+    root = document.getElementById('lrn-mor');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg'); range = document.getElementById('lrn-mor-mnd');
+    root.querySelectorAll('.lrn-seg button').forEach(function(bt){
+      bt.addEventListener('click', function(){ switchTo(bt.getAttribute('data-type')); });
+    });
+    // Glidebryteren: pil = 1 måned, PageUp/PageDown = 12, Home/End = første og siste
+    range.addEventListener('input', function(){ home = mnd = +range.value || 1; if(S) sight(); });
+    range.addEventListener('keydown', function(e){
+      if(!S || (e.key !== 'PageUp' && e.key !== 'PageDown')) return;
+      e.preventDefault();
+      home = mnd = Math.max(1, Math.min(S.m.n, mnd + (e.key === 'PageUp' ? 12 : -12)));
+      sight();
+    });
+    // Mus: siktet følger pekeren og går tilbake når den forlater grafen. Klikk eller fingerdrag fester måneden.
+    var down = false;
+    plot.addEventListener('pointerdown', function(e){ down = true; pointAt(e); });
+    plot.addEventListener('pointermove', function(e){ if(down || e.pointerType === 'mouse') pointAt(e); });
+    plot.addEventListener('pointerleave', function(e){ if(!down && e.pointerType === 'mouse' && S && mnd !== home){ mnd = home; sight(); } });
+    window.addEventListener('pointerup', function(){ if(down){ down = false; home = mnd; } });
+    window.addEventListener('pointercancel', function(){ down = false; });
+    // Hold over en merknad: sirkelen fremheves og siktet flytter seg til måneden den handler om
+    var list = q('notes');
+    list.addEventListener('mouseover', function(e){
+      var li = e.target.closest && e.target.closest('li'); if(!li || !S) return;
+      var i = Array.prototype.indexOf.call(list.children, li);
+      root.querySelectorAll('.lrn-labels .lrn-mk').forEach(function(mk, j){ mk.classList.toggle('is-hot', j === i); });
+      mnd = +li.getAttribute('data-m') || mnd; sight();
+    });
+    list.addEventListener('mouseleave', function(){
+      root.querySelectorAll('.lrn-labels .lrn-mk.is-hot').forEach(function(mk){ mk.classList.remove('is-hot'); });
+      if(S && mnd !== home){ mnd = home; sight(); }
+    });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // Regnestykket står åpent på store skjermer og lukket på mobil
+    var calc = root.querySelector('.lrn-calc');
+    if(calc && window.matchMedia('(min-width: 641px)').matches) calc.open = true;
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._mor || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 
