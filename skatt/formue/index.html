@@ -50,11 +50,11 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <style>
 /* Formuesskatt — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -157,10 +157,6 @@ select.ik-input{
 .side-card.related a:hover{color:var(--accent)}
 .side-card.related .arr{color:var(--ink4)}
 .side-card.related a:hover .arr{color:var(--accent)}
-.side-card .method-how{display:flex;flex-direction:column;gap:11px}
-.side-card .method-step{display:flex;gap:10px;font-size:12.5px;color:var(--ink2);line-height:1.55}
-.side-card .method-step .n{flex-shrink:0;font:600 10px/1.6 var(--font-mono);color:var(--accent)}
-.side-card .method-step b{color:var(--ink);font-weight:600}
 
 /* Breakdown — skattemessig verdsettelse (beholdt fra opprinnelig kalkulator, nøytrale tokens) */
 .formue-breakdown{
@@ -221,7 +217,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row .h-title{color:var(--ink);font-weight:600}
 .howto-body .howto-row .h-desc{color:var(--ink2)}
 
-.calc-disclaimer{font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;margin:0 0 32px}
+.calc-wrap > .container + .container{margin-top:24px}
 </style>
 <style>
 /* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
@@ -303,6 +299,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .lc-trinn tbody tr:last-child td{border-bottom:none}
 .lc-trinn td .step{color:var(--ink);font-weight:500}
 .lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.lc-trinn td .step{white-space:nowrap}
 
 /* ── Praktiske punkter (venstre-aksent) ── */
 .lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
@@ -360,11 +357,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   .lc-sec{padding:40px 0}
   .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
   .lc-led .fig{font-size:22px}
-  /* Resultatet kan være en setning ("0 kr — ingen formuesskatt"), ikke bare et
-     tall. Som flex-barn på 34px ble den 323px bred og ble kuttet av
-     .ks{overflow:hidden}. Blokk + mindre skrift lar den brekke over linjer. */
-  .ks-r-net{display:block;font-size:26px}
-  .ks-r-net > span{min-width:0;overflow-wrap:anywhere}
 }
 </style>
 </head>
@@ -447,7 +439,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="formueTitle">Formuesskatt</span>
       </div>
       <h1 class="page-title" data-i18n-html="formueTitleNew"><em>Formue</em>skatt</h1>
-      <p class="page-lead" data-i18n="formueSubtitle">Beregn norsk formuesskatt for 2026 — primærbolig (25 % verdsettelse opptil 14 mill., 70 % over), sekundærbolig (100 %), fritidsbolig (30 %), aksjer/fond (80 %), driftsmidler (70 %) og næringseiendom (80 %). Bunnfradrag 1 900 000 kr per person, gjeld fordeles forholdsmessig på eiendelene. Alt skjer lokalt i nettleseren.</p>
+      <p class="page-lead" data-i18n="formueSubtitle">Se hva du betaler i formuesskatt for 2026. Skatten regnes bare av netto formue over 1,9 mill. kr (3,8 mill. for ektefeller). Boligen du bor i og aksjer teller bare delvis med.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
@@ -534,12 +526,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
             <section class="ks-section" aria-labelledby="formueSubjektHdr">
               <div class="ik-section-head">
-                <h3 id="formueSubjektHdr" data-i18n="formueSectionSubjekt">Skattesubjekt</h3>
+                <h3 id="formueSubjektHdr" data-i18n="formueSectionSubjekt">Hvem gjelder det?</h3>
               </div>
               <div class="ik-stack">
                 <div class="ik-row full">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="formue-personer" data-i18n="formueLblPersoner">Hvem skal beregnes</label>
+                    <label class="ik-lbl" for="formue-personer" data-i18n="formueLblPersoner">Enslig eller ektefeller</label>
                     <select class="ik-input" id="formue-personer">
                       <option value="1" selected>Enslig (1 × bunnfradrag)</option>
                       <option value="2">Ektefeller (2 × bunnfradrag)</option>
@@ -568,6 +560,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
               <div class="ks-r-stat"><span class="l" data-i18n="formueROutSkattepliktig">Skattepliktig formue</span><span class="v" id="rSkattepliktig">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="formueROutEffSats">Effektiv sats</span><span class="v" id="rEffSats">–</span></div>
             </div>
+            <div class="ks-r-foot">Forenklet beregning etter skatteloven §§ 4‑10 til 4‑19 og satsene for 2026.</div>
           </aside>
         </div>
       </div>
@@ -597,7 +590,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <div class="ref-row"><span class="l">Trinn 1 · 1,9–21,5 mill</span><span class="v accent">1,00 %</span></div>
         <div class="ref-row"><span class="l">Trinn 2 · over 21,5 mill</span><span class="v accent">1,10 %</span></div>
         <div class="ref-row"><span class="l">Herav kommune</span><span class="v">0,35 %</span></div>
-        <div class="ref-row"><span class="l">Herav stat · trinn 1 / 2</span><span class="v">0,65 / 0,75 %</span></div>
+        <div class="ref-row"><span class="l">Stat, trinn 1 / 2</span><span class="v">0,65 / 0,75 %</span></div>
       </div>
       <div class="side-card related">
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
@@ -606,21 +599,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <a href="/skatt/reise/"><span class="name">Reisefradrag</span><span class="arr">→</span></a>
         <a href="/skatt/"><span class="name">Alle skatteverktøy</span><span class="arr">→</span></a>
       </div>
-      <div class="side-card">
-        <h4>Slik regner vi</h4>
-        <div class="method-how">
-          <div class="method-step"><span class="n">01</span><span><b>Verdsettelsesrabatt</b> — hver eiendel verdsettes for seg (aksjer 80 %, primærbolig 25 % / 70 % over 14 mill).</span></div>
-          <div class="method-step"><span class="n">02</span><span><b>Gjeld</b> trekkes fra forholdsmessig på de rabatterte eiendelene.</span></div>
-          <div class="method-step"><span class="n">03</span><span><b>Bunnfradrag</b> (1,9 mill enslig / 3,8 mill ektefeller) trekkes fra netto formue.</span></div>
-          <div class="method-step"><span class="n">04</span><span><b>Skatt</b> 1,00 % opp til 21,5 mill, 1,10 % over (kommune 0,35 % + stat).</span></div>
-        </div>
-      </div>
     </aside>
 
-  </div>
-
-  <div class="container">
-    <p class="calc-disclaimer">Forenklet beregning basert på Skatteloven §§ 4-10 til 4-19. Verdsettelsesrabatter for 2026: primærbolig 25 % opptil 14 mill. (70 % over), sekundærbolig 100 %, fritidsbolig 30 %, aksjer/fond 80 %, driftsmidler 70 %, næringseiendom 80 %. Gjeld fordeles forholdsmessig — gjeld knyttet til rabatterte eiendeler reduseres tilsvarende. Bunnfradrag 1 900 000 kr per person. Skattesatser: kommunal 0,35 % + statlig 0,65 % opp til 21,5 mill. (totalt 1,0 %); 0,75 % statlig over (totalt 1,1 %).</p>
   </div>
 
   <div class="container howto-wrap">
@@ -630,7 +610,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </summary>
       <div class="howto-body">
         <div class="howto-row"><div class="h-title">Fyll inn verdier</div><div class="h-desc">Skriv inn markedsverdi for bolig, aksjer, bankinnskudd og gjeld. Kalkulatoren bruker verdsettelsesrabattene automatisk.</div></div>
-        <div class="howto-row"><div class="h-title">Verdsettelsesrabatter</div><div class="h-desc">Primærbolig: 25% (70% over 10M). Aksjer/fond: 80%. Bankinnskudd: 100%.</div></div>
+        <div class="howto-row"><div class="h-title">Verdsettelsesrabatter</div><div class="h-desc">Primærbolig: 25 % av verdien opp til 14 mill. kr, 70 % over. Aksjer og fond: 80 %. Bankinnskudd: 100 %.</div></div>
         <div class="howto-row"><div class="h-title">Bunnfradrag</div><div class="h-desc">1 900 000 kr per person (2026). Ektefeller får dobbelt.</div></div>
         <div class="howto-row"><div class="h-title">Mange betaler ikke</div><div class="h-desc">Med typisk boliglån og primærbolig betaler de fleste null i formuesskatt.</div></div>
         <div class="howto-row"><div class="h-title">Gjeld reduseres</div><div class="h-desc">Gjeldsfradraget justeres proporsjonalt med verdsettelsesrabattene.</div></div>
@@ -643,21 +623,21 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-skatt-formue">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-formue">Veien fra markedsverdi til formueskatt</h2><p class="lc-intro">Kalkulatoren tar markedsverdien på det du eier, krymper hver verdi med en egen rabatt, trekker fra gjeld og bunnfradrag, og regner skatt av det som er igjen. Dette er nøyaktig de samme linjene du ser i beregningen over — bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-formue">Veien fra markedsverdi til formuesskatt</h2><p class="lc-intro">Hver eiendel krymper først med sin rabatt: bor du i en bolig til 5 mill. kr, teller den bare 1,25 mill. Så trekkes gjeld og bunnfradrag fra. Du betaler skatt av det som er igjen.</p></div>
       <div class="lc-ledger">
         <div class="lc-led"><span class="nm"><b>Verdsettelsesrabatt, primærbolig</b><span class="tag">Faktor</span></span><span class="fig">25<span class="u">%</span></span><p class="dsc">Boligen du selv bor i regnes bare med 25 % av markedsverdien opp til 14 mill. kr. Den delen som ligger over 14 mill. regnes med 70 %.</p></div>
         <div class="lc-led"><span class="nm"><b>Verdsettelsesrabatt, aksjer og fond</b><span class="tag">Faktor</span></span><span class="fig">80<span class="u">%</span></span><p class="dsc">Aksjer og aksjefond regnes med 80 % av verdien. Samme rabatt gjelder næringseiendom; driftsmidler regnes med 70 %.</p></div>
         <div class="lc-led"><span class="nm"><b>Full verdi, sekundærbolig og bank</b><span class="tag">Faktor</span></span><span class="fig">100<span class="u">%</span></span><p class="dsc">Utleiebolig nummer to og penger på konto teller fullt ut — ingen rabatt. Fritidsbolig regnes derimot med bare 30 %.</p></div>
         <div class="lc-led"><span class="nm"><b>Forholdsmessig gjeldsfradrag</b><span class="tag">Fradrag</span></span><span class="fig">§ 4-19</span><p class="dsc">Gjelden fordeles på alt du eier etter størrelse. Den delen som hører til rabatterte eiendeler (aksjer, drift, næring) skrumpes med samme prosent, så fradraget ikke blir kunstig stort.</p></div>
         <div class="lc-led"><span class="nm"><b>Bunnfradrag</b><span class="tag">Fradrag</span></span><span class="fig">1 900 000<span class="u">kr</span></span><p class="dsc">Hver person har et fribeløp på 1 900 000 kr som trekkes fra netto formue før skatt. Ektefeller får dette to ganger.</p></div>
-        <div class="lc-led"><span class="nm"><b>Formueskattesats, trinn 1</b><span class="tag">Sats</span></span><span class="fig">1,00<span class="u">%</span></span><p class="dsc">Av skattepliktig formue betales 1,00 % (0,35 % til kommunen + 0,65 % til staten) opp til 21,5 mill. kr netto formue. Over det blir satsen 1,10 %.</p></div>
+        <div class="lc-led"><span class="nm"><b>Formuesskattesats, trinn 1</b><span class="tag">Sats</span></span><span class="fig">1,00<span class="u">%</span></span><p class="dsc">Av skattepliktig formue betales 1,00 % (0,35 % til kommunen + 0,65 % til staten) opp til 21,5 mill. kr netto formue. Over det blir satsen 1,10 %.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcB-skatt-formue">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-skatt-formue">Satsene for 2026</h2><p class="lc-intro">Disse verdiene ligger fast i kalkulatoren. Rabattene bestemmer hvor mye av hver eiendel som teller, og bunnfradraget bestemmer hvor mye du kan eie skattefritt.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-skatt-formue">Satsene for 2026</h2><p class="lc-intro">Rabattene bestemmer hvor mye av hver eiendel som teller, og bunnfradraget bestemmer hvor mye du kan eie skattefritt.</p></div>
       <div class="lc-rates">
       <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
+        <span class="ttl">Nøkkeltall</span>
         <div class="lc-kv"><span class="k">Bunnfradrag, enslig</span><span class="v">1 900 000<span class="u">kr</span></span></div>
         <div class="lc-kv"><span class="k">Bunnfradrag, ektefeller</span><span class="v">3 800 000<span class="u">kr</span></span></div>
         <div class="lc-kv"><span class="k">Primærbolig (opptil 14 mill.)</span><span class="v">25<span class="u">%</span></span></div>
@@ -670,11 +650,11 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <div class="lc-card">
         <div class="lc-tblwrap">
         <table class="lc-trinn">
-          <caption>Formueskatt-trinn 2026 (av netto formue etter bunnfradrag)</caption>
-          <thead><tr><th>Trinn</th><th class="r">Netto formue</th><th class="r">Kommune</th><th class="r">Stat</th><th class="r">Sats totalt</th></tr></thead>
+          <caption>Formuesskatt-trinn 2026</caption>
+          <thead><tr><th>Trinn</th><th class="r">Netto formue</th><th class="r">Sats</th></tr></thead>
           <tbody>
-            <tr><td><span class="step">Trinn 1</span></td><td class="r">1,9–21,5 mill.</td><td class="r">0,35 %</td><td class="r">0,65 %</td><td class="r">1,00 %</td></tr>
-            <tr><td><span class="step">Trinn 2</span></td><td class="r">Over 21,5 mill.</td><td class="r">0,35 %</td><td class="r">0,75 %</td><td class="r">1,10 %</td></tr>
+            <tr><td><span class="step">Trinn 1</span></td><td class="r">1,9–21,5 mill.</td><td class="r">1,00 %</td></tr>
+            <tr><td><span class="step">Trinn 2</span></td><td class="r">Over 21,5 mill.</td><td class="r">1,10 %</td></tr>
           </tbody>
         </table>
         </div>
@@ -682,9 +662,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-skatt-formue">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-skatt-formue">Verdt å forstå før du tolker tallet</h2><p class="lc-intro">Noen poenger som forklarer hvorfor utfallet ofte blir lavere enn folk venter.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-skatt-formue">Verdt å forstå før du tolker tallet</h2></div>
       <div class="lc-notes">
-        <div class="lc-note"><h3>De fleste betaler null</h3><p>Med en vanlig primærbolig og boliglån havner netto formue ofte under bunnfradraget på 1 900 000 kr. Da blir formueskatten 0 kr — kalkulatoren viser hvor stor margin du har igjen.</p></div>
+        <div class="lc-note"><h3>De fleste betaler null</h3><p>Med en vanlig primærbolig og boliglån havner netto formue ofte under bunnfradraget på 1 900 000 kr. Da blir formuesskatten 0 kr — kalkulatoren viser hvor stor margin du har igjen.</p></div>
         <div class="lc-note"><h3>Rabatten gjelder verdien, ikke skatten</h3><p>At aksjer «bare» teller 80 % betyr at det er 80 % av markedsverdien som tas med i grunnlaget. Selve satsen (1,00 %) regnes deretter av det reduserte beløpet.</p></div>
         <div class="lc-note"><h3>Gjeld kan bli mindre verdt som fradrag</h3><p>Lån knyttet til rabatterte eiendeler trekkes ned med samme prosent som eiendelen. Har du mye aksjegjeld, blir gjeldsfradraget derfor lavere enn den faktiske gjelden.</p></div>
         <div class="lc-note"><h3>Effektiv sats er av markedsverdi</h3><p>«Effektiv sats» i resultatet er skatten delt på samlet markedsverdi — ikke på grunnlaget. Den blir derfor lavere enn 1,00 % fordi rabatter og bunnfradrag spiser av grunnlaget.</p></div>
@@ -693,7 +673,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     <section class="lc-sec" aria-labelledby="lcD-skatt-formue">
       <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-skatt-formue">Det folk lurer mest på</h2></div>
       <div class="lc-faq">
-        <details class="lc-q"><summary>Hvor mye formue kan jeg ha uten å betale formueskatt?</summary><div class="a"><p>Du betaler ingenting så lenge netto skattemessig formue er under bunnfradraget på 1 900 000 kr (3 800 000 kr for ektefeller). Husk at bolig og aksjer telles med rabatt, så grensen i markedsverdi er ofte langt høyere.</p></div></details>
+        <details class="lc-q"><summary>Hvor mye formue kan jeg ha uten å betale formuesskatt?</summary><div class="a"><p>Du betaler ingenting så lenge netto skattemessig formue er under bunnfradraget på 1 900 000 kr (3 800 000 kr for ektefeller). Husk at bolig og aksjer telles med rabatt, så grensen i markedsverdi er ofte langt høyere.</p></div></details>
         <details class="lc-q"><summary>Hvorfor teller boligen min så lite?</summary><div class="a"><p>Primærboligen verdsettes til bare 25 % av markedsverdien opp til 14 mill. kr. En bolig verdt 5 mill. teller altså bare 1,25 mill. i formuesgrunnlaget.</p></div></details>
         <details class="lc-q"><summary>Hva er forskjellen på primær- og sekundærbolig?</summary><div class="a"><p>Primærbolig er der du selv bor (25 % verdsettelse). Sekundærbolig er for eksempel en utleiebolig nummer to og teller fullt — 100 % av markedsverdien.</p></div></details>
         <details class="lc-q"><summary>Hvorfor blir gjeldsfradraget lavere enn gjelden min?</summary><div class="a"><p>Gjeld fordeles på alle eiendelene dine. Den delen som hører til rabatterte eiendeler — aksjer, driftsmidler og næringseiendom — reduseres med samme rabatt, slik at fradraget står i forhold til den reduserte verdien.</p></div></details>
@@ -727,9 +707,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -826,12 +806,17 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var underBunn = d.skattepliktig <= 0;
       var effStr = fmtPct2(d.effSats);
 
-      setText('rFormueVal', underBunn ? '0 kr — ingen formuesskatt' : fmtKr(d.totalSkatt));
-      setText('rFormueSub', underBunn ? 'Netto formue er under bunnfradraget' : ('Effektiv sats: ' + effStr + ' av markedsverdi'));
+      setText('rFormueVal', underBunn ? '0 kr' : fmtKr(d.totalSkatt));
+      // Egne tekstnoder rundt tallet, så _ph i språkfilene kan oversette dem.
+      var subEl = document.getElementById('rFormueSub');
+      if(subEl){
+        if(underBunn) subEl.textContent = 'Netto formue er under bunnfradraget';
+        else subEl.innerHTML = 'Effektiv sats: <span>' + effStr + '</span> av markedsverdi';
+      }
       setText('rBruttoFormue', fmtKr(d.bruttoFormue));
       setText('rGjeldJustert', '− ' + fmtKr(d.gjeldJustert));
       setText('rNettoFormue', fmtKr(d.nettoFormue));
-      setText('rBunnfradrag', '− ' + fmtKr(d.bunnfradrag) + ' (' + d.personer + '×' + fmtKr(1900000) + ')');
+      setText('rBunnfradrag', '− ' + fmtKr(d.bunnfradrag) + (d.personer === 2 ? ' (2 × 1,9 mill.)' : ''));
       setText('rSkattepliktig', fmtKr(d.skattepliktig));
       setText('rEffSats', effStr);
 

@@ -50,12 +50,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Boliglånskalkulator — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -140,7 +140,7 @@ body.focus-mode > footer{display:none}
 .ks-r-stat .l{color:var(--ink3);font-size:11.5px;letter-spacing:.04em}
 .ks-r-stat .v{color:var(--ink);font-variant-numeric:tabular-nums lining-nums;font-weight:500}
 .ks-r-stat.div{padding-top:8px;margin-top:4px;border-top:1px solid var(--line)}
-.ks-r-subhead{font:500 10px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin:8px 0 -2px}
+.ks-r-subhead{font:500 10px/1.3 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin:8px 0 -2px}
 .ks-r-foot{font-size:11px;color:var(--ink4);line-height:1.5;margin:6px 0 0}
 
 /* Side col */
@@ -312,6 +312,18 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
   .lc-led .fig{font-size:22px}
 }
+/* Lånetype-tabellen stables som kort på mobil. Kolonnenavnet står som liten
+   etikett i cellen; aria-hidden fordi skjermlesere har thead. */
+.mor-tl{display:none}
+@media(max-width:560px){
+  .mor-types,.mor-types tbody,.mor-types tr,.mor-types td{display:block}
+  .mor-types caption{display:block}
+  .mor-types thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .mor-types tr{padding:12px 0;border-bottom:1px solid var(--line)}
+  .mor-types tbody tr:last-child{border-bottom:none}
+  .lc-tblwrap .lc-trinn.mor-types td{border:0;padding:2px 0}
+  .mor-tl{display:block;font:600 10px/1.4 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-top:8px}
+}
 </style>
 </head>
 <body>
@@ -393,7 +405,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <span class="here" data-i18n="crumbHereBoliglanMor">Boliglånskalkulator</span>
       </div>
       <h1 class="page-title" data-i18n-html="morTitleNew"><em>Boliglåns</em>kalkulator</h1>
-      <p class="page-lead" data-i18n="morSubtitle">Skriv inn lånebeløp, rente og løpetid — så regner vi ut månedlig betaling, totale renter, skattefradrag og stresstest. Annuitetslån eller serielån, valgfri avdragsfri periode. Norske 2026-praksis (Utlånsforskriften § 5). Alt skjer lokalt i nettleseren.</p>
+      <p class="page-lead" data-i18n="morSubtitle">Se hva boliglånet koster hver måned og totalt. Du ser også skattefradraget på rentene og bankens stresstest. Velg annuitets- eller serielån.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="calc-help-btn" id="morCsvBtn" aria-label="Last ned nedbetalingsplan som CSV" title="Last ned nedbetalingsplan (CSV)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v7M4 6.5L7 9.5l3-3M2.5 12h9"/></svg></button>
@@ -417,7 +429,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <div class="ks-strip-cell"><span class="l" data-i18n="morRMonthly">Månedlig betaling</span><span class="v" id="mStripMnd">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="morROutTot">Totalt tilbakebetalt</span><span class="v" id="mStripTot">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="morROutInt">Totale renter</span><span class="v" id="mStripInt">–</span></div>
-          <div class="ks-strip-cell accent"><span class="l" data-i18n="morROutEff">Effektiv rente</span><span class="v" id="mStripEff">–</span></div>
+          <div class="ks-strip-cell accent"><span class="l" data-i18n="morREff">Effektiv rente</span><span class="v" id="mStripEff">–</span></div>
         </div>
 
         <div class="ks-body">
@@ -432,8 +444,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                   <div class="ik-fg">
                     <label class="ik-lbl" for="m-type" data-i18n="morLblType">Lånetype</label>
                     <select id="m-type" class="ik-select">
-                      <option value="annuity" data-i18n="morAnnuityLong">Annuitetslån — fast månedlig betaling</option>
-                      <option value="serial" data-i18n="morSerialLong">Serielån — fast avdrag, synkende terminbeløp</option>
+                      <option value="annuity" data-i18n="morAnnuityLong">Annuitetslån (likt beløp)</option>
+                      <option value="serial" data-i18n="morSerialLong">Serielån (synkende beløp)</option>
                     </select>
                   </div>
                 </div>
@@ -446,7 +458,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="m-r" data-i18n="morLblRate">Rente (%)</label>
-                    <input type="text" id="m-r" class="ik-input" value="5.13" step="0.1" inputmode="decimal">
+                    <input type="text" id="m-r" class="ik-input" value="5,13" step="0.1" inputmode="decimal">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="m-y" data-i18n="morLblYears">Løpetid (år)</label>
@@ -457,7 +469,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                   <div class="ik-fg">
                     <label class="ik-lbl" for="m-fees" data-i18n="morLblFees">Månedlige omkostninger (kr)</label>
                     <input type="text" id="m-fees" class="ik-input" value="0" inputmode="numeric" autocomplete="off">
-                    <span class="ik-hint">Termingebyr, forsikring, felleskostnader o.l.</span>
+                    <span class="ik-hint">Termingebyr og andre lånegebyrer</span>
                   </div>
                 </div>
                 <div class="ik-row full">
@@ -473,7 +485,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                   </div>
                 </div>
               </div>
-              <p class="ik-note">Maks tilbakebetalingstid 30 år (bankpraksis). Låner du over 60 % av boligens pris må du betale ned hvert år (Utlånsforskriften § 9). Stresstesten følger Utlånsforskriften § 5 — banken må vise at du tåler renten ved 7 % eller dagens rente + 3 prosentpoeng (strengeste av de to).</p>
+              <p class="ik-note">Maks løpetid er 30 år (bankpraksis). Låner du mer enn 60&nbsp;% av boligverdien, må du betale avdrag hvert år (utlånsforskriften §&nbsp;9).</p>
             </section>
           </div>
 
@@ -483,28 +495,25 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
             <div class="ks-r-mnd" id="m-sub">Skriv inn lånebeløp og rente</div>
 
             <div class="ks-r-stats">
-              <div class="ks-r-stat hidden" id="m-first-row"><span class="l" data-i18n="morROutFirst">Første måned</span><span class="v" id="m-first">–</span></div>
               <div class="ks-r-stat hidden" id="m-last-row"><span class="l" data-i18n="morROutLast">Siste måned</span><span class="v" id="m-last">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="morROutTot">Totalt tilbakebetalt</span><span class="v" id="m-tot">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="morROutInt">Totale renter</span><span class="v" id="m-int">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="morROutEff">Effektiv rente</span><span class="v" id="m-eff">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="morROutEff">Effektiv rente (uten gebyrer)</span><span class="v" id="m-eff">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="morROutY1i">År 1 renter</span><span class="v" id="m-y1i">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="morROutY1p">År 1 avdrag</span><span class="v" id="m-y1p">–</span></div>
               <div class="ks-r-stat hidden" id="m-fees-cell"><span class="l" data-i18n="morROutFeesTot">Totale omkostninger</span><span class="v" id="m-fees-tot">–</span></div>
             </div>
 
-            <div class="ks-r-subhead">Pengene staten gir tilbake (22 % av rentene)</div>
+            <div class="ks-r-subhead">Skattefradrag (22 %)</div>
             <div class="ks-r-stats">
               <div class="ks-r-stat"><span class="l" data-i18n="morROutTax">Totalt skattefradrag</span><span class="v" id="m-tax">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="morROutTaxY1">År 1 skattefradrag</span><span class="v" id="m-tax-y1">–</span></div>
             </div>
 
-            <div class="ks-r-subhead">Tåler du renten å øke? (banken sjekker +3 %)</div>
+            <div class="ks-r-subhead">Stresstest</div>
             <div class="ks-r-stats">
-              <div class="ks-r-stat"><span class="l" data-i18n="morROutStressMth">Månedlig ved +3 pp</span><span class="v" id="m-stress-mth">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="morROutStressMth">Månedlig i stresstest</span><span class="v" id="m-stress-mth">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="morROutStressDiff">Økt månedskostnad</span><span class="v" id="m-stress-diff">–</span></div>
             </div>
-            <p class="ks-r-foot">Banken må vise at du klarer renten hvis den blir 7 % eller dagens rente + 3 prosentpoeng — strengeste av de to (Utlånsforskriften § 5).</p>
+            <p class="ks-r-foot">Banken sjekker at du tåler renten pluss 3 prosentpoeng, minst 7&nbsp;% (utlånsforskriften §&nbsp;5).</p>
 
             <div class="hidden" id="m-io-res">
               <div class="ks-r-subhead">Avdragsfri periode</div>
@@ -554,7 +563,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <div class="howto-row"><strong>Totale renter</strong><span>Hvor mye du betaler i renter totalt. Ofte mer enn selve lånebeløpet over 25–30 år.</span></div>
         <div class="howto-row"><strong>Annuitet vs. serielån</strong><span>Annuitet: forutsigbart, likt beløp. Serielån: billigere totalt, men høyere start.</span></div>
         <div class="howto-row"><strong>Skattefradrag på renter</strong><span>Du får 22 % av renteutgiftene tilbake på skatten. Reell rentekostnad er ca. 4,00 % ved 5,13 % rente.</span></div>
-        <div class="howto-row"><strong>Stresstest</strong><span>Banken sjekker at du tåler rente på minst 7 % (eller gjeldende rente + 3 prosentpoeng).</span></div>
+        <div class="howto-row"><strong>Stresstest</strong><span>Banken sjekker at du tåler renten pluss 3 prosentpoeng, minst 7&nbsp;%.</span></div>
       </div>
     </details>
   </div>
@@ -564,38 +573,36 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-boliglan-mor">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-mor">Hva som skjer hver måned du betaler</h2><p class="lc-intro">Kalkulatoren deler hver månedsbetaling i to: renter (det banken tjener) og avdrag (det du betaler ned på selve lånet). Velger du annuitetslån holdes månedsbeløpet likt; velger du serielån betaler du like mye avdrag hver gang, så beløpet synker. Dette er de samme linjene du ser i resultatet over — bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-mor">Hva som skjer hver måned du betaler</h2><p class="lc-intro">Hver månedsbetaling er renter pluss avdrag. Renter er det banken tjener, avdrag er det du betaler ned på lånet. Med annuitetslån er beløpet likt hver måned: 3&nbsp;000&nbsp;000&nbsp;kr over 25 år til 5,13&nbsp;% gir 17&nbsp;766&nbsp;kr. Med serielån er avdraget likt, så beløpet synker.</p></div>
       <div class="lc-ledger">
         <div class="lc-led"><span class="nm"><b>Månedlig rente</b><span class="tag">Sats</span></span><span class="fig">÷ 12</span><p class="dsc">Årsrenten du skriver inn deles på 12 for å finne renten per måned. Renten regnes av det du fortsatt skylder, så den synker etter hvert som lånet betales ned.</p></div>
         <div class="lc-led"><span class="nm"><b>Annuitetslån</b><span class="tag">Faktor</span></span><span class="fig">Likt beløp</span><p class="dsc">Samme månedsbeløp hele løpetiden. I starten er det mest renter og lite avdrag; mot slutten snur det. Forutsigbart for budsjettet.</p></div>
         <div class="lc-led"><span class="nm"><b>Serielån</b><span class="tag">Faktor</span></span><span class="fig">Likt avdrag</span><p class="dsc">Du betaler like mye avdrag hver måned, og rente i tillegg. Beløpet er høyest i starten og synker jevnt. Kalkulatoren viser både første og siste måned.</p></div>
         <div class="lc-led"><span class="nm"><b>Skattefradrag på renter</b><span class="tag">Fradrag</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Du får 22 % av renteutgiftene tilbake på skatten. Kalkulatoren ganger totale renter med 0,22 og viser hva staten i praksis betaler av rentene dine.</p></div>
-        <div class="lc-led"><span class="nm"><b>Effektiv rente</b><span class="tag">Sats</span></span><span class="fig">(1+r)^12 − 1</span><p class="dsc">Fordi renten beregnes hver måned, blir den reelle årsrenten litt høyere enn den oppgitte nominelle renten. Dette er tallet som viser den faktiske årskostnaden i prosent.</p></div>
-        <div class="lc-led"><span class="nm"><b>Stresstest</b><span class="tag">Grense</span></span><span class="fig">+3<span class="u">pp</span></span><p class="dsc">Kalkulatoren regner ut hva måneden ville kostet hvis renten steg med 3 prosentpoeng (eller til 7 %), og viser hvor mye dyrere det blir. Dette er testen banken selv kjører før de gir lån.</p></div>
+        <div class="lc-led"><span class="nm"><b>Effektiv rente</b><span class="tag">Sats</span></span><span class="fig">5,25<span class="u">%</span></span><p class="dsc">Effektiv rente er årskostnaden i prosent når renten legges til hver måned og alle gebyrer er med. Her er gebyrene ikke med. Da blir 5,13&nbsp;% nominell rente 5,25&nbsp;%.</p></div>
+        <div class="lc-led"><span class="nm"><b>Stresstest</b><span class="tag">Grense</span></span><span class="fig">8,13<span class="u">%</span></span><p class="dsc">Kalkulatoren regner månedsbeløpet på nytt med renten pluss 3 prosentpoeng, minst 7&nbsp;%. Med 5,13&nbsp;% rente blir det 8,13&nbsp;%. Du ser hvor mye dyrere måneden blir.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcB-boliglan-mor">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-boliglan-mor">Grensene kalkulatoren bruker</h2><p class="lc-intro">Disse verdiene er bygget inn i beregningen og styrer hva tallene viser. De følger norsk bankpraksis og Utlånsforskriften for 2026.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-boliglan-mor">Grensene kalkulatoren bruker</h2></div>
       <div class="lc-rates">
       <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
+        <span class="ttl">Nøkkeltall</span>
         <div class="lc-kv"><span class="k">Skattefradrag på renter</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Stresstest — fast gulv</span><span class="v">7<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Stresstest — påslag på renten</span><span class="v">+3<span class="u">pp</span></span></div>
+        <div class="lc-kv"><span class="k">Stresstest, renteøkning (§ 5)</span><span class="v">3<span class="u">prosentpoeng</span></span></div>
+        <div class="lc-kv"><span class="k">Stresstest, minste rente (§ 5)</span><span class="v">7<span class="u">%</span></span></div>
         <div class="lc-kv"><span class="k">Maks løpetid</span><span class="v">30<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Standard løpetid</span><span class="v">25<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Standard avdragsfri periode</span><span class="v">5<span class="u">år</span></span></div>
         <div class="lc-kv"><span class="k">Krav om egenkapital</span><span class="v">10<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Årlig nedbetaling kreves over</span><span class="v">60<span class="u">% belåning</span></span></div>
+        <div class="lc-kv"><span class="k">Avdragskrav over</span><span class="v">60<span class="u">% belåning</span></span></div>
       </div>
       <div class="lc-card">
         <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>De to lånetypene kalkulatoren regner</caption>
-          <thead><tr><th>Lånetype</th><th class="r">Månedsbeløp</th><th class="r">Renter totalt</th></tr></thead>
+        <table class="lc-trinn mor-types">
+          <caption>Annuitet eller serie</caption>
+          <thead><tr><th>Lånetype</th><th>Månedsbeløp</th><th>Renter totalt</th></tr></thead>
           <tbody>
-            <tr><td><span class="step">Annuitetslån</span></td><td class="r">Likt hele veien</td><td class="r">Litt høyere</td></tr>
-            <tr><td><span class="step">Serielån</span></td><td class="r">Høyest i start, synker</td><td class="r">Litt lavere</td></tr>
+            <tr><td><span class="step">Annuitetslån</span></td><td><span class="mor-tl" aria-hidden="true">Månedsbeløp</span>Likt hele veien</td><td><span class="mor-tl" aria-hidden="true">Renter totalt</span>Litt høyere</td></tr>
+            <tr><td><span class="step">Serielån</span></td><td><span class="mor-tl" aria-hidden="true">Månedsbeløp</span>Høyest i start, synker</td><td><span class="mor-tl" aria-hidden="true">Renter totalt</span>Litt lavere</td></tr>
           </tbody>
         </table>
         </div>
@@ -605,10 +612,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     <section class="lc-sec" aria-labelledby="lcC-boliglan-mor">
       <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-mor">Før du stoler på tallet</h2><p class="lc-intro"></p></div>
       <div class="lc-notes">
-        <div class="lc-note"><h3>Stresstesten er ikke valgfri</h3><p>Banken må vise at du tåler renten hvis den blir 7 % eller dagens rente pluss 3 prosentpoeng — den strengeste av de to (Utlånsforskriften § 5). Tåler du ikke det månedsbeløpet, får du som regel ikke lånet.</p></div>
+        <div class="lc-note"><h3>Stresstesten er ikke valgfri</h3><p>Tåler du ikke månedsbeløpet i stresstesten, får du som regel ikke lånet. Regelen står i utlånsforskriften §&nbsp;5.</p></div>
         <div class="lc-note"><h3>Avdragsfrihet gjør lånet dyrere</h3><p>Krysser du av for avdragsfri periode betaler du bare renter i den tiden, så lånet står stille. Kalkulatoren viser «ekstra rentekostnad» — pengene du betaler ekstra fordi du utsatte avdragene.</p></div>
         <div class="lc-note"><h3>Skattefradraget er ikke penger i hånden nå</h3><p>De 22 % av rentene får du tilbake via skatteoppgjøret eller et lavere skattetrekk gjennom året — ikke som en utbetaling fra banken. Tallet viser hvor mye lavere den reelle rentekostnaden blir.</p></div>
-        <div class="lc-note"><h3>Omkostninger kommer i tillegg</h3><p>Termingebyr, forsikring og felleskostnader regnes ikke inn automatisk. Skriver du dem inn i «månedlige omkostninger», legger kalkulatoren dem oppå månedsbeløpet og i totalen.</p></div>
+        <div class="lc-note"><h3>Omkostninger kommer i tillegg</h3><p>Termingebyr og andre lånegebyrer regnes ikke inn automatisk. Skriver du dem inn i «månedlige omkostninger», legger kalkulatoren dem oppå månedsbeløpet og i totalen.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcD-boliglan-mor">
@@ -616,7 +623,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <div class="lc-faq">
         <details class="lc-q"><summary>Hva er forskjellen på annuitetslån og serielån?</summary><div class="a"><p>Annuitetslån har likt månedsbeløp hele veien — forutsigbart. Serielån har fast avdrag pluss rente, så beløpet er høyest i starten og synker. Serielån koster vanligvis litt mindre i renter totalt, men krever at du tåler høyere betaling i begynnelsen.</p></div></details>
         <details class="lc-q"><summary>Hvorfor er totale renter ofte større enn selve lånet?</summary><div class="a"><p>Over 25–30 år rekker rentene å bli store fordi du betaler rente hver måned på det som gjenstår. Jo lengre løpetid og jo høyere rente, desto mer betaler du totalt. Kalkulatoren viser «totalt tilbakebetalt» så du ser hva lånet faktisk koster.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr stresstesten på +3 prosentpoeng?</summary><div class="a"><p>Banken sjekker at du klarer en høyere rente før de låner deg penger. Kalkulatoren regner med 7 % eller din rente pluss 3 prosentpoeng — det høyeste av de to — og viser hvor mye dyrere måneden ville bli. Det er en buffer hvis renten stiger.</p></div></details>
+        <details class="lc-q"><summary>Hva betyr stresstesten på +3 prosentpoeng?</summary><div class="a"><p>Banken sjekker at du tåler renten pluss 3 prosentpoeng, minst 7&nbsp;%, før du får lånet. Med 5,13&nbsp;% rente regner kalkulatoren med 8,13&nbsp;%. Med 3&nbsp;% rente regner den med 7&nbsp;%. Du ser hvor mye dyrere måneden blir.</p></div></details>
         <details class="lc-q"><summary>Hvor mye får jeg igjen på skatten?</summary><div class="a"><p>Du får 22 % av renteutgiftene tilbake. Betaler du 100 000 kr i renter ett år, blir det 22 000 kr lavere skatt. Kalkulatoren viser både totalt og for første år.</p></div></details>
         <details class="lc-q"><summary>Lønner det seg å velge avdragsfri periode?</summary><div class="a"><p>Det gir lavere månedsbeløp en periode fordi du bare betaler renter, men lånet blir dyrere totalt siden gjelden ikke synker imens. Kalkulatoren viser «ekstra rentekostnad» så du ser hva utsettelsen koster.</p></div></details>
         <details class="lc-q"><summary>Hvor lenge kan jeg ha lånet?</summary><div class="a"><p>Kalkulatoren bruker maks 30 år, som er vanlig bankpraksis. Skriver du inn mer, settes det automatisk ned til 30. Lengre løpetid gir lavere månedsbeløp, men mer renter totalt.</p></div></details>
@@ -625,7 +632,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     <section class="lc-sec" aria-labelledby="lcE-boliglan-mor">
       <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-boliglan-mor">Relaterte verktøy</h2></div>
       <div class="lc-links">
-        <a class="lc-link" href="/boliglan/maxlan/"><span class="ar">Maks lån →</span><h3>Hva har du råd til?</h3><p>Regn ut hvor stort lån inntekten din bærer, med samme stresstest banken bruker.</p></a>
+        <a class="lc-link" href="/boliglan/maxlan/"><span class="ar">Maks lån →</span><h3>Hva har du råd til?</h3><p>Se hvor stort lån inntekten og egenkapitalen gir rom for etter utlånsforskriften.</p></a>
         <a class="lc-link" href="/boliglan/refi/"><span class="ar">Refinansiering →</span><h3>Lønner det seg å bytte bank?</h3><p>Sammenlign dagens lån med et nytt og se hva en lavere rente betyr over løpetiden.</p></a>
         <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Tåler budsjettet betalingen?</h3><p>Legg månedsbeløpet inn i et budsjett og se hva du sitter igjen med etter faste utgifter.</p></a>
       </div>
@@ -648,9 +655,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -687,10 +694,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     var P = parseNum('m-a');
     if(P <= 0){
       setEl('m-mth','–'); setEl('m-sub','Skriv inn lånebeløp og rente');
-      ['m-tot','m-int','m-eff','m-y1i','m-y1p','m-fees-tot','m-tax','m-tax-y1','m-stress-mth','m-stress-diff','m-first','m-last','m-io-mthfree','m-io-mthafter','m-io-extra'].forEach(function(id){setEl(id,'–');});
+      ['m-eff','m-y1i','m-y1p','m-fees-tot','m-tax','m-tax-y1','m-stress-mth','m-stress-diff','m-last','m-io-mthfree','m-io-mthafter','m-io-extra'].forEach(function(id){setEl(id,'–');});
       setEl('hStatMnd','–'); setEl('hStatRnt','–');
       setEl('mStripMnd','–'); setEl('mStripTot','–'); setEl('mStripInt','–'); setEl('mStripEff','–');
-      show('m-first-row',false); show('m-last-row',false);
+      show('m-last-row',false);
       show('m-io-res',false); show('m-fees-cell',false);
       persist();
       return;
@@ -724,8 +731,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var lastBal = Math.max(P - avdrag*(n-1), 0);
       lastPmt = lastBal + lastBal * mRate;
       mnd = firstPmt;
-      show('m-first-row', true); show('m-last-row', true);
-      setEl('m-first', fmt(firstPmt));
+      show('m-last-row', true);
       setEl('m-last',  fmt(lastPmt));
     } else {
       mnd = mRate===0 ? P/n : P*mRate*Math.pow(1+mRate,n)/(Math.pow(1+mRate,n)-1);
@@ -738,15 +744,13 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         a1 += mnd - ri;
         bal2 -= (mnd - ri);
       }
-      show('m-first-row', false); show('m-last-row', false);
+      show('m-last-row', false);
     }
 
     var effRate = mRate === 0 ? 0 : (Math.pow(1 + mRate, 12) - 1) * 100;
 
     setEl('m-mth', fmt(mnd));
-    setEl('m-sub', fmt(tot) + ' / ' + years + ' år');
-    setEl('m-tot', fmt(tot));
-    setEl('m-int', fmt(rnt));
+    setEl('m-sub', loanType === 'serial' ? 'Første måned. Beløpet synker deretter.' : 'Likt beløp hver måned i hele løpetiden.');
     setEl('m-eff', effRate.toFixed(2).replace('.', ',') + ' %');
     setEl('m-y1i', fmt(r1));
     setEl('m-y1p', fmt(a1));
@@ -780,14 +784,21 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     var feesPerMonth = parseNum('m-fees');
     if(feesPerMonth > 0){
       var totalFees = feesPerMonth * n;
-      var grandTotal = tot + totalFees;
       setEl('m-fees-tot', fmt(totalFees));
       show('m-fees-cell', true);
-      setEl('m-tot', fmt(grandTotal));
       setEl('m-mth', fmt(mnd + feesPerMonth));
-      setEl('m-sub', fmt(grandTotal) + ' / ' + years + ' år');
+      setEl('m-sub', loanType === 'serial' ? 'Første måned, med omkostninger. Beløpet synker deretter.' : 'Likt beløp hver måned i hele løpetiden, med omkostninger.');
     } else {
       show('m-fees-cell', false);
+    }
+
+    // Avdragsfri periode valgt: beløpet øverst gjelder lånet uten avdragsfri periode
+    if(ioCheck && ioCheck.checked && ioYears < years){
+      if(loanType === 'serial'){
+        setEl('m-sub', feesPerMonth > 0 ? 'Første måned uten avdragsfri periode, med omkostninger. Se tallene for avdragsfri periode under.' : 'Første måned uten avdragsfri periode. Se tallene for avdragsfri periode under.');
+      } else {
+        setEl('m-sub', feesPerMonth > 0 ? 'Uten avdragsfri periode, med omkostninger. Se tallene for avdragsfri periode under.' : 'Uten avdragsfri periode. Se tallene for avdragsfri periode under.');
+      }
     }
 
     // Skattefradrag: 22 % av renter

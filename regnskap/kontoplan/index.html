@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v228" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v229" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -49,7 +49,7 @@
 <!-- Temapaletten. Denne siden er ellers selvforsynt, men paletten lå her som en
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -840,7 +840,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <span class="here" data-i18n="crumbHereRegnskapKontoplan">Kontoplan NS 4102</span>
         </div>
         <h1 class="page-title" data-i18n-html="regnskapKontoplanH1Html">Standard <em>kontoplan</em> NS 4102</h1>
-        <p class="page-lead" data-i18n="regnskapKontoplanLead">Norsk Standard kontoplan med klasse 1 til 8 — søk konto-nummer eller navn for å finne riktig konto for transaksjonen din. Bygger på SAF-T-strukturen som brukes i offisiell rapportering.</p>
+        <p class="page-lead" data-i18n="regnskapKontoplanLead">Finn riktig konto for det du skal bokføre. Søk på nummer eller ord, eller bla i de åtte klassene. Skatteetatens SAF-T-standard bygger på den samme kontoplanen.</p>
         <div class="page-hero-actions">
           <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
         </div>
@@ -937,7 +937,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     }
     .kp-content-card p{font-size:13.5px;color:var(--ink2);line-height:1.65;margin:0;}
     .kp-content-card p + p{margin-top:10px}
-    .kp-content-card a{color:var(--accent);text-decoration:underline;font-weight:600}
+    .kp-content-card a{color:var(--accent-2);text-decoration:underline;font-weight:600}
 
     .kp-empty{
       display:none;background:var(--surface-2);
@@ -950,9 +950,18 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       .konto-grid{grid-template-columns:1fr}
       .kp-content{grid-template-columns:1fr}
     }
+    /* Mobil: «8 klasser» er alltid 8 og «Treff» viser strek før søk, så statsene
+       skjules. Filterknappene blir én rad som blas sidelengs, som fanerekka. */
+    @media (max-width: 700px){
+      .page-hero .page-stats{display:none}
+    }
     @media (max-width: 560px){
       .konto-class{padding:16px 16px 16px}
       .kp-search input{font-size:14px;padding:12px 14px}
+      .kp-search .calc-section-head .hint{display:none}
+      .kp-pills{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+      .kp-pills::-webkit-scrollbar{display:none}
+      .kp-pill{flex:none;white-space:nowrap}
     }
   </style>
 
@@ -1141,10 +1150,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <ul class="konto-list">
             <li data-num="80" data-name="finansinntekt rente utbytte"><span class="kn">80</span><span class="kt">Finansinntekt (rente, utbytte)</span></li>
             <li data-num="81" data-name="finanskostnad rentekostnad lan"><span class="kn">81</span><span class="kt">Finanskostnad (rentekostnad lån)</span></li>
-            <li data-num="83" data-name="skattekostnad ordinart resultat"><span class="kn">83</span><span class="kt">Skattekostnad på ordinært resultat</span></li>
-            <li data-num="85" data-name="ekstraordinaer inntekt"><span class="kn">85</span><span class="kt">Ekstraordinær inntekt</span></li>
-            <li data-num="86" data-name="ekstraordinaer kostnad"><span class="kn">86</span><span class="kt">Ekstraordinær kostnad</span></li>
-            <li data-num="87" data-name="skattekostnad ekstraordinart resultat"><span class="kn">87</span><span class="kt">Skattekostnad på ekstraordinært resultat</span></li>
+            <li data-num="83" data-name="skattekostnad"><span class="kn">83</span><span class="kt">Skattekostnad</span></li>
+            <li data-num="85" data-name="ekstraordinaer inntekt brukes ikke lenger"><span class="kn">85</span><span class="kt">Ekstraordinær inntekt (brukes ikke lenger i oppstillingen, jf. rskl. § 6‑1)</span></li>
+            <li data-num="86" data-name="ekstraordinaer kostnad brukes ikke lenger"><span class="kn">86</span><span class="kt">Ekstraordinær kostnad (brukes ikke lenger i oppstillingen, jf. rskl. § 6‑1)</span></li>
+            <li data-num="87" data-name="skattekostnad ekstraordinart resultat brukes ikke lenger"><span class="kn">87</span><span class="kt">Skattekostnad på ekstraordinært resultat (brukes ikke lenger i oppstillingen, jf. rskl. § 6‑1)</span></li>
             <li data-num="88" data-name="arsresultat"><span class="kn">88</span><span class="kt">Årsresultat</span></li>
             <li data-num="89" data-name="overforinger disponeringer utbytte"><span class="kn">89</span><span class="kt">Overføringer og disponeringer (utbytte, fond)</span></li>
           </ul>
@@ -1159,15 +1168,15 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         </article>
         <article class="kp-content-card">
           <h2 data-i18n="regnskapKontoplanHowTitle">Hvordan velge riktig konto?</h2>
-          <p data-i18n="regnskapKontoplanHowBody">Spør først hvilken klasse transaksjonen tilhører: er det en eiendel (1), gjeld eller egenkapital (2), inntekt (3), vare- eller lønnskostnad (4 eller 5), driftskostnad (6 eller 7), eller finans/skatt (8)? Innenfor klassen finner du den 2-sifrede gruppen som best beskriver posten.</p>
+          <p data-i18n="regnskapKontoplanHowBody">Finn først klassen. Eiendeler er 1, gjeld og egenkapital 2, og inntekter 3. Kostnader ligger i 4 (varer), 5 (lønn) og 6–7 (annen drift). Finansposter, skatt og disponering av årsresultatet er 8. Velg så den tosifrede gruppen som passer best. Husleie for lokaler er for eksempel 63.</p>
         </article>
         <article class="kp-content-card">
           <h2 data-i18n="regnskapKontoplanDebKredTitle">Debet og kredit</h2>
           <p data-i18n="regnskapKontoplanDebKredBody">Hver transaksjon registreres med debet på én konto og kredit på en annen — beløpene må alltid være like. Dette kalles dobbel bokføring og er grunnregelen for at balansen alltid stemmer.</p>
         </article>
         <article class="kp-content-card">
-          <h2 data-i18n="regnskapKontoplanCtaTitle">Tilbake til regnskap-oversikt</h2>
-          <p data-i18n="regnskapKontoplanCtaBody">Fra <a href="/regnskap/">regnskap-landingen</a> finner du andre verktøy: <a href="/regnskap/mva/">MVA-melding</a>, <a href="/regnskap/resultat/">resultatregnskap</a>, <a href="/regnskap/balanse/">balanse</a> og bokføring.</p>
+          <h2 data-i18n="regnskapKontoplanCtaTitle">Flere regnskapsverktøy</h2>
+          <p data-i18n-html="regnskapKontoplanCtaBody">Sett opp <a href="/regnskap/resultat/">resultatregnskap</a> og <a href="/regnskap/balanse/">balanse</a>, følg <a href="/regnskap/kontantstrom/">kontantstrømmen</a>, regn ut <a href="/regnskap/mva/">MVA-meldingen</a>, eller lær bokføring med <a href="/regnskap/skatteavstemming/">skatteavstemming</a> og <a href="/regnskap/avsetninger/">avsetninger</a>.</p>
         </article>
       </section>
 
@@ -1374,9 +1383,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   });
 })();
 </script>
-<script src="/shared/top-chrome.js?v=v243" defer></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script src="/shared/top-chrome.js?v=v245" defer></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —

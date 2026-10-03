@@ -43,7 +43,7 @@
   "mainEntity": [
     { "@type": "Question", "name": "Hva er break-even ROAS?", "acceptedAnswer": { "@type": "Answer", "text": "Den laveste avkastningen på annonsekronene der en ordre akkurat går i null. Med dekningsgrad 51,7 % blir break-even ROAS 1,93 — hver annonsekrone må gi minst 1,93 kr i salg. Ligger du over, tjener du på annonseringen." } },
     { "@type": "Question", "name": "Hva er et sunt LTV:CAC-forhold?", "acceptedAnswer": { "@type": "Answer", "text": "Tommelfingerregelen er at LTV bør være minst 3 ganger CAC. Under 3:1 bruker du for mye på å skaffe kunder; langt over kan bety at du underinvesterer i vekst. Eksempelet ligger på 6,4:1." } },
-    { "@type": "Question", "name": "Regnes tallene med eller uten mva?", "acceptedAnswer": { "@type": "Answer", "text": "Alt regnes eks. mva. Bruk snittordre og ARPU uten merverdiavgift, ellers blir dekningsgraden og LTV misvisende. Mva er gjennomgangspost for mva-pliktige og påvirker ikke enhetsøkonomien." } }
+    { "@type": "Question", "name": "Regnes tallene med eller uten mva?", "acceptedAnswer": { "@type": "Answer", "text": "Uten mva. Bruk snittordre og månedsinntekt uten mva, ellers blir dekningsgraden og kundeverdien for høye. For en mva-registrert bedrift går mvaen bare gjennom kassen og er ingen inntekt." } }
   ]
 }
 </script>
@@ -66,12 +66,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Netthandel og enhetsøkonomi — kalkulator-skall (delt mønster med Kalkyle-seksjonen) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -97,7 +97,7 @@ body.focus-mode > footer{display:none}
 
 .kk-dash{width:48px;height:2px;background:var(--accent);opacity:.9;margin-bottom:20px}
 
-.kk-picker-strip-wrap{padding:18px 0 6px}
+.kk-picker-strip-wrap{padding-top:18px;padding-bottom:6px}
 .kk-picker-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .kk-picker-strip::-webkit-scrollbar{display:none}
 .kk-chip{flex-shrink:0;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
@@ -117,6 +117,7 @@ body.focus-mode > footer{display:none}
 
 .kk-mode-view{display:none}
 .kk-mode-view.is-active{display:block}
+.ks-strip.kk-mode-view.is-active{display:grid}
 
 .kk-examples{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:820px){.kk-examples{grid-template-columns:1fr}}
@@ -146,6 +147,15 @@ body.focus-mode > footer{display:none}
 .lc-trinn tbody tr:last-child td{border-bottom:none}
 .lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .lc-trinn td .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
+/* Mobil: tre kolonner får ikke plass. Begrep og eksempel står på første linje, formelen under. */
+@media(max-width:560px){
+  .lc-stack,.lc-stack tbody,.lc-stack thead,.lc-stack thead tr,.lc-stack thead th{display:block}
+  .lc-stack thead th + th{display:none}
+  .lc-stack tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .lc-stack tbody tr:last-child{border-bottom:none}
+  .lc-tblwrap .lc-stack td,.lc-tblwrap .lc-stack td + td{border:0;padding:0}
+  .lc-tblwrap .lc-stack td:nth-child(2){grid-column:1 / -1;grid-row:2;padding-top:3px;font-size:12.5px;color:var(--ink3)}
+}
 .lc-faq{border-top:1px solid var(--line)}
 details.lc-q{border-bottom:1px solid var(--line)}
 details.lc-q > summary{cursor:pointer;list-style:none;padding:18px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;font:500 15px/1.45 var(--font-sans);color:var(--ink)}
@@ -157,7 +167,6 @@ details.lc-q .a{padding:0 0 20px;max-width:70ch}
 details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 .lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .lc-link{display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease)}
-.lc-link .ar{font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2)}
 .lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
 .lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
 @media(hover:hover){.lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}}
@@ -252,8 +261,8 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       </div>
     </div>
     <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="kalkNetthandelStatDb">Dekningsbidrag per ordre</span><span class="v" id="hStatDb">310 kr</span></div>
-      <div class="page-stat"><span class="l" data-i18n="kalkNetthandelStatRoas">Break-even ROAS</span><span class="v" id="hStatRoas">1,93</span></div>
+      <div class="page-stat"><span class="l" id="hStatDbLbl">Dekningsbidrag per ordre</span><span class="v" id="hStatDb">310 kr</span></div>
+      <div class="page-stat"><span class="l" id="hStatRoasLbl">Minste salg per annonsekrone</span><span class="v" id="hStatRoas">1,93 kr</span></div>
     </div>
   </div>
 </section>
@@ -279,16 +288,16 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     <div class="ks-host">
       <div class="ks">
         <div class="ks-strip kk-mode-view is-active" id="nhStripOrdre">
-          <div class="ks-strip-cell"><span class="l" data-i18n="kalkNetthandelResDb">Dekningsbidrag per ordre</span><span class="v" id="nhStripDb">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkNetthandelTblVariable">Variable kostnader</span><span class="v" id="nhStripVar">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="kalkNetthandelResDg">Dekningsgrad</span><span class="v" id="nhStripDg">–</span></div>
-          <div class="ks-strip-cell"><span class="l" data-i18n="kalkNetthandelResRoas">Break-even ROAS</span><span class="v" id="nhStripRoas">–</span></div>
-          <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkNetthandelResCpa">Break-even CPA</span><span class="v" id="nhStripCpa">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkNetthandelStripRoas">Minste salg per annonsekrone (ROAS)</span><span class="v" id="nhStripRoas">–</span></div>
+          <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkNetthandelStripCpa">Maks annonsekost per ordre (CPA)</span><span class="v" id="nhStripCpa">–</span></div>
         </div>
         <div class="ks-strip kk-mode-view" id="nhStripSaas">
           <div class="ks-strip-cell"><span class="l" data-i18n="kalkNetthandelResLevetid">Forventet levetid</span><span class="v" id="nhStripLevetid">–</span></div>
-          <div class="ks-strip-cell"><span class="l">LTV</span><span class="v" id="nhStripLtv">–</span></div>
-          <div class="ks-strip-cell"><span class="l" data-i18n="kalkNetthandelResRatio">LTV:CAC-forhold</span><span class="v" id="nhStripRatio">–</span></div>
-          <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkNetthandelResPayback">CAC payback</span><span class="v" id="nhStripPayback">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkNetthandelResLtv">Kundeverdi (LTV)</span><span class="v" id="nhStripLtv">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkNetthandelStripRatio">Kundeverdi mot kostnad (LTV:CAC)</span><span class="v" id="nhStripRatio">–</span></div>
+          <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkNetthandelStripPayback">Tid til kunden er tjent inn</span><span class="v" id="nhStripPayback">–</span></div>
         </div>
 
         <div class="ks-body">
@@ -296,7 +305,6 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
             <section class="ks-section">
               <div class="ik-section-head">
                 <h3 data-i18n="kalkNetthandelSectionModus">Modus</h3>
-                <span class="meta" data-i18n="kalkNetthandelSectionModusHint">Velg forretningsmodell</span>
               </div>
               <div class="mg-seg-row" role="group" aria-label="Velg modus">
                 <button type="button" class="mg-seg" id="nhSegOrdre" aria-pressed="true" data-i18n="kalkNetthandelModusOrdre">Per ordre (netthandel)</button>
@@ -307,11 +315,10 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
             <section class="ks-section kk-mode-view is-active" id="nhViewOrdre">
               <div class="ik-section-head">
                 <h3 data-i18n="kalkNetthandelSectionOrdre">Ordreøkonomi</h3>
-                <span class="meta" data-i18n="kalkNetthandelSectionOrdreHint">Snittordre minus alle variable kostnader per ordre</span>
               </div>
               <div class="ik-stack">
                 <div class="ik-fg">
-                  <label class="ik-lbl" for="neAov"><span data-i18n="kalkNetthandelLblAov">Snittordre — AOV</span> <span class="cap">(kr, eks. mva)</span></label>
+                  <label class="ik-lbl" for="neAov"><span data-i18n="kalkNetthandelLblAov">Snittordre (AOV)</span> <span class="cap" data-i18n="kalkSelvkostLblDmCap">(kr, eks. mva)</span></label>
                   <input class="ik-input" id="neAov" type="text" inputmode="decimal" autocomplete="off" value="600">
                 </div>
                 <div class="ik-row">
@@ -326,7 +333,7 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="neGebyr"><span data-i18n="kalkNetthandelLblGebyr">Betalingsgebyr</span> <span class="cap" data-i18n="kalkNetthandelLblGebyrCap">(% av AOV)</span></label>
+                    <label class="ik-lbl" for="neGebyr"><span data-i18n="kalkNetthandelLblGebyr">Betalingsgebyr</span> <span class="cap" data-i18n="kalkNetthandelLblGebyrCap">(% av snittordren)</span></label>
                     <input class="ik-input" id="neGebyr" type="text" inputmode="decimal" autocomplete="off" value="3">
                   </div>
                   <div class="ik-fg">
@@ -340,12 +347,11 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
             <section class="ks-section kk-mode-view" id="nhViewSaas">
               <div class="ik-section-head">
                 <h3 data-i18n="kalkNetthandelSectionSaas">Abonnementsøkonomi</h3>
-                <span class="meta" data-i18n="kalkNetthandelSectionSaasHint">Inntekt, margin og frafall per bruker</span>
               </div>
               <div class="ik-stack">
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="neArpu"><span data-i18n="kalkNetthandelLblArpu">ARPU per måned</span> <span class="cap">(kr)</span></label>
+                    <label class="ik-lbl" for="neArpu"><span data-i18n="kalkNetthandelLblArpu">Månedsinntekt per kunde (ARPU)</span> <span class="cap">(kr)</span></label>
                     <input class="ik-input" id="neArpu" type="text" inputmode="decimal" autocomplete="off" value="500">
                   </div>
                   <div class="ik-fg">
@@ -355,11 +361,11 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="neChurn"><span data-i18n="kalkNetthandelLblChurn">Månedlig churn</span> <span class="cap">(%)</span></label>
+                    <label class="ik-lbl" for="neChurn"><span data-i18n="kalkNetthandelLblChurn">Frafall per måned (churn)</span> <span class="cap">(%)</span></label>
                     <input class="ik-input" id="neChurn" type="text" inputmode="decimal" autocomplete="off" value="2,5">
                   </div>
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="neCac"><span data-i18n="kalkNetthandelLblCac">CAC</span> <span class="cap" data-i18n="kalkNetthandelLblCacCap">(kr per kunde)</span></label>
+                    <label class="ik-lbl" for="neCac"><span data-i18n="kalkNetthandelLblCac">Kostnad per ny kunde (CAC)</span> <span class="cap" data-i18n="kalkNetthandelLblCacCap">(kr)</span></label>
                     <input class="ik-input" id="neCac" type="text" inputmode="decimal" autocomplete="off" value="2 500">
                   </div>
                 </div>
@@ -368,36 +374,30 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
           </div>
 
           <aside class="ks-result" aria-live="polite">
-            <div class="ks-r-eyebrow" data-i18n="kalkNetthandelResHeadline">Resultat</div>
+            <div class="ks-r-eyebrow" id="nhREyebrow">Dekningsbidrag per ordre</div>
+            <div class="ks-r-net" id="nhRNet">–</div>
+            <div class="ks-r-mnd" id="nhRMnd">Fyll inn snittordren for å se svaret.</div>
 
             <div class="kk-mode-view is-active" id="nhResultOrdre">
-              <div class="ks-r-stats" style="border-top:0;padding-top:0">
+              <div class="ks-r-stats">
                 <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelLblAov">Snittordre (AOV)</span><span class="v" id="nhROutAov">–</span></div>
                 <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelMinusVare">− Varekost</span><span class="v" id="nhROutVare">–</span></div>
                 <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelMinusFrakt">− Frakt</span><span class="v" id="nhROutFrakt">–</span></div>
                 <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelMinusGebyr">− Betalingsgebyr</span><span class="v" id="nhROutGebyr">–</span></div>
-                <div class="ks-r-stat div"><span class="l" data-i18n="kalkNetthandelMinusEmb">− Emballasje</span><span class="v" id="nhROutEmb">–</span></div>
-                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelResDb">Dekningsbidrag per ordre</span><span class="v" id="nhROutDb">–</span></div>
-                <div class="ks-r-stat div"><span class="l" data-i18n="kalkNetthandelResDg">Dekningsgrad</span><span class="v" id="nhROutDg">–</span></div>
-                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelResRoas">Break-even ROAS</span><span class="v" id="nhROutRoas">–</span></div>
-                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelResCpaFull">Break-even CPA (maks annonsekost/ordre)</span><span class="v" id="nhROutCpa">–</span></div>
+                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelMinusEmb">− Emballasje</span><span class="v" id="nhROutEmb">–</span></div>
               </div>
             </div>
 
             <div class="kk-mode-view" id="nhResultSaas">
-              <div class="ks-r-stats" style="border-top:0;padding-top:0">
-                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelLblArpu">ARPU per måned</span><span class="v" id="nhROutArpu">–</span></div>
+              <div class="ks-r-stats">
+                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelLblArpu">Månedsinntekt per kunde (ARPU)</span><span class="v" id="nhROutArpu">–</span></div>
                 <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelLblMarginPct">Bruttomargin</span><span class="v" id="nhROutMargin">–</span></div>
-                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelResGross">Bruttomargin per bruker</span><span class="v" id="nhROutGross">–</span></div>
-                <div class="ks-r-stat div"><span class="l" data-i18n="kalkNetthandelLblChurn">Månedlig churn</span><span class="v" id="nhROutChurn">–</span></div>
-                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelResLevetid">Forventet levetid</span><span class="v" id="nhROutLevetid">–</span></div>
-                <div class="ks-r-stat div"><span class="l">LTV</span><span class="v" id="nhROutLtv">–</span></div>
-                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelResRatio">LTV:CAC-forhold</span><span class="v" id="nhROutRatio">–</span></div>
-                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelResPayback">CAC payback</span><span class="v" id="nhROutPayback">–</span></div>
+                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelResGross">Bruttomargin per kunde</span><span class="v" id="nhROutGross">–</span></div>
+                <div class="ks-r-stat"><span class="l" data-i18n="kalkNetthandelLblChurn">Frafall per måned (churn)</span><span class="v" id="nhROutChurn">–</span></div>
               </div>
             </div>
 
-            <p class="ik-note" id="nhNote" data-i18n="kalkNetthandelNoteOrdre">Alle beløp regnes eks. mva. Break-even CPA er den høyeste annonsekosten per ordre før dekningsbidraget spises opp.</p>
+            <p class="ik-note" id="nhNote">Alle beløp er uten mva.</p>
           </aside>
         </div>
 
@@ -410,7 +410,6 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
               <span data-i18n="kalkNetthandelF3">LTV = (ARPU × Bruttomargin%) / Churn · Levetid = 1 / Churn</span>
               <span data-i18n="kalkNetthandelF4">LTV:CAC = LTV / CAC · CAC payback = CAC / (ARPU × Bruttomargin%)</span>
             </div>
-            <p style="margin:16px 0 0;max-width:64ch" data-i18n="kalkNetthandelFNote">«ROAS 1,93 betyr hver annonsekrone må gi minst 1,93 kr i salg for å gå i null. LTV:CAC ≥ 3 regnes som sunt.»</p>
           </div>
         </details>
       </div>
@@ -422,18 +421,18 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-kalkyle-netthandel">
-      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkNetthandelGuideKicker">Slik regner du</span><h2 class="lc-title" id="lcA-kalkyle-netthandel" data-i18n="kalkNetthandelGuideTitle">To spørsmål, to modus</h2></div>
+      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkNetthandelGuideKicker">Slik regner du</span><h2 class="lc-title" id="lcA-kalkyle-netthandel" data-i18n="kalkNetthandelGuideTitle">Fra ordre til kundeverdi</h2></div>
       <ol class="kk-steps">
         <li><span class="n">01</span><span data-i18n-html="kalkNetthandelStep1"><b>Per ordre — tjener du på salget?</b> Trekk varekost, frakt, betalingsgebyr og emballasje fra snittordren. Det som står igjen er dekningsbidraget per ordre.</span></li>
-        <li><span class="n">02</span><span data-i18n-html="kalkNetthandelStep2"><b>Hva tåler du å betale for salget?</b> Dekningsgraden gir break-even ROAS og maks annonsekost per ordre (CPA). Under det tjener markedsføringen inn seg selv.</span></li>
-        <li><span class="n">03</span><span data-i18n-html="kalkNetthandelStep3"><b>Abonnement — hva er en kunde verdt?</b> Bytt til SaaS-modus. Margin og churn gir levetid og LTV, som du holder opp mot CAC for å se om anskaffelsen lønner seg.</span></li>
+        <li><span class="n">02</span><span data-i18n-html="kalkNetthandelStep2"><b>Hva tåler du å betale for salget?</b> Med dekningsgrad 51,7 % kan en ordre på 600 kr koste inntil 310 kr i annonser (break-even CPA). Hver annonsekrone må da gi minst 1,93 kr i salg (break-even ROAS).</span></li>
+        <li><span class="n">03</span><span data-i18n-html="kalkNetthandelStep3"><b>Abonnement — hva er en kunde verdt?</b> Slutter 2,5 % av kundene hver måned, blir en kunde i snitt i 40 måneder. Med 400 kr i bruttomargin per måned er kunden verdt 16 000 kr (LTV). Sammenlign med hva det koster å skaffe en ny kunde (CAC).</span></li>
       </ol>
     </section>
 
     <section class="lc-sec" aria-labelledby="lcB-kalkyle-netthandel">
       <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleExKicker">Regnet ut</span><h2 class="lc-title" id="lcB-kalkyle-netthandel" data-i18n="kalkNetthandelTableTitle">Begge eksemplene steg for steg</h2></div>
       <div class="lc-tblwrap">
-      <table class="lc-trinn">
+      <table class="lc-trinn lc-stack">
         <thead><tr><th data-i18n="kalkNetthandelTblOrdreH">Per ordre</th><th data-i18n="kalkyleColFormel">Formel</th><th class="r" data-i18n="kalkyleColEksempel">Eksempel</th></tr></thead>
         <tbody>
           <tr><td data-i18n="kalkNetthandelTblVariable">Variable kostnader</td><td>200 + 60 + 18 + 12</td><td class="r">290,00<span class="u">kr</span></td></tr>
@@ -445,12 +444,12 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       </table>
       </div>
       <div class="lc-tblwrap">
-      <table class="lc-trinn">
+      <table class="lc-trinn lc-stack">
         <thead><tr><th data-i18n="kalkNetthandelTblSaasH">Abonnement</th><th data-i18n="kalkyleColFormel">Formel</th><th class="r" data-i18n="kalkyleColEksempel">Eksempel</th></tr></thead>
         <tbody>
-          <tr><td data-i18n="kalkNetthandelResGross">Bruttomargin per bruker</td><td>500 × 80 %</td><td class="r">400,00<span class="u">kr</span></td></tr>
+          <tr><td data-i18n="kalkNetthandelResGross">Bruttomargin per kunde</td><td>500 × 80 %</td><td class="r">400,00<span class="u">kr</span></td></tr>
           <tr><td data-i18n="kalkNetthandelResLevetid">Forventet levetid</td><td>1 / 2,5 %</td><td class="r">40,0<span class="u">mnd</span></td></tr>
-          <tr class="is-sum"><td>LTV</td><td>400 / 0,025</td><td class="r">16 000<span class="u">kr</span></td></tr>
+          <tr class="is-sum"><td data-i18n="kalkNetthandelResLtv">Kundeverdi (LTV)</td><td>400 / 0,025</td><td class="r">16 000<span class="u">kr</span></td></tr>
           <tr class="is-sum"><td data-i18n="kalkNetthandelResRatio">LTV:CAC</td><td>16 000 / 2 500</td><td class="r">6,4 : 1</td></tr>
           <tr><td data-i18n="kalkNetthandelResPayback">CAC payback</td><td>2 500 / 400</td><td class="r">6,25<span class="u">mnd</span></td></tr>
         </tbody>
@@ -461,9 +460,9 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     <section class="lc-sec" aria-labelledby="lcC-kalkyle-netthandel">
       <div class="lc-head"><span class="lc-kicker" data-i18n="kalkNetthandelWhoKicker">Hvem bruker den</span><h2 class="lc-title" id="lcC-kalkyle-netthandel" data-i18n="kalkNetthandelWhoTitle">Tre typiske tilfeller</h2></div>
       <div class="kk-examples">
-        <div class="kk-ex"><span class="lbl" data-i18n="kalkNetthandelWho1Lbl">Nettbutikk · annonsering</span><span class="desc" data-i18n="kalkNetthandelWho1Desc">Break-even ROAS setter taket på hva en ordre kan koste i annonser før den går i minus.</span></div>
+        <div class="kk-ex"><span class="lbl" data-i18n="kalkNetthandelWho1Lbl">Nettbutikk · annonsering</span><span class="desc" data-i18n="kalkNetthandelWho1Desc">Se hvor mye en ordre tåler i annonsekost (CPA), og hvor mye salg hver annonsekrone må gi (ROAS).</span></div>
         <div class="kk-ex"><span class="lbl" data-i18n="kalkNetthandelWho2Lbl">SaaS · vekst</span><span class="desc" data-i18n="kalkNetthandelWho2Desc">LTV:CAC og payback avgjør hvor aggressivt du kan kjøpe nye kunder uten å tømme kassa.</span></div>
-        <div class="kk-ex"><span class="lbl" data-i18n="kalkNetthandelWho3Lbl">Abonnementsboks</span><span class="desc" data-i18n="kalkNetthandelWho3Desc">Både ordreøkonomi og churn i samme verktøy — bytt modus og sammenlign de to tallene.</span></div>
+        <div class="kk-ex"><span class="lbl" data-i18n="kalkNetthandelWho3Lbl">Abonnementsboks</span><span class="desc" data-i18n="kalkNetthandelWho3Desc">Regn på hver boks som en ordre, og på kunden som et abonnement med frafall.</span></div>
       </div>
     </section>
 
@@ -472,16 +471,16 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       <div class="lc-faq">
         <details class="lc-q"><summary data-i18n="kalkNetthandelFaqQ1">Hva er break-even ROAS?</summary><div class="a"><p data-i18n="kalkNetthandelFaqA1">Den laveste avkastningen på annonsekronene der en ordre akkurat går i null. Med dekningsgrad 51,7 % blir break-even ROAS 1,93 — hver annonsekrone må gi minst 1,93 kr i salg. Ligger du over, tjener du på annonseringen.</p></div></details>
         <details class="lc-q"><summary data-i18n="kalkNetthandelFaqQ2">Hva er et sunt LTV:CAC-forhold?</summary><div class="a"><p data-i18n="kalkNetthandelFaqA2">Tommelfingerregelen er at LTV bør være minst 3 ganger CAC. Under 3:1 bruker du for mye på å skaffe kunder; langt over kan bety at du underinvesterer i vekst. Eksempelet ligger på 6,4:1.</p></div></details>
-        <details class="lc-q"><summary data-i18n="kalkNetthandelFaqQ3">Regnes tallene med eller uten mva?</summary><div class="a"><p data-i18n="kalkNetthandelFaqA3">Alt regnes eks. mva. Bruk snittordre og ARPU uten merverdiavgift, ellers blir dekningsgraden og LTV misvisende. Mva er gjennomgangspost for mva-pliktige og påvirker ikke enhetsøkonomien.</p></div></details>
+        <details class="lc-q"><summary data-i18n="kalkNetthandelFaqQ3">Regnes tallene med eller uten mva?</summary><div class="a"><p data-i18n="kalkNetthandelFaqA3">Uten mva. Bruk snittordre og månedsinntekt uten mva, ellers blir dekningsgraden og kundeverdien for høye. For en mva-registrert bedrift går mvaen bare gjennom kassen og er ingen inntekt.</p></div></details>
       </div>
     </section>
 
     <section class="lc-sec" aria-labelledby="lcE-kalkyle-netthandel">
       <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleRelKicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkyle-netthandel" data-i18n="kalkyleRelTitle">Relaterte verktøy</h2></div>
       <div class="lc-links">
-        <a class="lc-link" href="/kalkyle/margin/"><span class="ar" data-i18n="kalkyleDestMargin">Margin &amp; påslag →</span><h3 data-i18n="kalkyleDestMargin">Margin &amp; påslag</h3><p data-i18n="kalkNetthandelRel1Desc">Sett riktig pris fra varekost, og se forskjellen på avanse og dekningsgrad.</p></a>
-        <a class="lc-link" href="/kalkyle/enhetskost/"><span class="ar" data-i18n="kalkyleDestEk">Enhetskost →</span><h3 data-i18n="kalkyleDestEk">Enhetskost</h3><p data-i18n="kalkNetthandelRel2Desc">Kostnad per enhet — også når variantene er ulikt krevende.</p></a>
-        <a class="lc-link" href="/kalkyle/selvkost/"><span class="ar" data-i18n="kalkyleDestSk">Selvkost →</span><h3 data-i18n="kalkyleDestSk">Selvkost</h3><p data-i18n="kalkNetthandelRel3Desc">Full kalkyle fra materiale til pris med tillegg og fortjeneste.</p></a>
+        <a class="lc-link" href="/kalkyle/margin/"><h3 data-i18n="kalkyleDestMargin">Margin &amp; påslag</h3><p data-i18n="kalkNetthandelRel1Desc">Sett riktig pris fra varekost, og se forskjellen på avanse og dekningsgrad.</p></a>
+        <a class="lc-link" href="/kalkyle/enhetskost/"><h3 data-i18n="kalkyleDestEk">Enhetskost</h3><p data-i18n="kalkNetthandelRel2Desc">Kostnad per enhet — også når variantene er ulikt krevende.</p></a>
+        <a class="lc-link" href="/kalkyle/selvkost/"><h3 data-i18n="kalkyleDestSk">Selvkost</h3><p data-i18n="kalkNetthandelRel3Desc">Full kalkyle fra materiale til pris med tillegg og fortjeneste.</p></a>
       </div>
     </section>
   </div>
@@ -502,9 +501,9 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -573,21 +572,42 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     document.getElementById('nhSegSaas').setAttribute('aria-pressed', mode === 'saas' ? 'true' : 'false');
     ['nhStripOrdre','nhViewOrdre','nhResultOrdre'].forEach(function(id){ document.getElementById(id).classList.toggle('is-active', mode === 'ordre'); });
     ['nhStripSaas','nhViewSaas','nhResultSaas'].forEach(function(id){ document.getElementById(id).classList.toggle('is-active', mode === 'saas'); });
-    var r = (typeof R === 'function') ? R() : {};
-    var noteEl = document.getElementById('nhNote');
-    if(noteEl) noteEl.textContent = mode === 'ordre'
-      ? (r.kalkNetthandelNoteOrdre || 'Alle beløp regnes eks. mva. Break-even CPA er den høyeste annonsekosten per ordre før dekningsbidraget spises opp.')
-      : (r.kalkNetthandelNoteSaas || 'Alle beløp regnes eks. mva. LTV forutsetter konstant churn og margin. LTV:CAC ≥ 3 regnes som sunt.');
     recalc();
   }
 
   function recalc(){
     var o = computeOrdre();
     var s = computeSaas();
+    var t = (typeof R === 'function') ? R() : {};
+    var ordre = mode === 'ordre';
 
-    setTxt('nhStripDb', fmtKr(o.db));
+    // Tekster som følger modus (etiketter i toppen, svarkortets overskrift og merknad).
+    setTxt('hStatDbLbl', ordre ? (t.kalkNetthandelStatDb || 'Dekningsbidrag per ordre') : (t.kalkNetthandelResLtv || 'Kundeverdi (LTV)'));
+    setTxt('hStatRoasLbl', ordre ? (t.kalkNetthandelStatRoas || 'Minste salg per annonsekrone') : (t.kalkNetthandelStripRatio || 'Kundeverdi mot kostnad (LTV:CAC)'));
+    setTxt('nhREyebrow', ordre ? (t.kalkNetthandelResDb || 'Dekningsbidrag per ordre') : (t.kalkNetthandelResLtv || 'Kundeverdi (LTV)'));
+    setTxt('nhNote', ordre ? (t.kalkNetthandelNoteOrdre || 'Alle beløp er uten mva.')
+      : (t.kalkNetthandelNoteSaas || 'Alle beløp er uten mva. Kundeverdien forutsetter at frafall og margin holder seg like.'));
+
+    // Ett stort svar: dekningsbidraget per ordre, eller hva en kunde er verdt.
+    if(ordre){
+      setTxt('nhRNet', fmtKr(o.db));
+      setTxt('nhRMnd', !isFinite(o.db) ? (t.kalkNetthandelMndEmptyOrdre || 'Fyll inn snittordren for å se svaret.')
+        : o.db > 0 ? (t.kalkNetthandelMndDb || 'Det er også det mest du kan bruke på annonser per ordre (break-even CPA).')
+        : (t.kalkNetthandelMndMinus || 'Ordren går i minus før annonsekostnader. Øk prisen eller kutt variable kostnader.'));
+    } else {
+      setTxt('nhRNet', fmtKr(s.ltv));
+      // Sammenlign med tallet slik det vises (6,4), så teksten ikke sier «3,0 … under 3».
+      var ratio1 = Math.round(s.ratio * 10) / 10;
+      setTxt('nhRMnd', !isFinite(s.ltv) ? (t.kalkNetthandelMndEmptySaas || 'Fyll inn frafall per måned for å se svaret.')
+        : !isFinite(s.ratio) ? (t.kalkNetthandelMndCac || 'Fyll inn kostnad per ny kunde for å sammenligne.')
+        : s.ratio < 1 ? (t.kalkNetthandelMndTap || 'Kunden er verdt mindre enn det koster å skaffe den. Hver ny kunde gir tap.')
+        : (ratio1 >= 3 ? (t.kalkNetthandelMndSunt || 'Kunden er verdt {x} ganger det den koster å skaffe. Minst 3 ganger regnes som sunt.')
+          : (t.kalkNetthandelMndLav || 'Kunden er verdt {x} ganger det den koster å skaffe. Under 3 ganger betyr at du bruker mye på å skaffe kunder.')).replace('{x}', fmtNum(s.ratio, 1)));
+    }
+
+    setTxt('nhStripVar', isFinite(o.aov) ? fmtKr(o.aov - o.db) : '–');
     setTxt('nhStripDg', isFinite(o.dg) ? fmtPct(o.dg * 100) : '–');
-    setTxt('nhStripRoas', isFinite(o.roas) ? fmtNum(o.roas, 2) : '–');
+    setTxt('nhStripRoas', isFinite(o.roas) ? fmtNum(o.roas, 2) + ' kr' : '–');
     setTxt('nhStripCpa', fmtKr(o.cpa));
 
     setTxt('nhStripLevetid', isFinite(s.levetid) ? fmtNum(s.levetid, 1) + ' mnd' : '–');
@@ -600,23 +620,15 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     setTxt('nhROutFrakt', fmtKr(o.frakt));
     setTxt('nhROutGebyr', fmtKr(o.gebyrKr));
     setTxt('nhROutEmb', fmtKr(o.emb));
-    setTxt('nhROutDb', fmtKr(o.db));
-    setTxt('nhROutDg', isFinite(o.dg) ? fmtPct(o.dg * 100) : '–');
-    setTxt('nhROutRoas', isFinite(o.roas) ? fmtNum(o.roas, 2) : '–');
-    setTxt('nhROutCpa', fmtKr(o.cpa));
 
     setTxt('nhROutArpu', fmtKr(s.arpu));
     setTxt('nhROutMargin', fmtPct(s.marginP));
     setTxt('nhROutGross', fmtKr(s.gross));
     setTxt('nhROutChurn', fmtPct(s.churnP));
-    setTxt('nhROutLevetid', isFinite(s.levetid) ? fmtNum(s.levetid, 1) + ' mnd' : '–');
-    setTxt('nhROutLtv', fmtKr(s.ltv));
-    setTxt('nhROutRatio', isFinite(s.ratio) ? fmtNum(s.ratio, 1) + ':1' : '–');
-    setTxt('nhROutPayback', isFinite(s.payback) ? fmtNum(s.payback, 2) + ' mnd' : '–');
 
     if(mode === 'ordre'){
       setTxt('hStatDb', fmtKr(o.db));
-      setTxt('hStatRoas', isFinite(o.roas) ? fmtNum(o.roas, 2) : '–');
+      setTxt('hStatRoas', isFinite(o.roas) ? fmtNum(o.roas, 2) + ' kr' : '–');
     } else {
       setTxt('hStatDb', fmtKr(s.ltv));
       setTxt('hStatRoas', isFinite(s.ratio) ? fmtNum(s.ratio, 1) + ':1' : '–');
@@ -647,6 +659,18 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 
   restore();
   setMode(mode);
+
+  // Svaret og etikettene skrives av JS: skriv dem på nytt når språkfila er lastet og ved språkbytte.
+  (function(){
+    var n = 0, iv = setInterval(function(){
+      if((typeof R === 'function' && R().kalkNetthandelNoteOrdre) || ++n > 40){ clearInterval(iv); recalc(); }
+    }, 80);
+  })();
+  new MutationObserver(recalc).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
+  // Chip-raden: vis den aktive kalkylen også når raden er bredere enn skjermen.
+  var s = document.querySelector('.kk-picker-strip'), a = s && s.querySelector('.is-active');
+  if(a) s.scrollLeft = a.offsetLeft - s.offsetLeft - 16;
 })();
 </script>
 

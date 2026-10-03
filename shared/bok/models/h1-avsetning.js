@@ -13,8 +13,13 @@
 
    Ingen konstanter og ingen årlige satser. Tersklene er sannsynlighets-
    skalaen i NRS 13 pkt. 3.2 (over 50 % / 10–50 % / under 10 %); IAS 37.23
-   har samme 50 %-grense. Modellen avgjør OM noe skal føres, ikke hvor mye —
-   beløpet regnes ut i egne oppslag.
+   har samme 50 %-grense. Modellen avgjør OM noe skal føres, ikke hvor mye.
+   Beløpet regnes ikke ut her; det settes til beste estimat (regnskapsloven
+   § 4-2).
+
+   Tekstfelt: hjelp står synlig under knappene, mer/merEtikett blir en
+   sammenleggbar utdyping, og valg[].under er den lille teksten på knappen.
+   utfall[].effekt er den lille etiketten i stripa over skjemaet.
    ────────────────────────────────────────────────────────────────────────── */
 
 (function () {
@@ -27,41 +32,45 @@
 
   var felt = [
     { id: 'hendelse', type: 'knapper', valg: JA_NEI,
-      etikett: '1. Har det skjedd noe før balansedagen som binder dere?',
+      etikett: '1. Skjedde det noe før balansedagen som binder dere?',
       kort: 'Hendelse før balansedagen',
-      hjelp: 'Et salg med garanti, en ulykke, et utslipp, et søksmål, en kunngjort nedbemanning. Plikten kan følge av lov, avtale eller noe dere har lovet utad. Det er hendelsen som teller, ikke når fakturaen eller dommen kommer.' },
+      hjelp: 'For eksempel salg med garanti, et søksmål eller et utslipp. Balansedagen er regnskapsårets siste dag, som regel 31. desember.',
+      merEtikett: 'Hva teller?',
+      mer: 'Plikten kan følge av lov eller avtale. Den kan også følge av fast praksis eller et løfte dere har gitt, slik at andre med rette regner med det. Hendelsen teller, ikke når fakturaen eller dommen kommer. Et søksmål i februar om en ulykke i november teller som ja: ulykken skjedde før balansedagen. Også en kunngjort nedbemanning kan binde dere.' },
 
     { id: 'egneValg', type: 'knapper', valg: JA_NEI,
-      etikett: '2. Kan dere slippe unna utgiften ved å velge annerledes framover?',
+      etikett: '2. Kan dere unngå utgiften ved egne valg framover?',
       kort: 'Kan unngås ved egne valg',
-      hjelp: 'For eksempel ved å legge ned en aktivitet, selge anlegget eller la være å investere. Kan dere det, hører utgiften til framtidig drift og er ikke en forpliktelse i dag.' },
+      hjelp: 'For eksempel ved å legge ned en aktivitet, selge anlegget eller droppe en investering.' },
 
     { id: 'sannsynlighet', type: 'knapper',
       etikett: '3. Hvor sannsynlig er det at dere må betale?',
       kort: 'Sannsynlighet for å måtte betale',
       valg: [
-        { verdi: 'over50', etikett: 'Over 50 % — mer sannsynlig enn ikke' },
-        { verdi: '10til50', etikett: '10–50 % — lite sannsynlig' },
-        { verdi: 'under10', etikett: 'Under 10 % — svært lite sannsynlig' }
+        { verdi: 'over50', etikett: 'Over 50 %', under: 'mer sannsynlig enn ikke' },
+        { verdi: '10til50', etikett: '10–50 %', under: 'lite sannsynlig: note' },
+        { verdi: 'under10', etikett: 'Under 10 %', under: 'svært lite sannsynlig: som regel ingen note' }
       ],
-      hjelp: 'En omtrentlig vurdering holder. Mange like saker, som garantier på solgte varer, vurderes samlet. Saker som gjelder ulike spørsmål, vurderes hver for seg.',
-      skjonn: 'Sannsynligheten er din og ledelsens vurdering. Siden foreslår aldri en prosent.' },
+      hjelp: 'Under 50 % gir ingen avsetning, uansett beløp.',
+      skjonn: 'Sannsynligheten er deres og ledelsens vurdering, og den må kunne begrunnes. Et omtrentlig anslag holder.',
+      merEtikett: 'Slik vurderes like saker',
+      mer: 'Eksempel: hver solgte vare har 3 % risiko for garantikrav. Av 1 000 varer kommer det nesten sikkert krav, så sannsynligheten er over 50 %. Saker som gjelder ulike spørsmål, for eksempel skattesaker, må vurderes hver for seg.' },
 
     { id: 'estimat', type: 'knapper', valg: JA_NEI,
       etikett: '4. Kan dere anslå beløpet?',
       kort: 'Beløpet kan anslås',
-      hjelp: 'Nesten alltid ja. Et spenn av mulige utfall er nok til å finne et beste estimat. Det er svært sjelden at det ikke går.' }
+      hjelp: 'Nesten alltid ja. Det holder med et spenn, for eksempel 200 000–400 000 kr.' }
   ];
 
   var utfall = [
-    { id: 'avsetning', navn: 'Avsetning', kort: 'Avsetning',
-      hva: 'Før forpliktelsen i balansen og kostnadsfør beste estimat av beløpet.' },
-    { id: 'note', navn: 'Note, ingen avsetning', kort: 'Note',
-      hva: 'Ingen post i balansen. Forholdet beskrives i noten.' },
-    { id: 'ingenting', navn: 'Ingenting', kort: 'Ingenting',
-      hva: 'Ingen post i balansen, og noten kan som regel sløyfes.' },
-    { id: 'ingen', navn: 'Ingen forpliktelse', kort: 'Ingen forpliktelse',
-      hva: 'Det finnes ingen plikt på balansedagen, og ingenting å føre som forpliktelse.' }
+    { id: 'avsetning', navn: 'Avsetning', effekt: 'Gjeld i balansen',
+      hva: 'Før forpliktelsen som gjeld i balansen, og som regel samme beløp som kostnad i resultatet. Bruk beste estimat: det beste anslaget ut fra det dere vet når regnskapet avlegges.' },
+    { id: 'note', navn: 'Note', effekt: 'Bare forklart i noten',
+      hva: 'Ingen post i balansen. Beskriv saken i tilleggsopplysningene til årsregnskapet (noten).' },
+    { id: 'ingenting', navn: 'Ingenting', effekt: 'Som regel ingen note',
+      hva: 'Ingen post i balansen, og som regel ingen note.' },
+    { id: 'ingen', navn: 'Ingen forpliktelse', effekt: 'Ikke noe å føre',
+      hva: 'Ingen plikt på balansedagen, og ingenting å føre som forpliktelse.' }
   ];
 
   function finnFelt(id) {
@@ -81,7 +90,7 @@
     katalogId: 'H1',
     sti: '/regnskap/avsetninger/',
     type: 2,
-    versjon: '1.0',
+    versjon: '1.1',
     tittel: 'Avsetning, note eller ingenting?',
     konstanter: [],
     felt: felt,
@@ -93,15 +102,15 @@
         kjede.push({ sporsmal: finnFelt(id).kort, svar: svarTekst(id, v[id]), folge: folge, avgjorde: !!avgjorde });
       }
       function venter(nr) {
-        return { utfall: null, venter: 'Svar på spørsmål ' + nr + ', så markeres utfallet ditt her.', kjede: kjede };
+        return { utfall: null, venter: 'Svar på spørsmål ' + nr + ' for å se utfallet.', kjede: kjede };
       }
 
       /* 1 — Finnes det en forpliktelse fra noe som alt har skjedd? */
       if (!v.hendelse) return venter(1);
       if (v.hendelse === 'nei') {
-        steg('hendelse', 'Uten en hendelse før balansedagen finnes det ingen forpliktelse å vurdere.', true);
+        steg('hendelse', 'Ingen hendelse før balansedagen, ingen forpliktelse å vurdere.', true);
         return { utfall: 'ingen', avgjortAv: 1, kjede: kjede,
-          grunn: 'Ingenting har skjedd ennå som binder dere. En avsetning krever en forpliktelse på balansedagen, så spørsmål 2 til 4 spiller ingen rolle.' };
+          grunn: 'Spørsmål 2–4 spiller da ingen rolle.' };
       }
       steg('hendelse', 'En forpliktelse er mulig.');
 
@@ -110,34 +119,34 @@
       if (v.egneValg === 'ja') {
         steg('egneValg', 'Utgiften hører til framtidig drift, ikke til noe dere skylder i dag.', true);
         return { utfall: 'ingen', avgjortAv: 2, kjede: kjede,
-          grunn: 'Kan dere velge dere bort fra utgiften, er den ikke en forpliktelse. Framtidige driftstap gir aldri avsetning — vurder heller nedskrivning av eiendelene. Unntak i norsk GAAP: periodisk vedlikehold, se regelen side om side.' };
+          grunn: 'Utgifter dere kan velge bort, er ingen forpliktelse, så spørsmål 3 og 4 spiller ingen rolle. Unntak i norsk GAAP: periodisk vedlikehold kan avsettes likevel (se tabellen over regelsett lenger ned). Framtidige driftstap gir aldri avsetning: vurder heller om eiendelene må skrives ned.' };
       }
-      steg('egneValg', 'Dere kan ikke velge dere bort fra den. Forpliktelsen er reell.');
+      steg('egneValg', 'Forpliktelsen er reell.');
 
       /* 3 — Terskelen. En bryter, ikke en glideskala. */
       if (!v.sannsynlighet) return venter(3);
       if (v.sannsynlighet === 'under10') {
         steg('sannsynlighet', 'Svært lite sannsynlig.', true);
         return { utfall: 'ingenting', avgjortAv: 3, kjede: kjede,
-          grunn: 'Under 10 % regnes som svært lite sannsynlig, og noten etter NRS 13 og IAS 37 kan sløyfes. Er forpliktelsen en garanti dere har stilt, skal summen likevel stå i noten (regnskapsloven § 7-28, for små foretak § 7-40 tredje ledd).' };
+          grunn: 'NRS 13 krever ingen note under 10 %. IAS 37 har ingen prosentgrense: noten faller bort bare når det er svært lite sannsynlig at dere må betale (avsnitt 86). Unntak: er forpliktelsen en garanti dere har stilt, skal summen likevel stå i noten (regnskapsloven § 7-28, små foretak § 7-40 tredje ledd). Spørsmål 4 spiller ingen rolle.' };
       }
       if (v.sannsynlighet === '10til50') {
-        steg('sannsynlighet', 'Under terskelen på 50 %. Det er en betinget forpliktelse.', true);
+        steg('sannsynlighet', 'Under 50 %: for usikkert til å føres i balansen (betinget forpliktelse).', true);
         return { utfall: 'note', avgjortAv: 3, kjede: kjede,
-          grunn: 'Under 50 % blir det ingen avsetning, uansett hvor stort beløpet er. Forpliktelsen er betinget og beskrives i noten. Små foretak har lettere notekrav — se regelen side om side.' };
+          grunn: 'Under 50 % blir det ingen avsetning, uansett beløp. Små foretak har lettere notekrav (se tabellen over regelsett lenger ned). Spørsmål 4 spiller ingen rolle.' };
       }
-      steg('sannsynlighet', 'Over terskelen: det er mer sannsynlig at dere må betale enn at dere slipper.');
+      steg('sannsynlighet', 'Over 50 %: mer sannsynlig at dere må betale enn ikke.');
 
       /* 4 — Kan beløpet anslås? */
       if (!v.estimat) return venter(4);
       if (v.estimat === 'nei') {
-        steg('estimat', 'Uten et pålitelig estimat kan ingenting føres i balansen.', true);
+        steg('estimat', 'Uten et pålitelig anslag kan ingenting føres i balansen.', true);
         return { utfall: 'note', avgjortAv: 4, kjede: kjede,
-          grunn: 'Uten et pålitelig estimat blir det ingen balansepost, bare note. Det skjer svært sjelden — lander du ofte her, er utfallsrommet sannsynligvis ikke bygget ennå.' };
+          grunn: 'Det er svært sjelden at beløpet ikke kan anslås. Lander du ofte her, har du trolig ikke satt opp mulige utfall og beløp ennå.' };
       }
-      steg('estimat', 'Da kan avsetningen måles til beste estimat.', true);
+      steg('estimat', 'Da kan beløpet føres i balansen.', true);
       return { utfall: 'avsetning', avgjortAv: '1–4', kjede: kjede,
-        grunn: 'Alle tre vilkårene er oppfylt: en forpliktelse fra noe som skjedde før balansedagen, over 50 % sannsynlig at dere må betale, og et beløp som kan anslås. Avsetningen føres til beste estimat.' };
+        grunn: 'Alle tre vilkårene er oppfylt: plikten (svar 1 og 2), sannsynligheten (svar 3) og beløpet (svar 4).' };
     }
   });
 })();

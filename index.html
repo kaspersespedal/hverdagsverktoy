@@ -54,11 +54,11 @@
 </script>
 
 <!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 
 <!-- FOUC-guard during language load — keeps i18n elements hidden until core.js resolves loadLang. -->
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
@@ -1349,10 +1349,11 @@
   .daily-refresh{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;border:0;background:none;color:var(--ink3);cursor:pointer;opacity:.65;transition:opacity .2s,color .2s,transform .4s var(--ease)}
   .daily-refresh svg{width:13px;height:13px}
   @media(hover:hover){.daily-refresh:hover{color:var(--accent-2);opacity:1;transform:rotate(90deg)}}
-  .daily-credits{margin:16px 0 0;padding:13px 4px 2px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--ink3)}
+  .daily-credits{margin:16px 0 0;padding:0 24px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--ink3)}
   .daily-credits a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line-2)}
   @media(hover:hover){.daily-credits a:hover{color:var(--accent-2);border-bottom-color:currentColor}}
-  .daily-sources summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 8px;color:inherit}
+  .daily-sources summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 8px;color:inherit;padding:12px 0}
+  .daily-sources[open]{padding-bottom:12px}
   .daily-sources summary::-webkit-details-marker{display:none}
   .daily-sources-toggle{display:inline-flex;align-items:center;gap:5px}
   .daily-sources-toggle::after{content:'';flex:0 0 auto;width:6px;height:6px;border-right:1.3px solid currentColor;border-bottom:1.3px solid currentColor;transform:rotate(45deg);opacity:.65;transition:transform .2s var(--ease)}
@@ -1409,7 +1410,9 @@
       padding:16px 18px;
       border-right:none !important;
       border-bottom:1px solid var(--line);
+      grid-template-rows:none;min-height:0;
     }
+    .daily-credits{padding:0 18px}
     .widget:last-child{border-bottom:none}
     .widget-value{font-size:26px}
     .widget-sub{font-size:12px}
@@ -1444,6 +1447,7 @@
     .search-icon{left:12px;width:16px;height:16px}
     .daily-head{padding:11px 16px 10px}
     .widget{padding:14px 16px}
+    .daily-credits{padding:0 16px}
     .widget-value{font-size:24px}
     .card{padding:20px 18px}
     .card .num{font-size:10.5px}
@@ -1797,20 +1801,20 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v228" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v228" defer></script>
-<script src="/shared/lang/no.js?v=v228" defer></script>
+<link rel="preload" href="/shared/core.js?v=v229" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v229" defer></script>
+<script src="/shared/lang/no.js?v=v229" defer></script>
 <script src="/shared/site-shell.js?v=v1" defer></script>
-<script src="/shared/top-chrome.js?v=v243" defer></script>
+<script src="/shared/top-chrome.js?v=v245" defer></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
-<script src="/shared/markedsdata.js?v=v12" defer></script>
+<script src="/shared/markedsdata.js?v=v13" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
 <script src="/shared/search.js?v=v131" defer></script>
 <!-- Timeren i toppen. Samme fil som /kalkulator/timer/ bruker — der i full
      størrelse, her som popover under pilla. -->
-<script src="/shared/timer.js?v=v5" defer></script>
+<script src="/shared/timer.js?v=v6" defer></script>
 <style>
 /* GLØD-FIX (2026-05-31): calm-override.css + site-shell.css disable the atmosphere
    site-wide (display:none !important) and paint body opaque, so the forside was flat.
@@ -1965,6 +1969,10 @@ body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(2){animat
 body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(3){animation-delay:.56s}
 body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(4){animation-delay:.62s}
 @keyframes hvNavItemIn{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:none}}
+/* Timer-wrapperen får bare fade: en transform her gjør den til ankerboks for det
+   fast posisjonerte Nedtelling-panelet, som da blir 38 px bredt på mobil. */
+body.introAct .nav-wrap .nav-right > .tmr-popwrap{animation-name:hvNavItemFade}
+@keyframes hvNavItemFade{0%{opacity:0}100%{opacity:1}}
 
 /* ── Akt 2: Tittel — linsefokus over hele linja mens ordmaskene løper ── */
 body.introAct [data-headline].play{animation:hvH1Focus .9s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) both}
@@ -2204,7 +2212,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
             <circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/>
           </svg>
           <input id="searchInput" type="text" autocomplete="off" spellcheck="false"
-            placeholder="Søk etter verktøy, kalkulator eller begrep…"
+            placeholder="Søk etter verktøy eller begrep..."
             aria-label="Søk" aria-autocomplete="list" aria-controls="searchPanel" aria-expanded="false">
           <div class="search-kbd"><kbd>⌘</kbd><kbd>K</kbd></div>
         </div>
@@ -2512,6 +2520,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   letter-spacing:-.3px;line-height:1.16;color:var(--fink);margin:8px 0 5px}
 .fr-feat-who{font:400 12.5px/1.4 var(--fsans);color:var(--fink2);margin:0}
 .fr-feat-date{font:500 11.5px/1 var(--fsans);color:var(--fink3);margin-top:8px;font-variant-numeric:var(--fnum)}
+.fr-miss.fr-feat-miss{border-top:0;padding-top:0;margin:6px 0 0}
 .fr-feat-cd{display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:5px;flex-shrink:0}
 .fr-cd-lead{font:600 9px/1 var(--fsans);letter-spacing:.2em;text-transform:uppercase;color:var(--fink3)}
 .fr-cd-big{display:flex;align-items:baseline;gap:6px}
@@ -2524,14 +2533,14 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 
 /* ── Liste (2 kolonner) ── */
 .fr-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.fr-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;
+.fr-row{display:grid;grid-template-columns:minmax(30px,auto) minmax(0,1fr) auto;align-items:center;gap:14px;
   padding:13px 15px;border:1px solid var(--fline);border-radius:6px;
   background:color-mix(in srgb,var(--fsurf2) 45%,transparent);
   transition:border-color .25s var(--fease),background .25s var(--fease),transform .2s var(--fease)}
 @media(hover:hover){.fr-row:hover{transform:translateY(-2px);border-color:var(--fline2);background:var(--fsurf2)}}
 .fr-row-mid{min-width:0}
 .fr-row-name{display:block;font-family:var(--fserif);font-weight:500;font-size:15px;letter-spacing:-.2px;
-  color:var(--fink);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  color:var(--fink);line-height:1.2}
 .fr-row-who{display:block;font:400 11.5px/1.3 var(--fsans);color:var(--fink3);margin-top:2px;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fr-row-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
@@ -2616,7 +2625,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 /* ── Fremhevet «neste frist»-band ──
    ::after (glødet) er bevisst urørt: den bærer frBreath-loopen, og forelderens
    egen .reveal-fade tar den med seg inn uansett. */
-.frister .fr-feat.reveal:not(.in) :is(.fr-flak .d,.fr-flak .mo,.fr-eyebrow,.fr-feat-name,.fr-feat-who,.fr-feat-date,.fr-cd-lead,.fr-cd-big,.fr-cd-unit,.fr-aud){opacity:0}
+.frister .fr-feat.reveal:not(.in) :is(.fr-flak .d,.fr-flak .mo,.fr-eyebrow,.fr-feat-name,.fr-feat-who,.fr-feat-date,.fr-feat-miss,.fr-cd-lead,.fr-cd-big,.fr-cd-unit,.fr-aud){opacity:0}
 .frister .fr-feat.reveal:not(.in)::before{transform:scaleY(0)}
 .frister .fr-feat.reveal:not(.in) .fr-div{transform:scaleY(0)}
 .frister .fr-feat.reveal.in::before{
@@ -2630,6 +2639,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 .frister .fr-feat.reveal.in .fr-feat-name{animation:frInUp .55s var(--fexpo) calc(var(--fd) + 190ms) backwards}
 .frister .fr-feat.reveal.in .fr-feat-who{animation:frInUp .5s var(--fease) calc(var(--fd) + 250ms) backwards}
 .frister .fr-feat.reveal.in .fr-feat-date{animation:frInUp .5s var(--fease) calc(var(--fd) + 300ms) backwards}
+.frister .fr-feat.reveal.in .fr-feat-miss{animation:frInUp .5s var(--fease) calc(var(--fd) + 340ms) backwards}
 .frister .fr-feat.reveal.in .fr-cd-lead{animation:frInUp .5s var(--fease) calc(var(--fd) + 230ms) backwards}
 .frister .fr-feat.reveal.in .fr-cd-big{animation:frInNum .65s var(--fexpo) calc(var(--fd) + 290ms) backwards}
 .frister .fr-feat.reveal.in .fr-cd-unit{animation:frInUp .5s var(--fease) calc(var(--fd) + 350ms) backwards}
@@ -2738,7 +2748,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 .fr-mon li{display:flex;align-items:baseline;gap:8px;font-size:11.5px;line-height:1.25;color:var(--fink2)}
 .fr-mon li .dd{flex-shrink:0;width:17px;text-align:right;font:600 11px/1.25 var(--fsans);
   color:var(--faccl);font-variant-numeric:var(--fnum)}
-.fr-mon li .nn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fr-mon li .nn{min-width:0;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  overflow:hidden;overflow-wrap:anywhere;hyphens:auto}
 .fr-mon li.empty{color:var(--fink4)}
 .fr-mon li.empty .dd{color:var(--fink4)}
 
@@ -2797,11 +2808,13 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 @keyframes frBreath{0%,100%{opacity:.5}50%{opacity:.95}}
 
 /* ── Responsivt ── */
+@media(max-width:1080px){.fr-wheel{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:720px){
   .fr-wheel{grid-template-columns:repeat(3,minmax(0,1fr))}
   .fr-cards{grid-template-columns:1fr}
 }
 @media(max-width:640px){
+  .fr-wheel{grid-template-columns:repeat(2,minmax(0,1fr))}
   .fr-grid{grid-template-columns:1fr}
   .fr-feat{display:flex;flex-direction:column;align-items:stretch;gap:14px}
   .fr-div{display:none}
@@ -2818,7 +2831,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   /* Koreografien er animasjonsbasert, ikke overgangsbasert. Uten dette blir
      hviletilstandens opacity:0 stående på barna og halve seksjonen usynlig. */
   .frister .reveal :is(.fr-eyebrow,.fr-htitle,.fr-btn,.fr-flak .d,.fr-flak .mo,
-    .fr-feat-name,.fr-feat-who,.fr-feat-date,.fr-cd-lead,.fr-cd-big,.fr-cd-unit,
+    .fr-feat-name,.fr-feat-who,.fr-feat-date,.fr-feat-miss,.fr-cd-lead,.fr-cd-big,.fr-cd-unit,
     .fr-aud,.fr-row-name,.fr-row-who,.fr-row-cd,.fr-verify,.fr-link,.fr-div){
     opacity:1 !important;transform:none !important;filter:none !important;animation:none !important}
   .frister .fr-eyebrow::before,.frister .fr-feat::before{transform:none !important;animation:none !important}
@@ -2836,7 +2849,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
             <span class="fr-eyebrow" data-i18n="fr.kicker">Kommende</span>
             <div class="fr-htitle">
               <h2 class="fr-title" id="fr-title" data-i18n="fr.title">Viktige frister</h2>
-              <span class="fr-context" data-i18n="fr.context">— de neste som gjelder deg, sortert etter dato</span>
+              <span class="fr-context" data-i18n="fr.context">— de neste fristene, sortert etter dato</span>
             </div>
           </div>
           <button type="button" class="fr-btn" data-fr-open aria-haspopup="dialog">
@@ -3870,14 +3883,15 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     else cd='<span class="fr-cd-lead" data-i18n="fr.in">om</span><span class="fr-cd-big"><span class="fr-cd-num">'+x.days+'</span><span class="fr-cd-unit" data-i18n="fr.days">dager</span></span>';
     var full=WK[x.date.getDay()]+" "+day+". "+MOL[mi]+" "+x.date.getFullYear();
     // Konsekvensen hører hjemme her: det er den som gjør fristen verdt å merke seg.
-    if(x.p) full+=" · "+x.p;
+    // Egen linje med samme «Bommer du»-etikett som i modalen, ikke limt på datoen.
+    var miss=x.p?'<div class="fr-miss fr-feat-miss"><span class="fr-miss-l" data-i18n="fr.miss">Bommer du</span>'+esc(x.p)+'</div>':'';
     return '<div class="fr-feat reveal" style="--d:2">'
       +'<div class="fr-flak lg"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
       +'<span class="fr-div"></span>'
       +'<div class="fr-feat-mid"><span class="fr-eyebrow" data-i18n="fr.next">Neste viktige frist</span>'
         +'<h3 class="fr-feat-name">'+esc(x.n)+'</h3>'
         +'<p class="fr-feat-who">'+esc(x.w)+'</p>'
-        +'<p class="fr-feat-date">'+esc(full)+'</p></div>'
+        +'<p class="fr-feat-date">'+esc(full)+'</p>'+miss+'</div>'
       +'<div class="fr-feat-cd '+(soon?'soon':'')+'">'+cd+'<span class="fr-aud">'+audLabel(x.a[0])+'</span></div>'
     +'</div>';
   }

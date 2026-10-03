@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v228" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v229" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -49,7 +49,7 @@
 <!-- Temapaletten. Denne siden er ellers selvforsynt, men paletten lå her som en
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -636,48 +636,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 .lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
 .lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
 
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
 /* ── Praktiske punkter (venstre-aksent) ── */
 .lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .lc-note{
@@ -726,7 +684,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 }
 
 @media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
   .lc-notes{grid-template-columns:minmax(0,1fr)}
   .lc-links{grid-template-columns:minmax(0,1fr)}
 }
@@ -850,7 +807,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <span class="here" data-i18n="crumbHereRegnskapKontantstrom">Kontantstrøm</span>
         </div>
         <h1 class="page-title">Kontantstrømoppstilling</h1>
-        <p class="page-lead">Fra årsresultat til faktiske penger inn og ut. Bygg en kontantstrømoppstilling etter den indirekte modellen (regnskapsloven § 6-4), se de tre aktivitetene henge sammen, og kontroller at oppstillingen avstemmer mot balansen. Pedagogisk verktøy med ferdig lærebok-eksempel.</p>
+        <p class="page-lead">Se hvorfor pengene på konto endret seg, selv når regnskapet viser overskudd. Du starter med resultatet, tar bort det som ikke var penger inn eller ut, og sjekker at svaret stemmer med balansen.</p>
         <div class="page-hero-actions">
           <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
         </div>
@@ -969,27 +926,36 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     .actv td:first-child{color:var(--ink);font-weight:500;white-space:nowrap}
     .actv td{color:var(--ink2)}
 
-    /* Explanations */
-    .rr-explain{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:6px clamp(18px,3.4vw,28px)}
-    .rr-explain details > summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
-    .rr-explain details:last-child > summary{border-bottom:none}
-    .rr-explain summary .q{font:500 14px/1.3 var(--font-sans);color:var(--ink)}
-    .rr-explain .ans{padding:4px 0 16px;font:400 13px/1.65 var(--font-sans);color:var(--ink2);max-width:60ch}
     details > summary{list-style:none;cursor:pointer}
     details > summary::-webkit-details-marker{display:none}
-    .rr-chev{transition:transform .2s var(--ease);color:var(--ink4);flex:none}
-    details[open] .rr-chev{transform:rotate(180deg)}
 
     .rr-source{font:400 11.5px/1.65 var(--font-sans);color:var(--ink4);margin:2px auto 0;text-align:center;max-width:62ch}
     .hidden{display:none}
 
+    .actv .actv-l{display:none}
+
     @media (max-width: 560px){
       .intro-cards{grid-template-columns:1fr}
-      .rr-amtcell{width:150px}
-      input.rr-num{width:106px}
-      .rr-out{min-width:106px}
+      /* Beløpscella tok 150 px og ga etikettene 138 px (2–3 linjer hver).
+         «kr» skjules fordi «NOK» står i hodet på oppstillingen. */
+      .rr-amtcell{width:118px}
+      input.rr-num{width:104px;padding:8px 9px}
+      .rr-out{min-width:104px}
+      .rr-kr{display:none}
+      .rr-sub .rr-amtcell{width:auto}
+      .rr-sub .rr-out{min-width:0}
+      .rr-panel-head{flex-direction:column;align-items:flex-start;gap:6px}
       .kx-fall-row{grid-template-columns:92px 1fr 78px;gap:8px}
       .kx-fall-lab{font-size:11px}
+      /* Aktivitetstabellen stables: én blokk per aktivitet, kolonnenavnet som liten etikett. */
+      .actv{min-width:0}
+      .actv thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+      .actv tr{display:block;padding:12px 0;border-bottom:1px solid var(--line)}
+      .actv tbody tr:last-child{border-bottom:none}
+      .actv th,.actv td{display:block;padding:0;border:0}
+      .actv td:first-child{font-size:13.5px;margin-bottom:6px}
+      .actv td + td{margin-top:8px}
+      .actv .actv-l{display:block;font:600 9.5px/1.4 var(--font-sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:2px}
     }
   </style>
 
@@ -1020,7 +986,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <div style="display:flex;flex-direction:column;gap:8px">
           <span class="rr-eyebrow">Fyll inn eksempel</span>
           <div style="display:flex;flex-wrap:wrap;gap:7px">
-            <button type="button" class="hv-btn--pill" data-preset="laerebok">Lærebok-eksempel (oppg. 9.11)</button>
+            <button type="button" class="hv-btn--pill" data-preset="laerebok">Øvingseksempel</button>
             <button type="button" class="hv-btn--pill ghost" data-preset="clear">Tøm</button>
           </div>
         </div>
@@ -1044,8 +1010,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
           <div class="rr-group">Operasjonelle aktiviteter</div>
           <p class="kx-hint">Driften: resultatet justert for ikke-kontante poster og endring i arbeidskapital.</p>
-          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opRes">Ordinært resultat før skattekostnad</label></span><span class="rr-amtcell"><input class="rr-num" id="opRes" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
-          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opSkatt">Periodens betalte skatter</label></span><span class="rr-amtcell"><input class="rr-num" id="opSkatt" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opRes">Resultat før skatt</label></span><span class="rr-amtcell"><input class="rr-num" id="opRes" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opSkatt">Betalt skatt i år</label></span><span class="rr-amtcell"><input class="rr-num" id="opSkatt" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opGevinst">− Gevinst / + tap ved salg av anleggsmidler</label></span><span class="rr-amtcell"><input class="rr-num" id="opGevinst" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opAvskr">+ Ordinære avskrivninger</label></span><span class="rr-amtcell"><input class="rr-num" id="opAvskr" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opNedskr">+ Nedskrivninger</label></span><span class="rr-amtcell"><input class="rr-num" id="opNedskr" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
@@ -1066,7 +1032,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <p class="kx-hint">Lån og egenkapital — opptak, nedbetaling, emisjon og utbytte.</p>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finGjeld">Endring langsiktig gjeld (netto)</label></span><span class="rr-amtcell"><input class="rr-num" id="finGjeld" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finKasse">Endring kassekreditt</label></span><span class="rr-amtcell"><input class="rr-num" id="finKasse" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
-          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finEk">Innbetaling / tilbakebetaling av egenkapital</label></span><span class="rr-amtcell"><input class="rr-num" id="finEk" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finEk">Inn- eller utbetalt egenkapital</label></span><span class="rr-amtcell"><input class="rr-num" id="finEk" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finUtbytte">− Utbetalt utbytte (fjorårets avsatte)</label></span><span class="rr-amtcell"><input class="rr-num" id="finUtbytte" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-sub"><span class="lbl">Netto kontantstrøm fra finansiering</span><span class="rr-amtcell"><span class="rr-out" id="finNet">0</span><span class="rr-kr">kr</span></span></div>
 
@@ -1086,9 +1052,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
           <!-- AVSTEMMING -->
           <div class="rr-group gap">Avstemming mot balansen</div>
-          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="kontIB">Kontanter ved periodens begynnelse (IB)</label></span><span class="rr-amtcell"><input class="rr-num" id="kontIB" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
-          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="kontBalUB">Kontanter ifølge balansen ved slutt (UB)</label></span><span class="rr-amtcell"><input class="rr-num" id="kontBalUB" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
-          <div class="rr-sub"><span class="lbl">Beregnet kontanter ved slutt (IB + netto endring)</span><span class="rr-amtcell"><span class="rr-out" id="kontUB">0</span><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="kontIB">Kontanter ved start (IB)</label></span><span class="rr-amtcell"><input class="rr-num" id="kontIB" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="kontBalUB">Kontanter i balansen ved slutt (UB)</label></span><span class="rr-amtcell"><input class="rr-num" id="kontBalUB" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-sub"><span class="lbl">Beregnet ved slutt (IB + netto endring)</span><span class="rr-amtcell"><span class="rr-out" id="kontUB">0</span><span class="rr-kr">kr</span></span></div>
 
           <div class="rr-arsband kx-avstem" id="avstemBox" aria-live="polite">
             <div style="display:flex;flex-direction:column;gap:8px">
@@ -1098,7 +1064,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
             <div style="display:flex;align-items:baseline;gap:7px">
               <span class="kx-anum" id="avstemV">–</span><span class="rr-arskr">kr</span>
             </div>
-            <p class="kx-anote" id="avstemD">Skriv inn tallene, eller last lærebok-eksempelet, for å sjekke at oppstillingen avstemmer.</p>
+            <p class="kx-anote" id="avstemD">Skriv inn tallene, eller trykk «Øvingseksempel», for å sjekke at oppstillingen avstemmer.</p>
           </div>
 
         </div>
@@ -1111,7 +1077,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <span class="rr-eyebrow">Fra inngående til utgående</span>
         </div>
         <div class="kx-fall hidden" id="kxFallRows"></div>
-        <div class="kx-fall-empty" id="kxFallEmpty">Fyll inn tallene, eller last lærebok-eksempelet, for å se broen fra inngående til utgående beholdning.</div>
+        <div class="kx-fall-empty" id="kxFallEmpty">Broen vises når tallene er fylt inn.</div>
       </div>
 
       <!-- KPIs + tegnmønster -->
@@ -1136,39 +1102,15 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <table class="actv">
             <thead><tr><th scope="col">Aktivitet</th><th scope="col">Hva det er</th><th scope="col">Typiske poster</th></tr></thead>
             <tbody>
-              <tr><td>Operasjonelle</td><td>Varekretsløpet + alt som ikke er investering eller finansiering</td><td>Innbetalinger fra kunder, betaling til leverandører og ansatte, betalte renter og skatt</td></tr>
-              <tr><td>Investering</td><td>Kjøp og salg av eiendeler utenfor varekretsløpet</td><td>Kjøp/salg av driftsmidler, kjøp/salg av aksjer og andeler i andre selskaper</td></tr>
-              <tr><td>Finansiering</td><td>Opptak og betjening av lån og egenkapital</td><td>Opptak/nedbetaling av lån, emisjon, utbetalt utbytte, konsernbidrag</td></tr>
+              <tr><td>Operasjonelle</td><td><span class="actv-l" aria-hidden="true">Hva det er</span>Varekretsløpet + alt som ikke er investering eller finansiering</td><td><span class="actv-l" aria-hidden="true">Typiske poster</span>Innbetalinger fra kunder, betaling til leverandører og ansatte, betalte renter og skatt</td></tr>
+              <tr><td>Investering</td><td><span class="actv-l" aria-hidden="true">Hva det er</span>Kjøp og salg av eiendeler utenfor varekretsløpet</td><td><span class="actv-l" aria-hidden="true">Typiske poster</span>Kjøp/salg av driftsmidler, kjøp/salg av aksjer og andeler i andre selskaper</td></tr>
+              <tr><td>Finansiering</td><td><span class="actv-l" aria-hidden="true">Hva det er</span>Opptak og betjening av lån og egenkapital</td><td><span class="actv-l" aria-hidden="true">Typiske poster</span>Opptak/nedbetaling av lån, emisjon, utbetalt utbytte, konsernbidrag</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- EXPLANATIONS -->
-      <div class="rr-explain">
-        <details>
-          <summary><span class="q">Hva er en kontantstrømoppstilling?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Den viser faktiske kroner inn og ut gjennom året, fordelt på tre aktiviteter — drift, investering og finansiering — og forklarer hvorfor bankbeholdningen endret seg. Et selskap kan ha overskudd og likevel tom kasse; kontantstrømmen avslører det. Settes opp etter regnskapsloven § 6-4.</div>
-        </details>
-        <details>
-          <summary><span class="q">Slik setter du fortegn</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Hver linje er en kontant-effekt: + styrker kassen, − svekker den. Avskrivninger og nedskrivninger legges tilbake (+) — de reduserte resultatet, men ingen kroner forlot kassen i år. Gevinst ved salg trekkes ut av drift (−), og hele salgssummen føres i stedet under investering. Arbeidskapital: eiendel øker → −, eiendel synker → +, gjeld øker → +, gjeld synker → −.</div>
-        </details>
-        <details>
-          <summary><span class="q">Indirekte eller direkte modell?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Den indirekte modellen — som byggeren over bruker — starter med resultatet og justerer for ikke-kontante poster og arbeidskapital. Den direkte modellen viser brutto inn- og utbetalinger. NRS og IAS 7 anbefaler den direkte, men den indirekte er mest brukt i Norge fordi den er enklest å lage fra et ferdig regnskap. Investering og finansiering er like i begge, og netto fra drift blir nøyaktig den samme.</div>
-        </details>
-        <details>
-          <summary><span class="q">Vanlige fallgruver</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Fortegnsfeil på arbeidskapital er den klassiske — økt kundefordring skal være −, økt leverandørgjeld +. Glemmer du å reversere gevinst/tap, telles samme krone to ganger. Utbyttet som betales i år er fjorårets avsatte, ikke årets. Under norsk god regnskapsskikk er trukket kassekreditt finansiering (gjeld), ikke et fradrag i kontanter — motsatt av IAS 7.</div>
-        </details>
-        <details>
-          <summary><span class="q">Hvem må lage den?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Etter regnskapsloven § 3-2 må mellomstore og store foretak ha kontantstrømoppstilling. Små foretak (§ 1-5) er unntatt. Børsnoterte konsern følger den internasjonale standarden IAS 7.</div>
-        </details>
-      </div>
-
-      <p class="rr-source">Kilde: Regnskapsloven § 6-4 (kontantstrømoppstilling) og § 3-2 (regnskapsplikt) · NRS(F) Kontantstrømoppstilling · IAS 7. Lærebok-eksempelet er oppgave 9.11. Veiledende, pedagogisk verktøy — ikke profesjonell rådgivning.</p>
+      <p class="rr-source">Kilde: Regnskapsloven § 6-4 (kontantstrømoppstilling) og § 3-2 (årsregnskapets innhold) · NRS(F) Kontantstrømoppstilling · IAS 7. Eksempeltallene er et ferdig avstemt øvingseksempel. Veiledende, pedagogisk verktøy — ikke profesjonell rådgivning.</p>
 
     </div>
   </div>
@@ -1178,69 +1120,40 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-regnskap-kontantstrom">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-regnskap-kontantstrom">Fra årsresultat til faktiske penger</h2><p class="lc-intro">Den indirekte modellen starter med resultatet og «vasker» det rent for alt som ikke er penger inn eller ut, og deler så strømmen i tre. Hver linje du skriver inn er en kontant-effekt: pluss styrker kassen, minus svekker den. Dette er nøyaktig de samme linjene du ser i byggeren over — bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-regnskap-kontantstrom">Fra årsresultat til faktiske penger</h2><p class="lc-intro">Den indirekte modellen starter med resultatet og tar bort alt som ikke var penger inn eller ut. Så deles strømmen i tre. Hver linje er en kontanteffekt: pluss styrker kassen, minus svekker den.</p></div>
       <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Netto kontantstrøm fra drift</b><span class="tag">Sum</span></span><span class="fig">9<span class="u">linjer</span></span><p class="dsc">Resultatet før skatt, justert for betalt skatt, avskrivninger, nedskrivninger, gevinst/tap og endring i arbeidskapital. Ni linjer summeres til den viktigste raden i hele oppstillingen.</p></div>
-        <div class="lc-led"><span class="nm"><b>Avskrivninger legges tilbake</b><span class="tag">Justering</span></span><span class="fig">+<span class="u">fortegn</span></span><p class="dsc">Avskrivninger og nedskrivninger trakk ned resultatet, men ingen kroner forlot kassen i år. Derfor legges de tilbake med plusstegn — pengene gikk ut da driftsmidlet ble kjøpt.</p></div>
-        <div class="lc-led"><span class="nm"><b>Endring i arbeidskapital</b><span class="tag">Fortegn</span></span><span class="fig">−/+<span class="u">regel</span></span><p class="dsc">Eiendel øker → minus (kapital bindes), eiendel synker → pluss. Gjeld øker → pluss, gjeld synker → minus. Økte kundefordringer svekker kassen, økt leverandørgjeld styrker den.</p></div>
-        <div class="lc-led"><span class="nm"><b>Fri kontantstrøm (FCF)</b><span class="tag">Faktor</span></span><span class="fig">drift + investering<span class="u">formel</span></span><p class="dsc">Netto fra drift pluss netto investering. Det som er igjen til eiere og långivere etter at driften har reinvestert. I lærebok-eksempelet blir dette 90 871.</p></div>
-        <div class="lc-led"><span class="nm"><b>Kvalitet på drift</b><span class="tag">Faktor</span></span><span class="fig">drift ÷ resultat<span class="u">%</span></span><p class="dsc">Netto fra drift delt på ordinært resultat før skatt. Nær eller over 100 % betyr at resultatet faktisk blir til kontanter. Vises bare når resultatet er positivt.</p></div>
+        <div class="lc-led"><span class="nm"><b>Netto kontantstrøm fra drift</b><span class="tag">Sum</span></span><span class="fig">=</span><p class="dsc">Resultatet før skatt, justert for betalt skatt, avskrivninger, nedskrivninger, gevinst/tap og endring i arbeidskapital. Ni linjer summeres til den viktigste raden i hele oppstillingen.</p></div>
+        <div class="lc-led"><span class="nm"><b>Avskrivninger legges tilbake</b><span class="tag">Justering</span></span><span class="fig">+</span><p class="dsc">Avskrivninger og nedskrivninger trakk ned resultatet, men ingen kroner forlot kassen i år. Derfor legges de tilbake med plusstegn — pengene gikk ut da driftsmidlet ble kjøpt.</p></div>
+        <div class="lc-led"><span class="nm"><b>Endring i arbeidskapital</b><span class="tag">Fortegn</span></span><span class="fig">±</span><p class="dsc">Eiendel øker → minus (kapital bindes), eiendel synker → pluss. Gjeld øker → pluss, gjeld synker → minus. Økte kundefordringer svekker kassen, økt leverandørgjeld styrker den.</p></div>
+        <div class="lc-led"><span class="nm"><b>Fri kontantstrøm (FCF)</b><span class="tag">Faktor</span></span><span class="fig">=</span><p class="dsc">Netto fra drift pluss netto investering. Det som er igjen til eiere og långivere etter at driften har reinvestert. I øvingseksempelet blir dette 90 871 kr.</p></div>
+        <div class="lc-led"><span class="nm"><b>Kvalitet på drift</b><span class="tag">Faktor</span></span><span class="fig">%</span><p class="dsc">Netto fra drift delt på resultat før skatt. Nær eller over 100 % betyr at resultatet faktisk blir til kontanter. Vises bare når resultatet er positivt.</p></div>
         <div class="lc-led"><span class="nm"><b>Avstemming mot balansen</b><span class="tag">Grense</span></span><span class="fig">0,5<span class="u">kr</span></span><p class="dsc">IB pluss netto endring skal treffe kontantene i balansen ved årets slutt. Er avviket under 0,5 kr, lyser avstemmingen — da er oppstillingen konsistent.</p></div>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcB-regnskap-kontantstrom">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-regnskap-kontantstrom">Tallene byggeren bruker</h2><p class="lc-intro">Byggeren regner ikke med faste satser — den summerer dine egne tall. Disse nøkkeltallene og grensene er likevel bakt inn i logikken og i lærebok-eksempelet (oppgave 9.11), der alle beløp er i 1000 kr.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
-        <div class="lc-kv"><span class="k">Antall aktiviteter strømmen deles i</span><span class="v">3<span class="u">drift / investering / finansiering</span></span></div>
-        <div class="lc-kv"><span class="k">Avstemmings-toleranse</span><span class="v">0,5<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Eksempel — netto fra drift</span><span class="v">209 902<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Eksempel — netto fra investering</span><span class="v">−119 031<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Eksempel — netto fra finansiering</span><span class="v">−86 259<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Eksempel — netto endring i kontanter</span><span class="v">4 612<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Eksempel — fri kontantstrøm (FCF)</span><span class="v">90 871<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Eksempel — kvalitet på drift</span><span class="v">84<span class="u">%</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>De tre aktivitetene</caption>
-          <thead><tr><th>Aktivitet</th><th class="r">Hva det er</th><th class="r">Typiske poster</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Operasjonelle</span></td><td class="r">Varekretsløpet og alt som ikke er investering eller finansiering</td><td class="r">Innbetalinger fra kunder, betaling til leverandører og ansatte, betalt skatt</td></tr>
-            <tr><td><span class="step">Investering</span></td><td class="r">Kjøp og salg av eiendeler utenfor varekretsløpet</td><td class="r">Kjøp og salg av driftsmidler, kjøp og salg av aksjer og andeler</td></tr>
-            <tr><td><span class="step">Finansiering</span></td><td class="r">Opptak og betjening av lån og egenkapital</td><td class="r">Opptak og nedbetaling av lån, emisjon, utbetalt utbytte</td></tr>
-          </tbody>
-        </table>
-        </div>
-      </div>
-      </div>
-    </section>
     <section class="lc-sec" aria-labelledby="lcC-regnskap-kontantstrom">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-regnskap-kontantstrom">Det som lett går galt</h2><p class="lc-intro">Avstemmingen sprekker nesten alltid av de samme grunnene. Her er de praktiske fellene byggeren er laget for å fange.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-regnskap-kontantstrom">Det som lett går galt</h2><p class="lc-intro">Avstemmingen sprekker nesten alltid av én av disse grunnene.</p></div>
       <div class="lc-notes">
         <div class="lc-note"><h3>Sett riktig fortegn på arbeidskapital</h3><p>Den klassiske feilen: økt kundefordring skal være minus, økt leverandørgjeld pluss. Bytter du fortegn, treffer ikke beregnet sluttbeholdning balansen, og avstemmingen lyser ikke.</p></div>
         <div class="lc-note"><h3>Reverser gevinst og tap ved salg</h3><p>Gevinst ved salg av anleggsmidler trekkes ut av drift, og hele salgssummen føres i stedet under investering. Glemmer du det, telles samme krone to ganger.</p></div>
         <div class="lc-note"><h3>Utbytte er fjorårets avsetning</h3><p>Det som faktisk betales ut i år, er utbyttet som ble avsatt i fjor. Å føre årets avsatte utbytte som kontantstrøm er en vanlig glipp som ikke gir penger ut av kassen ennå.</p></div>
-        <div class="lc-note"><h3>Last eksempelet for å se en fasit</h3><p>Knappen «Lærebok-eksempel (oppg. 9.11)» fyller inn en ferdig, fullt avstemt oppstilling. Bruk den som mal, og bytt ut linjene med dine egne tall etterpå.</p></div>
+        <div class="lc-note"><h3>Kassekreditt er gjeld</h3><p>Etter norsk god regnskapsskikk føres trukket kassekreditt som finansiering, ikke som minus i kontantene. IAS 7 kan behandle den motsatt.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcD-regnskap-kontantstrom">
       <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-regnskap-kontantstrom">Det folk lurer mest på</h2></div>
       <div class="lc-faq">
         <details class="lc-q"><summary>Hva er forskjellen på resultat og kontantstrøm?</summary><div class="a"><p>Resultatet er periodisert — det viser om du tjente penger gjennom året. Kontantstrømmen viser faktiske kroner inn og ut, og forklarer hvorfor bankbeholdningen endret seg. Et selskap kan ha overskudd og likevel tomme kasser.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr indirekte modell?</summary><div class="a"><p>At du starter med resultatet og justerer det for poster som ikke er penger — som avskrivninger og endring i arbeidskapital — til du står igjen med netto kontantstrøm fra drift. Den direkte modellen viser i stedet brutto inn- og utbetalinger, men gir samme svar på driftsdelen.</p></div></details>
+        <details class="lc-q"><summary>Hva betyr indirekte modell?</summary><div class="a"><p>At du starter med resultatet og justerer det for poster som ikke er penger — som avskrivninger og endring i arbeidskapital — til du står igjen med netto kontantstrøm fra drift. Den direkte modellen viser i stedet brutto inn- og utbetalinger, men gir samme svar på driftsdelen. IAS 7 anbefaler den direkte modellen, men i Norge er den indirekte mest brukt, fordi den er enklest å lage fra et ferdig regnskap.</p></div></details>
         <details class="lc-q"><summary>Hvorfor legges avskrivninger tilbake med plusstegn?</summary><div class="a"><p>Fordi de reduserte resultatet uten at noen kroner forlot kassen i år. Pengene gikk ut da driftsmidlet ble kjøpt. For å komme fra resultat til faktiske penger må avskrivningen legges tilbake.</p></div></details>
-        <details class="lc-q"><summary>Når avstemmer oppstillingen?</summary><div class="a"><p>Når kontanter ved start pluss netto endring treffer kontantene i balansen ved slutt. Byggeren godtar et avvik under 0,5 kr og lyser da grønt. Sprekker det, sjekk fortegn på arbeidskapital, at gevinst er reversert, og at utbyttet er fjorårets.</p></div></details>
-        <details class="lc-q"><summary>Hva er fri kontantstrøm?</summary><div class="a"><p>Netto fra drift pluss netto investering — det som er igjen til eiere og långivere etter at driften har reinvestert. I lærebok-eksempelet blir det 90 871. Tallet er grunnlaget for verdsettelse med diskontert kontantstrøm.</p></div></details>
+        <details class="lc-q"><summary>Når avstemmer oppstillingen?</summary><div class="a"><p>Når kontanter ved start pluss netto endring treffer kontantene i balansen ved slutt. Byggeren godtar et avvik under 0,5 kr og markerer da oppstillingen som avstemt. Sprekker det, sjekk fortegn på arbeidskapital, at gevinst er reversert, og at utbyttet er fjorårets.</p></div></details>
+        <details class="lc-q"><summary>Hva er fri kontantstrøm?</summary><div class="a"><p>Netto fra drift pluss netto investering — det som er igjen til eiere og långivere etter at driften har reinvestert. I øvingseksempelet blir det 90 871 kr. Tallet er grunnlaget for verdsettelse med diskontert kontantstrøm.</p></div></details>
         <details class="lc-q"><summary>Må alle selskaper lage kontantstrømoppstilling?</summary><div class="a"><p>Nei. Etter regnskapsloven § 3-2 må mellomstore og store foretak ha den, mens små foretak (§ 1-5) er unntatt. Børsnoterte konsern følger den internasjonale standarden IAS 7.</p></div></details>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcE-regnskap-kontantstrom">
       <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-regnskap-kontantstrom">Relaterte verktøy</h2></div>
       <div class="lc-links">
-        <a class="lc-link" href="/regnskap/resultat/"><span class="ar">Resultatregnskap →</span><h3>Der tallet starter</h3><p>Den indirekte modellen begynner med ordinært resultat før skatt. Se hvordan inntekter og kostnader bygger opp resultatet.</p></a>
+        <a class="lc-link" href="/regnskap/resultat/"><span class="ar">Resultatregnskap →</span><h3>Der tallet starter</h3><p>Den indirekte modellen begynner med resultat før skatt. Se hvordan inntekter og kostnader bygger opp resultatet.</p></a>
         <a class="lc-link" href="/regnskap/balanse/"><span class="ar">Balanse →</span><h3>Det avstemmingen treffer</h3><p>Endringen i kontanter må stemme med kontantene i balansen. Se eiendeler, egenkapital og gjeld på én dag.</p></a>
         <a class="lc-link" href="/kalkulator/npv/"><span class="ar">Nåverdi (NPV) →</span><h3>Fra kontantstrøm til verdi</h3><p>Fri kontantstrøm er grunnlaget for verdsettelse. Diskonter framtidige strømmer til dagens verdi.</p></a>
       </div>
@@ -1478,7 +1391,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           box.classList.remove('ok');
           setEl('avstemLabel','Beregnet sluttbeholdning');
           setEl('avstemV','–');
-          setEl('avstemD','Skriv inn tallene, eller last lærebok-eksempelet, for å sjekke at oppstillingen avstemmer.');
+          setEl('avstemD','Skriv inn tallene, eller trykk «Øvingseksempel», for å sjekke at oppstillingen avstemmer.');
         } else if(!hasBal){
           box.classList.remove('ok');
           setEl('avstemLabel','Beregnet sluttbeholdning');
@@ -1590,9 +1503,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   });
 })();
 </script>
-<script src="/shared/top-chrome.js?v=v243" defer></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script src="/shared/top-chrome.js?v=v245" defer></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —

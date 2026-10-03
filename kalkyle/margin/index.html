@@ -66,12 +66,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Margin og påslag — kalkulator-skall (delt mønster med Kalkyle-seksjonen) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -98,7 +98,7 @@ body.focus-mode > footer{display:none}
 .kk-dash{width:48px;height:2px;background:var(--accent);opacity:.9;margin-bottom:20px}
 
 /* ── Compact picker strip («Bytt kalkyle») ── */
-.kk-picker-strip-wrap{padding:18px 0 6px}
+.kk-picker-strip-wrap{padding-top:18px;padding-bottom:6px}
 .kk-picker-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .kk-picker-strip::-webkit-scrollbar{display:none}
 .kk-chip{flex-shrink:0;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
@@ -176,6 +176,15 @@ body.focus-mode > footer{display:none}
 .lc-trinn td .step{color:var(--ink);font-weight:500}
 .lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .lc-trinn td .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
+/* Mobil: tre kolonner får ikke plass. Begrep og eksempel står på første linje, formelen under. */
+@media(max-width:560px){
+  .lc-stack,.lc-stack tbody,.lc-stack thead,.lc-stack thead tr,.lc-stack thead th{display:block}
+  .lc-stack thead th + th{display:none}
+  .lc-stack tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .lc-stack tbody tr:last-child{border-bottom:none}
+  .lc-tblwrap .lc-stack td,.lc-tblwrap .lc-stack td + td{border:0;padding:0}
+  .lc-tblwrap .lc-stack td:nth-child(2){grid-column:1 / -1;grid-row:2;padding-top:3px;font-size:12.5px;color:var(--ink3)}
+}
 
 .lc-faq{border-top:1px solid var(--line)}
 details.lc-q{border-bottom:1px solid var(--line)}
@@ -200,9 +209,6 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
   display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
   background:var(--surface);border:1px solid var(--line);border-radius:8px;
   transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
 }
 .lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
 .lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
@@ -305,7 +311,7 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       </div>
     </div>
     <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="kalkMarginStatDg">Dekningsgrad i eksempelet</span><span class="v" id="hStatDg">37,5 %</span></div>
+      <div class="page-stat"><span class="l" data-i18n="kalkMarginStatDg">Margin</span><span class="v" id="hStatDg">37,5 %</span></div>
       <div class="page-stat"><span class="l" data-i18n="kalkMarginStatPris">Pris inkl. mva</span><span class="v" id="hStatPris">200 kr</span></div>
     </div>
   </div>
@@ -333,8 +339,8 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       <div class="ks">
         <div class="ks-strip">
           <div class="ks-strip-cell"><span class="l" data-i18n="kalkMarginResBrutto">Bruttofortjeneste</span><span class="v" id="mgStripBrutto">–</span></div>
-          <div class="ks-strip-cell"><span class="l" data-i18n="kalkMarginResDg">Dekningsgrad / margin</span><span class="v" id="mgStripDg">–</span></div>
-          <div class="ks-strip-cell"><span class="l" data-i18n="kalkMarginResAvanse">Avanse / påslag</span><span class="v" id="mgStripAvanse">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkMarginResDg">Margin / dekningsgrad</span><span class="v" id="mgStripDg">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="kalkMarginResAvanse">Påslag / avanse</span><span class="v" id="mgStripAvanse">–</span></div>
           <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkMarginResInkl">Utsalgspris inkl. mva</span><span class="v" id="mgStripInkl">–</span></div>
         </div>
 
@@ -343,7 +349,6 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
             <section class="ks-section">
               <div class="ik-section-head">
                 <h3 data-i18n="kalkMarginSectionTitle">Prisgrunnlag</h3>
-                <span class="meta" data-i18n="kalkMarginSectionHint">Fyll inn to av tre — vi løser resten</span>
               </div>
               <div class="ik-stack">
                 <div class="ik-row full">
@@ -362,9 +367,9 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
                 </div>
                 <div class="ik-row full">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="mg-val" id="mgValLbl" data-i18n="kalkMarginValLblPaaslag">Ønsket påslag <span class="cap">(%)</span></label>
+                    <label class="ik-lbl" for="mg-val" id="mgValLbl">Ønsket påslag <span class="cap">(%)</span></label>
                     <input id="mg-val" class="ik-input" type="text" inputmode="decimal" value="60" autocomplete="off">
-                    <span class="ik-hint" id="mgValHint" data-i18n="kalkMarginValHintPaaslag">Prosenten du legger oppå varekosten.</span>
+                    <span class="ik-hint" id="mgValHint">Prosenten du legger oppå varekosten.</span>
                   </div>
                 </div>
               </div>
@@ -391,18 +396,17 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
           </div>
 
           <aside class="ks-result" aria-live="polite">
-            <div class="ks-r-eyebrow" data-i18n="kalkMarginResHeadline">Resultat</div>
-            <div class="ks-r-stats" style="border-top:0;padding-top:0">
+            <div class="ks-r-eyebrow" id="mgREyebrow">Utsalgspris eks. mva</div>
+            <div class="ks-r-net" id="mgRNet">–</div>
+            <div class="ks-r-mnd" id="mgRMnd">Fyll inn varekost og ett tall til for å se svaret.</div>
+            <div class="ks-r-stats">
+              <div class="ks-r-stat" id="mgRowPris" hidden><span class="l" data-i18n="kalkMarginResPris">Utsalgspris eks. mva</span><span class="v" id="mgROutPris">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="kalkMarginLblVarekost">Varekost eks. mva</span><span class="v" id="mgROutVarekost">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="kalkMarginLblAndre">Andre variable kostn.</span><span class="v" id="mgROutAndre">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="kalkMarginResPris">Utsalgspris eks. mva</span><span class="v" id="mgROutPris">–</span></div>
-              <div class="ks-r-stat div"><span class="l" data-i18n="kalkMarginResBrutto">Bruttofortjeneste</span><span class="v" id="mgROutBrutto">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="kalkMarginResDgFull">Dekningsgrad (margin)</span><span class="v" id="mgROutDg">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="kalkMarginResAvanseFull">Avanse (påslag)</span><span class="v" id="mgROutAvanse">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkMarginResBrutto">Bruttofortjeneste</span><span class="v" id="mgROutBrutto">–</span></div>
               <div class="ks-r-stat div"><span class="l" id="mgROutMvaLbl">MVA (25 %)</span><span class="v" id="mgROutMva">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="kalkMarginResInkl">Utsalgspris inkl. mva</span><span class="v" id="mgROutInkl">–</span></div>
             </div>
-            <p class="ik-note" data-i18n="kalkMarginNote">Veiledende beregning. Regn kalkylen på priser eks. mva — merverdiavgift legges på til slutt.</p>
+            <p class="ik-note" data-i18n="kalkMarginNote">Regn på priser uten mva. Mva legges på til slutt.</p>
           </aside>
         </div>
 
@@ -420,7 +424,6 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
               <span data-i18n="kalkMarginF6">påslag = margin / (1 − margin)</span>
               <span data-i18n="kalkMarginF7">MVA inkl. = eks. × 1,25</span>
             </div>
-            <p style="margin:16px 0 0;max-width:64ch" data-i18n="kalkMarginFNote">«Avanse regnes i % av kostnaden og er alltid høyere enn dekningsgraden, som regnes i % av salgsprisen.»</p>
           </div>
         </details>
       </div>
@@ -444,14 +447,14 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     <section class="lc-sec" aria-labelledby="lcB-kalkyle-margin">
       <div class="lc-head"><span class="lc-kicker" data-i18n="kalkMarginFormlerKicker">Formler</span><h2 class="lc-title" id="lcB-kalkyle-margin" data-i18n="kalkMarginFormlerTitle">Fra kostnad til pris</h2></div>
       <div class="lc-tblwrap">
-      <table class="lc-trinn">
+      <table class="lc-trinn lc-stack">
         <thead><tr><th data-i18n="kalkyleColBegrep">Begrep</th><th data-i18n="kalkyleColFormel">Formel</th><th class="r" data-i18n="kalkyleColEksempel">Eksempel</th></tr></thead>
         <tbody>
           <tr><td><span class="step" data-i18n="kalkMarginResBrutto">Bruttofortjeneste</span></td><td data-i18n="kalkMarginTF1b">Pris − Varekost − Andre variable</td><td class="r">160 − 100 − 0 = 60<span class="u">kr</span></td></tr>
-          <tr><td><span class="step" data-i18n="kalkMarginTBegrepDg">Dekningsgrad</span></td><td data-i18n="kalkMarginTF2">Bruttofortj. / Pris × 100</td><td class="r">60 / 160 = 37,5<span class="u">%</span></td></tr>
-          <tr><td><span class="step" data-i18n="kalkMarginTBegrepAv">Avanse</span></td><td data-i18n="kalkMarginTF3">Bruttofortj. / Varekost × 100</td><td class="r">60 / 100 = 60,0<span class="u">%</span></td></tr>
+          <tr><td><span class="step" data-i18n="kalkMarginTBegrepDg">Dekningsgrad</span></td><td data-i18n="kalkMarginTF2">Bruttofortjeneste / pris × 100</td><td class="r">60 / 160 = 37,5<span class="u">%</span></td></tr>
+          <tr><td><span class="step" data-i18n="kalkMarginTBegrepAv">Avanse</span></td><td data-i18n="kalkMarginTF3">Bruttofortjeneste / varekost × 100</td><td class="r">60 / 100 = 60,0<span class="u">%</span></td></tr>
           <tr><td><span class="step" data-i18n="kalkMarginTBegrepPm">Pris fra margin</span></td><td data-i18n="kalkMarginTF4b">(Varekost + Andre variable) / (1 − margin)</td><td class="r">(100 + 0) / 0,625 = 160<span class="u">kr</span></td></tr>
-          <tr><td><span class="step" data-i18n="kalkMarginTBegrepPi">Pris inkl. mva</span></td><td data-i18n="kalkMarginTF5">Pris eks. × 1,25</td><td class="r">160 × 1,25 = 200<span class="u">kr</span></td></tr>
+          <tr><td><span class="step" data-i18n="kalkMarginTBegrepPi">Pris inkl. mva</span></td><td data-i18n="kalkMarginTF5">Pris uten mva × 1,25</td><td class="r">160 × 1,25 = 200<span class="u">kr</span></td></tr>
         </tbody>
       </table>
       </div>
@@ -490,9 +493,9 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     <section class="lc-sec" aria-labelledby="lcE-kalkyle-margin">
       <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleRelKicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkyle-margin" data-i18n="kalkyleRelTitle">Relaterte verktøy</h2></div>
       <div class="lc-links">
-        <a class="lc-link" href="/kalkulator/dekningsbidrag/"><span class="ar" data-i18n="kalkyleDestBe">Break-even →</span><h3 data-i18n="kalkyleDestBe">Dekningsbidrag &amp; break-even</h3><p data-i18n="kalkMarginRel1Desc">Hvor mange enheter må du selge for å dekke de faste kostnadene?</p></a>
-        <a class="lc-link" href="/kalkulator/timepris/"><span class="ar" data-i18n="kalkyleDestTp">Timepris →</span><h3 data-i18n="kalkyleDestTp">Timepris</h3><p data-i18n="kalkMarginRel2Desc">Fra ønsket lønn til hva du faktisk må fakturere per time.</p></a>
-        <a class="lc-link" href="/avgift/vat/"><span class="ar" data-i18n="kalkMarginRel3Ar">MVA →</span><h3 data-i18n="kalkMarginRel3Title">MVA-kalkulator</h3><p data-i18n="kalkMarginRel3Desc">Regn ut MVA opp og ned på et beløp.</p></a>
+        <a class="lc-link" href="/kalkulator/dekningsbidrag/"><h3 data-i18n="kalkyleDestBe">Dekningsbidrag &amp; break-even</h3><p data-i18n="kalkMarginRel1Desc">Hvor mange enheter må du selge for å dekke de faste kostnadene?</p></a>
+        <a class="lc-link" href="/kalkulator/timepris/"><h3 data-i18n="kalkyleDestTp">Timepris</h3><p data-i18n="kalkMarginRel2Desc">Fra ønsket lønn til hva du faktisk må fakturere per time.</p></a>
+        <a class="lc-link" href="/avgift/vat/"><h3 data-i18n="kalkMarginRel3Title">MVA-kalkulator</h3><p data-i18n="kalkMarginRel3Desc">Regn ut MVA opp og ned på et beløp.</p></a>
       </div>
     </section>
   </div>
@@ -513,9 +516,9 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -617,16 +620,24 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     setTxt('mgStripAvanse', ok ? fmtPct(r.avanse) : '–');
     setTxt('mgStripInkl', ok ? fmtKr(r.inkl) : '–');
 
+    // Ett stort svar: prisen når du oppgir påslag eller margin, marginen når du oppgir prisen.
+    var t = (typeof R === 'function') ? R() : {};
+    var prisModus = mode === 'pris';
+    var mvaPct = Math.round(r.mva * 100) + ' %';
+    setTxt('mgREyebrow', prisModus ? (t.kalkMarginResDgFull || 'Margin (dekningsgrad)') : (t.kalkMarginResPris || 'Utsalgspris eks. mva'));
+    setTxt('mgRNet', ok ? (prisModus ? fmtPct(r.margin) : fmtKr(r.pris)) : '–');
+    setTxt('mgRMnd', !ok ? (t.kalkMarginMndEmpty || 'Fyll inn varekost og ett tall til for å se svaret.')
+      : prisModus ? (isFinite(r.avanse) ? (t.kalkMarginMndPaaslag || 'Det tilsvarer {p} påslag på varekosten.').replace('{p}', fmtPct(r.avanse)) : '')
+      : (t.kalkMarginMndInkl || 'Kunden betaler {kr} med {mva} mva.').replace('{kr}', fmtKr(r.inkl)).replace('{mva}', mvaPct));
+    var rowPris = document.getElementById('mgRowPris');
+    if(rowPris) rowPris.hidden = !prisModus;
+
+    setTxt('mgROutPris', ok ? fmtKr(r.pris) : '–');
     setTxt('mgROutVarekost', ok ? fmtKr(r.varekost) : '–');
     setTxt('mgROutAndre', ok ? fmtKr(r.andre) : '–');
-    setTxt('mgROutPris', ok ? fmtKr(r.pris) : '–');
     setTxt('mgROutBrutto', ok ? fmtKr(r.brutto) : '–');
-    setTxt('mgROutDg', ok ? fmtPct(r.margin) : '–');
-    setTxt('mgROutAvanse', ok ? fmtPct(r.avanse) : '–');
     setTxt('mgROutMva', ok ? fmtKr(r.mvaKr) : '–');
-    setTxt('mgROutInkl', ok ? fmtKr(r.inkl) : '–');
-    var mvaLblEl = document.getElementById('mgROutMvaLbl');
-    if(mvaLblEl) mvaLblEl.textContent = 'MVA (' + Math.round(r.mva * 100) + ' %)';
+    setTxt('mgROutMvaLbl', (t.kalkSelvkostLdgMva || 'MVA') + ' (' + mvaPct + ')');
 
     setTxt('hStatDg', ok ? fmtPct(r.margin) : '–');
     setTxt('hStatPris', ok ? fmtKr(r.inkl) : '–');
@@ -681,6 +692,12 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       if((typeof R==='function' && R().kalkMarginValHintPaaslag) || n>40){ clearInterval(t); labels(); recalc(); }
     }, 80);
   })();
+  // Språkbytte: tekstene JS skriver (etiketten, svaret) må skrives på nytt.
+  new MutationObserver(function(){ labels(); recalc(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
+  // Chip-raden: vis den aktive kalkylen også når raden er bredere enn skjermen.
+  var s = document.querySelector('.kk-picker-strip'), a = s && s.querySelector('.is-active');
+  if(a) s.scrollLeft = a.offsetLeft - s.offsetLeft - 16;
 })();
 </script>
 

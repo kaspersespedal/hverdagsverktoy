@@ -501,7 +501,7 @@ var CSS = [
    første maling, med en 63 px klokke og en sprukken navrad i mellomtiden.
    Pille-stilen bor derfor sammen med markupen, ved siden av .nav-search-pill
    som den speiler. Panelet under er bygget av JS og hører hjemme her. */
-'.tmr-pop{position:absolute;top:calc(100% + 11px);right:0;z-index:60;',
+'.tmr-pop{position:absolute;top:calc(100% + 11px);inset-inline-end:0;z-index:60;',
 '  width:min(320px, calc(100vw - 28px));background:var(--surface);border:1px solid var(--line-2);',
 '  border-radius:13px;padding:17px 18px 15px;text-align:left;',
 '  box-shadow:0 26px 60px -26px rgba(0,0,0,.75), 0 2px 6px rgba(0,0,0,.22);',

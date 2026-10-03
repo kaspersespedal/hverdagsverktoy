@@ -66,12 +66,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Food cost — kalkulator-skall (delt mønster med Kalkyle-seksjonen) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -97,7 +97,7 @@ body.focus-mode > footer{display:none}
 
 .kk-dash{width:48px;height:2px;background:var(--accent);opacity:.9;margin-bottom:20px}
 
-.kk-picker-strip-wrap{padding:18px 0 6px}
+.kk-picker-strip-wrap{padding-top:18px;padding-bottom:6px}
 .kk-picker-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .kk-picker-strip::-webkit-scrollbar{display:none}
 .kk-chip{flex-shrink:0;padding:8px 14px;border-radius:999px;border:1px solid var(--line);
@@ -147,6 +147,15 @@ body.focus-mode > footer{display:none}
 .lc-trinn tbody tr:last-child td{border-bottom:none}
 .lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
 .lc-trinn td .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
+/* Mobil: tre kolonner får ikke plass. Begrep og eksempel står på første linje, formelen under. */
+@media(max-width:560px){
+  .lc-stack,.lc-stack tbody,.lc-stack thead,.lc-stack thead tr,.lc-stack thead th{display:block}
+  .lc-stack thead th + th{display:none}
+  .lc-stack tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .lc-stack tbody tr:last-child{border-bottom:none}
+  .lc-tblwrap .lc-stack td,.lc-tblwrap .lc-stack td + td{border:0;padding:0}
+  .lc-tblwrap .lc-stack td:nth-child(2){grid-column:1 / -1;grid-row:2;padding-top:3px;font-size:12.5px;color:var(--ink3)}
+}
 .lc-faq{border-top:1px solid var(--line)}
 details.lc-q{border-bottom:1px solid var(--line)}
 details.lc-q > summary{cursor:pointer;list-style:none;padding:18px 0;display:flex;align-items:center;justify-content:space-between;gap:20px;font:500 15px/1.45 var(--font-sans);color:var(--ink)}
@@ -158,7 +167,6 @@ details.lc-q .a{padding:0 0 20px;max-width:70ch}
 details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 .lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .lc-link{display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease)}
-.lc-link .ar{font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2)}
 .lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
 .lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
 @media(hover:hover){.lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}}
@@ -246,15 +254,15 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       </div>
       <div class="kk-dash" aria-hidden="true"></div>
       <h1 class="page-title"><em data-i18n="kalkFoodcostTitle">Food cost</em></h1>
-      <p class="page-lead" data-i18n="kalkFoodcostSubtitle">Sett menyprisen fra råvarekost og ønsket food cost.</p>
+      <p class="page-lead" data-i18n="kalkFoodcostSubtitle">Finn menyprisen ut fra hva råvarene koster. Food cost er hvor stor del av prisen uten mva som går til råvarer.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
     </div>
     <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="kalkFoodcostStatFc">Food cost i eksempelet</span><span class="v" id="hStatFc">30 %</span></div>
-      <div class="page-stat"><span class="l" data-i18n="kalkFoodcostStatMeny">Menypris inkl. mva</span><span class="v" id="hStatMeny">92 kr</span></div>
+      <div class="page-stat"><span class="l" data-i18n="kalkFoodcostStatFc">Food cost</span><span class="v" id="hStatFc">30 %</span></div>
+      <div class="page-stat"><span class="l" data-i18n="kalkFoodcostResRund">Avrundet menypris</span><span class="v" id="hStatMeny">92 kr</span></div>
     </div>
   </div>
 </section>
@@ -291,11 +299,10 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
             <section class="ks-section">
               <div class="ik-section-head">
                 <h3 data-i18n="kalkFoodcostSectionTitle">Rett og pris</h3>
-                <span class="meta" data-i18n="kalkFoodcostSectionHint">Råvarekost + én av: menypris eller food cost</span>
               </div>
               <div class="ik-stack">
                 <div class="ik-fg">
-                  <label class="ik-lbl" for="fcKost"><span data-i18n="kalkFoodcostLblKost">Råvarekost per rett</span> <span class="cap">(kr, eks. mva)</span></label>
+                  <label class="ik-lbl" for="fcKost"><span data-i18n="kalkFoodcostLblKost">Råvarekost per rett</span> <span class="cap" data-i18n="kalkSelvkostLblDmCap">(kr, eks. mva)</span></label>
                   <input class="ik-input" id="fcKost" type="text" inputmode="decimal" autocomplete="off" value="22">
                 </div>
                 <div class="ik-row full">
@@ -306,9 +313,9 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
                   </div>
                 </div>
                 <div class="ik-fg">
-                  <label class="ik-lbl" for="fcVal" id="fcValLbl" data-i18n="kalkFoodcostValLblFc">Ønsket food cost <span class="cap">(%)</span></label>
+                  <label class="ik-lbl" for="fcVal" id="fcValLbl">Ønsket food cost <span class="cap">(%)</span></label>
                   <input id="fcVal" class="ik-input" type="text" inputmode="decimal" autocomplete="off" value="30">
-                  <span class="ik-hint" id="fcValHint" data-i18n="kalkFoodcostValHintFc">Typisk 28–35 % for varmmat i restaurant.</span>
+                  <span class="ik-hint" id="fcValHint">Typisk 28–35 % for varmmat i restaurant.</span>
                 </div>
                 <div class="ik-row full">
                   <span class="ik-lbl" data-i18n="kalkFoodcostMvaLbl">MVA-sats</span>
@@ -322,15 +329,12 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
           </div>
 
           <aside class="ks-result" aria-live="polite">
-            <div class="ks-r-eyebrow" data-i18n="kalkFoodcostResHeadline">Resultat</div>
-            <div class="ks-r-stats" style="border-top:0;padding-top:0">
+            <div class="ks-r-eyebrow" id="fcREyebrow">Menypris til gjesten</div>
+            <div class="ks-r-net" id="fcRNet">–</div>
+            <div class="ks-r-mnd" id="fcRMnd">Fyll inn råvarekost og ett tall til for å se svaret.</div>
+            <div class="ks-r-stats">
               <div class="ks-r-stat"><span class="l" data-i18n="kalkFoodcostLblKost">Råvarekost per rett</span><span class="v" id="fcROutKost">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="kalkFoodcostTitle">Food cost</span><span class="v" id="fcROutFc">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="kalkFoodcostResDb">Dekningsbidrag per rett</span><span class="v" id="fcROutDb">–</span></div>
-              <div class="ks-r-stat div"><span class="l" data-i18n="kalkFoodcostResFaktor">Pris-faktor</span><span class="v" id="fcROutFaktor">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="kalkFoodcostResEks">Menypris eks. mva</span><span class="v" id="fcROutEks">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="kalkFoodcostResInkl">Menypris inkl. mva</span><span class="v" id="fcROutInkl">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="kalkFoodcostResRund">Avrundet menypris</span><span class="v" id="fcROutRund">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="kalkFoodcostResFaktor">Pris-faktor</span><span class="v" id="fcROutFaktor">–</span></div>
             </div>
             <p class="ik-note" data-i18n="kalkFoodcostNote">Kalkylen regnes eks. mva. Menyprisen til gjesten oppgis inkl. mva — rund gjerne opp til en pen pris.</p>
           </aside>
@@ -346,7 +350,6 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
               <span data-i18n="kalkFoodcostF4">Dekningsbidrag = Salgspris eks. mva − Råvarekost</span>
               <span data-i18n="kalkFoodcostF5">Pris-faktor = 1 / mål-food-cost%</span>
             </div>
-            <p style="margin:16px 0 0;max-width:64ch" data-i18n="kalkFoodcostFNote">«Lav food cost betyr høyere margin per rett — men prisen må også være riktig for gjesten. 28–35 % er vanlig.»</p>
           </div>
         </details>
       </div>
@@ -369,7 +372,7 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     <section class="lc-sec" aria-labelledby="lcB-kalkyle-foodcost">
       <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleExKicker">Regnet ut</span><h2 class="lc-title" id="lcB-kalkyle-foodcost" data-i18n="kalkFoodcostTableTitle">Eksempelet steg for steg</h2></div>
       <div class="lc-tblwrap">
-      <table class="lc-trinn">
+      <table class="lc-trinn lc-stack">
         <thead><tr><th data-i18n="kalkFoodcostColSteg">Steg</th><th data-i18n="kalkyleColFormel">Formel</th><th class="r" data-i18n="kalkyleColEksempel">Eksempel</th></tr></thead>
         <tbody>
           <tr><td data-i18n="kalkFoodcostResEks">Menypris eks. mva</td><td data-i18n="kalkFoodcostT1">Råvarekost / food cost%</td><td class="r">22 / 0,30 = 73,33<span class="u">kr</span></td></tr>
@@ -387,7 +390,7 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
       <div class="lc-head"><span class="lc-kicker" data-i18n="kalkFoodcostWhoKicker">Hvem bruker den</span><h2 class="lc-title" id="lcC-kalkyle-foodcost" data-i18n="kalkFoodcostWhoTitle">Tre typiske tilfeller</h2></div>
       <div class="kk-examples">
         <div class="kk-ex"><span class="lbl" data-i18n="kalkFoodcostWho1Lbl">Kafé · dagens rett</span><span class="desc" data-i18n="kalkFoodcostWho1Desc">Råvarekost 22 kr, mål 30 %. Menypris 92 kr inkl. serveringsmva.</span></div>
-        <div class="kk-ex"><span class="lbl" data-i18n="kalkFoodcostWho2Lbl">Restaurant · à la carte</span><span class="desc" data-i18n="kalkFoodcostWho2Desc">Høyere råvarekost gir lavere food cost-mål — 28 % gir mer rom til lønn og svinn.</span></div>
+        <div class="kk-ex"><span class="lbl" data-i18n="kalkFoodcostWho2Lbl">Restaurant · à la carte</span><span class="desc" data-i18n="kalkFoodcostWho2Desc">À la carte krever mer arbeid per rett. Et food cost-mål på 28 % gir mer rom til lønn og svinn.</span></div>
         <div class="kk-ex"><span class="lbl" data-i18n="kalkFoodcostWho3Lbl">Catering · take away</span><span class="desc" data-i18n="kalkFoodcostWho3Desc">15 % mva når maten bare leveres eller hentes. Stiller dere med servering, blir hele leveransen 25 %.</span></div>
       </div>
     </section>
@@ -404,9 +407,9 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     <section class="lc-sec" aria-labelledby="lcE-kalkyle-foodcost">
       <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleRelKicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkyle-foodcost" data-i18n="kalkyleRelTitle">Relaterte verktøy</h2></div>
       <div class="lc-links">
-        <a class="lc-link" href="/kalkyle/margin/"><span class="ar" data-i18n="kalkyleDestMargin">Margin &amp; påslag →</span><h3 data-i18n="kalkyleDestMargin">Margin &amp; påslag</h3><p data-i18n="kalkFoodcostRel1Desc">Sett riktig pris fra varekost, og se forskjellen på avanse og dekningsgrad.</p></a>
-        <a class="lc-link" href="/kalkyle/selvkost/"><span class="ar" data-i18n="kalkyleDestSk">Selvkost →</span><h3 data-i18n="kalkyleDestSk">Selvkost</h3><p data-i18n="kalkFoodcostRel2Desc">Full kalkyle fra materiale til pris med tillegg og fortjeneste.</p></a>
-        <a class="lc-link" href="/kalkyle/enhetskost/"><span class="ar" data-i18n="kalkyleDestEk">Enhetskost →</span><h3 data-i18n="kalkyleDestEk">Enhetskost</h3><p data-i18n="kalkFoodcostRel3Desc">Kostnad per enhet — også når variantene bruker ulikt med ressurser.</p></a>
+        <a class="lc-link" href="/kalkyle/margin/"><h3 data-i18n="kalkyleDestMargin">Margin &amp; påslag</h3><p data-i18n="kalkFoodcostRel1Desc">Sett riktig pris fra varekost, og se forskjellen på avanse og dekningsgrad.</p></a>
+        <a class="lc-link" href="/kalkyle/selvkost/"><h3 data-i18n="kalkyleDestSk">Selvkost</h3><p data-i18n="kalkFoodcostRel2Desc">Full kalkyle fra materiale til pris med tillegg og fortjeneste.</p></a>
+        <a class="lc-link" href="/kalkyle/enhetskost/"><h3 data-i18n="kalkyleDestEk">Enhetskost</h3><p data-i18n="kalkFoodcostRel3Desc">Kostnad per enhet — også når variantene bruker ulikt med ressurser.</p></a>
       </div>
     </section>
   </div>
@@ -427,9 +430,9 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -515,13 +518,17 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     setTxt('fcStripEks', ok ? fmtKr(r.eks) : '–');
     setTxt('fcStripInkl', ok ? fmtKr(r.inkl) : '–');
 
+    // Ett stort svar: menyprisen når du oppgir food cost, food cost når du oppgir menyprisen.
+    var t = (typeof R === 'function') ? R() : {};
+    var fcModus = mode === 'foodcost';
+    setTxt('fcREyebrow', fcModus ? (t.kalkFoodcostResMenypris || 'Menypris til gjesten') : (t.kalkFoodcostTitle || 'Food cost'));
+    setTxt('fcRNet', ok ? (fcModus ? fmtKr(r.rund, 0) : fmtPct(r.fcPct)) : '–');
+    setTxt('fcRMnd', !ok ? (t.kalkFoodcostMndEmpty || 'Fyll inn råvarekost og ett tall til for å se svaret.')
+      : fcModus ? (t.kalkFoodcostMndRund || 'Rundet av fra {kr} med {mva} mva.').replace('{kr}', fmtKr(r.inkl)).replace('{mva}', Math.round(mva * 100) + ' %')
+      : (t.kalkFoodcostMndFc || 'Så stor del av prisen uten mva går til råvarer.'));
+
     setTxt('fcROutKost', ok ? fmtKr(r.kost) : '–');
-    setTxt('fcROutFc', ok ? fmtPct(r.fcPct) : '–');
-    setTxt('fcROutDb', ok ? fmtKr(r.db) : '–');
-    setTxt('fcROutFaktor', ok ? r.faktor.toFixed(2).replace('.', ',') + ' ×' : '–');
-    setTxt('fcROutEks', ok ? fmtKr(r.eks) : '–');
-    setTxt('fcROutInkl', ok ? fmtKr(r.inkl) : '–');
-    setTxt('fcROutRund', ok ? fmtKr(r.rund, 0) : '–');
+    setTxt('fcROutFaktor', ok && isFinite(r.faktor) ? r.faktor.toFixed(2).replace('.', ',') + ' ×' : '–');
 
     setTxt('hStatFc', ok ? fmtPct(r.fcPct) : '–');
     setTxt('hStatMeny', ok ? fmtKr(r.rund, 0) : '–');
@@ -556,6 +563,18 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
   segMva15.setAttribute('aria-pressed', mva === 0.15 ? 'true' : 'false');
   labels();
   recalc();
+
+  // Etiketten og svaret skrives av JS: skriv dem på nytt når språkfila er lastet og ved språkbytte.
+  (function(){
+    var n = 0, iv = setInterval(function(){
+      if((typeof R === 'function' && R().kalkFoodcostValHintFc) || ++n > 40){ clearInterval(iv); labels(); recalc(); }
+    }, 80);
+  })();
+  new MutationObserver(function(){ labels(); recalc(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+
+  // Chip-raden: vis den aktive kalkylen også når raden er bredere enn skjermen.
+  var s = document.querySelector('.kk-picker-strip'), a = s && s.querySelector('.is-active');
+  if(a) s.scrollLeft = a.offsetLeft - s.offsetLeft - 16;
 })();
 </script>
 

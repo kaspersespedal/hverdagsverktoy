@@ -172,7 +172,7 @@
      menyteksten. --menu-bg (shared/themes.css) er tokenet som bærer dette;
      fallbacken til --surface holder de åtte andre temaene — og sider som ikke
      definerer --menu-bg — uendret. */
-  .tc-menu{position:absolute;top:calc(100% + 10px);right:0;min-width:212px;
+  .tc-menu{position:absolute;top:calc(100% + 10px);inset-inline-end:0;min-width:212px;
     background:var(--menu-bg,var(--surface));border:1px solid var(--line-2);border-radius:8px;
     padding:4px;
     box-shadow:0 1px 0 rgba(255,255,255,.04) inset,
@@ -513,7 +513,7 @@
        lagt inn før dette, så .tc-actions finnes når timer.js kaller init(). */
     if(!document.querySelector('script[src*="/shared/timer.js"]')){
       var timerScript = document.createElement('script');
-      timerScript.src = '/shared/timer.js?v=v5';
+      timerScript.src = '/shared/timer.js?v=v6';
       document.head.appendChild(timerScript);
     }
 

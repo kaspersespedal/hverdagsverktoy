@@ -366,7 +366,7 @@
     countUp('wxTemp', Math.round(d.temp), 0);
     setText('wxCond', wxText(d.sym));
     var sub = 'Maks ' + Math.round(d.max) + '° · Min ' + Math.round(d.min) + '°';
-    if (typeof d.wind === 'number') sub += ' · ' + nb(d.wind, 1) + ' m/s' + (d.dir != null ? ' ' + compass(d.dir) : '');
+    if (typeof d.wind === 'number') sub += ' · ' + nb(d.wind, 1) + '\u00a0m/s' + (d.dir != null ? '\u00a0' + compass(d.dir) : '');
     setText('wxSub', sub);
     buildForecast(d.hours);
     if (_modalOpen) { renderDayGraph(d); renderWeek(d); modalStamp(); } // live-oppdater åpen modal
@@ -828,7 +828,7 @@
     var sub = [];
     FX_CODES.forEach(function (k) {
       if (k === code || sub.length >= 3) return;
-      var o = d[k]; if (o) sub.push(fxUnit(o, k) + ' ' + fxQuote(o));
+      var o = d[k]; if (o) sub.push((fxUnit(o, k) + ' ' + fxQuote(o)).replace(/ /g, '\u00a0'));
     });
     setText('fxSub', sub.join(' · '));
     var span = $('fxTrend');
@@ -882,12 +882,12 @@
   }
   function renderRate(d) {
     countUp('srVal', d.last, 2);
-    setText('srSub', 'Norges Bank · sist endret ' + nbDate(d.changeDate));
+    setText('srSub', 'Norges Bank · sist endret ' + nbDate(d.changeDate).replace(/ /g, '\u00a0'));
     var span = $('srTrend');
     if (span) {
       var diff = d.last - d.prevLevel, dir = Math.abs(diff) < 0.001 ? 0 : diff > 0 ? 1 : -1;
       trendClass(span, dir);
-      span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) + '<i> pp</i></span>';
+      span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) + '<i>\u00a0pp</i></span>';
     }
     // En rente som endres ~4 ggr/år sier lite som sparkline → vis neste rentemøte i stedet.
     var nm = nextMeeting(), lbl = $('srNextLbl'), val = $('srNext');
@@ -940,7 +940,7 @@
       d.cheap = d.prices[d.cheapHour];
     }
     var ch = d.cheapHour < 10 ? '0' + d.cheapHour : d.cheapHour;
-    setText('stSub', 'Billigst kl ' + ch + ' · ' + Math.round(d.cheap * 100) + ' øre · snitt ' + Math.round(d.avg * 100) + ' øre');
+    setText('stSub', 'Billigst kl\u00a0' + ch + ' · ' + Math.round(d.cheap * 100) + '\u00a0øre · snitt ' + Math.round(d.avg * 100) + '\u00a0øre');
     var span = $('stTrend');
     if (span) {
       var pct = d.avg ? (d.now - d.avg) / d.avg * 100 : 0, dir = Math.abs(pct) < 0.5 ? 0 : pct > 0 ? 1 : -1;

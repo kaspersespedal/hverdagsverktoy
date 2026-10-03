@@ -25,7 +25,7 @@
                   på dette feltet, så det skal være riktig fra første konstant.
 
    MERK OM KLOKKA: utløpsvarselet leser klientens egen klokke. En maskin med
-   feil dato får varselet for tidlig eller for sent. Det står også på siden.
+   feil dato får varselet for tidlig eller for sent.
    ────────────────────────────────────────────────────────────────────────── */
 
 window.BOK_DATA = {

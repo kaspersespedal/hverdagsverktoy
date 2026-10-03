@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v228" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v229" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -107,7 +107,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 @media(hover:hover){.side-card.related a:hover .arr{transform:translateX(3px);opacity:1}}
 
 .ab-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:6px;background:rgba(255,255,255,.012)}
-.ab-list-head, .ab-row{display:grid;grid-template-columns:minmax(180px,2.4fr) minmax(120px,1.2fr) .9fr .65fr .55fr 32px;gap:0;align-items:stretch}
+.ab-list-head, .ab-row{display:grid;grid-template-columns:minmax(180px,2.4fr) minmax(120px,1.2fr) .9fr .65fr minmax(86px,.55fr) 32px;gap:0;align-items:stretch}
 .ab-list-head{background:rgba(0,0,0,.18);border-bottom:1px solid var(--line)}
 .ab-list-head > div{padding:11px 12px;font:500 10px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
 .ab-list-head .num{text-align:right}
@@ -116,6 +116,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .ab-row:hover{background:rgba(255,255,255,.015)}
 .ab-cell{display:flex;align-items:center;padding:2px 0;border-right:1px solid var(--line);min-width:0}
 .ab-cell:last-child{border-right:none}
+.ab-mlbl{display:none}
 .ab-cell input, .ab-cell select{width:100%;background:transparent;border:0;outline:none;color:var(--ink);font:400 14px/1.2 var(--font-sans);padding:11px 12px;transition:background .15s var(--ease)}
 .ab-cell.num input{text-align:right;font-variant-numeric:tabular-nums lining-nums;padding-right:12px}
 .ab-cell input:focus, .ab-cell select:focus{background:color-mix(in srgb, var(--accent) 5%, transparent)}
@@ -169,40 +170,47 @@ footer em{font-style:italic}
   .side-col{position:static;flex-direction:row;flex-wrap:wrap}
   .side-card{flex:1 1 280px}
   .ab-invest-grid{grid-template-columns:repeat(2,1fr)}
-  .ab-list-head, .ab-row{grid-template-columns:minmax(140px,2fr) minmax(100px,1fr) .8fr .55fr .5fr 30px}
+  .ab-list-head, .ab-row{grid-template-columns:minmax(140px,2fr) minmax(100px,1fr) .8fr minmax(80px,.7fr) minmax(86px,.7fr) 32px}
 }
 @media (max-width: 640px){
   .container{padding:0 22px}
   .calc-wrap{padding:24px 0 48px}
   .page-hero{padding:36px 0 24px}
-  .ab-list-head, .ab-row{grid-template-columns:1.6fr 1fr .8fr .5fr 30px}
-  .ab-list-head > div:nth-child(5), .ab-cell:nth-child(5){display:none}
-  /* Kolonnene kunne ikke krympe under sitt eget innhold, så raden ble 300px i
-     et 251px felt: "Kategori" rant inn i "Pris", og slett-knappen ble klippet
-     bort av .ks{overflow:hidden} — abonnementer kunne ikke fjernes på mobil.
-     Lar lista scrolle sidelengs i stedet, slik at alle kolonnene er i behold. */
-  .ab-list{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .ab-list-head, .ab-row{min-width:320px}
+  /* Hver rad blir et kort: navn og slett øverst, kategori under, og pris,
+     periode og deling med små etiketter nederst. Alle feltene er med, også
+     «Delt på», og lista ruller ikke sidelengs. */
+  .ab-list-head{display:none}
+  .ab-row{grid-template-columns:repeat(6,minmax(0,1fr));grid-template-areas:"name name name name name del" "kat kat kat kat kat ." "pris pris freq freq delt delt";padding:4px 0 8px}
+  .ab-row > :nth-child(1){grid-area:name}
+  .ab-row > :nth-child(2){grid-area:kat}
+  .ab-row > :nth-child(3){grid-area:pris}
+  .ab-row > :nth-child(4){grid-area:freq}
+  .ab-row > :nth-child(5){grid-area:delt}
+  .ab-row > :nth-child(6){grid-area:del}
+  .ab-cell{border-right:none;flex-direction:column;align-items:stretch}
+  .ab-cell.name input{font-weight:500}
+  .ab-mlbl{display:block;padding:8px 12px 0;font:500 10px/1.2 var(--font-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
+  .ab-cell.num .ab-mlbl{text-align:right}
   .ab-invest-grid{grid-template-columns:1fr 1fr}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
 </style>
 
-<link rel="stylesheet" href="/shared/atmosphere.css?v=v215">
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 
 <script defer src="/shared/atmosphere.js?v=v5"></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 <script defer src="/shared/search-intents.js?v=v124"></script>
 <script defer src="/shared/search.js?v=v131"></script>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v243"></script>
+<script defer src="/shared/top-chrome.js?v=v245"></script>
 <style>
 /* ════════ KASKADE-FIKS — må bli stående i DENNE blokka ════════
    Sidas hovedstil ligger i <style>-blokka FØR <link ... site-shell.css>, så
@@ -215,35 +223,18 @@ footer em{font-style:italic}
    ville reglene ellers vinne på mobil og hindre stablingen. */
 @media(min-width:1025px){
   .calc-wrap .container{grid-template-columns:minmax(0,1fr) 260px;gap:28px}
-  .ks-body{grid-template-columns:minmax(0,1fr) 340px}
-  /* .container har max-width:1180px, så lista blir aldri bredere enn 427px i
-     to-kolonne-layouten. Et gulv på 520px kunne derfor per definisjon aldri
-     innfris, og den vannrette rullelista var normaltilstanden på desktop —
-     både "Delt på" og slett-knappen krevde sidelengs scroll på ALLE bredder.
-     Gulvet er senket til det raden faktisk trenger:
-     32px slett + ~55px "Delt på" + ~52px "Pr." + ~52px "Pris" = 191px låst.
-     425 - 191 = 234px igjen til Tjeneste og Kategori, og 130 + 95 går akkurat
-     opp. Målt: rullefeltet er borte fra ~1190px og oppover (lista 427px, rad
-     427px). Mellom 1025 og ~1187px er lista selv smalere enn 425px (337px ved
-     1100, 262px ved 1025) fordi .container ikke har nådd max-width ennå — der
-     ruller lista fortsatt, men overflow-x:auto under er da en sikkerhetsventil
-     for et smalt vindusbånd i stedet for standardtilstanden. */
-  .ab-list-head,.ab-row{grid-template-columns:minmax(130px,2.4fr) minmax(95px,1.2fr) .9fr .65fr .55fr 32px;min-width:425px}
+  .ab-list-head,.ab-row{grid-template-columns:minmax(130px,2fr) minmax(95px,1.2fr) .9fr .8fr minmax(86px,.8fr) 32px;min-width:425px}
 }
-/* Under ~1188px har .container ikke nadd max-width:1180px enna, sa lista krymper
-   med vinduet: 337px ved 1100, 262px ved 1025. Da far raden ikke plass uansett
-   hvor lavt gulvet settes — malt uten gulv i det hele tatt kollapser de tre
-   smale kolonnene til 1,3-2,1px, altsa nøyaktig feilen vi kom fra. Losningen er
-   a gi skjemaet hele bredden i det bandet i stedet: resultatpanelet stables
-   under, slik site-shell allerede gjor lenger nede. Det gir 614px ved 1025 og
-   689px ved 1100 — raden pa 425px far god plass, og den vannrette rullelista
-   forsvinner helt pa desktop. Nedre grense er 1025px fordi site-shell da
-   uansett kollapser .calc-wrap .container. */
-@media(min-width:1025px) and (max-width:1187px){
-  .ks-body{grid-template-columns:minmax(0,1fr)}
-}
-/* Samme mobil-redning som i @media(max-width:640px), men på alle bredder. */
-.ab-list{overflow-x:auto}
+/* Resultatpanelet står under lista på alle bredder. Ved siden av fikk lista bare
+   427px, og seks kolonner delte plassen: «Strømmir», «1 09(» og «k» ble klippet,
+   og «Delt på» brøt over kolonnestreken. Under 769px stabler site-shell selv. */
+.ks-body{grid-template-columns:minmax(0,1fr)}
+.ks-form{border-right:none;border-bottom:1px solid var(--line)}
+/* Sikkerhetsventil hvis vinduet blir smalere enn raden. På mobil er radene kort. */
+@media(min-width:641px){.ab-list{overflow-x:auto}}
+/* «Treningssenter» ble delt midt i ordet i stripa ved 390px (22px serif i 118px
+   celle). 16px får plass; !important trengs mot calm-override.css. */
+@media(max-width:768px){#ab-host .ks-strip-cell .v[data-ab="topName"]{font-size:16px !important}}
 /* .side-card får background:var(--surface) i blokka over, men site-shell setter
    background:transparent og vinner — kortene ble gjennomsiktige. Samme verdi
    som søstersidene (personlig/fam, personlig/fbl m.fl.) bruker. */
@@ -465,8 +456,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <p class="page-lead" data-i18n="aboHeroLead">Samle alt du betaler hver måned — strømming, treningssenter, sky-lagring, aviser. Se hva som faktisk tappes per måned og per år, og hva summen kunne blitt om du sparte den i stedet.</p>
       </div>
       <div class="page-stats">
-        <div class="page-stat"><span class="l" data-i18n="aboHeroStat1L">Snitt nordmenn bruker</span><span class="v">1 240<span class="u">kr/mnd</span></span></div>
-        <div class="page-stat"><span class="l" data-i18n="aboHeroStat2L">På strømming alene</span><span class="v">480<span class="u">kr/mnd</span></span></div>
+        <div class="page-stat"><span class="l" data-i18n="aboHeroStat1L">Netflix Standard i året</span><span class="v">1 668<span class="u">kr</span></span></div>
+        <div class="page-stat"><span class="l" data-i18n="aboHeroStat2L">100 kr/mnd spart i 10 år</span><span class="v">17 409<span class="u">kr</span></span></div>
         <div class="page-stat"><span class="l" data-i18n="aboHeroStat3L">Fond, snitt avkastning</span><span class="v">7,0<span class="u">%</span></span></div>
       </div>
     </div>
@@ -503,37 +494,18 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-personlig-abo">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-abo">Hva kalkulatoren faktisk gjør med tallene</h2><p class="lc-intro">Du legger inn hvert abonnement med pris, hvor ofte du betaler og hvor mange du deler med. Kalkulatoren gjør alt om til samme måleenhet — kroner per måned per person — legger dem sammen, og viser hva summen kunne blitt om du sparte den i stedet. Dette er de samme linjene du ser i beregningen over, bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-abo">Hva kalkulatoren faktisk gjør med tallene</h2><p class="lc-intro">Hvert abonnement gjøres om til kroner per måned for din andel. Så legges alt sammen, og du ser hva summen kunne blitt om du sparte den i stedet.</p></div>
       <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Omregning til måned</b><span class="tag">Faktor</span></span><span class="fig">÷12 / ÷3 / ×52/12</span><p class="dsc">Betaler du i året deles prisen på 12, betaler du i kvartalet deles den på 3, og en ukepris ganges med 52/12. Slik blir alt sammenlignbart per måned, uansett hvor ofte fakturaen kommer.</p></div>
-        <div class="lc-led"><span class="nm"><b>Delt på</b><span class="tag">Faktor</span></span><span class="fig">minst 1<span class="u">person</span></span><p class="dsc">Deler du et abonnement med andre, deles månedsprisen på antall personer. Tallet kan aldri bli mindre enn 1, så din egen andel blir aldri kunstig lav.</p></div>
+        <div class="lc-led"><span class="nm"><b>Omregning til måned</b><span class="tag">Faktor</span></span><span class="fig">92<span class="u">kr/mnd</span></span><p class="dsc">En årspris deles på 12, og en kvartalspris på 3. En ukepris ganges med 52 og deles på 12. Et årsabonnement til 1 099 kr blir altså 92 kr i måneden.</p></div>
+        <div class="lc-led"><span class="nm"><b data-i18n="aboColDelt">Delt på</b><span class="tag">Faktor</span></span><span class="fig">minst 1<span class="u">person</span></span><p class="dsc">Deler du et abonnement med andre, deles månedsprisen på antall personer. Tallet kan aldri bli mindre enn 1, så din egen andel blir aldri kunstig lav.</p></div>
         <div class="lc-led"><span class="nm"><b>Sum per person</b><span class="tag">Sum</span></span><span class="fig">din andel<span class="u">kr/mnd</span></span><p class="dsc">Alle dine andeler legges sammen til én månedssum. Den ganges med 12 for å vise hva du betaler på et helt år.</p></div>
         <div class="lc-led"><span class="nm"><b>Største post</b><span class="tag">Sortering</span></span><span class="fig">høyest<span class="u">kr/mnd</span></span><p class="dsc">Kalkulatoren sorterer postene fra dyrest til billigst per måned og løfter fram den ene som koster deg mest. Det er som regel her det er mest å spare.</p></div>
         <div class="lc-led"><span class="nm"><b>Sammensatt avkastning</b><span class="tag">Sats</span></span><span class="fig">7,0<span class="u">%/år</span></span><p class="dsc">«Hva om»-boksen antar 7,0 % avkastning i året som standard. Den regner med at pengene legges inn på starten av hver måned og at avkastning legges oppå avkastning (renters rente).</p></div>
         <div class="lc-led"><span class="nm"><b>Spareperiode</b><span class="tag">Grense</span></span><span class="fig">10<span class="u">år</span></span><p class="dsc">Standard horisont er 10 år, men du kan skru den mellom 1 og 50 år. Lengre tid gir mer tid for rente på rente å virke.</p></div>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcB-personlig-abo">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-abo">Tallene kalkulatoren bygger på</h2><p class="lc-intro">Disse verdiene ligger fast i kalkulatoren — noen som forhåndsutfylte priser du kan endre, andre som regnefaktorer du ikke ser. Prisene er eksempler for 2026 og kan justeres fritt.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
-        <div class="lc-kv"><span class="k">Standard avkastning i «Hva om»</span><span class="v">7,0<span class="u">%/år</span></span></div>
-        <div class="lc-kv"><span class="k">Standard spareperiode</span><span class="v">10<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Spareperiode kan settes mellom</span><span class="v">1–50<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Delt på, tillatt område</span><span class="v">1–20<span class="u">personer</span></span></div>
-      </div>
-      <div class="lc-card">
-        <span class="ttl">Mer</span>
-        <div class="lc-kv"><span class="k">Netflix Standard (referanse)</span><span class="v">139<span class="u">kr/mnd</span></span></div>
-        <div class="lc-kv"><span class="k">Spotify Premium (referanse)</span><span class="v">129<span class="u">kr/mnd</span></span></div>
-        <div class="lc-kv"><span class="k">Treningssenter, snitt (referanse)</span><span class="v">499<span class="u">kr/mnd</span></span></div>
-        <div class="lc-kv"><span class="k">Microsoft 365 Family (referanse)</span><span class="v">1 099<span class="u">kr/år</span></span></div>
-      </div>
-      </div>
-    </section>
     <section class="lc-sec" aria-labelledby="lcC-personlig-abo">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-abo">Slik bruker du oversikten</h2><p class="lc-intro">Noen praktiske ting som gjør tallene riktigere og mer nyttige for deg.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-abo">Slik bruker du oversikten</h2></div>
       <div class="lc-notes">
         <div class="lc-note"><h3>Velg riktig «pr.»</h3><p>Et årsabonnement som Strava (849 kr/år i hurtigknappene) ser billig ut per år, men kalkulatoren gjør det om til måned for deg. Velg alltid samme intervall som står på fakturaen, så blir summen riktig.</p></div>
         <div class="lc-note"><h3>Husk delingen</h3><p>Microsoft 365 Family er forhåndsutfylt som delt på 6. Deler du Netflix, Spotify eller en familieplan med andre, sett «delt på» til antall som faktisk betaler — da viser kalkulatoren bare din egen andel.</p></div>
@@ -541,23 +513,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         <div class="lc-note"><h3>Prisene er bare et utgangspunkt</h3><p>Tjenestene øker prisene jevnlig, og referanseprisene i sidekortet er eksempler for 2026. Skriv inn det du faktisk betaler i dag for et bilde som stemmer.</p></div>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcD-personlig-abo">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-personlig-abo">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvorfor blir årsprisen ikke bare 12 ganger månedsprisen?</summary><div class="a"><p>Den blir nettopp det. Kalkulatoren tar din månedssum per person og ganger med 12. Det som kan overraske er at et abonnement du betaler én gang i året fordeles utover hele året — 1 099 kr i året blir rundt 92 kr i måneden.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr «delt på»?</summary><div class="a"><p>Hvor mange personer som spleiser på samme abonnement. Setter du «delt på» til 4, viser kalkulatoren bare din firedel av prisen. Tallet kan være mellom 1 og 20.</p></div></details>
-        <details class="lc-q"><summary>Hvor kommer de 7,0 % i spare-boksen fra?</summary><div class="a"><p>Det er en forhåndsvalgt antatt avkastning per år, ment som et realistisk eksempel for langsiktig sparing i fond. Du kan endre prosenten selv hvis du vil regne med en annen forventning.</p></div></details>
-        <details class="lc-q"><summary>Regner «Hva om»-boksen med renters rente?</summary><div class="a"><p>Ja. Den antar at du sparer summen på starten av hver måned og at avkastningen legges oppå tidligere avkastning. Derfor blir sluttbeløpet høyere enn bare innskuddene dine lagt sammen.</p></div></details>
-        <details class="lc-q"><summary>Er prisene i sidekortet de riktige akkurat nå?</summary><div class="a"><p>De er eksempelpriser for 2026 og kan være utdaterte når du leser dette. Bruk dem som pekepinn, men skriv inn det du selv betaler for å få en oversikt som stemmer.</p></div></details>
-        <details class="lc-q"><summary>Hva er «største post»?</summary><div class="a"><p>Det abonnementet som koster deg mest per måned etter at deling er tatt hensyn til. Kalkulatoren løfter det fram fordi det som regel er der det monner mest å si opp eller bytte plan.</p></div></details>
-      </div>
-    </section>
     <section class="lc-sec" aria-labelledby="lcE-personlig-abo">
       <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-personlig-abo">Relaterte verktøy</h2></div>
       <div class="lc-links">
         <a class="lc-link" href="/personlig/spare/"><span class="ar">Sparing →</span><h3>Sparekalkulator</h3><p>Ta summen du frigjør ved å kutte abonnementer og se hvordan den vokser over tid med renters rente.</p></a>
         <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Lag et budsjett</h3><p>Få abonnementene inn i en full oversikt sammen med husleie, mat og andre faste utgifter.</p></a>
-        <a class="lc-link" href="/kalkulator/rente/"><span class="ar">Renters rente →</span><h3>Renters rente</h3><p>Forstå hvordan avkastning oppå avkastning gjør at små månedsbeløp vokser seg store over år.</p></a>
+        <a class="lc-link" href="/kalkulator/finance/"><span class="ar">Renters rente →</span><h3>Renters rente</h3><p>Forstå hvordan avkastning oppå avkastning gjør at små månedsbeløp vokser seg store over år.</p></a>
       </div>
     </section>
   </div>
@@ -686,7 +647,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       '    <aside class="ks-result" aria-live="polite">',
       '      <div class="ks-r-eyebrow" data-i18n="aboResHdr">Din månedskost</div>',
       '      <div class="ks-r-net"><span data-ab="resMnd">–</span><span class="unit">kr</span></div>',
-      '      <div class="ks-r-mnd"><span data-i18n="aboResAarPrefix">tilsvarer</span> <b><span data-ab="resAar">–</span> kr</b> <span data-i18n="aboResAarSuffix">i året</span> <span data-ab="resAllExtra"></span></div>',
+      '      <div class="ks-r-mnd"><span data-i18n="aboResAarPrefix">tilsvarer</span> <b><span data-ab="resAar">–</span> kr</b> <span data-i18n="aboResAarSuffix">i året</span><span data-ab="resAllExtra" hidden> · <b><span data-ab="resAll">–</span> kr</b> <span data-i18n="aboResForDeling">i måneden før deling</span></span></div>',
       '      <button type="button" id="aboCsvBtn" style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;margin-top:2px;padding:7px 12px;font:600 12px/1 system-ui,sans-serif;color:var(--accent);background:transparent;border:1px solid var(--line);border-radius:8px;cursor:pointer" title="Last ned abonnementer som CSV"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v7M4 6.5L7 9.5l3-3M2.5 12h9"/></svg>Last ned CSV</button>',
       '      <div class="ab-rank">',
       '        <div class="ab-rank-head" data-i18n="aboRankHdr">Sortert etter månedskost</div>',
@@ -735,12 +696,15 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       '    <select data-f="kat" aria-label="Kategori for '+escAria(it.name)+'">'+katOpts+'</select>',
       '  </div>',
       '  <div class="ab-cell num">',
+      '    <span class="ab-mlbl" aria-hidden="true" data-i18n="aboColPrice">'+colLbl(2,'Pris')+'</span>',
       '    <input type="text" inputmode="numeric" aria-label="Beløp for '+escAria(it.name)+'" placeholder="0" value="'+krDisplay+'" data-f="kr">',
       '  </div>',
       '  <div class="ab-cell">',
+      '    <span class="ab-mlbl" aria-hidden="true" data-i18n="aboColFreq">'+colLbl(3,'Pr.')+'</span>',
       '    <select data-f="freq" aria-label="Betalingsfrekvens for '+escAria(it.name)+'">'+freqOpts+'</select>',
       '  </div>',
       '  <div class="ab-cell num">',
+      '    <span class="ab-mlbl" aria-hidden="true" data-i18n="aboColDelt">'+colLbl(4,'Delt på')+'</span>',
       '    <input type="text" inputmode="numeric" aria-label="Antall som deler '+escAria(it.name)+'" min="1" max="20" value="'+it.delt+'" data-f="delt">',
       '  </div>',
       '  <button class="ab-del" type="button" data-action="del" title="Fjern" aria-label="Fjern abonnement">',
@@ -748,6 +712,13 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       '  </button>',
       '</div>'
     ].join('\n');
+  }
+
+  // Etiketten i mobilkortet = kolonneoverskriften, som allerede er oversatt.
+  function colLbl(i, fb){
+    var h = $$('.ab-list-head > div')[i];
+    var t = (h && h.textContent.trim()) || fb;
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;');
   }
 
   function rankRow(it){
@@ -766,12 +737,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     $('[data-ab="resMnd"]').textContent = fmtKr(r.totMndPP);
     $('[data-ab="resAar"]').textContent = fmtKr(r.totAarPP);
-    var extra = $('[data-ab="resAllExtra"]');
-    if(Math.round(r.totMndAll) !== Math.round(r.totMndPP)){
-      extra.innerHTML = ' · av <b>' + fmtKr(r.totMndAll) + ' kr</b> totalt';
-    } else {
-      extra.innerHTML = '';
-    }
+    // Hele månedsprisen før deling vises bare når noe er delt.
+    var delt = Math.round(r.totMndAll) !== Math.round(r.totMndPP);
+    $('[data-ab="resAllExtra"]').hidden = !delt;
+    if(delt) $('[data-ab="resAll"]').textContent = fmtKr(r.totMndAll);
 
     var ranked = r.items.slice().filter(function(it){return it.minDel > 0;}).sort(function(a,b){return b.minDel - a.minDel;});
     var rankEl = $('#ab-rank-list');

@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v228" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v229" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -49,7 +49,7 @@
 <!-- Temapaletten. Denne siden er ellers selvforsynt, men paletten lå her som en
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -634,48 +634,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 .lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
 .lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
 
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
 /* ── Praktiske punkter (venstre-aksent) ── */
 .lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 .lc-note{
@@ -724,7 +682,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 }
 
 @media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
   .lc-notes{grid-template-columns:minmax(0,1fr)}
   .lc-links{grid-template-columns:minmax(0,1fr)}
 }
@@ -848,7 +805,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <span class="here" data-i18n="crumbHereRegnskapBalanse">Balanse</span>
         </div>
         <h1 class="page-title">Balanse</h1>
-        <p class="page-lead">Sett opp balansen post for post — så summeres eiendelene mot egenkapital og gjeld, og kontrollen viser om de to sidene går i null. Etter regnskapsloven § 6-2.</p>
+        <p class="page-lead">Skriv inn hva selskapet eier, og hvordan det er finansiert. Vi legger sammen begge sidene og viser om de er like store.</p>
         <div class="page-hero-actions">
           <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
         </div>
@@ -946,24 +903,26 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     .rr-leg .pc{font:400 11.5px/1 var(--font-sans);color:var(--ink4);min-width:42px;text-align:right}
     .rr-cost-empty{padding:18px 4px;font:400 12.5px/1.55 var(--font-sans);color:var(--ink3)}
 
-    /* Explanations */
-    .rr-explain{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:6px clamp(18px,3.4vw,28px)}
-    .rr-explain details > summary{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
-    .rr-explain details:last-child > summary{border-bottom:none}
-    .rr-explain summary .q{font:500 14px/1.3 var(--font-sans);color:var(--ink)}
-    .rr-explain .ans{padding:4px 0 16px;font:400 13px/1.65 var(--font-sans);color:var(--ink2);max-width:60ch}
     details > summary{list-style:none;cursor:pointer}
     details > summary::-webkit-details-marker{display:none}
-    .rr-chev{transition:transform .2s var(--ease);color:var(--ink4);flex:none}
-    details[open] .rr-chev{transform:rotate(180deg)}
 
     .rr-source{font:400 11.5px/1.65 var(--font-sans);color:var(--ink4);margin:2px auto 0;text-align:center;max-width:62ch}
     .hidden{display:none}
 
     @media (max-width: 560px){
-      .rr-amtcell{width:150px}
-      input.rr-num{width:106px}
-      .rr-out{min-width:106px}
+      /* Kontonummer + beløpscelle ga etiketten bare 89 px (2–4 linjer per post).
+         Kontonummeret legges over navnet, og «kr» skjules fordi «NOK» står i hodet. */
+      .rr-line{align-items:center}
+      .rr-name{flex-direction:column;align-items:flex-start;gap:2px}
+      .rr-konto{min-width:0}
+      .rr-lab .sub{display:block}
+      .rr-amtcell{width:118px}
+      input.rr-num{width:104px;padding:8px 9px}
+      .rr-out{min-width:104px}
+      .rr-kr{display:none}
+      .rr-sub .rr-amtcell,.rr-total .rr-amtcell{width:auto}
+      .rr-sub .rr-out,.rr-total .rr-out{min-width:0}
+      .rr-panel-head{flex-direction:column;align-items:flex-start;gap:6px}
     }
   </style>
 
@@ -1153,26 +1112,6 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         </div>
       </div>
 
-      <!-- EXPLANATIONS -->
-      <div class="rr-explain">
-        <details>
-          <summary><span class="q">Hva er en balanse?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Balansen er et øyeblikksbilde av selskapets økonomi på et bestemt tidspunkt — som regel 31. desember. Den ene siden viser hva selskapet eier (eiendeler), den andre hvordan det er finansiert (egenkapital og gjeld). Den settes opp etter oppstillingsplanen i regnskapsloven § 6-2.</div>
-        </details>
-        <details>
-          <summary><span class="q">Hvorfor må Eiendeler = EK + gjeld?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Hver krone selskapet eier må ha kommet fra et sted — enten fra eierne (egenkapital) eller fra noen selskapet skylder (gjeld). Derfor er de to sidene alltid like store. Det er kjernen i dobbel bokføring, og kontrollen nederst viser om oppstillingen din faktisk går opp.</div>
-        </details>
-        <details>
-          <summary><span class="q">Anleggsmidler eller omløpsmidler?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Anleggsmidler eies og brukes over flere år — bygninger, maskiner og langsiktige investeringer. Omløpsmidler er kortsiktige og snus i driften innen et år — varelager, kundefordringer og bankinnskudd. Skillet kreves av regnskapsloven § 5-1.</div>
-        </details>
-        <details>
-          <summary><span class="q">Hva er egenkapitalandel (soliditet)?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Egenkapitalandelen viser hvor stor del av eiendelene som er finansiert med egne penger framfor lån — egenkapital delt på sum eiendeler. Høy andel betyr et solid selskap som tåler tap. Opptjent egenkapital er summen av alle årsresultater fra resultatregnskapet, minus utbetalt utbytte.</div>
-        </details>
-      </div>
-
       <p class="rr-source">Kilde: Regnskapsloven §§ 5-1 og 6-2 · Oppstillingsplan for balansen · Kontonumre etter NS 4102. Forenklet oppstilling — et fullstendig årsregnskap krever noter (kapittel 7) og at årsresultatet fra resultatregnskapet er overført til opptjent egenkapital. Veiledende, ikke profesjonell rådgivning.</p>
 
     </div>
@@ -1183,45 +1122,15 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <div class="container">
   <div class="lonn-learn">
     <section class="lc-sec" aria-labelledby="lcA-regnskap-balanse">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-regnskap-balanse">Hva som skjer fra post til kontroll</h2><p class="lc-intro">Du fyller inn hver post på de to sidene av balansen. Verktøyet legger sammen eiendelene, legger sammen egenkapital og gjeld, og sjekker om de to summene er like store. Dette er nøyaktig de samme linjene du ser i oppstillingen over — bare forklart.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-regnskap-balanse">Hva som skjer fra post til kontroll</h2><p class="lc-intro">Eiendelene legges sammen på den ene siden, egenkapital og gjeld på den andre. Eier selskapet for 3 mill. kr, må egenkapital og gjeld også bli 3 mill. kr til sammen.</p></div>
       <div class="lc-ledger">
         <div class="lc-led"><span class="nm"><b>Sum eiendeler</b><span class="tag">Sum</span></span><span class="fig">7<span class="u">poster</span></span><p class="dsc">Alt selskapet eier, lagt sammen: fire anleggsmidler (forskning, eiendom, maskiner, investeringer) pluss tre omløpsmidler (varelager, kundefordringer, bank). Dette blir venstre side av balansen.</p></div>
         <div class="lc-led"><span class="nm"><b>Sum egenkapital og gjeld</b><span class="tag">Sum</span></span><span class="fig">8<span class="u">poster</span></span><p class="dsc">Hvordan eiendelene er finansiert: tre egenkapital-poster pluss to langsiktige og tre kortsiktige gjeldsposter. Dette blir høyre side, og skal bli like stor som eiendelene.</p></div>
         <div class="lc-led"><span class="nm"><b>Balanse-kontroll</b><span class="tag">Grense</span></span><span class="fig">1<span class="u">kr</span></span><p class="dsc">Verktøyet trekker høyre side fra venstre side. Er forskjellen under 1 krone, regnes balansen som riktig og kontrollen viser «Balansen stemmer». Ellers vises avviket i kroner.</p></div>
-        <div class="lc-led"><span class="nm"><b>Egenkapitalandel</b><span class="tag">Nøkkeltall</span></span><span class="fig">EK / eiendeler<span class="u">%</span></span><p class="dsc">Sum egenkapital delt på sum eiendeler, vist i prosent. Viser hvor stor del av det selskapet eier som er finansiert med egne penger framfor lån.</p></div>
-        <div class="lc-led"><span class="nm"><b>Likviditetsgrad 1</b><span class="tag">Nøkkeltall</span></span><span class="fig">oml / kortsikt<span class="u">×</span></span><p class="dsc">Omløpsmidler delt på kortsiktig gjeld. Viser hvor mange ganger de kortsiktige eiendelene dekker det selskapet skal betale snart.</p></div>
-        <div class="lc-led"><span class="nm"><b>Gjeldsgrad</b><span class="tag">Nøkkeltall</span></span><span class="fig">gjeld / EK<span class="u">×</span></span><p class="dsc">Samlet gjeld delt på egenkapital. Viser hvor mange kroner gjeld selskapet har for hver krone egenkapital.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-regnskap-balanse">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-regnskap-balanse">Tallene verktøyet bruker</h2><p class="lc-intro">Balansen har ingen satser å regne med — den følger en fast oppstillingsplan. Tallene under er rammene verktøyet bygger på: kontrollgrensen, formlene for nøkkeltall, og kontonumrene fra standard kontoplan.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nokkeltall</span>
-        <div class="lc-kv"><span class="k">Grense for «balansen stemmer»</span><span class="v">Avvik under 1<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Egenkapitalandel</span><span class="v">Egenkapital / sum eiendeler<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Likviditetsgrad 1</span><span class="v">Omløpsmidler / kortsiktig gjeld<span class="u">×</span></span></div>
-        <div class="lc-kv"><span class="k">Gjeldsgrad</span><span class="v">Sum gjeld / egenkapital<span class="u">×</span></span></div>
-        <div class="lc-kv"><span class="k">Arbeidskapital</span><span class="v">Omløpsmidler − kortsiktig gjeld<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Oppstillingsplan</span><span class="v">Regnskapsloven § 6-2</span></div>
-        <div class="lc-kv"><span class="k">Skille anlegg/omløp</span><span class="v">Regnskapsloven § 5-1</span></div>
-        <div class="lc-kv"><span class="k">Kontoplan</span><span class="v">NS 4102</span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Kontoklasser i oppstillingen (NS 4102)</caption>
-          <thead><tr><th>Gruppe</th><th class="r">Kontonummer</th><th class="r">Side i balansen</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Anleggsmidler</span></td><td class="r">1000–1399</td><td class="r">Eiendeler</td></tr>
-            <tr><td><span class="step">Omløpsmidler</span></td><td class="r">1400–1999</td><td class="r">Eiendeler</td></tr>
-            <tr><td><span class="step">Egenkapital</span></td><td class="r">2000–2099</td><td class="r">Egenkapital og gjeld</td></tr>
-            <tr><td><span class="step">Langsiktig gjeld</span></td><td class="r">2200–2299</td><td class="r">Egenkapital og gjeld</td></tr>
-            <tr><td><span class="step">Kortsiktig gjeld</span></td><td class="r">2400–2999</td><td class="r">Egenkapital og gjeld</td></tr>
-          </tbody>
-        </table>
-        </div>
-      </div>
+        <div class="lc-led"><span class="nm"><b>Egenkapitalandel</b><span class="tag">Nøkkeltall</span></span><span class="fig">%</span><p class="dsc">Sum egenkapital delt på sum eiendeler, vist i prosent. Viser hvor stor del av det selskapet eier som er finansiert med egne penger framfor lån.</p></div>
+        <div class="lc-led"><span class="nm"><b>Likviditetsgrad 1</b><span class="tag">Nøkkeltall</span></span><span class="fig">×</span><p class="dsc">Omløpsmidler delt på kortsiktig gjeld. Viser hvor mange ganger de kortsiktige eiendelene dekker det selskapet skal betale snart.</p></div>
+        <div class="lc-led"><span class="nm"><b>Gjeldsgrad</b><span class="tag">Nøkkeltall</span></span><span class="fig">×</span><p class="dsc">Samlet gjeld delt på egenkapital. Viser hvor mange kroner gjeld selskapet har for hver krone egenkapital.</p></div>
+        <div class="lc-led"><span class="nm"><b>Arbeidskapital</b><span class="tag">Nøkkeltall</span></span><span class="fig">kr</span><p class="dsc">Omløpsmidler minus kortsiktig gjeld. Viser hva som er igjen av de kortsiktige eiendelene når det som forfaller snart, er betalt.</p></div>
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcC-regnskap-balanse">
@@ -1234,8 +1143,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </div>
     </section>
     <section class="lc-sec" aria-labelledby="lcD-regnskap-balanse">
-      <div class="lc-head"><span class="lc-kicker">Sporsmal og svar</span><h2 class="lc-title" id="lcD-regnskap-balanse">Det folk lurer mest på</h2></div>
+      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-regnskap-balanse">Det folk lurer mest på</h2></div>
       <div class="lc-faq">
+        <details class="lc-q"><summary>Hva er en balanse?</summary><div class="a"><p>Et øyeblikksbilde av selskapet på én dato, som regel 31. desember. Den ene siden viser hva selskapet eier (eiendeler). Den andre viser hvem som har finansiert det: eierne (egenkapital) eller noen selskapet skylder penger (gjeld). Oppstillingen følger regnskapsloven § 6-2.</p></div></details>
         <details class="lc-q"><summary>Hvorfor må de to sidene være like store?</summary><div class="a"><p>Hver krone selskapet eier må ha kommet et sted fra — enten fra eierne (egenkapital) eller fra noen selskapet skylder (gjeld). Derfor er eiendeler alltid lik egenkapital pluss gjeld. Det er kjernen i dobbel bokføring.</p></div></details>
         <details class="lc-q"><summary>Hva er forskjellen på anleggsmidler og omløpsmidler?</summary><div class="a"><p>Anleggsmidler eies og brukes over flere år — bygninger, maskiner og langsiktige investeringer. Omløpsmidler snus i driften innen et år — varelager, kundefordringer og bankinnskudd. Skillet kreves av regnskapsloven § 5-1.</p></div></details>
         <details class="lc-q"><summary>Hva betyr det at kontrollen viser «Balansen stemmer»?</summary><div class="a"><p>At sum eiendeler og sum egenkapital og gjeld er like store — forskjellen er mindre enn 1 krone. Da går oppstillingen opp slik § 6-2 krever. Er forskjellen større, vises avviket i kroner med en forklaring på hva du bør sjekke.</p></div></details>
@@ -1523,9 +1433,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   });
 })();
 </script>
-<script src="/shared/top-chrome.js?v=v243" defer></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script src="/shared/top-chrome.js?v=v245" defer></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —

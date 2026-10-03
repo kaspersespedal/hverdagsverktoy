@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v228" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v229" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -48,12 +48,12 @@
 </script>
 
 <!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v241">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v2">
-<link rel="stylesheet" href="/shared/bok/bok-render.css?v=v1">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v245">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/bok/bok-render.css?v=v2">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -301,7 +301,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     width:100%;
     max-width:100vw;
   }
-  .container{max-width:1120px;margin:0 auto;padding:0 32px}
   ::selection{background:rgba(var(--glow-rgb),.28);color:var(--ink)}
 
   .nav-wrap{
@@ -506,159 +505,70 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     transition:background .2s var(--ease),transform .2s var(--ease),border-color .2s var(--ease)}
   @media(hover:hover){.crumb-back:hover{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink);transform:translateX(-2px)}}
 
-  .calc-grid{
-    display:grid;grid-template-columns:1fr 360px;gap:32px;align-items:start;
-    padding:8px 0 56px;
-  }
-  .calc-form{display:flex;flex-direction:column;gap:24px}
-  .calc-section{
-    background:var(--surface);border:1px solid var(--line);border-radius:6px;
-    padding:18px 22px 20px;
-  }
-  .calc-section-head{
-    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
-    padding-bottom:12px;margin-bottom:14px;
-    border-bottom:1px solid var(--line);
-  }
-  .calc-section-head h2{
-    font-family:var(--font-sans);font-size:11px;font-weight:600;
-    letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
-    margin:0;
-  }
-  .calc-section-head .hint{
-    font-size:11.5px;color:var(--ink3);font-style:italic;
-  }
+  /* Kalkulatoren: lønn-sidens ks-skall (personlig/lonn), uten side-col som
+     på kalkyle-sidene. Satsene står i Hjemmel, lenkene under Videre. */
+  .calc-wrap{padding:28px 0 56px}
+  .calc-wrap .container{display:block}
 
-  .calc-fields{
-    display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;
-  }
-  .fg{display:flex;flex-direction:column;gap:6px}
-  .fg.full{grid-column:1 / -1}
-  .fg label.flbl{
-    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;
-    color:var(--ink3);
-  }
-  .fg input,
-  .fg select{
-    width:100%;background:var(--bg);
-    border:1px solid var(--line-2);border-radius:5px;
-    padding:11px 12px;
-    color:var(--ink);font:500 14px/1.2 var(--font-sans);
-    outline:none;
+  .ks-host{min-width:0}
+  .ks{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:48px}
+
+  .ks-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
+  .ks-strip-cell{background:var(--surface);padding:18px 22px;display:flex;flex-direction:column;gap:6px;min-width:0}
+  .ks-strip-cell .l{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+  .ks-strip-cell .v{font-family:var(--font-serif);font-weight:500;font-size:22px;line-height:1;font-variant-numeric:tabular-nums lining-nums;color:var(--ink)}
+  .ks-strip-cell.accent{background:color-mix(in srgb, var(--accent) 6%, var(--surface))}
+  .ks-strip-cell.accent .v{color:var(--accent-2)}
+  @media(max-width:780px){.ks-strip{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+  @media(max-width:560px){.ks-strip-cell{padding:14px 14px}.ks-strip-cell .v{font-size:17px}}
+
+  .ks-body{display:grid;grid-template-columns:1fr 340px;gap:1px;background:var(--line)}
+  @media(max-width:980px){.ks-body{grid-template-columns:1fr}}
+
+  .ks-form{background:var(--surface);padding:22px 26px;min-width:0}
+  .ks-section{margin-bottom:22px}
+  .ks-section:last-child{margin-bottom:0}
+  .ik-section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .ik-section-head h3{margin:0;font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);letter-spacing:-.2px}
+  .ik-section-head .meta{font-size:11px;letter-spacing:.04em;color:var(--ink3)}
+  .ik-stack{display:flex;flex-direction:column;gap:12px}
+  .ik-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ik-row.full{grid-template-columns:1fr}
+  @media(max-width:580px){.ik-row{grid-template-columns:1fr}}
+
+  .ik-fg{display:flex;flex-direction:column;gap:5px;min-width:0}
+  .ik-lbl{font:500 11.5px/1.3 var(--font-sans);letter-spacing:.02em;color:var(--ink2)}
+  .ik-lbl .cap{color:var(--ink4);font-weight:400}
+  .ik-input,.ik-select{
+    width:100%;
+    background:var(--surface-2);border:1px solid var(--line-2);
+    color:var(--ink);font:inherit;font-size:14px;
+    padding:9px 12px;border-radius:4px;outline:none;
     font-variant-numeric:tabular-nums;
-    transition:border-color .2s var(--ease), background .2s var(--ease);
+    transition:border-color .15s, background .15s;
   }
-  .fg input:focus,
-  .fg select:focus{
-    border-color:var(--line-warm);background:var(--surface-2);
-  }
-  .fg select{
+  .ik-input:focus,.ik-select:focus{border-color:var(--accent);background:var(--surface)}
+  .ik-select{
     appearance:none;-webkit-appearance:none;cursor:pointer;padding-right:32px;
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23797469' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");
     background-repeat:no-repeat;background-position:right 10px center;
   }
-  .fg .hint-line{
-    font-size:11.5px;color:var(--ink3);line-height:1.55;margin-top:2px;font-style:italic;
-  }
-  .check-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer}
-  .check-row input{width:16px;height:16px;cursor:pointer;accent-color:var(--accent);background:transparent}
+  .ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin:0;font-style:italic}
 
-  .info-box{
-    margin:0;padding:11px 14px;
-    background:var(--surface-2);
-    border:1px solid var(--line);
-    border-left:2px solid var(--accent);
-    border-radius:5px;
-    font-size:12.5px;color:var(--ink2);line-height:1.55;
-  }
-  .info-box a{color:var(--accent);text-decoration:underline;font-weight:600}
+  .ks-result{background:var(--surface);padding:22px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+  .ks-r-eyebrow{font:500 10px/1 var(--font-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
+  .ks-r-net{font-family:var(--font-serif);font-weight:500;font-size:36px;color:var(--accent-2);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.7px;line-height:1.05}
+  .ks-r-mnd{font-size:12px;color:var(--ink3);line-height:1.5}
+  .ks-r-mnd b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 
-  .calc-result{
-    position:sticky;top:124px;
-    background:var(--surface);border:1px solid var(--line);border-radius:6px;
-    padding:24px 22px 20px;
-    display:flex;flex-direction:column;gap:16px;
-  }
-  .res-headline{
-    border-bottom:1px solid var(--line);
-    padding-bottom:16px;
-  }
-  .res-headline .r-lbl{
-    display:block;
-    font:600 10px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
-    color:var(--ink3);margin-bottom:8px;
-  }
-  .res-headline .r-val{
-    display:block;
-    font-family:var(--font-serif);font-weight:500;
-    font-size:38px;line-height:1;letter-spacing:-.8px;color:var(--ink);
-    font-variant-numeric:tabular-nums lining-nums;
-  }
-  .res-headline .r-verdict{
-    display:block;margin-top:8px;
-    font-size:12.5px;color:var(--ink3);font-style:italic;
-  }
-  .res-stats{display:flex;flex-direction:column}
-  .res-stat{
-    display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-    padding:11px 0;border-bottom:1px solid var(--line);
-    font-size:13px;
-  }
-  .res-stat:last-child{border-bottom:none}
-  .res-stat.divide{border-top:1px solid var(--line);margin-top:4px;padding-top:14px}
-  .res-stat .l{color:var(--ink2);
-    font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;}
-  .res-stat .v{
-    font-family:var(--font-serif);font-weight:500;font-size:17px;
-    color:var(--ink);font-variant-numeric:tabular-nums;
-  }
-  .res-stat.strong .v{font-weight:700;font-size:18px}
-  .res-section-h{
-    font:600 10px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-    color:var(--ink3);margin:8px 0 -2px;
-  }
-  .res-note{
-    font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic;
-    margin:6px 0 0;
-  }
+  .ks-r-stats{display:flex;flex-direction:column;gap:7px;padding-top:12px;border-top:1px solid var(--line)}
+  .ks-r-stat{display:flex;align-items:baseline;justify-content:space-between;gap:14px;font-size:13px;color:var(--ink2)}
+  .ks-r-stat .l{color:var(--ink3);font-size:11.5px;letter-spacing:.04em}
+  .ks-r-stat .v{color:var(--ink);font-variant-numeric:tabular-nums lining-nums;font-weight:500}
+  .ks-r-stat.div{padding-top:8px;margin-top:4px;border-top:1px solid var(--line)}
+  .ks-r-stat .v.dim{color:var(--ink3)}
+  @media(max-width:560px){.ks-form,.ks-result{padding:18px 16px}}
   .hidden{display:none}
-
-  .content-card{
-    background:var(--surface);border:1px solid var(--line);border-radius:6px;
-    padding:22px 24px 20px;
-  }
-  .content-card h3{
-    font-family:var(--font-serif);font-weight:500;font-size:22px;line-height:1.2;
-    letter-spacing:-.4px;margin:0 0 10px;color:var(--ink);
-  }
-  .content-card p{margin:0 0 10px;font-size:14px;line-height:1.65;color:var(--ink2)}
-  .content-card p:last-child{margin-bottom:0}
-  .content-card .ref-cta{
-    display:inline-flex;align-items:center;gap:6px;
-    color:var(--accent);text-decoration:none;font-weight:600;font-size:13.5px;
-    border-bottom:1px solid color-mix(in srgb,var(--accent) 35%,transparent);
-    padding-bottom:1px;
-    transition:color .2s var(--ease), border-color .2s var(--ease);
-  }
-  .content-card .ref-cta:hover{color:var(--accent-2);border-bottom-color:var(--accent-2)}
-
-  .content-grid{
-    display:grid;grid-template-columns:1fr 1fr;gap:18px;
-    padding:0 0 56px;
-  }
-  @media (max-width:880px){
-    .content-grid{grid-template-columns:1fr}
-  }
-
-  @media (max-width: 880px){
-    .calc-grid{grid-template-columns:1fr}
-    .calc-result{position:static;top:auto}
-  }
-  @media (max-width: 560px){
-    .calc-section{padding:16px 16px 18px}
-    .calc-result{padding:20px 18px 18px}
-    .calc-fields{grid-template-columns:1fr;gap:12px}
-  }
 
   /* T3: site-shell — help-btn + focus-btn + howto-details + full footer */
   .page-hero-actions{display:flex;gap:8px;margin-top:14px;}
@@ -700,17 +610,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .site-footer-full .footer-author{font-size:12px;color:var(--ink3);}
   .site-footer-full .footer-copy{font-size:12px;color:var(--ink3);line-height:1.6;}
 
-  /* Side-col port (claude-design 2026-05-27) — 3-col on wide, full-width 3-card row on medium */
-  @media(min-width:1201px){
-    .calc-grid.has-side-col{grid-template-columns:1.4fr 1fr 240px}
-  }
-  @media(min-width:901px) and (max-width:1200px){
-    .calc-grid.has-side-col > .side-col{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .calc-grid.has-side-col > .side-col > .side-card{margin:0}
-  }
-  @media(max-width:900px){
-    .calc-grid.has-side-col > .side-col{grid-column:1/-1}
-  }
 </style>
 <style>
 /* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
@@ -839,6 +738,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 @media(hover:hover){
   .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
 }
+.lc-rates + .lc-links{margin-top:24px}
 
 @media(max-width:820px){
   .lc-rates{grid-template-columns:minmax(0,1fr)}
@@ -964,184 +864,167 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <span class="sep"></span>
           <span class="here">Skatteavstemming</span>
         </div>
-        <h1 class="page-title"><em>Skatte</em>avstemming</h1>
-        <p class="page-lead">Avstem bokført skattekostnad mot det resultatet skulle gitt. Alt regnes ut lokalt i nettleseren, og tallene forlater aldri maskinen din.</p>
+        <h1 class="page-title" data-ph-skip lang="nb" dir="ltr"><em>Skatte</em>avstemming</h1>
+        <p class="page-lead" id="svar" data-ph-skip lang="nb" dir="ltr">Skattekostnaden starter på 22&nbsp;% av resultat før skatt (25&nbsp;% med finansskatt på lønn). Noen poster endrer den, som bøter og skattefritt utbytte. Legg inn tallene, så ser du hvor mye som står igjen uforklart. Det skal være 0&nbsp;kr.</p>
         <div class="page-hero-actions">
           <button type="button" class="calc-help-btn" data-target="sav-howto" aria-label="Vis veiledning" title="Vis veiledning" aria-expanded="false">?</button>
           <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner">⛶</button>
         </div>
       </div>
-      <div class="page-stats">
-        <div class="page-stat"><span class="l">Uforklart avvik</span><span class="v" id="hStatDiff">–</span></div>
-        <div class="page-stat"><span class="l">Effektiv sats</span><span class="v" id="hStatEtr">–</span></div>
+      <div class="page-stats" data-ph-skip lang="nb" dir="ltr">
+        <div class="page-stat"><span class="l">Uforklart avvik</span><span class="v" id="hStatDiff" data-bok="avvik">–</span></div>
+        <div class="page-stat"><span class="l">Effektiv skattesats</span><span class="v" id="hStatEtr" data-bok="etr">–</span></div>
       </div>
     </div>
   </section>
 
-  <div class="container">
+  <div class="calc-wrap" data-ph-skip lang="nb" dir="ltr">
+    <div class="container">
 
-    <section id="svar" class="bok-svar" aria-label="Svaret først">
-      <p><strong>Skattekostnaden skal være 22 % av resultat før skatt</strong>, pluss 22 % av de permanente forskjellene, pluss eller minus feil i fjorårets avsetning og effekten av endret sats. Det som blir stående igjen, er uforklart.</p>
-      <p>Legg inn tallene dine, så settes de inn i oppstillingen linje for linje. <strong>Står det noe annet enn null i uforklart-raden, er det en feil du må finne</strong> — ikke en restpost du kan la stå.</p>
-    </section>
+      <details class="howto" id="sav-howto">
+        <summary>Slik gjør du</summary>
+        <div class="howto-body">
+          <div class="howto-row"><div class="h-title">Hent to tall</div><div class="h-desc">Resultat før skatt og skattekostnaden står i resultatregnskapet.</div></div>
+          <div class="howto-row"><div class="h-title">Legg inn forskjellene</div><div class="h-desc">Under Permanente forskjeller skriver du hele beløpet. Under Skattebeløp skriver du bare skatten.</div></div>
+          <div class="howto-row"><div class="h-title">Les avviket</div><div class="h-desc">0&nbsp;kr betyr at tallene henger sammen. Er det noe annet, står mulige årsaker i svaret.</div></div>
+        </div>
+      </details>
 
-    <div class="bok-beviser-ikke">
-      <h3>Hva en nullstilt avstemming ikke beviser</h3>
-      <p>Går avstemmingen i null, betyr det at tallene du la inn henger sammen med hverandre. Det betyr <strong>ikke</strong> at:</p>
-      <ul>
-        <li>skattekostnaden er riktig beregnet — legger du inn feil bokført skattekostnad og en permanent forskjell som er like feil, går avstemmingen i null med to feil,</li>
-        <li>du har funnet alle permanente forskjellene — en glemt bot gir null avvik hvis du også har glemt den i tallet du avstemmer mot,</li>
-        <li>de midlertidige forskjellene er riktige — de påvirker ikke denne oppstillingen i det hele tatt, og kan være vilkårlig gale uten at det synes her,</li>
-        <li>utsatt skattefordel er riktig balanseført — sannsynlighetsvurderingen er et skjønn, ikke et regnestykke, og denne siden tester den ikke,</li>
-        <li>forskjellene er avstemt mot næringsspesifikasjonen — det er en egen kontroll,</li>
-        <li>skattemeldingen er riktig — dette er en regnskapskontroll og et notekrav.</li>
-      </ul>
-    </div>
+      <div class="bok-satsvarsel" id="bokSatsvarsel" hidden></div>
 
-    <div id="regelsett" class="bok-regelsett">
-      <strong>Regelsett:</strong> Selve avstemmingen regnes likt i norsk GAAP og IFRS. Forskjellen ligger i notekravet, ikke i mekanikken — derfor har denne siden ingen regelsett-velger. Se <a href="#side-om-side">regelen side om side</a>.
-    </div>
-
-    <div class="bok-satsvarsel" id="bokSatsvarsel" hidden></div>
-
-    <div class="calc-grid has-side-col">
-
-      <div class="calc-form">
-
-        <details class="howto" id="sav-howto">
-          <summary>Slik bruker du skatteavstemmingen</summary>
-          <div class="howto-body">
-            <div class="howto-row"><div class="h-title">Grunnlag eller skattebeløp?</div><div class="h-desc">De fire øverste beløpsfeltene er <em>grunnlag</em> i kroner — siden ganger dem med satsen selv. De fire nederste er allerede <em>skattebeløp</em>. Blander du dem, bommer avviket med rundt 4,5 ganger.</div></div>
-            <div class="howto-row"><div class="h-title">Fortegn</div><div class="h-desc">Underskudd og netto skatteinntekt tastes med minus. Er avviket nøyaktig to ganger et beløp du kjenner igjen, er det et fortegn som står feil vei.</div></div>
-            <div class="howto-row"><div class="h-title">Tallene dine</div><div class="h-desc">De lagres bare så lenge fanen er åpen, og sendes aldri noe sted.</div></div>
+      <div class="ks-host">
+        <div class="ks">
+          <!-- Stripa leses som likningen: skatt av resultatet, pluss/minus postene = forklart skatt, mot skatten i regnskapet = avvik. -->
+          <div class="ks-strip">
+            <div class="ks-strip-cell"><span class="l">Skatt av resultatet</span><span class="v" data-bok="forventet">–</span></div>
+            <div class="ks-strip-cell"><span class="l">Forklart skatt</span><span class="v" data-bok="beregnet">–</span></div>
+            <div class="ks-strip-cell"><span class="l">Skatt i regnskapet</span><span class="v" data-bok="bokfort">–</span></div>
+            <div class="ks-strip-cell accent"><span class="l">Uforklart avvik</span><span class="v" data-bok="avvik">–</span></div>
           </div>
-        </details>
 
-        <section class="calc-section" aria-labelledby="savInputHdr">
-          <header class="calc-section-head">
-            <h2 id="savInputHdr">Tallene dine</h2>
-            <span class="hint">Regnes lokalt</span>
-          </header>
-          <div class="calc-fields" id="bokFelt"></div>
-        </section>
+          <div class="ks-body">
+            <!-- Tre seksjoner, bygd av motoren fra modellens grupper og felt. -->
+            <div class="ks-form" id="bokFelt"></div>
 
-        <section class="calc-section" id="regnestykket" aria-labelledby="savStegHdr">
-          <header class="calc-section-head">
-            <h2 id="savStegHdr">Regnestykket, linje for linje</h2>
-            <span class="hint">Med dine egne tall</span>
-          </header>
-          <div class="bok-steg" id="bokSteg"></div>
-        </section>
+            <aside class="ks-result">
+              <div class="ks-r-eyebrow">Uforklart avvik</div>
+              <div class="ks-r-net" id="bokAvvik" data-bok="avvik">–</div>
+              <p class="ks-r-mnd" id="bokDom" aria-live="polite" aria-atomic="true">Legg inn resultat før skatt og skattekostnaden. Svaret kommer mens du skriver.</p>
+              <div class="ks-r-stats">
+                <div class="ks-r-stat"><span class="l">Effektiv skattesats<span class="cap">skattekostnad ÷ resultat før skatt</span></span><span class="v" data-bok="etr">–</span></div>
+              </div>
+              <p class="bok-merknad" id="bokMerknad" hidden></p>
+              <div class="bok-aarsaker" id="bokAarsaker" hidden></div>
+              <p class="ks-r-foot">Veiledende. Tallene blir i nettleseren og slettes når du lukker fanen.</p>
+            </aside>
+          </div>
 
-        <p class="info-box">
-          Satsen på 22 % følger av Stortingets skattevedtak for inntektsåret 2026 § 3-3 første ledd. Annet ledd gir 25 % for selskap som svarer finansskatt på lønn etter folketrygdloven § 23-2 a. Treprosentregelen står i skatteloven § 2-38 sjette ledd.
-        </p>
+          <section class="ks-steg" id="regnestykket" aria-labelledby="savStegHdr" hidden>
+            <div class="ik-section-head">
+              <h3 id="savStegHdr">Regnestykket med dine tall</h3>
+              <span class="meta">Linjer med 0&nbsp;kr er skjult</span>
+            </div>
+            <div class="bok-steg" id="bokSteg"></div>
+          </section>
 
+          <details class="ks-more" id="beviser-ikke">
+            <summary>Hva beviser 0&nbsp;kr i avvik?</summary>
+            <div class="body">
+              <p>Bare at tallene du la inn henger sammen. Det beviser <strong>ikke</strong> at:</p>
+              <ul class="bok-liste">
+                <li>skattekostnaden er riktig. To feil som utligner hverandre, gir også 0.</li>
+                <li>du har med alle permanente forskjeller. En bot du har glemt både her og i skatteberegningen, gir også 0.</li>
+                <li>de midlertidige forskjellene er riktige. De er ikke med her, så feil i dem synes ikke.</li>
+                <li>utsatt skattefordel er riktig balanseført. Om den sannsynligvis kan utnyttes, er et skjønn som siden ikke tester.</li>
+                <li>forskjellene stemmer med næringsspesifikasjonen (delen av skattemeldingen med regnskapstall og forskjeller). Det er en egen kontroll.</li>
+                <li>skattemeldingen er riktig. Dette er en kontroll av regnskapet.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
       </div>
 
-      <aside class="calc-result" aria-live="polite">
-        <div class="res-section-h">Avstemming</div>
-        <div class="bok-avst" id="bokAvstemming"></div>
-
-        <div class="res-section-h">Nøkkeltall</div>
-        <div class="bok-avst" id="bokNokkeltall"></div>
-
-        <p class="res-note">Veiledende. Kontroller mot eget regnskap og næringsspesifikasjon. Tallene dine sendes aldri noe sted.</p>
-      </aside>
-
-      <aside class="side-col">
-        <div class="side-card">
-          <h4>Satser 2026</h4>
-          <div class="ref-row"><span class="l">Alminnelig inntekt</span><span class="v">22<span class="u">%</span></span></div>
-          <div class="ref-row"><span class="l">Finansskatt på lønn</span><span class="v">25<span class="u">%</span></span></div>
-          <div class="ref-row"><span class="l">Treprosentregelen</span><span class="v">3<span class="u">%</span></span></div>
-        </div>
-        <div class="side-card related">
-          <h4>Relaterte verktøy</h4>
-          <a href="/regnskap/resultat/"><span class="name">Resultatregnskap</span><span class="arr">→</span></a>
-          <a href="/regnskap/balanse/"><span class="name">Balanse</span><span class="arr">→</span></a>
-          <a href="/regnskap/mva/"><span class="name">MVA-melding</span><span class="arr">→</span></a>
-        </div>
-      </aside>
-
     </div>
-
   </div>
 
-<div class="container">
+<div class="container" data-ph-skip lang="nb" dir="ltr">
   <div class="lonn-learn">
 
+    <section class="lc-sec" id="feil" aria-labelledby="lcC-sav">
+      <div class="lc-head"><span class="lc-kicker">Vanlige feil</span><h2 class="lc-title" id="lcC-sav">Det som <em>oftest</em> går galt</h2><p class="lc-intro">Del avviket på to, og eventuelt på satsen. Ofte dukker et kjent beløp opp.</p></div>
+      <ul class="bok-liste">
+        <li><strong>Tar med midlertidige forskjeller</strong> (poster som jevner seg ut over tid, f.eks. ulik avskrivning i regnskap og skatt). De hører i utsatt skatt, ikke her. Avviket blir da satsen × forskjellen.</li>
+        <li><strong>Glemmer fjorårets korreksjon.</strong> Forskjellen mellom endelig fastsatt og avsatt betalbar skatt føres i årets resultat, som et endret anslag (estimatendring). Ikke mot egenkapitalen.</li>
+        <li><strong>Mangler egen linje for satsendring.</strong> Hele den inngående netto forskjellen må regnes om, ellers går avstemmingen aldri i null.</li>
+        <li><strong>Avstemmer ikke midlertidige forskjeller mot næringsspesifikasjonen</strong> (delen av skattemeldingen med regnskapstall og forskjeller). Det er en egen kontroll som denne siden ikke gjør.</li>
+        <li><strong>Nettofører utsatt skattefordel mot utsatt skatt</strong> uten at vilkårene for motregning er oppfylt.</li>
+        <li><strong>Bytter om hele beløpet og skatten.</strong> Linjen blir da rundt 4,5 ganger for stor, eller bare 22&nbsp;% av riktig beløp (ved 22&nbsp;% sats).</li>
+      </ul>
+    </section>
+
     <section class="lc-sec" id="side-om-side" aria-labelledby="lcA-sav">
-      <div class="lc-head"><span class="lc-kicker">Regelen side om side</span><h2 class="lc-title" id="lcA-sav">Hva <em>regelsettet</em> endrer</h2><p class="lc-intro">Selve regnestykket er det samme uansett regelsett. Det som skiller dem, er om avstemmingen må stå i note, og hvor detaljert.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Regelen side om side</span><h2 class="lc-title" id="lcA-sav">Hva <em>regelsettet</em> endrer</h2><p class="lc-intro">Regnestykket er likt i alle regelsett. Forskjellen er om avstemmingen må stå i notene til årsregnskapet, og hvor detaljert. Norsk GAAP betyr regnskapsloven og de norske standardene (NRS). IFRS er de internasjonale standardene, og der gjelder IAS 12 for skatt.</p></div>
       <div class="lc-tblwrap">
         <table class="lc-trinn">
-          <thead><tr><th>Regelsett</th><th>Krav til avstemming i note</th></tr></thead>
+          <thead><tr><th>Regelsett</th><th>Krav i notene</th></tr></thead>
           <tbody>
-            <tr><td>Norsk GAAP, øvrige foretak</td><td>Regnskapsloven § 7-23 «Skattekostnad» krever noteopplysning om skattekostnaden. NRS(F) Resultatskatt utdyper hva spesifikasjonen skal inneholde.</td></tr>
-            <tr><td>Små foretak</td><td>§ 7-23 står blant noteopplysningene som <strong>ikke</strong> er obligatoriske for små foretak. Avstemmingen er like nyttig som kontroll, men kreves ikke i noten.</td></tr>
-            <tr><td>Forenklet IFRS</td><td>Måling følger IFRS, mens presentasjon og noter følger regnskapsloven. Avstemmingen gjøres på samme måte.</td></tr>
-            <tr><td>Full IFRS</td><td>IAS 12 krever en formell avstemming mellom skattekostnad og regnskapsmessig resultat i note. <span class="bok-usikker">avsnitt ikke etterprøvd</span></td></tr>
+            <tr><td>Norsk GAAP, andre enn små foretak</td><td>Du må ha en note om skattekostnaden. NRS(F) Resultatskatt sier hva den skal inneholde.</td></tr>
+            <tr><td>Små foretak</td><td>Noten om skattekostnaden er <strong>ikke</strong> påkrevd. Avstemmingen er like nyttig som kontroll.</td></tr>
+            <tr><td>Forenklet IFRS</td><td>Måling etter IFRS, presentasjon og noter etter regnskapsloven. Avstemmingen gjøres likt.</td></tr>
+            <tr><td>Full IFRS</td><td>IAS 12 krever at noten forklarer sammenhengen mellom skattekostnaden og regnskapsmessig resultat — som avstemming i kroner eller av skattesatsen. <span class="bok-usikker">avsnitt ikke etterprøvd</span></td></tr>
           </tbody>
         </table>
       </div>
-      <div class="lc-notes">
-        <p class="lc-note">Alle fire står her samtidig med vilje. Et verktøy som viser forskjellen ved å skjule tre av fire, demonstrerer ingenting.</p>
-        <p class="lc-note">Merknaden på IAS 12: henvisningen til hvilket avsnitt som hjemler kravet stammer fra en annenhåndskilde og er ikke kontrollert mot standarden selv. Selve kravet er godt belagt; avsnittsnummeret oppgir vi derfor ikke.</p>
-      </div>
-    </section>
-
-    <section class="lc-sec" id="hjemmel" aria-labelledby="lcB-sav">
-      <div class="lc-head"><span class="lc-kicker">Hjemmel</span><h2 class="lc-title" id="lcB-sav">Hvor det <em>står</em></h2><p class="lc-intro">Lovtekst kan gjengis fritt. Regnskapsstandarder er opphavsrettsbeskyttet, og omtales derfor bare ved nummer og med egne ord.</p></div>
-      <ul class="bok-liste">
-        <li><strong>Regnskapsloven § 7-23 Skattekostnad</strong> — noteopplysning om skattekostnaden. Ikke obligatorisk for små foretak.</li>
-        <li><strong>Stortingets skattevedtak for inntektsåret 2026 § 3-3</strong> — første ledd gir 22 %, annet ledd gir 25 % for selskap som svarer finansskatt på lønn.</li>
-        <li><strong>Folketrygdloven § 23-2 a</strong> — finansskatt på lønn. Det er lønnsplikten som utløser den høye satsen, ikke at foretaket kalles et finansforetak.</li>
-        <li><strong>Skatteloven § 2-38 sjette ledd</strong> — treprosentregelen i fritaksmetoden. Bokstav a gjelder utbytte, ikke gevinster. Bokstav c gjør unntak innenfor skattekonsern.</li>
-        <li><strong>NRS(F) Resultatskatt</strong> — den norske standarden for skatt i regnskapet. Omtales her, gjengis ikke.</li>
-        <li><strong>IAS 12 Inntektsskatt</strong> — den internasjonale standarden. Omtales her, gjengis ikke.</li>
-      </ul>
-      <div class="lc-links">
-        <a class="lc-link" href="/lov/skattelov/"><span class="name">Skatteloven</span><span class="arr">→</span></a>
-        <a class="lc-link" href="/lov/bokforingslov/#card-dokumentasjon"><span class="name">Bokføringsloven — dokumentasjon</span><span class="arr">→</span></a>
-      </div>
-    </section>
-
-    <section class="lc-sec" id="feil" aria-labelledby="lcC-sav">
-      <div class="lc-head"><span class="lc-kicker">Vanlige feil</span><h2 class="lc-title" id="lcC-sav">Det som <em>oftest</em> går galt</h2><p class="lc-intro">Avviket forteller deg ofte hvilken av disse det er. Del avviket på satsen, eller på to, og se om tallet blir kjent.</p></div>
-      <ul class="bok-liste">
-        <li><strong>Blander permanente og midlertidige forskjeller.</strong> Midlertidige forskjeller hører i utsatt skatt og skal ikke inn i denne oppstillingen. Avviket blir da satsen ganget med forskjellen.</li>
-        <li><strong>Glemmer korreksjonen fra fjorårets fastsetting.</strong> Differansen mellom endelig fastsatt skatt og det som ble avsatt, føres i år som estimatendring — ikke mot egenkapitalen.</li>
-        <li><strong>Viser ikke effekten av endret skattesats på egen linje.</strong> Er satsen endret, må hele den inngående netto forskjellen regnes om. Uten linjen går avstemmingen aldri i null.</li>
-        <li><strong>Avstemmer ikke de midlertidige forskjellene mot næringsspesifikasjonen.</strong> Denne siden fanger det ikke opp — det er en egen kontroll.</li>
-        <li><strong>Nettofører utsatt skattefordel og utsatt skatt</strong> uten at vilkårene for motregning er oppfylt.</li>
-        <li><strong>Legger inn et skattebeløp der det skal stå et grunnlag,</strong> eller omvendt. Avviket blir da rundt 4,5 ganger for stort, eller rundt 0,22 ganger.</li>
-      </ul>
     </section>
 
     <section class="lc-sec" id="dokumentasjon" aria-labelledby="lcD-sav">
-      <div class="lc-head"><span class="lc-kicker">Dokumentasjon</span><h2 class="lc-title" id="lcD-sav">Hva revisor <em>spør om</em></h2><p class="lc-intro">Dette er hva som pleier å bli etterspurt. Det er ikke en sjekkliste du kan hake av og dermed ha dokumentert noe — listen sier hva du bør ha, ikke at du har det.</p></div>
+      <div class="lc-head"><span class="lc-kicker">Dokumentasjon</span><h2 class="lc-title" id="lcD-sav">Hva revisor <em>spør om</em></h2></div>
       <ul class="bok-liste">
-        <li>Grunnlaget for hver permanente forskjell, spesifisert — ikke bare summen.</li>
+        <li>Grunnlaget for hver permanente forskjell, spesifisert – ikke bare summen.</li>
         <li>Avstemming av de midlertidige forskjellene mot næringsspesifikasjonen.</li>
-        <li>Dokumentasjon av fjorårskorreksjonen: endelig fastsatt skatt mot avsatt beløp.</li>
-        <li>Grunnlaget for at utsatt skattefordel er balanseført, eller for at den ikke er det.</li>
-        <li>Beregningen bak effekten av endret skattesats, dersom satsen er endret.</li>
+        <li>Fjorårskorreksjonen: endelig fastsatt skatt mot avsatt beløp.</li>
+        <li>Grunnlaget for at utsatt skattefordel er balanseført – eller for at den ikke er det.</li>
+        <li>Beregningen av effekten av satsendring, hvis satsen er endret.</li>
       </ul>
     </section>
 
-    <section class="lc-sec" id="naboer" aria-labelledby="lcE-sav">
-      <div class="lc-head"><span class="lc-kicker">Videre</span><h2 class="lc-title" id="lcE-sav">Beslektede <em>oppslag</em></h2><p class="lc-intro">Dette er det første oppslaget i bokføringsserien. Flere kommer.</p></div>
+    <section class="lc-sec" id="hjemmel" aria-labelledby="lcB-sav">
+      <div class="lc-head"><span class="lc-kicker">Hjemmel</span><h2 class="lc-title" id="lcB-sav">Hvor det <em>står</em></h2></div>
+      <div class="lc-rates">
+        <ul class="bok-liste">
+          <li><strong>Regnskapsloven § 7-23 Skattekostnad</strong> – note om skattekostnaden. Ikke påkrevd for små foretak.</li>
+          <li><strong>Stortingets skattevedtak for inntektsåret 2026 § 3-3</strong> – første ledd gir 22&nbsp;%. Annet ledd gir 25&nbsp;% for selskap som betaler finansskatt på lønn.</li>
+          <li><strong>Folketrygdloven § 23-2 a</strong> – finansskatt på lønn. 25&nbsp;% gjelder foretak som må betale denne skatten. Å kalles finansforetak er ikke nok.</li>
+          <li><strong>Skatteloven § 2-38 sjette ledd</strong> – treprosentregelen i fritaksmetoden. Bokstav a gjelder utbytte, ikke gevinster. Bokstav c gjør unntak innenfor skattekonsern.</li>
+          <li><strong>NRS(F) Resultatskatt</strong> – norsk standard for skatt i regnskapet.</li>
+          <li><strong>IAS 12 Inntektsskatt</strong> – internasjonal standard. Kravet om avstemming i noten er godt belagt.</li>
+        </ul>
+        <div class="lc-card">
+          <span class="ttl">Satser 2026</span>
+          <div class="lc-kv"><span class="k">Selskapsskatt</span><span class="v">22<span class="u">%</span></span></div>
+          <div class="lc-kv"><span class="k">Selskap med finansskatt på lønn</span><span class="v">25<span class="u">%</span></span></div>
+          <div class="lc-kv"><span class="k">Skattepliktig del av utbytte (treprosentregelen)</span><span class="v">3<span class="u">%</span></span></div>
+        </div>
+      </div>
       <div class="lc-links">
-        <a class="lc-link" href="/regnskap/"><span class="name">Alle regnskapsverktøy</span><span class="arr">→</span></a>
-        <a class="lc-link" href="/regnskap/resultat/"><span class="name">Resultatregnskap</span><span class="arr">→</span></a>
-        <a class="lc-link" href="/regnskap/mva/"><span class="name">MVA-melding</span><span class="arr">→</span></a>
+        <a class="lc-link" href="/lov/skattelov/"><span class="ar">Lov →</span><h3>Skatteloven</h3></a>
+        <a class="lc-link" href="/lov/bokforingslov/#card-dokumentasjon"><span class="ar">Lov →</span><h3>Bokføringsloven – dokumentasjon</h3></a>
+      </div>
+    </section>
+
+    <section class="lc-sec" id="naboer" aria-labelledby="lcE-sav">
+      <div class="lc-head"><span class="lc-kicker">Videre</span><h2 class="lc-title" id="lcE-sav">Beslektede <em>verktøy</em></h2></div>
+      <div class="lc-links">
+        <a class="lc-link" href="/regnskap/avsetninger/"><span class="ar">Bokføring →</span><h3>Avsetninger</h3><p>Avsetning, note eller ingenting? Fire spørsmål gir svaret.</p></a>
+        <a class="lc-link" href="/regnskap/resultat/"><span class="ar">Regnskap →</span><h3>Resultatregnskap</h3><p>Bygg opp resultatet fra driftsinntekter til årsresultat.</p></a>
+        <a class="lc-link" href="/regnskap/"><span class="ar">Oversikt →</span><h3>Alle regnskapsverktøy</h3><p>Balanse, resultat, kontantstrøm, mva og mer.</p></a>
       </div>
     </section>
 
   </div>
 
   <p class="bok-bunn">
-    Satser kontrollert <span id="bokKontrollert">–</span> mot primærkilde. Utløpsvarselet leser klokka på din egen maskin, så en maskin med feil dato kan få varselet for tidlig eller for sent. Siden er foreløpig bare på norsk.
+    Satser kontrollert <span id="bokKontrollert">–</span> mot primærkilde. Standardene omtales med egne ord og gjengis ikke. Siden finnes foreløpig bare på norsk.
   </p>
 </div>
 
@@ -1255,8 +1138,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <!-- Bokføringsmotoren. Kjører synkront her, altså før core.js, og er derfor
      selvforsynt med parsing og formatering. Rekkefølgen er data, motor, modell. -->
 <script src="/shared/bok/bok-data.js?v=v1"></script>
-<script src="/shared/bok/bok-engine.js?v=v1"></script>
-<script src="/shared/bok/models/l6-skatteavstemming.js?v=v1"></script>
+<script src="/shared/bok/bok-engine.js?v=v2"></script>
+<script src="/shared/bok/models/l6-skatteavstemming.js?v=v2"></script>
 <script>
 (function(){
   document.querySelectorAll('.calc-help-btn').forEach(function(b){
@@ -1275,8 +1158,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   });
 })();
 </script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
@@ -1285,7 +1168,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- SHELL scripts — REDESIGN-2026-05 (T1-T4 ported) -->
 <script src="/shared/site-shell.js?v=v1" defer></script>
-<script src="/shared/top-chrome.js?v=v243" defer></script>
+<script src="/shared/top-chrome.js?v=v245" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');

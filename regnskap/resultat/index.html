@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v228" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v229" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -49,7 +49,7 @@
 <!-- Temapaletten. Denne siden er ellers selvforsynt, men paletten lå her som en
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
-<link rel="stylesheet" href="/shared/themes.css?v=v9">
+<link rel="stylesheet" href="/shared/themes.css?v=v10">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -812,6 +812,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     .rr-explain details:last-child > summary{border-bottom:none}
     .rr-explain summary .q{font:500 14px/1.3 var(--font-sans);color:var(--ink)}
     .rr-explain .ans{padding:4px 0 16px;font:400 13px/1.65 var(--font-sans);color:var(--ink2);max-width:60ch}
+    .rr-explain .ans a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
     details > summary{list-style:none;cursor:pointer}
     details > summary::-webkit-details-marker{display:none}
     .rr-chev{transition:transform .2s var(--ease);color:var(--ink4);flex:none}
@@ -821,9 +822,19 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     .hidden{display:none}
 
     @media (max-width: 560px){
-      .rr-amtcell{width:150px}
-      input.rr-num{width:106px}
-      .rr-out{min-width:106px}
+      /* Kontonummer + beløpscelle ga etiketten under 90 px. Kontonummeret legges
+         over navnet, og «kr» skjules fordi «NOK» står i hodet. */
+      .rr-line{align-items:center}
+      .rr-name{flex-direction:column;align-items:flex-start;gap:2px}
+      .rr-konto{min-width:0}
+      .rr-lab .sub{display:block}
+      .rr-amtcell{width:118px}
+      input.rr-num{width:104px;padding:8px 9px}
+      .rr-out{min-width:104px}
+      .rr-kr{display:none}
+      .rr-sub .rr-amtcell,.rr-total .rr-amtcell{width:auto}
+      .rr-sub .rr-out,.rr-total .rr-out{min-width:0}
+      .rr-panel-head{flex-direction:column;align-items:flex-start;gap:6px}
       .ks-modes{flex-direction:column}
     }
   </style>
@@ -997,7 +1008,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         </details>
         <details>
           <summary><span class="q">AS eller enkeltpersonforetak?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
-          <div class="ans">Et AS betaler 22 % selskapsskatt på et positivt resultat, og skattekostnaden føres i regnskapet. I et enkeltpersonforetak skattlegges overskuddet på eierens hånd sammen med øvrig inntekt — derfor står det ingen skattekostnad i selskapsregnskapet.</div>
+          <div class="ans">Et AS betaler 22 % selskapsskatt på et positivt resultat, og skattekostnaden føres i regnskapet. I et enkeltpersonforetak skattlegges overskuddet på eierens hånd sammen med øvrig inntekt — derfor står det ingen skattekostnad i selskapsregnskapet. <span>Her er skatten forenklet til 22 % av et positivt resultat før skatt. Den faktiske skattekostnaden avviker ofte, se <a href="/regnskap/skatteavstemming/">skatteavstemmingen</a>.</span></div>
         </details>
         <details>
           <summary><span class="q">Hvorfor er avskrivning med?</span><span class="rr-chev"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 5 7 9 11 5"/></svg></span></summary>
@@ -1005,7 +1016,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         </details>
       </div>
 
-      <p class="rr-source">Kilde: Regnskapsloven § 6-1 · Selskapsskatt 22 % (Stortingets skattevedtak § 3-3) · Oppdatert 2026. Forenklet oppstilling — et fullstendig årsregnskap krever noter, kontantstrøm og balanse. Veiledende beregning, ikke profesjonell rådgivning.</p>
+      <p class="rr-source">Kilde: Regnskapsloven § 6-1 · Selskapsskatt 22 % (Stortingets skattevedtak § 3-3) · Oppdatert 2026. Forenklet oppstilling — et fullstendig årsregnskap krever også balanse og noter, og kontantstrømoppstilling for mellomstore og store foretak. Veiledende beregning, ikke profesjonell rådgivning.</p>
 
     </div>
   </div>
@@ -1291,9 +1302,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   });
 })();
 </script>
-<script src="/shared/top-chrome.js?v=v243" defer></script>
-<script defer src="/shared/core.js?v=v228"></script>
-<script defer src="/shared/lang/no.js?v=v228"></script>
+<script src="/shared/top-chrome.js?v=v245" defer></script>
+<script defer src="/shared/core.js?v=v229"></script>
+<script defer src="/shared/lang/no.js?v=v229"></script>
 
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
