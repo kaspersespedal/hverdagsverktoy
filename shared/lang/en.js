@@ -3719,6 +3719,21 @@ REGIONS['en'] = {
     lrnDbUnits: '{n} units',
     lrnDbUnits_one: '{n} unit',
     lrnDbYou: 'You sell {n}',
+    /* Forklaringsblokker (lrn): kalkyle/foodcost */
+    lrnFcBand: 'Usual for hot dishes: {a}–{b} %',
+    lrnFcBandNote: 'Usual for hot dishes: {a}–{b} %.',
+    lrnFcInkl: '{belop} kr incl. VAT',
+    lrnFcMva: 'VAT {belop} kr',
+    lrnFcMvaPct: 'VAT {p}',
+    lrnFcN1: 'Food cost is calculated on the price without VAT. Of the {inkl} kroner the guest pays, the ingredients are {andel}.',
+    lrnFcServ: 'Dine-in · {p} VAT',
+    lrnFcTake: 'Takeaway · {p} VAT',
+    lrnFcSr: 'The menu price without VAT, {eks} kr, is {kost} kr of ingredients ({fc}) and {db} kr of contribution margin. With 25 % VAT it becomes {a} kr, with 15 % {b} kr.',
+    lrnFcSrOver: 'The ingredients cost more than the price without VAT. The ingredients at {kost} kr are {fc} of the menu price without VAT of {eks} kr.',
+    lrnFcStateFc: '{kost} kr ingredients · food cost {v} · VAT {m}',
+    lrnFcStateMeny: '{kost} kr ingredients · menu price {v} kr incl. VAT · VAT {m}',
+    lrnFcSum: 'Dine-in gives {a} kr and takeaway {b} kr on the menu, but both give {db} kr in contribution margin.',
+    lrnFcSumOver: 'The ingredients cost more than the price without VAT, so each dish gives {db} kr in contribution margin.',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -9030,6 +9045,23 @@ REGIONS['en']._ph = {
 "Resultatregnskap":"Income statement",
 "Tap":"Loss",
 "Overskudd":"Profit",
+"Samme tallerken, to menypriser":"Same plate, two menu prices",
+"Food cost regnes av prisen uten mva, så råvareandelen er den samme enten gjesten spiser her eller tar maten med. Det er mva-kanten som gjør serveringsprisen høyere.":"Food cost is calculated on the price without VAT, so the ingredient share is the same whether the guest eats in or takes the food away. It is the VAT rim that makes the dine-in price higher.",
+"Menypris uten mva som tallerken, mva som kant utenpå":"Menu price without VAT as the plate, VAT as the rim around it",
+"Fra råvarekost til menypris uten mva":"From ingredient cost to menu price without VAT",
+"menypris eks. mva":"menu price excl. VAT",
+"råvarekost":"ingredient cost",
+"pris-faktor":"price factor",
+"Det vanlige området for varmmat står markert på tallerkenen. Drikke ligger ofte lavere. Lav food cost gir mer dekningsbidrag per rett, men prisen må fortsatt oppleves riktig for gjesten.":"The usual range for hot dishes is marked on the plate. Drinks are often lower. A low food cost gives more contribution margin per dish, but the price still has to feel right to the guest.",
+"Servering på stedet har 25 % mva. Mat som bare leveres eller hentes, som take away og catering uten servering, regnes som næringsmiddel og har 15 %. Stiller dere med servering på arrangementet, er hele leveransen en serveringstjeneste med 25 %. Samme rett kan altså ha to priser.":"Dine-in service has 25 % VAT. Food that is only delivered or collected, such as takeaway and catering without service, counts as foodstuffs and has 15 %. If you provide service at the event, the whole delivery is a catering service at 25 %. So the same dish can have two prices.",
+"Food cost og pris-faktor er margin og påslag med andre ord.":"Food cost and price factor are margin and markup in other words.",
+"Hvor mange retter dekningsbidraget må selges for å dekke de faste kostnadene.":"How many dishes you need to sell for the contribution margin to cover the fixed costs.",
+"Råvarer":"Ingredients",
+"Dekningsbidrag":"Contribution margin",
+"skal dekke lønn, husleie og fortjeneste":"has to cover wages, rent and profit",
+"Råvarene koster mer enn prisen uten mva":"The ingredients cost more than the price without VAT",
+"Din sats":"Your rate",
+"Samme rett og samme food cost. Bare kanten er forskjellig.":"Same dish and same food cost. Only the rim is different.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

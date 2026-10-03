@@ -3760,6 +3760,21 @@ REGIONS['ar'] = {
     lrnDbUnits_two: 'وحدتان',
     lrnDbUnits_few: '{n} وحدات',
     lrnDbYou: 'تبيع {n}',
+    /* Forklaringsblokker (lrn): kalkyle/foodcost */
+    lrnFcBand: 'المعتاد للأطباق الساخنة: {a}–{b} %',
+    lrnFcBandNote: 'المعتاد للأطباق الساخنة: {a}–{b} %.',
+    lrnFcInkl: '{belop} kr شاملة MVA',
+    lrnFcMva: 'MVA ‏{belop} kr',
+    lrnFcMvaPct: 'MVA ‏{p}',
+    lrnFcN1: 'تُحسب تكلفة الطعام من السعر بدون MVA. ومن الـ {inkl} kr التي يدفعها الضيف، تشكّل المكونات {andel}.',
+    lrnFcServ: 'في المطعم · MVA ‏{p}',
+    lrnFcTake: 'طلب خارجي · MVA ‏{p}',
+    lrnFcSr: 'سعر القائمة بدون MVA، وهو {eks} kr، يتكون من {kost} kr مكونات ({fc}) و{db} kr هامش مساهمة. مع MVA بنسبة 25 % يصبح {a} kr، ومع 15 % يصبح {b} kr.',
+    lrnFcSrOver: 'المكونات تكلّف أكثر من السعر بدون MVA. فالمكونات البالغة {kost} kr تمثل {fc} من سعر القائمة بدون MVA البالغ {eks} kr.',
+    lrnFcStateFc: 'المكونات {kost} kr · تكلفة الطعام {v} · MVA ‏{m}',
+    lrnFcStateMeny: 'المكونات {kost} kr · سعر القائمة {v} kr شاملة MVA · MVA ‏{m}',
+    lrnFcSum: 'يعطي الأكل في المطعم {a} kr والطلب الخارجي {b} kr في القائمة، لكن كليهما يعطي {db} kr هامش مساهمة.',
+    lrnFcSumOver: 'المكونات تكلّف أكثر من السعر بدون MVA، لذا يعطي كل طبق {db} kr هامش مساهمة.',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -9077,6 +9092,23 @@ REGIONS['ar']._ph = {
 "Resultatregnskap":"قائمة الدخل",
 "Tap":"خسارة",
 "Overskudd":"ربح",
+"Samme tallerken, to menypriser":"الطبق نفسه، سعران في القائمة",
+"Food cost regnes av prisen uten mva, så råvareandelen er den samme enten gjesten spiser her eller tar maten med. Det er mva-kanten som gjør serveringsprisen høyere.":"تُحسب تكلفة الطعام من السعر بدون MVA، لذا تبقى حصة المكونات نفسها سواء أكل الضيف في المطعم أو أخذ الطعام معه. حافة MVA هي ما يجعل سعر الأكل في المطعم أعلى.",
+"Menypris uten mva som tallerken, mva som kant utenpå":"سعر القائمة بدون MVA هو الطبق، وMVA هي الحافة حوله",
+"Fra råvarekost til menypris uten mva":"من تكلفة المكونات إلى سعر القائمة بدون MVA",
+"menypris eks. mva":"سعر القائمة بدون MVA",
+"råvarekost":"تكلفة المكونات",
+"pris-faktor":"معامل السعر",
+"Det vanlige området for varmmat står markert på tallerkenen. Drikke ligger ofte lavere. Lav food cost gir mer dekningsbidrag per rett, men prisen må fortsatt oppleves riktig for gjesten.":"النطاق المعتاد للأطباق الساخنة مُعلَّم على الطبق. وغالبًا ما تكون المشروبات أقل. تكلفة الطعام المنخفضة تعطي هامش مساهمة أكبر لكل طبق، لكن يجب أن يبدو السعر مناسبًا للضيف.",
+"Servering på stedet har 25 % mva. Mat som bare leveres eller hentes, som take away og catering uten servering, regnes som næringsmiddel og har 15 %. Stiller dere med servering på arrangementet, er hele leveransen en serveringstjeneste med 25 %. Samme rett kan altså ha to priser.":"للخدمة في المطعم MVA بنسبة 25 %. أما الطعام الذي يُوصَّل أو يُستلَم فقط، مثل الطلبات الخارجية والتموين دون خدمة، فيُعدّ مواد غذائية بنسبة 15 %. وإذا قدّمتم خدمة في المناسبة، فالتوريد كله خدمة ضيافة بنسبة 25 %. لذا قد يكون للطبق نفسه سعران.",
+"Food cost og pris-faktor er margin og påslag med andre ord.":"تكلفة الطعام ومعامل السعر هما الهامش والزيادة بكلمات أخرى.",
+"Hvor mange retter dekningsbidraget må selges for å dekke de faste kostnadene.":"كم طبقًا يجب أن تبيع ليغطي هامش المساهمة التكاليف الثابتة.",
+"Råvarer":"المكونات",
+"Dekningsbidrag":"هامش المساهمة",
+"skal dekke lønn, husleie og fortjeneste":"يجب أن يغطي الأجور والإيجار والربح",
+"Råvarene koster mer enn prisen uten mva":"المكونات تكلّف أكثر من السعر بدون MVA",
+"Din sats":"نسبتك",
+"Samme rett og samme food cost. Bare kanten er forskjellig.":"الطبق نفسه وتكلفة الطعام نفسها. الحافة وحدها مختلفة.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

@@ -3689,6 +3689,21 @@ REGIONS['fr'] = {
     lrnDbUnits: '{n} unités',
     lrnDbUnits_one: '{n} unité',
     lrnDbYou: 'Vous vendez {n}',
+    /* Forklaringsblokker (lrn): kalkyle/foodcost */
+    lrnFcBand: 'Habituel pour les plats chauds : {a}–{b} %',
+    lrnFcBandNote: 'Habituel pour les plats chauds : {a}–{b} %.',
+    lrnFcInkl: '{belop} kr TTC',
+    lrnFcMva: 'TVA {belop} kr',
+    lrnFcMvaPct: 'TVA {p}',
+    lrnFcN1: 'Le food cost se calcule sur le prix HT. Sur les {inkl} kr que paie le client, les matières représentent {andel}.',
+    lrnFcServ: 'Sur place · TVA {p}',
+    lrnFcTake: 'À emporter · TVA {p}',
+    lrnFcSr: 'Le prix HT, {eks} kr, se compose de {kost} kr de matières ({fc}) et de {db} kr de marge. Avec 25 % de TVA, il passe à {a} kr, avec 15 % à {b} kr.',
+    lrnFcSrOver: 'Les matières coûtent plus que le prix HT. Les matières à {kost} kr représentent {fc} du prix HT de {eks} kr.',
+    lrnFcStateFc: 'matières {kost} kr · food cost {v} · TVA {m}',
+    lrnFcStateMeny: 'matières {kost} kr · prix à la carte {v} kr TTC · TVA {m}',
+    lrnFcSum: 'Sur place, la carte affiche {a} kr et à emporter {b} kr, mais les deux donnent {db} kr de marge.',
+    lrnFcSumOver: 'Les matières coûtent plus que le prix HT, donc chaque plat donne {db} kr de marge.',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -8994,6 +9009,23 @@ REGIONS['fr']._ph = {
 "Resultatregnskap":"Compte de résultat",
 "Tap":"Perte",
 "Overskudd":"Bénéfice",
+"Samme tallerken, to menypriser":"Même assiette, deux prix à la carte",
+"Food cost regnes av prisen uten mva, så råvareandelen er den samme enten gjesten spiser her eller tar maten med. Det er mva-kanten som gjør serveringsprisen høyere.":"Le food cost se calcule sur le prix hors TVA, donc la part des matières premières est la même que le client mange sur place ou à emporter. C'est le bord de TVA qui rend le prix sur place plus élevé.",
+"Menypris uten mva som tallerken, mva som kant utenpå":"Le prix HT comme assiette, la TVA comme bord autour",
+"Fra råvarekost til menypris uten mva":"Du coût matière au prix HT",
+"menypris eks. mva":"prix HT",
+"råvarekost":"coût matière",
+"pris-faktor":"coefficient",
+"Det vanlige området for varmmat står markert på tallerkenen. Drikke ligger ofte lavere. Lav food cost gir mer dekningsbidrag per rett, men prisen må fortsatt oppleves riktig for gjesten.":"La fourchette habituelle pour les plats chauds est marquée sur l'assiette. Les boissons sont souvent plus basses. Un food cost bas donne plus de marge par plat, mais le prix doit rester juste aux yeux du client.",
+"Servering på stedet har 25 % mva. Mat som bare leveres eller hentes, som take away og catering uten servering, regnes som næringsmiddel og har 15 %. Stiller dere med servering på arrangementet, er hele leveransen en serveringstjeneste med 25 %. Samme rett kan altså ha to priser.":"Le service sur place est à 25 % de TVA. La nourriture seulement livrée ou retirée, comme la vente à emporter et le traiteur sans service, compte comme denrée alimentaire à 15 %. Si vous assurez le service lors de l'événement, toute la prestation est un service de restauration à 25 %. Le même plat peut donc avoir deux prix.",
+"Food cost og pris-faktor er margin og påslag med andre ord.":"Le food cost et le coefficient sont la marge et la majoration sous d'autres noms.",
+"Hvor mange retter dekningsbidraget må selges for å dekke de faste kostnadene.":"Combien de plats vendre pour que la marge couvre les coûts fixes.",
+"Råvarer":"Matières premières",
+"Dekningsbidrag":"Marge sur coûts variables",
+"skal dekke lønn, husleie og fortjeneste":"doit couvrir salaires, loyer et bénéfice",
+"Råvarene koster mer enn prisen uten mva":"Les matières coûtent plus que le prix HT",
+"Din sats":"Votre taux",
+"Samme rett og samme food cost. Bare kanten er forskjellig.":"Même plat et même food cost. Seul le bord change.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

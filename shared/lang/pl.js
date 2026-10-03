@@ -3695,6 +3695,21 @@ REGIONS['pl'] = {
     lrnDbUnits_one: '{n} sztuka',
     lrnDbUnits_few: '{n} sztuki',
     lrnDbYou: 'Sprzedajesz {n}',
+    /* Forklaringsblokker (lrn): kalkyle/foodcost */
+    lrnFcBand: 'Typowo dla dań na ciepło: {a}–{b} %',
+    lrnFcBandNote: 'Typowo dla dań na ciepło: {a}–{b} %.',
+    lrnFcInkl: '{belop} kr z VAT',
+    lrnFcMva: 'VAT {belop} kr',
+    lrnFcMvaPct: 'VAT {p}',
+    lrnFcN1: 'Food cost liczy się od ceny bez VAT. Z {inkl} kr, które płaci gość, surowce to {andel}.',
+    lrnFcServ: 'Na miejscu · {p} VAT',
+    lrnFcTake: 'Na wynos · {p} VAT',
+    lrnFcSr: 'Cena bez VAT, {eks} kr, to {kost} kr surowców ({fc}) i {db} kr marży na pokrycie. Z 25 % VAT wynosi {a} kr, z 15 % {b} kr.',
+    lrnFcSrOver: 'Surowce kosztują więcej niż cena bez VAT. Surowce za {kost} kr to {fc} ceny bez VAT wynoszącej {eks} kr.',
+    lrnFcStateFc: 'surowce {kost} kr · food cost {v} · VAT {m}',
+    lrnFcStateMeny: 'surowce {kost} kr · cena w menu {v} kr z VAT · VAT {m}',
+    lrnFcSum: 'Na miejscu daje {a} kr, a na wynos {b} kr w menu, ale oba dają {db} kr marży na pokrycie.',
+    lrnFcSumOver: 'Surowce kosztują więcej niż cena bez VAT, więc każde danie daje {db} kr marży na pokrycie.',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -9005,6 +9020,23 @@ REGIONS['pl']._ph = {
 "Resultatregnskap":"Rachunek zysków i strat",
 "Tap":"Strata",
 "Overskudd":"Zysk",
+"Samme tallerken, to menypriser":"Ten sam talerz, dwie ceny w menu",
+"Food cost regnes av prisen uten mva, så råvareandelen er den samme enten gjesten spiser her eller tar maten med. Det er mva-kanten som gjør serveringsprisen høyere.":"Food cost liczy się od ceny bez VAT, więc udział surowców jest taki sam, czy gość je na miejscu, czy bierze jedzenie na wynos. To krawędź VAT sprawia, że cena na miejscu jest wyższa.",
+"Menypris uten mva som tallerken, mva som kant utenpå":"Cena bez VAT jako talerz, VAT jako krawędź dookoła",
+"Fra råvarekost til menypris uten mva":"Od kosztu surowców do ceny bez VAT",
+"menypris eks. mva":"cena bez VAT",
+"råvarekost":"koszt surowców",
+"pris-faktor":"mnożnik ceny",
+"Det vanlige området for varmmat står markert på tallerkenen. Drikke ligger ofte lavere. Lav food cost gir mer dekningsbidrag per rett, men prisen må fortsatt oppleves riktig for gjesten.":"Typowy zakres dla dań na ciepło jest zaznaczony na talerzu. Napoje mają zwykle niższy. Niski food cost daje większą marżę na pokrycie na danie, ale cena wciąż musi wydawać się gościowi właściwa.",
+"Servering på stedet har 25 % mva. Mat som bare leveres eller hentes, som take away og catering uten servering, regnes som næringsmiddel og har 15 %. Stiller dere med servering på arrangementet, er hele leveransen en serveringstjeneste med 25 %. Samme rett kan altså ha to priser.":"Obsługa na miejscu ma 25 % VAT. Jedzenie, które jest tylko dostarczane lub odbierane, jak na wynos i catering bez obsługi, liczy się jako artykuł spożywczy i ma 15 %. Jeśli zapewniacie obsługę na wydarzeniu, cała dostawa jest usługą gastronomiczną z 25 %. To samo danie może więc mieć dwie ceny.",
+"Food cost og pris-faktor er margin og påslag med andre ord.":"Food cost i mnożnik ceny to inaczej marża i narzut.",
+"Hvor mange retter dekningsbidraget må selges for å dekke de faste kostnadene.":"Ile dań trzeba sprzedać, żeby marża na pokrycie pokryła koszty stałe.",
+"Råvarer":"Surowce",
+"Dekningsbidrag":"Marża na pokrycie",
+"skal dekke lønn, husleie og fortjeneste":"ma pokryć płace, czynsz i zysk",
+"Råvarene koster mer enn prisen uten mva":"Surowce kosztują więcej niż cena bez VAT",
+"Din sats":"Twoja stawka",
+"Samme rett og samme food cost. Bare kanten er forskjellig.":"To samo danie i ten sam food cost. Różni się tylko krawędź.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

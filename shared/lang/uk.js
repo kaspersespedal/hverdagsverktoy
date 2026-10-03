@@ -2622,6 +2622,21 @@ REGIONS['uk'] = {
     lrnDbUnits_one: '{n} одиниця',
     lrnDbUnits_few: '{n} одиниці',
     lrnDbYou: 'Ви продаєте {n}',
+    /* Forklaringsblokker (lrn): kalkyle/foodcost */
+    lrnFcBand: 'Звично для гарячих страв: {a}–{b} %',
+    lrnFcBandNote: 'Звично для гарячих страв: {a}–{b} %.',
+    lrnFcInkl: '{belop} kr з ПДВ',
+    lrnFcMva: 'ПДВ {belop} kr',
+    lrnFcMvaPct: 'ПДВ {p}',
+    lrnFcN1: 'Food cost рахують від ціни без ПДВ. Із {inkl} kr, які платить гість, сировина становить {andel}.',
+    lrnFcServ: 'У залі · {p} ПДВ',
+    lrnFcTake: 'З собою · {p} ПДВ',
+    lrnFcSr: 'Ціна без ПДВ, {eks} kr, — це {kost} kr сировини ({fc}) і {db} kr маржинального доходу. З 25 % ПДВ вона становить {a} kr, з 15 % — {b} kr.',
+    lrnFcSrOver: 'Сировина коштує більше, ніж ціна без ПДВ. Сировина за {kost} kr становить {fc} ціни без ПДВ, що дорівнює {eks} kr.',
+    lrnFcStateFc: 'сировина {kost} kr · food cost {v} · ПДВ {m}',
+    lrnFcStateMeny: 'сировина {kost} kr · ціна в меню {v} kr з ПДВ · ПДВ {m}',
+    lrnFcSum: 'У залі ціна в меню {a} kr, з собою {b} kr, але обидві дають {db} kr маржинального доходу.',
+    lrnFcSumOver: 'Сировина коштує більше, ніж ціна без ПДВ, тож кожна страва дає {db} kr маржинального доходу.',
 };
 
 /* ═══ frase-ordbok — auto-generert 2026-08-09 ═══════════════════════
@@ -8293,6 +8308,22 @@ REGIONS['uk']._ph = {
 "Sett prisen som gir dekningsbidraget du trenger, og se forskjellen på påslag og margin.":"Встановіть ціну, що дає потрібний маржинальний дохід, і подивіться різницю між націнкою та маржею.",
 "Tap":"Збиток",
 "Overskudd":"Прибуток",
+"Samme tallerken, to menypriser":"Та сама тарілка, дві ціни в меню",
+"Food cost regnes av prisen uten mva, så råvareandelen er den samme enten gjesten spiser her eller tar maten med. Det er mva-kanten som gjør serveringsprisen høyere.":"Food cost рахують від ціни без ПДВ, тож частка сировини однакова, чи гість їсть на місці, чи бере їжу з собою. Саме обідок ПДВ робить ціну в залі вищою.",
+"Menypris uten mva som tallerken, mva som kant utenpå":"Ціна без ПДВ як тарілка, ПДВ як обідок навколо",
+"Fra råvarekost til menypris uten mva":"Від вартості сировини до ціни без ПДВ",
+"menypris eks. mva":"ціна без ПДВ",
+"råvarekost":"вартість сировини",
+"pris-faktor":"ціновий коефіцієнт",
+"Det vanlige området for varmmat står markert på tallerkenen. Drikke ligger ofte lavere. Lav food cost gir mer dekningsbidrag per rett, men prisen må fortsatt oppleves riktig for gjesten.":"Звичайний діапазон для гарячих страв позначено на тарілці. Напої часто нижчі. Низький food cost дає більший маржинальний дохід на страву, але ціна все одно має здаватися гостеві правильною.",
+"Servering på stedet har 25 % mva. Mat som bare leveres eller hentes, som take away og catering uten servering, regnes som næringsmiddel og har 15 %. Stiller dere med servering på arrangementet, er hele leveransen en serveringstjeneste med 25 %. Samme rett kan altså ha to priser.":"Обслуговування на місці має 25 % ПДВ. Їжа, яку лише доставляють або забирають, як-от на винос і кейтеринг без обслуговування, вважається продуктами харчування й має 15 %. Якщо ви обслуговуєте захід, уся поставка — це послуга харчування з 25 %. Тож та сама страва може мати дві ціни.",
+"Food cost og pris-faktor er margin og påslag med andre ord.":"Food cost і ціновий коефіцієнт — це, по суті, маржа й націнка.",
+"Hvor mange retter dekningsbidraget må selges for å dekke de faste kostnadene.":"Скільки страв треба продати, щоб маржинальний дохід покрив постійні витрати.",
+"Råvarer":"Сировина",
+"skal dekke lønn, husleie og fortjeneste":"має покрити зарплати, оренду й прибуток",
+"Råvarene koster mer enn prisen uten mva":"Сировина коштує більше, ніж ціна без ПДВ",
+"Din sats":"Ваша ставка",
+"Samme rett og samme food cost. Bare kanten er forskjellig.":"Та сама страва й той самий food cost. Відрізняється лише обідок.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så
