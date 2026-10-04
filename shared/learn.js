@@ -3,13 +3,44 @@
 // tallene sine med hvtLearn.update(nøkkel, data) etter hver beregning. Flere oppdateringer
 // i samme oppgave slås sammen til én tegning, og alt tegnes på nytt når språket byttes.
 // (Mikrooppgave, ikke requestAnimationFrame: den står stille i en skjult fane.)
+//
+// Blokka står under kalkulatoren. Mens den er utenfor skjermen, tegnes den ikke for hvert
+// tastetrykk: tegningen venter til blokka er under 200 px fra skjermkanten, eller til det har
+// vært stille i 600 ms. Målt på telefon (4× tregere CPU): det meste av tiden per tastetrykk gikk
+// til en graf ingen så (INP-median boliglån 88 → 32 ms, effektiv rente 288 → 32 ms), og den
+// første tegningen tvang fram en ekstra stil- og layoutrunde midt i DOMContentLoaded.
+// near er null til første måling.
 (function(){
-  var fns = {}, last = {}, queued = {};
-  function run(key){
+  var fns = {}, last = {}, queued = {}, waiting = {}, near = null, rest = 0;
+  function draw(key){
     if(queued[key] || !fns[key]) return;
     queued[key] = true;
     Promise.resolve().then(function(){ queued[key] = false; fns[key](last[key]); });
   }
+  function flush(){
+    clearTimeout(rest);
+    for(var k in waiting){ delete waiting[k]; draw(k); }
+  }
+  function run(key){
+    if(!fns[key]) return;
+    if(near){ draw(key); return; }
+    waiting[key] = true;
+    clearTimeout(rest);
+    rest = setTimeout(flush, 600);
+  }
+  var blocks = document.querySelectorAll('.lrn');
+  if(!blocks.length || typeof IntersectionObserver !== 'function') near = true;
+  else {
+    var inside = [];
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ inside[Array.prototype.indexOf.call(blocks, e.target)] = e.isIntersecting; });
+      near = inside.indexOf(true) > -1;
+      if(near) flush();
+    }, {rootMargin: '200px 0px'});
+    Array.prototype.forEach.call(blocks, function(b){ io.observe(b); });
+  }
+  // Utskrift skal ha ferske tall, også i en blokk som ikke er tegnet ennå
+  window.addEventListener('beforeprint', flush);
   var nf = new Intl.NumberFormat('nb-NO', {maximumFractionDigits: 0});
   // Flertallsformen for tallet n etter reglene til språket som vises: one, two, few, many eller other
   function form(n){
