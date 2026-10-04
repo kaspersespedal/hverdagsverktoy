@@ -649,6 +649,11 @@
       sett('hStatUtfall', aktiv ? (aktiv.kort || aktiv.navn) : '–');
       sett('hStatAvgjort', (aktiv && ut.avgjortAv) ? 'Svar ' + ut.avgjortAv : '–');
       lagreSesjon(nokkel, v);
+      /* Til forklaringsblokken under kalkulatoren. Motoren kjører før learn.js,
+         så blokken leser BOK.siste selv når den starter. */
+      BOK.siste = BOK.siste || {};
+      BOK.siste[modell.id] = { v: v, ut: ut };
+      if (window.hvtLearn) window.hvtLearn.update('bok-' + modell.id, BOK.siste[modell.id]);
     }
 
     byggFelt(modell, vertFelt, oppdater);
