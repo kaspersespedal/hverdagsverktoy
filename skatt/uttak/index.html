@@ -804,16 +804,16 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       } else {
         var skjerming = parseAmt('uttak-skjerming');
         data.skjerming = skjerming;
-        if(gevinst > 0){
-          data.selskapsskatt = gevinst * 0.22;
-          var etterSelskapsskatt = gevinst - data.selskapsskatt;
-          var utbytteGrunnlag = etterSelskapsskatt - skjerming;
-          var oppjustert = Math.max(0, utbytteGrunnlag) * 1.72;
-          data.utbytteskatt = oppjustert * 0.22;
-          data.total = data.selskapsskatt + data.utbytteskatt;
-          data.netto = bruttoUttak - data.total;
-          data.effSats = (data.total / gevinst) * 100;
-        }
+        // Selskapet skattes for uttaket som et salg til markedsverdi (sktl. § 5-2), altså for gevinsten.
+        // Det aksjonæren får, er utbytte: hele verdien som overføres uten vederlag (sktl. § 10-11 annet ledd,
+        // verdsatt til omsetningsverdi etter § 5-3). Utbytteskatten kommer derfor også når det ikke er gevinst.
+        data.selskapsskatt = gevinst * 0.22;
+        var utbytteGrunnlag = bruttoUttak - skjerming;
+        var oppjustert = Math.max(0, utbytteGrunnlag) * 1.72;
+        data.utbytteskatt = oppjustert * 0.22;
+        data.total = data.selskapsskatt + data.utbytteskatt;
+        data.netto = bruttoUttak - data.total;
+        data.effSats = gevinst > 0 ? (data.total / gevinst) * 100 : 0;
       }
       return data;
     }
@@ -825,22 +825,28 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var setHidden = function(id, hidden){ var el = document.getElementById(id); if(el) el.classList.toggle('hidden', hidden); };
 
       var noGain = d.gevinst <= 0;
+      // I AS kan det være skatt uten gevinst (utbytteskatten), så «ingen skatt» og «ingen gevinst» er ulike ting
+      var noTax = d.total <= 0;
+      // Effektiv sats er skatt delt på gevinsten, så den finnes ikke når det er skatt uten gevinst
+      var effTxt = noGain ? (noTax ? '0,00 %' : '–') : fmtPct2(d.effSats);
       // Stort tall = bare beløpet. Setningen under er én tekstnode, så _ph-ordboka oversetter den.
-      setText('rUttakVal', noGain ? '0 kr' : fmtKr(d.total));
+      setText('rUttakVal', noTax ? '0 kr' : fmtKr(d.total));
       var subStr;
-      if(noGain){
+      if(noTax){
         subStr = 'Ingen gevinst: skattemessig verdi er like høy som markedsverdien eller høyere.';
       } else if(d.type === 'enk'){
         subStr = d.personinntekt
           ? 'Inntektsskatt, trygdeavgift og trinnskatt på gevinsten.'
           : 'Bare 22 % inntektsskatt på gevinsten.';
       } else {
-        subStr = 'Selskapsskatt i AS, pluss utbytteskatt hos deg.';
+        subStr = noGain
+          ? 'Ingen gevinst i selskapet, men verdien du tar ut, er utbytte hos deg.'
+          : 'Selskapsskatt på gevinsten, pluss utbytteskatt på hele verdien hos deg.';
       }
       setText('rUttakSub', subStr);
 
-      setText('hStatTotal', noGain ? '0 kr' : fmtKr(d.total));
-      setText('hStatEffektiv', noGain ? '0,00 %' : fmtPct2(d.effSats));
+      setText('hStatTotal', noTax ? '0 kr' : fmtKr(d.total));
+      setText('hStatEffektiv', effTxt);
 
       var isEnk = d.type === 'enk';
       // ENK-rows
@@ -860,14 +866,14 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
       if(!isEnk){
         setText('rSelskap', noGain ? '–' : fmtKr(d.selskapsskatt));
-        setText('rUtbytte', noGain ? '–' : fmtKr(d.utbytteskatt));
+        setText('rUtbytte', d.utbytteskatt > 0 ? fmtKr(d.utbytteskatt) : '–');
       }
 
       // ── RE-SKIN: summary-stripe + data-viz ──
       setText('rsSumGevinst', fmtKr(d.gevinst));
-      setText('rsSumSkatt', noGain ? '0 kr' : fmtKr(d.total));
-      setText('rsSumNetto', noGain ? fmtKr(d.bruttoUttak) : fmtKr(d.netto));
-      setText('rsSumEff', noGain ? '0,00 %' : fmtPct2(d.effSats));
+      setText('rsSumSkatt', noTax ? '0 kr' : fmtKr(d.total));
+      setText('rsSumNetto', noTax ? fmtKr(d.bruttoUttak) : fmtKr(d.netto));
+      setText('rsSumEff', effTxt);
 
       var vizEl = document.getElementById('rsViz');
       if(vizEl){
@@ -875,7 +881,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           ? [ {l:'Netto', v:d.netto}, {l:'Alm. skatt', v:d.almSkatt}, {l:'Trygdeavgift', v:d.trygd}, {l:'Trinnskatt', v:d.trinn} ]
           : [ {l:'Netto', v:d.netto}, {l:'Selskapsskatt', v:d.selskapsskatt}, {l:'Utbytteskatt', v:d.utbytteskatt} ];
         segs = segs.filter(function(s){ return s.v > 0; });
-        if(!noGain && d.bruttoUttak > 0 && d.total > 0 && segs.length){
+        if(!noTax && d.bruttoUttak > 0 && segs.length){
           var ops = [1, .56, .4, .28];
           var barHtml = '', legHtml = '';
           segs.forEach(function(s, i){
