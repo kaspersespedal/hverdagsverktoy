@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Aksjeutvanning — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -178,149 +179,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .content-card p{font-size:14px;line-height:1.7;color:var(--ink2);margin:0 0 12px}
 .content-card p strong{color:var(--ink);font-weight:600}
 @media (max-width:560px){.content-card{padding:18px 18px 16px}}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  /* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap), så
-     de dro hele siden ut i sidelengs scroll — opptil 380px på finance.
-     Samme scroll-wrapper-mønster som .bd-table-wrap/.pv-tblwrap. */
-  .lc-trinn{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -537,45 +395,68 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: selskap-aksjeutvanning =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-selskap-aksjeutvanning">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-selskap-aksjeutvanning">Hva som skjer med eierandelen din</h2><p class="lc-intro">Investorens andel er innskuddet delt på verdien etter runden. Med standardtallene gir 1 mill. av 6 mill. investoren 16,67 %. Du beholder 83,33 %, men av et selskap som er verdt mer.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Verdi etter runden</b><span class="tag">Sum</span></span><span class="fig">6 000 000<span class="u">kr</span></span><p class="dsc">Verdien før runden pluss innskuddet (post-money). Med standardtallene: 5 mill. + 1 mill. = 6 mill. kr.</p></div>
-        <div class="lc-led"><span class="nm"><b>Investorens andel</b><span class="tag">Andel</span></span><span class="fig">16,67<span class="u">%</span></span><p class="dsc">Innskuddet delt på verdien etter runden. 1 mill. av 6 mill. gir 16,67 %, før en eventuell pool trekkes fra.</p></div>
-        <div class="lc-led"><span class="nm"><b>Eiernes andel</b><span class="tag">Andel</span></span><span class="fig">83,33<span class="u">%</span></span><p class="dsc">Verdien før runden delt på verdien etter. Det er andelen dere som eide fra før, har til sammen. Eier du alene (100 %), er hele denne andelen din.</p></div>
-        <div class="lc-led"><span class="nm"><b>Aksjer til ansatte</b><span class="tag">Fradrag</span></span><span class="fig">0<span class="u">%</span></span><p class="dsc">Opsjonspoolen. Setter du den høyere enn 0, krymper både investorens og eiernes andel med samme prosent, så alle delene blir 100 % til sammen.</p></div>
-        <div class="lc-led"><span class="nm"><b>Din andel</b><span class="tag">Andel</span></span><span class="fig">83,33<span class="u">%</span></span><p class="dsc">Eiernes andel ganget med din prosent av den. Har dere flere eiere, blir det din del av eiernes andel.</p></div>
-        <div class="lc-led"><span class="nm"><b>Verdi av din andel</b><span class="tag">Verdi</span></span><span class="fig">5 000 000<span class="u">kr</span></span><p class="dsc">Din nye prosent ganget med verdien etter runden. 83,33 % av 6 mill. er 5 mill., det samme som andelen var verdt før.</p></div>
+  <div class="lrn" id="lrn-ak">
+    <section class="lrn-sec" aria-labelledby="lrn-ak-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-ak-h">Prosenten faller, men kaka blir større</h2>
+        <p class="lrn-lede">Ny kapital gjør selskapet verdt mer, så en mindre andel kan være verdt det samme som før. En opsjonspool reduserer derimot både prosenten og verdien.</p>
+      </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn selskapsverdien og hva investoren skyter inn i kalkulatoren.</p>
+      <div class="lrn-bar" data-lrn="main">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-seg lrn-ak-seg" role="group" aria-label="Velg tilfelle" data-lrn="seg">
+          <button type="button" aria-pressed="true" data-k="liten">Liten emisjon</button>
+          <button type="button" aria-pressed="false" data-k="pool">Med pool 10&nbsp;%</button>
+          <button type="button" aria-pressed="false" data-k="stor">Større runde</button>
+        </div>
+      </div>
+      <div class="lrn-ak-main" data-lrn="main">
+        <figure class="lrn-fig" aria-describedby="lrn-ak-sr lrn-ak-tab">
+          <figcaption class="lrn-cap" data-lrn="cap"></figcaption>
+          <div class="lrn-plot is-static lrn-ak-plot" dir="ltr">
+            <svg aria-hidden="true" focusable="false"><defs><pattern id="lrn-ak-hoved" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-ak-hl" x1="0" y1="0" x2="0" y2="6"/></pattern><pattern id="lrn-ak-skrav" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-ak-pr" x="0" y="0" width="5" height="5"/><line class="lrn-ak-ph" x1="0" y1="0" x2="0" y2="5"/></pattern></defs><path class="lrn-ak-base" data-p="base"/><path class="lrn-ak-you" data-p="you"/><path class="lrn-ak-co" data-p="co"/><path class="lrn-ak-pool" data-p="pool"/><path class="lrn-ak-hov" data-p="pool"/><path class="lrn-ak-skr" data-p="pool"/><path class="lrn-ak-inv" data-p="inv"/><path class="lrn-ak-hov" data-p="inv"/><path class="lrn-ak-ghost" data-p="ghost"/><path class="lrn-ak-help" data-p="help"/><path class="lrn-ak-brk" data-p="brk"/><path class="lrn-ak-lead" data-p="lead"/><path class="lrn-ak-dot" data-p="dot"/></svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <p class="lrn-cmp lrn-ak-sent" aria-live="polite" data-lrn="sent"></p>
+        <div class="lrn-sr" id="lrn-ak-tab"><table aria-label="Eierandelene før og etter som tabell">
+          <thead><tr><th scope="col">Rad</th><th scope="col">Du</th><th scope="col">Medgründere</th><th scope="col">Investor</th><th scope="col">Opsjonspool</th><th scope="col">Sum</th></tr></thead>
+          <tbody data-lrn="rows"></tbody>
+        </table></div>
+      </div>
+      <p class="lrn-sr" id="lrn-ak-sr" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-also lrn-ak-calc" aria-labelledby="lrn-ak-f" data-lrn="main">
+      <h3 class="lrn-h3 lrn-ak-fh" id="lrn-ak-f">Regnestykket</h3>
+      <details class="lrn-ak-fd">
+        <summary>Regnestykket<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+        <div class="lrn-card lrn-ak-card">
+          <div class="lrn-ak-row"><span class="l">Post-money</span><div class="lrn-f"><span><i>post-money</i> = <i>pre-money</i> + <i>investorbeløp</i></span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fPre"></span> + <span data-lrn="fInv"></span></span><span>=</span><b data-lrn="fPost"></b></div></div>
+          <div class="lrn-ak-row"><span class="l">Investor</span><div class="lrn-f"><span><i>investorandel</i> = <i>investorbeløp</i> ÷ <i>post-money</i> × (1 − <i>pool</i>)</span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fInv"></span> ÷ <span data-lrn="fPostN"></span> × (1 − <span data-lrn="fPool"></span>)</span><span>=</span><b data-lrn="fInvPct"></b></div></div>
+          <div class="lrn-ak-row"><span class="l">Eierblokk</span><div class="lrn-f"><span><i>eierblokk</i> = <i>pre-money</i> ÷ <i>post-money</i> × (1 − <i>pool</i>)</span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fPre"></span> ÷ <span data-lrn="fPostN"></span> × (1 − <span data-lrn="fPool"></span>)</span><span>=</span><b data-lrn="fEier"></b></div></div>
+          <div class="lrn-ak-row"><span class="l">Din andel</span><div class="lrn-f"><span><i>din andel</i> = <i>eierblokk</i> × <i>din eierandel før</i></span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fEier"></span> × <span data-lrn="fEx"></span></span><span>=</span><b data-lrn="fYou"></b></div></div>
+          <div class="lrn-ak-row"><span class="l">Verdi av din andel</span><div class="lrn-f"><span><i>verdi</i> = <i>din andel</i> × <i>post-money</i></span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fYou"></span> × <span data-lrn="fPostN"></span></span><span>=</span><b data-lrn="fValue"></b></div></div>
+        </div>
+      </details>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-ak-q">
+      <h3 class="lrn-h3" id="lrn-ak-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details open><summary>Hva er forskjellen på pre-money og post-money?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Pre-money er hva selskapet er verdt før investoren kommer inn, det partene blir enige om. Post-money er pre-money pluss investor-beløpet, altså verdien rett etter emisjonen.</p></div></details>
+        <details><summary>Hvor stor pool kan jeg legge inn?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren tillater opptil 50&nbsp;%, men det er en teknisk grense, ikke en anbefaling. I praksis ligger pool i tidlige runder typisk på 5–15&nbsp;%.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-selskap-aksjeutvanning">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-selskap-aksjeutvanning">Før du leser tallene</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Verdien faller ikke selv om prosenten gjør det</h3><p>Du eier en mindre prosent etterpå, men av et selskap som er verdt mer. Med standardtallene går du fra 100 % av 5 mill. til 83,33 % av 6 mill. Andelen er fortsatt verdt 5 mill., og selskapet har fått 1 mill. i ny kapital.</p></div>
-        <div class="lc-note"><h3>Poolen tar fra alle</h3><p>Poolen lages etter runden, så både din og investorens andel krymper med samme prosent. Med 10 % pool går du fra 83,33 % til 75 %, og investoren fra 16,67 % til 15 %.</p></div>
-        <div class="lc-note"><h3>Tallene lagres lokalt</h3><p>Tallene du skriver inn, blir i nettleseren din og huskes til neste gang.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-selskap-aksjeutvanning">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-selskap-aksjeutvanning">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hva er forskjellen på pre-money og post-money?</summary><div class="a"><p>Pre-money er det selskapet er verdt før investoren kommer inn, slik partene blir enige om. Post-money er pre-money pluss innskuddet, altså verdien rett etter emisjonen. Med standardtallene: 5 mill. før og 6 mill. etter.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor synker eierandelen min når jeg legger inn en opsjonspool?</summary><div class="a"><p>Aksjene til ansatte lages etter runden og tas fra alle eierne, også investoren. Både din og investorens andel krymper derfor med samme prosent. Typisk er poolen 5–15 % i tidlige runder.</p></div></details>
-        <details class="lc-q"><summary>Hva fyller jeg inn i «Din eierandel før»?</summary><div class="a"><p>Hvor stor del av selskapet du eier i dag, før emisjonen. Eier du alene, skriver du 100. Har dere flere eiere, skriver du din egen prosent. Feltet godtar 0 til 100.</p></div></details>
-        <details class="lc-q"><summary>Hvor stor pool kan jeg legge inn?</summary><div class="a"><p>Kalkulatoren tillater opptil 50 %, men det er en teknisk grense, ikke en anbefaling. I praksis ligger pool i tidlige runder typisk på 5–15 %.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr «Verdi av din andel»?</summary><div class="a"><p>Det er din nye eierandel ganget med verdien etter runden, altså hva andelen er verdt på papiret rett etter at pengene er kommet inn. Det er en regnestykke-verdi, ikke et tilbud noen har gitt deg.</p></div></details>
-        <details class="lc-q"><summary>Kan jeg stole på tallene når jeg forhandler?</summary><div class="a"><p>Som en pekepinn, ja. Modellen har én aksjeklasse og ingen særvilkår, så en ekte avtale kan gi andre tall.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-selskap-aksjeutvanning">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-selskap-aksjeutvanning">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/personlig/aksjer/"><span class="ar">Aksjegevinst →</span><h3>Skatt på aksjegevinst</h3><p>Selger du andelen senere, regn ut hva du sitter igjen med etter skatt på gevinsten.</p></a>
-        <a class="lc-link" href="/skatt/utbytte/"><span class="ar">Utbytteskatt →</span><h3>Skatt på utbytte</h3><p>Tar selskapet ut overskudd til eierne, se hvor mye som forsvinner i utbytteskatt.</p></a>
-        <a class="lc-link" href="/selskap/"><span class="ar">Selskap →</span><h3>Alle selskapsverktøy</h3><p>Oversikt over verktøyene for AS, selskapsformer og bedriftsøkonomi.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-ak-r">
+      <h3 class="lrn-h3" id="lrn-ak-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/personlig/aksjer/"><span><span class="t">Skatt på aksjegevinst</span><span class="d">Selger du andelen senere, ser du hva du sitter igjen med etter skatt.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/skatt/utbytte/"><span><span class="t">Utbytteskatt</span><span class="d">Tar selskapet ut overskudd til eierne, ser du hvor mye som går til skatt.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/lov/aksjelov/"><span><span class="t">Aksjeloven</span><span class="d">Kapitalforhøyelse står i kapittel 10.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -597,6 +478,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <script defer src="/shared/top-chrome.js?v=v245"></script>
 <script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -652,21 +534,24 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
       // ── Validering ──
       if(pre <= 0){
+        window._aksje = null;
+        if(window.hvtLearn) hvtLearn.update('selskap-aksjeutvanning', null);
         resetOutputs('Skriv inn selskapsverdien før runden');
         persist();
         return;
       }
       if(invest <= 0){
+        window._aksje = null;
+        if(window.hvtLearn) hvtLearn.update('selskap-aksjeutvanning', null);
         resetOutputs('Skriv inn hva investoren skyter inn');
         persist();
         return;
       }
 
       // ── Math ──
-      // Standard «post-money option pool»: pool er X % av POST-money cap-table.
-      // Den enkle formelen som gir like resultater som NVCA-modellen er at alle
-      // (investor og eksisterende eiere) blir fortynnet proporsjonalt med (1 − pool%).
-      // Det gir investor% + existing% + pool% = 100 %.
+      // «Post-money option pool»: poolen er X % av eierlista etter runden, så alle (investor og eksisterende eiere)
+      // fortynnes likt med (1 − pool%). Det gir investor% + existing% + pool% = 100 %. I mange term sheets (bl.a.
+      // NVCA-malene) ligger poolen i stedet i pre-money, og da betaler bare de som eide fra før. Det regnes ikke her.
       var postMoney = pre + invest;
       var poolFrac = poolPct / 100;
       var rawInvestorPct = invest / postMoney * 100;
@@ -696,6 +581,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       // ── Page-hero stats ──
       setEl('hStatInvestor', fmtPct(investorPct));
       setEl('hStatYou', fmtPct(yourPct));
+
+      // Til forklaringsblokken under
+      window._aksje = { pre:pre, inv:invest, ex:existingShare, pool:poolPct };
+      if(window.hvtLearn) hvtLearn.update('selskap-aksjeutvanning', window._aksje);
 
       persist();
     }
@@ -755,6 +644,238 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   document.querySelectorAll('.focus-card-btn').forEach(function(b){
     b.addEventListener('click', function(){ document.body.classList.toggle('focus-mode'); });
   });
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken for aksjeutvanning: to kvadrater der arealet er kroner. Før-kvadratet er selskapet før runden,
+//    etter-kvadratet etter. Eierblokken nede til venstre, investoren som et L-bånd og opsjonspoolen som en stripe øverst.
+//    Uten pool er eierblokken like stor som før-kvadratet: prosenten faller, verdien står. Matten er calcDilution() sin. ──
+(function(){
+  var KEY = 'selskap-aksjeutvanning';
+  var NB = '\u00a0';
+  var CASES = {liten:{pre:5000000, inv:1000000, ex:100, pool:0}, pool:{pre:5000000, inv:1000000, ex:100, pool:10}, stor:{pre:10000000, inv:5000000, ex:100, pool:0}};
+  var root, plot, raw = null, lastW = 0, queued = false, ctx = null, fam = '', serif = '', caseKey = 'liten';
+  var mqDesk = window.matchMedia ? window.matchMedia('(min-width: 641px)') : null;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function all(name){ return root.querySelectorAll('[data-lrn="' + name + '"]'); }
+  function set(name, s){ all(name).forEach(function(el){ el.textContent = s; }); }
+  function show(name, on){ all(name).forEach(function(el){ el.hidden = !on; }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function nb(s){ return String(s).replace(/([0-9]) (?=[0-9]{3}(?![0-9]))/g, '$1' + NB).replace(/([0-9]) (?=%|kr)/g, '$1' + NB); }
+  // Tekstbredde målt med skriften siden faktisk bruker (fungerer på alle språk)
+  function tw(s, px, wt, isSerif){
+    if(!ctx) ctx = document.createElement('canvas').getContext('2d');
+    ctx.font = (wt || 400) + ' ' + px + 'px ' + (isSerif ? serif : fam);
+    return ctx.measureText(String(s)).width * 1.02;
+  }
+  function wrap(text, maxW, px, wt){
+    var words = String(text).split(' '), out = [], cur = '';
+    words.forEach(function(w){ var tt = cur ? cur + ' ' + w : w; if(cur && tw(tt, px, wt) > maxW){ out.push(cur); cur = w; } else cur = tt; });
+    if(cur) out.push(cur);
+    return out;
+  }
+  function rectD(x, y, w, h){ return 'M' + f1(x) + ',' + f1(y) + ' H' + f1(x + w) + ' V' + f1(y + h) + ' H' + f1(x) + ' Z '; }
+
+  // Brede skjermer: kvadratene side om side med investor og pool til høyre. Smale: radene under grunnlinjen.
+  function geo(W){
+    // Før-kvadratet står inntil mellomrommet og er aldri større enn etter-kvadratet, så det holder seg innenfor venstre kant
+    if(W >= 760){ var S = Math.min(360, Math.floor((W - 150 - 236) / 2)); return {mobile:false, W:W, S:S, XA:S + 150, gapW:150, top:70, sz:{name:13, pct:22, amt:12.5}}; }
+    var Sm = Math.min(170, Math.floor((W - 22) / 2));
+    return {mobile:true, W:W, S:Sm, XA:Sm + 22, gapW:22, top:66, sz:{name:12, pct:18, amt:11.5}};
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, fmt = L.kr;
+    var none = !d || !(d.pre > 0) || !(d.inv > 0);
+    q('none').hidden = !none;
+    show('main', !none);
+    if(none){ set('sr', ''); return; }
+    function kr(v){ return fmt(v) + NB + 'kr'; }
+    function pc2(x){ return L.dec(x, 2) + NB + '%'; }
+    function pcIn(x){ return (Math.abs(x - Math.round(x)) < 1e-9 ? String(Math.round(x)) : L.dec(x, 2)) + NB + '%'; }
+    var cs = getComputedStyle(root);
+    fam = cs.fontFamily || 'Inter, system-ui, sans-serif';
+    serif = cs.getPropertyValue('--font-serif').trim() || 'Georgia, serif';
+
+    // ── Tallene: kalkulatorens standardverdier gir Eksempel med tre tilfeller å velge mellom ──
+    var dine = !(d.pre === 5000000 && d.inv === 1000000 && d.ex === 100 && d.pool === 0);
+    var p = dine ? d : CASES[caseKey];
+    var pre = p.pre, inv = p.inv, ex = p.ex, pool = p.pool, post = pre + inv, poolF = pool / 100;
+    var exTotF = pre / post * (1 - poolF), invF = inv / post * (1 - poolF), invPct = invF * 100, exTot = exTotF * 100;
+    var yourPct = exTot * ex / 100, coPct = exTot - yourPct, yourValue = yourPct / 100 * post, coValue = coPct / 100 * post, invValue = invPct / 100 * post, poolValue = poolF * post;
+    var beforeYour = pre * ex / 100, beforeCo = pre - beforeYour, ownersLoss = pre - exTotF * post, yourLoss = beforeYour - yourValue;
+    var hasCo = ex < 100 - 1e-9, hasPool = pool > 0;
+
+    root.querySelector('.lrn-state').setAttribute('data-state', dine ? 'dine' : 'eksempel');
+    set('stateLabel', dine ? ph('Dine tall') : ph('Eksempel'));
+    var caseName = {liten:ph('Liten emisjon'), pool:ph('Opsjonspool 10 %'), stor:ph('Større runde')}[caseKey];
+    set('stateText', nb((dine ? '' : caseName + ' · ') + kr(pre) + ' + ' + kr(inv) + (dine && hasCo ? ' · ' + t('lrnAkStateEx', 'du eide {e}', {e:pcIn(ex)}) : '') + (dine && hasPool ? ' · ' + t('lrnAkStatePool', 'pool {q}', {q:pcIn(pool)}) : '')));
+    show('seg', !dine);
+    root.querySelectorAll('.lrn-ak-seg button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-k') === caseKey ? 'true' : 'false'); });
+
+    // ── Flatene: arealet er proporsjonalt med kroner ──
+    var G = geo(plot.clientWidth || 1000), m = G.mobile, S = G.S, XA = G.XA;
+    lastW = G.W;
+    var s0 = S * Math.sqrt(pre / post), sO = S * Math.sqrt(exTotF), hP = S * poolF, th = S - sO, wY0 = s0 * ex / 100, wY = sO * ex / 100;
+    var off = (m && hasPool) ? 20 : 0, y0A = G.top + off, Yb = y0A + S, bR = XA - G.gapW, bX = bR - s0, yB0 = Yb - s0;
+    // Poolen og investoren: stripe langs toppen. Er stripen tykkere enn L-båndet, fortsetter den ned høyre side.
+    var poolPoly = null, invPoly, poolAnchorY = 0, invAnchorY;
+    if(!hasPool || hP <= th + 1e-9){
+      if(hasPool) poolPoly = [[0, 0], [S, 0], [S, hP], [0, hP]];
+      invPoly = [[0, hP], [S, hP], [S, S], [sO, S], [sO, th], [0, th]];
+      poolAnchorY = hP / 2; invAnchorY = (Math.max(th, hP) + S) / 2;
+    } else {
+      var dl = S * (hP - th) / th;
+      poolPoly = [[0, 0], [S, 0], [S, th + dl], [sO, th + dl], [sO, th], [0, th]];
+      invPoly = [[sO, th + dl], [S, th + dl], [S, S], [sO, S]];
+      poolAnchorY = (th + dl) / 2; invAnchorY = (th + dl + S) / 2;
+    }
+    function polyD(pts){ return 'M' + pts.map(function(qq){ return f1(XA + qq[0]) + ',' + f1(y0A + qq[1]); }).join(' L') + ' Z '; }
+    var D = {base:'M' + f1(Math.min(bX, XA) - 6) + ',' + f1(Yb) + ' H' + f1(XA + S + 6), you:'', co:'', inv:polyD(invPoly), pool:poolPoly ? polyD(poolPoly) : '', ghost:'', help:'', lead:'', dot:'', brk:''};
+    D.you = rectD(bX, yB0, wY0, s0) + rectD(XA, y0A + S - sO, wY, sO);
+    if(hasCo) D.co = rectD(bX + wY0, yB0, s0 - wY0, s0) + rectD(XA + wY, y0A + S - sO, sO - wY, sO);
+    if(hasPool) D.ghost = rectD(XA + 0.75, Yb - s0, s0 - 0.75, s0 - 0.75);
+    D.help = 'M' + f1(bR) + ',' + f1(yB0) + ' H' + f1(XA);
+    function dot(cx, cy){ D.dot += 'M' + f1(cx - 2.5) + ',' + f1(cy) + ' a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0 Z '; }
+
+    var lab = '';
+    // Tekst med valgfri enhet; fargeklassene a/b/c er ink/ink2/ink3
+    function T(o){
+      lab += '<div class="lrn-ak-t ' + (o.c || 'a') + (o.bg ? ' bg' : '') + '" style="left:' + f1(o.left) + 'px;top:' + f1(o.top) + 'px;' + (o.w ? 'width:' + f1(o.w) + 'px;white-space:normal;' : '') +
+        (o.tx ? 'transform:translateX(' + o.tx + ');' : '') + 'font-size:' + o.size + 'px;line-height:' + o.lh + 'px;font-weight:' + (o.wt || 400) + (o.serif ? ';font-family:var(--font-serif)' : '') + '">' + esc(nb(o.text)) +
+        (o.unit ? '<span class="u" style="font-size:' + (o.usize || 11) + 'px">' + esc(o.unit) + '</span>' : '') + '</div>';
+    }
+    var hz = m ? 12 : 12.5;
+    // Er før-kvadratet smalere enn teksten over det, flyttes teksten mot venstre så den ikke når etter-kvadratet
+    var befL = Math.max(0, Math.min(bX, bR - tw(ph('Før emisjonen'), hz, 500) - 4)), befN = Math.max(0, Math.min(bX, bR - tw(fmt(pre), m ? 20 : 28, 500, true) - tw(' kr', m ? 12 : 13) - 4));
+    T({text:ph('Før emisjonen'), left:befL, top:m ? off : 0, size:hz, lh:16, wt:500, c:'c'});
+    T({text:fmt(pre), unit:NB + 'kr', usize:m ? 12 : 13, left:befN, top:(m ? off : 0) + 17, size:m ? 20 : 28, lh:m ? 24 : 32, wt:500, serif:true});
+    T({text:ph('Etter emisjonen'), left:XA, top:m ? off : 0, size:hz, lh:16, wt:500, c:'c'});
+    T({text:fmt(post), unit:NB + 'kr', usize:m ? 12 : 13, left:XA, top:(m ? off : 0) + 17, size:m ? 20 : 28, lh:m ? 24 : 32, wt:500, serif:true});
+
+    // ── Etiketter inne i flatene: full etikett når den får plass, ellers navn og prosent, ellers bare prosenten ──
+    var SZ = G.sz, ins = m ? 8 : 12, pxc = m ? 6 : 8;
+    function regionChip(rx, ry, rw, name, pct, amt){
+      if(rw < 40) return;
+      var room = rw - ins - 4, nw = tw(name, SZ.name, 600);
+      var tries = [[name, SZ.pct, amt]];
+      for(var z = SZ.pct; z >= 12; z--) tries.push([name, z, '']);
+      for(var z2 = SZ.pct; z2 >= 12; z2--) tries.push(['', z2, '']);
+      for(var i = 0; i < tries.length; i++){
+        var tr = tries[i], wmax = Math.max(tr[0] ? nw : 0, tw(pct, tr[1], 500, true), tr[2] ? tw(tr[2], SZ.amt) : 0) + 2 * pxc;
+        if(wmax <= room){
+          lab += '<div class="lrn-ak-chip" style="left:' + f1(rx + ins) + 'px;top:' + f1(ry + ins) + 'px;padding:4px ' + pxc + 'px">' +
+            (tr[0] ? '<span class="n" style="font-size:' + SZ.name + 'px;line-height:' + (m ? 14 : 16) + 'px">' + esc(tr[0]) + '</span>' : '') +
+            '<span class="p" style="font-size:' + tr[1] + 'px;line-height:' + Math.round(tr[1] * 1.2) + 'px">' + esc(nb(pct)) + '</span>' +
+            (tr[2] ? '<span class="k" style="font-size:' + SZ.amt + 'px">' + esc(nb(tr[2])) + '</span>' : '') + '</div>';
+          return;
+        }
+      }
+    }
+    regionChip(bX, yB0, wY0, ph('Du'), pcIn(ex), kr(beforeYour));
+    if(hasCo) regionChip(bX + wY0, yB0, s0 - wY0, ph('Medgründere'), pcIn(100 - ex), kr(beforeCo));
+    regionChip(XA, y0A + S - sO, wY, ph('Du'), pc2(yourPct), kr(yourValue));
+    if(hasCo) regionChip(XA + wY, y0A + S - sO, sO - wY, ph('Medgründere'), pc2(coPct), kr(coValue));
+
+    // ── Investoren og poolen: utenfor kvadratet, med ledelinje ──
+    var invName = t('lrnAkInv', 'Investor: {p}', {p:pc2(invPct)}), poolName = t('lrnAkPool', 'Opsjonspool {p}', {p:pcIn(pool)});
+    var H, annTxt = hasPool ? ph('Med pool faller både prosenten og verdien.') : ph('Prosenten faller, verdien står.');
+    if(!m){
+      var lx = XA + S + 34, outs = [{ay:y0A + invAnchorY, name:invName, amt:invValue}];
+      if(hasPool) outs.push({ay:y0A + poolAnchorY, name:poolName, amt:poolValue});
+      outs.forEach(function(o){ o.h = 40; o.top = o.ay - o.h / 2; });
+      outs.sort(function(a, b){ return a.ay - b.ay; });
+      for(var i2 = 1; i2 < outs.length; i2++) if(outs[i2].top < outs[i2 - 1].top + outs[i2 - 1].h + 10) outs[i2].top = outs[i2 - 1].top + outs[i2 - 1].h + 10;
+      outs.forEach(function(o){
+        D.lead += 'M' + f1(XA + S) + ',' + f1(o.ay) + ' H' + f1(lx - 8) + ' ';
+        dot(XA + S, o.ay);
+        if(Math.abs(o.top + o.h / 2 - o.ay) > 1) D.lead += 'M' + f1(lx - 8) + ',' + f1(o.ay) + ' L' + f1(lx - 4) + ',' + f1(o.top + o.h / 2) + ' ';
+        T({text:o.name, left:lx, top:o.top, size:13, lh:18, wt:600});
+        T({text:fmt(o.amt), unit:NB + 'kr', usize:12, left:lx, top:o.top + 18, size:18, lh:22, wt:500, serif:true});
+      });
+      // Mellomrommet: hva det betyr, og med pool klammen for det eierne mistet
+      var aw = G.gapW - 28, al = wrap(annTxt, aw, 13, 600), ay = yB0 - 12 - al.length * 18;
+      T({text:annTxt, left:bR + 14, top:ay, w:aw, size:13, lh:18, wt:600});
+      if(hasPool){
+        var y2 = Yb - sO;
+        D.brk = 'M' + f1(XA - 6) + ',' + f1(yB0 + 1) + ' H' + f1(XA - 11) + ' V' + f1(y2 - 1) + ' H' + f1(XA - 6);
+        T({text:'−' + kr(ownersLoss), left:XA - 18, top:yB0 + 6, tx:'-100%', size:12.5, lh:16, wt:600, bg:true});
+      }
+      H = Yb + 38;
+    } else {
+      // Smalt: radene under grunnlinjen, poolen over etter-kvadratet
+      var rowY = Yb + 16, rows = [];
+      if(hasPool) rows.push({ax:XA + (sO + s0) / 2, text:'−' + kr(ownersLoss)});
+      rows.push({ax:XA + (sO + S) / 2, text:invName + ' · ' + kr(invValue)});
+      rows.forEach(function(r){
+        D.lead += 'M' + f1(r.ax) + ',' + f1(Yb) + ' V' + f1(rowY + 8) + ' H' + f1(r.ax - 6) + ' ';
+        dot(r.ax, Yb);
+        T({text:r.text, left:r.ax - 8, top:rowY, tx:'-100%', size:12, lh:16, wt:600});
+        rowY += 24;
+      });
+      if(hasPool){
+        var pax = XA + S - 12, pay = y0A + poolAnchorY, ptxt = poolName + ' · ' + kr(poolValue);
+        D.lead += 'M' + f1(pax) + ',' + f1(pay) + ' V' + f1(18) + ' ';
+        dot(pax, pay);
+        T({text:ptxt, left:G.W - 2, top:0, tx:'-100%', size:12, lh:16, wt:600});
+      }
+      var ml = wrap(annTxt, Math.min(170, G.W - 16), 12.5, 600), may = rowY + 4;
+      T({text:annTxt, left:0, top:may, w:Math.min(170, G.W - 16) + 4, size:12.5, lh:17, wt:600});
+      H = may + ml.length * 17 + 8;
+    }
+
+    plot.classList.toggle('m', m);
+    plot.style.height = Math.ceil(H) + 'px';
+    var svg = plot.querySelector('svg');
+    svg.setAttribute('viewBox', '0 0 ' + G.W + ' ' + Math.ceil(H));
+    for(var pn in D) svg.querySelectorAll('[data-p="' + pn + '"]').forEach(function(el){ el.setAttribute('d', D[pn]); });
+    q('labels').innerHTML = lab;
+
+    // ── Bildeteksten, setningen og tabellen for skjermlesere ──
+    var ratio = Math.sqrt(pre / post);
+    set('cap', nb(t('lrnAkCap', 'Hver flate har areal proporsjonalt med kroner. Siden i før-kvadratet er {r} av siden i etter-kvadratet.', {r:pc2(ratio * 100)})));
+    var A = '\u0001', Z = '\u0002';
+    var sent = t('lrnAkSent', 'Du går fra {a} til {b}.', {a:A + t('lrnAkOf', '{p} av {k}', {p:pcIn(ex), k:kr(pre)}) + Z, b:A + t('lrnAkOf', '{p} av {k}', {p:pc2(yourPct), k:kr(post)}) + Z}) + ' ' +
+      (hasPool ? t('lrnAkSentPool', 'Andelen er verdt {v}, {l} mindre enn før.', {v:kr(yourValue), l:kr(yourLoss)}) : t('lrnAkSentSame', 'Andelen er verdt {v} begge ganger.', {v:kr(yourValue)}));
+    q('sent').innerHTML = esc(nb(sent)).split(A).join('<strong>').split(Z).join('</strong>');
+    set('sr', nb(t('lrnAkSr', 'Selskapet er verdt {pre} før og {post} etter emisjonen. Du går fra {a} til {b}. Investoren får {i} for {inv}.', {pre:kr(pre), post:kr(post),
+      a:t('lrnAkOf', '{p} av {k}', {p:pcIn(ex), k:kr(pre)}), b:t('lrnAkOf', '{p} av {k}', {p:pc2(yourPct), k:kr(post)}), i:pc2(invPct), inv:kr(inv)}) + ' ' + annTxt));
+    var dash = '–';
+    var trs = [[ph('Før'), pcIn(ex) + ' · ' + kr(beforeYour), hasCo ? pcIn(100 - ex) + ' · ' + kr(beforeCo) : dash, dash, dash, kr(pre)],
+               [ph('Etter'), pc2(yourPct) + ' · ' + kr(yourValue), hasCo ? pc2(coPct) + ' · ' + kr(coValue) : dash, pc2(invPct) + ' · ' + kr(invValue), hasPool ? pcIn(pool) + ' · ' + kr(poolValue) : dash, kr(post)]];
+    q('rows').innerHTML = trs.map(function(r){ return '<tr><th scope="row">' + esc(r[0]) + '</th>' + r.slice(1).map(function(c){ return '<td>' + esc(nb(c)) + '</td>'; }).join('') + '</tr>'; }).join('');
+
+    // ── Regnestykket ──
+    set('fPre', fmt(pre)); set('fInv', fmt(inv)); set('fPost', nb(kr(post))); set('fPostN', fmt(post));
+    set('fPool', nb(pcIn(pool))); set('fInvPct', nb(pc2(invPct))); set('fEier', nb(pc2(exTot))); set('fEx', nb(pcIn(ex))); set('fYou', nb(pc2(yourPct))); set('fValue', nb(kr(yourValue)));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-ak');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-ak-plot');
+    root.querySelectorAll('.lrn-ak-seg button').forEach(function(b){ b.addEventListener('click', function(){ caseKey = b.getAttribute('data-k'); render(raw); }); });
+    // Regnestykket er sammenleggbart på mobil, men står åpent på brede skjermer
+    function syncOpen(){ if(mqDesk && mqDesk.matches) root.querySelectorAll('.lrn-ak-fd').forEach(function(el){ el.open = true; }); }
+    syncOpen();
+    if(mqDesk && mqDesk.addEventListener) mqDesk.addEventListener('change', syncOpen);
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // Etikettene måles med siden sin skrift, så de plasseres på nytt når den er lastet
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(raw) schedule(); });
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._aksje || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 
