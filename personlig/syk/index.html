@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v230" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v231" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -175,10 +175,12 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 
 <script defer src="/shared/atmosphere.js?v=v5"></script>
-<script defer src="/shared/core.js?v=v230"></script>
+<script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script defer src="/shared/search-intents.js?v=v124"></script>
 <script defer src="/shared/search.js?v=v131"></script>
 
@@ -206,154 +208,6 @@ body.focus-mode > footer{display:none}
    flex-basis 280px en minstehøyde med tom luft nederst i kortene. */
 @media(max-width:960px){.side-col{flex-direction:row}}
 
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-/* Kolonnenavn inni cellen: vises bare når «Hvem betaler når» stables på mobil.
-   aria-hidden, fordi skjermlesere allerede har kolonneoverskriftene i thead. */
-.syk-tl{display:none}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-  /* «Hvem betaler når» stables: én periode per blokk, kolonnenavnet som etikett */
-  .syk-who,.syk-who tbody,.syk-who tr,.syk-who td{display:block}
-  .syk-who caption{display:block}
-  .syk-who thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  .syk-who tr{padding:12px 0;border-bottom:1px solid var(--line)}
-  .syk-who tbody tr:last-child{border-bottom:none}
-  .lc-tblwrap .lc-trinn.syk-who td{border:0;padding:2px 0}
-  .syk-tl{display:block;font:600 10px/1.4 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink3);margin-top:8px}
-}
 </style>
 </head>
 <body>
@@ -463,75 +317,115 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: personlig-syk =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-personlig-syk">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-syk">Hvordan kalkulatoren bygger opp utbetalingen</h2><p class="lc-intro">Er du ansatt, betaler arbeidsgiveren de første 16 dagene. Så overtar NAV. Utbetalingen er en dagsats av lønnen din ganget med antall dager. NAV regner bare med lønn opp til 6G.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Arbeidsgiverperioden</b><span class="tag">Grense</span></span><span class="fig">16<span class="u">dager</span></span><p class="dsc">Arbeidsgiveren betaler full lønn de første 16 kalenderdagene. Kalkulatoren forenkler og regner dem som 16 av sykedagene du la inn.</p></div>
-        <div class="lc-led"><span class="nm"><b>Dagsats</b><span class="tag">Faktor</span></span><span class="fig">2 385<span class="u">kr per dag</span></span><p class="dsc">Årslønnen deles på 260 lønnsdager (5 dager × 52 uker). Med 620&nbsp;000&nbsp;kr i året er én sykedag verdt 2&nbsp;385&nbsp;kr.</p></div>
-        <div class="lc-led"><span class="nm"><b>NAV-perioden</b><span class="tag">Grense</span></span><span class="fig">248<span class="u">dager</span></span><p class="dsc">Fra dag 17 overtar NAV og betaler i opptil 248 sykepengedager. Sykepengedager telles mandag–fredag, så 248 dager svarer til rundt 52 uker med arbeidsgiverperioden. Til sammen regner kalkulatoren maks 264 dager.</p></div>
-        <div class="lc-led"><span class="nm"><b>6G-taket</b><span class="tag">Grense</span></span><span class="fig">819 294<span class="u">kr</span></span><p class="dsc">NAV regner bare på lønn opp til seks ganger grunnbeløpet. Tjener du mer, ser kalkulatoren bort fra det som ligger over taket når den regner NAV-delen.</p></div>
-        <div class="lc-led"><span class="nm"><b>Sykepengeprosent</b><span class="tag">Sats</span></span><span class="fig">100<span class="u">%</span></span><p class="dsc">Er du ansatt, dekker NAV 100 % av grunnlaget opp til taket. Er du selvstendig, settes satsen til 80 % i kalkulatoren.</p></div>
-        <div class="lc-led"><span class="nm"><b>Karensdager (selvstendig)</b><span class="tag">Grense</span></span><span class="fig">16<span class="u">dager</span></span><p class="dsc">Velger du selvstendig, trekker kalkulatoren de første 16 dagene helt fra — selvstendige får ingen utbetaling i denne perioden uten egen forsikring.</p></div>
+  <div class="lrn" id="lrn-sy">
+    <section class="lrn-sec" aria-labelledby="lrn-sy-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-sy-h">Arbeidsgiveren betaler de første 16 dagene, NAV resten opp til 6G</h2>
+        <p class="lrn-lede">Som ansatt under 6G merker du ikke byttet, for dagsatsen er den samme hele veien. Tjener du over taket eller er selvstendig, er det her inntekten faller.</p>
       </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-personlig-syk">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-syk">Satsene kalkulatoren bruker for 2026</h2><p class="lc-intro">Grunnbeløpet (G) gjelder fra 1. mai 2026, etter trygdeoppgjøret.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Grunnbeløp (1G)</span><span class="v">136 549<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">6G-tak (NAV-grense)</span><span class="v">819 294<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Arbeidsgiverperiode</span><span class="v">16<span class="u">dager</span></span></div>
-        <div class="lc-kv"><span class="k">Maks fra NAV</span><span class="v">248<span class="u">dager</span></span></div>
-        <div class="lc-kv"><span class="k">Maks total lengde</span><span class="v">264<span class="u">dager</span></span></div>
-        <div class="lc-kv"><span class="k">Sykepengeprosent (ansatt)</span><span class="v">100<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Sykepengeprosent (selvstendig)</span><span class="v">80<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Karensdager (selvstendig)</span><span class="v">16<span class="u">dager</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn syk-who">
-          <caption>Hvem betaler når</caption>
-          <thead><tr><th>Dager</th><th>Hvem betaler</th><th>Sats</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Dag 1–16</span></td><td><span class="syk-tl" aria-hidden="true">Hvem betaler</span>Arbeidsgiver</td><td><span class="syk-tl" aria-hidden="true">Sats</span>100 % (ansatt), 0 % (selvstendig)</td></tr>
-            <tr><td><span class="step">Dag 17–264</span></td><td><span class="syk-tl" aria-hidden="true">Hvem betaler</span>NAV</td><td><span class="syk-tl" aria-hidden="true">Sats</span>100 % (ansatt), 80 % (selvstendig)</td></tr>
-            <tr><td><span class="step">Etter dag 264</span></td><td><span class="syk-tl" aria-hidden="true">Hvem betaler</span>Ingen sykepenger</td><td><span class="syk-tl" aria-hidden="true">Sats</span>Du kan søke AAP</td></tr>
-          </tbody>
-        </table>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-segs">
+          <div class="lrn-seg" role="group" aria-label="Status" data-lrn="segS"><button type="button" data-st="ansatt" aria-pressed="true">Ansatt</button><button type="button" data-st="selvstendig" aria-pressed="false">Selvstendig</button></div>
+          <div class="lrn-seg" role="group" aria-label="Arbeidsgiver og mellomlegget over 6G" data-lrn="segA" hidden><button type="button" data-arb="1" aria-pressed="true">Dekker mellomlegget</button><button type="button" data-arb="0" aria-pressed="false">Dekker ikke</button></div>
         </div>
       </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn lønna i kalkulatoren.</p>
+      <div class="lrn-sy-main" data-lrn="main">
+        <div class="lrn-sy-row">
+          <figure class="lrn-fig" aria-describedby="lrn-sy-sum">
+            <figcaption class="lrn-cap" data-lrn="cap"></figcaption>
+            <div class="lrn-plot is-static" dir="ltr">
+              <svg aria-hidden="true" focusable="false">
+                <defs>
+                  <pattern id="lrn-sy-px" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect class="lrn-sy-pxbg" x="0" y="0" width="5" height="5"/><line class="lrn-sy-pxl" x1="0" y1="0" x2="0" y2="5"/><line class="lrn-sy-pxl" x1="0" y1="0" x2="5" y2="0"/></pattern>
+                  <pattern id="lrn-sy-ph" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-sy-phl" x1="0" y1="0" x2="0" y2="5"/></pattern>
+                  <pattern id="lrn-sy-pm" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-sy-pml" x1="0" y1="0" x2="0" y2="6"/></pattern>
+                </defs>
+                <path class="lrn-sy-grid" data-p="grid"/>
+                <path class="lrn-sy-aap" data-p="aap"/>
+                <path class="lrn-sy-ag" data-p="agL"/>
+                <path class="lrn-sy-nav" data-p="navL"/>
+                <path class="lrn-sy-ml" data-p="mlL"/>
+                <path class="lrn-sy-nav" data-p="snavL"/>
+                <path class="lrn-sy-ag" data-p="agF"/>
+                <path class="lrn-sy-nav" data-p="navF"/>
+                <path class="lrn-sy-ml" data-p="mlF"/>
+                <path class="lrn-sy-nav" data-p="snavF"/>
+                <path class="lrn-sy-out" data-p="aOut"/>
+                <path class="lrn-sy-out" data-p="sOut"/>
+                <path class="lrn-sy-no" data-p="sNo"/>
+                <path class="lrn-sy-base" data-p="base"/>
+                <path class="lrn-sy-sal" data-p="sal"/>
+                <path class="lrn-sy-six" data-p="six"/>
+                <path class="lrn-sy-split" data-p="split"/>
+                <path class="lrn-sy-brp" data-p="br"/>
+                <path class="lrn-sy-mark" data-p="mark"/>
+              </svg>
+              <div class="lrn-labels lrn-sy-labels" data-lrn="labels"></div>
+            </div>
+          </figure>
+          <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+        </div>
+        <div class="lrn-scrub lrn-sy-scrub">
+          <div class="lrn-scrub-c">
+            <label for="lrn-sy-dag">Dra for å se en bestemt dag</label>
+            <input id="lrn-sy-dag" type="range" min="1" max="300" step="1" value="60" data-lrn="slider">
+          </div>
+          <dl class="lrn-dl five" aria-live="polite">
+            <div><dt>Dag</dt><dd><span data-lrn="k1"></span> <span class="lrn-u" data-lrn="k1u"></span></dd></div>
+            <div><dt>Ansatt: fra arbeidsgiver</dt><dd><span data-lrn="k2"></span> <span class="lrn-u">kr</span></dd></div>
+            <div><dt>Ansatt: fra NAV</dt><dd><span data-lrn="k3"></span> <span class="lrn-u">kr</span></dd></div>
+            <div><dt>Ansatt: sum</dt><dd><span data-lrn="k4"></span> <span class="lrn-u">kr</span></dd></div>
+            <div><dt>Selvstendig: sum</dt><dd><span data-lrn="k5"></span> <span class="lrn-u">kr</span></dd></div>
+          </dl>
+          <p class="lrn-sy-msg" data-lrn="msg" hidden></p>
+        </div>
+        <p class="lrn-p lrn-sy-say" data-lrn="sum"></p>
+        <div class="lrn-card lrn-sy-card">
+          <span class="lrn-card-l">Regnestykket</span>
+          <div class="lrn-f"><i>sykepenger</i><span>=</span><span class="lrn-frac"><span><i>lønn</i></span><span>260 virkedager</span></span><span>×</span><i>dager</i></div>
+          <p class="lrn-sy-cp">For NAV-delen brukes lønna opp til 6G, med 100&nbsp;% for ansatte og 80&nbsp;% for selvstendige. Dagene før dag 17 betaler arbeidsgiveren.</p>
+          <div class="lrn-sy-lines" data-lrn="flines"></div>
+        </div>
+        <div class="lrn-sy-info">
+          <p>Kalkulatoren teller alle dager mandag–fredag, også de 16 dagene arbeidsgiveren betaler. NAV måler arbeidsgiverperioden i kalenderdager.</p>
+          <p>Beløpene er brutto. Sykepenger skattlegges som lønn.</p>
+        </div>
+        <details class="lrn-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table>
+            <caption>Kroner per måned, før skatt</caption>
+            <thead><tr><th scope="col" class="s">Periode</th><th scope="col">Dager</th><th scope="col">Hvem betaler</th><th scope="col">Ansatt, kr/mnd</th><th scope="col">Selvstendig, kr/mnd</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Arbeidsgiverperioden</th><td>1–16</td><td class="s">Arbeidsgiver</td><td data-lrn="tA1"></td><td>0</td></tr>
+              <tr><th scope="row">NAV-perioden</th><td>17–264</td><td class="s" data-lrn="tB2"></td><td data-lrn="tA2"></td><td data-lrn="tS2"></td></tr>
+              <tr><th scope="row">Etter dag 264</th><td>fra 265</td><td class="s">Ingen sykepenger, søk AAP</td><td>–</td><td>–</td></tr>
+            </tbody>
+          </table></div>
+        </details>
+      </div>
+      <p class="lrn-sr" id="lrn-sy-sum" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-sy-q">
+      <h3 class="lrn-h3" id="lrn-sy-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvor lenge kan jeg få sykepenger?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>NAV betaler i opptil 248 sykepengedager, og dagene telles mandag–fredag. I tillegg kommer arbeidsgiverperioden på 16 kalenderdager. Til sammen blir det om lag ett år. Når dagene er brukt opp, stopper sykepengene (folketrygdloven § 8-12).</p></div></details>
+        <details><summary>Får jeg full lønn når jeg er syk?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Som ansatt under 6G får du full lønn gjennom hele perioden, bare betaleren bytter på dag 17. Tjener du over taket, betaler NAV bare opp til det. Resten faller bort med mindre arbeidsgiveren dekker mellomlegget, som er vanlig i offentlig sektor og hos store arbeidsgivere. Sjekk arbeidsavtalen din.</p></div></details>
+        <details><summary>Hvorfor får jeg mindre som selvstendig?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Selvstendig næringsdrivende får ingenting de første 16 dagene og deretter 80&nbsp;% av grunnlaget, ikke 100&nbsp;%. En tilleggsforsikring hos NAV kan heve dekningen, så sjekk vilkårene der før du regner med 80&nbsp;%.</p></div></details>
+        <details><summary>Hva skjer etter 248 NAV-dager?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Sykepengene stopper. Da kan du søke arbeidsavklaringspenger (AAP), som er en lavere ytelse. Kalkulatoren gir ikke noe beløp for AAP, så sonen på tidslinjen står tom.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-personlig-syk">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-syk">Det er greit å ha klart for seg</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Taket rammer høye lønninger</h3><p>Tjener du mer enn 6G-taket på 819 294 kr, regner NAV bare opp til taket. Det som ligger over, faller bort med mindre arbeidsgiveren din dekker mellomlegget — vanlig i offentlig sektor og hos store arbeidsgivere.</p></div>
-        <div class="lc-note"><h3>Selvstendige står svakere</h3><p>Velger du selvstendig i kalkulatoren, faller de første 16 dagene helt bort, og resten dekkes med 80 %. En tilleggsforsikring hos NAV kan heve denne dekningen.</p></div>
-        <div class="lc-note"><h3>Det er en yttergrense</h3><p>Kalkulatoren stopper utbetalingen ved 264 sykepengedager til sammen. NAV betaler ikke sykepenger lenger enn 248 sykepengedager, altså dager mandag–fredag — etter det må du eventuelt søke arbeidsavklaringspenger (AAP), som er en lavere ytelse.</p></div>
-        <div class="lc-note"><h3>Sykepenger er skattepliktig</h3><p>Sykepenger fra NAV beskattes som vanlig lønn. Beløpet kalkulatoren viser er brutto — det trekkes skatt på vanlig måte før det havner på konto.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-personlig-syk">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-personlig-syk">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvor lenge kan jeg få sykepenger?</summary><div class="a"><p>Maks 264 sykepengedager til sammen: 16 dager fra arbeidsgiver pluss 248 dager fra NAV. Sykepengedager telles mandag–fredag, så det svarer til rundt 52 uker. Etter det stopper sykepengene, og du må eventuelt søke arbeidsavklaringspenger (AAP).</p></div></details>
-        <details class="lc-q"><summary>Får jeg full lønn når jeg er syk?</summary><div class="a"><p>Er du ansatt og tjener under 6G-taket på 819 294 kr, gir kalkulatoren 100 % dekning hele perioden. Tjener du over taket, dekker NAV bare opp til taket — resten faller bort med mindre arbeidsgiveren betaler mellomlegget.</p></div></details>
-        <details class="lc-q"><summary>Hva er 6G-taket?</summary><div class="a"><p>NAV regner bare sykepenger på lønn opp til seks ganger grunnbeløpet. Med 1G på 136 549 kr blir taket 819 294 kr i året. Lønn over dette tas ikke med i NAV-utbetalingen.</p></div></details>
-        <details class="lc-q"><summary>Hvem betaler de første dagene?</summary><div class="a"><p>Arbeidsgiveren din dekker de første 16 kalenderdagene med full lønn. Fra dag 17 overtar NAV.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor får jeg mindre som selvstendig?</summary><div class="a"><p>Selvstendig næringsdrivende får ingen utbetaling de første 16 dagene og deretter 80 % av grunnlaget — ikke 100 %. En tilleggsforsikring hos NAV kan heve dekningen.</p></div></details>
-        <details class="lc-q"><summary>Hva skjer etter 248 NAV-dager?</summary><div class="a"><p>Sykepengene stopper. Da kan du søke arbeidsavklaringspenger (AAP), som er en lavere ytelse enn sykepenger.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-personlig-syk">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-personlig-syk">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/personlig/lonn/"><span class="ar">Lønn etter skatt →</span><h3>Lønn etter skatt</h3><p>Sykepenger beskattes som lønn. Se hva du sitter igjen med etter skatt.</p></a>
-        <a class="lc-link" href="/personlig/foreldrepenger/"><span class="ar">Foreldrepenger →</span><h3>Foreldrepenger</h3><p>Samme 6G-tak og NAV-logikk gjelder når du er hjemme med barn.</p></a>
-        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Lag et budsjett</h3><p>Se hvordan et lengre sykefravær påvirker de faste utgiftene dine.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-sy-r">
+      <h3 class="lrn-h3" id="lrn-sy-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/personlig/lonn/"><span><span class="t">Lønn etter skatt</span><span class="d">Sykepenger skattlegges som lønn. Se hva du sitter igjen med.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/foreldrepenger/"><span><span class="t">Foreldrepenger</span><span class="d">Samme 6G-tak og samme NAV-logikk når du er hjemme med barn.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/budsjett/"><span><span class="t">Budsjett</span><span class="d">Se hva et lengre sykefravær gjør med de faste utgiftene.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -785,6 +679,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
   function render(){
     var r = sykCalc(state.brutto, state.status, state.sykDager, state.arbDekker);
+    window._syk = {s:state.brutto, dager:state.sykDager, status:state.status, arb:state.arbDekker};
+    if(window.hvtLearn) hvtLearn.update('personlig-syk', window._syk);
 
     // Strip
     $('[data-syk="brutto"]').textContent = fmtKr(state.brutto);
@@ -894,6 +790,277 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       });
     });
   })();
+</script>
+
+<script>
+// ── Forklaringsblokken «Arbeidsgiveren betaler de første 16 dagene, NAV resten opp til 6G»: to spor
+//    (ansatt og selvstendig) med kroner per måned for hver sykepengedag, og AAP etter dag 264.
+//    Samme regnestykke som sykCalc() på siden (1G = 136 549 kr). ──
+(function(){
+  var KEY = 'personlig-syk';
+  var DEF = {s:620000, dager:60, status:'ansatt', arb:true};
+  var G1 = 136549, SIX = 6 * G1;
+  var SANS = 'Inter, system-ui, sans-serif';
+  var NB = '\u00a0';
+  var root, plot, svg, raw = null, lastW = 0, queued = false, ctx, lastKey = null, ov = {};
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setD(name, d, op){ var el = svg.querySelector('[data-p="' + name + '"]'); el.setAttribute('d', d); if(op != null) el.style.opacity = op; }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function rect(x1, y1, x2, y2){ return x2 - x1 > 0.3 && y2 - y1 > 0.3 ? 'M' + f1(x1) + ',' + f1(y1) + ' H' + f1(x2) + ' V' + f1(y2) + ' H' + f1(x1) + ' Z ' : ''; }
+  // Kalkulatorens sykCalc(): arbeidsgiveren dag 1–16, NAV dag 17–264 opp til 6G (80 % for selvstendig)
+  function calc(S, status, dager, arbDekker){
+    var dagSats = S / 260, arbDays = Math.min(dager, 16), arbSum = arbDays * dagSats;
+    var navDays = Math.max(0, Math.min(dager - 16, 248)), navDagSats = Math.min(S, SIX) * (status === 'selvstendig' ? 0.8 : 1) / 260, navSum = navDays * navDagSats;
+    var overskudd = Math.max(0, S - SIX), dekker = arbDekker && status !== 'selvstendig';
+    var topUp = dekker ? navDays * overskudd / 260 : 0, karens = status === 'selvstendig' ? arbDays * dagSats : 0;
+    return {dagSats:dagSats, arbDays:arbDays, arbSum:arbSum, navDays:navDays, navSum:navSum, topUp:topUp, sum:arbSum + navSum + topUp - karens, navMnd:navDagSats * 260 / 12, arbMnd:dekker ? overskudd / 12 : 0};
+  }
+  // Legger en etikett på første ledige kandidat; text kan være en liste med varianter, lengst først
+  function put(st, text, on, cands){
+    var vars = Array.isArray(text) ? text : [text], last = null;
+    for(var vi = 0; vi < vars.length; vi++){
+      var w = textW(vars[vi], '500 ' + st.fz + 'px ' + SANS) + 12;
+      for(var i = 0; i < cands.length; i++){
+        var cd = cands[i], x = cd.a === 'r' ? cd.x - w : (cd.a === 'c' ? cd.x - w / 2 : cd.x);
+        x = Math.max(0, Math.min(st.W - w, x));
+        var b = {x:x, y:cd.y, w:w, h:20};
+        var free = !st.boxes.some(function(o){ return o.x < b.x + b.w + 3 && b.x < o.x + o.w + 3 && o.y < b.y + b.h + 3 && b.y < o.y + o.h + 3; });
+        last = {b:b, text:vars[vi]};
+        if(free){ st.boxes.push(b); st.lab += chip(vars[vi], x, cd.y, on); return b; }
+      }
+    }
+    st.boxes.push(last.b); st.lab += chip(last.text, last.b.x, last.b.y, on);
+    return last.b;
+  }
+  function chip(text, l, tp, on){ return '<span class="lrn-sy-chip' + (on ? '' : ' dim') + '" style="left:' + f1(l) + 'px;top:' + f1(tp) + 'px">' + esc(text) + '</span>'; }
+
+  function render(d){
+    var L = window.hvtLearn, t = L.t, ph = L.ph;
+    raw = d;
+    // Dag, status og mellomlegg valgt i blokka nullstilles når kalkulatorens tall endres
+    var key = d ? [d.s, d.dager, d.status, d.arb].join('|') : '';
+    if(key !== lastKey){ lastKey = key; ov = {}; }
+    var inp = d || DEF;
+    var mine = !!d && (+d.s !== DEF.s || +d.dager !== DEF.dager || d.status !== DEF.status || !!d.arb !== DEF.arb);
+    var S = +inp.s, ok = S > 0;
+    var dag = Math.max(1, Math.min(300, ov.dag != null ? ov.dag : (+inp.dager || 1)));
+    var status = ov.status || inp.status || 'ansatt', arb = ov.arb != null ? ov.arb : !!inp.arb;
+    q('main').hidden = !ok; q('none').hidden = ok;
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    function fmt(v){ return L.kr(v); }
+    function kr(v){ return L.kr(v) + NB + 'kr'; }
+    var over = S > SIX, ansatt = status === 'ansatt', showArb = over && ansatt;
+    root.querySelectorAll('[data-lrn="segS"] button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-st') === status ? 'true' : 'false'); });
+    root.querySelectorAll('[data-lrn="segA"] button').forEach(function(b){ b.setAttribute('aria-pressed', (b.getAttribute('data-arb') === '1') === arb ? 'true' : 'false'); });
+    q('segA').hidden = !showArb;
+    var stateTxt = t('lrnSyState', '{s} · {d} sykedager · {st}', {s:kr(S), d:dag, st:ph(ansatt ? 'ansatt' : 'selvstendig')});
+    if(showArb) stateTxt += ' · ' + ph(arb ? 'arbeidsgiveren dekker mellomlegget' : 'mellomlegget dekkes ikke');
+    set('stateText', ok ? stateTxt : ph('Fyll inn lønna i kalkulatoren.'));
+    q('slider').value = String(dag);
+    if(!ok){ set('sr', ph('Fyll inn lønna i kalkulatoren.')); return; }
+    var W = plot.clientWidth;
+    if(!W){ lastW = 0; return; }
+    lastW = W;
+    var MOB = W < 560;
+
+    var dm = Math.min(dag, 264), aapOn = dag > 264;
+    var A = calc(S, 'ansatt', dag, arb), B = calc(S, 'selvstendig', dag, arb);
+    var sm = S / 12, cm = SIX / 12, mlM = Math.max(0, sm - cm), selM = B.navMnd, gapM = sm - selM, nt = Math.min(sm, cm);
+    var T = {
+      nav100:ph('NAV, 100 % opp til 6G'), arb100:ph('Arbeidsgiver, 100 %'), arbK:ph('Arbeidsgiver'),
+      six:t('lrnSySix', '6G-tak: 6 × 136 549 = 819 294 kr i året ({m} kr/mnd)', {m:fmt(cm)}),
+      sal:t('lrnSySal', 'Lønna di: {m} kr/mnd', {m:fmt(sm)}),
+      ml:ph(arb ? 'Mellomlegg: fra arbeidsgiveren' : 'Mellomlegg: ingen betaler'),
+      nav80:ph('NAV, 80 %'), ingen:ph('Ingen utbetaling'), gap:t('lrnSyGap', '−{m} kr i måneden', {m:fmt(gapM)}),
+      six6:t('lrnSySix6', '6G {m}', {m:fmt(cm)}), sal6:t('lrnSySal6', 'Lønn {m}', {m:fmt(sm)}), navK:ph('NAV, 100 %')
+    };
+    var selA = ansatt, o = function(sel){ return sel ? {L:0.38, F:1, O:0.85} : {L:0.16, F:0.5, O:0.4}; }, oa = o(selA), os = o(!selA);
+    var ms = 18, yMax = Math.max(sm, cm) * 1.15, P = {}, mk = {}, H, tagTxt = t('lrnSyDay', 'Dag {n}', {n:dm}), tagW = textW(tagTxt, '600 12px ' + SANS) + 14;
+    var st = {W:W, fz:MOB ? 11 : 12, boxes:[], lab:''};
+    var titleA = ph('Ansatt'), titleS = ph('Selvstendig');
+    var lab = '';
+
+    if(!MOB){
+      // ── Brede skjermer: dagene bortover, to spor over hverandre ──
+      var x0 = 84, xe = W - 88, zx = xe + 8, aapW = 48, yT = [34, 238], Ht = 160, yB = [yT[0] + Ht, yT[1] + Ht];
+      var X = function(dd){ return x0 + dd * (xe - x0) / 264; }, Y = function(v, tr){ return yB[tr] - v / yMax * Ht; };
+      var xm = X(dm), x16 = X(16);
+      var cut = function(xa, xb, ya, yb){ return {F:xm > xa ? rect(xa, ya, Math.min(xb, xm), yb) : '', L:xm < xb ? rect(Math.max(xa, xm), ya, xb, yb) : ''}; };
+      var ag = cut(x0, x16, Y(sm, 0), yB[0]), nv = cut(x16, xe, Y(nt, 0), yB[0]);
+      var mlAll = over ? rect(x16, Y(sm, 0), xe, Y(cm, 0)) : '', ml = over && arb ? cut(x16, xe, Y(sm, 0), Y(cm, 0)) : {F:'', L:''};
+      var nv2 = cut(x16, xe, Y(0.8 * nt, 1), yB[1]);
+      var grid = '', stepY = yMax > 100000 ? 40000 : 20000;
+      for(var tr = 0; tr < 2; tr++) for(var v = 0; v <= yMax; v += stepY){
+        var yy = Y(v, tr);
+        if(v > 0) grid += 'M' + x0 + ',' + f1(yy) + ' H' + (zx + aapW) + ' ';
+        if(yy - yT[tr] > 12 || v === 0) lab += '<span class="lrn-sy-yt" style="top:' + f1(yy - 8) + 'px">' + esc(fmt(v)) + '</span>';
+      }
+      P.grid = grid;
+      P.base = 'M' + x0 + ',' + f1(yB[0]) + ' H' + (zx + aapW) + ' M' + x0 + ',' + f1(yB[1]) + ' H' + (zx + aapW);
+      P.sal = 'M' + x0 + ',' + f1(Y(sm, 0)) + ' H' + xe + ' M' + x0 + ',' + f1(Y(sm, 1)) + ' H' + xe;
+      P.six = 'M' + x0 + ',' + f1(Y(cm, 0)) + ' H' + xe + ' M' + x0 + ',' + f1(Y(cm, 1)) + ' H' + xe;
+      P.aap = rect(zx, yT[0], zx + aapW, yB[0]) + rect(zx, yT[1], zx + aapW, yB[1]);
+      P.split = 'M' + f1(x16) + ',' + (yT[0] - 4) + ' V' + f1(yB[1]);
+      P.mark = 'M' + f1(xm) + ',' + (yT[0] - 4) + ' V' + f1(yB[1]);
+      var gapPx = Y(0.8 * nt, 1) - Y(sm, 1), brX = xe - 14;
+      P.br = gapPx > 3 ? 'M' + (brX - 4) + ',' + f1(Y(0.8 * nt, 1)) + ' H' + brX + ' V' + f1(Y(sm, 1)) + ' H' + (brX - 4) : '';
+      P.agL = ag.L; P.agF = ag.F; P.navL = nv.L; P.navF = nv.F; P.mlL = arb ? ml.L : mlAll; P.mlF = ml.F; P.snavL = nv2.L; P.snavF = nv2.F;
+      P.aOut = rect(x0, Y(sm, 0), x16, yB[0]) + rect(x16, Y(nt, 0), xe, yB[0]) + (over ? rect(x16, Y(sm, 0), xe, Y(cm, 0)) : '');
+      P.sOut = rect(x16, Y(0.8 * nt, 1), xe, yB[1]); P.sNo = rect(x0, Y(sm, 1), x16, yB[1]);
+      [0, 16, 50, 100, 150, 200, 264].forEach(function(dd){ lab += '<span class="lrn-sy-xt" style="left:' + f1(X(dd) - 24) + 'px;top:' + f1(yB[1] + 8) + 'px">' + dd + '</span>'; });
+      lab += '<span class="lrn-sy-xt" style="left:' + f1(zx) + 'px;top:' + f1(yB[1] + 8) + 'px;width:' + aapW + 'px">AAP</span>';
+      mk.split = {l:x16 - ms / 2, t:3}; mk.aap = {l:zx + aapW / 2 - ms / 2, t:3};
+      if(over) mk.ml = {l:x16 + 8, t:Y(cm, 0) - Y(sm, 0) >= ms + 2 ? (Y(sm, 0) + Y(cm, 0)) / 2 - ms / 2 : Y(cm, 0) + 3};
+      var tagL = Math.max(0, Math.min(W - tagW, xm - tagW / 2)), tagT = yB[0] + (yT[1] - yB[0] - 20) / 2;
+      st.boxes.push({x:tagL, y:tagT, w:tagW, h:20});
+      Object.keys(mk).forEach(function(k){ st.boxes.push({x:mk[k].l, y:mk[k].t, w:ms, h:ms}); });
+      st.boxes.push({x:0, y:yT[0] - 2, w:textW(titleA, '600 12.5px ' + SANS), h:16}, {x:0, y:yT[1] - 2, w:textW(titleS, '600 12.5px ' + SANS), h:16});
+      var blockH = yB[0] - Y(nt, 0), blockH2 = yB[1] - Y(0.8 * nt, 1), mid = (x16 + xe) / 2;
+      // Spor 1: 6G-etiketten og lønnslinjen først, så blokkene
+      put(st, T.six, selA, over ? [{x:xe - 2, a:'r', y:Y(cm, 0) + 4}] : [{x:xe - 2, a:'r', y:Y(cm, 0) - 24}, {x:xe - 2, a:'r', y:Y(cm, 0) + 4}, {x:xe - 2, a:'r', y:yT[0] - 24}]);
+      put(st, T.nav100, selA, blockH >= 30 ? [{x:mid, a:'c', y:Y(nt, 0) + (blockH - 20) / 2}, {x:mid, a:'c', y:Y(nt, 0) + 28}, {x:mid, a:'c', y:yB[0] - 24}] : [{x:mid, a:'c', y:Y(nt, 0) - 24}]);
+      var bAg = put(st, [T.arb100, T.arbK], selA, [{x:x0 + 1, a:'l', y:Y(sm, 0) - 24}, {x:textW(titleA, '600 12.5px ' + SANS) + 8, a:'l', y:Y(sm, 0) - 24}, {x:x0 + 1, a:'l', y:Y(sm, 0) + 4}]);
+      if(over) put(st, T.ml, selA, [{x:bAg.x + bAg.w + 12, a:'l', y:Y(sm, 0) - 24}]);
+      // Spor 2: lønnslinjen merkes her, der gapet til lønna er det som mangler
+      put(st, T.sal, !selA, [{x:xe - 2, a:'r', y:Y(sm, 1) - 24}]);
+      put(st, T.nav80, !selA, blockH2 >= 30 ? [{x:mid, a:'c', y:Y(0.8 * nt, 1) + (blockH2 - 20) / 2}] : [{x:mid, a:'c', y:Y(0.8 * nt, 1) - 24}]);
+      put(st, T.ingen, !selA, [{x:x0 + 1, a:'l', y:Y(sm, 1) - 24}, {x:textW(titleS, '600 12.5px ' + SANS) + 8, a:'l', y:Y(sm, 1) - 24}]);
+      put(st, T.gap, !selA, (gapPx >= 21 ? [{x:brX - 8, a:'r', y:Y(sm, 1) + (gapPx - 20) / 2}] : []).concat([{x:xe - 6, a:'r', y:Y(0.8 * nt, 1) + 4}]));
+      lab += '<span class="lrn-sy-title' + (selA ? '' : ' dim') + '" style="left:0;top:' + (yT[0] - 2) + 'px">' + esc(titleA) + '</span><span class="lrn-sy-title' + (selA ? ' dim' : '') + '" style="left:0;top:' + (yT[1] - 2) + 'px">' + esc(titleS) + '</span>';
+      lab += '<span class="lrn-sy-tag" style="left:' + f1(tagL) + 'px;top:' + f1(tagT) + 'px">' + esc(tagTxt) + '</span>';
+      H = 430;
+    } else {
+      // ── Smale skjermer: dagene nedover, sporene som kolonner side om side ──
+      var cA = 54, cgap = 28, cw = (W - cA - cgap) / 2, cB = cA + cw + cgap, yT0 = 54, pyd = 1.9;
+      var Yd = function(dd){ return yT0 + dd * pyd; }, Mx = function(v){ return v / yMax * cw; };
+      var yE = Yd(264), ym = Yd(dm), y16 = Yd(16);
+      var cutV = function(xa, xb, ya, yb){ return {F:ym > ya ? rect(xa, ya, xb, Math.min(yb, ym)) : '', L:ym < yb ? rect(xa, Math.max(ya, ym), xb, yb) : ''}; };
+      var agV = cutV(cA, cA + Mx(sm), Yd(0), y16), nvV = cutV(cA, cA + Mx(nt), y16, yE);
+      var mlAllV = over ? rect(cA + Mx(cm), y16, cA + Mx(sm), yE) : '', mlV = over && arb ? cutV(cA + Mx(cm), cA + Mx(sm), y16, yE) : {F:'', L:''};
+      var nv2V = cutV(cB, cB + Mx(0.8 * nt), y16, yE);
+      var top = 46, aapTop = yE + 8, aapBot = aapTop + 40;
+      P.grid = '';
+      P.sal = 'M' + f1(cA + Mx(sm)) + ',' + top + ' V' + f1(yE) + ' M' + f1(cB + Mx(sm)) + ',' + yT0 + ' V' + f1(yE);
+      P.six = 'M' + f1(cA + Mx(cm)) + ',' + top + ' V' + f1(yE) + ' M' + f1(cB + Mx(cm)) + ',' + yT0 + ' V' + f1(yE);
+      P.base = 'M' + cA + ',' + yT0 + ' V' + f1(yE) + ' M' + f1(cB) + ',' + yT0 + ' V' + f1(yE);
+      P.aap = rect(cA, aapTop, cB + cw, aapBot);
+      P.split = 'M' + (cA - 6) + ',' + f1(y16) + ' H' + f1(cB + cw);
+      P.mark = 'M' + (cA - 6) + ',' + f1(ym) + ' H' + f1(cB + cw);
+      var yBr = Yd(150), bx1 = cB + Mx(0.8 * nt), bx2 = cB + Mx(sm);
+      P.br = bx2 - bx1 > 3 ? 'M' + f1(bx1) + ',' + f1(yBr - 4) + ' V' + f1(yBr + 4) + ' M' + f1(bx1) + ',' + f1(yBr) + ' H' + f1(bx2) + ' M' + f1(bx2) + ',' + f1(yBr - 4) + ' V' + f1(yBr + 4) : '';
+      P.agL = agV.L; P.agF = agV.F; P.navL = nvV.L; P.navF = nvV.F; P.mlL = arb ? mlV.L : mlAllV; P.mlF = mlV.F; P.snavL = nv2V.L; P.snavF = nv2V.F;
+      P.aOut = rect(cA, Yd(0), cA + Mx(sm), y16) + rect(cA, y16, cA + Mx(nt), yE) + (over ? rect(cA + Mx(cm), y16, cA + Mx(sm), yE) : '');
+      P.sOut = rect(cB, y16, cB + Mx(0.8 * nt), yE); P.sNo = rect(cB, Yd(0), cB + Mx(sm), y16);
+      [16, 50, 100, 150, 200, 264].forEach(function(dd){ if(Math.abs(Yd(dd) - ym) > 13) lab += '<span class="lrn-sy-yt m" style="top:' + f1(Yd(dd) - 8) + 'px">' + dd + '</span>'; });
+      lab += '<span class="lrn-sy-yt m" style="top:' + f1((aapTop + aapBot) / 2 - 8) + 'px">AAP</span>';
+      var gx = cA + cw + cgap / 2 - ms / 2;
+      mk.split = {l:gx, t:y16 - ms / 2};
+      if(over) mk.ml = {l:cA + (Mx(cm) + Mx(sm)) / 2 - ms / 2, t:Yd(100) - ms / 2};
+      mk.gap = {l:(bx1 + bx2) / 2 - ms / 2, t:yBr - ms - 8};
+      mk.aap = {l:(cA + cB + cw) / 2 - ms / 2, t:(aapTop + aapBot) / 2 - ms / 2};
+      var tagTV = ym - 10;
+      st.boxes.push({x:0, y:tagTV, w:tagW, h:20}, {x:cA, y:0, w:textW(titleA, '600 12px ' + SANS), h:16}, {x:cB, y:0, w:textW(titleS, '600 12px ' + SANS), h:16});
+      Object.keys(mk).forEach(function(k){ st.boxes.push({x:mk[k].l, y:mk[k].t, w:ms, h:ms}); });
+      var xs = cA + Mx(sm), x6 = cA + Mx(cm);
+      var six = sm >= cm ? put(st, T.six6, selA, [{x:x6 - 2, a:'r', y:20}]) : put(st, T.six6, selA, [{x:x6 + 2, a:'l', y:20}]);
+      var sal = sm >= cm ? put(st, T.sal6, selA, [{x:xs + 2, a:'l', y:20}]) : put(st, T.sal6, selA, [{x:xs - 2, a:'r', y:20}]);
+      var freeB = function(b){ return b.x >= 0 && b.x + b.w <= W && !st.boxes.some(function(o){ return o.x < b.x + b.w + 2 && b.x < o.x + o.w + 2 && o.y < b.y + b.h + 2 && b.y < o.y + o.h + 2; }); };
+      var cands = [{x:six.x - ms - 4, y:21}, {x:six.x + six.w + 4, y:21}, {x:sal.x + sal.w + 4, y:21}, {x:sal.x - ms - 4, y:21}];
+      var pick = cands.filter(function(c){ return freeB({x:c.x, y:c.y, w:ms, h:ms}); })[0] || cands[0];
+      mk.six = {l:Math.max(0, Math.min(W - ms, pick.x)), t:pick.y};
+      st.boxes.push({x:mk.six.l, y:mk.six.t, w:ms, h:ms});
+      put(st, T.arbK, selA, [{x:cA + 2, a:'l', y:Yd(8) - 10}]);
+      put(st, T.navK, selA, [{x:cA + 4, a:'l', y:y16 + 8}]);
+      put(st, T.ingen, !selA, [{x:cB + 2, a:'l', y:Yd(8) - 10}]);
+      put(st, T.nav80, !selA, [{x:cB + 4, a:'l', y:y16 + 8}]);
+      lab += '<span class="lrn-sy-title m' + (selA ? '' : ' dim') + '" style="left:' + cA + 'px;top:0">' + esc(titleA) + '</span><span class="lrn-sy-title m' + (selA ? ' dim' : '') + '" style="left:' + f1(cB) + 'px;top:0">' + esc(titleS) + '</span>';
+      lab += '<span class="lrn-sy-tag" style="left:0;top:' + f1(tagTV) + 'px">' + esc(tagTxt) + '</span>';
+      H = Math.ceil(aapBot + 8);
+    }
+    // Opasitet: valgt spor sterkt, det andre dempet; etter markøren lysere enn før
+    setD('grid', P.grid); setD('aap', P.aap); setD('base', P.base); setD('sal', P.sal); setD('six', P.six); setD('split', P.split); setD('br', P.br); setD('mark', P.mark);
+    svg.querySelector('[data-p="aap"]').classList.toggle('on', aapOn);
+    setD('agL', P.agL, oa.L); setD('navL', P.navL, oa.L); setD('mlL', P.mlL, arb ? oa.L : (selA ? 0.5 : 0.2)); setD('snavL', P.snavL, os.L);
+    setD('agF', P.agF, oa.F); setD('navF', P.navF, oa.F); setD('mlF', P.mlF, oa.F); setD('snavF', P.snavF, os.F);
+    setD('aOut', P.aOut, oa.O); setD('sOut', P.sOut, os.O); setD('sNo', P.sNo, selA ? 0.55 : 1);
+
+    // Merknader i fortellerrekkefølge, nummerert etter det som faktisk står i grafen
+    var defs = [];
+    if(MOB) defs.push(['six', t('lrnSyN0', 'Stiplet linje: 6G-tak, 6 × 136 549 = 819 294 kr i året ({c} i måneden). Heltrukket linje: lønna di, {s} i måneden.', {c:kr(cm), s:kr(sm)})]);
+    defs.push(['split', ph(over ? 'Dag 17: NAV overtar, men bare opp til 6G.' : 'Dag 17: NAV overtar. Under 6G er dagsatsen den samme før og etter, bare betaleren bytter.')]);
+    if(over) defs.push(['ml', arb ? t('lrnSyN2a', 'Over 6G betaler ikke NAV. De {m} i måneden over taket dekkes av arbeidsgiveren.', {m:kr(mlM)}) : t('lrnSyN2b', 'Over 6G betaler ikke NAV, og ingen andre betaler heller. De {m} i måneden over taket faller bort fra dag 17.', {m:kr(mlM)})]);
+    if(MOB) defs.push(['gap', t('lrnSyN3', 'Som selvstendig mangler du {m} i måneden mot lønna. De første 16 dagene får du ingenting.', {m:kr(gapM)})]);
+    defs.push(['aap', ph('Dag 264: sykepengene stopper. Etter 248 NAV-dager kan du søke AAP, som er en lavere ytelse.') + (aapOn ? ' ' + t('lrnSyN4', 'Du har valgt dag {d}, så markøren står på 264.', {d:dag}) : '')]);
+    var notes = '';
+    defs.forEach(function(df, i){
+      var num = String(i + 1), p = mk[df[0]];
+      notes += '<li data-n="' + num + '"><span class="lrn-mk" aria-hidden="true">' + num + '</span><span>' + esc(df[1]) + '</span></li>';
+      if(p) lab += '<span class="lrn-mk" data-n="' + num + '" aria-hidden="true" style="left:' + f1(p.l) + 'px;top:' + f1(p.t) + 'px">' + num + '</span>';
+    });
+    q('labels').innerHTML = lab + st.lab;
+    Array.prototype.forEach.call(q('labels').children, function(e){ var ovr = e.offsetLeft + e.offsetWidth - (W - 1); if(ovr > 0 && e.offsetWidth < W) e.style.left = f1(e.offsetLeft - ovr) + 'px'; });
+    plot.style.height = H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    q('notes').innerHTML = notes;
+    set('cap', ph(MOB ? 'Dagene går nedover, bredden er kroner per måned' : 'Kroner per måned for hver sykepengedag. Aksen viser dager, mandag–fredag.'));
+
+    // Avlesningen ved glidebryteren
+    set('k1', String(dm)); set('k1u', ph(aapOn ? 'stoppet' : 'av 264'));
+    set('k2', fmt(A.arbSum + A.topUp)); set('k3', fmt(A.navSum)); set('k4', fmt(A.sum)); set('k5', fmt(B.sum));
+    q('msg').hidden = !aapOn;
+    set('msg', t('lrnSyMsg', 'Sykepengene stopper etter dag 264. Du har valgt dag {d}, så markøren står på 264 og AAP-sonen er markert.', {d:dag}));
+    // Regnestykket for valgt status
+    var rows = [], fsum = '';
+    function day(a, b){ return b > a ? t('lrnSyDays', 'Dag {a}–{b}', {a:a, b:b}) : t('lrnSyDay', 'Dag {n}', {n:a}); }
+    if(ansatt && (!over || arb)) rows.push([ph('Ansatt'), fmt(S) + ' ÷ 260 × ' + dm, kr(A.sum)]);
+    else if(ansatt){
+      rows.push([day(1, A.arbDays), fmt(S) + ' ÷ 260 × ' + A.arbDays, kr(A.arbSum)]);
+      if(A.navDays > 0) rows.push([day(17, dm), fmt(SIX) + ' ÷ 260 × ' + A.navDays, kr(A.navSum)]);
+      fsum = rows.length > 1 ? kr(A.sum) : '';
+    } else {
+      rows.push([day(1, B.arbDays), ph('ingen utbetaling'), '0' + NB + 'kr']);
+      if(B.navDays > 0) rows.push([day(17, dm), fmt(Math.min(S, SIX)) + ' × 80' + NB + '% ÷ 260 × ' + B.navDays, kr(B.navSum)]);
+      fsum = rows.length > 1 ? kr(B.sum) : '';
+    }
+    q('flines').innerHTML = rows.map(function(r){ return '<div class="lrn-sy-fl"><span class="l">' + esc(r[0]) + '</span><span class="e">' + esc(r[1]) + '</span><span>=</span><b>' + esc(r[2]) + '</b></div>'; }).join('')
+      + (fsum ? '<div class="lrn-sy-fl s"><span class="l">' + esc(ph('Sum')) + '</span><span class="e"></span><span></span><b>' + esc(fsum) + '</b></div>' : '');
+    // Setningen, tabellen og teksttilsvarende
+    var s1 = over && !arb ? t('lrnSyS1b', 'Som ansatt får du {s} i måneden i 16 dager og deretter {c}.', {s:kr(sm), c:kr(cm)})
+      : over ? t('lrnSyS1a', 'Som ansatt får du {s} i måneden hele perioden, hvorav {m} kommer fra arbeidsgiveren etter dag 16.', {s:kr(sm), m:kr(mlM)})
+      : t('lrnSyS1', 'Som ansatt får du {s} i måneden hele perioden.', {s:kr(sm)});
+    set('sum', s1 + ' ' + t('lrnSyS2', 'Som selvstendig får du ingenting i 16 dager og deretter {k}.', {k:kr(selM)}));
+    set('tA1', fmt(sm)); set('tB2', ph(over && arb ? 'NAV, og arbeidsgiver for mellomlegget' : 'NAV')); set('tA2', fmt(A.navMnd + A.arbMnd)); set('tS2', fmt(B.navMnd));
+    set('sr', t('lrnSySr1', 'Tidslinje over sykepengedagene, med kroner per måned. Som ansatt med {s} i lønn betaler arbeidsgiveren dag 1 til 16 og NAV dag 17 til 264.', {s:kr(S)})
+      + (over ? ' ' + (arb ? ph('Arbeidsgiveren dekker mellomlegget over 6G.') : t('lrnSySr2', 'NAV betaler bare opp til 6G, så {m} i måneden faller bort.', {m:kr(mlM)})) : '')
+      + ' ' + t('lrnSySr3', 'Som selvstendig får du ingenting dag 1 til 16 og deretter {k} i måneden. Etter {d} dager er summen {a} som ansatt og {b} som selvstendig.', {k:kr(selM), d:dm, a:kr(A.sum), b:kr(B.sum)}));
+  }
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+  function init(){
+    root = document.getElementById('lrn-sy');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
+    root.querySelectorAll('[data-lrn="segS"] button').forEach(function(b){ b.addEventListener('click', function(){ ov.status = b.getAttribute('data-st'); render(raw); }); });
+    root.querySelectorAll('[data-lrn="segA"] button').forEach(function(b){ b.addEventListener('click', function(){ ov.arb = b.getAttribute('data-arb') === '1'; render(raw); }); });
+    q('slider').addEventListener('input', function(e){ ov.dag = parseInt(e.target.value, 10) || 1; render(raw); });
+    var hot = function(num){ root.querySelectorAll('.lrn-labels .lrn-mk').forEach(function(m){ m.classList.toggle('is-hot', m.getAttribute('data-n') === num); }); };
+    q('notes').addEventListener('mouseover', function(e){ var li = e.target.closest('li'); hot(li ? li.getAttribute('data-n') : ''); });
+    q('notes').addEventListener('mouseleave', function(){ hot(''); });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._syk || null);
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
 </script>
 
 </body>

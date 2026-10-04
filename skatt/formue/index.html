@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Formuesskatt — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -218,146 +219,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row .h-desc{color:var(--ink2)}
 
 .calc-wrap > .container + .container{margin-top:24px}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.lc-trinn td .step{white-space:nowrap}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -621,74 +482,96 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: skatt-formue =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-skatt-formue">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-formue">Veien fra markedsverdi til formuesskatt</h2><p class="lc-intro">Hver eiendel krymper først med sin rabatt: bor du i en bolig til 5 mill. kr, teller den bare 1,25 mill. Så trekkes gjeld og bunnfradrag fra. Du betaler skatt av det som er igjen.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Verdsettelsesrabatt, primærbolig</b><span class="tag">Faktor</span></span><span class="fig">25<span class="u">%</span></span><p class="dsc">Boligen du selv bor i regnes bare med 25 % av markedsverdien opp til 14 mill. kr. Den delen som ligger over 14 mill. regnes med 70 %.</p></div>
-        <div class="lc-led"><span class="nm"><b>Verdsettelsesrabatt, aksjer og fond</b><span class="tag">Faktor</span></span><span class="fig">80<span class="u">%</span></span><p class="dsc">Aksjer og aksjefond regnes med 80 % av verdien. Samme rabatt gjelder næringseiendom; driftsmidler regnes med 70 %.</p></div>
-        <div class="lc-led"><span class="nm"><b>Full verdi, sekundærbolig og bank</b><span class="tag">Faktor</span></span><span class="fig">100<span class="u">%</span></span><p class="dsc">Utleiebolig nummer to og penger på konto teller fullt ut — ingen rabatt. Fritidsbolig regnes derimot med bare 30 %.</p></div>
-        <div class="lc-led"><span class="nm"><b>Forholdsmessig gjeldsfradrag</b><span class="tag">Fradrag</span></span><span class="fig">§ 4-19</span><p class="dsc">Gjelden fordeles på alt du eier etter størrelse. Den delen som hører til rabatterte eiendeler (aksjer, drift, næring) skrumpes med samme prosent, så fradraget ikke blir kunstig stort.</p></div>
-        <div class="lc-led"><span class="nm"><b>Bunnfradrag</b><span class="tag">Fradrag</span></span><span class="fig">1 900 000<span class="u">kr</span></span><p class="dsc">Hver person har et fribeløp på 1 900 000 kr som trekkes fra netto formue før skatt. Ektefeller får dette to ganger.</p></div>
-        <div class="lc-led"><span class="nm"><b>Formuesskattesats, trinn 1</b><span class="tag">Sats</span></span><span class="fig">1,00<span class="u">%</span></span><p class="dsc">Av skattepliktig formue betales 1,00 % (0,35 % til kommunen + 0,65 % til staten) opp til 21,5 mill. kr netto formue. Over det blir satsen 1,10 %.</p></div>
+  <div class="lrn" id="lrn-fm">
+    <section class="lrn-sec" aria-labelledby="lrn-fm-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-fm-h">Formuesskatten treffer bare det som stikker over vannlinja</h2>
+        <p class="lrn-lede">Hver eiendel teller bare delvis, gjelden trekkes fra, og et bunnfradrag per person er fritatt. Bare det som stikker over, skattes.</p>
       </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-skatt-formue">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-skatt-formue">Satsene for 2026</h2><p class="lc-intro">Rabattene bestemmer hvor mye av hver eiendel som teller, og bunnfradraget bestemmer hvor mye du kan eie skattefritt.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Bunnfradrag, enslig</span><span class="v">1 900 000<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Bunnfradrag, ektefeller</span><span class="v">3 800 000<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Primærbolig (opptil 14 mill.)</span><span class="v">25<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Primærbolig (over 14 mill.)</span><span class="v">70<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Aksjer, fond og næringseiendom</span><span class="v">80<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Driftsmidler</span><span class="v">70<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Fritidsbolig</span><span class="v">30<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Sekundærbolig og bankinnskudd</span><span class="v">100<span class="u">%</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Formuesskatt-trinn 2026</caption>
-          <thead><tr><th>Trinn</th><th class="r">Netto formue</th><th class="r">Sats</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Trinn 1</span></td><td class="r">1,9–21,5 mill.</td><td class="r">1,00 %</td></tr>
-            <tr><td><span class="step">Trinn 2</span></td><td class="r">Over 21,5 mill.</td><td class="r">1,10 %</td></tr>
-          </tbody>
-        </table>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-seg" role="group" aria-label="Velg eksempel" data-lrn="seg">
+          <button type="button" data-eks="typisk" aria-pressed="true">Typisk boligeier</button>
+          <button type="button" data-eks="utleie" aria-pressed="false">Med utleiebolig og aksjer</button>
         </div>
       </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn formuen din i kalkulatoren.</p>
+      <div class="lrn-fm-main" data-lrn="main">
+        <figure class="lrn-fig" aria-describedby="lrn-fm-sum">
+          <figcaption class="lrn-cap">Kroner, fra markedsverdi til formuesskatt. Vannlinja er bunnfradraget.</figcaption>
+          <div class="lrn-plot is-static" dir="ltr">
+            <svg aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lrn-fm-ph" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-fm-gjbg" x="0" y="0" width="5" height="5"/><line class="lrn-fm-pl" x1="0" y1="0" x2="0" y2="5"/></pattern>
+                <pattern id="lrn-fm-pk" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-fm-pl" x1="0" y1="0" x2="0" y2="5"/></pattern>
+                <pattern id="lrn-fm-pm" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-fm-pml" x1="0" y1="0" x2="0" y2="6"/></pattern>
+                <pattern id="lrn-fm-pd" width="5" height="5" patternUnits="userSpaceOnUse"><circle class="lrn-fm-pc" cx="2.5" cy="2.5" r="1.1"/></pattern>
+              </defs>
+              <path class="lrn-fm-grid" data-p="grid"/>
+              <path class="lrn-fm-zero" data-p="zero"/>
+              <path class="lrn-fm-f1" data-p="s1Fill"/>
+              <path class="lrn-fm-out" data-p="s1Out"/>
+              <path class="lrn-fm-line" data-p="br"/>
+              <path class="lrn-fm-t14" data-p="tick14"/>
+              <path class="lrn-fm-f1" data-p="s2"/>
+              <path class="lrn-fm-sep" data-p="s2Sep"/>
+              <path class="lrn-fm-conn" data-p="conn"/>
+              <path class="lrn-fm-gj" data-p="s3Fill"/>
+              <path class="lrn-fm-line" data-p="s3Out"/>
+              <path class="lrn-fm-net" data-p="s4Solid"/>
+              <path class="lrn-fm-dot" data-p="s4Dot"/>
+              <path class="lrn-fm-netout" data-p="s4Out"/>
+              <path class="lrn-fm-f5" data-p="s5"/>
+              <path class="lrn-fm-hi" data-p="s5Hi"/>
+              <path class="lrn-fm-lim" data-p="limit"/>
+              <path class="lrn-fm-water" data-p="water"/>
+            </svg>
+            <div class="lrn-labels lrn-fm-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <p class="lrn-fm-foot" data-lrn="foot"></p>
+        <ol class="lrn-notes lrn-fm-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+        <p class="lrn-p lrn-fm-say" data-lrn="sum"></p>
+        <details class="lrn-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table>
+            <caption>De fem stasjonene i kroner</caption>
+            <thead><tr><th scope="col" class="s">Trinn</th><th scope="col">Beløp</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Markedsverdi</th><td data-lrn="tb1"></td></tr>
+              <tr><th scope="row">Formuesverdi etter verdsettelse</th><td data-lrn="tb2"></td></tr>
+              <tr><th scope="row">Gjeld som teller</th><td data-lrn="tb3"></td></tr>
+              <tr><th scope="row">Netto formue</th><td data-lrn="tb4"></td></tr>
+              <tr><th scope="row">Bunnfradrag</th><td data-lrn="tb5"></td></tr>
+              <tr><th scope="row">Over bunnfradraget</th><td data-lrn="tb6"></td></tr>
+              <tr><th scope="row">Formuesskatt</th><td data-lrn="tb7"></td></tr>
+            </tbody>
+          </table></div>
+        </details>
+      </div>
+      <p class="lrn-sr" id="lrn-fm-sum" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-fm-q">
+      <h3 class="lrn-h3" id="lrn-fm-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvor mye formue kan jeg ha uten å betale formuesskatt?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Du betaler ingenting så lenge netto formue ligger under bunnfradraget på 1&nbsp;900&nbsp;000&nbsp;kr (3&nbsp;800&nbsp;000&nbsp;kr for ektefeller). Bolig og aksjer teller bare delvis, så grensen i markedsverdi er ofte langt høyere.</p></div></details>
+        <details><summary>Hvorfor teller boligen min så lite?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Primærboligen verdsettes til bare 25&nbsp;% av markedsverdien opp til 14 mill. kr. En bolig verdt 5 mill. teller altså bare 1,25 mill. i formuesgrunnlaget.</p></div></details>
+        <details><summary>Hva er forskjellen på primær- og sekundærbolig?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Primærbolig er der du selv bor. Sekundærbolig er for eksempel en utleiebolig nummer to, og den teller fullt ut: 100&nbsp;% av markedsverdien.</p></div></details>
+        <details><summary>Hvorfor blir gjeldsfradraget lavere enn gjelden min?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Gjeld fordeles på alle eiendelene dine. Den delen som hører til aksjer, driftsmidler og næringseiendom, teller bare med samme andel som eiendelen, slik at fradraget står i forhold til den reduserte verdien.</p></div></details>
+        <details><summary>Når slår den høyere satsen på 1,10&nbsp;% inn?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Satsen på 1,10&nbsp;% gjelder netto formue over 21,5 mill. kr, regnet før bunnfradraget trekkes fra. Du betaler 1,00&nbsp;% av det som ligger mellom bunnfradraget og 21,5 mill., og 1,10&nbsp;% av det som ligger over. For ektefeller er grensen 43 mill. kr.</p></div></details>
+        <details><summary>Er dette den endelige skatten min?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Nei, det er en veiledende beregning basert på skatteloven §§ 4-10 til 4-19 og satsene for 2026. Faktisk skatt avhenger av verdiene Skatteetaten fastsetter og din konkrete situasjon.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-skatt-formue">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-skatt-formue">Verdt å forstå før du tolker tallet</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>De fleste betaler null</h3><p>Med en vanlig primærbolig og boliglån havner netto formue ofte under bunnfradraget på 1 900 000 kr. Da blir formuesskatten 0 kr — kalkulatoren viser hvor stor margin du har igjen.</p></div>
-        <div class="lc-note"><h3>Rabatten gjelder verdien, ikke skatten</h3><p>At aksjer «bare» teller 80 % betyr at det er 80 % av markedsverdien som tas med i grunnlaget. Selve satsen (1,00 %) regnes deretter av det reduserte beløpet.</p></div>
-        <div class="lc-note"><h3>Gjeld kan bli mindre verdt som fradrag</h3><p>Lån knyttet til rabatterte eiendeler trekkes ned med samme prosent som eiendelen. Har du mye aksjegjeld, blir gjeldsfradraget derfor lavere enn den faktiske gjelden.</p></div>
-        <div class="lc-note"><h3>Effektiv sats er av markedsverdi</h3><p>«Effektiv sats» i resultatet er skatten delt på samlet markedsverdi — ikke på grunnlaget. Den blir derfor lavere enn 1,00 % fordi rabatter og bunnfradrag spiser av grunnlaget.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-skatt-formue">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-skatt-formue">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvor mye formue kan jeg ha uten å betale formuesskatt?</summary><div class="a"><p>Du betaler ingenting så lenge netto skattemessig formue er under bunnfradraget på 1 900 000 kr (3 800 000 kr for ektefeller). Husk at bolig og aksjer telles med rabatt, så grensen i markedsverdi er ofte langt høyere.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor teller boligen min så lite?</summary><div class="a"><p>Primærboligen verdsettes til bare 25 % av markedsverdien opp til 14 mill. kr. En bolig verdt 5 mill. teller altså bare 1,25 mill. i formuesgrunnlaget.</p></div></details>
-        <details class="lc-q"><summary>Hva er forskjellen på primær- og sekundærbolig?</summary><div class="a"><p>Primærbolig er der du selv bor (25 % verdsettelse). Sekundærbolig er for eksempel en utleiebolig nummer to og teller fullt — 100 % av markedsverdien.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor blir gjeldsfradraget lavere enn gjelden min?</summary><div class="a"><p>Gjeld fordeles på alle eiendelene dine. Den delen som hører til rabatterte eiendeler — aksjer, driftsmidler og næringseiendom — reduseres med samme rabatt, slik at fradraget står i forhold til den reduserte verdien.</p></div></details>
-        <details class="lc-q"><summary>Når slår den høyere satsen på 1,10 % inn?</summary><div class="a"><p>Trinn 2 gjelder netto formue over 21,5 mill. kr. Da betaler du 1,00 % opp til grensen og 1,10 % på det som ligger over.</p></div></details>
-        <details class="lc-q"><summary>Er dette den endelige skatten min?</summary><div class="a"><p>Nei, det er en veiledende beregning basert på Skatteloven §§ 4-10 til 4-19 og 2026-satsene. Faktisk skatt avhenger av Skatteetatens fastsatte verdier og din konkrete situasjon.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-skatt-formue">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-skatt-formue">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/skatt/inntekt/"><span class="ar">Inntektsskatt →</span><h3>Beregn inntektsskatt</h3><p>Se hva du betaler i skatt på lønn og annen inntekt, med trinnskatt og fradrag.</p></a>
-        <a class="lc-link" href="/skatt/utbytte/"><span class="ar">Utbytteskatt →</span><h3>Skatt på utbytte</h3><p>Regn ut hva du sitter igjen med etter skatt når du tar ut utbytte fra aksjer.</p></a>
-        <a class="lc-link" href="/skatt/"><span class="ar">Skatt →</span><h3>Alle skatteverktøy</h3><p>Oversikt over kalkulatorene for inntekt, formue, reise og mer.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-fm-r">
+      <h3 class="lrn-h3" id="lrn-fm-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/skatt/inntekt/"><span><span class="t">Inntektsskatt</span><span class="d">Se hva du betaler i skatt på lønn og annen inntekt, med trinnskatt og fradrag.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/skatt/utbytte/"><span><span class="t">Utbytteskatt</span><span class="d">Regn ut hva du sitter igjen med etter skatt når du tar ut utbytte fra aksjer.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/skatt/"><span><span class="t">Skatt</span><span class="d">Oversikt over kalkulatorene for inntekt, formue, reise og mer.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -708,8 +591,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v245"></script>
-<script defer src="/shared/core.js?v=v230"></script>
+<script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -801,6 +685,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     function recalc(){
       var d = compute();
+      window._formue = {pri:d.pri, sek:d.sek, fritid:d.fritid, naering:d.naering, aksjer:d.aksjer, drift:d.driftsmidler, bank:d.bank, gjeld:d.gjeld, pers:d.personer};
+      if(window.hvtLearn) hvtLearn.update('skatt-formue', window._formue);
       var setText = function(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; };
 
       var underBunn = d.skattepliktig <= 0;
@@ -961,6 +847,317 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', init);
   } else { init(); }
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Formuesskatten treffer bare det som stikker over vannlinja»: fem stasjoner fra
+//    markedsverdi til formuesskatt på samme kroneakse, med bunnfradraget som vannlinje.
+//    Samme regnestykke som compute() på siden (satser 2026). ──
+(function(){
+  var KEY = 'skatt-formue';
+  var FIELDS = ['pri', 'sek', 'fritid', 'naering', 'aksjer', 'drift', 'bank', 'gjeld', 'pers'];
+  // Eksemplene: kalkulatorens standardverdier, og et større eksempel med utleiebolig og aksjer
+  var EX = {
+    typisk: {pri:5000000, sek:0, fritid:0, naering:0, aksjer:500000, drift:0, bank:200000, gjeld:3000000, pers:1},
+    utleie: {pri:6000000, sek:3000000, fritid:0, naering:0, aksjer:2000000, drift:0, bank:500000, gjeld:2500000, pers:1}
+  };
+  var ASSETS = [['pri', 'Primærbolig', 'Bolig'], ['sek', 'Sekundærbolig', 'Sek.bolig'], ['fritid', 'Fritidsbolig', 'Fritid'], ['naering', 'Næringseiendom', 'Næring'], ['aksjer', 'Aksjer og fond', 'Aksjer'], ['drift', 'Driftsmidler', 'Driftsm.'], ['bank', 'Bank', 'Bank']];
+  var SANS = 'Inter, system-ui, sans-serif', SERIF = "'Source Serif 4', Georgia, serif";
+  var NB = '\u00a0';
+  var root, plot, svg, raw = null, lastW = 0, queued = false, ctx, eks = 'typisk', lastKey = null;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setD(name, d){ svg.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function nice(v, parts){
+    var e0 = Math.floor(Math.log10(Math.max(v, 1))) - 2, fs = [1, 2, 2.5, 5];
+    for(var e = e0; e < e0 + 6; e++) for(var i = 0; i < fs.length; i++){ var step = fs[i] * Math.pow(10, e), n = Math.ceil(v / step - 1e-9); if(n <= parts) return {step:step, max:n * step}; }
+    return {step:v, max:v};
+  }
+  // Verdsettelse, forholdsmessig gjeldsreduksjon, bunnfradrag og satser, som compute() på siden
+  function calc(i){
+    var v = {pri:Math.min(i.pri, 14000000) * 0.25 + Math.max(i.pri - 14000000, 0) * 0.70, sek:i.sek, fritid:i.fritid * 0.30, naering:i.naering * 0.80, aksjer:i.aksjer * 0.80, drift:i.drift * 0.70, bank:i.bank};
+    var brutto = v.pri + v.sek + v.fritid + v.naering + v.aksjer + v.drift + v.bank;
+    var mt = i.pri + i.sek + i.fritid + i.naering + i.aksjer + i.drift + i.bank, gj = i.gjeld;
+    if(mt > 0){ var gA = i.gjeld * i.aksjer / mt, gD = i.gjeld * i.drift / mt, gN = i.gjeld * i.naering / mt; gj = i.gjeld - gA - gD - gN + gA * 0.80 + gD * 0.70 + gN * 0.80; }
+    var netto = brutto - gj, bunn = 1900000 * i.pers, sp = Math.max(netto - bunn, 0), grense = (21500000 - 1900000) * i.pers;
+    var skatt = sp * 0.0035 + Math.min(sp, grense) * 0.0065 + Math.max(sp - grense, 0) * 0.0075;
+    return {v:v, brutto:brutto, mt:mt, gj:gj, netto:netto, bunn:bunn, sp:sp, skatt:skatt, eff:mt > 0 ? skatt / mt * 100 : 0};
+  }
+
+  function render(d){
+    var L = window.hvtLearn, t = L.t, ph = L.ph;
+    raw = d;
+    // Valgt eksempel nullstilles når kalkulatorens tall endres
+    var key = d ? FIELDS.map(function(k){ return d[k]; }).join('|') : '';
+    if(key !== lastKey){ lastKey = key; eks = 'typisk'; }
+    var mine = !!d && FIELDS.some(function(k){ return +d[k] !== EX.typisk[k]; });
+    var inp = mine ? d : EX[eks];
+    var pers = +inp.pers === 2 ? 2 : 1;
+    var D = calc({pri:+inp.pri, sek:+inp.sek, fritid:+inp.fritid, naering:+inp.naering, aksjer:+inp.aksjer, drift:+inp.drift, bank:+inp.bank, gjeld:+inp.gjeld, pers:pers});
+    var GJ = +inp.gjeld, ok = D.mt > 0;
+    q('main').hidden = !ok; q('none').hidden = ok;
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    q('seg').hidden = mine;
+    root.querySelectorAll('[data-lrn="seg"] button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-eks') === eks ? 'true' : 'false'); });
+    function fmt(v){ return L.kr(v); }
+    function kr(v){ return L.kr(v) + NB + 'kr'; }
+    function pc(s){ return s + NB + '%'; }
+    set('stateText', ok ? t('lrnFmState', 'Markedsverdi {m} · gjeld {g} · {s}', {m:kr(D.mt), g:kr(GJ), s:ph(pers === 2 ? 'ektefeller' : 'enslig')}) : ph('Fyll inn formuen din i kalkulatoren.'));
+    if(!ok){ set('sr', ph('Fyll inn formuen din i kalkulatoren.')); return; }
+    var W = plot.clientWidth;
+    if(!W){ lastW = 0; return; }
+    lastW = W;
+    var MOB = W < 960;
+
+    // ── Eiendelene, størst først ──
+    var assets = ASSETS.filter(function(a){ return +inp[a[0]] > 0; }).map(function(a){ return {key:a[0], name:ph(a[1]), short:ph(a[2]), mv:+inp[a[0]], fv:D.v[a[0]]}; }).sort(function(a, b){ return b.mv - a.mv; });
+    var n = assets.length;
+    assets.forEach(function(a){ a.share = pc(Math.round(a.fv / a.mv * 100)); a.gap = a.mv - a.fv; });
+    var gapTotal = D.mt - D.brutto, iStar = 0;
+    assets.forEach(function(a, k){ if(a.gap > assets[iStar].gap) iStar = k; });
+    var bunn = D.bunn, over = D.netto > bunn, limit = 21500000 * pers, showLimit = D.netto > 15000000 * pers, gjeldDiff = GJ - D.gj;
+
+    // ── Merknadene, nummerert fortløpende ──
+    var notes = [];
+    function note(text){ notes.push(text); return String(notes.length); }
+    var n1 = note(ph('Rabatten krymper verdien, ikke satsen.'));
+    var priOver = +inp.pri > 14000000;
+    var n2 = priOver ? note(ph('Over 14 mill. teller boligen 70 %.')) : '';
+    var disc = ['aksjer', 'drift', 'naering'].filter(function(k){ return +inp[k] > 0; });
+    var hasDisc = disc.length > 0 && gjeldDiff >= 0.5, n3 = '';
+    if(hasDisc){
+      var dv = {k:kr(gjeldDiff)};
+      n3 = note(disc.length > 1 ? t('lrnFmN3Fl', 'Gjelden som fordeles på eiendeler med rabatt, teller bare med samme andel som eiendelene: {k} faller bort.', dv)
+        : disc[0] === 'aksjer' ? t('lrnFmN3Ak', 'Gjelden som fordeles på aksjene, teller bare 80 %: {k} faller bort.', dv)
+        : disc[0] === 'drift' ? t('lrnFmN3Dr', 'Gjelden som fordeles på driftsmidlene, teller bare 70 %: {k} faller bort.', dv)
+        : t('lrnFmN3Na', 'Gjelden som fordeles på næringseiendommen, teller bare 80 %: {k} faller bort.', dv));
+    }
+    var n4 = note(over ? t('lrnFmN4o', 'Over streken: {s} er skattepliktig, og det gir {k} i formuesskatt.', {s:kr(D.sp), k:kr(D.skatt)})
+      : t('lrnFmN4u', 'Under streken: 0 kr i formuesskatt. Du har {m} i margin.', {m:kr(bunn - D.netto)}));
+    var n5 = note(ph('Effektiv sats i resultatet er skatten delt på hele markedsverdien, derfor blir den lavere enn satsen.')
+      + (D.skatt > 0.5 ? ' ' + t('lrnFmN5', 'Her er det {s} ÷ {m} = {p} %.', {s:kr(D.skatt), m:kr(D.mt), p:L.dec(D.eff, 2)}) : ''));
+    var heads = [[ph('Markedsverdi'), kr(D.mt), ph('per eiendel')], [ph('Formuesverdi'), kr(D.brutto), ph('etter verdsettelse')], [ph('Gjeld som teller'), kr(D.gj), ph('fordelt forholdsmessig')], [ph('Netto formue'), kr(D.netto), ph('formuesverdi − gjeld')], [ph('Formuesskatt'), kr(D.skatt), ph('etter bunnfradrag og sats')]];
+    var gapTxt = t('lrnFmGap', 'Dette teller ikke: {k}', {k:kr(gapTotal)});
+
+    // ── Felles kroneakse for alle fem stasjoner ──
+    var hi = Math.max(n ? assets[0].mv : 0, D.brutto, GJ, bunn, D.netto, showLimit ? limit : 0, 1);
+    var lo = Math.min(0, D.netto, D.brutto - GJ);
+    var vTop = hi * 1.03, vBot = lo < 0 ? lo * 1.05 : 0;
+    var nz = nice(vTop - vBot, MOB ? 4 : 7), ticks = [];
+    for(var tv = Math.ceil(vBot / nz.step - 1e-9) * nz.step; tv <= vTop + 1e-6; tv += nz.step) ticks.push(Math.abs(tv) < 1e-6 ? 0 : tv);
+    function tickLbl(v){
+      if(v === 0) return '0';
+      if(nz.step < 100000) return fmt(v);
+      return (v < 0 ? '−' : '') + t('lrnFmMill', '{n} mill.', {n:String(+(Math.abs(v) / 1e6).toFixed(2)).replace('.', ',')});
+    }
+    var ms = 18, lab = '', H, A;
+    var paths = {grid:'', zero:'', s1Fill:'', s1Out:'', br:'', tick14:'', s2:'', s2Sep:'', conn:'', s3Fill:'', s3Out:'', s4Solid:'', s4Dot:'', s4Out:'', s5:'', s5Hi:'', limit:'', water:''};
+    function mk(num, l, tp){ return num ? '<span class="lrn-mk" data-n="' + num + '" aria-hidden="true" style="left:' + f1(l) + 'px;top:' + f1(tp) + 'px">' + num + '</span>' : ''; }
+    function pill(l, tp, w, text, o){ o = o || {}; return '<div class="lrn-fm-pill' + (o.cls ? ' ' + o.cls : '') + '" style="left:' + f1(l) + 'px;top:' + f1(tp) + 'px;width:' + f1(w) + 'px;justify-content:' + (o.just || 'flex-start') + '"><span>' + (o.num ? '<span class="lrn-mk" data-n="' + o.num + '" aria-hidden="true">' + o.num + '</span>' : '') + '<span>' + esc(text) + '</span></span></div>'; }
+
+    if(!MOB){
+      // ── Brede skjermer: fem stasjoner side om side, verdi oppover ──
+      var sx = Math.min(1, W / 1116), sp = Math.round(164 * sx), bw = Math.round(84 * sx), half = bw / 2;
+      var cx3 = W - 186, cx = [cx3 - 3 * sp, cx3 - 2 * sp, cx3 - sp, cx3];
+      var xL = 64, s1w = cx[0] - half - Math.round(44 * sx) - xL, plotH = 320;
+      // Overskriftene: tallet krymper om det ikke får plass, navn og forklaring kan brytes
+      var w0 = Math.min(220, s1w + 40), hw = sp - 8, vw = 0;
+      heads.forEach(function(h, k){ vw = Math.max(vw, textW(h[1], '500 22px ' + SERIF) / (k ? hw - 4 : w0 - 4)); });
+      var fs = Math.max(15, Math.min(22, Math.floor(22 / Math.max(vw, 1e-6))));
+      var nlMax = 1, slMax = 1;
+      heads.forEach(function(h, k){ var ww = (k ? hw : w0) - 4; nlMax = Math.max(nlMax, Math.ceil(textW(h[0], '600 13px ' + SANS) / ww)); slMax = Math.max(slMax, Math.ceil(textW(h[2], '12px ' + SANS) / ww)); });
+      var vH = Math.round(fs * 1.3), headH = nlMax * 16 + 2 + vH + 2 + slMax * 16, plotTop = Math.max(88, headH + 22);
+      var kk = plotH / (vTop - vBot);
+      A = function(v){ return plotTop + (vTop - v) * kk; };
+      var rect = function(v0, v1, b0, b1){ var y0 = f1(A(v1)), y1 = f1(A(v0)); return y1 - y0 > 0.3 ? 'M' + f1(b0) + ',' + y0 + ' H' + f1(b1) + ' V' + y1 + ' H' + f1(b0) + ' Z ' : ''; };
+      var across = function(v, b0, b1){ return 'M' + f1(b0) + ',' + f1(A(v)) + ' H' + f1(b1) + ' '; };
+      var yZ = A(0), xEnd = cx3 + half + 24;
+      ticks.forEach(function(tk){ lab += '<span class="lrn-fm-yt" style="top:' + f1(A(tk) - 8) + 'px">' + esc(tickLbl(tk)) + '</span>'; if(tk !== 0) paths.grid += across(tk, xL, xEnd); });
+      paths.zero = across(0, xL, xEnd);
+      // stasjon 1: en stolpe per eiendel, omriss for markedsverdi og fyll for formuesverdi
+      var gapB = 12, bw1 = Math.max(10, Math.min(84, Math.floor((s1w - (n - 1) * gapB) / Math.max(n, 1)))), total1 = n * bw1 + (n - 1) * gapB, s1x0 = xL + (s1w - total1) / 2;
+      var capW = bw1 + gapB, capHmax = 0;
+      assets.forEach(function(a, k){
+        a.x = s1x0 + k * (bw1 + gapB);
+        paths.s1Out += rect(0, a.mv, a.x, a.x + bw1); paths.s1Fill += rect(0, a.fv, a.x, a.x + bw1);
+        // Fullt navn når det får plass, ellers det korteste av navnet og kortformen
+        var wN = textW(a.name, '600 12px ' + SANS), nm = wN <= capW - 2 || textW(a.short, '600 12px ' + SANS) >= wN ? a.name : a.short;
+        var shr = capW >= 72 ? t('lrnFmCounts', 'teller {p}', {p:a.share}) : a.share;
+        capHmax = Math.max(capHmax, Math.ceil(textW(nm, '600 12px ' + SANS) / (capW - 2)) * 15 + 16);
+        lab += '<div class="lrn-fm-cap" style="left:' + f1(a.x - gapB / 2) + 'px;top:' + f1(yZ + 8) + 'px;width:' + capW + 'px"><b>' + esc(nm) + '</b><span>' + esc(shr) + '</span></div>';
+      });
+      var showVals = n > 0 && assets.every(function(a){ return textW(fmt(a.mv), '500 12px ' + SANS) + 8 <= capW + 6; });
+      if(showVals) assets.forEach(function(a){ lab += pill(a.x - 24, A(a.mv) - 22, bw1 + 48, fmt(a.mv), {just:'center', cls:'v'}); });
+      var yBottom = Math.max(plotTop + plotH, yZ + 8 + capHmax) + 10;
+      if(GJ > 0) yBottom = Math.max(yBottom, A(D.brutto - GJ) + 7 + ms + 8);
+      // «Dette teller ikke»: klammen på eiendelen med størst tomrom, etiketten til høyre for den eller under stasjonen
+      var a0 = assets[iStar];
+      if(a0 && gapTotal > 0.5){
+        var bx = a0.x + bw1 + 7, gapW = ms + 6 + textW(gapTxt, '600 12px ' + SANS) + 12;
+        paths.br = 'M' + f1(bx - 5) + ',' + f1(A(a0.mv)) + ' H' + f1(bx) + ' V' + f1(A(a0.fv)) + ' H' + f1(bx - 5);
+        var rest = assets.slice(iStar + 1), restTop = rest.length ? Math.max.apply(null, rest.map(function(r){ return r.mv; })) : 0;
+        var yc = Math.min(A((a0.mv + a0.fv) / 2), rest.length ? A(restTop) - (showVals ? 38 : 16) : 1e9);
+        if(yc >= A(a0.mv) + 12 && bx + 9 + gapW <= cx[0] - half + 4){
+          lab += pill(bx + 9, yc - ms / 2, gapW + 8, gapTxt, {num:n1, cls:'b'});
+        } else {
+          lab += mk(n1, bx + 3, A((a0.mv + a0.fv) / 2) - ms / 2);
+          lab += pill(s1x0 - gapB / 2, yBottom - 4, Math.max(gapW + 8, s1w), gapTxt, {num:n1, cls:'b'});
+          yBottom += 26;
+        }
+      }
+      if(priOver){
+        var ap = assets.filter(function(a){ return a.key === 'pri'; })[0];
+        paths.tick14 = across(14000000, ap.x - 4, ap.x + bw1 + 4);
+        lab += mk(n2, ap.x + bw1 / 2 - ms / 2, A(14000000) - ms / 2);
+      }
+      // stasjon 2: formuesverdien stablet
+      var cum = 0;
+      assets.forEach(function(a){ paths.s2 += rect(cum, cum + a.fv, cx[0] - half, cx[0] + half); cum += a.fv; if(cum < D.brutto - 0.5) paths.s2Sep += across(cum, cx[0] - half, cx[0] + half); });
+      // stasjon 3: gjelden henger under formuesverdien (omriss = faktisk gjeld, fyll = det som teller)
+      if(GJ > 0){
+        paths.s3Out = rect(D.brutto - GJ, D.brutto, cx[1] - half, cx[1] + half);
+        paths.s3Fill = rect(D.brutto - D.gj, D.brutto, cx[1] - half, cx[1] + half);
+        paths.conn += across(D.brutto, cx[0] + half, cx[1] - half);
+        if(hasDisc) lab += mk(n3, cx[1] - ms / 2, A(D.brutto - GJ) + 7);
+      }
+      paths.conn += across(D.netto, cx[1] + half, cx[2] - half);
+      // stasjon 4: netto formue, prikket under vannlinja
+      var lo4 = Math.min(0, D.netto), hi4 = Math.max(0, D.netto);
+      if(Math.abs(D.netto) > 0.5){
+        paths.s4Out = rect(lo4, hi4, cx[2] - half, cx[2] + half);
+        if(hi4 > bunn){ paths.s4Solid = rect(bunn, hi4, cx[2] - half, cx[2] + half); paths.s4Dot = rect(lo4, bunn, cx[2] - half, cx[2] + half); }
+        else paths.s4Dot = rect(lo4, hi4, cx[2] - half, cx[2] + half);
+      }
+      // stasjon 5: bare delen over vannlinja fylles
+      var wlEnd = cx3 + half + 6, gap45 = sp - bw;
+      paths.water = across(bunn, cx[2] - half - 26, wlEnd);
+      if(over){
+        paths.s5 = rect(bunn, D.netto, cx3 - half, cx3 + half);
+        var hiBase = showLimit ? Math.min(D.netto, limit) : D.netto;
+        lab += pill(cx3 - half - gap45 + 4, A((bunn + hiBase) / 2) - 9, gap45 - 8, pc('1,00'), {just:'flex-end', cls:'r'});
+        if(showLimit && D.netto > limit){
+          paths.s5Hi = rect(limit, D.netto, cx3 - half, cx3 + half);
+          lab += pill(cx3 - half - gap45 + 4, A((limit + D.netto) / 2) - 9, gap45 - 8, pc('1,10'), {just:'flex-end', cls:'r'});
+        }
+      }
+      var rlW = W - (wlEnd + 34) - 2;
+      var rl = function(v, t1, t2){ var nl = Math.ceil(textW(t1, '600 12px ' + SANS) / rlW); return '<div class="lrn-fm-rl" style="left:' + f1(wlEnd + 34) + 'px;top:' + f1(A(v) - 17 - (nl - 1) * 15) + 'px;width:' + f1(rlW) + 'px"><b>' + esc(t1) + '</b><span>' + esc(t2) + '</span></div>'; };
+      if(showLimit){ paths.limit = across(limit, cx[2] - half - 26, wlEnd); lab += rl(limit, ph('Over denne'), pc('1,10')); }
+      lab += mk(n4, wlEnd + 4, A(bunn) - ms / 2) + rl(bunn, ph('Bunnfradrag'), kr(bunn));
+      // Overskriftene over stasjonene, og merknad 5 ved skatten
+      var centers = [xL + s1w / 2, cx[0], cx[1], cx[2], cx[3]];
+      heads.forEach(function(h, k){
+        var ww = k ? hw : w0;
+        lab += '<div class="lrn-fm-hd" style="left:' + f1(centers[k] - ww / 2) + 'px;top:0;width:' + f1(ww) + 'px"><b style="height:' + nlMax * 16 + 'px">' + esc(h[0]) + '</b><span class="v" style="font-size:' + fs + 'px;line-height:' + vH + 'px">' + esc(h[1]) + '</span><span>' + esc(h[2]) + '</span></div>';
+      });
+      lab += mk(n5, cx3 + textW(heads[4][1], '500 ' + fs + 'px ' + SERIF) / 2 + 8, nlMax * 16 + 2 + (vH - ms) / 2);
+      H = Math.ceil(yBottom);
+    } else {
+      // ── Smale skjermer: sila lagt ned, verdi bortover ──
+      var xa = 8, xb = W - 8, bh = 22, kx = (xb - xa) / (vTop - vBot);
+      A = function(v){ return xa + (v - vBot) * kx; };
+      var rectM = function(v0, v1, b0, b1){ var x0 = f1(A(v0)), x1 = f1(A(v1)); return x1 - x0 > 0.3 ? 'M' + x0 + ',' + f1(b0) + ' H' + x1 + ' V' + f1(b1) + ' H' + x0 + ' Z ' : ''; };
+      var acrossM = function(v, b0, b1){ return 'M' + f1(A(v)) + ',' + f1(b0) + ' V' + f1(b1) + ' '; };
+      ticks.forEach(function(tk){ lab += '<span class="lrn-fm-xt" style="left:' + f1(Math.min(Math.max(A(tk) - 28, 0), W - 56)) + 'px">' + esc(tickLbl(tk)) + '</span>'; });
+      var headM = function(k, yy, num){ return '<div class="lrn-fm-hm" style="top:' + f1(yy) + 'px"><b>' + (num ? '<span class="lrn-mk" data-n="' + num + '" aria-hidden="true">' + num + '</span>' : '') + esc(heads[k][0]) + '</b><span>' + esc(heads[k][1]) + '</span></div>'; };
+      var y = 22;
+      lab += headM(0, y, ''); y += 30;
+      // stasjon 1: omriss og fyll under hverandre for hver eiendel
+      assets.forEach(function(a){
+        var cn = t('lrnFmCapM', '{n}, teller {p}', {n:a.name, p:a.share}), nums = fmt(a.mv) + ' → ' + fmt(a.fv);
+        var two = textW(cn, '600 12px ' + SANS) + textW(nums, '12px ' + SANS) + 18 > W, ex = two ? 16 : 0;
+        lab += '<div class="lrn-fm-cm' + (two ? ' two' : '') + '" style="top:' + f1(y) + 'px"><b>' + esc(cn) + '</b><span>' + esc(nums) + '</span></div>';
+        paths.s1Out += rectM(0, a.mv, y + ex + 20, y + ex + 32); paths.s1Fill += rectM(0, a.fv, y + ex + 34, y + ex + 46);
+        if(priOver && a.key === 'pri'){ paths.tick14 = acrossM(14000000, y + ex + 17, y + ex + 49); lab += mk(n2, A(14000000) - ms / 2, y + ex + 50); y += 22; }
+        y += 56 + ex;
+      });
+      if(gapTotal > 0.5) lab += pill(0, y - 4, W, gapTxt, {num:n1, cls:'b'});
+      y += 36;
+      // stasjon 2
+      lab += headM(1, y, ''); var y2 = y + 28, cumM = 0;
+      assets.forEach(function(a){ paths.s2 += rectM(cumM, cumM + a.fv, y2, y2 + bh); cumM += a.fv; if(cumM < D.brutto - 0.5) paths.s2Sep += acrossM(cumM, y2, y2 + bh); });
+      y = y2 + bh + 26;
+      // stasjon 3
+      lab += headM(2, y, ''); var y3 = y + 28;
+      if(GJ > 0){
+        paths.s3Out = rectM(D.brutto - GJ, D.brutto, y3, y3 + bh); paths.s3Fill = rectM(D.brutto - D.gj, D.brutto, y3, y3 + bh);
+        paths.conn += acrossM(D.brutto, y2 + bh, y3);
+        if(hasDisc) lab += mk(n3, Math.min(Math.max(A(D.brutto - GJ) - ms / 2, 0), W - ms), y3 + bh + 5);
+      }
+      y = y3 + bh + (hasDisc ? 32 : 26);
+      // stasjon 4
+      lab += headM(3, y, ''); var y4 = y + 28;
+      paths.conn += acrossM(D.netto, y3 + bh, y4);
+      var lo4m = Math.min(0, D.netto), hi4m = Math.max(0, D.netto);
+      if(Math.abs(D.netto) > 0.5){
+        paths.s4Out = rectM(lo4m, hi4m, y4, y4 + bh);
+        if(hi4m > bunn){ paths.s4Solid = rectM(bunn, hi4m, y4, y4 + bh); paths.s4Dot = rectM(lo4m, bunn, y4, y4 + bh); }
+        else paths.s4Dot = rectM(lo4m, hi4m, y4, y4 + bh);
+      }
+      y = y4 + bh + 12;
+      // vannlinja: loddrett stiplet linje gjennom stasjon 4 og 5, med etikett mellom dem
+      var wx = A(bunn), wText = t('lrnFmBunnM', 'Bunnfradrag: {k}', {k:kr(bunn)}), wW = ms + 6 + textW(wText, '600 11px ' + SANS) + 12;
+      lab += pill(Math.min(Math.max(0, wx + wW + 4 <= W ? wx - ms / 2 : wx + ms / 2 - wW), Math.max(0, W - wW - 4)), y, wW + 4, wText, {num:n4, cls:'b'});
+      y += 36;
+      // stasjon 5
+      lab += headM(4, y, n5); var y5 = y + 28;
+      if(over){
+        paths.s5 = rectM(bunn, D.netto, y5, y5 + bh);
+        var both = showLimit && D.netto > limit;
+        if(both) paths.s5Hi = rectM(limit, D.netto, y5, y5 + bh);
+        var mid = both ? (bunn + limit) / 2 : (bunn + D.netto) / 2;
+        var t1m = both ? t('lrnFmBoth', '{a} og {b}', {a:pc('1,00'), b:pc('1,10')}) : pc('1,00'), w1 = textW(t1m, '600 11px ' + SANS) + 12;
+        lab += pill(Math.min(Math.max(A(mid) - w1 / 2, 0), W - w1 - 4), y5 + bh + 4, w1 + 4, t1m, {cls:'r'});
+        y = y5 + bh + 28;
+      } else y = y5 + bh + 4;
+      paths.water = acrossM(bunn, y4 - 4, y5 + bh + 4);
+      if(showLimit) paths.limit = acrossM(limit, y4 - 4, y5 + bh + 4);
+      H = Math.ceil(y + 8);
+      ticks.forEach(function(tk){ if(tk !== 0) paths.grid += acrossM(tk, 20, y); });
+      paths.zero = acrossM(0, 20, y);
+    }
+    Object.keys(paths).forEach(function(k){ setD(k, paths[k]); });
+    q('labels').innerHTML = lab;
+    // Etiketter som går forbi høyrekanten skyves inn
+    Array.prototype.forEach.call(q('labels').children, function(e){ var ov = e.offsetLeft + e.offsetWidth - (W - 1); if(ov > 0 && e.offsetWidth < W) e.style.left = f1(e.offsetLeft - ov) + 'px'; });
+    plot.style.height = H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
+    // Merknadene, setningen, tabellen
+    q('notes').innerHTML = notes.map(function(tx, i){ return '<li data-n="' + (i + 1) + '"><span class="lrn-mk" aria-hidden="true">' + (i + 1) + '</span><span>' + esc(tx) + '</span></li>'; }).join('');
+    set('foot', t('lrnFmFoot', 'Netto formue {a}–{b} mill.: 1,00 %. Over {b} mill.: 1,10 %.', {a:pers === 2 ? '3,8' : '1,9', b:pers === 2 ? '43' : '21,5'}));
+    var sum = over ? t('lrnFmSumO', 'Netto formue er {n}, {o} over bunnfradraget, så formuesskatten er {s}.', {n:kr(D.netto), o:kr(D.sp), s:kr(D.skatt)})
+      : t('lrnFmSumU', 'Netto formue er {n}, {o} under bunnfradraget, så formuesskatten er {s}.', {n:kr(D.netto), o:kr(Math.max(bunn - D.netto, 0)), s:kr(D.skatt)});
+    set('sum', sum);
+    set('tb1', kr(D.mt)); set('tb2', kr(D.brutto)); set('tb3', kr(D.gj)); set('tb4', kr(D.netto)); set('tb5', kr(bunn)); set('tb6', kr(D.sp)); set('tb7', kr(D.skatt));
+    set('sr', t('lrnFmSr', 'Markedsverdien er {m}, og etter verdsettelse per eiendel teller {b}. Gjelden på {g} teller som {gj}. Bunnfradraget er {bf}.', {m:kr(D.mt), b:kr(D.brutto), g:kr(GJ), gj:kr(D.gj), bf:kr(bunn)}) + ' ' + sum);
+  }
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+  function init(){
+    root = document.getElementById('lrn-fm');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
+    root.querySelectorAll('[data-lrn="seg"] button').forEach(function(b){ b.addEventListener('click', function(){ eks = b.getAttribute('data-eks'); render(raw); }); });
+    // Merknaden leseren holder over i lista, fremhevet i grafen
+    var hot = function(num){ root.querySelectorAll('.lrn-labels .lrn-mk').forEach(function(m){ m.classList.toggle('is-hot', m.getAttribute('data-n') === num); }); };
+    q('notes').addEventListener('mouseover', function(e){ var li = e.target.closest('li'); hot(li ? li.getAttribute('data-n') : ''); });
+    q('notes').addEventListener('mouseleave', function(){ hot(''); });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._formue || null);
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 

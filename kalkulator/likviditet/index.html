@@ -56,6 +56,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Likviditetsbudsjett — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/avs/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -395,6 +396,55 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     </details>
   </div>
 </div>
+
+<!-- =============== LAER-INNHOLD: kalkulator-likviditet =============== -->
+<div class="container">
+  <div class="lrn" id="lrn-likv">
+    <section class="lrn-sec" aria-labelledby="lrn-likv-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-likv-h">Startbalansen kjøper tid, nettoen bestemmer retningen</h2>
+        <p class="lrn-lede">Linjen viser saldoen din måned for måned. Høyre akse regner den om til hvor mange måneder med utgifter du har på konto.</p>
+      </div>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">Startbalanse 50&nbsp;000&nbsp;kr · inntekt 30&nbsp;000&nbsp;kr · utgift 25&nbsp;000&nbsp;kr · 12 måneder</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+      </div>
+      <div class="lrn-figrow">
+        <figure class="lrn-fig" aria-describedby="lrn-likv-sum">
+          <figcaption class="lrn-cap">Saldo i kroner ved slutten av hver måned. Måned 0 er startbalansen.</figcaption>
+          <div class="lrn-plot is-static" dir="ltr">
+            <svg aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lrn-lq-ps" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-ps-a" x1="0" y1="0" x2="0" y2="5"/><line class="lrn-pat" x1="0" y1="0" x2="0" y2="5"/></pattern>
+              </defs>
+              <path class="lrn-grid" data-p="grid"/>
+              <path class="lrn-cross" data-p="rgrid"/>
+              <path class="lrn-grid" data-p="axis"/>
+              <path class="lrn-a2" data-p="neg"/>
+              <path fill="url(#lrn-lq-ps)" data-p="negp"/>
+              <path class="lrn-solk" data-p="zero"/>
+              <path class="lrn-extk" data-p="ext"/>
+              <path class="lrn-solk" data-p="line"/>
+              <path class="lrn-pt" data-p="dots"/>
+              <path class="lrn-pt e" data-p="edot"/>
+              <path class="lrn-youd" data-p="dot0"/>
+              <path class="lrn-pt x" data-p="xdot"/>
+            </svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+      </div>
+      <p class="lrn-say" data-lrn="say"></p>
+      <p class="lrn-sr" id="lrn-likv-sum" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-also" aria-labelledby="lrn-likv-r">
+      <h3 class="lrn-h3" id="lrn-likv-r">Likviditet er ikke resultat</h3>
+      <p class="lrn-p">Likviditet er pengene på konto. Resultat er inntekter minus kostnader i regnskapet. Du kan gå med overskudd og likevel gå tom for penger en måned.</p>
+    </section>
+  </div>
+</div>
+
 </main>
 
 <footer>
@@ -411,8 +461,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v245"></script>
-<script defer src="/shared/core.js?v=v230"></script>
+<script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -538,6 +589,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       bd.classList.add('empty');
       bdTable.innerHTML = '';
       csvBtn.disabled = true;
+      window._likv = null;
+      if(window.hvtLearn) hvtLearn.update('kalkulator-likviditet', null);
       persist();
       return;
     }
@@ -571,6 +624,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     bd.classList.remove('empty');
     csvBtn.disabled = false;
 
+    window._likv = {start:d.startBal, inn:d.income, ut:d.expense, n:d.months};
+    if(window.hvtLearn) hvtLearn.update('kalkulator-likviditet', window._likv);
     persist();
   }
 
@@ -647,6 +702,267 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   // ── Init ──
   restore();
   recalc();
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Startbalansen kjøper tid, nettoen bestemmer retningen»: saldoen måned for
+//    måned som en rett linje. Under null skraveres, og høyre akse regner saldoen om til måneder med
+//    utgifter. Går kontoen tom (eller ut av minus) like etter perioden, forlenges linja stiplet dit.
+//    Tallene kommer fra recalc via hvtLearn. ──
+(function(){
+  var KEY = 'kalkulator-likviditet';
+  // Tallene kalkulatoren starter med. Så lenge de står slik, er merket «Eksempel».
+  var DEF = {start:50000, inn:30000, ut:25000, n:12};
+  var SANS = 'Inter, system-ui, sans-serif';
+  var root, plot, svg, raw = null, lastW = 0, queued = false, ctx;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setD(name, d){ svg.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  function dot(x, y, r){ return 'M' + f1(x - r) + ',' + f1(y) + ' a' + r + ',' + r + ' 0 1,0 ' + 2 * r + ',0 a' + r + ',' + r + ' 0 1,0 ' + -2 * r + ',0 '; }
+  // Steg på 1, 2, 2,5 og 5 ganger en tierpotens, slik at det blir høyst max streker
+  function niceStep(range, max){
+    var base = [1, 2, 2.5, 5];
+    for(var e = 0; e < 12; e++) for(var k = 0; k < base.length; k++){ var s = base[k] * Math.pow(10, e); if(range / s <= max) return s; }
+    return range;
+  }
+  function hit(a, b, pad){ return a[0] < b[0] + b[2] + pad && a[0] + a[2] + pad > b[0] && a[1] < b[1] + b[3] + pad && a[1] + a[3] + pad > b[1]; }
+
+  function render(d){
+    var L = window.hvtLearn, kr = L.kr, t = L.t, ph = L.ph;
+    raw = d;
+    var ok = !!d && d.n >= 1 && isFinite(d.start) && isFinite(d.inn) && isFinite(d.ut);
+    var p = ok ? d : DEF;
+    var mine = ok && !(p.start === DEF.start && p.inn === DEF.inn && p.ut === DEF.ut && p.n === DEF.n);
+    var W = plot.clientWidth;
+    if(!W){ lastW = 0; return; }
+    lastW = W;
+    var mob = W < 560;
+    var start = p.start, net = p.inn - p.ut, N = p.n, E = p.ut;
+    function bal(k){ return start + k * net; }
+    var endBal = bal(N), hasE = E > 0;
+    function krs(v){ return kr(v) + ' kr'; }
+    function mths(n){ return t('lrnLqMonths', n === 1 ? '{n} måned' : '{n} måneder', {n:n}); }
+    function months(v){ return L.dec(v / E, 1); }
+
+    // Krysset: første måned med negativ sluttsaldo er ⌊startbalanse ÷ underskudd⌋ + 1. Ut av minus: ⌈|startbalanse| ÷ netto⌉.
+    var kind, cx = null, month = null;
+    if(net < 0 && start >= 0){ kind = 'tom'; cx = start / -net; month = Math.floor(start / -net) + 1; }
+    else if(net > 0 && start < 0){ kind = 'ut'; cx = -start / net; month = Math.ceil(-start / net); }
+    else if(net <= 0 && start < 0) kind = 'minus';
+    else if(net === 0) kind = 'still';
+    else kind = 'pluss';
+    // Linja forlenges stiplet til krysset når det kommer etter perioden (høyst 12 måneder ut)
+    var ext = (kind === 'tom' || kind === 'ut') && month > N && month <= N + 12;
+    var XM = ext ? month : N;
+
+    // Aksene
+    var G = mob ? {H:232, PT:20, PB:196, xlab:204, nY:5, nR:5, ms:20} : {H:430, PT:34, PB:376, xlab:388, nY:7, nR:8, ms:18};
+    var dMin = 0, dMax = 0, k, v;
+    for(k = 0; k <= XM; k++){ v = bal(k); if(v < dMin) dMin = v; if(v > dMax) dMax = v; }
+    var span = Math.max(dMax - dMin, hasE ? E : 0, 100);
+    var step = niceStep(span * 1.25, G.nY);
+    var yMin = dMin < 0 ? Math.floor((dMin - span * 0.08) / step) * step : 0;
+    var yMax = Math.ceil((dMax + span * 0.14) / step) * step;
+    function Y(v){ return f1(G.PB - (v - yMin) / (yMax - yMin) * (G.PB - G.PT)); }
+    var y0 = Y(0), TF = '400 12px ' + SANS;
+
+    // Venstre akse i kroner. Bredden på tallene bestemmer hvor grafen begynner.
+    var yt = [];
+    for(v = Math.ceil(yMin / step) * step; v <= yMax + 1e-9; v += step) yt.push(v);
+    var yw = Math.max.apply(null, yt.map(function(v){ return textW(kr(v), TF); }));
+    // Høyre akse i hele multipler av månedlig utgift
+    var rt = [];
+    if(hasE){
+      var kMin = Math.ceil(yMin / E - 1e-9), kMax = Math.floor(yMax / E + 1e-9);
+      var kStep = Math.max(1, Math.ceil(Math.max(1, kMax - kMin + 1) / G.nR));
+      for(k = Math.ceil(kMin / kStep) * kStep; k <= kMax; k += kStep) if(k !== 0) rt.push(k);
+    }
+    function mnd(k){ return t('lrnLqMnd', '{m} mnd', {m:(k < 0 ? '−' : '') + Math.abs(k)}); }
+    var rw = rt.length ? Math.max.apply(null, rt.map(function(k){ return textW(mnd(k), TF); })) : 0;
+    var rgap = mob ? 6 : 10;
+    G.PL = Math.max(mob ? 46 : 76, yw + 14);
+    G.PR = W - Math.max(mob ? 50 : 70, rw + rgap + 4);
+    function X(k){ return f1(G.PL + k / XM * (G.PR - G.PL)); }
+
+    var lab = '', grid = '', rgrid = '';
+    yt.forEach(function(v){
+      lab += '<span class="lrn-tick y" style="top:' + f1(Y(v) - 8) + 'px;width:' + (G.PL - 14) + 'px">' + kr(v) + '</span>';
+      if(Math.abs(v) > 1e-9) grid += 'M' + G.PL + ',' + Y(v) + ' H' + G.PR + ' ';
+    });
+    rt.forEach(function(k){
+      rgrid += 'M' + G.PL + ',' + Y(k * E) + ' H' + G.PR + ' ';
+      lab += '<span class="lrn-tick" style="left:' + f1(G.PR + rgap) + 'px;top:' + f1(Y(k * E) - 8) + 'px">' + mnd(k) + '</span>';
+    });
+    setD('grid', grid); setD('rgrid', rgrid);
+    setD('axis', 'M' + G.PL + ',' + G.PB + ' H' + G.PR);
+    setD('zero', 'M' + G.PL + ',' + y0 + ' H' + G.PR);
+    // Månedene bortover: så tett som det er plass til
+    var steps = mob ? [3, 6, 12] : [1, 2, 3, 6, 12], xs = steps[0];
+    if(!mob) xs = N <= 12 ? 1 : (N <= 24 ? 2 : (N <= 36 ? 3 : 6));
+    else xs = N <= 12 ? 3 : (N <= 24 ? 6 : 12);
+    for(var si = steps.indexOf(xs); si < steps.length - 1 && X(steps[si]) - X(0) < 24; si++) xs = steps[si + 1];
+    var lastX = 0;
+    for(k = 0; k <= XM; k += xs){ lab += '<span class="lrn-tick x" style="left:' + f1(X(k) - 24) + 'px;top:' + G.xlab + 'px">' + k + '</span>'; lastX = k; }
+    if(ext && month !== lastX && X(month) - X(lastX) >= 22) lab += '<span class="lrn-tick x" style="left:' + f1(X(month) - 24) + 'px;top:' + G.xlab + 'px">' + month + '</span>';
+
+    // Linja: heltrukken for perioden, stiplet forlengelse til krysset
+    var line = '';
+    for(k = 0; k <= N; k++) line += (k ? ' L' : 'M') + X(k) + ',' + Y(bal(k));
+    setD('line', line);
+    setD('ext', ext ? 'M' + X(N) + ',' + Y(endBal) + ' L' + X(month) + ',' + Y(bal(month)) : '');
+
+    // Flaten under null skraveres: fra krysset og ut (tom), fra start til krysset (ut av minus), eller hele veien
+    var neg = '', xEnd = XM;
+    var negAll = 'M' + X(0) + ',' + y0 + ' L' + X(0) + ',' + Y(start) + ' L' + X(N) + ',' + Y(endBal) + ' L' + X(N) + ',' + y0 + ' Z';
+    if(kind === 'tom' && cx < XM) neg = 'M' + X(cx) + ',' + y0 + ' L' + X(xEnd) + ',' + Y(bal(xEnd)) + ' L' + X(xEnd) + ',' + y0 + ' Z';
+    else if(kind === 'ut') neg = cx <= XM ? 'M' + X(0) + ',' + y0 + ' L' + X(0) + ',' + Y(start) + ' L' + X(cx) + ',' + y0 + ' Z' : negAll;
+    else if(kind === 'minus') neg = negAll;
+    setD('neg', neg); setD('negp', neg);
+
+    // Ett punkt per måned, større ved start. Krysset får en ring på nullstreken.
+    var pr = N > 36 ? 2 : (mob ? 2.6 : 3.2), dots = '';
+    for(k = 1; k <= N; k++) dots += dot(X(k), Y(bal(k)), pr);
+    setD('dots', dots);
+    svg.querySelector('[data-p="dots"]').style.strokeWidth = N > 36 ? '1.2' : '';
+    setD('edot', ext ? dot(X(month), Y(bal(month)), pr) : '');
+    setD('dot0', dot(X(0), Y(start), mob ? 4 : 5));
+    var cross = cx !== null && cx <= XM;
+    setD('xdot', cross ? dot(X(cx), y0, mob ? 5.5 : 6.5) : '');
+
+    // Etiketter direkte i grafen: krysset og nullstreken
+    var boxes = [];
+    if(cross){
+      var ct = kind === 'tom' ? t('lrnLqYouTom', 'Tom i måned {m} ({belop})', {m:month, belop:krs(bal(month))}) : t('lrnLqYouUt', 'Ut av minus i måned {m}', {m:month});
+      var cw = textW(ct, '600 12px ' + SANS) + 14, px = X(cx), right = px + 12 + cw <= W - 4;
+      var cl = right ? px + 12 : Math.max(0, px - 12 - cw);
+      var ctop = kind === 'tom' ? (right ? y0 - 38 : y0 + 12) : (right ? y0 + 12 : y0 - 38);
+      lab += '<span class="lrn-pick" style="left:' + f1(cl) + 'px;top:' + f1(ctop) + 'px">' + ct + '</span>';
+      boxes.push([cl, ctop, cw, 20]);
+    }
+    var zl = ph('Tom konto'), zw = textW(zl, '500 12px ' + SANS) + 4;
+    var sides = [G.PL + 6, G.PR - zw - 4], far = Math.abs(Y(endBal) - y0) >= Math.abs(Y(start) - y0) ? 1 : 0;
+    var zb = [sides[far], y0 - 20, zw, 16];
+    if(boxes.length && hit(zb, boxes[0], 6)) zb[0] = sides[1 - far];
+    lab += '<span class="lrn-lab" style="left:' + f1(zb[0]) + 'px;top:' + f1(zb[1]) + 'px;font-weight:500;font-size:12px">' + zl + '</span>';
+    boxes.push(zb);
+    if(hasE && !mob){
+      var ml = ph('Måneder med utgifter');
+      lab += '<span class="lrn-tick" style="left:' + f1(W - textW(ml, TF) - 2) + 'px;top:' + (G.PT - 28) + 'px">' + ml + '</span>';
+    }
+
+    // Merknadene: merket står vinkelrett på linja, på siden som ikke er skravert
+    var MS = G.ms, notes = [], marks = [];
+    function nrm(k, side){
+      var k0 = Math.max(0, Math.min(XM - 0.001, k - 0.5));
+      var dx = X(k0 + 0.5) - X(k0), dy = Y(bal(k0 + 0.5)) - Y(bal(k0)), len = Math.sqrt(dx * dx + dy * dy) || 1;
+      var nx = -dy / len, ny = dx / len;
+      if((side === 'up') !== (ny < 0)){ nx = -nx; ny = -ny; }
+      return [nx, ny];
+    }
+    function place(x, y){
+      var b = [f1(x - MS / 2), f1(y - MS / 2), MS, MS];
+      marks.push(b); boxes.push(b);
+    }
+    function mark(k, side, dist){
+      var p0 = [X(k), Y(bal(k))], n = nrm(k, side), b;
+      // Står merket oppå en etikett eller et annet merke, skyves det lenger ut langs normalen
+      for(var i = 0; i < 6; i++){
+        var mx = Math.min(G.PR - 4, Math.max(G.PL + 2, p0[0] + n[0] * dist)), my = Math.min(G.PB - 6, Math.max(G.PT - 22, p0[1] + n[1] * dist));
+        b = [mx - MS / 2, my - MS / 2, MS, MS];
+        if(!boxes.some(function(o){ return hit(b, o, 2); })) break;
+        dist += 10;
+      }
+      place(b[0] + MS / 2, b[1] + MS / 2);
+    }
+    function free(k){ return bal(k) < 0 ? 'down' : 'up'; }
+    var kEnd = ext ? N - 0.9 : N;
+    notes.push(hasE ? t('lrnLqN1', 'Startbalanse {belop} = {m} måneder med utgifter.', {belop:krs(start), m:months(start)}) : t('lrnLqN1b', 'Startbalanse {belop}.', {belop:krs(start)}));
+    mark(0, free(0), 24);
+    notes.push(net === 0 ? ph('Saldoen står stille.') : t('lrnLqN2', '{netto} kr per måned (inntekt − utgift).', {netto:(net < 0 ? '−' : '+') + kr(Math.abs(net))}));
+    mark(N / 2, free(N / 2), 22);
+    notes.push(hasE ? t('lrnLqN3', '{belop} = {m} måneder med utgifter.', {belop:krs(endBal), m:months(endBal)}) : krs(endBal) + '.');
+    mark(kEnd, free(kEnd), 24);
+    notes.push(ph('Rett linje: samme inntekt og utgift hver måned. Skattetrekk, feriepenger, halvårlige forsikringer og strømtopper gir hakk som modellen ikke ser.'));
+    mark(Math.max(1, N * 0.28), free(N * 0.28), 22);
+    if(neg){
+      // I tyngdepunktet av flaten under null, eller rett under krysset når flaten er for liten
+      var ax, ay, tw, th;
+      if(kind === 'tom' && cx < XM){ ax = (X(cx) + 2 * X(xEnd)) / 3; ay = (2 * y0 + Y(bal(xEnd))) / 3; tw = X(xEnd) - X(cx); th = Math.abs(Y(bal(xEnd)) - y0); }
+      else if(kind === 'ut' && cx <= XM){ ax = (2 * X(0) + X(cx)) / 3; ay = (Y(start) + 2 * y0) / 3; tw = X(cx) - X(0); th = Math.abs(Y(start) - y0); }
+      else { ax = (X(0) + X(N)) / 2; ay = (y0 + Y(bal(N / 2))) / 2 + 12; tw = G.PR - G.PL; th = Math.abs(Y(bal(N / 2)) - y0); }
+      if(tw < MS + 12 || th < MS + 4){ ax = (kind === 'tom' ? X(cx) : ax) + 4; ay = Math.min(y0 + 36, G.PB - MS / 2 - 2); }
+      notes.push(ph('Her trenger du reserver eller kassakreditt.'));
+      place(ax, ay);
+    }
+    if(ext){
+      notes.push(kind === 'tom' ? t('lrnLqExtTom', 'Med dette tempoet er kontoen tom i måned {m}, etter perioden du har valgt.', {m:month})
+        : t('lrnLqExtUt', 'Med dette tempoet er kontoen ute av minus i måned {m}, etter perioden du har valgt.', {m:month}));
+      mark(month, kind === 'tom' ? 'up' : free(month), 26);
+    }
+    marks.forEach(function(b, i){ lab += '<span class="lrn-mk" aria-hidden="true" style="left:' + b[0] + 'px;top:' + b[1] + 'px">' + (i + 1) + '</span>'; });
+    q('labels').innerHTML = lab;
+    plot.style.height = G.H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + G.H);
+    q('notes').innerHTML = notes.map(function(s, i){ return '<li><span class="lrn-mk" aria-hidden="true">' + (i + 1) + '</span><span>' + s + '</span></li>'; }).join('');
+
+    // Setningen under grafen
+    var late = (kind === 'tom' || kind === 'ut') && month > N + 12;
+    var say = {
+      tom: late ? ph('Kontoen holder hele perioden.') : t('lrnLqTom', 'Kontoen går i minus i måned {m}.', {m:month}),
+      ut: late ? ph('Kontoen står i minus hele perioden.') : t('lrnLqUt', 'Kontoen er ute av minus i måned {m}.', {m:month}),
+      minus: ph('Kontoen står i minus hele perioden.'),
+      still: ph('Kontoen holder hele perioden, og saldoen står stille.'),
+      pluss: ph('Kontoen holder hele perioden.')
+    }[kind];
+    var extra = '';
+    if(kind === 'tom' && ext) extra = ph('Den holder perioden ut, men ikke lenger.');
+    else if(kind === 'tom' && late) extra = t('lrnLqLateTom', 'Med dette tempoet går den i minus i måned {m}.', {m:month});
+    else if(kind === 'ut' && late) extra = t('lrnLqLateUt', 'Med dette tempoet er den ute av minus i måned {m}.', {m:month});
+    var sayEl = q('say');
+    sayEl.textContent = say;
+    if(extra){ var sp = document.createElement('span'); sp.textContent = ' ' + extra; sayEl.appendChild(sp); }
+
+    var sr = net > 0 ? t('lrnLqSrUp', 'Saldoen stiger fra {fra} til {til} etter {mnd}.', {fra:krs(start), til:krs(endBal), mnd:mths(N)})
+      : net < 0 ? t('lrnLqSrDown', 'Saldoen synker fra {fra} til {til} etter {mnd}.', {fra:krs(start), til:krs(endBal), mnd:mths(N)})
+      : t('lrnLqSrFlat', 'Saldoen står stille på {fra}.', {fra:krs(start)});
+    if(hasE) sr += ' ' + t('lrnLqSrM', 'Det tilsvarer {m} måneder med utgifter.', {m:months(endBal)});
+    sr += ' ' + say + (extra ? ' ' + extra : '');
+    if(ext) sr += ' ' + t('lrnLqSrExt', 'Linjen er forlenget stiplet til måned {m}.', {m:month});
+    set('sr', sr);
+
+    // Merket
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    set('stateText', t('lrnLqState', 'Startbalanse {start} · inntekt {inn} · utgift {ut} · {mnd}', {start:krs(start), inn:krs(p.inn), ut:krs(p.ut), mnd:mths(N)}));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+  function init(){
+    root = document.getElementById('lrn-likv');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
+    var list = q('notes');
+    list.addEventListener('mouseover', function(e){
+      var li = e.target.closest && e.target.closest('li'); if(!li) return;
+      var i = Array.prototype.indexOf.call(list.children, li);
+      root.querySelectorAll('.lrn-labels .lrn-mk').forEach(function(m, j){ m.classList.toggle('is-hot', j === i); });
+    });
+    list.addEventListener('mouseleave', function(){
+      root.querySelectorAll('.lrn-labels .lrn-mk.is-hot').forEach(function(m){ m.classList.remove('is-hot'); });
+    });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._likv || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 

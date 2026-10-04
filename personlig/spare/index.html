@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Sparekalkulator-spesifikk — fra ZIP "Sparekalkulator on Site.html" + bevart compare/saved */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -211,145 +212,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -624,66 +486,101 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: personlig-spare =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-personlig-spare">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-spare">Hva som skjer med pengene år for år</h2><p class="lc-intro">Saldoen regnes én periode om gangen. Først kommer innskuddet, så får hele saldoen rente. Renten du fikk forrige periode, gir ny rente neste gang. Til slutt trekkes 22 % skatt av avkastningen.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Startbeløp</b><span class="tag">Grunnlag</span></span><span class="fig">100 000<span class="u">kr</span></span><p class="dsc">Det du allerede har spart. Hele beløpet begynner å gi avkastning fra første periode. Standardverdien er 100 000 kr, men du setter ditt eget.</p></div>
-        <div class="lc-led"><span class="nm"><b>Periodisk innskudd</b><span class="tag">Faktor</span></span><span class="fig">12<span class="u">ganger i året</span></span><p class="dsc">Du velger hvor ofte du sparer: månedlig gir 12 innskudd i året, kvartalsvis 4, halvårlig 2 og årlig 1. Velger du «kun startbeløp» legges ingen innskudd til underveis.</p></div>
-        <div class="lc-led"><span class="nm"><b>Rentepåslag per periode</b><span class="tag">Sats</span></span><span class="fig">7 % ÷ 12<span class="u">= 0,58 % i måneden</span></span><p class="dsc">Den årlige renten deles på antall perioder i året og legges til saldoen hver gang. Sparer du månedlig, deles renten på 12 og legges til tolv ganger i året.</p></div>
-        <div class="lc-led"><span class="nm"><b>Rentes rente</b><span class="tag">Mekanisme</span></span><span class="fig">× 1,0058<span class="u">hver måned</span></span><p class="dsc">Hele saldoen ganges opp hver periode, ikke bare innskuddene. Derfor gir avkastningen du fikk i fjor ny avkastning i år — effekten vokser jo lengre du sparer.</p></div>
-        <div class="lc-led"><span class="nm"><b>Skatt på renter</b><span class="tag">Skatt</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">22 % av avkastningen trekkes i skatt, slik renter skattes. Resten er netto sluttbeløp. Fond og BSU har andre regler.</p></div>
-        <div class="lc-led"><span class="nm"><b>Spareperiode</b><span class="tag">Grense</span></span><span class="fig">1–60<span class="u">år</span></span><p class="dsc">Du kan regne på alt fra ett år til seksti år. Jo flere år, jo større blir andelen avkastning av sluttbeløpet.</p></div>
+  <div class="lrn" id="lrn-spare">
+    <section class="lrn-sec" aria-labelledby="lrn-spare-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-spare-h">Rente på rente starter smått og vokser raskest</h2>
+        <p class="lrn-lede">Hver måned får hele saldoen rente, også renten du allerede har fått. Det laget er nesten usynlig de første årene og vokser raskere enn alt annet.</p>
       </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-personlig-spare">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-spare">Tallene kalkulatoren bruker</h2></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Hvor ofte innskuddet legges til</caption>
-          <thead><tr><th>Frekvens</th><th class="r">Innskudd per år</th><th>Rente legges til</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Månedlig</span></td><td class="r">12</td><td>Hver måned</td></tr>
-            <tr><td><span class="step">Kvartalsvis</span></td><td class="r">4</td><td>Hvert kvartal</td></tr>
-            <tr><td><span class="step">Halvårlig</span></td><td class="r">2</td><td>Hvert halvår</td></tr>
-            <tr><td><span class="step">Årlig</span></td><td class="r">1</td><td>Én gang i året</td></tr>
-            <tr><td><span class="step">Kun startbeløp</span></td><td class="r">0</td><td>Hver måned</td></tr>
-          </tbody>
-        </table>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">100&nbsp;000 kr + 3&nbsp;000 kr i måneden, 7 %, 20 år</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+      </div>
+      <div class="lrn-figrow">
+        <figure class="lrn-fig" aria-describedby="lrn-spare-sr">
+          <figcaption class="lrn-cap" data-lrn="cap">Saldo før skatt, kroner, år for år</figcaption>
+          <div class="lrn-plot" dir="ltr">
+            <svg aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lrn-spare-pri" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-pat" x1="0" y1="0" x2="0" y2="5"/></pattern>
+                <pattern id="lrn-spare-prr" width="5" height="5" patternUnits="userSpaceOnUse"><circle class="lrn-dotp" cx="2.5" cy="2.5" r="1.15"/></pattern>
+              </defs>
+              <path class="lrn-grid" data-p="grid"/>
+              <path class="lrn-a2k" data-p="inn"/>
+              <path class="lrn-a1b" data-p="ri"/>
+              <path fill="url(#lrn-spare-pri)" data-p="rip"/>
+              <path class="lrn-a1" data-p="rr"/>
+              <path fill="url(#lrn-spare-prr)" data-p="rrp"/>
+              <path class="lrn-sep" data-p="sep"/>
+              <path class="lrn-balk" data-p="top"/>
+              <path class="lrn-base" data-p="base"/>
+              <path class="lrn-crossk" data-p="cross"/>
+              <path class="lrn-brk" data-p="br"/>
+              <path class="lrn-lead" data-p="lead"/>
+              <path class="lrn-leadk" data-p="scrub"/>
+              <circle class="lrn-dotk" r="3.5" data-p="d1"/>
+              <circle class="lrn-dotk" r="3.5" data-p="d2"/>
+              <circle class="lrn-dotk" r="3.5" data-p="d3"/>
+            </svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+      </div>
+      <div class="lrn-scrub">
+        <div class="lrn-scrub-c">
+          <label for="lrn-spare-aar">Dra for å se et bestemt år</label>
+          <input id="lrn-spare-aar" type="range" min="1" max="20" step="1" value="10">
         </div>
+        <dl class="lrn-dl five" aria-live="polite">
+          <div><dt>År</dt><dd data-lrn="sAar">10</dd></div>
+          <div><dt><i class="lrn-sw lrn-sw-in" aria-hidden="true"></i>Innskutt</dt><dd><span data-lrn="sInn">–</span> <span class="lrn-u">kr</span></dd></div>
+          <div><dt><i class="lrn-sw lrn-sw-ri" aria-hidden="true"></i>Rente på innskudd</dt><dd><span data-lrn="sRi">–</span> <span class="lrn-u">kr</span></dd></div>
+          <div><dt><i class="lrn-sw lrn-sw-rr" aria-hidden="true"></i>Rente på rente</dt><dd><span data-lrn="sRr">–</span> <span class="lrn-u">kr</span></dd></div>
+          <div><dt>Saldo før skatt</dt><dd><span data-lrn="sBal">–</span> <span class="lrn-u">kr</span></dd></div>
+        </dl>
       </div>
+      <p class="lrn-cmp" data-lrn="sum"></p>
+      <div class="lrn-calcrow">
+        <div class="lrn-card">
+          <span class="lrn-card-l" data-lrn="fH">Regnestykket hver måned</span>
+          <div class="lrn-f" data-f="start"><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span>(<i>saldo</i> + <i>innskudd</i>) × (1 + <i>årlig rente</i><span data-lrn="fDel"> ÷ 12</span>)</span></div>
+          <div class="lrn-f" data-f="slutt" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i><span data-lrn="fDel"> ÷ 12</span>) + <i>innskudd</i></span></div>
+          <div class="lrn-f" data-f="lump" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i><span data-lrn="fDel"> ÷ 12</span>)</span></div>
+          <div class="lrn-f n"><span>=</span><span data-lrn="fUtfylt"></span><span>=</span><b data-lrn="fSvar"></b></div>
+        </div>
+        <p class="lrn-p" data-lrn="fText"></p>
+      </div>
+      <details class="lrn-tbl">
+        <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+        <div>
+          <table>
+            <caption>Kroner før skatt, ved utgangen av året</caption>
+            <thead><tr><th scope="col">År</th><th scope="col">Innskutt</th><th scope="col">Rente på innskudd</th><th scope="col">Rente på rente</th><th scope="col">Saldo før skatt</th></tr></thead>
+            <tbody data-lrn="rows"></tbody>
+          </table>
+        </div>
+      </details>
+      <p class="lrn-sr" id="lrn-spare-sr" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-spare-q">
+      <h3 class="lrn-h3" id="lrn-spare-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvor mye skatt trekkes på avkastningen?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren trekker 22&nbsp;% av hele avkastningen én gang, når perioden er over. Innskuddene skattlegges ikke. Det er en forenkling: renter på bankinnskudd skattlegges i virkeligheten år for år, og det bremser rente på rente noe.</p></div></details>
+        <details><summary>Hvilken rente bør jeg legge inn?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det avhenger av hvor pengene står. Typiske nivåer i 2026 er 0,5&nbsp;% på brukskonto, 3,75&nbsp;% på sparekonto, 5,75&nbsp;% i BSU, 7,0&nbsp;% i snitt for aksjefond og 8,5&nbsp;% for indeksfond på lang sikt.</p></div></details>
+        <details><summary>Hva betyr «Når trekkes innskuddet»?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det styrer om innskuddet legges til før eller etter rentepåslaget. Trekkes det i starten, får innskuddet rente allerede samme måned. <span data-lrn="qTilv"></span></p></div></details>
+        <details><summary>Lagres scenarioene mine?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja, men bare lokalt i nettleseren din. Trykker du «Lagre nåværende», husker siden oppsettet til neste gang. Ingenting sendes videre, og det forsvinner om du tømmer nettleserdataene.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-personlig-spare">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-spare">Før du stoler på tallet</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Renten er fast hele veien</h3><p>Kalkulatoren bruker den samme renten hvert år. I virkeligheten svinger fond opp og ned. Et snitt på 7 % betyr ikke 7 % hvert eneste år — noen år er negative.</p></div>
-        <div class="lc-note"><h3>22 % gjelder renter, ikke fond</h3><p>Sluttbeløpet er regnet med 22 % skatt, som er skatten på renter. Gevinst på aksjefond skattes med 37,84 % når du selger. På aksjesparekonto (ASK) skattes gevinsten først når du tar ut mer enn du har satt inn. BSU gir i tillegg skattefradrag på innskuddet.</p></div>
-        <div class="lc-note"><h3>Når innskuddet trekkes betyr litt</h3><p>Du kan velge om innskuddet kommer i starten eller slutten av perioden. Trekker du i starten, rekker pengene å gi litt mer avkastning — forskjellen er liten, men reell over mange år.</p></div>
-        <div class="lc-note"><h3>Sammenlign mot vanlig konto</h3><p>Feltet «vanlig sparekonto» kjører samme oppsett med en lavere rente (forhåndsvalgt 2,0 %) så du ser forskjellen mot å la pengene stå på en alminnelig konto. Juster renten til det banken din faktisk gir.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-personlig-spare">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-personlig-spare">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hva er rentes rente?</summary><div class="a"><p>Det er når avkastningen din også begynner å gi avkastning. Saldoen ganges opp hver periode, så rentene du fikk i fjor er med på å tjene nye renter i år. Effekten blir tydeligst over mange år.</p></div></details>
-        <details class="lc-q"><summary>Hvor mye skatt trekkes på avkastningen?</summary><div class="a"><p>Kalkulatoren trekker 22 % av den samlede avkastningen. Det som står igjen vises som netto sluttbeløp. Innskuddene dine skattlegges ikke — bare gevinsten.</p></div></details>
-        <details class="lc-q"><summary>Hvilken rente bør jeg legge inn?</summary><div class="a"><p>Det avhenger av hvor pengene står. Siden viser typiske nivåer for 2026: sparekonto rundt 3,75 %, aksjefond i snitt 7,0 % og indeksfond på lang sikt 8,5 %. Velg det som passer din sparing.</p></div></details>
-        <details class="lc-q"><summary>Teller kalkulatoren med at fond svinger?</summary><div class="a"><p>Nei. Den bruker en fast rente hvert år for å vise den langsiktige trenden. Ekte fond går opp og ned underveis, så enkeltår kan avvike mye fra snittet.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr «når trekkes innskuddet»?</summary><div class="a"><p>Det styrer om månedens innskudd legges til før eller etter rentepåslaget. Trekker du i starten, får innskuddet litt avkastning samme periode. Forskjellen er liten, men merkes over lang tid.</p></div></details>
-        <details class="lc-q"><summary>Lagres scenarioene mine?</summary><div class="a"><p>Ja, men bare lokalt i nettleseren din. Trykker du «Lagre nåværende», husker siden oppsettet til neste gang. Ingenting sendes videre, og det forsvinner om du tømmer nettleserdataene.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-personlig-spare">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-personlig-spare">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/kalkulator/finance/"><span class="ar">Renters rente →</span><h3>Renters rente</h3><p>Regn rent på rentes rente-effekten alene, uten skatt og sammenligning — bare hvordan ett beløp vokser over tid.</p></a>
-        <a class="lc-link" href="/boliglan/bsu/"><span class="ar">BSU →</span><h3>BSU-kalkulator</h3><p>BSU gir høyere rente og skattefradrag til og med året du fyller 33. Se hvor mye du kan spare opp før boligkjøp.</p></a>
-        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Lag et budsjett</h3><p>Finn ut hvor mye du faktisk har til overs hver måned før du bestemmer et fast sparebeløp.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-spare-r">
+      <h3 class="lrn-h3" id="lrn-spare-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/boliglan/bsu/"><span><span class="t">BSU-kalkulator</span><span class="d">Er du under 34, gir BSU høyere rente og skattefradrag. Se hvor mye du kan spare opp før boligkjøp.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/konto/"><span><span class="t">Fond og ASK</span><span class="d">Sammenlign aksjesparekonto, IPS og vanlig fondskonto, med skattereglene for 2026.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/budsjett/"><span><span class="t">Lag et budsjett</span><span class="d">Finn ut hvor mye du faktisk har til overs hver måned før du bestemmer et fast sparebeløp.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -703,8 +600,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v245"></script>
-<script defer src="/shared/core.js?v=v230"></script>
+<script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -928,6 +826,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       els.hTotal.textContent = '–'; els.hPct.textContent = '–';
       els.rfTotal.textContent = '–'; els.rfInt.textContent = '–'; els.rfDiff.textContent = '–';
       els.svg.innerHTML = '';
+      window._spare = null;
+      if(window.hvtLearn) hvtLearn.update('personlig-spare', null);
       return;
     }
 
@@ -970,6 +870,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     els.rfDiff.classList.toggle('diff-down', rfDiff < 0);
 
     drawChart(data);
+    window._spare = {start:v.start, amt:v.amt, freq:v.freq, years:v.years, rate:v.rate, tilv:v.tilv};
+    if(window.hvtLearn) hvtLearn.update('personlig-spare', window._spare);
     persist();
   }
 
@@ -1041,6 +943,244 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   render();
 })();
 </script>
+<script>
+// ── Forklaringsblokken «Rente på rente starter smått og vokser raskest»: saldoen år for år delt i
+//    innskudd, rente på innskuddene og rente på rente. Tallene kommer fra render() via hvtLearn. ──
+(function(){
+  var KEY = 'personlig-spare';
+  // Standardverdiene i feltene over. Så lenge alle står slik, er merket «Eksempel».
+  var DEF = {start:100000, amt:3000, freq:'monthly', years:20, rate:7, tilv:true};
+  var PPY = {monthly:12, quarterly:4, half:2, yearly:1, lump:12};
+  // Ordene for hver innskuddsfrekvens
+  var FQ = {
+    monthly:  {i:'i måneden', hver:'hver måned', neste:'neste måned', forste:'Den første måneden', etter:'Måneden etter'},
+    quarterly:{i:'i kvartalet', hver:'hvert kvartal', neste:'neste kvartal', forste:'Det første kvartalet', etter:'Kvartalet etter'},
+    half:     {i:'i halvåret', hver:'hvert halvår', neste:'neste halvår', forste:'Det første halvåret', etter:'Halvåret etter'},
+    yearly:   {i:'i året', hver:'hvert år', neste:'neste år', forste:'Det første året', etter:'Året etter'},
+    lump:     {i:'', hver:'hver måned', neste:'neste måned', forste:'Den første måneden', etter:'Måneden etter'}
+  };
+  var root, plot, svg, range, raw = null, S = null, aar = null, home = null, lastW = 0, queued = false;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setHtml(name, s){ var el = q(name); if(el) el.innerHTML = s; }
+  function setD(name, d){ svg.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function b(s){ return '<b>' + s + '</b>'; }
+
+  // Samme regnestykke som spareCompute() over, men med renten på innskuddene skilt fra rente på rente
+  function serie(start, amt, ppy, lump, years, rate, tilvStart){
+    var pr = rate / 100 / ppy, pa = lump ? 0 : amt, bal = start, dep = start, simple = 0, rows = [{y:0, dep:start, ri:0, rr:0, bal:start}];
+    for(var y = 1; y <= years; y++){
+      for(var p = 0; p < ppy; p++){
+        if(tilvStart){ bal += pa; dep += pa; }
+        simple += dep * pr; bal = bal * (1 + pr);
+        if(!tilvStart){ bal += pa; dep += pa; }
+      }
+      rows.push({y:y, dep:dep, ri:simple, rr:bal - dep - simple, bal:bal});
+    }
+    return rows;
+  }
+  function nice(v, parts){
+    var e0 = Math.floor(Math.log10(Math.max(v, 1))) - 2, fs = [1, 2, 2.5, 5];
+    for(var e = e0; e < e0 + 5; e++) for(var i = 0; i < fs.length; i++){
+      var step = fs[i] * Math.pow(10, e), n = Math.ceil(v / step - 1e-9);
+      if(n <= parts) return {step:step, max:n * step};
+    }
+    return {step:v, max:v};
+  }
+  function kr2(x){ var r = Math.round(x * 100); return window.hvtLearn.kr(Math.floor(r / 100)) + ',' + String(r % 100).padStart(2, '0'); }
+
+  function geo(W){
+    if(W >= 600) return {mobile:false, W:W, H:432, x0:72, x1:W - 150, y0:30, y1:404, ms:18, labL:W - 126};
+    return {mobile:true, W:W, H:260, x0:0, x1:W - 24, y0:26, y1:232, ms:20, labL:0};
+  }
+
+  function render(d){
+    var L = window.hvtLearn, kr = function(v){ return L.kr(v) + ' kr'; }, t = L.t, ph = L.ph;
+    raw = d;
+    var mine = !!d && !(d.start === DEF.start && d.amt === DEF.amt && d.freq === DEF.freq && d.years === DEF.years && d.rate === DEF.rate && d.tilv === DEF.tilv);
+    if(!d) d = DEF;
+    var W = plot.clientWidth;
+    if(!W){ lastW = 0; return; }
+    lastW = W;
+    var G = geo(W), fq = FQ[d.freq] || FQ.monthly, lump = d.freq === 'lump', ppy = PPY[d.freq] || 12, N = d.years;
+    var all = serie(d.start, d.amt, ppy, lump, Math.max(60, N), d.rate, d.tilv), rows = all.slice(0, N + 1), last = rows[N];
+    var avk = last.bal - last.dep, skatt = avk * 0.22, netto = last.bal - skatt, andel = last.bal > 0 ? avk / last.bal * 100 : 0;
+    var crossY = 0, rrY = 0, k;
+    for(k = 1; k < all.length; k++){ if(!crossY && all[k].bal - all[k].dep > all[k].dep) crossY = k; if(!rrY && all[k].rr > all[k].ri) rrY = k; }
+
+    var ns = nice(Math.max(last.bal, 1), 5), yMax = ns.max, pw = G.x1 - G.x0;
+    function X(y){ return G.x0 + y / N * pw; }
+    function Y(v){ return G.y1 - v / yMax * (G.y1 - G.y0); }
+    function line(vals){ return vals.map(function(v, j){ return (j ? 'L' : 'M') + f1(X(j)) + ',' + f1(Y(v)); }).join(' '); }
+    function back(vals){ var s = ''; for(var j = vals.length - 1; j >= 0; j--) s += ' L' + f1(X(j)) + ',' + f1(Y(vals[j])); return s; }
+    function area(lo, hi){ return line(hi) + back(lo) + ' Z'; }
+    var s0 = rows.map(function(){ return 0; }), s1 = rows.map(function(r){ return r.dep; }), s2 = rows.map(function(r){ return r.dep + r.ri; }), s3 = rows.map(function(r){ return r.bal; });
+    plot.style.height = G.H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + G.H);
+    setD('inn', area(s0, s1)); setD('ri', area(s1, s2)); setD('rip', area(s1, s2)); setD('rr', area(s2, s3)); setD('rrp', area(s2, s3));
+    setD('sep', line(s1) + ' ' + line(s2)); setD('top', line(s3));
+
+    var grid = '', lab = '', v;
+    for(v = ns.step; v <= yMax + 1; v += ns.step){
+      grid += 'M' + G.x0 + ',' + f1(Y(v)) + ' H' + G.x1 + ' ';
+      lab += '<span class="lrn-tick y' + (G.mobile ? ' up' : '') + '" style="top:' + f1(G.mobile ? Y(v) - 17 : Y(v) - 8) + 'px;width:60px">' + L.kr(v) + '</span>';
+    }
+    if(!G.mobile) lab += '<span class="lrn-tick y" style="top:' + f1(Y(0) - 8) + 'px;width:60px">0</span>';
+    setD('grid', grid); setD('base', 'M' + G.x0 + ',' + f1(Y(0)) + ' H' + G.x1);
+    function xt(j, align){
+      var x = X(j), left = align === 'left' ? x : (align === 'right' ? x - 56 : x - 28);
+      lab += '<span class="lrn-tick x" style="left:' + f1(left) + 'px;top:' + (G.y1 + 8) + 'px;width:56px;text-align:' + align + '">' + (j === N ? t('lrnYears', '{n} år', {n:j}) : String(j)) + '</span>';
+    }
+    if(G.mobile){ xt(0, 'left'); xt(Math.round(N / 2), 'center'); xt(N, 'right'); }
+    else {
+      var st = N <= 10 ? 2 : (N <= 30 ? 5 : 10);
+      for(k = 0; k < N; k += st) if(N - k >= st / 2 || k === 0) xt(k, 'center');
+      xt(N, 'center');
+    }
+
+    // Klammen for skatten ved siste år
+    var bx = G.x1 + (G.mobile ? 4 : 5), yb = f1(Y(last.bal)), yn = f1(Y(netto)), yMid = f1((yb + yn) / 2);
+    setD('br', 'M' + bx + ',' + yb + ' H' + (bx + 6) + ' V' + yn + ' H' + bx + (G.mobile ? '' : ' M' + (bx + 6) + ',' + yMid + ' H' + (bx + 10)));
+
+    // Merknader i fortellerrekkefølge
+    var ms = G.ms, notes = [], marks = '', crossD = '';
+    function mk(x, y){ marks += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(Math.max(G.x0 + 1, Math.min(G.x1 + (G.mobile ? 12 : 16), x - ms / 2))) + 'px;top:' + f1(y - ms / 2) + 'px">' + notes.length + '</span>'; }
+    var inPeriod = crossY > 0 && crossY <= N;
+    if(inPeriod){
+      var rc = rows[crossY];
+      notes.push(t('lrnSpCross', 'I år {aar} passerer avkastningen ({avk}) det du har satt inn ({inn}).', {aar:crossY, avk:kr(rc.bal - rc.dep), inn:kr(rc.dep)}));
+      crossD = 'M' + f1(X(crossY)) + ',' + f1(Y(0)) + ' V' + f1(Y(rc.bal) - 4);
+      mk(X(crossY), Y(rc.bal) - ms / 2 - 8);
+    }
+    setD('cross', crossD);
+    if(rrY > 0 && rrY <= N){
+      var rr = rows[rrY];
+      notes.push(t('lrnSpRr', 'Fra år {aar} er rente på rente større enn renten på innskuddene.', {aar:rrY}));
+      mk(X(rrY), Y(rr.dep + rr.ri + rr.rr / 2));
+    }
+    notes.push(t('lrnSpTax', 'Skatt 22 % av avkastningen: {skatt} kr. Igjen: {netto}. BSU og aksjesparekonto følger andre regler.', {skatt:L.kr(-skatt), netto:b(kr(netto))}));
+    mk(bx + 3, yb - ms / 2 - 7);
+    var kF = Math.max(1, Math.round(N * 0.3)), pct = L.dec(d.rate, String(d.rate).indexOf('.') >= 0 ? Math.min(2, String(d.rate).split('.')[1].length) : 0);
+    notes.push(t('lrnSpSame', 'Samme rente hvert år. Et snitt på {r} % betyr ikke {r} % hvert år, og noen år er negative.', {r:pct}));
+    mk(X(kF), Y(rows[kF].bal));
+
+    // Sluttetiketter ved høyre kant (bred skjerm), skjøvet fra hverandre
+    var lead = '';
+    if(!G.mobile){
+      var topRr = netto > last.dep + last.ri + 1 ? Math.min(last.bal, netto) : last.bal;
+      var items = [
+        {name:ph('Skatt 22 %'), value:L.kr(-skatt) + ' kr', d:yMid, ax:bx + 10},
+        {name:ph('Rente på rente'), value:kr(last.rr), d:(Y(last.dep + last.ri) + Y(topRr)) / 2, ax:G.x1 + 1},
+        {name:ph('Rente på innskudd'), value:kr(last.ri), d:(Y(last.dep) + Y(last.dep + last.ri)) / 2, ax:G.x1 + 1},
+        {name:ph('Innskudd'), value:kr(last.dep), d:(Y(0) + Y(last.dep)) / 2, ax:G.x1 + 1}
+      ], h = 32, gap = 6;
+      items.sort(function(a, c){ return a.d - c.d; });
+      items.forEach(function(it, j){ it.y = it.d - h / 2; if(j > 0) it.y = Math.max(it.y, items[j - 1].y + h + gap); });
+      for(k = items.length - 1; k >= 0; k--){ var lim = k === items.length - 1 ? G.y1 + 8 - h : items[k + 1].y - h - gap; if(items[k].y > lim) items[k].y = lim; }
+      items.forEach(function(it){
+        it.y = Math.max(0, it.y);
+        var cy = f1(it.y + h / 2);
+        lab += '<span class="lrn-endv" style="left:' + G.labL + 'px;top:' + f1(it.y) + 'px"><span>' + it.name + '</span><b>' + it.value + '</b></span>';
+        lead += 'M' + f1(it.ax) + ',' + f1(it.d) + ' L' + f1(Math.max(it.ax, G.labL - 11)) + ',' + f1(it.d) + ' L' + (G.labL - 5) + ',' + cy + ' ';
+      });
+    }
+    setD('lead', lead);
+    q('labels').innerHTML = lab + '<span class="lrn-pick" data-lrn="tag" style="position:absolute"></span>' + marks;
+    q('notes').innerHTML = notes.map(function(s, i){ return '<li><span class="lrn-mk" aria-hidden="true">' + (i + 1) + '</span><span>' + s + '</span></li>'; }).join('');
+
+    S = {G:G, N:N, rows:rows, X:X, Y:Y};
+    if(aar === null || aar > N){ aar = home = Math.round(N / 2) || 1; }
+    sight();
+
+    // Andre halvdel mot første, og bildetekst
+    var hh = Math.max(1, Math.floor(N / 2)), rh = rows[hh];
+    function ratio(a, c){ return c > 0 ? L.dec(a / c, 1) : '–'; }
+    var s1t = andel > 50 ? t('lrnSpShareHi', 'Over halvparten av saldoen etter {n} år, {p} %, er avkastning.', {n:N, p:L.dec(andel, 1)}) : t('lrnSpShare', 'Avkastningen er {p} % av saldoen etter {n} år.', {n:N, p:L.dec(andel, 1)});
+    var s2t = lump
+      ? t('lrnSpGrowLump', 'Fra år {h} til år {n} står innskuddet stille, mens renten på innskuddet blir {b} ganger så stor og rente på rente {c} ganger.', {h:hh, n:N, b:'<strong>' + ratio(last.ri, rh.ri) + '</strong>', c:'<strong>' + ratio(last.rr, rh.rr) + '</strong>'})
+      : t('lrnSpGrow', 'Fra år {h} til år {n} blir innskuddene {a} så store, renten på innskuddene {b} og rente på rente {c}.', {h:hh, n:N, a:'<strong>' + t('lrnSpTimes', '{x} ganger', {x:ratio(last.dep, rh.dep)}) + '</strong>', b:'<strong>' + t('lrnSpTimes', '{x} ganger', {x:ratio(last.ri, rh.ri)}) + '</strong>', c:'<strong>' + t('lrnSpTimes', '{x} ganger', {x:ratio(last.rr, rh.rr)}) + '</strong>'});
+    setHtml('sum', s1t + ' ' + s2t);
+    set('cap', ph('Saldo før skatt, kroner, år for år') + (inPeriod ? '' : (crossY > 0 ? '. ' + t('lrnSpCapLate', 'Avkastningen passerer det du har satt inn i år {aar}, etter spareperioden', {aar:crossY}) : '. ' + ph('Innen 60 år passerer ikke avkastningen det du har satt inn'))));
+
+    // Regnestykket for første periode
+    var pr = d.rate / 100 / ppy, pa = lump ? 0 : d.amt;
+    var b1 = d.tilv ? (d.start + pa) * (1 + pr) : d.start * (1 + pr) + pa, r1 = (d.tilv ? d.start + pa : d.start) * pr, rr2 = r1 * pr;
+    var rateTxt = String(Math.round(d.rate * 1e6) / 1e8).replace('.', ','), delTxt = ppy > 1 ? ' ÷ ' + ppy : '';
+    var utfylt = lump ? L.kr(d.start) + ' × (1 + ' + rateTxt + delTxt + ')'
+      : d.tilv ? '(' + L.kr(d.start) + ' + ' + L.kr(pa) + ') × (1 + ' + rateTxt + delTxt + ')'
+      : L.kr(d.start) + ' × (1 + ' + rateTxt + delTxt + ') + ' + L.kr(pa);
+    set('fH', t('lrnSpCalcH', 'Regnestykket {hver}', {hver:ph(fq.hver)}));
+    root.querySelectorAll('[data-f]').forEach(function(el){ el.hidden = el.getAttribute('data-f') !== (lump ? 'lump' : d.tilv ? 'start' : 'slutt'); });
+    root.querySelectorAll('[data-lrn="fNeste"]').forEach(function(el){ el.textContent = ph(fq.neste); });
+    root.querySelectorAll('[data-lrn="fDel"]').forEach(function(el){ el.textContent = delTxt; });
+    set('fUtfylt', utfylt); set('fSvar', kr2(b1) + ' kr');
+    setHtml('fText', t('lrnSpFirst', '{forste} er hele renten, {r1}, rente på innskudd. {etter} gir de {r1k} kronene selv {rr2} i rente. Det er rente på rente, og det laget vokser fordi det bygger på seg selv.',
+      {forste:ph(fq.forste), etter:ph(fq.etter), r1:b(kr2(r1) + ' kr'), r1k:kr2(r1), rr2:b(kr2(rr2) + ' kr')}));
+
+    // Tabell, spørsmålet om tidspunkt og teksttilsvarende versjon
+    setHtml('rows', rows.filter(function(r){ return r.y > 0 && (r.y % 5 === 0 || r.y === N); }).map(function(r){
+      return '<tr><th scope="row">' + r.y + '</th><td>' + L.kr(r.dep) + '</td><td>' + L.kr(r.ri) + '</td><td>' + L.kr(r.rr) + '</td><td>' + L.kr(r.bal) + '</td></tr>';
+    }).join(''));
+    var altE = serie(d.start, d.amt, ppy, lump, N, d.rate, false)[N].bal, altS = serie(d.start, d.amt, ppy, lump, N, d.rate, true)[N].bal;
+    set('qTilv', lump ? ph('Med bare startbeløp spiller det ingen rolle.') : t('lrnSpTilv', 'Med tallene over gir start i stedet for slutt {belop} mer etter {n} år.', {belop:kr(altS - altE), n:N}));
+    set('sr', t('lrnSpSr', 'Etter {n} år er {inn} innskudd, {ri} rente på innskuddene og {rr} rente på rente. Skatt 22 % av avkastningen gir {netto} igjen.', {n:N, inn:kr(last.dep), ri:kr(last.ri), rr:kr(last.rr), netto:kr(netto)}));
+
+    // Merket
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    set('stateText', (lump ? t('lrnSpStateLump', '{start} uten innskudd', {start:kr(d.start)}) : t('lrnSpStateFlow', '{start} + {amt} {i}', {start:kr(d.start), amt:kr(d.amt), i:ph(fq.i)}))
+      + ', ' + pct + ' %, ' + t('lrnYears', '{n} år', {n:N}) + (d.tilv || lump ? '' : ', ' + ph('innskudd i slutten av perioden')));
+  }
+
+  // Sikte: ett bestemt år
+  function sight(){
+    var L = window.hvtLearn, G = S.G, N = S.N;
+    aar = Math.max(1, Math.min(N, aar));
+    var r = S.rows[aar], sx = f1(S.X(aar));
+    setD('scrub', 'M' + sx + ',' + f1(S.Y(r.bal) - 6) + ' V' + f1(S.Y(0)));
+    [['d1', r.dep], ['d2', r.dep + r.ri], ['d3', r.bal]].forEach(function(p){ var c = svg.querySelector('[data-p="' + p[0] + '"]'); c.setAttribute('cx', sx); c.setAttribute('cy', f1(S.Y(p[1]))); });
+    var tag = q('tag');
+    tag.textContent = L.t('lrnSpYear', 'År {n}', {n:aar});
+    tag.style.left = f1(Math.max(G.x0, Math.min(G.x1 - 44 - (G.mobile ? 10 : 14), sx - 22))) + 'px';
+    tag.style.top = f1(Math.max(0, S.Y(r.bal) - 30)) + 'px';
+    range.max = N; range.value = aar;
+    range.setAttribute('aria-valuetext', L.t('lrnSpSight', 'År {n}: saldo {bal} kr', {n:aar, bal:L.kr(r.bal)}));
+    set('sAar', String(aar)); set('sInn', L.kr(r.dep)); set('sRi', L.kr(r.ri)); set('sRr', L.kr(r.rr)); set('sBal', L.kr(r.bal));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+  function pointAt(e){
+    if(!S) return;
+    var rect = plot.getBoundingClientRect(), G = S.G;
+    var y = Math.max(1, Math.min(S.N, Math.round((e.clientX - rect.left - G.x0) / (G.x1 - G.x0) * S.N)));
+    if(y !== aar){ aar = y; sight(); }
+  }
+
+  function init(){
+    root = document.getElementById('lrn-spare');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg'); range = document.getElementById('lrn-spare-aar');
+    range.addEventListener('input', function(){ home = aar = +range.value || 1; if(S) sight(); });
+    var down = false;
+    plot.addEventListener('pointerdown', function(e){ down = true; pointAt(e); });
+    plot.addEventListener('pointermove', function(e){ if(down || e.pointerType === 'mouse') pointAt(e); });
+    plot.addEventListener('pointerleave', function(e){ if(!down && e.pointerType === 'mouse' && S && aar !== home){ aar = home; sight(); } });
+    window.addEventListener('pointerup', function(){ if(down){ down = false; home = aar; } });
+    window.addEventListener('pointercancel', function(){ down = false; });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._spare || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
 <script>
 (function(){
   function init(){

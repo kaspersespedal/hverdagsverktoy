@@ -56,6 +56,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Refinansiering — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -169,149 +170,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  /* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap), så
-     de dro hele siden ut i sidelengs scroll — opptil 380px på finance.
-     Samme scroll-wrapper-mønster som .bd-table-wrap/.pv-tblwrap. */
-  .lc-trinn{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -527,46 +385,89 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: boliglan-refi =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-boliglan-refi">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-refi">Hva kalkulatoren faktisk gjør</h2><p class="lc-intro">Besparelsen er forskjellen i månedsbeløp med gammel og ny rente. Bytter du fra 5,5&nbsp;% til 4,8&nbsp;% på 2&nbsp;500&nbsp;000&nbsp;kr over 20 år, sparer du 973&nbsp;kr i måneden. Gebyrene på 3&nbsp;045&nbsp;kr er da tjent inn etter 4 måneder.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Månedlig betaling</b><span class="tag">Formel</span></span><span class="fig">annuitet<span class="u">kr/mnd</span></span><p class="dsc">Begge lånene regnes som annuitetslån: samme beløp hver måned hele løpetiden ut. Kalkulatoren bruker samme saldo og samme restløpetid på begge, så den eneste forskjellen blir renten.</p></div>
-        <div class="lc-led"><span class="nm"><b>Månedsrente</b><span class="tag">Faktor</span></span><span class="fig">rente ÷ 12<span class="u">per mnd</span></span><p class="dsc">Den nominelle årsrenten deles på 12 for å få månedsrenten som brukes i formelen. 4,8 % i året blir altså 0,4 % i måneden.</p></div>
-        <div class="lc-led"><span class="nm"><b>Månedlig besparelse</b><span class="tag">Differanse</span></span><span class="fig">gammel − ny<span class="u">kr/mnd</span></span><p class="dsc">Gammel månedsbetaling minus ny månedsbetaling. Er den nye renten ikke lavere, blir besparelsen null eller negativ, og kalkulatoren melder at det ikke lønner seg.</p></div>
-        <div class="lc-led"><span class="nm"><b>Total refi-kostnad</b><span class="tag">Sum</span></span><span class="fig">etablering + tinglysing<span class="u">kr</span></span><p class="dsc">Engangsgebyrene ved å bytte legges sammen: etableringsgebyr i ny bank pluss tinglysingsgebyr hos Kartverket. Dette er beløpet besparelsen må tjene inn igjen.</p></div>
-        <div class="lc-led"><span class="nm"><b>Break-even-måned</b><span class="tag">Grense</span></span><span class="fig">kostnad ÷ besparelse<span class="u">mnd</span></span><p class="dsc">Antall måneder før den oppsamlede besparelsen har passert gebyrene. Kalkulatoren runder oppover til hel måned. Etter denne måneden sparer du i ren netto.</p></div>
-        <div class="lc-led"><span class="nm"><b>Total nettogevinst</b><span class="tag">Resultat</span></span><span class="fig">besparelse − kostnad<span class="u">kr</span></span><p class="dsc">Samlet besparelse over hele restløpetiden minus de to engangsgebyrene. Dette er det store tallet øverst som forteller om byttet lønner seg totalt sett.</p></div>
+  <div class="lrn" id="lrn-refi">
+    <section class="lrn-sec" aria-labelledby="lrn-refi-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-refi-h">Det er renteforskjellen, ikke gebyret, som avgjør</h2>
+        <p class="lrn-lede">Hver måned sparer du forskjellen mellom gammel og ny betaling, og de første månedene går med til å betale ned byttegebyret. På et vanlig boliglån tar det noen måneder. På et lån som nesten er nedbetalt, rekker det kanskje ikke.</p>
+      </div>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">2&nbsp;500&nbsp;000 kr · 20 år · 5,5 % → 4,8 %</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-seg" role="group" aria-label="Hvor du refinansierer">
+          <button type="button" data-bank="ny" aria-pressed="true">Ny bank</button>
+          <button type="button" data-bank="samme" aria-pressed="false">Samme bank</button>
+        </div>
+      </div>
+      <div class="lrn-figrow duo">
+        <figure class="lrn-fig" aria-describedby="lrn-refi-sum">
+          <figcaption class="lrn-cap">Én rute per måned som er igjen av lånet. Hver rad er ett år.</figcaption>
+          <p class="lrn-kpi"><b data-lrn="spar">973</b><span>kr spart per måned</span></p>
+          <div class="lrn-plot is-static" dir="ltr" data-lrn="plotA">
+            <svg aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lrn-refi-pg" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-pat" x1="0" y1="0" x2="0" y2="6"/></pattern>
+                <pattern id="lrn-refi-pk" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect class="lrn-a2" width="5" height="5"/><line class="lrn-ps-a" x1="0" y1="0" x2="0" y2="5"/><line class="lrn-ps-a" x1="0" y1="0" x2="5" y2="0"/><line class="lrn-pat" x1="0" y1="0" x2="0" y2="5"/><line class="lrn-pat" x1="0" y1="0" x2="5" y2="0"/></pattern>
+              </defs>
+              <path class="lrn-a1" data-p="gev"/>
+              <path fill="url(#lrn-refi-pg)" data-p="gevp"/>
+              <path fill="url(#lrn-refi-pk)" data-p="geb"/>
+              <path class="lrn-cell0" data-p="tom"/>
+              <path class="lrn-ghost" data-p="spok"/>
+              <path class="lrn-a1" data-p="stripe"/>
+              <path fill="url(#lrn-refi-pg)" data-p="stripep"/>
+              <path class="lrn-mark" data-p="mark"/>
+            </svg>
+            <div class="lrn-labels" data-lrn="labelsA"></div>
+          </div>
+          <div class="lrn-after" data-lrn="after"></div>
+        </figure>
+        <figure class="lrn-fig cmp">
+          <figcaption>Nesten nedbetalt: 300&nbsp;000 kr og 2 år igjen</figcaption>
+          <p class="lrn-p s" data-lrn="kSpar">Samme renter og gebyrer som over gir <strong>89 kr</strong> spart per måned.</p>
+          <div class="lrn-plot is-static" dir="ltr" data-lrn="plotB">
+            <svg aria-hidden="true" focusable="false">
+              <path class="lrn-a1" data-p="gev"/>
+              <path fill="url(#lrn-refi-pg)" data-p="gevp"/>
+              <path fill="url(#lrn-refi-pk)" data-p="geb"/>
+              <path class="lrn-cell0" data-p="tom"/>
+              <path class="lrn-ghost" data-p="spok"/>
+            </svg>
+            <div class="lrn-labels" data-lrn="labelsB"></div>
+          </div>
+          <p class="lrn-p s k" data-lrn="kTekst"></p>
+        </figure>
+      </div>
+      <p class="lrn-cmp" data-lrn="cmp">Gebyrene er like store i begge rutenettene. Det som skiller, er hva renteforskjellen er verdt i kroner hver måned: <strong>973 kr</strong> mot <strong>89 kr</strong>.</p>
+      <p class="lrn-sr" id="lrn-refi-sum" data-lrn="sum"></p>
+    </section>
+
+    <section class="lrn-sec lrn-also" aria-labelledby="lrn-refi-x">
+      <h3 class="lrn-h3" id="lrn-refi-x">Det rutene forutsetter</h3>
+      <div class="lrn-ps">
+        <p class="lrn-p">Rutene forutsetter at renteforskjellen varer hele restløpetiden. Er den nye renten en kampanjerente, gjelder gevinsten bare så lenge kampanjen varer.</p>
+        <p class="lrn-p">Kalkulatoren bruker den nominelle renten. Sammenlign tilbudene på effektiv rente, der gebyrene er regnet inn, med <a href="/kalkulator/rente/">Effektiv rente</a>.</p>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-boliglan-refi">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-refi">Før du bytter bank</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Samme bank gir null tinglysing</h3><p>Forhandler du ned renten i banken du allerede har, slipper du ofte ny tinglysing. Huker du av for «refi i samme bank», settes tinglysingsgebyret til 0 kr, og da er det bare etableringsgebyret som skal tjenes inn.</p></div>
-        <div class="lc-note"><h3>Sammenlign effektiv rente, ikke nominell</h3><p>Kalkulatoren bruker den nominelle renten du skriver inn. To lån med samme nominelle rente kan likevel koste ulikt på grunn av gebyrer. Be alltid om effektiv rente når du sammenligner tilbud.</p></div>
-        <div class="lc-note"><h3>Kort restløpetid gir lite å spare</h3><p>Jo nærmere du er å bli ferdig med lånet, jo mindre er det igjen å spare på en lavere rente. Da kan break-even komme etter at lånet egentlig er nedbetalt, og kalkulatoren skriver «&gt; antall år».</p></div>
-        <div class="lc-note"><h3>Pass på kampanjerente</h3><p>Et lokketilbud som varer i ett år sier lite om hva du faktisk betaler resten av løpetiden. Skriv inn den garanterte renten, ikke kampanjerenten, ellers blir besparelsen for optimistisk.</p></div>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-refi-q">
+      <h3 class="lrn-h3" id="lrn-refi-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hva betyr break-even?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det er måneden da den oppsamlede besparelsen har passert gebyrene du betalte for å bytte. Sparer du 973 kr i måneden og gebyrene er 3&nbsp;045 kr, er break-even i måned 4. Etter det er besparelsen ren gevinst.</p></div></details>
+        <details><summary>Hvor mye koster det å bytte bank?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren regner med to engangsgebyr: etableringsgebyret i den nye banken og tinglysingsgebyret hos Statens kartverk. Typiske beløp står ved feltene i kalkulatoren. Bytter du innenfor samme bank, faller tinglysingen som regel bort.</p></div></details>
+        <details><summary>Lønner det seg alltid med lavere rente?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ikke nødvendigvis. Er det lite igjen av lånet, blir besparelsen per måned så liten at gebyrene ikke rekker å bli tjent inn før lånet er nedbetalt. Da melder kalkulatoren at det ikke lønner seg, selv om renten er lavere.</p></div></details>
+        <details><summary>Hvorfor må jeg oppgi restløpetid?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Besparelsen avhenger av hvor lenge du har lånet. Den nye renten regnes på samme antall år som du har igjen, og total besparelse er den månedlige besparelsen ganget med alle månedene som gjenstår. Kalkulatoren godtar opptil 30 år.</p></div></details>
+        <details><summary>Slipper jeg tinglysing hvis jeg blir i banken?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Som regel ja. Forhandler du ned renten der du allerede er, trengs det vanligvis ikke ny tinglysing av pantet. Huk av for «refi i samme bank», så settes tinglysingsgebyret til 0 kr i regnestykket.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcD-boliglan-refi">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-boliglan-refi">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hva betyr break-even?</summary><div class="a"><p>Det er måneden da den oppsamlede besparelsen har passert gebyrene du betalte for å bytte. Sparer du for eksempel 500 kr i måneden og gebyrene var 3 000 kr, er break-even etter 6 måneder. Etter det er besparelsen ren gevinst.</p></div></details>
-        <details class="lc-q"><summary>Hvor mye koster det å bytte bank?</summary><div class="a"><p>Kalkulatoren regner med to engangsgebyr: et etableringsgebyr i ny bank på typisk 1 500–3 000 kr, og et tinglysingsgebyr på 545 kr per dokument hos Statens kartverk. Bytter du innenfor samme bank, faller tinglysingen som regel bort.</p></div></details>
-        <details class="lc-q"><summary>Lønner det seg alltid med lavere rente?</summary><div class="a"><p>Ikke nødvendigvis. Hvis gebyrene er høyere enn det du sparer, eller hvis restløpetiden er så kort at break-even kommer etter lånet er nedbetalt, melder kalkulatoren at det ikke lønner seg selv om renten er lavere.</p></div></details>
-        <details class="lc-q"><summary>Hva er forskjellen på nominell og effektiv rente?</summary><div class="a"><p>Nominell rente er renten banken oppgir per år. Effektiv rente er årskostnaden i prosent når renten legges til hver måned og alle gebyrer er med. Selv uten gebyrer er den litt høyere enn den nominelle: 3,5&nbsp;% blir 3,56&nbsp;%. Skriv inn nominell rente her, men sammenlign tilbud på effektiv rente.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor må jeg oppgi restløpetid?</summary><div class="a"><p>Besparelsen avhenger av hvor lenge du har lånet. Den nye renten regnes på samme antall år som du har igjen, og total besparelse er den månedlige besparelsen ganget med alle månedene som gjenstår. Kalkulatoren godtar opptil 30 år.</p></div></details>
-        <details class="lc-q"><summary>Slipper jeg tinglysing hvis jeg blir i banken?</summary><div class="a"><p>Som regel ja. Forhandler du ned renten der du allerede er, trengs det vanligvis ikke ny tinglysing av pantet. Huk av for «refi i samme bank», så settes tinglysingsgebyret til 0 kr i regnestykket.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-boliglan-refi">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-boliglan-refi">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/kalkulator/rente/"><span class="ar">Effektiv rente →</span><h3>Regn ut effektiv rente</h3><p>Se hva lånet faktisk koster i året når gebyrene er regnet inn — tallet du bør sammenligne tilbud på.</p></a>
-        <a class="lc-link" href="/boliglan/mor/"><span class="ar">Nedbetaling →</span><h3>Se nedbetalingsplanen</h3><p>Følg hvordan saldoen synker måned for måned, og hvor mye som går til renter kontra avdrag.</p></a>
-        <a class="lc-link" href="/boliglan/maxlan/"><span class="ar">Maks lån →</span><h3>Hva har du råd til?</h3><p>Sjekk hvor stort lån du kan få ut fra inntekt og egenkapital før du forhandler om ny rente.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-refi-r">
+      <h3 class="lrn-h3" id="lrn-refi-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/kalkulator/rente/"><span><span class="t">Effektiv rente</span><span class="d">Regn ut hva lånet faktisk koster i året når gebyrene er tatt med.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/mor/"><span><span class="t">Boliglånskalkulator</span><span class="d">Følg hvordan saldoen synker måned for måned, og hvor mye som går til renter og avdrag.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/maxlan/"><span><span class="t">Hva har jeg råd til?</span><span class="d">Sjekk hvor stort lån du kan få ut fra inntekt og egenkapital før du forhandler om ny rente.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -586,8 +487,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v245"></script>
-<script defer src="/shared/core.js?v=v230"></script>
+<script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -666,6 +568,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     // Tomme/ugyldige inputs → reset
     if(P <= 0 || years <= 0){
       resetOutputs(P <= 0 ? 'Skriv inn gjenstående saldo' : 'Skriv inn restløpetid');
+      window._refi = null;
+      if(window.hvtLearn) hvtLearn.update('boliglan-refi', null);
       persist();
       return;
     }
@@ -732,6 +636,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       setEl('hStatBe', '–');
     }
 
+    window._refi = {P:P, years:years, oldRate:oldRate, newRate:newRate, est:establishing, ting:tinglysingInputEl ? parseNum('refi-tinglysing') : 0, same:sameBank};
+    if(window.hvtLearn) hvtLearn.update('boliglan-refi', window._refi);
     persist();
   }
 
@@ -784,6 +690,193 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   restore();
   if(sbEl && sbEl.checked) show('refi-tinglysing-fg', false);
   calcRefi();
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Det er renteforskjellen, ikke gebyret, som avgjør»: én rute per måned som
+//    er igjen av lånet. Gebyret fyller de første rutene, resten er gevinst. Tallene kommer fra calcRefi. ──
+(function(){
+  var KEY = 'boliglan-refi';
+  // Standardverdiene i feltene over. Så lenge alle står slik, er merket «Eksempel».
+  var DEF = {P:2500000, years:20, oldRate:5.5, newRate:4.8, est:2500, ting:545, same:false};
+  // Sammenligningen: samme renter og gebyrer, men et lån som nesten er nedbetalt
+  var KP = 300000, KAAR = 2;
+  var root, plotA, plotB, raw = null, bank = null, lastSame = null, lastW = 0, queued = false;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setHtml(name, s){ var el = q(name); if(el) el.innerHTML = s; }
+  function setD(plot, name, d){ plot.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function b(s){ return '<b>' + s + '</b>'; }
+  function strong(s){ return '<strong>' + s + '</strong>'; }
+  function pct(x){ return String(Math.round(x * 100) / 100).replace('.', ','); }
+
+  // Samme regnestykke som annuityMonthly() og calcRefi() over
+  function ann(P, r, n){ if(n <= 0) return 0; if(r === 0) return P / n; return P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1); }
+  function refi(P, aar, gml, ny, kost){
+    var n = aar * 12, spar = ann(P, gml / 100 / 12, n) - ann(P, ny / 100 / 12, n);
+    return {n:Math.round(n), spar:spar, kost:kost, be:spar > 0 ? Math.ceil(kost / spar) : null, eks:spar > 0 ? kost / spar : 0, net:spar * n - kost};
+  }
+
+  // Rutestørrelse fra bredden: 12 ruter per rad (ett år), mindre ruter på smal skjerm
+  function geo(W){
+    var wide = W >= 520, g = wide ? {g:4, gx0:48, gy0:62, top:8} : {g:2, gx0:46, gy0:52, top:0};
+    var p = Math.min(wide ? 24 : 24, Math.floor((W - g.gx0 + g.g) / 12));
+    g.p = p; g.s = p - g.g; g.wide = wide; g.W = W; g.gridW = 12 * p - g.g;
+    return g;
+  }
+  function rute(x, y, w, h){ return 'M' + f1(x) + ',' + f1(y) + ' h' + f1(w) + ' v' + f1(h) + ' h' + f1(-w) + ' Z '; }
+
+  // Rutene i leseretning, 12 per rad. Gebyrandelen av en rute fylles fra venstre.
+  function nett(r, nDraw, G, gy0){
+    var p = G.p, tom = !(r.spar > 0), geb = '', gev = '', tomD = '', spok = '', i, a, w;
+    function at(k){ return {x:G.gx0 + (k % 12) * p, y:gy0 + Math.floor(k / 12) * p}; }
+    for(i = 0; i < nDraw; i++){
+      var c = at(i);
+      if(tom){ tomD += rute(c.x + 0.5, c.y + 0.5, G.s - 1, G.s - 1); continue; }
+      a = Math.max(0, Math.min(1, r.eks - i));
+      if(a >= 1) geb += rute(c.x, c.y, G.s, G.s);
+      else if(a <= 0) gev += rute(c.x, c.y, G.s, G.s);
+      else { w = f1(G.s * a); geb += rute(c.x, c.y, w, G.s); gev += rute(c.x + w, c.y, G.s - w, G.s); }
+    }
+    // Spøkelsesruter: månedene etter at lånet er nedbetalt, fram til gebyret ville vært tjent inn
+    var nSpok = (!tom && r.be > r.n) ? r.be - r.n : 0;
+    for(i = r.n; i < r.n + nSpok; i++){ c = at(i); spok += rute(c.x + 0.5, c.y + 0.5, G.s - 1, G.s - 1); }
+    var mq = tom ? null : at(r.be - 1), rows = Math.ceil(nDraw / 12);
+    return {geb:geb, gev:gev, tom:tomD, spok:spok, isTom:tom, nSpok:nSpok, rows:rows, rowsAll:Math.ceil((nDraw + nSpok) / 12),
+      mx:mq ? f1(mq.x + G.s + G.g / 2) : 0, mRowY:mq ? mq.y : 0, lastY:gy0 + (rows - 1) * p};
+  }
+  function paint(plot, w){
+    setD(plot, 'gev', w.gev); setD(plot, 'gevp', w.gev); setD(plot, 'geb', w.geb); setD(plot, 'tom', w.tom); setD(plot, 'spok', w.spok);
+  }
+  function rowLabel(G, k, top){
+    return '<span class="lrn-tick y" style="top:' + f1(top + k * G.p + (G.s - 16) / 2) + 'px;width:' + (G.gx0 - 10) + 'px">' + window.hvtLearn.t('lrnRefiYear', 'År {n}', {n:k + 1}) + '</span>';
+  }
+
+  function render(d){
+    var L = window.hvtLearn, kr = L.kr, t = L.t;
+    raw = d;
+    var mine = !!d && !(d.P === DEF.P && d.years === DEF.years && d.oldRate === DEF.oldRate && d.newRate === DEF.newRate && d.est === DEF.est && d.ting === DEF.ting && d.same === DEF.same);
+    if(!d) d = DEF;
+    // Bryteren følger avkrysningen i kalkulatoren, men kan vise det andre valget uten å endre den
+    if(d.same !== lastSame){ bank = d.same ? 'samme' : 'ny'; lastSame = d.same; }
+    var samme = bank === 'samme', kost = d.est + (samme ? 0 : d.ting);
+    var r = refi(d.P, d.years, d.oldRate, d.newRate, kost), rk = refi(KP, KAAR, d.oldRate, d.newRate, kost);
+
+    // Uten bredde (skjult eller midt i en omlegging) blir målingene feil: vent på neste størrelse
+    var W = plotA.clientWidth;
+    if(!W){ lastW = 0; return; }
+    lastW = W;
+    var G = geo(W), years = Math.ceil(r.n / 12);
+
+    // ── Merket for break-even øverst. Høyden måles, og rutene starter under det. ──
+    var labA = q('labelsA'), mk = '', eksTxt = L.dec(r.eks, 1);
+    if(r.spar > 0){
+      var t1 = r.be > r.n
+        ? t('lrnRefiMarkLate', 'Break-even i måned {be}, men lånet er nedbetalt etter {n}.', {be:r.be, n:r.n})
+        : t('lrnRefiMark', 'Måned {be}: gebyret er tjent inn', {be:r.be});
+      var t2 = t('lrnRefiMark2', '{kost} kr i gebyrer tilsvarer {eks} måneders besparelse', {kost:kr(kost), eks:eksTxt});
+      mk = '<span class="lrn-lbk" data-k="mk" style="top:' + G.top + 'px;width:' + (G.wide ? 340 : W) + 'px"><span class="lrn-lab">' + t1 + '</span><span class="lrn-lab ref" style="font-weight:400">' + t2 + '</span></span>';
+    }
+    labA.innerHTML = mk;
+    var mkEl = labA.querySelector('[data-k="mk"]'), mkH = mkEl ? mkEl.offsetHeight : 0;
+    var gy0 = Math.max(G.gy0, G.top + mkH + 18);
+
+    // ── Hovedrutenettet. På smal skjerm vises bare årene fram til break-even, resten som én stripe. ──
+    var nDraw = r.n, stripe = null;
+    if(!G.wide){
+      var shown = Math.min(years, Math.max(2, r.be ? Math.ceil(r.be / 12) : 2));
+      if(shown < years){ nDraw = shown * 12; stripe = {from:shown + 1, mnd:r.n - nDraw}; }
+    }
+    var w = nett(r, nDraw, G, gy0), p = G.p, lab = '', k;
+    paint(plotA, w);
+    for(k = 0; k < w.rows; k++){
+      var yr = k + 1;
+      if(!G.wide || yr === 1 || yr % 5 === 0 || yr === w.rows) lab += rowLabel(G, k, gy0);
+    }
+    var stripeY = gy0 + w.rows * p;
+    var stripeD = stripe ? rute(G.gx0, stripeY, G.gridW, G.s) : '';
+    setD(plotA, 'stripe', stripeD); setD(plotA, 'stripep', stripeD);
+    setD(plotA, 'mark', w.isTom ? '' : 'M' + w.mx + ',' + f1(G.top + mkH + 4) + ' V' + f1(w.mRowY + G.s + 3));
+    if(mkEl){ mkEl.style.left = f1(G.wide ? Math.max(0, Math.min(w.mx - 1, W - 340)) : 0) + 'px'; }
+    if(w.isTom) lab += '<span class="lrn-lab txt" style="left:' + G.gx0 + 'px;top:' + (gy0 + 60) + 'px;width:' + G.gridW + 'px;text-align:center;font-size:14px;font-weight:500">' + L.ph('Ingen besparelse å fylle rutene med') + '</span>';
+
+    // Netto etter siste måned: ved siste rad (bred skjerm) eller under spøkelsesrutene
+    var slutt = r.net >= 0
+      ? {pre:t('lrnRefiEnd', 'Etter {n} måneder:', {n:r.n}), val:t('lrnRefiNet', '{belop} kr netto', {belop:kr(r.net)})}
+      : {pre:t('lrnRefiEnd', 'Etter {n} måneder:', {n:r.n}), val:t('lrnRefiLoss', 'Tap: {belop} kr', {belop:kr(-r.net)})};
+    var endBelow = w.nSpok > 0, boxH, after = '';
+    if(G.wide){
+      var endLeft = endBelow ? G.gx0 : G.gx0 + G.gridW + 14;
+      var endTop = endBelow ? gy0 + w.rowsAll * p + 6 : Math.max(gy0, f1(w.lastY + G.s - 42));
+      if(!w.isTom) lab += '<span class="lrn-lbk" style="left:' + endLeft + 'px;top:' + endTop + 'px;gap:4px"><span class="lrn-lab txt" style="white-space:nowrap;font-size:12.5px">' + slutt.pre + '</span><span class="lrn-lab big">' + slutt.val + '</span></span>';
+      boxH = Math.max(gy0 + w.rowsAll * p - G.g + (endBelow ? 50 : 8), w.isTom ? 0 : endTop + 48);
+    } else {
+      boxH = gy0 + w.rowsAll * p + (stripe ? p : 0) - G.g;
+      if(stripe) after += '<span>' + t('lrnRefiStripe', 'År {fra}–{til}: {n} måneder, {belop} kr', {fra:stripe.from, til:years, n:stripe.mnd, belop:kr(r.spar * stripe.mnd)}) + '</span>';
+      if(!w.isTom) after += '<span>' + slutt.pre + ' ' + strong(slutt.val) + '</span>';
+    }
+    if(w.isTom) boxH = Math.max(boxH, gy0 + 120);
+    plotA.style.height = boxH + 'px';
+    plotA.querySelector('svg').setAttribute('viewBox', '0 0 ' + W + ' ' + boxH);
+    labA.insertAdjacentHTML('beforeend', lab);
+    setHtml('after', after);
+
+    // ── Sammenligningen ──
+    var WB = plotB.clientWidth || W, GB = geo(WB), wk = nett(rk, rk.n, GB, 0), labB = '';
+    paint(plotB, wk);
+    for(k = 0; k < wk.rows; k++) labB += rowLabel(GB, k, 0);
+    var hB = wk.rowsAll * GB.p - GB.g;
+    plotB.style.height = hB + 'px';
+    plotB.querySelector('svg').setAttribute('viewBox', '0 0 ' + WB + ' ' + hB);
+    q('labelsB').innerHTML = labB;
+    setHtml('kSpar', t('lrnRefiKSpar', 'Samme renter og gebyrer som over gir {belop} spart per måned.', {belop:strong(kr(Math.max(0, rk.spar)) + ' kr')}));
+    set('kTekst', wk.isTom ? L.ph('Ingen besparelse å fylle rutene med.')
+      : rk.be > rk.n
+        ? t('lrnRefiKLate', 'Break-even i måned {be}, men lånet er nedbetalt etter {n}. Tap: {belop} kr.', {be:rk.be, n:rk.n, belop:kr(-rk.net)})
+        : t('lrnRefiKOk', 'Gebyret er tjent inn i måned {be} av {n}. Netto: {belop} kr.', {be:rk.be, n:rk.n, belop:kr(rk.net)}));
+
+    // ── Nøkkeltall, sammenligningsraden og teksttilsvarende versjon ──
+    set('spar', kr(Math.max(0, r.spar)));
+    setHtml('cmp', t('lrnRefiCmp', 'Gebyrene er like store i begge rutenettene. Det som skiller, er hva renteforskjellen er verdt i kroner hver måned: {a} mot {b}.',
+      {a:strong(kr(Math.max(0, r.spar)) + ' kr'), b:strong(kr(Math.max(0, rk.spar)) + ' kr')}));
+    var sumA = w.isTom
+      ? t('lrnRefiSumTom', 'Den nye renten er ikke lavere enn den gamle, så det er ingen besparelse å fylle rutene med.')
+      : r.be > r.n
+        ? t('lrnRefiSumLate', 'Du sparer {spar} kr i måneden, men gebyrene på {kost} kr blir ikke tjent inn før lånet er nedbetalt. Tap: {tap} kr.', {spar:kr(r.spar), kost:kr(kost), tap:kr(-r.net)})
+        : t('lrnRefiSum', 'Du sparer {spar} kr i måneden. Gebyrene på {kost} kr er tjent inn i måned {be} av {n}, og netto gevinst blir {net} kr.', {spar:kr(r.spar), kost:kr(kost), be:r.be, n:r.n, net:kr(r.net)});
+    var sumB = wk.isTom ? '' : ' ' + (rk.be > rk.n
+      ? t('lrnRefiSumKLate', 'På et lån med 300 000 kr og 2 år igjen sparer du {spar} kr i måneden, og gebyrene blir aldri tjent inn.', {spar:kr(rk.spar)})
+      : t('lrnRefiSumKOk', 'På et lån med 300 000 kr og 2 år igjen sparer du {spar} kr i måneden, og gebyrene er tjent inn i måned {be}.', {spar:kr(rk.spar), be:rk.be}));
+    set('sum', sumA + sumB);
+
+    // Merket og bryteren
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    set('stateText', kr(d.P) + ' kr · ' + t('lrnYears', '{n} år', {n:d.years}) + ' · ' + pct(d.oldRate) + ' % → ' + pct(d.newRate) + ' %' + (samme ? ' · ' + L.ph('samme bank') : ''));
+    root.querySelectorAll('.lrn-seg button').forEach(function(bt){ bt.setAttribute('aria-pressed', bt.getAttribute('data-bank') === bank ? 'true' : 'false'); });
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-refi');
+    if(!root || !window.hvtLearn) return;
+    plotA = q('plotA'); plotB = q('plotB');
+    root.querySelectorAll('.lrn-seg button').forEach(function(bt){
+      bt.addEventListener('click', function(){ bank = bt.getAttribute('data-bank'); render(raw); });
+    });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plotA.clientWidth !== lastW) schedule(); }).observe(plotA);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._refi || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 

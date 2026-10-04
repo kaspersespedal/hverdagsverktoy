@@ -56,6 +56,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Maks lån — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/lonnut/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -169,149 +170,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  /* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap), så
-     de dro hele siden ut i sidelengs scroll — opptil 380px på finance.
-     Samme scroll-wrapper-mønster som .bd-table-wrap/.pv-tblwrap. */
-  .lc-trinn{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -494,64 +352,84 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: boliglan-maxlan =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-boliglan-maxlan">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-maxlan">Hvordan maks lån bygges opp</h2><p class="lc-intro">Maks lån er den laveste av to grenser: 5 ganger inntekten minus annen gjeld, og 9 ganger egenkapitalen. Med 650&nbsp;000&nbsp;kr i inntekt og 500&nbsp;000&nbsp;kr i egenkapital blir det 3&nbsp;250&nbsp;000&nbsp;kr.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Grense fra inntekt</b><span class="tag">Grense</span></span><span class="fig">5<span class="u">× inntekt</span></span><p class="dsc">Total gjeld kan ikke være over 5 ganger brutto årsinntekt. Kalkulatoren regner 5 × inntekt og trekker fra gjelden du har fra før.</p></div>
-        <div class="lc-led"><span class="nm"><b>Grense fra egenkapital</b><span class="tag">Faktor</span></span><span class="fig">9<span class="u">× EK</span></span><p class="dsc">Du må ha minst 10 % egenkapital. Når egenkapitalen er 10 % av prisen, er lånet 90 %, altså 9 ganger egenkapitalen. Derfor ganges sparepengene dine med 9.</p></div>
-        <div class="lc-led"><span class="nm"><b>Annen gjeld trekkes fra</b><span class="tag">Fradrag</span></span><span class="fig">1<span class="u">kr per kr</span></span><p class="dsc">Studielån, billån og forbrukslån trekkes krone for krone fra inntektsgrensen. Hver krone gjeld du har, er én krone mindre du kan låne til bolig.</p></div>
-        <div class="lc-led"><span class="nm"><b>Den strengeste binder</b><span class="tag">Mekanisme</span></span><span class="fig">min<span class="u">av to</span></span><p class="dsc">Maks lån er det laveste av de to grensene. Kalkulatoren viser hvilken som stopper deg — lav inntekt eller lav egenkapital.</p></div>
-        <div class="lc-led"><span class="nm"><b>Maks boligpris</b><span class="tag">Sum</span></span><span class="fig">lån + EK<span class="u">kr</span></span><p class="dsc">Boligprisen du har råd til er maks lån pluss egenkapitalen din. Egenkapitalen blir en del av kjøpesummen, ikke noe på toppen.</p></div>
+  <div class="lrn" id="lrn-maxlan">
+    <section class="lrn-sec" aria-labelledby="lrn-maxlan-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-maxlan-h">Du kan låne det laveste av to tak</h2>
+        <p class="lrn-lede">Banken regner ett tak fra inntekten og ett fra egenkapitalen, og bare det laveste teller. Stopper inntekten deg, hjelper det ikke å spare mer.</p>
+      </div>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">650&nbsp;000 kr inntekt · 0 kr annen gjeld · 500&nbsp;000 kr egenkapital</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+      </div>
+      <div class="lrn-figrow">
+        <figure class="lrn-fig" aria-describedby="lrn-maxlan-sum">
+          <figcaption class="lrn-cap">Største lån etter hver av de to reglene, i kroner</figcaption>
+          <div class="lrn-plot is-static" dir="ltr">
+            <svg aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lrn-maxlan-pb" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-pat" x1="0" y1="0" x2="0" y2="6"/></pattern>
+                <pattern id="lrn-maxlan-pr" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-ps-a" x1="0" y1="0" x2="0" y2="5"/><line class="lrn-pat" x1="0" y1="0" x2="0" y2="5"/></pattern>
+              </defs>
+              <path class="lrn-grid" data-p="grid"/>
+              <path class="lrn-a2" data-p="band"/>
+              <path class="lrn-a1b" data-p="rom"/>
+              <path fill="url(#lrn-maxlan-pr)" data-p="romp"/>
+              <path class="lrn-a1" data-p="bar"/>
+              <path fill="url(#lrn-maxlan-pb)" data-p="barp"/>
+              <path class="lrn-base" data-p="base"/>
+              <path class="lrn-ref" data-p="brutto"/>
+              <path class="lrn-lead" data-p="bracket"/>
+              <path class="lrn-dash" data-p="upper"/>
+              <path class="lrn-lk" data-p="lower"/>
+            </svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+      </div>
+      <div class="lrn-box">
+        <span class="lrn-card-l">Maks boligpris</span>
+        <div class="lrn-f n"><span><strong data-lrn="pLan">3&nbsp;250&nbsp;000 kr</strong> lån</span><span>+</span><span><strong data-lrn="pEk">500&nbsp;000 kr</strong> egenkapital</span><span>=</span><b data-lrn="pPris">3&nbsp;750&nbsp;000 kr</b></div>
+        <p class="lrn-p" data-lrn="dok">Kjøper du selveier til 3&nbsp;750&nbsp;000 kr, kommer 93&nbsp;750 kr i <a href="/boliglan/dok/">dokumentavgift</a> i tillegg.</p>
+      </div>
+      <p class="lrn-sr" id="lrn-maxlan-sum" data-lrn="sum"></p>
+      <div class="lrn-sr"><table>
+        <caption>De to takene for lånet</caption>
+        <thead><tr><th scope="col">Tak</th><th scope="col">Utregning</th><th scope="col">Beløp</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Inntektstaket</th><td data-lrn="tIc"></td><td data-lrn="tIv"></td></tr>
+          <tr><th scope="row">Egenkapitaltaket</th><td data-lrn="tEc"></td><td data-lrn="tEv"></td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section class="lrn-sec lrn-also" aria-labelledby="lrn-maxlan-x">
+      <h3 class="lrn-h3" id="lrn-maxlan-x">Det tallet ikke tar med</h3>
+      <ul>
+        <li><strong>Stresstesten er ikke med.</strong> Banken sjekker også at du tåler en høyere rente, og da kan lånet bli lavere. Se hva renten gjør med månedsbeløpet i <a href="/boliglan/mor/">Boliglånskalkulatoren</a>.</li>
+        <li><strong>Banken ser også på budsjettet ditt.</strong> Den sjekker at du har nok igjen til faste utgifter hver måned. Sett det opp i <a href="/personlig/budsjett/">Budsjett</a>.</li>
+      </ul>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-maxlan-q">
+      <h3 class="lrn-h3" id="lrn-maxlan-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvorfor ganges sparepengene mine med 9?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Fordi kravet er minst 10&nbsp;% egenkapital. Når egenkapitalen er 10&nbsp;% av prisen, utgjør lånet 90&nbsp;%. Da er lånet ni ganger så stort som egenkapitalen. Har du 500&nbsp;000 kr i egenkapital, gir det rom for inntil 4&nbsp;500&nbsp;000 kr i lån fra denne regelen.</p></div></details>
+        <details><summary>Kan banken låne meg mer enn fem ganger inntekten?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Noen ganger. Inntil 10&nbsp;% av bankens utlån kan bryte grensene, den såkalte fleksibilitetskvoten. Derfor får noen mer enn fem ganger inntekten, men du kan ikke regne med det.</p></div></details>
+        <details><summary>Teller studielånet mitt mot hvor mye jeg kan låne?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja. Studielån, billån og forbrukslån trekkes fra inntektstaket krone for krone. Hver krone du nedbetaler av annen gjeld, frigjør én krone i lånekapasitet til bolig.</p></div></details>
+        <details><summary>Får jeg garantert lånet kalkulatoren viser?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Nei. Tallet er den øvre rammen etter utlånsforskriften. Banken gjør sin egen vurdering i tillegg, så du kan få mindre, men sjelden mer.</p></div></details>
+        <details><summary>Hva regnes som egenkapital?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Sparing, BSU, arv, gave fra familie og gevinst fra salg av forrige bolig. BSU-saldoen teller som egenkapital, men ikke som gjeld.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcB-boliglan-maxlan">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-boliglan-maxlan">Grensene i Utlånsforskriften</h2><p class="lc-intro">Utlånsforskriften er reglene banken må følge når du låner til bolig.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Maks gjeld mot inntekt (§ 6)</span><span class="v">5<span class="u">× inntekt</span></span></div>
-        <div class="lc-kv"><span class="k">Minste egenkapital (§ 7)</span><span class="v">10<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Egenkapital ganges med</span><span class="v">9<span class="u">×</span></span></div>
-        <div class="lc-kv"><span class="k">Stresstest, renteøkning (§ 5)</span><span class="v">3<span class="u">prosentpoeng</span></span></div>
-        <div class="lc-kv"><span class="k">Stresstest, minste rente (§ 5)</span><span class="v">7<span class="u">%</span></span></div>
-      </div>
-      <div class="lc-card">
-        <span class="ttl">Andre regler</span>
-        <div class="lc-kv"><span class="k">Egenkapital sekundærbolig</span><span class="v">10<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Fleksibilitetskvote, lån som kan avvike</span><span class="v">10<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Dokumentavgift på kjøpesum</span><span class="v">2,5<span class="u">%</span></span></div>
-      </div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcC-boliglan-maxlan">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-maxlan">Det som ikke står i tallet</h2><p class="lc-intro">Kalkulatoren gir en ramme, ikke en garanti.</p></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Banken kan avvike i noen tilfeller</h3><p>Reglene gjelder vanlige lån, men inntil 10 % av bankens utlån kan bryte grensene (fleksibilitetskvote). Det betyr at noen får mer enn 5× inntekt, men du kan ikke regne med det.</p></div>
-        <div class="lc-note"><h3>Banken stresstester også renten</h3><p>Banken sjekker at du tåler renten pluss 3 prosentpoeng, minst 7&nbsp;% (utlånsforskriften §&nbsp;5). Den testen er ikke med her. Se den i boliglånskalkulatoren.</p></div>
-        <div class="lc-note"><h3>Husk kostnader oppå prisen</h3><p>Maks boligpris dekker ikke dokumentavgift (2,5 % av kjøpesummen) og tinglysing. Sett av ekstra penger til disse, ellers spiser de av egenkapitalen din.</p></div>
-        <div class="lc-note"><h3>Sekundærbolig følger nå samme krav</h3><p>Utlånsforskriften har ikke lenger et eget egenkapitalkrav for sekundærbolig — Oslo-særregelen (40 %) ble opphevet i 2023. Men banker kan sette egne, strengere krav for bolig nummer to. Kalkulatoren bruker det generelle kravet (10 %).</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-boliglan-maxlan">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-boliglan-maxlan">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvorfor ganges sparepengene mine med 9?</summary><div class="a"><p>Fordi kravet er minst 10 % egenkapital. Når egenkapitalen er 10 % av prisen, utgjør lånet 90 %. Da er lånet ni ganger så stort som egenkapitalen. Har du 500 000 kr i egenkapital, gir det rom for inntil 4,5 millioner i lån fra denne regelen.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr begrensende faktor?</summary><div class="a"><p>Det viser hvilken av de to reglene som stopper deg. Står det 5× inntekt, er det inntekten som binder — da hjelper mer egenkapital lite. Står det 10 % egenkapital, mangler du sparepenger, og høyere inntekt hjelper ikke.</p></div></details>
-        <details class="lc-q"><summary>Teller studielånet mitt mot hvor mye jeg kan låne?</summary><div class="a"><p>Ja. Studielån, billån og forbrukslån trekkes fra inntektsgrensen krone for krone. Hver krone du nedbetaler av annen gjeld, frigjør én krone i lånekapasitet til bolig.</p></div></details>
-        <details class="lc-q"><summary>Får jeg garantert lånet kalkulatoren viser?</summary><div class="a"><p>Nei. Kalkulatoren viser den øvre rammen etter Utlånsforskriften. Banken sjekker i tillegg at du tåler renten pluss 3 prosentpoeng, minst 7&nbsp;%, og at du har nok igjen til faste utgifter. Du kan få mindre, men sjelden mer.</p></div></details>
-        <details class="lc-q"><summary>Hva regnes som egenkapital?</summary><div class="a"><p>Sparing, BSU, arv, gave fra familie og gevinst fra salg av forrige bolig. BSU-saldoen teller som egenkapital, men ikke som gjeld.</p></div></details>
-        <details class="lc-q"><summary>Hva er maks boligpris i forhold til maks lån?</summary><div class="a"><p>Maks boligpris er lånet pluss egenkapitalen din. Egenkapitalen er en del av kjøpesummen — den kommer ikke på toppen av prisen. Husk at dokumentavgift og tinglysing kommer i tillegg.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-boliglan-maxlan">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-boliglan-maxlan">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/boliglan/mor/"><span class="ar">Nedbetaling →</span><h3>Boliglånskalkulator</h3><p>Når du vet hvor mye du kan låne: se hva det koster i måneden og hvor lang nedbetalingstid du trenger.</p></a>
-        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Lag et budsjett</h3><p>Sjekk om du faktisk har råd til lånet etter husleie, mat og faste utgifter — det banken også ser på.</p></a>
-        <a class="lc-link" href="/boliglan/dok/"><span class="ar">Dokumentavgift →</span><h3>Dokumentavgift</h3><p>Regn ut de 2,5 % i avgift og tinglysing som kommer oppå kjøpesummen, så du ikke tømmer egenkapitalen.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-maxlan-r">
+      <h3 class="lrn-h3" id="lrn-maxlan-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/boliglan/mor/"><span><span class="t">Boliglånskalkulator</span><span class="d">Når du vet hvor mye du kan låne: se hva det koster i måneden og hvor lang nedbetalingstid du trenger.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/dok/"><span><span class="t">Dokumentavgift</span><span class="d">Regn ut de 2,5&nbsp;% i avgift og tinglysing som kommer oppå kjøpesummen, så du ikke tømmer egenkapitalen.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/budsjett/"><span><span class="t">Budsjett</span><span class="d">Sjekk om du faktisk har råd til lånet etter husleie, mat og faste utgifter, slik banken også gjør.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -571,8 +449,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v245"></script>
-<script defer src="/shared/core.js?v=v230"></script>
+<script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -609,7 +488,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     return {
       hasData: true, maxLan: maxLan, maxPris: maxPris,
       gjeldsgrad: gjeldsgrad, ekAndel: ekAndel, binding: binding,
-      ek: ek
+      inntekt: inntekt, gjeld: gjeld, ek: ek
     };
   }
 
@@ -642,6 +521,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var verd0 = document.getElementById('maxlanVerdict');
       if(verd0) verd0.textContent = r.maxlanEmpty || 'Skriv inn inntekt og egenkapital for å se beregningen.';
       clearBar();
+      window._maxlan = null;
+      if(window.hvtLearn) hvtLearn.update('boliglan-maxlan', null);
       persist();
       return;
     }
@@ -670,6 +551,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     }
 
     renderBar(d);
+    window._maxlan = {inntekt:d.inntekt, gjeld:d.gjeld, ek:d.ek};
+    if(window.hvtLearn) hvtLearn.update('boliglan-maxlan', window._maxlan);
     persist();
   }
 
@@ -708,6 +591,215 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       if((typeof R==='function' && R().maxlanSubGjeldsgrad) || n>40){ clearInterval(t); recalc(); }
     }, 80);
   })();
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Du kan låne det laveste av to tak»: de to takene fra utlånsforskriften
+//    som linjer, maks lån som søyle og lånerommet over den. Tallene kommer fra recalc via hvtLearn. ──
+(function(){
+  var KEY = 'boliglan-maxlan';
+  // Standardverdiene i feltene over. Så lenge alle står slik, er merket «Eksempel».
+  var DEF = {inntekt:650000, gjeld:0, ek:500000};
+  var STEPS = [500000,1000000,2000000,2500000,5000000,10000000,20000000,25000000,50000000,100000000];
+  var root, plot, svg, lastW = 0, queued = false, raw = null, ctx;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setHtml(name, s){ var el = q(name); if(el) el.innerHTML = s; }
+  function setD(name, d){ svg.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function b(s){ return '<b>' + s + '</b>'; }
+  // Bredden på en etikett, så sirklene kan flyttes fri av den
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  // Legger etiketter nedenfra og opp: hver så nær ønsket plass som mulig, uten å overlappe den under
+  function pushUp(items, floor, gap){
+    items.slice().sort(function(a, c){ return c.want - a.want; }).forEach(function(it){ it.top = f1(Math.min(it.want, floor - it.h)); floor = it.top - gap; });
+  }
+
+  // Geometri fra faktisk bredde. Bred: tall til venstre, søylen mot høyre og en tekstsone ytterst.
+  // Smal: ingen akse, kortere etiketter og spakene i merknadene under.
+  function geo(){
+    var W = plot.clientWidth, g;
+    if(W >= 600){
+      g = {W:W, wide:true, H:Math.round(Math.max(380, Math.min(470, W * 0.56))), x0:72, y0:60, R:9};
+      g.y1 = g.H - 30; g.rzW = 146; g.rz0 = W - g.rzW; g.bw = 136; g.bx0 = g.rz0 - 18 - g.bw;
+      g.lz0 = g.x0 + 8; g.lzW = Math.max(160, Math.min(350, g.bx0 - 66 - g.lz0));
+      g.mkU = g.bx0 - 51; g.mkL = g.bx0 - 23;
+    } else {
+      g = {W:W, wide:false, H:280, x0:0, y0:30, y1:262, R:10};
+      g.bw = Math.min(112, Math.round(W * 0.31)); g.bx0 = W - 6 - g.bw;
+      g.mkU = g.bx0 - 36; g.mkL = g.bx0 - 12;
+    }
+    return g;
+  }
+
+  function render(d){
+    var L = window.hvtLearn, kr = L.kr, t = L.t, ph = L.ph;
+    raw = d;
+    var mine = !!d && !(d.inntekt === DEF.inntekt && d.gjeld === DEF.gjeld && d.ek === DEF.ek);
+    if(!d) d = DEF;
+    var inntekt = d.inntekt, gjeld = d.gjeld, ek = d.ek;
+
+    // Samme regnestykke som compute() over
+    var takI = Math.max(0, 5 * inntekt - gjeld), takE = ek * 9, maxLan = Math.min(takI, takE), bindI = takI <= takE;
+    var maxPris = maxLan + ek, dok = maxPris * 0.025, brutto = 5 * inntekt, hoy = Math.max(takI, takE), rom = hoy - maxLan;
+    var harGjeld = gjeld > 0, harRom = rom >= 1;
+
+    // Uten bredde (skjult eller midt i en omlegging) måles etikettene feil: vent på neste størrelse
+    if(!plot.clientWidth){ lastW = 0; return; }
+    var g = geo(), W = g.W;
+    plot.style.height = g.H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + g.H);
+    lastW = W;
+
+    // Akse fra 0 til høyeste tak + 10 %, rundet opp til en halv million (5 × inntekt skal også få plass)
+    var yMax = Math.max(500000, Math.ceil(Math.max(hoy * 1.1, brutto) / 500000) * 500000);
+    function Y(v){ return f1(g.y1 - v / yMax * (g.y1 - g.y0)); }
+    var yB = Y(0), yL = Y(maxLan), yU = Y(hoy), yBr = Y(brutto), yTI = Y(takI);
+    var bx0 = g.bx0, bx1 = g.bx0 + g.bw, yTop = harGjeld ? Math.min(yU, yBr) : yU;
+    function line(y){ return 'M' + g.x0 + ',' + y + ' H' + W; }
+    function box(xa, xb, ya, yb){ return 'M' + xa + ',' + ya + ' H' + xb + ' V' + yb + ' H' + xa + ' Z'; }
+
+    var grid = '', lab = '', v, step = STEPS[STEPS.length - 1];
+    for(v = 0; v < STEPS.length; v++) if(yMax / STEPS[v] <= 6){ step = STEPS[v]; break; }
+    if(g.wide){
+      for(v = step; v <= yMax; v += step) grid += line(Y(v)) + ' ';
+      for(v = 0; v <= yMax; v += step) lab += '<span class="lrn-tick y" style="top:' + f1(Y(v) - 8) + 'px;width:' + (g.x0 - 8) + 'px">' + kr(v) + '</span>';
+    }
+    setD('grid', grid);
+    setD('band', harGjeld ? box(g.x0, W, yBr, yTI) : '');
+    setD('rom', harRom ? box(bx0, bx1, yU, yL) : ''); setD('romp', harRom ? box(bx0, bx1, yU, yL) : '');
+    setD('bar', maxLan > 0 ? box(bx0, bx1, yL, yB) : ''); setD('barp', maxLan > 0 ? box(bx0, bx1, yL, yB) : '');
+    setD('base', line(yB));
+    setD('brutto', harGjeld ? line(yBr) : '');
+    setD('bracket', (g.wide && yL - yU >= 6) ? 'M' + (bx1 + 5) + ',' + yU + ' H' + (bx1 + 10) + ' V' + yL + ' H' + (bx1 + 5) : '');
+    setD('upper', line(yU));
+    setD('lower', line(yL));
+
+    // De to takene: navn, utregning og hva som flytter dem
+    var inn = {k:'inn', name:ph('Inntektstaket'), val:kr(takI) + ' kr',
+      calc:harGjeld ? t('lrnMaxCalcIG', '5 × {inntekt} kr − {gjeld} kr annen gjeld', {inntekt:kr(inntekt), gjeld:kr(gjeld)}) : t('lrnMaxCalcI', '5 × {inntekt} kr', {inntekt:kr(inntekt)}),
+      levers:[ph('+100 000 kr inntekt løfter taket 500 000 kr'), ph('1 kr annen gjeld senker taket 1 kr')],
+      leverM:ph('+100 000 kr inntekt løfter inntektstaket 500 000 kr, og 1 kr annen gjeld senker det 1 kr.')};
+    var egn = {k:'egn', name:ph('Egenkapitaltaket'), val:kr(takE) + ' kr',
+      calc:t('lrnMaxCalcE', '9 × {ek} kr', {ek:kr(ek)}),
+      levers:[ph('+100 000 kr egenkapital løfter taket 900 000 kr')],
+      leverM:ph('+100 000 kr egenkapital løfter egenkapitaltaket 900 000 kr.')};
+    var low = bindI ? inn : egn, upp = bindI ? egn : inn;
+
+    // Byttepunktene: der det andre taket ville tatt over
+    var ekBytte = b(kr(takI / 9) + ' kr'), innBytte = b(kr((takE + gjeld) / 5) + ' kr'), bpU, bpL;
+    if(bindI){
+      bpU = t('lrnMaxBpEkUnder', 'Under {belop} i egenkapital er det egenkapitalen som stopper deg.', {belop:ekBytte});
+      bpL = t('lrnMaxBpInnOver', 'Over {belop} i inntekt er det egenkapitalen som stopper deg.', {belop:innBytte});
+    } else {
+      bpU = t('lrnMaxBpInnUnder', 'Under {belop} i inntekt er det inntekten som stopper deg.', {belop:innBytte});
+      bpL = t('lrnMaxBpEkOver', 'Over {belop} i egenkapital er det inntekten som stopper deg.', {belop:ekBytte});
+    }
+    // Står et tak på null, er byttepunktet meningsløst: si hva som mangler i stedet
+    if(takI === 0 && takE === 0){ bpU = ''; bpL = t('lrnMaxZeroBoth', 'Uten egenkapital, og med annen gjeld på minst fem ganger inntekten, gir ingen av reglene rom for boliglån.'); }
+    else if(takE === 0){ bpU = ''; bpL = t('lrnMaxZeroEk', 'Uten egenkapital gir kravet om 10 % egenkapital ikke rom for boliglån. Hver krone du sparer, gir 9 kr i lånerom.'); }
+    else if(takI === 0){ bpU = ''; bpL = t('lrnMaxZeroInn', 'Annen gjeld er minst fem ganger inntekten, så inntektsregelen gir ikke rom for boliglån.'); }
+
+    var upRight = 0, loRight = 0;
+    var romTxt = b(kr(rom) + ' kr'), bandTxt = t('lrnMaxBand', 'Annen gjeld: {belop} kr', {belop:kr(-gjeld)});
+    function lblock(o, k, style){
+      return '<span class="lrn-lbk" data-k="' + k + '" style="' + style + '"><span class="lrn-lab">' + o.name + '</span><span class="lrn-lab ref">' + o.calc + ' = ' + o.val + '</span>'
+        + o.levers.map(function(s){ return '<span class="lrn-lab sub">' + s + '</span>'; }).join('') + '</span>';
+    }
+    if(g.wide){
+      // Øvre tak over linja (og over 5 × inntekt), nedre tak under linja. Høydene måles etter innsetting.
+      lab += lblock(upp, 'up', 'left:' + g.lz0 + 'px;bottom:' + f1(g.H - (yTop - 6)) + 'px;max-width:' + g.lzW + 'px');
+      lab += lblock(low, 'lo', 'left:' + g.lz0 + 'px;top:' + f1(yL + 8) + 'px;max-width:' + g.lzW + 'px');
+      lab += '<span class="lrn-lab" data-k="stop" style="left:' + g.rz0 + 'px;top:' + f1(yL + 6) + 'px;width:' + (g.rzW + 12) + 'px;white-space:normal">' + ph('Dette taket stopper deg') + '</span>';
+      if(harRom) lab += '<span class="lrn-lab txt" data-k="rom" style="left:' + g.rz0 + 'px;top:0;width:' + g.rzW + 'px;visibility:hidden">'
+        + t(bindI ? 'lrnMaxRomI' : 'lrnMaxRomE', bindI ? '{belop} lånerom du ikke får bruke før inntekten øker' : '{belop} lånerom du ikke får bruke før egenkapitalen øker', {belop:romTxt}) + '</span>';
+      if(harGjeld) lab += '<span class="lrn-lab txt" data-k="band" style="left:' + g.rz0 + 'px;top:0;width:' + g.rzW + 'px;visibility:hidden">' + bandTxt + '</span>';
+      lab += '<span class="lrn-tag" style="left:' + (bx0 + 12) + 'px;top:' + f1(Math.min(yL + 12, yB - 58)) + 'px"><span class="l">' + ph('Maks lån') + '</span><span class="v">' + kr(maxLan) + ' <span class="lrn-u">kr</span></span></span>';
+    } else {
+      // Smal skjerm: navn og beløp på én linje til venstre, over linja når det er plass
+      var lowAnchor = (bindI && harGjeld && yBr > yU + 1) ? yBr : yL, over = lowAnchor - yU >= 22, LF = '600 11px Inter, system-ui, sans-serif';
+      var loTop = f1(over ? lowAnchor - 18 : yL + 5), upTop = f1(Math.min(yTop - 18, over ? loTop - 18 : yTop - 18));
+      function one(o, top){ return '<span class="lrn-lab txt" style="left:0;top:' + top + 'px;white-space:nowrap"><b>' + o.name + '</b> ' + o.val + '</span>'; }
+      lab += one(upp, upTop) + one(low, loTop);
+      upRight = textW(upp.name + ' ' + upp.val, LF); loRight = textW(low.name + ' ' + low.val, LF);
+      lab += '<span class="lrn-lab" style="left:0;top:' + f1(over ? yL + 5 : yL + 22) + 'px;font-size:11px">' + ph('Dette taket stopper deg') + '</span>';
+      if(harRom) lab += '<span class="lrn-lab txt" data-k="rom" style="left:' + bx0 + 'px;top:0;width:' + g.bw + 'px;text-align:center;line-height:14px;visibility:hidden">' + romTxt + '<br>' + ph('ubrukt lånerom') + '</span>';
+      if(harGjeld) lab += '<span class="lrn-lab txt" data-k="band" style="right:0;top:0;white-space:nowrap;visibility:hidden">' + bandTxt + '</span>';
+      lab += '<span class="lrn-tag" style="left:' + (bx0 + 6) + 'px;top:' + f1(Math.min(yL + 8, yB - 46)) + 'px"><span class="l">' + ph('Maks lån') + '</span><span class="v">' + kr(maxLan) + ' <span class="lrn-u">kr</span></span></span>';
+    }
+
+    // Nummererte sirkler på de to linjene, fri av etikettene til venstre
+    var notes = [], mkU = Math.max(g.mkU, upRight ? upRight + 6 + g.R : 0), mkL = Math.max(g.mkL, loRight ? loRight + 6 + g.R : 0);
+    function mk(x, y, n){ return '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(x - g.R) + 'px;top:' + f1(y - g.R) + 'px">' + n + '</span>'; }
+    var noteU = g.wide ? bpU : upp.leverM + (bpU ? ' ' + bpU : ''), noteL = g.wide ? bpL : low.leverM + (bpL ? ' ' + bpL : '');
+    if(noteU){ notes.push(noteU); lab += mk(mkU, yU, notes.length); }
+    if(noteL){ notes.push(noteL); lab += mk(mkL, yL, notes.length); }
+    var labels = q('labels');
+    labels.innerHTML = lab;
+    q('notes').innerHTML = notes.map(function(s, i){ return '<li><span class="lrn-mk" aria-hidden="true">' + (i + 1) + '</span><span>' + s + '</span></li>'; }).join('');
+
+    // Andre pass: mål det som brytes over linjer, og legg det på plass
+    function el(k){ return labels.querySelector('[data-k="' + k + '"]'); }
+    if(g.wide){
+      var lo = el('lo'), up = el('up'), loH = lo.offsetHeight;
+      if(yL + 8 + loH > yB - 2){
+        // Ikke plass under det nedre taket: begge blokkene over linjene, den nedre nærmest
+        lo.style.top = 'auto'; lo.style.bottom = f1(g.H - (yL - 6)) + 'px';
+        up.style.bottom = f1(g.H - (Math.min(yTop, yL - loH - 6) - 6)) + 'px';
+      }
+    }
+    var items = [], rzRom = el('rom'), rzBand = el('band'), stop = el('stop'), floor = yL - 3;
+    // Står det nedre taket nesten på null, får «Dette taket stopper deg» plass over linja i stedet
+    if(stop && yL + 6 + stop.offsetHeight > yB - 2){ floor = yL - 6 - stop.offsetHeight; stop.style.top = f1(floor) + 'px'; floor -= 4; }
+    if(rzRom) items.push({el:rzRom, want:(yU + yL) / 2 - rzRom.offsetHeight / 2, h:rzRom.offsetHeight});
+    // Gjeldsbåndet: etiketten midt i båndet når det er tykt nok, ellers like over den prikkede linja
+    if(rzBand){ var bh = rzBand.offsetHeight; items.push({el:rzBand, want:(g.wide && yTI - yBr >= bh + 4) ? (yBr + yTI) / 2 - bh / 2 : yBr - bh - 2, h:bh}); }
+    pushUp(items, floor, g.wide ? 4 : 3);
+    items.forEach(function(it){ it.el.style.top = it.top + 'px'; it.el.style.visibility = ''; });
+
+    // Maks boligpris og teksttilsvarende versjon
+    set('pLan', kr(maxLan) + ' kr'); set('pEk', kr(ek) + ' kr'); set('pPris', kr(maxPris) + ' kr');
+    setHtml('dok', t('lrnMaxDok', 'Kjøper du selveier til {pris} kr, kommer {dok} kr i <a href="/boliglan/dok/">dokumentavgift</a> i tillegg.', {pris:kr(maxPris), dok:kr(dok)}));
+    set('sum', takI === takE
+      ? t('lrnMaxSumEq', 'Begge takene er på {tak} kr, så du kan låne {lan} kr.', {tak:kr(takI), lan:kr(maxLan)})
+      : bindI
+        ? t('lrnMaxSumI', 'Inntektstaket på {i} kr er lavere enn egenkapitaltaket på {e} kr, så du kan låne {lan} kr.', {i:kr(takI), e:kr(takE), lan:kr(maxLan)})
+        : t('lrnMaxSumE', 'Egenkapitaltaket på {e} kr er lavere enn inntektstaket på {i} kr, så du kan låne {lan} kr.', {i:kr(takI), e:kr(takE), lan:kr(maxLan)}));
+    set('tIc', inn.calc); set('tIv', inn.val); set('tEc', egn.calc); set('tEv', egn.val);
+
+    // Merket
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    set('stateText', t('lrnMaxState', '{inntekt} kr inntekt · {gjeld} kr annen gjeld · {ek} kr egenkapital', {inntekt:kr(inntekt), gjeld:kr(gjeld), ek:kr(ek)}));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-maxlan');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
+    // Hold over en merknad: sirkelen i grafen fremheves
+    var list = q('notes');
+    list.addEventListener('mouseover', function(e){
+      var li = e.target.closest && e.target.closest('li'); if(!li) return;
+      var i = Array.prototype.indexOf.call(list.children, li);
+      root.querySelectorAll('.lrn-labels .lrn-mk').forEach(function(mk, j){ mk.classList.toggle('is-hot', j === i); });
+    });
+    list.addEventListener('mouseleave', function(){
+      root.querySelectorAll('.lrn-labels .lrn-mk.is-hot').forEach(function(mk){ mk.classList.remove('is-hot'); });
+    });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._maxlan || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 

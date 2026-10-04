@@ -23,7 +23,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v230" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v231" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -235,44 +235,11 @@ footer em{font-style:italic}
   .bud-sum-cell .v{font-size:22px}
 }
 
-/* ── Innsikt: utgiftsfordeling + 50/30/20 ── */
-.bud-insight{margin:0 0 64px}
-.bud-insight[hidden]{display:none}
-.bud-insight-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:18px;flex-wrap:wrap}
-.bud-insight-head h3{margin:0;font-family:var(--font-serif);font-weight:500;font-size:19px;letter-spacing:-.2px;color:var(--ink)}
-.bud-insight-sub{font:400 12px/1.4 var(--font-sans);color:var(--ink4)}
-.bud-breakdown{display:flex;flex-direction:column;gap:2px;margin-bottom:26px}
-.bd-row{display:grid;grid-template-columns:minmax(86px,1.15fr) minmax(0,2.4fr) auto 48px;gap:14px;align-items:center;padding:9px 2px;border-bottom:1px solid color-mix(in srgb,var(--ink) 5%,transparent)}
-.bd-row:last-child{border-bottom:none}
-.bd-label{font:500 13px/1.3 var(--font-sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.bd-bar{height:8px;border-radius:5px;background:var(--mark-bg);overflow:hidden;min-width:0}
-.bd-fill{display:block;height:100%;border-radius:5px;background:color-mix(in srgb,var(--accent) 36%,transparent);transition:width .35s var(--ease)}
-.bd-row.bd-top .bd-fill{background:var(--accent)}
-.bd-val{font:500 13px/1 var(--font-sans);font-variant-numeric:tabular-nums;color:var(--ink2);text-align:right;white-space:nowrap}
-.bd-pct{font:400 12px/1 var(--font-sans);font-variant-numeric:tabular-nums;color:var(--ink4);text-align:right;white-space:nowrap}
-.bud-rule{border:1px solid var(--line);border-radius:9px;padding:18px 20px;background:var(--hover-bg-soft)}
-.bud-rule[hidden]{display:none}
-.br-head{font:600 11px/1.3 var(--font-sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink2);margin-bottom:15px}
-.br-head span{text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink4)}
-.br-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
-.br-cell{display:flex;flex-direction:column;gap:6px;text-align:center;padding:2px 14px;border-right:1px solid var(--line)}
-.br-cell:last-child{border-right:none}
-.br-l{font:500 11px/1.3 var(--font-sans);color:var(--ink3)}
-.br-v{font-family:var(--font-serif);font-weight:500;font-size:24px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
-.br-mal{font:400 11px/1 var(--font-sans);color:var(--ink4)}
-.br-note{font:400 11.5px/1.5 var(--font-sans);color:var(--ink4);margin-top:15px;max-width:72ch}
-@media (max-width:560px){
-  .bd-row{grid-template-columns:minmax(70px,1fr) auto 44px;gap:10px}
-  .bd-bar{display:none}
-  .br-cells{grid-template-columns:1fr;gap:0}
-  .br-cell{border-right:none;border-bottom:1px solid var(--line);flex-direction:row;justify-content:space-between;align-items:baseline;padding:11px 0;text-align:left}
-  .br-cell:last-child{border-bottom:none}
-  .br-v{font-size:19px}
-}
 @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important}}
 </style>
 
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <link rel="stylesheet" href="/shared/themes.css?v=v10">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
 <link rel="stylesheet" href="/shared/components.css?v=v6">
@@ -280,8 +247,9 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 
 <script defer src="/shared/atmosphere.js?v=v5"></script>
-<script defer src="/shared/core.js?v=v230"></script>
+<script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script defer src="/shared/search-intents.js?v=v124"></script>
 <script defer src="/shared/search.js?v=v131"></script>
 
@@ -386,14 +354,59 @@ footer em{font-style:italic}
       <div id="budCalcWrap" aria-live="polite"></div>
     </section>
 
-    <section class="bud-insight" id="budInsight" aria-label="Innsikt i budsjettet" hidden>
-      <div class="bud-insight-head">
-        <h3>Slik fordeler budsjettet seg</h3>
-        <span class="bud-insight-sub">Oppdateres mens du fyller inn</span>
-      </div>
-      <div class="bud-breakdown" id="budBreakdown"></div>
-      <div class="bud-rule" id="budRule" hidden></div>
-    </section>
+    <!-- =============== LAER-INNHOLD: personlig-budsjett =============== -->
+    <div class="lrn" id="lrn-bu">
+      <section class="lrn-sec" aria-labelledby="lrn-bu-h">
+        <div class="lrn-head">
+          <h2 class="lrn-h2" id="lrn-bu-h">Faste utgifter bestemmer hvor mye du kan spare</h2>
+          <p class="lrn-lede">Hver rute er 1&nbsp;% av inntekten din. Bakgrunnen viser 50/30/20-regelen, rutene viser budsjettet ditt.</p>
+        </div>
+        <div class="lrn-bar">
+          <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">Lønn etter skatt 37&nbsp;985&nbsp;kr og boliglån 18&nbsp;423&nbsp;kr, standardverdiene i minikalkulatorene</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        </div>
+        <figure class="lrn-fig" aria-describedby="lrn-bu-sum" data-lrn="fig">
+          <figcaption class="lrn-cap">Månedsinntekten som hundre ruter, i leserekkefølge fra øverst til venstre</figcaption>
+          <div class="lrn-plot is-static" dir="ltr">
+            <svg aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lrn-bu-sk" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-bu-pb" x="0" y="0" width="5" height="5"/><line class="lrn-bu-sl" x1="0" y1="0" x2="0" y2="5"/></pattern>
+                <pattern id="lrn-bu-pr" width="6" height="6" patternUnits="userSpaceOnUse"><rect class="lrn-bu-pb" x="0" y="0" width="6" height="6"/><circle class="lrn-bu-pd" cx="3" cy="3" r="1.8"/></pattern>
+                <pattern id="lrn-bu-ov" width="6" height="6" patternUnits="userSpaceOnUse"><rect class="lrn-bu-pb" x="0" y="0" width="6" height="6"/><path class="lrn-bu-px" d="M0,0 L6,6 M6,0 L0,6"/></pattern>
+              </defs>
+              <path class="lrn-bu-b2" data-p="bandA"/>
+              <path class="lrn-bu-b1" data-p="bandB"/>
+              <path class="lrn-bu-b2" data-p="bandC"/>
+              <path class="lrn-bu-base" data-p="base"/>
+              <path class="lrn-bu-f" data-p="faste"/>
+              <path class="lrn-bu-v" fill="url(#lrn-bu-sk)" data-p="var"/>
+              <path class="lrn-bu-s" fill="url(#lrn-bu-pr)" data-p="spar"/>
+              <path class="lrn-bu-o" data-p="overs"/>
+              <path class="lrn-bu-x" fill="url(#lrn-bu-ov)" data-p="over"/>
+              <path class="lrn-bu-div" data-p="div"/>
+              <path class="lrn-bu-lead" data-p="lead"/>
+            </svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <div class="lrn-tbl is-flat lrn-bu-leg" data-lrn="legw" hidden><div data-lrn="leg"></div></div>
+        <div class="lrn-bu-ann" data-lrn="ann" hidden></div>
+        <p class="lrn-p" data-lrn="noinn" hidden>Legg inn inntekt for å se fordelingen.</p>
+        <p class="lrn-fine">Regelen deler i behov og ønsker, budsjettet ditt i faste og varierende utgifter. Mat er et behov selv om beløpet varierer, så les sonene som et grovt mål.</p>
+        <details class="lrn-tbl lrn-bu-tbl" data-lrn="tblw">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div data-lrn="tbl"></div>
+        </details>
+        <p class="lrn-sr" id="lrn-bu-sum" aria-live="polite" data-lrn="sr"></p>
+      </section>
+
+      <section class="lrn-sec lrn-bu-top" aria-labelledby="lrn-bu-t" data-lrn="top">
+        <h3 class="lrn-h3" id="lrn-bu-t">Største poster</h3>
+        <div class="lrn-tbl is-flat"><div><table aria-label="Største poster blant utgiftene">
+          <thead><tr><th scope="col" class="s">Post</th><th scope="col">Kroner per måned</th><th scope="col">Andel av utgiftene</th><th scope="col" class="b"></th></tr></thead>
+          <tbody data-lrn="topRows"></tbody>
+        </table></div></div>
+      </section>
+    </div>
 
   </div>
   </div>
@@ -887,64 +900,8 @@ footer em{font-style:italic}
       aEl.textContent = sign + fmtKrPlain(Math.abs(diff * 12)) + ' kr';
       aEl.classList.toggle('neg', neg);
     }
-    renderInsight(inn, fasteSum, varSum, diff);
-  }
-
-  // ── Innsikt: utgiftsfordeling (sorterte søyler) + 50/30/20-tommelregel ──
-  function renderInsight(inn, fasteSum, varSum, diff){
-    var section = document.getElementById('budInsight');
-    if(!section) return;
-    var ut = fasteSum + varSum;
-    if(ut <= 0){ section.hidden = true; return; }
-    section.hidden = false;
-
-    var posts = [];
-    ['faste','variable'].forEach(function(k){
-      (budState[k] || []).forEach(function(r){
-        var val = parseInt(r.v,10) || 0;
-        if(val > 0) posts.push({ l: (r.l && r.l.trim()) ? r.l : '(uten navn)', v: val });
-      });
-    });
-    posts.sort(function(a,b){ return b.v - a.v; });
-    var rows = posts.slice(0, 8);
-    var restSum = posts.slice(8).reduce(function(s,p){ return s + p.v; }, 0);
-    if(restSum > 0) rows.push({ l:'Øvrige poster', v: restSum });
-    var maxV = rows.length ? rows[0].v : 1;
-
-    var bd = document.getElementById('budBreakdown');
-    if(bd){
-      bd.innerHTML = rows.map(function(p, i){
-        var pct = Math.round(p.v / ut * 100);
-        var w = Math.max(3, Math.round(p.v / maxV * 100));
-        return '<div class="bd-row'+(i === 0 ? ' bd-top' : '')+'">'
-          + '<span class="bd-label">'+escapeHtml(p.l)+'</span>'
-          + '<span class="bd-bar"><span class="bd-fill" style="width:'+w+'%"></span></span>'
-          + '<span class="bd-val">'+fmtKr(p.v)+'</span>'
-          + '<span class="bd-pct">'+pct+' %</span>'
-          + '</div>';
-      }).join('');
-    }
-
-    var rule = document.getElementById('budRule');
-    if(rule){
-      if(inn <= 0){ rule.hidden = true; rule.innerHTML = ''; return; }
-      rule.hidden = false;
-      var pF = Math.round(fasteSum / inn * 100);
-      var pV = Math.round(varSum / inn * 100);
-      var pS = Math.round(diff / inn * 100);
-      var cells = [
-        ['Faste (behov)', pF, 'mål ≤ 50 %'],
-        ['Variable (ønsker)', pV, 'mål ≤ 30 %'],
-        ['Til sparing', pS, 'mål ≥ 20 %']
-      ].map(function(c){
-        return '<div class="br-cell"><span class="br-l">'+c[0]+'</span>'
-          + '<span class="br-v">'+(c[1] < 0 ? '−' : '')+Math.abs(c[1])+' %</span>'
-          + '<span class="br-mal">'+c[2]+'</span></div>';
-      }).join('');
-      rule.innerHTML = '<div class="br-head">Tommelregel 50/30/20 <span>— veiledende fordeling av inntekten</span></div>'
-        + '<div class="br-cells">'+cells+'</div>'
-        + '<div class="br-note">En forenklet tommelregel basert på dine tre kolonner — ikke en fasit. Lån og avdrag regnes vanligvis som «behov».</div>';
-    }
+    window._budsjett = {inntekt:budState.inntekt, faste:budState.faste, variable:budState.variable};
+    if(window.hvtLearn) hvtLearn.update('personlig-budsjett', window._budsjett);
   }
 
   renderBudget();
@@ -956,6 +913,7 @@ footer em{font-style:italic}
     var field = e.target.dataset.field;
     if(field === 'l'){
       budState[col][idx].l = e.target.value;
+      if(window.hvtLearn) hvtLearn.update('personlig-budsjett', window._budsjett);
     } else if(field === 'v'){
       var raw = (e.target.value || '').replace(/[^\d\-]/g,'');
       budState[col][idx].v = parseInt(raw,10) || 0;
@@ -1572,6 +1530,262 @@ footer em{font-style:italic}
     w.document.open(); w.document.write(html); w.document.close();
     setTimeout(function(){ try{ w.focus(); w.print(); }catch(_){}; }, 250);
   });
+})();
+</script>
+<script>
+// ── Forklaringsblokken «Faste utgifter bestemmer hvor mye du kan spare»: månedsinntekten som
+//    hundre ruter, fylt i leserekkefølge med faste utgifter, utgifter som varierer, sparing og det
+//    som er til overs. Bakgrunnsbåndene er 50/30/20-regelen. Poster som heter «Sparing …» telles
+//    som sparing, ikke som utgift. Tallene kommer fra recalcBudget via hvtLearn. ──
+(function(){
+  var KEY = 'personlig-budsjett';
+  // Budsjettet starter tomt. Da viser blokka standardverdiene fra minikalkulatorene for lønn og boliglån.
+  var EX = {inntekt:[{l:'Lønn etter skatt', v:37985}], faste:[{l:'Boliglån', v:18423}], variable:[]};
+  var SANS = 'Inter, system-ui, sans-serif';
+  var NB = '\u00a0';
+  var root, plot, svg, raw = null, lastW = 0, queued = false, ctx;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setD(name, d){ svg.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function f2(v){ return Math.round(v * 100) / 100; }
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function R(x, y, w, h){ return 'M' + f2(x) + ',' + f2(y) + ' h' + f2(w) + ' v' + f2(h) + ' h' + f2(-w) + ' Z '; }
+  function num(v){ return parseInt(v, 10) || 0; }
+  function isSpar(l){ return /^spar/i.test(String(l || '').trim()); }
+
+  function render(d){
+    var L = window.hvtLearn, t = L.t, ph = L.ph;
+    raw = d;
+    var all = d ? ['inntekt', 'faste', 'variable'].reduce(function(s, k){ return s + (d[k] || []).reduce(function(a, r){ return a + Math.abs(num(r.v)); }, 0); }, 0) : 0;
+    var mine = all > 0;
+    var p = mine ? d : EX;
+    function kr(v){ return L.kr(v) + NB + 'kr'; }
+    function pct1(v){ return L.dec(Math.round(v * 10) / 10, 1) + NB + '%'; }
+
+    // Gruppene
+    var inn = (p.inntekt || []).reduce(function(a, r){ return a + num(r.v); }, 0);
+    var posts = [], fasteSum = 0, varSum = 0, sparSum = 0, nF = 0, nV = 0;
+    ['faste', 'variable'].forEach(function(col){
+      (p[col] || []).forEach(function(r){
+        var v = num(r.v);
+        if(v <= 0) return;
+        if(col === 'faste') nF++; else nV++;
+        if(isSpar(r.l)){ sparSum += v; return; }
+        if(col === 'faste') fasteSum += v; else varSum += v;
+        posts.push({l:r.l && r.l.trim() ? r.l : ph('(uten navn)'), v:v});
+      });
+    });
+    var ut = fasteSum + varSum, tot = ut + sparSum, hasInn = inn > 0;
+    var cF = hasInn ? fasteSum / inn * 100 : 0, cV = hasInn ? varSum / inn * 100 : 0, cS = hasInn ? sparSum / inn * 100 : 0;
+    var cur = 0;
+    function take(cells){ var a = cur; cur = Math.min(100, cur + cells); return [a, cur]; }
+    var iF = take(cF), iV = take(cV), iS = take(cS), iO = [cur, 100];
+    var shortCells = hasInn ? Math.max(0, cF + cV + cS - 100) : 0;
+    var shortKr = Math.max(0, tot - inn), overs = hasInn ? Math.max(0, inn - tot) : 0;
+    var names = [ph('Faste utgifter'), ph('Utgifter som varierer'), ph('Satt av til sparing'), ph('Til overs')];
+    var amt = [fasteSum, varSum, sparSum, overs], ints = [iF, iV, iS, iO];
+
+    // Merknadene ved sonegrensene
+    var only = (p.faste || []).filter(function(r){ return !isSpar(r.l) && num(r.v) > 0; });
+    var a50 = '', a80 = '';
+    if(hasInn && fasteSum > 0){
+      // Ønske-sonen har 30 ruter og spare-sonen 20. Går utgiftene lenger, sier merknaden at sonen er full.
+      if(cF > 80.5) a50 = ph('Faste utgifter fyller hele ønske-sonen');
+      else if(cF > 50.5){ var n50 = Math.round(cF - 50); a50 = t('lrnBuA50Over', n50 === 1 ? 'Faste utgifter går {n} rute inn i ønske-sonen' : 'Faste utgifter går {n} ruter inn i ønske-sonen', {n:n50}); }
+      else if(cF <= 50){
+        var fill = String(Math.floor(cF + 1e-9));
+        a50 = only.length === 1 && /^boliglån$/i.test(only[0].l.trim())
+          ? t('lrnBuA50Mort', 'Boliglånet alene fyller {n} av 50 behov-ruter', {n:fill})
+          : t('lrnBuA50Fill', 'Faste utgifter fyller {n} av 50 behov-ruter', {n:fill});
+      }
+    }
+    if(hasInn && cF + cV >= 100) a80 = ph('Utgiftene fyller hele spare-sonen');
+    else if(hasInn && cF + cV > 80.5){ var n80 = Math.round(cF + cV - 80); a80 = t('lrnBuA80', n80 === 1 ? 'Utgiftene går {n} rute inn i spare-sonen' : 'Utgiftene går {n} ruter inn i spare-sonen', {n:n80}); }
+
+    q('fig').hidden = !hasInn;
+    q('noinn').hidden = hasInn;
+    if(hasInn) draw();
+
+    function draw(){
+      var W = plot.clientWidth;
+      if(!W){ lastW = 0; return; }
+      lastW = W;
+      var ZF = '600 13px ' + SANS, LF = '600 13px ' + SANS, VF = '400 12.5px ' + SANS, AF = '500 12.5px ' + SANS;
+      var zn = [ph('Behov 50 %'), ph('Ønsker 30 %'), ph('Sparing 20 %')];
+      var lw = 0;
+      ints.forEach(function(iv, g){ if(iv[1] - iv[0] > 1e-6 && !(g === 3 && overs <= 0)) lw = Math.max(lw, textW(names[g], LF) + 8 + textW(kr(amt[g]) + ' · ' + pct1(amt[g] / inn * 100), VF)); });
+      [a50, a80].forEach(function(a){ if(a) lw = Math.max(lw, textW(a, AF)); });
+      var shortT = shortCells > 0 ? t('lrnBuShort', 'Mangler {belop} i måneden', {belop:kr(shortKr)}) : '';
+      if(shortT) lw = Math.max(lw, textW(shortT, '600 13px ' + SANS));
+      var zw = Math.max.apply(null, zn.map(function(z){ return textW(z, ZF); }));
+      // Ruter med sonenavn til venstre og etiketter til høyre når det er plass, ellers mobiloppsettet
+      var gx0 = Math.max(120, zw + 30);
+      var pD = Math.floor((W - gx0 - 34 - lw - 4) / 10);
+      var mob = pD < 30;
+      var G = mob ? {p:Math.min(36, Math.floor((W - 18) / 10)), gap:3.5, gy0:26, head:24, overGap:8, gx0:9}
+                  : {p:Math.min(44, pD), gap:2.5, gy0:34, head:0, overGap:10, gx0:gx0};
+      var cw = G.p - G.gap, chh = cw;
+      function band(r){ return r < 5 ? 0 : (r < 8 ? 1 : 2); }
+      function xOf(c){ return G.gx0 + c * G.p; }
+      function yOf(r){
+        if(r >= 10) return G.gy0 + G.head * 3 + r * G.p + G.overGap;
+        return G.gy0 + G.head * (band(r) + 1) + r * G.p;
+      }
+      function slice(a, b){
+        var s = '';
+        if(b - a < 1e-6) return s;
+        for(var k = Math.floor(a + 1e-9); k < Math.ceil(b - 1e-9); k++){
+          var s0 = Math.max(a, k), e0 = Math.min(b, k + 1);
+          if(e0 - s0 < 1e-6) continue;
+          s += R(xOf(k % 10) + (s0 - k) * cw, yOf(Math.floor(k / 10)), (e0 - s0) * cw, chh);
+        }
+        return s;
+      }
+      var base = '', r, c;
+      for(r = 0; r < 10; r++) for(c = 0; c < 10; c++) base += R(xOf(c), yOf(r), cw, chh);
+      var gridR = xOf(9) + cw, gridB = yOf(9) + chh;
+      function bandD(r0, r1){ return R(xOf(0) - 5, yOf(r0) - G.gap / 2 - 2, gridR - xOf(0) + 10, yOf(r1) + chh - yOf(r0) + 4 + G.gap / 2); }
+      // Overtrekket står under rammen, høyst ti rader
+      var shown = Math.min(shortCells, 100), overRows = shown > 0 ? Math.ceil(shown / 10) : 0;
+      var H = Math.round(gridB + 18 + (overRows ? overRows * G.p + G.overGap : 0));
+      var lab = '', lead = '', div = '';
+      function blk(x, y, s, cls, w, align){
+        return '<span class="lrn-bul' + (cls ? ' ' + cls : '') + '" style="left:' + f2(x) + 'px;top:' + f2(y) + 'px' + (w ? ';width:' + w + 'px;text-align:' + align : '') + '">' + esc(s) + '</span>';
+      }
+      if(!mob){
+        // Sonenavn til venstre og stiplede skillelinjer mellom båndene
+        var zy = [yOf(0) + 2.5 * G.p, yOf(5) + 1.5 * G.p, yOf(8) + G.p];
+        zn.forEach(function(z, i){ lab += blk(0, zy[i] - 9, z); });
+        var dy = [yOf(5) - G.gap / 2, yOf(8) - G.gap / 2];
+        dy.forEach(function(y){ div += 'M' + f2(gx0 - 20) + ',' + f2(y) + ' H' + f2(gridR + 22) + ' '; });
+        var fixed = [];
+        if(a50){ lab += blk(gridR + 34, dy[0] - 9, a50, 'a'); fixed.push(dy[0]); }
+        if(a80){ lab += blk(gridR + 34, dy[1] - 9, a80, 'a'); fixed.push(dy[1]); }
+        lab += blk(xOf(0), 0, t('lrnBuCell', '1 rute = {belop}', {belop:kr(Math.round(inn / 100))}));
+        // Gruppenavnet ved siste rute, med ledelinje langs mellomrommet mellom radene
+        var items = [];
+        ints.forEach(function(iv, g){
+          if(iv[1] - iv[0] < 1e-6 || (g === 3 && overs <= 0)) return;
+          var last = Math.ceil(iv[1] - 1e-9) - 1, rr = Math.floor(last / 10), cc = last % 10;
+          var s0 = Math.max(iv[0], last), cx = xOf(cc) + ((s0 + iv[1]) / 2 - last) * cw;
+          var above = !(rr === 5 || rr === 8);
+          var gy = above ? yOf(rr) - G.gap / 2 : yOf(rr) + chh + G.gap / 2;
+          items.push({g:g, cx:cx, ey:above ? yOf(rr) : yOf(rr) + chh, gy:gy, y:gy});
+        });
+        items.sort(function(a, b){ return a.y - b.y; });
+        // Etikettene skyves ned forbi hverandre og forbi merknadene ved sonegrensene
+        var prev = -1e9;
+        items.forEach(function(it){
+          it.y = Math.max(it.y, prev + 26);
+          for(var k = 0; k < 4; k++) fixed.forEach(function(fy){ if(Math.abs(it.y - fy) < 22) it.y = fy + 22; });
+          prev = it.y;
+        });
+        var trunk = gridR + 14;
+        items.forEach(function(it){
+          lab += '<span class="lrn-bun" style="left:' + f2(gridR + 34) + 'px;top:' + f2(it.y - 9) + 'px"><b>' + esc(names[it.g]) + '</b><span>' + esc(kr(amt[it.g]) + ' · ' + pct1(amt[it.g] / inn * 100)) + '</span></span>';
+          lead += 'M' + f2(it.cx) + ',' + f2(it.ey) + ' V' + f2(it.gy) + ' H' + f2(trunk) + (Math.abs(it.y - it.gy) > 0.5 ? ' V' + f2(it.y) : '') + ' H' + f2(gridR + 28) + ' ';
+        });
+        if(items.length && items[items.length - 1].y + 20 > H) H = Math.round(items[items.length - 1].y + 22);
+      } else {
+        // Mobil: små mellomtitler over hvert bånd
+        [[zn[0], 0], [zn[1], 5], [zn[2], 8]].forEach(function(h){ lab += blk(xOf(0), yOf(h[1]) - G.head + 2, h[0], 'm'); });
+        var ct = t('lrnBuCell', '1 rute = {belop}', {belop:kr(Math.round(inn / 100))});
+        lab += blk(gridR - 220, 2, ct, 'm r', 220, 'right');
+      }
+      // Overtrekk under rammen
+      var over = '';
+      if(shown > 0){
+        for(var k = 100; k < Math.ceil(100 + shown - 1e-9); k++){
+          var e0 = Math.min(100 + shown, k + 1);
+          over += R(xOf(k % 10), yOf(Math.floor(k / 10)), (e0 - k) * cw, chh);
+        }
+        var lastRow = 10 + overRows - 1;
+        var capT = shortCells > 100 ? ph('Bare de første 100 rutene vises') : '';
+        if(!mob){
+          lab += blk(gridR + 34, yOf(10) + 4, shortT, 's');
+          if(capT) lab += blk(gridR + 34, yOf(10) + 24, capT, 'c');
+        } else {
+          lab += blk(xOf(0), yOf(lastRow) + chh + 8, shortT, 's');
+          if(capT) lab += blk(xOf(0), yOf(lastRow) + chh + 28, capT, 'c');
+        }
+        H = Math.round(Math.max(H, yOf(lastRow) + chh + (mob ? (capT ? 54 : 36) : 14)));
+        if(!mob && capT) H = Math.max(H, Math.round(yOf(10) + 44));
+      }
+      setD('bandA', bandD(0, 4)); setD('bandB', bandD(5, 7)); setD('bandC', bandD(8, 9));
+      setD('base', base);
+      setD('faste', slice(iF[0], iF[1])); setD('var', slice(iV[0], iV[1])); setD('spar', slice(iS[0], iS[1]));
+      setD('overs', overs > 0 ? slice(iO[0], iO[1]) : '');
+      setD('over', over); setD('div', div); setD('lead', lead);
+      q('labels').innerHTML = lab;
+      plot.style.height = H + 'px';
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+      // Tabellen: under grafen på mobil, bak «Vis som tabell» ellers
+      var sw = ['f', 'v', 's', 'o'], mal = [ph('høyst 50 %'), ph('høyst 30 %'), ph('minst 20 %'), ''];
+      var rows = '';
+      for(var g = 0; g < 4; g++){
+        var on = g === 3 ? true : amt[g] > 0;
+        if(!on) continue;
+        var navn = names[g], k2 = kr(amt[g]), p2 = pct1(amt[g] / inn * 100), s = sw[g];
+        if(g === 3 && shortKr > 0){ navn = ph('Mangler'); k2 = '−' + kr(shortKr); p2 = '−' + pct1(shortKr / inn * 100); s = 'x'; }
+        rows += '<tr><td class="sw"><span class="lrn-bsw ' + s + '"></span></td><th scope="row">' + esc(navn) + '</th><td>' + k2 + '</td><td class="p">' + p2 + '</td>' + (mob ? '' : '<td class="p">' + mal[g] + '</td>') + '</tr>';
+      }
+      var head = '<thead><tr><th scope="col" colspan="2" class="s">' + ph('Gruppe') + '</th><th scope="col">' + ph('Kroner per måned') + '</th><th scope="col">' + ph('Andel av inntekten') + '</th>' + (mob ? '' : '<th scope="col">' + ph('Regelens mål') + '</th>') + '</tr></thead>';
+      var tbl = '<table aria-label="' + esc(ph('Budsjettet i hundre ruter, per gruppe')) + '">' + head + '<tbody>' + rows + '</tbody></table>';
+      q(mob ? 'leg' : 'tbl').innerHTML = tbl;
+      q(mob ? 'tbl' : 'leg').innerHTML = '';
+      q('legw').hidden = !mob;
+      q('tblw').hidden = mob;
+      var ann = q('ann');
+      ann.hidden = !mob || !(a50 || a80);
+      ann.innerHTML = mob ? [a50, a80].filter(Boolean).map(function(a){ return '<p class="lrn-p">' + esc(a) + '</p>'; }).join('') : '';
+    }
+    if(!hasInn){ q('legw').hidden = true; q('tblw').hidden = true; q('ann').hidden = true; }
+
+    // Største poster, av utgiftene uten sparing
+    var sorted = posts.slice().sort(function(a, b){ return b.v - a.v; });
+    var top = sorted.slice(0, 8), rest = sorted.slice(8).reduce(function(s, x){ return s + x.v; }, 0);
+    if(rest > 0) top.push({l:ph('Øvrige poster'), v:rest});
+    var maxV = top.length ? top[0].v : 1;
+    q('top').hidden = !top.length;
+    q('topRows').innerHTML = top.map(function(x){
+      return '<tr><th scope="row">' + esc(x.l) + '</th><td>' + kr(x.v) + '</td><td class="p">' + Math.round(x.v / ut * 100) + NB + '%</td><td class="b"><span style="width:' + Math.max(3, Math.round(x.v / maxV * 100)) + '%"></span></td></tr>';
+    }).join('');
+
+    // Skjermlesersetningen
+    var sr = ph('Legg inn inntekt for å se fordelingen.');
+    if(hasInn){
+      var dpp = Math.round((cF - 50) * 10) / 10;
+      sr = Math.abs(dpp) < 0.05 ? t('lrnBuSrEq', 'Faste utgifter tar {p} av inntekten, akkurat regelens 50 %.', {p:pct1(cF)})
+        : t(dpp > 0 ? 'lrnBuSrOver' : 'lrnBuSrUnder', dpp > 0 ? 'Faste utgifter tar {p} av inntekten, {d} prosentpoeng over regelens 50 %.' : 'Faste utgifter tar {p} av inntekten, {d} prosentpoeng under regelens 50 %.', {p:pct1(cF), d:L.dec(Math.abs(dpp), 1), n:Math.abs(dpp)});
+      sr += ' ' + (shortKr > 0 ? t('lrnBuSrShort', 'Utgiftene og sparingen er {belop} mer enn inntekten.', {belop:kr(shortKr)})
+        : t('lrnBuSrLeft', 'Til overs er {belop}, {p} av inntekten.', {belop:kr(overs), p:pct1(overs / inn * 100)}));
+    }
+    set('sr', sr);
+    // Merket
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    set('stateText', mine
+      ? t('lrnBuMine', 'Inntekt {inn} · {f} · {v}', {inn:kr(inn),
+          f:t('lrnBuNF', nF === 1 ? '{n} fast post' : '{n} faste poster', {n:nF}),
+          v:t('lrnBuNV', nV === 1 ? '{n} post som varierer' : '{n} poster som varierer', {n:nV})})
+      : t('lrnBuEx', 'Lønn etter skatt {inn} og boliglån {lan}, standardverdiene i minikalkulatorene', {inn:kr(37985), lan:kr(18423)}));
+  }
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+  function init(){
+    root = document.getElementById('lrn-bu');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._budsjett || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 </body>

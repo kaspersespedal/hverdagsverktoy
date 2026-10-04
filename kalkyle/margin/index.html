@@ -72,6 +72,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Margin og påslag — kalkulator-skall (delt mønster med Kalkyle-seksjonen) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -126,102 +127,6 @@ body.focus-mode > footer{display:none}
 .ik-collapse{display:none}
 .ik-collapse.open{display:block}
 
-/* ── Worked examples (kk-examples) ── */
-.kk-examples{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media(max-width:820px){.kk-examples{grid-template-columns:1fr}}
-.kk-ex{display:flex;flex-direction:column;gap:6px}
-.kk-ex .lbl{font:600 12px/1.3 var(--font-sans);color:var(--ink2)}
-.kk-ex .desc{font-size:13px;line-height:1.55;color:var(--ink3)}
-.kk-ex .fig{margin-top:6px;font-family:var(--font-serif);font-weight:500;font-size:26px;line-height:1;
-  letter-spacing:-.5px;color:var(--accent-2);font-variant-numeric:tabular-nums lining-nums}
-.kk-ex .fig .u{font:500 12px/1 var(--font-sans);color:var(--ink3)}
-
-.kk-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px}
-.kk-steps li{display:flex;gap:14px;align-items:flex-start}
-.kk-steps .n{flex-shrink:0;font:500 12px/1.6 var(--font-mono);color:var(--ink4);width:18px}
-.kk-steps span:last-child{font-size:15px;line-height:1.65;color:var(--ink2)}
-.kk-steps b{color:var(--ink);font-weight:600}
-.kk-steps em{font-style:italic;color:var(--ink)}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.lc-trinn td .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Mobil: tre kolonner får ikke plass. Begrep og eksempel står på første linje, formelen under. */
-@media(max-width:560px){
-  .lc-stack,.lc-stack tbody,.lc-stack thead,.lc-stack thead tr,.lc-stack thead th{display:block}
-  .lc-stack thead th + th{display:none}
-  .lc-stack tbody tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
-  .lc-stack tbody tr:last-child{border-bottom:none}
-  .lc-tblwrap .lc-stack td,.lc-tblwrap .lc-stack td + td{border:0;padding:0}
-  .lc-tblwrap .lc-stack td:nth-child(2){grid-column:1 / -1;grid-row:2;padding-top:3px;font-size:12.5px;color:var(--ink3)}
-}
-
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:8px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-}
 </style>
 </head>
 <body>
@@ -433,71 +338,67 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 </div>
 
 <!-- =============== LAER-INNHOLD: kalkyle-margin =============== -->
+<!-- =============== LAER-INNHOLD: kalkyle-margin =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-kalkyle-margin">
-      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkMarginGuideKicker">Slik regner du</span><h2 class="lc-title" id="lcA-kalkyle-margin" data-i18n="kalkMarginGuideTitle">Påslag og margin er ikke det samme</h2></div>
-      <ol class="kk-steps">
-        <li><span class="n">01</span><span data-i18n-html="kalkMarginStep1"><b>Påslag</b> legges <em>på</em> varekosten. Kjøper du inn for 100 kr og legger på 60 %, blir prisen 160 kr.</span></li>
-        <li><span class="n">02</span><span data-i18n-html="kalkMarginStep2"><b>Margin</b> regnes <em>av</em> salgsprisen. De 60 kronene du tjener er 37,5 % av 160 kr.</span></li>
-        <li><span class="n">03</span><span data-i18n-html="kalkMarginStep3"><b>Regn eks. mva.</b> Merverdiavgiften er ikke din inntekt — legg den på helt til slutt.</span></li>
-      </ol>
-    </section>
-
-    <section class="lc-sec" aria-labelledby="lcB-kalkyle-margin">
-      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkMarginFormlerKicker">Formler</span><h2 class="lc-title" id="lcB-kalkyle-margin" data-i18n="kalkMarginFormlerTitle">Fra kostnad til pris</h2></div>
-      <div class="lc-tblwrap">
-      <table class="lc-trinn lc-stack">
-        <thead><tr><th data-i18n="kalkyleColBegrep">Begrep</th><th data-i18n="kalkyleColFormel">Formel</th><th class="r" data-i18n="kalkyleColEksempel">Eksempel</th></tr></thead>
-        <tbody>
-          <tr><td><span class="step" data-i18n="kalkMarginResBrutto">Bruttofortjeneste</span></td><td data-i18n="kalkMarginTF1b">Pris − Varekost − Andre variable</td><td class="r">160 − 100 − 0 = 60<span class="u">kr</span></td></tr>
-          <tr><td><span class="step" data-i18n="kalkMarginTBegrepDg">Dekningsgrad</span></td><td data-i18n="kalkMarginTF2">Bruttofortjeneste / pris × 100</td><td class="r">60 / 160 = 37,5<span class="u">%</span></td></tr>
-          <tr><td><span class="step" data-i18n="kalkMarginTBegrepAv">Avanse</span></td><td data-i18n="kalkMarginTF3">Bruttofortjeneste / varekost × 100</td><td class="r">60 / 100 = 60,0<span class="u">%</span></td></tr>
-          <tr><td><span class="step" data-i18n="kalkMarginTBegrepPm">Pris fra margin</span></td><td data-i18n="kalkMarginTF4b">(Varekost + Andre variable) / (1 − margin)</td><td class="r">(100 + 0) / 0,625 = 160<span class="u">kr</span></td></tr>
-          <tr><td><span class="step" data-i18n="kalkMarginTBegrepPi">Pris inkl. mva</span></td><td data-i18n="kalkMarginTF5">Pris uten mva × 1,25</td><td class="r">160 × 1,25 = 200<span class="u">kr</span></td></tr>
-        </tbody>
-      </table>
+  <div class="lrn" id="lrn-margin">
+    <section class="lrn-sec" aria-labelledby="lrn-margin-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-margin-h">Samme fortjeneste, to prosenter</h2>
+        <p class="lrn-lede">Påslaget måler fortjenesten mot det du betalte, marginen mot det kunden betaler. Derfor er påslaget alltid det høyeste tallet.</p>
       </div>
-    </section>
-
-    <section class="lc-sec" aria-labelledby="lcC-kalkyle-margin">
-      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleExKicker">Regnet ut</span><h2 class="lc-title" id="lcC-kalkyle-margin" data-i18n="kalkyleExTitle">Tre eksempler</h2></div>
-      <div class="kk-examples">
-        <div class="kk-ex">
-          <span class="lbl" data-i18n="kalkMarginEx1Lbl">Butikk · fast margin</span>
-          <span class="desc" data-i18n="kalkMarginEx1Desc">Varekost 100 kr, ønsket margin 40 %. Pris = 100 / (1 − 0,40).</span>
-          <span class="fig">167 <span class="u">kr</span></span>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">Varekost 100 kr · påslag 60 % · mva 25 %</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+      </div>
+      <figure class="lrn-fig" aria-describedby="lrn-margin-sum">
+        <figcaption class="lrn-cap">Én vare i kroner, fra 0 til pris inkl. mva</figcaption>
+        <div class="lrn-plot is-static" dir="ltr">
+          <svg aria-hidden="true" focusable="false">
+            <defs>
+              <pattern id="lrn-margin-pd" width="5" height="5" patternUnits="userSpaceOnUse"><circle class="lrn-dotq" cx="2.5" cy="2.5" r="1.1"/></pattern>
+              <pattern id="lrn-margin-ps" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-ps-a" x1="0" y1="0" x2="0" y2="5"/><line class="lrn-pat" x1="0" y1="0" x2="0" y2="5"/></pattern>
+            </defs>
+            <path class="lrn-a2k" data-p="vk"/>
+            <path class="lrn-a4" data-p="an"/>
+            <path fill="url(#lrn-margin-pd)" data-p="anp"/>
+            <path class="lrn-a1" data-p="pr"/>
+            <path fill="url(#lrn-margin-ps)" data-p="prp"/>
+            <path class="lrn-dashbox" data-p="mv"/>
+            <path class="lrn-brk" data-p="top"/>
+            <path class="lrn-brk" data-p="bot"/>
+          </svg>
+          <div class="lrn-labels" data-lrn="labels"></div>
         </div>
-        <div class="kk-ex">
-          <span class="lbl" data-i18n="kalkMarginEx2Lbl">Nettbutikk · påslag</span>
-          <span class="desc" data-i18n="kalkMarginEx2Desc">Varekost 100 kr, påslag 60 %. Margin blir 37,5 %.</span>
-          <span class="fig">160 <span class="u">kr</span></span>
-        </div>
-        <div class="kk-ex">
-          <span class="lbl" data-i18n="kalkMarginEx3Lbl">Kjent pris · finn margin</span>
-          <span class="desc" data-i18n="kalkMarginEx3Desc">Pris 249 kr, varekost 150 kr. Margin = 99 / 249.</span>
-          <span class="fig">39,8 <span class="u">%</span></span>
-        </div>
+      </figure>
+      <div class="lrn-legend" data-lrn="legend" hidden>
+        <div><svg width="24" height="14" viewBox="0 0 24 14" aria-hidden="true"><path class="lrn-brk" d="M1,12 V3 H23 V12"/></svg><div class="lrn-brlab" data-f="p"></div></div>
+        <div><svg width="24" height="14" viewBox="0 0 24 14" aria-hidden="true"><path class="lrn-brk" d="M1,2 V11 H23 V2"/></svg><div class="lrn-brlab" data-f="m"></div></div>
+      </div>
+      <p class="lrn-cmp">Legger du 40&nbsp;% på varekosten, får du <strong>28,6&nbsp;% margin</strong>. Vil du ha 40&nbsp;% margin, må du legge på <strong>66,7&nbsp;%</strong>, og en vare til 100 kr koster da 167 kr.</p>
+      <div class="lrn-ps">
+        <div class="lrn-convh"><h3 class="lrn-h3" id="lrn-margin-c">Fra påslag til margin</h3><p class="lrn-fq"><i>margin</i> = <i>påslag</i> ÷ (1 + <i>påslag</i>)</p></div>
+        <div class="lrn-convw"><table class="lrn-conv" aria-labelledby="lrn-margin-c" data-lrn="conv"></table></div>
+        <p class="lrn-fine" data-lrn="convNote"></p>
+      </div>
+      <p class="lrn-p"><strong>Vet du bare prisen:</strong> 249 kr med varekost 150 kr gir 99 kr i fortjeneste, 39,8&nbsp;% margin og 66&nbsp;% påslag.</p>
+      <p class="lrn-sr" id="lrn-margin-sum" data-lrn="sum"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-margin-q">
+      <h3 class="lrn-h3" id="lrn-margin-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Er avanse og påslag det samme?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja. Begge er fortjenesten i prosent av varekosten. «Avanse» er handelsordet, «påslag» det dagligdagse. På samme måte er dekningsgrad og margin to navn på fortjenesten i prosent av prisen.</p></div></details>
+        <details><summary>Skal mva være med i kalkylen?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Nei. Regn margin og påslag på priser eks. mva. Merverdiavgiften legges på salgsprisen til slutt og kreves inn på vegne av staten. Derfor står den stiplet utenfor begge klammene.</p></div></details>
       </div>
     </section>
 
-    <section class="lc-sec" aria-labelledby="lcD-kalkyle-margin">
-      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleFaqKicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-kalkyle-margin" data-i18n="kalkyleFaqTitle">Vanlige spørsmål</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary data-i18n="kalkMarginFaqQ1">Er avanse og påslag det samme?</summary><div class="a"><p data-i18n="kalkMarginFaqA1">Ja — begge regnes i prosent av varekosten. «Avanse» er handelsordet, «påslag» det dagligdagse. Begge er høyere enn dekningsgraden.</p></div></details>
-        <details class="lc-q"><summary data-i18n="kalkMarginFaqQ2">Hvorfor er 60 % påslag bare 37,5 % margin?</summary><div class="a"><p data-i18n="kalkMarginFaqA2">Påslaget regnes av den lave varekosten (100 kr), margin av den høyere salgsprisen (160 kr). Samme 60 kr, to nevnere.</p></div></details>
-        <details class="lc-q"><summary data-i18n="kalkMarginFaqQ3">Skal mva være med i kalkylen?</summary><div class="a"><p data-i18n="kalkMarginFaqA3">Nei. Regn margin og påslag på priser eks. mva. Merverdiavgiften legges på salgsprisen til slutt og kreves inn på vegne av staten.</p></div></details>
-      </div>
-    </section>
-
-    <section class="lc-sec" aria-labelledby="lcE-kalkyle-margin">
-      <div class="lc-head"><span class="lc-kicker" data-i18n="kalkyleRelKicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkyle-margin" data-i18n="kalkyleRelTitle">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/kalkulator/dekningsbidrag/"><h3 data-i18n="kalkyleDestBe">Dekningsbidrag &amp; break-even</h3><p data-i18n="kalkMarginRel1Desc">Hvor mange enheter må du selge for å dekke de faste kostnadene?</p></a>
-        <a class="lc-link" href="/kalkulator/timepris/"><h3 data-i18n="kalkyleDestTp">Timepris</h3><p data-i18n="kalkMarginRel2Desc">Fra ønsket lønn til hva du faktisk må fakturere per time.</p></a>
-        <a class="lc-link" href="/avgift/vat/"><h3 data-i18n="kalkMarginRel3Title">MVA-kalkulator</h3><p data-i18n="kalkMarginRel3Desc">Regn ut MVA opp og ned på et beløp.</p></a>
-      </div>
-    </section>
+    <nav class="lrn-rel" aria-labelledby="lrn-margin-r">
+      <h3 class="lrn-h3" id="lrn-margin-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/kalkyle/landedcost/"><span><span class="t">Innførselskost</span><span class="d">Importerer du, er det innførselskosten du legger påslaget på.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/kalkulator/dekningsbidrag/"><span><span class="t">Dekningsbidrag &amp; break-even</span><span class="d">Hvor mye du må selge med denne marginen for å dekke de faste kostnadene.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/avgift/vat/"><span><span class="t">MVA-kalkulator</span><span class="d">Fra pris eks. mva til hyllepris.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -517,8 +418,9 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v245"></script>
-<script defer src="/shared/core.js?v=v230"></script>
+<script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -642,6 +544,8 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
     setTxt('hStatDg', ok ? fmtPct(r.margin) : '–');
     setTxt('hStatPris', ok ? fmtKr(r.inkl) : '–');
 
+    window._margin = {varekost:r.varekost, andre:r.andre, mva:r.mva, mode:mode, val:parseAmt(valEl.value)};
+    if(window.hvtLearn) hvtLearn.update('kalkyle-margin', window._margin);
     persist();
   }
 
@@ -698,6 +602,152 @@ details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
   // Chip-raden: vis den aktive kalkylen også når raden er bredere enn skjermen.
   var s = document.querySelector('.kk-picker-strip'), a = s && s.querySelector('.is-active');
   if(a) s.scrollLeft = a.offsetLeft - s.offsetLeft - 16;
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Samme fortjeneste, to prosenter»: én vare som stolpe fra 0 til pris inkl. mva.
+//    Påslaget er fortjenesten mot varekosten (klammen over), marginen mot prisen (klammen under). ──
+(function(){
+  var KEY = 'kalkyle-margin';
+  // Standardverdiene i feltene over. Så lenge alle står slik, er merket «Eksempel».
+  var DEF = {varekost:100, andre:0, mva:0.25, mode:'paaslag', val:60};
+  var STD = [25, 100 / 3, 50, 60, 200 / 3, 100, 150, 200];
+  var root, plot, svg, raw = null, lastW = 0, queued = false, ctx;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function setHtml(name, s){ var el = q(name); if(el) el.innerHTML = s; }
+  function setD(name, d){ svg.querySelector('[data-p="' + name + '"]').setAttribute('d', d); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  function pct(x){ var r = Math.round(x * 10) / 10; return (Math.abs(r - Math.round(r)) < 1e-9 ? String(Math.round(r)) : window.hvtLearn.dec(r, 1)) + ' %'; }
+
+  // Samme regnestykke som compute() over
+  function calc(d){
+    var pris;
+    if(d.mode === 'pris') pris = d.val;
+    else if(d.mode === 'margin'){ var m = d.val / 100; pris = (isFinite(m) && m < 1) ? (d.varekost + d.andre) / (1 - m) : NaN; }
+    else pris = d.varekost * (1 + d.val / 100) + d.andre;
+    var brutto = pris - d.varekost - d.andre;
+    return {varekost:d.varekost, andre:d.andre, mva:d.mva, pris:pris, brutto:brutto, margin:brutto / pris * 100, avanse:brutto / d.varekost * 100, mvaKr:pris * d.mva, inkl:pris * (1 + d.mva)};
+  }
+  function geo(W){
+    if(W >= 600) return {mobile:false, W:W, H:226, x0:1, chipFs:12, bigFs:28, bigH:54, aboveTop:52, topY:60, tick:8, barY:74, barH:72, botY:160};
+    return {mobile:true, W:W, H:110, x0:1, chipFs:11, bigFs:20, bigH:28, aboveTop:16, topY:27, tick:7, barY:40, barH:56, botY:104};
+  }
+  function rect(x, y, w, h){ return w > 0 ? 'M' + f1(x) + ',' + f1(y) + ' h' + f1(w) + ' v' + f1(h) + ' h' + f1(-w) + ' Z' : ''; }
+
+  function render(d){
+    var L = window.hvtLearn, kr = L.kr, t = L.t, ph = L.ph;
+    raw = d;
+    var mine = !!d && !(d.varekost === DEF.varekost && d.andre === DEF.andre && d.mva === DEF.mva && d.mode === DEF.mode && d.val === DEF.val);
+    if(!d) d = DEF;
+    var r = calc(d), ok = isFinite(r.pris) && r.pris > 0 && isFinite(r.varekost) && r.varekost > 0 && r.brutto >= 0;
+    var W = plot.clientWidth;
+    if(!W){ lastW = 0; return; }
+    lastW = W;
+    var G = geo(W);
+    plot.style.height = G.H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + G.H);
+
+    var lab = '', chipF = '500 ' + G.chipFs + 'px Inter, system-ui, sans-serif';
+    if(ok){
+      // ── Stolpen ──
+      var span = W - 2 * G.x0;
+      function X(v){ return G.x0 + v / r.inkl * span; }
+      var b1 = X(r.varekost), b2 = X(r.varekost + r.andre), b3 = X(r.pris), b4 = X(r.inkl), gap = 1;
+      var vk = {x:G.x0, w:Math.max(0, b1 - gap - G.x0)}, an = r.andre > 0 ? {x:b1 + gap, w:Math.max(0, b2 - b1 - 2 * gap)} : {x:b1, w:0};
+      var pr = {x:(r.andre > 0 ? b2 : b1) + gap, w:Math.max(0, b3 - (r.andre > 0 ? b2 : b1) - 2 * gap)}, mv = {x:b3 + gap + 0.75, w:Math.max(0, b4 - b3 - gap - 1.5)};
+      setD('vk', rect(vk.x, G.barY, vk.w, G.barH)); setD('an', rect(an.x, G.barY, an.w, G.barH)); setD('anp', rect(an.x, G.barY, an.w, G.barH));
+      setD('pr', rect(pr.x, G.barY, pr.w, G.barH)); setD('prp', rect(pr.x, G.barY, pr.w, G.barH));
+      setD('mv', rect(mv.x, G.barY + 0.75, mv.w, G.barH - 1.5));
+      setD('top', 'M' + f1(G.x0) + ',' + (G.topY + G.tick) + ' V' + G.topY + ' H' + f1(b1) + ' V' + (G.topY + G.tick));
+      setD('bot', 'M' + f1(G.x0) + ',' + (G.botY - G.tick) + ' V' + G.botY + ' H' + f1(b3) + ' V' + (G.botY - G.tick));
+
+      var midTop = G.barY + G.barH / 2 - 9, above = [];
+      function tw(s){ return textW(s, chipF) + 12; }
+      function chip(text, left, top, cls){ lab += '<span class="lrn-chip' + (cls ? ' ' + cls : '') + '" style="left:' + f1(left) + 'px;top:' + f1(top) + 'px">' + text + '</span>'; }
+      var tVk = t('lrnMgVk', 'Varekost {belop} kr', {belop:kr(r.varekost)});
+      if(tw(tVk) > vk.w - 10) tVk = kr(r.varekost) + ' kr';
+      if(tw(tVk) <= vk.w - 8) chip(tVk, vk.x + 7, midTop);
+      if(r.andre > 0){
+        var tA = t('lrnMgAndre', 'Andre {belop} kr', {belop:kr(r.andre)});
+        if(tw(tA) <= an.w - 8) chip(tA, an.x + (an.w - tw(tA)) / 2, midTop);
+        else above.push({text:tA, short:kr(r.andre) + ' kr', left:an.x + 6, cls:'dim'});
+      }
+      var tM = t('lrnMgMva', 'MVA {belop} kr', {belop:kr(r.mvaKr)});
+      if(tw(tM) <= mv.w - 10) chip(tM, mv.x + (mv.w - tw(tM)) / 2, midTop, 'dim');
+      else above.push({text:tM, left:b4 - tw(tM), cls:'dim'});
+      // Fortjenesten bærer det store tallet
+      var bigTxt = kr(r.brutto) + ' kr', bigW = Math.max(textW(bigTxt, '500 ' + G.bigFs + 'px "Source Serif 4", Georgia, serif') + 18, G.mobile ? 0 : textW(ph('Bruttofortjeneste'), '500 11px Inter, system-ui, sans-serif') + 18);
+      if(bigW <= pr.w - 10) lab += '<span class="lrn-bigv' + (G.mobile ? ' sm' : '') + '" style="left:' + f1(pr.x + (pr.w - bigW) / 2) + 'px;top:' + f1(G.barY + (G.barH - G.bigH) / 2) + 'px;width:' + f1(bigW) + 'px">' + (G.mobile ? '' : '<span>' + ph('Bruttofortjeneste') + '</span>') + '<b>' + bigTxt + '</b></span>';
+      else above.push({text:bigTxt, left:pr.x + pr.w / 2 - tw(bigTxt) / 2});
+      // To etiketter over stolpen skal ikke kollidere
+      above.forEach(function(a){ a.w = tw(a.text); });
+      if(above.length > 1 && above[0].left + above[0].w + 6 > above[1].left && above[0].short){ above[0].text = above[0].short; above[0].w = tw(above[0].text); }
+      above.forEach(function(a){ chip(a.text, Math.max(0, Math.min(W - a.w, a.left)), G.aboveTop, a.cls); });
+    } else ['vk', 'an', 'anp', 'pr', 'prp', 'mv', 'top', 'bot'].forEach(function(n){ setD(n, ''); });
+    // Klammeetikettene: over og under stolpen (bred skjerm), eller som liste under grafen (smal)
+    var you = '<span class="lrn-you">' + ph('du oppga') + '</span>';
+    var pTxt = '<span class="n">' + t('lrnMgOfVk', '{a} kr av {b} kr =', {a:kr(r.brutto), b:kr(r.varekost)}) + '</span><b>' + pct(r.avanse) + '</b>' + (d.mode === 'paaslag' ? you : '');
+    var mTxt = '<span class="n">' + t('lrnMgOfPris', '{a} kr av {b} kr', {a:kr(r.brutto), b:kr(r.pris)}) + '</span>' + (d.mode === 'pris' ? you : '') + '<span class="n">=</span><b>' + pct(r.margin) + '</b>' + (d.mode === 'margin' ? you : '');
+    if(ok && !G.mobile){
+      lab += '<div class="lrn-brlab" style="left:0;top:0"><span class="h">' + ph('Påslag (avanse)') + '</span><span class="r">' + pTxt + '</span></div>';
+      lab += '<div class="lrn-brlab" style="left:0;top:' + (G.botY + 12) + 'px"><span class="h">' + ph('Margin (dekningsgrad)') + '</span><span class="r">' + mTxt + '</span></div>';
+    }
+    q('labels').innerHTML = lab;
+    var leg = q('legend');
+    leg.hidden = !(ok && G.mobile);
+    if(ok && G.mobile){
+      leg.querySelector('[data-f="p"]').innerHTML = '<span class="h">' + ph('Påslag (avanse)') + '</span><span class="r">' + pTxt + '</span>';
+      leg.querySelector('[data-f="m"]').innerHTML = '<span class="h">' + ph('Margin (dekningsgrad)') + '</span><span class="r">' + mTxt + '</span>';
+    }
+
+    // ── Omregningstabellen: påslag → margin, med brukerens pris satt inn ──
+    var cols = STD.map(function(p){ return {p:p, m:p / (100 + p) * 100, you:false}; });
+    if(ok && r.andre === 0){
+      var hit = null; cols.forEach(function(o){ if(Math.abs(o.p - r.avanse) < 0.05) hit = o; });
+      if(hit) hit.you = true; else cols.push({p:r.avanse, m:r.margin, you:true});
+    }
+    cols.sort(function(a, b){ return a.p - b.p; });
+    var tag = ph('Din pris'), html;
+    if(!G.mobile){
+      html = '<thead><tr><td></td>' + cols.map(function(o){ return '<th scope="col"' + (o.you ? ' class="is-you"' : '') + '>' + (o.you ? tag : '') + '</th>'; }).join('') + '</tr></thead><tbody>'
+        + '<tr><th scope="row">' + ph('Påslag') + '</th>' + cols.map(function(o){ return '<td' + (o.you ? ' class="is-you"' : '') + '>' + pct(o.p) + '</td>'; }).join('') + '</tr>'
+        + '<tr><th scope="row">' + ph('Margin') + '</th>' + cols.map(function(o){ return '<td' + (o.you ? ' class="is-you"' : '') + '>' + pct(o.m) + '</td>'; }).join('') + '</tr></tbody>';
+    } else {
+      html = '<thead><tr><th scope="col">' + ph('Påslag') + '</th><th scope="col">' + ph('Margin') + '</th></tr></thead><tbody>'
+        + cols.map(function(o){ return '<tr' + (o.you ? ' class="is-you"' : '') + '><th scope="row">' + pct(o.p) + (o.you ? ' <span class="lrn-you">' + tag + '</span>' : '') + '</th><td>' + pct(o.m) + '</td></tr>'; }).join('') + '</tbody>';
+    }
+    q('conv').innerHTML = html;
+    q('conv').classList.toggle('is-col', G.mobile);
+    set('convNote', ok && r.andre > 0 ? ph('Påslaget regnes av varekosten alene, så med andre kostnader passer ikke tallene dine i tabellen.') : ph('Margin kan aldri bli 100 %. Påslag har ingen grense.'));
+
+    // Teksttilsvarende versjon og merket
+    set('sum', !ok ? '' : t('lrnMgSum', 'Fortjenesten på {b} kr er {p} av varekosten på {vk} kr, men {m} av prisen på {pris} kr.', {b:kr(r.brutto), p:pct(r.avanse), vk:kr(r.varekost), m:pct(r.margin), pris:kr(r.pris)})
+      + (ok && r.andre > 0 ? ' ' + t('lrnMgSumAndre', 'Andre variable kostnader på {a} kr ligger mellom varekosten og fortjenesten.', {a:kr(r.andre)}) : '')
+      + (ok ? ' ' + t('lrnMgSumMva', 'Mva på {mva} kr kommer oppå og er ikke med i noen av prosentene.', {mva:kr(r.mvaKr)}) : ''));
+    var modus = d.mode === 'margin' ? t('lrnMgModeM', 'margin {v}', {v:pct(r.margin)}) : d.mode === 'pris' ? t('lrnMgModeP', 'pris {v} kr', {v:kr(r.pris)}) : t('lrnMgModeA', 'påslag {v}', {v:pct(r.avanse)});
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
+    set('stateText', t('lrnMgVk', 'Varekost {belop} kr', {belop:kr(r.varekost)}) + (r.andre > 0 ? ' · ' + t('lrnMgAndreKost', 'andre kostnader {belop} kr', {belop:kr(r.andre)}) : '') + ' · ' + modus + ' · ' + t('lrnMgMvaSats', 'mva {p} %', {p:Math.round(r.mva * 100)}));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+  function init(){
+    root = document.getElementById('lrn-margin');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._margin || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 
