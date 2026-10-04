@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 body{min-height:100vh;display:flex;flex-direction:column}
 body > main{flex:1 0 auto}
@@ -219,145 +220,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -647,77 +509,115 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: skatt-inntekt =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-skatt-inntekt">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-inntekt">Hva som skjer mellom brutto og netto</h2><p class="lc-intro">Lønnen din skattlegges i flere lag. Først trekkes faste fradrag fra, så regnes alminnelig inntektsskatt av det som er igjen. På toppen kommer to bruttoskatter som regnes av hele lønnen: trinnskatt og trygdeavgift.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Minstefradrag</b><span class="tag">Fradrag</span></span><span class="fig">46<span class="u">%</span></span><p class="dsc">Et standardfradrag du får automatisk — 46 % av lønnen, men aldri mer enn 95 700 kr. Ingen kvitteringer nødvendig.</p></div>
-        <div class="lc-led"><span class="nm"><b>Personfradrag</b><span class="tag">Fradrag</span></span><span class="fig">114 540<span class="u">kr</span></span><p class="dsc">Et fast bunnfradrag alle får. Det trekkes fra før den alminnelige inntektsskatten regnes ut.</p></div>
-        <div class="lc-led"><span class="nm"><b>Alminnelig inntektsskatt</b><span class="tag">Sats</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Regnes av lønnen etter at fradragene er trukket fra. Satsen er 18,5 % hvis du bor i Finnmark eller Nord-Troms.</p></div>
-        <div class="lc-led"><span class="nm"><b>Trinnskatt</b><span class="tag">Skatt</span></span><span class="fig">5<span class="u">trinn</span></span><p class="dsc">En bruttoskatt som regnes av lønnen før fradrag, i fem trinn. Hver krone over en grense skattes med trinnsatsen — ikke hele lønnen.</p></div>
-        <div class="lc-led"><span class="nm"><b>Trygdeavgift</b><span class="tag">Sats</span></span><span class="fig">7,6<span class="u">%</span></span><p class="dsc">Regnes av brutto lønn, men bare hvis du tjener over 99 650 kr. Like over grensen brukes en mykere opptrappingsregel så hoppet ikke blir for stort.</p></div>
-        <div class="lc-led"><span class="nm"><b>BSU-fradrag</b><span class="tag">Faktor</span></span><span class="fig">10<span class="u">%</span></span><p class="dsc">Sparer du i BSU, trekkes 10 % av innskuddet direkte fra skatten. Maks innskudd som teller er 27 500 kr, altså inntil 2 750 kr i spart skatt.</p></div>
+  <div class="lrn" id="lrn-si">
+    <section class="lrn-sec" aria-labelledby="lrn-si-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-si-h">Den siste kronen skattes hardest, ikke hele lønna</h2>
+        <p class="lrn-lede">Trappen viser hvor mye av en ekstra krone som går til skatt på hvert lønnsnivå. Linja under viser hvor mye av hele lønna som går til skatt.</p>
       </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn lønna i kalkulatoren.</p>
+      <div class="lrn-si-main" data-lrn="main">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-figrow si">
+          <figure class="lrn-fig" aria-describedby="lrn-si-sr">
+            <figcaption class="lrn-cap">Marginalskatt (trappen) og snittskatt (linja) i prosent, etter brutto årslønn</figcaption>
+            <div class="lrn-plot is-static lrn-si-plot" dir="ltr">
+              <svg aria-hidden="true" focusable="false">
+                <defs>
+                  <pattern id="lrn-si-hoved" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-si-pl" x1="0" y1="0" x2="0" y2="6"/></pattern>
+                  <pattern id="lrn-si-prikk" width="5" height="5" patternUnits="userSpaceOnUse"><rect class="lrn-si-pb" x="0" y="0" width="5" height="5"/><circle class="lrn-si-pc" cx="2.5" cy="2.5" r="1.15"/></pattern>
+                </defs>
+              <path class="lrn-si-gr" data-p="grid"/>
+              <path class="lrn-si-ty" data-p="ty"/>
+              <path class="lrn-si-al" data-p="al"/>
+              <path class="lrn-si-tr" data-p="tr"/>
+              <path class="lrn-si-stair" data-p="stair"/>
+              <path class="lrn-si-base" data-p="base"/>
+              <path class="lrn-si-ters" data-p="ters"/>
+              <path class="lrn-si-halo" data-p="sn"/>
+              <path class="lrn-si-sn" data-p="sn"/>
+              <path class="lrn-si-lead" data-p="lead"/>
+              <path class="lrn-si-dot" data-p="dot"/>
+              <path class="lrn-si-duln" data-p="du"/>
+              <path class="lrn-si-sik" data-p="sikte"/>
+              <path class="lrn-si-kln" data-p="kl"/>
+                <circle class="lrn-si-pt" r="4" data-p="pM"/>
+                <circle class="lrn-si-pt" r="4" data-p="pS"/>
+              </svg>
+              <div class="lrn-labels" data-lrn="labels"></div>
+            </div>
+          </figure>
+          <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+        </div>
+        <div class="lrn-scrub">
+          <div class="lrn-scrub-c">
+            <label for="lrn-si-sikte">Dra for å se et annet lønnsnivå</label>
+            <input id="lrn-si-sikte" type="range" min="0" max="2000000" step="10000" value="650000" data-lrn="sikte">
+          </div>
+          <dl class="lrn-dl" aria-live="polite">
+            <div><dt>Brutto årslønn</dt><dd><span data-lrn="sVal"></span> <span class="lrn-u">kr</span></dd></div>
+            <div><dt>Marginalskatt</dt><dd data-lrn="sMarg"></dd></div>
+            <div><dt>Snittskatt</dt><dd data-lrn="sSnitt"></dd></div>
+            <div><dt>Avstand</dt><dd><span data-lrn="sGap"></span> <span class="lrn-u">prosentpoeng</span></dd></div>
+          </dl>
+        </div>
+        <p class="lrn-cmp" aria-live="polite" data-lrn="neste"></p>
+        <p class="lrn-p" data-lrn="oppsum"></p>
+        <details class="lrn-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table>
+            <caption>Marginalskatt på neste krone, etter brutto årslønn</caption>
+            <thead><tr><th scope="col" class="s">Brutto årslønn, kr</th><th scope="col">Marginalskatt</th><th scope="col" class="k">Det som kommer til</th></tr></thead>
+            <tbody data-lrn="rows"></tbody>
+          </table></div>
+        </details>
+      </div>
+      <p class="lrn-sr" id="lrn-si-sr" data-lrn="sr"></p>
     </section>
-    <section class="lc-sec" aria-labelledby="lcB-skatt-inntekt">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-skatt-inntekt">Satsene for 2026</h2><p class="lc-intro">Trinnskatten er delt i soner — du betaler bare den høyere satsen på den delen av lønnen som ligger over hver grense.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Minstefradrag</span><span class="v">46<span class="u">% (maks 95 700 kr)</span></span></div>
-        <div class="lc-kv"><span class="k">Personfradrag</span><span class="v">114 540<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Alminnelig sats</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Alminnelig sats (Finnmark / Nord-Troms)</span><span class="v">18,5<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Trygdeavgift lønn</span><span class="v">7,6<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Nedre grense trygdeavgift</span><span class="v">99 650<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Maks fagforeningsfradrag</span><span class="v">8 700<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Maks BSU-innskudd</span><span class="v">27 500<span class="u">kr</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Trinnskatt 2026 — satsen gjelder bare kroner over hver grense</caption>
-          <thead><tr><th>Trinn</th><th class="r">Inntekt over</th><th class="r">Sats</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Trinn 1</span></td><td class="r">226 100 kr</td><td class="r">1,7 %</td></tr>
-            <tr><td><span class="step">Trinn 2</span></td><td class="r">318 300 kr</td><td class="r">4,0 %</td></tr>
-            <tr><td><span class="step">Trinn 3</span></td><td class="r">725 050 kr</td><td class="r">13,7 %</td></tr>
-            <tr><td><span class="step">Trinn 4</span></td><td class="r">980 100 kr</td><td class="r">16,8 %</td></tr>
-            <tr><td><span class="step">Trinn 5</span></td><td class="r">1 467 200 kr</td><td class="r">17,8 %</td></tr>
-          </tbody>
-        </table>
+
+    <section class="lrn-sec lrn-also" aria-labelledby="lrn-si-f">
+      <h3 class="lrn-h3" id="lrn-si-f">Fradragene treffer bare én av tre skatter</h3>
+      <div class="lrn-si-frow">
+        <p class="lrn-p">Fradrag senker bare den alminnelige skatten. Trinnskatt og trygdeavgift regnes av brutto, før fradrag. Sparer du i BSU, trekkes 10&nbsp;% av innskuddet direkte fra skatten, maks 2&nbsp;750&nbsp;kr for innskudd opp til 27&nbsp;500&nbsp;kr.</p>
+        <div class="lrn-si-rates">
+          <div class="lrn-tbl is-flat"><div><table>
+            <caption>Satser 2026</caption>
+            <thead><tr><th scope="col" class="s">Post</th><th scope="col">Sats</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Minstefradrag</th><td>46 <span class="lrn-u">% av lønn, maks 95&nbsp;700&nbsp;kr</span></td></tr>
+              <tr><th scope="row">Personfradrag</th><td>114&nbsp;540 <span class="lrn-u">kr</span></td></tr>
+              <tr><th scope="row">Alminnelig inntektsskatt</th><td>22 <span class="lrn-u">%</span></td></tr>
+              <tr><th scope="row">Alminnelig inntektsskatt, Finnmark / Nord-Troms</th><td>18,5 <span class="lrn-u">%</span></td></tr>
+              <tr><th scope="row">Særskilt fradrag, Finnmark / Nord-Troms</th><td>45&nbsp;000 <span class="lrn-u">kr</span></td></tr>
+              <tr><th scope="row">Trygdeavgift</th><td>7,6 <span class="lrn-u">% fra 99&nbsp;650&nbsp;kr</span></td></tr>
+            </tbody>
+          </table></div></div>
+          <p class="lrn-fine">Kilde: Stortingets skattevedtak 2026.</p>
         </div>
       </div>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-si-q">
+      <h3 class="lrn-h3" id="lrn-si-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvorfor betaler jeg ikke 47&nbsp;% skatt selv om jeg er i toppen?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Fordi 47,4&nbsp;% bare gjelder kroner over 1&nbsp;467&nbsp;200&nbsp;kr. Resten av lønna skattes lavere, så snittskatten på hele lønna er langt under. Grafen over viser avstanden mellom de to.</p></div></details>
+        <details><summary>Hva er minstefradrag?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Et standardfradrag du får uten å gjøre noe: 46&nbsp;% av lønnen, men aldri mer enn 95&nbsp;700&nbsp;kr. Det senker grunnlaget den alminnelige skatten regnes av.</p></div></details>
+        <details><summary>Hva er forskjellen på trinnskatt og alminnelig inntektsskatt?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Alminnelig inntektsskatt regnes av lønnen etter fradrag. Trinnskatten er en ekstra skatt som regnes av brutto lønn i fem trinn, og den øker jo mer du tjener.</p></div></details>
+        <details><summary>Når begynner jeg å betale trygdeavgift?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Når lønna passerer 99&nbsp;650&nbsp;kr. Mellom 99&nbsp;650 og 143&nbsp;175&nbsp;kr er avgiften 25&nbsp;% av det som overstiger 99&nbsp;650&nbsp;kr. Over det er den 7,6&nbsp;% av hele lønna.</p></div></details>
+        <details><summary>Hvilke fradrag kan jeg legge inn selv?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Rentefradrag, reisefradrag, fagforeningskontingent (maks 8&nbsp;700&nbsp;kr), BSU (maks 27&nbsp;500&nbsp;kr), IPS (maks 25&nbsp;000&nbsp;kr) og gaver til frivillige organisasjoner (maks 25&nbsp;000&nbsp;kr). Minstefradrag og personfradrag legges inn automatisk.</p></div></details>
+        <details open><summary>Lønner det seg å tjene mer?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja. Høyeste marginalskatt er 47,4&nbsp;%, så du beholder alltid minst 52,6&nbsp;øre av hver ekstra krone.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-skatt-inntekt">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-skatt-inntekt">Verdt å huske om inntektsskatten</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Marginalskatt er ikke gjennomsnittsskatt</h3><p>Den høyeste satsen din gjelder bare den øverste kronen du tjener. Tjener du nok til trinn 5, blir marginalskatten 22 % + 17,8 % + 7,6 % = 47,4 %, men den effektive (gjennomsnittlige) satsen på hele lønnen er mye lavere.</p></div>
-        <div class="lc-note"><h3>Trinnskatt og trygdeavgift regnes av brutto</h3><p>Fradragene dine senker den alminnelige inntektsskatten på 22 %, men de påvirker ikke trinnskatten eller trygdeavgiften — de regnes alltid av hele lønnen før fradrag.</p></div>
-        <div class="lc-note"><h3>BSU gir skattefradrag, ikke bare sparing</h3><p>10 % av det du legger inn i BSU trekkes rett fra skatten. Legger du inn maks 27 500 kr, blir det 2 750 kr mindre i skatt — i tillegg til at pengene står spart til bolig.</p></div>
-        <div class="lc-note"><h3>Bor du i Finnmark, betaler du mindre</h3><p>I Finnmark og Nord-Troms er den alminnelige inntektsskatten 18,5 % i stedet for 22 %. Velg riktig region i kalkulatoren, ellers regnes det med standardsatsen.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-skatt-inntekt">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-skatt-inntekt">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvorfor betaler jeg ikke 47 % skatt selv om jeg er i toppen?</summary><div class="a"><p>Fordi 47,4 % er marginalskatten — satsen på den siste kronen du tjener. Lønnen under hver grense skattes lavere. Den effektive satsen, altså skatt delt på hele lønnen, er derfor mye lavere. Kalkulatoren viser begge.</p></div></details>
-        <details class="lc-q"><summary>Hva er minstefradrag?</summary><div class="a"><p>Et standardfradrag du får uten å gjøre noe: 46 % av lønnen, men aldri mer enn 95 700 kr. Det er trukket fra automatisk i beregningen og senker hva den alminnelige skatten på 22 % regnes av.</p></div></details>
-        <details class="lc-q"><summary>Hva er forskjellen på trinnskatt og alminnelig inntektsskatt?</summary><div class="a"><p>Alminnelig inntektsskatt er 22 % og regnes av lønnen etter at fradragene er trukket fra. Trinnskatten er en ekstra skatt som regnes av brutto lønn i fem trinn, og den øker jo mer du tjener.</p></div></details>
-        <details class="lc-q"><summary>Når begynner jeg å betale trygdeavgift?</summary><div class="a"><p>Trygdeavgiften på 7,6 % slår inn når du tjener over 99 650 kr. Like over grensen brukes en mykere regel slik at avgiften trappes gradvis opp, og du aldri taper på å tjene litt mer.</p></div></details>
-        <details class="lc-q"><summary>Hvor mye sparer jeg i skatt på BSU?</summary><div class="a"><p>Du får 10 % av innskuddet trukket rett fra skatten. Legger du inn maksbeløpet på 27 500 kr, blir det 2 750 kr mindre skatt det året.</p></div></details>
-        <details class="lc-q"><summary>Hvilke fradrag kan jeg legge inn selv?</summary><div class="a"><p>Rentefradrag, reisefradrag, fagforeningskontingent (maks 8 700 kr), BSU (maks 27 500 kr), IPS (maks 25 000 kr) og gaver til frivillige organisasjoner (maks 25 000 kr). Minstefradrag og personfradrag legges inn automatisk.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-skatt-inntekt">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-skatt-inntekt">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/personlig/lonn/"><span class="ar">Lønn etter skatt →</span><h3>Lønn etter skatt</h3><p>Se hva du sitter igjen med per måned når skatten er trukket fra.</p></a>
-        <a class="lc-link" href="/skatt/reise/"><span class="ar">Reisefradrag →</span><h3>Reisefradrag</h3><p>Regn ut hvor mye av pendlingen din som faktisk gir fradrag etter egenandelen.</p></a>
-        <a class="lc-link" href="/boliglan/bsu/"><span class="ar">BSU →</span><h3>BSU-kalkulator</h3><p>Se hvor mye skatt du sparer og hvor fort BSU-en vokser mot boligmålet.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-si-r">
+      <h3 class="lrn-h3" id="lrn-si-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/kalkulator/lonnut/"><span><span class="t">Lønn ut</span><span class="d">Hvordan årsskatten fordeles på tolv lønninger.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/lonn/"><span><span class="t">Lønn etter skatt</span><span class="d">Første jobb, skattekort og frikort.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/skatt/reise/"><span><span class="t">Reisefradrag</span><span class="d">Reisefradraget flytter hjørnet der 22&nbsp;% starter.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/bsu/"><span><span class="t">BSU-kalkulator</span><span class="d">Hvor mye skatt BSU sparer deg for.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -739,6 +639,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <script defer src="/shared/top-chrome.js?v=v245"></script>
 <script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -919,6 +820,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     }
     var input = Object.assign({}, state, { brutto: activeBrutto() });
     var r = calculate(input);
+    // Til forklaringsblokken: inndataene og fradragene utover minstefradrag og personfradrag
+    var ekstra = r.fradragSum - Math.min(r.brutto * MINSTE_RATE, MINSTE_MAX) - PERSON_FRAD;
+    window._inntekt = { inp: input, fradrag: ekstra, egne: ekstra - (r.almRate === FINNMARK_RATE ? FINNMARK_FRADRAG : 0), mode: state.mode };
+    if(window.hvtLearn) hvtLearn.update('skatt-inntekt', window._inntekt);
 
     $('rBruttoMnd').textContent = fmtKr(r.bruttoMnd);
     $('rSkattMnd').textContent  = fmtKr(r.totalSkatt/12);
@@ -1001,5 +906,360 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
+<script>
+// ── Forklaringsblokken «Den siste kronen skattes hardest»: marginalskatten som en trapp delt i trygdeavgift,
+//    alminnelig skatt og trinnskatt, og snittskatten som en linje under. Snittskatten regnes med kalkulatorens
+//    egen calculate() (window.hvCalcInntekt), så tallene er de samme som over. På smale skjermer står grafen
+//    på høykant: lønn nedover, prosent bortover. Etikettene plasseres der de ikke dekker noe. ──
+(function(){
+  var KEY = 'skatt-inntekt';
+  var NB = '\u00a0';
+  var MAX0 = 2000000, MAX = MAX0, KNEKK = 99650 * 0.25 / 0.174;
+  var TRS = [[226100, 0.017], [318300, 0.04], [725050, 0.137], [980100, 0.168], [1467200, 0.178]];
+  var DEF = {brutto:650000, region:0.22};
+  var root, plot, raw = null, sikte = null, forB = null, lastW = 0, queued = false, ctx = null, fam = '';
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, s){ root.querySelectorAll('[data-lrn="' + name + '"]').forEach(function(el){ el.textContent = s; }); }
+  function html(name, s){ root.querySelectorAll('[data-lrn="' + name + '"]').forEach(function(el){ el.innerHTML = s; }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  // Bredden på en etikett, målt med skriften siden faktisk bruker (fungerer på alle språk)
+  function tw(s, fz, wt, pad){
+    if(!ctx) ctx = document.createElement('canvas').getContext('2d');
+    ctx.font = (wt || 500) + ' ' + fz + 'px ' + fam;
+    return Math.ceil(ctx.measureText(String(s)).width) + (pad === undefined ? 12 : pad);
+  }
+  function ov(a, b, pad){ return a.x < b.x + b.w + pad && b.x < a.x + a.w + pad && a.y < b.y + b.h + pad && b.y < a.y + a.h + pad; }
+  // Krysser linjestykket p–r rektangelet (utvidet med pad)? Liang–Barsky.
+  function segHit(p, r2, r, pad){
+    var x1 = r.x - pad, y1 = r.y - pad, x2 = r.x + r.w + pad, y2 = r.y + r.h + pad, t0 = 0, t1 = 1;
+    var dx = r2[0] - p[0], dy = r2[1] - p[1];
+    var ps = [-dx, dx, -dy, dy], qs = [p[0] - x1, x2 - p[0], p[1] - y1, y2 - p[1]];
+    for(var i = 0; i < 4; i++){
+      if(ps[i] === 0){ if(qs[i] < 0) return false; }
+      else {
+        var tt = qs[i] / ps[i];
+        if(ps[i] < 0){ if(tt > t1) return false; if(tt > t0) t0 = tt; }
+        else { if(tt < t0) return false; if(tt < t1) t1 = tt; }
+      }
+    }
+    return true;
+  }
+  function polyHit(pts, r, pad){ for(var i = 1; i < pts.length; i++) if(segHit(pts[i - 1], pts[i], r, pad)) return true; return false; }
+  function geo(W){
+    return W < 600
+      ? {o:'v', W:W, H:668, x0:62, y0:30, pw:W - 88, ph:600, xlw:Math.min(44, Math.floor((W - 88) / 5)), ylw:56, mk:20, fz:11, gx:W - 12}
+      : {o:'h', W:W, H:446, x0:52, y0:34, pw:W - 164, ph:380, xlw:72, ylw:44, mk:22, fz:12};
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, fmt = L.kr;
+    var none = !d || !window.hvCalcInntekt || !(d.inp.brutto > 0);
+    q('none').hidden = !none;
+    q('main').hidden = none;
+    if(none){ set('sr', ''); return; }
+    var inp = d.inp, B = inp.brutto, fin = inp.region === 0.185, alm = inp.region, fr = d.fradrag, egne = d.egne;
+    function calc(b){ return window.hvCalcInntekt(Object.assign({}, inp, {brutto:b})); }
+    // Satsen på neste krone, delt i de tre lagene
+    function lag(b){
+      var tr = 0, n = 0;
+      for(var i = 0; i < TRS.length; i++) if(b >= TRS[i][0]){ tr = TRS[i][1]; n = i + 1; }
+      var ty = b < 99650 ? 0 : (b < KNEKK ? 0.25 : 0.076), al = b < 210240 + fr ? 0 : alm;
+      return {ty:ty, al:al, tr:tr, n:n, m:ty + al + tr};
+    }
+    function pnum(x){ var v = Math.round(x * 1000) / 10; return v % 1 === 0 ? String(v) : L.dec(v, 1); }
+    function pct(x){ return pnum(x) + NB + '%'; }
+    function nb(s){ return String(s).replace(/([0-9]) (?=[0-9]{3}(?![0-9]))/g, '$1' + NB).replace(/([0-9]) (?=%|kr)/g, '$1' + NB); }
+    if(forB !== B){ sikte = null; forB = B; }
+    // Aksen går til 2 mill. kr, men strekkes når lønna er høyere, så punktet ditt alltid er med
+    MAX = B > MAX0 ? Math.ceil(B * 1.1 / 500000) * 500000 : MAX0;
+    var Bc = Math.min(Math.max(B, 0), MAX), sB = sikte === null ? Bc : sikte;
+    var G = geo(plot.clientWidth || 856), V = G.o === 'v', fz = G.fz, ms = G.mk;
+    lastW = G.W;
+    fam = getComputedStyle(root).fontFamily || 'Inter, system-ui, sans-serif';
+    var lM = t('lrnSiLM', 'Marginalskatt'), lS = t('lrnSiLS', 'Snittskatt'), lTy = t('lrnSiLTy', 'Trygdeavgift'), lAl = t('lrnSiLAl', 'Alminnelig'), lTr = t('lrnSiLTr', 'Trinnskatt');
+    // Navnene til høyre for grafen skal få plass også når de er lange (noen språk)
+    if(!V){ var need = Math.max.apply(null, [lM, lS, lTy, lAl, lTr].map(function(x){ return tw(x, fz); })) + 8; G.pw = Math.min(G.pw, G.W - G.x0 - need); }
+
+    // Merket over grafen
+    var mine = !(B === DEF.brutto && inp.region === DEF.region && egne === 0 && !(inp.bsu > 0) && d.mode === 'brutto');
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    set('stateText', t('lrnSiState', '{b} i året · {r} · {f}', {b:fmt(B) + NB + 'kr', r:fin ? ph('Finnmark / Nord-Troms') : ph('resten av Norge'),
+      f:egne > 0 ? t('lrnSiEgne', '{k} i egne fradrag', {k:fmt(egne) + NB + 'kr'}) : ph('ingen egne fradrag')}));
+
+    // Lønn langs én akse, sats langs den andre
+    function bx(b){ return V ? G.y0 + b / MAX * G.ph : G.x0 + b / MAX * G.pw; }
+    function px(p){ return V ? G.x0 + p / 0.5 * G.pw : G.y0 + G.ph - p / 0.5 * G.ph; }
+    function P(b, p){ return V ? [f1(px(p)), f1(bx(b))] : [f1(bx(b)), f1(px(p))]; }
+    function pt(a){ return a[0] + ',' + a[1]; }
+    var yTop = G.y0, yBot = G.y0 + G.ph, xL = G.x0, xR = G.x0 + G.pw, bStar = 210240 + fr;
+
+    // Båndene: marginalskatten delt i trygdeavgift, alminnelig skatt og trinnskatt
+    var edges = [0, 99650, KNEKK, bStar, 226100, 318300, 725050, 980100, 1467200].filter(function(v){ return v < MAX; }).sort(function(a, b){ return a - b; });
+    var bands = [];
+    for(var i = 0; i < edges.length; i++){
+      var a = edges[i], z = i + 1 < edges.length ? edges[i + 1] : MAX;
+      if(z - a < 1) continue;
+      var Lq = lag(a + 1);
+      bands.push({a:a, z:z, ty:Lq.ty, al:Lq.al, tr:Lq.tr, n:Lq.n, m:Lq.m});
+    }
+    var last = bands[bands.length - 1];
+    function poly(lo, hi){
+      var dd = '';
+      bands.forEach(function(qq, k){ dd += (k === 0 ? 'M' : ' L') + pt(P(qq.a, hi(qq))) + ' L' + pt(P(qq.z, hi(qq))); });
+      for(var k = bands.length - 1; k >= 0; k--){ var qq = bands[k]; dd += ' L' + pt(P(qq.z, lo(qq))) + ' L' + pt(P(qq.a, lo(qq))); }
+      return dd + ' Z';
+    }
+    var D = {};
+    D.ty = poly(function(){ return 0; }, function(qq){ return qq.ty; });
+    D.al = poly(function(qq){ return qq.ty; }, function(qq){ return qq.ty + qq.al; });
+    D.tr = poly(function(qq){ return qq.ty + qq.al; }, function(qq){ return qq.m; });
+    D.stair = '';
+    var stair = [];
+    bands.forEach(function(qq, k){ D.stair += (k === 0 ? 'M' : ' L') + pt(P(qq.a, qq.m)) + ' L' + pt(P(qq.z, qq.m)); stair.push(P(qq.a, qq.m)); stair.push(P(qq.z, qq.m)); });
+    D.sn = '';
+    var curve = [];
+    for(var b = 0; b <= MAX; b += MAX / 400){ var cp = P(b, calc(b).eff); D.sn += (b === 0 ? 'M' : ' L') + pt(cp); curve.push(cp); }
+
+    // Rutenett, akser og terskler
+    var lab = '', marks = '', chipsHtml = '';
+    D.grid = '';
+    for(var k = 1; k <= 5; k++) D.grid += V ? 'M' + f1(px(k / 10)) + ',' + yTop + ' V' + yBot + ' ' : 'M' + xL + ',' + f1(px(k / 10)) + ' H' + xR + ' ';
+    D.base = V ? 'M' + xL + ',' + yTop + ' V' + yBot : 'M' + xL + ',' + yBot + ' H' + xR;
+    D.ters = '';
+    for(k = 0; k <= 5; k++){
+      var pl = (k * 10) + NB + '%';
+      lab += V ? '<span class="lrn-tick x" style="left:' + f1(px(k / 10) - G.xlw / 2) + 'px;top:5px;width:' + G.xlw + 'px">' + pl + '</span>'
+               : '<span class="lrn-tick y" style="top:' + f1(px(k / 10) - 8) + 'px;width:' + G.ylw + 'px">' + pl + '</span>';
+    }
+    if(!V){
+      [0, MAX / 4, MAX / 2, MAX * 3 / 4, MAX].forEach(function(v){ lab += '<span class="lrn-tick x" style="left:' + f1(bx(v) - G.xlw / 2) + 'px;top:' + (yBot + 8) + 'px;width:' + G.xlw + 'px">' + esc(v === MAX ? fmt(v) + NB + 'kr' : fmt(v)) + '</span>'; });
+    } else {
+      var cand = [99650, KNEKK, bStar, 318300, 725050, 980100, 1467200, 226100], taken = [yTop, yBot], keep = [];
+      cand.forEach(function(tv){ if(tv >= MAX) return; var y = bx(tv); if(taken.every(function(u){ return Math.abs(u - y) >= 16; })){ taken.push(y); keep.push(tv); } });
+      keep.sort(function(x, y){ return x - y; });
+      lab += '<span class="lrn-tick y" style="top:' + f1(yTop - 8) + 'px;width:' + G.ylw + 'px">0</span>';
+      keep.forEach(function(tv){
+        lab += '<span class="lrn-tick y" style="top:' + f1(bx(tv) - 8) + 'px;width:' + G.ylw + 'px">' + esc(fmt(tv)) + '</span>';
+        var mOut = Math.max(lag(tv).m, lag(tv - 1).m);
+        D.ters += 'M' + (xL - 4) + ',' + f1(bx(tv)) + ' H' + f1(px(mOut)) + ' ';
+      });
+      lab += '<span class="lrn-tick y" style="top:' + f1(yBot - 8) + 'px;width:' + G.ylw + 'px">' + esc(fmt(MAX)) + '</span>';
+    }
+
+    // Du er her (lønna i kalkulatoren) og siktet (glidebryteren)
+    var cs = calc(sB), marg = lag(sB).m, snitt = cs.eff, gapPp = (marg - snitt) * 100;
+    var pM = P(sB, marg), pS = P(sB, snitt), u = f1(bx(Bc)), s = f1(bx(sB));
+    D.du = V ? 'M' + xL + ',' + u + ' H' + xR : 'M' + u + ',' + (yTop - 6) + ' V' + yBot;
+    D.sikte = sB === Bc ? '' : (V ? 'M' + xL + ',' + s + ' H' + xR : 'M' + s + ',' + (yTop - 6) + ' V' + yBot);
+    var duTxt = ph('Du er her'), duW = tw(duTxt, 12, 600, 14);
+    var du = V ? {left:xL + 3, top:f1(u + 25 > yBot ? u - 25 : u + 5)} : {left:f1(Math.max(xL - 6, Math.min(G.W - duW, u - duW / 2))), top:f1(yTop - 26)};
+    lab += '<span class="lrn-si-du" style="left:' + du.left + 'px;top:' + du.top + 'px">' + esc(duTxt) + '</span>';
+
+    // Plassering uten kollisjoner: rects er opptatt, lines er strekene som ikke skal dekkes
+    var rects = [{x:du.left, y:du.top, w:duW, h:20}];
+    var lines = [stair, curve, V ? [[xL, u], [xR, u]] : [[u, yTop - 6], [u, yBot]]];
+    function inside(r){ return r.x >= 0 && r.x + r.w <= G.W && r.y >= 0 && r.y + r.h <= G.H; }
+    function inPlot(r){ return r.x >= xL + 2 && r.x + r.w <= (V ? G.W : xR + 2) && r.y >= (V ? yTop - 2 : 0) && r.y + r.h <= yBot - 2; }
+    function freeRect(r, pad, inplot){ return inside(r) && (!inplot || inPlot(r)) && !rects.some(function(qq){ return ov(r, qq, pad === undefined ? 2 : pad); }) && !lines.some(function(l){ return polyHit(l, r, 3); }); }
+    function take(r){ rects.push(r); return r; }
+
+    // Merkene 1–4: sirkel med føringslinje til stedet merknaden handler om
+    var bP = (99650 + KNEKK) / 2;
+    var pins = [['1', P(bP, 0.25)], ['2', P(bStar, Math.max(lag(bStar).m, lag(bStar - 1).m))], ['3', P(725050, Math.max(lag(725050).m, lag(725049).m))], ['4', P(1467200, last.m)]];
+    D.lead = ''; D.dot = '';
+    pins.forEach(function(sp){
+      var ax = sp[1][0], ay = sp[1][1], cands = [];
+      if(V) [0, -24, 24, -48, 48, -72, 72].forEach(function(dy){ cands.push([G.gx, ay + dy]); });
+      else {
+        [24, 32, 44, 60, 82, 110, 140].forEach(function(dd){ cands.push([ax, ay - dd]); });
+        [24, 32, 44, 60].forEach(function(dd){ cands.push([ax - 26, ay - dd]); cands.push([ax + 26, ay - dd]); });
+      }
+      var pick = cands[0];
+      for(var c = 0; c < cands.length; c++){
+        var r = {x:cands[c][0] - ms / 2, y:cands[c][1] - ms / 2, w:ms, h:ms};
+        var dx = ax - cands[c][0], dy = ay - cands[c][1], dl = Math.hypot(dx, dy) || 1;
+        var a1 = [cands[c][0] + dx / dl * (ms / 2), cands[c][1] + dy / dl * (ms / 2)], a2 = [ax - dx / dl * 4, ay - dy / dl * 4];
+        var lr = {x:Math.min(a1[0], a2[0]), y:Math.min(a1[1], a2[1]), w:Math.abs(a1[0] - a2[0]), h:Math.abs(a1[1] - a2[1])};
+        if(freeRect(r, 3) && !rects.some(function(qq){ return ov(lr, qq, 1); }) && !lines.slice(1).some(function(l){ return polyHit(l, lr, 0); })){ pick = cands[c]; break; }
+      }
+      var rr = take({x:pick[0] - ms / 2, y:pick[1] - ms / 2, w:ms, h:ms});
+      var ddx = ax - pick[0], ddy = ay - pick[1], ddl = Math.hypot(ddx, ddy) || 1, b1 = [pick[0] + ddx / ddl * (ms / 2), pick[1] + ddy / ddl * (ms / 2)];
+      D.lead += 'M' + f1(b1[0]) + ',' + f1(b1[1]) + ' L' + f1(ax) + ',' + f1(ay) + ' ';
+      D.dot += 'M' + f1(ax) + ',' + f1(ay) + ' h0.01 ';
+      lines.push([[b1[0], b1[1]], [ax, ay]]);
+      marks += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(rr.x) + 'px;top:' + f1(rr.y) + 'px">' + sp[0] + '</span>';
+    });
+
+    // Etiketter med bakgrunn, plassert der de ikke dekker noe
+    function chip(text, cls, x, y){ chipsHtml += '<span class="lrn-si-chip' + (cls ? ' ' + cls : '') + '" style="left:' + f1(x) + 'px;top:' + f1(y) + 'px">' + esc(text) + '</span>'; }
+    function addChip(text, cls, cands){
+      var w = tw(text, fz);
+      for(var c = 0; c < cands.length; c++){
+        var bb = {x:cands[c][0], y:cands[c][1], w:w, h:20};
+        if(freeRect(bb, 2, true)){ take(bb); chip(text, cls, bb.x, bb.y); return true; }
+      }
+      return false;
+    }
+    var stairTxt = pct(marg), snittTxt = L.dec(snitt * 100, 2) + NB + '%', wS = tw(stairTxt, fz), wA = tw(snittTxt, fz);
+    var candStair = [[s - 8 - wS, pM[1] - 27], [s + 8, pM[1] - 27], [s - 8 - wS, pM[1] + 7], [s + 8, pM[1] + 7]];
+    var candSnitt = [[s + 8, pS[1] + 7], [s - 8 - wA, pS[1] + 7], [s + 8, pS[1] - 27], [s - 8 - wA, pS[1] - 27]];
+    // Bare på brede skjermer: på mobil står tallene i avlesningen under grafen
+    var stairOk = !V && addChip(stairTxt, '', candStair);
+    if(!V) addChip(snittTxt, '', candSnitt);
+
+    // Klammen mellom trappen og linja
+    var harKl = gapPp >= 0.5 && Math.abs(pM[V ? 0 : 1] - pS[V ? 0 : 1]) >= 6, klNum = L.dec(gapPp, 1), ppTxt = ph('prosentpoeng');
+    D.kl = '';
+    if(harKl){
+      var w = V ? Math.max(88, tw(ppTxt, 11)) : tw(klNum + ' ' + ppTxt, fz, 600), h = V ? 40 : 20, kc = [];
+      if(V){
+        for(k = 0; k <= 12; k++) [-1, 1].forEach(function(dir){ var y = dir < 0 ? s - h - 4 - k * 8 : s + 6 + k * 8; kc.push([pM[0] + 9, y, dir]); kc.push([pS[0] - 9 - w, y, dir]); });
+      } else {
+        var mid = (pM[1] + pS[1]) / 2;
+        for(k = 0; k <= 16; k++) (k === 0 ? [0] : [-k * 6, k * 6]).forEach(function(dy){ kc.push([s + 13, mid - 10 + dy, 1]); kc.push([s - 13 - w, mid - 10 + dy, -1]); });
+        kc.push([s + 10, Math.min(pM[1], pS[1]) - 28, 1]); kc.push([s - 10 - w, Math.min(pM[1], pS[1]) - 28, -1]);
+        kc.push([s + 10, Math.max(pM[1], pS[1]) + 8, 1]); kc.push([s - 10 - w, Math.max(pM[1], pS[1]) + 8, -1]);
+      }
+      var kp = null;
+      for(var c2 = 0; c2 < kc.length; c2++){ if(freeRect({x:kc[c2][0], y:kc[c2][1], w:w, h:h}, 2, true)){ kp = kc[c2]; break; } }
+      var dir = kp ? kp[2] : 1;
+      if(kp){
+        take({x:kp[0], y:kp[1], w:w, h:h});
+        lab += V ? '<span class="lrn-si-kl v" style="left:' + f1(kp[0]) + 'px;top:' + f1(kp[1]) + 'px;width:' + w + 'px"><b>' + klNum + '</b><span>' + esc(ppTxt) + '</span></span>'
+                 : '<span class="lrn-si-kl" style="left:' + f1(kp[0]) + 'px;top:' + f1(kp[1]) + 'px">' + esc(klNum + ' ' + ppTxt) + '</span>';
+      }
+      D.kl = V ? 'M' + pS[0] + ',' + f1(s + dir * 3) + ' V' + f1(s + dir * 7) + ' H' + pM[0] + ' V' + f1(s + dir * 3)
+               : 'M' + f1(s + dir * 3) + ',' + pM[1] + ' H' + f1(s + dir * 7) + ' V' + pS[1] + ' H' + f1(s + dir * 3);
+    }
+
+    // Direkte etiketter: lagene, snittlinja og satsene
+    var effMax = calc(MAX).eff;
+    if(!V){
+      var ends = [
+        {text:lM, cls:'', p:last.m}, {text:lS, cls:'', p:effMax},
+        {text:lTr, cls:'s', p:(last.ty + last.al + effMax) / 2}, {text:lAl, cls:'s', p:last.ty + last.al / 2},
+        {text:lTy, cls:'s', p:last.ty / 2}
+      ].map(function(e){ e.top = px(e.p) - 9; return e; }).sort(function(x, y){ return x.top - y.top; });
+      for(k = 1; k < ends.length; k++) if(ends[k].top < ends[k - 1].top + 22) ends[k].top = ends[k - 1].top + 22;
+      ends.forEach(function(e){ chip(e.text, e.cls, xR + 8, e.top); });
+    } else {
+      var lays = [{text:lTy, p:last.ty / 2}, {text:lAl, p:last.ty + last.al / 2}, {text:lTr, p:last.ty + last.al + last.tr / 2}];
+      // Midt under hvert lag, men skjøvet til siden når navnene ikke får plass (lange navn på noen språk)
+      var pos = [], right = 0, bound = G.W;
+      lays.forEach(function(e){ var ew = tw(e.text, fz), left = Math.max(right + 4, px(e.p) - ew / 2); pos.push([left, ew]); right = left + ew; });
+      for(var li = pos.length - 1; li >= 0; li--){ pos[li][0] = Math.min(pos[li][0], bound - pos[li][1]); bound = pos[li][0] - 4; }
+      lays.forEach(function(e, li){ chip(e.text, 's', Math.max(0, pos[li][0]), yBot + 8); });
+      var sn = [0.925, 0.85, 0.775, 0.7].map(function(f){ var bb = f * MAX; return [px(calc(bb).eff) - 8 - tw(lS, fz), bx(bb) - 9]; });
+      addChip(lS, '', sn);
+      var mOpts = [];
+      bands.forEach(function(qq){ if(qq.m > 0 && bx(qq.z) - bx(qq.a) >= 24){ mOpts.push([px(qq.m) + 6, bx(qq.a) + 3]); mOpts.push([px(qq.m) + 6, bx(qq.z) - 21]); } });
+      addChip(lM, '', mOpts);
+    }
+    bands.forEach(function(qq){
+      if(qq.m <= 0) return;
+      if(stairOk && sB >= qq.a && sB < qq.z) return;
+      var tx = pct(qq.m), ww = tw(tx, fz), cs2 = [], c0;
+      if(!V){
+        if(bx(qq.z) - bx(qq.a) < ww + 6) return;
+        var top = px(qq.m) - 24;
+        c0 = (bx(qq.a) + bx(qq.z)) / 2 - ww / 2;
+        for(var kk = 0; kk <= 40; kk++) [c0 + kk * 6, c0 - kk * 6].forEach(function(x){ if(x >= bx(qq.a) + 3 && x + ww <= bx(qq.z) - 3) cs2.push([x, top]); });
+      } else {
+        if(bx(qq.z) - bx(qq.a) < 20) return;
+        c0 = (bx(qq.a) + bx(qq.z)) / 2 - 10;
+        for(var k2 = 0; k2 <= 40; k2++) [c0 + k2 * 6, c0 - k2 * 6].forEach(function(y){ if(y >= bx(qq.a) + 2 && y + 20 <= bx(qq.z) - 2){ cs2.push([px(qq.m) + 6, y]); cs2.push([px(qq.m) - 6 - ww, y]); } });
+      }
+      addChip(tx, '', cs2);
+    });
+
+    plot.classList.toggle('m', V);
+    plot.style.height = G.H + 'px';
+    var svg = plot.querySelector('svg');
+    svg.setAttribute('viewBox', '0 0 ' + G.W + ' ' + G.H);
+    for(var pn in D) svg.querySelectorAll('[data-p="' + pn + '"]').forEach(function(el){ el.setAttribute('d', D[pn]); });
+    var cm = svg.querySelector('[data-p="pM"]'), cn = svg.querySelector('[data-p="pS"]');
+    cm.setAttribute('cx', pM[0]); cm.setAttribute('cy', pM[1]); cn.setAttribute('cx', pS[0]); cn.setAttribute('cy', pS[1]);
+    q('labels').innerHTML = lab + chipsHtml + marks;
+
+    // Merknadene
+    var almTxt = pct(alm), nv = {b:fmt(bStar) + NB + 'kr', a:almTxt};
+    var n2 = fr - (fin ? 45000 : 0) > 0
+      ? (fin ? t('lrnSiN2fe', 'Ved {b} er minstefradrag, personfradrag, finnmarksfradraget og egne fradrag brukt opp, og {a} starter.', nv) : t('lrnSiN2e', 'Ved {b} er minstefradrag, personfradrag og egne fradrag brukt opp, og {a} starter.', nv))
+      : (fin ? t('lrnSiN2f', 'Ved {b} er minstefradrag, personfradrag og finnmarksfradraget brukt opp, og {a} starter.', nv) : t('lrnSiN2', 'Ved {b} er minstefradrag og personfradrag brukt opp, og {a} starter.', nv));
+    var notes = [
+      t('lrnSiN1', 'Trygdeavgiften trappes inn: 25 øre per krone opp til 143 175 kr.'), n2,
+      t('lrnSiN3', 'Trinn 3 ved 725 050 kr er det største av trinnskatt-hoppene: +9,7 prosentpoeng.'),
+      t('lrnSiN4', '{a} + 17,8 + 7,6 = {m}, men bare for kroner over 1 467 200 kr.', {a:pnum(alm), m:pct(last.m)})
+    ];
+    q('notes').innerHTML = notes.map(function(x, j){ return '<li><span class="lrn-mk" aria-hidden="true">' + (j + 1) + '</span><span>' + esc(nb(x)) + '</span></li>'; }).join('');
+
+    // Avlesningen ved siktet
+    var inp2 = q('sikte');
+    inp2.max = String(MAX);
+    if(document.activeElement !== inp2) inp2.value = String(sB);
+    set('sVal', fmt(sB)); set('sMarg', pct(marg)); set('sSnitt', snittTxt); set('sGap', L.dec(gapPp, 1));
+    var neste = fmt(calc(sB + 10000).totalSkatt - cs.totalSkatt) + NB + 'kr';
+    function tb(key, fb, vars){ var x = esc(nb(t(key, fb))); for(var kk in vars) x = x.split('{' + kk + '}').join(kk === 'v' ? esc(vars[kk]) : '<strong>' + esc(vars[kk]) + '</strong>'); return x; }
+    html('neste', sB !== Bc ? tb('lrnSiNesteV', 'Ved {v} kr: av de neste 10 000 kr går {n} til skatt. Av hele lønna går {s}.', {v:fmt(sB), n:neste, s:snittTxt})
+                            : tb('lrnSiNeste', 'Av de neste 10 000 kr går {n} til skatt. Av hele lønna går {s}.', {n:neste, s:snittTxt}));
+    function gapAt(bb){ return (lag(bb).m - calc(bb).eff) * 100; }
+    // Tre lønnsnivåer i stigende rekkefølge, der ditt eget står i fet skrift
+    var pts = [[200000, false], [1000000, false]];
+    if(Bc !== 200000 && Bc !== 1000000) pts.push([Bc, true]); else pts.forEach(function(pp){ if(pp[0] === Bc) pp[1] = true; });
+    pts.sort(function(x, y){ return x[0] - y[0]; });
+    var opp = esc(nb(pts.length === 3 ? t('lrnSiOpp', 'Avstanden mellom trappen og linja er {a} ved {ka}, {b} ved {kb} og {c} ved {kc}.')
+                                      : t('lrnSiOpp2', 'Avstanden mellom trappen og linja er {a} ved {ka} og {b} ved {kb}.')));
+    ['a', 'b', 'c'].forEach(function(k, j){
+      if(!pts[j]) return;
+      var g = gapAt(pts[j][0]), gt = esc(g < 0.05 ? ph('null') : L.dec(g, 1) + NB + ph('prosentpoeng'));
+      opp = opp.split('{' + k + '}').join(pts[j][1] ? '<strong>' + gt + '</strong>' : gt).split('{k' + k + '}').join(esc(fmt(pts[j][0]) + NB + 'kr'));
+    });
+    html('oppsum', opp);
+
+    // Tabellen
+    var rows = '';
+    bands.forEach(function(qq, j){
+      var pq = j > 0 ? bands[j - 1] : null, parts = [];
+      if(!pq) parts.push(ph('Ingen skatt'));
+      else {
+        if(qq.ty !== pq.ty) parts.push(qq.ty === 0.25 ? t('lrnSiTyOpp', 'Trygdeavgift trappes inn (25 %)') : t('lrnSiTyHel', 'Trygdeavgift {p} av hele lønna', {p:pct(qq.ty)}));
+        if(qq.al !== pq.al) parts.push(t('lrnSiAl', '+ alminnelig skatt {p}', {p:pct(qq.al)}));
+        if(qq.tr !== pq.tr) parts.push(t('lrnSiTr', '+ trinn {n} ({p})', {n:qq.n, p:L.dec(qq.tr * 100, 1) + NB + '%'}));
+      }
+      var fra = j === bands.length - 1 ? t('lrnSiOver', 'over {k}', {k:fmt(qq.a)}) : fmt(qq.a) + '–' + fmt(qq.z);
+      rows += '<tr><th scope="row">' + esc(fra) + '</th><td>' + pct(qq.m) + '</td><td class="k">' + esc(nb(parts.join(', '))) + '</td></tr>';
+    });
+    q('rows').innerHTML = rows;
+    var words = ['', 'ett', 'to', 'tre', 'fire', 'fem', 'seks', 'sju', 'åtte', 'ni', 'ti'];
+    var cB = calc(B);
+    set('sr', nb(t('lrnSiSr', 'Ved {b} er marginalskatten {m} og snittskatten {s}. Marginalskatten stiger i {nw} bånd fra 0 til {top}, og snittlinja ligger under trappen.',
+      {b:fmt(B) + NB + 'kr', m:pct(lag(B).m), s:L.dec(cB.eff * 100, 2) + NB + '%', nw:words[bands.length] || String(bands.length), n:String(bands.length), top:pct(last.m)})));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-si');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-si-plot');
+    q('sikte').addEventListener('input', function(e){ sikte = parseInt(e.target.value, 10) || 0; render(raw); });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // Etikettene måles med siden sin skrift, så de plasseres på nytt når den er lastet
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(raw) schedule(); });
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._inntekt || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
 </body>
 </html>
