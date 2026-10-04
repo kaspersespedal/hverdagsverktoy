@@ -523,9 +523,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                     <span class="ik-hint" data-i18n="kalkTimeprisSkattHint">Skatt og trygdeavgift samlet. 30 % passer for et ENK med middels inntekt.</span>
                   </div>
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="tp-ferie"><span data-i18n="kalkTimeprisFerieLabel">Ferie, sykdom og pensjon (%)</span></label>
-                    <input id="tp-ferie" class="ik-input" type="text" inputmode="decimal" value="12" autocomplete="off">
-                    <span class="ik-hint" data-i18n="kalkTimeprisFerieHint">Dekker uker uten inntekt. 12 % tilsvarer feriepenger for fem ukers ferie.</span>
+                    <label class="ik-lbl" for="tp-ferie"><span data-i18n="kalkTimeprisFerieLabel">Sykdom og pensjon (%)</span></label>
+                    <input id="tp-ferie" class="ik-input" type="text" inputmode="decimal" value="5" autocomplete="off">
+                    <span class="ik-hint" data-i18n="kalkTimeprisFerieHint">Ferien er alt trukket fra i timene (47 uker). Legg inn buffer for sykedager og egen pensjon.</span>
                   </div>
                 </div>
                 <div class="ik-row full">
@@ -638,8 +638,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           <span data-i18n-html="kalkTimeprisHowtoR3Desc">30 % passer for et ENK med middels inntekt. Tjener du over rundt 700 000 kr, blir satsen høyere, opp mot 35–40 %. Se <a href="https://www.skatteetaten.no/satser/trinnskatt/" target="_blank" rel="noopener">Skatteetatens satser</a>.</span>
         </div>
         <div class="howto-row">
-          <strong data-i18n="kalkTimeprisHowtoR4Title">4. Ferie og driftskostnader</strong>
-          <span data-i18n="kalkTimeprisHowtoR4Desc">Som selvstendig har du ingen betalt ferie. 12 % dekker uker uten inntekt. Driftskostnader på 15 % dekker regnskapsfører, utstyr, forsikring og kurs.</span>
+          <strong data-i18n="kalkTimeprisHowtoR4Title">4. Sykdom, pensjon og driftskostnader</strong>
+          <span data-i18n="kalkTimeprisHowtoR4Desc">Ferien er alt trukket fra i de fakturerbare timene. Påslaget for sykdom og pensjon er en buffer for sykedager og egen pensjon. Driftskostnader på 15 % dekker regnskapsfører, utstyr, forsikring og kurs.</span>
         </div>
         <div class="howto-row">
           <strong data-i18n="kalkTimeprisHowtoR5Title">5. MVA-registrering</strong>
@@ -752,7 +752,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   function renderBar(brutto, paaslag){
     var segs = [
       { v: brutto,  l:'Brutto (netto + skatt)', c:'linear-gradient(90deg,var(--accent),var(--accent-2))' },
-      { v: paaslag, l:'Påslag (ferie + driftskostnader)', c:'color-mix(in srgb, var(--accent) 30%, transparent)' }
+      { v: paaslag, l:'Påslag (sykdom, pensjon og driftskostnader)', c:'color-mix(in srgb, var(--accent) 30%, transparent)' }
     ];
     var total = segs.reduce(function(a,b){return a+b.v;}, 0) || 1;
     var track = document.getElementById('ksBarTrack');
@@ -846,7 +846,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var s = JSON.parse(raw);
       if(s.net   != null) document.getElementById('tp-net').value   = s.net;
       if(s.skatt != null) document.getElementById('tp-skatt').value = s.skatt;
-      if(s.ferie != null) document.getElementById('tp-ferie').value = s.ferie;
+      // Feltet dekket før også ferie, med 12 som standard. Ferien er alt trukket fra i timene (47 uker), så den gamle
+      // standardverdien leses ikke inn igjen; da gjelder den nye standarden for sykdom og pensjon.
+      if(s.ferie != null && String(s.ferie).trim() !== '12') document.getElementById('tp-ferie').value = s.ferie;
       if(s.oh    != null) document.getElementById('tp-oh').value    = s.oh;
       if(s.timer != null) document.getElementById('tp-timer').value = s.timer;
     } catch(e){}
