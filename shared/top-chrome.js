@@ -782,11 +782,17 @@
   // blir stående som fallback for sider uten JS.
   var __navObs = null;   // må holdes i live: en ResizeObserver uten referanse
                          // kan bli samlet inn, og da slutter den å fyre.
+  // Settes på .tabs-wrap, ikke på <html>: --nav-h leses bare av fanerekka (top), men en
+  // egenskap på <html> arves av hvert element, så første skriving tvang fram ny stil for
+  // hele siden midt i lastingen (målt 55–73 ms på telefon, alle 589 elementene på boliglån).
   function syncNavHeight(){
     var nw = document.querySelector('.nav-wrap');
     if (!nw) return;
     var h = Math.round(nw.getBoundingClientRect().height);
-    if (h > 0) document.documentElement.style.setProperty('--nav-h', h + 'px');
+    if (h <= 0) return;
+    var v = h + 'px', rows = document.querySelectorAll('.tabs-wrap');
+    for (var i = 0; i < rows.length; i++)
+      if (rows[i].style.getPropertyValue('--nav-h') !== v) rows[i].style.setProperty('--nav-h', v);
   }
   function watchNavHeight(){
     syncNavHeight();
