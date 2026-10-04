@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Bolig vs leie — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
@@ -159,149 +160,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  /* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap), så
-     de dro hele siden ut i sidelengs scroll — opptil 380px på finance.
-     Samme scroll-wrapper-mønster som .bd-table-wrap/.pv-tblwrap. */
-  .lc-trinn{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -532,57 +390,165 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: boliglan-bvl =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-boliglan-bvl">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-boliglan-bvl">Hva som skjer når kalkulatoren sammenligner</h2><p class="lc-intro">Kalkulatoren setter opp to regnestykker. Eie: renter, felleskost og vedlikehold, minus rentefradrag og verdistigningen på boligen. Leie: all husleie, minus det egenkapitalen kunne tjent i fond. Det som koster minst netto, lønner seg. Med standardtallene er eie 831 675 kr billigere over 10 år.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Lånebeløp</b><span class="tag">Faktor</span></span><span class="fig">Pris − EK<span class="u">kr</span></span><p class="dsc">Det du faktisk låner = kjøpspris minus egenkapital. Med standardtallene (4 mill. − 500 000) blir lånet 3,5 mill. kr, og alt videre regnes ut fra dette.</p></div>
-        <div class="lc-led"><span class="nm"><b>Annuitetslån</b><span class="tag">Faktor</span></span><span class="fig">25<span class="u">år</span></span><p class="dsc">Lånet betales ned med like store terminbeløp hver måned over nedbetalingstiden (standard 25 år). I starten er mest renter, mot slutten mest avdrag.</p></div>
-        <div class="lc-led"><span class="nm"><b>Skattefradrag på renter</b><span class="tag">Fradrag</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Du får 22 % av renteutgiftene tilbake på skatten. Kalkulatoren trekker dette fra eie-kostnaden hvert år, så den reelle rentekostnaden blir lavere enn satsen tilsier.</p></div>
-        <div class="lc-led"><span class="nm"><b>Vedlikehold</b><span class="tag">Sats</span></span><span class="fig">1,0<span class="u">% av verdi/år</span></span><p class="dsc">En årlig kostnad som andel av boligens verdi. Standard er 1 % (norsk tommelfinger-regel) — på en bolig verdt 4 mill. blir det 40 000 kr i året.</p></div>
-        <div class="lc-led"><span class="nm"><b>Verdistigning</b><span class="tag">Faktor</span></span><span class="fig">1 375 666<span class="u">kr</span></span><p class="dsc">Det boligen stiger i verdi i perioden, trukket fra eie-kostnaden. Med 3 % i året blir 4 mill. til 5,38 mill. på 10 år. Avdragene teller ikke som gevinst: de er dine egne penger, flyttet fra konto til bolig.</p></div>
-        <div class="lc-led"><span class="nm"><b>Alternativ avkastning</b><span class="tag">Sats</span></span><span class="fig">6,0<span class="u">%/år</span></span><p class="dsc">Hvis du leier i stedet, antar kalkulatoren at egenkapitalen står i fond og vokser med denne satsen (standard 6 %). Den gevinsten trekkes fra leie-kostnaden.</p></div>
+  <div class="lrn" id="lrn-bv">
+    <section class="lrn-sec" aria-labelledby="lrn-bv-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-bv-h">Så mye må endre seg før svaret snur</h2>
+        <p class="lrn-lede">Kalkulatoren gir ett svar, men det bygger på tre gjetninger: prisveksten, avkastningen du ville fått på sparepengene, og leien. Skalaene viser hvor mye hver av dem må endre seg før eie og leie bytter plass.</p>
+      </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn kjøpsprisen i kalkulatoren.</p>
+      <div class="lrn-bv-main" data-lrn="main">
+        <div class="lrn-bv-head">
+          <p class="lrn-bv-over" data-lrn="over"></p>
+          <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        </div>
+        <svg class="lrn-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs><pattern id="lrn-bv-p" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-bv-pl" x1="0" y1="0" x2="0" y2="6"/></pattern></defs></svg>
+        <div class="lrn-bv-rows">
+          <div class="lrn-bv-row">
+            <figure class="lrn-fig" aria-describedby="lrn-bv-sum">
+              <figcaption class="lrn-cap">Boligprisvekst per år</figcaption>
+              <div class="lrn-plot is-static lrn-bv-plot" dir="ltr">
+                <svg aria-hidden="true" focusable="false">
+                <path class="lrn-bv-eie" data-p="eie"/>
+                <path class="lrn-bv-chip" data-p="chip"/>
+                <path class="lrn-bv-band" data-p="band"/>
+                <path class="lrn-bv-tick" data-p="tick"/>
+                <path class="lrn-bv-zbr" data-p="zbr"/>
+                <path class="lrn-bv-hist" data-p="hist"/>
+                <path class="lrn-bv-guide" data-p="guide"/>
+                <path class="lrn-bv-dimbg" data-p="dim"/>
+                <path class="lrn-bv-dim" data-p="dim"/>
+                <path class="lrn-bv-usr" data-p="usr"/>
+                <path class="lrn-bv-brk" data-p="brk"/>
+                <path class="lrn-bv-tri" data-p="tri"/>
+                </svg>
+                <div class="lrn-labels"></div>
+              </div>
+            </figure>
+            <div class="lrn-bv-side"><span class="t">Boligprisvekst er en antakelse</span><span class="d">Tallet svinger mye lokalt, så prøv flere verdier og se hvor følsomt svaret er.</span></div>
+          </div>
+          <div class="lrn-bv-row">
+            <figure class="lrn-fig" aria-describedby="lrn-bv-sum">
+              <figcaption class="lrn-cap">Avkastning på egenkapitalen per år</figcaption>
+              <div class="lrn-plot is-static lrn-bv-plot" dir="ltr">
+                <svg aria-hidden="true" focusable="false">
+                <path class="lrn-bv-eie" data-p="eie"/>
+                <path class="lrn-bv-chip" data-p="chip"/>
+                <path class="lrn-bv-band" data-p="band"/>
+                <path class="lrn-bv-tick" data-p="tick"/>
+                <path class="lrn-bv-zbr" data-p="zbr"/>
+                <path class="lrn-bv-hist" data-p="hist"/>
+                <path class="lrn-bv-guide" data-p="guide"/>
+                <path class="lrn-bv-dimbg" data-p="dim"/>
+                <path class="lrn-bv-dim" data-p="dim"/>
+                <path class="lrn-bv-usr" data-p="usr"/>
+                <path class="lrn-bv-brk" data-p="brk"/>
+                <path class="lrn-bv-tri" data-p="tri"/>
+                </svg>
+                <div class="lrn-labels"></div>
+              </div>
+            </figure>
+            <div class="lrn-bv-side"><span class="t">Avkastningen på sparepengene teller med</span><span class="d">Hvis du leier, antar kalkulatoren at egenkapitalen står i fond og vokser med denne satsen. Er avkastningen høyere enn boligprisveksten, kan leie vinne, selv over lengre tid.</span></div>
+          </div>
+          <div class="lrn-bv-row">
+            <figure class="lrn-fig" aria-describedby="lrn-bv-sum">
+              <figcaption class="lrn-cap">Månedlig leie, kroner</figcaption>
+              <div class="lrn-plot is-static lrn-bv-plot" dir="ltr">
+                <svg aria-hidden="true" focusable="false">
+                <path class="lrn-bv-eie" data-p="eie"/>
+                <path class="lrn-bv-chip" data-p="chip"/>
+                <path class="lrn-bv-band" data-p="band"/>
+                <path class="lrn-bv-tick" data-p="tick"/>
+                <path class="lrn-bv-zbr" data-p="zbr"/>
+                <path class="lrn-bv-hist" data-p="hist"/>
+                <path class="lrn-bv-guide" data-p="guide"/>
+                <path class="lrn-bv-dimbg" data-p="dim"/>
+                <path class="lrn-bv-dim" data-p="dim"/>
+                <path class="lrn-bv-usr" data-p="usr"/>
+                <path class="lrn-bv-brk" data-p="brk"/>
+                <path class="lrn-bv-tri" data-p="tri"/>
+                </svg>
+                <div class="lrn-labels"></div>
+              </div>
+            </figure>
+            <div class="lrn-bv-side"><span class="t">Leien er det du betaler i dag</span><span class="d" data-lrn="rentNote"></span></div>
+          </div>
+        </div>
+        <p class="lrn-bv-fine" data-lrn="fine"></p>
+        <p class="lrn-bv-say" data-lrn="sum"></p>
+        <details class="lrn-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table>
+            <caption data-lrn="tcap"></caption>
+            <thead><tr><th scope="col" class="s">Skala</th><th scope="col">Område</th><th scope="col">Din verdi</th><th scope="col">Vippepunkt</th><th scope="col">Avstand</th></tr></thead>
+            <tbody data-lrn="tbody"></tbody>
+          </table></div>
+        </details>
+      </div>
+      <p class="lrn-sr" id="lrn-bv-sum" data-lrn="sr"></p>
+    </section>
+
+    <details class="lrn-calc" data-lrn="calc">
+      <summary><h3 class="lrn-h3">To regnestykker</h3><svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+      <div class="lrn-calc-b">
+        <div class="lrn-bv-rg lrn-bv-rgd">
+          <table>
+            <caption data-lrn="rgcap"></caption>
+            <thead><tr><th scope="colgroup" colspan="2" data-lrn="hdE">Eie</th><th scope="colgroup" colspan="2" class="s" data-lrn="hdL">Leie</th></tr></thead>
+            <tbody>
+                <tr><th scope="row">Renter<span data-lrn="rgRentS"></span></th><td data-lrn="rgRent"></td><th scope="row" class="s"><span class="l" data-lrn="rgLeieL">Leie</span><span data-lrn="rgLeieS"></span></th><td data-lrn="rgLeie"></td></tr>
+                <tr><th scope="row">Skattefradrag<span>22&nbsp;% av rentene</span></th><td data-lrn="rgFrad"></td><th scope="row" class="s">Avkastning på egenkapitalen<span data-lrn="rgAvkS"></span></th><td data-lrn="rgAvk"></td></tr>
+                <tr><th scope="row">Felleskostnader<span data-lrn="rgFkS"></span></th><td data-lrn="rgFk"></td><td colspan="2"></td></tr>
+                <tr><th scope="row"><span class="l" data-lrn="rgVlL">Vedlikehold</span><span data-lrn="rgVlS"></span></th><td data-lrn="rgVl"></td><td colspan="2"></td></tr>
+                <tr><th scope="row">Verdiøkning<span data-lrn="rgGainS"></span></th><td data-lrn="rgGain"></td><td colspan="2"></td></tr>
+                <tr class="n"><th scope="row">Netto kostnad</th><td data-lrn="rgNetE"></td><th scope="row" class="s">Netto kostnad</th><td data-lrn="rgNetL"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="lrn-bv-rg lrn-bv-rgm">
+          <p class="lrn-cap" data-lrn="rgcap"></p>
+          <table>
+            <caption data-lrn="hdE">Eie</caption>
+            <tbody>
+                <tr><th scope="row">Renter<span data-lrn="rgRentS"></span></th><td data-lrn="rgRent"></td></tr>
+                <tr><th scope="row">Skattefradrag<span>22&nbsp;% av rentene</span></th><td data-lrn="rgFrad"></td></tr>
+                <tr><th scope="row">Felleskostnader<span data-lrn="rgFkS"></span></th><td data-lrn="rgFk"></td></tr>
+                <tr><th scope="row"><span class="l" data-lrn="rgVlL">Vedlikehold</span><span data-lrn="rgVlS"></span></th><td data-lrn="rgVl"></td></tr>
+                <tr><th scope="row">Verdiøkning<span data-lrn="rgGainS"></span></th><td data-lrn="rgGain"></td></tr>
+                <tr class="n"><th scope="row">Netto kostnad</th><td data-lrn="rgNetE"></td></tr>
+            </tbody>
+          </table>
+          <table>
+            <caption data-lrn="hdL">Leie</caption>
+            <tbody>
+                <tr><th scope="row"><span class="l" data-lrn="rgLeieL">Leie</span><span data-lrn="rgLeieS"></span></th><td data-lrn="rgLeie"></td></tr>
+                <tr><th scope="row">Avkastning på egenkapitalen<span data-lrn="rgAvkS"></span></th><td data-lrn="rgAvk"></td></tr>
+                <tr class="n"><th scope="row">Netto kostnad</th><td data-lrn="rgNetL"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="lrn-p">Ikke med: <a href="/boliglan/dok/">dokumentavgift</a> og megler.</p>
+      </div>
+    </details>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-bv-q">
+      <h3 class="lrn-h3" id="lrn-bv-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvorfor lønner leie seg noen ganger i kalkulatoren?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Som regel fordi avkastningen på egenkapitalen i fond gir mer enn boligprisveksten, eller fordi perioden er for kort til at verdiøkningen rekker å samle seg. Skalaene over viser hvor langt unna du er. Prøv en lengre periode og se hva som skjer.</p></div></details>
+        <details><summary>Hvor mye egenkapital må jeg ha?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Utlånsforskriften krever minst 10&nbsp;% egenkapital. Med en bolig til 4 mill. betyr det minst 400&nbsp;000 kr du må stille med selv før banken låner ut resten.</p></div></details>
+        <details><summary>Hva er «formue ved eie»?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det er boligens verdi minus det som er igjen av lånet ved slutten av perioden, altså det du sitter igjen med hvis du selger. Verdien vokser med boligprisveksten, gjelden synker med avdragene.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcB-boliglan-bvl">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-boliglan-bvl">Satser og referansetall</h2></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Skattefradrag på renter</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Krav til egenkapital</span><span class="v">10<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Boligprisvekst, historisk snitt</span><span class="v">ca. 5<span class="u">%/år</span></span></div>
-      </div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcC-boliglan-bvl">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-boliglan-bvl">Det som avgjør hvilken vei det tipper</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Kort horisont straffer eie</h3><p>Flytter du innen 5 år, taper eie ofte. Transaksjonskostnader — dokumentavgift pluss megler ved salg — spiser opp gevinsten før verdiøkningen rekker å samle seg opp.</p></div>
-        <div class="lc-note"><h3>Lang horisont favoriserer eie</h3><p>Over 15–20 år vinner eie som regel. Da har verdistigningen rukket å veie opp for renter, vedlikehold og transaksjonskostnader.</p></div>
-        <div class="lc-note"><h3>Boligprisvekst er en antakelse</h3><p>Standard er 3 %/år, men historisk snitt i Norge har vært rundt 5 %/år. Tallet svinger mye lokalt, så prøv flere verdier og se hvor følsomt svaret er.</p></div>
-        <div class="lc-note"><h3>Avkastningen på sparepengene teller med</h3><p>Hvis du leier, antas egenkapitalen å vokse i fond (standard 6 %/år). Når denne avkastningen er høyere enn boligprisveksten, kan leie vinne — selv over lengre tid.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-boliglan-bvl">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-boliglan-bvl">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hva betyr break-even her?</summary><div class="a"><p>Det er året der eie blir billigere enn leie og holder seg billigere ut perioden. Dokumentavgift (2,5 % for selveier) og megler er ikke med, så i virkeligheten kommer break-even senere.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor lønner leie seg noen ganger i kalkulatoren?</summary><div class="a"><p>Som regel fordi den alternative avkastningen på egenkapitalen i fond (standard 6 %/år) gir mer enn boligprisveksten, eller fordi tidsperioden er for kort til at verdiøkning hentes inn. Prøv lengre tidsperiode og se hva som skjer.</p></div></details>
-        <details class="lc-q"><summary>Hvor mye egenkapital må jeg ha?</summary><div class="a"><p>Utlånsforskriften krever minst 10 % egenkapital. Med en bolig til 4 mill. betyr det minst 400 000 kr du må stille med selv før banken låner ut resten.</p></div></details>
-        <details class="lc-q"><summary>Er skattefradraget på renter regnet med?</summary><div class="a"><p>Ja. Kalkulatoren trekker 22 % av renteutgiftene fra eie-kostnaden hvert år, slik skattereglene gir. Det gjør den reelle rentekostnaden lavere enn lånerenten alene.</p></div></details>
-        <details class="lc-q"><summary>Hva er «formue ved eie»?</summary><div class="a"><p>Det er boligens verdi minus det som er igjen av lånet ved slutten av perioden — altså det du sitter igjen med hvis du selger. Verdien vokser med boligprisveksten, gjelden synker med avdragene.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor er svaret så forskjellig når jeg endrer ett tall?</summary><div class="a"><p>Resultatet henger tett på rente, boligprisvekst og avkastning på sparepengene. Små endringer i disse kan vippe svaret. Kjør kalkulatoren flere ganger med ulike forutsetninger heller enn å stole på ett tall.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-boliglan-bvl">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-boliglan-bvl">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/boliglan/mor/"><span class="ar">Nedbetaling →</span><h3>Nedbetaling av lån</h3><p>Se månedlig terminbeløp, totale renter og hvordan annuitet og serielån skiller seg fra hverandre.</p></a>
-        <a class="lc-link" href="/boliglan/maxlan/"><span class="ar">Maks lån →</span><h3>Hvor mye kan jeg låne?</h3><p>Finn ut hvor stort lån inntekten og egenkapitalen din rekker til etter bankens regler.</p></a>
-        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Lag et budsjett</h3><p>Se hva du sitter igjen med hver måned etter bolig, mat og faste utgifter.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-bv-r">
+      <h3 class="lrn-h3" id="lrn-bv-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/boliglan/mor/"><span><span class="t">Boliglånskalkulator</span><span class="d">Se terminbeløp, totale renter og hvordan annuitet og serielån skiller seg fra hverandre.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/maxlan/"><span><span class="t">Hva har jeg råd til?</span><span class="d">Finn ut hvor stort lån inntekten og egenkapitalen din rekker til etter bankens regler.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/dok/"><span><span class="t">Dokumentavgift</span><span class="d">Det kalkulatoren ikke tar med: avgiften du betaler ved kjøp.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/budsjett/"><span><span class="t">Budsjett</span><span class="d">Se hva du sitter igjen med hver måned etter bolig, mat og faste utgifter.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -604,6 +570,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <script defer src="/shared/top-chrome.js?v=v245"></script>
 <script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -624,23 +591,31 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     if(el) el.textContent = val;
   }
 
-  // ── Hovedberegning ──
+  // Feltene som tall. null når kjøpsprisen mangler.
+  function read(){
+    var pris = parseNum('bvl-pris');
+    if(pris <= 0) return null;
+    return { pris:pris, ek:parseNum('bvl-ek'), rente:parseNum('bvl-rente'), leie:parseNum('bvl-leie'),
+      fk:parseNum('bvl-felleskost'), vl:parseNum('bvl-vedlikehold'), aar:parseNum('bvl-aar'), lopetid:parseNum('bvl-lopetid'),
+      vekst:parseNum('bvl-vekst'), leievekst:parseNum('bvl-leievekst'), avk:parseNum('bvl-avk') };
+  }
+
+  // ── Hovedberegning ── (tar feltene som argument, så forklaringsblokka kan regne vippepunktene med samme matte)
   // Avdrag er egne penger som flyttes inn i boligen: de er verken kostnad eller gevinst.
   // Derfor trekkes bare verdistigningen (verdi − kjøpspris) fra eie-kostnaden.
-  function compute(){
-    var pris = parseNum('bvl-pris');
-    if(pris <= 0){ return { hasData:false }; }
-    var ek = parseNum('bvl-ek');
-    var renteAr = parseNum('bvl-rente')/100;
-    var leieMnd = parseNum('bvl-leie');
-    var fkMnd = parseNum('bvl-felleskost');
-    var vlPct = parseNum('bvl-vedlikehold')/100;
-    var aar = Math.round(parseNum('bvl-aar'))||10;
-    var prisVekstAr = parseNum('bvl-vekst')/100;
-    var leieVekstAr = parseNum('bvl-leievekst')/100;
-    var avkAr = parseNum('bvl-avk')/100;
+  function compute(p){
+    var pris = p.pris;
+    var ek = p.ek;
+    var renteAr = p.rente/100;
+    var leieMnd = p.leie;
+    var fkMnd = p.fk;
+    var vlPct = p.vl/100;
+    var aar = Math.round(p.aar)||10;
+    var prisVekstAr = p.vekst/100;
+    var leieVekstAr = p.leievekst/100;
+    var avkAr = p.avk/100;
     var lan = Math.max(0, pris - ek);
-    var lopetidAr = Math.round(parseNum('bvl-lopetid')) || 25;
+    var lopetidAr = Math.round(p.lopetid) || 25;
     if(lopetidAr<10) lopetidAr=10; if(lopetidAr>30) lopetidAr=30;
     var nMaks = lopetidAr*12, rMnd = renteAr/12;
     var annuitet = rMnd>0 ? lan * rMnd / (1 - Math.pow(1+rMnd,-nMaks)) : lan/nMaks;
@@ -650,7 +625,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     var boligVerdi = pris;
     var leieAr = leieMnd*12;
     var ekAlt = ek;
-    var rentBetaltTot = 0, avdragTot = 0;
+    var rentBetaltTot = 0, avdragTot = 0, fkTot = 0, vlTot = 0, fradTot = 0;
     var eieBilligst = [];
     for(var y=1; y<=aar; y++){
       var renteAretTotal = 0, avdragAretTotal = 0;
@@ -667,6 +642,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var fkAretTotal = fkMnd*12;
       var vlAretTotal = boligVerdi * vlPct;
       var skattefradragAr = renteAretTotal * 0.22;
+      fkTot += fkAretTotal; vlTot += vlAretTotal; fradTot += skattefradragAr;
       totalEie += renteAretTotal + fkAretTotal + vlAretTotal - skattefradragAr;
       totalLeie += leieAr;
       leieAr *= (1 + leieVekstAr);
@@ -687,12 +663,18 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       hasData: true, vinner: vinner, diff: diff,
       nettoEie: nettoEie, nettoLeie: nettoLeie,
       formueEie: formueEie, lan: lan, aar: aar,
-      beAar: beAar
+      beAar: beAar,
+      // Delene av de to regnestykkene (forklaringsblokka)
+      rent: rentBetaltTot, frad: fradTot, fkTot: fkTot, vlTot: vlTot, gevinst: boligVerdi - pris, verdi: boligVerdi,
+      leieTot: totalLeie, avkGevinst: ekAlt - ek, ann: annuitet, lop: lopetidAr
     };
   }
 
   function recalc(){
-    var d = compute();
+    var p = read();
+    var d = p ? compute(p) : { hasData:false };
+    window._bvl = { p:p, model:compute };
+    if(window.hvtLearn) hvtLearn.update('boliglan-bvl', window._bvl);
     var r = (typeof R === 'function') ? R() : {};
     if(!d.hasData){
       ['bvl-r-val','bvl-r-eie','bvl-r-leie','bvlStripLan','bvlStripFormue','bvlStripBe','bvlStripVinner','hStatVinner','hStatFormue'].forEach(function(id){ setEl(id, '–'); });
@@ -852,6 +834,437 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
   } else { init(); pollRender(); }
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Så mye må endre seg før svaret snur»: én skala per antakelse
+//    (prisvekst, avkastning, leie) med verdien din, vippepunktet og avstanden mellom dem.
+//    Vippepunktet finnes med halveringsmetoden på kalkulatorens egen modell (window._bvl). ──
+(function(){
+  var KEY = 'boliglan-bvl';
+  var NB = '\u00a0';
+  // Standardverdiene i feltene over. Så lenge alle står slik, er merket «Eksempel».
+  var DEF = {pris:4000000, ek:500000, rente:5.5, fk:3500, vl:1, aar:10, lopetid:25, leie:15000, vekst:3, leievekst:3, avk:6};
+  var STEPS = [0.5, 1, 2, 2.5, 5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000, 2500, 5000, 10000, 20000, 25000, 50000, 100000];
+  var root, ctx, lastW = 0, queued = false, raw = null;
+  // Retningsisolatene (U+2066–U+2069) som arabiske maler bruker rundt tall
+  var ISO = new RegExp('[' + String.fromCharCode(0x2066) + '-' + String.fromCharCode(0x2069) + ']', 'g');
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, s){ root.querySelectorAll('[data-lrn="' + name + '"]').forEach(function(el){ el.textContent = s; }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function cap1(s){ return s.charAt(0).toUpperCase() + s.slice(1); }
+  // Bredden på en etikett, så den kan plasseres der den får plass
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  // Teksten delt i to linjer på mellomrommet nærmest midten
+  function splitMid(s){
+    var best = -1;
+    for(var i = 0; i < s.length; i++) if(s.charAt(i) === ' ' && (best < 0 || Math.abs(i - s.length / 2) < Math.abs(best - s.length / 2))) best = i;
+    return best < 0 ? [s] : [s.slice(0, best), s.slice(best + 1)];
+  }
+
+  // Halveringsmetoden på differansen (leie minus eie) for ett felt, de andre holdt fast. null = snur ikke.
+  function tip(M, p, key, lo, hi){
+    function f(x){ var o = {}; for(var k in p) o[k] = p[k]; o[key] = x; return M(o).diff; }
+    var a = lo, b = hi, fa = f(a), fb = f(b);
+    if(fa === 0) return a;
+    if(fb === 0) return b;
+    if((fa > 0) === (fb > 0)) return null;
+    for(var i = 0; i < 80; i++){
+      var m = (a + b) / 2, fm = f(m);
+      if((fm > 0) === (fa > 0)){ a = m; fa = fm; } else b = m;
+    }
+    return (a + b) / 2;
+  }
+
+  // Runder delene av et regnestykke slik at de summerer til det avrundede svaret
+  function fit(parts, total){
+    var r = parts.map(function(x){ return Math.round(x); }), d = Math.round(total) - r.reduce(function(s, x){ return s + x; }, 0), guard = 0;
+    while(d !== 0 && guard < 10){
+      var dir = d > 0 ? 1 : -1, best = 0, bestCost = Infinity;
+      parts.forEach(function(x, i){ var c = Math.abs(r[i] + dir - x) - Math.abs(r[i] - x); if(c < bestCost){ bestCost = c; best = i; } });
+      r[best] += dir; d -= dir; guard++;
+    }
+    return r;
+  }
+
+  // Geometri fra faktisk bredde: én SVG-enhet er én piksel, så HTML-etikettene treffer
+  function geo(W){
+    var mob = W < 600;
+    return {mobile:mob, W:W, x0:mob ? 14 : 24, x1:W - (mob ? 14 : 24), fz:mob ? 11 : 12, bh:mob ? 28 : 32, maxT:mob ? 5 : 8};
+  }
+
+  // Én skala: område, soner, streker og etiketter. sp.eieRight: høyere verdi gir fordel til eie.
+  // Hver etikett står ved siden av sin egen strek (B = vippepunkt, U = din verdi, H = historisk snitt).
+  // Passer de ikke i samme rad, går én i en rad under, og den øverstes strek går gjennom raden under.
+  function scale(sp, G, userEie, T){
+    var mob = G.mobile, fz = G.fz, W = G.W, x0 = G.x0, x1 = G.x1, hasBrk = sp.brk !== null;
+    var F4 = '400 ' + fz + 'px Inter, system-ui, sans-serif', F6 = '600 ' + fz + 'px Inter, system-ui, sans-serif';
+    // Området: standardområdet, utvidet når verdien eller vippepunktet ligger utenfor eller helt ved kanten
+    var lo = sp.lo, hi = sp.hi, span0 = sp.hi - sp.lo;
+    (hasBrk ? [sp.user, sp.brk] : [sp.user]).forEach(function(v){
+      if(v < lo + 0.04 * span0) lo = Math.max(sp.minV, Math.min(lo, v - 0.1 * span0));
+      if(v > hi - 0.04 * span0) hi = Math.min(sp.maxV, Math.max(hi, v + 0.1 * span0));
+    });
+    var step = STEPS[STEPS.length - 1];
+    for(var si = 0; si < STEPS.length; si++){
+      var n = Math.floor(hi / STEPS[si] + 1e-9) - Math.ceil(lo / STEPS[si] - 1e-9) + 1;
+      if(n <= G.maxT){ step = STEPS[si]; break; }
+    }
+    function X(v){ return x0 + (Math.max(lo, Math.min(hi, v)) - lo) / (hi - lo) * (x1 - x0); }
+    var xu = X(sp.user), xb = hasBrk ? X(sp.brk) : null;
+    var xh = sp.hist !== undefined && sp.hist >= lo && sp.hist <= hi ? X(sp.hist) : null;
+
+    // Tekster og mål
+    var userText = T.you(sp.fmtV(sp.user));
+    var brkText = hasBrk ? T.brk(sp.fmtV(sp.brk)) : T.nobrk;
+    var dist = hasBrk ? Math.abs(sp.user - sp.brk) : 0;
+    var distText = !hasBrk ? '' : (dist < (sp.kind === 'kr' ? 5 : 0.05) ? T.on : T.margin(sp.fmtD(dist)));
+    var wB = textW(brkText, F6) + 4, wT = textW(userText, F6) + 18, bLines = [brkText];
+    // På mobil brytes avstandsteksten over to linjer når den er bredere enn merket
+    var distLines = distText ? [distText] : [];
+    if(distText && mob && textW(distText, F4) + 4 > wT + 10 && distText.indexOf(' ') > 0){
+      distLines = splitMid(distText);
+    }
+    var wD = distLines.length ? Math.max.apply(null, distLines.map(function(s){ return textW(s, F4); })) + 4 : 0;
+    var wU = Math.max(wT, wD), hU = distLines.length ? 22 + 16 * distLines.length : 20;
+    var hl = splitMid(T.hist), wH = textW(T.hist, F4) + 4, wH2 = hl.length > 1 ? Math.max(textW(hl[0], F4), textW(hl[1], F4)) + 4 : wH;
+
+    var ROW0 = 4;
+    function sideX(leg, w, side){ return side === 'left' ? leg - 7 - w : leg + 7; }
+    function inScr(x, w){ return x >= 0 && x + w <= W; }
+    var userRight = !hasBrk || xu >= xb;
+    var items = {B:{w:wB, h:20, leg:hasBrk ? xb : null}, U:{w:wU, h:hU, leg:xu}, H:{w:wH, h:20, leg:xh}};
+    function rowH(pos, r){ var m = 0; ['B', 'U', 'H'].forEach(function(kk){ if(pos[kk] && pos[kk].row === r) m = Math.max(m, items[kk].h); }); return m; }
+    function rowYof(pos, r){ return r === 0 ? ROW0 : ROW0 + rowH(pos, 0) + 4; }
+    // Passer historisk snitt i rad r, gitt plasseringen av de to andre? På mobil kan teksten brytes over to linjer.
+    function histFit(pos, r){
+      var y = rowYof(pos, r);
+      var variants = mob && hl.length > 1 ? [{w:wH, h:20, lines:1}, {w:wH2, h:36, lines:2}] : [{w:wH, h:20, lines:1}];
+      for(var vi = 0; vi < variants.length; vi++){
+        var v = variants[vi];
+        for(var di = 0; di < 2; di++){
+          var sd = di ? 'left' : 'right', x = sideX(xh, v.w, sd), okp = true;
+          if(!inScr(x, v.w)) continue;
+          ['B', 'U'].forEach(function(kk){
+            var it = items[kk];
+            if(it.leg !== null){
+              var top = rowYof(pos, pos[kk].row);
+              if(top <= y + v.h && it.leg > x - 7 && it.leg < x + v.w + 7) okp = false;
+            }
+            if(pos[kk].row === r && x < pos[kk].x + it.w + 10 && pos[kk].x < x + v.w + 10) okp = false;
+            // Strekens egen linje går ned gjennom radene under
+            if(pos[kk].row > r && xh > pos[kk].x - 7 && xh < pos[kk].x + it.w + 7) okp = false;
+          });
+          if(okp) return {x:x, side:sd, row:r, w:v.w, h:v.h, lines:v.lines};
+        }
+      }
+      return null;
+    }
+    var wantH = xh !== null, pos = null;
+    if(hasBrk){
+      // Begge i samme rad, utover fra hverandre
+      var singles = function(mg){
+        var out = [], prefB = userRight ? ['left', 'right'] : ['right', 'left'], prefU = userRight ? ['right', 'left'] : ['left', 'right'];
+        prefB.forEach(function(sb){
+          prefU.forEach(function(su){
+            var xB = sideX(xb, wB, sb), xU = sideX(xu, wU, su);
+            if(!inScr(xB, wB) || !inScr(xU, wU)) return;
+            if(xu > xB - mg && xu < xB + wB + mg) return;
+            if(xb > xU - mg && xb < xU + wU + mg) return;
+            if(xB < xU + wU + 10 && xU < xB + wB + 10) return;
+            out.push({B:{x:xB, side:sb, row:0}, U:{x:xU, side:su, row:0}});
+          });
+        });
+        return out;
+      };
+      // To rader: den øverste står fritt, den nederste holder seg unna den øverstes strek
+      var dbl = function(upperIsB, mg){
+        var up = upperIsB ? {leg:xb, w:wB} : {leg:xu, w:wU}, lw = upperIsB ? {leg:xu, w:wU} : {leg:xb, w:wB}, upX = null, upS = null;
+        (up.leg < W / 2 ? ['right', 'left'] : ['left', 'right']).some(function(sd){
+          var x = sideX(up.leg, up.w, sd);
+          if(inScr(x, up.w)){ upX = x; upS = sd; return true; }
+          return false;
+        });
+        if(upX === null) return null;
+        var outward = lw.leg >= up.leg ? ['right', 'left'] : ['left', 'right'];
+        for(var oi = 0; oi < 2; oi++){
+          var x = sideX(lw.leg, lw.w, outward[oi]);
+          if(!inScr(x, lw.w)) continue;
+          if(up.leg > x - mg && up.leg < x + lw.w + mg) continue;
+          var upPos = {x:upX, side:upS, row:0}, lwPos = {x:x, side:outward[oi], row:1};
+          return upperIsB ? {B:upPos, U:lwPos} : {B:lwPos, U:upPos};
+        }
+        return null;
+      };
+      // Foretrekk en plassering der også historisk snitt får plass i samme rad
+      var tryPlace = function(){
+        var tries = [singles(7), [dbl(true, 7)], [dbl(false, 7)], singles(3), [dbl(true, 3)], [dbl(false, 3)]], firstC = null, got = null;
+        for(var ti = 0; ti < tries.length && !got; ti++){
+          tries[ti].forEach(function(cand){
+            if(!cand || got) return;
+            if(!firstC) firstC = cand;
+            if(wantH){ var hf = histFit(cand, 0); if(hf){ got = {B:cand.B, U:cand.U, H:hf}; } }
+          });
+          if(!wantH && firstC) got = firstC;
+        }
+        return got || firstC;
+      };
+      pos = tryPlace();
+      // På mobil kan vippepunktet stå på to linjer, navnet over tallet, når det ikke får plass på én
+      if(!pos && mob){
+        bLines = [T.brkL, sp.fmtV(sp.brk)];
+        wB = Math.max(textW(bLines[0], F6), textW(bLines[1], F6)) + 4;
+        items.B.w = wB; items.B.h = 36;
+        pos = tryPlace();
+      }
+      if(!pos){
+        bLines = [brkText]; wB = textW(brkText, F6) + 4; items.B.w = wB; items.B.h = 20;
+        var sb0 = userRight ? 'left' : 'right', su0 = userRight ? 'right' : 'left';
+        pos = {B:{x:Math.max(0, Math.min(W - wB, sideX(xb, wB, sb0))), side:sb0, row:0}, U:{x:Math.max(0, Math.min(W - wU, sideX(xu, wU, su0))), side:su0, row:0}};
+      }
+    } else {
+      // Uten vippepunkt: teksten står fritt til venstre, og verdien ved siden av sin strek
+      var chosen = null;
+      [0, 1].forEach(function(row){
+        (xu < W / 2 ? ['right', 'left'] : ['left', 'right']).forEach(function(sd){
+          if(chosen) return;
+          var x = sideX(xu, wU, sd);
+          if(!inScr(x, wU)) return;
+          if(row === 0 && x < x0 + wB + 10 && x0 < x + wU + 10) return;
+          if(row === 0 && xu > x0 - 7 && xu < x0 + wB + 7) return;
+          chosen = {x:x, side:sd, row:row};
+        });
+      });
+      pos = {B:{x:x0, side:'right', row:0}, U:chosen || {x:Math.max(0, Math.min(W - wU, sideX(xu, wU, 'right'))), side:'right', row:1}};
+    }
+    // Historisk snitt over båndet, ellers inne i båndet ved siden av streken. Får ikke hele teksten plass,
+    // prøves den korte. Får heller ikke den plass, tegnes verken strek eller tekst.
+    var histT = T.hist, ph = null, phInX = null;
+    function inBandX(){
+      var legs = hasBrk ? [xu, xb] : [xu], dimOn = hasBrk && Math.abs(xu - xb) > 24, res = null;
+      ['right', 'left'].forEach(function(sd){
+        if(res) return;
+        var x = sideX(xh, wH, sd);
+        if(x < x0 + 2 || x + wH > x1 - 2) return;
+        if(legs.some(function(l){ return l > x - 4 && l < x + wH + 4; })) return;
+        if(dimOn && Math.min(xu, xb) + 4 < x + wH + 2 && Math.max(xu, xb) - 4 > x - 2) return;
+        res = {x:x, side:sd};
+      });
+      return res;
+    }
+    if(wantH){
+      ph = pos.H || histFit(pos, 0) || histFit(pos, 1);
+      if(!ph) phInX = inBandX();
+      if(!ph && !phInX){
+        histT = T.histS; hl = [histT]; wH = wH2 = textW(histT, F4) + 4; items.H.w = wH; items.H.h = 20;
+        ph = histFit(pos, 0) || histFit(pos, 1);
+        if(!ph) phInX = inBandX();
+      }
+      pos.H = ph;
+    }
+    if(ph){ items.H.w = ph.w; items.H.h = ph.h; }
+    var two = ['B', 'U', 'H'].some(function(kk){ return pos[kk] && pos[kk].row === 1; });
+    function rowY(r){ return rowYof(pos, r); }
+    var rowsBottom = two ? rowY(1) + rowH(pos, 1) : ROW0 + rowH(pos, 0);
+    var triTop = rowsBottom + 6, bt = triTop + 10, bb = bt + G.bh, tickTop = bb + 8, zoneLine = bb + 32, zoneTop = zoneLine + 4, h = zoneTop + 22;
+
+    // Soner: skravert der eie lønner seg, åpen der leie lønner seg
+    function rect(x, y, w, hh){ return 'M' + f1(x) + ',' + f1(y) + ' h' + f1(w) + ' v' + f1(hh) + ' h' + f1(-w) + ' Z'; }
+    var zones, eieD = '';
+    if(hasBrk){
+      var ze = sp.eieRight ? [xb, x1] : [x0, xb], zl = sp.eieRight ? [x0, xb] : [xb, x1];
+      eieD = rect(ze[0], bt, ze[1] - ze[0], bb - bt);
+      zones = [{a:ze[0], b:ze[1], label:T.eie}, {a:zl[0], b:zl[1], label:T.leie}];
+    } else {
+      if(userEie) eieD = rect(x0, bt, x1 - x0, bb - bt);
+      zones = [{a:x0, b:x1, label:userEie ? T.eie : T.leie}];
+    }
+    var d = {eie:eieD, band:rect(x0, bt, x1 - x0, bb - bt), tick:'', zbr:'', hist:'', guide:'', dim:'', usr:'', brk:'', tri:'', chip:''};
+
+    // Aksen. En etikett ved kanten skyves inn så den ikke går utenfor flaten.
+    var lab = '';
+    for(var v = Math.ceil(lo / step - 1e-9) * step; v <= hi + 1e-9; v += step){
+      var tv = Math.round(v / step) * step + 0, tl = sp.fmtT(tv, step), wt = textW(tl, F4);
+      var cx = Math.max(wt / 2 + 1, Math.min(W - wt / 2 - 1, X(tv)));
+      d.tick += 'M' + f1(X(tv)) + ',' + bb + ' V' + (bb + 4) + ' ';
+      lab += '<span class="lrn-bv-tx k" style="left:' + f1(cx - 28) + 'px;top:' + tickTop + 'px">' + esc(tl) + '</span>';
+    }
+
+    // Streker, målelinje og trekant
+    if(hasBrk){
+      d.brk = 'M' + f1(xb) + ',' + rowY(pos.B.row) + ' V' + bb;
+      if(Math.abs(xu - xb) > 24){
+        var ym = bt + G.bh / 2, dir = xu > xb ? 1 : -1, a = xb + dir * 4, b2 = xu - dir * 4;
+        d.dim = 'M' + f1(a) + ',' + f1(ym) + ' H' + f1(b2)
+          + ' M' + f1(a + dir * 6) + ',' + f1(ym - 3.5) + ' L' + f1(a) + ',' + f1(ym) + ' L' + f1(a + dir * 6) + ',' + f1(ym + 3.5)
+          + ' M' + f1(b2 - dir * 6) + ',' + f1(ym - 3.5) + ' L' + f1(b2) + ',' + f1(ym) + ' L' + f1(b2 - dir * 6) + ',' + f1(ym + 3.5);
+      }
+    }
+    d.usr = 'M' + f1(xu) + ',' + rowY(pos.U.row) + ' V' + triTop;
+    d.tri = 'M' + f1(xu - 6) + ',' + triTop + ' L' + f1(xu + 6) + ',' + triTop + ' L' + f1(xu) + ',' + bt + ' Z';
+    d.guide = 'M' + f1(xu) + ',' + bt + ' V' + bb;
+    var phIn = phInX ? {x:phInX.x, side:phInX.side, y:bt + (G.bh - 16) / 2} : null;
+    if(ph) d.hist = 'M' + f1(xh) + ',' + (rowY(ph.row) + ph.h + 3) + ' V' + bb;
+    else if(phIn){ d.hist = 'M' + f1(xh) + ',' + bt + ' V' + bb; d.chip = rect(phIn.x - 2, phIn.y, wH + 4, 16); }
+
+    // Etikettene
+    function put(p, text, w, top, cls){
+      var al = p.side === 'center' ? 'center' : p.side === 'left' ? 'right' : 'left';
+      lab += '<span class="lrn-bv-tx' + (cls ? ' ' + cls : '') + '" style="left:' + f1(p.x) + 'px;top:' + top + 'px;width:' + f1(w) + 'px;text-align:' + al + '">' + esc(text) + '</span>';
+    }
+    bLines.forEach(function(s, i){ put(pos.B, s, wB, rowY(pos.B.row) + 2 + 16 * i, 'b'); });
+    if(ph && ph.lines === 2){ put(ph, hl[0], ph.w, rowY(ph.row) + 2); put(ph, hl[1], ph.w, rowY(ph.row) + 18); }
+    else if(ph) put(ph, histT, ph.w, rowY(ph.row) + 2);
+    else if(phIn) put(phIn, histT, wH, phIn.y);
+    distLines.forEach(function(s, i){ put(pos.U, s, wU, rowY(pos.U.row) + 22 + 16 * i); });
+    lab += '<span class="lrn-bv-tag" style="left:' + f1(pos.U.x) + 'px;top:' + rowY(pos.U.row) + 'px;width:' + f1(wU) + 'px;text-align:' + (pos.U.side === 'left' ? 'right' : 'left') + '"><span>' + esc(userText) + '</span></span>';
+    // Sonene: klammer under aksen, med navnet midt under. Er sonen smalere enn navnet, ligger navnet inn mot midten.
+    zones.forEach(function(z){
+      d.zbr += 'M' + f1(z.a + 1) + ',' + (zoneLine - 5) + ' V' + zoneLine + ' H' + f1(z.b - 1) + ' V' + (zoneLine - 5) + ' ';
+      var wz = textW(z.label, '500 ' + fz + 'px Inter, system-ui, sans-serif') + 4, zw = z.b - z.a;
+      if(zw >= wz + 8) put({x:z.a, side:'center'}, z.label, zw, zoneTop, 'z');
+      else if(z.a <= x0 + 0.5) put({x:z.a, side:'right'}, z.label, wz, zoneTop, 'z');
+      else put({x:z.b - wz, side:'left'}, z.label, wz, zoneTop, 'z');
+    });
+    return {lo:lo, hi:hi, d:d, lab:lab, h:h};
+  }
+
+  function render(dd){
+    raw = dd;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, kr = L.kr;
+    var none = !dd || !dd.p;
+    q('none').hidden = !none;
+    q('main').hidden = none;
+    q('calc').hidden = none;
+    if(none){ set('sr', ''); return; }
+    var p = dd.p, M = dd.model, r = M(p), eie = r.diff >= 0;
+    var mine = Object.keys(DEF).some(function(k){ return Math.abs(p[k] - DEF[k]) > 1e-9; });
+    function pc(v){ return L.dec(v, 1) + NB + '%'; }
+    function krs(v){ return kr(v) + NB + 'kr'; }
+    function num(v){ return Math.abs(v - Math.round(v)) < 1e-9 ? kr(v) : L.dec(v, 1); }
+    function pp(v){ return t('lrnBvPp', '{v}' + NB + 'prosentpoeng', {v:L.dec(v, 1), n:f1(v)}); }
+    var T = {
+      you: function(v){ return t('lrnBvYou', 'Du er her: {v}', {v:v}); },
+      brk: function(v){ return t('lrnBvBrk', 'Vippepunkt: {v}', {v:v}); },
+      // Navnet alene, til vippepunktet på to linjer (uten de tomme isolatene rundt tallet på arabisk)
+      brkL: t('lrnBvBrk', 'Vippepunkt: {v}', {v:''}).replace(ISO, '').trim(),
+      margin: function(v){ return t('lrnBvMargin', '{v} margin', {v:v}); },
+      nobrk: ph('Snur ikke innenfor rimelige verdier'),
+      on: ph('På vippepunktet'),
+      hist: t('lrnBvHist', 'Historisk snitt ~5' + NB + '%'),
+      histS: t('lrnBvHistS', 'Snitt ~5' + NB + '%'),
+      eie: t('bvlVinnerEie', 'Eie lønner seg'),
+      leie: t('bvlVinnerLeie', 'Leie lønner seg')
+    };
+    var specs = [
+      {key:'vekst', lo:-3, hi:7, minV:-20, maxV:30, eieRight:true, kind:'pct', hist:5},
+      {key:'avk', lo:0, hi:20, minV:-20, maxV:30, eieRight:false, kind:'pct'},
+      {key:'leie', lo:0, hi:20000, minV:0, maxV:100000, eieRight:true, kind:'kr'}
+    ];
+    specs.forEach(function(sp){
+      sp.user = p[sp.key];
+      sp.brk = tip(M, p, sp.key, sp.minV, sp.maxV);
+      sp.fmtV = sp.kind === 'kr' ? krs : pc;
+      sp.fmtD = sp.kind === 'kr' ? krs : pp;
+      sp.fmtT = sp.kind === 'kr' ? function(v){ return kr(v); } : function(v, st){ return (st < 1 ? L.dec(v, 1) : kr(v)) + NB + '%'; };
+    });
+
+    // Merket og overskriften over skalaene
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    set('stateText', t('lrnBvState', '{p} · {e} egenkapital · {n} år', {p:krs(p.pris), e:krs(p.ek), n:r.aar}));
+    set('over', mine ? t('lrnBvOverD', 'Over {n} år, med dine tall', {n:r.aar}) : t('lrnBvOverE', 'Over {n} år, med standardtallene', {n:r.aar}));
+    set('rentNote', t('lrnBvRentNote', 'Den øker {p} i året gjennom hele perioden.', {p:pc(p.leievekst)}));
+    set('fine', t('lrnBvFine', 'Hver skala flytter én antakelse og holder de ti andre feltene fast, blant annet vedlikehold på {v} av boligverdien i året og felleskostnader på {f} i måneden.', {v:pc(p.vl), f:krs(p.fk)}));
+
+    // Skalaene
+    var plots = root.querySelectorAll('.lrn-bv-plot'), W = plots[0].clientWidth || 780, G = geo(W);
+    lastW = W;
+    var S = specs.map(function(sp, i){
+      var sc = scale(sp, G, eie, T), plot = plots[i], svg = plot.querySelector('svg');
+      plot.classList.toggle('m', G.mobile);
+      plot.style.height = sc.h + 'px';
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + sc.h);
+      for(var k in sc.d) svg.querySelectorAll('[data-p="' + k + '"]').forEach(function(el){ el.setAttribute('d', sc.d[k]); });
+      plot.querySelector('.lrn-labels').innerHTML = sc.lab;
+      return sc;
+    });
+
+    // Setningen under skalaene
+    function phrase(sp){
+      if(sp.brk === null) return null;
+      var b = sp.brk, onEie = sp.eieRight ? sp.user >= b : sp.user <= b;
+      if(sp.key === 'vekst'){
+        if(onEie) return b < 0 ? t('lrnBvV1', 'boligprisene faller mer enn {v} i året', {v:pc(-b)}) : t('lrnBvV2', 'prisveksten blir lavere enn {v} i året', {v:pc(b)});
+        return b >= 0 ? t('lrnBvV3', 'prisveksten blir høyere enn {v} i året', {v:pc(b)}) : t('lrnBvV4', 'prisfallet blir mindre enn {v} i året', {v:pc(-b)});
+      }
+      if(sp.key === 'avk') return onEie ? t('lrnBvA1', 'avkastningen blir over {v}', {v:pc(b)}) : t('lrnBvA2', 'avkastningen blir under {v}', {v:pc(b)});
+      return onEie ? t('lrnBvL1', 'leien blir under {v}', {v:krs(b)}) : t('lrnBvL2', 'leien blir over {v}', {v:krs(b)});
+    }
+    var phs = specs.map(phrase).filter(function(x){ return x; }), sum;
+    if(!phs.length) sum = ph('Svaret snur ikke innenfor rimelige verdier for noen av de tre antakelsene.');
+    else {
+      var list = phs.length === 1 ? phs[0] : phs.length === 2 ? t('lrnBvJ2', '{a} eller {b}', {a:phs[0], b:phs[1]}) : t('lrnBvJ3', '{a}, {b} eller {c}', {a:phs[0], b:phs[1], c:phs[2]});
+      sum = eie ? t('lrnBvSumE', 'Svaret snur først hvis {l}.', {l:list}) : t('lrnBvSumL', 'Svaret snur til eie hvis {l}.', {l:list});
+      var NMS = [t('lrnBvNm1', 'prisveksten'), t('lrnBvNm2', 'avkastningen'), t('lrnBvNm3', 'leien')];
+      var miss = specs.map(function(sp, i){ return sp.brk === null ? NMS[i] : null; }).filter(function(x){ return x; });
+      if(miss.length === 1) sum += ' ' + cap1(t('lrnBvMiss', '{a} snur ikke svaret innenfor rimelige verdier.', {a:miss[0]}));
+      else if(miss.length === 2) sum += ' ' + cap1(t('lrnBvMiss2', '{a} og {b} snur ikke svaret innenfor rimelige verdier.', {a:miss[0], b:miss[1]}));
+    }
+    set('sum', sum);
+
+    // Tabellen bak bryteren
+    var NM = [ph('Boligprisvekst'), ph('Avkastning på egenkapitalen'), ph('Månedlig leie')];
+    set('tcap', t('lrnBvTcap', 'Vippepunktet er verdien der eie og leie koster like mye over {n} år, når de andre feltene står fast.', {n:r.aar}));
+    q('tbody').innerHTML = specs.map(function(sp, i){
+      var omr = sp.kind === 'kr' ? t('lrnBvRangeK', '{a} til {b} kr', {a:num(S[i].lo), b:num(S[i].hi)}) : t('lrnBvRangeP', '{a} til {b} % per år', {a:num(S[i].lo), b:num(S[i].hi)});
+      return '<tr><th scope="row">' + esc(NM[i]) + '</th><td>' + esc(omr) + '</td><td>' + esc(sp.fmtV(sp.user)) + '</td><td>' + esc(sp.brk === null ? ph('Snur ikke') : sp.fmtV(sp.brk)) + '</td><td>' + esc(sp.brk === null ? '–' : sp.fmtD(Math.abs(sp.user - sp.brk))) + '</td></tr>';
+    }).join('');
+
+    // Skjermleserteksten
+    set('sr', t('lrnBvSr', '{s} over {n} år: {v}.', {s:mine ? ph('Dine tall') : ph('Eksempel'), n:r.aar, v:(eie ? T.eie : T.leie).toLowerCase()}) + ' ' + sum + ' ' + specs.map(function(sp, i){
+      return sp.brk === null
+        ? t('lrnBvSrN', '{nm}: din verdi {v}, snur ikke innenfor rimelige verdier.', {nm:NM[i], v:sp.fmtV(sp.user)})
+        : t('lrnBvSrB', '{nm}: din verdi {v}, vippepunkt {b}, avstand {d}.', {nm:NM[i], v:sp.fmtV(sp.user), b:sp.fmtV(sp.brk), d:sp.fmtD(Math.abs(sp.user - sp.brk))});
+    }).join(' '));
+
+    // To regnestykker: delene rundes så de summerer til nettokostnaden
+    var eP = fit([r.rent, -r.frad, r.fkTot, r.vlTot, -r.gevinst], r.nettoEie), lP = fit([r.leieTot, -r.avkGevinst], r.nettoLeie);
+    set('rgcap', t('lrnBvRgCap', 'Kroner over {n} år. Minus er gevinst.', {n:r.aar}));
+    set('rgRent', kr(eP[0])); set('rgFrad', kr(eP[1])); set('rgFk', kr(eP[2])); set('rgVl', kr(eP[3])); set('rgGain', kr(eP[4]));
+    set('rgNetE', kr(r.nettoEie)); set('rgLeie', kr(lP[0])); set('rgAvk', kr(lP[1])); set('rgNetL', kr(r.nettoLeie));
+    set('rgRentS', t('lrnBvRentS', '{p} på {k}, annuitet i {n} år ({m} i måneden)', {p:pc(p.rente), k:krs(r.lan), n:r.lop, m:krs(r.ann)}));
+    set('rgFkS', t('lrnBvPerMnd', '{k} i måneden', {k:krs(p.fk)}));
+    set('rgVlS', t('lrnBvVlS', '{p} av boligverdien per år', {p:pc(p.vl)}));
+    set('rgGainS', t('lrnBvGainS', 'Boligverdien etter {n} år, {k}, minus kjøpsprisen', {n:r.aar, k:krs(r.verdi)}));
+    set('rgLeieS', t('lrnBvLeieS', '{k} i måneden, {p} vekst i året', {k:krs(p.leie), p:pc(p.leievekst)}));
+    set('rgAvkS', t('lrnBvAvkS', '{p} i året i fond', {p:pc(p.avk)}));
+    // Samme norske ord, ulike oversettelser: overskriften «Leie» (å leie) og raden «Leie» (husleia)
+    set('hdE', t('lrnBvHE', 'Eie')); set('hdL', t('lrnBvHL', 'Leie'));
+    set('rgLeieL', t('lrnBvLeieL', 'Leie')); set('rgVlL', t('lrnBvVlL', 'Vedlikehold'));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-bv');
+    if(!root || !window.hvtLearn) return;
+    var plot = root.querySelector('.lrn-bv-plot');
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // Regnestykket står åpent på store skjermer og lukket på mobil
+    var calc = q('calc');
+    if(calc && window.matchMedia('(min-width: 641px)').matches) calc.open = true;
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._bvl || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 
