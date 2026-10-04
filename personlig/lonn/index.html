@@ -69,6 +69,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <style>
 /* Lønn etter skatt — kalkulator-skall (delt mønster med /skatt/reise/ + /skatt/inntekt/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -239,143 +240,6 @@ body.focus-mode > footer{display:none}
 .lonn-bd-table tr.total td.v{font-size:15px}
 .lonn-disclaimer{margin-top:14px;font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic}
 
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -583,158 +447,99 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
   </div>
 
-  <div class="container">
-    <div class="lonn-learn">
+<!-- =============== LAER-INNHOLD: personlig-lonn =============== -->
+<div class="container">
+  <div class="lrn" id="lrn-lo">
+    <section class="lrn-sec" id="lonn-guide" aria-labelledby="lcGuideTtl">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lcGuideTtl">Skattekortet avgjør hvor mye av den første lønna du får</h2>
+        <p class="lrn-lede">Slik ser en vanlig måned ut med timelønna di. Med skattekort trekkes omtrent det du skylder, uten må arbeidsgiver trekke 50&nbsp;%.</p>
+      </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn timelønn og timer i kalkulatoren.</p>
+      <div class="lrn-lo-main" data-lrn="main">
+        <div class="lrn-bar">
+          <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+          <div class="lrn-seg" role="group" aria-label="Skattekort i slippen" data-lrn="seg"><button type="button" aria-pressed="true">Med skattekort</button><button type="button" aria-pressed="false">Uten skattekort</button></div>
+        </div>
+        <div class="lrn-lo-wrap">
+        <table class="lrn-lo-slip" aria-describedby="lrn-lo-sr">
+          <caption>Lønnsslipp, eksempel</caption>
+          <thead><tr><th scope="col" class="c1">Linje</th><th scope="col" class="c2">Beløp</th><th scope="col" class="nt">Randnotat</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Timelønn<span data-lrn="timerSub"></span></th><td class="v"><b data-lrn="brutto"></b></td><td class="nt"><div><span class="lrn-av-mk" aria-hidden="true">1</span><span class="tx">Timer × timelønn. Dette skylder arbeidsgiver deg før skatt.</span></div></td></tr>
+            <tr><th scope="row">Forskuddstrekk<span data-lrn="trekkSub"></span></th><td class="v"><s data-lrn="trekkOld" hidden></s><b data-lrn="trekk"></b><em data-lrn="fri" hidden>Frikort: ingen trekk</em></td><td class="nt"><div><span class="lrn-av-mk" aria-hidden="true">2</span><span class="tx" data-lrn="n2"></span></div></td></tr>
+            <tr class="u"><th scope="row">Utbetalt</th><td class="v"><s data-lrn="utbOld" hidden></s><b data-lrn="utb"></b></td><td class="nt"></td></tr>
+            <tr class="m"><th scope="row" data-lrn="hittilLbl">Feriepengegrunnlag hittil i år (mars)</th><td class="v"><b data-lrn="hittil"></b></td><td class="nt"></td></tr>
+            <tr class="m"><th scope="row">Opptjente feriepenger, 10,2&nbsp;%</th><td class="v"><b data-lrn="ferie"></b></td><td class="nt"><div><span class="lrn-av-mk" aria-hidden="true">3</span><span class="tx">Settes av nå, utbetales i juni neste år. Er ikke med i «Utbetalt». <a href="/kalkulator/ferie/">Regn ut feriepengene →</a></span></div></td></tr>
+            <tr class="f"><td colspan="2"><div class="lrn-lo-fk">
+              <p>Hittil i år: <strong data-lrn="barHittil"></strong> av <strong data-lrn="barLim"></strong> kr (frikortgrensen)</p>
+              <div class="lrn-lo-bar" dir="ltr">
+                <svg aria-hidden="true" focusable="false"><rect class="lrn-lo-tr" data-p="track" x="0" y="16" width="538" height="6"/><rect class="lrn-lo-fl" data-p="fill" x="0" y="16" width="0" height="6"/><path class="lrn-lo-tk" data-p="ticks"/><path class="lrn-lo-end" data-p="end"/></svg>
+                <div data-lrn="barLabels"></div>
+              </div>
+            </div></td><td class="nt"><div><span class="lrn-av-mk" aria-hidden="true">4</span><span class="tx" data-lrn="n4"></span></div></td></tr>
+          </tbody>
+        </table>
+        </div>
+        <ol class="lrn-notes lrn-av-notes lrn-lo-mnotes" aria-label="Randnotater til lønnsslippen">
+          <li><span class="lrn-av-mk" aria-hidden="true">1</span><span>Timer × timelønn. Dette skylder arbeidsgiver deg før skatt.</span></li>
+          <li><span class="lrn-av-mk" aria-hidden="true">2</span><span data-lrn="n2"></span></li>
+          <li><span class="lrn-av-mk" aria-hidden="true">3</span><span>Settes av nå, utbetales i juni neste år. Er ikke med i «Utbetalt». <a href="/kalkulator/ferie/">Regn ut feriepengene →</a></span></li>
+          <li><span class="lrn-av-mk" aria-hidden="true">4</span><span data-lrn="n4"></span></li>
+        </ol>
+        <p class="lrn-cmp" data-lrn="sum"></p>
+      </div>
+      <p class="lrn-sr" id="lrn-lo-sr" data-lrn="sr"></p>
+    </section>
 
-      <!-- ① Anatomi: fra brutto til konto -->
-      <section class="lc-sec" id="lonn-guide" aria-labelledby="lcGuideTtl">
-        <div class="lc-head">
-          <span class="lc-kicker">Slik regnes det ut</span>
-          <h2 class="lc-title" id="lcGuideTtl">Hva som skjer mellom <em>brutto</em> og konto</h2>
-          <p class="lc-intro">Trygdeavgift og trinnskatt regnes av hele bruttolønnen. Skatten på 22 % regnes først etter at to fradrag er trukket fra.</p>
-        </div>
-        <div class="lc-ledger">
-          <div class="lc-led">
-            <span class="nm"><b>Minstefradrag</b><span class="tag">Fradrag</span></span>
-            <span class="fig">46<span class="u">%</span></span>
-            <p class="dsc">Et standardfradrag du får automatisk — 46 % av lønnen, opp til 95 700 kr. Ingen kvitteringer nødvendig.</p>
-          </div>
-          <div class="lc-led">
-            <span class="nm"><b>Personfradrag</b><span class="tag">Fradrag</span></span>
-            <span class="fig">114 540<span class="u">kr</span></span>
-            <p class="dsc">Et bunnfradrag alle lønnstakere får. Trekkes fra før den alminnelige inntektsskatten regnes ut.</p>
-          </div>
-          <div class="lc-led">
-            <span class="nm"><b>Alminnelig inntektsskatt</b><span class="tag">Skatt</span></span>
-            <span class="fig">22<span class="u">%</span></span>
-            <p class="dsc">Hovedskatten — 22 % av inntekten din etter at minstefradrag og personfradrag er trukket fra.</p>
-          </div>
-          <div class="lc-led">
-            <span class="nm"><b>Trinnskatt</b><span class="tag">Skatt</span></span>
-            <span class="fig">1,7–17,8<span class="u">%</span></span>
-            <p class="dsc">En tilleggsskatt som først slår inn på inntekt over 226&nbsp;100&nbsp;kr, og øker trinnvis jo mer du tjener.</p>
-          </div>
-          <div class="lc-led">
-            <span class="nm"><b>Trygdeavgift</b><span class="tag">Skatt</span></span>
-            <span class="fig">7,6<span class="u">%</span></span>
-            <p class="dsc">Går til folketrygden. 7,6 % av lønnen når du er mellom 17 og 69 år. Er du yngre enn 17 eller eldre enn 69, er satsen 5,1 %. Tjener du under 99 650 kr, betaler du ingen trygdeavgift.</p>
-          </div>
-        </div>
-      </section>
+    <section class="lrn-sec lrn-lo-s" aria-labelledby="lrn-lo-for">
+      <h3 class="lrn-h3" id="lrn-lo-for">Før første lønning</h3>
+      <ul class="lrn-lo-list">
+        <li><span>Sjekk frikortet, eller bestill skattekort</span><span>Er du over 13 år, får du frikort automatisk. Tjener du mer enn 100&nbsp;000 kr i året, bestiller du skattekort på skatteetaten.no før første lønning.</span></li>
+        <li><span>Sjekk første lønnsslipp</span><span>Står det 50&nbsp;% trekk, har ikke arbeidsgiver et skattekort som passer.</span></li>
+        <li><span>Sjekk skattemeldingen i april</span><span>Stemmer lønn og trekk, får du tilbake skatt du har betalt for mye.</span></li>
+      </ul>
+    </section>
 
-      <!-- ② Satser 2026 -->
-      <section class="lc-sec" aria-labelledby="lcRatesTtl">
-        <div class="lc-head">
-          <span class="lc-kicker">Tall og terskler</span>
-          <h2 class="lc-title" id="lcRatesTtl">Satsene for 2026</h2>
-        </div>
-        <div class="lc-rates">
-          <div class="lc-card">
-            <div class="lc-tblwrap">
-            <table class="lc-trinn">
-              <caption>Trinnskatt 2026</caption>
-              <thead><tr><th>Trinn</th><th class="r">Inntekt over</th><th class="r">Sats</th></tr></thead>
-              <tbody>
-                <tr><td><span class="step">Trinn 1</span></td><td class="r">226 100 kr</td><td class="r">1,7 %</td></tr>
-                <tr><td><span class="step">Trinn 2</span></td><td class="r">318 300 kr</td><td class="r">4,0 %</td></tr>
-                <tr><td><span class="step">Trinn 3</span></td><td class="r">725 050 kr</td><td class="r">13,7 %</td></tr>
-                <tr><td><span class="step">Trinn 4</span></td><td class="r">980 100 kr</td><td class="r">16,8 %</td></tr>
-                <tr><td><span class="step">Trinn 5</span></td><td class="r">1 467 200 kr</td><td class="r">17,8 %</td></tr>
-              </tbody>
-            </table>
-            </div>
-          </div>
-        </div>
-      </section>
+    <section class="lrn-sec lrn-lo-s" aria-labelledby="lrn-lo-sats">
+      <h3 class="lrn-h3" id="lrn-lo-sats">Satsene bak slippen</h3>
+      <table class="lrn-lo-rates">
+        <thead><tr><th scope="col">Post</th><th scope="col">Sats</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Minstefradrag</th><td>46 <span>%, maks 95&nbsp;700 kr</span></td></tr>
+          <tr><th scope="row">Personfradrag</th><td>114&nbsp;540 <span>kr</span></td></tr>
+          <tr><th scope="row">Trygdeavgift, 17–69 år</th><td>7,6 <span>%</span></td></tr>
+          <tr><th scope="row">Trygdeavgift, under 17 og fra 70 år</th><td>5,1 <span>%</span></td></tr>
+          <tr><th scope="row">Ingen trygdeavgift under</th><td>99&nbsp;650 <span>kr</span></td></tr>
+          <tr><th scope="row" colspan="2"><a href="/skatt/inntekt/">Inntektsskatt 22&nbsp;% og trinnskatt fra 226&nbsp;100 kr</a></th></tr>
+        </tbody>
+      </table>
+    </section>
 
-      <!-- ③ Praktisk -->
-      <section class="lc-sec" aria-labelledby="lcPraTtl">
-        <div class="lc-head">
-          <span class="lc-kicker">Før du begynner</span>
-          <h2 class="lc-title" id="lcPraTtl">Frikort, skattekort og første lønning</h2>
-        </div>
-        <div class="lc-notes">
-          <div class="lc-note">
-            <h3>Bestill skattekort først</h3>
-            <p>Uten skattekort må arbeidsgiver trekke 50 % skatt. Bestiller du på <a href="https://www.skatteetaten.no" target="_blank" rel="noopener">skatteetaten.no</a>, trekkes riktig sats fra første lønning.</p>
-          </div>
-          <div class="lc-note">
-            <h3>Frikort under 100 000 kr</h3>
-            <p>Regner du med å tjene under frikortgrensen i år, bestiller du frikort i stedet. Da trekkes ingen skatt i det hele tatt.</p>
-          </div>
-          <div class="lc-note">
-            <h3>Sjekk skattemeldingen i april</h3>
-            <p>Selv om du tjener lite, får du skattemeldingen i april. Stemmer lønn og trekk, får du tilbake eventuell skatt du har betalt for mye.</p>
-          </div>
-          <div class="lc-note">
-            <h3>Feriepenger kommer året etter</h3>
-            <p>Arbeidsgiver setter av 10,2 % av lønnen din til feriepenger, normalt utbetalt i juni året etter. De er ikke med i månedstallet over.</p>
-          </div>
-        </div>
-      </section>
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-lo-q">
+      <h3 class="lrn-h3" id="lrn-lo-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hvor mye kan jeg tjene uten å betale skatt?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Tjener du 100&nbsp;000 kr eller mindre i året, betaler du ikke skatt. Er du over 13 år, får du frikort automatisk. Slippen over viser når du passerer grensen med timelønna di.</p></div></details>
+        <details><summary>Hvorfor trekkes det 50&nbsp;% skatt av lønnen min?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Arbeidsgiver har ikke et skattekort som passer, for eksempel fordi du har frikort og tjener mer enn grensen. Velg «Uten skattekort» i slippen for å se hva det gjør med utbetalingen. Bestill skattekort på skatteetaten.no, så trekkes riktig sats. Skatt du har betalt for mye, får du tilbake ved skatteoppgjøret.</p></div></details>
+        <details><summary>Hva er forskjellen på frikort og skattekort?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Frikort betyr at du tjener under grensen og slipper skattetrekk, og det får du automatisk fra du er 13 år. Skattekort forteller arbeidsgiver hvor mye som skal trekkes når du tjener mer, og det bestiller du på skatteetaten.no.</p></div></details>
+        <details><summary>Når får jeg feriepengene mine?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Normalt i juni året etter at du tjente dem. Slippen viser hva du har opptjent hittil, men det er ikke med i utbetalingen. Feriepengene er 10,2&nbsp;% av fjorårets lønn (12&nbsp;% hvis du har fem uker ferie) og erstatter lønn når du tar ferie. <a href="/kalkulator/ferie/">Feriepenger-kalkulatoren</a> regner ut beløpet.</p></div></details>
+        <details><summary>Må jeg levere skattemelding selv om jeg tjener lite?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Du får skattemeldingen i april. Selv om du ikke betaler skatt, bør du sjekke at lønn og trekk stemmer. Gjør du ingen endringer, leveres den automatisk.</p></div></details>
+        <details><summary>Er feriepenger skattefrie?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Nei, feriepenger er skattepliktig inntekt. Hvor mye som trekkes i juni, avhenger av skattekortet ditt. <a href="/kalkulator/lonnut/">Lønn ut</a> viser hvorfor juni ser annerledes ut for mange.</p></div></details>
+      </div>
+    </section>
 
-      <!-- ④ FAQ -->
-      <section class="lc-sec" aria-labelledby="lcFaqTtl">
-        <div class="lc-head">
-          <span class="lc-kicker">Spørsmål og svar</span>
-          <h2 class="lc-title" id="lcFaqTtl">Det folk lurer mest på</h2>
-        </div>
-        <div class="lc-faq">
-          <details class="lc-q">
-            <summary>Hvor mye kan jeg tjene uten å betale skatt?</summary>
-            <div class="a"><p>Tjener du under frikortgrensen på 100 000 kr i året, trekkes ingen skatt. Du bør likevel bestille frikort på skatteetaten.no, ellers risikerer du at arbeidsgiver trekker skatt likevel.</p></div>
-          </details>
-          <details class="lc-q">
-            <summary>Hvorfor trekkes det 50 % skatt av lønnen min?</summary>
-            <div class="a"><p>Det skjer når arbeidsgiver ikke har skattekortet ditt. Bestill skattekort eller frikort på skatteetaten.no, så trekkes riktig sats. Skatt du har betalt for mye, får du tilbake ved skatteoppgjøret.</p></div>
-          </details>
-          <details class="lc-q">
-            <summary>Hva er forskjellen på frikort og skattekort?</summary>
-            <div class="a"><p>Frikort betyr at du tjener under grensen og slipper skattetrekk. Skattekort forteller arbeidsgiver hvor mye som skal trekkes når du tjener mer. Begge bestilles på skatteetaten.no.</p></div>
-          </details>
-          <details class="lc-q">
-            <summary>Når får jeg feriepengene mine?</summary>
-            <div class="a"><p>Normalt i juni året etter at du tjente dem. Feriepengene er 10,2 % av fjorårets lønn (12 % hvis du har fem uker ferie) og erstatter lønn når du tar ferie.</p></div>
-          </details>
-          <details class="lc-q">
-            <summary>Må jeg levere skattemelding selv om jeg tjener lite?</summary>
-            <div class="a"><p>Du får skattemeldingen i april. Selv om du ikke betaler skatt, bør du sjekke at lønn og trekk stemmer. Gjør du ingen endringer, leveres den automatisk.</p></div>
-          </details>
-          <details class="lc-q">
-            <summary>Er feriepenger skattefrie?</summary>
-            <div class="a"><p>Nei, men det trekkes vanligvis ikke skatt av feriepengene ved utbetaling i juni. Skatten er allerede fordelt på de andre månedene i året.</p></div>
-          </details>
-        </div>
-      </section>
-
-      <!-- ⑤ Relaterte verktøy -->
-      <section class="lc-sec" aria-labelledby="lcRelTtl">
-        <div class="lc-head">
-          <span class="lc-kicker">Fortsett her</span>
-          <h2 class="lc-title" id="lcRelTtl">Relaterte verktøy</h2>
-        </div>
-        <div class="lc-links">
-          <a class="lc-link" href="/personlig/budsjett/">
-            <span class="ar">Budsjett →</span>
-            <h3>Lag et budsjett</h3>
-            <p>Se hva du sitter igjen med etter husleie, mat og faste utgifter.</p>
-          </a>
-          <a class="lc-link" href="/skatt/">
-            <span class="ar">Skatt →</span>
-            <h3>Full skattekalkulator</h3>
-            <p>Trinnskatt, fradrag og effektiv skattesats for hele årsinntekten.</p>
-          </a>
-          <a class="lc-link" href="/personlig/spare/">
-            <span class="ar">Sparing →</span>
-            <h3>Sparekalkulator</h3>
-            <p>Regn ut hvordan sparepengene vokser med renters rente over tid.</p>
-          </a>
-        </div>
-      </section>
-
-    </div>
+    <nav class="lrn-rel" aria-labelledby="lrn-lo-r">
+      <h3 class="lrn-h3" id="lrn-lo-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/kalkulator/ferie/"><span><span class="t">Feriepenger</span><span class="d">Regn ut feriepengene som står opptjent på slippen.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/kalkulator/lonnut/"><span><span class="t">Lønn ut</span><span class="d">Se hvorfor juni og desember ser annerledes ut.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/budsjett/"><span><span class="t">Budsjett</span><span class="d">Legg utbetalingen inn i et budsjett og se hva du har igjen.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/skatt/inntekt/"><span><span class="t">Inntektsskatt</span><span class="d">Når lønna vokser, er det her skatten forklares.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
+
 </main>
 
 <footer>
@@ -753,6 +558,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <script defer src="/shared/top-chrome.js?v=v245"></script>
 <script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -902,6 +708,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     function recalc(){
       var d = compute();
       STATE = d;
+      window._lonn = d.hasData ? d : null;
+      if(window.hvtLearn) hvtLearn.update('personlig-lonn', window._lonn);
 
       var setOutputText = function(id, val){ var el=document.getElementById(id); if(el) el.textContent = val; };
 
@@ -1068,6 +876,117 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       document.addEventListener('DOMContentLoaded', init);
     } else { init(); }
   })();
+</script>
+
+<script>
+// ── Forklaringsblokken «Skattekortet avgjør hvor mye av den første lønna du får»: en lønnsslipp for
+//    mars med randnotater, med og uten skattekort, og hvor langt du har kommet mot frikortgrensen.
+//    Tallene kommer fra kalkulatoren via hvtLearn (window._lonn). ──
+(function(){
+  var KEY = 'personlig-lonn';
+  var NB = '\u00a0';
+  var LIM = 100000, NOW = 3;   // frikortgrensen 2026 og månedens slipp (mars)
+  var DEF = {timelonn:200, timerUke:15, ukerAar:47, alder:'17_69'};
+  var root, bar, ctx, raw = null, uten = false, lastW = 0, queued = false;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, s){ root.querySelectorAll('[data-lrn="' + name + '"]').forEach(function(el){ el.textContent = s; }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+  // Månedsnavn på språket som vises
+  function month(i){
+    try { return new Intl.DateTimeFormat(document.documentElement.lang || 'nb', {month:'long'}).format(new Date(2026, i - 1, 15)); }
+    catch(e){ return ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'][i - 1]; }
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, kr0 = L.kr;
+    var none = !d;
+    q('none').hidden = !none;
+    q('main').hidden = none;
+    if(none){ set('sr', ''); return; }
+    function kr(v){ return kr0(v) + NB + 'kr'; }
+    var mine = !(d.timelonn === DEF.timelonn && d.timerUke === DEF.timerUke && d.ukerAar === DEF.ukerAar && d.alder === DEF.alder);
+    var ageTxt = d.alder === 'u17' ? t('lrnLoAgeU17', 'under 17 år') : (d.alder === '70plus' ? t('lrnLoAge70', '70 år eller eldre') : t('lrnLoAgeMid', '17–69 år'));
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    set('stateText', t('lrnLoState', '{l} kr per time · {t} timer i uka · {u} uker · {a}', {l:kr0(d.timelonn), t:L.dec(d.timerUke, d.timerUke % 1 ? 1 : 0), u:d.ukerAar, a:ageTxt}));
+    root.querySelectorAll('[data-lrn="seg"] button').forEach(function(b, i){ b.setAttribute('aria-pressed', (i === 1) === uten ? 'true' : 'false'); });
+
+    // Slippen: brutto, trekk og utbetalt for én måned (mars), og hittil i år
+    var brutto = d.bruttoMnd, frikort = d.bruttoAar < LIM;
+    var trekkMed = frikort ? 0 : d.totalSkatt / 12, trekkUten = brutto * 0.5, trekk = uten ? trekkUten : trekkMed;
+    var utb = brutto - trekk, utbMed = brutto - trekkMed, hittil = brutto * NOW, ferie = hittil * 0.102;
+    var timerMnd = d.timerUke * d.ukerAar / 12;
+    set('timerSub', t('lrnLoTimer', '{t} t × {l}', {t:String(+timerMnd.toFixed(2)).replace('.', ','), l:kr(d.timelonn)}));
+    set('brutto', kr(brutto));
+    set('trekkSub', uten ? t('lrnLoSubUten', 'uten skattekort, 50' + NB + '% av brutto') : (frikort ? t('lrnLoSubFri', 'under frikortgrensen') : t('lrnLoSubMed', 'anslag, årsskatt {k} ÷ 12', {k:kr(d.totalSkatt)})));
+    var old = q('trekkOld'), cur = q('trekk'), fri = q('fri');
+    old.hidden = !uten; old.textContent = frikort ? '0' + NB + 'kr' : kr0(-trekkMed) + NB + 'kr';
+    cur.hidden = frikort && !uten; cur.textContent = kr0(-trekk) + NB + 'kr'; cur.classList.toggle('w', uten);
+    fri.hidden = !(frikort && !uten);
+    var uo = q('utbOld'); uo.hidden = !uten; uo.textContent = kr(utbMed);
+    var uv = q('utb'); uv.textContent = kr(utb); uv.classList.toggle('w', uten);
+    set('hittilLbl', t('lrnLoHittil', 'Feriepengegrunnlag hittil i år ({m})', {m:month(NOW)}));
+    set('hittil', kr(hittil));
+    set('ferie', kr(ferie));
+
+    // Randnotatene som skifter med tilstanden
+    var n2;
+    if(uten) n2 = t('lrnLoN2Uten', 'Arbeidsgiver har ikke skattekortet ditt og må trekke 50' + NB + '%. Det du betaler for mye, får du tilbake i skatteoppgjøret.');
+    else if(frikort) n2 = t('lrnLoN2Fri', 'Med frikort trekker ikke arbeidsgiver skatt så lenge du holder deg under frikortgrensen.');
+    else if(d.almSkatt > 0) n2 = t('lrnLoN2Skatt', 'Trekket er trygdeavgift og inntektsskatt. Inntektsskatten regnes av det som er igjen etter minstefradrag og personfradrag.') + (d.trinnskatt > 0 ? ' ' + t('lrnLoN2Trinn', 'Over 226' + NB + '100' + NB + 'kr kommer trinnskatt i tillegg.') : '');
+    else n2 = t('lrnLoN2Trygd', 'Hele trekket ditt er trygdeavgift. Inntektsskatt starter først over 210' + NB + '240' + NB + 'kr, der minstefradrag og personfradrag er brukt opp.');
+    set('n2', n2);
+    var crossM = d.bruttoAar > LIM ? Math.floor(LIM / brutto) + 1 : 0;
+    set('n4', crossM === 0 ? t('lrnLoN4Under', 'Du holder deg under frikortgrensen hele året.')
+      : (crossM <= NOW ? t('lrnLoN4Past', 'Med denne lønna passerte du 100' + NB + '000' + NB + 'kr i {m}. Da holder ikke frikort, du trenger skattekort.', {m:month(crossM)})
+                       : t('lrnLoN4', 'Med denne lønna passerer du 100' + NB + '000' + NB + 'kr i {m}. Da holder ikke frikort, du trenger skattekort.', {m:month(crossM)})));
+
+    // Hittil i år mot frikortgrensen: lønnsslipp for slipp, og måneden grensen passeres
+    var W = bar.clientWidth || 538, sc = W / LIM, fillW = Math.min(hittil, LIM) * sc, ticks = '', lastTick = 0, m;
+    lastW = W;
+    for(m = 1; m <= 12; m++){ var x = m * brutto * sc; if(x <= W + 0.01){ ticks += 'M' + f1(x) + ',10 V28 '; lastTick = x; } }
+    var svg = bar.querySelector('svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' 54');
+    svg.querySelector('[data-p="track"]').setAttribute('width', W);
+    svg.querySelector('[data-p="fill"]').setAttribute('width', f1(fillW));
+    svg.querySelector('[data-p="ticks"]').setAttribute('d', ticks);
+    svg.querySelector('[data-p="end"]').setAttribute('d', 'M' + f1(W) + ',4 V34');
+    var F = '600 12px Inter, system-ui, sans-serif', nowTxt = month(NOW), wNow = textW(nowTxt, F), lNow = Math.max(0, Math.min(W - wNow, fillW - wNow / 2));
+    var lab = '<span class="lrn-lo-bl b" style="left:' + f1(lNow) + 'px">' + esc(nowTxt) + '</span>';
+    var endTxt = crossM > 0 ? month(crossM) : month(12), endX = crossM > 0 ? W : lastTick, wEnd = textW(endTxt, F), lEnd = Math.max(0, Math.min(W - wEnd, endX - wEnd / 2));
+    if(lEnd > lNow + wNow + 10) lab += '<span class="lrn-lo-bl" style="left:' + f1(lEnd) + 'px">' + esc(endTxt) + '</span>';
+    q('barLabels').innerHTML = lab;
+    set('barHittil', kr0(hittil)); set('barLim', kr0(LIM));
+
+    var pst = Math.round(trekkMed / brutto * 100);
+    set('sum', frikort ? t('lrnLoSumFri', 'Uten skattekort trekkes 50' + NB + '% av lønna. Med frikort trekkes ingenting.')
+                       : t('lrnLoSum', 'Uten skattekort trekkes 50' + NB + '% av lønna. Riktig trekk for deg er rundt {p} %.', {p:pst}));
+    set('sr', t('lrnLoSr', 'Med skattekort får du utbetalt {a} i måneden. Uten skattekort {b}.', {a:kr(utbMed), b:kr(brutto - trekkUten)}));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-lo');
+    if(!root || !window.hvtLearn) return;
+    bar = root.querySelector('.lrn-lo-bar');
+    root.querySelectorAll('[data-lrn="seg"] button').forEach(function(b, i){
+      b.addEventListener('click', function(){ uten = i === 1; schedule(); });
+    });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && bar.clientWidth !== lastW) schedule(); }).observe(bar);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._lonn || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
 </script>
 
 </body>
