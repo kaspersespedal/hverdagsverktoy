@@ -8355,7 +8355,7 @@ REGIONS['pl']._ph = {
 "registrere selskap foretak altinn brønnøysund organisasjonsnummer register company":"rejestracja spółki firma altinn brønnøysund numer organizacyjny register company",
 "regner i":"liczą w",
 "regner prosent,":"liczy procent,",
-"regnes med 22 % (18,5 % i Finnmark / Nord-Troms).":"liczony jest według 22 % (18,5 % w Finnmark / Nord-Troms).",
+"regnes med 22 % (18,5 % i Finnmark / Nord-Troms, der du også får et særskilt fradrag på 45 000 kr).":"liczony jest według 22 % (18,5 % w Finnmark / Nord-Troms, gdzie dostajesz też specjalną ulgę 45 000 kr).",
 "regnskap":"księgowość",
 "regnskap bokføring regnskapsføring avskrivning driftsmiddel":"księgowość ewidencja prowadzenie księgowości amortyzacja środek trwały",
 "regnskapsplikt regnskap plikt foretak as enk accounting obligation":"obowiązek księgowy księgowość obowiązek firma as enk accounting obligation",

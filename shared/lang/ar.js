@@ -8467,7 +8467,7 @@ REGIONS['ar']._ph = {
 "registrere selskap foretak altinn brønnøysund organisasjonsnummer register company":"تسجيل شركة منشأة Altinn Brønnøysundregistrene رقم المنظمة register company",
 "regner i":"تُحسب بوحدة",
 "regner prosent,":"يحسب النسبة المئوية،",
-"regnes med 22 % (18,5 % i Finnmark / Nord-Troms).":"يُحسب بمعدل 22 % (18,5 % في Finnmark / Nord-Troms).",
+"regnes med 22 % (18,5 % i Finnmark / Nord-Troms, der du også får et særskilt fradrag på 45 000 kr).":"يُحسب بمعدل 22 % (18,5 % في Finnmark / Nord-Troms، حيث تحصل أيضًا على خصم خاص قدره 45 000 kr).",
 "regnskap":"محاسبة",
 "regnskap bokføring regnskapsføring avskrivning driftsmiddel":"محاسبة مسك الدفاتر إمساك الحسابات إهلاك أصل تشغيلي",
 "regnskapsplikt regnskap plikt foretak as enk accounting obligation":"التزام المحاسبة محاسبة التزام منشأة AS ENK accounting obligation",

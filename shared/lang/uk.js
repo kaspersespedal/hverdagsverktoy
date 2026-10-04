@@ -7689,7 +7689,7 @@ REGIONS['uk']._ph = {
 "registrere selskap foretak altinn brønnøysund organisasjonsnummer register company":"зареєструвати компанію підприємство Altinn Brønnøysund організаційний номер register company",
 "regner i":"рахують у",
 "regner prosent,":"рахує відсотки,",
-"regnes med 22 % (18,5 % i Finnmark / Nord-Troms).":"рахується за 22 % (18,5 % у Finnmark / Nord-Troms).",
+"regnes med 22 % (18,5 % i Finnmark / Nord-Troms, der du også får et særskilt fradrag på 45 000 kr).":"рахується за 22 % (18,5 % у Finnmark / Nord-Troms, де ви також отримуєте особливе відрахування 45 000 kr).",
 "regnskap":"бухгалтерський облік",
 "regnskap bokføring regnskapsføring avskrivning driftsmiddel":"бухгалтерський облік ведення обліку амортизація основний засіб",
 "regnskapsplikt regnskap plikt foretak as enk accounting obligation":"обов'язок вести облік бухгалтерський облік підприємство AS ENK accounting obligation",

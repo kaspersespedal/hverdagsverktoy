@@ -639,7 +639,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       <div class="howto-body">
         <div class="howto-row"><strong>Minstefradrag</strong><span>trekkes automatisk: 46 % av lønn, maks 95 700 kr.</span></div>
         <div class="howto-row"><strong>Personfradrag</strong><span>114 540 kr og dine fradrag reduserer beregningsgrunnlaget.</span></div>
-        <div class="howto-row"><strong>Alminnelig inntektsskatt</strong><span>regnes med 22 % (18,5 % i Finnmark / Nord-Troms).</span></div>
+        <div class="howto-row"><strong>Alminnelig inntektsskatt</strong><span>regnes med 22 % (18,5 % i Finnmark / Nord-Troms, der du også får et særskilt fradrag på 45 000 kr).</span></div>
         <div class="howto-row"><strong>Trinnskatt</strong><span>beregnes på brutto i fem trinn, pluss trygdeavgift 7,6 %.</span></div>
       </div>
     </details>
@@ -763,6 +763,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   var FAG_MAX     = 8700;
   var IPS_MAX     = 25000;
   var GAVE_MAX    = 25000;
+  // Tiltakssonen (Finnmark og Nord-Troms): 18,5 % alminnelig skatt og et særskilt fradrag på 45 000 kr (2026)
+  var FINNMARK_RATE    = 0.185;
+  var FINNMARK_FRADRAG = 45000;
 
   function computeTrinn(brutto){
     var rows = [];
@@ -793,7 +796,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     var bsuInn  = Math.min(+input.bsu || 0, BSU_MAX_INN);
 
     var minste = Math.min(brutto * MINSTE_RATE, MINSTE_MAX);
-    var fradragSum = minste + PERSON_FRAD + rente + reise + fag + ips + gaver;
+    var finnmark = (almRate === FINNMARK_RATE) ? FINNMARK_FRADRAG : 0;
+    var fradragSum = minste + PERSON_FRAD + rente + reise + fag + ips + gaver + finnmark;
     var grunnlag = Math.max(0, brutto - fradragSum);
     var alm = grunnlag * almRate;
     var trinn = computeTrinn(brutto);
@@ -885,8 +889,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         + '</div>';
     }).join('');
     $('trStack').innerHTML = html;
-    var cur = TRINN.find(function(tt){ return brutto > tt.from && brutto <= tt.to; });
-    var marg = (cur ? cur.rate : 0) + state.region + 0.076;
+    // Marginalskatt: skatten på de neste 100 kronene, regnet med samme calculate() som resten av siden.
+    // Da kommer frikortgrensen, opptrappingen av trygdeavgiften og fradragene med av seg selv.
+    var base = Object.assign({}, state, { brutto: brutto });
+    var marg = (calculate(Object.assign({}, base, { brutto: brutto + 100 })).totalSkatt - calculate(base).totalSkatt) / 100;
     $('trinnMarg').textContent = fmtPct(marg, 1);
   }
 

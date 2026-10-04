@@ -8323,7 +8323,7 @@ REGIONS['en']._ph = {
 "registrere selskap foretak altinn brønnøysund organisasjonsnummer register company":"register a company business Altinn Brønnøysundregistrene organisation number",
 "regner i":"work in",
 "regner prosent,":"works out percentages,",
-"regnes med 22 % (18,5 % i Finnmark / Nord-Troms).":"is charged at 22 % (18,5 % in Finnmark / Nord-Troms).",
+"regnes med 22 % (18,5 % i Finnmark / Nord-Troms, der du også får et særskilt fradrag på 45 000 kr).":"is charged at 22 % (18,5 % in Finnmark / Nord-Troms, where you also get a special deduction of 45 000 kr).",
 "regnskap":"accounting",
 "regnskap bokføring regnskapsføring avskrivning driftsmiddel":"accounting bookkeeping keeping accounts depreciation fixed asset regnskap",
 "regnskapsplikt regnskap plikt foretak as enk accounting obligation":"accounting obligation duty to keep accounts business AS ENK regnskapsplikt",
