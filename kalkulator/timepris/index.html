@@ -60,6 +60,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v2">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Timepris — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
@@ -204,149 +205,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row strong{color:var(--ink);font-weight:500}
 .howto-body .howto-row a{color:var(--accent);text-decoration:underline}
 @media(max-width:640px){.howto-body .howto-row{grid-template-columns:1fr;gap:4px}.howto-body .howto-row strong{margin-bottom:2px}}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  /* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap), så
-     de dro hele siden ut i sidelengs scroll — opptil 380px på finance.
-     Samme scroll-wrapper-mønster som .bd-table-wrap/.pv-tblwrap. */
-  .lc-trinn{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -656,45 +514,110 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: kalkulator-timepris =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-kalkulator-timepris">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-timepris">Veien fra ønsket netto til timepris</h2><p class="lc-intro">Timeprisen er omsetningen du trenger, delt på timene du kan fakturere. Med standardtallene trenger du 1 088 571 kr i omsetning, og det gir 726 kr per time.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Ønsket netto</b><span class="tag">Utgangspunkt</span></span><span class="fig">600 000<span class="u">kr (standard)</span></span><p class="dsc">Beløpet du vil ha igjen etter skatt per år. Alt annet regnes ut fra dette tallet — endrer du det, flytter hele beregningen seg.</p></div>
-        <div class="lc-led"><span class="nm"><b>Skattesats</b><span class="tag">Sats</span></span><span class="fig">30<span class="u">%</span></span><p class="dsc">Skatt og trygdeavgift samlet. Nettoen regnes opp til det du må tjene før skatt: 600 000 ÷ (1 − 0,30) = 857 143 kr. Det kalles brutto årsinntekt. 30 % passer for et ENK med middels inntekt.</p></div>
-        <div class="lc-led"><span class="nm"><b>Ferie, sykdom og pensjon</b><span class="tag">Påslag</span></span><span class="fig">12<span class="u">%</span></span><p class="dsc">Som selvstendig har du ingen betalt ferie. 12 % legges på bruttoen for å dekke uker uten inntekt og litt buffer for sykdom.</p></div>
-        <div class="lc-led"><span class="nm"><b>Driftskostnader</b><span class="tag">Påslag</span></span><span class="fig">15<span class="u">%</span></span><p class="dsc">Dekker utstyr, forsikring, regnskapsfører, kurs og administrasjon. Legges også på bruttoen. Typisk 10–15 %.</p></div>
-        <div class="lc-led"><span class="nm"><b>Fakturerbare timer</b><span class="tag">Deletall</span></span><span class="fig">1 500<span class="u">timer/år</span></span><p class="dsc">Omsetningen deles på dette tallet for å finne timeprisen. 1 500 er vanlig av 1 880 mulige (40 t × 47 uker). Resten går til admin, kurs og uproduktiv tid.</p></div>
-        <div class="lc-led"><span class="nm"><b>MVA-faktor</b><span class="tag">Faktor</span></span><span class="fig">1,25<span class="u">(25 %)</span></span><p class="dsc">Timeprisen eks. MVA ganges med 1,25 for å vise hva kunden faktisk betaler. MVA er ikke din inntekt — den går videre til staten.</p></div>
+  <div class="lrn" id="lrn-tp">
+    <section class="lrn-sec" aria-labelledby="lrn-tp-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-tp-h" data-lrn="h2">Timeprisen må bære hele året</h2>
+        <p class="lrn-lede" data-lrn="ingress"></p>
+      </div>
+      <div class="lrn-bar">
+        <p class="lrn-state" data-state="eksempel" data-lrn="main"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-seg t3" role="group" aria-label="Modus">
+          <button type="button" aria-pressed="true" data-k="fr">Frilans / konsulent</button>
+          <button type="button" aria-pressed="false" data-k="hv">Håndverker</button>
+        </div>
+      </div>
+      <p class="lrn-p" data-lrn="none" hidden><span data-lrn="noneFr">Fyll inn ønsket netto og fakturerbare timer i kalkulatoren.</span><span data-lrn="noneHv" hidden>Fyll inn montørlønn og faktureringsgrad i kalkulatoren.</span></p>
+      <div class="lrn-tp-main" data-lrn="main">
+        <div class="lrn-figrow tp">
+          <figure class="lrn-fig" aria-describedby="lrn-tp-sr1">
+            <figcaption class="lrn-cap" data-lrn="gridCap"></figcaption>
+            <div class="lrn-tp-steps">
+              <div class="s"><b data-lrn="stA"></b><span data-lrn="stACap"></span></div>
+              <div class="a"><span class="ln" aria-hidden="true"><i></i><svg width="8" height="10" viewBox="0 0 8 10" aria-hidden="true"><path d="M1 1 L6 5 L1 9"/></svg></span><span class="t"><strong data-lrn="stC1a"></strong> <span data-lrn="stC1b"></span></span></div>
+              <div class="s"><b data-lrn="stB"></b><span data-lrn="stBCap"></span></div>
+              <div class="a" data-lrn="st3"><span class="ln" aria-hidden="true"><i></i><svg width="8" height="10" viewBox="0 0 8 10" aria-hidden="true"><path d="M1 1 L6 5 L1 9"/></svg></span><span class="t"><strong data-lrn="stC2a"></strong> <span data-lrn="stC2b"></span></span></div>
+              <div class="s" data-lrn="st3"><b data-lrn="stC"></b><span data-lrn="stCCap"></span></div>
+            </div>
+            <div class="lrn-plot is-static lrn-tp-grid" data-lrn="grid" dir="ltr">
+              <svg aria-hidden="true" focusable="false"><defs><pattern id="lrn-tp-skrav" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-tp-pr" x="0" y="0" width="5" height="5"/><line class="lrn-tp-ph" x1="0" y1="0" x2="0" y2="5"/></pattern></defs><path class="lrn-tp-adm" data-p="adm"/><path class="lrn-tp-fer" data-p="fer"/><path class="lrn-tp-bill" data-p="bill"/><path class="lrn-tp-gbr" data-p="gbr"/></svg>
+              <!-- Skriptet oversetter etikettene selv. data-ph-skip hindrer at engelsk «Jul» (juli) oversettes videre til «Christmas». -->
+              <div class="lrn-labels" data-lrn="gridLabels" data-ph-skip></div>
+            </div>
+          </figure>
+          <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+        </div>
+        <div class="lrn-scrub lrn-tp-scrub">
+          <div class="lrn-scrub-c">
+            <label for="lrn-tp-sl" data-lrn="slLabel"></label>
+            <input id="lrn-tp-sl" type="range" data-lrn="slider">
+          </div>
+          <dl class="lrn-dl" aria-live="polite">
+            <div><dt data-lrn="k0l"></dt><dd><span data-lrn="k0v"></span> <span class="lrn-u" data-lrn="k0u"></span></dd></div>
+            <div><dt data-lrn="k1l"></dt><dd><span data-lrn="k1v"></span> <span class="lrn-u" data-lrn="k1u"></span></dd></div>
+            <div><dt data-lrn="k2l"></dt><dd><span data-lrn="k2v"></span> <span class="lrn-u" data-lrn="k2u"></span></dd></div>
+            <div><dt data-lrn="k3l"></dt><dd><span data-lrn="k3v"></span> <span class="lrn-u" data-lrn="k3u"></span></dd></div>
+          </dl>
+        </div>
+        <p class="lrn-cmp" data-lrn="summary"></p>
+      </div>
+      <p class="lrn-sr" id="lrn-tp-sr1" data-lrn="srGrid"></p>
+    </section>
+
+    <section class="lrn-sec lrn-also" aria-labelledby="lrn-tp-h3" data-lrn="main">
+      <h3 class="lrn-h3" id="lrn-tp-h3" data-lrn="h3">Hver fakturerbar time må bære hele året</h3>
+      <div class="lrn-tp-s2">
+        <figure class="lrn-fig" aria-describedby="lrn-tp-sr2">
+          <figcaption class="lrn-cap" data-lrn="barCap"></figcaption>
+          <div class="lrn-plot is-static lrn-tp-bar" data-lrn="bar" dir="ltr">
+            <svg aria-hidden="true" focusable="false"><defs><pattern id="lrn-tp-skrav2" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-tp-pr" x="0" y="0" width="5" height="5"/><line class="lrn-tp-ph" x1="0" y1="0" x2="0" y2="5"/></pattern></defs><g data-lrn="barSegs"></g><path class="lrn-tp-bbr" data-p="bbr"/><path class="lrn-tp-lead" data-p="blead"/></svg>
+            <div class="lrn-labels" data-lrn="barLabels"></div>
+          </div>
+        </figure>
+        <details class="lrn-tp-fd"><summary>Hva ligger i hver del?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><dl class="lrn-tp-defs" data-lrn="defs"></dl></details>
+        <div class="lrn-figrow tps">
+          <figure class="lrn-fig" aria-describedby="lrn-tp-sr3">
+            <figcaption class="lrn-cap" data-lrn="sensCap"></figcaption>
+            <div class="lrn-plot is-static lrn-tp-sens" data-lrn="sens" dir="ltr">
+              <svg aria-hidden="true" focusable="false"><path class="lrn-tp-sg" data-p="gridD"/><path class="lrn-tp-sd" data-p="dropD"/><path class="lrn-tp-sb" data-p="baseD"/><path class="lrn-tp-sc" data-p="capD"/><path class="lrn-tp-cv" data-p="curveD"/><g data-lrn="sensPts"></g></svg>
+              <div class="lrn-labels" data-lrn="sensLabels"></div>
+            </div>
+          </figure>
+          <div class="lrn-tp-side"><p class="lead" data-lrn="sensLead"></p><p data-lrn="sensText"></p></div>
+        </div>
+        <details class="lrn-tp-fd"><summary>Regnestykket<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div class="lrn-card lrn-tp-card">
+            <span class="lrn-card-l">Regnestykket</span>
+            <div class="lrn-f" data-lrn="fFr"><i>timepris</i><span>=</span><span><i>ønsket netto</i> ÷ (1 − <i>skattesats</i>) × (1 + <i>sykdom og pensjon</i> + <i>overhead</i>) ÷ <i>fakturerbare timer</i></span></div>
+            <div class="lrn-f" data-lrn="fHv" hidden><i>timepris</i><span>=</span><span><i>montørlønn</i> × (1 + <i>sosiale kostnader</i>) × (1 + <i>indirekte kostnader</i>) ÷ <i>faktureringsgrad</i> × (1 + <i>fortjeneste</i>)</span></div>
+            <div class="lrn-tp-lines" data-lrn="fLines"></div>
+            <p class="lrn-fine" data-lrn="fNote"></p>
+          </div>
+        </details>
+      </div>
+      <p class="lrn-sr" id="lrn-tp-sr2" data-lrn="srBar"></p>
+      <p class="lrn-sr" id="lrn-tp-sr3" data-lrn="srSens"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-tp-q">
+      <h3 class="lrn-h3" id="lrn-tp-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details open><summary>Hvorfor er timeprisen så mye høyere enn jeg ville tjent som ansatt?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Fordi den må dekke mer enn det du sitter igjen med: skatt, sykdom, pensjon og driftskostnader. Og den må gjøre det på 1&nbsp;500 av årets timer, ikke 2&nbsp;080. I eksempelet må en time som gir deg 400&nbsp;kr etter skatt faktureres med 686&nbsp;kr.</p></div></details>
+        <details><summary>Hva er forskjellen på timepris eks. MVA og inkl. MVA?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Eks. MVA er pengene som blir dine. Inkl. MVA er det kunden betaler, altså timeprisen ganget med 1,25. I eksempelet er det 686&nbsp;kr mot 858&nbsp;kr.</p></div></details>
+        <details><summary>Stemmer 30&nbsp;% skatt for meg?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>30&nbsp;% er satt som standard for moderate inntekter i enkeltpersonforetak. Tjener du mer, over rundt 700&nbsp;000&nbsp;kr, bør du øke satsen, siden skatten stiger med inntekten. Tallet er ditt eget anslag, og kalkulatoren beregner ikke skatten din eksakt.</p></div></details>
+        <details><summary>Når må jeg registrere meg for MVA?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Når omsetningen passerer 50&nbsp;000&nbsp;kr i løpet av en tolvmånedersperiode. Fra da legger du 25&nbsp;% MVA på fakturaen.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-kalkulator-timepris">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-timepris">Det som er lett å overse</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>MVA er ikke din inntekt</h3><p>Når omsetningen passerer 50 000 kr må du registrere deg for MVA. Da fakturerer du timeprisen pluss 25 %, men de 25 prosentene er en gjennomgangspost du sender videre til staten. Det er fortsatt timeprisen eks. MVA som er pengene dine.</p></div>
-        <div class="lc-note"><h3>Du har ingen betalt ferie</h3><p>I en fast jobb får du lønn også de ukene du har fri. Som selvstendig stopper inntekten når du ikke fakturerer. Påslaget på 12 % for ferie, sykdom og pensjon bygger disse ukene inn i timeprisen.</p></div>
-        <div class="lc-note"><h3>Fakturerbare timer er ikke arbeidstimer</h3><p>Du har kanskje 1 880 arbeidstimer i året, men kan ikke fakturere alle. Tilbud, regnskap, kurs og egen markedsføring tar tid uten kunde. Standardtallet 1 500 tar høyde for dette — settes det for høyt, ser timeprisen kunstig lav ut.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-kalkulator-timepris">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-kalkulator-timepris">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvorfor er timeprisen så mye høyere enn jeg ville tjent som ansatt?</summary><div class="a"><p>Fordi timeprisen må dekke alt du ellers fikk gratis som ansatt: skatt, ferie, sykdom og driftskostnader. Kalkulatoren regner først ønsket netto opp til brutto med 30 % skatt. Så legger den 12 % for ferie, sykdom og pensjon og 15 % driftskostnader på bruttoen. Til slutt deler den på timene du faktisk kan fakturere.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr forskjellen på timepris eks. MVA og inkl. MVA?</summary><div class="a"><p>Eks. MVA er pengene som faktisk blir dine. Inkl. MVA er det kunden betaler — timeprisen ganget med 1,25 (25 % MVA). De 25 prosentene videresender du til staten, så ikke regn dem som inntekt.</p></div></details>
-        <details class="lc-q"><summary>Hva er netto per fakturert time?</summary><div class="a"><p>Det er ønsket netto delt på fakturerbare timer — altså hva du sitter igjen med per fakturert time etter skatt og alle kostnader. Den er alltid lavere enn timeprisen du fakturerer, fordi timeprisen også skal dekke skatt og påslag.</p></div></details>
-        <details class="lc-q"><summary>Hvor mange timer bør jeg sette som fakturerbare?</summary><div class="a"><p>Standarden er 1 500 av 1 880 mulige (40 t × 47 uker). Er du ny eller har mye administrasjon, kan 1 200–1 300 være mer realistisk. Jo færre timer, jo høyere må timeprisen bli for å nå samme netto.</p></div></details>
-        <details class="lc-q"><summary>Stemmer 30 % skatt for meg?</summary><div class="a"><p>30 % er satt som standard for moderate inntekter i enkeltpersonforetak. Tjener du mer (over rundt 700 000 kr), bør du øke satsen, siden skatten stiger med inntekten. Tallet er ditt eget anslag — kalkulatoren beregner ikke skatten din eksakt.</p></div></details>
-        <details class="lc-q"><summary>Når må jeg registrere meg for MVA?</summary><div class="a"><p>Når omsetningen passerer 50 000 kr i løpet av en tolvmånedersperiode er du pliktig å registrere deg. Fra da legger du 25 % MVA på fakturaen — men husk at MVA-beløpet ikke er din inntekt.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-kalkulator-timepris">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkulator-timepris">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/kalkulator/lonnut/"><span class="ar">Lønn ut →</span><h3>Lønn ut</h3><p>Se hva en vanlig lønn gir utbetalt etter skatt, per måned og per år.</p></a>
-        <a class="lc-link" href="/personlig/lonn/"><span class="ar">Lønn etter skatt →</span><h3>Brutto/netto lønn</h3><p>Sammenlign timeprisen med hva en vanlig ansatt sitter igjen med etter skatt på samme bruttobeløp.</p></a>
-        <a class="lc-link" href="/avgift/vat/"><span class="ar">MVA →</span><h3>MVA-kalkulator</h3><p>Regn ut MVA opp og ned på et beløp, og se hvordan de 25 prosentene legger seg på timeprisen din.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-tp-r">
+      <h3 class="lrn-h3" id="lrn-tp-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/kalkulator/tilbud/"><span><span class="t">Tilbud</span><span class="d">Bruk timeprisen i arbeidslinjene og sett sammen tilbudet.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/skatt/utbytte/"><span><span class="t">Utbytteskatt</span><span class="d">Driver du heller gjennom aksjeselskap? Se hvordan overskuddet skattes i to lag.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/lonn/"><span><span class="t">Lønn etter skatt</span><span class="d">Sammenlign timeprisen med hva en ansatt sitter igjen med etter skatt.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/avgift/vat/"><span><span class="t">MVA-kalkulator</span><span class="d">Regn MVA opp og ned på et beløp, og se hvordan de 25 prosentene legger seg på timeprisen din.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -716,6 +639,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <script defer src="/shared/top-chrome.js?v=v245"></script>
 <script defer src="/shared/core.js?v=v231"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/learn.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v5" defer></script>
 
 <script>
@@ -771,6 +695,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     var ferie   = parseNum('tp-ferie');
     var overhead= parseNum('tp-oh');
     var timer   = parseNum('tp-timer');
+    // Til forklaringsblokken: frilanstallene (håndverkertallene og modusen legges til av håndverkerdelen)
+    window._timepris = Object.assign(window._timepris || {}, { fr: { netto: netto, timer: timer, skatt: skatt, ferie: ferie, oh: overhead } });
+    if(window.hvtLearn) hvtLearn.update('kalkulator-timepris', window._timepris);
 
     var warn = document.getElementById('tp-warning');
 
@@ -912,8 +839,16 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     return { lonn: lonn, lonnskost: lonnskost, indirekteTillegg: indirekteTillegg, bruttokost: bruttokost, selvkost: selvkost, eks: eks, inkl: inkl, db: db, ok: isFinite(lonn) && faktBrok > 0 };
   }
 
+  // Til forklaringsblokken: håndverkertallene og hvilken modus kalkulatoren står i
+  function learnHv(){
+    window._timepris = Object.assign(window._timepris || {}, { mode: mode, hv: { lonn: parseAmt(hvEls['hv-lonn'].value), sosial: parseAmt(hvEls['hv-sosial'].value),
+      ind: parseAmt(hvEls['hv-indirekte'].value), fakt: parseAmt(hvEls['hv-fakt'].value), fort: parseAmt(hvEls['hv-fort'].value) } });
+    if(window.hvtLearn) hvtLearn.update('kalkulator-timepris', window._timepris);
+  }
+
   function recalcHandverker(){
     var r = computeHandverker();
+    learnHv();
     setTxt('hvStripSelvkost', r.ok ? fmtKr(r.selvkost) : '–');
     setTxt('hvStripEks', r.ok ? fmtKr(r.eks) : '–');
     setTxt('hvStripInkl', r.ok ? fmtKr(r.inkl) : '–');
@@ -952,7 +887,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     document.getElementById('tpSegHandverker').setAttribute('aria-pressed', mode === 'handverker' ? 'true' : 'false');
     ['tpStripFrilans','tpFormFrilans','tpResultFrilans'].forEach(function(id){ document.getElementById(id).classList.toggle('is-active', mode === 'frilans'); });
     ['tpStripHandverker','tpFormHandverker','tpResultHandverker'].forEach(function(id){ document.getElementById(id).classList.toggle('is-active', mode === 'handverker'); });
-    if(mode === 'handverker') recalcHandverker();
+    if(mode === 'handverker') recalcHandverker(); else learnHv();
     persistHandverker();
   }
 
@@ -1044,6 +979,519 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
   } else { init(); pollRender(); }
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken for timepris. Frilans: året i dagsruter (2 080 timer, ferie og admin trukket fra), så én
+//    fakturerbar time delt i netto, skatt, sykdom/pensjon, overhead og MVA, og timeprisen ved andre timetall.
+//    Håndverker: ti timer på jobb der bare de fakturerbare betaler, og timeprisen ved andre faktureringsgrader.
+//    Tallene er kalkulatorens egne metoder (frilans og håndverker), via window._timepris. ──
+(function(){
+  var KEY = 'kalkulator-timepris';
+  var NB = '\u00a0';
+  var root, raw = null, bm = 'fr', calcMode = null, slFr = null, slHv = null, baseKey = '', lastW = 0, queued = false, ctx = null, fam = '', serif = '';
+  var mqDesk = window.matchMedia ? window.matchMedia('(min-width: 641px)') : null;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function all(name){ return root.querySelectorAll('[data-lrn="' + name + '"]'); }
+  function set(name, s){ all(name).forEach(function(el){ el.textContent = s; }); }
+  function show(name, on){ all(name).forEach(function(el){ el.hidden = !on; }); }
+  function f2(v){ return Math.round(v * 100) / 100; }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function tw(s, px, wt, isSerif){
+    if(!ctx) ctx = document.createElement('canvas').getContext('2d');
+    ctx.font = (wt || 400) + ' ' + px + 'px ' + (isSerif ? serif : fam);
+    return ctx.measureText(String(s)).width * 1.02;
+  }
+  function rect(x, y, w, h){ return 'M' + f2(x) + ',' + f2(y) + ' h' + f2(w) + ' v' + f2(h) + ' h' + f2(-w) + ' Z '; }
+  function cells(v){ var r = Math.round(v * 100) / 100; return Math.abs(r - Math.round(r)) < 1e-9 ? String(Math.round(r)) : String(r).replace('.', ','); }
+  function dd(v){ var s = String(Math.round(v * 10000) / 10000), p = s.split('.'), d = p[1] || ''; while(d.length < 2) d += '0'; return p[0] + ',' + d; }
+  function nb(s){ return String(s).replace(/([0-9]) (?=[0-9]{3}(?![0-9]))/g, '$1' + NB).replace(/([0-9]) (?=%|kr|t\b)/g, '$1' + NB); }
+  // Tekstboks med én eller to linjer (navn og tall), plassert absolutt i grafen
+  function TB(o){
+    var s = '<span class="lrn-tp-l' + (o.bg ? ' bg' : '') + '" style="left:' + f2(o.left) + 'px;top:' + f2(o.top) + 'px;' + (o.shift && o.shift !== '0%' ? 'transform:translateX(' + o.shift + ');' : '') +
+      'flex-direction:' + (o.dir || 'column') + ';align-items:' + (o.ai || 'flex-start') + ';gap:' + (o.gap === undefined ? 1 : o.gap) + 'px;' + (o.pad ? 'padding:' + o.pad + ';' : '') + '">' +
+      '<span class="' + (o.fam === 'f' ? 'f ' : '') + (o.c || 'c3') + '" style="font-size:' + (o.size || 12) + 'px;line-height:' + (o.lh || 16) + 'px;font-weight:' + (o.weight || 400) + (o.ls ? ';letter-spacing:' + o.ls : '') + '">' + esc(nb(o.text)) + '</span>';
+    if(o.text2) s += '<span class="' + (o.fam2 === 'f' ? 'f ' : '') + (o.c2 || 'c3') + '" style="font-size:' + (o.size2 || 12) + 'px;line-height:' + (o.lh2 || 16) + 'px;font-weight:' + (o.weight2 || 400) + (o.w2 ? ';max-width:' + f2(o.w2) + 'px;white-space:normal;text-align:' + (o.ai === 'flex-end' ? 'right' : 'left') : '') + '">' + esc(nb(o.text2)) + '</span>';
+    return s + '</span>';
+  }
+  function MK(num, left, top){ return '<span class="lrn-mk" aria-hidden="true" style="left:' + f2(left) + 'px;top:' + f2(top) + 'px">' + num + '</span>'; }
+
+  // Kalkulatorens egne metoder
+  function frilans(netto, timer, skatt, ferie, oh){
+    var brutto = netto / (1 - skatt / 100), paaslag = brutto * (ferie + oh) / 100, oms = brutto + paaslag;
+    var eks = Math.round(oms / timer), inkl = Math.round(eks * 1.25), eff = Math.round(netto / timer);
+    return {brutto:brutto, paaslag:paaslag, oms:oms, eks:eks, inkl:inkl, eff:eff, mva:inkl - eks};
+  }
+  function handverker(lonn, sosial, ind, fakt, fort){
+    var lonnskost = Math.round(lonn * (1 + sosial / 100)), indT = Math.round(lonnskost * ind / 100), bruttokost = lonnskost + indT;
+    var selvkost = Math.round(bruttokost / (fakt / 100)), eks = Math.round(selvkost * (1 + fort / 100)), inkl = Math.round(eks * 1.25);
+    return {lonn:lonn, lonnskost:lonnskost, indT:indT, bruttokost:bruttokost, selvkost:selvkost, eks:eks, inkl:inkl, mva:inkl - eks, tom:selvkost - bruttokost, fort:eks - selvkost};
+  }
+  // Timeprisen delt i kroner per fakturerbar time. Netto er den effektive timeprisen, resten fordeles med største rest.
+  function frParts(N, r){
+    var brH = N.netto / (1 - N.skatt / 100) / N.timer, rw = {skatt:brH * N.skatt / 100, ferie:brH * N.ferie / 100, oh:brH * N.oh / 100}, keys = ['skatt', 'ferie', 'oh'], fl = {}, sum = 0;
+    keys.forEach(function(k){ fl[k] = Math.floor(rw[k]); sum += fl[k]; });
+    var need = (r.eks - r.eff) - sum, order = keys.slice().sort(function(a, b){ return (rw[b] - fl[b]) - (rw[a] - fl[a]); });
+    for(var i = 0; need > 0 && i < 12; i++){ fl[order[i % 3]] += 1; need -= 1; }
+    for(var j = 0; need < 0 && j < 12; j++){ var k = order[2 - (j % 3)]; if(fl[k] > 0){ fl[k] -= 1; need += 1; } }
+    return {netto:r.eff, skatt:fl.skatt, ferie:fl.ferie, oh:fl.oh, mva:r.mva};
+  }
+  function geo(W){
+    var m = W < 600;
+    var g = m ? {W:W, x0:4, p:(W - 4) / 26, rh:22, chh:20, gy0:32, panelY:[0, 182], pH:164, ms:20, fz:11, hx0:4, hp:Math.min(34, (W - 8) / 10), hch:44}
+              : {W:W, x0:28, p:Math.min(15, (W - 28) / 52), rh:22, chh:20, gy0:44, panelY:[0], pH:182, ms:22, fz:12, hx0:28, hp:Math.min(74, (W - 28) / 10), hch:64};
+    g.cw = g.p - 2; g.hcw = g.hp - (m ? 3 : 5);
+    return {mobile:m, g:g};
+  }
+
+  // ── Rutenettet: året i dagsruter (frilans) ──
+  function gridFr(G, T, L){
+    var g = G.g, mob = G.mobile, ph = L.ph, t = L.t, fmt = L.kr;
+    var FERIE = [14, 28, 29, 30, 52], isF = function(w){ return FERIE.indexOf(w) >= 0; }, work = [], w, r;
+    for(w = 1; w <= 52; w++) if(!isF(w)) work.push(w);
+    // Fyllrekkefølge: rad for rad i arbeidsukene, så den femte raden, så ferieukene (over 1 880 timer)
+    var fill = {}, left = T / 8;
+    var put = function(rr, ww){ var f = Math.max(0, Math.min(1, left)); if(f > 0) fill[rr * 100 + ww] = f; left -= f; };
+    for(r = 0; r < 4; r++) work.forEach(function(ww){ put(r, ww); });
+    work.forEach(function(ww){ put(4, ww); });
+    FERIE.forEach(function(ww){ for(var rr = 0; rr < 5; rr++) put(rr, ww); });
+    var panelOf = function(ww){ return mob && ww > 26 ? 1 : 0; };
+    var X = function(ww){ return g.x0 + (mob ? (ww - 1) % 26 : ww - 1) * g.p; };
+    var Y = function(rr, ww){ return g.panelY[panelOf(ww)] + g.gy0 + rr * g.rh; };
+    var bill = '', adm = '', fer = '', nAdm = 0;
+    for(w = 1; w <= 52; w++) for(r = 0; r < 5; r++){
+      var f = fill[r * 100 + w] || 0, x = X(w), y = Y(r, w);
+      if(f > 0) bill += rect(x, y, g.cw, g.chh * f);
+      if(isF(w)) fer += rect(x + 0.5, y + 0.5, g.cw - 1, g.chh - 1);
+      else if(f < 1){ adm += rect(x, y + g.chh * f, g.cw, g.chh * (1 - f)); nAdm += 1 - f; }
+    }
+    var tx = '', gy1 = g.gy0 + 4 * g.rh + g.chh;
+    var MN = t('lrnTpMnd', 'jan,feb,mar,apr,mai,jun,jul,aug,sep,okt,nov,des').split(','), MS = [1, 5, 10, 14, 18, 23, 27, 31, 36, 40, 44, 49];
+    MS.forEach(function(ww, i){ tx += TB({left:X(ww), top:g.panelY[panelOf(ww)] + gy1 + 8, text:MN[i] || '', size:g.fz, c:'c3'}); });
+    // Ferieukene: klammer over kolonnene og navn over klammen
+    var yt = g.gy0 - 12, lblTop = yt - 20, brD = '';
+    var grp = function(a, b){ return {xl:X(a), xr:X(b) + g.cw, py:g.panelY[panelOf(a)]}; };
+    var br = function(o){ brD += 'M' + f2(o.xl) + ',' + (o.py + yt + 6) + ' V' + (o.py + yt) + ' H' + f2(o.xr) + ' V' + (o.py + yt + 6) + ' '; };
+    var eas = grp(14, 14), sum = grp(28, 30), jul = grp(52, 52);
+    [eas, sum, jul].forEach(br);
+    tx += TB({left:(eas.xl + eas.xr) / 2, top:eas.py + lblTop, shift:'-50%', text:ph('Påske'), size:g.fz, c:'c3'});
+    tx += TB({left:jul.xr, top:jul.py + lblTop, shift:'-100%', text:ph('Jul'), size:g.fz, c:'c3'});
+    var ferTxt = ph('Ferie: ingen fakturering'), ferW = tw(ferTxt, g.fz, 500), sCx = (sum.xl + sum.xr) / 2;
+    var ferLeft = Math.max(sCx - ferW / 2, 2), ferCentered = ferLeft === sCx - ferW / 2;
+    // Får ikke etiketten plass midt over sommeruka (smal skjerm), legges den til venstre for jul-etiketten
+    ferLeft = Math.min(ferLeft, jul.xr - tw(ph('Jul'), g.fz) - 12 - ferW);
+    ferCentered = ferCentered && ferLeft === sCx - ferW / 2;
+    tx += TB({left:ferCentered ? sCx : ferLeft, top:sum.py + lblTop, shift:ferCentered ? '-50%' : '0%', text:ferTxt, size:g.fz, weight:500, c:'c2'});
+    var ms = g.ms, mk = {};
+    mk.ferie = mob ? {left:ferLeft + ferW + 8, top:sum.py + lblTop + 8 - ms / 2} : {left:Math.max(0, (ferCentered ? sCx - ferW / 2 : ferLeft) - ms - 8), top:sum.py + lblTop + 8 - ms / 2};
+    // Fakturerbare timer: boks over rute 2–3
+    var billHrs = fmt(T) + NB + t('lrnTpH', 't'), bigS = mob ? 20 : 22, billLbl = ph('Fakturerbare timer');
+    var bw = Math.max(tw(billLbl, g.fz, 500), tw(billHrs, bigS, 500, true)) + 14, bh = 16 + 1 + (bigS + 2) + 8, by = g.gy0 + g.rh + (2 * g.rh - bh) / 2;
+    tx += TB({left:g.x0 + (mob ? 4 : 6), top:by, bg:true, pad:'4px 7px', text:billLbl, size:g.fz, weight:500, c:'c2', text2:billHrs, fam2:'f', size2:bigS, lh2:bigS + 2, weight2:500, c2:'c1'});
+    mk.bill = mob ? {left:g.x0 + 4 + bw + 6, top:by + bh / 2 - ms / 2} : {left:3, top:by + bh / 2 - ms / 2};
+    // Admin: boks på den femte raden, der halvtonen blir stående lengst
+    var admTxt = ph('Admin, tilbud, kurs, ledig tid'), admW = tw(admTxt, g.fz, 500) + 12, admRight = X(51) + g.cw - 4;
+    var admTop = (mob ? g.panelY[1] : 0) + g.gy0 + 4 * g.rh + (g.chh - 20) / 2, a5 = Math.max(0, Math.min(47, 47 - Math.max(0, T / 8 - 188)));
+    if(nAdm >= 0.5){
+      if(a5 * g.p >= admW + 8){
+        tx += TB({left:admRight, top:admTop, shift:'-100%', bg:true, pad:'1px 6px', text:admTxt, size:g.fz, lh:18, weight:500, c:'c1'});
+        mk.admin = {left:admRight - admW - ms - 6, top:admTop + 10 - ms / 2};
+      } else mk.admin = {left:X(51) + g.cw - Math.max(a5, 1) * g.p - ms - 4, top:admTop + 10 - ms / 2};
+    }
+    mk.over = {left:mob ? ferLeft + ferW + 8 + ms + 6 : ferLeft + ferW + 8, top:mk.ferie.top};
+    var H = mob ? g.panelY[1] + g.pH : g.gy0 + 4 * g.rh + g.chh + 8 + 16 + 6;
+    return {H:H, billD:bill, admD:adm, ferD:fer, brD:brD, tx:tx, mk:mk, nAdm:nAdm};
+  }
+
+  // ── Rutenettet i håndverkermodus: én rad på ti timer ──
+  function gridHv(G, fb, L){
+    var g = G.g, mob = G.mobile, ph = L.ph, t = L.t, topY = mob ? 38 : 40, bill = '', adm = '', i;
+    for(i = 0; i < 10; i++){
+      var f = Math.max(0, Math.min(1, fb - i)), x = g.hx0 + i * g.hp;
+      if(f > 0) bill += rect(x, topY, g.hcw * f, g.hch);
+      if(f < 1) adm += rect(x + g.hcw * f, topY, g.hcw * (1 - f), g.hch);
+    }
+    var aEnd = g.hx0 + Math.floor(fb) * g.hp + (fb % 1 > 0 ? g.hcw * (fb % 1) : -(g.hp - g.hcw));
+    var bStart = fb % 1 > 0 ? g.hx0 + Math.floor(fb) * g.hp + g.hcw * (fb % 1) : g.hx0 + Math.round(fb) * g.hp, bEnd = g.hx0 + 9 * g.hp + g.hcw;
+    var tx = '', ms = g.ms, mk = {}, brD = '', yTop = topY - 12;
+    brD += 'M' + g.hx0 + ',' + (yTop + 6) + ' V' + yTop + ' H' + f2(bEnd) + ' V' + (yTop + 6) + ' ';
+    tx += TB({left:g.hx0, top:yTop - 20, text:ph('10 timer på jobb'), size:g.fz, weight:500, c:'c2'});
+    var yBot = topY + g.hch + 12;
+    brD += 'M' + g.hx0 + ',' + (yBot - 6) + ' V' + yBot + ' H' + f2(aEnd) + ' V' + (yBot - 6) + ' ';
+    var hasB = fb < 10;
+    if(hasB) brD += 'M' + f2(bStart) + ',' + (yBot - 6) + ' V' + yBot + ' H' + f2(bEnd) + ' V' + (yBot - 6) + ' ';
+    var fz = g.fz, lt = yBot + 8, aTxt = ph('Fakturerbare timer'), aSub = t('lrnTpAv10', '{n} av 10 timer', {n:cells(fb)});
+    tx += TB({left:g.hx0, top:lt, text:aTxt, size:fz, weight:600, c:'c1', text2:aSub, size2:fz, c2:'c3'});
+    var bTxt = mob ? ph('Ikke fakturerbare') : ph('Ikke fakturerbare timer'), bSub = mob ? ph('ledig, admin, reisetid') : ph('ledig kapasitet, admin og reisetid');
+    var bw = Math.max(tw(bTxt, fz, 600), tw(bSub, fz, 400)), aw = Math.max(tw(aTxt, fz, 600), tw(aSub, fz, 400));
+    // Får ikke begge etikettene og merkene plass på én rad (lange ord, som på polsk), står den høyre på raden under
+    var lb = hasB && mob && g.hx0 + aw + 10 + ms + 12 + ms + 8 + bw > bEnd ? lt + 38 : lt;
+    if(hasB) tx += TB({left:bEnd, top:lb, shift:'-100%', ai:'flex-end', text:bTxt, size:fz, weight:600, c:'c1', text2:bSub, size2:fz, c2:'c3'});
+    mk.a = mob ? {left:g.hx0 + aw + 10, top:lt + 8 - ms / 2} : {left:3, top:lt + 8 - ms / 2};
+    mk.b = {left:bEnd - bw - ms - 8, top:lb + 8 - ms / 2};
+    return {H:lb + 32 + 6, billD:bill, admD:adm, ferD:'', brD:brD, tx:tx, mk:mk};
+  }
+
+  // ── Stolpen, brede skjermer: vannrett. tops og bot er klammer, end er flagget helt til høyre. ──
+  function barH(m, W){
+    var fz = 12, barHgt = 56, tops = m.tops.slice().sort(function(a, z){ return z.upto - a.upto; }), Lt = tops.length;
+    var yLine = function(k){ return 14 + 28 * k; }, barTop = Lt ? yLine(Lt - 1) + 30 : 8, barBot = barTop + barHgt, S = W / m.total, x = 0;
+    var segs = m.segs.map(function(s){ var w = s.v * S, o = {s:s, x0:x, x1:x + w, w:w}; x += w; return o; }), n = segs.length, rects = '', tx = '', flags = [];
+    segs.forEach(function(o, i){
+      if(o.w < 0.5) return;
+      var s = o.s, il = i > 0 ? 0.75 : 0, ir = i < n - 1 ? 0.75 : 0;
+      if(s.ghost) rects += '<rect class="lrn-tp-gh" x="' + f2(o.x0 + 0.75 + (i > 0 ? 0.75 : 0)) + '" y="' + (barTop + 0.75) + '" width="' + f2(Math.max(0, o.w - 1.5 - (i > 0 ? 0.75 : 0))) + '" height="' + (barHgt - 1.5) + '"/>';
+      else {
+        var at = 'x="' + f2(o.x0 + il) + '" y="' + barTop + '" width="' + f2(Math.max(0, o.w - il - ir)) + '" height="' + barHgt + '"';
+        rects += '<rect class="lrn-tp-' + s.fill + '" ' + at + '/>' + (s.hatch ? '<rect class="lrn-tp-ht" ' + at + '/>' : '');
+      }
+    });
+    segs.forEach(function(o){
+      var s = o.s;
+      if(o.w < 2) return;
+      var wBox = Math.max(tw(s.l1, fz, 600), s.l2 ? tw(s.l2, fz, 400) : 0), hL = s.l2 ? 39 : 22;
+      if(wBox + 14 <= o.w - 10) tx += TB({left:(o.x0 + o.x1) / 2, top:barTop + (barHgt - hL) / 2, shift:'-50%', ai:'center', bg:true, pad:'3px 7px', text:s.l1, size:fz, weight:600, c:'c1', text2:s.l2, size2:fz, c2:'c2'});
+      else flags.push({l1:s.l1, l2:s.l2, xa:o.x0, xb:o.x1, w:wBox + 2, prefer:'left', off:8});
+    });
+    if(m.end) flags.push({l1:m.end.num, l2:m.end.cap, xa:W - 1, xb:W, w:Math.max(tw(m.end.num, fz, 600), tw(m.end.cap, fz, 400)) + 2, prefer:'right', off:2});
+    // Klammer over stolpen: størst øverst, tallet til høyre for klammen
+    var brD = '';
+    tops.forEach(function(tt, k){
+      var y = yLine(k), xe = segs[tt.upto - 1].x1 - 1.5;
+      brD += 'M1.5,' + (y + 6) + ' V' + y + ' H' + f2(xe) + ' V' + (y + 6) + ' ';
+      // Er det ikke plass til høyre for klammen (lange navn, som på polsk), står tallet og navnet på linja, til venstre for enden
+      var fit = xe + 10 + tw(tt.num, 22, 500, true) + 8 + tw(tt.cap, fz, 400) <= W - 2;
+      tx += TB({left:fit ? xe + 10 : xe - 10, top:y - 13, shift:fit ? '0%' : '-100%', bg:!fit, pad:fit ? '' : '0 6px', dir:'row', ai:'baseline', gap:8, text:tt.num, fam:'f', size:22, lh:26, weight:500, c:'c1', ls:'-0.3px', text2:tt.cap, size2:fz, lh2:16, c2:'c2'});
+    });
+    // Klamme under stolpen (brutto), med navn under
+    var rows = [[], [], []], leaders = [], botEnd = -100, leadD = '';
+    if(m.bot){
+      var yb = barBot + 10;
+      botEnd = segs[m.bot.upto - 1].x1 - 3;
+      brD += 'M1.5,' + (yb - 6) + ' V' + yb + ' H' + f2(botEnd) + ' V' + (yb - 6) + ' ';
+      var bw = tw(m.bot.num, fz, 600) + 8 + tw(m.bot.cap, fz, 400);
+      tx += TB({left:1.5, top:yb + 6, dir:'row', ai:'baseline', gap:8, text:m.bot.num, size:fz, weight:600, c:'c1', text2:m.bot.cap, size2:fz, c2:'c2'});
+      rows[0].push([0, bw + 2]);
+    }
+    // Flagg for delene som ikke har plass til etiketten inni: rad 0–2 under stolpen
+    var rowH = 40, placed = [];
+    var overlap = function(arr, a, z){ return arr.some(function(iv){ return a < iv[1] + 10 && z > iv[0] - 10; }); };
+    var hitLeader = function(rr, a, z){ return leaders.some(function(qq){ return qq.r > rr && qq.x > a - 4 && qq.x < z + 4; }); };
+    var crossRows = function(rr, xl){ for(var qq = 0; qq < rr; qq++) if(rows[qq].some(function(iv){ return xl > iv[0] - 4 && xl < iv[1] + 4; })) return true; return false; };
+    flags.forEach(function(f){
+      var opts = f.prefer === 'right' ? ['right', 'left'] : ['left', 'right'], done = false;
+      for(var rr = 0; rr < 3 && !done; rr++) for(var oi = 0; oi < 2 && !done; oi++){
+        var side = opts[oi], xl = side === 'left' ? f.xa + f.off : f.xb - f.off, a = side === 'left' ? xl : xl - 8 - f.w, z = side === 'left' ? xl + 8 + f.w : xl;
+        if(a < 0 || z > W + 1 || xl < botEnd + 8) continue;
+        if(overlap(rows[rr], a, z) || hitLeader(rr, a, z) || crossRows(rr, xl)) continue;
+        rows[rr].push([a, z]); leaders.push({x:xl, r:rr}); placed.push({f:f, side:side, r:rr, xl:xl}); done = true;
+      }
+    });
+    var used = 0;
+    placed.forEach(function(p){
+      var top = barBot + 10 + p.r * rowH;
+      used = Math.max(used, p.r + 1);
+      leadD += 'M' + f2(p.xl) + ',' + barBot + ' V' + f2(top + 33) + ' ';
+      tx += TB({left:p.side === 'left' ? p.xl + 8 : p.xl - 8, top:top, shift:p.side === 'left' ? '0%' : '-100%', ai:p.side === 'left' ? 'flex-start' : 'flex-end', text:p.f.l1, size:fz, weight:600, c:'c1', text2:p.f.l2, size2:fz, c2:'c3'});
+    });
+    var below = Math.max(used ? 10 + (used - 1) * rowH + 33 : 0, m.bot ? 36 : 0);
+    return {H:Math.round(barBot + below + 10), segs:rects, tx:tx, brD:brD, leadD:leadD};
+  }
+
+  // ── Stolpen, smale skjermer: loddrett stabel med løpende sum til venstre og etiketter til høyre ──
+  function barV(m, W){
+    var fz = 11, bx = 100, bwd = 64, barTop = 14, barHgt = 300, lx = 176, cxr = 86, S = barHgt / m.total, y = barTop;
+    var segs = m.segs.map(function(s){ var h = s.v * S, o = {s:s, y0:y, y1:y + h, h:h}; y += h; return o; }), n = segs.length, rects = '', tx = '', leadD = '';
+    segs.forEach(function(o, i){
+      if(o.h < 0.5) return;
+      var s = o.s, it = i > 0 ? 0.75 : 0, ib = i < n - 1 ? 0.75 : 0;
+      if(s.ghost) rects += '<rect class="lrn-tp-gh" x="' + (bx + 0.75) + '" y="' + f2(o.y0 + 0.75 + it) + '" width="' + (bwd - 1.5) + '" height="' + f2(Math.max(0, o.h - 1.5 - it)) + '"/>';
+      else {
+        var at = 'x="' + bx + '" y="' + f2(o.y0 + it) + '" width="' + bwd + '" height="' + f2(Math.max(0, o.h - it - ib)) + '"';
+        rects += '<rect class="lrn-tp-' + s.fill + '" ' + at + '/>' + (s.hatch ? '<rect class="lrn-tp-ht" ' + at + '/>' : '');
+      }
+    });
+    var lw = W - lx - 2;
+    // Etikettene kan brytes over flere linjer på smale skjermer, så avstanden regnes av den faktiske høyden
+    var items = segs.filter(function(o){ return o.h >= 0.5; }).map(function(o){
+      var s = o.s, nl = Math.ceil(tw(s.short, fz, 500) / lw) + (s.short2 ? Math.ceil(tw(s.short2, fz) / lw) : 0);
+      return {o:o, cy:(o.y0 + o.y1) / 2, y:(o.y0 + o.y1) / 2, h:nl * 16};
+    });
+    items.forEach(function(it, k){ if(k > 0) it.y = Math.max(it.y, items[k - 1].y + items[k - 1].h + 2); });
+    items.forEach(function(it){
+      var s = it.o.s;
+      tx += '<span class="lrn-tp-l" style="left:' + lx + 'px;top:' + f2(it.y - 8) + 'px;flex-direction:column;align-items:flex-start;gap:1px;width:' + f2(lw) + 'px;white-space:normal">' +
+        '<span class="c1" style="font-size:' + fz + 'px;line-height:16px;font-weight:500">' + esc(nb(s.short)) + '</span>' + (s.short2 ? '<span class="c3" style="font-size:' + fz + 'px;line-height:16px">' + esc(nb(s.short2)) + '</span>' : '') + '</span>';
+      if(Math.abs(it.y - it.cy) > 3) leadD += 'M' + (bx + bwd + 2) + ',' + f2(it.cy) + ' L' + (lx - 6) + ',' + f2(it.y) + ' ';
+    });
+    // Løpende sum: tall og navn til venstre, kort strek mot stolpen
+    // Lange navn (polsk, ukrainsk) brytes innenfor kanten, og neste sum flyttes ned tilsvarende
+    var capW = cxr - 2;
+    var cum = m.cum.map(function(qq){ var yy = barTop; for(var i = 0; i < qq.upto; i++) yy += segs[i].h; return {q:qq, yb:yy, y:yy, h:21 + 14 * Math.max(1, Math.ceil(tw(qq.cap, 11) / capW))}; });
+    cum.forEach(function(o, k){ if(k > 0) o.y = Math.max(o.y, cum[k - 1].y + Math.max(40, cum[k - 1].h + 5)); });
+    cum.forEach(function(o){
+      tx += TB({left:cxr, top:o.y - 17, shift:'-100%', ai:'flex-end', text:o.q.num, fam:'f', size:17, lh:20, weight:500, c:'c1', ls:'-0.2px', text2:o.q.cap, size2:11, lh2:14, c2:'c3', w2:capW});
+      leadD += 'M' + (bx - 1) + ',' + f2(o.yb) + ' H' + (cxr + 7) + (Math.abs(o.y - o.yb) > 2 ? ' L' + (cxr + 4) + ',' + f2(o.y) : '') + ' ';
+    });
+    var lastC = cum.length ? cum[cum.length - 1] : null, lastLbl = items.length ? items[items.length - 1].y - 8 + items[items.length - 1].h : 0;
+    return {H:Math.round(Math.max(barTop + barHgt, lastC ? lastC.y - 17 + lastC.h : 0, lastLbl) + 22), segs:rects, tx:tx, brD:'', leadD:leadD};
+  }
+
+  // ── Følsomheten: timepris ved andre timetall (eller faktureringsgrader), samme netto ──
+  function sensLayout(W, mob, Sx, L){
+    var s = mob ? {x0:44, x1:W - 12, y0:62, y1:168, fz:11, H:218} : {x0:56, x1:W - 24, y0:62, y1:186, fz:12, H:236};
+    var fz = s.fz, fmt = L.kr, ph = L.ph;
+    var X = function(x){ return s.x0 + (x - Sx.xMin) / (Sx.xMax - Sx.xMin) * (s.x1 - s.x0); };
+    var Y = function(v){ return s.y1 - v / Sx.yMax * (s.y1 - s.y0); };
+    var tx = '', gridD = '';
+    for(var v = 0; v <= Sx.yMax + 0.5; v += Sx.yStep){
+      if(v > 0) gridD += 'M' + s.x0 + ',' + f1(Y(v)) + ' H' + f1(s.x1) + ' ';
+      tx += TB({left:s.x0 - 8, top:Y(v) - 8, shift:'-100%', text:fmt(v), size:fz, c:'c3'});
+    }
+    var baseD = 'M' + s.x0 + ',' + f1(Y(0)) + ' H' + f1(s.x1), curveD = '';
+    for(var i = 0; i <= 60; i++){ var x = Sx.xMin + (Sx.xMax - Sx.xMin) * i / 60; curveD += (i ? ' L' : 'M') + f1(X(x)) + ',' + f1(Y(Sx.f(x))); }
+    var dv = ph('Ditt valg'), tagW = tw(dv, 12, 600) + 14;
+    var mk = function(p, isU){
+      var px = X(p), py = Y(Sx.f(p)), lab = Sx.xFmt(p), chip = Sx.yFmt(Sx.f(p)), lw = tw(lab, fz, isU ? 600 : 400), chw = tw(chip, fz, isU ? 600 : 500) + 10;
+      var lxx = Math.max(0, Math.min(W - lw, px - lw / 2)), right = px + 8 + chw <= W - 2, cl = right ? px + 8 : px - 8 - chw;
+      var o = {p:p, isU:isU, px:px, py:py, lab:lab, chip:chip, lx:lxx, cl:cl, chw:chw, tagL:0};
+      o.boxes = [{x:lxx - 4, y:s.y1 + 6, w:lw + 8, h:20}, {x:cl - 4, y:py - 30, w:chw + 8, h:26}];
+      if(isU){ o.tagL = Math.max(0, Math.min(W - tagW, right ? cl : cl + chw - tagW)); o.boxes.push({x:o.tagL - 4, y:py - 54, w:tagW + 8, h:26}); }
+      return o;
+    };
+    var hit = function(a, b){ return a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h; };
+    var user = mk(Sx.user, true), keep = [user];
+    Sx.pts.slice().sort(function(a, z){ return a - z; }).forEach(function(p){
+      if(p === Sx.user) return;
+      var o = mk(p, false);
+      if(!keep.some(function(qq){ return qq.boxes.some(function(qb){ return o.boxes.some(function(ob){ return hit(qb, ob); }); }); })) keep.push(o);
+    });
+    keep.sort(function(a, z){ return a.p - z.p; });
+    var pts = '', dropD = '';
+    keep.forEach(function(o){
+      pts += '<circle class="lrn-tp-pt' + (o.isU ? ' u' : '') + '" cx="' + f1(o.px) + '" cy="' + f1(o.py) + '" r="' + (o.isU ? 5 : 4) + '"/>';
+      dropD += 'M' + f1(o.px) + ',' + f1(o.py) + ' V' + f1(Y(0)) + ' ';
+      tx += TB({left:o.lx, top:s.y1 + 8, text:o.lab, size:fz, weight:o.isU ? 600 : 400, c:o.isU ? 'c1' : 'c3'});
+      tx += TB({left:o.cl, top:o.py - 26, bg:true, pad:'1px 5px', text:o.chip, size:fz, lh:18, weight:o.isU ? 600 : 500, c:'c1'});
+    });
+    tx += '<span class="lrn-tp-tag" style="left:' + f1(user.tagL) + 'px;top:' + f1(user.py - 52) + 'px">' + esc(dv) + '</span>';
+    // Taket: stiplet linje i grafen og navnet på rad to under aksen
+    var cx = X(Sx.cap.x), capD = 'M' + f1(cx) + ',' + (s.y0 - 8) + ' V' + f1(Y(0) + 5), cw2 = tw(Sx.cap.label, fz, 500);
+    tx += TB({left:Math.max(0, Math.min(W - cw2, cx - cw2 / 2)), top:s.y1 + 28, text:Sx.cap.label, size:fz, weight:500, c:'c2'});
+    return {H:s.H, gridD:gridD, baseD:baseD, curveD:curveD, dropD:dropD, capD:capD, pts:pts, tx:tx};
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, fmt = L.kr;
+    function kr(v){ return fmt(v) + NB + 'kr'; }
+    function pc(v){ return cells(v) + NB + '%'; }
+    var F = d && d.fr, Hh = d && d.hv;
+    if(d && d.mode && d.mode !== calcMode){ calcMode = d.mode; bm = d.mode === 'handverker' ? 'hv' : 'fr'; }
+    var hv = bm === 'hv';
+    var frOk = !!F && F.netto > 0 && F.timer > 0 && F.skatt < 100 && isFinite(F.ferie) && isFinite(F.oh);
+    var hvOk = !!Hh && isFinite(Hh.lonn) && Hh.lonn > 0 && Hh.fakt > 0 && isFinite(Hh.sosial) && isFinite(Hh.ind) && isFinite(Hh.fort);
+    var none = !(hv ? hvOk : frOk);
+    root.querySelectorAll('.lrn-seg button').forEach(function(b){ b.setAttribute('aria-pressed', (b.getAttribute('data-k') === 'hv') === hv ? 'true' : 'false'); });
+    show('none', none); show('main', !none); show('noneFr', !hv); show('noneHv', hv);
+    if(none){ set('srGrid', ''); return; }
+    var cs = getComputedStyle(root);
+    fam = cs.fontFamily || 'Inter, system-ui, sans-serif';
+    serif = cs.getPropertyValue('--font-serif').trim() || 'Georgia, serif';
+    // Glidebryteren nullstilles når tallene i kalkulatoren endres
+    var key = JSON.stringify([F, Hh]);
+    if(key !== baseKey){ baseKey = key; slFr = null; slHv = null; }
+    var gW = q('grid').clientWidth || 808, G = geo(gW), mob = G.mobile, V;
+    lastW = gW;
+    show('hdrFr', !hv); show('hdrHv', hv);
+
+    if(!hv){
+      var B = {netto:F.netto, timer:F.timer, skatt:F.skatt, ferie:F.ferie, oh:F.oh};
+      var T = slFr === null ? B.timer : slFr, moved = T !== B.timer, N = {netto:B.netto, timer:T, skatt:B.skatt, ferie:B.ferie, oh:B.oh};
+      var dine = !(B.netto === 600000 && B.timer === 1500 && B.skatt === 30 && B.ferie === 5 && B.oh === 15);
+      var r = frilans(N.netto, T, N.skatt, N.ferie, N.oh), rb = frilans(B.netto, B.timer, B.skatt, B.ferie, B.oh), parts = frParts(N, r);
+      var over = Math.max(0, T - 1880), adminH = Math.max(0, 1880 - T), share = T / 1880 * 100, restH = 2080 - T;
+      var grid = gridFr(G, T, L);
+      var h2 = (dine || moved) ? t('lrnTpH2d', 'Av årets 2 080 timer får du betalt for {t}', {t:fmt(T)}) : t('lrnTpH2', 'Av årets 2 080 timer får en typisk frilanser betalt for {t}', {t:fmt(T)});
+      var nestTxt = (function(n){ var up = Math.ceil(n / 100) * 100; return (n % 100 !== 0 && up - n <= 25) ? t('lrnTpNesten', 'nesten {n}', {n:fmt(up)}) : fmt(n); })(restH);
+      var ingress = over > 0 ? t('lrnTpIngO', 'Med {t} fakturerbare timer er det bare {r} timer igjen til ferie og admin. Timene må bære hele nettoen, skatten og kostnadene.', {t:fmt(T), r:fmt(Math.max(0, restH))})
+                             : t('lrnTpIng', 'Med {t} fakturerbare timer går {r} timer i året til ferie og admin. Timene som er igjen, må bære hele nettoen, skatten og kostnadene.', {t:fmt(T), r:nestTxt});
+      var dpw = adminH / 47 / 8, daysTxt = (dpw >= 0.9 && dpw <= 1.1) ? ph('omtrent én dag i uka') : t('lrnTpDager', '{n} dager i uka', {n:(function(d){ return d === Math.round(d) ? d : cells(d); })(Math.round(dpw * 10) / 10)});
+      var defs = [{k:'ferie', t:t('lrnTpNFerie', 'Fem uker uten fakturering: tre om sommeren, én i påsken og én i jula. Som selvstendig stopper inntekten når du ikke fakturerer. Det er 200 timer.')}];
+      if(grid.nAdm >= 0.5) defs.push({k:'admin', t:t('lrnTpNAdmin', 'Admin, tilbud, kurs og ledig tid tar {d}, {h} timer. Fakturerbare timer er ikke arbeidstimer, og settes tallet for høyt, ser timeprisen kunstig lav ut.', {d:daysTxt, h:fmt(adminH)})});
+      defs.push({k:'bill', t:over > 0 ? t('lrnTpNBillO', '{t} timer er mer enn de 1 880 timene på jobb (40 t × 47 uker).', {t:fmt(T)})
+        : (Math.abs(share - 80) < 0.5 ? t('lrnTpNBill80', '{t} av 1 880 er {p}, samme faktureringsgrad som håndverkermodusen bruker.', {t:fmt(T), p:pc(Math.round(share))})
+                                      : t('lrnTpNBill', '{t} av 1 880 er {p}. Håndverkermodusen bruker 80 % som standard.', {t:fmt(T), p:pc(Math.round(share))}))});
+      if(over > 0) defs.push({k:'over', t:t('lrnTpNOver', 'Mer enn 1 880 timer betyr kortere ferie eller lengre uker.')});
+      var segs = [
+        {k:'netto', v:parts.netto, fill:'f1', l1:t('lrnTpSNetto', 'Effektiv timepris {k}', {k:kr(parts.netto)}), l2:ph('det du sitter igjen med per fakturerte time'), short:t('lrnTpSNetto', 'Effektiv timepris {k}', {k:kr(parts.netto)})},
+        {k:'skatt', v:parts.skatt, fill:'v2', l1:t('lrnTpSSkatt', 'Skatt {k}', {k:kr(parts.skatt)}), l2:t('lrnTpAvBrutto', '{p} av brutto', {p:pc(N.skatt)}), short:t('lrnTpSSkatt', 'Skatt {k}', {k:kr(parts.skatt)}) + ' · ' + pc(N.skatt)},
+        {k:'ferie', v:parts.ferie, fill:'v3', l1:t('lrnTpSSyk', 'Sykdom/pensjon {k}', {k:kr(parts.ferie)}), l2:t('lrnTpAvBrutto', '{p} av brutto', {p:pc(N.ferie)}), short:t('lrnTpSSyk', 'Sykdom/pensjon {k}', {k:kr(parts.ferie)}) + ' · ' + pc(N.ferie)},
+        {k:'oh', v:parts.oh, fill:'v4', l1:t('lrnTpSOh', 'Overhead {k}', {k:kr(parts.oh)}), l2:t('lrnTpAvBrutto', '{p} av brutto', {p:pc(N.oh)}), short:t('lrnTpSOh', 'Overhead {k}', {k:kr(parts.oh)}) + ' · ' + pc(N.oh)},
+        {k:'mva', v:parts.mva, ghost:true, l1:t('lrnTpSMva', 'MVA {k}', {k:kr(parts.mva)}), l2:ph('25 %, går videre til staten'), short:t('lrnTpSMva', 'MVA {k}', {k:kr(parts.mva)}), short2:ph('25 %, går videre til staten')}
+      ];
+      var bar = {segs:segs, total:r.inkl, tops:[{upto:4, num:kr(r.eks), cap:ph('eks. MVA')}], bot:{upto:2, num:t('lrnTpBrutto', '{k} brutto', {k:kr(parts.netto + parts.skatt)}), cap:ph('påslagene regnes av dette tallet')},
+        end:{num:kr(r.inkl), cap:ph('inkl. MVA, det kunden betaler')}, cum:[{upto:2, num:kr(parts.netto + parts.skatt), cap:ph('brutto')}, {upto:4, num:kr(r.eks), cap:ph('eks. MVA')}, {upto:5, num:kr(r.inkl), cap:ph('inkl. MVA')}]};
+      var f = function(x){ return frilans(N.netto, x, N.skatt, N.ferie, N.oh).eks; };
+      var Sx = {xMin:1000, xMax:2000, f:f, yMax:Math.ceil(f(1000) / 200) * 200, yStep:400, pts:mob ? [1200, 1500, 1700] : [1200, 1300, 1500, 1700], user:T,
+        cap:{x:1880, label:t('lrnTpCap', '1 880 t: alle timer på jobb')}, xFmt:function(x){ return fmt(x) + NB + t('lrnTpH', 't'); }, yFmt:function(v){ return kr(v); }};
+      var p1200 = frilans(B.netto, 1200, B.skatt, B.ferie, B.oh).eks;
+      V = {grid:grid, defs:defs, segs:segs, bar:bar, Sx:Sx, h2:h2, ingress:ingress,
+        gridCap:ph('Året i arbeidsdager. Hver rute er én dag à 8 timer, hver kolonne er én uke.'),
+        summary:t('lrnTpSum', 'Omsetningen på {o} må fordeles på {t} timer, og det gir {k} per time.', {o:kr(r.oms), t:fmt(T), k:kr(r.eks)}),
+        h3:ph('Hver fakturerbar time må bære hele året'), barCap:t('lrnTpBarCap', 'Hver fakturerbar time må bære {k}', {k:kr(r.eks)}),
+        eksDefs:[{n:t('lrnTpDSkatt', 'Skatt · {p}', {p:pc(N.skatt)}), x:ph('Inntektsskatt og trygdeavgift. 30 % er typisk for moderate inntekter som ENK. Skattesatsen er et anslag.')},
+                 {n:t('lrnTpDSyk', 'Sykdom/pensjon · {p}', {p:pc(N.ferie)}), x:ph('Ferien er alt trukket fra i timene. Påslaget er en buffer for sykedager og egen pensjon, som en arbeidsgiver ellers ville dekket.')},
+                 {n:t('lrnTpDOh', 'Overhead · {p}', {p:pc(N.oh)}), x:ph('Utstyr, forsikring, regnskapsfører, kurs og administrasjon. 15 % er standard. 10–15 % er vanlig.')},
+                 {n:t('lrnTpDMva', 'MVA · {p}', {p:pc(25)}), x:ph('Går videre til staten, så den er ikke din inntekt. Du må registrere deg når omsetningen passerer 50 000 kr i løpet av 12 måneder.')}],
+        sensCap:ph('Timepris eks. MVA ved andre timetall, med samme netto'), sensLead:ph('Hvor mange timer bør du regne med?'),
+        sensText:t('lrnTpSensFr', 'Er du ny eller har mye administrasjon, er 1 200–1 300 timer ofte mer realistisk. Med 1 200 timer må timeprisen være {a} i stedet for {b}. Jo færre timer, jo høyere må timeprisen bli for å nå samme netto.', {a:kr(p1200), b:kr(rb.eks)}),
+        lines:[{l:ph('Timepris eks. MVA'), e:fmt(N.netto) + ' ÷ ' + dd(1 - N.skatt / 100) + ' × ' + dd(1 + (N.ferie + N.oh) / 100) + ' ÷ ' + fmt(T), r:'= ' + kr(r.eks)}],
+        note:t('lrnTpNoteFr', 'Underveis: brutto {b}, påslag {p} og omsetning {o}. Kalkulatoren runder timeprisen til hele kroner.', {b:kr(r.brutto), p:kr(r.paaslag), o:kr(r.oms)}),
+        slider:{label:ph('Dra for å prøve et annet timetall'), min:1000, max:2000, step:50, value:T},
+        sk:[[ph('Fakturerbare timer'), fmt(T), ph('timer')], [ph('Fylte ruter'), cells(T / 8), ph('à 8 timer')], [ph('Timepris eks. MVA'), fmt(r.eks), 'kr'], [ph('Timepris inkl. MVA'), fmt(r.inkl), 'kr']],
+        badge:t('lrnTpBadge', '{n} netto · {s} skatt · {t}', {n:kr(N.netto), s:pc(N.skatt), t:moved ? t('lrnTpProver', 'prøver {t} timer', {t:fmt(T)}) : t('lrnTpTimer', '{t} timer', {t:fmt(T)})}),
+        dine:dine, steps:{a:'2' + NB + '080' + NB + t('lrnTpH', 't'), aCap:ph('i året (52 uker × 40 t)'), c1a:'−200' + NB + t('lrnTpH', 't'), c1b:ph('ferie'), b:'1' + NB + '880' + NB + t('lrnTpH', 't'), bCap:ph('på jobb (40 t × 47 uker)'),
+          c2a:(over > 0 ? '+' + fmt(over) : '−' + fmt(adminH)) + NB + t('lrnTpH', 't'), c2b:over > 0 ? ph('tatt fra ferieukene') : ph('admin, tilbud, kurs, ledig tid'), c:fmt(T) + NB + t('lrnTpH', 't'), cCap:ph('fakturerbare'), three:true},
+        sr:{grid:t('lrnTpSrGrid', 'Av 2 080 timer i året er {t} fakturerbare. 200 timer er ferie{a}{o}. For å sitte igjen med {n} må hver av dem faktureres med {k} eks. MVA.',
+              {t:fmt(T), a:adminH > 0 ? t('lrnTpSrAdm', ' og {h} timer er admin, tilbud, kurs og ledig tid', {h:fmt(adminH)}) : '', o:over > 0 ? t('lrnTpSrOver', '. {h} timer tas fra ferieukene', {h:fmt(over)}) : '', n:kr(N.netto), k:kr(r.eks)}),
+            bar:t('lrnTpSrBar', 'Én fakturerbar time må bære {k} eks. MVA: netto {n}, skatt {s}, sykdom og pensjon {f} og overhead {o}. MVA på {m} kommer oppå og går videre til staten, så kunden betaler {i}.',
+              {k:kr(r.eks), n:kr(parts.netto), s:kr(parts.skatt), f:kr(parts.ferie), o:kr(parts.oh), m:kr(parts.mva), i:kr(r.inkl)}),
+            sens:t('lrnTpSrSens', 'Samme netto ved andre timetall: {l}. Ditt valg, {t} timer, gir {k}.', {l:[1200, 1300, 1500, 1700].map(function(x){ return t('lrnTpSrPt', '{x} timer gir {k}', {x:fmt(x), k:kr(f(x))}); }).join(', '), t:fmt(T), k:kr(r.eks)})}};
+    } else {
+      var BH = {lonn:Hh.lonn, sosial:Hh.sosial, ind:Hh.ind, fakt:Hh.fakt, fort:Hh.fort};
+      var fakt = slHv === null ? BH.fakt : slHv, movedH = fakt !== BH.fakt, NH = {lonn:BH.lonn, sosial:BH.sosial, ind:BH.ind, fakt:fakt, fort:BH.fort};
+      var dineH = !(BH.lonn === 300 && BH.sosial === 30 && BH.ind === 25 && BH.fakt === 80 && BH.fort === 20);
+      var rh = handverker(NH.lonn, NH.sosial, NH.ind, fakt, NH.fort), rbh = handverker(BH.lonn, BH.sosial, BH.ind, BH.fakt, BH.fort), fb = fakt / 10, tom = 10 - fb;
+      var gridh = gridHv(G, fb, L);
+      // Norsk skriver tallord («de to andre timene»); de andre språkene bruker sifferet {n}
+      var words = {1:'én', 2:'to', 3:'tre', 4:'fire', 5:'fem', 6:'seks'}, ordTom = words[tom] || cells(tom);
+      var fh = function(x){ return handverker(NH.lonn, NH.sosial, NH.ind, x, NH.fort).eks; };
+      var rawInd = rh.lonnskost * (1 + NH.ind / 100);
+      V = {grid:gridh,
+        defs:[{k:'a', t:t('lrnTpNA', '{f} av 10 timer kan faktureres. Faktureringsgraden er {p}', {f:cells(fb), p:pc(fakt)}) + (fakt === 80 ? t('lrnTpNA80', '. Det er omtrent samme andel som frilanserens 1 500 av 1 880 timer.') : '.')},
+              {k:'b', t:t('lrnTpNB', 'De {w} andre timene er ledig kapasitet, admin og reisetid. Du betaler dem, men kunden gjør det ikke.', {w:ordTom, n:cells(tom)})}],
+        bar:{segs:[
+          {k:'lonn', v:rh.lonn, fill:'v2', l1:t('lrnTpSLonn', 'Montørlønn {k}', {k:kr(rh.lonn)}), l2:'', short:t('lrnTpSLonn', 'Montørlønn {k}', {k:kr(rh.lonn)})},
+          {k:'sosial', v:rh.lonnskost - rh.lonn, fill:'v4', l1:t('lrnTpSSos', 'Sosiale kostnader {k}', {k:kr(rh.lonnskost - rh.lonn)}), l2:t('lrnTpAvLonn', '{p} av lønn', {p:pc(NH.sosial)}), short:t('lrnTpSSosK', 'Sosiale {k}', {k:kr(rh.lonnskost - rh.lonn)}) + ' · ' + pc(NH.sosial)},
+          {k:'ind', v:rh.indT, fill:'v2', l1:t('lrnTpSInd', 'Indirekte kostnader {k}', {k:kr(rh.indT)}), l2:t('lrnTpAvLk', '{p} av lønnskostnaden', {p:pc(NH.ind)}), short:t('lrnTpSIndK', 'Indirekte {k}', {k:kr(rh.indT)}) + ' · ' + pc(NH.ind)},
+          {k:'tom', v:rh.tom, fill:'v3', hatch:true, l1:t('lrnTpSTom', 'De tomme timene {k}', {k:kr(rh.tom)}), l2:'', short:t('lrnTpSTom', 'De tomme timene {k}', {k:kr(rh.tom)})},
+          {k:'fort', v:rh.fort, fill:'f1', l1:t('lrnTpSFort', 'Fortjeneste {k}', {k:kr(rh.fort)}), l2:t('lrnTpAvSk', '{p} av selvkost', {p:pc(NH.fort)}), short:t('lrnTpSFort', 'Fortjeneste {k}', {k:kr(rh.fort)}) + ' · ' + pc(NH.fort)},
+          {k:'mva', v:rh.mva, ghost:true, l1:t('lrnTpSMva', 'MVA {k}', {k:kr(rh.mva)}), l2:ph('25 %, går videre til staten'), short:t('lrnTpSMva', 'MVA {k}', {k:kr(rh.mva)}), short2:ph('25 %, går videre til staten')}],
+          total:rh.inkl, tops:[{upto:3, num:kr(rh.bruttokost), cap:ph('per arbeidet time')}, {upto:4, num:kr(rh.selvkost), cap:ph('selvkost per fakturerbar time')}, {upto:5, num:kr(rh.eks), cap:ph('timepris eks. MVA')}],
+          bot:null, end:{num:kr(rh.inkl), cap:ph('inkl. MVA, det kunden betaler')},
+          cum:[{upto:3, num:kr(rh.bruttokost), cap:ph('arbeidet time')}, {upto:4, num:kr(rh.selvkost), cap:ph('selvkost')}, {upto:5, num:kr(rh.eks), cap:ph('eks. MVA')}, {upto:6, num:kr(rh.inkl), cap:ph('inkl. MVA')}]},
+        Sx:{xMin:50, xMax:100, f:fh, yMax:Math.ceil(fh(50) / 200) * 200, yStep:400, pts:mob ? [60, 80, 90] : [60, 70, 80, 90], user:fakt,
+          cap:{x:100, label:t('lrnTpCapHv', '100 %: ingen tomme timer')}, xFmt:function(x){ return x + NB + '%'; }, yFmt:function(v){ return kr(v); }},
+        h2:(dineH || movedH) ? t('lrnTpH2Hvd', 'Av hver 10 timer på jobb får du betalt for {f}', {f:cells(fb)}) : t('lrnTpH2Hv', 'Av hver 10 timer på jobb får en håndverker betalt for {f}', {f:cells(fb)}),
+        ingress:ph('Kunden betaler bare for de fakturerbare timene, men montørlønnen går for alle. Hver betalt time må derfor bære de tomme timene også.'),
+        gridCap:ph('Ti timer på jobb. Hver rute er én time.'),
+        summary:t('lrnTpSumHv', 'Montørlønnen koster {b} per arbeidet time. Siden bare {f} av 10 timer faktureres, blir selvkosten {s} per fakturerbar time.', {b:kr(rh.bruttokost), f:cells(fb), s:kr(rh.selvkost)}),
+        h3:ph('Hver fakturerbar time må bære de tomme timene'), barCap:t('lrnTpBarCap', 'Hver fakturerbar time må bære {k}', {k:kr(rh.eks)}),
+        eksDefs:[{n:t('lrnTpDSos', 'Sosiale kostnader · {p}', {p:pc(NH.sosial)}), x:ph('Arbeidsgiveravgift, feriepenger og OTP, regnet av lønnen.')},
+                 {n:t('lrnTpDInd', 'Indirekte kostnader · {p}', {p:pc(NH.ind)}), x:ph('Verktøy, bil, forsikring og administrasjon, regnet av lønnskostnaden.')},
+                 {n:t('lrnTpDTom', 'De tomme timene · {k}', {k:kr(rh.tom)}), x:t('lrnTpDTomX', 'Bruttokosten deles på faktureringsgraden. De {k} kronene betaler for de {w} tomme timene.', {k:cells(rh.tom), w:ordTom, n:cells(tom)})},
+                 {n:t('lrnTpDMva', 'MVA · {p}', {p:pc(25)}), x:ph('Går videre til staten, så den er ikke din inntekt. Du må registrere deg når omsetningen passerer 50 000 kr i løpet av 12 måneder.')}],
+        sensCap:ph('Timepris eks. MVA ved andre faktureringsgrader'), sensLead:ph('Hvor høy faktureringsgrad bør du regne med?'),
+        sensText:t('lrnTpSensHv', 'Ledig kapasitet, admin og reisetid hører med. Hvert prosentpoeng lavere fakturering gjør timeprisen dyrere: med {a} må den være {b}, med {c} {d}.',
+          {a:pc(60), b:kr(handverker(BH.lonn, BH.sosial, BH.ind, 60, BH.fort).eks), c:pc(90), d:kr(handverker(BH.lonn, BH.sosial, BH.ind, 90, BH.fort).eks)}),
+        lines:[{l:ph('Lønnskostnad'), e:cells(rh.lonn) + ' × ' + dd(1 + NH.sosial / 100), r:'= ' + kr(rh.lonnskost)},
+               {l:ph('Bruttokost per arbeidet time'), e:fmt(rh.lonnskost) + ' × ' + dd(1 + NH.ind / 100), r:'= ' + kr(rh.bruttokost)},
+               {l:ph('Selvkost per fakturerbar time'), e:fmt(rh.bruttokost) + ' ÷ ' + dd(fakt / 100), r:'= ' + kr(rh.selvkost)},
+               {l:ph('Timepris eks. MVA'), e:fmt(rh.selvkost) + ' × ' + dd(1 + NH.fort / 100), r:'= ' + kr(rh.eks)}],
+        note:Math.abs(rawInd - Math.round(rawInd)) > 1e-9 ? t('lrnTpNoteHvR', 'Kalkulatoren runder hvert trinn til hele kroner: {a} × {b} er {c} og blir {d}.', {a:fmt(rh.lonnskost), b:dd(1 + NH.ind / 100), c:cells(rawInd), d:kr(rh.bruttokost)}) : ph('Kalkulatoren runder hvert trinn til hele kroner.'),
+        slider:{label:ph('Dra for å prøve en annen faktureringsgrad'), min:50, max:95, step:5, value:fakt},
+        sk:[[ph('Faktureringsgrad'), cells(fakt), '%'], [ph('Fakturerbare timer'), cells(fb), ph('av 10')], [ph('Selvkost per time'), fmt(rh.selvkost), 'kr'], [ph('Timepris eks. MVA'), fmt(rh.eks), 'kr']],
+        badge:t('lrnTpBadgeHv', 'Montørlønn {l} kr/t · {f} · {p} fortjeneste', {l:cells(BH.lonn), f:movedH ? t('lrnTpProverF', 'prøver {p} fakturering', {p:pc(fakt)}) : t('lrnTpFakt', '{p} fakturering', {p:pc(fakt)}), p:pc(NH.fort)}),
+        dine:dineH, steps:{a:'10' + NB + t('lrnTpH', 't'), aCap:ph('på jobb'), c1a:'−' + cells(tom) + NB + t('lrnTpH', 't'), c1b:ph('tomme timer'), b:cells(fb) + NB + t('lrnTpH', 't'), bCap:t('lrnTpFaktP', 'fakturerbare ({p})', {p:pc(fakt)}), three:false},
+        sr:{grid:t('lrnTpSrGridHv', 'Av 10 timer på jobb er {f} fakturerbare, {p}. {t} timer er tomme. Hver fakturerbar time må derfor bære selvkosten {s}.', {f:cells(fb), p:pc(fakt), t:cells(tom), s:kr(rh.selvkost)}),
+            bar:t('lrnTpSrBarHv', 'Én fakturerbar time må bære {k} eks. MVA: montørlønn {l}, sosiale kostnader {so} og indirekte kostnader {i} gir {b} per arbeidet time. Delt på faktureringsgraden blir selvkosten {s}, og med {f} fortjeneste blir timeprisen {k}. MVA på {m} kommer oppå, så kunden betaler {in}.',
+              {k:kr(rh.eks), l:kr(rh.lonn), so:kr(rh.lonnskost - rh.lonn), i:kr(rh.indT), b:kr(rh.bruttokost), s:kr(rh.selvkost), f:pc(NH.fort), m:kr(rh.mva), 'in':kr(rh.inkl)}),
+            sens:t('lrnTpSrSensHv', 'Samme montørlønn ved andre faktureringsgrader: {l}. Ditt valg, {p}, gir {k}.', {l:[60, 70, 80, 90].map(function(x){ return t('lrnTpSrPtHv', '{x} gir {k}', {x:pc(x), k:kr(fh(x))}); }).join(', '), p:pc(fakt), k:kr(rh.eks)})}};
+    }
+
+    // Merket, overskriften og trinnlinja
+    root.querySelector('.lrn-state').setAttribute('data-state', V.dine ? 'dine' : 'eksempel');
+    set('stateLabel', V.dine ? ph('Dine tall') : ph('Eksempel'));
+    set('stateText', nb(V.badge));
+    set('h2', nb(V.h2)); set('ingress', nb(V.ingress)); set('gridCap', V.gridCap);
+    var st = V.steps;
+    set('stA', st.a); set('stACap', st.aCap); set('stC1a', st.c1a); set('stC1b', st.c1b); set('stB', st.b); set('stBCap', st.bCap);
+    show('st3', st.three);
+    if(st.three){ set('stC2a', st.c2a); set('stC2b', st.c2b); set('stC', st.c); set('stCCap', st.cCap); }
+
+    // Rutenettet
+    var gr = V.grid, gsvg = q('grid').querySelector('svg');
+    q('grid').style.height = gr.H + 'px';
+    gsvg.setAttribute('viewBox', '0 0 ' + gW + ' ' + gr.H);
+    gsvg.querySelector('[data-p="adm"]').setAttribute('d', gr.admD);
+    gsvg.querySelector('[data-p="fer"]').setAttribute('d', gr.ferD);
+    gsvg.querySelector('[data-p="bill"]').setAttribute('d', gr.billD);
+    gsvg.querySelector('[data-p="gbr"]').setAttribute('d', gr.brD);
+    var gmk = '';
+    V.defs.forEach(function(dd2, i){ var m = gr.mk[dd2.k]; if(m) gmk += MK(String(i + 1), m.left, m.top); });
+    q('gridLabels').innerHTML = gr.tx + gmk;
+    q('notes').innerHTML = V.defs.map(function(dd2, i){ return '<li><span class="lrn-mk" aria-hidden="true">' + (i + 1) + '</span><span>' + esc(nb(dd2.t)) + '</span></li>'; }).join('');
+
+    // Glidebryteren og avlesningen
+    var sl = q('slider');
+    set('slLabel', V.slider.label);
+    sl.min = V.slider.min; sl.max = V.slider.max; sl.step = V.slider.step;
+    if(document.activeElement !== sl) sl.value = String(V.slider.value);
+    V.sk.forEach(function(row, i){ set('k' + i + 'l', row[0]); set('k' + i + 'v', row[1]); set('k' + i + 'u', row[2]); });
+    set('summary', nb(V.summary)); set('srGrid', nb(V.sr.grid));
+
+    // Én fakturerbar time, som stolpe
+    set('h3', V.h3); set('barCap', nb(V.barCap));
+    var bW = q('bar').clientWidth || 1116, bar = mob ? barV(V.bar, bW) : barH(V.bar, bW), bsvg = q('bar').querySelector('svg');
+    q('bar').style.height = bar.H + 'px';
+    bsvg.setAttribute('viewBox', '0 0 ' + bW + ' ' + bar.H);
+    q('barSegs').innerHTML = bar.segs;
+    bsvg.querySelector('[data-p="bbr"]').setAttribute('d', bar.brD);
+    bsvg.querySelector('[data-p="blead"]').setAttribute('d', bar.leadD);
+    q('barLabels').innerHTML = bar.tx;
+    q('defs').innerHTML = V.eksDefs.map(function(x){ return '<div><dt>' + esc(nb(x.n)) + '</dt><dd>' + esc(nb(x.x)) + '</dd></div>'; }).join('');
+
+    // Følsomheten
+    var sW = q('sens').clientWidth || 700, sen = sensLayout(sW, mob, V.Sx, L), ssvg = q('sens').querySelector('svg');
+    q('sens').style.height = sen.H + 'px';
+    ssvg.setAttribute('viewBox', '0 0 ' + sW + ' ' + sen.H);
+    ['gridD', 'dropD', 'baseD', 'capD', 'curveD'].forEach(function(k){ ssvg.querySelector('[data-p="' + k + '"]').setAttribute('d', sen[k]); });
+    q('sensPts').innerHTML = sen.pts;
+    q('sensLabels').innerHTML = sen.tx;
+    set('sensCap', V.sensCap); set('sensLead', V.sensLead); set('sensText', nb(V.sensText));
+
+    // Regnestykket
+    show('fFr', !hv); show('fHv', hv);
+    q('fLines').innerHTML = V.lines.map(function(x){ return '<div><span>' + esc(x.l) + '</span><span>' + esc(nb(x.e)) + '</span><b>' + esc(nb(x.r)) + '</b></div>'; }).join('');
+    set('fNote', nb(V.note));
+    set('srBar', nb(V.sr.bar)); set('srSens', nb(V.sr.sens));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-tp');
+    if(!root || !window.hvtLearn) return;
+    root.querySelectorAll('.lrn-seg button').forEach(function(b){ b.addEventListener('click', function(){ bm = b.getAttribute('data-k'); render(raw); }); });
+    q('slider').addEventListener('input', function(e){ var v = parseInt(e.target.value, 10); if(bm === 'hv') slHv = isNaN(v) ? null : v; else slFr = isNaN(v) ? null : v; render(raw); });
+    // Delene og regnestykket er sammenleggbare på mobil, men står åpne på brede skjermer
+    function syncOpen(){ if(mqDesk && mqDesk.matches) root.querySelectorAll('.lrn-tp-fd').forEach(function(el){ el.open = true; }); }
+    syncOpen();
+    if(mqDesk && mqDesk.addEventListener) mqDesk.addEventListener('change', syncOpen);
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && q('grid').clientWidth !== lastW) schedule(); }).observe(q('grid'));
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(raw) schedule(); });
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._timepris || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 
