@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v231" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v232" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -212,11 +212,9 @@ footer em{font-style:italic}
 
 <!-- Existing shared assets (preserved) -->
 <script defer src="/shared/atmosphere.js?v=v6"></script>
-<script defer src="/shared/core.js?v=v231"></script>
+<script defer src="/shared/core.js?v=v232"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
-<script defer src="/shared/search-intents.js?v=v124"></script>
-<script defer src="/shared/search.js?v=v131"></script>
 
 <!-- NEW SHELL JS -->
 <script defer src="/shared/site-shell.js?v=v1"></script>
@@ -330,8 +328,6 @@ body.focus-mode > footer{display:none}
 
 <main id="main">
 
-  <div class="container" style="padding-top:16px;"><div id="site-search-anchor"></div></div>
-
   <section class="page-hero">
     <div class="container">
       <div>
@@ -439,7 +435,7 @@ body.focus-mode > footer{display:none}
 
     <section class="lrn-sec lrn-vc-s2" aria-labelledby="lrn-vc-h3" data-lrn="main2">
       <div class="lrn-head">
-        <h3 class="lrn-h3" id="lrn-vc-h3">Jo mer du kjører, jo billigere blir snittet</h3>
+        <h3 class="lrn-h3" id="lrn-vc-h3">Hver kilometer blir billigere, men du betaler mer totalt</h3>
         <p class="lrn-p lrn-vc-say" data-lrn="cl"></p>
       </div>
       <div class="lrn-figrow">
@@ -1158,7 +1154,7 @@ body.focus-mode > footer{display:none}
     }
     if(kc !== null){
       var under = k.km >= kc;
-      notes.push(t('lrnVcNoteKc', 'Først ved {kc} km i året er snittet nede på den skattefrie satsen.', {kc:fmt(kc)}) + (under ? ' ' + t('lrnVcNoteUnder', 'Du kjører {km} km og ligger allerede under.', {km:fmt(k.km)}) : ''));
+      notes.push(t('lrnVcNoteKc', 'Først ved {kc} km i året er prisen per kilometer nede på den skattefrie satsen.', {kc:fmt(kc)}) + (under ? ' ' + t('lrnVcNoteUnder', 'Du kjører {km} km og ligger allerede under.', {km:fmt(k.km)}) : ''));
       if(kcIn) mk(String(notes.length), XK(kc), yRef - C.ms / 2 - 9);
     }
     setD2('drop', kcIn ? 'M' + f1(XK(kc)) + ',' + f1(yRef) + ' V' + C.y1 : '');
@@ -1207,9 +1203,12 @@ body.focus-mode > footer{display:none}
     set('k1', fmt(ks)); set('k2', kr2(ys)); set('k3', fmt((F + dkm * ks) / 12));
 
     // Setningene i del to
-    q('cl').innerHTML = t('lrnVcCl', 'Prisen per kilometer er {F} delt på kilometerne du kjører, pluss {d} i {ind}. De {F2} er alt annet enn {def}, og de må betales like fullt om du kjører {lo} eller {hi}.', {F:b(fmt(F) + NB + 'kr'), F2:fmt(F) + NB + 'kr', d:b(fl + NB + 'kr'), ind:esc(ind), def:esc(def.toLowerCase()), lo:fmt(lo), hi:fmt(hi) + NB + 'km'});
+    // Siste setning bare når totalen faktisk stiger (ikke ved 0 kr i drivstoff/strøm)
+    var totLo = Math.round(F + dkm * lo), totHi = Math.round(F + dkm * hi);
+    q('cl').innerHTML = t('lrnVcCl', 'Bilen har {F} i faste kostnader i året, og dem betaler du uansett hvor mye du kjører. Kjører du {hi} i stedet for {lo}, deles de på flere kilometer, og hver kilometer koster {b} i stedet for {a}.', {F:b(fmt(F) + NB + 'kr'), hi:fmt(hi) + NB + 'km', lo:fmt(lo), b:b(kr2(cur(hi)) + NB + 'kr'), a:b(kr2(cur(lo)) + NB + 'kr')})
+      + (totHi > totLo ? ' ' + t('lrnVcClTot', 'Men {def} følger kilometerne, så totalt betaler du mer: {T2} i året i stedet for {T1}.', {def:esc(def.toLowerCase()), ind:esc(ind), T2:fmt(totHi) + NB + 'kr', T1:fmt(totLo) + NB + 'kr'}) : '');
     function mndAt(x){ return (F + dkm * x) / 12; }
-    q('s2').innerHTML = t('lrnVcS2', 'Halverer du kjørelengden til {half}, stiger snittet til {halfKr}. Dobler du den til {dbl}, faller det til {dblKr}, men månedsbeløpet stiger fra {m0} til {m1}.', {half:b(fmt(k.km / 2) + NB + 'km'), halfKr:b(kr2(cur(k.km / 2)) + NB + 'kr'), dbl:b(fmt(k.km * 2) + NB + 'km'), dblKr:b(kr2(cur(k.km * 2)) + NB + 'kr'), m0:b(fmt(k.mnd)), m1:b(fmt(mndAt(k.km * 2)) + NB + 'kr')});
+    q('s2').innerHTML = t('lrnVcS2', 'Halverer du kjørelengden til {half}, stiger prisen per kilometer til {halfKr}. Dobler du den til {dbl}, faller den til {dblKr}, men månedsbeløpet stiger fra {m0} til {m1}.', {half:b(fmt(k.km / 2) + NB + 'km'), halfKr:b(kr2(cur(k.km / 2)) + NB + 'kr'), dbl:b(fmt(k.km * 2) + NB + 'km'), dblKr:b(kr2(cur(k.km * 2)) + NB + 'kr'), m0:b(fmt(k.mnd)), m1:b(fmt(mndAt(k.km * 2)) + NB + 'kr')});
     set('sr2', t('lrnVcSr2', 'Prisen per kilometer faller fra {a} kr ved {lo} km i året til {b} kr ved {hi} km. Gulvet er {d} kr i {ind} per kilometer. Ved {km} km er prisen {t} kr.', {a:kr2(cur(lo)), lo:fmt(lo), b:kr2(cur(hi)), hi:fmt(hi), d:fl, ind:ind, km:fmt(k.km), t:totTxt}) + (kc !== null ? ' ' + t('lrnVcSrKc', 'Den kommer ned på den skattefrie satsen ved {kc} km.', {kc:fmt(kc)}) : ''));
   }
   function schedule(){
