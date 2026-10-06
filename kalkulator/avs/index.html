@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v3">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Avskrivning — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/lonnut/) */
@@ -211,145 +212,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -579,80 +441,126 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: kalkulator-avs =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-kalkulator-avs">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-avs">Hva som skjer fra kjøpesum til avskrivning</h2><p class="lc-intro">Avskrivning betyr at kostnaden for en maskin, bil eller bygning fordeles over flere år. I regnskapet er det oftest like mye hvert år (lineært): 1 000 000 kr over 10 år gir 100 000 kr i året. På skatten trekkes en fast prosent av det som er igjen (saldo).</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Kjøpesum</b><span class="tag">Grunnlag</span></span><span class="fig">1 000 000<span class="u">kr (start)</span></span><p class="dsc">Det du betalte for eiendelen (driftsmidlet). All avskrivning regnes ut fra dette beløpet.</p></div>
-        <div class="lc-led"><span class="nm"><b>Saldosats (skatt)</b><span class="tag">Sats</span></span><span class="fig">2–30<span class="u">%</span></span><p class="dsc">På skatten trekkes en fast prosent av gjenværende verdi hvert år. Prosenten bestemmes av hvilken saldogruppe (a–j) eiendelen hører til — fra 2 % på forretningsbygg til 30 % på kontormaskiner.</p></div>
-        <div class="lc-led"><span class="nm"><b>Lineær sats (regnskap)</b><span class="tag">Faktor</span></span><span class="fig">100 ÷ levetid<span class="u">%</span></span><p class="dsc">Med 10 års levetid avskrives 10 % i året (100 ÷ 10). Prosenten regnes av kjøpesum minus restverdi. Etter 10 år står eiendelen på restverdien.</p></div>
-        <div class="lc-led"><span class="nm"><b>Restverdi</b><span class="tag">Grense</span></span><span class="fig">0<span class="u">% (start)</span></span><p class="dsc">Verdien du forventer at eiendelen har til slutt. Den lineære avskrivningen stopper her — du avskriver bare ned til restverdien, ikke til null. Standard er 0&nbsp;%.</p></div>
-        <div class="lc-led"><span class="nm"><b>Utsatt skatt</b><span class="tag">Skatt</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">I Sammenlign-modus regnes forskjellen mellom de to metodene om til utsatt skatt med 22 % selskapsskatt. Trekker du fra mer på skatten enn i regnskapet, oppstår en utsatt skattegjeld — og omvendt.</p></div>
-        <div class="lc-led"><span class="nm"><b>Direkte fradrag</b><span class="tag">Grense</span></span><span class="fig">30 000<span class="u">kr</span></span><p class="dsc">Er restsaldoen på skatten under 30 000 kr, kan du trekke fra hele resten samme år. Tabellen viser likevel alle 10 årene.</p></div>
+  <div class="lrn" id="lrn-av">
+    <section class="lrn-sec" aria-labelledby="lrn-av-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-av-h">Saldo tar fradraget tidlig, lineær tar det jevnt</h2>
+        <p class="lrn-lede"><span>Skatten skriver ned en fast prosent av det som er igjen, regnskapet like mye hvert år.</span> <span data-lrn="ing"></span></p>
       </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn kjøpesummen i kalkulatoren.</p>
+      <div class="lrn-av-main" data-lrn="main">
+        <div class="lrn-bar">
+          <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+          <div class="lrn-seg t3" role="group" aria-label="Metode i grafen" data-lrn="seg"><button type="button" data-v="regnskap" aria-pressed="false">Regnskap</button><button type="button" data-v="skatt" aria-pressed="false">Skatt</button><button type="button" data-v="sammenlign" aria-pressed="true">Sammenlign</button></div>
+        </div>
+        <div class="lrn-av-row">
+          <figure class="lrn-fig" aria-describedby="lrn-av-sum">
+            <figcaption class="lrn-cap">Verdi på driftsmiddelet i kroner, ved utgangen av hvert år</figcaption>
+            <div class="lrn-plot is-static lrn-av-plot" dir="ltr">
+              <svg aria-hidden="true" focusable="false">
+                <defs>
+                  <pattern id="lrn-av-ps" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-ps-a" x1="0" y1="0" x2="0" y2="5" style="stroke-width:1.6"/><line class="lrn-ps-b" x1="0" y1="0" x2="0" y2="5" style="stroke-width:1.6"/></pattern>
+                  <pattern id="lrn-av-dot" width="5" height="5" patternUnits="userSpaceOnUse"><rect class="lrn-av-dotbg" x="0" y="0" width="5" height="5"/><circle class="lrn-av-dotc" cx="2.5" cy="2.5" r="1.15"/></pattern>
+                </defs>
+              <path class="lrn-av-grid" data-p="grid"/>
+              <path class="lrn-av-neg" data-p="neg"/>
+              <path class="lrn-av-pos" data-p="pos"/>
+              <path class="lrn-av-posp" data-p="pos"/>
+              <path class="lrn-av-base" data-p="base"/>
+              <path class="lrn-av-thr" data-p="thr"/>
+              <path class="lrn-av-l" data-p="book"/>
+              <path class="lrn-av-l" data-p="tax"/>
+              <path class="lrn-av-ext" data-p="ext"/>
+              <path class="lrn-av-br" data-p="br"/>
+              <path class="lrn-av-guide" data-p="guide"/>
+              <path class="lrn-av-lead" data-p="lead"/>
+              <path class="lrn-av-dot" data-p="dot"/>
+              <path class="lrn-av-open" data-p="open"/>
+              <path class="lrn-av-sikte" data-p="sikte"/>
+              <path class="lrn-av-sdot" data-p="sikteDot"/>
+              </svg>
+              <div class="lrn-labels" data-lrn="labels"></div>
+              <span class="lrn-av-tag" data-lrn="tag" aria-hidden="true"></span>
+            </div>
+          </figure>
+          <ol class="lrn-notes lrn-av-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+        </div>
+        <div class="lrn-scrub lrn-av-scrub">
+          <div class="lrn-scrub-c">
+            <label for="lrn-av-aar">Dra for å se et bestemt år</label>
+            <input id="lrn-av-aar" type="range" min="0" max="10" step="1" value="6" data-lrn="range">
+          </div>
+          <dl class="lrn-dl five" aria-live="polite">
+            <div><dt>År</dt><dd data-lrn="skAar"></dd></div>
+            <div><dt>Bokført (lineær)</dt><dd><span data-lrn="skBook"></span> <span class="lrn-u">kr</span></dd></div>
+            <div><dt>Saldo</dt><dd><span data-lrn="skTax"></span> <span class="lrn-u">kr</span></dd></div>
+            <div><dt>Forskjell</dt><dd><span data-lrn="skDiff"></span> <span class="lrn-u">kr</span></dd></div>
+            <div><dt>Utsatt skatt</dt><dd><span data-lrn="skUts"></span> <span class="lrn-u" data-lrn="skUtsU">kr</span></dd></div>
+          </dl>
+        </div>
+        <p class="lrn-cmp" data-lrn="sum"></p>
+        <details class="lrn-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table class="lrn-av-tab">
+            <caption>Kroner ved utgangen av året. Forskjell er bokført verdi minus saldo.</caption>
+            <thead><tr><th scope="col" class="s">År</th><th scope="col">Bokført (lineær)</th><th scope="col">Saldo</th><th scope="col">Forskjell</th><th scope="col">Utsatt skatt</th></tr></thead>
+            <tbody data-lrn="tbody"></tbody>
+          </table></div>
+        </details>
+      </div>
+      <p class="lrn-sr" id="lrn-av-sum" data-lrn="sr"></p>
     </section>
-    <section class="lc-sec" aria-labelledby="lcB-kalkulator-avs">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-kalkulator-avs">Satsene og grensene kalkulatoren bruker</h2><p class="lc-intro">Saldogruppene a–j er de offisielle skattemessige avskrivningsgruppene. Hver gruppe har sin egen maks-sats.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Selskapsskatt (utsatt skatt)</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Aktiveringsgrense (driftsmiddel)</span><span class="v">30 000<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Levetidskrav for aktivering</span><span class="v">3<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Direkte fradrag av restsaldo</span><span class="v">under 30 000<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Laveste saldosats (gruppe i)</span><span class="v">2<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Høyeste saldosats (gruppe a)</span><span class="v">30<span class="u">%</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Saldogrupper og maks-satser 2026 (sktl. §§ 14-40 til 14-48)</caption>
-          <thead><tr><th>Gruppe</th><th>Type eiendel</th><th class="r">Sats</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">a</span></td><td>Kontormaskiner o.l.</td><td class="r">30 %</td></tr>
-            <tr><td><span class="step">b</span></td><td>Forretningsverdi (goodwill)</td><td class="r">20 %</td></tr>
-            <tr><td><span class="step">c</span></td><td>Varebiler, lastebiler, busser, vogntog</td><td class="r">24 %</td></tr>
-            <tr><td><span class="step">d</span></td><td>Personbiler, maskiner, inventar</td><td class="r">20 %</td></tr>
-            <tr><td><span class="step">e</span></td><td>Skip, fartøyer, rigger</td><td class="r">14 %</td></tr>
-            <tr><td><span class="step">f</span></td><td>Fly, helikopter</td><td class="r">12 %</td></tr>
-            <tr><td><span class="step">g</span></td><td>Elektroteknisk utrustning i kraftforetak</td><td class="r">5 %</td></tr>
-            <tr><td><span class="step">h</span></td><td>Bygg og anlegg</td><td class="r">4 %</td></tr>
-            <tr><td><span class="step">i</span></td><td>Forretningsbygg</td><td class="r">2 %</td></tr>
-            <tr><td><span class="step">j</span></td><td>Faste tekniske installasjoner i bygninger</td><td class="r">10 %</td></tr>
-          </tbody>
-        </table>
+
+    <details class="lrn-calc lrn-av-grs" data-lrn="grs">
+      <summary><h3 class="lrn-h3">Saldogrupper og maks-satser 2026</h3><svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+      <div class="lrn-calc-b">
+        <div class="lrn-av-gr">
+          <table>
+            <thead><tr><th scope="col">Gruppe</th><th scope="col">Type eiendel</th><th scope="col">Maks-sats</th></tr></thead>
+            <tbody>
+              <tr data-g="a"><th scope="row">a</th><td>Kontormaskiner o.l.</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="120.0" height="8"/></svg><b>30&nbsp;%</b></span></td></tr>
+              <tr data-g="b"><th scope="row">b</th><td>Ervervet forretningsverdi (goodwill)</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="80.0" height="8"/></svg><b>20&nbsp;%</b></span></td></tr>
+              <tr data-g="c"><th scope="row">c</th><td>Vogntog, lastebiler, busser, varebiler, drosjebiler</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="96.0" height="8"/></svg><b>24&nbsp;%</b></span></td></tr>
+              <tr data-g="d"><th scope="row">d</th><td>Personbiler, traktorer, maskiner, inventar o.l.</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="80.0" height="8"/></svg><b>20&nbsp;%</b></span></td></tr>
+              <tr data-g="e"><th scope="row">e</th><td>Skip, fartøyer, rigger o.l.</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="56.0" height="8"/></svg><b>14&nbsp;%</b></span></td></tr>
+              <tr data-g="f"><th scope="row">f</th><td>Fly, helikopter</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="48.0" height="8"/></svg><b>12&nbsp;%</b></span></td></tr>
+              <tr data-g="g"><th scope="row">g</th><td>Kraftoverføring og elektroteknisk utrustning i kraftforetak</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="20.0" height="8"/></svg><b>5&nbsp;%</b></span></td></tr>
+              <tr data-g="h"><th scope="row">h</th><td>Bygg og anlegg, hoteller, losjihus, bevertningssteder</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="16.0" height="8"/></svg><b>4&nbsp;%</b></span></td></tr>
+              <tr data-g="i"><th scope="row">i</th><td>Forretningsbygg</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="8.0" height="8"/></svg><b>2&nbsp;%</b></span></td></tr>
+              <tr data-g="j"><th scope="row">j</th><td>Fast teknisk installasjon i bygninger</td><td class="r"><span><svg width="120" height="8" viewBox="0 0 120 8" aria-hidden="true"><rect x="0" y="0" width="40.0" height="8"/></svg><b>10&nbsp;%</b></span></td></tr>
+            </tbody>
+          </table>
+          <p class="lrn-fine">Satsene er maksimum. Du kan avskrive med lavere sats. Kilde: sktl. §§ 14-40 til 14-48. I regnskapet følger avskrivningen rskl. § 5-3, her lineært over levetiden.</p>
         </div>
       </div>
+    </details>
+
+    <section class="lrn-sec" aria-labelledby="lrn-av-g">
+      <h3 class="lrn-h3" id="lrn-av-g">To grenser på 30&nbsp;000 kr</h3>
+      <dl class="lrn-av-dl">
+        <div><dt>Ved kjøp</dt><dd><span>Under 30&nbsp;000 kr eller under 3 års levetid kan utgiftsføres med en gang.</span><span data-lrn="grKjop"></span></dd></div>
+        <div><dt>Restsaldo</dt><dd><span>Under 30&nbsp;000 kr kan trekkes fra i sin helhet.</span><span data-lrn="grRest"></span></dd></div>
+      </dl>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-av-q">
+      <h3 class="lrn-h3" id="lrn-av-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hva er forskjellen på saldo og lineær avskrivning?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Lineær trekker like mye hvert år og brukes i regnskapet. Saldo trekker en fast prosent av det som er igjen og brukes på skatten. Saldo gir fradraget tidligere, ikke mer fradrag totalt.</p></div></details>
+        <details><summary>Må jeg avskrive, eller kan jeg trekke fra alt med en gang?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Er kjøpesummen under 30&nbsp;000 kr eller levetiden under tre år, kan du utgiftsføre alt med en gang, ellers skal driftsmidlet aktiveres og avskrives.</p></div></details>
+        <details><summary>Hvorfor er verdien ikke null etter avskrivningsperioden?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Saldo tar en prosent av det som er igjen, så det blir alltid en rest. Er restsaldoen under 30&nbsp;000 kr, kan hele resten trekkes fra. Lineær stopper på restverdien du har satt.</p></div></details>
+        <details><summary>Hva betyr utsatt skatt i Sammenlign-modus?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren ganger forskjellen mellom bokført og skattemessig verdi med 22&nbsp;% selskapsskatt. Er bokført verdi høyest, har skatten fått fradraget før regnskapet, og forskjellen er en utsatt skattegjeld. Er skattemessig verdi høyest, er det en utsatt skattefordel. Når hele saldoen er trukket fra, går det opp i opp.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-kalkulator-avs">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-avs">Saldo, lineær og forskjellen mellom dem</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Saldo gir mest fradrag tidlig</h3><p>Saldoavskrivning tar en fast prosent av det som er igjen hvert år. Første år er beløpet størst, så blir det mindre og mindre. Eiendelen blir aldri helt nedskrevet til null — det er derfor regelen om direkte fradrag under 30 000 kr finnes.</p></div>
-        <div class="lc-note"><h3>Lineær gir like mye hvert år</h3><p>I regnskapet fordeles kostnaden jevnt over forventet levetid. Velger du 10 år, trekkes 10 % fra hvert år. Dette følger hvor mye eiendelen faktisk slites — derfor brukes det i regnskapet, ikke på skatten.</p></div>
-        <div class="lc-note"><h3>Forskjellen blir utsatt skatt</h3><p>Fordi de to metodene gir ulike beløp hvert år, oppstår en midlertidig forskjell. Sammenlign-modus regner den om til utsatt skatt med 22 %. Over hele levetiden jevner det seg ut — totalsummen som avskrives blir den samme.</p></div>
-        <div class="lc-note"><h3>Maks-satsen er et tak, ikke et krav</h3><p>På skatten kan du avskrive med lavere sats enn maks hvis du har lite overskudd og ikke trenger hele fradraget. Kalkulatoren bruker maks-satsen for gruppen, men du står fritt til å bruke mindre i praksis.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-kalkulator-avs">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-kalkulator-avs">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hva er forskjellen på saldo og lineær avskrivning?</summary><div class="a"><p>Saldo trekker en fast prosent av gjenværende verdi hvert år, så beløpet synker over tid — dette brukes på skatten. Lineær trekker like mye hvert år over forventet levetid — dette brukes i regnskapet. Kalkulatoren viser begge, og Sammenlign-modus setter dem side ved side.</p></div></details>
-        <details class="lc-q"><summary>Hvilken saldogruppe hører eiendelen min til?</summary><div class="a"><p>Det avhenger av type. Personbiler, maskiner og inventar er gruppe d (20 %), varebiler og lastebiler er gruppe c (24 %), kontormaskiner er gruppe a (30 %), bygg og anlegg er gruppe h (4 %) og forretningsbygg er gruppe i (2 %). Velg gruppen i nedtrekkslisten, så bruker kalkulatoren riktig sats.</p></div></details>
-        <details class="lc-q"><summary>Må jeg avskrive, eller kan jeg trekke fra alt med en gang?</summary><div class="a"><p>Et driftsmiddel som koster over 30 000 kr og har forventet levetid over 3 år skal aktiveres og avskrives over tid. Koster det mindre, eller varer kortere, kan hele beløpet trekkes fra direkte det året.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor er verdien ikke null etter avskrivningsperioden?</summary><div class="a"><p>Saldoavskrivning tar bare en prosent av det som er igjen, så det blir alltid en liten rest. Når restsaldoen kommer under 30 000 kr kan du fradragsføre hele beløpet direkte. Lineær avskrivning stopper på restverdien du selv har satt.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr utsatt skatt i Sammenlign-modus?</summary><div class="a"><p>Når du trekker fra mer på skatten enn i regnskapet, har du fått fradrag «for tidlig». Den forskjellen ganges med 22 % selskapsskatt og blir en utsatt skattegjeld i balansen. Trekker du fra mindre, blir det en utsatt skattefordel. Over levetiden går det opp i opp.</p></div></details>
-        <details class="lc-q"><summary>Kan jeg avskrive med en lavere sats enn maks?</summary><div class="a"><p>Ja. Saldosatsene er maksimumssatser. Har du lite overskudd og ikke trenger hele fradraget, kan du velge å avskrive med en lavere prosent og spare fradraget til senere år.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-kalkulator-avs">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkulator-avs">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/regnskap/resultat/"><span class="ar">Resultatregnskap →</span><h3>Se avskrivning i regnskapet</h3><p>Avskrivning er en kostnad i resultatregnskapet. Se hvordan den påvirker årets resultat og bunnlinjen.</p></a>
-        <a class="lc-link" href="/personlig/bil/"><span class="ar">Bilkostnader →</span><h3>Verditap på bil</h3><p>Personbil hører til saldogruppe d. Regn på de faktiske kostnadene ved å eie og kjøre bilen.</p></a>
-        <a class="lc-link" href="/skatt/"><span class="ar">Skatt →</span><h3>Oversikt over skatt</h3><p>Avskrivning gir fradrag som senker skatten. Se hvordan fradrag og satser henger sammen.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-av-r">
+      <h3 class="lrn-h3" id="lrn-av-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/regnskap/resultat/"><span><span class="t">Resultatregnskap</span><span class="d">Avskrivning er en kostnad i resultatregnskapet. Se hva den gjør med årets resultat.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/bil/"><span><span class="t">Bilkostnad</span><span class="d">Personbil hører til saldogruppe d. Se hva verditapet koster deg.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/kalkulator/npv/"><span><span class="t">NPV / IRR</span><span class="d">Saldo gir fradraget tidligere. Se hva et fradrag i framtiden er verdt i dag.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -672,8 +580,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v232"></script>
-<script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/core.js?v=v233"></script>
+<script defer src="/shared/lang/no.js?v=v230"></script>
+<script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
 <script>
@@ -860,6 +769,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   function recalc(){
     var d = compute();
     STATE = d;
+    window._avs = d.hasData ? { price:d.price, rate:d.taxRate, regPct:d.regPct, scrapPct:d.scrapPct, life:parseNum('avs-life'),
+      group:document.getElementById('avs-group').value, mode:d.mode } : null;
+    if(window.hvtLearn) hvtLearn.update('kalkulator-avs', window._avs);
 
     if(!d.hasData){
       setOutputText('rTotal', '–');
@@ -1063,6 +975,474 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
   } else { init(); pollRender(); }
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Saldo tar fradraget tidlig, lineær tar det jevnt»: verdien på driftsmiddelet
+//    år for år etter lineær avskrivning (regnskap) og saldo (skatt), med gapet mellom dem som utsatt
+//    skatt. Tallene kommer fra kalkulatoren via hvtLearn (window._avs). ──
+(function(){
+  var KEY = 'kalkulator-avs';
+  var NB = '\u00a0';
+  var UT = 0.22;
+  // Standardverdiene i feltene over. Så lenge alle står slik, er merket «Eksempel».
+  var DEF = {price:1000000, group:'d', regPct:0.1, scrapPct:0, life:10};
+  var GROUPS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'];
+  var RATE = {a:0.3, b:0.2, c:0.24, d:0.2, e:0.14, f:0.12, g:0.05, h:0.04, i:0.02, j:0.1};
+  var root, plot, svg, range, ctx, raw = null, view = 'sammenlign', lastMode = null, aar = null, lastN = 0, lastW = 0, queued = false, S = null;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, s){ root.querySelectorAll('[data-lrn="' + name + '"]').forEach(function(el){ el.textContent = s; }); }
+  function setD(name, d){ svg.querySelectorAll('[data-p="' + name + '"]').forEach(function(el){ el.setAttribute('d', d); }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
+
+  // ── Kollisjonshjelpere: rektangel mot rektangel, linjestykke mot rektangel, polylinje mot rektangel ──
+  function rhit(a, b, p){ p = p || 0; return a.x < b.x + b.w + p && b.x < a.x + a.w + p && a.y < b.y + b.h + p && b.y < a.y + a.h + p; }
+  function shit(x1, y1, x2, y2, r, p){
+    p = p || 0;
+    var xa = r.x - p, ya = r.y - p, xb = r.x + r.w + p, yb = r.y + r.h + p, t0 = 0, t1 = 1, dx = x2 - x1, dy = y2 - y1;
+    var ps = [-dx, dx, -dy, dy], qs = [x1 - xa, xb - x1, y1 - ya, yb - y1];
+    for(var i = 0; i < 4; i++){
+      if(ps[i] === 0){ if(qs[i] < 0) return false; }
+      else {
+        var t = qs[i] / ps[i];
+        if(ps[i] < 0){ if(t > t1) return false; if(t > t0) t0 = t; }
+        else { if(t < t0) return false; if(t < t1) t1 = t; }
+      }
+    }
+    return true;
+  }
+  function phit(pts, r, p){ for(var i = 1; i < pts.length; i++) if(shit(pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1], r, p)) return true; return false; }
+  function yAt(pts, x){
+    for(var i = 1; i < pts.length; i++){
+      var a = pts[i - 1], b = pts[i];
+      if(x >= a[0] - 1e-9 && x <= b[0] + 1e-9){ var d = b[0] - a[0]; return d === 0 ? a[1] : a[1] + (b[1] - a[1]) * (x - a[0]) / d; }
+    }
+    return null;
+  }
+  // Nærmeste ledige plass til en boks med midten nær (ax, ay)
+  function fit(w, h, ax, ay, box, ok, st){
+    st = st || 4;
+    var best = null, bd = Infinity;
+    for(var y = box.y0; y + h <= box.y1 + 0.01; y += st){
+      for(var x = box.x0; x + w <= box.x1 + 0.01; x += st){
+        var dx = x + w / 2 - ax, dy = y + h / 2 - ay, d = dx * dx + dy * dy;
+        if(d >= bd) continue;
+        var r = {x:x, y:y, w:w, h:h};
+        if(ok(r)){ best = r; bd = d; }
+      }
+    }
+    return best;
+  }
+  // Rutenettsteg rundt en firedel av kjøpesummen
+  function stepOf(price){
+    var best = price / 4, bd = Infinity, e0 = Math.floor(Math.log10(price)) - 1;
+    [1, 2, 2.5, 5].forEach(function(fx){
+      for(var e = e0; e <= e0 + 2; e++){
+        var s = fx * Math.pow(10, e), qv = price / s;
+        if(qv >= 2.4 && qv <= 7 && Math.abs(qv - 4) < bd){ bd = Math.abs(qv - 4); best = s; }
+      }
+    });
+    return best;
+  }
+  // Lineær og saldo år for år. Samme regnemåte som compute() i sammenlign-modus.
+  function calc(price, rate, regPct, scrapPct){
+    var scrap = price * scrapPct, annual = (price - scrap) * regPct, life = Math.ceil(1 / regPct), N = Math.max(10, life);
+    var book = [price], tax = [price], bv = price, tv = price;
+    for(var i = 1; i <= N; i++){
+      tv -= tv * rate;
+      bv -= bv > scrap ? Math.min(annual, bv - scrap) : 0;
+      book.push(bv); tax.push(tv);
+    }
+    return {price:price, rate:rate, regPct:regPct, scrap:scrap, annual:annual, life:life, N:N, book:book, tax:tax};
+  }
+  function geo(W){
+    return W < 600 ? {mobile:true, W:W, H:448, x0:6, x1:W - 36, y0:34, y1:410, ms:20}
+                   : {mobile:false, W:W, H:440, x0:74, x1:W - 84, y0:40, y1:396, ms:22};
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph;
+    var none = !d;
+    q('none').hidden = !none;
+    q('main').hidden = none;
+    if(none){ set('sr', ''); return; }
+    // Bryteren følger metoden i kalkulatoren når den endres der, men kan vise en annen uten å endre den
+    var calcView = d.mode === 'compare' ? 'sammenlign' : d.mode;
+    if(lastMode !== null && d.mode !== lastMode) view = calcView;
+    lastMode = d.mode;
+    root.querySelectorAll('[data-lrn="seg"] button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-v') === view ? 'true' : 'false'); });
+
+    var letter = String(d.group).charAt(0), rate = d.rate, mode = view, cmp = mode === 'sammenlign';
+    var mine = !(Math.abs(d.price - DEF.price) < 0.5 && letter === DEF.group && Math.abs(d.regPct - DEF.regPct) < 1e-9 && d.scrapPct === DEF.scrapPct);
+    var lifeOk = d.life > 0 && Math.abs(100 / d.life - d.regPct * 100) < 0.05;
+    var m = calc(d.price, rate, d.regPct, d.scrapPct), N = m.N, G = geo(plot.clientWidth || 780);
+    lastW = G.W;
+    function kr(v){ return L.kr(v) + NB + 'kr'; }
+    function fmt(v){ return L.kr(v); }
+    function pct(x){ return (Math.abs(x - Math.round(x)) < 1e-9 ? String(Math.round(x)) : L.dec(x, 1)) + NB + '%'; }
+    var regP = m.regPct * 100, rateP = rate * 100;
+
+    // ── Tall ──
+    var diff = m.book.map(function(b, k){ return b - m.tax[k]; });
+    var kP = 0, posYears = 0, k, i;
+    for(k = 1; k <= N; k++) if(diff[k] > 0.5){ posYears++; if(kP === 0 || diff[k] > diff[kP]) kP = k; }
+    var k30 = 0;
+    for(k = 1; k <= 80; k++) if(m.price * Math.pow(1 - m.rate, k) < 30000){ k30 = k; break; }
+    var v30 = k30 ? m.price * Math.pow(1 - m.rate, k30) : 0;
+    var ext = !G.mobile && mode !== 'regnskap' && k30 > N && k30 <= 20;
+    var caseA = mode !== 'regnskap' && k30 > 0 && k30 <= N;
+    var T = ext ? k30 : N;
+    function X(tt){ return G.x0 + tt / T * (G.x1 - G.x0); }
+    function Y(v){ return G.y1 - v / m.price * (G.y1 - G.y0); }
+    function bookAt(tt){ return Math.max(m.scrap, m.price - m.annual * tt); }
+    function taxAt(tt){ return m.price * Math.pow(1 - m.rate, tt); }
+
+    // ── Kurver ──
+    var ts = [];
+    for(i = 0; i <= N * 10; i++) ts.push(i / 10);
+    var bookPts = ts.map(function(tt){ return [X(tt), Y(bookAt(tt))]; });
+    var taxPts = ts.map(function(tt){ return [X(tt), Y(taxAt(tt))]; });
+    var extPts = [];
+    if(ext) for(i = N * 10; i <= T * 10; i++) extPts.push([X(i / 10), Y(taxAt(i / 10))]);
+    var taxFull = ext ? taxPts.concat(extPts.slice(1)) : taxPts;
+    function pathOf(pts){ return pts.map(function(p, j){ return (j ? 'L' : 'M') + f1(p[0]) + ',' + f1(p[1]); }).join(' '); }
+
+    // ── Gapet: skravur der bokført verdi ligger over saldo (utsatt skattegjeld), prikker der saldo ligger over (fordel) ──
+    var chains = {pos:[], neg:[]}, tc = 0, open = null, tPrev = 0, dPrev = bookAt(0) - taxAt(0);
+    function closeOpen(){ if(open && open.tl.length > 1) chains[open.sign > 0 ? 'pos' : 'neg'].push(open.tl); open = null; }
+    for(i = 1; i < ts.length; i++){
+      var t1 = ts[i], d1 = bookAt(t1) - taxAt(t1), segs = [];
+      if(dPrev * d1 < 0){
+        var tx = tPrev + (t1 - tPrev) * dPrev / (dPrev - d1);
+        if(dPrev > 0 && tc === 0) tc = tx;
+        segs.push([tPrev, tx, dPrev > 0 ? 1 : -1]); segs.push([tx, t1, d1 > 0 ? 1 : -1]);
+      } else {
+        segs.push([tPrev, t1, (dPrev > 0.5 || d1 > 0.5) ? 1 : ((dPrev < -0.5 || d1 < -0.5) ? -1 : 0)]);
+      }
+      segs.forEach(function(sg){
+        if(sg[2] === 0){ closeOpen(); return; }
+        if(!open || open.sign !== sg[2]){ closeOpen(); open = {sign:sg[2], tl:[sg[0]]}; }
+        open.tl.push(sg[1]);
+      });
+      tPrev = t1; dPrev = d1;
+    }
+    closeOpen();
+    function poly(tl){
+      var a = tl.map(function(tt, j){ return (j ? 'L' : 'M') + f1(X(tt)) + ',' + f1(Math.min(Y(bookAt(tt)), Y(taxAt(tt)))); }).join(' ');
+      var b = tl.slice().reverse().map(function(tt){ return 'L' + f1(X(tt)) + ',' + f1(Math.max(Y(bookAt(tt)), Y(taxAt(tt)))); }).join(' ');
+      return a + ' ' + b + ' Z';
+    }
+
+    // ── Akser ──
+    var lab = '', stepV = stepOf(m.price), yTop = Y(m.price), gridD = '', yTicks = [];
+    for(i = 0; i * stepV < m.price - 1e-6; i++){
+      var yv = Y(i * stepV);
+      if(i > 0) gridD += 'M' + f1(G.x0) + ',' + f1(yv) + ' H' + f1(G.x1) + ' ';
+      if(i > 0 && yv - yTop < 18) continue;
+      yTicks.push({label:fmt(i * stepV), top:f1(G.mobile ? yv - 17 : yv - 8)});
+    }
+    gridD += 'M' + f1(G.x0) + ',' + f1(yTop) + ' H' + f1(G.x1);
+    yTicks.push({label:fmt(m.price), top:f1(G.mobile ? yTop - 17 : yTop - 8)});
+    yTicks.forEach(function(tk){ lab += '<span class="lrn-av-yt" style="top:' + tk.top + 'px">' + esc(tk.label) + '</span>'; });
+    var tl = [];
+    for(var tt0 = 0; tt0 <= T + 1e-9; tt0 += 2) tl.push(tt0);
+    if(tl[tl.length - 1] < T - 1e-9){ if(T - tl[tl.length - 1] < 1.6) tl.pop(); tl.push(T); }
+    tl.forEach(function(tt, j){
+      var s = j === tl.length - 1 ? t('lrnAvYr', '{n} år', {n:tt}) : String(tt);
+      lab += '<span class="lrn-av-xt" style="left:' + f1(X(tt) - 24) + 'px;top:' + (G.y1 + 8) + 'px">' + esc(s) + '</span>';
+    });
+
+    // ── Plass til etiketter og merker: alt som er plassert, blir hinder for det neste ──
+    var ms = G.ms, FS = G.mobile ? 11 : 12, CF = '500 ' + FS + 'px Inter, system-ui, sans-serif';
+    var rects = [], lines = [bookPts, taxFull];
+    if(G.mobile) yTicks.forEach(function(tk){ rects.push({x:0, y:+tk.top, w:textW(tk.label, '400 11px Inter, system-ui, sans-serif') + 4, h:15}); });
+    function free(r, pr, pl){ return !rects.some(function(o){ return rhit(r, o, pr); }) && !lines.some(function(ln){ return phit(ln, r, pl); }); }
+    function upperY(x){ var a = yAt(bookPts, x), b = yAt(taxFull, x); return a === null ? b : (b === null ? a : Math.min(a, b)); }
+    function lowerY(x){ var a = yAt(bookPts, x), b = yAt(taxFull, x); return a === null ? b : (b === null ? a : Math.max(a, b)); }
+    function xsOf(r){ var xs = [r.x, r.x + r.w]; for(var x = r.x + 5; x < r.x + r.w; x += 5) xs.push(x); return xs; }
+    function aboveOk(r){ return xsOf(r).every(function(x){ var u = upperY(x); return u === null || r.y + r.h <= u - 6; }); }
+    function insideOk(r){ return xsOf(r).every(function(x){ var u = upperY(x), l = lowerY(x); return u === null || l === null || (r.y >= u + 4 && r.y + r.h <= l - 4); }); }
+    var box = {x0:G.mobile ? 2 : G.x0 + 2, y0:G.y0 + 2, x1:G.W - 2, y1:G.y1 - 2};
+    var chips = '', marks = '', notes = [], brD = '', guideD = '', leadD = '', dotD = '', openD = '';
+    function circ(cx, cy, r){ return 'M' + f1(cx - r) + ',' + f1(cy) + ' a' + r + ',' + r + ' 0 1,0 ' + (2 * r) + ',0 a' + r + ',' + r + ' 0 1,0 ' + (-2 * r) + ',0 Z '; }
+    function bracket(x, yU, yL){
+      brD += 'M' + f1(x - 5) + ',' + f1(yU) + ' H' + f1(x + 5) + ' M' + f1(x) + ',' + f1(yU) + ' V' + f1(yL) + ' M' + f1(x - 5) + ',' + f1(yL) + ' H' + f1(x + 5) + ' ';
+      lines.push([[x, yU], [x, yL]]);
+    }
+    function putMarker(px, py, ax, ay){
+      var r = {x:px, y:py, w:ms, h:ms};
+      var inside = r.x >= 0 && r.x + ms <= G.W && r.y >= 0 && r.y + ms <= G.H;
+      if(!inside || !free(r, 3, 3)) r = fit(ms, ms, ax, ay, {x0:0, y0:2, x1:G.W, y1:G.y1}, function(o){ return free(o, 3, 3); }, 2) || r;
+      rects.push(r);
+      return r;
+    }
+    function chipAt(text, cls, r){ chips += '<span class="lrn-av-chip' + (cls ? ' ' + cls : '') + '" style="left:' + f1(r.x) + 'px;top:' + f1(r.y) + 'px">' + esc(text) + '</span>'; }
+    function putChip(text, cls, ok, ax, ay){
+      var w = textW(text, CF) + 12, r = fit(w, 20, ax, ay, box, function(o){ return ok(o) && free(o, 8, 4); }, 4);
+      if(!r) return null;
+      rects.push(r); chipAt(text, cls, r);
+      return r;
+    }
+
+    // ── Terskelen på 30 000 kr (stiplet) er et hinder for resten ──
+    var thrOn = (ext || caseA) && G.y1 - Y(30000) >= 5, thrD = '', c30 = kr(30000), w30 = textW(c30, CF) + 12;
+    if(thrOn){
+      var yT = Y(30000), xa = ext ? X(N) : G.x0, xb = ext ? X(T) + 6 : G.x1;
+      thrD = 'M' + f1(xa) + ',' + f1(yT) + ' H' + f1(xb);
+      lines.push([[xa, yT], [xb, yT]]);
+      if(ext) rects.push({x:X(T) + 12, y:yT - 10, w:w30, h:20});
+    }
+
+    // ── Merknader i tidsrekkefølge ──
+    var anns = [];
+    if(cmp){
+      if(kP > 0 && kP < N) anns.push({t:kP, kind:'gap'});
+      if(tc > 0) anns.push({t:tc, kind:'cross'});
+      anns.push({t:N, kind:'end'});
+      if(ext || (caseA && k30 < N)) anns.push({t:k30 + 0.001, kind:'thr'});
+    } else if(mode === 'regnskap'){
+      anns.push({t:1.5, kind:'rate'});
+      anns.push({t:m.life, kind:'rend'});
+    } else {
+      anns.push({t:1, kind:'sy1'});
+      anns.push({t:10, kind:'sy10'});
+      if(ext || (caseA && k30 < 10)) anns.push({t:k30 + 0.001, kind:'thr'});
+    }
+    anns.sort(function(a, b){ return a.t - b.t; });
+    var firstNegAfter = 0;
+    if(tc > 0) for(k = Math.ceil(tc); k <= N; k++) if(diff[k] < -0.5){ firstNegAfter = k; break; }
+    var dN = diff[N];
+    // Er hele restsaldoen trukket fra året etter, og lineær har nådd null da, er forskjellen borte
+    var gone = m.scrap === 0 && m.life <= k30 + 1;
+    anns.forEach(function(a, idx){
+      var r = null, text = '', x, y, yU, yL;
+      if(a.kind === 'gap'){
+        x = X(kP); yU = Y(m.book[kP]); yL = Y(m.tax[kP]);
+        bracket(x, yU, yL);
+        var tall = yL - yU >= ms + 8;
+        r = putMarker(tall ? x + 9 : x - ms / 2, tall ? (yU + yL) / 2 - ms / 2 : yU - ms - 8, x + 20, (yU + yL) / 2);
+        text = t('lrnAvGap', 'Gapet er størst i år {k}: {d} × 22' + NB + '% = {u} utsatt skattegjeld. Skatten har fått fradraget før regnskapet.', {k:kP, d:kr(diff[kP]), u:kr(diff[kP] * UT)});
+      } else if(a.kind === 'cross'){
+        var xc = X(tc), yc = Y(bookAt(tc));
+        openD += circ(xc, yc, 3.5);
+        guideD += 'M' + f1(xc) + ',' + f1(yc - 5) + ' V' + f1(yc - 18) + ' ';
+        lines.push([[xc, yc - 5], [xc, yc - 18]]);
+        r = putMarker(xc - ms / 2, yc - 18 - ms, xc, yc - 30);
+        text = t('lrnAvCross', 'Her snur det, etter ca. {t} år.', {t:L.dec(tc, 1), n:f1(tc)}) + (firstNegAfter ? ' ' + t('lrnAvCross2', 'Fra år {k} ligger saldo over lineær, og skattegjelden er blitt en skattefordel.', {k:firstNegAfter}) : '');
+      } else if(a.kind === 'end'){
+        x = X(N); yU = Y(Math.max(m.book[N], m.tax[N])); yL = Y(Math.min(m.book[N], m.tax[N]));
+        if(yL - yU >= 3) bracket(x, yU, yL);
+        r = putMarker(x + 9, (yU + yL) / 2 - ms / 2, x + 20, (yU + yL) / 2);
+        var done = m.life < N
+          ? (m.scrap > 0 ? t('lrnAvDoneInS', 'Lineær ble ferdig i år {n} og står på restverdien, {s}.', {n:m.life, s:kr(m.scrap)}) : t('lrnAvDoneIn', 'Lineær ble ferdig i år {n}.', {n:m.life}))
+          : (m.scrap > 0 ? t('lrnAvDoneS', 'Lineær er ferdig og står på restverdien, {s}.', {s:kr(m.scrap)}) : t('lrnAvDone', 'Lineær er ferdig.'));
+        if(Math.abs(dN) < 0.5) text = t('lrnAvEnd0', 'År {n}: {done} Saldo står på det samme, så forskjellen er borte.', {n:N, done:done});
+        else if(dN < 0) text = m.scrap > 0
+          ? t('lrnAvEndNegS', 'År {n}: {done} Saldo har {t} igjen, {d} mer, og det gir {u} utsatt skattefordel.', {n:N, done:done, t:kr(m.tax[N]), d:kr(-dN), u:kr(-dN * UT)})
+          : t('lrnAvEndNeg', 'År {n}: {done} Saldo har {t} igjen, som gir {u} utsatt skattefordel.', {n:N, done:done, t:kr(m.tax[N]), u:kr(-dN * UT)});
+        else text = t('lrnAvEndPos', 'År {n}: {done} Saldo har {t} igjen. Forskjellen på {d} gir {u} utsatt skattegjeld.', {n:N, done:done, t:kr(m.tax[N]), d:kr(dN), u:kr(dN * UT)});
+        if(caseA && k30 === N) text += ' ' + t('lrnAvEnd30', 'Det er under 30' + NB + '000' + NB + 'kr, så hele resten kan trekkes fra året etter.');
+      } else if(a.kind === 'thr'){
+        x = X(k30); y = Y(v30);
+        openD += circ(x, y, 3.5);
+        r = putMarker(x - ms / 2, y - 14 - ms, x, y);
+        text = gone
+          ? t('lrnAvThr0', 'Saldoen er under 30' + NB + '000' + NB + 'kr ved utgangen av år {k} ({v}). Året etter kan hele resten trekkes fra, og forskjellen er borte.', {k:k30, v:kr(v30)})
+          : t('lrnAvThr', 'Saldoen er under 30' + NB + '000' + NB + 'kr ved utgangen av år {k} ({v}). Året etter kan hele resten trekkes fra.', {k:k30, v:kr(v30)});
+      } else if(a.kind === 'rate'){
+        x = X(a.t); y = Y(bookAt(a.t));
+        dotD += circ(x, y, 3);
+        r = putMarker(x + 8, y - ms - 10, x, y);
+        text = (lifeOk ? t('lrnAvRate', 'Lineær sats er 100 ÷ {n} år = {p}.', {n:d.life, p:pct(regP)}) : t('lrnAvRate2', 'Lineær sats er {p}.', {p:pct(regP)}))
+          + ' ' + t('lrnAvRate3', 'Samme beløp, {k}, trekkes fra hvert år til verdien har nådd restverdien.', {k:kr(m.annual)});
+      } else if(a.kind === 'rend'){
+        x = X(m.life); y = Y(bookAt(m.life));
+        dotD += circ(x, y, 3);
+        r = putMarker(x - ms / 2, y - ms - 12, x, y);
+        text = m.scrap > 0 ? t('lrnAvRendS', 'Etter {n} år er verdien nede på restverdien, {s}.', {n:m.life, s:kr(m.scrap)}) : t('lrnAvRend', 'Etter {n} år er verdien null.', {n:m.life});
+      } else if(a.kind === 'sy1'){
+        x = X(1); y = Y(m.tax[1]);
+        dotD += circ(x, y, 3);
+        r = putMarker(x + 8, y - ms - 6, x, y);
+        text = t('lrnAvSy1', 'Første år trekkes {r} av {p}, {a}. Det tiende året trekkes samme prosent av en mindre rest, {b}.', {r:pct(rateP), p:kr(m.price), a:kr(m.price * rate), b:kr(m.tax[9] * rate)});
+      } else if(a.kind === 'sy10'){
+        x = X(10); y = Y(m.tax[10]);
+        dotD += circ(x, y, 3);
+        r = putMarker(x + 9, y - ms / 2 - 2, x, y);
+        text = t('lrnAvSy10', 'Etter 10 år står {k} igjen. Saldo blir aldri null av seg selv.', {k:kr(m.tax[10])});
+      }
+      marks += '<span class="lrn-av-mk" aria-hidden="true" style="left:' + f1(r.x) + 'px;top:' + f1(r.y) + 'px">' + (idx + 1) + '</span>';
+      notes.push(text);
+    });
+
+    // ── Etiketter direkte på linjene og i gapet ──
+    var bookTxt = G.mobile ? ph('Regnskap (lineær)') : ph('Regnskap (lineær)') + ' · ' + pct(regP);
+    var taxTxt = G.mobile ? ph('Skatt (saldo)') : ph('Skatt (saldo)') + ' · ' + pct(rateP);
+    function bookF(x){ return yAt(bookPts, x); }
+    function taxF(x){ return yAt(taxFull, x); }
+    function aboveOwn(f){ return function(r){ return xsOf(r).every(function(x){ var yy = f(x); return yy === null || r.y + r.h <= yy - 6; }); }; }
+    function belowOwn(f){ return function(r){ return xsOf(r).every(function(x){ var yy = f(x); return yy === null || r.y >= yy + 6; }); }; }
+    // Etiketten står på den siden av egen linje som vender bort fra den andre linja
+    function lineLabel(txt, cls, f, g, tA){
+      var xa2 = X(tA), first = f(xa2) <= g(xa2) ? 'above' : 'below';
+      function trySide(side){ return putChip(txt, cls, side === 'above' ? aboveOwn(f) : belowOwn(f), xa2, f(xa2) + (side === 'above' ? -30 : 34)); }
+      return trySide(first) || trySide(first === 'above' ? 'below' : 'above');
+    }
+    lineLabel(bookTxt, mode === 'skatt' ? 'd' : '', bookF, taxF, 0.3 * N);
+    lineLabel(taxTxt, mode === 'regnskap' ? 'd' : '', taxF, bookF, 0.32 * N);
+    // Områdenavn: inni området hvis det er plass, ellers utenfor med lederlinje
+    function areaLabel(chain, frac, txt){
+      var len = chain[chain.length - 1] - chain[0];
+      if(len / T * (G.x1 - G.x0) < 28) return;
+      var tg = chain[0] + frac * len, w = textW(txt, CF) + 12, cx = X(tg), yb = Y(bookAt(tg)), yt = Y(taxAt(tg)), cy = (yb + yt) / 2;
+      var r = fit(w, 20, cx, cy, box, function(o){ return insideOk(o) && free(o, 8, 3); }, 3);
+      if(r && Math.hypot(r.x + w / 2 - cx, r.y + 10 - cy) > 90) r = null;
+      if(r){ rects.push(r); chipAt(txt, '', r); return; }
+      function leaderFree(o){ var sx = Math.max(o.x + 10, Math.min(o.x + o.w - 10, cx)); return !rects.some(function(p){ return shit(sx, o.y + 20, cx, cy, p, 3); }); }
+      r = putChip(txt, '', function(o){ return aboveOk(o) && leaderFree(o); }, cx + 30, Math.min(yb, yt) - 50);
+      if(r){
+        var sx = Math.max(r.x + 10, Math.min(r.x + r.w - 10, cx));
+        leadD += 'M' + f1(sx) + ',' + f1(r.y + 20) + ' L' + f1(cx) + ',' + f1(cy) + ' ';
+        lines.push([[sx, r.y + 20], [cx, cy]]);
+        dotD += circ(cx, cy, 2.5);
+      }
+    }
+    function longest(list){ return list.slice().sort(function(a, b){ return (b[b.length - 1] - b[0]) - (a[a.length - 1] - a[0]); })[0]; }
+    if(!G.mobile && cmp && chains.pos.length) areaLabel(longest(chains.pos), 0.62, ph('Utsatt skattegjeld'));
+    if(!G.mobile && cmp && chains.neg.length) areaLabel(longest(chains.neg), 0.55, ph('Utsatt skattefordel'));
+    if(thrOn){
+      var yT2 = Y(30000);
+      if(ext) chipAt(c30, 'm', {x:X(T) + 12, y:yT2 - 10});
+      else putChip(c30, 'm', function(o){ return o.y + o.h <= yT2 - 4 && o.y >= yT2 - 44; }, G.x0 + 8 + w30 / 2, yT2 - 16);
+    }
+
+    // ── Tegn ──
+    plot.classList.toggle('m', G.mobile);
+    plot.style.height = G.H + 'px';
+    svg.setAttribute('viewBox', '0 0 ' + G.W + ' ' + G.H);
+    setD('grid', gridD);
+    setD('base', 'M' + f1(G.x0) + ',' + f1(G.y1) + ' H' + f1(G.x1));
+    setD('pos', cmp ? chains.pos.map(poly).join(' ') : '');
+    setD('neg', cmp ? chains.neg.map(poly).join(' ') : '');
+    setD('thr', thrD);
+    setD('book', pathOf(bookPts));
+    setD('tax', pathOf(taxPts));
+    setD('ext', ext ? pathOf(extPts) : '');
+    setD('br', brD); setD('guide', guideD); setD('lead', leadD); setD('dot', dotD); setD('open', openD);
+    svg.querySelector('[data-p="book"]').setAttribute('class', 'lrn-av-l ' + (mode === 'skatt' ? 'g' : (cmp ? 'b2' : 'b')));
+    svg.querySelector('[data-p="tax"]').setAttribute('class', 'lrn-av-l ' + (mode === 'regnskap' ? 'g' : (cmp ? 't2' : 'b')));
+    q('labels').innerHTML = lab + chips + marks;
+    q('notes').innerHTML = notes.map(function(s, j){ return '<li><span class="lrn-av-mk" aria-hidden="true">' + (j + 1) + '</span><span>' + esc(s) + '</span></li>'; }).join('');
+
+    // ── Leselinja ──
+    if(aar === null || N !== lastN) aar = Math.max(1, Math.min(N, Math.round(N * 0.6)));
+    lastN = N;
+    range.max = N;
+    range.value = aar;
+    S = {m:m, G:G, X:X, Y:Y, diff:diff, kr:kr, fmt:fmt};
+    sight();
+
+    // ── Tekster ──
+    var ing = tc > 0 ? t('lrnAvIng1', 'Gapet mellom dem er utsatt skatt, og det snur før regnskapet er ferdig.')
+      : (posYears === 0 ? t('lrnAvIng2', 'Gapet mellom dem er utsatt skatt. Med så lav sats får skatten fradraget senere enn regnskapet hele veien.')
+      : t('lrnAvIng3', 'Gapet mellom dem er utsatt skatt. Med disse tallene har skatten fått fradraget først hele perioden.'));
+    set('ing', ing);
+    var Lf = m.life, sumText;
+    if(mode === 'regnskap') sumText = t('lrnAvSumR', 'Lineær tar like mye hvert år, {k}, og er ferdig etter {n} år.', {k:kr(m.annual), n:Lf}) + (m.scrap > 0 ? ' ' + t('lrnAvSumRS', 'Den stopper på restverdien, {s}.', {s:kr(m.scrap)}) : '');
+    else if(mode === 'skatt') sumText = t('lrnAvSumT', 'Saldo tar {a} det første året og {b} det tiende. Etter ti år har den skrevet ned {c} av {p}.', {a:kr(m.price * rate), b:kr(m.tax[9] * rate), c:kr(m.price - m.tax[10]), p:kr(m.price)});
+    else if(m.scrap > 0) sumText = t('lrnAvSumCS', 'Etter {n} år er lineær ferdig og står på restverdien, {s}, mens saldo har {t} igjen.', {n:Lf, s:kr(m.scrap), t:kr(m.tax[Lf])});
+    else sumText = t('lrnAvSumC', 'Etter {n} år er lineær ferdig, mens saldo har {t} igjen.', {n:Lf, t:kr(m.tax[Lf])}) + (m.tax[Lf] > 0.5 ? ' ' + t('lrnAvSumC2', 'Forskjellen er borte først når restsaldoen er trukket fra.') : '');
+    set('sum', sumText);
+    var sr;
+    if(mode === 'regnskap') sr = t('lrnAvSrR', 'Lineær avskrivning: verdien faller med {k} hvert år, fra {p} til {e} etter {n} år.', {k:kr(m.annual), p:kr(m.price), e:kr(m.book[Lf]), n:Lf});
+    else if(mode === 'skatt') sr = t('lrnAvSrT', 'Saldo: verdien faller med {r} av det som er igjen hvert år, fra {p} til {e} etter 10 år.', {r:pct(rateP), p:kr(m.price), e:kr(m.tax[10])});
+    else {
+      sr = kP > 0 ? t('lrnAvSrC1', 'Saldo ligger under lineær i {n} år og gir på det meste {u} i utsatt skattegjeld i år {k}.', {n:posYears, u:kr(diff[kP] * UT), k:kP}) : t('lrnAvSrC0', 'Saldo ligger over lineær hele perioden.');
+      if(firstNegAfter) sr += ' ' + t('lrnAvSrC2', 'Fra år {k} er det omvendt.', {k:firstNegAfter});
+      if(dN < -0.5) sr += ' ' + t('lrnAvSrC3', 'Etter {n} år er utsatt skattefordel {u}.', {n:N, u:kr(-dN * UT)});
+      else if(dN > 0.5) sr += ' ' + t('lrnAvSrC4', 'Etter {n} år er utsatt skattegjeld {u}.', {n:N, u:kr(dN * UT)});
+    }
+    set('sr', sr);
+
+    // Merket over grafen
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    var st = t('lrnAvState', '{p} · saldogruppe {g} ({r})', {p:kr(m.price), g:letter, r:pct(rateP)})
+      + ' · ' + (lifeOk ? t('lrnAvStLife', 'levetid {n} år', {n:d.life}) : t('lrnAvStLin', 'lineær {p}', {p:pct(regP)}))
+      + (m.scrap > 0 ? ' · ' + t('lrnAvStScrap', 'restverdi {p}', {p:pct(d.scrapPct * 100)}) : '');
+    set('stateText', st);
+
+    // ── Tabellen bak bryteren ──
+    q('tbody').innerHTML = m.book.map(function(b, kk){
+      var dd = diff[kk], u = Math.abs(dd) < 0.5 ? '' : ' <span>' + esc(dd > 0 ? t('lrnAvGjeld', 'gjeld') : t('lrnAvFordel', 'fordel')) + '</span>';
+      return '<tr><th scope="row">' + kk + '</th><td>' + fmt(b) + '</td><td>' + fmt(m.tax[kk]) + '</td><td>' + fmt(dd) + '</td><td>' + fmt(Math.abs(dd) * UT) + u + '</td></tr>';
+    }).join('');
+
+    // ── Saldogruppene: den valgte raden er markert ──
+    root.querySelectorAll('.lrn-av-gr tbody tr').forEach(function(tr){ tr.classList.toggle('on', tr.getAttribute('data-g') === letter); });
+
+    // ── To grenser på 30 000 kr ──
+    var lifeYrs = lifeOk ? d.life : m.life;
+    set('grKjop', (m.price < 30000 || lifeYrs < 3)
+      ? t('lrnAvKjop1', 'Med {p} og {n} års levetid kan driftsmidlet utgiftsføres med en gang.', {p:kr(m.price), n:lifeYrs})
+      : t('lrnAvKjop2', 'Med {p} og {n} års levetid ligger driftsmidlet over begge grensene og skal aktiveres og avskrives.', {p:kr(m.price), n:lifeYrs}));
+    var grRest = '';
+    if(k30 > 0 && k30 <= 20) grRest = gone
+      ? t('lrnAvRest0', 'Med disse tallene er saldoen under 30' + NB + '000' + NB + 'kr ved utgangen av år {k} ({v}). Året etter kan hele resten trekkes fra, og forskjellen er borte.', {k:k30, v:kr(v30)})
+      : t('lrnAvRest', 'Med disse tallene er saldoen under 30' + NB + '000' + NB + 'kr ved utgangen av år {k} ({v}). Året etter kan hele resten trekkes fra.', {k:k30, v:kr(v30)});
+    else if(k30 > 20) grRest = t('lrnAvRest2', 'Med disse tallene er saldoen først under 30' + NB + '000' + NB + 'kr ved utgangen av år {k}.', {k:k30});
+    else grRest = t('lrnAvRest3', 'Med så lav sats kommer saldoen ikke under 30' + NB + '000' + NB + 'kr på mange år.');
+    set('grRest', grRest);
+  }
+
+  // Leselinja og tallene for ett bestemt år
+  function sight(){
+    if(!S) return;
+    var m = S.m, G = S.G, X = S.X, Y = S.Y, L = window.hvtLearn, t = L.t, k = aar, dk = S.diff[k], xs = X(k);
+    function circ(cx, cy, r){ return 'M' + f1(cx - r) + ',' + f1(cy) + ' a' + r + ',' + r + ' 0 1,0 ' + (2 * r) + ',0 a' + r + ',' + r + ' 0 1,0 ' + (-2 * r) + ',0 Z '; }
+    setD('sikte', 'M' + f1(xs) + ',' + f1(G.y0 - 6) + ' V' + f1(G.y1));
+    setD('sikteDot', circ(xs, Y(m.book[k]), 3.5) + circ(xs, Y(m.tax[k]), 3.5));
+    var tag = q('tag'), txt = t('lrnAvTag', 'År {n}', {n:k}), tw = textW(txt, '600 12px Inter, system-ui, sans-serif') + 14;
+    tag.textContent = txt;
+    tag.style.left = f1(Math.max(G.x0, Math.min(G.x1 - tw + 10, xs - tw / 2))) + 'px';
+    tag.style.top = f1(Math.max(0, G.y0 - 32)) + 'px';
+    set('skAar', String(k));
+    set('skBook', S.fmt(m.book[k]));
+    set('skTax', S.fmt(m.tax[k]));
+    set('skDiff', S.fmt(dk));
+    set('skUts', S.fmt(Math.abs(dk) * 0.22));
+    set('skUtsU', Math.abs(dk) < 0.5 ? 'kr' : (dk > 0 ? t('lrnAvKrGjeld', 'kr gjeld') : t('lrnAvKrFordel', 'kr fordel')));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-av');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-av-plot');
+    svg = plot.querySelector('svg');
+    range = q('range');
+    range.addEventListener('input', function(){ aar = +range.value; sight(); });
+    root.querySelectorAll('[data-lrn="seg"] button').forEach(function(b){
+      b.addEventListener('click', function(){ view = b.getAttribute('data-v'); schedule(); });
+    });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // Saldogruppene står åpne på store skjermer og lukket på mobil
+    var grs = q('grs');
+    if(grs && window.matchMedia('(min-width: 641px)').matches) grs.open = true;
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._avs || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 

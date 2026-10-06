@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v3">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -95,149 +96,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  /* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap), så
-     de dro hele siden ut i sidelengs scroll — opptil 380px på finance.
-     Samme scroll-wrapper-mønster som .bd-table-wrap/.pv-tblwrap. */
-  .lc-trinn{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body class="atmo-on">
@@ -481,57 +339,106 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: personlig-pensjon =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-personlig-pensjon">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-pensjon">De tre pilarene bak tallet</h2><p class="lc-intro">Pensjonen din er summen av tre deler: folketrygd fra staten, tjenestepensjon fra arbeidsgiver og det du sparer selv. Hver del regnes om til et årlig beløp, og summen deles på 12.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Folketrygd-opptjening</b><span class="tag">Sats</span></span><span class="fig">18,1<span class="u">%</span></span><p class="dsc">Hvert år legges 18,1 % av lønnen din inn på en pensjonsbeholdning hos staten. Dette er grunnmuren alle som jobber bygger opp.</p></div>
-        <div class="lc-led"><span class="nm"><b>Opptjeningstak</b><span class="tag">Grense</span></span><span class="fig">7,1<span class="u">G</span></span><p class="dsc">Bare lønn opp til 7,1 G teller med i folketrygden. Med dagens G på 136&nbsp;549&nbsp;kr er taket rundt 969&nbsp;500&nbsp;kr — tjener du mer, gir det ekstra ikke høyere folketrygd.</p></div>
-        <div class="lc-led"><span class="nm"><b>Tjenestepensjon (OTP)</b><span class="tag">Innskudd</span></span><span class="fig">5<span class="u">%</span></span><p class="dsc">Arbeidsgiver setter av en prosent av lønnen din hvert år, her satt til 5 %. Beløpet vokser med avkastning fram til du tar det ut.</p></div>
-        <div class="lc-led"><span class="nm"><b>Forventet avkastning</b><span class="tag">Faktor</span></span><span class="fig">5<span class="u">% / år</span></span><p class="dsc">Både tjenestepensjon og egen sparing vokser med renters rente. Kalkulatoren bruker 5&nbsp;% i året som standard — du kan endre tallet selv.</p></div>
-        <div class="lc-led"><span class="nm"><b>Utbetalingsperiode</b><span class="tag">Faktor</span></span><span class="fig">20<span class="u">år</span></span><p class="dsc">Kalkulatoren deler alle tre beholdningene på 20 år. Folketrygden betales i virkeligheten ut livet ut: NAV deler beholdningen på et delingstall som avhenger av årskullet ditt og når du starter uttaket.</p></div>
-        <div class="lc-led"><span class="nm"><b>Uttaksalder</b><span class="tag">Mål</span></span><span class="fig">67<span class="u">år</span></span><p class="dsc">Pensjonen beregnes fra uttak ved 67 år. Resultatet vises som erstatningsgrad — årlig pensjon målt mot dagens lønn, i prosent.</p></div>
+  <div class="lrn" id="lrn-pe">
+    <section class="lrn-sec" aria-labelledby="lrn-pe-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-pe-h">Folketrygden er et gulv. Resten må du og arbeidsgiver bygge</h2>
+        <p class="lrn-lede">Folketrygden følger lønna di bare opp til 7,1G. Resten av veien opp til lønna tettes av det arbeidsgiver setter av og det du sparer selv.</p>
+      </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn lønna i kalkulatoren.</p>
+      <div class="lrn-pe-main" data-lrn="main">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-pe-row">
+          <figure class="lrn-fig" aria-describedby="lrn-pe-sr">
+            <figcaption class="lrn-cap">Kroner per år. Lønna di i dag mot pensjonen fra 67</figcaption>
+            <div class="lrn-plot is-static lrn-pe-plot" dir="ltr">
+              <svg aria-hidden="true" focusable="false">
+                <defs>
+                  <pattern id="lrn-pe-ps" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-pe-psl" x1="0" y1="0" x2="0" y2="5"/></pattern>
+                  <pattern id="lrn-pe-dot" width="5" height="5" patternUnits="userSpaceOnUse"><circle class="lrn-pe-dc" cx="2.5" cy="2.5" r="1.15"/></pattern>
+                  <pattern id="lrn-pe-tak" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-pe-tkl" x1="0" y1="0" x2="0" y2="6"/></pattern>
+                </defs>
+              <path class="lrn-pe-grid" data-p="grid"/>
+              <path class="lrn-pe-over" data-p="over"/>
+              <path class="lrn-pe-folk" data-p="folk"/>
+              <path class="lrn-pe-tj" data-p="tj"/>
+              <path class="lrn-pe-priv" data-p="priv"/>
+              <path class="lrn-pe-sep" data-p="sep"/>
+              <path class="lrn-pe-out" data-p="out"/>
+              <path class="lrn-pe-ghost" data-p="ghost"/>
+              <path class="lrn-pe-base" data-p="base"/>
+              <path class="lrn-pe-cap" data-p="cap"/>
+              <path class="lrn-pe-lead" data-p="lead"/>
+              </svg>
+              <div class="lrn-labels" data-lrn="labels"></div>
+            </div>
+            <ul class="lrn-pe-ml" aria-label="Delene av pensjonen" data-lrn="ml">
+              <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect class="lrn-pe-sw priv" x="0.5" y="0.5" width="13" height="13"/></svg><span>Egen sparing</span><span data-lrn="mlPriv"></span></li>
+              <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect class="lrn-pe-sw tj" x="0.5" y="0.5" width="13" height="13"/></svg><span>Tjenestepensjon</span><span data-lrn="mlTj"></span></li>
+              <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect class="lrn-pe-sw folk" x="0.5" y="0.5" width="13" height="13"/></svg><span>Folketrygd</span><span data-lrn="mlFolk"></span></li>
+              <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path class="lrn-pe-cap" d="M0 7 H14"/></svg><span data-lrn="mlCap"></span></li>
+            </ul>
+          </figure>
+          <div class="lrn-pe-side">
+            <p class="lrn-pe-big">Pensjonen blir <b data-lrn="sSum"></b> i året, <b data-lrn="sPct"></b> av lønna di i dag.</p>
+            <p class="lrn-p">Hver 1&nbsp;000 kr du sparer selv i måneden, gir <strong data-lrn="sPer1000"></strong> mer i året fra 67.</p>
+          </div>
+        </div>
+        <div class="lrn-pe-fcs">
+          <div class="lrn-pe-fc">
+            <div class="h"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect class="lrn-pe-sw folk" x="0.5" y="0.5" width="13" height="13"/></svg><span class="n">Folketrygd</span><span class="s">18,1&nbsp;% av lønna i 40 år, fordelt over 20 år</span></div>
+            <div class="lrn-f"><span class="lrn-frac"><span><i>lønn opp til 7,1G</i> × 18,1&nbsp;% × 40 år</span><span>20 år</span></span></div>
+            <div class="lrn-f n"><span>=</span><span class="lrn-frac"><span><span data-lrn="fLonnK"></span> × 18,1&nbsp;% × 40</span><span>20</span></span><span>=</span><b data-lrn="fFolk"></b></div>
+          </div>
+          <div class="lrn-pe-fc">
+            <div class="h"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect class="lrn-pe-sw tj" x="0.5" y="0.5" width="13" height="13"/></svg><span class="n">Tjenestepensjon</span><span class="s" data-lrn="fTjSub"></span></div>
+            <div class="lrn-f"><span class="lrn-frac"><span><i>årlig innskudd</i> × <i>vekstfaktor</i></span><span>20 år</span></span></div>
+            <div class="lrn-f n"><span>=</span><span class="lrn-frac"><span><span data-lrn="fTjInn"></span> × <span data-lrn="fVf"></span></span><span>20</span></span><span>=</span><b data-lrn="fTj"></b></div>
+          </div>
+          <div class="lrn-pe-fc">
+            <div class="h"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect class="lrn-pe-sw priv" x="0.5" y="0.5" width="13" height="13"/></svg><span class="n">Egen sparing</span><span class="s" data-lrn="fPrivSub"></span></div>
+            <div class="lrn-f"><span class="lrn-frac"><span><i>årlig innskudd</i> × <i>vekstfaktor</i></span><span>20 år</span></span></div>
+            <div class="lrn-f n"><span>=</span><span class="lrn-frac"><span><span data-lrn="fPrivInn"></span> × <span data-lrn="fVf"></span></span><span>20</span></span><span>=</span><b data-lrn="fPriv"></b></div>
+          </div>
+        </div>
+        <p class="lrn-p lrn-pe-vf" data-lrn="fVfTxt"></p>
+        <p class="lrn-fine"><strong>Det modellen forenkler.</strong> Uttak ved 67 år, og alle tre deler fordelt over 20 år. AFP og delingstall er ikke med. Satsene er fra NAV. Ditt faktiske tall finner du ved å logge inn på <a href="https://www.norskpensjon.no" rel="noopener">norskpensjon.no</a>.</p>
+        <details class="lrn-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table>
+            <caption>Kroner per år fra 67, og andel av lønna i dag</caption>
+            <thead><tr><td></td><th scope="col">Kr per år</th><th scope="col">Andel av lønna</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Folketrygd</th><td data-lrn="tFolk"></td><td><span data-lrn="tFolkP"></span>&nbsp;%</td></tr>
+              <tr><th scope="row">Tjenestepensjon</th><td data-lrn="tTj"></td><td><span data-lrn="tTjP"></span>&nbsp;%</td></tr>
+              <tr><th scope="row">Egen sparing</th><td data-lrn="tPriv"></td><td><span data-lrn="tPrivP"></span>&nbsp;%</td></tr>
+              <tr><th scope="row">Sum pensjon</th><td data-lrn="tSum"></td><td><span data-lrn="tSumP"></span>&nbsp;%</td></tr>
+              <tr><th scope="row">Lønna di i dag</th><td data-lrn="tLonn"></td><td>100&nbsp;%</td></tr>
+              <tr><th scope="row">Gap</th><td data-lrn="tGap"></td><td><span data-lrn="tGapP"></span>&nbsp;%</td></tr>
+            </tbody>
+          </table></div>
+        </details>
+      </div>
+      <p class="lrn-sr" id="lrn-pe-sr" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-pe-q">
+      <h3 class="lrn-h3" id="lrn-pe-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hva er erstatningsgrad?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p><span>Pensjonen per år delt på lønna di i dag.</span> <span data-lrn="qEks"></span></p></div></details>
+        <details><summary>Hva er OTP og minstekravet på 2&nbsp;%?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>OTP står for obligatorisk tjenestepensjon. Alle arbeidsgivere må sette av minst 2&nbsp;% av lønnen din til pensjon, men mange setter av mer, typisk 5–7&nbsp;%.</p></div></details>
+        <details><summary>Når kan jeg ta ut pensjon?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Du kan starte uttak mellom 62 og 75 år. Kalkulatoren regner med uttak ved 67 år. Tar du ut tidlig, fordeles beholdningen over flere år og månedsbeløpet blir lavere.</p></div></details>
+        <details><summary>Er tallet jeg får eksakt?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Nei, det er et forenklet estimat. Hva modellen holder utenfor, står i fotnoten under figuren.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcB-personlig-pensjon">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-pensjon">Tallene kalkulatoren bygger på</h2></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Forutsetninger</span>
-        <div class="lc-kv"><span class="k">Pensjonsalder</span><span class="v">62–75<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Uttaksalder i beregningen</span><span class="v">67<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Opptjeningsår i folketrygden</span><span class="v">40<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Utbetalingstid i beregningen</span><span class="v">20<span class="u">år</span></span></div>
-      </div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcC-personlig-pensjon">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-pensjon">Det som påvirker pensjonen mest</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Innskuddet fra arbeidsgiver varierer mye</h3><p>Minstekravet (OTP) er 2 % av lønnen, men mange har 5–7 %. Sjekk lønnsslippen eller spør arbeidsgiver — forskjellen mellom 2 % og 7 % over et helt arbeidsliv er stor.</p></div>
-        <div class="lc-note"><h3>Tid betyr mer enn beløp</h3><p>Fordi sparingen vokser med renters rente, betyr hvert ekstra år mye. Starter du tidlig, får avkastningen lenger tid til å vokse.</p></div>
-        <div class="lc-note"><h3>Lønn over 7,1 G gir ikke mer folketrygd</h3><p>Tjener du mer enn rundt 969 500 kr, stopper opptjeningen i folketrygden. Da blir tjenestepensjon og egen sparing viktigere for å holde erstatningsgraden oppe.</p></div>
-        <div class="lc-note"><h3>Dette er et forenklet estimat</h3><p>Modellen tar ikke med AFP, delingstall (hvor lenge årskullet ditt forventes å leve) eller når du faktisk velger å ta ut pensjon. Bruk tallet som en pekepinn, ikke en fasit. For ditt <em>faktiske</em> pensjonstall — med all opptjening samlet — logg inn på <a href="https://norskpensjon.no" target="_blank" rel="noopener">norskpensjon.no</a> (Din pensjon).</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-personlig-pensjon">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-personlig-pensjon">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hva er de tre pilarene i pensjon?</summary><div class="a"><p>Folketrygd fra staten, tjenestepensjon fra arbeidsgiver og egen sparing. Kalkulatoren regner hver del for seg og legger dem sammen til en samlet månedlig pensjon.</p></div></details>
-        <details class="lc-q"><summary>Hva er erstatningsgrad?</summary><div class="a"><p>Det er hvor stor del av dagens lønn pensjonen din dekker, vist i prosent. Får du 60 % erstatningsgrad, betyr det at pensjonen tilsvarer 60 % av det du tjener i dag.</p></div></details>
-        <details class="lc-q"><summary>Hva er OTP og minstekravet på 2 %?</summary><div class="a"><p>OTP står for obligatorisk tjenestepensjon. Alle arbeidsgivere må sette av minst 2 % av lønnen din til pensjon, men mange setter av mer — typisk 5–7 %.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor teller bare lønn opp til 7,1 G?</summary><div class="a"><p>Folketrygden har et tak. Bare inntekt opp til 7,1 ganger grunnbeløpet (rundt 969 500 kr med dagens G) gir opptjening. Lønn over taket gir ikke høyere folketrygd.</p></div></details>
-        <details class="lc-q"><summary>Når kan jeg ta ut pensjon?</summary><div class="a"><p>Du kan starte uttak mellom 62 og 75 år. Kalkulatoren regner med uttak ved 67 år. Tar du ut tidlig, fordeles beholdningen over flere år og månedsbeløpet blir lavere.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-personlig-pensjon">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-personlig-pensjon">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/personlig/spare/"><span class="ar">Sparing →</span><h3>Regn på egen sparing</h3><p>Se hvor mye den private pilaren kan vokse til med fast månedlig sparing og renters rente.</p></a>
-        <a class="lc-link" href="/personlig/lonn/"><span class="ar">Lønn etter skatt →</span><h3>Hva sitter du igjen med</h3><p>Pensjonen regnes av brutto lønn — se hva som faktisk havner på konto etter skatt i dag.</p></a>
-        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Finn rom til å spare</h3><p>Sett opp et budsjett og se hvor mye du kan legge til side hver måned til egen pensjon.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-pe-r">
+      <h3 class="lrn-h3" id="lrn-pe-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/personlig/spare/"><span><span class="t">Sparekalkulator</span><span class="d">Se hvordan et månedlig beløp vokser med renters rente fram til du går av.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/lonn/"><span><span class="t">Lønn etter skatt</span><span class="d">Finn ut hva du har igjen hver måned, og hva du kan sette av selv.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -551,8 +458,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v232"></script>
-<script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/core.js?v=v233"></script>
+<script defer src="/shared/lang/no.js?v=v230"></script>
+<script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
 <script>
@@ -613,6 +521,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     state.privat   = parseKr($('p-priv').value);
 
     var r = calcPensjon(state);
+    window._pen = { alder:state.alder, lonn:state.lonn, innskudd:state.innskudd, avk:state.avk, privat:state.privat };
+    if(window.hvtLearn) hvtLearn.update('personlig-pensjon', window._pen);
     var max = Math.max(r.folkeAar, r.tjenesteAar, r.privatAar) || 1;
 
     $('rAar').textContent        = r.aar;
@@ -665,5 +575,180 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
+<script>
+// ── Forklaringsblokken «Folketrygden er et gulv»: lønna i dag mot pensjonen fra 67 som to søyler,
+//    med folketrygd, tjenestepensjon og egen sparing stablet, taket på 7,1G og spøkelser for 2 og 7 %.
+//    Tallene kommer fra kalkulatoren via hvtLearn (window._pen). ──
+(function(){
+  var KEY = 'personlig-pensjon';
+  var NB = '\u00a0';
+  var G1 = 136549, CAP = 7.1 * G1;
+  var DEF = {alder:35, lonn:650000, innskudd:5, avk:5, privat:1500};
+  var root, plot, raw = null, lastW = 0, queued = false;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, s){ root.querySelectorAll('[data-lrn="' + name + '"]').forEach(function(el){ el.textContent = s; }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  // Samme regnemåte som calcPensjon i kalkulatoren
+  function calc(s){
+    var aar = Math.max(1, 67 - s.alder), lonnK = Math.min(s.lonn, CAP);
+    var folk = lonnK * 0.181 * Math.min(40, s.alder + aar - 17) / 20;
+    var innskudd = s.lonn * (s.innskudd / 100), r = (s.avk || 0) / 100;
+    var vf = r === 0 ? aar : (Math.pow(1 + r, aar) - 1) / r;
+    var tj = innskudd * vf / 20, priv = s.privat * 12 * vf / 20, total = folk + tj + priv;
+    return {aar:aar, lonnK:lonnK, folk:folk, tj:tj, priv:priv, total:total, ratio:total / Math.max(1, s.lonn), vf:vf, innskudd:innskudd};
+  }
+  function geo(W){
+    var mob = W < 600, k = W / (mob ? 358 : 820);
+    var b = mob ? {H:392, x0:58, y0:18, y1:330, sx0:62, sx1:178, px0:198, px1:314, g7:320, g2:334, gw:8, labL:0, big:26}
+                : {H:520, x0:72, y0:16, y1:452, sx0:88, sx1:328, px0:368, px1:608, g7:616, g2:634, gw:12, labL:658, big:40};
+    ['x0', 'sx0', 'sx1', 'px0', 'px1', 'g7', 'g2', 'labL'].forEach(function(n){ b[n] = Math.round(b[n] * k); });
+    b.mobile = mob; b.W = W;
+    return b;
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, kr0 = L.kr;
+    var none = !d || !(d.lonn > 0);
+    q('none').hidden = !none;
+    q('main').hidden = none;
+    if(none){ set('sr', ''); return; }
+    function kr(v){ return kr0(v) + NB + 'kr'; }
+    function pctOf(v){ return L.dec(v / d.lonn * 100, 1); }
+    function num(v){ return Math.abs(v - Math.round(v)) < 1e-9 ? String(Math.round(v)) : L.dec(v, 1); }
+    var s = d, R = calc(s), rate = Math.round(R.ratio * 100), G = geo(plot.clientWidth || 820);
+    lastW = G.W;
+    var mine = !(s.alder === DEF.alder && s.lonn === DEF.lonn && s.innskudd === DEF.innskudd && s.avk === DEF.avk && s.privat === DEF.privat);
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    set('stateText', t('lrnPeState', '{a} år, {l}, {i} fra arbeidsgiver, {r} avkastning, {p} i måneden', {a:s.alder, l:kr(s.lonn), i:num(s.innskudd) + NB + '%', r:num(s.avk) + NB + '%', p:kr(s.privat)}));
+
+    // Skala: maks(lønn, taket) × 1,08
+    var yMax = Math.max(s.lonn, CAP) * 1.08;
+    function Y(v){ return G.y1 - v / yMax * (G.y1 - G.y0); }
+    function rect(x0, x1, v0, v1){ return 'M' + x0 + ',' + f1(Y(v0)) + ' H' + x1 + ' V' + f1(Y(v1)) + ' H' + x0 + ' Z'; }
+    var steps = [100000, 200000, 250000, 500000, 1000000], step = steps[steps.length - 1], k;
+    for(k = 0; k < steps.length; k++) if(yMax / steps[k] <= (G.mobile ? 6 : 7)){ step = steps[k]; break; }
+    var gridD = '', lab = '';
+    for(var v = 0; v <= yMax; v += step){
+      if(v > 0) gridD += 'M' + G.x0 + ',' + f1(Y(v)) + ' H' + (G.px1 + (G.mobile ? 4 : 8)) + ' ';
+      lab += '<span class="lrn-pe-yt" style="top:' + f1(Y(v) - 8) + 'px;width:' + (G.x0 - 12) + 'px">' + esc(kr0(v)) + '</span>';
+    }
+    var b1 = R.folk, b2 = b1 + R.tj, b3 = b2 + R.priv, overCap = s.lonn > CAP, capY = f1(Y(CAP));
+    var D = {
+      grid:gridD, base:'M' + (G.sx0 - 8) + ',' + f1(Y(0)) + ' H' + (G.px1 + 8),
+      folk:rect(G.px0, G.px1, 0, b1), tj:rect(G.px0, G.px1, b1, b2), priv:rect(G.px0, G.px1, b2, b3),
+      sep:'M' + G.px0 + ',' + f1(Y(b1)) + ' H' + G.px1 + ' M' + G.px0 + ',' + f1(Y(b2)) + ' H' + G.px1,
+      out:rect(G.sx0, G.sx1, 0, s.lonn) + ' ' + rect(G.px0, G.px1, 0, s.lonn),
+      over:overCap ? rect(G.sx0, G.sx1, CAP, s.lonn) : '',
+      cap:'M' + (G.sx0 - 8) + ',' + capY + ' H' + (G.mobile ? G.g2 + G.gw + 4 : G.labL - 6),
+      ghost:'', lead:''
+    };
+
+    // Spøkelser for 2 % og 7 % (skjules når de er lik din egen sats)
+    var ghosts = [];
+    [7, 2].forEach(function(p){
+      if(Math.abs(p - s.innskudd) < 1e-9) return;
+      var g = calc({alder:s.alder, lonn:s.lonn, innskudd:p, avk:s.avk, privat:s.privat});
+      ghosts.push({p:p, x0:p === 7 ? G.g7 : G.g2, top:b1 + g.tj, tj:g.tj, rate:Math.round(g.ratio * 100)});
+    });
+    ghosts.forEach(function(g){ D.ghost += rect(g.x0, g.x0 + G.gw, b1, g.top) + ' '; });
+    function gName(p){ return p === 2 ? t('lrnPeMin', '2' + NB + '% (minstekravet)') : p + NB + '%'; }
+    if(!G.mobile){
+      // Etiketter i skinnen til høyre, sortert ovenfra og skjøvet fra hverandre
+      var items = ghosts.map(function(g){ return {g:g, d:Y(g.top), h:32}; });
+      items.sort(function(a, b){ return a.d - b.d; });
+      items.forEach(function(it, j){ it.y = it.d - 8; if(j > 0) it.y = Math.max(it.y, items[j - 1].y + items[j - 1].h + 6); });
+      items.forEach(function(it){
+        lab += '<span class="lrn-pe-gh" style="left:' + G.labL + 'px;top:' + f1(it.y) + 'px"><b>' + esc(gName(it.g.p)) + '</b><span>' + esc(kr(it.g.tj) + ', ' + it.g.rate + NB + '%') + '</span></span>';
+        D.lead += 'M' + (it.g.x0 + G.gw) + ',' + f1(it.d) + ' H' + (G.labL - 12) + ' L' + (G.labL - 5) + ',' + f1(it.y + 8) + ' ';
+      });
+    } else {
+      ghosts.forEach(function(g){ lab += '<span class="lrn-pe-ghm" style="left:' + f1(g.x0 + G.gw / 2 - 12) + 'px;top:' + f1(Y(g.top) - 16) + 'px">' + g.p + NB + '%</span>'; });
+    }
+
+    // Lagetiketter i flaten (store skjermer)
+    if(!G.mobile){
+      [[ph('Folketrygd'), 0, b1, R.folk], [ph('Tjenestepensjon'), b1, b2, R.tj], [ph('Egen sparing'), b2, b3, R.priv]].forEach(function(l){
+        var hgt = Y(l[1]) - Y(l[2]), two = hgt >= 46, hh = two ? 36 : 18;
+        if(hgt < 14) return;
+        lab += '<span class="lrn-pe-chip' + (two ? ' two' : '') + '" style="left:' + (G.px0 + 8) + 'px;top:' + f1((Y(l[1]) + Y(l[2])) / 2 - hh / 2) + 'px"><b>' + esc(l[0]) + '</b><span>' + esc(kr(l[3]) + ' · ' + pctOf(l[3]) + NB + '%') + '</span></span>';
+      });
+    }
+
+    // Gap og erstatningsgrad
+    var gapAmt = s.lonn - R.total, regionTop = Y(s.lonn), regionBot = Y(R.total), roomy = regionBot - regionTop >= G.big + 40;
+    if(gapAmt > 0) lab += '<span class="lrn-pe-gap" style="left:' + (G.px0 + (G.mobile ? 7 : 10)) + 'px;top:' + f1(roomy ? regionTop + 8 : regionTop - 24) + 'px">'
+      + esc(G.mobile ? t('lrnPeGapM', 'Gap {k}', {k:kr(gapAmt)}) : t('lrnPeGap', 'Gap: {k} i året', {k:kr(gapAmt)})) + '</span>';
+    lab += '<span class="lrn-pe-pct" style="left:' + (G.px0 + (G.mobile ? 7 : 10)) + 'px;top:' + f1(regionBot - 8 - G.big) + 'px"><b>' + rate + NB + '%</b>' + (G.mobile ? '' : '<span>' + esc(t('lrnPeOfPay', 'av lønna')) + '</span>') + '</span>';
+    // Taket
+    if(G.mobile) lab += '<span class="lrn-pe-capm" style="left:' + (G.g2 + G.gw + 4 - 32) + 'px;top:' + f1(capY - 18) + 'px">7,1G</span>';
+    else lab += '<span class="lrn-pe-capl" style="left:' + G.labL + 'px;top:' + f1(capY - 8) + 'px"><b>' + esc(t('lrnPeCapL', '7,1G = {k}.', {k:kr(CAP)})) + '</b><span>' + esc(t('lrnPeCapT', 'Lønn over streken gir ikke mer folketrygd.')) + '</span></span>';
+    if(overCap && Y(CAP) - Y(s.lonn) >= 20) lab += '<span class="lrn-pe-overl" style="left:' + (G.sx0 + 8) + 'px;top:' + f1((Y(CAP) + Y(s.lonn)) / 2 - 9) + 'px">'
+      + esc(G.mobile ? t('lrnPeOverM', 'Over taket') : t('lrnPeOver', 'Over taket: {k}', {k:kr(s.lonn - CAP)})) + '</span>';
+    // Navnene under søylene
+    var bt = G.y1 + 8;
+    lab += '<span class="lrn-pe-bot" style="left:' + G.sx0 + 'px;top:' + bt + 'px;width:' + (G.sx1 - G.sx0) + 'px"><span>' + esc(t('lrnPeBotL', 'Lønna di i dag')) + '</span><b>' + esc(kr0(s.lonn)) + ' <i>kr</i></b></span>';
+    lab += '<span class="lrn-pe-bot" style="left:' + G.px0 + 'px;top:' + bt + 'px;width:' + (G.px1 - G.px0) + 'px"><span>' + esc(t('lrnPeBotP', 'Pensjon per år fra 67')) + '</span><b>' + esc(kr0(R.total)) + ' <i>kr</i></b></span>';
+
+    plot.classList.toggle('m', G.mobile);
+    plot.style.height = G.H + 'px';
+    var svg = plot.querySelector('svg');
+    svg.setAttribute('viewBox', '0 0 ' + G.W + ' ' + G.H);
+    for(var n in D) svg.querySelectorAll('[data-p="' + n + '"]').forEach(function(el){ el.setAttribute('d', D[n]); });
+    q('labels').innerHTML = lab;
+
+    // Legenden på mobil
+    set('mlPriv', kr(R.priv) + ' · ' + pctOf(R.priv) + NB + '%');
+    set('mlTj', kr(R.tj) + ' · ' + pctOf(R.tj) + NB + '%');
+    set('mlFolk', kr(R.folk) + ' · ' + pctOf(R.folk) + NB + '%');
+    // Spøkelsene i legenden, før linja for taket
+    var ml = q('ml'), capLi = ml.lastElementChild;
+    ml.querySelectorAll('li.gx').forEach(function(li){ li.remove(); });
+    ghosts.forEach(function(g){
+      var li = document.createElement('li');
+      li.className = 'gx';
+      li.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect class="lrn-pe-sw g" x="0.5" y="0.5" width="13" height="13"/></svg><span>' + esc(gName(g.p) + ': ' + kr(g.tj) + ', ' + g.rate + NB + '%') + '</span>';
+      ml.insertBefore(li, capLi);
+    });
+    set('mlCap', t('lrnPeCapL', '7,1G = {k}.', {k:kr(CAP)}) + ' ' + t('lrnPeCapT', 'Lønn over streken gir ikke mer folketrygd.'));
+
+    // Teksten ved siden av og regnestykkene
+    set('sSum', kr(R.total)); set('sPct', rate + NB + '%'); set('sPer1000', kr(1000 * 12 * R.vf / 20));
+    set('fLonnK', kr0(R.lonnK)); set('fFolk', kr(R.folk));
+    set('fTjSub', t('lrnPeTjSub', '{p} av {l} = {i} i året', {p:num(s.innskudd) + NB + '%', l:kr(s.lonn), i:kr(R.innskudd)}));
+    set('fTjInn', kr0(R.innskudd)); set('fVf', L.dec(R.vf, 2)); set('fTj', kr(R.tj));
+    set('fPrivSub', t('lrnPePrivSub', '{m} i måneden = {a} i året', {m:kr(s.privat), a:kr(s.privat * 12)}));
+    set('fPrivInn', kr0(s.privat * 12)); set('fPriv', kr(R.priv));
+    var r = s.avk / 100;
+    set('fVfTxt', t('lrnPeVf', 'Vekstfaktoren {vf} er {n} årlige innskudd som hvert vokser med {a} i året, ((1 + {r}) opphøyd i {n} − 1) ÷ {r}. Den gjør årene fram til 67 viktigere enn beløpet.', {vf:L.dec(R.vf, 2), n:R.aar, a:num(s.avk) + NB + '%', r:String(r).replace('.', ',')}));
+    // Tabellen
+    set('tFolk', kr0(R.folk)); set('tFolkP', pctOf(R.folk)); set('tTj', kr0(R.tj)); set('tTjP', pctOf(R.tj));
+    set('tPriv', kr0(R.priv)); set('tPrivP', pctOf(R.priv)); set('tSum', kr0(R.total)); set('tSumP', pctOf(R.total));
+    set('tLonn', kr0(s.lonn)); set('tGap', kr0(gapAmt)); set('tGapP', pctOf(gapAmt));
+    set('qEks', mine ? t('lrnPeQDine', 'Med tallene dine er det {s} av {l}, altså {p}.', {s:kr(R.total), l:kr(s.lonn), p:rate + NB + '%'}) : t('lrnPeQEks', 'I eksempelet over er det {s} av {l}, altså {p}.', {s:kr(R.total), l:kr(s.lonn), p:rate + NB + '%'}));
+    set('sr', t('lrnPeSr', 'Pensjonen blir {s} i året, {p} av lønna di i dag: folketrygd {f}, tjenestepensjon {t} og egen sparing {e}. Gapet opp til lønna er {g} i året.', {s:kr(R.total), p:rate + NB + '%', f:kr(R.folk), t:kr(R.tj), e:kr(R.priv), g:kr(gapAmt)}));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-pe');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-pe-plot');
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._pen || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
 </body>
 </html>

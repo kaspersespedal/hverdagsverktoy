@@ -48,7 +48,7 @@ var SEARCH_DATA = [
 
   // Selskap
   {name:'Velg selskapsform',desc:'Hvilken selskapsform passer for deg? ENK, AS, ANS, DA eller KS',url:'/selskap/#selskap-velg-card',tags:'selskapsform velge starte bedrift virksomhet enk as ans da ks company form choose',type:'tool',page:'Selskap',sk:'selskapVelg'},
-  {name:'Enkeltpersonforetak (ENK)',desc:'Den enkleste måten å starte for seg selv — gratis og uten krav til kapital',url:'/selskap/#selskap-enk-card',tags:'enkeltpersonforetak enk selvstendig næringsdrivende frilanser gratis registrering sole proprietorship',type:'tool',page:'Selskap',sk:'enk'},
+  {name:'Enkeltpersonforetak (ENK)',desc:'Den enkleste måten å starte for seg selv — uten krav til kapital',url:'/selskap/#selskap-enk-card',tags:'enkeltpersonforetak enk selvstendig næringsdrivende frilanser gratis registrering sole proprietorship',type:'tool',page:'Selskap',sk:'enk'},
   {name:'Aksjeselskap (AS)',desc:'Begrenset ansvar, aksjekapital og profesjonell drift',url:'/selskap/#selskap-as-card',tags:'aksjeselskap as stiftelse styret generalforsamling aksjekapital vedtekter 30000 company limited',type:'tool',page:'Selskap',sk:'as'},
   {name:'Ansvarlig selskap (ANS / DA)',desc:'Partnerskap med personlig ansvar — solidarisk eller delt',url:'/selskap/#selskap-ans-card',tags:'ansvarlig selskap ans da partnerskap solidarisk delt ansvar selskapsavtale partnership',type:'tool',page:'Selskap',sk:'ans'},
   {name:'Kommandittselskap (KS)',desc:'To typer deltakere med ulik risiko — komplementar og kommandittist',url:'/selskap/#selskap-ks-card',tags:'kommandittselskap ks komplementar kommandittist limited partnership begrenset ansvar',type:'tool',page:'Selskap',sk:'ks'},

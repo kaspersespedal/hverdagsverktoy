@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v3">
 <style>
 /* Uttaksbeskatning — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -195,145 +196,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row:last-child{margin:0}
 .howto-body .howto-row .h-title{color:var(--ink);font-weight:600}
 .howto-body .howto-row .h-desc{color:var(--ink2)}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -608,76 +470,122 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: skatt-uttak =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-skatt-uttak">Hva som skjer når du tar ut en eiendel</h2><p class="lc-intro">Tar du en eiendel ut av virksomheten til privat bruk, regnes det som om du solgte den til deg selv til markedsverdi. Først regnes gevinsten, så legges skattene på.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Uttaksgevinst</b><span class="tag">Grunnlag</span></span><span class="fig">600 000<span class="u">kr</span></span><p class="dsc">Markedsverdi minus skattemessig nedskrevet verdi, ganget med andelen du tar ut privat. Med 1 mill. og 400 000 kr blir gevinsten 600 000 kr. Det er gevinsten, ikke hele verdien, som skattlegges.</p></div>
-        <div class="lc-led"><span class="nm"><b>Alminnelig inntektsskatt</b><span class="tag">Sats</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Grunnskatten på gevinsten. Gjelder både ENK (direkte på deg) og som første nivå i et AS (selskapsskatt).</p></div>
-        <div class="lc-led"><span class="nm"><b>Trygdeavgift næring</b><span class="tag">Sats</span></span><span class="fig">10,8<span class="u">%</span></span><p class="dsc">Legges på for ENK når uttaket regnes som personinntekt. Under 99 650 kr betaler du ingenting, og like over grensen trappes avgiften gradvis opp (25 % av beløpet over grensen).</p></div>
-        <div class="lc-led"><span class="nm"><b>Trinnskatt</b><span class="tag">Sats</span></span><span class="fig">1,7–17,8<span class="u">%</span></span><p class="dsc">Ekstra skatt i fem trinn for ENK med personinntekt. Satsen stiger jo høyere inntekten er, og treffer bare beløpet over hver grense.</p></div>
-        <div class="lc-led"><span class="nm"><b>Oppjusteringsfaktor</b><span class="tag">Faktor</span></span><span class="fig">1,72<span class="u">×</span></span><p class="dsc">For AS ganges utbyttedelen med 1,72 før den skattlegges. Det er denne oppjusteringen som løfter den reelle utbytteskatten over 22 %.</p></div>
-        <div class="lc-led"><span class="nm"><b>Utbytteskatt aksjonær</b><span class="tag">Sats</span></span><span class="fig">37,84<span class="u">%</span></span><p class="dsc">Det andre nivået for AS. Etter at selskapet har betalt 22 %, skattlegges resten hos deg som aksjonær: 1,72 × 22 % gir 37,84 %.</p></div>
+  <div class="lrn" id="lrn-ut">
+    <section class="lrn-sec" aria-labelledby="lrn-ut-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-ut-h"><span data-lrn="hEnk">Du skattes for gevinsten, ikke for hele verdien</span><span data-lrn="hAs" hidden>I AS skattes gevinsten i selskapet og hele verdien hos deg</span></h2>
+        <p class="lrn-lede"><span data-lrn="hEnk">Tar du en eiendel ut av virksomheten, regnes det som om du solgte den til deg selv til markedsverdi. Bare det som ligger over den skattemessige verdien, blir skattlagt.</span><span data-lrn="hAs" hidden>Tar du en eiendel ut av et AS, regnes det som om selskapet solgte den til markedsverdi, og selskapet skattes for gevinsten. Det du får, er utbytte, og det skattes av hele verdien.</span></p>
       </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn markedsverdien i kalkulatoren.</p>
+      <div class="lrn-ut-main" data-lrn="main">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <div class="lrn-figrow ut">
+          <figure class="lrn-fig" aria-describedby="lrn-ut-sr">
+            <figcaption class="lrn-cap">Kroner, i samme målestokk fra markedsverdi til skatt</figcaption>
+            <div class="lrn-plot is-static lrn-ut-plot" dir="ltr">
+              <svg aria-hidden="true" focusable="false">
+                <defs>
+                  <pattern id="lrn-ut-hoved" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-ut-pl" x1="0" y1="0" x2="0" y2="6"/></pattern>
+                  <pattern id="lrn-ut-skrav" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-ut-pr" x="0" y="0" width="5" height="5"/><line class="lrn-ut-ph" x1="0" y1="0" x2="0" y2="5"/></pattern>
+                  <pattern id="lrn-ut-lys" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-ut-pz" x1="0" y1="0" x2="0" y2="7"/></pattern>
+                  <pattern id="lrn-ut-vert" width="5" height="5" patternUnits="userSpaceOnUse"><line class="lrn-ut-pv" x1="2.5" y1="0" x2="2.5" y2="5"/></pattern>
+                  <pattern id="lrn-ut-hor" width="5" height="5" patternUnits="userSpaceOnUse"><line class="lrn-ut-pv" x1="0" y1="2.5" x2="5" y2="2.5"/></pattern>
+                </defs>
+              <path class="lrn-ut-dim" data-p="dim"/>
+              <path class="lrn-ut-svf" data-p="sv"/>
+              <path class="lrn-ut-svh" data-p="sv"/>
+              <path class="lrn-ut-gain" data-p="gain"/>
+              <path class="lrn-ut-chip" data-p="chip"/>
+              <path class="lrn-ut-fun" data-p="fun"/>
+              <path class="lrn-ut-pipe" data-p="pipe"/>
+              <path class="lrn-ut-gain" data-p="rem"/>
+              <path data-p="s1"/>
+              <path data-p="s1"/>
+              <path data-p="s2"/>
+              <path data-p="s2"/>
+              <path data-p="s3"/>
+              <path data-p="s3"/>
+              <g class="lrn-ut-cmp"><path data-p="k1"/><path data-p="k1"/><path data-p="k2"/><path data-p="k2"/><path data-p="k3"/><path data-p="k3"/></g>
+              <path class="lrn-ut-lead" data-p="lead"/>
+              <path class="lrn-ut-dot" data-p="dot"/>
+              <path class="lrn-ut-rule" data-p="rule"/>
+              <path class="lrn-ut-line" data-p="line"/>
+              </svg>
+              <div class="lrn-labels" data-lrn="labels"></div>
+            </div>
+          </figure>
+          <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes"></ol>
+        </div>
+        <div class="lrn-ut-close"><span data-lrn="closeLead"></span><span class="v" data-lrn="closeVal"></span></div>
+        <details class="lrn-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table>
+            <caption>Skatt på uttaket i de to virksomhetstypene</caption>
+            <thead><tr><th scope="col" class="s">Virksomhetstype</th><th scope="col">Skatt</th><th scope="col">Av gevinsten</th><th scope="col">Netto etter skatt</th></tr></thead>
+            <tbody>
+              <tr data-lrn="tEnk"><th scope="row">ENK</th><td data-lrn="tEnkS"></td><td data-lrn="tEnkE"></td><td data-lrn="tEnkN"></td></tr>
+              <tr data-lrn="tAs"><th scope="row">AS</th><td data-lrn="tAsS"></td><td data-lrn="tAsE"></td><td data-lrn="tAsN"></td></tr>
+            </tbody>
+          </table></div>
+        </details>
+      </div>
+      <p class="lrn-sr" id="lrn-ut-sr" data-lrn="sr"></p>
     </section>
-    <section class="lc-sec" aria-labelledby="lcB-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-skatt-uttak">Satsene for 2026</h2></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Alminnelig inntekt</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Selskapsskatt (AS)</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Oppjusteringsfaktor utbytte</span><span class="v">1,72<span class="u">×</span></span></div>
-        <div class="lc-kv"><span class="k">Utbytteskatt aksjonær</span><span class="v">37,84<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Trygdeavgift næring (ENK)</span><span class="v">10,8<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Nedre grense trygdeavgift</span><span class="v">99 650<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Opptrappingssats trygdeavgift</span><span class="v">25<span class="u">%</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Trinnskatt 2026 – sats på inntekt over hver grense</caption>
-          <thead><tr><th>Trinn</th><th class="r">Inntekt over</th><th class="r">Sats</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Trinn 1</span></td><td class="r">226 100 kr</td><td class="r">1,7 %</td></tr>
-            <tr><td><span class="step">Trinn 2</span></td><td class="r">318 300 kr</td><td class="r">4,0 %</td></tr>
-            <tr><td><span class="step">Trinn 3</span></td><td class="r">725 050 kr</td><td class="r">13,7 %</td></tr>
-            <tr><td><span class="step">Trinn 4</span></td><td class="r">980 100 kr</td><td class="r">16,8 %</td></tr>
-            <tr><td><span class="step">Trinn 5</span></td><td class="r">1 467 200 kr</td><td class="r">17,8 %</td></tr>
-          </tbody>
-        </table>
+
+    <details class="lrn-calc" data-lrn="main">
+      <summary><h3 class="lrn-h3" data-lrn="rH">Regnestykket</h3><svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+      <div class="lrn-calc-b">
+        <div class="lrn-cards ut">
+          <div class="lrn-card">
+            <span class="lrn-card-l">Gevinsten</span>
+            <div class="lrn-f"><span class="nw">(<i>markedsverdi</i> − <i>skattemessig verdi</i>)</span><span class="nw">× <i>andel privat</i></span><span class="nw">= <i>gevinst</i></span></div>
+            <div class="lrn-f n"><span class="nw">(<span data-lrn="fMv"></span> − <span data-lrn="fSv"></span>)</span><span class="nw">× <span data-lrn="fAn"></span>&nbsp;%</span><span>=</span><b data-lrn="fG"></b></div>
+          </div>
+          <div class="lrn-card">
+            <span class="lrn-card-l" data-lrn="fForm">Effektiv sats</span>
+            <div class="lrn-f"><i>effektiv sats</i><span>=</span><span class="lrn-frac"><span><i>samlet skatt</i></span><span><i>gevinst</i></span></span></div>
+            <div class="lrn-f n" data-lrn="fHas"><span>=</span><span class="lrn-frac"><span data-lrn="fSk"></span><span data-lrn="fG2"></span></span><span>=</span><b data-lrn="fE"></b></div>
+            <p class="lrn-p" data-lrn="fNo0" hidden>Ingen gevinst, så ingen skatt å dele.</p>
+            <p class="lrn-p" data-lrn="fNoA" hidden>Ingen gevinst å dele skatten på. Utbytteskatten kommer likevel.</p>
+          </div>
         </div>
       </div>
+    </details>
+
+    <section class="lrn-sec lrn-ut-ex" aria-labelledby="lrn-ut-x">
+      <h3 class="lrn-h3" id="lrn-ut-x">Unntak og særregler</h3>
+      <div>
+        <dl class="lrn-ut-dl">
+          <div><dt><span>ENK-vilkåret</span><small>sktl. § 5-2 (1)</small></dt><dd>Uttaksbeskatning gjelder bare der kostprisen er helt eller delvis fradragsført.</dd></div>
+          <div><dt><span>Virksomhetsoverdragelse</span><small>sktl. § 9-7 (4)</small></dt><dd>Unntak ved gave til en arveberettiget som overtar hele eller deler av virksomheten.</dd></div>
+          <div><dt><span>Fritaksmetoden</span><small>sktl. § 2-38</small></dt><dd>Selskap som eier aksjer i et annet selskap: uttak av slike aksjer kan være skattefritt på selskapets hånd.</dd></div>
+          <div><dt><span>Konsernforhold</span></dt><dd>Ved uttak fra datterselskap til aksjonær er det datterselskapet som er subjekt for uttaksbeskatningen.</dd></div>
+          <div><dt><span>Løpende privat bruk</span></dt><dd>Bruker du selskapets eiendeler løpende, for eksempel bolig, båt eller bil, beskattes det som utbytte hos aksjonæren etter aksjonærmodellen.</dd></div>
+        </dl>
+        <p class="lrn-fine lrn-ut-src">Skatteloven § 5-2, § 5-3, § 10-11 og kap. 9</p>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-skatt-uttak">Det som er lett å gå glipp av</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Det er gevinsten som skattlegges, ikke hele verdien</h3><p>Skatten regnes av forskjellen mellom markedsverdi og skattemessig nedskrevet verdi. Er den nedskrevne verdien like høy som markedsverdien eller høyere, er det ingen gevinst. Da viser kalkulatoren ingen skatt.</p></div>
-        <div class="lc-note"><h3>AS skattlegges i to lag</h3><p>Først betaler selskapet 22 % selskapsskatt av gevinsten. Det som er igjen, regnes som utbytte til deg og skattlegges en gang til. Derfor blir den effektive satsen for AS som regel høyere enn for et ENK.</p></div>
-        <div class="lc-note"><h3>Skjermingsfradraget trekkes fra utbyttet</h3><p>For AS kan du legge inn et skjermingsfradrag. Det trekkes fra utbyttet før det ganges med 1,72 og skattlegges med 22 %. Hele gevinsten betaler fortsatt selskapsskatt.</p></div>
-        <div class="lc-note"><h3>Andelen privat bruk styrer regnestykket</h3><p>Bruker du eiendelen bare delvis privat, setter du andelen lavere enn 100 %. Gevinsten og verdien skaleres ned like mye, så skatten følger andelen du tar ut.</p></div>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-ut-q">
+      <h3 class="lrn-h3" id="lrn-ut-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hva er uttaksbeskatning?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det er skatten du betaler når du tar noe ut av virksomheten uten å selge det. Den gjelder eiendeler, varer og tjenester, og den kommer selv om ingen penger skifter hender.</p></div></details>
+        <details><summary>Hvordan regnes selve gevinsten?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Gevinsten er det markedsverdien ligger over den skattemessige verdien, ganget med andelen du tar ut privat. Er den skattemessige verdien like høy eller høyere, er gevinsten null og det blir ingen uttaksskatt. I et AS kommer utbytteskatten likevel, fordi det du tar ut, er utbytte.</p></div></details>
+        <details open><summary>Hvorfor er skatten høyere for AS enn for ENK?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>I et AS betaler selskapet 22&nbsp;% av gevinsten, og du betaler utbytteskatt av hele verdien du tar ut, fordi den regnes som utbytte. Hvordan utbytteskatten virker, står under <a href="/skatt/utbytte/">Utbytteskatt</a>. Med standardtallene ender AS på 85,07&nbsp;% av gevinsten, mens ENK ligger mellom 22&nbsp;% og 34,94&nbsp;%.</p></div></details>
+        <details><summary>Når kommer trygdeavgift og trinnskatt i tillegg?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det skjer i ENK, når du oppgir at uttaket er personinntekt. Da kommer trygdeavgift på 10,8&nbsp;% og trinnskatt på 1,7 til 17,8&nbsp;% i tillegg til de 22&nbsp;%. Er uttaket ikke personinntekt, blir det bare 22&nbsp;%.</p></div></details>
+        <details><summary>Hva betyr skjermingsfradraget for AS?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det er et fradrag som skjermer en del av utbyttet fra skatt. Hvordan det regnes ut, står under <a href="/skatt/utbytte/">Utbytteskatt</a>.</p></div></details>
+        <details><summary>Hva betyr den effektive satsen?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Total skatt delt på gevinsten, ikke på markedsverdien. Den viser hvor stor del av gevinsten som går til skatt når alle lagene er lagt sammen, og er nyttig når du sammenligner ENK og AS. I et AS kan den bli over 100&nbsp;%, fordi utbytteskatten regnes av hele verdien.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcD-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-skatt-uttak">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hva er uttaksbeskatning?</summary><div class="a"><p>Tar du en eiendel, vare eller tjeneste ut av virksomheten til privat bruk, regnes det som om du solgte den til deg selv til markedsverdi. Gevinsten skattlegges etter vanlige regler.</p></div></details>
-        <details class="lc-q"><summary>Hvordan regnes selve gevinsten?</summary><div class="a"><p>Gevinst = (markedsverdi − skattemessig nedskrevet verdi) × andel privat. Er markedsverdien like høy som den nedskrevne verdien eller lavere, er gevinsten null, og kalkulatoren viser ingen skatt.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor er skatten høyere for AS enn for ENK?</summary><div class="a"><p>Et AS skattlegges i to lag: 22 % selskapsskatt først, så utbytteskatt hos deg som aksjonær. Utbyttet ganges med 1,72 før skatten på 22 %, så utbytteskatten blir 37,84 %. Et ENK skattlegges bare én gang.</p></div></details>
-        <details class="lc-q"><summary>Når får jeg trygdeavgift og trinnskatt i tillegg?</summary><div class="a"><p>For ENK, når du velger at uttaket er personinntekt. Da kommer 10,8 % trygdeavgift og trinnskatt i tillegg til de 22 %. Er det ikke personinntekt, blir det bare 22 %.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr skjermingsfradraget for AS?</summary><div class="a"><p>Skjermingsfradraget gjør utbyttet som skattlegges mindre. Det trekkes fra etter selskapsskatten, og bare resten ganges med 1,72 og skattlegges med 22 %. Selskapsskatten på 22 % endres ikke.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr den effektive satsen?</summary><div class="a"><p>Det er total skatt delt på uttaksgevinsten. Den viser hvor stor del av gevinsten som går til skatt når alle lagene er lagt sammen. Den gjør det lett å sammenligne ENK og AS.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-skatt-uttak">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-skatt-uttak">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/skatt/utbytte/"><span class="ar">Utbytteskatt →</span><h3>Utbytteskatt</h3><p>Se hvordan oppjusteringen på 1,72 og 22 % gir utbytteskatten når du tar utbytte fra eget AS.</p></a>
-        <a class="lc-link" href="/skatt/inntekt/"><span class="ar">Inntektsskatt →</span><h3>Inntektsskatt</h3><p>Se hvordan trinnskatt og trygdeavgift slår inn på vanlig inntekt. Det er de samme satsene som brukes for ENK her.</p></a>
-        <a class="lc-link" href="/selskap/"><span class="ar">Selskap →</span><h3>Selskapsformer (AS/ENK)</h3><p>Sammenlign hvordan ENK og AS skattlegges før du bestemmer hvilken form som passer.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-ut-r">
+      <h3 class="lrn-h3" id="lrn-ut-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/skatt/utbytte/"><span><span class="t">Utbytteskatt</span><span class="d">De to lagene i AS forklart, med oppjusteringen på 1,72.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/kalkulator/avs/"><span><span class="t">Avskrivning</span><span class="d">Den skattemessige verdien kommer fra avskrivningene.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/selskap/"><span><span class="t">Selskap</span><span class="d">Se hva som skiller ENK og AS før du velger selskapsform.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -697,8 +605,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v232"></script>
-<script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/core.js?v=v233"></script>
+<script defer src="/shared/lang/no.js?v=v230"></script>
+<script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
 <script>
@@ -804,16 +713,16 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       } else {
         var skjerming = parseAmt('uttak-skjerming');
         data.skjerming = skjerming;
-        if(gevinst > 0){
-          data.selskapsskatt = gevinst * 0.22;
-          var etterSelskapsskatt = gevinst - data.selskapsskatt;
-          var utbytteGrunnlag = etterSelskapsskatt - skjerming;
-          var oppjustert = Math.max(0, utbytteGrunnlag) * 1.72;
-          data.utbytteskatt = oppjustert * 0.22;
-          data.total = data.selskapsskatt + data.utbytteskatt;
-          data.netto = bruttoUttak - data.total;
-          data.effSats = (data.total / gevinst) * 100;
-        }
+        // Selskapet skattes for uttaket som et salg til markedsverdi (sktl. § 5-2), altså for gevinsten.
+        // Det aksjonæren får, er utbytte: hele verdien som overføres uten vederlag (sktl. § 10-11 annet ledd,
+        // verdsatt til omsetningsverdi etter § 5-3). Utbytteskatten kommer derfor også når det ikke er gevinst.
+        data.selskapsskatt = gevinst * 0.22;
+        var utbytteGrunnlag = bruttoUttak - skjerming;
+        var oppjustert = Math.max(0, utbytteGrunnlag) * 1.72;
+        data.utbytteskatt = oppjustert * 0.22;
+        data.total = data.selskapsskatt + data.utbytteskatt;
+        data.netto = bruttoUttak - data.total;
+        data.effSats = gevinst > 0 ? (data.total / gevinst) * 100 : 0;
       }
       return data;
     }
@@ -821,26 +730,36 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     function recalc(){
       toggleFields();
       var d = compute();
+      // Til forklaringsblokken: inndataene (den regner begge virksomhetstypene selv, med samme matte)
+      var pEl = document.getElementById('uttak-personinntekt');
+      window._uttak = { type: d.type, mv: d.mv, sv: d.sv, andel: d.andelPct, sk: parseAmt('uttak-skjerming'), pers: !pEl || pEl.value === 'ja' };
+      if(window.hvtLearn) hvtLearn.update('skatt-uttak', window._uttak);
       var setText = function(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; };
       var setHidden = function(id, hidden){ var el = document.getElementById(id); if(el) el.classList.toggle('hidden', hidden); };
 
       var noGain = d.gevinst <= 0;
+      // I AS kan det være skatt uten gevinst (utbytteskatten), så «ingen skatt» og «ingen gevinst» er ulike ting
+      var noTax = d.total <= 0;
+      // Effektiv sats er skatt delt på gevinsten, så den finnes ikke når det er skatt uten gevinst
+      var effTxt = noGain ? (noTax ? '0,00 %' : '–') : fmtPct2(d.effSats);
       // Stort tall = bare beløpet. Setningen under er én tekstnode, så _ph-ordboka oversetter den.
-      setText('rUttakVal', noGain ? '0 kr' : fmtKr(d.total));
+      setText('rUttakVal', noTax ? '0 kr' : fmtKr(d.total));
       var subStr;
-      if(noGain){
+      if(noTax){
         subStr = 'Ingen gevinst: skattemessig verdi er like høy som markedsverdien eller høyere.';
       } else if(d.type === 'enk'){
         subStr = d.personinntekt
           ? 'Inntektsskatt, trygdeavgift og trinnskatt på gevinsten.'
           : 'Bare 22 % inntektsskatt på gevinsten.';
       } else {
-        subStr = 'Selskapsskatt i AS, pluss utbytteskatt hos deg.';
+        subStr = noGain
+          ? 'Ingen gevinst i selskapet, men verdien du tar ut, er utbytte hos deg.'
+          : 'Selskapsskatt på gevinsten, pluss utbytteskatt på hele verdien hos deg.';
       }
       setText('rUttakSub', subStr);
 
-      setText('hStatTotal', noGain ? '0 kr' : fmtKr(d.total));
-      setText('hStatEffektiv', noGain ? '0,00 %' : fmtPct2(d.effSats));
+      setText('hStatTotal', noTax ? '0 kr' : fmtKr(d.total));
+      setText('hStatEffektiv', effTxt);
 
       var isEnk = d.type === 'enk';
       // ENK-rows
@@ -860,14 +779,14 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
       if(!isEnk){
         setText('rSelskap', noGain ? '–' : fmtKr(d.selskapsskatt));
-        setText('rUtbytte', noGain ? '–' : fmtKr(d.utbytteskatt));
+        setText('rUtbytte', d.utbytteskatt > 0 ? fmtKr(d.utbytteskatt) : '–');
       }
 
       // ── RE-SKIN: summary-stripe + data-viz ──
       setText('rsSumGevinst', fmtKr(d.gevinst));
-      setText('rsSumSkatt', noGain ? '0 kr' : fmtKr(d.total));
-      setText('rsSumNetto', noGain ? fmtKr(d.bruttoUttak) : fmtKr(d.netto));
-      setText('rsSumEff', noGain ? '0,00 %' : fmtPct2(d.effSats));
+      setText('rsSumSkatt', noTax ? '0 kr' : fmtKr(d.total));
+      setText('rsSumNetto', noTax ? fmtKr(d.bruttoUttak) : fmtKr(d.netto));
+      setText('rsSumEff', effTxt);
 
       var vizEl = document.getElementById('rsViz');
       if(vizEl){
@@ -875,7 +794,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
           ? [ {l:'Netto', v:d.netto}, {l:'Alm. skatt', v:d.almSkatt}, {l:'Trygdeavgift', v:d.trygd}, {l:'Trinnskatt', v:d.trinn} ]
           : [ {l:'Netto', v:d.netto}, {l:'Selskapsskatt', v:d.selskapsskatt}, {l:'Utbytteskatt', v:d.utbytteskatt} ];
         segs = segs.filter(function(s){ return s.v > 0; });
-        if(!noGain && d.bruttoUttak > 0 && d.total > 0 && segs.length){
+        if(!noTax && d.bruttoUttak > 0 && segs.length){
           var ops = [1, .56, .4, .28];
           var barHtml = '', legHtml = '';
           segs.forEach(function(s, i){
@@ -959,6 +878,400 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', init);
   } else { init(); }
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken for uttak: markedsverdien som én stolpe delt ved den skattemessige verdien, og sporet videre
+//    til skatten i samme kronemålestokk. I ENK går bare gevinsten videre. I AS skattes gevinsten i selskapet, mens
+//    hele verdien du tar ut er utbytte (sktl. § 10-11 annet ledd), så AS-sporet går fra hele stolpen. Det andre
+//    sporet vises dempet under, til sammenligning. Matten er den samme som compute() i kalkulatoren over. ──
+(function(){
+  var KEY = 'skatt-uttak';
+  var NB = '\u00a0';
+  var root, plot, raw = null, lastW = 0, queued = false, ctx = null, fam = '', serif = '', forceNote = false;
+  var mqDesk = window.matchMedia ? window.matchMedia('(min-width: 641px)') : null;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function all(name){ return root.querySelectorAll('[data-lrn="' + name + '"]'); }
+  function set(name, s){ all(name).forEach(function(el){ el.textContent = s; }); }
+  function show(name, on){ all(name).forEach(function(el){ el.hidden = !on; }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  // Tekstbredde målt med skriften siden faktisk bruker (fungerer på alle språk)
+  function tw(s, px, wt, isSerif){
+    if(!ctx) ctx = document.createElement('canvas').getContext('2d');
+    ctx.font = (wt || 400) + ' ' + px + 'px ' + (isSerif ? serif : fam);
+    return ctx.measureText(String(s)).width * 1.02;
+  }
+  function calcTrygd(inn){ var NEDRE = 99650; if(inn <= NEDRE) return 0; return Math.min(inn * 0.108, (inn - NEDRE) * 0.25); }
+  function calcTrinn(inn){
+    var tr = [[1467200, 0.178], [980100, 0.168], [725050, 0.137], [318300, 0.04], [226100, 0.017]], sum = 0, rest = inn, n = 0;
+    for(var i = 0; i < tr.length; i++) if(rest > tr[i][0]){ if(!n) n = tr.length - i; sum += (rest - tr[i][0]) * tr[i][1]; rest = tr[i][0]; }
+    return {sum:sum, n:n};
+  }
+  // Begge virksomhetstypene, regnet som compute() i kalkulatoren
+  function compute(mv, sv, andelPct, sk, pers){
+    var andel = andelPct / 100, gevinst = Math.max(0, (mv - sv) * andel), brutto = mv * andel;
+    var enk = {alm:0, trygd:0, trinn:0, total:0, netto:brutto, eff:0, n:0}, as = {sel:0, utb:0, total:0, netto:brutto, eff:0};
+    if(gevinst > 0){
+      enk.alm = gevinst * 0.22;
+      if(pers){ enk.trygd = calcTrygd(gevinst); var tt = calcTrinn(gevinst); enk.trinn = tt.sum; enk.n = tt.n; }
+      enk.total = enk.alm + enk.trygd + enk.trinn; enk.netto = brutto - enk.total; enk.eff = enk.total / gevinst * 100;
+    }
+    as.sel = gevinst * 0.22;
+    as.utb = Math.max(0, brutto - sk) * 1.72 * 0.22;
+    as.total = as.sel + as.utb; as.netto = brutto - as.total; as.eff = gevinst > 0 ? as.total / gevinst * 100 : 0;
+    return {gevinst:gevinst, brutto:brutto, enk:enk, as:as};
+  }
+  function geo(W){
+    return W < 600
+      ? {mobile:true, W:W, dimY:28, barTop:40, barH:64, ms:20, fz:11.5, fun:64, bar2H:40, pipe:52, trH:38, rowH:28, ledX:0, ledW:W, cmpH:8, nameFz:12, numFz:15, totFz:19}
+      : {mobile:false, W:W, dimY:30, barTop:44, barH:64, ms:22, fz:12.5, fun:68, bar2H:44, pipe:54, trH:44, rowH:27, ledX:32, ledW:276, cmpH:10, nameFz:12.5, numFz:16, totFz:21};
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, fmt = L.kr;
+    var none = !d || !(d.mv > 0);
+    q('none').hidden = !none;
+    show('main', !none);
+    if(none){ set('sr', ''); return; }
+    function kr(v){ return fmt(v) + NB + 'kr'; }
+    function pc(v){ return L.dec(v, 2) + NB + '%'; }
+    function nb(s){ return String(s).replace(/([0-9]) (?=[0-9]{3}(?![0-9]))/g, '$1' + NB).replace(/([0-9]) (?=%|kr)/g, '$1' + NB); }
+    var cs = getComputedStyle(root);
+    fam = cs.fontFamily || 'Inter, system-ui, sans-serif';
+    serif = cs.getPropertyValue('--font-serif').trim() || 'Georgia, serif';
+    var MV = d.mv, SV = d.sv, AN = d.andel, SK = d.sk, isAs = d.type === 'as', pers = d.pers;
+    var calc = compute(MV, SV, AN, SK, pers), E = calc.enk, A = calc.as, SEL = isAs ? A : E, OTH = isAs ? E : A;
+    var gev = calc.gevinst, brutto = calc.brutto, hasGain = gev > 0, taxed = SEL.total > 0.5, gevFull = Math.max(0, MV - SV), a = AN / 100;
+    var andelTxt = AN % 1 === 0 ? String(AN) : L.dec(AN, 1);
+    var form = isAs ? 'AS' : 'ENK', oForm = isAs ? 'ENK' : 'AS';
+    var G = geo(plot.clientWidth || 800), MOB = G.mobile, W = G.W, fz = G.fz;
+    lastW = W;
+    var scaled = hasGain && a < 0.9999, S = W / MV;
+
+    // Merket, overskriften og ingressen (AS har egen variant: der er hele verdien utbytte)
+    var mine = !(d.type === 'enk' && MV === 1000000 && SV === 400000 && AN === 100 && SK === 0 && pers);
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    var badge = t('lrnUxState', '{f} · markedsverdi {m} · skattemessig verdi {s} · {a} % privat', {f:form, m:kr(MV), s:kr(SV), a:andelTxt});
+    if(isAs && SK > 0) badge += ' · ' + t('lrnUxStateSk', 'skjerming {k}', {k:kr(SK)});
+    if(!isAs && !pers) badge += ' · ' + ph('ikke personinntekt');
+    set('stateText', nb(badge));
+    show('hEnk', !isAs); show('hAs', isAs);
+
+    var texts = '', nums = '', marks = '', notes = [], tag = '', link = '';
+    function T(o){
+      texts += '<div class="lrn-ut-t ' + (o.c || 'i2') + (o.cls ? ' ' + o.cls : '') + '" style="left:' + f1(o.left) + 'px;top:' + f1(o.top) + 'px;' + (o.w ? 'width:' + f1(o.w) + 'px;white-space:normal;' : '') +
+        (o.tx ? 'transform:translateX(' + o.tx + ');' : '') + (o.al ? 'text-align:' + o.al + ';' : '') + 'font-size:' + (o.fs || fz) + 'px;font-weight:' + (o.fw || 400) + ';line-height:' + (o.lh || 16) + 'px">' + esc(nb(o.text)) + '</div>';
+    }
+    function N(o){
+      nums += '<div class="lrn-ut-n ' + (o.c || 'i1') + '" style="left:' + f1(o.left) + 'px;top:' + f1(o.top) + 'px;' + (o.tx ? 'transform:translateX(' + o.tx + ');' : '') +
+        'font-size:' + (o.fs || 20) + 'px;line-height:' + (o.lh || 24) + 'px">' + esc(nb(o.text)) + '</div>';
+    }
+    function mk(num, cx, cy){ marks += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(Math.max(0, Math.min(W - G.ms, cx - G.ms / 2))) + 'px;top:' + f1(cy - G.ms / 2) + 'px">' + num + '</span>'; }
+    function R(x0, y0, x1, y1){ return x1 - x0 > 0.2 && y1 - y0 > 0.2 ? 'M' + f1(x0) + ',' + f1(y0) + ' H' + f1(x1) + ' V' + f1(y1) + ' H' + f1(x0) + ' Z ' : ''; }
+    function sy(g, f){ return f1(0.3635 * g - 0.3505 * f); }
+    var D = {dim:'', sv:'', gain:'', line:'', pipe:'', fun:'', chip:'', rule:'', lead:'', dot:'', rem:'', s1:'', s2:'', s3:'', k1:'', k2:'', k3:''};
+
+    // ── Rad 1: markedsverdien som én stolpe, delt ved den skattemessige verdien ──
+    var y0 = G.barTop, y1 = y0 + G.barH, xSV = Math.min(Math.max(SV, 0), MV) * S, xLine = Math.min(Math.max(xSV, 1), W - 1);
+    var ySV = y1 + (MOB ? 13 : 14), mid = W / 2, dFz = MOB ? 11.5 : 12.5, dNz = MOB ? 16 : 17;
+    // Etiketten og beløpet midt over stolpen, men innenfor kanten når skjermen er smal
+    var dLbl = ph('Markedsverdi ved uttak'), dLw = tw(dLbl, dFz), dMid = Math.max(mid, dLw * 1.06 + 12);
+    T({left:dMid - 7, tx:'-100%', top:4, text:dLbl, c:'i3', lh:20, fs:dFz});
+    N({left:dMid + 7, top:4 + sy(dFz, dNz), text:kr(MV), fs:dNz, lh:20});
+    D.dim = 'M0.5,' + (G.dimY - 5) + ' V' + (G.dimY + 5) + ' M0,' + G.dimY + ' H' + W + ' M' + (W - 0.5) + ',' + (G.dimY - 5) + ' V' + (G.dimY + 5);
+    if(hasGain){ D.sv += R(0, y0, xSV, y1); D.gain += R(xSV, y0, W, y1); } else D.sv += R(0, y0, W, y1);
+    var lblA = isAs ? ph('Skattemessig verdi: ikke gevinst') : ph('Skattemessig verdi: ikke skattlagt'), lblA2 = isAs ? ph('ikke gevinst') : ph('ikke skattlagt'), numFz = MOB ? 20 : 24;
+    var wA = Math.max(tw(lblA, fz, 500), tw(kr(SV), numFz, 500, true)) + 20;
+    var wB = Math.max(tw(ph('Skattemessig verdi'), fz, 500), tw(lblA2, fz), tw(kr(SV), 20, 500, true)) + 18;
+    var modeSV = !hasGain ? 'N' : (xSV >= 10 + wA + 8 ? 'A' : (xSV >= 6 + wB + 6 ? 'B' : 'C'));
+    var fOff = 0, bottom = ySV + G.ms / 2;
+    if(modeSV === 'A'){
+      D.chip += R(10, y0 + 7, 10 + wA, y1 - 7);
+      T({left:20, top:y0 + 11, text:lblA, fw:500});
+      N({left:20, top:y0 + 29, text:kr(SV), fs:numFz, lh:26});
+    } else if(modeSV === 'B'){
+      D.chip += R(6, y0 + 4, 6 + wB, y1 - 4);
+      T({left:14, top:y0 + 8, text:ph('Skattemessig verdi'), fw:500, lh:14});
+      T({left:14, top:y0 + 22, text:lblA2, lh:14});
+      N({left:14, top:y0 + 37, text:kr(SV), fs:20, lh:22});
+    } else if(modeSV === 'C'){
+      // For smal til å bære etiketten: den legger seg under stolpen, til høyre for streken
+      var lblC = isAs ? t('lrnUxSvCa', 'Skattemessig verdi: ikke gevinst, {k}', {k:kr(SV)}) : t('lrnUxSvC', 'Skattemessig verdi: ikke skattlagt, {k}', {k:kr(SV)});
+      var cw = Math.max(120, W - 16 - (xLine + 20)), nl = Math.max(1, Math.ceil(tw(lblC, fz, 500) / cw));
+      T({left:xLine + 20, top:y1 + 8, w:cw, text:lblC, fw:500});
+      fOff = 8 + nl * 16 + 8;
+    } else {
+      var lblN = isAs && taxed ? ph('Ingen gevinst i selskapet') : ph('Ingen gevinst, ingen uttaksskatt'), nFz = MOB ? 13 : 15;
+      var wN0 = tw(lblN, nFz, 600) + 26;
+      D.chip += R(W / 2 - wN0 / 2, y0 + 14, W / 2 + wN0 / 2, y1 - 14);
+      T({left:W / 2, tx:'-50%', top:y0 + G.barH / 2 - 10, text:lblN, fw:600, fs:nFz, lh:20, c:'i1'});
+      var svTxt = t('lrnUxSvN', 'Skattemessig verdi {k} er like høy som markedsverdien eller høyere.', {k:kr(SV)});
+      var wN = Math.min(MOB ? 300 : 380, W - 44), nLN = Math.max(1, Math.ceil(tw(svTxt, fz) / wN));
+      T({left:W - 30, tx:'-100%', al:'right', w:wN, top:y1 + 6, text:svTxt});
+      bottom = Math.max(bottom, y1 + 6 + nLN * 16);
+    }
+    // Gevinsten, inni stolpen
+    if(hasGain){
+      var gw = W - xSV, padG = MOB ? 12 : 18, needG = Math.max(tw(ph('Gevinst'), fz, 500), tw(kr(gevFull), numFz, 500, true)) + padG + 10;
+      if(gw >= needG){
+        T({left:xSV + padG, top:y0 + 11, text:ph('Gevinst'), fw:500, c:'oa'});
+        N({left:xSV + padG, top:y0 + 29, text:kr(gevFull), fs:numFz, lh:26, c:'oa'});
+      } else if(gw >= tw(fmt(gevFull), 17, 500, true) + 16) N({left:xSV + 8, top:y0 + 20, text:fmt(gevFull), fs:17, lh:24, c:'oa'});
+    }
+    D.line += 'M' + f1(xLine) + ',' + (y0 - 6) + ' V' + f1(y1 + 8 + fOff) + ' ';
+
+    // Trakten når andelen er under 100 %
+    var fy0 = y1 + fOff + 2, y2 = y1 + fOff + G.fun, y3 = y2 + G.bar2H, fy1 = y2 - 2, xSV2 = a * xSV, aW = a * W;
+    var xL = function(y){ return xLine + (xSV2 - xLine) * ((y - fy0) / (fy1 - fy0)); };
+    var xR = function(y){ return (W - 0.5) + (aW - (W - 0.5)) * ((y - fy0) / (fy1 - fy0)); };
+    // Merknaden på streken: rett ved streken når det er plass, ellers som merknad med markør
+    var annoTxt = ph('Det som ennå ikke er avskrevet, regnes ikke som gevinst.'), nNote = 0, anno = false, annoBox = null;
+    if(hasGain){
+      var yA = y1 + 10, lhA = MOB ? 15 : 16, maxW = MOB ? 190 : 300, tA = tw(annoTxt, fz);
+      var edgeAt = function(yb2){ return scaled ? Math.min(xLine, xL(yb2)) : xLine; };
+      var right = xLine - 12, wA2 = Math.min(maxW, right - 4);
+      for(var k = 0; k < 4; k++){ var nL0 = Math.max(1, Math.ceil(tA / Math.max(wA2, 1))); right = edgeAt(yA + nL0 * lhA) - 12; wA2 = Math.min(maxW, right - 4); }
+      var nL3 = Math.max(1, Math.ceil(tA / Math.max(wA2, 1)));
+      if(!forceNote && wA2 >= (MOB ? 96 : 150) && modeSV !== 'C' && edgeAt(yA + nL3 * lhA) - 12 >= right - 0.5){
+        anno = true;
+        annoBox = {x:right - wA2, y:yA, w:wA2, h:nL3 * lhA};
+        T({left:right, tx:'-100%', al:'right', w:wA2, top:yA, text:annoTxt, lh:lhA, cls:'anno'});
+      }
+    }
+    if(hasGain && !anno){ nNote = 1; mk('1', xLine, ySV); notes.push(annoTxt); }
+    var yb = y1, gx0 = xSV, gx1 = W, yEnd = anno ? bottom - G.ms / 2 + 8 : bottom;
+
+    // ── Andel privat: rad 2, skalert til andelen ──
+    if(scaled){
+      D.sv += R(0, y2, xSV2, y3); D.gain += R(xSV2, y2, aW, y3);
+      D.line += 'M' + f1(xSV2) + ',' + (y2 - 4) + ' V' + (y3 + 4) + ' ';
+      D.fun += 'M' + f1(xLine) + ',' + fy0 + ' L' + f1(xSV2) + ',' + fy1 + ' M' + f1(W - 0.5) + ',' + (y1 + 2) + ' V' + fy0 + ' L' + f1(aW) + ',' + fy1 + ' ';
+      var cy = (fy0 + fy1) / 2, fs1 = MOB ? 12 : 13;
+      var andelLbl = t('lrnUxAndel', '× {a} % privat', {a:andelTxt}), bruttoLbl = t('lrnUxBrutto', 'bruttouttak {k}', {k:kr(brutto)});
+      var lines2 = [{t:andelLbl, w:tw(andelLbl, fs1, 600), fw:600, fs:fs1, lh:17, c:'i1'}, {t:bruttoLbl, w:tw(bruttoLbl, fz), fw:400, fs:fz, lh:16, c:'i2'}];
+      var place = function(lines){
+        var cw2 = Math.max.apply(null, lines.map(function(qq){ return qq.w; })), hh = lines.reduce(function(p, qq){ return p + qq.lh; }, 0);
+        var yT = cy - hh / 2, yB = cy + hh / 2, cand = [], inL = xL(yT) + 12, inR = xR(yB) - 12;
+        if(inR - inL >= cw2) cand.push({x:(inL + inR) / 2, tx:'-50%', al:'center', yT:yT, x0:(inL + inR) / 2 - cw2 / 2, x1:(inL + inR) / 2 + cw2 / 2});
+        var rL = xR(yT) + 12;
+        if(rL + cw2 <= W - 2) cand.push({x:rL, tx:'', al:'left', yT:yT, x0:rL, x1:rL + cw2});
+        var lR = xL(yB) - 12;
+        if(lR - cw2 >= 2) cand.push({x:lR, tx:'-100%', al:'right', yT:yT, x0:lR - cw2, x1:lR});
+        var free = function(qq){ return !annoBox || !(qq.x0 < annoBox.x + annoBox.w + 4 && annoBox.x < qq.x1 + 4 && yT < annoBox.y + annoBox.h + 2 && annoBox.y < yB + 2); };
+        return cand.filter(free)[0] || null;
+      };
+      var pl = place(lines2), shown = lines2, bruttoOut = false;
+      if(!pl){ shown = [lines2[0]]; pl = place(shown) || {x:(xLine + W) / 2, tx:'-50%', al:'center', yT:cy - 8.5}; bruttoOut = true; }
+      var yy = pl.yT;
+      shown.forEach(function(qq){ T({left:pl.x, tx:pl.tx, al:pl.al, top:yy, text:qq.t, fw:qq.fw, fs:qq.fs, lh:qq.lh, c:qq.c}); yy += qq.lh; });
+      if(bruttoOut){
+        var sh = t('lrnUxUttak', 'uttak {k}', {k:kr(brutto)}), wsh = tw(sh, fz), ty = y2 + G.bar2H / 2 - 8;
+        if(aW + 10 + wsh <= W) T({left:aW + 10, top:ty, text:sh});
+        else if(xSV2 >= wsh + 22){ D.chip += R(4, y2 + G.bar2H / 2 - 11, 4 + wsh + 16, y2 + G.bar2H / 2 + 11); T({left:12, top:ty, text:sh}); }
+      }
+      var gw2 = aW - xSV2, pad2 = MOB ? 10 : 14, need2 = Math.max(tw(ph('Gevinst'), fz, 500), tw(kr(gev), MOB ? 17 : 20, 500, true)) + pad2 + 8;
+      if(gw2 >= need2){
+        T({left:xSV2 + pad2, top:y2 + (MOB ? 4 : 5), text:ph('Gevinst'), fw:500, c:'oa', lh:14});
+        N({left:xSV2 + pad2, top:y2 + (MOB ? 18 : 20), text:kr(gev), fs:MOB ? 17 : 20, lh:22, c:'oa'});
+      } else if(gw2 >= tw(fmt(gev), 16, 500, true) + 12) N({left:xSV2 + 6, top:y2 + (G.bar2H - 22) / 2, text:fmt(gev), fs:16, lh:22, c:'oa'});
+      yb = y3; gx0 = xSV2; gx1 = aW;
+      yEnd = Math.max(yEnd, y3 + 6);
+    }
+    var H = Math.ceil(yEnd + 10), tTop = null;
+    var fullBar = scaled ? [0, aW] : [0, W];
+
+    if(hasGain || (isAs && taxed)){
+      // ── Sporet: i ENK går bare gevinsten videre, i AS hele verdien (den er utbytte) ──
+      var tx0 = isAs ? fullBar[0] : gx0, tx1 = isAs ? fullBar[1] : gx1;
+      var nameSel = isAs ? (MOB ? 'AS' : ph('Aksjeselskap (AS)')) : (MOB ? 'ENK' : ph('Enkeltpersonforetak (ENK)'));
+      // AS-sporet går fra hele stolpen, men navnet står til høyre for streken, så det ikke treffer merknaden til venstre for den
+      var hx0 = isAs && hasGain ? Math.max(tx0, scaled ? xSV2 : xLine) : tx0;
+      var hfs = MOB ? 13.5 : 14, hw = tw(nameSel, hfs, 600), dv = ph('Ditt valg'), tagW = tw(dv, 12, 600) + 14, inner = tx1 - hx0;
+      var hy = yb + (scaled ? 12 : (anno ? 14 : 28) + fOff), tagAt;
+      if(!hasGain) hy = Math.max(hy, bottom + 4);
+      if(inner >= hw + tagW + 10 + 30){ T({left:hx0 + 14, top:hy, text:nameSel, fw:600, fs:hfs, lh:18, c:'i1'}); tagAt = [hx0 + 14 + hw + 10, hy]; }
+      else if(W - tx1 >= hw + tagW + 10 + 22){ T({left:tx1 + 12, top:hy, text:nameSel, fw:600, fs:hfs, lh:18, c:'i1'}); tagAt = [tx1 + 12 + hw + 10, hy]; }
+      else {
+        var hy2 = annoBox ? Math.max(hy, annoBox.y + annoBox.h + 6) : hy;
+        T({left:hx0 - 18 - tagW - 10, tx:'-100%', top:hy2, text:nameSel, fw:600, fs:hfs, lh:18, c:'i1'}); tagAt = [hx0 - 18 - tagW, hy2];
+      }
+      var tT = Math.max(yb + G.pipe + (scaled ? 0 : fOff), hy + 26), tB = tT + G.trH;
+      tTop = tT;
+      if(isAs) D.pipe += 'M' + f1(tx0 + 0.5) + ',' + f1(yb) + ' V' + f1(tT) + ' ';
+      else D.line += 'M' + f1(gx0) + ',' + f1(scaled ? yb : y1 + 8 + fOff) + ' V' + f1(tT) + ' ';
+      D.pipe += 'M' + f1(tx1 - 0.5) + ',' + f1(yb) + ' V' + f1(tT) + ' ';
+      tag = '<span class="lrn-ut-tag" style="left:' + f1(tagAt[0]) + 'px;top:' + f1(tagAt[1]) + 'px">' + esc(dv) + '</span>';
+
+      // Skattestykkene i valgt spor og i sammenligningssporet
+      var mkSlices = function(isA, X){
+        if(isA) return [{k:'sel', name:ph('Selskapsskatt 22 %'), v:X.sel}, {k:'utb', name:SK > 0 ? ph('Utbytteskatt etter skjerming') : ph('Utbytteskatt av hele verdien'), v:X.utb}];
+        var r = [{k:'alm', name:ph('Alminnelig inntektsskatt 22 %'), v:X.alm}];
+        if(pers){ r.push({k:'trygd', name:ph('Trygdeavgift 10,8 %'), v:X.trygd}); r.push({k:'trinn', name:ph('Trinnskatt'), v:X.trinn}); }
+        return r;
+      };
+      var sl = mkSlices(isAs, SEL), slO = mkSlices(!isAs, OTH);
+      var wSl = sl.map(function(qq){ return qq.v * S; }), taxW = wSl.reduce(function(p, qq){ return p + qq; }, 0), xTaxL = tx1 - taxW;
+      D.rem = R(tx0, tT, xTaxL, tB);
+      var xs = xTaxL, cen = [];
+      sl.forEach(function(qq, i){ D['s' + (i + 1)] += R(xs, tT, xs + wSl[i], tB); cen.push(xs + wSl[i] / 2); xs += wSl[i]; });
+      // Det som er igjen: av gevinsten i ENK, av verdien i AS
+      var remW = xTaxL - tx0, igjen = (isAs ? brutto : gev) - SEL.total;
+      var igjenLbl = isAs ? ph('Igjen av verdien') : ph('Igjen av gevinsten');
+      if(MOB){
+        var t1 = t('lrnUxIgjen', 'Igjen {k}', {k:kr(igjen)});
+        if(remW >= tw(t1, 12, 600) + 24) T({left:tx0 + 10, top:tT + (G.trH - 16) / 2, text:t1, fw:600, fs:12, c:'oa'});
+      } else if(remW >= Math.max(tw(igjenLbl, 12, 500), tw(kr(igjen), 19, 500, true)) + 28){
+        T({left:tx0 + 14, top:tT + 5, text:igjenLbl, fw:500, c:'oa', lh:14, fs:12});
+        N({left:tx0 + 14, top:tT + 19, text:kr(igjen), fs:19, lh:22, c:'oa'});
+      }
+
+      // Ordlisten: navn, beløp, pekere (eller fargeruter når det ikke er plass til pekere)
+      var lTop = tB + (MOB ? 16 : 22), lx = G.ledX;
+      var nameW = Math.max.apply(null, sl.map(function(qq){ return tw(qq.name, G.nameFz); })), numW = Math.max.apply(null, sl.map(function(qq){ return tw(kr(qq.v), G.numFz, 500, true); }));
+      var xA = MOB ? W : Math.min(W, Math.max(lx + G.ledW, lx + 22 + nameW + 16 + numW));
+      var leaders = !MOB && sl.length && cen[0] >= xA + 28;
+      var noteAt = {};
+      if(!isAs && pers){ noteAt.trygd = true; noteAt.trinn = true; } else if(!isAs) noteAt.alm = true; else noteAt.utb = true;
+      var nrNote = {}, nextNr = nNote + 1;
+      var ry = lTop;
+      sl.forEach(function(qq, i){
+        var nameX = leaders ? lx : (MOB ? 22 : lx + 22), avail = xA - tw(kr(qq.v), G.numFz, 500, true) - 10 - nameX - (MOB && noteAt[qq.k] ? G.ms + 8 : 0);
+        // Får ikke navnet plass ved siden av beløpet (smal skjerm, langt språk), brytes det over flere linjer
+        var nLines = Math.max(1, Math.ceil(tw(qq.name, G.nameFz) / Math.max(avail, 40)));
+        T({left:nameX, top:ry, text:qq.name, fs:G.nameFz, lh:18, w:nLines > 1 ? avail : 0});
+        N({left:xA, tx:'-100%', top:ry + sy(G.nameFz, G.numFz), text:kr(qq.v), fs:G.numFz, lh:18});
+        if(leaders){
+          D.lead += 'M' + f1(cen[i]) + ',' + f1(tB) + ' V' + f1(ry + 9) + ' H' + f1(xA + 8) + ' ';
+          D.dot += 'M' + f1(cen[i] - 2.5) + ',' + f1(tB + 0.5) + ' a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0 ';
+        } else { var sx = MOB ? 0 : lx; D['s' + (i + 1)] += R(sx, ry + 2, sx + 14, ry + 16); }
+        if(noteAt[qq.k]){
+          nrNote[qq.k] = String(nextNr); nextNr += 1;
+          var mxx = MOB ? nameX + Math.min(tw(qq.name, G.nameFz), avail) + 8 + G.ms / 2 : Math.max(0, lx - 30) + G.ms / 2;
+          mk(nrNote[qq.k], mxx, ry - 2 + G.ms / 2);
+        }
+        ry += G.rowH + (nLines - 1) * 18;
+      });
+      var yT2 = ry + 8, lx0 = MOB ? 0 : lx;
+      D.rule += 'M' + lx0 + ',' + f1(yT2 - 4) + ' H' + f1(xA) + ' ';
+      T({left:lx0, top:yT2, text:ph('Samlet skatt'), fw:600, fs:G.nameFz, c:'i1', lh:22});
+      N({left:xA, tx:'-100%', top:yT2 + sy(G.nameFz, G.totFz), text:kr(SEL.total), fs:G.totFz, lh:22});
+      T({left:lx0, top:yT2 + 26, text:ph('av gevinsten'), c:'i3', lh:22, fs:G.nameFz});
+      N({left:xA, tx:'-100%', top:yT2 + 26 + sy(G.nameFz, G.totFz), text:hasGain ? pc(SEL.eff) : '–', fs:G.totFz, lh:22});
+      var yAfter = yT2 + 26 + 22, noteW = MOB ? W : G.ledW;
+
+      // Fotnote (ENK) eller lenke (AS)
+      if(!isAs && pers){
+        var fn = ph('Regnet som om uttaket er den eneste personinntekten din i året.'), nLf = Math.max(1, Math.ceil(tw(fn, 12) / noteW));
+        T({left:lx0, top:yAfter + 12, w:noteW, text:fn, fs:12, lh:17, c:'i3'});
+        yAfter = yAfter + 12 + nLf * 17;
+      }
+      var linkTxt = ph('Hvorfor to lag og 1,72? Se Utbytteskatt →'), linkAt = null, linkW = tw(linkTxt, 12.5, 500), linkL = Math.max(1, Math.ceil(linkW / (W - 4)));
+      if(isAs){ linkAt = [lx0, yAfter + 12, '']; yAfter = yAfter + 12 + 18 + (linkL - 1) * 17; }
+
+      // Sammenligningslinjen: det andre sporet, dempet, i samme målestokk og med samme høyre kant
+      var wO = slO.map(function(qq){ return qq.v * S; }), xTaxLo = tx1 - wO.reduce(function(p, qq){ return p + qq; }, 0);
+      var cT = yAfter + (MOB ? 34 : 30), cB = cT + G.cmpH, xo = xTaxLo;
+      slO.forEach(function(qq, i){ D['k' + (i + 1)] += R(xo, cT, xo + wO[i], cB); xo += wO[i]; });
+      var cmpTxt = hasGain ? t('lrnUxCmp', 'Som {f}: {k}, {p} av gevinsten', {f:oForm, k:kr(OTH.total), p:pc(OTH.eff)}) : t('lrnUxCmp0', 'Som {f}: {k}', {f:oForm, k:kr(OTH.total)});
+      var cFz = MOB ? 12 : 12.5, lwC = tw(cmpTxt, cFz), lwL = tw(linkTxt, cFz, 500), yC = cB;
+      if(!MOB && xTaxLo - 14 - lwC >= 4){
+        T({left:xTaxLo - 14, tx:'-100%', top:cT + G.cmpH / 2 - 9, text:cmpTxt, fs:cFz, lh:18});
+        if(!isAs){ linkAt = [xTaxLo - 14 - lwL >= 4 ? xTaxLo - 14 : lwL + 4, cB + 10, '-100%']; yC = cB + 30; } else yC = cB + 6;
+      } else {
+        T({left:0, top:cT - 24, text:cmpTxt, fs:cFz, lh:18});
+        if(!isAs){ linkAt = [0, cB + 10, '']; yC = cB + 30 + (linkL - 1) * 17; } else yC = cB + 6;
+      }
+      if(linkAt) link = '<a class="lrn-ut-link" href="/skatt/utbytte/" style="left:' + f1(linkAt[0]) + 'px;top:' + f1(linkAt[1]) + 'px;' + (linkAt[2] ? 'transform:translateX(-100%);' : '') +
+        (linkL > 1 ? 'width:' + f1(W - 4 - linkAt[0]) + 'px;white-space:normal;' : '') + '">' + esc(linkTxt) + '</a>';
+      H = Math.ceil(Math.max(yC, yAfter) + 12);
+
+      // Merknadene
+      if(!isAs && pers){
+        notes[Number(nrNote.trygd) - 1] = t('lrnUxNTrygd', 'Trygdeavgiften er 10,8 % av gevinsten. Under 99 650 kr regnes den ikke, og rett over trappes den opp med 25 % av beløpet over grensen.');
+        var nn = E.n;
+        notes[Number(nrNote.trinn) - 1] = t('lrnUxNTrinn', 'Trinnskatten trappes opp: 1,7 % over 226 100 kr, 4,0 % over 318 300 kr, 13,7 % over 725 050 kr, 16,8 % over 980 100 kr og 17,8 % over 1 467 200 kr.') + ' ' +
+          (nn > 0 ? t('lrnUxNTrinnN', 'Gevinsten din når trinn {n}.', {n:String(nn)}) : t('lrnUxNTrinn0', 'Gevinsten din er under trinn 1, så trinnskatten blir 0 kr.'));
+      } else if(!isAs) notes[Number(nrNote.alm) - 1] = t('lrnUxNAlm', 'Du har svart at uttaket ikke er personinntekt, så det blir bare alminnelig inntektsskatt, ingen trygdeavgift og ingen trinnskatt.');
+      else if(nrNote.utb) notes[Number(nrNote.utb) - 1] = t('lrnUxNUtb', 'Utbyttet er hele verdien du tar ut, ikke bare gevinsten, fordi eiendelen går til deg uten vederlag (skatteloven § 10-11 annet ledd). Skjermingsfradraget trekkes fra før oppjusteringen med 1,72.');
+    } else H = Math.ceil(Math.max(yEnd, y1) + 14);
+
+    plot.classList.toggle('m', MOB);
+    plot.style.height = H + 'px';
+    var svg = plot.querySelector('svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    for(var pn in D) svg.querySelectorAll('[data-p="' + pn + '"]').forEach(function(el){ el.setAttribute('d', D[pn]); });
+    // Fargene på skattestykkene følger hvilket spor som er valgt
+    var keys = isAs ? ['sel', 'utb', 'trinn'] : ['alm', 'trygd', 'trinn'], keysO = isAs ? ['alm', 'trygd', 'trinn'] : ['sel', 'utb', 'trinn'];
+    if(!isAs && !pers) keys = ['alm', 'trygd', 'trinn'];
+    for(var si = 1; si <= 3; si++){
+      svg.querySelectorAll('[data-p="s' + si + '"]').forEach(function(el, j){ el.setAttribute('class', 'lrn-ut-' + keys[si - 1] + (j ? 'p' : 'b')); });
+      svg.querySelectorAll('[data-p="k' + si + '"]').forEach(function(el, j){ el.setAttribute('class', 'lrn-ut-' + keysO[si - 1] + (j ? 'p' : 'b')); });
+    }
+    q('labels').innerHTML = texts + nums + tag + link + marks;
+    // Merknaden ved streken er plassert etter anslått bredde. Når den faktisk brytes over flere linjer enn anslått
+    // (smal skjerm, langt språk) og når ned til skatteraden, blir den en nummerert merknad i stedet.
+    if(anno && tTop !== null && !forceNote){
+      var ae = plot.querySelector('.lrn-ut-t.anno'), ob = plot.getBoundingClientRect();
+      if(ae && ob.height > 0 && ae.getBoundingClientRect().bottom - ob.top > tTop - 4){ forceNote = true; render(d); forceNote = false; return; }
+    }
+    q('notes').innerHTML = notes.map(function(x, j){ return '<li><span class="lrn-mk" aria-hidden="true">' + (j + 1) + '</span><span>' + esc(nb(x)) + '</span></li>'; }).join('');
+    q('notes').hidden = !notes.length;
+
+    // Det du sitter igjen med
+    set('closeLead', nb(taxed
+      ? (AN < 100 ? t('lrnUxCloseA', 'Du sitter igjen med det du tok ut ({k}) minus skatten:', {k:kr(brutto)}) : t('lrnUxClose', 'Du sitter igjen med eiendelen ({k}) minus skatten:', {k:kr(MV)}))
+      : (AN < 100 ? t('lrnUxClose0A', 'Ingen skatt, så du sitter igjen med det du tok ut:') : t('lrnUxClose0', 'Ingen skatt, så du sitter igjen med hele eiendelen:'))));
+    set('closeVal', kr(taxed ? SEL.netto : brutto));
+
+    // Teksten for skjermlesere
+    var sum;
+    if(hasGain) sum = t('lrnUxSum', 'Markedsverdi {m} minus skattemessig verdi {s}{a} gir {g} i gevinst. Skatten i {f} er {k} ({p} av gevinsten). Til sammenligning ville {o} gitt {ok} ({op}). Du sitter igjen med {n}.',
+      {m:kr(MV), s:kr(SV), a:AN < 100 ? t('lrnUxSumA', ', ganger {a} % privat,', {a:andelTxt}) : '', g:kr(gev), f:form, k:kr(SEL.total), p:pc(SEL.eff), o:oForm, ok:kr(OTH.total), op:pc(OTH.eff), n:kr(SEL.netto)});
+    else if(isAs && taxed) sum = t('lrnUxSum0A', 'Markedsverdi {m} minus skattemessig verdi {s} gir ingen gevinst, så selskapet betaler ingen uttaksskatt. Men det du tar ut, er utbytte: {k} i utbytteskatt, og du sitter igjen med {n}.',
+      {m:kr(MV), s:kr(SV), k:kr(A.utb), n:kr(A.netto)});
+    else sum = t('lrnUxSum0', 'Markedsverdi {m} minus skattemessig verdi {s} gir ingen gevinst. Da er det ingen uttaksskatt, og du sitter igjen med {n}.', {m:kr(MV), s:kr(SV), n:kr(brutto)});
+    set('sr', nb(sum));
+
+    // Tabellen: begge virksomhetstypene, valgt type uthevet
+    set('tEnkS', kr(E.total)); set('tEnkE', hasGain ? pc(E.eff) : '–'); set('tEnkN', kr(E.netto));
+    set('tAsS', kr(A.total)); set('tAsE', hasGain ? pc(A.eff) : '–'); set('tAsN', kr(A.netto));
+    q('tEnk').classList.toggle('is-sel', !isAs); q('tAs').classList.toggle('is-sel', isAs);
+
+    // Regnestykket
+    set('rH', nb(t('lrnUxRegH', 'Regnestykket bak {k}', {k:kr(SEL.total)})));
+    set('fMv', fmt(MV)); set('fSv', fmt(SV)); set('fAn', andelTxt); set('fG', kr(gev));
+    set('fForm', nb(t('lrnUxEffL', 'Effektiv sats i {f}', {f:form})));
+    show('fHas', hasGain); show('fNo0', !hasGain && !(isAs && taxed)); show('fNoA', !hasGain && isAs && taxed);
+    set('fSk', fmt(SEL.total)); set('fG2', fmt(gev)); set('fE', pc(SEL.eff));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-ut');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-ut-plot');
+    // Regnestykket er sammenleggbart på mobil, men står åpent på brede skjermer
+    var calcEl = root.querySelector('.lrn-calc');
+    function syncOpen(){ if(calcEl && mqDesk && mqDesk.matches) calcEl.open = true; }
+    syncOpen();
+    if(mqDesk && mqDesk.addEventListener) mqDesk.addEventListener('change', syncOpen);
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // Etikettene måles med siden sin skrift, så de plasseres på nytt når den er lastet
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(raw) schedule(); });
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._uttak || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 

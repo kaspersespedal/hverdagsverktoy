@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v3">
 <style>
 /* Lønn ut — LAYOUT-vekt (samme app som skatt/inntekt, mindre intro) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -176,145 +177,6 @@ body.focus-mode > footer{display:none}
 .side-card.related a:hover{color:var(--accent)}
 .side-card.related .arr{color:var(--ink4)}
 .side-card.related a:hover .arr{color:var(--accent)}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -569,78 +431,114 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: kalkulator-lonnut =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-kalkulator-lonnut">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-kalkulator-lonnut">Hva som skjer mellom brutto og konto</h2><p class="lc-intro">Nettolønnen er bruttolønnen minus tre skatter. Fradragene trekkes ikke fra lønnen. De gjør bare grunnlaget for den alminnelige skatten (22 %) mindre. Med 650 000 kr i lønn og ingen egne fradrag får du 489 017 kr utbetalt i året.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Minstefradrag</b><span class="tag">Fradrag</span></span><span class="fig">46<span class="u">%</span></span><p class="dsc">Et standardfradrag du får automatisk — 46 % av lønnen, men aldri mer enn 95 700 kr. Det gjør grunnlaget for den alminnelige skatten mindre. Ingen kvitteringer nødvendig.</p></div>
-        <div class="lc-led"><span class="nm"><b>Personfradrag</b><span class="tag">Fradrag</span></span><span class="fig">114 540<span class="u">kr</span></span><p class="dsc">Et fast bunnfradrag alle får. Sammen med minstefradraget gjør dette at de første titusenene av lønnen i praksis er skattefrie.</p></div>
-        <div class="lc-led"><span class="nm"><b>Alminnelig inntektsskatt</b><span class="tag">Skatt</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Regnes av lønnen etter at alle fradrag er trukket fra (beregningsgrunnlaget). 22 % i resten av Norge, 18,5 % i Finnmark og Nord-Troms. Velger du den regionen, legges også finnmarksfradraget på 45 000 kr til fradragene automatisk.</p></div>
-        <div class="lc-led"><span class="nm"><b>Trinnskatt</b><span class="tag">Skatt</span></span><span class="fig">1,7–17,8<span class="u">%</span></span><p class="dsc">En ekstra skatt i fem trinn. Den regnes av bruttolønnen, ikke av inntekten etter fradrag. Hver sats gjelder bare kronene i sitt trinn. Med 650 000 kr i lønn betaler du 1,7 % av 92 200 kr og 4,0 % av 331 700 kr, til sammen 14 835 kr.</p></div>
-        <div class="lc-led"><span class="nm"><b>Trygdeavgift</b><span class="tag">Sats</span></span><span class="fig">7,6<span class="u">%</span></span><p class="dsc">7,6 % av bruttolønnen går til folketrygden. Tjener du 99 650 kr eller mindre, betaler du ingenting. Like over grensen trappes avgiften gradvis inn. Den blir aldri høyere enn 25 % av det du tjener over 99 650 kr.</p></div>
-        <div class="lc-led"><span class="nm"><b>BSU-fradrag</b><span class="tag">Fradrag</span></span><span class="fig">10<span class="u">%</span></span><p class="dsc">Sparer du i BSU, trekkes 10 % av innskuddet rett fra skatten. Sparer du maks 27 500 kr, blir det 2 750 kr mindre skatt.</p></div>
+  <div class="lrn" id="lrn-lu">
+    <section class="lrn-sec" aria-labelledby="lrn-lu-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-lu-h">Ti lønninger under snittet, to over</h2>
+        <p class="lrn-lede">Kalkulatoren deler årsnettoen på 12. Med tabelltrekk fordeles skatten på 10,5 måneder, så de fleste lønningene blir litt lavere, og juni og desember høyere.</p>
       </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-kalkulator-lonnut">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-kalkulator-lonnut">Satsene for 2026</h2><p class="lc-intro">Alle satsene gjelder lønn, ikke næringsinntekt eller pensjon.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Minstefradrag</span><span class="v">46<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Minstefradrag, maks</span><span class="v">95 700<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Personfradrag</span><span class="v">114 540<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Alminnelig sats</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Alminnelig sats, Finnmark/Nord-Troms</span><span class="v">18,5<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Finnmarksfradrag</span><span class="v">45 000<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Trygdeavgift på lønn</span><span class="v">7,6<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Nedre grense trygdeavgift</span><span class="v">99 650<span class="u">kr</span></span></div>
-        <div class="lc-kv"><span class="k">Topp marginalskatt</span><span class="v">47,4<span class="u">%</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Trinnskatt 2026 — satsen gjelder bare lønn over hvert trinn</caption>
-          <thead><tr><th>Trinn</th><th class="r">Lønn over</th><th class="r">Sats</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Trinn 1</span></td><td class="r">226 100 kr</td><td class="r">1,7 %</td></tr>
-            <tr><td><span class="step">Trinn 2</span></td><td class="r">318 300 kr</td><td class="r">4,0 %</td></tr>
-            <tr><td><span class="step">Trinn 3</span></td><td class="r">725 050 kr</td><td class="r">13,7 %</td></tr>
-            <tr><td><span class="step">Trinn 4</span></td><td class="r">980 100 kr</td><td class="r">16,8 %</td></tr>
-            <tr><td><span class="step">Trinn 5</span></td><td class="r">1 467 200 kr</td><td class="r">17,8 %</td></tr>
-          </tbody>
-        </table>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn lønna i kalkulatoren.</p>
+      <div class="lrn-lu-main" data-lrn="main">
+        <div class="lrn-bar">
+          <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+          <div class="lrn-seg t3" role="group" aria-label="Hvordan trekket fordeles">
+            <button type="button" aria-pressed="true" data-k="tabell">Tabelltrekk (÷&nbsp;10,5)</button>
+            <button type="button" aria-pressed="false" data-k="snitt">Kalkulatorens snitt (÷&nbsp;12)</button>
+          </div>
         </div>
+        <figure class="lrn-fig" aria-describedby="lrn-lu-sr">
+          <figcaption class="lrn-cap"><span data-lrn="capT">Månedslønn i kroner: netto og forskuddstrekk med tabelltrekk</span><span data-lrn="capS" hidden>Månedslønn i kroner: netto og forskuddstrekk, når trekket fordeles jevnt på tolv måneder</span></figcaption>
+          <div class="lrn-plot is-static lrn-lu-plot" dir="ltr">
+            <svg aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lrn-lu-skrav" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><line class="lrn-lu-pl" x1="0" y1="0" x2="0" y2="5"/></pattern>
+              </defs>
+              <path class="lrn-lu-gr" data-p="grid"/>
+              <path class="lrn-lu-tr" data-p="tr"/>
+              <path class="lrn-lu-hat" data-p="tr"/>
+              <path class="lrn-lu-net" data-p="net"/>
+              <path class="lrn-lu-base" data-p="base"/>
+              <path class="lrn-lu-halo" data-p="avg"/>
+              <path class="lrn-lu-avg" data-p="avg"/>
+              <path class="lrn-lu-br" data-p="br"/>
+              <path class="lrn-lu-lead" data-p="lead"/>
+            </svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <ol class="lrn-notes" aria-label="Merknader til grafen" data-lrn="notes" hidden></ol>
+        <div class="lrn-lu-sum">
+          <p data-lrn="sum1"></p>
+          <p data-lrn="sum2"></p>
+        </div>
+        <p class="lrn-fine">Forenklet: lik brutto hver måned. Feriepenger og ferietrekk i juni er ikke tegnet inn, og ditt faktiske trekk følger tabellnummeret på skattekortet. Gjelder tabelltrekk.</p>
+        <details class="lrn-lu-fd" data-lrn="fd">
+          <summary>Regnestykket bak trekket<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div class="lrn-lu-grid">
+            <div class="lrn-card">
+              <span class="lrn-card-l">Regnestykket bak trekket</span>
+              <div class="lrn-f" data-lrn="fT"><i>trekk i en vanlig måned</i><span>≈</span><span><i>årsskatt</i> ÷ 10,5</span></div>
+              <div class="lrn-f n" data-lrn="fT"><span><span data-lrn="fSk"></span> ÷ 10,5</span><span>=</span><b data-lrn="fTrT"></b></div>
+              <div class="lrn-f" data-lrn="fS" hidden><i>trekk per måned</i><span>=</span><span><i>årsskatt</i> ÷ 12</span></div>
+              <div class="lrn-f n" data-lrn="fS" hidden><span><span data-lrn="fSk"></span> ÷ 12</span><span>=</span><b data-lrn="fTrS"></b></div>
+              <div class="lrn-lu-sq">
+                <svg data-lrn="sq" width="212" height="16" viewBox="0 0 212 16" aria-hidden="true" focusable="false"><path class="lrn-lu-tr" data-p="sq"/><path class="lrn-lu-hat" data-p="sq"/><path class="lrn-lu-tr" data-p="hq"/><path class="lrn-lu-hat" data-p="hq"/><path class="lrn-lu-sqo" data-p="oq"/></svg>
+                <span><span data-lrn="sqT">Ti hele trekk og ett halvt i desember er 10,5.</span><span data-lrn="sqS" hidden>Tolv hele trekk, ett i hver måned.</span></span>
+              </div>
+            </div>
+            <p class="lrn-lu-gp">Med tabelltrekk fordeles årsskatten vanligvis på 10,5 måneder: hele trekk i ti måneder, ingenting i juni og et halvt trekk i desember. Kalkulatorens «Skatt / mnd» er årsskatten delt på 12.</p>
+          </div>
+        </details>
+        <details class="lrn-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table>
+            <caption>Tolv lønninger, kroner avrundet til hele kroner</caption>
+            <thead><tr><th scope="col" class="s">Måned</th><th scope="col">Brutto</th><th scope="col">Trekk</th><th scope="col">Netto</th></tr></thead>
+            <tbody data-lrn="rows"></tbody>
+          </table></div>
+        </details>
       </div>
+      <p class="lrn-sr" id="lrn-lu-sr" data-lrn="sr"></p>
+    </section>
+
+    <details class="lrn-calc" data-lrn="main">
+      <summary><h3 class="lrn-h3">Hvor årsskatten kommer fra</h3><svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+      <div class="lrn-calc-b">
+        <div class="lrn-card">
+          <div class="lrn-lu-eq"><span class="t"><b data-lrn="gB"></b><span>brutto</span></span><span class="o">−</span><span class="o">(</span><span class="t"><b data-lrn="gA"></b><span>alminnelig skatt</span></span><span class="o">+</span><span class="t"><b data-lrn="gT"></b><span>trinnskatt</span></span><span class="o">+</span><span class="t"><b data-lrn="gY"></b><span>trygdeavgift</span></span><span class="lrn-lu-eqb" data-lrn="gBsu"><span class="o">−</span><span class="t"><b data-lrn="gU"></b><span>BSU-fradrag</span></span></span><span class="o">)</span><span class="o">=</span><span class="t r"><b data-lrn="gN"></b><span>årsnetto</span></span></div>
+          <div class="lrn-lu-hr"></div>
+          <div class="lrn-lu-gb">
+            <span class="lrn-card-l">Grunnlaget for den alminnelige skatten</span>
+            <div class="lrn-f"><i>grunnlag</i><span>=</span><span><i>brutto</i> − <i>minstefradrag</i> − <i>personfradrag</i> − <i>egne fradrag</i><span data-lrn="gF"> − <i>finnmarksfradrag</i></span></span></div>
+            <div class="lrn-f n"><span><span data-lrn="gB"></span> − <span data-lrn="gMi"></span> − 114&nbsp;540 − <span data-lrn="gE"></span><span data-lrn="gF"> − 45&nbsp;000</span></span><span>=</span><b data-lrn="gG"></b></div>
+          </div>
+          <p class="lrn-lu-gs" data-lrn="gS"></p>
+        </div>
+        <p class="lrn-p">I Finnmark og Nord-Troms er den alminnelige satsen 18,5&nbsp;%, og du får i tillegg finnmarksfradrag på 45&nbsp;000&nbsp;kr.</p>
+        <p class="lrn-p"><a href="/skatt/inntekt/">Hver skatt forklart i Inntektsskatt →</a></p>
+      </div>
+    </details>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-lu-q">
+      <h3 class="lrn-h3" id="lrn-lu-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details><summary>Hva er forskjellen på brutto og netto?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Brutto er lønnen før skatt, det arbeidsgiver betaler. Netto er det som står igjen på konto etter at skatten er trukket. Kalkulatoren viser begge, både per måned og per år.</p></div></details>
+        <details open><summary>Hvorfor er junilønna så mye større?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Med tabelltrekk er årsskatten fordelt på 10,5 måneder. I juni, som oftest måneden feriepengene utbetales, trekkes det vanligvis ikke skatt, og i desember trekkes halvparten. Skatten er ikke borte, den er betalt i de andre månedene.</p></div></details>
+        <details><summary>Hvorfor får jeg mindre enn kalkulatoren sier?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren viser årsnetto delt på 12. Med tabelltrekk er vanlige måneder litt lavere, fordi trekket skal dekke hele årsskatten på 10,5 måneder.</p></div></details>
+        <details><summary>Hva betyr effektiv sats?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det er hvor stor andel av hele bruttolønnen som går til skatt. Tjener du 650&nbsp;000&nbsp;kr, regner kalkulatoren ut 160&nbsp;983&nbsp;kr i skatt. Det er en effektiv sats på 24,77&nbsp;%.</p></div></details>
+        <details><summary>Hvorfor er skatteprosenten min ikke 22&nbsp;%?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>22&nbsp;% er bare den alminnelige satsen, og den regnes av lønnen etter fradrag. På toppen kommer trinnskatt og trygdeavgift. Den effektive satsen er alle tre lagt sammen, delt på bruttolønnen. <a href="/skatt/inntekt/">Inntektsskatt</a> forklarer hver av dem.</p></div></details>
+        <details><summary>Får jeg lavere skatt med BSU?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja. Av det du sparer i BSU trekkes 10&nbsp;% rett fra skatten, opp til 27&nbsp;500&nbsp;kr i innskudd. Maks innskudd gir 2&nbsp;750&nbsp;kr mindre skatt. Legg inn BSU-beløpet i kalkulatoren under «Flere fradrag».</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-kalkulator-lonnut">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-kalkulator-lonnut">Før du stoler på tallet</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Dette er årstall, fordelt på 12</h3><p>Kalkulatoren regner skatten for hele året og deler så på 12 for å vise månedstallet. Lønnsslippen din kan avvike noen måneder fordi arbeidsgiver ofte trekker mindre i juni og desember.</p></div>
-        <div class="lc-note"><h3>Velg riktig region</h3><p>Bor du i Finnmark eller Nord-Troms, bytt region i kalkulatoren. Da faller den alminnelige satsen fra 22 % til 18,5 %, og du får i tillegg finnmarksfradraget på 45 000 kr i alminnelig inntekt. Begge deler regnes inn automatisk.</p></div>
-        <div class="lc-note"><h3>Legg inn fradragene dine</h3><p>Renter på lån, reisefradrag, fagforeningskontingent (maks 8 700 kr), IPS (maks 25 000 kr) og gaver til frivillige (maks 25 000 kr) senker skatten. Uten dem regner kalkulatoren bare med standardfradragene.</p></div>
-        <div class="lc-note"><h3>Timelønn-modus regner årslønn for deg</h3><p>Vet du ikke årslønnen, bytt til timelønn-modus. Da ganges timelønn med timer per uke og uker per år (standard 46) til en beregnet årslønn som resten av regnestykket bruker.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-kalkulator-lonnut">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-kalkulator-lonnut">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hva er forskjellen på brutto og netto?</summary><div class="a"><p>Brutto er lønnen før skatt — det arbeidsgiver betaler. Netto er det som står igjen på konto etter at skatten er trukket. Kalkulatoren viser begge, både per måned og per år.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor er skatteprosenten min ikke 22 %?</summary><div class="a"><p>22 % er bare den alminnelige satsen, og den regnes av lønnen etter fradrag. På toppen kommer trinnskatt og 7,6 % trygdeavgift. Den effektive satsen kalkulatoren viser er alle tre lagt sammen, delt på bruttolønnen.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr effektiv sats?</summary><div class="a"><p>Det er hvor stor andel av hele bruttolønnen din som går til skatt totalt. Tjener du 650 000 kr og betaler 150 000 kr i skatt, er effektiv sats rundt 23 %. Den er alltid lavere enn marginalskatten.</p></div></details>
-        <details class="lc-q"><summary>Hva er marginalskatt, og hvorfor 47,4 %?</summary><div class="a"><p>Marginalskatt er hva du betaler av den siste tusenlappen du tjener. På de høyeste lønningene blir summen av alminnelig sats, øverste trinnskatt og trygdeavgift inntil 47,4 %. Snittet ditt (effektiv sats) er likevel mye lavere.</p></div></details>
-        <details class="lc-q"><summary>Får jeg lavere skatt med BSU?</summary><div class="a"><p>Ja. Av det du sparer i BSU trekkes 10 % rett fra skatten, opp til 27 500 kr i innskudd. Maks innskudd gir 2 750 kr mindre skatt. Legg inn BSU-beløpet i kalkulatoren under «Flere fradrag».</p></div></details>
-        <details class="lc-q"><summary>Hvorfor betaler jeg lite skatt på lav lønn?</summary><div class="a"><p>Minstefradraget (46 % av lønn) og personfradraget (114 540 kr) trekkes fra før skatten regnes. Trygdeavgiften starter dessuten ikke før lønnen passerer 99 650 kr. Til sammen gjør dette de første titusenene tilnærmet skattefrie.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-kalkulator-lonnut">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-kalkulator-lonnut">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/skatt/inntekt/"><span class="ar">Inntektsskatt →</span><h3>Se skatten i detalj</h3><p>Samme beregning, men med full oppdeling av hver skatt og hvert fradrag linje for linje.</p></a>
-        <a class="lc-link" href="/kalkulator/ferie/"><span class="ar">Feriepenger →</span><h3>Regn ut feriepengene</h3><p>Se hva du får utbetalt i feriepenger ut fra fjorårets lønn og satsen arbeidsgiver bruker.</p></a>
-        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Lag et budsjett</h3><p>Ta nettolønnen herfra og se hva du sitter igjen med etter husleie, mat og faste utgifter.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-lu-r">
+      <h3 class="lrn-h3" id="lrn-lu-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/skatt/inntekt/"><span><span class="t">Inntektsskatt</span><span class="d">Se marginalskatt-trappen: hvor mye av den siste kronen som går til skatt.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/kalkulator/ferie/"><span><span class="t">Feriepenger</span><span class="d">Hva juniutbetalingen består av.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/budsjett/"><span><span class="t">Budsjett</span><span class="d">Legg budsjettet på en vanlig måned, ikke på snittet.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -660,8 +558,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v232"></script>
-<script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/core.js?v=v233"></script>
+<script defer src="/shared/lang/no.js?v=v230"></script>
+<script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
 <script>
@@ -809,6 +708,12 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     }
     var input = Object.assign({}, state, { brutto: activeBrutto() });
     var r = calculate(input);
+    // Til forklaringsblokken: tallene bak de tolv lønningene og regnestykket for årsskatten
+    var minste = Math.min(r.brutto * MINSTE_RATE, MINSTE_MAX);
+    window._lonnut = { brutto: r.brutto, region: r.almRate, minste: minste, egne: r.fradragSum - minste - PERSON_FRAD - r.finnmark, finn: r.finnmark,
+      alm: r.alm, trinn: r.trinn.total, trygd: r.trygd, bsu: r.bsuFrad, tot: r.totalSkatt, netto: r.netto,
+      mode: state.mode, timepris: state.timepris, timer: state.timerUke, uker: state.ukerAr };
+    if(window.hvtLearn) hvtLearn.update('kalkulator-lonnut', window._lonnut);
 
     $('rBruttoMnd').textContent = fmtKr(r.bruttoMnd);
     $('rSkattMnd').textContent  = fmtKr(r.totalSkatt/12);
@@ -868,5 +773,235 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   render();
 })();
 </script>
+<script>
+// ── Forklaringsblokken «Ti lønninger under snittet, to over»: tolv månedslønner som søyler, netto nederst og
+//    forskuddstrekket skravert over. Tabelltrekk fordeler årsskatten på 10,5 måneder (ingenting i juni, halvt i
+//    desember), kalkulatorens snitt deler den på 12. Tallene kommer fra kalkulatorens calculate() via window._lonnut. ──
+(function(){
+  var KEY = 'kalkulator-lonnut';
+  var NB = '\u00a0';
+  var root, plot, raw = null, modus = 'tabell', lastW = 0, queued = false, ctx = null;
+  var mqDesk = window.matchMedia ? window.matchMedia('(min-width: 641px)') : null;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function all(name){ return root.querySelectorAll('[data-lrn="' + name + '"]'); }
+  function set(name, s){ all(name).forEach(function(el){ el.textContent = s; }); }
+  function show(name, on){ all(name).forEach(function(el){ el.hidden = !on; }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  // Bredden på en tekst, målt med skriften siden faktisk bruker (fungerer på alle språk)
+  function tw(s, font){
+    if(!ctx) ctx = document.createElement('canvas').getContext('2d');
+    ctx.font = font;
+    return Math.ceil(ctx.measureText(String(s)).width);
+  }
+  function nice(v){
+    var fs = [1, 2, 2.5, 5];
+    for(var e = 2; e < 9; e++) for(var i = 0; i < fs.length; i++){
+      var st = fs[i] * Math.pow(10, e);
+      if(Math.ceil(v * 1.02 / st) <= 6) return {step:st, max:Math.ceil(v * 1.02 / st) * st};
+    }
+    return {step:v, max:v};
+  }
+  // Runder delene slik at de summerer til den avrundede summen, så regnestykket går opp i hele kroner
+  function roundTo(parts, total){
+    var fl = parts.map(Math.floor), rest = Math.round(total) - fl.reduce(function(a, b){ return a + b; }, 0);
+    var ord = parts.map(function(v, i){ return [v - Math.floor(v), i]; }).sort(function(a, b){ return b[0] - a[0]; });
+    for(var k = 0; k < ord.length && rest > 0; k++, rest--) fl[ord[k][1]] += 1;
+    return fl;
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, fmt = L.kr;
+    var none = !d || !(d.brutto > 0);
+    q('none').hidden = !none;
+    show('main', !none);
+    if(none){ set('sr', ''); return; }
+    function kr(v){ return fmt(v) + NB + 'kr'; }
+    function nb(s){ return String(s).replace(/([0-9]) (?=[0-9]{3}(?![0-9]))/g, '$1' + NB).replace(/([0-9]) (?=%|kr)/g, '$1' + NB); }
+    function num(v){ var x = Math.round(v * 100) / 100; return x % 1 === 0 ? fmt(x) : String(x).replace('.', ','); }
+    var B = d.brutto, tot = d.tot, bm = B / 12, T = tot / 10.5, snitt = modus === 'snitt', zero = tot < 0.5, tab = !snitt && !zero;
+    var trekk = [], netto = [], i;
+    for(i = 0; i < 12; i++){ var tr = snitt ? tot / 12 : (i === 5 ? 0 : (i === 11 ? T / 2 : T)); trekk.push(tr); netto.push(bm - tr); }
+    var avg = d.netto / 12, diff = avg - netto[0];
+
+    // Merket over grafen og bryteren
+    var mine = !(d.mode === 'brutto' && B === 650000 && d.region === 0.22 && d.egne === 0 && !(d.bsu > 0));
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    var bTxt = d.mode === 'time' ? t('lrnLuTime', '{p} kr/t × {h} t × {w} uker = {b}', {p:num(d.timepris), h:num(d.timer), w:num(d.uker), b:kr(B)}) : kr(B);
+    var st = t('lrnLuState', '{b} i året · {r} · {f}', {b:bTxt, r:d.finn > 0 ? ph('Finnmark / Nord-Troms') : ph('resten av Norge'),
+      f:d.egne > 0 ? t('lrnLuEgne', '{k} i egne fradrag', {k:kr(d.egne)}) : ph('ingen egne fradrag')});
+    if(d.bsu > 0) st += ' · ' + t('lrnLuBsu', '{k} i BSU-fradrag', {k:kr(d.bsu)});
+    set('stateText', nb(st));
+    root.querySelectorAll('.lrn-seg button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-k') === modus ? 'true' : 'false'); });
+    show('capT', !snitt); show('capS', snitt);
+
+    // Grafen. Plassen til høyre tilpasses etikettene, og grafen skyves ned hvis tekstene over søylene ikke får plass.
+    var W = plot.clientWidth || 1056, V = W < 720;
+    lastW = W;
+    var cs = getComputedStyle(root), fam = cs.fontFamily || 'Inter, system-ui, sans-serif', serif = cs.getPropertyValue('--font-serif').trim() || 'Georgia, serif';
+    var fz = V ? 11 : 12, sans = function(wt, px){ return wt + ' ' + px + 'px ' + fam; };
+    var labA = ph('Trekk'), labN = ph('Netto'), labS = V ? ph('Snitt') : ph('Kalkulatorens snitt'), labSb = ph('årsnetto ÷ 12'), avgTxt = V ? fmt(avg) : kr(avg);
+    var gut = 12 + Math.max(tw(labA, sans(500, fz)), tw(labN, sans(500, fz)), tw(labS, sans(500, fz)),
+      V ? tw(avgTxt, sans(500, 12)) : Math.max(tw(labSb, sans(400, 11)), tw(avgTxt, '500 15px ' + serif))) + 4;
+    var notes = [];
+    if(tab) notes = [[t('lrnLuC1L', 'Ti måneder:'), t('lrnLuC1', '{k} under snittet.', {k:kr(diff)})],
+                     [t('lrnLuC2L', 'Juni:'), t('lrnLuC2', 'vanligvis ingen tabelltrekk. Det er som regel måneden feriepengene utbetales.')],
+                     [t('lrnLuC3L', 'Desember:'), t('lrnLuC3', 'halvt trekk.')]];
+    else if(!zero) notes = [[t('lrnLuC4L', 'Snittet:'), t('lrnLuC4', 'alle tolv lønningene blir like, {k}.', {k:kr(avg)})]];
+    var MK = t(V ? 'lrnLuMndN' : 'lrnLuMndK', V ? 'J,F,M,A,M,J,J,A,S,O,N,D' : 'jan,feb,mar,apr,mai,jun,jul,aug,sep,okt,nov,des').split(',');
+
+    for(var shift = 0, pass = 0; pass < 2; pass++){
+      var G = V ? {x0:46, y0:40 + shift, ph:240, H:332 + shift, ms:20} : {x0:56, y0:112 + shift, ph:330, H:472 + shift, ms:22};
+      G.slot = (W - G.x0 - gut) / 12; G.bw = G.slot * (V ? 16 / 21 : 54 / 78);
+      var ns = nice(bm), yMax = ns.max, yB = G.y0 + G.ph;
+      var yv = function(v){ return G.y0 + G.ph - v / yMax * G.ph; };
+      var bx = function(k){ return G.x0 + k * G.slot + (G.slot - G.bw) / 2; };
+      var cx = function(k){ return bx(k) + G.bw / 2; };
+      var x1 = G.x0 + 12 * G.slot, barTop = yv(bm), avgY = f1(yv(avg));
+      var D = {grid:'', net:'', tr:''}, lab = '', marks = '', chips = '', rl = '';
+      for(var v = 0; v <= yMax + 1; v += ns.step){
+        if(v > 0) D.grid += 'M' + G.x0 + ',' + f1(yv(v)) + ' H' + f1(x1) + ' ';
+        lab += '<span class="lrn-tick y" style="top:' + f1(yv(v) - 8) + 'px;width:' + (G.x0 - 12) + 'px">' + esc(fmt(v)) + '</span>';
+      }
+      // Søylene: netto nederst, trekket skravert over. Alle søyler når månedens brutto.
+      for(i = 0; i < 12; i++){
+        var nTop = yv(netto[i]);
+        D.net += 'M' + f1(bx(i)) + ',' + f1(nTop) + ' h' + f1(G.bw) + ' V' + f1(yB) + ' h' + f1(-G.bw) + ' Z ';
+        if(nTop - barTop > 0.5) D.tr += 'M' + f1(bx(i)) + ',' + f1(barTop) + ' h' + f1(G.bw) + ' V' + f1(nTop) + ' h' + f1(-G.bw) + ' Z ';
+        var xw = Math.min(40, G.slot);
+        lab += '<span class="lrn-tick x" style="left:' + f1(cx(i) - xw / 2) + 'px;top:' + f1(yB + 8) + 'px;width:' + f1(xw) + 'px">' + esc(MK[i] || '') + '</span>';
+      }
+      D.base = 'M' + G.x0 + ',' + f1(yB) + ' H' + f1(x1);
+      D.avg = 'M' + G.x0 + ',' + avgY + ' H' + f1(x1);
+
+      // Klammen over de ti vanlige månedene (juni er åpningen) og føringslinjer til juni og desember
+      var yBr = barTop - (V ? 12 : 16), tick = V ? 6 : 7;
+      var seg = function(a, b){ return 'M' + f1(bx(a)) + ',' + f1(yBr + tick) + ' V' + f1(yBr) + ' H' + f1(bx(b) + G.bw) + ' V' + f1(yBr + tick) + ' '; };
+      var topJ = V ? G.y0 - 12 : barTop - 52, topD = V ? G.y0 - 12 : yBr - 6;
+      D.br = tab ? seg(0, 4) + seg(6, 10) : '';
+      D.lead = tab ? 'M' + f1(cx(5)) + ',' + f1(topJ) + ' V' + f1(barTop - 3) + ' M' + f1(cx(11)) + ',' + f1(topD) + ' V' + f1(barTop - 3) : '';
+
+      // Forklaringene: tekst over søylene på brede skjermer, nummererte merker og liste under grafen på smale
+      var calls = [];
+      if(!V && tab){
+        var c2l = cx(5) - 100;
+        calls = [{n:0, left:bx(0), w:Math.min(300, c2l - bx(0) - 8), bottom:G.H - (yBr - 8), al:'left'},
+                 {n:1, left:c2l, w:200, bottom:G.H - (topJ - 4), al:'center'},
+                 {n:2, left:Math.min(W - 140, cx(11) - 70), w:140, bottom:G.H - (topD - 4), al:'center'}];
+      } else if(!V && notes.length) calls = [{n:0, left:bx(0), w:420, bottom:G.H - (barTop - 12), al:'left'}];
+      calls.forEach(function(c){
+        lab += '<div class="lrn-lu-call" style="left:' + f1(c.left) + 'px;bottom:' + f1(c.bottom) + 'px;width:' + f1(c.w) + 'px;text-align:' + c.al + '"><strong>' + esc(nb(notes[c.n][0])) + '</strong> ' + esc(nb(notes[c.n][1])) + '</div>';
+      });
+      if(V && notes.length){
+        var pos = tab ? [[(bx(0) + bx(4) + G.bw) / 2, yBr - 5 - G.ms], [cx(5), topJ - G.ms], [cx(11), topD - G.ms]] : [[(bx(0) + bx(11) + G.bw) / 2, barTop - 6 - G.ms]];
+        pos.forEach(function(p, j){ marks += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(p[0] - G.ms / 2) + 'px;top:' + f1(p[1]) + 'px">' + (j + 1) + '</span>'; });
+      }
+
+      // Beløpene: i søylene på brede skjermer (bare der det er plass), under aksen på smale
+      var chip = function(txt, k, y){
+        var w = tw(txt, sans(500, fz)) + 12;
+        if(!V && w > G.slot) return;
+        chips += '<span class="lrn-lu-chip" style="left:' + f1(cx(k) - w / 2) + 'px;top:' + f1(y) + 'px">' + esc(txt) + '</span>';
+      };
+      if(!V){
+        var inBar = function(a, b, txt, k){ if(yv(b) - yv(a) >= 24) chip(txt, k, (yv(a) + yv(b)) / 2 - 10); };
+        inBar(bm, netto[0], fmt(trekk[0]), 0);
+        inBar(netto[0], 0, fmt(netto[0]), 0);
+        if(tab){ inBar(netto[5], 0, fmt(netto[5]), 5); inBar(bm, netto[11], fmt(trekk[11]), 11); inBar(netto[11], 0, fmt(netto[11]), 11); }
+      } else {
+        chip(fmt(netto[0]), 0, yB + 28);
+        if(tab){ chip(fmt(netto[5]), 5, yB + 28); chip(fmt(netto[11]), 11, yB + 28); }
+      }
+
+      // Etikettene ved høyre ende: trekk og netto ved desember, snittlinja ved snittet
+      var lx = f1(x1 + (V ? 8 : 12)), dTop = yv(netto[11]), hatchMid = (barTop + dTop) / 2;
+      if(dTop - barTop >= 4) rl += '<span class="lrn-lu-rl" style="left:' + lx + 'px;top:' + f1(hatchMid - 8) + 'px"><b>' + esc(labA) + '</b></span>';
+      rl += '<span class="lrn-lu-rl" style="left:' + lx + 'px;top:' + f1((dTop + yB) / 2 - 8) + 'px"><b>' + esc(labN) + '</b></span>';
+      rl += '<span class="lrn-lu-rl s" style="left:' + lx + 'px;top:' + f1(Math.max(avgY - (V ? 17 : 24), hatchMid + (V ? 12 : 14))) + 'px"><b>' + esc(labS) + '</b>' +
+            (V ? '' : '<span>' + esc(labSb) + '</span>') + '<strong>' + esc(avgTxt) + '</strong></span>';
+
+      plot.classList.toggle('m', V);
+      plot.style.height = G.H + 'px';
+      var svg = plot.querySelector('svg');
+      svg.setAttribute('viewBox', '0 0 ' + W + ' ' + G.H);
+      for(var pn in D) svg.querySelectorAll('[data-p="' + pn + '"]').forEach(function(el){ el.setAttribute('d', D[pn]); });
+      q('labels').innerHTML = lab + chips + rl + marks;
+      // Lange tekster (andre språk) kan bryte over flere linjer: får de ikke plass over søylene, skyves grafen ned
+      var o = plot.getBoundingClientRect(), minTop = 0;
+      plot.querySelectorAll('.lrn-lu-call').forEach(function(e){ minTop = Math.min(minTop, e.getBoundingClientRect().top - o.top); });
+      if(minTop < 2 && shift === 0 && o.height > 0){ shift = Math.ceil(4 - minTop); continue; }
+      break;
+    }
+    q('notes').hidden = !V || !notes.length;
+    q('notes').innerHTML = notes.map(function(x, j){ return '<li><span class="lrn-mk" aria-hidden="true">' + (j + 1) + '</span><span>' + esc(nb(x[0] + ' ' + x[1])) + '</span></li>'; }).join('');
+
+    // Fortellingen i tall
+    var s1 = zero ? t('lrnLuS1n', 'Uten skatt får du {k} hver måned.', {k:kr(avg)})
+      : snitt ? t('lrnLuS1s', 'Med snittet får du {k} hver måned.', {k:kr(avg)})
+      : t('lrnLuS1', 'Med tabelltrekk får du {a} i ti måneder, {j} i juni og {d} i desember.', {a:kr(netto[0]), j:kr(netto[5]), d:kr(netto[11])});
+    set('sum1', nb(s1));
+    var s2 = t('lrnLuS2', 'Sum tolv lønninger: {k}, samme som årsnettoen over.', {k:kr(d.netto)});
+    if(tab) s2 += ' ' + t('lrnLuBal', 'De ti vanlige månedene ligger til sammen {k} under snittet. Juni og desember ligger like mye over.', {k:kr(diff * 10)});
+    set('sum2', nb(s2));
+    set('sr', nb(tab ? t('lrnLuSr', 'Med tabelltrekk får du {a} i ti måneder, {j} i juni og {d} i desember. Snittet er {s}.', {a:kr(netto[0]), j:kr(netto[5]), d:kr(netto[11]), s:kr(avg)}) : s1));
+
+    // Regnestykket bak trekket, med ruter for trekkene
+    show('fT', !snitt); show('fS', snitt); show('sqT', !snitt); show('sqS', snitt);
+    set('fSk', kr(tot)); set('fTrT', kr(T)); set('fTrS', kr(tot / 12));
+    var n = snitt ? 12 : 10, sq = '', hx = n * 20, sqW = hx + (snitt ? 0 : 16) - 4;
+    for(i = 0; i < n; i++) sq += 'M' + (i * 20) + ',0 h16 v16 h-16 Z ';
+    var svq = q('sq');
+    svq.setAttribute('width', sqW); svq.setAttribute('viewBox', '0 0 ' + sqW + ' 16');
+    svq.querySelectorAll('[data-p="sq"]').forEach(function(el){ el.setAttribute('d', sq); });
+    svq.querySelectorAll('[data-p="hq"]').forEach(function(el){ el.setAttribute('d', snitt ? '' : 'M' + hx + ',0 h8 v16 h-8 Z'); });
+    svq.querySelectorAll('[data-p="oq"]').forEach(function(el){ el.setAttribute('d', snitt ? '' : 'M' + (hx + 0.5) + ',0.5 h15 v15 h-15 Z'); });
+
+    // Tabellen
+    var MND = t('lrnLuMnd', 'januar,februar,mars,april,mai,juni,juli,august,september,oktober,november,desember').split(','), rows = '';
+    for(i = 0; i < 12; i++) rows += '<tr><th scope="row">' + esc(MND[i] || '') + '</th><td>' + fmt(bm) + '</td><td>' + fmt(trekk[i]) + '</td><td>' + fmt(netto[i]) + '</td></tr>';
+    q('rows').innerHTML = rows;
+
+    // Hvor årsskatten kommer fra. BSU-fradraget tas med når det er brukt, så regnestykket går opp.
+    var bsuUsed = Math.max(0, d.alm + d.trinn + d.trygd - tot), parts = roundTo([d.alm, d.trinn, d.trygd, -bsuUsed], tot);
+    set('gB', fmt(B)); set('gA', fmt(parts[0])); set('gT', fmt(parts[1])); set('gY', fmt(parts[2])); set('gU', fmt(-parts[3])); set('gN', kr(B - Math.round(tot)));
+    show('gBsu', bsuUsed >= 0.5);
+    var mi = Math.round(d.minste), gr = B - mi - 114540 - d.egne - d.finn;
+    set('gMi', fmt(mi)); set('gE', fmt(d.egne)); set('gG', kr(gr)); show('gF', d.finn > 0);
+    var sats = d.region * 100;
+    set('gS', nb(gr < 0 ? t('lrnLuG0', 'Fradragene er større enn lønna, så grunnlaget blir 0 kr og den alminnelige skatten 0 kr.')
+      : t('lrnLuAlm', 'Den alminnelige skatten er {p} av grunnlaget: {k}.', {p:(sats % 1 === 0 ? String(sats) : L.dec(sats, 1)) + NB + '%', k:kr(parts[0])})));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-lu');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-lu-plot');
+    root.querySelectorAll('.lrn-seg button').forEach(function(b){
+      b.addEventListener('click', function(){ modus = b.getAttribute('data-k'); render(raw); });
+    });
+    // Regnestykket og «Hvor årsskatten kommer fra» er sammenleggbare på mobil, men står åpne på brede skjermer
+    var fd = q('fd'), calc = root.querySelector('.lrn-calc');
+    function syncOpen(){ if(mqDesk && mqDesk.matches){ if(fd) fd.open = true; if(calc) calc.open = true; } }
+    syncOpen();
+    if(mqDesk && mqDesk.addEventListener) mqDesk.addEventListener('change', syncOpen);
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // Etikettene måles med siden sin skrift, så de plasseres på nytt når den er lastet
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(raw) schedule(); });
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._lonnut || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
 </body>
 </html>

@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v3">
 <style>
 /* Studielån — kalkulator-skall (delt mønster med /skatt/reise/ + /personlig/spare/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -213,145 +214,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
 </style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
-</style>
 </head>
 <body>
 
@@ -463,7 +325,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
             <section class="ks-section" aria-labelledby="secOppsettHdr">
               <div class="ik-section-head">
                 <h3 id="secOppsettHdr" data-i18n="studieSecOppsett">Studieoppsett</h3>
-                <span class="meta">Lånekassen 2025–26</span>
+                <span class="meta">Lånekassen 2026–27</span>
               </div>
               <div class="ik-stack">
                 <div class="ik-row">
@@ -600,8 +462,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
     <aside class="side-col">
       <div class="side-card">
-        <h4>Satser 2025–26</h4>
-        <div class="ref-row"><span class="l">Basislån</span><span class="v">15 169<span class="u">kr/mnd</span></span></div>
+        <h4>Satser 2026–27</h4>
+        <div class="ref-row"><span class="l">Basislån</span><span class="v">15 488<span class="u">kr/mnd</span></span></div>
         <div class="ref-row"><span class="l">Stipend med grad (borteboer)</span><span class="v accent">40<span class="u">%</span></span></div>
         <div class="ref-row"><span class="l">Stipend uten grad (borteboer)</span><span class="v">15<span class="u">%</span></span></div>
         <div class="ref-row"><span class="l">Rentefradrag</span><span class="v accent">22<span class="u">%</span></span></div>
@@ -629,74 +491,84 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: personlig-studie =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-personlig-studie">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-studie">Fra basislån til månedlig nedbetaling</h2><p class="lc-intro">Først regnes det ut hvor mye du får, og hvor mye av det som blir stipend. Resten er et annuitetslån: du betaler samme beløp hver måned til lånet er nedbetalt.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Basislån</b><span class="tag">Sats</span></span><span class="fig">15 169<span class="u">kr/mnd</span></span><p class="dsc">Grunnbeløpet Lånekassen gir per måned i studieåret 2025–26. Samme sats enten du bor hjemme eller borte. Ganges med antall utbetalingsmåneder og antall studieår.</p></div>
-        <div class="lc-led"><span class="nm"><b>Utbetalingsmåneder</b><span class="tag">Faktor</span></span><span class="fig">11<span class="u">mnd/år</span></span><p class="dsc">Hvor mange måneder i året du får utbetaling. Standard er 11; du kan velge 10. Færre måneder gir mindre samlet støtte — og dermed mindre lån.</p></div>
-        <div class="lc-led"><span class="nm"><b>Stipend ved fullført grad</b><span class="tag">Faktor</span></span><span class="fig">40<span class="u">%</span></span><p class="dsc">Av borteboer-delen av lånet gjøres 40 % om til stipend du slipper å betale tilbake (25 % for å fullføre graden, pluss 15 % for beståtte studiepoeng).</p></div>
-        <div class="lc-led"><span class="nm"><b>Stipend uten grad</b><span class="tag">Faktor</span></span><span class="fig">15<span class="u">%</span></span><p class="dsc">Tar du enkeltemner uten å fullføre en grad, omgjøres bare 15 % av borteboer-lånet til stipend — kun andelen for beståtte studiepoeng.</p></div>
-        <div class="lc-led"><span class="nm"><b>Nedbetalingstid</b><span class="tag">Faktor</span></span><span class="fig">20<span class="u">år</span></span><p class="dsc">Standard løpetid for et annuitetslån fra Lånekassen. Lengre tid gir lavere månedsbeløp, men mer renter totalt. Du kan justere mellom 1 og 30 år.</p></div>
-        <div class="lc-led"><span class="nm"><b>Rentefradrag</b><span class="tag">Fradrag</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Rentene du betaler gir 22 % skattefradrag. Kalkulatoren trekker dette fra og viser deg «reell kostnad etter skatt» — det lånet faktisk koster når fradraget er regnet med.</p></div>
+  <div class="lrn" id="lrn-st">
+    <section class="lrn-sec" aria-labelledby="lrn-st-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-st-h">Stipendet er lån som slettes etterpå</h2>
+        <p class="lrn-lede">Hele støtten utbetales som lån. For årene du bor borte slettes 15&nbsp;% når du består og 25&nbsp;% til når graden er fullført. <span data-lrn="ledeNed"></span></p>
       </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcB-personlig-studie">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-studie">Satsene for 2025–26</h2><p class="lc-intro">Satsene gjelder studieåret 2025–26. Renten på 5 % er bare et eksempel, ikke Lånekassens sats. Legg inn renten du får.</p></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <span class="ttl">Nøkkeltall</span>
-        <div class="lc-kv"><span class="k">Basislån</span><span class="v">15 169<span class="u">kr/mnd</span></span></div>
-        <div class="lc-kv"><span class="k">Stipendandel med fullført grad</span><span class="v">40<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Stipendandel uten grad</span><span class="v">15<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Standard nedbetalingstid</span><span class="v">20<span class="u">år</span></span></div>
-        <div class="lc-kv"><span class="k">Skattefradrag på renter</span><span class="v">22<span class="u">%</span></span></div>
-        <div class="lc-kv"><span class="k">Termingebyr (ikke medregnet)</span><span class="v">18<span class="u">kr/mnd</span></span></div>
-      </div>
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Stipendandelen (bare borteboer-delen)</caption>
-          <thead><tr><th>Vilkår</th><th class="r">Andel</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Fullført grad</span></td><td class="r">25 %</td></tr>
-            <tr><td><span class="step">Beståtte studiepoeng</span></td><td class="r">15 %</td></tr>
-            <tr><td><span class="step">Til sammen med grad</span></td><td class="r">40 %</td></tr>
-            <tr><td><span class="step">Uten fullført grad</span></td><td class="r">15 %</td></tr>
-          </tbody>
-        </table>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn studievarigheten i kalkulatoren.</p>
+      <div class="lrn-st-main" data-lrn="main">
+        <div class="lrn-bar">
+          <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+          <div class="lrn-seg" role="group" aria-label="Fullfører du en grad?">
+            <button type="button" aria-pressed="true" data-k="ja">Fullført grad</button>
+            <button type="button" aria-pressed="false" data-k="nei">Enkeltemner</button>
+          </div>
         </div>
+        <figure class="lrn-fig" aria-describedby="lrn-st-sr">
+          <figcaption class="lrn-cap"><span class="lrn-st-cd">Studieårene som søyler og nedbetalingen som en tynn flate til høyre. Flaten har egen kroneskala.</span><span class="lrn-st-cm">Studieårene som rader og nedbetalingen som et tynt bånd under. Båndet har egen kroneskala.</span></figcaption>
+          <div class="lrn-st-mhd" data-lrn="mhd" dir="ltr" aria-hidden="true"></div>
+          <div class="lrn-plot is-static lrn-st-plot" dir="ltr">
+            <svg aria-hidden="true" focusable="false">
+              <defs>
+                <pattern id="lrn-st-skrav" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-st-pb" x="0" y="0" width="6" height="6"/><line class="lrn-st-pl" x1="0" y1="0" x2="0" y2="6"/></pattern>
+                <pattern id="lrn-st-prikk" width="5" height="5" patternUnits="userSpaceOnUse"><rect class="lrn-st-pb" x="0" y="0" width="5" height="5"/><circle class="lrn-st-pc" cx="2.5" cy="2.5" r="1.2"/></pattern>
+              </defs>
+              <path class="lrn-st-laan" data-p="tail"/>
+              <path class="lrn-st-laan" data-p="laan"/>
+              <path class="lrn-st-band" data-p="band"/>
+              <path class="lrn-st-po" data-p="poeng"/>
+              <path class="lrn-st-gr" data-p="grad"/>
+              <path class="lrn-st-gh" data-p="ghost"/>
+              <path class="lrn-st-tt" data-p="tailTop"/>
+              <path class="lrn-st-ax" data-p="base"/>
+              <path class="lrn-st-ax" data-p="tick"/>
+              <path class="lrn-st-ax" data-p="lead"/>
+              <path class="lrn-st-br" data-p="br" data-lrn="br"/>
+            </svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <p class="lrn-st-sm" data-lrn="sm"></p>
+        <p class="lrn-p lrn-st-mob" data-lrn="mob"></p>
+        <p class="lrn-p lrn-st-mob" data-lrn="mobEnd"></p>
+        <div class="lrn-card lrn-st-card">
+          <span class="lrn-card-l">Regnestykket for stipendet</span>
+          <div class="lrn-f"><i>stipend</i><span>=</span><span><i>basislån per måned</i> × <i>utbetalingsmåneder</i> × <i>år borte</i> × <i>stipendandel</i></span></div>
+          <div class="lrn-f n"><span>=</span><span data-lrn="fExpr"></span><span>=</span><b data-lrn="fRes"></b></div>
+        </div>
+        <details class="lrn-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table>
+            <caption>Kroner, hele studiet</caption>
+            <thead><tr><th scope="col">År</th><th scope="col">Utbetalt</th><th scope="col">Stipend for poeng</th><th scope="col">Stipend for grad</th><th scope="col">Lån</th></tr></thead>
+            <tbody data-lrn="rows"></tbody>
+          </table></div>
+        </details>
       </div>
+      <p class="lrn-sr" id="lrn-st-sr" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-st-q">
+      <h3 class="lrn-h3" id="lrn-st-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details open><summary>Hvor mye blir egentlig gratis stipend?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p data-lrn="q1"></p></div></details>
+        <details><summary>Hva er forskjellen på å bo hjemme og bo borte?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Selve basislånet er likt, enten du bor hjemme eller borte. Forskjellen er at bare lånet for årene du bor borte kan gjøres om til stipend. Bor du hjemme, må du betale tilbake alt.</p></div></details>
+        <details><summary>Hvorfor viser kalkulatoren en «reell kostnad etter skatt»?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Rentene du betaler gir 22&nbsp;% skattefradrag. Kalkulatoren trekker fradraget fra totalbeløpet, så du ser hva lånet koster når skatten er regnet med.</p></div></details>
+        <details><summary>Hvilken rente skal jeg legge inn?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Renten i kalkulatoren er et eksempel du kan endre selv, den hentes ikke fra Lånekassen. Sjekk gjeldende studielånsrente hos Lånekassen og legg den inn for et mer presist anslag. Tabellen i kalkulatoren viser også månedsbeløp fra 2 til 8&nbsp;%.</p></div></details>
+        <details><summary>Er termingebyr og andre kostnader med?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Nei. Kalkulatoren regner bare renter og avdrag på selve lånet. Termingebyret på 18&nbsp;kr i måneden (0&nbsp;kr med eFaktura) er ikke med, så det reelle månedsbeløpet kan være litt høyere.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcC-personlig-studie">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-studie">Det som avgjør hvor mye som blir gratis</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Bare borteboer-delen kan bli stipend</h3><p>Basislånet er likt enten du bor hjemme eller borte. Men det er kun delen for årene du bor borte som kan gjøres om til stipend. Bor du hjemme hele studiet, blir hele lånet et lån du må betale tilbake.</p></div>
-        <div class="lc-note"><h3>Stipendet kommer ikke før poengene er bestått</h3><p>Du får først lånet utbetalt. Etter hvert som du består studiepoeng — og til slutt fullfører graden — gjøres deler av borteboer-lånet om til stipend. Stryker du, blir den delen stående som lån.</p></div>
-        <div class="lc-note"><h3>Skolepenger og ekstra lån er rent lån</h3><p>Legger du inn lån til skoleavgift eller ekstra lån, gjøres ingenting av dette om til stipend. Det legges på toppen av gjelden og betales tilbake i sin helhet.</p></div>
-        <div class="lc-note"><h3>Termingebyr er ikke med i tallene</h3><p>Lånekassen tar 18 kr per måned i termingebyr, eller 0 kr om du bruker eFaktura. Kalkulatoren regner ikke med dette, så reelt månedsbeløp kan ligge noen kroner høyere.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-personlig-studie">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-personlig-studie">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvor mye blir egentlig gratis stipend?</summary><div class="a"><p>Fullfører du en grad og bor borte, gjøres 40 % av borteboer-delen av lånet om til stipend. Uten fullført grad er det 15 %. Resten er lån du betaler tilbake. Bor du hjemme, blir ingenting omgjort.</p></div></details>
-        <details class="lc-q"><summary>Hva er forskjellen på å bo hjemme og bo borte?</summary><div class="a"><p>Selve basislånet er likt — 15 169 kr i måneden begge veier. Forskjellen er at bare lånet for årene du bor borte kan gjøres om til stipend. Bor du hjemme, må du betale tilbake alt.</p></div></details>
-        <details class="lc-q"><summary>Hva betyr stipendandelen 25 % pluss 15 %?</summary><div class="a"><p>De 40 % er satt sammen av to ting: 25 % får du for å fullføre en hel grad, og 15 % får du for å bestå studiepoengene underveis. Fullfører du ikke graden, får du bare de 15 %-ene for poeng.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor viser kalkulatoren en «reell kostnad etter skatt»?</summary><div class="a"><p>Rentene du betaler på studielånet gir 22 % skattefradrag. Kalkulatoren trekker fradraget fra totalbeløpet, så du ser hva lånet faktisk koster når skatten er regnet med.</p></div></details>
-        <details class="lc-q"><summary>Hvilken rente skal jeg legge inn?</summary><div class="a"><p>Renten i kalkulatoren er et eksempel du kan endre selv — den hentes ikke automatisk fra Lånekassen. Sjekk gjeldende studielånsrente hos Lånekassen og legg den inn for et mer presist anslag. Tabellen viser også månedsbeløp fra 2 til 8 %.</p></div></details>
-        <details class="lc-q"><summary>Er termingebyr og andre kostnader med?</summary><div class="a"><p>Nei. Kalkulatoren regner bare renter og avdrag på selve lånet. Termingebyret på 18 kr i måneden (0 kr med eFaktura) er ikke med, så reelt månedsbeløp kan være litt høyere.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-personlig-studie">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-personlig-studie">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Lag et budsjett</h3><p>Se hva du sitter igjen med etter husleie, mat og den månedlige nedbetalingen på studielånet.</p></a>
-        <a class="lc-link" href="/personlig/spare/"><span class="ar">Sparing →</span><h3>Sparekalkulator</h3><p>Sammenlign å betale ned lånet raskere mot å spare pengene — se hvordan renters rente vokser over tid.</p></a>
-        <a class="lc-link" href="/boliglan/mor/"><span class="ar">Nedbetaling →</span><h3>Nedbetaling av lån</h3><p>Se hvordan annuitetslån fungerer på et boliglån, med samme logikk for renter og avdrag som studielånet.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-st-r">
+      <h3 class="lrn-h3" id="lrn-st-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/personlig/budsjett/"><span><span class="t">Lag et budsjett</span><span class="d">Se hva du sitter igjen med etter husleie, mat og den månedlige nedbetalingen på studielånet.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/spare/"><span><span class="t">Sparekalkulator</span><span class="d">Sammenlign å betale ned lånet raskere mot å spare pengene, og se hvordan renters rente vokser over tid.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/mor/"><span><span class="t">Nedbetaling av lån</span><span class="d">Se hvordan annuitetslån fungerer på et boliglån, med samme logikk for renter og avdrag som studielånet.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -716,8 +588,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v232"></script>
-<script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/core.js?v=v233"></script>
+<script defer src="/shared/lang/no.js?v=v230"></script>
+<script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
 <script>
@@ -725,10 +598,10 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   (function(){
     var KEY = 'hv-studie-v1';
 
-    // Lånekassen 2025-26 — basislån, samme sats for borte- og hjemmeboere.
+    // Lånekassen 2026-27 — basislån, samme sats for borte- og hjemmeboere.
     // Forskjellen er stipend-omgjøring: kun borteboer-delen kan konverteres
     // (40 % ved fullført grad, 15 % uten).
-    function satser(){ return { borte: 15169, hjemme: 15169 }; }
+    function satser(){ return { borte: 15488, hjemme: 15488 }; }
 
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
     function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
@@ -841,6 +714,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var totRente = totBetalt - gjeld;
       var skatt = totRente * 0.22;
       var reell = totBetalt - skatt;
+      window._studie = { varighet:aar, grad:st.grad, borte:borte, mnd:st.mnd, skole:st.skolepenger, tillegg:st.tilleggslan, rente:rente, ned:nedbtid, basis:S.borte };
+      if(window.hvtLearn) hvtLearn.update('personlig-studie', window._studie);
 
       // ── Result panel ──
       $('rMnd').textContent = gjeld > 0 ? fmtKr(mndBet) : fmtKr(0);
@@ -1029,6 +904,302 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
   } else { init(); pollRender(); }
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken «Stipendet er lån som slettes etterpå»: hvert studieår som en søyle (lån, stipend for
+//    beståtte poeng og for fullført grad) og nedbetalingen som en tynn flate til høyre med egen kroneskala.
+//    Mobil: rader per studieår og nedbetalingen som et bånd under. Tallene kommer fra kalkulatoren via
+//    hvtLearn (window._studie), og regnemåten er den samme som i recalc. ──
+(function(){
+  var KEY = 'personlig-studie';
+  var NB = '\u00a0';
+  var DEF = {varighet:3, grad:'ja', borte:3, mnd:11, skole:0, tillegg:0, rente:5, ned:20};
+  var root, plot, raw = null, view = null, lastGrad = null, lastW = 0, queued = false;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function set(name, s){ root.querySelectorAll('[data-lrn="' + name + '"]').forEach(function(el){ el.textContent = s; }); }
+  function html(name, s){ root.querySelectorAll('[data-lrn="' + name + '"]').forEach(function(el){ el.innerHTML = s; }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function f2(v){ return Math.round(v * 100) / 100; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function R(x, y, w, h){ return 'M' + f2(x) + ',' + f2(y) + ' h' + f2(w) + ' v' + f2(h) + ' h' + f2(-w) + ' Z '; }
+  // Samme regnemåte som recalc i kalkulatoren
+  function kost(d, grad){
+    var aar = d.varighet, borte = Math.min(d.borte, aar), yearly = d.basis * d.mnd;
+    var total = aar * yearly, borteDel = borte * yearly, pct = grad ? 0.40 : 0.15;
+    var stipend = Math.round(borteDel * pct), ekstra = (d.skole + d.tillegg) * aar, gjeld = total - stipend + ekstra;
+    var r = d.rente / 100 / 12, n = d.ned * 12, mnd;
+    if(r > 0) mnd = gjeld * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+    else mnd = n > 0 ? gjeld / n : 0;
+    if(!isFinite(mnd) || mnd < 0) mnd = 0;
+    var tot = mnd * n, rente = tot - gjeld;
+    return {aar:aar, borte:borte, yearly:yearly, total:total, borteDel:borteDel, pct:pct, stipend:stipend, ekstra:ekstra, gjeld:gjeld, r:r, n:n, mnd:mnd, tot:tot, rente:rente, skatt:rente * 0.22};
+  }
+  // Største rest: heltall per år som summerer seg til totalen
+  function lrm(vals, target){
+    var fl = vals.map(function(v){ return Math.floor(v + 1e-9); });
+    var rest = target - fl.reduce(function(a, b){ return a + b; }, 0);
+    var ord = vals.map(function(v, i){ return {i:i, r:v - fl[i]}; }).sort(function(a, b){ return b.r - a.r; });
+    for(var k = 0; k < ord.length && rest > 0; k++){ fl[ord[k].i] += 1; rest -= 1; }
+    return fl;
+  }
+  function geo(W){
+    return W < 820
+      ? {mobile:true, W:W, gx:52, bw:W - 54, rowH:26, rowGap:8, ht:40}
+      : {mobile:false, W:W, H:378, xL:176, hc:244, g:3, yb:322, ht:62, gapU:1.2};
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, kr0 = L.kr;
+    var none = !d || !(d.varighet > 0);
+    q('none').hidden = !none;
+    q('main').hidden = none;
+    if(none){ set('sr', ''); return; }
+    function kr(v){ return kr0(v) + NB + 'kr'; }
+    // Mal med tallene i fet skrift
+    function tb(key, fb, vars, n){
+      var s = esc(t(key, fb, typeof n === 'number' ? {n:n} : null));
+      for(var k in vars) s = s.split('{' + k + '}').join('<strong>' + esc(vars[k]) + '</strong>');
+      return s;
+    }
+    if(lastGrad !== d.grad){ view = d.grad; lastGrad = d.grad; }
+    var grad = view === 'ja', k = kost(d, grad), sletter = kost(d, true).stipend - kost(d, false).stipend;
+    var N = k.aar, B = k.borte, T = d.ned, extraYr = d.skole + d.tillegg, yearly = k.yearly;
+    var pY = yearly * 0.15, gY = yearly * 0.25, poengYr = Math.round(pY), gradYr = Math.round(gY), laanBase = Math.round(yearly) - poengYr - gradYr;
+    var G = geo(plot.clientWidth || 1116), m = G.mobile;
+    lastW = G.W;
+    root.classList.toggle('lrn-st-m', m);
+    root.querySelectorAll('.lrn-seg button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-k') === view ? 'true' : 'false'); });
+
+    // Merket over grafen
+    var mine = !(d.varighet === DEF.varighet && d.grad === DEF.grad && d.borte === DEF.borte && d.mnd === DEF.mnd && d.skole === DEF.skole && d.tillegg === DEF.tillegg && d.rente === DEF.rente && d.ned === DEF.ned);
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    var varTxt = N === 3 ? ph('Bachelor') : (N === 5 ? ph('Master') : t('lrnStYrs', '{n} år', {n:N}));
+    var borteTxt = B === N ? t('lrnStBorte', '{n} år borte', {n:B}) : t('lrnStBorteAv', '{b} av {n} år borte', {b:B, n:N});
+    set('stateText', t('lrnStState', '{v}, {b}, {g}, {r} rente, {t}', {v:varTxt, b:borteTxt, g:grad ? ph('fullført grad') : ph('uten grad'), r:L.dec(d.rente, 1) + NB + '%', t:t('lrnStYrs', '{n} år', {n:T})}));
+    set('ledeNed', t('lrnStLedeNed', 'Resten betaler du ned over {n} år.', {n:T}));
+
+    // Månedlig restgjeld, som planen i kalkulatoren
+    var bal = [k.gjeld], rest = k.gjeld;
+    for(var i = 1; i <= k.n; i++){
+      var mA = k.mnd - rest * k.r;
+      if(mA > rest) mA = rest;
+      rest -= mA;
+      if(rest < 0) rest = 0;
+      bal.push(rest);
+    }
+    var gjeldX = k.gjeld > 0 ? k.gjeld : 1;
+    var D = {laan:'', band:'', poeng:'', grad:'', ghost:'', tail:'', tailTop:'', base:'', tick:'', lead:'', br:''};
+    var lab = '', H, mhd = '';
+    function bl(cls, left, top, w, l1, l2, extra){
+      return '<span class="lrn-st-bl' + (cls ? ' ' + cls : '') + '" style="left:' + f1(left) + 'px;' + (top !== null ? 'top:' + f1(top) + 'px;' : '') + (w ? 'width:' + f1(w) + 'px;' : '') + (extra || '') + '">'
+        + (l1 ? '<b>' + esc(l1) + '</b>' : '') + (l2 ? '<span>' + esc(l2) + '</span>' : '') + '</span>';
+    }
+    function tick(label, left, top, w, align){ return '<span class="lrn-tick" style="left:' + f1(left) + 'px;top:' + f1(top) + 'px;width:' + f1(w) + 'px;text-align:' + align + '">' + esc(label) + '</span>'; }
+
+    if(!m){
+      // ── Store skjermer: søyler til venstre og nedbetalingen til høyre på samme tidsakse ──
+      var u = Math.min(56, (G.W - G.xL - 8) / (N + G.gapU + T)), cw = u * 0.78, yb = G.yb, Sc = G.hc / (yearly + extraYr);
+      var colX = function(j){ return G.xL + j * u + (u - cw) / 2; };
+      var xT0 = G.xL + (N + G.gapU) * u;
+      var stack = function(isBorte){
+        var out = [], y = yb;
+        var push = function(kind, h){ if(h <= 0.05) return; y -= h; out.push({k:kind, y:y, h:h}); y -= G.g; };
+        if(!isBorte) push('laan', yearly * Sc);
+        else if(grad){ push('laan', (yearly - pY - gY) * Sc); push('poeng', pY * Sc); push('grad', gY * Sc); }
+        else {
+          var lh = (yearly - pY - gY) * Sc, gh = gY * Sc;
+          y -= lh + gh;
+          out.push({k:'laan', y:y, h:lh + gh});
+          out.push({k:'ghost', y:y, h:gh});
+          y -= G.g;
+          push('poeng', pY * Sc);
+        }
+        if(extraYr > 0) push('band', Math.max(3, extraYr * Sc));
+        return out;
+      };
+      var sB = stack(true), sH = stack(false);
+      for(i = 0; i < N; i++) (i < B ? sB : sH).forEach(function(r){ D[r.k] += R(colX(i), r.y, cw, r.h); });
+      var topOf = function(z){ return Math.min.apply(null, z.map(function(r){ return r.y; })); };
+      var topY = Math.min(B > 0 ? topOf(sB) : 1e9, N > B ? topOf(sH) : 1e9);
+      if(B > 0){
+        // Navn på delene til venstre for første søyle
+        var find = function(kind){ return sB.filter(function(r){ return r.k === kind; })[0]; };
+        var mid = function(r){ return r.y + r.h / 2; };
+        var items = grad
+          ? [[ph('Fullført grad'), t('lrnStGrad', '25 %, {k} per år', {k:kr(gradYr)}), mid(find('grad'))],
+             [ph('Bestått'), t('lrnStPoeng', '15 %, {k} per år', {k:kr(poengYr)}), mid(find('poeng'))],
+             [ph('Lån'), t('lrnStLaan', '60 %, {k} per år', {k:kr(laanBase)}), mid(find('laan'))]]
+          : [[ph('Bestått'), t('lrnStPoeng', '15 %, {k} per år', {k:kr(poengYr)}), mid(find('poeng'))],
+             [ph('Fullført grad'), t('lrnStGradLaan', '25 %, {k}, blir lån', {k:kr(gradYr)}), mid(find('ghost'))],
+             [ph('Lån'), t('lrnStLaan', '60 %, {k} per år', {k:kr(laanBase)}), yb - (yearly - pY - gY) * Sc / 2]];
+        items.forEach(function(it){
+          lab += bl('r mid', 0, it[2], G.xL - 16, it[0], it[1]);
+          D.lead += 'M' + (G.xL - 12) + ',' + f1(it[2]) + ' H' + f1(colX(0) - 3) + ' ';
+        });
+        // Felles klamme over borteboer-årene
+        var xa = colX(0), xb = colX(B - 1) + cw, by = topY - 14;
+        D.br = 'M' + f1(xa) + ',' + f1(by + 6) + ' V' + f1(by) + ' H' + f1(xb) + ' V' + f1(by + 6);
+        lab += bl('c', (xa + xb) / 2, null, 0, ph('Når graden er fullført'), t('lrnStSletter', 'Å fullføre graden sletter {k}', {k:kr(sletter)}), 'bottom:' + f1(G.H - by + 8) + 'px;');
+      }
+      // Navn til høyre for siste søyle: tillegg og hjemmeboer
+      var lastR = colX(N - 1) + cw, band = (N - 1 < B ? sB : sH).filter(function(r){ return r.k === 'band'; })[0], nextY = topY + 4, cy;
+      if(band){
+        cy = band.y + band.h / 2;
+        lab += bl('', lastR + 14, cy - 8, 0, ph('Blir aldri stipend'), ph('Skolepenger og ekstra lån'));
+        D.lead += 'M' + f1(lastR + 2) + ',' + f1(cy) + ' H' + f1(lastR + 10) + ' ';
+        nextY = cy + 40;
+      }
+      if(N > B){
+        var lo = sH.filter(function(r){ return r.k === 'laan'; })[0];
+        cy = Math.max(lo.y + 14, nextY + 8);
+        lab += bl('', lastR + 14, cy - 8, 0, ph('Bor hjemme: hele året er lån'), '');
+        D.lead += 'M' + f1(lastR + 2) + ',' + f1(cy) + ' H' + f1(lastR + 10) + ' ';
+      }
+      // Nedbetalingen
+      var xAt = function(mm){ return xT0 + mm / 12 * u; }, yAt = function(v){ return yb - v / gjeldX * G.ht; };
+      var pts = '';
+      for(i = 0; i <= k.n; i++) pts += (i ? 'L' : 'M') + f1(xAt(i)) + ',' + f1(yAt(bal[i])) + ' ';
+      D.tailTop = pts;
+      D.tail = pts + 'L' + f1(xAt(k.n)) + ',' + yb + ' L' + f1(xAt(0)) + ',' + yb + ' Z';
+      D.base = 'M' + f1(colX(0) - 8) + ',' + yb + ' H' + f1(xAt(k.n));
+      // Akser: studieår og nedbetalingsår
+      var tw = Math.min(28, u);
+      for(i = 0; i < N; i++) lab += tick(String(i + 1), colX(i) + cw / 2 - tw / 2, yb + 8, tw, 'center');
+      lab += tick(ph('Studieår'), colX(0) - 8, yb + 28, 80, 'left');
+      // Siste tall står inntil høyrekanten i stedet for å stikke ut
+      var tStep = T > 20 ? 10 : 5, rtick = function(v){ var x = xAt(v * 12); D.tick += 'M' + f1(x) + ',' + yb + ' V' + (yb + 4) + ' '; return x + 14 > G.W ? tick(String(v), G.W - 28, yb + 8, 28, 'right') : tick(String(v), x - 14, yb + 8, 28, 'center'); };
+      for(var s = 0; s <= T + 1e-9; s += tStep) lab += rtick(s);
+      if(T % tStep !== 0) lab += rtick(T);
+      lab += tick(ph('Nedbetalingsår'), xT0 - 4, yb + 28, 120, 'left');
+      lab += '<span class="lrn-st-bl t" style="left:' + f1(xT0 + 2) + 'px;top:' + f1(yb - G.ht - 42) + 'px"><span>' + esc(t('lrnStRest', 'Restgjeld {k}', {k:kr(k.gjeld)})) + '</span><b>' + esc(t('lrnStPay', '{k} i måneden i {n} år', {k:kr(k.mnd), n:T})) + '</b></span>';
+      lab += '<span class="lrn-st-end" data-lrn="end"><span>' + tb('lrnStTot', 'Totalt {t}, herav {r} renter.', {t:kr(k.tot), r:kr(k.rente)}) + '</span><span>'
+        + tb('lrnStSkatt', 'Rentefradraget (22 %) gir {s} tilbake.', {s:kr(k.skatt)}) + '</span><a href="#studieTables">' + esc(ph('Se planen år for år ↑')) + '</a></span>';
+      H = G.H;
+      var endPos = function(){
+        var e = q('end');
+        if(!e) return;
+        var ew = e.getBoundingClientRect().width, eLeft = G.W - 2 - ew, mAt = Math.max(0, Math.round((eLeft - xT0) / u * 12));
+        var hEdge = mAt >= k.n ? 0 : (yb - yAt(bal[Math.min(k.n, mAt)]));
+        e.style.top = f1(yb - hEdge - 12 - 56) + 'px';
+      };
+    } else {
+      // ── Mobil: rader per studieår og et tynt bånd under ──
+      var sc = G.bw / (yearly + extraYr), gp = 2, y = 4, rowTop = [];
+      for(i = 0; i < N; i++){
+        if(i === B && B > 0) y += 18;
+        if(i === B){ lab += bl('h', G.gx, y - 2, 0, ph('Bor hjemme: hele året er lån'), ''); y += 16; }
+        rowTop.push(y);
+        y += G.rowH + G.rowGap;
+      }
+      var rowsBottom = y - G.rowGap;
+      for(i = 0; i < N; i++){
+        var ry = rowTop[i], x = G.gx;
+        var seg = function(kind, v){
+          var w = v * sc;
+          if(w <= 0.05) return;
+          D[kind] += R(x, ry, Math.max(0.5, w - gp), G.rowH);
+          x += w;
+        };
+        if(i >= B) seg('laan', yearly);
+        else if(grad){ seg('laan', yearly - pY - gY); seg('poeng', pY); seg('grad', gY); }
+        else {
+          var x0 = x;
+          seg('laan', yearly - pY);
+          D.ghost += R(x0 + (yearly - pY - gY) * sc, ry, gY * sc - gp, G.rowH);
+          x = x0 + (yearly - pY) * sc;
+          seg('poeng', pY);
+        }
+        if(extraYr > 0) seg('band', Math.max(4 / sc, extraYr));
+        lab += tick(t('lrnStYr', 'År {y}', {y:i + 1}), 0, ry + 5, G.gx - 8, 'right');
+      }
+      // Navnene over radene, i samme rekkefølge som delene
+      if(B > 0){
+        var parts = grad
+          ? [[ph('Lån'), '60' + NB + '%', yearly - pY - gY], [ph('Bestått'), '15' + NB + '%', pY], [ph('Fullført grad'), '25' + NB + '%', gY]]
+          : [[ph('Lån'), '60' + NB + '%', yearly - pY - gY], [ph('Fullført grad'), '25' + NB + '%', gY], [ph('Bestått'), '15' + NB + '%', pY]];
+        mhd = '<span class="p" style="padding-inline-start:' + G.gx + 'px">' + parts.map(function(p){ return '<span style="width:' + f1(p[2] * sc) + 'px"><b>' + esc(p[0]) + '</b><span>' + esc(p[1]) + '</span></span>'; }).join('') + '</span>'
+          + (extraYr > 0 ? '<span class="x">' + esc(ph('Blir aldri stipend')) + '</span>' : '');
+      }
+      // Båndet for nedbetalingen
+      var labTop = rowsBottom + 22, ybm = labTop + 42 + G.ht, u2 = (G.W - 2) / T;
+      var xAtm = function(mm){ return 1 + mm / 12 * u2; }, yAtm = function(v){ return ybm - v / gjeldX * G.ht; };
+      var ptsm = '';
+      for(i = 0; i <= k.n; i++) ptsm += (i ? 'L' : 'M') + f1(xAtm(i)) + ',' + f1(yAtm(bal[i])) + ' ';
+      D.tailTop = ptsm;
+      D.tail = ptsm + 'L' + f1(xAtm(k.n)) + ',' + f1(ybm) + ' L' + f1(xAtm(0)) + ',' + f1(ybm) + ' Z';
+      D.base = 'M0,' + f1(ybm) + ' H' + G.W;
+      var st = T > 20 ? 10 : 5, yrs = t('lrnStYrs', '{n} år', {n:T});
+      for(var s2 = 0; s2 <= T + 1e-9; s2 += st){
+        D.tick += 'M' + f1(xAtm(s2 * 12)) + ',' + f1(ybm) + ' V' + f1(ybm + 4) + ' ';
+        if(s2 === 0) lab += tick('0', 0, ybm + 8, 28, 'left');
+        else if(s2 === T) lab += tick(yrs, G.W - 60, ybm + 8, 60, 'right');
+        else if(T - s2 >= 2) lab += tick(String(s2), xAtm(s2 * 12) - 14, ybm + 8, 28, 'center');
+      }
+      if(T % st !== 0) lab += tick(yrs, G.W - 60, ybm + 8, 60, 'right');
+      lab += '<span class="lrn-st-bl t" style="left:0;top:' + f1(labTop) + 'px"><span>' + esc(t('lrnStRest', 'Restgjeld {k}', {k:kr(k.gjeld)})) + '</span><b>' + esc(t('lrnStPay', '{k} i måneden i {n} år', {k:kr(k.mnd), n:T})) + '</b></span>';
+      H = Math.round(ybm + 30);
+    }
+
+    plot.classList.toggle('m', m);
+    plot.style.height = H + 'px';
+    var svg = plot.querySelector('svg');
+    svg.setAttribute('viewBox', '0 0 ' + G.W + ' ' + H);
+    for(var p in D) svg.querySelectorAll('[data-p="' + p + '"]').forEach(function(el){ el.setAttribute('d', D[p]); });
+    q('br').classList.toggle('d', !grad);
+    q('labels').innerHTML = lab;
+    html('mhd', mhd);
+    if(!m) endPos();
+
+    // Setningene, regnestykket og tabellen
+    var smVars = {u:kr(k.total), s:kr(k.stipend), t:kr(k.ekstra), g:kr(k.gjeld)};
+    html('sm', k.ekstra > 0 ? tb('lrnStSmT', 'Utbetalt {u} · stipend {s} · tillegg {t} · gjeld {g}', smVars) : tb('lrnStSm', 'Utbetalt {u} · stipend {s} · gjeld {g}', smVars));
+    set('mob', B > 0
+      ? (grad ? t('lrnStMob', 'Å fullføre graden sletter {s}. Per borteboerår: {l} lån, {p} stipend for beståtte poeng og {g} for fullført grad.', {s:kr(sletter), l:kr(laanBase), p:kr(poengYr), g:kr(gradYr)})
+              : t('lrnStMobN', 'Å fullføre graden sletter {s}. Per borteboerår: {l} lån, {p} stipend for beståtte poeng og {g} for fullført grad, som da blir lån.', {s:kr(sletter), l:kr(laanBase), p:kr(poengYr), g:kr(gradYr)}))
+      : t('lrnStMob0', 'Alle årene bor du hjemme, så ingenting blir stipend.'));
+    html('mobEnd', tb('lrnStTot', 'Totalt {t}, herav {r} renter.', {t:kr(k.tot), r:kr(k.rente)}) + ' ' + tb('lrnStSkatt', 'Rentefradraget (22 %) gir {s} tilbake.', {s:kr(k.skatt)}) + ' <a href="#studieTables">' + esc(ph('Se planen år for år ↑')) + '</a>');
+    set('fExpr', kr0(d.basis) + ' × ' + d.mnd + ' × ' + B + ' × ' + Math.round(k.pct * 100) + NB + '%');
+    set('fRes', kr(k.stipend));
+    var perP = lrm(Array.apply(null, Array(B)).map(function(){ return pY; }), Math.round(k.borteDel * 0.15));
+    var perG = lrm(Array.apply(null, Array(B)).map(function(){ return gY; }), Math.round(k.borteDel * 0.25));
+    var rows = '', sU = 0, sP = 0, sG = 0, sL = 0;
+    for(i = 0; i < N; i++){
+      var ut = Math.round(yearly) + extraYr, po = i < B ? perP[i] : 0, gr = i < B && grad ? perG[i] : 0;
+      sU += ut; sP += po; sG += gr; sL += ut - po - gr;
+      rows += '<tr><th scope="row">' + (i + 1) + (i < B ? '' : ' ' + esc(ph('(hjemme)'))) + '</th><td>' + kr0(ut) + '</td><td>' + kr0(po) + '</td><td>' + kr0(gr) + '</td><td>' + kr0(ut - po - gr) + '</td></tr>';
+    }
+    rows += '<tr class="is-key"><th scope="row">' + esc(ph('Sum')) + '</th><td>' + kr0(sU) + '</td><td>' + kr0(sP) + '</td><td>' + kr0(sG) + '</td><td>' + kr0(sL) + '</td></tr>';
+    q('rows').innerHTML = rows;
+    // Spørsmålet om gratis stipend: tre år borte, 11 måneder, med og uten grad
+    var ex = 3 * 11 * d.basis;
+    set('q1', t('lrnStQ1', 'Fullfører du graden og bor borte i tre år, blir {g} av {t} stipend. Uten grad er det {u}. Bor du hjemme, blir ingenting omgjort.', {g:kr(Math.round(ex * 0.40)), t:kr(ex), u:kr(Math.round(ex * 0.15))}));
+    set('sr', t('lrnStSr', 'Av {t} i støtte blir {s} stipend.', {t:kr(k.total), s:kr(k.stipend)}) + (extraYr > 0 ? ' ' + t('lrnStSrX', 'Skolepenger og ekstra lån på {k} blir aldri stipend.', {k:kr(k.ekstra)}) : '')
+      + ' ' + t('lrnStSrN', 'Du betaler tilbake {g} over {n} år, {m} i måneden.', {g:kr(k.gjeld), n:T, m:kr(k.mnd)}));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-st');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-st-plot');
+    root.querySelectorAll('.lrn-seg button').forEach(function(b){
+      b.addEventListener('click', function(){ view = b.getAttribute('data-k'); render(raw); });
+    });
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._studie || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 

@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v232" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v233" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -53,7 +53,8 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
-<link rel="stylesheet" href="/shared/bok/bok-render.css?v=v2">
+<link rel="stylesheet" href="/shared/bok/bok-render.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v3">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -625,167 +626,6 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .site-footer-full .footer-author{font-size:12px;color:var(--ink3);}
   .site-footer-full .footer-copy{font-size:12px;color:var(--ink3);line-height:1.6;}
 </style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-.bok-liste + .lc-links{margin-top:24px}
-
-/* Regelsettene side om side: regelsettet er radoverskrift (th scope=row),
-   ikke en tabellhode-etikett. Notatene står i full bredde under tabellen. */
-#side-om-side .bok-tabell tbody th{
-  width:28%;padding:12px 16px 12px 0;border-bottom:1px solid var(--line);
-  font:600 13.5px/1.5 var(--font-sans);letter-spacing:0;text-transform:none;color:var(--ink);
-  text-align:left;vertical-align:top;
-}
-#side-om-side .bok-tabell tbody tr:last-child th{border-bottom:none}
-/* Luften mellom kolonnene er radoverskriftens padding-right. Andre kolonne
-   får ingen egen venstreluft, så hode og celler står på samme linje. */
-#side-om-side .bok-tabell th + th,#side-om-side .bok-tabell th + td{padding-left:0}
-#side-om-side .lc-note{margin:16px 0 0}
-/* På mobil blir hver rad en blokk: regelsettet som fet linje, noteteksten
-   i full bredde under. Theaden skjules visuelt, ikke med display:none. */
-@media(max-width:560px){
-  #side-om-side .bok-tabell thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-  #side-om-side .bok-tabell tr,#side-om-side .bok-tabell th,#side-om-side .bok-tabell td{display:block;width:auto;padding-right:0}
-  #side-om-side .bok-tabell tbody th{width:auto;padding-right:0;padding-bottom:2px;border-bottom:0}
-  #side-om-side .bok-tabell td{padding-top:0}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
-</style>
 </head>
 <body>
 <a class="skip" href="#main" data-i18n="skipLink">Hopp til hovedinnhold</a>
@@ -971,66 +811,118 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
     </div>
   </div>
 
+<!-- =============== LAER-INNHOLD: regnskap-avsetninger =============== -->
 <div class="container" data-ph-skip lang="nb" dir="ltr">
-  <div class="lonn-learn">
-
-    <section class="lc-sec" id="begreper" aria-labelledby="lcA-avs">
-      <div class="lc-head"><span class="lc-kicker">Tre begreper</span><h2 class="lc-title" id="lcA-avs">Avsetning, påløpt kostnad eller betinget forpliktelse?</h2><p class="lc-intro">Forskjellen er hvor sikkert beløpet er, og hvor sannsynlig det er at dere må betale.</p></div>
-      <div class="bok-begreper">
-        <div class="bok-begrep">
-          <h3>Påløpt kostnad</h3>
-          <p>Beløp og tidspunkt er kjent, eller nesten kjent.</p>
-          <p><strong>I balansen:</strong> ja, som annen kortsiktig gjeld.</p>
-          <p><strong>Eksempel:</strong> feriepenger, strøm, revisjonshonorar.</p>
-        </div>
-        <div class="bok-begrep">
-          <h3>Avsetning</h3>
-          <p>Forpliktelsen finnes, men beløpet eller tidspunktet er usikkert.</p>
-          <p><strong>I balansen:</strong> ja, som egen gjeldspost (avsetning for forpliktelser).</p>
-          <p><strong>Eksempel:</strong> garantier på solgte varer, en rettssak dere trolig taper.</p>
-        </div>
-        <div class="bok-begrep">
-          <h3>Betinget forpliktelse</h3>
-          <p>Under 50&nbsp;% sannsynlig at dere må betale, eller beløpet kan ikke anslås.</p>
-          <p><strong>I balansen:</strong> nei, bare note (under 10&nbsp;%: som regel ingen note).</p>
-          <p><strong>Eksempel:</strong> en rettssak dere trolig vinner.</p>
-        </div>
+  <div class="lrn" id="lrn-ap">
+    <section class="lrn-sec" aria-labelledby="lrn-ap-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-ap-h">Sannsynligheten er en bryter, ikke en glideskala</h2>
+        <p class="lrn-lede">Vurderingen går i fast rekkefølge, og det første svaret som stopper saken, avgjør utfallet. Ved 10&nbsp;% og 50&nbsp;% skifter utfallet, uansett beløp.</p>
       </div>
+      <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine svar ↑</a></p>
+      <figure class="lrn-fig" aria-describedby="lrn-ap-sr lrn-ap-liste">
+        <figcaption class="lrn-cap">Fire spørsmål i fast rekkefølge, seks utganger til fire utfall</figcaption>
+        <div class="lrn-ap-plot">
+          <div class="lrn-ap-canvas">
+            <svg aria-hidden="true" focusable="false"><defs><pattern id="lrn-ap-hoved" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="lrn-ap-hl" x1="0" y1="0" x2="0" y2="6"/></pattern><pattern id="lrn-ap-skrav" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-ap-pr" x="0" y="0" width="5" height="5"/><line class="lrn-ap-ph" x1="0" y1="0" x2="0" y2="5"/></pattern></defs><g data-p="g"></g></svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </div>
+      </figure>
+      <p class="lrn-cmp" aria-live="polite" data-lrn="out"></p>
+      <p class="lrn-sr" id="lrn-ap-sr" data-lrn="sr"></p>
+      <ol class="lrn-sr" id="lrn-ap-liste">
+        <li>Hendelse før balansedagen. Nei: uten en hendelse før balansedagen finnes det ingen forpliktelse å vurdere, utfallet er ingen forpliktelse. Ja: en forpliktelse er mulig.</li>
+        <li>Kan unngås ved egne valg. Ja: utgiften hører til framtidig drift, ikke til noe dere skylder i dag, utfallet er ingen forpliktelse. Nei: dere kan ikke velge dere bort fra den, forpliktelsen er reell.</li>
+        <li>Sannsynlighet for å måtte betale. Under 10&nbsp;%: svært lite sannsynlig, utfallet er ingenting, men for garantier skal summen likevel stå i noten. 10–50&nbsp;%: under terskelen på 50&nbsp;%, det er en betinget forpliktelse, utfallet er note. Over 50&nbsp;%: det er mer sannsynlig at dere må betale enn at dere slipper.</li>
+        <li>Beløpet kan anslås. Nei: uten et pålitelig anslag kan ingenting føres i balansen, utfallet er note. Ja: avsetningen settes til beste estimat, utfallet er avsetning.</li>
+      </ol>
     </section>
 
-    <section class="lc-sec" id="feil" aria-labelledby="lcC-avs">
-      <div class="lc-head"><span class="lc-kicker">Vanlige feil</span><h2 class="lc-title" id="lcC-avs">Det som <em>oftest</em> går galt</h2></div>
-      <ul class="bok-liste">
-        <li><strong>Lar beløpet styre vurderingen.</strong> 45&nbsp;% sjanse for å tape en rettssak om 12 millioner gir bare note. Terskelen er en bryter, ikke en glideskala.</li>
-        <li><strong>Avsetter for framtidige driftstap.</strong> Det er aldri en forpliktelse. Vurder heller om eiendelene må skrives ned (nedskrivning).</li>
-        <li><strong>Bruker avsetninger til å jevne ut resultatet.</strong> Å sette av ekstra i gode år og løse opp i dårlige er ikke tillatt. En avsetning skal være beste estimat, ikke en buffer.</li>
-        <li><strong>Kaller påløpte kostnader avsetninger.</strong> Feriepenger, strøm og revisjonshonorar har kjent beløp. Det er vanlig gjeld.</li>
-        <li><strong>Vurderer ulike saker under ett.</strong> Mange like garantier på solgte varer vurderes samlet. Skattesaker om ulike spørsmål må vurderes hver for seg.</li>
-        <li><strong>Regner med penger tilbake for tidlig.</strong> Det dere venter å få tilbake fra forsikring eller andre (regress), blir eiendel først når det er så godt som sikkert: nær 100&nbsp;%, ikke 50&nbsp;%. Avsetningen føres brutto, altså uten å trekke fra dette.</li>
-        <li><strong>Lar en gammel avsetning stå urørt.</strong> Den skal vurderes på nytt hver balansedag. Står den uendret i årevis, vil revisor spørre hvorfor.</li>
-      </ul>
-    </section>
-
-    <section class="lc-sec" id="side-om-side" aria-labelledby="lcB-avs">
-      <div class="lc-head"><span class="lc-kicker">Regelsettene side om side</span><h2 class="lc-title" id="lcB-avs">Hva <em>regelsettet</em> endrer</h2><p class="lc-intro">Grensen er over 50&nbsp;% i alle fire. Forskjellen er hva som må stå i noten, pluss noen unntak for periodisk vedlikehold og for små foretak. Norsk GAAP betyr regnskapsloven og de norske standardene (NRS). De fleste AS er små foretak (regnskapsloven § 1-5).</p></div>
-      <div class="lc-tblwrap">
-        <table class="lc-trinn bok-tabell">
-          <thead><tr><th scope="col">Regelsett</th><th scope="col">Note når det ikke blir avsetning</th></tr></thead>
+    <section class="lrn-sec lrn-ed" id="side-om-side" aria-labelledby="lrn-ap-a">
+      <div class="lrn-head">
+        <span class="lrn-eb">Regelsettene side om side</span>
+        <h2 class="lrn-h2" id="lrn-ap-a">Hva <em>regelsettet</em> endrer</h2>
+        <p class="lrn-lede">Grensen er over 50&nbsp;% i alle fire. Forskjellen er hva som må stå i noten, pluss noen unntak for periodisk vedlikehold og for små foretak.<a class="lrn-mkl" href="#mk-2" aria-label="Se utgang 2 i treet">2</a></p>
+        <p class="lrn-lede s">Norsk GAAP betyr regnskapsloven og de norske standardene (NRS). De fleste AS er små foretak (regnskapsloven §&nbsp;1-5).</p>
+      </div>
+      <div class="lrn-rules">
+        <div class="lrn-rules-thr"><span class="l">Terskel for avsetning</span><span class="v">Over 50&nbsp;% i alle fire</span></div>
+        <table aria-label="Regelsettene side om side">
+          <colgroup><col class="a"><col class="b"><col></colgroup>
+          <thead><tr><th scope="col">Regelsett</th><th scope="col" class="c">Terskel for avsetning</th><th scope="col" class="n">Note når det ikke blir avsetning</th></tr></thead>
           <tbody>
-            <tr><th scope="row">Norsk GAAP, andre enn små foretak</th><td>Note om garantier dere har stilt (garantiforpliktelser, § 7-28), andre forpliktelser (§ 7-29) og forhold med betinget utfall (§ 7-33). Foretak av allmenn interesse (noterte foretak, banker, kredittforetak og forsikringsforetak, regnskapsloven § 1-6) skal alltid gi de utvidede opplysningene i NRS 13. Andre skal gi dem når forpliktelsene er vesentlige.</td></tr>
-            <tr><th scope="row">Små foretak</th><td>Notekravene i NRS 13 gjelder ikke. Opplys det som trengs for å bedømme stilling og resultat (§ 7-1 annet ledd), og alltid summen av garantiforpliktelser som ikke er regnskapsført (§ 7-40 tredje ledd).</td></tr>
-            <tr><th scope="row">Forenklet IFRS</th><td>IAS 37 gjelder fullt ut for innregning og måling. Notekravene kan reduseres etter kapittel 4 i forskriften om forenklet anvendelse av internasjonale regnskapsstandarder.</td></tr>
-            <tr><th scope="row">Full IFRS</th><td>Note om betingede forpliktelser, unntatt når det er svært lite sannsynlig at dere må betale eller yte noe (utstrømming av ressurser, IAS 37 avsnitt 86).</td></tr>
+            <tr><th scope="row"><span class="t">Norsk GAAP, andre enn små foretak</span><span class="s">NRS 13</span></th><td rowspan="4" class="thr">Over 50&nbsp;% i alle fire</td><td class="n" data-l="Note når det ikke blir avsetning">Note om garantier dere har stilt (garantiforpliktelser, §&nbsp;7-28), andre forpliktelser (§&nbsp;7-29) og forhold med betinget utfall (§&nbsp;7-33). Foretak av allmenn interesse (noterte foretak, banker, kredittforetak og forsikringsforetak, regnskapsloven §&nbsp;1-6) skal alltid gi de utvidede opplysningene i NRS 13. Andre skal gi dem når forpliktelsene er vesentlige.</td></tr>
+            <tr><th scope="row"><span class="t">Små foretak</span><span class="s">NRS 8 viser til NRS 13</span></th><td class="n" data-l="Note når det ikke blir avsetning">Notekravene i NRS 13 gjelder ikke. Opplys det som trengs for å bedømme stilling og resultat (§&nbsp;7-1 annet ledd), og alltid summen av garantiforpliktelser som ikke er regnskapsført (§&nbsp;7-40 tredje ledd).</td></tr>
+            <tr><th scope="row"><span class="t">Forenklet IFRS</span><span class="s">IAS 37 for innregning og måling</span></th><td class="n" data-l="Note når det ikke blir avsetning">Notekravene kan reduseres etter kapittel 4 i forskriften om forenklet anvendelse av internasjonale regnskapsstandarder.</td></tr>
+            <tr><th scope="row"><span class="t">Full IFRS</span><span class="s">«probable», IAS 37 avsnitt 23</span></th><td class="n" data-l="Note når det ikke blir avsetning">Note om betingede forpliktelser, unntatt når det er svært lite sannsynlig at dere må betale eller yte noe (utstrømming av ressurser, IAS 37 avsnitt 86).</td></tr>
           </tbody>
         </table>
+        <p class="lrn-fn" id="fotnote-vedlikehold"><a class="lrn-mkl" href="#mk-2" aria-label="Tilbake til utgang 2 i treet">2</a><span><strong>Unntak: periodisk vedlikehold</strong>, store jobber med noen års mellomrom, som dokking av skip. Norsk GAAP godtar fortsatt avsetning som en «tillatt løsning» ved siden av hovedregelen, selv om utgiften kan unngås (NRS 13 punkt 7.6). IFRS forbyr det. Små foretak kan føre vedlikeholdet som kostnad når det gjøres.</span></p>
+        <p class="lrn-fn"><span><strong>Unntak for små foretak: fjerning og opprydding</strong>, for eksempel av et anlegg når leieavtalen går ut. Utgiften kan føres som kostnad når arbeidet gjøres, uten avsetning (NRS 8 punkt 6.1.1.3.3).</span></p>
       </div>
-      <p class="lc-note"><strong>Unntak: periodisk vedlikehold</strong>, store jobber med noen års mellomrom, som dokking av skip. Norsk GAAP godtar fortsatt avsetning som en «tillatt løsning» ved siden av hovedregelen, selv om utgiften kan unngås (NRS 13 punkt 7.6). IFRS forbyr det. Små foretak kan føre vedlikeholdet som kostnad når det gjøres.</p>
-      <p class="lc-note"><strong>Unntak for små foretak: fjerning og opprydding</strong>, for eksempel av et anlegg når leieavtalen går ut. Utgiften kan føres som kostnad når arbeidet gjøres, uten avsetning (NRS 8 punkt 6.1.1.3.3).</p>
     </section>
 
-    <section class="lc-sec" id="dokumentasjon" aria-labelledby="lcD-avs">
-      <div class="lc-head"><span class="lc-kicker">Dokumentasjon</span><h2 class="lc-title" id="lcD-avs">Hva revisor <em>spør om</em></h2></div>
-      <ul class="bok-liste">
+    <section class="lrn-sec lrn-ed" id="hjemmel" aria-labelledby="lrn-ap-b">
+      <div class="lrn-head">
+        <span class="lrn-eb">Hjemmel</span>
+        <h2 class="lrn-h2" id="lrn-ap-b">Hvor det <em>står</em></h2>
+        <p class="lrn-lede">Lovtekst kan gjengis fritt. Regnskapsstandarder er opphavsrettsbeskyttet, og omtales derfor bare ved nummer og med egne ord.</p>
+      </div>
+      <details class="lrn-hj-fd">
+        <summary>Lov og standarder<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+        <div class="lrn-hj">
+          <div>
+            <span class="lrn-hj-l">Lovtekst</span>
+            <ul class="lrn-law">
+            <li><p><span class="t">Regnskapsloven §&nbsp;4-1 første ledd nr. 4</span></p><blockquote>«Urealisert tap skal resultatføres (forsiktighetsprinsippet).»</blockquote></li>
+            <li><p><span class="t">Regnskapsloven §&nbsp;4-2 første ledd</span></p><blockquote>«Ved usikkerhet skal det brukes beste estimat, på bakgrunn av den informasjon som er tilgjengelig når årsregnskapet avlegges.»</blockquote></li>
+            <li><p><span class="t">Regnskapsloven §&nbsp;6-2, del D I</span> — egen balansegruppe «Avsetning for forpliktelser», med linjen «Andre avsetninger for forpliktelser».</p></li>
+            <li><p><span class="t">Regnskapsloven §&nbsp;7-21 tredje ledd</span></p><blockquote>«Det skal opplyses hvilke forpliktelser som er dekket av andre avsetninger som nevnt i §&nbsp;6-2 D I nr. 3.»</blockquote></li>
+            <li><p><span class="t">Regnskapsloven §§&nbsp;7-28, 7-29 og 7-33</span> — noter om garantiforpliktelser og andre forpliktelser som ikke er regnskapsført, og om forhold med betinget utfall. Små foretak: §&nbsp;7-40 tredje ledd for garantiforpliktelsene.</p></li>
+            </ul>
+            <p class="lrn-ext"><a href="https://lovdata.no/dokument/NL/lov/1998-07-17-56"><span>Regnskapsloven på Lovdata</span><svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><path d="M3 1.5 H9.5 V8 M9.5 1.5 L1.5 9.5"/></svg><span class="lrn-sr">(ekstern lenke)</span></a></p>
+          </div>
+          <div>
+            <span class="lrn-hj-l">Standarder, omtales, gjengis ikke</span>
+            <ul class="lrn-std">
+            <li><span class="t">NRS 13 Usikre forpliktelser og betingede eiendeler</span><span class="d">(januar 2025) — vilkårene i punkt 4.1, sannsynlighetsskalaen i punkt 3.2, like forpliktelser samlet i punkt 4.2, betingede forpliktelser i punkt 5 og periodisk vedlikehold i punkt 7.6.</span></li>
+            <li><span class="t">NRS 8 God regnskapsskikk for små foretak</span><span class="d">(desember 2025) — viser til NRS 13 for innregning og måling, med lettere notekrav og et unntak for fjerning og opprydding i punkt 6.1.1.3.3.</span></li>
+            <li><span class="t">IAS 37 Avsetninger, betingede forpliktelser og betingede eiendeler</span><span class="d">Vilkårene i avsnitt 14, «probable» (mer sannsynlig enn ikke) i avsnitt 23, like forpliktelser samlet i avsnitt 24 og noten i avsnitt 86.</span></li>
+            </ul>
+            <p class="lrn-ext"><a href="https://www.regnskapsstiftelsen.no/regnskap/regnskapsstandarder/nrs-13-usikre-forpliktelser-og-betingede-eiendeler/"><span>NRS 13 hos Regnskapsstiftelsen</span><svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true"><path d="M3 1.5 H9.5 V8 M9.5 1.5 L1.5 9.5"/></svg><span class="lrn-sr">(ekstern lenke)</span></a></p>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section class="lrn-sec lrn-ed side" id="feil" aria-labelledby="lrn-ap-c">
+      <div class="lrn-head">
+        <span class="lrn-eb">Vanlige feil</span>
+        <h2 class="lrn-h2" id="lrn-ap-c">Det som <em>oftest</em> går galt</h2>
+        <p class="lrn-lede">De fleste feilene kommer av at begrepene blandes, eller av at størrelsen på beløpet får styre vurderingen.</p>
+      </div>
+      <div class="lrn-err-w">
+        <p class="lrn-err-hint">Sirkelen med tall står også i treet, der feilen skjer. Trykk på den for å hoppe mellom treet og lista.</p>
+        <ul class="lrn-err">
+          <li id="feil-1"><span><a href="#mk-1" aria-label="Tilbake til punkt 1 i treet: beløpet"><span aria-hidden="true">1</span></a></span><span><strong>Lar beløpet styre vurderingen.</strong> 45&nbsp;% sjanse for å tape en rettssak om 12 millioner gir bare note. Terskelen er en bryter, ikke en glideskala.</span></li>
+          <li id="feil-2"><span><a href="#mk-2" aria-label="Tilbake til punkt 2 i treet: framtidige driftstap"><span aria-hidden="true">2</span></a></span><span><strong>Avsetter for framtidige driftstap.</strong> Det er aldri en forpliktelse. Vurder heller om eiendelene må skrives ned (nedskrivning).</span></li>
+          <li id="feil-3"><span><a href="#mk-3" aria-label="Tilbake til punkt 3 i treet: utjevning av resultatet"><span aria-hidden="true">3</span></a></span><span><strong>Bruker avsetninger til å jevne ut resultatet.</strong> Å sette av ekstra i gode år og løse opp i dårlige er ikke tillatt. En avsetning skal være beste estimat, ikke en buffer.</span></li>
+          <li id="feil-4"><span><a href="#mk-4" aria-label="Tilbake til punkt 4 i treet: påløpte kostnader"><span aria-hidden="true">4</span></a></span><span><strong>Kaller påløpte kostnader avsetninger.</strong> Feriepenger, strøm og revisjonshonorar har kjent beløp. Det er vanlig gjeld.</span></li>
+          <li id="feil-5"><span><a href="#mk-5" aria-label="Tilbake til punkt 5 i treet: ulike saker under ett"><span aria-hidden="true">5</span></a></span><span><strong>Vurderer ulike saker under ett.</strong> Mange like garantier på solgte varer vurderes samlet. Skattesaker om ulike spørsmål må vurderes hver for seg.</span></li>
+          <li id="feil-6"><span><a href="#mk-6" aria-label="Tilbake til punkt 6 i treet: regress og forsikring"><span aria-hidden="true">6</span></a></span><span><strong>Regner med penger tilbake for tidlig.</strong> Det dere venter å få tilbake fra forsikring eller andre (regress), blir eiendel først når det er så godt som sikkert: nær 100&nbsp;%, ikke 50&nbsp;%. Avsetningen føres brutto, altså uten å trekke fra dette.</span></li>
+          <li id="feil-7"><span><a href="#mk-7" aria-label="Tilbake til punkt 7 i treet: gammel avsetning"><span aria-hidden="true">7</span></a></span><span><strong>Lar en gammel avsetning stå urørt.</strong> Den skal vurderes på nytt hver balansedag. Står den uendret i årevis, vil revisor spørre hvorfor.</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="lrn-sec lrn-ed side" id="dokumentasjon" aria-labelledby="lrn-ap-d">
+      <div class="lrn-head">
+        <span class="lrn-eb">Dokumentasjon</span>
+        <h2 class="lrn-h2" id="lrn-ap-d">Hva revisor <em>spør om</em></h2>
+        <p class="lrn-lede">Dette pleier revisor å be om. Lista sier hva du bør ha, ikke at du har det.</p>
+      </div>
+      <ul class="lrn-docs">
         <li>Hvilken hendelse forpliktelsen kommer fra, og at den skjedde før balansedagen.</li>
         <li>Hvorfor forpliktelsen ikke kan unngås ved egne valg framover.</li>
         <li><strong>Grunnlaget for sannsynligheten</strong>, ikke bare prosenten: egen erfaring med lignende saker, eksterne fakta eller en advokatvurdering. Dette mangler oftest.</li>
@@ -1040,33 +932,20 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       </ul>
     </section>
 
-    <section class="lc-sec" id="hjemmel" aria-labelledby="lcE-avs">
-      <div class="lc-head"><span class="lc-kicker">Hjemmel</span><h2 class="lc-title" id="lcE-avs">Hvor det <em>står</em></h2></div>
-      <ul class="bok-liste">
-        <li><strong>Regnskapsloven § 4-1 første ledd nr. 4</strong> — «Urealisert tap skal resultatføres (forsiktighetsprinsippet).»</li>
-        <li><strong>Regnskapsloven § 4-2 første ledd</strong> — «Ved usikkerhet skal det brukes beste estimat, på bakgrunn av den informasjon som er tilgjengelig når årsregnskapet avlegges.»</li>
-        <li><strong>Regnskapsloven § 6-2, del D I</strong> — egen balansegruppe «Avsetning for forpliktelser», med linjen «Andre avsetninger for forpliktelser».</li>
-        <li><strong>Regnskapsloven § 7-21 tredje ledd</strong> — «Det skal opplyses hvilke forpliktelser som er dekket av andre avsetninger som nevnt i § 6-2 D I nr. 3.»</li>
-        <li><strong>Regnskapsloven §§ 7-28, 7-29 og 7-33</strong> — noter om garantiforpliktelser og andre forpliktelser som ikke er regnskapsført, og om forhold med betinget utfall. Små foretak: § 7-40 tredje ledd for garantiforpliktelsene.</li>
-        <li><strong>NRS 13 Usikre forpliktelser og betingede eiendeler</strong> (januar 2025) — vilkårene i punkt 4.1, sannsynlighetsskalaen i punkt 3.2, like forpliktelser samlet i punkt 4.2, betingede forpliktelser i punkt 5 og periodisk vedlikehold i punkt 7.6.</li>
-        <li><strong>NRS 8 God regnskapsskikk for små foretak</strong> (desember 2025) — viser til NRS 13 for innregning og måling, med lettere notekrav og et unntak for fjerning og opprydding i punkt 6.1.1.3.3.</li>
-        <li><strong>IAS 37 Avsetninger, betingede forpliktelser og betingede eiendeler</strong> — vilkårene i avsnitt 14, «probable» (mer sannsynlig enn ikke) i avsnitt 23, like forpliktelser samlet i avsnitt 24 og noten i avsnitt 86.</li>
-      </ul>
-      <div class="lc-links">
-        <a class="lc-link" href="https://lovdata.no/dokument/NL/lov/1998-07-17-56"><span class="ar">Lov →</span><h3>Regnskapsloven</h3></a>
-        <a class="lc-link" href="https://www.regnskapsstiftelsen.no/regnskap/regnskapsstandarder/nrs-13-usikre-forpliktelser-og-betingede-eiendeler/"><span class="ar">Regnskapsstiftelsen →</span><h3>NRS 13</h3></a>
+    <section class="lrn-sec lrn-ed side" id="naboer" aria-labelledby="lrn-ap-e">
+      <div class="lrn-head">
+        <span class="lrn-eb">Videre</span>
+        <h2 class="lrn-h2" id="lrn-ap-e">Beslektede <em>verktøy</em></h2>
+        <p class="lrn-lede">Dette er det andre oppslaget i bokføringsserien.</p>
       </div>
+      <nav class="lrn-rel one" aria-labelledby="lrn-ap-e">
+        <ul>
+          <li><a href="/regnskap/"><span><span class="t">Alle regnskapsverktøy</span><span class="d">Balanse, resultat, kontantstrøm, mva og mer.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+          <li><a href="/regnskap/skatteavstemming/"><span><span class="t">Skatteavstemming</span><span class="d">Hvorfor skattekostnaden sjelden er nøyaktig 22&nbsp;% av resultatet.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+          <li><a href="/regnskap/kontoplan/"><span><span class="t">Standard kontoplan</span><span class="d">Finn riktig konto for avsetningen i NS 4102.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        </ul>
+      </nav>
     </section>
-
-    <section class="lc-sec" id="naboer" aria-labelledby="lcF-avs">
-      <div class="lc-head"><span class="lc-kicker">Videre</span><h2 class="lc-title" id="lcF-avs">Beslektede <em>verktøy</em></h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/regnskap/"><span class="ar">Oversikt →</span><h3>Alle regnskapsverktøy</h3><p>Balanse, resultat, kontantstrøm, mva og mer.</p></a>
-        <a class="lc-link" href="/regnskap/skatteavstemming/"><span class="ar">Bokføring →</span><h3>Skatteavstemming</h3><p>Hvorfor skattekostnaden sjelden er nøyaktig 22&nbsp;% av resultatet.</p></a>
-        <a class="lc-link" href="/regnskap/kontoplan/"><span class="ar">Kontoplan →</span><h3>Standard kontoplan</h3><p>Finn riktig konto for avsetningen i NS 4102.</p></a>
-      </div>
-    </section>
-
   </div>
 
   <p class="bok-bunn">
@@ -1184,7 +1063,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 <!-- Bokføringsmotoren. Kjører synkront her, altså før core.js, og er derfor
      selvforsynt med parsing og formatering. Rekkefølgen er motor, modell.
      bok-data.js lastes ikke: H1 bruker ingen satser. -->
-<script src="/shared/bok/bok-engine.js?v=v2"></script>
+<script src="/shared/bok/bok-engine.js?v=v3"></script>
 <script src="/shared/bok/models/h1-avsetning.js?v=v2"></script>
 <script>
 (function(){
@@ -1204,13 +1083,14 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   });
 })();
 </script>
-<script defer src="/shared/core.js?v=v232"></script>
-<script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/core.js?v=v233"></script>
+<script defer src="/shared/lang/no.js?v=v230"></script>
+<script defer src="/shared/learn.js?v=v2"></script>
 
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
-<script src="/shared/search.js?v=v132" defer></script>
+<script src="/shared/search.js?v=v133" defer></script>
 
 <!-- SHELL scripts — REDESIGN-2026-05 (T1-T4 ported) -->
 <script src="/shared/site-shell.js?v=v1" defer></script>
@@ -1231,5 +1111,228 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   });
 })();
 </script>
+<script>
+// ── Forklaringsblokken for avsetninger: beslutningstreet med de fire spørsmålene i fast rekkefølge, seks utganger
+//    og fire utfall. Svarene kommer fra kalkulatoren over (bokføringsmotoren, modell h1-avsetning). Uten svar vises
+//    eksempelet: et søksmål på 12 millioner med 45 % sannsynlighet. Tegningen har faste mål, en bred og en smal,
+//    og skaleres ned når plassen er mindre. Merkene 1–7 lenker til lista over vanlige feil, og lista lenker tilbake. ──
+(function(){
+  var KEY = 'bok-h1-avsetning';
+  var NB = '\u00a0';
+  var root, plot, canvas, raw = null, lastW = 0, queued = false;
+
+  // Koordinatene er designets. Bred tegning fra 940 px, ellers den smale.
+  var GD = {mobile:false, W:1116, H:860, S:14, ms:22, hit:32, fz:12.5, Y:[62, 172, 282, 690], lab:{x:40, dy:14, size:20, lh:28}, tagX:[350, 350, 450, 350], tagDy:10,
+    exit:{x0:500, x1:756}, ansTop:{a12:108, a23:218, a34:646, a4a:733},
+    T:{e1:[756, 44, 240, 36], e2:[756, 154, 240, 36], e4:[756, 672, 240, 36], z1:[40, 470, 290, 92], z2:[370, 470, 290, 70], av:[40, 750, 560, 88]},
+    bar:{y:400, h:28}, zname:{z1:{x:30, w:76, rt:344, nt:362}, z2:{x:119, w:430, rt:359, nt:377}, z3:{x:566, w:540, rt:359, nt:377}},
+    flag:{x:558, top:312, lx:566, w:260}, tickZ:{z1:70, z2:400},
+    mk:{1:[446, 436], 2:[700, 161], 3:[630, 783], 4:[40, 8], 5:[409, 271], 6:[940, 589], 7:[664, 783]},
+    point:{chipDx:-22, chipTop:437, annX:536, annTop:437, annW:0, ann:13},
+    regress:{lx:40, lt:590, ty:616, tx0:40, tx1:1116, markX:1099, mlx:900, mlw:216, mlt:590}, av:{name:28, line:15, elbow:794}};
+  var GM = {mobile:true, W:358, H:1000, S:12, ms:20, hit:44, fz:11.5, Y:[41, 171, 301, 780], lab:{x:32, dy:13, size:16, lh:26}, tagX:[60, 32, 32, 32], tagTop:[6, 138, 268, 747],
+    exit:null, ansTop:{a12:108, a23:238, a34:722, a4a:848},
+    T:{e1:[32, 62, 326, 38], e2:[32, 192, 326, 38], e4:[32, 801, 326, 38], z1:[32, 492, 326, 78], z2:[32, 580, 326, 62], av:[32, 880, 326, 100]},
+    bar:{y:362, h:28}, zname:{z1:{x:28, w:64, rt:396, nt:412}, z2:{x:100, w:84, rt:396, nt:412}, z3:{x:194, w:156, rt:396, nt:412}},
+    flag:{x:179, top:322, lx:185, w:170}, tickZ:null,
+    mk:{1:[32, 450], 2:[328, 201], 3:[290, 890], 4:[32, 0], 5:[330, 291], 6:[194, 700], 7:[320, 890]},
+    point:{chipDx:0, chipTop:0, annX:60, annTop:450, annW:298, ann:11.5},
+    regress:{lx:32, lt:660, ty:686, tx0:32, tx1:358, markX:350, mlx:180, mlw:170, mlt:702}, av:{name:26, line:12.5, elbow:930}};
+  var FEILNAVN = ['Lar beløpet styre vurderingen', 'Avsetter for framtidige driftstap', 'Bruker avsetninger til å jevne ut resultatet', 'Kaller påløpte kostnader avsetninger',
+    'Vurderer ulike saker under ett', 'Regner med penger tilbake for tidlig', 'Lar en gammel avsetning stå urørt'];
+  var OUT = {avsetning:'Avsetning', note:'Note, ingen avsetning', ingenting:'Ingenting', ingen:'Ingen forpliktelse'};
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+  function nb(s){ return String(s).replace(/(\d) (%|kr)/g, '$1' + NB + '$2').replace(/§ /g, '§' + NB); }
+
+  function render(d){
+    raw = d;
+    var v = (d && d.v) || {};
+    var dine = !!(v.hendelse || v.egneValg || v.sannsynlighet || v.estimat);
+    var A = dine ? {h:v.hendelse || null, e:v.egneValg || null, s:v.sannsynlighet || null, k:v.estimat || null} : {h:'ja', e:'nei', s:'10til50', k:null};
+
+    // ── Stien: det første svaret som stopper saken, avgjør. Samme rekkefølge som modellen. ──
+    var reach = [false, true, false, false, false], decided = null, next = 0;
+    if(!A.h) next = 1;
+    else if(A.h === 'nei') decided = {node:1, outcome:'ingen', exit:'e1', av:'1'};
+    else {
+      reach[2] = true;
+      if(!A.e) next = 2;
+      else if(A.e === 'ja') decided = {node:2, outcome:'ingen', exit:'e2', av:'2'};
+      else {
+        reach[3] = true;
+        if(!A.s) next = 3;
+        else if(A.s === 'under10') decided = {node:3, outcome:'ingenting', exit:'z1', av:'3'};
+        else if(A.s === '10til50') decided = {node:3, outcome:'note', exit:'z2', av:'3'};
+        else {
+          reach[4] = true;
+          if(!A.k) next = 4;
+          else if(A.k === 'nei') decided = {node:4, outcome:'note', exit:'e4', av:'4'};
+          else decided = {node:4, outcome:'avsetning', exit:'ja', av:'1–4'};
+        }
+      }
+    }
+    var lastAns = decided ? decided.node : next - 1;
+    function nst(k){ return (decided && k > decided.node) ? 'skip' : (k === next ? 'next' : (k <= lastAns ? 'ans' : 'wait')); }
+    function took(x){ return !!decided && decided.exit === x; }
+    var sel = decided && decided.exit === 'z1' ? 1 : (decided && decided.exit === 'z2' ? 2 : ((reach[3] && A.s === 'over50') ? 3 : 0));
+    var on12 = A.h === 'ja', on23 = reach[2] && A.e === 'nei', on34 = reach[3] && A.s === 'over50', on4a = reach[4] && A.k === 'ja';
+
+    // ── Hvilken tegning, og hvor mye den skaleres ──
+    var W = plot.clientWidth || 1116;
+    lastW = W;
+    var G = W >= 940 ? GD : GM, m = G.mobile, sc = Math.min(1, W / G.W);
+    var S = G.S, Y = G.Y, bar = G.bar, GW = G.W, xz = [0, f1(GW * 0.1), f1(GW * 0.5), GW];
+
+    // Linjer: aktiv sti tykk og mørk, resten hårstrek og dempet
+    var svg = '';
+    function ln(dd, on){ svg += '<path class="lrn-ap-ln' + (on ? ' on' : '') + '" d="' + dd + '"/>'; }
+    ln('M' + S + ',' + Y[0] + ' V' + Y[1], on12);
+    ln('M' + S + ',' + Y[1] + ' V' + Y[2], on23);
+    ln('M' + S + ',' + Y[2] + ' V' + Y[3], on34);
+    ln('M' + S + ',' + Y[3] + ' V' + G.av.elbow + ' H' + G.T.av[0], on4a);
+    ln('M' + G.flag.x + ',' + G.flag.top + ' V' + bar.y, false);
+    if(!m){
+      ln('M' + G.exit.x0 + ',' + Y[0] + ' H' + G.exit.x1, took('e1'));
+      ln('M' + G.exit.x0 + ',' + Y[1] + ' H' + G.exit.x1, took('e2'));
+      ln('M' + G.exit.x0 + ',' + Y[3] + ' H' + G.exit.x1, took('e4'));
+      ln('M' + G.tickZ.z1 + ',' + (bar.y + bar.h) + ' V' + G.T.z1[1], took('z1'));
+      ln('M' + G.tickZ.z2 + ',' + (bar.y + bar.h) + ' V' + G.T.z2[1], took('z2'));
+    }
+    var rg = G.regress;
+    svg += '<path class="lrn-ap-ln on fix" d="M' + rg.markX + ',' + (rg.ty - 10) + ' V' + (rg.ty + 16) + '"/>';
+    // Skalaen: tre adskilte soner, 10, 40 og 50 % av bredden. Valgt sone fylles helt.
+    svg += '<rect class="lrn-ap-bg" x="0" y="' + bar.y + '" width="' + GW + '" height="' + bar.h + '"/>';
+    [{k:1, x:xz[0], w:xz[1] - xz[0], cls:'z0'}, {k:2, x:xz[1], w:xz[2] - xz[1], cls:'z1', hatch:true}, {k:3, x:xz[2], w:xz[3] - xz[2], cls:'z1'}].forEach(function(z){
+      var r = ' x="' + z.x + '" y="' + bar.y + '" width="' + f1(z.w) + '" height="' + bar.h + '"/>';
+      if(z.k === sel) return;
+      svg += '<rect class="lrn-ap-' + z.cls + '"' + r;
+      if(z.hatch) svg += '<rect class="lrn-ap-zh"' + r;
+    });
+    if(sel){
+      var zx = xz[sel - 1];
+      svg += '<rect class="lrn-ap-zsel" x="' + zx + '" y="' + bar.y + '" width="' + f1(xz[sel] - zx) + '" height="' + bar.h + '"/>';
+    }
+    svg += '<rect class="lrn-ap-rg" x="' + rg.tx0 + '" y="' + rg.ty + '" width="' + (rg.tx1 - rg.tx0) + '" height="6"/>';
+    Y.forEach(function(y, i){
+      var s = nst(i + 1);
+      svg += '<circle class="lrn-ap-node is-' + s + '" cx="' + S + '" cy="' + y + '" r="' + (s === 'next' ? 7 : 6) + '"/>';
+    });
+    if(!dine) svg += '<circle class="lrn-ap-pt" cx="' + f1(GW * 0.45) + '" cy="' + (bar.y + bar.h / 2) + '" r="7"/>';
+
+    // ── Tekstene ──
+    var lab = '';
+    function T(o){
+      lab += '<span class="lrn-ap-t ' + o.cls + '" style="left:' + f1(o.left) + 'px;top:' + f1(o.top) + 'px;' + (o.w ? 'width:' + o.w + 'px;white-space:normal;' : '') +
+        (o.align ? 'text-align:' + o.align + ';' : '') + 'font-size:' + (o.size || G.fz) + 'px;line-height:' + (o.lh || 18) + 'px">' + esc(nb(o.text)) + '</span>';
+    }
+    ['Hendelse før balansedagen', 'Kan unngås ved egne valg', 'Sannsynlighet for å måtte betale', 'Beløpet kan anslås'].forEach(function(n, i){
+      var s = nst(i + 1);
+      T({text:(i + 1) + ' ' + n, left:G.lab.x, top:Y[i] - G.lab.dy, size:G.lab.size, lh:G.lab.lh, cls:'nm' + ((s === 'ans' || s === 'next') ? ' on' : '')});
+      if(s === 'skip' || s === 'next') T({text:s === 'skip' ? 'Spiller ingen rolle' : 'Neste: spørsmål ' + (i + 1), left:G.tagX[i], top:m ? G.tagTop[i] : Y[i] - G.tagDy, size:11.5, lh:16, cls:'tag is-' + s});
+    });
+    // Svarene som fører videre, langs ryggraden
+    function aw(on){ return 'ans' + (on ? ' on' : ''); }
+    T({text:'Ja', left:S + 10, top:G.ansTop.a12, cls:aw(on12)});
+    T({text:'Nei', left:S + 10, top:G.ansTop.a23, cls:aw(on23)});
+    T({text:'Over 50 %', left:S + 10, top:G.ansTop.a34, cls:aw(on34)});
+    T({text:'Ja', left:S + 10, top:G.ansTop.a4a, cls:aw(on4a)});
+    // Svarene som stopper saken, på utgangslinjene (bred tegning)
+    if(!m){
+      var cx = f1((G.exit.x0 + G.exit.x1) / 2);
+      T({text:'Nei', left:cx - 14, top:Y[0] - 9, cls:aw(took('e1')) + ' bg'});
+      T({text:'Ja', left:cx - 11, top:Y[1] - 9, cls:aw(took('e2')) + ' bg'});
+      T({text:'Nei', left:cx - 14, top:Y[3] - 9, cls:aw(took('e4')) + ' bg'});
+    }
+    // Sonene: område og navn
+    function zr(k, range, name){
+      var z = G.zname['z' + k], on = sel === k ? ' on' : '';
+      T({text:range, left:z.x, top:z.rt, size:m ? 13 : 14, lh:m ? 16 : 18, cls:'zr' + on});
+      T({text:name, left:z.x, top:z.nt, w:z.w, size:m ? 11 : 12, lh:m ? 14 : 15, cls:'zn' + on});
+    }
+    zr(1, '0–10 %', 'Svært lite sannsynlig');
+    zr(2, '10–50 %', 'Lite sannsynlig');
+    zr(3, 'Over 50 %', 'Mer sannsynlig enn ikke');
+    // Eksempelet: punktet på 45 % og forklaringen
+    if(!dine){
+      if(!m) T({text:'45 %', left:f1(GW * 0.45) + G.point.chipDx, top:G.point.chipTop, size:12, lh:18, cls:'chip'});
+      T({text:'45 % av 12 mill. gir note. Beløpet flytter ikke grensen.', left:G.point.annX, top:G.point.annTop, w:G.point.annW, size:G.point.ann, lh:m ? 16 : 18, cls:'i2'});
+    }
+    // Regress-sporet
+    T({text:'Krav mot andre (regress, forsikring)', left:rg.lx, top:rg.lt, cls:'i2'});
+    T({text:'Så godt som sikkert', left:rg.mlx, top:rg.mlt, w:rg.mlw, align:'right', cls:'i1'});
+
+    // ── Utfallene: fire utfall, seks utganger. Rammen sier hvor tungt utfallet er, CSS-en tegner den. ──
+    var NS = {ingen:m ? 15 : 17, ingenting:m ? 17 : 20, note:m ? 17 : 20, avsetning:G.av.name};
+    function term(kind, r, name, line, pre, taken){
+      lab += '<div class="lrn-ap-term ' + kind + (taken ? ' on' : '') + '" style="left:' + r[0] + 'px;top:' + r[1] + 'px;width:' + r[2] + 'px;height:' + r[3] + 'px;' +
+        'padding:' + (kind === 'avsetning' ? (m ? '10px 84px 10px 14px' : '10px 16px') : (line ? '10px 12px' : '0 12px')) + '">' +
+        '<span class="h">' + (pre ? '<span class="pre">' + esc(nb(pre)) + '</span>' : '') + '<span class="n" style="font-size:' + NS[kind] + 'px">' + esc(name) + '</span></span>' +
+        (line ? '<span class="l" style="font-size:' + (m ? 12 : (kind === 'avsetning' ? G.av.line : 13)) + 'px">' + esc(nb(line)) + '</span>' : '') + '</div>';
+    }
+    term('ingen', G.T.e1, 'Ingen forpliktelse', '', m ? 'Nei →' : '', took('e1'));
+    term('ingen', G.T.e2, 'Ingen forpliktelse', '', m ? 'Ja →' : '', took('e2'));
+    term('ingenting', G.T.z1, 'Ingenting', 'Noten kan som regel sløyfes. Garantier: summen likevel (§ 7-28)', m ? 'Under 10 % →' : '', took('z1'));
+    term('note', G.T.z2, 'Note', 'Noten (§§ 7-28, 7-29, 7-33)', m ? '10–50 % →' : '', took('z2'));
+    term('note', G.T.e4, 'Note', '', m ? 'Nei →' : '', took('e4'));
+    term('avsetning', G.T.av, 'Avsetning', 'Balansen: avsetning for forpliktelser (§ 6-2 D I)', '', took('ja'));
+    // Flagget peker til tabellen over regelsettene
+    lab += '<a class="lrn-ap-flag" href="#side-om-side" style="left:' + G.flag.lx + 'px;top:' + G.flag.top + 'px;width:' + G.flag.w + 'px"><span>Samme grense i alle fire regelsett</span></a>';
+    // Feilene på treet: 1 til 7, med lenke begge veier
+    for(var n = 1; n <= 7; n++){
+      var p = G.mk[n], o = (G.ms - G.hit) / 2;
+      lab += '<a class="lrn-ap-mk" id="mk-' + n + '" href="#feil-' + n + '" aria-label="Vanlig feil ' + n + ': ' + esc(FEILNAVN[n - 1]) + '" style="left:' + (p[0] + o) + 'px;top:' + (p[1] + o) + 'px;width:' + G.hit + 'px;height:' + G.hit + 'px">' +
+        '<span aria-hidden="true">' + n + '</span></a>';
+    }
+
+    plot.classList.toggle('m', m);
+    canvas.style.width = GW + 'px';
+    canvas.style.height = G.H + 'px';
+    canvas.style.transform = sc < 1 ? 'scale(' + sc + ')' : '';
+    plot.style.height = Math.ceil(G.H * sc) + 'px';
+    var s = canvas.querySelector('svg');
+    s.setAttribute('width', GW); s.setAttribute('height', G.H); s.setAttribute('viewBox', '0 0 ' + GW + ' ' + G.H);
+    s.querySelector('[data-p="g"]').innerHTML = svg;
+    q('labels').innerHTML = lab;
+
+    // ── Setningen under, merket over og teksten for skjermlesere ──
+    q('out').innerHTML = decided
+      ? esc(dine ? 'Dine svar gir:' : 'Eksempelet gir:') + ' <strong>' + esc(OUT[decided.outcome]) + '</strong>. Avgjort av svar ' + esc(decided.av) + '.'
+      : esc('Svar på spørsmål ' + next + ', så markeres utfallet ditt her.');
+    root.querySelector('.lrn-state').setAttribute('data-state', dine ? 'dine' : 'eksempel');
+    q('stateLabel').textContent = dine ? 'Dine svar' : 'Eksempel';
+    function lo(a){ return a === 'ja' ? 'ja' : (a === 'nei' ? 'nei' : 'ubesvart'); }
+    var s3 = A.s === 'over50' ? 'over 50 %' : (A.s === '10til50' ? '10–50 %' : (A.s === 'under10' ? 'under 10 %' : 'ubesvart'));
+    q('stateText').textContent = nb(dine ? 'Hendelse ' + lo(A.h) + ' · egne valg ' + lo(A.e) + ' · sannsynlighet ' + s3 + ' · estimat ' + lo(A.k) : 'søksmål, krav 12 mill., 45 %');
+    q('sr').textContent = nb((dine ? 'Dine svar. ' : 'Eksempel: søksmål, krav 12 millioner, 45 prosent sannsynlighet. ') + 'Spørsmål 1, hendelse før balansedagen: ' + lo(A.h) + '. Spørsmål 2, kan unngås ved egne valg: ' + lo(A.e) +
+      '. Spørsmål 3, sannsynlighet: ' + s3 + '. Spørsmål 4, beløpet kan anslås: ' + lo(A.k) + '. ' + (decided ? 'Utfall: ' + OUT[decided.outcome] + ', avgjort av svar ' + decided.av + '.' : 'Neste: spørsmål ' + next + '.'));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-ap');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-ap-plot');
+    canvas = root.querySelector('.lrn-ap-canvas');
+    // Lov og standarder er sammenleggbart på mobil, men står åpent på brede skjermer
+    var mqDesk = window.matchMedia ? window.matchMedia('(min-width: 641px)') : null;
+    function syncOpen(){ if(mqDesk && mqDesk.matches) root.querySelectorAll('.lrn-hj-fd').forEach(function(el){ el.open = true; }); }
+    syncOpen();
+    if(mqDesk && mqDesk.addEventListener) mqDesk.addEventListener('change', syncOpen);
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, (window.BOK && window.BOK.siste && window.BOK.siste['h1-avsetning']) || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+})();
+</script>
+
 </body>
 </html>

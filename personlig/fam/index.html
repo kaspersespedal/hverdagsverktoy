@@ -55,6 +55,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v6">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v3">
 <style>
 /* Foreldrefradrag — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -162,145 +163,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
-</style>
-<style>
-/* ════════ LÆR-INNHOLD — redaksjonelle seksjoner under kalkulatoren ════════ */
-.lonn-learn{padding:8px 0 12px}
-.lc-sec{padding:54px 0;border-top:1px solid var(--line)}
-.lc-sec:first-child{border-top:none;padding-top:24px}
-.lc-head{max-width:640px;margin:0 0 32px}
-.lc-kicker{
-  display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;
-  text-transform:uppercase;color:var(--accent-2);margin-bottom:15px;
-}
-.lc-title{
-  font-family:var(--font-serif);font-weight:500;
-  font-size:clamp(25px, 3.4vw, 34px);line-height:1.1;letter-spacing:-.7px;
-  color:var(--ink);margin:0 0 14px;
-}
-.lc-title em{font-style:italic;font-weight:500;color:var(--accent-2)}
-.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:60ch}
-.lc-intro a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm);transition:color .2s var(--ease)}
-.lc-intro a:hover{color:var(--accent-2)}
-
-/* ── Anatomi-ledger (de 5 delene av skatten) ── */
-.lc-ledger{border-top:1px solid var(--line)}
-.lc-led{
-  display:grid;grid-template-columns:210px 130px 1fr;gap:28px;align-items:baseline;
-  padding:20px 0;border-bottom:1px solid var(--line);
-}
-.lc-led .nm{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
-.lc-led .nm b{font:600 14px/1.25 var(--font-sans);color:var(--ink);letter-spacing:-.1px}
-.lc-led .tag{
-  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
-  color:var(--ink3);padding:4px 8px;border:1px solid var(--line-2);border-radius:999px;
-}
-.lc-led .fig{
-  font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.3;
-  letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;overflow-wrap:break-word;
-}
-.lc-led .fig .u{font-family:var(--font-sans);font-size:12px;color:var(--ink3);margin-left:3px;letter-spacing:0;white-space:nowrap}
-.lc-led .dsc{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-
-/* ── Satser: spec-kort + trinn-tabell ── */
-.lc-rates{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start}
-.lc-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:6px 22px 12px;min-width:0}
-.lc-card .ttl{
-  display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 4px;
-}
-.lc-kv{
-  display:flex;align-items:baseline;justify-content:space-between;gap:18px;
-  padding:13px 0;border-top:1px solid var(--line);
-}
-/* Verdien er nowrap. Uten wrap tok den hele bredden når plassen ble knapp,
-   og etiketten ble klemt mot null bredde slik at teksten la seg oppå verdien.
-   Med wrap faller verdien ned på egen linje i stedet — rader som allerede
-   får plass er helt uendret. */
-.lc-kv{flex-wrap:wrap}
-.lc-kv .k{flex:1 1 auto}
-.lc-kv .k{font-size:13.5px;color:var(--ink2);line-height:1.4;min-width:0}
-.lc-kv .v{
-  font-family:var(--font-serif);font-weight:500;font-size:17px;color:var(--ink);
-  font-variant-numeric:tabular-nums;white-space:nowrap;letter-spacing:-.3px;
-}
-.lc-kv .v .u{font-family:var(--font-sans);font-size:11.5px;color:var(--ink3);margin-left:3px}
-/* Satstabellene har kolonner som ikke kan krympe (td.r er nowrap). Uten
-   denne wrapperen dro de hele siden ut i sidelengs scroll — opptil 380px
-   på mobil og 88px på desktop. Samme mønster som .bd-table-wrap. */
-.lc-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
-.lc-trinn{width:100%;border-collapse:collapse}
-.lc-trinn caption{
-  text-align:left;font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;
-  color:var(--ink3);padding:16px 0 12px;
-}
-.lc-trinn th{
-  font:600 10px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;
-  color:var(--ink4);padding:0 0 10px;border-bottom:1px solid var(--line);text-align:left;
-}
-.lc-trinn th.r,.lc-trinn td.r{text-align:right}
-.lc-trinn td{padding:12px 0;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--ink2)}
-.lc-trinn tbody tr:last-child td{border-bottom:none}
-.lc-trinn td .step{color:var(--ink);font-weight:500}
-.lc-trinn td.r{font-family:var(--font-serif);color:var(--ink);font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-
-/* ── Praktiske punkter (venstre-aksent) ── */
-.lc-notes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
-.lc-note{
-  padding:18px 20px;background:var(--surface);
-  border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:8px;
-}
-.lc-note h3{font:600 13.5px/1.3 var(--font-sans);color:var(--ink);margin:0 0 8px}
-.lc-note p{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0}
-.lc-note a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-.lc-note a:hover{color:var(--accent-2)}
-
-/* ── FAQ-trekkspill ── */
-.lc-faq{border-top:1px solid var(--line)}
-details.lc-q{border-bottom:1px solid var(--line)}
-details.lc-q > summary{
-  cursor:pointer;list-style:none;padding:18px 0;
-  display:flex;align-items:center;justify-content:space-between;gap:20px;
-  font:500 15px/1.45 var(--font-sans);color:var(--ink);
-}
-details.lc-q > summary::-webkit-details-marker{display:none}
-details.lc-q > summary::after{
-  content:'';flex:0 0 auto;width:9px;height:9px;
-  border-right:1.5px solid var(--ink3);border-bottom:1.5px solid var(--ink3);
-  transform:rotate(45deg);transition:transform .25s var(--ease);
-}
-details.lc-q[open] > summary::after{transform:rotate(-135deg)}
-details.lc-q[open] > summary{color:var(--ink)}
-details.lc-q .a{padding:0 0 20px;max-width:70ch}
-details.lc-q .a p{font-size:14px;line-height:1.65;color:var(--ink2);margin:0}
-details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
-
-/* ── Relaterte verktøy ── */
-.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.lc-link{
-  display:flex;flex-direction:column;gap:8px;padding:20px 20px 22px;text-decoration:none;
-  background:var(--surface);border:1px solid var(--line);border-radius:10px;
-  transition:border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
-}
-.lc-link .ar{
-  font:600 10px/1 var(--font-sans);letter-spacing:1.5px;text-transform:uppercase;color:var(--accent-2);
-}
-.lc-link h3{font-family:var(--font-serif);font-weight:500;font-size:19px;color:var(--ink);margin:0;letter-spacing:-.3px}
-.lc-link p{font-size:13px;line-height:1.55;color:var(--ink2);margin:0}
-@media(hover:hover){
-  .lc-link:hover{border-color:var(--line-warm);background:var(--surface-2);transform:translateY(-2px)}
-}
-
-@media(max-width:820px){
-  .lc-rates{grid-template-columns:minmax(0,1fr)}
-  .lc-notes{grid-template-columns:minmax(0,1fr)}
-  .lc-links{grid-template-columns:minmax(0,1fr)}
-}
-@media(max-width:560px){
-  .lc-sec{padding:40px 0}
-  .lc-led{grid-template-columns:1fr;gap:8px;padding:18px 0}
-  .lc-led .fig{font-size:22px}
-}
 </style>
 </head>
 <body>
@@ -423,7 +285,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="fam-pris" data-i18n="famLblPris">Månedspris første barn (kr)</label>
-                    <input class="ik-input" id="fam-pris" type="text" inputmode="numeric" value="3 000" autocomplete="off">
+                    <input class="ik-input" id="fam-pris" type="text" inputmode="numeric" value="1 200" autocomplete="off">
                   </div>
                 </div>
                 <div class="ik-row full">
@@ -481,61 +343,63 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <!-- =============== LAER-INNHOLD: personlig-fam =============== -->
 <div class="container">
-  <div class="lonn-learn">
-    <section class="lc-sec" aria-labelledby="lcA-personlig-fam">
-      <div class="lc-head"><span class="lc-kicker">Slik regnes det ut</span><h2 class="lc-title" id="lcA-personlig-fam">Hva som skjer fra full pris til netto kostnad</h2><p class="lc-intro">Først trekkes søskenrabatten fra prisen (søskenmoderasjon). Så trekkes det du betaler, opp til et tak, fra inntekten før skatt (foreldrefradrag). Du sparer 22 % av fradraget i skatt.</p></div>
-      <div class="lc-ledger">
-        <div class="lc-led"><span class="nm"><b>Søskenmoderasjon</b><span class="tag">Faktor</span></span><span class="fig">30<span class="u">%</span></span><p class="dsc">Barn nummer to teller bare 70 % av prisen — altså 30 % rabatt. Barn nummer tre og oppover er gratis.</p></div>
-        <div class="lc-led"><span class="nm"><b>Årspris etter søskenrabatt</b><span class="tag">Grunnlag</span></span><span class="fig">pris etter rabatt × mnd<span class="u">kr</span></span><p class="dsc">Prisen for hvert barn etter søskenrabatt, ganget med antall måneder (standard 11).</p></div>
-        <div class="lc-led"><span class="nm"><b>Foreldrefradrag barn 1</b><span class="tag">Fradrag</span></span><span class="fig">15 000<span class="u">kr</span></span><p class="dsc">Maksimalt fradrag for ett barn. Dette er ikke penger du får utbetalt, men et beløp som trekkes fra inntekten din før skatt regnes.</p></div>
-        <div class="lc-led"><span class="nm"><b>Per ekstra barn</b><span class="tag">Fradrag</span></span><span class="fig">10 000<span class="u">kr</span></span><p class="dsc">Har du flere barn, øker fradragstaket med 10&nbsp;000&nbsp;kr for hvert barn ut over det første. To barn gir 25&nbsp;000&nbsp;kr, tre barn 35&nbsp;000&nbsp;kr.</p></div>
-        <div class="lc-led"><span class="nm"><b>Skatt spart</b><span class="tag">Sats</span></span><span class="fig">22<span class="u">%</span></span><p class="dsc">Fradraget multipliseres med skattesatsen på 22 % for å vise hvor mange kroner du faktisk sparer i skatt.</p></div>
-        <div class="lc-led"><span class="nm"><b>Netto kostnad</b><span class="tag">Resultat</span></span><span class="fig">årspris − skatt spart<span class="u">kr</span></span><p class="dsc">Årsprisen etter søskenrabatt, minus skatten du sparer. Det er det barnepasset faktisk koster deg i året.</p></div>
+  <div class="lrn" id="lrn-fa">
+    <section class="lrn-sec" aria-labelledby="lrn-fa-h">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-fa-h">Et fradrag er ikke penger tilbake, bare 22&nbsp;% av det</h2>
+        <p class="lrn-lede">Søskenmoderasjonen trekkes rett av regningen. Fradraget trekkes fra inntekten din, så det du faktisk sparer, er 22&nbsp;% av det.</p>
+      </div>
+      <p class="lrn-p" data-lrn="none" hidden>Fyll inn antall barn, månedspris og antall måneder i kalkulatoren.</p>
+      <div class="lrn-fa-main" data-lrn="main">
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <figure class="lrn-fig" aria-describedby="lrn-fa-sr">
+          <figcaption class="lrn-cap">Barnehageregningen i fire steg, kroner per år på felles skala</figcaption>
+          <div class="lrn-plot is-static lrn-fa-plot" dir="ltr">
+            <svg aria-hidden="true" focusable="false"><defs><pattern id="lrn-fa-skrav" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-fa-sb" x="0" y="0" width="6" height="6"/><line class="lrn-fa-sl" x1="0" y1="0" x2="0" y2="6"/></pattern><pattern id="lrn-fa-hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect class="lrn-fa-pr" x="0" y="0" width="5" height="5"/><line class="lrn-fa-ph" x1="0" y1="0" x2="0" y2="5"/></pattern></defs><path class="lrn-fa-bill" data-p="bill"/><path class="lrn-fa-cut" data-p="cut"/><path class="lrn-fa-sk" data-p="sk"/><path class="lrn-fa-skh" data-p="sk"/><path class="lrn-fa-ext" data-p="ext"/><path class="lrn-fa-frame" data-p="frame"/><path class="lrn-fa-lead" data-p="lead"/><path class="lrn-fa-arrow" data-p="arrow"/></svg>
+            <div class="lrn-labels" data-lrn="labels"></div>
+          </div>
+        </figure>
+        <p class="lrn-cmp" data-lrn="sum"></p>
+        <details class="lrn-fa-fd">
+          <summary>Regnestykket<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div class="lrn-card lrn-fa-card">
+            <span class="lrn-card-l">Regnestykket</span>
+            <div class="lrn-f"><i>fradrag</i><span>=</span><span>det minste av <i>betalt beløp</i> og 15&nbsp;000&nbsp;kr + 10&nbsp;000&nbsp;kr per ekstra barn</span></div>
+            <div class="lrn-f n"><span class="e0">=</span><span data-lrn="fMin"></span><span>=</span><b data-lrn="fFrad"></b></div>
+            <div class="lrn-fa-hr" aria-hidden="true"></div>
+            <div class="lrn-f"><i>skatt spart</i><span>=</span><span><i>fradrag</i> × 22&nbsp;%</span></div>
+            <div class="lrn-f n"><span class="e0">=</span><span class="nx" data-lrn="fSk"></span><span>=</span><b data-lrn="fSkatt"></b></div>
+          </div>
+        </details>
+        <details class="lrn-tbl lrn-fa-tbl">
+          <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
+          <div><table>
+            <caption>Kroner per år</caption>
+            <tbody data-lrn="rows"></tbody>
+          </table></div>
+        </details>
+      </div>
+      <p class="lrn-sr" id="lrn-fa-sr" data-lrn="sr"></p>
+    </section>
+
+    <section class="lrn-sec lrn-faq" aria-labelledby="lrn-fa-q">
+      <h3 class="lrn-h3" id="lrn-fa-q">Spørsmål</h3>
+      <div class="lrn-qs">
+        <details open><summary>Hvor mye kan jeg trekke fra for barnepass?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Inntil taket i regnestykket over, og aldri mer enn du faktisk har betalt. To barn gir 25&nbsp;000&nbsp;kr i tak, tre barn 35&nbsp;000&nbsp;kr.</p></div></details>
+        <details><summary>Hvorfor står det 11 måneder og ikke 12?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>De fleste barnehager er betalingsfrie i juli, så du betaler vanligvis for 11 måneder i året. Du kan endre tallet hvis din avtale er annerledes.</p></div></details>
+        <details><summary>Gjelder fradraget også SFO og dagmamma?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja. Fradraget gjelder dokumenterte utgifter til barnepass generelt: barnehage, SFO eller dagmamma, for barn under 12 år. Kalkulatoren bruker den prisen du legger inn. Matpenger gir ikke fradrag, så skriv inn prisen uten kost.</p></div></details>
+        <details><summary>Må jeg føre opp fradraget selv?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Som regel ikke. Barnehagen og SFO rapporterer beløpet til Skatteetaten, og det står ferdig utfylt i skattemeldingen. Du bør likevel kontrollere at summen stemmer.</p></div></details>
       </div>
     </section>
-    <section class="lc-sec" aria-labelledby="lcB-personlig-fam">
-      <div class="lc-head"><span class="lc-kicker">Tall og terskler</span><h2 class="lc-title" id="lcB-personlig-fam">Satsene for 2026</h2></div>
-      <div class="lc-rates">
-      <div class="lc-card">
-        <div class="lc-tblwrap">
-        <table class="lc-trinn">
-          <caption>Søskenmoderasjon per barn</caption>
-          <thead><tr><th>Barn</th><th class="r">Andel av pris</th><th class="r">Rabatt</th></tr></thead>
-          <tbody>
-            <tr><td><span class="step">Barn 1</span></td><td class="r">100 %</td><td class="r">Ingen</td></tr>
-            <tr><td><span class="step">Barn 2</span></td><td class="r">70 %</td><td class="r">30 %</td></tr>
-            <tr><td><span class="step">Barn 3 og videre</span></td><td class="r">0 %</td><td class="r">Gratis</td></tr>
-          </tbody>
-        </table>
-        </div>
-      </div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcC-personlig-fam">
-      <div class="lc-head"><span class="lc-kicker">Godt å vite</span><h2 class="lc-title" id="lcC-personlig-fam">Slik fungerer fradraget i praksis</h2></div>
-      <div class="lc-notes">
-        <div class="lc-note"><h3>Fradrag er ikke det samme som penger tilbake</h3><p>Et fradrag på 15 000 kr betyr ikke at du får 15 000 kr. Det trekkes fra inntekten før skatt, så den faktiske besparelsen er 22 % av beløpet — altså rundt 3 300 kr for ett barn.</p></div>
-        <div class="lc-note"><h3>Gjelder barn under 12 år</h3><p>Foreldrefradraget dekker dokumenterte utgifter til barnepass — barnehage, SFO eller dagmamma — for barn som er under 12 år i løpet av inntektsåret.</p></div>
-        <div class="lc-note"><h3>Lav inntekt kan gi lavere pris</h3><p>Kalkulatoren bruker prisen du skriver inn. Staten setter en makspris for barnehage, og har husholdningen lav inntekt, kan du få lavere pris (inntektsgradert moderasjon). Skriv inn det du faktisk betaler.</p></div>
-        <div class="lc-note"><h3>Du fyller ikke ut noe selv</h3><p>Barnehagen og SFO rapporterer utgiftene til Skatteetaten, så fradraget står som regel ferdig utfylt i skattemeldingen. Sjekk likevel at beløpet stemmer med det du faktisk har betalt.</p></div>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcD-personlig-fam">
-      <div class="lc-head"><span class="lc-kicker">Spørsmål og svar</span><h2 class="lc-title" id="lcD-personlig-fam">Det folk lurer mest på</h2></div>
-      <div class="lc-faq">
-        <details class="lc-q"><summary>Hvor mye kan jeg trekke fra for barnepass?</summary><div class="a"><p>Du kan trekke fra inntil 15 000 kr for ett barn. Har du flere barn, øker taket med 10 000 kr per ekstra barn — altså 25 000 kr for to barn og 35 000 kr for tre.</p></div></details>
-        <details class="lc-q"><summary>Hva er søskenmoderasjon?</summary><div class="a"><p>Det er rabatt når du har flere barn i barnehage samtidig. I beregningen teller barn nummer to bare 70 % av prisen (30 % rabatt), og barn nummer tre og oppover er gratis.</p></div></details>
-        <details class="lc-q"><summary>Hvorfor står det 11 måneder og ikke 12?</summary><div class="a"><p>De fleste barnehager er betalingsfrie i juli, så du betaler vanligvis for 11 måneder i året. Du kan endre tallet hvis din avtale er annerledes.</p></div></details>
-      </div>
-    </section>
-    <section class="lc-sec" aria-labelledby="lcE-personlig-fam">
-      <div class="lc-head"><span class="lc-kicker">Fortsett her</span><h2 class="lc-title" id="lcE-personlig-fam">Relaterte verktøy</h2></div>
-      <div class="lc-links">
-        <a class="lc-link" href="/personlig/budsjett/"><span class="ar">Budsjett →</span><h3>Lag et budsjett</h3><p>Se hvordan barnehageutgiften passer inn ved siden av husleie, mat og andre faste kostnader.</p></a>
-        <a class="lc-link" href="/skatt/inntekt/"><span class="ar">Inntektsskatt →</span><h3>Regn ut inntektsskatten</h3><p>Forstå skattesatsen på 22 % som gjør at fradraget faktisk senker skatten din.</p></a>
-        <a class="lc-link" href="/personlig/lonn/"><span class="ar">Lønn etter skatt →</span><h3>Lønn etter skatt</h3><p>Se hva du sitter igjen med på konto hver måned når fradrag og skatt er regnet inn.</p></a>
-      </div>
-    </section>
+
+    <nav class="lrn-rel" aria-labelledby="lrn-fa-r">
+      <h3 class="lrn-h3" id="lrn-fa-r">Relaterte verktøy</h3>
+      <ul>
+        <li><a href="/personlig/budsjett/"><span><span class="t">Lag et budsjett</span><span class="d">Se hvordan barnehageutgiften passer inn ved siden av husleie, mat og andre faste kostnader.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/skatt/inntekt/"><span><span class="t">Regn ut inntektsskatten</span><span class="d">Forstå skattesatsen på 22&nbsp;% som gjør at fradraget faktisk senker skatten din.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/lonn/"><span><span class="t">Lønn etter skatt</span><span class="d">Se hva du sitter igjen med på konto hver måned når fradrag og skatt er regnet inn.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+      </ul>
+    </nav>
   </div>
 </div>
 
@@ -555,8 +419,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v232"></script>
-<script defer src="/shared/lang/no.js?v=v229"></script>
+<script defer src="/shared/core.js?v=v233"></script>
+<script defer src="/shared/lang/no.js?v=v230"></script>
+<script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
 <script>
@@ -574,6 +439,8 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         .forEach(function(id){var e=document.getElementById(id); if(e) e.textContent='–';});
       var s=document.getElementById('fam-r-sub');
       if(s) s.textContent='Skriv inn antall barn og månedspris';
+      window._fam = null;
+      if(window.hvtLearn) hvtLearn.update('personlig-fam', null);
     }
 
     window.calcFam=function(){
@@ -602,6 +469,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       var sM=document.getElementById('rsSumMod'); if(sM) sM.textContent=fmt(mod);
       var sF=document.getElementById('rsSumFrad'); if(sF) sF.textContent=fmt(frad);
       var sN=document.getElementById('rsSumNetto'); if(sN) sN.textContent=fmt(netto);
+      // Til forklaringsblokken under
+      window._fam = {barn:n, pris:pris, mnd:mnd};
+      if(window.hvtLearn) hvtLearn.update('personlig-fam', window._fam);
       persist();
     };
 
@@ -621,7 +491,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
         if(!raw) return;
         var s = JSON.parse(raw);
         if(s.barn != null) document.getElementById('fam-barn').value = s.barn;
-        if(s.pris != null) document.getElementById('fam-pris').value = s.pris;
+        // Standardprisen var 3 000 kr, over makspris. Står alle tre feltene på de gamle standardverdiene, gjelder den nye.
+        var gammel = String(s.pris).replace(/\s/g,'') === '3000' && String(s.barn).trim() === '2' && String(s.mnd).trim() === '11';
+        if(s.pris != null && !gammel) document.getElementById('fam-pris').value = s.pris;
         if(s.mnd  != null) document.getElementById('fam-mnd').value  = s.mnd;
       } catch(e){}
     }
@@ -692,6 +564,285 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', init);
   } else { init(); }
+})();
+</script>
+
+<script>
+// ── Forklaringsblokken for foreldrefradrag: barnehageregningen i fire steg på felles kroneskala. Full pris,
+//    regningen etter søskenmoderasjon (forskrift om foreldrebetaling § 3a), fradraget som en stiplet ramme der
+//    bare 22 % er fylt, og netto kostnad med skatten skåret av. Matten er den samme som calcFam() over. ──
+(function(){
+  var KEY = 'personlig-fam';
+  var NB = '\u00a0';
+  var FAKT = [1, 0.7, 0, 0, 0, 0];
+  var root, plot, raw = null, lastW = 0, queued = false, ctx = null, fam = '', serif = '';
+  var mqDesk = window.matchMedia ? window.matchMedia('(min-width: 641px)') : null;
+
+  function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
+  function all(name){ return root.querySelectorAll('[data-lrn="' + name + '"]'); }
+  function set(name, s){ all(name).forEach(function(el){ el.textContent = s; }); }
+  function f1(v){ return Math.round(v * 10) / 10; }
+  function f2(v){ return Math.round(v * 100) / 100; }
+  function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;'); }
+  function nb(s){ return String(s).replace(/([0-9]) (?=[0-9]{3}(?![0-9]))/g, '$1' + NB).replace(/([0-9]) (?=%|kr)/g, '$1' + NB); }
+  // Tekstbredde målt med skriften siden faktisk bruker (fungerer på alle språk)
+  function tw(s, px, wt, isSerif){
+    if(!ctx) ctx = document.createElement('canvas').getContext('2d');
+    ctx.font = (wt || 400) + ' ' + px + 'px ' + (isSerif ? serif : fam);
+    return ctx.measureText(String(s)).width * 1.02;
+  }
+  // Ordbryting etter målt bredde
+  function wrap(text, maxW, px, wt){
+    var words = String(text).split(' '), lines = [], cur = '';
+    words.forEach(function(w){ var tt = cur ? cur + ' ' + w : w; if(cur && tw(tt, px, wt) > maxW){ lines.push(cur); cur = w; } else cur = tt; });
+    if(cur) lines.push(cur);
+    return lines;
+  }
+  function R(x, y, w, h){ return 'M' + f2(x) + ',' + f2(y) + ' h' + f2(w) + ' v' + f2(h) + ' h' + f2(-w) + ' Z '; }
+
+  // Samme regnestykke som calcFam() i kalkulatoren
+  function calc(n, pris, mnd){
+    var sumMnd = 0;
+    for(var i = 0; i < n && i < FAKT.length; i++) sumMnd += pris * FAKT[i];
+    var brutto = sumMnd * mnd, full = n * pris * mnd, maks = n >= 1 ? 15000 + Math.max(0, n - 1) * 10000 : 0, frad = Math.min(brutto, maks), skatt = frad * 0.22;
+    return {brutto:brutto, full:full, mod:full - brutto, maks:maks, frad:frad, skatt:skatt, netto:brutto - skatt};
+  }
+
+  // Brede skjermer: navnene i en egen kolonne til venstre. Smale: navn og beløp over hver stolpe.
+  function geo(W){
+    if(W < 600) return {mobile:true, W:W, x0:1, plotW:W - 2, bar:30};
+    var x0 = 176;
+    return {mobile:false, W:W, x0:x0, plotW:Math.max(240, Math.min(624, W - x0 - 300)), bar:46};
+  }
+
+  function render(d){
+    raw = d;
+    var L = window.hvtLearn, t = L.t, ph = L.ph, fmt = L.kr;
+    var none = !d || !(d.barn > 0) || d.barn % 1 !== 0 || !(d.pris > 0) || !(d.mnd > 0);
+    q('none').hidden = !none;
+    all('main').forEach(function(el){ el.hidden = none; });
+    if(none){ set('sr', ''); return; }
+    function kr(v){ return fmt(v) + NB + 'kr'; }
+    var cs = getComputedStyle(root);
+    fam = cs.fontFamily || 'Inter, system-ui, sans-serif';
+    serif = cs.getPropertyValue('--font-serif').trim() || 'Georgia, serif';
+
+    var n = d.barn, pris = d.pris, mnd = d.mnd, k = calc(n, pris, mnd);
+    var G = geo(plot.clientWidth || 800), MOB = G.mobile, W = G.W, bh = G.bar;
+    lastW = W;
+    var cf = pris * mnd, S = G.plotW / Math.max(k.full, k.maks, 1);
+    function X(v){ return G.x0 + v * S; }
+    var limited = k.frad < k.maks - 0.5, nett = Math.round(k.netto), skattR = Math.round(k.skatt), tak = k.maks;
+
+    // Tekstene. Norsk bøyer ikke «barn», men de andre språkene får flertallsformer via tallet n.
+    // Hele måneder går inn som tall (flertall), brøker som tekst med komma
+    var mndN = mnd % 1 === 0 ? mnd : String(Math.round(mnd * 100) / 100).replace('.', ',');
+    var barnTxt = t('lrnFaBarnN', '{n} barn', {n:n}), mndTxt = t('lrnFaMndN', '{n} mnd', {n:mndN}), mndLong = t('lrnFaMndL', mnd === 1 ? '{n} måned' : '{n} måneder', {n:mndN});
+    var rowNames = [ph('Full pris'), ph('Etter søskenmoderasjon'), ph('Fradraget'), ph('Netto kostnad')];
+    var subs = [t('lrnFaSub1', '{b} × {p} × {m}', {b:barnTxt, p:kr(pris), m:mndTxt}),
+      n === 1 ? ph('Ingen søsken, ingen rabatt') : (n === 2 ? ph('Barn 2 betaler 70 %') : ph('Barn 2 betaler 70 %, barn 3 og videre ingenting')),
+      ph('Ikke penger, bare et tall på skattemeldingen'), ph('Regningen minus skatt spart')];
+    var modTxt = n === 2 ? t('lrnFaMod30', 'Søskenmoderasjon 30 %: −{k}', {k:kr(k.mod)}) : t('lrnFaMod', 'Søskenmoderasjon: −{k}', {k:kr(k.mod)});
+    var fradTxt = t('lrnFaFrad', 'Foreldrefradrag {k}', {k:kr(k.frad)}), ikkeTxt = ph('Trekkes fra inntekten, ikke fra regningen');
+    var takTxt = t('lrnFaTak', 'Taket er {k}, men fradraget kan ikke bli større enn det du har betalt.', {k:kr(tak)});
+    var sk22Txt = t('lrnFaSk22', '× 22 % = {k} lavere skatt', {k:kr(skattR)}), skSTxt = t('lrnFaSkS', 'Skatt spart {k}', {k:kr(skattR)});
+
+    // Merket over grafen
+    var mine = !(n === 2 && pris === 1200 && mnd === 11);
+    root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
+    set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
+    set('stateText', nb(t('lrnFaState', '{b}, {p} i måneden, {m}', {b:barnTxt, p:kr(pris), m:mndLong})));
+
+    // Ett stykke per barn. Rad 2 deler hvert barn i det som betales og det moderasjonen tar.
+    var kids = [];
+    for(var i = 0; i < n; i++){ var f = i < FAKT.length ? FAKT[i] : 0; kids.push({i:i, f:f, solid:f * cf, cut:cf - f * cf}); }
+    var D = {bill:'', cut:'', sk:'', ext:'', frame:'', lead:'', arrow:''}, lab = '';
+    var fzC = MOB ? 11 : 12;
+    function T(o){
+      // Tekstblokk: én eller flere linjer, første linje kan være uthevet
+      lab += '<div class="lrn-fa-t" style="left:' + f1(o.left) + 'px;top:' + f1(o.top) + 'px;' + (o.w ? 'width:' + f1(o.w) + 'px;' : '') + (o.tx ? 'transform:translateX(' + o.tx + ');' : '') +
+        (o.al ? 'text-align:' + o.al + ';align-items:' + (o.al === 'right' ? 'flex-end' : 'center') + ';' : '') + '">' +
+        o.lines.map(function(ln){ return '<span class="' + (ln.c || 'b') + '" style="font-size:' + (ln.fs || 12) + 'px;font-weight:' + (ln.fw || 400) + ';line-height:16px">' + esc(nb(ln.t)) + '</span>'; }).join('') + '</div>';
+    }
+    function N(o){
+      lab += '<div class="lrn-fa-n" style="left:' + f1(o.left) + 'px;top:' + f1(o.top) + 'px;' + (o.tx ? 'transform:translateX(' + o.tx + ');text-align:right;' : '') + 'font-size:' + o.fs + 'px;line-height:' + o.lh + 'px">' +
+        esc(fmt(o.v)) + '<span class="u">kr</span>' + (o.sub ? '<small>' + esc(nb(o.sub)) + '</small>' : '') + '</div>';
+    }
+    function chipW(s){ return tw(s, fzC, 500) + 12; }
+    function chipIn(sg, y, texts){
+      for(var j = 0; j < texts.length; j++) if(sg.w >= chipW(texts[j]) + 8){
+        lab += '<span class="lrn-fa-chip" style="left:' + f1(sg.x + 8) + 'px;top:' + f1(y + (bh - 20) / 2) + 'px;font-size:' + fzC + 'px">' + esc(nb(texts[j])) + '</span>';
+        return;
+      }
+    }
+    // Ett stykke av en rad, i kroner, med 1 px luft mellom stykkene
+    function seg(a, b, i0, last){ return {x:X(a) + (i0 ? 1 : 0), w:Math.max(0.5, (b - a) * S - (i0 ? 1 : 0) - (last ? 0 : 1))}; }
+
+    // Høyden på radene. Smale skjermer: tittel og beløp over stolpen, forklaringene under.
+    var Y, H, mobRow = [];
+    if(!MOB){ Y = [30, 140, 250, 360]; H = 452; }
+    else {
+      var y = 0, gapR = 24, wU = W - 2;
+      Y = [];
+      for(var r = 0; r < 4; r++){
+        // Navnet brytes hvis det ikke får plass ved siden av beløpet
+        var numW = tw(fmt(r === 3 ? nett : [k.full, k.brutto, k.frad][r]), r === 3 ? 26 : 20, 500, true) + tw('kr', 12, 500) + 8;
+        var nameL = wrap(rowNames[r], Math.max(120, W - numW - 12), 13, 600), top = Math.max(r === 3 ? 34 : 30, nameL.length * 16 + 10);
+        mobRow.push({nameL:nameL, top:top});
+        Y.push(y + top);
+        var hU = 0;
+        if(r === 1 && k.mod > 0.5) hU = 28;
+        if(r === 2){
+          var l3 = wrap(sk22Txt, wU, 12.5, 600).length + wrap(ikkeTxt, wU, 12).length;
+          hU = 12 + 16 * l3 + 4 + (limited ? 16 * wrap(takTxt, wU, 12).length + 6 : 0);
+        }
+        if(r === 3) hU = 28;
+        y += top + bh + hU + gapR;
+      }
+      H = Math.round(y - gapR + 6);
+    }
+
+    // ── Rad 1: full pris, ett stykke per barn ──
+    kids.forEach(function(kd, j){
+      var sg = seg(j * cf, (j + 1) * cf, j, j === n - 1);
+      D.bill += R(sg.x, Y[0], sg.w, bh);
+      chipIn(sg, Y[0], [t('lrnFaChip', 'Barn {i}: {k}', {i:j + 1, k:kr(cf)}), t('lrnFaChipS', 'Barn {i}', {i:j + 1})]);
+    });
+    // ── Rad 2: etter søskenmoderasjon ──
+    var cur = 0, cutPiece = null;
+    kids.forEach(function(kd, j){
+      if(kd.solid > 0){
+        var sg = seg(cur, cur + kd.solid, cur > 0, false);
+        D.bill += R(sg.x, Y[1], sg.w, bh);
+        chipIn(sg, Y[1], [t('lrnFaChip', 'Barn {i}: {k}', {i:j + 1, k:kr(kd.solid)}), t('lrnFaChipS', 'Barn {i}', {i:j + 1})]);
+        cur += kd.solid;
+      }
+      if(kd.cut > 0.0001){
+        var sc = seg(cur, cur + kd.cut, cur > 0, j === n - 1);
+        D.cut += R(sc.x, Y[1], sc.w, bh);
+        if(kd.f === 0) chipIn(sc, Y[1], [t('lrnFaFree', 'Barn {i}: gratis', {i:j + 1}), ph('Gratis')]);
+        else if(!cutPiece) cutPiece = sc;
+        cur += kd.cut;
+      }
+    });
+    // ── Rad 3: fradraget som stiplet ramme, 22 % fylt. Er det begrenset, viser en svakere strek resten av taket. ──
+    var fx = X(0);
+    D.frame = R(fx, Y[2], k.frad * S, bh);
+    D.sk = R(fx, Y[2], k.skatt * S, bh);
+    if(limited) D.ext = R(X(k.frad), Y[2], (k.maks - k.frad) * S, bh);
+    // ── Rad 4: netto, med skatten skåret av høyre ende ──
+    D.bill += R(X(0), Y[3], k.netto * S, bh);
+    D.cut += R(X(k.netto), Y[3], k.skatt * S, bh);
+
+    var pieceCx = fx + k.skatt * S / 2, cut4Cx = X(k.netto) + k.skatt * S / 2;
+    if(!MOB){
+      // Navn og forklaring til venstre, midt på stolpen
+      for(var rr = 0; rr < 4; rr++){
+        // Lange navn (ukrainsk, polsk) brytes også, så de ikke går inn i stolpen
+        var nl = wrap(rowNames[rr], 160, 13, 600), sl = wrap(subs[rr], 160, 12), hT = 16 * (nl.length + sl.length);
+        T({left:0, top:Y[rr] + bh / 2 - hT / 2, w:160, lines:nl.map(function(x){ return {t:x, fs:13, fw:600, c:'a'}; }).concat(sl.map(function(x){ return {t:x}; }))});
+      }
+      // Beløpene til høyre for rad 1 og 2
+      var xr = X(k.full) + 18;
+      N({left:xr, top:Y[0] + (bh - 30) / 2, v:k.full, fs:26, lh:30});
+      N({left:xr, top:Y[1] + (bh - (k.mod > 0.5 ? 46 : 30)) / 2, v:k.brutto, fs:26, lh:30, sub:k.mod > 0.5 ? modTxt : ''});
+      // Rad 3: teksten rett til høyre for rammen (og resten av taket). Mange linjer legges høyere, så de ikke når teksten under rammen.
+      var xf = X(limited ? k.maks : k.frad) + 18, wf = W - xf - 4;
+      var l3 = [{t:fradTxt, fs:12.5, fw:600, c:'a'}].concat(wrap(ikkeTxt, wf, 12).map(function(x){ return {t:x}; }));
+      if(limited) l3 = l3.concat(wrap(takTxt, wf, 12).map(function(x){ return {t:x}; }));
+      var h3 = 16 * l3.length, top3 = Math.max(Y[2] - 60, Math.min(Y[2] + (bh - h3) / 2, Y[2] + bh + 4 - h3));
+      T({left:xf, top:top3, w:wf, lines:l3});
+      // Den fylte 22 %-biten merkes under rammen
+      T({left:fx, top:Y[2] + bh + 8, lines:[{t:sk22Txt, fs:12.5, fw:600, c:'a'}]});
+      D.lead += 'M' + f2(pieceCx) + ',' + f2(Y[2] + bh) + ' V' + f2(Y[2] + bh + 7) + ' ';
+      // Netto stort i serif, til høyre for skattebiten
+      N({left:X(k.brutto) + 18, top:Y[3] + (bh - 46) / 2, v:nett, fs:42, lh:46});
+      var w4 = tw(skSTxt, 12, 500) + 4;
+      T({left:Math.max(0, Math.min(W - w4, cut4Cx - w4 / 2)), top:Y[3] + bh + 8, w:w4, al:'center', lines:[{t:skSTxt, fw:500, c:'a'}]});
+      D.lead += 'M' + f2(cut4Cx) + ',' + f2(Y[3] + bh) + ' V' + f2(Y[3] + bh + 7) + ' ';
+      // Pila fra den fylte biten opp til regningen, der skatten skjæres av i rad 4
+      var yMid = Y[2] - 30, yEnd = Y[1] + bh + 5, tx = X(k.brutto) - k.skatt * S / 2;
+      var head = function(x){ return ' M' + f2(x - 4) + ',' + f2(yEnd + 6) + ' L' + f2(x) + ',' + f2(yEnd) + ' L' + f2(x + 4) + ',' + f2(yEnd + 6); };
+      D.arrow = Math.abs(tx - pieceCx) > 6
+        ? 'M' + f2(pieceCx) + ',' + f2(Y[2] - 3) + ' V' + f2(yMid) + ' H' + f2(tx) + ' V' + f2(yEnd + 1) + head(tx)
+        : 'M' + f2(pieceCx) + ',' + f2(Y[2] - 3) + ' V' + f2(yEnd + 1) + head(pieceCx);
+    } else {
+      // Navn og beløp over hver stolpe
+      for(var rm = 0; rm < 4; rm++){
+        var mr = mobRow[rm];
+        T({left:0, top:Y[rm] - mr.top + 2, lines:mr.nameL.map(function(x){ return {t:x, fs:13, fw:600, c:'a'}; })});
+        N({left:W, tx:'-100%', top:Y[rm] - (rm === 3 ? 34 : 28), v:rm === 3 ? nett : [k.full, k.brutto, k.frad][rm], fs:rm === 3 ? 26 : 20, lh:rm === 3 ? 30 : 24});
+      }
+      if(cutPiece && k.mod > 0.5){
+        T({left:W, tx:'-100%', top:Y[1] + bh + 10, al:'right', lines:[{t:modTxt, fw:500, c:'a'}]});
+        D.lead += 'M' + f2(cutPiece.x + cutPiece.w / 2) + ',' + f2(Y[1] + bh) + ' V' + f2(Y[1] + bh + 9) + ' ';
+      }
+      var wU2 = W - 2, lm = wrap(sk22Txt, wU2, 12.5, 600).map(function(x){ return {t:x, fs:12.5, fw:600, c:'a'}; }).concat(wrap(ikkeTxt, wU2, 12).map(function(x){ return {t:x}; }));
+      T({left:0, top:Y[2] + bh + 10, w:wU2, lines:lm});
+      if(limited) T({left:0, top:Y[2] + bh + 10 + 16 * lm.length + 6, w:wU2, lines:wrap(takTxt, wU2, 12).map(function(x){ return {t:x}; })});
+      D.lead += 'M' + f2(pieceCx) + ',' + f2(Y[2] + bh) + ' V' + f2(Y[2] + bh + 9) + ' ';
+      T({left:W, tx:'-100%', top:Y[3] + bh + 10, al:'right', lines:[{t:skSTxt, fw:500, c:'a'}]});
+      D.lead += 'M' + f2(cut4Cx) + ',' + f2(Y[3] + bh) + ' V' + f2(Y[3] + bh + 9) + ' ';
+    }
+
+    plot.classList.toggle('m', MOB);
+    plot.style.height = H + 'px';
+    var svg = plot.querySelector('svg');
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+    for(var pn in D) svg.querySelectorAll('[data-p="' + pn + '"]').forEach(function(el){ el.setAttribute('d', D[pn]); });
+    q('labels').innerHTML = lab;
+
+    // Setningen under grafen, med tallene uthevet
+    var A = '\u0001', Z = '\u0002';
+    function strong(s){ return esc(nb(s)).split(A).join('<strong>').split(Z).join('</strong>'); }
+    var sum = t('lrnFaSum', 'Barnehagen koster {n} i året.', {n:A + kr(nett) + Z}) + ' ' + (limited
+      ? t('lrnFaSumL', 'Fradraget er begrenset til det du har betalt, {f}, og er verdt {s}.', {f:A + kr(k.frad) + Z, s:A + kr(skattR) + Z})
+      : t('lrnFaSumF', 'Fradraget på {f} er verdt {s}.', {f:A + kr(k.frad) + Z, s:A + kr(skattR) + Z}));
+    q('sum').innerHTML = strong(sum);
+
+    // Regnestykket
+    set('fMin', nb(t('lrnFaMin', 'det minste av {a} og {b}', {a:kr(k.brutto), b:kr(tak)})));
+    set('fFrad', nb(kr(k.frad)));
+    set('fSk', nb(fmt(k.frad) + ' × 22 %'));
+    set('fSkatt', nb(kr(skattR)));
+
+    // Tabellen
+    var rows = [[rowNames[0], t('lrnFaT0', '{b} × {p} × {m}', {b:barnTxt, p:kr(pris), m:mndLong}), k.full],
+      [rowNames[1], k.mod > 0.5 ? t('lrnFaT1', 'Søskenmoderasjonen er trukket fra: −{k}', {k:kr(k.mod)}) : ph('Ingen søskenmoderasjon'), k.brutto],
+      [ph('Foreldrefradrag'), ikkeTxt, k.frad],
+      [ph('Skatt spart (22 %)'), ph('Fradraget × 22 %'), skattR],
+      [rowNames[3], subs[3], nett]];
+    q('rows').innerHTML = rows.map(function(rw, j){
+      return '<tr' + (j === 4 ? ' class="tot"' : '') + '><th scope="row">' + esc(nb(rw[0])) + '<small>' + esc(nb(rw[1])) + '</small></th><td><bdi>' + esc(nb(kr(rw[2]))) + '</bdi></td></tr>';
+    }).join('');
+
+    // Teksten for skjermlesere
+    set('sr', nb(t('lrnFaSr', 'Full pris er {f} i året. Etter søskenmoderasjon er regningen {b}. Foreldrefradraget er {d}{l}, men det trekkes fra inntekten, og bare 22 % av det, {s}, kommer av skatten. Barnehagen koster {n} i året.',
+      {f:kr(k.full), b:kr(k.brutto), d:kr(k.frad), l:limited ? t('lrnFaSrL', ', begrenset til det du har betalt') : '', s:kr(skattR), n:kr(nett)})));
+  }
+
+  function schedule(){
+    if(queued) return;
+    queued = true;
+    Promise.resolve().then(function(){ queued = false; render(raw); });
+  }
+
+  function init(){
+    root = document.getElementById('lrn-fa');
+    if(!root || !window.hvtLearn) return;
+    plot = root.querySelector('.lrn-fa-plot');
+    // Regnestykket er sammenleggbart på mobil, men står åpent på brede skjermer
+    var fd = root.querySelector('.lrn-fa-fd');
+    function syncOpen(){ if(fd && mqDesk && mqDesk.matches) fd.open = true; }
+    syncOpen();
+    if(mqDesk && mqDesk.addEventListener) mqDesk.addEventListener('change', syncOpen);
+    if(window.ResizeObserver) new ResizeObserver(function(){ if(raw && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // Etikettene måles med siden sin skrift, så de plasseres på nytt når den er lastet
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(raw) schedule(); });
+    hvtLearn.on(KEY, render);
+    hvtLearn.update(KEY, window._fam || null);
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();
 </script>
 
