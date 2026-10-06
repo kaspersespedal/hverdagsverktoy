@@ -121,6 +121,67 @@
     else { document.documentElement.classList.remove('a5-paused'); }
   });
 
+  /* Ti bilder i sekundet (2026-10-04). Auroraen flytter seg under én piksel
+     per skjermoppdatering (perioder på 29–109 s), men de evige animasjonene
+     ba likevel om et nytt bilde 60–144 ganger i sekundet. Målt i tomgang på
+     ni sider: GPU-tråden, kompositoren og sidens egen kompositortråd sto
+     12–30 % opptatt hver, hele tiden, også når ingen rørte siden. Det er
+     batteri og varme på mobil, og det konkurrerer med scrolling og skriving.
+     Nå står de langsomme evige animasjonene (≥ 8 s, bare transform og
+     opacity: auroraen, Hendrix-hjulene og frister-glødet på forsiden) på
+     pause, og vi spoler dem fram selv ti ganger i sekundet. Samme
+     keyframes og samme tempo, bare færre bilder. Skjult fane: spolingen
+     stopper og fortsetter der den slapp, som a5-paused over. Starter først
+     etter lasting, så getAnimations() ikke tvinger fram stil midt i den.
+     Hver 30. runde hentes lista på nytt, så animasjoner som kommer til eller
+     byttes ut (temabytte, ≤ 768 px, redusert bevegelse) også fanges opp;
+     uten noen å spole sjekkes det bare hvert 3. sekund. */
+  (function(){
+    if(typeof document.getAnimations !== 'function') return;
+    var STEP = 100, list = [], from = [], t0 = 0, timer = 0, n = 0, fresh = true;
+    var META = {offset:1, easing:1, composite:1, computedOffset:1};
+    function slow(a){
+      var e = a.effect, tm = e && e.getTiming ? e.getTiming() : null;
+      if(!tm || tm.iterations !== Infinity || !(tm.duration >= 8000) || a.playState === 'idle') return false;
+      // Fargeskift i bakgrunnsposisjon o.l. kunne synes i trinn; de får gå som før.
+      var kf = e.getKeyframes();
+      for(var i = 0; i < kf.length; i++) for(var p in kf[i]) if(!META[p] && p !== 'transform' && p !== 'opacity') return false;
+      return true;
+    }
+    function grab(){
+      list = document.getAnimations().filter(slow);
+      from = list.map(function(a){ if(a.playState !== 'paused') a.pause(); return a.currentTime || 0; });
+      t0 = performance.now();
+    }
+    // playState tvinger fram stil, så alle leses før noe skrives (én oppdatering, ikke én per animasjon).
+    // En animasjon CSS har fjernet (idle) må ikke få ny tid: da våkner den igjen som pauset.
+    function advance(){
+      var dt = performance.now() - t0, live = [], i;
+      for(i = 0; i < list.length; i++) live[i] = list[i].playState !== 'idle';
+      for(i = 0; i < list.length; i++) if(live[i]) list[i].currentTime = from[i] + dt;
+    }
+    function tick(){
+      timer = 0;
+      if(document.hidden) return;
+      try {
+        if(fresh){ fresh = false; grab(); }
+        else { advance(); if(++n % 30 === 0 || !list.length) grab(); }
+      } catch(e){
+        // Noe uventet i nettleseren: la animasjonene gå av seg selv igjen, som før.
+        list.forEach(function(a){ try { a.play(); } catch(_e){} });
+        return;
+      }
+      timer = setTimeout(tick, list.length ? STEP : 3000);
+    }
+    // Etter skjult fane hentes lista først, så animasjonene fortsetter der de stoppet.
+    function start(){ if(!timer && !document.hidden){ fresh = true; timer = setTimeout(tick, 0); } }
+    function stop(){ clearTimeout(timer); timer = 0; }
+    document.addEventListener('visibilitychange', function(){ if(document.hidden) stop(); else start(); });
+    function later(){ setTimeout(start, 1500); }
+    if(document.readyState === 'complete') later();
+    else window.addEventListener('load', later);
+  })();
+
   /* ── Cursor-anchored light — uendret fra v3 (lerp 0.06, lags 200-400ms).
      Disabled <1024px og under prefers-reduced-motion. Pauses on hidden tab. */
   var light  = document.getElementById('cursorLight');

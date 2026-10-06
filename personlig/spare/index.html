@@ -407,8 +407,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
               <div class="row"><span class="sw inn"></span><span data-i18n="spareLegendDeposits">Innskudd</span></div>
             </div>
           </div>
-          <div class="spare-chart">
-            <svg class="spare-svg" id="spareSvg" viewBox="0 0 600 200" preserveAspectRatio="none"></svg>
+          <div class="spare-chart" dir="ltr">
+            <svg class="spare-svg" id="spareSvg"></svg>
           </div>
         </section>
       </div>
@@ -599,11 +599,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v245"></script>
-<script defer src="/shared/core.js?v=v231"></script>
+<script defer src="/shared/top-chrome.js?v=v248"></script>
+<script defer src="/shared/core.js?v=v232"></script>
 <script defer src="/shared/lang/no.js?v=v229"></script>
-<script defer src="/shared/learn.js?v=v1"></script>
-<script src="/shared/atmosphere.js?v=v5" defer></script>
+<script defer src="/shared/learn.js?v=v2"></script>
+<script src="/shared/atmosphere.js?v=v6" defer></script>
 
 <script>
 (function(){
@@ -731,20 +731,34 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   }
 
   // ── SVG chart (vanilla port of JSX render)
-  var CH_W = 600, CH_H = 200;
-  var PAD = {l:56, r:64, t:14, b:30};
+  // viewBox = målt bredde × høyde, så 1 enhet = 1 px og teksten aldri strekkes.
+  var PAD = {t:14, b:30};
+  var lastSeries = null, lastW = 0, measureCtx = null;
 
-  function niceMax(v){
-    if(v <= 0) return 1;
-    var exp = Math.pow(10, Math.floor(Math.log10(v)));
-    var m = v/exp;
-    var nm = m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10;
-    return nm*exp;
+  // Pene akseverdier: minste trinn (1/2/2,5/5 × 10^n, hele kroner) som dekker v med høyst «parts» trinn
+  function nice(v, parts){
+    var e0 = Math.floor(Math.log10(Math.max(v, 1))) - 2, fs = [1, 2, 2.5, 5];
+    for(var e = e0; e < e0 + 5; e++) for(var i = 0; i < fs.length; i++){
+      var step = fs[i] * Math.pow(10, e), n = Math.ceil(v / step - 1e-9);
+      if(n <= parts && step % 1 === 0) return {step:step, max:n * step};
+    }
+    return {step:v, max:v};
   }
   function fmtY(v){
     if(v >= 1e6) return (v/1e6).toFixed(1).replace('.',',')+'M';
     if(v >= 1000) return Math.round(v/1000)+'k';
     return String(Math.round(v));
+  }
+  function fmtTick(v){
+    function d(x){ return String(Math.round(x * 100) / 100).replace('.', ','); }
+    if(v >= 1e6) return d(v/1e6)+'M';
+    if(v >= 1000) return d(v/1000)+'k';
+    return String(Math.round(v));
+  }
+  function textW(s, font){
+    if(!measureCtx) measureCtx = document.createElement('canvas').getContext('2d');
+    measureCtx.font = font;
+    return measureCtx.measureText(s).width;
   }
   function smoothPath(pts){
     if(pts.length<2) return '';
@@ -764,26 +778,36 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     return d;
   }
   function drawChart(series){
-    if(!series || series.length < 2){ els.svg.innerHTML = ''; return; }
-    var ww = CH_W-PAD.l-PAD.r, hh = CH_H-PAD.t-PAD.b;
-    var max = series[series.length-1].total;
-    var nm = niceMax(max);
-    function xs(i){ return PAD.l + (i/Math.max(1,series.length-1))*ww; }
+    lastSeries = series;
+    if(!series || series.length < 2 || !isFinite(series[series.length-1].total)){ els.svg.innerHTML = ''; return; }
+    var W = els.svg.clientWidth, H = els.svg.clientHeight || 300;
+    lastW = W;
+    if(!W) return;
+    els.svg.setAttribute('viewBox', '0 0 '+W+' '+H);
+    var sans = getComputedStyle(els.svg).getPropertyValue('--font-sans').trim() || 'Inter, system-ui, sans-serif';
+    var lastIdx = series.length-1;
+    var max = series[lastIdx].total;
+    var sc = nice(max, 5), nm = sc.max, yTicks = [];
+    for(var k = 0; k * sc.step <= nm + 1e-9; k++) yTicks.push(k * sc.step);
+    // Margene følger tekstbredden: y-etikettene til venstre, sluttbeløpet til høyre
+    var endTxt = fmtY(series[lastIdx].total)+' kr';
+    var yLblW = Math.max.apply(null, yTicks.map(function(v){ return textW(fmtTick(v), '500 11px '+sans); }));
+    var PL = Math.ceil(yLblW) + 16, PR = Math.ceil(textW(endTxt, '600 12px '+sans)) + 16;
+    var ww = W-PL-PR, hh = H-PAD.t-PAD.b;
+    function xs(i){ return PL + (i/Math.max(1,lastIdx))*ww; }
     function ys(v){ return PAD.t + hh - (v/nm)*hh; }
     var ptsTot = series.map(function(p,i){ return [xs(i), ys(p.total)]; });
     var ptsInn = series.map(function(p,i){ return [xs(i), ys(p.deposits)]; });
     var dTot = smoothPath(ptsTot);
     var dInn = smoothPath(ptsInn);
-    var lastIdx = series.length-1;
     var endX = xs(lastIdx), endY = ys(series[lastIdx].total);
-    var ticks = [0,.25,.5,.75,1];
     var svgHtml = '';
-    ticks.forEach(function(t,i){
-      var y = PAD.t + hh*(1-t);
-      svgHtml += '<line class="'+(t===0?'grid base':'grid')+'" x1="'+PAD.l+'" y1="'+y+'" x2="'+(CH_W-PAD.r)+'" y2="'+y+'"/>';
+    yTicks.forEach(function(v,i){
+      var y = ys(v);
+      svgHtml += '<line class="'+(i===0?'grid base':'grid')+'" x1="'+PL+'" y1="'+y+'" x2="'+(W-PR)+'" y2="'+y+'"/>';
     });
-    ticks.forEach(function(t,i){
-      svgHtml += '<text class="ylbl" x="'+(PAD.l-12)+'" y="'+(PAD.t+hh*(1-t)+4)+'" text-anchor="end">'+fmtY(nm*t)+'</text>';
+    yTicks.forEach(function(v){
+      svgHtml += '<text class="ylbl" x="'+(PL-12)+'" y="'+(ys(v)+4)+'" text-anchor="end">'+fmtTick(v)+'</text>';
     });
     // area-inn (innskutt area, baseline to depCurve)
     var areaInnD = dInn + ' L '+xs(lastIdx)+' '+(PAD.t+hh)+' L '+xs(0)+' '+(PAD.t+hh)+' Z';
@@ -798,15 +822,20 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     svgHtml += '<path class="stroke-tot" d="'+dTot+'"/>';
     svgHtml += '<line class="endline" x1="'+endX+'" y1="'+PAD.t+'" x2="'+endX+'" y2="'+(PAD.t+hh)+'"/>';
     svgHtml += '<circle class="endcap" cx="'+endX+'" cy="'+endY+'" r="3.5"/>';
-    var lblX = Math.min(endX+8, CH_W-PAD.r+2);
-    svgHtml += '<text class="endlbl-txt" x="'+lblX+'" y="'+(endY+4)+'">'+fmtY(series[lastIdx].total)+' kr</text>';
-    var v = readInputs();
-    ticks.forEach(function(t){
-      var anchor = t===0?'start':t===1?'end':'middle';
-      svgHtml += '<text class="xlbl" x="'+(PAD.l+ww*t)+'" y="'+(CH_H-8)+'" text-anchor="'+anchor+'">år '+Math.round(v.years*t)+'</text>';
+    svgHtml += '<text class="endlbl-txt" x="'+(endX+8)+'" y="'+(endY+4)+'">'+endTxt+'</text>';
+    // År med jevne mellomrom: minste trinn som gir minst 56 px mellom etikettene og høyst 8 intervaller
+    var pxYear = ww / lastIdx, steps = [1,2,5,10,20,25,50], step = lastIdx;
+    for(var si = 0; si < steps.length; si++){ if(steps[si]*pxYear >= 56 && lastIdx/steps[si] <= 8){ step = steps[si]; break; } }
+    var xTicks = [];
+    for(var yr = 0; yr <= lastIdx; yr += step) xTicks.push(yr);
+    if((lastIdx - xTicks[xTicks.length-1]) * pxYear >= 56) xTicks.push(lastIdx);
+    xTicks.forEach(function(yr){
+      svgHtml += '<text class="xlbl" x="'+xs(yr)+'" y="'+(H-8)+'" text-anchor="'+(yr===0?'start':'middle')+'">år '+yr+'</text>';
     });
     els.svg.innerHTML = svgHtml;
   }
+  if(window.ResizeObserver) new ResizeObserver(function(){ if(lastSeries && els.svg.clientWidth !== lastW) drawChart(lastSeries); }).observe(els.svg);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(lastSeries) drawChart(lastSeries); });
 
   function render(){
     var v = readInputs();
@@ -825,7 +854,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       els.rPctStat.textContent = '0 %';
       els.hTotal.textContent = '–'; els.hPct.textContent = '–';
       els.rfTotal.textContent = '–'; els.rfInt.textContent = '–'; els.rfDiff.textContent = '–';
-      els.svg.innerHTML = '';
+      drawChart(null);
       window._spare = null;
       if(window.hvtLearn) hvtLearn.update('personlig-spare', null);
       return;
