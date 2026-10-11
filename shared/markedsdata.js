@@ -217,8 +217,14 @@
 
   function stampNow() {
     var el = $('dailyStampTxt'); if (!el) return;
+    el.innerHTML = stampHtml();
+  }
+
+  /* «Sist oppdatert» i egen span: på mobil skjules den visuelt (men leses opp),
+     så headeren får plass til en kompakt status-pille med bare klokkeslettet. */
+  function stampHtml() {
     var d = new Date();
-    el.textContent = 'Sist oppdatert ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    return '<span class="stamp-pre">Sist oppdatert </span>' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
   }
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
@@ -1103,9 +1109,7 @@
   /* ── Oppdater-knapp i headeren ───────────────────────────────── */
   function buildStamp() {
     var stamp = $('dailyStamp'); if (!stamp) return;
-    var d = new Date();
-    var t = 'Sist oppdatert ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
-    stamp.innerHTML = '<span id="dailyStampTxt">' + t + '</span>' +
+    stamp.innerHTML = '<span id="dailyStampTxt">' + stampHtml() + '</span>' +
       '<button type="button" class="daily-refresh" id="dailyRefresh" title="Oppdater" aria-label="Oppdater markedsdata">' +
       '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
       '<path d="M13.4,8 A5.4,5.4 0 1 1 11.8,4.2 M13.6,1.8 V5 H10.4"/></svg></button>';
