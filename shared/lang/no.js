@@ -1668,7 +1668,6 @@ REGIONS['no'] = {
 
     // — ferie calc (editorial redesign) —
     ferieTitle:'Feriepenger',
-    ferieSubtitle:'Feriepengene er 10,2 % av det du tjente i fjor, eller 12 % hvis du har fem ukers ferie. Fyller du 60 i år eller er eldre, får du 2,3 prosentpoeng ekstra på lønn opp til 6G (seks ganger grunnbeløpet).',
     ferieSectionInput:'Inntekt og ferietype',
     ferieSectionHint:'Ferieloven § 10',
     ferieLblSalary:'Årslønn (grunnlag)',
@@ -1681,7 +1680,6 @@ REGIONS['no'] = {
 
     // — valgevinst calc (editorial redesign) —
     valgevTitle:'Valutagevinst',
-    valgevSubtitle:'Se hva du tjener eller taper når du kjøper og selger utenlandsk valuta. Gevinst skattlegges med 22 %, og tap gir fradrag.',
     valgevSectionInput:'Kjøp og salg',
     valgevSectionHint:'22 % skattesats',
     valgevStatGain:'Gevinst / tap',
@@ -1692,7 +1690,6 @@ REGIONS['no'] = {
 
     // — avs calc (editorial redesign) —
     avsTitle:'Avskrivning',
-    avsSubtitle:'Se hvor mye en maskin, bil eller et bygg avskrives hvert år. I regnskapet fordeles kostnaden over levetiden, oftest med like mye hvert år (lineært). På skatten trekkes inntil en fast prosent av det som er igjen (saldo).',
     avsSectionInput:'Avskrivning',
     avsSectionHint:'2026-satser',
     avsStatTotal:'Total avskrivning',
@@ -1708,7 +1705,6 @@ REGIONS['no'] = {
 
     // — npv calc (editorial redesign sub-page) —
     npvHeroTitle:'Nåverdi (NPV/IRR)',
-    npvHeroLead:'Se om en investering lønner seg: du får nåverdi (NPV), internrente (IRR), tilbakebetalingstid og lønnsomhet per krone. Skriv inn hva den koster, avkastningskravet ditt og kontantstrømmen hvert år i fem år.',
     npvSectionInput:'Investering og kontantstrømmer',
     npvSectionHint:'5 år',
     npvLInv:'Investering (kr)',
@@ -1724,13 +1720,11 @@ REGIONS['no'] = {
     npvPlaceholder:'Skriv inn hva investeringen koster for å se beregningen.',
     // — finance calc sub-page (editorial redesign) —
     financeHeroTitle:'Finansiell kalkulator',
-    financeHeroLead:'Fem regnestykker i ett: hva sparepengene vokser til, margin og påslag, break-even, renters rente og rabatt. Velg type og fyll inn tallene.',
     financeSectionInput:'Finansiell beregning',
     financeSectionHint:'5 typer',
     financeInfoBox:'Finanskalkulatoren dekker fem typiske beregninger: nåverdi/fremtidsverdi (TVM), margin og markup, break-even-punkt, renters rente og rabatter. Resultatene oppdateres lokalt — ingen data sendes ut.',
     // — rente calc (editorial redesign) —
     renteTitle:'Effektiv rente',
-    renteSubtitle:'Se hva lånet faktisk koster per år når etableringsgebyr og månedsgebyr regnes med. Da kan du sammenligne lånetilbud på like vilkår.',
     renteSectionInput:'Lånedetaljer',
     renteSectionHint:'Annuitetslån',
     renteStatEff:'Effektiv årsrente',
@@ -1810,7 +1804,6 @@ REGIONS['no'] = {
     kalkToolTimeprisDesc:'Reverse-kalkulator fra ønsket netto årsinntekt til brutto timepris — inkluderer skatt, ferie og overhead.',
     kalkTimeprisTitle:'Timepris',
     kalkTimeprisTitleHtml:'Timepris-kalkulator',
-    kalkTimeprisSubtitle:'Finn timeprisen du må ta for å sitte igjen med det du ønsker etter skatt. Ferie, sykdom og driftskostnader er regnet inn.',
     kalkTimeprisBackEyebrow:'Kalkulator',
     kalkTimeprisBackLabel:'Tilbake til alle verktøy',
     kalkTimeprisStatEks:'Timepris eks. MVA',
@@ -2505,7 +2498,6 @@ REGIONS['no'] = {
     placeholderZero: '0',
     // — unit calc (Valutakonverter — editorial redesign 2026-05-08 T2) —
     unitHeroTitle: 'Valutakonverter',
-    unitHeroLead: 'Regn om et beløp mellom 15 valutaer med dagens markedskurs.',
     unitSectionInput: 'Konverter',
     unitStatRate: 'Kurs',
     unitLFrom: 'Fra',
@@ -2601,7 +2593,7 @@ REGIONS['no'] = {
 
     // ── Phase 1: Howto — finance (Finansiell kalkulator) ──
     financeHowtoTitle:'Slik bruker du Finansiell kalkulator', financeHowtoDesc:'Fem finansberegninger: nåverdi, fremtidsverdi, margin, break-even og effektiv rente',
-    financeHowtoRows:[['— SLIK BRUKER DU KALKULATOREN —','Velg beregningstype og fyll inn tallene'],['Beregningstype','Velg én av fem: nåverdi/fremtidsverdi (TVM), margin/markup, break-even, renters rente eller rabatt. Feltene tilpasser seg valget.'],['Nåverdi / fremtidsverdi','TVM — verdien av penger over tid. FV = hva et beløp vokser til; PV = hva et fremtidig beløp er verdt i dag.'],['Margin og markup','Margin = fortjeneste i prosent av salgspris. Markup = påslag i prosent av kostpris. Det er ikke det samme.'],['Break-even','Antall enheter du må selge for å dekke faste kostnader, gitt dekningsbidrag per enhet.'],['Renters rente','Hvordan en sum vokser med rente på rente over flere perioder.'],['Rabatt','Pris etter ett eller flere prosentvise avslag.'],['— SLIK LESER DU RESULTATENE —',''],['Resultat','Hovedtallet for valgt beregning vises øverst, med underlag og mellomregninger under.'],['— GODT Å VITE —',''],['Effektiv vs. nominell rente','Effektiv rente tar hensyn til antall terminer per år og gebyrer — sammenlign alltid lån og sparing på effektiv rente.'],['Margin er ikke markup','40 % markup på kostpris gir bare ca. 29 % margin. Vær bevisst på hvilken du oppgir.'],['Alt regnes lokalt','Ingen tall sendes ut av nettleseren.']],
+    financeHowtoRows:[['— KALKULATOREN —','Regn som på en vanlig kalkulator, med tastene eller tastaturet'],['Regnerekkefølge','Gange og dele regnes før pluss og minus, og potens før gange. Bruk parenteser for å bestemme rekkefølgen: (2 + 3) × 4 = 20.'],['Prosent','200 + 10 % gir 220, og 200 − 10 % gir 180. Ganger eller deler du, er 10 % én tidel: 200 × 10 % = 20.'],['Potens, rot og fortegn','xʸ opphøyer: 2 xʸ 10 = 1 024. √ tar kvadratroten av tallet du har skrevet, eller av tallet som kommer etter. ± bytter fortegn på det siste tallet.'],['Minne','M+ legger svaret til i minnet, og M− trekker det fra. MR setter inn tallet fra minnet, og MC tømmer det.'],['Historikk og kopiering','Utregningene dine vises i historikken. Trykk på en linje for å regne videre med svaret. «Kopier» legger svaret på utklippstavla, klart til å limes inn i et regneark. Minnet og historikken forsvinner når du lukker siden.'],['Tastatur','Skriv tall og + − * / ^ ( ) % rett fra tastaturet. Enter gir svaret, Backspace sletter siste tegn, Esc nullstiller, og r tar kvadratroten.'],['— FINANS —','Velg beregningstype og fyll inn tallene'],['Beregningstype','Velg én av fem: nåverdi/fremtidsverdi (TVM), margin/markup, break-even, renters rente eller rabatt. Feltene tilpasser seg valget.'],['Nåverdi / fremtidsverdi','TVM — verdien av penger over tid. FV = hva et beløp vokser til; PV = hva et fremtidig beløp er verdt i dag.'],['Margin og markup','Margin = fortjeneste i prosent av salgspris. Markup = påslag i prosent av kostpris. Det er ikke det samme.'],['Break-even','Antall enheter du må selge for å dekke faste kostnader, gitt dekningsbidrag per enhet.'],['Renters rente','Hvordan en sum vokser med rente på rente over flere perioder.'],['Rabatt','Pris etter ett eller flere prosentvise avslag.'],['— SLIK LESER DU RESULTATENE —',''],['Resultat','Hovedtallet for valgt beregning vises øverst, med underlag og mellomregninger under.'],['— GODT Å VITE —',''],['Effektiv vs. nominell rente','Effektiv rente tar hensyn til antall terminer per år og gebyrer — sammenlign alltid lån og sparing på effektiv rente.'],['Margin er ikke markup','40 % markup på kostpris gir bare ca. 29 % margin. Vær bevisst på hvilken du oppgir.'],['Alt regnes lokalt','Ingen tall sendes ut av nettleseren.']],
 
     // ── Phase 1: Howto — valgevinst (Valutagevinst) ──
     valgevinstHowtoTitle:'Slik bruker du Valutagevinst-kalkulatoren', valgevinstHowtoDesc:'Regn ut gevinst eller tap ved kjøp og salg av valuta (sktl. § 9-9)',
@@ -3190,7 +3182,6 @@ REGIONS['no'] = {
     kalkCatDeckTitle: 'Verktøy',
     kalkCatHeroTitle: '<em>Kalkulator</em> — hverdag, finans og regnskap',
     likvidTitle: 'Likviditetsbudsjett',
-    likvidSubtitle: 'Se hvor mye du har på kontoen måned for måned, og om pengene tar slutt underveis.',
     likvidStatEnd: 'Endelig saldo',
     likvidStatNetMnd: 'Netto / mnd',
     likvidRStart: 'Startbalanse',
@@ -3204,7 +3195,6 @@ REGIONS['no'] = {
     likvidCsvBtn: 'Last ned (CSV)',
     lonnutCrumb: 'Lønn ut',
     lonnutTitle: 'Lønn',
-    lonnutSubtitle: 'Skriv inn lønn — se hva du får utbetalt etter skatt, månedlig og årlig. 2026-satser.',
     lonnutStatNet: 'Netto / mnd',
     inntektStripBruttoMnd: 'Brutto / mnd',
     inntektStripSkattMnd: 'Skatt / mnd',
