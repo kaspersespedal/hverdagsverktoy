@@ -186,6 +186,149 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
+
+/* ── Visning: Kalkulator | Finans (samme knappeform som metodevalget på /kalkulator/avs/) ── */
+.fin-modes{display:flex;gap:4px;margin:0 0 14px;max-width:340px}
+.fin-mode{
+  flex:1;min-height:44px;background:transparent;border:1px solid var(--line-2);
+  color:var(--ink2);padding:10px 6px;border-radius:5px;
+  font:600 11px/1 var(--font-sans);letter-spacing:.5px;text-transform:uppercase;cursor:pointer;
+  transition:border-color .2s var(--ease,ease), color .2s var(--ease,ease), background .2s var(--ease,ease);
+}
+@media(hover:hover){.fin-mode:hover{border-color:var(--line-warm);color:var(--ink)}}
+.fin-mode[aria-selected="true"]{background:var(--surface-2);border-color:var(--line-warm);color:var(--ink)}
+.fin-mode:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.fin-panel[hidden],.page-stats[hidden]{display:none}
+[data-mode="calc"] .page-stat .l{flex-shrink:0}
+#hCalcExpr{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis}
+
+/* ── Kalkulatoren: kortet, skjermen og tastene er de samme som på /kalkulator/enkel/ ── */
+.calc-pane{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start;max-width:520px}
+@media(min-width:721px){
+  .calc-pane{grid-template-columns:minmax(0,430px) minmax(0,1fr);align-items:stretch;max-width:none}
+  /* Historikken følger kalkulatorens høyde og ruller inni seg selv */
+  .calc-hist{contain:size}
+}
+.calc{
+  --calc-glyph:var(--accent-2);
+  --calc-fill-a:var(--accent);
+  --calc-fill-b:var(--accent-deep);
+  width:100%;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:10px;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 7%, transparent),
+    0 1px 2px rgba(0,0,0,.16),
+    0 26px 56px -28px rgba(0,0,0,.5);
+}
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]) .calc{
+  --calc-glyph:var(--accent-deep);
+  --calc-fill-a:var(--accent-deep);
+  --calc-fill-b:color-mix(in srgb, var(--accent-deep) 88%, var(--ink));
+}
+.calc-display{
+  position:relative;overflow:hidden;border-radius:12px;
+  border:1px solid var(--line);margin:0 0 10px;
+  padding:14px 18px 18px 22px;text-align:right;min-height:150px;
+  display:flex;flex-direction:column;gap:6px;
+  background:
+    radial-gradient(120% 150% at 100% 0%, rgba(var(--glow-rgb),.09), transparent 60%),
+    color-mix(in srgb, var(--bg) 62%, var(--surface));
+  box-shadow:inset 0 1px 4px rgba(0,0,0,.18);
+}
+.calc-top{display:flex;align-items:center;gap:10px;min-height:32px;margin-bottom:auto;text-align:left}
+.calc-mem{font:600 11.5px/1.3 var(--font-sans);letter-spacing:.04em;color:var(--accent-2);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.calc-copy{
+  margin-left:auto;flex-shrink:0;appearance:none;background:transparent;
+  border:1px solid var(--line);border-radius:999px;color:var(--ink2);
+  font:500 12px/1 var(--font-sans);padding:0 12px;min-height:32px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:6px;
+  transition:color .15s ease,border-color .15s ease;
+}
+@media(hover:hover){.calc-copy:hover{color:var(--ink);border-color:var(--line-2)}}
+.calc-copy:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.calc-copy.is-done{color:var(--accent-2);border-color:color-mix(in srgb, var(--accent) 40%, transparent)}
+.calc-expr{font:500 12.5px/1.5 'JetBrains Mono',var(--font-sans,sans-serif);color:var(--ink3);letter-spacing:.04em;min-height:19px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Langt regnestykke: skriften krymper, og blir det likevel for langt, vises slutten (der du skriver) */
+.calc-now{font-family:var(--font-serif);font-weight:500;font-size:46px;line-height:1.06;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-1.2px;white-space:nowrap;overflow:hidden}
+.calc-now.is-err{font-size:24px;letter-spacing:-.2px;color:var(--ink2)}
+@keyframes calcPop{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}
+.calc-now.pop{animation:calcPop .22s ease-out}
+.calc-sr{position:absolute!important;width:1px;height:1px;margin:0;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+.calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.key{
+  appearance:none;background:var(--surface-2);border:1px solid var(--line);
+  border-radius:12px;color:var(--ink);font:500 20px/1 var(--font-sans);
+  padding:16px 0;min-height:52px;cursor:pointer;font-variant-numeric:tabular-nums;
+  -webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation;
+  box-shadow:inset 0 1px 0 color-mix(in srgb, var(--ink) 6%, transparent);
+  transition:background .14s ease,color .14s ease,border-color .14s ease,box-shadow .14s ease,transform .07s ease;
+}
+@media(hover:hover){.key:hover{background:var(--surface-3);border-color:var(--line-2)}}
+.key:active,.key.is-press{transform:translateY(1px);background:var(--surface-3);box-shadow:inset 0 2px 5px rgba(0,0,0,.18)}
+.key:focus-visible{outline:2px solid var(--accent);outline-offset:2px;position:relative;z-index:1}
+.key-mem{background:transparent;box-shadow:none;color:var(--ink3);font-size:13px;font-weight:600;letter-spacing:.06em;padding:12px 0;min-height:44px}
+@media(hover:hover){.key-mem:hover{background:color-mix(in srgb, var(--ink) 5%, transparent);color:var(--ink)}}
+.key-fn{background:color-mix(in srgb, var(--ink) 4%, transparent);color:var(--ink2);font-size:16px;font-weight:600;letter-spacing:.04em}
+@media(hover:hover){.key-fn:hover{background:color-mix(in srgb, var(--ink) 9%, transparent);color:var(--ink)}}
+.key-op{
+  background:color-mix(in srgb, var(--accent) 13%, transparent);
+  border-color:color-mix(in srgb, var(--accent) 20%, transparent);
+  color:var(--calc-glyph);font-size:24px;font-weight:500;
+}
+@media(hover:hover){.key-op:hover{background:color-mix(in srgb, var(--accent) 21%, transparent);border-color:color-mix(in srgb, var(--accent) 32%, transparent)}}
+.key-op:active,.key-op.is-press{background:color-mix(in srgb, var(--accent) 30%, transparent)}
+.key-eq{
+  background:linear-gradient(180deg, var(--calc-fill-a), var(--calc-fill-b));
+  border-color:transparent;color:var(--bg);font-weight:700;font-size:23px;
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--ink) 22%, transparent),
+    0 8px 22px -11px rgba(var(--glow-rgb),.75);
+}
+@media(hover:hover){.key-eq:hover{filter:brightness(1.08)}}
+.key-eq:active,.key-eq.is-press{background:var(--calc-fill-b);box-shadow:inset 0 2px 6px rgba(0,0,0,.28)}
+
+/* Historikk */
+.calc-hist{
+  background:var(--surface);border:1px solid var(--line);border-radius:18px;
+  padding:16px 18px;display:flex;flex-direction:column;min-width:0;
+  box-shadow:inset 0 1px 0 color-mix(in srgb, var(--ink) 5%, transparent);
+}
+.calc-hist-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.calc-hist-head h3{margin:0;font:600 11px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+.calc-hist-clear{appearance:none;background:transparent;border:0;border-radius:4px;color:var(--ink3);font:500 12px/1 var(--font-sans);padding:0 6px;min-height:32px;cursor:pointer}
+@media(hover:hover){.calc-hist-clear:hover{color:var(--ink)}}
+.calc-hist-clear[aria-disabled="true"]{opacity:.45;cursor:default;color:var(--ink3)}
+.calc-hist-clear:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.calc-hist-list{list-style:none;margin:0;padding:0;overflow-y:auto;flex:1 1 auto;min-height:0;max-height:320px}
+@media(min-width:721px){.calc-hist-list{max-height:none}}
+.calc-hist-item{
+  appearance:none;width:100%;display:flex;flex-direction:column;align-items:flex-end;gap:4px;
+  background:transparent;border:0;border-bottom:1px solid color-mix(in srgb, var(--ink) 6%, transparent);
+  border-radius:6px;padding:11px 8px;color:var(--ink);font:inherit;text-align:right;cursor:pointer;
+  transition:background .14s ease;
+}
+@media(hover:hover){.calc-hist-item:hover{background:color-mix(in srgb, var(--ink) 4%, transparent)}}
+.calc-hist-item:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.calc-hist-expr{font:500 12px/1.45 'JetBrains Mono',var(--font-sans,sans-serif);color:var(--ink3);letter-spacing:.02em;overflow-wrap:anywhere}
+.calc-hist-res{font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;overflow-wrap:anywhere}
+.calc-hist-empty{margin:14px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink3)}
+
+@media(max-width:560px){
+  .fin-modes{max-width:none}
+  .calc{padding:8px;border-radius:16px}
+  .calc-display{padding:12px 14px 14px 16px;min-height:132px}
+  .calc-now{font-size:38px}
+  .calc-keys{gap:7px}
+  .key{padding:15px 0;font-size:19px}
+  .key-mem{padding:12px 0;font-size:12.5px}
+  .calc-hist{border-radius:16px}
+}
+@media(prefers-reduced-motion:reduce){
+  .calc-now.pop{animation:none}
+  .key,.fin-mode,.calc-hist-item,.calc-copy{transition:none}
+  .key:active,.key.is-press{transform:none}
+}
 </style>
 </head>
 <body>
@@ -267,13 +410,16 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <span class="here" data-i18n="financeHeroTitle">Finansiell kalkulator</span>
       </div>
       <h1 class="page-title"><em data-i18n="financeHeroTitle">Finansiell kalkulator</em></h1>
-      <p class="page-lead" data-i18n="financeHeroLead">Fem regnestykker i ett: hva sparepengene vokser til, margin og påslag, break-even, renters rente og rabatt. Velg type og fyll inn tallene.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
     </div>
-    <div class="page-stats">
+    <div class="page-stats" data-mode="calc">
+      <div class="page-stat"><span class="l">Svar</span><span class="v" id="hCalcVal" data-ph-skip>0</span></div>
+      <div class="page-stat"><span class="l">Regnestykke</span><span class="v" id="hCalcExpr" data-ph-skip>–</span></div>
+    </div>
+    <div class="page-stats" data-mode="fin" hidden>
       <div class="page-stat"><span class="l" id="hStatLbl">Resultat</span><span class="v" id="hStatVal">–</span></div>
       <div class="page-stat"><span class="l" data-i18n="fcLblType">Beregningstype</span><span class="v" id="hStatType">–</span></div>
     </div>
@@ -285,6 +431,76 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   <div class="container">
 
     <div class="ks-host">
+      <div class="fin-modes" role="tablist" aria-label="Velg visning">
+        <button type="button" class="fin-mode" role="tab" id="fin-tab-calc" aria-selected="true" aria-controls="fin-panel-calc">Kalkulator</button>
+        <button type="button" class="fin-mode" role="tab" id="fin-tab-fin" aria-selected="false" aria-controls="fin-panel-fin" tabindex="-1">Finans</button>
+      </div>
+
+      <div class="fin-panel" id="fin-panel-calc" role="tabpanel" aria-labelledby="fin-tab-calc">
+        <div class="calc-pane">
+          <div class="calc" id="calc" role="group" aria-label="Kalkulator">
+            <div class="calc-display">
+              <div class="calc-top">
+                <span class="calc-mem" id="calcMem" hidden><span aria-hidden="true">M </span><span class="calc-sr">Minne:</span> <span id="calcMemVal" data-ph-skip>0</span></span>
+                <button type="button" class="calc-copy" id="calcCopy" aria-label="Kopier svaret">
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5 V4 A1.5 1.5 0 0 0 9 2.5 H4 A1.5 1.5 0 0 0 2.5 4 V9 A1.5 1.5 0 0 0 4 10.5 H5.5"/></svg>
+                  <span id="calcCopyLbl">Kopier</span>
+                </button>
+              </div>
+              <div class="calc-expr" id="calcExpr" aria-hidden="true" data-ph-skip></div>
+              <div class="calc-now" id="calcNow" aria-live="polite" aria-atomic="true" data-ph-skip>0</div>
+            </div>
+            <div class="calc-keys" id="calcKeys">
+              <button type="button" class="key key-mem" data-act="mc" aria-label="Tøm minnet">MC</button>
+              <button type="button" class="key key-mem" data-act="mr" aria-label="Hent fra minnet">MR</button>
+              <button type="button" class="key key-mem" data-act="m+" aria-label="Legg til i minnet">M+</button>
+              <button type="button" class="key key-mem" data-act="m-" aria-label="Trekk fra minnet">M−</button>
+
+              <button type="button" class="key key-fn" data-act="lp" aria-label="Venstre parentes">(</button>
+              <button type="button" class="key key-fn" data-act="rp" aria-label="Høyre parentes">)</button>
+              <button type="button" class="key key-fn" data-act="op" data-v="^" aria-label="Opphøyd i">xʸ</button>
+              <button type="button" class="key key-fn" data-act="sqrt" aria-label="Kvadratrot">√</button>
+
+              <button type="button" class="key key-fn" data-act="clear" aria-label="Nullstill">C</button>
+              <button type="button" class="key key-fn" data-act="back" aria-label="Slett siste">⌫</button>
+              <button type="button" class="key key-fn" data-act="pct" aria-label="Prosent">%</button>
+              <button type="button" class="key key-op" data-act="op" data-v="/" aria-label="Delt på">÷</button>
+
+              <button type="button" class="key" data-act="digit" data-v="7">7</button>
+              <button type="button" class="key" data-act="digit" data-v="8">8</button>
+              <button type="button" class="key" data-act="digit" data-v="9">9</button>
+              <button type="button" class="key key-op" data-act="op" data-v="*" aria-label="Ganget med">×</button>
+
+              <button type="button" class="key" data-act="digit" data-v="4">4</button>
+              <button type="button" class="key" data-act="digit" data-v="5">5</button>
+              <button type="button" class="key" data-act="digit" data-v="6">6</button>
+              <button type="button" class="key key-op" data-act="op" data-v="-" aria-label="Minus">−</button>
+
+              <button type="button" class="key" data-act="digit" data-v="1">1</button>
+              <button type="button" class="key" data-act="digit" data-v="2">2</button>
+              <button type="button" class="key" data-act="digit" data-v="3">3</button>
+              <button type="button" class="key key-op" data-act="op" data-v="+" aria-label="Pluss">+</button>
+
+              <button type="button" class="key key-fn" data-act="sign" aria-label="Bytt fortegn">±</button>
+              <button type="button" class="key" data-act="digit" data-v="0">0</button>
+              <button type="button" class="key" data-act="dec" aria-label="Komma">,</button>
+              <button type="button" class="key key-eq" data-act="eq" aria-label="Er lik">=</button>
+            </div>
+          </div>
+
+          <section class="calc-hist" aria-labelledby="calcHistH">
+            <div class="calc-hist-head">
+              <h3 id="calcHistH">Historikk</h3>
+              <button type="button" class="calc-hist-clear" id="calcHistClear" aria-label="Tøm historikken" aria-disabled="true">Tøm</button>
+            </div>
+            <p class="calc-hist-empty" id="calcHistEmpty">Utregningene dine vises her. Trykk på en linje for å regne videre med svaret.</p>
+            <ol class="calc-hist-list" id="calcHist" data-ph-skip></ol>
+          </section>
+        </div>
+        <p class="calc-sr" id="calcSr" role="status"></p>
+      </div>
+
+      <div class="fin-panel" id="fin-panel-fin" role="tabpanel" aria-labelledby="fin-tab-fin" hidden>
       <div class="ks">
         <div class="ks-strip">
           <div class="ks-strip-cell"><span class="l" data-i18n="fcLblType">Beregningstype</span><span class="v" id="fcStripType">–</span></div>
@@ -322,6 +538,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
             <div class="rgrid" id="fc-res-grid"></div>
           </aside>
         </div>
+      </div>
       </div>
     </div>
 
@@ -453,8 +670,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v233"></script>
-<script defer src="/shared/lang/no.js?v=v230"></script>
+<script defer src="/shared/core.js?v=v234"></script>
+<script defer src="/shared/lang/no.js?v=v231"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
@@ -514,9 +731,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   }
 
   // Kjør core.js-beregningen og speil etterpå. fcCalc finnes i core.js.
+  // Bare når Finans-fanen synes: fcCalc() ruller til resultatet, og et skjult resultat har høyde 0,
+  // så siden hoppet. Fanen sender 'hvfin:show' når den åpnes (se under).
+  var finPanel = el('fin-panel-fin');
   function run(){
-    try { if(typeof fcCalc === 'function') fcCalc(); } catch(e){}
-    mirror();
+    if(!finPanel || !finPanel.hidden){
+      try { if(typeof fcCalc === 'function') fcCalc(); } catch(e){}
+      mirror();
+    }
     var ts = el('fc-type'), v = {};
     Array.prototype.forEach.call(el('fc-fields').querySelectorAll('input'), function(i){ v[i.id] = parseFloat(i.value.replace(/[\s\u00a0]/g, '').replace(',', '.')) || 0; });
     window._fin = {type:ts ? ts.value : 'tvm', v:v};
@@ -528,7 +750,20 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   if(fieldsHost){
     fieldsHost.addEventListener('input', run);
     fieldsHost.addEventListener('change', run);
+    // Rente, rabatt og år kan ha desimaler. core.js lager feltene med inputmode="numeric" (eller ingen),
+    // og den globale formatereren spiser da kommaet: 12,5 % ble 125 %. «decimal» slipper komma gjennom.
+    var DEC = ['fc-rate', 'fc-n', 'fc-crate', 'fc-cyears', 'fc-disc'];
+    var setDec = function(){ DEC.forEach(function(id){ var i = el(id); if(i) i.setAttribute('inputmode', 'decimal'); }); };
+    setDec();
+    new MutationObserver(setDec).observe(fieldsHost, {childList:true});
   }
+  // Finans-fanen åpnes: regn ut og speil på nytt. Flagget er core.js sitt for utregninger brukeren
+  // ikke selv har satt i gang (som språkbytte), og hindrer at siden ruller ned til resultatet.
+  if(finPanel) finPanel.addEventListener('hvfin:show', function(){
+    window._hvtLangRecalcActive = true;
+    run();
+    setTimeout(function(){ window._hvtLangRecalcActive = false; }, 600);
+  });
   // Når beregningstype byttes: core.js sin onchange="fcUpdateFields()" har allerede kjørt (re-bygger felter
   // + skjuler #fc-result). Vi kjører fcCalc() igjen for å vise resultatet på nytt og speile det live.
   var typeSel = el('fc-type');
@@ -556,6 +791,495 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       else if(n > 150){ clearInterval(t); run(); }
     }, 80);
   })();
+})();
+</script>
+
+<script>
+// ── Kalkulatoren (standardvisningen) og fanene Kalkulator | Finans ──
+// Regnestykket bygges som en liste med ledd (tall, regnearter, parenteser, %, √, fortegn) og regnes
+// med vanlig regnerekkefølge: parenteser, så √ og potens, så gange og dele, så pluss og minus.
+// Pluss og minus rundes til 15 gjeldende sifre målt mot det største leddet, så 0,1 + 0,2 blir 0,3 og
+// 0,1 + 0,2 − 0,3 blir 0. Svaret vises med 15 gjeldende sifre, men regnes videre med full presisjon
+// (1 ÷ 3 × 3 = 1). Minne og historikk finnes bare mens siden er åpen: ingenting lagres.
+(function(){
+  function el(id){ return document.getElementById(id); }
+  var calc = el('calc'), keys = el('calcKeys'), nowEl = el('calcNow'), exprEl = el('calcExpr');
+  var memEl = el('calcMem'), memVal = el('calcMemVal'), srEl = el('calcSr');
+  var copyBtn = el('calcCopy'), copyLbl = el('calcCopyLbl');
+  var histList = el('calcHist'), histEmpty = el('calcHistEmpty'), histClear = el('calcHistClear');
+  var hVal = el('hCalcVal'), hExpr = el('hCalcExpr');
+  var tabCalc = el('fin-tab-calc'), tabFin = el('fin-tab-fin'), panCalc = el('fin-panel-calc'), panFin = el('fin-panel-fin');
+  if(!calc || !keys || !nowEl || !tabCalc || !tabFin || !panCalc || !panFin) return;
+
+  // Oversettelse via frase-ordboka i språkfila (samme oppslag som core.js gjør for tekst uten nøkkel)
+  function ph(s){ var r = typeof R === 'function' ? R() : null; return (r && r._ph && r._ph[s]) || s; }
+
+  var NNBSP = '\u202f', MINUS = '−';
+  var OPS = {'+':' + ', '-':' ' + MINUS + ' ', '*':' × ', '/':' ÷ ', '^':'^'};
+  var MAXD = 15;          // sifre per tall
+  // Ledd: {t:'num', s:'12.5'} (skrives inn) eller {t:'num', x:verdi} (svar, minne, historikk),
+  //       {t:'op', v:'+'|'-'|'*'|'/'|'^'}, {t:'neg'} (fortegn), {t:'lp'}, {t:'rp'}, {t:'pct'}, {t:'sqrt'}
+  var tk = [];
+  var done = false;       // svaret står i displayet, og neste siffer starter et nytt regnestykke
+  var err = '';           // feilmelding som vises i stedet for svaret
+  var shownExpr = '';     // regnestykket som ga svaret
+  var mem = 0, hist = [];
+
+  // ── Tall ──
+  function round15(v){ return parseFloat(v.toPrecision(15)); }
+  function exp10(v){ return Math.floor(Math.log10(Math.abs(v))); }
+  // Pluss og minus: det som ligger under 15. siffer i det største leddet, er avrundingsstøy
+  // fra totallssystemet (0,1 + 0,2 = 0,30000000000000004) og fjernes.
+  function addR(a, b){
+    var s = a + b, m = Math.max(Math.abs(a), Math.abs(b));
+    if(!isFinite(s) || s === 0 || m === 0) return s;
+    var sig = 15 - (exp10(m) - exp10(s));
+    return sig < 1 ? 0 : parseFloat(s.toPrecision(Math.min(sig, 17)));
+  }
+  function group(int){ return int.replace(/\B(?=(\d{3})+(?!\d))/g, NNBSP); }
+  // Tall slik det tastes: «1234.5» → «1 234,5» (et komma til slutt blir stående mens du skriver)
+  function fmtTyped(s){ var p = s.split('.'); return group(p[0]) + (p.length > 1 ? ',' + p[1] : ''); }
+  // Ferdig verdi → norsk visning med 15 gjeldende sifre, svært store og små tall med tierpotens
+  function fmtNum(v){
+    var r = round15(v);
+    if(r === 0) return '0';
+    var a = Math.abs(r), out;
+    if(a >= 1e15 || a < 1e-9){
+      var p = a.toExponential().split('e');
+      out = p[0].replace('.', ',') + ' × 10^' + parseInt(p[1], 10);
+    } else {
+      var s = a.toFixed(Math.max(0, Math.min(20, 14 - exp10(a))));
+      if(s.indexOf('.') > -1) s = s.replace(/0+$/, '').replace(/\.$/, '');
+      out = fmtTyped(s);
+    }
+    return (r < 0 ? MINUS : '') + out;
+  }
+  // Til utklippstavla: uten tusenskille og med vanlig bindestrek, så tallet kan limes rett inn i et regneark
+  function clipNum(v){
+    var r = round15(v), a = Math.abs(r);
+    if(r === 0) return '0';
+    var s = (a >= 1e15 || a < 1e-9) ? a.toExponential().toUpperCase().replace('.', ',') : fmtNum(a).split(NNBSP).join('');
+    return (r < 0 ? '-' : '') + s;
+  }
+
+  // ── Regnestykket ──
+  function last(){ return tk[tk.length - 1]; }
+  function typed(t){ return !!t && t.t === 'num' && t.x === undefined; }
+  function endsOperand(){ var l = last(); return !!l && (l.t === 'num' || l.t === 'rp' || l.t === 'pct'); }
+  function openParens(){ var n = 0; tk.forEach(function(t){ if(t.t === 'lp') n++; else if(t.t === 'rp') n--; }); return n; }
+  function numTok(v){ return {t:'num', x:v}; }
+  // Hvor det siste leddet (et tall eller en hel parentes) begynner, ellers -1
+  function operandStart(skipPct){
+    var i = tk.length - 1;
+    if(skipPct && i > -1 && tk[i].t === 'pct') i--;
+    if(i < 0) return -1;
+    if(tk[i].t === 'num') return i;
+    if(tk[i].t === 'rp') for(var depth = 0; i > -1; i--){
+      if(tk[i].t === 'rp') depth++;
+      else if(tk[i].t === 'lp' && --depth === 0) return i;
+    }
+    return -1;
+  }
+  function fmtTok(t){
+    if(t.t === 'num') return t.x !== undefined ? fmtNum(t.x) : fmtTyped(t.s);
+    if(t.t === 'op') return OPS[t.v];
+    return {neg:MINUS, lp:'(', rp:')', pct:'\u00a0%', sqrt:'√'}[t.t] || '';
+  }
+  function fmtTokens(list){ return list.map(fmtTok).join(''); }
+  function hasCalc(list){ return list.some(function(t){ return t.t !== 'num'; }); }
+  // Klar til utregning: fjern det som henger igjen til slutt (regneart, tom parentes, √) og lukk åpne parenteser
+  function complete(list){
+    var t = list.slice(), open = 0;
+    while(t.length && /^(op|neg|lp|sqrt)$/.test(t[t.length - 1].t)) t.pop();
+    t.forEach(function(x){ if(x.t === 'lp') open++; else if(x.t === 'rp') open--; });
+    while(open-- > 0) t.push({t:'rp'});
+    return t;
+  }
+
+  // ── Utregning ──
+  function Fail(code){ this.code = code; }
+  function evaluate(list){
+    var i = 0;
+    function peek(){ return list[i]; }
+    function isOp(v){ var t = list[i]; return !!t && t.t === 'op' && v.indexOf(t.v) > -1; }
+    function sum(){
+      var acc = prod();
+      while(isOp('+-')){
+        var o = list[i++].v, rhs = prod();
+        // 200 + 10 % = 220: prosent alene etter pluss eller minus er prosent av det som står foran
+        var b = rhs.pct ? acc.v * rhs.v : rhs.v;
+        acc = {v:addR(acc.v, o === '+' ? b : -b)};
+      }
+      return acc;
+    }
+    function prod(){
+      var acc = unary();
+      while(isOp('*/')){
+        var o = list[i++].v, b = unary().v;
+        if(o === '/' && b === 0) throw new Fail('div0');
+        acc = {v:o === '*' ? acc.v * b : acc.v / b};
+      }
+      return acc;
+    }
+    function unary(){
+      if(peek() && peek().t === 'neg'){ i++; var u = unary(); return {v:-u.v, pct:u.pct}; }
+      return power();
+    }
+    function power(){
+      var base = postfix();
+      if(!isOp('^')) return base;
+      i++;
+      var v = Math.pow(base.v, unary().v);   // høyreassosiativ: 2^3^2 = 2^9
+      if(isNaN(v)) throw new Fail('nan');
+      return {v:v};
+    }
+    function postfix(){
+      var v = root();
+      if(peek() && peek().t === 'pct'){ i++; return {v:v / 100, pct:true}; }
+      return {v:v};
+    }
+    function root(){
+      if(!peek() || peek().t !== 'sqrt') return primary();
+      i++;
+      var v = root();
+      if(v < 0) throw new Fail('nan');
+      return Math.sqrt(v);
+    }
+    function primary(){
+      var t = list[i++];
+      if(t && t.t === 'num') return t.x !== undefined ? t.x : parseFloat(t.s);
+      if(t && t.t === 'lp'){
+        var v = sum().v;
+        if(!peek() || peek().t !== 'rp') throw new Fail('nan');
+        i++;
+        return v;
+      }
+      throw new Fail('nan');
+    }
+    try {
+      var res = sum().v;
+      if(i !== list.length) throw new Fail('nan');
+      if(!isFinite(res)) throw new Fail('big');
+      return {ok:true, v:res === 0 ? 0 : res};
+    } catch(e){
+      if(e instanceof Fail) return {ok:false, code:e.code};
+      throw e;
+    }
+  }
+  // Verdien som gjelder akkurat nå: svaret, ellers det regnestykket gir så langt
+  function current(){
+    if(err) return null;
+    var t = complete(tk);
+    if(!t.length) return 0;
+    var r = evaluate(t);
+    return r.ok ? r.v : null;
+  }
+
+  // ── Tastene ──
+  function fresh(){ tk = []; done = false; err = ''; shownExpr = ''; }
+  // «3,» mister kommaet når noe annet kommer etter
+  function trimDot(){ var l = last(); if(typed(l) && /\.$/.test(l.s)) l.s = l.s.slice(0, -1); }
+  // Før et nytt tall: et hentet tall (svar, minne) byttes ut, og etter ) eller % settes det inn ×
+  function beforeNumber(){
+    var l = last();
+    if(l && l.t === 'num') tk.pop();
+    else if(endsOperand()) tk.push({t:'op', v:'*'});
+  }
+  function digit(d){
+    if(err || done) fresh();
+    var l = last();
+    if(typed(l)){
+      if(l.s.replace('.', '').length >= MAXD) return;
+      l.s = l.s === '0' ? d : l.s + d;
+    } else { beforeNumber(); tk.push({t:'num', s:d}); }
+  }
+  function decimal(){
+    if(err || done) fresh();
+    var l = last();
+    if(typed(l)){ if(l.s.indexOf('.') < 0) l.s += '.'; }
+    else { beforeNumber(); tk.push({t:'num', s:'0.'}); }
+  }
+  function operator(o){
+    if(err) return;
+    done = false; shownExpr = '';
+    trimDot();
+    var l = last();
+    if(!l){ if(o === '-') tk.push({t:'neg'}); else tk.push({t:'num', s:'0'}, {t:'op', v:o}); }
+    else if(l.t === 'op'){
+      if(o === '-' && l.v !== '+' && l.v !== '-') tk.push({t:'neg'});   // 2 × −3
+      else l.v = o;                                                     // bytt regneart
+    }
+    else if(l.t === 'neg'){
+      if(o !== '-'){ tk.pop(); var p = last(); if(p && p.t === 'op') p.v = o; }
+    }
+    else if(l.t === 'lp'){ if(o === '-') tk.push({t:'neg'}); }
+    else if(l.t !== 'sqrt') tk.push({t:'op', v:o});
+  }
+  function lparen(){
+    if(err || done) fresh();
+    trimDot();
+    if(endsOperand()) tk.push({t:'op', v:'*'});
+    tk.push({t:'lp'});
+  }
+  function rparen(){
+    if(err || done || openParens() < 1 || !endsOperand()) return;
+    trimDot();
+    tk.push({t:'rp'});
+  }
+  function percent(){
+    var l = last();
+    if(err || !l || (l.t !== 'num' && l.t !== 'rp')) return;
+    done = false; shownExpr = '';
+    trimDot();
+    tk.push({t:'pct'});
+  }
+  // √ etter et tall eller en parentes tar roten av den (9 √ = √9). Ellers venter √ på tallet som kommer.
+  function sqrt(){
+    if(err) fresh();
+    var l = last();
+    if(l && l.t === 'pct') return;
+    done = false; shownExpr = '';
+    trimDot();
+    var i = operandStart(false);
+    if(i > -1) tk.splice(i, 0, {t:'sqrt'});
+    else tk.push({t:'sqrt'});
+  }
+  // ± bytter fortegn på det siste tallet eller den siste parentesen
+  function sign(){
+    if(err) return;
+    var i = operandStart(true);
+    done = false; shownExpr = '';
+    if(i < 0){
+      var l = last();
+      if(l && l.t === 'neg') tk.pop();
+      else if(!l || l.t === 'op' || l.t === 'lp') tk.push({t:'neg'});
+      return;
+    }
+    while(i > 0 && tk[i - 1].t === 'sqrt') i--;
+    if(i > 0 && tk[i - 1].t === 'neg') tk.splice(i - 1, 1);
+    else if(tk[i].x !== undefined) tk[i].x = -tk[i].x;   // svar og minne: snu selve tallet
+    else tk.splice(i, 0, {t:'neg'});
+  }
+  function back(){
+    if(err){ fresh(); return; }
+    if(done) return;
+    var l = last();
+    if(typed(l) && l.s.length > 1) l.s = l.s.slice(0, -1);
+    else tk.pop();
+  }
+  function equals(){
+    if(err || done) return false;
+    var t = complete(tk);
+    if(!hasCalc(t)){ tk = t; return false; }   // «7 +» og = gir bare 7
+    var e = fmtTokens(t), r = evaluate(t);
+    shownExpr = e;
+    if(!r.ok){
+      tk = [];
+      err = ph(r.code === 'div0' ? 'Kan ikke dele på 0' : r.code === 'big' ? 'Tallet er for stort' : 'Ugyldig regnestykke');
+      return false;
+    }
+    hist.unshift({e:e, v:r.v});
+    if(hist.length > 30) hist.length = 30;
+    tk = [numTok(r.v)]; done = true;
+    renderHist();
+    nowEl.classList.remove('pop'); void nowEl.offsetWidth; nowEl.classList.add('pop');
+    return true;
+  }
+  // Sett inn et tall (minne eller historikk) der du er i regnestykket
+  function insert(v){
+    if(err || done) fresh();
+    beforeNumber();
+    tk.push(numTok(v));
+  }
+  // M+ og M− regner først ut regnestykket, som på en vanlig kalkulator
+  function memory(act){
+    if(act === 'mc'){ mem = 0; say(ph('Minnet er tømt')); return; }
+    if(act === 'mr'){ insert(mem); return; }
+    if(err) return;
+    if(!done && hasCalc(complete(tk)) && !equals()) return;
+    var v = current();
+    if(v === null) return;
+    mem = addR(mem, act === 'm+' ? v : -v);
+    if(tk.length && !done){ tk = [numTok(v)]; done = true; shownExpr = ''; }
+    say(ph('Minne') + ': ' + fmtNum(mem));
+  }
+  function useHist(h){
+    if(err || done || !tk.length){ fresh(); tk = [numTok(h.v)]; done = true; shownExpr = h.e; }
+    else insert(h.v);
+  }
+
+  // ── Visning ──
+  var SIZES = [46, 40, 34, 28, 22];
+  function fit(){
+    if(err){ nowEl.style.fontSize = ''; return; }
+    var max = matchMedia('(max-width:560px)').matches ? 38 : 46;
+    for(var k = 0; k < SIZES.length; k++){
+      nowEl.style.fontSize = Math.min(SIZES[k], max) + 'px';
+      if(nowEl.scrollWidth <= nowEl.clientWidth) break;
+    }
+    nowEl.scrollLeft = nowEl.scrollWidth;   // for langt likevel: vis slutten, der du skriver
+  }
+  function render(){
+    var cur = current(), small = '';
+    if(err) small = shownExpr;
+    else if(done) small = shownExpr ? shownExpr + ' =' : '';
+    else if(hasCalc(tk) && cur !== null) small = '= ' + fmtNum(cur);
+    nowEl.textContent = err || (tk.length ? fmtTokens(tk) : '0');
+    nowEl.classList.toggle('is-err', !!err);
+    exprEl.textContent = small;
+    fit();
+    if(hVal) hVal.textContent = cur === null ? '–' : fmtNum(cur);
+    if(hExpr) hExpr.textContent = done ? (shownExpr || '–') : (hasCalc(tk) ? fmtTokens(tk) : '–');
+    memEl.hidden = mem === 0;
+    memVal.textContent = fmtNum(mem);
+  }
+  function renderHist(){
+    histList.textContent = '';
+    hist.forEach(function(h, i){
+      var li = document.createElement('li'), b = document.createElement('button');
+      var e = document.createElement('span'), v = document.createElement('span');
+      b.type = 'button'; b.className = 'calc-hist-item'; b.title = ph('Bruk svaret'); b.setAttribute('data-i', i);
+      e.className = 'calc-hist-expr'; e.textContent = h.e + ' =';
+      v.className = 'calc-hist-res'; v.textContent = fmtNum(h.v);
+      b.appendChild(e); b.appendChild(document.createTextNode(' ')); b.appendChild(v);   // mellomrommet: «= 42» for skjermleser
+      li.appendChild(b); histList.appendChild(li);
+    });
+    histEmpty.hidden = hist.length > 0;
+    histClear.setAttribute('aria-disabled', hist.length ? 'false' : 'true');
+  }
+  // Kunngjøring for skjermleser (minne, kopiering): tøm først, så blir samme melding lest på nytt
+  function say(s){ srEl.textContent = ''; setTimeout(function(){ srEl.textContent = s; }, 50); }
+  function flash(b){ if(!b) return; b.classList.add('is-press'); setTimeout(function(){ b.classList.remove('is-press'); }, 110); }
+
+  function press(act, v){
+    switch(act){
+      case 'digit': digit(v); break;
+      case 'dec':   decimal(); break;
+      case 'op':    operator(v); break;
+      case 'lp':    lparen(); break;
+      case 'rp':    rparen(); break;
+      case 'pct':   percent(); break;
+      case 'sqrt':  sqrt(); break;
+      case 'sign':  sign(); break;
+      case 'back':  back(); break;
+      case 'clear': fresh(); break;
+      case 'eq':    equals(); break;
+      case 'mc': case 'mr': case 'm+': case 'm-': memory(act); break;
+      default: return;
+    }
+    render();
+  }
+
+  // ── Kopiering ──
+  var copyTimer = 0;
+  function copy(){
+    var v = current();
+    if(v === null) return;
+    var s = clipNum(v);
+    function ok(){
+      copyBtn.classList.add('is-done'); copyLbl.textContent = ph('Kopiert');
+      clearTimeout(copyTimer);
+      copyTimer = setTimeout(function(){ copyBtn.classList.remove('is-done'); copyLbl.textContent = ph('Kopier'); }, 1600);
+      say(ph('Kopiert') + ': ' + fmtNum(v));
+    }
+    function old(){
+      var ta = document.createElement('textarea'), f = document.activeElement, res = false;
+      ta.value = s; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      try { res = document.execCommand('copy'); } catch(e){}
+      document.body.removeChild(ta);
+      if(f && f.focus) f.focus();
+      if(res) ok();
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(s).then(ok, old);
+    else old();
+  }
+  copyBtn.addEventListener('click', copy);
+
+  // ── Mus, berøring og tastatur ──
+  keys.addEventListener('click', function(e){
+    var b = e.target.closest('button.key');
+    if(!b) return;
+    flash(b);
+    press(b.getAttribute('data-act'), b.getAttribute('data-v'));
+  });
+  // Et klikk skal ikke flytte fokus til tasten: da ville Enter trykke på den i stedet for å gi «=»
+  keys.addEventListener('mousedown', function(e){ if(e.target.closest('button.key')) e.preventDefault(); });
+
+  var KEYS = {',':['dec'], '.':['dec'], '+':['op', '+'], '-':['op', '-'], '*':['op', '*'], 'x':['op', '*'], 'X':['op', '*'],
+    '/':['op', '/'], ':':['op', '/'], '^':['op', '^'], '(':['lp'], ')':['rp'], '%':['pct'], 'r':['sqrt'], 'R':['sqrt'],
+    'Enter':['eq'], '=':['eq'], 'Backspace':['back'], 'Escape':['clear'], 'Delete':['clear']};
+  window.addEventListener('keydown', function(e){
+    if(panCalc.hidden) return;
+    var t = e.target, k = e.key;
+    if(t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    // Ctrl/Cmd + C uten markert tekst kopierer svaret
+    if((e.ctrlKey || e.metaKey) && !e.altKey && !e.shiftKey && (k === 'c' || k === 'C')){
+      if(!String(window.getSelection ? window.getSelection() : '')){ e.preventDefault(); copy(); }
+      return;
+    }
+    if(e.ctrlKey || e.metaKey || e.altKey) return;
+    // Enter og mellomrom på en knapp eller lenke skal trykke på den, ikke gi «=»
+    if((k === 'Enter' || k === ' ') && t && t.closest && t.closest('button, a, summary, [role="button"], [tabindex]')) return;
+    var m = k >= '0' && k <= '9' && k.length === 1 ? ['digit', k] : KEYS[k];
+    if(!m) return;
+    if(k === '/' || k === 'Enter' || k === 'Backspace') e.preventDefault();   // «/» åpner hurtigsøk i Firefox
+    press(m[0], m[1]);
+    flash(keys.querySelector('[data-act="' + m[0] + '"]' + (m[1] ? '[data-v="' + m[1] + '"]' : '')));
+  });
+
+  // ── Historikk ──
+  histList.addEventListener('click', function(e){
+    var b = e.target.closest('.calc-hist-item');
+    var h = b && hist[+b.getAttribute('data-i')];
+    if(!h) return;
+    useHist(h);
+    render();
+    // På mobil står historikken under tastene: vis displayet med svaret
+    if(calc.getBoundingClientRect().top < 0) calc.scrollIntoView({block:'start', behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+  });
+  histClear.addEventListener('click', function(){
+    if(!hist.length) return;
+    hist = [];
+    renderHist();
+    say(ph('Historikken er tømt'));
+  });
+
+  // ── Fanene ──
+  function setMode(fin, focus){
+    tabCalc.setAttribute('aria-selected', fin ? 'false' : 'true');
+    tabFin.setAttribute('aria-selected', fin ? 'true' : 'false');
+    tabCalc.tabIndex = fin ? -1 : 0;
+    tabFin.tabIndex = fin ? 0 : -1;
+    panCalc.hidden = fin;
+    panFin.hidden = !fin;
+    document.querySelectorAll('.page-stats[data-mode]').forEach(function(s){ s.hidden = (s.getAttribute('data-mode') === 'fin') !== fin; });
+    if(focus) (fin ? tabFin : tabCalc).focus();
+    // #finans i adressen: lenker og ny innlasting åpner Finans-fanen
+    try { history.replaceState(null, '', fin ? '#finans' : location.pathname + location.search); } catch(e){}
+    if(fin) panFin.dispatchEvent(new Event('hvfin:show'));
+    else render();
+  }
+  tabCalc.addEventListener('click', function(){ setMode(false); });
+  tabFin.addEventListener('click', function(){ setMode(true); });
+  [tabCalc, tabFin].forEach(function(tab){
+    tab.addEventListener('keydown', function(e){
+      var k = e.key;
+      if(k !== 'ArrowLeft' && k !== 'ArrowRight' && k !== 'Home' && k !== 'End') return;
+      e.preventDefault();
+      setMode(k === 'End' || (k !== 'Home' && tab === tabCalc), true);
+    });
+  });
+  // «Bruk mine tall ↑» i forklaringen under gjelder finansberegningene
+  var mine = document.querySelector('#lrn-fin .lrn-state-a');
+  if(mine) mine.addEventListener('click', function(){ setMode(true); });
+
+  if(location.hash === '#finans') setMode(true);
+  window.addEventListener('hashchange', function(){ if(location.hash === '#finans') setMode(true); });
+  renderHist();
+  render();
+  window.addEventListener('resize', function(){ if(!panCalc.hidden) fit(); });
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ if(!panCalc.hidden) fit(); });
 })();
 </script>
 
