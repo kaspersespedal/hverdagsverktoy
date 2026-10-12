@@ -1616,6 +1616,7 @@ REGIONS['en'] = {
     morIoCheck: 'Interest-only period',
     morLblAmt: 'Loan amount (kr)',
     morLblFees: 'Monthly fees (kr)',
+    morLblEst: 'Origination fee (kr)',
     morLblIoYrs: 'Interest-only period (years)',
     morLblRate: 'Interest rate (%)',
     morLblType: 'Loan type',
@@ -1623,7 +1624,7 @@ REGIONS['en'] = {
     morSerialLong: 'Serial loan (falling amount)',
     morLblYears: 'Loan term (years)',
     morRMonthly: 'Monthly payment',
-    morROutEff: 'Effective rate (excl. fees)',
+    morROutNom: 'Nominal rate',
     morROutFeesTot: 'Total fees',
     morROutFirst: 'First month',
     morROutInt: 'Total interest',
@@ -10445,6 +10446,8 @@ REGIONS['en']._ph = {
 "Minne":"Memory",
 "Minnet er tømt":"Memory cleared",
 "Historikken er tømt":"History cleared",
+"Engangsgebyr når du tar opp lånet":"One-off fee when you take out the loan",
+"Effektiv rente inkluderer gebyrer og rentes rente, og er det beste målet for å sammenligne lånetilbud.":"The effective rate includes fees and compound interest and is the best measure for comparing loan offers.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

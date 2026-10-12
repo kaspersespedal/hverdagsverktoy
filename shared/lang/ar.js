@@ -1576,6 +1576,7 @@ REGIONS['ar'] = {
     morIoCheck: 'فترة بدون أقساط',
     morLblAmt: 'مبلغ القرض (kr)',
     morLblFees: 'الرسوم الشهرية (kr)',
+    morLblEst: 'رسم التأسيس (kr)',
     morLblIoYrs: 'فترة بدون أقساط (سنوات)',
     morLblRate: 'الفائدة (٪)',
     morLblType: 'نوع القرض',
@@ -1583,7 +1584,7 @@ REGIONS['ar'] = {
     morSerialLong: 'قرض بدفعات متناقصة',
     morLblYears: 'المدة (سنوات)',
     morRMonthly: 'الدفعة الشهرية',
-    morROutEff: 'الفائدة الفعلية (دون الرسوم)',
+    morROutNom: 'معدل الفائدة الاسمي',
     morROutFeesTot: 'إجمالي الرسوم',
     morROutFirst: 'الشهر الأول',
     morROutInt: 'إجمالي الفوائد',
@@ -10586,6 +10587,8 @@ REGIONS['ar']._ph = {
 "MVA du har betalt på innkjøp":"الضريبة التي دفعتها على المشتريات",
 "Å betale:":"للدفع:",
 "Til gode:":"للاسترداد:",
+"Engangsgebyr når du tar opp lånet":"رسم يُدفع مرة واحدة عند الحصول على القرض",
+"Effektiv rente inkluderer gebyrer og rentes rente, og er det beste målet for å sammenligne lånetilbud.":"يشمل معدل الفائدة الفعلي الرسوم والفائدة المركبة، وهو أفضل مقياس لمقارنة عروض القروض.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så
