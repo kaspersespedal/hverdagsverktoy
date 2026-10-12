@@ -1093,6 +1093,7 @@ REGIONS['fr'] = {
     morLblRate: 'Taux (%)',
     morLblYears: 'Durée (années)',
     morLblFees: 'Frais mensuels (kr)',
+    morLblEst: 'Frais de dossier (kr)',
     morIoCheck: 'Période de différé d\'amortissement',
     morLblIoYrs: 'Période de différé (années)',
     morRMonthly: 'Mensualité',
@@ -1100,7 +1101,7 @@ REGIONS['fr'] = {
     morROutLast: 'Dernier mois',
     morROutTot: 'Total remboursé',
     morROutInt: 'Intérêts totaux',
-    morROutEff: 'Taux effectif (hors frais)',
+    morROutNom: 'Taux nominal',
     morROutY1i: 'Année 1 — intérêts',
     morROutY1p: 'Année 1 — capital',
     morROutFeesTot: 'Total des frais',
@@ -10394,6 +10395,8 @@ REGIONS['fr']._ph = {
 "MVA du har betalt på innkjøp":"TVA payée sur les achats",
 "Å betale:":"À payer :",
 "Til gode:":"À rembourser :",
+"Engangsgebyr når du tar opp lånet":"Frais unique à la souscription du prêt",
+"Effektiv rente inkluderer gebyrer og rentes rente, og er det beste målet for å sammenligne lånetilbud.":"Le taux effectif inclut les frais et les intérêts composés, et c'est la meilleure mesure pour comparer des offres de prêt.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så
