@@ -477,7 +477,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
@@ -489,6 +489,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
     function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
+    // Tekst som limes sammen med tall: fra språkfila (R()), norsk til den er lastet.
+    function phr(s){ var r = typeof window.R === 'function' ? window.R() : null; return (r && r._ph && r._ph[s]) || s; }
+    function trT(k, no){ var r = typeof window.R === 'function' ? window.R() : null; return (r && r[k]) || no; }
 
     function parseAmt(id){
       var el = document.getElementById(id);
@@ -552,7 +555,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         return;
       }
 
-      var bruttoStr = fmtKr(d.brutto) + (d.capped ? ' (tak ' + fmtKr(d.oevreGrense) + ')' : '');
+      var bruttoStr = d.capped ? trT('trSkattReiseBruttoTak', '{b} (tak {t})').replace('{b}', fmtKr(d.brutto)).replace('{t}', fmtKr(d.oevreGrense)) : fmtKr(d.brutto);
 
       setText('rReiseVal', fmtKr(d.fradrag));
       // Egne tekstnoder rundt beløpet, så _ph i språkfilene kan oversette dem.
@@ -582,8 +585,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           segs.forEach(function(s, i){
             var pct = s.v / d.brutto * 100;
             var op = ops[i % ops.length];
-            barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + s.l + ': ' + fmtKr(s.v) + '"></div>';
-            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + s.l + ' ' + Math.round(pct) + ' %</span>';
+            barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + phr(s.l) + ': ' + fmtKr(s.v) + '"></div>';
+            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + phr(s.l) + ' ' + Math.round(pct) + ' %</span>';
           });
           document.getElementById('rsVizBar').innerHTML = barHtml;
           document.getElementById('rsVizLegend').innerHTML = legHtml;
@@ -627,6 +630,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // ── Init ──
     restore();
     recalc();
+    // core.js setter <html lang> når språkfila er lastet eller byttet: regn ut på nytt, så tekstene over følger språket.
+    if(typeof MutationObserver === 'function'){
+      new MutationObserver(function(){ recalc(); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+    }
   })();
 </script>
 
@@ -676,6 +683,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       b.addEventListener('click', function(){ document.body.classList.toggle('focus-mode'); });
     });
     renderHowto();
+    // Veiledningen tegnes før språkfila er lastet: tegn den på nytt når core.js setter <html lang>.
+    if(typeof MutationObserver === 'function'){
+      new MutationObserver(renderHowto).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+    }
   }
   function pollRender(){
     var bodies = document.querySelectorAll('[data-howto-prefix]');

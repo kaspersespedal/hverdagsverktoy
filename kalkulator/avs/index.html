@@ -580,7 +580,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
@@ -597,6 +597,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function fmt(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' '); }
   function fmtSigned(n){ return (n>=0?'+':'') + fmt(n); }
   function fmtPct(n){ return n.toFixed(1).replace('.', ',') + ' %'; }
+  // Tekst med tall fra språkfila (R()), norsk reserve. hvtLearn.t velger flertallsform (nøkkel_one osv.).
+  function tx(key, fb, vars){
+    if(window.hvtLearn) return hvtLearn.t(key, fb, vars);
+    for(var k in vars) fb = fb.split('{' + k + '}').join(vars[k]);
+    return fb;
+  }
+  // Kort etikett via frase-ordboka (_ph), brukes i CSV-en
+  function tr(s){ return window.hvtLearn ? hvtLearn.ph(s) : s; }
 
   function parseAmt(s){
     if(s == null) return 0;
@@ -731,7 +739,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       for(var i=0; i<cumDiffs.length; i++){
         cumDiff += cumDiffs[i];
         var uts = cumDiff * skattesats;
-        effRows += '<tr><td>'+(i+1)+'</td><td class="v">'+fmtSigned(cumDiffs[i])+'</td><td class="v">'+fmt(Math.abs(uts))+' '+(cumDiff<0?'gjeld':'fordel')+'</td></tr>';
+        effRows += '<tr><td>'+(i+1)+'</td><td class="v">'+fmtSigned(cumDiffs[i])+'</td><td class="v">'+fmt(Math.abs(uts))+' '+(cumDiff<0?tx('lrnAvGjeld','gjeld'):tx('lrnAvFordel','fordel'))+'</td></tr>';
       }
       rows.push('<tr><td colspan="4" style="padding:16px 0 8px;border-bottom:none;"><div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;">Skatteeffekt av midlertidige forskjeller</div><table class="bd-table" style="width:100%;">'+effRows+'</table></td></tr>');
 
@@ -790,24 +798,25 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     }
 
     var methodLbl = d.mode === 'skatt' ? 'Skatt (saldo)' : (d.mode === 'regnskap' ? 'Regnskap (lineær)' : 'Sammenlign');
-    var rateLbl = d.mode === 'skatt' ? fmtPct(d.taxRate*100) : (d.mode === 'regnskap' ? fmtPct(d.regPct*100) : 'Saldo '+fmtPct(d.taxRate*100)+' / Lineær '+fmtPct(d.regPct*100));
+    var rateLbl = d.mode === 'skatt' ? fmtPct(d.taxRate*100) : (d.mode === 'regnskap' ? fmtPct(d.regPct*100) : tx('trKalkulatorAvsRateCmp', 'Saldo {a} / Lineær {b}', {a:fmtPct(d.taxRate*100), b:fmtPct(d.regPct*100)}));
+    var yearsLbl = tx('trKalkulatorAvsYears', '{n} år', {n:d.years});
 
     setOutputText('rTotal', fmtKr(d.totalDepr));
     setOutputText('rPrice', fmtKr(d.price));
     setOutputText('rMethod', methodLbl);
     setOutputText('rRate', rateLbl);
-    setOutputText('rPeriod', d.years + ' år');
+    setOutputText('rPeriod', yearsLbl);
     setOutputText('rEnd', fmtKr(d.endValue));
     var verdict;
     if(d.mode === 'skatt') verdict = 'Saldoavskrivning over 10 år. Restverdi etter 10 år vises her — i praksis kan rest under 30 000 kr fradragsføres direkte.';
-    else if(d.mode === 'regnskap') verdict = 'Lineær avskrivning over '+d.years+' år. Eiendelen ender på restverdien du har angitt.';
-    else verdict = 'Sammenlign metodene over '+d.years+' år. Differansen påvirker utsatt skatt i balansen.';
+    else if(d.mode === 'regnskap') verdict = tx('trKalkulatorAvsVerdictLin', 'Lineær avskrivning over {n} år. Eiendelen ender på restverdien du har angitt.', {n:d.years});
+    else verdict = tx('trKalkulatorAvsVerdictCmp', 'Sammenlign metodene over {n} år. Differansen påvirker utsatt skatt i balansen.', {n:d.years});
     setOutputText('rVerdict', verdict);
 
     // ks-strip + hero-stats
     setOutputText('avsStripPrice', fmtKr(d.price));
     setOutputText('avsStripRate', d.mode === 'compare' ? rateLbl : (d.mode === 'skatt' ? fmtPct(d.taxRate*100) : fmtPct(d.regPct*100)));
-    setOutputText('avsStripPeriod', d.years + ' år');
+    setOutputText('avsStripPeriod', yearsLbl);
     setOutputText('avsStripTotal', fmtKr(d.totalDepr));
     setOutputText('hStatTotal', fmtKr(d.totalDepr));
     setOutputText('hStatRest', fmtKr(d.endValue));
@@ -851,28 +860,29 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(!d || !d.hasData) return;
     var sep = ';';
     var rows = [];
-    var today = new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
-    rows.push(['Avskrivning – '+(d.mode==='skatt'?'Skatt':d.mode==='regnskap'?'Regnskap':'Sammenlign'), today]);
+    var today = typeof window._csvDate === 'function' ? window._csvDate() : new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
+    function up(s){ return tr(s).toUpperCase(); }
+    rows.push([tr('Avskrivning')+' – '+tr(d.mode==='skatt'?'Skatt':d.mode==='regnskap'?'Regnskap':'Sammenlign'), today]);
     rows.push([]);
     rows.push(['INPUT', '']);
-    rows.push(['Kjøpesum (kr)', Math.round(d.price)]);
-    rows.push(['Avskrivningsgruppe', document.getElementById('avs-group').value]);
-    rows.push(['Saldosats (%)', (d.taxRate*100).toFixed(1).replace('.', ',')]);
-    rows.push(['Levetid (år)', document.getElementById('avs-life').value]);
-    rows.push(['Lineær sats (%)', (d.regPct*100).toFixed(1).replace('.', ',')]);
-    rows.push(['Restverdi (%)', (d.scrapPct*100).toFixed(1).replace('.', ',')]);
+    rows.push([tr('Kjøpesum (kr)'), Math.round(d.price)]);
+    rows.push([tr('Avskrivningsgruppe'), document.getElementById('avs-group').value]);
+    rows.push([tr('Saldosats (%)'), (d.taxRate*100).toFixed(1).replace('.', ',')]);
+    rows.push([tr('Levetid (år)'), document.getElementById('avs-life').value]);
+    rows.push([tr('Lineær sats (%)'), (d.regPct*100).toFixed(1).replace('.', ',')]);
+    rows.push([tr('Restverdi (%)'), (d.scrapPct*100).toFixed(1).replace('.', ',')]);
     rows.push([]);
     if(d.mode === 'compare'){
-      rows.push(['ÅR', 'REGNSKAP (LINEÆR)', 'SKATT (SALDO)', 'DIFFERANSE']);
+      rows.push([up('År'), up('Regnskap (lineær)'), up('Skatt (saldo)'), up('Differanse')]);
     } else {
-      rows.push(['ÅR', 'VERDI START', 'AVSKRIVNING', 'VERDI SLUTT']);
+      rows.push([up('År'), up('Verdi start'), up('Avskrivning'), up('Verdi slutt')]);
     }
     d.csvRows.forEach(function(r){ rows.push(r); });
     rows.push([]);
-    rows.push(['Total avskrivning', Math.round(d.totalDepr)]);
-    rows.push(['Verdi etter periode', Math.round(d.endValue)]);
+    rows.push([tr('Total avskrivning'), Math.round(d.totalDepr)]);
+    rows.push([tr('Verdi etter periode'), Math.round(d.endValue)]);
     rows.push([]);
-    rows.push(['Generert av Hverdagsverktøy']);
+    rows.push([tr('Generert av Hverdagsverktøy')]);
 
     var csv = rows.map(function(r){
       return r.map(function(c){
@@ -906,6 +916,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   // ── Init ──
   restore();
   setAvsMode(avsMode);
+  // core.js laster språkfila etter dette skriptet og setter da lang på <html>: regn ut på nytt på valgt språk
+  try {
+    new MutationObserver(function(){ recalc(); })
+      .observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+  } catch(e){}
 })();
 </script>
 
@@ -975,6 +990,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
   } else { init(); pollRender(); }
+  // Språkfila kan komme etter at veiledningen er tegnet på norsk: tegn den på nytt når lang settes på <html>
+  try {
+    new MutationObserver(renderHowto).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+  } catch(e){}
 })();
 </script>
 

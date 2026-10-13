@@ -535,7 +535,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
@@ -548,6 +548,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
     function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
     function fmtPct2(n){ return (Math.round(n*100)/100).toFixed(2).replace('.', ',') + ' %'; }
+    // Etikett fra frase-ordboka (_ph) i valgt språk, for tekst som limes sammen med tall. Norsk til språkfila er lastet.
+    function phr(s){ var r = typeof window.R === 'function' ? window.R() : null; return (r && r._ph && r._ph[s]) || s; }
 
     function parseAmt(id){
       var el = document.getElementById(id);
@@ -690,8 +692,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           segs.forEach(function(s, i){
             var pct = s.v / d.overskudd * 100;
             var op = ops[i % ops.length];
-            barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + s.l + ': ' + fmtKr(s.v) + '"></div>';
-            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + s.l + ' ' + Math.round(pct) + ' %</span>';
+            barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + phr(s.l) + ': ' + fmtKr(s.v) + '"></div>';
+            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + phr(s.l) + ' ' + Math.round(pct) + ' %</span>';
           });
           document.getElementById('rsVizBar').innerHTML = barHtml;
           document.getElementById('rsVizLegend').innerHTML = legHtml;
@@ -758,6 +760,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // ── Init ──
     restore();
     recalc();
+    // core.js setter <html lang> når språkfila er lastet eller byttet: regn ut på nytt, så etikettene over følger språket.
+    if(typeof MutationObserver === 'function'){
+      new MutationObserver(function(){ recalc(); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+    }
   })();
 </script>
 

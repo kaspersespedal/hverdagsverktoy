@@ -93,6 +93,11 @@
   /* ── Småhjelpere ───────────────────────────────────────────── */
   function $(id) { return document.getElementById(id); }
   function setText(id, t) { var el = $(id); if (el) el.textContent = t; }
+  /* Språk: tekst fra språkfila via R() (core.js), med norsk som reserve. ph() slår opp et
+     helt ord i frase-ordboka (_ph), fill() setter inn {navn}-verdiene i en mal. */
+  function T(k, no) { try { var v = R()[k]; return v || no; } catch (e) { return no; } }
+  function ph(s) { try { var d = R()._ph; return (d && d[s]) || s; } catch (e) { return s; } }
+  function fill(s, o) { for (var k in o) s = s.split('{' + k + '}').join(o[k]); return s; }
 
   function nb(n, dec) {
     if (n == null || isNaN(n)) return '–';
@@ -103,18 +108,18 @@
   }
   function compass(deg) {
     if (deg == null || isNaN(deg)) return '';
-    return ['N', 'NØ', 'Ø', 'SØ', 'S', 'SV', 'V', 'NV'][Math.round(deg / 45) % 8];
+    return T('trSharedCompass', 'N,NØ,Ø,SØ,S,SV,V,NV').split(',')[Math.round(deg / 45) % 8];
   }
   var MND = ['jan.', 'feb.', 'mar.', 'apr.', 'mai', 'jun.', 'jul.', 'aug.', 'sep.', 'okt.', 'nov.', 'des.'];
   function nbDate(iso) { // 'YYYY-MM-DD' -> '24. jun. 2026'
     if (!iso) return '';
-    var p = iso.split('-');
-    return parseInt(p[2], 10) + '. ' + MND[parseInt(p[1], 10) - 1] + ' ' + p[0];
+    return nbShort(iso) + ' ' + iso.split('-')[0];
   }
   function nbShort(iso) { // 'YYYY-MM-DD' -> '24. jun.'
     if (!iso) return '';
     var p = iso.split('-');
-    return parseInt(p[2], 10) + '. ' + MND[parseInt(p[1], 10) - 1];
+    return fill(T('trSharedDateShort', '{d}. {m}'), { d: parseInt(p[2], 10),
+      m: T('trSharedMonthsShort', MND.join(',')).split(',')[parseInt(p[1], 10) - 1] });
   }
 
   /* ── Cache (localStorage) ──────────────────────────────────── */
@@ -371,7 +376,7 @@
     _lastWx = d;
     countUp('wxTemp', Math.round(d.temp), 0);
     setText('wxCond', wxText(d.sym));
-    var sub = 'Maks ' + Math.round(d.max) + '° · Min ' + Math.round(d.min) + '°';
+    var sub = fill(T('trSharedWxMaxMin', 'Maks {max}° · Min {min}°'), { max: Math.round(d.max), min: Math.round(d.min) });
     if (typeof d.wind === 'number') sub += ' · ' + nb(d.wind, 1) + '\u00a0m/s' + (d.dir != null ? '\u00a0' + compass(d.dir) : '');
     setText('wxSub', sub);
     buildForecast(d.hours);
@@ -553,8 +558,8 @@
     if (!_modalEls) return;
     var d = new Date();
     var cond = (_lastWx && _lastWx.sym) ? wxText(_lastWx.sym) : '';
-    _modalEls.stamp.textContent = (cond ? cond + ' · ' : '') + 'oppdatert ' +
-      String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+    _modalEls.stamp.textContent = (cond ? ph(cond) + ' · ' : '') + fill(T('trSharedWxUpdated', 'oppdatert {t}'),
+      { t: String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') });
   }
 
   function openWxModal() {
@@ -658,7 +663,8 @@
     if (sig === _graphSig) return; // uendret data (minutt-puls) — ikke bygg SVG på nytt (bevarer hover-scrub)
     _graphSig = sig;
     var today = new Date();
-    els.sub.textContent = DAGER_FULL[today.getDay()] + ' ' + today.getDate() + '. ' + MND_LONG[today.getMonth()];
+    els.sub.textContent = fill(T('trSharedDateLong', '{wd} {d}. {m}'), { wd: ph(DAGER_FULL[today.getDay()]), d: today.getDate(),
+      m: T('trSharedMonthsLong', MND_LONG.join(',')).split(',')[today.getMonth()] });
     if (hrs.length < 2) {
       els.graphHost.innerHTML = '<svg class="wx-graph" viewBox="0 0 760 300" role="img" aria-label="Værdata lastes"><text class="g-empty" x="34" y="150">Værdata lastes …</text></svg>';
       els.stats.innerHTML = ''; els.sr.textContent = ''; _graphGeo = null; return;
@@ -721,8 +727,8 @@
          '<circle class="g-now-mid" cx="' + nx + '" cy="' + ny + '" r="4.5"/>' +
          '<circle class="g-now-dot" cx="' + nx + '" cy="' + ny + '" r="3"/>';
 
-    var aria = 'Temperatur time for time. Nå ' + Math.round(hrs[0].temp) + ' grader, maks ' +
-      Math.round(tmax0) + ', min ' + Math.round(tmin0) + ' grader' + (anyP ? ', noe nedbør' : '');
+    var aria = fill(T('trSharedWxGraphAria', 'Temperatur time for time. Nå {now} grader, maks {max}, min {min} grader'),
+      { now: Math.round(hrs[0].temp), max: Math.round(tmax0), min: Math.round(tmin0) }) + (anyP ? T('trSharedWxGraphRain', ', noe nedbør') : '');
     els.graphHost.innerHTML =
       '<svg class="wx-graph" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + esc(aria) + '">' +
         '<defs><linearGradient id="wxGraphFill" x1="0" y1="0" x2="0" y2="1">' +
@@ -888,7 +894,7 @@
   }
   function renderRate(d) {
     countUp('srVal', d.last, 2);
-    setText('srSub', 'Norges Bank · sist endret ' + nbDate(d.changeDate).replace(/ /g, '\u00a0'));
+    setText('srSub', fill(T('trSharedRateChanged', 'Norges Bank · sist endret {d}'), { d: nbDate(d.changeDate).replace(/ /g, '\u00a0') }));
     var span = $('srTrend');
     if (span) {
       var diff = d.last - d.prevLevel, dir = Math.abs(diff) < 0.001 ? 0 : diff > 0 ? 1 : -1;
@@ -905,7 +911,7 @@
         var t = new Date(), md = nm.split('-').map(Number);
         var diff = Math.round((Date.UTC(md[0], md[1] - 1, md[2]) -
                                Date.UTC(t.getFullYear(), t.getMonth(), t.getDate())) / 864e5);
-        var word = diff > 1 ? 'om ' + diff + ' dager' : diff === 1 ? 'i morgen' : diff === 0 ? 'i dag' : '';
+        var word = diff > 1 ? fill(T('trSharedInDays', 'om {n} dager'), { n: diff }) : diff === 1 ? 'i morgen' : diff === 0 ? 'i dag' : '';
         if (word) {
           var s = document.createElement('span');
           s.className = 'in-days'; s.textContent = word;
@@ -946,7 +952,8 @@
       d.cheap = d.prices[d.cheapHour];
     }
     var ch = d.cheapHour < 10 ? '0' + d.cheapHour : d.cheapHour;
-    setText('stSub', 'Billigst kl\u00a0' + ch + ' · ' + Math.round(d.cheap * 100) + '\u00a0øre · snitt ' + Math.round(d.avg * 100) + '\u00a0øre');
+    setText('stSub', fill(T('trSharedStromSub', 'Billigst kl\u00a0{h} · {cheap}\u00a0øre · snitt {avg}\u00a0øre'),
+      { h: ch, cheap: Math.round(d.cheap * 100), avg: Math.round(d.avg * 100) }));
     var span = $('stTrend');
     if (span) {
       var pct = d.avg ? (d.now - d.avg) / d.avg * 100 : 0, dir = Math.abs(pct) < 0.5 ? 0 : pct > 0 ? 1 : -1;
@@ -1163,6 +1170,17 @@
     loadWeather(place, false); loadFx(false); loadRate(false); loadStrom(place, false);
     setInterval(tick, 60 * 1000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
+    /* core.js setter lang på <html> når en språkfil er lastet. Malene over leses med T() når
+       panelet tegnes, så tegn på nytt fra dataene som alt vises (uten ny henting) — også i en
+       bakgrunnsfane, der tick() står over. Dag-grafen bygges ellers bare på nytt ved nye data. */
+    new MutationObserver(function () {
+      var rate = cacheGet('rate'); _graphSig = '';
+      if (_lastWx) renderWeather(_lastWx);
+      if (_fx) renderFx(_fx);
+      if (rate) renderRate(rate.d);
+      if (_strom) renderStrom(_strom, getPlace().sone || 'NO1');
+      if (_modalOpen) modalStamp();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
   }
 
   /* Idle-gate: utsett init (fetch + DOM-skriv + count-up) til etter

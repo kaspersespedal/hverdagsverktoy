@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v235" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v236" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -212,7 +212,7 @@ footer em{font-style:italic}
 
 <!-- Existing shared assets (preserved) -->
 <script defer src="/shared/atmosphere.js?v=v6"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 
@@ -845,20 +845,21 @@ body.focus-mode > footer{display:none}
   function downloadBilCsv(){
     if(typeof window.bilCalc !== 'function' || typeof window.downloadCSV !== 'function') return;
     var r = window.bilCalc(state);
+    var L = (typeof R === 'function' && R()) || {};
     var rows = [];
-    rows.push(['Bilkostnad', new Date().toLocaleDateString('nb-NO', {year:'numeric', month:'long', day:'numeric'})]);
+    rows.push([L.csvBilTitle || 'Bilkostnad', typeof _csvDate === 'function' ? _csvDate() : new Date().toLocaleDateString('nb-NO', {year:'numeric', month:'long', day:'numeric'})]);
     rows.push([]);
-    rows.push(['Kategori', 'Per år (kr)', 'Per måned (kr)']);
-    rows.push(['Verditap', Math.round(r.verditap.aar), Math.round(r.verditap.mnd)]);
-    rows.push(['Drivstoff/lading', Math.round(r.drivstoff.aar), Math.round(r.drivstoff.mnd)]);
-    rows.push(['Faste kostnader', Math.round(r.faste.aar), Math.round(r.faste.mnd)]);
-    rows.push(['Vedlikehold', Math.round(r.vedlikehold.aar), Math.round(r.vedlikehold.mnd)]);
+    rows.push([L.csvBilCategory || 'Kategori', L.trPersonligBilCsvPerAar || 'Per år (kr)', L.trPersonligBilCsvPerMnd || 'Per måned (kr)']);
+    rows.push([L.csvBilDepreciation || 'Verditap', Math.round(r.verditap.aar), Math.round(r.verditap.mnd)]);
+    rows.push([L.csvBilFuel || 'Drivstoff/lading', Math.round(r.drivstoff.aar), Math.round(r.drivstoff.mnd)]);
+    rows.push([L.trPersonligBilCsvFaste || 'Faste kostnader', Math.round(r.faste.aar), Math.round(r.faste.mnd)]);
+    rows.push([L.trPersonligBilCsvVedl || 'Vedlikehold', Math.round(r.vedlikehold.aar), Math.round(r.vedlikehold.mnd)]);
     rows.push([]);
-    rows.push(['Total eierkostnad', Math.round(r.totAar), Math.round(r.totMnd)]);
-    rows.push(['Pris per km', '', (Math.round(r.krPerKm * 100) / 100).toString().replace('.', ',')]);
+    rows.push([L.csvBilTotal || 'Total eierkostnad', Math.round(r.totAar), Math.round(r.totMnd)]);
+    rows.push([L.trPersonligBilCsvPrisKm || 'Pris per km', '', (Math.round(r.krPerKm * 100) / 100).toString().replace('.', ',')]);
     rows.push([]);
-    rows.push(['Generert av Hverdagsverktøy']);
-    window.downloadCSV(rows, 'bilkostnad.csv');
+    rows.push([L.csvGenerated || 'Generert av Hverdagsverktøy']);
+    window.downloadCSV(rows, L.trPersonligBilCsvFile || 'bilkostnad.csv');
   }
 
   function bind(){

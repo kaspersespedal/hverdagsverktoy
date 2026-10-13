@@ -564,7 +564,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
@@ -779,51 +779,52 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
       var sep = ';';
       var rows = [];
-      var today = new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
+      var r = (typeof R === 'function') ? R() : {};
+      var today = new Date().toLocaleDateString(r.trKalkulatorTilbudCsvLocale || 'nb-NO', { year:'numeric', month:'long', day:'numeric' });
 
-      rows.push(['Tilbud / Anbud-kalkyle', today]);
+      rows.push([r.trKalkulatorTilbudCsvTitle || 'Tilbud / Anbud-kalkyle', today]);
       rows.push([]);
 
       // Materiell
-      rows.push(['MATERIELL', '', '', '']);
-      rows.push(['Beskrivelse', 'Antall', 'Pris per enhet (kr)', 'Subtotal (kr)']);
+      rows.push([r.trKalkulatorTilbudCsvMatHead || 'MATERIELL', '', '', '']);
+      rows.push([r.trKalkulatorTilbudCsvDesc || 'Beskrivelse', r.trKalkulatorTilbudCsvQty || 'Antall', r.trKalkulatorTilbudCsvUnitPrice || 'Pris per enhet (kr)', 'Subtotal (kr)']);
       document.querySelectorAll('#matRows .tilbud-mat-row').forEach(function(tr){
         var desc = tr.querySelector('.mat-desc').value;
         var antall = parseAmt(tr.querySelector('.mat-antall').value);
         var pris = parseAmt(tr.querySelector('.mat-pris').value);
         rows.push([desc, antall, pris, Math.round(antall * pris)]);
       });
-      rows.push(['Materiell total', '', '', d.matTotal]);
+      rows.push([r.trKalkulatorTilbudCsvMatTotal || 'Materiell total', '', '', d.matTotal]);
       rows.push([]);
 
       // Arbeid
-      rows.push(['ARBEID', '', '', '']);
-      rows.push(['Beskrivelse', 'Timer', 'Timepris (kr)', 'Subtotal (kr)']);
+      rows.push([r.trKalkulatorTilbudCsvArbHead || 'ARBEID', '', '', '']);
+      rows.push([r.trKalkulatorTilbudCsvDesc || 'Beskrivelse', r.trKalkulatorTilbudCsvHours || 'Timer', r.trKalkulatorTilbudCsvRate || 'Timepris (kr)', 'Subtotal (kr)']);
       document.querySelectorAll('#arbRows .tilbud-arb-row').forEach(function(tr){
         var desc = tr.querySelector('.arb-desc').value;
         var timer = parseAmt(tr.querySelector('.arb-timer').value);
         var timepris = parseAmt(tr.querySelector('.arb-timepris').value);
         rows.push([desc, timer, timepris, Math.round(timer * timepris)]);
       });
-      rows.push(['Arbeid total', '', '', d.arbTotal]);
+      rows.push([r.trKalkulatorTilbudCsvArbTotal || 'Arbeid total', '', '', d.arbTotal]);
       rows.push([]);
 
       // Påslag og sammendrag
       var paaslagLabel = 'Paslag';
       var paaslagType = document.getElementById('paaslagType').value;
-      if(paaslagType === 'mat-pct') paaslagLabel = 'Paslag pa materiell (' + d.paaslagVerdi + ' %)';
-      else if(paaslagType === 'total-pct') paaslagLabel = 'Paslag pa totalt (' + d.paaslagVerdi + ' %)';
-      else paaslagLabel = 'Paslag (fast kr)';
+      if(paaslagType === 'mat-pct') paaslagLabel = (r.trKalkulatorTilbudCsvPasMat || 'Paslag pa materiell ({p} %)').replace('{p}', d.paaslagVerdi);
+      else if(paaslagType === 'total-pct') paaslagLabel = (r.trKalkulatorTilbudCsvPasTot || 'Paslag pa totalt ({p} %)').replace('{p}', d.paaslagVerdi);
+      else paaslagLabel = r.trKalkulatorTilbudCsvPasFast || 'Paslag (fast kr)';
 
-      rows.push(['SAMMENDRAG', '', '', '']);
-      rows.push(['Materiell total', '', '', d.matTotal]);
-      rows.push(['Arbeid total', '', '', d.arbTotal]);
+      rows.push([r.trKalkulatorTilbudCsvSumHead || 'SAMMENDRAG', '', '', '']);
+      rows.push([r.trKalkulatorTilbudCsvMatTotal || 'Materiell total', '', '', d.matTotal]);
+      rows.push([r.trKalkulatorTilbudCsvArbTotal || 'Arbeid total', '', '', d.arbTotal]);
       rows.push([paaslagLabel, '', '', d.paaslagBelop]);
-      rows.push(['Sum eks. MVA', '', '', d.sumEks]);
-      rows.push(['MVA (' + Math.round(d.mvaSats * 100) + ' %)', '', '', d.mvaBelop]);
-      rows.push(['Tilbudssum inkl. MVA', '', '', d.sumInkl]);
+      rows.push([r.trKalkulatorTilbudCsvEks || 'Sum eks. MVA', '', '', d.sumEks]);
+      rows.push([(r.trKalkulatorTilbudCsvMva || 'MVA ({p} %)').replace('{p}', Math.round(d.mvaSats * 100)), '', '', d.mvaBelop]);
+      rows.push([r.trKalkulatorTilbudCsvInkl || 'Tilbudssum inkl. MVA', '', '', d.sumInkl]);
       rows.push([]);
-      rows.push(['Generert av Hverdagsverktoy']);
+      rows.push([r.trKalkulatorTilbudCsvFooter || 'Generert av Hverdagsverktoy']);
 
       var csv = rows.map(function(r){
         return r.map(function(c){ return csvEscape(c, sep); }).join(sep);
@@ -832,7 +833,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
       var url = URL.createObjectURL(blob);
       var a = document.createElement('a');
-      a.href = url; a.download = 'tilbud.csv';
+      a.href = url; a.download = r.trKalkulatorTilbudCsvFile || 'tilbud.csv';
       document.body.appendChild(a); a.click(); document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }

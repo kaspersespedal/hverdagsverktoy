@@ -617,7 +617,7 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
@@ -667,23 +667,30 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       });
     }
 
+    // Tekst fra språkfila med norsk reserve; {n} byttes med tallet, og nøkkel_one brukes når n er 1
+    function tx(key, fb, n){
+      var r = typeof R === 'function' ? R() : null;
+      var s = (r && n === 1 && r[key + '_one']) || (r && r[key]) || fb;
+      return n == null ? s : s.split('{n}').join(n);
+    }
+
     function receipt(n, tail){
       out.hidden = false;
-      out.textContent = n + (n === 1 ? ' lagret oppføring' : ' lagrede oppføringer') +
-        ' ble slettet. ' + tail +
-        ' Tema og språk er satt tilbake til standard — last siden på nytt for å se det. ' +
-        'Tall lagres på nytt neste gang du bruker en kalkulator.';
+      out.textContent = tx('trPersonvernSlettet', n === 1 ? '{n} lagret oppføring ble slettet.' : '{n} lagrede oppføringer ble slettet.', n) +
+        ' ' + tail + ' ' +
+        tx('trPersonvernTilbake', 'Tema og språk er satt tilbake til standard — last siden på nytt for å se det. ' +
+        'Tall lagres på nytt neste gang du bruker en kalkulator.');
       try { out.focus(); } catch(e){}
     }
 
     btn.addEventListener('click', function(){
       var n = stored();
-      var ok = window.confirm(
+      var ok = window.confirm(tx('trPersonvernConfirm',
         'Slette alt Hverdagsverktøy har lagret i denne nettleseren?\n\n' +
-        'Dette fjerner ' + n + ' lagrede oppføringer: alle tall du har fylt inn i ' +
+        'Dette fjerner {n} lagrede oppføringer: alle tall du har fylt inn i ' +
         'kalkulatorene, budsjettet ditt og valgt sted på forsiden. Temavalg og ' +
         'språkvalg settes også tilbake til standard.\n\n' +
-        'Handlingen kan ikke angres.'
+        'Handlingen kan ikke angres.', n)
       );
       if(!ok) return;
 
@@ -694,10 +701,9 @@ details.lc-q .a a{color:var(--accent-2);text-decoration:none;border-bottom:1px s
       out.textContent = 'Sletter …';
 
       wipeCoordCache().then(function(k){
-        receipt(n, k + (k === 1 ? ' mellomlagret svar' : ' mellomlagrede svar') +
-          ' med posisjon i adressen ble fjernet.');
+        receipt(n, tx('trPersonvernCache', k === 1 ? '{n} mellomlagret svar med posisjon i adressen ble fjernet.' : '{n} mellomlagrede svar med posisjon i adressen ble fjernet.', k));
       }, function(){
-        receipt(n, 'Mellomlageret kunne ikke ryddes i denne nettleseren — tøm det via nettleserinnstillingene.');
+        receipt(n, tx('trPersonvernCacheFeil', 'Mellomlageret kunne ikke ryddes i denne nettleseren — tøm det via nettleserinnstillingene.'));
       });
     });
   })();

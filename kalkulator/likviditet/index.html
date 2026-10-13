@@ -460,7 +460,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
@@ -487,6 +487,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     return parseAmt(el.value);
   }
   function setOutputText(id, val){ var el=document.getElementById(id); if(el) el.textContent = val; }
+  // Tekst fra språkfila (R()) med norsk reserve; {n} byttes inn, nøkkel_one når n er 1.
+  function txt(key, fb, n){
+    var r = typeof R === 'function' ? R() : null;
+    var s = (r && n === 1 && r[key + '_one']) || (r && r[key]) || fb;
+    return s.replace('{n}', n);
+  }
+  function mths(n){ return txt('trKalkulatorLikviditetMonths', '{n} mnd', n); }
 
   // ── Hovedberegning (byte-for-byte port fra calcLikvid) ──
   function compute(){
@@ -532,13 +539,18 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     };
   }
 
+  function colLabels(){
+    return [txt('trKalkulatorLikviditetColMonth', 'Måned'), txt('trKalkulatorLikviditetColStart', 'Startsaldo'),
+      txt('trKalkulatorLikviditetColIn', 'Inntekt'), txt('trKalkulatorLikviditetColOut', 'Utgift'), txt('trKalkulatorLikviditetColEnd', 'Sluttsaldo')];
+  }
+
   function buildTable(rows){
     var table = document.createElement('table');
     table.className = 'bd-table';
 
     var thead = document.createElement('thead');
     var headRow = document.createElement('tr');
-    ['Måned', 'Startsaldo', 'Inntekt', 'Utgift', 'Sluttsaldo'].forEach(function(label, idx){
+    colLabels().forEach(function(label, idx){
       var th = document.createElement('th');
       th.textContent = label;
       if(idx > 0) th.className = 'v';
@@ -552,7 +564,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var tr = document.createElement('tr');
       if(r.end < 0) tr.className = 'row-neg';
       var tdMonth = document.createElement('td');
-      tdMonth.textContent = 'Mnd ' + r.month;
+      tdMonth.textContent = txt('trKalkulatorLikviditetMonthN', 'Mnd {n}', r.month);
       tr.appendChild(tdMonth);
 
       [r.start, r.income, r.expense, r.end].forEach(function(val, idx){
@@ -598,23 +610,23 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     setOutputText('hStatEnd', fmtKr(d.endBal));
 
     var verdict;
-    if(d.endBal < 0) verdict = 'Du går i minus etter ' + d.months + ' mnd — kutt utgifter eller hold reserver klart.';
-    else if(d.net > 0) verdict = 'Saldoen vokser med ' + fmtKr(d.net) + ' / mnd over ' + d.months + ' mnd.';
-    else if(d.net < 0) verdict = 'Saldoen synker med ' + fmtKr(-d.net) + ' / mnd over ' + d.months + ' mnd.';
-    else verdict = 'Saldoen står stille: inntekt = utgift over ' + d.months + ' mnd.';
-    setOutputText('rVerdict', verdict);
+    if(d.endBal < 0) verdict = txt('trKalkulatorLikviditetVerdictMinus', 'Du går i minus etter {m} — kutt utgifter eller hold reserver klart.');
+    else if(d.net > 0) verdict = txt('trKalkulatorLikviditetVerdictUp', 'Saldoen vokser med {x} / mnd over {m}.').replace('{x}', fmtKr(d.net));
+    else if(d.net < 0) verdict = txt('trKalkulatorLikviditetVerdictDown', 'Saldoen synker med {x} / mnd over {m}.').replace('{x}', fmtKr(-d.net));
+    else verdict = txt('trKalkulatorLikviditetVerdictFlat', 'Saldoen står stille: inntekt = utgift over {m}.');
+    setOutputText('rVerdict', verdict.replace('{m}', mths(d.months)));
 
     setOutputText('rStart', fmtKr(d.startBal));
     setOutputText('rTotalIn', fmtKr(d.income * d.months));
     setOutputText('rTotalOut', fmtKr(d.expense * d.months));
-    setOutputText('rMonths', d.months + ' mnd');
+    setOutputText('rMonths', mths(d.months));
 
     setOutputText('hStatNet', fmtKrSigned(d.net));
 
     // ks-strip
     setOutputText('likvidStripStart', fmtKr(d.startBal));
     setOutputText('likvidStripNet', fmtKrSigned(d.net));
-    setOutputText('likvidStripMonths', d.months + ' mnd');
+    setOutputText('likvidStripMonths', mths(d.months));
     setOutputText('likvidStripEnd', fmtKr(d.endBal));
 
     // DOM-rebygg av tabellen — ingen innerHTML på nested HTML
@@ -656,25 +668,25 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(!d || !d.hasData) return;
     var sep = ';';
     var rows = [];
-    var today = new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
-    rows.push(['Likviditetsbudsjett', today]);
+    var today = new Date().toLocaleDateString(txt('trKalkulatorLikviditetCsvLocale', 'nb-NO'), { year:'numeric', month:'long', day:'numeric' });
+    rows.push([txt('likvidTitle', 'Likviditetsbudsjett'), today]);
     rows.push([]);
     rows.push(['INPUT', '']);
-    rows.push(['Startbalanse (kr)', Math.round(d.startBal)]);
-    rows.push(['Månedlig inntekt (kr)', Math.round(d.income)]);
-    rows.push(['Månedlig utgift (kr)', Math.round(d.expense)]);
-    rows.push(['Antall måneder', d.months]);
+    rows.push([txt('likvidStartLabel', 'Startbalanse (kr)'), Math.round(d.startBal)]);
+    rows.push([txt('likvidIncomeLabel', 'Månedlig inntekt (kr)'), Math.round(d.income)]);
+    rows.push([txt('likvidExpenseLabel', 'Månedlig utgift (kr)'), Math.round(d.expense)]);
+    rows.push([txt('likvidMonthsLabel', 'Antall måneder'), d.months]);
     rows.push([]);
-    rows.push(['MÅNED', 'STARTSALDO', 'INNTEKT', 'UTGIFT', 'SLUTTSALDO']);
+    rows.push(colLabels().map(function(s){ return s.toUpperCase(); }));
     d.rows.forEach(function(r){
-      rows.push(['Mnd ' + r.month, r.start, r.income, r.expense, r.end]);
+      rows.push([txt('trKalkulatorLikviditetMonthN', 'Mnd {n}', r.month), r.start, r.income, r.expense, r.end]);
     });
     rows.push([]);
-    rows.push(['Endelig saldo', Math.round(d.endBal)]);
-    rows.push(['Total inntekt', Math.round(d.income * d.months)]);
-    rows.push(['Total utgift', Math.round(d.expense * d.months)]);
+    rows.push([txt('likvidStatEnd', 'Endelig saldo'), Math.round(d.endBal)]);
+    rows.push([txt('likvidRTotalIn', 'Total inntekt'), Math.round(d.income * d.months)]);
+    rows.push([txt('likvidRTotalOut', 'Total utgift'), Math.round(d.expense * d.months)]);
     rows.push([]);
-    rows.push(['Generert av Hverdagsverktøy']);
+    rows.push([txt('csvGenerated', 'Generert av Hverdagsverktøy')]);
 
     var csv = rows.map(function(r){
       return r.map(function(c){
@@ -701,6 +713,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   // ── Init ──
   restore();
   recalc();
+  // Skriv resultattekstene på nytt når språkfila er lastet og ved språkbytte.
+  new MutationObserver(recalc).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 })();
 </script>
 

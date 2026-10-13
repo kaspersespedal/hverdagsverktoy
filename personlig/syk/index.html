@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v235" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v236" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -178,7 +178,7 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/learn.css?v=v3">
 
 <script defer src="/shared/atmosphere.js?v=v6"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 
@@ -452,6 +452,12 @@ body.focus-mode > footer{display:none}
 
   function fmtKr(n){ if(!isFinite(n)) return '–'; return Math.round(n).toLocaleString('nb-NO').replace(/,/g,' ').replace(/ /g,' '); }
   function parseKr(s){ if(s == null) return 0; return +String(s).replace(/[^\d]/g,'') || 0; }
+  // Tekst fra språkfila med norsk reserve; {n} byttes med tallet, og nøkkel_one brukes når n er 1
+  function tx(key, fb, n){
+    var r = typeof R === 'function' ? R() : null;
+    var s = (r && n === 1 && r[key + '_one']) || (r && r[key]) || fb;
+    return n == null ? s : s.split('{n}').join(n);
+  }
 
   // ── Matte (port av JSX calc()) ────────────────────
   function sykCalc(brutto, status, sykDager, arbDekker){
@@ -606,9 +612,9 @@ body.focus-mode > footer{display:none}
   function renderStatusCap(r){
     var box = $('#syk-status-cap');
     if(state.status === 'selvstendig'){
-      box.innerHTML = '<div class="syk-cap warn"><span class="syk-cap-glyph">!</span><span class="syk-cap-text">Som <b>selvstendig næringsdrivende</b> får du <b>ingen utbetaling</b> de første 16 sykedagene, og deretter <b>80 %</b> av grunnlaget — opp til 6G. Tilleggsforsikring hos NAV kan heve dekningen.</span></div>';
+      box.innerHTML = '<div class="syk-cap warn"><span class="syk-cap-glyph">!</span><span class="syk-cap-text">' + tx('trPersonligSykCapSelv', 'Som <b>selvstendig næringsdrivende</b> får du <b>ingen utbetaling</b> de første 16 sykedagene, og deretter <b>80 %</b> av grunnlaget — opp til 6G. Tilleggsforsikring hos NAV kan heve dekningen.') + '</span></div>';
     } else if(r.overGrense){
-      box.innerHTML = '<div class="syk-cap warn"><span class="syk-cap-glyph">!</span><span class="syk-cap-text">Lønnen din er over <b>6G-taket</b> ('+fmtKr(SIX_G)+' kr). NAV utbetaler kun opp til taket — '+fmtKr(r.overskudd)+' kr per år regnes ikke med. Mange tariffavtaler dekker mellomlegget.</span></div>';
+      box.innerHTML = '<div class="syk-cap warn"><span class="syk-cap-glyph">!</span><span class="syk-cap-text">Lønnen din er over <b>6G-taket</b>' + tx('trPersonligSykCapOver', ' ({tak} kr). NAV utbetaler kun opp til taket — {over} kr per år regnes ikke med. Mange tariffavtaler dekker mellomlegget.').replace('{tak}', fmtKr(SIX_G)).replace('{over}', fmtKr(r.overskudd)) + '</span></div>';
     } else {
       box.innerHTML = '<div class="syk-cap"><span class="syk-cap-glyph">&check;</span><span class="syk-cap-text">Lønnen din er under <b>6G-taket</b> — du får <b>100 % dekning</b> i hele perioden.</span></div>';
     }
@@ -667,7 +673,7 @@ body.focus-mode > footer{display:none}
   function renderOverflowCap(r){
     var box = $('#syk-overflow-cap');
     if(r.overflow){
-      box.innerHTML = '<div class="syk-cap warn" style="margin-top:14px"><span class="syk-cap-glyph">!</span><span class="syk-cap-text">Du har lagt inn <b>'+state.sykDager+' dager</b>, mer enn maks ('+TOTAL_MAX+'). NAV utbetaler ikke sykepenger lenger enn 248 sykepengedager — etter det må du søke <b>arbeidsavklaringspenger</b> (AAP).</span></div>';
+      box.innerHTML = '<div class="syk-cap warn" style="margin-top:14px"><span class="syk-cap-glyph">!</span><span class="syk-cap-text">' + tx('trPersonligSykOverflow', 'Du har lagt inn <b>{n} dager</b>, mer enn maks ({max}). NAV utbetaler ikke sykepenger lenger enn 248 sykepengedager — etter det må du søke <b>arbeidsavklaringspenger</b> (AAP).', state.sykDager).replace('{max}', TOTAL_MAX) + '</span></div>';
     } else {
       box.innerHTML = '';
     }
@@ -691,9 +697,9 @@ body.focus-mode > footer{display:none}
     $('[data-syk="resMnd"]').textContent = fmtKr(r.navDays > 0 ? r.sumNavPeriodeMnd : r.fullMnd);
     var sub = $('[data-syk="resSub"]');
     if(r.navDays > 0){
-      sub.innerHTML = 'NAV utbetaler i <b>'+r.navDays+' dager</b>' + (r.arbMnd > 0 ? ' · <span style="color:var(--accent-2)">+'+fmtKr(r.arbMnd)+'</span> fra arbg.' : '');
+      sub.innerHTML = tx('trPersonligSykSubNav', 'NAV utbetaler i <b>{n} dager</b>', r.navDays) + (r.arbMnd > 0 ? ' · <span style="color:var(--accent-2)">+'+fmtKr(r.arbMnd)+'</span> fra arbg.' : '');
     } else {
-      sub.innerHTML = 'Arbeidsgiver dekker hele perioden — <b>'+r.arbDays+' dager</b>';
+      sub.innerHTML = tx('trPersonligSykSubArb', 'Arbeidsgiver dekker hele perioden — <b>{n} dager</b>', r.arbDays);
     }
 
     // Stats
@@ -774,6 +780,8 @@ body.focus-mode > footer{display:none}
   } else {
     mount();
   }
+  // tx()-tekstene leses ved tegning; tegn på nytt når språkfila er lastet og ved språkbytte.
+  new MutationObserver(function(){ if(host) render(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 })();
 </script>
 
@@ -854,7 +862,7 @@ body.focus-mode > footer{display:none}
     root.querySelectorAll('[data-lrn="segS"] button').forEach(function(b){ b.setAttribute('aria-pressed', b.getAttribute('data-st') === status ? 'true' : 'false'); });
     root.querySelectorAll('[data-lrn="segA"] button').forEach(function(b){ b.setAttribute('aria-pressed', (b.getAttribute('data-arb') === '1') === arb ? 'true' : 'false'); });
     q('segA').hidden = !showArb;
-    var stateTxt = t('lrnSyState', '{s} · {d} sykedager · {st}', {s:kr(S), d:dag, st:ph(ansatt ? 'ansatt' : 'selvstendig')});
+    var stateTxt = t('lrnSyState', '{s} · {d} sykedager · {st}', {s:kr(S), d:dag, n:dag, st:ph(ansatt ? 'ansatt' : 'selvstendig')});
     if(showArb) stateTxt += ' · ' + ph(arb ? 'arbeidsgiveren dekker mellomlegget' : 'mellomlegget dekkes ikke');
     set('stateText', ok ? stateTxt : ph('Fyll inn lønna i kalkulatoren.'));
     q('slider').value = String(dag);
@@ -1033,7 +1041,7 @@ body.focus-mode > footer{display:none}
     set('tA1', fmt(sm)); set('tB2', ph(over && arb ? 'NAV, og arbeidsgiver for mellomlegget' : 'NAV')); set('tA2', fmt(A.navMnd + A.arbMnd)); set('tS2', fmt(B.navMnd));
     set('sr', t('lrnSySr1', 'Tidslinje over sykepengedagene, med kroner per måned. Som ansatt med {s} i lønn betaler arbeidsgiveren dag 1 til 16 og NAV dag 17 til 264.', {s:kr(S)})
       + (over ? ' ' + (arb ? ph('Arbeidsgiveren dekker mellomlegget over 6G.') : t('lrnSySr2', 'NAV betaler bare opp til 6G, så {m} i måneden faller bort.', {m:kr(mlM)})) : '')
-      + ' ' + t('lrnSySr3', 'Som selvstendig får du ingenting dag 1 til 16 og deretter {k} i måneden. Etter {d} dager er summen {a} som ansatt og {b} som selvstendig.', {k:kr(selM), d:dm, a:kr(A.sum), b:kr(B.sum)}));
+      + ' ' + t('lrnSySr3', 'Som selvstendig får du ingenting dag 1 til 16 og deretter {k} i måneden. Etter {d} dager er summen {a} som ansatt og {b} som selvstendig.', {k:kr(selM), d:dm, n:dm, a:kr(A.sum), b:kr(B.sum)}));
   }
   function schedule(){
     if(queued) return;

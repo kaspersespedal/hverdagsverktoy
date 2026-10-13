@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v235" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v236" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -1308,6 +1308,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     function applyFilter(){
       var q = norm(input.value);
+      var en = /^en/i.test(document.documentElement.lang || '');
       var classes = grid.querySelectorAll('.konto-class');
       var totalVisible = 0;
       var visibleClasses = 0;
@@ -1331,7 +1332,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           }
           var num  = (li.getAttribute('data-num') || '').toLowerCase();
           var name = norm(li.getAttribute('data-name'));
-          var hit  = (num.indexOf(q) === 0) || (name.indexOf(q) !== -1);
+          var hit  = (num.indexOf(q) === 0) || (name.indexOf(q) !== -1) || (en && /[a-z]/.test(q) && norm((li.querySelector('.kt') || li).textContent).indexOf(q) !== -1);
           li.hidden = !hit;
           if(hit){ anyHit = true; totalVisible++; }
         });
@@ -1384,13 +1385,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 })();
 </script>
 <script src="/shared/top-chrome.js?v=v248" defer></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
-<script src="/shared/search.js?v=v134" defer></script>
+<script src="/shared/search.js?v=v135" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');

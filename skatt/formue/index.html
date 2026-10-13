@@ -536,7 +536,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
           <div><table>
             <caption>De fem stasjonene i kroner</caption>
-            <thead><tr><th scope="col" class="s">Trinn</th><th scope="col">Beløp</th></tr></thead>
+            <thead><tr><th scope="col" class="s" data-i18n="trSkattFormueThStep">Trinn</th><th scope="col">Beløp</th></tr></thead>
             <tbody>
               <tr><th scope="row">Markedsverdi</th><td data-lrn="tb1"></td></tr>
               <tr><th scope="row">Formuesverdi etter verdsettelse</th><td data-lrn="tb2"></td></tr>
@@ -591,7 +591,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
@@ -616,6 +616,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       return String(s).replace(/[&<>"']/g, function(c){
         return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];
       });
+    }
+    // Etikett fra frase-ordboka (_ph) i valgt språk, for tekst som limes sammen med tall. Norsk til språkfila er lastet.
+    function phr(s){
+      var r = typeof window.R === 'function' ? window.R() : null;
+      return (r && r._ph && r._ph[s]) || s;
     }
 
     function compute(){
@@ -702,7 +707,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       setText('rBruttoFormue', fmtKr(d.bruttoFormue));
       setText('rGjeldJustert', '− ' + fmtKr(d.gjeldJustert));
       setText('rNettoFormue', fmtKr(d.nettoFormue));
-      setText('rBunnfradrag', '− ' + fmtKr(d.bunnfradrag) + (d.personer === 2 ? ' (2 × 1,9 mill.)' : ''));
+      setText('rBunnfradrag', '− ' + fmtKr(d.bunnfradrag) + (d.personer === 2 ? ' ' + phr('(2 × 1,9 mill.)') : ''));
       setText('rSkattepliktig', fmtKr(d.skattepliktig));
       setText('rEffSats', effStr);
 
@@ -755,8 +760,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           segs.forEach(function(s, i){
             var pct = s.v / d.bruttoFormue * 100;
             var op = ops[i % ops.length];
-            barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + escapeHtml(s.l) + ': ' + fmtKr(s.v) + '"></div>';
-            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + escapeHtml(s.l) + ' ' + Math.round(pct) + ' %</span>';
+            barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + escapeHtml(phr(s.l)) + ': ' + fmtKr(s.v) + '"></div>';
+            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + escapeHtml(phr(s.l)) + ' ' + Math.round(pct) + ' %</span>';
           });
           document.getElementById('vizBar').innerHTML = barHtml;
           document.getElementById('vizLegend').innerHTML = legHtml;
@@ -822,6 +827,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // ── Init ──
     restore();
     recalc();
+    // core.js setter <html lang> når språkfila er lastet eller byttet: regn ut på nytt, så etikettene over følger språket.
+    if(typeof MutationObserver === 'function'){
+      new MutationObserver(function(){ recalc(); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+    }
   })();
 </script>
 

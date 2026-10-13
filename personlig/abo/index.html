@@ -22,7 +22,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-normal.woff2">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.bunny.net/source-serif-4/files/source-serif-4-latin-500-italic.woff2">
 <link rel="preload" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700|jetbrains-mono:400,500,600|source-serif-4:400,400i,500,500i,600&display=swap"></noscript>
-<link rel="preload" href="/shared/core.js?v=v235" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v236" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -205,7 +205,7 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 
 <script defer src="/shared/atmosphere.js?v=v6"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 
@@ -484,8 +484,11 @@ footer em{font-style:italic}
 
   function fmtKr(n){ if(!isFinite(n)) return '–'; return Math.round(n).toLocaleString('nb-NO').replace(/,/g,' ').replace(/ /g,' '); }
   function fmtPct(p, d){ if(!isFinite(p)) return '–'; return (p*100).toFixed(d == null ? 1 : d).replace('.',',') + ' %'; }
+  // Tekst fra språkfila med norsk reserve, og navn oversatt med frase-ordboka (Treningssenter → Gym)
+  function tr(key, fb){ var r = typeof R === 'function' ? R() : null; return (r && r[key]) || fb; }
+  function loc(s){ var r = typeof R === 'function' ? R() : null; return (r && r._ph && r._ph[s]) || s; }
   // Trygt navn i aria-label: tomt felt skal ikke gi «Beløp for »
-  function escAria(v){ v=String(v||'').replace(/"/g,'').trim(); return v || 'nytt abonnement'; }
+  function escAria(v){ v=String(v||'').replace(/"/g,'').trim(); return v || tr('trPersonligAboAriaNy', 'nytt abonnement'); }
   function parseKr(s){ if(s == null) return 0; return +String(s).replace(/[^\d]/g,'') || 0; }
   function parseDec(s){ if(s == null) return 0; return +String(s).replace(/\s/g,'').replace(',','.').replace(/[^\d.]/g,'') || 0; }
 
@@ -521,7 +524,7 @@ footer em{font-style:italic}
       '    <div class="ks-strip-cell"><span class="l" data-i18n="aboStripMnd">Per måned</span><span class="v"><span data-ab="totMnd">–</span><span class="u">kr</span></span></div>',
       '    <div class="ks-strip-cell"><span class="l" data-i18n="aboStripAar">Per år</span><span class="v"><span data-ab="totAar">–</span><span class="u">kr</span></span></div>',
       '    <div class="ks-strip-cell"><span class="l" data-i18n="aboStripTop">Største post</span><span class="v" data-ab="topName">—</span></div>',
-      '    <div class="ks-strip-cell accent"><span class="l" data-i18n="aboStripAntall">Antall aktive</span><span class="v"><span data-ab="antall">–</span><span class="u">stk</span></span></div>',
+      '    <div class="ks-strip-cell accent"><span class="l" data-i18n="aboStripAntall">Antall aktive</span><span class="v"><span data-ab="antall">–</span><span class="u" data-i18n="trPersonligAboStk">stk</span></span></div>',
       '  </div>',
       '  <div class="ks-body">',
       '    <div class="ks-form">',
@@ -568,7 +571,7 @@ footer em{font-style:italic}
       '      </div>',
       '      <div class="ab-invest-knobs">',
       '        <label><span data-i18n="aboInvestRente">Avkastning</span><input type="text" inputmode="decimal" id="ab-rente" value="7,0"><span style="color:var(--ink4)">%/år</span></label>',
-      '        <label><span data-i18n="aboInvestAarLbl">i</span><input type="text" inputmode="numeric" min="1" max="50" id="ab-aar" value="10"><span style="color:var(--ink4)" data-i18n="aboInvestAarSuf">år</span></label>',
+      '        <label><span data-i18n="trPersonligAboInvestAarLbl">i</span><input type="text" inputmode="numeric" min="1" max="50" id="ab-aar" value="10"><span style="color:var(--ink4)" data-i18n="aboInvestAarSuf">år</span></label>',
       '      </div>',
       '    </div>',
       '    <div class="ab-invest-grid">',
@@ -592,25 +595,27 @@ footer em{font-style:italic}
       return '<option value="'+f[0]+'"'+(f[0]===it.freq?' selected':'')+'>'+f[1]+'</option>';
     }).join('');
     var krDisplay = it.kr === 0 ? '' : fmtKr(it.kr);
+    var nm = escAria(it.name);
+    function al(key, fb){ return tr(key, fb).split('{navn}').join(nm); }
     return [
       '<div class="ab-row" data-id="'+it.id+'">',
       '  <div class="ab-cell name">',
       '    <input type="text" aria-label="Tjeneste-navn" placeholder="Tjeneste-navn" value="'+(it.name || '').replace(/"/g,'&quot;')+'" data-f="name">',
       '  </div>',
       '  <div class="ab-cell">',
-      '    <select data-f="kat" aria-label="Kategori for '+escAria(it.name)+'">'+katOpts+'</select>',
+      '    <select data-f="kat" aria-label="'+al('trPersonligAboAriaKat', 'Kategori for {navn}')+'">'+katOpts+'</select>',
       '  </div>',
       '  <div class="ab-cell num">',
       '    <span class="ab-mlbl" aria-hidden="true" data-i18n="aboColPrice">'+colLbl(2,'Pris')+'</span>',
-      '    <input type="text" inputmode="numeric" aria-label="Beløp for '+escAria(it.name)+'" placeholder="0" value="'+krDisplay+'" data-f="kr">',
+      '    <input type="text" inputmode="numeric" aria-label="'+al('trPersonligAboAriaBelop', 'Beløp for {navn}')+'" placeholder="0" value="'+krDisplay+'" data-f="kr">',
       '  </div>',
       '  <div class="ab-cell">',
       '    <span class="ab-mlbl" aria-hidden="true" data-i18n="aboColFreq">'+colLbl(3,'Pr.')+'</span>',
-      '    <select data-f="freq" aria-label="Betalingsfrekvens for '+escAria(it.name)+'">'+freqOpts+'</select>',
+      '    <select data-f="freq" aria-label="'+al('trPersonligAboAriaFreq', 'Betalingsfrekvens for {navn}')+'">'+freqOpts+'</select>',
       '  </div>',
       '  <div class="ab-cell num">',
       '    <span class="ab-mlbl" aria-hidden="true" data-i18n="aboColDelt">'+colLbl(4,'Delt på')+'</span>',
-      '    <input type="text" inputmode="numeric" aria-label="Antall som deler '+escAria(it.name)+'" min="1" max="20" value="'+it.delt+'" data-f="delt">',
+      '    <input type="text" inputmode="numeric" aria-label="'+al('trPersonligAboAriaDelt', 'Antall som deler {navn}')+'" min="1" max="20" value="'+it.delt+'" data-f="delt">',
       '  </div>',
       '  <button class="ab-del" type="button" data-action="del" title="Fjern" aria-label="Fjern abonnement">',
       '    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h10M6.5 5V3.5h3V5M5 5l.5 8h5L11 5"/></svg>',
@@ -638,7 +643,7 @@ footer em{font-style:italic}
     $('[data-ab="totAar"]').textContent = fmtKr(r.totAarPP);
     $('[data-ab="topName"]').textContent = r.top ? (r.top.name || '—') : '—';
     $('[data-ab="antall"]').textContent = r.items.length;
-    $('[data-ab="poster"]').textContent = r.items.length + (r.items.length === 1 ? ' post' : ' poster');
+    $('[data-ab="poster"]').textContent = (r.items.length === 1 ? tr('trPersonligAboPost', '{n} post') : tr('trPersonligAboPoster', '{n} poster')).replace('{n}', r.items.length);
 
     $('[data-ab="resMnd"]').textContent = fmtKr(r.totMndPP);
     $('[data-ab="resAar"]').textContent = fmtKr(r.totAarPP);
@@ -661,6 +666,10 @@ footer em{font-style:italic}
     $('[data-ab="iInn"]').textContent = fmtKr(innskutt);
     $('[data-ab="iAvk"]').textContent = fmtKr(avk);
     $('[data-ab="iAarLbl"]').textContent = invest.aar;
+    // «år» etter antall år, i entall eller flertall der språket skiller (1 year / 10 years).
+    // Uten nøkkel: frase-ordbokas ord, så teksten ikke skrives om (og blinker) ved hvert tastetrykk.
+    var aarSuf = tr(invest.aar === 1 ? 'trPersonligAboAar1' : 'trPersonligAboAarN', loc('år'));
+    $$('[data-i18n^="aboInvestAarSuf"]').forEach(function(el){ if(el.textContent !== aarSuf) el.textContent = aarSuf; });
     $('[data-ab="iFv"]').textContent = fmtKr(r.fv);
     $('[data-ab="iVekst"]').textContent = r.totMndPP > 0 ? fmtPct(avk / Math.max(1, innskutt)) : '–';
 
@@ -694,7 +703,7 @@ footer em{font-style:italic}
           if(!it) return;
           if(f === 'kr') it.kr = parseKr(el.value);
           else if(f === 'delt') it.delt = Math.max(1, parseKr(el.value) || 1);
-          else if(f === 'name') it.name = el.value;
+          else if(f === 'name'){ it.name = el.value; it.base = null; }
           else it[f] = el.value;
           render();
         }
@@ -719,7 +728,7 @@ footer em{font-style:italic}
       b.type = 'button';
       b.textContent = p.n;
       b.addEventListener('click', function(){
-        items = items.concat([{id:nextId++, name:p.n, kr:p.kr, freq:p.freq, delt:1, kat:p.kat}]);
+        items = items.concat([{id:nextId++, name:loc(p.n), base:p.n, kr:p.kr, freq:p.freq, delt:1, kat:p.kat}]);
         renderRows();
       });
       box.appendChild(b);
@@ -729,20 +738,21 @@ footer em{font-style:italic}
   function downloadAboCsv(){
     var d = window._aboData;
     if(!d || typeof window.downloadCSV !== 'function') return;
-    var dt = new Date().toLocaleDateString('nb-NO', {year:'numeric', month:'long', day:'numeric'});
+    // _csvDate() (core.js) gir samme norske dato som før, og engelsk dato på engelsk
+    var dt = _csvDate();
     var rows = [];
-    rows.push(['Abonnementsoversikt', dt]);
+    rows.push([tr('csvAboTitle', 'Abonnementsoversikt'), dt]);
     rows.push([]);
-    rows.push(['Tjeneste', 'Beløp/mnd (kr)']);
+    rows.push([tr('csvAboService', 'Tjeneste'), tr('trPersonligAboCsvAmount', 'Beløp/mnd (kr)')]);
     d.items.forEach(function(i){ rows.push([i.name, i.amount]); });
     rows.push([]);
-    rows.push(['Totalt per måned', d.totalMnd]);
-    rows.push(['Totalt per år', d.totalAar]);
-    rows.push(['Antall abonnementer', d.antall]);
-    rows.push(['Snitt per abonnement', Math.round(d.snitt)]);
+    rows.push([tr('csvAboTotalMnd', 'Totalt per måned'), d.totalMnd]);
+    rows.push([tr('csvAboTotalAar', 'Totalt per år'), d.totalAar]);
+    rows.push([tr('csvAboCount', 'Antall abonnementer'), d.antall]);
+    rows.push([tr('csvAboAvg', 'Snitt per abonnement'), Math.round(d.snitt)]);
     rows.push([]);
-    rows.push(['Generert av Hverdagsverktøy']);
-    window.downloadCSV(rows, 'abonnementer.csv');
+    rows.push([tr('csvGenerated', 'Generert av Hverdagsverktøy')]);
+    window.downloadCSV(rows, tr('trPersonligAboCsvFile', 'abonnementer.csv'));
   }
 
   function mount(){
@@ -750,7 +760,14 @@ footer em{font-style:italic}
     if(!host) return;
     host.innerHTML = buildShell();
     renderPresets();
+    items.forEach(function(it){ it.base = it.name; });
     renderRows();
+    // Språkfila lastes etter mount. Når core.js setter lang, tegnes radene på nytt, slik at
+    // aria-etiketter, «poster» og eksempelnavn (til de redigeres) følger språket.
+    if(window.MutationObserver) new MutationObserver(function(){
+      items.forEach(function(it){ if(it.base) it.name = loc(it.base); });
+      renderRows();
+    }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
 
     $('#ab-add-btn').addEventListener('click', function(){
       items = items.concat([{id:nextId++, name:'', kr:0, freq:'mnd', delt:1, kat:'Annet'}]);
@@ -808,9 +825,11 @@ footer em{font-style:italic}
     if(!W){ lastW = 0; return; }
     lastW = W;
     function kr(v){ return L.kr(v) + NB + 'kr'; }
-    var items = d && d.items ? d.items : JSON.parse(DEF).map(function(a){ return {name:a[0], kr:a[1], freq:a[2], delt:a[3]}; });
+    // Eksempelnavnene vises på språket som er valgt (Treningssenter → Gym), og teller fortsatt som «Eksempel»
+    var defL = JSON.parse(DEF).map(function(a){ return [ph(a[0]), a[1], a[2], a[3]]; });
+    var items = d && d.items ? d.items : defL.map(function(a){ return {name:a[0], kr:a[1], freq:a[2], delt:a[3]}; });
     var r = d ? d.r : 7, n = d ? d.n : 10;
-    var mine = !!d && !(JSON.stringify(items.map(function(it){ return [it.name, it.kr, it.freq, it.delt]; })) === DEF && r === 7 && n === 10);
+    var mine = !!d && !(JSON.stringify(items.map(function(it){ return [it.name, it.kr, it.freq, it.delt]; })) === JSON.stringify(defL) && r === 7 && n === 10);
     var rTxt = String(+r.toFixed(2)).replace('.', ',') + NB + '%';
     var aarTxt = t('lrnAbYears', (ORD[n] || n) + ' år', {n:n});
     var aarN = t('lrnAbYearsN', n + ' år', {n:n});

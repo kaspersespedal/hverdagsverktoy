@@ -521,7 +521,7 @@ body > footer{flex-shrink:0}
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 <script>
@@ -546,13 +546,14 @@ body > footer{flex-shrink:0}
   var H = document.getElementById('sf-h'), P = document.getElementById('sf-p'), N = document.getElementById('sf-n');
   if(!tool || !H || !P || !N) return;
   var qs = [].slice.call(tool.querySelectorAll('.gd-q'));
-  function and(a){ return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' og ' + a[a.length - 1]; }
-  function why(f){
-    var w = [];
-    if(S.e && f.e.indexOf(S.e) < 0) w.push(f.ew);
-    if(S.h === 'nei' && f.h) w.push(f.h);
-    if(S.k !== null && S.k < f.k) w.push(f.kw);
-    if(S.m && f.m.indexOf(S.m) < 0) w.push(f.mw);
+  function t(k, fb){ var r = (typeof R === 'function') ? R() : null; return (r && r[k]) || fb; }
+  function and(a){ return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + t('trSelskapSelskapsformerAnd', ' og ') + a[a.length - 1]; }
+  function why(f, id){
+    var w = [], x = t('trSelskapSelskapsformerWhy', {})[id] || {};
+    if(S.e && f.e.indexOf(S.e) < 0) w.push(x.ew || f.ew);
+    if(S.h === 'nei' && f.h) w.push(x.h || f.h);
+    if(S.k !== null && S.k < f.k) w.push(x.kw || f.kw);
+    if(S.m && f.m.indexOf(S.m) < 0) w.push(x.mw || f.mw);
     return w;
   }
   function draw(){
@@ -560,9 +561,9 @@ body > footer{flex-shrink:0}
     ids.forEach(function(id){
       var el = document.getElementById(id), f = F[id];
       if(!el) return;
-      var w = why(f), miss = el.querySelector('.sf-miss');
+      var w = why(f, id), miss = el.querySelector('.sf-miss');
       el.classList.toggle('is-dim', w.length > 0);
-      if(miss) miss.textContent = w.length ? 'Passer ikke: ' + and(w) + '.' : '';
+      if(miss) miss.textContent = w.length ? t('trSelskapSelskapsformerMiss', 'Passer ikke: {w}.').replace('{w}', and(w)) : '';
       if(!w.length){ ok.push('<a href="#' + id + '">' + f.n + '</a>'); pass[id] = true; }
     });
     var tot = ids.length;
@@ -576,8 +577,8 @@ body > footer{flex-shrink:0}
       N.textContent = '0 av ' + tot + ' passer svarene dine.';
     } else {
       H.innerHTML = '<em>' + ok.length + '</em> av ' + tot + ' passer';
-      P.innerHTML = 'Passer: ' + and(ok) + '. De andre er tonet ned i oversikten under, med grunnen.' + (pass.nuf && !pass.as ? ' Vurderer du NUF fordi AS ikke passer, les først om <a href="#nuf-advarsel">risikoen ved NUF</a>.' : '') + (pass.enk && pass.as ? ' Står du mellom ENK og AS, se <a href="#skatt-enk-as">skatten</a> og <a href="#trygd">trygden</a>.' : '');
-      N.textContent = ok.length + ' av ' + tot + ' passer svarene dine. Grunnen står øverst på kortene som er tonet ned.';
+      P.innerHTML = t('trSelskapSelskapsformerFitP', 'Passer: {list}. De andre er tonet ned i oversikten under, med grunnen.').replace('{list}', and(ok)) + (pass.nuf && !pass.as ? ' ' + t('trSelskapSelskapsformerNufTip', 'Vurderer du NUF fordi AS ikke passer, les først om <a href="#nuf-advarsel">risikoen ved NUF</a>.') : '') + (pass.enk && pass.as ? ' ' + t('trSelskapSelskapsformerEnkAsTip', 'Står du mellom ENK og AS, se <a href="#skatt-enk-as">skatten</a> og <a href="#trygd">trygden</a>.') : '');
+      N.textContent = t('trSelskapSelskapsformerFitN', '{n} av {tot} passer svarene dine. Grunnen står øverst på kortene som er tonet ned.').replace('{n}', ok.length).replace('{tot}', tot);
     }
     qs.forEach(function(q){
       var key = q.getAttribute('data-q');

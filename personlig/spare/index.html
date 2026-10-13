@@ -600,7 +600,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/core.js?v=v236"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
@@ -829,8 +829,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var xTicks = [];
     for(var yr = 0; yr <= lastIdx; yr += step) xTicks.push(yr);
     if((lastIdx - xTicks[xTicks.length-1]) * pxYear >= 56) xTicks.push(lastIdx);
+    var yrTxt = (typeof R === 'function' && R().trPersonligSpareChartYear) || 'år {n}';
     xTicks.forEach(function(yr){
-      svgHtml += '<text class="xlbl" x="'+xs(yr)+'" y="'+(H-8)+'" text-anchor="'+(yr===0?'start':'middle')+'">år '+yr+'</text>';
+      svgHtml += '<text class="xlbl" x="'+xs(yr)+'" y="'+(H-8)+'" text-anchor="'+(yr===0?'start':'middle')+'">'+yrTxt.replace('{n}', yr)+'</text>';
     });
     els.svg.innerHTML = svgHtml;
   }
@@ -926,7 +927,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(!arr.length){ els.chips.innerHTML = ''; els.chipsEmpty.style.display = ''; return; }
     els.chipsEmpty.style.display = 'none';
     els.chips.innerHTML = arr.map(function(s, i){
-      var lbl = fmtKrPlain(s.start) + '/' + fmtKrPlain(s.amt) + '·' + s.freq + '·' + s.years + 'år@' + s.rate + '%';
+      var lbl = fmtKrPlain(s.start) + '/' + fmtKrPlain(s.amt) + '·' + s.freq + '·' + s.years + ((typeof R === 'function' && R().trPersonligSpareChipYears) || 'år') + '@' + s.rate + '%';
       return '<button type="button" class="spare-chip" data-idx="'+i+'"><span>'+escapeHtml(lbl)+'</span><span class="rm" data-rm="'+i+'">×</span></button>';
     }).join('');
   }
@@ -970,6 +971,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   updateYearHint();
   renderChips();
   render();
+  // Språkbytte: tegn årsetikettene og de lagrede scenarioene på nytt
+  if(window.MutationObserver) new MutationObserver(function(){ renderChips(); if(lastSeries) drawChart(lastSeries); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
 })();
 </script>
 <script>
@@ -1103,7 +1106,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         {name:ph('Skatt 22 %'), value:L.kr(-skatt) + ' kr', d:yMid, ax:bx + 10},
         {name:ph('Rente på rente'), value:kr(last.rr), d:(Y(last.dep + last.ri) + Y(topRr)) / 2, ax:G.x1 + 1},
         {name:ph('Rente på innskudd'), value:kr(last.ri), d:(Y(last.dep) + Y(last.dep + last.ri)) / 2, ax:G.x1 + 1},
-        {name:ph('Innskudd'), value:kr(last.dep), d:(Y(0) + Y(last.dep)) / 2, ax:G.x1 + 1}
+        {name:t('trPersonligSpareLrnDep', 'Innskudd'), value:kr(last.dep), d:(Y(0) + Y(last.dep)) / 2, ax:G.x1 + 1}
       ], h = 32, gap = 6;
       items.sort(function(a, c){ return a.d - c.d; });
       items.forEach(function(it, j){ it.y = it.d - h / 2; if(j > 0) it.y = Math.max(it.y, items[j - 1].y + h + gap); });
