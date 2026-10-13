@@ -352,6 +352,7 @@ body > footer{flex-shrink:0}
     return isNaN(v) || v < 0 ? 0 : v;
   }
   function kr(v){ return Math.round(v).toLocaleString('nb-NO') + ' kr'; }
+  function T(k, d){ var r = (typeof R === 'function') ? R() : null; return (r && r[k]) || d; }
   function row(ans, ja, q, d, p){
     return '<p class="q"><span class="gd-badge' + (ja ? ' ja' : '') + '">' + ans + '</span>' + q + '</p><p class="d">' + d + '</p><p class="p">' + p + '</p>';
   }
@@ -389,12 +390,13 @@ body > footer{flex-shrink:0}
       'Brønnøysundregistrene');
     put(1, fd);
 
-    var gt = allm ? ' for veldedige og allmennyttige organisasjoner' : '';
+    var gt = allm ? ' ' + T('trSelskapForeningMvaGt', 'for veldedige og allmennyttige organisasjoner') : '';
     var md;
-    if(mva) md = 'Salget på ' + kr(oms) + ' er over grensen på ' + kr(g) + gt + '. Plikten gjelder når omsetning og uttak har passert grensen i løpet av tolv måneder.';
-    else if(oms === g) md = 'Salget er akkurat på grensen på ' + kr(g) + gt + '. Passerer det grensen i løpet av tolv måneder, må foreningen registreres.';
-    else md = 'Salget på ' + kr(oms) + ' er under grensen på ' + kr(g) + gt + '. Dere har ' + kr(g - oms) + ' igjen. Passerer salget grensen i løpet av tolv måneder, må foreningen registreres.';
-    md += allm ? ' Er dere usikre på om foreningen regnes som veldedig eller allmennyttig, regn med 50 000 kr.' : ' Er foreningen veldedig eller allmennyttig, er grensen 140 000 kr.';
+    if(mva) md = T('trSelskapForeningMvaOver', 'Salget på {oms} er over grensen på {g}{gt}. Plikten gjelder når omsetning og uttak har passert grensen i løpet av tolv måneder.');
+    else if(oms === g) md = T('trSelskapForeningMvaAt', 'Salget er akkurat på grensen på {g}{gt}. Passerer det grensen i løpet av tolv måneder, må foreningen registreres.');
+    else md = T('trSelskapForeningMvaUnder', 'Salget på {oms} er under grensen på {g}{gt}. Dere har {rest} igjen. Passerer salget grensen i løpet av tolv måneder, må foreningen registreres.');
+    md = md.replace('{oms}', kr(oms)).replace('{g}', kr(g)).replace('{gt}', gt).replace('{rest}', kr(g - oms));
+    md += ' ' + (allm ? T('trSelskapForeningMvaUnsure', 'Er dere usikre på om foreningen regnes som veldedig eller allmennyttig, regn med 50 000 kr.') : T('trSelskapForeningMvaCharity', 'Er foreningen veldedig eller allmennyttig, er grensen 140 000 kr.'));
     put(2, row(mva ? 'Ja' : 'Nei', mva, 'Må registreres for MVA', md, 'Merverdiavgiftsloven § 2-1'));
 
     var rd = rsk
@@ -414,6 +416,8 @@ body > footer{flex-shrink:0}
       });
     });
   });
+  // Svaret skrives av JS: skriv det på nytt når språkfila er lastet og ved språkbytte.
+  if(window.MutationObserver) new MutationObserver(function(){ draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
   draw();
 })();
 </script>

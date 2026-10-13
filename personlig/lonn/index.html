@@ -202,7 +202,7 @@ body.focus-mode > footer{display:none}
 .side-card h4{margin:0 0 10px;font:600 11px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);padding-bottom:8px;border-bottom:1px solid var(--line)}
 .side-card p{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink2)}
 .side-card .ref-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
-.side-card .ref-row .v{color:var(--ink);font-weight:500}
+.side-card .ref-row .v{color:var(--ink);font-weight:500;white-space:nowrap}
 .side-card .ref-row .v.accent{color:var(--accent-2)}
 .side-card .ref-row .v .u{color:var(--ink3);font-size:11px;margin-left:2px}
 .side-card.related a{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid color-mix(in srgb, var(--ink) 5%, transparent);color:var(--ink2);text-decoration:none;font-size:13px;transition:color .15s}
@@ -797,34 +797,37 @@ body.focus-mode > footer{display:none}
       if(!d || !d.hasData) return;
       var sep = ';';
       var rows = [];
-      var today = new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
-      rows.push(['Lønn etter skatt', today]);
+      // Etikettene slås opp i frase-ordboka (_ph) og datoen følger språket, så CSV-en blir på språket som vises
+      var phd = (typeof R === 'function' && R()._ph) || {};
+      function tr(s){ return phd[s] || s; }
+      var today = typeof _csvDate === 'function' ? _csvDate() : new Date().toLocaleDateString('nb-NO', { year:'numeric', month:'long', day:'numeric' });
+      rows.push([tr('Lønn etter skatt'), today]);
       rows.push([]);
-      rows.push(['INNTEKT (input)', '']);
-      rows.push(['Timelønn (kr)', d.timelonn]);
-      rows.push(['Timer per uke', d.timerUke]);
-      rows.push(['Arbeidsuker per år', d.ukerAar]);
-      rows.push(['Alder', d.alder === 'u17' ? 'Under 17 år' : d.alder === '70plus' ? '70 år eller eldre' : '17–69 år']);
+      rows.push([tr('INNTEKT (input)'), '']);
+      rows.push([tr('Timelønn (kr)'), d.timelonn]);
+      rows.push([tr('Timer per uke'), d.timerUke]);
+      rows.push([tr('Arbeidsuker per år'), d.ukerAar]);
+      rows.push([tr('Alder'), tr(d.alder === 'u17' ? 'Under 17 år' : d.alder === '70plus' ? '70 år eller eldre' : '17–69 år')]);
       rows.push([]);
-      rows.push(['BRUTTOLØNN', '']);
-      rows.push(['Bruttolønn per år', Math.round(d.bruttoAar)]);
-      rows.push(['Bruttolønn per måned', Math.round(d.bruttoMnd)]);
+      rows.push([tr('BRUTTOLØNN'), '']);
+      rows.push([tr('Bruttolønn per år'), Math.round(d.bruttoAar)]);
+      rows.push([tr('Bruttolønn per måned'), Math.round(d.bruttoMnd)]);
       rows.push([]);
-      rows.push(['SKATTEBEREGNING', '']);
+      rows.push([tr('SKATTEBEREGNING'), '']);
       d.breakdown.forEach(function(it){
         var v = it.isFradrag ? '-' + Math.abs(Math.round(it.val)) : Math.round(it.val);
-        rows.push([it.lbl, v]);
+        rows.push([tr(it.lbl), v]);
       });
-      rows.push(['Total skatt', Math.round(d.totalSkatt)]);
+      rows.push([tr('Total skatt'), Math.round(d.totalSkatt)]);
       rows.push([]);
-      rows.push(['UTBETALT', '']);
-      rows.push(['Netto per år', Math.round(d.nettoAar)]);
-      rows.push(['Netto per måned', Math.round(d.nettoMnd)]);
-      rows.push(['Netto per time', Math.round(d.nettoTime)]);
-      rows.push(['Effektiv skattesats', d.effSats.toFixed(1).replace('.', ',') + ' %']);
-      rows.push(['Feriepenger (10,2 %)', Math.round(d.feriepenger)]);
+      rows.push([tr('UTBETALT'), '']);
+      rows.push([tr('Netto per år'), Math.round(d.nettoAar)]);
+      rows.push([tr('Netto per måned'), Math.round(d.nettoMnd)]);
+      rows.push([tr('Netto per time'), Math.round(d.nettoTime)]);
+      rows.push([tr('Effektiv skattesats'), d.effSats.toFixed(1).replace('.', ',') + ' %']);
+      rows.push([tr('Feriepenger (10,2 %)'), Math.round(d.feriepenger)]);
       rows.push([]);
-      rows.push(['Generert av Hverdagsverktøy']);
+      rows.push([(typeof R === 'function' && R().csvGenerated) || 'Generert av Hverdagsverktøy']);
 
       var csv = rows.map(function(r){
         return r.map(function(c){

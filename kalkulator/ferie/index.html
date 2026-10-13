@@ -672,6 +672,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       if((typeof R==='function' && (R().ferieVerdictBase || R().ferieTypeOpts)) || n>40){ clearInterval(t); recalc(); }
     }, 80);
   })();
+  // Pollingen over stopper alt når no.js er lastet; skriv på nytt når språkfila er lastet og ved språkbytte.
+  new MutationObserver(recalc).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 })();
 </script>
 
@@ -763,7 +765,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     lab += '<span class="lrn-sumv" style="left:' + f1(payL) + 'px;top:' + f1(payTop - (mob ? 28 : 34)) + 'px">' + tp + '</span>';
     var MND = months(mob);
     for(i = 0; i < 12; i++) [G.y1B, G.y2B].forEach(function(y){
-      lab += '<span class="lrn-tick x" style="left:' + f1(cxm(i) - 24) + 'px;top:' + (y + 6) + 'px' + (i === 5 ? ';color:var(--ink);font-weight:600' : '') + '">' + MND[i] + '</span>';
+      lab += '<span class="lrn-tick x" data-ph-skip style="left:' + f1(cxm(i) - 24) + 'px;top:' + (y + 6) + 'px' + (i === 5 ? ';color:var(--ink);font-weight:600' : '') + '">' + MND[i] + '</span>';
     });
 
     // Pila fra slutten av potten ned til juni
@@ -932,6 +934,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
   } else { init(); pollRender(); }
+  // pollRender treffer no.js før språkfila er lastet; skriv veiledningen på nytt når språket er satt.
+  new MutationObserver(renderHowto).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 })();
 </script>
 

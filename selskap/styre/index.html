@@ -404,6 +404,7 @@ body > footer{flex-shrink:0}
   }
   function kr(v){ return Math.round(v).toLocaleString('nb-NO') + ' kr'; }
   function tall(v){ return v.toLocaleString('nb-NO', {maximumFractionDigits: 2}); }
+  function T(k, d){ var r = (typeof R === 'function') ? R() : null; return (r && r[k]) || d; }
   var OK = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.5 L5 9 L9.5 3.5"/></svg>';
   var NO = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3 L9 9 M9 3 L3 9"/></svg>';
   function test(v, lim, under){ if(isNaN(v) || v < 0) return null; return under ? v < lim : v <= lim; }
@@ -420,27 +421,27 @@ body > footer{flex-shrink:0}
     if(!ny){
       var a = num('rv-inn'), b = num('rv-bal'), c = num('rv-arv');
       res = [test(a, 7000000, true), test(b, 27000000, true), test(c, 10, false)];
-      html = row('Driftsinntekter under 7&nbsp;mill.&nbsp;kr', res[0], isNaN(a) ? 'Fyll inn driftsinntektene.' : 'AS-et har ' + kr(a) + '.')
-        + row('Balansesum under 27&nbsp;mill.&nbsp;kr', res[1], isNaN(b) ? 'Fyll inn balansesummen.' : 'AS-et har ' + kr(b) + '.')
-        + row('Høyst 10 årsverk i snitt', res[2], isNaN(c) ? 'Fyll inn antall årsverk.' : 'AS-et har ' + tall(c) + ' årsverk.');
+      html = row('Driftsinntekter under 7&nbsp;mill.&nbsp;kr', res[0], isNaN(a) ? 'Fyll inn driftsinntektene.' : T('trSelskapStyreHas', 'AS-et har {v}.').replace('{v}', kr(a)))
+        + row('Balansesum under 27&nbsp;mill.&nbsp;kr', res[1], isNaN(b) ? 'Fyll inn balansesummen.' : T('trSelskapStyreHas', 'AS-et har {v}.').replace('{v}', kr(b)))
+        + row('Høyst 10 årsverk i snitt', res[2], isNaN(c) ? 'Fyll inn antall årsverk.' : T(c === 1 ? 'trSelskapStyreHasFte1' : 'trSelskapStyreHasFte', 'AS-et har {v} årsverk.').replace('{v}', tall(c)));
     } else {
       var d = num('rv-ans'), e = num('rv-innsk');
       res = [test(d, 10, false), test(e, 27000000, true)];
-      html = row('Høyst 10 ansatte', res[0], isNaN(d) ? 'Fyll inn antall ansatte.' : 'AS-et har ' + tall(d) + (d === 1 ? ' ansatt.' : ' ansatte.'))
-        + row('Aksjeinnskudd under 27&nbsp;mill.&nbsp;kr', res[1], isNaN(e) ? 'Fyll inn aksjeinnskuddet.' : 'Innskuddet var ' + kr(e) + '.');
+      html = row('Høyst 10 ansatte', res[0], isNaN(d) ? 'Fyll inn antall ansatte.' : (d === 1 ? T('trSelskapStyreHasEmp1', 'AS-et har {v} ansatt.') : T('trSelskapStyreHasEmp', 'AS-et har {v} ansatte.')).replace('{v}', tall(d)))
+        + row('Aksjeinnskudd under 27&nbsp;mill.&nbsp;kr', res[1], isNaN(e) ? 'Fyll inn aksjeinnskuddet.' : T('trSelskapStyreContrib', 'Innskuddet var {v}.').replace('{v}', kr(e)));
     }
     C.innerHTML = html;
     var miss = 0, hit = 0;
     res.forEach(function(r){ if(r === null) miss++; else if(r) hit++; });
     var all = res.length;
     if(miss){
-      H.innerHTML = 'Fyll inn <em>tallene</em>';
+      H.innerHTML = T('trSelskapStyreHFill', 'Fyll inn <em>tallene</em>');
       P.textContent = 'Svaret kommer når alle feltene har et tall.';
     } else if(hit === all){
-      H.innerHTML = (ny ? 'Det nye AS-et' : 'AS-et') + ' kan <em>velge bort</em> revisor';
+      H.innerHTML = ny ? T('trSelskapStyreHOkNy', 'Det nye AS-et kan <em>velge bort</em> revisor') : T('trSelskapStyreHOk', 'AS-et kan <em>velge bort</em> revisor');
       P.textContent = (all === 3 ? 'Alle tre' : 'Begge') + ' vilkårene er oppfylt. Generalforsamlingen kan vedta at årsregnskapet ikke skal revideres. Det skjer ikke av seg selv, det må vedtas og registreres.';
     } else {
-      H.innerHTML = 'AS-et <em>må ha</em> revisor';
+      H.innerHTML = T('trSelskapStyreHMust', 'AS-et <em>må ha</em> revisor');
       P.textContent = ORD[hit] + ' av ' + AV[all] + ' vilkår er oppfylt. Alle må være oppfylt for å velge bort revisor, så årsregnskapet skal revideres.'
         + (ny ? '' : ' Har AS-et allerede valgt bort revisor, skal regnskapet for året etter at grensen ble overskredet, revideres.');
     }
@@ -458,6 +459,8 @@ body > footer{flex-shrink:0}
   });
   root.addEventListener('input', draw);
   draw();
+  // Svaret skrives av JS: skriv det på nytt når språkfila er lastet og ved språkbytte.
+  new MutationObserver(function(){ draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 })();
 </script>
 </body>

@@ -1226,6 +1226,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     function ratio(a,b){ if(!(b>0)) return '—'; return (a/b).toFixed(1).replace('.',',') + '×'; }
     function set(id,v){ var e=el(id); if(e) e.textContent=v; }
     function show(id,on){ var e=el(id); if(e) e.classList.toggle('hidden', !on); }
+    // Språkfilas tekst (R()) med norsk reserve; trygg før core.js er lastet
+    function T(k,d){ var r = typeof R==='function' ? R() : null; return (r && r[k]) || d; }
 
     // Funding sources — accent gradient for equity (the owned share), neutral ink for debt.
     var SEGS = [
@@ -1296,9 +1298,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
         if(band) band.classList.remove('ok');
         if(tag){ tag.classList.remove('hidden'); tag.textContent='Avvik'; tag.classList.add('neg'); tag.classList.remove('pos'); }
         set('oBalNote', (diff>0
-          ? 'Eiendelene er ' + fmt(Math.abs(diff)) + ' kr større enn egenkapital + gjeld.'
-          : 'Egenkapital + gjeld er ' + fmt(Math.abs(diff)) + ' kr større enn eiendelene.')
-          + ' Sjekk at gjeld er ført positivt, at alle poster er med, og at årsresultatet fra resultatregnskapet er lagt til opptjent egenkapital.');
+          ? T('trRegnskapBalanseNoteEiend', 'Eiendelene er {d} kr større enn egenkapital + gjeld.')
+          : T('trRegnskapBalanseNoteEkGjeld', 'Egenkapital + gjeld er {d} kr større enn eiendelene.')).replace('{d}', fmt(Math.abs(diff)))
+          + ' ' + T('trRegnskapBalanseNoteSjekk', 'Sjekk at gjeld er ført positivt, at alle poster er med, og at årsresultatet fra resultatregnskapet er lagt til opptjent egenkapital.'));
         show('boxBal', true);
       }
 
@@ -1349,6 +1351,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     restore();
     compute();
+    // core.js setter lang på <html> når språkfila er lastet: regn ut på nytt så avviksteksten følger språket
+    if(window.MutationObserver) new MutationObserver(compute).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
   })();
 </script>
 
@@ -1774,6 +1778,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     svg.querySelectorAll('[data-p]').forEach(function(el){ el.setAttribute('d', P[el.getAttribute('data-p')] || ''); });
     q('labels').innerHTML = lab + mks;
     q('notes').innerHTML = notes.map(function(n){ return '<li><span class="lrn-ba-mk" aria-hidden="true">' + n[0] + '</span><span>' + esc(nb(n[1])) + '</span></li>'; }).join('');
+    q('notes').setAttribute('aria-label', ph('Merknader til grafen'));
 
     // ── Setningen under, og teksten for skjermlesere ──
     var A = '\u0001', Z = '\u0002', sent;

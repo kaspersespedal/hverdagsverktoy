@@ -438,6 +438,10 @@ footer em{font-style:italic}
     });
   }
   function setTxt(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; }
+  // Tekst fra språkfila (norsk reserve) og frase-ordboka. Språkfila er ikke lastet første gang
+  // budsjettet tegnes, så det tegnes på nytt når core.js setter lang på <html> (nederst).
+  function tr(key, no){ var r = typeof R === 'function' ? R() : null; return (r && typeof r[key] === 'string') ? r[key] : no; }
+  function ph(s){ var r = typeof R === 'function' ? R() : null; return (r && r._ph && r._ph[s]) || s; }
 
   var BUD_KEY = 'hv-budget-v3';
   var BUD_DEFAULTS = {
@@ -473,6 +477,18 @@ footer em{font-style:italic}
     variable: ['Dagligvarer','Klær & sko','Drivstoff','Restaurant','Helse / medisin','Fritid','Gaver','Reise']
   };
   var BUD_MENU_HEAD = {inntekt:'Vanlig inntekt', faste:'Vanlig fast utgift', variable:'Vanlig utgift'};
+  // Postnavn siden selv foreslår, lagres på norsk og vises oversatt. Det brukeren skriver selv, vises som det er.
+  var KNOWN = {'Ukategorisert':1};
+  ['inntekt','faste','variable'].forEach(function(k){
+    BUD_DEFAULTS[k].forEach(function(r){ KNOWN[r.l] = 1; });
+    BUD_SUGGEST[k].forEach(function(s){ KNOWN[s] = 1; });
+  });
+  // «Fritid» og «Sykepenger» har en annen engelsk tekst her enn i den felles ordboka, så de får egne nøkler.
+  var KEYED = {'Fritid':'trPersonligBudsjettFritid', 'Sykepenger':'trPersonligBudsjettSyk'};
+  function lbl(s){
+    if(Object.prototype.hasOwnProperty.call(KEYED, s)) return tr(KEYED[s], s);
+    return Object.prototype.hasOwnProperty.call(KNOWN, s) ? ph(s) : s;
+  }
 
   // ── Innebygde mini-kalkulatorer som regner ut et månedsbeløp og mater det inn i budsjettet ──
   // Satser og formler speiler de fulle kalkulatorene på siden (2026-tall).
@@ -625,7 +641,7 @@ footer em{font-style:italic}
         var delt = Math.max(1, Math.round(v.delt) || 1);
         return { amount: sum/delt, lines:[
           {l:'Sum alle valgte', v: fmtKr(sum)},
-          {l:'Delt på', v: delt + (delt===1?' person':' personer')}
+          {l:tr('trPersonligBudsjettDeltPaa','Delt på'), v: tr(delt===1?'trPersonligBudsjettPerson':'trPersonligBudsjettPersoner', delt===1?'{n} person':'{n} personer').replace('{n}', delt)}
         ]};
       }
     },
@@ -679,7 +695,7 @@ footer em{font-style:italic}
         var totalAar = folkeAar + otpAar;
         var ratio = lonn > 0 ? Math.round(totalAar / lonn * 100) : 0;
         return { amount: totalAar/12, lines:[
-          {l:'Folketrygd', v: fmtKr(folkeAar/12)},
+          {l:tr('trPersonligBudsjettFolketrygd','Folketrygd'), v: fmtKr(folkeAar/12)},
           {l:'Tjenestepensjon (OTP)', v: fmtKr(otpAar/12)},
           {l:'Erstatningsgrad', v: ratio + ' %'}
         ]};
@@ -698,9 +714,9 @@ footer em{font-style:italic}
         var grunnlag = Math.min(brutto, SIX_G);
         var lines = [
           {l:'Sykepengegrunnlag', v: fmtKr(grunnlag)},
-          {l:'Dekningsgrad', v:'100 %'}
+          {l:tr('trPersonligBudsjettDekning','Dekningsgrad'), v:'100 %'}
         ];
-        if(brutto > SIX_G){ lines.push({l:'Over 6G-taket', v: fmtKr(brutto - SIX_G) + '/år dekkes ikke'}); }
+        if(brutto > SIX_G){ lines.push({l:'Over 6G-taket', v: tr('trPersonligBudsjettIkkeDekket','{belop}/år dekkes ikke').replace('{belop}', fmtKr(brutto - SIX_G))}); }
         else { lines.push({l:'Arbeidsgiver dekker', v:'de første 16 dagene'}); }
         return { amount: grunnlag/12, lines: lines };
       }
@@ -713,7 +729,7 @@ footer em{font-style:italic}
       source:{href:'/personlig/foreldrepenger/', text:'Åpne full foreldrepenger-kalkulator'},
       fields:[
         {id:'brutto', label:'Brutto årslønn', unit:'kr/år', def:620000, money:true},
-        {id:'dekning', label:'Dekningsgrad', type:'select', def:'100', options:[
+        {id:'dekning', label:'Dekningsgrad', labelKey:'trPersonligBudsjettDekning', type:'select', def:'100', options:[
           {v:'100', label:'100 % — 49 uker (full sats)'}, {v:'80', label:'80 % — 59 uker (lavere sats)'}
         ]}
       ],
@@ -726,7 +742,7 @@ footer em{font-style:italic}
         var over6G = Math.max(0, brutto - SIX_G);
         var lines = [
           {l:'Grunnlag (maks 6G)', v: fmtKr(grunnlag)},
-          {l:'Dekningsgrad', v: pct + ' %'},
+          {l:tr('trPersonligBudsjettDekning','Dekningsgrad'), v: pct + ' %'},
           {l:'Lengde', v: (pct === 100 ? 49 : 59) + ' uker'}
         ];
         if(over6G > 0){ lines.push({l:'Over 6G (ikke dekket)', v: fmtKr(over6G)}); }
@@ -857,8 +873,8 @@ footer em{font-style:italic}
           + '<button class="bud-remove" type="button" aria-label="Fjern post" data-act="rm">×</button>'
           // aria-label per rad: uten den er alle radene bare «tekstfelt» for en
           // skjermleser, og kolonnen (Inntekt / Faste / Variable) går tapt.
-          + '<input class="bud-label" type="text" data-field="l" aria-label="'+escapeHtml(col.title)+' — navn på post '+(i+1)+'" value="'+escapeHtml(r.l)+'" placeholder="'+escapeHtml(col.placeholder)+'">'
-          + '<input type="text" inputmode="numeric" data-field="v" aria-label="'+escapeHtml(col.title)+' — beløp for post '+(i+1)+' i kroner" value="'+fmtKrPlain(r.v)+'">'
+          + '<input class="bud-label" type="text" data-field="l" aria-label="'+escapeHtml(tr('trPersonligBudsjettAriaNavn','{col} — navn på post {n}').replace('{col}', ph(col.title)).replace('{n}', i+1))+'" value="'+escapeHtml(lbl(r.l))+'" placeholder="'+escapeHtml(col.placeholder)+'">'
+          + '<input type="text" inputmode="numeric" data-field="v" aria-label="'+escapeHtml(tr('trPersonligBudsjettAriaBelop','{col} — beløp for post {n} i kroner').replace('{col}', ph(col.title)).replace('{n}', i+1))+'" value="'+fmtKrPlain(r.v)+'">'
           + '</div>';
       }).join('');
       return '<div class="bud-col" data-col="'+col.key+'"><h4>'+escapeHtml(col.title)+'</h4>'+rows
@@ -901,6 +917,8 @@ footer em{font-style:italic}
   }
 
   renderBudget();
+  if(typeof MutationObserver === 'function') new MutationObserver(function(){ renderBudget(); })
+    .observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
 
   host.addEventListener('input', function(e){
     var row = e.target.closest('.bud-row');
@@ -992,7 +1010,7 @@ footer em{font-style:italic}
       var badge = calc ? '<span class="bud-menu-calc" aria-hidden="true">Regn ut</span>' : '';
       return '<button class="bud-menu-item" type="button" role="menuitem" data-pick="'+escapeHtml(s)+'"'
         + (calc ? ' data-calc="'+escapeHtml(calc.id)+'"' : '')
-        + '><span>'+escapeHtml(s)+'</span>'+badge+'</button>';
+        + '><span>'+escapeHtml(Object.prototype.hasOwnProperty.call(KEYED, s) ? lbl(s) : s)+'</span>'+badge+'</button>';
     }).join('');
     if(sugg.length) html += '<div class="bud-menu-sep" aria-hidden="true"></div>';
     html += '<button class="bud-menu-item bud-menu-custom" type="button" role="menuitem" data-pick="">'
@@ -1040,7 +1058,7 @@ footer em{font-style:italic}
       var opts = f.options.map(function(o){
         return '<option value="'+escapeHtml(o.v)+'"'+(String(o.v)===String(calcVals[f.id])?' selected':'')+'>'+escapeHtml(o.label)+'</option>';
       }).join('');
-      return '<div class="bc-field"><label for="'+fid+'">'+escapeHtml(f.label)+'</label>'
+      return '<div class="bc-field"><label for="'+fid+'">'+escapeHtml(f.labelKey ? tr(f.labelKey, f.label) : f.label)+'</label>'
         + '<select class="bc-select" id="'+fid+'" data-fid="'+escapeHtml(f.id)+'">'+opts+'</select></div>';
     }
     if(f.type === 'services'){
@@ -1086,7 +1104,7 @@ footer em{font-style:italic}
       if(skipBtn) skipBtn.style.display = 'none';
       if(noteEl){ noteEl.textContent = res.note || ''; noteEl.hidden = false; }
     } else {
-      if(insBtn){ insBtn.style.display = ''; insBtn.textContent = 'Sett inn i budsjett (' + fmtKr(amt) + ')'; }
+      if(insBtn){ insBtn.style.display = ''; insBtn.textContent = tr('trPersonligBudsjettInsertAmt', 'Sett inn i budsjett ({belop})').replace('{belop}', fmtKr(amt)); }
       if(skipBtn) skipBtn.style.display = '';
       if(noteEl){ noteEl.hidden = true; noteEl.textContent = ''; }
     }
@@ -1231,25 +1249,25 @@ footer em{font-style:italic}
   });
 
   document.getElementById('budReset').addEventListener('click', function(){
-    if(!confirm('Tilbakestill budsjettet?')) return;
+    if(!confirm(tr('trPersonligBudsjettResetQ', 'Tilbakestill budsjettet?'))) return;
     budState = JSON.parse(JSON.stringify(BUD_DEFAULTS));
     saveBudget(budState);
     renderBudget();
   });
 
   document.getElementById('budCsv').addEventListener('click', function(){
-    var lines = ['Kategori;Post;Beløp (kr/mnd)'];
-    var labels = {inntekt:'Inntekt', faste:'Faste utgifter', variable:'Utgifter som varierer'};
+    var lines = [ph('Kategori;Post;Beløp (kr/mnd)')];
+    var labels = {inntekt:ph('Inntekt'), faste:ph('Faste utgifter'), variable:ph('Utgifter som varierer')};
     ['inntekt','faste','variable'].forEach(function(k){
       (budState[k]||[]).forEach(function(r){
-        lines.push([labels[k], (r.l||'').replace(/;/g,','), r.v||0].join(';'));
+        lines.push([labels[k], lbl(r.l||'').replace(/;/g,','), r.v||0].join(';'));
       });
     });
     var blob = new Blob(['﻿'+lines.join('\n')], {type:'text/csv;charset=utf-8'});
     var a = document.createElement('a');
     var d = new Date(), ymd = d.toISOString().slice(0,10);
     a.href = URL.createObjectURL(blob);
-    a.download = 'budsjett-'+ymd+'.csv';
+    a.download = tr('trPersonligBudsjettCsvFile', 'budsjett-{dato}.csv').replace('{dato}', ymd);
     document.body.appendChild(a); a.click();
     setTimeout(function(){URL.revokeObjectURL(a.href); a.remove();}, 100);
   });
@@ -1391,7 +1409,7 @@ footer em{font-style:italic}
       var buckets = categorize(result.txns);
       var head = document.createElement('div');
       head.innerHTML = '<h2 style="font:600 18px/1.3 Georgia,serif;margin:0 0 6px">Importert kontoutskrift</h2>'
-        + '<p style="color:var(--ink2,#b8b0a4);font-size:13px;line-height:1.55;margin:0 0 4px">'+result.txns.length+' transaksjoner lest, gruppert i '+buckets.length+' kategorier. Fjern haken på det du ikke vil ta med (f.eks. overføringer mellom egne kontoer).</p>'
+        + '<p style="color:var(--ink2,#b8b0a4);font-size:13px;line-height:1.55;margin:0 0 4px">'+tr('trPersonligBudsjettImpSum', '{n} transaksjoner lest, gruppert i {m} kategorier. Fjern haken på det du ikke vil ta med (f.eks. overføringer mellom egne kontoer).').replace('{n}', result.txns.length).replace('{m}', buckets.length)+'</p>'
         + '<p style="color:var(--accent,#c89968);font-size:12px;line-height:1.5;margin:0 0 16px">Filen ble lest lokalt i nettleseren din og forlater aldri enheten.</p>';
       panel.appendChild(head);
 
@@ -1407,8 +1425,8 @@ footer em{font-style:italic}
         cb.addEventListener('change', function(){ bk.include = cb.checked; updateTotal(); });
         bk._cb = cb;
         var mid = document.createElement('div');
-        mid.innerHTML = '<div style="font-size:14px;font-weight:600">'+esc(bk.cat)+'</div>'
-          + '<div style="font-size:11.5px;color:var(--ink3,#8a8378);text-transform:uppercase;letter-spacing:.04em">'+COLNAME[bk.col]+' · '+bk.n+' transaksjon'+(bk.n===1?'':'er')+'</div>';
+        mid.innerHTML = '<div style="font-size:14px;font-weight:600">'+esc(Object.prototype.hasOwnProperty.call(KEYED, bk.cat) ? lbl(bk.cat) : bk.cat)+'</div>'
+          + '<div style="font-size:11.5px;color:var(--ink3,#8a8378);text-transform:uppercase;letter-spacing:.04em">'+tr(bk.n===1?'trPersonligBudsjettTxnOne':'trPersonligBudsjettTxnMany', bk.n===1?'{col} · {n} transaksjon':'{col} · {n} transaksjoner').replace('{col}', ph(COLNAME[bk.col])).replace('{n}', bk.n)+'</div>';
         var amt = document.createElement('div');
         amt.style.cssText='font:600 15px/1 system-ui;font-variant-numeric:tabular-nums;color:'+(bk.col==='inntekt'?'var(--ink,#f2ede4)':'var(--ink,#f2ede4)');
         amt.textContent = fmtKrPlain(Math.round(bk.sum))+' kr';
@@ -1486,17 +1504,17 @@ footer em{font-style:italic}
     function colSection(title, rows){
       var sum = (rows||[]).reduce(function(a,r){return a+(parseInt(r.v,10)||0);}, 0);
       var body = (rows||[]).filter(function(r){return r.l || r.v;}).map(function(r){
-        return '<tr><td>'+escapeHtml(r.l||'')+'</td><td class="num">'+fmtKrPlain(r.v||0)+' kr</td></tr>';
+        return '<tr><td>'+escapeHtml(lbl(r.l||''))+'</td><td class="num">'+fmtKrPlain(r.v||0)+' kr</td></tr>';
       }).join('');
-      return '<section><h2>'+escapeHtml(title)+'</h2><table>'+body
-        + '<tr class="sum"><td>Sum</td><td class="num">'+fmtKrPlain(sum)+' kr</td></tr></table></section>';
+      return '<section><h2>'+escapeHtml(ph(title))+'</h2><table>'+body
+        + '<tr class="sum"><td>'+ph('Sum')+'</td><td class="num">'+fmtKrPlain(sum)+' kr</td></tr></table></section>';
     }
     var inn = (budState.inntekt||[]).reduce(function(a,r){return a+(parseInt(r.v,10)||0);},0);
     var ut1 = (budState.faste||[]).reduce(function(a,r){return a+(parseInt(r.v,10)||0);},0);
     var ut2 = (budState.variable||[]).reduce(function(a,r){return a+(parseInt(r.v,10)||0);},0);
     var diff = inn - (ut1+ut2);
-    var dato = new Date().toLocaleDateString('nb-NO',{day:'2-digit',month:'long',year:'numeric'});
-    var html = '<!doctype html><html lang="no"><head><meta charset="utf-8"><title>Budsjett — '+dato+'</title>'
+    var dato = new Date().toLocaleDateString(tr('trPersonligBudsjettPdfLocale','nb-NO'),{day:'2-digit',month:'long',year:'numeric'});
+    var html = '<!doctype html><html lang="'+tr('trPersonligBudsjettPdfLang','no')+'"><head><meta charset="utf-8"><title>'+tr('trPersonligBudsjettPdfTitle','Budsjett — {dato}').replace('{dato}', dato)+'</title>'
       + '<style>'
       + '@page{size:A4;margin:22mm 18mm}'
       + 'body{font-family:Georgia,"Source Serif 4",serif;color:#15140f;line-height:1.45;padding:0}'
@@ -1513,15 +1531,15 @@ footer em{font-style:italic}
       + '.totals{border-top:1px solid #888;padding-top:14px;margin-top:24px;display:flex;justify-content:space-between;font-size:14px}'
       + '.totals .diff{color:#a87842;font-weight:600}'
       + '</style></head><body>'
-      + '<header><h1><em>Budsjett</em> — månedlig oversikt</h1>'
-      + '<div class="meta">Generert '+escapeHtml(dato)+'<br>Hverdagsverktøy</div></header>'
+      + '<header><h1>'+tr('trPersonligBudsjettPdfH1','<em>Budsjett</em> — månedlig oversikt')+'</h1>'
+      + '<div class="meta">'+escapeHtml(tr('trPersonligBudsjettPdfGen','Generert {dato}').replace('{dato}', dato))+'<br>Hverdagsverktøy</div></header>'
       + colSection('Inntekt', budState.inntekt)
       + colSection('Faste utgifter', budState.faste)
       + colSection('Utgifter som varierer', budState.variable)
       + '<div class="totals">'
-      + '<span>Sum inntekt <b>'+fmtKrPlain(inn)+' kr</b></span>'
-      + '<span>Sum utgift <b>'+fmtKrPlain(ut1+ut2)+' kr</b></span>'
-      + '<span class="diff">Til overs <b>'+(diff<0?'−':'')+fmtKrPlain(Math.abs(diff))+' kr</b></span>'
+      + '<span>'+tr('trPersonligBudsjettPdfSumInn','Sum inntekt')+' <b>'+fmtKrPlain(inn)+' kr</b></span>'
+      + '<span>'+tr('trPersonligBudsjettPdfSumUt','Sum utgift')+' <b>'+fmtKrPlain(ut1+ut2)+' kr</b></span>'
+      + '<span class="diff">'+ph('Til overs')+' <b>'+(diff<0?'−':'')+fmtKrPlain(Math.abs(diff))+' kr</b></span>'
       + '</div></body></html>';
     w.document.open(); w.document.write(html); w.document.close();
     setTimeout(function(){ try{ w.focus(); w.print(); }catch(_){}; }, 250);

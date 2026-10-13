@@ -102,7 +102,7 @@
         kjede.push({ sporsmal: finnFelt(id).kort, svar: svarTekst(id, v[id]), folge: folge, avgjorde: !!avgjorde });
       }
       function venter(nr) {
-        return { utfall: null, venter: 'Svar på spørsmål ' + nr + ' for å se utfallet.', kjede: kjede };
+        return { utfall: null, venter: window.BOK.tx('trBokH1Venter', 'Svar på spørsmål {n} for å se utfallet.', { n: nr }), kjede: kjede };
       }
 
       /* 1 — Finnes det en forpliktelse fra noe som alt har skjedd? */

@@ -1308,6 +1308,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     function applyFilter(){
       var q = norm(input.value);
+      var en = /^en/i.test(document.documentElement.lang || '');
       var classes = grid.querySelectorAll('.konto-class');
       var totalVisible = 0;
       var visibleClasses = 0;
@@ -1331,7 +1332,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           }
           var num  = (li.getAttribute('data-num') || '').toLowerCase();
           var name = norm(li.getAttribute('data-name'));
-          var hit  = (num.indexOf(q) === 0) || (name.indexOf(q) !== -1);
+          var hit  = (num.indexOf(q) === 0) || (name.indexOf(q) !== -1) || (en && /[a-z]/.test(q) && norm((li.querySelector('.kt') || li).textContent).indexOf(q) !== -1);
           li.hidden = !hit;
           if(hit){ anyHit = true; totalVisible++; }
         });

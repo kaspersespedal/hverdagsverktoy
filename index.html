@@ -3107,24 +3107,34 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       'translate3d(' + targetX + 'px,' + targetY + 'px,0)';
   })();
 
+  // Språk: tekst og maler fra språkfila via R() (core.js), med norsk som reserve.
+  // trPh() gir oversettelsen av en hel norsk tekst fra frase-ordboka (_ph), ellers ''.
+  function trT(k, no){ try { var v = R()[k]; return v || no; } catch(e){ return no; } }
+  function trPh(s){ try { var d = R()._ph; return (d && s && d[s]) || ''; } catch(e){ return ''; } }
+
   // ── Localized date ──
   (function(){
     var el = document.getElementById('dailyDate');
     if(!el) return;
-    var d = new Date();
-    var dd = ['Søndag','Mandag','Tirsdag','Onsdag','Torsdag','Fredag','Lørdag'];
-    var mm = ['januar','februar','mars','april','mai','juni','juli','august','september','oktober','november','desember'];
-    el.textContent = dd[d.getDay()] + ' ' + d.getDate() + '. ' + mm[d.getMonth()] + ' ' + d.getFullYear();
-    // ISO 8601-ukenummer (uke starter mandag; uke 1 = uka med årets første torsdag) — som Norge bruker.
-    var w = document.getElementById('dailyWeek');
-    if (w) {
-      var u = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-      var dayNum = u.getUTCDay() || 7;          // man=1 … søn=7
-      u.setUTCDate(u.getUTCDate() + 4 - dayNum); // hopp til torsdagen i samme uke
-      var yearStart = new Date(Date.UTC(u.getUTCFullYear(), 0, 1));
-      var week = Math.ceil(((u - yearStart) / 864e5 + 1) / 7);
-      w.textContent = 'Uke ' + week;
+    // Datoen males før core.js er lastet, så den males på nytt når core.js setter lang på <html>.
+    function paint(){
+      var d = new Date();
+      var dd = trT('trForsideWeekdays', 'Søndag,Mandag,Tirsdag,Onsdag,Torsdag,Fredag,Lørdag').split(',');
+      var mm = trT('trForsideMonthsLong', 'januar,februar,mars,april,mai,juni,juli,august,september,oktober,november,desember').split(',');
+      el.textContent = trT('trForsideDateLong', '{wd} {d}. {m} {y}').replace('{wd}', dd[d.getDay()]).replace('{d}', d.getDate()).replace('{m}', mm[d.getMonth()]).replace('{y}', d.getFullYear());
+      // ISO 8601-ukenummer (uke starter mandag; uke 1 = uka med årets første torsdag) — som Norge bruker.
+      var w = document.getElementById('dailyWeek');
+      if (w) {
+        var u = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+        var dayNum = u.getUTCDay() || 7;          // man=1 … søn=7
+        u.setUTCDate(u.getUTCDate() + 4 - dayNum); // hopp til torsdagen i samme uke
+        var yearStart = new Date(Date.UTC(u.getUTCFullYear(), 0, 1));
+        var week = Math.ceil(((u - yearStart) / 864e5 + 1) / 7);
+        w.textContent = trT('trForsideWeek', 'Uke {n}').replace('{n}', week);
+      }
     }
+    paint();
+    new MutationObserver(paint).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
   })();
   // dailyStamp eies nå av shared/markedsdata.js (ekte hentetidspunkt + oppdater-knapp)
 
@@ -3170,12 +3180,14 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   // oppføringer) — denne lokale kopien hadde 19, og 14 av 18 verktøynavn
   // ga «Ingen treff» fra forsiden, som er hovedinngangen til nettstedet.
   // Leses ved hvert søk, ikke ved oppstart: search.js er defer.
+  // Oversatt navn og beskrivelse (_ph) blir også søkeord, så engelske ord gir treff.
+  // På norsk er trPh() tom, og norm() trimmer mellomrommene bort.
   function activeIndex(){
     var shared = window.HVT_SEARCH_DATA;
     if(!shared || !shared.length) return SEARCH_DATA;
     return shared.map(function(it){
       return {n:it.name, d:it.desc, u:it.url, c:it.page || it.section || '',
-              k:it.tags || '', type:it.type};
+              k:(it.tags || '') + ' ' + trPh(it.name) + ' ' + trPh(it.desc), type:it.type};
     });
   }
   var SEARCH_DATA = [
@@ -3328,7 +3340,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     rightHtml += '<span class="tip"><kbd>↑</kbd><kbd>↓</kbd><span>Bla</span></span>';
     rightHtml += '<span class="tip"><kbd>Esc</kbd><span>Lukk</span></span>';
     rightHtml += '</div>';
-    rightHtml += '<span class="tip-meta">'+activeIndex().length+' verktøy indeksert</span>';
+    rightHtml += '<span class="tip-meta">'+trT('trForsideIndexed', '{n} verktøy indeksert').replace('{n}', activeIndex().length)+'</span>';
     rightHtml += '</div>';
 
     panel.innerHTML =
@@ -3364,7 +3376,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     var u = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     u.setUTCDate(u.getUTCDate() + 4 - (u.getUTCDay() || 7));
     var ys = new Date(Date.UTC(u.getUTCFullYear(), 0, 1));
-    return 'Uke ' + Math.ceil((((u - ys) / 864e5) + 1) / 7);
+    return trT('trForsideWeek', 'Uke {n}').replace('{n}', Math.ceil((((u - ys) / 864e5) + 1) / 7));
   }
 
   function renderResults(q){
@@ -3372,13 +3384,14 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     currentItems = items;
     activeIdx = items.length ? 0 : -1;
     if(!items.length){
-      panel.innerHTML = '<div class="sr-empty">Ingen treff for «'+escapeHtml(q)+'».<br><span style="font-size:12px;color:var(--ink4)">Prøv et annet søkeord eller bla i kategoriene under.</span></div>';
+      panel.innerHTML = '<div class="sr-empty">'+trT('trForsideNoHits', 'Ingen treff for «{q}».').split('{q}').join(escapeHtml(q))+'<br><span style="font-size:12px;color:var(--ink4)">Prøv et annet søkeord eller bla i kategoriene under.</span></div>';
       return;
     }
     var html = '<div class="panel-section"><div class="panel-label"><span>Treff</span><span class="count">'+items.length+'</span></div><div class="sr-list">';
     items.forEach(function(it,i){
       html += '<a href="'+it.u+'" class="sr-item'+(i===0?' active':'')+'" data-i="'+i+'" data-q="'+escapeHtml(q)+'">';
-      html += '<div class="sr-text"><div class="sr-name">'+highlight(it.n, q)+'</div><div class="sr-desc">'+escapeHtml(it.d)+'</div></div>';
+      // Uthevingen deler navnet i flere tekstnoder, som _ph ikke kan oversette: uthev i oversettelsen.
+      html += '<div class="sr-text"><div class="sr-name">'+highlight(trPh(it.n) || it.n, q)+'</div><div class="sr-desc">'+escapeHtml(it.d)+'</div></div>';
       html += '<span class="sr-cat">'+escapeHtml(it.c)+'</span>';
       html += '<svg class="sr-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="2.5" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>';
       html += '</a>';
@@ -3865,9 +3878,19 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
   function d0(dt){return Date.UTC(dt.getFullYear(),dt.getMonth(),dt.getDate());}
   function days(a,b){return Math.round((d0(b)-d0(a))/86400000);}
-  function audLabel(a){return esc(AUD[a]||a);}
+  function audLabel(a){return esc(T("m.f."+a,AUD[a]||a));}
   function catTitle(id){for(var i=0;i<CATS.length;i++){if(CATS[i].id===id)return CATS[i].t;}return "";}
   function strip(s){return String(s).replace(/<[^>]+>/g,"");}
+  /* Språk: tekst og maler fra språkfila via R() (core.js), med norsk som reserve. Teksten i D
+     oversettes av frase-ordboka (_ph) i core.js; tr() slår opp i den samme ordboka for søket. */
+  function T(k,no){try{var v=R()[k];return v||no;}catch(e){return no;}}
+  function tr(s){try{var d=R()._ph;return (d&&d[String(s).trim()])||"";}catch(e){return "";}}
+  /* Månedsflaket har data-ph-skip: «Jul» står i _ph som «Christmas» (timepris-siden). */
+  function moFlake(mi){return '<span class="mo" data-ph-skip>'+T("trForsideMonthsShort",MO.join(",")).split(",")[mi]+'</span>';}
+  function fullDate(dt){
+    var wk=T("trForsideWeekdays",WK.join(",")).split(","),mol=T("trForsideMonthsLong",MOL.join(",")).split(",");
+    return T("trForsideDateLong","{wd} {d}. {m} {y}").replace("{wd}",wk[dt.getDay()]).replace("{d}",dt.getDate()).replace("{m}",mol[dt.getMonth()]).replace("{y}",dt.getFullYear());
+  }
 
   function makeState(){return {q:"",filter:"alle",today:new Date(),count:6,feat:true,prevOverflow:"",trigger:null};}
 
@@ -3916,6 +3939,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     if(st.filter!=="alle" && x.a.indexOf(st.filter)<0)return false;
     if(st.q){
       var hay=(x.n+" "+x.w+" "+x.short+" "+strip(x.d)+" "+x.s+" "+x.f+" "+catTitle(x.c)+" "+x.a.map(function(a){return AUD[a]||a;}).join(" ")).toLowerCase();
+      // Valgt språk: søk også i oversettelsen (tom på norsk, der _ph ikke finnes).
+      var en=[x.n,x.w,x.short,x.s,x.f,catTitle(x.c)].concat(x.d.split(/<[^>]+>/)).map(tr).join(" ").trim();
+      if(en)hay+=" "+en.toLowerCase();
       if(hay.indexOf(st.q)<0)return false;
     }
     return true;
@@ -3932,17 +3958,17 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     var cd;
     // Samme to-raders form uansett: etikett over tall, ellers hopper kolonnen
     // i høyde de to dagene fristen er «i dag» eller «i morgen».
-    if(x.days<=1)cd='<span class="fr-cd-lead" data-i18n="fr.due">Frist</span><span class="fr-cd-big"><span class="fr-cd-word">'
+    if(x.days<=1)cd='<span class="fr-cd-lead" data-i18n="fr.due">'+T("fr.due","Frist")+'</span><span class="fr-cd-big"><span class="fr-cd-word">'
       +(x.days<=0?'I dag':'I morgen')+'</span></span>';
-    else cd='<span class="fr-cd-lead" data-i18n="fr.in">om</span><span class="fr-cd-big"><span class="fr-cd-num">'+x.days+'</span><span class="fr-cd-unit" data-i18n="fr.days">dager</span></span>';
-    var full=WK[x.date.getDay()]+" "+day+". "+MOL[mi]+" "+x.date.getFullYear();
+    else cd='<span class="fr-cd-lead" data-i18n="fr.in">'+T("fr.in","om")+'</span><span class="fr-cd-big"><span class="fr-cd-num">'+x.days+'</span><span class="fr-cd-unit" data-i18n="fr.days">'+T("fr.days","dager")+'</span></span>';
+    var full=fullDate(x.date);
     // Konsekvensen hører hjemme her: det er den som gjør fristen verdt å merke seg.
     // Egen linje med samme «Bommer du»-etikett som i modalen, ikke limt på datoen.
-    var miss=x.p?'<div class="fr-miss fr-feat-miss"><span class="fr-miss-l" data-i18n="fr.miss">Bommer du</span>'+esc(x.p)+'</div>':'';
+    var miss=x.p?'<div class="fr-miss fr-feat-miss"><span class="fr-miss-l" data-i18n="fr.miss">'+T("fr.miss","Bommer du")+'</span>'+esc(x.p)+'</div>':'';
     return '<div class="fr-feat reveal" style="--d:2">'
-      +'<div class="fr-flak lg"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
+      +'<div class="fr-flak lg"><span class="d">'+day+'</span>'+moFlake(mi)+'</div>'
       +'<span class="fr-div"></span>'
-      +'<div class="fr-feat-mid"><span class="fr-eyebrow" data-i18n="fr.next">Neste viktige frist</span>'
+      +'<div class="fr-feat-mid"><span class="fr-eyebrow" data-i18n="fr.next">'+T("fr.next","Neste viktige frist")+'</span>'
         +'<h3 class="fr-feat-name">'+esc(x.n)+'</h3>'
         +'<p class="fr-feat-who">'+esc(x.w)+'</p>'
         +'<p class="fr-feat-date">'+esc(full)+'</p>'+miss+'</div>'
@@ -3952,9 +3978,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   function renderRow(x,i){
     var mi=x.date.getMonth(),day=x.date.getDate();
     var soon=x.days<=SOON_DAYS;
-    var t=x.days<=0?"i dag":x.days===1?"i morgen":("om "+x.days+" dager");
+    var t=x.days<=0?"i dag":x.days===1?"i morgen":T("trForsideInDays","om {n} dager").replace("{n}",x.days);
     return '<li class="fr-row reveal" style="--d:'+(i+3)+'">'
-      +'<div class="fr-flak sm"><span class="d">'+day+'</span><span class="mo">'+MO[mi]+'</span></div>'
+      +'<div class="fr-flak sm"><span class="d">'+day+'</span>'+moFlake(mi)+'</div>'
       +'<div class="fr-row-mid"><span class="fr-row-name">'+esc(x.short)+'</span>'
         +'<span class="fr-row-who">'+esc(x.w)+'</span></div>'
       +'<div class="fr-row-right"><span class="fr-row-cd '+(soon?'soon':'')+'">'+t+'</span>'
@@ -3964,16 +3990,22 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   function buildWidget(root,st){
     var fw=root.querySelector("[data-fr-featured]");
     var grid=root.querySelector("[data-fr-list]");
-    var up=upcoming(st);
+    var up=upcoming(st),feat="";
     if(st.feat && up.length){
       // Løft fram første frist med reell konsekvens — en «vanlig» frist (i:"m")
       // fortjener ikke hovedplassen når en kritisk/viktig ligger rett bak.
       var fi=0;
       for(var j=0;j<up.length;j++){ if(up[j].i!=="m"){ fi=j; break; } }
-      fw.innerHTML=renderFeatured(up[fi]);
+      feat=renderFeatured(up[fi]);
       up=up.filter(function(_,j){return j!==fi;});
-    } else { fw.innerHTML=""; }
-    grid.innerHTML=up.slice(0,st.count).map(renderRow).join("");
+    }
+    var rows=up.slice(0,st.count).map(renderRow).join("");
+    // Kalles på nytt ved språkbytte: samme tekst som sist = la DOM-en (og avsløringen) stå.
+    if(st.html===feat+rows)return false;
+    st.html=feat+rows;
+    fw.innerHTML=feat;
+    grid.innerHTML=rows;
+    return true;
   }
 
   /* ═══ Modal-byggere ═══ */
@@ -3998,9 +4030,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       +'<div class="fr-drule">'+x.d+'</div>'
       +'<div class="fr-card-meta"><span class="fr-freq">'+esc(x.f)+'</span>'
         +x.a.map(function(a){return '<span class="fr-aud">'+audLabel(a)+'</span>';}).join("")+'</div>'
-      +'<div class="fr-miss"><span class="fr-miss-l" data-i18n="fr.miss">Bommer du</span>'+esc(x.p)+'</div>'
+      +'<div class="fr-miss"><span class="fr-miss-l" data-i18n="fr.miss">'+T("fr.miss","Bommer du")+'</span>'+esc(x.p)+'</div>'
       +'<a class="fr-src" href="'+esc(x.u)+'" target="_blank" rel="noopener noreferrer">'
-        +'<span class="fr-src-l" data-i18n="fr.src">Kilde</span>'+esc(x.s)
+        +'<span class="fr-src-l" data-i18n="fr.src">'+T("fr.src","Kilde")+'</span>'+esc(x.s)
         +' <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 8.5 8.5 3.5M4.5 3.5h4v4"/></svg></a>'
     +'</article>';
   }
@@ -4091,6 +4123,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     if(!modal)return;
     buildWidget(root,st);
     setupReveal(root);
+    // Kortet tegnes før språkfila er lastet: tegn på nytt når core.js setter lang på <html>.
+    new MutationObserver(function(){if(buildWidget(root,st))setupReveal(root);})
+      .observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});
 
     function openModal(e){
       if(e){e.preventDefault();st.trigger=e.currentTarget;}

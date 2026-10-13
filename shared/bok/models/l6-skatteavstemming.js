@@ -40,13 +40,15 @@
           var sj = k.fritaksmetode_sjablong;
           var fradrag = 100000 * s;
           var tillegg = 100000 * sj * s;
-          return 'Fritaksmetoden: utbytte og aksjegevinst er i hovedsak skattefrie for selskaper. ' +
-            'Men ' + f.pst(sj) + ' av utbyttet skattlegges, unntatt i skattekonsern. ' +
-            'Eksempel ved ' + f.pst(s) + ': ' + f.kr(100000) + ' i utbytte gir ' + f.kr(fradrag) +
-            ' lavere skatt og ' + f.kr(tillegg) + ' ekstra (' + f.tall(100000) + ' × ' + f.pst(sj) +
-            ' × ' + f.pst(s) + '). Netto ' + f.kr(fradrag - tillegg) + ' lavere skatt. ' +
+          return window.BOK.tx('trBokL6Note',
+            'Fritaksmetoden: utbytte og aksjegevinst er i hovedsak skattefrie for selskaper. ' +
+            'Men {sj} av utbyttet skattlegges, unntatt i skattekonsern. ' +
+            'Eksempel ved {s}: {utbytte} i utbytte gir {fradrag} lavere skatt og {tillegg} ekstra ({tall} × {sj} × {s}). ' +
+            'Netto {netto} lavere skatt. ' +
             'Gevinster føres under Skattefrie inntekter, tap under Kostnader uten skattefradrag. ' +
-            'Bruker dere egenkapitalmetoden, er inntekten deres andel av resultatet, ikke utbyttet. Det dekker ikke siden.';
+            'Bruker dere egenkapitalmetoden, er inntekten deres andel av resultatet, ikke utbyttet. Det dekker ikke siden.',
+            { sj: f.pst(sj), s: f.pst(s), utbytte: f.kr(100000), fradrag: f.kr(fradrag), tillegg: f.kr(tillegg),
+              tall: f.tall(100000), netto: f.kr(fradrag - tillegg) });
         },
         noteLenke: { href: '/skatt/utbytte/', tekst: 'Mer om fritaksmetoden' } },
       { id: 'skatt', tittel: 'Skattebeløp', meta: 'Bare skatten',
@@ -103,8 +105,9 @@
       }
       if (avvik === 0) return 'Går opp. Det viser at tallene henger sammen – ikke at skatten er riktig.';
       if (a <= 1) return 'Avviket er 1 krone eller mindre. Trolig avrunding. Vis det i avstemmingen – ikke rund det bort.';
-      return 'Regnskapet viser ' + f.kr(a) + (avvik > 0 ? ' mer' : ' mindre') +
-        ' skatt enn postene forklarer. Noe mangler eller er feil. Finn årsaken – beløpet skal ikke bli stående.';
+      return avvik > 0
+        ? window.BOK.tx('trBokL6DomMer', 'Regnskapet viser {belop} mer skatt enn postene forklarer. Noe mangler eller er feil. Finn årsaken – beløpet skal ikke bli stående.', { belop: f.kr(a) })
+        : window.BOK.tx('trBokL6DomMindre', 'Regnskapet viser {belop} mindre skatt enn postene forklarer. Noe mangler eller er feil. Finn årsaken – beløpet skal ikke bli stående.', { belop: f.kr(a) });
     },
 
     /* Mulige årsaker, vanligste først, med tallene brukeren skal lete etter. */
@@ -115,13 +118,16 @@
       var ganger = String(Math.round(10 / s) / 10).replace('.', ',');
       return [
         { tittel: 'Noe mangler.',
-          tekst: 'Let etter ' + f.kr(a / s) + ' blant de permanente forskjellene, eller ' + f.kr(a) + ' blant skattebeløpene.' },
+          tekst: window.BOK.tx('trBokL6Aarsak1', 'Let etter {grunnlag} blant de permanente forskjellene, eller {skatt} blant skattebeløpene.',
+            { grunnlag: f.kr(a / s), skatt: f.kr(a) }) },
         { tittel: 'En midlertidig forskjell er tatt med',
           tekst: '(noe som jevner seg ut over tid). Den hører i utsatt skatt, ikke her.' },
         { tittel: 'Hele beløpet og skatten er byttet om.',
-          tekst: 'En linje i regnestykket blir da rundt ' + ganger + ' ganger for stor, eller bare ' + f.pst(s) + ' av riktig beløp.' },
+          tekst: window.BOK.tx('trBokL6Aarsak3', 'En linje i regnestykket blir da rundt {ganger} ganger for stor, eller bare {sats} av riktig beløp.',
+            { ganger: ganger, sats: f.pst(s) }) },
         { tittel: 'Pluss og minus byttet om.',
-          tekst: 'Let etter ' + f.kr(a / 2) + ' i en linje i regnestykket eller i skattekostnaden. Der står trolig fortegnet feil.' }
+          tekst: window.BOK.tx('trBokL6Aarsak4', 'Let etter {halve} i en linje i regnestykket eller i skattekostnaden. Der står trolig fortegnet feil.',
+            { halve: f.kr(a / 2) }) }
       ];
     },
 

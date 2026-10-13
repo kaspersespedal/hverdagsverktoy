@@ -307,7 +307,7 @@ body > footer{flex-shrink:0}
         </article>
         <article class="gd-sit" id="aksjeeierboken">
           <h3 class="gd-sit-q">«Hvem kan se hvem som eier aksjene?»</h3>
-          <p class="gd-sit-a"><span class="gd-badge">Alle</span>Aksjeeierboken, lista over hvem som eier aksjene, er åpen for alle.</p>
+          <p class="gd-sit-a"><span class="gd-badge" data-i18n="trSelskapAksjerBadgeAlle">Alle</span>Aksjeeierboken, lista over hvem som eier aksjene, er åpen for alle.</p>
           <p>Hvem som helst kan be selskapet om å få se den. Den digitale adressen din, for eksempel e-posten, er unntatt.</p>
           <p>Eier du gjennom et holdingselskap, er det holdingselskapet som står oppført. Holdingselskapet har sin egen aksjeeierbok, og den er også åpen.</p>
           <p class="gd-sit-foot"><a href="https://lovdata.no/lov/1997-06-13-44/§4-6">Aksjeloven §&nbsp;4-6</a></p>
@@ -477,11 +477,14 @@ body > footer{flex-shrink:0}
     set('hd-h-b', b); set('hd-h-s', hS); set('hd-h-r', hR);
     set('hd-h-s2', hS2); set('hd-h-n', hN); set('hd-h-t', hS + hS2);
     if(b <= 0){ HP.textContent = 'Skriv inn hvor mye driftsselskapet deler ut.'; return; }
-    HP.textContent = 'Mens pengene står i holdingselskapet, kan du investere ' + kr(hR) + ' i stedet for ' + kr(dN) + '. Tar du alt ut med en gang, betaler du ' + kr(dN - hN) + ' mer i skatt enn om utbyttet gikk rett til deg.';
+    var r = typeof R === 'function' ? R() : {};
+    HP.textContent = (r.trSelskapAksjerHoldP || 'Mens pengene står i holdingselskapet, kan du investere {a} i stedet for {b}. Tar du alt ut med en gang, betaler du {c} mer i skatt enn om utbyttet gikk rett til deg.').replace('{a}', kr(hR)).replace('{b}', kr(dN)).replace('{c}', kr(dN - hN));
   }
   // Vent til core.js har formatert feltet, så tallet som vises og tallet som regnes er det samme
   function later(){ setTimeout(drawHold, 0); }
   if(inp){ inp.addEventListener('input', later); inp.addEventListener('change', later); }
+  // Språkfila lastes etter denne koden: tegn på nytt når core.js setter eller bytter språket på <html>
+  if(window.MutationObserver) new MutationObserver(later).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
   drawHold();
 })();
 </script>

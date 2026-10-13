@@ -527,6 +527,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var el = document.getElementById(id);
     if(el) el.textContent = val;
   }
+  // Tekst med tall hentes fra språkfila (R()); norsk er reserve til den er lastet.
+  function tr(k, fb){ var r = (typeof R === 'function') ? R() : null; return (r && r[k]) || fb; }
   function show(id, on){
     var el = document.getElementById(id);
     if(!el) return;
@@ -603,10 +605,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var subText;
     if(type === 'nybygg' && !fritak){
       subText = tomt > 0
-        ? 'Nybygg — 2,5 % av tomteverdien ' + fmt(tomt)
+        ? tr('trBoliglanDokSubNybygg', 'Nybygg — 2,5 % av tomteverdien {belop}').replace('{belop}', fmt(tomt))
         : 'Skriv inn tomteverdien for å få dokumentavgiften';
     } else if(dokAvgift > 0){
-      subText = 'Selveier — 2,5 % av ' + fmt(pris);
+      subText = tr('trBoliglanDokSubSelveier', 'Selveier — 2,5 % av {belop}').replace('{belop}', fmt(pris));
     } else {
       subText = 'Ingen dokumentavgift på dette kjøpet';
     }
@@ -626,9 +628,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     } else if(type === 'nybygg'){
       tipText = 'Ved nybygg fra utbygger tinglyses skjøtet før bygget er tatt i bruk. Da beregnes dokumentavgiften kun av tomteverdien — bygningsverdien er fritatt (Stortingets vedtak om dokumentavgift § 3). Sjekk tomteandelen i prospektet eller kjøpekontrakten.';
     } else if(fritak && fritakType === 'arv'){
-      tipText = 'Fritaket gjelder din ideelle arveandel etter loven (Stortingets vedtak om dokumentavgift § 2). Overtar du mer enn din egen andel — for eksempel hele boligen når dere er flere arvinger — betales 2,5 % av det overskytende, og det er ikke med i tallet over. Tinglysingsgebyret på ' + fmt(tinglysing) + ' kommer uansett.';
+      tipText = tr('trBoliglanDokTipArv', 'Fritaket gjelder din ideelle arveandel etter loven (Stortingets vedtak om dokumentavgift § 2). Overtar du mer enn din egen andel — for eksempel hele boligen når dere er flere arvinger — betales 2,5 % av det overskytende, og det er ikke med i tallet over. Tinglysingsgebyret på {belop} kommer uansett.').replace('{belop}', fmt(tinglysing));
     } else if(fritak && fritakType === 'ektefelle'){
-      tipText = 'Overføring til ektefelle er fritatt for dokumentavgift (lov om dokumentavgift § 8). Du betaler kun tinglysingsgebyret på ' + fmt(tinglysing) + '.';
+      tipText = tr('trBoliglanDokTipEktefelle', 'Overføring til ektefelle er fritatt for dokumentavgift (lov om dokumentavgift § 8). Du betaler kun tinglysingsgebyret på {belop}.').replace('{belop}', fmt(tinglysing));
     } else {
       tipText = '';
     }
@@ -702,6 +704,12 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     show('dok-fritak-fields', true);
   }
   calcDok();
+  // core.js laster språkfila etter dette skriptet, og på nytt ved språkbytte.
+  // Begge gangene settes lang på <html>; da skrives resultatlinja og tipset på valgt språk.
+  try {
+    new MutationObserver(function(){ calcDok(); })
+      .observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+  } catch(e){}
 })();
 </script>
 

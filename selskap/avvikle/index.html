@@ -149,7 +149,7 @@ body > footer{flex-shrink:0}
         <span class="sep"></span>
         <span class="here">Legge ned selskapet</span>
       </div>
-      <h1 class="page-title">Legge ned <em>selskapet</em></h1>
+      <h1 class="page-title" data-i18n-html="trSelskapAvvikleTitle">Legge ned <em>selskapet</em></h1>
       <p class="page-lead">Kan all gjeld betales, er nedleggingen en ryddig prosess med faste frister. Kan den ikke det, gjelder andre regler, og styret må handle raskt. Velg form og se hva som gjelder for deg.</p>
     </div>
   </div>
@@ -296,10 +296,11 @@ body > footer{flex-shrink:0}
   var A = 'https://lovdata.no/lov/1997-06-13-44/§', SL = 'https://lovdata.no/lov/1985-06-21-83/§', KL = 'https://lovdata.no/lov/1984-06-08-58/§';
   function lov(b, p, t){ return '<a href="' + b + p + '">' + t + '</a>'; }
   function step(b, t, m){ return '<li><b>' + b + '</b><span>' + t + (m ? '<span class="m">' + m + '</span>' : '') + '</span></li>'; }
+  function T(k, d){ var r = (typeof R === 'function') ? R() : null; return (r && r[k]) || d; }
   var USIKKER = 'Er du usikker, gå ut fra at gjelden ikke kan betales til du har full oversikt. ';
 
   function asJa(){
-    return {h:'Frivillig <em>avvikling</em> og sletting',
+    return {h:T('trSelskapAvvikleHAsJa', 'Frivillig <em>avvikling</em> og sletting'),
       p:'Når all gjeld kan betales, avvikler dere selskapet selv. Styret leder avviklingen og tar over oppgavene til daglig leder. Oppløsning og sletting er gratis hos Brønnøysundregistrene.',
       s:[
         step('Generalforsamlingen vedtar å oppløse selskapet', 'Vedtaket krever minst to tredeler. Det meldes straks i Samordnet registermelding med protokollen. Fra da har selskapet status «under avvikling», og det skal stå på brev og fakturaer.', lov(A,'16-1','§&nbsp;16-1') + ', ' + lov(A,'16-3','§&nbsp;16-3')),
@@ -312,7 +313,7 @@ body > footer{flex-shrink:0}
       a:'Dukker det opp gjeld etter slettingen, kan eierne og styret måtte svare for den. Se <a href="#ukjent-gjeld">gjeld dere ikke visste om</a>.'};
   }
   function asNei(u){
-    return {h:u ? 'Få oversikt <em>før</em> dere gjør noe' : 'Selskapet kan være <em>insolvent</em>',
+    return {h:u ? T('trSelskapAvvikleHAsUsikker', 'Få oversikt <em>før</em> dere gjør noe') : T('trSelskapAvvikleHAsNei', 'Selskapet kan være <em>insolvent</em>'),
       p:(u ? USIKKER : '') + 'En frivillig avvikling forutsetter at gjelden blir betalt. Kan den ikke det, gjelder andre regler, og det er styret som har ansvaret. Kontakt advokat eller regnskapsfører straks.',
       s:[
         step('Finn ut om selskapet er insolvent', 'Selskapet er insolvent når det ikke kan betale regningene etter hvert som de forfaller, og det ikke er forbigående. Dekker eiendeler og inntekter all gjelden, er det ikke insolvent.', 'Konkursloven ' + lov(KL,'61','§&nbsp;61')),
@@ -320,10 +321,10 @@ body > footer{flex-shrink:0}
         step('Bare styret kan begjære konkurs', 'Når selskapet selv ber om konkurs, kalles det oppbud. Aksjeeierne kan ikke gjøre det, og daglig leder kan ikke gjøre det alene.', 'Aksjeloven ' + lov(A,'6-18','§&nbsp;6-18')),
         step('Vit hva som står på spill', 'Styremedlemmer og daglig leder kan bli erstatningsansvarlige for skade de har voldt med vilje eller ved uaktsomhet. Retten kan også ilegge konkurskarantene i to år ved uforsvarlig forretningsførsel.', 'Aksjeloven ' + lov(A,'17-1','§&nbsp;17-1') + ', konkursloven ' + lov(KL,'142','§&nbsp;142'))
       ],
-      a:'Et <a href="/kalkulator/likviditet/">likviditetsbudsjett</a> viser raskt om selskapet kan betale regningene som kommer.'};
+      a:T('trSelskapAvvikleLikvid', 'Et <a href="/kalkulator/likviditet/">likviditetsbudsjett</a> viser raskt om selskapet kan betale regningene som kommer.')};
   }
   function enkJa(){
-    return {h:'Slett <em>foretaket</em>',
+    return {h:T('trSelskapAvvikleHEnkJa', 'Slett <em>foretaket</em>'),
       p:'Et ENK er enklere å legge ned enn et AS. Du gjør opp det som gjenstår og sletter foretaket. Sletting er gratis.',
       s:[
         step('Gjør opp med kunder og leverandører', 'Send de siste fakturaene og betal regningene.'),
@@ -335,7 +336,7 @@ body > footer{flex-shrink:0}
       a:'Gjelden er din personlig. Den forsvinner ikke når foretaket slettes, fordi du og foretaket er samme person.'};
   }
   function enkNei(u){
-    return {h:'Gjelden følger <em>deg</em>',
+    return {h:T('trSelskapAvvikleHEnkNei', 'Gjelden følger <em>deg</em>'),
       p:(u ? USIKKER : '') + 'I et ENK er du og foretaket samme person. Sletting fjerner ikke gjelden, og kreditorene kan kreve deg personlig også etterpå.',
       s:[
         step('Få oversikt over all gjeld', 'Skriv opp hvem du skylder, hvor mye og når det forfaller.'),
@@ -346,7 +347,7 @@ body > footer{flex-shrink:0}
       a:''};
   }
   function ansJa(){
-    return {h:'Avvikle etter <em>selskapsavtalen</em>',
+    return {h:T('trSelskapAvvikleHAnsJa', 'Avvikle etter <em>selskapsavtalen</em>'),
       p:'Se først hva selskapsavtalen sier om oppløsning og oppgjør. Den går foran det som står her.',
       s:[
         step('Bli enige om å oppløse', 'Uten noe annet i avtalen må alle deltakerne stemme for.', 'Selskapsloven ' + lov(SL,'2-12','§&nbsp;2-12')),
@@ -357,7 +358,7 @@ body > footer{flex-shrink:0}
       a:'Sletting fjerner ikke ansvaret. Gjeld selskapet ikke har betalt, kan kreves fra deltakerne: i et ANS fra hver for hele beløpet, i et DA fra hver for sin del. Vil bare én av dere ut, kan den deltakeren si opp med seks måneders skriftlig varsel (' + lov(SL,'2-32','selskapsloven §&nbsp;2-32') + ').'};
   }
   function ansNei(u){
-    return {h:'Dere hefter <em>personlig</em>',
+    return {h:T('trSelskapAvvikleHAnsNei', 'Dere hefter <em>personlig</em>'),
       p:(u ? USIKKER : '') + 'Kan ikke selskapet betale, kan kreditorene kreve deltakerne. Sletting fjerner ikke det ansvaret.',
       s:[
         step('Få oversikt over gjelden', 'Skriv opp hvem selskapet skylder, hvor mye og når det forfaller.'),
@@ -390,6 +391,8 @@ body > footer{flex-shrink:0}
       b.addEventListener('click', function(){ st[q] = b.getAttribute('data-v'); draw(); });
     });
   });
+  // Svaret skrives av JS: skriv det på nytt når språkfila er lastet og ved språkbytte.
+  if(window.MutationObserver) new MutationObserver(function(){ draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
   draw();
 })();
 </script>

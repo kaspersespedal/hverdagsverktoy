@@ -226,7 +226,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <span class="sep"></span>
         <span class="here" data-i18n="crumbHerePersonligForeldrepenger">Foreldrepenger</span>
       </div>
-      <h1 class="page-title"><em>Foreldre</em>penger</h1>
+      <h1 class="page-title" data-i18n-html="trPersonligForeldrepengerTitle"><em>Foreldre</em>penger</h1>
       <p class="page-lead">Se hva NAV utbetaler per måned, og hvordan 100&nbsp;%- og 80&nbsp;%-uttaket fordeler seg på kvoter og fellesperiode.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning">?</button>
@@ -333,7 +333,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           <aside class="ks-result" aria-live="polite">
             <div class="ks-r-eyebrow">Per måned fra NAV</div>
             <div class="ks-r-net"><span id="rMndBig">0</span><span class="unit">kr</span></div>
-            <div class="ks-r-mnd">i <b id="rUkerInline">49 uker</b> ved <b id="rUttakInline">100 % uttak</b><span id="rArbInline"></span></div>
+            <div class="ks-r-mnd"><span data-i18n="trPersonligForeldrepengerFor">i</span> <b id="rUkerInline">49 uker</b> ved <b id="rUttakInline">100 % uttak</b><span id="rArbInline"></span></div>
 
             <div class="ks-r-stats">
               <div class="ks-r-stat"><span class="l">Brutto årslønn</span><span class="v" id="rBrutto">0 kr</span></div>
@@ -605,9 +605,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     $('segMor').style.flex    = r.kvoter.mor;
     $('segFelles').style.flex = r.kvoter.felles;
     $('segFar').style.flex    = r.kvoter.far;
-    $('tlBar').setAttribute('aria-label', fmtUker(r.kvoter.pre) + ' før fødsel forbeholdt mor, '
+    var tlLbl = fmtUker(r.kvoter.pre) + ' før fødsel forbeholdt mor, '
       + fmtUker(r.kvoter.mor) + ' mødrekvote, ' + fmtUker(r.kvoter.felles) + ' fellesperiode, '
-      + fmtUker(r.kvoter.far) + ' fedrekvote');
+      + fmtUker(r.kvoter.far) + ' fedrekvote';
+    // Attributtet skrives på nytt ved hver render, og frase-observatøren ser ikke attributter: slå opp selv.
+    $('tlBar').setAttribute('aria-label', (typeof R === 'function' && (R()._ph || {})[tlLbl]) || tlLbl);
     $('legPre').textContent    = '· ' + fmtUker(r.kvoter.pre);
     $('legMor').textContent    = '· ' + fmtUker(r.kvoter.mor);
     $('legFelles').textContent = '· ' + fmtUker(r.kvoter.felles);
@@ -618,7 +620,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     $('rUkerInline').textContent = fmtUker(r.dager);
     $('rUttakInline').textContent = state.uttak + ' % uttak';
     $('rArbInline').textContent = (r.overGrense && state.arbDekker)
-      ? ' · + ' + fmtKr(r.arbTopUp) + ' fra arbeidsgiver' : '';
+      ? ((typeof R === 'function' && R().trPersonligForeldrepengerArbInline) || ' · + {k} fra arbeidsgiver').replace('{k}', fmtKr(r.arbTopUp)) : '';
 
     $('rBrutto').textContent    = fmtKr(state.brutto);
     $('rsSum').textContent      = fmtKr(r.mndTotal);

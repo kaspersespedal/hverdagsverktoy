@@ -744,8 +744,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           <span class="sep"></span>
           <span class="here">Avsetninger</span>
         </div>
-        <h1 class="page-title" data-ph-skip lang="nb" dir="ltr"><em>Avsetninger</em> forklart med vanlige eksempler</h1>
-        <p class="page-lead" id="svar" data-ph-skip lang="nb" dir="ltr">En avsetning er penger bedriften allerede vet at den kommer til å skylde, men ikke vet nøyaktig hvor mye eller når. Typisk: reklamasjoner på jobber dere har gjort, en tvist dere trolig taper, eller en fastprisjobb som går i minus. Finn situasjonen din under, så ser du hva du fører, hva det betyr for skatten og hva som skjer neste år.</p>
+        <h1 class="page-title"><em>Avsetninger</em> forklart med vanlige eksempler</h1>
+        <p class="page-lead" id="svar">En avsetning er penger bedriften allerede vet at den kommer til å skylde, men ikke vet nøyaktig hvor mye eller når. Typisk: reklamasjoner på jobber dere har gjort, en tvist dere trolig taper, eller en fastprisjobb som går i minus. Finn situasjonen din under, så ser du hva du fører, hva det betyr for skatten og hva som skjer neste år.</p>
         <div class="page-hero-actions">
           <button type="button" class="calc-help-btn" data-target="avs-howto" aria-label="Vis veiledning" title="Vis veiledning" aria-expanded="false">?</button>
           <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner">⛶</button>
@@ -755,7 +755,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   </section>
 
   <!-- =============== Avsetninger i praksis: situasjonene først, testen og fagdelen etterpå =============== -->
-  <div class="container avs-praksis" data-ph-skip lang="nb" dir="ltr">
+  <div class="container avs-praksis">
     <div class="lrn">
       <nav aria-label="På denne siden"><p class="gd-toc"><span class="gd-toc-l">På denne siden</span><a href="#situasjoner">Velg situasjonen din</a><a href="#ikke-avsetning">Dette er ikke avsetninger</a><a href="#hvor-mye">Hvor mye?</a><a href="#neste-ar">Neste år, skatt og note</a><a href="#testen">Testen</a></p></nav>
 
@@ -874,7 +874,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     </div>
   </div>
 
-  <div class="calc-wrap" data-ph-skip lang="nb" dir="ltr">
+  <div class="calc-wrap">
     <div class="container">
 
       <header class="avs-test-h" id="testen">
@@ -938,7 +938,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   </div>
 
 <!-- =============== LAER-INNHOLD: regnskap-avsetninger =============== -->
-<div class="container" data-ph-skip lang="nb" dir="ltr">
+<div class="container">
   <div class="lrn" id="lrn-ap">
     <details class="gd-pro" id="fagdel">
       <summary><span>For regnskapsfører og revisor<span class="s">Beslutningstreet, regelsettene side om side, hjemmel, vanlige feil og hva revisor spør om.</span></span><svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
@@ -1206,24 +1206,28 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   if(!out || !el['ga-n']) return;
   function num(v){ var n = parseFloat(String(v || '').replace(/[\s\u00a0]/g, '').replace(',', '.')); return isFinite(n) ? n : 0; }
   function kr(n){ return Math.round(n).toLocaleString('nb-NO') + '\u00a0kr'; }
+  // Setningene limes sammen med tall, så de hentes fra språkfila (R() finnes først når core.js har lastet)
+  function t(k, fb){ var r = typeof window.R === 'function' ? window.R() : null; return (r && r[k]) || fb; }
   function draw(){
     var n = num(el['ga-n'].value), p = num(el['ga-p'].value), k = num(el['ga-k'].value);
     var f = num(el['ga-f'].value), b = num(el['ga-b'].value);
-    if(n <= 0 || p <= 0 || k <= 0){ out.textContent = '–'; cost.textContent = 'Fyll inn antall, andel og snittkostnad.'; return; }
+    if(n <= 0 || p <= 0 || k <= 0){ out.textContent = '–'; cost.textContent = t('trRegnskapAvsetningerGaFyll', 'Fyll inn antall, andel og snittkostnad.'); return; }
     var ny = n * p / 100 * k;
     out.textContent = kr(ny);
     var aar = ny - f + b;
     cost.innerHTML = Math.round(n).toLocaleString('nb-NO') + ' × ' + String(p).replace('.', ',') + '\u00a0% × ' + kr(k) + ' = <strong>' + kr(ny) + '</strong>. ' +
       (f > 0 || b > 0
-        ? 'Årets garantikostnad blir ny avsetning minus fjorårets pluss det som ble brukt: ' + kr(ny) + ' − ' + kr(f) + ' + ' + kr(b) + ' = <strong>' + kr(aar) + '</strong>.'
-        : 'Første år er hele beløpet årets garantikostnad. Fyll inn fjorårets avsetning og det som er brukt, så ser du årets kostnad de neste årene.');
+        ? t('trRegnskapAvsetningerGaAar', 'Årets garantikostnad blir ny avsetning minus fjorårets pluss det som ble brukt:') + ' ' + kr(ny) + ' − ' + kr(f) + ' + ' + kr(b) + ' = <strong>' + kr(aar) + '</strong>.'
+        : t('trRegnskapAvsetningerGaForste', 'Første år er hele beløpet årets garantikostnad. Fyll inn fjorårets avsetning og det som er brukt, så ser du årets kostnad de neste årene.'));
   }
   ids.forEach(function(id){ el[id].addEventListener('input', draw); });
   draw();
+  // core.js setter lang på <html> når språket er lastet: tegn på nytt på riktig språk
+  if(window.MutationObserver) new MutationObserver(function(){ draw(); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
 })();
 </script>
-<script src="/shared/bok/bok-engine.js?v=v3"></script>
-<script src="/shared/bok/models/h1-avsetning.js?v=v2"></script>
+<script src="/shared/bok/bok-engine.js?v=v4"></script>
+<script src="/shared/bok/models/h1-avsetning.js?v=v3"></script>
 <script>
 (function(){
   document.querySelectorAll('.calc-help-btn').forEach(function(b){
@@ -1308,6 +1312,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
   function render(d){
     raw = d;
+    // Tekst som limes sammen med tall eller svar, hentes fra språkfila (L.t) eller frase-ordboka (L.ph)
+    var L = window.hvtLearn;
     var v = (d && d.v) || {};
     var dine = !!(v.hendelse || v.egneValg || v.sannsynlighet || v.estimat);
     var A = dine ? {h:v.hendelse || null, e:v.egneValg || null, s:v.sannsynlighet || null, k:v.estimat || null} : {h:'ja', e:'nei', s:'10til50', k:null};
@@ -1385,12 +1391,12 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     var lab = '';
     function T(o){
       lab += '<span class="lrn-ap-t ' + o.cls + '" style="left:' + f1(o.left) + 'px;top:' + f1(o.top) + 'px;' + (o.w ? 'width:' + o.w + 'px;white-space:normal;' : '') +
-        (o.align ? 'text-align:' + o.align + ';' : '') + 'font-size:' + (o.size || G.fz) + 'px;line-height:' + (o.lh || 18) + 'px">' + esc(nb(o.text)) + '</span>';
+        (o.align ? 'text-align:' + o.align + ';' : '') + 'font-size:' + (o.size || G.fz) + 'px;line-height:' + (o.lh || 18) + 'px">' + esc(L.ph(nb(o.text))) + '</span>';
     }
     ['Hendelse før balansedagen', 'Kan unngås ved egne valg', 'Sannsynlighet for å måtte betale', 'Beløpet kan anslås'].forEach(function(n, i){
       var s = nst(i + 1);
-      T({text:(i + 1) + ' ' + n, left:G.lab.x, top:Y[i] - G.lab.dy, size:G.lab.size, lh:G.lab.lh, cls:'nm' + ((s === 'ans' || s === 'next') ? ' on' : '')});
-      if(s === 'skip' || s === 'next') T({text:s === 'skip' ? 'Spiller ingen rolle' : 'Neste: spørsmål ' + (i + 1), left:G.tagX[i], top:m ? G.tagTop[i] : Y[i] - G.tagDy, size:11.5, lh:16, cls:'tag is-' + s});
+      T({text:(i + 1) + ' ' + L.ph(n), left:G.lab.x, top:Y[i] - G.lab.dy, size:G.lab.size, lh:G.lab.lh, cls:'nm' + ((s === 'ans' || s === 'next') ? ' on' : '')});
+      if(s === 'skip' || s === 'next') T({text:s === 'skip' ? 'Spiller ingen rolle' : L.t('trRegnskapAvsetningerNeste', 'Neste: spørsmål {n}', {n:i + 1}), left:G.tagX[i], top:m ? G.tagTop[i] : Y[i] - G.tagDy, size:11.5, lh:16, cls:'tag is-' + s});
     });
     // Svarene som fører videre, langs ryggraden
     function aw(on){ return 'ans' + (on ? ' on' : ''); }
@@ -1428,8 +1434,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     function term(kind, r, name, line, pre, taken){
       lab += '<div class="lrn-ap-term ' + kind + (taken ? ' on' : '') + '" style="left:' + r[0] + 'px;top:' + r[1] + 'px;width:' + r[2] + 'px;height:' + r[3] + 'px;' +
         'padding:' + (kind === 'avsetning' ? (m ? '10px 84px 10px 14px' : '10px 16px') : (line ? '10px 12px' : '0 12px')) + '">' +
-        '<span class="h">' + (pre ? '<span class="pre">' + esc(nb(pre)) + '</span>' : '') + '<span class="n" style="font-size:' + NS[kind] + 'px">' + esc(name) + '</span></span>' +
-        (line ? '<span class="l" style="font-size:' + (m ? 12 : (kind === 'avsetning' ? G.av.line : 13)) + 'px">' + esc(nb(line)) + '</span>' : '') + '</div>';
+        '<span class="h">' + (pre ? '<span class="pre">' + esc(L.ph(nb(pre))) + '</span>' : '') + '<span class="n" style="font-size:' + NS[kind] + 'px">' + esc(L.ph(name)) + '</span></span>' +
+        (line ? '<span class="l" style="font-size:' + (m ? 12 : (kind === 'avsetning' ? G.av.line : 13)) + 'px">' + esc(L.ph(nb(line))) + '</span>' : '') + '</div>';
     }
     term('ingen', G.T.e1, 'Ingen forpliktelse', '', m ? 'Nei →' : '', took('e1'));
     term('ingen', G.T.e2, 'Ingen forpliktelse', '', m ? 'Ja →' : '', took('e2'));
@@ -1438,11 +1444,11 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     term('note', G.T.e4, 'Note', '', m ? 'Nei →' : '', took('e4'));
     term('avsetning', G.T.av, 'Avsetning', 'Balansen: avsetning for forpliktelser (§ 6-2 D I)', '', took('ja'));
     // Flagget peker til tabellen over regelsettene
-    lab += '<a class="lrn-ap-flag" href="#side-om-side" style="left:' + G.flag.lx + 'px;top:' + G.flag.top + 'px;width:' + G.flag.w + 'px"><span>Samme grense i alle fire regelsett</span></a>';
+    lab += '<a class="lrn-ap-flag" href="#side-om-side" style="left:' + G.flag.lx + 'px;top:' + G.flag.top + 'px;width:' + G.flag.w + 'px"><span>' + esc(L.ph('Samme grense i alle fire regelsett')) + '</span></a>';
     // Feilene på treet: 1 til 7, med lenke begge veier
     for(var n = 1; n <= 7; n++){
       var p = G.mk[n], o = (G.ms - G.hit) / 2;
-      lab += '<a class="lrn-ap-mk" id="mk-' + n + '" href="#feil-' + n + '" aria-label="Vanlig feil ' + n + ': ' + esc(FEILNAVN[n - 1]) + '" style="left:' + (p[0] + o) + 'px;top:' + (p[1] + o) + 'px;width:' + G.hit + 'px;height:' + G.hit + 'px">' +
+      lab += '<a class="lrn-ap-mk" id="mk-' + n + '" href="#feil-' + n + '" aria-label="' + esc(L.t('trRegnskapAvsetningerFeilAria', 'Vanlig feil {n}: {navn}', {n:n, navn:L.ph(FEILNAVN[n - 1])})) + '" style="left:' + (p[0] + o) + 'px;top:' + (p[1] + o) + 'px;width:' + G.hit + 'px;height:' + G.hit + 'px">' +
         '<span aria-hidden="true">' + n + '</span></a>';
     }
 
@@ -1457,16 +1463,24 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     q('labels').innerHTML = lab;
 
     // ── Setningen under, merket over og teksten for skjermlesere ──
+    // «Avgjort av svar 1–4» er flere svar; egne nøkler, så engelsk kan bruke flertall
+    var flere = !!decided && /–/.test(decided.av);
     q('out').innerHTML = decided
-      ? esc(dine ? 'Dine svar gir:' : 'Eksempelet gir:') + ' <strong>' + esc(OUT[decided.outcome]) + '</strong>. Avgjort av svar ' + esc(decided.av) + '.'
-      : esc('Svar på spørsmål ' + next + ', så markeres utfallet ditt her.');
+      ? esc(L.ph(dine ? 'Dine svar gir:' : 'Eksempelet gir:')) + ' <strong>' + esc(L.ph(OUT[decided.outcome])) + '</strong>' + esc(L.t(flere ? 'trRegnskapAvsetningerAvgjortFlere' : 'trRegnskapAvsetningerAvgjort', '. Avgjort av svar {av}.', {av:decided.av}))
+      : esc(L.t('trRegnskapAvsetningerSvarPaa', 'Svar på spørsmål {n}, så markeres utfallet ditt her.', {n:next}));
     root.querySelector('.lrn-state').setAttribute('data-state', dine ? 'dine' : 'eksempel');
-    q('stateLabel').textContent = dine ? 'Dine svar' : 'Eksempel';
-    function lo(a){ return a === 'ja' ? 'ja' : (a === 'nei' ? 'nei' : 'ubesvart'); }
-    var s3 = A.s === 'over50' ? 'over 50 %' : (A.s === '10til50' ? '10–50 %' : (A.s === 'under10' ? 'under 10 %' : 'ubesvart'));
-    q('stateText').textContent = nb(dine ? 'Hendelse ' + lo(A.h) + ' · egne valg ' + lo(A.e) + ' · sannsynlighet ' + s3 + ' · estimat ' + lo(A.k) : 'søksmål, krav 12 mill., 45 %');
-    q('sr').textContent = nb((dine ? 'Dine svar. ' : 'Eksempel: søksmål, krav 12 millioner, 45 prosent sannsynlighet. ') + 'Spørsmål 1, hendelse før balansedagen: ' + lo(A.h) + '. Spørsmål 2, kan unngås ved egne valg: ' + lo(A.e) +
-      '. Spørsmål 3, sannsynlighet: ' + s3 + '. Spørsmål 4, beløpet kan anslås: ' + lo(A.k) + '. ' + (decided ? 'Utfall: ' + OUT[decided.outcome] + ', avgjort av svar ' + decided.av + '.' : 'Neste: spørsmål ' + next + '.'));
+    q('stateLabel').textContent = L.ph(dine ? 'Dine svar' : 'Eksempel');
+    var UB = L.t('trRegnskapAvsetningerUbesvart', 'ubesvart');
+    function lo(a){ return a === 'ja' ? L.t('trRegnskapAvsetningerJa', 'ja') : (a === 'nei' ? L.t('trRegnskapAvsetningerNei', 'nei') : UB); }
+    var s3 = A.s === 'over50' ? 'over 50 %' : (A.s === '10til50' ? '10–50 %' : (A.s === 'under10' ? 'under 10 %' : UB));
+    var sv = {h:lo(A.h), e:lo(A.e), s:s3, k:lo(A.k)};
+    q('stateText').textContent = dine ? nb(L.t('trRegnskapAvsetningerStateDine', 'Hendelse {h} · egne valg {e} · sannsynlighet {s} · estimat {k}', sv)) : L.ph(nb('søksmål, krav 12 mill., 45 %'));
+    q('sr').textContent = nb((dine ? L.t('trRegnskapAvsetningerSrDine', 'Dine svar.') : L.t('trRegnskapAvsetningerSrEks', 'Eksempel: søksmål, krav 12 millioner, 45 prosent sannsynlighet.')) + ' ' +
+      L.t('trRegnskapAvsetningerSrSvar', 'Spørsmål 1, hendelse før balansedagen: {h}. Spørsmål 2, kan unngås ved egne valg: {e}. Spørsmål 3, sannsynlighet: {s}. Spørsmål 4, beløpet kan anslås: {k}.', sv) + ' ' +
+      (decided ? L.t(flere ? 'trRegnskapAvsetningerSrUtfallFlere' : 'trRegnskapAvsetningerSrUtfall', 'Utfall: {utfall}, avgjort av svar {av}.', {utfall:L.ph(OUT[decided.outcome]), av:decided.av}) : L.t('trRegnskapAvsetningerSrNeste', 'Neste: spørsmål {n}.', {n:next})));
+    // Mobilvisningen av tabellen viser kolonnenavnet fra data-l over hver note-celle
+    var dl = L.ph('Note når det ikke blir avsetning');
+    root.querySelectorAll('.lrn-rules td.n[data-l]').forEach(function(td){ if(td.getAttribute('data-l') !== dl) td.setAttribute('data-l', dl); });
   }
 
   function schedule(){

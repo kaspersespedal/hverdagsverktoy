@@ -833,7 +833,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     // Sammendragsstripa øverst (speiler resultatet — som MVA-kalkulatoren over)
     function paintStrip(d){
-      setText('adjSPeriode', d.periode ? (d.periode + ' år') : '–');
+      setText('adjSPeriode', d.periode ? t('lrnYears', '{n} år').replace('{n}', d.periode) : '–');
       var hasBase = d.state !== 'empty' && d.state !== 'under-terskel';
       setText('adjSBase', hasBase ? fmtKr(d.arligBeloep) : '–');
       var remaining = Math.max(0, (d.periode || 0) - (d.aarBrukt || 0));
@@ -1257,6 +1257,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(document.readyState === 'loading'){
       document.addEventListener('DOMContentLoaded', function(){ init(); pollRender(); });
     } else { init(); pollRender(); }
+    // pollRender kan stoppe på den norske reserven før språkfila er lastet.
+    // core.js setter lang på <html> når fila er klar (og ved språkbytte),
+    // så da tegnes veiledningen på nytt (samme mønster som /avgift/aga/).
+    try {
+      new MutationObserver(function(){ renderHowto(); })
+        .observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+    } catch(e){}
   })();
 </script>
 

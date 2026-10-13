@@ -614,16 +614,18 @@ body.focus-mode > footer{display:none}
     var i0 = {vare:inp.vare, frakt:+inp.frakt || 0, antall:inp.antall, toll:+inp.toll || 0, fors:+inp.fors || 0, gebyr:+inp.gebyr || 0, emb:+inp.emb || 0, margin:inp.margin};
     var r = calc(i0, i0.antall), lay = r.lay;
     function fmt(v){ return L.kr(v); }
+    // Tallet går inn som tall, så språkfila kan velge entall/flertall (lrnLcUnits_one), og formateres etterpå
+    function units(n){ return t('lrnLcUnits', n === 1 ? '{n} enhet' : '{n} enheter', {n:n}).replace(String(n), fmt(n)); }
     function kr2(v){ var c = Math.round(v * 100); return L.kr(Math.floor(c / 100)) + ',' + String(c % 100).padStart(2, '0'); }
     function kr(v){ return Math.abs(v - Math.round(v)) < 0.005 ? fmt(v) : kr2(v); }
     function pct(v){ var x = Math.round(v * 10) / 10; return (Math.abs(x - Math.round(x)) < 1e-9 ? String(Math.round(x)) : L.dec(x, 1)) + NB + '%'; }
     var sending = r.fraktE + r.gebyrE, prosent = r.forsE + r.tollE, tillegg = r.landed - i0.vare;
     var over = Math.round((r.landed / i0.vare - 1) * 100);
-    var antTxt = t('lrnLcUnits', i0.antall === 1 ? '{n} enhet' : '{n} enheter', {n:fmt(i0.antall)});
+    var antTxt = units(i0.antall);
     // Stasjonene: navn, tillegg per enhet og grunnlaget i én kort linje
     var ST = [
       {n:ph('Fabrikk'), a:kr(i0.vare) + NB + 'kr', b:ph('varekost per enhet'), mk:''},
-      {n:ph('Frakt'), a:'+' + kr(r.fraktE) + NB + 'kr', b:fmt(i0.frakt) + NB + 'kr ÷ ' + antTxt, mk:'1'},
+      {n:t('lrnLcStFrakt', ph('Frakt')), a:'+' + kr(r.fraktE) + NB + 'kr', b:fmt(i0.frakt) + NB + 'kr ÷ ' + antTxt, mk:'1'},
       {n:ph('Forsikring'), a:'+' + kr(r.forsE) + NB + 'kr', b:t('lrnLcOfVare', '{p} av varekosten', {p:pct(i0.fors)}), mk:'2'},
       {n:ph('Toll'), a:'+' + kr(r.tollE) + NB + 'kr', b:t('lrnLcOfTv', '{p} av tollverdien', {p:pct(i0.toll)}), mk:'2'},
       {n:ph('Klarering'), a:'+' + kr(r.gebyrE) + NB + 'kr', b:fmt(i0.gebyr) + NB + 'kr ÷ ' + antTxt, mk:'1'},
@@ -718,7 +720,7 @@ body.focus-mode > footer{display:none}
     var qs = [Math.max(1, Math.round(i0.antall / 5)), i0.antall, i0.antall * 2];
     var qv = qs.map(function(n){ return calc(i0, n).landed; }), qMax = Math.max.apply(null, qv);
     q('qty').innerHTML = qs.map(function(n, j){
-      return '<div class="lrn-lc-q"><div class="h"><span>' + esc(t('lrnLcUnits', n === 1 ? '{n} enhet' : '{n} enheter', {n:fmt(n)})) + '</span>' + (j === 1 ? '<span class="you">' + esc(ph('du')) + '</span>' : '') + '</div><span class="v">' + kr2(qv[j]) + NB + 'kr</span><span class="lrn-lc-qb" aria-hidden="true"><i style="width:' + f1(qv[j] / qMax * 100) + '%"></i></span></div>';
+      return '<div class="lrn-lc-q"><div class="h"><span>' + esc(units(n)) + '</span>' + (j === 1 ? '<span class="you">' + esc(ph('du')) + '</span>' : '') + '</div><span class="v">' + kr2(qv[j]) + NB + 'kr</span><span class="lrn-lc-qb" aria-hidden="true"><i style="width:' + f1(qv[j] / qMax * 100) + '%"></i></span></div>';
     }).join('');
   }
   function schedule(){

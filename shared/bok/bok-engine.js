@@ -26,7 +26,7 @@
                              står i stripa og svarkortet.
 
    IKKE ennå, med vilje: kontoplan, mva-koder, bilagstabell, T-konto,
-   regelsettvelger, i18n, bransjefilter, CSV-eksport.
+   regelsettvelger, bransjefilter, CSV-eksport.
 
    TYPESPERRE: validering 1 (type 3 kan ikke ha inndatafelt) og validering 2
    i lett form (type 2 kan ikke ha bilag-funksjon) er på plass. Validering 3
@@ -42,6 +42,31 @@
   'use strict';
 
   var BOK = window.BOK = window.BOK || {};
+
+  /* ── Språk ───────────────────────────────────────────────────────────────
+     Faste tekster oversettes av frase-ordboka i core.js (_ph) når de havner
+     i DOM-en. Tekst som limes sammen med tall eller andre tekster, slås opp
+     her før den limes: tx() henter en mal fra språkfila (R()[nøkkel]) med
+     norsk reserve og bytter {navn} med verdiene, ph() slår opp en fast del i
+     _ph. Fila kjører før core.js og språkfila, så første visning er norsk.
+     core.js setter lang på <html> når språket er lastet, og da tegnes
+     visningen på nytt (paaNytt).                                            */
+  function spraak() { return typeof window.R === 'function' ? window.R() : null; }
+  function tx(nokkel, norsk, vars) {
+    var r = spraak();
+    var s = (r && r[nokkel]) || norsk;
+    if (vars) for (var k in vars) s = s.split('{' + k + '}').join(vars[k]);
+    return s;
+  }
+  function ph(s) {
+    var r = spraak();
+    return (r && r._ph && r._ph[s]) || s;
+  }
+  var paaNytt = [];
+  if (typeof MutationObserver === 'function') {
+    new MutationObserver(function () { paaNytt.forEach(function (fn) { fn(); }); })
+      .observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  }
 
   /* ── Tall inn ────────────────────────────────────────────────────────────
      Rekkefølgen er kritisk og er lært av en tidligere feil i repoet:
@@ -86,11 +111,15 @@
   function el(id) { return document.getElementById(id); }
   function sett(id, tekst) { var e = el(id); if (e) e.textContent = tekst; }
   function idag() { return new Date().toISOString().slice(0, 10); }
-  /* ISO-dato til «1. januar 2027». Leses som UTC, så tidssonen ikke flytter dagen. */
+  /* ISO-dato til «1. januar 2027». Leses som UTC, så tidssonen ikke flytter dagen.
+     På engelsk blir det «1 January 2027». Andre språk har ikke tekstene her
+     ennå og beholder norsk dato, så setningen ikke får blandet språk. */
   function datoTekst(iso) {
     var d = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
     if (!d) return iso || '–';
-    return new Intl.DateTimeFormat('nb-NO', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+    var l = document.documentElement.lang;
+    var loc = l === 'en' ? 'en-GB' : 'nb-NO';
+    return new Intl.DateTimeFormat(loc, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
       .format(new Date(Date.UTC(+d[1], +d[2] - 1, +d[3]))).replace(' ', ' ');
   }
 
@@ -119,7 +148,9 @@
       if (!eldste || m.kontrollert < eldste) eldste = m.kontrollert;
       if (m.utloper && m.utloper <= na) {
         if (!perDato[m.utloper]) { perDato[m.utloper] = []; datoer.push(m.utloper); }
-        perDato[m.utloper].push(m);
+        /* Navn og kilde fra språkfila når den har dem (trBokKonstNavn_<nøkkel>). */
+        perDato[m.utloper].push({ navn: tx('trBokKonstNavn_' + n, m.navn), visning: m.visning,
+          kilde: tx('trBokKonstKilde_' + n, m.kilde) });
       }
     });
     return {
@@ -130,7 +161,7 @@
 
   /* «a», «a og b», «a, b og c» */
   function opplisting(ord) {
-    return ord.length < 2 ? ord.join('') : ord.slice(0, -1).join(', ') + ' og ' + ord[ord.length - 1];
+    return ord.length < 2 ? ord.join('') : ord.slice(0, -1).join(', ') + ' ' + tx('trBokOg', 'og') + ' ' + ord[ord.length - 1];
   }
 
   /* Bygges med textContent: bare strong og lenken er elementer. Lenken til
@@ -141,27 +172,28 @@
     if (!grupper.length) return;
     var antall = grupper.reduce(function (n, g) { return n + g.satser.length; }, 0);
     var st = document.createElement('strong');
-    st.textContent = antall === 1 ? 'Sjekk satsen.' : 'Sjekk satsene.';
+    st.textContent = ph(antall === 1 ? 'Sjekk satsen.' : 'Sjekk satsene.');
     vert.appendChild(st);
     function tekst(t) { vert.appendChild(document.createTextNode(t)); }
     grupper.forEach(function (g) {
       var s = g.satser;
       if (s.length === 1) {
-        tekst(' ' + s[0].navn + ' (' + s[0].visning + ') skulle vært kontrollert på nytt innen ' + datoTekst(g.utloper) +
-          '. Kontroller den mot ' + s[0].kilde + ' før du bruker tallet.');
+        tekst(' ' + tx('trBokVarselEn', '{navn} ({visning}) skulle vært kontrollert på nytt innen {dato}. Kontroller den mot {kilde} før du bruker tallet.',
+          { navn: s[0].navn, visning: s[0].visning, dato: datoTekst(g.utloper), kilde: s[0].kilde }));
         return;
       }
-      tekst(' Disse skulle vært kontrollert på nytt innen ' + datoTekst(g.utloper) + ': ' +
-        opplisting(s.map(function (m) { return m.navn + ' (' + m.visning + ')'; })) + '.');
+      tekst(' ' + tx('trBokVarselFlere', 'Disse skulle vært kontrollert på nytt innen {dato}: {liste}.',
+        { dato: datoTekst(g.utloper), liste: opplisting(s.map(function (m) { return m.navn + ' (' + m.visning + ')'; })) }));
       if (el('hjemmel')) {
-        tekst(' Kontroller dem mot kildene under ');
+        tekst(' ' + ph('Kontroller dem mot kildene under') + ' ');
         var a = document.createElement('a');
         a.href = '#hjemmel';
-        a.textContent = 'Hjemmel';
+        a.textContent = ph('Hjemmel');
         vert.appendChild(a);
-        tekst(' før du bruker tallene.');
+        tekst(' ' + ph('før du bruker tallene.'));
       } else {
-        tekst(' Kontroller dem mot ' + opplisting(s.map(function (m) { return m.kilde; })) + ' før du bruker tallene.');
+        tekst(' ' + tx('trBokVarselKilder', 'Kontroller dem mot {kilder} før du bruker tallene.',
+          { kilder: opplisting(s.map(function (m) { return m.kilde; })) }));
       }
     });
   }
@@ -473,8 +505,8 @@
       if (s.verdi === 0 && i > 0 && !s.sum && !s.visAlltid) return;
       var r = document.createElement('div');
       r.className = 'bok-steg-rad' + (s.sum ? ' er-sum' : '');
-      var a = document.createElement('span'); a.className = 'bs-lbl'; a.textContent = s.etikett;
-      var b = document.createElement('span'); b.className = 'bs-utt'; b.textContent = s.uttrykk;
+      var a = document.createElement('span'); a.className = 'bs-lbl'; a.textContent = ph(s.etikett);
+      var b = document.createElement('span'); b.className = 'bs-utt'; b.textContent = ph(s.uttrykk);
       var c = document.createElement('span'); c.className = 'bs-val'; c.textContent = kr(s.verdi);
       r.appendChild(a); r.appendChild(b); r.appendChild(c);
       vert.appendChild(r);
@@ -552,7 +584,7 @@
         if (!merke) {
           merke = document.createElement('span');
           merke.className = 'bok-merke';
-          merke.textContent = 'Ditt utfall';
+          merke.textContent = ph('Ditt utfall');
           c.appendChild(merke);
         }
       } else {
@@ -582,8 +614,8 @@
       vert.appendChild(net);
       vert.appendChild(mnd);
     }
-    net.textContent = aktiv ? aktiv.navn : '–';
-    mnd.textContent = aktiv ? aktiv.hva : (ut.venter || 'Svar på spørsmålene for å se utfallet.');
+    net.textContent = aktiv ? ph(aktiv.navn) : '–';
+    mnd.textContent = aktiv ? ph(aktiv.hva) : (ut.venter || ph('Svar på spørsmålene for å se utfallet.'));
 
     var g = vert.querySelector('.bok-grunn');
     if (aktiv && ut.grunn) {
@@ -592,7 +624,7 @@
         g.className = 'bok-grunn';
         vert.appendChild(g);
       }
-      g.textContent = ut.grunn;
+      g.textContent = ph(ut.grunn);
     } else if (g) {
       vert.removeChild(g);
     }
@@ -616,16 +648,16 @@
       var merk = samlet || !!k.avgjorde;
       var li = document.createElement('li');
       li.className = 'ks-r-stat bok-kj' + (merk ? ' er-avgjorende' : '');
-      var l = document.createElement('span'); l.className = 'l'; l.textContent = (i + 1) + '. ' + k.sporsmal;
-      var v = document.createElement('span'); v.className = 'v'; v.textContent = k.svar;
+      var l = document.createElement('span'); l.className = 'l'; l.textContent = (i + 1) + '. ' + ph(k.sporsmal);
+      var v = document.createElement('span'); v.className = 'v'; v.textContent = ph(k.svar);
       var fo = document.createElement('span'); fo.className = 'bok-kj-fo';
       if (merk) {
         var s = document.createElement('strong');
-        s.textContent = samlet ? 'Oppfylt.' : 'Avgjorde.';
+        s.textContent = ph(samlet ? 'Oppfylt.' : 'Avgjorde.');
         fo.appendChild(s);
         fo.appendChild(document.createTextNode(' '));
       }
-      fo.appendChild(document.createTextNode(k.folge));
+      fo.appendChild(document.createTextNode(ph(k.folge)));
       li.appendChild(l); li.appendChild(v); li.appendChild(fo);
       vert.appendChild(li);
     });
@@ -646,8 +678,9 @@
       var aktiv = byggUtfall(modell, ut, vertUtfall);
       if (vertStripe) markerStripe(vertStripe, aktiv ? aktiv.id : null);
       if (vertKjede) byggKjede(ut, vertKjede);
-      sett('hStatUtfall', aktiv ? (aktiv.kort || aktiv.navn) : '–');
-      sett('hStatAvgjort', (aktiv && ut.avgjortAv) ? 'Svar ' + ut.avgjortAv : '–');
+      sett('hStatUtfall', aktiv ? ph(aktiv.kort || aktiv.navn) : '–');
+      /* avgjortAv er et tall (ett svar) eller en tekst som «1–4» (flere svar): egen nøkkel for flertall */
+      sett('hStatAvgjort', (aktiv && ut.avgjortAv) ? tx(typeof ut.avgjortAv === 'string' ? 'trBokSvarNrFlere' : 'trBokSvarNr', 'Svar {n}', { n: ut.avgjortAv }) : '–');
       lagreSesjon(nokkel, v);
       /* Til forklaringsblokken under kalkulatoren. Motoren kjører før learn.js,
          så blokken leser BOK.siste selv når den starter. */
@@ -659,6 +692,7 @@
     byggFelt(modell, vertFelt, oppdater);
     gjenopprett(modell, hentSesjon(nokkel));
     oppdater();
+    paaNytt.push(oppdater);
   }
 
   /* ── Registrering og montering ───────────────────────────────────────── */
@@ -691,11 +725,13 @@
     var beviser = el('beviser-ikke');
 
     var k = hentKonstanter(modell.konstanter);
-    var varsel = satsvarsel(k);
-
     var vVarsel = el('bokSatsvarsel');
-    if (vVarsel) visSatsvarsel(vVarsel, varsel.grupper);
-    if (varsel.eldsteKontroll) sett('bokKontrollert', datoTekst(varsel.eldsteKontroll));
+    function visVarsel() {
+      var varsel = satsvarsel(k);
+      if (vVarsel) visSatsvarsel(vVarsel, varsel.grupper);
+      if (varsel.eldsteKontroll) sett('bokKontrollert', datoTekst(varsel.eldsteKontroll));
+    }
+    visVarsel();
 
     var lagerNokkel = 'hv-bok-' + modell.id;
     var seksjoner = [];
@@ -715,7 +751,7 @@
         if (!sek.knapp) return;
         var n = sek.avanserte.filter(function (fe) { return erEndret(fe, v[fe.id]); }).length;
         var lukket = !sek.samme.classList.contains('open');
-        sek.knapp.textContent = sek.gruppe.toggle + (lukket && n ? ' · ' + n + ' i bruk' : '');
+        sek.knapp.textContent = ph(sek.gruppe.toggle) + (lukket && n ? ' · ' + tx('trBokIBruk', '{n} i bruk', { n: n }) : '');
         if (sek.noteTekst) sek.noteTekst.textContent = sek.gruppe.note(v, k, f);
       });
     }
@@ -723,10 +759,10 @@
     function visDom(avvik, v) {
       if (!vertDom) return;
       var a = Math.abs(avvik);
-      vertDom.textContent = modell.dom ? modell.dom(avvik, v, f)
+      vertDom.textContent = ph(modell.dom ? modell.dom(avvik, v, f)
         : (avvik === 0 ? '' : a <= 1
           ? 'Avviket er på én krone eller mindre. Det er trolig avrunding, men beløpet blir stående — det skal ikke rundes bort.'
-          : 'Avviket er ikke null.');
+          : 'Avviket er ikke null.'));
       /* Bremsen står der den trengs: ved 0 kr lenker dom-linja til boksen
          om hva en avstemming i null ikke beviser. Samme tekst som summary. */
       if (avvik === 0 && beviser) {
@@ -747,14 +783,14 @@
       if (!liste.length) return;
       var t = document.createElement('p');
       t.className = 'bok-aarsaker-t';
-      t.textContent = 'Mulige årsaker, vanligste først';
+      t.textContent = ph('Mulige årsaker, vanligste først');
       var ol = document.createElement('ol');
       liste.forEach(function (a) {
         var li = document.createElement('li');
         var s = document.createElement('strong');
-        s.textContent = a.tittel;
+        s.textContent = ph(a.tittel);
         li.appendChild(s);
-        li.appendChild(document.createTextNode(' ' + a.tekst));
+        li.appendChild(document.createTextNode(' ' + ph(a.tekst)));
         ol.appendChild(li);
       });
       vertAarsaker.appendChild(t);
@@ -773,7 +809,7 @@
       });
       if (!harTall) {
         ['forventet', 'beregnet', 'bokfort', 'avvik', 'etr'].forEach(function (n) { fyll(n, '–'); });
-        if (vertDom) vertDom.textContent = modell.tomtekst || 'Legg inn tallene dine over. Avstemmingen regnes ut mens du skriver.';
+        if (vertDom) vertDom.textContent = ph(modell.tomtekst || 'Legg inn tallene dine over. Avstemmingen regnes ut mens du skriver.');
         if (vertAarsaker) vertAarsaker.hidden = true;
         if (vertMerknad) vertMerknad.hidden = true;
         if (boksSteg) boksSteg.hidden = true;
@@ -804,7 +840,7 @@
         if (n.merknad) merknad = n.merknad;
       });
       if (vertMerknad) {
-        vertMerknad.textContent = merknad || '';
+        vertMerknad.textContent = merknad ? ph(merknad) : '';
         vertMerknad.hidden = !merknad;
       }
 
@@ -830,8 +866,10 @@
       });
     }
     regnUt();
+    paaNytt.push(function () { visVarsel(); regnUt(); });
   };
 
   BOK._f = f;
+  BOK.tx = tx;
   BOK._parseNum = parseNum;
 })();

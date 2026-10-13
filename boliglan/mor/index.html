@@ -790,19 +790,21 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function downloadMorCsv(){
     var d = window._mor;
     if(!d || typeof window.downloadCSV !== 'function') return;
-    var dt = new Date().toLocaleDateString('nb-NO', {year:'numeric', month:'long', day:'numeric'});
+    // Etiketter via frase-ordboka (_ph) og årstall via lrnYears, så CSV-en følger språket som vises
+    var L = window.hvtLearn, tr = function(s){ return L ? L.ph(s) : s; }, yrs = function(n){ return L ? L.t('lrnYears', '{n} år', {n:n}) : n + ' år'; };
+    var dt = typeof window._csvDate === 'function' ? window._csvDate() : new Date().toLocaleDateString('nb-NO', {year:'numeric', month:'long', day:'numeric'});
     var rows = [];
-    rows.push(['Nedbetalingsplan', dt]);
+    rows.push([tr('Nedbetalingsplan'), dt]);
     rows.push([]);
-    rows.push(['Lånebeløp', d.P]);
-    rows.push(['Rente', String(d.rate).replace('.', ',') + ' %']);
-    rows.push(['Løpetid', d.years + ' år']);
-    rows.push(['Type', d.type === 'serial' ? 'Serielån' : 'Annuitetslån']);
-    if(d.ioYears > 0) rows.push(['Avdragsfri periode', d.ioYears + ' år']);
-    rows.push(['Månedlig betaling', Math.round(d.mnd + (d.fees || 0))]);
-    rows.push(['Totale renter', Math.round(d.rnt)]);
+    rows.push([tr('Lånebeløp'), d.P]);
+    rows.push([tr('Rente'), String(d.rate).replace('.', ',') + ' %']);
+    rows.push([tr('Løpetid'), yrs(d.years)]);
+    rows.push([tr('Type'), tr(d.type === 'serial' ? 'Serielån' : 'Annuitetslån')]);
+    if(d.ioYears > 0) rows.push([tr('Avdragsfri periode'), yrs(d.ioYears)]);
+    rows.push([tr('Månedlig betaling'), Math.round(d.mnd + (d.fees || 0))]);
+    rows.push([tr('Totale renter'), Math.round(d.rnt)]);
     rows.push([]);
-    rows.push(['Måned', 'Betaling', 'Renter', 'Avdrag', 'Omkostninger', 'Restgjeld']);
+    rows.push(['Måned', 'Betaling', 'Renter', 'Avdrag', 'Omkostninger', 'Restgjeld'].map(tr));
     var fees = +d.fees || 0, ioMonths = (d.ioYears || 0) * 12, mRate = d.rate / 100 / 12, n = d.years * 12, payN = n - ioMonths;
     var mthAfterIo = payN > 0 ? (mRate === 0 ? d.P / payN : d.P * mRate * Math.pow(1 + mRate, payN) / (Math.pow(1 + mRate, payN) - 1)) : d.mnd;
     var bal = d.P;
@@ -815,7 +817,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       rows.push([i, Math.round(payment + fees), Math.round(interest), Math.round(principal), Math.round(fees), Math.round(bal)]);
     }
     rows.push([]);
-    rows.push(['Generert av Hverdagsverktøy']);
+    rows.push([tr('Generert av Hverdagsverktøy')]);
     window.downloadCSV(rows, 'boliglan.csv');
   }
   var _morCsvBtn = document.getElementById('morCsvBtn');
