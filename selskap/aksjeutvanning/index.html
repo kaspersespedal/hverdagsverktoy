@@ -56,6 +56,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v245">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v3">
 <link rel="stylesheet" href="/shared/learn.css?v=v3">
+<link rel="stylesheet" href="/shared/guide.css?v=v1">
 <style>
 /* Aksjeutvanning — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -291,19 +292,20 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
             <section class="ks-section">
               <div class="ik-section-head">
                 <h3 data-i18n="selskapAksjeutvSectionInput">Runden</h3>
-                <span class="meta" data-i18n="selskapAksjeutvSectionHint">2026-praksis</span>
               </div>
               <div class="ik-stack">
                 <div class="ik-row full">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="dilut-pre" data-i18n="selskapAksjeutvLblPre">Selskapsverdi før runden (kr)</label>
                     <input class="ik-input" id="dilut-pre" type="text" inputmode="numeric" value="5 000 000" autocomplete="off">
+                    <div class="ik-hint">Pris per ny aksje × antall aksjer dere har i dag.</div>
                   </div>
                 </div>
                 <div class="ik-row full">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="dilut-invest" data-i18n="selskapAksjeutvLblInvest">Investor skyter inn (kr)</label>
                     <input class="ik-input" id="dilut-invest" type="text" inputmode="numeric" value="1 000 000" autocomplete="off">
+                    <div class="ik-hint">Pris per ny aksje × antall nye aksjer.</div>
                   </div>
                 </div>
                 <div class="ik-row">
@@ -315,7 +317,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                   <div class="ik-fg">
                     <label class="ik-lbl" for="dilut-pool" data-i18n="selskapAksjeutvLblPool">Aksjer satt av til ansatte (%)</label>
                     <input class="ik-input" id="dilut-pool" type="text" inputmode="decimal" min="0" max="50" step="0.5" value="0">
-                    <div class="ik-hint">Opsjonspool. Typisk 5–15 % i tidlige runder.</div>
+                    <div class="ik-hint">Bare hvis ansatte skal få kjøpe aksjer senere (opsjonspool). Ellers 0.</div>
                   </div>
                 </div>
               </div>
@@ -331,25 +333,19 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
               <div class="ks-r-stat strong"><span class="l" data-i18n="selskapAksjeutvROutValue">Verdi av din andel</span><span class="v" id="dilut-r-value">–</span></div>
             </div>
 
-            <div class="ks-r-foot">Enkel modell med én aksjeklasse. Har dere preferanseaksjer, konvertible lån eller andre særvilkår, bør revisor sjekke tallene før dere signerer.</div>
+            <div class="ks-r-foot">Kalkulatoren regner med at prisen per ny aksje er det aksjene faktisk er verdt, og at alle aksjene har like rettigheter. Er det ikke slik, bør en revisor eller advokat sjekke tallene før dere signerer.</div>
           </aside>
         </div>
       </div>
     </div>
 
     <aside class="side-col">
-      <div class="side-card">
-        <h4>Praksis 2026</h4>
-        <div class="ref-row"><span class="l">Opsjon-pool</span><span class="v">5–15<span class="u">%</span></span></div>
-        <div class="ref-row"><span class="l">Pool-type</span><span class="v accent">Post-money</span></div>
-        <div class="ref-row"><span class="l">Hjemmel</span><span class="v">Asl. kap. 10</span></div>
-      </div>
       <div class="side-card related">
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
         <a href="/selskap/"><span class="name">Alle selskapsverktøy</span><span class="arr">→</span></a>
-        <a href="/skatt/inntekt/"><span class="name">Inntektsskatt</span><span class="arr">→</span></a>
+        <a href="/selskap/aksjonaer/"><span class="name">Rettigheter som aksjonær</span><span class="arr">→</span></a>
+        <a href="/selskap/aksjer/"><span class="name">Kjøpe og selge aksjer</span><span class="arr">→</span></a>
         <a href="/personlig/aksjer/"><span class="name">Aksjegevinst</span><span class="arr">→</span></a>
-        <a href="/kalkulator/valgevinst/"><span class="name">Verdistigning</span><span class="arr">→</span></a>
       </div>
     </aside>
 
@@ -358,20 +354,17 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   <div class="container">
     <article class="content-card">
       <h3>Slik fungerer aksjeutvanning</h3>
-      <p>Når et AS henter penger i en nyemisjon, lages det nye aksjer. Du eier da en mindre prosent, men av et selskap som er verdt mer. Dette kalles utvanning eller fortynning.</p>
+      <p>Når et AS selger nye aksjer for å hente penger, kalles det en emisjon. Kjøper du ikke din del av de nye aksjene, eier du etterpå en mindre prosent av et selskap som er verdt mer. Det kalles utvanning.</p>
 
-      <h3 style="font-size:18px;margin-top:18px">Tre eksempler</h3>
-      <p><strong>1. Liten runde uten pool</strong> — Selskapet er verdt 5&nbsp;mill., og en investor skyter inn 1&nbsp;mill. Investoren får 16,67&nbsp;%, og du beholder 83,33&nbsp;% av 6&nbsp;mill., altså fortsatt verdt 5&nbsp;mill.</p>
+      <h3 style="font-size:18px;margin-top:18px">Eksempel: tre eiere henter 300&nbsp;000&nbsp;kr</h3>
+      <p>Dere eier 100 aksjer hver, og selskapet er verdt 600&nbsp;000&nbsp;kr, altså 2&nbsp;000&nbsp;kr per aksje. Dere selger 150 nye aksjer til 2&nbsp;000&nbsp;kr stykket.</p>
+      <p><strong>Du blir med:</strong> Du kjøper 50 aksjer for 100&nbsp;000&nbsp;kr og eier fortsatt en tredel.</p>
+      <p><strong>Du står over:</strong> De to andre kan kjøpe aksjene du ikke tar. Du eier da 100 av 450 aksjer, altså 22,22&nbsp;%. Andelen er fortsatt verdt 200&nbsp;000&nbsp;kr, fordi selskapet nå er verdt 900&nbsp;000&nbsp;kr.</p>
+      <p><strong>Prisen er for lav:</strong> Selger dere de nye aksjene for 1&nbsp;000&nbsp;kr, trengs 300 nye aksjer. Står du over, eier du 100 av 600 aksjer, verdt 150&nbsp;000&nbsp;kr. Du har tapt 50&nbsp;000&nbsp;kr, og det viser ikke kalkulatoren. Har du ikke råd til å være med, kan du be styret selge retten din til de andre eierne. Sier styret ja, får du verdien av den (§&nbsp;10-4).</p>
 
-      <p><strong>2. Med 10&nbsp;% til ansatte</strong> — Samme runde, men 10&nbsp;% av aksjene settes av til ansatte. Alle andeler krymper med 10&nbsp;%: du får 75&nbsp;%, investoren 15&nbsp;% og poolen 10&nbsp;%.</p>
-
-      <p><strong>3. Større runde</strong> — Selskapet er verdt 10&nbsp;mill., og investoren skyter inn 5&nbsp;mill. Investoren får 33,33&nbsp;%, og du beholder 66,67&nbsp;% av 15&nbsp;mill., altså verdt 10&nbsp;mill.</p>
-
-      <h3 style="font-size:18px;margin-top:18px">Hvem betaler for poolen?</h3>
-      <p>I kalkulatoren lages poolen etter runden, så alle eiere får mindre andel, også investoren. Lages poolen før runden, betaler bare dere som eide fra før for den, og din andel blir lavere enn her.</p>
       <h3 style="font-size:18px;margin-top:18px">Du har rett til å kjøpe først</h3>
-      <p>Når selskapet henter penger, har aksjonærene fortrinnsrett til de nye aksjene i samme forhold som de eier fra før (aksjeloven §&nbsp;10-4). Bruker du den, beholder du prosenten din. Retten kan ikke tas bort i vedtektene, og generalforsamlingen kan bare fravike den med minst to tredeler av stemmene og kapitalen (§&nbsp;10-5). <a href="/selskap/aksjonaer/#nye-aksjer">Les om rettighetene dine som aksjonær</a>.</p>
-      <p>Aksjonæravtalen kan også ha vern mot utvanning (anti-dilution). Det beskytter investoren hvis en senere runde skjer til lavere verdi, og kan endre tallene mye.</p>
+      <p>Betales de nye aksjene med penger, kan dere som eier fra før, kjøpe dem først (fortrinnsrett, <a href="https://lovdata.no/lov/1997-06-13-44/§10-4">aksjeloven §&nbsp;10-4</a>). Hver kan kjøpe like stor del som de eier i dag, og kjøper du hele din del, beholder du prosenten. Blir ikke alle aksjene kjøpt på møtet, skal du få skriftlig beskjed om hvordan du kjøper, og minst to uker på deg (§&nbsp;10-1).</p>
+      <p>Vedtektene (selskapets faste regler) kan ikke ta bort retten. Skal en ny investor få kjøpe, må generalforsamlingen (eiermøtet) sette retten til side (<a href="https://lovdata.no/lov/1997-06-13-44/§10-5">§&nbsp;10-5</a>). Da må minst to tredeler av stemmene som avgis og av aksjene som er med på møtet, si ja (§&nbsp;5-18). Møtet kan ikke gå lenger enn styret har foreslått, med mindre du godtar det. <a href="/selskap/aksjonaer/">Les om rettighetene dine som aksjonær</a>.</p>
     </article>
   </div>
 
@@ -382,13 +375,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       </summary>
       <div class="howto-body">
         <div class="howto-row"><div class="h-title">Selskapsverdi før runden</div><div class="h-desc">Det dere blir enige om at selskapet er verdt før investoren kommer inn (pre-money).</div></div>
-        <div class="howto-row"><div class="h-title">Investor skyter inn</div><div class="h-desc">Hvor mye penger investoren skyter inn i emisjonen.</div></div>
-        <div class="howto-row"><div class="h-title">Din eierandel før</div><div class="h-desc">Hvor stor del av selskapet du eier i dag. Eier du alene, skriv 100. Har dere flere eiere, skriv din prosent.</div></div>
-        <div class="howto-row"><div class="h-title">Aksjer satt av til ansatte</div><div class="h-desc">Opsjonspool, typisk 5–15 % i tidlige runder. Poolen lages etter runden, så alle eiere får mindre andel, også investoren.</div></div>
-        <div class="howto-row"><div class="h-title">Verdi etter runden</div><div class="h-desc">Verdien før runden pluss det investoren skyter inn (post-money).</div></div>
-        <div class="howto-row"><div class="h-title">Investor får</div><div class="h-desc">Investorens andel etter emisjonen, etter at en eventuell pool er trukket fra.</div></div>
-        <div class="howto-row"><div class="h-title">Du beholder</div><div class="h-desc">Din andel etter emisjonen. Med pool blir den litt mindre.</div></div>
-        <div class="howto-row"><div class="h-title">Verdi av din andel</div><div class="h-desc">Din nye eierandel × verdien etter runden. Det andelen er verdt på papiret rett etter emisjonen.</div></div>
+        <div class="howto-row"><div class="h-title">Aksjer satt av til ansatte</div><div class="h-desc">Kalkulatoren lager poolen etter runden, så alle eiere betaler for den, også investoren. Lages den før runden, betaler bare dere som eide fra før, og andelen din blir lavere.</div></div>
       </div>
     </details>
   </div>
@@ -401,7 +388,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     <section class="lrn-sec" aria-labelledby="lrn-ak-h">
       <div class="lrn-head">
         <h2 class="lrn-h2" id="lrn-ak-h">Prosenten faller, men kaka blir større</h2>
-        <p class="lrn-lede">Ny kapital gjør selskapet verdt mer, så en mindre andel kan være verdt det samme som før. En opsjonspool reduserer derimot både prosenten og verdien.</p>
+        <p class="lrn-lede">Pengene fra investoren gjør selskapet verdt mer, så en mindre andel kan være verdt like mye som før. En opsjonspool gjør derimot andelen din mindre både i prosent og i kroner.</p>
       </div>
       <p class="lrn-p" data-lrn="none" hidden>Fyll inn selskapsverdien og hva investoren skyter inn i kalkulatoren.</p>
       <div class="lrn-bar" data-lrn="main">
@@ -436,30 +423,45 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <div class="lrn-card lrn-ak-card">
           <div class="lrn-ak-row"><span class="l">Post-money</span><div class="lrn-f"><span><i>post-money</i> = <i>pre-money</i> + <i>investorbeløp</i></span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fPre"></span> + <span data-lrn="fInv"></span></span><span>=</span><b data-lrn="fPost"></b></div></div>
           <div class="lrn-ak-row"><span class="l">Investor</span><div class="lrn-f"><span><i>investorandel</i> = <i>investorbeløp</i> ÷ <i>post-money</i> × (1 − <i>pool</i>)</span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fInv"></span> ÷ <span data-lrn="fPostN"></span> × (1 − <span data-lrn="fPool"></span>)</span><span>=</span><b data-lrn="fInvPct"></b></div></div>
-          <div class="lrn-ak-row"><span class="l">Eierblokk</span><div class="lrn-f"><span><i>eierblokk</i> = <i>pre-money</i> ÷ <i>post-money</i> × (1 − <i>pool</i>)</span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fPre"></span> ÷ <span data-lrn="fPostN"></span> × (1 − <span data-lrn="fPool"></span>)</span><span>=</span><b data-lrn="fEier"></b></div></div>
-          <div class="lrn-ak-row"><span class="l">Din andel</span><div class="lrn-f"><span><i>din andel</i> = <i>eierblokk</i> × <i>din eierandel før</i></span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fEier"></span> × <span data-lrn="fEx"></span></span><span>=</span><b data-lrn="fYou"></b></div></div>
+          <div class="lrn-ak-row"><span class="l">Eierne fra før</span><div class="lrn-f"><span><i>eierne fra før</i> = <i>pre-money</i> ÷ <i>post-money</i> × (1 − <i>pool</i>)</span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fPre"></span> ÷ <span data-lrn="fPostN"></span> × (1 − <span data-lrn="fPool"></span>)</span><span>=</span><b data-lrn="fEier"></b></div></div>
+          <div class="lrn-ak-row"><span class="l">Din andel</span><div class="lrn-f"><span><i>din andel</i> = <i>eierne fra før</i> × <i>din eierandel før</i></span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fEier"></span> × <span data-lrn="fEx"></span></span><span>=</span><b data-lrn="fYou"></b></div></div>
           <div class="lrn-ak-row"><span class="l">Verdi av din andel</span><div class="lrn-f"><span><i>verdi</i> = <i>din andel</i> × <i>post-money</i></span></div><div class="lrn-f n"><span class="nx"><span data-lrn="fYou"></span> × <span data-lrn="fPostN"></span></span><span>=</span><b data-lrn="fValue"></b></div></div>
         </div>
       </details>
     </section>
 
+    <section class="lrn-sec" aria-labelledby="lrn-ak-steg">
+      <div class="lrn-head">
+        <h2 class="lrn-h2" id="lrn-ak-steg">Slik gjennomfører dere en emisjon</h2>
+      </div>
+      <ol class="gd-steps">
+        <li><b>Styret skriver et forslag.</b><span>Forslaget sier hvor mye dere skal hente, prisen per aksje, hvem som kan kjøpe og fristene. Det sendes til eierne med innkallingen minst en uke før møtet. <span class="m">§&nbsp;10-1, §&nbsp;10-3, §&nbsp;5-10</span></span></li>
+        <li><b>Generalforsamlingen vedtar.</b><span>Minst to tredeler av stemmene og av aksjene som er med på møtet, må si ja, fordi vedtektene må endres. Er ingen eiere imot det, kan dere vedta digitalt uten møte. Brønnøysundregistrene har et <a href="https://www.brreg.no/wp-content/uploads/generalforsamlingsprotokoll_kapitalforhoyelse_as-1.pdf">eksempel på protokoll</a> (referatet fra møtet). <span class="m">§&nbsp;5-18, §&nbsp;5-7</span></span></li>
+        <li><b>Kjøperne skriver under og betaler.</b><span>De skriver under i protokollen fra møtet eller på et eget dokument. Fristen for å kjøpe er høyst tre måneder etter vedtaket. Pengene går inn på en egen konto som selskapet ikke kan bruke før emisjonen er registrert, med mindre vedtaket sier noe annet. <span class="m">§&nbsp;10-1, §&nbsp;10-7, §&nbsp;10-13</span></span></li>
+        <li><b>Få innbetalingen bekreftet.</b><span>Revisor, bank, advokat eller statsautorisert regnskapsfører bekrefter at pengene er kommet inn. En kvittering eller bankutskrift er ikke nok. <span class="m">§&nbsp;10-9</span></span></li>
+        <li><b>Meld emisjonen i <a href="https://www.altinn.no/skjemaoversikt/bronnoysundregistrene/registrere-nye-og-endre-eksisterende-foretak-og-enheter-samordnet-registermelding/">Samordnet registermelding</a> i Altinn.</b><span>Legg ved protokollen, de nye vedtektene og bekreftelsen. Melder dere senere enn tre måneder etter fristen for å kjøpe, faller emisjonen bort, og pengene skal betales tilbake. <span class="m">§&nbsp;10-9 / gebyr 0&nbsp;kr</span></span></li>
+        <li><b>Oppdater eierlistene.</b><span>Før de nye aksjene inn i aksjeeierboken (selskapets liste over eierne). Ta emisjonen med i <a href="https://www.skatteetaten.no/bedrift-og-organisasjon/rapportering-og-bransjer/aksjonarregisteroppgaven/">aksjonærregisteroppgaven</a> til Skatteetaten innen 31.&nbsp;januar året etter. <span class="m">§&nbsp;4-9</span></span></li>
+      </ol>
+    </section>
+
     <section class="lrn-sec lrn-faq" aria-labelledby="lrn-ak-q">
       <h3 class="lrn-h3" id="lrn-ak-q">Spørsmål</h3>
       <div class="lrn-qs">
-        <details open><summary>Hva er forskjellen på pre-money og post-money?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Pre-money er hva selskapet er verdt før investoren kommer inn, det partene blir enige om. Post-money er pre-money pluss investor-beløpet, altså verdien rett etter emisjonen.</p></div></details>
-        <details><summary>Hvor stor pool kan jeg legge inn?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren tillater opptil 50&nbsp;%, men det er en teknisk grense, ikke en anbefaling. I praksis ligger pool i tidlige runder typisk på 5–15&nbsp;%.</p></div></details>
+        <details open><summary>Kan jeg gjøre lånet mitt til selskapet om til aksjer?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja. Du får nye aksjer i stedet for å få lånet tilbake, og gjelden blir egenkapital. Vedtaket må si at lånet brukes som betaling. Hele styret signerer en redegjørelse om at lånet er verdt minst det du får aksjer for. En revisor må bekrefte den, også om selskapet ellers ikke har revisor. Skriv lånebeløpet i «Investor skyter inn». Du eier da «Du beholder» pluss «Investor får».</p></div></details>
       </div>
     </section>
 
     <nav class="lrn-rel" aria-labelledby="lrn-ak-r">
       <h3 class="lrn-h3" id="lrn-ak-r">Relaterte verktøy</h3>
       <ul>
-        <li><a href="/personlig/aksjer/"><span><span class="t">Skatt på aksjegevinst</span><span class="d">Selger du andelen senere, ser du hva du sitter igjen med etter skatt.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
-        <li><a href="/skatt/utbytte/"><span><span class="t">Utbytteskatt</span><span class="d">Tar selskapet ut overskudd til eierne, ser du hvor mye som går til skatt.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/personlig/aksjer/"><span><span class="t">Skatt på aksjegevinst</span><span class="d">Slik skattlegges gevinsten hvis du selger aksjene senere.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/skatt/utbytte/"><span><span class="t">Utbytteskatt</span><span class="d">Deler selskapet ut overskudd til eierne (utbytte), ser du hvor mye som går til skatt.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
         <li><a href="/selskap/aksjonaer/"><span><span class="t">Rettigheter som aksjonær</span><span class="d">Hva du kan kreve og stanse med din eierandel.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
-        <li><a href="/lov/aksjelov/"><span><span class="t">Aksjeloven</span><span class="d">Kapitalforhøyelse står i kapittel 10.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/lov/aksjelov/"><span><span class="t">Aksjeloven</span><span class="d">Reglene om nye aksjer og fortrinnsretten står i kapittel 10.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
       </ul>
     </nav>
+
+    <p class="gd-src">Kilde: <a href="https://lovdata.no/lov/1997-06-13-44">aksjeloven</a> (LOV-1997-06-13-44, sist endret 01.01.2026) §§&nbsp;2-6, 4-9, 5-7, 5-10, 5-18 og kapittel 10. Brønnøysundregistrene om <a href="https://www.brreg.no/aksjeselskap/aksjekapital/forhoyelse-av-aksjekapital/">forhøyelse av aksjekapital</a>, <a href="https://www.brreg.no/aksjeselskap/aksjekapital/bekreftelse-av-mottatt-aksjeinnskudd/">bekreftelse av aksjeinnskudd</a> og <a href="https://www.brreg.no/hvordan-kan-vi-hjelpe-deg/gebyr-for-registrering-og-tinglysing/">gebyrer for 2026</a>. Skatteetaten om <a href="https://www.skatteetaten.no/bedrift-og-organisasjon/rapportering-og-bransjer/aksjonarregisteroppgaven/">aksjonærregisteroppgaven</a>. Kontrollert 12.&nbsp;oktober 2026.</p>
   </div>
 </div>
 
@@ -479,8 +481,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v234"></script>
-<script defer src="/shared/lang/no.js?v=v231"></script>
+<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
@@ -840,7 +842,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     // ── Bildeteksten, setningen og tabellen for skjermlesere ──
     var ratio = Math.sqrt(pre / post);
-    set('cap', nb(t('lrnAkCap', 'Hver flate har areal proporsjonalt med kroner. Siden i før-kvadratet er {r} av siden i etter-kvadratet.', {r:pc2(ratio * 100)})));
+    set('cap', nb(t('lrnAkCap', 'Jo større flate, jo flere kroner.', {r:pc2(ratio * 100)})));
     var A = '\u0001', Z = '\u0002';
     var sent = t('lrnAkSent', 'Du går fra {a} til {b}.', {a:A + t('lrnAkOf', '{p} av {k}', {p:pcIn(ex), k:kr(pre)}) + Z, b:A + t('lrnAkOf', '{p} av {k}', {p:pc2(yourPct), k:kr(post)}) + Z}) + ' ' +
       (hasPool ? t('lrnAkSentPool', 'Andelen er verdt {v}, {l} mindre enn før.', {v:kr(yourValue), l:kr(yourLoss)}) : t('lrnAkSentSame', 'Andelen er verdt {v} begge ganger.', {v:kr(yourValue)}));

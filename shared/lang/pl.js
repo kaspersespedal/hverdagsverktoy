@@ -1503,6 +1503,7 @@ REGIONS['pl'] = {
     morIoCheck:'Okres karencji spłaty kapitału',
     morLblAmt:'Kwota kredytu (kr)',
     morLblFees:'Opłaty miesięczne (kr)',
+    morLblEst:'Opłata początkowa (kr)',
     morLblIoYrs:'Okres karencji (lata)',
     morLblRate:'Oprocentowanie (%)',
     morLblType:'Rodzaj kredytu',
@@ -1510,7 +1511,7 @@ REGIONS['pl'] = {
     morSerialLong:'Kredyt z ratami malejącymi',
     morLblYears:'Okres spłaty (lata)',
     morRMonthly:'Rata miesięczna',
-    morROutEff:'Oprocentowanie efektywne (bez opłat)',
+    morROutNom:'Stopa nominalna',
     morROutFeesTot:'Łączne opłaty',
     morROutFirst:'Pierwszy miesiąc',
     morROutInt:'Łączne odsetki',
@@ -10468,6 +10469,8 @@ REGIONS['pl']._ph = {
 "MVA du har betalt på innkjøp":"VAT zapłacony przy zakupach",
 "Å betale:":"Do zapłaty:",
 "Til gode:":"Do zwrotu:",
+"Engangsgebyr når du tar opp lånet":"Jednorazowa opłata przy zaciąganiu kredytu",
+"Effektiv rente inkluderer gebyrer og rentes rente, og er det beste målet for å sammenligne lånetilbud.":"Stopa efektywna uwzględnia opłaty oraz procent składany i jest najlepszą miarą do porównywania ofert kredytowych.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

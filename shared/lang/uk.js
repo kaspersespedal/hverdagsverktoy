@@ -1579,6 +1579,7 @@ REGIONS['uk'] = {
     morIoCheck: 'Період без виплат',
     morLblAmt: 'Сума позики (kr)',
     morLblFees: 'Щомісячні витрати (kr)',
+    morLblEst: 'Комісія за оформлення (kr)',
     morLblIoYrs: 'Період без виплат (роки)',
     morLblRate: 'Ставка (%)',
     morLblType: 'Тип позики',
@@ -1586,7 +1587,7 @@ REGIONS['uk'] = {
     morSerialLong: 'Серійний кредит (платіж зменшується)',
     morLblYears: 'Термін (роки)',
     morRMonthly: 'Щомісячний платіж',
-    morROutEff: 'Ефективна ставка (без комісій)',
+    morROutNom: 'Номінальна ставка',
     morROutFeesTot: 'Загальні витрати',
     morROutFirst: 'Перший місяць',
     morROutInt: 'Загальні відсотки',
@@ -9754,6 +9755,8 @@ REGIONS['uk']._ph = {
 "MVA du har betalt på innkjøp":"ПДВ, сплачений за покупки",
 "Å betale:":"До сплати:",
 "Til gode:":"До повернення:",
+"Engangsgebyr når du tar opp lånet":"Одноразова комісія під час оформлення кредиту",
+"Effektiv rente inkluderer gebyrer og rentes rente, og er det beste målet for å sammenligne lånetilbud.":"Ефективна ставка враховує комісії та складні відсотки і є найкращим показником для порівняння кредитних пропозицій.",
 };
 
 /* Nøkler som manglet helt i denne fila — settes på plass her så

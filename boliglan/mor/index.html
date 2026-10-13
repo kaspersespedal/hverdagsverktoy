@@ -315,7 +315,12 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                     <input type="text" id="m-y" class="ik-input" value="25" max="30" inputmode="numeric">
                   </div>
                 </div>
-                <div class="ik-row full">
+                <div class="ik-row">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="m-est" data-i18n="morLblEst">Etableringsgebyr (kr)</label>
+                    <input type="text" id="m-est" class="ik-input" value="0" inputmode="numeric" autocomplete="off">
+                    <span class="ik-hint">Engangsgebyr når du tar opp lånet</span>
+                  </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="m-fees" data-i18n="morLblFees">Månedlige omkostninger (kr)</label>
                     <input type="text" id="m-fees" class="ik-input" value="0" inputmode="numeric" autocomplete="off">
@@ -346,11 +351,17 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
             <div class="ks-r-stats">
               <div class="ks-r-stat hidden" id="m-last-row"><span class="l" data-i18n="morROutLast">Siste måned</span><span class="v" id="m-last">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="morROutEff">Effektiv rente (uten gebyrer)</span><span class="v" id="m-eff">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="morROutY1i">År 1 renter</span><span class="v" id="m-y1i">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="morROutY1p">År 1 avdrag</span><span class="v" id="m-y1p">–</span></div>
               <div class="ks-r-stat hidden" id="m-fees-cell"><span class="l" data-i18n="morROutFeesTot">Totale omkostninger</span><span class="v" id="m-fees-tot">–</span></div>
             </div>
+
+            <div class="ks-r-subhead">Rente</div>
+            <div class="ks-r-stats">
+              <div class="ks-r-stat"><span class="l" data-i18n="morROutNom">Nominell rente</span><span class="v" id="m-nom">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="morREff">Effektiv rente</span><span class="v" id="m-eff">–</span></div>
+            </div>
+            <p class="ks-r-foot">Effektiv rente inkluderer gebyrer og rentes rente, og er det beste målet for å sammenligne lånetilbud.</p>
 
             <div class="ks-r-subhead">Skattefradrag (22 %)</div>
             <div class="ks-r-stats">
@@ -552,8 +563,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
 <script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v234"></script>
-<script defer src="/shared/lang/no.js?v=v231"></script>
+<script defer src="/shared/core.js?v=v235"></script>
+<script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
 
@@ -585,13 +596,50 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(!el) return;
     if(on) el.classList.remove('hidden'); else el.classList.add('hidden');
   }
+  // Prosent med to desimaler. Avrundes først, så −0,001 ikke vises som «−0,00 %».
+  function pct(x){
+    if(!isFinite(x)) return '–';
+    return new Intl.NumberFormat('nb-NO',{minimumFractionDigits:2, maximumFractionDigits:2})
+      .format(Math.round(x * 100) / 100 || 0) + ' %';
+  }
+
+  // ── Effektiv rente (% per år) ──
+  // Månedsrenten r der nåverdien av alle betalingene (terminbeløp + månedlige omkostninger)
+  // er lik det du får utbetalt (lånebeløp − etableringsgebyr). Årlig: (1 + r)^12 − 1.
+  // Newton-Raphson fra den nominelle månedsrenten. Gebyrene gjør r høyere, og nåverdien
+  // er krum og synkende, så stegene nærmer seg svaret fra venstre uten å skyte forbi.
+  // Gir NaN når det ikke finnes noe svar å vise.
+  function effRente(P, mRate, n, type, feeM, feeEst){
+    var net = P - feeEst;
+    if(!(net > 0) || !(n > 0)) return NaN;
+    var ann = mRate === 0 ? P/n : P*mRate*Math.pow(1+mRate,n)/(Math.pow(1+mRate,n)-1);
+    var pay = [], bal = P;
+    for(var i=0; i<n; i++){
+      pay.push((type === 'serial' ? P/n + bal*mRate : ann) + feeM);
+      bal -= P/n;
+    }
+    var r = mRate;
+    for(var it=0; it<100; it++){
+      var f = -net, df = 0, d = 1;
+      for(var k=0; k<pay.length; k++){
+        d /= 1 + r;                                  // (1 + r)^-(k+1)
+        f += pay[k] * d;
+        df -= (k + 1) * pay[k] * d / (1 + r);
+      }
+      var step = f / df;
+      r -= step;
+      if(!(r > -1 && r < 1)) return NaN;             // 100 % i måneden eller mer: ikke et svar
+      if(Math.abs(step) < 1e-12) return (Math.pow(1 + r, 12) - 1) * 100;
+    }
+    return NaN;
+  }
 
   // ── Hovedberegning (1:1 port fra calcMor) ──
   function calcMor(){
     var P = parseNum('m-a');
     if(P <= 0){
       setEl('m-mth','–'); setEl('m-sub','Skriv inn lånebeløp og rente');
-      ['m-eff','m-y1i','m-y1p','m-fees-tot','m-tax','m-tax-y1','m-stress-mth','m-stress-diff','m-last','m-io-mthfree','m-io-mthafter','m-io-extra'].forEach(function(id){setEl(id,'–');});
+      ['m-nom','m-eff','m-y1i','m-y1p','m-fees-tot','m-tax','m-tax-y1','m-stress-mth','m-stress-diff','m-last','m-io-mthfree','m-io-mthafter','m-io-extra'].forEach(function(id){setEl(id,'–');});
       setEl('hStatMnd','–'); setEl('hStatRnt','–');
       setEl('mStripMnd','–'); setEl('mStripTot','–'); setEl('mStripInt','–'); setEl('mStripEff','–');
       show('m-last-row',false);
@@ -645,11 +693,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       show('m-last-row', false);
     }
 
-    var effRate = mRate === 0 ? 0 : (Math.pow(1 + mRate, 12) - 1) * 100;
-
     setEl('m-mth', fmt(mnd));
     setEl('m-sub', loanType === 'serial' ? 'Første måned. Beløpet synker deretter.' : 'Likt beløp hver måned i hele løpetiden.');
-    setEl('m-eff', effRate.toFixed(2).replace('.', ',') + ' %');
     setEl('m-y1i', fmt(r1));
     setEl('m-y1p', fmt(a1));
 
@@ -678,17 +723,21 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       show('m-io-res', false);
     }
 
-    // Omkostninger
-    var feesPerMonth = parseNum('m-fees');
+    // Omkostninger: månedlige gebyrer gjennom hele løpetiden + etableringsgebyret
+    var feesPerMonth = Math.max(parseNum('m-fees'), 0);
+    var feeEst = Math.max(parseNum('m-est'), 0);
+    var totalFees = feesPerMonth * n + feeEst;
+    setEl('m-fees-tot', fmt(totalFees));
+    show('m-fees-cell', totalFees > 0);
     if(feesPerMonth > 0){
-      var totalFees = feesPerMonth * n;
-      setEl('m-fees-tot', fmt(totalFees));
-      show('m-fees-cell', true);
       setEl('m-mth', fmt(mnd + feesPerMonth));
       setEl('m-sub', loanType === 'serial' ? 'Første måned, med omkostninger. Beløpet synker deretter.' : 'Likt beløp hver måned i hele løpetiden, med omkostninger.');
-    } else {
-      show('m-fees-cell', false);
     }
+
+    // Rente: nominell ved siden av effektiv, der effektiv også tar med gebyrene
+    var effRate = effRente(P, mRate, n, loanType, feesPerMonth, feeEst);
+    setEl('m-nom', pct(yearlyRate));
+    setEl('m-eff', pct(effRate));
 
     // Avdragsfri periode valgt: beløpet øverst gjelder lånet uten avdragsfri periode
     if(ioCheck && ioCheck.checked && ioYears < years){
@@ -733,9 +782,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     // KS-strip (live oppsummering på toppen)
     setEl('mStripMnd', fmt(mnd + (feesPerMonth||0)));
-    setEl('mStripTot', fmt(tot + (feesPerMonth>0 ? feesPerMonth*n : 0)));
+    setEl('mStripTot', fmt(tot + totalFees));
     setEl('mStripInt', fmt(rnt));
-    setEl('mStripEff', effRate.toFixed(2).replace('.', ',') + ' %');
+    setEl('mStripEff', pct(effRate));
 
     // Eksport-state for morCsv() (core.js) — nedbetalingsplan gjenskapes fra disse
     var _ioYExp = (ioCheck && ioCheck.checked) ? (parseNum('m-io-yrs') || 5) : 0;
@@ -754,6 +803,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         r:    document.getElementById('m-r').value,
         y:    document.getElementById('m-y').value,
         fees: document.getElementById('m-fees').value,
+        est:  document.getElementById('m-est').value,
         io:   document.getElementById('m-io-check').checked,
         ioy:  document.getElementById('m-io-yrs').value
       };
@@ -770,6 +820,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       if(s.r    != null) document.getElementById('m-r').value    = s.r;
       if(s.y    != null) document.getElementById('m-y').value    = s.y;
       if(s.fees != null) document.getElementById('m-fees').value = s.fees;
+      if(s.est  != null) document.getElementById('m-est').value  = s.est;
       if(s.io)           document.getElementById('m-io-check').checked = true;
       if(s.ioy  != null) document.getElementById('m-io-yrs').value = s.ioy;
     } catch(e){}
@@ -782,7 +833,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   });
 
   // ── Live recalc ──
-  ['m-a','m-r','m-y','m-fees','m-io-yrs'].forEach(function(id){
+  ['m-a','m-r','m-y','m-fees','m-est','m-io-yrs'].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.addEventListener('input', calcMor);
   });
