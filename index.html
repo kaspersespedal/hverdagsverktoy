@@ -1906,11 +1906,15 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
 html[data-theme="carbon"] #nordlysCanvas{opacity:0!important}
 /* Nordlys v2 har en skarp, lys underkant som på PC ofte går rett bak tittelens
    siste linje («skatt og lovverk.»), og kontrasten falt da under 3:1. En mørk glød
-   rundt bokstavene holder den over 3,4:1 uten å synes som skygge. Kursivordet
-   tegnes med background-clip:text, så det får drop-shadow i stedet: arvet
-   text-shadow legger seg over gradienten og visker ut ordet. */
+   rundt bokstavene holder den over 3:1. Kursivordet tegnes med background-clip:text,
+   så det får drop-shadow i stedet: arvet text-shadow legger seg over gradienten og
+   visker ut ordet. Ordmaskene (overflow:hidden for innglidningen) klipper gløden til
+   harde bokser per ord, så de åpnes når tittelen har landet. Disco-kanten går bak
+   kursivordet på mindre PC-skjermer, derfor sterkere skygge der. */
 html:is([data-theme="nordlys"],[data-theme="disco"]) #heroH1{text-shadow:0 1px 3px rgba(3,4,9,.85),0 0 14px rgba(3,4,9,.8),0 0 34px rgba(3,4,9,.85)}
 html:is([data-theme="nordlys"],[data-theme="disco"]) #heroH1 .shimmer{text-shadow:none;filter:drop-shadow(0 0 5px rgba(3,4,9,.85)) drop-shadow(0 0 14px rgba(3,4,9,.75))}
+html[data-theme="disco"] #heroH1 .shimmer{filter:drop-shadow(0 0 2px rgba(3,4,9,.95)) drop-shadow(0 0 6px rgba(3,4,9,.9)) drop-shadow(0 0 16px rgba(3,4,9,.8))}
+html:is([data-theme="nordlys"],[data-theme="disco"]) body.heroLanded #heroH1 .word-mask{overflow:visible}
 /* bw = smokey-jazz noir forside: ellers lyst tema (lys bg/sort tekst), her flippet
    til mork jazzklubb - dyp sort, drivende WebGL-royk, lys serif-tekst. Token-drevet
    forside -> hero/kort/linjer folger token-overrideet. !important slar themes.css. */
@@ -4344,7 +4348,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   /* Stjernekatalog i celler på 250 × 250 CSS-px: [x, y, mag, r, g, b, seed, rank, type]
      per stjerne. Hver celle har sitt eget faste frø, så de samme stjernene står
      der uansett vindusstørrelse, og bare cellene som synes blir laget: en telefon
-     trenger 8 celler (~2 000 stjerner), ikke hele himmelen på 51 000. Dobbel
+     trenger 8 celler (~2 600 stjerner, ~1 000 tegnes), ikke hele himmelen på 51 000. Dobbel
      tetthet; STAR_DENSITY velger andelen via rank, så de samme stjernene står
      igjen når tettheten endres. type 0 = bakgrunn, 1 = Melkeveien, 2 = stjernehopen. */
   var CELL = 0.25;
@@ -4413,6 +4417,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     'uniform vec3  uCTop;',
     'uniform vec3  uCFringe;',
     'uniform vec2  uCss;',
+    'uniform float uAnchor;',
     'uniform float uMW;',
     '// ---------- self-contained value noise (WebGL1-safe) ----------',
     'float hash21(vec2 p){',
@@ -4674,11 +4679,16 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     '    float eA; float eB;',
     '    // hovedbue + et svakere ark bak som bare finnes i partier',
     '    float mB = smoothstep(0.30, 0.72, n1(x * 0.85 + 3.0 - t * 0.006));',
-    '    // Staaende skjerm (telefon): buen heves, vandrer mindre og faar hoyere gronn kropp,',
-    '    // saa kanten ligger bak sokefeltet og kroppen fyller toppen. Uten dette laa kanten',
-    '    // bak kategoripanelet og toppen var nesten svart. Liggende (aspect >= 1) er uendret.',
+    '    // Staaende skjerm (telefon, nettbrett): buen heves, vandrer mindre og faar hoyere',
+    '    // gronn kropp, saa kanten ligger bak sokefeltet og kroppen fyller toppen. Uten dette',
+    '    // laa kanten bak kategoripanelet og toppen var nesten svart. Paa telefon (aspect',
+    '    // under ~0,6) forankres kanten til midten av sokefeltet, som JS maaler i CSS-px fra',
+    '    // toppen (uAnchor, 0 = ikke maalt): skjermhoyden varierer for mye med modell og',
+    '    // nettleserlinjer til at en fast andel treffer feltet. Liggende (aspect >= 1) er uendret.',
     '    float por = 1.0 - smoothstep(0.60, 1.00, aspect);',
-    '    vec3 aur = curtain(x, y, t, uTimeR, 1.0,  vec3(0.625 + 0.065 * por, 0.080, -0.12), 0.120 * (1.0 - 0.58 * por), 0.125 * (1.0 + 0.6 * por), 11.0, 1.00, 1.00, 1.00, 220.0, eA);',
+    '    float anc = step(0.5, uAnchor) * (1.0 - smoothstep(0.55, 0.65, aspect));',
+    '    float baseY = mix(0.625 + 0.065 * por, 1.0 - uAnchor / uCss.y, anc);',
+    '    vec3 aur = curtain(x, y, t, uTimeR, 1.0,  vec3(baseY, 0.080, -0.12), 0.120 * (1.0 - 0.58 * por), 0.125 * (1.0 + 0.6 * por), 11.0, 1.00, 1.00, 1.00, 220.0, eA);',
     '    aur     += curtain(x, y, t, uTimeR, 7.0,  vec3(0.800 + 0.050 * por, 0.050,  0.40), 0.110, 0.095,  8.0, 0.85, 0.80, 0.50,  60.0, eB) * mB;',
     '    // svakt spredt lys rett under hovedbuen (faller raskt), nordlysglod mot horisonten, airglow',
     '    aur += uCMid * exp(-max(eA - y, 0.0) * 14.0 - max(y - eA, 0.0) * 6.0) * 0.040 * (0.55 + 0.45 * n1(x * 1.4 - t * 0.03));',
@@ -4989,7 +4999,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     var cc = null, ct = null, lastTheme = null, isSmoke = false, mode = 0;
     var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     var isStatic = !!(mq && mq.matches);
-    var ro = null, mo = null, subs = [];
+    var ro = null, mo = null, subs = [], booting = true;
+    var anchorEl = opts.anchor || null, anchorY = 0;
     function on(target, type, fn, o) { if (!target || !target.addEventListener) return; target.addEventListener(type, fn, o); subs.push([target, type, fn, o]); }
 
     function themeKey() { var k = root.getAttribute('data-theme') || 'carbon'; return THEMES[k] ? k : 'carbon'; }
@@ -5039,8 +5050,10 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
           C: link(QUAD_VS, '#define MOON ' + (k === 4 ? 1 : 0) + '\n' + COMP_FS, ['aPos']),
           uA: null, uC: null
         };
-        if (!starsLinked) { starsLinked = true; progP = link(STAR_VS, STAR_FS, ['aPos', 'aMag', 'aCol', 'aSeed']); }
-        scene = S; progA = S.A; progC = S.C; uA = S.uA; uC = S.uC;
+        if (!starsLinked && k !== 1) { starsLinked = true; progP = link(STAR_VS, STAR_FS, ['aPos', 'aMag', 'aCol', 'aSeed']); } // noir har ingen stjerner
+        // Kompilerer temaets scene fortsatt, tegnes forrige ferdige scene videre i stedet for
+        // at bildet fryser. draw() bytter når programmene er klare.
+        if (S.uA || !scene || !scene.uA) { scene = S; progA = S.A; progC = S.C; uA = S.uA; uC = S.uC; }
       };
 
       quadBuf = gl.createBuffer();
@@ -5069,7 +5082,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         for (var k in SCENES) {
           var S = SCENES[k];
           if (S.uA) continue;
-          S.uA = U(S.A, ['uRes', 'uTime', 'uTimeR', 'uAmp', 'uLight', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe', 'uCss', 'uMW']);
+          S.uA = U(S.A, ['uRes', 'uTime', 'uTimeR', 'uAmp', 'uLight', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe', 'uCss', 'uMW', 'uAnchor']);
           S.uC = U(S.C, ['uRes', 'uTime', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx']);
         }
         if (progP && !uP) uP = U(progP, ['uCss', 'uDpr', 'uTime', 'uLim', 'uGain', 'uTwk', 'uTint', 'uMoon', 'uMaxPt', 'uTex', 'uRes', 'uMode']);
@@ -5085,10 +5098,14 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       if (!pendingProgs.length) return true;
       var i;
       if (pcExt) for (i = 0; i < pendingProgs.length; i++) if (!gl.getProgramParameter(pendingProgs[i].prog, pcExt.COMPLETION_STATUS_KHR)) return false;
+      // Tapt kontekst (også midt i spørringen): COMPLETION_STATUS sier ja og LINK_STATUS
+      // gir null, men det er ikke en shaderfeil. webglcontextrestored bygger alt på nytt.
+      if (gl.isContextLost()) return false;
       var ok = true;
       for (i = 0; i < pendingProgs.length; i++) {
         var p = pendingProgs[i];
         if (gl.getProgramParameter(p.prog, gl.LINK_STATUS)) continue;
+        if (gl.isContextLost()) return false;
         if (!gl.getShaderParameter(p.vs, gl.COMPILE_STATUS)) console.warn('Nordlys shader: ' + gl.getShaderInfoLog(p.vs));
         if (!gl.getShaderParameter(p.fs, gl.COMPILE_STATUS)) console.warn('Nordlys shader: ' + gl.getShaderInfoLog(p.fs));
         console.warn('Nordlys link: ' + gl.getProgramInfoLog(p.prog));
@@ -5161,10 +5178,10 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, aw, ah, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         starsDirty = true;
         // Canvaset tømmes ved ny størrelse — tegn på nytt når loopen står (redusert
-        // bevegelse, skjult fane). Ikke ved oppstart: da tar første tick tegningen, så
-        // statussjekken aldri havner midt i HTML-parsingen (E257). Ikke på tema der
+        // bevegelse, skjult fane). Ikke ved oppstart: første tegning venter til HTML-en
+        // er lest, så statussjekken aldri havner midt i parsingen (E257). Ikke på tema der
         // canvaset er skjult (carbon og de lyse): der skal motoren ikke gjøre noe.
-        if (!raf && canvasVisible() && (isStatic || document.hidden)) draw();
+        if (!booting && !raf && canvasVisible() && (isStatic || document.hidden)) draw();
       }
     }
 
@@ -5182,12 +5199,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       var sp = CONFIG.SPEED;
       t += dt * 0.001 * sp;
       // Intro-reveal: nordlyset tennes svakt -> stiger -> blusser opp -> legger seg.
-      // Klokka starter først når shaderne er klare. Ellers brukes tenningen opp
-      // usynlig mens de kompilerer (kald shader-cache ved første besøk).
-      if (revealT0 < 0 && !pendingProgs.length) revealT0 = now;
       var sg = 0;
       if (!revealDone) {
-        var rr = revealT0 < 0 ? 0 : (now - revealT0) / 1500;
+        var rr = revealT0 < 0 ? 0 : Math.max(0, now - revealT0) / 1500;   // revealT0 settes i draw()
         if (rr >= 1) { revealDone = true; ampNow = CONFIG.INTENSITY; }
         else {
           var rise;
@@ -5231,17 +5245,25 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 
     function draw() {
       if (dead || !gl || !cc) return;
-      // Tapt kontekst: ikke lenk, og ikke spør etter LINK_STATUS (den gir null da, og
-      // det ville blitt lest som en shaderfeil). webglcontextrestored bygger alt på nytt.
+      // Tapt kontekst: ikke lenk og ikke tegn. webglcontextrestored bygger alt på nytt.
       if (gl.isContextLost()) return;
       // Degenerert buffer (ingen layout ennå): ikke tegn og ikke vis canvaset.
       if ((canvas.clientWidth || 0) < 4 || (canvas.clientHeight || 0) < 4 || canvas.width < 4 || canvas.height < 4) return;
       ensureScene();
-      if (!programsReady()) {
-        if (gl && !raf && !retryT) retryT = setTimeout(function () { retryT = 0; if (canvasVisible()) draw(); }, 60);
+      var ready = programsReady();
+      if (!gl) return;
+      // Ikke klar: med loopen i gang tegnes forrige ferdige scene videre (uA finnes),
+      // ellers prøves det igjen litt senere.
+      if (!ready && (!raf || !uA)) {
+        if (!raf && !retryT) retryT = setTimeout(function () { retryT = 0; if (canvasVisible()) draw(); }, 60);
         return;
       }
-      if (!gl) return;
+      if (ready) {
+        ensureScene();
+        // Tenningen starter ved første bilde av scenen, ikke mens shaderne kompilerer:
+        // ved kald shader-cache (første besøk) ble den ellers brukt opp usynlig.
+        if (revealT0 < 0) revealT0 = performance.now();
+      }
       if (starsDirty) rebuildStars();
       var cw = canvas.clientWidth || 2, ch = canvas.clientHeight || 2;
       var W = window.__smk || {};
@@ -5261,6 +5283,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       v3(uA.uSkyTop, cc.skyTop); v3(uA.uSkyBot, cc.skyBot);
       v3(uA.uCEdge, cc.edge); v3(uA.uCMid, cc.mid); v3(uA.uCTop, cc.top); v3(uA.uCFringe, cc.fringe);
       gl.uniform2f(uA.uCss, cw, ch);
+      gl.uniform1f(uA.uAnchor, anchorY);
       gl.uniform1f(uA.uMW, Math.max(0, cc.mw[0] * CONFIG.MILKY_WAY));
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
@@ -5316,8 +5339,26 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     if (!initGL()) return noop; // WebGL utilgjengelig → CSS .band-aurora beholdes
     if (bodyClass && document.body) document.body.classList.add('nordlys-on'); // skjuler CSS-bandene, canvas overtar
     syncTheme();
-    if (typeof ResizeObserver !== 'undefined') { ro = new ResizeObserver(function () { resize(false); }); ro.observe(canvas); }
-    else on(window, 'resize', function () { resize(false); });
+    // Telefon: hovedbuen forankres til midten av opts.anchor (søkefeltet), målt i
+    // CSS-px fra toppen av siden uten transform. Måles på nytt når canvaset eller
+    // seksjonen rundt ankeret endrer størrelse (fonter, språk, rotasjon).
+    function measureAnchor() {
+      var y = 0, e = anchorEl, old = anchorY;
+      while (e) { y += e.offsetTop; e = e.offsetParent; }
+      anchorY = anchorEl && anchorEl.offsetHeight ? y + anchorEl.offsetHeight / 2 : 0;
+      return anchorY !== old;
+    }
+    function onResize() {
+      var moved = measureAnchor();
+      resize(false);
+      if (moved && !booting && !raf && canvasVisible() && (isStatic || document.hidden)) draw();
+    }
+    measureAnchor();
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(onResize); ro.observe(canvas);
+      if (anchorEl) ro.observe((anchorEl.closest && anchorEl.closest('section')) || anchorEl);
+    }
+    else on(window, 'resize', onResize);
     resize(true);
 
     on(canvas, 'webglcontextlost', function (e) { e.preventDefault(); pause(); });
@@ -5360,7 +5401,13 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 
     // Skjult fane ved last: hopp over intro-tenningen og mal ett bilde med en gang.
     if (document.hidden) { revealDone = true; ampNow = CONFIG.INTENSITY; }
-    if (isStatic || document.hidden) { if (canvasVisible()) draw(); } else resume();
+    booting = false;
+    // Programmene for temaet lenkes nå (bare lenking, ingen statussjekk), men første
+    // tegning venter til HTML-en er lest: uten KHR_parallel_shader_compile står
+    // statussjekken og venter på driveren, og da skal den ikke holde igjen sidens skript.
+    if (canvasVisible()) ensureScene();
+    var start = function () { if (dead) return; if (isStatic || document.hidden) { if (canvasVisible()) draw(); } else resume(); };
+    if (document.readyState === 'loading') on(document, 'DOMContentLoaded', start); else setTimeout(start, 0);
 
     return {
       destroy: function () {
@@ -5393,7 +5440,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
           if ((k === 'STAR_DENSITY' || k === 'MILKY_WAY') && CONFIG[k] !== cfg[k]) starsDirty = true;
           CONFIG[k] = cfg[k];
         }
-        if (!raf) { if (revealDone) ampNow = CONFIG.INTENSITY; draw(); }
+        if (!raf) { if (revealDone) ampNow = CONFIG.INTENSITY; if (canvasVisible()) draw(); }
       },
       config: CONFIG
     };
@@ -5405,7 +5452,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   // før fila lastes for å montere selv.
   if (!window.HV_NORDLYS_MANUAL) {
     var el = document.getElementById('nordlysCanvas');
-    if (el) window.HVNordlys.active = mount(el);
+    if (el) window.HVNordlys.active = mount(el, { anchor: document.getElementById('searchShell') });
   }
 })();
 
