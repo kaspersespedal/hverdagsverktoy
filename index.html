@@ -4991,15 +4991,15 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     var gl = null, pcExt = null, progA = null, progC = null, progP = null, uA = null, uC = null, uP = null;
     var tex = null, fbo = null, quadBuf = null, starBuf = null;
     var pendingProgs = [], bindUniforms = null, ensureScene = null;
-    var SCENES = {}, scene = null, starsLinked = false;   // programmer per scene, se ensureScene
+    var SCENES = {}, COMPS = {}, scene = null, starsLinked = false;   // programmer per scene, se ensureScene
     var raf = 0, last = 0, t = 20 + Math.random() * 80, tr = t, shown = false, retryT = 0;
-    var ampNow = CONFIG.INTENSITY, actNow = 0, revealT0 = -1, revealDone = false;
+    var ampNow = CONFIG.INTENSITY, actNow = 0, revealOn = false, revealMs = 0, revealPending = false, revealDone = false;
     var mx = 0.5, my = 0.35, tmx = 0.5, tmy = 0.35, mAmt = 0, tmAmt = 0;
     var aw = 2, ah = 2, starCount = 0, starsDirty = true, maxPt = 64;
     var cc = null, ct = null, lastTheme = null, isSmoke = false, mode = 0;
     var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
     var isStatic = !!(mq && mq.matches);
-    var ro = null, mo = null, subs = [], booting = true;
+    var ro = null, mo = null, subs = [], started = false;   // started: siden er lest, se start()
     var anchorEl = opts.anchor || null, anchorY = 0;
     function on(target, type, fn, o) { if (!target || !target.addEventListener) return; target.addEventListener(type, fn, o); subs.push([target, type, fn, o]); }
 
@@ -5038,18 +5038,16 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         pendingProgs.push({ prog: prog, vs: vs, fs: fs });
         return prog;
       }
-      pendingProgs = []; SCENES = {}; scene = null; starsLinked = false;
+      pendingProgs = []; SCENES = {}; COMPS = {}; scene = null; starsLinked = false;
       progA = progC = progP = null; uA = uC = uP = null;
       // Programmene lenkes først ved første tegning, og bare for scenen temaet viser.
       // Carbon og de lyse temaene, der canvaset er skjult, kompilerer ingenting, og
       // nordlys slipper å kompilere månen og noir-scenen den aldri viser.
       ensureScene = function () {
-        var k = mode === 4 ? 4 : mode === 1 ? 1 : 0, S = SCENES[k];
-        if (!S) S = SCENES[k] = {
-          A: link(QUAD_VS, '#define SCENE ' + k + '\n' + AURORA_FS, ['aPos']),
-          C: link(QUAD_VS, '#define MOON ' + (k === 4 ? 1 : 0) + '\n' + COMP_FS, ['aPos']),
-          uA: null, uC: null
-        };
+        var k = mode === 4 ? 4 : mode === 1 ? 1 : 0, S = SCENES[k], m = k === 4 ? 1 : 0;
+        // Komposittpasset uten måne er likt for nordlys og noir, så det lenkes én gang.
+        if (!COMPS[m]) COMPS[m] = link(QUAD_VS, '#define MOON ' + m + '\n' + COMP_FS, ['aPos']);
+        if (!S) S = SCENES[k] = { A: link(QUAD_VS, '#define SCENE ' + k + '\n' + AURORA_FS, ['aPos']), C: COMPS[m], uA: null, uC: null };
         if (!starsLinked && k !== 1) { starsLinked = true; progP = link(STAR_VS, STAR_FS, ['aPos', 'aMag', 'aCol', 'aSeed']); } // noir har ingen stjerner
         // Kompilerer temaets scene fortsatt, tegnes forrige ferdige scene videre i stedet for
         // at bildet fryser. draw() bytter når programmene er klare.
@@ -5178,15 +5176,15 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, aw, ah, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         starsDirty = true;
         // Canvaset tømmes ved ny størrelse — tegn på nytt når loopen står (redusert
-        // bevegelse, skjult fane). Ikke ved oppstart: første tegning venter til HTML-en
-        // er lest, så statussjekken aldri havner midt i parsingen (E257). Ikke på tema der
+        // bevegelse, skjult fane). Før siden er lest gjør draw() ingenting (se start()),
+        // så statussjekken aldri havner midt i parsingen (E257). Ikke på tema der
         // canvaset er skjult (carbon og de lyse): der skal motoren ikke gjøre noe.
-        if (!booting && !raf && canvasVisible() && (isStatic || document.hidden)) draw();
+        if (!raf && canvasVisible() && (isStatic || document.hidden)) draw();
       }
     }
 
     function resume() {
-      if (!dead && gl && !raf && !isStatic && !document.hidden && canvasVisible()) { last = performance.now(); raf = requestAnimationFrame(tick); }
+      if (!dead && started && gl && !raf && !isStatic && !document.hidden && canvasVisible()) { last = performance.now(); raf = requestAnimationFrame(tick); }
     }
     function pause() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
 
@@ -5201,7 +5199,11 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       // Intro-reveal: nordlyset tennes svakt -> stiger -> blusser opp -> legger seg.
       var sg = 0;
       if (!revealDone) {
-        var rr = revealT0 < 0 ? 0 : Math.max(0, now - revealT0) / 1500;   // revealT0 settes i draw()
+        // Tenningen går på tegnet tid (maks 40 ms per bilde), ikke veggklokke, så et
+        // GPU-stopp rett etter første bilde av en ny scene ikke hopper over starten.
+        // revealOn settes i draw() ved første bilde av scenen.
+        if (revealOn) revealMs += Math.min(dt, 40);
+        var rr = revealMs / 1500;
         if (rr >= 1) { revealDone = true; ampNow = CONFIG.INTENSITY; }
         else {
           var rise;
@@ -5244,7 +5246,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     }
 
     function draw() {
-      if (dead || !gl || !cc) return;
+      if (dead || !started || !gl || !cc) return;
       // Tapt kontekst: ikke lenk og ikke tegn. webglcontextrestored bygger alt på nytt.
       if (gl.isContextLost()) return;
       // Degenerert buffer (ingen layout ennå): ikke tegn og ikke vis canvaset.
@@ -5260,9 +5262,11 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       }
       if (ready) {
         ensureScene();
-        // Tenningen starter ved første bilde av scenen, ikke mens shaderne kompilerer:
-        // ved kald shader-cache (første besøk) ble den ellers brukt opp usynlig.
-        if (revealT0 < 0) revealT0 = performance.now();
+        // Tenningen starter ved første bilde av scenen, også etter et temabytte, ikke mens
+        // shaderne kompilerer: ved kald shader-cache ble den ellers brukt opp usynlig, og
+        // forrige scene ble dempet så lenge den nye kompilerte.
+        if (revealPending) { revealPending = false; revealDone = false; revealOn = false; }
+        if (!revealOn) { revealOn = true; revealMs = 0; }
       }
       if (starsDirty) rebuildStars();
       var cw = canvas.clientWidth || 2, ch = canvas.clientHeight || 2;
@@ -5340,8 +5344,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     if (bodyClass && document.body) document.body.classList.add('nordlys-on'); // skjuler CSS-bandene, canvas overtar
     syncTheme();
     // Telefon: hovedbuen forankres til midten av opts.anchor (søkefeltet), målt i
-    // CSS-px fra toppen av siden uten transform. Måles på nytt når canvaset eller
-    // seksjonen rundt ankeret endrer størrelse (fonter, språk, rotasjon).
+    // CSS-px fra toppen av siden uten transform. Måles på nytt når canvaset, seksjonen
+    // rundt ankeret eller body endrer størrelse (fonter, språk, rotasjon, innhold over).
     function measureAnchor() {
       var y = 0, e = anchorEl, old = anchorY;
       while (e) { y += e.offsetTop; e = e.offsetParent; }
@@ -5351,12 +5355,12 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     function onResize() {
       var moved = measureAnchor();
       resize(false);
-      if (moved && !booting && !raf && canvasVisible() && (isStatic || document.hidden)) draw();
+      if (moved && !raf && canvasVisible() && (isStatic || document.hidden)) draw();
     }
     measureAnchor();
     if (typeof ResizeObserver !== 'undefined') {
       ro = new ResizeObserver(onResize); ro.observe(canvas);
-      if (anchorEl) ro.observe((anchorEl.closest && anchorEl.closest('section')) || anchorEl);
+      if (anchorEl) { ro.observe((anchorEl.closest && anchorEl.closest('section')) || anchorEl); ro.observe(document.body); }
     }
     else on(window, 'resize', onResize);
     resize(true);
@@ -5382,7 +5386,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       syncTheme();
       if (isStatic || (!raf && document.hidden)) { if (canvasVisible()) draw(); return; }
       if (canvasVisible()) {
-        if (lastTheme !== prevK) { revealT0 = -1; revealDone = false; }
+        if (lastTheme !== prevK) revealPending = true;   // ny tenning ved første bilde av det nye temaet
         resume();
       } else pause();
     });
@@ -5401,12 +5405,13 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 
     // Skjult fane ved last: hopp over intro-tenningen og mal ett bilde med en gang.
     if (document.hidden) { revealDone = true; ampNow = CONFIG.INTENSITY; }
-    booting = false;
-    // Programmene for temaet lenkes nå (bare lenking, ingen statussjekk), men første
-    // tegning venter til HTML-en er lest: uten KHR_parallel_shader_compile står
-    // statussjekken og venter på driveren, og da skal den ikke holde igjen sidens skript.
+    // Programmene for temaet lenkes nå (bare lenking, ingen statussjekk), men ingenting
+    // tegnes og loopen starter ikke før HTML-en er lest (draw() og resume() venter på
+    // started): uten KHR_parallel_shader_compile står statussjekken og venter på driveren,
+    // og da skal den ikke holde igjen sidens skript. Det gjelder også tema- og
+    // størrelsesendringer fra andre skript før det.
     if (canvasVisible()) ensureScene();
-    var start = function () { if (dead) return; if (isStatic || document.hidden) { if (canvasVisible()) draw(); } else resume(); };
+    var start = function () { if (dead || started) return; started = true; if (isStatic || document.hidden) { if (canvasVisible()) draw(); } else resume(); };
     if (document.readyState === 'loading') on(document, 'DOMContentLoaded', start); else setTimeout(start, 0);
 
     return {
