@@ -5052,6 +5052,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         // Kompilerer temaets scene fortsatt, tegnes forrige ferdige scene videre i stedet for
         // at bildet fryser. draw() bytter når programmene er klare.
         if (S.uA || !scene || !scene.uA) { scene = S; progA = S.A; progC = S.C; uA = S.uA; uC = S.uC; }
+        return scene === S;
       };
 
       quadBuf = gl.createBuffer();
@@ -5095,7 +5096,13 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     function programsReady() {
       if (!pendingProgs.length) return true;
       var i;
-      if (pcExt) for (i = 0; i < pendingProgs.length; i++) if (!gl.getProgramParameter(pendingProgs[i].prog, pcExt.COMPLETION_STATUS_KHR)) return false;
+      if (pcExt) {
+        // Spør om alle, ikke bare fram til første uferdige: spørringen blokkerer ikke, og
+        // lange byttekjeder ble ferdige ~1 s raskere slik (målt).
+        var done = true;
+        for (i = 0; i < pendingProgs.length; i++) if (!gl.getProgramParameter(pendingProgs[i].prog, pcExt.COMPLETION_STATUS_KHR)) done = false;
+        if (!done) return false;
+      }
       // Tapt kontekst (også midt i spørringen): COMPLETION_STATUS sier ja og LINK_STATUS
       // gir null, men det er ikke en shaderfeil. webglcontextrestored bygger alt på nytt.
       if (gl.isContextLost()) return false;
@@ -5251,7 +5258,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       if (gl.isContextLost()) return;
       // Degenerert buffer (ingen layout ennå): ikke tegn og ikke vis canvaset.
       if ((canvas.clientWidth || 0) < 4 || (canvas.clientHeight || 0) < 4 || canvas.width < 4 || canvas.height < 4) return;
-      ensureScene();
+      var onTarget = ensureScene();
       var ready = programsReady();
       if (!gl) return;
       // Ikke klar: med loopen i gang tegnes forrige ferdige scene videre (uA finnes),
@@ -5260,13 +5267,13 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         if (!raf && !retryT) retryT = setTimeout(function () { retryT = 0; if (canvasVisible()) draw(); }, 60);
         return;
       }
-      if (ready) {
-        ensureScene();
-        // Tenningen starter ved første bilde av scenen, også etter et temabytte, ikke mens
-        // shaderne kompilerer: ved kald shader-cache ble den ellers brukt opp usynlig, og
-        // forrige scene ble dempet så lenge den nye kompilerte.
+      if (ready) onTarget = ensureScene();
+      // Tenningen starter ved første bilde av temaets egen scene, også etter et temabytte,
+      // ikke mens shaderne kompilerer: ved kald shader-cache ble den ellers brukt opp
+      // usynlig, og forrige scene ble dempet så lenge den nye kompilerte.
+      if (onTarget) {
         if (revealPending) { revealPending = false; revealDone = false; revealOn = false; }
-        if (!revealOn) { revealOn = true; revealMs = 0; }
+        if (!revealOn) { revealOn = true; revealMs = 0; if (raf && !revealDone) ampNow = 0.16; }
       }
       if (starsDirty) rebuildStars();
       var cw = canvas.clientWidth || 2, ch = canvas.clientHeight || 2;
@@ -5395,7 +5402,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     if (mq) {
       var onMq = function () {
         isStatic = mq.matches;
-        if (isStatic) { pause(); if (ct) cc = JSON.parse(JSON.stringify(ct)); if (canvasVisible()) draw(); }
+        if (isStatic) { revealDone = true; ampNow = CONFIG.INTENSITY; pause(); if (ct) cc = JSON.parse(JSON.stringify(ct)); if (canvasVisible()) draw(); }
         else resume();
       };
       if (mq.addEventListener) on(mq, 'change', onMq);
@@ -5403,15 +5410,21 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     }
     on(document, 'visibilitychange', function () { if (document.hidden) pause(); else resume(); });
 
-    // Skjult fane ved last: hopp over intro-tenningen og mal ett bilde med en gang.
-    if (document.hidden) { revealDone = true; ampNow = CONFIG.INTENSITY; }
+    // Skjult fane eller redusert bevegelse ved last: hopp over intro-tenningen og mal
+    // ett bilde med en gang (slås bevegelse på senere, fortsetter pulsen der).
+    if (document.hidden || isStatic) { revealDone = true; ampNow = CONFIG.INTENSITY; }
     // Programmene for temaet lenkes nå (bare lenking, ingen statussjekk), men ingenting
     // tegnes og loopen starter ikke før HTML-en er lest (draw() og resume() venter på
     // started): uten KHR_parallel_shader_compile står statussjekken og venter på driveren,
     // og da skal den ikke holde igjen sidens skript. Det gjelder også tema- og
     // størrelsesendringer fra andre skript før det.
     if (canvasVisible()) ensureScene();
-    var start = function () { if (dead || started) return; started = true; if (isStatic || document.hidden) { if (canvasVisible()) draw(); } else resume(); };
+    var start = function () {
+      if (dead || started) return;
+      started = true; measureAnchor();
+      if (isStatic || document.hidden) setTimeout(function () { if (!dead && canvasVisible()) draw(); }, 0);
+      else resume();
+    };
     if (document.readyState === 'loading') on(document, 'DOMContentLoaded', start); else setTimeout(start, 0);
 
     return {
