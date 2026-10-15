@@ -31,7 +31,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v236" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v237" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -50,7 +50,7 @@
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
 <link rel="stylesheet" href="/shared/themes.css?v=v10">
-<link rel="stylesheet" href="/shared/learn.css?v=v3">
+<link rel="stylesheet" href="/shared/learn.css?v=v4">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -326,7 +326,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     font-size:15px;line-height:1.55;
     min-height:100vh;
     -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-    overflow-x:hidden;
+    overflow-x:hidden;overflow-x:clip; /* clip: hidden gjorde body til egen rullecontainer, så sticky toppmeny/innholdsliste rullet bort (se site-shell.css) */
     width:100%;
     max-width:100vw;
   }
@@ -570,6 +570,21 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     .calc-help-btn:hover,.focus-card-btn:hover{color:var(--ink);border-color:var(--line);background:var(--hover-bg);}
   }
   .calc-help-btn:focus-visible,.focus-card-btn:focus-visible{outline:1px solid var(--accent);outline-offset:2px;}
+  /* Som i shared/site-shell.css: ⛶ blir en pillknapp med ikon og ord når heroen
+     står i én kolonne (ordet er aria-label, oversatt i core.js). */
+  @media (max-width:1024px){
+    .page-hero .page-hero-actions{flex-wrap:wrap;gap:8px}
+    .page-hero-actions > .focus-card-btn{width:auto;height:32px;padding:0;padding-inline:10px 12px;gap:0;border-radius:999px;
+      font-size:0;background:rgba(var(--wash-rgb),.03);border:1px solid var(--line-2);color:var(--ink2)}
+    .page-hero-actions > .focus-card-btn::before{content:'';width:14px;height:14px;flex:none;margin-inline-end:6px;background:currentColor;
+      -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10'/%3E%3C/svg%3E") center/contain no-repeat}
+    .page-hero-actions > .focus-card-btn::after{content:attr(aria-label);font:500 12.5px/1 var(--font-sans);letter-spacing:0}
+    .page-hero-actions > .focus-card-btn:active{background:rgba(var(--wash-rgb),.08)}
+    body.focus-mode .page-hero-actions > .focus-card-btn{color:var(--ink);border-color:var(--line-warm)}
+  }
+  /* Som i shared/site-shell.css: på telefon er siste ledd i brødsmulen det samme
+     som tittelen rett under, og det brøt alene ned på ny linje. */
+  @media (max-width:640px){.crumb .here,.crumb .sep:nth-last-child(2){display:none}}
   body.focus-mode .nav-wrap,body.focus-mode .tabs-wrap,body.focus-mode footer{display:none;}
   body.focus-mode .page-hero{padding-top:24px;}
   details.howto{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px;padding:0;}
@@ -1371,7 +1386,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 })();
 </script>
 <script src="/shared/top-chrome.js?v=v248" defer></script>
-<script defer src="/shared/core.js?v=v236"></script>
+<script defer src="/shared/core.js?v=v237"></script>
 <script defer src="/shared/lang/no.js?v=v232"></script>
 <script defer src="/shared/learn.js?v=v2"></script>
 
