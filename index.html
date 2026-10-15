@@ -1904,6 +1904,13 @@ html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-t
 /* Carbon = som live-siden: kun CSS-auroraen (.a5), ingen WebGL-nordlys. Skjul canvas via opacity
    (IKKE display:none → nuller ResizeObserver = 2×2-bug ved temabytte). !important slår JS-inline opacity:1. */
 html[data-theme="carbon"] #nordlysCanvas{opacity:0!important}
+/* Nordlys v2 har en skarp, lys underkant som på PC ofte går rett bak tittelens
+   siste linje («skatt og lovverk.»), og kontrasten falt da under 3:1. En mørk glød
+   rundt bokstavene holder den over 3,4:1 uten å synes som skygge. Kursivordet
+   tegnes med background-clip:text, så det får drop-shadow i stedet: arvet
+   text-shadow legger seg over gradienten og visker ut ordet. */
+html:is([data-theme="nordlys"],[data-theme="disco"]) #heroH1{text-shadow:0 1px 3px rgba(3,4,9,.85),0 0 14px rgba(3,4,9,.8),0 0 34px rgba(3,4,9,.85)}
+html:is([data-theme="nordlys"],[data-theme="disco"]) #heroH1 .shimmer{text-shadow:none;filter:drop-shadow(0 0 5px rgba(3,4,9,.85)) drop-shadow(0 0 14px rgba(3,4,9,.75))}
 /* bw = smokey-jazz noir forside: ellers lyst tema (lys bg/sort tekst), her flippet
    til mork jazzklubb - dyp sort, drivende WebGL-royk, lys serif-tekst. Token-drevet
    forside -> hero/kort/linjer folger token-overrideet. !important slar themes.css. */
@@ -4231,231 +4238,303 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 
 <script id="nordlysEngine">
 /* ============================================================================
- * Nordlys (WebGL) — standalone vanilla-port fra Claude Design-draften.
- * To-pass shader: (1) tema-scene -> lavoppløst tekstur, (2) skarpe stjerner
- * + kompositt i full oppløsning. Hvert tema har sin egen scene (uMode):
- * 0 nordlys-gardiner (også disco) · 1 bw-noir (persiennelys) ·
- * 4 dark-månenatt. Tema-farger følger <html data-theme>.
- * Carbon står med vilje uten scene — canvaset er opacity:0 der (se nordlysCSS),
- * og CSS-auroraen .a5 tegner bakgrunnen, akkurat som før.
- * Fallback: hvis WebGL mangler ELLER prefers-reduced-motion -> CSS .band-aurora
- * beholdes (denne motoren tegner da kun ETT statisk bilde, ingen animasjon).
- * Kilde: "Hverdagsverktoy Forside.html" (dc-runtime-komponent), portert til
- * ren JS uten React/DCLogic. Aktiv kun på forsiden; andre sider bruker
- * CSS-auroraen fra shared/atmosphere.
+ * Nordlys v2 (WebGL) — forsidens himmel. Erstattet v1 i oktober 2026
+ * (Claude Design «Forside Nordlys»).
+ *
+ * <canvas id="nordlysCanvas"> og <style id="nordlysCSS"> er de samme som
+ * med v1. Motoren monterer seg selv på #nordlysCanvas, og eksponerer
+ * window.HVNordlys.mount(canvas, opts) for forhåndsvisninger.
+ *
+ * NORDLYSET (nordlys + disco)
+ *  • Skarp, lysende underkant der det grønne er sterkest — ikke en tykk, uskarp
+ *    lilla stripe. Magenta (N2) finnes bare som en hårfin kant under.
+ *  • Fiolette topper over den grønne kroppen: 630 nm-oksygen lyser høyere opp
+ *    enn 557,7 nm, så høye stråler skifter farge oppover.
+ *  • Tynne stråler i fire skalaer som glir langs buen, peker mot magnetisk senit
+ *    over bildet og har ulik høyde — noen få rager langt over resten.
+ *  • Folder: der buen svinger bratt ser vi langs arket — strålene pakkes tettere
+ *    og lyser sterkere. Buen synker mot sidene, slik en bue gjør i perspektiv.
+ *  • To lag gir dybde: hovedbue og en svakere bue bak, pluss nordlysglød lavt
+ *    over horisonten.
+ *  • Strålene har egen klokke og danser raskere under oppblussene.
+ *  • Lyssøylene og tone-vandringen av det grønne er fjernet — grønt er en
+ *    emisjonslinje og skifter ikke kulør.
+ * STJERNENE (nordlys, mørk, disco)
+ *  • Fast stjernekatalog i stedet for et rutenett per piksel: mange svake, få
+ *    sterke (magnitudefordeling som på himmelen), forankret til toppen av
+ *    vinduet så stjernene står stille ved resize.
+ *  • Farger fra B−V-indeks via sortlegemetemperatur. Svake stjerner er nesten
+ *    hvite — øyet ser ikke farge i svakt lys.
+ *  • Skarp punktkjerne og myk glorie på de sterkeste. Ingen kryss-spikes (det er
+ *    en kamera-artefakt, ikke noe øyet ser).
+ *  • Scintillasjon som øker mot horisonten, ekstinksjon og rødfarging lavt
+ *    nede, fargeblink bare hos sterke stjerner nær horisonten.
+ *  • Nordlyset er gjennomsiktig: stjernene skinner gjennom, men svakere der
+ *    lyset er sterkt. Skyer og horisont dekker dem fortsatt.
+ *  • Svak Melkevei med støvbånd: glød + flere svake stjerner langs båndet.
+ * YTELSE
+ *  • Stjernene er punkter (ca. 1 000 på telefon, 3 000–5 000 på PC) i stedet for
+ *    tre støyfelt per piksel i full oppløsning — komposittpasset blir billigere.
+ *    Katalogen lages i celler, bare for den delen av himmelen som synes.
+ *  • KHR_parallel_shader_compile der den finnes: ingen tegning før shaderne er
+ *    ferdige, så hovedtråden aldri står og venter på driveren.
+ * Månenatt (mørk) og noir (bw) er ellers uendret fra v1.
  * ==========================================================================*/
 (function () {
   'use strict';
 
-  /* ── Justeringsknotter (dette er det du finpusser) ───────────────────── */
-  var CONFIG = {
-    INTENSITY: 0.62,   // uAmp — aurora-styrke
-    SPEED: 1.0,        // tids-multiplikator (0 = frys)
-    STARS: true        // stjernelag av/på
+  /* ── Justeringsknotter ─────────────────────────────────────────────── */
+  var DEFAULTS = {
+    INTENSITY: 0.62,     // uAmp — aurora-styrke
+    SPEED: 1.0,          // tids-multiplikator (0 = frys)
+    STARS: true,         // stjernelag av/på
+    STAR_DENSITY: 1.0,   // 0–2: antall stjerner (1 = standard)
+    MILKY_WAY: 1.0,      // 0–1,5: Melkeveiens styrke
+    TWINKLE: 1.0         // 0–1: scintillasjon (0 = stille stjerner)
   };
 
-  /* ── Nordlys-paletter per tema (speiler draftens THEMES) ─────────────── */
+  /* ── Paletter per tema. lim = grensemagnitude (hvor svake stjerner som
+     vises), mw = Melkeveiens styrke. Nordlys: toppen er fiolett (630 nm) i
+     stedet for teal, og kanten under (N2) er magenta-fiolett. */
   var THEMES = {
-    nordlys: { light: 0, sky: ['#030409', '#070a0e'], edge: '#4dffa0', mid: '#19b37a', top: '#0d5c5e', fringe: '#8b60d6', star: '#b8d2e6' },
-    carbon:  { light: 0, sky: ['#0a0806', '#050403'], edge: '#f2e2c6', mid: '#c69a63', top: '#7d5a34', fringe: '#b98a55', star: '#d9c6a4' },
-    dark:    { light: 0, sky: ['#0c0f19', '#171b2a'], edge: '#a3b8ff', mid: '#6c8aef', top: '#3d3490', fringe: '#9a6cf0', star: '#bcc8f0' },
-    frost:   { light: 1, sky: ['#dfe6f6', '#f7f9fc'], edge: '#4f5fe5', mid: '#7d88f0', top: '#c8cff8', fringe: '#7a5bd8', star: '#ffffff' },
-    glass:   { light: 1, sky: ['#d5deee', '#e8edf6'], edge: '#5b69ea', mid: '#8b95ff', top: '#c5cbf5', fringe: '#8a76f2', star: '#ffffff' },
-    hendrix: { light: 1, sky: ['#f8e8cf', '#fffdf9'], edge: '#c4501f', mid: '#8e3390', top: '#e8c060', fringe: '#d1518f', star: '#ffffff' },
-    bw:      { light: 0, sky: ['#0a0a0b', '#050505'], edge: '#eef0f2', mid: '#6e7176', top: '#f3ead9', fringe: '#17161a', star: '#ffffff' },
-    disco:   { light: 0, sky: ['#0a0714', '#151021'], edge: '#ff5cb2', mid: '#28c0dc', top: '#45208f', fringe: '#9a4df0', star: '#e0c0ff' },
-    pink:    { light: 1, sky: ['#f9e3ec', '#fffbfc'], edge: '#c25574', mid: '#d4748e', top: '#f0c8d6', fringe: '#a13d6d', star: '#ffffff' }
+    nordlys: { light: 0, sky: ['#030409', '#070a0e'], edge: '#4dffa0', mid: '#19b37a', top: '#7340a6', fringe: '#b267d8', star: '#c2d4e6', lim: 6.9, mw: 1.0 },
+    carbon:  { light: 0, sky: ['#0a0806', '#050403'], edge: '#f2e2c6', mid: '#c69a63', top: '#7d5a34', fringe: '#b98a55', star: '#d9c6a4', lim: 6.4, mw: 0.6 },
+    dark:    { light: 0, sky: ['#0c0f19', '#171b2a'], edge: '#a3b8ff', mid: '#6c8aef', top: '#3d3490', fringe: '#9a6cf0', star: '#bcc8f0', lim: 5.6, mw: 0.0 },
+    frost:   { light: 1, sky: ['#dfe6f6', '#f7f9fc'], edge: '#4f5fe5', mid: '#7d88f0', top: '#c8cff8', fringe: '#7a5bd8', star: '#ffffff', lim: 5.0, mw: 0.0 },
+    glass:   { light: 1, sky: ['#d5deee', '#e8edf6'], edge: '#5b69ea', mid: '#8b95ff', top: '#c5cbf5', fringe: '#8a76f2', star: '#ffffff', lim: 5.0, mw: 0.0 },
+    hendrix: { light: 1, sky: ['#f8e8cf', '#fffdf9'], edge: '#c4501f', mid: '#8e3390', top: '#e8c060', fringe: '#d1518f', star: '#ffffff', lim: 5.0, mw: 0.0 },
+    bw:      { light: 0, sky: ['#0a0a0b', '#050505'], edge: '#eef0f2', mid: '#6e7176', top: '#f3ead9', fringe: '#17161a', star: '#ffffff', lim: 5.0, mw: 0.0 },
+    disco:   { light: 0, sky: ['#0a0714', '#151021'], edge: '#ff5cb2', mid: '#28c0dc', top: '#45208f', fringe: '#9a4df0', star: '#e0c0ff', lim: 6.2, mw: 0.5 },
+    pink:    { light: 1, sky: ['#f9e3ec', '#fffbfc'], edge: '#c25574', mid: '#d4748e', top: '#f0c8d6', fringe: '#a13d6d', star: '#ffffff', lim: 5.0, mw: 0.0 }
   };
+  // Kun disse temaene VISER canvaset (carbon er opacity:0, lyse temaer dekkes av opak body).
+  var CANVAS_THEMES = { nordlys: 1, dark: 1, disco: 1, bw: 1 };
+  // disco står ikke her og faller derfor til 0 = gardin-scenen, som før.
+  var MODE = { nordlys: 0, bw: 1, dark: 4 };
 
-  var canvas = document.getElementById('nordlysCanvas');
-  if (!canvas) return;
+  /* ── Himmelgeometri — delt mellom JS (stjernetetthet) og GLSL (glød) ─── */
+  var REF = 1000;                  // CSS-px per himmelenhet
+  var BASE_DENS = 1900;            // stjerner per himmelenhet² ved STAR_DENSITY 1
+  var MW_DENS = 2600;              // forsøk per himmelenhet² for Melkevei-stjernene
+  function mwDensity(qx, qy) {     // MÅ speile mwDensity() i AURORA_FS
+    var rx = qx - 0.30, ry = qy;
+    var along = rx * -0.4614 + ry * 0.8872;
+    var across = -0.4614 * ry - 0.8872 * rx;
+    var core = Math.exp(-across * across * 88.89);
+    var wide = Math.exp(-across * across * 12.5);
+    var c = 0.018 * Math.sin(along * 5.1 + 0.7) + 0.012 * Math.sin(along * 11.3 + 2.0) - 0.010;
+    var w = 0.024 + 0.010 * Math.sin(along * 3.7 + 0.4);
+    var rr = (across - c) / w;
+    var rift = Math.exp(-rr * rr) * (0.55 + 0.45 * Math.sin(along * 2.3 + 1.0));
+    var clump = 0.72 + 0.28 * Math.sin(along * 4.0 + 0.5) * Math.sin(along * 9.0 + 1.3);
+    return (0.72 * core + 0.28 * wide) * (1 - 0.8 * rift) * clump;
+  }
+
+  /* Sortlegeme (K) -> sRGB, normalisert til sterkeste kanal (Helland-tilnærming). */
+  function kelvin(T) {
+    var t = T / 100, r, g, b;
+    if (t <= 66) { r = 255; g = 99.4708025861 * Math.log(t) - 161.1195681661; }
+    else { r = 329.698727446 * Math.pow(t - 60, -0.1332047592); g = 288.1221695283 * Math.pow(t - 60, -0.0755148492); }
+    if (t >= 66) b = 255; else if (t <= 19) b = 0; else b = 138.5177312231 * Math.log(t - 10) - 305.0447927307;
+    r = Math.max(0, Math.min(255, r)); g = Math.max(0, Math.min(255, g)); b = Math.max(0, Math.min(255, b));
+    var m = Math.max(r, g, b) || 1;
+    return [r / m, g / m, b / m];
+  }
+
+  /* Stjernekatalog i celler på 250 × 250 CSS-px: [x, y, mag, r, g, b, seed, rank, type]
+     per stjerne. Hver celle har sitt eget faste frø, så de samme stjernene står
+     der uansett vindusstørrelse, og bare cellene som synes blir laget: en telefon
+     trenger 8 celler (~2 000 stjerner), ikke hele himmelen på 51 000. Dobbel
+     tetthet; STAR_DENSITY velger andelen via rank, så de samme stjernene står
+     igjen når tettheten endres. type 0 = bakgrunn, 1 = Melkeveien, 2 = stjernehopen. */
+  var CELL = 0.25;
+  var CELLS = {};
+  function starCell(ix, iy) {
+    var key = ix + ',' + iy;
+    if (CELLS[key]) return CELLS[key];
+    var a = (Math.imul(ix, 0x9E3779B1) ^ Math.imul(iy, 0x85EBCA77) ^ 0x2f6b9d4d) | 0;
+    function rnd() {
+      a = (a + 0x6D2B79F5) | 0;
+      var q = Math.imul(a ^ (a >>> 15), 1 | a);
+      q = (q + Math.imul(q ^ (q >>> 7), 61 | q)) ^ q;
+      return ((q ^ (q >>> 14)) >>> 0) / 4294967296;
+    }
+    function gauss() { return Math.sqrt(-2 * Math.log(1 - rnd())) * Math.cos(6.283185 * rnd()); }
+    // N(<m) ∝ 10^(0.45 m): hver magnitude svakere gir ~2,8 ganger så mange stjerner
+    function mag(lo, hi) { var A = Math.pow(10, 0.45 * lo), B = Math.pow(10, 0.45 * hi); return Math.log(A + rnd() * (B - A)) / (0.45 * Math.LN10); }
+    var out = [];
+    function push(x, y, m, bv, type) {
+      if (bv == null) {     // to topper: A/F-stjerner (hvite) og K-kjemper (oransje)
+        var u = rnd(), g = gauss();
+        bv = u < 0.10 ? -0.22 + 0.10 * g : u < 0.46 ? 0.28 + 0.22 * g : u < 0.74 ? 0.78 + 0.18 * g : 1.28 + 0.22 * g;
+      }
+      bv = Math.max(-0.33, Math.min(1.95, bv));
+      var c = kelvin(4600 * (1 / (0.92 * bv + 1.7) + 1 / (0.92 * bv + 0.62)));
+      var sat = Math.max(0.10, Math.min(0.85, (4.9 - m) / 4.6));   // svake stjerner: nesten uten farge
+      out.push(x, y, m, 0.93 + (c[0] - 0.93) * sat, 0.95 + (c[1] - 0.95) * sat, 1 + (c[2] - 1) * sat, rnd(), rnd(), type);
+    }
+    var x0 = ix * CELL, y0 = iy * CELL, i, x, y;
+    var nBase = Math.floor(CELL * CELL * BASE_DENS * 2 + rnd());
+    for (i = 0; i < nBase; i++) push(x0 + rnd() * CELL, y0 + rnd() * CELL, mag(-1.2, 7.2), null, 0);
+    var nMW = Math.floor(CELL * CELL * MW_DENS * 2 + rnd());
+    for (i = 0; i < nMW; i++) {
+      x = x0 + rnd() * CELL; y = y0 + rnd() * CELL;
+      if (rnd() < mwDensity(x, y)) push(x, y, mag(3.0, 7.2), null, 1);
+    }
+    // En kompakt, Pleiadene-aktig stjernehop med blåhvite medlemmer, i cellen der midten ligger
+    if (ix === Math.floor(0.47 / CELL) && iy === Math.floor(0.17 / CELL)) {
+      var P = [[0, 0, 2.9], [0.36, -0.05, 3.6], [0.40, 0.04, 5.1], [-0.27, -0.12, 3.9], [-0.44, -0.02, 3.7], [-0.22, 0.17, 4.2],
+               [-0.08, -0.26, 4.3], [-0.34, -0.27, 5.5], [-0.13, -0.40, 5.8], [0.12, 0.22, 6.2], [0.22, -0.30, 6.4]];
+      for (i = 0; i < P.length; i++) push(0.47 + P[i][0] * 0.05, 0.17 - P[i][1] * 0.05, P[i][2], -0.08 + 0.05 * gauss(), 2);
+    }
+    return (CELLS[key] = new Float32Array(out));
+  }
 
   function hex2v(hex) {
     var h = String(hex).replace('#', '');
     return [parseInt(h.substr(0, 2), 16) / 255, parseInt(h.substr(2, 2), 16) / 255, parseInt(h.substr(4, 2), 16) / 255];
   }
-  /* HSL-verktøy for levende paletter (disco/nordlys hue-sykling) */
-  function rgb2hsl(c) {
-    var r = c[0], g = c[1], b = c[2], mx = Math.max(r, g, b), mn = Math.min(r, g, b);
-    var h = 0, s = 0, l = (mx + mn) / 2, d = mx - mn;
-    if (d > 1e-5) {
-      s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
-      if (mx === r) h = (g - b) / d + (g < b ? 6 : 0);
-      else if (mx === g) h = (b - r) / d + 2;
-      else h = (r - g) / d + 4;
-      h /= 6;
-    }
-    return [h, s, l];
-  }
-  function hue2c(p, q, t) {
-    if (t < 0) t += 1; if (t > 1) t -= 1;
-    if (t < 1 / 6) return p + (q - p) * 6 * t;
-    if (t < 1 / 2) return q;
-    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-    return p;
-  }
-  function hsl2rgb(h, s, l) {
-    if (s < 1e-5) return [l, l, l];
-    var q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
-    h = h - Math.floor(h);
-    return [hue2c(p, q, h + 1 / 3), hue2c(p, q, h), hue2c(p, q, h - 1 / 3)];
-  }
-  function hueRot(v, deg) { var h = rgb2hsl(v); return hsl2rgb(h[0] + deg / 360, h[1], h[2]); }
-  function themeKey() {
-    var k = document.documentElement.getAttribute('data-theme') || 'carbon';
-    return THEMES[k] ? k : 'carbon';
-  }
-  // Kun disse temaene VISER canvaset. carbon (default) er opacity:0, og de lyse
-  // temaene (frost/glass/hendrix/pink) dekkes av en opak body-bakgrunn — der er
-  // WebGL-tegning ren bortkastet GPU (perf-sluk på mobil). På de temaene lar vi
-  // CSS-.a5-auroraen (allerede mobil-tunet) stå for bakgrunnen i stedet.
-  var CANVAS_THEMES = { nordlys: 1, dark: 1, disco: 1, bw: 1 };
-  function canvasVisible() { return !!CANVAS_THEMES[themeKey()]; }
 
-  var gl = null, progA = null, progC = null, uA = null, uC = null, tex = null, fbo = null;
-  var pendingProgs = [];  // programmer som venter på utsatt statussjekk, se programsOk()
-  var bindUniforms = null;  // uniform-oppslag, utsatt av samme grunn
-  var raf = 0, last = 0, t = 20 + Math.random() * 80, shown = false;
-  var ampNow = CONFIG.INTENSITY, revealT0 = -1, revealDone = false;
-  var mx = 0.5, my = 0.35, tmx = 0.5, tmy = 0.35, mAmt = 0, tmAmt = 0;
-  var aw = 2, ah = 2;
-  var cc = null, ct = null, bt = null, lastTheme = null;
-  // disco står ikke i MODE og faller derfor til 0 = gardin-scenen, som før.
-  var isSmoke = false, mode = 0, MODE = { nordlys: 0, bw: 1, dark: 4 };
-  var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-  var isStatic = mq.matches;
-  var ro = null;
+  /* ── Shadere ──────────────────────────────────────────────────────── */
+  var QUAD_VS = 'attribute vec2 aPos; void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }';
 
-  function syncTheme() {
-    var k = themeKey();
-    isSmoke = (k === 'bw');
-    mode = MODE[k] != null ? MODE[k] : 0;
-    if (k === lastTheme && cc && cc.fringe) return;
-    var T = THEMES[k];
-    ct = {
-      skyTop: hex2v(T.sky[0]), skyBot: hex2v(T.sky[1]),
-      edge: hex2v(T.edge), mid: hex2v(T.mid), top: hex2v(T.top),
-      fringe: hex2v(T.fringe), star: hex2v(T.star), light: [T.light]
-    };
-    bt = { edge: hex2v(T.edge), mid: hex2v(T.mid), fringe: hex2v(T.fringe), star: hex2v(T.star) };
-    if (!cc || isStatic) cc = JSON.parse(JSON.stringify(ct));
-    else if (!cc.fringe) cc.fringe = ct.fringe.slice();
-    lastTheme = k;
-    if (isStatic) drawOnce();
-  }
-
-  function initGL() {
-    try {
-      gl = canvas.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'low-power', preserveDrawingBuffer: true });
-    } catch (e) { gl = null; }
-    if (!gl) return false; // CSS-fallback (.band) blir stående
-
-    var vsrc = 'attribute vec2 aPos; void main(){ gl_Position = vec4(aPos, 0.0, 1.0); }';
-    var NOISE = [
-      'float hash21(vec2 p){',
-      '  p = fract(p * vec2(127.1, 311.7));',
-      '  p += dot(p, p + 34.23);',
-      '  return fract(p.x * p.y);',
-      '}',
-      'float vnoise(vec2 p){',
-      '  vec2 i = floor(p);',
-      '  vec2 f = fract(p);',
-      '  f = f * f * (3.0 - 2.0 * f);',
-      '  float a = hash21(i);',
-      '  float b = hash21(i + vec2(1.0, 0.0));',
-      '  float c = hash21(i + vec2(0.0, 1.0));',
-      '  float d = hash21(i + vec2(1.0, 1.0));',
-      '  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);',
-      '}',
-      'float fbm(vec2 p){',
-      '  float v = 0.0;',
-      '  float a = 0.5;',
-      '  mat2 r = mat2(0.8, -0.6, 0.6, 0.8);',
-      '  for(int i = 0; i < 5; i++){',
-      '    v += a * vnoise(p);',
-      '    p = r * p * 2.03;',
-      '    a *= 0.5;',
-      '  }',
-      '  return v;',
-      '}'
-    ].join('\n');
-    var auroraSrc = [
-      'precision highp float;',
-      'uniform vec2  uRes;',
-      'uniform float uTime;',
-      'uniform float uAmp;',
-      'uniform float uLight;',
-      'uniform float uMode;',
-      'uniform vec3  uSmk;',
-      'uniform vec3  uSkyTop;',
-      'uniform vec3  uSkyBot;',
-      'uniform vec3  uCEdge;',
-      'uniform vec3  uCMid;',
-      'uniform vec3  uCTop;',
-      'uniform vec3  uCFringe;',
-      '// ---------- self-contained value noise (WebGL1-safe) ----------',
-      'float hash21(vec2 p){',
-      '    p = fract(p * vec2(123.34, 345.45));',
-      '    p += dot(p, p + 34.345);',
-      '    return fract(p.x * p.y);',
-      '}',
-      'float vnoise(vec2 p){',
-      '    vec2 i = floor(p), f = fract(p);',
-      '    f = f*f*(3.0-2.0*f);',
-      '    float a = hash21(i);',
-      '    float b = hash21(i+vec2(1.0,0.0));',
-      '    float c = hash21(i+vec2(0.0,1.0));',
-      '    float d = hash21(i+vec2(1.0,1.0));',
-      '    return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);',
-      '}',
-      '// 4-octave fbm, constant bound, rotated to break axis banding',
-      'float fbm(vec2 p){',
-      '    float s = 0.0, a = 0.5;',
-      '    mat2 r = mat2(0.80, -0.60, 0.60, 0.80);',
-      '    for(int i=0;i<4;i++){',
-      '        s += a*vnoise(p);',
-      '        p = r*p*2.03 + 11.1;',
-      '        a *= 0.5;',
-      '    }',
-      '    return s;',
-      '}',
-      '// altitude -> palette band, driven ENTIRELY by uniforms.',
-      '// h: 0 = sharp bright lower edge .. 1 = diffuse crown top.',
-      'vec3 auroraColor(float h){',
-      '    vec3 lowCore = mix(uCFringe, uCEdge, smoothstep(0.0, 0.16, h));',
-      '    vec3 c = mix(lowCore, uCMid, smoothstep(0.14, 0.52, h));',
-      '    c = mix(c, uCTop, smoothstep(0.58, 1.0, h));',
-      '    return c;',
-      '}',
-      '// one curtain sheet -> density; lower-edge fringe glow returned via out fr.',
-      'float curtain(vec2 uv, float t, float seed, float drift,',
-      '              float warpAmt, float rayFreq, float rayPow, float edgeSoft,',
-      '              out float h, out float fr){',
-      '    float fold = fbm(vec2(uv.x*0.9 + seed*17.0, t*0.05*drift + seed));',
-      '    float w = (fold - 0.5) * 1.1',
-      '            + (vnoise(vec2(uv.x*2.4 + seed*29.0, 4.0 + t*0.09*drift)) - 0.5) * 0.32;',
-      '    float x = uv.x + w*warpAmt - t*0.018*drift;',
-      '    float base = 0.70 + 0.10*sin(x*2.1 + t*0.06*drift + seed) + (fold - 0.5)*0.22;',
-      '    float dist = uv.y - base;',
-      '    h = clamp(dist / 0.42, 0.0, 1.0);',
-      '    float lowerEdge = smoothstep(-0.018, 0.02 + edgeSoft, dist);',
-      '    float topFade   = exp(-max(dist, 0.0) * (5.0 - edgeSoft*6.0));',
-      '    float drape = lowerEdge * topFade;',
-      '    float limb = 0.80 + 0.45*abs(fold - 0.5);',
-      '    drape *= limb;',
-      '    float rx = x*rayFreq + seed*97.0;',
-      '    float rays = fbm(vec2(rx - t*0.06*drift, dist*2.4 + t*0.16*drift)) * 0.54',
-      '               + vnoise(vec2(rx*2.3 + 11.0, dist*3.2 + t*0.24*drift)) * 0.24',
-      '               + vnoise(vec2(rx*4.9 + 31.0, dist*5.4 + t*0.30*drift)) * 0.14',
-      '               + vnoise(vec2(rx*9.7 + 57.0, dist*7.8 + t*0.36*drift)) * 0.08;',
-      '    rays = pow(max(rays, 0.0), rayPow) * 1.9;',
-      '    float surge = 0.66 + 0.34*(0.6*sin(t*0.047 + seed*7.1) + 0.4*sin(t*0.113 + seed*2.3));',
-      '    float fd = (dist + 0.016) * 22.0;',
-      '    float frBand = exp(-fd * fd);',
-      '    float wave = 0.78 + 0.22*sin(x*1.35 - t*0.40*drift + seed*3.0);',
-      '    fr = frBand * (0.22 + rays*0.80) * surge * wave;',
-      '    return drape * (0.12 + rays*wave) * surge;',
-      '}',
+  var AURORA_FS = [
+    'precision highp float;',
+    'uniform vec2  uRes;',
+    'uniform float uTime;',
+    'uniform float uTimeR;',
+    'uniform float uAmp;',
+    'uniform float uLight;',
+    'uniform vec3  uSmk;',
+    'uniform vec3  uSkyTop;',
+    'uniform vec3  uSkyBot;',
+    'uniform vec3  uCEdge;',
+    'uniform vec3  uCMid;',
+    'uniform vec3  uCTop;',
+    'uniform vec3  uCFringe;',
+    'uniform vec2  uCss;',
+    'uniform float uMW;',
+    '// ---------- self-contained value noise (WebGL1-safe) ----------',
+    'float hash21(vec2 p){',
+    '    p = fract(p * vec2(123.34, 345.45));',
+    '    p += dot(p, p + 34.345);',
+    '    return fract(p.x * p.y);',
+    '}',
+    'float vnoise(vec2 p){',
+    '    vec2 i = floor(p), f = fract(p);',
+    '    f = f * f * (3.0 - 2.0 * f);',
+    '    float a = hash21(i);',
+    '    float b = hash21(i + vec2(1.0, 0.0));',
+    '    float c = hash21(i + vec2(0.0, 1.0));',
+    '    float d = hash21(i + vec2(1.0, 1.0));',
+    '    return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);',
+    '}',
+    'float fbm(vec2 p){',
+    '    float s = 0.0, a = 0.5;',
+    '    mat2 r = mat2(0.80, -0.60, 0.60, 0.80);',
+    '    for (int i = 0; i < 4; i++) {',
+    '        s += a * vnoise(p);',
+    '        p = r * p * 2.03 + 11.1;',
+    '        a *= 0.5;',
+    '    }',
+    '    return s;',
+    '}',
+    '// Hvert program har bare scenen til sitt tema (#define SCENE settes i JS):',
+    '// 0 = nordlysgardiner (nordlys, disco), 1 = noir (bw), 4 = maanenatt (dark).',
+    '#if SCENE == 0',
+    'float hash11(float p){',
+    '    p = fract(p * 0.1031);',
+    '    p *= p + 33.33;',
+    '    p *= p + p;',
+    '    return fract(p);',
+    '}',
+    '// 1D-verdistoy: stralene varierer langs buen, ikke oppover',
+    'float n1(float x){',
+    '    float i = floor(x);',
+    '    float f = fract(x);',
+    '    return mix(hash11(i), hash11(i + 1.0), f * f * (3.0 - 2.0 * f));',
+    '}',
+    '// Underkanten av et nordlysark (skjerm-y, 0 = bunn). geo = (hoyde, krumning, toppunkt-x).',
+    '// Buen synker mot sidene slik en bue gjor i perspektiv; folder og knekk ligger over.',
+    'float edgeY(float x, float t, float seed, vec3 geo, float amp){',
+    '    float s = x * 0.95 + seed * 3.7 - t * 0.0035;',
+    '    float dx = x - geo.z;',
+    '    float y = geo.x - geo.y * dx * dx;',
+    '    y += amp * 1.60 * (vnoise(vec2(s, t * 0.016 + seed)) - 0.5);',
+    '    y += amp * 0.70 * (vnoise(vec2(s * 2.6 + 5.1, t * 0.034 - seed)) - 0.5);',
+    '    y += amp * 0.22 * (vnoise(vec2(s * 7.3 + 9.7, t * 0.075 + seed * 0.5)) - 0.5);',
+    '    return y;',
+    '}',
+    '// Ett nordlysark:',
+    '//  - skarp underkant (elektronene stopper ~100 km), sterkest rett over kanten',
+    '//  - gronn kropp (557,7 nm) med ulik hoyde per straale; fiolett krone (630 nm) hoyere opp',
+    '//  - tynn magenta kant under (N2), bare et hint',
+    '//  - stralene folger magnetfeltet og peker mot magnetisk senit over bildet',
+    '//  - der arket svinger bratt ser vi langs det: tettere straaler, mer lys',
+    'vec3 curtain(float x, float y, float t, float tr, float seed, vec3 geo, float amp,',
+    '             float H, float rayF, float rayC, float spd, float gain, float crisp, out float edge){',
+    '    float ye = edgeY(x, t, seed, geo, amp);',
+    '    float slope = abs(edgeY(x + 0.008, t, seed, geo, amp) - ye) / 0.008;',
+    '    edge = ye;',
+    '    float turn = smoothstep(0.30, 1.90, slope);',
+    '    float d = y - ye;',
+    '    float dp = max(d, 0.0);',
+    '    float sv = min(dp / max(2.3 - ye, 0.5), 0.6);',
+    '    float rx = (x - 0.06 * sv) / (1.0 - sv) * rayF * (1.0 + 0.55 * turn) + seed * 17.0;',
+    '    // stralebunter (myke) x tynne straaler (ridged stoy = skarpe lyse linjer der stoyen krysser midten)',
+    '    float bund = smoothstep(0.15, 0.85, n1(rx * 0.23 - tr * 0.045 * spd));',
+    '    float f1 = 1.0 - abs(2.0 * n1(rx * 1.00 + tr * 0.090 * spd + dp * 1.4) - 1.0);',
+    '    float f2 = 1.0 - abs(2.0 * n1(rx * 2.60 - tr * 0.170 * spd + 3.1) - 1.0);',
+    '    float f3 = 1.0 - abs(2.0 * n1(rx * 5.90 + tr * 0.260 * spd + 7.7) - 1.0);',
+    '    float fine = pow(f1, 3.0) * 0.45 + pow(f2, 4.0) * 0.35 + pow(f3, 5.0) * 0.20;',
+    '    float rays = mix(1.0, (0.25 + 0.75 * bund) * (0.20 + 2.20 * fine), rayC);',
+    '    float hr = n1(rx * 0.55 + 2.0 + tr * 0.020 * spd);',
+    '    float tall = n1(rx * 1.70 + 9.0 - tr * 0.030 * spd);',
+    '    tall = tall * tall * tall * tall * tall;',
+    '    float Hk = H * (0.50 + 0.80 * hr + 1.50 * tall);',
+    '    float along = pow(0.25 + 0.75 * n1(x * 1.9 - t * 0.060 * spd + seed * 4.0), 1.4)',
+    '                * (0.75 + 0.25 * sin(x * 3.1 - t * 0.31 * spd + seed * 2.0));',
+    '    float I = gain * along * (1.0 + turn);',
+    '    float knot = 0.25 + 0.75 * smoothstep(0.10, 0.65, n1(x * 3.3 + seed * 2.0 - t * 0.05 * spd));',
+    '    float below = exp(-max(-d, 0.0) * crisp);',
+    '    float edgeB = exp(-dp * 45.0) * below * knot;',
+    '    float green = exp(-dp / (Hk * 0.50)) * below;',
+    '    float crown = smoothstep(0.0, Hk * 0.85, dp) * exp(-dp / (Hk * 1.45)) * below;',
+    '    float fd = (d + 0.0025) * 260.0;',
+    '    float fringe = exp(-fd * fd) * knot * knot;',
+    '    vec3 c = uCEdge   * edgeB  * 1.00 * (0.20 + 0.80 * min(rays, 1.5))',
+    '           + uCMid    * green  * 0.85 * rays',
+    '           + uCTop    * crown  * 0.45 * (0.35 + 0.65 * min(rays, 1.6))',
+    '           + uCFringe * fringe * 0.22 * (0.40 + 0.60 * min(rays, 1.5));',
+    '    return c * I;',
+    '}',
+    '// Melkeveien: samme geometri som mwDensity() i JS. q i himmelenheter (1000 CSS-px),',
+    '// x fra midten, y nedover fra toppen.',
+    'float mwDensity(vec2 q, out float core){',
+    '    vec2 r = q - vec2(0.30, 0.0);',
+    '    float along = dot(r, vec2(-0.4614, 0.8872));',
+    '    float across = -0.4614 * r.y - 0.8872 * r.x;',
+    '    core = exp(-across * across * 88.89);',
+    '    float wide = exp(-across * across * 12.5);',
+    '    float c = 0.018 * sin(along * 5.1 + 0.7) + 0.012 * sin(along * 11.3 + 2.0) - 0.010;',
+    '    float w = 0.024 + 0.010 * sin(along * 3.7 + 0.4);',
+    '    float rr = (across - c) / w;',
+    '    float rift = exp(-rr * rr) * (0.55 + 0.45 * sin(along * 2.3 + 1.0));',
+    '    float clump = 0.72 + 0.28 * sin(along * 4.0 + 0.5) * sin(along * 9.0 + 1.3);',
+    '    return (0.72 * core + 0.28 * wide) * (1.0 - 0.80 * rift) * clump;',
+    '}',
+    'vec3 milkyWay(vec2 frag){',
+    '    vec2 q = vec2((frag.x - 0.5) * uCss.x, (1.0 - frag.y) * uCss.y) / 1000.0;',
+    '    float core;',
+    '    float dens = mwDensity(q, core);',
+    '    float mott = fbm(q * 7.0 + 3.0);',
+    '    float fine = vnoise(q * 26.0 + 9.0);',
+    '    float g = dens * (0.40 + 0.80 * smoothstep(0.28, 0.85, mott)) * (0.80 + 0.35 * fine);',
+    '    vec3 c = mix(vec3(0.70, 0.77, 0.95), vec3(0.96, 0.90, 0.80), core * 0.55);',
+    '    return c * g * 0.070 * smoothstep(0.03, 0.25, frag.y);',
+    '}',
+    '#endif',
+    '#if SCENE == 1',
       '// ---- NOIR (bw) - persiennelys: skraa lysspalter fra ovre venstre, royk og stov.',
       '// Film noir-motivet (lys gjennom persienner) holdt saa lavt at det leses som',
       '// atmosfaere, ikke effekt. Sakte sig (~2-3 min per spalte), monokrom, vignettert.',
@@ -4508,6 +4587,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '    outc += (hash21(frag * uRes) - 0.5) * (1.5 / 255.0);',
       '    return outc;',
       '}',
+    '#endif',
+    '#if SCENE == 4',
       '// ---- MAANENATT (dark) - maane med hav og halo-ring, cirrus, bakketaake, airglow',
       'vec4 nightScene(vec2 frag, float t){',
       '    float aspect = uRes.x / uRes.y;',
@@ -4576,85 +4657,109 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '    outc += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (2.0 / 255.0);',
       '    return vec4(outc, clamp(neb * 0.6 + cirBand * 0.5 + fogA * 0.4 + bank * 0.35, 0.0, 1.0));',
       '}',
-      'void main(){',
-      '    vec2 frag = gl_FragCoord.xy / uRes;',
-      '    float aspect = uRes.x / uRes.y;',
-      '    vec2 uv = vec2((frag.x - 0.5)*aspect + 37.73, frag.y);',
-      '    float t = uTime;',
-      '    if (uMode > 3.5) { gl_FragColor = nightScene(frag, t); return; }',
-      '    if (uMode > 0.5) { gl_FragColor = vec4(smokeScene(frag, frag, t), 1.0); return; }',
-      '    vec3 sky = mix(uSkyBot, uSkyTop, smoothstep(0.05, 0.95, frag.y));',
-      '    float hN, hM, hF, fN, fM, fF;',
-      '    float near = curtain(uv,                          t, 1.0,  1.00, 1.0, 6.8, 1.9, 0.000, hN, fN);',
-      '    float mid  = curtain(vec2(uv.x*1.35 + 2.7, uv.y), t, 7.0,  0.78, 0.9, 5.4, 1.7, 0.020, hM, fM) * 0.55;',
-      '    float far  = curtain(vec2(uv.x*0.80 - 1.9, uv.y), t, 13.0, 0.62, 0.8, 4.2, 1.5, 0.045, hF, fF) * 0.32;',
-      '    vec3 aur = auroraColor(hN) * near;',
-      '    aur     += auroraColor(hM) * mid;',
-      '    aur     += mix(auroraColor(hF), uCTop, 0.30) * far;',
-      '    aur += uCFringe * (fN*0.32 + fM*0.10) * (1.0 - uLight*0.55);',
-      '    float airglow = exp(-abs(frag.y - 0.13) * 5.2) * 0.05',
-      '                  * (0.4 + 0.6*fbm(vec2(uv.x*0.7, t*0.02)));',
-      '    aur += mix(uCMid, uCFringe, 0.5) * airglow;',
-      '    // lyssoyler: smale vertikale sokk fra horisonten, i rolige vinduer',
-      '    float pil = 0.0;',
-      '    float pxx = (frag.x - 0.5) * aspect;',
-      '    for (int pi = 0; pi < 2; pi++) {',
-      '        float fi = float(pi);',
-      '        float pper = 23.0 + 9.0 * fi;',
-      '        float pci = floor((t + fi * 11.0) / pper);',
-      '        float pph = fract((t + fi * 11.0) / pper);',
-      '        float prn = hash21(vec2(pci, 5.1 + fi));',
-      '        float pon = step(0.5, prn) * sin(clamp(pph * 2.6, 0.0, 1.0) * 3.14159);',
-      '        float px = (hash21(vec2(pci, 9.7 + fi)) - 0.5) * aspect * 1.25;',
-      '        float pw = 0.016 + 0.020 * prn;',
-      '        float dx = pxx - px;',
-      '        pil += exp(-dx * dx / (pw * pw)) * exp(-max(frag.y - 0.05, 0.0) * 3.2) * pon * (0.65 + 0.35 * vnoise(vec2(px * 7.0 + fi * 3.0, t * 0.35)));',
-      '    }',
-      '    aur += mix(uCEdge, uCMid, 0.45) * pil * 0.12;',
-      '    aur *= uAmp * 2.0;',
-      '    aur *= (1.0 - uLight*0.92);',
-      '    float aurLum = dot(aur, vec3(0.34, 0.55, 0.30));',
-      '    float ridgeH = 0.070 + 0.045*fbm(vec2(uv.x*1.05, 2.7)) + 0.010*sin(uv.x*0.9 + 1.3);',
-      '    // Horisonten er ATMOSFAERE, ikke silhuett: kanten toner ut over ~0.05 av',
-      '    // hoyden (var 0.009 = knivkant midt i siden) og faar dis + spredt aurora over seg.',
-      '    float soft = 0.040 + 0.030*fbm(vec2(uv.x*0.55 + 8.3, 4.1));',
-      '    float ground = 1.0 - smoothstep(ridgeH - soft, ridgeH + soft*1.6, frag.y);',
-      '    ground = pow(ground, 1.30);',
-      '    float haze = exp(-max(frag.y - ridgeH, 0.0) * 6.5);',
-      '    float snow = exp(-max(ridgeH - frag.y, 0.0) * 13.0) * ground;',
-      '    float exposure = 1.22;',
-      '    vec3 lit = sky + aur;',
-      '    vec3 groundCol = mix(mix(uSkyBot, uCTop, 0.16) * 1.10, uSkyBot * 0.42, smoothstep(ridgeH, -0.09, frag.y));',
-      '    lit = mix(lit, groundCol, ground * 0.80);',
-      '    lit += mix(uCMid, uCEdge, 0.45) * aurLum * (0.34 * snow + 0.26 * haze);',
-      '    vec3 col = 1.0 - exp(-lit * exposure);',
-      '    float L = dot(col, vec3(0.299, 0.587, 0.114));',
-      '    col = mix(col, vec3(L), smoothstep(0.5, 1.0, L) * 0.42);',
-      '    float bloom = max(aurLum - 0.55, 0.0);',
-      '    col += mix(uCEdge, vec3(1.0), 0.38) * bloom * 0.30;',
-      '    vec3 darkCol = pow(max(col - 0.010, 0.0), vec3(1.05));',
-      '    col = mix(darkCol, col, uLight);',
-      '    col += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (2.0 / 255.0);',
-      '    float alpha = clamp(max(aurLum * 1.3, max(ground, haze * 0.35)), 0.0, 1.0);',
-      '    gl_FragColor = vec4(col, alpha);',
-      '}'
-    ].join('\n');
-    var compSrc = [
-      'precision highp float;',
-      'uniform vec2 uRes;',
-      'uniform float uTime;',
-      'uniform float uStarAmt;',
-      'uniform float uLight;',
-      'uniform vec2 uMouse;',
-      'uniform float uMouseAmt;',
-      'uniform vec3 uCMid;',
-      'uniform vec3 uStarTint;',
-      'uniform float uDust;',
-      'uniform float uMoon;',
-      'uniform vec3 uCEdge;',
-      'uniform vec3 uFx;',
-      'uniform sampler2D uTex;',
-      NOISE,
+    '#endif',
+    'void main(){',
+    '    vec2 frag = gl_FragCoord.xy / uRes;',
+    '    float aspect = uRes.x / uRes.y;',
+    '    float t = uTime;',
+    '#if SCENE == 4',
+    '    gl_FragColor = nightScene(frag, t);',
+    '#elif SCENE == 1',
+    '    gl_FragColor = vec4(smokeScene(frag, frag, t), 1.0);',
+    '#else',
+    '    float x = (frag.x - 0.5) * aspect;',
+    '    float y = frag.y;',
+    '    vec3 sky = mix(uSkyBot, uSkyTop, smoothstep(0.0, 0.6, y));',
+    '    sky += milkyWay(frag) * uMW * (1.0 - uLight);',
+    '    float eA; float eB;',
+    '    // hovedbue + et svakere ark bak som bare finnes i partier',
+    '    float mB = smoothstep(0.30, 0.72, n1(x * 0.85 + 3.0 - t * 0.006));',
+    '    // Staaende skjerm (telefon): buen heves, vandrer mindre og faar hoyere gronn kropp,',
+    '    // saa kanten ligger bak sokefeltet og kroppen fyller toppen. Uten dette laa kanten',
+    '    // bak kategoripanelet og toppen var nesten svart. Liggende (aspect >= 1) er uendret.',
+    '    float por = 1.0 - smoothstep(0.60, 1.00, aspect);',
+    '    vec3 aur = curtain(x, y, t, uTimeR, 1.0,  vec3(0.625 + 0.065 * por, 0.080, -0.12), 0.120 * (1.0 - 0.58 * por), 0.125 * (1.0 + 0.6 * por), 11.0, 1.00, 1.00, 1.00, 220.0, eA);',
+    '    aur     += curtain(x, y, t, uTimeR, 7.0,  vec3(0.800 + 0.050 * por, 0.050,  0.40), 0.110, 0.095,  8.0, 0.85, 0.80, 0.50,  60.0, eB) * mB;',
+    '    // svakt spredt lys rett under hovedbuen (faller raskt), nordlysglod mot horisonten, airglow',
+    '    aur += uCMid * exp(-max(eA - y, 0.0) * 14.0 - max(y - eA, 0.0) * 6.0) * 0.040 * (0.55 + 0.45 * n1(x * 1.4 - t * 0.03));',
+    '    aur += mix(uCMid, uCEdge, 0.25) * exp(-max(y - 0.06, 0.0) * 4.0) * 0.006;',
+    '    aur += mix(uCMid, uCFringe, 0.35) * exp(-abs(y - 0.135) * 6.5) * 0.012 * (0.45 + 0.55 * fbm(vec2(x * 0.7, t * 0.02)));',
+    '    aur *= uAmp * 2.0;',
+    '    aur *= (1.0 - uLight * 0.92);',
+    '    float aurLum = dot(aur, vec3(0.34, 0.55, 0.30));',
+    '    // Horisonten er atmosfaere, ikke silhuett (som v1)',
+    '    float ux = x + 37.73;',
+    '    float ridgeH = 0.070 + 0.045 * fbm(vec2(ux * 1.05, 2.7)) + 0.010 * sin(ux * 0.9 + 1.3);',
+    '    float soft = 0.040 + 0.030 * fbm(vec2(ux * 0.55 + 8.3, 4.1));',
+    '    float ground = 1.0 - smoothstep(ridgeH - soft, ridgeH + soft * 1.6, y);',
+    '    ground = pow(ground, 1.30);',
+    '    float haze = exp(-max(y - ridgeH, 0.0) * 6.5);',
+    '    float snow = exp(-max(ridgeH - y, 0.0) * 13.0) * ground;',
+    '    vec3 lit = sky + aur;',
+    '    vec3 groundCol = mix(mix(uSkyBot, uCMid, 0.10) * 1.10, uSkyBot * 0.42, 1.0 - smoothstep(-0.09, ridgeH, y));',
+    '    lit = mix(lit, groundCol, ground * 0.80);',
+    '    lit += mix(uCMid, uCEdge, 0.45) * aurLum * (0.34 * snow + 0.26 * haze);',
+    '    vec3 col = 1.0 - exp(-lit * 1.22);',
+    '    float L = dot(col, vec3(0.299, 0.587, 0.114));',
+    '    col = mix(col, vec3(L), smoothstep(0.5, 1.0, L) * 0.38);',
+    '    col += mix(uCEdge, vec3(1.0), 0.38) * max(aurLum - 0.55, 0.0) * 0.30;',
+    '    vec3 darkCol = pow(max(col - 0.010, 0.0), vec3(1.05));',
+    '    col = mix(darkCol, col, uLight);',
+    '    col += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (2.0 / 255.0);',
+    '    // alfa = det som faktisk dekker stjernene (horisont + dis). Nordlyset er gjennomsiktig.',
+    '    gl_FragColor = vec4(col, clamp(max(ground, haze * 0.22), 0.0, 1.0));',
+    '#endif',
+    '}'
+  ].join('\n');
+
+  var COMP_NOISE = [
+    'float hash21(vec2 p){',
+    '  p = fract(p * vec2(127.1, 311.7));',
+    '  p += dot(p, p + 34.23);',
+    '  return fract(p.x * p.y);',
+    '}',
+    'float vnoise(vec2 p){',
+    '  vec2 i = floor(p);',
+    '  vec2 f = fract(p);',
+    '  f = f * f * (3.0 - 2.0 * f);',
+    '  float a = hash21(i);',
+    '  float b = hash21(i + vec2(1.0, 0.0));',
+    '  float c = hash21(i + vec2(0.0, 1.0));',
+    '  float d = hash21(i + vec2(1.0, 1.0));',
+    '  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);',
+    '}',
+    'float fbm(vec2 p){',
+    '  float v = 0.0;',
+    '  float a = 0.5;',
+    '  mat2 r = mat2(0.8, -0.6, 0.6, 0.8);',
+    '  for(int i = 0; i < 5; i++){',
+    '    v += a * vnoise(p);',
+    '    p = r * p * 2.03;',
+    '    a *= 0.5;',
+    '  }',
+    '  return v;',
+    '}'
+  ].join('\n');
+
+  // Kompositt i full oppløsning: måne, satellitt, musglød, vignett, korn.
+  // Stjernene er flyttet ut i et eget punkt-pass (STAR_VS/STAR_FS).
+  var COMP_FS = [
+    'precision highp float;',
+    'uniform vec2 uRes;',
+    'uniform float uTime;',
+    'uniform float uLight;',
+    'uniform vec2 uMouse;',
+    'uniform float uMouseAmt;',
+    'uniform vec3 uCMid;',
+    'uniform vec3 uStarTint;',
+    'uniform float uDust;',
+    'uniform float uMoon;',
+    'uniform vec3 uCEdge;',
+    'uniform vec3 uFx;',
+    'uniform sampler2D uTex;',
+    COMP_NOISE,
+    '// Maane og satellitt bare i programmet for maanenatt (#define MOON 1 i JS).',
+    '#if MOON',
       '// satellitt (maanenatt): et lite blinkende punkt som seiler sakte over himmelen',
       'float satDot(vec2 frag, float aspect, float t){',
       '  float per = 47.0;',
@@ -4670,33 +4775,6 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '  float blink = 0.55 + 0.45 * sin(t * 2.6 + rn * 30.0);',
       '  float edgeFade = sin(ph * 3.14159);',
       '  return exp(-dot(rel, rel) / 0.0000042) * on * blink * edgeFade;',
-      '}',
-      'float starLayer(vec2 px, float scale, float keep, float szMul, float t, float twk, out float temp){',
-      '  vec2 sp = px / uRes.y * scale;',
-      '  vec2 cell = floor(sp);',
-      '  vec2 f = fract(sp);',
-      '  float rnd = hash21(cell);',
-      '  vec2 spos = vec2(hash21(cell + 11.0), hash21(cell + 23.0)) * 0.8 + 0.1;',
-      '  vec2 d = f - spos;',
-      '  float dist = length(d);',
-      '  float mag = pow(hash21(cell + 31.0), 5.0);',
-      '  float szPx = max((0.75 + 2.1 * mag) * szMul * uRes.y * 0.00092, 0.85);',
-      '  float sz = szPx * scale / uRes.y;',
-      '  float core = 0.72 * exp(-(dist * dist) / (sz * sz)) + 0.55 * exp(-(dist * dist) / (sz * sz * 0.28));',
-      '  float halo = exp(-dist / (sz * 1.7)) * 0.10 * (0.2 + mag);',
-      '  float spd = 0.4 + hash21(cell + 43.0) * 0.8;',
-      '  float n1 = vnoise(vec2(t * spd, rnd * 93.0));',
-      '  float n2 = vnoise(vec2(t * spd * 2.6 + 7.0, rnd * 57.0));',
-      '  float twAmp = mix(0.30, 0.08, mag) * twk;',
-      '  float tw = 1.0 - twAmp * (0.7 * n1 + 0.3 * n2);',
-      '  float sel = step(keep, rnd);',
-      '  float spikeAmt = smoothstep(0.82, 0.97, mag);',
-      '  float spike = (1.0 - smoothstep(0.0, sz * 9.0, abs(d.x))) * (1.0 - smoothstep(0.0, sz * 0.42, abs(d.y)));',
-      '  spike += (1.0 - smoothstep(0.0, sz * 9.0, abs(d.y))) * (1.0 - smoothstep(0.0, sz * 0.42, abs(d.x)));',
-      '  temp = hash21(cell + 5.0);',
-      '  float lim = min(min(spos.x, 1.0 - spos.x), min(spos.y, 1.0 - spos.y));',
-      '  float win = 1.0 - smoothstep(lim * 0.45, lim * 0.95, dist);',
-      '  return ((core + halo) * (0.8 + 1.25 * mag) + spike * spikeAmt * 0.34) * tw * sel * win;',
       '}',
       '// maane: ellipse-avstand (kvadrert) for mare-basseng og krater',
       'float mQ(vec2 p, vec2 c, vec2 r){ vec2 d = (p - c) / r; return dot(d, d); }',
@@ -4738,33 +4816,18 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '  hgt = -0.30 * mar + 0.16 * g1 + 0.09 * g2;',
       '  return alb;',
       '}',
-      'void main(){',
-      '  vec2 frag = gl_FragCoord.xy / uRes;',
-      '  float aspect = uRes.x / uRes.y;',
-      '  vec4 aur = texture2D(uTex, frag);',
-      '  vec3 col = aur.rgb;',
-      '  float occl = exp(-aur.a * 5.2);',
-      '  float t = uTime;',
-      '',
-      '  float tempA; float tempB; float tempC;',
-      '  float sA = starLayer(gl_FragCoord.xy, 30.0, 0.955, 1.0, t, 1.0, tempA);',
-      '  float sB = starLayer(gl_FragCoord.xy + vec2(157.0, 61.0), 11.0, 0.945, 1.35, t * 0.9, 0.65, tempB);',
-      '  float sC = starLayer(gl_FragCoord.xy + vec2(83.0, 211.0), 64.0, 0.900, 0.8, t * 1.15, 1.0, tempC);',
-      '  float clus = 0.55 + 0.9 * vnoise(vec2(frag.x * aspect, frag.y) * 3.1 + 17.0);',
-      '  vec3 cool = vec3(0.78, 0.86, 1.0);',
-      '  vec3 warm = vec3(1.0, 0.90, 0.74);',
-      '  vec3 stA = mix(mix(cool, warm, smoothstep(0.2, 0.8, tempA)), uStarTint, 0.30);',
-      '  vec3 stB = mix(mix(cool, warm, smoothstep(0.2, 0.8, tempB)), uStarTint, 0.30);',
-      '  vec3 stC = mix(mix(cool, warm, smoothstep(0.2, 0.8, tempC)), uStarTint, 0.30);',
-      '  float horizon = smoothstep(0.22, 0.60, frag.y);',
-      '  vec3 stars = stA * sA * 0.62 + stB * sB * 1.0 + stC * sC * 0.34 * clus;',
-      '  // samme klemme som i nightScene(): skiva og haloen maa dele senter,',
-      '  // ellers glir maaneskiva ut av sin egen glans paa staaende skjerm.',
-      '  float mpx = min(aspect * 0.31, max(aspect * 0.5 - 0.20, 0.0));',
-      '  vec2 mv = vec2((frag.x - 0.5) * aspect, frag.y) - vec2(mpx, 0.76);',
-      '  float mdd = length(mv);',
-      '  float moonMask = 1.0 - uMoon * 0.85 * exp(-mdd * mdd * 22.0);',
-      '  col += stars * horizon * uStarAmt * (1.0 - uLight) * occl * moonMask;',
+    '#endif',
+    'void main(){',
+    '  vec2 frag = gl_FragCoord.xy / uRes;',
+    '  float aspect = uRes.x / uRes.y;',
+    '  vec4 aur = texture2D(uTex, frag);',
+    '  vec3 col = aur.rgb;',
+    '  float occl = exp(-aur.a * 5.2);',
+    '  float t = uTime;',
+    '#if MOON',
+    '  float mpx = min(aspect * 0.31, max(aspect * 0.5 - 0.20, 0.0));',
+    '  vec2 mv = vec2((frag.x - 0.5) * aspect, frag.y) - vec2(mpx, 0.76);',
+    '  float mdd = length(mv);',
       '  if (uMoon > 0.5) {',
       '    float R = 0.033;',
       '    float cloudAmt = clamp(aur.a, 0.0, 1.0);',
@@ -4802,259 +4865,548 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '    }',
       '  }',
       '',
-      '  // -- himmel-hendelse: satellitt (kun maanenatt, uFx.z) --',
-      '  col += mix(uStarTint, vec3(1.0), 0.4) * satDot(frag, aspect, t) * uFx.z * occl * 0.5 * (1.0 - uLight);',
-      '',
-      '  vec2 m = vec2(uMouse.x, 1.0 - uMouse.y);',
-      '  vec2 md = (frag - m) * vec2(aspect, 1.0);',
-      '  col += uCMid * exp(-dot(md, md) * 5.5) * 0.05 * uMouseAmt * (1.0 - uLight);',
-      '',
-      '  vec2 vq = (frag - vec2(0.5, 0.55)) * vec2(1.0, 1.25);',
-      '  col *= 1.0 - mix(0.16, 0.05, uLight) * dot(vq, vq);',
-      '  // bw: temporalt korn (kinoprojektor) - ellers statisk som foer',
-      '  vec2 gsd = gl_FragCoord.xy * 1.7 + uDust * vec2(fract(t * 9.13) * 53.0, fract(t * 5.71) * 91.0);',
-      '  col += (hash21(gsd) - 0.5) * ((3.0 + uDust * 1.6) / 255.0);',
-      '',
-      '  gl_FragColor = vec4(col, 1.0);',
-      '}'
-    ].join('\n');
+    '  col += mix(uStarTint, vec3(1.0), 0.4) * satDot(frag, aspect, t) * uFx.z * occl * 0.5 * (1.0 - uLight);',
+    '#endif',
+    '  vec2 m = vec2(uMouse.x, 1.0 - uMouse.y);',
+    '  vec2 md = (frag - m) * vec2(aspect, 1.0);',
+    '  col += uCMid * exp(-dot(md, md) * 5.5) * 0.05 * uMouseAmt * (1.0 - uLight);',
+    '  vec2 vq = (frag - vec2(0.5, 0.55)) * vec2(1.0, 1.25);',
+    '  col *= 1.0 - mix(0.16, 0.05, uLight) * dot(vq, vq);',
+    '  vec2 gsd = gl_FragCoord.xy * 1.7 + uDust * vec2(fract(t * 9.13) * 53.0, fract(t * 5.71) * 91.0);',
+    '  col += (hash21(gsd) - 0.5) * ((3.0 + uDust * 1.6) / 255.0);',
+    '  gl_FragColor = vec4(col, 1.0);',
+    '}'
+  ].join('\n');
 
-    // Å spørre om COMPILE_STATUS/LINK_STATUS rett etter compileShader/linkProgram
-    // tvinger hovedtråden til å stå og vente på driveren. Uten spørsmålet gjør
-    // driveren nøyaktig samme jobb parallelt. Sjekken er derfor flyttet til
-    // programsOk(), som kjører ved første tegning. Målt på RTX 2060: motorblokka
-    // gikk fra 752 ms fryst hovedtråd til under 1 ms.
-    function compile(type, src) {
-      var s = gl.createShader(type);
-      gl.shaderSource(s, src);
-      gl.compileShader(s);
-      return s;
+  // Stjerner som punkter: én vertex per stjerne, additiv blanding over kompositten.
+  var STAR_VS = [
+    'precision highp float;',
+    'attribute vec2 aPos;',
+    'attribute float aMag;',
+    'attribute vec3 aCol;',
+    'attribute float aSeed;',
+    'uniform vec2 uCss;',
+    'uniform float uDpr;',
+    'uniform float uTime;',
+    'uniform float uLim;',
+    'uniform float uGain;',
+    'uniform float uTwk;',
+    'uniform vec3 uTint;',
+    'uniform float uMoon;',
+    'uniform float uMaxPt;',
+    'varying vec3 vCol;',
+    'varying float vSize;',
+    'varying float vHalo;',
+    'varying float vBloom;',
+    'varying float vSig;',
+    'void main(){',
+    '  vec2 css = vec2(uCss.x * 0.5 + aPos.x * 1000.0, aPos.y * 1000.0);',
+    '  vec2 frag = vec2(css.x / uCss.x, 1.0 - css.y / uCss.y);',
+    '  float aspect = uCss.x / uCss.y;',
+    '  // tilsynelatende lysstyrke: komprimert magnitudeskala, myk grensemagnitude',
+    '  float I = exp2(-0.6378 * (aMag - 1.0));',
+    '  I *= 1.0 - smoothstep(uLim - 0.5, uLim + 0.5, aMag);',
+    '  // atmosfaeren: ekstinksjon og roedfarging mot horisonten',
+    '  float ext = smoothstep(0.06, 0.42, frag.y);',
+    '  I *= mix(0.16, 1.0, ext);',
+    '  // scintillasjon: sterkere lavt paa himmelen, tre inkommensurable sinuser per stjerne',
+    '  float s = aSeed * 6.28318;',
+    '  float tw = 0.5 * sin(uTime * (1.1 + 2.4 * fract(aSeed * 7.13)) + s)',
+    '           + 0.3 * sin(uTime * (2.9 + 3.6 * fract(aSeed * 13.71)) + s * 3.7)',
+    '           + 0.2 * sin(uTime * (6.3 + 5.2 * fract(aSeed * 29.37)) + s * 9.1);',
+    '  I *= max(1.0 + mix(0.40, 0.09, ext) * uTwk * tw, 0.0);',
+    '  vec2 vq = (frag - vec2(0.5, 0.55)) * vec2(1.0, 1.25);',
+    '  I *= 1.0 - 0.16 * dot(vq, vq);',
+    '  // maanenatt: glansen visker ut stjerner rundt maanen, skiva dekker dem',
+    '  float mpx = min(aspect * 0.31, max(aspect * 0.5 - 0.20, 0.0));',
+    '  float mdd = length(vec2((frag.x - 0.5) * aspect, frag.y) - vec2(mpx, 0.76));',
+    '  I *= mix(1.0, (1.0 - 0.85 * exp(-mdd * mdd * 22.0)) * smoothstep(0.034, 0.048, mdd), uMoon);',
+    '  I *= uGain;',
+    '  vec3 c = aCol * mix(vec3(1.0, 0.78, 0.58), vec3(1.0), ext);',
+    '  float ph = uTime * 6.1 + s * 5.0;',
+    '  c *= 1.0 + smoothstep(0.30, 0.90, I) * (1.0 - ext) * 0.22 * uTwk * vec3(sin(ph), sin(ph + 2.094), sin(ph + 4.189));',
+    '  float lc = dot(c, vec3(0.299, 0.587, 0.114));',
+    '  c = mix(c, uTint * lc / max(dot(uTint, vec3(0.299, 0.587, 0.114)), 0.05), 0.16);',
+    '  vCol = c * I;',
+    '  vHalo = clamp(I - 0.45, 0.0, 1.6);',
+    '  vBloom = clamp((I - 0.90) * 0.7, 0.0, 1.2);',
+    '  vSig = max(0.5 * uDpr, 0.6);',
+    '  vSize = min(2.0 * (1.8 + 5.0 * min(vHalo, 1.0) + 12.0 * min(vBloom, 1.0)) * uDpr + 2.0, uMaxPt);',
+    '  gl_PointSize = vSize;',
+    '  gl_Position = I < 0.003 ? vec4(-9.0, -9.0, 0.0, 1.0) : vec4(frag * 2.0 - 1.0, 0.0, 1.0);',
+    '}'
+  ].join('\n');
+
+  var STAR_FS = [
+    'precision highp float;',
+    'uniform sampler2D uTex;',
+    'uniform vec2 uRes;',
+    'uniform float uDpr;',
+    'uniform float uMode;',
+    'varying vec3 vCol;',
+    'varying float vSize;',
+    'varying float vHalo;',
+    'varying float vBloom;',
+    'varying float vSig;',
+    'void main(){',
+    '  vec2 p = (gl_PointCoord - 0.5) * vSize;',
+    '  float r2 = dot(p, p);',
+    '  float rc = sqrt(r2) / uDpr;',
+    '  // punktspredning: skarp kjerne + glorie og lang hale bare for sterke stjerner',
+    '  float core = exp(-r2 / (2.0 * vSig * vSig));',
+    '  float halo = vHalo * 0.22 * exp(-rc * rc / 3.4);',
+    '  float wing = vHalo * 0.035 / pow(1.0 + rc * rc * 0.25, 1.5);',
+    '  float glow = vBloom * 0.05 * exp(-rc / 4.5);',
+    '  float win = 1.0 - smoothstep(0.36, 0.5, sqrt(r2) / vSize);',
+    '  vec4 bg = texture2D(uTex, gl_FragCoord.xy / uRes);',
+    '  // skyer (maanenatt) og horisont dekker; sterkt nordlys senker bare kontrasten',
+    '  float occ = uMode > 3.5 ? exp(-bg.a * 5.2) : 1.0 - bg.a;',
+    '  float wash = 1.0 - min(dot(bg.rgb, vec3(0.299, 0.587, 0.114)) * 1.6, 0.85);',
+    '  gl_FragColor = vec4(vCol * (core + halo + wing + glow) * win * occ * wash, 1.0);',
+    '}'
+  ].join('\n');
+
+  /* ── Motor ────────────────────────────────────────────────────────── */
+  function mount(canvas, opts) {
+    opts = opts || {};
+    var CONFIG = {}, key;
+    for (key in DEFAULTS) CONFIG[key] = DEFAULTS[key];
+    if (opts.config) for (key in opts.config) if (opts.config[key] != null && key in DEFAULTS) CONFIG[key] = opts.config[key];
+    var root = opts.themeRoot || document.documentElement;
+    var bodyClass = opts.bodyClass !== false;
+    var noop = { destroy: function () {}, frame: function () {}, set: function () {}, config: CONFIG };
+    if (!canvas) return noop;
+
+    var dead = false;
+    var gl = null, pcExt = null, progA = null, progC = null, progP = null, uA = null, uC = null, uP = null;
+    var tex = null, fbo = null, quadBuf = null, starBuf = null;
+    var pendingProgs = [], bindUniforms = null, ensureScene = null;
+    var SCENES = {}, scene = null, starsLinked = false;   // programmer per scene, se ensureScene
+    var raf = 0, last = 0, t = 20 + Math.random() * 80, tr = t, shown = false, retryT = 0;
+    var ampNow = CONFIG.INTENSITY, actNow = 0, revealT0 = -1, revealDone = false;
+    var mx = 0.5, my = 0.35, tmx = 0.5, tmy = 0.35, mAmt = 0, tmAmt = 0;
+    var aw = 2, ah = 2, starCount = 0, starsDirty = true, maxPt = 64;
+    var cc = null, ct = null, lastTheme = null, isSmoke = false, mode = 0;
+    var mq = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+    var isStatic = !!(mq && mq.matches);
+    var ro = null, mo = null, subs = [];
+    function on(target, type, fn, o) { if (!target || !target.addEventListener) return; target.addEventListener(type, fn, o); subs.push([target, type, fn, o]); }
+
+    function themeKey() { var k = root.getAttribute('data-theme') || 'carbon'; return THEMES[k] ? k : 'carbon'; }
+    function canvasVisible() { return !!CANVAS_THEMES[themeKey()]; }
+
+    function syncTheme() {
+      var k = themeKey();
+      isSmoke = (k === 'bw');
+      mode = MODE[k] != null ? MODE[k] : 0;
+      if (k === lastTheme && cc) return;
+      var T = THEMES[k];
+      ct = {
+        skyTop: hex2v(T.sky[0]), skyBot: hex2v(T.sky[1]), edge: hex2v(T.edge), mid: hex2v(T.mid), top: hex2v(T.top),
+        fringe: hex2v(T.fringe), star: hex2v(T.star), light: [T.light], lim: [T.lim], mw: [T.mw]
+      };
+      if (!cc || isStatic || !raf) cc = JSON.parse(JSON.stringify(ct)); // står loopen, bytt farger med en gang
+      lastTheme = k;
+      starsDirty = true;
     }
-    function linkProg(fsSrc) {
-      var vs = compile(gl.VERTEX_SHADER, vsrc);
-      var fs = compile(gl.FRAGMENT_SHADER, fsSrc);
-      var prog = gl.createProgram();
-      gl.attachShader(prog, vs); gl.attachShader(prog, fs);
-      gl.bindAttribLocation(prog, 0, 'aPos');
-      gl.linkProgram(prog);
-      pendingProgs.push({ prog: prog, vs: vs, fs: fs });
-      return prog;
+
+    function initGL() {
+      try {
+        gl = canvas.getContext('webgl', { alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'low-power', preserveDrawingBuffer: true });
+      } catch (e) { gl = null; }
+      if (!gl) return false; // CSS-fallback (.band) blir stående
+      pcExt = gl.getExtension('KHR_parallel_shader_compile');
+      // Statussjekken er utsatt til første tegning (se programsReady) — å spørre rett
+      // etter linkProgram tvinger hovedtråden til å vente på driveren.
+      function compile(type, src) { var s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; }
+      function link(vsSrc, fsSrc, attrs) {
+        var vs = compile(gl.VERTEX_SHADER, vsSrc), fs = compile(gl.FRAGMENT_SHADER, fsSrc), prog = gl.createProgram();
+        gl.attachShader(prog, vs); gl.attachShader(prog, fs);
+        for (var i = 0; i < attrs.length; i++) gl.bindAttribLocation(prog, i, attrs[i]);
+        gl.linkProgram(prog);
+        pendingProgs.push({ prog: prog, vs: vs, fs: fs });
+        return prog;
+      }
+      pendingProgs = []; SCENES = {}; scene = null; starsLinked = false;
+      progA = progC = progP = null; uA = uC = uP = null;
+      // Programmene lenkes først ved første tegning, og bare for scenen temaet viser.
+      // Carbon og de lyse temaene, der canvaset er skjult, kompilerer ingenting, og
+      // nordlys slipper å kompilere månen og noir-scenen den aldri viser.
+      ensureScene = function () {
+        var k = mode === 4 ? 4 : mode === 1 ? 1 : 0, S = SCENES[k];
+        if (!S) S = SCENES[k] = {
+          A: link(QUAD_VS, '#define SCENE ' + k + '\n' + AURORA_FS, ['aPos']),
+          C: link(QUAD_VS, '#define MOON ' + (k === 4 ? 1 : 0) + '\n' + COMP_FS, ['aPos']),
+          uA: null, uC: null
+        };
+        if (!starsLinked) { starsLinked = true; progP = link(STAR_VS, STAR_FS, ['aPos', 'aMag', 'aCol', 'aSeed']); }
+        scene = S; progA = S.A; progC = S.C; uA = S.uA; uC = S.uC;
+      };
+
+      quadBuf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      starBuf = gl.createBuffer();
+      starCount = 0; starsDirty = true;
+
+      tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 2, 2, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+      fbo = gl.createFramebuffer();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+      gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+      var pr = gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE);
+      maxPt = pr && pr[1] ? pr[1] : 64;
+
+      function U(prog, names) { var o = {}; for (var i = 0; i < names.length; i++) o[names[i]] = gl.getUniformLocation(prog, names[i]); return o; }
+      bindUniforms = function () {
+        for (var k in SCENES) {
+          var S = SCENES[k];
+          if (S.uA) continue;
+          S.uA = U(S.A, ['uRes', 'uTime', 'uTimeR', 'uAmp', 'uLight', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe', 'uCss', 'uMW']);
+          S.uC = U(S.C, ['uRes', 'uTime', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx']);
+        }
+        if (progP && !uP) uP = U(progP, ['uCss', 'uDpr', 'uTime', 'uLim', 'uGain', 'uTwk', 'uTint', 'uMoon', 'uMaxPt', 'uTex', 'uRes', 'uMode']);
+        if (scene) { uA = scene.uA; uC = scene.uC; }
+      };
+      return true;
     }
-    progA = linkProg(auroraSrc);
-    progC = linkProg(compSrc);
-    if (!progA || !progC) return false;
 
-    var buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(0);
-    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    // Utsatt statussjekk. Med KHR_parallel_shader_compile venter vi bare til
+    // driveren melder ferdig. Feiler scene/kompositt rives motoren ned og
+    // CSS-auroraen (.band) får jobben tilbake; feiler bare stjernene, kjører vi uten.
+    function programsReady() {
+      if (!pendingProgs.length) return true;
+      var i;
+      if (pcExt) for (i = 0; i < pendingProgs.length; i++) if (!gl.getProgramParameter(pendingProgs[i].prog, pcExt.COMPLETION_STATUS_KHR)) return false;
+      var ok = true;
+      for (i = 0; i < pendingProgs.length; i++) {
+        var p = pendingProgs[i];
+        if (gl.getProgramParameter(p.prog, gl.LINK_STATUS)) continue;
+        if (!gl.getShaderParameter(p.vs, gl.COMPILE_STATUS)) console.warn('Nordlys shader: ' + gl.getShaderInfoLog(p.vs));
+        if (!gl.getShaderParameter(p.fs, gl.COMPILE_STATUS)) console.warn('Nordlys shader: ' + gl.getShaderInfoLog(p.fs));
+        console.warn('Nordlys link: ' + gl.getProgramInfoLog(p.prog));
+        if (p.prog === progP) progP = null; else ok = false;
+      }
+      pendingProgs.length = 0;
+      if (ok && bindUniforms) bindUniforms();
+      if (!ok) {
+        pause(); gl = null;
+        canvas.style.opacity = '0';
+        if (bodyClass && document.body) document.body.classList.remove('nordlys-on');
+      }
+      return ok;
+    }
 
-    tex = gl.createTexture();
-    gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    fbo = gl.createFramebuffer();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    // Velg synlige stjerner (vindu + tetthet) fra cellene som dekker vinduet og last dem opp.
+    function rebuildStars() {
+      starsDirty = false;
+      if (!gl || !starBuf) return;
+      var cw = canvas.clientWidth || 2, ch = canvas.clientHeight || 2;
+      var hx = cw / 2 / REF + 0.04, y1 = ch / REF + 0.04;
+      var dens = Math.max(0, Math.min(2, +CONFIG.STAR_DENSITY || 0)) / 2;
+      var mwk = dens * Math.max(0, Math.min(1, (ct ? ct.mw[0] : 1) * (+CONFIG.MILKY_WAY || 0)));
+      var cells = [], total = 0, cx, cy;
+      for (cy = 0; cy <= Math.floor(y1 / CELL); cy++) {
+        for (cx = Math.floor(-hx / CELL); cx <= Math.floor(hx / CELL); cx++) {
+          var cell = starCell(cx, cy);
+          cells.push(cell); total += cell.length / 9;
+        }
+      }
+      var buf = new Float32Array(Math.max(total, 1) * 8), j = 0;
+      for (var q = 0; q < cells.length; q++) {
+        var C = cells[q], n = C.length / 9;
+        for (var i = 0; i < n; i++) {
+          var o = i * 9, x = C[o], y = C[o + 1];
+          if (x < -hx || x > hx || y < -0.04 || y > y1) continue;
+          var type = C[o + 8], rank = C[o + 7];
+          if (type === 0 ? rank >= dens : type === 1 ? rank >= mwk : dens <= 0) continue;
+          buf[j] = x; buf[j + 1] = y; buf[j + 2] = C[o + 2];
+          buf[j + 3] = C[o + 3]; buf[j + 4] = C[o + 4]; buf[j + 5] = C[o + 5];
+          buf[j + 6] = C[o + 6]; buf[j + 7] = 0;
+          j += 8;
+        }
+      }
+      starCount = j / 8;
+      gl.bindBuffer(gl.ARRAY_BUFFER, starBuf);
+      gl.bufferData(gl.ARRAY_BUFFER, buf.subarray(0, Math.max(j, 8)), gl.STATIC_DRAW);
+    }
 
-    // getUniformLocation venter også på at lenkingen er ferdig — 25 oppslag rett
-    // etter linkProgram er samme stoppunkt som statussjekken var. uA/uC leses kun
-    // i draw(), så oppslaget utsettes til programsOk() har godkjent programmene.
-    function U(prog, names) { var o = {}; for (var i = 0; i < names.length; i++) o[names[i]] = gl.getUniformLocation(prog, names[i]); return o; }
-    bindUniforms = function () {
-      uA = U(progA, ['uRes', 'uTime', 'uAmp', 'uLight', 'uMode', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe']);
-      uC = U(progC, ['uRes', 'uTime', 'uStarAmt', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx']);
-    };
+    var sizeT = 0;
+    function resize(force) {
+      if (!gl || !tex) return;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var cw = canvas.clientWidth, ch = canvas.clientHeight;
+      // Ikke lagt ut ennå (nytt element, skjult fane): ResizeObserver fyrer kanskje aldri
+      // mens fanen er skjult — prøv igjen litt senere i stedet for å lage en 2×2-buffer.
+      if (cw < 4 || ch < 4) {
+        if (!sizeT && !dead) sizeT = setTimeout(function () { sizeT = 0; resize(true); }, 80);
+        return;
+      }
+      var w = Math.max(2, Math.round(cw * dpr)), h = Math.max(2, Math.round(ch * dpr));
+      var cap = 4.6e6;
+      if (w * h > cap) { var s = Math.sqrt(cap / (w * h)); w = Math.round(w * s); h = Math.round(h * s); }
+      if (force || canvas.width !== w || canvas.height !== h) {
+        canvas.width = w; canvas.height = h;
+        var ss = Math.min(0.85, 1680 / Math.max(1, cw));
+        aw = Math.max(2, Math.round(cw * ss));
+        ah = Math.max(2, Math.round(ch * ss));
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, aw, ah, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        starsDirty = true;
+        // Canvaset tømmes ved ny størrelse — tegn på nytt når loopen står (redusert
+        // bevegelse, skjult fane). Ikke ved oppstart: da tar første tick tegningen, så
+        // statussjekken aldri havner midt i HTML-parsingen (E257). Ikke på tema der
+        // canvaset er skjult (carbon og de lyse): der skal motoren ikke gjøre noe.
+        if (!raf && canvasVisible() && (isStatic || document.hidden)) draw();
+      }
+    }
 
-    canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); cancelAnimationFrame(raf); raf = 0; });
-    canvas.addEventListener('webglcontextrestored', function () { progA = null; gl = null; if (initGL()) { resize(); if (isStatic) drawOnce(); else resume(); } });
+    function resume() {
+      if (!dead && gl && !raf && !isStatic && !document.hidden && canvasVisible()) { last = performance.now(); raf = requestAnimationFrame(tick); }
+    }
+    function pause() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
 
-    if (!ro) { ro = new ResizeObserver(resize); ro.observe(canvas); }
-    resize();
+    function tick(now) {
+      if (dead) return;
+      raf = requestAnimationFrame(tick);
+      var dt = Math.min(now - last, 100);
+      if (dt < 28) return; // ~33 fps
+      last = now;
+      var sp = CONFIG.SPEED;
+      t += dt * 0.001 * sp;
+      // Intro-reveal: nordlyset tennes svakt -> stiger -> blusser opp -> legger seg.
+      // Klokka starter først når shaderne er klare. Ellers brukes tenningen opp
+      // usynlig mens de kompilerer (kald shader-cache ved første besøk).
+      if (revealT0 < 0 && !pendingProgs.length) revealT0 = now;
+      var sg = 0;
+      if (!revealDone) {
+        var rr = revealT0 < 0 ? 0 : (now - revealT0) / 1500;
+        if (rr >= 1) { revealDone = true; ampNow = CONFIG.INTENSITY; }
+        else {
+          var rise;
+          if (rr <= 0.73) { var q = rr / 0.73; rise = 0.16 + (0.90 - 0.16) * (1 - Math.pow(1 - q, 3)); }
+          else { rise = 0.90 + (CONFIG.INTENSITY - 0.90) * ((rr - 0.73) / 0.27); }
+          var sw = Math.max(0, Math.min((rr - 0.6) / 0.4, 1));
+          ampNow = rise + Math.sin(sw * Math.PI) * 0.28;
+        }
+      } else {
+        // Levende puls: flerfrekvent pust + sporadisk oppbluss
+        var br = 0.945 + 0.05 * Math.sin(t * 0.21) + 0.033 * Math.sin(t * 0.083 + 1.7) + 0.022 * Math.sin(t * 0.31 + 0.6);
+        sg = Math.sin(t * 0.041 + 2.1); sg = sg > 0 ? sg * sg * sg : 0;
+        ampNow = CONFIG.INTENSITY * (br + sg * 0.26);
+      }
+      // Strålene har egen klokke: de danser raskere under oppblussene, roligere ellers.
+      actNow += (sg - actNow) * 0.05;
+      tr += dt * 0.001 * sp * (1 + 1.4 * actNow);
+      mx += (tmx - mx) * 0.045;
+      my += (tmy - my) * 0.045;
+      mAmt += (tmAmt - mAmt) * 0.05;
+      if (cc && ct) {
+        for (var k in ct) { var a = cc[k], b = ct[k]; for (var i = 0; i < b.length; i++) a[i] += (b[i] - a[i]) * 0.08; }
+      }
+      draw();
+    }
 
-    if (window.matchMedia('(pointer: fine)').matches) {
-      window.addEventListener('pointermove', function (e) {
+    function v3(loc, v) { gl.uniform3f(loc, v[0], v[1], v[2]); }
+    function useQuad() {
+      gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf);
+      gl.enableVertexAttribArray(0);
+      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+      gl.disableVertexAttribArray(1); gl.disableVertexAttribArray(2); gl.disableVertexAttribArray(3);
+    }
+    function useStars() {
+      gl.bindBuffer(gl.ARRAY_BUFFER, starBuf);
+      gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 32, 0);
+      gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1, 1, gl.FLOAT, false, 32, 8);
+      gl.enableVertexAttribArray(2); gl.vertexAttribPointer(2, 3, gl.FLOAT, false, 32, 12);
+      gl.enableVertexAttribArray(3); gl.vertexAttribPointer(3, 1, gl.FLOAT, false, 32, 24);
+    }
+
+    function draw() {
+      if (dead || !gl || !cc) return;
+      // Tapt kontekst: ikke lenk, og ikke spør etter LINK_STATUS (den gir null da, og
+      // det ville blitt lest som en shaderfeil). webglcontextrestored bygger alt på nytt.
+      if (gl.isContextLost()) return;
+      // Degenerert buffer (ingen layout ennå): ikke tegn og ikke vis canvaset.
+      if ((canvas.clientWidth || 0) < 4 || (canvas.clientHeight || 0) < 4 || canvas.width < 4 || canvas.height < 4) return;
+      ensureScene();
+      if (!programsReady()) {
+        if (gl && !raf && !retryT) retryT = setTimeout(function () { retryT = 0; if (canvasVisible()) draw(); }, 60);
+        return;
+      }
+      if (!gl) return;
+      if (starsDirty) rebuildStars();
+      var cw = canvas.clientWidth || 2, ch = canvas.clientHeight || 2;
+      var W = window.__smk || {};
+
+      // 1) tema-scene -> lavoppløst tekstur
+      gl.disable(gl.BLEND);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+      gl.viewport(0, 0, aw, ah);
+      gl.useProgram(progA);
+      useQuad();
+      gl.uniform2f(uA.uRes, aw, ah);
+      gl.uniform1f(uA.uTime, t);
+      gl.uniform1f(uA.uTimeR, tr);
+      gl.uniform1f(uA.uAmp, ampNow);
+      gl.uniform1f(uA.uLight, cc.light[0]);
+      gl.uniform3f(uA.uSmk, W.gain != null ? W.gain : 1.15, W.spot != null ? W.spot : 1.55, W.amb != null ? W.amb : 0.10);
+      v3(uA.uSkyTop, cc.skyTop); v3(uA.uSkyBot, cc.skyBot);
+      v3(uA.uCEdge, cc.edge); v3(uA.uCMid, cc.mid); v3(uA.uCTop, cc.top); v3(uA.uCFringe, cc.fringe);
+      gl.uniform2f(uA.uCss, cw, ch);
+      gl.uniform1f(uA.uMW, Math.max(0, cc.mw[0] * CONFIG.MILKY_WAY));
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      // 2) kompositt i full oppløsning
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.useProgram(progC);
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.uniform1i(uC.uTex, 0);
+      gl.uniform2f(uC.uRes, canvas.width, canvas.height);
+      gl.uniform1f(uC.uTime, t);
+      gl.uniform1f(uC.uDust, isSmoke ? 1 : 0);
+      gl.uniform1f(uC.uMoon, mode === 4 ? 1 : 0);
+      // Stjerneskudd og blitzlys er fjernet (brukervalg); kun satellitten på månenatt.
+      gl.uniform3f(uC.uFx, 0, 0, (!isStatic && mode === 4) ? 1 : 0);
+      v3(uC.uCEdge, cc.edge);
+      gl.uniform1f(uC.uLight, cc.light[0]);
+      gl.uniform2f(uC.uMouse, mx, my);
+      gl.uniform1f(uC.uMouseAmt, mAmt);
+      v3(uC.uCMid, cc.mid);
+      v3(uC.uStarTint, cc.star);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      // 3) stjerner — punkter, additivt
+      var gain = (CONFIG.STARS && !isSmoke) ? (1 - cc.light[0]) : 0;
+      if (progP && uP && starCount > 0 && gain > 0) {
+        gl.useProgram(progP);
+        useStars();
+        gl.enable(gl.BLEND);
+        gl.blendFunc(gl.ONE, gl.ONE);
+        gl.uniform1i(uP.uTex, 0);
+        gl.uniform2f(uP.uRes, canvas.width, canvas.height);
+        gl.uniform2f(uP.uCss, cw, ch);
+        gl.uniform1f(uP.uDpr, canvas.width / cw);
+        gl.uniform1f(uP.uTime, t);
+        gl.uniform1f(uP.uLim, cc.lim[0]);
+        gl.uniform1f(uP.uGain, gain);
+        gl.uniform1f(uP.uTwk, isStatic ? 0 : Math.max(0, Math.min(1, +CONFIG.TWINKLE || 0)));
+        v3(uP.uTint, cc.star);
+        gl.uniform1f(uP.uMoon, mode === 4 ? 1 : 0);
+        gl.uniform1f(uP.uMaxPt, maxPt);
+        gl.uniform1f(uP.uMode, mode);
+        gl.drawArrays(gl.POINTS, 0, starCount);
+        gl.disable(gl.BLEND);
+        useQuad();
+      }
+
+      if (!shown) { shown = true; canvas.style.opacity = '1'; }
+    }
+
+    /* ── Oppstart ──────────────────────────────────────────────────── */
+    if (!initGL()) return noop; // WebGL utilgjengelig → CSS .band-aurora beholdes
+    if (bodyClass && document.body) document.body.classList.add('nordlys-on'); // skjuler CSS-bandene, canvas overtar
+    syncTheme();
+    if (typeof ResizeObserver !== 'undefined') { ro = new ResizeObserver(function () { resize(false); }); ro.observe(canvas); }
+    else on(window, 'resize', function () { resize(false); });
+    resize(true);
+
+    on(canvas, 'webglcontextlost', function (e) { e.preventDefault(); pause(); });
+    on(canvas, 'webglcontextrestored', function () {
+      gl = null; progA = null; progP = null; uA = uC = uP = null;
+      if (initGL()) { resize(true); if (isStatic || document.hidden) { if (canvasVisible()) draw(); } else resume(); }
+    });
+    if (window.matchMedia && window.matchMedia('(pointer: fine)').matches) {
+      on(window, 'pointermove', function (e) {
         var r = canvas.getBoundingClientRect();
         tmx = (e.clientX - r.left) / Math.max(1, r.width);
         tmy = (e.clientY - r.top) / Math.max(1, r.height);
         tmAmt = 1;
       }, { passive: true });
     }
-    return true;
+
+    // Tema-bytte → farger lerpes mykt i tick; loopen startes/stoppes etter om
+    // det nye temaet faktisk viser canvaset.
+    mo = new MutationObserver(function () {
+      var prevK = lastTheme;
+      syncTheme();
+      if (isStatic || (!raf && document.hidden)) { if (canvasVisible()) draw(); return; }
+      if (canvasVisible()) {
+        if (lastTheme !== prevK) { revealT0 = -1; revealDone = false; }
+        resume();
+      } else pause();
+    });
+    mo.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+
+    if (mq) {
+      var onMq = function () {
+        isStatic = mq.matches;
+        if (isStatic) { pause(); if (ct) cc = JSON.parse(JSON.stringify(ct)); if (canvasVisible()) draw(); }
+        else resume();
+      };
+      if (mq.addEventListener) on(mq, 'change', onMq);
+      else if (mq.addListener) { mq.addListener(onMq); subs.push([mq, null, onMq]); }
+    }
+    on(document, 'visibilitychange', function () { if (document.hidden) pause(); else resume(); });
+
+    // Skjult fane ved last: hopp over intro-tenningen og mal ett bilde med en gang.
+    if (document.hidden) { revealDone = true; ampNow = CONFIG.INTENSITY; }
+    if (isStatic || document.hidden) { if (canvasVisible()) draw(); } else resume();
+
+    return {
+      destroy: function () {
+        if (dead) return;
+        dead = true; pause();
+        if (retryT) { clearTimeout(retryT); retryT = 0; }
+        if (sizeT) { clearTimeout(sizeT); sizeT = 0; }
+        if (ro) ro.disconnect();
+        if (mo) mo.disconnect();
+        for (var i = 0; i < subs.length; i++) {
+          var s = subs[i];
+          if (s[1]) s[0].removeEventListener(s[1], s[2], s[3]);
+          else if (s[0].removeListener) s[0].removeListener(s[2]);
+        }
+        subs.length = 0;
+        try { var ext = gl && gl.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext(); } catch (e) {}
+        gl = null;
+        if (bodyClass && document.body) document.body.classList.remove('nordlys-on');
+      },
+      // Tegn ett bilde ved gitt tid (forhåndsvisning / skjult fane).
+      frame: function (time) {
+        if (time != null) { t = +time; tr = t; }
+        if (!revealDone) { revealDone = true; ampNow = CONFIG.INTENSITY; }
+        draw();
+      },
+      // Endre knotter live, f.eks. { STAR_DENSITY: 1.4, MILKY_WAY: 0.5 }.
+      set: function (cfg) {
+        for (var k in cfg) {
+          if (cfg[k] == null || !(k in DEFAULTS)) continue;
+          if ((k === 'STAR_DENSITY' || k === 'MILKY_WAY') && CONFIG[k] !== cfg[k]) starsDirty = true;
+          CONFIG[k] = cfg[k];
+        }
+        if (!raf) { if (revealDone) ampNow = CONFIG.INTENSITY; draw(); }
+      },
+      config: CONFIG
+    };
   }
 
-  function resize() {
-    if (!gl || !tex) return;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var w = Math.max(2, Math.round(canvas.clientWidth * dpr));
-    var h = Math.max(2, Math.round(canvas.clientHeight * dpr));
-    var cap = 4.6e6;
-    if (w * h > cap) { var s = Math.sqrt(cap / (w * h)); w = Math.round(w * s); h = Math.round(h * s); }
-    if (canvas.width !== w || canvas.height !== h) {
-      canvas.width = w; canvas.height = h;
-      var ss = Math.min(0.85, 1680 / Math.max(1, canvas.clientWidth));
-      aw = Math.max(2, Math.round(canvas.clientWidth * ss));
-      ah = Math.max(2, Math.round(canvas.clientHeight * ss));
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, aw, ah, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-      if (isStatic) drawOnce();
-    }
+  window.HVNordlys = { mount: mount, version: 2 };
+
+  // Produksjon: monter på #nordlysCanvas, som v1. Sett window.HV_NORDLYS_MANUAL = true
+  // før fila lastes for å montere selv.
+  if (!window.HV_NORDLYS_MANUAL) {
+    var el = document.getElementById('nordlysCanvas');
+    if (el) window.HVNordlys.active = mount(el);
   }
-
-  function resume() {
-    if (gl && !raf && !isStatic && !document.hidden && canvasVisible()) { last = performance.now(); raf = requestAnimationFrame(tick); }
-  }
-
-  function tick(now) {
-    raf = requestAnimationFrame(tick);
-    var dt = Math.min(now - last, 100);
-    if (dt < 28) return; // ~33 fps
-    last = now;
-    t += dt * 0.001 * CONFIG.SPEED;
-    // Intro-reveal (wow-on-load): aurora ignites dim -> rises -> brightness-surges -> settles to idle.
-    // Driven entirely through uAmp; layered over the canvas' 1.4s CSS opacity fade-in.
-    if (revealT0 < 0) revealT0 = now;
-    if (!revealDone) {
-      var rr = (now - revealT0) / 1500;
-      if (rr >= 1) { revealDone = true; ampNow = CONFIG.INTENSITY; }
-      else {
-        var rise;
-        if (rr <= 0.73) { var q = rr / 0.73; rise = 0.16 + (0.90 - 0.16) * (1 - Math.pow(1 - q, 3)); }
-        else { rise = 0.90 + (CONFIG.INTENSITY - 0.90) * ((rr - 0.73) / 0.27); }
-        var sw = Math.max(0, Math.min((rr - 0.6) / 0.4, 1));
-        ampNow = rise + Math.sin(sw * Math.PI) * 0.28; // surge peaks ~1.2s
-      }
-    } else {
-      // Levende puls: flerfrekvent pust + sporadisk oppbluss (aldri statisk)
-      var br = 0.945 + 0.05 * Math.sin(t * 0.21) + 0.033 * Math.sin(t * 0.083 + 1.7) + 0.022 * Math.sin(t * 0.31 + 0.6);
-      var sg = Math.sin(t * 0.041 + 2.1); sg = sg > 0 ? sg * sg * sg : 0;
-      ampNow = CONFIG.INTENSITY * (br + sg * 0.26);
-    }
-    mx += (tmx - mx) * 0.045;
-    my += (tmy - my) * 0.045;
-    mAmt += (tmAmt - mAmt) * 0.05;
-    // Levende palett: nordlys vandrer subtilt i tone (aldri statisk)
-    if (ct && bt && lastTheme === 'nordlys') {
-      var rotA = 11 * Math.sin(t * 0.05) + 4 * Math.sin(t * 0.013 + 0.7);
-      ct.edge = hueRot(bt.edge, rotA);
-      ct.mid = hueRot(bt.mid, -0.6 * rotA);
-      ct.fringe = hueRot(bt.fringe, 0.5 * rotA);
-    }
-    if (cc && ct) {
-      var k = 0.08;
-      for (var key in ct) { var a = cc[key], b = ct[key]; for (var i = 0; i < b.length; i++) a[i] += (b[i] - a[i]) * k; }
-    }
-    draw();
-  }
-
-  // Utsatt statussjekk. Først her har driveren fått kompilere i fred, og
-  // spørsmålet koster ingenting. Feiler noe, rives motoren ned og CSS-auroraen
-  // (.band) får jobben tilbake — samme utfall som da sjekken lå i initGL(),
-  // bare noen millisekunder senere.
-  function programsOk() {
-    if (!pendingProgs.length) return true;
-    var ok = true;
-    for (var i = 0; i < pendingProgs.length; i++) {
-      var p = pendingProgs[i];
-      if (gl.getProgramParameter(p.prog, gl.LINK_STATUS)) continue;
-      if (!gl.getShaderParameter(p.vs, gl.COMPILE_STATUS)) console.warn('Nordlys shader: ' + gl.getShaderInfoLog(p.vs));
-      if (!gl.getShaderParameter(p.fs, gl.COMPILE_STATUS)) console.warn('Nordlys shader: ' + gl.getShaderInfoLog(p.fs));
-      console.warn('Nordlys link: ' + gl.getProgramInfoLog(p.prog));
-      ok = false;
-    }
-    pendingProgs.length = 0;
-    if (ok && bindUniforms) { bindUniforms(); bindUniforms = null; }
-    if (!ok) {
-      cancelAnimationFrame(raf); raf = 0;
-      gl = null;
-      canvas.style.opacity = '0';
-      document.body.classList.remove('nordlys-on');
-    }
-    return ok;
-  }
-
-  function draw() {
-    if (!gl || !cc || !progA || !cc.fringe) return;
-    if (!programsOk()) return;
-    gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-    gl.viewport(0, 0, aw || 2, ah || 2);
-    gl.useProgram(progA);
-    gl.uniform2f(uA.uRes, aw || 2, ah || 2);
-    gl.uniform1f(uA.uTime, t);
-    gl.uniform1f(uA.uAmp, ampNow);
-    gl.uniform1f(uA.uLight, cc.light[0]);
-    gl.uniform1f(uA.uMode, mode);
-    var W = window.__smk || {};
-    gl.uniform3f(uA.uSmk, W.gain != null ? W.gain : 1.15, W.spot != null ? W.spot : 1.55, W.amb != null ? W.amb : 0.10);
-    gl.uniform3f(uA.uSkyTop, cc.skyTop[0], cc.skyTop[1], cc.skyTop[2]);
-    gl.uniform3f(uA.uSkyBot, cc.skyBot[0], cc.skyBot[1], cc.skyBot[2]);
-    gl.uniform3f(uA.uCEdge, cc.edge[0], cc.edge[1], cc.edge[2]);
-    gl.uniform3f(uA.uCMid, cc.mid[0], cc.mid[1], cc.mid[2]);
-    gl.uniform3f(uA.uCTop, cc.top[0], cc.top[1], cc.top[2]);
-    gl.uniform3f(uA.uCFringe, cc.fringe[0], cc.fringe[1], cc.fringe[2]);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-
-    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.useProgram(progC);
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.uniform1i(uC.uTex, 0);
-    gl.uniform2f(uC.uRes, canvas.width, canvas.height);
-    gl.uniform1f(uC.uTime, t);
-    gl.uniform1f(uC.uStarAmt, (CONFIG.STARS && !isSmoke) ? 1 : 0);
-    gl.uniform1f(uC.uDust, isSmoke ? 1 : 0);
-    gl.uniform1f(uC.uMoon, mode === 4 ? 1 : 0);
-    // Stjerneskudd og blitzlys er fjernet på alle temaer (brukervalg).
-    // Kun satellitten på månenatt (mørk) er igjen; null ved reduced-motion.
-    gl.uniform3f(uC.uFx, 0, 0, (!isStatic && mode === 4) ? 1 : 0);
-    gl.uniform3f(uC.uCEdge, cc.edge[0], cc.edge[1], cc.edge[2]);
-    gl.uniform1f(uC.uLight, cc.light[0]);
-    gl.uniform2f(uC.uMouse, mx, my);
-    gl.uniform1f(uC.uMouseAmt, mAmt);
-    gl.uniform3f(uC.uCMid, cc.mid[0], cc.mid[1], cc.mid[2]);
-    gl.uniform3f(uC.uStarTint, cc.star[0], cc.star[1], cc.star[2]);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-
-    if (!shown) { shown = true; canvas.style.opacity = '1'; }
-  }
-  function drawOnce() { draw(); }
-
-  /* ── Oppstart ────────────────────────────────────────────────────────── */
-  if (!initGL()) return; // WebGL utilgjengelig → CSS .band-aurora beholdes
-  document.body.classList.add('nordlys-on'); // skjuler CSS-bandene, canvas overtar
-  syncTheme();
-
-  // Tema-bytte → re-sync farger (lerpes mykt i tick) + start/stopp loopen
-  // avhengig av om det nye temaet faktisk viser canvaset (unngår frossen canvas
-  // ved bytte carbon→mørkt, og stopper bortkastet tegning ved bytte til carbon).
-  new MutationObserver(function () {
-    var prevK = lastTheme;
-    syncTheme();
-    if (isStatic) { drawOnce(); return; }
-    if (canvasVisible()) {
-      // Re-tenning: nytt tema annonserer seg med samme ignite-kurve som ved last
-      if (lastTheme !== prevK) { revealT0 = -1; revealDone = false; }
-      resume();
-    }
-    else if (raf) { cancelAnimationFrame(raf); raf = 0; }
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
-  // Redusert bevegelse på/av live
-  if (mq.addEventListener) mq.addEventListener('change', function () {
-    isStatic = mq.matches;
-    if (isStatic) { cancelAnimationFrame(raf); raf = 0; if (ct) cc = JSON.parse(JSON.stringify(ct)); drawOnce(); }
-    else resume();
-  });
-  document.addEventListener('visibilitychange', function () {
-    if (document.hidden) { cancelAnimationFrame(raf); raf = 0; } else resume();
-  });
-
-  if (isStatic) drawOnce(); else resume();
 })();
 
 </script>
