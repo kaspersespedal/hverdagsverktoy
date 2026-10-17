@@ -935,12 +935,25 @@
   }
 
   /* ═══════════════════ STRØM (hvakosterstrømmen.no) ══════════════════ */
+  /* Dager med sommertid-skifte har 23 eller 25 timer (25. okt: kl. 02 to ganger),
+     så posisjonen i lista er ikke klokketimen. d.ts = time_start per time:
+     «nå» er siste time som har startet, og timeetiketten leses fra time_start.
+     Eldre cache uten ts faller tilbake til klokketimen som indeks. */
+  function stromIdx(d) {
+    var n = d.prices.length, i = n - 1, now = Date.now();
+    if (!d.ts) return Math.min(new Date().getHours(), n - 1);
+    while (i > 0 && Date.parse(d.ts[i]) > now) i--;
+    return i;
+  }
+  function stromHH(d, i) {
+    return d.ts ? String(d.ts[i]).slice(11, 13) : String(i).padStart(2, '0');
+  }
   function renderStrom(d, sone) {
     /* «Nå»-timen beregnes ved render (ikke ved fetch) — cachet dagsdata skal
        ikke vise forrige times pris når panelet står åpent over et timeskifte
        eller siden åpnes med gammel cache. */
     if (d.prices && d.prices.length) {
-      d.hour = Math.min(new Date().getHours(), d.prices.length - 1);
+      d.hour = stromIdx(d);
       d.now = d.prices[d.hour];
     }
     setText('stSone', 'Strøm ' + sone);
@@ -951,7 +964,7 @@
       for (var ci = 1; ci < d.prices.length; ci++) if (d.prices[ci] < d.prices[d.cheapHour]) d.cheapHour = ci;
       d.cheap = d.prices[d.cheapHour];
     }
-    var ch = d.cheapHour < 10 ? '0' + d.cheapHour : d.cheapHour;
+    var ch = stromHH(d, d.cheapHour);
     setText('stSub', fill(T('trSharedStromSub', 'Billigst kl\u00a0{h} · {cheap}\u00a0øre · snitt {avg}\u00a0øre'),
       { h: ch, cheap: Math.round(d.cheap * 100), avg: Math.round(d.avg * 100) }));
     var span = $('stTrend');
@@ -1003,19 +1016,21 @@
     var sone = place.sone || 'NO1', d = new Date();
     var y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
     var key = 'strom_' + y + m + day + '_' + sone, c = cacheGet(key);
-    if (!force && fresh(c, 3600 * 1000)) { renderStrom(c.d, sone); return; }
+    // Cache uten ts (fra før sommertid-rettingen) hentes på nytt; den vises imens.
+    if (!force && fresh(c, 3600 * 1000) && c.d.ts) { renderStrom(c.d, sone); return; }
     if (c) renderStrom(c.d, sone);
     fetch('https://www.hvakosterstrommen.no/api/v1/prices/' + y + '/' + m + '-' + day + '_' + sone + '.json')
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (arr) {
         var prices = arr.map(function (o) { return o.NOK_per_kWh; });
-        var hour = Math.min(d.getHours(), prices.length - 1), peak = 0, cheap = 0;
+        var ts = arr.map(function (o) { return o.time_start; });
+        var peak = 0, cheap = 0;
         for (var i = 1; i < prices.length; i++) {
           if (prices[i] > prices[peak]) peak = i;
           if (prices[i] < prices[cheap]) cheap = i;
         }
         var avg = prices.reduce(function (a, b) { return a + b; }, 0) / prices.length;
-        var out = { now: prices[hour], hour: hour, prices: prices, peakHour: peak, peak: prices[peak],
+        var out = { prices: prices, ts: ts, peakHour: peak, peak: prices[peak],
                     cheapHour: cheap, cheap: prices[cheap], avg: avg };
         cacheSet(key, out); renderStrom(out, sone);
       })
@@ -1138,7 +1153,7 @@
     bindScrub('stSpark', 'stScrub', 'stScrubTxt', function (frac) {
       var p = _strom && _strom.prices; if (!p || !p.length) return '';
       var i = Math.min(p.length - 1, Math.floor(frac * p.length));
-      return '<span class="mut">' + String(i).padStart(2, '0') + ':00</span> · ' +
+      return '<span class="mut">' + stromHH(_strom, i) + ':00</span> · ' +
              Math.round(p[i] * 100) + ' øre';
     });
     bindScrub('fxSpark', 'fxScrub', 'fxScrubTxt', function (frac) {
