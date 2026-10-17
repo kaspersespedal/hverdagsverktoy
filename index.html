@@ -921,97 +921,218 @@
   .wx-fc-temp{font-family:var(--font-serif);font-weight:500;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
   .wx-fc-time{font:600 8.5px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink4);font-variant-numeric:tabular-nums}
 
-  /* ══ Fullskjerm værmelding — dag-graf + neste 7 dager ══════════ */
-  .wx-expand{
-    margin-left:auto;align-self:center;flex-shrink:0;
-    width:30px;height:30px;display:grid;place-items:center;
-    border:0;border-radius:6px;background:transparent;color:var(--ink4);
-    cursor:pointer;transition:color var(--dur-fast) var(--ease-out-quart);
+  /* ══ Fullskjerm graf — vær, strøm og valuta (Claude Design «05 Fullskjerm graf») ══
+     Knappen sitter ytterst til høyre i kortets tall-linje, der det er ledig plass i
+     alle bredder. I topplinja tok den plassen fra sted, vær og trend når fire smale
+     kort deler raden (881–1099 px). Dialogen bygges av markedsdata.js første gang
+     den åpnes. Bare tema-tokens, så den følger alle ni temaene. */
+  /* Lang værtekst («Kraftige regnbyger og torden») kortes ned med … i stedet for å brekke raden.
+     min-width:0 på raden: ellers vokser kortets kolonne til hele teksten.
+     Etikettene (sted, valutapar) brekker heller aldri — de kortes ned på samme måte. */
+  #wxCard .widget-top,#fxCard .widget-top{min-width:0}
+  .widget-top .trend-weather{min-width:0}
+  .widget-top .wx-place-wrap,.widget-top .wx-place,.wx-place .widget-label{min-width:0}
+  .wx-place .widget-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #wxCond{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .md-exp{
+    display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;align-self:center;
+    width:26px;height:26px;margin:0 -5px 0 auto;padding:0;
+    border:1px solid transparent;border-radius:6px;background:transparent;color:var(--ink3);cursor:pointer;
+    transition:color .15s ease,border-color .15s ease,background-color .15s ease;
   }
-  .wx-expand svg{width:16px;height:16px}
-  @media(hover:hover){.wx-expand:hover{color:var(--accent-2)}}
-  .wx-expand:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .md-exp svg{width:12px;height:12px}
+  @media(hover:hover){.md-exp:hover{color:var(--ink);border-color:var(--line-2);background:color-mix(in srgb,var(--ink) 6%,transparent)}}
+  .md-exp:active{background:color-mix(in srgb,var(--ink) 10%,transparent)}
+  .md-exp:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-  .wx-modal-backdrop{
+  .mdb{
     position:fixed;inset:0;z-index:4000;
-    background:rgba(10,9,8,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-    opacity:0;transition:opacity var(--dur-fast) var(--ease-out-quart);
+    display:flex;align-items:center;justify-content:center;
+    padding:clamp(10px,2.4vw,28px);
+    background:color-mix(in srgb,var(--bg) 80%,transparent);
+    backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);
+    opacity:0;transition:opacity .28s cubic-bezier(.22,1,.36,1);
+    /* Linjas og søylenes fiolette ende — nordlysets motfarge blandet inn i aksenten */
+    --mdb-ink-a:color-mix(in oklab,var(--accent-2) 42%,hsl(var(--atmo-band-b)));
   }
-  .wx-modal-backdrop.in{opacity:1}
-  .wx-modal-backdrop[hidden]{display:none}
-  .wx-modal{
-    position:fixed;inset:0;margin:auto;
-    width:min(780px, 100vw - 32px);max-height:min(88vh, 900px);
-    display:flex;flex-direction:column;
-    background:var(--surface);border:1px solid var(--line-2);border-radius:12px;
-    box-shadow:0 24px 64px rgba(0,0,0,.6);overflow:hidden;
-    opacity:0;transform:translateY(12px) scale(.985);
-    transition:opacity var(--dur-base) var(--ease-out-expo), transform var(--dur-base) var(--ease-out-expo);
+  .mdb.in{opacity:1}
+  .mdb.is-fs{background:color-mix(in srgb,var(--bg) 56%,transparent)}
+  .mdb [hidden],.mdb[hidden]{display:none!important}
+  .mdb-panel{
+    position:relative;outline:0;width:100%;max-width:1320px;height:100%;max-height:880px;
+    display:flex;flex-direction:column;gap:18px;
+    padding:clamp(16px,2.4vw,26px) clamp(16px,2.6vw,32px) clamp(14px,2vw,22px);
+    border-radius:var(--r,14px);border:1px solid var(--line-2);
+    background:radial-gradient(60% 50% at 50% 0%,rgba(var(--glow-rgb),.08),transparent 70%),
+               linear-gradient(180deg,color-mix(in srgb,var(--surface-2) 86%,transparent),color-mix(in srgb,var(--surface) 76%,transparent));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 40px 90px -40px rgba(0,0,0,.95);
+    color:var(--ink);
+    transform:translateY(16px) scale(.975);transition:transform .36s cubic-bezier(.22,1,.36,1);
   }
-  .wx-modal-backdrop.in .wx-modal{opacity:1;transform:none}
-  .wx-modal-head{
-    position:sticky;top:0;z-index:2;
-    display:flex;align-items:flex-start;gap:14px;
-    padding:22px 34px 16px;background:var(--surface);border-bottom:1px solid var(--line);
+  .mdb.in .mdb-panel{transform:none}
+  .mdb.is-fs .mdb-panel{max-height:none}
+  .mdb-glow{position:absolute;top:-1px;left:22%;right:22%;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--glow-rgb),.55) 50%,transparent);pointer-events:none}
+  .mdb :focus-visible{outline:2px solid var(--accent);outline-offset:2px} /* samme ring som kortknappen — glød-fargen ga under 3:1 mot glasset */
+  .mdb .mdb-panel:focus-visible{outline:0}
+
+  .mdb-head{display:flex;align-items:center;gap:12px 20px;flex-wrap:wrap}
+  .mdb-head-l{display:flex;align-items:center;gap:12px;min-width:0;flex:1 1 auto}
+  .mdb-eye{font:600 10.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--ink2);white-space:nowrap}
+  .mdb-chips{position:relative;display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+  .mdb-chips::-webkit-scrollbar{display:none}
+  .mdb-chip{
+    appearance:none;position:relative;flex-shrink:0;display:inline-flex;align-items:center;height:32px;margin:0;padding:0 10px;
+    border:0;border-radius:calc(var(--rs,9px) - 3px);background:transparent;color:var(--ink3);
+    font:500 13px/1 var(--font-sans);letter-spacing:-.1px;cursor:pointer;white-space:nowrap;
+    transition:color .15s ease,background-color .15s ease;
   }
-  .wx-modal-place{font-family:var(--font-serif);font-weight:500;font-size:26px;color:var(--ink);letter-spacing:-.4px;margin:0;line-height:1.1}
-  .wx-modal-stamp{display:block;margin-top:6px;font-size:11.5px;letter-spacing:.2px;color:var(--ink3);font-variant-numeric:tabular-nums}
-  .wx-modal-close{
-    margin-left:auto;flex-shrink:0;width:34px;height:34px;
-    display:inline-flex;align-items:center;justify-content:center;
-    background:none;border:1px solid var(--line);border-radius:7px;color:var(--ink3);cursor:pointer;
-    transition:color var(--dur-fast) var(--ease-out-quart),border-color var(--dur-fast) var(--ease-out-quart);
+  .mdb-chip::after{content:"";position:absolute;left:10px;right:10px;bottom:0;height:2px;border-radius:1px;background:var(--accent-2);opacity:0;transition:opacity .15s ease}
+  .mdb-chip[aria-pressed="true"]{color:var(--ink)}
+  .mdb-chip[aria-pressed="true"]::after{opacity:1}
+  .mdb .mdb-chip:focus-visible{outline-offset:-2px} /* ringen innenfor brikken — raden ruller og klipper alt utenfor */
+  @media(hover:hover){.mdb-chip:hover{color:var(--ink);background:color-mix(in srgb,var(--ink) 5%,transparent)}}
+  .mdb-head-r{display:flex;align-items:center;gap:8px;margin-left:auto}
+  .mdb-seg{display:inline-flex;gap:2px;padding:2px;border-radius:var(--rs,9px);border:1px solid var(--line-2);background:color-mix(in srgb,var(--bg) 45%,transparent)}
+  .mdb-seg button,.mdb-retry{
+    appearance:none;height:28px;margin:0;padding:0 12px;border:0;border-radius:calc(var(--rs,9px) - 3px);
+    background:transparent;color:var(--ink3);font:500 12.5px/1 var(--font-sans);font-variant-numeric:tabular-nums;
+    cursor:pointer;white-space:nowrap;transition:background-color .15s ease,color .15s ease,box-shadow .15s ease;
   }
-  .wx-modal-close svg{width:15px;height:15px}
-  @media(hover:hover){.wx-modal-close:hover{color:var(--accent-2);border-color:var(--line-2)}}
-  .wx-modal-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-  .wx-modal-scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:26px 34px 34px}
+  .mdb-seg button[aria-pressed="true"]{background:var(--surface-3);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line-2),0 1px 2px rgba(0,0,0,.4)}
+  @media(hover:hover){.mdb-seg button:hover,.mdb-retry:hover{color:var(--ink)}}
+  .mdb-ib{
+    display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:34px;height:34px;margin:0;padding:0;
+    border-radius:var(--rs,9px);border:1px solid var(--line-2);background:transparent;color:var(--ink2);cursor:pointer;
+    transition:color .15s ease,border-color .15s ease,background-color .15s ease;
+  }
+  .mdb-ib svg{width:14px;height:14px}
+  .mdb-x svg{width:13px;height:13px}
+  @media(hover:hover){.mdb-ib:hover{color:var(--ink);border-color:color-mix(in srgb,var(--ink) 18%,transparent);background:color-mix(in srgb,var(--ink) 6%,transparent)}}
+  .mdb-ib:active{background:color-mix(in srgb,var(--ink) 10%,transparent)}
+
+  /* Alt under topplinja ruller samlet når skjermen er lav; grafen fyller ellers høyden.
+     16 px utløp til sidene, så pulsringen ved siste punkt ikke klippes av rulleflaten. */
+  .mdb-body{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:18px;margin:0 -16px;padding:0 16px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
+  .mdb-hero{display:flex;align-items:baseline;gap:6px 16px;flex-wrap:wrap}
+  .mdb-big{display:flex;align-items:baseline;gap:7px}
+  .mdb-val{font-family:var(--font-serif);font-weight:500;font-size:clamp(40px,5vw,60px);line-height:1;letter-spacing:-1.8px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+  .mdb-unit{font:500 16px/1 var(--font-sans);color:var(--ink3)}
+  .mdb-sub{font-size:13.5px;line-height:1.4;color:var(--ink2)}
+
+  .mdb-chart{
+    position:relative;flex:1 0 auto;min-height:clamp(180px,38vh,520px);
+    display:grid;grid-template-columns:46px minmax(0,1fr);grid-template-rows:minmax(0,1fr) 20px;gap:8px 10px;
+  }
+  .mdb-yax{grid-area:1/1;position:relative}
+  .mdb-yax-in{position:absolute;inset:30px 0 0 0}
+  .mdb-yl{position:absolute;right:0;transform:translateY(-50%);font:500 11px/1 var(--font-sans);color:var(--ink3);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mdb-pc{grid-area:1/2;position:relative;min-width:0}
+  .mdb-plot{position:absolute;inset:30px 0 0 0;cursor:crosshair;touch-action:pan-y;-webkit-user-select:none;user-select:none}
+  .mdb-plot *{pointer-events:none}
+  .mdb-plot > span,.mdb-plot > div,.mdb-plot > svg{position:absolute}
+  .mdb-xax{grid-area:2/2;position:relative}
+  .mdb-xl{position:absolute;top:5px;font:500 11px/1 var(--font-sans);color:var(--ink3);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mdb-xl i{position:absolute;top:-13px;width:1px;height:5px;margin-left:-.5px;background:var(--line-2)}
+  .mdb-svg{inset:0;width:100%;height:100%;overflow:visible;color:var(--accent-2)}
+  .mdb-grid line{stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke}
+  .mdb-grid .b{stroke:var(--line-2)}
+  .mdb-grid .z{stroke:color-mix(in srgb,var(--ink) 30%,transparent)}
+  .mdb-grid .nw{stroke:color-mix(in srgb,var(--ink) 36%,transparent);stroke-dasharray:3 4}
+  .mdb-light{inset:0;opacity:0;transition:opacity .6s ease}
+  .mdb-band{top:0;bottom:0;background:color-mix(in srgb,var(--ink) 2.5%,transparent)}
+  .mdb-day{top:0;bottom:0;width:0;border-left:1px dashed color-mix(in srgb,var(--ink) 16%,transparent)}
+  .mdb-day.has-l{top:-24px}
+  .mdb-day span{position:absolute;top:0;left:7px;font:500 11px/1 var(--font-sans);color:var(--ink2);white-space:nowrap}
+  .mdb-day.is-flip span{left:auto;right:7px}
+  /* Inn-animasjon: linja feies inn fra venstre (clip-path), søylene reiser seg etter tur. */
+  .mdb-rev{inset:0;clip-path:inset(-40px -40px -40px -40px);transition:clip-path 1.1s cubic-bezier(.22,1,.36,1) .12s}
+  .mdb-pre .mdb-rev{clip-path:inset(-40px calc(100% + 40px) -40px -40px);transition:none}
+  .mdb-rev > svg,.mdb-rev > span{position:absolute}
+  .mdb-line{filter:drop-shadow(0 0 7px rgba(var(--glow-rgb),.45))}
+  .mdb-line path{fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+  .mdb-dim{opacity:0}
+  .mdb-plot.is-hov .mdb-dim{opacity:.28}
+  .mdb-rain{bottom:0;transform:translateX(-50%);border-radius:2px 2px 0 0;background:linear-gradient(to top,color-mix(in srgb,var(--ink) 7%,transparent),color-mix(in srgb,var(--ink) 24%,transparent))}
+  .mdb-bars{inset:0;--bgap:1px} /* luft mellom tynne søyler (7 dager); 0 på mobil, der en søyle er ~2 px */
+  .mdb-bar{
+    position:absolute;border-radius:3px 3px 1px 1px;opacity:.66;
+    background-image:linear-gradient(to top,var(--accent) 0%,var(--accent-2) 52%,var(--mdb-ink-a) 100%);
+    background-position:center bottom;background-repeat:no-repeat;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.2);transform-origin:center bottom;
+    transition-property:transform,opacity,box-shadow;transition-duration:.9s,.2s,.2s;
+    transition-timing-function:cubic-bezier(.22,1,.36,1),ease,ease;transition-delay:var(--d,0ms),0s,0s;
+  }
+  .mdb-bar.is-thin{border-radius:1.5px 1.5px 0 0}
+  .mdb-bar.is-neg{border-radius:1px 1px 3px 3px;transform-origin:center top;background-image:none;background-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+  .mdb-bar.is-past:not(.on){background-image:none;background-color:color-mix(in srgb,var(--ink) 12%,transparent);box-shadow:none;opacity:1}
+  .mdb-bar.on{opacity:1;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 0 16px rgba(var(--glow-rgb),.5)}
+  .mdb-plot.is-hov .mdb-bar:not(.on):not(.is-past){opacity:.42}
+  .mdb-pre .mdb-bar{transform:scaleY(0);transition:none}
+  .mdb-avg{left:0;right:0;height:0;border-top:1px dashed color-mix(in srgb,var(--ink) 32%,transparent)}
+  .mdb-vx{top:-6px;bottom:0;width:1px;margin-left:-.5px;background:linear-gradient(to bottom,color-mix(in srgb,var(--ink) 42%,transparent),color-mix(in srgb,var(--ink) 6%,transparent));opacity:0;transition:opacity .15s}
+  .mdb-hx{left:0;right:0;height:0;border-top:1px dashed color-mix(in srgb,var(--ink) 24%,transparent);opacity:0;transition:opacity .15s}
+  .mdb-dot,.mdb-pulse{width:10px;height:10px;margin:-5px 0 0 -5px;opacity:0;transition:opacity .4s ease var(--dd,0s)}
+  .mdb-dot{border-radius:50%;background:var(--accent-2);box-shadow:0 0 0 2.5px var(--surface-2),0 0 0 6px rgba(var(--glow-rgb),.16),0 0 18px 2px rgba(var(--glow-rgb),.55)}
+  .mdb-pulse::before{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(var(--glow-rgb),.5);animation:mdbPulse 2.8s cubic-bezier(.22,1,.36,1) infinite}
+  @keyframes mdbPulse{0%{transform:scale(1);opacity:.7}75%,100%{transform:scale(3.4);opacity:0}}
+  .mdb-plot.is-hov .mdb-dot,.mdb-plot.is-hov .mdb-pulse{transition-delay:0s}
+  .mdb-plot .is-on{opacity:1}
+  .mdb-pre .mdb-plot .is-on{opacity:0;transition:none}
+  .mdb-tag{left:-56px;width:50px;transform:translateY(-50%);display:flex;justify-content:flex-end}
+  .mdb-tag b{display:inline-flex;align-items:center;height:20px;padding:0 6px;border-radius:4px;background:var(--accent-2);color:var(--bg);font:600 11px/1 var(--font-sans);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mdb-tag.is-avg b{height:18px;padding:0 5px;border:1px dashed color-mix(in srgb,var(--ink) 34%,transparent);background:var(--surface-2);color:var(--ink2);font-weight:500;font-size:10.5px}
+  .mdb-ytag{opacity:0;transition:opacity .15s}
+  .mdb-now{top:-18px;transform:translateX(-50%);font:500 10.5px/1 var(--font-sans);color:var(--ink2)}
+  .mdb-tip{
+    position:absolute;top:0;z-index:2;transform:translateX(-50%);
+    display:inline-flex;align-items:center;gap:8px;height:28px;padding:0 10px 0 9px;
+    border-radius:7px;border:1px solid var(--line-warm);background:color-mix(in srgb,var(--surface-3) 88%,transparent);
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 12px 28px -14px rgba(0,0,0,.9);
+    white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;
+  }
+  .mdb-tip.is-on{opacity:1}
+  .mdb-tip::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 8px rgba(var(--glow-rgb),.8)}
+  .mdb-tip span{font:500 11.5px/1 var(--font-sans);color:var(--ink2)}
+  .mdb-tip b{font:600 12px/1 var(--font-sans);color:var(--ink);font-variant-numeric:tabular-nums}
+  .mdb-state{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;text-align:center;font-size:13.5px;line-height:1.5;color:var(--ink2)}
+  .mdb-state p{margin:0;max-width:34ch}
+  .mdb-retry{border:1px solid var(--line-2);color:var(--ink2)}
+
+  .mdb-foot{display:flex;align-items:flex-end;justify-content:space-between;gap:12px 28px;flex-wrap:wrap;padding-top:14px;border-top:1px solid var(--line)}
+  .mdb-stats{display:flex;gap:10px 28px;flex-wrap:wrap}
+  .mdb-stat{display:flex;flex-direction:column;gap:6px;min-width:88px}
+  .mdb-stat > span{font:600 10px/1 var(--font-sans);letter-spacing:1.1px;text-transform:uppercase;color:var(--ink3)}
+  .mdb-stat div{display:flex;align-items:baseline;gap:6px}
+  .mdb-stat b{font:600 16px/1 var(--font-sans);letter-spacing:-.2px;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mdb-stat small{font:500 11.5px/1.2 var(--font-sans);color:var(--ink3)}
+  .mdb-meta{display:flex;flex-direction:column;align-items:flex-end;gap:7px;text-align:right;margin-left:auto}
+  .mdb-src{font-size:11.5px;line-height:1.4;color:var(--ink3)}
+  .mdb-keys{display:none;align-items:center;gap:5px;font:500 11px/1 var(--font-sans);color:var(--ink3)}
+  .mdb-keys kbd{display:inline-flex;align-items:center;justify-content:center;height:18px;min-width:18px;padding:0 5px;border-radius:4px;border:1px solid var(--line-2);background:color-mix(in srgb,var(--ink) 4%,transparent);font:600 10px/1 var(--font-sans);color:var(--ink2)}
+  .mdb-keys span{margin:0 6px 0 2px}
+  @media (min-width:641px) and (hover:hover){.mdb-keys{display:inline-flex}}
+  /* Værvisningen: «Neste 7 dager» står ved siden av grafen på brede skjermer, under den ellers. */
+  @media (min-width:1100px){
+    .mdb-body.has-week{display:grid;grid-template-columns:minmax(0,1fr) 300px;grid-template-rows:auto minmax(0,1fr) auto;
+      grid-template-areas:"hero week" "chart week" "foot foot";gap:18px 32px}
+    .mdb-body.has-week > .mdb-hero{grid-area:hero}
+    .mdb-body.has-week > .mdb-chart{grid-area:chart;min-height:0}
+    .mdb-body.has-week > .mdb-foot{grid-area:foot}
+    .mdb-body.has-week > .wx-week{grid-area:week;padding:0 0 0 24px;border-top:0;border-left:1px solid var(--line);overflow-y:auto}
+    .mdb-body.has-week .wx-week-row{grid-template-columns:76px 18px 1fr auto;gap:12px;padding:11px 0}
+    .mdb-body.has-week .wx-week-t{padding-left:12px}
+  }
+  /* Lyse temaer: mykere skygger, og linjas ende i temaets dype aksent (den fiolette blandingen blir grumsete på lys bunn). */
+  html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]) .mdb{--mdb-ink-a:var(--accent-deep)}
+  html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]) .mdb-panel{box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 40px 90px -40px rgba(15,23,42,.35)}
+  html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]) .mdb-seg button[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--line-2),0 1px 2px rgba(15,23,42,.12)}
+  html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]) .mdb-tip{box-shadow:0 12px 28px -14px rgba(15,23,42,.35)}
+  html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]) .mdb :focus-visible{outline-color:var(--accent-deep)} /* aksenten alene ga 2,9:1 på rosa glass */
+  html[data-theme="bw"] .mdb{--mdb-ink-a:var(--ink3)}
+
   .wx-kicker{font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink3)}
-  .wx-graph-sub{font-family:var(--font-serif);font-size:14px;color:var(--ink2);margin:6px 0 0}
-
-  .wx-graph-wrap{position:relative;margin-top:18px}
-  .wx-graph{display:block;width:100%;height:auto;font-variant-numeric:tabular-nums lining-nums}
-  .wx-graph text{font-family:var(--font-sans)}
-  .wx-graph .g-area{stroke:none}
-  .wx-graph .gf-a{stop-color:var(--accent-2);stop-opacity:.16}
-  .wx-graph .gf-b{stop-color:var(--accent-2);stop-opacity:0}
-  .wx-graph .g-line{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
-  .wx-graph .g-grid{stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke}
-  .wx-graph .g-now-halo{fill:var(--accent-2);opacity:.18}
-  .wx-graph .g-now-mid{fill:var(--accent-2);opacity:.4}
-  .wx-graph .g-now-dot{fill:var(--accent-2)}
-  .wx-graph .g-precip{fill:var(--ink3);opacity:.5}
-  .wx-graph .g-sym{color:var(--ink3)}
-  .wx-graph .g-sym.is-now{color:var(--accent-2)}
-  .wx-graph .y-lbl{font-family:var(--font-serif);font-weight:500;font-size:11px;fill:var(--ink3)}
-  .wx-graph .x-lbl{font-weight:600;font-size:10px;letter-spacing:.5px;fill:var(--ink3)}
-  .wx-graph .x-now{fill:var(--accent-2)}
-  .wx-graph .p-cap{font-weight:600;font-size:9px;letter-spacing:1px;fill:var(--ink4);text-transform:uppercase}
-  .wx-graph .p-lbl{font-weight:600;font-size:9px;fill:var(--ink3)}
-  .wx-graph .g-empty{font-family:var(--font-serif);font-size:14px;fill:var(--ink3)}
-  .wx-graph .g-scrub{stroke:var(--ink2);stroke-width:1;vector-effect:non-scaling-stroke;opacity:0}
-  .wx-graph .g-scrub.on{opacity:.8}
-  .wx-scrub{
-    position:absolute;left:0;top:0;transform:translate(-50%,calc(-100% - 8px));
-    pointer-events:none;opacity:0;transition:opacity var(--dur-micro) var(--ease-out-quart);
-    background:var(--surface-2);border:1px solid var(--line-2);border-radius:6px;padding:5px 8px;
-    font-family:var(--font-serif);font-size:12px;color:var(--ink);white-space:nowrap;
-    font-variant-numeric:tabular-nums lining-nums;z-index:3;
-  }
-  .wx-scrub.on{opacity:1}
-  .wx-scrub .mut{color:var(--ink3)}
-
-  /* Nøkkeltall-rad (Nå · Maks · Min · Vind) — erstatter tekst-caption */
-  .wx-stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:22px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .wx-stat{padding:15px 16px;border-left:1px solid var(--line)}
-  .wx-stat:first-child{border-left-color:transparent}
-  .wx-stat-lbl{font:600 9.5px/1 var(--font-sans);letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3)}
-  .wx-stat-val{margin-top:9px;display:flex;align-items:baseline;gap:4px;font-family:var(--font-serif);font-size:26px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
-  .wx-stat-val.is-now{color:var(--accent-2)}
-  .wx-stat-val .u{font:600 10px/1 var(--font-sans);letter-spacing:.4px;text-transform:uppercase;color:var(--ink3)}
-  .wx-stat-val .d{font-family:var(--font-serif);font-size:13px;color:var(--ink4);margin-left:1px}
-
-  .wx-week{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+  .wx-week{padding-top:18px;border-top:1px solid var(--line)}
   .wx-week-list{list-style:none;margin:12px 0 0;padding:0}
   .wx-week-row{display:grid;grid-template-columns:108px 22px 1fr auto;align-items:center;gap:16px;padding:13px 0;border-bottom:1px solid var(--line)}
   .wx-week-row:last-child{border-bottom:0}
@@ -1026,25 +1147,39 @@
   .wx-week-t .mn{color:var(--ink3)}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 
+  /* Mobil: tittel + fullskjerm + lukk på første rad, brikkene og tidsrommet på hver
+     sin rad under. Brikkene brytes over to linjer (som i designet) i stedet for å rulle:
+     en rullerad uten synlig hint så ut som avkuttede knapper («NC», «CH»). */
   @media (max-width:640px){
-    .wx-modal{
-      width:100vw;max-width:none;max-height:92vh;
-      border-radius:16px 16px 0 0;border-left:0;border-right:0;border-bottom:0;
-      inset:auto 0 0 0;margin:0;transform:translateY(100%);
-    }
-    .wx-modal-backdrop.in .wx-modal{transform:none}
-    .wx-modal-head{padding:16px 20px}
-    .wx-modal-place{font-size:22px}
-    .wx-modal-scroll{padding:20px 20px 30px}
-    .wx-stat{padding:12px 11px}
-    .wx-stat-val{font-size:22px}
+    .mdb-panel{gap:14px}
+    .mdb-head{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px 8px}
+    .mdb-head-l,.mdb-head-r{display:contents}
+    .mdb-fs{grid-row:1;grid-column:2}
+    .mdb-x{grid-row:1;grid-column:3}
+    .mdb-eye{white-space:normal;line-height:1.3}
+    .mdb-chips,.mdb-seg{grid-column:1/-1}
+    .mdb-chips{flex-wrap:wrap;overflow:visible}
+    .mdb-seg button{flex:1 1 0}
+    .mdb-body{gap:14px}
+    .mdb-meta{align-items:flex-start;text-align:left;margin-left:0}
+    .mdb-bars{--bgap:0px}
     .wx-week-row{grid-template-columns:64px 20px 1fr auto;gap:12px}
     .wx-week-range{max-width:120px}
     .wx-week-t{padding-left:12px}
   }
   @media (prefers-reduced-motion: reduce){
-    .wx-modal-backdrop,.wx-modal{transition:none!important}
-    .wx-modal,.wx-modal-backdrop.in .wx-modal{transform:none!important}
+    .mdb,.mdb-panel{transition:none!important}
+    .mdb-panel{transform:none!important}
+    .mdb-pulse::before{animation:none}
+  }
+  /* Høykontrast (Windows-kontrasttemaer): bakgrunnsgradienter og -farger tvinges bort, og da
+     forsvant søylene og markeringen av valgt sone og tidsrom. Systemfarger i stedet. */
+  @media (forced-colors:active){
+    .mdb-bar{forced-color-adjust:none;background:CanvasText}
+    .mdb-bar.is-past:not(.on){background:GrayText}
+    .mdb-bar.on{background:Highlight}
+    .mdb-chip[aria-pressed="true"]::after{forced-color-adjust:none;background:Highlight}
+    .mdb-seg button[aria-pressed="true"]{outline:2px solid Highlight;outline-offset:-2px}
   }
   /* Neste rentemøte (erstatter rente-sparkline) */
   .sr-next{display:flex;flex-direction:column;gap:4px}
@@ -1859,7 +1994,7 @@
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v248" defer></script>
 <script src="/shared/atmosphere.js?v=v6" defer></script>
-<script src="/shared/markedsdata.js?v=v15" defer></script>
+<script src="/shared/markedsdata.js?v=v16" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -2357,7 +2492,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
                 <span id="wxCond">—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="wxTemp">—</span><span class="unit">°C</span></div>
+            <div class="widget-value"><span class="count-up" id="wxTemp">—</span><span class="unit">°C</span>
+              <button type="button" class="md-exp" data-big="wx" aria-haspopup="dialog" aria-label="Vis værgrafen i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+            </div>
             <p class="widget-sub"><span class="ctx" id="wxSub">Henter værdata …</span></p>
             <div class="widget-spark-wrap">
               <div class="wx-fc" id="wxForecast" aria-hidden="true">
@@ -2395,7 +2532,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
                 <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="stVal">—</span><span class="unit">øre/kWh</span></div>
+            <div class="widget-value"><span class="count-up" id="stVal">—</span><span class="unit">øre/kWh</span>
+              <button type="button" class="md-exp" data-big="st" aria-haspopup="dialog" aria-label="Vis strømprisen i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+            </div>
             <p class="widget-sub"><span class="ctx" id="stSub">Henter strømpris …</span></p>
             <div class="widget-spark-wrap has-yax">
               <!-- Y-akse: dyreste og billigste time i øre. Fylles av markedsdata.js. -->
@@ -2419,7 +2558,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
                 <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="fxVal">—</span><span class="unit">kr</span></div>
+            <div class="widget-value"><span class="count-up" id="fxVal">—</span><span class="unit">kr</span>
+              <button type="button" class="md-exp" data-big="fx" aria-haspopup="dialog" aria-label="Vis valutakursen i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+            </div>
             <p class="widget-sub"><span class="ctx" id="fxSub">Henter valutakurser …</span></p>
             <div class="widget-spark-wrap has-yax">
               <!-- Y-akse: høyeste og laveste kurs i perioden. Fylles av markedsdata.js. -->
@@ -4269,8 +4410,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
  *    vinduet så stjernene står stille ved resize.
  *  • Farger fra B−V-indeks via sortlegemetemperatur. Svake stjerner er nesten
  *    hvite — øyet ser ikke farge i svakt lys.
- *  • Skarp punktkjerne og myk glorie på de sterkeste. Ingen kryss-spikes (det er
- *    en kamera-artefakt, ikke noe øyet ser).
+ *  • Skarp punktkjerne og myk glorie på de sterkeste. Ingen kryss-spikes utenom
+ *    månenatt (det er en kamera-artefakt, ikke noe øyet ser).
  *  • Scintillasjon som øker mot horisonten, ekstinksjon og rødfarging lavt
  *    nede, fargeblink bare hos sterke stjerner nær horisonten.
  *  • Nordlyset er gjennomsiktig: stjernene skinner gjennom, men svakere der
@@ -4282,7 +4423,13 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
  *    Katalogen lages i celler, bare for den delen av himmelen som synes.
  *  • KHR_parallel_shader_compile der den finnes: ingen tegning før shaderne er
  *    ferdige, så hovedtråden aldri står og venter på driveren.
- * Månenatt (mørk) og noir (bw) er ellers uendret fra v1.
+ * MÅNENATT (mørk) — fra Nordlys v3 (Claude Design, oktober 2026)
+ *  • Ekte månekart: NASA SVS CGI Moon Kit (LRO: LROC-farger og LOLA-høyder,
+ *    offentlig eiendom). Lastes fra shared/img/ først når månenatta tegnes.
+ *  • Natsiden glir inn i glorien, jevn aureole, skarp rand og kraterskygger
+ *    langs terminatoren. Fasen styres av MOON_PHASE.
+ *  • Flere stjerner og Melkeveien, og kryss-spikes på de sterkeste stjernene.
+ * Noir (bw) er ellers uendret fra v1.
  * ==========================================================================*/
 (function () {
   'use strict';
@@ -4294,7 +4441,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     STARS: true,         // stjernelag av/på
     STAR_DENSITY: 1.0,   // 0–2: antall stjerner (1 = standard)
     MILKY_WAY: 1.0,      // 0–1,5: Melkeveiens styrke
-    TWINKLE: 1.0         // 0–1: scintillasjon (0 = stille stjerner)
+    TWINKLE: 1.0,        // 0–1: scintillasjon (0 = stille stjerner)
+    MOON_PHASE: 35       // månenatt: fasevinkel i grader (0 = full, 90 = halv, 140 = smal sigd)
   };
 
   /* ── Paletter per tema. lim = grensemagnitude (hvor svake stjerner som
@@ -4303,7 +4451,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   var THEMES = {
     nordlys: { light: 0, sky: ['#030409', '#070a0e'], edge: '#4dffa0', mid: '#19b37a', top: '#7340a6', fringe: '#b267d8', star: '#c2d4e6', lim: 6.9, mw: 1.0 },
     carbon:  { light: 0, sky: ['#0a0806', '#050403'], edge: '#f2e2c6', mid: '#c69a63', top: '#7d5a34', fringe: '#b98a55', star: '#d9c6a4', lim: 6.4, mw: 0.6 },
-    dark:    { light: 0, sky: ['#0c0f19', '#171b2a'], edge: '#a3b8ff', mid: '#6c8aef', top: '#3d3490', fringe: '#9a6cf0', star: '#bcc8f0', lim: 5.6, mw: 0.0 },
+    dark:    { light: 0, sky: ['#0c0f19', '#171b2a'], edge: '#a3b8ff', mid: '#6c8aef', top: '#3d3490', fringe: '#9a6cf0', star: '#bcc8f0', lim: 6.6, mw: 1.15 },
     frost:   { light: 1, sky: ['#dfe6f6', '#f7f9fc'], edge: '#4f5fe5', mid: '#7d88f0', top: '#c8cff8', fringe: '#7a5bd8', star: '#ffffff', lim: 5.0, mw: 0.0 },
     glass:   { light: 1, sky: ['#d5deee', '#e8edf6'], edge: '#5b69ea', mid: '#8b95ff', top: '#c5cbf5', fringe: '#8a76f2', star: '#ffffff', lim: 5.0, mw: 0.0 },
     hendrix: { light: 1, sky: ['#f8e8cf', '#fffdf9'], edge: '#c4501f', mid: '#8e3390', top: '#e8c060', fringe: '#d1518f', star: '#ffffff', lim: 5.0, mw: 0.0 },
@@ -4513,6 +4661,10 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     '           + uCFringe * fringe * 0.22 * (0.40 + 0.60 * min(rays, 1.5));',
     '    return c * I;',
     '}',
+    '#endif',
+    // Melkeveien deles av nordlysscenen og månenatta (fra v3). JS-kommentar, så GLSL-en
+    // for SCENE 0 er tegn for tegn som før.
+    '#if SCENE == 0 || SCENE == 4',
     '// Melkeveien: samme geometri som mwDensity() i JS. q i himmelenheter (1000 CSS-px),',
     '// x fra midten, y nedover fra toppen.',
     'float mwDensity(vec2 q, out float core){',
@@ -4594,26 +4746,28 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '}',
     '#endif',
     '#if SCENE == 4',
+      '// maanefasen demper halo og maanelys (1 = full, se MOON_PHASE i JS)',
+      'uniform float uMoonGlow;',
+      '// maanens plass: x fra midten og y fra bunnen i hoydeenheter, z = radius (moonSpot i JS)',
+      'uniform vec3 uMoonP;',
       '// ---- MAANENATT (dark) - maane med hav og halo-ring, cirrus, bakketaake, airglow',
       'vec4 nightScene(vec2 frag, float t){',
       '    float aspect = uRes.x / uRes.y;',
       '    vec2 p = vec2((frag.x - 0.5) * aspect, frag.y);',
       '    vec3 sky = mix(uSkyBot, uSkyTop, smoothstep(0.05, 0.95, frag.y));',
       '    float amp = uAmp * 1.5;',
-      '    // 0.31 av bredden er maanens plass paa liggende skjerm. Staaende skjerm',
-      '    // har ikke bredde til den: halo-ringen maaler 0.145 av HOYDEN, altsaa',
-      '    // 118px paa en 375x812-telefon, mens det bare sto 71px igjen til hoyre.',
-      '    // Ringen ble derfor skaaret tvert av skjermkanten og maanen sto klemt',
-      '    // opp i hjornet. Klemmen holder minst 0.20 (ring + litt luft) inn fra',
-      '    // kanten. Over aspect 1.05 er min() aldri bindende — alt liggende er',
-      '    // uendret, ned til 1024x700. max(...,0.0) hindrer at ekstremt hoye',
-      '    // vinduer skyver maanen forbi midten og klipper ringen paa venstre side.',
-      '    float mpx = min(aspect * 0.31, max(aspect * 0.5 - 0.20, 0.0));',
-      '    vec2 mp = vec2(mpx, 0.76);',
+      '    // Plassen regnes ut i JS (moonSpot): oppe til hoyre, eller en mindre maane',
+      '    // til hoyre for tittelens forste linje naar den ellers sto bak tittelen.',
+      '    vec2 mp = uMoonP.xy;',
       '    float md = length(p - mp);',
-      '    float halo = exp(-md * md * 150.0) * 0.30 + exp(-md * md * 24.0) * 0.15 + exp(-md * 2.3) * 0.11;',
-      '    float rw = (md - 0.145) * 34.0;',
-      '    float ring = exp(-rw * rw) * 0.05;',
+      '    // glorien foelger maanens stoerrelse; den store ringen tones bort paa en liten',
+      '    // maane, der den ellers ble skaaret av skjermkanten',
+      '    float ms = max(uMoonP.z, 0.001) / 0.038, mdS = md / ms;',
+      '    // Melkeveien (v3): svakere naer maanen, der maanelyset visker den ut',
+      '    sky += milkyWay(frag) * uMW * (1.0 - 0.80 * exp(-md * md * 9.0));',
+      '    float halo = (exp(-mdS * mdS * 150.0) * 0.30 + exp(-mdS * mdS * 24.0) * 0.15 + exp(-mdS * 2.3) * 0.11) * uMoonGlow;',
+      '    float rw = (mdS - 0.145) * 34.0;',
+      '    float ring = exp(-rw * rw) * 0.05 * uMoonGlow * smoothstep(0.75, 0.95, ms);',
       '    vec3 ringC = mix(vec3(1.07, 0.94, 0.83), vec3(0.85, 0.94, 1.10), clamp(rw * 0.5 + 0.5, 0.0, 1.0));',
       '    vec2 q1 = vec2(p.x * 0.9 - t * 0.010, frag.y * 1.35 + 2.0);',
       '    float n1 = fbm(q1 + (fbm(q1 * 1.5 + vec2(t * 0.006, 0.0)) - 0.5) * 0.8);',
@@ -4621,7 +4775,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '    float n2 = fbm(q2);',
       '    float neb = smoothstep(0.46, 0.88, n1 * 0.72 + n2 * 0.28);',
       '    float nebHi = smoothstep(0.60, 0.95, n1);',
-      '    float moonLight = exp(-md * 1.9);',
+      '    float moonLight = exp(-md * 1.9) * uMoonGlow;',
       '    vec3 nebC = mix(uCMid, uCFringe, nebHi);',
       '    vec3 col = sky;',
       '    // ekko av live-sidens hero-spotlight: svak indigo kuppel midt-oppe',
@@ -4751,6 +4905,10 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     '}'
   ].join('\n');
 
+  // Høydeskala for månekartet: h/R per hele 8-bit-skalaen (LOLA ±10 km), ×2,2 overdrevet
+  // så relieffet synes i ~130 px. Brukes både i normalene (JS) og i skyggesporingen (GLSL).
+  var MOON_HS = 0.0253;
+
   // Kompositt i full oppløsning: måne, satellitt, musglød, vignett, korn.
   // Stjernene er flyttet ut i et eget punkt-pass (STAR_VS/STAR_FS).
   var COMP_FS = [
@@ -4770,6 +4928,23 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     COMP_NOISE,
     '// Maane og satellitt bare i programmet for maanenatt (#define MOON 1 i JS).',
     '#if MOON',
+    'uniform sampler2D uMoonAlb;',
+    'uniform sampler2D uMoonNrm;',
+    'uniform float uMoonMap;',
+    'uniform vec3 uMoonL;',
+    'uniform float uMoonK;',
+    'uniform vec3 uMoonP;',
+    '// Kartoppslag med eksplisitt LOD (MOON_LOD = EXT_shader_texture_lod, satt i JS): uten implisitte',
+    '// deriverte kan ANGLE/D3D11 beholde ekte grener, saa skiva og skyggeloekka bare regnes der',
+    '// maanen er. Normalkartet har ikke mipmap (LOD 0 = samme piksler); albedoen faar skjermgradienten',
+    '// til uv (dFdx, dFdy) regnet ut analytisk og ganget med 2^-0.6 = samme -0.6-bias som texture2D.',
+    '#if defined(MOON_LOD)',
+    '#define MOON_NRM(p) texture2DLodEXT(uMoonNrm, p, 0.0)',
+    '#define MOON_ALB(p, g) texture2DGradEXT(uMoonAlb, p, vec2(g, 0.0), vec2(0.0, -(g)))',
+    '#else',
+    '#define MOON_NRM(p) texture2D(uMoonNrm, p)',
+    '#define MOON_ALB(p, g) texture2D(uMoonAlb, p, -0.6)',
+    '#endif',
       '// satellitt (maanenatt): et lite blinkende punkt som seiler sakte over himmelen',
       'float satDot(vec2 frag, float aspect, float t){',
       '  float per = 47.0;',
@@ -4786,46 +4961,6 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       '  float edgeFade = sin(ph * 3.14159);',
       '  return exp(-dot(rel, rel) / 0.0000042) * on * blink * edgeFade;',
       '}',
-      '// maane: ellipse-avstand (kvadrert) for mare-basseng og krater',
-      'float mQ(vec2 p, vec2 c, vec2 r){ vec2 d = (p - c) / r; return dot(d, d); }',
-      '// haandplasserte mare-basseng = ekte naerside (nord opp): Crisium hoyre rand,',
-      '// Serenitatis/Tranquillitatis midt, Imbrium oppe-venstre, Procellarum venstre',
-      'float mMare(vec2 q){',
-      '  float m = 0.0;',
-      '  m += 0.95 * smoothstep(1.30, 0.62, mQ(q, vec2(0.60, 0.30), vec2(0.145, 0.115)));',
-      '  m += 0.72 * smoothstep(1.35, 0.60, mQ(q, vec2(0.45, -0.04), vec2(0.16, 0.21)));',
-      '  m += 0.70 * smoothstep(1.30, 0.60, mQ(q, vec2(0.26, -0.20), vec2(0.11, 0.12)));',
-      '  m += 0.90 * smoothstep(1.35, 0.55, mQ(q, vec2(0.26, 0.10), vec2(0.22, 0.18)));',
-      '  m += 0.88 * smoothstep(1.30, 0.55, mQ(q, vec2(0.08, 0.33), vec2(0.17, 0.16)));',
-      '  m += 0.92 * smoothstep(1.30, 0.55, mQ(q, vec2(-0.22, 0.38), vec2(0.235, 0.185)));',
-      '  m += 0.55 * smoothstep(1.40, 0.55, mQ(q, vec2(-0.10, 0.63), vec2(0.32, 0.075)));',
-      '  m += 0.85 * smoothstep(1.45, 0.55, mQ(q, vec2(-0.49, 0.06), vec2(0.21, 0.33)));',
-      '  m += 0.62 * smoothstep(1.30, 0.55, mQ(q, vec2(-0.40, -0.33), vec2(0.10, 0.10)));',
-      '  m += 0.66 * smoothstep(1.30, 0.55, mQ(q, vec2(-0.17, -0.31), vec2(0.15, 0.12)));',
-      '  m += 0.55 * smoothstep(1.25, 0.50, mQ(q, vec2(0.02, 0.13), vec2(0.075, 0.07)));',
-      '  return m;',
-      '}',
-      '// albedo + hoydefelt: dempet, malerisk clair-de-lune — mare/krater kun antydet',
-      'float moonAlb(vec2 sp, out float hgt){',
-      '  vec2 w = sp + (vec2(fbm(sp * 3.3 + vec2(11.7, 3.1)), fbm(sp * 3.3 + vec2(4.2, 8.9))) - 0.5) * 0.10;',
-      '  float mar = clamp(mMare(w), 0.0, 1.15);',
-      '  float g1 = fbm(sp * 6.0 + vec2(2.0, 5.0));',
-      '  float g2 = fbm(sp * 12.5 + vec2(9.0, 1.0));',
-      '  float alb = 1.0 - 0.16 * mar;',
-      '  alb *= 0.962 + 0.055 * g1;',
-      '  alb *= 0.989 + 0.021 * g2;',
-      '  vec2 tv = sp - vec2(0.05, -0.62);',
-      '  float tl = length(tv);',
-      '  float ta = atan(tv.y, tv.x);',
-      '  float rayN = vnoise(vec2(ta * 3.9, 1.7)) * 0.75 + vnoise(vec2(ta * 9.7, 6.3)) * 0.45;',
-      '  float rays = pow(max(rayN - 0.55, 0.0) * 2.4, 1.8) * exp(-tl * 2.1) * smoothstep(0.035, 0.12, tl);',
-      '  alb += exp(-mQ(sp, vec2(0.05, -0.62), vec2(0.030, 0.030)) * 2.6) * 0.15 + rays * 0.045;',
-      '  alb += exp(-mQ(sp, vec2(-0.20, 0.02), vec2(0.035, 0.035)) * 2.2) * 0.095;',
-      '  alb += exp(-mQ(sp, vec2(-0.44, 0.10), vec2(0.022, 0.022)) * 2.2) * 0.065;',
-      '  alb += exp(-mQ(sp, vec2(-0.52, 0.28), vec2(0.020, 0.020)) * 2.2) * 0.085;',
-      '  hgt = -0.30 * mar + 0.16 * g1 + 0.09 * g2;',
-      '  return alb;',
-      '}',
     '#endif',
     'void main(){',
     '  vec2 frag = gl_FragCoord.xy / uRes;',
@@ -4835,43 +4970,64 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     '  float occl = exp(-aur.a * 5.2);',
     '  float t = uTime;',
     '#if MOON',
-    '  float mpx = min(aspect * 0.31, max(aspect * 0.5 - 0.20, 0.0));',
-    '  vec2 mv = vec2((frag.x - 0.5) * aspect, frag.y) - vec2(mpx, 0.76);',
+    '  vec2 mv = vec2((frag.x - 0.5) * aspect, frag.y) - uMoonP.xy;',
     '  float mdd = length(mv);',
       '  if (uMoon > 0.5) {',
-      '    float R = 0.033;',
+      '    float R = uMoonP.z;',
+      '    float px = 1.0 / uRes.y;',
       '    float cloudAmt = clamp(aur.a, 0.0, 1.0);',
-      '    vec3 mC = mix(uCEdge, vec3(1.0), 0.74) * vec3(0.975, 0.995, 1.065);',
-      '    // stram fullopplost glans rett utenfor randen — bro mellom skive og lavopplost halo',
-      '    float rimD = max(mdd - R, 0.0);',
-      '    float glare = exp(-rimD * 40.0) * 0.115 + exp(-rimD * 8.5) * 0.062 + exp(-rimD * 3.2) * 0.028;',
-      '    float gDir = 0.76 + 0.24 * (0.5 + 0.5 * dot(mv / max(mdd, 1e-4), vec2(0.974, 0.227)));',
-      '    col += mC * glare * gDir * (1.0 - 0.62 * cloudAmt) * smoothstep(R - 0.002, R + 0.004, mdd);',
-      '    if (mdd < R + 0.02) {',
-      '      // sky-mykning: randen slorer nar cirrus driver forbi',
-      '      float aa = (2.4 + 10.0 * cloudAmt) / uRes.y;',
-      '      float mdisc = 1.0 - smoothstep(R - aa, R + aa, mdd);',
-      '      if (mdisc > 0.001) {',
-      '        vec2 sp = mv / R;',
-      '        float r2 = min(dot(sp, sp), 1.0);',
-      '        float nz = sqrt(1.0 - r2);',
-      '        float h0; float hX; float hY;',
-      '        float aC = moonAlb(sp, h0);',
-      '        float e = 0.075;',
-      '        moonAlb(sp + vec2(e, 0.0), hX);',
-      '        moonAlb(sp + vec2(0.0, e), hY);',
-      '        // bump-perturbert normal: relieff biter langs terminatoren, flatt i fullt lys',
-      '        vec3 N = normalize(vec3(sp + vec2(hX - h0, hY - h0) * (0.013 / e), nz));',
-      '        vec3 Ld = normalize(vec3(0.86, 0.18, 0.52));',
-      '        float shade = pow(smoothstep(-0.34, 0.54, dot(N, Ld)), 1.0);',
-      '        // maane-fotometri: regolitt gir nesten ingen randmorkning — flat, ikke ballaktig',
-      '        float flatf = 0.82 + 0.18 * nz + pow(1.0 - nz, 3.0) * 0.10;',
-      '        float cloud = 1.0 - 0.85 * cloudAmt;',
-      '        vec3 discC = mC * (0.72 * shade * aC * flatf + 0.135 * aC + 0.030);',
-      '        // jordskinn: natsiden svakt synlig, kjoligere i tonen',
-      '        discC = mix(discC, discC * vec3(0.80, 0.89, 1.16), (1.0 - shade) * 0.72);',
-      '        col = mix(col, discC, mdisc * cloud);',
+      '    float cloud = 1.0 - 0.85 * cloudAmt;',
+      '    vec3 mC = mix(uCEdge, vec3(1.0), 0.82) * vec3(1.0, 0.99, 0.97);',
+      '    float glow = 0.35 + 0.65 * pow(uMoonK, 1.3);',
+      '    // aureole: lys spredt i lufta FORAN maanen - glatt over randen, litt forskjovet mot lyssiden',
+      '    float rd = max(mdd - R, 0.0) / R;',
+      '    float side = dot(mv / max(mdd, 1e-4), uMoonL.xy);',
+      '    float aure = (exp(-rd * 2.6) * 0.060 + exp(-rd * 0.75) * 0.030) * glow * (1.0 + 0.30 * side);',
+      '    col += mC * aure * (1.0 - 0.6 * cloudAmt);',
+      '    if (mdd < R + 3.0 * px) {',
+      '    vec2 sp = mv / R;',
+      '    vec2 uv = clamp(vec2(sp.x, -sp.y) * 0.5 + 0.5, 0.0, 1.0);',
+      '    vec3 alb = MOON_ALB(uv, 0.5 * exp2(-0.6) * px / R).rgb;',
+      '    vec4 nm = MOON_NRM(uv);',
+      '    // kartene er ikke lastet (ennaa) eller feilet: jevn, graa kule med omtrent samme',
+      '    // snittlysstyrke som kartet (v3 brukte 0.70, som lyste nesten hvitt foer kartet kom)',
+      '    if (uMoonMap < 0.5) { alb = vec3(0.54); nm = vec4(0.5); }',
+      '    float aa = (0.8 + 5.0 * cloudAmt) * px;',
+      '    float mdisc = 1.0 - smoothstep(R - aa, R + aa, mdd);',
+      '    if (mdisc > 0.0) {',
+      '      float r2 = min(dot(sp, sp), 1.0);',
+      '      vec3 P = vec3(sp, sqrt(1.0 - r2));',
+      '      vec3 Ld = uMoonL;',
+      '      vec3 N = normalize(P - (nm.xyz * 2.0 - 1.0));',
+      '      float cg = dot(P, Ld);',
+      '      float sh = 1.0;',
+      '      if (uMoonMap > 0.5 && cg > -0.05) {',
+      '        // skyggesporing mot sola i hoydekartet: kraterskygger langs terminatoren',
+      '        vec3 Lt = Ld - P * cg; float lt = max(length(Lt), 1e-3);',
+      '        vec3 dir = Lt / lt; float tanE = cg / lt;',
+      '        for (int i = 1; i <= 10; i++) {',
+      '          float st = float(i * i) * 0.0008;',
+      '          vec3 Q = normalize(P + dir * st);',
+      '          float hq = MOON_NRM(vec2(Q.x, -Q.y) * 0.5 + 0.5).a;',
+      '          float occ = smoothstep(-0.02, 0.02, nm.a + (st * tanE + 0.5 * st * st) / ' + MOON_HS.toFixed(4) + ' - hq);',
+      '          // bak randen finnes ingen data: ingen skygge derfra (maske, ikke break — loekka maa kunne rulles ut)',
+      '          sh = min(sh, mix(1.0, occ, step(0.03, Q.z)));',
+      '        }',
       '      }',
+      '      // lunar-Lambert: regolitten har nesten ingen randmorkning',
+      '      float m0 = max(dot(N, Ld), 0.0);',
+      '      float lit = mix(m0, 2.0 * m0 / (m0 + max(N.z, 0.0) + 1e-3), 0.78) * sh;',
+      '      lit *= smoothstep(-0.03, 0.035, cg);',
+      '      float L0 = dot(alb, vec3(0.299, 0.587, 0.114));',
+      '      vec3 a = pow(max(mix(vec3(L0), alb, 0.85), 0.0), vec3(2.15));',
+      '      vec3 rad = a * lit * 3.7 * vec3(1.0, 0.975, 0.935);',
+      '      // jordskinn: bare synlig naar maanen er smal',
+      '      rad += a * vec3(0.55, 0.68, 0.95) * 0.30 * pow(1.0 - uMoonK, 2.5) * (1.0 - smoothstep(-0.12, 0.08, cg));',
+      '      vec3 b = 1.0 - exp(-rad);',
+      '      // skiva lyser opp lufta foran seg (screen): natsiden blir himmel, ikke en svart kule',
+      '      vec3 skyIn = col * (1.0 - 0.7 * dot(b, vec3(0.299, 0.587, 0.114)));',
+      '      col = mix(col, 1.0 - (1.0 - skyIn) * (1.0 - b), mdisc * cloud);',
+      '    }',
       '    }',
       '  }',
       '',
@@ -4903,6 +5059,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     'uniform float uTwk;',
     'uniform vec3 uTint;',
     'uniform float uMoon;',
+    'uniform vec3 uMoonP;',
     'uniform float uMaxPt;',
     'varying vec3 vCol;',
     'varying float vSize;',
@@ -4928,9 +5085,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     '  vec2 vq = (frag - vec2(0.5, 0.55)) * vec2(1.0, 1.25);',
     '  I *= 1.0 - 0.16 * dot(vq, vq);',
     '  // maanenatt: glansen visker ut stjerner rundt maanen, skiva dekker dem',
-    '  float mpx = min(aspect * 0.31, max(aspect * 0.5 - 0.20, 0.0));',
-    '  float mdd = length(vec2((frag.x - 0.5) * aspect, frag.y) - vec2(mpx, 0.76));',
-    '  I *= mix(1.0, (1.0 - 0.85 * exp(-mdd * mdd * 22.0)) * smoothstep(0.034, 0.048, mdd), uMoon);',
+    '  float Rm = max(uMoonP.z, 0.001), mdd = length(vec2((frag.x - 0.5) * aspect, frag.y) - uMoonP.xy) * 0.038 / Rm;',
+    '  I *= mix(1.0, (1.0 - 0.85 * exp(-mdd * mdd * 22.0)) * smoothstep(0.039, 0.054, mdd), uMoon);',
     '  I *= uGain;',
     '  vec3 c = aCol * mix(vec3(1.0, 0.78, 0.58), vec3(1.0), ext);',
     '  float ph = uTime * 6.1 + s * 5.0;',
@@ -4967,14 +5123,68 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     '  float halo = vHalo * 0.22 * exp(-rc * rc / 3.4);',
     '  float wing = vHalo * 0.035 / pow(1.0 + rc * rc * 0.25, 1.5);',
     '  float glow = vBloom * 0.05 * exp(-rc / 4.5);',
+    '  // kryss-spikes bare paa maanenatt (uMode 4), og bare paa de sterkeste stjernene',
+    '  vec2 ap = abs(p) / uDpr;',
+    '  float spk = uMode > 3.5 ? vBloom * 0.20 * (exp(-ap.x * 1.5) * exp(-ap.y * 0.28) + exp(-ap.y * 1.5) * exp(-ap.x * 0.28)) : 0.0;',
     '  float win = 1.0 - smoothstep(0.36, 0.5, sqrt(r2) / vSize);',
     '  vec4 bg = texture2D(uTex, gl_FragCoord.xy / uRes);',
     '  // skyer (maanenatt) og horisont dekker; sterkt nordlys senker bare kontrasten',
     '  float occ = uMode > 3.5 ? exp(-bg.a * 5.2) : 1.0 - bg.a;',
     '  float wash = 1.0 - min(dot(bg.rgb, vec3(0.299, 0.587, 0.114)) * 1.6, 0.85);',
-    '  gl_FragColor = vec4(vCol * (core + halo + wing + glow) * win * occ * wash, 1.0);',
+    '  gl_FragColor = vec4(vCol * (core + halo + wing + glow + spk) * win * occ * wash, 1.0);',
     '}'
   ].join('\n');
+
+  /* ── Månekart ─────────────────────────────────────────────────────────
+     NASA SVS CGI Moon Kit (Lunar Reconnaissance Orbiter: LROC-farger og LOLA-høyder,
+     offentlig eiendom), projisert ortografisk på nærsiden — nord opp, øst til høyre, slik
+     vi ser den fra Norge. Albedo 256² JPEG, høyde 128² PNG (gråtone). Filene hentes først
+     når månenatta tegnes, så de andre temaene aldri laster dem. Gradienten til normalene
+     regnes ut én gang her, høyden ligger i alfa for skyggesporingen. */
+  var MOON_ALB = '/shared/img/moon-albedo.jpg';
+  var MOON_HGT = '/shared/img/moon-height.png';
+  var MOON_NS = 128, MOON_MAPS = null, MOON_PENDING = false, MOON_WAIT = [];
+  function moonNormals(img) {
+    var S = MOON_NS, c = document.createElement('canvas');
+    c.width = c.height = S;
+    // willReadFrequently: et vanlig CPU-canvas. Uten det lager nettleseren et GPU-canvas
+    // og venter på GPU-en midt i månens første bilder (200–300 ms fastlåst side, målt).
+    var g = c.getContext('2d', { willReadFrequently: true });
+    g.drawImage(img, 0, 0, S, S);
+    var px = g.getImageData(0, 0, S, S).data, out = new Uint8Array(S * S * 4), du = 2 / S;
+    function h(i, j) { i = i < 0 ? 0 : i > S - 1 ? S - 1 : i; j = j < 0 ? 0 : j > S - 1 ? S - 1 : j; return px[(j * S + i) * 4] / 255; }
+    function q(x) { return Math.max(0, Math.min(255, Math.round(127.5 + 127.5 * x))); }
+    for (var j = 0; j < S; j++) for (var i = 0; i < S; i++) {
+      var u = (i + 0.5) / S * 2 - 1, v = 1 - (j + 0.5) / S * 2, z = Math.sqrt(Math.max(0, 1 - u * u - v * v));
+      // skjermgradient -> tangentiell gradient på kula; tones ned mot randen, der kartet er sammenpresset
+      var hu = (h(i + 1, j) - h(i - 1, j)) / (2 * du) * MOON_HS, hv = (h(i, j - 1) - h(i, j + 1)) / (2 * du) * MOON_HS;
+      var pg = u * hu + v * hv, f = Math.min(1, z / 0.3), o = (j * S + i) * 4;
+      f = f * f * (3 - 2 * f);
+      out[o] = q((hu - u * pg) * f); out[o + 1] = q((hv - v * pg) * f); out[o + 2] = q(-z * pg * f); out[o + 3] = px[o];
+    }
+    return out;
+  }
+  // Laster begge kartene én gang for alle motorer. Feiler én av dem, blir månen en jevn,
+  // grå kule (uMoonMap = 0) i stedet for å vente for alltid.
+  function requestMoonMaps(cb) {
+    if (MOON_MAPS) { cb(MOON_MAPS); return; }
+    MOON_WAIT.push(cb);
+    if (MOON_PENDING) return;
+    MOON_PENDING = true;
+    var a = new Image(), hm = new Image(), left = 2;
+    function fin(ok) {
+      if (--left > 0 && ok) return;
+      if (MOON_MAPS) return;
+      var m = { alb: null, nrm: null };
+      if (ok) { try { m.nrm = moonNormals(hm); m.alb = a; } catch (e) { m.nrm = null; } }
+      MOON_MAPS = m;
+      var w = MOON_WAIT; MOON_WAIT = [];
+      for (var i = 0; i < w.length; i++) w[i](m);
+    }
+    a.onload = hm.onload = function () { fin(true); };
+    a.onerror = hm.onerror = function () { fin(false); };
+    a.src = MOON_ALB; hm.src = MOON_HGT;
+  }
 
   /* ── Motor ────────────────────────────────────────────────────────── */
   function mount(canvas, opts) {
@@ -4989,7 +5199,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
 
     var dead = false;
     var gl = null, pcExt = null, progA = null, progC = null, progP = null, uA = null, uC = null, uP = null;
-    var tex = null, fbo = null, quadBuf = null, starBuf = null;
+    var tex = null, fbo = null, quadBuf = null, starBuf = null, moonAlbTex = null, moonNrmTex = null, moonAsked = false;
     var pendingProgs = [], bindUniforms = null, ensureScene = null;
     var SCENES = {}, COMPS = {}, scene = null, starsLinked = false;   // programmer per scene, se ensureScene
     var raf = 0, last = 0, t = 20 + Math.random() * 80, tr = t, shown = false, retryT = 0;
@@ -5001,6 +5211,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
     var isStatic = !!(mq && mq.matches);
     var ro = null, mo = null, subs = [], started = false;   // started: siden er lest, se start()
     var anchorEl = opts.anchor || null, anchorY = 0;
+    var avoidEl = opts.avoid || null, avoidMo = null, moonP = [0, 0.76, 0.038], moonDirty = true;   // se moonSpot()
     function on(target, type, fn, o) { if (!target || !target.addEventListener) return; target.addEventListener(type, fn, o); subs.push([target, type, fn, o]); }
 
     function themeKey() { var k = root.getAttribute('data-theme') || 'carbon'; return THEMES[k] ? k : 'carbon'; }
@@ -5046,7 +5257,11 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       ensureScene = function () {
         var k = mode === 4 ? 4 : mode === 1 ? 1 : 0, S = SCENES[k], m = k === 4 ? 1 : 0;
         // Komposittpasset uten måne er likt for nordlys og noir, så det lenkes én gang.
-        if (!COMPS[m]) COMPS[m] = link(QUAD_VS, '#define MOON ' + m + '\n' + COMP_FS, ['aPos']);
+        if (!COMPS[m]) {
+          // Månenatt slår på EXT_shader_texture_lod når den finnes (MOON_LOD i COMP_FS).
+          var lod = m === 1 && gl.getExtension('EXT_shader_texture_lod') ? '#extension GL_EXT_shader_texture_lod : enable\n#define MOON_LOD 1\n' : '';
+          COMPS[m] = link(QUAD_VS, lod + '#define MOON ' + m + '\n' + COMP_FS, ['aPos']);
+        }
         if (!S) S = SCENES[k] = { A: link(QUAD_VS, '#define SCENE ' + k + '\n' + AURORA_FS, ['aPos']), C: COMPS[m], uA: null, uC: null };
         if (!starsLinked && k !== 1) { starsLinked = true; progP = link(STAR_VS, STAR_FS, ['aPos', 'aMag', 'aCol', 'aSeed']); } // noir har ingen stjerner
         // Kompilerer temaets scene fortsatt, tegnes forrige ferdige scene videre i stedet for
@@ -5060,6 +5275,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
       starBuf = gl.createBuffer();
       starCount = 0; starsDirty = true;
+      moonAlbTex = moonNrmTex = null;   // månekartene lastes opp på nytt ved første månetegning
 
       tex = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, tex);
@@ -5081,10 +5297,10 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         for (var k in SCENES) {
           var S = SCENES[k];
           if (S.uA) continue;
-          S.uA = U(S.A, ['uRes', 'uTime', 'uTimeR', 'uAmp', 'uLight', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe', 'uCss', 'uMW', 'uAnchor']);
-          S.uC = U(S.C, ['uRes', 'uTime', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx']);
+          S.uA = U(S.A, ['uRes', 'uTime', 'uTimeR', 'uAmp', 'uLight', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe', 'uCss', 'uMW', 'uAnchor', 'uMoonGlow', 'uMoonP']);
+          S.uC = U(S.C, ['uRes', 'uTime', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx', 'uMoonAlb', 'uMoonNrm', 'uMoonMap', 'uMoonL', 'uMoonK', 'uMoonP']);
         }
-        if (progP && !uP) uP = U(progP, ['uCss', 'uDpr', 'uTime', 'uLim', 'uGain', 'uTwk', 'uTint', 'uMoon', 'uMaxPt', 'uTex', 'uRes', 'uMode']);
+        if (progP && !uP) uP = U(progP, ['uCss', 'uDpr', 'uTime', 'uLim', 'uGain', 'uTwk', 'uTint', 'uMoon', 'uMoonP', 'uMaxPt', 'uTex', 'uRes', 'uMode']);
         if (scene) { uA = scene.uA; uC = scene.uC; }
       };
       return true;
@@ -5252,6 +5468,34 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       gl.enableVertexAttribArray(3); gl.vertexAttribPointer(3, 1, gl.FLOAT, false, 32, 24);
     }
 
+    function moonTex(src, filt) {
+      var tx = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tx);
+      if (src.width && !src.length) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src);
+      else gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, MOON_NS, MOON_NS, 0, gl.RGBA, gl.UNSIGNED_BYTE, src);
+      if (filt === gl.LINEAR_MIPMAP_LINEAR) gl.generateMipmap(gl.TEXTURE_2D);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, filt);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      return tx;
+    }
+    // Månenatt: bind månekartene til enhet 1 og 2. Første gang hentes filene; til de er
+    // her (eller hvis de feiler) gir den 0, og shaderen tegner en jevn, grå kule.
+    function bindMoon() {
+      if (!MOON_MAPS) {
+        if (!moonAsked) { moonAsked = true; requestMoonMaps(function () { if (!dead && !raf && canvasVisible()) draw(); }); }
+        return 0;
+      }
+      if (!MOON_MAPS.alb || !MOON_MAPS.nrm) return 0;
+      // albedo med mipmap; høyde/normal uten, så skyggeløkka kan lese den trygt i forgrenet kode
+      if (!moonAlbTex) { moonAlbTex = moonTex(MOON_MAPS.alb, gl.LINEAR_MIPMAP_LINEAR); moonNrmTex = moonTex(MOON_MAPS.nrm, gl.LINEAR); }
+      gl.activeTexture(gl.TEXTURE1); gl.bindTexture(gl.TEXTURE_2D, moonAlbTex);
+      gl.activeTexture(gl.TEXTURE2); gl.bindTexture(gl.TEXTURE_2D, moonNrmTex);
+      gl.activeTexture(gl.TEXTURE0);
+      return 1;
+    }
+
     function draw() {
       if (dead || !started || !gl || !cc) return;
       // Tapt kontekst: ikke lenk og ikke tegn. webglcontextrestored bygger alt på nytt.
@@ -5278,6 +5522,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       if (starsDirty) rebuildStars();
       var cw = canvas.clientWidth || 2, ch = canvas.clientHeight || 2;
       var W = window.__smk || {};
+      // månefase (bare månenatt): sola fra høyre og litt under (voksende kveldsmåne)
+      var mph = Math.max(0, Math.min(165, +CONFIG.MOON_PHASE || 0)) * Math.PI / 180, mk = (1 + Math.cos(mph)) / 2;
+      if (mode === 4 && moonDirty) moonSpot();
 
       // 1) tema-scene -> lavoppløst tekstur
       gl.disable(gl.BLEND);
@@ -5296,6 +5543,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       gl.uniform2f(uA.uCss, cw, ch);
       gl.uniform1f(uA.uAnchor, anchorY);
       gl.uniform1f(uA.uMW, Math.max(0, cc.mw[0] * CONFIG.MILKY_WAY));
+      if (mode === 4) { gl.uniform1f(uA.uMoonGlow, 0.35 + 0.65 * Math.pow(mk, 1.3)); gl.uniform3f(uA.uMoonP, moonP[0], moonP[1], moonP[2]); }
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       // 2) kompositt i full oppløsning
@@ -5309,6 +5557,14 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       gl.uniform1f(uC.uTime, t);
       gl.uniform1f(uC.uDust, isSmoke ? 1 : 0);
       gl.uniform1f(uC.uMoon, mode === 4 ? 1 : 0);
+      if (mode === 4) {
+        var hasMap = bindMoon();
+        gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, tex);   // moonTex() kan ha tatt enhet 0
+        gl.uniform1i(uC.uMoonAlb, 1); gl.uniform1i(uC.uMoonNrm, 2); gl.uniform1f(uC.uMoonMap, hasMap);
+        gl.uniform3f(uC.uMoonL, Math.sin(mph) * 0.980, Math.sin(mph) * -0.199, Math.cos(mph));
+        gl.uniform1f(uC.uMoonK, mk);
+        gl.uniform3f(uC.uMoonP, moonP[0], moonP[1], moonP[2]);
+      }
       // Stjerneskudd og blitzlys er fjernet (brukervalg); kun satellitten på månenatt.
       gl.uniform3f(uC.uFx, 0, 0, (!isStatic && mode === 4) ? 1 : 0);
       v3(uC.uCEdge, cc.edge);
@@ -5336,6 +5592,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         gl.uniform1f(uP.uTwk, isStatic ? 0 : Math.max(0, Math.min(1, +CONFIG.TWINKLE || 0)));
         v3(uP.uTint, cc.star);
         gl.uniform1f(uP.uMoon, mode === 4 ? 1 : 0);
+        if (mode === 4) gl.uniform3f(uP.uMoonP, moonP[0], moonP[1], moonP[2]);
         gl.uniform1f(uP.uMaxPt, maxPt);
         gl.uniform1f(uP.uMode, mode);
         gl.drawArrays(gl.POINTS, 0, starCount);
@@ -5359,8 +5616,47 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       anchorY = anchorEl && anchorEl.offsetHeight ? y + anchorEl.offsetHeight / 2 : 0;
       return anchorY !== old;
     }
+    // Månens plass (bare månenatt, regnes i draw() når moonDirty er satt): oppe til
+    // høyre som før. Står den bak tittelen (opts.avoid), som på stående telefon, flyttes
+    // en mindre måne til den ledige himmelen til høyre for tittelens første linje.
+    // Ordboksene (.word-mask) flyttes ikke av intro-animasjonen, og linjene måles i
+    // CSS-px fra toppen av siden, så plassen holder under introen og etter rulling.
+    function moonSpot() {
+      moonDirty = false;
+      var cw = canvas.clientWidth || 2, ch = canvas.clientHeight || 2, a = cw / ch;
+      moonP = [Math.min(a * 0.31, Math.max(a * 0.5 - 0.20, 0)), 0.76, 0.038];
+      if (!avoidEl || !avoidEl.offsetHeight) return;
+      var base = avoidEl.getBoundingClientRect(), x0 = 0, y0 = 0, e = avoidEl;
+      while (e) { x0 += e.offsetLeft; y0 += e.offsetTop; e = e.offsetParent; }
+      var boxes = avoidEl.querySelectorAll('.word-mask'), rs = [], lines = [], i, j, q, L, top, bot;
+      if (boxes.length) for (i = 0; i < boxes.length; i++) rs.push(boxes[i].getBoundingClientRect());
+      else { var rg = document.createRange(); rg.selectNodeContents(avoidEl); rs = rg.getClientRects(); }
+      for (i = 0; i < rs.length; i++) {
+        q = rs[i]; if (q.width < 1) continue;
+        top = q.top - base.top + y0; bot = q.bottom - base.top + y0;
+        for (L = null, j = 0; j < lines.length; j++) if (Math.abs(lines[j].b - bot) < q.height / 2) L = lines[j];
+        if (!L) { L = { l: 1e9, r: -1e9, t: top, b: bot }; lines.push(L); }
+        L.l = Math.min(L.l, q.left - base.left + x0); L.r = Math.max(L.r, q.right - base.left + x0);
+        L.t = Math.min(L.t, top); L.b = Math.max(L.b, bot);
+      }
+      function hits(cx, cy, r, pad) {
+        for (var k = 0; k < lines.length; k++) {
+          var o = lines[k];
+          if (cx + r + pad > o.l && cx - r - pad < o.r && cy + r + pad > o.t && cy - r - pad < o.b) return true;
+        }
+        return false;
+      }
+      var r = moonP[2] * ch;
+      if (!lines.length || !hits(cw / 2 + moonP[0] * ch, (1 - moonP[1]) * ch, r, 10)) return;
+      lines.sort(function (p, s) { return p.t - s.t; });
+      var L1 = lines[0], free = x0 + avoidEl.offsetWidth - L1.r, cx = L1.r + free / 2, cy = L1.t + 2;
+      for (r = Math.min(r, 22, free / 2 - 10); r >= 12; r -= 2) {
+        if (!hits(cx, cy, r, 6)) { moonP = [(cx - cw / 2) / ch, 1 - cy / ch, r / ch]; return; }
+      }
+    }
     function onResize() {
       var moved = measureAnchor();
+      moonDirty = true;
       resize(false);
       if (moved && !raf && canvasVisible() && (isStatic || document.hidden)) draw();
     }
@@ -5370,6 +5666,16 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       if (anchorEl) { ro.observe((anchorEl.closest && anchorEl.closest('section')) || anchorEl); ro.observe(document.body); }
     }
     else on(window, 'resize', onResize);
+    // Tittelen bytter tekst (språk), får ordbokser (introen) og ny skrift uten at
+    // størrelsen nødvendigvis endres: mål månens plass på nytt.
+    if (avoidEl && typeof MutationObserver !== 'undefined') {
+      avoidMo = new MutationObserver(function () {
+        moonDirty = true;
+        if (mode === 4 && !raf && canvasVisible() && (isStatic || document.hidden)) draw();
+      });
+      avoidMo.observe(avoidEl, { childList: true, subtree: true, characterData: true });
+    }
+    if (avoidEl && document.fonts && document.fonts.ready) document.fonts.ready.then(function () { moonDirty = true; });
     resize(true);
 
     on(canvas, 'webglcontextlost', function (e) { e.preventDefault(); pause(); });
@@ -5435,6 +5741,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
         if (sizeT) { clearTimeout(sizeT); sizeT = 0; }
         if (ro) ro.disconnect();
         if (mo) mo.disconnect();
+        if (avoidMo) avoidMo.disconnect();
         for (var i = 0; i < subs.length; i++) {
           var s = subs[i];
           if (s[1]) s[0].removeEventListener(s[1], s[2], s[3]);
@@ -5470,7 +5777,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   // før fila lastes for å montere selv.
   if (!window.HV_NORDLYS_MANUAL) {
     var el = document.getElementById('nordlysCanvas');
-    if (el) window.HVNordlys.active = mount(el, { anchor: document.getElementById('searchShell') });
+    if (el) window.HVNordlys.active = mount(el, { anchor: document.getElementById('searchShell'), avoid: document.getElementById('heroH1') });
   }
 })();
 

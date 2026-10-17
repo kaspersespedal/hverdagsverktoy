@@ -23,13 +23,11 @@
   /* Render-signaturer: minutt-pulsen re-rendrer fra cache hvert 60. sekund,
      men DOM som bærer animasjon (søylediagram, værstripe) skal kun bygges om
      når innholdet faktisk er endret — ellers restarter animasjonen synlig. */
-  var _stromSig = '', _fcSig = '', _graphSig = '', _weekSig = '';
+  var _stromSig = '', _fcSig = '', _weekSig = '';
 
-  /* Fullskjerm-værmelding-state: modal-DOM bygges lazy ved første åpning,
-     _lastWx holder siste rendrede vær-data (mates til grafen ved åpning),
-     _graphGeo holder graf-geometri til hover-avlesningen. */
-  var _modalEls = null, _modalOpen = false, _wxReturnFocus = null,
-      _lastWx = null, _graphGeo = null, _prevHtmlOverflow = '';
+  /* _lastWx holder siste rendrede vær-data (fullskjermgrafen leser timeserien
+     herfra), _wxFail sier om siste værhenting feilet (gir feilmelding i grafen). */
+  var _lastWx = null, _wxFail = false;
 
   /* ── Strømsone-kart (NVE/Statnett prisområder). Slås opp fra Geonorge-treffets
      kommunenummer, med fylke som fallback. Oppslag:
@@ -370,8 +368,6 @@
     return WX_ICONS[g] || WX_ICONS.cloud;
   }
   var DAGER_FULL = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag']; // Date.getDay(): 0 = søndag
-  var MND_LONG = ['januar', 'februar', 'mars', 'april', 'mai', 'juni',
-                  'juli', 'august', 'september', 'oktober', 'november', 'desember'];
   function renderWeather(d) {
     _lastWx = d;
     countUp('wxTemp', Math.round(d.temp), 0);
@@ -380,7 +376,7 @@
     if (typeof d.wind === 'number') sub += ' · ' + nb(d.wind, 1) + '\u00a0m/s' + (d.dir != null ? '\u00a0' + compass(d.dir) : '');
     setText('wxSub', sub);
     buildForecast(d.hours);
-    if (_modalOpen) { renderDayGraph(d); renderWeek(d); modalStamp(); } // live-oppdater åpen modal
+    if (_big.kind === 'wx') bigRefresh(); // live-oppdater åpen fullskjermgraf
     stampNow();
   }
   /* Værmeldings-stripe: «nå» + neste timer framover (klokke + symbol + grad).
@@ -430,24 +426,20 @@
     }
     return week;
   }
-  /* Full time-for-time-serie framover (til den store dag-grafen i fullskjerm).
-     Tar de neste ~24 time-oppløste punktene fra «nå» (MET gir 1-t-oppløsning
+  /* Time-for-time-serie framover til fullskjermgrafen (12 / 24 / 48 t).
+     Tar de neste 49 time-oppløste punktene fra «nå» (MET gir 1-t-oppløsning
      ~2,5 døgn framover, så dette fylles uansett klokkeslett). Hver post har
-     temp + nedbør (next_1_hours) + symbol + vind. */
-  function buildDayHours(ts) {
+     tidspunkt + temperatur + nedbør neste time (next_1_hours). */
+  function buildHours(ts) {
     var out = [];
-    for (var i = 0; i < ts.length && out.length < 24; i++) {
+    for (var i = 0; i < ts.length && out.length < 49; i++) {
       var e = ts[i], det = e.data.instant.details, n1 = e.data.next_1_hours;
       if (!n1) break; // forbi 1-t-sonen → stopp (6-t-blokker egner seg ikke til time-graf)
       if (typeof det.air_temperature !== 'number' || isNaN(det.air_temperature)) continue; // hopp over hull (som buildWeek)
       out.push({
         t: e.time,
-        hour: new Date(e.time).getHours(),
         temp: det.air_temperature,
-        precip: (n1.details && typeof n1.details.precipitation_amount === 'number') ? n1.details.precipitation_amount : 0,
-        sym: (n1.summary && n1.summary.symbol_code) || '',
-        wind: det.wind_speed,
-        dir: det.wind_from_direction
+        precip: (n1.details && typeof n1.details.precipitation_amount === 'number') ? n1.details.precipitation_amount : 0
       });
     }
     return out;
@@ -455,7 +447,8 @@
   function loadWeather(place, force) {
     var key = 'wx_' + place.lat.toFixed(3) + '_' + place.lon.toFixed(3);
     var c = cacheGet(key);
-    if (!force && fresh(c, 30 * 60 * 1000)) { renderWeather(c.d); return; }
+    /* Cache fra før fullskjermgrafen mangler timeserien (hrs) — vises, men regnes som utløpt. */
+    if (!force && c && c.d && c.d.hrs && fresh(c, 30 * 60 * 1000)) { renderWeather(c.d); return; }
     if (c) renderWeather(c.d); // vis cachet umiddelbart mens vi henter ferskt
     fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=' + place.lat.toFixed(4) + '&lon=' + place.lon.toFixed(4))
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -479,125 +472,420 @@
         }
         var d = { temp: now.air_temperature, wind: now.wind_speed, dir: now.wind_from_direction,
                   sym: sym, max: Math.max.apply(null, temps), min: Math.min.apply(null, temps), temps: temps, hours: hours,
-                  week: buildWeek(ts), dayHours: buildDayHours(ts) };
+                  week: buildWeek(ts), hrs: buildHours(ts) };
+        _wxFail = false;
         cacheSet(key, d); renderWeather(d);
       })
-      .catch(function () { /* behold cachet/HTML-verdi */ });
+      .catch(function () { /* behold cachet/HTML-verdi */
+        _wxFail = true;
+        if (_big.kind === 'wx') bigRefresh();
+      });
   }
 
-  /* ═══════════ FULLSKJERM VÆRMELDING (dag-graf + neste 7 dager) ═══════════
-     «Utvid»-knapp på værkortet åpner en modal med (1) stor time-for-time-graf
-     for i dag/neste 24t og (2) de neste 7 dagene. All data er allerede hentet
-     og cachet (d.dayHours + d.week) — modalen gjør ingen egne nettverkskall. */
+  /* ═══════════ FULLSKJERM GRAF (vær · strøm · valuta) ═══════════════════
+     Knappen øverst til høyre på vær-, strøm- og valutakortet åpner én felles
+     dialog (Claude Design «05 Fullskjerm graf»). DOM-en bygges første gang den
+     åpnes og gjenbrukes. Vær leser timeserien loadWeather allerede har hentet;
+     strøm (andre soner, i morgen, siste 7 dager) og valuta (ett år) hentes først
+     når de vises, og caches. Hver henting lagres under sin egen nøkkel
+     (sone + dato, valuta), og dialogen tegnes alltid fra det som er valgt NÅ —
+     et sent svar for et gammelt valg kan derfor aldri overskrive et nyere. */
+  var BIG = null, _bigT = 0, _rvF = 0, _reduce = false;
+  /* kind: åpen graf (wx/st/fx) · r: tidsrom per graf · hov: punkt under peker/piltast
+     · M: tegnet modell · sig: modellens signatur (minutt-pulsen tegner bare om ved endring) */
+  var _big = { kind: null, r: { wx: 0, st: 0, fx: 0 }, zone: 'NO1', hov: null, M: null, sig: '', ret: null, ov: '' };
+  var RANGES = { wx: ['12 t', '24 t', '48 t'], st: ['I dag', 'I morgen', '7 dager'], fx: ['30 d', '90 d', '1 år'] };
+  var ZONES = [['NO1', 'Øst'], ['NO2', 'Sør'], ['NO3', 'Midt'], ['NO4', 'Nord'], ['NO5', 'Vest']];
+  var FS_ON = 'M6 2v4H2M10 14v-4h4M14 6h-4V2M2 10h4v4', FS_OFF = 'M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9';
 
-  /* Utvid-knapp: legges i værkortets tall-rad (til høyre for temperaturen). */
-  function buildExpand() {
-    var card = $('wxCard'); if (!card) return;
-    var row = card.querySelector('.widget-value') || card;
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'wx-expand';
-    btn.id = 'wxExpandBtn';
-    btn.setAttribute('aria-haspopup', 'dialog');
-    btn.setAttribute('aria-label', 'Åpne full værmelding – i dag time for time og neste 7 dager');
-    btn.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2.5H3.5V5 M10 2.5H12.5V5 M6 13.5H3.5V11 M10 13.5H12.5V11"/></svg>';
-    btn.addEventListener('click', function (e) { e.stopPropagation(); openWxModal(); });
-    row.appendChild(btn);
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function isoDay(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+  function dayShift(n) { var d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + n); return d; }
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+  function wdShort(dow) { return ph(DAGER_FULL[dow]).slice(0, 3); } // «Lør» / «Sat»
+  function hourLbl(a, b) { return fill(ph('Kl. {a}–{b}'), { a: a, b: b }); }
+  /* Små bokstaver midt i en setning («lør kl. 14») — men ikke på engelsk, der ukedagen har stor forbokstav («Sat at 14:00»). */
+  function low(s) { return document.documentElement.lang === 'en' ? s : s.toLowerCase(); }
+  function monthLbl(iso) { // 'YYYY-MM-DD' -> «Okt 25»
+    var p = iso.split('-');
+    return cap(T('trSharedMonthsShort', MND.join(',')).split(',')[parseInt(p[1], 10) - 1].replace(/\.$/, '')) + ' ' + p[0].slice(2);
   }
+  function spread(n, k) { var o = []; for (var j = 0; j < k; j++) o.push(Math.round(j * (n - 1) / (k - 1))); return o; }
+  function sum(a) { var s = 0; for (var i = 0; i < a.length; i++) s += a[i]; return s; }
+  /* Plottet tegnes i et 1000 × 400-rom; spenn og etiketter plasseres i prosent av det. */
+  function pct(x) { return (x / 10).toFixed(3) + '%'; }
+  function pctY(y) { return (y / 4).toFixed(3) + '%'; }
 
-  /* Bygger modal-DOM én gang (lazy), gjenbrukes deretter. */
-  function buildWxModal() {
-    if (_modalEls) return _modalEls;
-    var bd = document.createElement('div');
-    bd.className = 'wx-modal-backdrop';
-    bd.hidden = true;
-    bd.innerHTML =
-      '<div class="wx-modal" role="dialog" aria-modal="true" aria-labelledby="wxModalPlace" tabindex="-1">' +
-        '<header class="wx-modal-head">' +
-          '<div><h2 class="wx-modal-place" id="wxModalPlace">Vær</h2>' +
-          '<span class="wx-modal-stamp" id="wxModalStamp"></span></div>' +
-          '<button type="button" class="wx-modal-close" id="wxModalClose" aria-label="Lukk værmelding">' +
-            '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>' +
-          '</button>' +
-        '</header>' +
-        '<div class="wx-modal-scroll">' +
-          '<p class="sr-only" id="wxModalSr"></p>' +
-          '<div class="wx-kicker">I dag · time for time</div>' +
-          '<p class="wx-graph-sub" id="wxGraphSub"></p>' +
-          '<div class="wx-graph-wrap"><div id="wxGraphHost"></div><div class="wx-scrub" id="wxScrub" aria-hidden="true"></div></div>' +
-          '<div class="wx-stats" id="wxStats"></div>' +
-          '<section class="wx-week"><div class="wx-kicker">Neste 7 dager</div><ul class="wx-week-list" id="wxWeekHost"></ul></section>' +
-        '</div>' +
-      '</div>';
-    document.body.appendChild(bd);
-    _modalEls = {
-      bd: bd, modal: bd.querySelector('.wx-modal'), close: $('wxModalClose'),
-      graphHost: $('wxGraphHost'), weekHost: $('wxWeekHost'), scrub: $('wxScrub'),
-      sub: $('wxGraphSub'), stats: $('wxStats'), sr: $('wxModalSr'), stamp: $('wxModalStamp')
-    };
-    _modalEls.close.addEventListener('click', closeWxModal);
-    bd.addEventListener('click', function (e) { if (e.target === bd) closeWxModal(); });
-    _modalEls.modal.addEventListener('keydown', onModalKeydown);
-    wireScrub();
-    return _modalEls;
-  }
-
-  function onModalKeydown(e) {
-    if (e.key === 'Escape') { e.preventDefault(); closeWxModal(); return; }
-    if (e.key !== 'Tab') return;
-    var f = _modalEls.modal.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])');
-    var list = [];
-    for (var i = 0; i < f.length; i++) if (f[i].offsetParent !== null) list.push(f[i]);
-    if (!list.length) return;
-    var first = list[0], last = list[list.length - 1];
-    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
-  }
-
-  function modalStamp() {
-    if (!_modalEls) return;
-    var d = new Date();
-    var cond = (_lastWx && _lastWx.sym) ? wxText(_lastWx.sym) : '';
-    _modalEls.stamp.textContent = (cond ? ph(cond) + ' · ' : '') + fill(T('trSharedWxUpdated', 'oppdatert {t}'),
-      { t: String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') });
-  }
-
-  function openWxModal() {
-    var els = buildWxModal();
-    // Forankre fokus-retur til selve utvid-knappen: Safari/Firefox-macOS gir ikke
-    // <button> fokus ved musseklikk, så document.activeElement er da <body>.
-    var ae = document.activeElement;
-    _wxReturnFocus = (ae && ae !== document.body) ? ae : $('wxExpandBtn');
-    _modalOpen = true;
-    _prevHtmlOverflow = document.documentElement.style.overflow;
-    document.documentElement.style.overflow = 'hidden';
-    setText('wxModalPlace', getPlace().navn || 'Vær');
-    modalStamp();
-    if (_lastWx) { renderDayGraph(_lastWx); renderWeek(_lastWx); }
-    else {
-      els.graphHost.innerHTML = '<svg class="wx-graph" viewBox="0 0 760 300" role="img" aria-label="Værdata lastes"><text class="g-empty" x="34" y="150">Værdata lastes …</text></svg>';
-      els.sub.textContent = ''; els.stats.innerHTML = ''; els.weekHost.innerHTML = '';
+  /* ── Strømpris per dag og sone (hvakosterstrømmen.no) ──
+     Priser endrer seg ikke etter at de er publisert, så en hentet dag beholdes
+     (lagres i localStorage, de siste 8 dagene). 404 betyr «ikke publisert ennå»
+     (i morgen før ~kl. 13) og prøves igjen etter to minutter, det samme gjør feil. */
+  var _stDays = {}, _stBusy = {}, _stDisk = {};
+  /* Timene leses fra time_start, ikke fra rekkefølgen: dager med sommertid-skifte
+     har 23 eller 25 timer. Kommer prisene i kvarter, slås de sammen til timer. */
+  function stParse(arr) {
+    var h = [], s = [], p = [], c = [];
+    for (var i = 0; i < arr.length; i++) {
+      var o = arr[i], hh = String(o.time_start).slice(11, 13), t = Date.parse(o.time_start), j = h.length - 1;
+      if (typeof o.NOK_per_kWh !== 'number' || isNaN(t)) throw 0;
+      if (j >= 0 && h[j] === hh && t - s[j] < 3600e3) { p[j] += o.NOK_per_kWh; c[j]++; }
+      else { h.push(hh); s.push(t); p.push(o.NOK_per_kWh); c.push(1); }
     }
-    els.bd.hidden = false;
-    void els.bd.offsetWidth; // tvinger reflow så .in-transisjonen faktisk kjører fra opacity:0/translate
-    els.bd.classList.add('in');
-    els.close.focus();
+    if (!h.length) throw 0;
+    for (var k = 0; k < p.length; k++) p[k] = Math.round(p[k] / c[k] * 1e4) / 100; // øre/kWh
+    return { h: h, s: s, p: p };
+  }
+  /* Gir dagens data, null (ikke publisert), false (feil) eller undefined (hentes nå).
+     peek: bare se i cachen, ikke hent. */
+  function stDay(zone, iso, peek) {
+    var k = zone + '|' + iso, e = _stDays[k];
+    if (!e && !_stDisk[zone]) {
+      _stDisk[zone] = 1;
+      var o = cacheGet('stdays_' + zone), m = (o && o.d) || {};
+      for (var di in m) if (!_stDays[zone + '|' + di]) _stDays[zone + '|' + di] = { d: m[di], t: 0 };
+      e = _stDays[k];
+    }
+    if (e && (e.d || Date.now() - e.t < 120000)) return e.d;
+    if (peek) return e ? e.d : null;
+    if (!_stBusy[k]) fetchStDay(zone, iso);
+    return e ? e.d : undefined; // mens null/feil prøves på nytt, står forrige svar
+  }
+  function fetchStDay(zone, iso) {
+    var k = zone + '|' + iso, p = iso.split('-');
+    _stBusy[k] = true;
+    fetch('https://www.hvakosterstrommen.no/api/v1/prices/' + p[0] + '/' + p[1] + '-' + p[2] + '_' + zone + '.json')
+      .then(function (r) { if (r.status === 404) return null; if (!r.ok) throw 0; return r.json(); })
+      .then(function (arr) { return arr ? stParse(arr) : null; })
+      .then(function (d) {
+        _stDays[k] = { d: d, t: Date.now() };
+        if (!d) return;
+        var o = cacheGet('stdays_' + zone), m = (o && o.d) || {}, cut = isoDay(dayShift(-8));
+        m[iso] = d;
+        for (var key in m) if (key < cut) delete m[key];
+        cacheSet('stdays_' + zone, m);
+      }, function () { _stDays[k] = { d: false, t: Date.now() }; })
+      .then(function () { delete _stBusy[k]; if (_big.kind === 'st') bigRefresh(); });
   }
 
-  function closeWxModal() {
-    if (!_modalEls || !_modalOpen) return;
-    _modalOpen = false;
-    var els = _modalEls;
-    els.bd.classList.remove('in');
-    document.documentElement.style.overflow = _prevHtmlOverflow || '';
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // Guard mot rask lukk→åpne-race: skjul KUN hvis modalen fortsatt er lukket
-    // når exit-transisjonen (eller 600ms-fallbacken) fyrer.
-    function done() { els.modal.removeEventListener('transitionend', te); if (!_modalOpen) els.bd.hidden = true; }
-    function te(e) { if (e.target === els.modal) done(); }
-    if (reduce) { done(); }
-    else { els.modal.addEventListener('transitionend', te); setTimeout(done, 600); }
-    if (_wxReturnFocus && _wxReturnFocus.focus) _wxReturnFocus.focus();
+  /* ── Valutakurs siste år (Norges Bank EXR), hentes per valuta når den vises ── */
+  var _fxY = {}, _fxYBusy = {}, _fxYFail = {};
+  function fxYear(code) {
+    var e = _fxY[code] || (_fxY[code] = cacheGet('fxy_' + code));
+    if ((!e || !fresh(e, 6 * 3600 * 1000)) && !_fxYBusy[code] &&
+        !(_fxYFail[code] && Date.now() - _fxYFail[code] < 120000)) fetchFxYear(code);
+    return e && e.d && e.d.dates ? e.d : null;
+  }
+  function fetchFxYear(code) {
+    _fxYBusy[code] = true;
+    fetch('https://data.norges-bank.no/api/data/EXR/B.' + code + '.NOK.SP?startPeriod=' + isoDay(dayShift(-372)) + '&format=sdmx-json&locale=en')
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (j) {
+        var c = parseExr(j)[code];
+        if (!c || !c.series.length) throw 0;
+        return { dates: c.dates, vals: c.series, mult: c.mult };
+      })
+      .then(function (d) { cacheSet('fxy_' + code, d); _fxY[code] = { t: Date.now(), d: d }; delete _fxYFail[code]; },
+            function () { _fxYFail[code] = Date.now(); })
+      .then(function () { delete _fxYBusy[code]; if (_big.kind === 'fx') bigRefresh(); });
+  }
+
+  /* ── Seriemodeller: én per graf og tidsrom ──
+     state: ok | load | err | empty. Ellers: v (verdier), n, line (linje eller søyler),
+     def (punktet som vises uten peker), nowIdx, ax ([indeks, etikett]),
+     seps (døgnskiller), stats, og tekstene rundt grafen. */
+  function wxModel(r) {
+    var d = _lastWx, place = getPlace(), now = Date.now();
+    var M = { kind: 'wx', line: true, unit: '°C', ydec: 1, eye: ph('Vær') + ' · ' + place.navn,
+      foot: fill(ph('MET Norway · timesverdier for {sted} · søylene nederst er nedbør'), { sted: place.navn }),
+      week: d && d.week };
+    /* Timer som alt er passert, faller ut — «nå» er alltid første punkt. */
+    var hrs = ((d && d.hrs) || []).filter(function (h) { return Date.parse(h.t) + 3600e3 > now; }).slice(0, [12, 24, 48][r] + 1);
+    if (hrs.length < 2) { M.state = _wxFail ? 'err' : 'load'; return M; }
+    var n = hrs.length, v = [], p = [], dt = [], today = isoDay(new Date());
+    for (var i = 0; i < n; i++) { v.push(hrs[i].temp); p.push(hrs[i].precip || 0); dt.push(new Date(hrs[i].t)); }
+    function hh(i) { return pad2(dt[i].getHours()); }
+    function other(i) { return isoDay(dt[i]) !== today; }
+    function at(i) { return i === 0 ? ph('nå') : (other(i) ? low(wdShort(dt[i].getDay())) + ' ' : '') + fill(ph('kl. {h}'), { h: hh(i) }); }
+    M.n = n; M.v = v; M.p = p; M.def = 0; M.nowIdx = 0;
+    M.label = function (i) {
+      var b = pad2((dt[i].getHours() + 1) % 24);
+      return other(i) ? fill(ph('{wd} kl. {a}–{b}'), { wd: wdShort(dt[i].getDay()), a: hh(i), b: b }) : hourLbl(hh(i), b);
+    };
+    M.ax = []; M.seps = [];
+    for (var j = 0; j < n; j += (n > 13 ? 6 : 3)) M.ax.push([j, j === 0 ? ph('Nå') : hh(j)]);
+    for (var k = 1; k < n; k++) {
+      if (dt[k].getHours() === 0) M.seps.push([k, ph(DAGER_FULL[dt[k].getDay()]) + (window.innerWidth < 641 ? '' : ' ' + nbShort(isoDay(dt[k])))]);
+    }
+    var mx = Math.max.apply(null, v), mn = Math.min.apply(null, v);
+    /* Nedbøren i et punkt gjelder timen ETTER det — siste punkt er slutten av perioden og telles ikke. */
+    M.stats = [[ph('Høyest'), Math.round(mx) + '°', at(v.indexOf(mx))], [ph('Lavest'), Math.round(mn) + '°', at(v.indexOf(mn))],
+               [ph('Nedbør'), nb(sum(p.slice(0, n - 1)), 1), ph('mm i perioden')]];
+    M.valOf = function (i) { return String(Math.round(v[i])); };
+    M.sub0 = ph(wxText(d.sym)) + (typeof d.wind === 'number'
+      ? ' · ' + ph('Vind') + ' ' + nb(d.wind, 1) + ' m/s' + (d.dir != null ? ' ' + compass(d.dir) : '') : '');
+    M.subOf = function (i) { return M.label(i) + ' · ' + fill(ph('{mm} mm nedbør'), { mm: nb(p[i], 1) }); };
+    M.tipV = function (i) { return Math.round(v[i]) + ' °C · ' + nb(p[i], 1) + ' mm'; };
+    M.state = 'ok';
+    return M;
+  }
+
+  function stModel(r) {
+    var zone = _big.zone, zn = zone;
+    ZONES.forEach(function (z) { if (z[0] === zone) zn = zone + ' ' + ph(z[1]); });
+    var M = { kind: 'st', line: false, unit: 'øre/kWh', ydec: 1, avg: true, eye: ph('Strømpris'), title: ph('Strømpris') + ' · ' + zn,
+      chips: ZONES.map(function (z) { return [z[0], z[0] + ' ' + ph(z[1]), z[0] === zone]; }), chipLbl: ph('Velg prisområde'),
+      foot: fill(ph('Ren spotpris · {sone} · nettleie og avgifter kommer i tillegg · stiplet linje er snittet'), { sone: zn }) };
+    var dates = r === 0 ? [dayShift(0)] : r === 1 ? [dayShift(1)] : [-6, -5, -4, -3, -2, -1, 0].map(dayShift);
+    /* Morgendagens priser publiseres rundt kl. 13 — før det spørres ikke (det gir bare 404). */
+    var early = r === 1 && new Date().getHours() < 13;
+    var days = dates.map(function (dd) { return stDay(zone, isoDay(dd), early); });
+    if (days.indexOf(false) >= 0) { M.state = 'err'; return M; }
+    if (days.indexOf(undefined) >= 0) { M.state = 'load'; return M; }
+    if (days.indexOf(null) >= 0) {
+      M.state = 'empty';
+      M.msg = r === 1 ? ph('Morgendagens priser kommer rundt kl. 13') : ph('Prisene for denne perioden er ikke publisert ennå');
+      return M;
+    }
+    var v = [], h = [], s = [], di = [], starts = [];
+    days.forEach(function (x, k) {
+      starts.push(v.length);
+      for (var i = 0; i < x.p.length; i++) { v.push(x.p[i]); h.push(x.h[i]); s.push(x.s[i]); di.push(k); }
+    });
+    var n = v.length, now = Date.now(), nowIdx = null;
+    if (r !== 1) for (var i = 0; i < n; i++) if (s[i] <= now && (i < n - 1 ? s[i + 1] > now : now - s[i] < 3600e3)) nowIdx = i;
+    function span(i) { return [h[i], pad2((parseInt(h[i], 10) + 1) % 24)]; }
+    function lbl(i) {
+      var a = span(i);
+      return r === 2 ? fill(ph('{wd} kl. {a}–{b}'), { wd: wdShort(dates[di[i]].getDay()), a: a[0], b: a[1] }) : hourLbl(a[0], a[1]);
+    }
+    M.n = n; M.v = v; M.nowIdx = nowIdx; M.def = r === 1 ? null : nowIdx;
+    M.label = function (i) { return lbl(i) + (i === nowIdx ? ' · ' + ph('nå') : ''); };
+    M.ax = []; M.seps = [];
+    if (r === 2) {
+      starts.forEach(function (st, k) {
+        M.ax.push([st + Math.floor(days[k].p.length / 2), wdShort(dates[k].getDay())]);
+        if (k) M.seps.push([st, '']);
+      });
+    } else {
+      ['00', '06', '12', '18'].forEach(function (t) { var i = h.indexOf(t); if (i >= 0) M.ax.push([i, t]); });
+      M.ax.push([n - 1, h[n - 1]]);
+    }
+    var mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), lo = v.indexOf(mn);
+    M.avgV = sum(v) / n;
+    M.stats = [[ph('Billigst'), nb(mn, 1), low(M.label(lo))], [ph('Dyrest'), nb(mx, 1), low(M.label(v.indexOf(mx)))],
+               [ph('Snitt'), nb(M.avgV, 1), 'øre/kWh']];
+    if (nowIdx != null) M.stats.push([ph('Nå'), nb(v[nowIdx], 1), low(hourLbl(span(nowIdx)[0], span(nowIdx)[1]))]);
+    var cheap = fill(ph('billigst {t}'), { t: low(lbl(lo)) });
+    M.val0 = nb(M.avgV, 1); // vises bare når def er null (i morgen)
+    M.sub0 = M.def == null ? ph('Snitt i morgen') + ' · ' + cheap : M.label(M.def) + ' · ' + cheap;
+    M.valOf = function (i) { return nb(v[i], 1); };
+    M.subOf = M.label;
+    M.tipV = function (i) { return nb(v[i], 1) + ' øre/kWh'; };
+    M.state = 'ok';
+    return M;
+  }
+
+  function fxModel(r) {
+    var code = _fxCode, y = fxYear(code), base = _fx && _fx[code];
+    /* Til årsserien er hentet, kan 30 d vises fra kursene kortet alt har. */
+    var src = y || (r === 0 && base ? { dates: base.dates, vals: base.series, mult: base.mult } : null);
+    /* Årsserien caches i 6 t. Er den hentet før Norges Bank publiserte (rundt kl. 16), mangler
+       den kursen kortet alt viser — legg til kortets nyere dager, så kort og graf sier det samme. */
+    if (y && base && base.dates) {
+      var last = y.dates[y.dates.length - 1], xd = [], xv = [];
+      for (var b = 0; b < base.dates.length; b++) if (base.dates[b] > last) { xd.push(base.dates[b]); xv.push(base.series[b]); }
+      if (xd.length) src = { dates: y.dates.concat(xd), vals: y.vals.concat(xv), mult: y.mult };
+    }
+    var unit = fxUnit({ mult: (src && src.mult) || (base && base.mult) || 1 }, code);
+    var M = { kind: 'fx', line: true, unit: 'kr', ydec: 2, avg: true, eye: ph('Valutakurs'), title: ph('Valutakurs') + ' · ' + unit + ' / NOK',
+      chips: FX_CODES.map(function (c) { return [c, c, c === code]; }), chipLbl: ph('Velg valuta'),
+      foot: ph('Norges Bank · daglige midtkurser · stiplet linje er snittet') };
+    if (!src) { M.state = _fxYFail[code] ? 'err' : 'load'; return M; }
+    var cut = isoDay(dayShift(-[30, 90, 365][r])), dates = [], v = [], m = src.mult || 1;
+    for (var i = 0; i < src.dates.length; i++) if (src.dates[i] >= cut) { dates.push(src.dates[i]); v.push(src.vals[i] * m); }
+    if (v.length < 2) { M.state = 'empty'; M.msg = ph('Ingen kurser for denne perioden'); return M; }
+    var n = v.length, today = isoDay(new Date()), k = window.innerWidth < 641 ? (r === 2 ? 4 : 3) : (r === 2 ? 7 : 5);
+    M.n = n; M.v = v; M.def = n - 1; M.nowIdx = null; M.seps = [];
+    M.label = function (i) { return nbDate(dates[i]) + (dates[i] === today ? ' · ' + ph('i dag') : ''); };
+    M.ax = spread(n, k).map(function (i) {
+      return [i, dates[i] === today ? ph('I dag') : r === 2 ? monthLbl(dates[i]) : nbShort(dates[i])];
+    });
+    var mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), ch = Math.round((v[n - 1] - v[0]) / v[0] * 1000) / 10;
+    M.avgV = sum(v) / n;
+    M.stats = [[ph('Høyest'), nb(mx, 2), nbShort(dates[v.indexOf(mx)])], [ph('Lavest'), nb(mn, 2), nbShort(dates[v.indexOf(mn)])],
+               [ph('Snitt'), nb(M.avgV, 2), 'kr'], [ph('Endring'), (ch > 0 ? '+' : ch < 0 ? '−' : '') + nb(Math.abs(ch), 1) + ' %', ph('i perioden')]];
+    M.valOf = function (i) { return nb(v[i], 2); };
+    M.sub0 = unit + ' / NOK · ' + fill(ph('snitt {v} kr'), { v: nb(M.avgV, 2) });
+    M.subOf = function (i) { return unit + ' / NOK · ' + M.label(i); };
+    M.tipV = function (i) { return nb(v[i], 2) + ' kr'; };
+    M.state = 'ok';
+    return M;
+  }
+
+  function bigModel() {
+    var k = _big.kind, r = _big.r[k], M = k === 'wx' ? wxModel(r) : k === 'st' ? stModel(r) : fxModel(r);
+    M.r = r;
+    M.msg = M.state === 'load' ? ph('Henter data …') : M.state === 'err' ? ph('Kunne ikke hente data. Sjekk nettet og prøv igjen.') : M.msg;
+    M.sig = [k, r, M.title || M.eye, M.foot, M.state, M.msg, M.v && M.v.join(','), M.p && M.p.join(','), M.nowIdx,
+             M.sub0, M.ax && M.ax.join('|'), JSON.stringify(M.week || null), document.documentElement.lang].join('§');
+    return M;
+  }
+
+  /* ── Dialogen: bygges ved første åpning, gjenbrukes deretter ── */
+  function buildBig() {
+    if (BIG) return BIG;
+    var root = document.createElement('div');
+    root.className = 'mdb'; root.hidden = true;
+    root.innerHTML =
+      '<div class="mdb-panel" role="dialog" aria-modal="true" tabindex="-1">' +
+        '<span class="mdb-glow" aria-hidden="true"></span>' +
+        '<div class="mdb-head">' +
+          '<div class="mdb-head-l"><span class="mdb-eye"></span><div class="mdb-chips" role="group"></div></div>' +
+          '<div class="mdb-head-r"><div class="mdb-seg" role="group"></div>' +
+            '<button type="button" class="mdb-ib mdb-fs"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="' + FS_OFF + '"/></svg></button>' +
+            '<button type="button" class="mdb-ib mdb-x"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="mdb-body" role="region">' +
+          '<div class="mdb-hero"><span class="mdb-big"><span class="mdb-val"></span><span class="mdb-unit"></span></span><span class="mdb-sub"></span></div>' +
+          '<div class="mdb-chart">' +
+            '<div class="mdb-yax" aria-hidden="true"><div class="mdb-yax-in"></div></div>' +
+            '<div class="mdb-pc"><div class="mdb-plot" aria-hidden="true"></div><div class="mdb-tip" aria-hidden="true"><span></span><b></b></div></div>' +
+            '<div class="mdb-xax" aria-hidden="true"></div>' +
+            '<div class="mdb-state" role="status" hidden></div>' +
+          '</div>' +
+          '<div class="mdb-foot"><div class="mdb-stats"></div><div class="mdb-meta"><span class="mdb-src"></span><span class="mdb-keys" aria-hidden="true"></span></div></div>' +
+          '<section class="wx-week" hidden><div class="wx-kicker"></div><ul class="wx-week-list"></ul></section>' +
+        '</div>' +
+        '<p class="sr-only" aria-live="polite"></p>' +
+      '</div>';
+    document.body.appendChild(root);
+    function q(s) { return root.querySelector(s); }
+    var E = BIG = {
+      root: root, panel: q('.mdb-panel'), eye: q('.mdb-eye'), chips: q('.mdb-chips'), seg: q('.mdb-seg'),
+      fs: q('.mdb-fs'), x: q('.mdb-x'), body: q('.mdb-body'), val: q('.mdb-val'), unit: q('.mdb-unit'), sub: q('.mdb-sub'),
+      chart: q('.mdb-chart'), y: q('.mdb-yax-in'), pc: q('.mdb-pc'), plot: q('.mdb-plot'), tip: q('.mdb-tip'),
+      xax: q('.mdb-xax'), state: q('.mdb-state'), stats: q('.mdb-stats'), src: q('.mdb-src'), keys: q('.mdb-keys'),
+      week: q('.wx-week'), weekK: q('.wx-kicker'), weekList: q('.wx-week-list'), live: q('.sr-only'), head: ''
+    };
+    E.fsPath = E.fs.querySelector('path');
+    root.addEventListener('click', function (e) { if (e.target === root) closeBig(); });
+    E.x.addEventListener('click', closeBig);
+    E.fs.addEventListener('click', toggleFs);
+    E.chips.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-v]'); if (!b || !_big.kind) return;
+      _big.hov = null;
+      if (_big.kind === 'st') _big.zone = b.getAttribute('data-v');
+      else setFxCode(b.getAttribute('data-v')); // samme lagrede valg som kortet og omregneren
+      bigRender(true);
+    });
+    E.seg.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-i]'); if (!b || !_big.kind) return;
+      _big.r[_big.kind] = +b.getAttribute('data-i'); _big.hov = null;
+      bigRender(true);
+    });
+    E.state.addEventListener('click', function (e) { if (e.target.closest('.mdb-retry')) bigRetry(); });
+    E.plot.addEventListener('pointermove', onPlotMove);
+    E.plot.addEventListener('pointerdown', onPlotMove);
+    E.plot.addEventListener('pointerleave', onPlotLeave);
+    E.plot.addEventListener('pointercancel', onPlotLeave);
+    document.addEventListener('fullscreenchange', syncFs);
+    /* Antall akse-etiketter og døgnetikettene avhenger av bredden — tegn om etter snuing/endret vindu. */
+    var rs = 0;
+    window.addEventListener('resize', function () {
+      if (!_big.kind) return;
+      clearTimeout(rs);
+      rs = setTimeout(function () { if (_big.kind) bigRender(false); }, 150);
+    });
+    return E;
+  }
+
+  /* Sidens globale Enter-lytter (core.js, «Enter for other calculators») kaller preventDefault
+     på alt som ikke er et skjemafelt, og da trykkes ingen knapp med Enter. Enter stoppes før den
+     når dit — her og i onModalKeydown — uten preventDefault, så knappens egen handling får skje. */
+  function stopEnter(e) { if (e.key === 'Enter') e.stopPropagation(); }
+  function wireBig() {
+    var bs = document.querySelectorAll('[data-big]');
+    for (var i = 0; i < bs.length; i++) {
+      bs[i].addEventListener('click', function () { openBig(this.getAttribute('data-big'), this); });
+      bs[i].addEventListener('keydown', stopEnter);
+    }
+  }
+
+  function openBig(kind, btn) {
+    var E = buildBig();
+    clearTimeout(_bigT);
+    _reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if (!_big.kind) {
+      _big.ov = document.documentElement.style.overflow;
+      document.documentElement.style.overflow = 'hidden'; // siden bak står stille
+      document.addEventListener('keydown', onModalKeydown, true);
+    }
+    _big.kind = kind; _big.hov = null; _big.ret = btn || null;
+    if (kind === 'st') _big.zone = getPlace().sone || 'NO1'; // starter alltid på brukerens egen sone
+    E.head = '';
+    E.root.hidden = false;
+    void E.root.offsetWidth; // reflow, så inn-overgangen faktisk kjører
+    E.root.classList.add('in');
+    E.body.scrollTop = 0;
+    bigRender(true);
+    var on = E.chips.querySelector('[aria-pressed="true"]');
+    if (on) E.chips.scrollLeft = Math.max(0, on.offsetLeft - (E.chips.clientWidth - on.offsetWidth) / 2);
+    try { E.panel.focus({ preventScroll: true }); } catch (e) { E.panel.focus(); }
+  }
+
+  function closeBig() {
+    if (!_big.kind) return;
+    var E = BIG, ret = _big.ret;
+    _big.kind = null; _big.hov = null; _big.M = null; _big.sig = '';
+    document.removeEventListener('keydown', onModalKeydown, true);
+    if (document.fullscreenElement && document.exitFullscreen) { var p = document.exitFullscreen(); if (p && p.catch) p.catch(function () {}); }
+    cancelAnimationFrame(_rvF);
+    E.root.classList.remove('in');
+    document.documentElement.style.overflow = _big.ov || '';
+    _bigT = setTimeout(function () { if (!_big.kind) E.root.hidden = true; }, _reduce ? 0 : 280);
+    if (ret && ret.focus) { try { ret.focus({ preventScroll: true }); } catch (e) { ret.focus(); } }
+  }
+
+  /* Tastatur mens dialogen er åpen: Esc lukker, ← → / Home End blar i punktene,
+     F slår nettleserens fullskjerm av og på, Tab holdes inne i dialogen.
+     Lytter i fangstfasen, så sidens egne snarveier (/ og Ctrl+K til søket)
+     ikke flytter fokus til siden bak. */
+  function onModalKeydown(e) {
+    if (!_big.kind) return;
+    var k = e.key;
+    if (k === 'Escape') { e.preventDefault(); closeBig(); return; }
+    if (k === 'Tab') { trapTab(e); return; }
+    if (k === 'Enter') { stopEnter(e); return; }
+    if (k === '/' || ((e.metaKey || e.ctrlKey) && String(k).toLowerCase() === 'k')) { e.preventDefault(); e.stopPropagation(); return; }
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (k === 'ArrowLeft' || k === 'ArrowRight') { e.preventDefault(); nudge(k === 'ArrowLeft' ? -1 : 1); }
+    else if (k === 'Home' || k === 'End') { e.preventDefault(); nudge(k === 'Home' ? -1e9 : 1e9); }
+    else if ((k === 'f' || k === 'F') && fsOk()) { e.preventDefault(); toggleFs(); }
+  }
+  function trapTab(e) {
+    var f = BIG.panel.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])'), list = [];
+    for (var i = 0; i < f.length; i++) if (f[i].offsetParent !== null && !f[i].disabled) list.push(f[i]);
+    if (!list.length) { e.preventDefault(); return; }
+    var first = list[0], last = list[list.length - 1], a = document.activeElement;
+    if (list.indexOf(a) < 0) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+    else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+  }
+
+  /* Hele siden går i fullskjerm (ikke bare dialogen), så nordlyset fortsatt lyser bak glasset. */
+  function fsOk() { return !!document.documentElement.requestFullscreen; }
+  function toggleFs() {
+    if (document.fullscreenElement) { if (document.exitFullscreen) { var p = document.exitFullscreen(); if (p && p.catch) p.catch(function () {}); } }
+    else if (fsOk()) { var q = document.documentElement.requestFullscreen(); if (q && q.catch) q.catch(function () {}); }
+  }
+  function syncFs() {
+    var E = BIG; if (!E) return;
+    var on = !!document.fullscreenElement, l = on ? ph('Avslutt fullskjerm') : ph('Fullskjerm (F)');
+    E.root.classList.toggle('is-fs', on);
+    E.fs.hidden = !fsOk();
+    E.fs.setAttribute('aria-label', l); E.fs.title = l;
+    E.fsPath.setAttribute('d', on ? FS_ON : FS_OFF);
   }
 
   /* Glatt temperaturkurve: cardinal-spline (Catmull-Rom) → kubiske bezier-segmenter.
@@ -621,140 +909,263 @@
     }
     return d;
   }
-  /* Rutelinje-verdier på pene heltall innenfor [lo,hi] (maks 3-4 linjer). */
-  function niceTicks(lo, hi) {
-    var span = (hi - lo) || 1;
-    var step = span >= 20 ? 10 : span >= 8 ? 5 : span >= 3 ? 2 : 1;
-    var ticks = [], v;
-    for (v = Math.ceil(lo / step) * step; v <= hi + 1e-6 && ticks.length < 5; v += step) ticks.push(v);
-    if (ticks.length < 2) ticks = [hi, (hi + lo) / 2, lo];
-    if (ticks.length > 4) ticks = [ticks[0], ticks[Math.floor(ticks.length / 2)], ticks[ticks.length - 1]];
-    return ticks.map(function (t) { return Math.round(t); });
-  }
-  /* Nøkkeltall-rad: Nå · Maks · Min · Vind (erstatter tekst-caption). */
-  function statCell(lbl, val, unit, dir, isNow) {
-    return '<div class="wx-stat"><div class="wx-stat-lbl">' + lbl + '</div>' +
-      '<div class="wx-stat-val' + (isNow ? ' is-now' : '') + '"><span>' + val + '</span>' +
-      (unit ? '<span class="u">' + unit + '</span>' : '') +
-      (dir ? '<span class="d">' + dir + '</span>' : '') + '</div></div>';
-  }
-  function renderStats(hrs, d) {
-    var els = _modalEls; if (!els) return;
-    if (!hrs.length) { els.stats.innerHTML = ''; return; }
-    var temps = hrs.map(function (h) { return h.temp; });
-    var tmax = Math.round(Math.max.apply(null, temps)), tmin = Math.round(Math.min.apply(null, temps));
-    var windOk = d && typeof d.wind === 'number';
-    els.stats.innerHTML =
-      statCell('Nå', Math.round(hrs[0].temp) + '°', '', '', true) +
-      statCell('Maks', tmax + '°', '', '', false) +
-      statCell('Min', tmin + '°', '', '', false) +
-      statCell('Vind', windOk ? String(Math.round(d.wind)) : '–', windOk ? 'm/s' : '',
-               (windOk && d.dir != null) ? compass(d.dir) : '', false);
+  /* «Pene» akseverdier: trinn på 1 · 2 · 2,5 · 5 × 10^k som dekker [mn, mx].
+     dec = antall desimaler trinnet trenger (2,5 → 1, 25 → 0). */
+  function ticks(mn, mx, want) {
+    var span = (mx - mn) || Math.abs(mx) || 1, p = Math.pow(10, Math.floor(Math.log(span / want) / Math.LN10));
+    var steps = [1, 2, 2.5, 5, 10], step = 10 * p;
+    for (var i = 0; i < steps.length; i++) if (span / (steps[i] * p) <= want) { step = steps[i] * p; break; }
+    var lo = Math.floor(mn / step + 1e-9) * step, hi = Math.ceil(mx / step - 1e-9) * step, arr = [];
+    for (var v = lo; v <= hi + step / 2; v += step) arr.push(+v.toFixed(6));
+    return { lo: arr[0], hi: arr[arr.length - 1], arr: arr, step: step, dec: (String(+step.toFixed(6)).split('.')[1] || '').length };
   }
 
-  /* Stor time-for-time-graf: glatt temperaturkurve + nedbørsøyler (nøytral) + symbolrad
-     + pene rutelinjer + myk «nå»-halo. Bygges fra cachet d.dayHours. */
-  function renderDayGraph(d) {
-    var els = _modalEls; if (!els) return;
-    // Filtrer bort punkter uten gyldig temperatur (null/undefined/NaN/Infinity fra
-    // delvis/korrupt cache) — ellers forgifter ett hull hele Y-skalaen.
-    var hrs = ((d && d.dayHours) || []).filter(function (h) { return h && typeof h.temp === 'number' && isFinite(h.temp); });
-    var sig = JSON.stringify(hrs);
-    if (sig === _graphSig) return; // uendret data (minutt-puls) — ikke bygg SVG på nytt (bevarer hover-scrub)
-    _graphSig = sig;
-    var today = new Date();
-    els.sub.textContent = fill(T('trSharedDateLong', '{wd} {d}. {m}'), { wd: ph(DAGER_FULL[today.getDay()]), d: today.getDate(),
-      m: T('trSharedMonthsLong', MND_LONG.join(',')).split(',')[today.getMonth()] });
-    if (hrs.length < 2) {
-      els.graphHost.innerHTML = '<svg class="wx-graph" viewBox="0 0 760 300" role="img" aria-label="Værdata lastes"><text class="g-empty" x="34" y="150">Værdata lastes …</text></svg>';
-      els.stats.innerHTML = ''; els.sr.textContent = ''; _graphGeo = null; return;
+  /* Topplinja: serie-brikker og tidsrom bygges bare når graf eller språk byttes
+     (ellers mister en tastaturbruker fokus på knappen hen nettopp trykket). */
+  function renderHead(M) {
+    var E = BIG, k = _big.kind, key = k + '|' + document.documentElement.lang;
+    if (E.head !== key) {
+      E.head = key;
+      E.chips.innerHTML = (M.chips || []).map(function (c) {
+        return '<button type="button" class="mdb-chip" data-v="' + c[0] + '" aria-pressed="false">' + esc(c[1]) + '</button>';
+      }).join('');
+      E.seg.innerHTML = RANGES[k].map(function (l, i) {
+        return '<button type="button" data-i="' + i + '" aria-pressed="false">' + esc(ph(l)) + '</button>';
+      }).join('');
+      E.seg.setAttribute('aria-label', ph('Tidsrom'));
+      E.x.setAttribute('aria-label', ph('Lukk')); E.x.title = ph('Lukk (Esc)');
+      E.keys.innerHTML = '<kbd>←</kbd><kbd>→</kbd><span>' + esc(ph('bla')) + '</span><kbd>Esc</kbd><span>' + esc(ph('lukk')) + '</span>' +
+        (fsOk() ? '<kbd>F</kbd><span>' + esc(ph('fullskjerm')) + '</span>' : '');
+      E.weekK.textContent = ph('Neste 7 dager');
     }
-    var W = 760, H = 300, PADL = 34, PADR = 14, plotW = W - PADL - PADR;
-    var TT = 68, TB = 192, ABASE = 200, PBASE = 250; // temp-bånd 68→192, area-baseline 200, nedbør-baseline 250
-    var n = hrs.length;
-    function X(i) { return n <= 1 ? PADL : PADL + (i / (n - 1)) * plotW; }
-    var temps = hrs.map(function (h) { return h.temp; }); // alle endelige tall (filtrert over)
-    var tmin0 = Math.min.apply(null, temps), tmax0 = Math.max.apply(null, temps); // faktiske
-    var tmin = tmin0, tmax = tmax0;
-    if (tmax - tmin < 1) { tmax += 1; tmin -= 1; } // flat dag → gi båndet høyde
-    function Y(t) { return TT + (tmax - t) / (tmax - tmin) * (TB - TT); }
-    var precs = hrs.map(function (h) { return h.precip || 0; });
-    var maxP = Math.max.apply(null, precs), anyP = maxP > 0.05, wettest = 0;
-    for (var wi = 1; wi < precs.length; wi++) if (precs[wi] > precs[wettest]) wettest = wi;
-    var dense = (window.matchMedia && window.matchMedia('(max-width:640px)').matches) ? 4 : 3;
+    E.chips.hidden = !M.chips;
+    if (M.chips) {
+      E.chips.setAttribute('aria-label', M.chipLbl);
+      for (var i = 0; i < M.chips.length; i++) E.chips.children[i].setAttribute('aria-pressed', M.chips[i][2] ? 'true' : 'false');
+    }
+    for (var j = 0; j < E.seg.children.length; j++) E.seg.children[j].setAttribute('aria-pressed', j === M.r ? 'true' : 'false');
+    syncFs();
+  }
 
-    // glatt kurve + fylt areal ned til area-baseline
-    var pts = hrs.map(function (h, i) { return [X(i), Y(h.temp)]; });
-    var line = smoothPath(pts);
-    var area = line + ' L' + X(n - 1).toFixed(1) + ',' + ABASE + ' L' + X(0).toFixed(1) + ',' + ABASE + ' Z';
+  /* Full tegning: topplinje, tall, akser, graf, nøkkeltall og kilde. anim = la linja
+     feie inn og søylene reise seg (ved åpning og bytte av serie/tidsrom). */
+  function bigRender(anim, M) {
+    var E = BIG;
+    M = M || bigModel();
+    _big.M = M; _big.sig = M.sig;
+    if (_big.hov != null && (M.state !== 'ok' || _big.hov >= M.n)) _big.hov = null;
+    E.panel.setAttribute('aria-label', M.title || M.eye);
+    E.eye.textContent = M.eye;
+    renderHead(M);
+    E.unit.textContent = M.unit;
+    E.src.textContent = M.foot;
+    var ok = M.state === 'ok';
+    E.state.hidden = ok;
+    if (ok) drawChart(M, anim && !_reduce);
+    else {
+      E.plot.innerHTML = ''; E.y.innerHTML = ''; E.xax.innerHTML = ''; E.stats.innerHTML = '';
+      E.val.textContent = '–'; E.sub.textContent = '';
+      E.state.innerHTML = '<p>' + esc(M.msg) + '</p>' +
+        (M.state === 'err' ? '<button type="button" class="mdb-retry">' + esc(ph('Prøv igjen')) + '</button>' : '');
+    }
+    var wk = M.kind === 'wx' && M.week && M.week.length;
+    E.week.hidden = !wk;
+    E.body.classList.toggle('has-week', !!wk);
+    if (wk) renderWeek(M.week);
+    /* Ruller innholdet (lav skjerm, stor zoom), må tastaturet kunne nå det med Tab og rulle med piltastene. */
+    E.body.tabIndex = E.body.scrollHeight > E.body.clientHeight + 1 ? 0 : -1;
+    E.body.setAttribute('aria-label', M.title || M.eye);
+    bigSelect();
+  }
 
-    var g = '';
-    niceTicks(tmin0, tmax0).forEach(function (v) {
-      var gy = Y(v);
-      g += '<line class="g-grid" x1="' + PADL + '" y1="' + gy.toFixed(1) + '" x2="' + (W - PADR) + '" y2="' + gy.toFixed(1) + '"/>';
-      g += '<text class="y-lbl" x="' + (PADL - 8) + '" y="' + (gy + 3.5).toFixed(1) + '" text-anchor="end">' + v + '°</text>';
+  function drawChart(M, anim) {
+    var E = BIG, v = M.v, n = M.n, mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), T;
+    if (M.line) {
+      /* Litt luft over og under linja, men aldri under null for serier som ikke kan bli negative. */
+      T = ticks(mn, mx, 4);
+      if (mn - T.lo < T.step * 0.2 && !(mn >= 0 && T.lo - T.step < 0)) T.arr.unshift(T.lo = +(T.lo - T.step).toFixed(6));
+      if (T.hi - mx < T.step * 0.2) T.arr.push(T.hi = +(T.hi + T.step).toFixed(6));
+    } else T = ticks(Math.min(0, mn), Math.max(0, mx), 4); // søyler står alltid på null — også når prisen er negativ
+    var span = (T.hi - T.lo) || 1;
+    function Y(x) { return (1 - (x - T.lo) / span) * 400; }
+    function X(i) { return M.line ? (n > 1 ? i / (n - 1) * 1000 : 500) : (i + 0.5) / n * 1000; }
+    function sx(i) { return M.line ? X(i) : i / n * 1000; } // døgnskille: mellom to søyler
+    M.X = X; M.Y = Y;
+
+    /* Snitt-merket står i samme kolonne som akseverdiene: en verdi under 16 px fra det skjules. */
+    var yl = '', grid = '', hpx = E.plot.clientHeight, ayv = M.avg ? Y(M.avgV) : null;
+    T.arr.forEach(function (t) {
+      var y = Y(t).toFixed(1), hid = ayv != null && Math.abs(Y(t) - ayv) / 400 * hpx < 16;
+      yl += '<span class="mdb-yl" style="top:' + pctY(y) + (hid ? ';visibility:hidden' : '') + '">' + nb(t, T.dec) + '</span>';
+      grid += '<line class="' + (t === 0 && T.lo < 0 ? 'z' : 'g') + '" x1="0" y1="' + y + '" x2="1000" y2="' + y + '"/>';
     });
-    g += '<path class="g-area" d="' + area + '" fill="url(#wxGraphFill)"/>';
-    g += '<path class="g-line" d="' + line + '"/>';
-    // nedbør: baseline + søyler (nøytral ink)
-    g += '<line class="g-grid" x1="' + PADL + '" y1="' + PBASE + '" x2="' + (W - PADR) + '" y2="' + PBASE + '"/>';
-    if (anyP) {
-      hrs.forEach(function (h, i) {
-        var p = h.precip || 0; if (p <= 0.05) return;
-        var bh = Math.max(2, Math.min(30, p / maxP * 30));
-        g += '<rect class="g-precip" x="' + (X(i) - 3).toFixed(1) + '" y="' + (PBASE - bh).toFixed(1) + '" width="6" height="' + bh.toFixed(1) + '" rx="1"/>';
+    grid += '<line class="b" x1="0" y1="399.5" x2="1000" y2="399.5"/>';
+    if (!M.line && M.nowIdx != null) { var nx = X(M.nowIdx).toFixed(1); grid += '<line class="nw" x1="' + nx + '" y1="0" x2="' + nx + '" y2="400"/>'; }
+
+    /* Døgnskiller (midnatt i værvarselet, hver dag i ukesvisningen) — annenhver dag får et svakt bånd. */
+    var edges = [0], bands = '', days = '';
+    M.seps.forEach(function (s) {
+      edges.push(sx(s[0]));
+      days += '<span class="mdb-day' + (s[1] ? ' has-l' : '') + '" style="left:' + pct(sx(s[0])) + '">' + (s[1] ? '<span>' + esc(s[1]) + '</span>' : '') + '</span>';
+    });
+    edges.push(1000);
+    for (var j = 1; j < edges.length - 1; j += 2) bands += '<span class="mdb-band" style="left:' + pct(edges[j]) + ';width:' + pct(edges[j + 1] - edges[j]) + '"></span>';
+
+    var html = '<span class="mdb-light"></span>' + bands +
+      '<svg class="mdb-svg mdb-grid" viewBox="0 0 1000 400" preserveAspectRatio="none">' + grid + '</svg>' + days;
+    if (M.line) {
+      var pts = v.map(function (x, i) { return [X(i), Y(x)]; }), line = smoothPath(pts), area = line + ' L1000,400 L0,400 Z';
+      var topY = Math.min.apply(null, pts.map(function (q) { return q[1]; })).toFixed(1);
+      var gx = M.kind === 'wx' ? ['1000', '0'] : ['0', '1000']; // fiolett ende = lengst fra «nå»
+      var rain = '';
+      if (M.p) {
+        /* Nedbør nederst: høyden skaleres mot minst 2 mm/t, så yr ikke ser ut som styrtregn.
+           Søyla står midt i timen den gjelder (fra punktet til neste); siste punkt er periodens slutt. */
+        var pmax = Math.max(2, Math.max.apply(null, M.p)), hw = 1000 / (n - 1);
+        M.p.forEach(function (mm, i) {
+          if (mm > 0 && i < n - 1) rain += '<span class="mdb-rain" style="left:' + pct(X(i) + hw / 2) + ';width:calc(' + (62 / (n - 1)).toFixed(3) + '% - 1px);height:' + (mm / pmax * 22).toFixed(2) + '%"></span>';
+        });
+      }
+      /* To kopier av linja og flaten: én dempet, én klippet ved pekeren — slik blir alt til høyre for pekeren dempet. */
+      html += '<div class="mdb-rev">' +
+        '<svg class="mdb-svg" viewBox="0 0 1000 400" preserveAspectRatio="none"><defs>' +
+          '<linearGradient id="mdbFill" gradientUnits="userSpaceOnUse" x1="0" y1="' + topY + '" x2="0" y2="400">' +
+          '<stop offset="0" stop-color="currentColor" stop-opacity=".24"/><stop offset=".6" stop-color="currentColor" stop-opacity=".05"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient>' +
+          '<clipPath id="mdbCutA"><rect class="mdb-cut" x="-40" y="-80" width="1200" height="560"/></clipPath></defs>' +
+          '<path class="mdb-dim" d="' + area + '" fill="url(#mdbFill)"/><path d="' + area + '" fill="url(#mdbFill)" clip-path="url(#mdbCutA)"/></svg>' +
+        '<svg class="mdb-svg mdb-line" viewBox="0 0 1000 400" preserveAspectRatio="none"><defs>' +
+          '<linearGradient id="mdbInk" gradientUnits="userSpaceOnUse" x1="' + gx[0] + '" y1="0" x2="' + gx[1] + '" y2="0">' +
+          '<stop offset="0" style="stop-color:var(--mdb-ink-a)"/><stop offset=".55" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--accent-2)"/></linearGradient>' +
+          '<clipPath id="mdbCutL"><rect class="mdb-cut" x="-40" y="-80" width="1200" height="560"/></clipPath></defs>' +
+          '<path class="mdb-dim" d="' + line + '" stroke="url(#mdbInk)"/><path d="' + line + '" stroke="url(#mdbInk)" clip-path="url(#mdbCutL)"/></svg>' +
+        rain + '</div>';
+    } else {
+      /* Søyler fra nullinja: positive opp, negative ned. Gradienten strekkes over hele
+         den positive høyden, så fargen sier hvor høy prisen er, ikke hvor høy søyla er.
+         Også passerte timer får gradienten: velges en av dem, vises den i full farge. */
+      var zy = Y(0), thin = n > 48, bars = '';
+      v.forEach(function (x, i) {
+        var top = x >= 0 ? Y(x) : zy, h = Math.abs(Y(x) - zy);
+        if (h < 2.4) { h = 2.4; if (x >= 0) top = zy - 2.4; }
+        var past = M.nowIdx != null && i < M.nowIdx, neg = x < 0;
+        bars += '<span class="mdb-bar' + (past ? ' is-past' : '') + (neg ? ' is-neg' : '') + (thin ? ' is-thin' : '') + '" style="left:' +
+          (thin ? (i / n * 100).toFixed(4) + '%;width:calc(' + (100 / n).toFixed(4) + '% - var(--bgap))' : ((i + 0.07) / n * 100).toFixed(4) + '%;width:' + (86 / n).toFixed(4) + '%') +
+          ';top:' + pctY(top) + ';height:' + pctY(h) + (neg ? '' : ';background-size:100% ' + (zy / h * 100).toFixed(1) + '%') +
+          ';--d:' + (120 + Math.round(i / n * 420)) + 'ms"></span>';
       });
-      g += '<text class="p-cap" x="' + PADL + '" y="' + (PBASE - 34) + '">Nedbør</text>';
-      g += '<text class="p-lbl" x="' + X(wettest).toFixed(1) + '" y="' + (PBASE - 34) + '" text-anchor="middle">' + nb(maxP, 1) + ' mm</text>';
+      html += '<div class="mdb-bars">' + bars + '</div>';
     }
-    // symbolrad (hver 3./4. time), «nå» aksentfarget. Nested SVG MÅ ha eksplisitt størrelse.
-    hrs.forEach(function (h, i) {
-      if (i % dense !== 0) return;
-      var ic = wxIcon(h.sym).replace('<svg ', '<svg width="20" height="20" x="' + (X(i) - 10).toFixed(1) + '" y="9" ');
-      g += '<g class="g-sym' + (i === 0 ? ' is-now' : '') + '">' + ic + '</g>';
-    });
-    // time-etiketter («nå» aksentfarget)
-    hrs.forEach(function (h, i) {
-      if (i % dense !== 0) return;
-      var lbl = i === 0 ? 'nå' : String(h.hour).padStart(2, '0');
-      g += '<text class="x-lbl' + (i === 0 ? ' x-now' : '') + '" x="' + X(i).toFixed(1) + '" y="272" text-anchor="middle">' + lbl + '</text>';
-    });
-    // skjult skrubbe-linje (hover-avlesning)
-    g += '<line class="g-scrub" id="wxScrubLine" x1="0" y1="' + TT + '" x2="0" y2="' + PBASE + '"/>';
-    // «nå»-markør: myk halo-prikk (3 konsentriske sirkler) på kurven
-    var nx = X(0).toFixed(1), ny = Y(hrs[0].temp).toFixed(1);
-    g += '<circle class="g-now-halo" cx="' + nx + '" cy="' + ny + '" r="6.5"/>' +
-         '<circle class="g-now-mid" cx="' + nx + '" cy="' + ny + '" r="4.5"/>' +
-         '<circle class="g-now-dot" cx="' + nx + '" cy="' + ny + '" r="3"/>';
+    var tags = '';
+    if (M.avg) {
+      var ay = pctY(Y(M.avgV));
+      html += '<span class="mdb-avg" style="top:' + ay + '"></span>';
+      tags += '<span class="mdb-tag is-avg" style="top:' + ay + '"><b>' + nb(M.avgV, M.ydec) + '</b></span>';
+    }
+    html += '<span class="mdb-vx"></span><span class="mdb-hx"></span><span class="mdb-pulse"></span><span class="mdb-dot"></span>' +
+      tags + '<span class="mdb-tag mdb-ytag"><b></b></span>';
+    if (!M.line && M.nowIdx != null) html += '<span class="mdb-now" style="left:' + pct(X(M.nowIdx)) + '">' + esc(ph('Nå')) + '</span>';
 
-    var aria = fill(T('trSharedWxGraphAria', 'Temperatur time for time. Nå {now} grader, maks {max}, min {min} grader'),
-      { now: Math.round(hrs[0].temp), max: Math.round(tmax0), min: Math.round(tmin0) }) + (anyP ? T('trSharedWxGraphRain', ', noe nedbør') : '');
-    els.graphHost.innerHTML =
-      '<svg class="wx-graph" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="' + esc(aria) + '">' +
-        '<defs><linearGradient id="wxGraphFill" x1="0" y1="0" x2="0" y2="1">' +
-          '<stop offset="0" class="gf-a"/><stop offset="1" class="gf-b"/>' +
-        '</linearGradient></defs>' + g + '</svg>';
-    els.sr.textContent = aria;
-    renderStats(hrs, d);
-
-    var geo = { n: n, xs: [], ys: [], hours: hrs, vbW: W, vbH: H };
-    for (var gi = 0; gi < n; gi++) { geo.xs.push(X(gi)); geo.ys.push(Y(hrs[gi].temp)); }
-    _graphGeo = geo;
+    if (anim) E.chart.classList.add('mdb-pre'); // startpunktet for inn-animasjonen, satt FØR nye noder tegnes
+    E.y.innerHTML = yl;
+    E.plot.innerHTML = html;
+    E.xax.innerHTML = M.ax.map(function (a) {
+      var x = X(a[0]), al = x < 30 ? 0 : x > 970 ? 2 : 1;
+      return '<span class="mdb-xl" style="left:' + pct(x) + ';transform:translateX(' + ['0', '-50%', '-100%'][al] + ')">' + esc(a[1]) +
+        '<i style="left:' + ['0%', '50%', '100%'][al] + '"></i></span>';
+    }).join('');
+    E.stats.innerHTML = M.stats.map(function (s) {
+      return '<div class="mdb-stat"><span>' + esc(s[0]) + '</span><div><b>' + esc(s[1]) + '</b><small>' + esc(s[2]) + '</small></div></div>';
+    }).join('');
+    /* Døgnetiketten som ikke får plass til høyre for streken, settes på venstre side. */
+    var pr = E.plot.getBoundingClientRect().right, dl = E.plot.querySelectorAll('.mdb-day > span');
+    for (var di = 0; di < dl.length; di++) if (dl[di].getBoundingClientRect().right > pr) dl[di].parentNode.classList.add('is-flip');
+    function q(s) { return E.plot.querySelector(s); }
+    E.cuts = E.plot.querySelectorAll('.mdb-cut'); E.bars = E.plot.querySelectorAll('.mdb-bar'); E.selBar = null;
+    E.vx = q('.mdb-vx'); E.hx = q('.mdb-hx'); E.dot = q('.mdb-dot'); E.pulse = q('.mdb-pulse'); E.light = q('.mdb-light'); E.ytag = q('.mdb-ytag');
+    cancelAnimationFrame(_rvF);
+    if (anim) {
+      void E.chart.offsetWidth;
+      _rvF = requestAnimationFrame(function () { _rvF = requestAnimationFrame(function () { E.chart.classList.remove('mdb-pre'); }); });
+    } else E.chart.classList.remove('mdb-pre');
   }
 
-  /* Neste 7 dager: typografisk tabell (dag · symbol · maks/min-stolpe · temp). */
-  function renderWeek(d) {
-    var els = _modalEls; if (!els) return;
-    var wk = (d && d.week) || [];
-    var wsig = JSON.stringify(wk);
+  /* Valgt punkt: under pekeren/piltasten, ellers modellens standardpunkt (nå / siste kurs).
+     Flytter bare markørene — grafen tegnes ikke på nytt mens pekeren beveger seg. */
+  function bigSelect() {
+    var E = BIG, M = _big.M; if (!E || !M) return;
+    var H = _big.hov, hov = H != null, sel = hov ? H : M.def;
+    E.plot.classList.toggle('is-hov', hov);
+    E.tip.classList.toggle('is-on', hov && M.state === 'ok');
+    if (M.state !== 'ok') return;
+    E.val.textContent = sel != null ? M.valOf(sel) : M.val0;
+    E.sub.textContent = hov ? M.subOf(H) : M.sub0;
+    if (E.selBar) E.selBar.classList.remove('on');
+    E.selBar = null;
+    function vis(el, on) { el.classList.toggle('is-on', !!on); }
+    var cx = sel != null ? M.X(sel) : 0;
+    for (var i = 0; i < E.cuts.length; i++) E.cuts[i].setAttribute('width', hov && M.line ? (cx + 40).toFixed(1) : '1200');
+    vis(E.vx, hov && M.line); vis(E.hx, hov); vis(E.ytag, hov);
+    vis(E.dot, sel != null && M.line); vis(E.pulse, sel != null && M.line && !hov); vis(E.light, sel != null);
+    if (sel == null) return;
+    var cy = M.Y(M.v[sel]), L = pct(cx), Tp = pctY(cy), dd = (0.2 + cx / 1000 * 0.6).toFixed(2) + 's';
+    E.vx.style.left = E.dot.style.left = E.pulse.style.left = L;
+    E.hx.style.top = E.dot.style.top = E.pulse.style.top = E.ytag.style.top = Tp;
+    E.dot.style.setProperty('--dd', dd); E.pulse.style.setProperty('--dd', dd);
+    E.light.style.background = 'radial-gradient(32% 44% at ' + L + ' ' + Tp + ', rgba(var(--glow-rgb), .1), transparent 72%)';
+    E.ytag.firstChild.textContent = nb(M.v[sel], M.ydec);
+    if (!M.line && E.bars[sel]) { E.selBar = E.bars[sel]; E.selBar.classList.add('on'); }
+    if (hov) {
+      E.tip.firstChild.textContent = M.label(H);
+      E.tip.lastChild.textContent = M.tipV(H);
+      /* Holdes innenfor grafen; kan stikke inn over Y-aksen til venstre (56 px). */
+      var w = E.pc.clientWidth, tw = E.tip.offsetWidth;
+      E.tip.style.left = Math.max(tw / 2 - 56, Math.min(w - tw / 2, cx / 1000 * w)) + 'px';
+    }
+  }
+
+  /* Minutt-pulsen og nye data: tegn bare om når modellen faktisk er endret.
+     Inn-animasjonen spilles bare når grafen går fra «henter»/feil til data. */
+  function bigRefresh() {
+    if (!_big.kind || !BIG) return;
+    var M = bigModel();
+    if (M.sig === _big.sig) return;
+    bigRender(!_big.M || _big.M.state !== 'ok', M);
+  }
+
+  function nudge(d) {
+    var M = _big.M; if (!M || M.state !== 'ok') return;
+    var cur = _big.hov != null ? _big.hov : M.def != null ? M.def : (d > 0 ? -1 : M.n);
+    _big.hov = Math.max(0, Math.min(M.n - 1, cur + d));
+    bigSelect();
+    BIG.live.textContent = M.label(_big.hov) + ': ' + M.tipV(_big.hov);
+  }
+  function onPlotMove(e) {
+    var M = _big.M; if (!M || M.state !== 'ok') return;
+    var r = BIG.plot.getBoundingClientRect(), f = Math.max(0, Math.min(1, (e.clientX - r.left) / (r.width || 1)));
+    var i = M.line ? Math.round(f * (M.n - 1)) : Math.min(M.n - 1, Math.floor(f * M.n));
+    if (i !== _big.hov) { _big.hov = i; bigSelect(); }
+  }
+  function onPlotLeave() { if (_big.hov != null) { _big.hov = null; bigSelect(); } }
+
+  function bigRetry() {
+    var k = _big.kind;
+    if (k === 'wx') { _wxFail = false; loadWeather(getPlace(), true); }
+    else if (k === 'st') { for (var key in _stDays) if (_stDays[key].d === false) delete _stDays[key]; }
+    else delete _fxYFail[_fxCode];
+    bigRender(true);
+    BIG.panel.focus(); // knappen forsvant med feilmeldingen
+  }
+
+  /* Neste 7 dager (under grafen i værvisningen): typografisk tabell (dag · symbol · maks/min-stolpe · temp). */
+  function renderWeek(wk) {
+    var wsig = JSON.stringify(wk) + document.documentElement.lang;
     if (wsig === _weekSig) return; // uendret ukesvarsel (minutt-puls) — ikke bygg på nytt
     _weekSig = wsig;
-    if (!wk.length) { els.weekHost.innerHTML = ''; return; }
     var gMin = Infinity, gMax = -Infinity;
     wk.forEach(function (w) { if (w.min < gMin) gMin = w.min; if (w.max > gMax) gMax = w.max; });
     var gRng = (gMax - gMin) || 1, html = '';
     wk.forEach(function (w, i) {
-      var name = i === 0 ? 'I dag' : DAGER_FULL[w.dow];
+      var name = i === 0 ? ph('I dag') : ph(DAGER_FULL[w.dow]);
       var L = (w.min - gMin) / gRng * 100, Wd = (w.max - w.min) / gRng * 100;
       if (Wd < 4) Wd = 4;
       html += '<li class="wx-week-row' + (i === 0 ? ' is-today' : '') + '">' +
@@ -764,37 +1175,7 @@
         '<span class="wx-week-t">' + Math.round(w.max) + '°<span class="sl">/</span><span class="mn">' + Math.round(w.min) + '°</span></span>' +
         '</li>';
     });
-    els.weekHost.innerHTML = html;
-  }
-
-  /* Hover-avlesning (kun presise pekere): snapper en tynn linje + en liten
-     chip til nærmeste time. Ingen touch-scrubbing (så mobil-arket scroller fritt). */
-  function wireScrub() {
-    var els = _modalEls; if (!els) return;
-    var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-    if (!fine) return;
-    var wrap = els.graphHost.parentNode;
-    wrap.addEventListener('pointermove', function (e) {
-      if (!_graphGeo) return;
-      var svg = els.graphHost.querySelector('svg'); if (!svg) return;
-      var rect = svg.getBoundingClientRect(), wrapRect = wrap.getBoundingClientRect();
-      var vbx = (e.clientX - rect.left) / rect.width * 720;
-      var best = 0, bd = Infinity;
-      for (var i = 0; i < _graphGeo.n; i++) { var dd = Math.abs(_graphGeo.xs[i] - vbx); if (dd < bd) { bd = dd; best = i; } }
-      var line = svg.querySelector('#wxScrubLine');
-      if (line) { line.setAttribute('x1', _graphGeo.xs[best].toFixed(1)); line.setAttribute('x2', _graphGeo.xs[best].toFixed(1)); line.classList.add('on'); }
-      var h = _graphGeo.hours[best];
-      els.scrub.innerHTML = '<b>' + (best === 0 ? 'nå' : String(h.hour).padStart(2, '0') + ':00') + '</b> · ' +
-        Math.round(h.temp) + '°' + (h.precip > 0.05 ? ' · <span class="mut">' + nb(h.precip, 1) + ' mm</span>' : '');
-      els.scrub.style.left = ((rect.left - wrapRect.left) + _graphGeo.xs[best] / _graphGeo.vbW * rect.width) + 'px';
-      els.scrub.style.top = ((rect.top - wrapRect.top) + _graphGeo.ys[best] / _graphGeo.vbH * rect.height) + 'px';
-      els.scrub.classList.add('on');
-    });
-    wrap.addEventListener('pointerleave', function () {
-      els.scrub.classList.remove('on');
-      var svg = els.graphHost.querySelector('svg'), line = svg && svg.querySelector('#wxScrubLine');
-      if (line) line.classList.remove('on');
-    });
+    BIG.weekList.innerHTML = html;
   }
 
   /* ════════════════════ VALUTA (Norges Bank EXR) ═════════════════════ */
@@ -1050,7 +1431,6 @@
     p.sone = soneFor(p.kommunenr, p.fylkesnr);
     cacheSet('place', p);
     setText('wxPlaceName', p.navn);
-    setText('wxModalPlace', p.navn); // hold fullskjerm-tittelen i synk (no-op om modal ikke bygd)
     loadWeather(p, true);
     loadStrom(p, true);
   }
@@ -1158,6 +1538,7 @@
     if (document.hidden) return;
     var p = getPlace();
     loadWeather(p, false); loadFx(false); loadRate(false); loadStrom(p, false);
+    if (_big.kind) bigRefresh(); // åpen fullskjermgraf: ny «nå»-time, passerte timer ut
   }
 
   /* ── Init ────────────────────────────────────────────────────── */
@@ -1165,21 +1546,21 @@
     var place = getPlace();
     _fxCode = getFxCode();
     setText('wxPlaceName', place.navn);
-    buildStamp(); buildPicker(); buildGeo(); buildExpand(); buildScrubs();
+    buildStamp(); buildPicker(); buildGeo(); wireBig(); buildScrubs();
     buildCurMenu($('fxPickBtn'), $('fxCard')); buildConverter();
     loadWeather(place, false); loadFx(false); loadRate(false); loadStrom(place, false);
     setInterval(tick, 60 * 1000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
     /* core.js setter lang på <html> når en språkfil er lastet. Malene over leses med T() når
        panelet tegnes, så tegn på nytt fra dataene som alt vises (uten ny henting) — også i en
-       bakgrunnsfane, der tick() står over. Dag-grafen bygges ellers bare på nytt ved nye data. */
+       bakgrunnsfane, der tick() står over. Fullskjermgrafens signatur inneholder språket. */
     new MutationObserver(function () {
-      var rate = cacheGet('rate'); _graphSig = '';
+      var rate = cacheGet('rate');
       if (_lastWx) renderWeather(_lastWx);
       if (_fx) renderFx(_fx);
       if (rate) renderRate(rate.d);
       if (_strom) renderStrom(_strom, getPlace().sone || 'NO1');
-      if (_modalOpen) modalStamp();
+      if (_big.kind) bigRefresh();
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
   }
 
