@@ -2319,6 +2319,12 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
   .intro-veil{display:none !important}
   .search-shell::after,.daily-frame::after{display:none !important}
 }
+
+/* ── Gjenbesøk i samme økt: ingen intro, tittel, søk og meny står der med en gang ── */
+body.introSeen .enter,
+body.introSeen .rise{animation:none;opacity:1;transform:none;transition:none}
+body.introSeen [data-headline] .word-inner{opacity:1;transform:none;transition:none}
+body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 0}
 </style>
 </head>
 <body class="atmo-on">
@@ -2327,6 +2333,12 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
    seg igjen når klassen kommer på. */
 (function(){
   if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  /* Introen spilles bare første gang per besøk (fanen). Ved oppdatering, eller
+     når man kommer tilbake fra en underside, står alt der med en gang (introSeen). */
+  try{
+    if(sessionStorage.getItem('hvt-intro')){ document.body.classList.add('introSeen'); return; }
+    sessionStorage.setItem('hvt-intro', '1');
+  }catch(e){}
   document.body.classList.add('introAct');
   document.body.insertAdjacentHTML('afterbegin', '<div class="intro-veil" aria-hidden="true"></div>');
 })();
@@ -3185,6 +3197,12 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
       h.classList.add('play');
       var riseAt = Math.max(420, total - 400);
       setTimeout(function(){ document.body.classList.add('heroLanded'); }, riseAt);
+    }
+
+    if(document.body.classList.contains('introSeen')){
+      h.classList.add('play');
+      document.body.classList.add('heroLanded');
+      return;
     }
 
     if(REDUCE_MOTION){

@@ -1,30 +1,28 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v263';
+const CACHE_NAME = 'hverdagsverktoy-v265';
 
 // Files to cache on SW install for offline use.
 // Lang files are NOT precached — they'd add ~2.5 MB to install cost and most users
 // only need 1 of 10. The fetch handler caches them on-demand (stale-while-revalidate).
 // style.css is NOT precached either — only translated subtrees (en/, pl/, ar/, ...)
 // and /om/ load it; norske hovedside-tre har inline CSS. Fetched on-demand for users who navigate there.
+// Versioned files (core.js?v=, search.js?v=, search-intents.js?v=) are NOT precached
+// either: the page loads them under the ?v= URL, so precaching the bare URL meant a
+// second full download (~150 KB gzip on a first visit). The fetch handler caches them
+// on the next request instead, straight from the browser's HTTP cache.
 const PRECACHE_URLS = [
   './',
-  './manifest.json',
-  './shared/core.js',
-  './shared/search.js',
-  './shared/search-intents.js'
+  './manifest.json'
 ];
 
-// Flag images (external CDN) — precached so language dropdown renders instantly
+// Flag images (external CDN) — precached so language dropdown renders instantly.
+// Only the languages the menu shows; lt/so/ti/zh are hidden in top-chrome.js.
 const FLAG_URLS = [
   'https://flagcdn.com/w80/no.png',
   'https://flagcdn.com/w80/gb.png',
   'https://flagcdn.com/w80/pl.png',
   'https://flagcdn.com/w80/ua.png',
   'https://flagcdn.com/w80/sa.png',
-  'https://flagcdn.com/w80/lt.png',
-  'https://flagcdn.com/w80/so.png',
-  'https://flagcdn.com/w80/er.png',
-  'https://flagcdn.com/w80/cn.png',
   'https://flagcdn.com/w80/fr.png'
 ];
 
@@ -83,8 +81,7 @@ self.addEventListener('fetch', event => {
   }
 
   // Cache-first for local files.
-  // ignoreSearch: true lets precached URLs (./shared/core.js) match versioned
-  // requests (/shared/core.js?v=v20) so precache still works after cache-bust bumps.
+  // ignoreSearch: true lets a cached URL match the same file with another query string.
   event.respondWith(
     caches.match(event.request, { ignoreSearch: true })
       .then(cached => {
