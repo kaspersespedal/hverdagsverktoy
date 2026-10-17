@@ -5,8 +5,8 @@
 
    Bakgrunn (2026-10-17, forsøk): no.js er 407 KB (116 KB komprimert) og
    lastes på alle sider, men /skatt/inntekt/ og /boliglan/mor/ leser bare
-   188 av 3 655 nøkler. Disse to sidene laster no-lett.js i stedet:
-   3 KB komprimert, kalkulatoren klar ~0,85 s tidligere på telefon.
+   230 av 3 655 nøkler. Disse to sidene laster no-lett.js i stedet:
+   ~4 KB komprimert, kalkulatoren klar ~0,85 s tidligere på telefon.
 
    Nøklene hentes fra to steder:
    1. nøklene som står i no-lett.js fra før (funnet ved å spore hvilke
@@ -27,7 +27,18 @@ const vm = require('vm');
 const ROOT = path.resolve(__dirname, '..');
 const PAGES = ['skatt/inntekt/index.html', 'boliglan/mor/index.html'];
 const OUT = path.join(ROOT, 'shared/lang/no-lett.js');
-const NEW_KEYS = [];
+// Funnet i kontrollrunden 2026-10-17: nøkler som delte filer leser, men som
+// første sporing ikke traff. Koden har i dag samme norske reservetekst.
+const NEW_KEYS = [
+  // timer.js (nedtellingen i toppmenyen): start, pause, ferdig, lyd av, skjermleser
+  'timerAgain', 'timerPause', 'timerResume', 'timerSoundOff', 'timerSrDone', 'timerSrPaused',
+  'timerSrReset', 'timerSrStarted', 'timerStateDone', 'timerStatePaused', 'timerStateRunning',
+  // core.js switchCalcMode/getFcConfigs: bare når adressen slutter på f.eks. #finance
+  'cmBasic', 'cmFinance', 'cmScientific', 'cmUnit', 'fcBe', 'fcCompound', 'fcCost', 'fcDiscPct',
+  'fcDiscount', 'fcFixed', 'fcFreq', 'fcMargin', 'fcOrig', 'fcPmt', 'fcPriceU', 'fcPrinc', 'fcPv',
+  'fcRate', 'fcSell', 'fcTvm', 'fcVarCost', 'fcYears', 'lblAga', 'lblAvs', 'lblFerie', 'lblLikvid',
+  'lblLvu', 'lblPensjon', 'lblRente', 'lblValgevinst', 'npvTitle'
+];
 
 function load(file) {
   const ctx = { REGIONS: {}, window: {}, document: {} };
