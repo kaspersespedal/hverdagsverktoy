@@ -1991,7 +1991,7 @@
 <script src="/shared/lang/no.js?v=v232" defer></script>
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v248" defer></script>
-<script src="/shared/atmosphere.js?v=v6" defer></script>
+<script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/markedsdata.js?v=v16" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
@@ -3235,44 +3235,6 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
       });
     }, {threshold:0.4});
     io.observe(stamp);
-  })();
-
-  // ── Cursor-anchored light — lerp 0.06, lags 200–400ms ─────
-  (function(){
-    var WIDE = matchMedia('(min-width: 1024px)').matches;
-    var light = document.getElementById('cursorLight');
-    if(!light) return;
-    if(REDUCE_MOTION || !WIDE){ light.style.display = 'none'; return; }
-
-    var targetX = window.innerWidth  / 2;
-    var targetY = window.innerHeight / 2;
-    var curX = targetX, curY = targetY;
-    var raf = null, paused = false;
-
-    function tick(){
-      if(paused){ raf = null; return; }
-      curX += (targetX - curX) * 0.06;
-      curY += (targetY - curY) * 0.06;
-      light.style.transform =
-        'translate3d(' + curX.toFixed(2) + 'px,' + curY.toFixed(2) + 'px,0)';
-      if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
-        raf = requestAnimationFrame(tick);
-      } else { raf = null; }
-    }
-    function onMove(e){
-      targetX = e.clientX; targetY = e.clientY;
-      if(!raf && !paused) raf = requestAnimationFrame(tick);
-    }
-    window.addEventListener('mousemove', onMove, {passive:true});
-    document.addEventListener('visibilitychange', function(){
-      paused = document.hidden;
-      if(paused){ if(raf){ cancelAnimationFrame(raf); raf = null; } }
-      else if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
-        raf = requestAnimationFrame(tick);
-      }
-    });
-    light.style.transform =
-      'translate3d(' + targetX + 'px,' + targetY + 'px,0)';
   })();
 
   // Språk: tekst og maler fra språkfila via R() (core.js), med norsk som reserve.
@@ -5218,7 +5180,7 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
     var tex = null, fbo = null, quadBuf = null, starBuf = null, moonAlbTex = null, moonNrmTex = null, moonAsked = false;
     var pendingProgs = [], bindUniforms = null, ensureScene = null;
     var SCENES = {}, COMPS = {}, scene = null, starsLinked = false;   // programmer per scene, se ensureScene
-    var raf = 0, last = 0, t = 20 + Math.random() * 80, tr = t, shown = false, retryT = 0;
+    var raf = 0, rafT = 0, last = 0, t = 20 + Math.random() * 80, tr = t, shown = false, retryT = 0;
     var ampNow = CONFIG.INTENSITY, actNow = 0, revealOn = false, revealMs = 0, revealPending = false, revealDone = false;
     var mx = 0.5, my = 0.35, tmx = 0.5, tmy = 0.35, mAmt = 0, tmAmt = 0;
     var aw = 2, ah = 2, starCount = 0, starsDirty = true, maxPt = 64;
@@ -5425,13 +5387,23 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
     function resume() {
       if (!dead && started && gl && !raf && !isStatic && !document.hidden && canvasVisible()) { last = performance.now(); raf = requestAnimationFrame(tick); }
     }
-    function pause() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
+    function pause() { if (raf) { cancelAnimationFrame(raf); clearTimeout(rafT); raf = rafT = 0; } }
+
+    // Vekk hovedtråden først rett før neste bilde skal tegnes (~33 ganger i sekundet), ikke
+    // ved hver skjermoppdatering (60–144). Hvert tomme rAF-kall kostet et helt bilde på
+    // hovedtråden (stil, observatører, lag). Målt 2026-11-03 i ro på nordlys: like mange
+    // tegnede bilder som før (ca. 30/s ved 60–144 Hz), 20–30 % mindre arbeid på hovedtråden.
+    // raf står ≠ 0 mens vi venter, så resten av motoren ser at loopen går.
+    function later(ms) {
+      raf = -1;
+      rafT = setTimeout(function () { rafT = 0; raf = requestAnimationFrame(tick); }, Math.max(0, ms - 4));
+    }
 
     function tick(now) {
       if (dead) return;
-      raf = requestAnimationFrame(tick);
       var dt = Math.min(now - last, 100);
-      if (dt < 28) return; // ~33 fps
+      if (dt < 28) { later(28 - dt); return; } // ~33 fps
+      later(28);
       last = now;
       var sp = CONFIG.SPEED;
       t += dt * 0.001 * sp;

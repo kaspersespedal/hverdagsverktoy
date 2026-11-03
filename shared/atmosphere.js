@@ -12,12 +12,9 @@
    falloff til hsla(token,0). Farger: KUN eksisterende --atmo-*-tokens.
    Kun transform/opacity animeres. --a5-gain (default 1) = intensitets-
    knott per side. Batteri: html.a5-paused ved document.hidden.
-   Cursor-light-logikken er uendret fra v3 (lerp 0.06, av <1024px,
-   pause on hidden). Kilde v3: hv_oppdatert_design/Homepage.html. */
+   Muselyset (.cursor-light) og kornlaget (.film-grain) er tatt bort
+   2026-11-03, se A5_CSS. Kilde v3: hv_oppdatert_design/Homepage.html. */
 (function(){
-  var REDUCE = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var WIDE   = matchMedia('(min-width: 1024px)').matches;
-
   /* .ks-template ships uten aurora-markup — injiser legacy-settet en gang
      hvis det mangler, så synlighets-kontrakten (.atmo) finnes på alle sider.
      .atmo-base beholdes som instant-paint-fallback (males av ren CSS-fil). */
@@ -27,12 +24,7 @@
       '<div class="atmo" aria-hidden="true">'+
         '<div class="band band-a"><div class="band-inner"></div></div>'+
         '<div class="band band-b"><div class="band-inner"></div></div>'+
-        '<div class="cursor-light" id="cursorLight"></div>'+
-      '</div>'+
-      '<svg class="film-grain" aria-hidden="true" preserveAspectRatio="none">'+
-        '<filter id="atmoGrain"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" seed="4"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0"/></filter>'+
-        '<rect width="100%" height="100%" filter="url(#atmoGrain)"/>'+
-      '</svg>');
+      '</div>');
   }
 
   /* ── AURORA v5 CSS — injiseres sist i head så den vinner over alle
@@ -90,7 +82,13 @@
     '  .a5,.a5>div,.a5 .a5-i{animation:none !important}',
     '  .a5-arc{display:none}',
     '}',
-    'html.a5-paused .a5,html.a5-paused .a5 *{animation-play-state:paused}'
+    'html.a5-paused .a5,html.a5-paused .a5 *{animation-play-state:paused}',
+    /* Muselyset og kornlaget er borte (2026-11-03). De lå på 4–5 og 3,5 % styrke, men målt
+       før/etter på Retina-skjerm (1440×900 @2x) ga det 60–70 % mindre arbeid på hovedtråden og
+       60–90 % mindre på skjermkortet når musa beveges, og 15–25 % mindre på skjermkortet under
+       rulling. 28 sider har fortsatt markupen inline; denne regelen skjuler den (0,2,2 slår
+       body.atmo-on .film-grain). */
+    'html body .cursor-light,html body.atmo-on .cursor-light,html body .film-grain,html body.atmo-on .film-grain{display:none !important}'
   ].join('\n');
 
   if(!document.getElementById('a5Style')){
@@ -99,7 +97,7 @@
     st.appendChild(document.createTextNode(A5_CSS));
     document.head.appendChild(st);
   }
-  /* Markup: .a5 først i .atmo — cursor-light (senere søsken) maler over. */
+  /* Markup: .a5 først i .atmo. */
   var atmo = document.querySelector('.atmo');
   if(atmo && !atmo.querySelector('.a5')){
     atmo.insertAdjacentHTML('afterbegin',
@@ -112,9 +110,8 @@
   }
 
   /* Batteri: pause alle v5-animasjoner når fanen er skjult.
-     (Egen listener FØR cursor-light-guarden — den skal kjøre også på
-     sider/bredder uten cursor-light.) Sett også ved boot: en fane som
-     åpnes i bakgrunnen skal ikke animere før den faktisk vises. */
+     Sett også ved boot: en fane som åpnes i bakgrunnen skal ikke
+     animere før den faktisk vises. */
   if(document.hidden){ document.documentElement.classList.add('a5-paused'); }
   document.addEventListener('visibilitychange', function(){
     if(document.hidden){ document.documentElement.classList.add('a5-paused'); }
@@ -181,42 +178,6 @@
     if(document.readyState === 'complete') later();
     else window.addEventListener('load', later);
   })();
-
-  /* ── Cursor-anchored light — uendret fra v3 (lerp 0.06, lags 200-400ms).
-     Disabled <1024px og under prefers-reduced-motion. Pauses on hidden tab. */
-  var light  = document.getElementById('cursorLight');
-  if(!light) return;
-  if(REDUCE || !WIDE){ light.style.display = 'none'; return; }
-
-  var targetX = window.innerWidth  / 2;
-  var targetY = window.innerHeight / 2;
-  var curX = targetX, curY = targetY;
-  var raf = null, paused = false;
-
-  function tick(){
-    if(paused){ raf = null; return; }
-    curX += (targetX - curX) * 0.06;
-    curY += (targetY - curY) * 0.06;
-    light.style.transform =
-      'translate3d(' + curX.toFixed(2) + 'px,' + curY.toFixed(2) + 'px,0)';
-    if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
-      raf = requestAnimationFrame(tick);
-    } else { raf = null; }
-  }
-  function onMove(e){
-    targetX = e.clientX; targetY = e.clientY;
-    if(!raf && !paused) raf = requestAnimationFrame(tick);
-  }
-  window.addEventListener('mousemove', onMove, {passive:true});
-  document.addEventListener('visibilitychange', function(){
-    paused = document.hidden;
-    if(paused){ if(raf){ cancelAnimationFrame(raf); raf = null; } }
-    else if(Math.abs(targetX - curX) > 0.5 || Math.abs(targetY - curY) > 0.5){
-      raf = requestAnimationFrame(tick);
-    }
-  });
-  light.style.transform =
-    'translate3d(' + targetX + 'px,' + targetY + 'px,0)';
 })();
 
 /* ─────────────────────────────────────────────────────────────
