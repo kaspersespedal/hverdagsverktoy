@@ -12,8 +12,18 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hverdagsverktoy.com/kalkyle/landedcost/">
 <meta property="og:locale" content="nb_NO">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,13 +74,13 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <style>
 /* Innførselskost — kalkulator-skall (delt mønster med Kalkyle-seksjonen) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -94,7 +104,6 @@ body.focus-mode > footer{display:none}
 .calc-wrap .container{display:block}
 .ks-host{min-width:0}
 
-.kk-dash{width:48px;height:2px;background:var(--accent);opacity:.9;margin-bottom:20px}
 
 .kk-picker-strip-wrap{padding-top:18px;padding-bottom:6px}
 .kk-picker-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
@@ -116,6 +125,16 @@ body.focus-mode > footer{display:none}
 .kk-steps .n{flex-shrink:0;font:500 12px/1.6 var(--font-mono);color:var(--ink4);width:18px}
 .kk-steps span:last-child{font-size:15px;line-height:1.65;color:var(--ink2)}
 .kk-steps b{color:var(--ink);font-weight:600}
+
+/* Heroen har ikke lenger tallraden (.page-stats): de samme tallene står i stripa og svarkortet rett under.
+   Én kolonne, ellers står det et tomt felt til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
+
+/* Lager-tallet var like bredt som avstanden til Hylle, så «143,60 kr» og «220,92 kr eks. mva» sto kant i kant */
+#lrn-lc .lrn-lc-st.end .a{font-size:28px;line-height:32px}
+/* Lenken til Margin & påslag i tidslinjen på mobil: bare teksten er understreket, men trykkflaten er 44 px høy */
+.lrn-lc-mob li.is-hylle a{align-self:flex-start;position:relative}
+.lrn-lc-mob li.is-hylle a::after{content:"";position:absolute;left:-8px;right:-8px;top:-14px;bottom:-14px}
 </style>
 </head>
 <body>
@@ -196,17 +215,12 @@ body.focus-mode > footer{display:none}
         <span class="sep"></span>
         <span class="here" data-i18n="kalkLandedcostTitle">Innførselskost</span>
       </div>
-      <div class="kk-dash" aria-hidden="true"></div>
       <h1 class="page-title"><em data-i18n="kalkLandedcostTitle">Innførselskost</em></h1>
       <p class="page-lead" data-i18n="kalkLandedcostSubtitle">Se hva varen koster deg per enhet når frakt, toll, forsikring og gebyr er med. Det kalles innførselskost, på engelsk landed cost.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
-    </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="kalkLandedcostStatLanded">Innførselskost</span><span class="v" id="hStatLanded">143,60 kr</span></div>
-      <div class="page-stat"><span class="l" data-i18n="kalkLandedcostStatFrakt">Frakt per enhet</span><span class="v" id="hStatFrakt">30 kr</span></div>
     </div>
   </div>
 </section>
@@ -215,7 +229,7 @@ body.focus-mode > footer{display:none}
 <div class="calc-wrap">
   <div class="container kk-picker-strip-wrap">
     <div class="kk-picker-strip">
-      <a href="/kalkyle/margin/" class="kk-chip" data-i18n="kalkyleDestMargin">Margin &amp; påslag</a>
+      <a href="/kalkyle/margin/" class="kk-chip" data-i18n="kalkyleDestMargin">Margin og påslag</a>
       <a href="/kalkyle/selvkost/" class="kk-chip" data-i18n="kalkyleDestSk">Selvkost</a>
       <a href="/kalkyle/enhetskost/" class="kk-chip" data-i18n="kalkyleDestEk">Enhetskost</a>
       <a href="/kalkyle/foodcost/" class="kk-chip" data-i18n="kalkyleDestFc">Food cost</a>
@@ -235,7 +249,7 @@ body.focus-mode > footer{display:none}
           <div class="ks-strip-cell"><span class="l" data-i18n="kalkLandedcostStatFrakt">Frakt per enhet</span><span class="v" id="lkStripFrakt">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="kalkLandedcostResToll">Toll per enhet</span><span class="v" id="lkStripToll">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="kalkLandedcostResLanded">Innførselskost per enhet</span><span class="v" id="lkStripLanded">–</span></div>
-          <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkLandedcostResPris">Veiledende pris</span><span class="v" id="lkStripPris">–</span></div>
+          <div class="ks-strip-cell accent"><span class="l" data-i18n="kalkLandedcostResPris">Veiledende pris eks. mva</span><span class="v" id="lkStripPris">–</span></div>
         </div>
 
         <div class="ks-body">
@@ -381,7 +395,7 @@ body.focus-mode > footer{display:none}
     <section class="lrn-sec lrn-lc-s2" aria-labelledby="lrn-lc-q2" data-lrn="main2">
       <div class="lrn-head">
         <h3 class="lrn-h3" id="lrn-lc-q2">Samme sending, annet antall</h3>
-        <p class="lrn-p">Hvis frakt og gebyr for sendingen er de samme</p>
+        <p class="lrn-p">Frakt og gebyr for sendingen holdes de samme.</p>
       </div>
       <div class="lrn-lc-qs" data-lrn="qty"></div>
     </section>
@@ -421,10 +435,10 @@ body.focus-mode > footer{display:none}
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no.js?v=v232"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -487,9 +501,6 @@ body.focus-mode > footer{display:none}
     setTxt('lkROutGebyr', fmtKr(gebyrEnhet));
     setTxt('lkROutEmb', fmtKr(embEnhet));
     setTxt('lkROutPrisInkl', hasMargin ? fmtKr(prisInkl) : '–');
-
-    setTxt('hStatLanded', landedOk ? fmtKr(landed) : '–');
-    setTxt('hStatFrakt', fmtKr(fraktEnhet));
 
     var r = (typeof R === 'function') ? R() : {};
     // Ett stort svar: innførselskosten, og hvor mye den ligger over fakturaprisen.
@@ -638,7 +649,7 @@ body.focus-mode > footer{display:none}
     var mob = W < 1000;
     q('desk').hidden = mob; q('mob').hidden = !mob; q('notes').hidden = !mob;
     var noteSend = t('lrnLcNoteSend', 'Frakt og klarering er faste per sending og deles på antall enheter, til sammen {belop} kr.', {belop:kr(sending)});
-    var notePct = t('lrnLcNotePct', 'Forsikring regnes av varekosten på {vare} kr. Toll regnes av tollverdien, vare + frakt + forsikring = {tv} kr. Til sammen {belop} kr.', {vare:kr(i0.vare), tv:kr(r.tv), belop:kr(prosent)});
+    var notePct = t('lrnLcNotePct', 'Forsikring regnes av varekosten på {vare} kr. Toll regnes av tollverdien, vare + frakt + forsikring = {tv} kr. Til sammen {belop} kr.', {vare:kr(i0.vare), tv:kr(r.tv), belop:kr(prosent)});
     var cum = [], acc = 0;
     lay.forEach(function(v){ acc += v; cum.push(acc); });
 
@@ -674,7 +685,7 @@ body.focus-mode > footer{display:none}
         var wide = k === 6 ? 140 : lw;
         lab += '<div class="lrn-lc-st' + (k === 6 ? ' end' : '') + '" style="left:' + f1(xs[k] - wide / 2) + 'px;top:86px;width:' + wide + 'px"><b>' + esc(st.n) + '</b><span class="a">' + esc(st.a) + '</span><span class="bs">' + esc(st.b) + '</span></div>';
       });
-      if(hylle) lab += '<div class="lrn-lc-st" style="left:' + f1(xs[7] - 72) + 'px;top:86px;width:144px"><b>' + esc(hylle.n) + '</b><span class="a">' + esc(hylle.a) + '</span><span class="bs">' + esc(hylle.b) + '</span><a href="/kalkyle/margin/">' + esc(ph('Margin og påslag')) + '</a></div>';
+      if(hylle) lab += '<div class="lrn-lc-st" style="left:' + f1(xs[7] - 66) + 'px;top:86px;width:144px"><b>' + esc(hylle.n) + '</b><span class="a">' + esc(hylle.a) + '</span><span class="bs">' + esc(hylle.b) + '</span><a href="/kalkyle/margin/">' + esc(ph('Margin og påslag')) + '</a></div>';
       var brPct = t('lrnLcBrPct', 'forsikring av {vare} kr, toll av tollverdien {tv} kr', {vare:kr(i0.vare), tv:kr(r.tv)});
       var bw = textW(brPct, '500 12.5px ' + SANS) + 16, bc = (x0 + mid) / 2;
       lab += '<span class="lrn-lc-br" style="left:' + f1(Math.max(0, bc - bw / 2)) + 'px;top:12px">' + esc(brPct) + '</span>';
@@ -707,9 +718,9 @@ body.focus-mode > footer{display:none}
       svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
     }
 
-    set('stateText', t('lrnLcState', '{vare} kr · frakt {frakt} kr på {ant} · toll {toll} · forsikring {fors} · gebyr {gebyr} kr', {vare:kr(i0.vare), frakt:fmt(i0.frakt), ant:antTxt, toll:pct(i0.toll), fors:pct(i0.fors), gebyr:fmt(i0.gebyr)})
-      + (i0.emb > 0 ? ' · ' + t('lrnLcStateEmb', 'emballasje {belop} kr', {belop:kr(i0.emb)}) : '')
-      + (r.hasMargin ? ' · ' + t('lrnLcStateMarg', 'margin {p}', {p:pct(i0.margin)}) : ''));
+    set('stateText', t('lrnLcState', '{vare} kr · frakt {frakt} kr på {ant} · toll {toll} · forsikring {fors} · gebyr {gebyr} kr', {vare:kr(i0.vare), frakt:fmt(i0.frakt), ant:antTxt, toll:pct(i0.toll), fors:pct(i0.fors), gebyr:fmt(i0.gebyr)})
+      + (i0.emb > 0 ? ' · ' + t('lrnLcStateEmb', 'emballasje {belop} kr', {belop:kr(i0.emb)}) : '')
+      + (r.hasMargin ? ' · ' + t('lrnLcStateMarg', 'margin {p}', {p:pct(i0.margin)}) : ''));
     q('sum').innerHTML = t('lrnLcSum', 'Av de {t} i tillegg er {s} frakt og klarering. De er faste per sending og blir billigere per enhet jo flere enheter du importerer.', {t:'<strong>' + kr(tillegg) + NB + 'kr</strong>', s:'<strong>' + kr(sending) + NB + 'kr</strong>'});
     set('sr', t('lrnLcSr', 'Varen koster {vare} kr fra fabrikken og {landed} kr på lageret. Frakt og klarering utgjør {send} kr, toll og forsikring {pct} kr.', {vare:kr(i0.vare), landed:kr(r.landed), send:kr(sending), pct:kr(prosent)})
       + (r.hasMargin ? ' ' + t('lrnLcSrMarg', 'Med {p} margin blir veiledende pris {belop} kr eks. mva.', {p:pct(i0.margin), belop:kr2(r.prisEks)}) : ''));

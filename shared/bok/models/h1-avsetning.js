@@ -67,7 +67,7 @@
       hva: 'Før forpliktelsen som gjeld i balansen, og som regel samme beløp som kostnad i resultatet. Bruk beste estimat: det beste anslaget ut fra det dere vet når regnskapet avlegges.' },
     { id: 'note', navn: 'Note', effekt: 'Bare forklart i noten',
       hva: 'Ingen post i balansen. Beskriv saken i tilleggsopplysningene til årsregnskapet (noten).' },
-    { id: 'ingenting', navn: 'Ingenting', effekt: 'Som regel ingen note',
+    { id: 'ingenting', navn: 'Ingen note', effekt: 'Som regel ingen note',
       hva: 'Ingen post i balansen, og som regel ingen note.' },
     { id: 'ingen', navn: 'Ingen forpliktelse', effekt: 'Ikke noe å føre',
       hva: 'Ingen plikt på balansedagen, og ingenting å føre som forpliktelse.' }

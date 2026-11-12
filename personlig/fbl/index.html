@@ -7,8 +7,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/personlig/fbl/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:title" content="Forbrukslån — Privatøkonomi">
+<meta property="og:description" content="Beregn effektiv rente på forbrukslån — nominell rente er ikke hele sannheten. Etableringsgebyr og terminomkostninger gir den reelle kostnaden per år.">
+<meta property="og:url" content="https://hverdagsverktoy.com/personlig/fbl/">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -48,12 +63,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <style>
 /* Forbrukslån — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -154,6 +169,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
+
+/* Heroen har ikke lenger tallraden (.page-stats): de samme tallene står i stripa og svarkortet rett under.
+   Én kolonne, ellers står det et tomt felt til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
 </style>
 </head>
 <body>
@@ -241,10 +260,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
     </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="fblStatEff">Effektiv rente</span><span class="v" id="hStatEff">–</span></div>
-      <div class="page-stat"><span class="l" data-i18n="fblStatMnd">Månedlig betaling</span><span class="v" id="hStatMnd">–</span></div>
-    </div>
   </div>
 </section>
 
@@ -255,9 +270,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     <div class="ks-host">
       <div class="ks">
         <div class="ks-strip">
-          <div class="ks-strip-cell"><span class="l" data-i18n="fblRMnd">Månedlig betaling</span><span class="v" id="ksMnd">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="fblRMnd">Månedsbeløp</span><span class="v" id="ksMnd">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="fblRTotal">Totalt betalt</span><span class="v" id="ksTotal">–</span></div>
-          <div class="ks-strip-cell"><span class="l" data-i18n="fblRKost">Totale renter + gebyrer</span><span class="v" id="ksKost">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="fblRKost">Renter og gebyrer</span><span class="v" id="ksKost">–</span></div>
           <div class="ks-strip-cell accent"><span class="l" data-i18n="fblStatEff">Effektiv rente</span><span class="v" id="ksEff">–</span></div>
         </div>
 
@@ -308,7 +323,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
             <div class="ks-r-stats">
               <div class="ks-r-stat"><span class="l" data-i18n="fblRNom">Nominell rente</span><span class="v" id="fbl-r-nom">–</span></div>
             </div>
-            <div class="ks-r-foot" data-i18n="fblDisclaimer">Regnet som annuitetslån, altså likt beløp hver måned. Etableringsgebyret trekkes fra det du får utbetalt, og terminomkostningen legges på hver betaling. Veiledende – vilkårene varierer mellom långivere.</div>
+            <div class="ks-r-foot" data-i18n="fblDisclaimer">Regnet som annuitetslån, altså likt beløp hver måned. Etableringsgebyret trekkes fra det du får utbetalt, og terminomkostningen legges på hver betaling. Tallene er veiledende, siden vilkårene varierer mellom långivere.</div>
           </aside>
         </div>
       </div>
@@ -317,10 +332,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     <aside class="side-col">
       <div class="side-card related">
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
-        <a href="/boliglan/maxlan/"><span class="name">Maks lån</span><span class="arr">→</span></a>
+        <a href="/boliglan/maxlan/"><span class="name">Hva har jeg råd til?</span><span class="arr">→</span></a>
         <a href="/personlig/budsjett/"><span class="name">Budsjett</span><span class="arr">→</span></a>
         <a href="/personlig/spare/"><span class="name">Sparekalkulator</span><span class="arr">→</span></a>
-        <a href="/personlig/"><span class="name">Alt i Privatøkonomi</span><span class="arr">→</span></a>
       </div>
     </aside>
 
@@ -389,7 +403,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     <section class="lrn-sec lrn-also" aria-labelledby="lrn-fbl-x">
       <h3 class="lrn-h3" id="lrn-fbl-x">Effektiv rente sammenligner like lån</h3>
-      <p class="lrn-p">Effektiv rente er riktig tall når to tilbud har samme beløp og løpetid. Har de ulik løpetid, må du sammenligne kronene.</p>
+      <p class="lrn-p">Effektiv rente er det riktige tallet når to tilbud har samme beløp og løpetid. Har de ulik løpetid, må du sammenligne kronene.</p>
       <p class="lrn-p" data-lrn="small"></p>
       <p class="lrn-p"><a href="/kalkulator/rente/#formel">Slik regnes effektiv rente</a> →</p>
     </section>
@@ -430,10 +444,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no.js?v=v232"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -449,7 +463,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // Tømmer brukeren feltene skal svaret bli «–», ikke bli stående med
     // forrige beregning — et gammelt tall ser ferskt ut og lyver.
     function blank(){
-      ['fbl-r-eff','fbl-r-nom','ksMnd','ksTotal','ksKost','ksEff','hStatEff','hStatMnd']
+      ['fbl-r-eff','fbl-r-nom','ksMnd','ksTotal','ksKost','ksEff']
         .forEach(function(id){var e=document.getElementById(id); if(e) e.textContent='–';});
       var s=document.getElementById('fbl-r-sub');
       if(s) s.textContent='Skriv inn lånebeløp, rente og løpetid';
@@ -485,9 +499,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var sT=document.getElementById('ksTotal'); if(sT) sT.textContent=fmt(total);
       var sK=document.getElementById('ksKost'); if(sK) sK.textContent=fmt(kost);
       var sE=document.getElementById('ksEff'); if(sE) sE.textContent=fmtPct(eff);
-      // Hero stats
-      var hEff=document.getElementById('hStatEff'); if(hEff) hEff.textContent=fmtPct(eff);
-      var hMnd=document.getElementById('hStatMnd'); if(hMnd) hMnd.textContent=fmt(pmt);
       window._fbl = {P:P, r:rNom, etab:etab, term:term, n:n};
       if(window.hvtLearn) hvtLearn.update('personlig-fbl', window._fbl);
       persist();
@@ -666,7 +677,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           stat(sx + cw, y + 62, cw - 4, lGeb, kr(r.gebyr) + ' kr');
           stat(sx, y + 108, cw - 4, lEff, pct(r.eff));
           r.effTop = y + 108; r.effLeft = sx; r.effW = cw - 4;
-          y = ybm + 30;
+          y = ybm + 40;
         } else {
           var y3 = y + amtH + 4;
           ybm = y3 + h;
@@ -696,7 +707,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // Merknader og merker, nummerert ovenfra og ned
     var notes = [], nr = 0, rm = rows[Math.min(1, k - 1)];
     function mk(x, yy){ lab += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(x) + 'px;top:' + f1(yy) + 'px">' + nr + '</span>'; }
-    nr++; notes.push(t('lrnFbN1', 'Prisen per måned er nesten lik. Lengre løpetid gir bare flere måneder med den.'));
+    nr++; notes.push(t('lrnFbN1', 'Renter og terminomkostning per måned er nesten like. Lengre løpetid gir bare flere måneder med dem.'));
     mk(rm.xr + rm.w - ms - 6, (rm.y3 + rm.y1) / 2 - ms / 2);
     if(hasEtab){
       nr++; notes.push(t('lrnFbN2', 'Etableringsgebyret på {belop} kr betales én gang, ved start. Det er hakket foran hvert rektangel.', {belop:kr(p.etab)}));
@@ -736,7 +747,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // Merket
     root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
     set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
-    set('stateText', t('lrnFbState', '{belop} kr · {r} % · gebyr {etab} kr + {term} kr/mnd · {m}', {belop:kr(p.P), r:rate(p.r), etab:kr(p.etab), term:kr(p.term), m:months(p.n)}));
+    // Hard mellomrom foran «·» og «+», så en linje aldri begynner med tegnet
+    set('stateText', t('lrnFbState', '{belop} kr · {r} % · gebyr {etab} kr + {term} kr/mnd · {m}', {belop:kr(p.P), r:rate(p.r), etab:kr(p.etab), term:kr(p.term), m:months(p.n)}).replace(/ ([·+]) /g, ' $1 '));
   }
 
   function schedule(){

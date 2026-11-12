@@ -97,12 +97,16 @@
   function ph(s) { try { var d = R()._ph; return (d && d[s]) || s; } catch (e) { return s; } }
   function fill(s, o) { for (var k in o) s = s.split('{' + k + '}').join(o[k]); return s; }
 
+  /* Tallformat følger språket: punktum som desimaltegn og komma som tusenskille på engelsk,
+     kinesisk, somali og tigrinja; ellers komma og hardt mellomrom. */
+  var DOT_LANG = { en: 1, zh: 1, so: 1, ti: 1 };
+  function decSep() { return DOT_LANG[(document.documentElement.lang || '').slice(0, 2)] ? '.' : ','; }
   function nb(n, dec) {
     if (n == null || isNaN(n)) return '–';
-    var s = Number(n).toFixed(dec == null ? 0 : dec);
+    var s = Number(n).toFixed(dec == null ? 0 : dec), d = decSep();
     var p = s.split('.');
-    p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' '); // tusenskille = hardt mellomrom
-    return p.join(',');
+    p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, d === '.' ? ',' : ' '); // tusenskille
+    return p.join(d);
   }
   function compass(deg) {
     if (deg == null || isNaN(deg)) return '';
@@ -201,7 +205,7 @@
     var isValue = el.parentNode && el.parentNode.classList.contains('widget-value');
     function write(v) {
       var s = nb(v, dec);
-      var i = dec ? s.lastIndexOf(',') : -1;
+      var i = dec ? s.lastIndexOf(decSep()) : -1;
       if (isValue && i > 0) el.innerHTML = esc(s.slice(0, i)) + '<span class="dec">' + esc(s.slice(i)) + '</span>';
       else el.textContent = s;
     }
@@ -357,14 +361,15 @@
     sun: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="3"/><path d="M8 1.6v1.6M8 12.8v1.6M1.6 8h1.6M12.8 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"/></svg>',
     cloud: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 11.5h7a2.5 2.5 0 0 0 .2-5a3.5 3.5 0 0 0-6.7-1A2.7 2.7 0 0 0 4.6 11.5Z"/></svg>',
     rain: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 9.4h7a2.4 2.4 0 0 0 .2-4.8a3.4 3.4 0 0 0-6.5-.9A2.6 2.6 0 0 0 4.6 9.4Z"/><path d="M6 11.3l-.8 2M9 11.3l-.8 2"/></svg>',
-    snow: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 9.4h7a2.4 2.4 0 0 0 .2-4.8a3.4 3.4 0 0 0-6.5-.9A2.6 2.6 0 0 0 4.6 9.4Z"/><circle cx="6" cy="12.3" r=".55" fill="currentColor" stroke="none"/><circle cx="9" cy="12.3" r=".55" fill="currentColor" stroke="none"/></svg>'
+    snow: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.6 9.4h7a2.4 2.4 0 0 0 .2-4.8a3.4 3.4 0 0 0-6.5-.9A2.6 2.6 0 0 0 4.6 9.4Z"/><circle cx="6" cy="12.3" r=".55" fill="currentColor" stroke="none"/><circle cx="9" cy="12.3" r=".55" fill="currentColor" stroke="none"/></svg>',
+    moon: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.2 9.6A5.4 5.4 0 0 1 6.4 2.8a5.4 5.4 0 1 0 6.8 6.8Z"/></svg>'
   };
   function wxIcon(sym) {
     var s = (sym || '').replace(/_(day|night|polartwilight)$/, '');
     var g = 'cloud';
     if (/snow/.test(s)) g = 'snow';
     else if (/sleet|rain|thunder/.test(s)) g = 'rain';
-    else if (/clearsky|fair/.test(s)) g = 'sun';
+    else if (/clearsky|fair/.test(s)) g = /_night$/.test(sym || '') ? 'moon' : 'sun';
     return WX_ICONS[g] || WX_ICONS.cloud;
   }
   var DAGER_FULL = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag']; // Date.getDay(): 0 = søndag
@@ -372,6 +377,14 @@
     _lastWx = d;
     countUp('wxTemp', Math.round(d.temp), 0);
     setText('wxCond', wxText(d.sym));
+    var wg = document.querySelector('.trend-weather .trend-glyph');
+    if (wg && wg.getAttribute('data-sym') !== (d.sym || '')) {
+      var tmp = document.createElement('div');
+      tmp.innerHTML = wxIcon(d.sym);
+      var ng = tmp.firstChild;
+      ng.setAttribute('class', 'trend-glyph'); ng.setAttribute('data-sym', d.sym || '');
+      wg.parentNode.replaceChild(ng, wg);
+    }
     var sub = fill(T('trSharedWxMaxMin', 'Maks {max}° · Min {min}°'), { max: Math.round(d.max), min: Math.round(d.min) });
     if (typeof d.wind === 'number') sub += ' · ' + nb(d.wind, 1) + '\u00a0m/s' + (d.dir != null ? '\u00a0' + compass(d.dir) : '');
     setText('wxSub', sub);
@@ -713,7 +726,7 @@
     var mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), ch = Math.round((v[n - 1] - v[0]) / v[0] * 1000) / 10;
     M.avgV = sum(v) / n;
     M.stats = [[ph('Høyest'), nb(mx, 2), nbShort(dates[v.indexOf(mx)])], [ph('Lavest'), nb(mn, 2), nbShort(dates[v.indexOf(mn)])],
-               [ph('Snitt'), nb(M.avgV, 2), 'kr'], [ph('Endring'), (ch > 0 ? '+' : ch < 0 ? '−' : '') + nb(Math.abs(ch), 1) + ' %', ph('i perioden')]];
+               [ph('Snitt'), nb(M.avgV, 2), 'kr'], [ph('Endring'), (ch > 0 ? '+' : ch < 0 ? '−' : '') + nb(Math.abs(ch), 1) + ' %', ph('i perioden')]];
     M.valOf = function (i) { return nb(v[i], 2); };
     M.sub0 = unit + ' / NOK · ' + fill(ph('snitt {v} kr'), { v: nb(M.avgV, 2) });
     M.subOf = function (i) { return unit + ' / NOK · ' + M.label(i); };
@@ -1228,7 +1241,7 @@
     if (span && c.prev != null) {
       var diff = (c.last - c.prev) * m, dir = Math.abs(diff) < 0.0005 ? 0 : diff > 0 ? 1 : -1;
       trendClass(span, dir);
-      span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) + '</span>';
+      span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) + '<i> kr</i></span>';
     }
     var dts = c.dates;
     if (dts && dts.length) {
@@ -1333,20 +1346,20 @@
       d.cheap = d.prices[d.cheapHour];
     }
     var ch = d.cheapHour < 10 ? '0' + d.cheapHour : d.cheapHour;
-    setText('stSub', fill(T('trSharedStromSub', 'Billigst kl\u00a0{h} · {cheap}\u00a0øre · snitt {avg}\u00a0øre'),
+    setText('stSub', fill(T('trSharedStromSub', 'Billigst kl.\u00a0{h} · {cheap}\u00a0øre · snitt {avg}\u00a0øre'),
       { h: ch, cheap: Math.round(d.cheap * 100), avg: Math.round(d.avg * 100) }));
     var span = $('stTrend');
     if (span) {
       var pct = d.avg ? (d.now - d.avg) / d.avg * 100 : 0, dir = Math.abs(pct) < 0.5 ? 0 : pct > 0 ? 1 : -1;
       trendClass(span, dir);
-      span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + Math.round(Math.abs(pct)) + '<i>%</i></span>';
+      span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + Math.round(Math.abs(pct)) + '<i> %</i></span>';
     }
     /* Y-akse: dyreste og billigste time i øre. Søylene skaleres mot dagens
        maks, og med spenn som 143:1 blir de billige timene 2 px høye — da er
        tallene det eneste som forteller hva bunnen faktisk er. */
     if (d.prices && d.prices.length) {
       setText('stYMax', String(Math.round(Math.max.apply(null, d.prices) * 100)));
-      setText('stYMin', String(Math.round(Math.min.apply(null, d.prices) * 100)));
+      setText('stYMin', '0'); // søylene starter på 0
     }
     _strom = d;
     var sig = sone + '|' + d.hour + '|' + d.cheapHour + '|' + (d.prices ? d.prices.length + ':' + d.prices[0] : '');

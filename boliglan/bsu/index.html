@@ -3,12 +3,27 @@
 <head>
 <meta charset="utf-8">
 <title>BSU-kalkulator — beregn skattefradrag og spar mer · Hverdagsverktøy</title>
-<meta name="description" content="Regn ut hvor mye du sparer på BSU vs vanlig sparekonto. 10 % skattefradrag, maks 27 500 kr/år, maks 300 000 kr totalt, til og med året du fyller 33.">
+<meta name="description" content="Regn ut hvor mye du sparer på BSU sammenlignet med en vanlig sparekonto. 10 % skattefradrag, maks 27 500 kr/år, maks 300 000 kr totalt, til og med året du fyller 33.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/boliglan/bsu/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:title" content="BSU-kalkulator — beregn skattefradrag og spar mer">
+<meta property="og:description" content="Regn ut hvor mye du sparer på BSU sammenlignet med en vanlig sparekonto. 10 % skattefradrag, maks 27 500 kr/år, maks 300 000 kr totalt, til og med året du fyller 33.">
+<meta property="og:url" content="https://hverdagsverktoy.com/boliglan/bsu/">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -48,13 +63,13 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <style>
 /* BSU — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -144,8 +159,8 @@ body.focus-mode > footer{display:none}
 .side-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px 18px}
 .side-card h4{margin:0 0 10px;font:600 11px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);padding-bottom:8px;border-bottom:1px solid var(--line)}
 .side-card p{margin:0;font-size:12.5px;line-height:1.6;color:var(--ink2)}
-.side-card .ref-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
-.side-card .ref-row .v{color:var(--ink);font-weight:500}
+.side-card .ref-row{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0;font-size:12.5px;color:var(--ink2)}
+.side-card .ref-row .v{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
 .side-card .ref-row .v.accent{color:var(--accent-2)}
 .side-card .ref-row .v .u{color:var(--ink3);font-size:11px;margin-left:2px}
 .side-card.related a{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid color-mix(in srgb, var(--ink) 5%, transparent);color:var(--ink2);text-decoration:none;font-size:13px;transition:color .15s}
@@ -170,6 +185,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row:last-child{margin:0}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
+
+/* Heroen har ikke lenger tallene (.page-stats): de samme står i stripa og resultatkortet under.
+   Én kolonne, ellers står det et tomt felt til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
 </style>
 </head>
 <body>
@@ -257,10 +276,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
     </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="bsuHStatFordel">Total fordel BSU</span><span class="v" id="hStatFordel">–</span></div>
-      <div class="page-stat"><span class="l" data-i18n="bsuHStatTax">Skattefradrag samlet</span><span class="v" id="hStatTax">–</span></div>
-    </div>
   </div>
 </section>
 
@@ -271,7 +286,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     <div class="ks-host">
       <div class="ks">
         <div class="ks-strip">
-          <div class="ks-strip-cell"><span class="l" data-i18n="bsuROutSpart">Total innskudd</span><span class="v" id="bsuStripSpart">–</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="bsuROutSpart">Samlede innskudd</span><span class="v" id="bsuStripSpart">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="bsuROutBsuBalance">BSU-saldo</span><span class="v" id="bsuStripBalance">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="bsuROutTaxBenefit">Skattefradrag</span><span class="v" id="bsuStripTax">–</span></div>
           <div class="ks-strip-cell accent"><span class="l" data-i18n="bsuHStatFordel">Total fordel BSU</span><span class="v" id="bsuStripFordel">–</span></div>
@@ -289,7 +304,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bsu-monthly"><span data-i18n="bsuLblMonthly">Månedlig sparing</span> <span class="cap">(kr)</span></label>
                     <input id="bsu-monthly" class="ik-input" type="text" inputmode="numeric" value="2 291" autocomplete="off">
-                    <span class="ik-hint">Bare 27 500 kr i året (ca. 2 291 kr/mnd) gir fradrag. Kalkulatoren regner ikke med det du sparer utover.</span>
+                    <span class="ik-hint">Bare 27 500 kr i året (ca. 2 291 kr i måneden) gir fradrag. Kalkulatoren regner ikke med det du sparer utover.</span>
                   </div>
                 </div>
                 <div class="ik-row">
@@ -305,7 +320,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                 </div>
                 <div class="ik-row">
                   <div class="ik-fg">
-                    <label class="ik-lbl" for="bsu-alt-rate"><span data-i18n="bsuLblAltRate">Rente vanlig sparekonto</span> <span class="cap">(%)</span></label>
+                    <label class="ik-lbl" for="bsu-alt-rate"><span data-i18n="bsuLblAltRate">Rente på vanlig sparekonto</span> <span class="cap">(%)</span></label>
                     <input id="bsu-alt-rate" class="ik-input" type="text" value="4,0" step="0.1" min="0" max="20" inputmode="decimal" autocomplete="off">
                   </div>
                   <div class="ik-fg">
@@ -319,7 +334,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           </div>
 
           <aside class="ks-result" aria-live="polite">
-            <div class="ks-r-eyebrow" data-i18n="bsuRFordel">Total fordel BSU vs vanlig sparing</div>
+            <div class="ks-r-eyebrow" data-i18n="bsuRFordel">Fordel med BSU sammenlignet med vanlig sparing</div>
             <div class="ks-r-net"><span id="bsu-r-fordel">–</span></div>
             <div class="ks-r-mnd" id="bsuVerdict">Skriv inn månedlig sparing for å starte</div>
 
@@ -329,8 +344,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
             </div>
 
             <div class="ks-r-stats">
-              <div class="ks-r-stat"><span class="l" data-i18n="bsuROutAltBalance">Vanlig konto-saldo</span><span class="v" id="bsu-r-alt-balance">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="bsuROutAltRenter">Vanlig sparing-renter</span><span class="v" id="bsu-r-alt-renter">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="bsuROutAltBalance">Saldo på vanlig konto</span><span class="v" id="bsu-r-alt-balance">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="bsuROutAltRenter">Renter på vanlig konto</span><span class="v" id="bsu-r-alt-renter">–</span></div>
             </div>
 
             <p class="ks-r-note" id="bsu-tip">10 % av årets innskudd trekkes fra skatten din. Eksempel: 27 500 kr innskudd → 2 750 kr i lavere skatt.</p>
@@ -350,9 +365,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       </div>
       <div class="side-card related">
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
+        <a href="/boliglan/maxlan/"><span class="name">Hva har jeg råd til?</span><span class="arr">→</span></a>
         <a href="/personlig/spare/"><span class="name">Sparekalkulator</span><span class="arr">→</span></a>
-        <a href="/boliglan/mor/"><span class="name">Boliglån</span><span class="arr">→</span></a>
-        <a href="/skatt/inntekt/"><span class="name">Lønn etter skatt</span><span class="arr">→</span></a>
+        <a href="/personlig/lonn/"><span class="name">Lønn etter skatt</span><span class="arr">→</span></a>
       </div>
     </aside>
 
@@ -364,13 +379,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <span class="howto-title">Slik bruker du BSU-kalkulatoren</span>
       </summary>
       <div class="howto-body">
-        <div class="howto-row"><strong>Månedlig sparing</strong><span>Det du legger inn på BSU-kontoen hver måned. Maks 27 500 kr per år (≈ 2 291 kr/mnd) gir fradrag.</span></div>
+        <div class="howto-row"><strong>Månedlig sparing</strong><span>Det du legger inn på BSU-kontoen hver måned. Maks 27 500 kr per år (ca. 2 291 kr i måneden) gir fradrag.</span></div>
         <div class="howto-row"><strong>Antall år</strong><span>Hvor lenge du planlegger å spare. BSU har aldersgrense — siste innskudd er året du fyller 33 år.</span></div>
         <div class="howto-row"><strong>Fradrag du får brukt</strong><span>Hvor stor del av fradraget du får trukket fra skatten. 100 % hvis skatten din er minst like stor som fradraget.</span></div>
         <div class="howto-row"><strong>Rente vanlig sparekonto</strong><span>Renten du ville fått på en vanlig sparekonto hvis du ikke valgte BSU. Brukes til sammenligning.</span></div>
         <div class="howto-row"><strong>BSU-rente</strong><span>Renten banken gir på BSU-kontoen din. Ofte litt høyere enn vanlig sparekonto siden bankene konkurrerer om unge kunder.</span></div>
         <div class="howto-row"><strong>10 % skattefradrag</strong><span>Du får 10 % av årets innskudd direkte trukket fra skatten. Eksempel: 27 500 kr innskudd → 2 750 kr lavere skatt (forutsatt at du har skatt å trekke fra).</span></div>
-        <div class="howto-row"><strong>300 000 kr-grensen</strong><span>Total BSU-saldo (innskudd) kan ikke overstige 300 000 kr. Etter det må resten spares andre steder.</span></div>
+        <div class="howto-row"><strong>300 000 kr-grensen</strong><span>Innskuddene kan til sammen ikke overstige 300 000 kr, og resten må spares andre steder. Saldoen kan bli høyere, fordi rentene ikke teller med.</span></div>
         <div class="howto-row"><strong>Bruk av pengene</strong><span>BSU-saldoen må brukes til kjøp av egen bolig eller nedbetaling av boliglån. Brukes pengene til noe annet, mister du fradragene.</span></div>
         <div class="howto-row"><strong>Total fordel</strong><span>Forskjell mellom BSU-saldo og vanlig sparekonto, pluss samlet skattefradrag over årene. Viser om BSU lønner seg for deg.</span></div>
       </div>
@@ -498,10 +513,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no.js?v=v232"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -628,7 +643,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function recalc(){
     var d = compute();
     if(!d.hasData){
-      ['bsuStripSpart','bsuStripBalance','bsuStripTax','bsuStripFordel','hStatFordel','hStatTax','bsu-r-fordel','bsu-r-alt-balance','bsu-r-alt-renter'].forEach(function(id){ setEl(id, '–'); });
+      ['bsuStripSpart','bsuStripBalance','bsuStripTax','bsuStripFordel','bsu-r-fordel','bsu-r-alt-balance','bsu-r-alt-renter'].forEach(function(id){ setEl(id, '–'); });
       setEl('bsuVerdict', 'Skriv inn månedlig sparing for å starte');
       setEl('bsu-tip', '10 % av årets innskudd trekkes fra skatten din. Eksempel: 27 500 kr innskudd → 2 750 kr i lavere skatt.');
       clearBar();
@@ -643,10 +658,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     setEl('bsuStripBalance', fmt(d.bsuBalance));
     setEl('bsuStripTax', fmt(d.totalTaxBenefit));
     setEl('bsuStripFordel', fmt(d.bsuTotalFordel));
-
-    // Hero-stats
-    setEl('hStatFordel', fmt(d.bsuTotalFordel));
-    setEl('hStatTax', fmt(d.totalTaxBenefit));
 
     // Result
     setEl('bsu-r-fordel', fmt(d.bsuTotalFordel));
@@ -806,7 +817,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var rows = M.rows, N = rows.length, mob = G.mobile, FONT = (mob ? '500 11px' : '500 12px') + ' Inter, system-ui, sans-serif';
     function tw(s){ return textW(s, FONT) + 14; }
     var maxBal = 0; rows.forEach(function(r){ if(r.bal > maxBal) maxBal = r.bal; });
-    var yMax = Math.max(400000, Math.ceil(maxBal / 100000) * 100000);
+    var yMax = Math.max(400000, Math.ceil(maxBal / 100000) * 100000), gridStep = Math.max(100000, Math.ceil(yMax / 50 / 100000) * 100000);
     var x0 = G.x0, x1 = G.x1, rEnd = mob ? G.r0 + N * G.rowH : 0, y0 = G.y0, y1 = mob ? rEnd : G.y1;
     function V(v){ return mob ? x0 + v / yMax * (x1 - x0) : y1 - v / yMax * (y1 - y0); }
     var pitch = mob ? G.rowH : (x1 - x0) / N;
@@ -840,7 +851,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     // ── Rutenett, grunnlinje, tak ──
     var grid = '', v;
-    for(v = 100000; v <= yMax; v += 100000){
+    for(v = gridStep; v <= yMax; v += gridStep){
       if(v === CAP) continue;
       grid += mob ? 'M' + f1(V(v)) + ',' + (G.r0 - 4) + ' V' + rEnd + ' ' : 'M' + x0 + ',' + f1(V(v)) + ' H' + x1 + ' ';
     }
@@ -866,7 +877,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     obs.push(mob ? {x:capV - 2, y:G.r0 - 6, w:4, h:rEnd - G.r0 + 6} : {x:x0, y:capV - 2, w:x1 - x0, h:4});
 
     // ── Akser ──
-    for(v = (mob ? 100000 : 0); v <= yMax; v += 100000){
+    for(v = (mob ? gridStep : 0); v <= yMax; v += gridStep){
       if(mob){ lab += '<span class="lrn-tick x" style="left:' + f1(V(v) - 24) + 'px;top:26px">' + L.kr(v) + '</span>'; obs.push({x:V(v) - 24, y:26, w:48, h:16}); }
       else lab += '<span class="lrn-tick y" style="top:' + f1(V(v) - 8) + 'px;width:52px">' + L.kr(v) + '</span>';
     }
@@ -932,6 +943,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       txt(ph('Fradrag'), x1 + 6, 3, 46, 'center');
       var yt = rEnd + (ageKnown ? 38 : 10), tFr = ph('Skattefradrag til sammen:');
       endLab(G.W - 300, yt, 300, tFr, '', kr(M.fr), true);
+      endLab(G.W - 300, yt + 26, 300, t('lrnBsuSaldo', 'Saldo, {sats} % rente', {sats:L.dec(G.bsu, 1)}) + ':', '', kr(M.bal), true);
       var tl = textW(tFr, '400 12px Inter, system-ui, sans-serif') + 6 + textW(kr(M.fr), '600 13px Inter, system-ui, sans-serif');
       markerSpec.coins = {x:Math.max(0, G.W - tl - 30), y:yt - 2};
     }
@@ -961,7 +973,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         var one = function(rr2, w, text, targetX){
           var row = rows[rr2 - 1], xs = Math.max(V(row.cum), V(row.bal)) + 12, r = {x:xs, y:C(rr2) - 10, w:w, h:20};
           if(r.x + r.w > capV - 6 || !free(pad(r, 1), obs)) return;
-          chip(text, r.x, r.y); obs.push(r); lead.push('M' + f1(xs) + ',' + f1(C(rr2)) + ' H' + f1(targetX)); leadDots.push([targetX, C(rr2)]);
+          var tx = V(row.bal), ly = f1(C(rr2));
+          chip(text, r.x, r.y); obs.push(r);
+          // Pekerlinja hopper over saldostreken i stedet for å krysse den
+          lead.push(tx > targetX + 6 && tx < xs - 6 ? 'M' + f1(xs) + ',' + ly + ' H' + f1(tx + 4) + ' M' + f1(tx - 4) + ',' + ly + ' H' + f1(targetX) : 'M' + f1(xs) + ',' + ly + ' H' + f1(targetX));
+          leadDots.push([targetX, C(rr2)]);
         };
         one(rA, wA, tA, V(rows[rA - 1].cum) - 5);
         if(prev && rB !== rA) one(rB, wB, tB, V(prev.cum - prev.inv / 2));
@@ -990,7 +1006,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     }
 
     // ── Merknader og merker, i leserekkefølge ──
-    var notes = [], marks = '', ms = G.ms, Wc = G.W, Hc = mob ? rEnd + (ageKnown ? 64 : 36) : G.H;
+    var notes = [], marks = '', ms = G.ms, Wc = G.W, Hc = mob ? rEnd + (ageKnown ? 90 : 62) : G.H;
     function take(text, r){
       notes.push(text);
       if(r) marks += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(r.x) + 'px;top:' + f1(r.y) + 'px">' + notes.length + '</span>';
@@ -1000,7 +1016,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var j1 = mob ? 1 : Math.min(2, nInv), r1 = rows[j1 - 1], an = mob ? {x:V(r1.cum), y:C(j1)} : {x:C(j1), y:V(r1.cum)};
       var m1 = putMarker(an.x, an.y, ms, Wc, Hc, obs, mob ? [[1,0],[1,-1],[1,1],[0,-1],[0,1]] : [[0,-1],[-1,-1],[1,-1],[-1,0],[1,0]]);
       obs.push(m1);
-      take(M.plan === MAXY ? ph('Hvert trinn er ett års innskudd. Grensen er 27 500 kr i året, rundt 2 292 kr i måneden, og du kan fordele det fritt gjennom året.')
+      take(M.plan === MAXY ? ph('Hvert trinn er ett års innskudd. Grensen er 27 500 kr i året, rundt 2 291 kr i måneden, og du kan fordele det fritt gjennom året.')
         : t('lrnBsuSteps', 'Hvert trinn er ett års innskudd, her {belop}. Grensen er 27 500 kr i året, og du kan fordele det fritt gjennom året.', {belop:kr(M.plan)}), m1);
     }
     // 2. Fradraget

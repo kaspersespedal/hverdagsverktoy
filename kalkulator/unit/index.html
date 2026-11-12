@@ -7,9 +7,24 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/kalkulator/unit/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:title" content="Valutakonverter — Kalkulator">
+<meta property="og:description" content="Regn om et beløp mellom 15 valutaer med dagens markedskurs.">
+<meta property="og:url" content="https://hverdagsverktoy.com/kalkulator/unit/">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://open.er-api.com" crossorigin>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -49,12 +64,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Valutakonverter — kalkulator-skall (delt mønster med /kalkulator/rente/) */
@@ -127,10 +142,12 @@ body.focus-mode > footer{display:none}
 .ik-swap:focus-visible{outline:1px solid var(--accent);outline-offset:2px}
 .ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .ik-note strong{color:var(--ink2);font-weight:600}
+.lrn-uc-chain .uc-nx{display:inline-flex;align-items:center;gap:14px}
 
 .ks-result{background:var(--surface);padding:22px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .ks-r-eyebrow{font:500 10px/1 var(--font-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
 .ks-r-net{font-family:var(--font-serif);font-weight:500;font-size:40px;color:var(--accent-2);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.7px;line-height:1.05;word-break:break-word}
+.ks-r-net .unit{font-size:18px;color:var(--ink3);letter-spacing:0;margin-left:2px}
 .ks-r-mnd{font-size:12px;color:var(--ink3);line-height:1.5}
 
 .ks-r-stats{display:flex;flex-direction:column;gap:7px;padding-top:12px;border-top:1px solid var(--line)}
@@ -169,6 +186,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
+/* Heroen har ikke lenger tallene (.page-stats): de samme tallene står i stripa og resultatkortet rett under.
+   Én kolonne, ellers står det et tomt felt til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
 </style>
 </head>
 <body>
@@ -255,10 +275,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
     </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="unitLRes">Resultat</span><span class="v" id="hStatRes">–</span></div>
-      <div class="page-stat"><span class="l" data-i18n="unitStatRate">Kurs</span><span class="v" id="hStatRate">–</span></div>
-    </div>
   </div>
 </section>
 
@@ -280,10 +296,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
             <section class="ks-section">
               <div class="ik-section-head">
                 <h3 data-i18n="unitSectionInput">Konverter</h3>
-                <span class="meta" data-i18n="kalkTagLive">Live</span>
+                <span class="meta" data-i18n="kalkTagLive">Dagens kurs</span>
               </div>
               <div class="ik-stack">
-                <div class="ik-row">
+                <div class="ik-row full">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="uc-from" id="uc-lbl-from" data-i18n="unitLFrom">Fra</label>
                     <select id="uc-from" class="ik-select"></select>
@@ -329,9 +345,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       </div>
       <div class="side-card related">
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
-        <a href="/kalkulator/rente/"><span class="name" data-i18n="renteCrumb">Effektiv rente</span><span class="arr">→</span></a>
+        <a href="/kalkulator/valgevinst/"><span class="name">Valutagevinst</span><span class="arr">→</span></a>
         <a href="/personlig/budsjett/"><span class="name" data-i18n="relBudsjett">Budsjett</span><span class="arr">→</span></a>
-        <a href="/personlig/spare/"><span class="name" data-i18n="relSpare">Sparekalkulator</span><span class="arr">→</span></a>
+        <a href="/kalkulator/finance/"><span class="name" data-i18n="relFinance">Finansiell kalkulator</span><span class="arr">→</span></a>
       </div>
     </aside>
 
@@ -432,7 +448,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     <section class="lrn-sec lrn-uc-s" aria-labelledby="lrn-uc-h4">
       <h3 class="lrn-h3" id="lrn-uc-h4">Regnestykket</h3>
       <p class="lrn-p"><span>Alle kurser er lagret som hva 1 krone er verdt.</span> <span data-lrn="rgLead"></span></p>
-      <div class="lrn-uc-chain"><span data-lrn="rgA"></span><svg class="lrn-uc-arr" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg><span data-lrn="rgB"></span><svg class="lrn-uc-arr" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg><span data-lrn="rgC"></span></div>
+      <div class="lrn-uc-chain"><span data-lrn="rgA"></span><span class="uc-nx"><svg class="lrn-uc-arr" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg><span data-lrn="rgB"></span></span><span class="uc-nx"><svg class="lrn-uc-arr" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg><span data-lrn="rgC"></span></span></div>
       <div class="lrn-card lrn-uc-card">
         <span class="lrn-card-l">Formelen i ord</span>
         <div class="lrn-f"><i>resultat</i><span>=</span><span><i>beløp</i> × (<i>til-valuta per krone</i> ÷ <i>fra-valuta per krone</i>)</span></div>
@@ -449,7 +465,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <details><summary>Hvor kommer kursene fra?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Fra ExchangeRate-API. Det er midtkurser, og kilden oppdaterer dem én gang i døgnet.</p></div></details>
         <details><summary>Virker konverteren uten internett?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja, en stund. Siden lagrer de sist hentede kursene i nettleseren og bruker dem i inntil 7 dager. Etter det, eller hvis ingen kurs er lagret, brukes en innebygd reservetabell som kan være langt unna dagens kurs.</p></div></details>
         <details><summary>Hvor nøyaktig er resultatet?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kursen vises med fire desimaler og beløpet med to. Beløpet regnes med full presisjon. Det holder for å planlegge, men banken tar et påslag som siden ikke kjenner, og kursen kan ha beveget seg siden den ble hentet.</p></div></details>
-        <details><summary>Hva betyr (live), (lagret) og (ca.)?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Teksten under resultatet viser hvor kursen kommer fra: dagens kurs, en lagret kopi fra nettleseren med dato, eller reservetabellen (ca.). Tidslinjen over viser hvor gammel hver av dem er.</p></div></details>
+        <details><summary>Hva betyr (dagens kurs), (lagret) og (ca.)?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Teksten under resultatet viser hvor kursen kommer fra: dagens kurs, en lagret kopi fra nettleseren med dato, eller reservetabellen (ca.). Tidslinjen over viser hvor gammel hver av dem er.</p></div></details>
       </div>
     </section>
 
@@ -478,10 +494,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no.js?v=v232"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -491,7 +507,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var CC_CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
     // Mirror av shared/core.js linje 5111-5113
-    var ccCurrenciesNO = ['Norske kroner','Euro','US Dollar','Britiske pund','Svenske kroner','Danske kroner','Polske zloty','Sveitsiske franc','Japanske yen','Kinesiske yuan','Kanadiske dollar','Australske dollar','Indiske rupi','Tyrkiske lira','Brasilianske real'];
+    var ccCurrenciesNO = ['Norske kroner','Euro','Amerikanske dollar','Britiske pund','Svenske kroner','Danske kroner','Polske zloty','Sveitsiske franc','Japanske yen','Kinesiske yuan','Kanadiske dollar','Australske dollar','Indiske rupi','Tyrkiske lira','Brasilianske real'];
     var ccCurrencyCodes = ['NOK','EUR','USD','GBP','SEK','DKK','PLN','CHF','JPY','CNY','CAD','AUD','INR','TRY','BRL'];
     // Last-resort fallback rates vs NOK. Live ER-API erstatter disse innen ~500 ms.
     var ccRates = {NOK:1,EUR:0.0904,USD:0.0935,GBP:0.0737,SEK:0.9524,DKK:0.6404,PLN:0.3685,CHF:0.0813,JPY:14.02,CNY:0.6618,CAD:0.1267,AUD:0.1435,INR:7.88,TRY:3.39,BRL:0.5356};
@@ -585,24 +601,16 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         if(val === 0){
           resEl.textContent = '–';
         } else {
-          resEl.textContent = result.toLocaleString('no', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' ' + to;
+          resEl.textContent = result.toLocaleString('no', {minimumFractionDigits:2, maximumFractionDigits:2});
+          var unitEl = document.createElement('span'); unitEl.className = 'unit'; unitEl.textContent = ' ' + to; resEl.appendChild(unitEl);
         }
-      }
-
-      var hStatRes = document.getElementById('hStatRes');
-      if(hStatRes){
-        hStatRes.textContent = (val === 0) ? '–' : result.toLocaleString('no', {minimumFractionDigits:2, maximumFractionDigits:2});
-      }
-      var hStatRate = document.getElementById('hStatRate');
-      if(hStatRate){
-        hStatRate.textContent = rate.toLocaleString('no', {minimumFractionDigits:4, maximumFractionDigits:4});
       }
 
       var info = document.getElementById('uc-rate-info');
       var r = R_();
       if(info){
         var stateSuffix;
-        if(ccRatesLoaded) stateSuffix = ' ' + (r.ccLive || '(live)');
+        if(ccRatesLoaded) stateSuffix = ' ' + (r.ccLive || '(dagens kurs)');
         else if(ccRatesCached) stateSuffix = ' ' + (r.trKalkulatorUnitCached || '(lagret {d})').replace('{d}', ccLastUpdate || '').trim();
         else stateSuffix = ' ' + (r.ccApprox || '(ca.)');
         info.textContent = '1 ' + from + ' = ' + rate.toLocaleString('no', {minimumFractionDigits:4, maximumFractionDigits:4}) + ' ' + to + stateSuffix;
@@ -690,7 +698,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         for(var i=0;i<rows.length;i++){
           var label = rows[i][0]||'';
           var desc  = rows[i][1]||'';
-          html += '<div class="howto-row"><strong>'+label+'</strong><span>'+desc+'</span></div>';
+          html += '<div class="howto-row"><strong>'+label.replace(/^—\s*|\s*—$/g,'')+'</strong><span>'+desc+'</span></div>';
         }
       } else {
         if(r[prefix + 'Lead']) html += '<p>' + r[prefix + 'Lead'] + '</p>';
@@ -754,7 +762,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   var NB = '\u00a0';
   var DEF = {from:'USD', to:'NOK', val:1000};
   var CODES = ['NOK', 'EUR', 'USD', 'GBP', 'SEK', 'DKK', 'PLN', 'CHF', 'JPY', 'CNY', 'CAD', 'AUD', 'INR', 'TRY', 'BRL'];
-  var NAMES = ['Norske kroner', 'Euro', 'US Dollar', 'Britiske pund', 'Svenske kroner', 'Danske kroner', 'Polske zloty', 'Sveitsiske franc', 'Japanske yen', 'Kinesiske yuan', 'Kanadiske dollar', 'Australske dollar', 'Indiske rupi', 'Tyrkiske lira', 'Brasilianske real'];
+  var NAMES = ['Norske kroner', 'Euro', 'Amerikanske dollar', 'Britiske pund', 'Svenske kroner', 'Danske kroner', 'Polske zloty', 'Sveitsiske franc', 'Japanske yen', 'Kinesiske yuan', 'Kanadiske dollar', 'Australske dollar', 'Indiske rupi', 'Tyrkiske lira', 'Brasilianske real'];
   var root, axis, tline, input, ctx, raw = null, swap = false, view = null, lastActual = null, lastPair = '', lastW = 0, queued = false;
 
   function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
@@ -910,7 +918,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     set('rgRes', money(resR.result) + NB + Rg.to);
     // De 15 valutaene, med navnene på språket som vises
     var r = typeof window.R === 'function' ? window.R() : null, names = (r && r.ccCurrNames) || NAMES;
-    q('cur').innerHTML = CODES.map(function(c, i){ return '<span class="lrn-uc-cc"><b>' + c + '</b>' + NB + esc(String(names[i] || NAMES[i]).replace(/ /g, NB)) + '</span>'; }).join(' · ');
+    q('cur').innerHTML = CODES.map(function(c, i){ return '<span class="lrn-uc-cc"><b>' + c + '</b>' + NB + esc(String(names[i] || NAMES[i]).replace(/ /g, NB)) + '</span>'; }).join(NB + '· ');
   }
 
   function schedule(){

@@ -24,11 +24,11 @@
     {k:'dark',    l:'Mørk-blå',  group:'dark',  sub:'Kjølig natt',        pv:{bg:'#141a2c', ink:'#e9edf4', accent:'#7f9ad6'}},
     {k:'nordlys', l:'Nordlys',   group:'dark',  sub:'Aurora over fjord',  pv:{bg:'#0c1416', ink:'#e6f0ec', accent:'#4ec9a0'}},
     {k:'bw',      l:'Sort/hvit', group:'dark',  sub:'Høy kontrast',       pv:{bg:'#0a0a0a', ink:'#fafafa', accent:'#fafafa'}},
-    {k:'disco',   l:'Kosmisk',   group:'dark',  sub:'Nebula i neon',      pv:{bg:'#161226', ink:'#f0e6ff', accent:'#e91e8c'}},
+    {k:'disco',   l:'Kosmisk',   group:'dark',  sub:'Nebula i neon',      pv:{bg:'#161226', ink:'#f0e6ff', accent:'#ec3a9a'}},
     {k:'frost',   l:'Frost',     group:'light', sub:'Lys morgen',         pv:{bg:'#f7f9fc', ink:'#0f172a', accent:'#4f5fe5'}},
-    {k:'glass',   l:'Glass',     group:'light', sub:'Glass og dis',       pv:{bg:'#e8edf6', ink:'#1a1a2e', accent:'#6875f5'}},
-    {k:'pink',    l:'Rosa',      group:'light', sub:'Mykt blush',         pv:{bg:'#fffbfc', ink:'#3a2030', accent:'#d4748e'}},
-    {k:'hendrix', l:'Hendrix',   group:'light', sub:'Fillmore-plakat',    pv:{bg:'#fdf0d9', ink:'#2b0b3f', accent:'#cf0f7d'}}
+    {k:'glass',   l:'Glass',     group:'light', sub:'Glass og dis',       pv:{bg:'#e8edf6', ink:'#1a1a2e', accent:'#4151f2'}},
+    {k:'pink',    l:'Rosa',      group:'light', sub:'Mykt blush',         pv:{bg:'#fffbfc', ink:'#3a2030', accent:'#bd3a5e'}},
+    {k:'hendrix', l:'Hendrix',   group:'light', sub:'Fillmore-plakat',    pv:{bg:'#fdf0d9', ink:'#2b0b3f', accent:'#c40e76'}}
   ];
   // `hidden:true` tar språket ut av velgeren uten å fjerne koden: språkfila,
   // /<kode>/-sidene og ?lang=<kode> fungerer fortsatt for den som har lenka.
@@ -273,12 +273,12 @@
   .sw-carbon{background:#c58e5a}
   .sw-dark{background:#7f9ad6}
   .sw-nordlys{background:linear-gradient(135deg,#4ec9a0 0%,#2e9472 52%,#7b5cc4 100%)}
-  .sw-hendrix{background:linear-gradient(135deg,#cf0f7d 0%,#dd4f0a 58%,#6a12a3 100%)}
+  .sw-hendrix{background:linear-gradient(135deg,#c40e76 0%,#dd4f0a 58%,#6a12a3 100%)}
   .sw-bw{background:#fafafa}
-  .sw-disco{background:#e91e8c}
+  .sw-disco{background:#ec3a9a}
   .sw-frost{background:#4f5fe5}
-  .sw-glass{background:linear-gradient(135deg,#6875f5,#e8edf6)}
-  .sw-pink{background:#d4748e}
+  .sw-glass{background:linear-gradient(135deg,#4151f2,#e8edf6)}
+  .sw-pink{background:#bd3a5e}
 
   /* ── Ticker tape ──────────────────────────── */
   .tc-ticker{position:relative;padding:8px 0;
@@ -338,8 +338,36 @@
   @media(max-width:640px){
     #tc-theme-label,#tc-lang-label{display:none}
     .tc-actions{gap:10px}
-    nav .nav-back{display:none}
   }
+  /* «Forsiden» sto bare i toppmenyen på sju regnskapssider. Logoen lenker hjem og
+     brødsmulen står rett under, så den er borte på alle bredder: samme meny overalt. */
+  nav .nav-back{display:none}
+  /* Trykkflate på berøringsskjerm: minst 44 px høy og 40 px bred (var 13–33 × 20–23).
+     Polstring + like stor negativ marg: ikonene står der de stod, og flaten vokser ut i
+     lufta rundt dem. Mellomrommet på 10 px deles mellom naboene, så flatene aldri
+     overlapper; nedtellingen er bare et ikon på 13 px og vokser derfor mot venstre.
+     Forsidens piller har synlig ramme, der utvides flaten med ::after. */
+  @media(pointer:coarse){
+    .tc-btn{padding:17px 5px;margin:-12px -5px}
+    #tc-theme-btn{padding-inline-start:8px;margin-inline-start:-8px}
+    .tmr-pill,.nav-search-pill{position:relative}
+    .tmr-pill::after,.nav-search-pill::after{content:"";position:absolute;inset:-9px -5px}
+    .nav-search-pill kbd,.search-shell .search-kbd{display:none}
+  }
+  @media(pointer:coarse) and (max-width:480px){
+    .tmr-navbtn{padding-inline:25px 2px;margin-inline:-25px -2px}
+  }
+  /* Forsidens rad sprakk med 7 px på 360 px: pillene får litt mindre polstring der. */
+  @media(max-width:380px){
+    nav .tmr-pill,nav .nav-search-pill{padding-inline:9px}
+  }
+  /* Fokusmodus skjuler toppmenyen. Knappen i heroen er ute av syne når man har rullet, så en
+     liten flytende knapp (og Esc) gir veien ut. */
+  .tc-focus-exit{position:fixed;top:12px;inset-inline-end:16px;z-index:900;min-height:36px;padding:0 14px;
+    border-radius:999px;border:1px solid var(--line-2,var(--line));background:var(--menu-bg,var(--surface));
+    color:var(--ink);font:500 13px/1 var(--font-sans,inherit);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  .tc-focus-exit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  @media(hover:hover){.tc-focus-exit:hover{border-color:var(--accent)}}
   `;
   var styleEl = document.createElement('style');
   styleEl.id = 'tc-styles';
@@ -513,7 +541,7 @@
        lagt inn før dette, så .tc-actions finnes når timer.js kaller init(). */
     if(!document.querySelector('script[src*="/shared/timer.js"]')){
       var timerScript = document.createElement('script');
-      timerScript.src = '/shared/timer.js?v=v6';
+      timerScript.src = '/shared/timer.js?v=v7';
       document.head.appendChild(timerScript);
     }
 
@@ -693,7 +721,7 @@
     // at det finnes faner på begge sider.
     // Målt fra scrollerens egen venstrekant, ikke fra offsetLeft: .tabs-wrap
     // er position:sticky og dermed offsetParent for fanene, så offsetLeft bar
-    // med seg .container sin luft (22px på /skatt/, 14–32px ellers). Den luften
+    // med seg .container sin luft (16–32px). Den luften
     // finnes ikke i scrollLeft, så fanen havnet en gutter-bredde for langt
     // til venstre — merkbart nettopp på de smale skjermene dette er til for.
     var target = tabs.scrollLeft
@@ -710,7 +738,7 @@
   // hver kant bare tones når den skjuler noe.
   // --tabs-bleed leses av .container sin egen luft, slik at scrolleren kan gå
   // kant til kant uten at gutter-bredden hardkodes to steder; den varierer
-  // både per side og per breddetrinn (32/20/16/14px).
+  // per breddetrinn (32/16px).
   // Forsiden har ingen .tabs — der er kategori-raden (.quick-cats) den eneste
   // vannrette scrolleren, og den satt igjen med den gamle oppførselen mens
   // fanerekka fikk den nye. Samme mekanikk gjelder begge: en scroller med
@@ -817,9 +845,42 @@
     setTimeout(syncNavHeight, 1200);
   }
 
+  // ── «Avgift»-ikonet ──────────
+  // %-tegnet i HTML-en (sirkler r=2, strek 6→18) brukte bare midten av ikonboksen, så det
+  // var mindre og tynnere enn de andre faneikonene og leste som en × i liten størrelse.
+  // Det står i hver av de 82 sidene, derfor tegnes det om her.
+  function drawAvgiftIcon(){
+    var ico = document.querySelector('a.tab[href$="/avgift/"] svg');
+    if (ico) ico.innerHTML = '<circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><line x1="19.5" y1="4.5" x2="4.5" y2="19.5"/>';
+  }
+
   // syncTabRow FØR revealActiveTab: den legger på --tabs-bleed, som endrer
   // scrollerens bredde. Sentreringen må regne på den ferdige geometrien.
-  function bootTopChrome(){ render(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); }
+  // ── Fokusmodus: flytende «Lukk fokus» + Esc ──
+  function watchFocusMode(){
+    var btn = null;
+    function exit(){ document.body.classList.remove('focus-mode'); }
+    function sync(){
+      var on = document.body.classList.contains('focus-mode');
+      if (on && !btn){
+        var r = {}; try { r = (typeof R === 'function' && R()) || {}; } catch(_e){}
+        btn = document.createElement('button');
+        btn.type = 'button'; btn.className = 'tc-focus-exit';
+        btn.setAttribute('data-i18n', 'focusClose');
+        btn.textContent = r.focusClose || 'Lukk fokus';
+        btn.addEventListener('click', exit);
+        document.body.appendChild(btn);
+      } else if (!on && btn){ btn.remove(); btn = null; }
+    }
+    new MutationObserver(sync).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    document.addEventListener('keydown', function(e){
+      var calcKeys = document.getElementById('calcKeys');
+      if (e.key === 'Escape' && document.body.classList.contains('focus-mode') && !document.querySelector('.tc-menu.open,.tmr-pop.open') && !(calcKeys && calcKeys.offsetParent)) exit();
+    });
+    sync();
+  }
+
+  function bootTopChrome(){ render(); drawAvgiftIcon(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); watchFocusMode(); }
   if (document.readyState === 'loading')
     document.addEventListener('DOMContentLoaded', bootTopChrome);
   else bootTopChrome();

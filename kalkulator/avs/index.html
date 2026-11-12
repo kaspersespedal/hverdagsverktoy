@@ -3,12 +3,27 @@
 <head>
 <meta charset="utf-8">
 <title>Avskrivning — Kalkulator · Hverdagsverktøy</title>
-<meta name="description" content="Regnskapsmessig (lineær) og skattemessig (saldo) avskrivning, samt sammenlign metodene side ved side. Saldogruppe a–j etter sktl. §§ 14-40 til 14-48. Alt skjer lokalt i nettleseren.">
+<meta name="description" content="Regnskapsmessig (lineær) og skattemessig (saldo) avskrivning — sammenlign metodene side ved side. Saldogruppe a–j etter sktl. §§ 14-40 til 14-48.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/kalkulator/avs/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:title" content="Avskrivning — Kalkulator">
+<meta property="og:description" content="Regnskapsmessig (lineær) og skattemessig (saldo) avskrivning — sammenlign metodene side ved side. Saldogruppe a–j etter sktl. §§ 14-40 til 14-48.">
+<meta property="og:url" content="https://hverdagsverktoy.com/kalkulator/avs/">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -48,12 +63,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Avskrivning — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/lonnut/) */
@@ -130,7 +145,7 @@ select.ik-input{
 .mode-btn{
   flex:1;min-width:auto;min-height:40px;background:transparent;border:1px solid var(--line-2);
   color:var(--ink2);padding:10px 6px;border-radius:5px;
-  font:600 11px/1 var(--font-sans);letter-spacing:.5px;text-transform:uppercase;
+  font:500 13.5px/1 var(--font-sans);letter-spacing:0;
   cursor:pointer;
   transition:border-color .2s var(--ease,ease), color .2s var(--ease,ease), background .2s var(--ease,ease);
 }
@@ -210,6 +225,18 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
+/* Heroen har ikke lenger tallene (.page-stats): de samme tallene står i stripa og resultatkortet rett under.
+   Én kolonne, ellers står det et tomt felt til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
+/* Berøringsskjerm: samme rekkefølge som de andre forklaringsblokkene (valg og utlesing over grafen).
+   learn.css løfter bare .lrn-bar til order 2, så uten dette havnet valgene under tabellen. */
+@media(pointer:coarse){
+  .lrn-av-main > *{order:10}
+  .lrn-av-main > .lrn-bar{order:2}
+  .lrn-av-main > .lrn-av-scrub{order:3}
+  .lrn-av-main > .lrn-av-row{order:4}
+  .lrn-av-main > .lrn-cmp{order:5}
+}
 </style>
 </head>
 <body>
@@ -295,10 +322,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
-    </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="avsStatTotal">Total avskrivning</span><span class="v" id="hStatTotal">–</span></div>
-      <div class="page-stat"><span class="l" data-i18n="avsStatRest">Verdi etter periode</span><span class="v" id="hStatRest">–</span></div>
     </div>
   </div>
 </section>
@@ -395,7 +418,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
             <button type="button" id="avsCsvBtn" class="res-csv" disabled>
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2 V10"/><polyline points="3.5 6.5 7 10 10.5 6.5"/><line x1="2" y1="12" x2="12" y2="12"/></svg>
-              <span data-i18n="avsCsvBtn">Last ned (CSV)</span>
+              <span data-i18n="avsCsvBtn">Last ned CSV</span>
             </button>
           </aside>
         </div>
@@ -409,18 +432,18 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     </div>
 
     <aside class="side-col" aria-label="Regler og relaterte verktøy">
-      <div class="side-card related">
-        <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
-        <a href="/personlig/bil/"><span class="name" data-i18n="relBil">Bilkostnad</span><span class="arr">→</span></a>
-        <a href="/skatt/inntekt/"><span class="name" data-i18n="relLonn">Lønn etter skatt</span><span class="arr">→</span></a>
-        <a href="/regnskap/"><span class="name" data-i18n="relRegnskap">Regnskap</span><span class="arr">→</span></a>
-      </div>
       <div class="side-card method">
         <h4 data-i18n="avsSideMethod">Når skal det avskrives?</h4>
         <ol class="method-list">
           <li><span class="n">01</span><span class="t"><span data-i18n="avsMethod3">Et driftsmiddel over 30 000 kr og forventet levetid over 3 år</span> <b data-i18n="avsMethod3B">skal aktiveres og avskrives</b>.</span></li>
           <li><span class="n">02</span><span class="t"><b data-i18n="avsMethod4B">Påkost</b> <span data-i18n="avsMethod4">aktiveres på saldoen, salg/skroting trekkes fra. Negativ saldo gir gevinst.</span></span></li>
         </ol>
+      </div>
+      <div class="side-card related">
+        <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
+        <a href="/personlig/bil/"><span class="name" data-i18n="relBil">Bilkostnad</span><span class="arr">→</span></a>
+        <a href="/skatt/inntekt/"><span class="name" data-i18n="relLonn">Inntektsskatt</span><span class="arr">→</span></a>
+        <a href="/regnskap/"><span class="name" data-i18n="relRegnskap">Regnskap</span><span class="arr">→</span></a>
       </div>
     </aside>
 
@@ -452,7 +475,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         </div>
         <div class="lrn-av-row">
           <figure class="lrn-fig" aria-describedby="lrn-av-sum">
-            <figcaption class="lrn-cap">Verdi på driftsmiddelet i kroner, ved utgangen av hvert år</figcaption>
+            <figcaption class="lrn-cap">Verdi på driftsmidlet i kroner, ved utgangen av hvert år</figcaption>
             <div class="lrn-plot is-static lrn-av-plot" dir="ltr">
               <svg aria-hidden="true" focusable="false">
                 <defs>
@@ -556,7 +579,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <li><a href="/regnskap/resultat/"><span><span class="t">Resultatregnskap</span><span class="d">Avskrivning er en kostnad i resultatregnskapet. Se hva den gjør med årets resultat.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
         <li><a href="/personlig/bil/"><span><span class="t">Bilkostnad</span><span class="d">Personbil hører til saldogruppe d. Se hva verditapet koster deg.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
         <li><a href="/regnskap/skatteavstemming/"><span><span class="t">Skatteavstemming</span><span class="d">Ulik avskrivning i regnskap og skatt gir en midlertidig forskjell. Se hvordan den avstemmes.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
-        <li><a href="/kalkulator/npv/"><span><span class="t">NPV / IRR</span><span class="d">Saldo gir fradraget tidligere. Se hva et fradrag i framtiden er verdt i dag.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/kalkulator/npv/"><span><span class="t">Nåverdi (NPV/IRR)</span><span class="d">Saldo gir fradraget tidligere. Se hva et fradrag i fremtiden er verdt i dag.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
       </ul>
     </nav>
   </div>
@@ -577,10 +600,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no.js?v=v232"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -750,7 +773,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         var vdiff = bv - tv;
         valRows += '<tr><td>'+i+'</td><td class="v">'+fmt(bv)+'</td><td class="v">'+fmt(tv)+'</td><td class="v">'+fmtSigned(vdiff)+'</td></tr>';
       }
-      rows.push('<tr><td colspan="4" style="padding:16px 0 8px;border-bottom:none;"><div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;">Verdi på driftsmiddelet</div><table class="bd-table" style="width:100%;">'+valRows+'</table><div style="font-size:11.5px;color:var(--ink3);margin-top:8px;line-height:1.5;font-style:italic;">Bokført verdi = regnskapsmessig restverdi (lineær). Skattemessig verdi = saldoverdi (degressiv). Forskjell = bokført − skattemessig. Positiv forskjell → utsatt skattegjeld. Negativ → utsatt skattefordel.</div></td></tr>');
+      rows.push('<tr><td colspan="4" style="padding:16px 0 8px;border-bottom:none;"><div style="font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;">Verdi på driftsmidlet</div><table class="bd-table" style="width:100%;">'+valRows+'</table><div style="font-size:11.5px;color:var(--ink3);margin-top:8px;line-height:1.5;font-style:italic;">Bokført verdi = regnskapsmessig restverdi (lineær). Skattemessig verdi = saldoverdi (degressiv). Forskjell = bokført − skattemessig. Positiv forskjell → utsatt skattegjeld. Negativ → utsatt skattefordel.</div></td></tr>');
 
       totalDepr = accTotalDepr;
       endValue = Math.max(bookVal, 0);
@@ -784,7 +807,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       setOutputText('rVerdict', 'Skriv inn kjøpesum for å se beregningen');
       setOutputText('rPrice','–'); setOutputText('rMethod','–'); setOutputText('rRate','–');
       setOutputText('rPeriod','–'); setOutputText('rEnd','–');
-      setOutputText('hStatTotal','–'); setOutputText('hStatRest','–');
       setOutputText('avsStripPrice','–'); setOutputText('avsStripRate','–');
       setOutputText('avsStripPeriod','–'); setOutputText('avsStripTotal','–');
       var bd = document.getElementById('avsBreakdown');
@@ -811,13 +833,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     else verdict = tx('trKalkulatorAvsVerdictCmp', 'Sammenlign metodene over {n} år. Differansen påvirker utsatt skatt i balansen.', {n:d.years});
     setOutputText('rVerdict', verdict);
 
-    // ks-strip + hero-stats
+    // ks-strip
     setOutputText('avsStripPrice', fmtKr(d.price));
     setOutputText('avsStripRate', d.mode === 'compare' ? rateLbl : (d.mode === 'skatt' ? fmtPct(d.taxRate*100) : fmtPct(d.regPct*100)));
     setOutputText('avsStripPeriod', yearsLbl);
     setOutputText('avsStripTotal', fmtKr(d.totalDepr));
-    setOutputText('hStatTotal', fmtKr(d.totalDepr));
-    setOutputText('hStatRest', fmtKr(d.endValue));
 
     document.getElementById('avsBdTable').innerHTML = '<table class="bd-table">' + d.rowsHtml + '</table>';
     document.getElementById('avsBreakdown').classList.remove('empty');
@@ -937,7 +957,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         for(var i=0;i<rows.length;i++){
           var label = rows[i][0]||'';
           var desc  = rows[i][1]||'';
-          html += '<div class="howto-row"><strong>'+label+'</strong><span>'+desc+'</span></div>';
+          html += '<div class="howto-row"><strong>'+label.replace(/^—\s*|\s*—$/g,'')+'</strong><span>'+desc+'</span></div>';
         }
       } else {
         if(r[prefix + 'Lead']) html += '<p>' + r[prefix + 'Lead'] + '</p>';
@@ -1243,7 +1263,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         bracket(x, yU, yL);
         var tall = yL - yU >= ms + 8;
         r = putMarker(tall ? x + 9 : x - ms / 2, tall ? (yU + yL) / 2 - ms / 2 : yU - ms - 8, x + 20, (yU + yL) / 2);
-        text = t('lrnAvGap', 'Gapet er størst i år {k}: {d} × 22' + NB + '% = {u} utsatt skattegjeld. Skatten har fått fradraget før regnskapet.', {k:kP, d:kr(diff[kP]), u:kr(diff[kP] * UT)});
+        text = t('lrnAvGap', 'Gapet er størst i år {k}: {d}' + NB + '×' + NB + '22' + NB + '% =' + NB + '{u} utsatt skattegjeld. Skatten har fått fradraget før regnskapet.', {k:kP, d:kr(diff[kP]), u:kr(diff[kP] * UT)});
       } else if(a.kind === 'cross'){
         var xc = X(tc), yc = Y(bookAt(tc));
         openD += circ(xc, yc, 3.5);
@@ -1275,7 +1295,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         x = X(a.t); y = Y(bookAt(a.t));
         dotD += circ(x, y, 3);
         r = putMarker(x + 8, y - ms - 10, x, y);
-        text = (lifeOk ? t('lrnAvRate', 'Lineær sats er 100 ÷ {n} år = {p}.', {n:d.life, p:pct(regP)}) : t('lrnAvRate2', 'Lineær sats er {p}.', {p:pct(regP)}))
+        text = (lifeOk ? t('lrnAvRate', 'Lineær sats er 100' + NB + '÷' + NB + '{n} år' + NB + '=' + NB + '{p}.', {n:d.life, p:pct(regP)}) : t('lrnAvRate2', 'Lineær sats er {p}.', {p:pct(regP)}))
           + ' ' + t('lrnAvRate3', 'Samme beløp, {k}, trekkes fra hvert år til verdien har nådd restverdien.', {k:kr(m.annual)});
       } else if(a.kind === 'rend'){
         x = X(m.life); y = Y(bookAt(m.life));

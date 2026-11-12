@@ -26,7 +26,7 @@ var SEARCH_DATA = [
   // Boliglån
   {name:'Boliglånskalkulator',desc:'Beregn månedlig betaling, rente og totalkostnad',url:'/boliglan/mor/',tags:'boliglån lån bolig hus leilighet rente annuitet serielån avdrag nedbetaling månedlig betaling mortgage',type:'tool',page:'Boliglån',sk:'boliglan'},
   {name:'Hva har jeg råd til?',desc:'Maks lånebeløp basert på inntekt og egenkapital',url:'/boliglan/maxlan/',tags:'maks lån hva kan jeg låne inntekt egenkapital gjeldsgrad utlånsforskriften låneramme boliglån max loan',type:'tool',page:'Boliglån',sk:'maxlan'},
-  {name:'Bolig vs leie',desc:'Sammenlign total kostnad over X år — hva lønner seg?',url:'/boliglan/bvl/',tags:'bolig vs leie kjøpe leie sammenligne break-even eie rent vs buy investering avkastning',type:'tool',page:'Boliglån',sk:'bvl'},
+  {name:'Eie eller leie?',desc:'Sammenlign total kostnad over X år — hva lønner seg?',url:'/boliglan/bvl/',tags:'bolig vs leie kjøpe leie sammenligne break-even eie rent vs buy investering avkastning',type:'tool',page:'Boliglån',sk:'bvl'},
 
   // Kalkulator (hash handled by switchCalcMode in core.js)
   {name:'Enkel kalkulator',desc:'Standard kalkulator med grunnleggende regning',url:'/kalkulator/enkel/',tags:'kalkulator regnemaskin pluss minus gange dele prosent calculator',type:'tool',page:'Kalkulator',sk:'kalkBasic'},
@@ -719,10 +719,18 @@ function injectSearchStyles(){
   '.search-box:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 32%,transparent);}' +
   '.search-icon{color:var(--ink3);flex-shrink:0;transition:color .2s;}' +
   '.search-box:focus-within .search-icon{color:var(--accent);}' +
-  '#search-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font:inherit;padding:2px 0;}' +
+  '#search-input{flex:1;min-width:0;background:transparent;border:0;outline:0;color:var(--ink);font:inherit;padding:2px 0;text-overflow:ellipsis;}' +
   '#search-input::placeholder{color:var(--ink4,var(--ink3));}' +
-  '.search-kbd{font:600 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink3);background:var(--bg);border:1px solid var(--line);padding:3px 7px;border-radius:6px;flex-shrink:0;}' +
-  '.search-box:focus-within .search-kbd{display:none;}' +
+  // Tastetipset har samme form som på forsiden: to taster, en strek foran.
+  '.search-keys{position:relative;display:inline-flex;gap:4px;align-items:center;padding-left:12px;flex-shrink:0;}' +
+  '.search-keys::before{content:"";position:absolute;left:0;top:50%;width:1px;height:18px;margin-top:-9px;background:var(--line-2);}' +
+  '.search-keys kbd{font:600 11px/1 var(--font-sans);letter-spacing:.4px;color:var(--ink2);background:color-mix(in srgb,var(--ink) 4%,transparent);border:1px solid var(--line-2);border-radius:4px;padding:5px 6px;min-width:18px;box-sizing:border-box;text-align:center;}' +
+  '.search-box:focus-within .search-keys{display:none;}' +
+  // Tastetipset gir ingen mening uten tastatur.
+  '@media (pointer:coarse){.search-keys{display:none;}}' +
+  // Søkefeltet i toppmenyen (lov, regnskap): den tomme forslagsraden har 10px topp-marg,
+  // som dyttet feltet ut av midten av raden.
+  '.nav-right .search-suggestions:not(.visible){margin-top:0;}' +
   // Glass er det ene temaet med halvgjennomsiktig --surface (hvit .62). Et
   // flytende panel må være ugjennomsiktig for å være lesbart — nedtrekket har
   // ingen backdrop-filter, så med --surface leser sideinnholdet rett gjennom
@@ -810,8 +818,51 @@ function renderResults(results, q){
   return groupRowsHtml(deduped.slice(0,7), q);
 }
 
+/* ─── Tastetipset ───
+   «/» krever Shift+7 på norsk tastatur, så tipset viser snarveien som er kjent fra andre
+   nettsteder: ⌘ K på Mac og Ctrl K ellers. Begge er koblet nederst i initSearch, og «/»
+   virker fortsatt. Forsiden har ⌘ skrevet fast i HTML og rettes her. */
+var IS_MAC = /Mac|iPhone|iPad|iPod/.test(navigator.platform || '');
+var KBD_LABEL = IS_MAC ? '⌘ K' : 'Ctrl K';
+function fixHomeKbd(){
+  if(IS_MAC) return;
+  var kbds = document.querySelectorAll('.nav-search-pill kbd,.search-shell .search-kbd kbd');
+  for(var i=0; i<kbds.length; i++) kbds[i].textContent = kbds[i].textContent.replace('⌘K','Ctrl K').replace('⌘','Ctrl');
+}
+
+/* ─── Plassholderen skal aldri kuttes midt i et ord ───
+   Viser den lengste teksten som får plass: full tekst, kortversjonen på norsk, eller første
+   ledd av språkets egen tekst («Search for tools…»), så alle språk virker uten nye nøkler.
+   core.js bytter placeholder-attributtet ved språkskifte, derfor MutationObserver;
+   bredden endrer seg med skjermen, skriften og toppmenyen, derfor ResizeObserver. */
+function fitPlaceholder(input){
+  var long = input.getAttribute('placeholder') || '', shown = long;
+  var ctx = document.createElement('canvas').getContext('2d');
+  function fit(){
+    var cur = input.getAttribute('placeholder') || '';
+    if(cur !== shown) long = cur;
+    var room = input.clientWidth;
+    if(!room || !ctx) return;
+    var cs = getComputedStyle(input);
+    ctx.font = cs.fontStyle+' '+cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;
+    var first = long.split(/[,،、፣]/)[0].replace(/…$/,'').trim()+'…';
+    var opts = /^Søk\b/.test(long) ? [long,'Søk etter verktøy og begreper',first] : [long,first];
+    var want = first;
+    for(var i=0; i<opts.length; i++){
+      if(ctx.measureText(opts[i]).width <= room){ want = opts[i]; break; }
+    }
+    shown = want;
+    if(cur !== want) input.setAttribute('placeholder', want);
+  }
+  fit();
+  if(window.MutationObserver) new MutationObserver(fit).observe(input, {attributes:true, attributeFilter:['placeholder']});
+  if(window.ResizeObserver) new ResizeObserver(fit).observe(input);
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+}
+
 /* ─── Build and inject the search bar ─── */
 function initSearch(){
+  fixHomeKbd();
   var point = findInjectionPoint();
   if(!point) return;
   injectSearchStyles();
@@ -821,13 +872,13 @@ function initSearch(){
   wrap.id = 'site-search';
 
   var placeholder = T('searchPlaceholder','Søk etter verktøy eller begrep...');
-  var kbdHint = T('searchKbdHint','Trykk / for å fokusere søket');
+  var kbdHint = T('searchKbdHint','Trykk / for å fokusere søket').replace('/', KBD_LABEL);
 
   wrap.innerHTML =
     '<div class="search-box">' +
       '<svg class="search-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>' +
       '<input type="text" id="search-input" placeholder="'+placeholder+'" data-i18n-placeholder="searchPlaceholder" autocomplete="off" spellcheck="false" aria-label="'+placeholder+'" role="combobox" aria-expanded="false" aria-controls="search-dropdown">' +
-      '<kbd class="search-kbd" title="'+kbdHint+'" aria-label="'+kbdHint+'">/</kbd>' +
+      '<span class="search-keys" role="img" title="'+kbdHint+'" aria-label="'+kbdHint+'"><kbd>'+(IS_MAC ? '⌘' : 'Ctrl')+'</kbd><kbd>K</kbd></span>' +
     '</div>' +
     '<div class="search-dropdown" id="search-dropdown" role="listbox" aria-live="polite"></div>' +
     '<div class="search-suggestions" id="search-suggestions"></div>';
@@ -837,6 +888,7 @@ function initSearch(){
   var input    = document.getElementById('search-input');
   var dropdown = document.getElementById('search-dropdown');
   var chips    = document.getElementById('search-suggestions');
+  fitPlaceholder(input);
   var activeIdx = -1;
 
   // Combobox open/close — holder aria-expanded synk med dropdownen (a11y H9)

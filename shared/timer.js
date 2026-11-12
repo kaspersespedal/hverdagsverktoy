@@ -479,6 +479,10 @@ var CSS = [
 '  cursor:pointer;transition:color .15s ease}',
 '.tmr-link svg{width:14px;height:14px;flex:0 0 auto}',
 '.tmr-link[disabled]{opacity:.45;cursor:default}',
+/* Trykkflater: glidebryteren og de to små knappene er 44 px høye på berøringsskjerm og mobil. */
+'@media(pointer:coarse),(max-width:640px){',
+'  .tmr-range{height:44px;margin-top:4px}',
+'  .tmr-mute,.tmr-link{min-height:44px;padding-top:0;padding-bottom:0}}',
 
 /* — timer-knapp i toppen på sider som ikke har en egen (se mountNavTimer).
    Forsiden eier sin egen pille i HTML og styles der (E247); denne bygges av
