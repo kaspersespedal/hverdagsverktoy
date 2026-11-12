@@ -47,6 +47,19 @@ html body{overflow-x:clip}
    lastes etter og overstyrte den med samme spesifisitet. */
 ::selection{background:rgba(var(--glow-rgb),.28);color:var(--ink)}
 .container{max-width:1180px;margin:0 auto;padding:0 32px}
+/* Logo og faner hoppet sideveis når du klikket deg rundt: 17 sider hadde en inline
+   .container på 1120px, og mobilmargen var 32, 22, 20, 16 eller 14px alt etter side.
+   body-prefikset (0,1,1) slår de inline kopiene (0,1,0), så alle sider får samme
+   bredde og marg. padding-inline, ikke padding: noen containere har egen padding-top.
+   .fr-inner er forsidens egen container rundt «Viktige frister», med samme tall. */
+body .container,body .fr-inner{max-width:1180px;padding-inline:32px}
+@media (max-width:640px){body .container,body .fr-inner{padding-inline:16px}}
+
+/* Linjeskift: ikke ett ord alene på siste linje. Langformen text-wrap-style, ikke
+   kortformen text-wrap: kortformen setter også text-wrap-mode:wrap, og ville opphevet
+   nowrap for en overskrift eller et listepunkt som arver det. */
+h1,h2,h3,h4,.cat-hero .ch-sub{text-wrap-style:balance}
+p,li,dd,summary{text-wrap-style:pretty}
 
 /* ATMOSPHERE — aurora ON site-wide (2026-05-31). Reverses the earlier "flat
    calm" experiment. The aurora markup + atmosphere.js + per-theme tokens are
@@ -139,6 +152,10 @@ body.embed .calc-wrap .container{grid-template-columns:1fr;padding:0;max-width:n
   background:var(--bg);
   border-bottom:1px solid var(--line)}
 nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:24px}
+/* Samme høyde på toppmenyen overalt. Høyden ble 92px der søkefeltet står i menyen
+   (lov, regnskap), 70px på forsiden med timer-pilla og 64px ellers, så alt under
+   hoppet opp og ned. min-height, ikke height: raden må kunne vokse hvis den brytes. */
+body .nav-wrap nav{min-height:64px;padding-block:0}
 .brand-row{display:flex;align-items:center;gap:11px;text-decoration:none;color:var(--ink)}
 /* Flisa bak logomerket. Fargen eies av --mark-bg i themes.css, som setter den
    for alle ni temaene — mørke temaer løfter flisa fra den nesten svarte
@@ -232,10 +249,19 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   white-space:nowrap;display:inline-flex;align-items:baseline;gap:5px}
 .page-stat .v .u{font-family:var(--font-sans);font-weight:400;font-size:12px;
   color:var(--ink4);letter-spacing:0;text-transform:none}
-/* Hero-knappene (? og ⛶) når heroen står i én kolonne: to tomme rundinger
-   hang alene under tittelen. Her blir de pillknapper med ikon og ord.
-   Ordet er aria-label (oversatt i core.js); tegnet i knappen skjules med
-   font-size:0 og ikonet tegnes som maske i currentColor. */
+/* Hero-knappene (? og ⛶): tegnene i HTML-en kom i nettleserens standardskrift (Arial),
+   og ⛶ så ulik ut fra maskin til maskin. Tegnet skjules med font-size:0 på alle
+   bredder, og ikonet tegnes som maske i currentColor, så det følger temaet og hover.
+   På PC er knappen allerede rund, så spørsmålstegnet står her uten egen ring. */
+.page-hero-actions > .calc-help-btn,
+.page-hero-actions > .focus-card-btn{font-size:0}
+.page-hero-actions > .calc-help-btn::before,
+.page-hero-actions > .focus-card-btn::before{content:'';width:16px;height:16px;flex:none;background:currentColor;
+  -webkit-mask:var(--hv-ico) center/contain no-repeat;mask:var(--hv-ico) center/contain no-repeat}
+.page-hero-actions > .calc-help-btn{--hv-ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M5.5 5.8a2.6 2.6 0 0 1 5.1.7c0 1.8-2.6 2.1-2.6 3.8'/%3E%3Ccircle cx='8' cy='12.9' r='.5' fill='%23000'/%3E%3C/svg%3E")}
+.page-hero-actions > .focus-card-btn{--hv-ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10'/%3E%3C/svg%3E")}
+/* Når heroen står i én kolonne: to tomme rundinger hang alene under tittelen. Her
+   blir de pillknapper med ikon og ord. Ordet er aria-label (oversatt i core.js). */
 @media (max-width:1024px){
   .page-hero .page-hero-actions{flex-wrap:wrap;gap:8px}
   .page-hero-actions > .calc-help-btn,
@@ -244,16 +270,13 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
     width:auto;height:32px;padding:0;padding-inline:10px 12px;gap:0;border-radius:999px;
     font-size:0;background:rgba(var(--wash-rgb),.03);border:1px solid var(--line-2);color:var(--ink2)}
   .page-hero-actions > .calc-help-btn::before,
-  .page-hero-actions > .focus-card-btn::before{content:'';width:14px;height:14px;flex:none;
-    margin-inline-end:6px;background:currentColor;
-    -webkit-mask:var(--hv-ico) center/contain no-repeat;mask:var(--hv-ico) center/contain no-repeat}
+  .page-hero-actions > .focus-card-btn::before{width:14px;height:14px;margin-inline-end:6px}
   .page-hero-actions > .hero-csv-btn svg{margin-inline-end:6px}
   .page-hero-actions > .calc-help-btn::after,
   .page-hero-actions > .focus-card-btn::after{content:attr(aria-label)}
   .page-hero-actions > .hero-csv-btn::after{content:'CSV'}
   .page-hero-actions > *::after{font:500 12.5px/1 var(--font-sans);letter-spacing:0}
   .page-hero-actions > .calc-help-btn{--hv-ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round'%3E%3Ccircle cx='8' cy='8' r='6.6'/%3E%3Cpath d='M6.2 6.2a1.9 1.9 0 0 1 3.7.6c0 1.3-1.9 1.6-1.9 2.8'/%3E%3Ccircle cx='8' cy='11.6' r='.4' fill='%23000'/%3E%3C/svg%3E")}
-  .page-hero-actions > .focus-card-btn{--hv-ico:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10'/%3E%3C/svg%3E")}
   .page-hero-actions > button:active{background:rgba(var(--wash-rgb),.08)}
   body.focus-mode .page-hero-actions > .focus-card-btn{color:var(--ink);border-color:var(--line-warm)}
 }
@@ -262,9 +285,21 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 @media (max-width:640px){
   .crumb .here,.crumb .sep:nth-last-child(2){display:none}
 }
+/* Trykkflate i brødsmulen på berøringsskjerm: lenkene var 12px høye og pila 22×22.
+   Polstring + like stor negativ marg: teksten står der den stod, og flaten vokser ut
+   i lufta rundt. Pila tegner ringen sin som ::before, for selve knappen må være 44×44.
+   Lenka rett etter pila vokser ikke mot venstre, ellers ville flatene overlappet. */
+@media (pointer:coarse){
+  .crumb a:not(.crumb-back){padding:16px 10px;margin:-16px -10px}
+  .crumb .crumb-back + a{padding-inline-start:0;margin-inline-start:0}
+  body .crumb-back{position:relative;width:44px;height:44px;border-color:transparent;
+    margin-block:-11px;margin-inline:-11px -7px}
+  body .crumb-back::before{content:"";position:absolute;inset:11px;
+    border:1px solid var(--line-2);border-radius:50%}
+}
 
 .calc-wrap{padding:28px 0 24px}
-.calc-wrap .container{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start}
+.calc-wrap .container{display:grid;grid-template-columns:1fr 260px;gap:28px;align-items:start}
 /* Howto-drawer skal være en sentrert blokk i full container-bredde — ikke fanges av .calc-wrap-grid (3 klasser slår 2-klasse grid-regelen uansett kilderekkefølge). Skjult som standard — vises kun når ?-knappen legger til .howto-open. */
 .calc-wrap .container.howto-wrap,.calc-wrap > .container.howto-wrap{display:none;grid-template-columns:none}
 .calc-wrap .container.howto-wrap.howto-open,.calc-wrap > .container.howto-wrap.howto-open{display:block}
@@ -288,8 +323,8 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 .hidden{display:none !important}
 .ik-row[hidden],.ik-row.is-hidden,.ik-fg[hidden],.ik-fg.is-hidden,.ks-r-stat[hidden],.ks-section[hidden]{display:none}
 .ik-lbl{font:500 12px/1.3 var(--font-sans);color:var(--ink2);
-  display:flex;align-items:baseline;justify-content:space-between;gap:8px}
-.ik-lbl .cap{font:400 11px/1 var(--font-sans);color:var(--ink4);letter-spacing:0}
+  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:2px 8px}
+.ik-lbl .cap{font:400 12px/1 var(--font-sans);color:var(--ink4);letter-spacing:0;white-space:nowrap}
 .ik-input,.ik-select{
   width:100%;background:rgba(var(--wash-rgb),.025);border:1px solid var(--line-2);border-radius:5px;
   padding:11px 13px;color:var(--ink);
@@ -325,7 +360,7 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
              0 0 20px -2px color-mix(in srgb, var(--err) 18%, transparent)}
 .ik-fg.is-error .ik-lbl{color:color-mix(in srgb, var(--err) 66%, var(--ink2))}
 .ik-err{display:flex;align-items:center;gap:6px;
-  font:500 11.5px/1.4 var(--font-sans);color:var(--err);letter-spacing:0}
+  font:500 12px/1.4 var(--font-sans);color:var(--err);letter-spacing:0}
 .ik-err svg{flex:none;width:13px;height:13px;stroke:currentColor}
 
 /* Read-only derived value — mirrors ik-input shape but with accent + label inside */
@@ -338,11 +373,11 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   border:1px dashed color-mix(in srgb, var(--accent) 32%, transparent);
   border-radius:5px;min-height:46px;
 }
-.ik-derived .l{font:500 10.5px/1 var(--font-sans);color:var(--ink3);
+.ik-derived .l{font:500 11px/1 var(--font-sans);color:var(--ink3);
   letter-spacing:.16em;text-transform:uppercase}
 .ik-derived .v{font:500 16px/1 var(--font-sans);color:var(--accent-2);
   font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.1px}
-.ik-derived .v .u{font:400 11px/1 var(--font-sans);color:var(--ink3);margin-left:2px}
+.ik-derived .v .u{font:400 12px/1 var(--font-sans);color:var(--ink3);margin-left:2px}
 
 .ik-segs{display:grid;grid-template-columns:repeat(var(--segs,4),1fr);gap:4px;
   padding:3px;background:rgba(var(--wash-rgb),.025);
@@ -362,8 +397,8 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   background:rgba(var(--glow-rgb),.10);color:var(--ink);
   box-shadow:inset 0 0 0 1px var(--line-warm)}
 .ik-seg[aria-pressed="true"] .glyph{opacity:1;color:var(--accent-2)}
-.ik-hint{font-size:11.5px;color:var(--ink3);line-height:1.45}
-.ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.ik-hint{font-size:12px;color:var(--ink3);line-height:1.45}
+.ik-note{font-size:12px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .ik-section-head{display:flex;align-items:baseline;gap:14px;
   padding-bottom:10px;margin-bottom:14px;border-bottom:1px solid var(--line)}
 .ik-section-head h3{font:500 13px/1 var(--font-sans);letter-spacing:0;color:var(--ink2);margin:0}
@@ -385,21 +420,20 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 
 .ks-strip{display:grid;grid-template-columns:repeat(4,1fr);
   border-bottom:1px solid var(--line)}
-.ks-strip-cell{padding:18px 22px;
+.ks-strip-cell{padding:18px 24px;
   display:flex;flex-direction:column;gap:7px;align-items:flex-start;text-align:left;position:relative}
 .ks-strip-cell + .ks-strip-cell::before{content:'';position:absolute;left:0;
   top:22%;bottom:22%;width:1px;background:var(--line)}
-.ks-strip-cell .l{font:500 11px/1 var(--font-sans);letter-spacing:.2px;color:var(--ink3)}
+.ks-strip-cell .l{font:500 12px/1.25 var(--font-sans);letter-spacing:.2px;color:var(--ink3);text-wrap-style:balance}
 .ks-strip-cell .v{font-family:var(--font-serif);font-weight:500;font-style:normal;
   font-size:22px;color:var(--ink);letter-spacing:-.4px;line-height:1;
   font-variant-numeric:tabular-nums lining-nums;
   display:inline-flex;align-items:baseline;gap:4px}
-.ks-strip-cell .v .u{font:500 11px/1 var(--font-sans);font-style:normal;
+.ks-strip-cell .v .u{font:500 12px/1 var(--font-sans);font-style:normal;
   color:var(--ink4);letter-spacing:0}
 .ks-strip-cell.accent .v{color:var(--accent-2)}
-
 .ks-body{display:grid;grid-template-columns:minmax(0,1fr) 360px}
-.ks-form{padding:22px 28px 24px;border-right:1px solid var(--line);min-width:0}
+.ks-form{padding:22px 24px 24px;border-right:1px solid var(--line);min-width:0}
 .ks-section{margin-bottom:24px}
 .ks-section:last-child{margin-bottom:0}
 
@@ -407,7 +441,7 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   border:1px solid var(--line);border-radius:5px;overflow:hidden;
   background:transparent;margin-bottom:22px}
 .ks-modes.three{grid-template-columns:1fr 1fr 1fr}
-.ks-mode{padding:11px 14px;background:transparent;border:0;cursor:pointer;
+.ks-mode{display:flex;flex-direction:column;justify-content:flex-start;padding:11px 14px;background:transparent;border:0;cursor:pointer;
   color:var(--ink3);text-align:left;
   transition:background .2s var(--ease),color .2s var(--ease);
   border-right:1px solid var(--line)}
@@ -420,22 +454,22 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 .ks-mode[aria-pressed="true"] .mtitle{color:var(--ink)}
 .ks-mode .mtitle{display:block;font:500 13px/1.2 var(--font-sans);
   letter-spacing:0;margin-bottom:2px}
-.ks-mode .mdesc{display:block;font:400 11.5px/1.4 var(--font-sans);color:var(--ink3)}
+.ks-mode .mdesc{display:block;font:400 12px/1.4 var(--font-sans);color:var(--ink3)}
+.ks-mode[aria-pressed="true"] .mdesc{color:var(--ink2)}
 
-.ks-result{padding:28px 30px 26px;background:transparent;
+.ks-result{padding:22px 24px 26px;background:transparent;
   display:flex;flex-direction:column;min-width:0;text-align:left;align-items:stretch;position:relative}
-.ks-r-eyebrow{font:500 11px/1 var(--font-sans);letter-spacing:.2px;
+.ks-r-eyebrow{font:500 12px/1.25 var(--font-sans);letter-spacing:.2px;
   color:var(--ink3);margin-bottom:10px}
 .ks-r-net{font-family:var(--font-serif);font-style:normal;font-weight:500;
-  font-size:54px;line-height:1;letter-spacing:-1.6px;color:var(--ink);
+  font-size:54px;line-height:1;letter-spacing:-1.6px;color:var(--accent-2);
   font-variant-numeric:tabular-nums lining-nums;
   display:inline-flex;align-items:baseline;gap:8px}
 .ks-r-net.small{font-size:44px;letter-spacing:-1.2px}
 .ks-r-net .unit{font:500 12px/1 var(--font-sans);font-style:normal;
   color:var(--ink3);letter-spacing:0;
   align-self:flex-start;margin-top:10px}
-.ks-r-mnd{margin-top:10px;color:var(--ink3);font-size:12.5px;
-  font-variant-numeric:tabular-nums lining-nums;letter-spacing:0}
+.ks-r-mnd{margin-top:10px;color:var(--ink3);font-size:12.5px;letter-spacing:0}
 .ks-r-mnd b{font-weight:500;color:var(--ink);font-family:var(--font-sans);font-style:normal;letter-spacing:0}
 
 /* Add-to-budget — only shown when calc is hosted inside the budget page.
@@ -475,7 +509,7 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 .ks-bar-legend{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 18px;
   margin:12px 0 0;font-size:12px;color:var(--ink3)}
 .ks-bar-legend .row{display:flex;align-items:center;gap:8px;
-  padding:5px 0;font-variant-numeric:tabular-nums}
+  padding:5px 0}
 .ks-bar-legend .dot{width:7px;height:7px;border-radius:1px;flex-shrink:0}
 .ks-bar-legend .row b{font-family:var(--font-sans);font-style:normal;font-weight:500;color:var(--ink);
   margin-left:auto;font-size:12.5px;letter-spacing:0;
@@ -494,23 +528,24 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 .ks-r-stat .v.pos{color:var(--pos)}
 .ks-r-stat .v.neg{color:var(--neg)}
 .ks-r-foot{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);
-  font-size:11.5px;color:var(--ink3);line-height:1.55}
+  font-size:12px;color:var(--ink3);line-height:1.55}
 
 .side-col{display:flex;flex-direction:column;gap:14px}
 .side-card{background:transparent;
   border:1px solid var(--line);border-radius:6px;padding:18px 20px}
-.side-card h4{font:500 11px/1 var(--font-sans);letter-spacing:.2px;
+.side-card h4{font:500 12px/1.25 var(--font-sans);letter-spacing:.2px;
   color:var(--ink3);margin:0 0 12px;
   padding-bottom:12px;border-bottom:1px solid var(--line)}
 .ref-row{display:flex;align-items:baseline;justify-content:space-between;
   gap:14px;padding:9px 0;font-size:13px}
 .ref-row + .ref-row{border-top:1px solid var(--line)}
-.ref-row .l{color:var(--ink3)}
+.ref-row .l{color:var(--ink3);text-wrap-style:balance}
 .ref-row .v{font-family:var(--font-sans);font-style:normal;font-weight:500;
   color:var(--ink);font-variant-numeric:tabular-nums lining-nums;
   letter-spacing:0;font-size:13.5px;
   display:inline-flex;align-items:baseline;gap:5px}
-.ref-row .v .u{font:400 11.5px/1 var(--font-sans);color:var(--ink4);letter-spacing:0}
+.ref-row .v .u{font:400 12px/1 var(--font-sans);color:var(--ink4);letter-spacing:0}
+.ref-row .v:has(.u){white-space:nowrap}
 .ref-row .v.accent{color:var(--ink)}
 .related a{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
   padding:10px 0;text-decoration:none;color:var(--ink2);
@@ -521,27 +556,26 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
 .related a:hover .arr{color:var(--accent);transform:translateX(2px)}
 }
 .related .name{font-size:13.5px;font-family:var(--font-sans);font-weight:400;letter-spacing:0}
-.related .arr{color:var(--ink4);font-size:11px;
+.related .arr{color:var(--ink4);font-size:12px;
   transition:color .2s var(--ease),transform .2s var(--ease)}
 
 .method-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
 .method-list li{display:flex;gap:10px;align-items:flex-start;
   font-size:12.5px;line-height:1.55;color:var(--ink2)}
-.method-list .n{flex-shrink:0;font:500 11px/1.55 var(--font-sans);color:var(--ink4);width:14px}
+.method-list .n{flex-shrink:0;font:500 12px/1.55 var(--font-sans);color:var(--ink4);width:14px}
 .method-list .t{padding-top:0}
 .method-list b{font-family:var(--font-sans);font-weight:500;color:var(--ink);letter-spacing:0}
 
 .ks-r-sources{margin-top:14px;padding-top:14px;width:100%;
   border-top:1px solid var(--line);
-  display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;
-  gap:6px 14px;font-size:11.5px;color:var(--ink3)}
+  display:flex;flex-wrap:wrap;align-items:baseline;
+  gap:6px 14px;font-size:12px;color:var(--ink3)}
 .ks-r-sources .src{color:var(--ink3)}
 .ks-r-sources .dot{display:none}
-.ks-r-sources .upd{margin-left:auto;color:var(--ink4);font-size:11.5px}
-.ks-r-sources .upd em{color:var(--ink3);font-style:normal;font-family:var(--font-sans);
-  letter-spacing:0;margin-left:4px}
+.ks-r-sources .upd{color:var(--ink3);white-space:nowrap}
+.ks-r-sources .upd em{color:var(--ink3);font-style:normal;font-family:var(--font-sans);letter-spacing:0}
 
-.ks-import{margin:0;padding:14px 32px;
+.ks-import{margin:0;padding:14px 24px;
   background:transparent;border-top:1px solid var(--line);
   display:flex;align-items:center;gap:14px;text-decoration:none;
   transition:background .2s var(--ease)}
@@ -565,6 +599,47 @@ footer{border-top:1px solid var(--line);padding:32px 0 36px;color:var(--ink4);fo
 footer a{color:var(--ink3);text-decoration:none;transition:color .2s var(--ease)}
 @media(hover:hover){footer a:hover{color:var(--ink)}}
 footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+/* Én bunntekst overalt. Sidene hadde fire utgaver med ulik størrelse, farge og skilletegn.
+   «body > footer»: lovsidene har også en <footer> inne i innholdet, den skal ikke treffes.
+   Lenkene får avstand i stedet for prikker: font-size:0 på .foot-links skjuler « · » som
+   ligger som ren tekst på oversiktssidene. .foot-links.foot-links er for å slå
+   .site-footer-full .foot-links a (0,2,1) i regnskapssidenes egen kopi. */
+body > footer{margin-top:32px;padding:32px 0 36px;font-size:12.5px;color:var(--ink4)}
+body > footer .foot{gap:24px;font:400 12.5px/1.55 var(--font-sans);color:var(--ink4)}
+body > footer .foot-text{flex:1 1 100%}
+body > footer .foot{flex-direction:column;align-items:flex-start}
+body > footer #fl-copy,body > .site-footer-full #fl-copy{max-width:72ch;text-wrap-style:pretty}
+body > footer .foot-links.foot-links{display:block;margin:0;font-size:0}
+body > footer .foot-links .foot-sep{display:none}
+body > footer .foot-links.foot-links a{display:inline-block;margin:0;margin-inline-end:16px;padding:0;border:0;
+  font:400 12.5px/1.4 var(--font-sans);letter-spacing:0;color:var(--ink3);text-decoration:none}
+body > footer .foot-links.foot-links a:last-child{margin-inline-end:0}
+@media(hover:hover){body > footer .foot-links.foot-links a:hover{color:var(--ink)}}
+/* Trykkflate: 16px høye lenker blir 44px, uten at teksten flytter seg. */
+@media (pointer:coarse){
+  body > footer .foot-links.foot-links a{min-width:40px;text-align:center;padding:13.25px 8px;margin-block:-13.25px;margin-inline:-8px 8px}
+  body > footer .foot-links.foot-links a:last-child{margin-inline-end:-8px}
+}
+/* «Hverdagsverktøy» som ekstra linje finnes bare på oversiktssidene og regnskap. Style-
+   attributtet i HTML-en setter display:block, derfor !important. */
+#fl-author{display:none !important}
+/* Regnskapssidene: eget felt, logotekst og navnet to ganger. Samme oppsett som resten:
+   teksten øverst, lenkene under. */
+body > .site-footer-full{margin-top:32px;padding:32px 0 36px;background:none;font-size:12.5px;color:var(--ink4)}
+body > .site-footer-full .container{flex-direction:column-reverse;gap:24px}
+body > .site-footer-full .footer-logo{display:none}
+body > .site-footer-full .footer-inner{margin:0}
+body > .site-footer-full .footer-copy{font-size:12.5px;line-height:1.55;color:var(--ink4)}
+
+/* Seksjonstitlene hadde to stiler på samme side (serif med teller i store bokstaver mot
+   liten sans med «5 emner»). Alle følger nå stilen i components.css (.calc-deck > .col-head). */
+body .calc-deck > .col-head,
+body .col-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;height:auto;
+  padding:0 0 12px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+body .col-head h2,
+body .col-head h3{font-family:var(--font-serif);font-weight:500;font-size:14px;line-height:1.5;
+  letter-spacing:.15em;text-transform:uppercase;color:var(--ink2);margin:0}
+body .col-head .count{flex-shrink:0;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3)}
 
 /* ── Lær-seksjonene: formel-ledger og satstabeller ──
    41 sider har en identisk inline-kopi med tallkolonne 130px og tekstkolonne 1fr,
@@ -584,6 +659,17 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .side-col{position:static}
   .page-hero .container{grid-template-columns:minmax(0,1fr)}
 }
+/* Skjema, resultat og sidekolonne side om side gir skjemaet 246-325 px mellom 981 og 1100 px
+   (faner og sats-brikker presses sammen). Egen inline-regel (max-width:980px) på mange sider slo
+   den delte regelen over, så body-prefikset trengs. Under 1100 px ligger sidekortet under;
+   1101-1180 px får smalere sidekolonne så skjemaet holder ca. 380 px. */
+@media (max-width:1100px){
+  body .calc-wrap .container{grid-template-columns:minmax(0,1fr)}
+  body .side-col{position:static}
+}
+@media (min-width:1101px) and (max-width:1180px){
+  body .calc-wrap .container{grid-template-columns:minmax(0,1fr) 270px;gap:24px}
+}
 @media (max-width:768px){
   .ks-body{grid-template-columns:1fr}
   .ks-form{border-right:none;border-bottom:1px solid var(--line)}
@@ -597,6 +683,101 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
   .ks-strip-cell .v{max-width:100%;flex-wrap:wrap;overflow-wrap:anywhere}
   .ks-strip-cell .v > *{min-width:0}
 }
+
+/* ── Kalkulatorskallet: felles overstyring (2026-11) ──
+   Rundt 50 sider har egen inline-kopi av .ks-*, .ik-* og .side-card, og inline <style>
+   kommer etter <link> i kaskaden. body-prefikset slår kopiene uten å røre sidene.
+   .ks-result og noen etiketter ligger i calm-override.css, der reglene bruker !important. */
+
+/* Samme tekstkant i alle kort. Før på mobil: tallstripe 31, skjema 43, resultat 47 og sidekort 35 px. */
+body .ks-strip-cell,body .ks-form,body .ks-import,body .ks-breakdown,body .spare-graph-wrap,body .bok-strip-cap{padding-inline:24px}
+/* Formelen i kalkylekortene har polstringen i style-attributtet. */
+body .ks > details.howto > summary,body .ks > details.howto > .howto-body{padding-inline:24px !important}
+@media (max-width:1024px){body .side-card{padding-inline:24px}}
+@media (max-width:640px){
+  body .ks-strip-cell,body .ks-form,body .ks-import,body .ks-breakdown,body .spare-graph-wrap,body .bok-strip-cap,body .side-card{padding-inline:16px}
+  body .ks > details.howto > summary,body .ks > details.howto > .howto-body{padding-inline:16px !important}
+}
+
+/* PC: kolonnene i kortet er ulikt høye (opptil 540 px tomt felt). Innholdet i den korteste
+   følger med ved rulling, og sidekolonnen likeså. overflow:clip: med hidden blir kortet en
+   rullecontainer, og da fester sticky seg til kortet i stedet for skjermen.
+   Bakgrunnen ligger på .ks og skillestreken på .ks-body, så begge går hele veien ned uansett
+   hvilken kolonne som er kortest. grid-column på et absolutt element plasserer streken i
+   rutenettet uten å ta opp en rute. Bare sticky når innholdet får plass under toppmenyen:
+   ved 700 px høyde er det 576 px. Fem kolonner er litt høyere (580–653 px); bunnen av dem kommer
+   til syne nederst i kortet. */
+body .ks{overflow:clip}
+@media (min-width:769px){
+  body .ks-body{position:relative}
+  body .ks-body::before{content:"";position:absolute;grid-column:2;top:0;bottom:0;inset-inline-start:0;width:1px;background:var(--line)}
+  body .ks-body > .ks-form{border-right:0}
+}
+@media (min-width:981px){
+  body .ks-body{gap:0;background:transparent}
+  body .ks-body > .ks-form,body .ks-body > .ks-result{background:transparent}
+}
+@media screen and (min-width:1101px) and (min-height:700px){
+  body .ks-body > .ks-form,body .ks-body > .ks-result,body .side-col{position:sticky;top:124px;align-self:start}
+  /* Hjelpebobler i skjemaet skal ligge over resultatkolonnen. */
+  body .ks-body > .ks-form{z-index:1}
+  body.focus-mode .ks-body > .ks-form,body.focus-mode .ks-body > .ks-result,body.focus-mode .side-col{top:16px}
+  body.embed .ks-body > .ks-form,body.embed .ks-body > .ks-result{position:static}
+}
+
+/* Tallet står på samme høyde i raden selv om etiketten ved siden av brytes til to linjer. */
+body .ks-strip-cell .v{margin-top:auto}
+
+/* Gulv for liten tekst: 12 px for alt som skal leses, 11 px for små etiketter i store bokstaver. */
+body .ik-lbl,body .ik-lbl .cap,body .ik-hint,body .ik-note,body .ik-err,body .ik-warning,
+body .ks-mode .mdesc,body .ks-r-note,body .ks-bar-legend,body .related .arr,body .calc-disclaimer,
+body .side-card .method-step .n,body .side-card .method-list .n,body .ref-row .v .u{font-size:12px}
+body .ks-r-subhead,body .ks-r-shdr,body .bd-table th,body .rates-table thead th{font-size:11px}
+/* Ikke ett ord alene på siste linje (samme regel som p i skallet; dette er div og span). */
+body .ks-r-mnd,body .ks-r-foot,body .ik-hint,body .ik-note,body .ks-mode .mdesc{text-wrap-style:pretty}
+/* Kildene: samme luft mellom alle, også der siden har sin egen gap. */
+body .ks-r-sources{gap:4px 14px}
+/* Hintet i seksjonsoverskriften: til høyre på samme linje, til venstre når det brytes ned på mobil.
+   Med margin-left:auto havnet det alene helt til høyre på egen linje. */
+body .ik-section-head{justify-content:space-between}
+body .ik-section-head .meta{margin-left:0}
+body .ik-section-head h3{flex-shrink:0}
+
+/* Listerader i sans. Serif er for hovedsvaret og tallstripa. */
+body .bd-table td.v{font-family:var(--font-sans)}
+
+/* Rader som kan rulles sidelengs: tonet kant bare i den enden det er mer innhold. Maske i stedet
+   for farget overlegg, så det virker i alle tema. Uten overflyt er tidslinja inaktiv og kanten 0.
+   Nettlesere uten scroll-tidslinje: fast kant på brikkeraden, som vi vet ruller på smale skjermer. */
+@property --rull-v{syntax:'<length>';inherits:false;initial-value:0px}
+@property --rull-h{syntax:'<length>';inherits:false;initial-value:0px}
+@keyframes rull-kant{
+  0%{--rull-v:0px;--rull-h:36px}
+  8%{--rull-v:16px}
+  92%{--rull-h:36px}
+  100%{--rull-v:16px;--rull-h:0px}
+}
+body .kk-picker-strip,body .bd-table-wrap,body .lrn-seg.scr{
+  -webkit-mask-image:linear-gradient(var(--rull-fra,to right),transparent,#000 var(--rull-v,0px),#000 calc(100% - var(--rull-h,0px)),transparent);
+          mask-image:linear-gradient(var(--rull-fra,to right),transparent,#000 var(--rull-v,0px),#000 calc(100% - var(--rull-h,0px)),transparent)}
+html[dir="rtl"] body .kk-picker-strip,html[dir="rtl"] body .bd-table-wrap,html[dir="rtl"] body .lrn-seg.scr{--rull-fra:to left}
+@supports (animation-timeline:scroll()){
+  body .kk-picker-strip,body .bd-table-wrap,body .lrn-seg.scr{animation:rull-kant linear both;animation-timeline:scroll(self inline)}
+}
+/* Brikkeraden går helt ut til skjermkanten, så brikkene ikke forsvinner en marg før kanten. */
+@media (max-width:1180px){
+  body .kk-picker-strip{margin-inline:-32px;padding-inline:32px}
+  @supports not (animation-timeline:scroll()){body .kk-picker-strip{--rull-h:36px}}
+}
+@media (max-width:640px){body .kk-picker-strip{margin-inline:-16px;padding-inline:16px}}
+
+/* Inter gjør bindestreken bredere med tabulære sifre (6,45 mot 9,08 px på 14 px), så «NRK-lisens»
+   ser ut som «NRK - lisens». Bare rene tall skal ha dem; .ref-row .v beholder sine. */
+body .rates-table{font-variant-numeric:lining-nums}
+body .rates-table tbody td.rate{font-variant-numeric:tabular-nums lining-nums}
+body .side-card .ref-row{font-variant-numeric:normal}
+body .cc-a{font-variant-numeric:lining-nums}
+body .rv-cond .v{font-variant-numeric:normal}
 
 /* ── Help dot + popover (?-veiledning ved seksjonshoder) ────── */
 .help-dot{
@@ -869,8 +1050,13 @@ body.hv-entered .page-content::before{ content:none; }
    på opacity:0. animation:none + opacity:1 = identisk med fill-forwards-
    sluttbildet for synlige faner, og øyeblikkelig synlig innhold for
    faner som åpnes i bakgrunnen. Treffer KUN entrance-elementene —
-   ikke UI-keyframes (budflash, spark-pulse osv.). */
-body.hv-entered .page-content .cat-hero .ch-feat,
+   ikke UI-keyframes (budflash, spark-pulse osv.).
+   Tittelen må med: blur-animasjonen (hvxTitle) blir stående med fill:both og filter
+   på h1. Tegnes siden på nytt med ny visningsstørrelse (målt med skjermbilde av hele
+   siden) forsvinner tittelen, med opacity:1 og blur(0) i stilen. Uten animasjon: ingen feil. */
+body.hv-entered .page-content .cat-hero h1,
+body.hv-entered .page-content .cat-hero h2,
+body.hv-entered .page-content .page-hero h1.page-title,
 body.hv-entered .page-content .page-hero .page-stat,
 body.hv-entered .page-content .cat-grid > .cat-card,
 body.hv-entered .page-content section.tools .tool-grid > .tool-card,
@@ -881,11 +1067,6 @@ body .page-content .cat-hero .ch-eyebrow{ animation: hvxRiseSm .5s var(--ease-so
 body .page-content .cat-hero h1,
 body .page-content .cat-hero h2{ animation: hvxTitle .7s var(--ease-soft) both .10s; }
 body .page-content .cat-hero .ch-sub{ animation: hvxRiseSm .5s var(--ease-soft) both .20s; }
-body .page-content .cat-hero .ch-feats{ animation: hvxLine .6s var(--ease-soft) both .28s; transform-origin:center top; }
-body .page-content .cat-hero .ch-feat{ animation: hvxRise .5s var(--ease-soft) both; opacity:0; }
-body .page-content .cat-hero .ch-feat:nth-child(1){ animation-delay:.34s }
-body .page-content .cat-hero .ch-feat:nth-child(2){ animation-delay:.40s }
-body .page-content .cat-hero .ch-feat:nth-child(3){ animation-delay:.46s }
 
 /* ── Beat 1 · Hero-fallback (page-hero) ── */
 body .page-content .page-hero .page-eyebrow{ animation: hvxRiseSm .5s var(--ease-soft) both .04s; }
@@ -1052,8 +1233,8 @@ body .page-content.is-leaving{ animation: hvxPageOut .28s var(--ease-glide) forw
      stripe ensfarget bakgrunn. Negativ margin + samme verdi som polstring
      gir en scroller som går kant til kant, mens første og siste fane
      fortsatt hviler på gutteren når rekka står i ro. Verdien måles av
-     top-chrome.js fordi .container har ulik luft per side og breddetrinn
-     (32/20/16/14px); uten JS står den på 0px og rekka er som før.
+     top-chrome.js fordi .container har ulik luft per breddetrinn
+     (32/16px); uten JS står den på 0px og rekka er som før.
 
      body-prefiks: 20 sider har egen inline-kopi av `.tabs{…padding:6px 0…}`,
      og inline <style> kommer etter <link> i kaskaden. Uten prefikset ville
@@ -1084,11 +1265,13 @@ body .page-content.is-leaving{ animation: hvxPageOut .28s var(--ease-glide) forw
 @media (max-width:640px){
   :root{--nav-h:55px}
   body nav{padding:14px 0;gap:12px}
+  body .nav-wrap nav{min-height:54px}
   body .mark{width:26px;height:26px}
   body .wordmark{font-size:16.5px}
 }
 @media (max-width:380px){
   :root{--nav-h:53px}
+  body .nav-wrap nav{min-height:52px}
   body .mark{width:24px;height:24px}
   body .wordmark{font-size:15.5px}
 }

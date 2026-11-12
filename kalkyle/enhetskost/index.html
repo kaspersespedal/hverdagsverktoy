@@ -12,8 +12,18 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hverdagsverktoy.com/kalkyle/enhetskost/">
 <meta property="og:locale" content="nb_NO">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,13 +74,13 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <style>
 /* Enhetskost — kalkulator-skall (delt mønster med Kalkyle-seksjonen) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -94,7 +104,6 @@ body.focus-mode > footer{display:none}
 .calc-wrap .container{display:block}
 .ks-host{min-width:0}
 
-.kk-dash{width:48px;height:2px;background:var(--accent);opacity:.9;margin-bottom:20px}
 
 .kk-picker-strip-wrap{padding-top:18px;padding-bottom:6px}
 .kk-picker-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
@@ -124,9 +133,11 @@ body.focus-mode > footer{display:none}
 .vr-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .vr-head,.vr{display:grid;grid-template-columns:1fr 92px 96px 28px;gap:8px;align-items:center}
 /* Mobil: navnefeltet ble 28 px smalt og klippet «B» og «C» */
-@media(max-width:560px){.vr-head,.vr{grid-template-columns:minmax(64px,1fr) 72px 72px 28px;gap:6px}.vr .ik-input{padding:8px}}
+@media(max-width:560px){.vr-head,.vr{grid-template-columns:minmax(64px,1fr) 72px 72px 36px;gap:6px}.vr .ik-input{padding:8px}}
 .vr-head{font:600 9.5px/1 var(--font-sans);letter-spacing:.6px;text-transform:uppercase;color:var(--ink4);padding:0 2px 8px}
-.vr-head .num{text-align:right}
+/* Overskriften til høyre like langt inn som tallene i feltene under */
+.vr-head .num{text-align:right;padding-right:10px}
+@media(max-width:560px){.vr-head .num{padding-right:8px}}
 .vr{margin-bottom:8px}
 .vr .ik-input{padding:8px 10px;font-size:13px}
 .vr .ik-input.num{text-align:right;font-variant-numeric:tabular-nums lining-nums}
@@ -135,6 +146,7 @@ body.focus-mode > footer{display:none}
   transition:color .15s,border-color .15s}
 @media(hover:hover){.vr-x:hover{color:var(--accent-2);border-color:var(--line-warm)}}
 .vr-x[hidden]{visibility:hidden}
+@media(max-width:560px){.vr-x{width:36px;height:36px}}
 .vr-add{margin-top:4px;display:inline-flex;align-items:center;gap:7px;background:transparent;border:1px dashed var(--line-2);
   border-radius:6px;padding:8px 12px;color:var(--ink3);font:500 12.5px/1 var(--font-sans);cursor:pointer;
   transition:color .15s,border-color .15s}
@@ -157,6 +169,10 @@ body.focus-mode > footer{display:none}
 .lg-row .v .u{color:var(--ink4);font-weight:400;margin-left:3px;font-size:11px}
 .lg-sum{border-top:1px solid var(--line-2);margin-top:3px;padding-top:10px}
 .lg-final .v{color:var(--accent-2);font-size:20px;font-weight:600;font-family:var(--font-serif)}
+
+/* Heroen har ikke lenger tallraden (.page-stats): de samme tallene står i stripa og svarkortet rett under.
+   Én kolonne, ellers står det et tomt felt til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
 
 </style>
 </head>
@@ -238,17 +254,12 @@ body.focus-mode > footer{display:none}
         <span class="sep"></span>
         <span class="here" data-i18n="kalkEnhetskostTitle">Enhetskost</span>
       </div>
-      <div class="kk-dash" aria-hidden="true"></div>
       <h1 class="page-title"><em data-i18n="kalkEnhetskostTitle">Enhetskost</em></h1>
       <p class="page-lead" data-i18n="kalkEnhetskostSubtitle">Kostnad per enhet — også når variantene er ulikt krevende.</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
-    </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" id="hStatKostLbl">Kostnad per omregnet enhet</span><span class="v" id="hStatKost">214,94 kr</span></div>
-      <div class="page-stat"><span class="l" id="hStatEkvLbl">Omregnede enheter</span><span class="v" id="hStatEkv">4 620</span></div>
     </div>
   </div>
 </section>
@@ -257,7 +268,7 @@ body.focus-mode > footer{display:none}
 <div class="calc-wrap">
   <div class="container kk-picker-strip-wrap">
     <div class="kk-picker-strip">
-      <a href="/kalkyle/margin/" class="kk-chip" data-i18n="kalkyleDestMargin">Margin &amp; påslag</a>
+      <a href="/kalkyle/margin/" class="kk-chip" data-i18n="kalkyleDestMargin">Margin og påslag</a>
       <a href="/kalkyle/selvkost/" class="kk-chip" data-i18n="kalkyleDestSk">Selvkost</a>
       <a href="/kalkyle/enhetskost/" class="kk-chip is-active" data-i18n="kalkyleDestEk">Enhetskost</a>
       <a href="/kalkyle/foodcost/" class="kk-chip" data-i18n="kalkyleDestFc">Food cost</a>
@@ -438,7 +449,7 @@ body.focus-mode > footer{display:none}
       <h3 class="lrn-h3" id="lrn-ek-r">Relaterte verktøy</h3>
       <ul>
         <li><a href="/kalkyle/selvkost/"><span><span class="t">Selvkost</span><span class="d">Når kostnaden per enhet skal videre til pris med tillegg.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
-        <li><a href="/kalkyle/margin/"><span><span class="t">Margin &amp; påslag</span><span class="d">Sett utsalgspris per variant.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/kalkyle/margin/"><span><span class="t">Margin og påslag</span><span class="d">Sett utsalgspris per variant.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
       </ul>
     </nav>
   </div>
@@ -459,10 +470,10 @@ body.focus-mode > footer{display:none}
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no.js?v=v232"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -551,19 +562,7 @@ body.focus-mode > footer{display:none}
     var totalEkv = rows.reduce(function(a, r){ return a + r.ekv; }, 0);
     var kostPerEkv = totalEkv ? ekvTotal / totalEkv : NaN;
 
-    // Tallene i toppen følger metoden; etikettene skrives her (JS eier dem).
     var t = (typeof R === 'function') ? R() : {};
-    if(mode === 'div'){
-      setTxt('hStatKostLbl', t.kalkEnhetskostPEnhet || 'Enhetskost');
-      setTxt('hStatEkvLbl', t.kalkEnhetskostPAntall || 'Produsert antall');
-      setTxt('hStatKost', isFinite(divEnhet) ? fmtDec(divEnhet) + ' kr' : '–');
-      setTxt('hStatEkv', fmtNum(divAntall));
-    } else {
-      setTxt('hStatKostLbl', t.kalkEnhetskostStatKost || 'Kostnad per omregnet enhet');
-      setTxt('hStatEkvLbl', t.kalkEnhetskostStatEkv || 'Omregnede enheter');
-      setTxt('hStatKost', isFinite(kostPerEkv) ? fmtDec(kostPerEkv) + ' kr' : '–');
-      setTxt('hStatEkv', fmtNum(totalEkv));
-    }
     var totalMengde = rows.reduce(function(sum, r){ return sum + r.mengde; }, 0);
     setTxt('ekStripAntall', fmtNum(totalMengde) + ' ' + (t.kalkEnhetskostStk || 'stk'));
     setTxt('ekStripKost', isFinite(kostPerEkv) ? fmtDec(kostPerEkv) + ' kr' : '–');
@@ -625,7 +624,7 @@ body.focus-mode > footer{display:none}
 
   setMode('ekv');
 
-  // Etikettene i toppen skrives av JS: skriv dem på nytt når språkfila er lastet og ved språkbytte.
+  // Enheten i stripa («stk») skrives av JS: skriv den på nytt når språkfila er lastet og ved språkbytte.
   (function(){
     var n = 0, iv = setInterval(function(){
       if((typeof R === 'function' && R().kalkEnhetskostPEnhet) || ++n > 40){ clearInterval(iv); recalc(); }

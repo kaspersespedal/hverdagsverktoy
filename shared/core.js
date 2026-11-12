@@ -212,7 +212,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v240';
+    s.src = '/shared/lang/' + code + '.js?v=v241';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -243,9 +243,9 @@ function setFlagSrc(img, countryCode) {
 }
 function fmt(n) {
   const r=R();
-  return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(Math.round(n)).replace(/\u00a0/g,' ')+' '+(r.currency||'kr');
+  return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0}).format(Math.round(n))+'\u00a0'+(r.currency||'kr');
 }
-function pct(n) { return n.toFixed(1).replace('.',',')+' %'; }
+function pct(n) { return n.toFixed(1).replace('.',',')+'\u00a0%'; }
 function parseNum(id) { const el=document.getElementById(id); return el ? +(el.value.replace(/[\s\u00a0]/g,'').replace(',','.')) || 0 : 0; }
 // NB: nb-NO formaterer negative tall med U+2212 MINUS SIGN. Verdien her skrives
 // tilbake INN i skjemafelt, og ingen av parserne p\u00e5 nettstedet kjenner U+2212 \u2014
@@ -475,6 +475,7 @@ function updateAll() {
   try{_updateI18nText(R());}catch(e){_uiErr('i18nText',e);}
   try{_updateI18nPh(R());}catch(e){_uiErr('i18nPh',e);}
   try{_phObserve();_phSweepAll();}catch(e){_uiErr('phraseSweep',e);}
+  _tallSweep();
 }
 
 // Swap placeholder-attribute on [data-i18n-placeholder] elements when current lang has an override key.
@@ -549,7 +550,7 @@ function _updateI18nText(r){
     var target=r[key]||el._hvtI18nTextOrig;
     if(el._hvtI18nTextApplied===target) continue;
     // Samme synlige tekst: ikke skriv, ellers forsvinner lenker/<strong>/<em> i elementet.
-    if(el.children.length && el.textContent.replace(/\s+/g,' ').trim() === String(target).replace(/\s+/g,' ').trim()){ el._hvtI18nTextApplied=target; continue; }
+    if(el.children.length && _tallRen(el.textContent).trim() === _tallRen(target).trim()){ el._hvtI18nTextApplied=target; continue; }
     _setI18nText(el, target);
     el._hvtI18nTextApplied=target;
   }
@@ -596,6 +597,8 @@ function _phText(node, dict){
   if(key.length<2) return;
   var hit=dict && dict[key];
   var next=hit ? _phSwap(src,hit) : src;
+  // Bare hårde mellomrom skiller (_tallSweep har vært her): ikke skriv råteksten tilbake.
+  if(next!==cur && _tallRen(next)===_tallRen(cur)) next=cur;
   if(next!==cur) node.nodeValue=next;
   node._hvPhOut=next;
 }
@@ -662,16 +665,116 @@ function _phObserve(){
       if(m.type==='characterData') _phRoots.push(m.target);
       else for(var j=0;j<m.addedNodes.length;j++) _phRoots.push(m.addedNodes[j]);
     }
-    if(!_phRoots.length || _phQueued) return;
+    if(!_phRoots.length) return;
+    // Uten ordbok (norsk) er det bare tallene som skal rettes. Det skjer med en gang: venter vi på neste
+    // animasjonsramme, må nettleseren legge ut siden én gang til når teksten ble skrevet inne i en ramme.
+    if(!_phDict()){ var nye=_phRoots; _phRoots=[]; _tallSweep(nye); return; }
+    if(_phQueued) return;
     _phQueued=true;
     requestAnimationFrame(function(){
       _phQueued=false;
       var roots=_phRoots; _phRoots=[];
       if(_phDict()) _phSweepAll(roots);
+      _tallSweep(roots);
     });
   });
   _phObs.observe(document.body,{childList:true,subtree:true,characterData:true});
 }
+
+// ═══════════════════════════════════════════════════════
+// TALL OG ENHET — hårde mellomrom i all synlig tekst
+// ═══════════════════════════════════════════════════════
+// Uten dette deles tall over to linjer: «27 / 500 kr», «25 000 / kr», «§ 17- / 1».
+// Teksten kommer fra HTML, språkfilene og sidenes egne fmtKr(), så den rettes der alt
+// havner til slutt: i tekstnodene. Bare mellomrom og streker rundt tall endres.
+//  · Vi skriver bare ved endring. Går på samme observatør og animasjonsramme som frase-i18n.
+//    Egne skrivinger drenes med takeRecords(), så det blir ingen runddans.
+//  · Kode som leser tekst tilbake må tåle U+00A0 og U+2060: bruk _tallRen().
+var _TALL_ROM='[ \\t\\r\\n]+';
+var _TALL_ENHET='kr|kroner|krone|øre|nok|usd|eur|sek|dkk|gbp|%|prosent|prosentpoeng|pp|percent|'+
+  'år|mnd|måned|måneder|uke|uker|dag|dager|time|timer|t|min|minutter|'+
+  'km|m|m2|m3|mm|kg|g|l|stk|ganger|x|×|barn|ansatte|aksje|aksjer|person|mill|million|millioner|'+
+  'year|years|month|months|week|weeks|day|days|hour|hours|minutes|times|employees|shares|children';
+var _TALL_FORAN='§§?|\\b(?:kr\\.?|nok|nr\\.?|kap\\.?|ca\\.?|kl\\.?)';
+var _TALL_REGLER=[
+  [new RegExp('(\\d)'+_TALL_ROM+'(?=\\d{3}(?!\\d))','g'),'$1\u00a0'],                                 // 27 500
+  [new RegExp('(\\d)'+_TALL_ROM+'(?=(?:'+_TALL_ENHET+')(?![A-Za-zÀ-ɏ0-9]))','gi'),'$1\u00a0'],        // 500 kr, 4,0 %
+  [new RegExp('('+_TALL_FORAN+')'+_TALL_ROM+'(?=[-−]?\\d)','gi'),'$1\u00a0'],                         // kr 500, § 17, ca. 5
+  [new RegExp('\\b(mill\\.?|millioner)'+_TALL_ROM+'(?=(?:kr|kroner|nok)\\b)','gi'),'$1\u00a0'],       // 7 mill. kr
+  [/(\d[-–—]|[A-Za-zÀ-ɏ]-)(?=\d)|(\d-)(?=[A-Za-zÀ-ɏ])/g,'$1$2\u2060'],                                // 17-1, 1 200–1 300, LOV-1999, 5-årig
+  [new RegExp('(^|[\\s(])([=≈≤≥×÷+−])'+_TALL_ROM+'(?=\\S)','g'),'$1$2\u00a0'],                        // = 500, − 500: regnetegnet følger tallet
+  [/(^|[^A-Za-zÀ-ɏ0-9])([A-ZÆØÅ]{1,5}|[a-zæøå])-(?=[A-Za-zÀ-ɏ])/g,'$1$2-\u2060'],                        // e-post, a-melding, NAV-dager, ETF-er: kort forledd deles ikke
+  [new RegExp('([^\\s])'+_TALL_ROM+'(?=[—–]'+_TALL_ROM+')','g'),'$1\u00a0'],                            // «tekst — tekst»: ingen linje starter med tankestrek
+  [new RegExp('\\b(eks\\.?|inkl\\.?)'+_TALL_ROM+'(?=mva\\b)','gi'),'$1\u00a0'],                         // eks. MVA
+  [new RegExp('([^\\s])'+_TALL_ROM+'(?=-[A-Za-zÀ-ɏ])','g'),'$1\u00a0']                                 // «og -rett»: bindestrek-ordet følger ordet foran
+];
+var _TALL_HINT=/[\d=≈≤≥×÷+−—–-]/;
+function _tallFix(s){
+  if(!_TALL_HINT.test(s)) return s;
+  for(var i=0;i<_TALL_REGLER.length;i++) s=s.replace(_TALL_REGLER[i][0],_TALL_REGLER[i][1]);
+  return s;
+}
+// Tilbake til vanlig tekst, for sammenligning og for det som forlater siden.
+function _tallRen(s){ return String(s).replace(/\u2060/g,'').replace(/\s+/g,' '); }
+
+var _TALL_SKIP='script,style,noscript,template,textarea,select,option,code,pre,svg,[contenteditable]';
+function _tallSkip(el){ return !el || !el.closest || !!el.closest(_TALL_SKIP); }
+// Samme bokføring som _phText: kildeteksten overlever, så frase-oppslaget fortsatt treffer.
+function _tallSett(n,v){
+  var cur=n.nodeValue;
+  if(v===cur) return;
+  if(n._hvPhOut!==cur) n._hvPhSrc=cur;
+  n._hvPhOut=v;
+  n.nodeValue=v;
+}
+
+// Stort tall alene i boksen sin (svaret i kalkulatoren): vanlige mellomrom. Det står alene på linja og
+// brytes bare når det ikke får plass, og da er «1 234 567 / kr» bedre enn at tallet stikker ut av kortet.
+var _TALL_ALENE=/^\s*[−+-]?\d[\d\s.,]*\D{0,12}$/;
+function _tallStorBoks(n){
+  var p=n.parentNode, b=p;
+  if(parseFloat(getComputedStyle(p).fontSize)<20) return false;
+  while(b && b.nodeType===1 && getComputedStyle(b).display==='inline') b=b.parentNode;
+  return !!b && b.nodeType===1 && b.textContent.length<=30 && _TALL_ALENE.test(b.textContent);
+}
+function _tallStore(alene){
+  try{
+    for(var k=0;k<alene.length;k++){
+      var t=alene[k];
+      if(t.nodeValue.indexOf('\u00a0')>=0 && !_tallSkip(t.parentNode) && _tallStorBoks(t)) _tallSett(t,t.nodeValue.replace(/\u00a0/g,' '));
+    }
+  }catch(e){ _uiErr('tall',e); }
+  finally{ if(_phObs) _phObs.takeRecords(); }
+}
+function _tallSweep(roots){
+  var alene=[];
+  try{
+    var list=roots||[document.body];
+    for(var i=0;i<list.length;i++){
+      var r=list[i], w=r.nodeType===1?document.createTreeWalker(r,NodeFilter.SHOW_TEXT,null):null;
+      for(var n=w?w.nextNode():(r.nodeType===3?r:null);n;n=w?w.nextNode():null){
+        if(!n.parentNode || n.parentNode.nodeName==='SCRIPT' || n.parentNode.nodeName==='STYLE') continue;
+        var cur=n.nodeValue, next=_tallFix(cur);
+        if(next!==cur && !_tallSkip(n.parentNode)) _tallSett(n,next);
+        if(next.length<=30 && _TALL_ALENE.test(next)) alene.push(n);
+      }
+    }
+  }catch(e){ _uiErr('tall',e); }
+  finally{ if(_phObs) _phObs.takeRecords(); }
+  // Første runde: stilen er ikke regnet ut ennå, så de store tallene venter til nettleseren uansett gjør det.
+  if(roots) _tallStore(alene);
+  else requestAnimationFrame(function(){ _tallStore(alene); });
+}
+// Kopiering fra siden: U+2060 skal ikke følge med ut.
+document.addEventListener('copy',function(e){
+  var s=window.getSelection&&window.getSelection(), t=s?String(s):'';
+  if(t.indexOf('\u2060')<0 || !e.clipboardData || !s.rangeCount) return;
+  var d=document.createElement('div');
+  d.appendChild(s.getRangeAt(0).cloneContents());
+  e.clipboardData.setData('text/plain',t.replace(/\u2060/g,'').replace(/\u00a0/g,' '));
+  e.clipboardData.setData('text/html',d.innerHTML.replace(/\u2060/g,''));
+  e.preventDefault();
+});
 
 // Three.js disco ball
 var _discoBall3D=[];
@@ -1599,7 +1702,8 @@ function infoRowsHTML(rows, defaultLaw) {
     if(kvLower.indexOf('utbytte')>=0||kvLower.indexOf('dividend')>=0||kvLower.indexOf('skjerming')>=0||kvLower.indexOf('shielding')>=0) kwTopics.push('utbytte');
     if(kwTopics.length) topicAttr += ' data-topic="' + kwTopics.join(',') + '"';
 
-    if(k.startsWith('—')) return `<div class="ir ir-hdr"${topicAttr} style="flex-direction:column;align-items:flex-start;gap:2px;padding:14px 22px 10px;background:var(--surface2);"><span class="k" style="font-weight:700;color:var(--accent);font-size:11px;letter-spacing:.5px">${k}</span>${v?`<span style="font-size:11.5px;color:var(--ink3);font-weight:400;line-height:1.4">${v}</span>`:''}</div>`;
+    // «— OVERSKRIFT —» er bare et merke for mellomtittel: dashene vises ikke
+    if(k.startsWith('—')){const kh=k.replace(/^—\s*/,'').replace(/\s*—$/,'').replace(/\s+—\s+/g,': '); return `<div class="ir ir-hdr"${topicAttr} style="flex-direction:column;align-items:flex-start;gap:2px;padding:14px 22px 10px;background:var(--surface2);"><span class="k" style="font-weight:600;color:var(--ink);font-size:14px;line-height:1.4">${kh}</span>${v?`<span style="font-size:12px;color:var(--ink3);font-weight:400;line-height:1.4">${v}</span>`:''}</div>`;}
     const long = v && v.length > 40;
     const linkedHint = hint ? lovdataLink(hint, dl) : '';
     const url = hint ? lovdataUrl(hint, dl) : '';
@@ -1990,7 +2094,7 @@ function updateMortgageUI() {
   // Bolig vs leie labels
   var _bvT=document.getElementById('bvl-title');
   if(_bvT){
-    _bvT.innerHTML=(r.bvlTitle||'Bolig vs leie')+' <span style="font-size:11px;opacity:.5">▼</span>';
+    _bvT.innerHTML=(r.bvlTitle||'Eie eller leie?')+' <span style="font-size:11px;opacity:.5">▼</span>';
     setText('bvl-desc',r.bvlDesc||'Sammenlign total kostnad over X år — hva lønner seg?');
     setText('bvl-l-pris',r.bvlLPris||'Kjøpspris bolig (kr)');
     setText('bvl-l-ek',r.bvlLEk||'Egenkapital (kr)');
@@ -2022,7 +2126,7 @@ function updateMortgageUI() {
   var _bhT=document.getElementById('bvl-howto-title');
   if(_bhT){
     _bhT.innerHTML=(r.bvlHowtoTitle||'Hjelp med kalkulatoren')+' <span style="font-size:11px;opacity:.5">▼</span>';
-    setText('bvl-howto-desc',r.bvlHowtoDesc||'Slik bruker du Bolig vs leie');
+    setText('bvl-howto-desc',r.bvlHowtoDesc||'Slik bruker du kalkulatoren');
     var _bhR=document.getElementById('bvl-howto-rows');
     if(_bhR&&r.bvlHowtoRows)_bhR.innerHTML=infoRowsHTML(r.bvlHowtoRows);
   }
@@ -5312,7 +5416,7 @@ function switchCalcMode(mode, skipScroll, preserveExpr){
 // ═══════════════════════════════════════════════════════
 // CURRENCY CONVERTER
 // ═══════════════════════════════════════════════════════
-const ccCurrenciesNO = ['Norske kroner','Euro','US Dollar','Britiske pund','Svenske kroner','Danske kroner','Polske zloty','Sveitsiske franc','Japanske yen','Kinesiske yuan','Kanadiske dollar','Australske dollar','Indiske rupi','Tyrkiske lira','Brasilianske real'];
+const ccCurrenciesNO = ['Norske kroner','Euro','Amerikanske dollar','Britiske pund','Svenske kroner','Danske kroner','Polske zloty','Sveitsiske franc','Japanske yen','Kinesiske yuan','Kanadiske dollar','Australske dollar','Indiske rupi','Tyrkiske lira','Brasilianske real'];
 const ccCurrencyCodes = ['NOK','EUR','USD','GBP','SEK','DKK','PLN','CHF','JPY','CNY','CAD','AUD','INR','TRY','BRL'];
 const ccCurrencyFlags = ['no','eu','us','gb','se','dk','pl','ch','jp','cn','ca','au','in','tr','br'];
 function getCcCurrencies(){ const r=R(); const names=r.ccCurrNames||ccCurrenciesNO; return ccCurrencyCodes.map((code,i)=>[code,code+' — '+(names[i]||ccCurrenciesNO[i]),ccCurrencyFlags[i]]); }

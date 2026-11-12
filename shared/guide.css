@@ -13,8 +13,10 @@
 /* ── Nøkkeltall: en rad med de viktigste tallene på siden ── */
 .gd-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1px;margin:0;
   background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+/* Tre kolonner ville gitt ett kort alene og en grå flate ved siden av (bakgrunnen er hårstrekene) */
+@media(min-width:561px) and (max-width:760px){.gd-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .gd-facts > div{background:var(--surface);padding:16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.gd-facts dt{font:500 11.5px/1.35 var(--font-sans);letter-spacing:.02em;color:var(--ink3)}
+.gd-facts dt{font:500 12px/1.35 var(--font-sans);letter-spacing:.02em;color:var(--ink3)}
 .gd-facts dd{margin:0;font:500 22px/1.15 var(--font-serif);color:var(--ink);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.3px}
 .gd-facts dd small{display:block;margin-top:4px;font:400 12.5px/1.45 var(--font-sans);color:var(--ink2);letter-spacing:0}
 
@@ -29,10 +31,13 @@
 .gd-tool [hidden],.gd-sits [hidden]{display:none!important}
 
 /* Spørsmål med svarknapper (veivisere) */
-.gd-qs{display:flex;flex-direction:column;gap:18px}
+.gd-qs{display:flex;flex-direction:column;gap:22px}
 .gd-q{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;border:0;min-width:0}
 .gd-q > legend,.gd-q-l{padding:0;font:600 14.5px/1.4 var(--font-sans);color:var(--ink)}
 .gd-q-hint{margin:-4px 0 0;font-size:13px;line-height:1.5;color:var(--ink3)}
+/* I et fieldset står legend utenfor flex-rutenettet, så avstanden må settes her */
+.gd-q > legend + *{margin-top:8px}
+.gd-q > legend + .gd-q-hint{margin-top:6px}
 .gd-opts{display:flex;flex-wrap:wrap;gap:8px}
 .gd-opts button{min-height:40px;padding:0 16px;border:1px solid var(--line-2);border-radius:8px;cursor:pointer;
   background:transparent;color:var(--ink2);font:500 14px/1.2 var(--font-sans);text-align:start;
@@ -53,6 +58,7 @@
 .gd-out-k{font:600 11px/1 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
 .gd-out-h{margin:0;font:500 28px/1.15 var(--font-serif);letter-spacing:-.5px;color:var(--ink);text-wrap:balance}
 .gd-out-h em{font-style:italic;color:var(--accent-2)}
+@media(max-width:560px){.gd-out-h{font-size:24px}}
 .gd-out-p{margin:0;font-size:15px;line-height:1.65;color:var(--ink2);max-width:72ch;text-wrap:pretty}
 .gd-out-p strong{color:var(--ink);font-weight:600}
 .gd-out-p a,.gd-sit a,.gd-check a,.gd-rights a,.gd-form a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid var(--line-warm)}
@@ -60,6 +66,7 @@
 
 /* Nummererte steg */
 .gd-steps{list-style:none;margin:0;padding:0;counter-reset:gd;display:flex;flex-direction:column;gap:12px}
+.lrn-sec > .gd-steps{max-width:760px}
 .gd-steps > li{counter-increment:gd;display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px 12px;font-size:15px;line-height:1.6;color:var(--ink2)}
 .gd-steps > li::before{content:counter(gd);grid-row:1 / span 2;display:inline-flex;align-items:center;justify-content:center;
   width:26px;height:26px;border-radius:50%;border:1px solid var(--line-2);font:600 12px/1 var(--font-mono);color:var(--accent-2)}
@@ -67,8 +74,13 @@
 .gd-steps .m{font-size:13px;color:var(--ink3);font-variant-numeric:tabular-nums}
 
 /* ── Situasjonskort: problem → kort svar → slik gjør du → hva loven sier ── */
-.gd-sits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
-@media(max-width:860px){.gd-sits{grid-template-columns:minmax(0,1fr)}}
+/* To spalter som fylles ovenfra: kortene beholder sin egen høyde, så det blir ikke tomrom inne i et kort
+   eller ett kort alene på siste rad. Rekkefølgen er nedover første spalte, så nedover andre. */
+.gd-sits{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+@media(min-width:861px){
+  .gd-sits{display:block;columns:2;column-gap:20px;margin-bottom:-20px}
+  .gd-sit{break-inside:avoid;margin-bottom:20px}
+}
 .gd-sit{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px 24px;display:flex;flex-direction:column;gap:12px;min-width:0;scroll-margin-top:calc(var(--nav-h,64px) + 56px)}
 .gd-sit:target{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .gd-sit-q{margin:0;font:500 19px/1.3 var(--font-serif);letter-spacing:-.2px;color:var(--ink);text-wrap:balance}
@@ -77,6 +89,8 @@
 .gd-sit ul,.gd-sit ol{margin:0;padding-inline-start:20px;display:flex;flex-direction:column;gap:6px;font-size:14.5px;line-height:1.6;color:var(--ink2)}
 .gd-sit-foot{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;line-height:1.5;color:var(--ink3)}
 .gd-sit-foot a{color:var(--ink2);border-bottom:1px solid var(--line-2)}
+/* Mobil: lenkene får over 24 px trykkflate uten at understreken flytter seg */
+@media(max-width:640px){.gd-sit-foot a{position:relative}.gd-sit-foot a::after{content:"";position:absolute;inset:-4px -4px}}
 
 /* Kort svar: et ord i en ramme. Ingen farge, bare ord. */
 .gd-badge{display:inline-flex;align-items:center;gap:6px;margin-inline-end:8px;padding:3px 9px;border:1px solid var(--line-2);border-radius:999px;
@@ -86,16 +100,16 @@
 /* ── Rettighetslister (aksjonær): på / av ── */
 .gd-rights{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
 @media(max-width:760px){.gd-rights{grid-template-columns:minmax(0,1fr)}}
-.gd-rights h3{margin:0 0 10px;font:600 13px/1.3 var(--font-sans);letter-spacing:.04em;color:var(--ink)}
+.gd-rights h3{margin:0 0 10px;font:500 19px/1.25 var(--font-serif);letter-spacing:-.2px;color:var(--ink)}
 .gd-rights ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
 .gd-rights li{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:4px 10px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line);
   font-size:14.5px;line-height:1.5;color:var(--ink);transition:color .2s var(--ease)}
 .gd-rights li::before{content:'';width:12px;height:12px;border-radius:50%;box-sizing:border-box;border:1.5px solid var(--accent);background:var(--accent);transform:translateY(1px)}
-.gd-rights li .p{font:500 11.5px/1.3 var(--font-mono);color:var(--ink3);white-space:nowrap}
+.gd-rights li .p{font:500 12px/1.3 var(--font-mono);color:var(--ink3);white-space:nowrap}
 .gd-rights li .x{grid-column:2 / -1;font-size:13px;line-height:1.5;color:var(--ink3)}
 .gd-rights li.is-off{color:var(--ink3)}
 .gd-rights li.is-off::before{background:transparent;border-color:var(--ink4)}
-.gd-rights li.is-off .need{font:600 11px/1.3 var(--font-sans);color:var(--ink3)}
+.gd-rights li.is-off .need{font:600 12px/1.3 var(--font-sans);color:var(--ink3)}
 .gd-rights li .need{display:none}
 .gd-rights li.is-off .need{display:inline}
 .gd-rights li.is-off .p{display:none}
@@ -111,7 +125,7 @@
 .gd-range:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
 .gd-scale{position:relative;height:30px;margin:0 9px}
 .gd-scale span{position:absolute;top:0;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;
-  font:500 11px/1 var(--font-mono);color:var(--ink3);white-space:nowrap}
+  font:500 12px/1 var(--font-mono);color:var(--ink3);white-space:nowrap}
 .gd-scale span::before{content:'';width:1px;height:8px;background:var(--ink4)}
 .gd-scale span.on{color:var(--ink)}
 .gd-scale span.on::before{background:var(--accent)}
@@ -140,9 +154,9 @@
 .gd-form-h .ab{font:600 12px/1 var(--font-mono);color:var(--accent-2);letter-spacing:.04em}
 .gd-form > p{margin:0;font-size:14.5px;line-height:1.6;color:var(--ink2)}
 .gd-form dl{margin:0;display:flex;flex-direction:column;border-top:1px solid var(--line)}
-.gd-form dl > div{display:grid;grid-template-columns:120px minmax(0,1fr);gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
+.gd-form dl > div{display:grid;grid-template-columns:minmax(0,1fr);gap:2px;padding:9px 0;border-bottom:1px solid var(--line)}
 .gd-form dt{font:500 12.5px/1.45 var(--font-sans);color:var(--ink3)}
-.gd-form dd{margin:0;font-size:14px;line-height:1.5;color:var(--ink);font-variant-numeric:tabular-nums}
+.gd-form dd{margin:0;font-size:14px;line-height:1.5;color:var(--ink)}
 .gd-form .fit{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink2)}
 .gd-form .fit b{color:var(--ink)}
 .gd-filter-n{font-size:13px;color:var(--ink3)}
@@ -150,16 +164,19 @@
 /* ── Fagdel for regnskapsfører og revisor: lukket bolk nederst ── */
 .gd-pro{border:1px solid var(--line);border-radius:12px;background:var(--surface);min-width:0}
 .gd-pro > summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px;
-  font:600 16px/1.35 var(--font-sans);color:var(--ink)}
+  font:500 24px/1.2 var(--font-serif);letter-spacing:-.4px;color:var(--ink)}
 .gd-pro > summary::-webkit-details-marker{display:none}
-.gd-pro > summary .s{display:block;margin-top:4px;font:400 13.5px/1.5 var(--font-sans);color:var(--ink3)}
+.gd-pro > summary .s{display:block;margin-top:6px;font:400 13.5px/1.5 var(--font-sans);letter-spacing:0;color:var(--ink3)}
 .gd-pro > summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .gd-pro[open] > summary{border-bottom:1px solid var(--line)}
 .gd-pro-b{display:flex;flex-direction:column;gap:56px;padding:28px 24px 36px;min-width:0}
-@media(max-width:560px){.gd-pro > summary{padding:16px 18px}.gd-pro-b{padding:22px 18px 28px}}
+@media(max-width:560px){.gd-pro > summary{padding:16px 18px;font-size:21px;letter-spacing:-.3px}.gd-pro-b{padding:22px 18px 28px}}
 
 /* ── Kildelinje nederst i hver veiledning ── */
 .gd-src{margin:0;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;line-height:1.6;color:var(--ink3);max-width:90ch}
+/* Lista over slutter med strek: kildelinja trenger ingen egen, og står nærmere enn en ny seksjon */
+.lrn-rel + .gd-src{margin-top:-24px;padding-top:0;border-top:0}
+.lrn + .bok-bunn{margin-top:-40px;padding-top:0;border-top:0}
 .gd-src a{color:var(--ink2);text-decoration:none;border-bottom:1px solid var(--line-2)}
 
 /* Høyre til venstre: prosentskalaen beholder retningen (dir="ltr" i HTML), resten speiles av logiske egenskaper */

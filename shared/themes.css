@@ -211,7 +211,7 @@ html[data-theme="hendrix"]{
   --ink2:#57206b;
   --ink3:#6d3080;
   --ink4:#763589;
-  --accent:#cf0f7d;        /* hot magenta — skjerfet */
+  --accent:#c40e76;        /* hot magenta — skjerfet; målt ned fra #cf0f7d (4,15 -> 4,55 på --surface-2) */
   --glow-rgb:207, 15, 125;
   /* Tangerinen er MÅLT ned fra #ff6a1a, ikke smaksjustert. --accent-2 er ment
      som «lysere trinn» av aksenten, og det stemmer på de fem mørke temaene —
@@ -326,7 +326,7 @@ html[data-theme="bw"]{ /* Sort/hvit — high contrast monochrome */
 html[data-theme="disco"]{ /* neon nightclub */
   --bg:#0d0a18; --surface:#161226; --surface-2:#1e1832; --surface-3:#2a2348;
   --ink:#f0e6ff; --ink2:#c4b0e0; --ink3:#9b86bb; --ink4:#8e7bb0;
-  --accent:#e91e8c; --accent-2:#ff4da6; --accent-deep:#c0186e;
+  --accent:#ec3a9a; --accent-2:#ff4da6; --accent-deep:#c0186e;
   --glow-rgb:233, 30, 140;
   --line:rgba(233,30,140,.10); --line-2:rgba(233,30,140,.16);
   --line-warm:rgba(233,30,140,.22);
@@ -412,7 +412,7 @@ html[data-theme="frost"]{
 html[data-theme="glass"]{
   --bg:#e8edf6; --surface:rgba(255,255,255,.62); --surface-2:rgba(255,255,255,.42); --surface-3:rgba(255,255,255,.32);
   --ink:#1a1a2e; --ink2:#4a5568; --ink3:#5f6981; --ink4:#536c8f;
-  --accent:#6875f5; --accent-2:#3b4bff; --accent-deep:#4f5bd5;
+  --accent:#4151f2; --accent-2:#3b4bff; --accent-deep:#4f5bd5;
   --glow-rgb:104, 117, 245;
   --line:rgba(26,26,46,.08); --line-2:rgba(26,26,46,.14);
   --line-warm:rgba(104,117,245,.18);
@@ -423,13 +423,25 @@ html[data-theme="glass"]{
 html[data-theme="pink"]{ /* Rosa */
   --bg:#fffbfc; --surface:#fff; --surface-2:#fef5f8; --surface-3:#fbe9ef;
   --ink:#3a2030; --ink2:#6a4458; --ink3:#866979; --ink4:#a25a7e;
-  --accent:#d4748e; --accent-2:#c52f61; --accent-deep:#b85a74;
+  --accent:#bd3a5e; --accent-2:#c52f61; --accent-deep:#b0526c;
   --glow-rgb:212, 116, 142;
   --line:rgba(58,32,48,.07); --line-2:rgba(58,32,48,.12);
   --line-warm:rgba(212,116,142,.18);
   --pos:#3a2030; --neg:#6a4458;
   color-scheme:light;
 }
+
+/* --accent som TEKST — målt 2026-11 ──────────────────────────────────
+   Aksenten brukes som tekstfarge på nummer, satser, eyebrows og lenker over hele
+   nettstedet, og lå under 4,5 mot flatene den står på: glass 3,3-3,6, pink 3,0-3,1,
+   disco 4,1-4,4, hendrix 4,15. Å bytte til --accent-2 selektor for selektor ble
+   rene lappeløsninger (12+ ulike klasser på 82 sider), så selve tokenet er senket
+   til AA-terskelen, samme fargetone og metning, bare lysheten er flyttet:
+     glass #6875f5 -> #4151f2 · pink #d4748e -> #bd3a5e · hendrix #cf0f7d -> #c40e76
+     disco (mørkt tema, løftet) #e91e8c -> #ec3a9a
+   Hvit tekst oppå aksenten (--on-accent) lander på 5,3-5,7 på glass og pink;
+   tidligere nesten svart, som falt til 3,5 på de nye verdiene. --glow-rgb er
+   uendret, så tonede flater og skygger ser ut som før. */
 
 /* Feiltone på lyse temaer — standard --err (#cc7a66 fra site-shell.css) gir
    bare ~3,2:1 mot lys bakgrunn og faller under WCAG AA for brødtekst. Samme
@@ -508,13 +520,14 @@ html[data-theme="glass"]{ --menu-bg:#fff; }
    Derfor: seks temaer klarer seg med sin egen --bg, glass og pink trenger en
    dyp nøytral, og hendrix trenger hvit (aksenten der er en mettet magenta som
    er for mørk for svart tekst og lys nok for hvit). Alle ni lander over 4,5.
+   Tallene over er FØR 2026-11: da fikk glass og pink mørkere aksent og går nå
+   på hvit (5,3-5,7), se «--accent som TEKST»-blokka lenger opp.
 
    MERK gradienter: flater som går fra --accent til --accent-2 faller under AA
    på frost (3,43) og hendrix (2,87) uansett tekstfarge, fordi --accent-2 er et
    lysere trinn. Slike flater må være FLATE var(--accent) — ikke en gradient —
    når det ligger tekst på dem. */
-html:is([data-theme="glass"],[data-theme="pink"]){ --on-accent:#0a0a0a; }
-html[data-theme="hendrix"]{ --on-accent:#ffffff; }
+html:is([data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]){ --on-accent:#ffffff; }
 
 /* Logoflisa — den ene chrome-flaten som IKKE styres av et token ────
    Merket inni flisa er en messinggradient (#d8ad7e → #a87842). På et MØRKT

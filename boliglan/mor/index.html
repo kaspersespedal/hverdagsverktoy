@@ -3,12 +3,27 @@
 <head>
 <meta charset="utf-8">
 <title>Boliglånskalkulator — månedlig betaling og totalkostnad · Hverdagsverktøy</title>
-<meta name="description" content="Regn ut månedlig betaling, totale renter, skattefradrag og stresstest for boliglånet. Annuitet eller serielån, valgfri avdragsfri periode. Norske 2026-regler. Alt skjer lokalt i nettleseren.">
+<meta name="description" content="Regn ut månedlig betaling, totale renter, skattefradrag og stresstest for boliglånet. Annuitet eller serielån, valgfri avdragsfri periode. Norske 2026-regler.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/boliglan/mor/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:title" content="Boliglånskalkulator — månedlig betaling og totalkostnad">
+<meta property="og:description" content="Regn ut månedlig betaling, totale renter, skattefradrag og stresstest for boliglånet. Annuitet eller serielån, valgfri avdragsfri periode. Norske 2026-regler.">
+<meta property="og:url" content="https://hverdagsverktoy.com/boliglan/mor/">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -48,13 +63,13 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <style>
 /* Boliglånskalkulator — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -123,6 +138,7 @@ body.focus-mode > footer{display:none}
 }
 .ik-check{display:flex;align-items:center;gap:8px;font:500 12.5px/1.3 var(--font-sans);color:var(--ink2);cursor:pointer}
 .ik-check input{width:16px;height:16px;cursor:pointer;accent-color:var(--accent);background:transparent;flex-shrink:0}
+@media(pointer:coarse){.ik-check{min-height:44px}.ik-check input{width:22px;height:22px}}
 .ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .ik-note a{color:var(--accent);text-decoration:underline}
 
@@ -141,6 +157,7 @@ body.focus-mode > footer{display:none}
 .ks-r-stat.div{padding-top:8px;margin-top:4px;border-top:1px solid var(--line)}
 .ks-r-subhead{font:500 10px/1.3 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);margin:8px 0 -2px}
 .ks-r-foot{font-size:11px;color:var(--ink4);line-height:1.5;margin:6px 0 0}
+.ks-r-foot + .ks-r-subhead{margin-top:20px}
 
 /* Side col */
 .side-col{display:flex;flex-direction:column;gap:12px;min-width:0}
@@ -172,6 +189,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
+
+/* Heroen har ikke lenger tallene (.page-stats): de samme står i stripa og resultatkortet under.
+   Én kolonne, ellers står det et tomt felt til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
 </style>
 </head>
 <body>
@@ -259,10 +280,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <button type="button" class="hero-csv-btn" id="morCsvBtn" aria-label="Last ned nedbetalingsplan som CSV" title="Last ned nedbetalingsplan (CSV)"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2v7M4 6.5L7 9.5l3-3M2.5 12h9"/></svg></button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
-    </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="morHStatMnd">Månedlig betaling</span><span class="v" id="hStatMnd">–</span></div>
-      <div class="page-stat"><span class="l" data-i18n="morHStatRnt">Totale renter</span><span class="v" id="hStatRnt">–</span></div>
     </div>
   </div>
 </section>
@@ -401,7 +418,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <a href="/boliglan/maxlan/"><span class="name">Hva har jeg råd til?</span><span class="arr">→</span></a>
         <a href="/kalkulator/rente/"><span class="name">Effektiv rente</span><span class="arr">→</span></a>
         <a href="/personlig/spare/"><span class="name">Sparekalkulator</span><span class="arr">→</span></a>
-        <a href="/skatt/inntekt/"><span class="name">Lønn etter skatt</span><span class="arr">→</span></a>
+        <a href="/skatt/inntekt/"><span class="name">Inntektsskatt</span><span class="arr">→</span></a>
       </div>
     </aside>
 
@@ -526,7 +543,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       <div class="lrn-qs">
         <details><summary>Hva er forskjellen på annuitetslån og serielån?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Annuitetslån har likt månedsbeløp hele veien. Serielån har fast avdrag pluss rente av det du skylder, så det starter høyere, synker jevnt og koster litt mindre i renter totalt.</p></div></details>
         <details><summary>Hvorfor blir rentene så store til sammen?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Du betaler rente hver måned av det du fortsatt skylder, og de første årene synker gjelden sakte. 3&nbsp;000&nbsp;000 kr over 25 år til 5,13&nbsp;% gir 2&nbsp;329&nbsp;702 kr i renter. Over 30 år blir det 2&nbsp;883&nbsp;782 kr.</p></div></details>
-        <details><summary>Hva betyr stresstesten på +3 prosentpoeng?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Banken sjekker at du klarer en høyere rente før de låner deg penger. Kalkulatoren regner med 7&nbsp;% eller din rente pluss 3 prosentpoeng, det høyeste av de to, og viser hvor mye dyrere måneden ville bli.</p></div></details>
+        <details><summary>Hva betyr stresstesten på +3 prosentpoeng?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Banken sjekker at du klarer en høyere rente før den låner deg penger. Kalkulatoren regner med 7&nbsp;% eller din rente pluss 3 prosentpoeng, det høyeste av de to, og viser hvor mye dyrere måneden ville bli.</p></div></details>
         <details><summary>Hvor mye får jeg igjen på skatten?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Du får 22&nbsp;% av renteutgiftene tilbake. Betaler du 100&nbsp;000 kr i renter ett år, blir skatten 22&nbsp;000 kr lavere. Kalkulatoren viser både totalt og for første år.</p></div></details>
         <details><summary>Lønner det seg å velge avdragsfri periode?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Månedsbeløpet blir lavere mens du bare betaler renter, men gjelden står stille og lånet blir dyrere totalt. Kalkulatoren viser hva utsettelsen koster som «ekstra rentekostnad».</p></div></details>
         <details><summary>Hvor lenge kan jeg ha lånet?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren bruker maks 30 år, som er vanlig bankpraksis. Lengre løpetid gir lavere månedsbeløp, men mer renter totalt.</p></div></details>
@@ -536,7 +553,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     <nav class="lrn-rel" aria-labelledby="lrn-mor-r">
       <h3 class="lrn-h3" id="lrn-mor-r">Relaterte verktøy</h3>
       <ul>
-        <li><a href="/boliglan/maxlan/"><span><span class="t">Hva har du råd til?</span><span class="d">Regn ut hvor stort lån inntekten din bærer, med samme stresstest banken bruker.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
+        <li><a href="/boliglan/maxlan/"><span><span class="t">Hva har jeg råd til?</span><span class="d">Regn ut hvor stort lån inntekten din bærer, med samme stresstest banken bruker.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
         <li><a href="/boliglan/refi/"><span><span class="t">Lønner det seg å bytte bank?</span><span class="d">Se hvor mange måneder det tar før byttegebyret er tjent inn.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
         <li><a href="/kalkulator/rente/"><span><span class="t">Effektiv rente</span><span class="d">Se hva gebyrene gjør med renten du faktisk betaler.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
         <li><a href="/personlig/budsjett/"><span><span class="t">Tåler budsjettet betalingen?</span><span class="d">Legg månedsbeløpet inn i budsjettet og se hva du sitter igjen med.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
@@ -560,10 +577,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no-lett.js?v=v1"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no-lett.js?v=v2"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -638,7 +655,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(P <= 0){
       setEl('m-mth','–'); setEl('m-sub','Skriv inn lånebeløp og rente');
       ['m-nom','m-eff','m-y1i','m-y1p','m-fees-tot','m-tax','m-tax-y1','m-stress-mth','m-stress-diff','m-last','m-io-mthfree','m-io-mthafter','m-io-extra'].forEach(function(id){setEl(id,'–');});
-      setEl('hStatMnd','–'); setEl('hStatRnt','–');
       setEl('mStripMnd','–'); setEl('mStripTot','–'); setEl('mStripInt','–'); setEl('mStripEff','–');
       show('m-last-row',false);
       if(window.hvtLearn) hvtLearn.update('boliglan-mor', null);
@@ -773,10 +789,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var stressDiff = stressMnd - mnd;
     setEl('m-stress-mth', fmt(stressMnd));
     setEl('m-stress-diff', '+ ' + fmt(stressDiff));
-
-    // Hero-stats
-    setEl('hStatMnd', fmt(mnd + (feesPerMonth||0)));
-    setEl('hStatRnt', fmt(rnt));
 
     // KS-strip (live oppsummering på toppen)
     setEl('mStripMnd', fmt(mnd + (feesPerMonth||0)));

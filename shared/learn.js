@@ -12,10 +12,42 @@
 // near er null til første måling.
 (function(){
   var fns = {}, last = {}, queued = {}, waiting = {}, near = null, rest = 0;
+  // Regnestykkene (.lrn-f): linjeskift skal komme foran et regnetegn, aldri etter. CSS kan ikke lese tekst,
+  // så det som slutter med et tegn (og summetegnet) samles her med leddet etter seg (.lrn-fj). Inne i et ledd
+  // får tegnet hardt mellomrom etter seg, og «(1 +» holdes samlet. Bare tekst uten bokstaver røres: frase-
+  // oversetteren i core.js krever eksakt treff på tekst med ord.
+  function opens(el){
+    var e = el.lastChild;
+    return el.classList.contains('lrn-sig') || (e && e.nodeType === 3 && /[=≈+×÷−–]\s*$/.test(e.nodeValue));
+  }
+  function glue(){
+    var fs = document.querySelectorAll('.lrn-f');
+    for(var i = 0; i < fs.length; i++){
+      for(var c = fs[i].firstElementChild; c; c = c.nextElementSibling){
+        var n = c.nextElementSibling;
+        if(!n || c.className === 'lrn-fj' || !opens(c)) continue;
+        var w = document.createElement('span');
+        w.className = 'lrn-fj';
+        fs[i].insertBefore(w, c);
+        w.appendChild(c);
+        // Videre til første synlige ledd som ikke selv slutter med et tegn
+        do { c = n; n = c.nextElementSibling; w.appendChild(c); } while(n && (c.hidden || opens(c)));
+        c = w;
+      }
+      var tw = document.createTreeWalker(fs[i], NodeFilter.SHOW_TEXT);
+      while(tw.nextNode()){
+        var t = tw.currentNode, s = t.nodeValue;
+        if(/[+−×÷=≈] /.test(s) && !/\p{L}/u.test(s)) t.nodeValue = s.replace(/\((\d+) ([+−])/g, '($1\u00A0$2').replace(/([+−×÷=≈]) /g, '$1\u00A0');
+      }
+    }
+    // Tabellene: lange radtitler får minstebredde på mobil (.lng i learn.css)
+    var th = document.querySelectorAll('.lrn-tbl tbody th:first-child');
+    for(i = 0; i < th.length; i++) th[i].classList.toggle('lng', th[i].textContent.trim().length > 14);
+  }
   function draw(key){
     if(queued[key] || !fns[key]) return;
     queued[key] = true;
-    Promise.resolve().then(function(){ queued[key] = false; fns[key](last[key]); });
+    Promise.resolve().then(function(){ queued[key] = false; fns[key](last[key]); glue(); });
   }
   function flush(){
     clearTimeout(rest);
@@ -70,6 +102,8 @@
       return (r && r._ph && r._ph[s]) || s;
     }
   };
+
+  glue();
 
   // core.js setter lang på <html> når en språkfil er lastet. Da tegnes setningene på nytt.
   new MutationObserver(function(){ for(var k in fns) run(k); })

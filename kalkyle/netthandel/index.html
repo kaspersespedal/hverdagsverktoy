@@ -12,8 +12,18 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hverdagsverktoy.com/kalkyle/netthandel/">
 <meta property="og:locale" content="nb_NO">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -64,13 +74,13 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <style>
 /* Netthandel og enhetsøkonomi — kalkulator-skall (delt mønster med Kalkyle-seksjonen) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -94,7 +104,6 @@ body.focus-mode > footer{display:none}
 .calc-wrap .container{display:block}
 .ks-host{min-width:0}
 
-.kk-dash{width:48px;height:2px;background:var(--accent);opacity:.9;margin-bottom:20px}
 
 .kk-picker-strip-wrap{padding-top:18px;padding-bottom:6px}
 .kk-picker-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
@@ -129,6 +138,13 @@ body.focus-mode > footer{display:none}
 .kk-steps .n{flex-shrink:0;font:500 12px/1.6 var(--font-mono);color:var(--ink4);width:18px}
 .kk-steps span:last-child{font-size:15px;line-height:1.65;color:var(--ink2)}
 .kk-steps b{color:var(--ink);font-weight:600}
+
+/* Heroen har ikke lenger tallraden (.page-stats): de samme tallene står i stripa og svarkortet rett under.
+   Én kolonne, ellers står det et tomt felt til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
+
+/* Hele «(break-even CPA)» holdes samlet i merknadene, så bindestreken ikke brytes midt i. */
+.lrn-notes .nw{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -209,17 +225,12 @@ body.focus-mode > footer{display:none}
         <span class="sep"></span>
         <span class="here" data-i18n="kalkNetthandelTitle">Netthandel og enhetsøkonomi</span>
       </div>
-      <div class="kk-dash" aria-hidden="true"></div>
       <h1 class="page-title"><em data-i18n="kalkNetthandelTitle">Netthandel og enhetsøkonomi</em></h1>
       <p class="page-lead" data-i18n="kalkNetthandelSubtitle">Tjener du på hver ordre — og hva tåler du å betale for en kunde?</p>
       <div class="page-hero-actions">
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
-    </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" id="hStatDbLbl">Dekningsbidrag per ordre</span><span class="v" id="hStatDb">310 kr</span></div>
-      <div class="page-stat"><span class="l" id="hStatRoasLbl">Minste salg per annonsekrone</span><span class="v" id="hStatRoas">1,93 kr</span></div>
     </div>
   </div>
 </section>
@@ -228,7 +239,7 @@ body.focus-mode > footer{display:none}
 <div class="calc-wrap">
   <div class="container kk-picker-strip-wrap">
     <div class="kk-picker-strip">
-      <a href="/kalkyle/margin/" class="kk-chip" data-i18n="kalkyleDestMargin">Margin &amp; påslag</a>
+      <a href="/kalkyle/margin/" class="kk-chip" data-i18n="kalkyleDestMargin">Margin og påslag</a>
       <a href="/kalkyle/selvkost/" class="kk-chip" data-i18n="kalkyleDestSk">Selvkost</a>
       <a href="/kalkyle/enhetskost/" class="kk-chip" data-i18n="kalkyleDestEk">Enhetskost</a>
       <a href="/kalkyle/foodcost/" class="kk-chip" data-i18n="kalkyleDestFc">Food cost</a>
@@ -522,10 +533,10 @@ body.focus-mode > footer{display:none}
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no.js?v=v232"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -605,9 +616,7 @@ body.focus-mode > footer{display:none}
     window._nett = {mode:mode, aov:o.aov, vare:o.vare, frakt:o.frakt, gebyrP:parseAmt(els.neGebyr.value) || 0, emb:o.emb, arpu:s.arpu, marginP:s.marginP, churnP:s.churnP, cac:s.cac};
     if(window.hvtLearn) hvtLearn.update('kalkyle-netthandel', window._nett);
 
-    // Tekster som følger modus (etiketter i toppen, svarkortets overskrift og merknad).
-    setTxt('hStatDbLbl', ordre ? (t.kalkNetthandelStatDb || 'Dekningsbidrag per ordre') : (t.kalkNetthandelResLtv || 'Kundeverdi (LTV)'));
-    setTxt('hStatRoasLbl', ordre ? (t.kalkNetthandelStatRoas || 'Minste salg per annonsekrone') : (t.kalkNetthandelStripRatio || 'Kundeverdi mot kostnad (LTV:CAC)'));
+    // Tekster som følger modus (svarkortets overskrift og merknad).
     setTxt('nhREyebrow', ordre ? (t.kalkNetthandelResDb || 'Dekningsbidrag per ordre') : (t.kalkNetthandelResLtv || 'Kundeverdi (LTV)'));
     setTxt('nhNote', ordre ? (t.kalkNetthandelNoteOrdre || 'Alle beløp er uten mva.')
       : (t.kalkNetthandelNoteSaas || 'Alle beløp er uten mva. Kundeverdien forutsetter at frafall og margin holder seg like.'));
@@ -649,14 +658,6 @@ body.focus-mode > footer{display:none}
     setTxt('nhROutMargin', fmtPct(s.marginP));
     setTxt('nhROutGross', fmtKr(s.gross));
     setTxt('nhROutChurn', fmtPct(s.churnP));
-
-    if(mode === 'ordre'){
-      setTxt('hStatDb', fmtKr(o.db));
-      setTxt('hStatRoas', isFinite(o.roas) ? fmtNum(o.roas, 2) + ' kr' : '–');
-    } else {
-      setTxt('hStatDb', fmtKr(s.ltv));
-      setTxt('hStatRoas', isFinite(s.ratio) ? fmtNum(s.ratio, 1) + ':1' : '–');
-    }
 
     persist();
   }
@@ -739,7 +740,7 @@ body.focus-mode > footer{display:none}
   var root, raw = null, lastW = 0, queued = false, ctx, local = null, base = null;
 
   function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
-  function set(name, text){ var el = q(name); if(el) el.textContent = text; }
+  function set(name, text){ var el = q(name); if(el) el.textContent = name === 'stateText' ? String(text).replace(/ · /g, ' · ') : text; }
   function f1(v){ return Math.round(v * 10) / 10; }
   function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
   function esc(s){ return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -905,7 +906,7 @@ body.focus-mode > footer{display:none}
         + (r15 < 0 ? t('lrnNhLoss', 'Ordren taper {belop} kr.', {belop:kr(Math.round(-r15))}) : t('lrnNhGain', 'Ordren gir {belop} kr.', {belop:kr(Math.round(r15))}));
       var notes = mob ? [t('lrnNhCpa', 'Maks annonsekost per ordre: {belop} kr (break-even CPA)', {belop:kr(cpa)}) + '.', t('lrnNhNoteBe', 'Break-even ROAS {r}, slik kalkulatoren regner: 1 ÷ {dg}.', {r:roasTxt, dg:dgTxt}), roasNote] : [roasNote];
       if(db <= 0) notes = [ph('Ordren går i minus før annonsekostnader.')];
-      q('notesO').innerHTML = notes.map(function(n0, j){ return '<li><span class="lrn-mk" aria-hidden="true">' + (j + 1) + '</span><span>' + esc(n0) + '</span></li>'; }).join('');
+      q('notesO').innerHTML = notes.map(function(n0, j){ return '<li><span class="lrn-mk" aria-hidden="true">' + (j + 1) + '</span><span>' + esc(n0).replace('(break-even CPA)', '<span class="nw">(break-even CPA)</span>') + '</span></li>'; }).join('');
       set('fdg', '1 ÷ ' + L.dec(dgR, 3)); set('froas', roasTxt);
       set('sumO', isFinite(roas) ? t('lrnNhSumO', 'Break-even ROAS er {r}: hver annonsekrone må gi minst {r} kr i salg for at ordren ikke skal gå i minus.', {r:roasTxt}) : ph('Ordren går i minus før annonsekostnader.'));
       set('sr', t('lrnNhSrO', 'Av en snittordre på {aov} kr går {var} kr til varekost, frakt, betalingsgebyr og emballasje. Dekningsbidraget er {db} kr, {dg}.', {aov:kr(oi.aov), 'var':kr(variable), db:kr(db), dg:dgTxt})

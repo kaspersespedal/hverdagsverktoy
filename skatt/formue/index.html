@@ -3,12 +3,27 @@
 <head>
 <meta charset="utf-8">
 <title>Formuesskatt — Skatt · Hverdagsverktøy</title>
-<meta name="description" content="Beregn norsk formuesskatt for 2026 — med verdsettelsesrabatter for primærbolig, sekundærbolig, fritidsbolig, aksjer, driftsmidler og næringseiendom. Bunnfradrag 1 900 000 kr per person, gjeldsfordeling forholdsmessig.">
+<meta name="description" content="Beregn formuesskatt for 2026 — med verdsettelsesrabatter for primær- og sekundærbolig, fritidsbolig, aksjer og næringseiendom. Bunnfradrag 1 900 000 kr per person.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/skatt/formue/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:title" content="Formuesskatt — Skatt">
+<meta property="og:description" content="Beregn formuesskatt for 2026 — med verdsettelsesrabatter for primær- og sekundærbolig, fritidsbolig, aksjer og næringseiendom. Bunnfradrag 1 900 000 kr per person.">
+<meta property="og:url" content="https://hverdagsverktoy.com/skatt/formue/">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -48,12 +63,12 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <style>
 /* Formuesskatt — kalkulator-skall (delt mønster med /skatt/inntekt/ + /skatt/reise/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -120,16 +135,6 @@ select.ik-input{
   background-repeat:no-repeat;background-position:right 12px center;
 }
 .ik-rabatt{color:var(--ink4);font-weight:400;letter-spacing:.02em}
-.calc-btn{
-  margin-top:18px;width:100%;
-  padding:13px 20px;background:var(--accent);
-  border:0;border-radius:5px;cursor:pointer;
-  color:var(--surface);font:600 14px/1 var(--font-sans);letter-spacing:.2px;
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  transition:background .2s ease, transform .15s ease;
-}
-@media(hover:hover){.calc-btn:hover{background:var(--accent-2)}}
-.calc-btn:active{transform:scale(.99)}
 
 .ks-result{background:var(--surface);padding:22px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .ks-r-eyebrow{font:500 10px/1 var(--font-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
@@ -151,6 +156,8 @@ select.ik-input{
 .side-card .ref-row .l{color:var(--ink2)}
 .side-card .ref-row .v{color:var(--ink);font-weight:500;white-space:nowrap}
 .side-card .ref-row .v.accent{color:var(--accent-2)}
+.lrn-seg button{text-wrap:balance}
+.lrn-fm-say{text-wrap:pretty}
 .side-card.related a{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid color-mix(in srgb, var(--ink) 5%, transparent);color:var(--ink2);text-decoration:none;font-size:13px;transition:color .15s}
 .side-card.related a:last-child{border-bottom:0}
 .side-card.related a:hover{color:var(--accent)}
@@ -217,6 +224,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row .h-desc{color:var(--ink2)}
 
 .calc-wrap > .container + .container{margin-top:24px}
+/* Heroen har ikke lenger tallene (.page-stats): de samme tallene står i stripa rett under.
+   Én kolonne, ellers står et tomt felt på 320px til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
 </style>
 </head>
 <body>
@@ -303,10 +313,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <button type="button" class="calc-help-btn" aria-label="Vis veiledning" title="Vis veiledning" data-i18n-title="howtoBtn">?</button>
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
-    </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="formueHStatSkatt">Total formuesskatt</span><span class="v" id="hStatSkatt">–</span></div>
-      <div class="page-stat"><span class="l" data-i18n="formueHStatEffektiv">Effektiv sats</span><span class="v" id="hStatEffektiv">–</span></div>
     </div>
   </div>
 </section>
@@ -399,10 +405,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                 </div>
               </div>
 
-              <button type="button" id="formueCalcBtn" class="calc-btn">
-                <span data-i18n="formueBtnCalcNew">Beregn formuesskatt</span>
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="7" x2="11" y2="7"/><polyline points="7.5 3.5 11 7 7.5 10.5"/></svg>
-              </button>
             </section>
           </div>
 
@@ -444,10 +446,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     <aside class="side-col">
       <div class="side-card">
         <h4>Satser 2026</h4>
-        <div class="ref-row"><span class="l">Bunnfradrag, enslig</span><span class="v">1 900 000<span class="u"></span></span></div>
+        <div class="ref-row"><span class="l">Bunnfradrag, enslig</span><span class="v">1 900 000</span></div>
         <div class="ref-row"><span class="l">Bunnfradrag, ektefeller</span><span class="v">3 800 000</span></div>
-        <div class="ref-row"><span class="l">Trinn 1 · 1,9–21,5 mill</span><span class="v accent">1,00 %</span></div>
-        <div class="ref-row"><span class="l">Trinn 2 · over 21,5 mill</span><span class="v accent">1,10 %</span></div>
+        <div class="ref-row"><span class="l">Trinn 1 · 1,9–21,5 mill.</span><span class="v accent">1,00 %</span></div>
+        <div class="ref-row"><span class="l">Trinn 2 · over 21,5 mill.</span><span class="v accent">1,10 %</span></div>
         <div class="ref-row"><span class="l">Herav kommune</span><span class="v">0,35 %</span></div>
         <div class="ref-row"><span class="l">Stat, trinn 1 / 2</span><span class="v">0,65 / 0,75 %</span></div>
       </div>
@@ -456,7 +458,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <a href="/skatt/inntekt/"><span class="name">Inntektsskatt</span><span class="arr">→</span></a>
         <a href="/skatt/utbytte/"><span class="name">Utbytteskatt</span><span class="arr">→</span></a>
         <a href="/skatt/reise/"><span class="name">Reisefradrag</span><span class="arr">→</span></a>
-        <a href="/skatt/"><span class="name">Alle skatteverktøy</span><span class="arr">→</span></a>
       </div>
     </aside>
 
@@ -533,7 +534,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <details class="lrn-tbl">
           <summary>Vis som tabell<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary>
           <div><table>
-            <caption>De fem stasjonene i kroner</caption>
+            <caption>Fra markedsverdi til formuesskatt, i kroner</caption>
             <thead><tr><th scope="col" class="s" data-i18n="trSkattFormueThStep">Trinn</th><th scope="col">Beløp</th></tr></thead>
             <tbody>
               <tr><th scope="row">Markedsverdi</th><td data-lrn="tb1"></td></tr>
@@ -588,10 +589,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no.js?v=v232"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -703,14 +704,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         else subEl.innerHTML = 'Effektiv sats: <span>' + effStr + '</span> av markedsverdi';
       }
       setText('rBruttoFormue', fmtKr(d.bruttoFormue));
-      setText('rGjeldJustert', '− ' + fmtKr(d.gjeldJustert));
+      setText('rGjeldJustert', '−' + fmtKr(d.gjeldJustert));
       setText('rNettoFormue', fmtKr(d.nettoFormue));
-      setText('rBunnfradrag', '− ' + fmtKr(d.bunnfradrag) + (d.personer === 2 ? ' ' + phr('(2 × 1,9 mill.)') : ''));
+      setText('rBunnfradrag', '−' + fmtKr(d.bunnfradrag) + (d.personer === 2 ? ' ' + phr('(2 × 1,9 mill.)') : ''));
       setText('rSkattepliktig', fmtKr(d.skattepliktig));
       setText('rEffSats', effStr);
-
-      setText('hStatSkatt', underBunn ? '0 kr' : fmtKr(d.totalSkatt));
-      setText('hStatEffektiv', effStr);
 
       // Summary-stripe (nytt design — verdiene finnes allerede i d)
       setText('rSumBrutto', fmtKr(d.bruttoFormue));
@@ -755,11 +753,17 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         if(hasAny && d.bruttoFormue > 0 && segs.length){
           var ops = [1, .74, .56, .42, .32, .24, .18];
           var barHtml = '', legHtml = '';
+          // Hele prosenter som summerer til 100 (størst rest får resten)
+          var pcts = segs.map(function(s){ return Math.floor(s.v / d.bruttoFormue * 100); });
+          var rest = 100 - pcts.reduce(function(a, b){ return a + b; }, 0);
+          segs.map(function(s, i){ return {i:i, r:s.v / d.bruttoFormue * 100 - pcts[i]}; })
+            .sort(function(a, b){ return b.r - a.r; })
+            .slice(0, Math.max(0, rest)).forEach(function(x){ pcts[x.i]++; });
           segs.forEach(function(s, i){
             var pct = s.v / d.bruttoFormue * 100;
             var op = ops[i % ops.length];
             barHtml += '<div class="viz-seg" style="width:' + pct.toFixed(2) + '%;opacity:' + op + '" title="' + escapeHtml(phr(s.l)) + ': ' + fmtKr(s.v) + '"></div>';
-            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + escapeHtml(phr(s.l)) + ' ' + Math.round(pct) + ' %</span>';
+            legHtml += '<span class="lg"><span class="sw" style="opacity:' + op + '"></span>' + escapeHtml(phr(s.l)) + ' ' + pcts[i] + ' %</span>';
           });
           document.getElementById('vizBar').innerHTML = barHtml;
           document.getElementById('vizLegend').innerHTML = legHtml;
@@ -813,14 +817,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     });
     var sel = document.getElementById('formue-personer');
     if(sel) sel.addEventListener('change', recalc);
-
-    document.getElementById('formueCalcBtn').addEventListener('click', function(){
-      recalc();
-      var bd = document.getElementById('formueBreakdown');
-      if(bd && !bd.classList.contains('empty')){
-        bd.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
 
     // ── Init ──
     restore();
@@ -915,7 +911,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     function fmt(v){ return L.kr(v); }
     function kr(v){ return L.kr(v) + NB + 'kr'; }
     function pc(s){ return s + NB + '%'; }
-    set('stateText', ok ? t('lrnFmState', 'Markedsverdi {m} · gjeld {g} · {s}', {m:kr(D.mt), g:kr(GJ), s:ph(pers === 2 ? 'ektefeller' : 'enslig')}) : ph('Fyll inn formuen din i kalkulatoren.'));
+    set('stateText', ok ? t('lrnFmState', 'Markedsverdi {m} · gjeld {g} · {s}', {m:kr(D.mt), g:kr(GJ), s:ph(pers === 2 ? 'ektefeller' : 'enslig')}) : ph('Fyll inn formuen din i kalkulatoren.'));
     if(!ok){ set('sr', ph('Fyll inn formuen din i kalkulatoren.')); return; }
     var W = plot.clientWidth;
     if(!W){ lastW = 0; return; }
@@ -1139,8 +1135,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // Merknadene, setningen, tabellen
     q('notes').innerHTML = notes.map(function(tx, i){ return '<li data-n="' + (i + 1) + '"><span class="lrn-mk" aria-hidden="true">' + (i + 1) + '</span><span>' + esc(tx) + '</span></li>'; }).join('');
     set('foot', t('lrnFmFoot', 'Netto formue {a}–{b} mill.: 1,00 %. Over {b} mill.: 1,10 %.', {a:pers === 2 ? '3,8' : '1,9', b:pers === 2 ? '43' : '21,5'}));
-    var sum = over ? t('lrnFmSumO', 'Netto formue er {n}, {o} over bunnfradraget, så formuesskatten er {s}.', {n:kr(D.netto), o:kr(D.sp), s:kr(D.skatt)})
-      : t('lrnFmSumU', 'Netto formue er {n}, {o} under bunnfradraget, så formuesskatten er {s}.', {n:kr(D.netto), o:kr(Math.max(bunn - D.netto, 0)), s:kr(D.skatt)});
+    var sum = over ? t('lrnFmSumO', 'Netto formue er {n}, {o} over bunnfradraget, så formuesskatten er {s}.', {n:kr(D.netto), o:kr(D.sp), s:kr(D.skatt)})
+      : t('lrnFmSumU', 'Netto formue er {n}, {o} under bunnfradraget, så formuesskatten er {s}.', {n:kr(D.netto), o:kr(Math.max(bunn - D.netto, 0)), s:kr(D.skatt)});
     set('sum', sum);
     set('tb1', kr(D.mt)); set('tb2', kr(D.brutto)); set('tb3', kr(D.gj)); set('tb4', kr(D.netto)); set('tb5', kr(bunn)); set('tb6', kr(D.sp)); set('tb7', kr(D.skatt));
     set('sr', t('lrnFmSr', 'Markedsverdien er {m}, og etter verdsettelse per eiendel teller {b}. Gjelden på {g} teller som {gj}. Bunnfradraget er {bf}.', {m:kr(D.mt), b:kr(D.brutto), g:kr(GJ), gj:kr(D.gj), bf:kr(bunn)}) + ' ' + sum);

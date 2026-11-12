@@ -3,12 +3,27 @@
 <head>
 <meta charset="utf-8">
 <title>Likviditetsbudsjett — Kalkulator · Hverdagsverktøy</title>
-<meta name="description" content="Måned-for-måned likviditetsbudsjett: startbalanse + inntekter − utgifter = saldo. Se om du går tom for penger noen måned. Last ned som CSV. Alt skjer lokalt i nettleseren.">
+<meta name="description" content="Likviditetsbudsjett måned for måned: startbalanse + inntekter − utgifter = saldo. Se om du går tom for penger noen måned. Last ned som CSV.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/kalkulator/likviditet/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:title" content="Likviditetsbudsjett — Kalkulator">
+<meta property="og:description" content="Likviditetsbudsjett måned for måned: startbalanse + inntekter − utgifter = saldo. Se om du går tom for penger noen måned. Last ned som CSV.">
+<meta property="og:url" content="https://hverdagsverktoy.com/kalkulator/likviditet/">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
 <link rel="manifest" href="/manifest.json">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -48,13 +63,13 @@
   })();
 </script>
 <style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
-<link rel="stylesheet" href="/shared/themes.css?v=v10">
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v5">
-<link rel="stylesheet" href="/shared/components.css?v=v6">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v246">
-<link rel="stylesheet" href="/shared/calm-override.css?v=v3">
+<link rel="stylesheet" href="/shared/components.css?v=v7">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v247">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
-<link rel="stylesheet" href="/shared/learn.css?v=v4">
+<link rel="stylesheet" href="/shared/learn.css?v=v5">
 <style>
 /* Likviditetsbudsjett — kalkulator-skall (delt mønster med /kalkulator/rente/ + /kalkulator/avs/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -165,6 +180,17 @@ body.focus-mode > footer{display:none}
 .bd-table tr.row-neg td{color:var(--ink3)}
 .bd-table tr.row-neg td.v{color:var(--ink)}
 .bd-table tr.row-neg td.v.bal{font-weight:700;color:var(--ink)}
+/* Bred skjerm: fem like brede kolonner, så avstanden mellom tallene blir lik */
+@media(min-width:561px){
+  .bd-table{table-layout:fixed}
+}
+/* Smal skjerm: fem kolonner skal få plass uten sidelengs rulling */
+@media(max-width:560px){
+  .bd-table{min-width:0;font-size:12.5px}
+  .bd-table td,.bd-table th{padding:8px 4px}
+  .bd-table td:first-child{white-space:nowrap}
+  .bd-table th{font-size:10px;letter-spacing:.2px}
+}
 .calc-disclaimer{margin-top:14px;font-size:11.5px;color:var(--ink4);line-height:1.55}
 
 /* Side col */
@@ -193,6 +219,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 .howto-body .howto-row{display:flex;flex-direction:column;gap:2px;margin:0 0 12px}
 .howto-body .howto-row strong{color:var(--ink);font-weight:600}
 .howto-body strong{color:var(--ink);font-weight:500}
+/* Heroen har ikke lenger tallene (.page-stats): de samme tallene står i stripa og resultatkortet rett under.
+   Én kolonne, ellers står det et tomt felt til høyre. */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
 </style>
 </head>
 <body>
@@ -279,10 +308,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <button type="button" class="focus-card-btn" aria-label="Fokusmodus" title="Skjul distraksjoner" data-i18n-title="focusBtn">⛶</button>
       </div>
     </div>
-    <div class="page-stats">
-      <div class="page-stat"><span class="l" data-i18n="likvidStatEnd">Endelig saldo</span><span class="v" id="hStatEnd">–</span></div>
-      <div class="page-stat"><span class="l" data-i18n="likvidStatNetMnd">Netto / mnd</span><span class="v" id="hStatNet">–</span></div>
-    </div>
   </div>
 </section>
 
@@ -303,7 +328,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           <div class="ks-form">
             <section class="ks-section" aria-labelledby="likvidInputHdr">
               <div class="ik-section-head">
-                <h3 id="likvidInputHdr" data-i18n="likvidSectionInput">Likviditetsbudsjett</h3>
+                <h3 id="likvidInputHdr" data-i18n="likvidSectionInput">Inntekter og utgifter</h3>
                 <span class="meta" data-i18n="likvidSectionHint">Måned for måned</span>
               </div>
 
@@ -350,7 +375,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
             <button type="button" id="likvidCsvBtn" class="res-csv" disabled>
               <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2 V10"/><polyline points="3.5 6.5 7 10 10.5 6.5"/><line x1="2" y1="12" x2="12" y2="12"/></svg>
-              <span data-i18n="likvidCsvBtn">Last ned (CSV)</span>
+              <span data-i18n="likvidCsvBtn">Last ned CSV</span>
             </button>
           </aside>
         </div>
@@ -372,7 +397,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
         <a href="/personlig/budsjett/"><span class="name" data-i18n="relBudsjett">Budsjett</span><span class="arr">→</span></a>
         <a href="/personlig/spare/"><span class="name" data-i18n="relSpare">Sparekalkulator</span><span class="arr">→</span></a>
-        <a href="/skatt/inntekt/"><span class="name" data-i18n="relLonn">Lønn etter skatt</span><span class="arr">→</span></a>
+        <a href="/skatt/inntekt/"><span class="name" data-i18n="relLonn">Inntektsskatt</span><span class="arr">→</span></a>
       </div>
     </aside>
 
@@ -387,7 +412,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <div class="howto-row"><strong>1. Startbalanse</strong><span>Det du har på konto i dag (eller på første dag i perioden du planlegger).</span></div>
         <div class="howto-row"><strong>2. Månedlig inntekt og utgift</strong><span>Forventet snitt for hele perioden. For et personlig budsjett: nettolønn etter skatt og typiske månedlige kostnader.</span></div>
         <div class="howto-row"><strong>3. Antall måneder</strong><span>Hvor langt fram du vil planlegge — typisk 12 måneder, men du kan velge opptil 60 måneder.</span></div>
-        <div class="howto-row"><strong>4. Les av tabellen</strong><span>Hver rad viser startsaldo, inntekt, utgift og sluttsaldo for én måned. Måneder med negativ sluttsaldo markeres — der trenger du å enten kutte utgifter eller ha reservelikvider klar.</span></div>
+        <div class="howto-row"><strong>4. Les av tabellen</strong><span>Hver rad viser startsaldo, inntekt, utgift og sluttsaldo for én måned. Måneder med negativ sluttsaldo markeres — der må du enten kutte utgifter eller ha en reserve klar.</span></div>
         <div class="howto-row"><strong>5. Last ned CSV</strong><span>Hele tabellen kan lastes ned som CSV-fil og åpnes i Excel eller Google Sheets for videre bearbeiding.</span></div>
       </div>
     </details>
@@ -457,10 +482,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v1"></script>
-<script defer src="/shared/top-chrome.js?v=v248"></script>
-<script defer src="/shared/core.js?v=v240"></script>
-<script defer src="/shared/lang/no.js?v=v232"></script>
-<script defer src="/shared/learn.js?v=v2"></script>
+<script defer src="/shared/top-chrome.js?v=v249"></script>
+<script defer src="/shared/core.js?v=v241"></script>
+<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/learn.js?v=v3"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -588,11 +613,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     if(!d.hasData){
       setOutputText('rEnd', '–');
-      setOutputText('hStatEnd', '–');
       setOutputText('rVerdict','Skriv inn tall for å se beregningen');
       setOutputText('rStart','–'); setOutputText('rTotalIn','–');
       setOutputText('rTotalOut','–'); setOutputText('rMonths','–');
-      setOutputText('hStatNet','–');
       setOutputText('likvidStripStart','–'); setOutputText('likvidStripNet','–');
       setOutputText('likvidStripMonths','–'); setOutputText('likvidStripEnd','–');
       bd.classList.add('empty');
@@ -605,7 +628,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     }
 
     setOutputText('rEnd', fmtKr(d.endBal));
-    setOutputText('hStatEnd', fmtKr(d.endBal));
 
     var verdict;
     if(d.endBal < 0) verdict = txt('trKalkulatorLikviditetVerdictMinus', 'Du går i minus etter {m} — kutt utgifter eller hold reserver klart.');
@@ -618,8 +640,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     setOutputText('rTotalIn', fmtKr(d.income * d.months));
     setOutputText('rTotalOut', fmtKr(d.expense * d.months));
     setOutputText('rMonths', mths(d.months));
-
-    setOutputText('hStatNet', fmtKrSigned(d.net));
 
     // ks-strip
     setOutputText('likvidStripStart', fmtKr(d.startBal));
@@ -891,11 +911,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     }
     function free(k){ return bal(k) < 0 ? 'down' : 'up'; }
     var kEnd = ext ? N - 0.9 : N;
-    notes.push(hasE ? t('lrnLqN1', 'Startbalanse {belop} = {m} måneder med utgifter.', {belop:krs(start), m:months(start)}) : t('lrnLqN1b', 'Startbalanse {belop}.', {belop:krs(start)}));
+    notes.push(hasE ? t('lrnLqN1', 'Startbalansen på {belop} dekker {m} måneder med utgifter.', {belop:krs(start), m:months(start)}) : t('lrnLqN1b', 'Startbalanse {belop}.', {belop:krs(start)}));
     mark(0, free(0), 24);
-    notes.push(net === 0 ? ph('Saldoen står stille.') : t('lrnLqN2', '{netto} kr per måned (inntekt − utgift).', {netto:(net < 0 ? '−' : '+') + kr(Math.abs(net))}));
+    notes.push(net === 0 ? ph('Saldoen står stille.') : t('lrnLqN2', '{netto} kr per måned (inntekt&nbsp;−&nbsp;utgift).', {netto:(net < 0 ? '−' : '+') + kr(Math.abs(net))}));
     mark(N / 2, free(N / 2), 22);
-    notes.push(hasE ? t('lrnLqN3', '{belop} = {m} måneder med utgifter.', {belop:krs(endBal), m:months(endBal)}) : krs(endBal) + '.');
+    notes.push(hasE ? t('lrnLqN3', '{belop} dekker {m} måneder med utgifter.', {belop:krs(endBal), m:months(endBal)}) : krs(endBal) + '.');
     mark(kEnd, free(kEnd), 24);
     notes.push(ph('Rett linje: samme inntekt og utgift hver måned. Skattetrekk, feriepenger, halvårlige forsikringer og strømtopper gir hakk som modellen ikke ser.'));
     mark(Math.max(1, N * 0.28), free(N * 0.28), 22);
