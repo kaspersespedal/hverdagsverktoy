@@ -69,7 +69,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v7">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v247">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
-<link rel="stylesheet" href="/shared/learn.css?v=v5">
+<link rel="stylesheet" href="/shared/learn.css?v=v6">
 <style>
 body{min-height:100vh;display:flex;flex-direction:column}
 body > main{flex:1 0 auto}
@@ -543,7 +543,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
               <path class="lrn-si-stair" data-p="stair"/>
               <path class="lrn-si-base" data-p="base"/>
               <path class="lrn-si-ters" data-p="ters"/>
-              <path class="lrn-si-halo" data-p="sn"/>
               <path class="lrn-si-sn" data-p="sn"/>
               <path class="lrn-si-lead" data-p="lead"/>
               <path class="lrn-si-dot" data-p="dot"/>
@@ -958,7 +957,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function polyHit(pts, r, pad){ for(var i = 1; i < pts.length; i++) if(segHit(pts[i - 1], pts[i], r, pad)) return true; return false; }
   function geo(W){
     return W < 600
-      ? {o:'v', W:W, H:668, x0:62, y0:30, pw:W - 88, ph:600, xlw:Math.min(44, Math.floor((W - 88) / 5)), ylw:56, mk:20, fz:11, gx:W - 12}
+      ? {o:'v', W:W, H:668, x0:62, y0:30, pw:W - 130, ph:600, xlw:Math.min(44, Math.floor((W - 130) / 5)), ylw:56, mk:20, fz:11, gx:W - 12}
       : {o:'h', W:W, H:446, x0:52, y0:34, pw:W - 164, ph:380, xlw:72, ylw:44, mk:22, fz:12};
   }
 
@@ -1034,9 +1033,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     for(var b = 0; b <= MAX; b += MAX / 400){ var cp = P(b, calc(b).eff); D.sn += (b === 0 ? 'M' : ' L') + pt(cp); curve.push(cp); }
 
     // Rutenett, akser og terskler
-    var lab = '', marks = '', chipsHtml = '';
-    D.grid = '';
-    for(var k = 1; k <= 5; k++) D.grid += V ? 'M' + f1(px(k / 10)) + ',' + yTop + ' V' + yBot + ' ' : 'M' + xL + ',' + f1(px(k / 10)) + ' H' + xR + ' ';
+    var lab = '', marks = '', chipsHtml = '', bounds = [], k;
     D.base = V ? 'M' + xL + ',' + yTop + ' V' + yBot : 'M' + xL + ',' + yBot + ' H' + xR;
     D.ters = '';
     for(k = 0; k <= 5; k++){
@@ -1055,6 +1052,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         lab += '<span class="lrn-tick y" style="top:' + f1(bx(tv) - 8) + 'px;width:' + G.ylw + 'px">' + esc(fmt(tv)) + '</span>';
         var mOut = Math.max(lag(tv).m, lag(tv - 1).m);
         D.ters += 'M' + (xL - 4) + ',' + f1(bx(tv)) + ' H' + f1(px(mOut)) + ' ';
+        bounds.push([[xL, bx(tv)], [px(mOut), bx(tv)]]);
       });
       lab += '<span class="lrn-tick y" style="top:' + f1(yBot - 8) + 'px;width:' + G.ylw + 'px">' + esc(fmt(MAX)) + '</span>';
     }
@@ -1071,6 +1069,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // Plassering uten kollisjoner: rects er opptatt, lines er strekene som ikke skal dekkes
     var rects = [{x:du.left, y:du.top, w:duW, h:20}];
     var lines = [stair, curve, V ? [[xL, u], [xR, u]] : [[u, yTop - 6], [u, yBot]]];
+    if(sB !== Bc) lines.push(V ? [[xL, s], [xR, s]] : [[s, yTop - 6], [s, yBot]]);
     function inside(r){ return r.x >= 0 && r.x + r.w <= G.W && r.y >= 0 && r.y + r.h <= G.H; }
     function inPlot(r){ return r.x >= xL + 2 && r.x + r.w <= (V ? G.W : xR + 2) && r.y >= (V ? yTop - 2 : 0) && r.y + r.h <= yBot - 2; }
     function freeRect(r, pad, inplot){ return inside(r) && (!inplot || inPlot(r)) && !rects.some(function(qq){ return ov(r, qq, pad === undefined ? 2 : pad); }) && !lines.some(function(l){ return polyHit(l, r, 3); }); }
@@ -1103,13 +1102,16 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       marks += '<span class="lrn-mk" aria-hidden="true" style="left:' + f1(rr.x) + 'px;top:' + f1(rr.y) + 'px">' + sp[0] + '</span>';
     });
 
-    // Etiketter med bakgrunn, plassert der de ikke dekker noe
+    // Etiketter uten bakgrunn, plassert der de ikke dekker noe, og helst ikke oppå tersklene og grensene mellom lagene
+    [function(qq){ return qq.ty; }, function(qq){ return qq.ty + qq.al; }].forEach(function(hi){
+      var l = []; bands.forEach(function(qq){ l.push(P(qq.a, hi(qq))); l.push(P(qq.z, hi(qq))); }); bounds.push(l);
+    });
     function chip(text, cls, x, y){ chipsHtml += '<span class="lrn-si-chip' + (cls ? ' ' + cls : '') + '" style="left:' + f1(x) + 'px;top:' + f1(y) + 'px">' + esc(text) + '</span>'; }
-    function addChip(text, cls, cands){
+    function addChip(text, cls, cands, loose){
       var w = tw(text, fz);
       for(var c = 0; c < cands.length; c++){
         var bb = {x:cands[c][0], y:cands[c][1], w:w, h:20};
-        if(freeRect(bb, 2, true)){ take(bb); chip(text, cls, bb.x, bb.y); return true; }
+        if(freeRect(bb, 2, true) && (loose || !bounds.some(function(l){ return polyHit(l, bb, 1); }))){ take(bb); chip(text, cls, bb.x, bb.y); return true; }
       }
       return false;
     }
@@ -1117,8 +1119,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var candStair = [[s - 8 - wS, pM[1] - 27], [s + 8, pM[1] - 27], [s - 8 - wS, pM[1] + 7], [s + 8, pM[1] + 7]];
     var candSnitt = [[s + 8, pS[1] + 7], [s - 8 - wA, pS[1] + 7], [s + 8, pS[1] - 27], [s - 8 - wA, pS[1] - 27]];
     // Bare på brede skjermer: på mobil står tallene i avlesningen under grafen
-    var stairOk = !V && addChip(stairTxt, '', candStair);
-    if(!V) addChip(snittTxt, '', candSnitt);
+    var stairOk = !V && (addChip(stairTxt, '', candStair) || addChip(stairTxt, '', candStair, true));
+    if(!V) addChip(snittTxt, '', candSnitt) || addChip(snittTxt, '', candSnitt, true);
 
     // Klammen mellom trappen og linja
     var harKl = gapPp >= 0.5 && Math.abs(pM[V ? 0 : 1] - pS[V ? 0 : 1]) >= 6, klNum = L.dec(gapPp, 1), ppTxt = ph('prosentpoeng');
@@ -1134,7 +1136,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         kc.push([s + 10, Math.max(pM[1], pS[1]) + 8, 1]); kc.push([s - 10 - w, Math.max(pM[1], pS[1]) + 8, -1]);
       }
       var kp = null;
-      for(var c2 = 0; c2 < kc.length; c2++){ if(freeRect({x:kc[c2][0], y:kc[c2][1], w:w, h:h}, 2, true)){ kp = kc[c2]; break; } }
+      for(var pass = 0; pass < 2 && !kp; pass++) for(var c2 = 0; c2 < kc.length; c2++){
+        var kr = {x:kc[c2][0], y:kc[c2][1], w:w, h:h};
+        if(freeRect(kr, 2, true) && (pass || !bounds.some(function(l){ return polyHit(l, kr, 1); }))){ kp = kc[c2]; break; }
+      }
       var dir = kp ? kp[2] : 1;
       if(kp){
         take({x:kp[0], y:kp[1], w:w, h:h});
@@ -1162,11 +1167,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       lays.forEach(function(e){ var ew = tw(e.text, fz), left = Math.max(right + 4, px(e.p) - ew / 2); pos.push([left, ew]); right = left + ew; });
       for(var li = pos.length - 1; li >= 0; li--){ pos[li][0] = Math.min(pos[li][0], bound - pos[li][1]); bound = pos[li][0] - 4; }
       lays.forEach(function(e, li){ chip(e.text, 's', Math.max(0, pos[li][0]), yBot + 8); });
-      var sn = [0.925, 0.85, 0.775, 0.7].map(function(f){ var bb = f * MAX; return [px(calc(bb).eff) - 8 - tw(lS, fz), bx(bb) - 9]; });
-      addChip(lS, '', sn);
-      var mOpts = [];
-      bands.forEach(function(qq){ if(qq.m > 0 && bx(qq.z) - bx(qq.a) >= 24){ mOpts.push([px(qq.m) + 6, bx(qq.a) + 3]); mOpts.push([px(qq.m) + 6, bx(qq.z) - 21]); } });
-      addChip(lM, '', mOpts);
+      function snAt(f){ var bb = f * MAX; return [px(calc(bb).eff) - 8 - tw(lS, fz), bx(bb) - 9]; }
+      addChip(lS, '', [0.4, 0.425, 0.375, 0.45, 0.35, 0.475, 0.325, 0.5, 0.3].map(snAt)) || addChip(lS, '', [0.925, 0.85, 0.775, 0.7].map(snAt), true);
     }
     bands.forEach(function(qq){
       if(qq.m <= 0) return;
@@ -1180,10 +1182,30 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       } else {
         if(bx(qq.z) - bx(qq.a) < 20) return;
         c0 = (bx(qq.a) + bx(qq.z)) / 2 - 10;
-        for(var k2 = 0; k2 <= 40; k2++) [c0 + k2 * 6, c0 - k2 * 6].forEach(function(y){ if(y >= bx(qq.a) + 2 && y + 20 <= bx(qq.z) - 2){ cs2.push([px(qq.m) + 6, y]); cs2.push([px(qq.m) - 6 - ww, y]); } });
+        // Helst utenfor trappen, ellers inne i trinnskatten eller i det grå laget
+        var inn = [];
+        for(var k2 = 0; k2 <= 40; k2++) [c0 + k2 * 6, c0 - k2 * 6].forEach(function(y){ if(y >= bx(qq.a) + 2 && y + 20 <= bx(qq.z) - 2){ cs2.push([px(qq.m) + 6, y]); inn.push([px(qq.m) - 6 - ww, y]); inn.push([px(qq.m - qq.tr) - 6 - ww, y]); } });
+        cs2 = cs2.concat(inn);
       }
       addChip(tx, '', cs2);
     });
+    if(V){
+      var mOpts = [];
+      bands.forEach(function(qq){ if(qq.m > 0) for(var y = bx(qq.a) + 4; y <= bx(qq.z) - 24; y += 8) mOpts.push([px(qq.m) + 6, y]); });
+      addChip(lM, '', mOpts);
+    }
+
+    // Rutenettet til slutt, med hull der det ellers ville gått gjennom en etikett
+    D.grid = '';
+    for(k = 1; k <= 5; k++){
+      var gp = px(k / 10), from = V ? yTop : xL, end = V ? yBot : xR;
+      rects.filter(function(r){ return V ? r.x - 2 < gp && gp < r.x + r.w + 2 : r.y - 2 < gp && gp < r.y + r.h + 2; })
+        .map(function(r){ return V ? [r.y, r.y + r.h] : [r.x, r.x + r.w]; }).sort(function(x, y){ return x[0] - y[0]; }).concat([[end, end]])
+        .forEach(function(g){
+          if(g[0] > from) D.grid += V ? 'M' + f1(gp) + ',' + f1(from) + ' V' + f1(Math.min(g[0], end)) + ' ' : 'M' + f1(from) + ',' + f1(gp) + ' H' + f1(Math.min(g[0], end)) + ' ';
+          from = Math.max(from, g[1]);
+        });
+    }
 
     plot.classList.toggle('m', V);
     plot.style.height = G.H + 'px';

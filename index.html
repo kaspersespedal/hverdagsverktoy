@@ -1938,7 +1938,7 @@
 </script>
 <link rel="preload" href="/shared/core.js?v=v241" as="script" fetchpriority="high">
 <script src="/shared/core.js?v=v241" defer></script>
-<script src="/shared/lang/no.js?v=v234" defer></script>
+<script src="/shared/lang/no.js?v=v235" defer></script>
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v249" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
@@ -1946,7 +1946,7 @@
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
-<script src="/shared/search.js?v=v136" defer></script>
+<script src="/shared/search.js?v=v137" defer></script>
 <!-- Timeren i toppen. Samme fil som /kalkulator/timer/ bruker — der i full
      størrelse, her som popover under pilla. -->
 <script src="/shared/timer.js?v=v7" defer></script>
@@ -2125,7 +2125,7 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
 
   <section class="hero" data-screen-label="02 Hero">
     <div class="container">
-      <h1 id="heroH1" data-headline>Praktiske verktøy for <em>privatøkonomi</em>, skatt og lovverk.</h1>
+      <h1 id="heroH1" data-headline data-i18n-html="homeHeroTitle">Alt du trenger innen <em>økonomi</em>.</h1>
       <div class="search-wrap" id="searchWrap">
         <div class="search-shell" id="searchShell">
           <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2849,6 +2849,7 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
       return out;
     }
 
+    function split(){
     var tokens = splitNodes(h, false);
     h.innerHTML = '';
 
@@ -2873,6 +2874,11 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
       }
       h.appendChild(mask);
     });
+    }
+    split();
+    // Språkfila bytter hele tittelen (data-i18n-html): del den i ord igjen, så
+    // ordene ikke oversettes hver for seg og månen fortsatt kan måle linjene.
+    if('MutationObserver' in window) new MutationObserver(function(){ if(!h.querySelector('.word-mask')) split(); }).observe(h, {childList:true});
 
     // Tittelen står ferdig med en gang. Klassen brukes av tema-CSS (ordboksene
     // åpnes så tekstskyggen ikke klippes) og av tellerne i dagsoversikten.

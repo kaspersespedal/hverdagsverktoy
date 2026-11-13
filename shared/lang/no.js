@@ -1254,7 +1254,7 @@ REGIONS['no'] = {
     persToolAksjerDesc:'Skatt på aksjegevinst, oppjusteringsfaktor 1,72 og skjermingsfradrag — komplett veiledning.',
 
     // — home (editorial redesign) —
-    homeHeroTitle:'Praktiske verktøy for <em>privatøkonomi</em>, skatt og lovverk.',
+    homeHeroTitle:'Alt du trenger innen <em>økonomi</em>.',
     homeHeroLangPill:'10 språk',
     homeHeroSubtitle:'Oppdatert til gjeldende regler for 2026.',
     homeHeroFree:'Gratis — alt kjører lokalt i nettleseren.',
@@ -3343,7 +3343,7 @@ REGIONS['no'] = {
     sykHeroTitleNew: 'Syke<em>penger</em>',
     regnskapCatHeroSub: 'Sett opp resultat og balanse, finn riktig konto, regn ut MVA-meldingen og se hvor pengene tok veien.',
     regnskapCatDeckTitle: 'Verktøy',
-    regnskapCatDeckCount: '7 verktøy · 1 kommer',
+    regnskapCatDeckCount: '11 verktøy',
     regnskapCatOppstTitle: 'Resultatregnskap',
     regnskapCatOppstDesc: 'Inntekter minus kostnader for ett år, ned til årsresultatet.',
     regnskapCatCtaOpen: 'Åpne',
@@ -3351,7 +3351,6 @@ REGIONS['no'] = {
     regnskapCatKontoDesc: 'Finn riktig konto i NS 4102 for det du skal bokføre.',
     regnskapCatPeriodTitle: 'Periodisering',
     regnskapCatPeriodDesc: 'Riktig år, riktig periode — sammenstilling i praksis.',
-    regnskapCatPeriodCount: 'Kommer',
     regnskapCatKontantTitle: 'Kontantstrøm',
     regnskapCatKontantDesc: 'Fra årsresultat til faktiske penger inn og ut, etter den indirekte modellen.',
     regnskapCatSkattavstTitle: 'Skatteavstemming',

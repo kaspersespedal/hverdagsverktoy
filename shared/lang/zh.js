@@ -1056,7 +1056,7 @@ persToolStudieDesc:'计算来自Lånekassen的助学金、贷款和还款计划 
 persToolBudsjettDesc:'制作包含所有收入和支出的个人预算 — 可下载为CSV。',
 persToolAksjerTitle:'股票',
 persToolAksjerDesc:'股票收益税、调整系数1.72和屏蔽扣除额 — 完整指南。',
-homeHeroTitle:'<em>个人理财</em>、税务和法律的实用工具。',
+homeHeroTitle:'<em>理财</em>所需的一切。',
 homeHeroLangPill:'10种语言',
 homeHeroSubtitle:'已更新至2026年现行规则。',
 homeHeroFree:'免费 — 一切都在您的浏览器本地运行。',
