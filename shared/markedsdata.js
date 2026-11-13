@@ -192,34 +192,19 @@
     return '<svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="' + d + '"/></svg>';
   }
 
-  /* Egen count-up — animerer opp til den EKTE verdien (forsidens generiske
-     count-up-IIFE hoppes over fordi vi fjernet data-to på disse feltene).
-     Animerer kun ved første visning per felt; senere oppdateringer settes direkte. */
-  var COUNTED = {};
-  function countUp(id, target, dec) {
+  /* Skriver tallet i et verdifelt. Settes direkte: opptellingen fra 82 % av
+     verdien viste et feil tall i et drøyt sekund (4,39 % før 4,50 %) og tegnet
+     feltet på nytt for hvert bilde mens siden lastet. */
+  function setVal(id, target, dec) {
     var el = $(id);
     if (!el || typeof target !== 'number' || isNaN(target)) return;
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     /* Desimalene settes i egen .dec-span: mindre grad, dempet farge — heltallet
        skal bære blikket. CSS-en (.widget-value .dec) har ligget der ubrukt. */
     var isValue = el.parentNode && el.parentNode.classList.contains('widget-value');
-    function write(v) {
-      var s = nb(v, dec);
-      var i = dec ? s.lastIndexOf(decSep()) : -1;
-      if (isValue && i > 0) el.innerHTML = esc(s.slice(0, i)) + '<span class="dec">' + esc(s.slice(i)) + '</span>';
-      else el.textContent = s;
-    }
-    if (COUNTED[id] || reduce) { write(target); COUNTED[id] = true; return; }
-    COUNTED[id] = true;
-    var from = target * 0.82, dur = 1100, t0 = null;
-    function ease(t) { return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t); }
-    function step(ts) {
-      if (t0 === null) t0 = ts;
-      var t = Math.min(1, (ts - t0) / dur);
-      write(from + (target - from) * ease(t));
-      if (t < 1) requestAnimationFrame(step); else write(target);
-    }
-    requestAnimationFrame(step);
+    var s = nb(target, dec);
+    var i = dec ? s.lastIndexOf(decSep()) : -1;
+    if (isValue && i > 0) el.innerHTML = esc(s.slice(0, i)) + '<span class="dec">' + esc(s.slice(i)) + '</span>';
+    else el.textContent = s;
   }
 
   function stampNow() {
@@ -375,7 +360,7 @@
   var DAGER_FULL = ['Søndag', 'Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag']; // Date.getDay(): 0 = søndag
   function renderWeather(d) {
     _lastWx = d;
-    countUp('wxTemp', Math.round(d.temp), 0);
+    setVal('wxTemp', Math.round(d.temp), 0);
     setText('wxCond', wxText(d.sym));
     var wg = document.querySelector('.trend-weather .trend-glyph');
     if (wg && wg.getAttribute('data-sym') !== (d.sym || '')) {
@@ -1229,7 +1214,7 @@
     /* Tall og etikett siteres i Norges Banks egen noteringsenhet, slik at
        yen står som «100 JPY = 7,02» og ikke «1 JPY = 0,07». */
     setText('fxPairName', fxUnit(c, code) + ' / NOK');
-    countUp('fxVal', c.last * m, 2);
+    setVal('fxVal', c.last * m, 2);
     /* Undertittelen viser de tre neste i lista — den valgte står i tallet over. */
     var sub = [];
     FX_CODES.forEach(function (k) {
@@ -1287,7 +1272,7 @@
              changeDate: dates[ci], prevLevel: ci > 0 ? vals[ci - 1] : last };
   }
   function renderRate(d) {
-    countUp('srVal', d.last, 2);
+    setVal('srVal', d.last, 2);
     setText('srSub', fill(T('trSharedRateChanged', 'Norges Bank · sist endret {d}'), { d: nbDate(d.changeDate).replace(/ /g, '\u00a0') }));
     var span = $('srTrend');
     if (span) {
@@ -1338,7 +1323,7 @@
       d.now = d.prices[d.hour];
     }
     setText('stSone', 'Strøm ' + sone);
-    countUp('stVal', Math.round(d.now * 100), 0);
+    setVal('stVal', Math.round(d.now * 100), 0);
     // Utled billigste time defensivt (eldre cache fra forrige versjon mangler feltet).
     if (typeof d.cheapHour !== 'number' && d.prices) {
       d.cheapHour = 0;

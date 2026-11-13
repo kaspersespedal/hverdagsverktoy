@@ -126,11 +126,12 @@
   }
   .container{max-width:1120px;margin:0 auto;padding:0 32px}
 
-  /* ── Sequenced page load ─────────────────────────── */
+  /* ── Tittelen ───────────────────────────────────── */
 
-  /* Headline mask-reveal: each word sits in its own clip, translates from
-     100% line-height up to 0. JS measures and adds .ready when fonts are
-     resolved + adds .play after a 200ms settle. ease-out-expo, slow. */
+  /* Hvert ord ligger i sin egen boks (lages av skriptet under), så ordet og
+     tegnsettingen etter det ikke kan deles over to linjer. Forsiden har ingen
+     lasteanimasjon: tittel, søk, kategorier og dagsoversikt står ferdige ved
+     første maling. */
   [data-headline]{
     line-height:1.05;
   }
@@ -145,20 +146,9 @@
   }
   [data-headline] .word-inner{
     display:inline-block;
-    transform:translateY(110%);
-    opacity:0;
-    will-change:transform, opacity;
-    transition:
-      transform var(--dur-slow) var(--ease-out-expo),
-      opacity   var(--dur-base) var(--ease-out-quart);
-    transition-delay:var(--w-d, 0ms);
-  }
-  [data-headline].play .word-inner{
-    transform:translateY(0);
-    opacity:1;
   }
 
-  /* Italic word — gold shimmer sweep, fires once */
+  /* Kursivordet — gull */
   [data-headline] .shimmer{
     position:relative;
     background:linear-gradient(
@@ -170,47 +160,11 @@
       var(--accent-2) 100%
     );
     background-size:240% 100%;
-    background-position:0% 0%;
+    background-position:160% 0%;
     -webkit-background-clip:text;
             background-clip:text;
     color:transparent;
     -webkit-text-fill-color:transparent;
-  }
-  [data-headline].play .shimmer{
-    animation:shimmer 600ms cubic-bezier(.5, 0, .25, 1) 1 forwards;
-    animation-delay:var(--shimmer-d, 0ms);
-  }
-  @keyframes shimmer{
-    0%   { background-position:  0% 0%; }
-    100% { background-position:160% 0%; }
-  }
-
-  /* Subline + search rise — fade + 12px translate-y, base, ease-out-quart. */
-  .rise{
-    opacity:0;
-    transform:translateY(12px);
-    transition:opacity var(--dur-base) var(--ease-out-quart),
-               transform var(--dur-base) var(--ease-out-quart);
-    will-change:transform, opacity;
-  }
-  body.heroLanded .rise{
-    opacity:1;
-    transform:translateY(0);
-  }
-  body.heroLanded .rise[data-rise-d="0"]{ transition-delay: 0ms; }
-  body.heroLanded .rise[data-rise-d="1"]{ transition-delay: var(--stag-loose); }
-
-  /* Generic .enter — used by nav + data frame. Keep simple. */
-  .enter{
-    opacity:0;
-    transform:translateY(8px);
-    animation:enterIn var(--dur-base) var(--ease-out-quart) both;
-    animation-delay:var(--enter-d, 0ms);
-    will-change:transform, opacity;
-  }
-  @keyframes enterIn{
-    0%   { opacity:0; transform:translateY(8px); }
-    100% { opacity:1; transform:translateY(0); }
   }
 
   /* Keyboard focus — institutional cognac ring */
@@ -1445,6 +1399,10 @@
   }
   .reveal.in{opacity:1;transform:translateY(0)}
   .reveal{transition-delay:calc(var(--i, 0) * var(--stag-loose))}
+  /* Dagsoversikten står i første skjermbilde: den skal stå der ved første maling,
+     ikke tones inn. .reveal brukes fortsatt lenger ned på siden (ved rulling). */
+  .daily .reveal{opacity:1;transform:none}
+  .daily .daily-frame{position:relative}
 
   .daily-head .stamp{display:inline-flex;align-items:center;gap:8px}
   .daily-head .stamp::before{
@@ -1606,9 +1564,6 @@
   @media (prefers-reduced-motion: reduce){
     *{ transition-duration: var(--dur-micro) !important; animation:none !important; }
     .reveal{ opacity:1 !important; transform:none !important; }
-    .enter{ opacity:1 !important; transform:none !important; }
-    .rise{ opacity:1 !important; transform:none !important; }
-    [data-headline] .word-inner{ transform:none !important; transition:none !important; }
     [data-headline] .shimmer{
       color:var(--accent-2) !important;
       -webkit-text-fill-color:var(--accent-2) !important;
@@ -1997,7 +1952,7 @@
 <script src="/shared/site-shell.js?v=v1" defer></script>
 <script src="/shared/top-chrome.js?v=v249" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v17" defer></script>
+<script src="/shared/markedsdata.js?v=v18" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -2108,246 +2063,8 @@ html[data-theme="bw"] .widget{ box-shadow:inset 0 1px 0 rgba(243,239,231,.05); }
    og ned i teksten bak. Samme tone, full dekkevne. */
 html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
 </style>
-<style id="introCSS">/* ══ HV-INTRO — koreografert lastesekvens ═══════════════════
-   Fem akter:
-   0  Lysteppe — dekker font-/skriptoppstart, åpner som en blender.
-   1  Merkevare — merket smetter på plass, ordmerket fokuseres, nav-knappene faller inn.
-   2  Tittel — ordmaskene (finnes fra før) + linsefokus over hele linja + glød bak kursiven.
-   3  Søk + kategorier — skallet får ett lys-sveip, strek-ikonene TEGNER seg selv.
-   4  Dagsoversikt — ramma lander med skala, widgetene kaskaderer innvendig
-      (etikett → tall → kontekst → graf) i stedet for å slås på samtidig.
-
-   Token-drevet (--glow-rgb, --ease-*), så sekvensen følger det aktive temaet og
-   gjelder ALLE ni temaene — ingen farger er hardkodet her.
-
-   Aktvinduet styres av body.introAct (settes/fjernes i #introBoot nedenfor), slik
-   at scroll-avsløringer ETTER introen beholder sin vanlige, raske oppførsel.
-   Alt dør under prefers-reduced-motion. */
-
-/* ── Akt 0: Lysteppe ── */
-.intro-veil{
-  position:fixed;inset:0;z-index:80;pointer-events:none;
-  background:radial-gradient(130% 90% at 50% 6%,
-    color-mix(in srgb, var(--bg,#0A0908) 86%, rgb(var(--glow-rgb,200,153,104))) 0%,
-    var(--bg,#0A0908) 74%);
-  animation:hvVeilOut 1.05s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) .4s both;
-}
-@keyframes hvVeilOut{0%{opacity:1}100%{opacity:0;visibility:hidden}}
-
-/* ── Akt 1: Merkevare + nav-knapper ──
-   Alt her ligger inne i body.introAct. Det er ikke kosmetikk: reglene setter
-   opacity:0 og lar animasjonen bære elementet tilbake til synlig. Uten scopet
-   ville logo, ordmerke og topp-knappene blitt stående usynlige den dagen
-   animasjonen ikke kjører (animasjoner slått av i nettleseren, eller et element
-   som monteres av et skript etter at introen er over). Når #introBoot fjerner
-   introAct, faller de tilbake til sin egen, synlige tilstand. */
-body.introAct .nav-wrap .brand-row .mark{
-  opacity:0;
-  animation:hvMarkIn .65s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) .18s both;
-}
-@keyframes hvMarkIn{
-  0%{opacity:0;transform:scale(.5) rotate(-12deg)}
-  55%{opacity:1}
-  100%{opacity:1;transform:scale(1) rotate(0deg)}
-}
-body.introAct .nav-wrap .wordmark{
-  opacity:0;
-  animation:hvWordmarkIn .6s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) .32s both;
-}
-@keyframes hvWordmarkIn{
-  0%{opacity:0;transform:translateX(-7px);filter:blur(6px)}
-  100%{opacity:1;transform:none;filter:blur(0)}
-}
-/* Sidens egne topp-knapper (timer-pilla m.fl.) — markupen røres ikke, de faller
-   bare inn etter ordmerket.
-   .nav-search-pill er holdt UTENFOR med vilje: den er skjult til man har scrollet
-   forbi hero-søket (.show settes av scroll-lytteren). En animasjon med both-fill
-   slår vanlige deklarasjoner, så uten :not() ville pilla blitt tvunget synlig i
-   de fem sekundene aktvinduet står åpent — og så forsvunnet igjen. */
-body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill){opacity:0;animation:hvNavItemIn .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) both}
-body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(1){animation-delay:.44s}
-body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(2){animation-delay:.50s}
-body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(3){animation-delay:.56s}
-body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(4){animation-delay:.62s}
-@keyframes hvNavItemIn{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:none}}
-/* Timer-wrapperen får bare fade: en transform her gjør den til ankerboks for det
-   fast posisjonerte Nedtelling-panelet, som da blir 38 px bredt på mobil. */
-body.introAct .nav-wrap .nav-right > .tmr-popwrap{animation-name:hvNavItemFade}
-@keyframes hvNavItemFade{0%{opacity:0}100%{opacity:1}}
-
-/* ── Akt 2: Tittel — linsefokus over hele linja mens ordmaskene løper ── */
-body.introAct [data-headline].play{animation:hvH1Focus .9s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) both}
-@keyframes hvH1Focus{0%{filter:blur(10px)}100%{filter:blur(0)}}
-/* Kursivordet: behold original shimmer + varm glød-bloom bak glyfene. */
-body.introAct [data-headline].play .shimmer{
-  animation:shimmer 600ms cubic-bezier(.5,0,.25,1) 1 forwards,
-            hvEmBloom 1.15s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) 1 both;
-  animation-delay:var(--shimmer-d,0ms),var(--shimmer-d,0ms);
-}
-@keyframes hvEmBloom{
-  0%{text-shadow:0 0 0 rgba(var(--glow-rgb,216,173,126),0)}
-  30%{text-shadow:0 0 30px rgba(var(--glow-rgb,216,173,126),.5)}
-  100%{text-shadow:0 0 0 rgba(var(--glow-rgb,216,173,126),0)}
-}
-
-/* ── Akt 3a: Søkeskallet — lys-sveip + ikon som tegner seg + ⌘K-pop ── */
-.search-shell::after{
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
-  background:linear-gradient(105deg,transparent 40%,rgba(var(--glow-rgb,216,173,126),.13) 50%,transparent 60%);
-  background-size:240% 100%;background-position:0% 0;
-}
-body.introAct.heroLanded .search-shell::after{
-  animation:hvSweep 1.15s cubic-bezier(.6,.05,.3,1) .5s 1 both;
-}
-@keyframes hvSweep{
-  0%{opacity:0;background-position:0% 0}
-  14%{opacity:1}
-  86%{opacity:1}
-  100%{opacity:0;background-position:170% 0}
-}
-body.introDraw .search-icon .i-draw{
-  transition:stroke-dashoffset .8s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) .3s;
-}
-body.introDraw.heroLanded .search-icon .i-draw{stroke-dashoffset:0 !important}
-body.introAct.heroLanded .search-shell .search-kbd{
-  animation:hvKbdIn .55s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) .85s backwards;
-}
-@keyframes hvKbdIn{
-  0%{opacity:0;transform:scale(.55)}
-  100%{opacity:1;transform:scale(1)}
-}
-
-/* ── Akt 3b: Kategoriene — kaskade + selvtegnende strek-ikoner ── */
-body.introAct .quick-cats .qc{opacity:0;transform:translateY(13px) scale(.98)}
-body.introAct.heroLanded .quick-cats .qc{
-  opacity:1;transform:none;
-  transition:opacity .55s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) var(--qcd,230ms),
-             transform .6s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) var(--qcd,230ms);
-}
-body.introAct .quick-cats .qc:nth-child(1){--qcd:230ms}
-body.introAct .quick-cats .qc:nth-child(2){--qcd:272ms}
-body.introAct .quick-cats .qc:nth-child(3){--qcd:314ms}
-body.introAct .quick-cats .qc:nth-child(4){--qcd:356ms}
-body.introAct .quick-cats .qc:nth-child(5){--qcd:398ms}
-body.introAct .quick-cats .qc:nth-child(6){--qcd:440ms}
-body.introAct .quick-cats .qc:nth-child(7){--qcd:482ms}
-body.introAct .quick-cats .qc:nth-child(8){--qcd:524ms}
-body.introAct .quick-cats .qc:nth-child(9){--qcd:566ms}
-body.introAct .quick-cats .qc:nth-child(10){--qcd:608ms}
-body.introAct.introDraw .qc-ico .i-draw{
-  transition:stroke-dashoffset .85s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--qcd,230ms) + 140ms);
-}
-body.introAct.introDraw.heroLanded .qc-ico .i-draw{stroke-dashoffset:0 !important}
-body.introAct.introDraw .qc-ico .i-dot{opacity:0}
-body.introAct.introDraw.heroLanded .qc-ico .i-dot{
-  opacity:1;
-  transition:opacity .45s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--qcd,230ms) + 480ms);
-}
-
-/* ── Akt 4: Dagsoversikten — porten er heroLanded, ikke scroll ── */
-body.introAct .daily .reveal{transition-delay:calc(var(--i,0) * 120ms + 330ms)}
-body.introAct:not(.heroLanded) .daily .reveal{
-  opacity:0 !important;transform:translateY(20px) !important;transition:none !important;
-}
-body.introAct .daily #fxConv{--i:5}
-
-/* Ramma lander med et hint av skala */
-.daily .daily-frame{position:relative}
-body.introAct .daily .daily-frame.reveal{transform:translateY(20px) scale(.988)}
-body.introAct .daily .daily-frame.reveal.in{transform:none}
-
-/* Ett stille lys-sveip over ramma når den har landet */
-.daily-frame::after{
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;z-index:1;
-  background:linear-gradient(115deg,transparent 42%,rgba(var(--glow-rgb,216,173,126),.07) 50%,transparent 58%);
-  background-size:240% 100%;background-position:0% 0;
-}
-body.introAct.heroLanded .daily .daily-frame.reveal.in::after{
-  animation:hvSweep 1.5s cubic-bezier(.6,.05,.3,1) 1.05s 1 both;
-}
-
-/* Topplinja i ramma */
-body.introAct .daily .daily-head .title,
-body.introAct .daily .daily-head .stamp{opacity:0;transform:translateY(7px)}
-body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .title{
-  opacity:1;transform:none;
-  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) 430ms,
-             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) 430ms;
-}
-body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .stamp{
-  opacity:1;transform:none;
-  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) 510ms,
-             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) 510ms;
-}
-
-/* Innvendig widget-kaskade: etikett → tall → kontekst → graf → fotnote */
-body.introAct .daily .widget.reveal{--wd:calc(var(--i,0) * 120ms + 330ms)}
-body.introAct .daily .widget.reveal :is(.widget-top,.widget-value,.widget-sub,.widget-spark-wrap,.widget-note){
-  opacity:0;transform:translateY(8px);
-}
-body.introAct.heroLanded .daily .widget.reveal.in .widget-top{
-  opacity:1;transform:none;
-  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 90ms),
-             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 90ms);
-}
-body.introAct.heroLanded .daily .widget.reveal.in .widget-value{
-  opacity:1;transform:none;
-  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 170ms),
-             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 170ms);
-}
-body.introAct.heroLanded .daily .widget.reveal.in .widget-sub{
-  opacity:1;transform:none;
-  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 250ms),
-             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 250ms);
-}
-body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{
-  opacity:1;transform:none;
-  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 330ms),
-             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 330ms);
-}
-body.introAct.heroLanded .daily .widget.reveal.in .widget-note{
-  opacity:1;transform:none;
-  transition:opacity .5s var(--ease-out-quart,cubic-bezier(.25,1,.5,1)) calc(var(--wd) + 400ms),
-             transform .55s var(--ease-out-expo,cubic-bezier(.16,1,.3,1)) calc(var(--wd) + 400ms);
-}
-
-/* ── Mobil: samme koreografi, men uten tunge blur-filtre ── */
-@media (max-width:768px){
-  body.introAct [data-headline].play{animation:none}
-  body.introAct .nav-wrap .wordmark{animation-name:hvNavItemIn}
-}
-
-/* ── Redusert bevegelse: alt av intro av, alt synlig ── */
-/* Redusert bevegelse: #introBoot setter aldri introAct da, så hele koreografien
-   er allerede ute av spill. Igjen står bare de to uskopede ::after-dekorasjonene. */
-@media (prefers-reduced-motion:reduce){
-  .intro-veil{display:none !important}
-  .search-shell::after,.daily-frame::after{display:none !important}
-}
-
-/* ── Gjenbesøk i samme økt: ingen intro, tittel, søk og meny står der med en gang ── */
-body.introSeen .enter,
-body.introSeen .rise{animation:none;opacity:1;transform:none;transition:none}
-body.introSeen [data-headline] .word-inner{opacity:1;transform:none;transition:none}
-body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 0}
-</style>
 </head>
 <body class="atmo-on">
-<script>/* Lysteppe + introAct FØR første maling — se #introCSS. Settes her og ikke i
-   #introBoot fordi kategoriene ellers rekker å males ferdige og deretter skjule
-   seg igjen når klassen kommer på. */
-(function(){
-  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  /* Introen spilles bare første gang per besøk (fanen). Ved oppdatering, eller
-     når man kommer tilbake fra en underside, står alt der med en gang (introSeen). */
-  try{
-    if(sessionStorage.getItem('hvt-intro')){ document.body.classList.add('introSeen'); return; }
-    sessionStorage.setItem('hvt-intro', '1');
-  }catch(e){}
-  document.body.classList.add('introAct');
-  document.body.insertAdjacentHTML('afterbegin', '<div class="intro-veil" aria-hidden="true"></div>');
-})();
-</script>
 <canvas id="nordlysCanvas" aria-hidden="true"></canvas>
 
 <a class="skip" href="#main" data-i18n="skipLink">Hopp til hovedinnhold</a>
@@ -2386,7 +2103,7 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
 
 <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
-<div class="nav-wrap enter" id="navWrap" style="--enter-d:0ms">
+<div class="nav-wrap" id="navWrap">
   <div class="container">
     <nav data-screen-label="01 Nav">
       <a href="/" class="brand-row" aria-label="Hverdagsverktøy hjem">
@@ -2419,7 +2136,7 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
   <section class="hero" data-screen-label="02 Hero">
     <div class="container">
       <h1 id="heroH1" data-headline>Praktiske verktøy for <em>privatøkonomi</em>, skatt og lovverk.</h1>
-      <div class="search-wrap rise" data-rise-d="0" id="searchWrap">
+      <div class="search-wrap" id="searchWrap">
         <div class="search-shell" id="searchShell">
           <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="9" cy="9" r="6"/><line x1="14" y1="14" x2="18" y2="18"/>
@@ -2432,7 +2149,7 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
         <div class="search-panel" id="searchPanel" role="listbox"></div>
       </div>
 
-      <nav class="quick-cats rise" data-rise-d="1" aria-label="Hurtigtilgang til kategorier">
+      <nav class="quick-cats" aria-label="Hurtigtilgang til kategorier">
         <a href="/personlig/budsjett/" class="qc">
           <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg></span>
           <span class="qc-lbl">Budsjett</span>
@@ -3119,7 +2836,7 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
   var REDUCE_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var IS_MOBILE = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
 
-  // ── Headline mask reveal ─────────────────────────
+  // ── Tittelen: ett ord per boks ───────────────────
   (function(){
     var h = document.querySelector('[data-headline]');
     if(!h) return;
@@ -3150,21 +2867,6 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
     var tokens = splitNodes(h, false);
     h.innerHTML = '';
 
-    var wordIdx = 0;
-    var italicLastIdx = -1;
-    var wordCount = tokens.filter(function(t){return t.type==='word'}).length;
-    tokens.forEach(function(t){
-      if(t.type !== 'word') return;
-      if(t.italic) italicLastIdx = wordIdx;
-      wordIdx++;
-    });
-
-    var STAG_MEDIUM = 80;
-    var STAG_LOOSE  = 140;
-    var ITALIC_GAP  = 180;
-
-    wordIdx = 0;
-    var italicDelay = 0;
     tokens.forEach(function(t){
       if(t.type === 'space'){
         h.appendChild(document.createTextNode(' '));
@@ -3175,12 +2877,6 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
       var inner = document.createElement('span');
       inner.className = 'word-inner' + (t.italic ? ' shimmer' : '');
       inner.textContent = t.text;
-      var d = wordIdx * STAG_MEDIUM;
-      if(t.italic && wordIdx === italicLastIdx){
-        d += ITALIC_GAP;
-        italicDelay = d;
-      }
-      inner.style.setProperty('--w-d', d + 'ms');
       mask.appendChild(inner);
       if(t.tail){
         /* Eget inner-span så tegnsettingen slipper gull-gradienten, men samme
@@ -3188,47 +2884,14 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
         var tail = document.createElement('span');
         tail.className = 'word-inner';
         tail.textContent = t.tail;
-        tail.style.setProperty('--w-d', d + 'ms');
         mask.appendChild(tail);
       }
       h.appendChild(mask);
-      wordIdx++;
     });
 
-    if(italicLastIdx >= 0){
-      h.style.setProperty('--shimmer-d', (italicDelay + 280) + 'ms');
-    }
-
-    function trigger(){
-      var total = (wordCount - 1) * STAG_MEDIUM + (italicLastIdx >= 0 ? ITALIC_GAP : 0) + 720;
-      h.classList.add('play');
-      var riseAt = Math.max(420, total - 400);
-      setTimeout(function(){ document.body.classList.add('heroLanded'); }, riseAt);
-    }
-
-    if(document.body.classList.contains('introSeen')){
-      h.classList.add('play');
-      document.body.classList.add('heroLanded');
-      return;
-    }
-
-    if(REDUCE_MOTION){
-      Array.prototype.forEach.call(h.querySelectorAll('.word-inner'), function(el){
-        el.style.transition = 'opacity 120ms linear';
-        el.style.transform = 'none';
-      });
-      h.classList.add('play');
-      document.body.classList.add('heroLanded');
-      return;
-    }
-
-    var ready = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-    ready.then(function(){
-      setTimeout(trigger, 200);
-    });
-    setTimeout(function(){
-      if(!h.classList.contains('play')) trigger();
-    }, 1400);
+    // Tittelen står ferdig med en gang. Klassen brukes av tema-CSS (ordboksene
+    // åpnes så tekstskyggen ikke klippes) og av tellerne i dagsoversikten.
+    document.body.classList.add('heroLanded');
   })();
 
   // ── Live-dot single ping (data-frame stamp) ───────────────
@@ -3290,9 +2953,9 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
       {val:'fxVal',  sub:'fxSub', txt:'Fikk ikke hentet valutakursene nå.'}
     ];
     function meld(){
-      // Fanen må ha vært synlig først: i bakgrunnsfaner står requestAnimationFrame
-      // stille, og da rekker ikke count-up-en i markedsdata.js å skrive tallet —
-      // det ville sett ut som en hentefeil selv om data kom fint fram.
+      // Fanen må ha vært synlig først. Sjekken kom til da tallene ble skrevet med
+      // requestAnimationFrame, som står stille i bakgrunnsfaner. De settes nå
+      // direkte i markedsdata.js, men ventingen er ufarlig og står.
       if(document.hidden){
         document.addEventListener('visibilitychange', function once(){
           if(document.hidden) return;
@@ -4319,41 +3982,6 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);
   else boot();
-})();
-</script>
-
-<script id="introBoot">
-/* Strek-ikonene tegner seg selv: mål hver strek og sett dasharray/-offset, så
-   overtar overgangene i #introCSS. Gjøres i JS (ikke i markupen) fordi lengden
-   må måles per ikon — ingen SVG-er er endret for dette.
-   Aktvinduet lukkes etter 5 s: introAct/introDraw fjernes og strekene leveres
-   tilbake til sin egen styling, slik at scroll-avsløringer lenger nede på siden
-   oppfører seg nøyaktig som før. */
-(function(){
-  if(!document.body.classList.contains('introAct')) return;
-  document.querySelectorAll('.qc-ico svg, .search-shell .search-icon').forEach(function(svg){
-    svg.querySelectorAll('path,line,circle,rect,polyline,polygon').forEach(function(el){
-      if(el.getAttribute('fill') === 'currentColor'){ el.classList.add('i-dot'); return; }
-      try{
-        var L = el.getTotalLength();
-        if(!L) return;
-        el.style.strokeDasharray = L + ' ' + L;
-        el.style.strokeDashoffset = L;
-        el.classList.add('i-draw');
-      }catch(e){}
-    });
-  });
-  document.body.classList.add('introDraw');
-  setTimeout(function(){
-    document.body.classList.remove('introAct');
-    document.body.classList.remove('introDraw');
-    document.querySelectorAll('.i-draw').forEach(function(el){
-      el.style.strokeDasharray = ''; el.style.strokeDashoffset = ''; el.classList.remove('i-draw');
-    });
-    document.querySelectorAll('.i-dot').forEach(function(el){ el.classList.remove('i-dot'); });
-    var veil = document.querySelector('.intro-veil');
-    if(veil && veil.parentNode) veil.parentNode.removeChild(veil);
-  }, 5000);
 })();
 </script>
 
@@ -5590,7 +5218,7 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
     }
 
     /* ── Oppstart ──────────────────────────────────────────────────── */
-    if (!initGL()) return noop; // WebGL utilgjengelig → CSS .band-aurora beholdes
+    if (!initGL()) { noop.failed = true; return noop; } // WebGL utilgjengelig → CSS .band-aurora beholdes
     if (bodyClass && document.body) document.body.classList.add('nordlys-on'); // skjuler CSS-bandene, canvas overtar
     syncTheme();
     // Telefon: hovedbuen forankres til midten av opts.anchor (søkefeltet), målt i
@@ -5761,9 +5389,37 @@ body.introSeen [data-headline] .shimmer{animation:none;background-position:160% 
 
   // Produksjon: monter på #nordlysCanvas, som v1. Sett window.HV_NORDLYS_MANUAL = true
   // før fila lastes for å montere selv.
+  //
+  // mount() oppretter WebGL-konteksten og måler siden (measureAnchor). Midt i
+  // HTML-tolkingen tvang det fram et fullt sideoppsett før første maling, også på
+  // carbon og de lyse temaene, der canvaset aldri vises. Derfor monteres motoren
+  // først når temaet faktisk viser canvaset, og tidligst når HTML-en er lest, sidens
+  // skript har kjørt og neste bilde er malt. Konteksten kan låse hovedtråden i
+  // 50–150 ms, og da skal innholdet allerede stå der.
   if (!window.HV_NORDLYS_MANUAL) {
     var el = document.getElementById('nordlysCanvas');
-    if (el) window.HVNordlys.active = mount(el, { anchor: document.getElementById('searchShell'), avoid: document.getElementById('heroH1') });
+    if (el) {
+      var themeRoot = document.documentElement, waitMo = null;
+      var wantsCanvas = function () { var k = themeRoot.getAttribute('data-theme') || 'carbon'; return !!(THEMES[k] && CANVAS_THEMES[k]); };
+      var mountNow = function () {
+        if (window.HVNordlys.active) return;
+        if (waitMo) { waitMo.disconnect(); waitMo = null; }
+        var h = window.HVNordlys.active = mount(el, { anchor: document.getElementById('searchShell'), avoid: document.getElementById('heroH1') });
+        if (h.failed && document.body) document.body.classList.remove('nordlys-on');
+      };
+      // Klassen gjør body gjennomsiktig (se #nordlysCSS) og settes med en gang, som før,
+      // så sidens bakgrunn er lik fra første maling. Tas av igjen hvis WebGL mangler.
+      if (document.body) document.body.classList.add('nordlys-on');
+      var afterLoad = function () { requestAnimationFrame(function () { setTimeout(mountNow, 0); }); };
+      if (wantsCanvas()) {
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afterLoad);
+        else afterLoad();
+      }
+      else if (typeof MutationObserver !== 'undefined') {
+        waitMo = new MutationObserver(function () { if (wantsCanvas()) mountNow(); });
+        waitMo.observe(themeRoot, { attributes: true, attributeFilter: ['data-theme'] });
+      }
+    }
   }
 })();
 
