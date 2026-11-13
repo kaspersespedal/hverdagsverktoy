@@ -1259,6 +1259,7 @@ body .ks-mode .mdesc{font-size:12px}
   // ── Resultatregnskap — Claude Design reskin (vanilla; drives the ledger) ──
   (function(){
     var KEY = 'hv-rr-v2';
+    var RES_KEY = 'hv-rr-arsresultat';   // årsresultatet, hentes av balansesiden
     var RATE = 0.22;                // 22 % selskapsskatt (Stortingets skattevedtak § 3-3)
     var INPUTS = ['rSalg','rAnnen','rVare','rLonn','rAvskr','rAnnenKost','rFinInnt','rFinKost'];
     var mode = 'as';
@@ -1368,6 +1369,7 @@ body .ks-mode .mdesc{font-size:12px}
       renderCost(sumDrift, {vare:vare,lonn:lonn,avskr:avskr,annen:annenKost,kept:Math.max(0,driftsres)});
 
       persist();
+      persistResult(isEmpty ? 0 : Math.round(arsresultat));
     }
 
     function persist(){
@@ -1375,6 +1377,16 @@ body .ks-mode .mdesc{font-size:12px}
         var snap={mode:mode};
         INPUTS.forEach(function(id){ var e=el(id); if(e) snap[id]=e.value; });
         localStorage.setItem(KEY, JSON.stringify(snap));
+      }catch(e){}
+    }
+    // Årsresultatet lagres for seg, så balansesiden kan tilby å hente det.
+    // Tidsstempelet (ts) endres bare når beløpet endres. Uten resultat fjernes nøkkelen.
+    function persistResult(ar){
+      try{
+        if(!ar){ localStorage.removeItem(RES_KEY); return; }
+        var old = null;
+        try{ old = JSON.parse(localStorage.getItem(RES_KEY)); }catch(e){}
+        if(!old || old.belop !== ar) localStorage.setItem(RES_KEY, JSON.stringify({belop:ar, ts:Date.now()}));
       }catch(e){}
     }
     function syncModes(){
@@ -1433,12 +1445,12 @@ body .ks-mode .mdesc{font-size:12px}
 </script>
 <script src="/shared/top-chrome.js?v=v249" defer></script>
 <script defer src="/shared/core.js?v=v241"></script>
-<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/lang/no.js?v=v235"></script>
 
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
-<script src="/shared/search.js?v=v136" defer></script>
+<script src="/shared/search.js?v=v137" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');

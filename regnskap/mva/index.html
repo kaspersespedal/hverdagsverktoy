@@ -68,7 +68,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v7">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v247">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
-<link rel="stylesheet" href="/shared/learn.css?v=v5">
+<link rel="stylesheet" href="/shared/learn.css?v=v6">
 
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
@@ -501,6 +501,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
   .check-row{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer}
   .check-row input{width:16px;height:16px;cursor:pointer;accent-color:var(--accent);background:transparent}
+  @media (pointer:coarse){.check-row{min-height:44px}}
 
   .hidden{display:none}
   /* site-shell gir .ks-r-stat display:flex, som ellers overstyrer hidden (raden for retting). */
@@ -680,6 +681,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
             <div class="howto-row"><div class="h-title">Termin</div><div class="h-desc">De to månedene meldingen gjelder, for eksempel januar og februar.</div></div>
             <div class="howto-row"><div class="h-title">Salg uten MVA</div><div class="h-desc">Salget før MVA er lagt på, fordelt på sats. MVA-en regnes ut for deg.</div></div>
             <div class="howto-row"><div class="h-title">Inngående MVA</div><div class="h-desc">MVA-beløpet på fakturaene for innkjøpene dine. Det trekkes fra MVA-en på salget.</div></div>
+            <div class="howto-row"><div class="h-title">Kjøp uten MVA</div><div class="h-desc">Har du bare kjøpesummen, fjerner du krysset over kjøpsfeltene. Da skriver du kjøp uten MVA, og MVA-en regnes ut for deg.</div></div>
           </div>
         </details>
 
@@ -745,27 +747,36 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
               <section class="ks-section" aria-labelledby="mvaInnHdr">
                 <div class="ik-section-head">
-                  <h3 id="mvaInnHdr" data-i18n="regnskapMvaInnH">MVA på innkjøp</h3>
+                  <!-- data-pm: m vises når kjøpsfeltene er MVA-beløp (standard, krysset står på), g når krysset er fjernet og kjøp føres uten MVA -->
+                  <h3 id="mvaInnHdr"><span data-pm="m" data-i18n="regnskapMvaInnH">MVA på innkjøp</span><span data-pm="g" hidden>Innkjøp uten MVA</span></h3>
                   <span class="meta" data-i18n="regnskapMvaInnHint">Inngående MVA</span>
                 </div>
                 <div class="ik-stack">
+                  <div class="ik-fg">
+                    <label class="check-row"><input type="checkbox" id="mvaPurchaseVat" checked> Jeg skriver MVA-beløpet, slik det står i MVA-meldingen</label>
+                    <span class="ik-hint" data-pm="m">Har du bare kjøpesummen? Fjern krysset, så regner siden ut MVA-en.</span>
+                  </div>
                   <div class="ik-row">
                     <div class="ik-fg">
-                      <label class="ik-lbl" for="mvaPurchase25" data-i18n="regnskapMvaP25Lbl">MVA på kjøp, 25&nbsp;%</label>
+                      <label class="ik-lbl" for="mvaPurchase25"><span data-pm="m" data-i18n="regnskapMvaP25Lbl">MVA på kjøp, 25&nbsp;%</span><span data-pm="g" hidden>Kjøp med 25&nbsp;%</span></label>
                       <input type="text" id="mvaPurchase25" class="ik-input" placeholder="0" inputmode="numeric" min="0" step="any">
+                      <span class="ik-hint" data-pm="g" id="mvaP25Vat" hidden>MVA: 0 kr</span>
                     </div>
                     <div class="ik-fg">
-                      <label class="ik-lbl" for="mvaPurchase15" data-i18n="regnskapMvaP15Lbl">MVA på kjøp, 15&nbsp;%</label>
+                      <label class="ik-lbl" for="mvaPurchase15"><span data-pm="m" data-i18n="regnskapMvaP15Lbl">MVA på kjøp, 15&nbsp;%</span><span data-pm="g" hidden>Kjøp med 15&nbsp;%</span></label>
                       <input type="text" id="mvaPurchase15" class="ik-input" placeholder="0" inputmode="numeric" min="0" step="any">
+                      <span class="ik-hint" data-pm="g" id="mvaP15Vat" hidden>MVA: 0 kr</span>
                     </div>
                   </div>
                   <div class="ik-row">
                     <div class="ik-fg">
-                      <label class="ik-lbl" for="mvaPurchase12" data-i18n="regnskapMvaP12Lbl">MVA på kjøp, 12&nbsp;%</label>
+                      <label class="ik-lbl" for="mvaPurchase12"><span data-pm="m" data-i18n="regnskapMvaP12Lbl">MVA på kjøp, 12&nbsp;%</span><span data-pm="g" hidden>Kjøp med 12&nbsp;%</span></label>
                       <input type="text" id="mvaPurchase12" class="ik-input" placeholder="0" inputmode="numeric" min="0" step="any">
+                      <span class="ik-hint" data-pm="g" id="mvaP12Vat" hidden>MVA: 0 kr</span>
                     </div>
                   </div>
-                  <p class="ik-note">Skriv MVA-beløpet på fakturaene, ikke kjøpesummen. Ta bare med MVA du har rett til å trekke fra (fradragsrett).</p>
+                  <p class="ik-note" data-pm="m">Skriv MVA-beløpet på fakturaene, ikke kjøpesummen. Ta bare med MVA du har rett til å trekke fra (fradragsrett).</p>
+                  <p class="ik-note" data-pm="g" hidden>Skriv kjøpesummen uten MVA, så regner siden ut MVA-en. Ta bare med kjøp der du har rett til å trekke fra MVA-en (fradragsrett).</p>
                 </div>
               </section>
 
@@ -1022,15 +1033,28 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       var el = document.getElementById(id);
       if(el) el.textContent = val;
     }
+    // Kjøpsfeltene er MVA-beløp, som i MVA-meldingen (krysset står på fra start).
+    // Uten krysset er de kjøp uten MVA, og MVA-en regnes ut her.
+    function purchaseIsVat(){
+      var el = document.getElementById('mvaPurchaseVat');
+      return !!(el && el.checked);
+    }
+    // Overskrift, ledetekster og merknad for valgt måte (data-pm i skjemaet).
+    function showPurchaseMode(){
+      var pm = purchaseIsVat() ? 'm' : 'g';
+      document.querySelectorAll('[data-pm]').forEach(function(el){ el.hidden = el.getAttribute('data-pm') !== pm; });
+    }
 
     function calcMva(){
       var sale25 = parseNum('mvaSale25');
       var sale15 = parseNum('mvaSale15');
       var sale12 = parseNum('mvaSale12');
       var sale0  = parseNum('mvaSale0');
-      var p25 = parseNum('mvaPurchase25');
-      var p15 = parseNum('mvaPurchase15');
-      var p12 = parseNum('mvaPurchase12');
+      // p25, p15 og p12 er inngående MVA i kroner, uansett hvordan kjøpene er ført.
+      var pVat = purchaseIsVat();
+      var p25 = parseNum('mvaPurchase25') * (pVat ? 1 : RATE_25);
+      var p15 = parseNum('mvaPurchase15') * (pVat ? 1 : RATE_15);
+      var p12 = parseNum('mvaPurchase12') * (pVat ? 1 : RATE_12);
       var adjust = parseNum('mvaAdjust');
 
       var utg25 = sale25 * RATE_25;
@@ -1057,10 +1081,15 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       window._mva = { termin:t, s25:sale25, s15:sale15, s12:sale12, s0:sale0, p25:p25, p15:p15, p12:p12, adj:adjust, any:anyInput };
       if(window.hvtLearn) hvtLearn.update('regnskap-mva', window._mva);
 
+      // MVA-en siden har regnet ut, under hvert kjøpsfelt
+      setEl('mvaP25Vat', 'MVA: ' + fmt(p25));
+      setEl('mvaP15Vat', 'MVA: ' + fmt(p15));
+      setEl('mvaP12Vat', 'MVA: ' + fmt(p12));
+
       if(!anyInput){
         setEl('rNetLbl', r.regnskapMvaResNetPay || 'MVA å betale');
         ['rNet','rUtg25','rUtg15','rUtg12','rUtg','rInn','sNet'].forEach(function(id){ setEl(id, '–'); });
-        setEl('rVerdict', r.regnskapMvaVerdictEmpty || 'Fyll inn salget og MVA-en på innkjøpene.');
+        setEl('rVerdict', pVat ? (r.regnskapMvaVerdictEmpty || 'Fyll inn salget og MVA-en på innkjøpene.') : 'Fyll inn salget og innkjøpene.');
         if(adjRow) adjRow.hidden = true;
         persist();
         return;
@@ -1105,6 +1134,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
           p25: document.getElementById('mvaPurchase25').value,
           p15: document.getElementById('mvaPurchase15').value,
           p12: document.getElementById('mvaPurchase12').value,
+          pVat: purchaseIsVat(),
           adj: document.getElementById('mvaAdjust').value
         };
         localStorage.setItem(KEY, JSON.stringify(snap));
@@ -1125,6 +1155,9 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
             if(el) el.value = s[k];
           }
         });
+        // Krysset står på i skjemaet fra start. Lagringer fra før det fantes, har MVA-beløp og beholder det.
+        var chk = document.getElementById('mvaPurchaseVat');
+        if(chk && s.pVat != null) chk.checked = !!s.pVat;
       } catch(e){}
     }
 
@@ -1135,6 +1168,8 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     });
     var terminEl = document.getElementById('mvaTermin');
     if(terminEl) terminEl.addEventListener('change', calcMva);
+    var pVatEl = document.getElementById('mvaPurchaseVat');
+    if(pVatEl) pVatEl.addEventListener('change', function(){ showPurchaseMode(); calcMva(); });
 
     // «Retting fra tidligere termin» — feltet er sammenlagt til det trengs
     var adjToggle = document.getElementById('mvaAdjToggle');
@@ -1150,6 +1185,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     // Init
     restore();
+    showPurchaseMode();
     // En lagret retting skal ikke ligge skjult bak knappen.
     setAdjOpen(parseNum('mvaAdjust') !== 0);
     calcMva();
@@ -1182,13 +1218,13 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 })();
 </script>
 <script defer src="/shared/core.js?v=v241"></script>
-<script defer src="/shared/lang/no.js?v=v234"></script>
+<script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v3"></script>
 
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
-<script src="/shared/search.js?v=v136" defer></script>
+<script src="/shared/search.js?v=v137" defer></script>
 
 <!-- SHELL scripts — REDESIGN-2026-05 (T1-T4 ported) -->
 <script src="/shared/site-shell.js?v=v1" defer></script>
