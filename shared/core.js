@@ -4883,7 +4883,7 @@ function bcBtnStyle(t,l,isSmall){
   let sz = isSmall ? '12px' : '17px';
   let pad = isSmall ? '10px 6px' : '18px 8px';
   let rad = isSmall ? '10px' : '14px';
-  let base = `border:none;border-radius:${rad};padding:${pad};font-family:'Inter',sans-serif;font-size:${sz};font-weight:500;cursor:pointer;transition:all .15s ease;`;
+  let base = `border:none;border-radius:${rad};padding:${pad};font-family:'Geist','Inter',sans-serif;font-size:${sz};font-weight:500;cursor:pointer;transition:all .15s ease;`;
   if(l==='=') return base+'background:linear-gradient(135deg,var(--accent-d,#5b8def),var(--accent));color:#fff;font-size:18px;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.12);';
   if(t==='acc') return base+'background:rgba(100,120,200,.06);color:var(--accent-d,#5b8def);border:1px solid rgba(100,120,200,.08);font-weight:600;';
   if(t==='fn') return base+'background:rgba(100,120,200,.04);color:var(--accent-d,#5b8def);border:1px solid rgba(100,120,200,.06);font-weight:600;';
@@ -6057,7 +6057,7 @@ function calcSpare() {
       plugins: {
         legend: {
           position: 'top',
-          labels: { color: inkColor, font: { size: 12, family: 'Inter' }, usePointStyle: true, pointStyle: 'rectRounded', padding: 16 }
+          labels: { color: inkColor, font: { size: 12, family: 'Geist, Inter' }, usePointStyle: true, pointStyle: 'rectRounded', padding: 16 }
         },
         tooltip: {
           callbacks: {
@@ -6157,7 +6157,7 @@ function calcSpareRF(){
       responsive: true, maintainAspectRatio: false,
       interaction: { mode:'index', intersect:false },
       plugins: {
-        legend: { position:'top', labels: { color: inkColor, font: { size: 12, family: 'Inter' }, usePointStyle: true, pointStyle: 'rectRounded', padding: 16 } },
+        legend: { position:'top', labels: { color: inkColor, font: { size: 12, family: 'Geist, Inter' }, usePointStyle: true, pointStyle: 'rectRounded', padding: 16 } },
         tooltip: { callbacks: { label: function(ctx){ return ctx.dataset.label+': '+new Intl.NumberFormat('nb-NO').format(ctx.parsed.y).replace(/\u00a0/g,' ')+' '+(R().currency||'kr'); } } }
       },
       scales: {
@@ -7023,7 +7023,7 @@ function initPage(){
       t.setAttribute('role','status');
       t.setAttribute('aria-live','polite');
       t.textContent = 'Språk kunne ikke lastes — viser norsk.';
-      t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#b45309;color:#fff;padding:10px 18px;border-radius:8px;font:600 13px/1.3 Inter,sans-serif;z-index:10000;box-shadow:0 6px 20px rgba(0,0,0,.18);';
+      t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#b45309;color:#fff;padding:10px 18px;border-radius:8px;font:600 13px/1.3 Geist,Inter,sans-serif;z-index:10000;box-shadow:0 6px 20px rgba(0,0,0,.18);';
       document.body.appendChild(t);
       setTimeout(function(){ t.style.transition='opacity .4s'; t.style.opacity='0'; }, 5000);
       setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); }, 5500);

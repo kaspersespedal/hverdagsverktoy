@@ -714,7 +714,7 @@ function findInjectionPoint(){
 function injectSearchStyles(){
   if(document.getElementById('hvt-search-styles')) return;
   var css =
-  '#site-search{position:relative;max-width:520px;margin:0 auto;width:100%;font:14px/1.45 var(--font-sans,"Inter",system-ui,sans-serif);}' +
+  '#site-search{position:relative;max-width:520px;margin:0 auto;width:100%;font:14px/1.45 var(--font-sans,"Geist","Inter",system-ui,sans-serif);}' +
   '.search-box{position:relative;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;transition:border-color .2s,box-shadow .2s;}' +
   // --line-warm er en hårlinje på 14 % alpha og målte 1,13–1,48:1 mot flaten —
   // langt under WCAG 2.2 sitt krav på 3:1 for fokusmarkering, og #search-input
