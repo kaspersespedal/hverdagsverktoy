@@ -10,7 +10,7 @@
   // Medistim ASA, årsrapport 2025, tusen kroner. Fri kontantstrøm 2025 = 144 318 (regnestykket står på siden).
   // Vekst, avkastningskrav og WACC-delene er antakelser.
   var EKS = {
-    enhet:'1000', base:144318, vekst5:8, wacc:8.9, g:2.5, gjeld:49271, kont:212088, aksjer:18282848,
+    enhet:'1000', base:144318, vekst5:8, wacc:8.9, g:2.5, gjeld:49271, kont:212088, aksjer:18282848, kurs:259,
     rf:4, beta:1, mp:5, rd:5, tax:22, e:4735258, d:49271
   };
   var PCT = ['vekst5', 'wacc', 'g', 'rf', 'mp', 'rd', 'tax'];
@@ -30,7 +30,7 @@
     $('dcf-enhet').value = o.enhet;
     put($('dcf-base'), o.base); put($('dcf-vekst5'), o.vekst5, decs(o.vekst5));
     put($('dcf-wacc'), o.wacc, decs(o.wacc)); put($('dcf-g'), o.g, decs(o.g));
-    put($('dcf-gjeld'), o.gjeld); put($('dcf-kont'), o.kont); put($('dcf-aksjer'), o.aksjer);
+    put($('dcf-gjeld'), o.gjeld); put($('dcf-kont'), o.kont); put($('dcf-aksjer'), o.aksjer); put($('dcf-kurs'), o.kurs, decs(o.kurs));
     put($('w-rf'), o.rf, decs(o.rf)); put($('w-beta'), o.beta, decs(o.beta)); put($('w-mp'), o.mp, decs(o.mp));
     put($('w-rd'), o.rd, decs(o.rd)); put($('w-tax'), o.tax, decs(o.tax)); put($('w-e'), o.e); put($('w-d'), o.d);
     fillYears();
@@ -76,9 +76,9 @@
     var feil = $('dcf-feil');
     if(!res.ok){
       feil.hidden = false; feil.textContent = res.err;
-      ['s-ps', 's-eq', 's-ev', 's-tv', 'r-pvsum', 'r-tv', 'r-pvtv', 'r-ev', 'r-gjeld', 'r-kont', 'r-eq', 'r-aksjer', 'r-ps'].forEach(function(id){ $(id).textContent = '–'; });
-      $('s-ps-s').textContent = ''; $('s-eq-s').textContent = '';
-      $('dcf-sens').innerHTML = '';
+      ['s-ps', 's-eq', 's-ev', 's-tv', 'r-pvsum', 'r-tv', 'r-pvtv', 'r-ev', 'r-gjeld', 'r-kont', 'r-eq', 'r-aksjer', 'r-ps', 'r-kurs'].forEach(function(id){ $(id).textContent = '–'; });
+      $('s-ps-s').textContent = ''; $('s-eq-s').textContent = ''; $('r-kurs-s').textContent = '';
+      $('dcf-sens').innerHTML = ''; $('dcf-scn').innerHTML = ''; $('dcf-tvvarsel').hidden = true;
       return;
     }
     feil.hidden = true;
@@ -97,22 +97,54 @@
     $('r-aksjer').textContent = hasShares ? M.fmt(shares, 0) : 'Ikke fylt inn';
     $('r-ps').textContent = hasShares ? M.fmt(res.perShare, 2) + ' kr' : '–';
 
+    var kurs = M.parseNum($('dcf-kurs').value), hasKurs = hasShares && kurs > 0;
     $('s-ps').textContent = hasShares ? M.fmt(res.perShare, 2) + ' kr' : '–';
-    $('s-ps-s').textContent = hasShares ? '' : 'Fyll inn antall aksjer';
+    $('s-ps-s').textContent = hasShares ? (hasKurs ? vsKurs(res.perShare, kurs) + ' kursen ' + M.fmt(kurs, decs(kurs)) + ' kr' : '') : 'Fyll inn antall aksjer';
+    $('r-kurs').textContent = hasKurs ? M.fmt(kurs, 2) + ' kr' : 'Ikke fylt inn';
+    $('r-kurs-s').textContent = hasKurs ? 'Verdien er ' + vsKurs(res.perShare, kurs) + ' kursen' : '';
+    var tvv = $('dcf-tvvarsel');
+    tvv.hidden = !(res.tvShare > 0.75);
+    tvv.textContent = 'Over tre firedeler av verdien kommer fra årene etter prognosen. Svaret hviler mest på avkastningskravet og veksten for alltid, så se på tabellene under.';
     $('s-eq').textContent = M.fmt(res.equity, 0);
     $('s-eq-s').textContent = unitName();
     $('s-ev').textContent = M.fmt(res.ev, 0);
     $('s-tv').textContent = M.pct(res.tvShare, 0);
 
-    sens(o, hasShares);
+    sens(o, hasShares, hasKurs ? kurs : NaN);
+    scenarios(o, hasShares, hasKurs ? kurs : NaN);
   }
 
-  function sens(o, hasShares){
+  // «35 % under» / «12 % over» kursen.
+  function vsKurs(ps, kurs){
+    var d = ps / kurs - 1;
+    return Math.abs(d) < 0.005 ? 'omtrent lik' : M.pct(Math.abs(d), 0) + (d < 0 ? ' under' : ' over');
+  }
+
+  // Svak og sterk endrer bare veksten i prognoseårene (−4 og +7 prosentpoeng per år).
+  function scenarios(o, hasShares, kurs){
+    var v = pctv('dcf-vekst5'), hasV = isFinite(v); if(!hasV) v = 0;
+    var S = [['Svak', -0.04], ['Normal', 0], ['Sterk', 0.07]];
+    var h = '<caption>Tre scenarioer <small>' + (hasShares ? 'Verdi per aksje i kroner' : 'Egenkapitalverdi, ' + unitName()) + '</small></caption>';
+    h += '<thead><tr><th scope="col">Scenario</th><th scope="col">Vekst per år</th><th scope="col">' + (hasShares ? 'Verdi per aksje' : 'Egenkapitalverdi') + '</th>' + (isFinite(kurs) ? '<th scope="col">Mot kursen</th>' : '') + '</tr></thead><tbody>';
+    S.forEach(function(sc){
+      var k = (1 + v + sc[1]) / (1 + v);
+      var fcf = o.fcf.map(function(x, i){ return x * Math.pow(k, i + 1); });
+      var res = M.dcf({ fcf:fcf, r:o.r, g:o.g, debt:o.debt, cash:o.cash, shares:o.shares, unit:o.unit });
+      var val = res.ok ? (hasShares ? res.perShare : res.equity) : NaN;
+      h += '<tr' + (sc[1] === 0 ? ' class="sum"' : '') + '><td>' + sc[0] + '</td><td>' + (hasV ? M.pct(v + sc[1], 1) : (sc[1] === 0 ? 'Som over' : (sc[1] > 0 ? '+' : '−') + M.fmt(Math.abs(sc[1]) * 100, 0) + ' poeng')) + '</td>';
+      h += '<td>' + (isFinite(val) ? M.fmt(val, hasShares ? 2 : 0) : '–') + '</td>';
+      if(isFinite(kurs)) h += '<td>' + (isFinite(val) ? vsKurs(val, kurs) : '–') + '</td>';
+      h += '</tr>';
+    });
+    $('dcf-scn').innerHTML = h + '</tbody>';
+  }
+
+  function sens(o, hasShares, kurs){
     var dr = [-0.02, -0.01, 0, 0.01, 0.02], dg = [-0.01, -0.005, 0, 0.005, 0.01];
     var grid = M.sensitivity(o, dr, dg);
     $('sens-lead').textContent = hasShares
-      ? 'Verdien per aksje i kroner med litt høyere og lavere avkastningskrav og vekst. Feltet i midten er svaret over. Ser du store sprang, er verdien følsom for antakelsene.'
-      : 'Egenkapitalverdien (' + unitName() + ') med litt høyere og lavere avkastningskrav og vekst. Feltet i midten er svaret over. Fyll inn antall aksjer for å se verdi per aksje.';
+      ? 'Verdi per aksje i kroner med andre krav og vekst. Midten er svaret over.' + (isFinite(kurs) ? ' Fet skrift er over børskursen.' : '')
+      : 'Egenkapitalverdien (' + unitName() + ') med andre krav og vekst. Midten er svaret over.';
     var h = '<caption class="sr-only" style="position:absolute;left:-9999px">' + (hasShares ? 'Verdi per aksje' : 'Egenkapitalverdi') + ' for ulike WACC (rader) og vekst for alltid (kolonner)</caption>';
     h += '<thead><tr><th scope="col" class="corner">WACC ↓ · vekst →</th>';
     dg.forEach(function(d){ h += '<th scope="col">' + M.pct(o.g + d, 1) + '</th>'; });
@@ -120,8 +152,9 @@
     grid.forEach(function(row, i){
       h += '<tr><th scope="row">' + M.pct(o.r + dr[i], 1) + '</th>';
       row.forEach(function(v, j){
-        var base = dr[i] === 0 && dg[j] === 0;
-        h += '<td' + (base ? ' class="base"' : '') + '>' + (isFinite(v) ? M.fmt(v, hasShares ? 0 : 0) : '–') + '</td>';
+        var base = dr[i] === 0 && dg[j] === 0, over = hasShares && v > kurs;
+        var cls = (base ? 'base' : '') + (over ? (base ? ' ' : '') + 'over' : '');
+        h += '<td' + (cls ? ' class="' + cls + '"' : '') + '>' + (isFinite(v) ? M.fmt(v, hasShares ? 0 : 0) : '–') + '</td>';
       });
       h += '</tr>';
     });
@@ -171,7 +204,7 @@
     $('dcf-eksinfo').hidden = true;
     var m = $('dcf-fra');
     m.hidden = false;
-    m.innerHTML = '<strong>Fri kontantstrøm for ' + vals.length + ' år kom fra treårsprognosen</strong>, sammen med gjeld og kontanter ved start. Sjekk avkastningskrav, vekst for alltid og antall aksjer. De står som i Medistim-eksempelet til du endrer dem.';
+    m.innerHTML = '<strong>Fri kontantstrøm for ' + vals.length + ' år kom fra treårsprognosen</strong>, sammen med gjeld og kontanter ved start. Sjekk avkastningskrav, vekst for alltid, antall aksjer og børskurs. De står som i Medistim-eksempelet til du endrer dem.';
     return true;
   }
 
