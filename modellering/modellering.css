@@ -1,0 +1,178 @@
+/* Finansiell modellering — felles stil for /modellering/, /modellering/dcf/ og /modellering/prognose/.
+   Bygger på site-shell.css (page-hero, crumb, ks, ik-*) og components.css (cat-hero, cat-grid).
+   Bare tema-tokens: ingen egne farger, så alle ni temaene fungerer. */
+
+body{min-height:100vh;display:flex;flex-direction:column}
+body > main{flex:1 0 auto}
+body > footer{flex-shrink:0}
+
+/* Heroen har ingen tall i høyre kolonne på disse sidene */
+.page-hero .container{grid-template-columns:minmax(0,1fr)}
+h1.page-title em{font-style:italic;color:var(--accent-2)}
+
+/* Kalkulatoren står i full bredde, uten sidekolonne */
+.calc-wrap .container{display:block}
+.md-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:22px;min-width:0}
+.md-card > .md-in{padding:22px 24px 24px}
+@media (max-width:560px){.md-card > .md-in{padding:18px 16px 20px}}
+.md-card .ks-strip{border-bottom:1px solid var(--line)}
+@media (max-width:780px){.md-card .ks-strip{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .md-card .ks-strip-cell:nth-child(3)::before{display:none}
+  .md-card .ks-strip-cell:nth-child(n+3){border-top:1px solid var(--line)}}
+@media (max-width:560px){.md-card .ks-strip-cell{padding:14px 16px}.md-card .ks-strip-cell .v{font-size:19px}}
+.md-card .ks-strip-cell .v{flex-wrap:wrap}
+.md-card .ks-strip-cell .s{font-size:12px;color:var(--ink3);line-height:1.4}
+
+.md-h2{font-family:var(--font-serif);font-weight:500;font-size:20px;letter-spacing:-.3px;color:var(--ink);margin:0 0 4px}
+.md-lead{font-size:13.5px;line-height:1.6;color:var(--ink2);margin:0 0 18px;max-width:68ch}
+.md-sec + .md-sec{margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+
+/* Verktøylinje: eksempel, nullstill, enhet */
+.md-tools{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 20px}
+.md-btn{appearance:none;-webkit-appearance:none;background:var(--surface);color:var(--ink2);border:1px solid var(--line-2);
+  border-radius:999px;padding:10px 16px;min-height:40px;cursor:pointer;font:500 13px/1.1 var(--font-sans);text-decoration:none;
+  display:inline-flex;align-items:center;gap:8px;transition:color .15s var(--ease),border-color .15s var(--ease),background .15s var(--ease)}
+@media (hover:hover){.md-btn:hover{color:var(--ink);border-color:var(--line-warm);background:var(--surface-2)}}
+.md-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.md-btn.primary{background:color-mix(in srgb, var(--accent) 14%, var(--surface));color:var(--ink);border-color:var(--line-warm)}
+.md-unit{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--ink3);margin-inline-start:auto}
+.md-unit .ik-select{width:auto;min-width:130px;padding-block:8px}
+@media (max-width:560px){.md-unit{margin-inline-start:0;width:100%}}
+
+/* Felt med forklaring */
+.md-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 22px}
+.md-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:860px){.md-grid.three{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.md-grid,.md-grid.three{grid-template-columns:minmax(0,1fr)}}
+.md-f{display:flex;flex-direction:column;gap:6px;min-width:0}
+.md-f .ik-input{text-align:right}
+.md-f .ik-hint b{color:var(--ink2);font-weight:500}
+.md-inp-u{position:relative}
+.md-inp-u .ik-input{padding-right:42px}
+.md-inp-u .u{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--ink3);pointer-events:none}
+
+/* År-for-år-tabell med felt (fri kontantstrøm, forutsetninger) */
+.md-years{display:grid;gap:10px}
+.md-yr{display:grid;grid-template-columns:minmax(0,1.1fr) repeat(var(--cols,5),minmax(0,1fr));gap:8px;align-items:center}
+.md-yr.head span{font:500 11.5px/1.2 var(--font-sans);color:var(--ink3);text-align:right}
+.md-yr.head span:first-child{text-align:left}
+.md-yr .nm{font-size:13px;color:var(--ink2);line-height:1.3;min-width:0}
+.md-yr .nm small{display:block;font-size:11.5px;color:var(--ink3);margin-top:2px}
+.md-yr .ik-input{text-align:right;padding-inline:8px;min-width:0}
+.md-yr .out{font-variant-numeric:tabular-nums;text-align:right;font-size:13px;color:var(--ink3)}
+@media (max-width:620px){
+  .md-yr{grid-template-columns:repeat(var(--cols,5),minmax(0,1fr))}
+  .md-yr .nm{grid-column:1 / -1}
+  .md-yr.head span:first-child{display:none}
+}
+
+/* Loddrett årsliste (DCF): ett år per rad, så store tall får plass også på mobil */
+.md-yv{max-width:560px}
+.md-yv .md-yr{grid-template-columns:52px minmax(0,1fr) minmax(0,1fr)}
+.md-yv .md-yr .yr{font-size:13px;color:var(--ink2)}
+@media (max-width:620px){
+  .md-yv .md-yr{grid-template-columns:44px minmax(0,1fr) minmax(0,1fr)}
+  .md-yv .md-yr.head span:first-child{display:block}
+}
+
+/* Utregnede tabeller (resultat, balanse, kontantstrøm, nåverdier, kilde) */
+.md-tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.md-t{width:100%;border-collapse:collapse;font-size:13.5px;font-variant-numeric:tabular-nums lining-nums}
+.md-t caption{text-align:left;font:500 14px/1.3 var(--font-serif);color:var(--ink);padding:0 0 10px}
+.md-t caption small{font:400 12px/1.4 var(--font-sans);color:var(--ink3);margin-inline-start:6px}
+.md-t th,.md-t td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.md-t th:first-child,.md-t td:first-child{text-align:left;white-space:normal;padding-left:0;min-width:9em}
+.md-t td:last-child,.md-t th:last-child{padding-right:0}
+.md-t thead th{font:500 12px/1.2 var(--font-sans);color:var(--ink3);border-bottom:1px solid var(--line-2)}
+.md-t td{color:var(--ink2)}
+.md-t tr.sum td{color:var(--ink);font-weight:500;border-top:1px solid var(--line-2)}
+.md-t tr.sum td:not(:first-child){font-family:var(--font-serif);font-size:15px}
+.md-t tr.sub td:first-child{padding-left:14px;color:var(--ink3)}
+.md-t tr.chk td{color:var(--ink3);font-size:12.5px;border-bottom:0}
+.md-t td.txt{white-space:normal;text-align:left;min-width:11em;font-size:12.5px;color:var(--ink3)}
+@media (max-width:560px){.md-t{font-size:12px}.md-t th,.md-t td{padding:7px 4px}.md-t th:first-child,.md-t td:first-child{min-width:6.5em}
+  .md-t tr.sum td:not(:first-child){font-size:13.5px}}
+@media (max-width:420px){.md-t{font-size:11.5px}.md-t th,.md-t td{padding:7px 3px}.md-t tr.sum td:not(:first-child){font-size:12.5px}}
+.md-tables{display:grid;grid-template-columns:minmax(0,1fr);gap:26px}
+
+/* Følsomhetstabell */
+.md-sens{width:100%;border-collapse:separate;border-spacing:0;font-variant-numeric:tabular-nums lining-nums;font-size:13px}
+.md-sens th,.md-sens td{padding:9px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.md-sens thead th{font:500 12px/1.2 var(--font-sans);color:var(--ink3)}
+.md-sens tbody th{font:500 12px/1.2 var(--font-sans);color:var(--ink3);text-align:left}
+.md-sens td{color:var(--ink2)}
+.md-sens td.base{background:color-mix(in srgb, var(--accent) 16%, transparent);color:var(--ink);font-weight:600;border-radius:3px}
+.md-sens .corner{text-align:left;font-weight:400;color:var(--ink4)}
+@media (max-width:560px){.md-sens{font-size:12px}.md-sens th,.md-sens td{padding:8px 4px}}
+
+/* Resultatlinjer (verdi per aksje osv.) */
+.md-res{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 16px;align-items:baseline}
+.md-res dt{font-size:13.5px;color:var(--ink2);padding:9px 0;border-bottom:1px solid var(--line)}
+.md-res dt small{display:block;font-size:12px;color:var(--ink3);margin-top:2px}
+.md-res dd{margin:0;padding:9px 0;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums;color:var(--ink);font-size:14px}
+.md-res .tot{font-family:var(--font-serif);font-size:18px;color:var(--accent-2)}
+.md-res dt.tot{font-family:var(--font-sans);font-size:14px;color:var(--ink);font-weight:500}
+
+/* Meldinger */
+.md-msg{border:1px solid var(--line);border-left:2px solid var(--accent);border-radius:6px;padding:12px 14px;
+  font-size:13.5px;line-height:1.55;color:var(--ink2);background:var(--surface);margin:0 0 16px}
+.md-msg strong{color:var(--ink)}
+.md-msg[hidden]{display:none}
+.md-ok{font-size:13px;color:var(--ink3);margin:8px 0 0}
+.md-ok b{color:var(--ink);font-weight:500}
+
+/* Hjelp under en knapp (WACC) */
+details.md-help{border:1px solid var(--line);border-radius:6px;background:var(--surface-2);margin-top:12px}
+details.md-help > summary{list-style:none;cursor:pointer;padding:12px 14px;font:500 13px/1.3 var(--font-sans);color:var(--ink2);
+  display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:44px}
+details.md-help > summary::-webkit-details-marker{display:none}
+details.md-help > summary::after{content:'+';font:400 18px/1 var(--font-sans);color:var(--ink3)}
+details.md-help[open] > summary::after{content:'−'}
+details.md-help > .b{padding:4px 14px 16px}
+
+/* Forklaringer og eksempel under kalkulatoren */
+.md-learn{padding:8px 0 12px}
+.lc-sec{padding:46px 0;border-top:1px solid var(--line)}
+.lc-sec:first-child{border-top:none;padding-top:20px}
+.lc-head{max-width:680px;margin:0 0 26px}
+.lc-kicker{display:block;font:600 11px/1 var(--font-sans);letter-spacing:1.9px;text-transform:uppercase;color:var(--accent-2);margin-bottom:14px}
+.lc-title{font-family:var(--font-serif);font-weight:500;font-size:clamp(24px,3.2vw,32px);line-height:1.12;letter-spacing:-.6px;color:var(--ink);margin:0 0 12px}
+.lc-title em{font-style:italic;color:var(--accent-2)}
+.lc-intro{font-size:15px;line-height:1.65;color:var(--ink2);margin:0;max-width:62ch}
+.md-p{font-size:14.5px;line-height:1.65;color:var(--ink2);margin:0 0 14px;max-width:70ch}
+.md-p strong{color:var(--ink);font-weight:500}
+.md-list{margin:0 0 14px;padding-left:20px;font-size:14.5px;line-height:1.65;color:var(--ink2);max-width:70ch}
+.md-list li{margin-bottom:8px}
+.md-list strong{color:var(--ink);font-weight:500}
+.md-src{font-size:13px;color:var(--ink3);line-height:1.6;margin:14px 0 0;max-width:80ch;overflow-wrap:anywhere}
+.md-src a{color:var(--accent-2)}
+.md-disc{border:1px solid var(--line-warm);border-radius:6px;padding:14px 16px;font-size:14px;line-height:1.6;color:var(--ink2);background:var(--surface);margin:0 0 22px;max-width:80ch}
+.md-disc strong{color:var(--ink)}
+
+/* Feltforklaringer: hva det er, hvor det står */
+.md-fields{border-top:1px solid var(--line)}
+.md-fld{display:grid;grid-template-columns:200px minmax(0,1fr) minmax(0,1fr);gap:22px;padding:16px 0;border-bottom:1px solid var(--line)}
+.md-fld h3{margin:0;font:600 14px/1.35 var(--font-sans);color:var(--ink)}
+.md-fld p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink2)}
+.md-fld p b{display:block;font:600 10.5px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+@media (max-width:780px){.md-fld{grid-template-columns:minmax(0,1fr);gap:8px}}
+
+.lc-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:780px){.lc-links{grid-template-columns:minmax(0,1fr)}}
+.lc-link{display:block;padding:16px 18px;border:1px solid var(--line);border-radius:6px;background:var(--surface);text-decoration:none;color:var(--ink2)}
+.lc-link .ar{font-size:11.5px;color:var(--ink3)}
+.lc-link h3{margin:6px 0 4px;font:500 17px/1.25 var(--font-serif);color:var(--ink)}
+.lc-link p{margin:0;font-size:13px;line-height:1.5;color:var(--ink3)}
+@media (hover:hover){.lc-link:hover{border-color:var(--line-warm)}}
+
+.md-bunn{font-size:12.5px;color:var(--ink3);line-height:1.6;margin:10px 0 0;max-width:80ch}
+
+/* Landingssiden: flyten prognose → kontantstrøm → verdi */
+.md-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:22px}
+.md-flow > div{background:var(--surface);padding:20px 22px}
+.md-flow .n{font:500 12px/1 var(--font-sans);color:var(--accent-2);letter-spacing:.1em}
+.md-flow h3{margin:10px 0 6px;font:500 18px/1.25 var(--font-serif);color:var(--ink)}
+.md-flow p{margin:0;font-size:13.5px;line-height:1.55;color:var(--ink2)}
+@media (max-width:780px){.md-flow{grid-template-columns:minmax(0,1fr)}}
+.page-content .cat-hero{padding-bottom:40px}
+@media (max-width:780px){.page-content .cat-hero{padding-bottom:28px}}

@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="nb" data-theme="carbon">
+<head>
+<meta charset="utf-8">
+<title>Verdsettelse med DCF — nåverdi, WACC og verdi per aksje · Hverdagsverktøy</title>
+<meta name="description" content="Regn ut hva et selskap er verdt: fri kontantstrøm, WACC, terminalverdi, nåverdi og verdi per aksje, med følsomhetstabell. Eksempel med tall fra Medistim ASAs årsrapport 2025.">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://hverdagsverktoy.com/modellering/dcf/">
+<meta property="og:title" content="Verdsettelse med DCF — Hverdagsverktøy">
+<meta property="og:description" content="Regn ut hva et selskap er verdt: fri kontantstrøm, WACC, terminalverdi, nåverdi og verdi per aksje, med følsomhetstabell. Eksempel med tall fra Medistim ASAs årsrapport 2025.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hverdagsverktoy.com/modellering/dcf/">
+<meta property="og:locale" content="nb_NO">
+<meta property="og:site_name" content="Hverdagsverktøy">
+<meta property="og:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hverdagsverktoy.com/icons/og-card.png">
+<meta name="twitter:image:alt" content="Hverdagsverktøy — praktiske finansverktøy for Norge">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#070504">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "@id": "https://hverdagsverktoy.com/modellering/dcf/#webpage",
+  "name": "Verdsettelse med DCF — Hverdagsverktøy",
+  "url": "https://hverdagsverktoy.com/modellering/dcf/",
+  "inLanguage": "no",
+  "isPartOf": { "@id": "https://hverdagsverktoy.com/#website" }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Hjem", "item": "https://hverdagsverktoy.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Finansiell modellering", "item": "https://hverdagsverktoy.com/modellering/" },
+    { "@type": "ListItem", "position": 3, "name": "Verdsettelse (DCF)", "item": "https://hverdagsverktoy.com/modellering/dcf/" }
+  ]
+}
+</script>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/geist-latin-wght-normal.woff2?v=v1">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-normal.woff2?v=v1">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-italic.woff2?v=v1">
+<link rel="stylesheet" href="/shared/fonts.css?v=v2">
+<script>
+  (function(){try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
+<script>
+  (function(){
+    try{
+      var l=localStorage.getItem('hvt-lang')||'no';
+      document.documentElement.setAttribute('data-lang',l);
+      if(l!=='no')document.documentElement.classList.add('lang-loading');
+    }catch(e){}
+  })();
+</script>
+<style>html.lang-loading [data-i18n]{visibility:hidden;}</style>
+<link rel="stylesheet" href="/shared/themes.css?v=v11">
+<link rel="stylesheet" href="/shared/colors_and_type.css?v=v6">
+<link rel="stylesheet" href="/shared/components.css?v=v8">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v248">
+<link rel="stylesheet" href="/shared/calm-override.css?v=v4">
+<link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
+<link rel="stylesheet" href="/modellering/modellering.css?v=v1">
+</head>
+<body>
+
+<a class="skip" href="#main" data-i18n="skipLink">Hopp til innhold</a>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="mark-g" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d8ad7e"/><stop offset="1" stop-color="#a87842"/>
+    </linearGradient>
+    <symbol id="mark-h" viewBox="0 0 64 64">
+      <rect x="14" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="42" y="12" width="8" height="40" rx="2.5" fill="url(#mark-g)"/>
+      <rect x="22" y="28" width="20" height="8" rx="1.5" fill="url(#mark-g)"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="nav-wrap">
+  <div class="container">
+    <nav>
+      <a href="/" class="brand-row" aria-label="Hverdagsverktøy — forside">
+        <span class="mark"><svg width="16" height="16"><use href="#mark-h"/></svg></span>
+        <span class="wordmark">Hverdagsverktøy</span>
+      </a>
+    </nav>
+  </div>
+</div>
+
+<div class="tabs-wrap" role="tablist" aria-label="Kategorier">
+  <div class="container">
+    <div class="tabs">
+      <a href="/personlig/budsjett/" class="tab" role="tab" aria-selected="false" data-i18n="tabBudsjett">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg>Budsjett
+      </a>
+      <a href="/personlig/" class="tab" role="tab" aria-selected="false" data-i18n="tabPersonlig">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>Privatøkonomi
+      </a>
+      <a href="/boliglan/" class="tab" role="tab" aria-selected="false" data-i18n="tabBoliglan">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/></svg>Boliglån
+      </a>
+      <a href="/kalkulator/" class="tab" role="tab" aria-selected="false" data-i18n="tabKalkulator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg>Kalkulator
+      </a>
+      <a href="/skatt/" class="tab" role="tab" aria-selected="false" data-i18n="tabSkatt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg>Skatt
+      </a>
+      <a href="/selskap/" class="tab" role="tab" aria-selected="false" data-i18n="tabSelskap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg>Selskap
+      </a>
+      <a href="/avgift/" class="tab" role="tab" aria-selected="false" data-i18n="tabAvgift">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg>Avgift
+      </a>
+      <a href="/regnskap/" class="tab" role="tab" aria-selected="false" data-i18n="tabRegnskap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg>Regnskap
+      </a>
+      <a href="/lov/" class="tab" role="tab" aria-selected="false" data-i18n="tabLov">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V20"/><path d="M5 7 L12 5 L19 7"/><path d="M3 13 a3 3 0 0 0 6 0 L6 7 Z"/><path d="M15 13 a3 3 0 0 0 6 0 L18 7 Z"/></svg>Lov
+      </a>
+      <a href="/kalkyle/" class="tab" role="tab" aria-selected="false" data-i18n="tabKalkyle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 3 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6Z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>Kalkyle
+      </a>
+      <a href="/modellering/" class="tab" role="tab" aria-selected="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 V20 H20"/><polyline points="7.5 15 11 11 14 13.5 19 8"/></svg>Finansiell modellering
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Seksjonen finnes bare på norsk. data-ph-skip hindrer at enkeltord oversettes midt i norsk tekst. -->
+<main id="main" data-ph-skip>
+  <section class="page-hero">
+    <div class="container">
+      <div>
+        <div class="crumb">
+          <a href="/modellering/" class="crumb-back" aria-label="Tilbake">
+            <svg width="10" height="10" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 3 4 7 8 11"/></svg>
+          </a>
+          <a href="/">Hverdagsverktøy</a>
+          <span class="sep"></span>
+          <a href="/modellering/">Finansiell modellering</a>
+          <span class="sep"></span>
+          <span class="here">Verdsettelse (DCF)</span>
+        </div>
+        <h1 class="page-title"><em>Verdsettelse</em> med DCF</h1>
+        <p class="page-lead">Et selskap er verdt pengene det skal tjene i fremtiden, regnet om til kroner i dag. Legg inn fri kontantstrøm, avkastningskrav og vekst, så får du selskapsverdien og verdien per aksje. Siden starter med et eksempel fra Medistim ASAs årsrapport for 2025.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="calc-wrap">
+    <div class="container">
+
+      <p class="md-msg" id="dcf-fra" hidden></p>
+
+      <div class="md-card ks">
+        <div class="ks-strip" aria-live="polite">
+          <div class="ks-strip-cell accent"><span class="l">Verdi per aksje</span><span class="v" id="s-ps">–</span><span class="s" id="s-ps-s"></span></div>
+          <div class="ks-strip-cell"><span class="l">Egenkapitalverdi</span><span class="v" id="s-eq">–</span><span class="s" id="s-eq-s"></span></div>
+          <div class="ks-strip-cell"><span class="l">Selskapsverdi</span><span class="v" id="s-ev">–</span><span class="s">Før gjeld og kontanter</span></div>
+          <div class="ks-strip-cell"><span class="l">Andel fra terminalverdien</span><span class="v" id="s-tv">–</span><span class="s">Verdien etter de årene du har fylt inn</span></div>
+        </div>
+
+        <div class="md-in">
+          <div class="md-tools">
+            <button type="button" class="md-btn" id="dcf-eks">Fyll inn eksempel (Medistim 2025)</button>
+            <button type="button" class="md-btn" id="dcf-null">Nullstill</button>
+            <a class="md-btn" href="/modellering/prognose/">Lag kontantstrømmen i prognosen →</a>
+            <label class="md-unit">Tall i
+              <select class="ik-select" id="dcf-enhet">
+                <option value="1">kroner</option>
+                <option value="1000">tusen kroner</option>
+                <option value="1000000">millioner kroner</option>
+              </select>
+            </label>
+          </div>
+          <p class="md-msg" id="dcf-eksinfo">Eksempelet bruker tall fra Medistim ASAs årsrapport for 2025, i tusen kroner. Vekst og avkastningskrav er våre antakelser. Dette er et regneeksempel, ikke investeringsråd. <a href="#eksempel">Se tallene og kilden.</a></p>
+
+          <section class="md-sec" aria-labelledby="dcf-h1">
+            <h2 class="md-h2" id="dcf-h1">1. Fri kontantstrøm per år</h2>
+            <p class="md-lead">Pengene driften gir etter skatt og investeringer, før renter og avdrag. Fyll inn for de årene du har en prognose for. Tomme år hoppes over, og terminalverdien regnes fra siste år du har fylt inn.</p>
+            <div class="md-grid three">
+              <div class="md-f">
+                <label class="ik-lbl" for="dcf-base">Fri kontantstrøm i fjor</label>
+                <input class="ik-input" id="dcf-base" type="text" inputmode="decimal" autocomplete="off">
+                <span class="ik-hint">Utgangspunktet. Se forklaringen under for hvordan du finner den.</span>
+              </div>
+              <div class="md-f">
+                <label class="ik-lbl" for="dcf-vekst5">Vekst per år fremover</label>
+                <div class="md-inp-u"><input class="ik-input" id="dcf-vekst5" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
+                <span class="ik-hint">Hvor mye kontantstrømmen vokser hvert år i prognoseperioden.</span>
+              </div>
+              <div class="md-f" style="justify-content:flex-start">
+                <span class="ik-lbl" aria-hidden="true">&nbsp;</span>
+                <button type="button" class="md-btn" id="dcf-fyll">Fyll inn fem år</button>
+                <span class="ik-hint">Eller skriv tallene rett inn i radene under.</span>
+              </div>
+            </div>
+
+            <div class="md-years md-yv" style="margin-top:20px" role="group" aria-labelledby="dcf-h1">
+              <div class="md-yr head" aria-hidden="true"><span></span><span>Fri kontantstrøm</span><span>Nåverdi i dag</span></div>
+              <div class="md-yr"><span class="yr">År 1</span><input class="ik-input dcf-fcf" type="text" inputmode="decimal" autocomplete="off" aria-label="Fri kontantstrøm år 1"><span class="out dcf-pv">–</span></div>
+              <div class="md-yr"><span class="yr">År 2</span><input class="ik-input dcf-fcf" type="text" inputmode="decimal" autocomplete="off" aria-label="Fri kontantstrøm år 2"><span class="out dcf-pv">–</span></div>
+              <div class="md-yr"><span class="yr">År 3</span><input class="ik-input dcf-fcf" type="text" inputmode="decimal" autocomplete="off" aria-label="Fri kontantstrøm år 3"><span class="out dcf-pv">–</span></div>
+              <div class="md-yr"><span class="yr">År 4</span><input class="ik-input dcf-fcf" type="text" inputmode="decimal" autocomplete="off" aria-label="Fri kontantstrøm år 4"><span class="out dcf-pv">–</span></div>
+              <div class="md-yr"><span class="yr">År 5</span><input class="ik-input dcf-fcf" type="text" inputmode="decimal" autocomplete="off" aria-label="Fri kontantstrøm år 5"><span class="out dcf-pv">–</span></div>
+            </div>
+          </section>
+
+          <section class="md-sec" aria-labelledby="dcf-h2">
+            <h2 class="md-h2" id="dcf-h2">2. Avkastningskrav og vekst</h2>
+            <p class="md-lead">Avkastningskravet er renten du regner tilbake med. Jo høyere risiko, jo høyere krav, og jo lavere verdi i dag.</p>
+            <div class="md-grid">
+              <div class="md-f">
+                <label class="ik-lbl" for="dcf-wacc">Avkastningskrav (WACC)</label>
+                <div class="md-inp-u"><input class="ik-input" id="dcf-wacc" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
+                <span class="ik-hint">Vanlig spenn for et stabilt norsk selskap er 7–11 %. Usikker? Regn det ut under.</span>
+              </div>
+              <div class="md-f">
+                <label class="ik-lbl" for="dcf-g">Vekst for alltid etter siste år</label>
+                <div class="md-inp-u"><input class="ik-input" id="dcf-g" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
+                <span class="ik-hint">Brukes i terminalverdien. Hold den lav, gjerne 1,5–3 %. Ingen selskap vokser fortere enn økonomien for alltid.</span>
+              </div>
+            </div>
+
+            <details class="md-help" id="wacc-hjelp">
+              <summary>Regn ut WACC</summary>
+              <div class="b">
+                <p class="md-lead">WACC er et vektet snitt av hva eierne krever og hva lånet koster etter skatt. Eiernes krav regnes med CAPM: risikofri rente pluss beta ganger markedspremien.</p>
+                <div class="md-grid three">
+                  <div class="md-f">
+                    <label class="ik-lbl" for="w-rf">Risikofri rente</label>
+                    <div class="md-inp-u"><input class="ik-input" id="w-rf" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
+                    <span class="ik-hint">Renten på tiårige norske statsobligasjoner. Norges Bank publiserer den.</span>
+                  </div>
+                  <div class="md-f">
+                    <label class="ik-lbl" for="w-beta">Beta</label>
+                    <input class="ik-input" id="w-beta" type="text" inputmode="decimal" autocomplete="off">
+                    <span class="ik-hint">Hvor mye aksjen svinger med markedet. 1 er som markedet. Over 1 er mer risikabelt.</span>
+                  </div>
+                  <div class="md-f">
+                    <label class="ik-lbl" for="w-mp">Markedspremie</label>
+                    <div class="md-inp-u"><input class="ik-input" id="w-mp" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
+                    <span class="ik-hint">Ekstra avkastning aksjer gir over risikofri rente. 5 % er mye brukt i Norge.</span>
+                  </div>
+                  <div class="md-f">
+                    <label class="ik-lbl" for="w-rd">Lånerente før skatt</label>
+                    <div class="md-inp-u"><input class="ik-input" id="w-rd" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
+                    <span class="ik-hint">Renten selskapet betaler på lån. Står i noten om rentebærende gjeld.</span>
+                  </div>
+                  <div class="md-f">
+                    <label class="ik-lbl" for="w-tax">Skattesats</label>
+                    <div class="md-inp-u"><input class="ik-input" id="w-tax" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
+                    <span class="ik-hint">22 % for norske aksjeselskaper. Renter er fradragsberettiget, derfor trekkes skatten fra.</span>
+                  </div>
+                  <div class="md-f">
+                    <label class="ik-lbl" for="w-e">Markedsverdi egenkapital</label>
+                    <input class="ik-input" id="w-e" type="text" inputmode="decimal" autocomplete="off">
+                    <span class="ik-hint">Børskurs ganger antall aksjer. For et selskap uten børskurs: bruk bokført egenkapital som et grovt anslag.</span>
+                  </div>
+                  <div class="md-f">
+                    <label class="ik-lbl" for="w-d">Rentebærende gjeld</label>
+                    <input class="ik-input" id="w-d" type="text" inputmode="decimal" autocomplete="off">
+                    <span class="ik-hint">Samme tall som i del 3.</span>
+                  </div>
+                </div>
+                <dl class="md-res" style="margin-top:16px">
+                  <dt>Eiernes avkastningskrav (CAPM)<small id="w-re-f"></small></dt><dd id="w-re">–</dd>
+                  <dt>Lånerente etter skatt</dt><dd id="w-rdt">–</dd>
+                  <dt>Andel egenkapital / andel gjeld</dt><dd id="w-vekt">–</dd>
+                  <dt class="tot">WACC</dt><dd class="tot" id="w-wacc">–</dd>
+                </dl>
+                <div class="md-tools" style="margin:14px 0 0"><button type="button" class="md-btn primary" id="w-bruk">Bruk denne WACC-en</button></div>
+              </div>
+            </details>
+          </section>
+
+          <section class="md-sec" aria-labelledby="dcf-h3">
+            <h2 class="md-h2" id="dcf-h3">3. Fra selskapsverdi til verdi per aksje</h2>
+            <p class="md-lead">Kontantstrømmen tilhører både eiere og långivere. For å finne eiernes del trekker du fra gjelden og legger til kontantene.</p>
+            <div class="md-grid three">
+              <div class="md-f">
+                <label class="ik-lbl" for="dcf-gjeld">Rentebærende gjeld</label>
+                <input class="ik-input" id="dcf-gjeld" type="text" inputmode="decimal" autocomplete="off">
+                <span class="ik-hint">Banklån, obligasjoner og leieforpliktelser. Står i balansen under gjeld.</span>
+              </div>
+              <div class="md-f">
+                <label class="ik-lbl" for="dcf-kont">Kontanter og bankinnskudd</label>
+                <input class="ik-input" id="dcf-kont" type="text" inputmode="decimal" autocomplete="off">
+                <span class="ik-hint">Står nederst på eiendelssiden i balansen.</span>
+              </div>
+              <div class="md-f">
+                <label class="ik-lbl" for="dcf-aksjer">Antall aksjer</label>
+                <input class="ik-input" id="dcf-aksjer" type="text" inputmode="numeric" autocomplete="off">
+                <span class="ik-hint">Utstedte aksjer minus egne aksjer. Står i noten om aksjekapital. Skriv hele antallet.</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="md-sec" aria-labelledby="dcf-h4">
+            <h2 class="md-h2" id="dcf-h4">4. Utregningen</h2>
+            <p class="md-msg" id="dcf-feil" role="alert" hidden></p>
+            <dl class="md-res" id="dcf-res">
+              <dt>Nåverdi av kontantstrømmen<small id="r-pvsum-s">Summen av nåverdiene over</small></dt><dd id="r-pvsum">–</dd>
+              <dt>Terminalverdi<small id="r-tv-s">Siste års kontantstrøm × (1 + vekst) / (WACC − vekst)</small></dt><dd id="r-tv">–</dd>
+              <dt>Nåverdi av terminalverdien<small id="r-pvtv-s"></small></dt><dd id="r-pvtv">–</dd>
+              <dt class="tot">Selskapsverdi</dt><dd class="tot" id="r-ev">–</dd>
+              <dt>Rentebærende gjeld</dt><dd id="r-gjeld">–</dd>
+              <dt>Kontanter</dt><dd id="r-kont">–</dd>
+              <dt class="tot">Egenkapitalverdi</dt><dd class="tot" id="r-eq">–</dd>
+              <dt>Delt på antall aksjer</dt><dd id="r-aksjer">–</dd>
+              <dt class="tot">Verdi per aksje</dt><dd class="tot" id="r-ps">–</dd>
+            </dl>
+          </section>
+
+          <section class="md-sec" aria-labelledby="dcf-h5">
+            <h2 class="md-h2" id="dcf-h5">5. Hvor mye tåler svaret?</h2>
+            <p class="md-lead" id="sens-lead">Verdien per aksje med litt høyere og lavere avkastningskrav og vekst. Feltet i midten er svaret over. Ser du store sprang, er verdien følsom for antakelsene.</p>
+            <div class="md-tw"><table class="md-sens" id="dcf-sens"></table></div>
+          </section>
+
+          <p class="md-bunn">Veiledende. Kontantstrømmen regnes som om den kommer ved slutten av hvert år, og verdien gjelder datoen for balansen du har hentet gjeld og kontanter fra. Tallene lagres ikke.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="md-learn">
+
+      <section class="lc-sec" id="felt" aria-labelledby="lc-felt">
+        <div class="lc-head"><span class="lc-kicker">Feltene forklart</span><h2 class="lc-title" id="lc-felt">Hva tallene betyr, og <em>hvor du finner dem</em></h2><p class="lc-intro">Alle tallene står i årsrapporten. Resultatregnskapet, balansen og kontantstrømoppstillingen er de tre tabellene du trenger. Notene forklarer detaljene.</p></div>
+        <div class="md-fields">
+          <div class="md-fld"><h3>Fri kontantstrøm</h3>
+            <p><b>Hva det er</b>Pengene driften gir når skatt og investeringer er betalt, før renter og avdrag. Det er det eiere og långivere til sammen kan ta ut.</p>
+            <p><b>Hvor du finner det</b>Regn det ut: driftsresultat × (1 − 22 %) + avskrivninger − investeringer − økning i arbeidskapital. Driftsresultat og avskrivninger står i resultatregnskapet. Investeringene står i kontantstrømmen under investeringsaktiviteter.</p></div>
+          <div class="md-fld"><h3>Vekst per år</h3>
+            <p><b>Hva det er</b>Hvor fort kontantstrømmen vokser de første årene.</p>
+            <p><b>Hvor du finner det</b>Et anslag. Se på veksten i omsetning de siste årene i årsrapporten, og på hva ledelsen skriver om utsiktene. Vær forsiktig: høy vekst holder sjelden lenge.</p></div>
+          <div class="md-fld"><h3>Avkastningskrav (WACC)</h3>
+            <p><b>Hva det er</b>Hvor mye eiere og långivere til sammen krever i avkastning per år. Det er renten fremtidige kroner regnes tilbake med.</p>
+            <p><b>Hvor du finner det</b>Ikke i årsrapporten. Regn det ut med hjelpen over. Lånerenten og gjelden står i notene. Risikofri rente finner du hos Norges Bank.</p></div>
+          <div class="md-fld"><h3>Vekst for alltid</h3>
+            <p><b>Hva det er</b>Veksten etter de årene du har fylt inn, uten slutt. Brukes til terminalverdien.</p>
+            <p><b>Hvor du finner det</b>Et anslag. Bruk omtrent forventet inflasjon og vekst i økonomien, 1,5–3 %. Norges Banks inflasjonsmål er 2 %.</p></div>
+          <div class="md-fld"><h3>Terminalverdi</h3>
+            <p><b>Hva det er</b>Verdien av alle årene etter prognosen, samlet i ett tall. Den utgjør ofte 60–80 % av hele verdien.</p>
+            <p><b>Hvor du finner det</b>Regnes ut: siste års kontantstrøm × (1 + vekst) / (WACC − vekst). Formelen kalles Gordons vekstmodell.</p></div>
+          <div class="md-fld"><h3>Nåverdi</h3>
+            <p><b>Hva det er</b>Hva et beløp i fremtiden er verdt i dag. 100 kr om ett år med 10 % krav er verdt 90,91 kr i dag.</p>
+            <p><b>Hvor du finner det</b>Regnes ut: beløp / (1 + WACC)<sup>antall år</sup>.</p></div>
+          <div class="md-fld"><h3>Rentebærende gjeld</h3>
+            <p><b>Hva det er</b>Lån som koster renter. Den delen av selskapsverdien tilhører långiverne.</p>
+            <p><b>Hvor du finner det</b>Balansen, under langsiktig og kortsiktig gjeld: lån fra bank, obligasjoner og leieforpliktelser. Leverandørgjeld og skyldig skatt er ikke rentebærende og regnes ikke med.</p></div>
+          <div class="md-fld"><h3>Kontanter</h3>
+            <p><b>Hva det er</b>Penger selskapet har i banken. De kommer i tillegg til verdien av driften.</p>
+            <p><b>Hvor du finner det</b>Balansen, nederst på eiendelssiden: «Bankinnskudd, kontanter og lignende».</p></div>
+          <div class="md-fld"><h3>Antall aksjer</h3>
+            <p><b>Hva det er</b>Hvor mange deler egenkapitalen fordeles på.</p>
+            <p><b>Hvor du finner det</b>Noten om aksjekapital og aksjonærer. Trekk fra aksjene selskapet eier selv (egne aksjer).</p></div>
+        </div>
+      </section>
+
+      <section class="lc-sec" id="eksempel" aria-labelledby="lc-eks">
+        <div class="lc-head"><span class="lc-kicker">Regneeksempel</span><h2 class="lc-title" id="lc-eks">Medistim ASA, <em>årsrapport 2025</em></h2><p class="lc-intro">Medistim lager utstyr som måler blodstrømmen under hjerteoperasjoner. Selskapet er notert på Oslo Børs og har et enkelt regnskap i norske kroner, uten banklån.</p></div>
+        <p class="md-disc"><strong>Dette er et regneeksempel, ikke investeringsråd.</strong> Tallene fra årsrapporten er ekte. Vekst, avkastningskrav og risikofri rente er våre antakelser for å vise metoden. Andre antakelser gir en helt annen verdi.</p>
+
+        <div class="md-tables">
+          <div class="md-tw"><table class="md-t">
+            <caption>Fra resultatregnskapet <small>Tusen kroner, konsern, side 55</small></caption>
+            <thead><tr><th scope="col">Post</th><th scope="col">2025</th><th scope="col">2024</th></tr></thead>
+            <tbody>
+              <tr><td>Driftsinntekter</td><td>699 767</td><td>562 599</td></tr>
+              <tr><td>Av- og nedskrivninger</td><td>24 828</td><td>24 510</td></tr>
+              <tr class="sum"><td>Driftsresultat</td><td>196 196</td><td>131 076</td></tr>
+              <tr><td>Skattekostnad</td><td>47 639</td><td>30 414</td></tr>
+              <tr class="sum"><td>Årsresultat</td><td>159 210</td><td>103 832</td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="md-tw"><table class="md-t">
+            <caption>Fra balansen 31.12. <small>Tusen kroner, konsern, side 56</small></caption>
+            <thead><tr><th scope="col">Post</th><th scope="col">2025</th><th scope="col">2024</th></tr></thead>
+            <tbody>
+              <tr><td>Varelager</td><td>161 132</td><td>160 521</td></tr>
+              <tr><td>Kundefordringer</td><td>86 388</td><td>68 980</td></tr>
+              <tr><td>Andre kortsiktige fordringer</td><td>18 112</td><td>20 421</td></tr>
+              <tr><td>Leverandørgjeld</td><td>26 629</td><td>17 730</td></tr>
+              <tr><td>Annen kortsiktig gjeld</td><td>56 405</td><td>50 127</td></tr>
+              <tr class="sum"><td>Arbeidskapital (de fem linjene over)</td><td>182 598</td><td>182 065</td></tr>
+              <tr><td>Kontanter og bankinnskudd</td><td>212 088</td><td>179 210</td></tr>
+              <tr><td>Leieforpliktelser, langsiktige</td><td>37 677</td><td>25 059</td></tr>
+              <tr><td>Leieforpliktelser, kortsiktige</td><td>11 594</td><td>9 305</td></tr>
+              <tr class="sum"><td>Rentebærende gjeld (bare leie, ingen banklån)</td><td>49 271</td><td>34 364</td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="md-tw"><table class="md-t">
+            <caption>Fra kontantstrømmen og notene <small>Tusen kroner, side 57 og 85</small></caption>
+            <thead><tr><th scope="col">Post</th><th scope="col">2025</th></tr></thead>
+            <tbody>
+              <tr><td>Kjøp av varige driftsmidler</td><td>5 492</td></tr>
+              <tr><td>IT-infrastruktur</td><td>10 034</td></tr>
+              <tr><td>Produkter under utvikling</td><td>17 484</td></tr>
+              <tr class="sum"><td>Investeringer i alt</td><td>33 010</td></tr>
+              <tr><td>Utstedte aksjer</td><td>18 337 336</td></tr>
+              <tr><td>Egne aksjer</td><td>54 488</td></tr>
+              <tr class="sum"><td>Aksjer i markedet</td><td>18 282 848</td></tr>
+              <tr><td>Børskurs 31.12.2025 (kroner, side 20)</td><td>259</td></tr>
+            </tbody>
+          </table></div>
+
+          <div class="md-tw"><table class="md-t">
+            <caption>Slik ble tallene brukt <small>Tusen kroner</small></caption>
+            <thead><tr><th scope="col">Steg</th><th scope="col">Tall</th></tr></thead>
+            <tbody>
+              <tr><td>Driftsresultat etter 22 % skatt: 196 196 × 0,78</td><td>153 033</td></tr>
+              <tr><td>Pluss av- og nedskrivninger</td><td>24 828</td></tr>
+              <tr><td>Minus investeringer</td><td>−33 010</td></tr>
+              <tr><td>Minus økning i arbeidskapital: 182 598 − 182 065</td><td>−533</td></tr>
+              <tr class="sum"><td>Fri kontantstrøm 2025</td><td>144 318</td></tr>
+              <tr><td>Vekst år 1–5 (antakelse)</td><td>8 %</td></tr>
+              <tr><td>Vekst for alltid (antakelse)</td><td>2,5 %</td></tr>
+              <tr><td>Risikofri rente, beta og markedspremie (antakelser)</td><td>4 %, 1,0 og 5 %</td></tr>
+              <tr><td>Eiernes krav: 4 % + 1,0 × 5 %</td><td>9,0 %</td></tr>
+              <tr><td>Markedsverdi egenkapital: 259 kr × 18 282 848 aksjer</td><td>4 735 258</td></tr>
+              <tr><td>Lånerente på leie (antakelse)</td><td>5 %</td></tr>
+              <tr class="sum"><td>WACC, avrundet</td><td>8,9 %</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+
+        <ul class="md-list" style="margin-top:24px">
+          <li><strong>Leie regnes som gjeld.</strong> Medistim følger IFRS. Der står leieavtaler som gjeld, og leiekostnaden er flyttet til avskrivninger og renter. Derfor tar vi med alle avskrivningene og regner leieforpliktelsene som rentebærende gjeld. Nye leieavtaler er ikke med som investering, så verdien blir litt for høy.</li>
+          <li><strong>Hvorfor er modellverdien lavere enn børskursen?</strong> Markedet regner trolig med høyere vekst enn 8 % i fem år. Omsetningen vokste 24 % fra 2024 til 2025. Prøv vekst på 15 % og se hva som skjer. Det viser hvor mye verdien hviler på antakelsene.</li>
+          <li><strong>Alle kontantene er tatt med.</strong> 5 900 av dem er bundet til skattetrekk (note 16), så egentlig fri likviditet er litt lavere.</li>
+          <li><strong>Feil i rapporten.</strong> Noen noter stemmer ikke helt med hovedtabellene. Vi har brukt tallene i resultatregnskapet, balansen og kontantstrømoppstillingen.</li>
+        </ul>
+
+        <p class="md-src">Kilde: Medistim ASA, «Annual Report – Fiscal year 2025», konsernregnskap etter IFRS, publisert 14.04.2026, side 20, 55–57 og 85. <a href="https://cdn.prod.website-files.com/6482c8d760f9ba2ad73f8901/69de3830a1c350924f6f2f98_Annual%20Report%202025-FINAL-final.pdf" rel="noopener">Årsrapporten (PDF, engelsk)</a> · <a href="https://www.medistim.com/investor-relations/financial-reports-and-presentations" rel="noopener">Medistims investorside</a></p>
+      </section>
+
+      <section class="lc-sec" id="feller" aria-labelledby="lc-feller">
+        <div class="lc-head"><span class="lc-kicker">Fallgruver</span><h2 class="lc-title" id="lc-feller">Fem vanlige <em>feil</em></h2></div>
+        <ol class="md-list">
+          <li><strong>For høy evig vekst.</strong> Med WACC på 9 % og vekst på 6 % blir terminalverdien enorm. Hold veksten under det økonomien kan vokse.</li>
+          <li><strong>Feil kontantstrøm til feil krav.</strong> Fri kontantstrøm før renter hører sammen med WACC. Kontantstrøm etter renter og avdrag skal regnes med eiernes krav alene.</li>
+          <li><strong>Glemt arbeidskapital.</strong> Når salget vokser, binder varelager og kundefordringer mer penger. Det trekker kontantstrømmen ned.</li>
+          <li><strong>Investeringer lavere enn avskrivningene for lenge.</strong> Da slites selskapet ned. Over tid må investeringene minst dekke avskrivningene.</li>
+          <li><strong>Gjeld og kontanter fra en annen dato.</strong> Bruk balansen fra samme dato som verdien skal gjelde.</li>
+        </ol>
+      </section>
+
+      <section class="lc-sec" aria-labelledby="lc-videre">
+        <div class="lc-head"><span class="lc-kicker">Videre</span><h2 class="lc-title" id="lc-videre">Relaterte <em>verktøy</em></h2></div>
+        <div class="lc-links">
+          <a class="lc-link" href="/modellering/prognose/"><span class="ar">Modellering →</span><h3>Treårsprognose</h3><p>Lag resultat, balanse og kontantstrøm, og send fri kontantstrøm hit.</p></a>
+          <a class="lc-link" href="/kalkulator/npv/"><span class="ar">Kalkulator →</span><h3>NPV og IRR</h3><p>Lønner en enkelt investering seg? Nåverdi og internrente.</p></a>
+          <a class="lc-link" href="/regnskap/nokkeltall/"><span class="ar">Regnskap →</span><h3>Nøkkeltall</h3><p>Lønnsomhet, likviditet og soliditet fra årsregnskapet.</p></a>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="container foot">
+    <span id="fl-copy">© 2026 Hverdagsverktøy</span>
+    <span class="foot-links">
+      <a href="/personvern/" id="fl-priv" data-i18n="footerPriv">Personvern</a>
+      <span class="foot-sep" aria-hidden="true">·</span>
+      <a href="/om/" id="fl-cont" data-i18n="footerCon">Kontakt</a>
+    </span>
+    <em id="fl-disc" data-i18n="footerDisc">Veiledende beregninger basert på kjente satser. Ikke profesjonell rådgivning.</em>
+  </div>
+</footer>
+
+<script defer src="/shared/site-shell.js?v=v1"></script>
+<script defer src="/shared/top-chrome.js?v=v282"></script>
+<script defer src="/shared/core.js?v=v242"></script>
+<script defer src="/shared/lang/no.js?v=v235"></script>
+<script src="/shared/atmosphere.js?v=v7" defer></script>
+<script src="/shared/search.js?v=v282" defer></script>
+<script defer src="/modellering/modellering.js?v=v1"></script>
+<script defer src="/modellering/dcf/dcf.js?v=v1"></script>
+
+</body>
+</html>

@@ -186,7 +186,11 @@ var SEARCH_DATA = [
   {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/reise/',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger',type:'tool',page:'Skatt'},
   // De to eneste sidene i sitemap som manglet oppføring — «dokumentavgift» ga
   // «Ingen treff» selv om kalkulatoren har ligget ute lenge.
-  {name:'Dokumentavgift og tinglysing',desc:'Dokumentavgift 2,5 % og tinglysingsgebyr ved boligkjøp',url:'/boliglan/dok/',tags:'dokumentavgift tinglysing tinglysingsgebyr boligkjøp borettslag nybygg arv fritak omkostninger',type:'tool',page:'Boliglån'}
+  {name:'Dokumentavgift og tinglysing',desc:'Dokumentavgift 2,5 % og tinglysingsgebyr ved boligkjøp',url:'/boliglan/dok/',tags:'dokumentavgift tinglysing tinglysingsgebyr boligkjøp borettslag nybygg arv fritak omkostninger',type:'tool',page:'Boliglån'},
+  // ══════ FINANSIELL MODELLERING (ny seksjon 2026-11) ══════
+  {name:'Finansiell modellering',desc:'Verdsettelse med DCF og treårsprognose med resultat, balanse og kontantstrøm',url:'/modellering/',tags:'finansiell modellering finansmodell modell verdsettelse prognose budsjett selskap verdi section',type:'section',page:'Finansiell modellering'},
+  {name:'Verdsettelse (DCF)',desc:'Hva er selskapet verdt? Fri kontantstrøm, WACC, terminalverdi og verdi per aksje',url:'/modellering/dcf/',tags:'dcf verdsettelse verdivurdering selskapsverdi aksjeverdi verdi per aksje kontantstrømmodell diskontert kontantstrøm fri kontantstrøm wacc kapitalkostnad avkastningskrav capm beta terminalverdi gordon nåverdi følsomhet enterprise value discounted cash flow valuation',type:'tool',page:'Finansiell modellering'},
+  {name:'Treårsprognose',desc:'Resultat, balanse og kontantstrøm for tre år som henger sammen',url:'/modellering/prognose/',tags:'prognose treårsprognose budsjett resultatbudsjett balansebudsjett likviditetsbudsjett kontantstrømprognose finansmodell tremodell three statement model forecast fremskrivning vekst margin arbeidskapital investeringer',type:'tool',page:'Finansiell modellering'}
 ];
 
 /* Forsiden har sin egen søke-UI og kjørte på en lokal 19-treffs kopi av dette
@@ -250,7 +254,8 @@ var SECTION_BY_PREFIX = [
   ['/kalkulator/','Kalkulator'],
   ['/regnskap/',  'Regnskap'],
   ['/lov/',       'Lov'],
-  ['/kalkyle/',   'Kalkyle']
+  ['/kalkyle/',   'Kalkyle'],
+  ['/modellering/', 'Finansiell modellering']
 ];
 function sectionFromUrl(url){
   if(!url) return null;

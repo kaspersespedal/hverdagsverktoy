@@ -361,6 +361,27 @@
   @media(max-width:380px){
     nav .tmr-pill,nav .nav-search-pill{padding-inline:9px}
   }
+  /* Fanerekka med 11 faner er 1194 px, men containeren er 1116 px på store skjermer, så
+     «Budsjett» ble skjøvet ut på 1440 px. 10 px sideluft i stedet for 14 gir 1106 px, og rekka
+     får plass igjen fra ca. 1170 px. Under 1061 px ruller rekka uansett, der står 14 px. */
+  @media(min-width:1061px){
+    .tabs.has-mod > a.tab{padding-left:10px;padding-right:10px}
+    .tabs.has-mod > a.tab[aria-selected="true"]::after{left:10px;right:10px}
+  }
+  /* Forsidens kategorirad med «Finansiell modellering» som kort nr. 11 (se addModelleringLink).
+     Navnet går over to linjer der de andre har én. Kortene strekkes til full høyde og innholdet
+     legges øverst, så skillestrekene går helt ned og ikonene står på samme linje. */
+  .quick-cats.has-mod{align-items:stretch}
+  .quick-cats.has-mod .qc{justify-content:flex-start}
+  @media(min-width:1061px){
+    .quick-cats.has-mod{grid-template-columns:repeat(11,minmax(0,1fr))}
+  }
+  @media(min-width:561px) and (max-width:1060px){
+    .quick-cats.has-mod{grid-template-columns:repeat(6,minmax(0,1fr))}
+    .quick-cats.has-mod .qc:nth-child(5){border-right:1px solid var(--line)}
+    .quick-cats.has-mod .qc:nth-child(6){border-right:0;border-top:0}
+    .quick-cats.has-mod .qc:last-child{grid-column:span 2}
+  }
   /* Fokusmodus skjuler toppmenyen. Knappen i heroen er ute av syne når man har rullet, så en
      liten flytende knapp (og Esc) gir veien ut. */
   .tc-focus-exit{position:fixed;top:12px;inset-inline-end:16px;z-index:900;min-height:36px;padding:0 14px;
@@ -854,6 +875,46 @@
     if (ico) ico.innerHTML = '<circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><line x1="19.5" y1="4.5" x2="4.5" y2="19.5"/>';
   }
 
+  // ── «Finansiell modellering» i menyen ──────────
+  // Fanerekka står ferdig skrevet i HTML-en på ~85 sider, og forsidens kategorirad i index.html.
+  // Den nye seksjonen legges til sist her i stedet for i hver fil, samme grep som Avgift-ikonet over.
+  // Sidene i /modellering/ har fanen i HTML-en selv (valgt), og da legges den ikke til to ganger.
+  // Forsidens rad er et rutenett med fast kolonnetall (10, og 5 × 2 under 1060 px). Med 11 kort
+  // får raden klassen .has-mod, og CSS-en under setter 11 kolonner, eller 6 + 5 der siste kort
+  // er dobbelt så bredt, så begge radene går helt ut. Under 560 px er raden en sidelengs scroller
+  // og trenger ingenting.
+  var MOD_HREF = '/modellering/', MOD_LABEL = 'Finansiell modellering';
+  var MOD_ICON = '<path d="M4 4 V20 H20"/><polyline points="7.5 15 11 11 14 13.5 19 8"/>';
+  function addModelleringLink(){
+    var tabs = document.querySelector('.tabs');
+    if (tabs && !tabs.querySelector('a[href="' + MOD_HREF + '"]')){
+      var ref = tabs.querySelector('a.tab');
+      if (ref){
+        var a = document.createElement('a');
+        a.href = MOD_HREF; a.className = 'tab';
+        if (ref.hasAttribute('role')) a.setAttribute('role', ref.getAttribute('role'));
+        if (ref.hasAttribute('aria-selected')) a.setAttribute('aria-selected', 'false');
+        var refSvg = ref.querySelector('svg');
+        if (refSvg){
+          var svg = refSvg.cloneNode(false);
+          svg.innerHTML = MOD_ICON;
+          a.appendChild(svg);
+        }
+        a.appendChild(document.createTextNode(MOD_LABEL));
+        tabs.appendChild(a);
+      }
+    }
+    if (tabs && tabs.querySelector('a[href="' + MOD_HREF + '"]')) tabs.classList.add('has-mod');
+    var qc = document.querySelector('.quick-cats');
+    if (qc && qc.querySelector('a.qc') && !qc.querySelector('a[href="' + MOD_HREF + '"]')){
+      var q = document.createElement('a');
+      q.href = MOD_HREF; q.className = 'qc';
+      q.innerHTML = '<span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + MOD_ICON + '</svg></span><span class="qc-lbl">' + MOD_LABEL + '</span>';
+      qc.appendChild(q);
+      qc.classList.add('has-mod');
+    }
+  }
+
   // syncTabRow FØR revealActiveTab: den legger på --tabs-bleed, som endrer
   // scrollerens bredde. Sentreringen må regne på den ferdige geometrien.
   // ── Fokusmodus: flytende «Lukk fokus» + Esc ──
@@ -880,7 +941,7 @@
     sync();
   }
 
-  function bootTopChrome(){ render(); drawAvgiftIcon(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); watchFocusMode(); }
+  function bootTopChrome(){ render(); drawAvgiftIcon(); addModelleringLink(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); watchFocusMode(); }
   if (document.readyState === 'loading')
     document.addEventListener('DOMContentLoaded', bootTopChrome);
   else bootTopChrome();
