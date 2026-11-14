@@ -65,6 +65,7 @@
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
 <link rel="stylesheet" href="/shared/themes.css?v=v11">
+<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v1">
 <link rel="stylesheet" href="/shared/learn.css?v=v6">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
@@ -820,6 +821,7 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
     .rr-hent button{background:none;border:0;padding:3px 0;cursor:pointer;font:400 12px/1.45 var(--font-sans);color:var(--ink2);text-align:end;text-decoration:underline;text-underline-offset:3px}
     @media (hover:hover){.rr-hent button:hover{color:var(--ink)}}
     @media (pointer:coarse){.rr-hent button{min-height:44px}}
+    .rr-hent span{padding:3px 0;font:400 12px/1.45 var(--font-sans);color:var(--ink4);text-align:end}
 
     /* Analysis panels */
     .rr-panel{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:clamp(18px,3vw,26px) clamp(18px,3.4vw,30px)}
@@ -966,6 +968,17 @@ body .ks-mode .mdesc{font-size:12px}
   <div class="container">
     <div class="rr-col rr-wrap">
 
+      <!-- LAG REGNSKAPET — de tre delene som faner -->
+      <div class="rf" role="navigation" aria-label="Lag regnskapet">
+        <span class="rf-eyebrow">Lag regnskapet · del 2 av 3</span>
+        <div class="rf-steps">
+          <a class="rf-step" href="/regnskap/resultat/"><span class="rf-top"><span class="rf-n">1</span><span class="rf-t">Resultat</span></span><span class="rf-v" data-rf="res" data-tom="Ikke fylt ut"></span></a>
+          <a class="rf-step" href="/regnskap/balanse/" aria-current="page"><span class="rf-top"><span class="rf-n">2</span><span class="rf-t">Balanse</span></span><span class="rf-v" data-rf="bal" data-tom="Ikke fylt ut"></span></a>
+          <a class="rf-step" href="/regnskap/kontantstrom/"><span class="rf-top"><span class="rf-n">3</span><span class="rf-t">Kontantstrøm</span></span><span class="rf-v" data-rf="ks" data-tom="Ikke fylt ut"></span></a>
+        </div>
+      </div>
+
+
       <!-- TOOLBAR — eksempler -->
       <div class="rr-toolbar">
         <div style="display:flex;flex-direction:column;gap:8px">
@@ -1060,6 +1073,7 @@ body .ks-mode .mdesc{font-size:12px}
           </div>
           <div class="rr-hent hidden" id="rowArsres">
             <button type="button" id="btnArsres"></button>
+            <span id="noteArsres"></span>
           </div>
           <div class="rr-sub muted">
             <span class="lbl">Sum egenkapital</span>
@@ -1453,6 +1467,8 @@ body .ks-mode .mdesc{font-size:12px}
 
       renderSources({ek:ek, gl:gl, gk:gk});
       persist();
+      // Til fanene «Lag regnskapet» og til avstemmingen i kontantstrømmen
+      try{ localStorage.setItem(SUM_KEY, JSON.stringify({eiend:sumEiend, diff:diff, bank:num('bOmlBank'), tom:isEmpty})); }catch(e){}
       showOffer();
     }
 
@@ -1472,10 +1488,12 @@ body .ks-mode .mdesc{font-size:12px}
     }
 
     // ── Årsresultatet fra resultatregnskapet ──
-    // Resultatsiden lagrer {belop, ts} under RES_KEY. Her tilbys beløpet under opptjent egenkapital
-    // og legges til først når brukeren trykker. FETCHED_KEY husker beløpet som er hentet, så samme
-    // resultat ikke legges til to ganger, og et endret resultat bare flytter feltet med forskjellen.
-    var RES_KEY = 'hv-rr-arsresultat', FETCHED_KEY = 'hv-balanse-arsresultat-hentet';
+    // Resultatsiden lagrer {belop, ts} under RES_KEY. Når siden åpnes, følger beløpet med av seg selv
+    // hvis opptjent egenkapital er tom eller resultatet er hentet før (autoFetch). Står det et tall der
+    // som brukeren har skrevet selv, tilbys beløpet med en knapp. FETCHED_KEY husker beløpet som er
+    // hentet, så samme resultat ikke legges til to ganger, og et endret resultat bare flytter feltet
+    // med forskjellen.
+    var RES_KEY = 'hv-rr-arsresultat', FETCHED_KEY = 'hv-balanse-arsresultat-hentet', SUM_KEY = 'hv-balanse-sum';
     function readAmount(k){
       try{ var o=JSON.parse(localStorage.getItem(k)); return (o && typeof o.belop==='number' && isFinite(o.belop)) ? o.belop : null; }
       catch(e){ return null; }
@@ -1494,20 +1512,34 @@ body .ks-mode .mdesc{font-size:12px}
       offer = (r && r!==fetched) ? {belop:r, add:r-(fetched||0)} : null;
       if(offer) btn.textContent = (blank ? 'Hent' : fetched!=null ? 'Oppdater' : 'Legg til') + ' årsresultatet fra resultatregnskapet: ' + fmt(r) + ' kr'
         + (fetched!=null ? ' (sist hentet ' + fmt(fetched) + ' kr)' : '');
-      show('rowArsres', !!offer);
+      var note = (!offer && fetched!=null) ? 'Årsresultatet på ' + fmt(fetched) + ' kr er hentet fra resultatregnskapet.' : '';
+      set('noteArsres', note);
+      btn.classList.toggle('hidden', !offer);
+      show('rowArsres', !!offer || !!note);
     }
-    var btnArsres = el('btnArsres');
-    if(btnArsres) btnArsres.addEventListener('click', function(ev){
+    function applyOffer(){
       var f=el('bEkOpp');
       if(!offer||!f) return;
       f.value = Math.round(num('bEkOpp') + offer.add);
       setFetched(offer.belop);
       compute();
+    }
+    // Bare ved åpning og når resultatet endres et annet sted — aldri mens brukeren skriver i feltet.
+    function autoFetch(){
+      showOffer();
+      var f=el('bEkOpp');
+      if(offer && f && (f.value.replace(/\s/g,'')==='' || fetched!=null)) applyOffer();
+    }
+    var btnArsres = el('btnArsres');
+    if(btnArsres) btnArsres.addEventListener('click', function(ev){
+      var f=el('bEkOpp');
+      if(!offer||!f) return;
+      applyOffer();
       if(ev.detail===0) f.focus();                  // tastatur: knappen skjules, så fokus flyttes til feltet
     });
     // Resultatet kan være endret i en annen fane, eller siden kan være hentet fram igjen uten ny lasting.
-    window.addEventListener('storage', showOffer);
-    window.addEventListener('pageshow', showOffer);
+    window.addEventListener('storage', autoFetch);
+    window.addEventListener('pageshow', autoFetch);
 
     INPUTS.forEach(function(id){ var e=el(id); if(e) e.addEventListener('input', compute); });
 
@@ -1528,6 +1560,7 @@ body .ks-mode .mdesc{font-size:12px}
 
     restore();
     compute();
+    autoFetch();
     // core.js setter lang på <html> når språkfila er lastet: regn ut på nytt så avviksteksten følger språket
     if(window.MutationObserver) new MutationObserver(compute).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
   })();
@@ -1552,6 +1585,7 @@ body .ks-mode .mdesc{font-size:12px}
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v3"></script>
 
+<script defer src="/shared/regnskap-flyt.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->

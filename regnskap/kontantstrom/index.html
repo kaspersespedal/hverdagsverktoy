@@ -65,6 +65,7 @@
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
 <link rel="stylesheet" href="/shared/themes.css?v=v11">
+<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v1">
 <link rel="stylesheet" href="/shared/learn.css?v=v6">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
@@ -791,6 +792,12 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     .rr-group{font:600 10px/1 var(--font-sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink4);margin:18px 0 2px}
     .rr-group.gap{margin-top:22px}
+    /* Tall som følger med fra resultatregnskapet og balansen (samme rad som på balansesiden) */
+    .rr-hent{display:flex;justify-content:flex-end;padding:0 0 7px}
+    .rr-hent button{background:none;border:0;padding:3px 0;cursor:pointer;font:400 12px/1.45 var(--font-sans);color:var(--ink2);text-align:end;text-decoration:underline;text-underline-offset:3px}
+    @media (hover:hover){.rr-hent button:hover{color:var(--ink)}}
+    @media (pointer:coarse){.rr-hent button{min-height:44px}}
+    .rr-hent span{padding:3px 0;font:400 12px/1.45 var(--font-sans);color:var(--ink4);text-align:end}
     .kx-hint{font:400 11.5px/1.45 var(--font-sans);font-style:italic;color:var(--ink4);margin:2px 0 4px}
     .rr-line{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 0}
     .rr-name{display:flex;align-items:baseline;gap:9px;min-width:0}
@@ -995,6 +1002,17 @@ body .ks-mode .mdesc{font-size:12px}
   <div class="container">
     <div class="rr-col rr-wrap">
 
+      <!-- LAG REGNSKAPET — de tre delene som faner -->
+      <div class="rf" role="navigation" aria-label="Lag regnskapet">
+        <span class="rf-eyebrow">Lag regnskapet · del 3 av 3</span>
+        <div class="rf-steps">
+          <a class="rf-step" href="/regnskap/resultat/"><span class="rf-top"><span class="rf-n">1</span><span class="rf-t">Resultat</span></span><span class="rf-v" data-rf="res" data-tom="Ikke fylt ut"></span></a>
+          <a class="rf-step" href="/regnskap/balanse/"><span class="rf-top"><span class="rf-n">2</span><span class="rf-t">Balanse</span></span><span class="rf-v" data-rf="bal" data-tom="Ikke fylt ut"></span></a>
+          <a class="rf-step" href="/regnskap/kontantstrom/" aria-current="page"><span class="rf-top"><span class="rf-n">3</span><span class="rf-t">Kontantstrøm</span></span><span class="rf-v" data-rf="ks" data-tom="Ikke fylt ut"></span></a>
+        </div>
+      </div>
+
+
       <!-- INTRO — the three statements -->
       <div class="intro-cards" aria-label="Tre regnskapsoppstillinger">
         <div class="intro-cell">
@@ -1044,9 +1062,11 @@ body .ks-mode .mdesc{font-size:12px}
           <div class="rr-group">Operasjonelle aktiviteter</div>
           <p class="kx-hint">Driften: resultatet justert for ikke-kontante poster og endring i arbeidskapital.</p>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opRes">Resultat før skatt</label></span><span class="rr-amtcell"><input class="rr-num" id="opRes" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-hent hidden" id="hentOpRes"><button type="button"></button><span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opSkatt">Betalt skatt i år</label></span><span class="rr-amtcell"><input class="rr-num" id="opSkatt" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opGevinst">− Gevinst / + tap ved salg av anleggsmidler</label></span><span class="rr-amtcell"><input class="rr-num" id="opGevinst" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opAvskr">+ Ordinære avskrivninger</label></span><span class="rr-amtcell"><input class="rr-num" id="opAvskr" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-hent hidden" id="hentOpAvskr"><button type="button"></button><span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opNedskr">+ Nedskrivninger</label></span><span class="rr-amtcell"><input class="rr-num" id="opNedskr" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opVarelager">Endring varelager</label></span><span class="rr-amtcell"><input class="rr-num" id="opVarelager" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opKunde">Endring kundefordringer</label></span><span class="rr-amtcell"><input class="rr-num" id="opKunde" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
@@ -1087,6 +1107,7 @@ body .ks-mode .mdesc{font-size:12px}
           <div class="rr-group gap">Avstemming mot balansen</div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="kontIB">Kontanter ved start (IB)</label></span><span class="rr-amtcell"><input class="rr-num" id="kontIB" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="kontBalUB">Kontanter i balansen ved slutt (UB)</label></span><span class="rr-amtcell"><input class="rr-num" id="kontBalUB" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-hent hidden" id="hentKontUB"><button type="button"></button><span></span></div>
           <div class="rr-sub"><span class="lbl">Beregnet ved slutt (IB + netto endring)</span><span class="rr-amtcell"><span class="rr-out" id="kontUB">0</span><span class="rr-kr">kr</span></span></div>
 
           <div class="rr-arsband kx-avstem" id="avstemBox" aria-live="polite">
@@ -1482,7 +1503,60 @@ body .ks-mode .mdesc{font-size:12px}
       if(anyInput) renderFall(ib, op, inv, fin); else clearFall();
 
       persist();
+      // Til fanene «Lag regnskapet»
+      try { localStorage.setItem('hv-kontantstrom-sum', JSON.stringify({ub:calcUB, any:anyInput})); } catch(e){}
+      syncLinks(false);
     }
+
+    // ── Tall som følger med fra resultatregnskapet og balansen ──
+    // Resultat før skatt og avskrivningene kommer fra resultatsiden, kontantene ved slutt fra balansen.
+    // Når siden åpnes (auto), fylles et felt som er tomt eller som fortsatt har det tallet som ble hentet
+    // sist. Har brukeren skrevet noe annet, står tallet urørt og det nye tilbys med en knapp.
+    var HENT_KEY = 'hv-kontantstrom-hentet';
+    var LINKS = [
+      {id:'opRes',     row:'hentOpRes',   key:'hv-rr-arsresultat', prop:'forSkatt', navn:'resultat før skatt',        fra:'resultatregnskapet'},
+      {id:'opAvskr',   row:'hentOpAvskr', key:'hv-rr-arsresultat', prop:'avskr',    navn:'avskrivningene',            fra:'resultatregnskapet'},
+      {id:'kontBalUB', row:'hentKontUB',  key:'hv-balanse-sum',    prop:'bank',     navn:'bankinnskudd og kontanter', fra:'balansen'}
+    ];
+    var hentet = {};
+    try { hentet = JSON.parse(localStorage.getItem(HENT_KEY)) || {}; } catch(e){}
+    function kilde(l){
+      try { var o = JSON.parse(localStorage.getItem(l.key)); var v = o && o[l.prop]; return (typeof v==='number' && isFinite(v) && v!==0) ? v : null; }
+      catch(e){ return null; }
+    }
+    function syncLinks(auto){
+      var changed = false;
+      LINKS.forEach(function(l){
+        var f = document.getElementById(l.id), row = document.getElementById(l.row);
+        if(!f || !row) return;
+        var v = kilde(l), cur = parseNum(l.id), blank = (f.value||'').trim()==='';
+        if(auto && v!=null && v!==cur && (blank || hentet[l.id]===cur)){ f.value = v; cur = v; blank = false; changed = true; }
+        var same = v!=null && v===cur && !blank;
+        if(same) hentet[l.id] = v;
+        else if(blank || hentet[l.id]!==cur) delete hentet[l.id];
+        var offer = v!=null && !same;
+        var btn = row.querySelector('button'), note = row.querySelector('span');
+        btn.textContent = offer ? 'Bruk ' + l.navn + ' fra ' + l.fra + ': ' + fmt(v) : '';
+        btn.classList.toggle('hidden', !offer);
+        note.textContent = same ? 'Hentet fra ' + l.fra : '';
+        row.classList.toggle('hidden', !offer && !same);
+      });
+      try { localStorage.setItem(HENT_KEY, JSON.stringify(hentet)); } catch(e){}
+      if(changed) compute();
+    }
+    LINKS.forEach(function(l){
+      var row = document.getElementById(l.row), btn = row && row.querySelector('button');
+      if(btn) btn.addEventListener('click', function(ev){
+        var f = document.getElementById(l.id), v = kilde(l);
+        if(!f || v==null) return;
+        f.value = v;
+        compute();
+        if(ev.detail===0) f.focus();                // tastatur: knappen skjules, så fokus flyttes til feltet
+      });
+    });
+    // Tallene kan være endret i en annen fane, eller siden kan være hentet fram igjen uten ny lasting.
+    window.addEventListener('storage', function(){ syncLinks(true); });
+    window.addEventListener('pageshow', function(){ syncLinks(true); });
 
     function persist(){
       try {
@@ -1534,6 +1608,7 @@ body .ks-mode .mdesc{font-size:12px}
     // Init
     restore();
     compute();
+    syncLinks(true);
   })();
 </script>
 
@@ -1556,6 +1631,7 @@ body .ks-mode .mdesc{font-size:12px}
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v3"></script>
 
+<script defer src="/shared/regnskap-flyt.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->

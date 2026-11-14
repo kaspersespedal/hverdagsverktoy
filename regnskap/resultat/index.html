@@ -65,6 +65,7 @@
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
 <link rel="stylesheet" href="/shared/themes.css?v=v11">
+<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v1">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
 /* ─────────────────────────────────────────────────────
@@ -971,6 +972,17 @@ body .ks-mode .mdesc{font-size:12px}
   <div class="container">
     <div class="rr-col rr-wrap">
 
+      <!-- LAG REGNSKAPET — de tre delene som faner -->
+      <div class="rf" role="navigation" aria-label="Lag regnskapet">
+        <span class="rf-eyebrow">Lag regnskapet · del 1 av 3</span>
+        <div class="rf-steps">
+          <a class="rf-step" href="/regnskap/resultat/" aria-current="page"><span class="rf-top"><span class="rf-n">1</span><span class="rf-t">Resultat</span></span><span class="rf-v" data-rf="res" data-tom="Ikke fylt ut"></span></a>
+          <a class="rf-step" href="/regnskap/balanse/"><span class="rf-top"><span class="rf-n">2</span><span class="rf-t">Balanse</span></span><span class="rf-v" data-rf="bal" data-tom="Ikke fylt ut"></span></a>
+          <a class="rf-step" href="/regnskap/kontantstrom/"><span class="rf-top"><span class="rf-n">3</span><span class="rf-t">Kontantstrøm</span></span><span class="rf-v" data-rf="ks" data-tom="Ikke fylt ut"></span></a>
+        </div>
+      </div>
+
+
       <!-- TOOLBAR — selskapsform + eksempler -->
       <div class="rr-toolbar">
         <div style="display:flex;flex-direction:column;gap:8px;min-width:280px;flex:1">
@@ -1259,7 +1271,7 @@ body .ks-mode .mdesc{font-size:12px}
   // ── Resultatregnskap — Claude Design reskin (vanilla; drives the ledger) ──
   (function(){
     var KEY = 'hv-rr-v2';
-    var RES_KEY = 'hv-rr-arsresultat';   // årsresultatet, hentes av balansesiden
+    var RES_KEY = 'hv-rr-arsresultat';   // årsresultatet, hentes av balansen og kontantstrømmen
     var RATE = 0.22;                // 22 % selskapsskatt (Stortingets skattevedtak § 3-3)
     var INPUTS = ['rSalg','rAnnen','rVare','rLonn','rAvskr','rAnnenKost','rFinInnt','rFinKost'];
     var mode = 'as';
@@ -1369,7 +1381,7 @@ body .ks-mode .mdesc{font-size:12px}
       renderCost(sumDrift, {vare:vare,lonn:lonn,avskr:avskr,annen:annenKost,kept:Math.max(0,driftsres)});
 
       persist();
-      persistResult(isEmpty ? 0 : Math.round(arsresultat));
+      persistResult(isEmpty ? null : Math.round(arsresultat), Math.round(resForSkatt), Math.round(avskr));
     }
 
     function persist(){
@@ -1379,14 +1391,16 @@ body .ks-mode .mdesc{font-size:12px}
         localStorage.setItem(KEY, JSON.stringify(snap));
       }catch(e){}
     }
-    // Årsresultatet lagres for seg, så balansesiden kan tilby å hente det.
-    // Tidsstempelet (ts) endres bare når beløpet endres. Uten resultat fjernes nøkkelen.
-    function persistResult(ar){
+    // Årsresultatet lagres for seg, så balansesiden kan hente det. Resultat før skatt og
+    // avskrivningene følger med til kontantstrømmen. Tidsstempelet (ts) endres bare når
+    // et av tallene endres. Uten resultat fjernes nøkkelen.
+    function persistResult(ar, forSkatt, avskr){
       try{
-        if(!ar){ localStorage.removeItem(RES_KEY); return; }
+        if(ar==null){ localStorage.removeItem(RES_KEY); return; }
         var old = null;
         try{ old = JSON.parse(localStorage.getItem(RES_KEY)); }catch(e){}
-        if(!old || old.belop !== ar) localStorage.setItem(RES_KEY, JSON.stringify({belop:ar, ts:Date.now()}));
+        if(!old || old.belop !== ar || old.forSkatt !== forSkatt || old.avskr !== avskr)
+          localStorage.setItem(RES_KEY, JSON.stringify({belop:ar, ts:Date.now(), forSkatt:forSkatt, avskr:avskr}));
       }catch(e){}
     }
     function syncModes(){
@@ -1447,6 +1461,7 @@ body .ks-mode .mdesc{font-size:12px}
 <script defer src="/shared/core.js?v=v242"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 
+<script defer src="/shared/regnskap-flyt.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
