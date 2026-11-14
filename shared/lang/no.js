@@ -1254,7 +1254,7 @@ REGIONS['no'] = {
     persToolAksjerDesc:'Skatt på aksjegevinst, oppjusteringsfaktor 1,72 og skjermingsfradrag — komplett veiledning.',
 
     // — home (editorial redesign) —
-    homeHeroTitle:'Alt du trenger innen <em>økonomi</em>.',
+    homeHeroTitle:'Økonomi <em>uten fagspråk</em>.',
     homeHeroLangPill:'10 språk',
     homeHeroSubtitle:'Oppdatert til gjeldende regler for 2026.',
     homeHeroFree:'Gratis — alt kjører lokalt i nettleseren.',

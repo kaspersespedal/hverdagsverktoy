@@ -1331,7 +1331,7 @@ REGIONS['lt'] = {
     timerSrReset:'Laikmatis atstatytas.',
     timerSrDone:'Laikas baigėsi.',
     crumbHereKalkulatorTimer:'Atgalinis skaičiavimas',
-    homeHeroTitle: 'Viskas, ko reikia jūsų <em>finansams</em>.',
+    homeHeroTitle: 'Finansai <em>be žargono</em>.',
     homeMarketTitle: 'Dienos apžvalga',
     homeFxConvLabel: 'Valiutų konverteris',
     "fr.kicker": "Artėja",
