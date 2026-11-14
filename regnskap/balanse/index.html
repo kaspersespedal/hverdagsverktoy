@@ -65,7 +65,8 @@
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
 <link rel="stylesheet" href="/shared/themes.css?v=v11">
-<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v1">
+<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v2">
+<link rel="stylesheet" href="/shared/steg-guide.css?v=v1">
 <link rel="stylesheet" href="/shared/learn.css?v=v6">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
@@ -859,9 +860,10 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       .rr-name{flex-direction:column;align-items:flex-start;gap:2px}
       .rr-konto{min-width:0}
       .rr-lab .sub{display:block}
-      .rr-amtcell{width:118px}
-      input.rr-num{width:104px;padding:8px 9px}
-      .rr-out{min-width:104px}
+      /* Beløp i hundretalls millioner (ekte eksempel) fikk ikke plass i 104 px */
+      .rr-amtcell{width:140px}
+      input.rr-num{width:136px;padding:8px 8px}
+      .rr-out{min-width:136px}
       .rr-kr{display:none}
       .rr-sub .rr-amtcell,.rr-total .rr-amtcell{width:auto}
       .rr-sub .rr-out,.rr-total .rr-out{min-width:0}
@@ -984,6 +986,7 @@ body .ks-mode .mdesc{font-size:12px}
         <div style="display:flex;flex-direction:column;gap:8px">
           <span class="rr-eyebrow">Eksempler</span>
           <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <button type="button" class="hv-btn--pill" data-preset="nille">Ekte eksempel: Nille 2025</button>
             <button type="button" class="hv-btn--pill" data-preset="liten">Liten AS</button>
             <button type="button" class="hv-btn--pill" data-preset="oppstart">Oppstart</button>
             <button type="button" class="hv-btn--pill" data-preset="etablert">Etablert AS</button>
@@ -1001,7 +1004,7 @@ body .ks-mode .mdesc{font-size:12px}
           </div>
           <div style="text-align:right">
             <div class="rr-stmt-meta1">Eiendeler = EK + gjeld</div>
-            <div class="rr-stmt-meta2">Per 31.12.2026 · NOK</div>
+            <div class="rr-stmt-meta2" id="oAar">Per 31.12.2026 · NOK</div>
           </div>
         </div>
 
@@ -1167,6 +1170,81 @@ body .ks-mode .mdesc{font-size:12px}
           <div class="rr-cost-empty hidden" id="srcEmpty">Fyll inn egenkapital og gjeld for å se hvordan eiendelene er finansiert.</div>
         </div>
       </div>
+
+      <!-- EKTE EKSEMPEL -->
+      <section class="rf-ekte" aria-labelledby="ekte-h">
+        <span class="rf-eyebrow">Ekte eksempel · Nille AS 2025</span>
+        <h2 class="rf-ekte-h" id="ekte-h">Slik leser du balansen til Nille</h2>
+        <p class="rf-ekte-lede">Nille er butikkjeden med 294 butikker over hele landet. Tallene er hentet fra årsregnskapet selskapet sendte til Brønnøysundregistrene. Trykk «Ekte eksempel: Nille 2025» øverst, så står de i skjemaet.</p>
+        <ol class="rf-ekte-pkt">
+          <li><strong>Balansen stemmer: 871,7&nbsp;millioner på hver side.</strong> Eiendelene er like store som egenkapitalen og gjelden til sammen. Slik skal det alltid være.</li>
+          <li><strong>Over halvparten av eiendelene er varer.</strong> Varelageret var 450,0&nbsp;millioner, 52&nbsp;% av alle eiendelene. For en butikkjede er lageret den største verdien.</li>
+          <li><strong>Nesten ingen penger i egen bank, men pengene finnes.</strong> Bankinnskuddet var bare 1,2&nbsp;millioner. Nille er med på en felles konto hos eieren, Nille Holding AS, og hadde 227,4&nbsp;millioner der. De står som «andre fordringer», ikke som bank.</li>
+          <li><strong>Eierne har finansiert 44&nbsp;% av eiendelene.</strong> Egenkapitalen var 379,9&nbsp;millioner. Det gir en egenkapitalandel på 44&nbsp;%. Resten er gjeld.</li>
+          <li><strong>Mye av gjelden skal videre til staten.</strong> Ved nyttår skyldte Nille 109,5&nbsp;millioner i mva og 35,3&nbsp;millioner i skattetrekk og arbeidsgiveravgift. Det er penger fra kundene og de ansatte som skal betales inn.</li>
+          <li><strong>Ingen banklån i egen balanse.</strong> Den langsiktige gjelden er 8,2&nbsp;millioner, og det er leasing. Leverandørgjelden på 152,4&nbsp;millioner er den største enkeltposten i gjelden.</li>
+        </ol>
+        <details class="sg" id="fyll-ut">
+          <summary><span class="sg-head"><span class="sg-k">Veiledning</span><span class="sg-t">Slik fyller du ut balansen</span><span class="sg-d">Linje for linje, med tallene til Nille som eksempel.</span></span><span class="sg-btn"><span class="o">Åpne veiledningen</span><span class="c">Lukk</span><span class="x" aria-hidden="true">+</span></span></summary>
+          <div class="sg-body">
+            <p class="sg-lede">Du trenger saldoene per 31.&nbsp;desember. Skjemaet har færre linjer enn et fullt årsregnskap, så noen poster legges sammen.</p>
+            <ol class="sg-steps">
+              <li><details class="sg-step"><summary><span class="sg-step-t">Skriv inn anleggsmidlene<span class="sg-step-w">Det selskapet skal eie lenge</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Anleggsmidler er utstyr, inventar, programvare og bygg som skal brukes i flere år. Skriv verdien etter avskrivninger.</p>
+                  <ul>
+                    <li><strong>Immaterielle eiendeler:</strong> programvare 38&nbsp;760&nbsp;035&nbsp;kr og utsatt skattefordel 4&nbsp;084&nbsp;906&nbsp;kr. Til sammen 42&nbsp;844&nbsp;941&nbsp;kr i den øverste linja.</li>
+                    <li><strong>Varige driftsmidler:</strong> inventar og utstyr i butikkene, 114&nbsp;383&nbsp;875&nbsp;kr. Nille eier ingen tomter eller bygninger.</li>
+                    <li><strong>Finansielle anleggsmidler:</strong> andre langsiktige fordringer, 415&nbsp;969&nbsp;kr.</li>
+                  </ul>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Skriv inn varelageret<span class="sg-step-w">Til innkjøpspris, minus svinn</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Varer på lager føres til det de kostet, eller lavere hvis de ikke kan selges for det. Trekk fra forventet svinn.</p>
+                  <p><strong>Nille:</strong> 449&nbsp;960&nbsp;688&nbsp;kr. Det er etter et fradrag for svinn og ukurans på 17&nbsp;977&nbsp;774&nbsp;kr.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Skriv inn fordringene<span class="sg-step-w">Det andre skylder selskapet</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Kundefordringer er salg kundene ikke har betalt ennå. Andre fordringer er for eksempel forskuddsbetalt husleie og penger til gode hos eieren.</p>
+                  <p><strong>Nille:</strong> kundefordringer 6&nbsp;584&nbsp;544&nbsp;kr og andre fordringer 256&nbsp;220&nbsp;752&nbsp;kr. Til sammen 262&nbsp;805&nbsp;296&nbsp;kr. Av dette er 227&nbsp;400&nbsp;092&nbsp;kr penger på konsernkontoen hos eieren.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Skriv inn bankinnskuddet<span class="sg-step-w">Saldoen 31.&nbsp;desember</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Bruk saldoen på kontoutskriften 31.&nbsp;desember, pluss eventuelle kontanter.</p>
+                  <p><strong>Nille:</strong> 1&nbsp;244&nbsp;700&nbsp;kr. Dette er tallet kontantstrømmen skal ende på.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Skriv inn egenkapitalen<span class="sg-step-w">Innskutt og opptjent</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Innskutt egenkapital er det eierne har betalt inn. Opptjent egenkapital er overskudd fra tidligere år som er blitt i selskapet. Årets overskudd legges til, minus utbytte og konsernbidrag.</p>
+                  <ul>
+                    <li><strong>Aksjekapital:</strong> 2&nbsp;600&nbsp;000&nbsp;kr.</li>
+                    <li><strong>Overkurs og annen innskutt egenkapital:</strong> 276&nbsp;642&nbsp;900 +&nbsp;58&nbsp;710&nbsp;725 =&nbsp;335&nbsp;353&nbsp;625&nbsp;kr.</li>
+                    <li><strong>Opptjent egenkapital:</strong> 34&nbsp;704&nbsp;805&nbsp;kr fra i fjor +&nbsp;7&nbsp;228&nbsp;876&nbsp;kr fra i år =&nbsp;41&nbsp;933&nbsp;681&nbsp;kr.</li>
+                  </ul>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Skriv inn langsiktig gjeld<span class="sg-step-w">Gjeld som forfaller om mer enn ett år</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Banklån står i den første linja. Annen langsiktig gjeld er for eksempel leasing og lån fra eierne.</p>
+                  <p><strong>Nille:</strong> ingen banklån. Øvrig langsiktig gjeld 8&nbsp;187&nbsp;202&nbsp;kr i den andre linja.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Skriv inn kortsiktig gjeld<span class="sg-step-w">Gjeld som forfaller innen ett år</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <ul>
+                    <li><strong>Leverandørgjeld:</strong> 152&nbsp;400&nbsp;877&nbsp;kr.</li>
+                    <li><strong>Skatte- og avgiftsgjeld:</strong> betalbar skatt 5&nbsp;011&nbsp;424&nbsp;kr og skyldige offentlige avgifter 144&nbsp;776&nbsp;595&nbsp;kr. Til sammen 149&nbsp;788&nbsp;019&nbsp;kr.</li>
+                    <li><strong>Annen kortsiktig gjeld:</strong> 181&nbsp;392&nbsp;065&nbsp;kr.</li>
+                  </ul>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Kontroller at balansen går opp<span class="sg-step-w">Eiendeler = egenkapital + gjeld</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Går den ikke opp, mangler som regel en linje, eller årsresultatet er ikke lagt til i opptjent egenkapital.</p>
+                  <p><strong>Nille:</strong> 871&nbsp;655&nbsp;469&nbsp;kr på begge sider.</p>
+                </div></details></li>
+            </ol>
+          </div>
+        </details>
+        <p class="rf-ekte-src">Kilde: Nille AS (org.nr. 918&nbsp;468&nbsp;919), <a href="https://data.brreg.no/regnskapsregisteret/regnskap/aarsregnskap/kopi/918468919/2025">årsregnskap for 2025</a> med note 17, 19 og 21, fastsatt 22.&nbsp;april 2026, fra <a href="https://virksomhet.brreg.no/nb/oppslag/enheter/918468919">Brønnøysundregistrene</a>. Hentet 14.&nbsp;november 2026. Tall i hele kroner, som i kilden.</p>
+      </section>
 
       <p class="rr-source">Kilde: Regnskapsloven §§ 5-1 og 6-2 · Oppstillingsplan for balansen · Kontonumre etter NS 4102. Forenklet oppstilling — et fullstendig årsregnskap krever noter (kapittel 7) og at årsresultatet fra resultatregnskapet er overført til opptjent egenkapital. Veiledende, ikke profesjonell rådgivning.</p>
 
@@ -1421,6 +1499,7 @@ body .ks-mode .mdesc{font-size:12px}
       var isEmpty = sumEiend===0 && sumEkGjeld===0;
       var balanced = Math.abs(diff) < 1;
 
+      set('oAar', erNille() ? 'Nille AS · 31.12.2025 · NOK' : 'Per 31.12.2026 · NOK');
       set('oSumAnl', fmt(anl));
       set('oSumOml', fmt(oml));
       set('oSumEiend', fmt(sumEiend));
@@ -1510,9 +1589,13 @@ body .ks-mode .mdesc{font-size:12px}
       var blank = f.value.replace(/\s/g,'')==='';
       if(blank && fetched!=null) setFetched(null);  // tomt felt: ingenting er hentet lenger
       offer = (r && r!==fetched) ? {belop:r, add:r-(fetched||0)} : null;
+      // Ekte eksempel: Nilles årsresultat er alt med i opptjent egenkapital, så det skal ikke legges til en gang til
+      var nille = r===NILLE_AR && erNille();
+      if(nille) offer = null;
       if(offer) btn.textContent = (blank ? 'Hent' : fetched!=null ? 'Oppdater' : 'Legg til') + ' årsresultatet fra resultatregnskapet: ' + fmt(r) + ' kr'
         + (fetched!=null ? ' (sist hentet ' + fmt(fetched) + ' kr)' : '');
-      var note = (!offer && fetched!=null) ? 'Årsresultatet på ' + fmt(fetched) + ' kr er hentet fra resultatregnskapet.' : '';
+      var note = nille ? 'Årsresultatet fra resultatregnskapet, ' + fmt(NILLE_AR) + ' kr, er alt med. 7 228 876 kr ble i selskapet, og 24 230 184 kr gikk som konsernbidrag til eieren.'
+        : (!offer && fetched!=null) ? 'Årsresultatet på ' + fmt(fetched) + ' kr er hentet fra resultatregnskapet.' : '';
       set('noteArsres', note);
       btn.classList.toggle('hidden', !offer);
       show('rowArsres', !!offer || !!note);
@@ -1520,7 +1603,7 @@ body .ks-mode .mdesc{font-size:12px}
     function applyOffer(){
       var f=el('bEkOpp');
       if(!offer||!f) return;
-      f.value = Math.round(num('bEkOpp') + offer.add);
+      f.value = fmt(Math.round(num('bEkOpp') + offer.add));
       setFetched(offer.belop);
       compute();
     }
@@ -1543,7 +1626,14 @@ body .ks-mode .mdesc{font-size:12px}
 
     INPUTS.forEach(function(id){ var e=el(id); if(e) e.addEventListener('input', compute); });
 
+    // Ekte eksempel: Nille AS, balansen 31.12.2025 (Brønnøysundregistrene), hele kroner. Linjer slått sammen der skjemaet har færre:
+    // bAnlForsk = programvare 38 760 035 + utsatt skattefordel 4 084 906. bAnlMask = bygningsmessig inventar 217 612 + maskiner,
+    // inventar og anlegg 114 166 263. bAnlInv = andre langsiktige fordringer. bOmlKund = kundefordringer 6 584 544 + andre fordringer
+    // 256 220 752. bEkOver = overkurs 276 642 900 + annen innskutt EK 58 710 725. bGLAnnen = øvrig langsiktig gjeld (leasing).
+    // bGKSkat = betalbar skatt 5 011 424 + skyldige offentlige avgifter 144 776 595. Sum eiendeler = sum EK og gjeld = 871 655 469.
+    var NILLE_AR = 31459060;                         // årsresultatet i resultatregnskapet for 2025
     var PRESETS = {
+      nille:    {bAnlForsk:42844941, bAnlMask:114383875, bAnlInv:415969, bOmlVare:449960688, bOmlKund:262805296, bOmlBank:1244700, bEkAks:2600000, bEkOver:335353625, bEkOpp:41933681, bGLAnnen:8187202, bGKLev:152400877, bGKSkat:149788019, bGKAnnen:181392065},
       liten:    {bAnlEiend:1500000, bAnlMask:300000, bOmlVare:400000, bOmlKund:250000, bOmlBank:550000, bEkAks:100000, bEkOpp:900000, bGLBank:1500000, bGKLev:350000, bGKSkat:150000},
       oppstart: {bAnlMask:150000, bOmlBank:310000, bEkAks:500000, bEkOpp:-120000, bGKLev:80000},
       etablert: {bAnlEiend:4000000, bAnlMask:800000, bAnlInv:300000, bOmlVare:600000, bOmlKund:900000, bOmlBank:700000, bEkAks:1000000, bEkOver:500000, bEkOpp:2800000, bGLBank:2000000, bGKLev:600000, bGKSkat:400000},
@@ -1552,11 +1642,13 @@ body .ks-mode .mdesc{font-size:12px}
     document.querySelectorAll('.hv-btn--pill').forEach(function(b){
       b.addEventListener('click', function(){
         var p=PRESETS[b.getAttribute('data-preset')]; if(!p) return;
-        INPUTS.forEach(function(id){ var e=el(id); if(e){ var v=p[id]; e.value=(v==null)?'':v; } });
+        INPUTS.forEach(function(id){ var e=el(id); if(e){ var v=p[id]; e.value=(v==null)?'':fmt(v); } });
         setFetched(null);                           // eksemplet skriver over feltet
         compute();
       });
     });
+
+    function erNille(){ return INPUTS.every(function(id){ return num(id) === (PRESETS.nille[id] || 0); }); }
 
     restore();
     compute();
@@ -1586,6 +1678,7 @@ body .ks-mode .mdesc{font-size:12px}
 <script defer src="/shared/learn.js?v=v3"></script>
 
 <script defer src="/shared/regnskap-flyt.js?v=v1"></script>
+<script defer src="/shared/steg-guide.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
