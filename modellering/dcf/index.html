@@ -69,7 +69,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v248">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
-<link rel="stylesheet" href="/modellering/modellering.css?v=v1">
+<link rel="stylesheet" href="/modellering/modellering.css?v=v2">
 </head>
 <body>
 
@@ -190,22 +190,22 @@
 
           <section class="md-sec" aria-labelledby="dcf-h1">
             <h2 class="md-h2" id="dcf-h1">1. Fri kontantstrøm per år</h2>
-            <p class="md-lead">Pengene driften gir etter skatt og investeringer, før renter og avdrag. Fyll inn for de årene du har en prognose for. Tomme år hoppes over, og terminalverdien regnes fra siste år du har fylt inn.</p>
+            <p class="md-lead">Pengene driften gir etter skatt og investeringer, før renter og avdrag.</p>
             <div class="md-grid three">
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-base">Fri kontantstrøm i fjor</label>
                 <input class="ik-input" id="dcf-base" type="text" inputmode="decimal" autocomplete="off">
-                <span class="ik-hint">Utgangspunktet. Se forklaringen under for hvordan du finner den.</span>
+                <span class="ik-hint">Siste hele år.</span>
               </div>
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-vekst5">Vekst per år fremover</label>
                 <div class="md-inp-u"><input class="ik-input" id="dcf-vekst5" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
-                <span class="ik-hint">Hvor mye kontantstrømmen vokser hvert år i prognoseperioden.</span>
+                <span class="ik-hint">Hvert år i prognosen.</span>
               </div>
               <div class="md-f" style="justify-content:flex-start">
                 <span class="ik-lbl" aria-hidden="true">&nbsp;</span>
                 <button type="button" class="md-btn" id="dcf-fyll">Fyll inn fem år</button>
-                <span class="ik-hint">Eller skriv tallene rett inn i radene under.</span>
+                <span class="ik-hint">Eller skriv tallene rett inn under.</span>
               </div>
             </div>
 
@@ -217,23 +217,31 @@
               <div class="md-yr"><span class="yr">År 4</span><input class="ik-input dcf-fcf" type="text" inputmode="decimal" autocomplete="off" aria-label="Fri kontantstrøm år 4"><span class="out dcf-pv">–</span></div>
               <div class="md-yr"><span class="yr">År 5</span><input class="ik-input dcf-fcf" type="text" inputmode="decimal" autocomplete="off" aria-label="Fri kontantstrøm år 5"><span class="out dcf-pv">–</span></div>
             </div>
+            <details class="md-help">
+              <summary>Mer om fri kontantstrøm</summary>
+              <div class="b"><p class="md-lead">Fyll inn for de årene du har en prognose for. Tomme år hoppes over, og terminalverdien regnes fra siste år du har fylt inn. <a href="#felt">Slik finner du tallet i årsrapporten.</a></p></div>
+            </details>
           </section>
 
           <section class="md-sec" aria-labelledby="dcf-h2">
             <h2 class="md-h2" id="dcf-h2">2. Avkastningskrav og vekst</h2>
-            <p class="md-lead">Avkastningskravet er renten du regner tilbake med. Jo høyere risiko, jo høyere krav, og jo lavere verdi i dag.</p>
+            <p class="md-lead">Høyere risiko gir høyere krav og lavere verdi i dag.</p>
             <div class="md-grid">
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-wacc">Avkastningskrav (WACC)</label>
                 <div class="md-inp-u"><input class="ik-input" id="dcf-wacc" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
-                <span class="ik-hint">Vanlig spenn for et stabilt norsk selskap er 7–11 %. Usikker? Regn det ut under.</span>
+                <span class="ik-hint">Ofte 7–11 %. Regn det ut under.</span>
               </div>
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-g">Vekst for alltid etter siste år</label>
                 <div class="md-inp-u"><input class="ik-input" id="dcf-g" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
-                <span class="ik-hint">Brukes i terminalverdien. Hold den lav, gjerne 1,5–3 %. Ingen selskap vokser fortere enn økonomien for alltid.</span>
+                <span class="ik-hint">Hold den lav, 1,5–3 %.</span>
               </div>
             </div>
+            <details class="md-help">
+              <summary>Mer om avkastningskrav og vekst</summary>
+              <div class="b"><p class="md-lead">Avkastningskravet er renten fremtidige kroner regnes tilbake med. 7–11 % er et vanlig spenn for et stabilt norsk selskap. Veksten for alltid brukes i terminalverdien. Ingen selskap vokser fortere enn økonomien for alltid, så hold den nær inflasjonen.</p></div>
+            </details>
 
             <details class="md-help" id="wacc-hjelp">
               <summary>Regn ut WACC</summary>
@@ -289,24 +297,33 @@
 
           <section class="md-sec" aria-labelledby="dcf-h3">
             <h2 class="md-h2" id="dcf-h3">3. Fra selskapsverdi til verdi per aksje</h2>
-            <p class="md-lead">Kontantstrømmen tilhører både eiere og långivere. For å finne eiernes del trekker du fra gjelden og legger til kontantene.</p>
-            <div class="md-grid three">
+            <p class="md-lead">Trekk fra gjelden og legg til kontantene, så får du eiernes del.</p>
+            <div class="md-grid">
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-gjeld">Rentebærende gjeld</label>
                 <input class="ik-input" id="dcf-gjeld" type="text" inputmode="decimal" autocomplete="off">
-                <span class="ik-hint">Banklån, obligasjoner og leieforpliktelser. Står i balansen under gjeld.</span>
+                <span class="ik-hint">Banklån, obligasjoner og leie.</span>
               </div>
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-kont">Kontanter og bankinnskudd</label>
                 <input class="ik-input" id="dcf-kont" type="text" inputmode="decimal" autocomplete="off">
-                <span class="ik-hint">Står nederst på eiendelssiden i balansen.</span>
+                <span class="ik-hint">Nederst på eiendelssiden.</span>
               </div>
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-aksjer">Antall aksjer</label>
                 <input class="ik-input" id="dcf-aksjer" type="text" inputmode="numeric" autocomplete="off">
-                <span class="ik-hint">Utstedte aksjer minus egne aksjer. Står i noten om aksjekapital. Skriv hele antallet.</span>
+                <span class="ik-hint">Hele antallet, minus egne aksjer.</span>
+              </div>
+              <div class="md-f">
+                <label class="ik-lbl" for="dcf-kurs">Børskurs i dag (valgfritt)</label>
+                <div class="md-inp-u"><input class="ik-input" id="dcf-kurs" type="text" inputmode="decimal" autocomplete="off"><span class="u">kr</span></div>
+                <span class="ik-hint">Kroner per aksje, for å sammenligne.</span>
               </div>
             </div>
+            <details class="md-help">
+              <summary>Mer om gjeld, kontanter og aksjer</summary>
+              <div class="b"><p class="md-lead">Kontantstrømmen tilhører både eiere og långivere. Gjelden er långivernes del, og kontantene kommer i tillegg til verdien av driften. Gjeld og kontanter står i balansen. Antall aksjer står i noten om aksjekapital. Børskursen skrives i hele kroner per aksje, uansett hva du har valgt under «Tall i».</p></div>
+            </details>
           </section>
 
           <section class="md-sec" aria-labelledby="dcf-h4">
@@ -322,13 +339,20 @@
               <dt class="tot">Egenkapitalverdi</dt><dd class="tot" id="r-eq">–</dd>
               <dt>Delt på antall aksjer</dt><dd id="r-aksjer">–</dd>
               <dt class="tot">Verdi per aksje</dt><dd class="tot" id="r-ps">–</dd>
+              <dt>Børskurs<small id="r-kurs-s"></small></dt><dd id="r-kurs">–</dd>
             </dl>
+            <p class="md-msg" id="dcf-tvvarsel" role="status" hidden></p>
           </section>
 
           <section class="md-sec" aria-labelledby="dcf-h5">
             <h2 class="md-h2" id="dcf-h5">5. Hvor mye tåler svaret?</h2>
-            <p class="md-lead" id="sens-lead">Verdien per aksje med litt høyere og lavere avkastningskrav og vekst. Feltet i midten er svaret over. Ser du store sprang, er verdien følsom for antakelsene.</p>
+            <p class="md-lead" id="sens-lead">Verdien med andre krav og vekst. Midten er svaret over.</p>
             <div class="md-tw"><table class="md-sens" id="dcf-sens"></table></div>
+            <div class="md-tw" style="margin-top:24px"><table class="md-t" id="dcf-scn"></table></div>
+            <details class="md-help">
+              <summary>Slik leser du tabellene</summary>
+              <div class="b"><p class="md-lead">I følsomhetstabellen er avkastningskravet i radene og veksten for alltid i kolonnene. Ser du store sprang, er verdien følsom for antakelsene. Har du fylt inn børskurs, er verdiene over kursen i fet skrift. Scenarioene endrer bare veksten i prognoseårene: svak er 4 prosentpoeng lavere hvert år, sterk er 7 prosentpoeng høyere. Avkastningskrav og vekst for alltid står som over.</p></div>
+            </details>
           </section>
 
           <p class="md-bunn">Veiledende. Kontantstrømmen regnes som om den kommer ved slutten av hvert år, og verdien gjelder datoen for balansen du har hentet gjeld og kontanter fra. Tallene lagres ikke.</p>
@@ -371,6 +395,9 @@
           <div class="md-fld"><h3>Antall aksjer</h3>
             <p><b>Hva det er</b>Hvor mange deler egenkapitalen fordeles på.</p>
             <p><b>Hvor du finner det</b>Noten om aksjekapital og aksjonærer. Trekk fra aksjene selskapet eier selv (egne aksjer).</p></div>
+          <div class="md-fld"><h3>Børskurs</h3>
+            <p><b>Hva det er</b>Prisen markedet betaler for én aksje. Er verdien din lavere enn kursen, regner markedet med mer vekst eller lavere risiko enn du gjør.</p>
+            <p><b>Hvor du finner det</b>Oslo Børs eller nettbanken. Selskaper som ikke er på børs, har ingen kurs. La feltet stå tomt.</p></div>
         </div>
       </section>
 
@@ -496,7 +523,7 @@
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/search.js?v=v282" defer></script>
 <script defer src="/modellering/modellering.js?v=v1"></script>
-<script defer src="/modellering/dcf/dcf.js?v=v1"></script>
+<script defer src="/modellering/dcf/dcf.js?v=v2"></script>
 
 </body>
 </html>
