@@ -233,3 +233,127 @@ window.renderSiteChrome = function(opts){
   </div></footer>`;
   document.body.insertAdjacentHTML('beforeend', foot);
 };
+
+/* ════════ Forklaringene under kalkulatoren er lukkede nedtrekk (sw v285) ════════
+   Den som åpner en kalkulatorside, skal se kalkulatoren og svaret, ikke sider med tekst.
+   Hver forklaringsseksjon (.lrn-sec i forklaringsblokkene, .lc-sec i «Lønn-stil»-seksjonene)
+   blir et nedtrekk som er lukket ved lasting: overskriften (og én linje ingress) står igjen
+   som en knapp. Seksjoner uten egen overskrift hører til nedtrekket over seg. Spørsmålene
+   samles under «Spørsmål» på samme måte; hvert spørsmål er fortsatt sin egen <details>.
+   «Formelen bak beregningen» (details.lrn-calc) lukkes, og «Relaterte verktøy» blir også en rad. HTML-en endres ikke: knappen legges til i hodet, og
+   CSS skjuler resten (site-shell.css, «.hvt-dd»).
+   Bare på kalkulatorsider: .lrn der siden laster learn.js, .lc-sec der det finnes felt å
+   fylle ut utenfor forklaringene (om/ og personvern/ er ren tekst og står åpne).
+   Ved åpning sendes «hvt-dd-open», og learn.js tegner grafen da (ikke mens den er skjult).
+   Et anker inn i et nedtrekk (#lc-felt, søket, lenker på siden) åpner det først. */
+(function(){
+  var groups = [], uid = 0;
+  function headOf(sec, hc){
+    for(var c = sec.firstElementChild; c; c = c.nextElementSibling){
+      if(c.classList.contains(hc)) return c;
+      if(c.tagName === 'H2' || c.tagName === 'H3'){
+        // Seksjon med bare en overskrift (.lrn-also, .lrn-faq): den får et hode rundt seg
+        var w = document.createElement('div');
+        w.className = 'hvt-dd-head';
+        sec.insertBefore(w, c);
+        w.appendChild(c);
+        return w;
+      }
+    }
+    return null;
+  }
+  function add(sec, head){
+    var h = head.querySelector('h2') || head.querySelector('h3');
+    if(!h) return null;
+    if(!h.id) h.id = 'hvt-dd-h' + (++uid);
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'hvt-dd-btn';
+    b.setAttribute('aria-expanded', 'false');
+    b.setAttribute('aria-labelledby', h.id);
+    b.innerHTML = '<span class="hvt-dd-chev" aria-hidden="true">+</span>';
+    head.appendChild(b);
+    sec.classList.add('hvt-dd');
+    var g = {sec: sec, btn: b, tail: [], open: false};
+    b.addEventListener('click', function(){ set(g, !g.open); });
+    groups.push(g);
+    return g;
+  }
+  function set(g, open){
+    if(g.open === open) return;
+    g.open = open;
+    g.sec.classList.toggle('is-open', open);
+    g.tail.forEach(function(t){ t.classList.toggle('is-open', open); });
+    g.btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    g.sec.dispatchEvent(new CustomEvent(open ? 'hvt-dd-open' : 'hvt-dd-close', {bubbles: true}));
+  }
+  if(document.querySelector('script[src*="/shared/learn.js"]')){
+    document.querySelectorAll('.lrn').forEach(function(lrn){
+      var cur = null;
+      Array.prototype.forEach.call(lrn.children, function(el){
+        var cl = el.classList;
+        if(cl.contains('lrn-rel')){ var rh = headOf(el, 'lrn-head'); if(rh) add(el, rh); cur = null; return; }
+        // «Formelen bak beregningen» er allerede et nedtrekk, men sto åpent
+        if(el.tagName === 'DETAILS' && cl.contains('lrn-calc')){ el.open = false; cur = null; return; }
+        if(!cl.contains('lrn-sec') && !cl.contains('lrn-qs')) return;
+        var head = cl.contains('lrn-sec') && headOf(el, 'lrn-head');
+        if(head){ cur = add(el, head) || cur; return; }
+        if(cur){ cl.add('hvt-dd-tail'); cur.tail.push(el); }
+      });
+    });
+  }
+  var fields = Array.prototype.some.call(document.querySelectorAll('main input:not([type=search]), main select, main textarea'), function(el){
+    return !el.closest('.lc-sec');
+  });
+  if(fields) document.querySelectorAll('.lc-sec').forEach(function(sec){
+    var head = headOf(sec, 'lc-head');
+    if(head) add(sec, head);
+  });
+  if(!groups.length) return;
+
+  function openFor(el){
+    for(var i = 0; i < groups.length; i++){
+      var g = groups[i];
+      if(g.sec.contains(el) || g.tail.some(function(t){ return t.contains(el); })){
+        if(g.open) return false;
+        set(g, true);
+        return true;
+      }
+    }
+    return false;
+  }
+  function target(hash){
+    var id = (hash || '').slice(1);
+    if(!id) return null;
+    try { id = decodeURIComponent(id); } catch(e){}
+    return document.getElementById(id);
+  }
+  // Etter core.js sin egen (myke) rulling til ankeret: legg overskriften rett under menyen og fanene
+  function place(el){
+    setTimeout(function(){
+      var box = el.closest('.lrn-head,.lc-head,.hvt-dd-head') || el;
+      var off = 0;
+      document.querySelectorAll('header,.nav-wrap,.tabs-wrap').forEach(function(e){
+        var cs = getComputedStyle(e);
+        if(cs.position === 'sticky' || cs.position === 'fixed') off = Math.max(off, (parseFloat(cs.top) || 0) + e.offsetHeight);
+      });
+      window.scrollTo({top: Math.max(0, box.getBoundingClientRect().top + window.scrollY - off - 16), behavior: 'instant'});
+    }, 0);
+  }
+  function fromHash(){
+    var el = target(location.hash);
+    if(el && openFor(el)) return el;
+  }
+  var first = fromHash();
+  if(first) window.addEventListener('load', function(){ place(first); });
+  window.addEventListener('hashchange', function(){ var el = fromHash(); if(el) place(el); });
+  // Lenke til samme anker som allerede står i adressefeltet gir ingen hashchange
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href*="#"]');
+    if(!a || a.pathname !== location.pathname) return;
+    var el = target(a.hash);
+    if(el) openFor(el);
+  });
+  // Utskrift: alt åpnes, så papiret har hele forklaringen
+  window.addEventListener('beforeprint', function(){ groups.forEach(function(g){ set(g, true); }); });
+})();

@@ -49,8 +49,11 @@
     queued[key] = true;
     Promise.resolve().then(function(){ queued[key] = false; fns[key](last[key]); glue(); });
   }
-  function flush(){
+  // Lukket nedtrekk (site-shell.js, .hvt-dd): grafen er skjult og tegnes ikke før den åpnes
+  function live(b){ return !b.querySelector('.hvt-dd') || !!b.querySelector('.hvt-dd.is-open'); }
+  function flush(force){
     clearTimeout(rest);
+    if(force !== true && !Array.prototype.some.call(blocks, live)) return;
     for(var k in waiting){ delete waiting[k]; draw(k); }
   }
   function run(key){
@@ -60,19 +63,28 @@
     clearTimeout(rest);
     rest = setTimeout(flush, 600);
   }
-  var blocks = document.querySelectorAll('.lrn');
+  var blocks = document.querySelectorAll('.lrn'), inside = [];
   if(!blocks.length || typeof IntersectionObserver !== 'function') near = true;
   else {
-    var inside = [];
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(e){ inside[Array.prototype.indexOf.call(blocks, e.target)] = e.isIntersecting; });
-      near = inside.indexOf(true) > -1;
-      if(near) flush();
+      check();
     }, {rootMargin: '200px 0px'});
     Array.prototype.forEach.call(blocks, function(b){ io.observe(b); });
   }
+  function check(){
+    if(near === true && !inside.length) return;
+    near = Array.prototype.some.call(blocks, function(b, i){ return inside[i] && live(b); });
+    if(near) flush();
+  }
+  // Nedtrekket åpnes: alt tegnes på nytt med riktig bredde. Lukkes det: ingen tegning mens det er skjult.
+  document.addEventListener('hvt-dd-open', function(){
+    check();
+    for(var k in fns) if(k in last) draw(k);
+  });
+  document.addEventListener('hvt-dd-close', check);
   // Utskrift skal ha ferske tall, også i en blokk som ikke er tegnet ennå
-  window.addEventListener('beforeprint', flush);
+  window.addEventListener('beforeprint', function(){ flush(true); });
   var nf = new Intl.NumberFormat('nb-NO', {maximumFractionDigits: 0});
   // Flertallsformen for tallet n etter reglene til språket som vises: one, two, few, many eller other
   function form(n){
@@ -105,7 +117,45 @@
 
   glue();
 
+  // Regnestykkene (.lrn-f) står bak en liten lenke «Vis utregningen», og når de vises er de
+  // forenklet (learn.css, .lrn-enkel): ord, så tallene satt inn, så svaret. Ingen stablet brøk.
+  // Forslag på tre sider først (2026-11); fjern sjekken på stien for å rulle ut på alle.
+  var FV = {nb: ['Vis utregningen', 'Skjul utregningen'], en: ['Show the calculation', 'Hide the calculation'],
+    fr: ['Afficher le calcul', 'Masquer le calcul'], pl: ['Pokaż obliczenie', 'Ukryj obliczenie'],
+    uk: ['Показати розрахунок', 'Сховати розрахунок'], lt: ['Rodyti skaičiavimą', 'Slėpti skaičiavimą'],
+    ar: ['عرض الحساب', 'إخفاء الحساب'], so: ['Muuji xisaabinta', 'Qari xisaabinta'],
+    ti: ['ስሌቱ ኣርኢ', 'ስሌቱ ሕባእ'], zh: ['显示计算过程', '隐藏计算过程']};
+  var fvs = [];
+  function fvText(){
+    var l = (document.documentElement.lang || 'nb').toLowerCase().split('-')[0];
+    var t = FV[l === 'no' || l === 'nn' ? 'nb' : l] || FV.nb;
+    fvs.forEach(function(b){ b.textContent = t[b.getAttribute('aria-expanded') === 'true' ? 1 : 0]; });
+  }
+  if(/^\/(personlig\/abo|personlig\/spare|boliglan\/maxlan)\/?$/.test(location.pathname)){
+    document.documentElement.classList.add('lrn-enkel');
+    var fpar = [];
+    Array.prototype.forEach.call(document.querySelectorAll('.lrn .lrn-f'), function(f){
+      var p = f.parentElement;
+      if(fpar.indexOf(p) > -1 || p.closest('.lrn-f')) return;
+      fpar.push(p);
+      p.classList.add('lrn-fhide');
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'lrn-fv';
+      b.setAttribute('aria-expanded', 'false');
+      p.insertBefore(b, p.querySelector(':scope > .lrn-f'));
+      b.addEventListener('click', function(){
+        var on = !p.classList.contains('is-fv');
+        p.classList.toggle('is-fv', on);
+        b.setAttribute('aria-expanded', on ? 'true' : 'false');
+        fvText();
+      });
+      fvs.push(b);
+    });
+    fvText();
+  }
+
   // core.js setter lang på <html> når en språkfil er lastet. Da tegnes setningene på nytt.
-  new MutationObserver(function(){ for(var k in fns) run(k); })
+  new MutationObserver(function(){ fvText(); for(var k in fns) run(k); })
     .observe(document.documentElement, {attributes: true, attributeFilter: ['lang']});
 })();
