@@ -107,17 +107,19 @@ body.focus-mode > footer{display:none}
 .ks-host{min-width:0}
 .ks{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:48px}
 
-.ks-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
-.ks-strip-cell{background:var(--surface);padding:18px 22px;display:flex;flex-direction:column;gap:6px;min-width:0}
-.ks-strip-cell .l{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);font-weight:500}
-.ks-strip-cell .v{font-family:var(--font-serif);font-weight:500;font-size:22px;line-height:1;font-variant-numeric:tabular-nums lining-nums;color:var(--ink)}
-.ks-strip-cell.accent{background:color-mix(in srgb, var(--accent) 6%, var(--surface))}
-.ks-strip-cell.accent .v{color:var(--accent-2)}
-@media(max-width:780px){.ks-strip{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
-@media(max-width:560px){.ks-strip-cell{padding:14px 14px}.ks-strip-cell .v{font-size:17px}}
-
+/* Venstre kolonne = skjema + skatteberegning, høyre = svarkortet. På smal skjerm løses
+   kolonnen opp, så rekkefølgen blir skjema → svar → skatteberegning. */
 .ks-body{display:grid;grid-template-columns:1fr 340px;gap:1px;background:var(--line)}
-@media(max-width:980px){.ks-body{grid-template-columns:1fr}}
+.ks-left{background:var(--surface);min-width:0}
+/* site-shell.css tar bort skjemaets høyrekant bare når det er direkte barn av .ks-body */
+.ks-left > .ks-form{border-right:0}
+@media(max-width:980px){
+  .ks-body{grid-template-columns:minmax(0,1fr)}
+  .ks-left{display:contents}
+  .ks-form{order:1}
+  .ks-result{order:2}
+  .ks-left .lonn-breakdown{order:3;padding-top:22px}
+}
 
 .ks-form{background:var(--surface);padding:22px 26px;min-width:0}
 .ks-section{margin-bottom:22px}
@@ -149,17 +151,9 @@ body.focus-mode > footer{display:none}
 }
 .ik-note{font-size:11.5px;color:var(--ink3);line-height:1.5;margin:0;font-style:italic}
 
-.lonn-frikort-hint{margin-top:4px}
-
-.lonn-info-box{
-  margin:14px 0 0;padding:11px 14px;
-  background:var(--surface-2);
-  border:1px solid var(--line);
-  border-left:2px solid var(--accent);
-  border-radius:5px;
-  font-size:12.5px;color:var(--ink2);line-height:1.55;
-}
-.lonn-info-box a{color:var(--accent);text-decoration:underline;font-weight:600}
+/* Én linje under feltene i stedet for kursivnote + egen info-boks */
+.lonn-note{margin-top:4px;font-style:normal}
+.lonn-note a{color:var(--accent);white-space:nowrap}
 
 .ks-result{background:var(--surface);padding:22px 22px;display:flex;flex-direction:column;gap:12px;min-width:0}
 .ks-r-eyebrow{font:500 10px/1 var(--font-sans);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3)}
@@ -167,20 +161,10 @@ body.focus-mode > footer{display:none}
 .ks-r-mnd{font-size:12px;color:var(--ink3);line-height:1.5}
 .ks-r-mnd b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 
-/* Netto vs skatt-fordeling — beholdt fra opprinnelig kalkulator, nøytrale tokens */
-.ks-bar{margin-top:6px}
-.ks-bar-track{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--line);margin-bottom:10px}
-.ks-bar-seg{transition:flex .3s var(--ease, ease)}
-.ks-bar-legend{display:flex;flex-direction:column;gap:6px;font-size:11.5px;color:var(--ink2)}
-.ks-bar-legend .row{display:flex;align-items:baseline;gap:8px;justify-content:space-between}
-.ks-bar-legend .dot{width:9px;height:9px;border-radius:2px;flex-shrink:0}
-.ks-bar-legend b{margin-left:auto;color:var(--ink);font-variant-numeric:tabular-nums}
-
 .ks-r-stats{display:flex;flex-direction:column;gap:7px;padding-top:12px;border-top:1px solid var(--line)}
 .ks-r-stat{display:flex;align-items:baseline;justify-content:space-between;gap:14px;font-size:13px;color:var(--ink2)}
 .ks-r-stat .l{color:var(--ink3);font-size:11.5px;letter-spacing:.04em}
 .ks-r-stat .v{color:var(--ink);font-variant-numeric:tabular-nums lining-nums;font-weight:500}
-.ks-r-stat.div{padding-top:8px;margin-top:4px;border-top:1px solid var(--line)}
 .ks-r-stat .v.pos{color:var(--accent-2)}
 .ks-r-stat .v.dim{color:var(--ink3)}
 
@@ -197,16 +181,18 @@ body.focus-mode > footer{display:none}
 .res-cta .desc{display:block;margin-top:2px;font-size:11.5px;color:var(--ink3)}
 .res-cta .arr{color:var(--accent);font-size:18px;font-weight:300}
 
+/* CSV er en liten tekstknapp under budsjettknappen, ikke en knapp nummer to i full bredde */
 .res-csv{
-  margin-top:2px;width:100%;
-  padding:11px 14px;
-  background:transparent;border:1px solid var(--line-2);border-radius:5px;
-  color:var(--ink2);font:600 12px/1 var(--font-sans);letter-spacing:.3px;
+  align-self:flex-start;
+  min-height:32px;padding:0;
+  background:transparent;border:0;
+  color:var(--ink3);font:600 12px/1 var(--font-sans);letter-spacing:.3px;
   cursor:pointer;
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  transition:all .2s var(--ease);
+  display:inline-flex;align-items:center;gap:8px;
+  transition:color .2s var(--ease);
 }
-.res-csv:hover{background:var(--hover-bg);border-color:var(--line-warm);color:var(--ink)}
+.res-csv:hover{color:var(--ink)}
+.res-csv:focus-visible{outline:1px solid var(--accent);outline-offset:2px}
 .res-csv:disabled{opacity:.4;cursor:not-allowed}
 
 /* Side col */
@@ -225,17 +211,15 @@ body.focus-mode > footer{display:none}
 .side-card.related a:hover .arr{color:var(--accent)}
 
 /* ── BREAKDOWN (skatte-tabell) ───────────────────── */
+/* Står under skjemaet i venstre kolonne, med samme overskrift som «Inntekt» */
 .lonn-breakdown{
-  background:var(--surface);border:1px solid var(--line);border-radius:6px;
-  padding:22px 24px 26px;
-  margin-bottom:0;
+  background:var(--surface);
+  padding:4px 24px 22px;
+  min-width:0;
 }
+@media(max-width:640px){.lonn-breakdown{padding-inline:16px}}
 .lonn-breakdown.empty{display:none}
-.lonn-breakdown h3{
-  font-family:var(--font-sans);font-size:11px;font-weight:600;
-  letter-spacing:2px;text-transform:uppercase;color:var(--ink3);
-  margin:0 0 16px;padding-bottom:12px;border-bottom:1px solid var(--line);
-}
+.lonn-breakdown .ik-section-head{margin-bottom:4px}
 .lonn-bd-table{width:100%;border-collapse:collapse;font-size:13px}
 .lonn-bd-table tr{border-bottom:1px solid var(--line)}
 .lonn-bd-table tr:last-child{border-bottom:none}
@@ -253,7 +237,7 @@ body.focus-mode > footer{display:none}
 .lonn-bd-table tr.total td.v{font-size:15px}
 .lonn-disclaimer{margin-top:14px;font-size:11.5px;color:var(--ink4);line-height:1.55;font-style:italic}
 
-/* Heroen har ikke lenger tallraden (.page-stats): de samme tallene står i stripa og svarkortet rett under.
+/* Heroen har ikke lenger tallraden (.page-stats): de samme tallene står i svarkortet rett under.
    Én kolonne, ellers står det et tomt felt til høyre. */
 .page-hero .container{grid-template-columns:minmax(0,1fr)}
 
@@ -357,14 +341,8 @@ body.focus-mode > footer{display:none}
 
     <div class="ks-host">
       <div class="ks">
-        <div class="ks-strip">
-          <div class="ks-strip-cell"><span class="l" data-i18n="lonnRlBruttoMnd">Bruttolønn per måned</span><span class="v" id="sBruttoMnd">–</span></div>
-          <div class="ks-strip-cell"><span class="l" data-i18n="lonnRlSkattMnd">Skattetrekk per måned</span><span class="v" id="sSkattMnd">–</span></div>
-          <div class="ks-strip-cell"><span class="l" data-i18n="lonnRlEffektiv">Effektiv skattesats</span><span class="v" id="sEff">–</span></div>
-          <div class="ks-strip-cell accent"><span class="l" data-i18n="lonnStatNetto">Netto månedlig</span><span class="v" id="sNetto">–</span></div>
-        </div>
-
         <div class="ks-body">
+          <div class="ks-left">
           <div class="ks-form">
             <section class="ks-section">
               <div class="ik-section-head">
@@ -396,14 +374,16 @@ body.focus-mode > footer{display:none}
                     </select>
                   </div>
                 </div>
-                <p class="ik-note lonn-frikort-hint">Frikortgrensen for 2026 er 100 000 kr. Tjener du under dette, trekker ikke arbeidsgiver skatt. Du kan fortsatt skylde litt trygdeavgift ved skatteoppgjøret.</p>
+                <p class="ik-note lonn-note">Under frikortgrensen trekkes ingen skatt, men du kan skylde litt trygdeavgift. <a href="/skatt/inntekt/">Full beregning i Skattekalkulatoren →</a></p>
               </div>
             </section>
+          </div>
 
-            <p class="lonn-info-box">
-              Dette er en forenklet beregning. Vil du ha full oversikt over trinnskatt, trygdeavgift, alminnelig inntekt og fradrag?
-              <a href="/skatt/inntekt/">Åpne Skattekalkulatoren →</a>
-            </p>
+          <section class="lonn-breakdown empty" id="lonnBreakdown" aria-labelledby="lonnBreakdownHdr">
+            <div class="ik-section-head"><h3 id="lonnBreakdownHdr">Skatteberegning</h3></div>
+            <table class="lonn-bd-table" id="lonnBdTable"></table>
+            <p class="lonn-disclaimer">* Forenklet estimat. Faktisk skattetrekk avhenger av skattekortet ditt (tabelltrekk). Feriepenger utbetales normalt i juni året etter, og er ikke inkludert i månedstallet over.</p>
+          </section>
           </div>
 
           <aside class="ks-result" aria-live="polite">
@@ -411,14 +391,10 @@ body.focus-mode > footer{display:none}
             <div class="ks-r-net" id="rNettoMnd">–</div>
             <div class="ks-r-mnd" id="rVerdict">Skriv inn timelønn og timer for å se utbetalingen</div>
 
-            <div class="ks-bar">
-              <div class="ks-bar-track" id="ksBarTrack"></div>
-              <div class="ks-bar-legend" id="ksBarLegend"></div>
-            </div>
-
             <div class="ks-r-stats">
               <div class="ks-r-stat"><span class="l" data-i18n="lonnRlBruttoAar">Bruttolønn per år</span><span class="v" id="rBruttoAar">–</span></div>
-              <div class="ks-r-stat div"><span class="l" data-i18n="lonnRlFeriepenger">Feriepenger (10,2 %)</span><span class="v" id="rFeriepenger">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="lonnRlEffektiv">Effektiv skattesats</span><span class="v" id="rEff">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="lonnRlFeriepenger">Feriepenger (10,2 %)</span><span class="v" id="rFeriepenger">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="lonnRlNettoTime">Netto per time</span><span class="v" id="rNettoTime">–</span></div>
             </div>
 
@@ -436,12 +412,6 @@ body.focus-mode > footer{display:none}
           </aside>
         </div>
       </div>
-
-      <section class="lonn-breakdown empty" id="lonnBreakdown" aria-labelledby="lonnBreakdownHdr">
-        <h3 id="lonnBreakdownHdr">Skatteberegning</h3>
-        <table class="lonn-bd-table" id="lonnBdTable"></table>
-        <p class="lonn-disclaimer">* Forenklet estimat. Faktisk skattetrekk avhenger av skattekortet ditt (tabelltrekk). Feriepenger utbetales normalt i juni året etter, og er ikke inkludert i månedstallet over.</p>
-      </section>
     </div>
 
     <aside class="side-col">
@@ -625,7 +595,6 @@ body.focus-mode > footer{display:none}
       var bruttoAar = timelonn * timerUke * ukerAar;
       var bruttoMnd = bruttoAar / 12;
 
-      var FRIKORTGRENSE = 100000;
       var mf = Math.min(Math.max(bruttoAar * 0.46, 0), 95700);   // Minstefradrag 2026
       var pf = 114540;                                            // Personfradrag 2026
       var almInntekt = Math.max(bruttoAar - mf - pf, 0);
@@ -682,15 +651,6 @@ body.focus-mode > footer{display:none}
       var nettoTime = (totalSkatt > 0) ? timelonn * (1 - totalSkatt/bruttoAar) : timelonn;
       var effSats = bruttoAar > 0 ? (totalSkatt/bruttoAar*100) : 0;
 
-      var verdict;
-      if(bruttoAar <= FRIKORTGRENSE || totalSkatt <= 0){
-        verdict = 'Ingen skatt — inntekten er lav nok til at fradragene dekker alt.';
-      } else if(effSats < 15){
-        verdict = 'Lav skattesats — typisk for deltidsjobb ved siden av studier.';
-      } else {
-        verdict = 'Normal skattesats for inntektsnivået ditt.';
-      }
-
       return {
         hasData: true,
         timelonn: timelonn, timerUke: timerUke, ukerAar: ukerAar, alder: alder,
@@ -699,27 +659,19 @@ body.focus-mode > footer{display:none}
         almSkatt: almSkatt, trygd: trygd, mf: mf, pf: pf,
         nettoAar: nettoAar, nettoMnd: nettoMnd, nettoTime: nettoTime,
         feriepenger: feriepenger, effSats: effSats,
-        verdict: verdict, breakdown: breakdown
+        breakdown: breakdown
       };
     }
 
-    // ── Kostnadsfordeling Netto vs Skatt (speiler lonnut renderBar, nøytrale farger) ──
-    function renderBar(d){
-      var track = document.getElementById('ksBarTrack');
-      var legend = document.getElementById('ksBarLegend');
-      if(!track || !legend) return;
-      if(!d || !d.hasData){ track.innerHTML = ''; legend.innerHTML = ''; return; }
-      var segs = [
-        { v: d.nettoAar,   l:'Netto per år',  c:'linear-gradient(90deg,var(--accent),var(--accent-2))' },
-        { v: d.totalSkatt, l:'Skatt per år',  c:'color-mix(in srgb, var(--accent) 30%, transparent)' }
-      ];
-      var total = segs.reduce(function(a,b){return a+Math.max(0,b.v);}, 0) || 1;
-      track.innerHTML = segs.map(function(s){
-        return '<div class="ks-bar-seg" style="flex:'+(Math.max(0,s.v)/total)+' 0 0;background:'+s.c+'"></div>';
-      }).join('');
-      legend.innerHTML = segs.map(function(s){
-        return '<div class="row"><span class="dot" style="background:'+s.c+'"></span>'+s.l+'<b>'+fmtKr(s.v)+'</b></div>';
-      }).join('');
+    // ── Linja under det store tallet: brutto og skatt per måned, eller «ingen skatt».
+    //    Setningen har tall inni seg, så den hentes som mal (lonnRLine) fra språkfila. ──
+    function renderLine(d){
+      var el = document.getElementById('rVerdict');
+      if(d.totalSkatt <= 0){ el.textContent = 'Ingen skatt — inntekten er lav nok til at fradragene dekker alt.'; return; }
+      var tpl = (typeof R === 'function' && R() && R().lonnRLine) || 'Av {b} i bruttolønn trekkes {s} i skatt.';
+      el.innerHTML = escapeHtml(tpl)
+        .replace('{b}', '<b>' + fmtKr(d.bruttoMnd) + '</b>')
+        .replace('{s}', '<b>' + fmtKr(d.totalSkatt/12) + '</b>');
     }
 
     function recalc(){
@@ -734,10 +686,7 @@ body.focus-mode > footer{display:none}
         setOutputText('rNettoMnd', '–');
         setOutputText('rVerdict', 'Skriv inn timelønn og timer for å se utbetalingen');
         setOutputText('rBruttoAar','–'); setOutputText('rFeriepenger','–');
-        setOutputText('rNettoTime','–');
-        setOutputText('sBruttoMnd','–'); setOutputText('sSkattMnd','–');
-        setOutputText('sEff','–'); setOutputText('sNetto','–');
-        renderBar(null);
+        setOutputText('rNettoTime','–'); setOutputText('rEff','–');
         var bd = document.getElementById('lonnBreakdown');
         bd.classList.add('empty');
         document.getElementById('lonnBdTable').innerHTML = '';
@@ -747,18 +696,11 @@ body.focus-mode > footer{display:none}
       }
 
       setOutputText('rNettoMnd', fmtKr(d.nettoMnd));
-      setOutputText('rVerdict', d.verdict);
+      renderLine(d);
       setOutputText('rBruttoAar', fmtKr(d.bruttoAar));
+      setOutputText('rEff', fmtPct(d.effSats));
       setOutputText('rFeriepenger', fmtKr(d.feriepenger));
       setOutputText('rNettoTime', fmtKr(d.nettoTime));
-
-      // Strip-celler (speiler verdiene over)
-      setOutputText('sBruttoMnd', fmtKr(d.bruttoMnd));
-      setOutputText('sSkattMnd', fmtKr(d.totalSkatt/12));
-      setOutputText('sEff', fmtPct(d.effSats));
-      setOutputText('sNetto', fmtKr(d.nettoMnd));
-
-      renderBar(d);
 
       // Breakdown-tabell
       var bdTable = document.getElementById('lonnBdTable');
@@ -866,6 +808,9 @@ body.focus-mode > footer{display:none}
     document.getElementById('lonnAlder').addEventListener('change', recalc);
 
     document.getElementById('lonnCsvBtn').addEventListener('click', downloadCsv);
+    // Språkbytte setter <html lang>: skriv linja på nytt med malen fra det nye språket
+    if(window.MutationObserver) new MutationObserver(function(){ if(STATE.hasData) renderLine(STATE); })
+      .observe(document.documentElement, { attributes:true, attributeFilter:['lang'] });
 
     // ── Init ──
     restore();
