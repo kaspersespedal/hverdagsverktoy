@@ -65,7 +65,8 @@
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
 <link rel="stylesheet" href="/shared/themes.css?v=v11">
-<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v1">
+<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v2">
+<link rel="stylesheet" href="/shared/steg-guide.css?v=v1">
 <link rel="stylesheet" href="/shared/learn.css?v=v6">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
@@ -832,26 +833,34 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
 
     /* Analysis panels */
     .rr-panel{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest);padding:clamp(18px,3vw,26px) clamp(18px,3.4vw,30px)}
-    .rr-panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:16px}
-    .rr-panel-title{font:500 17px/1.1 var(--font-serif);color:var(--ink);font-style:italic}
-    .rr-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px}
+    /* To og to, som på balansen: beløp i millioner fikk ikke plass i fire kolonner */
+    .rr-kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    @media(max-width:560px){.rr-kpis{grid-template-columns:minmax(0,1fr)}}
     .rr-kpi{display:flex;flex-direction:column;gap:9px;padding:15px 16px;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--accent) 2.5%,var(--surface))}
     .rr-kpi .l{font:500 9.5px/1.2 var(--font-sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink4)}
     .rr-kpi .v{font:500 20px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);letter-spacing:-.4px}
 
-    /* Waterfall bridge */
-    .kx-fall{display:flex;flex-direction:column;gap:9px}
-    .kx-fall-row{display:grid;grid-template-columns:124px 1fr 96px;align-items:center;gap:12px}
-    .kx-fall-lab{font:500 12px/1.3 var(--font-sans);color:var(--ink2)}
-    .kx-fall-track{position:relative;height:26px;background:rgba(var(--wash-rgb),.03);border:1px solid var(--line);border-radius:6px;overflow:hidden}
-    .kx-fall-track::before{content:"";position:absolute;top:0;bottom:0;left:var(--zero,0%);width:1px;background:var(--line-2)}
-    .kx-fall-bar{position:absolute;top:4px;bottom:4px;border-radius:3px;min-width:2px}
-    .kx-fall-bar.base{background:var(--ink3)}
-    .kx-fall-bar.up{background:linear-gradient(90deg,var(--accent-deep),var(--accent-2))}
-    .kx-fall-bar.down{background:var(--ink4)}
-    .kx-fall-bar.dest{background:linear-gradient(90deg,var(--accent-deep),var(--accent-2))}
-    .kx-fall-val{font:500 12.5px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);text-align:right}
-    .kx-fall-empty{font:400 12.5px/1.55 var(--font-sans);color:var(--ink3)}
+    /* Tallene i én kolonne: summene står rett under sifrene i feltene (feltets indre marg + kant) */
+    .rr-out{padding-right:12px}
+
+    /* Fra drift til bank — samme kort, kolonner og linjer som oppstillingen over */
+    .kx-bro{display:flex;flex-direction:column;margin-top:6px}
+    .kx-bro-row{display:flex;align-items:center;gap:16px;padding:9px 0;border-top:1px solid var(--line)}
+    .kx-bro-row:first-child{border-top:0}
+    .kx-bro-row.sum{border-top-color:var(--line-2)}
+    .kx-bro-row.bank:not(.sum){margin-top:14px;border-top:0}
+    .kx-bro-lab{flex:0 0 150px;font:400 13.5px/1.45 var(--font-sans);color:var(--ink2)}
+    .kx-bro-row.sum .kx-bro-lab{font-weight:600;color:var(--ink)}
+    .kx-bro-track{position:relative;flex:1;align-self:stretch;min-height:22px}
+    .kx-bro-row:not(.bank) .kx-bro-track::before{content:"";position:absolute;left:50%;top:-9px;bottom:-9px;width:1px;background:var(--line-2)}
+    .kx-bro-row:first-child .kx-bro-track::before{top:0}
+    .kx-bro-row.sum:not(.bank) .kx-bro-track::before{bottom:0}
+    .kx-bro-bar{position:absolute;top:50%;height:12px;margin-top:-6px;border-radius:2px}
+    .kx-bro-bar.up{background:linear-gradient(90deg,var(--accent-deep),var(--accent-2))}
+    .kx-bro-bar.down{background:var(--ink4)}
+    .kx-bro .rr-out{font:500 14px/1 var(--font-sans)}
+    .kx-bro .sum .rr-out{font:600 15px/1 var(--font-serif);letter-spacing:-.2px}
+    .kx-bro-empty{font:400 12.5px/1.55 var(--font-sans);color:var(--ink3);margin:14px 0 0}
 
     /* Tegnmønster */
     .kx-pattern{display:flex;align-items:center;gap:16px;margin-top:16px;padding:14px 16px;background:color-mix(in srgb,var(--accent) 2.5%,var(--surface));border:1px solid var(--line);border-radius:9px}
@@ -880,17 +889,20 @@ footer a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border
       .intro-cards{grid-template-columns:1fr}
       /* Beløpscella tok 150 px og ga etikettene 138 px (2–3 linjer hver).
          «kr» skjules fordi «NOK» står i hodet på oppstillingen. */
-      .rr-amtcell{width:118px}
-      input.rr-num{width:104px;padding:8px 9px}
-      .rr-out{min-width:104px}
+      /* Beløp i hundretalls millioner (ekte eksempel) fikk ikke plass i 104 px */
+      .rr-amtcell{width:140px}
+      input.rr-num{width:136px;padding:8px 8px}
+      .rr-out{min-width:136px;padding-right:9px}
       .rr-kr{display:none}
       .rr-sub .rr-amtcell{width:auto}
       .rr-sub .rr-out{min-width:0}
-      .rr-panel-head{flex-direction:column;align-items:flex-start;gap:6px}
-      /* Bryteren over grafen: begge knappene brøt over to linjer («Kundefordringer med / pluss») */
+      /* Bryteren over grafen: begge knappene brøt over to linjer («Kundefordringer med / feil fortegn») */
       .lrn-ks-seg button{padding:0 8px;font-size:14px;line-height:1.2}
-      .kx-fall-row{grid-template-columns:92px 1fr 78px;gap:8px}
-      .kx-fall-lab{font-size:11px}
+      .kx-bro-row{gap:10px}
+      .kx-bro-lab{flex-basis:92px;font-size:12.5px}
+      /* Ingen felt her: beløpet tar bare plassen det trenger, så stolpene får resten */
+      .kx-bro .rr-amtcell{width:auto}
+      .kx-bro .rr-out{min-width:0}
       /* Aktivitetstabellen stables: én blokk per aktivitet, kolonnenavnet som liten etikett. */
       .actv{min-width:0}
       .actv thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -1037,7 +1049,7 @@ body .ks-mode .mdesc{font-size:12px}
         <div style="display:flex;flex-direction:column;gap:8px">
           <span class="rr-eyebrow">Eksempler</span>
           <div style="display:flex;flex-wrap:wrap;gap:7px">
-            <button type="button" class="hv-btn--pill" data-preset="laerebok">Øvingseksempel</button>
+            <button type="button" class="hv-btn--pill" data-preset="nille">Ekte eksempel: Nille 2025</button>
             <button type="button" class="hv-btn--pill ghost" data-preset="clear">Tøm</button>
           </div>
         </div>
@@ -1052,7 +1064,7 @@ body .ks-mode .mdesc{font-size:12px}
           </div>
           <div style="text-align:right">
             <div class="rr-stmt-meta1">Indirekte modell</div>
-            <div class="rr-stmt-meta2">Regnskapsåret 2026 · NOK</div>
+            <div class="rr-stmt-meta2" id="ksAar">Regnskapsåret 2026 · NOK</div>
           </div>
         </div>
         <p class="kx-legend"><b>+</b> styrker kassen (penger inn / frigjort kapital) &middot; <b>−</b> svekker kassen (penger ut / bundet kapital)</p>
@@ -1118,20 +1130,34 @@ body .ks-mode .mdesc{font-size:12px}
             <div style="display:flex;align-items:baseline;gap:7px">
               <span class="kx-anum" id="avstemV">–</span><span class="rr-arskr">kr</span>
             </div>
-            <p class="kx-anote" id="avstemD">Skriv inn tallene, eller trykk «Øvingseksempel», for å sjekke at oppstillingen avstemmer.</p>
+            <p class="kx-anote" id="avstemD">Skriv inn tallene, eller trykk «Ekte eksempel», for å sjekke at oppstillingen avstemmer.</p>
           </div>
 
         </div>
       </div>
 
-      <!-- WATERFALL BRIDGE -->
-      <div class="rr-panel">
-        <div class="rr-panel-head">
-          <span class="rr-panel-title">Kontantbroen</span>
-          <span class="rr-eyebrow">Fra inngående til utgående</span>
+      <!-- FRA DRIFT TIL BANK — de tre aktivitetene i samme rekkefølge, bredde og kolonner som oppstillingen.
+           Stolpene starter på midtlinja: pluss mot høyre, minus mot venstre. -->
+      <div class="rr-card rr-stmt">
+        <div class="rr-stmt-head">
+          <div>
+            <div class="rr-eyebrow">Sammendrag</div>
+            <div class="rr-stmt-title">Fra drift til bank</div>
+          </div>
+          <div style="text-align:right">
+            <div class="rr-stmt-meta1">Tre aktiviteter</div>
+            <div class="rr-stmt-meta2">gir endringen i bank</div>
+          </div>
         </div>
-        <div class="kx-fall hidden" id="kxFallRows"></div>
-        <div class="kx-fall-empty" id="kxFallEmpty">Broen vises når tallene er fylt inn.</div>
+        <div class="kx-bro hidden" id="kxBro">
+          <div class="kx-bro-row" data-k="op"><span class="kx-bro-lab">Drift</span><span class="kx-bro-track"><span class="kx-bro-bar"></span></span><span class="rr-amtcell"><span class="rr-out"></span><span class="rr-kr">kr</span></span></div>
+          <div class="kx-bro-row" data-k="inv"><span class="kx-bro-lab">Investering</span><span class="kx-bro-track"><span class="kx-bro-bar"></span></span><span class="rr-amtcell"><span class="rr-out"></span><span class="rr-kr">kr</span></span></div>
+          <div class="kx-bro-row" data-k="fin"><span class="kx-bro-lab">Finansiering</span><span class="kx-bro-track"><span class="kx-bro-bar"></span></span><span class="rr-amtcell"><span class="rr-out"></span><span class="rr-kr">kr</span></span></div>
+          <div class="kx-bro-row sum" data-k="net"><span class="kx-bro-lab">Endring i bank</span><span class="kx-bro-track"><span class="kx-bro-bar"></span></span><span class="rr-amtcell"><span class="rr-out"></span><span class="rr-kr">kr</span></span></div>
+          <div class="kx-bro-row bank" data-k="ib"><span class="kx-bro-lab">Bank 1.&nbsp;januar</span><span class="kx-bro-track"></span><span class="rr-amtcell"><span class="rr-out"></span><span class="rr-kr">kr</span></span></div>
+          <div class="kx-bro-row bank sum" data-k="ub"><span class="kx-bro-lab">Bank 31.&nbsp;desember</span><span class="kx-bro-track"></span><span class="rr-amtcell"><span class="rr-out"></span><span class="rr-kr">kr</span></span></div>
+        </div>
+        <p class="kx-bro-empty" id="kxBroEmpty">Fylles ut når du har skrevet inn tallene.</p>
       </div>
 
       <!-- KPIs + tegnmønster -->
@@ -1164,7 +1190,75 @@ body .ks-mode .mdesc{font-size:12px}
         </div>
       </div>
 
-      <p class="rr-source">Kilde: Regnskapsloven § 6-4 (kontantstrømoppstilling) og § 3-2 (årsregnskapets innhold) · NRS(F) Kontantstrømoppstilling · IAS 7. Eksempeltallene er et ferdig avstemt øvingseksempel. Veiledende, pedagogisk verktøy — ikke profesjonell rådgivning.</p>
+      <!-- EKTE EKSEMPEL -->
+      <section class="rf-ekte" aria-labelledby="ekte-h">
+        <span class="rf-eyebrow">Ekte eksempel · Nille AS 2025</span>
+        <h2 class="rf-ekte-h" id="ekte-h">Slik leser du kontantstrømmen til Nille</h2>
+        <p class="rf-ekte-lede">Nille er butikkjeden med 294 butikker over hele landet. Tallene er hentet fra årsregnskapet selskapet sendte til Brønnøysundregistrene. Trykk «Ekte eksempel: Nille 2025» øverst, så står de i skjemaet.</p>
+        <ol class="rf-ekte-pkt">
+          <li><strong>Banken endret seg med −2&nbsp;300&nbsp;kr.</strong> Nille startet året med 1&nbsp;247&nbsp;000&nbsp;kr og sluttet med 1&nbsp;244&nbsp;700&nbsp;kr. Det er nøyaktig det balansen viser, så oppstillingen avstemmer.</li>
+          <li><strong>Driften ga 35,9&nbsp;millioner kroner.</strong> Resultatet før skatt var 41,2&nbsp;millioner. Avskrivningene på 52,6&nbsp;millioner trakk ned resultatet, men kostet ingen penger i år. Derfor legges de til igjen.</li>
+          <li><strong>Nille betalte ned 31,2&nbsp;millioner av leverandørgjelden.</strong> I tillegg økte lageret med 8,3&nbsp;millioner. Begge deler bandt penger. Kundene skyldte 5,0&nbsp;millioner mindre, og det frigjorde penger.</li>
+          <li><strong>32,0&nbsp;millioner gikk til konsernkontoen.</strong> Nille har nesten ingen penger i egen bank. Pengene samles på en felles konto hos eieren, Nille Holding AS. Der hadde Nille 227,4&nbsp;millioner ved nyttår. I skjemaet står flyttingen i linja «Endring andre tidsavgrensningsposter».</li>
+          <li><strong>Investeringene var lavere enn avskrivningene.</strong> Nille kjøpte driftsmidler for 33,0&nbsp;millioner. Det er mindre enn de 52,6 millionene som ble skrevet av. Ifølge årsberetningen er butikkene og IT-systemet oppgradert de siste årene.</li>
+          <li><strong>Fri kontantstrøm gikk til leasing.</strong> Drift minus investering ga 2,9&nbsp;millioner. Omtrent det samme, 2,9&nbsp;millioner, gikk til å betale ned leasing. Derfor endte banken nesten der den startet.</li>
+        </ol>
+        <details class="sg" id="fyll-ut">
+          <summary><span class="sg-head"><span class="sg-k">Veiledning</span><span class="sg-t">Slik fyller du ut kontantstrømmen</span><span class="sg-d">Linje for linje, med tallene til Nille som eksempel.</span></span><span class="sg-btn"><span class="o">Åpne veiledningen</span><span class="c">Lukk</span><span class="x" aria-hidden="true">+</span></span></summary>
+          <div class="sg-body">
+            <p class="sg-lede">Du trenger resultatregnskapet for i år og balansen for i år og i fjor. Det meste regner du ut som forskjellen mellom to balanser.</p>
+            <ol class="sg-steps">
+              <li><details class="sg-step"><summary><span class="sg-step-t">Start med resultat før skatt<span class="sg-step-w">Fra resultatregnskapet</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Skriv resultatet før skattekostnad, med pluss. Er det underskudd, skriver du minus.</p>
+                  <p><strong>Nille:</strong> 41&nbsp;237&nbsp;816&nbsp;kr. Resultatregnskapet viser 41&nbsp;237&nbsp;815&nbsp;kr. Den ene kronen er avrunding hos Nille.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Trekk fra skatten som ble betalt<span class="sg-step-w">Med minus</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Skatten du betaler i år, er som regel fjorårets betalbare skatt. Den står i fjorårets balanse. Skattekostnaden i resultatet er ikke det samme.</p>
+                  <p><strong>Nille:</strong> 0&nbsp;kr. Betalbar skatt i balansen ved utgangen av 2024 var 0&nbsp;kr. Nille ga bort konsernbidrag og hadde ikke skatt å betale for 2024.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Legg tilbake avskrivninger og nedskrivninger<span class="sg-step-w">Med pluss</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Avskrivninger er en kostnad i resultatet, men ingen penger går ut av banken i år. Derfor legges de til igjen. Tallene står i resultatregnskapet.</p>
+                  <p><strong>Nille:</strong> avskrivninger 52&nbsp;562&nbsp;003&nbsp;kr og nedskrivninger 812&nbsp;599&nbsp;kr.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Regn ut endringen i varelager, kunder og leverandører<span class="sg-step-w">Eiendel opp gir minus, gjeld opp gir pluss</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Sammenlign balansen i år med balansen i fjor. Øker en eiendel, har du bundet penger: minus. Øker gjelden, har du ventet med å betale: pluss.</p>
+                  <ul>
+                    <li><strong>Varelager:</strong> 441&nbsp;617&nbsp;508&nbsp;kr til 449&nbsp;960&nbsp;688&nbsp;kr. Økte, så −8&nbsp;343&nbsp;180&nbsp;kr.</li>
+                    <li><strong>Kundefordringer:</strong> 11&nbsp;611&nbsp;251&nbsp;kr til 6&nbsp;584&nbsp;544&nbsp;kr. Sank, så +5&nbsp;026&nbsp;707&nbsp;kr.</li>
+                    <li><strong>Leverandørgjeld:</strong> 183&nbsp;627&nbsp;822&nbsp;kr til 152&nbsp;400&nbsp;877&nbsp;kr. Sank, så −31&nbsp;226&nbsp;945&nbsp;kr.</li>
+                  </ul>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Ta med resten av driften<span class="sg-step-w">Andre fordringer og annen kortsiktig gjeld</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Andre endringer i kortsiktige poster går i linja «Endring andre tidsavgrensningsposter». Bruk samme regel for fortegn som i forrige steg.</p>
+                  <p><strong>Nille:</strong> Årsregnskapet har to linjer her: konsernmellomværende −32&nbsp;000&nbsp;137&nbsp;kr og andre tidsavgrensningsposter +7&nbsp;863&nbsp;189&nbsp;kr. Skjemaet har én linje, så de er lagt sammen: −24&nbsp;136&nbsp;948&nbsp;kr.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Før opp investeringene<span class="sg-step-w">Kjøp med minus, salg med pluss</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Skriv det du betalte for maskiner, inventar, programvare og bygg. Solgte du noe, skriver du salgssummen med pluss.</p>
+                  <p><strong>Nille:</strong> kjøp av driftsmidler −33&nbsp;041&nbsp;152&nbsp;kr. Ingen salg.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Før opp finansieringen<span class="sg-step-w">Nye lån pluss, nedbetaling og utbytte minus</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Se på endringen i langsiktig gjeld og kassekreditt, og på egenkapital og utbytte som er betalt inn eller ut.</p>
+                  <p><strong>Nille:</strong> nedbetaling av leasing −2&nbsp;893&nbsp;200&nbsp;kr. Øvrig langsiktig gjeld sank fra 11&nbsp;080&nbsp;402&nbsp;kr til 8&nbsp;187&nbsp;202&nbsp;kr.</p>
+                </div></details></li>
+              <li><details class="sg-step"><summary><span class="sg-step-t">Avstem mot banken<span class="sg-step-w">Bank 1.&nbsp;januar + endring = bank 31.&nbsp;desember</span></span><span class="sg-chev" aria-hidden="true">+</span></summary>
+                <div class="sg-step-b">
+                  <p>Summen av drift, investering og finansiering er endringen i bankinnskudd. Legg den til banken 1.&nbsp;januar. Svaret skal være likt bankinnskuddet i balansen 31.&nbsp;desember. Er det ikke det, mangler en linje eller et fortegn er feil.</p>
+                  <p><strong>Nille:</strong> 35&nbsp;932&nbsp;052 −&nbsp;33&nbsp;041&nbsp;152 −&nbsp;2&nbsp;893&nbsp;200 = −2&nbsp;300&nbsp;kr. 1&nbsp;247&nbsp;000 −&nbsp;2&nbsp;300 =&nbsp;1&nbsp;244&nbsp;700&nbsp;kr, som i balansen.</p>
+                </div></details></li>
+            </ol>
+          </div>
+        </details>
+        <p class="rf-ekte-src">Kilde: Nille AS (org.nr. 918&nbsp;468&nbsp;919), <a href="https://data.brreg.no/regnskapsregisteret/regnskap/aarsregnskap/kopi/918468919/2025">årsregnskap for 2025</a>, fastsatt 22.&nbsp;april 2026, fra <a href="https://virksomhet.brreg.no/nb/oppslag/enheter/918468919">Brønnøysundregistrene</a>. Hentet 14.&nbsp;november 2026. Tall i hele kroner, som i kilden.</p>
+      </section>
+
+      <p class="rr-source">Kilde: Regnskapsloven § 6-4 (kontantstrømoppstilling) og § 3-2 (årsregnskapets innhold) · NRS(F) Kontantstrømoppstilling · IAS 7. Eksempeltallene er fra årsregnskapet til Nille AS for 2025, se kilden over. Veiledende, pedagogisk verktøy — ikke profesjonell rådgivning.</p>
 
     </div>
   </div>
@@ -1183,11 +1277,11 @@ body .ks-mode .mdesc{font-size:12px}
         <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText"></span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
         <div class="lrn-seg lrn-ks-seg" role="group" aria-label="Fortegnet på kundefordringene i eksempelet" data-lrn="seg">
           <button type="button" aria-pressed="true" data-k="ok">Riktig fortegn</button>
-          <button type="button" aria-pressed="false" data-k="flip">Kundefordringer med pluss</button>
+          <button type="button" aria-pressed="false" data-k="flip">Kundefordringer med feil fortegn</button>
         </div>
       </div>
       <figure class="lrn-fig" aria-describedby="lrn-ks-sr lrn-ks-tab">
-        <figcaption class="lrn-cap">Regnskapsåret 2026, i kroner. Pluss styrker kassen og peker til høyre, minus svekker den og peker til venstre. Hver stolpe starter der forrige sluttet.</figcaption>
+        <figcaption class="lrn-cap">I kroner. Pluss styrker kassen og peker til høyre, minus svekker den og peker til venstre. Hver stolpe starter der forrige sluttet.</figcaption>
         <div class="lrn-ks-plot" dir="ltr">
           <svg aria-hidden="true" focusable="false"><path class="lrn-ks-row" data-p="row"/><path class="lrn-ks-grid" data-p="grid"/><path class="lrn-ks-zl" data-p="zl"/><path class="lrn-ks-zero" data-p="zero"/><path class="lrn-ks-conn" data-p="conn"/><path class="lrn-ks-bd" data-p="bd"/><path class="lrn-ks-bi" data-p="bi"/><path class="lrn-ks-oi" data-p="oi"/><path class="lrn-ks-bf" data-p="bf"/><path class="lrn-ks-of" data-p="of"/><path class="lrn-ks-frame" data-p="frame"/><path class="lrn-ks-brk" data-p="brk"/><path class="lrn-ks-key" data-p="key"/><path class="lrn-ks-keyl" data-p="keyl"/><path class="lrn-ks-panel" data-p="panel"/></svg>
           <div class="lrn-labels" data-lrn="labels" data-ph-skip></div>
@@ -1368,47 +1462,25 @@ body .ks-mode .mdesc{font-size:12px}
       return 'Tre strømmer satt sammen — tegnene forteller hvilken fase selskapet er i.';
     }
 
-    // Waterfall bridge: IB → drift → investering → finansiering → UB.
-    function renderFall(ib, drift, inv, fin){
-      var rows = document.getElementById('kxFallRows');
-      var empty = document.getElementById('kxFallEmpty');
-      if(!rows) return;
-      var c1 = ib + drift, c2 = c1 + inv, c3 = c2 + fin;
-      var pts = [0, ib, c1, c2, c3];
-      var lo = Math.min.apply(null, pts), hi = Math.max.apply(null, pts);
-      var range = (hi - lo) || 1;
-      function seg(a, b){
-        var l = Math.min(a, b), h = Math.max(a, b);
-        var left = (l - lo) / range * 100;
-        var w = (h - l) / range * 100;
-        if(w > 0 && w < 1.4) w = 1.4;
-        return 'left:' + left.toFixed(2) + '%;width:' + w.toFixed(2) + '%';
-      }
-      var zero = ((0 - lo) / range * 100).toFixed(2);
-      var lanes = [
-        {lab:'Kontanter 01.01', cls:'base', style:seg(0, ib),  val:ib},
-        {lab:'+ Drift',         cls:(drift>=0?'up':'down'), style:seg(ib, c1), val:drift},
-        {lab:'± Investering',   cls:(inv>=0?'up':'down'),   style:seg(c1, c2), val:inv},
-        {lab:'± Finansiering',  cls:(fin>=0?'up':'down'),   style:seg(c2, c3), val:fin},
-        {lab:'Kontanter 31.12', cls:'dest', style:seg(0, c3), val:c3}
-      ];
-      var html = '';
-      lanes.forEach(function(r){
-        html += '<div class="kx-fall-row">'
-          + '<span class="kx-fall-lab">' + r.lab + '</span>'
-          + '<div class="kx-fall-track" style="--zero:' + zero + '%">'
-            + '<span class="kx-fall-bar ' + r.cls + '" style="' + r.style + '"></span></div>'
-          + '<span class="kx-fall-val">' + fmtN(r.val) + '</span></div>';
+    // Fra drift til bank: drift + investering + finansiering = endring i bank, og bank 1.1. + endring = bank 31.12.
+    // Stolpene deler skala, og den største av de fire fyller halve sporet.
+    function renderBro(any, v){
+      var box = document.getElementById('kxBro'), empty = document.getElementById('kxBroEmpty');
+      if(!box) return;
+      box.classList.toggle('hidden', !any);
+      if(empty) empty.classList.toggle('hidden', any);
+      if(!any) return;
+      var max = Math.max(Math.abs(v.op), Math.abs(v.inv), Math.abs(v.fin), Math.abs(v.net)) || 1;
+      box.querySelectorAll('.kx-bro-row').forEach(function(r){
+        var n = v[r.getAttribute('data-k')], bar = r.querySelector('.kx-bro-bar');
+        r.querySelector('.rr-out').textContent = fmtN(n);
+        if(!bar) return;
+        var w = Math.abs(n) / max * 50;
+        if(n !== 0 && w < 0.6) w = 0.6;
+        bar.className = 'kx-bro-bar ' + (n >= 0 ? 'up' : 'down');
+        bar.style.width = w.toFixed(2) + '%';
+        bar.style.left = n >= 0 ? '50%' : (50 - w).toFixed(2) + '%';
       });
-      rows.innerHTML = html;
-      rows.classList.remove('hidden');
-      if(empty) empty.classList.add('hidden');
-    }
-    function clearFall(){
-      var rows = document.getElementById('kxFallRows');
-      var empty = document.getElementById('kxFallEmpty');
-      if(rows){ rows.innerHTML = ''; rows.classList.add('hidden'); }
-      if(empty) empty.classList.remove('hidden');
     }
 
     function compute(){
@@ -1452,7 +1524,7 @@ body .ks-mode .mdesc{font-size:12px}
           box.classList.remove('ok');
           setEl('avstemLabel','Beregnet sluttbeholdning');
           setEl('avstemV','–');
-          setEl('avstemD','Skriv inn tallene, eller trykk «Øvingseksempel», for å sjekke at oppstillingen avstemmer.');
+          setEl('avstemD','Skriv inn tallene, eller trykk «Ekte eksempel», for å sjekke at oppstillingen avstemmer.');
         } else if(!hasBal){
           box.classList.remove('ok');
           setEl('avstemLabel','Beregnet sluttbeholdning');
@@ -1499,8 +1571,8 @@ body .ks-mode .mdesc{font-size:12px}
         }
       }
 
-      // Waterfall
-      if(anyInput) renderFall(ib, op, inv, fin); else clearFall();
+      renderBro(anyInput, {op:op, inv:inv, fin:fin, net:net, ib:ib, ub:calcUB});
+      setEl('ksAar', erNille() ? 'Nille AS · 2025 · NOK' : 'Regnskapsåret 2026 · NOK');
 
       persist();
       // Til fanene «Lag regnskapet»
@@ -1514,8 +1586,10 @@ body .ks-mode .mdesc{font-size:12px}
     // sist. Har brukeren skrevet noe annet, står tallet urørt og det nye tilbys med en knapp.
     var HENT_KEY = 'hv-kontantstrom-hentet';
     var LINKS = [
-      {id:'opRes',     row:'hentOpRes',   key:'hv-rr-arsresultat', prop:'forSkatt', navn:'resultat før skatt',        fra:'resultatregnskapet'},
-      {id:'opAvskr',   row:'hentOpAvskr', key:'hv-rr-arsresultat', prop:'avskr',    navn:'avskrivningene',            fra:'resultatregnskapet'},
+      {id:'opRes',     row:'hentOpRes',   key:'hv-rr-arsresultat', prop:'forSkatt', navn:'resultat før skatt',        fra:'resultatregnskapet',
+        nille:41237815, nilleTxt:'Resultatregnskapet sier 41 237 815 kr. Nille har 1 kr avrundingsforskjell.'},
+      {id:'opAvskr',   row:'hentOpAvskr', key:'hv-rr-arsresultat', prop:'avskr',    navn:'avskrivningene',            fra:'resultatregnskapet',
+        nille:53374602, nilleTxt:'Resultatregnskapet har avskrivning og nedskrivning på én linje: 53 374 602 kr.'},
       {id:'kontBalUB', row:'hentKontUB',  key:'hv-balanse-sum',    prop:'bank',     navn:'bankinnskudd og kontanter', fra:'balansen'}
     ];
     var hentet = {};
@@ -1530,16 +1604,18 @@ body .ks-mode .mdesc{font-size:12px}
         var f = document.getElementById(l.id), row = document.getElementById(l.row);
         if(!f || !row) return;
         var v = kilde(l), cur = parseNum(l.id), blank = (f.value||'').trim()==='';
-        if(auto && v!=null && v!==cur && (blank || hentet[l.id]===cur)){ f.value = v; cur = v; blank = false; changed = true; }
+        if(auto && v!=null && v!==cur && (blank || hentet[l.id]===cur)){ f.value = fmtN(v); cur = v; blank = false; changed = true; }
         var same = v!=null && v===cur && !blank;
         if(same) hentet[l.id] = v;
         else if(blank || hentet[l.id]!==cur) delete hentet[l.id];
-        var offer = v!=null && !same;
+        // Nille-eksempelet på begge sider: resultatet har 1 kr annen avrunding, og av- og nedskrivning på én linje
+        var nille = !same && v!=null && l.nille===v && erNille();
+        var offer = v!=null && !same && !nille;
         var btn = row.querySelector('button'), note = row.querySelector('span');
         btn.textContent = offer ? 'Bruk ' + l.navn + ' fra ' + l.fra + ': ' + fmt(v) : '';
         btn.classList.toggle('hidden', !offer);
-        note.textContent = same ? 'Hentet fra ' + l.fra : '';
-        row.classList.toggle('hidden', !offer && !same);
+        note.textContent = same ? 'Hentet fra ' + l.fra : (nille ? l.nilleTxt : '');
+        row.classList.toggle('hidden', !offer && !same && !nille);
       });
       try { localStorage.setItem(HENT_KEY, JSON.stringify(hentet)); } catch(e){}
       if(changed) compute();
@@ -1549,7 +1625,7 @@ body .ks-mode .mdesc{font-size:12px}
       if(btn) btn.addEventListener('click', function(ev){
         var f = document.getElementById(l.id), v = kilde(l);
         if(!f || v==null) return;
-        f.value = v;
+        f.value = fmtN(v);
         compute();
         if(ev.detail===0) f.focus();                // tastatur: knappen skjules, så fokus flyttes til feltet
       });
@@ -1574,24 +1650,27 @@ body .ks-mode .mdesc{font-size:12px}
       } catch(e){}
     }
 
-    // Lærebok-eksempel (oppgave 9.11) — fullt avstemt indirekte modell, tall i 1000 kr.
-    // op 209 902, inv −119 031, fin −86 259 → netto 4 612; IB 149 162 + 4 612 = UB 153 774.
+    // Ekte eksempel: Nille AS, kontantstrømoppstillingen i årsregnskapet for 2025 (Brønnøysundregistrene), hele kroner.
+    // opAnnet = endring i konsernmellomværende −32 000 137 + endring i andre tidsavgrensningsposter 7 863 189.
+    // finGjeld = endring finansiell leasing. Drift 35 932 052, investering −33 041 152, finansiering −2 893 200
+    // → netto −2 300; bank 1 247 000 − 2 300 = 1 244 700, som i balansen.
     var PRESETS = {
-      laerebok: {
-        opRes:250215, opSkatt:-73458, opGevinst:-89, opAvskr:35382, opNedskr:2000,
-        opVarelager:15180, opKunde:-50538, opLevgjeld:25994, opAnnet:5216,
-        invSalg:3430, invKjop:-127937, invAksjer:5476,
-        finGjeld:1375, finKasse:5872, finEk:6755, finUtbytte:-100261,
-        kontIB:149162, kontBalUB:153774
+      nille: {
+        opRes:41237816, opAvskr:52562003, opNedskr:812599,
+        opVarelager:-8343180, opKunde:5026707, opLevgjeld:-31226945, opAnnet:-24136948,
+        invKjop:-33041152,
+        finGjeld:-2893200,
+        kontIB:1247000, kontBalUB:1244700
       },
       clear: {}
     };
+    function erNille(){ return ALL.every(function(id){ return parseNum(id) === (PRESETS.nille[id] || 0); }); }
     function applyPreset(key){
       var p = PRESETS[key];
       if(!p) return;
       ALL.forEach(function(id){
         var el = document.getElementById(id);
-        if(el){ var v = p[id]; el.value = (v===undefined || v===null) ? '' : v; }
+        if(el){ var v = p[id]; el.value = (v===undefined || v===null) ? '' : fmtN(v); }
       });
       compute();
     }
@@ -1632,6 +1711,7 @@ body .ks-mode .mdesc{font-size:12px}
 <script defer src="/shared/learn.js?v=v3"></script>
 
 <script defer src="/shared/regnskap-flyt.js?v=v1"></script>
+<script defer src="/shared/steg-guide.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
@@ -1656,13 +1736,14 @@ body .ks-mode .mdesc{font-size:12px}
 // ── Forklaringsblokken for kontantstrømmen: broen fra resultat før skatt til netto endring i kontanter. Hver rad er en
 //    stolpe som starter der forrige sluttet: pluss peker til høyre, minus til venstre. Delsummene (netto fra drift, fri
 //    kontantstrøm, netto endring) har ramme. Arbeidskapitalradene får klamme og fortegnsregelen som en 2 × 2-nøkkel.
-//    Tallene er kalkulatorens (window._ks). Uten tall vises øvingseksempelet, med en bryter som gir kundefordringene
-//    feil fortegn. ──
+//    Tallene er kalkulatorens (window._ks). Uten tall vises det ekte eksempelet (Nille AS 2025), med en bryter som gir
+//    kundefordringene feil fortegn. ──
 (function(){
   var KEY = 'regnskap-kontantstrom';
   var NB = '\u00a0', MINUS = '−';
-  var EKS = {opRes:250215, opSkatt:-73458, opGevinst:-89, opAvskr:35382, opNedskr:2000, opVare:15180, opKunde:-50538, opLev:25994, opAnnet:5216,
-    invSalg:3430, invKjop:-127937, invAksjer:5476, finGjeld:1375, finKasse:5872, finEk:6755, finUtb:-100261, ib:149162, ub:153774, hasBal:true};
+  // Nille AS 2025, samme tall som knappen «Ekte eksempel» i oppstillingen
+  var EKS = {opRes:41237816, opSkatt:0, opGevinst:0, opAvskr:52562003, opNedskr:812599, opVare:-8343180, opKunde:5026707, opLev:-31226945, opAnnet:-24136948,
+    invSalg:0, invKjop:-33041152, invAksjer:0, finGjeld:-2893200, finKasse:0, finEk:0, finUtb:0, ib:1247000, ub:1244700, hasBal:true};
   var root, plot, raw = null, lastW = 0, queued = false, ctx = null, fam = '', serif = '', flip = false;
 
   function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
@@ -1718,7 +1799,7 @@ body .ks-mode .mdesc{font-size:12px}
 
     root.querySelector('.lrn-state').setAttribute('data-state', dine ? 'dine' : 'eksempel');
     set('stateLabel', dine ? ph('Dine tall') : ph('Eksempel'));
-    set('stateText', nb(dine ? t('lrnKsStateDine', 'netto endring i kontanter {n}', {n:fmt(net)}) : ph('Øvingseksempel') + (fl ? ' · ' + ph('kundefordringene med pluss') : '')));
+    set('stateText', nb(dine ? t('lrnKsStateDine', 'netto endring i kontanter {n}', {n:fmt(net)}) : 'Nille AS 2025' + (fl ? ' · ' + ph('feil fortegn på kundefordringene') : '')));
     q('seg').hidden = dine;
     root.querySelectorAll('.lrn-ks-seg button').forEach(function(b){ b.setAttribute('aria-pressed', (b.getAttribute('data-k') === 'flip') === flip ? 'true' : 'false'); });
 
@@ -1911,7 +1992,9 @@ body .ks-mode .mdesc{font-size:12px}
       var big = wcRows.slice().sort(function(a, b){ return Math.abs(b.v) - Math.abs(a.v); })[0];
       anchors.push({id:'wc', text:wcRows.length > 1 ? t('lrnKsNWc', 'Arbeidskapitalradene gir netto {n}. Størst utslag har {p}, {v}.', {n:sgn(wcNet), p:WCN[big.id], v:sgn(big.v)}) : t('lrnKsNWc1', 'Arbeidskapitalen gir netto {n}.', {n:sgn(wcNet)})});
     }
-    if(fl) anchors.push({id:'kunde', text:t('lrnKsNFlip', 'Kundefordringene økte, så fortegnet skal være minus. Med pluss blir netto endring {n}, og oppstillingen avviker {d} fra balansen.', {n:fmt(net), d:fmt(Math.abs(avDiff))})});
+    if(fl) anchors.push({id:'kunde', text:(+tv.opKunde || 0) < 0
+      ? t('lrnKsNFlip', 'Kundefordringene økte, så fortegnet skal være minus. Med pluss blir netto endring {n}, og oppstillingen avviker {d} fra balansen.', {n:fmt(net), d:fmt(Math.abs(avDiff))})
+      : t('lrnKsNFlipS', 'Kundefordringene sank, så fortegnet skal være pluss. Med minus blir netto endring {n}, og oppstillingen avviker {d} fra balansen.', {n:fmt(net), d:fmt(Math.abs(avDiff))})});
     if(v.opRes > 0){
       var qv = Math.round(op / v.opRes * 100), qs = (qv < 0 ? MINUS : '') + Math.abs(qv) + NB + '%';
       anchors.push({id:'opnet', text:op > 0
@@ -1955,8 +2038,8 @@ body .ks-mode .mdesc{font-size:12px}
       : avstemt ? t('lrnKsCloseOk', 'Inngående {ib} {s} netto endring {n} = utgående {u}, som i balansen.', bv)
       : t('lrnKsCloseOff', '{ib} inn {s} {n} = {u}. Balansen sier {b}, så oppstillingen avviker med {d}.', bv);
     q('close').innerHTML = esc(nb(close)).split(A).join('<strong>').split(Z).join('</strong>');
-    set('sr', nb((dine ? ph('Dine tall') + '. ' : ph('Eksempel') + ': ' + ph('Øvingseksempel') + (fl ? ', ' + ph('kundefordringene med pluss') : '') + '. ')
-      + t('lrnKsSr', 'Regnskapsåret 2026, i kroner. Resultat før skatt {r} blir {n} i netto endring i kontanter. Netto fra drift {o}, netto fra investering {i}, netto fra finansiering {f}, fri kontantstrøm {c}.', {r:fmt(v.opRes), n:fmt(net), o:fmt(op), i:fmt(inv), f:fmt(fin), c:fmt(fcf)})
+    set('sr', nb((dine ? ph('Dine tall') + '. ' : ph('Eksempel') + ': ' + 'Nille AS 2025' + (fl ? ', ' + ph('feil fortegn på kundefordringene') : '') + '. ')
+      + t('lrnKsSr', 'I kroner. Resultat før skatt {r} blir {n} i netto endring i kontanter. Netto fra drift {o}, netto fra investering {i}, netto fra finansiering {f}, fri kontantstrøm {c}.', {r:fmt(v.opRes), n:fmt(net), o:fmt(op), i:fmt(inv), f:fmt(fin), c:fmt(fcf)})
       + (wcRows.length ? ' ' + t('lrnKsSrWc', 'Arbeidskapitalradene gir netto {n}. Fortegnsregel: øker en eiendel, er det minus. Synker en eiendel, er det pluss. Øker gjeld, er det pluss. Synker gjeld, er det minus.', {n:sgn(wcNet)}) : '')
       + ' ' + (!v.hasBal ? t('lrnKsSrNoBal', 'Inngående kontanter {ib} pluss {n} er {u}.', {ib:fmt(v.ib), n:fmt(net), u:fmt(calcUB)})
         : avstemt ? t('lrnKsSrOk', 'Inngående kontanter {ib} pluss {n} er {u}, som i balansen.', {ib:fmt(v.ib), n:fmt(net), u:fmt(calcUB)})
