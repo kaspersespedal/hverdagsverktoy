@@ -3399,7 +3399,7 @@ REGIONS['no'] = {
     selskapCatHeroTitle: '<em>Selskap</em> — stiftelse, drift og avvikling',
     skattCatHeroSub: 'Marginalskatt, formuesskatt og fradrag du sannsynligvis glemmer — for inntektsåret 2026, med henvisninger til skatteloven.',
     skattCatDeckTitle: 'Verktøy',
-    skattCatDeckCount: '5 kategorier',
+    skattCatDeckCount: '6 kategorier',
     skattCatLonnTitle: 'Skatt på lønn',
     skattCatLonnDesc: 'Brutto, netto og marginalskatt — det du faktisk betaler av neste tusenlapp.',
     skattCatCtaOpen: 'Åpne',
