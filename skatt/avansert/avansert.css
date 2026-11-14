@@ -1,0 +1,261 @@
+/* Avansert skatt (skatt/avansert/): de enkle temasidene med figurer og «Prøv selv»-kalkulatorer.
+   Bygges av research/skatt-avansert/verktoy/nettside.py. Ikke rediger avansert.css for hånd.
+   Figurene bruker sine egne token-navn (--muted, --accent-soft, --accent-ink, --f-*). De oversettes her til
+   nettstedets temaer, så alle ni temaene og mørk modus virker uten faste farger. Alt er avgrenset til .sa. */
+
+.sa .topic, .sa .overview {counter-reset: fig; }
+.sa .ills {display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; min-width: 0; }
+.sa .ill {margin: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; min-width: 0;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 18px 16px;
+  counter-increment: fig; overflow-wrap: normal; }
+.sa .ill-head {display: grid; gap: 3px; }
+.sa .ill-n {font-family: var(--f-mono); font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.sa .ill-n::before {content: "Figur " counter(fig); }
+.sa .ill-title {font-family: var(--f-display); font-weight: 600; font-size: 1.08rem; line-height: 1.3; margin: 0; text-wrap: balance; }
+.sa .ill-cap {margin: 0; font-size: .96rem; }
+.sa .ill-cap p {margin: 0 0 .5em; }
+.sa .ill-cap p:last-child {margin-bottom: 0; }
+.sa .ill-src {margin: 0; font-family: var(--f-mono); font-size: .74rem; line-height: 1.5; color: var(--muted); }
+.sa .ill-src::before {content: "Hjemmel: "; }
+.sa .ill-note {margin: 0; font-size: .86rem; color: var(--muted); }
+.sa .ill svg {display: block; width: 100%; height: auto; max-width: 480px; margin-inline: auto; overflow: visible;
+  font-family: var(--f-display); font-size: 14px; }
+.sa .ill svg text {fill: var(--ink); }
+.sa .ill svg .f-s {font-size: 12.5px; }
+.sa .ill svg .f-l {font-size: 16px; }
+.sa .ill svg .f-xl {font-size: 21px; font-weight: 700; }
+.sa .ill svg .f-b {font-weight: 600; }
+.sa .ill svg .f-m {fill: var(--muted); }
+.sa .ill svg .f-a {fill: var(--accent); }
+.sa .ill svg .f-on {fill: var(--accent-ink); }
+.sa .ill svg .f-mono {font-family: var(--f-mono); font-variant-numeric: tabular-nums; }
+.sa .ill svg .f-mid {text-anchor: middle; }
+.sa .ill svg .f-end {text-anchor: end; }
+.sa .ill svg .f-box {fill: var(--surface); stroke: var(--ink); stroke-width: 1.5; }
+.sa .ill svg .f-soft {fill: var(--accent-soft); stroke: var(--accent); stroke-width: 1.5; }
+.sa .ill svg .f-fill {fill: var(--accent); stroke: var(--accent); stroke-width: 1.5; }
+.sa .ill svg .f-ghost {fill: none; stroke: var(--muted); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.sa .ill svg .f-zone {fill: var(--bg); stroke: var(--line); stroke-width: 1; }
+.sa .ill svg .f-ln {fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.sa .ill svg .f-ln-a {fill: none; stroke: var(--accent); stroke-width: 2.25; }
+.sa .ill svg .f-ln-m {fill: none; stroke: var(--muted); stroke-width: 1.25; }
+.sa .ill svg .f-dash {stroke-dasharray: 5 4; }
+.sa .ill svg .f-pil {fill: var(--ink); stroke: none; }
+.sa .ill svg .f-pil-a {fill: var(--accent); stroke: none; }
+.sa .ill svg .f-pil-m {fill: var(--muted); stroke: none; }
+.sa .ill svg .f-dot {fill: var(--accent); stroke: none; }
+.sa .ill svg .f-dot-m {fill: var(--muted); stroke: none; }
+.sa .flyt {list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); counter-reset: steg; }
+.sa .flyt > li {position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .85fr); gap: 8px 14px;
+  align-items: start; padding: 0 0 26px 36px; counter-increment: steg; }
+.sa .flyt > li::before {content: counter(steg); position: absolute; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink); font: 600 .78rem/24px var(--f-display); text-align: center; }
+.sa .flyt > li::after {content: ""; position: absolute; left: 11px; top: 26px; bottom: 2px; width: 2px; background: var(--accent); }
+.sa .flyt-q {font-family: var(--f-display); font-weight: 600; line-height: 1.35; padding-top: 1px; }
+.sa .flyt-q small {display: block; margin-top: 3px; font: 400 .86rem/1.45 var(--f-body); color: var(--muted); }
+.sa .flyt-ut {border: 1.5px solid var(--line); background: var(--bg); border-radius: 8px; padding: 7px 10px; font-size: .9rem; line-height: 1.45; }
+.sa .flyt-ut.aksent {border-color: var(--accent); background: var(--accent-soft); }
+.sa .flyt-ut b, .sa .flyt-mal b {font-family: var(--f-display); font-weight: 600; }
+.sa .flyt-v {position: absolute; left: -4px; bottom: 5px; width: 32px; text-align: center; background: var(--surface); z-index: 1;
+  font: 600 .64rem/1.25 var(--f-display); color: var(--accent); text-transform: uppercase; letter-spacing: .03em; }
+.sa .flyt > li.flyt-mal {display: block; padding-bottom: 0; counter-increment: none; }
+.sa .flyt > li.flyt-mal::before {content: ""; border-radius: 6px; }
+.sa .flyt > li.flyt-mal::after {display: none; }
+.sa .flyt-mal > div {background: var(--accent); color: var(--accent-ink); border-radius: 8px; padding: 9px 12px; font-family: var(--f-display); font-weight: 600; line-height: 1.4; }
+.sa .flyt-mal > div small {display: block; font: 400 .86rem/1.45 var(--f-body); }
+.sa .ord {margin: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 10px 16px; }
+.sa .ord > div {border-left: 3px solid var(--accent); padding: 3px 0 3px 11px; }
+.sa .ord dt {font-family: var(--f-display); font-weight: 600; line-height: 1.35; }
+.sa .ord dd {margin: 2px 0 0; font-size: .9rem; line-height: 1.45; }
+.sa .par {display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.sa .par-rad {display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; }
+.sa .par-tema {grid-column: 1 / -1; font-family: var(--f-display); font-weight: 600; font-size: .92rem; margin: 0; }
+.sa .par-feil, .sa .par-riktig {border-radius: 8px; padding: 9px 12px; font-size: .92rem; line-height: 1.45; }
+.sa .par-feil {border: 1.5px dashed var(--muted); }
+.sa .par-riktig {border: 1.5px solid var(--accent); background: var(--accent-soft); }
+.sa .par-feil::before, .sa .par-riktig::before {display: block; font: 600 .7rem/1.4 var(--f-display); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 3px; }
+.sa .par-feil::before {content: "Vanlig feil"; color: var(--muted); }
+.sa .par-riktig::before {content: "Riktig"; color: var(--accent); }
+.sa .par-hvorfor {grid-column: 1 / -1; font-size: .84rem; color: var(--muted); margin: 0; }
+.sa .tl {list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+.sa .tl > li {display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 0 14px; }
+.sa .tl-dato {font-family: var(--f-mono); font-size: .78rem; line-height: 1.45; color: var(--muted); text-align: right; padding-top: 2px; }
+.sa .tl-hva {border-left: 2px solid var(--accent); padding: 0 0 16px 14px; position: relative; font-size: .93rem; line-height: 1.45; }
+.sa .tl-hva::before {content: ""; position: absolute; left: -6px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+.sa .tl > li:last-child .tl-hva {padding-bottom: 0; }
+.sa .tl-hva b {font-family: var(--f-display); font-weight: 600; }
+.sa .tl-hva .status {display: inline-block; margin: 0 6px 0 0; vertical-align: 1px; }
+.sa .tl > li.tl-forslag .tl-hva {border-left-style: dashed; }
+.sa .tl > li.tl-forslag .tl-hva::before {background: var(--surface); border: 2px solid var(--accent); }
+.sa .fliser {display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 10px; }
+.sa .flis {border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; background: var(--bg); display: grid; gap: 3px; align-content: start; }
+.sa .flis-tall {font: 700 1.45rem/1.15 var(--f-display); color: var(--accent); font-variant-numeric: tabular-nums; }
+.sa .flis-hva {font-size: .88rem; line-height: 1.4; }
+.sa .flis-ref {font-family: var(--f-mono); font-size: .7rem; color: var(--muted); }
+.sa .trinn {list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr)); gap: 10px; counter-reset: trinn; }
+.sa .trinn > li {counter-increment: trinn; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; background: var(--bg); font-size: .9rem; line-height: 1.45; }
+.sa .trinn > li::before {content: counter(trinn); display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink); font: 600 .72rem/1 var(--f-display); margin-bottom: 6px; }
+.sa .trinn > li b {display: block; font-family: var(--f-display); font-weight: 600; }
+.sa .modell-inn {display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 10px 16px; }
+.sa .m-felt {display: grid; gap: 4px; align-content: start; font-family: var(--f-display); font-size: .86rem; line-height: 1.35; }
+.sa .m-felt small {font: 400 .78rem/1.4 var(--f-body); color: var(--muted); }
+.sa .m-felt input[type="text"], .sa .m-felt select {font: 500 1rem/1.2 var(--f-mono); padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px;
+  background: var(--bg); color: var(--ink); width: 100%; min-width: 0; }
+.sa .m-felt input[type="range"] {width: 100%; accent-color: var(--accent); }
+.sa .m-felt input:focus-visible, .sa .m-felt select:focus-visible {outline: 2px solid var(--accent); outline-offset: 1px; }
+.sa .m-valg {display: flex; flex-wrap: wrap; gap: 6px 14px; font-family: var(--f-display); font-size: .88rem; }
+.sa .m-valg label {display: inline-flex; gap: 6px; align-items: center; cursor: pointer; }
+.sa .m-valg input {accent-color: var(--accent); }
+.sa .m-eks {display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-family: var(--f-display); font-size: .8rem; color: var(--muted); }
+.sa .m-eks button {font: 500 .8rem/1.3 var(--f-display); border: 1px solid var(--accent); color: var(--accent); background: none;
+  border-radius: 999px; padding: 4px 11px; cursor: pointer; }
+.sa .m-eks button:hover {background: var(--accent-soft); }
+.sa .m-eks button[aria-pressed="true"] {background: var(--accent); color: var(--accent-ink); }
+.sa .m-ut {display: grid; gap: 6px; border-top: 1px solid var(--line); padding-top: 12px; }
+.sa .m-rad {display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: .93rem; line-height: 1.4; }
+.sa .m-rad > span:last-child {font-family: var(--f-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sa .m-rad.m-sum {font-weight: 600; border-top: 1px solid var(--line); padding-top: 6px; }
+.sa .m-rad.m-sum > span:first-child {font-family: var(--f-display); }
+.sa .m-dom {border-radius: 8px; padding: 10px 12px; font-family: var(--f-display); font-weight: 600; line-height: 1.4; }
+.sa .m-dom small {display: block; font: 400 .86rem/1.45 var(--f-body); }
+.sa .m-dom[data-ok="1"] {background: var(--accent); color: var(--accent-ink); }
+.sa .m-dom[data-ok="0"] {border: 1.5px dashed var(--muted); }
+.sa .m-bar {position: relative; height: 16px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.sa .m-bar > i {position: absolute; top: 0; bottom: 0; left: 0; background: var(--accent); }
+.sa .m-bar > i.m-del2 {background: var(--accent-soft); border-left: 1px solid var(--accent); }
+.sa .m-bar > b {position: absolute; top: 0; bottom: 0; width: 2px; background: var(--ink); box-shadow: 0 0 0 1.5px var(--surface); }
+.sa .m-bar-tekst {display: flex; justify-content: space-between; gap: 8px; font-family: var(--f-mono); font-size: .74rem; color: var(--muted); }
+.sa .m-note {margin: 0; font-size: .84rem; color: var(--muted); }
+@media (max-width: 560px) {
+.sa .ill {padding: 14px 14px 13px; }
+.sa .flyt > li {grid-template-columns: minmax(0, 1fr); }
+.sa .par-rad {grid-template-columns: minmax(0, 1fr); }
+.sa .tl > li {grid-template-columns: minmax(0, 1fr); }
+.sa .tl-dato {text-align: left; padding: 0 0 2px 16px; }
+}
+
+.sa {
+  --muted: var(--ink3);
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, var(--surface-2, var(--surface)));
+  --accent-ink: var(--on-accent, var(--bg));
+  --f-display: var(--font-sans);
+  --f-body: var(--font-sans);
+  --f-mono: var(--font-serif);
+  counter-reset: fig;
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px;
+  max-width: 760px; margin: 0;
+  font: 400 16px/1.65 var(--font-sans); color: var(--ink);
+  overflow-wrap: break-word;
+}
+.sa-wrap { padding-top: 28px; padding-bottom: 64px; }
+.sa-sok { padding-top: 16px; }
+.sa a { color: var(--accent); text-underline-offset: 2px; }
+.sa a:focus-visible, .sa button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sa h2 { font-family: var(--font-serif); font-weight: 500; letter-spacing: -.005em; line-height: 1.2; margin: 0; text-wrap: balance; }
+.sa p { margin: 0; }
+.sa table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+.sa th, .sa td { text-align: left; vertical-align: top; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.sa tr:last-child td { border-bottom: 0; }
+.sa td.num { font-family: var(--font-serif); font-variant-numeric: tabular-nums lining-nums; white-space: nowrap; text-align: right; }
+.sa .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+
+/* Temahodet: «Tema 3 av 11», nivå og hurtigmenyen. */
+.sa-meta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.sa .e-nr { font: 600 .72rem/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+.sa .chip { font: 600 .7rem/1.3 var(--font-sans); letter-spacing: .06em; text-transform: uppercase;
+  border: 1px solid var(--accent); color: var(--accent); border-radius: 999px; padding: 2px 9px; }
+/* Nettstedet styler alle <nav> som toppmenyen (space-between, padding). Det nullstilles her. */
+.sa .e-nav { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-start; align-items: center; padding: 0; }
+.sa .e-nav a { font: 500 .82rem/1.3 var(--font-sans); text-decoration: none; color: var(--ink2);
+  border: 1px solid var(--line-2, var(--line)); background: var(--surface); border-radius: 999px; padding: 5px 11px; }
+.sa .e-nav a:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Kort fortalt, sammenligning og husk. */
+.sa .simple { background: var(--accent-soft); border-radius: 12px; padding: 20px 22px; display: grid; gap: 10px; }
+.sa .simple-label { font: 600 .72rem/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 2px; }
+.sa .analogy { border-top: 1px solid var(--line-2, var(--line)); padding-top: 12px; margin-top: 4px; display: grid; gap: 4px; }
+.sa .e-husk { background: var(--accent); color: var(--accent-ink); border-radius: 12px; padding: 18px 22px; }
+.sa .e-husk .simple-label { color: inherit; }
+.sa .e-husk ul { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+
+/* Seksjonene. */
+.sa .e-sek { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0;
+  border-top: 1px solid var(--line); padding-top: 28px; margin-top: 10px; scroll-margin-top: 120px; }
+.sa .e-sek h2 { font-size: clamp(1.45rem, 3.4vw, 1.75rem); }
+.sa .e-tekst { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+.sa .e-tekst ul, .sa .e-tekst ol { margin: 0; padding-left: 1.2em; display: grid; gap: 8px; }
+.sa .e-tekst li::marker { color: var(--accent); }
+.sa .e-hj { display: flex; flex-wrap: wrap; gap: 2px 16px; font: 400 .76rem/1.5 var(--font-sans); color: var(--ink3); }
+.sa .e-calc { max-width: 560px; }
+.sa .e-calc caption { caption-side: top; text-align: left; padding: 10px 12px 2px; font: 600 .72rem/1.3 var(--font-sans);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+.sa .e-sum td { font-weight: 700; border-top: 2px solid var(--ink); }
+.sa .e-par { display: grid; gap: 22px; }
+.sa .e-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 6px; }
+.sa .e-feil, .sa .e-riktig { display: grid; gap: 4px; align-content: start; border-radius: 10px; padding: 12px 14px; }
+.sa .e-feil { border: 1.5px dashed var(--ink3); }
+.sa .e-riktig { background: var(--accent-soft); border: 1.5px solid var(--accent); }
+.sa .e-lbl { font: 700 .72rem/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+.sa .e-riktig .e-lbl, .sa .e-eks .e-lbl { color: var(--accent); }
+.sa .qa { display: grid; gap: 6px; border-left: 3px solid var(--accent); padding-left: 14px; margin-bottom: 14px; }
+.sa .q { font-weight: 600; }
+
+/* Eksempelboksene. */
+.sa .e-eksliste { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px; }
+.sa .e-eks { display: grid; gap: 6px; align-content: start; background: var(--surface); border: 1px solid var(--line);
+  border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 16px; }
+.sa .e-eks-t { font-family: var(--font-serif); font-weight: 500; font-size: 1.08rem; line-height: 1.3; }
+.sa .e-eks table { font-size: .9rem; margin-top: 4px; }
+.sa .e-eks td { padding: 5px 0; border-top: 1px solid var(--line); border-bottom: 0; }
+.sa .e-eks td.num { padding-left: 12px; }
+
+/* Oversikten: temakortene. */
+.sa .e-temaer { list-style: none; margin: 0; padding: 0; display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 10px; }
+.sa .e-temaer a { display: grid; gap: 6px; align-content: start; height: 100%; padding: 14px 16px; border: 1px solid var(--line);
+  border-radius: 12px; background: var(--surface); color: var(--ink); text-decoration: none; transition: border-color .2s; }
+.sa .e-temaer a:hover { border-color: var(--accent); }
+.sa .e-t-navn { font-family: var(--font-serif); font-weight: 500; font-size: 1.12rem; line-height: 1.25; color: var(--ink); }
+.sa .e-t-tekst { font-size: .92rem; line-height: 1.5; color: var(--ink2); }
+.sa .e-t-niva { font: 600 .68rem/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+
+/* Forrige og neste tema. */
+.sa .sa-pn { justify-content: normal; align-items: stretch; padding: 24px 0 0; }
+.sa-pn { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 10px;
+  border-top: 1px solid var(--line); padding-top: 24px; margin-top: 10px; }
+.sa-pn a { display: grid; gap: 3px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+  text-decoration: none; color: var(--ink); font-family: var(--font-serif); font-weight: 500; font-size: 1.08rem; line-height: 1.3; }
+.sa-pn a:hover { border-color: var(--accent); }
+.sa-pn span { font: 600 .7rem/1.3 var(--font-sans); letter-spacing: .08em; text-transform: uppercase; color: var(--ink3); }
+.sa-pn .sa-pn-n { text-align: right; }
+.sa-kilde { font-size: .8rem !important; line-height: 1.55; color: var(--ink3); }
+
+/* Figurene: tittel i Newsreader, etiketter og hjemmel i Geist. Tall i Newsreader med like brede sifre. */
+.sa .ill { background: var(--surface); }
+.sa .ill .ill-title { font-family: var(--font-serif); font-weight: 500; font-size: 1.15rem; }
+.sa .ill .ill-n, .sa .ill .ill-src, .sa .tl-dato, .sa .flis-ref, .sa .m-bar-tekst { font-family: var(--font-sans); letter-spacing: .02em; }
+.sa .ill svg .f-mono, .sa .m-rad > span:last-child, .sa .flis-tall, .sa .m-felt input[type="text"] { font-variant-numeric: tabular-nums lining-nums; }
+.sa .flis-tall { font-family: var(--font-serif); font-weight: 500; }
+
+/* Søkeboksen som search.js setter inn (samme reservestil som på /skatt/). */
+.search-box { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px 14px; max-width: 520px; margin: 0 auto; font: 14px/1.4 var(--font-sans); }
+.search-icon { color: var(--ink3); flex-shrink: 0; }
+#search-input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--ink); font: inherit; padding: 2px 0; }
+#search-input::placeholder { color: var(--ink4); }
+.search-box:focus-within { border-color: var(--line-warm); }
+.search-kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink3); background: var(--bg);
+  border: 1px solid var(--line); padding: 3px 7px; border-radius: 5px; flex-shrink: 0; }
+.search-dropdown { position: absolute; z-index: 100; margin-top: 6px; max-width: 520px; width: 100%; background: var(--surface-2, var(--surface));
+  border: 1px solid var(--line); border-radius: 10px; display: none; overflow: hidden; }
+.search-dropdown:not(:empty) { display: block; }
+
+body { min-height: 100vh; display: flex; flex-direction: column; }
+body > main { flex: 1 0 auto; }
+body > footer { flex-shrink: 0; }
+
+@media (max-width: 560px) {
+  .sa .simple, .sa .e-husk { padding: 16px; }
+  .sa-pn .sa-pn-n { text-align: left; }
+}

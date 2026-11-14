@@ -3352,7 +3352,7 @@ REGIONS['en'] = {
     sykHeroTitleNew: 'Sick <em>pay</em>',
     skattCatHeroSub: 'Marginal tax, wealth tax and the deductions you probably forget — for the 2026 income year, with references to skatteloven (the Tax Act).',
     skattCatDeckTitle: 'Tools',
-    skattCatDeckCount: '5 categories',
+    skattCatDeckCount: '6 categories',
     skattCatLonnTitle: 'Tax on salary',
     skattCatLonnDesc: 'Gross, net and marginal tax — what you actually pay on the next thousand kroner.',
     skattCatCtaOpen: 'Open',
