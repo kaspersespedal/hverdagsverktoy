@@ -12,7 +12,8 @@ const CACHE_NAME = 'hverdagsverktoy-v280';
 // on the next request instead, straight from the browser's HTTP cache.
 const PRECACHE_URLS = [
   './',
-  './manifest.json'
+  './manifest.json',
+  './skatt/skattemelding/'
 ];
 
 // Flag images (external CDN) — precached so language dropdown renders instantly.

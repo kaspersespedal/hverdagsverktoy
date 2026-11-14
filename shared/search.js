@@ -186,11 +186,12 @@ var SEARCH_DATA = [
   {name:'Reisefradrag',desc:'Fradrag for reise mellom hjem og arbeidssted',url:'/skatt/reise/',tags:'reisefradrag pendler reise arbeid km kilometer bom bompenger',type:'tool',page:'Skatt'},
   // De to eneste sidene i sitemap som manglet oppføring — «dokumentavgift» ga
   // «Ingen treff» selv om kalkulatoren har ligget ute lenge.
-  {name:'Dokumentavgift og tinglysing',desc:'Dokumentavgift 2,5 % og tinglysingsgebyr ved boligkjøp',url:'/boliglan/dok/',tags:'dokumentavgift tinglysing tinglysingsgebyr boligkjøp borettslag nybygg arv fritak omkostninger',type:'tool',page:'Boliglån'}
+  {name:'Dokumentavgift og tinglysing',desc:'Dokumentavgift 2,5 % og tinglysingsgebyr ved boligkjøp',url:'/boliglan/dok/',tags:'dokumentavgift tinglysing tinglysingsgebyr boligkjøp borettslag nybygg arv fritak omkostninger',type:'tool',page:'Boliglån'},
   // Gruppe B (14.11.2026): tre nye kalkulatorer
   {name:'Prosentregning',desc:'Hvor mange prosent, økning og nedgang, pris etter rabatt og pris uten mva',url:'/kalkulator/prosent/',tags:'prosent prosentregning prosentkalkulator rabatt rabattkalkulator økning nedgang endring i prosent prosentpoeng pris før rabatt mva uten mva ta ut mva percentage percent discount',type:'tool',page:'Kalkulator'},
   {name:'Dager mellom datoer',desc:'Dager, uker og virkedager mellom to datoer, eller legg til dager med norske helligdager',url:'/kalkulator/datoer/',tags:'dager mellom datoer datokalkulator dagskalkulator virkedager arbeidsdager uker helligdager påske pinse kristi himmelfart legge til dager frist days between dates working days business days',type:'tool',page:'Kalkulator'},
   {name:'Kroneverdi og inflasjon',desc:'Hva et beløp fra et tidligere år er verdt i dag, regnet med konsumprisindeksen',url:'/kalkulator/kroneverdi/',tags:'kroneverdi inflasjon kpi konsumprisindeks prisvekst kjøpekraft verdien av penger prisstigning priskalkulator ssb inflation purchasing power',type:'tool',page:'Kalkulator'},
+  {name:'Lag skattemelding',desc:'Gå gjennom skattemeldingen steg for steg med et eksempel',url:'/skatt/skattemelding/',tags:'skattemelding selvangivelse skatteoppgjør lever levere restskatt tilbake penger tilgode fradrag eksempel steg for steg',type:'tool',page:'Skatt'}
 ];
 
 /* Forsiden har sin egen søke-UI og kjørte på en lokal 19-treffs kopi av dette
