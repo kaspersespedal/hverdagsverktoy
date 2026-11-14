@@ -207,6 +207,45 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
   .bud-calc-result{border-left:none;border-top:1px solid var(--line)}
 }
 
+/* ── «Hvor går pengene?»: levende fordeling under budsjett-grid (tegnes av renderViz) ── */
+.bud-viz{margin-top:22px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:22px 24px 24px}
+.bud-viz-h{margin:0 0 8px;font-family:var(--font-serif);font-size:20px;font-weight:500;letter-spacing:-.2px;color:var(--ink)}
+.bud-viz-say{margin:0;font:400 14px/1.55 var(--font-sans);color:var(--ink2);max-width:62ch}
+.bud-viz-bar{position:relative;display:flex;gap:2px;height:26px;margin-top:20px;border-radius:4px;overflow:hidden}
+.bud-viz-bar span{min-width:0;height:100%}
+.bv-f{background:color-mix(in srgb,var(--ink) 60%,transparent)}
+.bv-v{background:color-mix(in srgb,var(--ink) 28%,transparent)}
+.bv-s{background:repeating-linear-gradient(135deg,var(--accent) 0 3px,color-mix(in srgb,var(--accent) 35%,transparent) 3px 6px)}
+.bv-o{background:var(--accent)}
+.bv-x{background:repeating-linear-gradient(135deg,var(--surface) 0 2px,transparent 2px 6px),color-mix(in srgb,var(--ink) 60%,transparent)}
+.bud-viz-bar .bv-x{position:absolute;top:0;right:0;bottom:0;border-left:2px solid var(--ink);background:repeating-linear-gradient(135deg,var(--surface) 0 2px,transparent 2px 6px)}
+.bud-viz-leg{list-style:none;margin:16px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px 20px}
+.bud-viz-leg li{min-width:0;display:flex;flex-direction:column;gap:5px}
+.bud-viz-leg .n{display:flex;align-items:center;gap:8px;font-size:12px;line-height:1.3;color:var(--ink3)}
+.bud-viz-leg .sw{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.bud-viz-leg .k,.bud-viz-fut .k{font-family:var(--font-serif);font-weight:500;font-size:20px;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums lining-nums;letter-spacing:-.2px}
+.bud-viz-leg .p{font:400 12px/1 var(--font-sans);color:var(--ink3);margin-left:7px;letter-spacing:0}
+.bud-viz-sub{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.bud-viz-l{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);font-weight:600}
+.bud-viz-l b{font:500 14px/1 var(--font-sans);letter-spacing:0;color:var(--ink);font-variant-numeric:tabular-nums}
+.bud-viz-track{position:relative;height:8px;margin-top:14px;border-radius:4px;background:color-mix(in srgb,var(--ink) 10%,transparent)}
+.bud-viz-track b{display:block;height:100%;border-radius:4px;background:var(--accent)}
+.bud-viz-track i{position:absolute;top:-4px;bottom:-4px;width:1px;background:var(--ink3)}
+.bud-viz-ticks{position:relative;height:14px;margin-top:8px;font-size:11px;line-height:14px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.bud-viz-ticks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.bud-viz-fut{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:14px;border:1px solid var(--line);border-radius:6px}
+.bud-viz-fut div{min-width:0;padding:14px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:7px}
+.bud-viz-fut div:last-child{border-right:none}
+.bud-viz-fut .t{font-size:12px;color:var(--ink3)}
+.bud-viz-fine{margin:10px 0 0;font:400 12px/1.5 var(--font-sans);color:var(--ink3)}
+@media (max-width:640px){
+  .bud-viz{padding:18px 16px 20px}
+  .bud-viz-leg{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+  .bud-viz-fut{grid-template-columns:1fr}
+  .bud-viz-fut div{flex-direction:row;justify-content:space-between;align-items:baseline;gap:12px;padding:11px 14px;border-right:none;border-bottom:1px solid var(--line)}
+  .bud-viz-fut div:last-child{border-bottom:none}
+}
+
 footer{border-top:1px solid var(--line);padding:32px 0;margin-top:32px}
 footer .foot{display:flex;align-items:center;justify-content:space-between;gap:18px;font:400 12.5px/1.4 var(--font-sans);color:var(--ink3);flex-wrap:wrap}
 footer .foot-links{display:flex;gap:14px;align-items:center}
@@ -356,6 +395,11 @@ footer em{font-style:italic}
 
       <div class="bud-grid" id="budGrid"></div>
       <div id="budCalcWrap" aria-live="polite"></div>
+      <section class="bud-viz" aria-labelledby="budVizH">
+        <h2 class="bud-viz-h" id="budVizH">Hvor går pengene?</h2>
+        <p class="bud-viz-say" id="budVizSay" aria-live="polite"></p>
+        <div id="budVizBody"></div>
+      </section>
     </section>
 
     <!-- =============== LAER-INNHOLD: personlig-budsjett =============== -->
@@ -892,6 +936,70 @@ footer em{font-style:italic}
     recalcBudget();
   }
 
+  // ── «Hvor går pengene?»: stolpe, sparing mot 10 og 20 %, og hva beløpet blir til over tid.
+  //    Får summene fra recalcBudget. Poster som heter «Sparing …» telles som sparing, slik
+  //    forklaringsblokken lenger ned også gjør. ──
+  var vizLast = [0, 0, 0];
+  function renderViz(inn, fasteSum, varSum){
+    var say = document.getElementById('budVizSay'), body = document.getElementById('budVizBody');
+    if(!say || !body) return;
+    vizLast = [inn, fasteSum, varSum];
+    var NB = '\u00a0', txt, html = '';
+    function kr(n){ return fmtKrPlain(n) + NB + 'kr'; }
+    function pct(n){ return Math.round(n / inn * 100) + NB + '%'; }
+    var spar = 0, sparF = 0;
+    ['faste','variable'].forEach(function(k){
+      (budState[k] || []).forEach(function(r){
+        var v = parseInt(r.v,10) || 0;
+        if(v > 0 && /^spar/i.test(String(r.l || '').trim())){ spar += v; if(k === 'faste') sparF += v; }
+      });
+    });
+    var ut = fasteSum + varSum, diff = inn - ut, over = diff < 0 ? -diff : 0;
+    if(inn <= 0){
+      txt = 'Legg inn inntekt i budsjettet over. Da ser du her hvor pengene går, og hvor mye du kan spare.';
+    } else {
+      var segs = [
+        ['bv-f', ph('Faste utgifter'), Math.max(0, fasteSum - sparF), 1],
+        ['bv-v', ph('Utgifter som varierer'), Math.max(0, varSum - (spar - sparF)), 1],
+        ['bv-s', 'Satt av til sparing', spar, 0],
+        over ? ['bv-x', 'Over inntekten', over, 1] : ['bv-o', ph('Til overs'), diff, 1]
+      ].filter(function(s){ return s[3] || s[2] > 0; });
+      html = '<div class="bud-viz-bar" role="img" aria-label="' + escapeHtml('Inntekten per måned fordelt: ' + segs.map(function(s){ return s[1] + ' ' + kr(s[2]) + ', ' + pct(s[2]); }).join('. ')) + '">'
+        + segs.map(function(s){
+            if(s[0] === 'bv-x') return '<span class="bv-x" style="width:' + (over / ut * 100).toFixed(2) + '%"></span>';
+            return s[2] > 0 ? '<span class="' + s[0] + '" style="flex:' + s[2] + ' 1 0"></span>' : '';
+          }).join('')
+        + '</div><ul class="bud-viz-leg">'
+        + segs.map(function(s){
+            return '<li><span class="n"><span class="sw ' + s[0] + '" aria-hidden="true"></span>' + escapeHtml(s[1]) + '</span>'
+              + '<span class="k">' + kr(s[2]) + '<span class="p">' + pct(s[2]) + '</span></span></li>';
+          }).join('')
+        + '</ul>';
+      if(over){
+        txt = 'Du bruker ' + kr(over) + ' mer enn du tjener hver måned. På ett år blir det ' + kr(over * 12) + '.';
+      } else {
+        var saved = spar + diff, rate = Math.round(saved / inn * 100), mal = rate < 10 ? 10 : 20;
+        txt = saved <= 0 ? 'Du bruker hele inntekten. Da blir det ingenting igjen til sparing.'
+          : spar > 0 ? 'Du sparer ' + rate + NB + '% av inntekten. ' + kr(spar) + ' er satt av til sparing, og ' + kr(diff) + ' er til overs.'
+          : 'Du kan spare ' + rate + NB + '% av inntekten.';
+        txt += rate >= 20 ? (rate > 20 ? ' Det er mer enn 20' : ' Det er akkurat 20') + NB + '%, som er sparedelen i 50/30/20-regelen.'
+          : ' Med ' + mal + NB + '% ville du hatt ' + kr(Math.round(inn * mal / 100) - saved) + ' mer i måneden.';
+        html += '<div class="bud-viz-sub"><div class="bud-viz-l"><span>Sparing av inntekten</span><b>' + rate + NB + '%</b></div>'
+          + '<div class="bud-viz-track" aria-hidden="true"><b style="width:' + Math.min(100, rate / 40 * 100) + '%"></b><i style="left:25%"></i><i style="left:50%"></i></div>'
+          + '<div class="bud-viz-ticks" aria-hidden="true"><span style="left:25%">10' + NB + '%</span><span style="left:50%">20' + NB + '%</span></div></div>';
+        if(saved > 0){
+          html += '<div class="bud-viz-sub"><div class="bud-viz-l"><span>Hva blir det til?</span></div><div class="bud-viz-fut">'
+            + [[1,'Etter 1 år'],[5,'Etter 5 år'],[10,'Etter 10 år']].map(function(a){
+                return '<div><span class="t">' + a[1] + '</span><span class="k">' + kr(saved * 12 * a[0]) + '</span></div>';
+              }).join('')
+            + '</div><p class="bud-viz-fine">Hvis du setter av ' + kr(saved) + ' hver måned. Renter er ikke med.</p></div>';
+        }
+      }
+    }
+    if(say.textContent !== txt) say.textContent = txt;
+    body.innerHTML = html;
+  }
+
   function recalcBudget(){
     var inn = 0, fasteSum = 0, varSum = 0;
     (budState.inntekt || []).forEach(function(r){ inn      += (parseInt(r.v,10)||0); });
@@ -920,6 +1028,7 @@ footer em{font-style:italic}
       aEl.textContent = sign + fmtKrPlain(Math.abs(diff * 12)) + ' kr';
       aEl.classList.toggle('neg', neg);
     }
+    renderViz(inn, fasteSum, varSum);
     window._budsjett = {inntekt:budState.inntekt, faste:budState.faste, variable:budState.variable};
     if(window.hvtLearn) hvtLearn.update('personlig-budsjett', window._budsjett);
   }
@@ -935,6 +1044,7 @@ footer em{font-style:italic}
     var field = e.target.dataset.field;
     if(field === 'l'){
       budState[col][idx].l = e.target.value;
+      renderViz.apply(null, vizLast);
       if(window.hvtLearn) hvtLearn.update('personlig-budsjett', window._budsjett);
     } else if(field === 'v'){
       var raw = (e.target.value || '').replace(/[^\d\-]/g,'');
