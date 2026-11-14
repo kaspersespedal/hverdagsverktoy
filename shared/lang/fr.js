@@ -3092,7 +3092,7 @@ REGIONS['fr'] = {
     sykHeroTitleNew: 'Indemnités <em>maladie</em>',
     skattCatHeroSub: 'Taux marginal, impôt sur la fortune et déductions que vous oubliez sans doute — pour l\'année de revenus 2026, avec références à la skatteloven (loi fiscale).',
     skattCatDeckTitle: 'Outils',
-    skattCatDeckCount: '5 catégories',
+    skattCatDeckCount: '6 catégories',
     skattCatLonnTitle: 'Impôt sur le salaire',
     skattCatLonnDesc: 'Brut, net et taux marginal — ce que vous payez réellement sur les mille prochaines couronnes.',
     skattCatCtaOpen: 'Ouvrir',

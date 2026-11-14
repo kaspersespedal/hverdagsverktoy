@@ -3081,7 +3081,7 @@ REGIONS['pl'] = {
     sykHeroTitleNew: 'Zasiłek <em>chorobowy</em>',
     skattCatHeroSub: 'Krańcowa stawka podatku, formuesskatt (podatek majątkowy) i odliczenia, o których zwykle się zapomina — dla roku podatkowego 2026, z odniesieniami do skatteloven.',
     skattCatDeckTitle: 'Narzędzia',
-    skattCatDeckCount: '5 kategorii',
+    skattCatDeckCount: '6 kategorii',
     skattCatLonnTitle: 'Podatek od wynagrodzenia',
     skattCatLonnDesc: 'Brutto, netto i stawka krańcowa — ile naprawdę zapłacisz od kolejnego tysiąca.',
     skattCatCtaOpen: 'Otwórz',

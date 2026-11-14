@@ -3136,7 +3136,7 @@ REGIONS['ar'] = {
     sykHeroTitleNew: 'بدل <em>المرض</em>',
     skattCatHeroSub: 'الضريبة الحدية وضريبة الثروة والخصومات التي تنساها على الأرجح — للسنة الضريبية 2026، مع إحالات إلى قانون الضرائب (skatteloven).',
     skattCatDeckTitle: 'أدوات',
-    skattCatDeckCount: '5 فئات',
+    skattCatDeckCount: '6 فئات',
     skattCatLonnTitle: 'الضريبة على الراتب',
     skattCatLonnDesc: 'الإجمالي والصافي والضريبة الحدية — ما تدفعه فعلياً من الألف كرونة التالية.',
     skattCatCtaOpen: 'افتح',
