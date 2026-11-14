@@ -1,5 +1,5 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v279';
+const CACHE_NAME = 'hverdagsverktoy-v280';
 
 // Files to cache on SW install for offline use.
 // Lang files are NOT precached — they'd add ~2.5 MB to install cost and most users
@@ -12,7 +12,8 @@ const CACHE_NAME = 'hverdagsverktoy-v279';
 // on the next request instead, straight from the browser's HTTP cache.
 const PRECACHE_URLS = [
   './',
-  './manifest.json'
+  './manifest.json',
+  './skatt/skattemelding/'
 ];
 
 // Flag images (external CDN) — precached so language dropdown renders instantly.
