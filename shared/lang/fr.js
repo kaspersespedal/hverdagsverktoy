@@ -1002,7 +1002,7 @@ REGIONS['fr'] = {
     persToolBudsjettDesc: 'Établissez un budget personnel avec tous les revenus et dépenses — exportable en CSV.',
     persToolAksjerTitle: 'Actions',
     persToolAksjerDesc: 'Impôt sur la plus-value sur actions, facteur d\'ajustement 1,72 et abattement de protection — guide complet.',
-    homeHeroTitle: 'Tout ce qu’il vous faut pour vos <em>finances</em>.',
+    homeHeroTitle: 'Vos finances, <em>sans jargon</em>.',
     homeHeroLangPill: '10 langues',
     homeHeroSubtitle: 'Mis à jour selon les règles en vigueur pour 2026.',
     homeHeroFree: 'Gratuit — tout s\'exécute localement dans votre navigateur.',

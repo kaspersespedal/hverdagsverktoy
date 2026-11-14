@@ -1445,7 +1445,7 @@ REGIONS['pl'] = {
     timerSrReset:'Minutnik został wyzerowany.',
     timerSrDone:'Czas minął.',
     crumbHereKalkulatorTimer:'Odliczanie',
-    homeHeroTitle:'Wszystko, czego potrzebujesz do <em>finansów</em>.',
+    homeHeroTitle:'Finanse <em>bez żargonu</em>.',
     homeMarketTitle:'Przegląd dnia',
     homeFxConvLabel: 'Przelicznik walut',
     "fr.kicker": "Nadchodzące",

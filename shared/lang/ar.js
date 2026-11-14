@@ -1514,7 +1514,7 @@ REGIONS['ar'] = {
     timerSrReset:'تمت إعادة تعيين المؤقت.',
     timerSrDone:'انتهى الوقت.',
     crumbHereKalkulatorTimer:'العد التنازلي',
-    homeHeroTitle: 'كل ما تحتاجه لإدارة <em>أموالك</em>.',
+    homeHeroTitle: 'أموالك <em>بلا مصطلحات معقدة</em>.',
     homeMarketTitle: 'نظرة عامة يومية',
     homeFxConvLabel: 'محوّل العملات',
     "fr.kicker": "قادمة",

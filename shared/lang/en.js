@@ -1801,7 +1801,7 @@ REGIONS['en'] = {
     timerSrReset:'The timer has been reset.',
     timerSrDone:'Time is up.',
     crumbHereKalkulatorTimer:'Countdown',
-    homeHeroTitle: 'Everything you need for <em>your finances</em>.',
+    homeHeroTitle: 'Money matters, <em>minus the jargon</em>.',
     homeMarketTitle: 'Daily overview',
     homeFxConvLabel: 'Currency converter',
     "fr.kicker": "Upcoming",

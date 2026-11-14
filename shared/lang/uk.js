@@ -1521,7 +1521,7 @@ REGIONS['uk'] = {
     timerSrReset:'Таймер скинуто.',
     timerSrDone:'Час вийшов.',
     crumbHereKalkulatorTimer:'Відлік',
-    homeHeroTitle: 'Усе, що потрібно для ваших <em>фінансів</em>.',
+    homeHeroTitle: 'Фінанси <em>без жаргону</em>.',
     homeMarketTitle: 'Огляд дня',
     homeFxConvLabel: 'Конвертер валют',
     "fr.kicker": "Незабаром",
