@@ -393,10 +393,34 @@
     if (typeof d.wind === 'number') rows.push([ph('Vind'), nb(d.wind, 1) + '\u00a0m/s' + (d.dir != null ? '\u00a0' + compass(d.dir) : '')]);
     if (w) rows.push([ph('Nedbør'), nb(w.tot, w.tot ? 1 : 0) + '\u00a0mm']);
     setFacts('wxSub', rows);
+    /* Carbon på telefon (index.html, #carbonMobil) viser værkortet som i oktober: én linje
+       med dagens maks, min og vind, og fire ruter under. Fylles alltid; CSS velger visning. */
+    var line = ph('Maks') + ' ' + deg(d.max) + ' · ' + ph('Min') + ' ' + deg(d.min);
+    if (typeof d.wind === 'number') line += ' · ' + nb(d.wind, 1) + ' m/s' + (d.dir != null ? ' ' + compass(d.dir) : '');
+    setText('wxLine', line);
+    buildForecast(d);
     if (_big.kind === 'wx') bigRefresh(); // live-oppdater åpen fullskjermgraf
     stampNow();
   }
   function deg(v) { var r = Math.round(v); return (r < 0 ? '−' + (-r) : String(r)) + '°'; }
+  /* De fire rutene under linja (Carbon på telefon): nå, +2, +4 og +6 timer, med symbol,
+     temperatur og klokkeslett. Samme timeserie som døgngrafen. */
+  function buildForecast(d) {
+    var el = $('wxForecast'); if (!el) return;
+    var now = Date.now();
+    var hrs = (d.hrs || []).filter(function (h) { return Date.parse(h.t) + 3600e3 > now; });
+    if (hrs.length < 7) return;
+    var html = '';
+    for (var i = 0; i <= 6; i += 2) {
+      var hh = new Date(hrs[i].t).getHours();
+      html += '<div class="wx-fc-cell">' +
+        '<span class="wx-fc-ico">' + wxIcon(hrs[i].sym) + '</span>' +
+        '<b class="wx-fc-temp">' + deg(hrs[i].temp) + '</b>' +
+        '<span class="wx-fc-time">' + esc(i === 0 ? ph('nå') : (hh < 10 ? '0' + hh : String(hh))) + '</span>' +
+        '</div>';
+    }
+    el.innerHTML = html;
+  }
   /* Værkortets døgngraf: temperaturkurven de neste 24 timene, nedbør som søyler nederst,
      et værsymbol per rute og en setning om når nedbøren kommer.
      _wxMini holder serien scrub-chipen leser fra, og døgnets maks, min og nedbør til faktaradene. */
@@ -1292,6 +1316,7 @@
       var o = d[k]; if (o) sub.push([fxUnit(o, k), fxQuote(o)]);
     });
     setFacts('fxSub', sub);
+    setText('fxLine', sub.map(function (r) { return r[0] + ' ' + r[1]; }).join(' · ')); // Carbon på telefon
     var span = $('fxTrend');
     if (span && c.prev != null) {
       var diff = (c.last - c.prev) * m, dir = Math.abs(diff) < 0.0005 ? 0 : diff > 0 ? 1 : -1;
@@ -1347,15 +1372,29 @@
     setVal('srVal', d.last, 2);
     var rows = [[ph('Sist endret'), nbDate(d.changeDate)]];
     /* Neste rentemøte og hvor lenge det er til. Når møtelista er tom, faller de to radene bort. */
-    var nm = nextMeeting();
+    var nm = nextMeeting(), when = '';
     if (nm) {
       rows.push([ph('Neste rentemøte'), nbDate(nm)]);
       var t = new Date(), md = nm.split('-').map(Number);
       var days = Math.round((Date.UTC(md[0], md[1] - 1, md[2]) -
                              Date.UTC(t.getFullYear(), t.getMonth(), t.getDate())) / 864e5);
-      rows.push([ph('Møtet er'), days > 1 ? fill(T('trSharedInDays', 'om {n} dager'), { n: days }) : ph(days === 1 ? 'i morgen' : 'i dag')]);
+      when = days > 1 ? fill(T('trSharedInDays', 'om {n} dager'), { n: days }) : ph(days === 1 ? 'i morgen' : 'i dag');
+      rows.push([ph('Møtet er'), when]);
     }
     setFacts('srSub', rows);
+    /* Carbon på telefon (index.html, #carbonMobil): én linje, og neste rentemøte i stedet for grafen. */
+    setText('srLine', 'Norges Bank · ' + ph('sist endret') + ' ' + nbDate(d.changeDate));
+    var nv = $('srNext'), nl = $('srNextLbl');
+    if (nv && nl) {
+      nl.textContent = nm ? ph('Neste rentemøte') : '';
+      nv.textContent = nm ? nbShort(nm) + ' ' + nm.slice(0, 4) : '';
+      if (nm) {
+        var s = document.createElement('span');
+        s.className = 'in-days'; s.textContent = when;
+        nv.appendChild(document.createTextNode(' ')); // skiller ordene for skjermlesere
+        nv.appendChild(s);
+      }
+    }
     var span = $('srTrend');
     if (span) {
       var diff = d.last - d.prevLevel, dir = Math.abs(diff) < 0.001 ? 0 : diff > 0 ? 1 : -1;
@@ -1407,6 +1446,8 @@
     setFacts('stSub', [[ph('Billigst'), ore(d.cheap, d.cheapHour)],
                        [ph('Dyrest'), ore(d.prices ? d.prices[pk] : d.peak, d.prices ? pk : d.peakHour)],
                        [ph('Snitt'), ore(d.avg)]]);
+    setText('stLine', ph('Billigst') + ' ' + fill(ph('kl. {h}'), { h: pad2(d.cheapHour) }) + ' · ' + // Carbon på telefon
+      Math.round(d.cheap * 100) + ' øre · ' + ph('snitt') + ' ' + Math.round(d.avg * 100) + ' øre');
     var span = $('stTrend');
     if (span) {
       var pct = d.avg ? (d.now - d.avg) / d.avg * 100 : 0, dir = Math.abs(pct) < 0.5 ? 0 : pct > 0 ? 1 : -1;
