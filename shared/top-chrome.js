@@ -368,20 +368,6 @@
     .tabs.has-mod > a.tab{padding-left:10px;padding-right:10px}
     .tabs.has-mod > a.tab[aria-selected="true"]::after{left:10px;right:10px}
   }
-  /* Forsidens kategorirad med «Finansiell modellering» som kort nr. 11 (se addModelleringLink).
-     Navnet går over to linjer der de andre har én. Kortene strekkes til full høyde og innholdet
-     legges øverst, så skillestrekene går helt ned og ikonene står på samme linje. */
-  .quick-cats.has-mod{align-items:stretch}
-  .quick-cats.has-mod .qc{justify-content:flex-start}
-  @media(min-width:1061px){
-    .quick-cats.has-mod{grid-template-columns:repeat(11,minmax(0,1fr))}
-  }
-  @media(min-width:561px) and (max-width:1060px){
-    .quick-cats.has-mod{grid-template-columns:repeat(6,minmax(0,1fr))}
-    .quick-cats.has-mod .qc:nth-child(5){border-right:1px solid var(--line)}
-    .quick-cats.has-mod .qc:nth-child(6){border-right:0;border-top:0}
-    .quick-cats.has-mod .qc:last-child{grid-column:span 2}
-  }
   /* Fokusmodus skjuler toppmenyen. Knappen i heroen er ute av syne når man har rullet, så en
      liten flytende knapp (og Esc) gir veien ut. */
   .tc-focus-exit{position:fixed;top:12px;inset-inline-end:16px;z-index:900;min-height:36px;padding:0 14px;

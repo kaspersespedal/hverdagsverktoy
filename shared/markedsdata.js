@@ -459,16 +459,6 @@
       if (sc) sy += '<span style="left:' + (c / (n - 1) * 100).toFixed(1) + '%">' + wxIcon(sc) + '</span>';
     }
     el = $('wxSyms'); if (el) el.innerHTML = sy;
-
-    /* Én setning om når nedbøren starter. Mengden står i faktaradene over grafen. */
-    var first = -1, note = ph('Opphold det neste døgnet');
-    for (i = 0; i < n - 1; i++) if (p[i] >= 0.1) { first = i; break; }
-    if (first >= 0) {
-      var fs = hrs[first].sym || '', type = /snow/.test(fs) ? ph('Snø') : /sleet/.test(fs) ? ph('Sludd') : ph('Regn');
-      var tpl = first === 0 ? '{type} nå' : isoDay(dt[first]) !== isoDay(new Date()) ? '{type} fra i morgen kl. {h}' : '{type} fra kl. {h}';
-      note = fill(ph(tpl), { type: type, h: pad2(dt[first].getHours()) });
-    }
-    setText('wxNote', note);
   }
   /* Grupperer hele MET-timeserien på lokal kalenderdag og finner maks/min +
      et symbol representativt for dagen (målepunktet nærmest kl. 13 lokal tid). */
