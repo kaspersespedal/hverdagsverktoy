@@ -1977,7 +1977,7 @@
 <script src="/shared/site-shell.js?v=v2" defer></script>
 <script src="/shared/top-chrome.js?v=v293" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v21" defer></script>
+<script src="/shared/markedsdata.js?v=v22" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -2087,8 +2087,309 @@ html[data-theme="bw"] .widget{ box-shadow:inset 0 1px 0 rgba(243,239,231,.05); }
    og ned i teksten bak. Samme tone, full dekkevne. */
 html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
 </style>
+<style id="carbonMobil">/* ══ Carbon på telefon — forsiden slik den var i oktober (v242) ══════════
+   Kasper 2026-11-15: på telefon (640 px og smalere) skal Carbon ha det gamle
+   første skjermbildet: venstrestilt tittel «Praktiske verktøy for økonomi, skatt,
+   lovverk og regnskap.», firkantet søkefelt, kategoriene som én rad man blar
+   sidelengs i, dagsoversikten rett under, og lasteanimasjonen fra den gang.
+   Alle andre temaer, og Carbon på PC og nettbrett, er urørt.
+   Kategoriene står fortsatt i tre grupper i markupen (#280). Her løses gruppene
+   opp (display:contents) til én rad, så også nye lenker – som den top-chrome.js
+   legger sist i siste gruppe – havner i raden. En lenke med langt navn får en
+   bredere celle i stedet for å kuttes. */
+/* Skriftene fra den gang (Inter + Source Serif 4, tatt ut i #255). Bare latin; filene
+   lastes bare ned når Carbon på telefon faktisk bruker dem. */
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(/shared/fonts/inter-latin-400-normal.woff2?v=v1) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(/shared/fonts/inter-latin-500-normal.woff2?v=v1) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(/shared/fonts/inter-latin-600-normal.woff2?v=v1) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Source Serif 4';font-style:normal;font-weight:400;font-display:swap;src:url(/shared/fonts/source-serif-4-latin-400-normal.woff2?v=v1) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Source Serif 4';font-style:normal;font-weight:500;font-display:swap;src:url(/shared/fonts/source-serif-4-latin-500-normal.woff2?v=v1) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Source Serif 4';font-style:normal;font-weight:600;font-display:swap;src:url(/shared/fonts/source-serif-4-latin-600-normal.woff2?v=v1) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+.hero-h1-alt{display:none}
+@media (max-width:640px){
+  html[data-theme="carbon"]{
+    --font-sans:'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif:'Source Serif 4', Georgia, 'Times New Roman', serif;
+  }
+  /* Tittelen. Norsk har egen tekst; andre språk beholder sin oversatte tittel. */
+  html[data-theme="carbon"][lang="nb"] #heroH1{display:none}
+  html[data-theme="carbon"][lang="nb"] #heroH1Alt{display:block}
+  html[data-theme="carbon"] .hero{min-height:0;display:block;text-align:left;padding:44px 0 28px}
+  html[data-theme="carbon"] #heroH1,
+  html[data-theme="carbon"] #heroH1Alt{font-size:clamp(36px,9vw,46px);letter-spacing:-1.1px;text-wrap:balance}
+
+  /* Søkefeltet: firkantet med avrundede hjørner og mørk gradient */
+  html[data-theme="carbon"] .search-wrap{margin:24px 0 0;max-width:none}
+  html[data-theme="carbon"] .search-shell{border-radius:8px;background:linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%)}
+  html[data-theme="carbon"] .search-shell.focused{background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%)}
+  html[data-theme="carbon"] .search-shell input{padding:14px 18px 14px 44px;font-size:14.5px}
+  html[data-theme="carbon"] .search-icon{left:14px}
+
+  /* Kategoriene: én rad i en ramme, 88 px per celle, blas sidelengs. Luften over og
+     under (14 px) kom i v242 fra telefonregelen «nav{padding:14px 0}» – raden er en <nav>. */
+  html[data-theme="carbon"] .quick-cats{
+    max-width:none;margin:14px 0 0;padding:14px 0;
+    display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:max-content;gap:0;
+    overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+  }
+  html[data-theme="carbon"] .quick-cats::-webkit-scrollbar{display:none}
+  html[data-theme="carbon"] .qg-col{display:contents}
+  html[data-theme="carbon"] .qg-h{display:none}
+  /* .quick-cats i velgeren: slår «.qc:last-child:nth-child(even){grid-column:1/-1}» over,
+     som ellers ville kastet siste lenke i siste gruppe ut av raden */
+  html[data-theme="carbon"] .quick-cats .qc{
+    min-width:88px;grid-column:auto;
+    flex-direction:column;justify-content:center;gap:9px;
+    padding:14px 6px 12px;border-radius:0;color:var(--ink2);
+    border-right:1px solid var(--line);scroll-snap-align:start;
+    transition:background .2s var(--ease), color .2s var(--ease);
+  }
+  html[data-theme="carbon"] .qg-col:last-child .qc:last-child{border-right:0}
+  html[data-theme="carbon"] .qc-ico{width:24px;height:24px;transition:color .2s var(--ease), transform .25s var(--ease)}
+  html[data-theme="carbon"] .qc-ico svg{width:22px;height:22px}
+  html[data-theme="carbon"] .qc-lbl{font:500 10.5px/1 var(--font-sans);letter-spacing:-.05px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  html[data-theme="carbon"] .qc::after{
+    content:"";inset:auto 0 0 0;width:auto;height:1px;margin:0;border:0;
+    background:var(--accent-2);opacity:1;transform:scaleX(0);transform-origin:center;
+    transition:transform .25s var(--ease);
+  }
+
+  /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
+  html[data-theme="carbon"] section.daily{margin-top:0}
+  html[data-theme="carbon"] section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
+
+  /* Toppmenyen 58 px høy som da (nå 55) */
+  html[data-theme="carbon"] body .nav-wrap nav{min-height:57px}
+
+  /* Dagsoversikt-toppen: tre tekstlinjer, ingen piller. Aksentstreken over
+     «DAGSOVERSIKT», så «dato · uke» og «● Sist oppdatert» under. */
+  html[data-theme="carbon"] .daily-head{
+    display:flex;flex-direction:column;align-items:flex-start;gap:7px;
+    padding:12px 18px 11px;
+  }
+  html[data-theme="carbon"] .daily-head .title{
+    display:flex;flex-wrap:wrap;align-items:center;column-gap:9px;row-gap:3px;
+    grid-column:auto;grid-row:auto;
+  }
+  html[data-theme="carbon"] .daily-head .title::before{display:block}
+  html[data-theme="carbon"] .daily-head .title #dailyDate + .sep{display:block}
+  html[data-theme="carbon"] .daily-head .title > span[data-i18n]{
+    flex:0 0 100%;display:block;min-height:0;letter-spacing:2px;
+  }
+  html[data-theme="carbon"] .daily-head .title > span[data-i18n]::before{content:none}
+  html[data-theme="carbon"] .daily-head .title #dailyDate,
+  html[data-theme="carbon"] .daily-head .title #dailyWeek{
+    padding:0;border:0;border-radius:0;background:none;
+    font-family:var(--font-sans);font-size:12.5px;font-weight:500;line-height:inherit;
+    letter-spacing:.2px;color:var(--ink2);white-space:nowrap;
+  }
+  html[data-theme="carbon"] .daily-head .stamp{
+    grid-column:auto;grid-row:auto;height:auto;gap:8px;padding:0;
+    border:0;border-radius:0;background:none;font-size:10.5px;color:var(--ink3);
+  }
+  html[data-theme="carbon"] .daily-head .daily-refresh{display:none}
+
+  /* Kortene: én linje i stedet for faktaradene, lave grafer (48 px), ingen utvid-knapp.
+     Værkortet har fire ruter og renta «Neste rentemøte» i stedet for graf; strøm har fotnoten. */
+  html[data-theme="carbon"] .widget{grid-template-rows:23px auto minmax(34px,auto) 1fr 30px;gap:7px}
+  html[data-theme="carbon"] .widget > .widget-facts,
+  html[data-theme="carbon"] #wxCard > .widget-spark-wrap,
+  html[data-theme="carbon"] #srCard > .widget-spark-wrap,
+  html[data-theme="carbon"] .widget .md-exp{display:none}
+  html[data-theme="carbon"] .widget-label{font-size:10.5px}
+  html[data-theme="carbon"] .widget .w-line{
+    display:flex;align-items:center;gap:8px;margin:0;
+    font-size:12px;line-height:1.4;letter-spacing:-.05px;color:var(--ink3);
+    font-variant-numeric:tabular-nums;
+  }
+  html[data-theme="carbon"] .widget .w-line .ctx{color:var(--ink4)}
+  html[data-theme="carbon"] .widget-spark-wrap,
+  html[data-theme="carbon"] #wxCard .wx-fc-wrap,
+  html[data-theme="carbon"] #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
+  html[data-theme="carbon"] .spark-yax{top:11px;height:48px;font-size:8.5px}
+  html[data-theme="carbon"] .widget-axis{font-size:8.5px}
+  html[data-theme="carbon"] .widget-spark{height:48px}
+  html[data-theme="carbon"] #fxTrend i{display:none}
+  html[data-theme="carbon"] #stCard .w-note{display:block}
+}
+.w-line,.wx-fc-wrap,.sr-next-wrap,.w-note{display:none}
+.sr-next{display:flex;flex-direction:column;gap:4px}
+.sr-next-lbl{font:600 8.5px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;color:var(--ink4)}
+.sr-next-val{font-family:var(--font-serif);font-weight:500;font-size:18px;color:var(--ink2);letter-spacing:-.2px;font-variant-numeric:tabular-nums lining-nums;transition:color .3s var(--ease)}
+.sr-next-val .in-days{font-family:var(--font-sans);font-weight:500;font-size:11px;color:var(--ink4);margin-left:7px;letter-spacing:0}
+@media(hover:hover){.widget:hover .sr-next-val{color:var(--accent-2)}}
+.w-note{margin:0;font-size:10.5px;line-height:1.35;letter-spacing:0;color:var(--ink3)}
+.wx-fc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-height:48px}
+.wx-fc-cell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:7px}
+.wx-fc-cell:first-child{background:rgba(var(--glow-rgb),.10)}
+.wx-fc-ico{display:flex;color:var(--ink3);transition:color .3s var(--ease)}
+.wx-fc-ico svg{width:15px;height:15px;display:block}
+.wx-fc-temp{font-family:var(--font-serif);font-weight:500;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+.wx-fc-time{font:600 8.5px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink4);font-variant-numeric:tabular-nums}
+@media (max-width:640px) and (hover:hover){
+  html[data-theme="carbon"] .qc:hover{background:rgba(255,255,255,.018);color:var(--ink)}
+  html[data-theme="carbon"] .qc:hover::after{transform:scaleX(.5)}
+  html[data-theme="carbon"] .qc:hover .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
+}
+@media (max-width:480px){
+  html[data-theme="carbon"] .daily-head{padding:11px 16px 10px}
+  html[data-theme="carbon"] .hero{padding:36px 0 22px}
+  html[data-theme="carbon"] #heroH1,
+  html[data-theme="carbon"] #heroH1Alt{font-size:clamp(30px,9.4vw,38px);letter-spacing:-.6px}
+  html[data-theme="carbon"] .search-shell input{padding:13px 16px 13px 40px;font-size:14px}
+  html[data-theme="carbon"] .search-icon{left:12px}
+}
+@media (max-width:380px){
+  html[data-theme="carbon"] #heroH1,
+  html[data-theme="carbon"] #heroH1Alt{font-size:28px;letter-spacing:-.4px}
+}
+
+/* ── Lasteanimasjonen (fra v242, fjernet for alle i #252) ──
+   Slås på bare for Carbon på telefon, første gang i fanen, og aldri med redusert
+   bevegelse: skriptet øverst i <body> setter body.introAct, #introBoot tar den av
+   etter 5 s. Alt som skjules her ligger under body.introAct, så ingenting kan bli
+   stående usynlig hvis animasjonen ikke kjører. Fem akter:
+   0 lysteppe · 1 merke og toppknapper · 2 tittelen ord for ord · 3 søk og
+   kategorier (ikonene tegner seg selv) · 4 dagsoversikten og valutaomregneren. */
+.intro-veil{
+  position:fixed;inset:0;z-index:80;pointer-events:none;
+  background:radial-gradient(130% 90% at 50% 6%,
+    color-mix(in srgb, var(--bg,#0A0908) 86%, rgb(var(--glow-rgb,200,153,104))) 0%,
+    var(--bg,#0A0908) 74%);
+  animation:hvVeilOut 1.05s var(--ease-out-quart) .4s both;
+}
+@keyframes hvVeilOut{0%{opacity:1}100%{opacity:0;visibility:hidden}}
+
+body.introAct .nav-wrap{animation:hvEnterIn var(--dur-base) var(--ease-out-quart) backwards}
+@keyframes hvEnterIn{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+body.introAct .nav-wrap .brand-row .mark{animation:hvMarkIn .65s var(--ease-spring-soft) .18s both}
+@keyframes hvMarkIn{
+  0%{opacity:0;transform:scale(.5) rotate(-12deg)}
+  55%{opacity:1}
+  100%{opacity:1;transform:scale(1) rotate(0deg)}
+}
+body.introAct .nav-wrap .wordmark{animation:hvNavItemIn .6s var(--ease-out-quart) .32s both}
+/* .nav-search-pill er skjult til man har blad forbi søket; en animasjon med
+   both-fyll ville tvunget den synlig. */
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill){animation:hvNavItemIn .5s var(--ease-out-quart) both}
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(1){animation-delay:.44s}
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(2){animation-delay:.50s}
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(3){animation-delay:.56s}
+body.introAct .nav-wrap .nav-right > *:not(.nav-search-pill):nth-child(4){animation-delay:.62s}
+@keyframes hvNavItemIn{0%{opacity:0;transform:translateY(-8px)}100%{opacity:1;transform:none}}
+/* Timer-wrapperen får bare fade: en transform gjør den til ankerboks for det
+   fast posisjonerte Nedtelling-panelet. */
+body.introAct .nav-wrap .nav-right > .tmr-popwrap{animation-name:hvNavItemFade}
+@keyframes hvNavItemFade{0%{opacity:0}100%{opacity:1}}
+
+/* Tittelen: hvert ord glir opp av sin egen boks; forsinkelsene (--w-d) settes av skriptet */
+body.introAct [data-headline] .word-inner{
+  transform:translateY(110%);opacity:0;
+  transition:transform var(--dur-slow) var(--ease-out-expo), opacity var(--dur-base) var(--ease-out-quart);
+  transition-delay:var(--w-d, 0ms);
+}
+body.introAct [data-headline].play .word-inner{transform:none;opacity:1}
+body.introAct [data-headline].play .shimmer{
+  animation:hvShimmer 600ms cubic-bezier(.5,0,.25,1) var(--shimmer-d,0ms) 1 both,
+            hvEmBloom 1.15s var(--ease-out-quart) var(--shimmer-d,0ms) 1 both;
+}
+@keyframes hvShimmer{0%{background-position:0% 0}100%{background-position:160% 0}}
+@keyframes hvEmBloom{
+  0%{text-shadow:0 0 0 rgba(var(--glow-rgb,216,173,126),0)}
+  30%{text-shadow:0 0 30px rgba(var(--glow-rgb,216,173,126),.5)}
+  100%{text-shadow:0 0 0 rgba(var(--glow-rgb,216,173,126),0)}
+}
+
+/* Søk og kategorier stiger opp når tittelen har landet */
+body.introAct .hero .search-wrap,
+body.introAct .hero .quick-cats{
+  opacity:0;transform:translateY(12px);
+  transition:opacity var(--dur-base) var(--ease-out-quart), transform var(--dur-base) var(--ease-out-quart);
+}
+body.introAct.heroLanded .hero .search-wrap{opacity:1;transform:none}
+body.introAct.heroLanded .hero .quick-cats{opacity:1;transform:none;transition-delay:var(--stag-loose)}
+/* Ett lys-sveip over søkefeltet, og forstørrelsesglasset tegner seg */
+body.introAct .search-shell::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
+  background:linear-gradient(105deg,transparent 40%,rgba(var(--glow-rgb,216,173,126),.13) 50%,transparent 60%);
+  background-size:240% 100%;background-position:0% 0;
+}
+body.introAct.heroLanded .search-shell::after{animation:hvSweep 1.15s cubic-bezier(.6,.05,.3,1) .5s 1 both}
+@keyframes hvSweep{
+  0%{opacity:0;background-position:0% 0}
+  14%{opacity:1}
+  86%{opacity:1}
+  100%{opacity:0;background-position:170% 0}
+}
+body.introDraw .search-icon .i-draw{transition:stroke-dashoffset .8s var(--ease-out-expo) .3s}
+body.introDraw.heroLanded .search-icon .i-draw{stroke-dashoffset:0 !important}
+
+/* Kategoriene kommer inn én og én (--qcd settes av #introBoot), ikonene tegner seg */
+body.introAct .quick-cats .qc{opacity:0;transform:translateY(13px) scale(.98)}
+body.introAct.heroLanded .quick-cats .qc{
+  opacity:1;transform:none;
+  transition:opacity .55s var(--ease-out-quart) var(--qcd,230ms),
+             transform .6s var(--ease-out-expo) var(--qcd,230ms);
+}
+body.introAct.introDraw .qc-ico .i-draw{transition:stroke-dashoffset .85s var(--ease-out-expo) calc(var(--qcd,230ms) + 140ms)}
+body.introAct.introDraw.heroLanded .qc-ico .i-draw{stroke-dashoffset:0 !important}
+body.introAct.introDraw .qc-ico .i-dot{opacity:0}
+body.introAct.introDraw.heroLanded .qc-ico .i-dot{opacity:1;transition:opacity .45s var(--ease-out-quart) calc(var(--qcd,230ms) + 480ms)}
+
+/* Dagsoversikten lander med et hint av skala når tittelen har landet, kortene
+   bygges opp innvendig (etikett → tall → faktarader → graf), og valutaomregneren
+   kommer sist */
+body.introAct .daily .reveal{opacity:0;transform:translateY(20px);transition-delay:calc(var(--i,0) * 120ms + 330ms)}
+body.introAct .daily .daily-frame.reveal{transform:translateY(20px) scale(.988)}
+body.introAct.heroLanded .daily .reveal.in{opacity:1;transform:none}
+body.introAct .daily #fxConv{--i:5}
+body.introAct .daily-frame::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;z-index:1;
+  background:linear-gradient(115deg,transparent 42%,rgba(var(--glow-rgb,216,173,126),.07) 50%,transparent 58%);
+  background-size:240% 100%;background-position:0% 0;
+}
+body.introAct.heroLanded .daily .daily-frame.reveal.in::after{animation:hvSweep 1.5s cubic-bezier(.6,.05,.3,1) 1.05s 1 both}
+body.introAct .daily .daily-head .title,
+body.introAct .daily .daily-head .stamp{opacity:0;transform:translateY(7px)}
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .title{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease-out-quart) 430ms, transform .55s var(--ease-out-expo) 430ms;
+}
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .stamp{
+  opacity:1;transform:none;
+  transition:opacity .5s var(--ease-out-quart) 510ms, transform .55s var(--ease-out-expo) 510ms;
+}
+body.introAct .daily .widget.reveal{--wd:calc(var(--i,0) * 120ms + 330ms)}
+body.introAct .daily .widget.reveal :is(.widget-top,.widget-value,.widget-facts,.widget-spark-wrap,.w-line,.wx-fc-wrap,.sr-next-wrap,.w-note){opacity:0;transform:translateY(8px)}
+body.introAct.heroLanded .daily .widget.reveal.in .sr-next-wrap{opacity:1;transform:none;transition:opacity .5s var(--ease-out-quart) calc(var(--wd) + 330ms), transform .55s var(--ease-out-expo) calc(var(--wd) + 330ms)}
+body.introAct.heroLanded .daily .widget.reveal.in .w-note{opacity:1;transform:none;transition:opacity .5s var(--ease-out-quart) calc(var(--wd) + 400ms), transform .55s var(--ease-out-expo) calc(var(--wd) + 400ms)}
+body.introAct.heroLanded .daily .widget.reveal.in .w-line{opacity:1;transform:none;transition:opacity .5s var(--ease-out-quart) calc(var(--wd) + 250ms), transform .55s var(--ease-out-expo) calc(var(--wd) + 250ms)}
+body.introAct.heroLanded .daily .widget.reveal.in .wx-fc-wrap{opacity:1;transform:none;transition:opacity .5s var(--ease-out-quart) calc(var(--wd) + 330ms), transform .55s var(--ease-out-expo) calc(var(--wd) + 330ms)}
+body.introAct.heroLanded .daily .widget.reveal.in .widget-top{opacity:1;transform:none;transition:opacity .5s var(--ease-out-quart) calc(var(--wd) + 90ms), transform .55s var(--ease-out-expo) calc(var(--wd) + 90ms)}
+body.introAct.heroLanded .daily .widget.reveal.in .widget-value{opacity:1;transform:none;transition:opacity .5s var(--ease-out-quart) calc(var(--wd) + 170ms), transform .55s var(--ease-out-expo) calc(var(--wd) + 170ms)}
+body.introAct.heroLanded .daily .widget.reveal.in .widget-facts{opacity:1;transform:none;transition:opacity .5s var(--ease-out-quart) calc(var(--wd) + 250ms), transform .55s var(--ease-out-expo) calc(var(--wd) + 250ms)}
+body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;transform:none;transition:opacity .5s var(--ease-out-quart) calc(var(--wd) + 330ms), transform .55s var(--ease-out-expo) calc(var(--wd) + 330ms)}
+
+@media (prefers-reduced-motion:reduce){
+  .intro-veil{display:none !important}
+}
+</style>
 </head>
 <body class="atmo-on">
+<script>/* Carbon på telefon: lasteanimasjonen i #carbonMobil. Settes FØR første maling,
+   ellers rekker kategoriene å vises og så skjule seg igjen. Én gang per fane. */
+(function(){
+  try{
+    if(document.documentElement.getAttribute('data-theme') !== 'carbon') return;
+    if(!window.matchMedia || !matchMedia('(max-width:640px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(sessionStorage.getItem('hvt-intro')) return;
+    sessionStorage.setItem('hvt-intro', '1');
+  }catch(e){ return; }
+  document.body.classList.add('introAct');
+  document.body.insertAdjacentHTML('afterbegin', '<div class="intro-veil" aria-hidden="true"></div>');
+})();
+</script>
 <canvas id="nordlysCanvas" aria-hidden="true"></canvas>
 
 <a class="skip" href="#main" data-i18n="skipLink">Hopp til hovedinnhold</a>
@@ -2160,6 +2461,8 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   <section class="hero" data-screen-label="02 Hero">
     <div class="container">
       <h1 id="heroH1" data-headline data-i18n-html="homeHeroTitle">Økonomi <em>uten fagspråk</em>.</h1>
+      <!-- Carbon på telefon (norsk) har denne tittelen i stedet, se #carbonMobil. Bare én av de to vises. -->
+      <h1 id="heroH1Alt" class="hero-h1-alt" data-headline>Praktiske verktøy for <em>økonomi</em>, skatt, lovverk og regnskap.</h1>
       <div class="search-wrap" id="searchWrap">
         <div class="search-shell" id="searchShell">
           <svg class="search-icon" width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -2266,6 +2569,9 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
             </div>
             <!-- Faktarader (nøkkel · verdi). Fylles av markedsdata.js; teksten her står til data er hentet. -->
             <div class="widget-facts" id="wxSub">Henter værdata …</div>
+            <!-- Carbon på telefon (#carbonMobil) viser kortene som i oktober: én linje i stedet for
+                 faktaradene. På værkortet står fire ruter (nå, +2, +4, +6 t) i stedet for grafen. Fylles av markedsdata.js. -->
+            <p class="w-line"><span class="ctx" id="wxLine">Henter værdata …</span></p>
             <div class="widget-spark-wrap has-yax has-syms">
               <!-- Y-akse: høyeste og laveste temperatur det neste døgnet. Fylles av markedsdata.js. -->
               <div class="spark-yax" aria-hidden="true"><span id="wxYMax">—</span><span id="wxYMin">—</span></div>
@@ -2275,6 +2581,14 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
               <svg class="widget-spark wx-spark" id="wxSpark" viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true"></svg>
               <div class="spark-scrub" id="wxScrub" aria-hidden="true"><span id="wxScrubTxt"></span></div>
               <div class="widget-axis wx-axis" id="wxAxis" aria-hidden="true"></div>
+            </div>
+            <div class="wx-fc-wrap">
+              <div class="wx-fc" id="wxForecast" aria-hidden="true">
+                <div class="wx-fc-cell"><b class="wx-fc-temp">—</b></div>
+                <div class="wx-fc-cell"><b class="wx-fc-temp">—</b></div>
+                <div class="wx-fc-cell"><b class="wx-fc-temp">—</b></div>
+                <div class="wx-fc-cell"><b class="wx-fc-temp">—</b></div>
+              </div>
             </div>
           </div>
 
@@ -2288,6 +2602,14 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
             </div>
             <div class="widget-value"><span class="count-up" id="srVal">—</span><span class="unit">%</span></div>
             <div class="widget-facts" id="srSub">Norges Bank · styringsrenta</div>
+            <p class="w-line"><span class="ctx" id="srLine">Norges Bank · styringsrenta</span></p>
+            <!-- Carbon på telefon: neste rentemøte i stedet for grafen under. -->
+            <div class="sr-next-wrap">
+              <div class="sr-next">
+                <span class="sr-next-lbl" id="srNextLbl">Neste rentemøte</span>
+                <b class="sr-next-val" id="srNext">—</b><!-- «om N dager» legges til av markedsdata.js -->
+              </div>
+            </div>
             <div class="widget-spark-wrap has-yax">
               <!-- Y-akse: høyeste og laveste rentenivå i perioden. Fylles av markedsdata.js. -->
               <div class="spark-yax" aria-hidden="true"><span id="srYMax">—</span><span id="srYMin">—</span></div>
@@ -2310,6 +2632,7 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
               <button type="button" class="md-exp" data-big="st" aria-haspopup="dialog" aria-label="Vis strømprisen i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
             </div>
             <div class="widget-facts" id="stSub">Henter strømpris …</div>
+            <p class="w-line"><span class="ctx" id="stLine">Henter strømpris …</span></p>
             <div class="widget-spark-wrap has-yax">
               <!-- Y-akse: dyreste og billigste time i øre. Fylles av markedsdata.js. -->
               <div class="spark-yax" aria-hidden="true"><span id="stYMax">—</span><span id="stYMin">—</span></div>
@@ -2318,6 +2641,7 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
               <div class="spark-scrub" id="stScrub" aria-hidden="true"><span id="stScrubTxt"></span></div>
               <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>
             </div>
+            <p class="w-note">Ren spotpris. Nettleie og avgifter kommer i tillegg.</p>
           </div>
 
           <div class="widget reveal" style="--i:4" id="fxCard" aria-label="Valutakurs">
@@ -2335,6 +2659,7 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
               <button type="button" class="md-exp" data-big="fx" aria-haspopup="dialog" aria-label="Vis valutakursen i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
             </div>
             <div class="widget-facts" id="fxSub">Henter valutakurser …</div>
+            <p class="w-line"><span class="ctx" id="fxLine">Henter valutakurser …</span></p>
             <div class="widget-spark-wrap has-yax">
               <!-- Y-akse: høyeste og laveste kurs i perioden. Fylles av markedsdata.js. -->
               <div class="spark-yax" aria-hidden="true"><span id="fxYMax">—</span><span id="fxYMin">—</span></div>
@@ -2870,9 +3195,13 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   var IS_MOBILE = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
 
   // ── Tittelen: ett ord per boks ───────────────────
+  // To titler (#heroH1 og #heroH1Alt for Carbon på telefon); bare én vises, begge deles.
   (function(){
-    var h = document.querySelector('[data-headline]');
-    if(!h) return;
+    var all = document.querySelectorAll('[data-headline]');
+    if(!all.length) return;
+    var INTRO = document.body.classList.contains('introAct');
+    var total = 0;
+    all.forEach(function(h){
 
     function splitNodes(parent, isItalic){
       var out = [];
@@ -2922,15 +3251,39 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
       }
       h.appendChild(mask);
     });
+    if(INTRO) total = Math.max(total, stagger(h));
     }
     split();
     // Språkfila bytter hele tittelen (data-i18n-html): del den i ord igjen, så
     // ordene ikke oversettes hver for seg og månen fortsatt kan måle linjene.
     if('MutationObserver' in window) new MutationObserver(function(){ if(!h.querySelector('.word-mask')) split(); }).observe(h, {childList:true});
+    });
 
-    // Tittelen står ferdig med en gang. Klassen brukes av tema-CSS (ordboksene
+    // Introen (Carbon på telefon, første besøk i fanen): ordene glir opp ett og ett
+    // og kursivordet får et gullsveip. Her settes bare forsinkelsene; CSS-en står i #carbonMobil.
+    function stagger(h){
+      var masks = h.querySelectorAll('.word-mask'), lastEm = -1, i, d;
+      for(i = 0; i < masks.length; i++) if(masks[i].querySelector('.shimmer')) lastEm = i;
+      for(i = 0; i < masks.length; i++){
+        d = i * 80 + (i === lastEm ? 180 : 0);
+        for(var k = 0; k < masks[i].children.length; k++) masks[i].children[k].style.setProperty('--w-d', d + 'ms');
+        if(i === lastEm) h.style.setProperty('--shimmer-d', (d + 280) + 'ms');
+      }
+      return masks.length ? (masks.length - 1) * 80 + (lastEm >= 0 ? 180 : 0) + 720 : 0;
+    }
+
+    // Uten intro står tittelen ferdig med en gang. Klassen brukes av tema-CSS (ordboksene
     // åpnes så tekstskyggen ikke klippes) og av tellerne i dagsoversikten.
-    document.body.classList.add('heroLanded');
+    if(!INTRO){ document.body.classList.add('heroLanded'); return; }
+    var played = false;
+    function play(){
+      if(played) return;
+      played = true;
+      all.forEach(function(h){ h.classList.add('play'); });
+      setTimeout(function(){ document.body.classList.add('heroLanded'); }, Math.max(420, total - 400));
+    }
+    (document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve()).then(function(){ setTimeout(play, 200); });
+    setTimeout(play, 1400);
   })();
 
   // ── Live-dot single ping (data-frame stamp) ───────────────
@@ -2986,10 +3339,10 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   (function(){
     var PH = '—';
     var FELT = [
-      {val:'wxTemp', sub:'wxSub', txt:'Fikk ikke hentet værdata nå.'},
-      {val:'srVal',  sub:'srSub', txt:'Fikk ikke hentet styringsrenta nå.'},
-      {val:'stVal',  sub:'stSub', txt:'Fikk ikke hentet strømprisen nå.'},
-      {val:'fxVal',  sub:'fxSub', txt:'Fikk ikke hentet valutakursene nå.'}
+      {val:'wxTemp', sub:'wxSub', line:'wxLine', txt:'Fikk ikke hentet værdata nå.'},
+      {val:'srVal',  sub:'srSub', line:'srLine', txt:'Fikk ikke hentet styringsrenta nå.'},
+      {val:'stVal',  sub:'stSub', line:'stLine', txt:'Fikk ikke hentet strømprisen nå.'},
+      {val:'fxVal',  sub:'fxSub', line:'fxLine', txt:'Fikk ikke hentet valutakursene nå.'}
     ];
     function meld(){
       // Fanen må ha vært synlig først. Sjekken kom til da tallene ble skrevet med
@@ -3008,6 +3361,8 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
         if(!v || v.textContent.trim() !== PH) return; // ekte tall er på plass
         var s = document.getElementById(f.sub);
         if(s) s.textContent = f.txt;
+        var l = document.getElementById(f.line); // linja Carbon på telefon viser i stedet
+        if(l) l.textContent = f.txt;
       });
     }
     setTimeout(meld, 12000);
@@ -3972,6 +4327,49 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);
   else boot();
+})();
+</script>
+
+<script id="introBoot">
+/* Lasteanimasjonen (Carbon på telefon, se #carbonMobil): strek-ikonene i søkefeltet
+   og kategoriraden tegner seg selv. Hver strek måles og får dasharray/-offset, så
+   overtar overgangene i CSS-en. Kategoriene tas ved DOMContentLoaded, så også lenka
+   top-chrome.js legger til sist er med, og hver får sin plass i kaskaden (--qcd).
+   Etter 5 s tas introAct/introDraw av og strekene får vanlig stil tilbake. */
+(function(){
+  if(!document.body.classList.contains('introAct')) return;
+  function draw(svgs){
+    Array.prototype.forEach.call(svgs, function(svg){
+      svg.querySelectorAll('path,line,circle,rect,polyline,polygon').forEach(function(el){
+        if(el.getAttribute('fill') === 'currentColor'){ el.classList.add('i-dot'); return; }
+        try{
+          var L = el.getTotalLength();
+          if(!L) return;
+          el.style.strokeDasharray = L + ' ' + L;
+          el.style.strokeDashoffset = L;
+          el.classList.add('i-draw');
+        }catch(e){}
+      });
+    });
+  }
+  function cats(){
+    document.querySelectorAll('.quick-cats .qc').forEach(function(a, i){ a.style.setProperty('--qcd', (230 + i * 42) + 'ms'); });
+    draw(document.querySelectorAll('.qc-ico svg'));
+  }
+  draw(document.querySelectorAll('.search-shell .search-icon'));
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', cats);
+  else cats();
+  document.body.classList.add('introDraw');
+  setTimeout(function(){
+    document.body.classList.remove('introAct', 'introDraw');
+    document.querySelectorAll('.i-draw').forEach(function(el){
+      el.style.strokeDasharray = ''; el.style.strokeDashoffset = ''; el.classList.remove('i-draw');
+    });
+    document.querySelectorAll('.i-dot').forEach(function(el){ el.classList.remove('i-dot'); });
+    document.querySelectorAll('.quick-cats .qc').forEach(function(a){ a.style.removeProperty('--qcd'); });
+    var veil = document.querySelector('.intro-veil');
+    if(veil && veil.parentNode) veil.parentNode.removeChild(veil);
+  }, 5000);
 })();
 </script>
 
