@@ -65,7 +65,7 @@
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
 <link rel="stylesheet" href="/shared/themes.css?v=v11">
-<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v2">
+<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v4">
 <link rel="stylesheet" href="/shared/steg-guide.css?v=v1">
 <link rel="stylesheet" href="/shared/learn.css?v=v7">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
@@ -1049,12 +1049,18 @@ body .ks-mode .mdesc{font-size:12px}
         <div style="display:flex;flex-direction:column;gap:8px">
           <span class="rr-eyebrow">Eksempler</span>
           <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <button type="button" class="hv-btn--pill" data-preset="enkel">Enkelt eksempel</button>
             <button type="button" class="hv-btn--pill" data-preset="nille">Ekte eksempel: Nille 2025</button>
             <button type="button" class="hv-btn--pill ghost" data-preset="clear">Tøm</button>
           </div>
         </div>
+        <div class="rf-hent">
+          <button type="button" class="rf-hent-btn" data-rf-hent>Hent tallene fra resultat og balanse</button>
+          <span class="rf-hent-note" data-rf-hent-note aria-live="polite">Slik settes kontantstrømmen opp i praksis: den regnes ut av de to andre.</span>
+        </div>
       </div>
 
+      <div class="rf-work" style="--rf-rows:4">
       <!-- STATEMENT -->
       <div class="rr-card rr-stmt">
         <div class="rr-stmt-head">
@@ -1136,6 +1142,7 @@ body .ks-mode .mdesc{font-size:12px}
         </div>
       </div>
 
+      <div class="rf-side">
       <!-- FRA DRIFT TIL BANK — de tre aktivitetene i samme rekkefølge, bredde og kolonner som oppstillingen.
            Stolpene starter på midtlinja: pluss mot høyre, minus mot venstre. -->
       <div class="rr-card rr-stmt">
@@ -1174,6 +1181,16 @@ body .ks-mode .mdesc{font-size:12px}
           <span class="ptxt" id="patTxt"></span>
         </div>
       </div>
+
+        <div class="rf-xl">
+          <span class="rf-xl-t">Last ned regnskapet</span>
+          <span class="rf-xl-d">Én Excel-fil med resultat, balanse, kontantstrøm og nøkkeltall. Formlene følger med, så du kan regne videre.</span>
+          <button type="button" class="rf-xl-btn" data-rf-excel>Last ned Excel</button>
+          <span class="rf-xl-note" data-rf-excel-note aria-live="polite"></span>
+        </div>
+      </div><!-- /rf-side -->
+
+      <a class="rf-next" href="/regnskap/nokkeltall/"><span><span class="rf-next-k">Regnskapet er satt opp</span><span class="rf-next-t">Les det med nøkkeltall</span></span><span class="rf-next-go">Åpne <span aria-hidden="true">→</span></span></a>
 
       <!-- ACTIVITIES -->
       <div class="rr-panel">
@@ -1257,6 +1274,8 @@ body .ks-mode .mdesc{font-size:12px}
         </details>
         <p class="rf-ekte-src">Kilde: Nille AS (org.nr. 918&nbsp;468&nbsp;919), <a href="https://data.brreg.no/regnskapsregisteret/regnskap/aarsregnskap/kopi/918468919/2025">årsregnskap for 2025</a>, fastsatt 22.&nbsp;april 2026, fra <a href="https://virksomhet.brreg.no/nb/oppslag/enheter/918468919">Brønnøysundregistrene</a>. Hentet 14.&nbsp;november 2026. Tall i hele kroner, som i kilden.</p>
       </section>
+
+      </div><!-- /rf-work -->
 
       <p class="rr-source">Kilde: Regnskapsloven § 6-4 (kontantstrømoppstilling) og § 3-2 (årsregnskapets innhold) · NRS(F) Kontantstrømoppstilling · IAS 7. Eksempeltallene er fra årsregnskapet til Nille AS for 2025, se kilden over. Veiledende, pedagogisk verktøy — ikke profesjonell rådgivning.</p>
 
@@ -1665,15 +1684,31 @@ body .ks-mode .mdesc{font-size:12px}
       clear: {}
     };
     function erNille(){ return ALL.every(function(id){ return parseNum(id) === (PRESETS.nille[id] || 0); }); }
-    function applyPreset(key){
-      var p = PRESETS[key];
-      if(!p) return;
+    function fyll(p){
       ALL.forEach(function(id){
         var el = document.getElementById(id);
-        if(el){ var v = p[id]; el.value = (v===undefined || v===null) ? '' : fmtN(v); }
+        if(el){ var v = p[id]; el.value = (v===undefined || v===null || v===0) ? '' : fmtN(v); }
       });
       compute();
     }
+    function applyPreset(key){
+      var enkel = key==='enkel' && window.HVRegnskap;
+      var p = enkel ? HVRegnskap.eksKs() : PRESETS[key];
+      if(!p) return;
+      if(enkel) HVRegnskap.fyllAndre('ks');   // samme selskap i resultatet og balansen
+      fyll(p);
+    }
+    // Hele oppstillingen regnet ut av resultatet og de to balansene (i år og i fjor)
+    var hentAlt = document.querySelector('[data-rf-hent]'), hentNote = document.querySelector('[data-rf-hent-note]');
+    if(hentAlt) hentAlt.addEventListener('click', function(){
+      if(!window.HVRegnskap) return;
+      var L = HVRegnskap.lagret(), R = HVRegnskap.regnRes(L.res), B = HVRegnskap.regnBal(L.bal), Fj = HVRegnskap.regnBal(L.bal, '_f');
+      if(R.tom || B.tom){ if(hentNote) hentNote.textContent = 'Fyll ut resultatet og balansen først. Da kan tallene hentes hit.'; return; }
+      fyll(HVRegnskap.utled(L.res, L.bal));
+      if(hentNote) hentNote.textContent = Fj.tom ? 'Hentet. Balansen mangler tallene fra i fjor, så endringene er regnet fra null.'
+        : Math.abs(B.diff) >= 1 || Math.abs(Fj.diff) >= 1 ? 'Hentet. Balansen stemmer ikke ennå, så kontantene går ikke opp.'
+        : 'Hentet fra resultatet og balansen.';
+    });
     document.querySelectorAll('[data-preset]').forEach(function(b){
       b.addEventListener('click', function(){ applyPreset(b.getAttribute('data-preset')); });
     });
@@ -1710,7 +1745,7 @@ body .ks-mode .mdesc{font-size:12px}
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v4"></script>
 
-<script defer src="/shared/regnskap-flyt.js?v=v1"></script>
+<script defer src="/shared/regnskap-flyt.js?v=v2"></script>
 <script defer src="/shared/steg-guide.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
