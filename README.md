@@ -2,7 +2,7 @@
 
 Gratis norske finanskalkulatorer — skatt, boliglån, MVA, avgifter, regnskap og privatøkonomi. Tilgjengelig på 10 språk.
 
-**[hverdagsverktoy.com](https://hverdagsverktoy.com)**
+**[hverdagsverktoy.com](https://xn--hverdagsverkty-2qb.no)**
 
 Et uavhengig, ikke-kommersielt hobbyprosjekt utviklet av en privatperson på fritiden. Ingen reklame, ingen sporing, ingen analyseverktøy.
 
@@ -34,7 +34,7 @@ shared/lang/     Språkfiler (10 stk)
 <seksjon>/<x>/   Én kalkulator eller artikkel per mappe
 ```
 
-Alle beregninger skjer lokalt i nettleseren. Det finnes ingen server som tar imot tall brukeren taster inn. Se [personvernerklæringen](https://hverdagsverktoy.com/personvern/) for hvilke eksterne tjenester som brukes.
+Alle beregninger skjer lokalt i nettleseren. Det finnes ingen server som tar imot tall brukeren taster inn. Se [personvernerklæringen](https://xn--hverdagsverkty-2qb.no/personvern/) for hvilke eksterne tjenester som brukes.
 
 ## Kilder
 
