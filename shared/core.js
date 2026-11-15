@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════
 // Hverdagsverktøy — core.js
 // © 2026 Hverdagsverktøy. All rights reserved.
-// https://hverdagsverktoy.com
+// https://xn--hverdagsverkty-2qb.no
 // ═══════════════════════════════════════════════════════
 
 const RATES_LAST_UPDATED = '2026-03-19';

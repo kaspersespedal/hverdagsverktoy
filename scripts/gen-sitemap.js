@@ -17,7 +17,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const ORIGIN = 'https://hverdagsverktoy.com';
+const ORIGIN = 'https://xn--hverdagsverkty-2qb.no';
 const FROZEN = ['ar', 'en', 'fr', 'lt', 'pl', 'so', 'ti', 'uk', 'zh'];
 const SKIP = [
   '.git', '.claude', '_arkiv', '_incoming', '_dev', 'node_modules',
