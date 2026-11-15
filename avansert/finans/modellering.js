@@ -1,4 +1,4 @@
-/* Finansiell modellering — regnemotoren for /modellering/dcf/ og /modellering/prognose/.
+/* Finans (under Avansert) — regnemotoren for /avansert/finans/dcf/ og /avansert/finans/prognose/.
    Bare rene funksjoner, ingen DOM. Samme fil lastes i nettleseren (window.HVModell)
    og i testene (node modellering/test-modellering.js), så det som testes er det som kjører.
    Alle satser er desimaltall: 8 % = 0.08. Beløp er i den enheten brukeren har valgt. */

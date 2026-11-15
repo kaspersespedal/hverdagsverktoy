@@ -1,4 +1,4 @@
-/* /modellering/dcf/ — kobler skjemaet til regnemotoren i /modellering/modellering.js. */
+/* /avansert/finans/dcf/ — kobler skjemaet til regnemotoren i /avansert/finans/modellering.js. */
 (function(){
   'use strict';
   var M = window.HVModell;
