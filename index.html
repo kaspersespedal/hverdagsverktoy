@@ -228,8 +228,10 @@
     min-height:calc(100vh - var(--hero-nav));
     min-height:calc(100svh - var(--hero-nav));
     display:flex;flex-direction:column;justify-content:center;
-    padding:56px 0 104px;text-align:left;position:relative;
+    padding:56px 0 104px;text-align:center;position:relative;
   }
+  /* Alt i første skjermbilde står på samme midtakse: tittel, søk og kategorier. */
+  .hero h1{max-width:none}
   /* margin:auto på et flex-barn krymper det til innholdets bredde. På telefon er
      kategoriraden 880 px bred, og da dro den søkefeltet med seg ut av skjermen. */
   .hero > .container{width:100%;box-sizing:border-box}
@@ -239,7 +241,7 @@
     display:inline-flex;flex-direction:column;align-items:center;gap:9px;
     font:600 11px/1 var(--font-sans);letter-spacing:2px;text-transform:uppercase;
     color:var(--ink3);text-decoration:none;
-    transition:color .2s var(--ease);
+    transition:color .2s var(--ease), opacity .3s var(--ease);
   }
   .hero-more svg{width:14px;height:14px;display:block}
   @media(hover:hover){.hero-more:hover{color:var(--accent-2)}}
@@ -361,17 +363,21 @@
   h1 em{font-style:italic;font-weight:500;color:var(--accent-2)}
 
   /* ── SEARCH ─────────────────────────────────── */
+  /* Søkefeltet er en avrundet pille, smalere enn siden og midtstilt. Flaten er
+     halvt gjennomsiktig så himmelen bak synes; uten backdrop-filter, som ville
+     tvunget nettleseren til å uskarpe nordlyset på nytt for hvert bilde. */
   .search-wrap{
-    margin:52px 0 0;
+    margin:44px auto 0;
+    max-width:720px;
     position:relative;
     z-index:45;
   }
   .search-wrap.is-open{ z-index:120; }
   .search-shell{
     position:relative;
-    background:linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+    background:color-mix(in srgb, var(--surface) 72%, transparent);
     border:1px solid var(--line-2);
-    border-radius:8px;
+    border-radius:999px;
     box-shadow:
       inset 0 1px 0 rgba(255,255,255,.025),
       0 1px 0 rgba(0,0,0,.35);
@@ -400,9 +406,10 @@
   .search-shell input{
     width:100%;background:transparent;border:0;outline:0;
     color:var(--ink);
-    font:400 15.5px/1 var(--font-sans);letter-spacing:-.1px;
-    padding:18px 64px 18px 50px;
+    font:400 16.5px/1 var(--font-sans);letter-spacing:-.1px;
+    padding:21px 84px 21px 60px;
     text-align:left;
+    border-radius:inherit;
   }
   .search-shell input::placeholder{
     color:var(--ink3);
@@ -411,7 +418,7 @@
   }
   .search-shell.focused input::placeholder{ color:var(--ink4); }
   .search-icon{
-    position:absolute;left:18px;top:50%;transform:translateY(-50%);
+    position:absolute;left:25px;top:50%;transform:translateY(-50%);
     color:var(--ink3);pointer-events:none;
     transition:color var(--dur-fast) var(--ease-out-quart),
                transform var(--dur-base) var(--ease-out-quart);
@@ -421,7 +428,7 @@
     transform:translateY(-50%) scale(1.04);
   }
   .search-kbd{
-    position:absolute;right:14px;top:50%;
+    position:absolute;right:22px;top:50%;
     transform:translateY(-50%) translateX(0);
     display:inline-flex;gap:4px;align-items:center;
     padding-left:12px;
@@ -450,88 +457,78 @@
   }
 
   /* ── QUICK CATEGORIES — fast access strip under search ──────────── */
+  /* Ingen ramme og ingen skillestreker: hver kategori er et rundt ikon med
+     navnet under, midtstilt under søkefeltet. Raden brekker selv, så antall
+     kort (10 her + «Finansiell modellering» fra top-chrome.js) kan endres uten
+     at noe kolonnetall må følge med. */
   .quick-cats{
-    margin-top:20px;
-    display:grid;
-    /* Kolonnetallet MÅ følge antall .qc-kort (10). Da Kalkyle ble lagt til som
-       kort nr. 10 sto denne på 9, og kortet brakk ned på en egen rad alene i
-       1/9 bredde — uten topp-kantlinje, siden den bare settes på 5-kolonners
-       breakpointet. */
-    grid-template-columns:repeat(10, minmax(0,1fr));
-    gap:0;
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:6px;
-    overflow:hidden;
+    margin:30px auto 0;
+    display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-start;
+    gap:10px 2px;
   }
   .qc{
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:9px;
-    padding:18px 8px 15px;
+    width:88px;
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+    gap:10px;
+    padding:4px 2px;
     text-decoration:none;color:var(--ink2);
-    border-right:1px solid var(--line);
-    background:transparent;
-    position:relative;
-    transition:background .2s var(--ease),
-               color .2s var(--ease);
+    transition:color .2s var(--ease);
   }
-  .qc:last-child{border-right:0}
-  .qc::after{
-    content:"";position:absolute;left:0;right:0;bottom:0;
-    height:1px;background:var(--accent-2);
-    transform:scaleX(0);transform-origin:center;
-    transition:transform .25s var(--ease);
-  }
-  .qc:hover{
-    background:rgba(255,255,255,.018);
-    color:var(--ink);
-  }
-  @media(hover:hover){.qc:hover::after{transform:scaleX(.5)}}
   .qc-ico{
-    width:24px;height:24px;display:flex;align-items:center;justify-content:center;
-    color:var(--ink3);
-    transition:color .2s var(--ease), transform .25s var(--ease);
+    width:52px;height:52px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink2);
+    background:color-mix(in srgb, var(--surface) 62%, transparent);
+    border:1px solid var(--line-2);
+    transition:color .2s var(--ease), border-color .2s var(--ease),
+               background .2s var(--ease), transform .25s var(--ease);
   }
-  .qc-ico svg{width:22px;height:22px;display:block}
-  @media(hover:hover){.qc:hover .qc-ico{ color:var(--accent-2); transform:translateY(-1px); }}
+  .qc-ico svg{width:21px;height:21px;display:block}
+  @media(hover:hover){
+    .qc:hover{color:var(--ink)}
+    .qc:hover .qc-ico{
+      color:var(--accent-2);
+      border-color:rgba(var(--glow-rgb),.55);
+      background:color-mix(in srgb, var(--surface-2) 82%, transparent);
+      transform:translateY(-2px);
+    }
+  }
+  .qc:focus-visible{outline:none}
+  .qc:focus-visible .qc-ico{
+    border-color:rgba(var(--glow-rgb),.7);
+    box-shadow:0 0 0 3px rgba(var(--glow-rgb),.18);
+  }
   .qc-lbl{
     font:500 11.5px/1.2 var(--font-sans);
     letter-spacing:-.05px;text-align:center;text-wrap:balance;
     overflow:hidden;text-overflow:ellipsis;
     max-width:100%;
   }
-  /* 1060px, ikke 900px: under dette gir 10 kolonner ~84px tekstbredde og
-     "Privatøkonomi" (~78px) begynner å bli ellipset. 5×2 er like symmetrisk. */
+  /* Under 1060 px får ikke alle plass på én rad. Bredden låses til seks kort,
+     så raden brekker 6 + 5 i stedet for 9 + 2. */
   @media (max-width:1060px){
-    .quick-cats{grid-template-columns:repeat(5, minmax(0,1fr))}
-    .qc:nth-child(5){border-right:0}
-    .qc:nth-child(n+6){border-top:1px solid var(--line)}
+    .quick-cats{max-width:540px}
     .qc-lbl{font-size:11px}
   }
   @media (max-width:560px){
     /* Kategori-raden er forsidens svar på fanerekka — den eneste tingen her
-       du blar sidelengs i. Den var bygget som et innrammet kort: strek på
-       alle fire sider og runde hjørner, mens fanerekka på de 71 andre sidene
-       er en bar rad med én hårstrek under. Det ga to vannrette streker der
-       resten av nettstedet har én, og forskjellen leste tydeligst nettopp
-       når raden ble dratt med fingeren. Kortet er derfor løst opp her; bare
-       bunnstreken står igjen.
+       du blar sidelengs i.
 
        --tabs-bleed og data-fade-l/-r settes av shared/top-chrome.js, samme
        mekanikk fanerekka fikk. Uten JS står bleed på 0px og begge fade-ene
        på 0px — da er raden nøyaktig som før, ikke halvveis ombygd. */
     .quick-cats{
-      margin-top:14px;
-      grid-template-columns:none;
+      margin-top:22px;
+      max-width:none;
+      display:grid;
+      justify-content:start;
+      gap:0;
       grid-auto-flow:column;
-      grid-auto-columns:80px;
+      grid-auto-columns:76px;
       overflow-x:auto;overflow-y:hidden;
       scroll-snap-type:x mandatory;
       -webkit-overflow-scrolling:touch;
       scrollbar-width:none;
-      border:0;
-      border-bottom:1px solid var(--line);
-      border-radius:0;
       margin-inline:calc(var(--tabs-bleed, 0px) * -1);
       padding-inline:var(--tabs-bleed, 0px);
       /* Snappingen må kjenne til polstringen. Uten dette låser
@@ -550,8 +547,8 @@
     .quick-cats[data-fade-l="1"]{--fade-l:26px}
     .quick-cats[data-fade-r="1"]{--fade-r:26px}
     .quick-cats::-webkit-scrollbar{display:none}
-    .qc{scroll-snap-align:start;padding:14px 3px 12px;border-top:0}
-    .qc:nth-child(5){border-right:1px solid var(--line)}
+    .qc{scroll-snap-align:start;width:auto;padding:3px 2px 6px}
+    .qc-ico{width:48px;height:48px}
     .qc-lbl{font-size:11px;letter-spacing:-.3px}
   }
 
@@ -751,7 +748,20 @@
   section.daily{
     padding:16px 0 8px;position:relative;
     scroll-margin-top:72px; /* lenka nederst i første skjermbilde: stopp under toppmenyen */
+    /* Første skjermbilde er fortsatt bare tittel, søk og kategorier, men
+       dagsoversikten ligger tett under kategoriene og ikke en halv skjerm
+       lenger ned: den trekkes opp i det tomme feltet nederst i heroen
+       (--hero-pull måles av skriptet «Dagsoversikten: tett under kategoriene»)
+       og holdes usynlig til man blar. Uten JS står den synlig på gammel plass. */
+    margin-top:calc(var(--hero-pull, 0px) * -1);
   }
+  /* .is-live settes først etter at første tilstand er lagt, så dagsoversikten
+     ikke tones UT foran øynene på folk idet siden lastes. */
+  section.daily.is-live > .container{
+    transition:opacity .45s var(--ease-out-quart), transform .6s var(--ease-out-expo);
+  }
+  section.daily.is-held > .container{opacity:0;transform:translateY(18px);pointer-events:none}
+  body.daily-shown .hero-more{opacity:0;pointer-events:none}
   .daily-frame{
     background:var(--surface);
     border:1px solid var(--line);
@@ -1490,9 +1500,9 @@
     }
     .search-wrap{margin-top:32px}
     .search-shell input{
-      padding:14px 18px 14px 44px;font-size:14.5px;
+      padding:16px 22px 16px 50px;font-size:14.5px;
     }
-    .search-icon{left:14px}
+    .search-icon{left:20px}
     .search-kbd{display:none}
     .daily-frame{border-radius:5px}
     .daily-head{
@@ -1544,8 +1554,8 @@
     .container{padding:0 16px}
     .hero{padding:28px 0 84px}
     h1{font-size:clamp(30px, 9.4vw, 38px);letter-spacing:-.6px}
-    .search-shell input{padding:13px 16px 13px 40px;font-size:14px}
-    .search-icon{left:12px;width:16px;height:16px}
+    .search-shell input{padding:15px 20px 15px 46px;font-size:14px}
+    .search-icon{left:18px;width:16px;height:16px}
     .daily-head{padding:11px 16px 10px}
     .widget{padding:14px 16px}
     .daily-credits{padding:0 16px;margin-top:0}
@@ -1944,7 +1954,7 @@
 <script src="/shared/core.js?v=v242" defer></script>
 <script src="/shared/lang/no.js?v=v289" defer></script>
 <script src="/shared/site-shell.js?v=v2" defer></script>
-<script src="/shared/top-chrome.js?v=v282" defer></script>
+<script src="/shared/top-chrome.js?v=v292" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/markedsdata.js?v=v21" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
@@ -3312,6 +3322,36 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
       window.scrollTo({top:0, behavior: REDUCE_MOTION ? 'auto' : 'smooth'});
       setTimeout(function(){ input.focus(); }, REDUCE_MOTION ? 0 : 380);
     });
+  })();
+
+  // ── Dagsoversikten: tett under kategoriene, skjult til man blar ──
+  // Heroen fyller hele vinduet med innholdet midt i, så under kategoriene står
+  // et tomt felt. Dagsoversikten trekkes opp i det feltet (--hero-pull) og
+  // holdes usynlig helt øverst på siden. Feltets høyde følger vinduet, språket
+  // og antall kategorirader, derfor måles det i stedet for å stå som et tall i CSS.
+  (function(){
+    var hero  = document.querySelector('.hero');
+    var daily = document.getElementById('dagsoversikt');
+    var box   = hero && hero.querySelector('.container');
+    if(!hero || !daily || !box) return;
+    var GAP = 40; // luft mellom kategoriene og dagsoversikten (pluss seksjonens egen polstring)
+    function fit(){
+      var free = hero.getBoundingClientRect().bottom - box.getBoundingClientRect().bottom;
+      daily.style.setProperty('--hero-pull', Math.max(0, Math.round(free - GAP)) + 'px');
+    }
+    function sync(){
+      var held = window.scrollY <= 8 && location.hash !== '#dagsoversikt' && !daily.contains(document.activeElement);
+      daily.classList.toggle('is-held', held);
+      document.body.classList.toggle('daily-shown', !held);
+    }
+    fit(); sync();
+    void daily.offsetWidth; // første tilstand regnes ferdig før overgangen slås på
+    daily.classList.add('is-live');
+    window.addEventListener('resize', fit);
+    if('ResizeObserver' in window) new ResizeObserver(fit).observe(box);
+    window.addEventListener('scroll', sync, {passive:true});
+    window.addEventListener('hashchange', sync);
+    daily.addEventListener('focusin', sync);
   })();
 
   // ── Reveal on scroll ──
