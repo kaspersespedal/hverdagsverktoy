@@ -220,7 +220,30 @@
   .nav-right{display:flex;align-items:center;gap:8px;position:relative}
 
   /* ── HERO — quiet, editorial ─────────────────────── */
-  .hero{padding:96px 0 24px;text-align:left;position:relative}
+  /* Første skjermbilde er bare tittel, søk og kategorier: seksjonen fyller
+     vinduet under toppmenyen (--hero-nav = menyens høyde), og innholdet står
+     midt i. Dagsoversikten kommer først når man blar. */
+  .hero{
+    --hero-nav:65px;
+    min-height:calc(100vh - var(--hero-nav));
+    min-height:calc(100svh - var(--hero-nav));
+    display:flex;flex-direction:column;justify-content:center;
+    padding:56px 0 104px;text-align:left;position:relative;
+  }
+  /* margin:auto på et flex-barn krymper det til innholdets bredde. På telefon er
+     kategoriraden 880 px bred, og da dro den søkefeltet med seg ut av skjermen. */
+  .hero > .container{width:100%;box-sizing:border-box}
+  /* Eneste tegn på at det er mer under: en stille lenke nederst i skjermbildet. */
+  .hero-more{
+    position:absolute;left:50%;bottom:30px;transform:translateX(-50%);
+    display:inline-flex;flex-direction:column;align-items:center;gap:9px;
+    font:600 11px/1 var(--font-sans);letter-spacing:2px;text-transform:uppercase;
+    color:var(--ink3);text-decoration:none;
+    transition:color .2s var(--ease);
+  }
+  .hero-more svg{width:14px;height:14px;display:block}
+  @media(hover:hover){.hero-more:hover{color:var(--accent-2)}}
+  @media (max-height:560px){.hero-more{display:none}}
 
   /* ─────────────────────────────────────────────────────
      ATMOSPHERE — "Aurora over ink" (site-wide)
@@ -339,7 +362,7 @@
 
   /* ── SEARCH ─────────────────────────────────── */
   .search-wrap{
-    margin:32px 0 0;
+    margin:52px 0 0;
     position:relative;
     z-index:45;
   }
@@ -727,6 +750,7 @@
   /* ── DATA STRIP — institutional, no chrome ──────── */
   section.daily{
     padding:16px 0 8px;position:relative;
+    scroll-margin-top:72px; /* lenka nederst i første skjermbilde: stopp under toppmenyen */
   }
   .daily-frame{
     background:var(--surface);
@@ -759,17 +783,15 @@
     display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));
   }
   /* Fast radrutenett, likt i alle fire kort: topplinje · tall · faktarader ·
-     graf · fotnote. Uten dette bestemmer innholdet høyden på hver rad, og da
+     graf. Uten dette bestemmer innholdet høyden på hver rad, og da
      havner tallene, grafene og aksene på ulik høyde fra kort til kort.
-     Faktaraden har plass til tre rader à 29 px i alle kort. Fotnote-raden er
-     reservert selv i kortene som ikke har fotnote — det er den som holder
-     grafene på samme linje som strømkortets.
+     Faktaraden har plass til tre rader à 29 px i alle kort.
      Absolutt plasserte barn (stedsøket, valutamenyen) er ikke rutenett-celler. */
   .widget{
     padding:26px 26px 22px;
     border-right:1px solid var(--line);
     display:grid;
-    grid-template-rows:23px auto minmax(87px,auto) 1fr 30px;
+    grid-template-rows:23px auto minmax(87px,auto) 1fr;
     gap:12px;
     min-height:200px;position:relative;
     text-decoration:none;color:var(--ink);
@@ -853,13 +875,6 @@
     color:var(--ink4);
     font-variant-numeric:tabular-nums;
     white-space:nowrap; /* brekker aksen, sprekker rad 4 i kort-rutenettet */
-  }
-  /* Fotnote i et widget-kort (strøm: hva tallet ikke inneholder).
-     --ink3, ikke --ink4: dette er en presisering som skal kunne leses. */
-  .widget-note{
-    margin:0; /* rad-avstanden kommer fra kort-rutenettets gap */
-    font-size:12px;line-height:1.35;letter-spacing:0;text-wrap:pretty;
-    color:var(--ink3);
   }
   /* Værkortets døgngraf: temperaturkurve, nedbør som søyler nederst og en egen rad med
      værsymboler øverst. Symbolrad (18) + luft (6) + kurve (64) = 88 px, samme flate som
@@ -1285,10 +1300,9 @@
   .fx-opt.on b{color:var(--accent-2)}
   .fx-opt:hover,.fx-opt:focus-visible{background:rgba(255,255,255,.09);outline:none}
 
-  /* ── Valutaomregner-stripa (nederst i dagsoversikt-rammen) ──
+  /* ── Valutaomregneren (egen boks rett under dagsoversikt-rammen) ──
      Erstattet marqueen som bare gjentok kursene fra kortene over.
-     Stripa ligger nederst i rammen, som klipper alt som stikker ut,
-     så nedtrekket her må slå oppover. */
+     Nedtrekket slår oppover, over dagsoversikten. */
   /* 1fr auto 1fr: like brede sidekolonner gjør at kontrollene står midt i
      stripa uansett hvor bred etiketten til venstre og kurslinja til høyre er.
      Etiketten er justify-self:start, så den beholder innholdsbredden sin —
@@ -1296,8 +1310,11 @@
   .fxc{
     position:relative;
     display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;
-    border-top:1px solid var(--line);
-    min-height:44px;
+    margin-top:12px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:6px;
+    min-height:52px;
   }
   .fxc-io{
     display:flex;align-items:center;gap:10px;
@@ -1434,7 +1451,7 @@
   .daily-refresh{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;border:0;background:none;color:var(--ink3);cursor:pointer;opacity:.65;transition:opacity .2s,color .2s,transform .4s var(--ease)}
   .daily-refresh svg{width:13px;height:13px}
   @media(hover:hover){.daily-refresh:hover{color:var(--accent-2);opacity:1;transform:rotate(90deg)}}
-  .daily-credits{margin:16px 0 0;padding:0 24px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--ink3)}
+  .daily-credits{margin:0;padding:0 24px;border-top:1px solid var(--line);font-size:11px;line-height:1.7;color:var(--ink3)}
   .daily-credits a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line-2)}
   @media(hover:hover){.daily-credits a:hover{color:var(--accent-2);border-bottom-color:currentColor}}
   .daily-sources summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;align-items:baseline;gap:5px 8px;color:inherit;padding:12px 0}
@@ -1454,7 +1471,7 @@
     .daily-grid{grid-template-columns:repeat(2,1fr)}
     .widget:nth-child(2){border-right:none}
     .widget:nth-child(1),.widget:nth-child(2){border-bottom:1px solid var(--line)}
-    .hero{padding:64px 0 40px}
+    .hero{padding:48px 0 96px}
     .sg-grid{grid-template-columns:1fr}
     section.tools{padding:48px 0 64px}
     section.daily{padding:12px 0 4px}
@@ -1465,13 +1482,13 @@
     nav{padding:14px 0;gap:12px}
     .wordmark{font-size:16.5px}
     .mark{width:26px;height:26px}
-    .hero{padding:44px 0 28px}
+    .hero{--hero-nav:53px;padding:32px 0 88px}
     h1{
       font-size:clamp(34px, 8.6vw, 44px);
       line-height:1.08;letter-spacing:-1px;
       max-width:none;
     }
-    .search-wrap{margin-top:24px}
+    .search-wrap{margin-top:32px}
     .search-shell input{
       padding:14px 18px 14px 44px;font-size:14.5px;
     }
@@ -1525,7 +1542,7 @@
 
   @media (max-width: 480px){
     .container{padding:0 16px}
-    .hero{padding:36px 0 22px}
+    .hero{padding:28px 0 84px}
     h1{font-size:clamp(30px, 9.4vw, 38px);letter-spacing:-.6px}
     .search-shell input{padding:13px 16px 13px 40px;font-size:14px}
     .search-icon{left:12px;width:16px;height:16px}
@@ -1625,12 +1642,12 @@
   }
 
   h1#heroH1{
-    font-size: clamp(46px, 5.8vw, 72px);
-    letter-spacing: -1.6px;
+    font-size: clamp(46px, 6.5vw, 92px);
+    letter-spacing: -.022em;
     text-wrap: balance; /* jevner ut raggen — samme grep som .cat-hero h1 i components.css */
   }
   h1#heroH1 em{
-    letter-spacing: -1.2px;
+    letter-spacing: -.017em;
   }
 
   .section-head h2{
@@ -1889,7 +1906,7 @@
     .widget-value{font-size:24px}
   }
   @media (max-width: 380px){
-    h1#heroH1{font-size:28px;letter-spacing:-.4px}
+    h1#heroH1{font-size:32px;letter-spacing:-.5px}
     .widget-value{font-size:22px}
   }
   /* Scrub er en peker-affordanse — ingen hover på touch. */
@@ -1929,7 +1946,7 @@
 <script src="/shared/site-shell.js?v=v2" defer></script>
 <script src="/shared/top-chrome.js?v=v282" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v20" defer></script>
+<script src="/shared/markedsdata.js?v=v21" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -2169,9 +2186,13 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
         </a>
       </nav>
     </div>
+    <a class="hero-more" href="#dagsoversikt">
+      <span data-i18n="homeMarketTitle">Dagsoversikt</span>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5,6 L8,10.5 L12.5,6"/></svg>
+    </a>
   </section>
 
-  <section class="daily" data-screen-label="03 Dagsoversikt">
+  <section class="daily" id="dagsoversikt" data-screen-label="03 Dagsoversikt">
     <div class="container">
       <div class="daily-frame reveal">
         <header class="daily-head">
@@ -2216,7 +2237,6 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
               <div class="spark-scrub" id="wxScrub" aria-hidden="true"><span id="wxScrubTxt"></span></div>
               <div class="widget-axis wx-axis" id="wxAxis" aria-hidden="true"></div>
             </div>
-            <p class="widget-note" id="wxNote"></p>
           </div>
 
           <div class="widget reveal" style="--i:2" id="srCard" aria-label="Norges Banks styringsrente">
@@ -2259,7 +2279,6 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
               <div class="spark-scrub" id="stScrub" aria-hidden="true"><span id="stScrubTxt"></span></div>
               <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>
             </div>
-            <p class="widget-note">Ren spotpris. Nettleie og avgifter kommer i tillegg.</p>
           </div>
 
           <div class="widget reveal" style="--i:4" id="fxCard" aria-label="Valutakurs">
@@ -2290,31 +2309,6 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
 
         </div>
 
-        <!-- Omregner på kursene som allerede er hentet til valutakortet over.
-             Valuta-brikka og NOK-brikka bytter plass når retningen snus (markedsdata.js). -->
-        <div class="fxc reveal" id="fxConv" data-screen-label="04 Omregner">
-          <span class="fxc-label" data-i18n="homeFxConvLabel">Valutaomregner</span>
-          <div class="fxc-io">
-            <div class="fxc-field" id="fxcSlotA">
-              <input class="fxc-amt" id="fxcAmt" type="text" inputmode="decimal" value="100"
-                     autocomplete="off" spellcheck="false" aria-label="Beløp">
-              <button type="button" class="fxc-cur" id="fxcPick" aria-haspopup="listbox" aria-expanded="false">
-                <span id="fxcCode">USD</span>
-                <svg class="wx-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5,4 L5,6.5 L7.5,4"/></svg>
-              </button>
-            </div>
-            <button type="button" class="fxc-swap" id="fxcSwap" aria-label="Bytt retning">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5,5.5 H12.5 M10.2,3.2 L12.5,5.5 L10.2,7.8"/><path d="M13.5,10.5 H3.5 M5.8,8.2 L3.5,10.5 L5.8,12.8"/></svg>
-            </button>
-            <!-- aria-live på feltet, ikke på tallet: da leses «951,45 NOK», ikke bare tallet. -->
-            <div class="fxc-field fxc-field-out" id="fxcSlotB" aria-live="polite">
-              <span class="fxc-res" id="fxcOut">—</span>
-              <span class="fxc-cur fxc-cur-fixed" id="fxcNok">NOK</span>
-            </div>
-          </div>
-          <span class="fxc-rate" id="fxcRate"></span>
-        </div>
-
       <div class="daily-credits">
         <details class="daily-sources">
           <summary>
@@ -2330,6 +2324,31 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
         </details>
       </div>
 
+      </div>
+
+      <!-- Omregner på kursene som allerede er hentet til valutakortet over. Egen boks under dagsoversikten.
+           Valuta-brikka og NOK-brikka bytter plass når retningen snus (markedsdata.js). -->
+      <div class="fxc reveal" id="fxConv" data-screen-label="04 Omregner">
+        <span class="fxc-label" data-i18n="homeFxConvLabel">Valutaomregner</span>
+        <div class="fxc-io">
+          <div class="fxc-field" id="fxcSlotA">
+            <input class="fxc-amt" id="fxcAmt" type="text" inputmode="decimal" value="100"
+                   autocomplete="off" spellcheck="false" aria-label="Beløp">
+            <button type="button" class="fxc-cur" id="fxcPick" aria-haspopup="listbox" aria-expanded="false">
+              <span id="fxcCode">USD</span>
+              <svg class="wx-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5,4 L5,6.5 L7.5,4"/></svg>
+            </button>
+          </div>
+          <button type="button" class="fxc-swap" id="fxcSwap" aria-label="Bytt retning">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5,5.5 H12.5 M10.2,3.2 L12.5,5.5 L10.2,7.8"/><path d="M13.5,10.5 H3.5 M5.8,8.2 L3.5,10.5 L5.8,12.8"/></svg>
+          </button>
+          <!-- aria-live på feltet, ikke på tallet: da leses «951,45 NOK», ikke bare tallet. -->
+          <div class="fxc-field fxc-field-out" id="fxcSlotB" aria-live="polite">
+            <span class="fxc-res" id="fxcOut">—</span>
+            <span class="fxc-cur fxc-cur-fixed" id="fxcNok">NOK</span>
+          </div>
+        </div>
+        <span class="fxc-rate" id="fxcRate"></span>
       </div>
     </div>
   </section>
