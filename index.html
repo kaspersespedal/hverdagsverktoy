@@ -758,18 +758,19 @@
   .daily-grid{
     display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));
   }
-  /* Fast radrutenett, likt i alle fire kort: topplinje · tall · undertekst ·
+  /* Fast radrutenett, likt i alle fire kort: topplinje · tall · faktarader ·
      graf · fotnote. Uten dette bestemmer innholdet høyden på hver rad, og da
      havner tallene, grafene og aksene på ulik høyde fra kort til kort.
-     Fotnote-raden er reservert selv i kortene som ikke har fotnote — det er
-     den som holder grafene på samme linje som strømkortets.
+     Faktaraden har plass til tre rader à 29 px i alle kort. Fotnote-raden er
+     reservert selv i kortene som ikke har fotnote — det er den som holder
+     grafene på samme linje som strømkortets.
      Absolutt plasserte barn (stedsøket, valutamenyen) er ikke rutenett-celler. */
   .widget{
-    padding:22px 24px 18px;
+    padding:26px 26px 22px;
     border-right:1px solid var(--line);
     display:grid;
-    grid-template-rows:23px auto minmax(34px,auto) 1fr 30px;
-    gap:7px;
+    grid-template-rows:23px auto minmax(87px,auto) 1fr 30px;
+    gap:12px;
     min-height:200px;position:relative;
     text-decoration:none;color:var(--ink);
     transition:background .2s var(--ease);
@@ -810,14 +811,14 @@
   .widget-trend.trend-weather .trend-glyph{width:13px;height:13px;color:var(--accent-2);opacity:.9}
 
   .widget-spark-wrap{
-    padding-top:11px;
-    display:flex;flex-direction:column;gap:3px;
+    padding-top:18px;
+    display:flex;flex-direction:column;gap:6px;
   }
   /* Y-akse: to tall i venstremargen, øverste og nederste verdi i grafen.
      Uten dem kan kurven ikke måles — den autoskalerer, så et fall på 0,3 %
      og et på 15 % fyller nøyaktig like mye av høyden. */
   .spark-yax{
-    position:absolute;left:0;top:11px;width:25px;height:48px;
+    position:absolute;left:0;top:18px;width:25px;height:88px;
     display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;
     font:600 11px/1 var(--font-sans);letter-spacing:.2px;
     color:var(--ink4);font-variant-numeric:tabular-nums;
@@ -828,7 +829,7 @@
   .widget-spark-wrap.has-yax .widget-spark{width:calc(100% - 30px);margin-left:30px}
   .widget-spark-wrap.has-yax .widget-axis{padding-left:30px}
   .widget-spark{
-    display:block;width:100%;height:48px;
+    display:block;width:100%;height:88px;
     color:var(--ink3);
     transition:color .3s var(--ease);
     overflow:visible;
@@ -860,13 +861,24 @@
     font-size:12px;line-height:1.35;letter-spacing:0;text-wrap:pretty;
     color:var(--ink3);
   }
-  /* Værkortets døgngraf: temperaturkurve, nedbør som søyler nederst og et værsymbol per
-     sjette time. Samme 48 px-flate og akser som strøm- og valutakortet, så grafene står
-     på linje. Symbolene ligger i luften over grafen, ikke i den. */
-  .wx-syms{position:absolute;left:30px;right:0;top:-4px;height:14px;color:var(--ink3);pointer-events:none}
-  .wx-syms span{position:absolute;top:0;width:14px;height:14px;margin-left:-7px}
-  .wx-syms svg{display:block;width:14px;height:14px}
+  /* Værkortets døgngraf: temperaturkurve, nedbør som søyler nederst og en egen rad med
+     værsymboler øverst. Symbolrad (18) + luft (6) + kurve (64) = 88 px, samme flate som
+     de tre andre grafene, så aksene står på linje. Loddrette hårstreker på kl. 00 · 06 ·
+     12 · 18 deler døgnet i ruter: symbolet står midt i ruta, klokkeslettet under streken. */
+  .wx-syms{position:relative;height:18px;margin-left:30px;color:var(--ink2);pointer-events:none}
+  .wx-syms span{position:absolute;top:1px;width:16px;height:16px;margin-left:-8px}
+  .wx-syms svg{display:block;width:16px;height:16px}
+  .widget-spark.wx-spark{height:64px}
+  .widget-spark-wrap.has-syms .spark-yax{top:42px;height:64px}
   .wx-spark .wx-rain{fill:var(--ink2);opacity:.4}
+  .wx-spark .spark-grid{stroke:var(--ink3);stroke-width:1;opacity:.22;vector-effect:non-scaling-stroke}
+  /* Faktarader under tallet: nøkkel til venstre, verdi til høyre, hårstrek over hver rad.
+     Samme tre rader à 29 px i alle fire kort, så de leses som én tabell på tvers.
+     Mens data hentes (eller henting feiler) står det en vanlig tekstlinje her i stedet. */
+  .widget-facts{font-size:12px;line-height:1.4;letter-spacing:-.05px;color:var(--ink3)}
+  .wf{display:flex;align-items:center;justify-content:space-between;gap:10px;height:29px;border-top:1px solid var(--line)}
+  .wf-k{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .wf-v{flex-shrink:0;white-space:nowrap;font-weight:500;color:var(--ink2)}
   /* Klokkeslettene står der de hører hjemme på tidsaksen, ikke jevnt fordelt. */
   .widget-spark-wrap.has-yax .wx-axis{display:block;position:relative;height:11px;margin-left:30px;padding-left:0}
   .wx-axis span{position:absolute;top:0;transform:translateX(-50%)}
@@ -1127,10 +1139,6 @@
     .mdb-seg button[aria-pressed="true"]{outline:2px solid Highlight;outline-offset:-2px}
   }
   /* Neste rentemøte (erstatter rente-sparkline) */
-  .sr-next{display:flex;flex-direction:column;gap:4px}
-  .sr-next-lbl{font:600 11px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;color:var(--ink4)}
-  .sr-next-val{font-family:var(--font-serif);font-weight:500;font-size:18px;color:var(--ink2);letter-spacing:-.2px;font-variant-numeric:tabular-nums lining-nums;transition:color .3s var(--ease)}
-  @media(hover:hover){.widget:hover .sr-next-val{color:var(--accent-2)}}
   .widget-value{
     font-family:var(--font-serif);font-weight:500;
     font-size:30px;line-height:1;letter-spacing:-.5px;color:var(--ink);
@@ -1154,15 +1162,6 @@
     text-transform:none;
     margin-left:6px;
   }
-  .widget-sub{
-    font-size:12.5px;line-height:1.4;color:var(--ink3);margin:0;
-    display:flex;align-items:flex-start;gap:8px;font-variant-numeric:tabular-nums;
-  }
-  .widget-sub .delta-up,.widget-sub .delta-down,.widget-sub .delta-flat{font-weight:500}
-  .widget-sub .delta-up{color:var(--pos-soft)}
-  .widget-sub .delta-down{color:var(--neg-soft)}
-  .widget-sub .delta-flat{color:var(--flat-soft)}
-  .widget-sub .ctx{color:var(--ink4)}
 
   /* ── TOOLS ───────────────────────────────────────── */
   section.tools{padding:64px 0 88px}
@@ -1501,7 +1500,6 @@
     .daily-credits{padding:0 18px}
     .widget:last-child{border-bottom:none}
     .widget-value{font-size:26px}
-    .widget-sub{font-size:12px}
     section.tools{padding:40px 0 56px}
     .section-head{
       flex-direction:column;align-items:flex-start;gap:10px;
@@ -1604,7 +1602,7 @@
   }
 
   .fxc-res, .fxc-rate, .fxc-amt,
-  .widget-value, .widget-value .unit, .widget-sub,
+  .widget-value, .widget-value .unit, .widget-facts,
   .data-foot, .data-foot .pair, .data-foot .pair b,
   .card .num,
   .section-head .meta,
@@ -1675,10 +1673,6 @@
     font-weight: 500;
     color: var(--ink3);
     align-self: baseline;
-  }
-  .widget-sub{
-    font-size: 12px;
-    letter-spacing: -.05px;
   }
 
   .data-foot{
@@ -1791,12 +1785,6 @@
   .spark-scrub.on{opacity:1}
   .spark-scrub .mut{color:var(--ink3)}
 
-  /* ── Nedtelling til neste rentemøte, ved siden av datoen ── */
-  .sr-next-val .in-days{
-    font-family:var(--font-sans);font-weight:500;font-size:11px;
-    color:var(--ink4);margin-left:7px;letter-spacing:0;
-  }
-
   /* ── Søk: treff-utheving og «tøm»-knapp for nylige søk ── */
   .sr-item .sr-name mark{
     background:none;color:var(--accent-2);
@@ -1812,7 +1800,7 @@
 
   /* Nye numeriske/versal-flater arver typografi-featurene fra REFINE-2026-05.
      Frist-tallene hadde font-variant-numeric, men ikke OpenType-fallbacken. */
-  .spark-scrub,.sr-next-val,
+  .spark-scrub,
   .fr-cd-num,.fr-row-cd,.fr-flak .d,.fr-feat-date{
     -webkit-font-feature-settings: var(--refine-feat-num);
             font-feature-settings: var(--refine-feat-num);
@@ -1941,7 +1929,7 @@
 <script src="/shared/site-shell.js?v=v2" defer></script>
 <script src="/shared/top-chrome.js?v=v282" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v19" defer></script>
+<script src="/shared/markedsdata.js?v=v20" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -2216,14 +2204,15 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
             <div class="widget-value"><span class="count-up" id="wxTemp">—</span><span class="unit">°C</span>
               <button type="button" class="md-exp" data-big="wx" aria-haspopup="dialog" aria-label="Vis værgrafen i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
             </div>
-            <p class="widget-sub"><span class="ctx" id="wxSub">Henter værdata …</span></p>
-            <div class="widget-spark-wrap has-yax">
+            <!-- Faktarader (nøkkel · verdi). Fylles av markedsdata.js; teksten her står til data er hentet. -->
+            <div class="widget-facts" id="wxSub">Henter værdata …</div>
+            <div class="widget-spark-wrap has-yax has-syms">
               <!-- Y-akse: høyeste og laveste temperatur det neste døgnet. Fylles av markedsdata.js. -->
               <div class="spark-yax" aria-hidden="true"><span id="wxYMax">—</span><span id="wxYMin">—</span></div>
-              <!-- Ett værsymbol per sjette time, over kurven. -->
+              <!-- Ett værsymbol per rute i grafen (rutene deles på kl. 00 · 06 · 12 · 18). -->
               <div class="wx-syms" id="wxSyms" aria-hidden="true"></div>
               <!-- Temperaturkurve og nedbørsøyler bygges av shared/markedsdata.js (buildWxSpark). Tom til data er hentet. -->
-              <svg class="widget-spark wx-spark" id="wxSpark" viewBox="0 0 200 48" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <svg class="widget-spark wx-spark" id="wxSpark" viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true"></svg>
               <div class="spark-scrub" id="wxScrub" aria-hidden="true"><span id="wxScrubTxt"></span></div>
               <div class="widget-axis wx-axis" id="wxAxis" aria-hidden="true"></div>
             </div>
@@ -2239,12 +2228,14 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
               </span>
             </div>
             <div class="widget-value"><span class="count-up" id="srVal">—</span><span class="unit">%</span></div>
-            <p class="widget-sub"><span class="ctx" id="srSub">Norges Bank · styringsrenta</span></p>
-            <div class="widget-spark-wrap">
-              <div class="sr-next">
-                <span class="sr-next-lbl" id="srNextLbl">Neste rentemøte</span>
-                <b class="sr-next-val" id="srNext">—</b><!-- «om N dager» legges til av markedsdata.js -->
-              </div>
+            <div class="widget-facts" id="srSub">Norges Bank · styringsrenta</div>
+            <div class="widget-spark-wrap has-yax">
+              <!-- Y-akse: høyeste og laveste rentenivå i perioden. Fylles av markedsdata.js. -->
+              <div class="spark-yax" aria-hidden="true"><span id="srYMax">—</span><span id="srYMin">—</span></div>
+              <!-- Renta de siste 18 månedene tegnes av shared/markedsdata.js (applySpark). Tom til data er hentet. -->
+              <svg class="widget-spark" id="srSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="spark-scrub" id="srScrub" aria-hidden="true"><span id="srScrubTxt"></span></div>
+              <div class="widget-axis"><span id="srAx0"></span><span id="srAx1"></span></div>
             </div>
           </div>
 
@@ -2259,12 +2250,12 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
             <div class="widget-value"><span class="count-up" id="stVal">—</span><span class="unit">øre/kWh</span>
               <button type="button" class="md-exp" data-big="st" aria-haspopup="dialog" aria-label="Vis strømprisen i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
             </div>
-            <p class="widget-sub"><span class="ctx" id="stSub">Henter strømpris …</span></p>
+            <div class="widget-facts" id="stSub">Henter strømpris …</div>
             <div class="widget-spark-wrap has-yax">
               <!-- Y-akse: dyreste og billigste time i øre. Fylles av markedsdata.js. -->
               <div class="spark-yax" aria-hidden="true"><span id="stYMax">—</span><span id="stYMin">—</span></div>
               <!-- Søylene bygges av shared/markedsdata.js (buildStromBars). Tom til data er hentet. -->
-              <svg class="widget-spark spark-bars" id="stSpark" viewBox="0 0 200 48" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <svg class="widget-spark spark-bars" id="stSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
               <div class="spark-scrub" id="stScrub" aria-hidden="true"><span id="stScrubTxt"></span></div>
               <div class="widget-axis"><span>00</span><span>06</span><span>12</span><span>18</span><span>23</span></div>
             </div>
@@ -2285,12 +2276,12 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
             <div class="widget-value"><span class="count-up" id="fxVal">—</span><span class="unit">kr</span>
               <button type="button" class="md-exp" data-big="fx" aria-haspopup="dialog" aria-label="Vis valutakursen i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
             </div>
-            <p class="widget-sub"><span class="ctx" id="fxSub">Henter valutakurser …</span></p>
+            <div class="widget-facts" id="fxSub">Henter valutakurser …</div>
             <div class="widget-spark-wrap has-yax">
               <!-- Y-akse: høyeste og laveste kurs i perioden. Fylles av markedsdata.js. -->
               <div class="spark-yax" aria-hidden="true"><span id="fxYMax">—</span><span id="fxYMin">—</span></div>
               <!-- Kurven tegnes av shared/markedsdata.js (applySpark). Tom til data er hentet. -->
-              <svg class="widget-spark" id="fxSpark" viewBox="0 0 200 48" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <svg class="widget-spark" id="fxSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
               <div class="spark-scrub" id="fxScrub" aria-hidden="true"><span id="fxScrubTxt"></span></div>
               <!-- Tre datoer, ikke fire: fire brakk over to linjer og sprengte radhøyden. -->
               <div class="widget-axis"><span id="fxAx0">30d</span><span id="fxAx1">15d</span><span id="fxAx2">i dag</span></div>
