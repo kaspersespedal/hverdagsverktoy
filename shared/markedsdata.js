@@ -134,10 +134,11 @@
   }
   function fresh(o, ttl) { return o && (Date.now() - o.t) < ttl; }
 
-  /* ── Sparkline-bygger (200×48 viewBox) ─────────────────────────
-     Høyden speiler .widget-spark{height:48px} 1:1, så kurven ikke
-     strekkes vertikalt av preserveAspectRatio="none". */
-  var SPARK_H = 48;
+  /* ── Sparkline-bygger (200×88 viewBox) ─────────────────────────
+     Høyden speiler .widget-spark{height:88px} 1:1, så kurven ikke
+     strekkes vertikalt av preserveAspectRatio="none". Værgrafen er
+     64 px høy: resten av de 88 går til raden med værsymboler over. */
+  var SPARK_H = 88, WX_H = 64;
   function sparkPaths(vals, pad) {
     var W = 200, H = SPARK_H; pad = pad || 6;
     var clean = (vals || []).filter(function (v) { return typeof v === 'number' && !isNaN(v); });
@@ -227,6 +228,14 @@
   }
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+  /* Faktaradene under tallet i et kort: [[nøkkel, verdi], …] — nøkkel til venstre, verdi til høyre. */
+  function setFacts(id, rows) {
+    var el = $(id); if (!el) return;
+    el.innerHTML = rows.map(function (r) {
+      return '<div class="wf"><span class="wf-k">' + esc(r[0]) + '</span><span class="wf-v">' + esc(r[1]) + '</span></div>';
+    }).join('');
+  }
 
   /* ════════════════════════ VALUTAVALG ════════════════════════════════
      Valutakortet viste før alltid USD, og under panelet rullet en stripe
@@ -377,17 +386,20 @@
       ng.setAttribute('class', 'trend-glyph'); ng.setAttribute('data-sym', d.sym || '');
       wg.parentNode.replaceChild(ng, wg);
     }
-    var sub = fill(T('trSharedWxMaxMin', 'Maks {max}° · Min {min}°'), { max: Math.round(d.max), min: Math.round(d.min) });
-    if (typeof d.wind === 'number') sub += ' · ' + nb(d.wind, 1) + '\u00a0m/s' + (d.dir != null ? '\u00a0' + compass(d.dir) : '');
-    setText('wxSub', sub);
     buildWxSpark(d);
+    /* Maks, min og nedbør gjelder det neste døgnet — samme periode og samme tall som grafen
+       under. Uten timeserie (gammel cache) brukes dagens maks og min, og nedbøren står over. */
+    var w = _wxMini, rows = [[ph('Maks / min'), deg(w ? w.mx : d.max) + ' / ' + deg(w ? w.mn : d.min)]];
+    if (typeof d.wind === 'number') rows.push([ph('Vind'), nb(d.wind, 1) + '\u00a0m/s' + (d.dir != null ? '\u00a0' + compass(d.dir) : '')]);
+    if (w) rows.push([ph('Nedbør'), nb(w.tot, w.tot ? 1 : 0) + '\u00a0mm']);
+    setFacts('wxSub', rows);
     if (_big.kind === 'wx') bigRefresh(); // live-oppdater åpen fullskjermgraf
     stampNow();
   }
   function deg(v) { var r = Math.round(v); return (r < 0 ? '−' + (-r) : String(r)) + '°'; }
   /* Værkortets døgngraf: temperaturkurven de neste 24 timene, nedbør som søyler nederst,
-     et værsymbol per sjette time og en setning om når nedbøren kommer.
-     _wxMini holder serien scrub-chipen leser fra. */
+     et værsymbol per rute og en setning om når nedbøren kommer.
+     _wxMini holder serien scrub-chipen leser fra, og døgnets maks, min og nedbør til faktaradene. */
   var _wxMini = null;
   function buildWxSpark(d) {
     var svg = $('wxSpark'); if (!svg) return;
@@ -400,16 +412,30 @@
     _fcSig = sig;
     var n = hrs.length, v = [], p = [], dt = [];
     for (i = 0; i < n; i++) { v.push(hrs[i].temp); p.push(hrs[i].precip || 0); dt.push(new Date(hrs[i].t)); }
-    _wxMini = { v: v, p: p, dt: dt };
     var mx = Math.max.apply(null, v), mn = Math.min.apply(null, v);
+    _wxMini = { v: v, p: p, dt: dt, mx: mx, mn: mn, tot: sum(p.slice(0, n - 1)) };
     /* Et nesten flatt døgn skal se flatt ut: skalaen spenner alltid over minst to grader. */
     if (mx - mn < 2) { var mid = (mx + mn) / 2; mx = mid + 1; mn = mid - 1; }
-    var W = 200, H = SPARK_H, pad = 6;
+    var W = 200, H = WX_H, pad = 6;
     function X(k) { return k / (n - 1) * W; }
     function Y(x) { return pad + (1 - (x - mn) / (mx - mn)) * (H - 2 * pad); }
     setText('wxYMax', deg(mx)); setText('wxYMin', deg(mn));
 
+    /* Klokkeslett på hele seks timer (00 · 06 · 12 · 18). De første timene hoppes over, ellers
+       kolliderer første klokkeslett med «nå» — regnet for den smaleste grafen (126 px), og
+       lengre for et lengre ord («now»). */
+    var nowL = ph('nå'), ax = '<span>' + esc(nowL) + '</span>', tk = [];
+    for (i = Math.ceil((nowL.length * 9.5 + 12) / 126 * (n - 1)); i < n; i++) {
+      if (dt[i].getHours() % 6) continue;
+      var end = i / (n - 1) > 0.95;
+      if (i < n - 1) tk.push(i);
+      ax += '<span' + (end ? ' class="is-end"' : '') + ' style="left:' + (end ? 100 : i / (n - 1) * 100).toFixed(1) + '%">' + pad2(dt[i].getHours()) + '</span>';
+    }
+    var el = $('wxAxis'); if (el) el.innerHTML = ax;
+
     var s = '';
+    /* Loddrett hårstrek over hvert klokkeslett: deler døgnet i ruter som symbolene står i. */
+    for (i = 0; i < tk.length; i++) s += '<line class="spark-grid" x1="' + X(tk[i]).toFixed(1) + '" y1="0" x2="' + X(tk[i]).toFixed(1) + '" y2="' + H + '"/>';
     /* Stiplet linje på 0° når døgnet krysser frysepunktet. */
     if (mn < 0 && mx > 0) s += '<line class="spark-base" x1="0" y1="' + Y(0).toFixed(1) + '" x2="' + W + '" y2="' + Y(0).toFixed(1) + '"/>';
     /* Nedbør: søyla dekker timen fra punktet til neste. Høyden skaleres mot minst 2 mm/t,
@@ -417,39 +443,30 @@
     var pmax = Math.max(2, Math.max.apply(null, p)), bw = W / (n - 1);
     for (i = 0; i < n - 1; i++) {
       if (p[i] <= 0) continue;
-      var bh = Math.max(1.5, p[i] / pmax * 14);
+      var bh = Math.max(1.5, p[i] / pmax * 20);
       s += '<rect class="wx-rain" x="' + (X(i) + bw * 0.15).toFixed(1) + '" y="' + (H - bh).toFixed(1) +
            '" width="' + (bw * 0.7).toFixed(1) + '" height="' + bh.toFixed(1) + '"/>';
     }
     var pts = v.map(function (x, k) { return [X(k), Y(x)]; });
     svg.innerHTML = s + '<path class="spark-line" d="' + curvePath(pts) + '"/>' + sparkDot(pts[0]);
 
-    /* Symbolene oppsummerer seks timer hver (METs next_6_hours) og står midt i sin blokk. */
-    var sy = '';
-    for (i = 0; i + 3 < n; i += 6) {
-      var sc = hrs[i].s6 || hrs[i].sym;
-      if (sc) sy += '<span style="left:' + ((i + 3) / (n - 1) * 100).toFixed(1) + '%">' + wxIcon(sc) + '</span>';
+    /* Ett symbol midt i hver rute (mellom to hårstreker). Symbolet oppsummerer de seks timene
+       rundt der det står (METs next_6_hours). Ruter under tre timer er for smale og står tomme. */
+    var sy = '', b = [0].concat(tk, [n - 1]);
+    for (i = 0; i < b.length - 1; i++) {
+      if (b[i + 1] - b[i] < 3) continue;
+      var c = (b[i] + b[i + 1]) / 2, h0 = hrs[Math.max(b[i], Math.round(c) - 3)], sc = h0.s6 || h0.sym;
+      if (sc) sy += '<span style="left:' + (c / (n - 1) * 100).toFixed(1) + '%">' + wxIcon(sc) + '</span>';
     }
-    var el = $('wxSyms'); if (el) el.innerHTML = sy;
+    el = $('wxSyms'); if (el) el.innerHTML = sy;
 
-    /* Klokkeslett på hele seks timer (00 · 06 · 12 · 18). De første timene hoppes over, ellers
-       kolliderer første klokkeslett med «nå» — regnet for den smaleste grafen (126 px), og
-       lengre for et lengre ord («now»). */
-    var nowL = ph('nå'), ax = '<span>' + esc(nowL) + '</span>';
-    for (i = Math.ceil((nowL.length * 9.5 + 12) / 126 * (n - 1)); i < n; i++) {
-      if (dt[i].getHours() % 6) continue;
-      var end = i / (n - 1) > 0.95;
-      ax += '<span' + (end ? ' class="is-end"' : '') + ' style="left:' + (end ? 100 : i / (n - 1) * 100).toFixed(1) + '%">' + pad2(dt[i].getHours()) + '</span>';
-    }
-    el = $('wxAxis'); if (el) el.innerHTML = ax;
-
-    /* Én setning om nedbøren: når den starter, og hvor mye det blir. */
-    var first = -1, tot = sum(p.slice(0, n - 1)), note = ph('Opphold det neste døgnet');
+    /* Én setning om når nedbøren starter. Mengden står i faktaradene over grafen. */
+    var first = -1, note = ph('Opphold det neste døgnet');
     for (i = 0; i < n - 1; i++) if (p[i] >= 0.1) { first = i; break; }
     if (first >= 0) {
       var fs = hrs[first].sym || '', type = /snow/.test(fs) ? ph('Snø') : /sleet/.test(fs) ? ph('Sludd') : ph('Regn');
       var tpl = first === 0 ? '{type} nå' : isoDay(dt[first]) !== isoDay(new Date()) ? '{type} fra i morgen kl. {h}' : '{type} fra kl. {h}';
-      note = fill(ph(tpl), { type: type, h: pad2(dt[first].getHours()) }) + ' · ' + fill(ph('{mm} mm neste døgn'), { mm: nb(tot, 1) });
+      note = fill(ph(tpl), { type: type, h: pad2(dt[first].getHours()) });
     }
     setText('wxNote', note);
   }
@@ -1278,13 +1295,13 @@
        yen står som «100 JPY = 7,02» og ikke «1 JPY = 0,07». */
     setText('fxPairName', fxUnit(c, code) + ' / NOK');
     setVal('fxVal', c.last * m, 2);
-    /* Undertittelen viser de tre neste i lista — den valgte står i tallet over. */
+    /* Faktaradene viser de tre neste i lista — den valgte står i tallet over. */
     var sub = [];
     FX_CODES.forEach(function (k) {
       if (k === code || sub.length >= 3) return;
-      var o = d[k]; if (o) sub.push((fxUnit(o, k) + ' ' + fxQuote(o)).replace(/ /g, '\u00a0'));
+      var o = d[k]; if (o) sub.push([fxUnit(o, k), fxQuote(o)]);
     });
-    setText('fxSub', sub.join(' · '));
+    setFacts('fxSub', sub);
     var span = $('fxTrend');
     if (span && c.prev != null) {
       var diff = (c.last - c.prev) * m, dir = Math.abs(diff) < 0.0005 ? 0 : diff > 0 ? 1 : -1;
@@ -1296,7 +1313,7 @@
       var lastI = dts.length - 1;
       setText('fxAx0', nbShort(dts[0]));
       setText('fxAx1', nbShort(dts[Math.round(lastI / 2)]));
-      setText('fxAx2', 'i dag');
+      setText('fxAx2', ph('i dag'));
     }
     /* Y-akse. Kurven autoskalerer mellom periodens laveste og høyeste verdi,
        så uten disse to tallene er den umulig å måle. Samme noteringsenhet
@@ -1331,37 +1348,38 @@
     // når begynte gjeldende nivå?
     var last = vals[vals.length - 1], ci = vals.length - 1;
     while (ci > 0 && vals[ci - 1] === last) ci--;
-    return { series: vals, last: last, lastDate: dates[dates.length - 1],
+    return { series: vals, dates: dates, last: last, lastDate: dates[dates.length - 1],
              changeDate: dates[ci], prevLevel: ci > 0 ? vals[ci - 1] : last };
   }
+  var _rate = null; // siste rentedata — scrub-chipen på rentegrafen leser herfra
   function renderRate(d) {
+    _rate = d;
     setVal('srVal', d.last, 2);
-    setText('srSub', fill(T('trSharedRateChanged', 'Norges Bank · sist endret {d}'), { d: nbDate(d.changeDate).replace(/ /g, '\u00a0') }));
+    var rows = [[ph('Sist endret'), nbDate(d.changeDate)]];
+    /* Neste rentemøte og hvor lenge det er til. Når møtelista er tom, faller de to radene bort. */
+    var nm = nextMeeting();
+    if (nm) {
+      rows.push([ph('Neste rentemøte'), nbDate(nm)]);
+      var t = new Date(), md = nm.split('-').map(Number);
+      var days = Math.round((Date.UTC(md[0], md[1] - 1, md[2]) -
+                             Date.UTC(t.getFullYear(), t.getMonth(), t.getDate())) / 864e5);
+      rows.push([ph('Møtet er'), days > 1 ? fill(T('trSharedInDays', 'om {n} dager'), { n: days }) : ph(days === 1 ? 'i morgen' : 'i dag')]);
+    }
+    setFacts('srSub', rows);
     var span = $('srTrend');
     if (span) {
       var diff = d.last - d.prevLevel, dir = Math.abs(diff) < 0.001 ? 0 : diff > 0 ? 1 : -1;
       trendClass(span, dir);
       span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), 2) + '<i>\u00a0pp</i></span>';
     }
-    // En rente som endres ~4 ggr/år sier lite som sparkline → vis neste rentemøte i stedet.
-    var nm = nextMeeting(), lbl = $('srNextLbl'), val = $('srNext');
-    if (lbl && val) {
-      if (nm) {
-        lbl.textContent = 'Neste rentemøte';
-        val.textContent = nbShort(nm) + ' ' + nm.slice(0, 4);
-        // Datoen alene sier lite — vis avstanden i dager ved siden av.
-        var t = new Date(), md = nm.split('-').map(Number);
-        var diff = Math.round((Date.UTC(md[0], md[1] - 1, md[2]) -
-                               Date.UTC(t.getFullYear(), t.getMonth(), t.getDate())) / 864e5);
-        var word = diff > 1 ? fill(T('trSharedInDays', 'om {n} dager'), { n: diff }) : diff === 1 ? 'i morgen' : diff === 0 ? 'i dag' : '';
-        if (word) {
-          var s = document.createElement('span');
-          s.className = 'in-days'; s.textContent = word;
-          val.appendChild(document.createTextNode(' ')); // skiller ordene for skjermlesere
-          val.appendChild(s);
-        }
-      }
-      else { lbl.textContent = ''; val.textContent = ''; }
+    /* Renta de siste 18 månedene som trappelinje. Aksen viser høyeste og laveste nivå i
+       perioden; har renta stått stille hele tiden, er det bare ett nivå å vise. */
+    if (d.series && d.series.length > 1) {
+      var mx = Math.max.apply(null, d.series), mn = Math.min.apply(null, d.series);
+      setText('srYMax', mx > mn ? nb(mx, 2) : ''); setText('srYMin', nb(mn, 2));
+      setText('srAx0', d.dates && d.dates[0] ? monthLbl(d.dates[0]) : ''); // eldre cache mangler datoene
+      setText('srAx1', ph('i dag'));
+      applySpark($('srCard'), d.series);
     }
     stampNow();
   }
@@ -1393,9 +1411,12 @@
       for (var ci = 1; ci < d.prices.length; ci++) if (d.prices[ci] < d.prices[d.cheapHour]) d.cheapHour = ci;
       d.cheap = d.prices[d.cheapHour];
     }
-    var ch = d.cheapHour < 10 ? '0' + d.cheapHour : d.cheapHour;
-    setText('stSub', fill(T('trSharedStromSub', 'Billigst kl.\u00a0{h} · {cheap}\u00a0øre · snitt {avg}\u00a0øre'),
-      { h: ch, cheap: Math.round(d.cheap * 100), avg: Math.round(d.avg * 100) }));
+    var pk = 0;
+    if (d.prices) for (var pi = 1; pi < d.prices.length; pi++) if (d.prices[pi] > d.prices[pk]) pk = pi;
+    function ore(kr, hour) { return Math.round(kr * 100) + '\u00a0øre' + (hour == null ? '' : ' · ' + fill(ph('kl. {h}'), { h: pad2(hour) })); }
+    setFacts('stSub', [[ph('Billigst'), ore(d.cheap, d.cheapHour)],
+                       [ph('Dyrest'), ore(d.prices ? d.prices[pk] : d.peak, d.prices ? pk : d.peakHour)],
+                       [ph('Snitt'), ore(d.avg)]]);
     var span = $('stTrend');
     if (span) {
       var pct = d.avg ? (d.now - d.avg) / d.avg * 100 : 0, dir = Math.abs(pct) < 0.5 ? 0 : pct > 0 ? 1 : -1;
@@ -1423,7 +1444,7 @@
     var gPast = document.createElementNS(NS, 'g'), gFut = document.createElementNS(NS, 'g');
     gPast.setAttribute('fill', 'currentColor'); gPast.setAttribute('opacity', '.28');
     gFut.setAttribute('fill', 'currentColor'); gFut.setAttribute('opacity', '.58');
-    var BASE = SPARK_H - 2, MAXH = SPARK_H - 4; // grunnlinje/topp i 200×48-rommet
+    var BASE = SPARK_H - 2, MAXH = SPARK_H - 4; // grunnlinje/topp i 200×88-rommet
     prices.forEach(function (p, i) {
       var h = Math.max(2, (p / mx) * MAXH), y = BASE - h, x = i * slot + (slot - bw) / 2;
       var rect = document.createElementNS(NS, 'rect');
@@ -1581,6 +1602,12 @@
       var i = Math.round(frac * (w.v.length - 1));
       return '<span class="mut">' + pad2(w.dt[i].getHours()) + ':00</span> · ' + deg(w.v[i]) +
              (w.p[i] > 0 ? ' · ' + nb(w.p[i], 1) + ' mm' : '');
+    });
+    bindScrub('srSpark', 'srScrub', 'srScrubTxt', function (frac) {
+      var r = _rate; if (!r || !r.series || !r.series.length) return '';
+      var i = Math.min(r.series.length - 1, Math.round(frac * (r.series.length - 1)));
+      var dt = r.dates && r.dates[i] ? nbDate(r.dates[i]) : '';
+      return (dt ? '<span class="mut">' + dt + '</span> · ' : '') + nb(r.series[i], 2) + ' %';
     });
     bindScrub('stSpark', 'stScrub', 'stScrubTxt', function (frac) {
       var p = _strom && _strom.prices; if (!p || !p.length) return '';
