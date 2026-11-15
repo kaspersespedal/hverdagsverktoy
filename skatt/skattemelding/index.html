@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>Lag skattemeldingen steg for steg — Skatt · Hverdagsverktøy</title>
-<meta name="description" content="Gå gjennom skattemeldingen for 2026 sammen med en oppdiktet person: hva som står ferdig, hva du må sjekke, hva du legger til selv, og hvordan skatten og tilbakebetalingen regnes ut.">
+<meta name="description" content="Fyll inn skattemeldingen for 2026 tema for tema og se om du får penger tilbake eller må betale restskatt. Med et helt eksempel som viser hva som står ferdig, hva du må sjekke og hva du legger til selv.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://hverdagsverktoy.com/skatt/skattemelding/">
@@ -179,6 +179,78 @@ body > footer{flex-shrink:0}
   .smx-h span{text-align:left}
 }
 </style>
+<style>
+/* Utfyllingen øverst: skjemaet til venstre, foreløpig beregning til høyre (følger med når du ruller). Bare tema-tokens. */
+.sm-wrap .container > .sf{max-width:1100px}
+.sf{margin:0 0 56px}
+.sf-eyebrow{display:block;font:600 11px/1.3 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+.sf-top{display:flex;flex-direction:column;gap:9px;margin:0 0 18px}
+.sf-pills{display:flex;flex-wrap:wrap;gap:7px}
+.sf-pill{background:var(--surface);color:var(--ink2);border:1px solid var(--line-2);border-radius:999px;padding:10px 16px;cursor:pointer;font:500 13.5px/1 var(--font-sans);transition:color .15s var(--ease,ease),border-color .15s var(--ease,ease),background .15s var(--ease,ease)}
+.sf-pill[data-sf="enkel"]{border-color:var(--line-warm);color:var(--ink);background:color-mix(in srgb,var(--accent) 9%,var(--surface))}
+@media (hover:hover){.sf-pill:hover{color:var(--ink);border-color:var(--line-warm)}}
+.sf-pill:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sf-work,.sf-side{display:flex;flex-direction:column;gap:18px}
+.sf-card{background:var(--surface);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow-rest)}
+.sf-skjema{padding:clamp(22px,3vw,34px) clamp(18px,3vw,36px)}
+.sf-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.sf-head h2{margin:6px 0 0;font:500 26px/1.1 var(--font-serif);letter-spacing:-.3px;color:var(--ink)}
+.sf-meta{font:400 12.5px/1.3 var(--font-sans);color:var(--ink3);text-align:right}
+.sf-tema{margin:22px -12px 0;padding:10px 12px;border-radius:7px;background:rgba(var(--wash-rgb),.05);font:600 11.5px/1 var(--font-sans);letter-spacing:.15em;text-transform:uppercase;color:var(--ink2)}
+.sf-kilde{margin:10px 0 6px;max-width:62ch;font:400 13px/1.55 var(--font-sans);color:var(--ink3)}
+.sf-kilde a{color:var(--accent-2);text-decoration:underline;text-underline-offset:2px}
+.sf-rad{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-inline:-12px;padding:6px 12px;border-radius:7px;transition:background .12s var(--ease,ease)}
+.sf-rad:focus-within{background:rgba(var(--wash-rgb),.04)}
+@media (hover:hover){.sf-rad:hover{background:rgba(var(--wash-rgb),.035)}}
+.sf-navn{min-width:0;font:400 14.5px/1.4 var(--font-sans);color:var(--ink)}
+.sf-sub{font-size:12.5px;color:var(--ink3);margin-inline-start:4px}
+.sf-felt{flex:none;display:flex;align-items:baseline;justify-content:flex-end;gap:7px}
+.sf-felt label{display:flex;align-items:baseline;gap:7px}
+.sf-to{gap:14px}
+.sf-kr{font:400 12.5px/1 var(--font-sans);color:var(--ink3)}
+input.sf-num{width:152px;text-align:right;font:500 15px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink);background:var(--surface-2);border:1px solid var(--line-2);border-radius:6px;padding:9px 12px;outline:none;transition:border-color .18s var(--ease,ease),box-shadow .18s var(--ease,ease)}
+input.sf-num.sf-kort{width:72px}
+input.sf-num::placeholder{color:var(--ink4)}
+input.sf-num:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+.sf-ut{margin:0;padding:0 0 4px;text-align:right;font:400 12.5px/1.5 var(--font-sans);color:var(--ink2);font-variant-numeric:tabular-nums lining-nums}
+.sf-ut:empty{display:none}
+.sf-kryss{display:flex;align-items:flex-start;gap:10px;padding:8px 0 2px;font:400 13.5px/1.5 var(--font-sans);color:var(--ink2);cursor:pointer}
+.sf-kryss input{flex:none;width:18px;height:18px;margin:1px 0 0;accent-color:var(--accent)}
+/* Resultatet */
+.sf-res{display:flex;flex-direction:column;gap:8px;padding:22px 22px;border-radius:11px;border:1px solid var(--line-warm);background:color-mix(in srgb,var(--accent) 8%,var(--surface))}
+.sf-res-l{font:500 21px/1.2 var(--font-serif);letter-spacing:-.2px;color:var(--ink)}
+.sf-res-v{display:flex;align-items:baseline;gap:8px;font:600 clamp(34px,4.6vw,44px)/1 var(--font-serif);letter-spacing:-1px;color:var(--accent-2);font-variant-numeric:tabular-nums lining-nums}
+.sf-res-v .sf-kr{font-size:14px;letter-spacing:0}
+.sf-res-d{margin:2px 0 0;font:400 13px/1.55 var(--font-sans);color:var(--ink2)}
+.sf-calc{padding:22px 22px}
+.sf-tbl{width:100%;margin-top:12px;border-collapse:collapse;font:400 13.5px/1.4 var(--font-sans);color:var(--ink2);font-variant-numeric:tabular-nums lining-nums}
+.sf-tbl th{padding:7px 0;text-align:left;font-weight:400}
+.sf-tbl td{padding:7px 0;text-align:right;white-space:nowrap;color:var(--ink)}
+.sf-tbl tr + tr > *{border-top:1px solid var(--line)}
+.sf-tbl tr.sum > *{font-weight:600;color:var(--ink);border-top-color:var(--line-2)}
+.sf-tbl tr.stor > *{padding-top:11px;font:600 16px/1.3 var(--font-sans);color:var(--ink)}
+.sf-tbl tr.stor td{color:var(--accent-2)}
+.sf-note{margin:14px 0 0;font:400 12.5px/1.55 var(--font-sans);color:var(--ink3)}
+.sf-eks{padding-top:36px;border-top:1px solid var(--line);scroll-margin-top:124px}
+.sf-eks .sf-eyebrow{margin-bottom:10px;color:var(--accent-2)}
+.sf-eks .sm-hero-sum{max-width:320px}
+@media (min-width:1000px){
+  .sf-work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,392px);gap:26px;align-items:start}
+}
+@media (min-width:1000px) and (min-height:720px){
+  .sf-side{position:sticky;top:128px;max-height:calc(100vh - 144px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+}
+@media (max-width:560px){
+  .sf-head{flex-direction:column;align-items:flex-start;gap:10px}
+  .sf-meta{text-align:left}
+  .sf-rad{flex-wrap:wrap;gap:6px 12px}
+  .sf-navn{flex:1 1 100%}
+  .sf-sub{display:block;margin-inline-start:0}
+  .sf-felt{flex:1 1 auto;justify-content:flex-start}
+  input.sf-num{width:150px}
+}
+@media (prefers-reduced-motion:reduce){.sf-pill,.sf-rad,input.sf-num{transition:none}}
+</style>
 </head>
 <body>
 
@@ -258,20 +330,91 @@ body > footer{flex-shrink:0}
         <span class="sep"></span>
         <span class="here">Lag skattemelding</span>
       </div>
-      <h1 class="page-title">Lag <em>skattemeldingen</em> sammen med Nora</h1>
-      <p class="page-lead">Nora er oppdiktet, men økonomien hennes er vanlig. Vi går gjennom skattemeldingen hennes for 2026, som hun leverer våren 2027. Du ser hva som står ferdig, hva hun sjekker, hva hun legger til, og hva det gjør med skatten.</p>
+      <h1 class="page-title">Lag <em>skattemeldingen</em></h1>
+      <p class="page-lead">Fyll inn tallene tema for tema, i samme rekkefølge som i skattemeldingen fra Skatteetaten. Du ser med en gang om du får penger tilbake eller må betale restskatt for 2026.</p>
     </div>
-    <aside class="sm-hero-sum" aria-label="Kort fortalt">
-      <div class="k">Etter gjennomgangen</div>
-      <div class="v">17&nbsp;750&nbsp;kr</div>
-      <p class="d">tilbake på skatten. Uten endringene hennes ville det vært 14&nbsp;137&nbsp;kr.</p>
-    </aside>
   </div>
 </section>
 
 <main id="main">
 <div class="sm-wrap">
   <div class="container">
+
+    <!-- ───── FYLL UT SKATTEMELDINGEN ───── -->
+    <section class="sf" aria-labelledby="sf-h">
+      <div class="sf-top">
+        <span class="sf-eyebrow">Eksempler</span>
+        <div class="sf-pills">
+          <button type="button" class="sf-pill" data-sf="enkel">Enkelt eksempel</button>
+          <button type="button" class="sf-pill" data-sf="nora">Noras tall</button>
+          <button type="button" class="sf-pill" data-sf="tom">Tøm</button>
+        </div>
+      </div>
+
+      <div class="sf-work">
+        <div class="sf-card sf-skjema">
+          <div class="sf-head">
+            <div><span class="sf-eyebrow">Inntektsåret 2026</span><h2 id="sf-h">Skattemeldingen din</h2></div>
+            <span class="sf-meta">Leveres innen 30. april 2027</span>
+          </div>
+
+          <h3 class="sf-tema">Arbeid, trygd og pensjon</h3>
+          <p class="sf-kilde">Står ferdig utfylt fra arbeidsgiveren. Sjekk mot lønnsslippen for desember, der det står «hittil i år».</p>
+          <label class="sf-rad"><span class="sf-navn">Lønn <span class="sf-sub">feriepenger medregnet</span></span><span class="sf-felt"><input class="sf-num" id="smLonn" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="sf-kr">kr</span></span></label>
+          <label class="sf-rad"><span class="sf-navn">Trukket skatt <span class="sf-sub">forskuddstrekk</span></span><span class="sf-felt"><input class="sf-num" id="smTrekk" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="sf-kr">kr</span></span></label>
+          <label class="sf-rad"><span class="sf-navn">Fagforeningskontingent <span class="sf-sub">høyst 8 700 kr gir fradrag</span></span><span class="sf-felt"><input class="sf-num" id="smFag" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="sf-kr">kr</span></span></label>
+          <div class="sf-rad">
+            <span class="sf-navn">Reise mellom hjem og jobb <span class="sf-sub">må du føre selv</span></span>
+            <span class="sf-felt sf-to">
+              <label><input class="sf-num sf-kort" id="smKm" type="text" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="Kilometer hver vei"><span class="sf-kr">km hver vei</span></label>
+              <label><input class="sf-num sf-kort" id="smDager" type="text" inputmode="numeric" autocomplete="off" placeholder="0" aria-label="Antall dager du reiste"><span class="sf-kr">dager</span></label>
+            </span>
+          </div>
+          <p class="sf-ut" id="smReiseUt"></p>
+
+          <h3 class="sf-tema">Bank, lån og forsikring</h3>
+          <p class="sf-kilde">Står ferdig utfylt fra banken og Lånekassen. Sjekk mot årsoppgavene, som kommer i januar.</p>
+          <label class="sf-rad"><span class="sf-navn">Renteinntekter <span class="sf-sub">renter du har fått på sparepengene</span></span><span class="sf-felt"><input class="sf-num" id="smRenteInn" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="sf-kr">kr</span></span></label>
+          <label class="sf-rad"><span class="sf-navn">Renter på lån <span class="sf-sub">boliglån, studielån og andre lån</span></span><span class="sf-felt"><input class="sf-num" id="smRenteUt" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="sf-kr">kr</span></span></label>
+          <label class="sf-rad"><span class="sf-navn">BSU, innbetalt i år <span class="sf-sub">10 % trekkes fra skatten</span></span><span class="sf-felt"><input class="sf-num" id="smBsu" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="sf-kr">kr</span></span></label>
+          <label class="sf-kryss"><input type="checkbox" id="smEier"><span>Jeg eide bolig 31. desember. Da gir BSU ikke fradrag for dette året.</span></label>
+
+          <h3 class="sf-tema">Familie og helse</h3>
+          <p class="sf-kilde">Står ferdig utfylt fra barnehagen eller SFO. Mat regnes ikke med.</p>
+          <label class="sf-rad"><span class="sf-navn">Barnepass <span class="sf-sub">det du har betalt, uten mat</span></span><span class="sf-felt"><input class="sf-num" id="smPass" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="sf-kr">kr</span></span></label>
+          <label class="sf-rad"><span class="sf-navn">Antall barn du betaler pass for</span><span class="sf-felt"><input class="sf-num" id="smBarn" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="sf-kr">barn</span></span></label>
+
+          <h3 class="sf-tema">Bolig og eiendeler</h3>
+          <p class="sf-kilde">Bolig, bankinnskudd, aksjer og gjeld står også i skattemeldingen. De teller bare med i formuesskatten, som begynner når du eier mer enn 1 900 000 kr etter at gjelden er trukket fra. <a href="/skatt/formue/">Regn ut formuesskatten</a>.</p>
+        </div>
+
+        <aside class="sf-side" aria-label="Foreløpig beregning">
+          <div class="sf-res" id="sfRes" aria-live="polite" aria-atomic="true">
+            <span class="sf-eyebrow">Foreløpig beregning</span>
+            <span class="sf-res-l" id="sfResL">Fyll inn lønnen din</span>
+            <span class="sf-res-v"><span id="sfResV">0</span><span class="sf-kr">kr</span></span>
+            <p class="sf-res-d" id="sfResD">Øverst i den ekte skattemeldingen står det samme: hva du får tilbake eller må betale.</p>
+          </div>
+          <div class="sf-card sf-calc">
+            <span class="sf-eyebrow">Slik regnes skatten din</span>
+            <table class="sf-tbl"><tbody id="sfRows"></tbody></table>
+            <p class="sf-note">Regnet med satsene for 2026, som står nederst på siden. Et ekte skatteoppgjør kan avvike med noen kroner.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ───── EKSEMPEL ───── -->
+    <section class="sm-sec sf-eks" id="eksempel" aria-labelledby="sf-eks-h">
+      <span class="sf-eyebrow">Eksempel</span>
+      <h2 id="sf-eks-h">Følg Nora gjennom hele skattemeldingen</h2>
+      <p class="sm-sub">Nora er oppdiktet, men økonomien hennes er vanlig. Vi går gjennom skattemeldingen hennes for 2026, som hun leverer våren 2027. Du ser hva som står ferdig, hva hun sjekker, hva hun legger til, og hva det gjør med skatten.</p>
+      <aside class="sm-hero-sum" aria-label="Kort fortalt">
+        <div class="k">Etter gjennomgangen</div>
+        <div class="v">17&nbsp;750&nbsp;kr</div>
+        <p class="d">tilbake på skatten. Uten endringene hennes ville det vært 14&nbsp;137&nbsp;kr.</p>
+      </aside>
+    </section>
 
     <!-- ───── MØT NORA ───── -->
     <section class="sm-sec" aria-labelledby="sm-nora">
@@ -585,5 +728,115 @@ body > footer{flex-shrink:0}
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/steg-guide.js?v=v1" defer></script>
+<script>
+// ── Lag skattemeldingen: regner skatten for 2026 mens du fyller inn ──
+// Satsene er de samme som i inntektskalkulatoren (/skatt/inntekt/) og i tabellen «Satsene vi har brukt» nederst på siden.
+(function(){
+  var KEY = 'hv-skattemelding-v1';
+  var TRINN = [[226100, 318300, 0.017], [318300, 725050, 0.040], [725050, 980100, 0.137], [980100, 1467200, 0.168], [1467200, Infinity, 0.178]];
+  var MINSTE_RATE = 0.46, MINSTE_MAX = 95700, PERSON = 114540, ALM = 0.22;
+  var TRYGD = 0.076, TRYGD_NEDRE = 99650, TRYGD_OPP = 0.25;
+  var FAG_MAX = 8700, BSU_RATE = 0.10, BSU_MAX = 27500;
+  var KM = 1.90, REISE_EGEN = 12000, REISE_TAK = 120000;
+  var PASS_FORSTE = 15000, PASS_NESTE = 10000;
+  var FELT = ['smLonn', 'smTrekk', 'smFag', 'smKm', 'smDager', 'smRenteInn', 'smRenteUt', 'smBsu', 'smPass', 'smBarn'];
+  var EKS = {
+    enkel: {smLonn:600000, smTrekk:150000, smFag:5000, smRenteUt:50000},
+    // Nora fra eksempelet under. Skal gi 17 750 kr tilbake, som i tabellen «Slik regnes skatten hennes».
+    nora:  {smLonn:640000, smTrekk:151200, smFag:6480, smKm:34, smDager:220, smRenteInn:2340, smRenteUt:76110, smBsu:15000, smEier:true, smPass:13200, smBarn:1},
+    tom:   {}
+  };
+
+  function el(id){ return document.getElementById(id); }
+  function tall(id){
+    var e = el(id); if(!e) return 0;
+    var n = parseFloat(String(e.value).replace(/[\s\u00a0\u202f]/g, '').replace(',', '.').replace(/[^0-9.]/g, ''));
+    return isFinite(n) ? n : 0;
+  }
+  function kr(n){ return Math.round(n).toLocaleString('nb-NO').replace(/[\u00a0\u202f]/g, '\u00a0'); }
+  function felt(n){ return n ? Math.round(n).toLocaleString('nb-NO').replace(/[\u00a0\u202f]/g, ' ') : ''; }
+
+  function regn(v){
+    var o = {lonn:v.smLonn, renteInn:v.smRenteInn, renteUt:v.smRenteUt, trekk:v.smTrekk};
+    o.minste = Math.round(Math.min(o.lonn * MINSTE_RATE, MINSTE_MAX));
+    o.fag = Math.min(v.smFag, FAG_MAX);
+    o.reiseBrutto = Math.min(v.smKm * 2 * v.smDager * KM, REISE_TAK);
+    o.reise = Math.round(Math.max(0, o.reiseBrutto - REISE_EGEN));
+    var barn = Math.floor(v.smBarn) || (v.smPass > 0 ? 1 : 0);
+    o.pass = Math.min(v.smPass, barn ? PASS_FORSTE + PASS_NESTE * (barn - 1) : 0);
+    o.alm = o.lonn + o.renteInn - o.minste - o.renteUt - o.fag - o.pass - o.reise;
+    o.grunnlag = Math.max(0, o.alm - PERSON);
+    o.skattAlm = Math.round(o.grunnlag * ALM);
+    o.trinn = Math.round(TRINN.reduce(function(t, x){ return t + Math.max(0, Math.min(o.lonn, x[1]) - x[0]) * x[2]; }, 0));
+    o.trygd = Math.round(o.lonn <= TRYGD_NEDRE ? 0 : Math.min(o.lonn * TRYGD, (o.lonn - TRYGD_NEDRE) * TRYGD_OPP));
+    o.bsu = v.smEier ? 0 : Math.round(Math.min(v.smBsu, BSU_MAX) * BSU_RATE);
+    o.bsu = Math.min(o.bsu, o.skattAlm + o.trinn);   // BSU kan ikke gi mer enn skatten
+    o.skatt = o.skattAlm + o.trinn + o.trygd - o.bsu;
+    o.igjen = o.trekk - o.skatt;
+    return o;
+  }
+
+  function les(){
+    var v = {}; FELT.forEach(function(id){ v[id] = tall(id); });
+    v.smEier = !!(el('smEier') && el('smEier').checked);
+    return v;
+  }
+  function tegn(){
+    var v = les(), o = regn(v), tom = !o.lonn && !o.renteInn;
+    var rader = [['Lønn', o.lonn]];
+    if(o.renteInn) rader.push(['+ Renteinntekter', o.renteInn]);
+    rader.push(['\u2212 Minstefradrag', o.minste]);
+    if(o.renteUt) rader.push(['\u2212 Renter på lån', o.renteUt]);
+    if(o.fag) rader.push(['\u2212 Fagforening', o.fag]);
+    if(o.pass) rader.push(['\u2212 Foreldrefradrag', o.pass]);
+    if(o.reise) rader.push(['\u2212 Reisefradrag', o.reise]);
+    rader.push(['= Alminnelig inntekt', o.alm, 'sum'], ['\u2212 Personfradrag', PERSON], ['= Grunnlag for 22\u00a0% skatt', o.grunnlag, 'sum'],
+      ['Skatt på alminnelig inntekt', o.skattAlm], ['Trinnskatt', o.trinn], ['Trygdeavgift', o.trygd]);
+    if(o.bsu) rader.push(['\u2212 BSU-fradrag', o.bsu]);
+    rader.push(['= Skatt for 2026', o.skatt, 'sum'], ['\u2212 Trukket i lønnen', o.trekk],
+      [o.igjen >= 0 ? '= Penger tilbake' : '= Restskatt', Math.abs(o.igjen), 'sum stor']);
+    el('sfRows').innerHTML = rader.map(function(r){
+      return '<tr' + (r[2] ? ' class="' + r[2] + '"' : '') + '><th scope="row">' + r[0] + '</th><td>' + (tom ? '\u2013' : kr(r[1])) + '</td></tr>';
+    }).join('');
+
+    var L = el('sfResL'), V = el('sfResV'), D = el('sfResD');
+    if(tom){
+      L.textContent = 'Fyll inn lønnen din'; V.textContent = '0';
+      D.textContent = 'Øverst i den ekte skattemeldingen står det samme: hva du får tilbake eller må betale.';
+    } else if(!o.trekk){
+      L.textContent = 'Skatt for 2026'; V.textContent = kr(o.skatt);
+      D.textContent = 'Fyll inn trukket skatt, så ser du om du får penger tilbake.';
+    } else {
+      L.textContent = o.igjen > 0 ? 'Du får tilbake' : o.igjen < 0 ? 'Du må betale' : 'Skatten går akkurat opp';
+      V.textContent = kr(Math.abs(o.igjen));
+      D.textContent = o.igjen >= 0 ? 'Skatten for året er ' + kr(o.skatt) + '\u00a0kr, og det er trukket ' + kr(o.trekk) + '\u00a0kr i lønnen.'
+        : 'Skatten for året er ' + kr(o.skatt) + '\u00a0kr, men det er bare trukket ' + kr(o.trekk) + '\u00a0kr i lønnen. Resten kalles restskatt.';
+    }
+    el('smReiseUt').textContent = !(v.smKm && v.smDager) ? ''
+      : o.reise ? 'Reisefradrag: ' + kr(o.reise) + '\u00a0kr. Det er ' + kr(o.reiseBrutto) + '\u00a0kr minus 12\u00a0000\u00a0kr som ikke gir fradrag.'
+      : 'Ingen fradrag: reisen gir ' + kr(o.reiseBrutto) + '\u00a0kr, og de første 12\u00a0000\u00a0kr teller ikke.';
+    try{
+      var snap = {smEier:v.smEier}; FELT.forEach(function(id){ snap[id] = el(id).value; });
+      localStorage.setItem(KEY, JSON.stringify(snap));
+    }catch(e){}
+  }
+
+  function fyll(p){
+    FELT.forEach(function(id){ el(id).value = felt(p[id]); });
+    el('smEier').checked = !!p.smEier;
+    tegn();
+  }
+  try{
+    var s = JSON.parse(localStorage.getItem(KEY));
+    if(s){ FELT.forEach(function(id){ if(s[id] != null) el(id).value = s[id]; }); el('smEier').checked = !!s.smEier; }
+  }catch(e){}
+  FELT.forEach(function(id){ el(id).addEventListener('input', tegn); });
+  el('smEier').addEventListener('change', tegn);
+  document.querySelectorAll('[data-sf]').forEach(function(b){
+    b.addEventListener('click', function(){ var p = EKS[b.getAttribute('data-sf')]; if(p) fyll(p); });
+  });
+  tegn();
+})();
+</script>
 </body>
 </html>

@@ -2,23 +2,29 @@
    .rf      = de tre fanene øverst på hver av de tre sidene
    .rf-hub  = den samlede inngangen på /regnskap/
    Bare tema-tokens. Tallene i .rf-v fylles av shared/regnskap-flyt.js. */
-.rf{display:flex;flex-direction:column;gap:9px}
-.rf-eyebrow{font:600 11px/1.3 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink4)}
-.rf-steps{display:grid;padding:0;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line-2);border:1px solid var(--line-2);border-radius:9px;overflow:hidden}
-.rf-step{position:relative;display:flex;flex-direction:column;gap:5px;min-height:44px;padding:12px 14px 12px;background:var(--surface);color:var(--ink2);text-decoration:none;transition:background .15s var(--ease,ease),color .15s var(--ease,ease)}
-@media (hover:hover){.rf-step:hover{background:var(--surface-2);color:var(--ink)}}
-.rf-step:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-.rf-step[aria-current="page"]{background:var(--surface-2);color:var(--ink)}
-.rf-step[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--accent)}
-.rf-top{display:flex;align-items:baseline;gap:8px;min-width:0}
-.rf-n{font:500 11px/1 var(--font-mono,ui-monospace,monospace);color:var(--ink4)}
-.rf-t{font:500 14px/1.2 var(--font-sans);color:inherit}
-.rf-v{font:400 12px/1.35 var(--font-sans);color:var(--ink4);font-variant-numeric:tabular-nums lining-nums}
+.rf{display:flex;flex-direction:column;gap:11px}
+.rf-eyebrow{font:600 11px/1.3 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+/* Stegraden: tre kort med nummer i ring. Den du står på er fylt, de som er ferdige får aksentring. */
+.rf-steps{display:grid;padding:0;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;counter-reset:rfs}
+.rf-step{counter-increment:rfs;position:relative;display:grid;grid-template-columns:34px minmax(0,1fr);column-gap:13px;row-gap:3px;align-content:center;min-height:68px;padding:13px 16px;background:var(--surface);border:1px solid var(--line);border-radius:11px;color:var(--ink2);text-decoration:none;transition:background .15s var(--ease,ease),border-color .15s var(--ease,ease),color .15s var(--ease,ease)}
+.rf-step::before{content:counter(rfs);grid-row:1 / span 2;align-self:center;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid var(--line-2);font:600 13.5px/1 var(--font-sans);font-variant-numeric:tabular-nums lining-nums;color:var(--ink2);transition:border-color .15s var(--ease,ease)}
+@media (hover:hover){.rf-step:hover{border-color:var(--line-warm);color:var(--ink)}}
+.rf-step:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.rf-step:has(.rf-v:not(:empty))::before{border-color:var(--accent);color:var(--accent-2,var(--accent))}
+.rf-step[aria-current="page"]{background:color-mix(in srgb,var(--accent) 8%,var(--surface));border-color:var(--line-warm);color:var(--ink)}
+.rf-steps .rf-step[aria-current="page"]::before{background:var(--accent);border-color:var(--accent);color:var(--on-accent,var(--bg))}
+.rf-top{grid-column:2;display:flex;align-items:baseline;gap:8px;min-width:0}
+.rf-n{display:none}
+.rf-t{font:600 15.5px/1.2 var(--font-sans);color:inherit}
+.rf-v{grid-column:2;font:400 13px/1.35 var(--font-sans);color:var(--ink3);font-variant-numeric:tabular-nums lining-nums}
+.rf-v:not(:empty){color:var(--ink2)}
 .rf-v:empty::before{content:attr(data-tom)}
-@media (max-width:520px){
-  .rf-step{padding:11px 10px}
-  .rf-n{display:none}
-  .rf-t{font-size:13px}
+@media (max-width:620px){
+  .rf-steps{gap:6px}
+  .rf-step{grid-template-columns:minmax(0,1fr);min-height:58px;padding:10px 10px}
+  .rf-step::before{content:none}
+  .rf-top,.rf-v{grid-column:1}
+  .rf-t{font-size:13.5px}
   .rf-v{font-size:11.5px}
 }
 
@@ -58,3 +64,122 @@
 @media (max-width:560px){
   .rf-ekte-h{font-size:20px}
 }
+
+/* ── Arbeidsflaten (2026-11): oppstillingen til venstre, tallene den gir til høyre.
+   Høyre side følger med når du ruller, så du ser nøkkeltallene endre seg mens du skriver.
+   --rf-rows = antall blokker i venstre kolonne (settes på .rf-work i HTML-en). ── */
+.rf-work,.rf-side{display:flex;flex-direction:column;gap:18px}
+@media (min-width:1000px){
+  body .rr-col{max-width:1100px}
+  .rf-work{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,392px);column-gap:26px;row-gap:18px;align-items:start}
+  .rf-work > *{grid-column:1;min-width:0}
+  .rf-work > .rf-side{grid-column:2;grid-row:1 / span var(--rf-rows,4)}
+  .rf-side .rr-panel,.rf-side .rr-stmt{padding:22px 22px}
+  /* Nøkkeltallene som rader i sidekolonnen: lange beløp får plass på én linje */
+  .rr-wrap .rf-side .rr-kpis{grid-template-columns:minmax(0,1fr);gap:0}
+  .rr-wrap .rf-side .rr-kpi{flex-direction:row;align-items:baseline;justify-content:space-between;gap:12px;padding:13px 0;border:0;border-top:1px solid var(--line);border-radius:0;background:none}
+  .rr-wrap .rf-side .rr-kpi:last-child{padding-bottom:2px}
+  .rr-wrap .rf-side .rr-kpi .l{font-size:13.5px;letter-spacing:0;text-transform:none;color:var(--ink2)}
+  .rr-wrap .rf-side .rr-kpi .v{margin-top:0;font-size:19px;white-space:nowrap}
+  .rf-side .rr-panel-head{flex-direction:column;align-items:flex-start;gap:6px}
+  .rf-side .rr-stmt-head{flex-direction:column;align-items:flex-start;gap:10px}
+  .rf-side .rr-stmt-head > div:last-child{text-align:left !important}
+}
+@media (min-width:1000px) and (min-height:720px){
+  /* Er sidekolonnen høyere enn vinduet, ruller den for seg selv, så bunnen alltid kan nås */
+  .rf-work > .rf-side{position:sticky;top:calc(var(--rf-top,112px) + 16px);max-height:calc(100vh - var(--rf-top,112px) - 32px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin}
+}
+
+/* «Neste del» — nederst i venstre kolonne */
+.rf-next{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;border-radius:11px;border:1px solid var(--line-warm);background:color-mix(in srgb,var(--accent) 7%,var(--surface));color:var(--ink);text-decoration:none;transition:background .15s var(--ease,ease)}
+.rf-next-k{display:block;margin-bottom:7px;font:600 11px/1.2 var(--font-sans);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+.rf-next-t{display:block;font:500 21px/1.2 var(--font-serif,'Newsreader',Georgia,serif);letter-spacing:-.2px;color:var(--ink)}
+.rf-next-go{flex:none;display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:12px 22px;border-radius:8px;background:var(--accent);color:var(--on-accent,var(--bg));font:600 15px/1.2 var(--font-sans)}
+.rf-next-go > span{font-size:17px;line-height:1;transition:transform .25s var(--ease,ease)}
+@media (hover:hover){
+  .rf-next:hover{background:color-mix(in srgb,var(--accent) 11%,var(--surface))}
+  .rf-next:hover .rf-next-go > span{transform:translateX(3px)}
+}
+.rf-next:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+@media (max-width:520px){
+  .rf-next{flex-direction:column;align-items:stretch;padding:18px 18px}
+  .rf-next-go{justify-content:center}
+}
+
+/* ── Oppstillingen: tydeligere nivåer. .rr-wrap foran slår sidenes egne (inline) regler. ── */
+.rr-wrap .rr-eyebrow{color:var(--ink3)}
+.rr-wrap .rr-stmt-title{font-size:26px;letter-spacing:-.3px}
+.rr-wrap .rr-stmt-head{padding-bottom:20px;margin-bottom:4px}
+/* Gruppeoverskrift som eget bånd, så skjemaet ikke blir én lang vegg av like rader */
+.rr-wrap .rr-group{margin:20px -12px 6px;padding:10px 12px;border-radius:7px;background:rgba(var(--wash-rgb),.05);font-size:11.5px;letter-spacing:.15em;color:var(--ink2)}
+.rr-wrap .rr-group.gap{margin-top:24px}
+.rr-wrap .rr-line{margin-inline:-12px;padding:6px 12px;border-radius:7px;transition:background .12s var(--ease,ease)}
+.rr-wrap .rr-line:focus-within{background:rgba(var(--wash-rgb),.04)}
+@media (hover:hover){.rr-wrap .rr-line:hover{background:rgba(var(--wash-rgb),.035)}}
+.rr-wrap .rr-lab{font-size:14.5px;color:var(--ink)}
+.rr-wrap .rr-lab .sub{color:var(--ink3)}
+.rr-wrap .rr-konto{color:var(--ink3)}
+.rr-wrap .rr-kr{color:var(--ink3)}
+.rr-wrap input.rr-num{background:var(--surface-2);font-size:15px}
+.rr-wrap input.rr-num::placeholder{color:var(--ink4)}
+.rr-wrap .rr-sub{padding:12px 0 8px;border-top-color:var(--line-2)}
+.rr-wrap .rr-sub .lbl{font-size:14px;font-weight:600}
+.rr-wrap .rr-sub .rr-out{font-size:16.5px}
+/* Hovedsummene (driftsresultat, resultat før skatt, sum eiendeler) som tonet bånd */
+.rr-wrap .rr-total{margin:10px -12px 2px;padding:13px 12px;border-top:0;border-radius:8px;background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.rr-wrap .rr-total .lbl{font-size:15px}
+.rr-wrap .rr-total .rr-out{font-size:19px}
+.rr-wrap .rr-arsband{margin-top:18px;padding:22px 22px}
+.rr-wrap .rr-arslabel{font-size:22px}
+.rr-wrap .rr-arsnum{font-size:clamp(30px,5vw,40px)}
+.rr-wrap .rr-kpi .v{font-size:23px}
+.rr-wrap .rr-kpi .l{color:var(--ink3)}
+/* Eksempelknappene: det enkle eksempelet er hovedvalget */
+.rr-wrap .hv-btn--pill{padding:10px 16px;font-size:13.5px}
+.rr-wrap .hv-btn--pill[data-preset="enkel"]{border-color:var(--line-warm);color:var(--ink);background:color-mix(in srgb,var(--accent) 9%,var(--surface))}
+.rr-wrap .ks-mode .mtitle{font-size:14px}
+@media (min-width:561px){
+  .rr-wrap .rr-amtcell{width:204px}
+  .rr-wrap input.rr-num{width:152px;padding:9px 12px}
+  .rr-wrap .rr-out{min-width:152px}
+}
+@media (min-width:1000px){
+  .rr-wrap .rf-side .rr-amtcell{width:auto}
+  .rr-wrap .rf-side .rr-out{min-width:0}
+  .rr-wrap .rf-side .rr-stmt-title{font-size:21px}
+}
+
+/* ── Balansen i to kolonner: i år og i fjor, slik et årsregnskap er satt opp ── */
+.rr-cols{display:flex;align-items:baseline;gap:16px;padding:2px 0 10px;font:600 12px/1.2 var(--font-sans);color:var(--ink3)}
+.rr-cols > span:first-child{margin-right:auto;font-weight:400}
+.rr-colh{width:138px;text-align:right;font-variant-numeric:tabular-nums lining-nums;color:var(--ink)}
+.rr-colh + .rr-colh{color:var(--ink3)}
+.rr-wrap .rr-2col .rr-name,.rr-wrap .rr-2col .lbl{margin-right:auto}
+.rr-wrap .rr-2col .rr-kr{display:none}
+.rr-wrap .rr-2col .rr-amtcell{width:138px}
+.rr-wrap .rr-2col input.rr-num{width:138px}
+.rr-wrap .rr-2col .rr-out{min-width:0}
+.rr-wrap .rr-2col .rr-fjor input.rr-num,.rr-wrap .rr-2col .rr-fjor .rr-out{color:var(--ink2)}
+.rr-fjornote{margin:10px 0 0;font:400 13px/1.5 var(--font-sans);color:var(--ink3)}
+.rr-fjornote:empty{display:none}
+@media (max-width:560px){
+  .rr-cols{gap:10px}
+  .rr-cols > span:first-child{display:none}
+  .rr-colh{flex:1 1 0;width:auto}
+  .rr-wrap .rr-2col .rr-line,.rr-wrap .rr-2col .rr-sub,.rr-wrap .rr-2col .rr-total{flex-wrap:wrap;gap:6px 10px}
+  .rr-wrap .rr-2col .rr-name,.rr-wrap .rr-2col .lbl{flex:1 1 100%}
+  .rr-wrap .rr-2col .rr-amtcell{flex:1 1 0;width:auto;min-width:0}
+  .rr-wrap .rr-2col input.rr-num{width:100%;min-width:0}
+}
+
+/* ── «Last ned Excel» (nederst i sidekolonnen) og «Hent tallene» (kontantstrøm) ── */
+.rf-xl{display:flex;flex-direction:column;gap:8px;padding:20px 22px;border:1px solid var(--line);border-radius:11px;background:var(--surface);box-shadow:var(--shadow-rest)}
+.rf-xl-t{font:500 19px/1.2 var(--font-serif,'Newsreader',Georgia,serif);letter-spacing:-.2px;color:var(--ink)}
+.rf-xl-d{font:400 13.5px/1.55 var(--font-sans);color:var(--ink2)}
+.rf-xl-btn,.rf-hent-btn{align-self:flex-start;min-height:44px;padding:11px 20px;border-radius:8px;border:1px solid var(--line-warm);background:color-mix(in srgb,var(--accent) 10%,var(--surface));color:var(--ink);font:600 14.5px/1.2 var(--font-sans);cursor:pointer;transition:background .15s var(--ease,ease)}
+.rf-xl-btn{margin-top:6px}
+@media (hover:hover){.rf-xl-btn:hover,.rf-hent-btn:hover{background:color-mix(in srgb,var(--accent) 17%,var(--surface))}}
+.rf-xl-btn:focus-visible,.rf-hent-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.rf-xl-note,.rf-hent-note{font:400 13px/1.5 var(--font-sans);color:var(--ink3)}
+.rf-xl-note:empty{display:none}
+.rf-hent{display:flex;flex-direction:column;align-items:flex-start;gap:8px;max-width:46ch}
