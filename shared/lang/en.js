@@ -12834,6 +12834,7 @@ REGIONS['en']._ph = {
 "terminbeløp":"instalment",
 "termingebyr":"monthly fee",
 "Med tallene over":"With the numbers above",
+"Med tallene dine":"With your numbers",
 "gir månedsrente":"gives a monthly rate of",
 "Kalkulatoren prøver seg fram ved å halvere intervallet 200 ganger til begge sider er like.":"The calculator homes in by halving the interval 200 times until both sides are equal.",
 "Lånet minus etableringsgebyret.":"The loan minus the setup fee.",

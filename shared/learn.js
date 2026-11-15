@@ -26,6 +26,9 @@
       for(var c = fs[i].firstElementChild; c; c = c.nextElementSibling){
         var n = c.nextElementSibling;
         if(!n || c.className === 'lrn-fj' || !opens(c)) continue;
+        // Et regnetegn som står alene får dempet farge (.lrn-op); «=» merkes, så navnet foran kan utheves
+        var op = c.textContent.trim();
+        if(/^[=≈+×÷−–]$/.test(op)){ c.classList.add('lrn-op'); if(op === '=') c.classList.add('eq'); }
         var w = document.createElement('span');
         w.className = 'lrn-fj';
         fs[i].insertBefore(w, c);
@@ -116,6 +119,36 @@
   };
 
   glue();
+
+  // «Vis formel» i kalkylekortene (.lrn-hwf): tekstlinjene fra språkfila («A = B / C», flere på én linje skilt
+  // med « · ») settes opp som formelliste med navn, likhetstegn og uttrykk i hver sin kolonne. Kildeteksten står
+  // urørt og skjult, så oversettelsen i core.js virker som før, og lista bygges på nytt når teksten byttes.
+  Array.prototype.forEach.call(document.querySelectorAll('.lrn-hwf'), function(src){
+    var fl = document.createElement('div');
+    fl.className = 'lrn-fl hw';
+    function add(tag, txt, par){ var e = document.createElement(tag); e.textContent = txt; par.appendChild(e); return e; }
+    function build(){
+      fl.textContent = '';
+      Array.prototype.forEach.call(src.children, function(line){
+        // \s tar også harde mellomrom, som språkfila har etter regnetegnene
+        line.textContent.split(/\s·\s/).forEach(function(f){
+          var k = f.search(/\s=\s/), row = add('div', '', fl);
+          row.className = 'lrn-f';
+          add('i', k > -1 ? f.slice(0, k).trim() : '', row);
+          add('span', k > -1 ? '=' : '', row);
+          var rhs = add('span', '', row);
+          (k > -1 ? f.slice(k + 3) : f).trim().replace(/\s\/\s/g, ' ÷ ').split(/([+−×÷])/).forEach(function(p, i){
+            if(i % 2) add('span', p, rhs).className = 'lrn-op'; else rhs.appendChild(document.createTextNode(p));
+          });
+        });
+      });
+      glue();
+    }
+    src.hidden = true;
+    src.parentNode.insertBefore(fl, src.nextSibling);
+    build();
+    new MutationObserver(build).observe(src, {childList:true, characterData:true, subtree:true});
+  });
 
   // Regnestykkene (.lrn-f) står bak en liten lenke «Vis utregningen», og når de vises er de
   // forenklet (learn.css, .lrn-enkel): ord, så tallene satt inn, så svaret. Ingen stablet brøk.
