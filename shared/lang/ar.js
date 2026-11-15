@@ -8885,6 +8885,7 @@ REGIONS['ar']._ph = {
 "terminbeløp":"القسط",
 "termingebyr":"الرسم الشهري",
 "Med tallene over":"بالأرقام أعلاه",
+"Med tallene dine":"بأرقامك",
 "gir månedsrente":"يعطي فائدة شهرية قدرها",
 "Kalkulatoren prøver seg fram ved å halvere intervallet 200 ganger til begge sider er like.":"تقترب الحاسبة من النتيجة بتنصيف المجال 200 مرة حتى يتساوى الطرفان.",
 "Lånet minus etableringsgebyret.":"القرض مطروحًا منه رسم الإنشاء.",

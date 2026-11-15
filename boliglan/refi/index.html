@@ -68,7 +68,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v249">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
-<link rel="stylesheet" href="/shared/learn.css?v=v7">
+<link rel="stylesheet" href="/shared/learn.css?v=v8">
 <style>
 /* Refinansiering — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
 body{min-height:100vh;display:flex;flex-direction:column}
@@ -494,7 +494,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/top-chrome.js?v=v293"></script>
 <script defer src="/shared/core.js?v=v242"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
-<script defer src="/shared/learn.js?v=v4"></script>
+<script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -789,17 +789,15 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var mkEl = labA.querySelector('[data-k="mk"]'), mkH = mkEl ? mkEl.offsetHeight : 0;
     var gy0 = Math.max(G.gy0, G.top + mkH + 18);
 
-    // ── Hovedrutenettet. På smal skjerm vises bare årene fram til break-even, resten som én stripe. ──
+    // ── Hovedrutenettet. Bare årene fram til break-even vises rute for rute, resten som én stripe. ──
     var nDraw = r.n, stripe = null;
-    if(!G.wide){
-      var shown = Math.min(years, Math.max(2, r.be ? Math.ceil(r.be / 12) : 2));
-      if(shown < years){ nDraw = shown * 12; stripe = {from:shown + 1, mnd:r.n - nDraw}; }
-    }
+    var shown = Math.min(years, Math.max(2, r.be ? Math.ceil(r.be / 12) : 2));
+    if(shown < years){ nDraw = shown * 12; stripe = {from:shown + 1, mnd:r.n - nDraw}; }
     var w = nett(r, nDraw, G, gy0), p = G.p, lab = '', k;
     paint(plotA, w);
     for(k = 0; k < w.rows; k++){
       var yr = k + 1;
-      if(!G.wide || yr === 1 || yr % 5 === 0 || yr === w.rows) lab += rowLabel(G, k, gy0);
+      if(!G.wide || stripe || yr === 1 || yr % 5 === 0 || yr === w.rows) lab += rowLabel(G, k, gy0);
     }
     var stripeY = gy0 + w.rows * p;
     var stripeD = stripe ? rute(G.gx0, stripeY, G.gridW, G.s) : '';
@@ -813,14 +811,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       ? {pre:t('lrnRefiEnd', 'Etter {n} måneder:', {n:r.n}), val:t('lrnRefiNet', '{belop} kr netto', {belop:kr(r.net)})}
       : {pre:t('lrnRefiEnd', 'Etter {n} måneder:', {n:r.n}), val:t('lrnRefiLoss', 'Tap: {belop} kr', {belop:kr(-r.net)})};
     var endBelow = w.nSpok > 0, boxH, after = '';
+    if(stripe) after += '<span>' + t('lrnRefiStripe', 'År {fra}–{til}: {n} måneder, {belop} kr', {fra:stripe.from, til:years, n:stripe.mnd, belop:kr(r.spar * stripe.mnd)}) + '</span>';
     if(G.wide){
       var endLeft = endBelow ? G.gx0 : G.gx0 + G.gridW + 14;
-      var endTop = endBelow ? gy0 + w.rowsAll * p + 6 : Math.max(gy0, f1(w.lastY + G.s - 42));
+      var endTop = endBelow ? gy0 + w.rowsAll * p + 6 : Math.max(gy0, f1((stripe ? stripeY : w.lastY) + G.s - 42));
       if(!w.isTom) lab += '<span class="lrn-lbk" style="left:' + endLeft + 'px;top:' + endTop + 'px;gap:4px"><span class="lrn-lab txt" style="white-space:nowrap;font-size:12.5px">' + slutt.pre + '</span><span class="lrn-lab big">' + slutt.val + '</span></span>';
-      boxH = Math.max(gy0 + w.rowsAll * p - G.g + (endBelow ? 50 : 8), w.isTom ? 0 : endTop + 48);
+      boxH = Math.max(gy0 + w.rowsAll * p + (stripe ? p : 0) - G.g + (endBelow ? 50 : 8), w.isTom ? 0 : endTop + 48);
     } else {
       boxH = gy0 + w.rowsAll * p + (stripe ? p : 0) - G.g;
-      if(stripe) after += '<span>' + t('lrnRefiStripe', 'År {fra}–{til}: {n} måneder, {belop} kr', {fra:stripe.from, til:years, n:stripe.mnd, belop:kr(r.spar * stripe.mnd)}) + '</span>';
       if(!w.isTom) after += '<span>' + slutt.pre + ' ' + strong(slutt.val) + '</span>';
     }
     if(w.isTom) boxH = Math.max(boxH, gy0 + 120);

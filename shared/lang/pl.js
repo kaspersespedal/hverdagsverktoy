@@ -8764,6 +8764,7 @@ REGIONS['pl']._ph = {
 "terminbeløp":"rata",
 "termingebyr":"opłata miesięczna",
 "Med tallene over":"Z liczbami powyżej",
+"Med tallene dine":"Z Twoimi liczbami",
 "gir månedsrente":"daje stopę miesięczną",
 "Kalkulatoren prøver seg fram ved å halvere intervallet 200 ganger til begge sider er like.":"Kalkulator dochodzi do wyniku, dzieląc przedział na pół 200 razy, aż obie strony będą równe.",
 "Lånet minus etableringsgebyret.":"Kredyt minus opłata przygotowawcza.",
