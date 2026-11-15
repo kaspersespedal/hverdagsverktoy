@@ -8691,6 +8691,7 @@ REGIONS['fr']._ph = {
 "terminbeløp":"échéance",
 "termingebyr":"frais mensuels",
 "Med tallene over":"Avec les chiffres ci-dessus",
+"Med tallene dine":"Avec vos chiffres",
 "gir månedsrente":"donne un taux mensuel de",
 "Kalkulatoren prøver seg fram ved å halvere intervallet 200 ganger til begge sider er like.":"Le calculateur procède par essais en divisant l'intervalle par deux 200 fois, jusqu'à ce que les deux côtés soient égaux.",
 "Lånet minus etableringsgebyret.":"Le prêt moins les frais de dossier.",

@@ -67,7 +67,7 @@
 <link rel="stylesheet" href="/shared/components.css?v=v8">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v249">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
-<link rel="stylesheet" href="/shared/learn.css?v=v7">
+<link rel="stylesheet" href="/shared/learn.css?v=v8">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <style>
 /* Timepris — kalkulator-skall (delt mønster med /kalkulator/rente/ + /boliglan/maxlan/) */
@@ -646,7 +646,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/top-chrome.js?v=v282"></script>
 <script defer src="/shared/core.js?v=v242"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
-<script defer src="/shared/learn.js?v=v4"></script>
+<script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
 <script>
@@ -1349,7 +1349,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                  {n:t('lrnTpDMva', 'MVA · {p}', {p:pc(25)}), x:ph('Går videre til staten, så den er ikke din inntekt. Du må registrere deg når omsetningen passerer 50 000 kr i løpet av 12 måneder.')}],
         sensCap:ph('Timepris eks. MVA ved andre timetall, med samme netto'), sensLead:ph('Hvor mange timer bør du regne med?'),
         sensText:t('lrnTpSensFr', 'Er du ny eller har mye administrasjon, er 1 200–1 300 timer ofte mer realistisk. Med 1 200 timer må timeprisen være {a} i stedet for {b}. Jo færre timer, jo høyere må timeprisen bli for å nå samme netto.', {a:kr(p1200), b:kr(rb.eks)}),
-        lines:[{l:ph('Timepris eks. MVA'), e:fmt(N.netto) + ' ÷ ' + dd(1 - N.skatt / 100) + ' × ' + dd(1 + (N.ferie + N.oh) / 100) + ' ÷ ' + fmt(T), r:'= ' + kr(r.eks)}],
+        lines:[{l:ph('Timepris eks. MVA'), e:fmt(N.netto) + ' ÷ ' + dd(1 - N.skatt / 100) + ' × ' + dd(1 + (N.ferie + N.oh) / 100) + ' ÷ ' + fmt(T), r:kr(r.eks)}],
         note:t('lrnTpNoteFr', 'Underveis: brutto {b}, påslag {p} og omsetning {o}. Kalkulatoren runder timeprisen til hele kroner.', {b:kr(r.brutto), p:kr(Math.round(r.oms) - Math.round(r.brutto)), o:kr(r.oms)}),
         slider:{label:ph('Dra for å prøve et annet timetall'), min:1000, max:2000, step:50, value:T},
         sk:[[ph('Fakturerbare timer'), fmt(T), ph('timer')], [ph('Fylte ruter'), cells(T / 8), ph('à 8 timer')], [ph('Timepris eks. MVA'), fmt(r.eks), 'kr'], [ph('Timepris inkl. MVA'), fmt(r.inkl), 'kr']],
@@ -1398,10 +1398,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         sensCap:ph('Timepris eks. MVA ved andre faktureringsgrader'), sensLead:ph('Hvor høy faktureringsgrad bør du regne med?'),
         sensText:t('lrnTpSensHv', 'Ledig kapasitet, admin og reisetid hører med. Hvert prosentpoeng lavere fakturering gjør timeprisen dyrere: med {a} må den være {b}, med {c} {d}.',
           {a:pc(60), b:kr(handverker(BH.lonn, BH.sosial, BH.ind, 60, BH.fort).eks), c:pc(90), d:kr(handverker(BH.lonn, BH.sosial, BH.ind, 90, BH.fort).eks)}),
-        lines:[{l:ph('Lønnskostnad'), e:cells(rh.lonn) + ' × ' + dd(1 + NH.sosial / 100), r:'= ' + kr(rh.lonnskost)},
-               {l:ph('Bruttokost per arbeidet time'), e:fmt(rh.lonnskost) + ' × ' + dd(1 + NH.ind / 100), r:'= ' + kr(rh.bruttokost)},
-               {l:ph('Selvkost per fakturerbar time'), e:fmt(rh.bruttokost) + ' ÷ ' + dd(fakt / 100), r:'= ' + kr(rh.selvkost)},
-               {l:ph('Timepris eks. MVA'), e:fmt(rh.selvkost) + ' × ' + dd(1 + NH.fort / 100), r:'= ' + kr(rh.eks)}],
+        lines:[{l:ph('Lønnskostnad'), e:cells(rh.lonn) + ' × ' + dd(1 + NH.sosial / 100), r:kr(rh.lonnskost)},
+               {l:ph('Bruttokost per arbeidet time'), e:fmt(rh.lonnskost) + ' × ' + dd(1 + NH.ind / 100), r:kr(rh.bruttokost)},
+               {l:ph('Selvkost per fakturerbar time'), e:fmt(rh.bruttokost) + ' ÷ ' + dd(fakt / 100), r:kr(rh.selvkost)},
+               {l:ph('Timepris eks. MVA'), e:fmt(rh.selvkost) + ' × ' + dd(1 + NH.fort / 100), r:kr(rh.eks)}],
         note:Math.abs(rawInd - Math.round(rawInd)) > 1e-9 ? t('lrnTpNoteHvR', 'Kalkulatoren runder hvert trinn til hele kroner: {a} × {b} er {c} og blir {d}.', {a:fmt(rh.lonnskost), b:dd(1 + NH.ind / 100), c:cells(rawInd), d:kr(rh.bruttokost)}) : ph('Kalkulatoren runder hvert trinn til hele kroner.'),
         slider:{label:ph('Dra for å prøve en annen faktureringsgrad'), min:50, max:95, step:5, value:fakt},
         sk:[[ph('Faktureringsgrad'), cells(fakt), '%'], [ph('Fakturerbare timer'), cells(fb), ph('av 10')], [ph('Selvkost per time'), fmt(rh.selvkost), 'kr'], [ph('Timepris eks. MVA'), fmt(rh.eks), 'kr']],

@@ -469,8 +469,40 @@ html[data-theme="bw"] .lrn .lrn-a1f{fill:transparent}
 .lrn-lg > span{display:flex;align-items:center;gap:8px;font-size:12.5px;line-height:18px;color:var(--ink3)}
 .lrn-lg svg{flex-shrink:0}
 .lrn-lg b{color:var(--ink);font-weight:600}
-.lrn-frow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:32px;align-items:center}
-.lrn-frow + .lrn-frow{padding-top:18px;border-top:1px solid var(--line)}
+/* Formelkort i to felt: regelen til venstre, de samme leddene med tallene dine til høyre på en mørkere flate */
+/* Navnet (.lrn-fnm) har egen kolonne som er like bred i alle rader (subgrid), så likhetstegnene står under hverandre på alle språk */
+.lrn-card:has(> .lrn-frow){padding:0;gap:0;overflow:hidden;display:grid;grid-template-columns:max-content minmax(0,1fr)}
+.lrn-card:has(> .lrn-frow > :nth-child(3)){grid-template-columns:max-content minmax(0,1fr) minmax(0,1fr)}
+.lrn-frow{display:grid;grid-template-columns:subgrid;grid-column:1 / -1;align-items:stretch}
+.lrn-frow + .lrn-frow{border-top:1px solid var(--line)}
+.lrn-frow > *{padding:20px 24px;align-content:center;justify-content:center}
+.lrn-frow > .lrn-fnm{padding-inline-end:0;align-self:center;font:600 16px/1.4 var(--font-sans);color:var(--ink)}
+.lrn-frow > .lrn-f{justify-content:flex-start}
+.lrn-frow > .lrn-fnm + .lrn-f{padding-inline-start:9px}
+.lrn-frow > :nth-child(3),.lrn-frow.hd > :nth-child(2){background:var(--surface-2);border-inline-start:1px solid var(--line)}
+.lrn-frow.hd > *{padding-block:13px}
+.lrn-frow.hd > :first-child{grid-column:1 / 3}
+/* Flere formler under hverandre (.lrn-fl): navn, likhetstegn og uttrykk i hver sin kolonne.
+   display:contents på .lrn-fj gir samme tre ruter før og etter at learn.js har samlet tegn og ledd. */
+.lrn-fl{display:grid;grid-template-columns:max-content max-content minmax(0,1fr);gap:14px 9px;align-items:baseline}
+.lrn-fl > .lrn-f{display:grid;grid-template-columns:subgrid;grid-column:1 / -1;align-items:baseline}
+.lrn-fl > .lrn-f > .lrn-fj{display:contents}
+/* Lista skal se lik ut også på sider uten learn.js (prosent, kroneverdi): navn og likhetstegn styles rett fra plassen sin */
+.lrn-fl > .lrn-f > i:first-child{font-weight:600}
+.lrn-fl > .lrn-f > i:first-child::first-letter{text-transform:uppercase}
+.lrn-fl > .lrn-f > i:first-child + span:not(.lrn-fj){color:var(--ink3)}
+/* «Vis formel» i kalkylekortene: learn.js bygger lista (.lrn-fl.hw) av tekstlinjene i .lrn-hwf. Uten skript vises linjene som de er. */
+.lrn-hwf{display:flex;flex-direction:column;gap:8px;font:400 15px/1.5 var(--font-sans);color:var(--ink2)}
+.lrn-hwf[hidden]{display:none}
+.lrn-fl.hw{gap:12px 9px}
+.lrn-fl.hw .lrn-f{font-size:15px;color:var(--ink)}
+/* Kort med flere regnestykker under hverandre (ikke i rader): det samme navnet-først-oppsettet, og stor forbokstav */
+.lrn-f > i:first-child:has(+ .lrn-fj > .lrn-op.eq:first-child)::first-letter{text-transform:uppercase}
+.lrn-frow > .lrn-fnm::first-letter{text-transform:uppercase}
+/* I radene er hele høyre felt den mørke flaten, så tallinja har ikke egen bakgrunn */
+.lrn-frow > .lrn-f.n{padding:20px 24px;border-radius:0}
+.lrn-frow .lrn-fs .lrn-f.n{padding:0;border-radius:0;background:none}
+.lrn-card .lrn-frow .lrn-f.n b{font:500 24px/1 var(--font-serif);letter-spacing:-.4px}
 .lrn-kt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:40px;max-width:760px}
 .lrn-kt > div{display:flex;flex-direction:column;gap:10px;min-width:0}
 .lrn-kt-h{display:flex;align-items:center;gap:10px}
@@ -671,7 +703,7 @@ html[data-theme="bw"] .lrn .lrn-l1.dsh{stroke-dasharray:4 3}
 .lrn-pl span{font:400 12px/16px var(--font-sans);color:var(--ink2)}
 .lrn-pl.dim b,.lrn-pl.dim span{color:var(--ink3)}
 .lrn-say0{position:absolute;font:500 24px/30px var(--font-serif);color:var(--ink);white-space:nowrap;unicode-bidi:plaintext}
-.lrn-fl3s{display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+.lrn-fl3s{display:flex;flex-direction:column;gap:10px;padding:13px 16px;border-radius:8px;background:var(--surface-2)}
 .lrn-fl3{display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:6px 16px;align-items:baseline;font-variant-numeric:tabular-nums}
 .lrn-fl3 span:first-child{font:500 12px/1.4 var(--font-sans);color:var(--ink3)}
 .lrn-fl3 span{font:400 16px/1.4 var(--font-sans);color:var(--ink2)}
@@ -1206,10 +1238,12 @@ html[data-theme="bw"] .lrn .lrn-sy-nav{fill:url(#lrn-sy-pm)}
 .lrn-sy-say{font-size:16px;line-height:1.55;max-width:70ch;text-wrap:pretty;font-variant-numeric:tabular-nums}
 .lrn-sy-card{max-width:760px}
 .lrn-sy-cp{margin:0;font-size:14px;line-height:1.55;color:var(--ink2);text-wrap:pretty}
-.lrn-sy-lines{display:flex;flex-direction:column;gap:8px}
+.lrn-sy-lines{display:flex;flex-direction:column;gap:8px;padding:13px 16px;border-radius:8px;background:var(--surface-2)}
+.lrn-sy-lines:empty{display:none}
+.lrn-sy-fl > span:nth-child(3){position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .lrn-sy-fl{display:grid;grid-template-columns:110px minmax(0,1fr) auto auto;gap:4px 12px;align-items:baseline;font:400 15px/1.4 var(--font-sans);color:var(--ink2);font-variant-numeric:tabular-nums}
 .lrn-sy-fl .l{font-size:13px;color:var(--ink3)}
-.lrn-sy-fl b{font:600 15px/1.4 var(--font-sans);color:var(--ink);white-space:nowrap}
+.lrn-sy-fl b{font:500 20px/1.2 var(--font-serif);letter-spacing:-.3px;color:var(--ink);white-space:nowrap}
 .lrn-sy-fl.s{padding-top:8px;border-top:1px solid var(--line)}
 .lrn-sy-info{display:flex;flex-direction:column;gap:6px;max-width:72ch}
 .lrn-sy-info p{margin:0;font-size:13.5px;line-height:1.5;color:var(--ink3)}
@@ -1257,10 +1291,11 @@ html[data-theme="bw"] .lrn .lrn-fp-far{fill:url(#lrn-fp-pm)}
 .lrn-fp-tot b{font-weight:600;color:var(--ink)}
 .lrn-fp-say{font-size:16px;line-height:1.55;max-width:70ch;text-wrap:pretty;font-variant-numeric:tabular-nums}
 .lrn-fp-card{max-width:760px}
-.lrn-fp-lines{display:flex;flex-direction:column;gap:8px;padding-top:14px;border-top:1px solid var(--line)}
+.lrn-fp-lines{display:flex;flex-direction:column;gap:8px;padding:13px 16px;border-radius:8px;background:var(--surface-2)}
 .lrn-fp-fl{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px;font:400 16px/1.4 var(--font-sans);color:var(--ink2);font-variant-numeric:tabular-nums}
 .lrn-fp-fl .l{min-width:44px;font:500 12px/1.4 var(--font-sans);color:var(--ink3)}
-.lrn-fp-fl b{font:500 22px/1 var(--font-serif);color:var(--ink);letter-spacing:-.3px;white-space:nowrap}
+.lrn-fp-fl b{margin-inline-start:auto;font:500 22px/1 var(--font-serif);color:var(--ink);letter-spacing:-.3px;white-space:nowrap}
+.lrn-fp-fl > span:nth-child(3){position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .lrn-fp-info{display:flex;flex-direction:column;gap:6px;max-width:760px}
 .lrn-fp-info p{margin:0;font-size:13px;line-height:1.5;color:var(--ink3)}
 @media(max-width:1100px){.lrn-fp-row{grid-template-columns:minmax(0,1fr);gap:20px}}
@@ -2160,7 +2195,7 @@ html[data-theme="bw"] .lrn .lrn-tp-ph{stroke:var(--bg)}
 .lrn-tp-side{display:flex;flex-direction:column;gap:8px;padding:30px 0 0 8px}
 .lrn-tp-side p{margin:0;font-size:14.5px;line-height:1.55;color:var(--ink2);text-wrap:pretty}
 .lrn-tp-side .lead{font:600 15px/1.4 var(--font-sans);color:var(--ink)}
-.lrn-tp-lines{display:flex;flex-direction:column;gap:10px;padding-top:14px;border-top:1px solid var(--line)}
+.lrn-tp-lines{display:flex;flex-direction:column;gap:10px;padding:13px 16px;border-radius:8px;background:var(--surface-2)}
 .lrn-tp-lines > div{display:grid;grid-template-columns:210px minmax(0,1fr) auto;gap:6px 16px;align-items:baseline;font-variant-numeric:tabular-nums}
 .lrn-tp-lines span:first-child{font:500 12px/1.4 var(--font-sans);color:var(--ink3)}
 .lrn-tp-lines span:nth-child(2){font:400 16px/1.4 var(--font-sans);color:var(--ink2)}
@@ -2850,19 +2885,27 @@ html[data-theme="bw"] .lrn .lrn-mv-tr.on .lrn-mv-tbar{fill:color-mix(in oklch, v
 .lrn-card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px 24px;display:flex;flex-direction:column;gap:18px;min-width:0}
 .lrn-card-l{font:500 12px/1 var(--font-sans);letter-spacing:.2px;color:var(--ink3)}
 
-/* ── Formel: brøkstrek, hevet skrift, ekte minus og gangetegn ── */
-.lrn-f{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font:400 18px/1.35 var(--font-serif);color:var(--ink)}
-.lrn-f.n{font:400 16px/1.35 var(--font-sans);color:var(--ink2);font-variant-numeric:tabular-nums}
+/* ── Formel: brøkstrek, hevet skrift, ekte minus og gangetegn ──
+   Navnene står i vanlig skrift, ikke kursiv. Størrelsen som regnes ut (først, foran «=») er halvfet.
+   Regnetegnene (.lrn-op, merket av learn.js) er dempet, så leddene skiller seg fra hverandre. */
+.lrn-f{display:flex;align-items:center;gap:6px 9px;flex-wrap:wrap;font:400 16px/1.4 var(--font-sans);color:var(--ink2);font-variant-numeric:tabular-nums}
+.lrn-f i{font-style:normal;color:var(--ink)}
+.lrn-f > i:first-child:has(+ .lrn-fj > .lrn-op.eq:first-child){font-weight:600}
+.lrn-op{color:var(--ink3)}
+/* Tallene dine står i et eget felt på mørkere flate, med svaret helt til høyre.
+   Likhetstegnet foran svaret, og et som står aller først, leses opp, men vises ikke. */
+.lrn-f.n{font-size:15.5px;font-weight:400;color:var(--ink2);padding:13px 16px;border-radius:8px;background:var(--surface-2)}
+.lrn-f.n > .lrn-fj:has(> b){margin-inline-start:auto}
+.lrn-f.n > .lrn-fj:has(> b) > .lrn-op.eq,.lrn-f.n > .lrn-fj:first-child > .lrn-op.eq:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .lrn-frac{display:inline-flex;flex-direction:column;text-align:center}
-.lrn-frac > span:first-child{padding:0 6px 6px}
-.lrn-frac > span:last-child{padding:6px 6px 0;border-top:1px solid var(--ink2)}
-.lrn-f.n .lrn-frac > span:last-child{border-top-color:var(--ink3)}
-.lrn-f sup{font-size:12px;line-height:0}
-.lrn-f b{font:500 26px/1 var(--font-serif);color:var(--ink);letter-spacing:-.4px;white-space:nowrap}
+.lrn-frac > span:first-child{padding:0 8px 5px}
+.lrn-frac > span:last-child{padding:5px 8px 0;border-top:1px solid var(--ink3)}
+.lrn-f sup{font-size:.7em;line-height:0}
+.lrn-f b{font:500 24px/1 var(--font-serif);color:var(--ink);letter-spacing:-.4px;white-space:nowrap;font-variant-numeric:tabular-nums lining-nums}
 .lrn-fs{display:flex;flex-direction:column;gap:6px}
 .lrn-fs .lrn-f{gap:6px 8px}
 .lrn-fs .lrn-f.n{font-size:15px;line-height:1.4}
-.lrn-fs .lrn-f.n b{font:600 15px/1.4 var(--font-sans);letter-spacing:0}
+.lrn-fs .lrn-f.n b{font-size:20px}
 
 /* ── Spørsmål: én komponent på hele nettstedet, ekte details/summary ── */
 .lrn-faq{gap:16px}
@@ -3015,9 +3058,9 @@ details[open] > summary .lrn-chev{transform:rotate(180deg)}
   .lrn-calc .lrn-gl > div:last-child{border-bottom:0}
   .lrn-cards{grid-template-columns:minmax(0,1fr);gap:12px}
   .lrn-card{padding:18px 16px;gap:14px}
-  .lrn-f{font-size:15.5px}
+  .lrn-f{font-size:15px}
   .lrn-f.n{font-size:14.5px}
-  .lrn-f b{font-size:22px}
+  .lrn-f b{font-size:21px}
   .lrn-lab.tot{font-size:16px;line-height:20px}
   .lrn-sig > .s{font-size:30px}
   .lrn-col{gap:14px}
@@ -3038,8 +3081,19 @@ details[open] > summary .lrn-chev{transform:rotate(180deg)}
   .lrn-out{padding:16px}
   .lrn-out .h{font-size:18px}
   .lrn-jst{font-size:20px}
-  .lrn-frow{grid-template-columns:minmax(0,1fr);gap:10px}
-  .lrn-frow + .lrn-frow{padding-top:16px}
+  .lrn-card:has(> .lrn-frow),.lrn-frow{display:block}
+  .lrn-frow > *,.lrn-frow > .lrn-f.n{padding:14px 16px}
+  .lrn-frow > .lrn-fnm{display:block;padding-bottom:4px;font-size:15px}
+  .lrn-frow > .lrn-fnm + .lrn-f{padding:0 16px 14px}
+  .lrn-frow > :nth-child(3){border-inline-start:0;border-top:1px solid var(--line)}
+  .lrn-frow + .lrn-frow{border-top-color:var(--line-2)}
+  .lrn-frow.hd{display:none}
+  /* Formellister på smal skjerm: navnet på egen linje, likhetstegn og uttrykk under */
+  .lrn-fl{grid-template-columns:max-content minmax(0,1fr);row-gap:0}
+  .lrn-fl > .lrn-f{row-gap:2px}
+  .lrn-fl > .lrn-f + .lrn-f{margin-top:14px}
+  .lrn-fl > .lrn-f > i:first-child{grid-column:1 / -1}
+  .lrn-card .lrn-frow .lrn-f.n b{font-size:21px}
   .lrn-kt{gap:16px}
   .lrn-kt li{font-size:14px}
   .lrn-ptitle{font-size:12px;line-height:16px}
@@ -3079,4 +3133,3 @@ details[open] > summary .lrn-chev{transform:rotate(180deg)}
 .lrn-enkel .lrn-f:has(.lrn-frac){display:none}
 .lrn-enkel .lrn .lrn-f{font:400 15px/1.5 var(--font-sans);color:var(--ink2);gap:4px 8px}
 .lrn-enkel .lrn .lrn-f i{font-style:normal;color:var(--ink)}
-.lrn-enkel .lrn .lrn-f b{font:600 16px/1.5 var(--font-sans);letter-spacing:0;color:var(--ink)}

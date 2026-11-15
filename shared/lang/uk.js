@@ -8157,6 +8157,7 @@ REGIONS['uk']._ph = {
 "terminbeløp":"платіж",
 "termingebyr":"щомісячна комісія",
 "Med tallene over":"З числами вище",
+"Med tallene dine":"З вашими числами",
 "gir månedsrente":"дає місячну ставку",
 "Kalkulatoren prøver seg fram ved å halvere intervallet 200 ganger til begge sider er like.":"Калькулятор шукає відповідь, ділячи інтервал навпіл 200 разів, доки обидві сторони не зрівняються.",
 "Lånet minus etableringsgebyret.":"Кредит мінус комісія за оформлення.",
