@@ -11977,6 +11977,7 @@ REGIONS['en']._ph = {
 "Verdsettelse av formue, aksjer, bolig og rabatter":"Valuation of wealth, shares, homes and discounts",
 "Verken gevinst eller tap.":"Neither gain nor loss.",
 "Verktøy":"Tools",
+"Verktøy og oppslag":"Tools and reference",
 "Verktøy og kalkulator for regnskap og bokføring":"Tools and calculator for accounting and bookkeeping",
 "Verktøy, bil, forsikring, administrasjon.":"Tools, vehicle, insurance, admin.",
 "Verktøy, inventar og driftsmateriell":"Tools, fixtures and operating supplies",

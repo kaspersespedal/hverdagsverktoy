@@ -775,8 +775,13 @@
     var cs = getComputedStyle(tabs);
     var padL = parseFloat(cs.paddingLeft) || 0, padR = parseFloat(cs.paddingRight) || 0;
     var box = tabs.getBoundingClientRect();
-    var a = tabs.firstElementChild.getBoundingClientRect();
-    var b = tabs.lastElementChild.getBoundingClientRect();
+    // Ytterlenkene, ikke ytterbarna: forsidens rad har lenkene i tre grupper
+    // (.qg-col), og på telefon er gruppene display:contents — de har ingen
+    // egen boks å måle. I fanerekka er lenkene barna, så der er det det samme.
+    var links = tabs.getElementsByTagName('a');
+    if (!links.length) return;
+    var a = links[0].getBoundingClientRect();
+    var b = links[links.length - 1].getBoundingClientRect();
     // 2px slingringsmonn: subpiksel-scroll og zoom gjør at kantene sjelden
     // lander blankt på hverandre, og uten monnet blir uttoningen stående igjen.
     setAttrIfChanged(tabs, 'data-fade-l',
@@ -896,7 +901,8 @@
       var q = document.createElement('a');
       q.href = MOD_HREF; q.className = 'qc';
       q.innerHTML = '<span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + MOD_ICON + '</svg></span><span class="qc-lbl">' + MOD_LABEL + '</span>';
-      qc.appendChild(q);
+      // Forsidens lenker står i tre grupper; den nye hører hjemme sist i den siste.
+      (qc.querySelector('.qg-col:last-child') || qc).appendChild(q);
       qc.classList.add('has-mod');
     }
   }
