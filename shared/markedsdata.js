@@ -445,16 +445,18 @@
     function Y(x) { return pad + (1 - (x - mn) / (mx - mn)) * (H - 2 * pad); }
     setText('wxYMax', deg(mx)); setText('wxYMin', deg(mn));
 
-    /* Klokkeslett på hele seks timer (00 · 06 · 12 · 18). De første timene hoppes over, ellers
-       kolliderer første klokkeslett med «nå» — regnet for den smaleste grafen (126 px), og
-       lengre for et lengre ord («now»). */
-    var nowL = ph('nå'), ax = '<span>' + esc(nowL) + '</span>', tk = [];
-    for (i = Math.ceil((nowL.length * 9.5 + 12) / 126 * (n - 1)); i < n; i++) {
-      if (dt[i].getHours() % 6) continue;
-      var end = i / (n - 1) > 0.95;
-      if (i < n - 1) tk.push(i);
-      ax += '<span' + (end ? ' class="is-end"' : '') + ' style="left:' + (end ? 100 : i / (n - 1) * 100).toFixed(1) + '%">' + pad2(dt[i].getHours()) + '</span>';
+    /* Døgnet deles i like ruter à seks timer regnet fra nå, med klokkeslettet under hver strek
+       og ved slutten. Faste klokkeslett (00 · 06 · 12 · 18) ga ujevne ruter: bred først og en
+       smal rest til slutt. Annethvert klokkeslett (is-fine) skjules av CSS når fire smale kort
+       deler raden. Første klokkeslett sløyfes når ordet for «nå» er så langt at de kolliderer
+       i den smaleste grafen der det vises (173 px); streken står likevel. */
+    var nowL = ph('nå'), ax = '<span>' + esc(nowL) + '</span>', tk = [], last = n - 1;
+    for (i = 6; i < last; i += 6) {
+      tk.push(i);
+      if (i > 6 || nowL.length * 9.5 + 12 <= 6 / last * 173) ax += '<span' + (i % 12 ? ' class="is-fine"' : '') + ' style="left:' + (i / last * 100).toFixed(1) + '%">' + pad2(dt[i].getHours()) + '</span>';
     }
+    /* Slutten får klokkeslett bare når siste rute er hel, ellers kolliderer det med det forrige. */
+    if (last % 6 === 0) ax += '<span class="is-end" style="left:100%">' + pad2(dt[last].getHours()) + '</span>';
     var el = $('wxAxis'); if (el) el.innerHTML = ax;
 
     var s = '';
@@ -471,7 +473,10 @@
       s += '<rect class="wx-rain" x="' + (X(i) + bw * 0.15).toFixed(1) + '" y="' + (H - bh).toFixed(1) +
            '" width="' + (bw * 0.7).toFixed(1) + '" height="' + bh.toFixed(1) + '"/>';
     }
-    var pts = v.map(function (x, k) { return [X(k), Y(x)]; });
+    /* Kurven tegnes litt utjevnet: hver time veies sammen med nabotimene. METs tideler gir
+       ellers små trappetrinn i en så lav graf. «Nå» og siste time står urørt, og avlesningen
+       under pekeren bruker de ekte tallene. */
+    var pts = v.map(function (x, k) { return [X(k), Y(k && k < last ? (v[k - 1] + 2 * x + v[k + 1]) / 4 : x)]; });
     svg.innerHTML = s + '<path class="spark-line" d="' + curvePath(pts) + '"/>' + sparkDot(pts[0]);
 
     /* Ett symbol midt i hver rute (mellom to hårstreker). Symbolet oppsummerer de seks timene

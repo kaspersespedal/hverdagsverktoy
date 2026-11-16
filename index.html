@@ -885,8 +885,8 @@
   }
   /* Værkortets døgngraf: temperaturkurve, nedbør som søyler nederst og en egen rad med
      værsymboler øverst. Symbolrad (18) + luft (6) + kurve (64) = 88 px, samme flate som
-     de tre andre grafene, så aksene står på linje. Loddrette hårstreker på kl. 00 · 06 ·
-     12 · 18 deler døgnet i ruter: symbolet står midt i ruta, klokkeslettet under streken. */
+     de tre andre grafene, så aksene står på linje. Loddrette hårstreker hver sjette time
+     fra nå deler døgnet i fire like ruter: symbolet står midt i ruta, klokkeslettet under streken. */
   .wx-syms{position:relative;height:18px;margin-left:30px;color:var(--ink2);pointer-events:none}
   .wx-syms span{position:absolute;top:1px;width:16px;height:16px;margin-left:-8px}
   .wx-syms svg{display:block;width:16px;height:16px}
@@ -906,6 +906,9 @@
   .wx-axis span{position:absolute;top:0;transform:translateX(-50%)}
   .wx-axis span:first-child{transform:none}
   .wx-axis span.is-end{transform:translateX(-100%)}
+  /* Fire smale kort på rad: grafen er 118–173 px, og fem klokkeslett blir for tett. Da
+     vises bare nå, midten og slutten; strekene og symbolene står som før. */
+  @media (min-width:881px) and (max-width:1099px){.wx-axis span.is-fine{display:none}}
 
   /* ══ Fullskjerm graf — vær, strøm og valuta (Claude Design «05 Fullskjerm graf») ══
      Knappen sitter ytterst til høyre i kortets tall-linje, der det er ledig plass i
@@ -1976,7 +1979,7 @@
 <script src="/shared/site-shell.js?v=v2" defer></script>
 <script src="/shared/top-chrome.js?v=v312" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v22" defer></script>
+<script src="/shared/markedsdata.js?v=v23" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -2574,7 +2577,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
             <div class="widget-spark-wrap has-yax has-syms">
               <!-- Y-akse: høyeste og laveste temperatur det neste døgnet. Fylles av markedsdata.js. -->
               <div class="spark-yax" aria-hidden="true"><span id="wxYMax">—</span><span id="wxYMin">—</span></div>
-              <!-- Ett værsymbol per rute i grafen (rutene deles på kl. 00 · 06 · 12 · 18). -->
+              <!-- Ett værsymbol per rute i grafen (fire like ruter à seks timer fra nå). -->
               <div class="wx-syms" id="wxSyms" aria-hidden="true"></div>
               <!-- Temperaturkurve og nedbørsøyler bygges av shared/markedsdata.js (buildWxSpark). Tom til data er hentet. -->
               <svg class="widget-spark wx-spark" id="wxSpark" viewBox="0 0 200 64" preserveAspectRatio="none" aria-hidden="true"></svg>
