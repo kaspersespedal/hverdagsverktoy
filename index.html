@@ -2213,34 +2213,57 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   /* Toppmenyen 58 px høy som da (nå 55) */
   html[data-theme="carbon"] body .nav-wrap nav{min-height:57px}
 
-  /* Dagsoversikt-toppen: tre tekstlinjer, ingen piller. Aksentstreken over
-     «DAGSOVERSIKT», så «dato · uke» og «● Sist oppdatert» under. Den står fritt
-     som overskrift over boksene (se under), ikke inne i en ramme. */
+  /* Dagsoversikt-toppen som en ekte overskrift over boksene.
+     Kasper 2026-11-16: «gjør det MARKANT BEDRE». Før: tre små, løse tekstlinjer
+     (etikett, dato · uke, ● Sist oppdatert) som fløt 4 px inn fra kanten.
+     Nå: øverst «— DAGSOVERSIKT | UKE 47» og en status-pille (● 18:04 ↻) til høyre,
+     under det datoen i stor serif med ukedagen i aksentfargen, som «økonomi» i
+     tittelen. Står i flukt med boksene. «Sist oppdatert» leses fortsatt opp.
+     .title er display:contents, så etikett, uke, pille og dato er søsken i én
+     flex-rad som brytes: blir første linje for trang (smal telefon, langt språk),
+     flytter pillen ned i stedet for å legge seg over uka. Lasteanimasjonen
+     toner derfor barna av .title, ikke .title selv (se body.introAct under). */
   html[data-theme="carbon"] .daily-head{
-    display:flex;flex-direction:column;align-items:flex-start;gap:7px;
-    padding:4px 4px 14px;background:none;border-bottom:0;
+    display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;
+    column-gap:10px;row-gap:12px;padding:4px 0 18px;background:none;border-bottom:0;
   }
-  html[data-theme="carbon"] .daily-head .title{
-    display:flex;flex-wrap:wrap;align-items:center;column-gap:9px;row-gap:3px;
-    grid-column:auto;grid-row:auto;
-  }
-  html[data-theme="carbon"] .daily-head .title::before{display:block}
-  html[data-theme="carbon"] .daily-head .title #dailyDate + .sep{display:block}
+  html[data-theme="carbon"] .daily-head .title{display:contents}
+  html[data-theme="carbon"] .daily-head .title::before{content:none}
+  html[data-theme="carbon"] .daily-head .title .sep{display:none}
   html[data-theme="carbon"] .daily-head .title > span[data-i18n]{
-    flex:0 0 100%;display:block;min-height:0;letter-spacing:2px;
+    order:1;flex:none;display:inline-flex;align-items:center;gap:9px;min-height:28px;
+    font-size:10.5px;letter-spacing:1.8px;color:var(--ink3);
   }
-  html[data-theme="carbon"] .daily-head .title > span[data-i18n]::before{content:none}
-  html[data-theme="carbon"] .daily-head .title #dailyDate,
+  html[data-theme="carbon"] .daily-head .title > span[data-i18n]::before{
+    content:"";width:16px;height:1px;background:var(--accent);opacity:.85;flex-shrink:0;
+  }
   html[data-theme="carbon"] .daily-head .title #dailyWeek{
+    order:2;display:inline-flex;align-items:center;gap:10px;
     padding:0;border:0;border-radius:0;background:none;
-    font-family:var(--font-sans);font-size:12.5px;font-weight:500;line-height:inherit;
-    letter-spacing:.2px;color:var(--ink2);white-space:nowrap;
+    font:600 10.5px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--ink4);white-space:nowrap;
   }
+  html[data-theme="carbon"] .daily-head .title #dailyWeek::before{content:"";width:1px;height:11px;background:var(--line-2)}
   html[data-theme="carbon"] .daily-head .stamp{
-    grid-column:auto;grid-row:auto;height:auto;gap:8px;padding:0;
-    border:0;border-radius:0;background:none;font-size:10.5px;color:var(--ink3);
+    order:3;margin-left:auto;height:28px;gap:7px;padding:0 3px 0 11px;
+    border:1px solid var(--line-2);border-radius:999px;background:rgba(var(--wash-rgb),.025);
+    font-size:11px;color:var(--ink2);
   }
-  html[data-theme="carbon"] .daily-head .daily-refresh{display:none}
+  /* Glød som filter: ping-animasjonen (livePulseOnce) eier box-shadow og nullstiller den */
+  html[data-theme="carbon"] .daily-head .stamp::before{background:var(--accent-2);filter:drop-shadow(0 0 3px rgba(var(--glow-rgb),.9))}
+  html[data-theme="carbon"] .daily-head .stamp .stamp-pre{
+    position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
+  }
+  html[data-theme="carbon"] .daily-head .daily-refresh{display:inline-flex;width:24px;height:24px}
+  html[data-theme="carbon"] .daily-head .title #dailyDate{
+    order:4;flex:0 0 100%;margin-top:2px;padding:0;border:0;background:none;
+    font-family:var(--font-serif);font-weight:500;font-size:clamp(24px,7vw,28px);line-height:1.15;
+    letter-spacing:-.5px;color:var(--ink);white-space:normal;
+  }
+  /* Ukedagen og resten står i hvert sitt <span> (skriptet «Localized date»): datoen
+     brekker bare etter ukedagen, aldri mellom «16.» og «november». */
+  html[data-theme="carbon"] #dailyDate .dd-wd{color:var(--accent-2)}
+  html[data-theme="carbon"] #dailyDate .dd-rest{white-space:nowrap}
 
   /* Hvert kort i egen boks med tittelstripe, som de andre temaene fikk i #288.
      Kasper 2026-11-16: «implementer det vi har gjort under forsidetittelen» også i
@@ -2432,9 +2455,10 @@ body.introAct .daily-frame::after{
   background-size:240% 100%;background-position:0% 0;
 }
 body.introAct.heroLanded .daily .daily-frame.reveal.in::after{animation:hvSweep 1.5s cubic-bezier(.6,.05,.3,1) 1.05s 1 both}
-body.introAct .daily .daily-head .title,
+/* .title > *, ikke .title: i Carbon på telefon er .title display:contents (se over) */
+body.introAct .daily .daily-head .title > *,
 body.introAct .daily .daily-head .stamp{opacity:0;transform:translateY(7px)}
-body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .title{
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .title > *{
   opacity:1;transform:none;
   transition:opacity .5s var(--ease-out-quart) 430ms, transform .55s var(--ease-out-expo) 430ms;
 }
@@ -3443,7 +3467,17 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
       var d = new Date();
       var dd = trT('trForsideWeekdays', 'Søndag,Mandag,Tirsdag,Onsdag,Torsdag,Fredag,Lørdag').split(',');
       var mm = trT('trForsideMonthsLong', 'januar,februar,mars,april,mai,juni,juli,august,september,oktober,november,desember').split(',');
-      el.textContent = trT('trForsideDateLong', '{wd} {d}. {m} {y}').replace('{wd}', dd[d.getDay()]).replace('{d}', d.getDate()).replace('{m}', mm[d.getMonth()]).replace('{y}', d.getFullYear());
+      var wd = dd[d.getDay()];
+      var txt = trT('trForsideDateLong', '{wd} {d}. {m} {y}').replace('{d}', d.getDate()).replace('{m}', mm[d.getMonth()]).replace('{y}', d.getFullYear());
+      // Ukedagen og resten i hvert sitt <span>: Carbon på telefon farger ukedagen og
+      // lar datoen brekke bare etter den (#carbonMobil). Uten CSS ser det likt ut som før.
+      if (txt.indexOf('{wd}') === 0) {
+        var a = document.createElement('span'); a.className = 'dd-wd'; a.textContent = wd;
+        var b = document.createElement('span'); b.className = 'dd-rest'; b.textContent = txt.slice(4).trim();
+        el.textContent = ''; el.append(a, ' ', b);
+      } else {
+        el.textContent = txt.replace('{wd}', wd);
+      }
       // ISO 8601-ukenummer (uke starter mandag; uke 1 = uka med årets første torsdag) — som Norge bruker.
       var w = document.getElementById('dailyWeek');
       if (w) {
