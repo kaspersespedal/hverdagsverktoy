@@ -1921,7 +1921,9 @@
      Kasper 2026-11-16: vær, rente, strøm og valuta sto klemt i én ramme med
      bare en hårstrek mellom. Nå er rammen borte, toppen (etikett + dato) står
      fritt som overskrift, og hvert kort er en egen boks med luft mellom og en
-     tittelstripe øverst. Carbon på telefon (#carbonMobil, som i oktober) er urørt. */
+     tittelstripe øverst. Carbon på telefon har sin egen utgave i #carbonMobil.
+     border-right må være !important: telefonregelen «.widget{border-right:none
+     !important}» tok ellers høyrekanten av boksen. */
   @media (max-width: 640px){
     html:not([data-theme="carbon"]) .daily-frame{
       background:none;border:0;border-radius:0;overflow:visible;box-shadow:none;
@@ -1932,7 +1934,7 @@
     html:not([data-theme="carbon"]) .daily-grid{gap:12px}
     html:not([data-theme="carbon"]) .daily-grid > .widget{
       background:var(--surface);
-      border:1px solid var(--line);border-radius:18px;
+      border:1px solid var(--line);border-right:1px solid var(--line) !important;border-radius:18px;
       padding:0 16px 16px;
     }
     html:not([data-theme="carbon"]) .daily-grid > .widget > .widget-top{
@@ -2139,6 +2141,8 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
    første skjermbildet: venstrestilt tittel «Praktiske verktøy for økonomi, skatt,
    lovverk og regnskap.», firkantet søkefelt, kategoriene som én rad man blar
    sidelengs i, dagsoversikten rett under, og lasteanimasjonen fra den gang.
+   2026-11-16: dagsoversiktens kort står i egne bokser med tittelstripe (som de
+   andre temaene) og har fullskjermknapp; innholdet i kortene er som i oktober.
    Alle andre temaer, og Carbon på PC og nettbrett, er urørt.
    Kategoriene står fortsatt i tre grupper i markupen (#280). Her løses gruppene
    opp (display:contents) til én rad, så også nye lenker – som den top-chrome.js
@@ -2210,10 +2214,11 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   html[data-theme="carbon"] body .nav-wrap nav{min-height:57px}
 
   /* Dagsoversikt-toppen: tre tekstlinjer, ingen piller. Aksentstreken over
-     «DAGSOVERSIKT», så «dato · uke» og «● Sist oppdatert» under. */
+     «DAGSOVERSIKT», så «dato · uke» og «● Sist oppdatert» under. Den står fritt
+     som overskrift over boksene (se under), ikke inne i en ramme. */
   html[data-theme="carbon"] .daily-head{
     display:flex;flex-direction:column;align-items:flex-start;gap:7px;
-    padding:12px 18px 11px;
+    padding:4px 4px 14px;background:none;border-bottom:0;
   }
   html[data-theme="carbon"] .daily-head .title{
     display:flex;flex-wrap:wrap;align-items:center;column-gap:9px;row-gap:3px;
@@ -2237,12 +2242,42 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   }
   html[data-theme="carbon"] .daily-head .daily-refresh{display:none}
 
-  /* Kortene: én linje i stedet for faktaradene, lave grafer (48 px), ingen utvid-knapp.
-     Værkortet har fire ruter og renta «Neste rentemøte» i stedet for graf; strøm har fotnoten. */
-  html[data-theme="carbon"] .widget{grid-template-rows:23px auto minmax(34px,auto) 1fr 30px;gap:7px}
+  /* Hvert kort i egen boks med tittelstripe, som de andre temaene fikk i #288.
+     Kasper 2026-11-16: «implementer det vi har gjort under forsidetittelen» også i
+     Carbon. Rammen rundt hele dagsoversikten er borte; innholdet i kortene er
+     fortsatt som i oktober. Litt mindre runde hjørner enn de andre temaene (12 mot
+     18 px), så boksene passer med søkefeltet (8) og kategoriraden (6) over.
+     border-right må være !important: telefonregelen «.widget{border-right:none
+     !important}» tok ellers høyrekanten av boksen. */
+  html[data-theme="carbon"] .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
+  html[data-theme="carbon"] .daily-grid{gap:12px}
+  html[data-theme="carbon"] .daily-grid > .widget{
+    background:var(--surface);
+    border:1px solid var(--line);border-right:1px solid var(--line) !important;border-radius:12px;
+    padding:0 16px 16px;
+  }
+  html[data-theme="carbon"] .daily-grid > .widget > .widget-top{
+    margin:0 -16px 5px;padding:12px 16px;min-height:46px;box-sizing:border-box;
+    border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
+    background:color-mix(in srgb,var(--accent) 5%,transparent);
+  }
+  html[data-theme="carbon"] .daily-credits{border-top:0;padding:4px 4px 0}
+  html[data-theme="carbon"] .fxc{border-radius:12px}
+  html[data-theme="carbon"] .fxc-label{
+    justify-self:stretch;padding:12px 16px;min-height:46px;box-sizing:border-box;
+    border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
+    background:color-mix(in srgb,var(--accent) 5%,transparent);
+  }
+  html[data-theme="carbon"] .fxc-io{padding-top:14px}
+
+  /* Kortene: én linje i stedet for faktaradene og lave grafer (48 px). Værkortet har
+     fire ruter og renta «Neste rentemøte» i stedet for graf; strøm har fotnoten.
+     Fullskjermknappen (↗ ved tallet) er med, så alle fire grafene kan åpnes stort.
+     Ingen fast femte rad lenger: i egen boks trenger ikke kortene like høye rader,
+     og den tomme raden ga 30 px dødluft i bunnen av vær- og rentekortet. */
+  html[data-theme="carbon"] .widget{grid-template-rows:auto auto minmax(34px,auto) 1fr;gap:7px}
   html[data-theme="carbon"] .widget > .widget-facts,
-  html[data-theme="carbon"] #wxCard > .widget-spark-wrap,
-  html[data-theme="carbon"] .widget .md-exp{display:none}
+  html[data-theme="carbon"] #wxCard > .widget-spark-wrap{display:none}
   /* Rentegrafen vises på PC, men på telefon bare i fullskjerm. */
   #srCard > .widget-spark-wrap{display:none}
   html[data-theme="carbon"] .widget-label{font-size:10.5px}
@@ -2281,7 +2316,6 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   html[data-theme="carbon"] .qc:hover .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
 }
 @media (max-width:480px){
-  html[data-theme="carbon"] .daily-head{padding:11px 16px 10px}
   html[data-theme="carbon"] .hero{padding:36px 0 22px}
   html[data-theme="carbon"] #heroH1,
   html[data-theme="carbon"] #heroH1Alt{font-size:clamp(30px,9.4vw,38px);letter-spacing:-.6px}
@@ -2421,6 +2455,51 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
 
 @media (prefers-reduced-motion:reduce){
   .intro-veil{display:none !important}
+}
+</style>
+<style id="carbonNav">/* ══ Navbaren i Carbon (forsiden, PC og telefon) ═══════════════════════
+   Kasper 2026-11-16: «fiks navbaren til å bli penere». Svakhetene var:
+   – fire knapper i to stiler: søk og nedtelling hadde ramme, tema og språk var naken
+     tekst med pil (på telefon: en firkant, en prikk med pil og et flagg med pil);
+   – baren var en flat svart stripe som skar av den varme gløden øverst i heroen.
+   Nå er alle knappene like piller (PC: ikon + tekst, telefon: runde ikonknapper uten
+   pil), logoflisa har en svak messingkant, og baren er gjennomsiktig til man blar
+   (.scrolled settes etter 8 px; da blir den tett som på resten av nettstedet).
+   #navWrap i velgeren: top-chrome.js har «#tc-theme-btn{…}» for berøringsskjerm,
+   og en id-regel slås bare av en annen id-regel. Bare Carbon; andre temaer er urørt. */
+html[data-theme="carbon"] body #navWrap{transition:background-color .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease)}
+html[data-theme="carbon"] body #navWrap:not(.scrolled){background:transparent}
+html[data-theme="carbon"] #navWrap nav,
+html[data-theme="carbon"] #navWrap .tc-actions{gap:8px}
+html[data-theme="carbon"] #navWrap .mark{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){
+  position:relative;height:34px;box-sizing:border-box;margin:0;padding:0 14px;gap:8px;
+  border:1px solid var(--line-2);border-radius:999px;
+  background:rgba(var(--wash-rgb),.025);color:var(--ink2);
+  font:500 12.5px/1 var(--font-sans);
+}
+html[data-theme="carbon"] #navWrap :is(.tmr-pill.is-live,.tc-btn[aria-expanded="true"]){color:var(--ink);border-color:var(--line-warm);background:rgba(var(--wash-rgb),.05)}
+@media(hover:hover){
+  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn):hover{color:var(--ink);border-color:var(--line-warm);background:rgba(var(--wash-rgb),.05)}
+}
+html[data-theme="carbon"] #navWrap .tc-btn:focus-visible{outline-offset:2px;border-radius:999px}
+/* Trykkflaten blir 44 px høy uten at knappen vokser (erstatter polstringstrikset i
+   top-chrome.js, som ville gjort pillene 78 px høye på berøringsskjerm). 3 px til
+   hver side, så flatene ikke overlapper i mellomrommet på 6 px på telefon. */
+html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::after{content:"";position:absolute;inset:-5px -3px}
+/* 641–760 px: med søkepilla framme ble raden for bred (cirka 23 px over på 641 px).
+   Nedtellingen blir et rundt ikon her, slik den er på telefon. */
+@media (min-width:641px) and (max-width:760px){
+  html[data-theme="carbon"] #navWrap .tmr-pill{width:34px;padding:0;justify-content:center}
+  html[data-theme="carbon"] #navWrap .tmr-pill .tmr-pill-t{display:none}
+}
+@media (max-width:640px){
+  html[data-theme="carbon"] #navWrap nav,
+  html[data-theme="carbon"] #navWrap .nav-right,
+  html[data-theme="carbon"] #navWrap .tc-actions{gap:6px}
+  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:34px;padding:0;justify-content:center}
+  html[data-theme="carbon"] #navWrap .tc-btn .chev{display:none}
+  html[data-theme="carbon"] #navWrap .tc-btn .swatch{width:12px;height:12px}
 }
 </style>
 </head>
