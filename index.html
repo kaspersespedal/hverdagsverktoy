@@ -553,7 +553,10 @@
     position:absolute;top:calc(100% + 8px);left:0;right:0;
     background:
       radial-gradient(120% 80% at 50% -10%, rgba(200,153,104,.04), transparent 55%),
-      linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+      linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%) var(--bg);
+    /* var(--bg) under gradienten: Noir (bw) har halvgjennomsiktig --surface med
+       vilje (røyken skal synes bak kortene), men panelet ligger OPPÅ kategoriene,
+       så de skinte gjennom treffene. --bg er heldekkende i alle temaer. */
     border:1px solid var(--line-2);
     border-radius:8px;
     box-shadow:
@@ -2030,7 +2033,7 @@
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
-<script src="/shared/search.js?v=v293" defer></script>
+<script src="/shared/search.js?v=v318" defer></script>
 <!-- Timeren i toppen. Samme fil som /kalkulator/timer/ bruker — der i full
      størrelse, her som popover under pilla. -->
 <script src="/shared/timer.js?v=v7" defer></script>
@@ -2091,6 +2094,9 @@ html[data-theme="bw"], body[data-theme="bw"]{
   --surface2:rgba(16,16,18,.55) !important;
   --surface-2:#17171b !important;
   --surface-3:#202024 !important;
+  /* Menyene (språk, tema, søket i toppen) leser --menu-bg = --surface, som her er
+     halvgjennomsiktig. Samme tone som .tmr-pop under, men heldekkende. */
+  --menu-bg:#101012 !important;
   --ink:#f3efe7 !important;
   --ink2:#c3beb3 !important;
   --ink3:#8f8a80 !important;
@@ -3626,9 +3632,13 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     var n = norm(item.n), d = norm(item.d), k = norm(item.k||''), c = norm(item.c);
     var s = 0;
     if(n === qn) s += 100;
-    if(n.indexOf(qn) === 0) s += 60;
+    /* Prefiks av navnet teller fullt bare når søket slutter på en ordgrense.
+       Ellers slo «Avansert» (prefiks) «Margin og påslag» (har ordet «avanse»
+       som tag) når man søkte «avanse» — det man skrev, var et helt ord. */
+    if(n.indexOf(qn) === 0) s += /[a-z0-9æøå]/.test(n.charAt(qn.length)) ? 35 : 60;
     if(n.indexOf(qn) >= 0) s += 30;
     if(k.indexOf(qn) >= 0) s += 18;
+    if((' ' + n + ' ' + k + ' ').indexOf(' ' + qn + ' ') >= 0) s += 80;
     if(d.indexOf(qn) >= 0) s += 12;
     if(c.indexOf(qn) >= 0) s += 6;
     var toks = qn.split(/\s+/).filter(Boolean);
@@ -3808,11 +3818,53 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     if(wrap) wrap.classList.add('is-open');
     input.setAttribute('aria-expanded','true');
     if(!input.value.trim()) renderSuggested();
+    fitPanel();
   }
+
+  /* Tastaturet på mobil: 60vh krymper ikke når tastaturet kommer opp, så de
+     nederste treffene havnet bak tastaturet og Safari-linja. visualViewport er
+     det som faktisk er synlig; panelet får aldri gå lenger ned enn det. */
+  var vv = window.visualViewport;
+  var fitRaf = 0, lastVvH = vv ? vv.height : 0, liftedThisOpen = false;
+  function fitPanel(){
+    if(!panel || !panel.classList.contains('open')) return;
+    var viewBottom = vv ? vv.offsetTop + vv.height : window.innerHeight;
+    var avail = Math.floor(viewBottom - panel.getBoundingClientRect().top - 12);
+    var cap = Math.round(window.innerHeight * 0.6);
+    panel.style.maxHeight = Math.max(120, Math.min(avail, cap)) + 'px';
+  }
+  function queueFit(){
+    if(fitRaf) return;
+    fitRaf = requestAnimationFrame(function(){ fitRaf = 0; fitPanel(); });
+  }
+  /* Når tastaturet åpner (synlig høyde krymper merkbart), løft søkefeltet opp
+     under toppmenyen så det blir plass til flere treff. Én gang per åpning. */
+  function liftForKeyboard(){
+    if(!vv || !panel.classList.contains('open') || liftedThisOpen) return;
+    if(!window.matchMedia('(pointer:coarse)').matches) return;
+    if(vv.height > lastVvH - 120) return;
+    liftedThisOpen = true;
+    var nav = document.querySelector('.nav-wrap');
+    var navH = nav ? nav.getBoundingClientRect().height : 0;
+    var top = shell.getBoundingClientRect().top - vv.offsetTop;
+    var delta = top - navH - 8;
+    if(delta > 24) window.scrollBy(0, delta);
+    queueFit();
+  }
+  if(vv && panel){
+    vv.addEventListener('resize', function(){ liftForKeyboard(); queueFit(); if(!panel.classList.contains('open')) lastVvH = vv.height; });
+    vv.addEventListener('scroll', queueFit);
+  }
+  if(panel) window.addEventListener('resize', queueFit);
+  if(panel) window.addEventListener('scroll', queueFit, {passive:true});
+
   function closePanel(){
     if(!shell || !panel) return;
     shell.classList.remove('focused');
     panel.classList.remove('open');
+    panel.style.maxHeight = '';
+    liftedThisOpen = false;
+    if(vv) lastVvH = vv.height;
     var wrap = shell.closest('.search-wrap');
     if(wrap) wrap.classList.remove('is-open');
     if(input) input.setAttribute('aria-expanded','false');
