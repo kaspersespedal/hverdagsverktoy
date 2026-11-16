@@ -2257,13 +2257,46 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   html[data-theme="carbon"] .daily-head .daily-refresh{display:inline-flex;width:24px;height:24px}
   html[data-theme="carbon"] .daily-head .title #dailyDate{
     order:4;flex:0 0 100%;margin-top:2px;padding:0;border:0;background:none;
-    font-family:var(--font-serif);font-weight:500;font-size:clamp(24px,7vw,28px);line-height:1.15;
-    letter-spacing:-.5px;color:var(--ink);white-space:normal;
+    font-family:var(--font-serif);font-weight:500;font-size:clamp(21px,6vw,24px);line-height:1.15;
+    letter-spacing:-.4px;color:var(--ink);white-space:normal;
   }
   /* Ukedagen og resten står i hvert sitt <span> (skriptet «Localized date»): datoen
      brekker bare etter ukedagen, aldri mellom «16.» og «november». */
   html[data-theme="carbon"] #dailyDate .dd-wd{color:var(--accent-2)}
   html[data-theme="carbon"] #dailyDate .dd-rest{white-space:nowrap}
+
+  /* Karbonfiber bak toppen. Kasper 2026-11-16: «en kul carbon-effekt i bakgrunnen
+     som er subtil». ::before er en fin twill-vev (12 px) i --wash-rgb, ::after en
+     kobberglød bak ukedagen og et lysskinn som glir over vevet én gang etter
+     lasting. Begge går ut til skjermkanten og tones bort oppe, nede og mot høyre
+     (to masker som snittes), så det aldri blir en firkant. isolation holder
+     lagene bak teksten, men over sidebakgrunnen. */
+  html[data-theme="carbon"] .daily-head{position:relative;isolation:isolate}
+  html[data-theme="carbon"] .daily-head::before,
+  html[data-theme="carbon"] .daily-head::after{
+    content:"";position:absolute;z-index:-1;inset:-26px -16px -10px;pointer-events:none;
+    -webkit-mask:linear-gradient(180deg,transparent 0,#000 38%,#000 66%,transparent 100%),linear-gradient(90deg,#000 0,#000 25%,transparent 92%);
+    -webkit-mask-composite:source-in;
+    mask:linear-gradient(180deg,transparent 0,#000 38%,#000 66%,transparent 100%),linear-gradient(90deg,#000 0,#000 25%,transparent 92%);
+    mask-composite:intersect;
+  }
+  html[data-theme="carbon"] .daily-head::before{
+    background:
+      linear-gradient(27deg,rgba(var(--wash-rgb),.06) 3px,transparent 3px) 0 3px,
+      linear-gradient(207deg,rgba(var(--wash-rgb),.06) 3px,transparent 3px) 6px 0,
+      linear-gradient(27deg,rgba(var(--wash-rgb),.10) 3px,transparent 3px) 0 6px,
+      linear-gradient(207deg,rgba(var(--wash-rgb),.10) 3px,transparent 3px) 6px 3px,
+      linear-gradient(90deg,rgba(var(--wash-rgb),.07) 6px,transparent 6px),
+      linear-gradient(rgba(var(--wash-rgb),.08) 25%,rgba(var(--wash-rgb),.05) 25%,rgba(var(--wash-rgb),.05) 50%,transparent 50%,transparent 75%,rgba(var(--wash-rgb),.11) 75%);
+    background-size:12px 12px;opacity:.5;
+  }
+  html[data-theme="carbon"] .daily-head::after{
+    background:
+      linear-gradient(105deg,transparent 42%,rgba(var(--glow-rgb),.34) 50%,transparent 58%) 120% 0/250% 100% no-repeat,
+      radial-gradient(55% 60% at 20% 64%,rgba(var(--glow-rgb),.20),transparent 72%);
+    animation:hvCarbonSheen 2.4s cubic-bezier(.6,.05,.3,1) 1.8s 1 both;
+  }
+  @keyframes hvCarbonSheen{from{background-position:120% 0,0 0}to{background-position:-20% 0,0 0}}
 
   /* Hvert kort i egen boks med tittelstripe, som de andre temaene fikk i #288.
      Kasper 2026-11-16: «implementer det vi har gjort under forsidetittelen» også i
@@ -2479,6 +2512,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
 
 @media (prefers-reduced-motion:reduce){
   .intro-veil{display:none !important}
+  html[data-theme="carbon"] .daily-head::after{animation:none}
 }
 </style>
 <style id="carbonNav">/* ══ Navbaren i Carbon (forsiden, PC og telefon) ═══════════════════════
