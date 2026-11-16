@@ -570,8 +570,8 @@
       });
   }
 
-  /* ═══════════ FULLSKJERM GRAF (vær · strøm · valuta) ═══════════════════
-     Knappen øverst til høyre på vær-, strøm- og valutakortet åpner én felles
+  /* ═══════════ FULLSKJERM GRAF (vær · rente · strøm · valuta) ═══════════
+     Knappen øverst til høyre på vær-, rente-, strøm- og valutakortet åpner én felles
      dialog (Claude Design «05 Fullskjerm graf»). DOM-en bygges første gang den
      åpnes og gjenbrukes. Vær leser timeserien loadWeather allerede har hentet;
      strøm (andre soner, i morgen, siste 7 dager) og valuta (ett år) hentes først
@@ -581,8 +581,8 @@
   var BIG = null, _bigT = 0, _rvF = 0, _reduce = false;
   /* kind: åpen graf (wx/st/fx) · r: tidsrom per graf · hov: punkt under peker/piltast
      · M: tegnet modell · sig: modellens signatur (minutt-pulsen tegner bare om ved endring) */
-  var _big = { kind: null, r: { wx: 0, st: 0, fx: 0 }, zone: 'NO1', hov: null, M: null, sig: '', ret: null, ov: '' };
-  var RANGES = { wx: ['12 t', '24 t', '48 t'], st: ['I dag', 'I morgen', '7 dager'], fx: ['30 d', '90 d', '1 år'] };
+  var _big = { kind: null, r: { wx: 0, st: 0, fx: 0, sr: 1 }, zone: 'NO1', hov: null, M: null, sig: '', ret: null, ov: '' };
+  var RANGES = { wx: ['12 t', '24 t', '48 t'], st: ['I dag', 'I morgen', '7 dager'], fx: ['30 d', '90 d', '1 år'], sr: ['1 år', '5 år', '10 år'] };
   var ZONES = [['NO1', 'Øst'], ['NO2', 'Sør'], ['NO3', 'Midt'], ['NO4', 'Nord'], ['NO5', 'Vest']];
   var FS_ON = 'M6 2v4H2M10 14v-4h4M14 6h-4V2M2 10h4v4', FS_OFF = 'M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9';
 
@@ -675,6 +675,25 @@
       .then(function (d) { cacheSet('fxy_' + code, d); _fxY[code] = { t: Date.now(), d: d }; delete _fxYFail[code]; },
             function () { _fxYFail[code] = Date.now(); })
       .then(function () { delete _fxYBusy[code]; if (_big.kind === 'fx') bigRefresh(); });
+  }
+
+  /* ── Styringsrenta siste ti år (Norges Bank IR). Kortet viser bare 18 måneder (og
+     ingen graf på telefon); tiårsserien hentes først når fullskjermgrafen åpnes, og
+     caches i 6 t. ── */
+  var _srL = null, _srLBusy = false, _srLFail = 0;
+  function rateLong() {
+    var e = _srL || (_srL = cacheGet('srl'));
+    if ((!e || !fresh(e, 6 * 3600 * 1000)) && !_srLBusy && !(_srLFail && Date.now() - _srLFail < 120000)) fetchRateLong();
+    return e && e.d && e.d.dates ? e.d : null;
+  }
+  function fetchRateLong() {
+    _srLBusy = true;
+    fetch('https://data.norges-bank.no/api/data/IR/B.KPRA.SD.R?startPeriod=' + isoDay(dayShift(-3660)) + '&format=sdmx-json&locale=en')
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (j) { var d = parseRate(j); return { dates: d.dates, vals: d.series }; })
+      .then(function (d) { cacheSet('srl', d); _srL = { t: Date.now(), d: d }; _srLFail = 0; },
+            function () { _srLFail = Date.now(); })
+      .then(function () { _srLBusy = false; if (_big.kind === 'sr') bigRefresh(); });
   }
 
   /* ── Seriemodeller: én per graf og tidsrom ──
@@ -822,8 +841,43 @@
     return M;
   }
 
+  /* Renta står stille i måneder og hopper på rentemøtene; med én verdi per virkedag blir
+     linja en trapp av seg selv. Ingen snittlinje — et snitt av renta sier lite. */
+  function srModel(r) {
+    var y = rateLong(), base = _rate, src = y;
+    /* Tiårsserien caches i 6 t; har kortet (1 t) fått nyere dager, legges de til. */
+    if (y && base && base.dates) {
+      var last = y.dates[y.dates.length - 1], xd = [], xv = [];
+      for (var b = 0; b < base.dates.length; b++) if (base.dates[b] > last) { xd.push(base.dates[b]); xv.push(base.series[b]); }
+      if (xd.length) src = { dates: y.dates.concat(xd), vals: y.vals.concat(xv) };
+    }
+    var M = { kind: 'sr', line: true, unit: '%', ydec: 2, eye: ph('Styringsrente'), title: ph('Styringsrente') + ' · Norges Bank',
+      foot: ph('Norges Bank · styringsrenta hver virkedag') };
+    if (!src) { M.state = _srLFail ? 'err' : 'load'; return M; }
+    var cut = isoDay(dayShift(-[365, 1826, 3652][r])), dates = [], v = [], i;
+    for (i = 0; i < src.dates.length; i++) if (src.dates[i] >= cut) { dates.push(src.dates[i]); v.push(src.vals[i]); }
+    if (v.length < 2) { M.state = 'empty'; M.msg = ph('Ingen renter for denne perioden'); return M; }
+    var n = v.length, today = isoDay(new Date()), k = window.innerWidth < 641 ? 4 : 6;
+    var all = src.vals, ci = all.length - 1;
+    while (ci > 0 && all[ci - 1] === all[all.length - 1]) ci--;
+    var mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), ch = v[n - 1] - v[0], cnt = 0;
+    for (i = 1; i < n; i++) if (v[i] !== v[i - 1]) cnt++;
+    M.n = n; M.v = v; M.def = n - 1; M.nowIdx = null; M.seps = [];
+    M.label = function (j) { return nbDate(dates[j]) + (dates[j] === today ? ' · ' + ph('i dag') : ''); };
+    M.ax = spread(n, k).map(function (j) { return [j, dates[j] === today ? ph('I dag') : monthLbl(dates[j])]; });
+    M.stats = [[ph('Høyest'), nb(mx, 2) + ' %', nbDate(dates[v.indexOf(mx)])], [ph('Lavest'), nb(mn, 2) + ' %', nbDate(dates[v.indexOf(mn)])],
+               [ph('Endring'), (ch > 0.001 ? '+' : ch < -0.001 ? '−' : '±') + nb(Math.abs(ch), 2) + ' pp', ph('i perioden')],
+               [ph('Endringer'), String(cnt), ph('i perioden')]];
+    M.valOf = function (j) { return nb(v[j], 2); };
+    M.sub0 = 'Norges Bank · ' + fill(ph('sist endret {d}'), { d: nbDate(src.dates[ci]) });
+    M.subOf = M.label;
+    M.tipV = function (j) { return nb(v[j], 2) + ' %'; };
+    M.state = 'ok';
+    return M;
+  }
+
   function bigModel() {
-    var k = _big.kind, r = _big.r[k], M = k === 'wx' ? wxModel(r) : k === 'st' ? stModel(r) : fxModel(r);
+    var k = _big.kind, r = _big.r[k], M = k === 'wx' ? wxModel(r) : k === 'st' ? stModel(r) : k === 'sr' ? srModel(r) : fxModel(r);
     M.r = r;
     M.msg = M.state === 'load' ? ph('Henter data …') : M.state === 'err' ? ph('Kunne ikke hente data. Sjekk nettet og prøv igjen.') : M.msg;
     M.sig = [k, r, M.title || M.eye, M.foot, M.state, M.msg, M.v && M.v.join(','), M.p && M.p.join(','), M.nowIdx,
@@ -1248,6 +1302,7 @@
     var k = _big.kind;
     if (k === 'wx') { _wxFail = false; loadWeather(getPlace(), true); }
     else if (k === 'st') { for (var key in _stDays) if (_stDays[key].d === false) delete _stDays[key]; }
+    else if (k === 'sr') _srLFail = 0;
     else delete _fxYFail[_fxCode];
     bigRender(true);
     BIG.panel.focus(); // knappen forsvant med feilmeldingen
@@ -1371,7 +1426,7 @@
     return { series: vals, dates: dates, last: last, lastDate: dates[dates.length - 1],
              changeDate: dates[ci], prevLevel: ci > 0 ? vals[ci - 1] : last };
   }
-  var _rate = null; // siste rentedata — scrub-chipen på rentegrafen leser herfra
+  var _rate = null; // siste rentedata — scrub-chipen leser herfra, og fullskjermgrafen legger til dager tiårsserien mangler
   function renderRate(d) {
     _rate = d;
     setVal('srVal', d.last, 2);
