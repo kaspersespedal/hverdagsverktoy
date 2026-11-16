@@ -31,6 +31,8 @@ function walk(dir, out) {
       if (SKIP.includes(e.name) || e.name.startsWith('.')) continue;
       walk(path.join(dir, e.name), out);
     } else if (e.name === 'index.html') {
+      // Videresendinger fra gamle adresser (f.eks. /modellering/ → /avansert/finans/) skal ikke i sitemapen.
+      if (fs.readFileSync(path.join(dir, e.name), 'utf8').includes('http-equiv="refresh"')) continue;
       const rel = path.relative(ROOT, dir).split(path.sep).filter(Boolean).join('/');
       out.push(rel ? '/' + rel + '/' : '/');
     }

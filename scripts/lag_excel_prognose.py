@@ -1,7 +1,7 @@
-"""Lager modellering/prognose/treaarsprognose-eksempel.xlsx.
+"""Lager avansert/finans/prognose/treaarsprognose-eksempel.xlsx.
 
-Samme modell som kalkulatoren på /modellering/prognose/ (regnemotoren er
-forecast() i modellering/modellering.js), med Medistim ASA 2025 som startverdier.
+Samme modell som kalkulatoren på /avansert/finans/prognose/ (regnemotoren er
+forecast() i avansert/finans/modellering.js), med Medistim ASA 2025 som startverdier.
 Alle tall utenom forutsetningene er ekte Excel-formler, så filen regner om
 når brukeren endrer en blå celle. Ingen makroer.
 
@@ -13,7 +13,7 @@ from pathlib import Path
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, Side
 
-UT = Path(__file__).resolve().parent.parent / 'modellering' / 'prognose' / 'treaarsprognose-eksempel.xlsx'
+UT = Path(__file__).resolve().parent.parent / 'avansert' / 'finans' / 'prognose' / 'treaarsprognose-eksempel.xlsx'
 
 # Medistim ASA, konsernregnskap 2025, tusen kroner (samme som EKS i prognose.js).
 START = [
@@ -193,7 +193,7 @@ ws['A11'] = 'Til DCF-en trenger du også:'
 ws['A11'].font = FET
 rad(ws, 12, 'Rentebærende gjeld (start)', {'C': f"={S['Rentebærende gjeld']}"})
 rad(ws, 13, 'Bankinnskudd (start)', {'C': f"={S['Bankinnskudd']}"})
-ws['A15'] = 'Skriv de tre tallene for fri kontantstrøm inn i DCF-kalkulatoren på hverdagsverktoy.com/modellering/dcf/'
+ws['A15'] = 'Skriv de tre tallene for fri kontantstrøm inn i DCF-kalkulatoren på hverdagsverktoy.com/avansert/finans/dcf/'
 
 # Faste metadata, så filen blir lik hver gang skriptet kjøres
 wb.properties.creator = 'hverdagsverktoy.com'

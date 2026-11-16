@@ -862,15 +862,15 @@
     if (ico) ico.innerHTML = '<circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><line x1="19.5" y1="4.5" x2="4.5" y2="19.5"/>';
   }
 
-  // ── «Finansiell modellering» i menyen ──────────
+  // ── «Avansert» i menyen (Finans og Avansert skatt) ──────────
   // Fanerekka står ferdig skrevet i HTML-en på ~85 sider, og forsidens kategorirad i index.html.
   // Den nye seksjonen legges til sist her i stedet for i hver fil, samme grep som Avgift-ikonet over.
-  // Sidene i /modellering/ har fanen i HTML-en selv (valgt), og da legges den ikke til to ganger.
+  // Sidene i /avansert/ har fanen i HTML-en selv (valgt), og da legges den ikke til to ganger.
   // Forsidens rad er et rutenett med fast kolonnetall (10, og 5 × 2 under 1060 px). Med 11 kort
   // får raden klassen .has-mod, og CSS-en under setter 11 kolonner, eller 6 + 5 der siste kort
   // er dobbelt så bredt, så begge radene går helt ut. Under 560 px er raden en sidelengs scroller
   // og trenger ingenting.
-  var MOD_HREF = '/modellering/', MOD_LABEL = 'Finansiell modellering';
+  var MOD_HREF = '/avansert/', MOD_LABEL = 'Avansert';
   var MOD_ICON = '<path d="M4 4 V20 H20"/><polyline points="7.5 15 11 11 14 13.5 19 8"/>';
   function addModelleringLink(){
     var tabs = document.querySelector('.tabs');

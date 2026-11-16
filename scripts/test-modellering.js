@@ -1,8 +1,8 @@
-/* Tester regnemotoren i modellering/modellering.js mot svar som er kjent på forhånd.
+/* Tester regnemotoren i avansert/finans/modellering.js mot svar som er kjent på forhånd.
    Kjør fra repo-rota:  node scripts/test-modellering.js
    Avslutter med kode 1 hvis en test feiler. */
 'use strict';
-const M = require('../modellering/modellering.js');
+const M = require('../avansert/finans/modellering.js');
 
 let pass = 0, fail = 0;
 function near(navn, fikk, ventet, tol){

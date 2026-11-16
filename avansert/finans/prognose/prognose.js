@@ -1,4 +1,4 @@
-/* /modellering/prognose/ — kobler skjemaet til regnemotoren i /modellering/modellering.js. */
+/* /avansert/finans/prognose/ — kobler skjemaet til regnemotoren i /avansert/finans/modellering.js. */
 (function(){
   'use strict';
   var M = window.HVModell;
@@ -84,7 +84,7 @@
       ['pgs-oms', 'pgs-res', 'pgs-bank', 'pgs-bal'].forEach(function(id){ $(id).textContent = '–'; });
       ['pgs-oms-s', 'pgs-res-s', 'pgs-bank-s', 'pgs-bal-s'].forEach(function(id){ $(id).textContent = ''; });
       $('pg-andre').textContent = ''; $('pg-varsel').hidden = true;
-      $('pg-send').setAttribute('aria-disabled', 'true'); $('pg-send').href = '/modellering/dcf/';
+      $('pg-send').setAttribute('aria-disabled', 'true'); $('pg-send').href = '/avansert/finans/dcf/';
       return;
     }
     var p = M.forecast(d.start, d.a, 3), Y = p.years, s = d.start;
@@ -168,7 +168,7 @@
 
     // Lenken til DCF
     var q = 'fcf=' + Y.map(function(y){ return Math.round(y.fcff); }).join(',') + '&gjeld=' + Math.round(s.debt) + '&kontanter=' + Math.round(s.cash) + '&enhet=' + $('pg-enhet').value;
-    $('pg-send').href = '/modellering/dcf/?' + q;
+    $('pg-send').href = '/avansert/finans/dcf/?' + q;
     $('pg-send').removeAttribute('aria-disabled');
   }
 
