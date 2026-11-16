@@ -1489,16 +1489,15 @@
     nav{padding:14px 0;gap:12px}
     .wordmark{font-size:16.5px}
     .mark{width:26px;height:26px}
-    /* Innholdet står nederst, og kortet går --peek under skjermkanten: himmelen
-       over tittelen er fri, så nordlyset bak synes, og det avkuttede kortet viser
-       at det er mer under (derfor ingen «Dagsoversikt»-lenke her). Heroen er derfor
-       --peek høyere enn skjermen, pluss lufta ned til dagsoversikten (padding-bottom). */
+    /* Tittel, søk og kort står midt i skjermbildet under toppmenyen, med like
+       mye luft over og under, og hele kortet er synlig. Heroen fyller skjermen
+       (svh = høyden med nettleserens verktøylinjer synlige). */
     .hero{
-      --hero-nav:53px;--peek:18px;
-      min-height:calc(100vh - var(--hero-nav) + var(--peek) + 28px);
-      min-height:calc(100svh - var(--hero-nav) + var(--peek) + 28px);
-      justify-content:flex-end;
-      padding:32px 0 28px;
+      --hero-nav:53px;
+      min-height:calc(100vh - var(--hero-nav));
+      min-height:calc(100svh - var(--hero-nav));
+      justify-content:center;
+      padding:28px 0;
     }
     .hero-more{display:none}
     h1{
@@ -1584,8 +1583,8 @@
     .widget-value{font-size:22px}
     .card h3{font-size:16.5px}
   }
-  /* Lav telefon (iPhone SE og mindre): litt mindre luft, så kortet fortsatt bare
-     så vidt går under skjermkanten. Står etter telefonreglene over, så den vinner
+  /* Lav telefon (iPhone SE og mindre): litt mindre luft, så tittel, søk og kort
+     får plass i første skjermbilde. Står etter telefonreglene over, så den vinner
      over dem. */
   @media (max-width:640px) and (max-height:700px){
     .hero{padding-top:20px}
@@ -5661,6 +5660,12 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
       for (r = Math.min(r, 22, free / 2 - 10); r >= 12; r -= 2) {
         if (!hits(cx, cy, r, 6)) { moonP = [(cx - cw / 2) / ch, 1 - cy / ch, r / ch]; return; }
       }
+      // Fyller tittelen bredden (én linje på stående telefon): en mindre måne midt i
+      // himmelen mellom toppmenyen (toppen av heroen) og tittelen, ved tre fjerdedeler
+      // av bredden (over «fagspråk»).
+      var sky = avoidEl.closest('.hero'), skyTop = sky ? pageTop(sky) : 0;
+      cx = cw * 0.76; cy = (skyTop + L1.t) / 2; r = Math.min(moonP[2] * ch, 22, (L1.t - skyTop) / 2 - 12);
+      if (r >= 12) moonP = [(cx - cw / 2) / ch, 1 - cy / ch, r / ch];
     }
     function onResize() {
       var moved = measureAnchor();
