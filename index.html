@@ -1974,7 +1974,7 @@
 <script src="/shared/core.js?v=v242" defer></script>
 <script src="/shared/lang/no.js?v=v289" defer></script>
 <script src="/shared/site-shell.js?v=v2" defer></script>
-<script src="/shared/top-chrome.js?v=v298" defer></script>
+<script src="/shared/top-chrome.js?v=v311" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/markedsdata.js?v=v22" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
@@ -4454,6 +4454,11 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
   var CANVAS_THEMES = { nordlys: 1, dark: 1, disco: 1, bw: 1 };
   // disco står ikke her og faller derfor til 0 = gardin-scenen, som før.
   var MODE = { nordlys: 0, bw: 1, dark: 4 };
+  // Temabytte fra menyen toner hele siden over (top-chrome.js, window.hvThemeFade).
+  // Motoren svarer først når toningen er ferdig: oppstarten (WebGL-kontekst, måling
+  // av siden) og nye shadere kan låse hovedtråden i 50–150 ms, og det skal ikke
+  // skje midt i toningen.
+  function etterToning(fn) { var p = window.hvThemeFade; if (p && p.then) p.then(fn, fn); else fn(); }
 
   /* ── Himmelgeometri — delt mellom JS (stjernetetthet) og GLSL (glød) ─── */
   var REF = 1000;                  // CSS-px per himmelenhet
@@ -5707,7 +5712,8 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
 
     // Tema-bytte → farger lerpes mykt i tick; loopen startes/stoppes etter om
     // det nye temaet faktisk viser canvaset.
-    mo = new MutationObserver(function () {
+    mo = new MutationObserver(function () { etterToning(function () {
+      if (dead) return;
       var prevK = lastTheme;
       syncTheme();
       if (isStatic || (!raf && document.hidden)) { if (canvasVisible()) draw(); return; }
@@ -5715,7 +5721,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
         if (lastTheme !== prevK) revealPending = true;   // ny tenning ved første bilde av det nye temaet
         resume();
       } else pause();
-    });
+    }); });
     mo.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 
     if (mq) {
@@ -5815,7 +5821,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
         else afterLoad();
       }
       else if (typeof MutationObserver !== 'undefined') {
-        waitMo = new MutationObserver(function () { if (wantsCanvas()) mountNow(); });
+        waitMo = new MutationObserver(function () { if (wantsCanvas()) etterToning(function () { if (wantsCanvas()) mountNow(); }); });
         waitMo.observe(themeRoot, { attributes: true, attributeFilter: ['data-theme'] });
       }
     }

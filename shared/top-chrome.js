@@ -309,17 +309,15 @@
     background:var(--accent);animation:tcPulse 2s ease-in-out infinite}
   @keyframes tcPulse{0%,100%{opacity:.4}50%{opacity:1}}
 
-  /* ── Theme switch: View-Transitions circular reveal ──────────
-     The new theme is painted on top and wiped in via a growing circle
-     anchored at the theme button. We kill the default cross-fade so the
-     clip-path (set in JS) is the only motion. Falls back to an instant
+  /* ── Theme switch: View-Transitions cross-fade ──────────
+     The whole page dissolves softly from the old palette to the new one
+     (the browser's own cross-fade, slowed down). Falls back to an instant
      swap where startViewTransition is unsupported or motion is reduced. */
   ::view-transition-old(root),
-  ::view-transition-new(root){ animation:none; mix-blend-mode:normal }
-  ::view-transition-new(root){ z-index:9999 }
-  ::view-transition-old(root){ z-index:1 }
+  ::view-transition-new(root){ animation-duration:.45s; animation-timing-function:cubic-bezier(.4,0,.2,1) }
   @media (prefers-reduced-motion:reduce){
-    ::view-transition-group(root){ animation-duration:.001ms !important }
+    ::view-transition-old(root),
+    ::view-transition-new(root){ animation-duration:.001ms !important }
   }
 
   /* ── Mobil-kollaps @≤640px ────────────────────────────────────
@@ -642,7 +640,7 @@
     }
     wireMenu('tc-theme-btn', 'tc-theme-menu', function(t){
       // The actual DOM mutation — applied either instantly or inside a
-      // View Transition so the new palette wipes in as a growing circle.
+      // View Transition so the new palette fades in over the old one.
       function swap(){
         applyTheme(t, {persist:true});
         var pick = THEMES.find(function(x){return x.k===t;})||THEMES[0];
@@ -659,7 +657,7 @@
         });
         var sw = document.querySelector('#tc-theme-btn .swatch');
         if (sw) sw.className = 'swatch sw-'+t;
-        // Close the menu inside the swap so it dissolves with the wipe.
+        // Close the menu inside the swap so it dissolves with the fade.
         var menu = document.getElementById('tc-theme-menu');
         if (menu) menu.classList.remove('open');
       }
@@ -667,20 +665,18 @@
       var reduce = false;
       try{ reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(_e){}
       if (typeof document.startViewTransition !== 'function' || reduce){ swap(); return; }
-
-      // Anchor the reveal at the theme button (fall back to top-right corner).
-      var x = window.innerWidth - 60, y = 40;
-      var btn = document.getElementById('tc-theme-btn');
-      if (btn){ var r = btn.getBoundingClientRect(); x = r.left + r.width/2; y = r.top + r.height/2; }
-      var endR = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
-
-      var vt = document.startViewTransition(swap);
-      vt.ready.then(function(){
-        document.documentElement.animate(
-          { clipPath:['circle(0px at '+x+'px '+y+'px)', 'circle('+endR+'px at '+x+'px '+y+'px)'] },
-          { duration:520, easing:'cubic-bezier(.4,0,.2,1)', pseudoElement:'::view-transition-new(root)' }
-        );
-      }).catch(function(){});
+      var vt = document.startViewTransition(function(){
+        swap();
+        // Some themes use fonts the page hasn't loaded yet (Carbon on phones). Lay the
+        // page out now so they start downloading, and hold the old picture until they
+        // arrive (max 1 s) — otherwise the text jumps to the new font after the fade.
+        void document.documentElement.offsetHeight;
+        if (!document.fonts || document.fonts.status !== 'loading') return;
+        return Promise.race([document.fonts.ready, new Promise(function(r){ setTimeout(r, 1000); })]);
+      });
+      // Heavy theme work elsewhere (the front-page aurora starts its WebGL engine)
+      // waits for this, so it doesn't freeze the screen in the middle of the fade.
+      window.hvThemeFade = vt.finished;
     }, 'data-tk');
     wireMenu('tc-lang-btn', 'tc-lang-menu', function(l){
       applyLang(l);
