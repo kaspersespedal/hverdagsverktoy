@@ -1917,6 +1917,51 @@
     .wx-geo{min-width:24px}
   }
 
+  /* ── Dagsoversikten på telefon: hvert kort i egen avrundet boks ──
+     Kasper 2026-11-16: vær, rente, strøm og valuta sto klemt i én ramme med
+     bare en hårstrek mellom. Nå er rammen borte, toppen (etikett + dato) står
+     fritt som overskrift, og hvert kort er en egen boks med luft mellom og en
+     tittelstripe øverst. Carbon på telefon (#carbonMobil, som i oktober) er urørt. */
+  @media (max-width: 640px){
+    html:not([data-theme="carbon"]) .daily-frame{
+      background:none;border:0;border-radius:0;overflow:visible;box-shadow:none;
+    }
+    html:not([data-theme="carbon"]) .daily-head{
+      background:none;border-bottom:0;padding:4px 4px 14px;
+    }
+    html:not([data-theme="carbon"]) .daily-grid{gap:12px}
+    html:not([data-theme="carbon"]) .daily-grid > .widget{
+      background:var(--surface);
+      border:1px solid var(--line);border-radius:18px;
+      padding:0 16px 16px;
+    }
+    html:not([data-theme="carbon"]) .daily-grid > .widget > .widget-top{
+      margin:0 -16px;padding:12px 16px;min-height:46px;
+      border-bottom:1px solid var(--line);border-radius:17px 17px 0 0;
+      background:color-mix(in srgb,var(--accent) 5%,transparent);
+    }
+    html:not([data-theme="carbon"]) .daily-credits{border-top:0;padding:4px 4px 0}
+    html:not([data-theme="carbon"]) .fxc{border-radius:18px}
+    html:not([data-theme="carbon"]) .fxc-label{
+      justify-self:stretch;padding:12px 16px;min-height:46px;box-sizing:border-box;
+      border-bottom:1px solid var(--line);border-radius:17px 17px 0 0;
+      background:color-mix(in srgb,var(--accent) 5%,transparent);
+    }
+    html:not([data-theme="carbon"]) .fxc-io{padding-top:14px}
+  }
+  /* PC og nettbrett: rammen beholdes, men hvert kort får samme tittelstripe
+     øverst, så de fire delene leses som hver sin seksjon. Første rad er auto
+     (ikke 23px) for å få plass til stripa; den er like høy i alle kort, så
+     tall, faktarader og grafer står fortsatt på linje. */
+  @media (min-width: 641px){
+    .daily-grid > .widget{grid-template-rows:auto auto minmax(87px,auto) 1fr;padding-top:0}
+    .daily-grid > .widget > .widget-top{
+      margin:0 -26px 6px;padding:0 26px;height:46px;box-sizing:border-box;
+      border-bottom:1px solid var(--line);
+      background:color-mix(in srgb,var(--accent) 4%,transparent);
+    }
+  }
+
   /* ── Widget-tallet: 32px som i referansen, og en mobil-trapp som faktisk
      får virke. h1#heroH1 og .widget-value settes i REFINE-2026-05 under
      max-width:640 — de mindre stegene der lå etter i kilden og ble aldri
