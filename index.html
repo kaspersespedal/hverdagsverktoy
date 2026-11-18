@@ -2515,6 +2515,191 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
   html[data-theme="carbon"] .daily-head::after{animation:none}
 }
 </style>
+<style id="gammelPC">/* ══ Carbon og Mørk-blå på PC — forsiden slik den var i september (v242) ══════
+   Kasper 2026-11-18: «Jeg liker egentlig dette designet bedre for desktop … SE
+   HVORDAN layoutet er på mobil.» Første skjermbilde som i v242: venstrestilt
+   tittel, bredt firkantet søkefelt, kategoriene som én rad i en ramme og
+   dagsoversikten rett under. Det som er gjort for Carbon på telefon siden, er tatt
+   med: tittelteksten, kategorirekkefølgen, Inter + Source Serif 4, dagsoversikt-
+   toppen med stor dato, pille og karbonvev, kortene i egne bokser med tittelstripe
+   og fullskjermknapp, og kortinnholdet fra den gang (én linje, lave grafer).
+   Bare over 640 px og bare disse to temaene; telefon står i #carbonMobil. */
+@media (min-width:641px){
+  html:is([data-theme="carbon"],[data-theme="dark"]){
+    --font-sans:'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif:'Source Serif 4', Georgia, 'Times New Roman', serif;
+  }
+  /* Tittelen: norsk har egen tekst; andre språk beholder sin oversatte tittel */
+  html:is([data-theme="carbon"],[data-theme="dark"])[lang="nb"] #heroH1{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"])[lang="nb"] #heroH1Alt{display:block}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero{min-height:0;display:block;text-align:left;padding:96px 0 24px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero h1{
+    max-width:18ch;font-size:clamp(46px,5.8vw,72px);letter-spacing:-1.6px;text-wrap:balance;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero h1 em{letter-spacing:-1.2px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero-more{display:none}
+
+  /* Søkefeltet: hele bredden, firkantet med avrundede hjørner og mørk gradient */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-wrap{margin:32px 0 0;max-width:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-shell{border-radius:8px;background:linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-shell.focused{background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-shell input{padding:18px 64px 18px 50px;font-size:15.5px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-icon{left:18px}
+
+  /* Kategoriene: én rad i en ramme, ikon over navn. Gruppene løses opp
+     (display:contents) som på telefon, så også lenka top-chrome.js legger sist
+     havner i raden. Cellene deler bredden, men blir aldri smalere enn navnet
+     eller 80 px (da får alle 11 plass ned til 1024 px vindu); er vinduet for
+     smalt til alle, blar man sidelengs som på telefon. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .quick-cats{
+    max-width:none;margin:20px 0 0;padding:0;
+    display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(max-content,1fr);gap:0;
+    overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .quick-cats::-webkit-scrollbar{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qg-col{display:contents}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qg-h{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .quick-cats .qc{
+    min-width:80px;grid-column:auto;flex-direction:column;justify-content:center;gap:9px;
+    padding:18px 8px 15px;border-radius:0;color:var(--ink2);
+    border-right:1px solid var(--line);
+    transition:background .2s var(--ease), color .2s var(--ease);
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qg-col:last-child .qc:last-child{border-right:0}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc-ico{width:24px;height:24px;transition:color .2s var(--ease), transform .25s var(--ease)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc-ico svg{width:22px;height:22px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc-lbl{font:500 11.5px/1 var(--font-sans);letter-spacing:-.05px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc::after{
+    content:"";inset:auto 0 0 0;width:auto;height:1px;margin:0;border:0;
+    background:var(--accent-2);opacity:1;transform:scaleX(0);transform-origin:center;
+    transition:transform .25s var(--ease);
+  }
+
+  /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
+  html:is([data-theme="carbon"],[data-theme="dark"]) section.daily{margin-top:0;padding-top:28px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
+
+  /* Dagsoversikt-toppen som på Carbon-telefon: «— DAGSOVERSIKT | UKE 47» og
+     status-pillen på første linje, datoen i stor serif med ukedagen i aksentfargen
+     under. .title er display:contents, så barna er søsken i én flex-rad. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head{
+    display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;
+    column-gap:10px;row-gap:12px;padding:4px 0 20px;background:none;border-bottom:0;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title{display:contents}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title::before{content:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title .sep{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title > span[data-i18n]{
+    order:1;flex:none;display:inline-flex;align-items:center;gap:9px;min-height:28px;
+    font-size:10.5px;letter-spacing:1.8px;color:var(--ink3);
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title > span[data-i18n]::before{
+    content:"";width:16px;height:1px;background:var(--accent);opacity:.85;flex-shrink:0;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title #dailyWeek{
+    order:2;display:inline-flex;align-items:center;gap:10px;
+    padding:0;border:0;border-radius:0;background:none;
+    font:600 10.5px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--ink4);white-space:nowrap;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title #dailyWeek::before{content:"";width:1px;height:11px;background:var(--line-2)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .stamp{
+    order:3;margin-left:auto;height:28px;gap:7px;padding:0 3px 0 11px;
+    border:1px solid var(--line-2);border-radius:999px;background:rgba(var(--wash-rgb),.025);
+    font-size:11px;color:var(--ink2);
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .stamp::before{background:var(--accent-2);filter:drop-shadow(0 0 3px rgba(var(--glow-rgb),.9))}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .daily-refresh{display:inline-flex;width:24px;height:24px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title #dailyDate{
+    order:4;flex:0 0 100%;margin-top:2px;padding:0;border:0;background:none;
+    font-family:var(--font-serif);font-weight:500;font-size:28px;line-height:1.15;
+    letter-spacing:-.5px;color:var(--ink);white-space:normal;text-transform:none;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-wd{color:var(--accent-2)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-rest{white-space:nowrap}
+
+  /* Karbonvev og glød bak toppen, som på Carbon-telefon (se #carbonMobil) */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head{position:relative;isolation:isolate}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head::before,
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head::after{
+    content:"";position:absolute;z-index:-1;inset:-26px -24px -10px;pointer-events:none;
+    -webkit-mask:linear-gradient(180deg,transparent 0,#000 38%,#000 66%,transparent 100%),linear-gradient(90deg,#000 0,#000 18%,transparent 60%);
+    -webkit-mask-composite:source-in;
+    mask:linear-gradient(180deg,transparent 0,#000 38%,#000 66%,transparent 100%),linear-gradient(90deg,#000 0,#000 18%,transparent 60%);
+    mask-composite:intersect;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head::before{
+    background:
+      linear-gradient(27deg,rgba(var(--wash-rgb),.06) 3px,transparent 3px) 0 3px,
+      linear-gradient(207deg,rgba(var(--wash-rgb),.06) 3px,transparent 3px) 6px 0,
+      linear-gradient(27deg,rgba(var(--wash-rgb),.10) 3px,transparent 3px) 0 6px,
+      linear-gradient(207deg,rgba(var(--wash-rgb),.10) 3px,transparent 3px) 6px 3px,
+      linear-gradient(90deg,rgba(var(--wash-rgb),.07) 6px,transparent 6px),
+      linear-gradient(rgba(var(--wash-rgb),.08) 25%,rgba(var(--wash-rgb),.05) 25%,rgba(var(--wash-rgb),.05) 50%,transparent 50%,transparent 75%,rgba(var(--wash-rgb),.11) 75%);
+    background-size:12px 12px;opacity:.5;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head::after{
+    background:
+      linear-gradient(105deg,transparent 42%,rgba(var(--glow-rgb),.34) 50%,transparent 58%) 120% 0/250% 100% no-repeat,
+      radial-gradient(40% 60% at 12% 64%,rgba(var(--glow-rgb),.20),transparent 72%);
+    animation:hvCarbonSheen 2.4s cubic-bezier(.6,.05,.3,1) 1.8s 1 both;
+  }
+
+  /* Hvert kort i egen boks med tittelstripe, rammen rundt hele dagsoversikten er
+     borte. Hjørnene 12 px, som på Carbon-telefon. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid{gap:12px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget{
+    background:var(--surface);
+    border:1px solid var(--line);border-radius:12px;
+    padding:0 20px 18px;min-height:0;
+    grid-template-rows:auto auto minmax(34px,auto) 1fr;gap:7px;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget > .widget-top{
+    margin:0 -20px 5px;padding:12px 20px;height:auto;min-height:46px;box-sizing:border-box;
+    border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
+    background:color-mix(in srgb,var(--accent) 5%,transparent);
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-credits{border-top:0;padding:4px 4px 0}
+  /* Valutaomregneren står på én rad på PC, så den får bare de runde hjørnene */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .fxc{border-radius:12px}
+
+  /* Kortinnholdet fra den gang: én linje i stedet for faktaradene, lave grafer
+     (48 px), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
+     graf. Rentegrafen og de andre grafene åpnes stort med fullskjermknappen. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget > .widget-facts,
+  html:is([data-theme="carbon"],[data-theme="dark"]) #wxCard > .widget-spark-wrap,
+  html:is([data-theme="carbon"],[data-theme="dark"]) #srCard > .widget-spark-wrap{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-label{font-size:10.5px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget .w-line{
+    display:flex;align-items:center;gap:8px;margin:0;
+    font-size:12px;line-height:1.4;letter-spacing:-.05px;color:var(--ink3);
+    font-variant-numeric:tabular-nums;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget .w-line .ctx{color:var(--ink4)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-spark-wrap,
+  html:is([data-theme="carbon"],[data-theme="dark"]) #wxCard .wx-fc-wrap,
+  html:is([data-theme="carbon"],[data-theme="dark"]) #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .spark-yax{top:11px;height:48px;font-size:8.5px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-axis{font-size:8.5px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-spark{height:48px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) #fxTrend i{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) #stCard .w-note{display:block}
+}
+@media (min-width:641px) and (hover:hover){
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc:hover{background:rgba(255,255,255,.018);color:var(--ink)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc:hover::after{opacity:1;transform:scaleX(.5)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc:hover .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
+}
+/* Nettbrett: mindre luft over tittelen, som i v242 */
+@media (min-width:641px) and (max-width:900px){
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero{padding-top:64px}
+}
+@media (min-width:641px) and (prefers-reduced-motion:reduce){
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head::after{animation:none}
+}
+</style>
 <style id="carbonNav">/* ══ Navbaren i Carbon (forsiden, PC og telefon) ═══════════════════════
    Kasper 2026-11-16: «fiks navbaren til å bli penere». Svakhetene var:
    – fire knapper i to stiler: søk og nedtelling hadde ramme, tema og språk var naken
@@ -2562,12 +2747,14 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 </style>
 </head>
 <body class="atmo-on">
-<script>/* Carbon på telefon: lasteanimasjonen i #carbonMobil. Settes FØR første maling,
-   ellers rekker kategoriene å vises og så skjule seg igjen. Én gang per fane. */
+<script>/* Lasteanimasjonen i #carbonMobil: Carbon (telefon og PC) og Mørk-blå på PC
+   (#gammelPC). Settes FØR første maling, ellers rekker kategoriene å vises og så
+   skjule seg igjen. Én gang per fane. */
 (function(){
   try{
-    if(document.documentElement.getAttribute('data-theme') !== 'carbon') return;
-    if(!window.matchMedia || !matchMedia('(max-width:640px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var t = document.documentElement.getAttribute('data-theme');
+    if(!window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(t !== 'carbon' && !(t === 'dark' && matchMedia('(min-width:641px)').matches)) return;
     if(sessionStorage.getItem('hvt-intro')) return;
     sessionStorage.setItem('hvt-intro', '1');
   }catch(e){ return; }
