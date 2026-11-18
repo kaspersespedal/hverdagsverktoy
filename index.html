@@ -2747,12 +2747,14 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 </style>
 </head>
 <body class="atmo-on">
-<script>/* Carbon på telefon: lasteanimasjonen i #carbonMobil. Settes FØR første maling,
-   ellers rekker kategoriene å vises og så skjule seg igjen. Én gang per fane. */
+<script>/* Lasteanimasjonen i #carbonMobil: Carbon (telefon og PC) og Mørk-blå på PC
+   (#gammelPC). Settes FØR første maling, ellers rekker kategoriene å vises og så
+   skjule seg igjen. Én gang per fane. */
 (function(){
   try{
-    if(document.documentElement.getAttribute('data-theme') !== 'carbon') return;
-    if(!window.matchMedia || !matchMedia('(max-width:640px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var t = document.documentElement.getAttribute('data-theme');
+    if(!window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(t !== 'carbon' && !(t === 'dark' && matchMedia('(min-width:641px)').matches)) return;
     if(sessionStorage.getItem('hvt-intro')) return;
     sessionStorage.setItem('hvt-intro', '1');
   }catch(e){ return; }
