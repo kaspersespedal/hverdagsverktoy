@@ -317,7 +317,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                   <div class="ik-fg">
                     <label class="ik-lbl" for="reise-bom" data-i18n="reiseLblBom">Bom og ferge per dag (kr)</label>
                     <input class="ik-input" id="reise-bom" type="text" inputmode="numeric" value="0" autocomplete="off">
-                    <div class="ik-hint">Bare det du faktisk betaler og kan dokumentere.</div>
+                    <div class="ik-hint">Bare det du faktisk betaler og kan dokumentere. <span>Teller bare når det blir over 3&nbsp;300&nbsp;kr i året, og da med hele beløpet.</span></div>
                   </div>
                 </div>
               </div>
@@ -446,6 +446,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       <h3 class="lrn-h3" id="lrn-rs-b">Bom og ferge</h3>
       <div class="lrn-rs-bom">
         <p class="lrn-p">Daglige bom- og fergeutgifter legges til per arbeidsdag og teller innenfor samme tak på 120&nbsp;000&nbsp;kr. Skatteetaten kan be om dokumentasjon, så ta vare på kvitteringene.</p>
+        <p class="lrn-p">Bom og ferge gir bare fradrag når utgiftene til sammen blir over 3&nbsp;300&nbsp;kr i året. Da teller hele beløpet, ikke bare det som er over grensen.</p>
         <p class="lrn-p" data-lrn="bomlive" hidden></p>
       </div>
     </section>
@@ -519,13 +520,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var satsPerKm = 1.90;       // Skatteetaten 2025/2026
       var nedreGrense = 12000;    // Egenandel
       var oevreGrense = 120000;   // Maks fradragsgrunnlag
+      var bomGrense = 3300;       // Bom og ferge teller bare over 3 300 kr i året, og da hele beløpet (FSFIN § 6-44-4)
 
       if(km <= 0){
         return { hasData:false, km:km, dager:dager, bom:bom, satsPerKm:satsPerKm, nedreGrense:nedreGrense, oevreGrense:oevreGrense };
       }
 
       var reisekost = km * 2 * dager * satsPerKm;
-      var bomTotal = bom * dager;
+      var bomTotal = bom * dager > bomGrense ? bom * dager : 0;
       var sumFor = reisekost + bomTotal;
       var brutto = Math.min(sumFor, oevreGrense);
       var capped = sumFor > oevreGrense;
@@ -724,7 +726,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 (function(){
   var KEY = 'skatt-reise';
   var DEF = {km:35, dager:230, bom:0};
-  var SATS = 1.90, EGEN = 12000, TAK = 120000, SKATT = 0.22;
+  var SATS = 1.90, EGEN = 12000, TAK = 120000, SKATT = 0.22, BOMGRENSE = 3300;
   var SANS = 'Geist, Inter, system-ui, sans-serif';
   var NB = ' ';
   var root, plot, svg, raw = null, lastW = 0, queued = false, ctx, skm = null, skKey = '';
@@ -757,13 +759,15 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     function kr(v){ return L.kr(v) + NB + 'kr'; }
     function kmTxt(v){ return Math.abs(v - Math.round(v)) < 0.05 ? String(Math.round(v)) : L.dec(v, 1); }
     var dager = inp.dager > 0 ? inp.dager : 230, bom = inp.bom > 0 ? inp.bom : 0;
+    // Bom og ferge teller bare når året blir over 3 300 kr, og da hele beløpet
+    var bomD = bom * dager > BOMGRENSE ? bom : 0;
     function calc(k){
-      var reisekost = k * 2 * dager * SATS, bomTotal = bom * dager, sumFor = reisekost + bomTotal;
+      var reisekost = k * 2 * dager * SATS, bomTotal = bomD * dager, sumFor = reisekost + bomTotal;
       var brutto = Math.min(sumFor, TAK), fradrag = Math.max(brutto - EGEN, 0);
       return {reisekost:reisekost, sumFor:sumFor, brutto:brutto, capped:sumFor > TAK, fradrag:fradrag, besparelse:fradrag * SKATT, perMnd:fradrag * SKATT / 12};
     }
     var perKm = 2 * SATS * dager;
-    var km0 = Math.max(0, (EGEN / dager - bom) / (2 * SATS)), kmCap = Math.max(0, (TAK / dager - bom) / (2 * SATS));
+    var km0 = Math.max(0, (EGEN / dager - bomD) / (2 * SATS)), kmCap = Math.max(0, (TAK / dager - bomD) / (2 * SATS));
     var MAXSAV = (TAK - EGEN) * SKATT;
     // Aksen: 0–160 km, utvidet når taket eller avstanden ligger lenger ut
     var need = Math.max(kmCap * 1.06, inp.km * 1.03, 160);
@@ -907,8 +911,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // ── Regnestykket ──
     set('fkm', t('lrnRsFKm', 'Regnestykket for {km} km', {km:kmTxt(km)}));
     set('f1a', kmTxt(km) + NB + 'km'); set('f1d', '× ' + t('lrnRsDays', '{d} dager', {d:dager, n:dager})); set('f1r', fmt(you.reisekost) + NB + 'kr');
-    q('fbom').hidden = !(bom > 0);
-    if(bom > 0){ set('f2a', fmt(you.reisekost)); set('f2b', '+ ' + fmt(bom) + NB + 'kr × ' + t('lrnRsDays', '{d} dager', {d:dager, n:dager})); set('f2r', fmt(you.sumFor) + NB + 'kr'); }
+    q('fbom').hidden = !(bomD > 0);
+    if(bomD > 0){ set('f2a', fmt(you.reisekost)); set('f2b', '+ ' + fmt(bom) + NB + 'kr × ' + t('lrnRsDays', '{d} dager', {d:dager, n:dager})); set('f2r', fmt(you.sumFor) + NB + 'kr'); }
     q('fcap').hidden = !you.capped;
     q('fnorm').hidden = !(you.fradrag > 0); q('fdead').hidden = you.fradrag > 0;
     set('f4a', fmt(you.brutto) + ' − 12' + NB + '000'); set('f4r', t('lrnRsFrad', '{belop} kr fradrag', {belop:fmt(you.fradrag)}));
@@ -933,7 +937,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var km0Uten = EGEN / dager / (2 * SATS);
     var bomLive = q('bomlive');
     bomLive.hidden = !(bom > 0);
-    if(bom > 0) bomLive.textContent = t('lrnRsBom', 'Med {b} per dag i bom og ferge er sonen uten fradrag {a} km i stedet for {u} km.', {b:kr(bom), a:kmTxt(km0), u:kmTxt(km0Uten)});
+    if(bom > 0) bomLive.textContent = bomD > 0
+      ? t('lrnRsBom', 'Med {b} per dag i bom og ferge er sonen uten fradrag {a} km i stedet for {u} km.', {b:kr(bom), a:kmTxt(km0), u:kmTxt(km0Uten)})
+      : t('lrnRsBomUnder', 'Med {b} per dag blir bom og ferge {s} i året. Det gir bare fradrag når summen er over {g}, så det teller ikke med her.', {b:kr(bom), s:kr(bom * dager), g:kr(BOMGRENSE)});
     root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
     set('stateLabel', mine ? 'Dine tall' : 'Eksempel');
     set('stateText', t('lrnRsState', '{km} km · {d} arbeidsdager · {b}', {km:kmTxt(inp.km), d:dager, n:dager, b:bom > 0 ? t('lrnRsStateBom', '{belop} i bom og ferge per dag', {belop:kr(bom)}) : ph('ingen bom')}));
