@@ -649,31 +649,27 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
+<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
 <script>
-// ── Inntektsskatt 2026: JSX→vanilla port av inntekt-calc.jsx + inntekt-app.jsx
-// Source: Stortingets skattevedtak 2026, Skatteloven §§ 6-30, 12-1, 15-4
+// ── Inntektsskatt: JSX→vanilla port av inntekt-calc.jsx + inntekt-app.jsx
+// Satsene leses fra shared/satser.js (Stortingets skattevedtak, Skatteloven §§ 6-30, 12-1, 15-4)
 (function(){
-  var TRINN = [
-    { from: 226100,  to: 318300,   rate: 0.017 },
-    { from: 318300,  to: 725050,   rate: 0.040 },
-    { from: 725050,  to: 980100,   rate: 0.137 },
-    { from: 980100,  to: 1467200,  rate: 0.168 },
-    { from: 1467200, to: Infinity, rate: 0.178 }
-  ];
-  var MINSTE_RATE = 0.46;
-  var MINSTE_MAX  = 95700;
-  var PERSON_FRAD = 114540;
-  var TRYGD_RATE  = 0.076;
-  var TRYGD_NEDRE = 99650;
-  var TRYGD_OPP   = 0.25;
-  var BSU_RATE    = 0.10;
-  var BSU_MAX_INN = 27500;
-  var FAG_MAX     = 8700;
-  var IPS_MAX     = 25000;
-  var GAVE_MAX    = 25000;
-  // Tiltakssonen (Finnmark og Nord-Troms): 18,5 % alminnelig skatt og et særskilt fradrag på 45 000 kr (2026)
-  var FINNMARK_RATE    = 0.185;
-  var FINNMARK_FRADRAG = 45000;
+  var S = HV_SATSER.skatt;
+  var TRINN = S.trinn.map(function(t){ return { from: t.fra, to: t.til, rate: t.sats }; });
+  var MINSTE_RATE = S.minsteSats;
+  var MINSTE_MAX  = S.minsteMaks;
+  var PERSON_FRAD = S.personfradrag;
+  var TRYGD_RATE  = S.trygdLonn;
+  var TRYGD_NEDRE = S.trygdNedre;
+  var TRYGD_OPP   = S.trygdOpptrapping;
+  var BSU_RATE    = S.bsuSats;
+  var BSU_MAX_INN = S.bsuMaksAar;
+  var FAG_MAX     = S.fagforening;
+  var IPS_MAX     = S.ips;
+  var GAVE_MAX    = S.gaver;
+  // Tiltakssonen (Finnmark og Nord-Troms): lavere alminnelig skatt og et særskilt fradrag
+  var FINNMARK_RATE    = S.finnmarkSats;
+  var FINNMARK_FRADRAG = S.finnmarkFradrag;
 
   function computeTrinn(brutto){
     var rows = [];
@@ -921,8 +917,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 (function(){
   var KEY = 'skatt-inntekt';
   var NB = '\u00a0';
-  var MAX0 = 2000000, MAX = MAX0, KNEKK = 99650 * 0.25 / 0.174;
-  var TRS = [[226100, 0.017], [318300, 0.04], [725050, 0.137], [980100, 0.168], [1467200, 0.178]];
+  var S = HV_SATSER.skatt;
+  var MAX0 = 2000000, MAX = MAX0, KNEKK = S.trygdNedre * S.trygdOpptrapping / (S.trygdOpptrapping - S.trygdLonn);
+  var TRS = S.trinn.map(function(t){ return [t.fra, t.sats]; });
   var DEF = {brutto:650000, region:0.22};
   var root, plot, raw = null, sikte = null, forB = null, lastW = 0, queued = false, ctx = null, fam = '';
 
@@ -967,13 +964,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     q('none').hidden = !none;
     q('main').hidden = none;
     if(none){ set('sr', ''); return; }
-    var inp = d.inp, B = inp.brutto, fin = inp.region === 0.185, alm = inp.region, fr = d.fradrag, egne = d.egne;
+    var inp = d.inp, B = inp.brutto, fin = inp.region === S.finnmarkSats, alm = inp.region, fr = d.fradrag, egne = d.egne;
     function calc(b){ return window.hvCalcInntekt(Object.assign({}, inp, {brutto:b})); }
     // Satsen på neste krone, delt i de tre lagene
     function lag(b){
       var tr = 0, n = 0;
       for(var i = 0; i < TRS.length; i++) if(b >= TRS[i][0]){ tr = TRS[i][1]; n = i + 1; }
-      var ty = b < 99650 ? 0 : (b < KNEKK ? 0.25 : 0.076), al = b < 210240 + fr ? 0 : alm;
+      var ty = b < S.trygdNedre ? 0 : (b < KNEKK ? S.trygdOpptrapping : S.trygdLonn), al = b < S.minsteMaks + S.personfradrag + fr ? 0 : alm;
       return {ty:ty, al:al, tr:tr, n:n, m:ty + al + tr};
     }
     function pnum(x){ var v = Math.round(x * 1000) / 10; return v % 1 === 0 ? String(v) : L.dec(v, 1); }
@@ -1002,10 +999,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     function px(p){ return V ? G.x0 + p / 0.5 * G.pw : G.y0 + G.ph - p / 0.5 * G.ph; }
     function P(b, p){ return V ? [f1(px(p)), f1(bx(b))] : [f1(bx(b)), f1(px(p))]; }
     function pt(a){ return a[0] + ',' + a[1]; }
-    var yTop = G.y0, yBot = G.y0 + G.ph, xL = G.x0, xR = G.x0 + G.pw, bStar = 210240 + fr;
+    var yTop = G.y0, yBot = G.y0 + G.ph, xL = G.x0, xR = G.x0 + G.pw, bStar = S.minsteMaks + S.personfradrag + fr;
 
     // Båndene: marginalskatten delt i trygdeavgift, alminnelig skatt og trinnskatt
-    var edges = [0, 99650, KNEKK, bStar, 226100, 318300, 725050, 980100, 1467200].filter(function(v){ return v < MAX; }).sort(function(a, b){ return a - b; });
+    var edges = [0, S.trygdNedre, KNEKK, bStar].concat(TRS.map(function(t){ return t[0]; })).filter(function(v){ return v < MAX; }).sort(function(a, b){ return a - b; });
     var bands = [];
     for(var i = 0; i < edges.length; i++){
       var a = edges[i], z = i + 1 < edges.length ? edges[i + 1] : MAX;
@@ -1043,7 +1040,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(!V){
       [0, MAX / 4, MAX / 2, MAX * 3 / 4, MAX].forEach(function(v){ lab += '<span class="lrn-tick x" style="left:' + f1(bx(v) - G.xlw / 2) + 'px;top:' + (yBot + 8) + 'px;width:' + G.xlw + 'px">' + esc(v === MAX ? fmt(v) + NB + 'kr' : fmt(v)) + '</span>'; });
     } else {
-      var cand = [99650, KNEKK, bStar, 318300, 725050, 980100, 1467200, 226100], taken = [yTop, yBot], keep = [];
+      var cand = [S.trygdNedre, KNEKK, bStar].concat(TRS.slice(1).map(function(t){ return t[0]; }), [TRS[0][0]]), taken = [yTop, yBot], keep = [];
       cand.forEach(function(tv){ if(tv >= MAX) return; var y = bx(tv); if(taken.every(function(u){ return Math.abs(u - y) >= 16; })){ taken.push(y); keep.push(tv); } });
       keep.sort(function(x, y){ return x - y; });
       lab += '<span class="lrn-tick y" style="top:' + f1(yTop - 8) + 'px;width:' + G.ylw + 'px">0</span>';
@@ -1075,8 +1072,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     function take(r){ rects.push(r); return r; }
 
     // Merkene 1–4: sirkel med føringslinje til stedet merknaden handler om
-    var bP = (99650 + KNEKK) / 2;
-    var pins = [['1', P(bP, 0.25)], ['2', P(bStar, Math.max(lag(bStar).m, lag(bStar - 1).m))], ['3', P(725050, Math.max(lag(725050).m, lag(725049).m))], ['4', P(1467200, last.m)]];
+    var bP = (S.trygdNedre + KNEKK) / 2;
+    var pins = [['1', P(bP, S.trygdOpptrapping)], ['2', P(bStar, Math.max(lag(bStar).m, lag(bStar - 1).m))], ['3', P(TRS[2][0], Math.max(lag(TRS[2][0]).m, lag(TRS[2][0] - 1).m))], ['4', P(TRS[4][0], last.m)]];
     D.lead = ''; D.dot = '';
     pins.forEach(function(sp){
       var ax = sp[1][0], ay = sp[1][1], cands = [];
@@ -1217,7 +1214,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     // Merknadene
     var almTxt = pct(alm), nv = {b:fmt(bStar) + NB + 'kr', a:almTxt};
-    var n2 = fr - (fin ? 45000 : 0) > 0
+    var n2 = fr - (fin ? S.finnmarkFradrag : 0) > 0
       ? (fin ? t('lrnSiN2fe', 'Ved {b} er minstefradrag, personfradrag, finnmarksfradraget og egne fradrag brukt opp, og {a} starter.', nv) : t('lrnSiN2e', 'Ved {b} er minstefradrag, personfradrag og egne fradrag brukt opp, og {a} starter.', nv))
       : (fin ? t('lrnSiN2f', 'Ved {b} er minstefradrag, personfradrag og finnmarksfradraget brukt opp, og {a} starter.', nv) : t('lrnSiN2', 'Ved {b} er minstefradrag og personfradrag brukt opp, og {a} starter.', nv));
     var notes = [

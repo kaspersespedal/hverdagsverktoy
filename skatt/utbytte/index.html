@@ -536,6 +536,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
+<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
 <script>
   // ── Utbytteskatt: portet calcUtdeling-logikk (shared/core.js:4464) ──
   (function(){
@@ -557,21 +558,15 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     // calcTrygdeavgift port (shared/core.js:3128) — ID med 25 % opptrapping over nedre grense
     function calcTrygdeavgift(inntekt, rate){
-      var NEDRE_GRENSE = 99650;
+      var NEDRE_GRENSE = HV_SATSER.skatt.trygdNedre;
       if(inntekt <= NEDRE_GRENSE) return 0;
       var ordinaer = inntekt * rate;
-      var opptrapping = (inntekt - NEDRE_GRENSE) * 0.25;
+      var opptrapping = (inntekt - NEDRE_GRENSE) * HV_SATSER.skatt.trygdOpptrapping;
       return Math.min(ordinaer, opptrapping);
     }
 
-    // Trinnskatt 2026 (5 trinn) — same som calcSal
-    var TRINN_SATSER = [
-      { grense: 1467200, sats: 0.178 },
-      { grense: 980100,  sats: 0.168 },
-      { grense: 725050,  sats: 0.137 },
-      { grense: 318300,  sats: 0.040 },
-      { grense: 226100,  sats: 0.017 }
-    ];
+    // Trinnskatt fra shared/satser.js, høyeste trinn først
+    var TRINN_SATSER = HV_SATSER.skatt.trinn.slice().reverse().map(function(t){ return { grense: t.fra, sats: t.sats }; });
     function calcTrinnskatt(personinntekt){
       var trinn = 0, gjenstaar = personinntekt;
       for(var i=0;i<TRINN_SATSER.length;i++){
@@ -592,12 +587,12 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       }
 
       if(type === 'enk'){
-        // Foretaksmodellen: alminnelig inntekt 22% + trygdeavgift 10,8% (2026) + trinnskatt
-        var personfradrag = 114540; // 2026
+        // Foretaksmodellen: alminnelig inntekt 22% + trygdeavgift for næring + trinnskatt
+        var personfradrag = HV_SATSER.skatt.personfradrag;
         var almInntekt = Math.max(0, overskudd - personfradrag);
         var almSkatt = almInntekt * 0.22;
         var personinntekt = Math.max(0, overskudd - skjerming);
-        var trygd = calcTrygdeavgift(personinntekt, 0.108);
+        var trygd = calcTrygdeavgift(personinntekt, HV_SATSER.skatt.trygdNaering);
         var trinn = calcTrinnskatt(personinntekt);
         var totalSkatt = almSkatt + trygd + trinn;
         var netto = overskudd - totalSkatt;
@@ -809,9 +804,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   }
   // Foretaksmodellen: alminnelig inntekt 22 % etter personfradrag, trygdeavgift næring 10,8 % og trinnskatt på personinntekten
   function enkCalc(o, sk){
-    var alm = Math.max(0, o - 114540) * 0.22, pi = Math.max(0, o - sk), trygd = 0;
-    if(pi > 99650) trygd = Math.min(pi * 0.108, (pi - 99650) * 0.25);
-    var tr = [[1467200, 0.178], [980100, 0.168], [725050, 0.137], [318300, 0.040], [226100, 0.017]], trinn = 0, rest = pi;
+    var S = HV_SATSER.skatt;
+    var alm = Math.max(0, o - S.personfradrag) * 0.22, pi = Math.max(0, o - sk), trygd = 0;
+    if(pi > S.trygdNedre) trygd = Math.min(pi * S.trygdNaering, (pi - S.trygdNedre) * S.trygdOpptrapping);
+    var tr = S.trinn.slice().reverse().map(function(t){ return [t.fra, t.sats]; }), trinn = 0, rest = pi;
     for(var i = 0; i < tr.length; i++) if(rest > tr[i][0]){ trinn += (rest - tr[i][0]) * tr[i][1]; rest = tr[i][0]; }
     var tot = alm + trygd + trinn;
     return {alm:alm, trygd:trygd, trinn:trinn, total:tot, netto:o - tot, eff:tot / o * 100};

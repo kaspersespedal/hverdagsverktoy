@@ -728,16 +728,19 @@ input.sf-num:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in 
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/steg-guide.js?v=v1" defer></script>
+<!-- Ingen data-varsel: skattemeldingen for 2026 leveres i 2027, og da er 2026-satsene de riktige. -->
+<script src="/shared/satser.js?v=v1"></script>
 <script>
 // ── Lag skattemeldingen: regner skatten for 2026 mens du fyller inn ──
-// Satsene er de samme som i inntektskalkulatoren (/skatt/inntekt/) og i tabellen «Satsene vi har brukt» nederst på siden.
+// Satsene leses fra shared/satser.js, som inntektskalkulatoren (/skatt/inntekt/). Tabellen «Satsene vi har brukt» nederst på siden er tekst og må følge med.
 (function(){
   var KEY = 'hv-skattemelding-v1';
-  var TRINN = [[226100, 318300, 0.017], [318300, 725050, 0.040], [725050, 980100, 0.137], [980100, 1467200, 0.168], [1467200, Infinity, 0.178]];
-  var MINSTE_RATE = 0.46, MINSTE_MAX = 95700, PERSON = 114540, ALM = 0.22;
-  var TRYGD = 0.076, TRYGD_NEDRE = 99650, TRYGD_OPP = 0.25;
-  var FAG_MAX = 8700, BSU_RATE = 0.10, BSU_MAX = 27500;
-  var KM = 1.90, REISE_EGEN = 12000, REISE_TAK = 120000;
+  var S = HV_SATSER.skatt;
+  var TRINN = S.trinn.map(function(t){ return [t.fra, t.til, t.sats]; });
+  var MINSTE_RATE = S.minsteSats, MINSTE_MAX = S.minsteMaks, PERSON = S.personfradrag, ALM = 0.22;
+  var TRYGD = S.trygdLonn, TRYGD_NEDRE = S.trygdNedre, TRYGD_OPP = S.trygdOpptrapping;
+  var FAG_MAX = S.fagforening, BSU_RATE = S.bsuSats, BSU_MAX = S.bsuMaksAar;
+  var KM = S.reiseKm, REISE_EGEN = S.reiseEgenandel, REISE_TAK = S.reiseTak;
   var PASS_FORSTE = 15000, PASS_NESTE = 10000;
   var FELT = ['smLonn', 'smTrekk', 'smFag', 'smKm', 'smDager', 'smRenteInn', 'smRenteUt', 'smBsu', 'smPass', 'smBarn'];
   var EKS = {

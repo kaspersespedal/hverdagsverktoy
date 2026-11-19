@@ -518,15 +518,16 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
+<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
 <script>
 // ── BSU-kalkulator: portet calcBsu-logikk (matte uendret), nå live + ks-skall ──
 (function(){
   var KEY = 'hv-bsu-v1';
 
-  // BSU-konstanter (Skatteloven § 16-10, 2026)
-  var BSU_MAX_PER_YEAR = 27500;       // Maks innskudd per år som gir fradrag
-  var BSU_MAX_TOTAL = 300000;          // Maks total saldo (innskudd)
-  var BSU_FRADRAG_RATE = 0.10;         // 10 % skattefradrag av innskudd
+  // BSU-konstanter (Skatteloven § 16-10), fra shared/satser.js
+  var BSU_MAX_PER_YEAR = HV_SATSER.skatt.bsuMaksAar;    // Maks innskudd per år som gir fradrag
+  var BSU_MAX_TOTAL = HV_SATSER.skatt.bsuMaksTotalt;    // Maks total saldo (innskudd)
+  var BSU_FRADRAG_RATE = HV_SATSER.skatt.bsuSats;       // skattefradrag av innskudd
 
   // ── helpers ──
   function parseNum(id){
@@ -760,10 +761,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 //    compute() via hvtLearn. Alderen er bare visning: den lagres ikke og endrer ikke kalkulatoren. ──
 (function(){
   var KEY = 'boliglan-bsu';
-  var MAXY = 27500, CAP = 300000;
+  var MAXY = HV_SATSER.skatt.bsuMaksAar, CAP = HV_SATSER.skatt.bsuMaksTotalt;
   // Standardverdiene i feltene over. Står alle slik, viser blokken eksempelet: maks innskudd i elleve år fra 23 år.
   var DEF = {monthly:2291, years:10, brukt:100, alt:4, bsu:4.5};
-  var EKS = {yearly:27500, years:11, brukt:100, alt:4, bsu:4.5};
+  var EKS = {yearly:MAXY, years:11, brukt:100, alt:4, bsu:4.5};
   var root, plot, svg, raw = null, age = null, lastW = 0, queued = false, ctx;
 
   function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
@@ -787,7 +788,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var ag = ageStart === null ? null : ageStart + i - 1, ok = ag === null || ag <= 33, inv = plan;
       if(tot + inv > CAP) inv = Math.max(0, CAP - tot);
       if(!ok) inv = 0;
-      var tb = inv * 0.10 * Math.min(brukt / 100, 1);
+      var tb = inv * HV_SATSER.skatt.bsuSats * Math.min(brukt / 100, 1);
       b = (b + inv) * (1 + bsu / 100); a = (a + inv) * (1 + alt / 100); tot += inv; fr += tb;
       rows.push({i:i, age:ag, ok:ok, inv:inv, cum:tot, bal:b, alt:a, tb:tb, state:!ok ? 'etter' : (inv > 0 ? 'ny' : 'full')});
     }

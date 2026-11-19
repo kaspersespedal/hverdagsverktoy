@@ -493,6 +493,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
+<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
 <script>
   // ── Reisefradrag: portet calcReise-logikk (shared/core.js:3582) ──
   (function(){
@@ -517,10 +518,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var dager = parseAmt('reise-dager') || 230;
       var bom = parseAmt('reise-bom');
 
-      var satsPerKm = 1.90;       // Skatteetaten 2025/2026
-      var nedreGrense = 12000;    // Egenandel
-      var oevreGrense = 120000;   // Maks fradragsgrunnlag
-      var bomGrense = 3300;       // Bom og ferge teller bare over 3 300 kr i året, og da hele beløpet (FSFIN § 6-44-4)
+      var S = HV_SATSER.skatt;
+      var satsPerKm = S.reiseKm;            // kr per km
+      var nedreGrense = S.reiseEgenandel;   // Egenandel
+      var oevreGrense = S.reiseTak;         // Maks fradragsgrunnlag
+      var bomGrense = S.reiseBomGrense;     // Bom og ferge teller bare over 3 300 kr i året, og da hele beløpet (FSFIN § 6-44-4)
 
       if(km <= 0){
         return { hasData:false, km:km, dager:dager, bom:bom, satsPerKm:satsPerKm, nedreGrense:nedreGrense, oevreGrense:oevreGrense };
@@ -726,7 +728,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 (function(){
   var KEY = 'skatt-reise';
   var DEF = {km:35, dager:230, bom:0};
-  var SATS = 1.90, EGEN = 12000, TAK = 120000, SKATT = 0.22, BOMGRENSE = 3300;
+  var S = HV_SATSER.skatt;
+  var SATS = S.reiseKm, EGEN = S.reiseEgenandel, TAK = S.reiseTak, SKATT = 0.22, BOMGRENSE = S.reiseBomGrense;
   var SANS = 'Geist, Inter, system-ui, sans-serif';
   var NB = ' ';
   var root, plot, svg, raw = null, lastW = 0, queued = false, ctx, skm = null, skKey = '';
