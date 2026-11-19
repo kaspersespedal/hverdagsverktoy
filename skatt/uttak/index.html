@@ -626,6 +626,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
+<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
 <script>
   // ── Uttaksbeskatning: portet calcUttak-logikk (shared/core.js:4340) ──
   (function(){
@@ -654,24 +655,18 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     }
 
     // Trygdeavgift med opptrapping (sktl. § 23-3 / ftrl. § 23-3)
-    // Nedre grense 99 650 kr, opptrappingssats 25 %.
+    // Nedre grense og opptrappingssats fra shared/satser.js.
     function calcTrygd(inntekt, rate){
-      var NEDRE = 99650;
+      var NEDRE = HV_SATSER.skatt.trygdNedre;
       if(inntekt <= NEDRE) return 0;
       var ord = inntekt * rate;
-      var opp = (inntekt - NEDRE) * 0.25;
+      var opp = (inntekt - NEDRE) * HV_SATSER.skatt.trygdOpptrapping;
       return Math.min(ord, opp);
     }
 
-    // Trinnskatt 2026 — § 3-1 Stortingets skattevedtak
+    // Trinnskatt — § 3-1 Stortingets skattevedtak, fra shared/satser.js, høyeste trinn først
     function calcTrinn(inntekt){
-      var trinn = [
-        {grense: 1467200, sats: 0.178},
-        {grense: 980100,  sats: 0.168},
-        {grense: 725050,  sats: 0.137},
-        {grense: 318300,  sats: 0.040},
-        {grense: 226100,  sats: 0.017}
-      ];
+      var trinn = HV_SATSER.skatt.trinn.slice().reverse().map(function(t){ return {grense: t.fra, sats: t.sats}; });
       var sum = 0, gjenstaar = inntekt;
       for(var i=0; i<trinn.length; i++){
         var t = trinn[i];
@@ -721,7 +716,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           data.almSkatt = gevinst * 0.22;
           if(personinntekt){
             // ENK høy sats (selvstendig næringsdrivende) — § 23-3
-            data.trygd = calcTrygd(gevinst, 0.108);
+            data.trygd = calcTrygd(gevinst, HV_SATSER.skatt.trygdNaering);
             data.trinn = calcTrinn(gevinst);
           }
           data.total = data.almSkatt + data.trygd + data.trinn;
@@ -923,9 +918,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     ctx.font = (wt || 400) + ' ' + px + 'px ' + (isSerif ? serif : fam);
     return ctx.measureText(String(s)).width * 1.02;
   }
-  function calcTrygd(inn){ var NEDRE = 99650; if(inn <= NEDRE) return 0; return Math.min(inn * 0.108, (inn - NEDRE) * 0.25); }
+  function calcTrygd(inn){ var S = HV_SATSER.skatt, NEDRE = S.trygdNedre; if(inn <= NEDRE) return 0; return Math.min(inn * S.trygdNaering, (inn - NEDRE) * S.trygdOpptrapping); }
   function calcTrinn(inn){
-    var tr = [[1467200, 0.178], [980100, 0.168], [725050, 0.137], [318300, 0.04], [226100, 0.017]], sum = 0, rest = inn, n = 0;
+    var tr = HV_SATSER.skatt.trinn.slice().reverse().map(function(t){ return [t.fra, t.sats]; }), sum = 0, rest = inn, n = 0;
     for(var i = 0; i < tr.length; i++) if(rest > tr[i][0]){ if(!n) n = tr.length - i; sum += (rest - tr[i][0]) * tr[i][1]; rest = tr[i][0]; }
     return {sum:sum, n:n};
   }

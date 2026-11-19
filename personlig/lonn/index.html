@@ -548,6 +548,7 @@ body.focus-mode > footer{display:none}
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
+<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
 <script>
   // ── Lønn etter skatt: portet calcLonn-logikk ──
   (function(){
@@ -574,10 +575,10 @@ body.focus-mode > footer{display:none}
 
     // ── Trygdeavgift med opptrapping (port fra shared/core.js calcTrygdeavgift) ──
     function calcTrygdeavgift(inntekt, rate){
-      var NEDRE = 99650;
+      var NEDRE = HV_SATSER.skatt.trygdNedre;
       if(inntekt <= NEDRE) return 0;
       var ord = inntekt * rate;
-      var opp = (inntekt - NEDRE) * 0.25;
+      var opp = (inntekt - NEDRE) * HV_SATSER.skatt.trygdOpptrapping;
       return Math.min(ord, opp);
     }
 
@@ -595,21 +596,18 @@ body.focus-mode > footer{display:none}
       var bruttoAar = timelonn * timerUke * ukerAar;
       var bruttoMnd = bruttoAar / 12;
 
-      var mf = Math.min(Math.max(bruttoAar * 0.46, 0), 95700);   // Minstefradrag 2026
-      var pf = 114540;                                            // Personfradrag 2026
+      var S = HV_SATSER.skatt;
+      var mf = Math.min(Math.max(bruttoAar * S.minsteSats, 0), S.minsteMaks);   // Minstefradrag
+      var pf = S.personfradrag;                                                  // Personfradrag
       var almInntekt = Math.max(bruttoAar - mf - pf, 0);
 
       var totalSkatt = 0;
       var breakdown = [];
 
-      // Trinnskatt 2026
-      var trinnSteps = [
-        [226100,  318300, 0.017, 'Trinnskatt – Trinn 1 (1,7 %)'],
-        [318300,  725050, 0.040, 'Trinnskatt – Trinn 2 (4,0 %)'],
-        [725050,  980100, 0.137, 'Trinnskatt – Trinn 3 (13,7 %)'],
-        [980100, 1467200, 0.168, 'Trinnskatt – Trinn 4 (16,8 %)'],
-        [1467200, Infinity, 0.178, 'Trinnskatt – Trinn 5 (17,8 %)']
-      ];
+      // Trinnskatt
+      var trinnSteps = S.trinn.map(function(t, i){
+        return [t.fra, t.til, t.sats, 'Trinnskatt – Trinn ' + (i + 1) + ' (' + (t.sats*100).toFixed(1).replace('.',',') + ' %)'];
+      });
       var trinnskatt = 0;
       trinnSteps.forEach(function(s){
         var lo=s[0], hi=s[1], rate=s[2];
@@ -635,7 +633,7 @@ body.focus-mode > footer{display:none}
       // de under 17 og de over 69 betaler 5,1 %. Feltet hadde tidligere bare
       // «under 18» = 0 %, som ga en 17-åring med 250 000 kr i lønn ca. 19 000 kr
       // for lite i beregnet skatt — og en 16-åring 0 i stedet for 5,1 %.
-      var trygdRate = (alder === 'u17' || alder === '70plus') ? 0.051 : 0.076;
+      var trygdRate = (alder === 'u17' || alder === '70plus') ? S.trygdLav : S.trygdLonn;
       var trygd = trygdRate > 0 ? calcTrygdeavgift(bruttoAar, trygdRate) : 0;
       if(trygd > 0){
         totalSkatt += trygd;

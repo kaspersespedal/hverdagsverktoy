@@ -575,26 +575,22 @@ body.focus-mode > footer{display:none}
   })();
 </script>
 
+<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
 <script>
 // ── Lønn ut: JSX→vanilla port av samme inntekt-app (delt matte med /skatt/inntekt/)
-// Source: Stortingets skattevedtak 2026, Skatteloven §§ 6-30, 12-1, 15-4
+// Satsene leses fra shared/satser.js (Stortingets skattevedtak, Skatteloven §§ 6-30, 12-1, 15-4)
 (function(){
-  var TRINN = [
-    { from: 226100,  to: 318300,   rate: 0.017 },
-    { from: 318300,  to: 725050,   rate: 0.040 },
-    { from: 725050,  to: 980100,   rate: 0.137 },
-    { from: 980100,  to: 1467200,  rate: 0.168 },
-    { from: 1467200, to: Infinity, rate: 0.178 }
-  ];
-  var MINSTE_RATE = 0.46, MINSTE_MAX = 95700, PERSON_FRAD = 114540;
-  var TRYGD_RATE = 0.076, TRYGD_NEDRE = 99650, TRYGD_OPP = 0.25;
-  var BSU_RATE = 0.10, BSU_MAX_INN = 27500;
-  var FAG_MAX = 8700, IPS_MAX = 25000, GAVE_MAX = 25000;
+  var S = HV_SATSER.skatt;
+  var TRINN = S.trinn.map(function(t){ return { from: t.fra, to: t.til, rate: t.sats }; });
+  var MINSTE_RATE = S.minsteSats, MINSTE_MAX = S.minsteMaks, PERSON_FRAD = S.personfradrag;
+  var TRYGD_RATE = S.trygdLonn, TRYGD_NEDRE = S.trygdNedre, TRYGD_OPP = S.trygdOpptrapping;
+  var BSU_RATE = S.bsuSats, BSU_MAX_INN = S.bsuMaksAar;
+  var FAG_MAX = S.fagforening, IPS_MAX = S.ips, GAVE_MAX = S.gaver;
   // Finnmarksfradraget er TO ting, ikke én: den lavere alminnelige satsen
   // (18,5 %) OG et særskilt fradrag i alminnelig inntekt på 45 000 kr
   // (Skatteetaten, «Finnmarksfradraget», inntektsåret 2026). Region-valget
   // slo bare på satsen, så fradraget falt helt ut.
-  var FINNMARK_RATE = 0.185, FINNMARK_FRADRAG = 45000;
+  var FINNMARK_RATE = S.finnmarkSats, FINNMARK_FRADRAG = S.finnmarkFradrag;
 
   function computeTrinn(brutto){
     var rows = [], total = 0;
@@ -971,7 +967,7 @@ body.focus-mode > footer{display:none}
     var bsuUsed = Math.max(0, d.alm + d.trinn + d.trygd - tot), parts = roundTo([d.alm, d.trinn, d.trygd, -bsuUsed], tot);
     set('gB', fmt(B)); set('gA', fmt(parts[0])); set('gT', fmt(parts[1])); set('gY', fmt(parts[2])); set('gU', fmt(-parts[3])); set('gN', kr(B - Math.round(tot)));
     show('gBsu', bsuUsed >= 0.5);
-    var mi = Math.round(d.minste), gr = B - mi - 114540 - d.egne - d.finn;
+    var mi = Math.round(d.minste), gr = B - mi - HV_SATSER.skatt.personfradrag - d.egne - d.finn;
     set('gMi', fmt(mi)); set('gE', fmt(d.egne)); set('gG', kr(gr)); show('gF', d.finn > 0);
     var sats = d.region * 100;
     set('gS', nb(gr < 0 ? t('lrnLuG0', 'Fradragene er større enn lønna, så grunnlaget blir 0 kr og den alminnelige skatten 0 kr.')

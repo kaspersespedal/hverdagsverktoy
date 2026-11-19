@@ -528,15 +528,16 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
+<script src="/shared/satser.js?v=v1" data-varsel="g"></script>
 <script>
 // ── Feriepenger: portet calcFerie-logikk (matte uendret fra shared/core.js ~4861), nå live + ks-skall ──
 (function(){
   var KEY = 'hv-ferie-v1';
   var STATE = {};
-  // G per 31.12. i opptjeningsåret, jf. ferieloven § 10 nr. 3 (nav.no/grunnbelopet). Legg til nytt år når G settes i mai.
-  var G_31DES = {2025:130160, 2026:136549};
-  // Opptjeningsåret er i fjor. Mangler året i tabellen, brukes gjeldende G fra core.js.
-  function gOpptj(){ return G_31DES[new Date().getFullYear() - 1] || window._HVT_G || G_31DES[2026]; }
+  // G per 31.12. i opptjeningsåret, jf. ferieloven § 10 nr. 3 (nav.no/grunnbelopet). Tabellen står i shared/satser.js.
+  var G_31DES = HV_SATSER.g.per31des;
+  // Opptjeningsåret er i fjor. Mangler året i tabellen, brukes gjeldende G.
+  function gOpptj(){ return G_31DES[new Date().getFullYear() - 1] || HV_SATSER.g.verdi; }
   window._ferieG = gOpptj; // brukes også av forklaringsblokken under
 
   var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
