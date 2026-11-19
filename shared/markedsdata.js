@@ -1634,7 +1634,7 @@
           list.forEach(function (p) {
             var li = document.createElement('li');
             li.className = 'wx-result'; li.setAttribute('role', 'option'); li.tabIndex = 0;
-            li.innerHTML = '<span>' + p.navn + '</span><small>' + (p.kommunenavn || '') + '</small>';
+            li.innerHTML = '<span>' + esc(p.navn) + '</span><small>' + esc(p.kommunenavn || '') + '</small>';
             function pick() { applyPlace(p); close(); btn.focus(); }
             li.addEventListener('click', pick);
             li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
