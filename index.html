@@ -2265,38 +2265,25 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   html[data-theme="carbon"] #dailyDate .dd-wd{color:var(--accent-2)}
   html[data-theme="carbon"] #dailyDate .dd-rest{white-space:nowrap}
 
-  /* Karbonfiber bak toppen. Kasper 2026-11-16: «en kul carbon-effekt i bakgrunnen
-     som er subtil». ::before er en fin twill-vev (12 px) i --wash-rgb, ::after en
-     kobberglød bak ukedagen og et lysskinn som glir over vevet én gang etter
-     lasting. Begge går ut til skjermkanten og tones bort oppe, nede og mot høyre
-     (to masker som snittes), så det aldri blir en firkant. isolation holder
-     lagene bak teksten, men over sidebakgrunnen. */
-  html[data-theme="carbon"] .daily-head{position:relative;isolation:isolate}
-  html[data-theme="carbon"] .daily-head::before,
-  html[data-theme="carbon"] .daily-head::after{
-    content:"";position:absolute;z-index:-1;inset:-26px -16px -10px;pointer-events:none;
-    -webkit-mask:linear-gradient(180deg,transparent 0,#000 38%,#000 66%,transparent 100%),linear-gradient(90deg,#000 0,#000 25%,transparent 92%);
-    -webkit-mask-composite:source-in;
-    mask:linear-gradient(180deg,transparent 0,#000 38%,#000 66%,transparent 100%),linear-gradient(90deg,#000 0,#000 25%,transparent 92%);
-    mask-composite:intersect;
+  /* Toppen som på PC (#gammelPC). Kasper 2026-11-19 ombestemte seg: «telefon også».
+     Karbonveven er byttet med samme topp som på PC: ukedagen med metallskjær, året
+     dempet, et mykt lys bak datoen og døgnlinja under (reglene for linja står
+     felles øverst i #gammelPC). z-index:1 lar gløden fra «nå»-punktet falle på kortene. */
+  @supports ((-webkit-background-clip:text) or (background-clip:text)){
+    html[data-theme="carbon"] #dailyDate .dd-wd{
+      background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 46%,color-mix(in srgb,var(--accent-2) 55%,#fff) 100%);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    }
   }
+  html[data-theme="carbon"] #dailyDate .dd-yr{color:var(--ink3)}
+  html[data-theme="carbon"] .daily-head{position:relative;isolation:isolate;z-index:1;padding-bottom:12px;row-gap:10px}
   html[data-theme="carbon"] .daily-head::before{
-    background:
-      linear-gradient(27deg,rgba(var(--wash-rgb),.06) 3px,transparent 3px) 0 3px,
-      linear-gradient(207deg,rgba(var(--wash-rgb),.06) 3px,transparent 3px) 6px 0,
-      linear-gradient(27deg,rgba(var(--wash-rgb),.10) 3px,transparent 3px) 0 6px,
-      linear-gradient(207deg,rgba(var(--wash-rgb),.10) 3px,transparent 3px) 6px 3px,
-      linear-gradient(90deg,rgba(var(--wash-rgb),.07) 6px,transparent 6px),
-      linear-gradient(rgba(var(--wash-rgb),.08) 25%,rgba(var(--wash-rgb),.05) 25%,rgba(var(--wash-rgb),.05) 50%,transparent 50%,transparent 75%,rgba(var(--wash-rgb),.11) 75%);
-    background-size:12px 12px;opacity:.5;
+    content:"";position:absolute;z-index:-1;pointer-events:none;
+    left:-14px;top:-50px;width:88%;height:200px;
+    background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
   }
-  html[data-theme="carbon"] .daily-head::after{
-    background:
-      linear-gradient(105deg,transparent 42%,rgba(var(--glow-rgb),.34) 50%,transparent 58%) 120% 0/250% 100% no-repeat,
-      radial-gradient(55% 60% at 20% 64%,rgba(var(--glow-rgb),.20),transparent 72%);
-    animation:hvCarbonSheen 2.4s cubic-bezier(.6,.05,.3,1) 1.8s 1 both;
-  }
-  @keyframes hvCarbonSheen{from{background-position:120% 0,0 0}to{background-position:-20% 0,0 0}}
+  html[data-theme="carbon"] .dayline{order:5;flex:0 0 100%;display:block;margin-top:4px}
+  html[data-theme="carbon"] body.introAct .daily-frame::after{content:none}
 
   /* Hvert kort i egen boks med tittelstripe, som de andre temaene fikk i #288.
      Kasper 2026-11-16: «implementer det vi har gjort under forsidetittelen» også i
@@ -2308,14 +2295,15 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   html[data-theme="carbon"] .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
   html[data-theme="carbon"] .daily-grid{gap:12px}
   html[data-theme="carbon"] .daily-grid > .widget{
-    background:var(--surface);
+    background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
     border:1px solid var(--line);border-right:1px solid var(--line) !important;border-radius:12px;
+    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,.8);
     padding:0 16px 16px;
   }
   html[data-theme="carbon"] .daily-grid > .widget > .widget-top{
     margin:0 -16px 5px;padding:12px 16px;min-height:46px;box-sizing:border-box;
     border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
-    background:color-mix(in srgb,var(--accent) 5%,transparent);
+    background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 8%,transparent),color-mix(in srgb,var(--accent) 3%,transparent));
   }
   html[data-theme="carbon"] .daily-credits{border-top:0;padding:4px 4px 0}
   html[data-theme="carbon"] .fxc{border-radius:12px}
@@ -2512,7 +2500,6 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
 
 @media (prefers-reduced-motion:reduce){
   .intro-veil{display:none !important}
-  html[data-theme="carbon"] .daily-head::after{animation:none}
 }
 </style>
 <style id="gammelPC">/* ══ Carbon og Mørk-blå på PC — forsiden slik den var i september (v242) ══════
@@ -2526,10 +2513,96 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
    Bare over 640 px og bare disse to temaene; telefon står i #carbonMobil.
    2026-11-19: dagsoversikt-toppen har fått døgnlinja i stedet for karbonveven,
    og kortene lys ovenfra og en lysring som følger musa (se lenger ned). */
-/* Døgnlinja vises bare her (Carbon og Mørk-blå på PC). --dl-p er registrert som
-   tall, så den kan tones med transition; uten støtte hopper lyset rett på plass. */
+/* Døgnlinja vises bare for Carbon og Mørk-blå på PC (her) og Carbon på telefon
+   (#carbonMobil). Reglene under er felles; de virker bare der linja slås på med
+   display:block. --dl-p er registrert som tall, så den kan tones med transition;
+   uten støtte hopper lyset rett på plass. */
 .dayline{display:none}
 @property --dl-p{syntax:'<number>';inherits:true;initial-value:0}
+/* Døgnlinja. Kasper 2026-11-19: «utrolig pent design … med wow og x-faktor …
+   smooth men profesjonelt … ikke over fancy». En tynn skala fra 00 til 24 under
+   datoen, som på et instrument: én strek per time, lengre hver sjette. Den delen
+   av døgnet som er gått, lyser i aksentfargen og tones ut bakover mot midnatt;
+   et lyspunkt står på klokka nå og kaster et svakt lys ned på kortene under.
+   --dl-p (0–1) er hvor langt lyset er kommet. Den er registrert med @property
+   (rett over), så den kan tones: ved lasting glir lyset fra
+   midnatt og fram til nå, og flytter seg siden ett hakk i minuttet. --dl-now
+   settes av skriptet «Døgnlinja». Uten det (ingen JS) vises bare skalaen. */
+.dayline{
+  position:relative;height:24px;
+  --dl-p:0;transition:--dl-p 1.7s var(--ease-out-expo) .3s;
+}
+body.heroLanded .daily-frame.in .dayline{--dl-p:var(--dl-now,0)}
+.dayline::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line-2);
+}
+/* Strekene er SVG med crispEdges: 1116 px / 24 gir halve piksler, og da ble
+   annenhver strek uskarp som CSS-toning. Halv piksel inn på hver side, så første
+   og siste strek står nøyaktig i flukt med kortkantene. */
+.dl-ticks{
+  position:absolute;left:.5px;top:1px;width:calc(100% - 1px);height:8px;overflow:visible;
+  fill:none;stroke:currentColor;stroke-width:1;shape-rendering:crispEdges;
+  color:rgba(var(--wash-rgb),.26);
+}
+.dl-ticks.is-lit{
+  color:var(--accent-2);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.45) calc(var(--dl-p) * 60%),#000 calc(var(--dl-p) * 100%),transparent calc(var(--dl-p) * 100%));
+  mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.45) calc(var(--dl-p) * 60%),#000 calc(var(--dl-p) * 100%),transparent calc(var(--dl-p) * 100%));
+}
+.dl-fill{
+  position:absolute;left:0;top:0;height:1px;width:calc(var(--dl-p) * 100%);
+  background:linear-gradient(90deg,transparent,rgba(var(--glow-rgb),.5) 55%,var(--accent-2));
+}
+.dl-fill::after{
+  content:"";position:absolute;left:0;right:0;top:-7px;height:15px;
+  background:linear-gradient(180deg,transparent,rgba(var(--glow-rgb),.24),transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000);
+  mask-image:linear-gradient(90deg,transparent 30%,#000);
+}
+/* Gløden rundt «nå»-punktet. Den ligger som bakgrunn i et lag som bare går
+   12 px ut over linja på hver side (mindre enn sidemargen på telefon) og tones bort mot kantene: som eget element
+   rundt punktet stakk den 240 px ut av siden rundt midnatt og ga sidelengs rulling. */
+.dayline::after{
+  content:"";position:absolute;left:-12px;right:-12px;top:-74px;height:180px;pointer-events:none;
+  background:radial-gradient(240px 90px at calc(12px + var(--dl-p) * (100% - 24px)) 74px,rgba(var(--glow-rgb),.17),rgba(var(--glow-rgb),.05) 56%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
+}
+.dl-now{position:absolute;z-index:1;top:0;left:calc(var(--dl-p) * 100%);width:0;height:0}
+.dl-now i{
+  position:absolute;left:-3.5px;top:-3px;width:7px;height:7px;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,#fff 0,var(--accent-2) 58%);
+  box-shadow:0 0 0 3px rgba(var(--glow-rgb),.20),0 0 12px 2px rgba(var(--glow-rgb),.6);
+}
+.dl-now i::after{
+  content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--accent-2);opacity:0;
+}
+/* To rolige ringer når lyset har landet, så står punktet stille */
+body.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{
+  animation:hvDlPulse 2.2s var(--ease-out-quart) 2.2s 2 both;
+}
+@keyframes hvDlPulse{0%{opacity:.75;transform:scale(1)}100%{opacity:0;transform:scale(3.6)}}
+.dayline:not(.is-set) :is(.dl-now,.dl-fill,.dl-ticks.is-lit),
+.dayline:not(.is-set)::after{display:none}
+.dl-hrs b{
+  position:absolute;top:14px;transform:translateX(-50%);
+  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;color:var(--ink4);font-variant-numeric:tabular-nums;
+}
+.dl-hrs b:nth-child(1){left:0;transform:none}
+.dl-hrs b:nth-child(2){left:25%}
+.dl-hrs b:nth-child(3){left:50%}
+.dl-hrs b:nth-child(4){left:75%}
+.dl-hrs b:nth-child(5){right:-1.3px;transform:none}
+/* Lasteanimasjonen: linja tones inn etter datoen, og lyset starter litt seinere */
+body.introAct .daily .daily-head .dayline{opacity:0}
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .dayline{
+  opacity:1;transition:opacity .6s var(--ease-out-quart) 620ms, --dl-p 1.7s var(--ease-out-expo) 900ms;
+}
+body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animation-delay:2.9s}
+@media (prefers-reduced-motion:reduce){
+  .dayline{transition:none}
+  .dl-now i::after{animation:none !important}
+}
 @media (min-width:641px){
   html:is([data-theme="carbon"],[data-theme="dark"]){
     --font-sans:'Inter', system-ui, -apple-system, sans-serif;
@@ -2644,86 +2717,7 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
     background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
   }
 
-  /* Døgnlinja. Kasper 2026-11-19: «utrolig pent design … med wow og x-faktor …
-     smooth men profesjonelt … ikke over fancy». En tynn skala fra 00 til 24 under
-     datoen, som på et instrument: én strek per time, lengre hver sjette. Den delen
-     av døgnet som er gått, lyser i aksentfargen og tones ut bakover mot midnatt;
-     et lyspunkt står på klokka nå og kaster et svakt lys ned på kortene under.
-     --dl-p (0–1) er hvor langt lyset er kommet. Den er registrert med @property
-     (rett over denne stilblokka), så den kan tones: ved lasting glir lyset fra
-     midnatt og fram til nå, og flytter seg siden ett hakk i minuttet. --dl-now
-     settes av skriptet «Døgnlinja». Uten det (ingen JS) vises bare skalaen. */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dayline{
-    order:5;flex:0 0 100%;display:block;position:relative;height:24px;margin-top:8px;
-    --dl-p:0;transition:--dl-p 1.7s var(--ease-out-expo) .3s;
-  }
-  html:is([data-theme="carbon"],[data-theme="dark"]) body.heroLanded .daily-frame.in .dayline{--dl-p:var(--dl-now,0)}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dayline::before{
-    content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line-2);
-  }
-  /* Strekene er SVG med crispEdges: 1116 px / 24 gir halve piksler, og da ble
-     annenhver strek uskarp som CSS-toning. Halv piksel inn på hver side, så første
-     og siste strek står nøyaktig i flukt med kortkantene. */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-ticks{
-    position:absolute;left:.5px;top:1px;width:calc(100% - 1px);height:8px;overflow:visible;
-    fill:none;stroke:currentColor;stroke-width:1;shape-rendering:crispEdges;
-    color:rgba(var(--wash-rgb),.26);
-  }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-ticks.is-lit{
-    color:var(--accent-2);
-    -webkit-mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.45) calc(var(--dl-p) * 60%),#000 calc(var(--dl-p) * 100%),transparent calc(var(--dl-p) * 100%));
-    mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.45) calc(var(--dl-p) * 60%),#000 calc(var(--dl-p) * 100%),transparent calc(var(--dl-p) * 100%));
-  }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-fill{
-    position:absolute;left:0;top:0;height:1px;width:calc(var(--dl-p) * 100%);
-    background:linear-gradient(90deg,transparent,rgba(var(--glow-rgb),.5) 55%,var(--accent-2));
-  }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-fill::after{
-    content:"";position:absolute;left:0;right:0;top:-7px;height:15px;
-    background:linear-gradient(180deg,transparent,rgba(var(--glow-rgb),.24),transparent);
-    -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000);
-    mask-image:linear-gradient(90deg,transparent 30%,#000);
-  }
-  /* Gløden rundt «nå»-punktet. Den ligger som bakgrunn i et lag som bare går
-     20 px ut over linja på hver side og tones bort mot kantene: som eget element
-     rundt punktet stakk den 240 px ut av siden rundt midnatt og ga sidelengs rulling. */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dayline::after{
-    content:"";position:absolute;left:-20px;right:-20px;top:-74px;height:180px;pointer-events:none;
-    background:radial-gradient(240px 90px at calc(20px + var(--dl-p) * (100% - 40px)) 74px,rgba(var(--glow-rgb),.17),rgba(var(--glow-rgb),.05) 56%,transparent);
-    -webkit-mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
-    mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
-  }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-now{position:absolute;z-index:1;top:0;left:calc(var(--dl-p) * 100%);width:0;height:0}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-now i{
-    position:absolute;left:-3.5px;top:-3px;width:7px;height:7px;border-radius:50%;
-    background:radial-gradient(circle at 50% 45%,#fff 0,var(--accent-2) 58%);
-    box-shadow:0 0 0 3px rgba(var(--glow-rgb),.20),0 0 12px 2px rgba(var(--glow-rgb),.6);
-  }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-now i::after{
-    content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--accent-2);opacity:0;
-  }
-  /* To rolige ringer når lyset har landet, så står punktet stille */
-  html:is([data-theme="carbon"],[data-theme="dark"]) body.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{
-    animation:hvDlPulse 2.2s var(--ease-out-quart) 2.2s 2 both;
-  }
-  @keyframes hvDlPulse{0%{opacity:.75;transform:scale(1)}100%{opacity:0;transform:scale(3.6)}}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dayline:not(.is-set) :is(.dl-now,.dl-fill,.dl-ticks.is-lit),
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dayline:not(.is-set)::after{display:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-hrs b{
-    position:absolute;top:14px;transform:translateX(-50%);
-    font:600 9px/1 var(--font-sans);letter-spacing:1.3px;color:var(--ink4);font-variant-numeric:tabular-nums;
-  }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-hrs b:nth-child(1){left:0;transform:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-hrs b:nth-child(2){left:25%}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-hrs b:nth-child(3){left:50%}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-hrs b:nth-child(4){left:75%}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-hrs b:nth-child(5){right:-1.3px;transform:none}
-  /* Lasteanimasjonen: linja tones inn etter datoen, og lyset starter litt seinere */
-  html:is([data-theme="carbon"],[data-theme="dark"]) body.introAct .daily .daily-head .dayline{opacity:0}
-  html:is([data-theme="carbon"],[data-theme="dark"]) body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .dayline{
-    opacity:1;transition:opacity .6s var(--ease-out-quart) 620ms, --dl-p 1.7s var(--ease-out-expo) 900ms;
-  }
-  html:is([data-theme="carbon"],[data-theme="dark"]) body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animation-delay:2.9s}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .dayline{order:5;flex:0 0 100%;display:block;margin-top:8px}
   /* Lyssveipet over hele dagsoversikten (fra #carbonMobil) er tatt ut her: uten
      ramme rundt kortene sto det et øyeblikk som en firkant bak toppen. Lyset som
      glir langs døgnlinja gjør samme jobb. */
@@ -2805,10 +2799,6 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
 /* Nettbrett: mindre luft over tittelen, som i v242 */
 @media (min-width:641px) and (max-width:900px){
   html:is([data-theme="carbon"],[data-theme="dark"]) .hero{padding-top:64px}
-}
-@media (min-width:641px) and (prefers-reduced-motion:reduce){
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dayline{transition:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dl-now i::after{animation:none !important}
 }
 </style>
 <style id="carbonNav">/* ══ Navbaren i Carbon (forsiden, PC og telefon) ═══════════════════════
@@ -3023,7 +3013,7 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
         <header class="daily-head">
           <div class="title"><span data-i18n="homeMarketTitle">Dagsoversikt</span><span class="sep"></span><b id="dailyDate">Fredag 25. april 2026</b><span class="sep"></span><b id="dailyWeek">Uke 18</b></div>
           <div class="stamp" id="dailyStamp"><span class="stamp-pre">Sist oppdatert </span>—</div>
-          <!-- Døgnlinja (Carbon og Mørk-blå på PC, se #gammelPC): skala fra 00 til 24 med et lyspunkt
+          <!-- Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon, se #gammelPC): skala fra 00 til 24 med et lyspunkt
                for klokka nå. Ren pynt, derfor aria-hidden. Skriptet «Døgnlinja» setter --dl-now. -->
           <div class="dayline" id="dayLine" aria-hidden="true">
             <svg class="dl-ticks" viewBox="0 0 24 8" preserveAspectRatio="none" focusable="false">
@@ -3844,7 +3834,7 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   })();
   // dailyStamp eies nå av shared/markedsdata.js (ekte hentetidspunkt + oppdater-knapp)
 
-  // ── Døgnlinja og lysringen på kortene (Carbon og Mørk-blå på PC, se #gammelPC) ──
+  // ── Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon) og lysringen på kortene (bare PC), se #gammelPC ──
   (function(){
     // Hvor langt døgnet er kommet (0–1). CSS-en flytter lyspunktet dit.
     var dl = document.getElementById('dayLine');
