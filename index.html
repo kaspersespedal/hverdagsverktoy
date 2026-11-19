@@ -2026,7 +2026,7 @@
 <script src="/shared/site-shell.js?v=v2" defer></script>
 <script src="/shared/top-chrome.js?v=v323" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v323" defer></script>
+<script src="/shared/markedsdata.js?v=v327" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -4438,45 +4438,48 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
   /* ═══ Datamodell — 73 verifiserte frister ═══
      n=navn short=kortnavn w=hvem d=dato/regel(HTML) f=frekvens i=viktighet(k/h/m)
-     c=kategori a=målgrupper mo/dm=fast måned+dag (mo:0 = ingen fast dato) p=konsekvens s/u=kilde */
+     c=kategori a=målgrupper mo/dm=fast måned+dag (mo:0 = ingen fast dato) p=konsekvens s/u=kilde
+     {d} i d = datoen i år, regnet ut fra mo/dm (se drule). mo/dm er lovdatoen, ikke en flyttet dag.
+     mv:1 = flyttes til neste virkedag ved helg eller helligdag (se dateIn).
+     yr/dx = gjelder bare året yr; andre år vises dx i stedet, og fristen står ikke i nedtellingen. */
   var D=[
     /* ── MVA ── */
-    {n:"MVA-melding 1. termin (jan–feb)",short:"MVA 1. termin",w:"MVA-registrerte",d:"<b>10. april 2026</b>",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:4,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 2. termin (mar–apr)",short:"MVA 2. termin",w:"MVA-registrerte",d:"<b>10. juni 2026</b>",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:6,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 3. termin (mai–jun)",short:"MVA 3. termin",w:"MVA-registrerte",d:"<b>31. august 2026</b> (sommertermin)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:8,dm:31,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 4. termin (jul–aug)",short:"MVA 4. termin",w:"MVA-registrerte",d:"<b>12. oktober 2026</b> (10. = lørdag)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:10,dm:12,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 5. termin (sep–okt)",short:"MVA 5. termin",w:"MVA-registrerte",d:"<b>10. desember 2026</b>",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:12,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 6. termin (nov–des)",short:"MVA 6. termin",w:"MVA-registrerte",d:"<b>10. februar 2026</b> (for nov–des i fjor)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:2,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA årsoppgave",short:"MVA årsoppgave",w:"Omsetning < 1 mill. (årstermin)",d:"<b>10. mars 2026</b> (for hele fjoråret)",f:"årlig",i:"h",c:"mva",a:["bedrift"],mo:3,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"Søknad om MVA-årstermin",short:"Søknad MVA-årstermin",w:"Vil levere årlig i stedet",d:"<b>1. februar 2026</b> (vindu 10. des–1. feb)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:2,dm:1,p:"Mister årstermin dette året",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/registrere/"},
-    {n:"MVA primærnæring",short:"MVA primærnæring",w:"Jord / skog / fiske",d:"<b>10. april 2026</b> (for hele fjoråret)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:4,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 1. termin (jan–feb)",short:"MVA 1. termin",w:"MVA-registrerte",d:"{d}",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:4,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 2. termin (mar–apr)",short:"MVA 2. termin",w:"MVA-registrerte",d:"{d}",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:6,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 3. termin (mai–jun)",short:"MVA 3. termin",w:"MVA-registrerte",d:"{d} (sommertermin)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:8,dm:31,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 4. termin (jul–aug)",short:"MVA 4. termin",w:"MVA-registrerte",d:"{d}",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:10,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 5. termin (sep–okt)",short:"MVA 5. termin",w:"MVA-registrerte",d:"{d}",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:12,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 6. termin (nov–des)",short:"MVA 6. termin",w:"MVA-registrerte",d:"{d} (for nov–des i fjor)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:2,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA årsoppgave",short:"MVA årsoppgave",w:"Omsetning < 1 mill. (årstermin)",d:"{d} (for hele fjoråret)",f:"årlig",i:"h",c:"mva",a:["bedrift"],mo:3,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"Søknad om MVA-årstermin",short:"Søknad MVA-årstermin",w:"Vil levere årlig i stedet",d:"{d} (vindu 10. des–1. feb)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:2,dm:1,mv:1,p:"Mister årstermin dette året",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/registrere/"},
+    {n:"MVA primærnæring",short:"MVA primærnæring",w:"Jord / skog / fiske",d:"{d} (for hele fjoråret)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:4,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
     {n:"MVA-registrering ved 50 000 kr",short:"MVA-registrering (50 000)",w:"Nystartet ENK / AS",d:"Straks omsetningen passerer <b>50 000 kr</b> siste 12 mnd",f:"hendelse",i:"h",c:"mva",a:["bedrift"],mo:0,p:"Etterberegning; feilfakturert mva",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/registrere/"},
 
     /* ── Skattemelding & skatteoppgjør ── */
-    {n:"Skattemelding — privatperson",short:"Skattemelding (privat)",w:"Lønn / pensjon / uføre",d:"<b>30. april 2026</b>",f:"årlig",i:"k",c:"skm",a:["privat"],mo:4,dm:30,p:"Tvangsmulkt; mister rett til å rette selv",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/"},
-    {n:"Skattemelding — næring og selskap",short:"Skattemelding (næring)",w:"ENK, AS",d:"<b>31. mai</b> → søndag, i praksis <b>1. juni 2026</b>",f:"årlig",i:"k",c:"skm",a:["bedrift"],mo:6,dm:1,p:"Tvangsmulkt",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/skattemelding-naringsdrivende/"},
-    {n:"Utsatt skattemelding — privat",short:"Utsettelse (privat)",w:"Trenger mer tid",d:"Søk før <b>30. april 2026</b> → +1 mnd",f:"årlig",i:"h",c:"skm",a:["privat"],mo:4,dm:30,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsattfrist/"},
-    {n:"Utsatt skattemelding — næring",short:"Utsettelse (næring)",w:"ENK, selskap, regnskapsfører",d:"Søk før <b>31. mai</b> → ny frist <b>30. juni 2026</b>",f:"årlig",i:"h",c:"skm",a:["bedrift"],mo:5,dm:31,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsattfrist/"},
+    {n:"Skattemelding — privatperson",short:"Skattemelding (privat)",w:"Lønn / pensjon / uføre",d:"{d}",f:"årlig",i:"k",c:"skm",a:["privat"],mo:4,dm:30,mv:1,p:"Tvangsmulkt; mister rett til å rette selv",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/"},
+    {n:"Skattemelding — næring og selskap",short:"Skattemelding (næring)",w:"ENK, AS",d:"{d}",f:"årlig",i:"k",c:"skm",a:["bedrift"],mo:5,dm:31,mv:1,p:"Tvangsmulkt",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/skattemelding-naringsdrivende/"},
+    {n:"Utsatt skattemelding — privat",short:"Utsettelse (privat)",w:"Trenger mer tid",d:"Søk før {d} → +1 mnd",f:"årlig",i:"h",c:"skm",a:["privat"],mo:4,dm:30,mv:1,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsattfrist/"},
+    {n:"Utsatt skattemelding — næring",short:"Utsettelse (næring)",w:"ENK, selskap, regnskapsfører",d:"Søk før {d} → ny frist <b>30. juni</b>",f:"årlig",i:"h",c:"skm",a:["bedrift"],mo:5,dm:31,mv:1,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsattfrist/"},
     {n:"Egenretting av skattemelding",short:"Egenretting (3 år)",w:"Oppdaget feil selv",d:"<b>3 år</b> fra leveringsfristen",f:"hendelse",i:"m",c:"skm",a:["privat","bedrift"],mo:0,p:"Kan ikke lenger endre meldingen selv",s:"Skatteforvaltningsloven §9-4",u:"https://lovdata.no/lov/2016-05-27-14/§9-4"},
-    {n:"Skatteoppgjør — penger til gode",short:"Skatteoppgjør til gode",w:"Alle",d:"Løpende; alle senest <b>1. desember 2026</b>",f:"årlig",i:"h",c:"skm",a:["privat","bedrift"],mo:12,dm:1,p:"Har du restskatt, løper det rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/"},
-    {n:"Skattekort for neste år",short:"Skattekort neste år",w:"Alle med lønn eller pensjon",d:"Klart ca. <b>15. desember 2026</b>",f:"årlig",i:"m",c:"skm",a:["privat"],mo:12,dm:15,p:"Feil skattekort gir feil trekk fra januar",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/"},
+    {n:"Skatteoppgjør — penger til gode",short:"Skatteoppgjør til gode",w:"Alle",d:"Løpende; alle senest {d}",f:"årlig",i:"h",c:"skm",a:["privat","bedrift"],mo:12,dm:1,p:"Har du restskatt, løper det rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/"},
+    {n:"Skattekort for neste år",short:"Skattekort neste år",w:"Alle med lønn eller pensjon",d:"Klart ca. {d}",f:"årlig",i:"m",c:"skm",a:["privat"],mo:12,dm:15,yr:2026,dx:"Kommer i desember. Skatteetaten publiserer datoen hvert år.",p:"Feil skattekort gir feil trekk fra januar",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/"},
 
     /* ── Forskuddsskatt & restskatt ── */
-    {n:"Forskuddsskatt ENK/privat — 1. termin",short:"Forskuddsskatt 1. termin",w:"ENK, ANS/DA, privat",d:"<b>16. mars 2026</b> (15. = søndag)",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:3,dm:16,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
-    {n:"Forskuddsskatt ENK/privat — 2. termin",short:"Forskuddsskatt 2. termin",w:"ENK, ANS/DA, privat",d:"<b>15. juni 2026</b>",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:6,dm:15,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
-    {n:"Forskuddsskatt ENK/privat — 3. termin",short:"Forskuddsskatt 3. termin",w:"ENK, ANS/DA, privat",d:"<b>15. september 2026</b>",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:9,dm:15,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
-    {n:"Forskuddsskatt ENK/privat — 4. termin",short:"Forskuddsskatt 4. termin",w:"ENK, ANS/DA, privat",d:"<b>15. desember 2026</b>",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:12,dm:15,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
-    {n:"Forskuddsskatt AS — 1. termin",short:"Forskuddsskatt AS 1.",w:"AS / upersonlige",d:"<b>16. februar 2026</b> (15. = søndag)",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:2,dm:16,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/forskuddsskatt-for-aksjeselskap-og-andre/"},
-    {n:"Forskuddsskatt AS — 2. termin",short:"Forskuddsskatt AS 2.",w:"AS / upersonlige",d:"<b>15. april 2026</b>",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:4,dm:15,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/forskuddsskatt-for-aksjeselskap-og-andre/"},
-    {n:"Tilleggsforskudd (unngå rente)",short:"Tilleggsforskudd",w:"Venter restskatt",d:"<b>31. mai</b> → betal innen <b>1. juni 2026</b>",f:"årlig",i:"m",c:"fsk",a:["privat","bedrift"],mo:5,dm:31,p:"Rente på restskatt du kunne unngått",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/tilleggsforskudd/"},
-    {n:"Restskatt — 1. faktura",short:"Restskatt 1. faktura",w:"Skylder skatt fra i fjor",d:"Oppgjør ≤ juni → <b>20. august 2026</b>",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:8,dm:20,p:"HELE restskatten forfaller straks + rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
-    {n:"Restskatt — 2. faktura",short:"Restskatt 2. faktura",w:"Restskatt over 1 000 kr",d:"Oppgjør ≤ juni → <b>24. september 2026</b>",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:9,dm:24,p:"Forsinkelsesrente på restbeløpet",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 1. termin",short:"Forskuddsskatt 1. termin",w:"ENK, ANS/DA, privat",d:"{d}",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:3,dm:15,mv:1,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 2. termin",short:"Forskuddsskatt 2. termin",w:"ENK, ANS/DA, privat",d:"{d}",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:6,dm:15,mv:1,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 3. termin",short:"Forskuddsskatt 3. termin",w:"ENK, ANS/DA, privat",d:"{d}",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:9,dm:15,mv:1,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 4. termin",short:"Forskuddsskatt 4. termin",w:"ENK, ANS/DA, privat",d:"{d}",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:12,dm:15,mv:1,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
+    {n:"Forskuddsskatt AS — 1. termin",short:"Forskuddsskatt AS 1.",w:"AS / upersonlige",d:"{d}",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:2,dm:15,mv:1,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/forskuddsskatt-for-aksjeselskap-og-andre/"},
+    {n:"Forskuddsskatt AS — 2. termin",short:"Forskuddsskatt AS 2.",w:"AS / upersonlige",d:"{d}",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:4,dm:15,mv:1,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/forskuddsskatt-for-aksjeselskap-og-andre/"},
+    {n:"Tilleggsforskudd (unngå rente)",short:"Tilleggsforskudd",w:"Venter restskatt",d:"Betal innen {d}",f:"årlig",i:"m",c:"fsk",a:["privat","bedrift"],mo:5,dm:31,mv:1,p:"Rente på restskatt du kunne unngått",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/tilleggsforskudd/"},
+    {n:"Restskatt — 1. faktura",short:"Restskatt 1. faktura",w:"Skylder skatt fra i fjor",d:"Oppgjør ≤ juni → {d}",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:8,dm:20,mv:1,p:"HELE restskatten forfaller straks + rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
+    {n:"Restskatt — 2. faktura",short:"Restskatt 2. faktura",w:"Restskatt over 1 000 kr",d:"Oppgjør ≤ juni → {d}",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:9,dm:24,mv:1,p:"Forsinkelsesrente på restbeløpet",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
 
     /* ── Årsregnskap & selskap ── */
-    {n:"Årsregnskap til Regnskapsregisteret",short:"Årsregnskap",w:"Regnskapspliktige",d:"<b>31. juli 2026</b> — kan IKKE forlenges",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:7,dm:31,p:"Forsinkelsesgebyr; styreansvar",s:"Brønnøysundregistrene",u:"https://www.brreg.no/en/submission-of-annual-accounts/"},
-    {n:"Ordinær generalforsamling AS",short:"Generalforsamling AS",w:"Alle AS / ASA",d:"<b>30. juni 2026</b> (6 mnd etter årsslutt)",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:6,dm:30,p:"Brudd på aksjeloven §5-5",s:"Aksjeloven §5-5",u:"https://lovdata.no/dokument/NL/lov/1997-06-13-44/KAPITTEL_5"},
-    {n:"Aksjonærregisteroppgaven (RF-1086)",short:"Aksjonærregisteroppgaven",w:"AS / ASA, sparebanker",d:"<b>31. januar 2026</b> (for i fjor)",f:"årlig",i:"h",c:"reg",a:["bedrift"],mo:1,dm:31,p:"Tvangsmulkt; feil skatt for aksjonærene",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/forms/aksjonarregisteroppgaven/"},
-    {n:"SkatteFUNN — søknad",short:"SkatteFUNN",w:"AS / næring med FoU",d:"<b>1. september 2026</b> (garantifrist)",f:"årlig",i:"m",c:"reg",a:["bedrift"],mo:9,dm:1,p:"Mister garantert behandling for året",s:"Forskningsrådet",u:"https://www.forskningsradet.no/skattefunn/"},
+    {n:"Årsregnskap til Regnskapsregisteret",short:"Årsregnskap",w:"Regnskapspliktige",d:"{d} — kan IKKE forlenges",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:7,dm:31,p:"Forsinkelsesgebyr; styreansvar",s:"Brønnøysundregistrene",u:"https://www.brreg.no/en/submission-of-annual-accounts/"},
+    {n:"Ordinær generalforsamling AS",short:"Generalforsamling AS",w:"Alle AS / ASA",d:"{d} (6 mnd etter årsslutt)",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:6,dm:30,p:"Brudd på aksjeloven §5-5",s:"Aksjeloven §5-5",u:"https://lovdata.no/dokument/NL/lov/1997-06-13-44/KAPITTEL_5"},
+    {n:"Aksjonærregisteroppgaven (RF-1086)",short:"Aksjonærregisteroppgaven",w:"AS / ASA, sparebanker",d:"{d} (for i fjor)",f:"årlig",i:"h",c:"reg",a:["bedrift"],mo:1,dm:31,mv:1,p:"Tvangsmulkt; feil skatt for aksjonærene",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/forms/aksjonarregisteroppgaven/"},
+    {n:"SkatteFUNN — søknad",short:"SkatteFUNN",w:"AS / næring med FoU",d:"{d} (garantifrist)",f:"årlig",i:"m",c:"reg",a:["bedrift"],mo:9,dm:1,p:"Mister garantert behandling for året",s:"Forskningsrådet",u:"https://www.forskningsradet.no/skattefunn/"},
     {n:"Oppbevaring — primærdokumentasjon",short:"Oppbevaring primærdok.",w:"Bokføringspliktige",d:"<b>5 år</b> etter regnskapsårets slutt",f:"løpende",i:"m",c:"reg",a:["bedrift"],mo:0,p:"Bokføringsovertredelse; gebyr",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/rettskilder/type/kunngjoringer/oppbevaringstiden-for-regnskapsmateriale-endres-fra-ti-ar-til-fem-ar/"},
     {n:"Oppbevaring — sekundærdokumentasjon",short:"Oppbevaring sekundærdok.",w:"Bokføringspliktige",d:"<b>3 år 6 mnd</b> etter regnskapsårets slutt",f:"løpende",i:"m",c:"reg",a:["bedrift"],mo:0,p:"Bokføringsovertredelse",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/rettskilder/type/kunngjoringer/oppbevaringstiden-for-regnskapsmateriale-endres-fra-ti-ar-til-fem-ar/"},
 
@@ -4490,13 +4493,13 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     {n:"Yrkesskadeforsikring",short:"Yrkesskadeforsikring",w:"Har ansatte",d:"Fra <b>første ansettelse</b> (løpende plikt)",f:"løpende",i:"h",c:"amld",a:["bedrift"],mo:0,p:"Arbeidsgiver hefter personlig for skader",s:"Lovdata (yrkesskadeforsikringsloven)",u:"https://lovdata.no/lov/1989-06-16-65"},
 
     /* ── Privatøkonomi ── */
-    {n:"BSU — innskudd for årets fradrag",short:"BSU-innskudd",w:"Til og med året du fyller 33",d:"<b>31. desember 2026</b> — 10 % fradrag",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets skattefradrag",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/bank-og-lan/bsu/"},
-    {n:"IPS — innbetaling",short:"IPS-innbetaling",w:"18–75 år",d:"<b>31. desember 2026</b> — inntil 25 000 kr",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets utsatt-skatt-fordel",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/arbeid-trygd-og-pensjon/pensjon-og-uforetrygd/ny-ordning-for-skattefavorisert-individuell-sparing-til-pensjon/"},
+    {n:"BSU — innskudd for årets fradrag",short:"BSU-innskudd",w:"Til og med året du fyller 33",d:"{d} — 10 % fradrag",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets skattefradrag",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/bank-og-lan/bsu/"},
+    {n:"IPS — innbetaling",short:"IPS-innbetaling",w:"18–75 år",d:"{d} — inntil 25 000 kr",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets utsatt-skatt-fordel",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/arbeid-trygd-og-pensjon/pensjon-og-uforetrygd/ny-ordning-for-skattefavorisert-individuell-sparing-til-pensjon/"},
     {n:"Frikort → bytt til skattekort",short:"Frikortgrense (100 000)",w:"Lav inntekt",d:"Bytt før du passerer <b>100 000 kr</b> (feriepenger teller med)",f:"hendelse",i:"h",c:"priv",a:["privat"],mo:0,p:"For lite trekk → restskatt",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/frikort/"},
-    {n:"Salg av aksjer/fond før nyttår",short:"Aksjesalg før nyttår",w:"Verdipapirer utenfor ASK",d:"<b>31. desember 2026</b> — realisering treffer årets skatt",f:"årlig",i:"m",c:"priv",a:["privat"],mo:12,dm:31,p:"Gevinst/tap havner på neste års skatt",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/aksjer-og-verdipapirer/"},
-    {n:"Lånekassen — hovedsøknad (høst)",short:"Lånekassen (høst)",w:"Studenter / elever",d:"<b>15. november 2026</b> (høstsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:11,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
-    {n:"Lånekassen — hovedsøknad (vår)",short:"Lånekassen (vår)",w:"Studenter / elever",d:"<b>15. mars 2026</b> (vårsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:3,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
-    {n:"Lånekassen — inntektsgrense",short:"Lånekassen inntektsgrense",w:"Mottar støtte",d:"2026: <b>234 821 kr</b> (helår) / 587 053 kr (≤ 7 mnd)",f:"årlig",i:"m",c:"priv",a:["student"],mo:0,p:"Stipend gjøres om til lån",s:"Lånekassen",u:"https://lanekassen.no/nb-NO/stipend-og-lan/inntekt-og-formue/"},
+    {n:"Salg av aksjer/fond før nyttår",short:"Aksjesalg før nyttår",w:"Verdipapirer utenfor ASK",d:"{d} — realisering treffer årets skatt",f:"årlig",i:"m",c:"priv",a:["privat"],mo:12,dm:31,p:"Gevinst/tap havner på neste års skatt",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/aksjer-og-verdipapirer/"},
+    {n:"Lånekassen — hovedsøknad (høst)",short:"Lånekassen (høst)",w:"Studenter / elever",d:"{d} (høstsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:11,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
+    {n:"Lånekassen — hovedsøknad (vår)",short:"Lånekassen (vår)",w:"Studenter / elever",d:"{d} (vårsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:3,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
+    {n:"Lånekassen — inntektsgrense",short:"Lånekassen inntektsgrense",w:"Mottar støtte",d:"2026: <b>234 821 kr</b> (helår) / 587 053 kr (≤ 7 mnd)",f:"årlig",i:"m",c:"priv",a:["student"],mo:0,yr:2026,dx:"Grensen for i år er ikke lagt inn ennå. Se Lånekassen.",p:"Stipend gjøres om til lån",s:"Lånekassen",u:"https://lanekassen.no/nb-NO/stipend-og-lan/inntekt-og-formue/"},
     {n:"Lånekassen — nedbetaling",short:"Lånekassen nedbetaling",w:"Tidligere studenter",d:"Fast forfall hver måned (standard <b>den 15.</b>)",f:"månedlig",i:"m",c:"priv",a:["privat","student"],mo:0,monthly:15,p:"Purregebyr og renter",s:"Lånekassen",u:"https://lanekassen.no/"},
 
     /* ── Juridiske frister ── */
@@ -4549,7 +4552,6 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   var MOF=["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"];
   var MOL=["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
   var WK=["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"];
-  var WHEEL_YEAR=2026;
 
   /* ═══ Hjelpere ═══ */
   function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
@@ -4571,11 +4573,52 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
   function makeState(){return {q:"",filter:"alle",today:new Date(),count:6,feat:true,prevOverflow:"",trigger:null};}
 
-  /* Helg → neste virkedag. Gjelder kun de gjentakende fristene under;
-     de faste mo/dm-datoene i D er allerede notert med riktig virkedag. */
+  /* Første påskedag (gregoriansk, Meeus/Jones/Butcher). */
+  function easter(y){
+    var a=y%19,b=Math.floor(y/100),c=y%100,e=b%4,f=Math.floor((b+8)/25),
+        g=Math.floor((b-f+1)/3),h=(19*a+b-Math.floor(b/4)-g+15)%30,
+        l=(32+2*e+2*Math.floor(c/4)-h-c%4)%7,m=Math.floor((a+11*h+22*l)/451),
+        n=h+l-7*m+114;
+    return new Date(y,Math.floor(n/31)-1,n%31+1);
+  }
+  /* Helligdager og lovfestede høytidsdager (1. og 17. mai) som "måned-dag". */
+  var HOL={};
+  function isHoliday(d){
+    var y=d.getFullYear();
+    if(!HOL[y]){
+      var e=easter(y),s={"1-1":1,"5-1":1,"5-17":1,"12-25":1,"12-26":1};
+      [-3,-2,0,1,39,49,50].forEach(function(n){
+        var x=new Date(y,e.getMonth(),e.getDate()+n);s[(x.getMonth()+1)+"-"+x.getDate()]=1;
+      });
+      HOL[y]=s;
+    }
+    return !!HOL[y][(d.getMonth()+1)+"-"+d.getDate()];
+  }
+  /* Lørdag, søndag eller helligdag → neste virkedag. */
   function workday(d){
-    while(d.getDay()===6||d.getDay()===0)d.setDate(d.getDate()+1);
+    while(d.getDay()===6||d.getDay()===0||isHoliday(d))d.setDate(d.getDate()+1);
     return d;
+  }
+  /* Fristdatoen i år y, eller null når fristen bare er kjent for et annet år (yr). */
+  function dateIn(x,y){
+    if(x.yr&&x.yr!==y)return null;
+    var d=new Date(y,x.mo-1,x.dm);
+    return x.mv?workday(d):d;
+  }
+  /* Datoformat på sidens språk (core.js setter <html lang>). */
+  var fmtL="",fmtF=null;
+  function fmtDate(d){
+    var l=document.documentElement.lang||"nb";
+    if(l==="en")l="en-GB";
+    try{ if(l!==fmtL){fmtF=new Intl.DateTimeFormat(l,{day:"numeric",month:"long",year:"numeric"});fmtL=l;} return fmtF.format(d); }
+    catch(e){ return d.getDate()+". "+MOL[d.getMonth()]+" "+d.getFullYear(); }
+  }
+  /* d-teksten for kortet: {d} byttes med datoen i år. */
+  function drule(x,st){
+    var y=st.today.getFullYear();
+    if(x.yr&&x.yr!==y)return esc(x.dx);
+    if(x.d.indexOf("{d}")<0)return x.d;
+    return x.d.replace("{d}","<b>"+esc(fmtDate(dateIn(x,y)))+"</b>");
   }
   /* De hyppigste fristene (A-melding, arbeidsgiveravgift, studielån) har ingen
      enkelt mo/dm og falt derfor helt ut av «neste frister» — de gjentar seg
@@ -4599,8 +4642,8 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
       });
       return best;
     }
-    d=new Date(y,x.mo-1,x.dm);
-    if(d0(d)<d0(today))d=new Date(y+1,x.mo-1,x.dm);
+    d=dateIn(x,y);
+    if(!d||d0(d)<d0(today))d=dateIn(x,y+1);
     return d;
   }
   function upcoming(st){
@@ -4615,7 +4658,7 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   function passes(x,st){
     if(st.filter!=="alle" && x.a.indexOf(st.filter)<0)return false;
     if(st.q){
-      var hay=(x.n+" "+x.w+" "+x.short+" "+strip(x.d)+" "+x.s+" "+x.f+" "+catTitle(x.c)+" "+x.a.map(function(a){return AUD[a]||a;}).join(" ")).toLowerCase();
+      var hay=(x.n+" "+x.w+" "+x.short+" "+strip(drule(x,st))+" "+x.s+" "+x.f+" "+catTitle(x.c)+" "+x.a.map(function(a){return AUD[a]||a;}).join(" ")).toLowerCase();
       // Valgt språk: søk også i oversettelsen (tom på norsk, der _ph ikke finnes).
       var en=[x.n,x.w,x.short,x.s,x.f,catTitle(x.c)].concat(x.d.split(/<[^>]+>/)).map(tr).join(" ").trim();
       if(en)hay+=" "+en.toLowerCase();
@@ -4687,24 +4730,26 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
   /* ═══ Modal-byggere ═══ */
   function renderWheel(st){
-    var cur=(st.today.getFullYear()===WHEEL_YEAR)?st.today.getMonth():-1;
+    var y=st.today.getFullYear(),cur=st.today.getMonth();
     var out="";
     for(var m=0;m<12;m++){
-      var items=D.filter(function(x){return x.mo===m+1 && passes(x,st);}).sort(function(a,b){return a.dm-b.dm;});
+      var items=[];
+      D.forEach(function(x){var dt=x.mo&&dateIn(x,y);if(dt&&dt.getMonth()===m&&passes(x,st))items.push({x:x,dd:dt.getDate()});});
+      items.sort(function(a,b){return a.dd-b.dd;});
       var lis=items.length
-        ? items.map(function(x){return '<li><span class="dd">'+x.dm+'.</span><span class="nn">'+esc(x.short)+'</span></li>';}).join("")
+        ? items.map(function(o){return '<li><span class="dd">'+o.dd+'.</span><span class="nn">'+esc(o.x.short)+'</span></li>';}).join("")
         : '<li class="empty"><span class="dd">—</span></li>';
       out+='<div class="fr-mon'+(m===cur?' cur':'')+'"><h4><span>'+MOF[m]+'</span><span class="c">'+(items.length||"")+'</span></h4><ul>'+lis+'</ul></div>';
     }
     return out;
   }
-  function renderCard(x){
+  function renderCard(x,st){
     var im=IMP[x.i];
     return '<article class="fr-card imp-'+x.i+'">'
       +'<div class="fr-card-h"><h4 class="fr-card-name">'+esc(x.n)+'</h4>'
         +'<span class="fr-imp '+x.i+'" title="'+esc(im.f)+'">'+esc(im.s)+'</span></div>'
       +'<div class="fr-card-who">'+esc(x.w)+'</div>'
-      +'<div class="fr-drule">'+x.d+'</div>'
+      +'<div class="fr-drule">'+drule(x,st)+'</div>'
       +'<div class="fr-card-meta"><span class="fr-freq">'+esc(x.f)+'</span>'
         +x.a.map(function(a){return '<span class="fr-aud">'+audLabel(a)+'</span>';}).join("")+'</div>'
       +'<div class="fr-miss"><span class="fr-miss-l" data-i18n="fr.miss">'+T("fr.miss","Hvis du er for sen")+'</span>'+esc(x.p)+'</div>'
@@ -4721,11 +4766,16 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
       any=true;
       html+='<section class="fr-cat"><div class="fr-cat-h"><h3>'+esc(cat.t)+'</h3>'
         +'<span class="fr-badge">'+items.length+'</span></div>'
-        +'<div class="fr-cards">'+items.map(renderCard).join("")+'</div></section>';
+        +'<div class="fr-cards">'+items.map(function(x){return renderCard(x,st);}).join("")+'</div></section>';
     });
     return {html:html,any:any};
   }
   function renderModal(modal,st){
+    /* Titlene følger året; språkfilene har et fast årstall. */
+    modal.querySelectorAll('[data-i18n="m.title"],[data-i18n="m.wheel"]').forEach(function(el){
+      var t=el.textContent,n=t.replace(/\b20\d\d\b/,String(st.today.getFullYear()));
+      if(n!==t)el.textContent=n;
+    });
     modal.querySelector("[data-fr-wheel]").innerHTML=renderWheel(st);
     var cats=renderCats(st);
     modal.querySelector("[data-fr-cats]").innerHTML=cats.html;
