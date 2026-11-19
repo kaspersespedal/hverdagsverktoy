@@ -673,7 +673,7 @@ input.sf-num:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in 
         </ul>
         <p>Kalkulatoren viser da <b>135&nbsp;840&nbsp;kr</b> i skatt. Den har ikke felt for renteinntekter og foreldrefradrag. Tar du dem med, blir svaret det samme som over:</p>
         <ul>
-          <li>135&nbsp;840 − 22&nbsp;% av foreldrefradraget (2&nbsp;904) + 22&nbsp;% av renteinntektene (515) = <b>133&nbsp;450&nbsp;kr</b></li>
+          <li>135&nbsp;840 − 22&nbsp;% av foreldrefradraget (2&nbsp;904) + 22&nbsp;% av renteinntektene (515) = <b>133&nbsp;451&nbsp;kr</b>. Kronen som skiller, er avrunding.</li>
         </ul>
       </div>
     </section>
@@ -729,7 +729,7 @@ input.sf-num:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in 
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/steg-guide.js?v=v1" defer></script>
 <!-- Ingen data-varsel: skattemeldingen for 2026 leveres i 2027, og da er 2026-satsene de riktige. -->
-<script src="/shared/satser.js?v=v1"></script>
+<script src="/shared/satser.js?v=v2"></script>
 <script>
 // ── Lag skattemeldingen: regner skatten for 2026 mens du fyller inn ──
 // Satsene leses fra shared/satser.js, som inntektskalkulatoren (/skatt/inntekt/). Tabellen «Satsene vi har brukt» nederst på siden er tekst og må følge med.
@@ -773,7 +773,7 @@ input.sf-num:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in 
     o.trinn = Math.round(TRINN.reduce(function(t, x){ return t + Math.max(0, Math.min(o.lonn, x[1]) - x[0]) * x[2]; }, 0));
     o.trygd = Math.round(o.lonn <= TRYGD_NEDRE ? 0 : Math.min(o.lonn * TRYGD, (o.lonn - TRYGD_NEDRE) * TRYGD_OPP));
     o.bsu = v.smEier ? 0 : Math.round(Math.min(v.smBsu, BSU_MAX) * BSU_RATE);
-    o.bsu = Math.min(o.bsu, o.skattAlm + o.trinn);   // BSU kan ikke gi mer enn skatten
+    o.bsu = Math.min(o.bsu, o.skattAlm + o.trinn + o.trygd);   // BSU kan ikke gi mer enn inntektsskatt og trygdeavgift (sktl. § 16-10)
     o.skatt = o.skattAlm + o.trinn + o.trygd - o.bsu;
     o.igjen = o.trekk - o.skatt;
     return o;

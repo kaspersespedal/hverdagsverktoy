@@ -64,6 +64,7 @@
       fagforening:      8700,
       ips:              25000,   // individuell sparing til pensjon
       gaver:            25000,   // gaver til frivillige organisasjoner
+      gaverMin:         500,     // gaver under dette gir ikke fradrag (skatteloven § 6-50)
       bsuSats:          0.10,
       bsuMaksAar:       27500,
       bsuMaksTotalt:    300000,

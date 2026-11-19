@@ -478,7 +478,7 @@ footer em{font-style:italic}
   </div>
 </footer>
 
-<script src="/shared/satser.js?v=v1" data-varsel="skatt g"></script>
+<script src="/shared/satser.js?v=v2" data-varsel="skatt g"></script>
 <script>
 (function(){
   'use strict';
@@ -787,13 +787,13 @@ footer em{font-style:italic}
     {
       id:'foreldre', col:'inntekt', label:'Foreldrepenger',
       eyebrow:'Inntekt', title:'Foreldrepenger fra NAV',
-      blurb:'NAV utbetaler en månedlig sats i hele stønadsperioden. 100 % gir full sats over 49 uker, 80 % gir lavere sats over 59 uker. Grunnlaget er begrenset til 6G (819 294 kr i 2026).',
+      blurb:'NAV utbetaler en månedlig sats i hele stønadsperioden. 100 % gir full sats over 49 uker, 80 % gir lavere sats over 61 uker og 1 dag. Grunnlaget er begrenset til 6G (819 294 kr i 2026).',
       resLabel:'Per måned fra NAV', resSub:'Legges inn som inntekt i stønadsperioden',
       source:{href:'/personlig/foreldrepenger/', text:'Åpne full foreldrepenger-kalkulator'},
       fields:[
         {id:'brutto', label:'Brutto årslønn', unit:'kr/år', def:620000, money:true},
         {id:'dekning', label:'Dekningsgrad', labelKey:'trPersonligBudsjettDekning', type:'select', def:'100', options:[
-          {v:'100', label:'100 % — 49 uker (full sats)'}, {v:'80', label:'80 % — 59 uker (lavere sats)'}
+          {v:'100', label:'100 % — 49 uker (full sats)'}, {v:'80', label:'80 % — 61 uker og 1 dag (lavere sats)'}
         ]}
       ],
       compute:function(v){
@@ -806,7 +806,7 @@ footer em{font-style:italic}
         var lines = [
           {l:'Grunnlag (maks 6G)', v: fmtKr(grunnlag)},
           {l:tr('trPersonligBudsjettDekning','Dekningsgrad'), v: pct + ' %'},
-          {l:'Lengde', v: (pct === 100 ? 49 : 59) + ' uker'}
+          {l:'Lengde', v: pct === 100 ? '49 uker' : '61 uker og 1 dag'}
         ];
         if(over6G > 0){ lines.push({l:'Over 6G (ikke dekket)', v: fmtKr(over6G)}); }
         return { amount: aarSats/12, lines: lines };

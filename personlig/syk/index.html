@@ -443,7 +443,7 @@ body.focus-mode > footer{display:none}
   </div>
 </footer>
 
-<script src="/shared/satser.js?v=v1" data-varsel="g"></script>
+<script src="/shared/satser.js?v=v2" data-varsel="g"></script>
 <script>
 (function(){
   'use strict';
@@ -470,7 +470,10 @@ body.focus-mode > footer{display:none}
     var fullMnd = brutto / 12;
 
     var arbDays = Math.min(sykDager, ARB_DAYS);
-    var arbSum  = arbDays * dagSats;
+    // Uten avtale om full lønn plikter arbeidsgiveren bare å betale av lønn opp til 6G, også de første 16 dagene (ftrl. § 8-10).
+    // Selvstendige har ingen arbeidsgiver: de første 16 dagene er ventetid uten utbetaling (§ 8-34).
+    var arbDagSats = status === 'selvstendig' ? 0 : (arbDekker ? dagSats : Math.min(brutto, SIX_G) / 260);
+    var arbSum  = arbDays * arbDagSats;
 
     var navDays = Math.max(0, Math.min(sykDager - ARB_DAYS, MAX_NAV_DAYS));
     var navGrunnlag = Math.min(brutto, SIX_G);
@@ -490,12 +493,12 @@ body.focus-mode > footer{display:none}
 
     return {
       dagSats:dagSats, fullMnd:fullMnd,
-      arbDays:arbDays, arbSum:arbSum,
+      arbDays:arbDays, arbSum:arbSum, arbDagSats:arbDagSats,
       navDays:navDays, navSum:navSum, navDagSats:navDagSats, navMnd:navMnd,
       arbTopUpSum:arbTopUpSum, arbMnd:arbMnd, sumNavPeriodeMnd:sumNavPeriodeMnd,
       overskudd:overskudd, overGrense:brutto > SIX_G,
       selvKarens:selvKarens,
-      sumIalt:arbSum + navSum + arbTopUpSum - selvKarens,
+      sumIalt:arbSum + navSum + arbTopUpSum,
       overflow:sykDager > TOTAL_MAX
     };
   }
@@ -565,7 +568,7 @@ body.focus-mode > footer{display:none}
       '          </button>',
       '          <button type="button" class="ks-mode" data-arb="false" aria-pressed="false">',
       '            <span class="mtitle" data-i18n="sykArbIkke">Dekker ikke</span>',
-      '            <span class="mdesc" data-i18n="sykArbIkkeDesc">Du faller til 6G-taket fra dag 17. Sjekk arbeidskontrakten din.</span>',
+      '            <span class="mdesc" data-i18n="sykArbIkkeDesc">Du får bare lønn opp til 6G-taket, fra første sykedag. Sjekk arbeidskontrakten din.</span>',
       '          </button>',
       '        </div>',
       '      </section>',
@@ -644,7 +647,9 @@ body.focus-mode > footer{display:none}
     var restFlex = Math.max(0, TOTAL_MAX - arbFlex - navFlex);
     var bar = $('#syk-bar');
     var parts = [];
-    if(arbFlex > 0){
+    if(arbFlex > 0 && state.status === 'selvstendig'){
+      parts.push('<div class="syk-bar-seg tom" style="flex:'+arbFlex+'"><span class="syk-bar-label">Ventetid</span></div>');
+    } else if(arbFlex > 0){
       parts.push('<div class="syk-bar-seg arb" style="flex:'+arbFlex+'"><span class="syk-bar-label">Arbg.</span><span class="syk-bar-days">'+(arbFlex > 8 ? r.arbDays+' d' : '')+'</span></div>');
     }
     if(navFlex > 0){
@@ -699,11 +704,16 @@ body.focus-mode > footer{display:none}
 
     // Result eyebrow + net
     var resHdr = $('[data-syk="resHdr"]');
-    resHdr.textContent = r.navDays > 0 ? 'Per måned i NAV-perioden' : 'Full lønn (arbeidsgiver)';
-    $('[data-syk="resMnd"]').textContent = fmtKr(r.navDays > 0 ? r.sumNavPeriodeMnd : r.fullMnd);
+    var selv = state.status === 'selvstendig';
+    resHdr.textContent = r.navDays > 0 ? 'Per måned i NAV-perioden'
+      : selv ? 'Ventetid (ingen utbetaling)'
+      : r.arbDagSats < r.dagSats ? 'Lønn opp til 6G (arbeidsgiver)' : 'Full lønn (arbeidsgiver)';
+    $('[data-syk="resMnd"]').textContent = fmtKr(r.navDays > 0 ? r.sumNavPeriodeMnd : r.arbDagSats * 260 / 12);
     var sub = $('[data-syk="resSub"]');
     if(r.navDays > 0){
       sub.innerHTML = tx('trPersonligSykSubNav', 'NAV utbetaler i <b>{n} dager</b>', r.navDays) + (r.arbMnd > 0 ? ' · <span style="color:var(--accent-2)">+'+fmtKr(r.arbMnd)+'</span> fra arbeidsgiver' : '');
+    } else if(selv){
+      sub.textContent = 'Selvstendige får ikke sykepenger de første 16 dagene.';
     } else {
       sub.innerHTML = tx('trPersonligSykSubArb', 'Arbeidsgiver dekker hele perioden — <b>{n} dager</b>', r.arbDays);
     }
@@ -823,11 +833,13 @@ body.focus-mode > footer{display:none}
   function rect(x1, y1, x2, y2){ return x2 - x1 > 0.3 && y2 - y1 > 0.3 ? 'M' + f1(x1) + ',' + f1(y1) + ' H' + f1(x2) + ' V' + f1(y2) + ' H' + f1(x1) + ' Z ' : ''; }
   // Kalkulatorens sykCalc(): arbeidsgiveren dag 1–16, NAV dag 17–264 opp til 6G (80 % for selvstendig)
   function calc(S, status, dager, arbDekker){
-    var dagSats = S / 260, arbDays = Math.min(dager, 16), arbSum = arbDays * dagSats;
+    var dagSats = S / 260, arbDays = Math.min(dager, 16);
+    // Uten avtale om full lønn betaler arbeidsgiveren bare av lønn opp til 6G; selvstendige har ventetid uten utbetaling
+    var arbSum = arbDays * (status === 'selvstendig' ? 0 : (arbDekker ? dagSats : Math.min(S, SIX) / 260));
     var navDays = Math.max(0, Math.min(dager - 16, 248)), navDagSats = Math.min(S, SIX) * (status === 'selvstendig' ? 0.8 : 1) / 260, navSum = navDays * navDagSats;
     var overskudd = Math.max(0, S - SIX), dekker = arbDekker && status !== 'selvstendig';
-    var topUp = dekker ? navDays * overskudd / 260 : 0, karens = status === 'selvstendig' ? arbDays * dagSats : 0;
-    return {dagSats:dagSats, arbDays:arbDays, arbSum:arbSum, navDays:navDays, navSum:navSum, topUp:topUp, sum:arbSum + navSum + topUp - karens, navMnd:navDagSats * 260 / 12, arbMnd:dekker ? overskudd / 12 : 0};
+    var topUp = dekker ? navDays * overskudd / 260 : 0;
+    return {dagSats:dagSats, arbDays:arbDays, arbSum:arbSum, navDays:navDays, navSum:navSum, topUp:topUp, sum:arbSum + navSum + topUp, navMnd:navDagSats * 260 / 12, arbMnd:dekker ? overskudd / 12 : 0};
   }
   // Legger en etikett på første ledige kandidat; text kan være en liste med varianter, lengst først
   function put(st, text, on, cands){
@@ -880,7 +892,7 @@ body.focus-mode > footer{display:none}
 
     var dm = Math.min(dag, 264), aapOn = dag > 264;
     var A = calc(S, 'ansatt', dag, arb), B = calc(S, 'selvstendig', dag, arb);
-    var sm = S / 12, cm = SIX / 12, mlM = Math.max(0, sm - cm), selM = B.navMnd, gapM = sm - selM, nt = Math.min(sm, cm);
+    var sm = S / 12, cm = SIX / 12, mlM = Math.max(0, sm - cm), selM = B.navMnd, gapM = sm - selM, nt = Math.min(sm, cm), agM = arb ? sm : nt;
     var T = {
       nav100:ph('NAV, 100 % opp til 6G'), arb100:ph('Arbeidsgiver, 100 %'), arbK:ph('Arbeidsgiver'),
       six:t('lrnSySix', '6G-tak: 6 × 136 549 = 819 294 kr i året ({m} kr/mnd)', {m:fmt(cm)}),
@@ -901,8 +913,8 @@ body.focus-mode > footer{display:none}
       var X = function(dd){ return x0 + dd * (xe - x0) / 264; }, Y = function(v, tr){ return yB[tr] - v / yMax * Ht; };
       var xm = X(dm), x16 = X(16);
       var cut = function(xa, xb, ya, yb){ return {F:xm > xa ? rect(xa, ya, Math.min(xb, xm), yb) : '', L:xm < xb ? rect(Math.max(xa, xm), ya, xb, yb) : ''}; };
-      var ag = cut(x0, x16, Y(sm, 0), yB[0]), nv = cut(x16, xe, Y(nt, 0), yB[0]);
-      var mlAll = over ? rect(x16, Y(sm, 0), xe, Y(cm, 0)) : '', ml = over && arb ? cut(x16, xe, Y(sm, 0), Y(cm, 0)) : {F:'', L:''};
+      var ag = cut(x0, x16, Y(agM, 0), yB[0]), nv = cut(x16, xe, Y(nt, 0), yB[0]);
+      var mlAll = over ? rect(arb ? x16 : x0, Y(sm, 0), xe, Y(cm, 0)) : '', ml = over && arb ? cut(x16, xe, Y(sm, 0), Y(cm, 0)) : {F:'', L:''};
       var nv2 = cut(x16, xe, Y(0.8 * nt, 1), yB[1]);
       var grid = '', stepY = yMax > 100000 ? 40000 : 20000;
       for(var tr = 0; tr < 2; tr++) for(var v = 0; v <= yMax; v += stepY){
@@ -920,7 +932,7 @@ body.focus-mode > footer{display:none}
       var gapPx = Y(0.8 * nt, 1) - Y(sm, 1), brX = xe - 14;
       P.br = gapPx > 3 ? 'M' + (brX - 4) + ',' + f1(Y(0.8 * nt, 1)) + ' H' + brX + ' V' + f1(Y(sm, 1)) + ' H' + (brX - 4) : '';
       P.agL = ag.L; P.agF = ag.F; P.navL = nv.L; P.navF = nv.F; P.mlL = arb ? ml.L : mlAll; P.mlF = ml.F; P.snavL = nv2.L; P.snavF = nv2.F;
-      P.aOut = rect(x0, Y(sm, 0), x16, yB[0]) + rect(x16, Y(nt, 0), xe, yB[0]) + (over ? rect(x16, Y(sm, 0), xe, Y(cm, 0)) : '');
+      P.aOut = rect(x0, Y(agM, 0), x16, yB[0]) + rect(x16, Y(nt, 0), xe, yB[0]) + (over ? rect(arb ? x16 : x0, Y(sm, 0), xe, Y(cm, 0)) : '');
       P.sOut = rect(x16, Y(0.8 * nt, 1), xe, yB[1]); P.sNo = rect(x0, Y(sm, 1), x16, yB[1]);
       [0, 16, 50, 100, 150, 200, 264].forEach(function(dd){ lab += '<span class="lrn-sy-xt" style="left:' + f1(X(dd) - 24) + 'px;top:' + f1(yB[1] + 8) + 'px">' + dd + '</span>'; });
       lab += '<span class="lrn-sy-xt" style="left:' + f1(zx) + 'px;top:' + f1(yB[1] + 8) + 'px;width:' + aapW + 'px">AAP</span>';
@@ -934,7 +946,7 @@ body.focus-mode > footer{display:none}
       // Spor 1: 6G-etiketten og lønnslinjen først, så blokkene
       put(st, T.six, selA, over ? [{x:xe - 2, a:'r', y:Y(cm, 0) + 4}] : [{x:xe - 2, a:'r', y:Y(cm, 0) - 24}, {x:xe - 2, a:'r', y:Y(cm, 0) + 4}, {x:xe - 2, a:'r', y:yT[0] - 24}]);
       put(st, T.nav100, selA, blockH >= 30 ? [{x:mid, a:'c', y:Y(nt, 0) + (blockH - 20) / 2}, {x:mid, a:'c', y:Y(nt, 0) + 28}, {x:mid, a:'c', y:yB[0] - 24}] : [{x:mid, a:'c', y:Y(nt, 0) - 24}]);
-      var bAg = put(st, [T.arb100, T.arbK], selA, [{x:x0 + 1, a:'l', y:Y(sm, 0) - 24}, {x:textW(titleA, '600 12.5px ' + SANS) + 8, a:'l', y:Y(sm, 0) - 24}, {x:x0 + 1, a:'l', y:Y(sm, 0) + 4}]);
+      var bAg = put(st, over && !arb ? [T.arbK] : [T.arb100, T.arbK], selA, [{x:x0 + 1, a:'l', y:Y(sm, 0) - 24}, {x:textW(titleA, '600 12.5px ' + SANS) + 8, a:'l', y:Y(sm, 0) - 24}, {x:x0 + 1, a:'l', y:Y(sm, 0) + 4}]);
       if(over) put(st, T.ml, selA, [{x:bAg.x + bAg.w + 12, a:'l', y:Y(sm, 0) - 24}]);
       // Spor 2: lønnslinjen merkes her, der gapet til lønna er det som mangler
       put(st, T.sal, !selA, [{x:xe - 2, a:'r', y:Y(sm, 1) - 24}]);
@@ -950,8 +962,8 @@ body.focus-mode > footer{display:none}
       var Yd = function(dd){ return yT0 + dd * pyd; }, Mx = function(v){ return v / yMax * cw; };
       var yE = Yd(264), ym = Yd(dm), y16 = Yd(16);
       var cutV = function(xa, xb, ya, yb){ return {F:ym > ya ? rect(xa, ya, xb, Math.min(yb, ym)) : '', L:ym < yb ? rect(xa, Math.max(ya, ym), xb, yb) : ''}; };
-      var agV = cutV(cA, cA + Mx(sm), Yd(0), y16), nvV = cutV(cA, cA + Mx(nt), y16, yE);
-      var mlAllV = over ? rect(cA + Mx(cm), y16, cA + Mx(sm), yE) : '', mlV = over && arb ? cutV(cA + Mx(cm), cA + Mx(sm), y16, yE) : {F:'', L:''};
+      var agV = cutV(cA, cA + Mx(agM), Yd(0), y16), nvV = cutV(cA, cA + Mx(nt), y16, yE);
+      var mlAllV = over ? rect(cA + Mx(cm), arb ? y16 : Yd(0), cA + Mx(sm), yE) : '', mlV = over && arb ? cutV(cA + Mx(cm), cA + Mx(sm), y16, yE) : {F:'', L:''};
       var nv2V = cutV(cB, cB + Mx(0.8 * nt), y16, yE);
       var top = 46, aapTop = yE + 8, aapBot = aapTop + 40;
       P.grid = '';
@@ -964,7 +976,7 @@ body.focus-mode > footer{display:none}
       var yBr = Yd(150), bx1 = cB + Mx(0.8 * nt), bx2 = cB + Mx(sm);
       P.br = bx2 - bx1 > 3 ? 'M' + f1(bx1) + ',' + f1(yBr - 4) + ' V' + f1(yBr + 4) + ' M' + f1(bx1) + ',' + f1(yBr) + ' H' + f1(bx2) + ' M' + f1(bx2) + ',' + f1(yBr - 4) + ' V' + f1(yBr + 4) : '';
       P.agL = agV.L; P.agF = agV.F; P.navL = nvV.L; P.navF = nvV.F; P.mlL = arb ? mlV.L : mlAllV; P.mlF = mlV.F; P.snavL = nv2V.L; P.snavF = nv2V.F;
-      P.aOut = rect(cA, Yd(0), cA + Mx(sm), y16) + rect(cA, y16, cA + Mx(nt), yE) + (over ? rect(cA + Mx(cm), y16, cA + Mx(sm), yE) : '');
+      P.aOut = rect(cA, Yd(0), cA + Mx(agM), y16) + rect(cA, y16, cA + Mx(nt), yE) + (over ? rect(cA + Mx(cm), arb ? y16 : Yd(0), cA + Mx(sm), yE) : '');
       P.sOut = rect(cB, y16, cB + Mx(0.8 * nt), yE); P.sNo = rect(cB, Yd(0), cB + Mx(sm), y16);
       [16, 50, 100, 150, 200, 264].forEach(function(dd){ if(Math.abs(Yd(dd) - ym) > 13) lab += '<span class="lrn-sy-yt m" style="top:' + f1(Yd(dd) - 8) + 'px">' + dd + '</span>'; });
       lab += '<span class="lrn-sy-yt m" style="top:' + f1((aapTop + aapBot) / 2 - 8) + 'px">AAP</span>';
@@ -1003,7 +1015,7 @@ body.focus-mode > footer{display:none}
     var defs = [];
     if(MOB) defs.push(['six', t('lrnSyN0', 'Stiplet linje: 6G-tak, 6 × 136 549 = 819 294 kr i året ({c} i måneden). Heltrukket linje: lønna di, {s} i måneden.', {c:kr(cm), s:kr(sm)})]);
     defs.push(['split', ph(over ? 'Dag 17: NAV overtar, men bare opp til 6G.' : 'Dag 17: NAV overtar. Under 6G er dagsatsen den samme før og etter, bare betaleren bytter.')]);
-    if(over) defs.push(['ml', arb ? t('lrnSyN2a', 'Over 6G betaler ikke NAV. De {m} i måneden over taket dekkes av arbeidsgiveren.', {m:kr(mlM)}) : t('lrnSyN2b', 'Over 6G betaler ikke NAV, og ingen andre betaler heller. De {m} i måneden over taket faller bort fra dag 17.', {m:kr(mlM)})]);
+    if(over) defs.push(['ml', arb ? t('lrnSyN2a', 'Over 6G betaler ikke NAV. De {m} i måneden over taket dekkes av arbeidsgiveren.', {m:kr(mlM)}) : t('lrnSyN2c', 'Over 6G betaler ikke NAV, og arbeidsgiveren må heller ikke. De {m} i måneden over taket faller bort fra første dag.', {m:kr(mlM)})]);
     if(MOB) defs.push(['gap', t('lrnSyN3', 'Som selvstendig mangler du {m} i måneden mot lønna. De første 16 dagene får du ingenting.', {m:kr(gapM)})]);
     defs.push(['aap', ph('Dag 264: sykepengene stopper. Etter 248 NAV-dager kan du søke AAP, som er en lavere ytelse.') + (aapOn ? ' ' + t('lrnSyN4', 'Du har valgt dag {d}, så markøren står på 264.', {d:dag}) : '')]);
     var notes = '';
@@ -1027,12 +1039,8 @@ body.focus-mode > footer{display:none}
     // Regnestykket for valgt status
     var rows = [], fsum = '';
     function day(a, b){ return b > a ? t('lrnSyDays', 'Dag {a}–{b}', {a:a, b:b}) : t('lrnSyDay', 'Dag {n}', {n:a}); }
-    if(ansatt && (!over || arb)) rows.push([ph('Ansatt'), fmt(S) + ' ÷ 260 × ' + dm, kr(A.sum)]);
-    else if(ansatt){
-      rows.push([day(1, A.arbDays), fmt(S) + ' ÷ 260 × ' + A.arbDays, kr(A.arbSum)]);
-      if(A.navDays > 0) rows.push([day(17, dm), fmt(SIX) + ' ÷ 260 × ' + A.navDays, kr(A.navSum)]);
-      fsum = rows.length > 1 ? kr(A.sum) : '';
-    } else {
+    if(ansatt) rows.push([ph('Ansatt'), fmt(over && !arb ? SIX : S) + ' ÷ 260 × ' + dm, kr(A.sum)]);
+    else {
       rows.push([day(1, B.arbDays), ph('ingen utbetaling'), '0' + NB + 'kr']);
       if(B.navDays > 0) rows.push([day(17, dm), fmt(Math.min(S, SIX)) + ' × 80' + NB + '% ÷ 260 × ' + B.navDays, kr(B.navSum)]);
       fsum = rows.length > 1 ? kr(B.sum) : '';
@@ -1040,11 +1048,11 @@ body.focus-mode > footer{display:none}
     q('flines').innerHTML = rows.map(function(r){ return '<div class="lrn-sy-fl"><span class="l">' + esc(r[0]) + '</span><span class="e">' + esc(r[1]) + '</span><span>=</span><b>' + esc(r[2]) + '</b></div>'; }).join('')
       + (fsum ? '<div class="lrn-sy-fl s"><span class="l">' + esc(ph('Sum')) + '</span><span class="e"></span><span></span><b>' + esc(fsum) + '</b></div>' : '');
     // Setningen, tabellen og teksttilsvarende
-    var s1 = over && !arb ? t('lrnSyS1b', 'Som ansatt får du {s} i måneden i 16 dager og deretter {c}.', {s:kr(sm), c:kr(cm)})
+    var s1 = over && !arb ? t('lrnSyS1c', 'Som ansatt får du {c} i måneden hele perioden. Lønn over 6G dekkes ikke.', {c:kr(cm)})
       : over ? t('lrnSyS1a', 'Som ansatt får du {s} i måneden hele perioden, hvorav {m} kommer fra arbeidsgiveren etter dag 16.', {s:kr(sm), m:kr(mlM)})
       : t('lrnSyS1', 'Som ansatt får du {s} i måneden hele perioden.', {s:kr(sm)});
     set('sum', s1 + ' ' + t('lrnSyS2', 'Som selvstendig får du ingenting i 16 dager og deretter {k}.', {k:kr(selM)}));
-    set('tA1', fmt(sm)); set('tB2', ph(over && arb ? 'NAV, og arbeidsgiver for mellomlegget' : 'NAV')); set('tA2', fmt(A.navMnd + A.arbMnd)); set('tS2', fmt(B.navMnd));
+    set('tA1', fmt(agM)); set('tB2', ph(over && arb ? 'NAV, og arbeidsgiver for mellomlegget' : 'NAV')); set('tA2', fmt(A.navMnd + A.arbMnd)); set('tS2', fmt(B.navMnd));
     set('sr', t('lrnSySr1', 'Tidslinje over sykepengedagene, med kroner per måned. Som ansatt med {s} i lønn betaler arbeidsgiveren dag 1 til 16 og NAV dag 17 til 264.', {s:kr(S)})
       + (over ? ' ' + (arb ? ph('Arbeidsgiveren dekker mellomlegget over 6G.') : t('lrnSySr2', 'NAV betaler bare opp til 6G, så {m} i måneden faller bort.', {m:kr(mlM)})) : '')
       + ' ' + t('lrnSySr3', 'Som selvstendig får du ingenting dag 1 til 16 og deretter {k} i måneden. Etter {d} dager er summen {a} som ansatt og {b} som selvstendig.', {k:kr(selM), d:dm, n:dm, a:kr(A.sum), b:kr(B.sum)}));
