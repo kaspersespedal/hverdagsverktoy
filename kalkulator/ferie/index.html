@@ -464,7 +464,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           <tr><th scope="row">5 uker</th><td>12&nbsp;%</td><td>25</td><td>14,3&nbsp;%</td></tr>
         </tbody>
       </table></div></div>
-      <p class="lrn-fine">Tillegget for over 60 år regnes bare av grunnlag opp til 6G. Kalkulatoren bruker 6 × 136&nbsp;549 kr = 819&nbsp;294 kr, grunnbeløpet fra mai 2026. Loven bruker grunnbeløpet som gjaldt 31. desember i opptjeningsåret, så for lønn tjent i 2025 er taket lavere. Kilde: ferieloven § 10.</p>
+      <p class="lrn-fine">Tillegget for over 60 år regnes bare av grunnlag opp til 6G. Loven bruker grunnbeløpet som gjaldt 31. desember i året du tjente lønna. For lønn tjent i 2025 er det 130&nbsp;160 kr, så taket er 6 × 130&nbsp;160 kr = 780&nbsp;960 kr. Kilde: ferieloven § 10.</p>
     </section>
 
     <section class="lrn-sec lrn-faq" aria-labelledby="lrn-fe-q">
@@ -522,7 +522,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
-<script defer src="/shared/top-chrome.js?v=v321"></script>
+<script defer src="/shared/top-chrome.js?v=v323"></script>
 <script defer src="/shared/core.js?v=v242"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
@@ -533,7 +533,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 (function(){
   var KEY = 'hv-ferie-v1';
   var STATE = {};
-  var _HVT_G = 136549; // 1G fra 1. mai 2026 (trygdeoppgjøret) — sentralisert i core.js
+  // G per 31.12. i opptjeningsåret, jf. ferieloven § 10 nr. 3 (nav.no/grunnbelopet). Legg til nytt år når G settes i mai.
+  var G_31DES = {2025:130160, 2026:136549};
+  // Opptjeningsåret er i fjor. Mangler året i tabellen, brukes gjeldende G fra core.js.
+  function gOpptj(){ return G_31DES[new Date().getFullYear() - 1] || window._HVT_G || G_31DES[2026]; }
+  window._ferieG = gOpptj; // brukes også av forklaringsblokken under
 
   var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
   function fmtKr(n){ if(!isFinite(n)) return '–'; return fmtNb.format(Math.round(n)) + ' kr'; }
@@ -569,7 +573,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     var bonus = 0;
     if(over60){
-      var sixG = 6 * _HVT_G;
+      var sixG = 6 * gOpptj();
       var extraBase = Math.min(sal, sixG);
       bonus = extraBase * 0.023;
     }
@@ -718,7 +722,6 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   var KEY = 'kalkulator-ferie';
   // Tallene kalkulatoren starter med. Så lenge de står slik, er merket «Eksempel».
   var DEF = {sal:500000, typ5:false, o60:false};
-  var SIXG = 6 * 136549;  // samme tak som kalkulatoren (grunnbeløpet fra mai 2026)
   var SANS = 'Geist, Inter, system-ui, sans-serif', SERIF = '"Newsreader", "Source Serif 4", Georgia, serif';
   var root, plot, svg, raw = null, lastW = 0, queued = false, ctx, vt5 = null, vo60 = null, viewKey = null;
 
@@ -751,6 +754,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     lastW = W;
     function krs(v){ return kr(v) + ' kr'; }
     // Samme regnestykke som compute() over: grunnlag × sats, tillegg 60+ av grunnlag opp til 6G
+    var SIXG = 6 * window._ferieG();  // samme tak som kalkulatoren (G per 31.12. i opptjeningsåret)
     var sal = p.sal, rate = typ5 ? 0.12 : 0.102, amt = sal * rate, days = typ5 ? 25 : 21, daily = amt / days;
     var capped = Math.min(sal, SIXG), bonus = o60 ? capped * 0.023 : 0, over = o60 && sal > SIXG ? (sal - SIXG) * 0.023 : 0, total = amt + bonus;
     var mA = amt / 12, mB = bonus / 12, mO = over / 12;

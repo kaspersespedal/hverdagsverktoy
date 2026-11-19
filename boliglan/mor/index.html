@@ -576,7 +576,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 </footer>
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
-<script defer src="/shared/top-chrome.js?v=v321"></script>
+<script defer src="/shared/top-chrome.js?v=v323"></script>
 <script defer src="/shared/core.js?v=v242"></script>
 <script defer src="/shared/lang/no-lett.js?v=v2"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
@@ -620,18 +620,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   // ── Effektiv rente (% per år) ──
   // Månedsrenten r der nåverdien av alle betalingene (terminbeløp + månedlige omkostninger)
   // er lik det du får utbetalt (lånebeløp − etableringsgebyr). Årlig: (1 + r)^12 − 1.
+  // Betalingene hentes fra nedbetalingsplanen (plan() under), så serielån og avdragsfri periode blir riktige.
   // Newton-Raphson fra den nominelle månedsrenten. Gebyrene gjør r høyere, og nåverdien
   // er krum og synkende, så stegene nærmer seg svaret fra venstre uten å skyte forbi.
   // Gir NaN når det ikke finnes noe svar å vise.
-  function effRente(P, mRate, n, type, feeM, feeEst){
+  function effRente(P, rows, mRate, feeM, feeEst){
     var net = P - feeEst;
-    if(!(net > 0) || !(n > 0)) return NaN;
-    var ann = mRate === 0 ? P/n : P*mRate*Math.pow(1+mRate,n)/(Math.pow(1+mRate,n)-1);
-    var pay = [], bal = P;
-    for(var i=0; i<n; i++){
-      pay.push((type === 'serial' ? P/n + bal*mRate : ann) + feeM);
-      bal -= P/n;
-    }
+    if(!(net > 0) || !rows.length) return NaN;
+    var pay = rows.map(function(x){ return x.pay + feeM; });
     var r = mRate;
     for(var it=0; it<100; it++){
       var f = -net, df = 0, d = 1;
@@ -648,7 +644,29 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     return NaN;
   }
 
-  // ── Hovedberegning (1:1 port fra calcMor) ──
+  // ── Nedbetalingsplanen: én rad per måned med rente, avdrag, betaling og restgjeld.
+  //    Resultatpanelet, stresstesten, stripa, CSV-en og grafen i forklaringsblokka bruker alle denne. ──
+  function annuitet(P, r, m){ return r === 0 ? P / m : P * r / (1 - Math.pow(1 + r, -m)); }
+  function plan(P, rAar, years, type, ioYears){
+    var n = years * 12, r = rAar / 100 / 12, io = ioYears * 12;
+    var fast = annuitet(P, r, n - io), serAvdrag = P / (n - io), rows = [], bal = P;
+    for(var i = 1; i <= n; i++){
+      var int = bal * r, pr = 0;
+      if(i > io) pr = type === 'annuity' ? fast - int : serAvdrag;
+      if(i === n) pr = bal;
+      rows.push({i:i, int:int, pr:pr, pay:int + pr, bal0:bal, bal1:bal - pr});
+      bal -= pr;
+    }
+    return rows;
+  }
+  window._morPlan = plan;
+  // Første måned med avdrag (måned 1 når lånet ikke har avdragsfri periode)
+  function firstPay(rows){
+    for(var k = 0; k < rows.length; k++) if(rows[k].pr > 0) return rows[k];
+    return rows[0];
+  }
+
+  // ── Hovedberegning (alle tall fra nedbetalingsplanen over) ──
   function calcMor(){
     var P = parseNum('m-a');
     if(P <= 0){
@@ -672,66 +690,34 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var _mt = document.getElementById('m-type');
     var loanType = _mt ? _mt.value : 'annuity';
 
-    var mnd, tot, rnt, r1=0, a1=0, firstPmt, lastPmt;
+    // Avdragsfri periode teller bare når den er kortere enn løpetiden. 0, tomt eller minus = ingen.
+    var ioCheck = document.getElementById('m-io-check');
+    var ioYears = (ioCheck && ioCheck.checked) ? Math.max(parseNum('m-io-yrs'), 0) : 0;
+    if(!(ioYears > 0 && ioYears < years)) ioYears = 0;
 
-    if(loanType === 'serial'){
-      var avdrag = P / n;
-      var bal = P;
-      tot = 0; rnt = 0;
-      firstPmt = avdrag + bal * mRate;
-      for(var i=0; i<n; i++){
-        var renteIMnd = bal * mRate;
-        var betaling = avdrag + renteIMnd;
-        tot += betaling;
-        rnt += renteIMnd;
-        if(i < 12){ r1 += renteIMnd; a1 += avdrag; }
-        bal -= avdrag;
-      }
-      var lastBal = Math.max(P - avdrag*(n-1), 0);
-      lastPmt = lastBal + lastBal * mRate;
-      mnd = firstPmt;
-      show('m-last-row', true);
-      setEl('m-last',  fmt(lastPmt));
-    } else {
-      mnd = mRate===0 ? P/n : P*mRate*Math.pow(1+mRate,n)/(Math.pow(1+mRate,n)-1);
-      tot = mnd*n;
-      rnt = tot - P;
-      var bal2 = P;
-      for(var j=0; j<12; j++){
-        var ri = bal2 * mRate;
-        r1 += ri;
-        a1 += mnd - ri;
-        bal2 -= (mnd - ri);
-      }
-      show('m-last-row', false);
-    }
+    // Alle tallene under kommer fra samme nedbetalingsplan som grafen.
+    // Beløpet øverst er første måned med avdrag.
+    var rows = plan(P, yearlyRate, years, loanType, ioYears);
+    var mnd = firstPay(rows).pay, tot = 0, rnt = 0, r1 = 0, a1 = 0;
+    rows.forEach(function(x, i){
+      tot += x.pay; rnt += x.int;
+      if(i < 12){ r1 += x.int; a1 += x.pr; }
+    });
+    show('m-last-row', loanType === 'serial');
+    if(loanType === 'serial') setEl('m-last', fmt(rows[rows.length - 1].pay));
 
     setEl('m-mth', fmt(mnd));
     setEl('m-sub', loanType === 'serial' ? 'Første måned. Beløpet synker deretter.' : 'Likt beløp hver måned i hele løpetiden.');
     setEl('m-y1i', fmt(r1));
     setEl('m-y1p', fmt(a1));
 
-    // Avdragsfri-beregning
-    var ioCheck = document.getElementById('m-io-check');
-    if(ioCheck && ioCheck.checked){
-      var ioYears = parseNum('m-io-yrs') || 5;
-      if(ioYears < years){
-        var ioMonths = ioYears * 12;
-        var remainMonths = n - ioMonths;
-        var mthFree = P * mRate;
-        var mthAfter = mRate === 0 ? P / remainMonths : P * mRate * Math.pow(1 + mRate, remainMonths) / (Math.pow(1 + mRate, remainMonths) - 1);
-        var totFreePeriodInt = mthFree * ioMonths;
-        var totAfterPeriod = mthAfter * remainMonths;
-        var intAfterPeriod = totAfterPeriod - P;
-        var totIntIo = totFreePeriodInt + intAfterPeriod;
-        var diff = totIntIo - rnt;
-        setEl('m-io-mthfree', fmt(mthFree));
-        setEl('m-io-mthafter', fmt(mthAfter));
-        setEl('m-io-extra', '+ ' + fmt(diff));
-        show('m-io-res', true);
-      } else {
-        show('m-io-res', false);
-      }
+    // Avdragsfri-beregning: rentene sammenlignes med samme lån uten avdragsfri periode
+    if(ioYears){
+      var rntUtenIo = plan(P, yearlyRate, years, loanType, 0).reduce(function(s, x){ return s + x.int; }, 0);
+      setEl('m-io-mthfree', fmt(rows[0].pay));
+      setEl('m-io-mthafter', fmt(mnd));
+      setEl('m-io-extra', '+ ' + fmt(rnt - rntUtenIo));
+      show('m-io-res', true);
     } else {
       show('m-io-res', false);
     }
@@ -748,16 +734,16 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     }
 
     // Rente: nominell ved siden av effektiv, der effektiv også tar med gebyrene
-    var effRate = effRente(P, mRate, n, loanType, feesPerMonth, feeEst);
+    var effRate = effRente(P, rows, mRate, feesPerMonth, feeEst);
     setEl('m-nom', pct(yearlyRate));
     setEl('m-eff', pct(effRate));
 
-    // Avdragsfri periode valgt: beløpet øverst gjelder lånet uten avdragsfri periode
-    if(ioCheck && ioCheck.checked && ioYears < years){
+    // Avdragsfri periode valgt: beløpet øverst er det du betaler når avdragene starter
+    if(ioYears){
       if(loanType === 'serial'){
-        setEl('m-sub', feesPerMonth > 0 ? 'Første måned uten avdragsfri periode, med omkostninger. Se tallene for avdragsfri periode under.' : 'Første måned uten avdragsfri periode. Se tallene for avdragsfri periode under.');
+        setEl('m-sub', feesPerMonth > 0 ? 'Første måned med avdrag, med omkostninger. Se tallene for avdragsfri periode under.' : 'Første måned med avdrag. Se tallene for avdragsfri periode under.');
       } else {
-        setEl('m-sub', feesPerMonth > 0 ? 'Uten avdragsfri periode, med omkostninger. Se tallene for avdragsfri periode under.' : 'Uten avdragsfri periode. Se tallene for avdragsfri periode under.');
+        setEl('m-sub', feesPerMonth > 0 ? 'Likt beløp hver måned når avdragene har startet, med omkostninger. Se tallene for avdragsfri periode under.' : 'Likt beløp hver måned når avdragene har startet. Se tallene for avdragsfri periode under.');
       }
     }
 
@@ -766,25 +752,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     setEl('m-tax', fmt(taxDeduction));
     setEl('m-tax-y1', fmt(r1 * 0.22));
 
-    // Stresstest § 5: høyeste av 7 % og rente+3 pp
+    // Stresstest § 5: høyeste av 7 % og rente+3 pp. Samme plan med stressrenten,
+    // første måned med avdrag, sammenlignet med beløpet øverst.
     var stressYearlyPct = Math.max(yearlyRate + 3, 7);
-    var stressRate = stressYearlyPct / 100 / 12;
-    var stressN = n;
-    if(ioCheck && ioCheck.checked){
-      var ioYearsForStress = parseNum('m-io-yrs') || 5;
-      if(ioYearsForStress > 0 && ioYearsForStress < years){
-        stressN = (years - ioYearsForStress) * 12;
-      }
-    }
-    var stressMnd;
-    if(loanType === 'serial'){
-      // Serielån: sammenlign førstebetaling mot førstebetaling (avdrag + rente av full hovedstol)
-      stressMnd = P / stressN + P * stressRate;
-    } else {
-      stressMnd = stressRate === 0
-        ? P / stressN
-        : P * stressRate * Math.pow(1 + stressRate, stressN) / (Math.pow(1 + stressRate, stressN) - 1);
-    }
+    var stressMnd = firstPay(plan(P, stressYearlyPct, years, loanType, ioYears)).pay;
     var stressDiff = stressMnd - mnd;
     setEl('m-stress-mth', fmt(stressMnd));
     setEl('m-stress-diff', '+ ' + fmt(stressDiff));
@@ -796,8 +767,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     setEl('mStripEff', pct(effRate));
 
     // Eksport-state for morCsv() (core.js) — nedbetalingsplan gjenskapes fra disse
-    var _ioYExp = (ioCheck && ioCheck.checked) ? (parseNum('m-io-yrs') || 5) : 0;
-    window._mor = { P:P, rate:yearlyRate, years:years, type:loanType, mnd:mnd, rnt:rnt, fees:feesPerMonth, ioYears:(_ioYExp < years ? _ioYExp : 0) };
+    window._mor = { P:P, rate:yearlyRate, years:years, type:loanType, mnd:mnd, rnt:rnt, fees:feesPerMonth, feeEst:feeEst, ioYears:ioYears };
     if(window.hvtLearn) hvtLearn.update('boliglan-mor', window._mor);
 
     persist();
@@ -863,6 +833,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(d.ioYears > 0) rows.push([tr('Avdragsfri periode'), yrs(d.ioYears)]);
     rows.push([tr('Månedlig betaling'), Math.round(d.mnd + (d.fees || 0))]);
     rows.push([tr('Totale renter'), Math.round(d.rnt)]);
+    if(d.feeEst > 0) rows.push([tr('Etableringsgebyr'), Math.round(d.feeEst)]);
     rows.push([]);
     rows.push(['Måned', 'Betaling', 'Renter', 'Avdrag', 'Omkostninger', 'Restgjeld'].map(tr));
     var fees = +d.fees || 0, ioMonths = (d.ioYears || 0) * 12, mRate = d.rate / 100 / 12, n = d.years * 12, payN = n - ioMonths;
@@ -919,19 +890,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function textW(s, font){ ctx = ctx || document.createElement('canvas').getContext('2d'); ctx.font = font; return Math.ceil(ctx.measureText(s).width); }
   function annuitet(P, r, m){ return r === 0 ? P / m : P * r / (1 - Math.pow(1 + r, -m)); }
 
-  // Én rad per måned med rente, avdrag, betaling og restgjeld. Samme regnemåte som calcMor.
-  function plan(P, rAar, years, type, ioYears){
-    var n = years * 12, r = rAar / 100 / 12, io = ioYears * 12;
-    var fast = annuitet(P, r, n - io), serAvdrag = P / (n - io), rows = [], bal = P;
-    for(var i = 1; i <= n; i++){
-      var int = bal * r, pr = 0;
-      if(i > io) pr = type === 'annuity' ? fast - int : serAvdrag;
-      if(i === n) pr = bal;
-      rows.push({i:i, int:int, pr:pr, pay:int + pr, bal0:bal, bal1:bal - pr});
-      bal -= pr;
-    }
-    return rows;
-  }
+  // Én rad per måned med rente, avdrag, betaling og restgjeld. Samme plan som kalkulatoren over bruker.
+  var plan = window._morPlan;
 
   // Y-skala rundet opp til en hel enhet (35 000 kr i standardeksempelet), med høyst fire rutenettlinjer
   function scale(maxV){
