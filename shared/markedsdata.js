@@ -77,9 +77,11 @@
   var DEFAULT_PLACE = { navn: 'Oslo', lat: 59.9133, lon: 10.7389, kommunenr: '0301', fylkesnr: '03', sone: 'NO1' };
 
   /* Norges Banks rentemøter (rentebeslutning-datoer). Verifisert mot norges-bank.no
-     2026-06-27 — 8 møter/år. 2027-datoene er ikke publisert ennå; når lista går tom
-     skjules «neste møte»-linja heller enn å vise en gal dato. Oppdater ved årsskiftet. */
-  var NB_MEETINGS = ['2026-08-13', '2026-09-24', '2026-11-05', '2026-12-17'];
+     2026-06-27 og 2026-11-19 (norges-bank.no/aktuelt/kalender/rentemoter/) — 8 møter/år.
+     Når lista går tom, skjules «neste møte»-linja heller enn å vise en gal dato.
+     Legg inn neste års datoer hver høst, når Norges Bank publiserer dem. */
+  var NB_MEETINGS = ['2026-08-13', '2026-09-24', '2026-11-05', '2026-12-17',
+    '2027-01-21', '2027-03-18', '2027-05-05', '2027-06-17', '2027-08-19', '2027-09-23', '2027-11-04', '2027-12-16'];
   function nextMeeting() {
     var t = new Date(); t.setHours(0, 0, 0, 0);
     for (var i = 0; i < NB_MEETINGS.length; i++) {
@@ -1446,6 +1448,8 @@
     setText('srLine', 'Norges Bank · ' + ph('sist endret') + ' ' + nbDate(d.changeDate));
     var nv = $('srNext'), nl = $('srNextLbl');
     if (nv && nl) {
+      var wrap = nv.closest('.sr-next-wrap');
+      if (wrap) wrap.style.display = nm ? '' : 'none'; // ellers står en tom rute igjen i Carbon
       nl.textContent = nm ? ph('Neste rentemøte') : '';
       nv.textContent = nm ? nbShort(nm) + ' ' + nm.slice(0, 4) : '';
       if (nm) {
