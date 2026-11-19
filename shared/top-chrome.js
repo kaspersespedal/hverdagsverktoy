@@ -61,7 +61,11 @@
     }
   }
 
+  // Bare temanavn som finnes i THEMES godtas (stopper fremmede verdier fra meldinger og lagring).
+  function isTheme(t){ return typeof t === 'string' && THEMES.some(function(x){ return x.k === t; }); }
+
   function applyTheme(t, opts){
+    if (!isTheme(t)) return;
     document.documentElement.setAttribute('data-theme', t);
     // Inside an embed we don't want to clobber the parent's localStorage value
     // with whatever the embedded page happened to start at — only persist when
@@ -83,17 +87,21 @@
   // Apply persisted theme ASAP (idempotent — html may already have it).
   // Inside an iframe, defer to whatever the parent broadcasts — don't read
   // localStorage (the embed may have been opened separately with a stale theme).
-  applyTheme(
-    IN_IFRAME
+  // Ukjent verdi (fra lagring eller hodeskriptet) faller tilbake til carbon.
+  (function(){
+    var t = IN_IFRAME
       ? (document.documentElement.getAttribute('data-theme') || 'carbon')
-      : getStored('hvt-theme', document.documentElement.getAttribute('data-theme') || 'carbon')
-  );
+      : getStored('hvt-theme', document.documentElement.getAttribute('data-theme') || 'carbon');
+    applyTheme(isTheme(t) ? t : 'carbon');
+  })();
 
   // Receive theme pushes from a host page (Subpage Preview etc.).
+  // Bare meldinger fra samme opphav (egen side/ramme) godtas.
   window.addEventListener('message', function(ev){
-    var d = ev && ev.data;
+    if (!ev || ev.origin !== location.origin) return;
+    var d = ev.data;
     if (!d || typeof d !== 'object') return;
-    if (d.type === '__hv_theme' && typeof d.theme === 'string'){
+    if (d.type === '__hv_theme' && isTheme(d.theme)){
       applyTheme(d.theme);
     }
   });
@@ -105,7 +113,8 @@
   }
   // Host side: when a child asks, reply with our current theme.
   window.addEventListener('message', function(ev){
-    var d = ev && ev.data;
+    if (!ev || ev.origin !== location.origin) return;
+    var d = ev.data;
     if (!d || d.type !== '__hv_theme_request') return;
     var t = document.documentElement.getAttribute('data-theme') || 'carbon';
     try{ ev.source && ev.source.postMessage({type:'__hv_theme', theme:t}, '*'); }catch(_e){}
@@ -461,6 +470,7 @@
     var navEl = document.querySelector('.nav-wrap nav');
     if (!navEl) return;
     var curTheme = document.documentElement.getAttribute('data-theme') || 'carbon';
+    if (!isTheme(curTheme)) curTheme = 'carbon';
     var curLang = getStored('hvt-lang','no');
     var curLangObj = LANGS.find(function(x){return x.k===curLang;}) || LANGS[0];
 

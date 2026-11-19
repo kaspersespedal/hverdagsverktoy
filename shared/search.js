@@ -979,7 +979,7 @@ function initSearch(){
       dropdown.innerHTML =
         '<div class="search-no-results">' +
           '<div class="search-no-results-text">'+noResultsText+' «<strong>'+escHtml(q)+'</strong>»</div>' +
-          '<a href="#" class="search-missing-link" data-missing-query="'+escAttr(q)+'">'+missingText+'</a>' +
+          '<a href="#" class="search-missing-link" data-missing-query="'+escHtml(q)+'">'+missingText+'</a>' +
         '</div>';
       var missingLink = dropdown.querySelector('.search-missing-link');
       if(missingLink){
@@ -1063,7 +1063,6 @@ function initSearch(){
 
 /* ─── Helpers ─── */
 function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(s){ return s.replace(/'/g,"\\'").replace(/"/g,'\\"'); }
 
 function highlight(text, q){
   if(!q) return escHtml(text);
