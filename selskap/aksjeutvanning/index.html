@@ -328,11 +328,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                   <div class="ik-fg">
                     <label class="ik-lbl" for="dilut-existing" data-i18n="selskapAksjeutvLblExisting">Din eierandel før (%)</label>
                     <input class="ik-input" id="dilut-existing" type="text" inputmode="decimal" min="0" max="100" step="0.1" value="100">
+                    <div class="ik-hint" id="dilut-existing-klemt" hidden></div>
                     <div class="ik-hint">Eier du alene, skriv 100. Ellers din prosent.</div>
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="dilut-pool" data-i18n="selskapAksjeutvLblPool">Aksjer satt av til ansatte (%)</label>
                     <input class="ik-input" id="dilut-pool" type="text" inputmode="decimal" min="0" max="50" step="0.5" value="0">
+                    <div class="ik-hint" id="dilut-pool-klemt" hidden></div>
                     <div class="ik-hint">Bare hvis ansatte skal få kjøpe aksjer senere (opsjonspool). Ellers 0.</div>
                   </div>
                 </div>
@@ -542,6 +544,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       setEl('dilut-r-value', '–');
     }
 
+    // Si fra under feltet når tallet er utenfor grensene og derfor byttet ut
+    function setKlemt(id, raw, brukt){
+      var el = document.getElementById(id);
+      if(!el) return;
+      el.hidden = raw === brukt;
+      if(raw !== brukt) el.textContent = 'Regnet med ' + brukt + ' %, som er ' + (brukt < raw ? 'høyeste' : 'laveste') + ' verdi.';
+    }
+
     function calcDilution(){
       var pre = parseNum('dilut-pre');
       var invest = parseNum('dilut-invest');
@@ -549,6 +559,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var existingShare = Math.max(0, Math.min(rawExisting, 100));
       var rawPool = getVal('dilut-pool', 0);
       var poolPct = Math.max(0, Math.min(rawPool, 50));
+      setKlemt('dilut-existing-klemt', rawExisting, existingShare);
+      setKlemt('dilut-pool-klemt', rawPool, poolPct);
 
       // ── Validering ──
       if(pre <= 0){

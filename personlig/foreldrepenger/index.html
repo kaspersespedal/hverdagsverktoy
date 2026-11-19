@@ -309,7 +309,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
               <div class="ks-modes" role="tablist">
                 <button type="button" class="ks-mode" data-arb="1" aria-pressed="true">
                   <span class="mtitle">Dekker mellomlegget</span>
-                  <span class="mdesc">Vanlig i offentlig sektor og hos store arbeidsgivere — full lønn.</span>
+                  <span class="mdesc">Vanlig i offentlig sektor og hos store arbeidsgivere — full lønn, eller 80 % av lønna ved 80 % uttak.</span>
                 </button>
                 <button type="button" class="ks-mode" data-arb="0" aria-pressed="false">
                   <span class="mtitle">Dekker ikke</span>
@@ -523,7 +523,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
-<script src="/shared/satser.js?v=v1" data-varsel="g"></script>
+<script src="/shared/satser.js?v=v2" data-varsel="g"></script>
 <script>
 // ── Foreldrepenger 2026: vanilla-port av "Foreldrepenger on Site.html" (design-system ZIP)
 // Kilde: NAV, Folketrygdloven kap. 14. G leses fra shared/satser.js.
@@ -561,7 +561,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var totalNAV = ukeSats * uker;
 
     var overskuddMnd = overskudd / 12;
-    var arbTopUp = arbDekker ? overskuddMnd : 0;
+    // Arbeidsgivere som dekker lønn over 6G, følger uttaksgraden: full lønn eller 80 % lønn (f.eks. statens hovedtariffavtale § 19)
+    var arbTopUp = arbDekker ? overskuddMnd * (uttakPct === 100 ? 1 : 0.80) : 0;
     var mndTotal = mndSats + arbTopUp;
 
     // Kvoter i stønadsdager — faste per uttaksgrad, fellesperioden er resten.
@@ -888,7 +889,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // Merknader med nummer etter det som faktisk står i grafen
     var defs = [['fill', t('lrnFpN1', 'Rutene er fylt til {a} % av taket ved 100 % og {b} % ved 80 %, fordi ukesatsen ligger under taket. Toppen er lik for alle ruter, så radene kan sammenlignes direkte.', {a:L.dec(Math.min(fr1, 1) * 100, 1), b:L.dec(Math.min(fr2, 1) * 100, 1)}) + (over ? ' ' + ph('Over taket er rutene fulle.') : '')],
       ['sliver', ph('Fellesperioden ved 80 % er 20 uker og 1 dag. Den siste ruta er én stønadsdag, en femtedel av en uke.')]];
-    if(over) defs.push(['band', t('lrnFpN3', 'Lønn over 6G får ikke plass i rutene, og NAV betaler ikke den delen: {k} i måneden.', {k:kr(overM)}) + ' ' + ph(arb ? 'Arbeidsgiveren dekker den.' : 'Ingen andre betaler den heller.') + (clamped ? ' ' + ph('Båndet er ikke tegnet i målestokk.') : '')]);
+    if(over) defs.push(['band', t('lrnFpN3', 'Lønn over 6G får ikke plass i rutene, og NAV betaler ikke den delen: {k} i måneden.', {k:kr(overM)}) + ' ' + ph(arb ? 'Arbeidsgiveren dekker den, men bare 80 % av den ved 80 % uttak.' : 'Ingen andre betaler den heller.') + (clamped ? ' ' + ph('Båndet er ikke tegnet i målestokk.') : '')]);
     var notes = '';
     defs.forEach(function(df, i){
       var num = String(i + 1), pp = mk[df[0]];
@@ -911,7 +912,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     set('tFa', felles(r1)); set('tFb', felles(r2)); set('tTa', uk(r1.dager)); set('tTb', uk(r2.dager));
     set('tUa', kr(r1.uke)); set('tUb', kr(r2.uke)); set('tSa', kr(r1.tot)); set('tSb', kr(r2.tot));
     set('sr', t('lrnFpSr', 'To rader med uke-ruter. Ved 100 % uttak gir {a} i uka i {ua} en sum på {sa}. Ved 80 % uttak gir {b} i uka i {ub} en sum på {sb}. Forskjellen er {ud} lenger permisjon og {k} mindre med 80 %.', {a:kr(r1.uke), ua:uk(r1.dager), sa:kr(r1.tot), b:kr(r2.uke), ub:uk(r2.dager), sb:kr(r2.tot), ud:uk(diffD), k:kr(diffKr)})
-      + (over ? ' ' + (arb ? t('lrnFpSrA', 'Lønn over 6G, {k} i måneden, dekkes av arbeidsgiveren.', {k:kr(overM)}) : t('lrnFpSrB', 'Lønn over 6G, {k} i måneden, dekkes ikke av NAV.', {k:kr(overM)})) : ''));
+      + (over ? ' ' + (arb ? t('lrnFpSrA', 'Lønn over 6G, {k} i måneden, dekkes av arbeidsgiveren.', {k:kr(overM)}) + ' ' + ph('Ved 80 % uttak dekker arbeidsgiveren 80 % av den.') : t('lrnFpSrB', 'Lønn over 6G, {k} i måneden, dekkes ikke av NAV.', {k:kr(overM)})) : ''));
   }
   function schedule(){
     if(queued) return;

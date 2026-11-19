@@ -377,6 +377,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                       <div class="ik-fg">
                         <label class="ik-lbl" for="inn-uker"><span data-i18n="inntektLblUker">Uker per år</span> <span class="cap">(uker)</span></label>
                         <input id="inn-uker" class="ik-input" type="text" inputmode="numeric" value="46" autocomplete="off">
+                        <div class="ik-hint">Uker du faktisk jobber. Feriepenger (10,2 %) legges til årslønna.</div>
                         <div class="ik-hint" data-i18n="inntektHintUker">52 minus ferie og ulønnet permisjon. Standard ~46.</div>
                       </div>
                       <div class="ik-derived">
@@ -479,7 +480,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <h2 id="trinnHdr" data-i18n="trinnsHdr">Fordeling av trinnskatt 2026</h2>
         <p class="trinn-sub" data-i18n="trinnsSub">Trinnskatt regnes av lønn før fradrag. Bare kronene over hver grense får satsen for det trinnet.</p>
         <div class="tr-stack" id="trStack"></div>
-        <div class="trinn-margin"><span data-i18n="trinnsMargLbl">Marginalskatt (skatt på neste krone du tjener):</span> <b id="trinnMarg">31,3 %</b></div>
+        <div class="trinn-margin"><span data-i18n="trinnsMargLbl">Marginalskatt (skatt på neste krone du tjener):</span> <b id="trinnMarg">33,6 %</b></div>
       </section>
     </div>
 
@@ -649,7 +650,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
-<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
+<script src="/shared/satser.js?v=v2" data-varsel="skatt"></script>
 <script>
 // ── Inntektsskatt: JSX→vanilla port av inntekt-calc.jsx + inntekt-app.jsx
 // Satsene leses fra shared/satser.js (Stortingets skattevedtak, Skatteloven §§ 6-30, 12-1, 15-4)
@@ -697,6 +698,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var fag     = Math.min(+input.fag || 0, FAG_MAX);
     var ips     = Math.min(+input.ips || 0, IPS_MAX);
     var gaver   = Math.min(+input.gaver || 0, GAVE_MAX);
+    if(gaver < S.gaverMin) gaver = 0;   // under 500 kr gir ikke fradrag (sktl. § 6-50)
     var bsuInn  = Math.min(+input.bsu || 0, BSU_MAX_INN);
 
     var minste = Math.min(brutto * MINSTE_RATE, MINSTE_MAX);
@@ -776,7 +778,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
   function activeBrutto(){
     if(state.mode === 'time'){
-      return Math.round(state.timepris * state.timerUke * state.ukerAr);
+      // Timelønte får ikke lønn i ferien, men feriepenger: 10,2 % av lønna (ferieloven § 10 nr. 2)
+      return Math.round(state.timepris * state.timerUke * state.ukerAr * 1.102);
     }
     return state.brutto;
   }

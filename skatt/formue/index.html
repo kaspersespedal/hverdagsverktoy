@@ -593,7 +593,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script defer src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
+<script defer src="/shared/satser.js?v=v2" data-varsel="skatt"></script>
 
 <script>
   // ── Formuesskatt: portet calcFormue-logikk (shared/core.js:3501) ──
@@ -650,11 +650,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
       // Gjeldsreduksjon (§ 4-19): forholdsmessig på rabatterte eiendeler
       var markedTotal = pri + sek + fritid + naering + aksjer + driftsmidler + bank;
+      // § 4-19 (3): primærbolig og eiendeler med rabatt telles uten reduksjon; fritidsbolig med formuesverdien
+      var gjeldGrunnlag = markedTotal - fritid + fritidV;
       var gjeldJustert;
-      if(markedTotal > 0){
-        var gjeldAks = gjeld * (aksjer / markedTotal);
-        var gjeldDrift = gjeld * (driftsmidler / markedTotal);
-        var gjeldNaer = gjeld * (naering / markedTotal);
+      if(gjeldGrunnlag > 0){
+        var gjeldAks = gjeld * (aksjer / gjeldGrunnlag);
+        var gjeldDrift = gjeld * (driftsmidler / gjeldGrunnlag);
+        var gjeldNaer = gjeld * (naering / gjeldGrunnlag);
         var gjeldRest = gjeld - gjeldAks - gjeldDrift - gjeldNaer;
         gjeldJustert = gjeldRest + (gjeldAks * 0.80) + (gjeldDrift * 0.70) + (gjeldNaer * 0.80);
       } else {
@@ -886,7 +888,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var v = {pri:Math.min(i.pri, 14000000) * 0.25 + Math.max(i.pri - 14000000, 0) * 0.70, sek:i.sek, fritid:i.fritid * 0.30, naering:i.naering * 0.80, aksjer:i.aksjer * 0.80, drift:i.drift * 0.70, bank:i.bank};
     var brutto = v.pri + v.sek + v.fritid + v.naering + v.aksjer + v.drift + v.bank;
     var mt = i.pri + i.sek + i.fritid + i.naering + i.aksjer + i.drift + i.bank, gj = i.gjeld;
-    if(mt > 0){ var gA = i.gjeld * i.aksjer / mt, gD = i.gjeld * i.drift / mt, gN = i.gjeld * i.naering / mt; gj = i.gjeld - gA - gD - gN + gA * 0.80 + gD * 0.70 + gN * 0.80; }
+    var gg = mt - i.fritid + v.fritid;
+    if(gg > 0){ var gA = i.gjeld * i.aksjer / gg, gD = i.gjeld * i.drift / gg, gN = i.gjeld * i.naering / gg; gj = i.gjeld - gA - gD - gN + gA * 0.80 + gD * 0.70 + gN * 0.80; }
     var netto = brutto - gj, bunn = 1900000 * i.pers, sp = Math.max(netto - bunn, 0), grense = (21500000 - 1900000) * i.pers;
     var skatt = sp * 0.0035 + Math.min(sp, grense) * 0.0065 + Math.max(sp - grense, 0) * 0.0075;
     return {v:v, brutto:brutto, mt:mt, gj:gj, netto:netto, bunn:bunn, sp:sp, skatt:skatt, eff:mt > 0 ? skatt / mt * 100 : 0};

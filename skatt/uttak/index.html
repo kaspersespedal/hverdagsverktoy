@@ -351,6 +351,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                   <div class="ik-fg">
                     <label class="ik-lbl" for="uttak-andel" data-i18n="skattUttakFormAndel">Andel som tas ut privat (%)</label>
                     <input class="ik-input" id="uttak-andel" type="text" inputmode="decimal" min="1" max="100" step="1" value="100" autocomplete="off">
+                    <div class="ik-hint" id="uttak-andel-klemt" hidden></div>
                   </div>
                 </div>
               </div>
@@ -382,6 +383,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                       <option value="ja" selected data-i18n="skattUttakFormPersoninntektJa">Ja (trinnskatt og trygdeavgift)</option>
                       <option value="nei" data-i18n="skattUttakFormPersoninntektNei">Nei (bare 22 %)</option>
                     </select>
+                  </div>
+                </div>
+                <div class="ik-row full">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="uttak-annen">Annen personinntekt i året (kr)</label>
+                    <input class="ik-input" id="uttak-annen" type="text" inputmode="numeric" value="0" autocomplete="off">
+                    <div class="ik-hint">Lønn, pensjon og resten av overskuddet i foretaket. Skatten på uttaket regnes oppå denne inntekten.</div>
                   </div>
                 </div>
               </div>
@@ -626,7 +634,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
-<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
+<script src="/shared/satser.js?v=v2" data-varsel="skatt"></script>
 <script>
   // ── Uttaksbeskatning: portet calcUttak-logikk (shared/core.js:4340) ──
   (function(){
@@ -712,12 +720,17 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         var pSel = document.getElementById('uttak-personinntekt');
         var personinntekt = pSel ? pSel.value === 'ja' : false;
         data.personinntekt = personinntekt;
+        var annen = parseAmt('uttak-annen');
+        data.annen = annen;
         if(gevinst > 0){
-          data.almSkatt = gevinst * 0.22;
+          // Skatten på gevinsten regnes oppå annen inntekt i året: skatt(annen + gevinst) − skatt(annen).
+          // Personfradraget brukes først av den andre inntekten.
+          var pf = HV_SATSER.skatt.personfradrag;
+          data.almSkatt = (Math.max(0, annen + gevinst - pf) - Math.max(0, annen - pf)) * 0.22;
           if(personinntekt){
             // ENK høy sats (selvstendig næringsdrivende) — § 23-3
-            data.trygd = calcTrygd(gevinst, HV_SATSER.skatt.trygdNaering);
-            data.trinn = calcTrinn(gevinst);
+            data.trygd = calcTrygd(annen + gevinst, HV_SATSER.skatt.trygdNaering) - calcTrygd(annen, HV_SATSER.skatt.trygdNaering);
+            data.trinn = calcTrinn(annen + gevinst) - calcTrinn(annen);
           }
           data.total = data.almSkatt + data.trygd + data.trinn;
           data.netto = bruttoUttak - data.total;
@@ -745,10 +758,19 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var d = compute();
       // Til forklaringsblokken: inndataene (den regner begge virksomhetstypene selv, med samme matte)
       var pEl = document.getElementById('uttak-personinntekt');
-      window._uttak = { type: d.type, mv: d.mv, sv: d.sv, andel: d.andelPct, sk: parseAmt('uttak-skjerming'), pers: !pEl || pEl.value === 'ja' };
+      window._uttak = { type: d.type, mv: d.mv, sv: d.sv, andel: d.andelPct, sk: parseAmt('uttak-skjerming'), pers: !pEl || pEl.value === 'ja', annen: parseAmt('uttak-annen') };
       if(window.hvtLearn) hvtLearn.update('skatt-uttak', window._uttak);
       var setText = function(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; };
       var setHidden = function(id, hidden){ var el = document.getElementById(id); if(el) el.classList.toggle('hidden', hidden); };
+
+      // Si fra under feltet når andelen er utenfor 1–100 og derfor byttet ut
+      var aEl = document.getElementById('uttak-andel'), aHint = document.getElementById('uttak-andel-klemt');
+      if(aEl && aHint){
+        var aRaw = parseFloat(String(aEl.value).replace(/\s/g, '').replace(',', '.'));
+        var klemt = !isNaN(aRaw) && aRaw !== d.andelPct;
+        aHint.hidden = !klemt;
+        if(klemt) aHint.textContent = d.andelPct === 1 ? 'Regnet med 1 %, som er laveste verdi.' : 'Regnet med 100 %, som er høyeste verdi.';
+      }
 
       var noGain = d.gevinst <= 0;
       // I AS kan det være skatt uten gevinst (utbytteskatten), så «ingen skatt» og «ingen gevinst» er ulike ting
@@ -759,7 +781,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       setText('rUttakVal', noTax ? '0 kr' : fmtKr(d.total));
       var subStr;
       if(noTax){
-        subStr = 'Ingen gevinst: skattemessig verdi er like høy som markedsverdien eller høyere.';
+        subStr = noGain ? 'Ingen gevinst: skattemessig verdi er like høy som markedsverdien eller høyere.'
+          : 'Inntekten er så lav at det ikke blir skatt på gevinsten.';
       } else if(d.type === 'enk'){
         subStr = d.personinntekt
           ? 'Inntektsskatt, trygdeavgift og trinnskatt på gevinsten.'
@@ -827,7 +850,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     function persist(){
       try {
-        var ids = ['uttak-type','uttak-mv','uttak-sv','uttak-andel','uttak-skjerming','uttak-personinntekt'];
+        var ids = ['uttak-type','uttak-mv','uttak-sv','uttak-andel','uttak-skjerming','uttak-personinntekt','uttak-annen'];
         var snap = {};
         ids.forEach(function(id){
           var el = document.getElementById(id);
@@ -849,7 +872,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     }
 
     // ── Wire events ──
-    var inputIds = ['uttak-mv','uttak-sv','uttak-andel','uttak-skjerming'];
+    var inputIds = ['uttak-mv','uttak-sv','uttak-andel','uttak-skjerming','uttak-annen'];
     inputIds.forEach(function(id){
       var el = document.getElementById(id);
       if(el) el.addEventListener('input', recalc);
@@ -925,12 +948,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     return {sum:sum, n:n};
   }
   // Begge virksomhetstypene, regnet som compute() i kalkulatoren
-  function compute(mv, sv, andelPct, sk, pers){
+  function compute(mv, sv, andelPct, sk, pers, annen){
     var andel = andelPct / 100, gevinst = Math.max(0, (mv - sv) * andel), brutto = mv * andel;
     var enk = {alm:0, trygd:0, trinn:0, total:0, netto:brutto, eff:0, n:0}, as = {sel:0, utb:0, total:0, netto:brutto, eff:0};
     if(gevinst > 0){
-      enk.alm = gevinst * 0.22;
-      if(pers){ enk.trygd = calcTrygd(gevinst); var tt = calcTrinn(gevinst); enk.trinn = tt.sum; enk.n = tt.n; }
+      // Skatten på gevinsten regnes oppå annen inntekt i året: skatt(annen + gevinst) − skatt(annen)
+      var pf = HV_SATSER.skatt.personfradrag;
+      enk.alm = (Math.max(0, annen + gevinst - pf) - Math.max(0, annen - pf)) * 0.22;
+      if(pers){ enk.trygd = calcTrygd(annen + gevinst) - calcTrygd(annen); var tt = calcTrinn(annen + gevinst); enk.trinn = tt.sum - calcTrinn(annen).sum; enk.n = tt.n; }
       enk.total = enk.alm + enk.trygd + enk.trinn; enk.netto = brutto - enk.total; enk.eff = enk.total / gevinst * 100;
     }
     as.sel = gevinst * 0.22;
@@ -957,8 +982,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var cs = getComputedStyle(root);
     fam = cs.fontFamily || 'Geist, Inter, system-ui, sans-serif';
     serif = cs.getPropertyValue('--font-serif').trim() || 'Georgia, serif';
-    var MV = d.mv, SV = d.sv, AN = d.andel, SK = d.sk, isAs = d.type === 'as', pers = d.pers;
-    var calc = compute(MV, SV, AN, SK, pers), E = calc.enk, A = calc.as, SEL = isAs ? A : E, OTH = isAs ? E : A;
+    var MV = d.mv, SV = d.sv, AN = d.andel, SK = d.sk, isAs = d.type === 'as', pers = d.pers, AI = d.annen || 0;
+    var calc = compute(MV, SV, AN, SK, pers, AI), E = calc.enk, A = calc.as, SEL = isAs ? A : E, OTH = isAs ? E : A;
     var gev = calc.gevinst, brutto = calc.brutto, hasGain = gev > 0, taxed = SEL.total > 0.5, gevFull = Math.max(0, MV - SV), a = AN / 100;
     var andelTxt = AN % 1 === 0 ? String(AN) : L.dec(AN, 1);
     var form = isAs ? 'AS' : 'ENK', oForm = isAs ? 'ENK' : 'AS';
@@ -967,12 +992,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var scaled = hasGain && a < 0.9999, S = W / MV;
 
     // Merket, overskriften og ingressen (AS har egen variant: der er hele verdien utbytte)
-    var mine = !(d.type === 'enk' && MV === 1000000 && SV === 400000 && AN === 100 && SK === 0 && pers);
+    var mine = !(d.type === 'enk' && MV === 1000000 && SV === 400000 && AN === 100 && SK === 0 && pers && AI === 0);
     root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
     set('stateLabel', mine ? ph('Dine tall') : ph('Eksempel'));
     var badge = t('lrnUxState', '{f} · markedsverdi {m} · skattemessig verdi {s} · {a} % privat', {f:form, m:kr(MV), s:kr(SV), a:andelTxt});
     if(isAs && SK > 0) badge += ' · ' + t('lrnUxStateSk', 'skjerming {k}', {k:kr(SK)});
     if(!isAs && !pers) badge += ' · ' + ph('ikke personinntekt');
+    if(!isAs && AI > 0) badge += ' · ' + t('lrnUxStateAi', 'annen inntekt {k}', {k:kr(AI)});
     set('stateText', nb(badge));
     show('hEnk', !isAs); show('hAs', isAs);
 
@@ -1179,8 +1205,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var yAfter = yT2 + 26 + 22, noteW = MOB ? W : G.ledW;
 
       // Fotnote (ENK) eller lenke (AS)
-      if(!isAs && pers){
-        var fn = ph('Regnet som om uttaket er den eneste personinntekten din i året.'), nLf = Math.max(1, Math.ceil(tw(fn, 12) / noteW));
+      if(!isAs){
+        var fn = AI > 0 ? t('lrnUxFotA', 'Regnet oppå {k} i annen personinntekt.', {k:kr(AI)})
+          : (pers ? ph('Regnet som om uttaket er den eneste personinntekten din i året.') : ph('Regnet som om du ikke har annen inntekt i året.'));
+        if(AI < HV_SATSER.skatt.personfradrag) fn += ' ' + ph('Personfradraget er trukket fra før inntektsskatten.');
+        var nLf = Math.max(1, Math.ceil(tw(fn, 12) / noteW));
         T({left:lx0, top:yAfter + 12, w:noteW, text:fn, fs:12, lh:17, c:'i3'});
         yAfter = yAfter + 12 + nLf * 17;
       }
@@ -1206,10 +1235,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
       // Merknadene
       if(!isAs && pers){
-        notes[Number(nrNote.trygd) - 1] = t('lrnUxNTrygd', 'Trygdeavgiften er 10,8 % av gevinsten. Under 99 650 kr regnes den ikke, og rett over trappes den opp med 25 % av beløpet over grensen.');
+        notes[Number(nrNote.trygd) - 1] = AI > 0
+          ? t('lrnUxNTrygdA', 'Trygdeavgiften er regnet av gevinsten oppå den andre inntekten din. Vanligvis blir det 10,8 % av gevinsten.')
+          : t('lrnUxNTrygd', 'Trygdeavgiften er 10,8 % av gevinsten. Under 99 650 kr regnes den ikke, og rett over trappes den opp med 25 % av beløpet over grensen.');
         var nn = E.n;
         notes[Number(nrNote.trinn) - 1] = t('lrnUxNTrinn', 'Trinnskatten trappes opp: 1,7 % over 226 100 kr, 4,0 % over 318 300 kr, 13,7 % over 725 050 kr, 16,8 % over 980 100 kr og 17,8 % over 1 467 200 kr.') + ' ' +
-          (nn > 0 ? t('lrnUxNTrinnN', 'Gevinsten din når trinn {n}.', {n:String(nn)}) : t('lrnUxNTrinn0', 'Gevinsten din er under trinn 1, så trinnskatten blir 0 kr.'));
+          (AI > 0
+            ? (nn > 0 ? t('lrnUxNTrinnNA', 'Sammen med den andre inntekten din når du trinn {n}.', {n:String(nn)}) : t('lrnUxNTrinn0A', 'Sammen med den andre inntekten din er du under trinn 1, så trinnskatten blir 0 kr.'))
+            : (nn > 0 ? t('lrnUxNTrinnN', 'Gevinsten din når trinn {n}.', {n:String(nn)}) : t('lrnUxNTrinn0', 'Gevinsten din er under trinn 1, så trinnskatten blir 0 kr.')));
       } else if(!isAs) notes[Number(nrNote.alm) - 1] = t('lrnUxNAlm', 'Du har svart at uttaket ikke er personinntekt, så det blir bare alminnelig inntektsskatt, ingen trygdeavgift og ingen trinnskatt.');
       else if(nrNote.utb) notes[Number(nrNote.utb) - 1] = t('lrnUxNUtb', 'Utbyttet er hele verdien du tar ut, ikke bare gevinsten, fordi eiendelen går til deg uten vederlag (skatteloven § 10-11 annet ledd). Skjermingsfradraget trekkes fra før oppjusteringen med 1,72.');
     } else H = Math.ceil(Math.max(yEnd, y1) + 14);

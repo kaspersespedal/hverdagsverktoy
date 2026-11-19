@@ -493,7 +493,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
-<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
+<script src="/shared/satser.js?v=v2" data-varsel="skatt"></script>
 <script>
   // ── Reisefradrag: portet calcReise-logikk (shared/core.js:3582) ──
   (function(){
@@ -515,7 +515,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     function compute(){
       var km = parseAmt('reise-km');
-      var dager = parseAmt('reise-dager') || 230;
+      var dager = parseAmt('reise-dager');
       var bom = parseAmt('reise-bom');
 
       var S = HV_SATSER.skatt;
@@ -524,7 +524,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var oevreGrense = S.reiseTak;         // Maks fradragsgrunnlag
       var bomGrense = S.reiseBomGrense;     // Bom og ferge teller bare over 3 300 kr i året, og da hele beløpet (FSFIN § 6-44-4)
 
-      if(km <= 0){
+      if(km <= 0 || dager <= 0){
         return { hasData:false, km:km, dager:dager, bom:bom, satsPerKm:satsPerKm, nedreGrense:nedreGrense, oevreGrense:oevreGrense };
       }
 
@@ -750,8 +750,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function render(d){
     var L = window.hvtLearn, t = L.t, ph = L.ph;
     raw = d;
-    var inp = d && d.km > 0 ? d : DEF;
-    var mine = !!d && d.km > 0 && !(d.km === DEF.km && d.dager === DEF.dager && d.bom === DEF.bom);
+    var inp = d && d.km > 0 && d.dager > 0 ? d : DEF;
+    var mine = !!d && d.km > 0 && d.dager > 0 && !(d.km === DEF.km && d.dager === DEF.dager && d.bom === DEF.bom);
     var W = plot.clientWidth;
     if(!W){ lastW = 0; return; }
     lastW = W;

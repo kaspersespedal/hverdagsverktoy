@@ -331,6 +331,7 @@ body.focus-mode > footer{display:none}
                       <div class="ik-fg">
                         <label class="ik-lbl" for="inn-uker"><span data-i18n="inntektLblUker">Uker per år</span> <span class="cap">(uker)</span></label>
                         <input id="inn-uker" class="ik-input" type="text" inputmode="numeric" value="46" autocomplete="off">
+                        <div class="ik-hint">Uker du faktisk jobber. Feriepenger (10,2 %) legges til årslønna.</div>
                       </div>
                       <div class="ik-derived">
                         <span class="l" data-i18n="inntektDerivedBrutto">Beregnet årslønn</span>
@@ -575,7 +576,7 @@ body.focus-mode > footer{display:none}
   })();
 </script>
 
-<script src="/shared/satser.js?v=v1" data-varsel="skatt"></script>
+<script src="/shared/satser.js?v=v2" data-varsel="skatt"></script>
 <script>
 // ── Lønn ut: JSX→vanilla port av samme inntekt-app (delt matte med /skatt/inntekt/)
 // Satsene leses fra shared/satser.js (Stortingets skattevedtak, Skatteloven §§ 6-30, 12-1, 15-4)
@@ -617,6 +618,7 @@ body.focus-mode > footer{display:none}
     var fag     = Math.min(+input.fag || 0, FAG_MAX);
     var ips     = Math.min(+input.ips || 0, IPS_MAX);
     var gaver   = Math.min(+input.gaver || 0, GAVE_MAX);
+    if(gaver < S.gaverMin) gaver = 0;   // under 500 kr gir ikke fradrag (sktl. § 6-50)
     var bsuInn  = Math.min(+input.bsu || 0, BSU_MAX_INN);
     var minste = Math.min(brutto * MINSTE_RATE, MINSTE_MAX);
     var finnmark = (almRate === FINNMARK_RATE) ? FINNMARK_FRADRAG : 0;
@@ -679,7 +681,8 @@ body.focus-mode > footer{display:none}
   }
   function activeBrutto(){
     if(state.mode === 'time'){
-      return Math.round(state.timepris * state.timerUke * state.ukerAr);
+      // Timelønte får ikke lønn i ferien, men feriepenger: 10,2 % av lønna (ferieloven § 10 nr. 2)
+      return Math.round(state.timepris * state.timerUke * state.ukerAr * 1.102);
     }
     return state.brutto;
   }
