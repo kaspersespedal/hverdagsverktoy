@@ -707,6 +707,7 @@ REGIONS['fr'] = {
     searchKbdHint:'Appuyez sur / pour accéder à la recherche',
     searchPopular:'Suggestions',
     searchNoResults:'Aucun résultat',
+    searchResultCount:'{n} résultats',
     searchGroupHere:'Sur cette page',
     searchGroupElse:'Ailleurs sur le site',
     searchMissing:'Il manque quelque chose ?',

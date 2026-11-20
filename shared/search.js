@@ -838,9 +838,9 @@ function renderResults(results, q){
     else rest.push(deduped[k]);
   }
   if(here.length && rest.length){
-    return '<div class="search-group-label">'+escHtml(T('searchGroupHere','På denne siden'))+'</div>' +
+    return '<div class="search-group-label" role="presentation">'+escHtml(T('searchGroupHere','På denne siden'))+'</div>' +
            groupRowsHtml(here.slice(0,5), q) +
-           '<div class="search-group-label">'+escHtml(T('searchGroupElse','Ellers på hverdagsverktøy'))+'</div>' +
+           '<div class="search-group-label" role="presentation">'+escHtml(T('searchGroupElse','Ellers på hverdagsverktøy'))+'</div>' +
            groupRowsHtml(rest.slice(0,4), q);
   }
   return groupRowsHtml(deduped.slice(0,7), q);
@@ -908,13 +908,15 @@ function initSearch(){
       '<input type="text" id="search-input" placeholder="'+placeholder+'" data-i18n-placeholder="searchPlaceholder" autocomplete="off" spellcheck="false" aria-label="'+placeholder+'" role="combobox" aria-expanded="false" aria-controls="search-dropdown">' +
       '<span class="search-keys" role="img" title="'+kbdHint+'" aria-label="'+kbdHint+'"><kbd>'+(IS_MAC ? '⌘' : 'Ctrl')+'</kbd><kbd>K</kbd></span>' +
     '</div>' +
-    '<div class="search-dropdown" id="search-dropdown" role="listbox" aria-live="polite"></div>' +
+    '<div class="search-dropdown" id="search-dropdown" role="listbox"></div>' +
+    '<div id="search-status" role="status" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;"></div>' +
     '<div class="search-suggestions" id="search-suggestions"></div>';
 
   point.parent.insertBefore(wrap, point.before);
 
   var input    = document.getElementById('search-input');
   var dropdown = document.getElementById('search-dropdown');
+  var statusEl = document.getElementById('search-status');
   var chips    = document.getElementById('search-suggestions');
   fitPlaceholder(input);
   var activeIdx = -1;
@@ -923,7 +925,12 @@ function initSearch(){
   function setOpen(open){
     dropdown.classList.toggle('visible', open);
     input.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if(!open) input.removeAttribute('aria-activedescendant');
+    if(!open){
+      input.removeAttribute('aria-activedescendant');
+      // Tom lista, ellers holder :not(:empty){display:block} den synlig (WCAG 1.4.13)
+      dropdown.innerHTML = '';
+      statusEl.textContent = '';
+    }
   }
 
   // Build suggestion chips (rebuildable on language change)
@@ -949,6 +956,9 @@ function initSearch(){
     if(!input.value.trim()){
       chips.classList.add('visible');
       setOpen(false);
+    } else if(!dropdown.classList.contains('visible')){
+      // Treffene ble lukket (Esc eller klikk utenfor): vis dem igjen når feltet får fokus
+      input.dispatchEvent(new Event('input'));
     }
   });
   // Backup: load intents at idle time even if user never focuses search
@@ -989,11 +999,13 @@ function initSearch(){
         });
       }
       setOpen(true);
+      statusEl.textContent = T('searchNoResults','Ingen treff');
       return;
     }
 
     dropdown.innerHTML = renderResults(results, q);
     setOpen(true);
+    statusEl.textContent = T('searchResultCount','{n} treff').replace('{n}', dropdown.querySelectorAll('.search-result').length);
   });
 
   // Keyboard navigation
@@ -1017,8 +1029,12 @@ function initSearch(){
         openContactWithSuggestion(input.value.trim());
       }
     } else if(e.key === 'Escape'){
-      input.blur();
-      setOpen(false);
+      // Første Esc lukker lista og beholder fokus i feltet; Esc på lukket liste forlater feltet
+      if(dropdown.classList.contains('visible')){
+        setOpen(false);
+      } else {
+        input.blur();
+      }
       chips.classList.remove('visible');
     }
   });
