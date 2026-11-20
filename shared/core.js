@@ -202,8 +202,6 @@ let region = (function(){
   try { const s=localStorage.getItem('hvt-lang'); if(s && VALID_LANGS.indexOf(s)>=0) return s; } catch(e){}
   return 'no';
 })();
-// Redirect ?lang=X to /X/path/ (SEO Fase 4 — canonical subdirectory URLs)
-(function(){try{var ql=new URLSearchParams(window.location.search).get('lang');if(ql&&VALID_LANGS.indexOf(ql)>=0&&ql!=='no'){var p=window.location.pathname.replace(/\/$/,'');if(!/^\/[a-z]{2}(\/|$)/.test(p)){var dst='/'+ql+p+'/';window.location.replace(dst);return;}}}catch(e){}})();
 // Set dir attribute on load for RTL languages
 (function(){if(region==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}})();
 let _langLoading = {};
@@ -212,7 +210,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v330';
+    s.src = '/shared/lang/' + code + '.js?v=v331';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);

@@ -1,6 +1,6 @@
 # Hverdagsverktøy
 
-Gratis norske finanskalkulatorer — skatt, boliglån, MVA, avgifter, regnskap og privatøkonomi. Tilgjengelig på 10 språk.
+Gratis norske finanskalkulatorer — skatt, boliglån, MVA, avgifter, regnskap og privatøkonomi. Tilgjengelig på 6 språk.
 
 **[hverdagsverktoy.com](https://xn--hverdagsverkty-2qb.no)**
 
@@ -8,9 +8,9 @@ Et uavhengig, ikke-kommersielt hobbyprosjekt utviklet av en privatperson på fri
 
 ## Hva det er
 
-Rundt 50 kalkulatorer og informasjonssider som forklarer norske skatteregler, boliglånsforskrifter og avgifter. Prosjektet startet som et personlig verktøy for å forstå norsk skatt og økonomi.
+Over 50 kalkulatorer og informasjonssider som forklarer norske skatteregler, boliglånsforskrifter og avgifter. Prosjektet startet som et personlig verktøy for å forstå norsk skatt og økonomi.
 
-Innholdet finnes på norsk, engelsk, arabisk, kinesisk, fransk, polsk, ukrainsk, litauisk, somali og tigrinja. Alle språkversjoner viser de samme norske satsene og reglene — bare oversatt.
+Innholdet finnes på norsk, engelsk, polsk, ukrainsk, arabisk og fransk. Alle språkversjoner viser de samme norske satsene og reglene — bare oversatt.
 
 | Seksjon | Innhold |
 |---|---|
@@ -29,7 +29,7 @@ Statisk nettsted uten byggesystem. Ren HTML, CSS og JavaScript — filene server
 
 ```
 shared/          Delt CSS og JS — lastes av alle sider
-shared/lang/     Språkfiler (10 stk)
+shared/lang/     Språkfiler (10 stk, 6 vises i språkvelgeren)
 <seksjon>/       Landingsside per seksjon
 <seksjon>/<x>/   Én kalkulator eller artikkel per mappe
 ```
