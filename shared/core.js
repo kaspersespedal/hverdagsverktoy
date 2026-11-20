@@ -212,7 +212,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v241';
+    s.src = '/shared/lang/' + code + '.js?v=v330';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -228,6 +228,14 @@ if('serviceWorker' in navigator) {
 }
 buildThemePicker();
 let activeCalc = 'dashboard';
+// Myk rulling følger «reduser bevegelse»: kall med behavior:'smooth' (her og i sidenes egne skript) blir vanlig rulling.
+(function(){
+  if(!window.matchMedia||!window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  function calm(o){return(o&&typeof o==='object'&&o.behavior==='smooth')?Object.assign({},o,{behavior:'auto'}):o;}
+  var si=Element.prototype.scrollIntoView;
+  Element.prototype.scrollIntoView=function(o){return si.call(this,calm(o));};
+  ['scrollTo','scroll'].forEach(function(n){var f=window[n];window[n]=function(a,b){return typeof a==='object'?f.call(window,calm(a)):f.apply(window,arguments);};});
+})();
 let _sal, _mor, _npv, _vat;
 
 function R() { const r=REGIONS[region]; if(!r) return REGIONS['no']||{}; return r.base ? Object.assign({},REGIONS[r.base],r) : r; }
@@ -5683,7 +5691,7 @@ function toggleMobileSidebar(){document.body.classList.toggle('mobile-sidebar-op
 function closeMobileSidebar(){document.body.classList.remove('mobile-sidebar-open');}
 // Focus mode
 var _focusZoomHandler=null;var _focusGestureHandler=null;
-function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';var mmb=document.querySelector('.mobile-mode-bar');if(mmb)mmb.style.top='0px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no');_focusZoomHandler=function(e){if(e.touches&&e.touches.length>1){e.preventDefault();}};document.addEventListener('touchstart',_focusZoomHandler,{passive:false});_focusGestureHandler=function(e){e.preventDefault();};document.addEventListener('gesturestart',_focusGestureHandler,{passive:false});var scrollContainer=document.querySelector('#calc-basic>div:first-child');if(scrollContainer)scrollContainer.style.overflowY='auto';}
+function enterFocusMode(){document.body.classList.add('calc-focus');document.body.style.overflow='hidden';var mmb=document.querySelector('.mobile-mode-bar');if(mmb)mmb.style.top='0px';var scrollContainer=document.querySelector('#calc-basic>div:first-child');if(scrollContainer)scrollContainer.style.overflowY='auto';}
 function exitFocusMode(){document.body.classList.remove('calc-focus');document.body.style.overflow='';var mmb=document.querySelector('.mobile-mode-bar');var h=document.querySelector('header');if(mmb&&h&&h.offsetHeight>0)mmb.style.top=h.offsetHeight+'px';var vp=document.querySelector('meta[name="viewport"]');if(vp)vp.setAttribute('content','width=device-width,initial-scale=1');if(_focusZoomHandler){document.removeEventListener('touchstart',_focusZoomHandler);_focusZoomHandler=null;}if(_focusGestureHandler){document.removeEventListener('gesturestart',_focusGestureHandler);_focusGestureHandler=null;}}
 function updateMobileBar(label){var el=document.getElementById('mobile-mode-label');if(el)el.textContent=label;}
 
@@ -5805,6 +5813,8 @@ document.addEventListener('keydown', function(e){
   }
   // Enter for other calculators
   if(e.key==='Enter'){
+    // Enter skal virke som vanlig på lenker, knapper, <summary> og elementer med rolle (WCAG 2.1.1)
+    if(e.target.closest&&e.target.closest('a[href],button,summary,[role="button"],[role="tab"],[role="link"],[role="menuitem"],[role="option"],[contenteditable="true"]'))return;
     e.preventDefault();
     const calcMap={salary:calcSal,mortgage:calcMor,npv:calcNpv,vat:calcVat,uttak:calcUttak,adj:calcAdj};
     if(activeCalc==='basic'&&bcMode==='finance'){fcCalc();return;}
@@ -5816,6 +5826,30 @@ document.addEventListener('keydown', function(e){
     if(calcMap[activeCalc])calcMap[activeCalc]();
   }
 });
+
+// ═══════════════════════════════════════════════════════
+// TILSTAND PÅ FOKUS- OG VEILEDNINGSKNAPPENE (aria-pressed / aria-expanded)
+// Sidene bytter selv klassene; her holdes aria-attributtene i takt for alle sidene.
+// ═══════════════════════════════════════════════════════
+(function(){
+  function syncFocusBtns(){
+    var on=document.body.classList.contains('focus-mode')?'true':'false';
+    document.querySelectorAll('.focus-card-btn').forEach(function(b){b.setAttribute('aria-pressed',on);});
+  }
+  function initToggleState(){
+    document.querySelectorAll('.calc-help-btn').forEach(function(b){if(!b.hasAttribute('aria-expanded'))b.setAttribute('aria-expanded','false');});
+    syncFocusBtns();
+    new MutationObserver(syncFocusBtns).observe(document.body,{attributes:true,attributeFilter:['class']});
+  }
+  // Veiledningsknappen: har sidens egen kode ikke endret aria-expanded under klikket, snus den her.
+  var _helpBefore=null;
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.calc-help-btn');_helpBefore=b?b.getAttribute('aria-expanded'):null;},true);
+  document.addEventListener('click',function(e){
+    var b=e.target.closest&&e.target.closest('.calc-help-btn');
+    if(b&&b.getAttribute('aria-expanded')===_helpBefore)b.setAttribute('aria-expanded',_helpBefore==='true'?'false':'true');
+  });
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initToggleState);else initToggleState();
+})();
 
 // ═══════════════════════════════════════════════════════
 // INIT

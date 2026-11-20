@@ -901,6 +901,7 @@ REGIONS['en'] = {
     searchKbdHint:'Press / to focus search',
     searchPopular:'Suggested',
     searchNoResults:'No results',
+    searchResultCount:'{n} results',
     searchGroupHere:'On this page',
     searchGroupElse:'Elsewhere on the site',
     searchMissing:'Missing something?',

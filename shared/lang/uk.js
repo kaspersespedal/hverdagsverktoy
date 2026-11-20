@@ -665,6 +665,7 @@ REGIONS['uk'] = {
     searchKbdHint:'Натисніть /, щоб перейти до пошуку',
     searchPopular:'Рекомендовані',
     searchNoResults:'Нічого не знайдено',
+    searchResultCount:'Результатів: {n}',
     searchGroupHere:'На цій сторінці',
     searchGroupElse:'В інших розділах сайту',
     searchMissing:'Чогось не вистачає?',

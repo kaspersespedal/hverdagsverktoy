@@ -662,6 +662,7 @@ REGIONS['pl'] = {
     searchKbdHint:'Naciśnij /, aby skupić wyszukiwanie',
     searchPopular:'Proponowane',
     searchNoResults:'Brak wyników',
+    searchResultCount:'Wyniki: {n}',
     searchGroupHere:'Na tej stronie',
     searchGroupElse:'W innych miejscach serwisu',
     searchMissing:'Czegoś brakuje?',
