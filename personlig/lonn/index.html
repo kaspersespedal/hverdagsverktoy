@@ -364,6 +364,7 @@ body.focus-mode > footer{display:none}
                   <div class="ik-fg">
                     <label class="ik-lbl" for="lonnUker" data-i18n="lonnLUker">Arbeidsuker per år</label>
                     <input id="lonnUker" class="ik-input" type="text" inputmode="numeric" min="1" max="52" step="1" value="47" autocomplete="off">
+                    <div class="ik-hint" id="lonnUkerFeil" hidden>Arbeidsuker må være fra 1 til 52.</div>
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="lonnAlder" data-i18n="lonnLAlder">Alder</label>
@@ -543,7 +544,7 @@ body.focus-mode > footer{display:none}
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
-<script defer src="/shared/core.js?v=v350"></script>
+<script defer src="/shared/core.js?v=v366"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
@@ -586,10 +587,14 @@ body.focus-mode > footer{display:none}
     function compute(){
       var timelonn = parseAmt(document.getElementById('lonnTimelonn').value);
       var timerUke = parseAmt(document.getElementById('lonnTimer').value);
-      var ukerAar  = parseAmt(document.getElementById('lonnUker').value) || 47;
+      // Tomt felt = 47 uker. 0 eller over 52 er umulig: ingen svar, melding under feltet.
+      var ukerTxt  = document.getElementById('lonnUker').value;
+      var ukerAar  = String(ukerTxt).trim() === '' ? 47 : parseAmt(ukerTxt);
       var alder    = document.getElementById('lonnAlder').value || '18plus';
+      var ukerFeil = !(ukerAar >= 1 && ukerAar <= 52);
+      document.getElementById('lonnUkerFeil').hidden = !ukerFeil;
 
-      if(timelonn <= 0 || timerUke <= 0){
+      if(timelonn <= 0 || timerUke <= 0 || ukerFeil){
         return { hasData:false, timelonn:timelonn, timerUke:timerUke, ukerAar:ukerAar, alder:alder };
       }
 
