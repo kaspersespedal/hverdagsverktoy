@@ -533,7 +533,7 @@ body.focus-mode > footer{display:none}
   window.bilCalc = window.bilCalc || function(s){
     var pris      = +s.pris      || 0;
     var restverdi = +s.restverdi || 0;
-    var aar       = Math.max(1, +s.aar || 1);
+    var aar       = +s.aar > 0 ? +s.aar : 1;   // 0,5 år regnes som 0,5 år; 0 eller tomt = 1 år (melding under feltet)
     var kmAar     = +s.kmAar     || 0;
     var forbruk   = +s.forbruk   || 0;
     var drivPris  = +s.drivPris  || 0;
@@ -651,6 +651,7 @@ body.focus-mode > footer{display:none}
       '            <div class="ik-fg">',
       '              <label class="ik-lbl" for="bil-aar"><span data-i18n="bilLblAarShort">Eieperiode</span> <span class="cap">(år)</span></label>',
       '              <input id="bil-aar" class="ik-input" type="text" inputmode="decimal" autocomplete="off" data-field="aar" data-parser="dec">',
+      '              <div class="ik-hint" id="bilAarFeil" hidden>Eieperioden må være mer enn 0 år. Regnet med 1 år.</div>',
       '            </div>',
       '            <div class="ik-fg">',
       '              <label class="ik-lbl" for="bil-km"><span data-i18n="bilLblKmShort">Kjørelengde</span> <span class="cap">(km/år)</span></label>',
@@ -785,6 +786,8 @@ body.focus-mode > footer{display:none}
 
   function render(){
     var r = window.bilCalc(state);
+    var aarFeil = document.getElementById('bilAarFeil');
+    if(aarFeil) aarFeil.hidden = +state.aar > 0;
     var preset = PRESETS[state.drivstoffType];
     window._bil = {type:state.drivstoffType, pris:state.pris, rest:state.restverdi, aar:state.aar, km:state.kmAar, fb:state.forbruk, pr:state.drivPris,
       fors:state.forsikring, avg:state.aarsavg, bom:state.bom, park:state.parkering, serv:state.service, dekk:state.dekk, div:state.div};
@@ -969,7 +972,7 @@ body.focus-mode > footer{display:none}
     return fl;
   }
   function kost(s){
-    var aar = Math.max(1, +s.aar || 1), km = +s.km || 0;
+    var aar = +s.aar > 0 ? +s.aar : 1, km = +s.km || 0;
     var va = Math.max(0, (+s.pris || 0) - (+s.rest || 0)) / aar;
     var da = km * (+s.fb || 0) / 100 * (+s.pr || 0);
     var fa = (+s.fors || 0) + (+s.avg || 0) + ((+s.bom || 0) + (+s.park || 0)) * 12;
