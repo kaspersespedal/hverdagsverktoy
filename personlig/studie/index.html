@@ -599,7 +599,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
-<script defer src="/shared/core.js?v=v331"></script>
+<script defer src="/shared/core.js?v=v332"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
@@ -618,9 +618,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
     function parseAmt(s){
       if(s == null) return 0;
-      var raw = String(s).replace(/[^0-9\-]/g, '');
+      // Komma er desimaltegn og rundes til hele kroner: «129,90» blir 130, ikke 12 990.
+      var raw = String(s).replace(/[^0-9,\-]/g, '').replace(',', '.');
       if(!raw || raw === '-') return 0;
-      var n = parseInt(raw, 10);
+      var n = Math.round(parseFloat(raw));
       return isNaN(n) ? 0 : n;
     }
     function parseDec(s){
@@ -631,6 +632,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     }
     function fmtInt(n){ return fmtNb.format(n).replace(/ /g, ' '); }
     function liveFormat(inp){
+      if(/[.,]/.test(inp.value)) return; // Med desimaler (komma eller punktum) lar vi feltet være: core.js formaterer det og beholder kommaet.
       var raw = inp.value.replace(/[^0-9\-]/g, '');
       if(raw === '' || raw === '-') return;
       var num = parseInt(raw, 10);
@@ -644,7 +646,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     function $(id){ return document.getElementById(id); }
     function val(id){ return $(id) ? $(id).value : ''; }
-    function num(id){ var v = +val(id); return isNaN(v) ? 0 : v; }
+    // Antall år og måneder: komma leses som desimaltegn og rundes til helt tall («2,5» blir 3, ikke 0).
+    function num(id){ var v = Math.round(+String(val(id)).replace(/\s/g, '').replace(',', '.')); return isNaN(v) ? 0 : v; }
 
     function clampBorte(){
       var aar = num('varighet') || 3;
