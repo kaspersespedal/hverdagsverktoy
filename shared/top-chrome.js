@@ -374,7 +374,7 @@
      får plass igjen fra ca. 1170 px. Under 1061 px ruller rekka uansett, der står 14 px. */
   @media(min-width:1061px){
     .tabs.has-mod > a.tab{padding-left:10px;padding-right:10px}
-    .tabs.has-mod > a.tab[aria-selected="true"]::after{left:10px;right:10px}
+    .tabs.has-mod > a.tab[aria-current="page"]::after{left:10px;right:10px}
   }
   /* Fokusmodus skjuler toppmenyen. Knappen i heroen er ute av syne når man har rullet, så en
      liten flytende knapp (og Esc) gir veien ut. */
@@ -745,7 +745,7 @@
     var tabs = document.querySelector('.tabs');
     if (!tabs) return;
     if (tabs.scrollWidth <= tabs.clientWidth + 1) return;   // alt får plass
-    var active = tabs.querySelector('[aria-selected="true"], .tab.active, .tab[aria-current]');
+    var active = tabs.querySelector('.tab.active, .tab[aria-current]');
     if (!active) return;
     // Sentrer fanen i stedet for å klistre den til kanten, så det er synlig
     // at det finnes faner på begge sider.
@@ -910,8 +910,6 @@
       if (ref){
         var a = document.createElement('a');
         a.href = MOD_HREF; a.className = 'tab';
-        if (ref.hasAttribute('role')) a.setAttribute('role', ref.getAttribute('role'));
-        if (ref.hasAttribute('aria-selected')) a.setAttribute('aria-selected', 'false');
         var refSvg = ref.querySelector('svg');
         if (refSvg){
           var svg = refSvg.cloneNode(false);
