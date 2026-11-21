@@ -2083,11 +2083,11 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v331" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v331" defer></script>
+<link rel="preload" href="/shared/core.js?v=v332" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v332" defer></script>
 <script src="/shared/lang/no.js?v=v289" defer></script>
 <script src="/shared/site-shell.js?v=v2" defer></script>
-<script src="/shared/top-chrome.js?v=v331" defer></script>
+<script src="/shared/top-chrome.js?v=v332" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/markedsdata.js?v=v327" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
@@ -4959,6 +4959,12 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     function openModal(e){
       if(e){e.preventDefault();st.trigger=e.currentTarget;}
       if(st.hideTimer){clearTimeout(st.hideTimer);st.hideTimer=null;}
+      // Starter på Privat eller Bedrift etter knappen over kategoriene, til du velger filter selv.
+      var md=document.documentElement.getAttribute("data-modus");
+      if(!st.egetFilter && (md==="privat"||md==="bedrift")){
+        st.filter=md;
+        modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q.getAttribute("data-fr-filter")===md?"true":"false");});
+      }
       renderModal(modal,st);
       modal.hidden=false;modal.setAttribute("aria-hidden","false");
       requestAnimationFrame(function(){modal.classList.add("open");});
@@ -4984,14 +4990,14 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
     modal.querySelectorAll("[data-fr-filter]").forEach(function(pill){
       pill.addEventListener("click",function(){
-        st.filter=pill.getAttribute("data-fr-filter");
+        st.filter=pill.getAttribute("data-fr-filter");st.egetFilter=true;
         modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q===pill?"true":"false");});
         renderModal(modal,st);
       });
     });
     modal.querySelectorAll("[data-fr-clear]").forEach(function(b){
       b.addEventListener("click",function(){
-        st.q="";st.filter="alle";si.value="";
+        st.q="";st.filter="alle";st.egetFilter=true;si.value="";
         modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q.getAttribute("data-fr-filter")==="alle"?"true":"false");});
         renderModal(modal,st);
       });

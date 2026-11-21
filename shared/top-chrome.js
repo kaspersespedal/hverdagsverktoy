@@ -1002,12 +1002,34 @@
       if (links[i].pathname.replace(/index\.html$/, '') === sti) return links[i];
     return null;
   }
+  // De fire blandede seksjonsforsidene: kortene for valgt side først, så de felles, så den
+  // andre siden. Ingenting skjules. Nummereringen (01, 02 …) følger den nye rekkefølgen.
+  var MODUS_FORSIDER = ['/skatt/', '/kalkulator/', '/avgift/', '/lov/'];
+  function sorterKort(m){
+    if (MODUS_FORSIDER.indexOf(location.pathname.replace(/index\.html$/, '')) < 0) return;
+    function rang(a){ var s = sideModus(a.pathname); return s === m ? 0 : s === 'felles' ? 1 : 2; }
+    var lister = document.querySelectorAll('.cat-grid, .tool-group');
+    for (var i = 0; i < lister.length; i++){
+      var kort = [];
+      for (var c = lister[i].firstElementChild; c; c = c.nextElementSibling)
+        if (c.matches('a.cat-card, a.tg-link')) kort.push(c);
+      for (var k = 0; k < kort.length; k++)
+        if (!kort[k].hasAttribute('data-tc-ordre')) kort[k].setAttribute('data-tc-ordre', k);
+      kort.sort(function(a, b){ return rang(a) - rang(b) || a.getAttribute('data-tc-ordre') - b.getAttribute('data-tc-ordre'); });
+      for (k = 0; k < kort.length; k++){
+        lister[i].appendChild(kort[k]);
+        var n = kort[k].querySelector('.cat-num');
+        if (n) n.textContent = (k < 9 ? '0' : '') + (k + 1);
+      }
+    }
+  }
   function visModus(m){
     document.documentElement.setAttribute('data-modus', m);
     // .hm-btn er forsidens knapp; den står ferdig i index.html.
     var btns = document.querySelectorAll('.tc-modus-btn, .hm-btn');
     for (var j = 0; j < btns.length; j++)
       btns[j].setAttribute('aria-pressed', btns[j].getAttribute('data-modus') === m ? 'true' : 'false');
+    sorterKort(m);
     var tabs = document.querySelector('.tabs');
     if (!tabs) return;
     for (var i = 0; i < MODUS_FANER.length; i++){
@@ -1046,7 +1068,9 @@
       var box = document.createElement('div');
       box.className = 'tc-modus';
       box.setAttribute('role', 'group');
-      box.setAttribute('aria-label', 'Vis menyen for privat eller bedrift');
+      // Ledeteksten oversettes fra språkfilas frase-ordbok (_ph), som core.js bruker for aria-label.
+      var lbl = 'Vis menyen for privat eller bedrift';
+      box.setAttribute('aria-label', (r._ph && r._ph[lbl]) || lbl);
       box.innerHTML =
         '<button type="button" class="tc-modus-btn" data-modus="privat" data-i18n="m.f.privat">' + (r['m.f.privat'] || 'Privat') + '</button>' +
         '<button type="button" class="tc-modus-btn" data-modus="bedrift" data-i18n="m.f.bedrift">' + (r['m.f.bedrift'] || 'Bedrift') + '</button>';
