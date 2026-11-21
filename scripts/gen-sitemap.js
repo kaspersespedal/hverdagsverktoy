@@ -40,9 +40,19 @@ function walk(dir, out) {
   return out;
 }
 
+// Hver versjonsbump endrer bare ?v=-lenkene i alle sider. Slike commits teller ikke:
+// lastmod er datoen for siste commit som endret noe annet enn en ?v=-linje.
 function lastmod(urlPath) {
   const file = path.join(urlPath.replace(/^\//, ''), 'index.html').split(path.sep).join('/');
   try {
+    const log = execFileSync('git', ['log', '-n', '40', '--format=COMMIT %cs', '--patch', '-U0', '--', file],
+      { cwd: ROOT, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
+    for (const block of log.split('COMMIT ').slice(1)) {
+      const lines = block.split(/\r?\n/);
+      const real = lines.slice(1).some(l =>
+        /^[+-]/.test(l) && !/^(\+\+\+|---)/.test(l) && !/\?v=/.test(l));
+      if (real && /^\d{4}-\d{2}-\d{2}$/.test(lines[0].trim())) return lines[0].trim();
+    }
     const d = execFileSync('git', ['log', '-1', '--format=%cs', '--', file],
       { cwd: ROOT, encoding: 'utf8' }).trim();
     if (/^\d{4}-\d{2}-\d{2}$/.test(d)) return d;
