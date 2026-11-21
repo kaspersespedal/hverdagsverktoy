@@ -62,7 +62,9 @@
     ROWS.forEach(function(r){
       a[r.k] = inp[r.k].map(function(el){
         var n = M.parseNum(el.value);
-        if(!isFinite(n)) n = 0;          // tomt felt = 0
+        // Tomt felt = 0. Står det noe som ikke er et tall, merkes feltet i stedet for at 0 brukes i stillhet.
+        el.setAttribute('aria-invalid', !isFinite(n) && el.value.trim() !== '' ? 'true' : 'false');
+        if(!isFinite(n)) n = 0;
         return r.pct ? n / 100 : n;
       });
     });

@@ -328,7 +328,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                 <div class="ik-row full">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="v-a"><span id="vatAmtLbl">Pris uten MVA</span><span class="cap">kr</span></label>
-                    <input id="v-a" class="ik-input" type="text" inputmode="numeric" value="10 000" autocomplete="off">
+                    <input id="v-a" class="ik-input" type="text" inputmode="decimal" value="10 000" autocomplete="off">
                   </div>
                 </div>
               </section>
@@ -650,7 +650,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var KEY = 'hv-vat-v1';
 
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
-    function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
+    // Beløp med øre vises med to desimaler (1 249,50 × 1,25 = 1 561,88 kr); hele kroner uten desimaler.
+    var fmtNb2 = new Intl.NumberFormat('nb-NO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    function fmtOre(n){ var o = Math.round(n * 100) / 100; return o % 1 === 0 ? fmtNb.format(o) : fmtNb2.format(o); }
+    function fmtKr(n){ return fmtOre(n).replace(/ /g, ' ') + ' kr'; }
     function fmtPct(n){ return n.toFixed(1).replace('.', ',').replace(/,0$/, '') + ' %'; }
 
     // Port av parseNum (core.js:249) — håndterer mellomrom, NBSP, komma som desimal
@@ -665,7 +668,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     function setOutputText(id, val){ var el=document.getElementById(id); if(el) el.textContent=val; }
 
     function setOutputHTML(id, val){ var el=document.getElementById(id); if(el) el.innerHTML=val; }
-    function fmtNum(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' '); }
+    function fmtNum(n){ return fmtOre(n).replace(/ /g, ' '); }
     // Tekst med tall hentes fra språkfila (R()); fast tekst skrives på norsk og oversettes av _ph.
     function t(k, fb){ var r = (typeof R === 'function') ? R() : null; return (r && r[k]) || fb; }
 
@@ -1277,7 +1280,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
-<script defer src="/shared/core.js?v=v331"></script>
+<script defer src="/shared/core.js?v=v350"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
