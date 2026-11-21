@@ -30,8 +30,9 @@
     {k:'pink',    l:'Rosa',      group:'light', sub:'Mykt blush',         pv:{bg:'#fffbfc', ink:'#3a2030', accent:'#bd3a5e'}},
     {k:'hendrix', l:'Hendrix',   group:'light', sub:'Fillmore-plakat',    pv:{bg:'#fdf0d9', ink:'#2b0b3f', accent:'#c40e76'}}
   ];
-  // `hidden:true` tar språket ut av velgeren uten å fjerne koden: språkfila,
-  // /<kode>/-sidene og ?lang=<kode> fungerer fortsatt for den som har lenka.
+  // `hidden:true` tar språket ut av velgeren uten å fjerne koden: språkfila
+  // ligger der fortsatt. ?lang=<kode> velger bare språket (core.js lagrer det i
+  // 'hvt-lang'); det finnes ingen /<kode>/-mapper å sende brukeren til.
   // Skjult 2026-08-09 fordi oversettelsene der lå for langt bak til å vises.
   var LANGS = [
     {k:'no', l:'Norsk',       flag:'no', group:'main'},
