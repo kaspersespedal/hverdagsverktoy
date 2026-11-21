@@ -575,9 +575,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   </div>
 </footer>
 
-<script defer src="/shared/site-shell.js?v=v357"></script>
-<script defer src="/shared/top-chrome.js?v=v357"></script>
-<script defer src="/shared/core.js?v=v366"></script>
+<script defer src="/shared/site-shell.js?v=v358"></script>
+<script defer src="/shared/top-chrome.js?v=v375"></script>
+<script defer src="/shared/core.js?v=v375"></script>
 <script defer src="/shared/lang/no-lett.js?v=v2"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
@@ -593,6 +593,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     return el ? +(el.value.replace(/[\s ]/g,'').replace(',','.')) || 0 : 0;
   }
   function fmt(n){
+    if(!isFinite(n)) return '–';  // urimelige tall gir «–», ikke «NaN kr» eller «∞ kr»
     return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0})
       .format(Math.round(n)).replace(/ /g,' ') + ' kr';
   }
@@ -685,7 +686,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var rawYears = getVal('m-y', 0);
     var years = rawYears > 0 ? Math.min(rawYears, 30) : 25;
     var _myEl = document.getElementById('m-y');
-    if(_myEl && String(_myEl.value) !== String(years)) _myEl.value = years;
+    // Rettes i feltet først når du går ut av det, så tallet ikke hopper mens du skriver
+    if(_myEl && document.activeElement !== _myEl && String(_myEl.value) !== String(years)) _myEl.value = years;
     var n = years * 12;
     var _mt = document.getElementById('m-type');
     var loanType = _mt ? _mt.value : 'annuity';
@@ -816,6 +818,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var el = document.getElementById(id);
     if(el) el.addEventListener('input', calcMor);
   });
+  document.getElementById('m-y').addEventListener('blur', calcMor);
   document.getElementById('m-type').addEventListener('change', calcMor);
   function downloadMorCsv(){
     var d = window._mor;

@@ -597,10 +597,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   </div>
 </footer>
 
-<script defer src="/shared/site-shell.js?v=v357"></script>
-<script defer src="/shared/top-chrome.js?v=v357"></script>
-<script defer src="/shared/core.js?v=v366"></script>
-<script defer src="/shared/lang/no.js?v=v235"></script>
+<script defer src="/shared/site-shell.js?v=v358"></script>
+<script defer src="/shared/top-chrome.js?v=v375"></script>
+<script defer src="/shared/core.js?v=v375"></script>
+<script defer src="/shared/lang/no.js?v=v375"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
@@ -615,7 +615,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     function satser(){ return { borte: 15488, hjemme: 15488 }; }
 
     var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
-    function fmtKr(n){ return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
+    function fmtKr(n){ if(!isFinite(n)) return '–'; return fmtNb.format(Math.round(n)).replace(/ /g, ' ') + ' kr'; }
     function parseAmt(s){
       if(s == null) return 0;
       // Komma er desimaltegn og rundes til hele kroner: «129,90» blir 130, ikke 12 990.
@@ -630,7 +630,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var n = parseFloat(v);
       return isNaN(n) ? 0 : n;
     }
-    function fmtInt(n){ return fmtNb.format(n).replace(/ /g, ' '); }
+    function fmtInt(n){ if(!isFinite(n)) return '–'; return fmtNb.format(n).replace(/ /g, ' '); }
     function liveFormat(inp){
       if(/[.,]/.test(inp.value)) return; // Med desimaler (komma eller punktum) lar vi feltet være: core.js formaterer det og beholder kommaet.
       var raw = inp.value.replace(/[^0-9\-]/g, '');
@@ -697,6 +697,16 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       clampBorte();
       var st = readState();
       var S = satser();
+      // 0 eller minus i nedbetalingstid: be om et tall i stedet for å regne stille med 20 år
+      if(num('nedbtid') < 1){
+        ['rMnd','rEkstra','rTotbet','rTotRente','rSkatt','rReell'].forEach(function(id){ $(id).textContent = '–'; });
+        var tv = (typeof R === 'function') ? R() : {};
+        $('rVerdict').textContent = tv.studieVerdictNed || 'Skriv inn nedbetalingstid (minst 1 år).';
+        $('renteBody').innerHTML = ''; $('planBody').innerHTML = '';
+        window._studie = null;
+        if(window.hvtLearn) hvtLearn.update('personlig-studie', null);
+        return;
+      }
 
       var aar = st.varighet;
       var borte = Math.min(st.borte, aar);
