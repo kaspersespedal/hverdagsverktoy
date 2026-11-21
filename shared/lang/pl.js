@@ -130,7 +130,7 @@ REGIONS['pl'] = {
     avsMethod1:'jest zasadą główną dla celów podatkowych — stały procent wartości pozostałej w każdym roku.',
     avsMethod2B:'Amortyzacja liniowa',
     avsMethod2:'stosowana jest w księgowości, gdy okres użytkowania jest znany — jednakowe kwoty w każdym roku.',
-    avsMethod3:'Środek trwały o wartości powyżej 30 000 kr i przewidywanym okresie użytkowania powyżej 3 lat',
+    avsMethod3:'Środek trwały o wartości co najmniej 30 000 kr i przewidywanym okresie użytkowania co najmniej 3 lat',
     avsMethod3B:'należy aktywować i amortyzować',
     avsMethod4B:'Nakłady ulepszające',
     avsMethod4:'dolicza się do salda, sprzedaż/złomowanie odejmuje się od niego. Saldo ujemne daje zysk.',
