@@ -956,8 +956,26 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   els.rfRate.addEventListener('input', render);
 
   // Saved scenarios
+  // Bare gyldige scenarioer tas med (ødelagt lagring gir ellers feil eller «undefined» på knappen).
+  // Mangler lista, hentes scenarioer lagret med forrige versjon av siden (hvt-spare-scenarios) inn én gang.
+  function validScenario(s){
+    return !!s && typeof s === 'object' && isFinite(s.start) && isFinite(s.amt) && isFinite(s.years) && s.years >= 1
+      && isFinite(s.rate) && FREQ_PER_YEAR.hasOwnProperty(s.freq);
+  }
   function loadSaved(){
-    try{ var raw = localStorage.getItem(SAVED_KEY); if(raw) return JSON.parse(raw)||[]; }catch(_e){}
+    try{
+      var raw = localStorage.getItem(SAVED_KEY);
+      if(raw == null){
+        var old = JSON.parse(localStorage.getItem('hvt-spare-scenarios') || '[]');
+        if(Array.isArray(old) && old.length){
+          var conv = old.map(function(s){ return s && {start:+s.start, amt:+s.amt, freq:s.freq, years:+s.years, rate:+s.rate, tilv:true, konto:'bank'}; }).filter(validScenario);
+          if(conv.length){ saveScenarios(conv.slice(-10)); return conv.slice(-10); }
+        }
+        return [];
+      }
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr.filter(validScenario) : [];
+    }catch(_e){}
     return [];
   }
   function saveScenarios(arr){

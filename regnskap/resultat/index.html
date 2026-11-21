@@ -1485,7 +1485,13 @@ body .ks-mode .mdesc{font-size:12px}
     }
     function restore(){
       try{
-        var raw=localStorage.getItem(KEY); if(!raw) return;
+        var raw=localStorage.getItem(KEY);
+        if(!raw){
+          // Lagret med forrige versjon av siden (10.05–28.06.2026) under hv-resultat-v1 med andre feltnavn
+          var o=JSON.parse(localStorage.getItem('hv-resultat-v1')||'null'); if(!o || typeof o!=='object') return;
+          var MAP={salg:'rSalg',annen:'rAnnen',vare:'rVare',lonn:'rLonn',avs:'rAvskr',annDrift:'rAnnenKost',finInn:'rFinInnt',finUt:'rFinKost'};
+          raw=JSON.stringify(Object.keys(MAP).reduce(function(acc,k){ if(o[k]!=null) acc[MAP[k]]=o[k]; return acc; },{mode:o.mode}));
+        }
         var s=JSON.parse(raw);
         if(s.mode==='as'||s.mode==='enk') mode=s.mode;
         INPUTS.forEach(function(id){ if(s[id]!=null){ var e=el(id); if(e) e.value=s[id]; } });
