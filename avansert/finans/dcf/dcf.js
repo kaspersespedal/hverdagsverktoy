@@ -189,17 +189,27 @@
     $('dcf-wacc').focus();
   });
 
-  // Fra treårsprognosen: ?fcf=1,2,3&gjeld=..&kontanter=..&enhet=..
+  // Fra treårsprognosen: ?fra=prognose, og tallene ligger i lagringen i nettleseren (hv-prognose-til-dcf).
+  // Eldre lenker hadde tallene i adressen (?fcf=1,2,3&gjeld=..&kontanter=..&enhet=..). De leses fortsatt,
+  // men fjernes straks fra adressefeltet og historikken.
   function fromUrl(){
-    var q = new URLSearchParams(location.search), f = q.get('fcf');
-    if(!f) return false;
-    var vals = f.split(',').map(Number).filter(isFinite).slice(0, 5);
+    var q = new URLSearchParams(location.search), d = null;
+    if(q.get('fra') === 'prognose'){
+      try { d = JSON.parse(localStorage.getItem('hv-prognose-til-dcf')); } catch(e){}
+    } else if(q.get('fcf')){
+      d = { fcf: q.get('fcf').split(','), gjeld: q.get('gjeld'), kontanter: q.get('kontanter'), enhet: q.get('enhet') };
+    }
+    ['fcf', 'gjeld', 'kontanter', 'enhet', 'fra'].forEach(function(k){ q.delete(k); });
+    var rest = q.toString();
+    try { history.replaceState(history.state, '', location.pathname + (rest ? '?' + rest : '') + location.hash); } catch(e){}
+    if(!d || !Array.isArray(d.fcf)) return false;
+    var vals = d.fcf.map(Number).filter(isFinite).slice(0, 5);
     if(!vals.length) return false;
     fill(EKS);
     fcfIn.forEach(function(el, i){ if(i < vals.length) put(el, Math.round(vals[i])); else el.value = ''; });
-    if(q.get('enhet')) $('dcf-enhet').value = q.get('enhet');
-    if(isFinite(+q.get('gjeld')) && q.get('gjeld') !== null){ put($('dcf-gjeld'), +q.get('gjeld')); put($('w-d'), +q.get('gjeld')); }
-    if(isFinite(+q.get('kontanter')) && q.get('kontanter') !== null) put($('dcf-kont'), +q.get('kontanter'));
+    if(d.enhet){ var en = $('dcf-enhet'), e0 = en.value; en.value = String(d.enhet); if(en.selectedIndex < 0) en.value = e0; }
+    if(d.gjeld != null && isFinite(+d.gjeld)){ put($('dcf-gjeld'), +d.gjeld); put($('w-d'), +d.gjeld); }
+    if(d.kontanter != null && isFinite(+d.kontanter)) put($('dcf-kont'), +d.kontanter);
     $('dcf-base').value = ''; $('dcf-vekst5').value = '';
     $('dcf-eksinfo').hidden = true;
     var m = $('dcf-fra');

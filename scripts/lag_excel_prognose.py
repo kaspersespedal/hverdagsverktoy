@@ -141,10 +141,11 @@ rad(ws, 8, 'Avskrivninger', per_aar(lambda k, p: f"=-{k}4*{fo('Avskrivninger', k
 rad(ws, 9, 'Driftsresultat', per_aar(lambda k, p: f"={k}7+{k}8"), sum_=True)
 rad(ws, 10, 'Rentekostnad', per_aar(lambda k, p: f"=-Balanse!{p}10*{fo('Rente på gjeld', k)}"))
 rad(ws, 11, 'Resultat før skatt', per_aar(lambda k, p: f"={k}9+{k}10"), sum_=True)
-rad(ws, 12, 'Skattekostnad', per_aar(lambda k, p: f"=-MAX(0,{k}11)*{fo('Skattesats', k)}"))
+rad(ws, 12, 'Skattekostnad', per_aar(lambda k, p: f"=-MAX(0,{k}11-{p}15)*{fo('Skattesats', k)}"))
 rad(ws, 13, 'Årsresultat', per_aar(lambda k, p: f"={k}11+{k}12"), sum_=True)
 rad(ws, 14, '   Herav utbytte', per_aar(lambda k, p: f"=MAX(0,{k}13)*{fo('Utbytte', k)}"))
-ws['A16'] = 'Underskudd gir ingen skatt og ikke utbytte i modellen.'
+rad(ws, 15, '   Fremført underskudd ved årets slutt', per_aar(lambda k, p: f"=MAX(0,{p}15-{k}11)"))
+ws['A16'] = 'Underskudd gir ingen skatt og ikke utbytte. Det fremføres og trekkes fra overskuddet de neste årene før skatten regnes.'
 
 # ---------- Balanse ----------
 B = 'Balanse'
@@ -177,7 +178,7 @@ rad(ws, 11, 'Kontantstrøm fra finansiering', per_aar(lambda k, p: f"={k}9+{k}10
 rad(ws, 12, 'Endring i bank', per_aar(lambda k, p: f"={k}7+{k}8+{k}11"), sum_=True)
 rad(ws, 13, 'Bank ved starten av året', per_aar(lambda k, p: f"=Balanse!{p}7"))
 rad(ws, 14, 'Bank ved slutten av året', per_aar(lambda k, p: f"={k}13+{k}12"), sum_=True)
-rad(ws, 15, 'Bank i balansen', per_aar(lambda k, p: f"=Balanse!{k}7"))
+rad(ws, 15, 'Bank regnet ut av balansen (egenkapital + gjeld − andre eiendeler)', per_aar(lambda k, p: f"=Balanse!{k}9+Balanse!{k}10-Balanse!{k}4-Balanse!{k}5-Balanse!{k}6"))
 rad(ws, 16, 'Kontroll (skal være 0)', per_aar(lambda k, p: f"=ROUND({k}14-{k}15,2)"), sum_=True)
 
 # ---------- Fri kontantstrøm ----------

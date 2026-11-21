@@ -689,15 +689,19 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         if(s.sone == null && s.zone != null){
           s.sone = {'0.141':'I', '0.106':'II', '0.064':'III', '0.079':'IVa', '0.051':'IV', '0':'V'}[String(s.zone)];
         }
-        if(s.sone != null){
+        // Et lagret valg som ikke finnes lenger (ny sats eller nytt navn), gir et tomt valg: da beholdes standardvalget.
+        var soner = Array.prototype.map.call(document.querySelectorAll('.aga-z'), function(b){ return b.getAttribute('data-sone'); });
+        if(s.sone != null && soner.indexOf(s.sone) > -1){
           document.querySelectorAll('.aga-z').forEach(function(b){
             var on = b.getAttribute('data-sone') === s.sone;
             b.setAttribute('aria-pressed', on ? 'true' : 'false');
           });
           syncHiddenSelect();
         }
-        if(s.ferie != null) document.getElementById('aga-ferie').value = s.ferie;
-        if(s.otp != null) document.getElementById('aga-otp').value = s.otp;
+        [['aga-ferie', s.ferie], ['aga-otp', s.otp]].forEach(function(p){
+          var sel = document.getElementById(p[0]); if(!sel || p[1] == null) return;
+          var f0 = sel.value; sel.value = p[1]; if(sel.selectedIndex < 0) sel.value = f0;
+        });
       } catch(e){}
     }
 

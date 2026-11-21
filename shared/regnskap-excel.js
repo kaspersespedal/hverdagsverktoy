@@ -348,10 +348,10 @@
     function br(teller, nevner){ return 'IF(' + nevner + '=0,"",' + teller + '/' + nevner + ')'; }
     var rD = 'Resultat!D', bD = 'Balanse!D';
     nok('Driftsmargin', br(rD + P.drift, rD + P.sumDrift), del(R.drift, R.sumDrift), NFP, 'Driftsresultat delt på driftsinntekter');
-    nok('Resultatgrad', br(rD + P.forSkatt, rD + P.sumDrift), del(R.forSkatt, R.sumDrift), NFP, 'Resultat før skatt delt på driftsinntekter');
+    nok('Margin før skatt', br(rD + P.forSkatt, rD + P.sumDrift), del(R.forSkatt, R.sumDrift), NFP, 'Resultat før skatt delt på driftsinntekter');
     nok('Kostnadsandel', br(rD + P.sumKost, rD + P.sumDrift), del(R.sumKost, R.sumDrift), NFP, 'Driftskostnader delt på driftsinntekter');
     nok('Egenkapitalandel', br(bD + Q.ek, bD + Q.eiend), del(B.ek, B.eiend), NFP, 'Egenkapital delt på sum eiendeler');
-    nok('Likviditetsgrad 1', br(bD + Q.oml, bD + Q.gk), del(B.oml, B.gk), NFX, 'Omløpsmidler delt på kortsiktig gjeld. Bør være over 1.');
+    nok('Likviditetsgrad 1', br(bD + Q.oml, bD + Q.gk), del(B.oml, B.gk), NFX, 'Omløpsmidler delt på kortsiktig gjeld. En gammel tommelfingerregel sier over 2.');
     nok('Gjeldsgrad', br('(' + bD + Q.gl + '+' + bD + Q.gk + ')', bD + Q.ek), del(B.gl + B.gk, B.ek), NFX, 'Gjeld delt på egenkapital');
     nok('Arbeidskapital', bD + Q.oml + '-' + bD + Q.gk, B.oml - B.gk, NF, 'Omløpsmidler minus kortsiktig gjeld, i kroner');
     nok('Kontantstrøm fra drift', "'Kontantstrøm'!D" + X.op, K.op, NF, 'Pengene driften ga i år, i kroner');

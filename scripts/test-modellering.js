@@ -77,6 +77,16 @@ p3.years.forEach(function(yy, i){
 sann('Tre år: underskudd gir null skatt og null utbytte', p3.years[1].tax === 0 && p3.years[1].dividend === 0);
 near('Tre år: bank = forrige bank + kontantstrøm (år 3)', p3.years[2].cash, p3.years[1].cash + p3.years[2].dCash, 1e-9);
 
+// 15b. Fremført underskudd: år 1 taper 100, år 2 tjener 150 og betaler skatt bare av 50
+const aU = { growth:[0, 0, 0], ebitdaMargin:[-0.10, 0.15, 0.15], depr:[0, 0, 0], capex:[0, 0, 0], nwcPct:[0, 0, 0], rate:[0, 0, 0], tax:[0.22, 0.22, 0.22], payout:[0, 0, 0], debtChange:[0, 0, 0] };
+const pU = M.forecast({ revenue:1000, fixed:0, nwc:0, cash:100, debt:0, equity:100 }, aU, 3);
+near('Underskudd: år 1 ingen skatt', pU.years[0].tax, 0);
+near('Underskudd: 100 fremført etter år 1', pU.years[0].lossCf, 100);
+near('Underskudd: år 2 skatt av 150 − 100 = 50 × 22 %', pU.years[1].tax, 11, 1e-9);
+near('Underskudd: ingenting fremført etter år 2', pU.years[1].lossCf, 0);
+near('Underskudd: år 3 full skatt 150 × 22 %', pU.years[2].tax, 33, 1e-9);
+pU.years.forEach(function(yy, i){ near('Underskudd: balansen går opp i år ' + (i + 1), yy.diff, 0, 1e-9); });
+
 // 16. Tall fra skjemafelt
 near('Tolker «1 234,5»', M.parseNum('1 234,5'), 1234.5);
 near('Tolker «−12» med typografisk minus', M.parseNum('−12'), -12);

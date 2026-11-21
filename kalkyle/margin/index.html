@@ -567,9 +567,10 @@ body.focus-mode > footer{display:none}
       var s = JSON.parse(raw);
       if(s.varekost != null) varekostEl.value = s.varekost;
       if(s.andre != null) andreEl.value = s.andre;
-      if(s.mva != null) mvaEl.value = s.mva;
+      // Et lagret valg som ikke finnes lenger (ny sats eller nytt navn), gir et tomt valg: da beholdes standardvalget.
+      if(s.mva != null){ var m0 = mvaEl.value; mvaEl.value = s.mva; if(mvaEl.selectedIndex < 0) mvaEl.value = m0; }
       if(s.val != null) valEl.value = s.val;
-      if(s.mode) mode = s.mode;
+      if(s.mode === 'pris' || s.mode === 'margin' || s.mode === 'paaslag') mode = s.mode;
     } catch(e){}
   }
 

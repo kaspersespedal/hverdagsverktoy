@@ -618,13 +618,32 @@ body.focus-mode > footer{display:none}
     recalc();
   });
 
-  // Seed initial 3 variants (A/B/C worked example)
-  variantRowsEl.appendChild(makeVariantRow('A', '2 500', '1,00'));
-  variantRowsEl.appendChild(makeVariantRow('B', '800', '1,40'));
-  variantRowsEl.appendChild(makeVariantRow('C', '500', '2,00'));
+  // Tallene fra forrige besøk. Ugyldig eller for få varianter: eksemplet under brukes.
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KEY)); } catch(e){}
+  var fmtNbDes = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 4 });
+  function tekst(v){ return (typeof v === 'string') ? v : ''; }
+  if(saved && typeof saved === 'object'){
+    if(typeof saved.divTot === 'string') divTotEl.value = saved.divTot;
+    if(typeof saved.divAnt === 'string') divAntEl.value = saved.divAnt;
+    if(typeof saved.ekvTot === 'string') ekvTotEl.value = saved.ekvTot;
+  }
+  var savedV = (saved && Array.isArray(saved.variants)) ? saved.variants.filter(function(v){
+    return v && typeof v === 'object' && isFinite(v.mengde) && isFinite(v.tall);
+  }) : [];
+  if(savedV.length >= 2){
+    savedV.forEach(function(v){
+      variantRowsEl.appendChild(makeVariantRow(tekst(v.name), fmtNbDes.format(v.mengde), fmtDec(v.tall)));
+    });
+  } else {
+    // Seed initial 3 variants (A/B/C worked example)
+    variantRowsEl.appendChild(makeVariantRow('A', '2 500', '1,00'));
+    variantRowsEl.appendChild(makeVariantRow('B', '800', '1,40'));
+    variantRowsEl.appendChild(makeVariantRow('C', '500', '2,00'));
+  }
   updateRmVisibility();
 
-  setMode('ekv');
+  setMode(saved && (saved.mode === 'div' || saved.mode === 'ekv') ? saved.mode : 'ekv');
 
   // Enheten i stripa («stk») skrives av JS: skriv den på nytt når språkfila er lastet og ved språkbytte.
   (function(){
