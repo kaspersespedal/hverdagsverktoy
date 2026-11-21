@@ -1661,10 +1661,10 @@
           .then(function (r) { return r.json(); })
           .then(function (j) {
             var n = j.navn && j.navn[0], komm = n && n.kommuner && n.kommuner[0] || {}, fyl = n && n.fylker && n.fylker[0] || {};
-            applyPlace({ navn: (n && (n.skrivemåte || n.stedsnavn)) || 'Min posisjon', lat: lat, lon: lon,
+            applyPlace({ navn: (n && (n.skrivemåte || n.stedsnavn)) || 'Min posisjon', lat: +lat.toFixed(4), lon: +lon.toFixed(4),
               kommunenr: komm.kommunenummer, fylkesnr: fyl.fylkesnummer, kommunenavn: komm.kommunenavn });
           })
-          .catch(function () { applyPlace({ navn: 'Min posisjon', lat: lat, lon: lon }); })
+          .catch(function () { applyPlace({ navn: 'Min posisjon', lat: +lat.toFixed(4), lon: +lon.toFixed(4) }); })
           .then(function () { btn.classList.remove('busy'); });
       }, function () { btn.classList.remove('busy'); }, { enableHighAccuracy: false, timeout: 9000, maximumAge: 6e5 });
     });
