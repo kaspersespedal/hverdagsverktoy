@@ -5604,6 +5604,8 @@ REGIONS['pl']._ph = {
 "Fikk ikke hentet værdata nå.":"Nie udało się teraz pobrać danych pogodowych.",
 "Filtrer på konto-klasse":"Filtruj według klasy kont",
 "Filtrer på målgruppe":"Filtruj według grupy docelowej",
+"Vis menyen for privat eller bedrift":"Pokaż menu dla osób prywatnych lub firm",
+"Vis kategoriene for privat eller bedrift":"Pokaż kategorie dla osób prywatnych lub firm",
 "Finans og skatt":"Finanse i podatek",
 "Finansiell kalkulator":"Kalkulator finansowy",
 "Finansiell kalkulator — sparing og margin · Hverdagsverktøy":"Kalkulator finansowy — Kalkulator · Hverdagsverktøy",
