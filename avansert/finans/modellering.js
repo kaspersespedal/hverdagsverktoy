@@ -112,9 +112,14 @@
   }
 
   // Tall fra skjemafelt: tåler mellomrom, komma som desimaltegn og minus (også U+2212).
+  // «%» og «kr» på slutten tas bort. Punktum er tusenskille når det står komma i tallet
+  // («1.500,5») eller bare grupper på tre sifre følger («49.271», «1.000.000»), samme regel
+  // som lesBelop på periodiseringssiden.
   function parseNum(s){
     if(s == null) return NaN;
-    var t = String(s).replace(/[\s  ]/g, '').replace(/[−‒-―]/g, '-').replace(',', '.');
+    var t = String(s).replace(/[\s  ]/g, '').replace(/[−‒-―]/g, '-').replace(/(%|kr)$/i, '');
+    if(t.indexOf(',') > -1) t = t.replace(/\./g, '').replace(',', '.');
+    else if(/^-?\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, '');
     if(t === '' || t === '-' || t === '.') return NaN;
     if(!/^-?\d*\.?\d*$/.test(t)) return NaN;
     return parseFloat(t);
