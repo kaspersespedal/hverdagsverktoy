@@ -203,14 +203,14 @@ let region = (function(){
   return 'no';
 })();
 // Set dir attribute on load for RTL languages
-(function(){if(region==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}})();
+(function(){if(region==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');var s=document.createElement('style');s.textContent='input[inputmode=numeric],input[inputmode=decimal]{direction:ltr}';document.documentElement.appendChild(s);}})();
 let _langLoading = {};
 function loadLang(code) {
   if(REGIONS[code]) return Promise.resolve();
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v331';
+    s.src = '/shared/lang/' + code + '.js?v=v367';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -269,21 +269,54 @@ function getChk(id) { var el=document.getElementById(id); return el?!!el.checked
 var _HVT_G = 136549;
 
 // Live-format number inputs
+// Leser teksten i et tallfelt og skriver den pent tilbake: tusenskille i heltallsdelen,
+// desimalene beholdes. Komma er desimaltegn. Punktum er tusenskille når det står komma
+// i tallet («1.500,50») eller når bare grupper på tre sifre følger («1.000», «2.000.000»);
+// ellers er punktum desimaltegn og står som skrevet («1.5»). Før ble alt utenom sifre
+// fjernet, så «1 249,50» ble 124 950 (100 ganger for stort).
+// Returnerer null når det ikke er noe å formatere ennå («», «-», «,»).
+function fmtLiveNum(value) {
+  // Unicode-minus/tankestrek (limt inn fra Excel/PDF) må bli ASCII, ellers
+  // spises minustegnet og −50 000 blir +50 000.
+  var s = String(value).replace(/[−‒-―]/g,'-').replace(/[\s\u00a0\u202f]/g,'');
+  var neg = s.charAt(0) === '-';
+  var sep = '', i;
+  if(s.indexOf(',') > -1) { s = s.replace(/\./g,''); i = s.indexOf(','); sep = ','; }
+  else if(/^-?\d{1,3}(\.\d{3})+$/.test(s)) { s = s.replace(/\./g,''); i = -1; }
+  else { i = s.indexOf('.'); if(i > -1) sep = '.'; }
+  var intPart = (i < 0 ? s : s.slice(0, i)).replace(/\D/g,'');
+  var decPart = i < 0 ? '' : s.slice(i + 1).replace(/\D/g,'');
+  if(intPart === '' && decPart === '') return null;
+  return (neg ? '-' : '') + fmtInput(intPart === '' ? 0 : parseInt(intPart, 10)) + sep + decPart;
+}
+let _fmtLiveBusy = false;
 document.addEventListener('input', function(e) {
   const el = e.target;
-  if(el.inputMode !== 'numeric') return;
-  // Unicode-minus/tankestrek (limt inn fra Excel/PDF) må bli ASCII, ellers
-  // spises minustegnet av strippingen under og −50 000 blir +50 000.
-  const raw = el.value.replace(/[−‒-―]/g,'-').replace(/[^0-9\-]/g,'');
-  if(raw === '' || raw === '-') return;
-  const num = parseInt(raw, 10);
-  if(isNaN(num)) return;
+  if(_fmtLiveBusy || el.inputMode !== 'numeric') return;
+  const out = fmtLiveNum(el.value);
+  // Hardt mellomrom som tusenskille (noen sider formaterer selv slik) regnes som ferdig formatert.
+  if(out === null || out === el.value.replace(/[\u00a0\u202f]/g,' ')) return;
   const pos = el.selectionStart;
   const oldLen = el.value.length;
-  el.value = fmtInput(num);
+  el.value = out;
   const newLen = el.value.length;
   // setSelectionRange kaster på felttyper som ikke støtter markørposisjon.
   try { el.setSelectionRange(pos + newLen - oldLen, pos + newLen - oldLen); } catch(_e){}
+  // Sidens egne lyttere har allerede regnet (og lagret) med teksten slik den var før
+  // formateringen. Send en ny input-hendelse, så svaret og det som lagres alltid
+  // gjelder tallet som står i feltet. Sperren hindrer en evig runddans med sider som
+  // selv skriver om feltet (for eksempel med hardt mellomrom som tusenskille).
+  _fmtLiveBusy = true;
+  try { el.dispatchEvent(new Event('input', {bubbles:true})); } finally { _fmtLiveBusy = false; }
+});
+// Mens man skriver, kan «1.5» bli «1.500» (tusen), så punktum står urørt. Når feltet
+// forlates, er punktum med 1–2 eller 4+ sifre etter et desimaltegn: gjør det til komma,
+// som alle sidenes egne tolkere leser riktig.
+document.addEventListener('change', function(e) {
+  const el = e.target;
+  if(el.inputMode !== 'numeric' || !/^-?[\d ]*\.\d+$/.test(el.value)) return;
+  el.value = el.value.replace('.', ',');
+  el.dispatchEvent(new Event('input', {bubbles:true}));
 });
 
 // ═══════════════════════════════════════════════════════
@@ -747,7 +780,7 @@ function _tallStore(alene){
   try{
     for(var k=0;k<alene.length;k++){
       var t=alene[k];
-      if(t.nodeValue.indexOf('\u00a0')>=0 && !_tallSkip(t.parentNode) && _tallStorBoks(t)) _tallSett(t,t.nodeValue.replace(/\u00a0/g,' '));
+      if(document.documentElement.dir!=='rtl' && t.nodeValue.indexOf('\u00a0')>=0 && !_tallSkip(t.parentNode) && _tallStorBoks(t)) _tallSett(t,t.nodeValue.replace(/\u00a0/g,' '));
     }
   }catch(e){ _uiErr('tall',e); }
   finally{ if(_phObs) _phObs.takeRecords(); }
@@ -5492,6 +5525,7 @@ function ccPopulate(){
 }
 
 function ccConvert(){
+  if(!document.getElementById('uc-from'))return; // bare /kalkulator/unit/ har valutaomregneren (#unit på andre sider)
   const from=document.getElementById('uc-from').value;
   const to=document.getElementById('uc-to').value;
   const val=Math.abs(parseFloat(document.getElementById('uc-val').value))||0;
@@ -5617,7 +5651,8 @@ function fcCalc(){
     resLbl.textContent = r.fcRFv||'Future value (FV)';
     resVal.textContent = fmt(fv);
     resSub.textContent = (r.fcRAfter||'After') + ' ' + n + ' ' + (r.fcRYr||'years');
-    const tvmReturn = pv!==0 ? pct((fv/pv-1)*100) : '—';
+    const invested = pv + totalPmt;   // avkastning = renter delt på alt som er satt inn, ikke bare startbeløpet
+    const tvmReturn = invested>0 ? pct(interest/invested*100) : '—';
     resGrid.innerHTML = `
       <div class="rt"><div class="rt-lbl">${r.fcRStart||'Starting amount'}</div><div class="rt-val">${fmt(pv)}</div></div>
       <div class="rt"><div class="rt-lbl">${r.fcRTotalPmt||'Total payments'}</div><div class="rt-val">${fmt(totalPmt)}</div></div>
@@ -5641,7 +5676,7 @@ function fcCalc(){
   else if(type==='breakeven'){
     const fixed=g('fc-fixed'), price=g('fc-price'), vc=g('fc-varcost');
     const contribution = price - vc;
-    const units = contribution > 0 ? Math.ceil(fixed / contribution) : Infinity;
+    const units = contribution > 0 ? Math.ceil(+(fixed / contribution).toFixed(9)) : Infinity;
     const revenue = units * price;
     resLbl.textContent = r.fcRBePoint||'Break-even point';
     resVal.textContent = units === Infinity ? '∞' : fmtInput(units) + ' ' + (r.fcRUnits||'units');
@@ -7054,7 +7089,7 @@ function initPage(){
       t.id = 'hvt-lang-toast';
       t.setAttribute('role','status');
       t.setAttribute('aria-live','polite');
-      t.textContent = 'Språk kunne ikke lastes — viser norsk.';
+      t.textContent = 'Could not load the language — showing Norwegian.';
       t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#b45309;color:#fff;padding:10px 18px;border-radius:8px;font:600 13px/1.3 Geist,Inter,sans-serif;z-index:10000;box-shadow:0 6px 20px rgba(0,0,0,.18);';
       document.body.appendChild(t);
       setTimeout(function(){ t.style.transition='opacity .4s'; t.style.opacity='0'; }, 5000);
