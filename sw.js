@@ -1,5 +1,5 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v366';
+const CACHE_NAME = 'hverdagsverktoy-v377';
 
 // Files to cache on SW install for offline use.
 // Lang files are NOT precached — they'd add ~2.5 MB to install cost and most users
@@ -69,22 +69,9 @@ self.addEventListener('fetch', event => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
 
-  // Network-first for currency API calls
-  if (url.hostname !== location.hostname) {
-    event.respondWith(
-      fetch(event.request)
-        .then(response => {
-          // Cache successful external responses
-          if (response.ok) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone).catch(() => {}));
-          }
-          return response;
-        })
-        .catch(() => caches.match(event.request))
-    );
-    return;
-  }
+  // Eksterne kall (API-er, fonter): rett til nettet, ingen lagring. Et lagret API-svar
+  // ville ellers blitt tatt for ferskt av siden og vist som nye tall.
+  if (url.hostname !== location.hostname) return;
 
   // Cache-first for local files.
   // ignoreSearch: true lets a cached URL match the same file with another query string.
