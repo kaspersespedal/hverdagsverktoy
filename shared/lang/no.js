@@ -2578,7 +2578,7 @@ REGIONS['no'] = {
     avsSideSaldo:'Saldogrupper 2026', avsSideMethod:'Når skal det avskrives?',
     avsMethod1B:'Saldoavskrivning', avsMethod1:'er hovedregel for skatt — fast prosent av gjenværende verdi hvert år.',
     avsMethod2B:'Lineær avskrivning', avsMethod2:'brukes i regnskapet når levetiden er kjent — like store beløp hvert år.',
-    avsMethod3:'Et driftsmiddel over 30 000 kr og forventet levetid over 3 år', avsMethod3B:'skal aktiveres og avskrives',
+    avsMethod3:'Et driftsmiddel på 30 000 kr eller mer og forventet levetid på minst 3 år', avsMethod3B:'skal aktiveres og avskrives',
     avsMethod4B:'Påkost', avsMethod4:'aktiveres på saldoen, salg/skroting trekkes fra. Negativ saldo gir gevinst.',
     avsMethod5:'Maks-satsen er valgfri — du kan avskrive med lavere sats om du har lite overskudd.',
     // valgevinst (valutagevinst) — kurs + metode
