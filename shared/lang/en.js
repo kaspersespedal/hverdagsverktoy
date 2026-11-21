@@ -2553,7 +2553,7 @@ REGIONS['en'] = {
     kalkMarginF4: 'Price = Cost of goods / (1 − margin)',
     kalkMarginF5: 'margin = markup / (1 + markup)',
     kalkMarginF6: 'markup = margin / (1 − margin)',
-    kalkMarginF7: 'Incl. VAT = excl. × 1.25',
+    kalkMarginF7: 'Incl. VAT = excl. × (1 + VAT rate)',
     kalkMarginFNote: '“Avanse is calculated as a % of the cost and is always higher than the contribution margin ratio, which is calculated as a % of the selling price.”',
     kalkMarginGuideKicker: 'How to calculate',
     kalkMarginGuideTitle: 'Markup and margin are not the same',
