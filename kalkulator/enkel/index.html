@@ -378,7 +378,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <span class="howto-title">Slik bruker du kalkulatoren</span>
       </summary>
       <div class="howto-body">
-        <div class="howto-row"><strong>Tall og regnearter</strong><span>Trykk sifrene og <strong>+ − × ÷</strong>, så <strong>=</strong> for svaret. Du kan regne videre på svaret — trykk en regneart rett etter «=».</span></div>
+        <div class="howto-row"><strong>Tall og regnearter</strong><span>Trykk sifrene og <strong>+ − × ÷</strong>, så <strong>=</strong> for svaret. Du kan regne videre på svaret — trykk en regneart rett etter «=». Kalkulatoren regner <strong>fortløpende fra venstre mot høyre</strong>: «2 + 3 × 4» blir 20. Vil du at gange og dele skal regnes først (= 14), bruk <a href="/kalkulator/scientific/">den vitenskapelige kalkulatoren</a>.</span></div>
         <div class="howto-row"><strong>Prosent (%)</strong><span>«200 + 10 %» gir 10 % av 200 (= 20), så «=» blir 220. Trykker du «%» alene, deles tallet på 100.</span></div>
         <div class="howto-row"><strong>± og ⌫</strong><span><strong>±</strong> bytter mellom pluss og minus. <strong>⌫</strong> sletter siste siffer. <strong>AC</strong> nullstiller alt.</span></div>
         <div class="howto-row"><strong>Tastatur</strong><span>På PC: skriv <kbd>0</kbd>–<kbd>9</kbd>, <kbd>+</kbd> <kbd>-</kbd> <kbd>*</kbd> <kbd>/</kbd>, <kbd>Enter</kbd> for «=», <kbd>Backspace</kbd> for ⌫ og <kbd>Esc</kbd> for å nullstille.</span></div>
@@ -430,7 +430,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function numToCanonical(n){
     if(!isFinite(n)) return '0';
     if(Math.abs(n) >= 1e15) return n.toString().replace('.', ',');
-    var s = n.toFixed(10).replace(/0+$/,'').replace(/\.$/,'');
+    if(n === 0) return '0';
+    var dec = Math.min(20, Math.max(0, 14 - Math.floor(Math.log10(Math.abs(n)))));   // 15 gjeldende sifre: bort med støy som 2 498 000,5599999996
+    var s = n.toFixed(dec).replace(/0+$/,'').replace(/\.$/,'');
     return s.replace('.', ',');
   }
 

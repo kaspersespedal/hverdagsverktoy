@@ -708,12 +708,14 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       return { hasData:false, mode:mode, price:price };
     }
     var taxRate = parseFloat(String(document.getElementById('avs-group').value).split('-').pop()) || 0.20;
-    var regPct = Math.max(0.1, parseNum('avs-reg-pct') || 10) / 100;
+    var regRaw = parseNum('avs-reg-pct') || 10, lifeIn = parseNum('avs-life');
+    if(lifeIn > 0 && Math.abs(100 / lifeIn - regRaw) < 0.05) regRaw = 100 / lifeIn;   // feltet viser satsen avrundet (33,3), regn med 1 ÷ levetid
+    var regPct = Math.max(0.1, regRaw) / 100;
     var scrapPct = Math.max(0, Math.min(100, parseNum('avs-scrap'))) / 100;
     var scrapValue = price * scrapPct;
     var depBase = price - scrapValue;
     var annualLinear = depBase * regPct;
-    var lifeYears = Math.ceil(1 / regPct);
+    var lifeYears = Math.ceil(1 / regPct - 1e-9);
     var years = mode === 'regnskap' ? lifeYears : (mode === 'compare' ? Math.max(10, lifeYears) : 10);
 
     var rows = [];
@@ -1108,7 +1110,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   }
   // Lineær og saldo år for år. Samme regnemåte som compute() i sammenlign-modus.
   function calc(price, rate, regPct, scrapPct){
-    var scrap = price * scrapPct, annual = (price - scrap) * regPct, life = Math.ceil(1 / regPct), N = Math.max(10, life);
+    var scrap = price * scrapPct, annual = (price - scrap) * regPct, life = Math.ceil(1 / regPct - 1e-9), N = Math.max(10, life);
     var book = [price], tax = [price], bv = price, tv = price;
     for(var i = 1; i <= N; i++){
       tv -= tv * rate;
