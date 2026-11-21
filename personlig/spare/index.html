@@ -501,7 +501,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     <details class="howto">
       <summary><span class="howto-title">Slik regner vi</span></summary>
       <div class="howto-body">
-        <div class="howto-row"><strong>Månedlig rente</strong><span>— årlig rente delt på 12 og lagt til hver måned.</span></div>
+        <div class="howto-row"><strong>Månedlig rente</strong><span>— renten legges til hver måned, slik at den blir nøyaktig den årlige renten over et helt år.</span></div>
         <div class="howto-row"><strong>Rentes rente</strong><span>— avkastning forrige måned bidrar til avkastning denne måneden.</span></div>
         <div class="howto-row"><strong>Skatt</strong><span>— på bankkonto 22&nbsp;% av renten hvert år. I aksjefond, aksjer og aksjesparekonto 37,84&nbsp;% av gevinsten (22&nbsp;% × 1,72) når du selger eller tar ut. Skjermingsfradraget er ikke regnet med.</span></div>
       </div>
@@ -567,9 +567,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       <div class="lrn-calcrow">
         <div class="lrn-card">
           <span class="lrn-card-l" data-lrn="fH">Regnestykket hver måned</span>
-          <div class="lrn-f" data-f="start"><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span>(<i>saldo</i> + <i>innskudd</i>) × (1 + <i>årlig rente</i><span data-lrn="fDel"> ÷ 12</span>)</span></div>
-          <div class="lrn-f" data-f="slutt" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i><span data-lrn="fDel"> ÷ 12</span>) + <i>innskudd</i></span></div>
-          <div class="lrn-f" data-f="lump" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i><span data-lrn="fDel"> ÷ 12</span>)</span></div>
+          <div class="lrn-f" data-f="start"><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span>(<i>saldo</i> + <i>innskudd</i>) × (1 + <i>årlig rente</i>)<sup data-lrn="fDel">1/12</sup></span></div>
+          <div class="lrn-f" data-f="slutt" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i>)<sup data-lrn="fDel">1/12</sup> + <i>innskudd</i></span></div>
+          <div class="lrn-f" data-f="lump" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i>)<sup data-lrn="fDel">1/12</sup></span></div>
           <div class="lrn-f n"><span>=</span><span data-lrn="fUtfylt"></span><span>=</span><b data-lrn="fSvar"></b></div>
         </div>
         <p class="lrn-p" data-lrn="fText"></p>
@@ -667,7 +667,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function spareCompute(start, amt, freq, years, rateAnnual, tilvStart){
     var isLump = freq === 'lump';
     var periodsPerYear = isLump ? 12 : (FREQ_PER_YEAR[freq] || 12);
-    var periodRate = rateAnnual / 100 / periodsPerYear;
+    // Årlig rente gjøres om til rente per periode, så 7 % i året blir 7 % uansett hvor ofte du setter inn
+    var periodRate = Math.pow(1 + rateAnnual / 100, 1 / periodsPerYear) - 1;
     var periodAmt  = isLump ? 0 : amt;
     var balance = start, totalDeposits = start;
     var data = [{ year:0, deposits:start, interest:0, total:start }];
@@ -956,8 +957,26 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   els.rfRate.addEventListener('input', render);
 
   // Saved scenarios
+  // Bare gyldige scenarioer tas med (ødelagt lagring gir ellers feil eller «undefined» på knappen).
+  // Mangler lista, hentes scenarioer lagret med forrige versjon av siden (hvt-spare-scenarios) inn én gang.
+  function validScenario(s){
+    return !!s && typeof s === 'object' && isFinite(s.start) && isFinite(s.amt) && isFinite(s.years) && s.years >= 1
+      && isFinite(s.rate) && FREQ_PER_YEAR.hasOwnProperty(s.freq);
+  }
   function loadSaved(){
-    try{ var raw = localStorage.getItem(SAVED_KEY); if(raw) return JSON.parse(raw)||[]; }catch(_e){}
+    try{
+      var raw = localStorage.getItem(SAVED_KEY);
+      if(raw == null){
+        var old = JSON.parse(localStorage.getItem('hvt-spare-scenarios') || '[]');
+        if(Array.isArray(old) && old.length){
+          var conv = old.map(function(s){ return s && {start:+s.start, amt:+s.amt, freq:s.freq, years:+s.years, rate:+s.rate, tilv:true, konto:'bank'}; }).filter(validScenario);
+          if(conv.length){ saveScenarios(conv.slice(-10)); return conv.slice(-10); }
+        }
+        return [];
+      }
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr.filter(validScenario) : [];
+    }catch(_e){}
     return [];
   }
   function saveScenarios(arr){
@@ -1048,7 +1067,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
   // Samme regnestykke som spareCompute() over, men med renten på innskuddene skilt fra rente på rente
   function serie(start, amt, ppy, lump, years, rate, tilvStart){
-    var pr = rate / 100 / ppy, pa = lump ? 0 : amt, bal = start, dep = start, simple = 0, rows = [{y:0, dep:start, ri:0, rr:0, bal:start}];
+    var pr = Math.pow(1 + rate / 100, 1 / ppy) - 1, pa = lump ? 0 : amt, bal = start, dep = start, simple = 0, rows = [{y:0, dep:start, ri:0, rr:0, bal:start}];
     for(var y = 1; y <= years; y++){
       for(var p = 0; p < ppy; p++){
         if(tilvStart){ bal += pa; dep += pa; }
@@ -1189,17 +1208,17 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     set('cap', ph('Saldo før skatt, kroner, år for år') + (inPeriod ? '' : (crossY > 0 ? '. ' + t('lrnSpCapLate', 'Avkastningen passerer det du har satt inn i år {aar}, etter spareperioden', {aar:crossY}) : '. ' + ph('Innen 60 år passerer ikke avkastningen det du har satt inn'))));
 
     // Regnestykket for første periode
-    var pr = d.rate / 100 / ppy, pa = lump ? 0 : d.amt;
+    var pr = Math.pow(1 + d.rate / 100, 1 / ppy) - 1, pa = lump ? 0 : d.amt;
     var b1 = d.tilv ? (d.start + pa) * (1 + pr) : d.start * (1 + pr) + pa, r1 = (d.tilv ? d.start + pa : d.start) * pr, rr2 = r1 * pr;
-    var rateTxt = String(Math.round(d.rate * 1e6) / 1e8).replace('.', ','), delTxt = ppy > 1 ? ' ÷ ' + ppy : '';
-    var utfylt = lump ? L.kr(d.start) + ' × (1 + ' + rateTxt + delTxt + ')'
-      : d.tilv ? '(' + L.kr(d.start) + ' + ' + L.kr(pa) + ') × (1 + ' + rateTxt + delTxt + ')'
-      : L.kr(d.start) + ' × (1 + ' + rateTxt + delTxt + ') + ' + L.kr(pa);
+    var rateTxt = String(Math.round(d.rate * 1e6) / 1e8).replace('.', ','), delTxt = ppy > 1 ? '1/' + ppy : '', supTxt = delTxt ? '<sup>' + delTxt + '</sup>' : '';
+    var utfylt = lump ? L.kr(d.start) + ' × (1 + ' + rateTxt + ')' + supTxt
+      : d.tilv ? '(' + L.kr(d.start) + ' + ' + L.kr(pa) + ') × (1 + ' + rateTxt + ')' + supTxt
+      : L.kr(d.start) + ' × (1 + ' + rateTxt + ')' + supTxt + ' + ' + L.kr(pa);
     set('fH', t('lrnSpCalcH', 'Regnestykket {hver}', {hver:ph(fq.hver)}));
     root.querySelectorAll('[data-f]').forEach(function(el){ el.hidden = el.getAttribute('data-f') !== (lump ? 'lump' : d.tilv ? 'start' : 'slutt'); });
     root.querySelectorAll('[data-lrn="fNeste"]').forEach(function(el){ el.textContent = ph(fq.neste); });
     root.querySelectorAll('[data-lrn="fDel"]').forEach(function(el){ el.textContent = delTxt; });
-    set('fUtfylt', utfylt); set('fSvar', kr2(b1) + ' kr');
+    setHtml('fUtfylt', utfylt); set('fSvar', kr2(b1) + ' kr');
     setHtml('fText', t('lrnSpFirst', '{forste} er hele renten, {r1}, rente på innskudd. {etter} gir de {r1k} kronene selv {rr2} i rente. Det er rente på rente, og det laget vokser fordi det bygger på seg selv.',
       {forste:ph(fq.forste), etter:ph(fq.etter), r1:b(kr2(r1) + ' kr'), r1k:kr2(r1), rr2:b(kr2(rr2) + ' kr')}));
 
