@@ -335,7 +335,7 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   font-variant-numeric:tabular-nums lining-nums;letter-spacing:0;
   transition:border-color .2s var(--ease),background .2s var(--ease),box-shadow .2s var(--ease)}
 .ik-input:focus,.ik-select:focus{
-  border-color:rgba(var(--glow-rgb),.45);background:var(--surface-2);
+  border-color:var(--accent);background:var(--surface-2);
   /* focus bloom — crisp inner ring + soft accent halo (theme-native --glow-rgb) */
   box-shadow:0 0 0 3px rgba(var(--glow-rgb),.10),
              0 0 20px -2px rgba(var(--glow-rgb),.13)}
@@ -343,7 +343,22 @@ h1.page-title{font-family:var(--font-serif);font-style:normal;font-weight:500;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6' fill='none' stroke='%23a8a39a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'><polyline points='1 1 5 5 9 1'/></svg>");
   background-repeat:no-repeat;background-position:right 14px center;
   background-color:rgba(var(--wash-rgb),.025);border-color:var(--line-2)}
-.ik-select:hover{background-color:rgba(var(--wash-rgb),.04);border-color:var(--line-warm)}
+.ik-select:hover{background-color:rgba(var(--wash-rgb),.04);border-color:var(--ink2)}
+/* Feltkant og fokus — WCAG 1.4.11 og 2.4.7 ─────────────────────
+   Kanten sto på --line-2, en hårstrek som målte 1,21–1,62:1 mot kortet i de ni
+   temaene. Et felt trenger 3:1 i kanten, ellers ser man ikke at det er et felt.
+   --ink4 er det stilleste blekktrinnet og holder minst 4,5:1 mot --bg,
+   --surface og --surface-2 i alle temaene (se themes.css), så kanten klarer
+   seg uten en ny farge. Hover (over) og fokus (--accent) holder også 3:1;
+   --line-warm og 45 % glød gjorde kanten svakere når man pekte eller klikket.
+   Fokusringen er --accent-2, temaets tekst-trygge aksent: målt til minst 5,1:1
+   mot flata rundt feltet i alle ni temaene. --accent ville gitt 3,1 på rosa og
+   3,6 på glass.
+   body-prefikset (0,1,1)/(0,2,1) trengs: 31 av de 44 kalkulatorsidene har
+   egen kopi av .ik-input i <style> etter denne fila, med samme spesifisitet som
+   reglene over, og kopien vant. */
+body .ik-input,body .ik-select{border-color:var(--ink4)}
+body .ik-input:focus-visible,body .ik-select:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
 
 /* ── Feiltilstand på felt ──────────────────────────────────────
    Slås på med .is-error på feltet, eller native [aria-invalid="true"].
