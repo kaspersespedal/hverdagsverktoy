@@ -2350,7 +2350,7 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
     left:-14px;top:-50px;width:88%;height:200px;
     background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
   }
-  html[data-theme="carbon"] .dayline{order:5;flex:0 0 100%;display:block;margin-top:4px}
+  html[data-theme="carbon"] .dayline{order:5;flex:0 0 100%;display:block;margin-top:4px;--dl-spill:36px}
   html[data-theme="carbon"] body.introAct .daily-frame::after{content:none}
 
   /* Hvert kort i egen boks med tittelstripe, som de andre temaene fikk i #288.
@@ -2597,14 +2597,21 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
    --dl-p (0–1) er hvor langt lyset er kommet. Den er registrert med @property
    (rett over), så den kan tones: ved lasting glir lyset fra
    midnatt og fram til nå, og flytter seg siden ett hakk i minuttet. --dl-now
-   settes av skriptet «Døgnlinja». Uten det (ingen JS) vises bare skalaen. */
+   settes av skriptet «Døgnlinja». Uten det (ingen JS) vises bare skalaen.
+   2026-11-21, Kasper: «enda mer smooth og litt mer subtil … bedre transition» fra
+   lyst til mørkt. Lyset stoppet brått i punktet; nå renner det --dl-spill videre
+   og tones over i den grå linja. Glidningen starter og lander mykt (--dl-ease). */
 .dayline{
   position:relative;height:24px;
-  --dl-p:0;transition:--dl-p 1.7s var(--ease-out-expo) .3s;
+  --dl-p:0;--dl-spill:64px;--dl-ease:cubic-bezier(.45,0,.15,1);
+  transition:--dl-p 2.2s var(--dl-ease) .3s;
 }
 body.heroLanded .daily-frame.in .dayline{--dl-p:var(--dl-now,0)}
 .dayline::before{
   content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line-2);
+}
+.dayline.is-set::before{
+  background:linear-gradient(90deg,var(--line-2) calc(var(--dl-p) * 100% - 1px),rgba(var(--glow-rgb),.5) calc(var(--dl-p) * 100%),var(--line-2) calc(var(--dl-p) * 100% + var(--dl-spill)));
 }
 /* Strekene er SVG med crispEdges: 1116 px / 24 gir halve piksler, og da ble
    annenhver strek uskarp som CSS-toning. Halv piksel inn på hver side, så første
@@ -2616,42 +2623,42 @@ body.heroLanded .daily-frame.in .dayline{--dl-p:var(--dl-now,0)}
 }
 .dl-ticks.is-lit{
   color:var(--accent-2);
-  -webkit-mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.45) calc(var(--dl-p) * 60%),#000 calc(var(--dl-p) * 100%),transparent calc(var(--dl-p) * 100%));
-  mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.45) calc(var(--dl-p) * 60%),#000 calc(var(--dl-p) * 100%),transparent calc(var(--dl-p) * 100%));
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.4) calc(var(--dl-p) * 60%),rgba(0,0,0,.85) calc(var(--dl-p) * 100% - 6px),transparent calc(var(--dl-p) * 100% + var(--dl-spill) * .4));
+  mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.4) calc(var(--dl-p) * 60%),rgba(0,0,0,.85) calc(var(--dl-p) * 100% - 6px),transparent calc(var(--dl-p) * 100% + var(--dl-spill) * .4));
 }
 .dl-fill{
   position:absolute;left:0;top:0;height:1px;width:calc(var(--dl-p) * 100%);
-  background:linear-gradient(90deg,transparent,rgba(var(--glow-rgb),.5) 55%,var(--accent-2));
+  background:linear-gradient(90deg,transparent,rgba(var(--glow-rgb),.4) 55%,rgba(var(--glow-rgb),.85) calc(100% - 20px),var(--accent-2));
 }
 .dl-fill::after{
-  content:"";position:absolute;left:0;right:0;top:-7px;height:15px;
-  background:linear-gradient(180deg,transparent,rgba(var(--glow-rgb),.24),transparent);
-  -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000);
-  mask-image:linear-gradient(90deg,transparent 30%,#000);
+  content:"";position:absolute;left:0;right:0;top:-9px;height:19px;
+  background:linear-gradient(180deg,transparent,rgba(var(--glow-rgb),.13),transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 calc(100% - 24px),rgba(0,0,0,.4));
+  mask-image:linear-gradient(90deg,transparent 30%,#000 calc(100% - 24px),rgba(0,0,0,.4));
 }
 /* Gløden rundt «nå»-punktet. Den ligger som bakgrunn i et lag som bare går
    12 px ut over linja på hver side (mindre enn sidemargen på telefon) og tones bort mot kantene: som eget element
    rundt punktet stakk den 240 px ut av siden rundt midnatt og ga sidelengs rulling. */
 .dayline::after{
   content:"";position:absolute;left:-12px;right:-12px;top:-74px;height:180px;pointer-events:none;
-  background:radial-gradient(240px 90px at calc(12px + var(--dl-p) * (100% - 24px)) 74px,rgba(var(--glow-rgb),.17),rgba(var(--glow-rgb),.05) 56%,transparent);
+  background:radial-gradient(260px 96px at calc(12px + var(--dl-p) * (100% - 24px)) 74px,rgba(var(--glow-rgb),.12),rgba(var(--glow-rgb),.035) 56%,transparent);
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
   mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
 }
 .dl-now{position:absolute;z-index:1;top:0;left:calc(var(--dl-p) * 100%);width:0;height:0}
 .dl-now i{
-  position:absolute;left:-3.5px;top:-3px;width:7px;height:7px;border-radius:50%;
-  background:radial-gradient(circle at 50% 45%,#fff 0,var(--accent-2) 58%);
-  box-shadow:0 0 0 3px rgba(var(--glow-rgb),.20),0 0 12px 2px rgba(var(--glow-rgb),.6);
+  position:absolute;left:-3px;top:-2.5px;width:6px;height:6px;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.9) 0,var(--accent-2) 62%);
+  box-shadow:0 0 4px 1px rgba(var(--glow-rgb),.6),0 0 14px 4px rgba(var(--glow-rgb),.3);
 }
 .dl-now i::after{
   content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--accent-2);opacity:0;
 }
 /* To rolige ringer når lyset har landet, så står punktet stille */
 body.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{
-  animation:hvDlPulse 2.2s var(--ease-out-quart) 2.2s 2 both;
+  animation:hvDlPulse 2.8s var(--ease-out-quart) 2.5s 2 both;
 }
-@keyframes hvDlPulse{0%{opacity:.75;transform:scale(1)}100%{opacity:0;transform:scale(3.6)}}
+@keyframes hvDlPulse{0%{opacity:.45;transform:scale(1)}100%{opacity:0;transform:scale(3)}}
 .dayline:not(.is-set) :is(.dl-now,.dl-fill,.dl-ticks.is-lit),
 .dayline:not(.is-set)::after{display:none}
 .dl-hrs b{
@@ -2666,9 +2673,9 @@ body.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{
 /* Lasteanimasjonen: linja tones inn etter datoen, og lyset starter litt seinere */
 body.introAct .daily .daily-head .dayline{opacity:0}
 body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .dayline{
-  opacity:1;transition:opacity .6s var(--ease-out-quart) 620ms, --dl-p 1.7s var(--ease-out-expo) 900ms;
+  opacity:1;transition:opacity .8s var(--ease-out-quart) 620ms, --dl-p 2.2s var(--dl-ease) 900ms;
 }
-body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animation-delay:2.9s}
+body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animation-delay:3.1s}
 @media (prefers-reduced-motion:reduce){
   .dayline{transition:none}
   .dl-now i::after{animation:none !important}
