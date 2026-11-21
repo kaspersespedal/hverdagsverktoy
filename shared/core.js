@@ -210,7 +210,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v378';
+    s.src = '/shared/lang/' + code + '.js?v=v379';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -5525,6 +5525,7 @@ function ccPopulate(){
 }
 
 function ccConvert(){
+  if(!document.getElementById('uc-from'))return; // bare /kalkulator/unit/ har valutaomregneren (#unit på andre sider)
   const from=document.getElementById('uc-from').value;
   const to=document.getElementById('uc-to').value;
   const val=Math.abs(parseFloat(document.getElementById('uc-val').value))||0;

@@ -1,0 +1,37 @@
+#!/bin/sh
+# Sperre mot å pushe docs/referanse/ på nytt.
+# Innholdet ble fjernet fra all offentlig historikk 2026-08-19 av opphavsrettsgrunner
+# (transkribert lærebok). ~12 lokale brancher + taggen pre-redesign-2026-05-26 har
+# den fortsatt. Uten denne sperren gjeninnfører én push hele problemet.
+# Se auto-minne project_juridisk_gjennomgang_2026-08.
+#
+# Sjekker både siste versjon og ALLE commits som pushes (de som ikke ligger på
+# remoten fra før). En gren som la til mappa og fjernet den igjen, slapp gjennom
+# den gamle sperren, men historikken ble med i pushen.
+# Installer (fra hovedmappa):  cp scripts/hooks/pre-push .git/hooks/pre-push
+z=0000000000000000000000000000000000000000
+remote="${1:-origin}"
+pattern='(^|/)docs/referanse/|matematikk-22a'
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ "$local_sha" = "$z" ] && continue
+  hvor=""
+  if git ls-tree -r --name-only "$local_sha" 2>/dev/null | grep -Eq "$pattern"; then
+    hvor="siste versjon"
+  elif git log -m --format= --name-only "$local_sha" --not --remotes="$remote" 2>/dev/null | grep -Eq "$pattern"; then
+    hvor="historikken (en commit som pushes)"
+  fi
+  if [ -n "$hvor" ]; then
+    echo "" >&2
+    echo "PUSH BLOKKERT — $local_ref inneholder docs/referanse/ i $hvor" >&2
+    echo "" >&2
+    echo "  Denne stien ble fjernet fra all offentlig historikk 2026-08-19." >&2
+    echo "  Pusher du den, er den tilbake på GitHub." >&2
+    echo "" >&2
+    echo "  Fiks:  git branch -f <branch> origin/<branch>" >&2
+    echo "  eller lag en ny gren fra origin/main og ta med bare filene du trenger." >&2
+    echo "  Backup ligger i C:\Users\Kaspe\hv-historikk-backup.git" >&2
+    echo "" >&2
+    exit 1
+  fi
+done
+exit 0
