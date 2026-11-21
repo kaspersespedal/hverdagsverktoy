@@ -81,6 +81,13 @@ near('Tre år: bank = forrige bank + kontantstrøm (år 3)', p3.years[2].cash, p
 near('Tolker «1 234,5»', M.parseNum('1 234,5'), 1234.5);
 near('Tolker «−12» med typografisk minus', M.parseNum('−12'), -12);
 sann('Avviser «12a»', isNaN(M.parseNum('12a')));
+near('Tolker «10 %»', M.parseNum('10 %'), 10);
+near('Tolker «8,5%»', M.parseNum('8,5%'), 8.5);
+near('Tolker «1 000 kr»', M.parseNum('1 000 kr'), 1000);
+near('Tolker «49.271» som tusenskille', M.parseNum('49.271'), 49271);
+near('Tolker «1.000.000» som tusenskille', M.parseNum('1.000.000'), 1000000);
+near('Tolker «1.500,5»', M.parseNum('1.500,5'), 1500.5);
+near('Tolker «8.5» som desimal', M.parseNum('8.5'), 8.5);
 sann('Viser 1234567,8 som «1 234 567,8»', M.fmt(1234567.8, 1) === '1 234 567,8');
 
 console.log('\n' + pass + ' bestått, ' + fail + ' feilet');
