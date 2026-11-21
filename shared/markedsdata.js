@@ -312,9 +312,12 @@
   var _convDir = 1;              // 1: valuta → NOK, −1: NOK → valuta
   var _convPick = null, _convNok = null;
 
-  /* Skjemafeltet tar både «1 234,5» og «1234.5». Tomt/ugyldig gir null. */
+  /* Skjemafeltet tar «1 234,5», «1234.5» og «1.000». Tomt/ugyldig gir null. */
   function parseAmt(s) {
-    var t = String(s == null ? '' : s).replace(/[\s ]/g, '').replace(',', '.');
+    var t = String(s == null ? '' : s).replace(/[\s ]/g, '');
+    // Punktum er tusenskille når det står komma i tallet eller bare grupper på tre sifre følger («1.000», «1.000,50»).
+    if (t.indexOf(',') > -1 || /^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, '');
+    t = t.replace(',', '.');
     if (!/^\d*\.?\d*$/.test(t)) return null;
     var n = parseFloat(t);
     return isNaN(n) ? null : n;
