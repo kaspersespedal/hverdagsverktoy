@@ -203,14 +203,14 @@ let region = (function(){
   return 'no';
 })();
 // Set dir attribute on load for RTL languages
-(function(){if(region==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}})();
+(function(){if(region==='ar'){document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');var s=document.createElement('style');s.textContent='input[inputmode=numeric],input[inputmode=decimal]{direction:ltr}';document.documentElement.appendChild(s);}})();
 let _langLoading = {};
 function loadLang(code) {
   if(REGIONS[code]) return Promise.resolve();
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v331';
+    s.src = '/shared/lang/' + code + '.js?v=v367';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -780,7 +780,7 @@ function _tallStore(alene){
   try{
     for(var k=0;k<alene.length;k++){
       var t=alene[k];
-      if(t.nodeValue.indexOf('\u00a0')>=0 && !_tallSkip(t.parentNode) && _tallStorBoks(t)) _tallSett(t,t.nodeValue.replace(/\u00a0/g,' '));
+      if(document.documentElement.dir!=='rtl' && t.nodeValue.indexOf('\u00a0')>=0 && !_tallSkip(t.parentNode) && _tallStorBoks(t)) _tallSett(t,t.nodeValue.replace(/\u00a0/g,' '));
     }
   }catch(e){ _uiErr('tall',e); }
   finally{ if(_phObs) _phObs.takeRecords(); }
@@ -7088,7 +7088,7 @@ function initPage(){
       t.id = 'hvt-lang-toast';
       t.setAttribute('role','status');
       t.setAttribute('aria-live','polite');
-      t.textContent = 'Språk kunne ikke lastes — viser norsk.';
+      t.textContent = 'Could not load the language — showing Norwegian.';
       t.style.cssText = 'position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#b45309;color:#fff;padding:10px 18px;border-radius:8px;font:600 13px/1.3 Geist,Inter,sans-serif;z-index:10000;box-shadow:0 6px 20px rgba(0,0,0,.18);';
       document.body.appendChild(t);
       setTimeout(function(){ t.style.transition='opacity .4s'; t.style.opacity='0'; }, 5000);
