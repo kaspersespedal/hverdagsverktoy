@@ -5650,7 +5650,8 @@ function fcCalc(){
     resLbl.textContent = r.fcRFv||'Future value (FV)';
     resVal.textContent = fmt(fv);
     resSub.textContent = (r.fcRAfter||'After') + ' ' + n + ' ' + (r.fcRYr||'years');
-    const tvmReturn = pv!==0 ? pct((fv/pv-1)*100) : '—';
+    const invested = pv + totalPmt;   // avkastning = renter delt på alt som er satt inn, ikke bare startbeløpet
+    const tvmReturn = invested>0 ? pct(interest/invested*100) : '—';
     resGrid.innerHTML = `
       <div class="rt"><div class="rt-lbl">${r.fcRStart||'Starting amount'}</div><div class="rt-val">${fmt(pv)}</div></div>
       <div class="rt"><div class="rt-lbl">${r.fcRTotalPmt||'Total payments'}</div><div class="rt-val">${fmt(totalPmt)}</div></div>
@@ -5674,7 +5675,7 @@ function fcCalc(){
   else if(type==='breakeven'){
     const fixed=g('fc-fixed'), price=g('fc-price'), vc=g('fc-varcost');
     const contribution = price - vc;
-    const units = contribution > 0 ? Math.ceil(fixed / contribution) : Infinity;
+    const units = contribution > 0 ? Math.ceil(+(fixed / contribution).toFixed(9)) : Infinity;
     const revenue = units * price;
     resLbl.textContent = r.fcRBePoint||'Break-even point';
     resVal.textContent = units === Infinity ? '∞' : fmtInput(units) + ' ' + (r.fcRUnits||'units');
