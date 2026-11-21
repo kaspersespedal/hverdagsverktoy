@@ -624,8 +624,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
-<script defer src="/shared/core.js?v=v359"></script>
-<script defer src="/shared/lang/no.js?v=v359"></script>
+<script defer src="/shared/core.js?v=v366"></script>
+<script defer src="/shared/lang/no.js?v=v366"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
@@ -644,9 +644,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function fmtPct(n, d){ if(!isFinite(n)) n=0; return (n.toFixed(d == null ? 1 : d)).replace('.', ',') + ' %'; }
   function parseAmt(s){
     if(!s) return 0;
-    var raw = String(s).replace(/[^0-9\-]/g, '');
+    // Komma er desimaltegn og rundes til hele kroner: «129,90» blir 130, ikke 12 990.
+    var raw = String(s).replace(/[^0-9,\-]/g, '').replace(',', '.');
     if(!raw || raw === '-') return 0;
-    var n = parseInt(raw, 10);
+    var n = Math.round(parseFloat(raw));
     return isNaN(n) ? 0 : n;
   }
   function parseDec(s){
@@ -735,6 +736,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   }
 
   function liveFormatKr(inp){
+    if(/[.,]/.test(inp.value)) return; // Med desimaler (komma eller punktum) lar vi feltet være: core.js formaterer det og beholder kommaet.
     var raw = inp.value.replace(/[^0-9\-]/g, '');
     if(raw === '' || raw === '-') return;
     var num = parseInt(raw, 10);

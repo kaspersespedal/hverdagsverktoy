@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-normal.woff2?v=v1">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-italic.woff2?v=v1">
 <link rel="stylesheet" href="/shared/fonts.css?v=v2">
-<link rel="preload" href="/shared/core.js?v=v359" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v366" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -294,8 +294,8 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 
 <script defer src="/shared/atmosphere.js?v=v7"></script>
-<script defer src="/shared/core.js?v=v359"></script>
-<script defer src="/shared/lang/no.js?v=v359"></script>
+<script defer src="/shared/core.js?v=v366"></script>
+<script defer src="/shared/lang/no.js?v=v366"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script defer src="/shared/steg-guide.js?v=v1"></script>
 
@@ -1059,8 +1059,9 @@ footer em{font-style:italic}
       renderViz.apply(null, vizLast);
       if(window.hvtLearn) hvtLearn.update('personlig-budsjett', window._budsjett);
     } else if(field === 'v'){
-      var raw = (e.target.value || '').replace(/[^\d\-]/g,'');
-      budState[col][idx].v = parseInt(raw,10) || 0;
+      // Komma er desimaltegn og rundes til hele kroner: «129,90» blir 130, ikke 12 990.
+      var raw = (e.target.value || '').replace(/[\s ]/g,'').replace(',','.');
+      budState[col][idx].v = Math.round(parseFloat(raw)) || 0;
       recalcBudget();
     }
     saveBudget(budState);
