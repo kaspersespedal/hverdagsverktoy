@@ -445,7 +445,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
 <script defer src="/shared/core.js?v=v367"></script>
-<script defer src="/shared/lang/no.js?v=v367"></script>
+<script defer src="/shared/lang/no.js?v=v374"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
@@ -471,21 +471,25 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     // ── Forbrukslån — effektiv rente (APR via IRR-iterasjon) ──
     window.calcFbl=function(){
       var P=num('fbl-beloep'), rNom=num('fbl-rente'), etab=num('fbl-etablering'), term=num('fbl-termin'), n=num('fbl-mnd');
-      if(P<=0||n<=0||rNom<=0){
+      // 0 % rente er gyldig (gebyrene gir likevel en effektiv rente); tomt rentefelt er det ikke.
+      // Gebyr like stort som lånet gir ingen effektiv rente: melding i stedet for et svar.
+      var rTom=String((document.getElementById('fbl-rente')||{}).value||'').trim()==='';
+      if(P<=0||n<=0||rNom<0||rTom||etab>=P){
         blank(); persist();
+        if(P>0 && etab>=P){ var sub=document.getElementById('fbl-r-sub'); if(sub) sub.textContent='Etableringsgebyret kan ikke være like stort som lånebeløpet'; }
         window._fbl = null;
         if(window.hvtLearn) hvtLearn.update('personlig-fbl', null);
         return;
       }
       var iNom=rNom/100/12;
-      var pmt = P*iNom/(1-Math.pow(1+iNom,-n)) + term;
+      var pmt = (iNom===0 ? P/n : P*iNom/(1-Math.pow(1+iNom,-n))) + term;
       var total = pmt*n + etab;
       var kost = total - P;
       // IRR for monthly rate where sum of PV of payments = P - etab (received net)
       // PV: P - etab = pmt * (1-(1+r)^-n)/r
       var net = P - etab;
       function pv(r){return r===0?pmt*n:pmt*(1-Math.pow(1+r,-n))/r;}
-      var lo=0.0001, hi=0.5, mid;
+      var lo=0, hi=0.5, mid;   // nedre grense 0, ellers vises aldri under 0,12 % effektiv rente
       for(var i=0;i<60;i++){mid=(lo+hi)/2; var p=pv(mid); if(p>net){lo=mid;}else{hi=mid;} }
       var eff = (Math.pow(1+mid,12)-1)*100;
       document.getElementById('fbl-r-eff').textContent=fmtPct(eff);
@@ -563,7 +567,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   }
   // Samme regnestykke som calcFbl over
   function fbl(P, rNom, etab, term, n){
-    var i = rNom / 100 / 12, pmt = P * i / (1 - Math.pow(1 + i, -n)) + term, total = pmt * n + etab, net = P - etab, lo = 0.0001, hi = 0.5, mid = 0;
+    var i = rNom / 100 / 12, pmt = P * i / (1 - Math.pow(1 + i, -n)) + term, total = pmt * n + etab, net = P - etab, lo = 0, hi = 0.5, mid = 0;
     for(var k = 0; k < 60; k++){ mid = (lo + hi) / 2; var pv = pmt * (1 - Math.pow(1 + mid, -n)) / mid; if(pv > net) lo = mid; else hi = mid; }
     var renter = (pmt - term) * n - P;
     return {pmt:pmt, total:total, kost:total - P, eff:(Math.pow(1 + mid, 12) - 1) * 100, renter:renter, gebyr:etab + term * n, lant:P / n, rAvg:renter / n};

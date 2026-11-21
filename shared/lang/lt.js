@@ -1915,6 +1915,7 @@ REGIONS['lt'] = {
     inntektBreadSkatt:'Mokestis',
     inntektBreadCurrent:'Pajamų mokestis',
     inntektTitle:'Pajamų',
+    inntektH1:'<em>Pajamų</em> mokestis',
     inntektSubtitle:'Apskaičiuokite uždarbį po mokesčių 2026 mokestiniais metais — laipsninis mokestis, bendras pajamų mokestis (22 % / 18,5 % Finmarkene ir Šiaurės Troms), socialinis draudimas su augimo slenksčiu, minimalus ir asmens atskaitymas. Apima palūkanų atskaitymą, profsąjungą, BSU, IPS, dovanas ir kelionių atskaitymą.',
     inntektHStatSkatt:'Bendras mokestis',
     inntektHStatEff:'Efektyvioji norma',

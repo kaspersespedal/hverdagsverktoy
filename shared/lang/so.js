@@ -1874,6 +1874,7 @@ REGIONS['so'] = {
     inntektBreadSkatt:'Canshuur',
     inntektBreadCurrent:'Canshuurta Dakhliga',
     inntektTitle:'Canshuurta Dakhliga',
+    inntektH1:'<em>Canshuurta</em> dakhliga',
     inntektSubtitle:'Xisaabi mushahar ka dib canshuurta sanadka dakhliga 2026 — canshuurta darajo, canshuurta dakhliga caadiga ah (22% / 18.5% Finnmark iyo Waqooyiga Troms), caymiska bulshada oo leh kordhin, jarriitaanka ugu yar iyo cafiska shakhsiga. Ku jira jarriitaanka ribada, ururka shaqaalaha, BSU, IPS, hadiyada iyo jarriitaanka safarka.',
     inntektHStatSkatt:'Wadarta canshuurta',
     inntektHStatEff:'Heerka dhabta ah',

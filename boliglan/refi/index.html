@@ -288,7 +288,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           <div class="ks-strip-cell"><span class="l" data-i18n="refiLblBalance">Gjenstående saldo</span><span class="v" id="refiStripBal">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="refiLblOldRate">Gammel rente</span><span class="v" id="refiStripOld">–</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="refiLblNewRate">Ny rente</span><span class="v" id="refiStripNew">–</span></div>
-          <div class="ks-strip-cell accent"><span class="l" data-i18n="refiHStatSaving">Månedlig besparelse</span><span class="v" id="refiStripSaving">–</span></div>
+          <div class="ks-strip-cell accent"><span class="l" data-i18n="refiHStatSaving">Månedlig besparelse etter skatt</span><span class="v" id="refiStripSaving">–</span></div>
         </div>
 
         <div class="ks-body">
@@ -350,8 +350,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
             <div class="ks-r-mnd" id="refiVerdict">Skriv inn gammel og ny rente</div>
 
             <div class="ks-r-stats">
-              <div class="ks-r-stat"><span class="l" data-i18n="refiROutMndSaving">Månedlig besparelse</span><span class="v" id="refi-r-mnd-saving">–</span></div>
-              <div class="ks-r-stat"><span class="l" data-i18n="refiROutTotalSaving">Total besparelse</span><span class="v" id="refi-r-total-saving">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="refiROutMndSaving">Månedlig besparelse etter skatt</span><span class="v" id="refi-r-mnd-saving">–</span></div>
+              <div class="ks-r-stat"><span class="l" data-i18n="refiROutTotalSaving">Total besparelse etter skatt</span><span class="v" id="refi-r-total-saving">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="refiROutCost">Totale gebyrer</span><span class="v" id="refi-r-cost">–</span></div>
               <div class="ks-r-stat"><span class="l" data-i18n="refiROutBe">Break-even</span><span class="v" id="refi-r-be">–</span></div>
             </div>
@@ -389,7 +389,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <div class="howto-row"><strong>Ny rente</strong><span>Tilbudet fra ny bank (eller forhandlet rente i samme bank). Sjekk at det er garantert rente, ikke kampanjerente.</span></div>
         <div class="howto-row"><strong>Etableringsgebyr</strong><span>Engangskostnad i ny bank. Typisk 1 500–3 000 kr i 2026.</span></div>
         <div class="howto-row"><strong>Tinglysingsgebyr</strong><span>545 kr per dokument hos Kartverket i 2026. Sett til 0 hvis du refinansierer i samme bank uten ny tinglysing.</span></div>
-        <div class="howto-row"><strong>Månedlig besparelse</strong><span>Forskjellen mellom gammel og ny månedlig betaling.</span></div>
+        <div class="howto-row"><strong>Månedlig besparelse</strong><span>Forskjellen mellom gammel og ny månedlig betaling, minus de 22&nbsp;% du mister i rentefradrag.</span></div>
         <div class="howto-row"><strong>Break-even</strong><span>Måneden da den samlede besparelsen overstiger gebyrene. Etter det er besparelsen ren gevinst.</span></div>
         <div class="howto-row"><strong>Total nettogevinst</strong><span>Total besparelse over restløpetid minus etablerings- og tinglysingsgebyr.</span></div>
       </div>
@@ -493,7 +493,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
 <script defer src="/shared/core.js?v=v367"></script>
-<script defer src="/shared/lang/no.js?v=v367"></script>
+<script defer src="/shared/lang/no.js?v=v374"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
@@ -515,6 +515,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     return isNaN(v) ? (fb||0) : v;
   }
   function fmt(n){
+    if(!isFinite(n)) return '–';  // urimelige tall gir «–», ikke «NaN kr» eller «∞ kr»
     return new Intl.NumberFormat('nb-NO',{maximumFractionDigits:0})
       .format(Math.round(n)).replace(/ /g,' ') + ' kr';
   }
@@ -589,7 +590,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var rNew = newRate / 100 / 12;
     var oldMonthly = annuityMonthly(P, rOld, n);
     var newMonthly = annuityMonthly(P, rNew, n);
-    var monthlySaving = oldMonthly - newMonthly;
+    // Lavere rente gir også lavere rentefradrag (22 %), så besparelsen regnes etter skatt
+    var monthlySaving = (oldMonthly - newMonthly) * 0.78;
     var totalSaving = monthlySaving * n;
     var totalRefiCost = establishing + tinglysing;
     var netGain = totalSaving - totalRefiCost;
@@ -721,7 +723,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   // Samme regnestykke som annuityMonthly() og calcRefi() over
   function ann(P, r, n){ if(n <= 0) return 0; if(r === 0) return P / n; return P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1); }
   function refi(P, aar, gml, ny, kost){
-    var n = aar * 12, spar = ann(P, gml / 100 / 12, n) - ann(P, ny / 100 / 12, n);
+    var n = aar * 12, spar = (ann(P, gml / 100 / 12, n) - ann(P, ny / 100 / 12, n)) * 0.78;
     return {n:Math.round(n), spar:spar, kost:kost, be:spar > 0 ? Math.ceil(kost / spar) : null, eks:spar > 0 ? kost / spar : 0, net:spar * n - kost};
   }
 
