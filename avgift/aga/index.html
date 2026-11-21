@@ -547,7 +547,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
-<script defer src="/shared/core.js?v=v331"></script>
+<script defer src="/shared/core.js?v=v366"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
@@ -684,6 +684,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         if(!raw) return;
         var s = JSON.parse(raw);
         if(s.salary != null) document.getElementById('aga-salary').value = s.salary;
+        // Lagret med forrige versjon av siden (til mai 2026): bare satsen (zone), ikke sonen.
+        // 0.106 var «Sone Ia/II» i én; Ia og II har samme sats, så II gir samme svar.
+        if(s.sone == null && s.zone != null){
+          s.sone = {'0.141':'I', '0.106':'II', '0.064':'III', '0.079':'IVa', '0.051':'IV', '0':'V'}[String(s.zone)];
+        }
         if(s.sone != null){
           document.querySelectorAll('.aga-z').forEach(function(b){
             var on = b.getAttribute('data-sone') === s.sone;

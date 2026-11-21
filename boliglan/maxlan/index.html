@@ -463,7 +463,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
-<script defer src="/shared/core.js?v=v331"></script>
+<script defer src="/shared/core.js?v=v366"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
@@ -490,8 +490,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function compute(){
     var inntekt = parseNum('maxlan-inntekt');
     if(inntekt <= 0){ return { hasData:false }; }
-    var gjeld = parseNum('maxlan-gjeld');
-    var ek = parseNum('maxlan-ek');
+    // Minustegn i beløpsfeltene regnes som 0
+    var gjeld = Math.max(0, parseNum('maxlan-gjeld'));
+    var ek = Math.max(0, parseNum('maxlan-ek'));
     var maxLanGjeldsgrad = Math.max(0, 5*inntekt - gjeld);
     var maxLanEk = ek * 9;
     var maxLan = Math.min(maxLanGjeldsgrad, maxLanEk);

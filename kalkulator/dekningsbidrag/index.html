@@ -518,7 +518,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
-<script defer src="/shared/core.js?v=v331"></script>
+<script defer src="/shared/core.js?v=v366"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
@@ -541,7 +541,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   // Norsk desimalkomma + tusenskille-mellomrom må tåles (feltene er type="text").
   function parseNum(id){
     var el = document.getElementById(id); if(!el) return 0;
-    var n = parseFloat(String(el.value).replace(/[\s ]/g,'').replace(',','.'));
+    var t = String(el.value).replace(/[\s ]/g,'');
+    // Punktum er tusenskille når det står komma i tallet eller bare grupper på tre sifre følger («1.500», «1.500,50»).
+    if(t.indexOf(',') > -1 || /^-?\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, '');
+    var n = parseFloat(t.replace(',','.'));
     return isNaN(n) ? 0 : n;
   }
 
@@ -603,7 +606,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       setText('rStripBe', tr('trKalkulatorDekningsbidragUnits', '{n} enheter', 0));
       setText('rVerdict', 'Ingen faste kostnader — lønnsomhet fra første enhet.');
     } else {
-      var beEnheter = Math.ceil(fk / dbPerEnhet);
+      var beEnheter = Math.ceil(+(fk / dbPerEnhet).toFixed(9));   // 19,90 − 9,90 gir støy, ikke en ekstra enhet
       var beOms = beEnheter * sp;
       setText('rBeEnheter', tr('trKalkulatorDekningsbidragUnits', '{n} enheter', beEnheter));
       setText('rBeOms', fmtKr(beOms));
@@ -686,7 +689,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   // Samme regnestykke som recalc() over: break-even rundes opp, finnes ikke ved DB ≤ 0, 0 ved faste kostnader 0
   function model(sp, vk, antall, fk){
     var db = sp - vk, noBe = vk >= sp || db <= 0, be = null, beEnh = null, beOms = null;
-    if(!noBe){ if(fk === 0){ be = 0; beEnh = 0; beOms = 0; } else { be = fk / db; beEnh = Math.ceil(fk / db); beOms = beEnh * sp; } }
+    if(!noBe){ if(fk === 0){ be = 0; beEnh = 0; beOms = 0; } else { be = fk / db; beEnh = Math.ceil(+(fk / db).toFixed(9)); beOms = beEnh * sp; } }
     var totalDb = db * antall;
     return {sp:sp, vk:vk, antall:antall, fk:fk, db:db, be:be, beEnh:beEnh, beOms:beOms, dg:sp > 0 ? Math.round(db / sp * 1000) / 10 : NaN, resultat:totalDb - fk, inntekt:sp * antall, kost:fk + vk * antall};
   }

@@ -353,7 +353,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
-<script defer src="/shared/core.js?v=v331"></script>
+<script defer src="/shared/core.js?v=v366"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
@@ -386,7 +386,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   var FNS = {
     sin:  [function(v){ return Math.sin(v*Math.PI/180); }, 'sin'],
     cos:  [function(v){ return Math.cos(v*Math.PI/180); }, 'cos'],
-    tan:  [function(v){ return Math.tan(v*Math.PI/180); }, 'tan'],
+    tan:  [function(v){ return Math.abs(v % 180) === 90 ? NaN : Math.tan(v*Math.PI/180); }, 'tan'],
     log:  [function(v){ return Math.log(v)/Math.LN10; }, 'log'],
     ln:   [function(v){ return Math.log(v); }, 'ln'],
     sqrt: [function(v){ return Math.sqrt(v); }, '√'],
@@ -475,20 +475,72 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     expr = expr.replace(re, function(m, op, neg, num){ return op + (neg ? '' : '-') + num; });
     fresh = false; render();
   }
+  // Rydd avrundingsstøy (sin 180° = 1,2e-16 → 0) og vis aldri «1e+21»: store og små svar
+  // skrives som mantisse×10**eksponent, som motoren under leser tilbake.
+  function clean(v){
+    v = Math.abs(v) < 1e15 ? Math.round(v * 1e10) / 1e10 : parseFloat(v.toPrecision(15));
+    return v === 0 ? 0 : v;
+  }
+  function numToExpr(v){
+    var t = '' + v;
+    if(Math.abs(v) >= 1e15) t = v.toExponential();
+    var m = t.match(/^(-?[\d.]+)e([+-]\d+)$/);
+    return m ? m[1] + '×10**' + parseInt(m[2], 10) : t;
+  }
+  // Regner uttrykket (× ÷ − + ** og parenteser) med vanlig regnerekkefølge. Fortegn foran et
+  // tall hører til tallet, så (−4)² = 16. Gir NaN ved ugyldig uttrykk og deling på null.
+  function evalExpr(src){
+    var tk = src.match(/\*\*|[\d.]+|[+×÷−\-()]/g) || [], i = 0, bad = false;
+    function sum(){
+      var a = prod();
+      while(tk[i] === '+' || tk[i] === '−'){ var o = tk[i++], b = prod(); a = o === '+' ? a + b : a - b; }
+      return a;
+    }
+    function prod(){
+      var a = pow();
+      while(tk[i] === '×' || tk[i] === '÷'){
+        var o = tk[i++], b = pow();
+        if(o === '÷' && b === 0) bad = true;
+        a = o === '×' ? a * b : a / b;
+      }
+      return a;
+    }
+    function pow(){
+      var a = unary();
+      if(tk[i] === '**'){ i++; return Math.pow(a, pow()); }
+      return a;
+    }
+    function unary(){
+      if(tk[i] === '-'){ i++; return -unary(); }
+      if(tk[i] === '('){
+        i++; var v = sum();
+        if(tk[i] === ')') i++; else bad = true;
+        return v;
+      }
+      var t = tk[i++];
+      if(t === undefined || !/^[\d.]+$/.test(t)){ bad = true; return NaN; }
+      return parseFloat(t);
+    }
+    var res = sum();
+    return (bad || i !== tk.length) ? NaN : res;
+  }
   function percent(){
     if(errored) return;
-    expr = expr.replace(/(\d[\d.]*)$/, function(m){ return '' + (parseFloat(m) / 100); });
+    // 200 + 10 % = 220: etter + eller − er prosenten av det som står foran, som på de andre kalkulatorene.
+    var m = expr.match(/^(.*)([+−])(\d[\d.]*)$/), base = m ? evalExpr(m[1]) : NaN;
+    if(m && !isNaN(base)) expr = m[1] + m[2] + numToExpr(clean(base * parseFloat(m[3]) / 100));
+    else expr = expr.replace(/(\d[\d.]*)$/, function(x){ return numToExpr(clean(parseFloat(x) / 100)); });
     fresh = false; render();
   }
   function applyFn(fn, label){
     if(errored) clearAll();
-    var m = expr.match(/(\d[\d.]*)$/);
+    var m = expr.match(/(^|[+×÷(−*])(-?)(\d[\d.]*)$/);      // tallet med eventuelt fortegn
     if(!m) return;                                          // ingenting å regne på ennå
-    var res = fn(parseFloat(m[1]));
+    var res = fn(parseFloat(m[2] + m[3]));
     if(isNaN(res) || !isFinite(res)){ showError(); return; }
-    res = Math.round(res * 1e10) / 1e10;
-    history = label + '(' + fmt(m[1]) + ')';
-    expr = expr.slice(0, expr.length - m[1].length) + res;
+    res = clean(res);
+    history = label + '(' + fmt(m[2] + m[3]) + ')';
+    expr = expr.slice(0, expr.length - m[2].length - m[3].length) + numToExpr(res);
     fresh = true; render();
   }
   function backspace(){
@@ -501,17 +553,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   }
   function equals(){
     if(errored || expr === '') return;
-    var e = expr.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+    var e = expr;
     var opens = (e.match(/\(/g) || []).length, closes = (e.match(/\)/g) || []).length;
     while(closes < opens){ e += ')'; closes++; }            // balanser åpne parenteser
-    if(!/^[0-9+\-*/(). ]+$/.test(e)){ showError(); return; } // whitelist: kun tall/operatorer
-    try{
-      var result = Function('"use strict";return(' + e + ')')();
-      if(typeof result !== 'number' || isNaN(result) || !isFinite(result)){ showError(); return; }
-      history = expr;
-      result = Math.round(result * 1e10) / 1e10;
-      expr = '' + result; fresh = true; render();
-    }catch(ex){ showError(); }
+    var result = evalExpr(e);
+    if(typeof result !== 'number' || isNaN(result) || !isFinite(result)){ showError(); return; }
+    history = expr;
+    expr = numToExpr(clean(result)); fresh = true; render();
   }
 
   keys.addEventListener('click', function(e){
