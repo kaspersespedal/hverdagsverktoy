@@ -424,8 +424,10 @@ body > footer{flex-shrink:0}
   var OK = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 6.5 L5 9 L9.5 3.5"/></svg>';
   var NO = '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3 L9 9 M9 3 L3 9"/></svg>';
   function test(v, lim, under){ if(isNaN(v) || v < 0) return null; return under ? v < lim : v <= lim; }
+  var NEG = 'Tallet kan ikke være negativt.', MIN = 'Et AS må ha minst 30 000 kr i aksjekapital.', bad = false;
+  function chk(v, txt){ if(v < 0){ bad = true; return NEG; } return txt; }
   function row(t, ok, v){
-    var b = ok === null ? '<span class="gd-badge">Mangler tall</span>'
+    var b = ok === null ? '<span class="gd-badge">' + (v === NEG || v === MIN ? 'Feil tall' : 'Mangler tall') + '</span>'
       : ok ? '<span class="gd-badge ja">' + OK + 'Oppfylt</span>'
       : '<span class="gd-badge">' + NO + 'Ikke oppfylt</span>';
     return '<li><span class="t">' + t + '</span>' + b + '<span class="v">' + v + '</span></li>';
@@ -434,28 +436,34 @@ body > footer{flex-shrink:0}
   var H = el('rv-h'), P = el('rv-p'), C = el('rv-cond'), S = el('rv-ok'), M = el('rv-must');
   function draw(){
     var res, html;
+    bad = false;
     if(!ny){
       var a = num('rv-inn'), b = num('rv-bal'), c = num('rv-arv');
       res = [test(a, 7000000, true), test(b, 27000000, true), test(c, 10, false)];
-      html = row('Driftsinntekter under 7&nbsp;mill.&nbsp;kr', res[0], isNaN(a) ? 'Fyll inn driftsinntektene.' : T('trSelskapStyreHas', 'AS-et har {v}.').replace('{v}', kr(a)))
-        + row('Balansesum under 27&nbsp;mill.&nbsp;kr', res[1], isNaN(b) ? 'Fyll inn balansesummen.' : T('trSelskapStyreHas', 'AS-et har {v}.').replace('{v}', kr(b)))
-        + row('Høyst 10 årsverk i snitt', res[2], isNaN(c) ? 'Fyll inn antall årsverk.' : T(c === 1 ? 'trSelskapStyreHasFte1' : 'trSelskapStyreHasFte', 'AS-et har {v} årsverk.').replace('{v}', tall(c)));
+      html = row('Driftsinntekter under 7&nbsp;mill.&nbsp;kr', res[0], isNaN(a) ? 'Fyll inn driftsinntektene.' : chk(a, T('trSelskapStyreHas', 'AS-et har {v}.').replace('{v}', kr(a))))
+        + row('Balansesum under 27&nbsp;mill.&nbsp;kr', res[1], isNaN(b) ? 'Fyll inn balansesummen.' : chk(b, T('trSelskapStyreHas', 'AS-et har {v}.').replace('{v}', kr(b))))
+        + row('Høyst 10 årsverk i snitt', res[2], isNaN(c) ? 'Fyll inn antall årsverk.' : chk(c, T(c === 1 ? 'trSelskapStyreHasFte1' : 'trSelskapStyreHasFte', 'AS-et har {v} årsverk.').replace('{v}', tall(c))));
     } else {
       var d = num('rv-ans'), e = num('rv-innsk');
       res = [test(d, 10, false), test(e, 27000000, true)];
-      html = row('Høyst 10 ansatte', res[0], isNaN(d) ? 'Fyll inn antall ansatte.' : (d === 1 ? T('trSelskapStyreHasEmp1', 'AS-et har {v} ansatt.') : T('trSelskapStyreHasEmp', 'AS-et har {v} ansatte.')).replace('{v}', tall(d)))
-        + row('Aksjeinnskudd under 27&nbsp;mill.&nbsp;kr', res[1], isNaN(e) ? 'Fyll inn aksjeinnskuddet.' : T('trSelskapStyreContrib', 'Innskuddet var {v}.').replace('{v}', kr(e)));
+      if(e >= 0 && e < 30000){ res[1] = null; bad = true; } // aksjeloven § 3-1: minst 30 000 kr
+      html = row('Høyst 10 ansatte', res[0], isNaN(d) ? 'Fyll inn antall ansatte.' : chk(d, (d === 1 ? T('trSelskapStyreHasEmp1', 'AS-et har {v} ansatt.') : T('trSelskapStyreHasEmp', 'AS-et har {v} ansatte.')).replace('{v}', tall(d))))
+        + row('Aksjeinnskudd under 27&nbsp;mill.&nbsp;kr', res[1], isNaN(e) ? 'Fyll inn aksjeinnskuddet.' : e >= 0 && e < 30000 ? MIN : chk(e, T('trSelskapStyreContrib', 'Innskuddet var {v}.').replace('{v}', kr(e))));
     }
     C.innerHTML = html;
     var miss = 0, hit = 0;
     res.forEach(function(r){ if(r === null) miss++; else if(r) hit++; });
     var all = res.length;
-    if(miss){
+    if(miss && bad){
+      H.innerHTML = T('trSelskapStyreHFix', 'Rett <em>tallene</em>');
+      P.textContent = 'Ett av tallene kan ikke stemme. Se merknaden i lista over.';
+    } else if(miss){
       H.innerHTML = T('trSelskapStyreHFill', 'Fyll inn <em>tallene</em>');
       P.textContent = 'Svaret kommer når alle feltene har et tall.';
     } else if(hit === all){
       H.innerHTML = T(ny ? 'trSelskapStyreHOkNy' : 'trSelskapStyreHOk', (ny ? 'Det nye AS-et' : 'AS-et') + ' kan <em>velge bort</em> revisor');
-      P.textContent = (all === 3 ? 'Alle tre' : 'Begge') + ' vilkårene er oppfylt. Det skjer ikke av seg selv: aksjonærene må vedta det på generalforsamlingen (aksjonærenes møte), og vedtaket må registreres i Foretaksregisteret.';
+      P.textContent = (all === 3 ? 'Alle tre' : 'Begge') + ' vilkårene er oppfylt. Det skjer ikke av seg selv: aksjonærene må vedta det på generalforsamlingen (aksjonærenes møte), og vedtaket må registreres i Foretaksregisteret.'
+        + (ny ? ' Stifter du selskapet nå, kan dere i stedet skrive fravalget i stiftelsesdokumentet.' : '');
     } else {
       H.innerHTML = T('trSelskapStyreHMust', 'AS-et <em>må ha</em> revisor');
       P.textContent = ORD[hit] + ' av ' + AV[all] + ' vilkår er oppfylt. AS-et kan bare velge bort revisor når alle er oppfylt.'
