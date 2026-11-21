@@ -5492,6 +5492,7 @@ function ccPopulate(){
 }
 
 function ccConvert(){
+  if(!document.getElementById('uc-from'))return; // bare /kalkulator/unit/ har valutaomregneren (#unit på andre sider)
   const from=document.getElementById('uc-from').value;
   const to=document.getElementById('uc-to').value;
   const val=Math.abs(parseFloat(document.getElementById('uc-val').value))||0;
