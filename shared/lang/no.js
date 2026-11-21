@@ -1594,11 +1594,11 @@ REGIONS['no'] = {
 
     // — personlig/syk (Sykepenger — calc + howto) —
     sykTitle:'Sykepenger',
-    sykLead:'Se hva du får utbetalt når du er syk. Er du ansatt, betaler arbeidsgiveren de første 16 dagene. Deretter betaler NAV i opptil 248 sykepengedager, men regner bare med lønn opp til 6G (819 294 kr).',
+    sykLead:'Se hva du får utbetalt når du er syk. Er du ansatt, betaler arbeidsgiveren de første 16 kalenderdagene, om lag 12 arbeidsdager. Deretter betaler NAV i opptil 248 sykepengedager, men regner bare med lønn opp til 6G (819 294 kr).',
     sykStatMnd:'Per måned fra NAV',
     sykStatGrunn:'Beregningsgrunnlag',
     sykStatAnsattDesc:'100 % fra første dag.',
-    sykStatSelvDesc:'Ingenting de første 16 dagene, så 80 %.',
+    sykStatSelvDesc:'Ingenting de første 16 kalenderdagene, så 80 %.',
     sykSecInput:'Inntekt',
     sykSecHint:'2026-satser',
     sykLblLonn:'Brutto årslønn (kr)',
