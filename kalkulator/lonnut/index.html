@@ -560,7 +560,7 @@ body.focus-mode > footer{display:none}
 
 <script defer src="/shared/site-shell.js?v=v2"></script>
 <script defer src="/shared/top-chrome.js?v=v331"></script>
-<script defer src="/shared/core.js?v=v358"></script>
+<script defer src="/shared/core.js?v=v366"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
@@ -643,7 +643,7 @@ body.focus-mode > footer{display:none}
   function fmtKr(n){ if(!isFinite(n)) return '–'; return fmtNb.format(Math.round(n)) + ' kr'; }
   function fmtKrPlain(n){ if(!isFinite(n)) return '0'; return fmtNb.format(Math.round(n)); }
   function fmtPct(n, d){ if(!isFinite(n)) return '–'; return (n*100).toFixed(d == null ? 1 : d).replace('.', ',') + ' %'; }
-  function parseKr(s){ if(s==null) return 0; return parseInt(String(s).replace(/[^\d]/g, ''), 10) || 0; }
+  function parseKr(s){ if(s==null) return 0; return Math.round(parseFloat(String(s).replace(/[^\d,]/g, '').replace(',', '.'))) || 0; }
   function parseDec(s){ if(s==null) return 0; var v = String(s).replace(',', '.').replace(/[^\d.\-]/g, ''); return parseFloat(v) || 0; }
   var $ = function(id){ return document.getElementById(id); };
 
@@ -669,6 +669,7 @@ body.focus-mode > footer{display:none}
     return state;
   }
   function liveFormatKr(inp){
+    if(/[.,]/.test(inp.value)) return; // Med desimaler (komma eller punktum) lar vi feltet være: core.js formaterer det og beholder kommaet.
     var raw = inp.value.replace(/[^\d]/g, '');
     if(!raw) return;
     var num = parseInt(raw, 10);

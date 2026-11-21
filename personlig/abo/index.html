@@ -26,7 +26,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/geist-latin-wght-normal.woff2?v=v1">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-normal.woff2?v=v1">
 <link rel="stylesheet" href="/shared/fonts.css?v=v2">
-<link rel="preload" href="/shared/core.js?v=v358" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v366" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -209,7 +209,7 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 
 <script defer src="/shared/atmosphere.js?v=v7"></script>
-<script defer src="/shared/core.js?v=v358"></script>
+<script defer src="/shared/core.js?v=v366"></script>
 <script defer src="/shared/lang/no.js?v=v235"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 
@@ -503,7 +503,8 @@ body .ks-body > .ks-form,body .ks-body > .ks-result{position:static}
   function loc(s){ var r = typeof R === 'function' ? R() : null; return (r && r._ph && r._ph[s]) || s; }
   // Trygt navn i aria-label: tomt felt skal ikke gi «Beløp for »
   function escAria(v){ v=String(v||'').replace(/"/g,'').trim(); return v || tr('trPersonligAboAriaNy', 'nytt abonnement'); }
-  function parseKr(s){ if(s == null) return 0; return +String(s).replace(/[^\d]/g,'') || 0; }
+  // Komma er desimaltegn og rundes til hele kroner: «129,90» blir 130, ikke 12 990.
+  function parseKr(s){ if(s == null) return 0; return Math.round(parseDec(s)) || 0; }
   function parseDec(s){ if(s == null) return 0; return +String(s).replace(/\s/g,'').replace(',','.').replace(/[^\d.]/g,'') || 0; }
 
   var KATEGORIER = ['Strømming','Musikk','Trening','Sky/Apper','Avis','Annet'];
