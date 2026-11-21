@@ -145,7 +145,7 @@
     $('sens-lead').textContent = hasShares
       ? 'Verdi per aksje i kroner med andre krav og vekst. Midten er svaret over.' + (isFinite(kurs) ? ' Fet skrift er over børskursen.' : '')
       : 'Egenkapitalverdien (' + unitName() + ') med andre krav og vekst. Midten er svaret over.';
-    var h = '<caption class="sr-only" style="position:absolute;left:-9999px">' + (hasShares ? 'Verdi per aksje' : 'Egenkapitalverdi') + ' for ulike WACC (rader) og vekst for alltid (kolonner)</caption>';
+    var h = '<caption class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">' + (hasShares ? 'Verdi per aksje' : 'Egenkapitalverdi') + ' for ulike WACC (rader) og vekst for alltid (kolonner)</caption>';
     h += '<thead><tr><th scope="col" class="corner">WACC ↓ · vekst →</th>';
     dg.forEach(function(d){ h += '<th scope="col">' + M.pct(o.g + d, 1) + '</th>'; });
     h += '</tr></thead><tbody>';

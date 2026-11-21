@@ -1844,6 +1844,7 @@ tekFootNote:'* 2026年费率。规则可能变化 — 请查阅 skatteetaten.no 
     inntektSubtitle:'计算2026收入年度的税后工资——阶梯税、一般所得税（22 % / 芬马克和北特罗姆斯18,5 %）、累进社会保险费、最低扣除和个人免税额。包括利息扣除、工会会费、BSU、IPS、捐赠和通勤扣除。',
 
     inntektTitle:'所得',
+    inntektH1:'<em>所得</em>税',
 
     lovGuideEndringer:'修订历史',
 

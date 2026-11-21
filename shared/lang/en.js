@@ -1529,6 +1529,7 @@ REGIONS['en'] = {
     inntektSectionInntekt: 'Income',
     inntektSubtitle: 'See what you keep after tax in 2026, per month and per year. Bracket tax, national insurance and the most common deductions are included.',
     inntektTitle: 'Income',
+    inntektH1:'<em>Income</em> tax',
     avgiftHeroChipAll: 'All',
     avgiftHeroChipNew: 'New',
     avgiftHeroChipPopular: 'Popular',
