@@ -45,7 +45,7 @@ for (const pr of prer) {
 
 console.log('main: v' + vMain);
 for (const r of rader.sort((a, b) => (b.v || 0) - (a.v || 0))) {
-  const merk = Number.isNaN(r.v) ? '' : r.v <= vMain ? '  (lavere enn main, må få nytt nummer)' : '';
+  const merk = Number.isNaN(r.v) ? '' : r.v <= vMain ? '  (ikke høyere enn main: trenger nytt nummer hvis PR-en endrer nettstedsfiler)' : '';
   console.log('#' + r.nr + ': ' + (Number.isNaN(r.v) ? '–' : 'v' + r.v) + (r.utkast ? ' (utkast)' : '') + merk + '  ' + r.tittel);
 }
 const hoyest = Math.max(vMain, ...rader.map(r => r.v).filter(v => !Number.isNaN(v)));
