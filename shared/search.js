@@ -1101,7 +1101,7 @@ window.openContactWithSuggestion = function(query){
     return;
   }
   var subject = encodeURIComponent(T('trSharedSearchMailSubject', 'Forslag: {q}').split('{q}').join(query));
-  var body = encodeURIComponent(T('trSharedSearchMailBody', 'Jeg søkte etter «{q}» på hverdagsverktoy.com, men fant ingen resultater.\n\nDet hadde vært nyttig med et verktøy eller informasjon om dette.').split('{q}').join(query));
+  var body = encodeURIComponent(T('trSharedSearchMailBody', 'Jeg søkte etter «{q}» på hverdagsverktøy.no, men fant ingen resultater.\n\nDet hadde vært nyttig med et verktøy eller informasjon om dette.').split('{q}').join(query));
   window.location.href = 'mailto:kontakt@hverdagsverktoy.com?subject=' + subject + '&body=' + body;
 };
 
