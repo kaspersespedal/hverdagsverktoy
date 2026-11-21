@@ -34,7 +34,7 @@ console.log('Syntaks: ' + jsFiler.length + ' JS-filer sjekket.');
 
 // 2. Service worker-versjon
 // Filer som ikke serveres til besøkende (eller ikke caches av sw.js) krever ikke nytt CACHE_NAME.
-const IKKE_NETTSIDE = /^(\.github\/|scripts\/)|\.md$|^(\.gitignore|sitemap\.xml|robots\.txt|CNAME|LICENSE|llms\.txt)$/;
+const IKKE_NETTSIDE = /^(\.github\/|scripts\/)|\.md$|^(\.gitignore|\.gitattributes|sitemap\.xml|robots\.txt|CNAME|LICENSE|llms\.txt)$/;
 const endret = lines(git('diff', '--name-only', base + '...HEAD'));
 const nettside = endret.filter(f => !IKKE_NETTSIDE.test(f));
 const versjon = txt => {
