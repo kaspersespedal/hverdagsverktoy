@@ -1477,20 +1477,7 @@ REGIONS['no'] = {
     skattHeroSectionLevels:'Trinnskatt 2026',
     skattHeroSeeAllLov:'Skatteloven 2026',
     skattHeroTagPopular:'Populær',
-    skattHeroToolSkattkalkTitle:'Skattkalkulator',
-    skattHeroToolSkattkalkDesc:'Beregn skatt på årsinntekt med trinnskatt og trygdeavgift.',
-    skattHeroToolTrinnTitle:'Trinnskatt',
-    skattHeroToolTrinnDesc:'Trinn 1 til 5 — fra 1,7 % opp til 17,8 % over 1 410 750 kr.',
-    skattHeroToolUtbytteTitle:'Utbytteskatt',
-    skattHeroToolUtbytteDesc:'Oppjusteringsfaktor 1,72 og skjermingsfradrag forklart.',
-    skattHeroToolFormueTitle:'Formuesskatt',
-    skattHeroToolFormueDesc:'0,7 % stat + 0,3 % kommune over 1,9 mill bunnfradrag.',
-    skattHeroToolReiseTitle:'Reisefradrag',
-    skattHeroToolReiseDesc:'1,90 kr per km over 12 000 kr egenandel.',
-    skattHeroToolForaTitle:'Foreldrefradrag',
-    skattHeroToolForaDesc:'15 000 kr for ett barn, 10 000 kr for hvert ekstra.',
     skattHeroToolInntektTitle:'Inntektsskatt',
-    skattHeroToolInntektDesc:'Lønn etter skatt — trinnskatt, alminnelig inntektsskatt, trygdeavgift og fradrag for 2026.',
     skattHeroTagNew:'Ny',
 
     // — avgift landing (editorial redesign) —
@@ -1610,14 +1597,12 @@ REGIONS['no'] = {
     sykFase1:'<strong>Dag 1–16 — arbeidsgiver betaler:</strong> 100 % av lønnen din, <em>uten tak</em>. Tjener du 1 million, får du full lønn disse to ukene.',
     sykFase2:'<strong>Dag 17–365 — NAV tar over:</strong> NAV betaler 100 %, men maks <strong>6G = 819 294 kr/år (≈ 68 275 kr/måned)</strong>. Tjener du mer, taper du det over 6G — med mindre tariffavtalen din dekker mellomlegget (mange offentlige ansatte får det, ikke alle private).',
     sykFase3:'<strong>Etter 52 uker:</strong> Sykepengene stopper. Du søker <strong>arbeidsavklaringspenger (AAP)</strong> — 66 % av inntekt opp til 6G, inntil 3 år. Krever minst 50 % nedsatt arbeidsevne.',
-    sykCallout:'<span class="syk-callout-title">Vanlig misforståelse</span> <em>"Jeg får 100 % lønn hele sykeperioden."</em> Feil. Bare de første 16 dagene er uten tak. Tjener du 900 000 og er langtidssyk, får du ca 65 080 kr/mnd fra NAV — ikke 75 000 kr/mnd.',
     sykH4Egenmelding:'Egenmelding (uten legeerklæring)',
     sykEgenVanlig:'<strong>Vanlig arbeidsplass:</strong> 3 kalenderdager × inntil 4 ganger/år (etter 2 mnd ansettelse)',
     sykEgenIA:'<strong>IA-bedrift:</strong> 8 kalenderdager × inntil 24 dager/år',
     sykH4Gradert:'Gradert sykmelding',
     sykGradertBody:'Minst 20 % og maks 99 % nedsatt arbeidsevne. Du jobber delvis og får sykepenger for resten.',
     sykH4Spesielle:'Spesielle regler',
-    sykSpesSelv:'<strong>Selvstendig næringsdrivende:</strong> 0 kr de første 16 dagene, deretter kun <strong>75 %</strong> fra dag 17 (opp til 6G). Kan kjøpe tilleggsforsikring hos NAV for bedre dekning.',
     sykSpesFri:'<strong>Frilanser:</strong> 0 kr første 16 dager, deretter 100 % opp til 6G.',
     sykSpes6770:'<strong>67–70 år:</strong> Kun <strong>60 sykepengedager</strong> totalt igjen.',
     sykSpes70:'<strong>Over 70 år:</strong> Ingen rett til sykepenger fra folketrygden.',
@@ -2050,7 +2035,6 @@ REGIONS['no'] = {
     tekSkjBody:'<p>Skjermingsfradraget betyr at <strong>en liten del av aksjeavkastningen din er skattefri hvert år</strong> — en slags kompensasjon for at du kunne hatt pengene risikofritt i banken. Beregnes automatisk av Skatteetaten.</p><p class="note">Forenklet: skjermingsrenten for 2025 var 3,6 %, ganget med det du kjøpte aksjene for. 2026-satsen kunngjøres januar 2027.</p><p><strong>Eksempel:</strong> Har du aksjer for 200 000 kr, blir skjermingsfradraget rundt 7 200 kr (2025-sats). Får du 10 000 kr i utbytte, skattlegges bare det som overstiger fradraget (etter oppjustering).</p><p><strong>Når møter du det:</strong> På skattemeldingen hvert år, eller når du leser om utbytteskatt og noen nevner at «effektiv skatt er lavere enn 37,84 %».</p>',
     tekFootNote:'* Satser 2026, unntatt skjermingsrenten, som er den siste kunngjorte (inntektsåret 2025). Regler kan endres — sjekk skatteetaten.no og fondsleverandøren din.'
 ,
-    famHowtoBodyHTML:`<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Foreldrefradrag:</strong> Du kan trekke fra inntil 15 000 kr for første barn og 10 000 kr per ytterligere barn i dokumenterte utgifter til barnepass (barnehage, SFO, dagmamma). Fradraget gis i alminnelig inntekt — 22 % av beløpet spart i skatt.<br/><br/><strong>Maksimalpris barnehage (2026):</strong> Makspris per måned for heltidsplass (SJEKK oppdatert sats fra regjeringen.no). Kommunen kan ha inntektsgradert eller gratis plass.<br/><br/><strong>Søskenmoderasjon:</strong> 30 % rabatt for barn nr. 2, gratis (100 %) for barn nr. 3 og flere.<br/><br/>Fyll inn antall barn, månedspris og inntekt — så ser du årlig utgift, fradragseffekt og netto kostnad.</div>`,
     fblHowtoBodyHTML:`<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Nominell rente</strong> er den rentesatsen banken annonserer. <strong>Effektiv rente</strong> inkluderer gebyrer (etableringsgebyr + terminomkostninger) og viser den faktiske kostnaden per år.<br/><br/>To lån med samme nominelle rente kan ha svært ulik effektiv rente om gebyrene er forskjellige. Alltid sammenlign på effektiv rente, ikke nominell.<br/><br/>Skriv inn lånebeløp, nominell rente, gebyrer og løpetid. Kalkulatoren viser månedlig betaling, total kostnad og reell effektiv rente.</div>`,
     investBodyHTML:`<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;"><strong>Aksjer er eierandeler i et selskap.</strong> Kjøper du en aksje i Equinor, eier du en liten bit av selskapet — og har rett til del av overskuddet.</div>
 <a href="#spare-wrapper" onclick="event.preventDefault();openCardInFocus('spare-wrapper')" style="display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:600;text-decoration:none;margin-bottom:16px;">→ Regn på din sparing i Sparekalkulatoren</a>
@@ -2082,37 +2066,6 @@ REGIONS['no'] = {
 <div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Begreper du bør kjenne:</strong> <em>utbytte, skjermingsfradrag, ASK, indeksfond vs aktivt forvaltet, ETF, shorting, gearing</em> — alle forklart enkelt i <a href="#teknisk-wrapper" onclick="event.preventDefault();var c=document.getElementById('teknisk-wrapper');if(c){if(c.classList.contains('collapsed'))c.querySelector('.card-hdr').click();c.scrollIntoView({behavior:'smooth',block:'start'});}" style="color:var(--accent);text-decoration:underline;">Teknisk ordliste</a> nederst på siden.</div>
 
 <div style="font-size:11px;color:var(--ink3);margin-top:12px;font-style:italic;">* Historiske tall basert på Oslo Børs / MSCI World. Reell avkastning kan bli langt lavere eller høyere — aksjer er volatile.</div>`,
-    kontoHowtoBodyHTML:`<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong>Aksjesparekonto (ASK):</strong> Du kan kjøpe og selge aksjer og aksjefond uten å betale skatt på gevinst før du tar pengene ut av kontoen. Ingen årlig skatt så lenge pengene blir værende. Passer til langsiktig aksjesparing.<br/><br/><strong>Individuell pensjonssparing (IPS):</strong> Låst til du er 62 år. Du får skattefradrag på inntil 15 000 kr i året (22 % = 3 300 kr spart). Skatt betales først ved uttak som pensjon. Passer hvis du vil ha ekstra pensjonssparing og tåler å binde pengene.<br/><br/><strong>Vanlig fondskonto:</strong> Du betaler skatt på utbytte og gevinst hvert år. Friere enn ASK og IPS, men dårligere skattemessig. Passer hvis du trenger fleksibilitet eller investerer i noe som ikke kvalifiserer for ASK.</div>`,
-    sykHowtoBodyHTML:`<div style="font-size:13px;color:var(--ink2);line-height:1.7;"><strong style="color:var(--ink);">Hvordan fungerer det — 3 faser:</strong><br/><br/>
-
-<strong>Dag 1–16 — arbeidsgiver betaler:</strong> 100 % av lønnen din, <em>uten tak</em>. Tjener du 1 million, får du full lønn disse to ukene.<br/><br/>
-
-<strong>Dag 17–365 — NAV tar over:</strong> NAV betaler 100 %, men maks <strong>6G = 819 294 kr/år (≈ 68 275 kr/måned)</strong>. Tjener du mer, taper du det over 6G — med mindre tariffavtalen din dekker mellomlegget (mange offentlige ansatte får det, ikke alle private).<br/><br/>
-
-<strong>Etter 52 uker:</strong> Sykepengene stopper. Du søker <strong>arbeidsavklaringspenger (AAP)</strong> — 66 % av inntekt opp til 6G, inntil 3 år. Krever minst 50 % nedsatt arbeidsevne.<br/><br/>
-
-<div style="background:color-mix(in srgb,rgba(220,120,60,1) 8%,transparent);border:1px solid color-mix(in srgb,rgba(220,120,60,1) 20%,var(--border));border-radius:8px;padding:12px 16px;margin:6px 0 14px;font-size:12px;line-height:1.6;"><div style="text-align:center;font-weight:700;color:var(--ink);margin-bottom:6px;">Vanlig misforståelse</div><em>"Jeg får 100 % lønn hele sykeperioden."</em> Feil. Bare de første 16 dagene er uten tak. Tjener du 900 000 og er langtidssyk, får du ca 65 080 kr/mnd fra NAV — ikke 75 000 kr/mnd.</div>
-
-<strong style="color:var(--ink);">Egenmelding (uten legeerklæring):</strong><br/>
-• <strong>Vanlig arbeidsplass:</strong> 3 kalenderdager × inntil 4 ganger/år (etter 2 mnd ansettelse)<br/>
-• <strong>IA-bedrift:</strong> 8 kalenderdager × inntil 24 dager/år<br/><br/>
-
-<strong style="color:var(--ink);">Gradert sykmelding:</strong> Minst 20 % og maks 99 % nedsatt arbeidsevne. Du jobber delvis og får sykepenger for resten.<br/><br/>
-
-<strong style="color:var(--ink);">Spesielle regler:</strong><br/>
-• <strong>Selvstendig næringsdrivende:</strong> 0 kr de første 16 dagene, deretter kun <strong>75 %</strong> fra dag 17 (opp til 6G). Kan kjøpe tilleggsforsikring hos NAV for bedre dekning.<br/>
-• <strong>Frilanser:</strong> 0 kr første 16 dager, deretter 100 % opp til 6G.<br/>
-• <strong>67–70 år:</strong> Kun <strong>60 sykepengedager</strong> totalt igjen.<br/>
-• <strong>Over 70 år:</strong> Ingen rett til sykepenger fra folketrygden.<br/>
-• <strong>Opptjeningstid:</strong> Minst 4 ukers ansettelse før sykdomsstart.<br/><br/>
-
-<strong style="color:var(--ink);">Sykt barn — egen ordning (omsorgspenger, ikke sykepenger):</strong><br/>
-• <strong>10 dager/år</strong> for 1–2 barn, <strong>15 dager/år</strong> for 3+ barn (per forelder)<br/>
-• Dobbel kvote for aleneforeldre<br/>
-• + 10 ekstra dager ved kronisk/langvarig sykt barn<br/>
-• Gjelder til barnet fyller 12 år (18 år ved kronisk sykdom)<br/><br/>
-
-<strong>Skriv inn årslønn under</strong> — så ser du hva du faktisk får per måned fra NAV og hvor mye du eventuelt taper over 6G-taket.</div>`,
     tekniskBodyHTML:`<div style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;">Begreper du ofte hører men ikke helt forstår — forklart uten finans-sjargong. Klikk et tema for full forklaring.</div>
 <div class="info-card collapsed" id="tek-ips-card" style="margin-top:8px;"><button class="card-hdr" aria-expanded="false" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">IPS (Individuell pensjonssparing) <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Pensjonssparekonto med skattefradrag — men pengene er låst</div></div></button><div class="law-body" style="padding:12px 20px 16px;font-size:13px;color:var(--ink2);line-height:1.7;"><p>IPS er en sparekonto <strong>kun for pensjon</strong>, hvor staten gir deg skattefradrag på det du setter inn. Til gjengjeld er pengene låst til du er 62 år, og du må ta dem ut over minst 10 år.</p><p style="font-size:12px;color:var(--ink3);font-style:italic;">Forenklet: du utsetter skatt nå, men betaler 22 % inntektsskatt når du tar ut pengene senere.</p><p><strong>Eksempel:</strong> Setter du inn 25 000 kr i IPS i 2026, får du ca. 5 500 kr mindre i skatt på skatteoppgjøret. Pengene vokser skattefritt til du blir pensjonist.</p><p><strong>Når møter du det:</strong> Når banken din (DNB, Nordnet, Storebrand) reklamerer for pensjonssparing, eller når du vurderer hvordan du skal spare ekstra til alderdommen utenom folketrygd og jobbpensjon.</p></div></div>
 <div class="info-card collapsed" id="tek-obl-card" style="margin-top:8px;"><button class="card-hdr" aria-expanded="false" onclick="toggleCard(this.parentElement)" style="cursor:pointer" type="button"><div><div class="card-title">Obligasjoner <span style="font-size:11px;opacity:.5">▼</span></div><div class="card-desc">Du er långiver, ikke eier — stabilt, men lavere avkastning</div></div></button><div class="law-body" style="padding:12px 20px 16px;font-size:13px;color:var(--ink2);line-height:1.7;"><p>En obligasjon er <strong>et lån du gir</strong> til staten eller et selskap — du får fast rente i bytte for å låne ut pengene dine. Når løpetiden er slutt, får du pengene tilbake.</p><p style="font-size:12px;color:var(--ink3);font-style:italic;">Forenklet: motsatt av aksjer — du er långiver, ikke eier. Avkastningen er mer forutsigbar, men lavere.</p><p><strong>Eksempel:</strong> Kjøper du en statsobligasjon på 10 000 kr med 4 % rente i 5 år, får du 400 kr i året, og pengene tilbake etter 5 år.</p><p><strong>Når møter du det:</strong> Når du ser på rentefond eller obligasjonsfond hos banken, eller når finansnyheter snakker om at "renten stiger og obligasjonskursen faller".</p></div></div>
