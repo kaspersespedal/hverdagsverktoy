@@ -1582,7 +1582,7 @@ REGIONS['fr'] = {
     tekUtbBody: '<p>Un dividende, c\'est quand une société <strong>distribue une part du bénéfice</strong> aux actionnaires — généralement en argent directement sur votre compte. En Norvège, les dividendes versés aux particuliers sont fortement imposés : effectivement 37,84 % en 2026.</p><p class="note">En clair : le facteur d\'ajustement de 1,72 fait que 100 000 kr de dividende donnent 37 840 kr d\'impôt, moins l\'abattement de protection.</p><p><strong>Exemple :</strong> Si vous détenez 100 actions Equinor et que la société verse 15 kr par action en dividende, vous percevez 1 500 kr — mais environ 570 kr partent en impôt.</p><p><strong>Quand vous y êtes confronté :</strong> Chaque année dans la déclaration d\'impôt, ou quand vous voyez des termes comme « action à dividende », « rendement direct » ou « date ex-dividende » sur Nordnet.</p>',
     tekSkjTitle: 'Abattement de protection',
     tekSkjDesc: 'Une petite part du rendement des actions est non imposable chaque année (env. 3,6 % du prix d\'achat)',
-    tekSkjBody: '<p>L\'abattement de protection signifie qu\'<strong>une petite part de votre rendement sur actions est non imposable chaque année</strong> — une sorte de compensation pour le fait que vous auriez pu placer cet argent sans risque à la banque. Calculé automatiquement par Skatteetaten.</p><p class="note">En clair : le taux de protection pour 2026 est de 3,6 %, multiplié par votre prix d\'achat des actions.</p><p><strong>Exemple :</strong> Si vous avez des actions pour 200 000 kr, l\'abattement de protection s\'élève à environ 7 200 kr en 2026. Si vous touchez 10 000 kr de dividende, seuls 2 800 kr sont imposés (après ajustement).</p><p><strong>Quand vous y êtes confronté :</strong> Sur la déclaration d\'impôt chaque année, ou quand vous lisez sur l\'impôt sur les dividendes et que quelqu\'un mentionne que « l\'impôt effectif est inférieur à 37,84 % ».</p>',
+    tekSkjBody: '<p>L\'abattement de protection signifie qu\'<strong>une petite part de votre rendement sur actions est non imposable chaque année</strong> — une sorte de compensation pour le fait que vous auriez pu placer cet argent sans risque à la banque. Calculé automatiquement par Skatteetaten.</p><p class="note">En clair : le taux de protection pour 2025 était de 3,6 %, multiplié par votre prix d\'achat des actions. Le taux 2026 sera annoncé en janvier 2027.</p><p><strong>Exemple :</strong> Si vous avez des actions pour 200 000 kr, l\'abattement de protection s\'élève à environ 7 200 kr (taux 2025). Si vous touchez 10 000 kr de dividende, seule la part qui dépasse l\'abattement est imposée (après ajustement).</p><p><strong>Quand vous y êtes confronté :</strong> Sur la déclaration d\'impôt chaque année, ou quand vous lisez sur l\'impôt sur les dividendes et que quelqu\'un mentionne que « l\'impôt effectif est inférieur à 37,84 % ».</p>',
     tekFootNote: '* Taux 2026. Les règles peuvent évoluer — consultez skatteetaten.no et votre fournisseur de fonds.',
 
     bvlHowtoSummary:`Comment utiliser Acheter vs Louer`,
@@ -1697,6 +1697,7 @@ REGIONS['fr'] = {
     inntektSectionInntekt: 'Revenu',
     inntektSubtitle: 'Voyez ce qu\'il vous reste après impôt en 2026, par mois et par an. L\'impôt par tranches, la cotisation sociale et les déductions les plus courantes sont pris en compte.',
     inntektTitle: 'Impôt sur le',
+    inntektH1:'<em>Impôt</em> sur le revenu',
 
     // lov/* landing (25 keys: 6 guide + 19 hero)
     lovGuideEndringer: 'Historique des modifications',
@@ -7485,6 +7486,12 @@ REGIONS['fr']._ph = {
 "Tilbake til Regnskap":"Retour à Comptabilité",
 "Tilbake til alle verktøy":"Retour à tous les outils",
 "Tilbake til forsiden":"Retour à l'accueil",
+"Tilbake":"Retour",
+"Lukk nedtellingen":"Fermer le compte à rebours",
+"Ett minutt mer":"Une minute de plus",
+"Ett minutt mindre":"Une minute de moins",
+"Skjul distraksjoner":"Masquer les distractions",
+"Trykk Ctrl K for å fokusere søket":"Appuyez sur Ctrl K pour accéder à la recherche",
 "Tilbakeføring (§ 9-6 og § 9-7)":"Reversement (§ 9-6 et § 9-7)",
 "Tilbakeføring er noe annet enn justering...":"Le reversement n'est pas la même chose que l'ajustement...",
 "Tilbud / Anbud":"Devis / Appel d'offres",
