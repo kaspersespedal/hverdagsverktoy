@@ -2651,7 +2651,7 @@ REGIONS['no'] = {
     kalkMarginFormelToggle:'Vis formel',
     kalkMarginF1:'Bruttofortjeneste = Pris − Varekost', kalkMarginF2:'Margin = Bruttofortjeneste / Pris × 100',
     kalkMarginF3:'Avanse = Bruttofortjeneste / Varekost × 100', kalkMarginF4:'Pris = Varekost / (1 − margin)',
-    kalkMarginF5:'margin = påslag / (1 + påslag)', kalkMarginF6:'påslag = margin / (1 − margin)', kalkMarginF7:'MVA inkl. = eks. × 1,25',
+    kalkMarginF5:'margin = påslag / (1 + påslag)', kalkMarginF6:'påslag = margin / (1 − margin)', kalkMarginF7:'MVA inkl. = eks. × (1 + mva-sats)',
     kalkMarginFNote:'«Avanse regnes i % av kostnaden og er alltid høyere enn dekningsgraden, som regnes i % av salgsprisen.»',
     kalkMarginGuideKicker:'Slik regner du', kalkMarginGuideTitle:'Påslag og margin er ikke det samme',
     kalkMarginStep1:'<b>Påslag</b> legges <em>på</em> varekosten. Kjøper du inn for 100 kr og legger på 60 %, blir prisen 160 kr.',
