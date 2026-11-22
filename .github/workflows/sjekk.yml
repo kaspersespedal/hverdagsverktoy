@@ -1,0 +1,41 @@
+# Enkle kontroller på hver PR mot main (svakhetssveipen 2026-11, repo-flyt-04/07/08).
+# Stopper ikke merge før Kasper slår på «Require status checks» for main på GitHub.
+name: Sjekk
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  sjekk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Hent main
+        run: git fetch -q origin main
+
+      - name: Syntaks, sw-versjon og lærebokinnhold
+        run: node scripts/sjekk-pr.js origin/main
+
+      - name: Ingen annen åpen PR har samme sw-versjon
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/neste-sw.js --sjekk "${{ github.event.pull_request.number }}"
+
+      - name: sitemap.xml har alle sidene
+        run: |
+          git show HEAD:sitemap.xml | grep -o '<loc>[^<]*' > foer.txt
+          node scripts/gen-sitemap.js
+          grep -o '<loc>[^<]*' sitemap.xml > etter.txt
+          if ! diff foer.txt etter.txt; then
+            echo "sitemap.xml mangler eller har for mange sider. Kjør: node scripts/gen-sitemap.js" >&2
+            exit 1
+          fi

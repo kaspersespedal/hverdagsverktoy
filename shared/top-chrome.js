@@ -30,8 +30,9 @@
     {k:'pink',    l:'Rosa',      group:'light', sub:'Mykt blush',         pv:{bg:'#fffbfc', ink:'#3a2030', accent:'#bd3a5e'}},
     {k:'hendrix', l:'Hendrix',   group:'light', sub:'Fillmore-plakat',    pv:{bg:'#fdf0d9', ink:'#2b0b3f', accent:'#c40e76'}}
   ];
-  // `hidden:true` tar språket ut av velgeren uten å fjerne koden: språkfila,
-  // /<kode>/-sidene og ?lang=<kode> fungerer fortsatt for den som har lenka.
+  // `hidden:true` tar språket ut av velgeren uten å fjerne koden: språkfila
+  // ligger der fortsatt. ?lang=<kode> velger bare språket (core.js lagrer det i
+  // 'hvt-lang'); det finnes ingen /<kode>/-mapper å sende brukeren til.
   // Skjult 2026-08-09 fordi oversettelsene der lå for langt bak til å vises.
   var LANGS = [
     {k:'no', l:'Norsk',       flag:'no', group:'main'},
@@ -61,7 +62,11 @@
     }
   }
 
+  // Bare temanavn som finnes i THEMES godtas (stopper fremmede verdier fra meldinger og lagring).
+  function isTheme(t){ return typeof t === 'string' && THEMES.some(function(x){ return x.k === t; }); }
+
   function applyTheme(t, opts){
+    if (!isTheme(t)) return;
     document.documentElement.setAttribute('data-theme', t);
     // Inside an embed we don't want to clobber the parent's localStorage value
     // with whatever the embedded page happened to start at — only persist when
@@ -83,17 +88,21 @@
   // Apply persisted theme ASAP (idempotent — html may already have it).
   // Inside an iframe, defer to whatever the parent broadcasts — don't read
   // localStorage (the embed may have been opened separately with a stale theme).
-  applyTheme(
-    IN_IFRAME
+  // Ukjent verdi (fra lagring eller hodeskriptet) faller tilbake til carbon.
+  (function(){
+    var t = IN_IFRAME
       ? (document.documentElement.getAttribute('data-theme') || 'carbon')
-      : getStored('hvt-theme', document.documentElement.getAttribute('data-theme') || 'carbon')
-  );
+      : getStored('hvt-theme', document.documentElement.getAttribute('data-theme') || 'carbon');
+    applyTheme(isTheme(t) ? t : 'carbon');
+  })();
 
   // Receive theme pushes from a host page (Subpage Preview etc.).
+  // Bare meldinger fra samme opphav (egen side/ramme) godtas.
   window.addEventListener('message', function(ev){
-    var d = ev && ev.data;
+    if (!ev || ev.origin !== location.origin) return;
+    var d = ev.data;
     if (!d || typeof d !== 'object') return;
-    if (d.type === '__hv_theme' && typeof d.theme === 'string'){
+    if (d.type === '__hv_theme' && isTheme(d.theme)){
       applyTheme(d.theme);
     }
   });
@@ -105,7 +114,8 @@
   }
   // Host side: when a child asks, reply with our current theme.
   window.addEventListener('message', function(ev){
-    var d = ev && ev.data;
+    if (!ev || ev.origin !== location.origin) return;
+    var d = ev.data;
     if (!d || d.type !== '__hv_theme_request') return;
     var t = document.documentElement.getAttribute('data-theme') || 'carbon';
     try{ ev.source && ev.source.postMessage({type:'__hv_theme', theme:t}, '*'); }catch(_e){}
@@ -364,7 +374,7 @@
      får plass igjen fra ca. 1170 px. Under 1061 px ruller rekka uansett, der står 14 px. */
   @media(min-width:1061px){
     .tabs.has-mod > a.tab{padding-left:10px;padding-right:10px}
-    .tabs.has-mod > a.tab[aria-selected="true"]::after{left:10px;right:10px}
+    .tabs.has-mod > a.tab[aria-current="page"]::after{left:10px;right:10px}
   }
   /* Fokusmodus skjuler toppmenyen. Knappen i heroen er ute av syne når man har rullet, så en
      liten flytende knapp (og Esc) gir veien ut. */
@@ -373,6 +383,22 @@
     color:var(--ink);font:500 13px/1 var(--font-sans,inherit);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
   .tc-focus-exit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   @media(hover:hover){.tc-focus-exit:hover{border-color:var(--accent)}}
+  /* Privat | Bedrift: todelt knapp foran fanerekka. Knappen står fast, fanene ruller ved siden
+     av den. Fanerekka går ellers helt ut til skjermkanten på telefon (--tabs-bleed); på
+     knappens side slås det av, ellers hadde fanene glidd inn under knappen. */
+  .tc-modus-rad{display:flex;align-items:center;gap:12px}
+  body .tc-modus-rad > .tabs{flex:1 1 auto;min-width:0;margin-inline-start:0;padding-inline-start:0}
+  .tc-modus{flex:none;display:inline-flex;padding:2px;border-radius:999px;border:1px solid var(--line-2,var(--line))}
+  .tc-modus-btn{appearance:none;border:0;background:transparent;cursor:pointer;position:relative;
+    padding:7px 11px;border-radius:999px;font:500 12px/1 var(--font-sans,inherit);color:var(--ink3);
+    transition:color .2s,background .2s}
+  /* Ringen i aksentfargen er det som viser valget: fyllet alene er bare 1,3:1 mot bakgrunnen. */
+  .tc-modus-btn[aria-pressed="true"]{color:var(--ink);background:rgba(var(--wash-rgb,128,128,128),.12);
+    box-shadow:inset 0 0 0 1px var(--accent)}
+  .tc-modus-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+  @media(hover:hover){.tc-modus-btn:hover{color:var(--ink)}}
+  @media(pointer:coarse){.tc-modus-btn::after{content:"";position:absolute;inset:-8px 0}}
+  .tabs > a.tab.tc-modus-skjult{display:none}
   `;
   var styleEl = document.createElement('style');
   styleEl.id = 'tc-styles';
@@ -461,6 +487,7 @@
     var navEl = document.querySelector('.nav-wrap nav');
     if (!navEl) return;
     var curTheme = document.documentElement.getAttribute('data-theme') || 'carbon';
+    if (!isTheme(curTheme)) curTheme = 'carbon';
     var curLang = getStored('hvt-lang','no');
     var curLangObj = LANGS.find(function(x){return x.k===curLang;}) || LANGS[0];
 
@@ -718,7 +745,7 @@
     var tabs = document.querySelector('.tabs');
     if (!tabs) return;
     if (tabs.scrollWidth <= tabs.clientWidth + 1) return;   // alt får plass
-    var active = tabs.querySelector('[aria-selected="true"], .tab.active, .tab[aria-current]');
+    var active = tabs.querySelector('.tab.active, .tab[aria-current]');
     if (!active) return;
     // Sentrer fanen i stedet for å klistre den til kanten, så det er synlig
     // at det finnes faner på begge sider.
@@ -774,10 +801,14 @@
     // Ytterlenkene, ikke ytterbarna: forsidens rad har lenkene i tre grupper
     // (.qg-col), og på telefon er gruppene display:contents — de har ingen
     // egen boks å måle. I fanerekka er lenkene barna, så der er det det samme.
-    var links = tabs.getElementsByTagName('a');
-    if (!links.length) return;
-    var a = links[0].getBoundingClientRect();
-    var b = links[links.length - 1].getBoundingClientRect();
+    // Bare lenker som vises teller: Privat | Bedrift skjuler faner, og en skjult lenke har
+    // ingen boks (alle mål er 0), så uttoningen ville stått på til venstre og manglet til høyre.
+    var links = tabs.getElementsByTagName('a'), first = null, last = null;
+    for (var i = 0; i < links.length; i++)
+      if (links[i].getClientRects().length){ if (!first) first = links[i]; last = links[i]; }
+    if (!first) return;
+    var a = first.getBoundingClientRect();
+    var b = last.getBoundingClientRect();
     // 2px slingringsmonn: subpiksel-scroll og zoom gjør at kantene sjelden
     // lander blankt på hverandre, og uten monnet blir uttoningen stående igjen.
     setAttrIfChanged(tabs, 'data-fade-l',
@@ -879,8 +910,6 @@
       if (ref){
         var a = document.createElement('a');
         a.href = MOD_HREF; a.className = 'tab';
-        if (ref.hasAttribute('role')) a.setAttribute('role', ref.getAttribute('role'));
-        if (ref.hasAttribute('aria-selected')) a.setAttribute('aria-selected', 'false');
         var refSvg = ref.querySelector('svg');
         if (refSvg){
           var svg = refSvg.cloneNode(false);
@@ -929,7 +958,130 @@
     sync();
   }
 
-  function bootTopChrome(){ render(); drawAvgiftIcon(); addModelleringLink(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); watchFocusMode(); }
+  // ── Privat | Bedrift: todelt knapp som styrer fanerekka ──────────
+  // Knappen styrer bare MENYEN. Ingen side stenges ute: fanene står fortsatt i HTML-en og
+  // skjules med CSS, så adresser, søk og Google er uendret.
+  // Regler: (1) siden du står på vinner, (2) felles sider følger siden du sist var på eller
+  // valgte, (3) fanen for seksjonen du står i skjules aldri.
+  // MODUS_SIDER sier hvem hver side er for. Lengste treff vinner; alt som ikke står her er felles.
+  var MODUS_SIDER = [
+    ['/personlig/', 'privat'], ['/boliglan/', 'privat'],
+    ['/skatt/inntekt/', 'privat'], ['/skatt/formue/', 'privat'], ['/skatt/reise/', 'privat'],
+    ['/skatt/skattemelding/', 'privat'], ['/avgift/engangsavgift/', 'privat'], ['/kalkulator/lonnut/', 'privat'],
+    ['/selskap/', 'bedrift'], ['/regnskap/', 'bedrift'], ['/kalkyle/', 'bedrift'], ['/avansert/', 'bedrift'],
+    ['/skatt/utbytte/', 'bedrift'], ['/skatt/uttak/', 'bedrift'], ['/avgift/aga/', 'bedrift'],
+    ['/kalkulator/avs/', 'bedrift'], ['/kalkulator/dekningsbidrag/', 'bedrift'], ['/kalkulator/likviditet/', 'bedrift'],
+    ['/kalkulator/npv/', 'bedrift'], ['/kalkulator/tilbud/', 'bedrift'], ['/kalkulator/timepris/', 'bedrift'],
+    ['/kalkulator/valgevinst/', 'bedrift'],
+    ['/lov/aksjelov/', 'bedrift'], ['/lov/bokforingslov/', 'bedrift'], ['/lov/mvalov/', 'bedrift']
+  ];
+  // MODUS_FANER er fanene i den rekkefølgen de skal stå, og hvilken side de hører til ('' = begge).
+  // Samme rekkefølge og inndeling som kategorilista på forsiden (index.html): de egne først,
+  // så de felles. Der gjør CSS jobben ut fra <html data-modus>, her skjules fanene én og én.
+  var MODUS_FANER = [
+    ['/personlig/budsjett/', 'privat'], ['/personlig/', 'privat'], ['/boliglan/', 'privat'],
+    ['/selskap/', 'bedrift'], ['/regnskap/', 'bedrift'], ['/avgift/', 'bedrift'], ['/kalkyle/', 'bedrift'],
+    ['/skatt/', ''], ['/kalkulator/', ''], ['/lov/', ''], ['/avansert/', 'bedrift']
+  ];
+  function isModus(m){ return m === 'privat' || m === 'bedrift'; }
+  function sideModus(path){
+    var best = '', hit = 'felles';
+    for (var i = 0; i < MODUS_SIDER.length; i++){
+      var p = MODUS_SIDER[i][0];
+      if (path.indexOf(p) === 0 && p.length > best.length){ best = p; hit = MODUS_SIDER[i][1]; }
+    }
+    return hit;
+  }
+  // Fanen finnes på adressen lenka faktisk går til, ikke på href-teksten: /kalkulator/ og
+  // /personlig/ skriver «../skatt/» og «#» (egen fane) der de andre sidene skriver «/skatt/».
+  function modusFane(tabs, sti){
+    var links = tabs.querySelectorAll('a.tab');
+    for (var i = 0; i < links.length; i++)
+      if (links[i].pathname.replace(/index\.html$/, '') === sti) return links[i];
+    return null;
+  }
+  // De fire blandede seksjonsforsidene: kortene for valgt side først, så de felles, så den
+  // andre siden. Ingenting skjules. Nummereringen (01, 02 …) følger den nye rekkefølgen.
+  var MODUS_FORSIDER = ['/skatt/', '/kalkulator/', '/avgift/', '/lov/'];
+  function sorterKort(m){
+    if (MODUS_FORSIDER.indexOf(location.pathname.replace(/index\.html$/, '')) < 0) return;
+    function rang(a){ var s = sideModus(a.pathname); return s === m ? 0 : s === 'felles' ? 1 : 2; }
+    var lister = document.querySelectorAll('.cat-grid, .tool-group');
+    for (var i = 0; i < lister.length; i++){
+      var kort = [];
+      for (var c = lister[i].firstElementChild; c; c = c.nextElementSibling)
+        if (c.matches('a.cat-card, a.tg-link')) kort.push(c);
+      for (var k = 0; k < kort.length; k++)
+        if (!kort[k].hasAttribute('data-tc-ordre')) kort[k].setAttribute('data-tc-ordre', k);
+      kort.sort(function(a, b){ return rang(a) - rang(b) || a.getAttribute('data-tc-ordre') - b.getAttribute('data-tc-ordre'); });
+      for (k = 0; k < kort.length; k++){
+        lister[i].appendChild(kort[k]);
+        var n = kort[k].querySelector('.cat-num');
+        if (n) n.textContent = (k < 9 ? '0' : '') + (k + 1);
+      }
+    }
+  }
+  function visModus(m){
+    document.documentElement.setAttribute('data-modus', m);
+    // .hm-btn er forsidens knapp; den står ferdig i index.html.
+    var btns = document.querySelectorAll('.tc-modus-btn, .hm-btn');
+    for (var j = 0; j < btns.length; j++)
+      btns[j].setAttribute('aria-pressed', btns[j].getAttribute('data-modus') === m ? 'true' : 'false');
+    sorterKort(m);
+    var tabs = document.querySelector('.tabs');
+    if (!tabs) return;
+    for (var i = 0; i < MODUS_FANER.length; i++){
+      var a = modusFane(tabs, MODUS_FANER[i][0]);
+      if (!a) continue;
+      var hvem = MODUS_FANER[i][1];
+      var aktiv = a.matches('[aria-selected="true"], .active, [aria-current]');
+      a.classList.toggle('tc-modus-skjult', !!hvem && hvem !== m && !aktiv);
+    }
+  }
+  function modusKlikk(e){
+    var b = e.target.closest ? e.target.closest('button[data-modus]') : null;
+    var valg = b && b.getAttribute('data-modus');
+    if (!isModus(valg)) return;
+    setStored('hvt-modus', valg);
+    visModus(valg);
+    var rows = tabRows();
+    for (var i = 0; i < rows.length; i++) rows[i].scrollLeft = 0;
+    syncTabRow(); revealActiveTab();
+  }
+  function byggModus(){
+    var side = sideModus(location.pathname);
+    var lagret = getStored('hvt-modus', 'privat');
+    var m = side !== 'felles' ? side : (isModus(lagret) ? lagret : 'privat');
+    // Husk siden du sist var på, så felles sider (Kalkulator, Lov, forsiden) holder samme meny.
+    if (side !== 'felles' && !IN_IFRAME) setStored('hvt-modus', side);
+    var tabs = document.querySelector('.tabs');
+    if (tabs && tabs.parentElement && !document.querySelector('.tc-modus')){
+      // Fanene i fast rekkefølge: privat, bedrift, så de felles verktøyene. Flyttes i selve
+      // dokumentet (ikke med CSS order), så Tab-tasten følger det øyet ser.
+      for (var i = 0; i < MODUS_FANER.length; i++){
+        var a = modusFane(tabs, MODUS_FANER[i][0]);
+        if (a) tabs.appendChild(a);
+      }
+      var r = {}; try { r = (typeof R === 'function' && R()) || {}; } catch(_e){}
+      var box = document.createElement('div');
+      box.className = 'tc-modus';
+      box.setAttribute('role', 'group');
+      // Ledeteksten oversettes fra språkfilas frase-ordbok (_ph), som core.js bruker for aria-label.
+      var lbl = 'Vis menyen for privat eller bedrift';
+      box.setAttribute('aria-label', (r._ph && r._ph[lbl]) || lbl);
+      box.innerHTML =
+        '<button type="button" class="tc-modus-btn" data-modus="privat" data-i18n="m.f.privat">' + (r['m.f.privat'] || 'Privat') + '</button>' +
+        '<button type="button" class="tc-modus-btn" data-modus="bedrift" data-i18n="m.f.bedrift">' + (r['m.f.bedrift'] || 'Bedrift') + '</button>';
+      box.addEventListener('click', modusKlikk);
+      tabs.parentElement.classList.add('tc-modus-rad');
+      tabs.parentElement.insertBefore(box, tabs);
+    }
+    var forside = document.querySelector('.hero-modus');
+    if (forside) forside.addEventListener('click', modusKlikk);
+    visModus(m);
+  }
+
+  function bootTopChrome(){ render(); drawAvgiftIcon(); addModelleringLink(); byggModus(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); watchFocusMode(); }
   if (document.readyState === 'loading')
     document.addEventListener('DOMContentLoaded', bootTopChrome);
   else bootTopChrome();

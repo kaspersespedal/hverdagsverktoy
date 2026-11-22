@@ -77,9 +77,11 @@
   var DEFAULT_PLACE = { navn: 'Oslo', lat: 59.9133, lon: 10.7389, kommunenr: '0301', fylkesnr: '03', sone: 'NO1' };
 
   /* Norges Banks rentemøter (rentebeslutning-datoer). Verifisert mot norges-bank.no
-     2026-06-27 — 8 møter/år. 2027-datoene er ikke publisert ennå; når lista går tom
-     skjules «neste møte»-linja heller enn å vise en gal dato. Oppdater ved årsskiftet. */
-  var NB_MEETINGS = ['2026-08-13', '2026-09-24', '2026-11-05', '2026-12-17'];
+     2026-06-27 og 2026-11-19 (norges-bank.no/aktuelt/kalender/rentemoter/) — 8 møter/år.
+     Når lista går tom, skjules «neste møte»-linja heller enn å vise en gal dato.
+     Legg inn neste års datoer hver høst, når Norges Bank publiserer dem. */
+  var NB_MEETINGS = ['2026-08-13', '2026-09-24', '2026-11-05', '2026-12-17',
+    '2027-01-21', '2027-03-18', '2027-05-05', '2027-06-17', '2027-08-19', '2027-09-23', '2027-11-04', '2027-12-16'];
   function nextMeeting() {
     var t = new Date(); t.setHours(0, 0, 0, 0);
     for (var i = 0; i < NB_MEETINGS.length; i++) {
@@ -223,9 +225,18 @@
   /* «Sist oppdatert» i egen span: på mobil skjules den visuelt (men leses opp),
      så headeren får plass til en kompakt status-pille med bare klokkeslettet. */
   function stampHtml() {
-    var d = new Date();
+    /* _got[kort] = når tallene på kortet faktisk ble hentet. Er de eldre enn _STALE[kort]
+       (henting feiler, eller nettet er nede), viser stempelet det eldste hentetidspunktet
+       med dato i stedet for klokka nå. */
+    var d = new Date(), old = 0;
+    for (var k in _got) if (_got[k] && Date.now() - _got[k] > _STALE[k] && (!old || _got[k] < old)) old = _got[k];
+    if (old) {
+      var o = new Date(old);
+      return '<span class="stamp-pre">Sist hentet </span>' + pad2(o.getDate()) + '.' + pad2(o.getMonth() + 1) + '. ' + pad2(o.getHours()) + ':' + pad2(o.getMinutes());
+    }
     return '<span class="stamp-pre">Sist oppdatert </span>' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
   }
+  var _got = {}, _STALE = { wx: 2 * 36e5, fx: 26 * 36e5, sr: 26 * 36e5 };
 
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
@@ -301,9 +312,12 @@
   var _convDir = 1;              // 1: valuta → NOK, −1: NOK → valuta
   var _convPick = null, _convNok = null;
 
-  /* Skjemafeltet tar både «1 234,5» og «1234.5». Tomt/ugyldig gir null. */
+  /* Skjemafeltet tar «1 234,5», «1234.5» og «1.000». Tomt/ugyldig gir null. */
   function parseAmt(s) {
-    var t = String(s == null ? '' : s).replace(/[\s ]/g, '').replace(',', '.');
+    var t = String(s == null ? '' : s).replace(/[\s ]/g, '');
+    // Punktum er tusenskille når det står komma i tallet eller bare grupper på tre sifre følger («1.000», «1.000,50»).
+    if (t.indexOf(',') > -1 || /^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, '');
+    t = t.replace(',', '.');
     if (!/^\d*\.?\d*$/.test(t)) return null;
     var n = parseFloat(t);
     return isNaN(n) ? null : n;
@@ -323,7 +337,8 @@
     setText('fxcCode', _fxCode);
     var c = _fx && _fx[_fxCode], amt = parseAmt($('fxcAmt') && $('fxcAmt').value);
     if (!c || c.last == null) { out.textContent = '—'; setText('fxcRate', ''); return; }
-    setText('fxcRate', '1 ' + _fxCode + ' = ' + nb(c.last, 4) + ' kr');
+    var cd = c.dates && c.dates[c.dates.length - 1];
+    setText('fxcRate', '1 ' + _fxCode + ' = ' + nb(c.last, 4) + ' kr' + (cd && cd !== isoDay(new Date()) ? ' (' + nbShort(cd) + ')' : ''));
     out.textContent = (amt == null) ? '—' : nb(_convDir > 0 ? amt * c.last : amt / c.last, 2);
   }
 
@@ -395,7 +410,7 @@
     setFacts('wxSub', rows);
     /* Carbon på telefon (index.html, #carbonMobil) viser værkortet som i oktober: én linje
        med dagens maks, min og vind, og fire ruter under. Fylles alltid; CSS velger visning. */
-    var line = ph('Maks') + ' ' + deg(d.max) + ' · ' + ph('Min') + ' ' + deg(d.min);
+    var line = ph('Maks') + ' ' + deg(w ? w.mx : d.max) + ' · ' + ph('Min') + ' ' + deg(w ? w.mn : d.min); // neste 24 t, som de andre temaene
     if (typeof d.wind === 'number') line += ' · ' + nb(d.wind, 1) + ' m/s' + (d.dir != null ? ' ' + compass(d.dir) : '');
     setText('wxLine', line);
     buildForecast(d);
@@ -544,8 +559,8 @@
     var key = 'wx_' + place.lat.toFixed(3) + '_' + place.lon.toFixed(3);
     var c = cacheGet(key);
     /* Cache fra før døgngrafen mangler timeserien (hrs) eller symbolene i den — vises, men regnes som utløpt. */
-    if (!force && c && c.d && c.d.hrs && c.d.hrs[0] && c.d.hrs[0].sym != null && fresh(c, 30 * 60 * 1000)) { renderWeather(c.d); return; }
-    if (c) renderWeather(c.d); // vis cachet umiddelbart mens vi henter ferskt
+    if (!force && c && c.d && c.d.hrs && c.d.hrs[0] && c.d.hrs[0].sym != null && fresh(c, 30 * 60 * 1000)) { _got.wx = c.t; renderWeather(c.d); return; }
+    if (c) { _got.wx = c.t; renderWeather(c.d); } // vis cachet umiddelbart mens vi henter ferskt
     fetch('https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=' + place.lat.toFixed(4) + '&lon=' + place.lon.toFixed(4))
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (j) {
@@ -562,7 +577,7 @@
                   sym: sym, max: Math.max.apply(null, temps), min: Math.min.apply(null, temps), temps: temps,
                   week: buildWeek(ts), hrs: buildHours(ts) };
         _wxFail = false;
-        cacheSet(key, d); renderWeather(d);
+        cacheSet(key, d); _got.wx = Date.now(); renderWeather(d);
       })
       .catch(function () { /* behold cachet/HTML-verdi */
         _wxFail = true;
@@ -1388,7 +1403,7 @@
       var lastI = dts.length - 1;
       setText('fxAx0', nbShort(dts[0]));
       setText('fxAx1', nbShort(dts[Math.round(lastI / 2)]));
-      setText('fxAx2', ph('i dag'));
+      setText('fxAx2', dts[lastI] === isoDay(new Date()) ? ph('i dag') : nbShort(dts[lastI])); // Norges Bank publiserer ~kl. 16
     }
     /* Y-akse. Kurven autoskalerer mellom periodens laveste og høyeste verdi,
        så uten disse to tallene er den umulig å måle. Samme noteringsenhet
@@ -1405,11 +1420,11 @@
     var c = cacheGet('fx');
     /* 1 t TTL (var 6 t): Norges Bank publiserer ~16:00 — med minutt-pulsen
        plukkes ny dagskurs opp senest en time etter publisering. */
-    if (!force && fresh(c, 3600 * 1000)) { renderFx(c.d); return; }
-    if (c) renderFx(c.d);
+    if (!force && fresh(c, 3600 * 1000)) { _got.fx = c.t; renderFx(c.d); return; }
+    if (c) { _got.fx = c.t; renderFx(c.d); }
     fetch('https://data.norges-bank.no/api/data/EXR/B.USD+EUR+GBP+SEK+DKK+CHF+JPY+PLN.NOK.SP?lastNObservations=30&format=sdmx-json&locale=en')
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (j) { var d = parseExr(j); cacheSet('fx', d); renderFx(d); })
+      .then(function (j) { var d = parseExr(j); cacheSet('fx', d); _got.fx = Date.now(); renderFx(d); })
       .catch(function () {});
   }
 
@@ -1446,6 +1461,8 @@
     setText('srLine', 'Norges Bank · ' + ph('sist endret') + ' ' + nbDate(d.changeDate));
     var nv = $('srNext'), nl = $('srNextLbl');
     if (nv && nl) {
+      var wrap = nv.closest('.sr-next-wrap');
+      if (wrap) wrap.style.display = nm ? '' : 'none'; // ellers står en tom rute igjen i Carbon
       nl.textContent = nm ? ph('Neste rentemøte') : '';
       nv.textContent = nm ? nbShort(nm) + ' ' + nm.slice(0, 4) : '';
       if (nm) {
@@ -1474,22 +1491,32 @@
   }
   function loadRate(force) {
     var c = cacheGet('rate');
-    if (!force && fresh(c, 3600 * 1000)) { renderRate(c.d); return; } // 1 t TTL (var 12 t)
-    if (c) renderRate(c.d);
+    if (!force && fresh(c, 3600 * 1000)) { _got.sr = c.t; renderRate(c.d); return; } // 1 t TTL (var 12 t)
+    if (c) { _got.sr = c.t; renderRate(c.d); }
     var start = new Date(Date.now() - 18 * 30 * 864e5).toISOString().slice(0, 10);
     fetch('https://data.norges-bank.no/api/data/IR/B.KPRA.SD.R?startPeriod=' + start + '&format=sdmx-json&locale=en')
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (j) { var d = parseRate(j); cacheSet('rate', d); renderRate(d); })
+      .then(function (j) { var d = parseRate(j); cacheSet('rate', d); _got.sr = Date.now(); renderRate(d); })
       .catch(function () {});
   }
 
   /* ═══════════════════ STRØM (hvakosterstrømmen.no) ══════════════════ */
+  /* Dager med sommertid-skifte har 23 eller 25 timer, så plassen i lista er ikke
+     klokketimen. d.ts = time_start per time: «nå» er siste time som har startet,
+     og timeetiketten leses fra time_start. Cache uten ts faller tilbake til indeks. */
+  function stromIdx(d) {
+    var n = d.prices.length, i = n - 1, now = Date.now();
+    if (!d.ts) return Math.min(new Date().getHours(), n - 1);
+    while (i > 0 && Date.parse(d.ts[i]) > now) i--;
+    return i;
+  }
+  function stromHH(d, i) { return d.ts && d.ts[i] ? String(d.ts[i]).slice(11, 13) : pad2(i); }
   function renderStrom(d, sone) {
     /* «Nå»-timen beregnes ved render (ikke ved fetch) — cachet dagsdata skal
        ikke vise forrige times pris når panelet står åpent over et timeskifte
        eller siden åpnes med gammel cache. */
     if (d.prices && d.prices.length) {
-      d.hour = Math.min(new Date().getHours(), d.prices.length - 1);
+      d.hour = stromIdx(d);
       d.now = d.prices[d.hour];
     }
     setText('stSone', 'Strøm ' + sone);
@@ -1502,11 +1529,11 @@
     }
     var pk = 0;
     if (d.prices) for (var pi = 1; pi < d.prices.length; pi++) if (d.prices[pi] > d.prices[pk]) pk = pi;
-    function ore(kr, hour) { return Math.round(kr * 100) + '\u00a0øre' + (hour == null ? '' : ' · ' + fill(ph('kl. {h}'), { h: pad2(hour) })); }
+    function ore(kr, hour) { return Math.round(kr * 100) + '\u00a0øre' + (hour == null ? '' : ' · ' + fill(ph('kl. {h}'), { h: stromHH(d, hour) })); }
     setFacts('stSub', [[ph('Billigst'), ore(d.cheap, d.cheapHour)],
                        [ph('Dyrest'), ore(d.prices ? d.prices[pk] : d.peak, d.prices ? pk : d.peakHour)],
                        [ph('Snitt'), ore(d.avg)]]);
-    setText('stLine', ph('Billigst') + ' ' + fill(ph('kl. {h}'), { h: pad2(d.cheapHour) }) + ' · ' + // Carbon på telefon
+    setText('stLine', ph('Billigst') + ' ' + fill(ph('kl. {h}'), { h: stromHH(d, d.cheapHour) }) + ' · ' + // Carbon på telefon
       Math.round(d.cheap * 100) + ' øre · ' + ph('snitt') + ' ' + Math.round(d.avg * 100) + ' øre');
     var span = $('stTrend');
     if (span) {
@@ -1557,19 +1584,20 @@
     var sone = place.sone || 'NO1', d = new Date();
     var y = d.getFullYear(), m = String(d.getMonth() + 1).padStart(2, '0'), day = String(d.getDate()).padStart(2, '0');
     var key = 'strom_' + y + m + day + '_' + sone, c = cacheGet(key);
-    if (!force && fresh(c, 3600 * 1000)) { renderStrom(c.d, sone); return; }
+    // Cache uten ts (fra før sommertid-rettingen) hentes på nytt; den vises imens.
+    if (!force && fresh(c, 3600 * 1000) && c.d.ts) { renderStrom(c.d, sone); return; }
     if (c) renderStrom(c.d, sone);
     fetch('https://www.hvakosterstrommen.no/api/v1/prices/' + y + '/' + m + '-' + day + '_' + sone + '.json')
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (arr) {
         var prices = arr.map(function (o) { return o.NOK_per_kWh; });
-        var hour = Math.min(d.getHours(), prices.length - 1), peak = 0, cheap = 0;
+        var ts = arr.map(function (o) { return o.time_start; }), peak = 0, cheap = 0;
         for (var i = 1; i < prices.length; i++) {
           if (prices[i] > prices[peak]) peak = i;
           if (prices[i] < prices[cheap]) cheap = i;
         }
         var avg = prices.reduce(function (a, b) { return a + b; }, 0) / prices.length;
-        var out = { now: prices[hour], hour: hour, prices: prices, peakHour: peak, peak: prices[peak],
+        var out = { prices: prices, ts: ts, peakHour: peak, peak: prices[peak],
                     cheapHour: cheap, cheap: prices[cheap], avg: avg };
         cacheSet(key, out); renderStrom(out, sone);
       })
@@ -1634,7 +1662,7 @@
           list.forEach(function (p) {
             var li = document.createElement('li');
             li.className = 'wx-result'; li.setAttribute('role', 'option'); li.tabIndex = 0;
-            li.innerHTML = '<span>' + p.navn + '</span><small>' + (p.kommunenavn || '') + '</small>';
+            li.innerHTML = '<span>' + esc(p.navn) + '</span><small>' + esc(p.kommunenavn || '') + '</small>';
             function pick() { applyPlace(p); close(); btn.focus(); }
             li.addEventListener('click', pick);
             li.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
@@ -1657,10 +1685,10 @@
           .then(function (r) { return r.json(); })
           .then(function (j) {
             var n = j.navn && j.navn[0], komm = n && n.kommuner && n.kommuner[0] || {}, fyl = n && n.fylker && n.fylker[0] || {};
-            applyPlace({ navn: (n && (n.skrivemåte || n.stedsnavn)) || 'Min posisjon', lat: lat, lon: lon,
+            applyPlace({ navn: (n && (n.skrivemåte || n.stedsnavn)) || 'Min posisjon', lat: +lat.toFixed(4), lon: +lon.toFixed(4),
               kommunenr: komm.kommunenummer, fylkesnr: fyl.fylkesnummer, kommunenavn: komm.kommunenavn });
           })
-          .catch(function () { applyPlace({ navn: 'Min posisjon', lat: lat, lon: lon }); })
+          .catch(function () { applyPlace({ navn: 'Min posisjon', lat: +lat.toFixed(4), lon: +lon.toFixed(4) }); })
           .then(function () { btn.classList.remove('busy'); });
       }, function () { btn.classList.remove('busy'); }, { enableHighAccuracy: false, timeout: 9000, maximumAge: 6e5 });
     });
@@ -1703,7 +1731,7 @@
     bindScrub('stSpark', 'stScrub', 'stScrubTxt', function (frac) {
       var p = _strom && _strom.prices; if (!p || !p.length) return '';
       var i = Math.min(p.length - 1, Math.floor(frac * p.length));
-      return '<span class="mut">' + String(i).padStart(2, '0') + ':00</span> · ' +
+      return '<span class="mut">' + stromHH(_strom, i) + ':00</span> · ' +
              Math.round(p[i] * 100) + ' øre';
     });
     bindScrub('fxSpark', 'fxScrub', 'fxScrubTxt', function (frac) {

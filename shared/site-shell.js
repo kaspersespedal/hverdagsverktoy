@@ -175,7 +175,7 @@ window.renderSiteChrome = function(opts){
     // {k:'ai',        l:'Kunstig intelligens', svg:'<rect x="5" y="6" width="14" height="13" rx="2.5"/><circle cx="9.5" cy="12" r="1.2"/><circle cx="14.5" cy="12" r="1.2"/><path d="M12 3 V6"/><path d="M9 19 V21"/><path d="M15 19 V21"/>'}
   ];
   const tabsHtml = tabDefs.map(t =>
-    '<a href="'+(t.href || ('Subpage Preview.html#'+t.k))+'" class="tab"'+(t.k===activeTab?' aria-selected="true"':'')+'>'+
+    '<a href="'+(t.href || ('Subpage Preview.html#'+t.k))+'" class="tab"'+(t.k===activeTab?' aria-current="page"':'')+'>'+
       '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">'+t.svg+'</svg>'+
       t.l+'</a>'
   ).join('');
@@ -305,7 +305,8 @@ window.renderSiteChrome = function(opts){
   var fields = Array.prototype.some.call(document.querySelectorAll('main input:not([type=search]), main select, main textarea'), function(el){
     return !el.closest('.lc-sec');
   });
-  if(fields) document.querySelectorAll('.lc-sec').forEach(function(sec){
+  // Sider uten felt kan gjøre en enkelt seksjon til nedtrekk med data-dd
+  document.querySelectorAll(fields ? '.lc-sec' : '.lc-sec[data-dd]').forEach(function(sec){
     var head = headOf(sec, 'lc-head');
     if(head) add(sec, head);
   });

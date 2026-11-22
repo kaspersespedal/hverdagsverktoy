@@ -9,7 +9,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Hverdagsverktøy — verktøy for privatøkonomi, skatt og lovverk</title>
-<meta name="description" content="Gratis norske verktøy for økonomi — kalkulator, boliglån, skatt, budsjett, bilkostnad, pensjon, avskrivning og mer. 10 språk. Kjører lokalt i nettleseren.">
+<meta name="description" content="Gratis norske verktøy for økonomi — kalkulator, boliglån, skatt, budsjett, bilkostnad, pensjon, avskrivning og mer. 6 språk. Kjører lokalt i nettleseren.">
 <meta name="keywords" content="finanskalkulator, boliglån, skatt, budsjett, bilkostnad, pensjon, avskrivning, Norge, gratis">
 <meta name="author" content="Hverdagsverktøy">
 <meta name="robots" content="index, follow">
@@ -41,6 +41,11 @@
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+    // Privat | Bedrift: forsiden er felles og følger siden du sist var på. Settes før første
+    // tegning, så kategorilista ikke står med alle 11 et øyeblikk. Samme regel som byggModus()
+    // i shared/top-chrome.js.
+    var m='privat';try{if(localStorage.getItem('hvt-modus')==='bedrift')m='bedrift';}catch(e){}
+    document.documentElement.setAttribute('data-modus',m);
   })();
 </script>
 <script>
@@ -57,7 +62,7 @@
 <link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v6">
 <link rel="stylesheet" href="/shared/components.css?v=v8">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v249">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v357">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 
 <!-- FOUC-guard during language load — keeps i18n elements hidden until core.js resolves loadLang. -->
@@ -547,6 +552,62 @@
     .qc{gap:10px;padding:10px 12px;-webkit-tap-highlight-color:transparent}
     .qc::after{content:none}
     .qc:active{background:rgba(var(--glow-rgb),.08)}
+  }
+
+  /* ── PRIVAT | BEDRIFT — knappen over kategorilista ─────────────── */
+  /* Knappen velger hvilke kategorier lista viser: de egne øverst, de felles
+     (Skatt, Kalkulator, Lov) under. data-modus settes på <html> av snutten i
+     <head> før første tegning, så alt her er ren CSS og ingenting blinker.
+     Uten JavaScript mangler attributtet, og lista står som før med alle tre
+     gruppene og overskriftene. Carbon og Mørk-blå har lista som én rad (se
+     blokkene lenger ned); der er det bare lenkene som skjules. */
+  .hero-modus{display:none}
+  html[data-modus] .hero-modus{
+    display:flex;width:max-content;margin:24px auto 0;padding:3px;gap:2px;
+    background:color-mix(in srgb, var(--surface) 62%, transparent);
+    border:1px solid var(--line-2);border-radius:999px;
+  }
+  .hm-btn{
+    appearance:none;border:0;background:transparent;cursor:pointer;position:relative;
+    padding:9px 20px;border-radius:999px;
+    font:500 13.5px/1 var(--font-sans);color:var(--ink2);
+    transition:color .2s var(--ease), background .2s var(--ease);
+  }
+  /* Valgt side følger <html data-modus>, ikke aria-pressed, så den er riktig før
+     top-chrome.js har kjørt. Ringen i aksentfargen er det som viser valget. */
+  html[data-modus="privat"] .hm-btn[data-modus="privat"],
+  html[data-modus="bedrift"] .hm-btn[data-modus="bedrift"]{
+    color:var(--ink);background:rgba(var(--glow-rgb),.1);box-shadow:inset 0 0 0 1px var(--accent);
+  }
+  .hm-btn:focus-visible{outline:2px solid rgba(var(--glow-rgb),.7);outline-offset:2px}
+  @media (hover:hover){.hm-btn:hover{color:var(--ink)}}
+  @media (pointer:coarse){.hm-btn::after{content:"";position:absolute;inset:-6px 0}}
+  html[data-modus="privat"] .quick-cats .qg-col[data-modus="bedrift"],
+  html[data-modus="bedrift"] .quick-cats .qg-col[data-modus="privat"],
+  html[data-modus="privat"] .quick-cats .qc[href="/avansert/"]{display:none}
+  /* Carbon-raden: siste synlige celle skal ikke ha skillestrek mot rammen. */
+  html[data-modus="privat"] .quick-cats .qc[href="/lov/"]{border-right:0}
+  html[data-modus] .quick-cats{grid-template-columns:minmax(0, 1fr);margin-top:12px;padding:4px 0}
+  html[data-modus] .qg-h{display:none}
+  /* Hver gruppe er én rad: tre lenker i Privat, fire i Bedrift. */
+  html[data-modus] .qg-col{
+    display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:4px;
+    padding:8px 12px;border-inline-start:0;border-top:1px solid var(--line);
+  }
+  html[data-modus="bedrift"] .qg-col{grid-template-columns:repeat(4, minmax(0, 1fr))}
+  html[data-modus] .qg-col[data-modus]{border-top:0}
+  @media (max-width:640px){
+    /* Telefon: ett rutenett med to lenker per rad (tre rader i Privat, fire i Bedrift). */
+    html[data-modus] .hero-modus{margin-top:20px}
+    html[data-modus] .quick-cats{grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:4px;padding:6px 8px}
+    html[data-modus] .qg-col{display:contents}
+    html[data-modus] .qc:last-child:nth-child(even){grid-column:auto}
+    /* Privat har én rad mindre enn Bedrift. Heroen midtstiller innholdet, så uten denne
+       lufta (én radhøyde) hopper knappen 19 px under fingeren hver gang man bytter. */
+    html[data-modus="privat"] .quick-cats{margin-bottom:38px}
+  }
+  @media (max-width:640px) and (max-height:700px){
+    html[data-modus="privat"] .quick-cats{margin-bottom:36px}
   }
 
   .search-panel{
@@ -1312,6 +1373,7 @@
   .fx-opt.on{background:rgba(255,255,255,.05)}
   .fx-opt.on b{color:var(--accent-2)}
   .fx-opt:hover,.fx-opt:focus-visible{background:rgba(255,255,255,.09);outline:none}
+  .fx-opt:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 
   /* ── Valutaomregneren (egen boks rett under dagsoversikt-rammen) ──
      Erstattet marqueen som bare gjentok kursene fra kortene over.
@@ -1459,6 +1521,7 @@
   .wx-result{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:8px 9px;border-radius:6px;cursor:pointer}
   .wx-result small{color:var(--ink3);font-size:11px;white-space:nowrap}
   .wx-result:hover,.wx-result:focus-visible{background:rgba(255,255,255,.06);outline:none}
+  .wx-result:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
   .wx-empty{padding:8px 9px;color:var(--ink3);font-size:12px}
   .stamp{display:inline-flex;align-items:center;gap:8px}
   .daily-refresh{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;border:0;background:none;color:var(--ink3);cursor:pointer;opacity:.65;transition:opacity .2s,color .2s,transform .4s var(--ease)}
@@ -2023,17 +2086,17 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v242" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v242" defer></script>
-<script src="/shared/lang/no.js?v=v289" defer></script>
-<script src="/shared/site-shell.js?v=v2" defer></script>
-<script src="/shared/top-chrome.js?v=v312" defer></script>
+<link rel="preload" href="/shared/core.js?v=v395" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v395" defer></script>
+<script src="/shared/lang/no.js?v=v394" defer></script>
+<script src="/shared/site-shell.js?v=v359" defer></script>
+<script src="/shared/top-chrome.js?v=v395" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v24" defer></script>
+<script src="/shared/markedsdata.js?v=v366" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
-<script src="/shared/search.js?v=v318" defer></script>
+<script src="/shared/search.js?v=v376" defer></script>
 <!-- Timeren i toppen. Samme fil som /kalkulator/timer/ bruker — der i full
      størrelse, her som popover under pilla. -->
 <script src="/shared/timer.js?v=v7" defer></script>
@@ -2212,6 +2275,11 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
     transition:transform .25s var(--ease);
   }
 
+  /* Privat | Bedrift over raden: venstrestilt og firkantet som søkefeltet */
+  html[data-theme="carbon"] .hero-modus{margin:14px 0 0;background:var(--surface);border-color:var(--line);border-radius:8px}
+  html[data-theme="carbon"] .hm-btn{padding:8px 16px;border-radius:5px;font-size:12.5px}
+  html[data-theme="carbon"][data-modus] .quick-cats{margin-top:8px}
+
   /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
   html[data-theme="carbon"] section.daily{margin-top:0}
   html[data-theme="carbon"] section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
@@ -2271,38 +2339,25 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   html[data-theme="carbon"] #dailyDate .dd-wd{color:var(--accent-2)}
   html[data-theme="carbon"] #dailyDate .dd-rest{white-space:nowrap}
 
-  /* Karbonfiber bak toppen. Kasper 2026-11-16: «en kul carbon-effekt i bakgrunnen
-     som er subtil». ::before er en fin twill-vev (12 px) i --wash-rgb, ::after en
-     kobberglød bak ukedagen og et lysskinn som glir over vevet én gang etter
-     lasting. Begge går ut til skjermkanten og tones bort oppe, nede og mot høyre
-     (to masker som snittes), så det aldri blir en firkant. isolation holder
-     lagene bak teksten, men over sidebakgrunnen. */
-  html[data-theme="carbon"] .daily-head{position:relative;isolation:isolate}
-  html[data-theme="carbon"] .daily-head::before,
-  html[data-theme="carbon"] .daily-head::after{
-    content:"";position:absolute;z-index:-1;inset:-26px -16px -10px;pointer-events:none;
-    -webkit-mask:linear-gradient(180deg,transparent 0,#000 38%,#000 66%,transparent 100%),linear-gradient(90deg,#000 0,#000 25%,transparent 92%);
-    -webkit-mask-composite:source-in;
-    mask:linear-gradient(180deg,transparent 0,#000 38%,#000 66%,transparent 100%),linear-gradient(90deg,#000 0,#000 25%,transparent 92%);
-    mask-composite:intersect;
+  /* Toppen som på PC (#gammelPC). Kasper 2026-11-19 ombestemte seg: «telefon også».
+     Karbonveven er byttet med samme topp som på PC: ukedagen med metallskjær, året
+     dempet, et mykt lys bak datoen og døgnlinja under (reglene for linja står
+     felles øverst i #gammelPC). z-index:1 lar gløden fra «nå»-punktet falle på kortene. */
+  @supports ((-webkit-background-clip:text) or (background-clip:text)){
+    html[data-theme="carbon"] #dailyDate .dd-wd{
+      background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 46%,color-mix(in srgb,var(--accent-2) 55%,#fff) 100%);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    }
   }
+  html[data-theme="carbon"] #dailyDate .dd-yr{color:var(--ink3)}
+  html[data-theme="carbon"] .daily-head{position:relative;isolation:isolate;z-index:1;padding-bottom:12px;row-gap:10px}
   html[data-theme="carbon"] .daily-head::before{
-    background:
-      linear-gradient(27deg,rgba(var(--wash-rgb),.06) 3px,transparent 3px) 0 3px,
-      linear-gradient(207deg,rgba(var(--wash-rgb),.06) 3px,transparent 3px) 6px 0,
-      linear-gradient(27deg,rgba(var(--wash-rgb),.10) 3px,transparent 3px) 0 6px,
-      linear-gradient(207deg,rgba(var(--wash-rgb),.10) 3px,transparent 3px) 6px 3px,
-      linear-gradient(90deg,rgba(var(--wash-rgb),.07) 6px,transparent 6px),
-      linear-gradient(rgba(var(--wash-rgb),.08) 25%,rgba(var(--wash-rgb),.05) 25%,rgba(var(--wash-rgb),.05) 50%,transparent 50%,transparent 75%,rgba(var(--wash-rgb),.11) 75%);
-    background-size:12px 12px;opacity:.5;
+    content:"";position:absolute;z-index:-1;pointer-events:none;
+    left:-14px;top:-50px;width:88%;height:200px;
+    background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
   }
-  html[data-theme="carbon"] .daily-head::after{
-    background:
-      linear-gradient(105deg,transparent 42%,rgba(var(--glow-rgb),.34) 50%,transparent 58%) 120% 0/250% 100% no-repeat,
-      radial-gradient(55% 60% at 20% 64%,rgba(var(--glow-rgb),.20),transparent 72%);
-    animation:hvCarbonSheen 2.4s cubic-bezier(.6,.05,.3,1) 1.8s 1 both;
-  }
-  @keyframes hvCarbonSheen{from{background-position:120% 0,0 0}to{background-position:-20% 0,0 0}}
+  html[data-theme="carbon"] .dayline{order:5;flex:0 0 100%;display:block;margin-top:4px;--dl-spill:36px}
+  html[data-theme="carbon"] body.introAct .daily-frame::after{content:none}
 
   /* Hvert kort i egen boks med tittelstripe, som de andre temaene fikk i #288.
      Kasper 2026-11-16: «implementer det vi har gjort under forsidetittelen» også i
@@ -2314,14 +2369,15 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
   html[data-theme="carbon"] .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
   html[data-theme="carbon"] .daily-grid{gap:12px}
   html[data-theme="carbon"] .daily-grid > .widget{
-    background:var(--surface);
+    background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
     border:1px solid var(--line);border-right:1px solid var(--line) !important;border-radius:12px;
+    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,.8);
     padding:0 16px 16px;
   }
   html[data-theme="carbon"] .daily-grid > .widget > .widget-top{
     margin:0 -16px 5px;padding:12px 16px;min-height:46px;box-sizing:border-box;
     border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
-    background:color-mix(in srgb,var(--accent) 5%,transparent);
+    background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 8%,transparent),color-mix(in srgb,var(--accent) 3%,transparent));
   }
   html[data-theme="carbon"] .daily-credits{border-top:0;padding:4px 4px 0}
   html[data-theme="carbon"] .fxc{border-radius:12px}
@@ -2365,6 +2421,7 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
 .sr-next-val .in-days{font-family:var(--font-sans);font-weight:500;font-size:11px;color:var(--ink4);margin-left:7px;letter-spacing:0}
 @media(hover:hover){.widget:hover .sr-next-val{color:var(--accent-2)}}
 .w-note{margin:0;font-size:10.5px;line-height:1.35;letter-spacing:0;color:var(--ink3)}
+#stCard .w-note{display:block}
 .wx-fc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-height:48px}
 .wx-fc-cell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:7px}
 .wx-fc-cell:first-child{background:rgba(var(--glow-rgb),.10)}
@@ -2447,11 +2504,13 @@ body.introAct [data-headline].play .shimmer{
 
 /* Søk og kategorier stiger opp når tittelen har landet */
 body.introAct .hero .search-wrap,
+body.introAct .hero .hero-modus,
 body.introAct .hero .quick-cats{
   opacity:0;transform:translateY(12px);
   transition:opacity var(--dur-base) var(--ease-out-quart), transform var(--dur-base) var(--ease-out-quart);
 }
 body.introAct.heroLanded .hero .search-wrap{opacity:1;transform:none}
+body.introAct.heroLanded .hero .hero-modus,
 body.introAct.heroLanded .hero .quick-cats{opacity:1;transform:none;transition-delay:var(--stag-loose)}
 /* Ett lys-sveip over søkefeltet, og forstørrelsesglasset tegner seg */
 body.introAct .search-shell::after{
@@ -2518,7 +2577,317 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
 
 @media (prefers-reduced-motion:reduce){
   .intro-veil{display:none !important}
-  html[data-theme="carbon"] .daily-head::after{animation:none}
+}
+</style>
+<style id="gammelPC">/* ══ Carbon og Mørk-blå på PC — forsiden slik den var i september (v242) ══════
+   Kasper 2026-11-18: «Jeg liker egentlig dette designet bedre for desktop … SE
+   HVORDAN layoutet er på mobil.» Første skjermbilde som i v242: venstrestilt
+   tittel, bredt firkantet søkefelt, kategoriene som én rad i en ramme og
+   dagsoversikten rett under. Det som er gjort for Carbon på telefon siden, er tatt
+   med: tittelteksten, kategorirekkefølgen, Inter + Source Serif 4, dagsoversikt-
+   toppen med stor dato, pille og karbonvev, kortene i egne bokser med tittelstripe
+   og fullskjermknapp, og kortinnholdet fra den gang (én linje, lave grafer).
+   Bare over 640 px og bare disse to temaene; telefon står i #carbonMobil.
+   2026-11-19: dagsoversikt-toppen har fått døgnlinja i stedet for karbonveven,
+   og kortene lys ovenfra og en lysring som følger musa (se lenger ned). */
+/* Døgnlinja vises bare for Carbon og Mørk-blå på PC (her) og Carbon på telefon
+   (#carbonMobil). Reglene under er felles; de virker bare der linja slås på med
+   display:block. --dl-p er registrert som tall, så den kan tones med transition;
+   uten støtte hopper lyset rett på plass. */
+.dayline{display:none}
+@property --dl-p{syntax:'<number>';inherits:true;initial-value:0}
+/* Døgnlinja. Kasper 2026-11-19: «utrolig pent design … med wow og x-faktor …
+   smooth men profesjonelt … ikke over fancy». En tynn skala fra 00 til 24 under
+   datoen, som på et instrument: én strek per time, lengre hver sjette. Den delen
+   av døgnet som er gått, lyser i aksentfargen og tones ut bakover mot midnatt;
+   et lyspunkt står på klokka nå og kaster et svakt lys ned på kortene under.
+   --dl-p (0–1) er hvor langt lyset er kommet. Den er registrert med @property
+   (rett over), så den kan tones: ved lasting glir lyset fra
+   midnatt og fram til nå, og flytter seg siden ett hakk i minuttet. --dl-now
+   settes av skriptet «Døgnlinja». Uten det (ingen JS) vises bare skalaen.
+   2026-11-21, Kasper: «enda mer smooth og litt mer subtil … bedre transition» fra
+   lyst til mørkt. Lyset stoppet brått i punktet; nå renner det --dl-spill videre
+   og tones over i den grå linja. Glidningen starter og lander mykt (--dl-ease). */
+.dayline{
+  position:relative;height:24px;
+  --dl-p:0;--dl-spill:64px;--dl-ease:cubic-bezier(.45,0,.15,1);
+  transition:--dl-p 2.2s var(--dl-ease) .3s;
+}
+body.heroLanded .daily-frame.in .dayline{--dl-p:var(--dl-now,0)}
+.dayline::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line-2);
+}
+.dayline.is-set::before{
+  background:linear-gradient(90deg,var(--line-2) calc(var(--dl-p) * 100% - 1px),rgba(var(--glow-rgb),.5) calc(var(--dl-p) * 100%),var(--line-2) calc(var(--dl-p) * 100% + var(--dl-spill)));
+}
+/* Strekene er SVG med crispEdges: 1116 px / 24 gir halve piksler, og da ble
+   annenhver strek uskarp som CSS-toning. Halv piksel inn på hver side, så første
+   og siste strek står nøyaktig i flukt med kortkantene. */
+.dl-ticks{
+  position:absolute;left:.5px;top:1px;width:calc(100% - 1px);height:8px;overflow:visible;
+  fill:none;stroke:currentColor;stroke-width:1;shape-rendering:crispEdges;
+  color:rgba(var(--wash-rgb),.26);
+}
+.dl-ticks.is-lit{
+  color:var(--accent-2);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.4) calc(var(--dl-p) * 60%),rgba(0,0,0,.85) calc(var(--dl-p) * 100% - 6px),transparent calc(var(--dl-p) * 100% + var(--dl-spill) * .4));
+  mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.4) calc(var(--dl-p) * 60%),rgba(0,0,0,.85) calc(var(--dl-p) * 100% - 6px),transparent calc(var(--dl-p) * 100% + var(--dl-spill) * .4));
+}
+.dl-fill{
+  position:absolute;left:0;top:0;height:1px;width:calc(var(--dl-p) * 100%);
+  background:linear-gradient(90deg,transparent,rgba(var(--glow-rgb),.4) 55%,rgba(var(--glow-rgb),.85) calc(100% - 20px),var(--accent-2));
+}
+.dl-fill::after{
+  content:"";position:absolute;left:0;right:0;top:-9px;height:19px;
+  background:linear-gradient(180deg,transparent,rgba(var(--glow-rgb),.13),transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent 30%,#000 calc(100% - 24px),rgba(0,0,0,.4));
+  mask-image:linear-gradient(90deg,transparent 30%,#000 calc(100% - 24px),rgba(0,0,0,.4));
+}
+/* Gløden rundt «nå»-punktet. Den ligger som bakgrunn i et lag som bare går
+   12 px ut over linja på hver side (mindre enn sidemargen på telefon) og tones bort mot kantene: som eget element
+   rundt punktet stakk den 240 px ut av siden rundt midnatt og ga sidelengs rulling. */
+.dayline::after{
+  content:"";position:absolute;left:-12px;right:-12px;top:-74px;height:180px;pointer-events:none;
+  background:radial-gradient(260px 96px at calc(12px + var(--dl-p) * (100% - 24px)) 74px,rgba(var(--glow-rgb),.12),rgba(var(--glow-rgb),.035) 56%,transparent);
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
+}
+.dl-now{position:absolute;z-index:1;top:0;left:calc(var(--dl-p) * 100%);width:0;height:0}
+.dl-now i{
+  position:absolute;left:-3px;top:-2.5px;width:6px;height:6px;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.9) 0,var(--accent-2) 62%);
+  box-shadow:0 0 4px 1px rgba(var(--glow-rgb),.6),0 0 14px 4px rgba(var(--glow-rgb),.3);
+}
+.dl-now i::after{
+  content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--accent-2);opacity:0;
+}
+/* To rolige ringer når lyset har landet, så står punktet stille */
+body.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{
+  animation:hvDlPulse 2.8s var(--ease-out-quart) 2.5s 2 both;
+}
+@keyframes hvDlPulse{0%{opacity:.45;transform:scale(1)}100%{opacity:0;transform:scale(3)}}
+.dayline:not(.is-set) :is(.dl-now,.dl-fill,.dl-ticks.is-lit),
+.dayline:not(.is-set)::after{display:none}
+.dl-hrs b{
+  position:absolute;top:14px;transform:translateX(-50%);
+  font:600 9px/1 var(--font-sans);letter-spacing:1.3px;color:var(--ink4);font-variant-numeric:tabular-nums;
+}
+.dl-hrs b:nth-child(1){left:0;transform:none}
+.dl-hrs b:nth-child(2){left:25%}
+.dl-hrs b:nth-child(3){left:50%}
+.dl-hrs b:nth-child(4){left:75%}
+.dl-hrs b:nth-child(5){right:-1.3px;transform:none}
+/* Lasteanimasjonen: linja tones inn etter datoen, og lyset starter litt seinere */
+body.introAct .daily .daily-head .dayline{opacity:0}
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .dayline{
+  opacity:1;transition:opacity .8s var(--ease-out-quart) 620ms, --dl-p 2.2s var(--dl-ease) 900ms;
+}
+body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animation-delay:3.1s}
+@media (prefers-reduced-motion:reduce){
+  .dayline{transition:none}
+  .dl-now i::after{animation:none !important}
+}
+@media (min-width:641px){
+  html:is([data-theme="carbon"],[data-theme="dark"]){
+    --font-sans:'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif:'Source Serif 4', Georgia, 'Times New Roman', serif;
+  }
+  /* Tittelen: norsk har egen tekst; andre språk beholder sin oversatte tittel */
+  html:is([data-theme="carbon"],[data-theme="dark"])[lang="nb"] #heroH1{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"])[lang="nb"] #heroH1Alt{display:block}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero{min-height:0;display:block;text-align:left;padding:96px 0 24px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero h1{
+    max-width:18ch;font-size:clamp(46px,5.8vw,72px);letter-spacing:-1.6px;text-wrap:balance;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero h1 em{letter-spacing:-1.2px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero-more{display:none}
+
+  /* Søkefeltet: hele bredden, firkantet med avrundede hjørner og mørk gradient */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-wrap{margin:32px 0 0;max-width:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-shell{border-radius:8px;background:linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-shell.focused{background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-shell input{padding:18px 64px 18px 50px;font-size:15.5px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .search-icon{left:18px}
+
+  /* Kategoriene: én rad i en ramme, ikon over navn. Gruppene løses opp
+     (display:contents) som på telefon, så også lenka top-chrome.js legger sist
+     havner i raden. Cellene deler bredden, men blir aldri smalere enn navnet
+     eller 80 px (da får alle 11 plass ned til 1024 px vindu); er vinduet for
+     smalt til alle, blar man sidelengs som på telefon. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .quick-cats{
+    max-width:none;margin:20px 0 0;padding:0;
+    display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(max-content,1fr);gap:0;
+    overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
+    background:var(--surface);border:1px solid var(--line);border-radius:6px;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .quick-cats::-webkit-scrollbar{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qg-col{display:contents}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qg-h{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .quick-cats .qc{
+    min-width:80px;grid-column:auto;flex-direction:column;justify-content:center;gap:9px;
+    padding:18px 8px 15px;border-radius:0;color:var(--ink2);
+    border-right:1px solid var(--line);
+    transition:background .2s var(--ease), color .2s var(--ease);
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qg-col:last-child .qc:last-child{border-right:0}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc-ico{width:24px;height:24px;transition:color .2s var(--ease), transform .25s var(--ease)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc-ico svg{width:22px;height:22px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc-lbl{font:500 11.5px/1 var(--font-sans);letter-spacing:-.05px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc::after{
+    content:"";inset:auto 0 0 0;width:auto;height:1px;margin:0;border:0;
+    background:var(--accent-2);opacity:1;transform:scaleX(0);transform-origin:center;
+    transition:transform .25s var(--ease);
+  }
+
+  /* Privat | Bedrift over raden: venstrestilt og firkantet som søkefeltet */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero-modus{margin:18px 0 0;background:var(--surface);border-color:var(--line);border-radius:8px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hm-btn{padding:8px 18px;border-radius:5px;font-size:13px}
+  html:is([data-theme="carbon"],[data-theme="dark"])[data-modus] .quick-cats{margin-top:10px}
+
+  /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
+  html:is([data-theme="carbon"],[data-theme="dark"]) section.daily{margin-top:0;padding-top:18px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
+
+  /* Dagsoversikt-toppen: «— DAGSOVERSIKT | UKE 47» og status-pillen på første
+     linje, datoen i stor serif under, og nederst døgnlinja (se under).
+     .title er display:contents, så barna er søsken i én flex-rad.
+     z-index:1 løfter toppen over kortene, så gløden fra «nå»-punktet faller på dem. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head{
+    display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;
+    column-gap:10px;row-gap:8px;padding:4px 0 12px;background:none;border-bottom:0;
+    position:relative;z-index:1;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title{display:contents}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title::before{content:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title .sep{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title > span[data-i18n]{
+    order:1;flex:none;display:inline-flex;align-items:center;gap:9px;min-height:28px;
+    font-size:10.5px;letter-spacing:1.8px;color:var(--ink3);
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title > span[data-i18n]::before{
+    content:"";width:16px;height:1px;background:var(--accent);opacity:.85;flex-shrink:0;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title #dailyWeek{
+    order:2;display:inline-flex;align-items:center;gap:10px;
+    padding:0;border:0;border-radius:0;background:none;
+    font:600 10.5px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
+    color:var(--ink4);white-space:nowrap;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title #dailyWeek::before{content:"";width:1px;height:11px;background:var(--line-2)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .stamp{
+    order:3;margin-left:auto;height:28px;gap:7px;padding:0 3px 0 11px;
+    border:1px solid var(--line-2);border-radius:999px;background:rgba(var(--wash-rgb),.025);
+    font-size:11px;color:var(--ink2);
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .stamp::before{background:var(--accent-2);filter:drop-shadow(0 0 3px rgba(var(--glow-rgb),.9))}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .daily-refresh{display:inline-flex;width:24px;height:24px}
+  /* Datoen: ukedagen i aksentfargen med et metallskjær (kobber → champagne i
+     Carbon, blå → isblå i Mørk-blå), dag og måned i hvitt, året dempet. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title #dailyDate{
+    order:4;flex:0 0 100%;margin:0;padding:0;border:0;background:none;
+    font-family:var(--font-serif);font-weight:500;font-size:clamp(30px,2.7vw,38px);line-height:1.14;
+    letter-spacing:-.8px;color:var(--ink);white-space:normal;text-transform:none;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-wd{color:var(--accent-2)}
+  @supports ((-webkit-background-clip:text) or (background-clip:text)){
+    html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-wd{
+      background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 46%,color-mix(in srgb,var(--accent-2) 55%,#fff) 100%);
+      -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+    }
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-rest{white-space:nowrap}
+  html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-yr{color:var(--ink3)}
+
+  /* Et mykt lys bak datoen. Ren radial toning uten kanter (karbonveven som sto
+     her før, ble kuttet i en firkant og så ut som en tegnefeil på PC). */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head::before{
+    content:"";position:absolute;z-index:-1;pointer-events:none;
+    left:-150px;top:-70px;width:min(780px,72%);height:250px;
+    background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
+  }
+
+  html:is([data-theme="carbon"],[data-theme="dark"]) .dayline{order:5;flex:0 0 100%;display:block;margin-top:8px}
+  /* Lyssveipet over hele dagsoversikten (fra #carbonMobil) er tatt ut her: uten
+     ramme rundt kortene sto det et øyeblikk som en firkant bak toppen. Lyset som
+     glir langs døgnlinja gjør samme jobb. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) body.introAct .daily-frame::after{content:none}
+
+  /* Hvert kort i egen boks med tittelstripe, rammen rundt hele dagsoversikten er
+     borte. Hjørnene 12 px, som på Carbon-telefon. Kortet får lys ovenfra (en svak
+     toning og en lys hårstrek i overkanten) og skygge under, som .ks i themes.css. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid{gap:12px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget{
+    background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
+    border:1px solid var(--line);border-radius:12px;
+    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,.8);
+    padding:0 20px 18px;min-height:0;
+    grid-template-rows:auto auto minmax(34px,auto) 1fr;gap:7px;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget > .widget-top{
+    margin:0 -20px 5px;padding:12px 20px;height:auto;min-height:46px;box-sizing:border-box;
+    border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
+    background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 8%,transparent),color-mix(in srgb,var(--accent) 3%,transparent));
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-credits{border-top:0;padding:4px 4px 0}
+  /* Valutaomregneren står på én rad på PC, så den får bare de runde hjørnene */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .fxc{border-radius:12px}
+
+  /* Kortinnholdet fra den gang: én linje i stedet for faktaradene, lave grafer
+     (48 px), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
+     graf. Rentegrafen og de andre grafene åpnes stort med fullskjermknappen. */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget > .widget-facts,
+  html:is([data-theme="carbon"],[data-theme="dark"]) #wxCard > .widget-spark-wrap,
+  html:is([data-theme="carbon"],[data-theme="dark"]) #srCard > .widget-spark-wrap{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-label{font-size:10.5px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget .w-line{
+    display:flex;align-items:center;gap:8px;margin:0;
+    font-size:12px;line-height:1.4;letter-spacing:-.05px;color:var(--ink3);
+    font-variant-numeric:tabular-nums;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget .w-line .ctx{color:var(--ink4)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-spark-wrap,
+  html:is([data-theme="carbon"],[data-theme="dark"]) #wxCard .wx-fc-wrap,
+  html:is([data-theme="carbon"],[data-theme="dark"]) #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .spark-yax{top:11px;height:48px;font-size:8.5px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-axis{font-size:8.5px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-spark{height:48px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) #fxTrend i{display:none}
+  html:is([data-theme="carbon"],[data-theme="dark"]) #stCard .w-note{display:block}
+}
+@media (min-width:641px) and (hover:hover){
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc:hover{background:rgba(255,255,255,.018);color:var(--ink)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc:hover::after{opacity:1;transform:scaleX(.5)}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .qc:hover .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
+}
+/* Lysringen på kortene (bare mus): et mykt lys i kortflata og i kanten der pila
+   er, også på nabokortene når pila er nær dem. --mx/--my settes per kort av
+   skriptet «Døgnlinja»; .is-lit står på rutenettet så lenge pila er over det.
+   ::after er bare selve kanten (masken skjærer ut alt innenfor 1 px). */
+@media (min-width:641px) and (hover:hover) and (pointer:fine){
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget::before,
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget::after{
+    content:"";position:absolute;border-radius:inherit;pointer-events:none;opacity:0;
+    transition:opacity .45s var(--ease-out-quart);
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget::before{
+    inset:0;
+    background:radial-gradient(380px circle at var(--mx,50%) var(--my,0px),rgba(var(--glow-rgb),.075),transparent 68%);
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget::after{
+    inset:-1px;padding:1px;
+    background:radial-gradient(240px circle at var(--mx,50%) var(--my,0px),rgba(var(--glow-rgb),.85),transparent 72%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+    mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    mask-composite:exclude;
+  }
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid.is-lit > .widget::before,
+  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid.is-lit > .widget::after{opacity:1}
+}
+/* Nettbrett: mindre luft over tittelen, som i v242 */
+@media (min-width:641px) and (max-width:900px){
+  html:is([data-theme="carbon"],[data-theme="dark"]) .hero{padding-top:64px}
 }
 </style>
 <style id="carbonNav">/* ══ Navbaren i Carbon (forsiden, PC og telefon) ═══════════════════════
@@ -2568,12 +2937,14 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 </style>
 </head>
 <body class="atmo-on">
-<script>/* Carbon på telefon: lasteanimasjonen i #carbonMobil. Settes FØR første maling,
-   ellers rekker kategoriene å vises og så skjule seg igjen. Én gang per fane. */
+<script>/* Lasteanimasjonen i #carbonMobil: Carbon (telefon og PC) og Mørk-blå på PC
+   (#gammelPC). Settes FØR første maling, ellers rekker kategoriene å vises og så
+   skjule seg igjen. Én gang per fane. */
 (function(){
   try{
-    if(document.documentElement.getAttribute('data-theme') !== 'carbon') return;
-    if(!window.matchMedia || !matchMedia('(max-width:640px)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var t = document.documentElement.getAttribute('data-theme');
+    if(!window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(t !== 'carbon' && !(t === 'dark' && matchMedia('(min-width:641px)').matches)) return;
     if(sessionStorage.getItem('hvt-intro')) return;
     sessionStorage.setItem('hvt-intro', '1');
   }catch(e){ return; }
@@ -2661,14 +3032,19 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
           </svg>
           <input id="searchInput" type="text" autocomplete="off" spellcheck="false"
             placeholder="Søk etter verktøy eller begrep…"
-            aria-label="Søk" aria-autocomplete="list" aria-controls="searchPanel" aria-expanded="false">
+            role="combobox" aria-label="Søk" aria-autocomplete="list" aria-controls="searchPanel" aria-expanded="false">
           <div class="search-kbd"><kbd>⌘</kbd><kbd>K</kbd></div>
         </div>
-        <div class="search-panel" id="searchPanel" role="listbox"></div>
+        <div class="search-panel" id="searchPanel"></div>
+        <div class="sr-only" id="searchStatus" role="status" aria-live="polite"></div>
       </div>
 
-      <nav class="quick-cats" aria-label="Hurtigtilgang til kategorier">
-        <div class="qg-col" role="group" aria-labelledby="qgPrivat">
+      <div class="hero-modus" role="group" aria-label="Vis kategoriene for privat eller bedrift">
+        <button type="button" class="hm-btn" data-modus="privat" aria-pressed="true" data-i18n="m.f.privat">Privat</button>
+        <button type="button" class="hm-btn" data-modus="bedrift" aria-pressed="false" data-i18n="m.f.bedrift">Bedrift</button>
+      </div>
+      <nav class="quick-cats has-mod" aria-label="Hurtigtilgang til kategorier">
+        <div class="qg-col" role="group" aria-labelledby="qgPrivat" data-modus="privat">
           <span class="qg-h" id="qgPrivat">Privat</span>
           <a href="/personlig/budsjett/" class="qc">
             <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg></span>
@@ -2682,12 +3058,8 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
             <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/><path d="M10 20 V14 H14 V20"/></svg></span>
             <span class="qc-lbl">Boliglån</span>
           </a>
-          <a href="/skatt/" class="qc">
-            <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 H14 L18 7 V21 H6 Z"/><path d="M14 3 V7 H18"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></span>
-            <span class="qc-lbl">Skatt</span>
-          </a>
         </div>
-        <div class="qg-col" role="group" aria-labelledby="qgBedrift">
+        <div class="qg-col" role="group" aria-labelledby="qgBedrift" data-modus="bedrift">
           <span class="qg-h" id="qgBedrift">Bedrift</span>
           <a href="/selskap/" class="qc">
             <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg></span>
@@ -2708,6 +3080,10 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
         </div>
         <div class="qg-col" role="group" aria-labelledby="qgVerktoy">
           <span class="qg-h" id="qgVerktoy">Verktøy og oppslag</span>
+          <a href="/skatt/" class="qc">
+            <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3 H14 L18 7 V21 H6 Z"/><path d="M14 3 V7 H18"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg></span>
+            <span class="qc-lbl">Skatt</span>
+          </a>
           <a href="/kalkulator/" class="qc">
             <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="8" y1="7.5" x2="16" y2="7.5"/><circle cx="9" cy="13" r=".6" fill="currentColor"/><circle cx="12" cy="13" r=".6" fill="currentColor"/><circle cx="15" cy="13" r=".6" fill="currentColor"/><circle cx="9" cy="17" r=".6" fill="currentColor"/><circle cx="15" cy="17" r=".6" fill="currentColor"/></svg></span>
             <span class="qc-lbl">Kalkulator</span>
@@ -2715,6 +3091,10 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
           <a href="/lov/" class="qc">
             <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4 V20"/><path d="M5 21 H19"/><path d="M4 9 L12 5 L20 9"/><path d="M6 9 L4 14 a3 3 0 0 0 4 0 L6 9"/><path d="M18 9 L16 14 a3 3 0 0 0 4 0 L18 9"/></svg></span>
             <span class="qc-lbl">Lov</span>
+          </a>
+          <a href="/avansert/" class="qc">
+            <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4 V20 H20"/><polyline points="7.5 15 11 11 14 13.5 19 8"/></svg></span>
+            <span class="qc-lbl">Avansert</span>
           </a>
         </div>
       </nav>
@@ -2731,6 +3111,18 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
         <header class="daily-head">
           <div class="title"><span data-i18n="homeMarketTitle">Dagsoversikt</span><span class="sep"></span><b id="dailyDate">Fredag 25. april 2026</b><span class="sep"></span><b id="dailyWeek">Uke 18</b></div>
           <div class="stamp" id="dailyStamp"><span class="stamp-pre">Sist oppdatert </span>—</div>
+          <!-- Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon, se #gammelPC): skala fra 00 til 24 med et lyspunkt
+               for klokka nå. Ren pynt, derfor aria-hidden. Skriptet «Døgnlinja» setter --dl-now. -->
+          <div class="dayline" id="dayLine" aria-hidden="true">
+            <svg class="dl-ticks" viewBox="0 0 24 8" preserveAspectRatio="none" focusable="false">
+              <path id="dlTMin" vector-effect="non-scaling-stroke" stroke-opacity=".6" d="M1,0V4M2,0V4M3,0V4M4,0V4M5,0V4M7,0V4M8,0V4M9,0V4M10,0V4M11,0V4M13,0V4M14,0V4M15,0V4M16,0V4M17,0V4M19,0V4M20,0V4M21,0V4M22,0V4M23,0V4"/>
+              <path id="dlTMaj" vector-effect="non-scaling-stroke" d="M0,0V8M6,0V8M12,0V8M18,0V8M24,0V8"/>
+            </svg>
+            <svg class="dl-ticks is-lit" viewBox="0 0 24 8" preserveAspectRatio="none" focusable="false"><use href="#dlTMin"/><use href="#dlTMaj"/></svg>
+            <span class="dl-fill"></span>
+            <span class="dl-now"><i></i></span>
+            <span class="dl-hrs"><b>00</b><b>06</b><b>12</b><b>18</b><b>24</b></span>
+          </div>
         </header>
 
         <div class="daily-grid">
@@ -3514,6 +3906,12 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
       if (txt.indexOf('{wd}') === 0) {
         var a = document.createElement('span'); a.className = 'dd-wd'; a.textContent = wd;
         var b = document.createElement('span'); b.className = 'dd-rest'; b.textContent = txt.slice(4).trim();
+        // Står året sist, får det eget <span>: #gammelPC demper det. Ellers urørt.
+        var y = String(d.getFullYear()), rest = b.textContent;
+        if (rest.length > y.length && rest.slice(-y.length) === y) {
+          var c = document.createElement('span'); c.className = 'dd-yr'; c.textContent = y;
+          b.textContent = rest.slice(0, -y.length); b.append(c);
+        }
         el.textContent = ''; el.append(a, ' ', b);
       } else {
         el.textContent = txt.replace('{wd}', wd);
@@ -3533,6 +3931,43 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     new MutationObserver(paint).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
   })();
   // dailyStamp eies nå av shared/markedsdata.js (ekte hentetidspunkt + oppdater-knapp)
+
+  // ── Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon) og lysringen på kortene (bare PC), se #gammelPC ──
+  (function(){
+    // Hvor langt døgnet er kommet (0–1). CSS-en flytter lyspunktet dit.
+    var dl = document.getElementById('dayLine');
+    if(dl){
+      var naa = function(){
+        var d = new Date();
+        dl.style.setProperty('--dl-now', ((d.getHours() * 60 + d.getMinutes()) / 1440).toFixed(4));
+        dl.classList.add('is-set');
+      };
+      naa(); setInterval(naa, 60000);
+    }
+    // Musas plass i hvert kort (--mx/--my), høyst én gang per bilde.
+    var grid = document.querySelector('.daily-grid');
+    if(!grid || !window.matchMedia || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    var kort = grid.querySelectorAll('.widget'), raf = 0, px = 0, py = 0;
+    grid.addEventListener('pointermove', function(e){
+      px = e.clientX; py = e.clientY;
+      if(raf) return;
+      raf = requestAnimationFrame(function(){
+        raf = 0;
+        var t = document.documentElement.getAttribute('data-theme');
+        if(t !== 'carbon' && t !== 'dark') return;
+        for(var i = 0; i < kort.length; i++){
+          var r = kort[i].getBoundingClientRect();
+          kort[i].style.setProperty('--mx', Math.round(px - r.left) + 'px');
+          kort[i].style.setProperty('--my', Math.round(py - r.top) + 'px');
+        }
+        grid.classList.add('is-lit');
+      });
+    });
+    grid.addEventListener('pointerleave', function(){
+      if(raf){ cancelAnimationFrame(raf); raf = 0; }
+      grid.classList.remove('is-lit');
+    });
+  })();
 
   // ── Dagsoversikt: ærlig tom- og feiltilstand ──────────────
   // Tallene i HTML er nøytrale plassholdere («—»); shared/markedsdata.js fyller
@@ -3691,6 +4126,8 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   }
 
   function renderSuggested(){
+    if(input){ input.removeAttribute('aria-activedescendant'); input.setAttribute('aria-controls','searchPanel'); }
+    setStatus('');
     var leftHtml  = '';
     var rightHtml = '';
     var recents   = getRecents();
@@ -3772,17 +4209,23 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     });
   }
 
+  var statusEl = document.getElementById('searchStatus');
+  function setStatus(t){ if(statusEl) statusEl.textContent = t; }
+
   function renderResults(q){
     var items = search(q);
     currentItems = items;
     activeIdx = items.length ? 0 : -1;
     if(!items.length){
+      setStatus(trT('trForsideNoHits', 'Ingen treff for «{q}».').split('{q}').join(q));
+      input.removeAttribute('aria-activedescendant');
+      input.setAttribute('aria-controls','searchPanel');
       panel.innerHTML = '<div class="sr-empty">'+trT('trForsideNoHits', 'Ingen treff for «{q}».').split('{q}').join(escapeHtml(q))+'<br><span style="font-size:12px;color:var(--ink4)">Prøv et annet søkeord eller bla i kategoriene under.</span></div>';
       return;
     }
-    var html = '<div class="panel-section"><div class="panel-label"><span>Treff</span><span class="count">'+items.length+'</span></div><div class="sr-list">';
+    var html = '<div class="panel-section"><div class="panel-label"><span>Treff</span><span class="count">'+items.length+'</span></div><div class="sr-list" id="srResults" role="listbox" aria-label="Treff">';
     items.forEach(function(it,i){
-      html += '<a href="'+it.u+'" class="sr-item'+(i===0?' active':'')+'" data-i="'+i+'" data-q="'+escapeHtml(q)+'">';
+      html += '<a href="'+it.u+'" class="sr-item'+(i===0?' active':'')+'" id="sr-opt-'+i+'" role="option" aria-selected="'+(i===0?'true':'false')+'" data-i="'+i+'" data-q="'+escapeHtml(q)+'">';
       // Uthevingen deler navnet i flere tekstnoder, som _ph ikke kan oversette: uthev i oversettelsen.
       html += '<div class="sr-text"><div class="sr-name">'+highlight(trPh(it.n) || it.n, q)+'</div><div class="sr-desc">'+escapeHtml(it.d)+'</div></div>';
       html += '<span class="sr-cat">'+escapeHtml(it.c)+'</span>';
@@ -3791,10 +4234,15 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     });
     html += '</div></div>';
     panel.innerHTML = html;
+    input.setAttribute('aria-controls','srResults');
+    input.setAttribute('aria-activedescendant','sr-opt-0');
+    setStatus(items.length+' treff');
     panel.querySelectorAll('.sr-item').forEach(function(el){
       el.addEventListener('mouseenter', function(){
-        panel.querySelectorAll('.sr-item').forEach(function(x){x.classList.remove('active')});
+        panel.querySelectorAll('.sr-item').forEach(function(x){x.classList.remove('active');x.setAttribute('aria-selected','false')});
         el.classList.add('active');
+        el.setAttribute('aria-selected','true');
+        input.setAttribute('aria-activedescendant', el.id);
         activeIdx = parseInt(el.getAttribute('data-i'),10);
       });
       el.addEventListener('click', function(){ pushRecent(el.getAttribute('data-q')); });
@@ -3804,9 +4252,11 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   function setActive(i){
     var nodes = panel.querySelectorAll('.sr-item');
     if(!nodes.length) return;
-    nodes.forEach(function(n){n.classList.remove('active')});
+    nodes.forEach(function(n){n.classList.remove('active');n.setAttribute('aria-selected','false')});
     activeIdx = (i + nodes.length) % nodes.length;
     nodes[activeIdx].classList.add('active');
+    nodes[activeIdx].setAttribute('aria-selected','true');
+    input.setAttribute('aria-activedescendant', nodes[activeIdx].id);
     nodes[activeIdx].scrollIntoView({block:'nearest'});
   }
 
@@ -3867,31 +4317,38 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     if(vv) lastVvH = vv.height;
     var wrap = shell.closest('.search-wrap');
     if(wrap) wrap.classList.remove('is-open');
-    if(input) input.setAttribute('aria-expanded','false');
+    if(input){ input.setAttribute('aria-expanded','false'); input.removeAttribute('aria-activedescendant'); }
+    setStatus('');
   }
 
   if(input && shell && panel){
     input.addEventListener('focus', openPanel);
     input.addEventListener('input', function(){
       var q = input.value;
+      if(!panel.classList.contains('open')) openPanel();
       if(!q.trim()) renderSuggested();
       else renderResults(q);
     });
     input.addEventListener('keydown', function(e){
-      if(e.key==='ArrowDown'){ e.preventDefault(); if(currentItems.length) setActive(activeIdx+1); }
+      if(e.key==='ArrowDown'){ e.preventDefault(); if(!panel.classList.contains('open')){ openPanel(); if(input.value.trim()) renderResults(input.value); } else if(currentItems.length) setActive(activeIdx+1); }
       else if(e.key==='ArrowUp'){ e.preventDefault(); if(currentItems.length) setActive(activeIdx-1); }
       else if(e.key==='Enter'){
         var nodes = panel.querySelectorAll('.sr-item');
-        if(activeIdx>=0 && nodes[activeIdx]){ e.preventDefault(); pushRecent(input.value); window.location.href = nodes[activeIdx].getAttribute('href'); }
+        if(panel.classList.contains('open') && activeIdx>=0 && nodes[activeIdx]){ e.preventDefault(); pushRecent(input.value); window.location.href = nodes[activeIdx].getAttribute('href'); }
       }
       else if(e.key==='Escape'){
-        // Første Esc tømmer søket, andre lukker panelet.
+        // Første Esc tømmer søket, andre lukker panelet. Fokus blir i feltet.
         if(input.value){ input.value=''; renderSuggested(); }
-        else { input.blur(); closePanel(); }
+        else { closePanel(); }
       }
     });
     document.addEventListener('click', function(e){
       if(!shell.contains(e.target) && !panel.contains(e.target)) closePanel();
+    });
+    // Tab videre ut av søket lukker panelet (ikke ved museklikk uten fokus, det tar klikk-lytteren over)
+    document.addEventListener('focusin', function(e){
+      var w = shell.closest('.search-wrap');
+      if(panel.classList.contains('open') && w && !w.contains(e.target)) closePanel();
     });
     document.addEventListener('keydown', function(e){
       if((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==='k'){
@@ -4147,45 +4604,48 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
   /* ═══ Datamodell — 73 verifiserte frister ═══
      n=navn short=kortnavn w=hvem d=dato/regel(HTML) f=frekvens i=viktighet(k/h/m)
-     c=kategori a=målgrupper mo/dm=fast måned+dag (mo:0 = ingen fast dato) p=konsekvens s/u=kilde */
+     c=kategori a=målgrupper mo/dm=fast måned+dag (mo:0 = ingen fast dato) p=konsekvens s/u=kilde
+     {d} i d = datoen i år, regnet ut fra mo/dm (se drule). mo/dm er lovdatoen, ikke en flyttet dag.
+     mv:1 = flyttes til neste virkedag ved helg eller helligdag (se dateIn).
+     yr/dx = gjelder bare året yr; andre år vises dx i stedet, og fristen står ikke i nedtellingen. */
   var D=[
     /* ── MVA ── */
-    {n:"MVA-melding 1. termin (jan–feb)",short:"MVA 1. termin",w:"MVA-registrerte",d:"<b>10. april 2026</b>",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:4,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 2. termin (mar–apr)",short:"MVA 2. termin",w:"MVA-registrerte",d:"<b>10. juni 2026</b>",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:6,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 3. termin (mai–jun)",short:"MVA 3. termin",w:"MVA-registrerte",d:"<b>31. august 2026</b> (sommertermin)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:8,dm:31,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 4. termin (jul–aug)",short:"MVA 4. termin",w:"MVA-registrerte",d:"<b>12. oktober 2026</b> (10. = lørdag)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:10,dm:12,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 5. termin (sep–okt)",short:"MVA 5. termin",w:"MVA-registrerte",d:"<b>10. desember 2026</b>",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:12,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA-melding 6. termin (nov–des)",short:"MVA 6. termin",w:"MVA-registrerte",d:"<b>10. februar 2026</b> (for nov–des i fjor)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:2,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"MVA årsoppgave",short:"MVA årsoppgave",w:"Omsetning < 1 mill. (årstermin)",d:"<b>10. mars 2026</b> (for hele fjoråret)",f:"årlig",i:"h",c:"mva",a:["bedrift"],mo:3,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
-    {n:"Søknad om MVA-årstermin",short:"Søknad MVA-årstermin",w:"Vil levere årlig i stedet",d:"<b>1. februar 2026</b> (vindu 10. des–1. feb)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:2,dm:1,p:"Mister årstermin dette året",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/registrere/"},
-    {n:"MVA primærnæring",short:"MVA primærnæring",w:"Jord / skog / fiske",d:"<b>10. april 2026</b> (for hele fjoråret)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:4,dm:10,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 1. termin (jan–feb)",short:"MVA 1. termin",w:"MVA-registrerte",d:"{d}",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:4,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 2. termin (mar–apr)",short:"MVA 2. termin",w:"MVA-registrerte",d:"{d}",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:6,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 3. termin (mai–jun)",short:"MVA 3. termin",w:"MVA-registrerte",d:"{d} (sommertermin)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:8,dm:31,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 4. termin (jul–aug)",short:"MVA 4. termin",w:"MVA-registrerte",d:"{d}",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:10,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 5. termin (sep–okt)",short:"MVA 5. termin",w:"MVA-registrerte",d:"{d}",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:12,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA-melding 6. termin (nov–des)",short:"MVA 6. termin",w:"MVA-registrerte",d:"{d} (for nov–des i fjor)",f:"2-månedlig",i:"k",c:"mva",a:["bedrift"],mo:2,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"MVA årsoppgave",short:"MVA årsoppgave",w:"Omsetning < 1 mill. (årstermin)",d:"{d} (for hele fjoråret)",f:"årlig",i:"h",c:"mva",a:["bedrift"],mo:3,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
+    {n:"Søknad om MVA-årstermin",short:"Søknad MVA-årstermin",w:"Vil levere årlig i stedet",d:"{d} (vindu 10. des–1. feb)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:2,dm:1,mv:1,p:"Mister årstermin dette året",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/registrere/"},
+    {n:"MVA primærnæring",short:"MVA primærnæring",w:"Jord / skog / fiske",d:"{d} (for hele fjoråret)",f:"årlig",i:"m",c:"mva",a:["bedrift"],mo:4,dm:10,mv:1,p:"Tvangsmulkt + forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/betale-mva/"},
     {n:"MVA-registrering ved 50 000 kr",short:"MVA-registrering (50 000)",w:"Nystartet ENK / AS",d:"Straks omsetningen passerer <b>50 000 kr</b> siste 12 mnd",f:"hendelse",i:"h",c:"mva",a:["bedrift"],mo:0,p:"Etterberegning; feilfakturert mva",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/avgifter/mva/registrere/"},
 
     /* ── Skattemelding & skatteoppgjør ── */
-    {n:"Skattemelding — privatperson",short:"Skattemelding (privat)",w:"Lønn / pensjon / uføre",d:"<b>30. april 2026</b>",f:"årlig",i:"k",c:"skm",a:["privat"],mo:4,dm:30,p:"Tvangsmulkt; mister rett til å rette selv",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/"},
-    {n:"Skattemelding — næring og selskap",short:"Skattemelding (næring)",w:"ENK, AS",d:"<b>31. mai</b> → søndag, i praksis <b>1. juni 2026</b>",f:"årlig",i:"k",c:"skm",a:["bedrift"],mo:6,dm:1,p:"Tvangsmulkt",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/skattemelding-naringsdrivende/"},
-    {n:"Utsatt skattemelding — privat",short:"Utsettelse (privat)",w:"Trenger mer tid",d:"Søk før <b>30. april 2026</b> → +1 mnd",f:"årlig",i:"h",c:"skm",a:["privat"],mo:4,dm:30,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsattfrist/"},
-    {n:"Utsatt skattemelding — næring",short:"Utsettelse (næring)",w:"ENK, selskap, regnskapsfører",d:"Søk før <b>31. mai</b> → ny frist <b>30. juni 2026</b>",f:"årlig",i:"h",c:"skm",a:["bedrift"],mo:5,dm:31,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsattfrist/"},
+    {n:"Skattemelding — privatperson",short:"Skattemelding (privat)",w:"Lønn / pensjon / uføre",d:"{d}",f:"årlig",i:"k",c:"skm",a:["privat"],mo:4,dm:30,mv:1,p:"Tvangsmulkt; mister rett til å rette selv",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/"},
+    {n:"Skattemelding — næring og selskap",short:"Skattemelding (næring)",w:"ENK, AS",d:"{d}",f:"årlig",i:"k",c:"skm",a:["bedrift"],mo:5,dm:31,mv:1,p:"Tvangsmulkt",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/skattemelding-naringsdrivende/"},
+    {n:"Utsatt skattemelding — privat",short:"Utsettelse (privat)",w:"Trenger mer tid",d:"Søk før {d} → +1 mnd",f:"årlig",i:"h",c:"skm",a:["privat"],mo:4,dm:30,mv:1,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsattfrist/"},
+    {n:"Utsatt skattemelding — næring",short:"Utsettelse (næring)",w:"ENK, selskap, regnskapsfører",d:"Søk før {d} → ny frist <b>30. juni</b>",f:"årlig",i:"h",c:"skm",a:["bedrift"],mo:5,dm:31,mv:1,p:"Får ikke utsatt leveringsfrist",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattemelding/utsattfrist/"},
     {n:"Egenretting av skattemelding",short:"Egenretting (3 år)",w:"Oppdaget feil selv",d:"<b>3 år</b> fra leveringsfristen",f:"hendelse",i:"m",c:"skm",a:["privat","bedrift"],mo:0,p:"Kan ikke lenger endre meldingen selv",s:"Skatteforvaltningsloven §9-4",u:"https://lovdata.no/lov/2016-05-27-14/§9-4"},
-    {n:"Skatteoppgjør — penger til gode",short:"Skatteoppgjør til gode",w:"Alle",d:"Løpende; alle senest <b>1. desember 2026</b>",f:"årlig",i:"h",c:"skm",a:["privat","bedrift"],mo:12,dm:1,p:"Har du restskatt, løper det rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/"},
-    {n:"Skattekort for neste år",short:"Skattekort neste år",w:"Alle med lønn eller pensjon",d:"Klart ca. <b>15. desember 2026</b>",f:"årlig",i:"m",c:"skm",a:["privat"],mo:12,dm:15,p:"Feil skattekort gir feil trekk fra januar",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/"},
+    {n:"Skatteoppgjør — penger til gode",short:"Skatteoppgjør til gode",w:"Alle",d:"Løpende; alle senest {d}",f:"årlig",i:"h",c:"skm",a:["privat","bedrift"],mo:12,dm:1,p:"Har du restskatt, løper det rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/"},
+    {n:"Skattekort for neste år",short:"Skattekort neste år",w:"Alle med lønn eller pensjon",d:"Klart ca. {d}",f:"årlig",i:"m",c:"skm",a:["privat"],mo:12,dm:15,yr:2026,dx:"Kommer i desember. Skatteetaten publiserer datoen hvert år.",p:"Feil skattekort gir feil trekk fra januar",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/"},
 
     /* ── Forskuddsskatt & restskatt ── */
-    {n:"Forskuddsskatt ENK/privat — 1. termin",short:"Forskuddsskatt 1. termin",w:"ENK, ANS/DA, privat",d:"<b>16. mars 2026</b> (15. = søndag)",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:3,dm:16,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
-    {n:"Forskuddsskatt ENK/privat — 2. termin",short:"Forskuddsskatt 2. termin",w:"ENK, ANS/DA, privat",d:"<b>15. juni 2026</b>",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:6,dm:15,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
-    {n:"Forskuddsskatt ENK/privat — 3. termin",short:"Forskuddsskatt 3. termin",w:"ENK, ANS/DA, privat",d:"<b>15. september 2026</b>",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:9,dm:15,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
-    {n:"Forskuddsskatt ENK/privat — 4. termin",short:"Forskuddsskatt 4. termin",w:"ENK, ANS/DA, privat",d:"<b>15. desember 2026</b>",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:12,dm:15,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
-    {n:"Forskuddsskatt AS — 1. termin",short:"Forskuddsskatt AS 1.",w:"AS / upersonlige",d:"<b>16. februar 2026</b> (15. = søndag)",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:2,dm:16,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/forskuddsskatt-for-aksjeselskap-og-andre/"},
-    {n:"Forskuddsskatt AS — 2. termin",short:"Forskuddsskatt AS 2.",w:"AS / upersonlige",d:"<b>15. april 2026</b>",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:4,dm:15,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/forskuddsskatt-for-aksjeselskap-og-andre/"},
-    {n:"Tilleggsforskudd (unngå rente)",short:"Tilleggsforskudd",w:"Venter restskatt",d:"<b>31. mai</b> → betal innen <b>1. juni 2026</b>",f:"årlig",i:"m",c:"fsk",a:["privat","bedrift"],mo:5,dm:31,p:"Rente på restskatt du kunne unngått",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/tilleggsforskudd/"},
-    {n:"Restskatt — 1. faktura",short:"Restskatt 1. faktura",w:"Skylder skatt fra i fjor",d:"Oppgjør ≤ juni → <b>20. august 2026</b>",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:8,dm:20,p:"HELE restskatten forfaller straks + rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
-    {n:"Restskatt — 2. faktura",short:"Restskatt 2. faktura",w:"Restskatt over 1 000 kr",d:"Oppgjør ≤ juni → <b>24. september 2026</b>",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:9,dm:24,p:"Forsinkelsesrente på restbeløpet",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 1. termin",short:"Forskuddsskatt 1. termin",w:"ENK, ANS/DA, privat",d:"{d}",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:3,dm:15,mv:1,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 2. termin",short:"Forskuddsskatt 2. termin",w:"ENK, ANS/DA, privat",d:"{d}",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:6,dm:15,mv:1,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 3. termin",short:"Forskuddsskatt 3. termin",w:"ENK, ANS/DA, privat",d:"{d}",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:9,dm:15,mv:1,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
+    {n:"Forskuddsskatt ENK/privat — 4. termin",short:"Forskuddsskatt 4. termin",w:"ENK, ANS/DA, privat",d:"{d}",f:"kvartalsvis",i:"h",c:"fsk",a:["bedrift","privat"],mo:12,dm:15,mv:1,p:"Forsinkelsesrente; restskatt med rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/forskuddsskatt/"},
+    {n:"Forskuddsskatt AS — 1. termin",short:"Forskuddsskatt AS 1.",w:"AS / upersonlige",d:"{d}",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:2,dm:15,mv:1,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/forskuddsskatt-for-aksjeselskap-og-andre/"},
+    {n:"Forskuddsskatt AS — 2. termin",short:"Forskuddsskatt AS 2.",w:"AS / upersonlige",d:"{d}",f:"halvårlig",i:"h",c:"fsk",a:["bedrift"],mo:4,dm:15,mv:1,p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/forskuddsskatt-for-aksjeselskap-og-andre/"},
+    {n:"Tilleggsforskudd (unngå rente)",short:"Tilleggsforskudd",w:"Venter restskatt",d:"Betal innen {d}",f:"årlig",i:"m",c:"fsk",a:["privat","bedrift"],mo:5,dm:31,mv:1,p:"Rente på restskatt du kunne unngått",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/skatt/forskuddsskatt/tilleggsforskudd/"},
+    {n:"Restskatt — 1. faktura",short:"Restskatt 1. faktura",w:"Skylder skatt fra i fjor",d:"Oppgjør ≤ juni → {d}",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:8,dm:20,mv:1,p:"HELE restskatten forfaller straks + rente",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
+    {n:"Restskatt — 2. faktura",short:"Restskatt 2. faktura",w:"Restskatt over 1 000 kr",d:"Oppgjør ≤ juni → {d}",f:"hendelse",i:"h",c:"fsk",a:["privat","bedrift"],mo:9,dm:24,mv:1,p:"Forsinkelsesrente på restbeløpet",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skatteoppgjor/restskatt/"},
 
     /* ── Årsregnskap & selskap ── */
-    {n:"Årsregnskap til Regnskapsregisteret",short:"Årsregnskap",w:"Regnskapspliktige",d:"<b>31. juli 2026</b> — kan IKKE forlenges",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:7,dm:31,p:"Forsinkelsesgebyr; styreansvar",s:"Brønnøysundregistrene",u:"https://www.brreg.no/en/submission-of-annual-accounts/"},
-    {n:"Ordinær generalforsamling AS",short:"Generalforsamling AS",w:"Alle AS / ASA",d:"<b>30. juni 2026</b> (6 mnd etter årsslutt)",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:6,dm:30,p:"Brudd på aksjeloven §5-5",s:"Aksjeloven §5-5",u:"https://lovdata.no/dokument/NL/lov/1997-06-13-44/KAPITTEL_5"},
-    {n:"Aksjonærregisteroppgaven (RF-1086)",short:"Aksjonærregisteroppgaven",w:"AS / ASA, sparebanker",d:"<b>31. januar 2026</b> (for i fjor)",f:"årlig",i:"h",c:"reg",a:["bedrift"],mo:1,dm:31,p:"Tvangsmulkt; feil skatt for aksjonærene",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/forms/aksjonarregisteroppgaven/"},
-    {n:"SkatteFUNN — søknad",short:"SkatteFUNN",w:"AS / næring med FoU",d:"<b>1. september 2026</b> (garantifrist)",f:"årlig",i:"m",c:"reg",a:["bedrift"],mo:9,dm:1,p:"Mister garantert behandling for året",s:"Forskningsrådet",u:"https://www.forskningsradet.no/skattefunn/"},
+    {n:"Årsregnskap til Regnskapsregisteret",short:"Årsregnskap",w:"Regnskapspliktige",d:"{d} — kan IKKE forlenges",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:7,dm:31,p:"Forsinkelsesgebyr; styreansvar",s:"Brønnøysundregistrene",u:"https://www.brreg.no/en/submission-of-annual-accounts/"},
+    {n:"Ordinær generalforsamling AS",short:"Generalforsamling AS",w:"Alle AS / ASA",d:"{d} (6 mnd etter årsslutt)",f:"årlig",i:"k",c:"reg",a:["bedrift"],mo:6,dm:30,p:"Brudd på aksjeloven §5-5",s:"Aksjeloven §5-5",u:"https://lovdata.no/dokument/NL/lov/1997-06-13-44/KAPITTEL_5"},
+    {n:"Aksjonærregisteroppgaven (RF-1086)",short:"Aksjonærregisteroppgaven",w:"AS / ASA, sparebanker",d:"{d} (for i fjor)",f:"årlig",i:"h",c:"reg",a:["bedrift"],mo:1,dm:31,mv:1,p:"Tvangsmulkt; feil skatt for aksjonærene",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/forms/aksjonarregisteroppgaven/"},
+    {n:"SkatteFUNN — søknad",short:"SkatteFUNN",w:"AS / næring med FoU",d:"{d} (garantifrist)",f:"årlig",i:"m",c:"reg",a:["bedrift"],mo:9,dm:1,p:"Mister garantert behandling for året",s:"Forskningsrådet",u:"https://www.forskningsradet.no/skattefunn/"},
     {n:"Oppbevaring — primærdokumentasjon",short:"Oppbevaring primærdok.",w:"Bokføringspliktige",d:"<b>5 år</b> etter regnskapsårets slutt",f:"løpende",i:"m",c:"reg",a:["bedrift"],mo:0,p:"Bokføringsovertredelse; gebyr",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/rettskilder/type/kunngjoringer/oppbevaringstiden-for-regnskapsmateriale-endres-fra-ti-ar-til-fem-ar/"},
     {n:"Oppbevaring — sekundærdokumentasjon",short:"Oppbevaring sekundærdok.",w:"Bokføringspliktige",d:"<b>3 år 6 mnd</b> etter regnskapsårets slutt",f:"løpende",i:"m",c:"reg",a:["bedrift"],mo:0,p:"Bokføringsovertredelse",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/rettskilder/type/kunngjoringer/oppbevaringstiden-for-regnskapsmateriale-endres-fra-ti-ar-til-fem-ar/"},
 
@@ -4199,13 +4659,13 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     {n:"Yrkesskadeforsikring",short:"Yrkesskadeforsikring",w:"Har ansatte",d:"Fra <b>første ansettelse</b> (løpende plikt)",f:"løpende",i:"h",c:"amld",a:["bedrift"],mo:0,p:"Arbeidsgiver hefter personlig for skader",s:"Lovdata (yrkesskadeforsikringsloven)",u:"https://lovdata.no/lov/1989-06-16-65"},
 
     /* ── Privatøkonomi ── */
-    {n:"BSU — innskudd for årets fradrag",short:"BSU-innskudd",w:"Til og med året du fyller 33",d:"<b>31. desember 2026</b> — 10 % fradrag",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets skattefradrag",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/bank-og-lan/bsu/"},
-    {n:"IPS — innbetaling",short:"IPS-innbetaling",w:"18–75 år",d:"<b>31. desember 2026</b> — inntil 25 000 kr",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets utsatt-skatt-fordel",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/arbeid-trygd-og-pensjon/pensjon-og-uforetrygd/ny-ordning-for-skattefavorisert-individuell-sparing-til-pensjon/"},
+    {n:"BSU — innskudd for årets fradrag",short:"BSU-innskudd",w:"Til og med året du fyller 33",d:"{d} — 10 % fradrag",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets skattefradrag",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/bank-og-lan/bsu/"},
+    {n:"IPS — innbetaling",short:"IPS-innbetaling",w:"18–75 år",d:"{d} — inntil 25 000 kr",f:"årlig",i:"h",c:"priv",a:["privat"],mo:12,dm:31,p:"Mister årets utsatt-skatt-fordel",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/arbeid-trygd-og-pensjon/pensjon-og-uforetrygd/ny-ordning-for-skattefavorisert-individuell-sparing-til-pensjon/"},
     {n:"Frikort → bytt til skattekort",short:"Frikortgrense (100 000)",w:"Lav inntekt",d:"Bytt før du passerer <b>100 000 kr</b> (feriepenger teller med)",f:"hendelse",i:"h",c:"priv",a:["privat"],mo:0,p:"For lite trekk → restskatt",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/skattekort/frikort/"},
-    {n:"Salg av aksjer/fond før nyttår",short:"Aksjesalg før nyttår",w:"Verdipapirer utenfor ASK",d:"<b>31. desember 2026</b> — realisering treffer årets skatt",f:"årlig",i:"m",c:"priv",a:["privat"],mo:12,dm:31,p:"Gevinst/tap havner på neste års skatt",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/aksjer-og-verdipapirer/"},
-    {n:"Lånekassen — hovedsøknad (høst)",short:"Lånekassen (høst)",w:"Studenter / elever",d:"<b>15. november 2026</b> (høstsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:11,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
-    {n:"Lånekassen — hovedsøknad (vår)",short:"Lånekassen (vår)",w:"Studenter / elever",d:"<b>15. mars 2026</b> (vårsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:3,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
-    {n:"Lånekassen — inntektsgrense",short:"Lånekassen inntektsgrense",w:"Mottar støtte",d:"2026: <b>234 821 kr</b> (helår) / 587 053 kr (≤ 7 mnd)",f:"årlig",i:"m",c:"priv",a:["student"],mo:0,p:"Stipend gjøres om til lån",s:"Lånekassen",u:"https://lanekassen.no/nb-NO/stipend-og-lan/inntekt-og-formue/"},
+    {n:"Salg av aksjer/fond før nyttår",short:"Aksjesalg før nyttår",w:"Verdipapirer utenfor ASK",d:"{d} — realisering treffer årets skatt",f:"årlig",i:"m",c:"priv",a:["privat"],mo:12,dm:31,p:"Gevinst/tap havner på neste års skatt",s:"Skatteetaten",u:"https://www.skatteetaten.no/person/skatt/hjelp-til-riktig-skatt/aksjer-og-verdipapirer/"},
+    {n:"Lånekassen — hovedsøknad (høst)",short:"Lånekassen (høst)",w:"Studenter / elever",d:"{d} (høstsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:11,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
+    {n:"Lånekassen — hovedsøknad (vår)",short:"Lånekassen (vår)",w:"Studenter / elever",d:"{d} (vårsemester)",f:"halvårlig",i:"h",c:"priv",a:["student"],mo:3,dm:15,p:"Mister støtte for hele semesteret",s:"Lånekassen",u:"https://lanekassen.no/"},
+    {n:"Lånekassen — inntektsgrense",short:"Lånekassen inntektsgrense",w:"Mottar støtte",d:"2026: <b>234 821 kr</b> (helår) / 587 053 kr (≤ 7 mnd)",f:"årlig",i:"m",c:"priv",a:["student"],mo:0,yr:2026,dx:"Grensen for i år er ikke lagt inn ennå. Se Lånekassen.",p:"Stipend gjøres om til lån",s:"Lånekassen",u:"https://lanekassen.no/nb-NO/stipend-og-lan/inntekt-og-formue/"},
     {n:"Lånekassen — nedbetaling",short:"Lånekassen nedbetaling",w:"Tidligere studenter",d:"Fast forfall hver måned (standard <b>den 15.</b>)",f:"månedlig",i:"m",c:"priv",a:["privat","student"],mo:0,monthly:15,p:"Purregebyr og renter",s:"Lånekassen",u:"https://lanekassen.no/"},
 
     /* ── Juridiske frister ── */
@@ -4258,7 +4718,6 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   var MOF=["Januar","Februar","Mars","April","Mai","Juni","Juli","August","September","Oktober","November","Desember"];
   var MOL=["januar","februar","mars","april","mai","juni","juli","august","september","oktober","november","desember"];
   var WK=["Søndag","Mandag","Tirsdag","Onsdag","Torsdag","Fredag","Lørdag"];
-  var WHEEL_YEAR=2026;
 
   /* ═══ Hjelpere ═══ */
   function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
@@ -4280,11 +4739,52 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
   function makeState(){return {q:"",filter:"alle",today:new Date(),count:6,feat:true,prevOverflow:"",trigger:null};}
 
-  /* Helg → neste virkedag. Gjelder kun de gjentakende fristene under;
-     de faste mo/dm-datoene i D er allerede notert med riktig virkedag. */
+  /* Første påskedag (gregoriansk, Meeus/Jones/Butcher). */
+  function easter(y){
+    var a=y%19,b=Math.floor(y/100),c=y%100,e=b%4,f=Math.floor((b+8)/25),
+        g=Math.floor((b-f+1)/3),h=(19*a+b-Math.floor(b/4)-g+15)%30,
+        l=(32+2*e+2*Math.floor(c/4)-h-c%4)%7,m=Math.floor((a+11*h+22*l)/451),
+        n=h+l-7*m+114;
+    return new Date(y,Math.floor(n/31)-1,n%31+1);
+  }
+  /* Helligdager og lovfestede høytidsdager (1. og 17. mai) som "måned-dag". */
+  var HOL={};
+  function isHoliday(d){
+    var y=d.getFullYear();
+    if(!HOL[y]){
+      var e=easter(y),s={"1-1":1,"5-1":1,"5-17":1,"12-25":1,"12-26":1};
+      [-3,-2,0,1,39,49,50].forEach(function(n){
+        var x=new Date(y,e.getMonth(),e.getDate()+n);s[(x.getMonth()+1)+"-"+x.getDate()]=1;
+      });
+      HOL[y]=s;
+    }
+    return !!HOL[y][(d.getMonth()+1)+"-"+d.getDate()];
+  }
+  /* Lørdag, søndag eller helligdag → neste virkedag. */
   function workday(d){
-    while(d.getDay()===6||d.getDay()===0)d.setDate(d.getDate()+1);
+    while(d.getDay()===6||d.getDay()===0||isHoliday(d))d.setDate(d.getDate()+1);
     return d;
+  }
+  /* Fristdatoen i år y, eller null når fristen bare er kjent for et annet år (yr). */
+  function dateIn(x,y){
+    if(x.yr&&x.yr!==y)return null;
+    var d=new Date(y,x.mo-1,x.dm);
+    return x.mv?workday(d):d;
+  }
+  /* Datoformat på sidens språk (core.js setter <html lang>). */
+  var fmtL="",fmtF=null;
+  function fmtDate(d){
+    var l=document.documentElement.lang||"nb";
+    if(l==="en")l="en-GB";
+    try{ if(l!==fmtL){fmtF=new Intl.DateTimeFormat(l,{day:"numeric",month:"long",year:"numeric"});fmtL=l;} return fmtF.format(d); }
+    catch(e){ return d.getDate()+". "+MOL[d.getMonth()]+" "+d.getFullYear(); }
+  }
+  /* d-teksten for kortet: {d} byttes med datoen i år. */
+  function drule(x,st){
+    var y=st.today.getFullYear();
+    if(x.yr&&x.yr!==y)return esc(x.dx);
+    if(x.d.indexOf("{d}")<0)return x.d;
+    return x.d.replace("{d}","<b>"+esc(fmtDate(dateIn(x,y)))+"</b>");
   }
   /* De hyppigste fristene (A-melding, arbeidsgiveravgift, studielån) har ingen
      enkelt mo/dm og falt derfor helt ut av «neste frister» — de gjentar seg
@@ -4308,8 +4808,8 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
       });
       return best;
     }
-    d=new Date(y,x.mo-1,x.dm);
-    if(d0(d)<d0(today))d=new Date(y+1,x.mo-1,x.dm);
+    d=dateIn(x,y);
+    if(!d||d0(d)<d0(today))d=dateIn(x,y+1);
     return d;
   }
   function upcoming(st){
@@ -4324,7 +4824,7 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   function passes(x,st){
     if(st.filter!=="alle" && x.a.indexOf(st.filter)<0)return false;
     if(st.q){
-      var hay=(x.n+" "+x.w+" "+x.short+" "+strip(x.d)+" "+x.s+" "+x.f+" "+catTitle(x.c)+" "+x.a.map(function(a){return AUD[a]||a;}).join(" ")).toLowerCase();
+      var hay=(x.n+" "+x.w+" "+x.short+" "+strip(drule(x,st))+" "+x.s+" "+x.f+" "+catTitle(x.c)+" "+x.a.map(function(a){return AUD[a]||a;}).join(" ")).toLowerCase();
       // Valgt språk: søk også i oversettelsen (tom på norsk, der _ph ikke finnes).
       var en=[x.n,x.w,x.short,x.s,x.f,catTitle(x.c)].concat(x.d.split(/<[^>]+>/)).map(tr).join(" ").trim();
       if(en)hay+=" "+en.toLowerCase();
@@ -4396,24 +4896,26 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
   /* ═══ Modal-byggere ═══ */
   function renderWheel(st){
-    var cur=(st.today.getFullYear()===WHEEL_YEAR)?st.today.getMonth():-1;
+    var y=st.today.getFullYear(),cur=st.today.getMonth();
     var out="";
     for(var m=0;m<12;m++){
-      var items=D.filter(function(x){return x.mo===m+1 && passes(x,st);}).sort(function(a,b){return a.dm-b.dm;});
+      var items=[];
+      D.forEach(function(x){var dt=x.mo&&dateIn(x,y);if(dt&&dt.getMonth()===m&&passes(x,st))items.push({x:x,dd:dt.getDate()});});
+      items.sort(function(a,b){return a.dd-b.dd;});
       var lis=items.length
-        ? items.map(function(x){return '<li><span class="dd">'+x.dm+'.</span><span class="nn">'+esc(x.short)+'</span></li>';}).join("")
+        ? items.map(function(o){return '<li><span class="dd">'+o.dd+'.</span><span class="nn">'+esc(o.x.short)+'</span></li>';}).join("")
         : '<li class="empty"><span class="dd">—</span></li>';
       out+='<div class="fr-mon'+(m===cur?' cur':'')+'"><h4><span>'+MOF[m]+'</span><span class="c">'+(items.length||"")+'</span></h4><ul>'+lis+'</ul></div>';
     }
     return out;
   }
-  function renderCard(x){
+  function renderCard(x,st){
     var im=IMP[x.i];
     return '<article class="fr-card imp-'+x.i+'">'
       +'<div class="fr-card-h"><h4 class="fr-card-name">'+esc(x.n)+'</h4>'
         +'<span class="fr-imp '+x.i+'" title="'+esc(im.f)+'">'+esc(im.s)+'</span></div>'
       +'<div class="fr-card-who">'+esc(x.w)+'</div>'
-      +'<div class="fr-drule">'+x.d+'</div>'
+      +'<div class="fr-drule">'+drule(x,st)+'</div>'
       +'<div class="fr-card-meta"><span class="fr-freq">'+esc(x.f)+'</span>'
         +x.a.map(function(a){return '<span class="fr-aud">'+audLabel(a)+'</span>';}).join("")+'</div>'
       +'<div class="fr-miss"><span class="fr-miss-l" data-i18n="fr.miss">'+T("fr.miss","Hvis du er for sen")+'</span>'+esc(x.p)+'</div>'
@@ -4430,11 +4932,16 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
       any=true;
       html+='<section class="fr-cat"><div class="fr-cat-h"><h3>'+esc(cat.t)+'</h3>'
         +'<span class="fr-badge">'+items.length+'</span></div>'
-        +'<div class="fr-cards">'+items.map(renderCard).join("")+'</div></section>';
+        +'<div class="fr-cards">'+items.map(function(x){return renderCard(x,st);}).join("")+'</div></section>';
     });
     return {html:html,any:any};
   }
   function renderModal(modal,st){
+    /* Titlene følger året; språkfilene har et fast årstall. */
+    modal.querySelectorAll('[data-i18n="m.title"],[data-i18n="m.wheel"]').forEach(function(el){
+      var t=el.textContent,n=t.replace(/\b20\d\d\b/,String(st.today.getFullYear()));
+      if(n!==t)el.textContent=n;
+    });
     modal.querySelector("[data-fr-wheel]").innerHTML=renderWheel(st);
     var cats=renderCats(st);
     modal.querySelector("[data-fr-cats]").innerHTML=cats.html;
@@ -4516,6 +5023,12 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     function openModal(e){
       if(e){e.preventDefault();st.trigger=e.currentTarget;}
       if(st.hideTimer){clearTimeout(st.hideTimer);st.hideTimer=null;}
+      // Starter på Privat eller Bedrift etter knappen over kategoriene, til du velger filter selv.
+      var md=document.documentElement.getAttribute("data-modus");
+      if(!st.egetFilter && (md==="privat"||md==="bedrift")){
+        st.filter=md;
+        modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q.getAttribute("data-fr-filter")===md?"true":"false");});
+      }
       renderModal(modal,st);
       modal.hidden=false;modal.setAttribute("aria-hidden","false");
       requestAnimationFrame(function(){modal.classList.add("open");});
@@ -4541,14 +5054,14 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
     modal.querySelectorAll("[data-fr-filter]").forEach(function(pill){
       pill.addEventListener("click",function(){
-        st.filter=pill.getAttribute("data-fr-filter");
+        st.filter=pill.getAttribute("data-fr-filter");st.egetFilter=true;
         modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q===pill?"true":"false");});
         renderModal(modal,st);
       });
     });
     modal.querySelectorAll("[data-fr-clear]").forEach(function(b){
       b.addEventListener("click",function(){
-        st.q="";st.filter="alle";si.value="";
+        st.q="";st.filter="alle";st.egetFilter=true;si.value="";
         modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q.getAttribute("data-fr-filter")==="alle"?"true":"false");});
         renderModal(modal,st);
       });

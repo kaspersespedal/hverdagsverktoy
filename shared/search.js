@@ -44,11 +44,11 @@ var SEARCH_DATA = [
   {name:'Uttakskalkulator',desc:'Skatt ved uttak av eiendeler fra virksomhet',url:'/skatt/uttak/',tags:'uttak skatt virksomhet eiendeler sktl 5-2 withdrawal',type:'tool',page:'Skatt',sk:'uttak'},
   {name:'Effektiv skatt ved utdeling',desc:'Aksjonærmodellen og foretaksmodellen',url:'/skatt/utbytte/',tags:'utdeling utbytte aksjonærmodellen foretaksmodellen selskapsskatt effektiv skatt distribution',type:'tool',page:'Skatt',sk:'utdeling'},
   // Avgift
-  {name:'Justeringskalkulator',desc:'Justering av inngående MVA ved bruksendring',url:'/avgift/vat/',tags:'justering mva inngående bruksendring kapitalvare justeringsperiode mval kap 9',type:'tool',page:'Avgift',sk:'mvajust'},
+  {name:'Justeringskalkulator',desc:'Justering av inngående MVA ved bruksendring',url:'/avgift/vat/#vat-adj-section',tags:'justering mva inngående bruksendring kapitalvare justeringsperiode mval kap 9',type:'tool',page:'Avgift',sk:'mvajust'},
 
   // Selskap
   {name:'Velg selskapsform',desc:'Hvilken selskapsform passer for deg? ENK, AS, ANS, DA eller KS',url:'/selskap/#selskap-velg-card',tags:'selskapsform velge starte bedrift virksomhet enk as ans da ks company form choose',type:'tool',page:'Selskap',sk:'selskapVelg'},
-  {name:'Enkeltpersonforetak (ENK)',desc:'Den enkleste måten å starte for seg selv — uten krav til kapital',url:'/selskap/#selskap-enk-card',tags:'enkeltpersonforetak enk selvstendig næringsdrivende frilanser gratis registrering sole proprietorship',type:'tool',page:'Selskap',sk:'enk'},
+  {name:'Enkeltpersonforetak (ENK)',desc:'Den enkleste måten å starte for seg selv — uten krav til kapital',url:'/selskap/#selskap-enk-card',tags:'enkeltpersonforetak enk selvstendig næringsdrivende frilanser sole proprietorship',type:'tool',page:'Selskap',sk:'enk'},
   {name:'Aksjeselskap (AS)',desc:'Begrenset ansvar, aksjekapital og profesjonell drift',url:'/selskap/#selskap-as-card',tags:'aksjeselskap as stiftelse styret generalforsamling aksjekapital vedtekter 30000 company limited',type:'tool',page:'Selskap',sk:'as'},
   {name:'Ansvarlig selskap (ANS / DA)',desc:'Partnerskap med personlig ansvar — solidarisk eller delt',url:'/selskap/#selskap-ans-card',tags:'ansvarlig selskap ans da partnerskap solidarisk delt ansvar selskapsavtale partnership',type:'tool',page:'Selskap',sk:'ans'},
   {name:'Kommandittselskap (KS)',desc:'To typer deltakere med ulik risiko — komplementar og kommandittist',url:'/selskap/#selskap-ks-card',tags:'kommandittselskap ks komplementar kommandittist limited partnership begrenset ansvar',type:'tool',page:'Selskap',sk:'ks'},
@@ -295,12 +295,12 @@ var CURRENT_SECTION = null;
    clean and makes it trivial to add more mappings later. */
 var URL_TO_I18N_KEYS = {
   // Privatøkonomi
-  '/personlig/#budsjett-wrapper': ['budsjettTitle','budsjettDesc','budsjettHowtoTitle','budsjettHowtoDesc','tabPerso','dashDescPerso'],
-  '/personlig/#bil-wrapper':       ['bilTitle','bilDesc'],
-  '/personlig/#spare-wrapper':     ['spareTitle','spareDesc'],
-  '/personlig/#studie-wrapper':    ['studieTitle','studieDesc'],
-  '/personlig/#lonn-wrapper':      ['lonnTitle','lonnDesc','lonnHowtoTitle','lonnHowtoDesc'],
-  '/personlig/#abo-wrapper':       ['aboTitle','aboDesc'],
+  '/personlig/budsjett/':          ['budsjettTitle','budsjettDesc','budsjettHowtoTitle','budsjettHowtoDesc','tabPerso','dashDescPerso'],
+  '/personlig/bil/':               ['bilTitle','bilDesc'],
+  '/personlig/spare/':             ['spareTitle','spareDesc'],
+  '/personlig/studie/':            ['studieTitle','studieDesc'],
+  '/personlig/lonn/':              ['lonnTitle','lonnDesc','lonnHowtoTitle','lonnHowtoDesc'],
+  '/personlig/abo/':               ['aboTitle','aboDesc'],
   // Boliglån
   '/boliglan/mor/':        ['morTitle','morDesc','morInfoTitle','morInfoDesc','tabMor'],
   '/boliglan/maxlan/':     ['maxlanTitle','maxlanDesc'],
@@ -308,29 +308,30 @@ var URL_TO_I18N_KEYS = {
   '/boliglan/bsu/':       ['morBsuTitle','morBsuDesc'],
   // Kalkulator (fagkalkulatorer)
   '/kalkulator/':                  ['tabBasic','cmBasic','cmLabel'],
-  '/kalkulator/#scientific':       ['cmScientific'],
-  '/kalkulator/#unit':             ['cmUnit'],
-  '/kalkulator/#finance':          ['cmFinance','cmFinCalcs'],
-  '/avgift/#aga-wrapper':          ['lblAga','agaRTotal','agaSal','salAgaTitle','salAgaDesc'],
-  '/kalkulator/#avs':              ['lblAvs'],
-  '/kalkulator/#ferie':            ['lblFerie','agaFerie','lonnRlFeriepenger'],
-  '/kalkulator/#rente':            ['lblRente','renteEffLabel','renteAmountLabel','renteIntro'],
-  '/kalkulator/#valgevinst':       ['lblValgevinst'],
-  '/kalkulator/#likvid':           ['lblLikvid','likvidIntro'],
-  '/kalkulator/#npv':              ['npvTitle','npvDesc','cmFcNpv'],
+  '/kalkulator/enkel/':            ['cmBasic'],
+  '/kalkulator/scientific/':       ['cmScientific'],
+  '/kalkulator/unit/':             ['cmUnit'],
+  '/kalkulator/finance/':          ['cmFinance','cmFinCalcs'],
+  '/avgift/aga/':                  ['lblAga','agaRTotal','agaSal','salAgaTitle','salAgaDesc'],
+  '/kalkulator/avs/':              ['lblAvs'],
+  '/kalkulator/ferie/':            ['lblFerie','agaFerie','lonnRlFeriepenger'],
+  '/kalkulator/rente/':            ['lblRente','renteEffLabel','renteAmountLabel','renteIntro'],
+  '/kalkulator/valgevinst/':       ['lblValgevinst'],
+  '/kalkulator/likviditet/':       ['lblLikvid','likvidIntro'],
+  '/kalkulator/npv/':              ['npvTitle','npvDesc','cmFcNpv'],
   '/kalkulator/dekningsbidrag/':  ['kalkDekningsbidragTitle','kalkDekningsbidragSubtitle','kalkToolDbTitle','kalkToolDbDesc'],
-  '/kalkulator/#pensjon':          ['lblPensjon','pensjonHint'],
+  '/personlig/pensjon/':           ['lblPensjon','pensjonHint'],
   '/kalkulator/tilbud/':          ['kalkTilbudHeroTitle','kalkTilbudHeroDesc','kalkTilbudHowtoTitle'],
-  '/kalkulator/#lvu':              ['lblLvu','lvuRSal','lvuRDiv','lvuGross'],
+  '/kalkulator/lonnut/':           ['lblLvu','lvuRSal','lvuRDiv','lvuGross'],
   // Skatt
-  '/skatt/#sal-salary-card':       ['salTitle','salDesc','tabSal','cmFcSal'],
-  '/skatt/#sal-uttak-card':        ['uttakTitle','uttakDesc','tabSal'],
-  '/skatt/#sal-utdeling-card':     ['utdelingTitle','utdelingDesc','tabSal'],
-  '/skatt/#formue-wrapper':        ['formueTitle','formueDesc'],
-  '/skatt/#reise-wrapper':         ['reiseTitle','reiseDesc'],
+  '/skatt/inntekt/':               ['salTitle','salDesc','tabSal','cmFcSal','skattHeroToolInntektTitle'],
+  '/skatt/uttak/':                 ['uttakTitle','uttakDesc','tabSal'],
+  '/skatt/utbytte/':               ['utdelingTitle','utdelingDesc','tabSal'],
+  '/skatt/formue/':                ['formueTitle','formueDesc'],
+  '/skatt/reise/':                 ['reiseTitle','reiseDesc'],
   // Avgift
-  '/avgift/#vat-wrapper':          ['vatTitle','vatDesc','tabVat','cmFcVat'],
-  '/avgift/#vat-adj-card':         ['adjTitle','adjDesc','tabVat'],
+  '/avgift/vat/':                  ['vatTitle','vatDesc','tabVat','cmFcVat'],
+  '/avgift/vat/#vat-adj-section':  ['adjTitle','adjDesc','tabVat'],
   // Selskap
   '/selskap/#selskap-velg-card':    ['tabSelskap','dashDescSelskap'],
   '/selskap/#selskap-as-card':     ['tabSelskap','dashDescSelskap'],
@@ -348,15 +349,18 @@ var URL_TO_I18N_KEYS = {
    Maps each search item's URL to translation keys for the DISPLAYED
    title and description. Used when rendering result rows so the
    dropdown respects the active UI language. Falls back to the
-   hardcoded Norwegian name/desc when a key is missing or empty. */
+   hardcoded Norwegian name/desc when a key is missing or empty.
+   Navn og beskrivelser som mangler her, oversettes av _ph-ordboka i
+   core.js (hele teksten, f.eks. «Enkel kalkulator» → «Simple calculator»).
+   notNo: gjelder ikke på norsk — der vises teksten i SEARCH_DATA
+   (nøkkelen er ofte en kort etikett, f.eks. «Abonnement»). */
 var URL_TO_DISPLAY = {
   // Privatøkonomi
-  '/personlig/#budsjett-wrapper': {title:'budsjettTitle', desc:'budsjettDesc'},
-  '/personlig/#bil-wrapper':      {title:'bilTitle',      desc:'bilDesc'},
-  '/personlig/#spare-wrapper':    {title:'spareTitle',    desc:'spareDesc'},
-  '/personlig/#studie-wrapper':   {title:'studieTitle',   desc:'studieDesc'},
-  '/personlig/#lonn-wrapper':     {title:'lonnTitle',     desc:'lonnDesc'},
-  '/personlig/#abo-wrapper':      {title:'aboTitle',      desc:'aboDesc'},
+  '/personlig/budsjett/':         {title:'budsjettTitle', desc:'budsjettDesc', notNo:true},
+  '/personlig/lonn/':             {title:'lonnTitle',     desc:'lonnDesc', notNo:true},
+  '/personlig/bil/':              {title:'bilTitle',      desc:'bilDesc', notNo:true},
+  '/personlig/spare/':            {desc:'spareDesc',      notNo:true},
+  '/personlig/abo/':              {title:'aboTitle',      notNo:true},
   // Boliglån
   '/boliglan/mor/':       {title:'morTitle',      desc:'morDesc'},
   '/boliglan/maxlan/':    {title:'maxlanTitle',   desc:'maxlanDesc'},
@@ -364,29 +368,17 @@ var URL_TO_DISPLAY = {
   '/boliglan/bsu/':      {title:'morBsuTitle',   desc:'morBsuDesc'},
   // Kalkulator
   '/kalkulator/timer/':           {title:'timerTitle',    desc:'timerSearchDesc'},
-  '/kalkulator/':                 {title:'cmBasic'},
-  '/kalkulator/#scientific':      {title:'cmScientific'},
-  '/kalkulator/#unit':            {title:'cmUnit'},
-  '/kalkulator/#finance':         {title:'cmFinance'},
-  '/avgift/#aga-wrapper':         {title:'lblAga'},
-  '/kalkulator/#avs':             {title:'lblAvs'},
-  '/kalkulator/#ferie':           {title:'lblFerie'},
-  '/kalkulator/#rente':           {title:'lblRente',      desc:'renteIntro'},
-  '/kalkulator/#valgevinst':      {title:'lblValgevinst'},
-  '/kalkulator/#likvid':          {title:'lblLikvid',     desc:'likvidIntro'},
-  '/kalkulator/#npv':             {title:'npvTitle',      desc:'npvDesc'},
+  '/avgift/aga/':                 {title:'lblAga',        notNo:true},
+  '/kalkulator/valgevinst/':      {title:'lblValgevinst', notNo:true},
+  '/kalkulator/npv/':             {title:'npvTitle',      notNo:true},
   '/kalkulator/dekningsbidrag/': {title:'kalkToolDbTitle', desc:'kalkToolDbDesc'},
-  '/kalkulator/#pensjon':         {title:'lblPensjon',    desc:'pensjonHint'},
-  '/kalkulator/#lvu':             {title:'lblLvu'},
-  // Skatt
-  '/skatt/#sal-salary-card':      {title:'salTitle',      desc:'salDesc'},
-  '/skatt/#sal-uttak-card':       {title:'uttakTitle',    desc:'uttakDesc'},
-  '/skatt/#sal-utdeling-card':    {title:'utdelingTitle', desc:'utdelingDesc'},
-  '/skatt/#formue-wrapper':       {title:'formueTitle',   desc:'formueDesc'},
-  '/skatt/#reise-wrapper':        {title:'reiseTitle',    desc:'reiseDesc'},
+  '/personlig/pensjon/':          {title:'lblPensjon',    notNo:true},
+  // Skatt — salTitle er «Lønn etter skatt», samme navn som /personlig/lonn/
+  '/skatt/inntekt/':              {title:'skattHeroToolInntektTitle', notNo:true},
+  '/skatt/uttak/':                {title:'uttakTitle',    notNo:true},
+  '/skatt/formue/':               {title:'formueTitle',   notNo:true},
   // Avgift
-  '/avgift/#vat-wrapper':         {title:'vatTitle',      desc:'vatDesc'},
-  '/avgift/#vat-adj-card':        {title:'adjTitle',      desc:'adjDesc'},
+  '/avgift/vat/#vat-adj-section': {title:'adjTitle',      notNo:true},
   // Selskap
   '/selskap/#selskap-velg-card':    {title:'selskapVelgTitle',    desc:'selskapVelgDesc'},
   '/selskap/#selskap-enk-card':     {title:'selskapEnkTitle',     desc:'selskapEnkDesc'},
@@ -425,9 +417,10 @@ function resolveDisplay(item){
   try {
     var r = (typeof R === 'function') ? R() : null;
     if(!r) return out;
+    var lang = (typeof region !== 'undefined') ? region : 'no';
     if(item.type === 'tool'){
       var disp = URL_TO_DISPLAY[item.url];
-      if(disp){
+      if(disp && !(lang === 'no' && disp.notNo)){
         if(disp.title && typeof r[disp.title]==='string' && r[disp.title].trim()) out.name = r[disp.title];
         if(disp.desc  && typeof r[disp.desc]==='string'  && r[disp.desc].trim())  out.desc = r[disp.desc];
       }
@@ -843,9 +836,9 @@ function renderResults(results, q){
     else rest.push(deduped[k]);
   }
   if(here.length && rest.length){
-    return '<div class="search-group-label">'+escHtml(T('searchGroupHere','På denne siden'))+'</div>' +
+    return '<div class="search-group-label" role="presentation">'+escHtml(T('searchGroupHere','På denne siden'))+'</div>' +
            groupRowsHtml(here.slice(0,5), q) +
-           '<div class="search-group-label">'+escHtml(T('searchGroupElse','Ellers på hverdagsverktøy'))+'</div>' +
+           '<div class="search-group-label" role="presentation">'+escHtml(T('searchGroupElse','Ellers på hverdagsverktøy'))+'</div>' +
            groupRowsHtml(rest.slice(0,4), q);
   }
   return groupRowsHtml(deduped.slice(0,7), q);
@@ -913,13 +906,15 @@ function initSearch(){
       '<input type="text" id="search-input" placeholder="'+placeholder+'" data-i18n-placeholder="searchPlaceholder" autocomplete="off" spellcheck="false" aria-label="'+placeholder+'" role="combobox" aria-expanded="false" aria-controls="search-dropdown">' +
       '<span class="search-keys" role="img" title="'+kbdHint+'" aria-label="'+kbdHint+'"><kbd>'+(IS_MAC ? '⌘' : 'Ctrl')+'</kbd><kbd>K</kbd></span>' +
     '</div>' +
-    '<div class="search-dropdown" id="search-dropdown" role="listbox" aria-live="polite"></div>' +
+    '<div class="search-dropdown" id="search-dropdown" role="listbox"></div>' +
+    '<div id="search-status" role="status" aria-live="polite" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;"></div>' +
     '<div class="search-suggestions" id="search-suggestions"></div>';
 
   point.parent.insertBefore(wrap, point.before);
 
   var input    = document.getElementById('search-input');
   var dropdown = document.getElementById('search-dropdown');
+  var statusEl = document.getElementById('search-status');
   var chips    = document.getElementById('search-suggestions');
   fitPlaceholder(input);
   var activeIdx = -1;
@@ -928,7 +923,12 @@ function initSearch(){
   function setOpen(open){
     dropdown.classList.toggle('visible', open);
     input.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if(!open) input.removeAttribute('aria-activedescendant');
+    if(!open){
+      input.removeAttribute('aria-activedescendant');
+      // Tom lista, ellers holder :not(:empty){display:block} den synlig (WCAG 1.4.13)
+      dropdown.innerHTML = '';
+      statusEl.textContent = '';
+    }
   }
 
   // Build suggestion chips (rebuildable on language change)
@@ -954,6 +954,9 @@ function initSearch(){
     if(!input.value.trim()){
       chips.classList.add('visible');
       setOpen(false);
+    } else if(!dropdown.classList.contains('visible')){
+      // Treffene ble lukket (Esc eller klikk utenfor): vis dem igjen når feltet får fokus
+      input.dispatchEvent(new Event('input'));
     }
   });
   // Backup: load intents at idle time even if user never focuses search
@@ -984,7 +987,7 @@ function initSearch(){
       dropdown.innerHTML =
         '<div class="search-no-results">' +
           '<div class="search-no-results-text">'+noResultsText+' «<strong>'+escHtml(q)+'</strong>»</div>' +
-          '<a href="#" class="search-missing-link" data-missing-query="'+escAttr(q)+'">'+missingText+'</a>' +
+          '<a href="#" class="search-missing-link" data-missing-query="'+escHtml(q)+'">'+missingText+'</a>' +
         '</div>';
       var missingLink = dropdown.querySelector('.search-missing-link');
       if(missingLink){
@@ -994,11 +997,13 @@ function initSearch(){
         });
       }
       setOpen(true);
+      statusEl.textContent = T('searchNoResults','Ingen treff');
       return;
     }
 
     dropdown.innerHTML = renderResults(results, q);
     setOpen(true);
+    statusEl.textContent = T('searchResultCount','{n} treff').replace('{n}', dropdown.querySelectorAll('.search-result').length);
   });
 
   // Keyboard navigation
@@ -1022,8 +1027,12 @@ function initSearch(){
         openContactWithSuggestion(input.value.trim());
       }
     } else if(e.key === 'Escape'){
-      input.blur();
-      setOpen(false);
+      // Første Esc lukker lista og beholder fokus i feltet; Esc på lukket liste forlater feltet
+      if(dropdown.classList.contains('visible')){
+        setOpen(false);
+      } else {
+        input.blur();
+      }
       chips.classList.remove('visible');
     }
   });
@@ -1068,7 +1077,6 @@ function initSearch(){
 
 /* ─── Helpers ─── */
 function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escAttr(s){ return s.replace(/'/g,"\\'").replace(/"/g,'\\"'); }
 
 function highlight(text, q){
   if(!q) return escHtml(text);
@@ -1098,7 +1106,7 @@ window.openContactWithSuggestion = function(query){
     return;
   }
   var subject = encodeURIComponent(T('trSharedSearchMailSubject', 'Forslag: {q}').split('{q}').join(query));
-  var body = encodeURIComponent(T('trSharedSearchMailBody', 'Jeg søkte etter «{q}» på hverdagsverktoy.com, men fant ingen resultater.\n\nDet hadde vært nyttig med et verktøy eller informasjon om dette.').split('{q}').join(query));
+  var body = encodeURIComponent(T('trSharedSearchMailBody', 'Jeg søkte etter «{q}» på hverdagsverktøy.no, men fant ingen resultater.\n\nDet hadde vært nyttig med et verktøy eller informasjon om dette.').split('{q}').join(query));
   window.location.href = 'mailto:kontakt@hverdagsverktoy.com?subject=' + subject + '&body=' + body;
 };
 

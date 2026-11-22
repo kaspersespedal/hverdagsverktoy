@@ -65,7 +65,7 @@
 <link rel="stylesheet" href="/shared/themes.css?v=v11">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v6">
 <link rel="stylesheet" href="/shared/components.css?v=v8">
-<link rel="stylesheet" href="/shared/site-shell.css?v=v249">
+<link rel="stylesheet" href="/shared/site-shell.css?v=v357">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 <link rel="stylesheet" href="/shared/learn.css?v=v8">
 <style>
@@ -261,12 +261,12 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <div class="tabs-wrap">
   <div class="container">
-    <div class="tabs" role="tablist">
+    <div class="tabs" role="navigation" aria-label="Kategorier">
       <a href="/personlig/budsjett/" class="tab" data-i18n="tabBudsjett">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg>
         Budsjett
       </a>
-      <a href="/personlig/" class="tab" aria-selected="true" data-i18n="tabPersonlig">
+      <a href="/personlig/" class="tab" aria-current="page" data-i18n="tabPersonlig">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg>
         Privatøkonomi
       </a>
@@ -338,24 +338,24 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <div class="ks-strip">
           <div class="ks-strip-cell"><span class="l" data-i18n="spareRDeposits">Innskutt</span><span class="v" id="sStripInn">0 kr</span></div>
           <div class="ks-strip-cell"><span class="l" data-i18n="spareRInterest">Avkastning</span><span class="v" id="sStripAvk">0 kr</span></div>
-          <div class="ks-strip-cell"><span class="l" data-i18n="spareStripSkatt">Skatt 22 %</span><span class="v" id="sStripSkatt">0 kr</span></div>
+          <div class="ks-strip-cell"><span class="l" data-i18n="spareStripSkatt" data-konto="bank">Skatt 22 %</span><span class="l" data-i18n="spareStripSkattGevinst" data-konto="fond ask" hidden>Skatt 37,84&nbsp;%</span><span class="v" id="sStripSkatt">0 kr</span></div>
           <div class="ks-strip-cell accent"><span class="l" data-i18n="spareStatTotal">Sluttbeløp</span><span class="v" id="sStripTotal">0 kr</span></div>
         </div>
 
         <div class="ks-body">
           <div class="ks-form">
             <section class="ks-section">
-              <div class="ik-section-head"><h3 data-i18n="spareSectionInput">Innskudd og periode</h3><span class="meta" data-i18n="spareMeta">norske banker, 2026</span></div>
+              <div class="ik-section-head"><h3 aria-level="2" data-i18n="spareSectionInput">Innskudd og periode</h3><span class="meta" data-i18n="spareMeta">norske banker, 2026</span></div>
               <div class="ik-stack">
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="spInpStart"><span data-i18n="spareLStart">Startbeløp (kr)</span></label>
-                    <input id="spInpStart" class="ik-input" type="text" inputmode="numeric" value="100 000" autocomplete="off">
-                    <div class="ik-hint" data-i18n="spareHintStart">Det du allerede har spart.</div>
+                    <input aria-describedby="spInpStart-hint" id="spInpStart" class="ik-input" type="text" inputmode="numeric" value="100 000" autocomplete="off">
+                    <div id="spInpStart-hint" class="ik-hint" data-i18n="spareHintStart">Det du allerede har spart.</div>
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="spInpAmt"><span data-i18n="spareLAmt">Innskudd (kr)</span></label>
-                    <input id="spInpAmt" class="ik-input" type="text" inputmode="numeric" value="3 000" autocomplete="off">
+                    <input aria-describedby="spYearHint" id="spInpAmt" class="ik-input" type="text" inputmode="numeric" value="3 000" autocomplete="off">
                     <div class="ik-hint" id="spYearHint">= <strong>36 000 kr</strong> per år</div>
                   </div>
                 </div>
@@ -372,8 +372,19 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="spInpRate"><span data-i18n="spareLRate">Årlig avkastning (%)</span></label>
-                    <input id="spInpRate" class="ik-input" type="text" inputmode="decimal" value="7" autocomplete="off">
-                    <div class="ik-hint" data-i18n="spareHintRate">Sparekonto, fond eller indeks.</div>
+                    <input aria-describedby="spInpRate-hint" id="spInpRate" class="ik-input" type="text" inputmode="decimal" value="7" autocomplete="off">
+                    <div id="spInpRate-hint" class="ik-hint" data-i18n="spareHintRate">Sparekonto, fond eller indeks.</div>
+                  </div>
+                </div>
+                <div class="ik-row full">
+                  <div class="ik-fg">
+                    <label class="ik-lbl" for="spInpKonto" data-i18n="spareLKonto">Hvor står pengene?</label>
+                    <select aria-describedby="spInpKonto-hint" id="spInpKonto" class="ik-select">
+                      <option value="bank" data-i18n="spareKontoBank">Bankkonto</option>
+                      <option value="fond" data-i18n="spareKontoFond">Aksjefond eller aksjer</option>
+                      <option value="ask" data-i18n="spareKontoAsk">Aksjesparekonto (ASK)</option>
+                    </select>
+                    <div id="spInpKonto-hint" class="ik-hint"><span data-konto="bank" data-i18n="spareHintKontoBank">Renten skattes med 22&nbsp;% hvert år.</span><span data-konto="fond" data-i18n="spareHintKontoFond" hidden>Gevinsten skattes med 37,84&nbsp;% når du selger. Skjermingsfradraget gjør skatten noe lavere, men er ikke regnet med.</span><span data-konto="ask" data-i18n="spareHintKontoAsk" hidden>Gevinsten skattes med 37,84&nbsp;% når du tar den ut. Skjermingsfradraget gjør skatten noe lavere, men er ikke regnet med.</span></div>
                   </div>
                 </div>
                 <div class="ik-row">
@@ -396,7 +407,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
           <aside class="ks-result" aria-live="polite">
             <div class="ks-r-eyebrow"><span data-i18n="spareREyebrow">Sluttbeløp etter</span> <span id="sEyebrowYrs">20</span> <span data-i18n="spareREyebrowAr">år</span></div>
             <div class="ks-r-net"><span id="rTotal">0</span><span class="unit">kr</span></div>
-            <div class="ks-r-mnd" data-i18n="spareRMndEtterSkatt">Etter 22 % skatt på avkastningen.</div>
+            <div class="ks-r-mnd"><span data-i18n="spareRMndEtterSkatt" data-konto="bank">Etter 22 % skatt på avkastningen.</span><span data-i18n="spareRMndEtterSkattGevinst" data-konto="fond ask" hidden>Etter 37,84&nbsp;% skatt på gevinsten.</span></div>
 
             <div class="ks-r-stats">
               <div class="ks-r-stat"><span class="l" data-i18n="spareRDepositsTot">Innskutt totalt</span><span class="v" id="rDepStat">0 kr</span></div>
@@ -412,8 +423,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <section class="spare-graph-wrap">
           <div class="spare-graph-head">
             <div>
-              <div class="spare-graph-eyebrow" data-i18n="spareGraphEyebrow">Utvikling før skatt</div>
-              <h3><span data-i18n="spareChartHdr">Vekst år for år</span></h3>
+              <div class="spare-graph-eyebrow"><span data-i18n="spareGraphEyebrowNetto" data-konto="bank">Utvikling etter skatt</span><span data-i18n="spareGraphEyebrow" data-konto="fond ask" hidden>Utvikling før skatt</span></div>
+              <h3 aria-level="2"><span data-i18n="spareChartHdr">Vekst år for år</span></h3>
             </div>
             <div class="spare-leg">
               <div class="row"><span class="sw ret"></span><span data-i18n="spareLegendInterest">Rente på rente</span></div>
@@ -429,7 +440,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
     <aside class="side-col">
       <div class="side-card">
-        <h4 data-i18n="spareSideRates">Typiske renter 2026</h4>
+        <h4 aria-level="3" data-i18n="spareSideRates">Typiske renter 2026</h4>
         <div class="ref-row"><span class="l" data-i18n="spareRefBrukskonto">Brukskonto</span><span class="v">0,5<span class="u">%</span></span></div>
         <div class="ref-row"><span class="l" data-i18n="spareRefSpare">Sparekonto</span><span class="v">3,75<span class="u">%</span></span></div>
         <div class="ref-row"><span class="l" data-i18n="spareRefBSU">BSU (t.o.m. året du fyller 33)</span><span class="v">5,75<span class="u">%</span></span></div>
@@ -437,7 +448,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <div class="ref-row"><span class="l" data-i18n="spareRefIndeks">Indeksfond, lang sikt</span><span class="v accent">8,5<span class="u">%</span></span></div>
       </div>
       <div class="side-card related">
-        <h4 data-i18n="sideRelated">Relaterte verktøy</h4>
+        <h4 aria-level="3" data-i18n="sideRelated">Relaterte verktøy</h4>
         <a href="/boliglan/bsu/"><span class="name" data-i18n="relBSU">BSU-kalkulator</span><span class="arr">→</span></a>
         <a href="/boliglan/"><span class="name" data-i18n="relBoliglan">Boliglån</span><span class="arr">→</span></a>
         <a href="/personlig/lonn/"><span class="name" data-i18n="relLonn">Lønn etter skatt</span><span class="arr">→</span></a>
@@ -450,7 +461,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <div class="container">
   <section class="spare-compare" id="spareCompare" aria-labelledby="spareCompareHdr">
     <header class="spare-compare-head">
-      <h3 id="spareCompareHdr" data-i18n="spareCompareHdr">Til sammenligning: vanlig sparekonto (før skatt)</h3>
+      <h3 aria-level="2" id="spareCompareHdr" data-i18n="spareCompareHdr">Til sammenligning: vanlig sparekonto (før skatt)</h3>
       <div class="rate-control">
         <label for="spInpRfRate" data-i18n="spareLRfRate">Sparerente</label>
         <input id="spInpRfRate" type="text" inputmode="decimal" min="0" max="15" step="0.1" value="2,0">
@@ -467,7 +478,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
   <section class="spare-saved" aria-labelledby="spareSavedHdr">
     <header class="spare-saved-head">
-      <h3 id="spareSavedHdr" data-i18n="spareSavedHdr">Lagrede scenarioer</h3>
+      <h3 aria-level="2" id="spareSavedHdr" data-i18n="spareSavedHdr">Lagrede scenarioer</h3>
       <button type="button" class="spare-add-btn" id="spSaveBtn" data-i18n="spareSaveBtn">Lagre nåværende</button>
     </header>
     <div class="spare-suggest-row">
@@ -490,9 +501,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     <details class="howto">
       <summary><span class="howto-title">Slik regner vi</span></summary>
       <div class="howto-body">
-        <div class="howto-row"><strong>Månedlig rente</strong><span>— årlig rente delt på 12 og lagt til hver måned.</span></div>
+        <div class="howto-row"><strong>Månedlig rente</strong><span>— renten legges til hver måned, slik at den blir nøyaktig den årlige renten over et helt år.</span></div>
         <div class="howto-row"><strong>Rentes rente</strong><span>— avkastning forrige måned bidrar til avkastning denne måneden.</span></div>
-        <div class="howto-row"><strong>Skatt på avkastning</strong><span>— 22 % på opptjent avkastning (utenfor BSU/aksjesparekonto).</span></div>
+        <div class="howto-row"><strong>Skatt</strong><span>— på bankkonto 22&nbsp;% av renten hvert år. I aksjefond, aksjer og aksjesparekonto 37,84&nbsp;% av gevinsten (22&nbsp;% × 1,72) når du selger eller tar ut. Skjermingsfradraget er ikke regnet med.</span></div>
       </div>
     </details>
   </div>
@@ -556,9 +567,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       <div class="lrn-calcrow">
         <div class="lrn-card">
           <span class="lrn-card-l" data-lrn="fH">Regnestykket hver måned</span>
-          <div class="lrn-f" data-f="start"><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span>(<i>saldo</i> + <i>innskudd</i>) × (1 + <i>årlig rente</i><span data-lrn="fDel"> ÷ 12</span>)</span></div>
-          <div class="lrn-f" data-f="slutt" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i><span data-lrn="fDel"> ÷ 12</span>) + <i>innskudd</i></span></div>
-          <div class="lrn-f" data-f="lump" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i><span data-lrn="fDel"> ÷ 12</span>)</span></div>
+          <div class="lrn-f" data-f="start"><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span>(<i>saldo</i> + <i>innskudd</i>) × (1 + <i>årlig rente</i>)<sup data-lrn="fDel">1/12</sup></span></div>
+          <div class="lrn-f" data-f="slutt" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i>)<sup data-lrn="fDel">1/12</sup> + <i>innskudd</i></span></div>
+          <div class="lrn-f" data-f="lump" hidden><i>saldo <span data-lrn="fNeste">neste måned</span></i><span>=</span><span><i>saldo</i> × (1 + <i>årlig rente</i>)<sup data-lrn="fDel">1/12</sup></span></div>
           <div class="lrn-f n"><span>=</span><span data-lrn="fUtfylt"></span><span>=</span><b data-lrn="fSvar"></b></div>
         </div>
         <p class="lrn-p" data-lrn="fText"></p>
@@ -577,9 +588,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     </section>
 
     <section class="lrn-sec lrn-faq" aria-labelledby="lrn-spare-q">
-      <h3 class="lrn-h3" id="lrn-spare-q">Spørsmål</h3>
+      <h3 aria-level="2" class="lrn-h3" id="lrn-spare-q">Spørsmål</h3>
       <div class="lrn-qs">
-        <details><summary>Hvor mye skatt trekkes på avkastningen?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Kalkulatoren trekker 22&nbsp;% av hele avkastningen én gang, når perioden er over. Innskuddene skattlegges ikke. Det er en forenkling: renter på bankinnskudd skattlegges i virkeligheten år for år, og det bremser rente på rente noe.</p></div></details>
+        <details><summary>Hvor mye skatt trekkes på avkastningen?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det kommer an på hvor pengene står. På bankkonto skattes renten med 22&nbsp;% hvert år. Kalkulatoren trekker skatten fra saldoen hvert år, og det bremser rente på rente. I aksjefond og aksjer skattes gevinsten med 37,84&nbsp;% når du selger. I aksjesparekonto skattes gevinsten først når du tar den ut. Innskuddene skattlegges ikke. Skjermingsfradraget gjør skatten på gevinst noe lavere, men er ikke regnet med.</p></div></details>
         <details><summary>Hvilken rente bør jeg legge inn?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det avhenger av hvor pengene står. Typiske nivåer i 2026 er 0,5&nbsp;% på brukskonto, 3,75&nbsp;% på sparekonto, 5,75&nbsp;% i BSU, 7,0&nbsp;% i snitt for aksjefond og 8,5&nbsp;% for indeksfond på lang sikt.</p></div></details>
         <details><summary>Hva betyr «Når trekkes innskuddet»?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Det styrer om innskuddet legges til før eller etter rentepåslaget. Trekkes det i starten, får innskuddet rente allerede samme måned. <span data-lrn="qTilv"></span></p></div></details>
         <details><summary>Lagres scenarioene mine?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Ja, men bare lokalt i nettleseren din. Trykker du «Lagre nåværende», husker siden oppsettet til neste gang. Ingenting sendes videre, og det forsvinner om du tømmer nettleserdataene.</p></div></details>
@@ -587,7 +598,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     </section>
 
     <nav class="lrn-rel" aria-labelledby="lrn-spare-r">
-      <h3 class="lrn-h3" id="lrn-spare-r">Relaterte verktøy</h3>
+      <h3 aria-level="2" class="lrn-h3" id="lrn-spare-r">Relaterte verktøy</h3>
       <ul>
         <li><a href="/boliglan/bsu/"><span><span class="t">BSU-kalkulator</span><span class="d">Er du under 34, gir BSU høyere rente og skattefradrag. Se hvor mye du kan spare opp før boligkjøp.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
         <li><a href="/personlig/konto/"><span><span class="t">Fond og ASK</span><span class="d">Sammenlign aksjesparekonto, IPS og vanlig fondskonto, med skattereglene for 2026.</span></span><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8 H13 M9 4 L13 8 L9 12"/></svg></a></li>
@@ -611,10 +622,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   </div>
 </footer>
 
-<script defer src="/shared/site-shell.js?v=v2"></script>
-<script defer src="/shared/top-chrome.js?v=v312"></script>
-<script defer src="/shared/core.js?v=v242"></script>
-<script defer src="/shared/lang/no.js?v=v235"></script>
+<script defer src="/shared/site-shell.js?v=v358"></script>
+<script defer src="/shared/top-chrome.js?v=v395"></script>
+<script defer src="/shared/core.js?v=v395"></script>
+<script defer src="/shared/lang/no.js?v=v394"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
@@ -623,6 +634,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   var INPUT_KEY = 'hv-spare-v1';
   var SAVED_KEY = 'hv-spare-saved-v1';
   var FREQ_PER_YEAR = { monthly:12, quarterly:4, half:2, yearly:1, lump:0 };
+  // Skatt 2026 etter hvor pengene står. Bank: 22 % av renten hvert år.
+  // Aksjefond, aksjer og ASK: 22 % × 1,72 = 37,84 % av gevinsten ved salg eller uttak (Skatteetaten).
+  var SKATT = { bank:0.22, fond:0.3784, ask:0.3784 };
 
   var fmtNb = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
   function fmtKr(n){ if(!isFinite(n)) n=0; return fmtNb.format(Math.round(n)) + ' kr'; }
@@ -630,9 +644,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function fmtPct(n, d){ if(!isFinite(n)) n=0; return (n.toFixed(d == null ? 1 : d)).replace('.', ',') + ' %'; }
   function parseAmt(s){
     if(!s) return 0;
-    var raw = String(s).replace(/[^0-9\-]/g, '');
+    // Komma er desimaltegn og rundes til hele kroner: «129,90» blir 130, ikke 12 990.
+    var raw = String(s).replace(/[^0-9,\-]/g, '').replace(',', '.');
     if(!raw || raw === '-') return 0;
-    var n = parseInt(raw, 10);
+    var n = Math.round(parseFloat(raw));
     return isNaN(n) ? 0 : n;
   }
   function parseDec(s){
@@ -652,7 +667,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function spareCompute(start, amt, freq, years, rateAnnual, tilvStart){
     var isLump = freq === 'lump';
     var periodsPerYear = isLump ? 12 : (FREQ_PER_YEAR[freq] || 12);
-    var periodRate = rateAnnual / 100 / periodsPerYear;
+    // Årlig rente gjøres om til rente per periode, så 7 % i året blir 7 % uansett hvor ofte du setter inn
+    var periodRate = Math.pow(1 + rateAnnual / 100, 1 / periodsPerYear) - 1;
     var periodAmt  = isLump ? 0 : amt;
     var balance = start, totalDeposits = start;
     var data = [{ year:0, deposits:start, interest:0, total:start }];
@@ -670,7 +686,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
   var els = {
     start: $('spInpStart'), amt: $('spInpAmt'), freq: $('spInpFreq'),
-    years: $('spInpYears'), rate: $('spInpRate'), tilv: $('spInpTilv'),
+    years: $('spInpYears'), rate: $('spInpRate'), tilv: $('spInpTilv'), konto: $('spInpKonto'),
     rfRate: $('spInpRfRate'), yearHint: $('spYearHint'),
     sStripInn:$('sStripInn'), sStripAvk:$('sStripAvk'), sStripSkatt:$('sStripSkatt'), sStripTotal:$('sStripTotal'),
     rTotal:$('rTotal'),
@@ -682,6 +698,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     chips:$('spChips'), chipsEmpty:$('spChipsEmpty'),
     saveBtn:$('spSaveBtn'), suggest:$('spSuggest')
   };
+  var kontoEls = document.querySelectorAll('[data-konto]');
 
   function readInputs(){
     return {
@@ -691,6 +708,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       years: Math.max(1, Math.min(60, parseInt(els.years.value, 10) || 1)),
       rate:  Math.max(0, parseDec(els.rate.value)),
       tilv:  els.tilv.value === 'start',
+      konto: SKATT.hasOwnProperty(els.konto.value) ? els.konto.value : 'bank',
       rfRate: Math.max(0, parseDec(els.rfRate.value))
     };
   }
@@ -713,10 +731,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(v.years != null) els.years.value = v.years;
     if(v.rate != null) els.rate.value = String(v.rate).replace('.', ',');
     if(v.tilv != null) els.tilv.value = v.tilv ? 'start' : 'slutt';
+    // Lagret før kontovalget fantes: behold valget som står
+    if(SKATT.hasOwnProperty(v.konto)) els.konto.value = v.konto;
     if(v.rfRate != null) els.rfRate.value = String(v.rfRate).replace('.', ',');
   }
 
   function liveFormatKr(inp){
+    if(/[.,]/.test(inp.value)) return; // Med desimaler (komma eller punktum) lar vi feltet være: core.js formaterer det og beholder kommaet.
     var raw = inp.value.replace(/[^0-9\-]/g, '');
     if(raw === '' || raw === '-') return;
     var num = parseInt(raw, 10);
@@ -856,6 +877,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var hasFlow  = v.amt > 0 && v.freq !== 'lump';
     var hasData  = hasStart || hasFlow;
     els.eyebrowYrs.textContent = v.years;
+    // Etikettene som hører til kontovalget (skattesats, «renter» eller «gevinst»)
+    kontoEls.forEach(function(el){ el.hidden = el.getAttribute('data-konto').split(' ').indexOf(v.konto) < 0; });
 
     if(!hasData){
       ['rTotal','rDepStat','rIntStat','rSkattStat','rNettoStat','rEffStat','rPctStat',
@@ -876,10 +899,20 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var last = data[data.length - 1];
     var totalVal = last.total;
     var totalDep = last.deposits;
-    var totalInt = totalVal - totalDep;
-    var skatt    = totalInt * 0.22;
-    var netto    = totalVal - skatt;
-    var intPct   = totalVal > 0 ? (totalInt / totalVal * 100) : 0;
+    var series   = data, totalInt, skatt, netto;
+    if(v.konto === 'bank'){
+      // Skatten trekkes hvert år, så saldoen vokser med renten × 0,78
+      series   = spareCompute(v.start, v.amt, v.freq, v.years, v.rate * (1 - SKATT.bank), v.tilv);
+      netto    = series[series.length - 1].total;
+      totalInt = (netto - totalDep) / (1 - SKATT.bank);
+      skatt    = totalInt * SKATT.bank;
+    } else {
+      // Gevinsten skattes én gang, når du selger eller tar ut
+      totalInt = totalVal - totalDep;
+      skatt    = totalInt * SKATT[v.konto];
+      netto    = totalVal - skatt;
+    }
+    var intPct   = totalDep + totalInt > 0 ? (totalInt / (totalDep + totalInt) * 100) : 0;
     var eff      = totalDep > 0 ? (totalInt / totalDep) * 100 : 0;
 
     // Strip
@@ -907,8 +940,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     els.rfDiff.classList.toggle('diff-up', rfDiff >= 0);
     els.rfDiff.classList.toggle('diff-down', rfDiff < 0);
 
-    drawChart(data);
-    window._spare = {start:v.start, amt:v.amt, freq:v.freq, years:v.years, rate:v.rate, tilv:v.tilv};
+    drawChart(series);
+    window._spare = {start:v.start, amt:v.amt, freq:v.freq, years:v.years, rate:v.rate, tilv:v.tilv, konto:v.konto};
     if(window.hvtLearn) hvtLearn.update('personlig-spare', window._spare);
     persist();
   }
@@ -920,11 +953,30 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   els.years.addEventListener('input', render);
   els.rate.addEventListener('input', render);
   els.tilv.addEventListener('change', render);
+  els.konto.addEventListener('change', render);
   els.rfRate.addEventListener('input', render);
 
   // Saved scenarios
+  // Bare gyldige scenarioer tas med (ødelagt lagring gir ellers feil eller «undefined» på knappen).
+  // Mangler lista, hentes scenarioer lagret med forrige versjon av siden (hvt-spare-scenarios) inn én gang.
+  function validScenario(s){
+    return !!s && typeof s === 'object' && isFinite(s.start) && isFinite(s.amt) && isFinite(s.years) && s.years >= 1
+      && isFinite(s.rate) && FREQ_PER_YEAR.hasOwnProperty(s.freq);
+  }
   function loadSaved(){
-    try{ var raw = localStorage.getItem(SAVED_KEY); if(raw) return JSON.parse(raw)||[]; }catch(_e){}
+    try{
+      var raw = localStorage.getItem(SAVED_KEY);
+      if(raw == null){
+        var old = JSON.parse(localStorage.getItem('hvt-spare-scenarios') || '[]');
+        if(Array.isArray(old) && old.length){
+          var conv = old.map(function(s){ return s && {start:+s.start, amt:+s.amt, freq:s.freq, years:+s.years, rate:+s.rate, tilv:true, konto:'bank'}; }).filter(validScenario);
+          if(conv.length){ saveScenarios(conv.slice(-10)); return conv.slice(-10); }
+        }
+        return [];
+      }
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr.filter(validScenario) : [];
+    }catch(_e){}
     return [];
   }
   function saveScenarios(arr){
@@ -938,7 +990,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       var yrs = (typeof R === 'function' && R().trPersonligSpareChipYears) || 'år';
       var fqOpt = els.freq.querySelector('option[value="' + s.freq + '"]');
       var fq = fqOpt ? fqOpt.textContent.split('—').pop().trim().toLowerCase() : s.freq;
-      var lbl = fmtKrPlain(s.start) + (s.freq === 'lump' ? '' : ' + ' + fmtKrPlain(s.amt)) + ' kr, ' + fq + ', ' + s.years + ' ' + yrs.trim() + ', ' + String(s.rate).replace('.', ',') + ' %';
+      var lbl = fmtKrPlain(s.start) + (s.freq === 'lump' ? '' : ' + ' + fmtKrPlain(s.amt)) + ' kr, ' + fq + ', ' + s.years + ' ' + yrs.trim() + ', ' + String(s.rate).replace('.', ',') + ' %' + (s.konto === 'fond' ? ', fond' : s.konto === 'ask' ? ', ASK' : '');
       return '<button type="button" class="spare-chip" data-idx="'+i+'"><span>'+escapeHtml(lbl)+'</span><span class="rm" data-rm="'+i+'">×</span></button>';
     }).join('');
   }
@@ -992,8 +1044,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 (function(){
   var KEY = 'personlig-spare';
   // Standardverdiene i feltene over. Så lenge alle står slik, er merket «Eksempel».
-  var DEF = {start:100000, amt:3000, freq:'monthly', years:20, rate:7, tilv:true};
+  var DEF = {start:100000, amt:3000, freq:'monthly', years:20, rate:7, tilv:true, konto:'bank'};
   var PPY = {monthly:12, quarterly:4, half:2, yearly:1, lump:12};
+  // Samme skattesatser som SKATT i kalkulatoren over
+  var SATS = {bank:0.22, fond:0.3784, ask:0.3784};
   // Ordene for hver innskuddsfrekvens
   var FQ = {
     monthly:  {i:'i måneden', hver:'hver måned', neste:'neste måned', forste:'Den første måneden', etter:'Måneden etter'},
@@ -1013,7 +1067,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
   // Samme regnestykke som spareCompute() over, men med renten på innskuddene skilt fra rente på rente
   function serie(start, amt, ppy, lump, years, rate, tilvStart){
-    var pr = rate / 100 / ppy, pa = lump ? 0 : amt, bal = start, dep = start, simple = 0, rows = [{y:0, dep:start, ri:0, rr:0, bal:start}];
+    var pr = Math.pow(1 + rate / 100, 1 / ppy) - 1, pa = lump ? 0 : amt, bal = start, dep = start, simple = 0, rows = [{y:0, dep:start, ri:0, rr:0, bal:start}];
     for(var y = 1; y <= years; y++){
       for(var p = 0; p < ppy; p++){
         if(tilvStart){ bal += pa; dep += pa; }
@@ -1042,14 +1096,18 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function render(d){
     var L = window.hvtLearn, kr = function(v){ return L.kr(v) + ' kr'; }, t = L.t, ph = L.ph;
     raw = d;
-    var mine = !!d && !(d.start === DEF.start && d.amt === DEF.amt && d.freq === DEF.freq && d.years === DEF.years && d.rate === DEF.rate && d.tilv === DEF.tilv);
+    var mine = !!d && !(d.start === DEF.start && d.amt === DEF.amt && d.freq === DEF.freq && d.years === DEF.years && d.rate === DEF.rate && d.tilv === DEF.tilv && d.konto === DEF.konto);
     if(!d) d = DEF;
     var W = plot.clientWidth;
     if(!W){ lastW = 0; return; }
     lastW = W;
     var G = geo(W), fq = FQ[d.freq] || FQ.monthly, lump = d.freq === 'lump', ppy = PPY[d.freq] || 12, N = d.years;
     var all = serie(d.start, d.amt, ppy, lump, Math.max(60, N), d.rate, d.tilv), rows = all.slice(0, N + 1), last = rows[N];
-    var avk = last.bal - last.dep, skatt = avk * 0.22, netto = last.bal - skatt, andel = last.bal > 0 ? avk / last.bal * 100 : 0;
+    var avk = last.bal - last.dep, andel = last.bal > 0 ? avk / last.bal * 100 : 0;
+    // Bank: skatten trekkes hvert år, så saldoen etter skatt vokser med renten × 0,78. Ellers skattes gevinsten ved slutten.
+    var bank = !SATS.hasOwnProperty(d.konto) || d.konto === 'bank', skatt, netto;
+    if(bank){ netto = serie(d.start, d.amt, ppy, lump, N, d.rate * (1 - SATS.bank), d.tilv)[N].bal; skatt = (netto - last.dep) / (1 - SATS.bank) * SATS.bank; }
+    else { skatt = avk * SATS[d.konto]; netto = last.bal - skatt; }
     var crossY = 0, rrY = 0, k;
     for(k = 1; k < all.length; k++){ if(!crossY && all[k].bal - all[k].dep > all[k].dep) crossY = k; if(!rrY && all[k].rr > all[k].ri) rrY = k; }
 
@@ -1103,7 +1161,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       notes.push(t('lrnSpRr', 'Fra år {aar} er rente på rente større enn renten på innskuddene.', {aar:rrY}));
       mk(X(rrY), Y(rr.dep + rr.ri + rr.rr / 2));
     }
-    notes.push(t('lrnSpTax', 'Skatt 22 % av avkastningen: {skatt} kr. Igjen: {netto}. BSU og aksjesparekonto følger andre regler.', {skatt:L.kr(-skatt), netto:b(kr(netto))}));
+    notes.push(bank
+      ? t('lrnSpTaxBank', 'Skatt 22\u00a0% av renten hvert år: {skatt}\u00a0kr. Fordi skatten trekkes hvert år, går du også glipp av {tapt}\u00a0kr i rente. Igjen: {netto}.', {skatt:L.kr(-skatt), tapt:L.kr(last.bal - netto - skatt), netto:b(kr(netto))})
+      : t('lrnSpTaxGain', 'Skatt 37,84\u00a0% av gevinsten: {skatt}\u00a0kr. Igjen: {netto}. Skjermingsfradraget gjør skatten noe lavere.', {skatt:L.kr(-skatt), netto:b(kr(netto))}));
     mk(bx + 3, yb - ms / 2 - 7);
     var kF = Math.max(1, Math.round(N * 0.3)), pct = L.dec(d.rate, String(d.rate).indexOf('.') >= 0 ? Math.min(2, String(d.rate).split('.')[1].length) : 0);
     notes.push(t('lrnSpSame', 'Samme rente hvert år. Et snitt på {r} % betyr ikke {r} % hvert år, og noen år er negative.', {r:pct}));
@@ -1114,7 +1174,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     if(!G.mobile){
       var topRr = netto > last.dep + last.ri + 1 ? Math.min(last.bal, netto) : last.bal;
       var items = [
-        {name:ph('Skatt 22 %'), value:L.kr(-skatt) + ' kr', d:yMid, ax:bx + 10},
+        {name:ph(bank ? 'Skatt og tapt rente' : 'Skatt 37,84\u00a0%'), value:L.kr(netto - last.bal) + ' kr', d:yMid, ax:bx + 10},
         {name:ph('Rente på rente'), value:kr(last.rr), d:(Y(last.dep + last.ri) + Y(topRr)) / 2, ax:G.x1 + 1},
         {name:ph('Rente på innskudd'), value:kr(last.ri), d:(Y(last.dep) + Y(last.dep + last.ri)) / 2, ax:G.x1 + 1},
         {name:t('trPersonligSpareLrnDep', 'Innskudd'), value:kr(last.dep), d:(Y(0) + Y(last.dep)) / 2, ax:G.x1 + 1}
@@ -1148,17 +1208,17 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     set('cap', ph('Saldo før skatt, kroner, år for år') + (inPeriod ? '' : (crossY > 0 ? '. ' + t('lrnSpCapLate', 'Avkastningen passerer det du har satt inn i år {aar}, etter spareperioden', {aar:crossY}) : '. ' + ph('Innen 60 år passerer ikke avkastningen det du har satt inn'))));
 
     // Regnestykket for første periode
-    var pr = d.rate / 100 / ppy, pa = lump ? 0 : d.amt;
+    var pr = Math.pow(1 + d.rate / 100, 1 / ppy) - 1, pa = lump ? 0 : d.amt;
     var b1 = d.tilv ? (d.start + pa) * (1 + pr) : d.start * (1 + pr) + pa, r1 = (d.tilv ? d.start + pa : d.start) * pr, rr2 = r1 * pr;
-    var rateTxt = String(Math.round(d.rate * 1e6) / 1e8).replace('.', ','), delTxt = ppy > 1 ? ' ÷ ' + ppy : '';
-    var utfylt = lump ? L.kr(d.start) + ' × (1 + ' + rateTxt + delTxt + ')'
-      : d.tilv ? '(' + L.kr(d.start) + ' + ' + L.kr(pa) + ') × (1 + ' + rateTxt + delTxt + ')'
-      : L.kr(d.start) + ' × (1 + ' + rateTxt + delTxt + ') + ' + L.kr(pa);
+    var rateTxt = String(Math.round(d.rate * 1e6) / 1e8).replace('.', ','), delTxt = ppy > 1 ? '1/' + ppy : '', supTxt = delTxt ? '<sup>' + delTxt + '</sup>' : '';
+    var utfylt = lump ? L.kr(d.start) + ' × (1 + ' + rateTxt + ')' + supTxt
+      : d.tilv ? '(' + L.kr(d.start) + ' + ' + L.kr(pa) + ') × (1 + ' + rateTxt + ')' + supTxt
+      : L.kr(d.start) + ' × (1 + ' + rateTxt + ')' + supTxt + ' + ' + L.kr(pa);
     set('fH', t('lrnSpCalcH', 'Regnestykket {hver}', {hver:ph(fq.hver)}));
     root.querySelectorAll('[data-f]').forEach(function(el){ el.hidden = el.getAttribute('data-f') !== (lump ? 'lump' : d.tilv ? 'start' : 'slutt'); });
     root.querySelectorAll('[data-lrn="fNeste"]').forEach(function(el){ el.textContent = ph(fq.neste); });
     root.querySelectorAll('[data-lrn="fDel"]').forEach(function(el){ el.textContent = delTxt; });
-    set('fUtfylt', utfylt); set('fSvar', kr2(b1) + ' kr');
+    setHtml('fUtfylt', utfylt); set('fSvar', kr2(b1) + ' kr');
     setHtml('fText', t('lrnSpFirst', '{forste} er hele renten, {r1}, rente på innskudd. {etter} gir de {r1k} kronene selv {rr2} i rente. Det er rente på rente, og det laget vokser fordi det bygger på seg selv.',
       {forste:ph(fq.forste), etter:ph(fq.etter), r1:b(kr2(r1) + ' kr'), r1k:kr2(r1), rr2:b(kr2(rr2) + ' kr')}));
 
@@ -1168,7 +1228,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     }).join(''));
     var altE = serie(d.start, d.amt, ppy, lump, N, d.rate, false)[N].bal, altS = serie(d.start, d.amt, ppy, lump, N, d.rate, true)[N].bal;
     set('qTilv', lump ? ph('Med bare startbeløp spiller det ingen rolle.') : t('lrnSpTilv', 'Med tallene over gir start i stedet for slutt {belop} mer etter {n} år.', {belop:kr(altS - altE), n:N}));
-    set('sr', t('lrnSpSr', 'Etter {n} år er {inn} innskudd, {ri} rente på innskuddene og {rr} rente på rente. Skatt 22 % av avkastningen gir {netto} igjen.', {n:N, inn:kr(last.dep), ri:kr(last.ri), rr:kr(last.rr), netto:kr(netto)}));
+    set('sr', bank
+      ? t('lrnSpSrBank', 'Etter {n} år er {inn} innskudd, {ri} rente på innskuddene og {rr} rente på rente, før skatt. Med 22\u00a0% skatt på renten hvert år blir det {netto} igjen.', {n:N, inn:kr(last.dep), ri:kr(last.ri), rr:kr(last.rr), netto:kr(netto)})
+      : t('lrnSpSrGain', 'Etter {n} år er {inn} innskudd, {ri} rente på innskuddene og {rr} rente på rente. Skatt 37,84\u00a0% av gevinsten gir {netto} igjen.', {n:N, inn:kr(last.dep), ri:kr(last.ri), rr:kr(last.rr), netto:kr(netto)}));
 
     // Merket
     root.querySelector('.lrn-state').setAttribute('data-state', mine ? 'dine' : 'eksempel');
