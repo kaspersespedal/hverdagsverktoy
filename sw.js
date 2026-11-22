@@ -15,6 +15,7 @@ const PRECACHE_URLS = [
   './manifest.json',
   './skatt/skattemelding/',
   './shared/satser.js?v=v2',  // skattemeldingen virker ikke uten den; samme ?v= som på sidene
+  './shared/kalender.js?v=v1',  // kalenderen på forsiden hentes først ved trykk; uten denne er knappen død uten nett. Samme ?v= som i index.html (#kalBoot)
   './avansert/finans/',
   './avansert/finans/dcf/',
   './avansert/finans/prognose/',
