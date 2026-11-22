@@ -2104,11 +2104,11 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v435" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v435" defer></script>
-<script src="/shared/lang/no.js?v=v435" defer></script>
+<link rel="preload" href="/shared/core.js?v=v464" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v464" defer></script>
+<script src="/shared/lang/no.js?v=v464" defer></script>
 <script src="/shared/site-shell.js?v=v359" defer></script>
-<script src="/shared/top-chrome.js?v=v435" defer></script>
+<script src="/shared/top-chrome.js?v=v464" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/markedsdata.js?v=v431" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
@@ -2830,10 +2830,12 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
   html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-yr{color:var(--ink3)}
 
   /* Et mykt lys bak datoen. Ren radial toning uten kanter (karbonveven som sto
-     her før, ble kuttet i en firkant og så ut som en tegnefeil på PC). */
+     her før, ble kuttet i en firkant og så ut som en tegnefeil på PC).
+     inset-inline-start: på arabisk (RTL) står lyset til høyre, bak datoen, i stedet for
+     å stikke 150 px ut til venstre og gjøre siden for bred (P51). */
   html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head::before{
     content:"";position:absolute;z-index:-1;pointer-events:none;
-    left:-150px;top:-70px;width:min(780px,72%);height:250px;
+    left:auto;inset-inline-start:-150px;top:-70px;width:min(780px,72%);height:250px;
     background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
   }
 
@@ -2968,6 +2970,18 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:34px;padding:0;justify-content:center}
   html[data-theme="carbon"] #navWrap .tc-btn .chev{display:none}
   html[data-theme="carbon"] #navWrap .tc-btn .swatch{width:12px;height:12px}
+}
+/* Under 360 px fikk logoen og de fire knappene ikke plass: siden ble 17 px for bred
+   på 320 px (P50). Litt mindre knapper, mellomrom og logotekst; trykkflaten er
+   fortsatt 44 px høy. */
+@media (max-width:360px){
+  html[data-theme="carbon"] #navWrap nav,
+  html[data-theme="carbon"] #navWrap .nav-right,
+  html[data-theme="carbon"] #navWrap .tc-actions{gap:4px}
+  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:30px;height:30px}
+  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::after{inset:-7px -2px}
+  html[data-theme="carbon"] #navWrap .brand-row{gap:8px}
+  html[data-theme="carbon"] #navWrap .wordmark{font-size:14.5px}
 }
 </style>
 <style id="kalKnapp">/* ══ Kalender-knappen i dagsoversikt-toppen ══════════════════════════════
@@ -4805,7 +4819,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     {n:"Oppbevaring — sekundærdokumentasjon",short:"Oppbevaring sekundærdok.",w:"Bokføringspliktige",d:"<b>3 år 6 mnd</b> etter regnskapsårets slutt",f:"løpende",i:"m",c:"reg",a:["bedrift"],mo:0,p:"Bokføringsovertredelse",s:"Skatteetaten",u:"https://www.skatteetaten.no/en/rettskilder/type/kunngjoringer/oppbevaringstiden-for-regnskapsmateriale-endres-fra-ti-ar-til-fem-ar/"},
 
     /* ── A-melding & arbeidsgiver ── */
-    {n:"A-melding (lønn, trekk, arbeidsgiveravgift)",short:"A-melding",w:"Alle arbeidsgivere",d:"<b>Den 5.</b> måneden etter (helg → virkedag)",f:"månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,monthly:5,p:"Tvangsmulkt (dagbøter)",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling-i-a-meldingen/"},
+    {n:"A-melding (lønn, trekk, arbeidsgiveravgift)",short:"A-melding",w:"Alle arbeidsgivere",d:"<b>Den 5.</b> måneden etter (flyttes til neste virkedag hvis den 5. er en helg)",f:"månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,monthly:5,p:"Tvangsmulkt (dagbøter)",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/a-meldingen/frister-og-betaling-i-a-meldingen/"},
     {n:"Betaling av forskuddstrekk (nytt 2026)",short:"Forskuddstrekk",w:"Trekker skatt av lønn",d:"<b>Første virkedag etter lønn</b> (skattetrekkskonto avvikles)",f:"månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,p:"Skattetrekk skal betales straks",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/arbeidsgiveravgift/betaling-av-forskuddstrekk-og-arbeidsgiveravgift/"},
     {n:"Betaling av arbeidsgiveravgift",short:"Arbeidsgiveravgift",w:"Alle arbeidsgivere",d:"<b>Den 15.</b> jan / mar / mai / jul / sep / nov",f:"2-månedlig",i:"k",c:"amld",a:["bedrift"],mo:0,terms:[[1,15],[3,15],[5,15],[7,15],[9,15],[11,15]],p:"Forsinkelsesrente",s:"Skatteetaten",u:"https://www.skatteetaten.no/bedrift-og-organisasjon/arbeidsgiver/arbeidsgiveravgift/betaling-av-forskuddstrekk-og-arbeidsgiveravgift/"},
     {n:"Feriepenger til ansatte",short:"Feriepenger",w:"Arbeidsgivere",d:"Siste lønningsdag før ferie; senest <b>1 uke</b> før",f:"årlig",i:"h",c:"amld",a:["bedrift"],mo:0,p:"Brudd på ferieloven §11",s:"Ferieloven §11",u:"https://lovdata.no/lov/1988-04-29-21/§11"},
