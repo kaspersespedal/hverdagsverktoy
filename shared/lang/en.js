@@ -372,7 +372,7 @@ REGIONS['en'] = {
     avsMethod1:'is the main rule for tax — a fixed percentage of the remaining value each year.',
     avsMethod2B:'Straight-line depreciation',
     avsMethod2:'is used in the accounts when the useful life is known — equal amounts each year.',
-    avsMethod3:'An asset above 30 000 kr with an expected useful life of more than 3 years',
+    avsMethod3:'An asset of 30 000 kr or more with an expected useful life of at least 3 years',
     avsMethod3B:'must be capitalised and depreciated',
     avsMethod4B:'Improvements (capital expenditure)',
     avsMethod4:'are added to the balance; sale/scrapping is deducted. A negative balance gives a gain.',

@@ -2675,7 +2675,7 @@ REGIONS['fr'] = {
     avsMethod1: 'est la règle principale en fiscalité — un pourcentage fixe de la valeur résiduelle chaque année.',
     avsMethod2B: 'L\'amortissement linéaire',
     avsMethod2: 'est utilisé en comptabilité lorsque la durée d\'utilité est connue — des montants égaux chaque année.',
-    avsMethod3: 'Une immobilisation de plus de 30 000 kr avec une durée d\'utilité prévue de plus de 3 ans',
+    avsMethod3: 'Une immobilisation de 30 000 kr ou plus avec une durée d\'utilité prévue d\'au moins 3 ans',
     avsMethod3B: 'doit être immobilisée et amortie',
     avsMethod4B: 'Les dépenses d\'amélioration',
     avsMethod4: 's\'ajoutent au solde ; les ventes/mises au rebut en sont retirées. Un solde négatif génère un gain.',
