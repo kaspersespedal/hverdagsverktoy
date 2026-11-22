@@ -162,7 +162,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v472';
+    s.src = '/shared/lang/' + code + '.js?v=v482';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -2888,7 +2888,7 @@ function updateFooter() {
   document.querySelectorAll('#fl-con,#fl-cont,[data-i18n="footerCon"]').forEach(function(a){
     if(hasConModal){ a.onclick = function(e){ e.preventDefault(); openContact(); }; return; }
     a.onclick = null;
-    a.setAttribute('href', '/personvern/#kontakt');
+    a.setAttribute('href', '/kontakt/');
   });
   setText('seo-toggle', r.seoToggle||'Om denne siden');
 }
