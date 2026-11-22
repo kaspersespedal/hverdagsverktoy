@@ -1611,8 +1611,12 @@ body .ks-mode .mdesc{font-size:12px}
         nille:53374602, nilleTxt:'Resultatregnskapet har avskrivning og nedskrivning på én linje: 53 374 602 kr.'},
       {id:'kontBalUB', row:'hentKontUB',  key:'hv-balanse-sum',    prop:'bank',     navn:'bankinnskudd og kontanter', fra:'balansen'}
     ];
-    var hentet = {};
-    try { hentet = JSON.parse(localStorage.getItem(HENT_KEY)) || {}; } catch(e){}
+    // Etter «Tøm» husker TOMT_KEY tallene som sto i resultatet og balansen da. De samme tallene fylles ikke
+    // inn av seg selv igjen (bare tilbys med knappen). Endres resultatet eller balansen etterpå, følger de med som før.
+    var TOMT_KEY = 'hv-kontantstrom-tomt';
+    var hentet = {}, tomt = {}, hentLagret = null;
+    try { hentLagret = localStorage.getItem(HENT_KEY); hentet = JSON.parse(hentLagret) || {}; } catch(e){}
+    try { tomt = JSON.parse(localStorage.getItem(TOMT_KEY)) || {}; } catch(e){}
     function kilde(l){
       try { var o = JSON.parse(localStorage.getItem(l.key)); var v = o && o[l.prop]; return (typeof v==='number' && isFinite(v) && v!==0) ? v : null; }
       catch(e){ return null; }
@@ -1623,7 +1627,7 @@ body .ks-mode .mdesc{font-size:12px}
         var f = document.getElementById(l.id), row = document.getElementById(l.row);
         if(!f || !row) return;
         var v = kilde(l), cur = parseNum(l.id), blank = (f.value||'').trim()==='';
-        if(auto && v!=null && v!==cur && (blank || hentet[l.id]===cur)){ f.value = fmtN(v); cur = v; blank = false; changed = true; }
+        if(auto && v!=null && v!==cur && (blank || hentet[l.id]===cur) && !(blank && tomt[l.id]===v)){ f.value = fmtN(v); cur = v; blank = false; changed = true; }
         var same = v!=null && v===cur && !blank;
         if(same) hentet[l.id] = v;
         else if(blank || hentet[l.id]!==cur) delete hentet[l.id];
@@ -1636,7 +1640,9 @@ body .ks-mode .mdesc{font-size:12px}
         note.textContent = same ? 'Hentet fra ' + l.fra : (nille ? l.nilleTxt : '');
         row.classList.toggle('hidden', !offer && !same && !nille);
       });
-      try { localStorage.setItem(HENT_KEY, JSON.stringify(hentet)); } catch(e){}
+      // Skrives bare når innholdet er endret, så en åpen fane ikke legger tallene tilbake etter «Slett alt»
+      var ny = JSON.stringify(hentet);
+      if(ny !== hentLagret){ try { localStorage.setItem(HENT_KEY, ny); hentLagret = ny; } catch(e){} }
       if(changed) compute();
     }
     LINKS.forEach(function(l){
@@ -1650,7 +1656,8 @@ body .ks-mode .mdesc{font-size:12px}
       });
     });
     // Tallene kan være endret i en annen fane, eller siden kan være hentet fram igjen uten ny lasting.
-    window.addEventListener('storage', function(){ syncLinks(true); });
+    // key er null når hele lagringen er tømt («Slett alt» på personvernsiden): da skal ingenting skrives tilbake.
+    window.addEventListener('storage', function(e){ if(e && e.key===null) return; syncLinks(true); });
     window.addEventListener('pageshow', function(){ syncLinks(true); });
 
     function persist(){
@@ -1695,6 +1702,11 @@ body .ks-mode .mdesc{font-size:12px}
       var enkel = key==='enkel' && window.HVRegnskap;
       var p = enkel ? HVRegnskap.eksKs() : PRESETS[key];
       if(!p) return;
+      if(key==='clear'){
+        tomt = {};
+        LINKS.forEach(function(l){ var v = kilde(l); if(v!=null) tomt[l.id] = v; });
+        try { localStorage.setItem(TOMT_KEY, JSON.stringify(tomt)); } catch(e){}
+      }
       if(enkel) HVRegnskap.fyllAndre('ks');   // samme selskap i resultatet og balansen
       fyll(p);
     }
@@ -1704,6 +1716,7 @@ body .ks-mode .mdesc{font-size:12px}
       if(!window.HVRegnskap) return;
       var L = HVRegnskap.lagret(), R = HVRegnskap.regnRes(L.res), B = HVRegnskap.regnBal(L.bal), Fj = HVRegnskap.regnBal(L.bal, '_f');
       if(R.tom || B.tom){ if(hentNote) hentNote.textContent = 'Fyll ut resultatet og balansen først. Da kan tallene hentes hit.'; return; }
+      if(HVRegnskap.balUtdatert()){ if(hentNote) hentNote.textContent = HVRegnskap.UTDATERT; return; }
       fyll(HVRegnskap.utled(L.res, L.bal));
       if(hentNote) hentNote.textContent = Fj.tom ? 'Hentet. Balansen mangler tallene fra i fjor, så endringene er regnet fra null.'
         : Math.abs(B.diff) >= 1 || Math.abs(Fj.diff) >= 1 ? 'Hentet. Balansen stemmer ikke ennå, så kontantene går ikke opp.'
@@ -1745,7 +1758,7 @@ body .ks-mode .mdesc{font-size:12px}
 <script defer src="/shared/lang/no.js?v=v375"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 
-<script defer src="/shared/regnskap-flyt.js?v=v2"></script>
+<script defer src="/shared/regnskap-flyt.js?v=v3"></script>
 <script defer src="/shared/steg-guide.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —

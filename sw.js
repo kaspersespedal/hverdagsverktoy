@@ -86,8 +86,10 @@ self.addEventListener('fetch', event => {
       fetch(event.request, { cache: 'no-cache' })
         .then(response => {
           if (response.ok) {
+            // Lagres under adressen uten «?…»: det som står etter «?» kan være noe brukeren har skrevet,
+            // og skal ikke bli liggende i lageret. Siden er den samme filen uansett.
             const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone).catch(() => {}));
+            caches.open(CACHE_NAME).then(cache => cache.put(url.origin + url.pathname, clone).catch(() => {}));
           }
           return response;
         })

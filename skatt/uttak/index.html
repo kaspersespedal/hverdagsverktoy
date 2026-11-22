@@ -866,7 +866,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         var s = JSON.parse(raw);
         Object.keys(s).forEach(function(id){
           var el = document.getElementById(id);
-          if(el && s[id] != null) el.value = s[id];
+          if(el && s[id] != null){
+            // Et lagret valg som ikke finnes lenger, gir et tomt valg: da beholdes standardvalget.
+            var f0 = el.value; el.value = s[id];
+            if(el.tagName === 'SELECT' && el.selectedIndex < 0) el.value = f0;
+          }
         });
       } catch(e){}
     }

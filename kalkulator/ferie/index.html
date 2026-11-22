@@ -686,7 +686,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       if(!raw) return;
       var s = JSON.parse(raw);
       if(s.salary != null) document.getElementById('ferie-salary').value = s.salary;
-      if(s.type != null)   document.getElementById('ferie-type').value   = s.type;
+      // Et lagret valg som ikke finnes lenger (ny sats eller nytt navn), gir et tomt valg: da beholdes standardvalget.
+      if(s.type != null){ var ft = document.getElementById('ferie-type'), f0 = ft.value; ft.value = s.type; if(ft.selectedIndex < 0) ft.value = f0; }
       if(s.over60 != null) document.getElementById('ferie-over60').checked = !!s.over60;
     } catch(e){}
   }
