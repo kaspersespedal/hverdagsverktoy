@@ -615,6 +615,9 @@
     background:
       radial-gradient(120% 80% at 50% -10%, rgba(200,153,104,.04), transparent 55%),
       linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+    /* Heldekkende bunn: i Noir/blanc og Glass er --surface halvgjennomsiktig,
+       og da skinte kategorilista under gjennom panelet. */
+    background-color:var(--bg);
     border:1px solid var(--line-2);
     border-radius:8px;
     box-shadow:
@@ -696,9 +699,11 @@
     transition:color .15s;
   }
   .pop-item:hover .pop-rank{color:var(--accent)}
+  /* Navnet brytes heller enn å kuttes: på fransk tok kategorien («Finances
+     personnelles») så mye plass at det sto «Salaire apr…». */
   .pop-item .pop-name{
     font:500 13.5px/1.25 var(--font-sans);letter-spacing:-.1px;color:var(--ink);
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    text-wrap:balance;
     margin:0 0 1px;
   }
   .pop-item .pop-meta{
@@ -708,6 +713,7 @@
   .pop-item .pop-cat{
     font-size:11px;font-weight:600;letter-spacing:1.3px;
     text-transform:uppercase;color:var(--ink4);
+    max-width:8.5em;text-align:end;line-height:1.35;
     transition:color .15s;
   }
   .pop-item:hover .pop-cat{color:var(--ink2)}
@@ -2152,6 +2158,9 @@ html[data-theme="bw"], body[data-theme="bw"]{
   --bg:#070708 !important;
   --surface:rgba(16,16,18,.55) !important;
   --surface2:rgba(16,16,18,.55) !important;
+  /* Menyer og nedtrekk ligger OPPÅ innholdet: samme tone, full dekkevne
+     (som .tmr-pop under). Ellers leste man siden rett gjennom tema- og språkmenyen. */
+  --menu-bg:#101012 !important;
   --surface-2:#17171b !important;
   --surface-3:#202024 !important;
   --ink:#f3efe7 !important;
@@ -2198,6 +2207,10 @@ html[data-theme="bw"] .widget{ box-shadow:inset 0 1px 0 rgba(243,239,231,.05); }
    korta (røyken skal drive bak dem), men her leser man rett gjennom nedtellinga
    og ned i teksten bak. Samme tone, full dekkevne. */
 html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
+/* Samme for nedtrekkene i dagsoversikten (stedsøk i været, valutavelgeren): de
+   bruker --surface2, som er halvgjennomsiktig i Noir/blanc og Glass. */
+html:is([data-theme="bw"],[data-theme="glass"]) :is(.wx-search,.fx-menu){ background:var(--menu-bg); }
+html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
 </style>
 <style id="carbonMobil">/* ══ Carbon på telefon — forsiden slik den var i oktober (v242) ══════════
    Kasper 2026-11-15: på telefon (640 px og smalere) skal Carbon ha det gamle
