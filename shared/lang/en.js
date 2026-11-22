@@ -7124,6 +7124,7 @@ REGIONS['en']._ph = {
 "Driftsmargin":"Operating margin",
 "EBITDA-margin":"EBITDA margin",
 "Resultatgrad":"Pre-tax margin",
+"Margin før skatt":"Pre-tax margin",
 "Kostnadsandel":"Cost ratio",
 "Kostnadsstruktur":"Cost structure",
 "Igjen til drift":"Left after costs",
