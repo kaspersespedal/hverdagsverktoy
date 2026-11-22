@@ -54,7 +54,7 @@
 </script>
 
 <!-- SHELL stylesheets — REDESIGN-2026-05 (T1-T4 ported) -->
-<link rel="stylesheet" href="/shared/themes.css?v=v11">
+<link rel="stylesheet" href="/shared/themes.css?v=v12">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v6">
 <link rel="stylesheet" href="/shared/components.css?v=v8">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v357">
@@ -870,10 +870,15 @@
     overflow:visible;
   }
   @media(hover:hover){.widget:hover .widget-spark{color:var(--accent-2)}}
-  /* Linja har én farge og ingen flate under seg. Punktet («nå» / siste kurs) er en nesten
-     null-lang strek med rund ende, så det blir en sirkel også når SVG-en strekkes ulikt i
-     bredde og høyde; ringen bak, i kortets bunnfarge, skiller det fra linja. */
-  .widget-spark .spark-line{fill:none;stroke:var(--accent-2);stroke-width:1.5;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+  /* Linja har én farge og står på en hårstrek i bunnen, med et svakt, ensfarget felt
+     mellom (ingen fargeovergang), så grafen har tyngde og ikke svever i kortet.
+     Punktet («nå» / siste kurs) er en nesten null-lang strek med rund ende, så det blir en
+     sirkel også når SVG-en strekkes ulikt i bredde og høyde; ringen bak, i kortets
+     bunnfarge, skiller det fra linja. .spark-drop er streken fra punktet ned til bunnen. */
+  .widget-spark .spark-line{fill:none;stroke:var(--accent-2);stroke-width:1.75;stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
+  .widget-spark .spark-area{fill:var(--accent-2);opacity:.11}
+  .widget-spark .spark-floor{stroke:var(--ink3);stroke-width:1;opacity:.4;vector-effect:non-scaling-stroke}
+  .widget-spark .spark-drop{stroke:var(--accent-2);stroke-width:1;opacity:.5;vector-effect:non-scaling-stroke}
   .widget-spark .spark-ring,.widget-spark .spark-dot{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}
   .widget-spark .spark-ring{stroke:var(--surface);stroke-width:9}
   .widget-spark .spark-dot{stroke:var(--accent-2);stroke-width:5}
@@ -881,7 +886,7 @@
   .widget-spark .bar-now{fill:var(--accent-2);opacity:.95}
   .widget-spark .bar-cheap{fill:var(--ink);opacity:.8}
   .widget-spark .bar-cheap-mark{fill:var(--ink);opacity:.9}
-  .widget-spark .spark-base{stroke:var(--ink3);stroke-width:1;stroke-dasharray:2 3;opacity:.3;vector-effect:non-scaling-stroke}
+  .widget-spark .spark-base{stroke:var(--ink3);stroke-width:1;stroke-dasharray:2 3;opacity:.55;vector-effect:non-scaling-stroke}
   .widget-axis{
     display:flex;justify-content:space-between;
     font:600 11px/1 var(--font-sans);letter-spacing:1.3px;text-transform:uppercase;
@@ -1043,6 +1048,20 @@
   .mdb-line path{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
   .mdb-dim{opacity:0}
   .mdb-plot.is-hov .mdb-dim{opacity:.28}
+  /* De fire nyeste kortene: ensfarget felt under linja (og mellom soloppgang og solnedgang i
+     dagslyset), og en grå linje å måle mot (det andre drivstoffet, styringsrenta). Ingen fargeovergang. */
+  .mdb-line .mdb-area{fill:currentColor;stroke:none;opacity:.1}
+  .mdb-line .mdb-cmp{stroke:var(--ink3);stroke-width:1.5}
+  .mdb-dot2.is-cmp{width:8px;height:8px;margin:-4px 0 0 -4px;background:var(--ink3)}
+  /* «Sola ned» over feltet og «Sola opp» under, helt til venstre */
+  .mdb-note{left:2px;margin-top:8px;font:500 11px/1 var(--font-sans);color:var(--ink2);white-space:nowrap}
+  .mdb-note.is-up{margin-top:-8px;transform:translateY(-100%)}
+  /* Forklaring til linjene, til høyre for tallet */
+  .mdb-leg{display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap;margin-left:auto;font:500 12px/1 var(--font-sans);color:var(--ink2)}
+  .mdb-leg span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+  .mdb-leg i{width:16px;height:0;border-top:2px solid var(--accent-2)}
+  .mdb-leg .is-c i{border-top:1.5px solid var(--ink3)}
+  .mdb-leg .is-r i{border-top:1px dashed color-mix(in srgb,var(--ink) 45%,transparent)}
   .mdb-rain{bottom:0;transform:translateX(-50%);border-radius:1px 1px 0 0;background:color-mix(in srgb,var(--ink) 22%,transparent)}
   /* Værsymbol like over kurven, ved punktet det gjelder */
   .mdb-sym{width:18px;height:18px;margin:-27px 0 0 -9px;color:var(--ink2)}
@@ -1151,6 +1170,7 @@
     .mdb-chips{flex-wrap:wrap;overflow:visible}
     .mdb-seg button{flex:1 1 0}
     .mdb-body{gap:14px}
+    .mdb-leg{margin-left:0;width:100%}
     .mdb-meta{align-items:flex-start;text-align:left;margin-left:0}
     .mdb-bars{--bgap:0px}
     .wx-week-row{grid-template-columns:64px 20px 1fr auto;gap:12px}
@@ -2084,13 +2104,13 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v444" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v444" defer></script>
-<script src="/shared/lang/no.js?v=v444" defer></script>
+<link rel="preload" href="/shared/core.js?v=v482" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v482" defer></script>
+<script src="/shared/lang/no.js?v=v464" defer></script>
 <script src="/shared/site-shell.js?v=v359" defer></script>
-<script src="/shared/top-chrome.js?v=v443" defer></script>
+<script src="/shared/top-chrome.js?v=v464" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v431" defer></script>
+<script src="/shared/markedsdata.js?v=v472" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -2810,10 +2830,12 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
   html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-yr{color:var(--ink3)}
 
   /* Et mykt lys bak datoen. Ren radial toning uten kanter (karbonveven som sto
-     her før, ble kuttet i en firkant og så ut som en tegnefeil på PC). */
+     her før, ble kuttet i en firkant og så ut som en tegnefeil på PC).
+     inset-inline-start: på arabisk (RTL) står lyset til høyre, bak datoen, i stedet for
+     å stikke 150 px ut til venstre og gjøre siden for bred (P51). */
   html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head::before{
     content:"";position:absolute;z-index:-1;pointer-events:none;
-    left:-150px;top:-70px;width:min(780px,72%);height:250px;
+    left:auto;inset-inline-start:-150px;top:-70px;width:min(780px,72%);height:250px;
     background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
   }
 
@@ -2849,7 +2871,7 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
   }
 
   /* Kortinnholdet fra den gang: én linje i stedet for faktaradene, lave grafer
-     (48 px), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
+     (60 px), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
      graf. Rentegrafen og de andre grafene åpnes stort med fullskjermknappen. */
   html:is([data-theme="carbon"],[data-theme="dark"]) .widget > .widget-facts,
   html:is([data-theme="carbon"],[data-theme="dark"]) #wxCard > .widget-spark-wrap,
@@ -2864,9 +2886,9 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
   html:is([data-theme="carbon"],[data-theme="dark"]) .widget-spark-wrap,
   html:is([data-theme="carbon"],[data-theme="dark"]) #wxCard .wx-fc-wrap,
   html:is([data-theme="carbon"],[data-theme="dark"]) #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .spark-yax{top:11px;height:48px;font-size:8.5px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .spark-yax{top:11px;height:60px;font-size:8.5px}
   html:is([data-theme="carbon"],[data-theme="dark"]) .widget-axis{font-size:8.5px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-spark{height:48px}
+  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-spark{height:60px}
   html:is([data-theme="carbon"],[data-theme="dark"]) #fxTrend i{display:none}
   html:is([data-theme="carbon"],[data-theme="dark"]) #stCard .w-note{display:block}
 }
@@ -2948,6 +2970,18 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:34px;padding:0;justify-content:center}
   html[data-theme="carbon"] #navWrap .tc-btn .chev{display:none}
   html[data-theme="carbon"] #navWrap .tc-btn .swatch{width:12px;height:12px}
+}
+/* Under 360 px fikk logoen og de fire knappene ikke plass: siden ble 17 px for bred
+   på 320 px (P50). Litt mindre knapper, mellomrom og logotekst; trykkflaten er
+   fortsatt 44 px høy. */
+@media (max-width:360px){
+  html[data-theme="carbon"] #navWrap nav,
+  html[data-theme="carbon"] #navWrap .nav-right,
+  html[data-theme="carbon"] #navWrap .tc-actions{gap:4px}
+  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:30px;height:30px}
+  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::after{inset:-7px -2px}
+  html[data-theme="carbon"] #navWrap .brand-row{gap:8px}
+  html[data-theme="carbon"] #navWrap .wordmark{font-size:14.5px}
 }
 </style>
 <style id="kalKnapp">/* ══ Kalender-knappen i dagsoversikt-toppen ══════════════════════════════
@@ -3344,7 +3378,9 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
                 <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="dfVal">—</span><span class="unit">kr/l</span></div>
+            <div class="widget-value"><span class="count-up" id="dfVal">—</span><span class="unit">kr/l</span>
+              <button type="button" class="md-exp" data-big="df" aria-haspopup="dialog" aria-label="Vis drivstoffprisen i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+            </div>
             <div class="widget-facts" id="dfSub">Henter drivstoffpris …</div>
             <p class="w-line"><span class="ctx" id="dfLine">Henter drivstoffpris …</span></p>
             <div class="widget-spark-wrap has-yax">
@@ -3365,7 +3401,9 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
                 <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="kpVal">—</span><span class="unit">%</span></div>
+            <div class="widget-value"><span class="count-up" id="kpVal">—</span><span class="unit">%</span>
+              <button type="button" class="md-exp" data-big="kp" aria-haspopup="dialog" aria-label="Vis prisveksten i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+            </div>
             <div class="widget-facts" id="kpSub">Henter prisveksten …</div>
             <p class="w-line"><span class="ctx" id="kpLine">Henter prisveksten …</span></p>
             <div class="widget-spark-wrap has-yax">
@@ -3386,7 +3424,9 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
                 <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="blVal">—</span><span class="unit">%</span></div>
+            <div class="widget-value"><span class="count-up" id="blVal">—</span><span class="unit">%</span>
+              <button type="button" class="md-exp" data-big="bl" aria-haspopup="dialog" aria-label="Vis boliglånsrenta i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+            </div>
             <div class="widget-facts" id="blSub">Henter boliglånsrenta …</div>
             <p class="w-line"><span class="ctx" id="blLine">Henter boliglånsrenta …</span></p>
             <div class="widget-spark-wrap has-yax">
@@ -3408,7 +3448,9 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
                 <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="suVal">—</span><span class="unit" id="suUnit">t</span></div>
+            <div class="widget-value"><span class="count-up" id="suVal">—</span><span class="unit" id="suUnit">t</span>
+              <button type="button" class="md-exp" data-big="su" aria-haspopup="dialog" aria-label="Vis dagslyset i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+            </div>
             <div class="widget-facts" id="suSub">Regner ut dagslyset …</div>
             <p class="w-line"><span class="ctx" id="suLine">Regner ut dagslyset …</span></p>
             <div class="widget-spark-wrap has-yax">
