@@ -879,18 +879,9 @@
     setTimeout(syncNavHeight, 1200);
   }
 
-  // ── «Avgift»-ikonet ──────────
-  // %-tegnet i HTML-en (sirkler r=2, strek 6→18) brukte bare midten av ikonboksen, så det
-  // var mindre og tynnere enn de andre faneikonene og leste som en × i liten størrelse.
-  // Det står i hver av de 82 sidene, derfor tegnes det om her.
-  function drawAvgiftIcon(){
-    var ico = document.querySelector('a.tab[href$="/avgift/"] svg');
-    if (ico) ico.innerHTML = '<circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><line x1="19.5" y1="4.5" x2="4.5" y2="19.5"/>';
-  }
-
   // ── «Avansert» i menyen (Finans og Avansert skatt) ──────────
   // Fanerekka står ferdig skrevet i HTML-en på ~85 sider, og forsidens kategorirad i index.html.
-  // Den nye seksjonen legges til sist her i stedet for i hver fil, samme grep som Avgift-ikonet over.
+  // Den nye seksjonen legges til sist her i stedet for i hver fil.
   // Sidene i /avansert/ har fanen i HTML-en selv (valgt), og da legges den ikke til to ganger.
   // Forsidens rad er et rutenett med fast kolonnetall (10, og 5 × 2 under 1060 px). Med 11 kort
   // får raden klassen .has-mod, og CSS-en under setter 11 kolonner, eller 6 + 5 der siste kort
@@ -976,7 +967,7 @@
   // Fanene i fast rekkefølge: privat, bedrift, så de felles. Samme rekkefølge som kategorilista
   // på forsiden (index.html).
   var FANE_REKKEFOLGE = ['/personlig/', '/boliglan/',
-    '/selskap/', '/regnskap/', '/avgift/', '/kalkyle/',
+    '/selskap/', '/regnskap/', '/kalkyle/',
     '/personlig/budsjett/', '/skatt/', '/kalkulator/', '/lov/', '/avansert/'];
   function isModus(m){ return m === 'privat' || m === 'bedrift'; }
   function sideModus(path){
@@ -1057,7 +1048,7 @@
     visModus(isModus(lagret) ? lagret : 'privat');
   }
 
-  function bootTopChrome(){ render(); drawAvgiftIcon(); addModelleringLink(); byggModus(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); watchFocusMode(); }
+  function bootTopChrome(){ render(); addModelleringLink(); byggModus(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); watchFocusMode(); }
   if (document.readyState === 'loading')
     document.addEventListener('DOMContentLoaded', bootTopChrome);
   else bootTopChrome();
