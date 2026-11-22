@@ -4844,6 +4844,8 @@ REGIONS['uk']._ph = {
 "Fillmore-plakat":"Афіша Fillmore",
 "Filtrer på konto-klasse":"Фільтрувати за класом рахунків",
 "Filtrer på målgruppe":"Фільтр за цільовою групою",
+"Vis menyen for privat eller bedrift":"Показати меню для приватних осіб або бізнесу",
+"Vis kategoriene for privat eller bedrift":"Показати категорії для приватних осіб або бізнесу",
 "Finans og skatt":"Фінанси та податок",
 "Finansiell":"Фінансовий",
 "Finansiell kalkulator":"Фінансовий калькулятор",
