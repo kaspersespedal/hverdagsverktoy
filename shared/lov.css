@@ -1,0 +1,193 @@
+/* ═══════════════════════════════════════════════════════════
+   lov.css — lovleseren på de fire lovsidene under /lov/ (lastes etter sidens egen <style>)
+
+   Siden viser én ting om gangen:
+   - kapittelboksen #lov-kapitler (samme utforming som innholdslista på
+     forsiden: tre grupper med overskrift, én lenke per kapittel)
+   - eller ett kapittel, når adressen er #<kapittel-id> (:target)
+   Under søk (lov.js setter .is-searching) vises treff fra alle kapitlene.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Toppen: bare søket og tittelen ── */
+.lov-doc .lov-mast{padding:0;margin:0 auto 44px;max-width:none}
+@media (min-width:981px){.lov-shell .lov-doc{padding-top:44px}}
+.lov-doc .lov-title{
+  margin:0;font-family:'Newsreader', var(--font-serif);font-weight:500;font-style:normal;
+  font-size:clamp(46px, 5.4vw, 68px);line-height:1.04;letter-spacing:-.022em;color:var(--ink);
+  text-align:center;text-wrap:balance;font-optical-sizing:auto;
+}
+/* «Merverdiavgiftsloven» er ett langt ord og må få plass på 375 px. */
+@media (max-width:560px){.lov-doc .lov-title{font-size:clamp(30px, 9vw, 44px)}}
+
+/* Søket: samme pilleform som søket på forsiden. */
+.lov-doc .lov-mast .lov-search{
+  max-width:560px;margin:0 auto 36px;padding:0 10px 0 22px;gap:14px;text-align:start;
+  border:1px solid var(--line-2);border-radius:999px;
+  background:color-mix(in srgb, var(--surface) 72%, transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025), 0 1px 0 rgba(0,0,0,.3);
+  transition:border-color .2s var(--ease), background .2s var(--ease), box-shadow .25s var(--ease);
+}
+@media (hover:hover){
+  .lov-doc .lov-mast .lov-search:hover{border-color:color-mix(in srgb, var(--accent) 30%, var(--line-2))}
+}
+/* Fokus: hel aksentkant (3:1 mot flaten i alle temaer, som søket i search.js) og en svak ring. */
+.lov-doc .lov-mast .lov-search:focus-within{
+  border-color:var(--accent);
+  background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%);
+  box-shadow:0 0 0 4px color-mix(in srgb, var(--accent) 10%, transparent), 0 8px 22px -10px rgba(0,0,0,.5);
+}
+.lov-doc .lov-mast .lov-search svg{width:17px;height:17px}
+.lov-doc .lov-mast .lov-search .lov-clear svg{width:12px;height:12px}
+.lov-doc .lov-mast .lov-search input{padding:17px 0;font:400 16px/1 var(--font-sans);letter-spacing:-.1px}
+.lov-doc .lov-mast .lov-search .lov-count{padding-inline-start:12px}
+.lov-doc .lov-mast .lov-search .lov-clear{padding:10px;margin:0}
+/* Feltet har egen tøm-knapp; nettleserens kryss ga to kryss ved siden av hverandre. */
+.lov-search input::-webkit-search-cancel-button{-webkit-appearance:none;appearance:none;display:none}
+/* Tastetips som i toppmenyen: Ctrl K (⌘ K på Mac, se lov.js). Borte ved fokus, søk og berøring. */
+.lov-keys{position:relative;display:inline-flex;gap:4px;align-items:center;padding-inline-start:12px;margin-inline-end:10px;flex-shrink:0}
+.lov-keys::before{content:"";position:absolute;inset-inline-start:0;top:50%;width:1px;height:18px;margin-top:-9px;background:var(--line-2)}
+.lov-keys kbd{
+  font:600 11px/1 var(--font-sans);letter-spacing:.4px;color:var(--ink2);
+  background:color-mix(in srgb, var(--ink) 4%, transparent);border:1px solid var(--line-2);border-radius:4px;
+  padding:5px 6px;min-width:18px;text-align:center;
+}
+.lov-search:focus-within .lov-keys,.lov-search.has-q .lov-keys{display:none}
+@media (pointer:coarse){.lov-keys{display:none}}
+@media (max-width:560px){.lov-doc .lov-mast .lov-search{margin-bottom:28px;padding-inline-start:18px}}
+
+/* ── Kapittelboksen ── */
+.lov-kap{
+  max-width:900px;margin:0 auto;padding:8px 0;
+  display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));
+  background:color-mix(in srgb, var(--surface) 62%, transparent);
+  border:1px solid var(--line-2);border-radius:24px;
+  scroll-margin-top:136px;
+}
+.lk-col{display:flex;flex-direction:column;padding:14px 12px 10px;border-inline-start:1px solid var(--line)}
+.lk-col:first-child{border-inline-start:0}
+.lk-h{
+  display:block;margin:0 0 8px;padding:0 12px;
+  font:600 10.5px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;color:var(--ink3);
+}
+[dir="rtl"] .lk-h{font-size:12px;letter-spacing:0}
+/* Nummeret står der forsiden har ikonet. Bredden er lik i hele boksen,
+   så navnene står på linje; bokføringsloven har «§ 10» og trenger mer. */
+.lk{
+  position:relative;display:grid;grid-template-columns:var(--lk-n, 1.4em) minmax(0, 1fr);
+  column-gap:12px;align-items:baseline;
+  padding:9px 30px 9px 12px;border-radius:10px;color:var(--ink);text-decoration:none;
+  transition:background .2s var(--ease);
+}
+.lov-kap.is-par{--lk-n:2.3em}
+.lk-n{
+  font-family:'EB Garamond', var(--font-serif);font-style:italic;font-weight:500;font-size:17px;line-height:1;
+  color:var(--accent);font-variant-numeric:tabular-nums lining-nums;text-align:end;white-space:nowrap;
+  opacity:.85;transition:opacity .2s var(--ease), color .2s var(--ease);
+}
+.lk-lbl{font:500 15px/1.3 var(--font-sans);letter-spacing:-.1px;text-wrap:balance}
+.lk::after{
+  content:"";position:absolute;inset-inline-end:14px;top:50%;
+  width:7px;height:7px;margin-top:-4px;
+  border-top:1.5px solid var(--accent-2);border-inline-end:1.5px solid var(--accent-2);
+  transform:translateX(-4px) rotate(45deg);opacity:0;
+  transition:opacity .2s var(--ease), transform .2s var(--ease);
+}
+[dir="rtl"] .lk::after{transform:translateX(4px) rotate(-45deg)}
+.lk:focus-visible{outline:2px solid color-mix(in srgb, var(--accent) 70%, transparent);outline-offset:-2px}
+@media (hover:hover){
+  .lk:hover{background:color-mix(in srgb, var(--accent) 8%, transparent)}
+  .lk:hover .lk-n{opacity:1;color:var(--accent-2)}
+  .lk:hover::after{opacity:1;transform:translateX(0) rotate(45deg)}
+  [dir="rtl"] .lk:hover::after{transform:translateX(0) rotate(-45deg)}
+}
+/* Nettbrett: tre spalter blir for smale for lange kapittelnavn. Gruppene
+   står under hverandre, med to kapitler per rad. */
+@media (max-width:860px){
+  .lov-kap{grid-template-columns:minmax(0, 1fr);padding:4px 0;border-radius:22px}
+  .lk-col{
+    display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));align-content:start;column-gap:4px;
+    padding:13px 8px 7px;border-inline-start:0;border-top:1px solid var(--line);
+  }
+  .lk-col:first-child{border-top:0}
+  .lk-h{grid-column:1 / -1;margin-bottom:5px}
+}
+/* Telefon: ett kapittel per rad, hele raden er trykkflate. */
+@media (max-width:560px){
+  .lk-col{grid-template-columns:minmax(0, 1fr)}
+  .lk{padding:11px 12px;-webkit-tap-highlight-color:transparent}
+  .lk::after{content:none}
+  .lk:active{background:color-mix(in srgb, var(--accent) 8%, transparent)}
+}
+
+/* ── Ett kapittel om gangen ── */
+.lov-body .lov-chapter{display:none;max-width:820px;margin:0 auto;scroll-margin-top:136px}
+.lov-body .lov-chapter:target{display:block}
+.lov-body:has(.lov-chapter:target) .lov-kap{display:none}
+
+.chap-back{
+  display:inline-flex;align-items:center;gap:8px;margin:0 0 32px;padding:8px 14px 8px 11px;
+  border:1px solid var(--line);border-radius:999px;color:var(--ink2);text-decoration:none;
+  font:500 12.5px/1 var(--font-sans);letter-spacing:.02em;
+  transition:color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.chap-back svg{color:var(--accent)}
+.chap-back:hover{color:var(--ink);border-color:var(--line-warm);background:color-mix(in srgb, var(--accent) 6%, transparent)}
+[dir="rtl"] .chap-back svg{transform:scaleX(-1)}
+
+.chap-sum{
+  margin:0 0 44px;padding:22px 26px 24px;border:1px solid var(--line);border-radius:14px;
+  background:color-mix(in srgb, var(--surface) 55%, transparent);
+}
+.chap-sum p{margin:0;font-family:var(--font-serif);font-size:17px;line-height:1.7;color:var(--ink);text-wrap:pretty}
+.chap-sum .cs-h,.chap-lbl{
+  display:flex;align-items:center;gap:10px;margin:0 0 12px;
+  font:500 10.5px/1 var(--font-sans);letter-spacing:.28em;text-transform:uppercase;color:var(--accent);
+}
+.chap-sum .cs-h::before,.chap-lbl::before{content:"";width:14px;height:1px;background:var(--accent);opacity:.6;flex-shrink:0}
+.chap-lbl{margin-bottom:4px}
+
+/* Paragrafer utover de tre viktigste ligger bak «Vis alle». */
+.lov-chapter .par.is-extra{display:none}
+.lov-chapter.is-expanded .par.is-extra{display:grid}
+.chap-more{
+  display:inline-flex;align-items:center;gap:8px;margin:12px 0 0;padding:11px 16px;cursor:pointer;
+  background:transparent;border:1px solid var(--line-warm);border-radius:999px;color:var(--ink);
+  font:500 12.5px/1 var(--font-sans);letter-spacing:.02em;
+  transition:background .2s var(--ease), color .2s var(--ease);
+}
+.chap-more svg{color:var(--accent);transition:transform .2s var(--ease)}
+.chap-more[aria-expanded="true"] svg{transform:rotate(180deg)}
+.chap-more:hover{background:color-mix(in srgb, var(--accent) 8%, transparent);color:var(--accent-2)}
+
+/* Forrige / neste kapittel */
+.chap-pager{
+  display:flex;gap:16px;justify-content:space-between;margin-top:56px;padding-top:28px;
+  border-top:1px solid var(--line-2);
+}
+.chap-pager .cp{
+  flex:0 1 48%;display:flex;flex-direction:column;gap:8px;padding:16px 20px;
+  border:1px solid var(--line);border-radius:12px;text-decoration:none;
+  transition:border-color .2s var(--ease), background .2s var(--ease);
+}
+.chap-pager .cp-next{margin-inline-start:auto;text-align:end}
+.chap-pager .cp-dir{font:500 10px/1 var(--font-sans);letter-spacing:.24em;text-transform:uppercase;color:var(--ink3)}
+.chap-pager .cp-name{font:500 15px/1.35 var(--font-sans);color:var(--ink);text-wrap:balance}
+.chap-pager .cp:hover{border-color:var(--line-warm);background:color-mix(in srgb, var(--accent) 5%, transparent)}
+.chap-pager .cp:hover .cp-dir{color:var(--accent-2)}
+@media (max-width:560px){
+  .chap-sum{padding:18px 18px 20px}
+  .chap-sum p{font-size:16px}
+  .chap-pager{flex-direction:column;gap:10px;margin-top:40px}
+  .chap-pager .cp{flex-basis:auto}
+  .chap-pager .cp-next{margin-inline-start:0}
+}
+
+/* ── Søk: treff fra alle kapitlene, uten boks, oppsummering og navigasjon ── */
+.lov-shell.is-searching .lov-kap,
+.lov-shell.is-searching .chap-back,
+.lov-shell.is-searching .chap-sum,
+.lov-shell.is-searching .chap-lbl,
+.lov-shell.is-searching .chap-more,
+.lov-shell.is-searching .chap-pager{display:none}
+.lov-shell.is-searching .lov-body .lov-chapter{display:block;margin-bottom:64px}
+.lov-shell.is-searching .lov-chapter .par.is-extra{display:grid}
