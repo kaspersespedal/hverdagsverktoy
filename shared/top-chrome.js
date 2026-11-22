@@ -383,11 +383,10 @@
     color:var(--ink);font:500 13px/1 var(--font-sans,inherit);cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.35)}
   .tc-focus-exit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   @media(hover:hover){.tc-focus-exit:hover{border-color:var(--accent)}}
-  /* Privat | Bedrift: todelt knapp foran fanerekka. Knappen står fast, fanene ruller ved siden
-     av den. Fanerekka går ellers helt ut til skjermkanten på telefon (--tabs-bleed); på
-     knappens side slås det av, ellers hadde fanene glidd inn under knappen. */
-  .tc-modus-rad{display:flex;align-items:center;gap:12px}
-  body .tc-modus-rad > .tabs{flex:1 1 auto;min-width:0;margin-inline-start:0;padding-inline-start:0}
+  /* Privat | Bedrift: todelt knapp over kortlista på Skatt, Kalkulator, Avgift og Lov. Den står
+     til høyre i overskriftsraden, der tellingen («7 kategorier») stod: tellingen stemmer ikke
+     når den andre sidens kort er skjult. */
+  .col-head.tc-modus-hode .count{display:none}
   .tc-modus{flex:none;display:inline-flex;padding:2px;border-radius:999px;border:1px solid var(--line-2,var(--line))}
   .tc-modus-btn{appearance:none;border:0;background:transparent;cursor:pointer;position:relative;
     padding:7px 11px;border-radius:999px;font:500 12px/1 var(--font-sans,inherit);color:var(--ink3);
@@ -398,7 +397,7 @@
   .tc-modus-btn:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
   @media(hover:hover){.tc-modus-btn:hover{color:var(--ink)}}
   @media(pointer:coarse){.tc-modus-btn::after{content:"";position:absolute;inset:-8px 0}}
-  .tabs > a.tab.tc-modus-skjult{display:none}
+  .calc-deck a.tc-modus-skjult{display:none}
   `;
   var styleEl = document.createElement('style');
   styleEl.id = 'tc-styles';
@@ -801,14 +800,10 @@
     // Ytterlenkene, ikke ytterbarna: forsidens rad har lenkene i tre grupper
     // (.qg-col), og på telefon er gruppene display:contents — de har ingen
     // egen boks å måle. I fanerekka er lenkene barna, så der er det det samme.
-    // Bare lenker som vises teller: Privat | Bedrift skjuler faner, og en skjult lenke har
-    // ingen boks (alle mål er 0), så uttoningen ville stått på til venstre og manglet til høyre.
-    var links = tabs.getElementsByTagName('a'), first = null, last = null;
-    for (var i = 0; i < links.length; i++)
-      if (links[i].getClientRects().length){ if (!first) first = links[i]; last = links[i]; }
-    if (!first) return;
-    var a = first.getBoundingClientRect();
-    var b = last.getBoundingClientRect();
+    var links = tabs.getElementsByTagName('a');
+    if (!links.length) return;
+    var a = links[0].getBoundingClientRect();
+    var b = links[links.length - 1].getBoundingClientRect();
     // 2px slingringsmonn: subpiksel-scroll og zoom gjør at kantene sjelden
     // lander blankt på hverandre, og uten monnet blir uttoningen stående igjen.
     setAttrIfChanged(tabs, 'data-fade-l',
@@ -884,18 +879,9 @@
     setTimeout(syncNavHeight, 1200);
   }
 
-  // ── «Avgift»-ikonet ──────────
-  // %-tegnet i HTML-en (sirkler r=2, strek 6→18) brukte bare midten av ikonboksen, så det
-  // var mindre og tynnere enn de andre faneikonene og leste som en × i liten størrelse.
-  // Det står i hver av de 82 sidene, derfor tegnes det om her.
-  function drawAvgiftIcon(){
-    var ico = document.querySelector('a.tab[href$="/avgift/"] svg');
-    if (ico) ico.innerHTML = '<circle cx="7" cy="7" r="3"/><circle cx="17" cy="17" r="3"/><line x1="19.5" y1="4.5" x2="4.5" y2="19.5"/>';
-  }
-
   // ── «Avansert» i menyen (Finans og Avansert skatt) ──────────
   // Fanerekka står ferdig skrevet i HTML-en på ~85 sider, og forsidens kategorirad i index.html.
-  // Den nye seksjonen legges til sist her i stedet for i hver fil, samme grep som Avgift-ikonet over.
+  // Den nye seksjonen legges til sist her i stedet for i hver fil.
   // Sidene i /avansert/ har fanen i HTML-en selv (valgt), og da legges den ikke til to ganger.
   // Forsidens rad er et rutenett med fast kolonnetall (10, og 5 × 2 under 1060 px). Med 11 kort
   // får raden klassen .has-mod, og CSS-en under setter 11 kolonner, eller 6 + 5 der siste kort
@@ -958,14 +944,17 @@
     sync();
   }
 
-  // ── Privat | Bedrift: todelt knapp som styrer fanerekka ──────────
-  // Knappen styrer bare MENYEN. Ingen side stenges ute: fanene står fortsatt i HTML-en og
-  // skjules med CSS, så adresser, søk og Google er uendret.
-  // Regler: (1) siden du står på vinner, (2) felles sider følger siden du sist var på eller
-  // valgte, (3) fanen for seksjonen du står i skjules aldri.
+  // ── Privat | Bedrift: todelt knapp over kortlista på seksjonene som har begge deler ──
+  // Skatt, Kalkulator, Avgift og Lov har sider for både privatpersoner og bedrifter. Knappen
+  // viser den valgte sidens kort pluss de felles, og skjuler den andre sidens kort. Menyen og
+  // forsiden viser alltid alt, så en ny besøkende ser hele nettstedet.
+  // Valget huskes (localStorage hvt-modus). Sider som bare er for den ene siden (Regnskap,
+  // Boliglån …) setter valget, så Skatt åpner på Bedrift etter et besøk i Regnskap.
   // MODUS_SIDER sier hvem hver side er for. Lengste treff vinner; alt som ikke står her er felles.
+  // Budsjett ligger under /personlig/, men har både en privat- og en bedriftsutgave og sin egen
+  // Privat | Bedrift-knapp på siden. Det er derfor felles og setter ikke valget selv.
   var MODUS_SIDER = [
-    ['/personlig/', 'privat'], ['/boliglan/', 'privat'],
+    ['/personlig/', 'privat'], ['/personlig/budsjett/', 'felles'], ['/boliglan/', 'privat'],
     ['/skatt/inntekt/', 'privat'], ['/skatt/formue/', 'privat'], ['/skatt/reise/', 'privat'],
     ['/skatt/skattemelding/', 'privat'], ['/avgift/engangsavgift/', 'privat'], ['/kalkulator/lonnut/', 'privat'],
     ['/selskap/', 'bedrift'], ['/regnskap/', 'bedrift'], ['/kalkyle/', 'bedrift'], ['/avansert/', 'bedrift'],
@@ -975,14 +964,11 @@
     ['/kalkulator/valgevinst/', 'bedrift'],
     ['/lov/aksjelov/', 'bedrift'], ['/lov/bokforingslov/', 'bedrift'], ['/lov/mvalov/', 'bedrift']
   ];
-  // MODUS_FANER er fanene i den rekkefølgen de skal stå, og hvilken side de hører til ('' = begge).
-  // Samme rekkefølge og inndeling som kategorilista på forsiden (index.html): de egne først,
-  // så de felles. Der gjør CSS jobben ut fra <html data-modus>, her skjules fanene én og én.
-  var MODUS_FANER = [
-    ['/personlig/budsjett/', 'privat'], ['/personlig/', 'privat'], ['/boliglan/', 'privat'],
-    ['/selskap/', 'bedrift'], ['/regnskap/', 'bedrift'], ['/avgift/', 'bedrift'], ['/kalkyle/', 'bedrift'],
-    ['/skatt/', ''], ['/kalkulator/', ''], ['/lov/', ''], ['/avansert/', 'bedrift']
-  ];
+  // Fanene i fast rekkefølge: privat, bedrift, så de felles. Samme rekkefølge som kategorilista
+  // på forsiden (index.html).
+  var FANE_REKKEFOLGE = ['/personlig/', '/boliglan/',
+    '/selskap/', '/regnskap/', '/kalkyle/',
+    '/personlig/budsjett/', '/skatt/', '/kalkulator/', '/lov/', '/avansert/'];
   function isModus(m){ return m === 'privat' || m === 'bedrift'; }
   function sideModus(path){
     var best = '', hit = 'felles';
@@ -1000,13 +986,15 @@
       if (links[i].pathname.replace(/index\.html$/, '') === sti) return links[i];
     return null;
   }
-  // De fire blandede seksjonsforsidene: kortene for valgt side først, så de felles, så den
-  // andre siden. Ingenting skjules. Nummereringen (01, 02 …) følger den nye rekkefølgen.
+  // De fire blandede seksjonsforsidene: kortene for valgt side først, så de felles. Den andre
+  // sidens kort skjules. Nummereringen (01, 02 …) følger de synlige kortene.
   var MODUS_FORSIDER = ['/skatt/', '/kalkulator/', '/avgift/', '/lov/'];
-  function sorterKort(m){
-    if (MODUS_FORSIDER.indexOf(location.pathname.replace(/index\.html$/, '')) < 0) return;
+  function visModus(m){
+    var btns = document.querySelectorAll('.tc-modus-btn');
+    for (var j = 0; j < btns.length; j++)
+      btns[j].setAttribute('aria-pressed', btns[j].getAttribute('data-modus') === m ? 'true' : 'false');
     function rang(a){ var s = sideModus(a.pathname); return s === m ? 0 : s === 'felles' ? 1 : 2; }
-    var lister = document.querySelectorAll('.cat-grid, .tool-group');
+    var lister = document.querySelectorAll('.calc-deck .cat-grid, .calc-deck .tool-group');
     for (var i = 0; i < lister.length; i++){
       var kort = [];
       for (var c = lister[i].firstElementChild; c; c = c.nextElementSibling)
@@ -1016,26 +1004,10 @@
       kort.sort(function(a, b){ return rang(a) - rang(b) || a.getAttribute('data-tc-ordre') - b.getAttribute('data-tc-ordre'); });
       for (k = 0; k < kort.length; k++){
         lister[i].appendChild(kort[k]);
+        kort[k].classList.toggle('tc-modus-skjult', rang(kort[k]) === 2);
         var n = kort[k].querySelector('.cat-num');
         if (n) n.textContent = (k < 9 ? '0' : '') + (k + 1);
       }
-    }
-  }
-  function visModus(m){
-    document.documentElement.setAttribute('data-modus', m);
-    // .hm-btn er forsidens knapp; den står ferdig i index.html.
-    var btns = document.querySelectorAll('.tc-modus-btn, .hm-btn');
-    for (var j = 0; j < btns.length; j++)
-      btns[j].setAttribute('aria-pressed', btns[j].getAttribute('data-modus') === m ? 'true' : 'false');
-    sorterKort(m);
-    var tabs = document.querySelector('.tabs');
-    if (!tabs) return;
-    for (var i = 0; i < MODUS_FANER.length; i++){
-      var a = modusFane(tabs, MODUS_FANER[i][0]);
-      if (!a) continue;
-      var hvem = MODUS_FANER[i][1];
-      var aktiv = a.matches('[aria-selected="true"], .active, [aria-current]');
-      a.classList.toggle('tc-modus-skjult', !!hvem && hvem !== m && !aktiv);
     }
   }
   function modusKlikk(e){
@@ -1044,44 +1016,39 @@
     if (!isModus(valg)) return;
     setStored('hvt-modus', valg);
     visModus(valg);
-    var rows = tabRows();
-    for (var i = 0; i < rows.length; i++) rows[i].scrollLeft = 0;
-    syncTabRow(); revealActiveTab();
   }
   function byggModus(){
     var side = sideModus(location.pathname);
-    var lagret = getStored('hvt-modus', 'privat');
-    var m = side !== 'felles' ? side : (isModus(lagret) ? lagret : 'privat');
-    // Husk siden du sist var på, så felles sider (Kalkulator, Lov, forsiden) holder samme meny.
+    // Husk siden du sist var på, så Skatt, Kalkulator, Avgift og Lov åpner på samme side.
     if (side !== 'felles' && !IN_IFRAME) setStored('hvt-modus', side);
     var tabs = document.querySelector('.tabs');
-    if (tabs && tabs.parentElement && !document.querySelector('.tc-modus')){
-      // Fanene i fast rekkefølge: privat, bedrift, så de felles verktøyene. Flyttes i selve
-      // dokumentet (ikke med CSS order), så Tab-tasten følger det øyet ser.
-      for (var i = 0; i < MODUS_FANER.length; i++){
-        var a = modusFane(tabs, MODUS_FANER[i][0]);
+    if (tabs){
+      // Flyttes i selve dokumentet (ikke med CSS order), så Tab-tasten følger det øyet ser.
+      for (var i = 0; i < FANE_REKKEFOLGE.length; i++){
+        var a = modusFane(tabs, FANE_REKKEFOLGE[i]);
         if (a) tabs.appendChild(a);
       }
-      var r = {}; try { r = (typeof R === 'function' && R()) || {}; } catch(_e){}
-      var box = document.createElement('div');
-      box.className = 'tc-modus';
-      box.setAttribute('role', 'group');
-      // Ledeteksten oversettes fra språkfilas frase-ordbok (_ph), som core.js bruker for aria-label.
-      var lbl = 'Vis menyen for privat eller bedrift';
-      box.setAttribute('aria-label', (r._ph && r._ph[lbl]) || lbl);
-      box.innerHTML =
-        '<button type="button" class="tc-modus-btn" data-modus="privat" data-i18n="m.f.privat">' + (r['m.f.privat'] || 'Privat') + '</button>' +
-        '<button type="button" class="tc-modus-btn" data-modus="bedrift" data-i18n="m.f.bedrift">' + (r['m.f.bedrift'] || 'Bedrift') + '</button>';
-      box.addEventListener('click', modusKlikk);
-      tabs.parentElement.classList.add('tc-modus-rad');
-      tabs.parentElement.insertBefore(box, tabs);
     }
-    var forside = document.querySelector('.hero-modus');
-    if (forside) forside.addEventListener('click', modusKlikk);
-    visModus(m);
+    var hode = document.querySelector('.calc-deck .col-head');
+    if (MODUS_FORSIDER.indexOf(location.pathname.replace(/index\.html$/, '')) < 0 || !hode || hode.querySelector('.tc-modus')) return;
+    var r = {}; try { r = (typeof R === 'function' && R()) || {}; } catch(_e){}
+    var box = document.createElement('div');
+    box.className = 'tc-modus';
+    box.setAttribute('role', 'group');
+    // Ledeteksten oversettes fra språkfilas frase-ordbok (_ph), som core.js bruker for aria-label.
+    var lbl = 'Velg privat eller bedrift';
+    box.setAttribute('aria-label', (r._ph && r._ph[lbl]) || lbl);
+    box.innerHTML =
+      '<button type="button" class="tc-modus-btn" data-modus="privat" data-i18n="m.f.privat">' + (r['m.f.privat'] || 'Privat') + '</button>' +
+      '<button type="button" class="tc-modus-btn" data-modus="bedrift" data-i18n="m.f.bedrift">' + (r['m.f.bedrift'] || 'Bedrift') + '</button>';
+    box.addEventListener('click', modusKlikk);
+    hode.classList.add('tc-modus-hode');
+    hode.appendChild(box);
+    var lagret = getStored('hvt-modus', 'privat');
+    visModus(isModus(lagret) ? lagret : 'privat');
   }
 
-  function bootTopChrome(){ render(); drawAvgiftIcon(); addModelleringLink(); byggModus(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); watchFocusMode(); }
+  function bootTopChrome(){ render(); addModelleringLink(); byggModus(); syncTabRow(); revealActiveTab(); watchTabRow(); watchNavHeight(); watchFocusMode(); }
   if (document.readyState === 'loading')
     document.addEventListener('DOMContentLoaded', bootTopChrome);
   else bootTopChrome();

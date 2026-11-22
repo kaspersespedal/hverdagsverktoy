@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <title>Budsjett — Privatøkonomi · Hverdagsverktøy</title>
-<meta name="description" content="Lag et personlig budsjett med inntekter og utgifter — se sparerate, månedlig balanse og årlig overskudd. Last ned som CSV eller PDF. Alt skjer lokalt i nettleseren.">
+<meta name="description" content="Lag budsjett for deg selv eller for bedriften. Privat: sparerate og hva du har til overs. Bedrift: driftsresultat og driftsmargin. Last ned som CSV eller PDF. Alt skjer lokalt i nettleseren.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://xn--hverdagsverkty-2qb.no/personlig/budsjett/">
 <meta property="og:title" content="Budsjett — Hverdagsverktøy">
-<meta property="og:description" content="Lag et personlig budsjett med inntekter og utgifter — se sparerate, månedlig balanse og årlig overskudd.">
+<meta property="og:description" content="Lag budsjett for deg selv eller for bedriften — se sparerate og hva du har til overs, eller driftsresultat og driftsmargin.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://xn--hverdagsverkty-2qb.no/personlig/budsjett/">
 <meta property="og:locale" content="nb_NO">
@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-normal.woff2?v=v1">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-italic.woff2?v=v1">
 <link rel="stylesheet" href="/shared/fonts.css?v=v2">
-<link rel="preload" href="/shared/core.js?v=v395" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v472" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -55,6 +55,8 @@
 
 <script>(function(){try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <script>(function(){try{var l=localStorage.getItem('hvt-lang')||'no';document.documentElement.setAttribute('data-lang',l);if(l!=='no')document.documentElement.classList.add('lang-loading');}catch(e){}})();</script>
+<!-- Privat eller bedrift settes før siden tegnes, så riktig utgave vises fra første bilde -->
+<script>(function(){try{if(localStorage.getItem('hvt-modus')==='bedrift')document.documentElement.setAttribute('data-utgave','bedrift');}catch(e){}})();</script>
 
 <style>
 html.lang-loading [data-i18n]{visibility:hidden;}
@@ -101,9 +103,19 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:18px 0
 .bud-sum-cell.accent .v{color:var(--accent-2)}
 .bud-sum-cell .v.neg{color:var(--neg,#c66)}
 
+/* Privat | Bedrift: samme knapp som på Skatt, Kalkulator, Avgift og Lov (utseendet ligger i
+   shared/top-chrome.js). Tekst som bare gjelder den ene utgaven er merket data-utg, og
+   html[data-utgave] bestemmer hvilken som vises. */
+.bud-modus{margin-top:24px}
+html[data-utgave="bedrift"] [data-utg="privat"],
+html:not([data-utgave="bedrift"]) [data-utg="bedrift"]{display:none !important}
+
 /* Entré-animasjoner — samme system som landingssidene (keyframes + .page-content fra shared).
    Eyebrow/tittel/lead animeres av site-shell.css; her legges nøkkeltall-raden + verktøyet til.
    Re-timet 2026-07-02 til hvx-koreografien («ett åndedrag», ferdig ≤1,2s). */
+.page-content .cat-hero .bud-modus{animation:hvxRiseSm .5s var(--ease-soft,cubic-bezier(.16,1,.3,1)) both .24s}
+/* Ingressen byttes når man velger utgave. Etter første innlasting skal den nye stå der med en gang. */
+body.hv-entered .page-content .cat-hero .ch-sub[data-utg]{animation:none}
 .page-content .cat-hero .bud-sum{animation:hvxLine .6s var(--ease-soft,cubic-bezier(.16,1,.3,1)) both .28s;transform-origin:center top}
 .page-content .cat-hero .bud-sum-cell{animation:hvxRise .5s var(--ease-soft,cubic-bezier(.16,1,.3,1)) both}
 .page-content .cat-hero .bud-sum-cell:nth-child(1){animation-delay:.34s}
@@ -287,20 +299,20 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
 <link rel="stylesheet" href="/shared/learn.css?v=v8">
 <link rel="stylesheet" href="/shared/steg-guide.css?v=v1">
-<link rel="stylesheet" href="/shared/themes.css?v=v11">
+<link rel="stylesheet" href="/shared/themes.css?v=v12">
 <link rel="stylesheet" href="/shared/colors_and_type.css?v=v6">
 <link rel="stylesheet" href="/shared/components.css?v=v8">
 <link rel="stylesheet" href="/shared/site-shell.css?v=v357">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v4">
 
 <script defer src="/shared/atmosphere.js?v=v7"></script>
-<script defer src="/shared/core.js?v=v395"></script>
-<script defer src="/shared/lang/no.js?v=v394"></script>
+<script defer src="/shared/core.js?v=v472"></script>
+<script defer src="/shared/lang/no.js?v=v464"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script defer src="/shared/steg-guide.js?v=v1"></script>
 
 <script defer src="/shared/site-shell.js?v=v357"></script>
-<script defer src="/shared/top-chrome.js?v=v395"></script>
+<script defer src="/shared/top-chrome.js?v=v464"></script>
 </head>
 <body>
 
@@ -344,9 +356,8 @@ footer em{font-style:italic}
       <a href="/personlig/" class="tab" data-tab="personlig"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.5 3.1-6 7-6s7 2.5 7 6"/></svg><span data-i18n="tabPersonlig">Privatøkonomi</span></a>
       <a href="/boliglan/" class="tab" data-tab="boliglan"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 L12 4 L21 11"/><path d="M5 10 V20 H19 V10"/></svg><span data-i18n="tabBoliglan">Boliglån</span></a>
       <a href="/kalkulator/" class="tab" data-tab="kalkulator"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="9" y1="7" x2="15" y2="7"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="12" y1="12" x2="12" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><line x1="9" y1="16" x2="9" y2="16.01"/><line x1="12" y1="16" x2="12" y2="16.01"/><line x1="15" y1="16" x2="15" y2="16.01"/></svg><span data-i18n="tabKalkulator">Kalkulator</span></a>
-      <a href="/skatt/" class="tab" data-tab="skatt"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg><span data-i18n="tabSkatt">Skatt</span></a>
+      <a href="/skatt/" class="tab" data-tab="skatt"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 H16 L20 7 V21 H6 Z"/><polyline points="16 3 16 7 20 7"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="15" y2="16"/></svg><span data-i18n="tabSkattAvgift">Skatt og avgift</span></a>
       <a href="/selskap/" class="tab" data-tab="selskap"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg><span data-i18n="tabSelskap">Selskap</span></a>
-      <a href="/avgift/" class="tab" data-tab="avgift"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="2"/><circle cx="15" cy="15" r="2"/><line x1="6" y1="18" x2="18" y2="6"/></svg><span data-i18n="tabAvgift">Avgift</span></a>
       <a href="/regnskap/" class="tab" data-tab="regnskap"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="1.5"/><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="14" x2="20" y2="14"/><line x1="12" y1="9" x2="12" y2="20"/></svg><span data-i18n="tabRegnskap">Regnskap</span></a>
       <a href="/lov/" class="tab" data-tab="lov"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 V20"/><path d="M5 7 L12 5 L19 7"/><path d="M3 13 a3 3 0 0 0 6 0 L6 7 Z"/><path d="M15 13 a3 3 0 0 0 6 0 L18 7 Z"/></svg><span data-i18n="tabLov">Lov</span></a>
       <a href="/kalkyle/" class="tab" data-tab="kalkyle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2A2 2 0 0 1 3 12V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6Z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg><span data-i18n="tabKalkyle">Kalkyle</span></a>
@@ -365,22 +376,28 @@ footer em{font-style:italic}
         <!-- a11y/SEO: siden hadde ingen h1 i det hele tatt — sidetittelen lå
              som h2, så overskriftsnivå 1 manglet på hele siden. -->
         <h1><em data-i18n="budNTitle">Budsjett</em> <span data-i18n="budHeadingSuffix">— månedlig oversikt</span></h1>
-        <div class="ch-sub" data-i18n="budNLead">Legg inn inntekter og utgifter, så ser du hva du har igjen hver måned, hvor stor del av inntekten det er (sparerate), og hva det blir på et år.</div>
+        <div class="ch-sub" data-utg="privat" data-i18n="budNLead">Legg inn inntekter og utgifter, så ser du hva du har igjen hver måned, hvor stor del av inntekten det er (sparerate), og hva det blir på et år.</div>
+        <div class="ch-sub" data-utg="bedrift" data-i18n="budBLead">Legg inn bedriftens inntekter og kostnader, så ser du driftsresultatet hver måned, hvor stor del av inntektene det er (driftsmargin), og hva det blir på et år.</div>
+        <div class="tc-modus bud-modus" id="budModus" role="group" aria-label="Velg privat eller bedrift">
+          <button type="button" class="tc-modus-btn" data-modus="privat" aria-pressed="true" data-i18n="m.f.privat">Privat</button>
+          <button type="button" class="tc-modus-btn" data-modus="bedrift" aria-pressed="false" data-i18n="m.f.bedrift">Bedrift</button>
+        </div>
       </div>
       <div class="bud-sum" id="budSummary">
-        <div class="bud-sum-cell"><span class="l" data-i18n="budColInntekt">Inntekt</span><span class="v" id="bs-inn">0 kr</span></div>
-        <div class="bud-sum-cell"><span class="l" data-i18n="budColUtgift">Utgift</span><span class="v" id="bs-ut">0 kr</span></div>
-        <div class="bud-sum-cell accent"><span class="l" data-i18n="budRDispLbl">Til overs</span><span class="v" id="bs-diff">0 kr</span></div>
-        <div class="bud-sum-cell"><span class="l" data-i18n="budNStatSavings">Sparerate</span><span class="v" id="bs-rate">0 %</span></div>
+        <div class="bud-sum-cell"><span class="l" data-utg="privat" data-i18n="budColInntekt">Inntekt</span><span class="l" data-utg="bedrift">Driftsinntekter</span><span class="v" id="bs-inn">0 kr</span></div>
+        <div class="bud-sum-cell"><span class="l" data-utg="privat" data-i18n="budColUtgift">Utgift</span><span class="l" data-utg="bedrift">Driftskostnader</span><span class="v" id="bs-ut">0 kr</span></div>
+        <div class="bud-sum-cell accent"><span class="l" data-utg="privat" data-i18n="budRDispLbl">Til overs</span><span class="l" data-utg="bedrift">Driftsresultat</span><span class="v" id="bs-diff">0 kr</span></div>
+        <div class="bud-sum-cell"><span class="l" data-utg="privat" data-i18n="budNStatSavings">Sparerate</span><span class="l" data-utg="bedrift">Driftsmargin</span><span class="v" id="bs-rate">0 %</span></div>
         <div class="bud-sum-cell"><span class="l">Per år</span><span class="v" id="bs-aar">0 kr</span></div>
       </div>
     </section>
 
     <section class="bud-tool">
       <div class="bud-toolbar">
-        <span class="bud-toolbar-hint" data-i18n="budToolbarHint">Klikk i et felt for å endre det. Alle beløp er per måned. Budsjettet lagres automatisk og blir i nettleseren din.</span>
+        <span class="bud-toolbar-hint" data-utg="privat" data-i18n="budToolbarHint">Klikk i et felt for å endre det. Alle beløp er per måned. Budsjettet lagres automatisk og blir i nettleseren din.</span>
+        <span class="bud-toolbar-hint" data-utg="bedrift" data-i18n="budBToolbarHint">Klikk i et felt for å endre det. Alle beløp er per måned, og uten merverdiavgift hvis bedriften er mva-registrert. Budsjettet lagres automatisk og blir i nettleseren din.</span>
         <div class="bud-toolbar-actions">
-          <button class="bud-act" type="button" id="budImport" title="Importer kontoutskrift (CSV) fra nettbanken — filen leses lokalt og forlater aldri nettleseren din">
+          <button class="bud-act" type="button" id="budImport" data-utg="privat" title="Importer kontoutskrift (CSV) fra nettbanken — filen leses lokalt og forlater aldri nettleseren din">
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12V4M3.5 7.5L7 4l3.5 3.5M2.5 2h9"/></svg><span>Importer</span>
           </button>
           <input type="file" id="budImportFile" accept=".csv,text/csv,text/plain" style="display:none" aria-hidden="true">
@@ -399,14 +416,14 @@ footer em{font-style:italic}
       <div class="bud-grid" id="budGrid"></div>
       <div id="budCalcWrap" aria-live="polite"></div>
       <section class="bud-viz" aria-labelledby="budVizH">
-        <h2 class="bud-viz-h" id="budVizH">Hvor går pengene?</h2>
+        <h2 class="bud-viz-h" id="budVizH"><span data-utg="privat">Hvor går pengene?</span><span data-utg="bedrift">Hvor går inntektene?</span></h2>
         <p class="bud-viz-say" id="budVizSay" aria-live="polite"></p>
         <div id="budVizBody"></div>
       </section>
     </section>
 
-    <!-- =============== LAER-INNHOLD: personlig-budsjett =============== -->
-    <div class="lrn" id="lrn-bu">
+    <!-- =============== LAER-INNHOLD: personlig-budsjett (bare privatutgaven: 50/30/20-regelen gjelder husholdninger) =============== -->
+    <div class="lrn" id="lrn-bu" data-utg="privat">
       <details class="sg" id="lrn-bu-modell">
         <summary><span class="sg-head"><span class="sg-k">Modell</span><h2 class="sg-t" id="lrn-bu-h">Faste utgifter bestemmer hvor mye du kan spare</h2><span class="sg-d">Se budsjettet ditt som hundre ruter, sammenlignet med 50/30/20-regelen.</span></span><span class="sg-btn"><span class="o">Åpne</span><span class="c">Lukk</span><span class="x" aria-hidden="true">+</span></span></summary>
         <div class="sg-body">
@@ -498,17 +515,66 @@ footer em{font-style:italic}
     });
   }
   function setTxt(id, val){ var el = document.getElementById(id); if(el) el.textContent = val; }
+  // Prosent med én desimal: «12,5 %», «−3,4 %»
+  function fmtMargin(p){
+    p = Math.round((isFinite(p) ? p : 0) * 10) / 10;
+    return (p < 0 ? '−' : '') + Math.abs(p).toFixed(1).replace('.', ',') + ' %';
+  }
   // Tekst fra språkfila (norsk reserve) og frase-ordboka. Språkfila er ikke lastet første gang
   // budsjettet tegnes, så det tegnes på nytt når core.js setter lang på <html> (nederst).
   function tr(key, no){ var r = typeof R === 'function' ? R() : null; return (r && typeof r[key] === 'string') ? r[key] : no; }
   function ph(s){ var r = typeof R === 'function' ? R() : null; return (r && r._ph && r._ph[s]) || s; }
 
-  var BUD_KEY = 'hv-budget-v3';
-  var BUD_DEFAULTS = {
-    inntekt:  [ {l:'Lønn (netto)',     v:0} ],
-    faste:    [ {l:'Bolig (lån/leie)', v:0} ],
-    variable: [ {l:'Mat & dagligvarer',v:0} ]
+  // ── To utgaver av samme budsjett: privat og bedrift ──
+  // Valget er det samme som Privat | Bedrift-knappen på Skatt, Kalkulator, Avgift og Lov
+  // (localStorage hvt-modus). Hver utgave har egne poster og egen lagringsnøkkel, så det ene
+  // budsjettet aldri skriver over det andre. Kolonnenøklene (inntekt, faste, variable) er de
+  // samme i begge, så griddet, lagringen og eksporten er felles. I bedriftsutgaven er «faste»
+  // varer og lønn, og «variable» de andre driftskostnadene.
+  var UTGAVER = {
+    privat: {
+      key: 'hv-budget-v3',
+      defaults: {
+        inntekt:  [ {l:'Lønn (netto)',     v:0} ],
+        faste:    [ {l:'Bolig (lån/leie)', v:0} ],
+        variable: [ {l:'Mat & dagligvarer',v:0} ]
+      },
+      cols: [
+        {key:'inntekt',  title:'Inntekt',              placeholder:'Ny inntektspost'},
+        {key:'faste',    title:'Faste utgifter',       placeholder:'Ny fast utgift'},
+        {key:'variable', title:'Utgifter som varierer',placeholder:'Ny utgift som varierer'}
+      ],
+      // Forslag til vanlige poster — vises i meny når man trykker «Legg til post»
+      suggest: {
+        inntekt:  ['Lønn etter skatt','Feriepenger','Barnetrygd','Bostøtte','Leieinntekt','Pensjon','Sykepenger','Foreldrepenger','Stipend','Annen inntekt'],
+        faste:    ['Husleie','Boliglån','Forbrukslån','Strøm','Internett','Mobil','Forsikring','Bil (alle kostnader)','Barnehage / SFO','Strømmetjenester','Kollektivkort','Sparing','Årlig regning'],
+        variable: ['Dagligvarer','Klær & sko','Drivstoff','Restaurant','Helse / medisin','Fritid','Gaver','Reise']
+      },
+      menuHead: {inntekt:'Vanlig inntekt', faste:'Vanlig fast utgift', variable:'Vanlig utgift'}
+    },
+    bedrift: {
+      key: 'hv-budget-bedrift-v1',
+      defaults: {
+        inntekt:  [ {l:'Salgsinntekter', v:0}, {l:'Andre inntekter', v:0} ],
+        faste:    [ {l:'Varekjøp', v:0}, {l:'Lønn', v:0}, {l:'Arbeidsgiveravgift', v:0}, {l:'Feriepenger', v:0} ],
+        variable: [ {l:'Husleie', v:0}, {l:'Forsikring', v:0}, {l:'Regnskapsfører', v:0}, {l:'Markedsføring', v:0}, {l:'Avskrivninger', v:0}, {l:'Andre driftskostnader', v:0} ]
+      },
+      cols: [
+        {key:'inntekt',  title:'Driftsinntekter',  placeholder:'Ny inntektspost'},
+        {key:'faste',    title:'Varer og lønn',    placeholder:'Ny kostnad'},
+        {key:'variable', title:'Lokaler og drift', placeholder:'Ny kostnad'}
+      ],
+      suggest: {
+        inntekt:  ['Salgsinntekter','Andre inntekter','Leieinntekter','Tilskudd'],
+        faste:    ['Varekjøp','Frakt og toll','Lønn','Arbeidsgiveravgift','Feriepenger','Pensjon (OTP)','Innleid hjelp'],
+        variable: ['Husleie','Strøm','Forsikring','Regnskapsfører','Revisor','Markedsføring','Telefon og internett','Programvare','Kontorrekvisita','Bil og transport','Reise','Leasing','Bankgebyr','Avskrivninger','Andre driftskostnader']
+      },
+      menuHead: {inntekt:'Vanlig inntekt', faste:'Vanlig kostnad', variable:'Vanlig kostnad'}
+    }
   };
+  var modus = 'privat';
+  try{ if(localStorage.getItem('hvt-modus') === 'bedrift') modus = 'bedrift'; }catch(_e){}
+  var U = UTGAVER[modus];
   // Lagrede rader kan ha feil form (gammel versjon, ødelagt lagring): bare lister godtas,
   // og beløp lagret som tekst («42 000») leses som tall, ikke som 42.
   function cleanRows(list){
@@ -520,12 +586,12 @@ footer em{font-style:italic}
   }
   function loadBudget(){
     try{
-      var raw = localStorage.getItem(BUD_KEY);
+      var raw = localStorage.getItem(U.key);
       if(raw){
         var parsed = JSON.parse(raw);
         var inn = cleanRows(parsed && parsed.inntekt), fas = cleanRows(parsed && parsed.faste), vari = cleanRows(parsed && parsed.variable);
         if(inn && fas && vari) return {inntekt: inn.length ? inn : [{l:'', v:0}], faste: fas.length ? fas : [{l:'', v:0}], variable: vari.length ? vari : [{l:'', v:0}]};
-      } else {
+      } else if(modus === 'privat'){
         // Budsjett lagret med forrige versjon av siden (mai 2026): {income:[{cat, customLabel, amount}], expense:[…]}.
         // Hentes inn én gang: inntekter som inntekt, utgifter som faste utgifter.
         var old = JSON.parse(localStorage.getItem('hv-budsjett-v1') || 'null');
@@ -536,37 +602,26 @@ footer em{font-style:italic}
             }).filter(function(r){ return r.l.trim() || r.v; });
           };
           var st = {inntekt: conv(old.income), faste: conv(old.expense), variable: []};
-          ['inntekt','faste','variable'].forEach(function(k){ if(!st[k].length) st[k] = JSON.parse(JSON.stringify(BUD_DEFAULTS[k])); });
+          ['inntekt','faste','variable'].forEach(function(k){ if(!st[k].length) st[k] = JSON.parse(JSON.stringify(U.defaults[k])); });
           saveBudget(st);
           return st;
         }
       }
     }catch(_e){}
-    return JSON.parse(JSON.stringify(BUD_DEFAULTS));
+    return JSON.parse(JSON.stringify(U.defaults));
   }
   function saveBudget(state){
-    try{ localStorage.setItem(BUD_KEY, JSON.stringify(state)); }catch(_e){}
+    try{ localStorage.setItem(U.key, JSON.stringify(state)); }catch(_e){}
   }
   var budState = loadBudget();
 
-  var budCols = [
-    {key:'inntekt',  title:'Inntekt',              placeholder:'Ny inntektspost'},
-    {key:'faste',    title:'Faste utgifter',       placeholder:'Ny fast utgift'},
-    {key:'variable', title:'Utgifter som varierer',placeholder:'Ny utgift som varierer'}
-  ];
-
-  // Forslag til vanlige poster — vises i meny når man trykker «Legg til post»
-  var BUD_SUGGEST = {
-    inntekt:  ['Lønn etter skatt','Feriepenger','Barnetrygd','Bostøtte','Leieinntekt','Pensjon','Sykepenger','Foreldrepenger','Stipend','Annen inntekt'],
-    faste:    ['Husleie','Boliglån','Forbrukslån','Strøm','Internett','Mobil','Forsikring','Bil (alle kostnader)','Barnehage / SFO','Strømmetjenester','Kollektivkort','Sparing','Årlig regning'],
-    variable: ['Dagligvarer','Klær & sko','Drivstoff','Restaurant','Helse / medisin','Fritid','Gaver','Reise']
-  };
-  var BUD_MENU_HEAD = {inntekt:'Vanlig inntekt', faste:'Vanlig fast utgift', variable:'Vanlig utgift'};
   // Postnavn siden selv foreslår, lagres på norsk og vises oversatt. Det brukeren skriver selv, vises som det er.
   var KNOWN = {'Ukategorisert':1};
-  ['inntekt','faste','variable'].forEach(function(k){
-    BUD_DEFAULTS[k].forEach(function(r){ KNOWN[r.l] = 1; });
-    BUD_SUGGEST[k].forEach(function(s){ KNOWN[s] = 1; });
+  ['privat','bedrift'].forEach(function(m){
+    ['inntekt','faste','variable'].forEach(function(k){
+      UTGAVER[m].defaults[k].forEach(function(r){ KNOWN[r.l] = 1; });
+      UTGAVER[m].suggest[k].forEach(function(s){ KNOWN[s] = 1; });
+    });
   });
   // «Fritid» og «Sykepenger» har en annen engelsk tekst her enn i den felles ordboka, så de får egne nøkler.
   var KEYED = {'Fritid':'trPersonligBudsjettFritid', 'Sykepenger':'trPersonligBudsjettSyk'};
@@ -971,7 +1026,7 @@ footer em{font-style:italic}
   var host = document.getElementById('budGrid');
 
   function renderBudget(){
-    host.innerHTML = budCols.map(function(col){
+    host.innerHTML = U.cols.map(function(col){
       var rows = (budState[col.key] || []).map(function(r,i){
         return '<div class="bud-row" data-col="'+col.key+'" data-idx="'+i+'">'
           + '<button class="bud-remove" type="button" aria-label="Fjern post" data-act="rm">×</button>'
@@ -1008,18 +1063,10 @@ footer em{font-style:italic}
     var NB = '\u00a0', txt, html = '';
     function kr(n){ return fmtKrPlain(n) + NB + 'kr'; }
     function pct(n){ return Math.round(n / inn * 100) + NB + '%'; }
-    var sp = sparPoster(), spar = sp.spar, sparF = sp.sparF;
-    var ut = fasteSum + varSum, diff = inn - ut, over = diff < 0 ? -diff : 0;
-    if(inn <= 0){
-      txt = 'Legg inn inntekt i budsjettet over. Da ser du her hvor pengene går, og hvor mye du kan spare.';
-    } else {
-      var segs = [
-        ['bv-f', ph('Faste utgifter'), Math.max(0, fasteSum - sparF), 1],
-        ['bv-v', ph('Utgifter som varierer'), Math.max(0, varSum - (spar - sparF)), 1],
-        ['bv-s', 'Satt av til sparing', spar, 0],
-        over ? ['bv-x', 'Over inntekten', over, 1] : ['bv-o', ph('Til overs'), diff, 1]
-      ].filter(function(s){ return s[3] || s[2] > 0; });
-      html = '<div class="bud-viz-bar" role="img" aria-label="' + escapeHtml('Inntekten per måned fordelt: ' + segs.map(function(s){ return s[1] + ' ' + kr(s[2]) + ', ' + pct(s[2]); }).join('. ')) + '">'
+    // Stolpen med forklaring under er lik i begge utgavene. Det som er brukt over inntekten
+    // (bv-x), tegnes oppå høyre ende av stolpen.
+    function stolpe(segs){
+      return '<div class="bud-viz-bar" role="img" aria-label="' + escapeHtml('Inntekten per måned fordelt: ' + segs.map(function(s){ return s[1] + ' ' + kr(s[2]) + ', ' + pct(s[2]); }).join('. ')) + '">'
         + segs.map(function(s){
             if(s[0] === 'bv-x') return '<span class="bv-x" style="width:' + (over / ut * 100).toFixed(2) + '%"></span>';
             return s[2] > 0 ? '<span class="' + s[0] + '" style="flex:' + s[2] + ' 1 0"></span>' : '';
@@ -1030,6 +1077,44 @@ footer em{font-style:italic}
               + '<span class="k">' + kr(s[2]) + '<span class="p">' + pct(s[2]) + '</span></span></li>';
           }).join('')
         + '</ul>';
+    }
+    var ut = fasteSum + varSum, diff = inn - ut, over = diff < 0 ? -diff : 0;
+    if(modus === 'bedrift'){
+      // Bedrift: de to kostnadsgruppene og driftsresultatet, og hva resultatet blir til over tid.
+      if(inn <= 0){
+        txt = tr('budBVizTom', 'Legg inn inntekter i budsjettet over. Da ser du her hvor mye som går til kostnader, og hva bedriften sitter igjen med.');
+      } else {
+        html = stolpe([
+          ['bv-f', ph(U.cols[1].title), fasteSum],
+          ['bv-v', ph(U.cols[2].title), varSum],
+          over ? ['bv-x', ph('Underskudd'), over] : ['bv-o', ph('Driftsresultat'), diff]
+        ]);
+        txt = over ? tr('budBVizMinus', 'Kostnadene er {belop} høyere enn inntektene hver måned. På ett år blir det et underskudd på {aar}.').replace('{belop}', kr(over)).replace('{aar}', kr(over * 12))
+          : diff === 0 ? tr('budBVizNull', 'Kostnadene er like store som inntektene. Driftsresultatet er null.')
+          : tr('budBVizPluss', 'Bedriften sitter igjen med {belop} i måneden etter driftskostnadene. Det er {margin} av inntektene.').replace('{belop}', kr(diff)).replace('{margin}', fmtMargin(diff / inn * 100).replace(' ', NB));
+        if(diff !== 0){
+          html += '<div class="bud-viz-sub"><div class="bud-viz-l"><span>' + escapeHtml(tr('budBVizTid', 'Driftsresultat over tid')) + '</span></div><div class="bud-viz-fut">'
+            + [[3, tr('budBVizKvartal', 'Et kvartal')], [6, tr('budBVizHalvaar', 'Et halvår')], [12, tr('budBVizAar', 'Et år')]].map(function(a){
+                return '<div><span class="t">' + escapeHtml(a[1]) + '</span><span class="k">' + (over ? '−' : '') + kr(Math.abs(diff) * a[0]) + '</span></div>';
+              }).join('')
+            + '</div><p class="bud-viz-fine">' + escapeHtml(tr('budBVizFine', 'Hvis hver måned blir som i budsjettet. Renter og skatt er ikke med.')) + '</p></div>';
+        }
+      }
+      if(say.textContent !== txt) say.textContent = txt;
+      body.innerHTML = html;
+      return;
+    }
+    var sp = sparPoster(), spar = sp.spar, sparF = sp.sparF;
+    if(inn <= 0){
+      txt = 'Legg inn inntekt i budsjettet over. Da ser du her hvor pengene går, og hvor mye du kan spare.';
+    } else {
+      var segs = [
+        ['bv-f', ph('Faste utgifter'), Math.max(0, fasteSum - sparF), 1],
+        ['bv-v', ph('Utgifter som varierer'), Math.max(0, varSum - (spar - sparF)), 1],
+        ['bv-s', 'Satt av til sparing', spar, 0],
+        over ? ['bv-x', 'Over inntekten', over, 1] : ['bv-o', ph('Til overs'), diff, 1]
+      ].filter(function(s){ return s[3] || s[2] > 0; });
+      html = stolpe(segs);
       if(over){
         txt = 'Du bruker ' + kr(over) + ' mer enn du tjener hver måned. På ett år blir det ' + kr(over * 12) + '.';
       } else {
@@ -1072,10 +1157,14 @@ footer em{font-style:italic}
       d.textContent = sign + fmtKrPlain(Math.abs(diff)) + ' kr';
       d.classList.toggle('neg', neg);
     }
-    // Som figuren under: det som er satt av til sparing pluss det som er til overs
-    var rate = inn > 0 ? Math.round((sparPoster().spar + diff) / inn * 100) : 0;
     var rEl = document.getElementById('bs-rate');
-    if(rEl){
+    if(rEl && modus === 'bedrift'){
+      // Driftsmargin: driftsresultatet i prosent av inntektene. Uten inntekt finnes den ikke.
+      rEl.textContent = inn > 0 ? fmtMargin(diff / inn * 100) : '–';
+      rEl.classList.toggle('neg', neg && inn > 0);
+    } else if(rEl){
+      // Som figuren under: det som er satt av til sparing pluss det som er til overs
+      var rate = inn > 0 ? Math.round((sparPoster().spar + diff) / inn * 100) : 0;
       rEl.textContent = (rate < 0 ? '−' : '') + Math.abs(rate) + ' %';
       rEl.classList.toggle('neg', rate < 0);
     }
@@ -1085,17 +1174,42 @@ footer em{font-style:italic}
       aEl.classList.toggle('neg', neg);
     }
     renderViz(inn, fasteSum, varSum);
-    window._budsjett = {inntekt:budState.inntekt, faste:budState.faste, variable:budState.variable};
-    if(window.hvtLearn) hvtLearn.update('personlig-budsjett', window._budsjett);
+    // Forklaringsblokken (50/30/20-regelen) hører til privatutgaven og får bare de tallene
+    if(modus === 'privat'){
+      window._budsjett = {inntekt:budState.inntekt, faste:budState.faste, variable:budState.variable};
+      if(window.hvtLearn) hvtLearn.update('personlig-budsjett', window._budsjett);
+      // «Modell» er et eget nedtrekk som learn.js ikke venter på, så figuren der får beskjed selv
+      document.dispatchEvent(new Event('hvt-budsjett'));
+    }
   }
 
   // Kobles før budsjettet tegnes første gang, så knappen virker selv om tegningen skulle feile
   document.getElementById('budReset').addEventListener('click', function(){
     if(!confirm(tr('trPersonligBudsjettResetQ', 'Tilbakestill budsjettet?'))) return;
-    budState = JSON.parse(JSON.stringify(BUD_DEFAULTS));
+    budState = JSON.parse(JSON.stringify(U.defaults));
     saveBudget(budState);
     renderBudget();
   });
+
+  // Privat | Bedrift: bytter poster, nøkkeltall og lagringsnøkkel. Tekstene som er merket
+  // data-utg i HTML-en følger html[data-utgave].
+  function visUtgave(){
+    document.documentElement.setAttribute('data-utgave', modus);
+    var btns = document.querySelectorAll('#budModus [data-modus]');
+    for(var i = 0; i < btns.length; i++) btns[i].setAttribute('aria-pressed', btns[i].getAttribute('data-modus') === modus ? 'true' : 'false');
+  }
+  document.getElementById('budModus').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-modus]');
+    var valg = b && b.getAttribute('data-modus');
+    if((valg !== 'privat' && valg !== 'bedrift') || valg === modus) return;
+    try{ localStorage.setItem('hvt-modus', valg); }catch(_e){}
+    modus = valg; U = UTGAVER[modus];
+    closeBudMenu(); closeCalcPanel();
+    budState = loadBudget();
+    visUtgave();
+    renderBudget();
+  });
+  visUtgave();
 
   renderBudget();
   if(typeof MutationObserver === 'function') new MutationObserver(function(){ renderBudget(); })
@@ -1134,7 +1248,7 @@ footer em{font-style:italic}
     saveBudget(budState);
     renderBudget();
     requestAnimationFrame(function(){
-      var col = host.querySelectorAll('.bud-col')[budCols.findIndex(function(c){return c.key===key;})];
+      var col = host.querySelectorAll('.bud-col')[U.cols.findIndex(function(c){return c.key===key;})];
       if(!col) return;
       var rows = col.querySelectorAll('.bud-row');
       var newRow = rows[rows.length-1];
@@ -1181,14 +1295,15 @@ footer em{font-style:italic}
     closeBudMenu();
     var used = {};
     (budState[key] || []).forEach(function(r){ if(r.l) used[r.l.trim().toLowerCase()] = 1; });
-    var sugg = (BUD_SUGGEST[key] || []).filter(function(s){ return !used[s.toLowerCase()]; });
+    var sugg = (U.suggest[key] || []).filter(function(s){ return !used[s.toLowerCase()]; });
 
     var menu = document.createElement('div');
     menu.className = 'bud-menu';
     menu.setAttribute('role', 'menu');
-    var html = '<div class="bud-menu-head">' + escapeHtml(BUD_MENU_HEAD[key] || 'Vanlige poster') + '</div>';
+    var html = '<div class="bud-menu-head">' + escapeHtml(U.menuHead[key] || 'Vanlige poster') + '</div>';
     html += sugg.map(function(s){
-      var calc = CALC_BY_KEY[key + '|' + s.toLowerCase()];
+      // Minikalkulatorene regner for en privatperson (lønn etter skatt, boliglån …)
+      var calc = modus === 'privat' ? CALC_BY_KEY[key + '|' + s.toLowerCase()] : null;
       var badge = calc ? '<span class="bud-menu-calc" aria-hidden="true">Regn ut</span>' : '';
       return '<button class="bud-menu-item" type="button" role="menuitem" data-pick="'+escapeHtml(s)+'"'
         + (calc ? ' data-calc="'+escapeHtml(calc.id)+'"' : '')
@@ -1437,7 +1552,8 @@ footer em{font-style:italic}
 
   document.getElementById('budCsv').addEventListener('click', function(){
     var lines = [ph('Kategori;Post;Beløp (kr/mnd)')];
-    var labels = {inntekt:ph('Inntekt'), faste:ph('Faste utgifter'), variable:ph('Utgifter som varierer')};
+    var labels = {};
+    U.cols.forEach(function(c){ labels[c.key] = ph(c.title); });
     ['inntekt','faste','variable'].forEach(function(k){
       (budState[k]||[]).forEach(function(r){
         lines.push([labels[k], lbl(r.l||'').replace(/;/g,','), r.v||0].join(';'));
@@ -1447,7 +1563,7 @@ footer em{font-style:italic}
     var a = document.createElement('a');
     var d = new Date(), ymd = d.toISOString().slice(0,10);
     a.href = URL.createObjectURL(blob);
-    a.download = tr('trPersonligBudsjettCsvFile', 'budsjett-{dato}.csv').replace('{dato}', ymd);
+    a.download = (modus === 'bedrift' ? tr('budBCsvFile', 'bedriftsbudsjett-{dato}.csv') : tr('trPersonligBudsjettCsvFile', 'budsjett-{dato}.csv')).replace('{dato}', ymd);
     document.body.appendChild(a); a.click();
     setTimeout(function(){URL.revokeObjectURL(a.href); a.remove();}, 100);
   });
@@ -1737,7 +1853,8 @@ footer em{font-style:italic}
     var ut2 = (budState.variable||[]).reduce(function(a,r){return a+(parseInt(r.v,10)||0);},0);
     var diff = inn - (ut1+ut2);
     var dato = new Date().toLocaleDateString(tr('trPersonligBudsjettPdfLocale','nb-NO'),{day:'2-digit',month:'long',year:'numeric'});
-    var html = '<!doctype html><html lang="'+tr('trPersonligBudsjettPdfLang','no')+'"><head><meta charset="utf-8"><title>'+tr('trPersonligBudsjettPdfTitle','Budsjett — {dato}').replace('{dato}', dato)+'</title>'
+    var bed = modus === 'bedrift';
+    var html = '<!doctype html><html lang="'+tr('trPersonligBudsjettPdfLang','no')+'"><head><meta charset="utf-8"><title>'+(bed ? tr('budBPdfTitle','Bedriftsbudsjett — {dato}') : tr('trPersonligBudsjettPdfTitle','Budsjett — {dato}')).replace('{dato}', dato)+'</title>'
       + '<style>'
       + '@page{size:A4;margin:22mm 18mm}'
       + 'body{font-family:Georgia,"Source Serif 4",serif;color:#15140f;line-height:1.45;padding:0}'
@@ -1754,15 +1871,13 @@ footer em{font-style:italic}
       + '.totals{border-top:1px solid #888;padding-top:14px;margin-top:24px;display:flex;justify-content:space-between;font-size:14px}'
       + '.totals .diff{color:#a87842;font-weight:600}'
       + '</style></head><body>'
-      + '<header><h1>'+tr('trPersonligBudsjettPdfH1','<em>Budsjett</em> — månedlig oversikt')+'</h1>'
+      + '<header><h1>'+(bed ? tr('budBPdfH1','<em>Bedriftsbudsjett</em> — månedlig oversikt') : tr('trPersonligBudsjettPdfH1','<em>Budsjett</em> — månedlig oversikt'))+'</h1>'
       + '<div class="meta">'+escapeHtml(tr('trPersonligBudsjettPdfGen','Generert {dato}').replace('{dato}', dato))+'<br>Hverdagsverktøy</div></header>'
-      + colSection('Inntekt', budState.inntekt)
-      + colSection('Faste utgifter', budState.faste)
-      + colSection('Utgifter som varierer', budState.variable)
+      + U.cols.map(function(c){ return colSection(c.title, budState[c.key]); }).join('')
       + '<div class="totals">'
-      + '<span>'+tr('trPersonligBudsjettPdfSumInn','Sum inntekt')+' <b>'+fmtKrPlain(inn)+' kr</b></span>'
-      + '<span>'+tr('trPersonligBudsjettPdfSumUt','Sum utgift')+' <b>'+fmtKrPlain(ut1+ut2)+' kr</b></span>'
-      + '<span class="diff">'+ph('Til overs')+' <b>'+(diff<0?'−':'')+fmtKrPlain(Math.abs(diff))+' kr</b></span>'
+      + '<span>'+(bed ? ph('Driftsinntekter') : tr('trPersonligBudsjettPdfSumInn','Sum inntekt'))+' <b>'+fmtKrPlain(inn)+' kr</b></span>'
+      + '<span>'+(bed ? ph('Driftskostnader') : tr('trPersonligBudsjettPdfSumUt','Sum utgift'))+' <b>'+fmtKrPlain(ut1+ut2)+' kr</b></span>'
+      + '<span class="diff">'+ph(bed ? 'Driftsresultat' : 'Til overs')+' <b>'+(diff<0?'−':'')+fmtKrPlain(Math.abs(diff))+' kr</b></span>'
       + '</div></body></html>';
     w.document.open(); w.document.write(html); w.document.close();
     setTimeout(function(){ try{ w.focus(); w.print(); }catch(_){}; }, 250);
@@ -1780,7 +1895,7 @@ footer em{font-style:italic}
   var EX = {inntekt:[{l:'Lønn etter skatt', v:37985}], faste:[{l:'Boliglån', v:18423}], variable:[]};
   var SANS = 'Geist, Inter, system-ui, sans-serif';
   var NB = '\u00a0';
-  var root, plot, svg, raw = null, lastW = 0, queued = false, ctx;
+  var root, plot, svg, lastW = 0, queued = false, ctx;
 
   function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
   function set(name, text){ var el = q(name); if(el) el.textContent = text; }
@@ -1794,7 +1909,6 @@ footer em{font-style:italic}
 
   function render(d){
     var L = window.hvtLearn, t = L.t, ph = L.ph;
-    raw = d;
     var all = d ? ['inntekt', 'faste', 'variable'].reduce(function(s, k){ return s + (d[k] || []).reduce(function(a, r){ return a + Math.abs(num(r.v)); }, 0); }, 0) : 0;
     var mine = all > 0;
     var p = mine ? d : EX;
@@ -2012,13 +2126,18 @@ footer em{font-style:italic}
   function schedule(){
     if(queued) return;
     queued = true;
-    Promise.resolve().then(function(){ queued = false; render(raw); });
+    // Alltid budsjettets ferskeste tall: learn.js kan ha latt være å tegne mens «Største poster» er lukket
+    Promise.resolve().then(function(){ queued = false; render(window._budsjett || null); });
   }
   function init(){
     root = document.getElementById('lrn-bu');
     if(!root || !window.hvtLearn) return;
     plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
     if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // «Modell» tegnes når den åpnes, og på nytt når et beløp endres mens den er åpen
+    var modell = document.getElementById('lrn-bu-modell');
+    modell.addEventListener('toggle', function(){ if(modell.open) schedule(); });
+    document.addEventListener('hvt-budsjett', function(){ if(modell.open) schedule(); });
     hvtLearn.on(KEY, render);
     hvtLearn.update(KEY, window._budsjett || null);
   }
