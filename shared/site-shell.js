@@ -305,7 +305,8 @@ window.renderSiteChrome = function(opts){
   var fields = Array.prototype.some.call(document.querySelectorAll('main input:not([type=search]), main select, main textarea'), function(el){
     return !el.closest('.lc-sec');
   });
-  if(fields) document.querySelectorAll('.lc-sec').forEach(function(sec){
+  // Sider uten felt kan gjøre en enkelt seksjon til nedtrekk med data-dd
+  document.querySelectorAll(fields ? '.lc-sec' : '.lc-sec[data-dd]').forEach(function(sec){
     var head = headOf(sec, 'lc-head');
     if(head) add(sec, head);
   });

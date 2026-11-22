@@ -5699,6 +5699,8 @@ REGIONS['ar']._ph = {
 "Fikk ikke hentet værdata nå.":"تعذّر جلب بيانات الطقس الآن.",
 "Filtrer på konto-klasse":"تصفية حسب فئة الحساب",
 "Filtrer på målgruppe":"تصفية حسب الفئة المستهدفة",
+"Vis menyen for privat eller bedrift":"عرض القائمة للأفراد أو الشركات",
+"Vis kategoriene for privat eller bedrift":"عرض الفئات للأفراد أو الشركات",
 "Finans og skatt":"التمويل والضريبة",
 "Finansiell kalkulator":"حاسبة مالية",
 "Finansiell kalkulator — sparing og margin · Hverdagsverktøy":"الحاسبة المالية — حاسبة · Hverdagsverktøy",
