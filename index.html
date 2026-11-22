@@ -2084,13 +2084,13 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v430" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v430" defer></script>
+<link rel="preload" href="/shared/core.js?v=v432" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v432" defer></script>
 <script src="/shared/lang/no.js?v=v394" defer></script>
 <script src="/shared/site-shell.js?v=v359" defer></script>
 <script src="/shared/top-chrome.js?v=v421" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v412" defer></script>
+<script src="/shared/markedsdata.js?v=v431" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -2423,6 +2423,21 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
 @media(hover:hover){.widget:hover .sr-next-val{color:var(--accent-2)}}
 .w-note{margin:0;font-size:10.5px;line-height:1.35;letter-spacing:0;color:var(--ink3)}
 #stCard .w-note{display:block}
+/* De fire kortene under valutaomregneren (drivstoff, prisvekst, boliglånsrente, dagslys):
+   egen ramme med samme luft over som omregneren har. Boliglånskortet lenker til kalkulatoren.
+   Stedsnavnet på dagslyskortet kortes ned med … i stedet for å brekke raden, som på værkortet. */
+.daily-frame-2{margin-top:12px}
+#blCard .w-note{display:block}
+#blCard .w-note a{color:var(--ink2);text-decoration:none;border-bottom:1px solid var(--line-2)}
+@media(hover:hover){#blCard .w-note a:hover{color:var(--accent-2);border-bottom-color:currentColor}}
+#suCard .widget-top{min-width:0}
+#suPlace{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#suTrend{flex-shrink:0;white-space:nowrap}
+/* Fire smale kort på rad: tre månedsnavn på aksen gikk i hverandre («OKT 24OKT 25OKT 26»).
+   Da står bare første og siste; visibility (ikke display) holder dem ytterst i hver ende. */
+@media (min-width:881px) and (max-width:1099px){
+  :is(#dfCard,#kpCard,#blCard) .widget-axis span:nth-child(2){visibility:hidden}
+}
 .wx-fc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-height:48px}
 .wx-fc-cell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:7px}
 .wx-fc-cell:first-child{background:rgba(var(--glow-rgb),.10)}
@@ -3324,6 +3339,8 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
             Strøm: <a href="https://www.hvakosterstrommen.no/" target="_blank" rel="noopener">hvakosterstrommen.no</a> ·
             Sted: <a href="https://www.kartverket.no/" target="_blank" rel="noopener">© Kartverket</a>.
           </p>
+          <p>Drivstoff, prisvekst og boliglånsrente: <a href="https://www.ssb.no/" target="_blank" rel="noopener">Statistisk sentralbyrå (SSB)</a>, månedstall.</p>
+          <p>Dagslys: regnet ut på siden for stedet i værkortet.</p>
           <p class="daily-disclaimer">Veiledende, muligens forsinkede tall — ikke investeringsrådgivning.</p>
         </details>
       </div>
@@ -3353,6 +3370,103 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
           </div>
         </div>
         <span class="fxc-rate" id="fxcRate"></span>
+      </div>
+
+      <!-- Fire kort til (Kasper 2026-11-22): drivstoff, prisvekst og boliglånsrente fra SSB, og dagslys
+           som regnes ut på siden for stedet i værkortet. Egen ramme under omregneren, men samme klasser
+           som de fire over, så alle temaene og telefonoppsettet virker uten egne regler.
+           SSB-tallene er månedstall: kortene sier alltid hvilken måned tallet gjelder. Fylles av markedsdata.js. -->
+      <div class="daily-frame daily-frame-2 reveal" style="--i:5">
+        <div class="daily-grid">
+
+          <div class="widget reveal" style="--i:5" id="dfCard" aria-label="Drivstoffpris">
+            <div class="widget-top">
+              <span class="widget-label">Bensin 95</span>
+              <span class="widget-trend trend-flat" id="dfTrend" aria-hidden="true">
+                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
+                <span>—</span>
+              </span>
+            </div>
+            <div class="widget-value"><span class="count-up" id="dfVal">—</span><span class="unit">kr/l</span></div>
+            <div class="widget-facts" id="dfSub">Henter drivstoffpris …</div>
+            <p class="w-line"><span class="ctx" id="dfLine">Henter drivstoffpris …</span></p>
+            <div class="widget-spark-wrap has-yax">
+              <!-- Y-akse: høyeste og laveste månedspris i perioden. Fylles av markedsdata.js. -->
+              <div class="spark-yax" aria-hidden="true"><span id="dfYMax">—</span><span id="dfYMin">—</span></div>
+              <!-- Bensinprisen de siste 24 månedene (applySpark). Tom til data er hentet. -->
+              <svg class="widget-spark" id="dfSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="spark-scrub" id="dfScrub" aria-hidden="true"><span id="dfScrubTxt"></span></div>
+              <div class="widget-axis"><span id="dfAx0"></span><span id="dfAx1"></span><span id="dfAx2"></span></div>
+            </div>
+          </div>
+
+          <div class="widget reveal" style="--i:6" id="kpCard" aria-label="Prisvekst">
+            <div class="widget-top">
+              <span class="widget-label">Prisvekst</span>
+              <span class="widget-trend trend-flat" id="kpTrend" aria-hidden="true">
+                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
+                <span>—</span>
+              </span>
+            </div>
+            <div class="widget-value"><span class="count-up" id="kpVal">—</span><span class="unit">%</span></div>
+            <div class="widget-facts" id="kpSub">Henter prisveksten …</div>
+            <p class="w-line"><span class="ctx" id="kpLine">Henter prisveksten …</span></p>
+            <div class="widget-spark-wrap has-yax">
+              <!-- Y-akse: høyeste og laveste prisvekst i perioden. Fylles av markedsdata.js. -->
+              <div class="spark-yax" aria-hidden="true"><span id="kpYMax">—</span><span id="kpYMin">—</span></div>
+              <!-- Prisveksten siste 12 måneder, målt hver måned de siste 24 månedene (applySpark). -->
+              <svg class="widget-spark" id="kpSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="spark-scrub" id="kpScrub" aria-hidden="true"><span id="kpScrubTxt"></span></div>
+              <div class="widget-axis"><span id="kpAx0"></span><span id="kpAx1"></span><span id="kpAx2"></span></div>
+            </div>
+          </div>
+
+          <div class="widget reveal" style="--i:7" id="blCard" aria-label="Boliglånsrente">
+            <div class="widget-top">
+              <span class="widget-label">Boliglånsrente</span>
+              <span class="widget-trend trend-flat" id="blTrend" aria-hidden="true">
+                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
+                <span>—</span>
+              </span>
+            </div>
+            <div class="widget-value"><span class="count-up" id="blVal">—</span><span class="unit">%</span></div>
+            <div class="widget-facts" id="blSub">Henter boliglånsrenta …</div>
+            <p class="w-line"><span class="ctx" id="blLine">Henter boliglånsrenta …</span></p>
+            <div class="widget-spark-wrap has-yax">
+              <!-- Y-akse: høyeste og laveste snittrente i perioden. Fylles av markedsdata.js. -->
+              <div class="spark-yax" aria-hidden="true"><span id="blYMax">—</span><span id="blYMin">—</span></div>
+              <!-- Snittrenta på nye boliglån de siste 24 månedene (applySpark). Tom til data er hentet. -->
+              <svg class="widget-spark" id="blSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="spark-scrub" id="blScrub" aria-hidden="true"><span id="blScrubTxt"></span></div>
+              <div class="widget-axis"><span id="blAx0"></span><span id="blAx1"></span><span id="blAx2"></span></div>
+            </div>
+            <p class="w-note"><a href="/boliglan/">Regn på lånet ditt</a></p>
+          </div>
+
+          <div class="widget reveal" style="--i:8" id="suCard" aria-label="Dagslys">
+            <div class="widget-top">
+              <span class="widget-label" id="suPlace">Dagslys i Oslo</span>
+              <span class="widget-trend trend-flat" id="suTrend" aria-hidden="true">
+                <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
+                <span>—</span>
+              </span>
+            </div>
+            <div class="widget-value"><span class="count-up" id="suVal">—</span><span class="unit" id="suUnit">t</span></div>
+            <div class="widget-facts" id="suSub">Regner ut dagslyset …</div>
+            <p class="w-line"><span class="ctx" id="suLine">Regner ut dagslyset …</span></p>
+            <div class="widget-spark-wrap has-yax">
+              <!-- Y-akse: lengste og korteste dag i året på stedet. Fylles av markedsdata.js. -->
+              <div class="spark-yax" aria-hidden="true"><span id="suYMax">—</span><span id="suYMin">—</span></div>
+              <!-- Dagslengden gjennom hele året, med punkt for i dag og stiplet linje ved 12 timer (jevndøgn). -->
+              <svg class="widget-spark" id="suSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="spark-scrub" id="suScrub" aria-hidden="true"><span id="suScrubTxt"></span></div>
+              <!-- data-ph-skip: månedsnavnene settes på riktig språk av markedsdata.js. Uten det
+                   gjorde frase-ordboka engelske «Jul» (juli) om til «Christmas». -->
+              <div class="widget-axis" data-ph-skip><span id="suAx0">Jan</span><span id="suAx1">Jul</span><span id="suAx2">Des</span></div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   </section>
@@ -3999,27 +4113,29 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       naa(); setInterval(naa, 60000);
     }
     // Musas plass i hvert kort (--mx/--my), høyst én gang per bilde.
-    var grid = document.querySelector('.daily-grid');
-    if(!grid || !window.matchMedia || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
-    var kort = grid.querySelectorAll('.widget'), raf = 0, px = 0, py = 0;
-    grid.addEventListener('pointermove', function(e){
-      px = e.clientX; py = e.clientY;
-      if(raf) return;
-      raf = requestAnimationFrame(function(){
-        raf = 0;
-        var t = document.documentElement.getAttribute('data-theme');
-        if(t !== 'carbon' && t !== 'dark') return;
-        for(var i = 0; i < kort.length; i++){
-          var r = kort[i].getBoundingClientRect();
-          kort[i].style.setProperty('--mx', Math.round(px - r.left) + 'px');
-          kort[i].style.setProperty('--my', Math.round(py - r.top) + 'px');
-        }
-        grid.classList.add('is-lit');
+    // To rutenett: de fire kortene øverst og de fire under valutaomregneren.
+    if(!window.matchMedia || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    document.querySelectorAll('.daily-grid').forEach(function(grid){
+      var kort = grid.querySelectorAll('.widget'), raf = 0, px = 0, py = 0;
+      grid.addEventListener('pointermove', function(e){
+        px = e.clientX; py = e.clientY;
+        if(raf) return;
+        raf = requestAnimationFrame(function(){
+          raf = 0;
+          var t = document.documentElement.getAttribute('data-theme');
+          if(t !== 'carbon' && t !== 'dark') return;
+          for(var i = 0; i < kort.length; i++){
+            var r = kort[i].getBoundingClientRect();
+            kort[i].style.setProperty('--mx', Math.round(px - r.left) + 'px');
+            kort[i].style.setProperty('--my', Math.round(py - r.top) + 'px');
+          }
+          grid.classList.add('is-lit');
+        });
       });
-    });
-    grid.addEventListener('pointerleave', function(){
-      if(raf){ cancelAnimationFrame(raf); raf = 0; }
-      grid.classList.remove('is-lit');
+      grid.addEventListener('pointerleave', function(){
+        if(raf){ cancelAnimationFrame(raf); raf = 0; }
+        grid.classList.remove('is-lit');
+      });
     });
   })();
 
@@ -4035,7 +4151,10 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       {val:'wxTemp', sub:'wxSub', line:'wxLine', txt:'Fikk ikke hentet værdata nå.'},
       {val:'srVal',  sub:'srSub', line:'srLine', txt:'Fikk ikke hentet styringsrenta nå.'},
       {val:'stVal',  sub:'stSub', line:'stLine', txt:'Fikk ikke hentet strømprisen nå.'},
-      {val:'fxVal',  sub:'fxSub', line:'fxLine', txt:'Fikk ikke hentet valutakursene nå.'}
+      {val:'fxVal',  sub:'fxSub', line:'fxLine', txt:'Fikk ikke hentet valutakursene nå.'},
+      {val:'dfVal',  sub:'dfSub', line:'dfLine', txt:'Fikk ikke hentet drivstoffprisen nå.'},
+      {val:'kpVal',  sub:'kpSub', line:'kpLine', txt:'Fikk ikke hentet prisveksten nå.'},
+      {val:'blVal',  sub:'blSub', line:'blLine', txt:'Fikk ikke hentet boliglånsrenta nå.'}
     ];
     function meld(){
       // Fanen må ha vært synlig først. Sjekken kom til da tallene ble skrevet med
