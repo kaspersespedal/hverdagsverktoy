@@ -116,12 +116,120 @@ html[data-theme="carbon"] body::before{
 
 html[data-theme="carbon"] .ks{
   background:
+    var(--edge-brass) top / 100% 1px no-repeat border-box,
     linear-gradient(180deg, rgba(255,232,200,.030) 0%, transparent 26%),
     var(--surface) !important;
   box-shadow:
     inset 0 1px 0 rgba(255,232,200,.055),
     0 1px 0 rgba(0,0,0,.5),
     0 24px 56px -20px rgba(0,0,0,.7) !important;
+}
+
+/* Carbon-oppfrisking 2026-11 — seks små tiltak mot at temaet leste som grått
+   på svart. Ingen nye farger: bare messingtokenene og de varme nøytralene som
+   alt finnes over. Alt er låst til carbon.
+   Et sjuende tiltak, å løfte --surface og --surface-2, ble målt og lagt bort:
+   --ink4 på --surface-2 ligger på 4,58, så flatene tåler bare to fargetrinn
+   (kort mot --bg 1,09 -> 1,11) før den teksten faller under AA. */
+
+/* Korn i bakgrunnen.
+   Svakt, varmt støymønster bak innholdet. Det ligger på .atmo og ikke på
+   body::before: body::before (z -4) ligger UNDER .atmo-base (z -3), som er
+   ugjennomsiktig, så ingenting der synes. .atmo er alt et eget fast lag, så
+   kornet tegnes én gang og følger ikke med i rullingen.
+   Bare toppene i støyen tegnes (tabellen 0 0 .07): snittet løfter flaten
+   under ett fargetrinn, så «bek» forblir bek. Ingen blend-mode. */
+html[data-theme="carbon"] .atmo{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n' x='0' y='0' width='100%25' height='100%25' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .91 0 0 0 0 .78 1 0 0 0 0'/%3E%3CfeComponentTransfer%3E%3CfeFuncA type='table' tableValues='0 0 .07'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Messinglist i toppkanten av kortene.
+   En 1 px messingstrek som er sterkest på midten og dør ut før hjørnene.
+   Den ligger i selve kantlinja (border-box): kalkulatorkortets øverste rad
+   (.ks-strip-cell) har ugjennomsiktig bakgrunn og ville dekket en strek
+   innenfor kanten. .ks henter den inn som øverste bakgrunnslag i regelen
+   over; «Viktige frister» på forsiden får den her. Kategoriraden og
+   dagsoversikten har egen Carbon-bakgrunn i index.html og er ikke med. */
+html[data-theme="carbon"]{
+  --edge-brass:linear-gradient(90deg, transparent 8%, rgba(var(--glow-rgb),.25) 50%, transparent 92%);
+}
+html[data-theme="carbon"] .fr-panel{
+  background-image:var(--edge-brass);
+  background-size:100% 1px; background-position:top; background-repeat:no-repeat;
+  background-origin:border-box;
+}
+
+/* Kortene svarer når du peker.
+   Kanten går fra krem til messing og det kommer en svak messingglød under.
+   Kortet LØFTES ikke: transform på .ks ville gjort det til ankerpunkt for
+   alt med position:fixed inni, og hele kalkulatoren ville flyttet seg hver
+   gang musa går inn og ut. :focus-within gir tastaturet samme svar.
+   Gløden står FØR den svarte skyggen i lista: skygger males bakfra, og den
+   svarte (.7) ville ellers ligget oppå og dekket messingen helt. Resten av
+   lista er lik .ks-regelen over og må følge den.
+   Forsidens kategoriruter (.qc) svarer alt på mus; her får Tab det samme. */
+@media (hover:hover){
+  html[data-theme="carbon"] .ks{
+    transition:border-color .18s var(--ease), box-shadow .18s var(--ease);
+  }
+  html[data-theme="carbon"] .ks:is(:hover,:focus-within){
+    border-color:var(--line-warm);
+    box-shadow:
+      inset 0 1px 0 rgba(255,232,200,.055),
+      0 1px 0 rgba(0,0,0,.5),
+      0 22px 48px -26px rgba(var(--glow-rgb),.3),
+      0 24px 56px -20px rgba(0,0,0,.7) !important;
+  }
+  html[data-theme="carbon"] .qc:focus-visible{background:rgba(var(--wash-rgb),.018);color:var(--ink)}
+  html[data-theme="carbon"] .qc:focus-visible::after{transform:scaleX(.5)}
+  html[data-theme="carbon"] .qc:focus-visible .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
+}
+@media (prefers-reduced-motion:reduce){
+  html[data-theme="carbon"] .ks{transition:none}
+}
+
+/* Mer messing på små steder.
+   Tre steder, ikke flere. Målt mot flaten de står på (krav 3:1, tekst 4,5:1):
+     «Verktøy» over oversiktsrutene     --accent på --bg           7,2
+     scrollbar-tommelen                 --accent-deep på --bg      4,3
+     markert tekst                      messing .6 mot flaten      3,1
+                                        --ink oppå markeringen     5,0
+   Aktiv fane i toppmenyen har alt messingstrek (site-shell.css) — urørt.
+   Forsidens kategoriikoner og «Dagsoversikt» er bevisst IKKE med: ikonene
+   skal være grå i hvile (Kasper 2026-11-22), og dagsoversikt-toppen har
+   egne farger i index.html. */
+html[data-theme="carbon"] .calc-deck > .col-head h2{color:var(--accent)}
+html[data-theme="carbon"]{scrollbar-color:var(--accent-deep) transparent}
+html[data-theme="carbon"] ::selection{background:rgba(var(--glow-rgb),.6);color:var(--ink)}
+
+/* Metallglans i overskriftene.
+   Det messingfargede ordet i .cat-hero-overskriftene får en stillestående
+   gradient lys–mørk–lys. Mørkeste punkt er --accent (6,6 på --surface).
+   Kalkulatortitlene (h1.page-title em) er bevisst nøytrale i
+   calm-override.css og er ikke med. Forsidens «økonomi» har sin egen. */
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  html[data-theme="carbon"] .cat-hero :is(h1,h2) em{
+    background:linear-gradient(100deg, var(--accent-2), var(--accent) 50%, var(--accent-2));
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent;
+    -webkit-box-decoration-break:clone; box-decoration-break:clone;
+  }
+}
+@media (forced-colors:active){
+  html[data-theme="carbon"] .cat-hero :is(h1,h2) em{
+    background:none; -webkit-text-fill-color:currentColor;
+  }
+}
+
+/* Hovedknappen.
+   Messing ovenfra og ned + 1 px lys toppkant, samme oppskrift som
+   Start-knappen i nedtellingen (timer.js). Mørkeste punkt er --accent, så
+   --on-accent holder 7,2. Gradienten går ALDRI ned mot --accent-deep: der
+   faller teksten til 4,3. */
+html[data-theme="carbon"] .cat-hero .ch-cta,
+html[data-theme="carbon"] :is(.hv-btn,.bc-insert){
+  background:linear-gradient(180deg, var(--accent-2), var(--accent));
+  box-shadow:inset 0 1px 0 rgba(255,232,200,.45), 0 8px 22px -12px rgba(var(--glow-rgb),.8);
 }
 
 html[data-theme="dark"]{ /* Mørk — dyp navy trukket subtilt mot forsidens indigo (#141520 / #6c8aef) */
