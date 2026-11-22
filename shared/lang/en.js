@@ -3549,6 +3549,7 @@ REGIONS['en'] = {
     lrnMaxRomE: '{belop} of borrowing room you cannot use until your equity rises',
     lrnMaxBand: 'Other debt: {belop} kr',
     lrnMaxDok: 'If you buy a freehold home for {pris} kr, {dok} kr in <a href="/boliglan/dok/">document duty</a> comes on top.',
+    lrnMaxDokMed: 'The price includes {dok} kr in <a href="/boliglan/dok/">document duty</a>, which is paid from your equity.',
     lrnMaxSumEq: 'Both caps are {tak} kr, so you can borrow {lan} kr.',
     lrnMaxSumI: 'The income cap of {i} kr is lower than the equity cap of {e} kr, so you can borrow {lan} kr.',
     lrnMaxSumE: 'The equity cap of {e} kr is lower than the income cap of {i} kr, so you can borrow {lan} kr.',
@@ -4011,6 +4012,7 @@ REGIONS['en'] = {
     lrnNhStateO: 'Average order {aov} kr · cost of goods {vare} kr · shipping {frakt} kr · fee {g} · packaging {emb} kr',
     lrnNhStateS: 'ARPU {arpu} kr/mo · margin {m} · churn {c}/mo · CAC {cac} kr',
     lrnNhGebyrOf: 'Payment fee ({p} of the order)',
+    lrnNhGebyrOfInkl: 'Payment fee ({p} of the order incl. VAT)',
     lrnNhDbSub: 'Contribution margin · {dg}',
     lrnNhCpa: 'Max ad cost per order: {belop} kr (break-even CPA)',
     lrnNhBe: 'Break-even ROAS {r}',
@@ -4691,6 +4693,18 @@ REGIONS['en'] = {
    core.js (_phSweepAll) bytter den ut når dette språket er valgt.
    Mangler en frase her, blir den norske teksten stående. */
 REGIONS['en']._ph = {
+// P53: valg for mva i netthandel og dokumentavgift i maks boligpris (2026-11-22)
+"Gebyret regnes av":"Fee is calculated on",
+"Snittordren uten mva":"Average order excl. VAT",
+"Snittordren med mva (25 %)":"Average order incl. VAT (25 %)",
+"Unntaket er betalingsgebyret. Betalingsleverandøren tar som regel prosenten av det kunden betaler, altså med mva. Velg derfor selv om gebyret skal regnes av snittordren med eller uten mva.":"The exception is the payment fee. The payment provider usually takes its percentage of what the customer pays, that is including VAT. So choose yourself whether the fee is calculated on the average order with or without VAT.",
+"Uten (borettslag)":"Without (co-op)",
+"Med 2,5 % (selveier)":"With 2.5 % (freehold)",
+"Kjøper du selveier, betaler du 2,5 % av kjøpesummen i dokumentavgift. Den tas fra egenkapitalen.":"If you buy a freehold home, you pay 2.5 % of the price in document duty. It is taken from your equity.",
+"+100 000 kr egenkapital løfter taket 720 000 kr":"+100 000 kr in equity raises the cap by 720 000 kr",
+"+100 000 kr egenkapital løfter egenkapitaltaket 720 000 kr.":"+100 000 kr in equity raises the equity cap by 720 000 kr.",
+"Uten egenkapital gir kravet om 10 % egenkapital ikke rom for boliglån. Med dokumentavgift gir hver krone du sparer 7,20 kr i lånerom.":"Without equity, the 10 % equity requirement leaves no room for a mortgage. With document duty, every krone you save gives 7.20 kr of borrowing room.",
+"Velger du med dokumentavgift, blir tallet 7,2. Da går 2,5 % av prisen til avgiften, og bare resten av egenkapitalen teller mot kravet om 10 %.":"If you choose with document duty, the number becomes 7.2. Then 2.5 % of the price goes to the duty, and only the rest of your equity counts towards the 10 % requirement.",
 /* P22 runde 2: resterende tekster etter ny måling (i18n-02) */
 "Start her":"Start here",
 "MVA-⁠meldingen for én termin":"The VAT return for one VAT period",

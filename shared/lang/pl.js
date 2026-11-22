@@ -3280,6 +3280,7 @@ REGIONS['pl'] = {
     lrnMaxRomE: '{belop} zdolności kredytowej, której nie wykorzystasz, dopóki nie wzrośnie wkład własny',
     lrnMaxBand: 'Inne zadłużenie: {belop} kr',
     lrnMaxDok: 'Jeśli kupisz mieszkanie na własność (selveier) za {pris} kr, dochodzi {dok} kr <a href="/boliglan/dok/">opłaty dokumentowej</a>.',
+    lrnMaxDokMed: 'Cena uwzględnia {dok} kr <a href="/boliglan/dok/">opłaty dokumentowej</a>, płaconej z wkładu własnego.',
     lrnMaxSumEq: 'Oba limity wynoszą {tak} kr, więc możesz pożyczyć {lan} kr.',
     lrnMaxSumI: 'Limit z dochodu ({i} kr) jest niższy niż limit z wkładu własnego ({e} kr), więc możesz pożyczyć {lan} kr.',
     lrnMaxSumE: 'Limit z wkładu własnego ({e} kr) jest niższy niż limit z dochodu ({i} kr), więc możesz pożyczyć {lan} kr.',
@@ -3777,6 +3778,7 @@ REGIONS['pl'] = {
     lrnNhStateO: 'Średnie zamówienie {aov} kr · koszt towaru {vare} kr · transport {frakt} kr · opłata {g} · opakowanie {emb} kr',
     lrnNhStateS: 'ARPU {arpu} kr/mies. · marża {m} · odpływ {c}/mies. · CAC {cac} kr',
     lrnNhGebyrOf: 'Opłata za płatność ({p} zamówienia)',
+    lrnNhGebyrOfInkl: 'Opłata za płatność ({p} zamówienia z VAT)',
     lrnNhDbSub: 'Marża na pokrycie · {dg}',
     lrnNhCpa: 'Maks. koszt reklamy na zamówienie: {belop} kr (próg CPA)',
     lrnNhBe: 'Próg ROAS {r}',
@@ -4496,6 +4498,18 @@ REGIONS['pl'] = {
    core.js (_phSweepAll) bytter den ut når dette språket er valgt.
    Mangler en frase her, blir den norske teksten stående. */
 REGIONS['pl']._ph = {
+// P53: valg for mva i netthandel og dokumentavgift i maks boligpris (2026-11-22)
+"Gebyret regnes av":"Opłata liczona od",
+"Snittordren uten mva":"Średnie zamówienie bez VAT",
+"Snittordren med mva (25 %)":"Średnie zamówienie z VAT (25 %)",
+"Unntaket er betalingsgebyret. Betalingsleverandøren tar som regel prosenten av det kunden betaler, altså med mva. Velg derfor selv om gebyret skal regnes av snittordren med eller uten mva.":"Wyjątkiem jest opłata za płatność. Operator płatności zwykle pobiera procent od kwoty, którą płaci klient, czyli z VAT. Dlatego sam wybierz, czy opłata ma być liczona od średniego zamówienia z VAT, czy bez.",
+"Uten (borettslag)":"Bez (spółdzielnia)",
+"Med 2,5 % (selveier)":"Z 2,5 % (własność)",
+"Kjøper du selveier, betaler du 2,5 % av kjøpesummen i dokumentavgift. Den tas fra egenkapitalen.":"Kupując mieszkanie na własność, płacisz 2,5 % ceny jako opłatę dokumentową. Pokrywa się ją z wkładu własnego.",
+"+100 000 kr egenkapital løfter taket 720 000 kr":"+100 000 kr wkładu własnego podnosi limit o 720 000 kr",
+"+100 000 kr egenkapital løfter egenkapitaltaket 720 000 kr.":"+100 000 kr wkładu własnego podnosi limit z wkładu o 720 000 kr.",
+"Uten egenkapital gir kravet om 10 % egenkapital ikke rom for boliglån. Med dokumentavgift gir hver krone du sparer 7,20 kr i lånerom.":"Bez wkładu własnego wymóg 10 % nie daje miejsca na kredyt hipoteczny. Z opłatą dokumentową każda zaoszczędzona korona daje 7,20 kr zdolności kredytowej.",
+"Velger du med dokumentavgift, blir tallet 7,2. Da går 2,5 % av prisen til avgiften, og bare resten av egenkapitalen teller mot kravet om 10 %.":"Jeśli wybierzesz opcję z opłatą dokumentową, liczba wynosi 7,2. Wtedy 2,5 % ceny idzie na opłatę, a do wymogu 10 % liczy się tylko reszta wkładu własnego.",
 /* P10 svakhetssveip 2026-11: skatteregler (uttak, sykepenger, foreldrepenger, feriepenger) */
 "Inntekten er så lav at det ikke blir skatt på gevinsten.":"Dochód jest tak niski, że nie ma podatku od zysku.",
 "Annen personinntekt i året (kr)":"Inny dochód osobisty w roku (kr)",

@@ -3288,6 +3288,7 @@ REGIONS['fr'] = {
     lrnMaxRomE: '{belop} de marge d\'emprunt inutilisable tant que l\'apport n\'augmente pas',
     lrnMaxBand: 'Autres dettes : {belop} kr',
     lrnMaxDok: 'Si vous achetez en pleine propriété (selveier) pour {pris} kr, il faut ajouter {dok} kr de <a href="/boliglan/dok/">droit de mutation</a>.',
+    lrnMaxDokMed: 'Le prix tient compte de {dok} kr de <a href="/boliglan/dok/">droit de mutation</a>, payés sur votre apport personnel.',
     lrnMaxSumEq: 'Les deux plafonds sont de {tak} kr, vous pouvez donc emprunter {lan} kr.',
     lrnMaxSumI: 'Le plafond du revenu ({i} kr) est inférieur au plafond de l\'apport ({e} kr), vous pouvez donc emprunter {lan} kr.',
     lrnMaxSumE: 'Le plafond de l\'apport ({e} kr) est inférieur au plafond du revenu ({i} kr), vous pouvez donc emprunter {lan} kr.',
@@ -3748,6 +3749,7 @@ REGIONS['fr'] = {
     lrnNhStateO: 'Commande moyenne {aov} kr · marchandise {vare} kr · transport {frakt} kr · frais {g} · emballage {emb} kr',
     lrnNhStateS: 'ARPU {arpu} kr/mois · marge {m} · résiliation {c}/mois · CAC {cac} kr',
     lrnNhGebyrOf: 'Frais de paiement ({p} de la commande)',
+    lrnNhGebyrOfInkl: 'Frais de paiement ({p} de la commande TTC)',
     lrnNhDbSub: 'Marge sur coûts variables · {dg}',
     lrnNhCpa: 'Coût publicitaire max. par commande : {belop} kr (CPA de rentabilité)',
     lrnNhBe: 'ROAS de rentabilité {r}',
@@ -4426,6 +4428,18 @@ REGIONS['fr'] = {
    core.js (_phSweepAll) bytter den ut når dette språket er valgt.
    Mangler en frase her, blir den norske teksten stående. */
 REGIONS['fr']._ph = {
+// P53: valg for mva i netthandel og dokumentavgift i maks boligpris (2026-11-22)
+"Gebyret regnes av":"Frais calculés sur",
+"Snittordren uten mva":"Panier moyen HT",
+"Snittordren med mva (25 %)":"Panier moyen TTC (25 %)",
+"Unntaket er betalingsgebyret. Betalingsleverandøren tar som regel prosenten av det kunden betaler, altså med mva. Velg derfor selv om gebyret skal regnes av snittordren med eller uten mva.":"L’exception, ce sont les frais de paiement. Le prestataire prélève en général son pourcentage sur ce que paie le client, donc TTC. Choisissez donc vous-même si les frais se calculent sur le panier moyen HT ou TTC.",
+"Uten (borettslag)":"Sans (coopérative)",
+"Med 2,5 % (selveier)":"Avec 2,5 % (pleine propriété)",
+"Kjøper du selveier, betaler du 2,5 % av kjøpesummen i dokumentavgift. Den tas fra egenkapitalen.":"Si vous achetez en pleine propriété, vous payez 2,5 % du prix en droit de mutation, prélevé sur votre apport.",
+"+100 000 kr egenkapital løfter taket 720 000 kr":"+100 000 kr d’apport relèvent le plafond de 720 000 kr",
+"+100 000 kr egenkapital løfter egenkapitaltaket 720 000 kr.":"+100 000 kr d’apport relèvent le plafond lié à l’apport de 720 000 kr.",
+"Uten egenkapital gir kravet om 10 % egenkapital ikke rom for boliglån. Med dokumentavgift gir hver krone du sparer 7,20 kr i lånerom.":"Sans apport, l’exigence de 10 % ne laisse aucune place à un prêt immobilier. Avec le droit de mutation, chaque couronne épargnée donne 7,20 kr de capacité d’emprunt.",
+"Velger du med dokumentavgift, blir tallet 7,2. Da går 2,5 % av prisen til avgiften, og bare resten av egenkapitalen teller mot kravet om 10 %.":"Si vous choisissez avec droit de mutation, le chiffre devient 7,2. Alors 2,5 % du prix vont au droit, et seul le reste de votre apport compte pour l’exigence de 10 %.",
 /* P10 svakhetssveip 2026-11: skatteregler (uttak, sykepenger, foreldrepenger, feriepenger) */
 "Inntekten er så lav at det ikke blir skatt på gevinsten.":"Le revenu est si bas qu'il n'y a pas d'impôt sur la plus-value.",
 "Annen personinntekt i året (kr)":"Autre revenu personnel dans l'année (kr)",

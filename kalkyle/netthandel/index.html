@@ -308,6 +308,13 @@ body.focus-mode > footer{display:none}
                     <input class="ik-input" id="neEmb" type="text" inputmode="decimal" autocomplete="off" value="12">
                   </div>
                 </div>
+                <div class="ik-fg">
+                  <span class="ik-lbl" id="neGebyrGrunnLbl">Gebyret regnes av</span>
+                  <div class="mg-seg-row" role="group" aria-labelledby="neGebyrGrunnLbl">
+                    <button type="button" class="mg-seg" id="neGebyrEks" aria-pressed="true">Snittordren uten mva</button>
+                    <button type="button" class="mg-seg" id="neGebyrInkl" aria-pressed="false">Snittordren med mva (25 %)</button>
+                  </div>
+                </div>
               </div>
             </section>
 
@@ -502,7 +509,7 @@ body.focus-mode > footer{display:none}
       <div class="lrn-qs">
         <details><summary>Hva er break-even ROAS?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Den laveste avkastningen på annonsekronene der en ordre akkurat går i null: 1 delt på dekningsgraden. Ligger du over, tjener du på annonseringen.</p></div></details>
         <details><summary>Hva er et sunt LTV:CAC-forhold?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Tommelfingerregelen er at LTV bør være minst 3 ganger CAC. Under 3:1 bruker du for mye på å skaffe kunder. Langt over kan bety at du investerer for lite i vekst.</p></div></details>
-        <details><summary>Regnes tallene med eller uten mva?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Alt regnes uten mva. Bruk snittordre og ARPU uten merverdiavgift, ellers blir dekningsgraden og LTV misvisende. For mva-pliktige går mvaen inn og ut og påvirker ikke enhetsøkonomien.</p></div></details>
+        <details><summary>Regnes tallene med eller uten mva?<svg class="lrn-chev" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5 L6 8.5 L10 4.5"/></svg></summary><div class="a"><p>Alt regnes uten mva. Bruk snittordre og ARPU uten merverdiavgift, ellers blir dekningsgraden og LTV misvisende. For mva-pliktige går mvaen inn og ut og påvirker ikke enhetsøkonomien.</p><p>Unntaket er betalingsgebyret. Betalingsleverandøren tar som regel prosenten av det kunden betaler, altså med mva. Velg derfor selv om gebyret skal regnes av snittordren med eller uten mva.</p></div></details>
       </div>
     </section>
 
@@ -543,6 +550,8 @@ body.focus-mode > footer{display:none}
 (function(){
   var KEY = 'hv-kalkyle-netthandel-v1';
   var mode = 'ordre'; // 'ordre' | 'saas'
+  // Betalingsleverandøren tar som regel prosenten av det kunden betaler (med mva). Brukeren velger grunnlaget.
+  var gebyrInkl = false;
 
   var fmtNbGroup = new Intl.NumberFormat('nb-NO', { maximumFractionDigits: 0 });
   function fmtKr(n, dec){
@@ -576,7 +585,7 @@ body.focus-mode > footer{display:none}
     var frakt = parseAmt(els.neFrakt.value) || 0;
     var gebyrP = parseAmt(els.neGebyr.value) || 0;
     var emb = parseAmt(els.neEmb.value) || 0;
-    var gebyrKr = isFinite(aov) ? aov * gebyrP / 100 : NaN;
+    var gebyrKr = isFinite(aov) ? aov * (gebyrInkl ? 1.25 : 1) * gebyrP / 100 : NaN;
     var variable = vare + frakt + (isFinite(gebyrKr) ? gebyrKr : 0) + emb;
     var db = isFinite(aov) ? aov - variable : NaN;
     var dg = (isFinite(aov) && aov !== 0) ? db / aov : NaN;
@@ -615,7 +624,7 @@ body.focus-mode > footer{display:none}
     var s = computeSaas();
     var t = (typeof R === 'function') ? R() : {};
     var ordre = mode === 'ordre';
-    window._nett = {mode:mode, aov:o.aov, vare:o.vare, frakt:o.frakt, gebyrP:parseAmt(els.neGebyr.value) || 0, emb:o.emb, arpu:s.arpu, marginP:s.marginP, churnP:s.churnP, cac:s.cac};
+    window._nett = {mode:mode, aov:o.aov, vare:o.vare, frakt:o.frakt, gebyrP:parseAmt(els.neGebyr.value) || 0, gebyrInkl:gebyrInkl, emb:o.emb, arpu:s.arpu, marginP:s.marginP, churnP:s.churnP, cac:s.cac};
     if(window.hvtLearn) hvtLearn.update('kalkyle-netthandel', window._nett);
 
     // Tekster som følger modus (svarkortets overskrift og merknad).
@@ -666,7 +675,7 @@ body.focus-mode > footer{display:none}
 
   function persist(){
     try {
-      var s = { mode: mode };
+      var s = { mode: mode, gebyrInkl: gebyrInkl };
       Object.keys(els).forEach(function(id){ s[id] = els[id].value; });
       localStorage.setItem(KEY, JSON.stringify(s));
     } catch(e){}
@@ -677,14 +686,24 @@ body.focus-mode > footer{display:none}
       var s = JSON.parse(raw);
       Object.keys(els).forEach(function(id){ if(s[id] != null) els[id].value = s[id]; });
       if(s.mode === 'ordre' || s.mode === 'saas') mode = s.mode;   // ukjent modus: standardvalget beholdes
+      if(typeof s.gebyrInkl === 'boolean') gebyrInkl = s.gebyrInkl;
     } catch(e){}
+  }
+
+  function setGebyrGrunn(inkl){
+    gebyrInkl = inkl;
+    document.getElementById('neGebyrEks').setAttribute('aria-pressed', inkl ? 'false' : 'true');
+    document.getElementById('neGebyrInkl').setAttribute('aria-pressed', inkl ? 'true' : 'false');
   }
 
   document.getElementById('nhSegOrdre').addEventListener('click', function(){ setMode('ordre'); });
   document.getElementById('nhSegSaas').addEventListener('click', function(){ setMode('saas'); });
+  document.getElementById('neGebyrEks').addEventListener('click', function(){ setGebyrGrunn(false); recalc(); });
+  document.getElementById('neGebyrInkl').addEventListener('click', function(){ setGebyrGrunn(true); recalc(); });
   Object.keys(els).forEach(function(id){ els[id].addEventListener('input', recalc); });
 
   restore();
+  setGebyrGrunn(gebyrInkl);
   setMode(mode);
 
   // Svaret og etikettene skrives av JS: skriv dem på nytt når språkfila er lastet og ved språkbytte.
@@ -736,7 +755,7 @@ body.focus-mode > footer{display:none}
 (function(){
   var KEY = 'kalkyle-netthandel';
   // Tallene kalkulatoren starter med. Så lenge de står slik, er merket «Eksempel».
-  var DEF = {aov:600, vare:200, frakt:60, gebyrP:3, emb:12, arpu:500, marginP:80, churnP:2.5, cac:2500};
+  var DEF = {aov:600, vare:200, frakt:60, gebyrP:3, gebyrInkl:false, emb:12, arpu:500, marginP:80, churnP:2.5, cac:2500};
   var SANS = 'Geist, Inter, system-ui, sans-serif';
   var NB = ' ';
   var root, raw = null, lastW = 0, queued = false, ctx, local = null, base = null;
@@ -783,12 +802,12 @@ body.focus-mode > footer{display:none}
     var mob = W < 640;
 
     if(isO){
-      var oi = {aov:+inp.aov, vare:+inp.vare || 0, frakt:+inp.frakt || 0, gebyrP:+inp.gebyrP || 0, emb:+inp.emb || 0};
+      var oi = {aov:+inp.aov, vare:+inp.vare || 0, frakt:+inp.frakt || 0, gebyrP:+inp.gebyrP || 0, gebyrInkl:inp.gebyrInkl === true, emb:+inp.emb || 0};
       var okO = isFinite(oi.aov) && oi.aov > 0;
       q('okO').hidden = !okO; q('noO').hidden = okO;
       set('stateText', okO ? t('lrnNhStateO', 'Snittordre {aov} kr · varekost {vare} kr · frakt {frakt} kr · gebyr {g} · emballasje {emb} kr', {aov:kr(oi.aov), vare:kr(oi.vare), frakt:kr(oi.frakt), g:pc(oi.gebyrP), emb:kr(oi.emb)}) : ph('Fyll inn snittordren i kalkulatoren.'));
       if(!okO){ set('sr', ph('Fyll inn snittordren i kalkulatoren.')); return; }
-      var gebyrKr = oi.aov * oi.gebyrP / 100, variable = oi.vare + oi.frakt + gebyrKr + oi.emb, db = oi.aov - variable, dg = db / oi.aov;
+      var gebyrKr = oi.aov * (oi.gebyrInkl ? 1.25 : 1) * oi.gebyrP / 100, variable = oi.vare + oi.frakt + gebyrKr + oi.emb, db = oi.aov - variable, dg = db / oi.aov;
       var dgR = Math.round(dg * 1000) / 1000, roas = dgR > 0 ? 1 / dgR : NaN, cpa = oi.aov * dg;
       var dgTxt = p1(dg * 100), roasTxt = isFinite(roas) ? L.dec(roas, 2) : '–';
       // ── Stolpen: én snittordre fra 0 til ordresum ──
@@ -821,7 +840,7 @@ body.focus-mode > footer{display:none}
           if(x.w >= chipW(x.n, full) + 10) lab += chip(x.x + 6, B.y0 + 8, x.n, full);
           else if(x.w >= chipW(x.n, short) + 10) lab += chip(x.x + 6, B.y0 + 8, x.n, short);
           else {
-            var nm = x.k === 'gebyr' ? t('lrnNhGebyrOf', 'Betalingsgebyr ({p} av ordren)', {p:pc(oi.gebyrP)}) : x.n;
+            var nm = x.k === 'gebyr' ? (oi.gebyrInkl ? t('lrnNhGebyrOfInkl', 'Betalingsgebyr ({p} av ordren med mva)', {p:pc(oi.gebyrP)}) : t('lrnNhGebyrOf', 'Betalingsgebyr ({p} av ordren)', {p:pc(oi.gebyrP)})) : x.n;
             var w = chipW(nm, full), cxm = x.x + x.w / 2, right = outIdx % 2 === 0;
             lab += chip(right ? cxm - 4 - w : cxm + 4, B.y1 + 24, nm, full);
             lead += 'M' + f1(cxm) + ',' + B.y1 + ' V' + (B.y1 + 22) + ' ';
