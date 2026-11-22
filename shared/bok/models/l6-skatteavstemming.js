@@ -79,7 +79,7 @@
         hjelp: 'Utbytte som er inntektsført i regnskapet, innenfor fritaksmetoden. Skriv det bare her.' },
 
       { id: 'konsern', gruppe: 'forskjeller', avansert: true, etikett: 'Mottatt innenfor skattekonsern', type: 'avkrysning', start: false,
-        hjelp: 'Dere eier over 90 % av aksjene og stemmene i selskapet som delte ut.' },
+        hjelp: 'Dere og selskapet som delte ut, er i samme konsern ved slutten av året. Et morselskap eier over 90 % av aksjene og stemmene, direkte eller gjennom et datterselskap.' },
 
       { id: 'fjoraar', gruppe: 'skatt', etikett: 'For lite eller mye avsatt i fjor', type: 'kr', start: 0,
         hjelp: 'Endelig fastsatt minus avsatt betalbar skatt. For lite avsatt gir pluss.' },
