@@ -4,6 +4,8 @@
      • Valuta + rente. Norges Bank åpne data (EXR / IR)  (gjenbruk med kildehenvisning)
      • Strøm ......... hvakosterstrømmen.no               (fritt tilgjengelig, NO1–NO5)
      • Stedssøk ...... Kartverket Geonorge stedsnavn      (CC BY 4.0 — © Kartverket)
+     • Drivstoff, prisvekst, boliglånsrente . SSB PxWebApi v2 (CC BY 4.0 — «Kilde: SSB»)
+     • Dagslys ....... regnes ut på siden (ingen kilde)
    Alt caches i localStorage og degraderer pent til forrige/HTML-verdi ved feil — panelet
    viser aldri blankt. Ingen API-nøkler, ingen server. Full kilde/juss-analyse:
    auto-minne project-markedsdata-live-research. */
@@ -1634,6 +1636,7 @@
     setText('wxPlaceName', p.navn);
     loadWeather(p, true);
     loadStrom(p, true);
+    renderSun(p);
   }
 
   function buildPicker() {
@@ -1694,6 +1697,194 @@
     });
   }
 
+  /* ═══════════ SSB: DRIVSTOFF, PRISVEKST OG BOLIGLÅNSRENTE ═══════════
+     Statistisk sentralbyrå, PxWebApi v2 (CC BY 4.0, åpent for nettlesere, ingen nøkkel).
+     Alle tre er månedstall som kommer et par uker etter at måneden er omme, så kortene
+     sier alltid hvilken måned tallet gjelder. Tabellene (sjekket 2026-11-22):
+       09654 Priser på drivstoff: 031 bensin 95 blyfri, 035 diesel (kr per liter, landssnitt)
+       14700 KPI (2025=100): 00 i alt, 12-måneders endring (03013 ble avsluttet i 2025)
+       10748 Renter på nye boliglån: 70 nedbetalingslån, 04b husholdninger, 08 flytende rente
+     25 måneder: to år med graf, og tallet for samme måned året før. */
+  var SSB = 'https://data.ssb.no/api/pxwebapi/v2/tables/';
+  var SSB_Q = {
+    df: '09654/data?lang=no&valueCodes[PetroleumProd]=031,035&valueCodes[ContentsCode]=Priser&valueCodes[Tid]=top(25)',
+    kp: '14700/data?lang=no&valueCodes[VareTjenesteGrp]=00&valueCodes[ContentsCode]=Tolvmanedersendring&valueCodes[Tid]=top(25)',
+    bl: '10748/data?lang=no&valueCodes[Utlanstype]=70&valueCodes[Sektor]=04b&valueCodes[Rentebinding]=08&valueCodes[ContentsCode]=RenterNyeBolig&valueCodes[Tid]=top(25)'
+  };
+  var _ssb = {}; // siste SSB-data per kort — scrub-chipen leser herfra
+
+  /* json-stat2 → { dates: ['2026-10', …], series: [[…], […]] }. Tid er siste dimensjon,
+     så verdiene ligger rekke for rekke (bensin først, så diesel). Måneder uten tall
+     ennå (null) i slutten kuttes, så kortet viser siste måned som faktisk har tall. */
+  function parseSsb(j) {
+    var tid = j.dimension.Tid.category.index;
+    var keys = Object.keys(tid).sort(function (a, b) { return tid[a] - tid[b]; }), n = keys.length, out = [];
+    for (var s = 0; s * n < j.value.length; s++) out.push(j.value.slice(s * n, s * n + n));
+    var end = n;
+    while (end > 0 && out.some(function (r) { return typeof r[end - 1] !== 'number'; })) end--;
+    return { dates: keys.slice(0, end).map(function (k) { return k.replace('M', '-'); }),
+             series: out.map(function (r) { return r.slice(0, end); }) };
+  }
+  function mndYr(ym) { // '2026-10' → «okt. 2026»
+    var p = ym.split('-');
+    return T('trSharedMonthsShort', MND.join(',')).split(',')[parseInt(p[1], 10) - 1] + ' ' + p[0];
+  }
+  /* Pil og endring fra måneden før, i kortets enhet (« kr» eller « pp»). */
+  function ssbTrend(k, diff, dec, unit) {
+    var span = $(k + 'Trend'); if (!span) return;
+    var dir = Math.abs(diff) < Math.pow(10, -dec) / 2 ? 0 : diff > 0 ? 1 : -1;
+    trendClass(span, dir);
+    span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), dec) + '<i>' + unit + '</i></span>';
+  }
+  /* Grafen: rekka det store tallet viser, med høyeste/laveste verdi på y-aksen og
+     første, midterste og siste måned under. */
+  function ssbSpark(k, dates, vals, dec) {
+    var n = vals.length;
+    setText(k + 'YMax', nb(Math.max.apply(null, vals), dec));
+    setText(k + 'YMin', nb(Math.min.apply(null, vals), dec));
+    setText(k + 'Ax0', monthLbl(dates[0]));
+    setText(k + 'Ax1', monthLbl(dates[Math.round((n - 1) / 2)]));
+    setText(k + 'Ax2', monthLbl(dates[n - 1]));
+    applySpark($(k + 'Card'), vals);
+  }
+
+  function renderDf(d) { // bensin i tallet og grafen, diesel i faktaradene
+    var b = d.series[0], di = d.series[1] || [], last = b.length - 1, mnd = mndYr(d.dates[last]);
+    setVal('dfVal', b[last], 2);
+    ssbTrend('df', b[last] - b[last - 1], 2, ' kr');
+    var rows = [];
+    if (typeof di[last] === 'number') rows.push([ph('Diesel'), nb(di[last], 2) + ' kr']);
+    if (last >= 12) rows.push([ph('Ett år før'), nb(b[last - 12], 2) + ' kr']);
+    rows.push([ph('Landssnitt for'), mnd]);
+    setFacts('dfSub', rows);
+    setText('dfLine', (typeof di[last] === 'number' ? ph('Diesel') + ' ' + nb(di[last], 2) + ' kr · ' : '') + ph('landssnitt') + ' ' + mnd);
+    ssbSpark('df', d.dates, b, 2);
+  }
+  function renderKp(d) { // 12-måneders endring i KPI
+    var v = d.series[0], last = v.length - 1, mnd = mndYr(d.dates[last]);
+    setVal('kpVal', v[last], 1);
+    ssbTrend('kp', v[last] - v[last - 1], 1, ' pp');
+    setFacts('kpSub', [[ph('Siste 12 mnd. til'), mnd],
+      [ph('Måneden før'), nb(v[last - 1], 1) + ' %'],
+      [ph('Norges Banks mål'), nb(2, 0) + ' %']]);
+    setText('kpLine', ph('Siste 12 mnd. til') + ' ' + mnd + ' · ' + ph('målet er 2 %'));
+    ssbSpark('kp', d.dates, v, 1);
+  }
+  function renderBl(d) { // snittrente på nye nedbetalingslån med flytende rente
+    var v = d.series[0], last = v.length - 1, mnd = mndYr(d.dates[last]);
+    setVal('blVal', v[last], 2);
+    ssbTrend('bl', v[last] - v[last - 1], 2, ' pp');
+    var rows = [[ph('Nye lån, flytende rente'), mnd], [ph('Måneden før'), nb(v[last - 1], 2) + ' %']];
+    if (last >= 12) rows.push([ph('Ett år før'), nb(v[last - 12], 2) + ' %']);
+    setFacts('blSub', rows);
+    setText('blLine', ph('Snitt for nye lån') + ' · ' + mnd);
+    ssbSpark('bl', d.dates, v, 2);
+  }
+  var SSB_R = { df: renderDf, kp: renderKp, bl: renderBl };
+  function renderSsb(k, d) { _ssb[k] = d; SSB_R[k](d); }
+
+  /* Månedstall: det holder å spørre SSB to ganger i døgnet. Cachen vises med en gang. */
+  function loadSsb(k, force) {
+    var c = cacheGet('ssb_' + k), ok = c && c.d && c.d.series && c.d.series[0] && c.d.series[0].length > 1;
+    if (ok) renderSsb(k, c.d);
+    if (ok && !force && fresh(c, 12 * 36e5)) return;
+    fetch(SSB + SSB_Q[k])
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (j) {
+        var d = parseSsb(j);
+        if (!d.series[0] || d.series[0].length < 2) throw 0;
+        cacheSet('ssb_' + k, d); renderSsb(k, d);
+      })
+      .catch(function () {});
+  }
+  function loadSsbAll(force) { loadSsb('df', force); loadSsb('kp', force); loadSsb('bl', force); }
+
+  /* ═══════════════════ DAGSLYS (regnes ut på siden) ══════════════════
+     Soloppgang og solnedgang for stedet i værkortet, med de vanlige formlene for solas
+     bane (deklinasjon og timevinkel). Sola regnes som oppe når øvre kant er over
+     horisonten (−0,833° med lysbrytningen). Treffer innen et par minutter.
+     Ingen henting og ingen kilde å vente på. */
+  var RAD = Math.PI / 180, J2000 = Date.UTC(2000, 0, 1, 12);
+  function sunDay(lat, lon, y, m, d) {
+    var n = (Date.UTC(y, m, d, 12) - J2000) / 864e5 - lon / 360;     // dager fra J2000 til soltid-middag
+    var M = (357.5291 + 0.98560028 * n) * RAD;                        // middelanomali
+    var L = M + (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M) + 282.9372) * RAD;
+    var noon = J2000 + (n + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L)) * 864e5;
+    var dec = Math.asin(Math.sin(L) * Math.sin(23.4397 * RAD)), phi = lat * RAD;
+    var c = (Math.sin(-0.833 * RAD) - Math.sin(phi) * Math.sin(dec)) / (Math.cos(phi) * Math.cos(dec));
+    if (c >= 1) return { len: 0, polar: -1 };     // mørketid: sola står ikke opp
+    if (c <= -1) return { len: 1440, polar: 1 };  // midnattssol: sola går ikke ned
+    var w = Math.acos(c) / (2 * Math.PI) * 864e5; // halve dagen i ms
+    return { len: 2 * w / 6e4, rise: new Date(noon - w), set: new Date(noon + w), polar: 0 };
+  }
+  function hhmm(dt) { return pad2(dt.getHours()) + ':' + pad2(dt.getMinutes()); }
+  function dayLen(min) { // 403 → «6 t 43 min»
+    var t = Math.round(min);
+    return fill(ph('{h} t {m} min'), { h: Math.floor(t / 60), m: t % 60 });
+  }
+  function monthOnly(i) { return cap(T('trSharedMonthsShort', MND.join(',')).split(',')[i].replace(/\.$/, '')); }
+
+  var _sun = null, _sunSig = '';
+  function renderSun(place) {
+    var now = new Date(), y = now.getFullYear(), mo = now.getMonth(), da = now.getDate();
+    var sig = isoDay(now) + '|' + place.lat + '|' + place.lon + '|' + document.documentElement.lang;
+    if (sig === _sunSig) return;
+    _sunSig = sig;
+    var td = sunDay(place.lat, place.lon, y, mo, da), yd = sunDay(place.lat, place.lon, y, mo, da - 1);
+
+    setText('suPlace', fill(ph('Dagslys i {sted}'), { sted: place.navn }));
+    /* «7 t 5 min»; under én time (like før mørketida) bare «46 min», ikke «0 t 46 min». */
+    var t = Math.round(td.len), short = !td.polar && t < 60;
+    setText('suVal', String(short ? t : Math.floor(t / 60)));
+    setText('suUnit', td.polar ? ph('timer') : short ? 'min' : fill(ph('t {m} min'), { m: t % 60 }));
+
+    /* Pila: hvor mye lengre eller kortere dagen er enn i går. I mørketid og midnattssol
+       står det hva det er i stedet. */
+    var span = $('suTrend');
+    if (span) {
+      var diff = td.len - yd.len, dir = Math.abs(diff) < 0.5 ? 0 : diff > 0 ? 1 : -1;
+      trendClass(span, td.polar ? 0 : dir);
+      span.innerHTML = td.polar
+        ? '<span>' + esc(ph(td.polar < 0 ? 'Mørketid' : 'Midnattssol')) + '</span>'
+        : arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + Math.round(Math.abs(diff)) + '<i> min</i></span>';
+    }
+
+    /* Neste solverv (21. juni og 21. desember, en dag fram eller tilbake fra år til år). */
+    var today = Date.UTC(y, mo, da), sols = [[y, 5, 'Sommersolverv'], [y, 11, 'Vintersolverv'], [y + 1, 5, 'Sommersolverv']], sv = null;
+    for (var i = 0; i < sols.length && !sv; i++) if (Date.UTC(sols[i][0], sols[i][1], 21) >= today) sv = sols[i];
+    var days = Math.round((Date.UTC(sv[0], sv[1], 21) - today) / 864e5);
+    var svRow = [ph(sv[2]), days > 1 ? fill(T('trSharedInDays', 'om {n} dager'), { n: days }) : ph(days === 1 ? 'i morgen' : 'i dag')];
+
+    if (td.polar) {
+      var what = ph(td.polar < 0 ? 'sola står ikke opp' : 'sola går ikke ned');
+      setFacts('suSub', [[ph(td.polar < 0 ? 'Mørketid' : 'Midnattssol'), what], svRow]);
+      setText('suLine', ph(td.polar < 0 ? 'Mørketid' : 'Midnattssol') + ' · ' + what);
+    } else {
+      setFacts('suSub', [[ph('Sola opp'), hhmm(td.rise)], [ph('Sola ned'), hhmm(td.set)], svRow]);
+      setText('suLine', fill(ph('Sola opp {a} · ned {b}'), { a: hhmm(td.rise), b: hhmm(td.set) }));
+    }
+
+    /* Grafen: dagslengden gjennom hele året (annenhver dag), punkt for i dag og en
+       stiplet linje ved 12 timer, der dag og natt er like lange (jevndøgn). */
+    var yrDays = Math.round((Date.UTC(y + 1, 0, 1) - Date.UTC(y, 0, 1)) / 864e5), lens = [];
+    for (var dd = 0; dd < yrDays; dd += 2) lens.push(sunDay(place.lat, place.lon, y, 0, dd + 1).len);
+    var mn = Math.min.apply(null, lens), mx = Math.max.apply(null, lens), rng = (mx - mn) || 1, pad = 6;
+    var yOf = function (v) { return pad + (1 - (v - mn) / rng) * (SPARK_H - 2 * pad); };
+    var pts = lens.map(function (v, k) { return [(k / (lens.length - 1)) * 200, yOf(v)]; });
+    var doy = Math.round((today - Date.UTC(y, 0, 1)) / 864e5);
+    var dot = [(doy / 2 / (lens.length - 1)) * 200, yOf(td.len)];
+    var svg = $('suSpark');
+    if (svg) {
+      var y12 = yOf(720).toFixed(1);
+      svg.innerHTML = (720 > mn && 720 < mx ? '<line class="spark-base" x1="0" y1="' + y12 + '" x2="200" y2="' + y12 + '"/>' : '') +
+        '<path class="spark-line" d="' + linePath(pts) + '"/>' + sparkDot(dot);
+    }
+    setText('suYMax', fill(ph('{n} t'), { n: Math.round(mx / 60) }));
+    setText('suYMin', fill(ph('{n} t'), { n: Math.round(mn / 60) }));
+    setText('suAx0', monthOnly(0)); setText('suAx1', monthOnly(6)); setText('suAx2', monthOnly(11));
+    _sun = { y: y, lens: lens };
+  }
+
   /* ── Oppdater-knapp i headeren ───────────────────────────────── */
   function buildStamp() {
     var stamp = $('dailyStamp'); if (!stamp) return;
@@ -1703,7 +1894,7 @@
       '<path d="M13.4,8 A5.4,5.4 0 1 1 11.8,4.2 M13.6,1.8 V5 H10.4"/></svg></button>';
     $('dailyRefresh').addEventListener('click', function () {
       var p = getPlace();
-      loadWeather(p, true); loadFx(true); loadRate(true); loadStrom(p, true);
+      loadWeather(p, true); loadFx(true); loadRate(true); loadStrom(p, true); loadSsbAll(true);
     });
   }
 
@@ -1740,6 +1931,18 @@
       var dt = u.dates && u.dates[i] ? nbShort(u.dates[i]) : '';
       return (dt ? '<span class="mut">' + dt + '</span> · ' : '') + nb(u.series[i] * (u.mult || 1), 2) + ' kr';
     });
+    ['df', 'kp', 'bl'].forEach(function (k) {
+      bindScrub(k + 'Spark', k + 'Scrub', k + 'ScrubTxt', function (frac) {
+        var d = _ssb[k], v = d && d.series[0]; if (!v || !v.length) return '';
+        var i = Math.min(v.length - 1, Math.round(frac * (v.length - 1)));
+        return '<span class="mut">' + mndYr(d.dates[i]) + '</span> · ' + nb(v[i], k === 'kp' ? 1 : 2) + (k === 'df' ? ' kr' : ' %');
+      });
+    });
+    bindScrub('suSpark', 'suScrub', 'suScrubTxt', function (frac) {
+      var s = _sun; if (!s) return '';
+      var i = Math.min(s.lens.length - 1, Math.round(frac * (s.lens.length - 1)));
+      return '<span class="mut">' + nbShort(isoDay(new Date(s.y, 0, 1 + 2 * i))) + '</span> · ' + dayLen(s.lens[i]);
+    });
   }
 
   /* ── Minutt-puls ─────────────────────────────────────────────────
@@ -1751,6 +1954,7 @@
     if (document.hidden) return;
     var p = getPlace();
     loadWeather(p, false); loadFx(false); loadRate(false); loadStrom(p, false);
+    loadSsbAll(false); renderSun(p); // dagslyset tegnes bare på nytt når datoen eller stedet er nytt
     if (_big.kind) bigRefresh(); // åpen fullskjermgraf: ny «nå»-time, passerte timer ut
   }
 
@@ -1762,6 +1966,7 @@
     buildStamp(); buildPicker(); buildGeo(); wireBig(); buildScrubs();
     buildCurMenu($('fxPickBtn'), $('fxCard')); buildConverter();
     loadWeather(place, false); loadFx(false); loadRate(false); loadStrom(place, false);
+    loadSsbAll(false); renderSun(place);
     setInterval(tick, 60 * 1000);
     document.addEventListener('visibilitychange', function () { if (!document.hidden) tick(); });
     /* core.js setter lang på <html> når en språkfil er lastet. Malene over leses med T() når
@@ -1773,6 +1978,8 @@
       if (_fx) renderFx(_fx);
       if (rate) renderRate(rate.d);
       if (_strom) renderStrom(_strom, getPlace().sone || 'NO1');
+      for (var k in _ssb) renderSsb(k, _ssb[k]);
+      renderSun(getPlace()); // signaturen inneholder språket, så dette tegner på nytt
       if (_big.kind) bigRefresh();
     }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
   }
