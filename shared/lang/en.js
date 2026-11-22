@@ -7351,6 +7351,7 @@ REGIONS['en']._ph = {
 "Forslag":"Suggestions",
 "Hopp til kategori":"Jump to a category",
 "Mye brukte verktøy":"Most-used tools",
+"Avansert":"Advanced",
 "Bla":"Browse",
 "Treff":"Results",
 "Prøv et annet søkeord eller bla i kategoriene under.":"Try another search term or browse the categories below.",

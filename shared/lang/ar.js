@@ -1,5 +1,14 @@
 // Hverdagsverktøy — ar.js (auto-generated)
 REGIONS['ar'] = {
+    /* Forsiden: dato, uke, søkepanel (samme nøkler som en.js) */
+    trForsideWeekdays:"الأحد,الاثنين,الثلاثاء,الأربعاء,الخميس,الجمعة,السبت",
+    trForsideMonthsLong:"يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر",
+    trForsideDateLong:"{wd} {d} {m} {y}",
+    trForsideWeek:"الأسبوع {n}",
+    trForsideMonthsShort:"يناير,فبراير,مارس,أبريل,مايو,يونيو,يوليو,أغسطس,سبتمبر,أكتوبر,نوفمبر,ديسمبر",
+    trForsideInDays:"خلال {n} يوم",
+    trForsideIndexed:"عدد الأدوات المفهرسة: {n}",
+    trForsideNoHits:"لا توجد نتائج لـ «{q}».",
     /* i18n fill ar (auto-translated + verified, 2026-06-29) */
     kalkToolDbTitle:'هامش المساهمة',
     kalkToolDbDesc:'احسب نسبة هامش المساهمة (DB%) ونقطة التعادل — كم وحدة يجب أن تبيع لتصل إلى نقطة الصفر؟',
@@ -7920,6 +7929,15 @@ REGIONS['ar']._ph = {
 "Tåler budsjettet betalingen?":"هل تتحمل الميزانية الدفعة؟",
 "Stresstest":"اختبار الضغط",
 "Tøm":"مسح",
+"Forslag":"اقتراحات",
+"Mye brukte verktøy":"الأدوات الأكثر استخدامًا",
+"Hopp til kategori":"انتقل إلى فئة",
+"Nylig søkt":"عمليات البحث الأخيرة",
+"Bla":"تصفّح",
+"Lukk":"إغلاق",
+"Treff":"النتائج",
+"Prøv et annet søkeord eller bla i kategoriene under.":"جرّب كلمة بحث أخرى أو تصفّح الفئات أدناه.",
+"Avansert":"متقدّم",
 "Tøm søk":"مسح البحث",
 "Uke-sats":"المعدل الأسبوعي",
 "Uker per år":"أسابيع في السنة",

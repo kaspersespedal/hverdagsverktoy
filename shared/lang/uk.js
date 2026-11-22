@@ -1,5 +1,14 @@
 // Hverdagsverktøy — uk.js (auto-generated)
 REGIONS['uk'] = {
+    /* Forsiden: dato, uke, søkepanel (samme nøkler som en.js) */
+    trForsideWeekdays:"Неділя,Понеділок,Вівторок,Середа,Четвер,П’ятниця,Субота",
+    trForsideMonthsLong:"січня,лютого,березня,квітня,травня,червня,липня,серпня,вересня,жовтня,листопада,грудня",
+    trForsideDateLong:"{wd}, {d} {m} {y}",
+    trForsideWeek:"Тиждень {n}",
+    trForsideMonthsShort:"січ.,лют.,бер.,квіт.,трав.,черв.,лип.,серп.,вер.,жовт.,лист.,груд.",
+    trForsideInDays:"через {n} дн.",
+    trForsideIndexed:"Проіндексовано інструментів: {n}",
+    trForsideNoHits:"Немає результатів для «{q}».",
     /* i18n fill uk (auto-translated + verified, 2026-06-29) */
     kalkToolDbTitle:'Маржинальний прибуток',
     kalkToolDbDesc:'Розрахуйте коефіцієнт маржинального прибутку (DB%) та точку беззбитковості — скільки одиниць потрібно продати, щоб вийти в нуль?',
@@ -7164,6 +7173,15 @@ REGIONS['uk']._ph = {
 "Tåler budsjettet betalingen?":"Чи витримає бюджет цей платіж?",
 "Stresstest":"Стрес-тест",
 "Tøm":"Очистити",
+"Forslag":"Пропозиції",
+"Mye brukte verktøy":"Найпопулярніші інструменти",
+"Hopp til kategori":"Перейти до категорії",
+"Nylig søkt":"Нещодавні пошуки",
+"Bla":"Гортати",
+"Lukk":"Закрити",
+"Treff":"Результати",
+"Prøv et annet søkeord eller bla i kategoriene under.":"Спробуйте інше слово або перегляньте категорії нижче.",
+"Avansert":"Розширене",
 "Tøm søk":"Очистити пошук",
 "Uke-sats":"Тижнева ставка",
 "Uker per år":"Тижнів на рік",

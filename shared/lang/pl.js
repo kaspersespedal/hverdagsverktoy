@@ -1,5 +1,14 @@
 // Hverdagsverktøy — pl.js (auto-generated)
 REGIONS['pl'] = {
+    /* Forsiden: dato, uke, søkepanel (samme nøkler som en.js) */
+    trForsideWeekdays:"Niedziela,Poniedziałek,Wtorek,Środa,Czwartek,Piątek,Sobota",
+    trForsideMonthsLong:"stycznia,lutego,marca,kwietnia,maja,czerwca,lipca,sierpnia,września,października,listopada,grudnia",
+    trForsideDateLong:"{wd}, {d} {m} {y}",
+    trForsideWeek:"Tydzień {n}",
+    trForsideMonthsShort:"sty,lut,mar,kwi,maj,cze,lip,sie,wrz,paź,lis,gru",
+    trForsideInDays:"za {n} dni",
+    trForsideIndexed:"Narzędzia w indeksie: {n}",
+    trForsideNoHits:"Brak wyników dla „{q}”.",
     /* i18n fill pl (auto-translated + verified, 2026-06-29) */
     kalkToolDbTitle:'Marża na pokrycie',
     kalkToolDbDesc:'Oblicz wskaźnik pokrycia (DB%) i próg rentowności — ile sztuk musisz sprzedać, aby wyjść na zero?',
@@ -7789,6 +7798,15 @@ REGIONS['pl']._ph = {
 "Tåke":"Mgła",
 "Tåler budsjettet betalingen?":"Czy budżet udźwignie tę ratę?",
 "Tøm":"Wyczyść",
+"Forslag":"Propozycje",
+"Mye brukte verktøy":"Najczęściej używane narzędzia",
+"Hopp til kategori":"Przejdź do kategorii",
+"Nylig søkt":"Ostatnie wyszukiwania",
+"Bla":"Przeglądaj",
+"Lukk":"Zamknij",
+"Treff":"Wyniki",
+"Prøv et annet søkeord eller bla i kategoriene under.":"Spróbuj innego hasła lub przejrzyj kategorie poniżej.",
+"Avansert":"Zaawansowane",
 "Tøm søk":"Wyczyść wyszukiwanie",
 "Uke-sats":"Stawka tygodniowa",
 "Uker per år":"Tygodni w roku",
