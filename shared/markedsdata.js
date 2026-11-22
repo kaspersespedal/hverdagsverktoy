@@ -298,6 +298,10 @@
         li.querySelector('small').textContent = c ? fxQuote(c) + ' kr' : '';
       }
       menu.hidden = false; btn.setAttribute('aria-expanded', 'true');
+      /* Omregneren: menyen står over valuta-ruta (høyrekant mot høyrekant), ikke helt til venstre i stripa. */
+      if (anchor.id === 'fxConv') {
+        menu.style.left = Math.max(12, btn.offsetLeft + btn.offsetWidth - menu.offsetWidth) + 'px';
+      }
     }
     function close() { menu.hidden = true; btn.setAttribute('aria-expanded', 'false'); }
     btn.addEventListener('click', function (e) { e.stopPropagation(); menu.hidden ? open() : close(); });
@@ -330,6 +334,7 @@
     if (!a || !b || !_convPick || !_convNok) return;
     a.appendChild(_convDir > 0 ? _convPick : _convNok);
     b.appendChild(_convDir > 0 ? _convNok : _convPick);
+    $('fxConv').classList.toggle('rev', _convDir < 0); // pilene på bytteknappen tar en halv omdreining
   }
 
   function renderConv() {
@@ -337,8 +342,10 @@
     setText('fxcCode', _fxCode);
     var c = _fx && _fx[_fxCode], amt = parseAmt($('fxcAmt') && $('fxcAmt').value);
     if (!c || c.last == null) { out.textContent = '—'; setText('fxcRate', ''); return; }
-    var cd = c.dates && c.dates[c.dates.length - 1];
-    setText('fxcRate', '1 ' + _fxCode + ' = ' + nb(c.last, 4) + ' kr' + (cd && cd !== isoDay(new Date()) ? ' (' + nbShort(cd) + ')' : ''));
+    var cd = c.dates && c.dates[c.dates.length - 1], rate = $('fxcRate');
+    /* Kursen og datoen i hver sin span: datoen står på egen linje under kursen (index.html, .fxc-rate-d). */
+    if (rate) rate.innerHTML = '<span>' + esc('1 ' + _fxCode + ' = ' + nb(c.last, 4) + ' kr') + '</span>' +
+      (cd && cd !== isoDay(new Date()) ? '<span class="fxc-rate-d">' + esc(nbShort(cd)) + '</span>' : '');
     out.textContent = (amt == null) ? '—' : nb(_convDir > 0 ? amt * c.last : amt / c.last, 2);
   }
 
