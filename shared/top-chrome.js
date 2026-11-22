@@ -960,8 +960,10 @@
   // Valget huskes (localStorage hvt-modus). Sider som bare er for den ene siden (Regnskap,
   // Boliglån …) setter valget, så Skatt åpner på Bedrift etter et besøk i Regnskap.
   // MODUS_SIDER sier hvem hver side er for. Lengste treff vinner; alt som ikke står her er felles.
+  // Budsjett ligger under /personlig/, men har både en privat- og en bedriftsutgave og sin egen
+  // Privat | Bedrift-knapp på siden. Det er derfor felles og setter ikke valget selv.
   var MODUS_SIDER = [
-    ['/personlig/', 'privat'], ['/boliglan/', 'privat'],
+    ['/personlig/', 'privat'], ['/personlig/budsjett/', 'felles'], ['/boliglan/', 'privat'],
     ['/skatt/inntekt/', 'privat'], ['/skatt/formue/', 'privat'], ['/skatt/reise/', 'privat'],
     ['/skatt/skattemelding/', 'privat'], ['/avgift/engangsavgift/', 'privat'], ['/kalkulator/lonnut/', 'privat'],
     ['/selskap/', 'bedrift'], ['/regnskap/', 'bedrift'], ['/kalkyle/', 'bedrift'], ['/avansert/', 'bedrift'],
@@ -973,8 +975,9 @@
   ];
   // Fanene i fast rekkefølge: privat, bedrift, så de felles. Samme rekkefølge som kategorilista
   // på forsiden (index.html).
-  var FANE_REKKEFOLGE = ['/personlig/budsjett/', '/personlig/', '/boliglan/',
-    '/selskap/', '/regnskap/', '/avgift/', '/kalkyle/', '/skatt/', '/kalkulator/', '/lov/', '/avansert/'];
+  var FANE_REKKEFOLGE = ['/personlig/', '/boliglan/',
+    '/selskap/', '/regnskap/', '/avgift/', '/kalkyle/',
+    '/personlig/budsjett/', '/skatt/', '/kalkulator/', '/lov/', '/avansert/'];
   function isModus(m){ return m === 'privat' || m === 'bedrift'; }
   function sideModus(path){
     var best = '', hit = 'felles';
