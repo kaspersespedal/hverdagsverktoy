@@ -240,6 +240,12 @@
     w = Skriver(a2, st, ['D', 'E']);
     function to(id){ return [I(bal[id]), I(bal[id + '_f'])]; }
     function summ(fra, til, a, f){ return [{f:'SUM(D' + fra + ':D' + til + ')', v:a}, {f:'SUM(E' + fra + ':E' + til + ')', v:f}]; }
+    // Egne poster («+ Legg til post») står sist i gruppa si, over summen. Gir siste rad i gruppa, eller forrige rad.
+    var EX = bal.ekstra || [];
+    function egne(g, forrige){
+      EX.forEach(function(e){ if(e.g === g) forrige = Q[e.id] = w.post(e.k, e.n, [I(e.v), I(e.f)]); });
+      return forrige;
+    }
     function pluss(rader, a, f){ return ['D', 'E'].map(function(k, i){ return {f:rader.map(function(x){ return k + x; }).join('+'), v:i ? f : a}; }); }
     w.tittel('Balanse', 'Per 31.12.' + aar + ' og 31.12.' + (aar - 1) + ' · beløp i kroner');
     w.hode(['31.12.' + aar, '31.12.' + (aar - 1)], 'Konto');
@@ -249,28 +255,33 @@
     Q.bAnlEiend = w.post('1100', 'Tomter, bygninger og eiendom', to('bAnlEiend'));
     Q.bAnlMask = w.post('1200', 'Maskiner og utstyr', to('bAnlMask'));
     Q.bAnlInv = w.post('1350', 'Investeringer i aksjer og andeler', to('bAnlInv'));
-    Q.anl = w.sum('Sum anleggsmidler', summ(Q.bAnlForsk, Q.bAnlInv, B.anl, Fj.anl));
+    var til = egne('anl', Q.bAnlInv);
+    Q.anl = w.sum('Sum anleggsmidler', summ(Q.bAnlForsk, til, B.anl, Fj.anl));
     w.gruppe('Omløpsmidler');
     Q.bOmlVare = w.post('1400', 'Varelager', to('bOmlVare'));
     Q.bOmlKund = w.post('1500', 'Kundefordringer og andre fordringer', to('bOmlKund'));
     Q.bOmlBank = w.post('1920', 'Bankinnskudd og kontanter', to('bOmlBank'));
-    Q.oml = w.sum('Sum omløpsmidler', summ(Q.bOmlVare, Q.bOmlBank, B.oml, Fj.oml));
+    til = egne('oml', Q.bOmlBank);
+    Q.oml = w.sum('Sum omløpsmidler', summ(Q.bOmlVare, til, B.oml, Fj.oml));
     Q.eiend = w.total('Sum eiendeler', pluss([Q.anl, Q.oml], B.eiend, Fj.eiend));
     w.seksjon('Egenkapital og gjeld');
     w.gruppe('Egenkapital');
     Q.bEkAks = w.post('2000', 'Aksjekapital', to('bEkAks'));
     Q.bEkOver = w.post('2020', 'Overkurs', to('bEkOver'));
     Q.bEkOpp = w.post('2050', 'Opptjent egenkapital', to('bEkOpp'));
-    Q.ek = w.sum('Sum egenkapital', summ(Q.bEkAks, Q.bEkOpp, B.ek, Fj.ek));
+    til = egne('ek', Q.bEkOpp);
+    Q.ek = w.sum('Sum egenkapital', summ(Q.bEkAks, til, B.ek, Fj.ek));
     w.gruppe('Langsiktig gjeld');
     Q.bGLBank = w.post('2220', 'Gjeld til kredittinstitusjoner', to('bGLBank'));
     Q.bGLAnnen = w.post('2290', 'Annen langsiktig gjeld', to('bGLAnnen'));
-    Q.gl = w.sum('Sum langsiktig gjeld', summ(Q.bGLBank, Q.bGLAnnen, B.gl, Fj.gl));
+    til = egne('gl', Q.bGLAnnen);
+    Q.gl = w.sum('Sum langsiktig gjeld', summ(Q.bGLBank, til, B.gl, Fj.gl));
     w.gruppe('Kortsiktig gjeld');
     Q.bGKLev = w.post('2400', 'Leverandørgjeld', to('bGKLev'));
     Q.bGKSkat = w.post('2600', 'Skatte- og avgiftsgjeld', to('bGKSkat'));
     Q.bGKAnnen = w.post('2900', 'Annen kortsiktig gjeld', to('bGKAnnen'));
-    Q.gk = w.sum('Sum kortsiktig gjeld', summ(Q.bGKLev, Q.bGKAnnen, B.gk, Fj.gk));
+    til = egne('gk', Q.bGKAnnen);
+    Q.gk = w.sum('Sum kortsiktig gjeld', summ(Q.bGKLev, til, B.gk, Fj.gk));
     Q.ekGjeld = w.total('Sum egenkapital og gjeld', pluss([Q.ek, Q.gl, Q.gk], B.ekGjeld, Fj.ekGjeld));
     w.luft(8);
     w.post('', 'Kontroll: eiendeler er lik egenkapital og gjeld', ['D', 'E'].map(function(k, i){
@@ -281,17 +292,25 @@
     var a3 = new Ark('Kontantstrøm', [3, 4, 52, 19, 3], 'D'), X = {};
     w = Skriver(a3, st, ['D']);
     function d(id){ return '(Balanse!D' + Q[id] + '-Balanse!E' + Q[id] + ')'; }
+    // Endringen i de egne postene med rolle r, med fortegnet som styrker kassen (eiendeler minus, gjeld og egenkapital pluss).
+    // Samme regler som utled i shared/regnskap-flyt.js.
+    function x(r){ return EX.filter(function(e){ return e.r === r; }).map(function(e){ return (e.g === 'anl' || e.g === 'oml' ? '-' : '+') + d(e.id); }).join(''); }
     var skattRef = 'Resultat!D' + P.skatt, avskrRef = 'Resultat!D' + P.avskr;
-    var kjop = '(' + d('bAnlForsk') + '+' + d('bAnlEiend') + '+' + d('bAnlMask') + '+' + avskrRef + ')';
+    var skattGjeld = '(' + d('bGKSkat') + x('skatt') + ')';
+    // Kjøp til kostpris = endring i driftsmidlene (også egne poster med rolle anl, alltid eiendeler) + avskrivning
+    var kjop = '(' + d('bAnlForsk') + '+' + d('bAnlEiend') + '+' + d('bAnlMask')
+      + EX.filter(function(e){ return e.r === 'anl'; }).map(function(e){ return '+' + d(e.id); }).join('') + '+' + avskrRef + ')';
     var FORM = {
-      opRes: 'Resultat!D' + P.forSkatt, opSkatt: '-MAX(0,' + skattRef + '-' + d('bGKSkat') + ')', opAvskr: avskrRef,
+      opRes: 'Resultat!D' + P.forSkatt, opSkatt: '-MAX(0,' + skattRef + '-' + skattGjeld + ')', opAvskr: avskrRef,
       opVarelager: '-' + d('bOmlVare'), opKunde: '-' + d('bOmlKund'), opLevgjeld: d('bGKLev'),
-      opAnnet: d('bGKAnnen') + '+MAX(0,' + d('bGKSkat') + '-' + skattRef + ')',
-      invSalg: 'MAX(0,-' + kjop + ')', invKjop: '-MAX(0,' + kjop + ')', invAksjer: '-' + d('bAnlInv'),
-      finGjeld: d('bGLBank') + '+' + d('bGLAnnen'), finEk: d('bEkAks') + '+' + d('bEkOver'),
-      finUtbytte: '-(Resultat!D' + P.ar + '-' + d('bEkOpp') + ')',
+      opAnnet: d('bGKAnnen') + x('drift') + '+MAX(0,' + skattGjeld + '-' + skattRef + ')',
+      invSalg: 'MAX(0,-' + kjop + ')', invKjop: '-MAX(0,' + kjop + ')', invAksjer: '-' + d('bAnlInv') + x('aksjer'),
+      finGjeld: d('bGLBank') + '+' + d('bGLAnnen') + x('gjeld'), finEk: d('bEkAks') + '+' + d('bEkOver') + x('ek'),
+      // Utbytte satt av i år minus det som fortsatt er skyldig (NRS 8 kap. 5.3.1)
+      finUtbytte: '-(Resultat!D' + P.ar + '-' + d('bEkOpp') + ')' + x('utbytte'),
       kontIB: 'Balanse!E' + Q.bOmlBank, kontBalUB: 'Balanse!D' + Q.bOmlBank
     };
+    if(x('kasse')) FORM.finKasse = x('kasse').replace(/^\+/, '');
     function k(id){ return [avledet && FORM[id] ? {f:FORM[id], v:kv[id] || 0} : I(kv[id])]; }
     w.tittel('Kontantstrøm', 'Indirekte modell · regnskapsåret ' + aar + ' · beløp i kroner');
     w.hode([String(aar)]);
