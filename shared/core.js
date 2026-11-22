@@ -162,7 +162,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v443';
+    s.src = '/shared/lang/' + code + '.js?v=v444';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -4757,7 +4757,7 @@ function fcCalc(){
     resVal.textContent = fmt(profit);
     resGrid.innerHTML = `
       <div class="rt"><div class="rt-lbl">Margin</div><div class="rt-val">${pct(margin)}</div></div>
-      <div class="rt"><div class="rt-lbl">Påslag</div><div class="rt-val">${pct(markup)}</div></div>
+      <div class="rt"><div class="rt-lbl">${r.fcRMarkup||'Markup'}</div><div class="rt-val">${pct(markup)}</div></div>
       <div class="rt"><div class="rt-lbl">${r.fcCost||'Cost price'}</div><div class="rt-val">${fmt(cost)}</div></div>
       <div class="rt"><div class="rt-lbl">${r.fcSell||'Selling price'}</div><div class="rt-val">${fmt(sell)}</div></div>`;
   }
@@ -4782,9 +4782,11 @@ function fcCalc(){
     const doubling = logBase > 0 ? Math.log(2) / logBase / freq : Infinity;
     resLbl.textContent = r.fcREndVal||'Final value';
     resVal.textContent = fmt(total);
-    resSub.textContent = (r.fcRAfter||'After') + ' ' + y + ' ' + (r.fcRYr||'years') + ' ' + (r.fcRMonthly||'with monthly interest');
+    // Frekvensteksten må følge feltet: 12 = månedlig, 4 = kvartalsvis, 1 = årlig. Andre tall: ingen tekst.
+    const freqTxt = freq===12 ? (r.fcRMonthly||'with monthly interest') : freq===4 ? (r.fcRQuarterly||'') : freq===1 ? (r.fcRYearly||'') : '';
+    resSub.textContent = (r.fcRAfter||'After') + ' ' + y + ' ' + (r.fcRYr||'years') + (freqTxt ? ' ' + freqTxt : '');
     const compReturn = p!==0 ? pct((total/p-1)*100) : '—';
-    const doublingStr = isFinite(doubling) && doubling > 0 ? doubling.toFixed(1) + ' ' + (r.fcRYr||'years') : '—';
+    const doublingStr = isFinite(doubling) && doubling > 0 ? doubling.toFixed(1).replace('.',',') + ' ' + (r.fcRYr||'years') : '—';
     resGrid.innerHTML = `
       <div class="rt"><div class="rt-lbl">${r.fcRStart||'Starting amount'}</div><div class="rt-val">${fmt(p)}</div></div>
       <div class="rt"><div class="rt-lbl">${r.fcRInterest||'Interest earned'}</div><div class="rt-val">${fmt(interest)}</div></div>
