@@ -332,7 +332,7 @@ body.focus-mode > footer{display:none}
               <span data-i18n="kalkMarginF4b">Pris = (Varekost + Andre variable kostn.) / (1 − margin)</span>
               <span data-i18n="kalkMarginF5">margin = påslag / (1 + påslag)</span>
               <span data-i18n="kalkMarginF6">påslag = margin / (1 − margin)</span>
-              <span data-i18n="kalkMarginF7">MVA inkl. = eks. × 1,25</span>
+              <span data-i18n="kalkMarginF7">MVA inkl. = eks. × (1 + mva-sats)</span>
             </div>
           </div>
         </details>
@@ -423,8 +423,8 @@ body.focus-mode > footer{display:none}
 
 <script defer src="/shared/site-shell.js?v=v358"></script>
 <script defer src="/shared/top-chrome.js?v=v375"></script>
-<script defer src="/shared/core.js?v=v394"></script>
-<script defer src="/shared/lang/no.js?v=v394"></script>
+<script defer src="/shared/core.js?v=v384"></script>
+<script defer src="/shared/lang/no.js?v=v384"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
@@ -523,7 +523,7 @@ body.focus-mode > footer{display:none}
 
   function recalc(){
     var r = compute();
-    var ok = isFinite(r.pris) && isFinite(r.varekost) && r.varekost >= 0;
+    var ok = isFinite(r.pris) && r.pris > 0 && isFinite(r.varekost) && r.varekost >= 0;
 
     setTxt('mgStripBrutto', ok ? fmtKr(r.brutto) : '–');
     setTxt('mgStripDg', ok ? fmtPct(r.margin) : '–');
@@ -567,9 +567,10 @@ body.focus-mode > footer{display:none}
       var s = JSON.parse(raw);
       if(s.varekost != null) varekostEl.value = s.varekost;
       if(s.andre != null) andreEl.value = s.andre;
-      if(s.mva != null) mvaEl.value = s.mva;
+      // Et lagret valg som ikke finnes lenger (ny sats eller nytt navn), gir et tomt valg: da beholdes standardvalget.
+      if(s.mva != null){ var m0 = mvaEl.value; mvaEl.value = s.mva; if(mvaEl.selectedIndex < 0) mvaEl.value = m0; }
       if(s.val != null) valEl.value = s.val;
-      if(s.mode) mode = s.mode;
+      if(s.mode === 'pris' || s.mode === 'margin' || s.mode === 'paaslag') mode = s.mode;
     } catch(e){}
   }
 

@@ -481,7 +481,9 @@ body.focus-mode > footer{display:none}
     var embEnhet = isFinite(emb) ? emb : 0;
 
     var parts = [vare, fraktEnhet, tollEnhet, forsEnhet, gebyrEnhet, embEnhet];
-    var landedOk = isFinite(vare);
+    // Frakt og gebyr deles på antall: uten antall (tomt eller 0) kan svaret ikke regnes riktig.
+    var antallMangler = ((isFinite(frakt) && frakt > 0) || (isFinite(gebyr) && gebyr > 0)) && !(isFinite(antall) && antall > 0);
+    var landedOk = isFinite(vare) && !antallMangler;
     var landed = parts.reduce(function(a, b){ return a + (isFinite(b) ? b : 0); }, 0);
 
     var m = marginP / 100;
@@ -509,7 +511,7 @@ body.focus-mode > footer{display:none}
     setTxt('lkRNet', landedOk ? fmtKr(landed) : '–');
     setTxt('lkRMnd', landedOk
       ? (r.kalkLandedcostMndDiff || '{kr} mer enn varekosten fra leverandøren.').replace('{kr}', fmtKr(landed - vare))
-      : (r.kalkLandedcostMndEmpty || 'Fyll inn varekost per enhet for å se svaret.'));
+      : (antallMangler && isFinite(vare) ? (r.kalkLandedcostMndAntall || 'Fyll inn antall enheter.') : (r.kalkLandedcostMndEmpty || 'Fyll inn varekost per enhet for å se svaret.')));
     var noteEl = document.getElementById('lkPriceNote');
     if(noteEl) noteEl.textContent = hasMargin
       ? (r.kalkLandedcostNoteWithMargin || 'Veiledende pris regnes fra innførselskost og ønsket margin, eks. mva. Mva legges på til sluttkunden — sats 25 %.')

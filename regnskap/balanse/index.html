@@ -1621,7 +1621,7 @@ body .ks-mode .mdesc{font-size:12px}
       if(offer) btn.textContent = (blank ? 'Hent' : fetched!=null ? 'Oppdater' : 'Legg til') + ' årsresultatet fra resultatregnskapet: ' + fmt(r) + ' kr'
         + (fetched!=null ? ' (sist hentet ' + fmt(fetched) + ' kr)' : '');
       var note = nille ? 'Årsresultatet fra resultatregnskapet, ' + fmt(NILLE_AR) + ' kr, er alt med. 7 228 876 kr ble i selskapet, og 24 230 184 kr gikk som konsernbidrag til eieren.'
-        : (!offer && fetched!=null) ? 'Årsresultatet på ' + fmt(fetched) + ' kr er hentet fra resultatregnskapet.' : '';
+        : (!offer && fetched!=null && r===fetched) ? 'Årsresultatet på ' + fmt(fetched) + ' kr er hentet fra resultatregnskapet.' : '';
       set('noteArsres', note);
       btn.classList.toggle('hidden', !offer);
       show('rowArsres', !!offer || !!note);
@@ -1634,10 +1634,14 @@ body .ks-mode .mdesc{font-size:12px}
       compute();
     }
     // Bare ved åpning og når resultatet endres et annet sted — aldri mens brukeren skriver i feltet.
+    // Etter «Tøm» husker TOMT_KEY årsresultatet som sto i resultatet da. Det samme beløpet fylles ikke inn
+    // av seg selv igjen (bare tilbys med knappen). Endres resultatet etterpå, følger det med som før.
+    var TOMT_KEY = 'hv-balanse-tomt';
     function autoFetch(){
       showOffer();
       var f=el('bEkOpp');
-      if(offer && f && (f.value.replace(/\s/g,'')==='' || fetched!=null)) applyOffer();
+      var blank = f && f.value.replace(/\s/g,'')==='';
+      if(offer && f && (blank || fetched!=null) && !(blank && offer.belop===readAmount(TOMT_KEY))) applyOffer();
     }
     var btnArsres = el('btnArsres');
     if(btnArsres) btnArsres.addEventListener('click', function(ev){
@@ -1665,6 +1669,7 @@ body .ks-mode .mdesc{font-size:12px}
     document.querySelectorAll('.hv-btn--pill').forEach(function(b){
       b.addEventListener('click', function(){
         var k=b.getAttribute('data-preset'), enkel=k==='enkel' && window.HVRegnskap, p=enkel ? HVRegnskap.EKS.bal : PRESETS[k]; if(!p) return;
+        if(k==='tom'){ try{ var r=readAmount(RES_KEY); if(r!=null) localStorage.setItem(TOMT_KEY, JSON.stringify({belop:r})); else localStorage.removeItem(TOMT_KEY); }catch(e){} }
         ALLE.forEach(function(id){ var e=el(id); if(e){ var v=p[id]; e.value=(v==null)?'':fmt(v); } });
         // eksemplet skriver over feltet. I det enkle eksempelet er årsresultatet alt med i opptjent egenkapital.
         setFetched(enkel ? HVRegnskap.regnRes(HVRegnskap.EKS.res).ar : null);
@@ -1702,7 +1707,7 @@ body .ks-mode .mdesc{font-size:12px}
 <script defer src="/shared/lang/no.js?v=v394"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 
-<script defer src="/shared/regnskap-flyt.js?v=v2"></script>
+<script defer src="/shared/regnskap-flyt.js?v=v3"></script>
 <script defer src="/shared/steg-guide.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —

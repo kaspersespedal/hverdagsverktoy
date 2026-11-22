@@ -474,7 +474,8 @@
     function felt(n) { return root.querySelector('[data-inn="' + n + '"]'); }
     function valg(n) { return root.querySelector('[data-inn="' + n + '"]:checked').value; }
     function les() {
-      return { utbytte: SA.les(felt('utbytte').value), kildeskatt: SA.les(felt('kildeskatt').value),
+      // Minus blir 0, slik de andre kalkulatorene gjør. Ellers gir feil fortegn negativ skatt.
+      return { utbytte: Math.max(0, SA.les(felt('utbytte').value)), kildeskatt: Math.max(0, SA.les(felt('kildeskatt').value)),
         land: valg('land'), ti: +valg('ti'), over90: +valg('over90') };
     }
     function vis() {

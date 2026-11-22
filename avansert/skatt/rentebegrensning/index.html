@@ -377,7 +377,7 @@
   </div>
   <div class="m-dom" data-ut="dom" aria-live="polite"></div>
   <div class="modell-inn" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-    <label class="m-felt">Inntekt før rentebegrensning<input type="text" inputmode="numeric" data-inn="inntekt" value="4 000 000"><small>Etter fradrag for alle renter.</small></label>
+    <label class="m-felt">Inntekt før rentebegrensning<span style="display:flex;gap:6px"><input type="text" inputmode="numeric" data-inn="inntekt" value="4 000 000"><button type="button" data-fortegn aria-label="Bytt mellom pluss og minus" style="font:500 1rem/1.2 var(--f-mono);padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:none;color:var(--ink);cursor:pointer">±</button></span><small>Etter fradrag for alle renter. Taper selskapet penger, trykk ± for minus.</small></label>
     <label class="m-felt">Skattemessige avskrivninger<input type="text" inputmode="numeric" data-inn="avskr" value="3 000 000"></label>
     <label class="m-felt">Renter til Kari<input type="text" inputmode="numeric" data-inn="rKari" value="4 000 000"><small>Garanterte bankrenter føres her.</small></label>
     <label class="m-felt">Renter til banken<input type="text" inputmode="numeric" data-inn="rBank" value="6 000 000"></label>
@@ -485,6 +485,13 @@
       root.querySelectorAll('[data-eks]').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
     }
     root.addEventListener('input', function () { trykk(null); vis(); });
+    // Tallastaturet på iPhone har ikke minus. Knappen bytter fortegn på inntekten.
+    root.querySelector('[data-fortegn]').addEventListener('click', function () {
+      var f = felt('inntekt'), v = SA.les(f.value);
+      f.value = SA.tall(v ? -v : 0);
+      trykk(null);
+      vis();
+    });
     root.querySelectorAll('[data-eks]').forEach(function (b) {
       b.addEventListener('click', function () {
         var e = EKS[+b.dataset.eks];

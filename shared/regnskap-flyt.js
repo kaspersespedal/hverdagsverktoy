@@ -11,10 +11,17 @@
   function set(name, txt){
     document.querySelectorAll('[data-rf="' + name + '"]').forEach(function(e){ if(e.textContent !== txt) e.textContent = txt; });
   }
+  // Balansen har hentet årsresultatet, men resultatet er endret etterpå og balansen er ikke åpnet siden.
+  // Da hører balansen (og summen den lagret) til det gamle resultatet.
+  function balUtdatert(){
+    var r = read('hv-rr-arsresultat'), h = read('hv-balanse-arsresultat-hentet'), b = read('hv-balanse-sum');
+    return !!(b && !b.tom && h && typeof h.belop === 'number' && r && typeof r.belop === 'number' && Math.round(r.belop) !== Math.round(h.belop));
+  }
+  var UTDATERT = 'Balansen er ikke oppdatert med det nye resultatet. Åpne balansen først.';
   function paint(){
     var r = read('hv-rr-arsresultat'), b = read('hv-balanse-sum'), k = read('hv-kontantstrom-sum');
     set('res', (r && typeof r.belop === 'number') ? 'Årsresultat ' + kr(r.belop) : '');
-    set('bal', (b && !b.tom && typeof b.diff === 'number') ? (Math.abs(b.diff) < 1 ? 'Balansen stemmer' : 'Avvik ' + kr(Math.abs(b.diff))) : '');
+    set('bal', (b && !b.tom && typeof b.diff === 'number') ? (balUtdatert() ? 'Må oppdateres' : Math.abs(b.diff) < 1 ? 'Balansen stemmer' : 'Avvik ' + kr(Math.abs(b.diff))) : '');
     set('ks',  (k && k.any && typeof k.ub === 'number') ? 'Kontanter ' + kr(k.ub) : '');
   }
   function later(){ setTimeout(paint, 0); }   // etter at siden selv har regnet og lagret
@@ -112,9 +119,29 @@
     return {res:res, bal:bal, ks:ks};
   }
 
+  // Har brukeren ført egne tall i en del (noe annet enn tomt eller eksempelet)?
+  function egneTall(del, eksKs){
+    var n = 0;
+    if(del === 'res'){ var r = read('hv-rr-v2') || {}; RES.forEach(function(id){ if(tall(r[id]) !== (EKS.res[id] || 0)) n++; }); }
+    if(del === 'bal'){ var b = read('hv-balanse-v1') || {}; BAL.forEach(function(id){
+      if(tall(b[id]) !== (EKS.bal[id] || 0) || tall(b[id + '_f']) !== (EKS.bal[id + '_f'] || 0)) n++; }); }
+    if(del === 'ks'){ var k = read('hv-kontantstrom-v2') || {}; KS.forEach(function(id){ if(tall(k[id]) !== (eksKs[id] || 0)) n++; }); }
+    return n > 0;
+  }
+  var NAVN = {res:'resultatet', bal:'balansen', ks:'kontantstrømmen'};
+
   // Eksempelet er trykket på én side: legg de to andre delene i lageret, så alle tre viser samme selskap.
+  // Har brukeren ført egne tall i en av de andre delene, spør vi først. Svarer brukeren Avbryt, står
+  // de andre delene urørt, og bare siden brukeren står på får eksempelet.
   function fyllAndre(denne){
     var R = regnRes(EKS.res), B = regnBal(EKS.bal), ks = utled(EKS.res, EKS.bal), K = regnKs(ks), snap;
+    var egne = ['res', 'bal', 'ks'].filter(function(d){ return d !== denne && egneTall(d, ks); });
+    if(egne.length){
+      var ok = true;
+      try{ ok = window.confirm('Eksempelet erstatter tallene du har ført i ' + egne.map(function(d){ return NAVN[d]; }).join(' og ')
+        + '. De kan ikke hentes tilbake.\n\nVelg OK for å fylle alle tre delene med eksempelet, eller Avbryt for å bare fylle denne siden.'); }catch(e){}
+      if(!ok) return;
+    }
     try{
       if(denne !== 'res'){
         snap = {mode:'as'}; RES.forEach(function(id){ snap[id] = felt(EKS.res[id]); });
@@ -142,7 +169,7 @@
     if(!xl) xl = new Promise(function(ok, feil){
       if(window.HVRegnskapExcel) return ok();
       var s = document.createElement('script');
-      s.src = '/shared/regnskap-excel.js?v=v1'; s.onload = function(){ ok(); }; s.onerror = function(){ xl = null; feil(new Error('excel')); };
+      s.src = '/shared/regnskap-excel.js?v=v2'; s.onload = function(){ ok(); }; s.onerror = function(){ xl = null; feil(new Error('excel')); };
       document.head.appendChild(s);
     });
     return xl;
@@ -151,6 +178,7 @@
     var b = ev.target.closest && ev.target.closest('[data-rf-excel]');
     if(!b) return;
     var note = document.querySelector('[data-rf-excel-note]');
+    if(balUtdatert()){ if(note) note.textContent = UTDATERT; return; }
     lastExcel().then(function(){
       var ok = window.HVRegnskapExcel.lastNed(lagret());
       if(note) note.textContent = ok ? '' : 'Fyll inn minst én av de tre delene først.';
@@ -159,5 +187,6 @@
 
   window.HVRegnskap = {RES:RES, BAL:BAL, KS:KS, EKS:EKS, SATS:SATS, tall:tall, felt:felt,
     regnRes:regnRes, regnBal:regnBal, regnKs:regnKs, utled:utled, lagret:lagret, fyllAndre:fyllAndre,
+    balUtdatert:balUtdatert, UTDATERT:UTDATERT,
     eksKs:function(){ return utled(EKS.res, EKS.bal); }};
 })();

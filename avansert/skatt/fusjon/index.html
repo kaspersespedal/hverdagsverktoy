@@ -447,7 +447,8 @@
     if (!root) return;
     function felt(n) { return root.querySelector('[data-inn="' + n + '"]'); }
     function les() {
-      return { aksjer: SA.les(felt('aksjer').value), kontanter: SA.les(felt('kontanter').value) };
+      // Minus blir 0, slik de andre kalkulatorene gjør. Ellers gir feil fortegn negativ skatt.
+      return { aksjer: Math.max(0, SA.les(felt('aksjer').value)), kontanter: Math.max(0, SA.les(felt('kontanter').value)) };
     }
     function vis() {
       var r = calc(les());
@@ -471,6 +472,12 @@
       bar2.style.width = over / 40 * 100 + '%';
       bar2.style.display = over > 0 ? '' : 'none';
       var dom = root.querySelector('[data-ut="dom"]');
+      if (r.samlet <= 0) {
+        root.querySelector('[data-ut="skatt"]').textContent = '–';
+        dom.dataset.ok = '0';
+        dom.innerHTML = 'Skriv inn tall<small>Fyll inn verdien av aksjene og pengene Kari får.</small>';
+        return;
+      }
       dom.dataset.ok = r.innenfor ? '1' : '0';
       dom.innerHTML = r.innenfor
         ? 'Innenfor grensen: fusjonen kan være skattefri for aksjene<small>Pengene regnes som utbytte (en utdeling fra selskapet) og skattlegges nå.</small>'
@@ -642,7 +649,7 @@
   </ol>
   <div class="ill-cap"><p>Endringen gjelder bare når et AS slås inn i et borettslag. Tomteselskaper som 15.&nbsp;oktober&nbsp;2025 hadde byggetillatelse for nye boliger eller forhåndssalg, beholder den gamle praksisen. Ellers er fusjonsreglene uendret i 2026, og ingen endringer i skatteloven kapittel&nbsp;11 er foreslått for 2027.</p></div>
   <p class="ill-src">sktl. <span style="white-space:nowrap">§&nbsp;11-2</span> fjerde ledd; FSFIN <span style="white-space:nowrap">§&nbsp;11-2-1</span>; forskrift 22. desember 2025 nr.&nbsp;2861 del&nbsp;IV; <span style="white-space:nowrap">Prop. 1 LS (2026–2027)</span></p>
-</figure></div><div class="e-tekst"><ul><li><strong>Fra 1. januar 2027</strong> kommer en ny lov om særavgifter i stedet for dokumentavgiftsloven. Dokumentavgift kan betales når fast eiendom får ny eier. Fritaket for dokumentavgift når skatteverdiene følger med, også ved fusjon, står i den nye loven. Regjeringen kaller endringen i hovedsak teknisk.</li></ul></div></section>
+</figure></div><div class="e-tekst"><ul><li><strong>Fra 1. januar 2027</strong> kommer en ny lov om særavgifter i stedet for dokumentavgiftsloven. Dokumentavgift kan betales når fast eiendom får ny eier. Fritaket for dokumentavgift når skatteverdiene følger med, også ved fusjon, skal etter planen stå i den nye loven eller en forskrift til den. Den endelige ordlyden er ikke kjent ennå. Regjeringen kaller endringen i hovedsak teknisk.</li></ul></div></section>
 <section class="e-sek" id="fusjon-skjema"><h2>Skjema og frister</h2><div class="e-tekst"><ul><li><strong>Aksjonærregisteroppgaven (RF-1086):</strong> Ved en vanlig fusjon rapporterer både X og Y. Går datter inn i mor, rapporterer bare datteren. Bruk dagen Foretaksregisteret registrerte fusjonen som dato. Fristen er 31. januar året etter. Fra juni 2026 må oppgaven sendes fra et program som kan levere den (sluttbrukersystem). Altinn og papir går ikke lenger.</li><li><strong>Skattemeldingen:</strong> Skatteetaten oppgir ikke noe eget skjema for fusjon.</li><li><strong>Kartverket,</strong> når Y eier fast eiendom: Fusjonen meldes normalt som en navneendring. Da betales verken dokumentavgift eller gebyr for tinglysing.</li></ul></div><p class="e-hj"><span>Hjemmel: sfl. § 7-7 første ledd bokstav a; Justisdepartementets rundskriv G-06/2005</span></p></section>
 <section class="e-sek" id="fusjon-koblinger"><h2>Henger sammen med</h2><div class="e-tekst"><ul class="plain"><li><a href="../fisjon/">Fisjon (deling av et selskap)</a>: det motsatte av fusjon. Mange av reglene er de samme.</li><li><a href="../virksomhetskjop-innmat/">Kjøpe innmaten i en bedrift</a>: alternativet til å kjøpe aksjene og så fusjonere.</li><li><a href="../nytt-konsernselskap-skatteposisjoner/">Kjøpe et selskap med underskudd</a>: samme regel om at underskudd kan falle bort, når et selskap kommer inn i et konsern.</li><li><a href="../rentebegrensning/">Rentebegrensning (tak på fradrag for renter)</a>: reglene som skyver rentefradrag til senere år.</li><li><a href="../deltakerlignede-selskap/">ANS, DA og KS: eierne betaler skatten</a>: ANS, DA og KS kan også slå seg sammen uten skatt nå, med samme 20-prosentgrense.</li><li><a href="../utenlandske-aksjer/">Når et AS eier aksjer i utlandet</a>: fritaksmetoden, som tillegget vurderes etter når eieren er et selskap.</li></ul></div></section>
 <div class="e-husk"><div class="simple-label">Husk</div><ul><li>Skatten blir utsatt, ikke borte. X fortsetter med de gamle skatteverdiene til Y.</li><li>Høyst 20 % av alt eierne i Y får, kan være tillegg. Er det mer, blir hele fusjonen skattepliktig.</li><li>Fusjonen gjelder for skatten fra registreringsdagen, ikke fra datoen i regnskapet. Det mor betalte for datter utover datterens skatteverdier, for eksempel for goodwill, gir ingen avskrivning.</li></ul></div>

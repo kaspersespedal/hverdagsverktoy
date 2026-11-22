@@ -29,6 +29,7 @@
 
   // Bygg forutsetningsradene
   var fors = $('pg-fors'), inp = {};
+  var tilDcf = null;   // det DCF-siden skal få, satt av calc()
   ROWS.forEach(function(r){
     var row = document.createElement('div');
     row.className = 'md-yr';
@@ -86,7 +87,7 @@
       ['pgs-oms', 'pgs-res', 'pgs-bank', 'pgs-bal'].forEach(function(id){ $(id).textContent = '–'; });
       ['pgs-oms-s', 'pgs-res-s', 'pgs-bank-s', 'pgs-bal-s'].forEach(function(id){ $(id).textContent = ''; });
       $('pg-andre').textContent = ''; $('pg-varsel').hidden = true;
-      $('pg-send').setAttribute('aria-disabled', 'true'); $('pg-send').href = '/avansert/finans/dcf/';
+      $('pg-send').setAttribute('aria-disabled', 'true'); $('pg-send').href = '/avansert/finans/dcf/'; tilDcf = null;
       return;
     }
     var p = M.forecast(d.start, d.a, 3), Y = p.years, s = d.start;
@@ -135,9 +136,10 @@
       row('sum', 'Endring i bank', pick(Y, 'dCash')) +
       row('', 'Bank ved starten av året', [s.cash].concat(pick(Y, 'cash').slice(0, 2))) +
       row('sum', 'Bank ved slutten av året', Y.map(function(y, i){ return (i ? Y[i - 1].cash : s.cash) + y.dCash; })) +
-      row('', 'Bank i balansen', pick(Y, 'cash')) +
+      // Regnet uavhengig av kontantstrømmen: egenkapital + gjeld − anleggsmidler − arbeidskapital − andre poster
+      row('', 'Bank regnet ut av balansen', Y.map(function(y){ return y.equity + y.debt - y.fixed - y.nwc - y.other; })) +
       '<tr class="chk"><td>Kontroll (skal være 0)</td>' +
-        Y.map(function(y, i){ var v = (i ? Y[i - 1].cash : s.cash) + y.dCash - y.cash; return '<td>' + (Math.abs(v) < 0.5 ? '0' : f0(v)) + '</td>'; }).join('') + '</tr>' +
+        Y.map(function(y, i){ var v = (i ? Y[i - 1].cash : s.cash) + y.dCash - (y.equity + y.debt - y.fixed - y.nwc - y.other); return '<td>' + (Math.abs(v) < 0.5 ? '0' : f0(v)) + '</td>'; }).join('') + '</tr>' +
       '</tbody>';
 
     $('pg-t-fcf').innerHTML = head(cols) + '<tbody>' +
@@ -168,9 +170,10 @@
     v.hidden = !neg.length;
     if(neg.length) v.innerHTML = '<strong>Se her:</strong> ' + neg.join(', og ') + '. Selskapet trenger da mer lån, lavere utbytte eller færre investeringer.';
 
-    // Lenken til DCF
-    var q = 'fcf=' + Y.map(function(y){ return Math.round(y.fcff); }).join(',') + '&gjeld=' + Math.round(s.debt) + '&kontanter=' + Math.round(s.cash) + '&enhet=' + $('pg-enhet').value;
-    $('pg-send').href = '/avansert/finans/dcf/?' + q;
+    // Lenken til DCF. Tallene legges ikke i nettadressen (der havner de i serverlogger og historikk),
+    // men i lagringen i nettleseren når lenken trykkes (se tilDcf nederst).
+    tilDcf = { fcf: Y.map(function(y){ return Math.round(y.fcff); }), gjeld: Math.round(s.debt), kontanter: Math.round(s.cash), enhet: $('pg-enhet').value };
+    $('pg-send').href = '/avansert/finans/dcf/?fra=prognose';
     $('pg-send').removeAttribute('aria-disabled');
   }
 
@@ -204,6 +207,13 @@
     $('pg-eksinfo').hidden = true;
     calc();
   });
+
+  // Tallene til DCF-siden skrives først når lenken brukes (vanlig klikk, midtklikk eller høyreklikk «åpne i ny fane»).
+  function sendTilDcf(){
+    if(!tilDcf) return;
+    try { localStorage.setItem('hv-prognose-til-dcf', JSON.stringify(tilDcf)); } catch(e){}
+  }
+  ['click', 'auxclick', 'contextmenu'].forEach(function(t){ $('pg-send').addEventListener(t, sendTilDcf); });
 
   fill(EKS);
   calc();
