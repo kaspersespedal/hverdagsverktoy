@@ -5879,6 +5879,8 @@ REGIONS['ar']._ph = {
 "Få oversikt over hva du betaler i abonnementer":"احصل على نظرة على ما تدفعه في الاشتراكات",
 "Får i tillegg":"تحصل إضافةً على",
 "Får ikke utsatt leveringsfrist":"لا يمكن تأجيل موعد التسليم",
+"Får jeg BSU-fradrag hvis jeg kjøper bolig?":"هل أحصل على خصم BSU إذا اشتريت مسكنًا؟",
+"Ikke for året du eier boligen 31. desember. Kjøper du bolig i løpet av året, får du ikke fradrag for det året, selv om du satte inn pengene før kjøpet. Du kan heller ikke sette inn mer når du har begynt å bruke pengene.":"ليس عن السنة التي تملك فيها المسكن في 31 ديسمبر. إذا اشتريت مسكنًا خلال السنة، فلن تحصل على خصم لتلك السنة، حتى لو أودعت المال قبل الشراء. ولا يمكنك أيضًا إيداع المزيد بعد أن تبدأ في استخدام المال.",
 "Får jeg full lønn når jeg er syk?":"هل أحصل على راتب كامل عندما أمرض؟",
 "Får jeg garantert lånet kalkulatoren viser?":"هل أحصل مضمونًا على القرض الذي تُظهره الحاسبة؟",
 "Får jeg igjen hele fradragsbeløpet?":"هل أستعيد مبلغ الخصم كاملًا؟",
