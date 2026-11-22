@@ -41,11 +41,6 @@
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
-    // Privat | Bedrift: forsiden er felles og følger siden du sist var på. Settes før første
-    // tegning, så kategorilista ikke står med alle 11 et øyeblikk. Samme regel som byggModus()
-    // i shared/top-chrome.js.
-    var m='privat';try{if(localStorage.getItem('hvt-modus')==='bedrift')m='bedrift';}catch(e){}
-    document.documentElement.setAttribute('data-modus',m);
   })();
 </script>
 <script>
@@ -552,62 +547,6 @@
     .qc{gap:10px;padding:10px 12px;-webkit-tap-highlight-color:transparent}
     .qc::after{content:none}
     .qc:active{background:rgba(var(--glow-rgb),.08)}
-  }
-
-  /* ── PRIVAT | BEDRIFT — knappen over kategorilista ─────────────── */
-  /* Knappen velger hvilke kategorier lista viser: de egne øverst, de felles
-     (Skatt, Kalkulator, Lov) under. data-modus settes på <html> av snutten i
-     <head> før første tegning, så alt her er ren CSS og ingenting blinker.
-     Uten JavaScript mangler attributtet, og lista står som før med alle tre
-     gruppene og overskriftene. Carbon og Mørk-blå har lista som én rad (se
-     blokkene lenger ned); der er det bare lenkene som skjules. */
-  .hero-modus{display:none}
-  html[data-modus] .hero-modus{
-    display:flex;width:max-content;margin:24px auto 0;padding:3px;gap:2px;
-    background:color-mix(in srgb, var(--surface) 62%, transparent);
-    border:1px solid var(--line-2);border-radius:999px;
-  }
-  .hm-btn{
-    appearance:none;border:0;background:transparent;cursor:pointer;position:relative;
-    padding:9px 20px;border-radius:999px;
-    font:500 13.5px/1 var(--font-sans);color:var(--ink2);
-    transition:color .2s var(--ease), background .2s var(--ease);
-  }
-  /* Valgt side følger <html data-modus>, ikke aria-pressed, så den er riktig før
-     top-chrome.js har kjørt. Ringen i aksentfargen er det som viser valget. */
-  html[data-modus="privat"] .hm-btn[data-modus="privat"],
-  html[data-modus="bedrift"] .hm-btn[data-modus="bedrift"]{
-    color:var(--ink);background:rgba(var(--glow-rgb),.1);box-shadow:inset 0 0 0 1px var(--accent);
-  }
-  .hm-btn:focus-visible{outline:2px solid rgba(var(--glow-rgb),.7);outline-offset:2px}
-  @media (hover:hover){.hm-btn:hover{color:var(--ink)}}
-  @media (pointer:coarse){.hm-btn::after{content:"";position:absolute;inset:-6px 0}}
-  html[data-modus="privat"] .quick-cats .qg-col[data-modus="bedrift"],
-  html[data-modus="bedrift"] .quick-cats .qg-col[data-modus="privat"],
-  html[data-modus="privat"] .quick-cats .qc[href="/avansert/"]{display:none}
-  /* Carbon-raden: siste synlige celle skal ikke ha skillestrek mot rammen. */
-  html[data-modus="privat"] .quick-cats .qc[href="/lov/"]{border-right:0}
-  html[data-modus] .quick-cats{grid-template-columns:minmax(0, 1fr);margin-top:12px;padding:4px 0}
-  html[data-modus] .qg-h{display:none}
-  /* Hver gruppe er én rad: tre lenker i Privat, fire i Bedrift. */
-  html[data-modus] .qg-col{
-    display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:4px;
-    padding:8px 12px;border-inline-start:0;border-top:1px solid var(--line);
-  }
-  html[data-modus="bedrift"] .qg-col{grid-template-columns:repeat(4, minmax(0, 1fr))}
-  html[data-modus] .qg-col[data-modus]{border-top:0}
-  @media (max-width:640px){
-    /* Telefon: ett rutenett med to lenker per rad (tre rader i Privat, fire i Bedrift). */
-    html[data-modus] .hero-modus{margin-top:20px}
-    html[data-modus] .quick-cats{grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:4px;padding:6px 8px}
-    html[data-modus] .qg-col{display:contents}
-    html[data-modus] .qc:last-child:nth-child(even){grid-column:auto}
-    /* Privat har én rad mindre enn Bedrift. Heroen midtstiller innholdet, så uten denne
-       lufta (én radhøyde) hopper knappen 19 px under fingeren hver gang man bytter. */
-    html[data-modus="privat"] .quick-cats{margin-bottom:38px}
-  }
-  @media (max-width:640px) and (max-height:700px){
-    html[data-modus="privat"] .quick-cats{margin-bottom:36px}
   }
 
   .search-panel{
@@ -2083,11 +2022,11 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v395" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v395" defer></script>
+<link rel="preload" href="/shared/core.js?v=v421" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v421" defer></script>
 <script src="/shared/lang/no.js?v=v394" defer></script>
 <script src="/shared/site-shell.js?v=v359" defer></script>
-<script src="/shared/top-chrome.js?v=v395" defer></script>
+<script src="/shared/top-chrome.js?v=v421" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <script src="/shared/markedsdata.js?v=v366" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
@@ -2268,11 +2207,6 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
     background:var(--accent-2);opacity:1;transform:scaleX(0);transform-origin:center;
     transition:transform .25s var(--ease);
   }
-
-  /* Privat | Bedrift over raden: venstrestilt og firkantet som søkefeltet */
-  html[data-theme="carbon"] .hero-modus{margin:14px 0 0;background:var(--surface);border-color:var(--line);border-radius:8px}
-  html[data-theme="carbon"] .hm-btn{padding:8px 16px;border-radius:5px;font-size:12.5px}
-  html[data-theme="carbon"][data-modus] .quick-cats{margin-top:8px}
 
   /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
   html[data-theme="carbon"] section.daily{margin-top:0}
@@ -2498,13 +2432,11 @@ body.introAct [data-headline].play .shimmer{
 
 /* Søk og kategorier stiger opp når tittelen har landet */
 body.introAct .hero .search-wrap,
-body.introAct .hero .hero-modus,
 body.introAct .hero .quick-cats{
   opacity:0;transform:translateY(12px);
   transition:opacity var(--dur-base) var(--ease-out-quart), transform var(--dur-base) var(--ease-out-quart);
 }
 body.introAct.heroLanded .hero .search-wrap{opacity:1;transform:none}
-body.introAct.heroLanded .hero .hero-modus,
 body.introAct.heroLanded .hero .quick-cats{opacity:1;transform:none;transition-delay:var(--stag-loose)}
 /* Ett lys-sveip over søkefeltet, og forstørrelsesglasset tegner seg */
 body.introAct .search-shell::after{
@@ -2732,11 +2664,6 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
     background:var(--accent-2);opacity:1;transform:scaleX(0);transform-origin:center;
     transition:transform .25s var(--ease);
   }
-
-  /* Privat | Bedrift over raden: venstrestilt og firkantet som søkefeltet */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .hero-modus{margin:18px 0 0;background:var(--surface);border-color:var(--line);border-radius:8px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .hm-btn{padding:8px 18px;border-radius:5px;font-size:13px}
-  html:is([data-theme="carbon"],[data-theme="dark"])[data-modus] .quick-cats{margin-top:10px}
 
   /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
   html:is([data-theme="carbon"],[data-theme="dark"]) section.daily{margin-top:0;padding-top:18px}
@@ -3033,12 +2960,8 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
         <div class="sr-only" id="searchStatus" role="status" aria-live="polite"></div>
       </div>
 
-      <div class="hero-modus" role="group" aria-label="Vis kategoriene for privat eller bedrift">
-        <button type="button" class="hm-btn" data-modus="privat" aria-pressed="true" data-i18n="m.f.privat">Privat</button>
-        <button type="button" class="hm-btn" data-modus="bedrift" aria-pressed="false" data-i18n="m.f.bedrift">Bedrift</button>
-      </div>
       <nav class="quick-cats has-mod" aria-label="Hurtigtilgang til kategorier">
-        <div class="qg-col" role="group" aria-labelledby="qgPrivat" data-modus="privat">
+        <div class="qg-col" role="group" aria-labelledby="qgPrivat">
           <span class="qg-h" id="qgPrivat">Privat</span>
           <a href="/personlig/budsjett/" class="qc">
             <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg></span>
@@ -3053,7 +2976,7 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
             <span class="qc-lbl">Boliglån</span>
           </a>
         </div>
-        <div class="qg-col" role="group" aria-labelledby="qgBedrift" data-modus="bedrift">
+        <div class="qg-col" role="group" aria-labelledby="qgBedrift">
           <span class="qg-h" id="qgBedrift">Bedrift</span>
           <a href="/selskap/" class="qc">
             <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg></span>
@@ -4971,12 +4894,6 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     function openModal(e){
       if(e){e.preventDefault();st.trigger=e.currentTarget;}
       if(st.hideTimer){clearTimeout(st.hideTimer);st.hideTimer=null;}
-      // Starter på Privat eller Bedrift etter knappen over kategoriene, til du velger filter selv.
-      var md=document.documentElement.getAttribute("data-modus");
-      if(!st.egetFilter && (md==="privat"||md==="bedrift")){
-        st.filter=md;
-        modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q.getAttribute("data-fr-filter")===md?"true":"false");});
-      }
       renderModal(modal,st);
       modal.hidden=false;modal.setAttribute("aria-hidden","false");
       requestAnimationFrame(function(){modal.classList.add("open");});
@@ -5002,14 +4919,14 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
     modal.querySelectorAll("[data-fr-filter]").forEach(function(pill){
       pill.addEventListener("click",function(){
-        st.filter=pill.getAttribute("data-fr-filter");st.egetFilter=true;
+        st.filter=pill.getAttribute("data-fr-filter");
         modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q===pill?"true":"false");});
         renderModal(modal,st);
       });
     });
     modal.querySelectorAll("[data-fr-clear]").forEach(function(b){
       b.addEventListener("click",function(){
-        st.q="";st.filter="alle";st.egetFilter=true;si.value="";
+        st.q="";st.filter="alle";si.value="";
         modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q.getAttribute("data-fr-filter")==="alle"?"true":"false");});
         renderModal(modal,st);
       });
