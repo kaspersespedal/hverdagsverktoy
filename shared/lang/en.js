@@ -2952,6 +2952,7 @@ REGIONS['en'] = {
     tabBoliglan: 'Mortgage',
     tabKalkulator: 'Calculator',
     tabSkatt: 'Tax',
+    tabSkattAvgift: 'Tax and duties',
     tabRegnskap: 'Accounting',
     tabLov: 'Law',
     tabAvgift: 'Duties',

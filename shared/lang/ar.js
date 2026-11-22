@@ -2763,6 +2763,7 @@ REGIONS['ar'] = {
     tabBoliglan: 'قرض الرهن العقاري',
     tabKalkulator: 'آلة حاسبة',
     tabSkatt: 'الضرائب',
+    tabSkattAvgift: 'الضرائب والرسوم',
     tabRegnskap: 'المحاسبة',
     tabLov: 'قانون',
     tabAvgift: 'رسوم',

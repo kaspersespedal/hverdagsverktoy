@@ -170,6 +170,7 @@ REGIONS['no'] = {
     tabBoliglan: "Boliglån",
     tabKalkulator: "Kalkulator",
     tabSkatt: "Skatt",
+    tabSkattAvgift: "Skatt og avgift",
     tabRegnskap: "Regnskap",
     tabLov: "Lov",
     tabAvgift: "Avgift",
