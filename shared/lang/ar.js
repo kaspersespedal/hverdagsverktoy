@@ -3329,6 +3329,7 @@ REGIONS['ar'] = {
     lrnMaxRomE: 'هامش اقتراض قدره {belop} لا يمكنك استخدامه حتى يرتفع رأس مالك الذاتي',
     lrnMaxBand: 'ديون أخرى: {belop} kr',
     lrnMaxDok: 'إذا اشتريت مسكنًا بملكية تامة (selveier) بسعر {pris} kr، يُضاف {dok} kr <a href="/boliglan/dok/">رسم توثيق</a>.',
+    lrnMaxDokMed: 'السعر محسوب مع {dok} kr <a href="/boliglan/dok/">رسم توثيق</a>، يُدفع من رأس مالك الخاص.',
     lrnMaxSumEq: 'كلا السقفين {tak} kr، لذا يمكنك اقتراض {lan} kr.',
     lrnMaxSumI: 'سقف الدخل البالغ {i} kr أدنى من سقف رأس المال الذاتي البالغ {e} kr، لذا يمكنك اقتراض {lan} kr.',
     lrnMaxSumE: 'سقف رأس المال الذاتي البالغ {e} kr أدنى من سقف الدخل البالغ {i} kr، لذا يمكنك اقتراض {lan} kr.',
@@ -3843,6 +3844,7 @@ REGIONS['ar'] = {
     lrnNhStateO: 'متوسط الطلب {aov} kr · تكلفة البضاعة {vare} kr · الشحن {frakt} kr · الرسوم {g} · التغليف {emb} kr',
     lrnNhStateS: 'ARPU {arpu} kr/شهر · الهامش {m} · الإلغاء {c}/شهر · CAC {cac} kr',
     lrnNhGebyrOf: 'رسوم الدفع ({p} من الطلب)',
+    lrnNhGebyrOfInkl: 'رسوم الدفع ({p} من الطلب شاملًا ضريبة القيمة المضافة)',
     lrnNhDbSub: 'هامش المساهمة · {dg}',
     lrnNhCpa: 'أقصى تكلفة إعلان لكل طلب: {belop} kr (CPA التعادل)',
     lrnNhBe: 'ROAS التعادل {r}',
@@ -4602,6 +4604,18 @@ REGIONS['ar'] = {
    core.js (_phSweepAll) bytter den ut når dette språket er valgt.
    Mangler en frase her, blir den norske teksten stående. */
 REGIONS['ar']._ph = {
+// P53: valg for mva i netthandel og dokumentavgift i maks boligpris (2026-11-22)
+"Gebyret regnes av":"تُحسب الرسوم على",
+"Snittordren uten mva":"متوسط الطلب دون ضريبة القيمة المضافة",
+"Snittordren med mva (25 %)":"متوسط الطلب شاملًا الضريبة (25 %)",
+"Unntaket er betalingsgebyret. Betalingsleverandøren tar som regel prosenten av det kunden betaler, altså med mva. Velg derfor selv om gebyret skal regnes av snittordren med eller uten mva.":"الاستثناء هو رسوم الدفع. عادةً ما يأخذ مزوّد الدفع نسبته من المبلغ الذي يدفعه العميل، أي شاملًا ضريبة القيمة المضافة. لذا اختر بنفسك ما إذا كانت الرسوم تُحسب على متوسط الطلب مع الضريبة أو بدونها.",
+"Uten (borettslag)":"بدون (جمعية سكنية)",
+"Med 2,5 % (selveier)":"مع 2,5 % (ملكية تامة)",
+"Kjøper du selveier, betaler du 2,5 % av kjøpesummen i dokumentavgift. Den tas fra egenkapitalen.":"إذا اشتريت مسكنًا بملكية تامة، تدفع 2,5 % من السعر رسم توثيق، ويُخصم من رأس مالك الخاص.",
+"+100 000 kr egenkapital løfter taket 720 000 kr":"+100 000 kr من رأس المال الخاص ترفع السقف بمقدار 720 000 kr",
+"+100 000 kr egenkapital løfter egenkapitaltaket 720 000 kr.":"+100 000 kr من رأس المال الخاص ترفع سقف رأس المال بمقدار 720 000 kr.",
+"Uten egenkapital gir kravet om 10 % egenkapital ikke rom for boliglån. Med dokumentavgift gir hver krone du sparer 7,20 kr i lånerom.":"من دون رأس مال خاص، لا يترك شرط 10 % مجالًا لقرض سكني. مع رسم التوثيق، تمنحك كل كرونة تدّخرها 7,20 kr من القدرة على الاقتراض.",
+"Velger du med dokumentavgift, blir tallet 7,2. Da går 2,5 % av prisen til avgiften, og bare resten av egenkapitalen teller mot kravet om 10 %.":"إذا اخترت مع رسم التوثيق، يصبح الرقم 7,2. عندها تذهب 2,5 % من السعر إلى الرسم، ولا يُحتسب ضمن شرط 10 % إلا ما تبقى من رأس مالك الخاص.",
 /* P10 svakhetssveip 2026-11: skatteregler (uttak, sykepenger, foreldrepenger, feriepenger) */
 "Inntekten er så lav at det ikke blir skatt på gevinsten.":"الدخل منخفض إلى حد أنه لا ضريبة على الربح.",
 "Annen personinntekt i året (kr)":"دخل شخصي آخر في السنة (kr)",

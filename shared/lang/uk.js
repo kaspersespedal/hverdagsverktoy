@@ -2294,6 +2294,7 @@ REGIONS['uk'] = {
     lrnMaxRomE: '{belop} кредитного запасу, який не можна використати, поки не зросте власний капітал',
     lrnMaxBand: 'Інший борг: {belop} kr',
     lrnMaxDok: 'Якщо ви купуєте житло у власність (selveier) за {pris} kr, додатково доведеться сплатити {dok} kr <a href="/boliglan/dok/">збору за реєстрацію</a>.',
+    lrnMaxDokMed: 'Ціну розраховано з урахуванням {dok} kr <a href="/boliglan/dok/">мита за реєстрацію</a>, яке сплачується з власних коштів.',
     lrnMaxSumEq: 'Обидва ліміти становлять {tak} kr, тож ви можете позичити {lan} kr.',
     lrnMaxSumI: 'Ліміт за доходом ({i} kr) нижчий за ліміт за власним капіталом ({e} kr), тож ви можете позичити {lan} kr.',
     lrnMaxSumE: 'Ліміт за власним капіталом ({e} kr) нижчий за ліміт за доходом ({i} kr), тож ви можете позичити {lan} kr.',
@@ -2800,6 +2801,7 @@ REGIONS['uk'] = {
     lrnNhStateO: 'Середнє замовлення {aov} kr · вартість товару {vare} kr · доставка {frakt} kr · комісія {g} · пакування {emb} kr',
     lrnNhStateS: 'ARPU {arpu} kr/міс. · маржа {m} · відтік {c}/міс. · CAC {cac} kr',
     lrnNhGebyrOf: 'Комісія за оплату ({p} від замовлення)',
+    lrnNhGebyrOfInkl: 'Комісія за оплату ({p} від замовлення з ПДВ)',
     lrnNhDbSub: 'Маржинальний дохід · {dg}',
     lrnNhCpa: 'Макс. витрати на рекламу на замовлення: {belop} kr (беззбитковий CPA)',
     lrnNhBe: 'Беззбитковий ROAS {r}',
@@ -3523,6 +3525,18 @@ REGIONS['uk'] = {
    core.js (_phSweepAll) bytter den ut når dette språket er valgt.
    Mangler en frase her, blir den norske teksten stående. */
 REGIONS['uk']._ph = {
+// P53: valg for mva i netthandel og dokumentavgift i maks boligpris (2026-11-22)
+"Gebyret regnes av":"Комісія рахується від",
+"Snittordren uten mva":"Середнє замовлення без ПДВ",
+"Snittordren med mva (25 %)":"Середнє замовлення з ПДВ (25 %)",
+"Unntaket er betalingsgebyret. Betalingsleverandøren tar som regel prosenten av det kunden betaler, altså med mva. Velg derfor selv om gebyret skal regnes av snittordren med eller uten mva.":"Виняток — комісія за оплату. Платіжний провайдер зазвичай бере відсоток від суми, яку платить клієнт, тобто з ПДВ. Тому сам обери, чи рахувати комісію від середнього замовлення з ПДВ чи без.",
+"Uten (borettslag)":"Без (житловий кооператив)",
+"Med 2,5 % (selveier)":"З 2,5 % (власність)",
+"Kjøper du selveier, betaler du 2,5 % av kjøpesummen i dokumentavgift. Den tas fra egenkapitalen.":"Купуючи житло у власність, ти сплачуєш 2,5 % від ціни як мито за реєстрацію. Воно береться з власних коштів.",
+"+100 000 kr egenkapital løfter taket 720 000 kr":"+100 000 kr власних коштів піднімає межу на 720 000 kr",
+"+100 000 kr egenkapital løfter egenkapitaltaket 720 000 kr.":"+100 000 kr власних коштів піднімає межу за власними коштами на 720 000 kr.",
+"Uten egenkapital gir kravet om 10 % egenkapital ikke rom for boliglån. Med dokumentavgift gir hver krone du sparer 7,20 kr i lånerom.":"Без власних коштів вимога 10 % не залишає місця для іпотеки. З митом за реєстрацію кожна заощаджена крона дає 7,20 kr кредитного простору.",
+"Velger du med dokumentavgift, blir tallet 7,2. Da går 2,5 % av prisen til avgiften, og bare resten av egenkapitalen teller mot kravet om 10 %.":"Якщо обрати з митом за реєстрацію, число стає 7,2. Тоді 2,5 % ціни йде на мито, і лише решта власних коштів зараховується до вимоги 10 %.",
 /* P10 svakhetssveip 2026-11: skatteregler (uttak, sykepenger, foreldrepenger, feriepenger) */
 "Inntekten er så lav at det ikke blir skatt på gevinsten.":"Дохід такий низький, що податку на прибуток немає.",
 "Annen personinntekt i året (kr)":"Інший особистий дохід за рік (kr)",
