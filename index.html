@@ -41,11 +41,6 @@
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
-    // Privat | Bedrift: forsiden er felles og følger siden du sist var på. Settes før første
-    // tegning, så kategorilista ikke står med alle 11 et øyeblikk. Samme regel som byggModus()
-    // i shared/top-chrome.js.
-    var m='privat';try{if(localStorage.getItem('hvt-modus')==='bedrift')m='bedrift';}catch(e){}
-    document.documentElement.setAttribute('data-modus',m);
   })();
 </script>
 <script>
@@ -552,62 +547,6 @@
     .qc{gap:10px;padding:10px 12px;-webkit-tap-highlight-color:transparent}
     .qc::after{content:none}
     .qc:active{background:rgba(var(--glow-rgb),.08)}
-  }
-
-  /* ── PRIVAT | BEDRIFT — knappen over kategorilista ─────────────── */
-  /* Knappen velger hvilke kategorier lista viser: de egne øverst, de felles
-     (Skatt, Kalkulator, Lov) under. data-modus settes på <html> av snutten i
-     <head> før første tegning, så alt her er ren CSS og ingenting blinker.
-     Uten JavaScript mangler attributtet, og lista står som før med alle tre
-     gruppene og overskriftene. Carbon og Mørk-blå har lista som én rad (se
-     blokkene lenger ned); der er det bare lenkene som skjules. */
-  .hero-modus{display:none}
-  html[data-modus] .hero-modus{
-    display:flex;width:max-content;margin:24px auto 0;padding:3px;gap:2px;
-    background:color-mix(in srgb, var(--surface) 62%, transparent);
-    border:1px solid var(--line-2);border-radius:999px;
-  }
-  .hm-btn{
-    appearance:none;border:0;background:transparent;cursor:pointer;position:relative;
-    padding:9px 20px;border-radius:999px;
-    font:500 13.5px/1 var(--font-sans);color:var(--ink2);
-    transition:color .2s var(--ease), background .2s var(--ease);
-  }
-  /* Valgt side følger <html data-modus>, ikke aria-pressed, så den er riktig før
-     top-chrome.js har kjørt. Ringen i aksentfargen er det som viser valget. */
-  html[data-modus="privat"] .hm-btn[data-modus="privat"],
-  html[data-modus="bedrift"] .hm-btn[data-modus="bedrift"]{
-    color:var(--ink);background:rgba(var(--glow-rgb),.1);box-shadow:inset 0 0 0 1px var(--accent);
-  }
-  .hm-btn:focus-visible{outline:2px solid rgba(var(--glow-rgb),.7);outline-offset:2px}
-  @media (hover:hover){.hm-btn:hover{color:var(--ink)}}
-  @media (pointer:coarse){.hm-btn::after{content:"";position:absolute;inset:-6px 0}}
-  html[data-modus="privat"] .quick-cats .qg-col[data-modus="bedrift"],
-  html[data-modus="bedrift"] .quick-cats .qg-col[data-modus="privat"],
-  html[data-modus="privat"] .quick-cats .qc[href="/avansert/"]{display:none}
-  /* Carbon-raden: siste synlige celle skal ikke ha skillestrek mot rammen. */
-  html[data-modus="privat"] .quick-cats .qc[href="/lov/"]{border-right:0}
-  html[data-modus] .quick-cats{grid-template-columns:minmax(0, 1fr);margin-top:12px;padding:4px 0}
-  html[data-modus] .qg-h{display:none}
-  /* Hver gruppe er én rad: tre lenker i Privat, fire i Bedrift. */
-  html[data-modus] .qg-col{
-    display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:4px;
-    padding:8px 12px;border-inline-start:0;border-top:1px solid var(--line);
-  }
-  html[data-modus="bedrift"] .qg-col{grid-template-columns:repeat(4, minmax(0, 1fr))}
-  html[data-modus] .qg-col[data-modus]{border-top:0}
-  @media (max-width:640px){
-    /* Telefon: ett rutenett med to lenker per rad (tre rader i Privat, fire i Bedrift). */
-    html[data-modus] .hero-modus{margin-top:20px}
-    html[data-modus] .quick-cats{grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:4px;padding:6px 8px}
-    html[data-modus] .qg-col{display:contents}
-    html[data-modus] .qc:last-child:nth-child(even){grid-column:auto}
-    /* Privat har én rad mindre enn Bedrift. Heroen midtstiller innholdet, så uten denne
-       lufta (én radhøyde) hopper knappen 19 px under fingeren hver gang man bytter. */
-    html[data-modus="privat"] .quick-cats{margin-bottom:38px}
-  }
-  @media (max-width:640px) and (max-height:700px){
-    html[data-modus="privat"] .quick-cats{margin-bottom:36px}
   }
 
   .search-panel{
@@ -1378,88 +1317,144 @@
   /* 1fr auto 1fr: like brede sidekolonner gjør at kontrollene står midt i
      stripa uansett hvor bred etiketten til venstre og kurslinja til høyre er.
      Etiketten er justify-self:start, så den beholder innholdsbredden sin —
-     kolonnen rundt er bare tom plass. */
+     kolonnen rundt er bare tom plass.
+     Utforming (2026-11-22): etiketten er en egen celle med samme toning som
+     tittelstripene på kortene over, de to beløpene står i like store felt med
+     valutakoden i en egen rute til høyre, og tallene har samme skrift som de
+     store tallene på kortene. Svarfeltet har en svak aksenttone, så det er
+     lett å se hva som er svaret. --fxc-r er hjørneradien; temaene setter den. */
   .fxc{
+    --fxc-r:6px;
+    --fxc-fw:clamp(150px,17vw,216px);
     position:relative;
     display:grid;grid-template-columns:1fr auto 1fr;align-items:stretch;
     margin-top:12px;
     background:var(--surface);
     border:1px solid var(--line);
-    border-radius:6px;
-    min-height:52px;
+    border-radius:var(--fxc-r);
+    min-height:68px;
   }
   .fxc-io{
-    display:flex;align-items:center;gap:10px;
-    padding:7px 14px;
+    display:flex;align-items:center;gap:12px;
+    padding:11px 16px;
   }
   .fxc .fx-menu{top:auto;bottom:calc(100% + 6px);right:auto;min-width:176px}
   .fxc-label{
     justify-self:start;display:inline-flex;align-items:center;
-    padding:0 14px 0 24px;
+    padding:0 24px;
+    border-right:1px solid var(--line);
+    border-radius:calc(var(--fxc-r) - 1px) 0 0 calc(var(--fxc-r) - 1px);
+    background:color-mix(in srgb,var(--accent) 4%,transparent);
     font:600 11px/1 var(--font-sans);
     letter-spacing:1.6px;text-transform:uppercase;
     color:var(--ink3);
     white-space:nowrap;
   }
   .fxc-field{
-    display:inline-flex;align-items:center;gap:2px;height:30px;
-    border:1px solid var(--line);border-radius:5px;
-    background:rgba(255,255,255,.03);
-    padding-right:4px;
+    display:flex;align-items:stretch;
+    width:var(--fxc-fw);height:44px;box-sizing:border-box;
+    border:1px solid var(--line-2,var(--line));border-radius:9px;
+    background:color-mix(in srgb,var(--ink) 4%,transparent);
+    transition:border-color .2s var(--ease),box-shadow .2s var(--ease);
   }
-  .fxc-field:focus-within{border-color:var(--accent-2)}
-  .fxc-field-out{background:none;border-color:transparent}
-  .fxc-amt{
-    width:84px;box-sizing:border-box;height:100%;
-    background:none;border:0;padding:0 8px;
-    color:var(--ink);font:inherit;font-size:13px;
-    font-variant-numeric:tabular-nums;
+  .fxc-field:focus-within{
+    border-color:var(--accent-2);
+    box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 14%,transparent);
   }
+  /* Svarfeltet vokser heller enn å kutte et langt tall. */
+  .fxc-field-out{
+    width:auto;min-width:var(--fxc-fw);
+    border-color:color-mix(in srgb,var(--accent) 26%,var(--line));
+    background:color-mix(in srgb,var(--accent) 7%,transparent);
+  }
+  .fxc-amt,.fxc-res{
+    flex:1;min-width:0;box-sizing:border-box;
+    padding:0 8px 0 14px;
+    color:var(--ink);
+    font-family:var(--font-serif);font-weight:500;font-size:19px;letter-spacing:-.2px;
+    font-variant-numeric:tabular-nums lining-nums;
+  }
+  .fxc-amt{width:0;height:100%;background:none;border:0}
   .fxc-amt:focus{outline:none}
-  .fxc-res{
-    min-width:84px;padding:0 8px;
-    color:var(--ink);font-size:15px;letter-spacing:-.1px;
-    font-variant-numeric:tabular-nums;
-  }
+  .fxc-res{display:flex;align-items:center;white-space:nowrap}
   .fxc-cur{
-    display:inline-flex;align-items:center;gap:3px;
-    margin:0;padding:3px 6px;border:0;border-radius:4px;
+    display:inline-flex;align-items:center;justify-content:center;gap:4px;
+    min-width:68px;margin:0;padding:0 12px;box-sizing:border-box;
+    border:0;border-left:1px solid var(--line);border-radius:0 8px 8px 0;
     background:none;color:var(--ink2);
-    font:600 11.5px/1 var(--font-sans);letter-spacing:.8px;
+    font:600 11.5px/1 var(--font-sans);letter-spacing:1px;
     cursor:pointer;
     transition:color .2s var(--ease),background .2s var(--ease);
   }
+  .fxc-field-out .fxc-cur{border-left-color:color-mix(in srgb,var(--accent) 20%,var(--line))}
   .fxc-cur .wx-caret{width:8px;height:8px}
   .fxc-cur-fixed{cursor:default;color:var(--ink3)}
   .fxc-swap{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:26px;height:26px;margin:0;padding:0;border:0;border-radius:4px;
-    background:none;color:var(--ink3);cursor:pointer;
-    transition:color .2s var(--ease),background .2s var(--ease);
+    flex:none;display:inline-flex;align-items:center;justify-content:center;
+    width:34px;height:34px;margin:0;padding:0;
+    border:1px solid var(--line-2,var(--line));border-radius:50%;
+    background:var(--surface);color:var(--ink2);cursor:pointer;
+    transition:color .2s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
   }
-  .fxc-swap svg{width:14px;height:14px}
+  /* Pilene tar en halv omdreining hver gang retningen snus (.rev settes av markedsdata.js). */
+  .fxc-swap svg{width:15px;height:15px;transition:transform .45s var(--ease)}
+  .fxc.rev .fxc-swap svg{transform:rotate(180deg)}
+  .fxc-cur:focus-visible,.fxc-swap:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   @media(hover:hover){
-    .fxc-cur:not(.fxc-cur-fixed):hover,
-    .fxc-swap:hover{color:var(--accent-2);background:rgba(255,255,255,.05)}
+    .fxc-cur:not(.fxc-cur-fixed):hover{color:var(--accent-2);background:color-mix(in srgb,var(--ink) 5%,transparent)}
+    .fxc-swap:hover{
+      color:var(--accent-2);
+      border-color:color-mix(in srgb,var(--accent) 45%,var(--line));
+      background:color-mix(in srgb,var(--accent) 8%,var(--surface));
+    }
   }
+  @media (prefers-reduced-motion: reduce){
+    .fxc-swap svg{transition:none}
+  }
+  /* Kursen på første linje, datoen (når kursen ikke er fra i dag) under. */
   .fxc-rate{
-    justify-self:end;align-self:center;padding-right:24px;
-    font-size:11px;color:var(--ink3);white-space:nowrap;
+    justify-self:end;align-self:center;
+    display:flex;flex-direction:column;align-items:flex-end;gap:5px;
+    padding-right:24px;
+    font-size:12px;line-height:1;color:var(--ink2);white-space:nowrap;
     font-variant-numeric:tabular-nums;
   }
+  .fxc-rate-d{font-size:10.5px;letter-spacing:.3px;color:var(--ink3)}
   @media (max-width:640px){
-    /* Smalt: én kolonne, alt stablet og venstrestilt — sentrering av
-       kontrollene ville gitt ujevne marger mot kortene over. */
+    /* Smalt: én kolonne. De to feltene står under hverandre i full bredde,
+       med bytteknappen midt på skjøten mellom dem. */
     .fxc{grid-template-columns:1fr;min-height:0}
     .fxc-label{
       padding:14px 16px 0;border-right:0;background:none;
       font-size:11px;letter-spacing:1.4px;
     }
-    .fxc-io{padding:7px 16px 0;gap:8px;flex-wrap:wrap}
-    .fxc-amt{width:72px}
-    .fxc-res{min-width:72px;font-size:14px}
-    .fxc-rate{justify-self:start;padding:2px 16px 14px}
+    .fxc-io{flex-direction:column;align-items:stretch;gap:0;padding:14px 16px 0}
+    .fxc-field,.fxc-field-out{width:auto;min-width:0;height:48px}
+    .fxc-amt,.fxc-res{font-size:20px}
+    .fxc-swap{align-self:center;margin:-13px 0;position:relative;z-index:1;transform:rotate(90deg)}
+    .fxc-rate{
+      justify-self:start;flex-direction:row;align-items:baseline;gap:6px;
+      padding:11px 16px 14px;
+    }
+    .fxc-rate-d::before{content:"·";margin-right:6px}
   }
+  @media (min-width:641px) and (max-width:820px){
+    /* Nettbrett: ikke plass til tre kolonner ved siden av hverandre, så
+       kurslinja flytter ned under feltene. Etiketten går over begge radene. */
+    .fxc{grid-template-columns:auto 1fr}
+    .fxc-label{grid-row:1 / span 2}
+    .fxc-io{justify-content:center;padding-bottom:0}
+    .fxc-rate{
+      grid-column:2;justify-self:center;flex-direction:row;align-items:baseline;gap:6px;
+      padding:10px 16px 13px;
+    }
+    .fxc-rate-d::before{content:"·";margin-right:6px}
+  }
+  /* site-shell.css tvinger 16px !important på alle skjemafelt under 768 px (mot
+     zoom i iOS). Beløpet er større enn det, så ID-en må vinne her — ellers blir
+     tallet du skriver mindre enn svaret ved siden av. */
+  @media (max-width:768px){#fxcAmt{font-size:19px !important}}
+  @media (max-width:640px){#fxcAmt{font-size:20px !important}}
   footer{border-top:1px solid var(--line);padding:36px 0 40px;color:var(--ink4);font-size:12.5px}
   .foot-top{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:24px}
   .foot-links{display:flex;gap:4px}
@@ -2006,7 +2001,7 @@
       background:color-mix(in srgb,var(--accent) 5%,transparent);
     }
     html:not([data-theme="carbon"]) .daily-credits{border-top:0;padding:4px 4px 0}
-    html:not([data-theme="carbon"]) .fxc{border-radius:18px}
+    html:not([data-theme="carbon"]) .fxc{--fxc-r:18px}
     html:not([data-theme="carbon"]) .fxc-label{
       justify-self:stretch;padding:12px 16px;min-height:46px;box-sizing:border-box;
       border-bottom:1px solid var(--line);border-radius:17px 17px 0 0;
@@ -2083,13 +2078,13 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v395" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v395" defer></script>
+<link rel="preload" href="/shared/core.js?v=v421" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v421" defer></script>
 <script src="/shared/lang/no.js?v=v394" defer></script>
 <script src="/shared/site-shell.js?v=v359" defer></script>
-<script src="/shared/top-chrome.js?v=v395" defer></script>
+<script src="/shared/top-chrome.js?v=v421" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
-<script src="/shared/markedsdata.js?v=v414" defer></script>
+<script src="/shared/markedsdata.js?v=v431" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
      ingen av search.js sine monteringspunkter, så den injiserer ikke en
      andre søkeboks — initSearch() returnerer tidlig. -->
@@ -2269,11 +2264,6 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
     transition:transform .25s var(--ease);
   }
 
-  /* Privat | Bedrift over raden: venstrestilt og firkantet som søkefeltet */
-  html[data-theme="carbon"] .hero-modus{margin:14px 0 0;background:var(--surface);border-color:var(--line);border-radius:8px}
-  html[data-theme="carbon"] .hm-btn{padding:8px 16px;border-radius:5px;font-size:12.5px}
-  html[data-theme="carbon"][data-modus] .quick-cats{margin-top:8px}
-
   /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
   html[data-theme="carbon"] section.daily{margin-top:0}
   html[data-theme="carbon"] section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
@@ -2374,7 +2364,11 @@ html[data-theme="bw"] .tmr-pop{ background:#101012 !important; }
     background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 8%,transparent),color-mix(in srgb,var(--accent) 3%,transparent));
   }
   html[data-theme="carbon"] .daily-credits{border-top:0;padding:4px 4px 0}
-  html[data-theme="carbon"] .fxc{border-radius:12px}
+  html[data-theme="carbon"] .fxc{
+    --fxc-r:12px;
+    background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
+    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,.8);
+  }
   html[data-theme="carbon"] .fxc-label{
     justify-self:stretch;padding:12px 16px;min-height:46px;box-sizing:border-box;
     border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
@@ -2513,13 +2507,11 @@ body.introAct [data-headline].play .shimmer{
 
 /* Søk og kategorier stiger opp når tittelen har landet */
 body.introAct .hero .search-wrap,
-body.introAct .hero .hero-modus,
 body.introAct .hero .quick-cats{
   opacity:0;transform:translateY(12px);
   transition:opacity var(--dur-base) var(--ease-out-quart), transform var(--dur-base) var(--ease-out-quart);
 }
 body.introAct.heroLanded .hero .search-wrap{opacity:1;transform:none}
-body.introAct.heroLanded .hero .hero-modus,
 body.introAct.heroLanded .hero .quick-cats{opacity:1;transform:none;transition-delay:var(--stag-loose)}
 /* Ett lys-sveip over søkefeltet, og forstørrelsesglasset tegner seg */
 body.introAct .search-shell::after{
@@ -2564,11 +2556,13 @@ body.introAct .daily-frame::after{
 body.introAct.heroLanded .daily .daily-frame.reveal.in::after{animation:hvSweep 1.5s cubic-bezier(.6,.05,.3,1) 1.05s 1 both}
 /* .title > *, ikke .title: i Carbon på telefon er .title display:contents (se over) */
 body.introAct .daily .daily-head .title > *,
+body.introAct .daily .daily-head .daily-cal,
 body.introAct .daily .daily-head .stamp{opacity:0;transform:translateY(7px)}
 body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .title > *{
   opacity:1;transform:none;
   transition:opacity .5s var(--ease-out-quart) 430ms, transform .55s var(--ease-out-expo) 430ms;
 }
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .daily-cal,
 body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .stamp{
   opacity:1;transform:none;
   transition:opacity .5s var(--ease-out-quart) 510ms, transform .55s var(--ease-out-expo) 510ms;
@@ -2748,11 +2742,6 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
     transition:transform .25s var(--ease);
   }
 
-  /* Privat | Bedrift over raden: venstrestilt og firkantet som søkefeltet */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .hero-modus{margin:18px 0 0;background:var(--surface);border-color:var(--line);border-radius:8px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .hm-btn{padding:8px 18px;border-radius:5px;font-size:13px}
-  html:is([data-theme="carbon"],[data-theme="dark"])[data-modus] .quick-cats{margin-top:10px}
-
   /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
   html:is([data-theme="carbon"],[data-theme="dark"]) section.daily{margin-top:0;padding-top:18px}
   html:is([data-theme="carbon"],[data-theme="dark"]) section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
@@ -2839,8 +2828,12 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
     background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 8%,transparent),color-mix(in srgb,var(--accent) 3%,transparent));
   }
   html:is([data-theme="carbon"],[data-theme="dark"]) .daily-credits{border-top:0;padding:4px 4px 0}
-  /* Valutaomregneren står på én rad på PC, så den får bare de runde hjørnene */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .fxc{border-radius:12px}
+  /* Valutaomregneren står på én rad på PC: samme hjørner, lys ovenfra og skygge som kortene */
+  html:is([data-theme="carbon"],[data-theme="dark"]) .fxc{
+    --fxc-r:12px;
+    background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
+    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,.8);
+  }
 
   /* Kortinnholdet fra den gang: én linje i stedet for faktaradene, lave grafer
      (48 px), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
@@ -2942,6 +2935,58 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:34px;padding:0;justify-content:center}
   html[data-theme="carbon"] #navWrap .tc-btn .chev{display:none}
   html[data-theme="carbon"] #navWrap .tc-btn .swatch{width:12px;height:12px}
+}
+</style>
+<style id="kalKnapp">/* ══ Kalender-knappen i dagsoversikt-toppen ══════════════════════════════
+   Kasper 2026-11-22: en knapp som åpner en kalender på siden (ikke nytt vindu).
+   Knappen er en pille som «Sist oppdatert» og står rett til venstre for den.
+   .daily-tools er rammen rundt de to: det er den som plasseres i toppen, så
+   knappen og pillen alltid står sammen og brytes til ny linje som én enhet.
+   Står sist i <head> fordi toppen har tre ulike oppsett (vanlig rad, rutenett på
+   telefon, flex med order i Carbon og Mørk-blå), og reglene her må vinne over dem.
+   Selve kalenderen og utseendet på den ligger i shared/kalender.js. */
+.daily-tools{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.daily-cal{
+  display:inline-flex;align-items:center;gap:7px;flex-shrink:0;
+  height:26px;padding:0 11px 0 9px;
+  border:1px solid var(--line-2);border-radius:999px;
+  background:color-mix(in srgb,var(--ink) 3%,transparent);
+  color:var(--ink2);font:500 11px/1 var(--font-sans);letter-spacing:.4px;white-space:nowrap;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:color .2s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
+}
+.daily-cal svg{width:13px;height:13px;flex-shrink:0}
+@media(hover:hover){
+  .daily-cal:hover{color:var(--ink);border-color:color-mix(in srgb,var(--accent) 50%,transparent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+}
+.daily-cal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.daily-cal:active{transform:translateY(1px)}
+/* Telefon: bare ikonet (teksten leses fortsatt opp). I rutenettet (alle temaer
+   unntatt Carbon) tar rammen plassen status-pillen hadde alene. For at begge skal
+   få plass ved siden av «Dagsoversikt», viser pillen bare klokkeslettet, som i
+   Carbon: «Sist oppdatert» skjules visuelt, men leses fortsatt opp. */
+@media (max-width:640px){
+  .daily-tools{grid-column:2;grid-row:1;gap:7px}
+  .daily-head .daily-cal{width:26px;padding:0;justify-content:center}
+  .daily-cal-lbl,
+  .daily-head .stamp .stamp-pre{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+}
+/* Carbon (telefon og PC): toppen er én flex-rad med order. Rammen står helt til høyre. */
+html[data-theme="carbon"] .daily-tools{order:3;margin-left:auto;gap:8px}
+html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-rgb),.025)}
+@media (max-width:640px){
+  html[data-theme="carbon"] .daily-head .daily-cal{width:28px}
+}
+/* Smale telefoner (360 px): litt tettere, så etikett, uke, knapp og pille får plass på én linje */
+@media (max-width:374px){
+  html[data-theme="carbon"] .daily-head{column-gap:7px}
+  html[data-theme="carbon"] .daily-head .title > span[data-i18n]{gap:7px;letter-spacing:1.4px}
+  html[data-theme="carbon"] .daily-head .title #dailyWeek{gap:7px;letter-spacing:1.4px}
+}
+/* Mørk-blå på PC har samme topp som Carbon (#gammelPC) */
+@media (min-width:641px){
+  html[data-theme="dark"] .daily-tools{order:3;margin-left:auto;gap:8px}
+  html[data-theme="dark"] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-rgb),.025)}
 }
 </style>
 </head>
@@ -3048,12 +3093,8 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
         <div class="sr-only" id="searchStatus" role="status" aria-live="polite"></div>
       </div>
 
-      <div class="hero-modus" role="group" aria-label="Vis kategoriene for privat eller bedrift">
-        <button type="button" class="hm-btn" data-modus="privat" aria-pressed="true" data-i18n="m.f.privat">Privat</button>
-        <button type="button" class="hm-btn" data-modus="bedrift" aria-pressed="false" data-i18n="m.f.bedrift">Bedrift</button>
-      </div>
       <nav class="quick-cats has-mod" aria-label="Hurtigtilgang til kategorier">
-        <div class="qg-col" role="group" aria-labelledby="qgPrivat" data-modus="privat">
+        <div class="qg-col" role="group" aria-labelledby="qgPrivat">
           <span class="qg-h" id="qgPrivat">Privat</span>
           <a href="/personlig/budsjett/" class="qc">
             <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="1.5"/><line x1="3.5" y1="9.5" x2="20.5" y2="9.5"/><line x1="7" y1="13" x2="11" y2="13"/><line x1="7" y1="16" x2="9" y2="16"/><line x1="15" y1="13" x2="17" y2="13"/><line x1="15" y1="16" x2="17" y2="16"/></svg></span>
@@ -3068,7 +3109,7 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
             <span class="qc-lbl">Boliglån</span>
           </a>
         </div>
-        <div class="qg-col" role="group" aria-labelledby="qgBedrift" data-modus="bedrift">
+        <div class="qg-col" role="group" aria-labelledby="qgBedrift">
           <span class="qg-h" id="qgBedrift">Bedrift</span>
           <a href="/selskap/" class="qc">
             <span class="qc-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="16" height="14" rx="1.5"/><path d="M9 7 V4 H15 V7"/><line x1="4" y1="13" x2="20" y2="13"/></svg></span>
@@ -3119,7 +3160,13 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
       <div class="daily-frame reveal">
         <header class="daily-head">
           <div class="title"><span data-i18n="homeMarketTitle">Dagsoversikt</span><span class="sep"></span><b id="dailyDate">Fredag 25. april 2026</b><span class="sep"></span><b id="dailyWeek">Uke 18</b></div>
+          <!-- Kalender-knappen (se #kalKnapp): åpner kalenderen som sidepanel (PC) eller ark nedenfra (telefon).
+               Selve kalenderen ligger i shared/kalender.js og lastes først når knappen brukes.
+               .daily-tools holder knappen og status-pillen samlet, så de brytes til ny linje som én enhet. -->
+          <div class="daily-tools">
+          <button type="button" class="daily-cal" id="dailyCal" aria-haspopup="dialog" aria-label="Åpne kalenderen" title="Kalender"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="3.2" width="11.6" height="10.6" rx="2"/><path d="M2.2 6.7h11.6M5.4 1.8v2.6M10.6 1.8v2.6"/></svg><span class="daily-cal-lbl">Kalender</span></button>
           <div class="stamp" id="dailyStamp"><span class="stamp-pre">Sist oppdatert </span>—</div>
+          </div>
           <!-- Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon, se #gammelPC): skala fra 00 til 24 med et lyspunkt
                for klokka nå. Ren pynt, derfor aria-hidden. Skriptet «Døgnlinja» setter --dl-now. -->
           <div class="dayline" id="dayLine" aria-hidden="true">
@@ -5090,12 +5137,6 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
     function openModal(e){
       if(e){e.preventDefault();st.trigger=e.currentTarget;}
       if(st.hideTimer){clearTimeout(st.hideTimer);st.hideTimer=null;}
-      // Starter på Privat eller Bedrift etter knappen over kategoriene, til du velger filter selv.
-      var md=document.documentElement.getAttribute("data-modus");
-      if(!st.egetFilter && (md==="privat"||md==="bedrift")){
-        st.filter=md;
-        modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q.getAttribute("data-fr-filter")===md?"true":"false");});
-      }
       renderModal(modal,st);
       modal.hidden=false;modal.setAttribute("aria-hidden","false");
       requestAnimationFrame(function(){modal.classList.add("open");});
@@ -5121,14 +5162,14 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 
     modal.querySelectorAll("[data-fr-filter]").forEach(function(pill){
       pill.addEventListener("click",function(){
-        st.filter=pill.getAttribute("data-fr-filter");st.egetFilter=true;
+        st.filter=pill.getAttribute("data-fr-filter");
         modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q===pill?"true":"false");});
         renderModal(modal,st);
       });
     });
     modal.querySelectorAll("[data-fr-clear]").forEach(function(b){
       b.addEventListener("click",function(){
-        st.q="";st.filter="alle";st.egetFilter=true;si.value="";
+        st.q="";st.filter="alle";si.value="";
         modal.querySelectorAll("[data-fr-filter]").forEach(function(q){q.setAttribute("aria-pressed",q.getAttribute("data-fr-filter")==="alle"?"true":"false");});
         renderModal(modal,st);
       });
@@ -5157,6 +5198,35 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);
   else boot();
+
+  /* Kalenderen (shared/kalender.js) bruker de samme fristene og de samme datoreglene. */
+  window.HVFrister={D:D,CATS:CATS,AUD:AUD,easter:easter,workday:workday,dateIn:dateIn,nextDate:nextDate};
+})();
+</script>
+
+<script id="kalBoot">
+/* Kalender-knappen i dagsoversikt-toppen. shared/kalender.js (kalenderen + utseendet)
+   hentes først når knappen brukes, så forsiden ikke blir tyngre å laste. Fila hentes
+   på forhånd idet pekeren eller fingeren treffer knappen, så panelet åpner uten ventetid. */
+(function(){
+  var btn=document.getElementById("dailyCal"); if(!btn) return;
+  var SRC="/shared/kalender.js?v=v1", state=0, wantOpen=false; /* 0 = ikke hentet, 1 = henter, 2 = klar */
+  function load(){
+    if(state) return;
+    state=1;
+    var s=document.createElement("script");
+    s.src=SRC;
+    s.onload=function(){ state=2; if(wantOpen && window.HVKalender) window.HVKalender.open(btn); };
+    s.onerror=function(){ state=0; wantOpen=false; };
+    document.head.appendChild(s);
+  }
+  btn.addEventListener("pointerenter",load);
+  btn.addEventListener("touchstart",load,{passive:true});
+  btn.addEventListener("focus",load);
+  btn.addEventListener("click",function(){
+    if(state===2 && window.HVKalender){ window.HVKalender.open(btn); return; }
+    wantOpen=true; load();
+  });
 })();
 </script>
 
