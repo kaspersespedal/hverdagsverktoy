@@ -5620,6 +5620,8 @@ REGIONS['fr']._ph = {
 "Få oversikt over hva du betaler i abonnementer":"Vois ce que tu paies en abonnements",
 "Får i tillegg":"Reçoit en plus",
 "Får ikke utsatt leveringsfrist":"Pas de report de la date limite de dépôt",
+"Får jeg BSU-fradrag hvis jeg kjøper bolig?":"Ai-je droit à la déduction BSU si j'achète un logement ?",
+"Ikke for året du eier boligen 31. desember. Kjøper du bolig i løpet av året, får du ikke fradrag for det året, selv om du satte inn pengene før kjøpet. Du kan heller ikke sette inn mer når du har begynt å bruke pengene.":"Pas pour l'année où vous êtes propriétaire du logement au 31 décembre. Si vous achetez un logement en cours d'année, vous n'avez pas de déduction pour cette année, même si les versements ont été faits avant l'achat. Vous ne pouvez pas non plus verser davantage une fois que vous avez commencé à utiliser l'argent.",
 "Får jeg full lønn når jeg er syk?":"Est-ce que je touche mon salaire complet en arrêt maladie ?",
 "Får jeg garantert lånet kalkulatoren viser?":"Le prêt affiché par le calculateur est-il garanti ?",
 "Får jeg igjen hele fradragsbeløpet?":"Est-ce que je récupère tout le montant de la déduction ?",
