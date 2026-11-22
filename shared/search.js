@@ -87,6 +87,8 @@ var SEARCH_DATA = [
   {name:'Næring eller hobby?',desc:'Når blir biinntekt skattepliktig næringsvirksomhet?',url:'/skatt/',tags:'næring hobby biinntekt skattepliktig virksomhet grense business hobby',type:'concept',page:'Skatt',sk:'naeringHobby'},
   {name:'Konsernbidrag',desc:'Overføring av overskudd mellom selskaper i samme konsern',url:'/lov/skattelov/#kap-skatteloven-10',tags:'konsernbidrag konsern overføring selskap morselskap datterselskap group contribution',type:'concept',page:'Skatt',sk:'konsernbidrag'},
   {name:'Fritaksmetoden',desc:'Selskaper slipper skatt på aksjeutbytte og -gevinst',url:'/lov/skattelov/#kap-skatteloven-10',tags:'fritaksmetoden fritak skatt utbytte aksjegevinst selskap participation exemption',type:'concept',page:'Skatt',sk:'fritaksmetoden'},
+  {name:'Avanse',desc:'Påslag i % av varekost: Bruttofortjeneste / Varekost × 100',url:'/kalkyle/margin/#formel',tags:'avanse påslag paslag markup bruttofortjeneste varekost innkjøpspris prissetting formel',type:'concept',page:'Kalkyle'},
+  {name:'Dekningsgrad',desc:'Fortjeneste i % av pris: Bruttofortjeneste / Pris × 100',url:'/kalkyle/margin/#formel',tags:'dekningsgrad dg margin bruttomargin bruttofortjeneste pris prissetting formel gross margin',type:'concept',page:'Kalkyle'},
   {name:'Deltakerligning',desc:'Overskudd fordeles og beskattes hos hver deltaker — ANS, DA og KS',url:'/selskap/#selskap-ans-card',tags:'deltakerligning deltakermodellen ansvarlig selskap kommandittselskap fordeling partner taxation',type:'concept',page:'Selskap',sk:'deltakerligning'},
   {name:'Selskapsskatt',desc:'22 % skatt på overskudd i aksjeselskap',url:'/skatt/utbytte/',tags:'selskapsskatt 22 prosent overskudd aksjeselskap as corporate tax',type:'concept',page:'Selskap',sk:'selskapsskatt'},
   {name:'Utbytteskatt',desc:'37,84 % skatt på utbytte til personlige aksjonærer (oppjustert)',url:'/skatt/utbytte/',tags:'utbytteskatt utbytte aksjonær oppjustert 37.84 1.72 dividend tax',type:'concept',page:'Selskap',sk:'utbytteskatt'},
@@ -515,8 +517,11 @@ function scoreItem(item, q, itemIdx, hays){
 
   // Exact name match → highest
   if(nameN === qn) score += 100;
-  else if(nameN.indexOf(qn) === 0) score += 80;
+  // Prefiks teller fullt bare på ordgrense: «avanse» skal ikke gi «Avansert» 80.
+  else if(nameN.indexOf(qn) === 0) score += /[a-z0-9æøå]/.test(nameN.charAt(qn.length)) ? 30 : 80;
   else if(nameN.indexOf(qn) >= 0) score += 60;
+  // Søket er et helt ord i navnet eller taggene → klart relevant.
+  if((' ' + nameN + ' ' + tagsN + ' ').indexOf(' ' + qn + ' ') >= 0) score += 60;
 
   // Word-by-word matching
   var matched = 0;
