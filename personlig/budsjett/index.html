@@ -1179,6 +1179,8 @@ footer em{font-style:italic}
     if(modus === 'privat'){
       window._budsjett = {inntekt:budState.inntekt, faste:budState.faste, variable:budState.variable};
       if(window.hvtLearn) hvtLearn.update('personlig-budsjett', window._budsjett);
+      // «Modell» er et eget nedtrekk som learn.js ikke venter på, så figuren der får beskjed selv
+      document.dispatchEvent(new Event('hvt-budsjett'));
     }
   }
 
@@ -1894,7 +1896,7 @@ footer em{font-style:italic}
   var EX = {inntekt:[{l:'Lønn etter skatt', v:37985}], faste:[{l:'Boliglån', v:18423}], variable:[]};
   var SANS = 'Geist, Inter, system-ui, sans-serif';
   var NB = '\u00a0';
-  var root, plot, svg, raw = null, lastW = 0, queued = false, ctx;
+  var root, plot, svg, lastW = 0, queued = false, ctx;
 
   function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
   function set(name, text){ var el = q(name); if(el) el.textContent = text; }
@@ -1908,7 +1910,6 @@ footer em{font-style:italic}
 
   function render(d){
     var L = window.hvtLearn, t = L.t, ph = L.ph;
-    raw = d;
     var all = d ? ['inntekt', 'faste', 'variable'].reduce(function(s, k){ return s + (d[k] || []).reduce(function(a, r){ return a + Math.abs(num(r.v)); }, 0); }, 0) : 0;
     var mine = all > 0;
     var p = mine ? d : EX;
@@ -2126,13 +2127,18 @@ footer em{font-style:italic}
   function schedule(){
     if(queued) return;
     queued = true;
-    Promise.resolve().then(function(){ queued = false; render(raw); });
+    // Alltid budsjettets ferskeste tall: learn.js kan ha latt være å tegne mens «Største poster» er lukket
+    Promise.resolve().then(function(){ queued = false; render(window._budsjett || null); });
   }
   function init(){
     root = document.getElementById('lrn-bu');
     if(!root || !window.hvtLearn) return;
     plot = root.querySelector('.lrn-plot'); svg = plot.querySelector('svg');
     if(window.ResizeObserver) new ResizeObserver(function(){ if(plot.clientWidth && plot.clientWidth !== lastW) schedule(); }).observe(plot);
+    // «Modell» tegnes når den åpnes, og på nytt når et beløp endres mens den er åpen
+    var modell = document.getElementById('lrn-bu-modell');
+    modell.addEventListener('toggle', function(){ if(modell.open) schedule(); });
+    document.addEventListener('hvt-budsjett', function(){ if(modell.open) schedule(); });
     hvtLearn.on(KEY, render);
     hvtLearn.update(KEY, window._budsjett || null);
   }
