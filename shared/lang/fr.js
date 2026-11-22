@@ -2703,6 +2703,7 @@ REGIONS['fr'] = {
     tabBoliglan: 'Prêt immobilier',
     tabKalkulator: 'Calculatrice',
     tabSkatt: 'Impôt',
+    tabSkattAvgift: 'Impôts et taxes',
     tabRegnskap: 'Comptabilité',
     tabLov: 'Loi',
     tabAvgift: 'Taxes',

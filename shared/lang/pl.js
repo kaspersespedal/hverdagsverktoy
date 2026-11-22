@@ -2692,6 +2692,7 @@ REGIONS['pl'] = {
     tabBoliglan: 'Kredyt hipoteczny',
     tabKalkulator: 'Kalkulator',
     tabSkatt: 'Podatki',
+    tabSkattAvgift: 'Podatki i opłaty',
     tabRegnskap: 'Rachunkowość',
     tabLov: 'Prawo',
     tabAvgift: 'Opłaty',

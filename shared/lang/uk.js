@@ -10383,6 +10383,7 @@ REGIONS['uk']._ph = {
 ["tabBoliglan","Іпотека"],
 ["tabKalkulator","Калькулятор"],
 ["tabSkatt","Податок"],
+["tabSkattAvgift","Податки і збори"],
 ["tabRegnskap","Бухоблік"],
 ["tabLov","Закон"],
 ["tabAvgift","Збори"],

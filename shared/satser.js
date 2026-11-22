@@ -21,7 +21,11 @@
    Teksten oversettes via `_ph` i shared/lang/{en,pl,uk,ar,fr}.js. Nøklene der
    inneholder årstallet, så de må få nye årstall når satsene oppdateres.
 
+   GAMLE SATSER SLETTES IKKE: før en blokk får nye verdier, kopieres den
+   uendret til shared/satser-arkiv/ (se README.md der). Ingen side leser arkivet.
+
    SJEKKLISTE VED ÅRSSKIFTET (skatt, 1.1.) — ikke alt står her ennå:
+     0. Kopier `skatt`-blokken til shared/satser-arkiv/skatt-<aar>.js.
      1. Alle verdiene i `skatt` under, og `aar` + `kontrollert`.
      2. Satser som bare står på én side og derfor ikke er flyttet hit:
         skatt/formue (bunnfradrag, trinn, satser), avgift/aga (soner, fribeløp),
@@ -31,7 +35,7 @@
      3. Satser i vanlig tekst og i shared/lang/*.js («Trinn 1 (1,7 %)», titler,
         meta-beskrivelser), og shared/lang/no-lett.js (scripts/gen-no-lett.js).
      4. Død kode i shared/core.js har fortsatt gamle kopier (slettes i P27).
-   VED NYTT GRUNNBELØP (1.5.): `g.verdi`, `g.fra`, `g.til`, og nytt år i `g.per31des`.
+   VED NYTT GRUNNBELØP (1.5.): kopier `g` til shared/satser-arkiv/g-<år>.js, så `g.verdi`, `g.fra`, `g.til`, og nytt år i `g.per31des`.
    ──────────────────────────────────────────────────────────────────────── */
 (function(){
   var S = window.HV_SATSER = {
