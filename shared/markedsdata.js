@@ -143,19 +143,37 @@
      strekkes vertikalt av preserveAspectRatio="none". Værgrafen er
      64 px høy: resten av de 88 går til raden med værsymboler over. */
   var SPARK_H = 88, WX_H = 64;
-  function sparkPaths(vals, pad) {
-    var W = 200, H = SPARK_H; pad = pad || 6;
-    var clean = (vals || []).filter(function (v) { return typeof v === 'number' && !isNaN(v); });
-    if (clean.length < 2) return null;
-    var mn = Math.min.apply(null, clean), mx = Math.max.apply(null, clean), rng = (mx - mn) || 1, n = clean.length;
-    var pts = clean.map(function (v, i) {
-      return [(i / (n - 1)) * W, pad + (1 - (v - mn) / rng) * (H - 2 * pad)];
-    });
-    return { line: linePath(pts), first: pts[0], last: pts[n - 1] };
+  /* Linjegrafene står på en hårstrek i bunnen, med et svakt, ensfarget felt opp til linja,
+     så grafen har tyngde og ikke svever i kortet. Høyeste verdi ligger SPARK_PT under
+     toppen og laveste SPARK_PB over bunnstreken, så feltet aldri blir helt borte. */
+  var SPARK_PT = 6, SPARK_PB = 10;
+  function sparkY(v, mn, mx) {
+    return SPARK_PT + (1 - (v - mn) / ((mx - mn) || 1)) * (SPARK_H - SPARK_PT - SPARK_PB);
+  }
+  /* d = linja som sti, dot = punktet som merkes, mid = det som ligger mellom feltet og linja
+     (stiplet linje, hårstreker, nedbør), H = høyden på grafen (værgrafen er lavere). */
+  function sparkSvg(d, dot, mid, H) {
+    H = H || SPARK_H;
+    return '<path class="spark-area" d="' + d + ' L200,' + H + ' L0,' + H + ' Z"/>' + (mid || '') +
+      '<line class="spark-floor" x1="0" y1="' + H + '" x2="200" y2="' + H + '"/>' +
+      '<path class="spark-line" d="' + d + '"/>' + sparkDot(dot);
+  }
+  /* Stiplet linje på en bestemt verdi: målet for prisveksten, 12 timer dagslys, 0 grader. */
+  function sparkRef(y) {
+    return '<line class="spark-base" x1="0" y1="' + y.toFixed(1) + '" x2="200" y2="' + y.toFixed(1) + '"/>';
   }
   /* Rett strek fra punkt til punkt: dagskurser er enkeltmålinger, ingenting å glatte. */
   function linePath(pts) {
     return 'M' + pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' L');
+  }
+  /* Som linePath, men løfter pennen der ok(i) er usann (måneder uten tall, mørketid). */
+  function segPath(pts, ok) {
+    var d = '', pen = false;
+    for (var i = 0; i < pts.length; i++) {
+      if (!ok(i)) { pen = false; continue; }
+      d += (pen ? ' L' : ' M') + pts[i][0].toFixed(1) + ',' + pts[i][1].toFixed(1); pen = true;
+    }
+    return d.slice(1);
   }
   /* Punktet i en kortgraf («nå» / siste kurs): en nesten null-lang strek med rund ende.
      Da blir det en sirkel også når SVG-en strekkes ulikt i bredde og høyde.
@@ -164,14 +182,16 @@
     var d = 'M' + p[0].toFixed(1) + ',' + p[1].toFixed(1) + 'h.01';
     return '<path class="spark-ring" d="' + d + '"/><path class="spark-dot" d="' + d + '"/>';
   }
-  function applySpark(card, vals) {
+  /* ref: en verdi som skal være med på skalaen og få stiplet linje (målet for prisveksten). */
+  function applySpark(card, vals, ref) {
     if (!card) return;
     var svg = card.querySelector('.widget-spark'); if (!svg) return;
-    var sp = sparkPaths(vals); if (!sp) return;
-    /* Stiplet startnivå: viser hvor kursen lå ved periodens start. */
-    var y0 = sp.first[1].toFixed(1);
-    svg.innerHTML = '<line class="spark-base" x1="0" y1="' + y0 + '" x2="200" y2="' + y0 + '"/>' +
-      '<path class="spark-line" d="' + sp.line + '"/>' + sparkDot(sp.last);
+    var clean = (vals || []).filter(function (v) { return typeof v === 'number' && !isNaN(v); }), n = clean.length;
+    if (n < 2) return;
+    var all = ref == null ? clean : clean.concat(ref);
+    var mn = Math.min.apply(null, all), mx = Math.max.apply(null, all);
+    var pts = clean.map(function (v, i) { return [(i / (n - 1)) * 200, sparkY(v, mn, mx)]; });
+    svg.innerHTML = sparkSvg(linePath(pts), pts[n - 1], ref == null ? '' : sparkRef(sparkY(ref, mn, mx)));
   }
 
   /* ── Scrub-chip: verdien under pekeren, festet til .widget-spark-wrap ──
@@ -487,7 +507,7 @@
     /* Loddrett hårstrek over hvert klokkeslett: deler døgnet i ruter som symbolene står i. */
     for (i = 0; i < tk.length; i++) s += '<line class="spark-grid" x1="' + X(tk[i]).toFixed(1) + '" y1="0" x2="' + X(tk[i]).toFixed(1) + '" y2="' + H + '"/>';
     /* Stiplet linje på 0° når døgnet krysser frysepunktet. */
-    if (mn < 0 && mx > 0) s += '<line class="spark-base" x1="0" y1="' + Y(0).toFixed(1) + '" x2="' + W + '" y2="' + Y(0).toFixed(1) + '"/>';
+    if (mn < 0 && mx > 0) s += sparkRef(Y(0));
     /* Nedbør: søyla dekker timen fra punktet til neste. Høyden skaleres mot minst 2 mm/t,
        så yr ikke ser ut som styrtregn. Siste punkt er periodens slutt og har ingen søyle. */
     var pmax = Math.max(2, Math.max.apply(null, p)), bw = W / (n - 1);
@@ -501,7 +521,7 @@
        ellers små trappetrinn i en så lav graf. «Nå» og siste time står urørt, og avlesningen
        under pekeren bruker de ekte tallene. */
     var pts = v.map(function (x, k) { return [X(k), Y(k && k < last ? (v[k - 1] + 2 * x + v[k + 1]) / 4 : x)]; });
-    svg.innerHTML = s + '<path class="spark-line" d="' + curvePath(pts) + '"/>' + sparkDot(pts[0]);
+    svg.innerHTML = sparkSvg(curvePath(pts), pts[0], s, H);
 
     /* Ett symbol midt i hver rute (mellom to hårstreker). Symbolet oppsummerer de seks timene
        rundt der det står (METs next_6_hours). Ruter under tre timer er for smale og står tomme. */
@@ -594,19 +614,22 @@
       });
   }
 
-  /* ═══════════ FULLSKJERM GRAF (vær · rente · strøm · valuta) ═══════════
-     Knappen øverst til høyre på vær-, rente-, strøm- og valutakortet åpner én felles
+  /* ═══════════ FULLSKJERM GRAF (alle åtte kortene) ═══════════
+     Knappen øverst til høyre på hvert kort åpner én felles
      dialog (Claude Design «05 Fullskjerm graf»). DOM-en bygges første gang den
      åpnes og gjenbrukes. Vær leser timeserien loadWeather allerede har hentet;
-     strøm (andre soner, i morgen, siste 7 dager) og valuta (ett år) hentes først
-     når de vises, og caches. Hver henting lagres under sin egen nøkkel
+     strøm (andre soner, i morgen, siste 7 dager), valuta (ett år) og SSB-tallene
+     (ti år) hentes først når de vises, og caches. Dagslyset regnes ut på siden.
+     Hver henting lagres under sin egen nøkkel
      (sone + dato, valuta), og dialogen tegnes alltid fra det som er valgt NÅ —
      et sent svar for et gammelt valg kan derfor aldri overskrive et nyere. */
   var BIG = null, _bigT = 0, _rvF = 0, _reduce = false;
-  /* kind: åpen graf (wx/st/fx) · r: tidsrom per graf · hov: punkt under peker/piltast
-     · M: tegnet modell · sig: modellens signatur (minutt-pulsen tegner bare om ved endring) */
-  var _big = { kind: null, r: { wx: 0, st: 0, fx: 0, sr: 1 }, zone: 'NO1', hov: null, M: null, sig: '', ret: null, ov: '' };
-  var RANGES = { wx: ['12 t', '24 t', '48 t'], st: ['I dag', 'I morgen', '7 dager'], fx: ['30 d', '90 d', '1 år'], sr: ['1 år', '5 år', '10 år'] };
+  /* kind: åpen graf (wx/sr/st/fx/df/kp/bl/su) · r: tidsrom per graf · fuel: 0 bensin, 1 diesel
+     · hov: punkt under peker/piltast · M: tegnet modell · sig: modellens signatur
+     (minutt-pulsen tegner bare om ved endring) */
+  var _big = { kind: null, r: { wx: 0, st: 0, fx: 0, sr: 1, df: 1, kp: 1, bl: 1, su: 0 }, zone: 'NO1', fuel: 0, hov: null, M: null, sig: '', ret: null, ov: '' };
+  var RANGES = { wx: ['12 t', '24 t', '48 t'], st: ['I dag', 'I morgen', '7 dager'], fx: ['30 d', '90 d', '1 år'], sr: ['1 år', '5 år', '10 år'],
+    df: ['2 år', '5 år', '10 år'], kp: ['2 år', '5 år', '10 år'], bl: ['2 år', '5 år', '10 år'], su: [] }; // dagslyset viser alltid hele året
   var ZONES = [['NO1', 'Øst'], ['NO2', 'Sør'], ['NO3', 'Midt'], ['NO4', 'Nord'], ['NO5', 'Vest']];
   var FS_ON = 'M6 2v4H2M10 14v-4h4M14 6h-4V2M2 10h4v4', FS_OFF = 'M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9';
 
@@ -712,12 +735,31 @@
   }
   function fetchRateLong() {
     _srLBusy = true;
-    fetch('https://data.norges-bank.no/api/data/IR/B.KPRA.SD.R?startPeriod=' + isoDay(dayShift(-3660)) + '&format=sdmx-json&locale=en')
+    /* Litt over ti år: boliglånsgrafen måler mot styringsrenta i alle sine 121 måneder, og SSB ligger et par måneder etter. */
+    fetch('https://data.norges-bank.no/api/data/IR/B.KPRA.SD.R?startPeriod=' + isoDay(dayShift(-3800)) + '&format=sdmx-json&locale=en')
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (j) { var d = parseRate(j); return { dates: d.dates, vals: d.series }; })
       .then(function (d) { cacheSet('srl', d); _srL = { t: Date.now(), d: d }; _srLFail = 0; },
             function () { _srLFail = Date.now(); })
-      .then(function () { _srLBusy = false; if (_big.kind === 'sr') bigRefresh(); });
+      .then(function () { _srLBusy = false; if (_big.kind === 'sr' || _big.kind === 'bl') bigRefresh(); }); // bl: sammenligningslinja
+  }
+
+  /* ── SSB-tallene ti år tilbake (drivstoff, prisvekst, boliglånsrente). Kortene henter
+     bare 25 måneder; de 121 hentes først når fullskjermgrafen åpnes, og caches i 12 t. ── */
+  var _ssbL = {}, _ssbLBusy = {}, _ssbLFail = {};
+  function ssbLong(k) {
+    var e = _ssbL[k] || (_ssbL[k] = cacheGet('ssbl_' + k));
+    if ((!e || !fresh(e, 12 * 36e5)) && !_ssbLBusy[k] && !(_ssbLFail[k] && Date.now() - _ssbLFail[k] < 120000)) fetchSsbLong(k);
+    return e && e.d && e.d.dates ? e.d : null;
+  }
+  function fetchSsbLong(k) {
+    _ssbLBusy[k] = true;
+    fetch(SSB + SSB_Q[k].replace('top(25)', 'top(121)'))
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (j) { var d = parseSsb(j); if (!d.series[0] || d.series[0].length < 2) throw 0; return d; })
+      .then(function (d) { cacheSet('ssbl_' + k, d); _ssbL[k] = { t: Date.now(), d: d }; delete _ssbLFail[k]; },
+            function () { _ssbLFail[k] = Date.now(); })
+      .then(function () { delete _ssbLBusy[k]; if (_big.kind === k) bigRefresh(); });
   }
 
   /* ── Seriemodeller: én per graf og tidsrom ──
@@ -900,11 +942,150 @@
     return M;
   }
 
+  /* Styringsrenta ved utgangen av hver måned ('2026-10' → 4.25): tiårsserien pluss kortets
+     nyere dager. Datoene er stigende, så siste dag i måneden blir stående. */
+  function rateByMonth() {
+    var y = rateLong(), o = {};
+    if (!y) return null;
+    [{ dates: y.dates, vals: y.vals }, _rate && { dates: _rate.dates, vals: _rate.series }].forEach(function (s) {
+      if (s) for (var i = 0; i < s.dates.length; i++) o[s.dates[i].slice(0, 7)] = s.vals[i];
+    });
+    return o;
+  }
+
+  /* Månedstallene fra SSB (drivstoff, prisvekst, boliglånsrente). v2 er en grå linje å måle
+     mot: det andre drivstoffet, eller styringsrenta. Prisveksten får stiplet linje på målet. */
+  function ssbModel(k, r) {
+    var y = ssbLong(k), base = _ssb[k], src = y || (r === 0 && base) || null; // 2 år kan vises fra kortets tall
+    /* Tiårsserien caches i 12 t; har kortet fått en nyere måned, legges den til. */
+    if (y && base) {
+      var at = base.dates.indexOf(y.dates[y.dates.length - 1]);
+      if (at >= 0 && at < base.dates.length - 1) src = { dates: y.dates.concat(base.dates.slice(at + 1)),
+        series: y.series.map(function (s, i) { return s.concat((base.series[i] || []).slice(at + 1)); }) };
+    }
+    var dec = k === 'kp' ? 1 : 2, u = k === 'df' ? ' kr' : ' %', fuel = _big.fuel, names = [ph('Bensin 95'), ph('Diesel')];
+    var M = { kind: k, line: true, area: true, ydec: dec, unit: k === 'df' ? 'kr/l' : '%', seps: [], nowIdx: null };
+    if (k === 'df') {
+      M.eye = ph('Drivstoffpris'); M.title = M.eye + ' · ' + names[fuel];
+      M.chips = names.map(function (nm, i) { return [String(i), nm, i === fuel]; }); M.chipLbl = ph('Velg drivstoff');
+      M.foot = ph('SSB · landssnitt for hver måned, kroner per liter');
+    } else if (k === 'kp') {
+      M.eye = ph('Prisvekst');
+      M.foot = ph('SSB · prisene sammenlignet med samme måned året før');
+    } else {
+      M.eye = ph('Boliglånsrente');
+      M.foot = ph('SSB · snittrente på nye boliglån med flytende rente · styringsrenta fra Norges Bank');
+    }
+    if (!src) { M.state = _ssbLFail[k] ? 'err' : 'load'; return M; }
+    var cut = [24, 60, 120][r] + 1, dates = src.dates.slice(-cut), n = dates.length;
+    if (n < 2) { M.state = 'empty'; M.msg = ph('Ingen tall for denne perioden'); return M; }
+    var v = (src.series[k === 'df' ? fuel : 0] || src.series[0]).slice(-cut), v2 = null, n2 = '';
+    if (k === 'df' && src.series[1]) { v2 = src.series[1 - fuel].slice(-cut); n2 = [ph('Diesel'), ph('Bensin')][fuel]; }
+    if (k === 'bl') {
+      var rm = rateByMonth();
+      if (rm) { v2 = dates.map(function (d) { return rm[d] != null ? rm[d] : null; }); n2 = ph('Styringsrente'); }
+    }
+    function val(x) { return nb(x, dec) + u; }
+    function sgn(x, d) { var a = +Math.abs(x).toFixed(d); return (!a ? '±' : x > 0 ? '+' : '−') + nb(a, d); }
+    function other(i) { return v2 && v2[i] != null ? ' · ' + low(n2) + ' ' + val(v2[i]) : ''; }
+    function gap(x) { // avstanden til målet på 2 %
+      var g = +(x - 2).toFixed(1);
+      return g ? fill(ph(g > 0 ? '{v} pp over målet' : '{v} pp under målet'), { v: nb(Math.abs(g), 1) }) : ph('på målet');
+    }
+    var mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), last = n - 1, avg = sum(v) / n, ch = v[last] - v[0];
+    M.n = n; M.v = v; M.def = last;
+    if (v2) { M.v2 = v2; M.has2 = function (i) { return v2[i] != null; }; }
+    M.label = function (i) { return mndYr(dates[i]); };
+    M.ax = spread(n, window.innerWidth < 641 ? 4 : 7).map(function (i) { return [i, monthLbl(dates[i])]; });
+    M.stats = [[ph('Høyest'), val(mx), mndYr(dates[v.indexOf(mx)])], [ph('Lavest'), val(mn), mndYr(dates[v.indexOf(mn)])]];
+    M.valOf = function (i) { return nb(v[i], dec); };
+    M.tipV = function (i) { return val(v[i]) + other(i); };
+    M.subOf = function (i) { return mndYr(dates[i]) + (k === 'kp' ? ' · ' + gap(v[i]) : other(i)); };
+    if (k === 'df') {
+      M.leg = [['a', names[fuel]]].concat(v2 ? [['c', names[1 - fuel]]] : []);
+      M.stats.push([ph('Snitt'), val(avg), ph('i perioden')], [ph('Endring'), sgn(ch / v[0] * 100, 1) + ' %', ph('i perioden')]);
+      M.sub0 = ph('Landssnitt for') + ' ' + mndYr(dates[last]) + other(last);
+    } else if (k === 'kp') {
+      M.avg = true; M.avgV = 2;
+      M.leg = [['a', ph('Prisvekst')], ['r', ph('Målet på 2 %')]];
+      M.stats.push([ph('Snitt'), val(avg), ph('i perioden')],
+        [ph('Over målet'), fill(ph('{a} av {b}'), { a: v.filter(function (x) { return x > 2; }).length, b: n }), ph('måneder')]);
+      M.sub0 = ph('Siste 12 mnd. til') + ' ' + mndYr(dates[last]) + ' · ' + gap(v[last]);
+    } else {
+      M.leg = [['a', ph('Boliglånsrente')]].concat(v2 ? [['c', n2]] : []);
+      M.stats.push([ph('Endring'), sgn(ch, 2) + ' pp', ph('i perioden')]);
+      if (v2 && v2[last] != null) M.stats.push([ph('Over styringsrenta'), sgn(v[last] - v2[last], 2) + ' pp', mndYr(dates[last])]);
+      M.sub0 = ph('Snitt for nye lån') + ' · ' + mndYr(dates[last]);
+    }
+    M.state = 'ok';
+    return M;
+  }
+
+  /* Klokkeslett som timer fra midnatt den dagen (08:30 → 8,5), holdt innenfor døgnet. */
+  function clock(dt, mid) {
+    var day = Math.round((new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()) - mid) / 864e5);
+    return Math.max(0, Math.min(24, day * 24 + dt.getHours() + dt.getMinutes() / 60 + dt.getSeconds() / 3600));
+  }
+
+  /* Dagslyset gjennom året: feltet går fra soloppgang (v2) til solnedgang (v) dag for dag, med
+     klokka på y-aksen. Sommertid gir hakkene i mars og oktober. I mørketid er feltet borte,
+     i midnattssol fyller det hele døgnet. */
+  function sunModel() {
+    var place = getPlace(), now = new Date(), y = now.getFullYear();
+    var M = { kind: 'su', line: true, band: true, unit: '', eye: ph('Dagslys') + ' · ' + place.navn,
+      foot: fill(ph('Regnet ut for {sted} · feltet viser når sola er oppe'), { sted: place.navn }),
+      T: { lo: 0, hi: 24, arr: [0, 6, 12, 18, 24] }, yFmt: function (t) { return pad2(t) + ':00'; },
+      notes: [ph('Sola ned'), ph('Sola opp')], nowLbl: ph('I dag'), seps: [], ax: [] };
+    var n = Math.round((Date.UTC(y + 1, 0, 1) - Date.UTC(y, 0, 1)) / 864e5), S = [], hi = [], lo = [], len = [], i;
+    for (i = 0; i < n; i++) {
+      var s = S[i] = sunDay(place.lat, place.lon, y, 0, i + 1), mid = new Date(y, 0, i + 1);
+      lo.push(s.polar > 0 ? 0 : clock(s.polar ? new Date(s.noon) : s.rise, mid));
+      hi.push(s.polar > 0 ? 24 : s.polar ? lo[i] : clock(s.set, mid));
+      len.push(s.len);
+    }
+    var doy = Math.round((Date.UTC(y, now.getMonth(), now.getDate()) - Date.UTC(y, 0, 1)) / 864e5), td = S[doy];
+    function iso(j) { return isoDay(new Date(y, 0, j + 1)); }
+    function name(d) { return ph(d.polar < 0 ? 'Mørketid' : 'Midnattssol'); }
+    function what(d) { return ph(d.polar < 0 ? 'sola står ikke opp' : 'sola går ikke ned'); }
+    function span(d) { return d.polar ? cap(what(d)) : fill(ph('Sola opp {a} · ned {b}'), { a: hhmm(d.rise), b: hhmm(d.set) }); }
+    function lenTxt(min) { var t = Math.round(min); return t < 60 ? t + ' min' : dayLen(t); } // «46 min», ikke «0 t 46 min»
+    M.n = n; M.v = hi; M.v2 = lo; M.def = M.nowIdx = doy;
+    M.has2 = function (j) { return !S[j].polar; };
+    M.tagOf = function (j, rise) { return hhmm(rise ? S[j].rise : S[j].set); };
+    var small = window.innerWidth < 641;
+    for (var m = 0; m < 12; m++) {
+      var a = Math.round((Date.UTC(y, m, 1) - Date.UTC(y, 0, 1)) / 864e5);
+      if (m) M.seps.push([a, '']);
+      M.ax.push([a + 14, small ? monthOnly(m).charAt(0) : monthOnly(m)]);
+    }
+    /* Mørketid og midnattssol har ingen lengste eller korteste dag: da står antall dager i stedet. */
+    function polarStat(sign) {
+      var cnt = 0, first = 0;
+      for (var j = 0; j < n; j++) if (S[j].polar === sign) { cnt++; if (S[(j + n - 1) % n].polar !== sign) first = j; }
+      return [ph(sign < 0 ? 'Mørketid' : 'Midnattssol'), fill(ph('{n} dager'), { n: cnt }), fill(ph('fra {d}'), { d: nbShort(iso(first)) })];
+    }
+    var mx = Math.max.apply(null, len), mn = Math.min.apply(null, len);
+    M.stats = (td.polar ? [[name(td), ph('i dag'), what(td)]]
+                        : [[ph('Sola opp'), hhmm(td.rise), ph('i dag')], [ph('Sola ned'), hhmm(td.set), ph('i dag')]])
+      .concat([mx >= 1440 ? polarStat(1) : [ph('Lengste dag'), lenTxt(mx), nbShort(iso(len.indexOf(mx)))],
+               mn <= 0 ? polarStat(-1) : [ph('Korteste dag'), lenTxt(mn), nbShort(iso(len.indexOf(mn)))]]);
+    var diff = Math.round(td.len - sunDay(place.lat, place.lon, y, 0, doy).len); // mot i går
+    M.valOf = function (j) { return S[j].polar ? name(S[j]) : lenTxt(len[j]); };
+    M.sub0 = span(td) + (td.polar ? '' : ' · ' + (diff ? fill(ph(diff > 0 ? '{n} min lengre enn i går' : '{n} min kortere enn i går'), { n: Math.abs(diff) })
+                                                      : ph('like lang som i går')));
+    M.label = function (j) { return nbShort(iso(j)) + (j === doy ? ' · ' + ph('i dag') : ''); };
+    M.subOf = function (j) { return M.label(j) + ' · ' + span(S[j]); };
+    M.tipV = function (j) { return S[j].polar ? name(S[j]) : hhmm(S[j].rise) + '–' + hhmm(S[j].set); };
+    M.state = 'ok';
+    return M;
+  }
+
   function bigModel() {
-    var k = _big.kind, r = _big.r[k], M = k === 'wx' ? wxModel(r) : k === 'st' ? stModel(r) : k === 'sr' ? srModel(r) : fxModel(r);
+    var k = _big.kind, r = _big.r[k];
+    var M = k === 'wx' ? wxModel(r) : k === 'st' ? stModel(r) : k === 'sr' ? srModel(r) : k === 'fx' ? fxModel(r) : k === 'su' ? sunModel() : ssbModel(k, r);
     M.r = r;
     M.msg = M.state === 'load' ? ph('Henter data …') : M.state === 'err' ? ph('Kunne ikke hente data. Sjekk nettet og prøv igjen.') : M.msg;
-    M.sig = [k, r, M.title || M.eye, M.foot, M.state, M.msg, M.v && M.v.join(','), M.p && M.p.join(','), M.nowIdx,
+    M.sig = [k, r, M.title || M.eye, M.foot, M.state, M.msg, M.v && M.v.join(','), M.v2 && M.v2.join(','), M.p && M.p.join(','), M.nowIdx,
              M.sub0, M.ax && M.ax.join('|'), M.sym && M.sym.join('|'), JSON.stringify(M.week || null), document.documentElement.lang].join('§');
     return M;
   }
@@ -925,11 +1106,13 @@
           '</div>' +
         '</div>' +
         '<div class="mdb-body" role="region">' +
-          '<div class="mdb-hero"><span class="mdb-big"><span class="mdb-val"></span><span class="mdb-unit"></span></span><span class="mdb-sub"></span></div>' +
+          '<div class="mdb-hero"><span class="mdb-big"><span class="mdb-val"></span><span class="mdb-unit"></span></span><span class="mdb-sub"></span>' +
+            '<span class="mdb-leg" aria-hidden="true"></span></div>' +
           '<div class="mdb-chart">' +
             '<div class="mdb-yax" aria-hidden="true"><div class="mdb-yax-in"></div></div>' +
             '<div class="mdb-pc"><div class="mdb-plot" aria-hidden="true"></div><div class="mdb-tip" aria-hidden="true"><span></span><b></b></div></div>' +
-            '<div class="mdb-xax" aria-hidden="true"></div>' +
+            /* data-ph-skip: etikettene skrives ferdig oversatt. Uten det gjør frase-ordboka engelske «Jul» (juli) til «Christmas». */
+            '<div class="mdb-xax" aria-hidden="true" data-ph-skip></div>' +
             '<div class="mdb-state" role="status" hidden></div>' +
           '</div>' +
           '<div class="mdb-foot"><div class="mdb-stats"></div><div class="mdb-meta"><span class="mdb-src"></span><span class="mdb-keys" aria-hidden="true"></span></div></div>' +
@@ -941,7 +1124,7 @@
     function q(s) { return root.querySelector(s); }
     var E = BIG = {
       root: root, panel: q('.mdb-panel'), eye: q('.mdb-eye'), chips: q('.mdb-chips'), seg: q('.mdb-seg'),
-      fs: q('.mdb-fs'), x: q('.mdb-x'), body: q('.mdb-body'), val: q('.mdb-val'), unit: q('.mdb-unit'), sub: q('.mdb-sub'),
+      fs: q('.mdb-fs'), x: q('.mdb-x'), body: q('.mdb-body'), val: q('.mdb-val'), unit: q('.mdb-unit'), sub: q('.mdb-sub'), leg: q('.mdb-leg'),
       chart: q('.mdb-chart'), y: q('.mdb-yax-in'), pc: q('.mdb-pc'), plot: q('.mdb-plot'), tip: q('.mdb-tip'),
       xax: q('.mdb-xax'), state: q('.mdb-state'), stats: q('.mdb-stats'), src: q('.mdb-src'), keys: q('.mdb-keys'),
       week: q('.wx-week'), weekK: q('.wx-kicker'), weekList: q('.wx-week-list'), live: q('.sr-only'), head: ''
@@ -954,6 +1137,7 @@
       var b = e.target.closest('[data-v]'); if (!b || !_big.kind) return;
       _big.hov = null;
       if (_big.kind === 'st') _big.zone = b.getAttribute('data-v');
+      else if (_big.kind === 'df') _big.fuel = +b.getAttribute('data-v');
       else setFxCode(b.getAttribute('data-v')); // samme lagrede valg som kortet og omregneren
       bigRender(true);
     });
@@ -1113,6 +1297,7 @@
         return '<button type="button" data-i="' + i + '" aria-pressed="false">' + esc(ph(l)) + '</button>';
       }).join('');
       E.seg.setAttribute('aria-label', ph('Tidsrom'));
+      E.seg.hidden = !RANGES[k].length;
       E.x.setAttribute('aria-label', ph('Lukk')); E.x.title = ph('Lukk (Esc)');
       E.keys.innerHTML = '<kbd>←</kbd><kbd>→</kbd><span>' + esc(ph('bla')) + '</span><kbd>Esc</kbd><span>' + esc(ph('lukk')) + '</span>' +
         (fsOk() ? '<kbd>F</kbd><span>' + esc(ph('fullskjerm')) + '</span>' : '');
@@ -1141,6 +1326,9 @@
     E.src.textContent = M.foot;
     var ok = M.state === 'ok';
     E.state.hidden = ok;
+    /* Forklaring til linjene: a = linja i farge, c = den grå å måle mot, r = stiplet. */
+    E.leg.hidden = !(ok && M.leg);
+    E.leg.innerHTML = ok && M.leg ? M.leg.map(function (l) { return '<span class="is-' + l[0] + '"><i></i>' + esc(l[1]) + '</span>'; }).join('') : '';
     if (ok) drawChart(M, anim && !_reduce);
     else {
       E.plot.innerHTML = ''; E.y.innerHTML = ''; E.xax.innerHTML = ''; E.stats.innerHTML = '';
@@ -1159,8 +1347,13 @@
   }
 
   function drawChart(M, anim) {
-    var E = BIG, v = M.v, n = M.n, mn = Math.min.apply(null, v), mx = Math.max.apply(null, v), T;
-    if (M.line) {
+    /* Skalaen dekker også linja det måles mot og den stiplede linja (målet for prisveksten). */
+    var E = BIG, v = M.v, n = M.n, all = v, T;
+    if (M.v2 && !M.band) all = all.concat(M.v2.filter(function (x) { return x != null; }));
+    if (M.avg) all = all.concat(M.avgV);
+    var mn = Math.min.apply(null, all), mx = Math.max.apply(null, all);
+    if (M.T) T = M.T; // fast akse (døgnet, 00–24)
+    else if (M.line) {
       /* Litt luft over og under linja, men aldri under null for serier som ikke kan bli negative. */
       T = ticks(mn, mx, 4);
       if (mn - T.lo < T.step * 0.2 && !(mn >= 0 && T.lo - T.step < 0)) T.arr.unshift(T.lo = +(T.lo - T.step).toFixed(6));
@@ -1176,11 +1369,12 @@
     var yl = '', grid = '', hpx = E.plot.clientHeight, ayv = M.avg ? Y(M.avgV) : null;
     T.arr.forEach(function (t) {
       var y = Y(t).toFixed(1), hid = ayv != null && Math.abs(Y(t) - ayv) / 400 * hpx < 16;
-      yl += '<span class="mdb-yl" style="top:' + pctY(y) + (hid ? ';visibility:hidden' : '') + '">' + nb(t, T.dec) + '</span>';
+      yl += '<span class="mdb-yl" style="top:' + pctY(y) + (hid ? ';visibility:hidden' : '') + '">' + (M.yFmt ? M.yFmt(t) : nb(t, T.dec)) + '</span>';
       grid += '<line class="' + (t === 0 && T.lo < 0 ? 'z' : 'g') + '" x1="0" y1="' + y + '" x2="1000" y2="' + y + '"/>';
     });
     grid += '<line class="b" x1="0" y1="399.5" x2="1000" y2="399.5"/>';
-    if (!M.line && M.nowIdx != null) { var nx = X(M.nowIdx).toFixed(1); grid += '<line class="nw" x1="' + nx + '" y1="0" x2="' + nx + '" y2="400"/>'; }
+    var nowLine = M.nowIdx != null && (!M.line || M.band); // strek og etikett ved «nå» (strøm) og «i dag» (dagslys)
+    if (nowLine) { var nx = X(M.nowIdx).toFixed(1); grid += '<line class="nw" x1="' + nx + '" y1="0" x2="' + nx + '" y2="400"/>'; }
 
     /* Døgnskiller (midnatt i værvarselet, hver dag i ukesvisningen) — annenhver dag får et svakt bånd. */
     var edges = [0], bands = '', days = '';
@@ -1196,8 +1390,19 @@
     if (M.line) {
       /* Temperatur er en jevn størrelse og tegnes som kurve; dagskurser er enkeltmålinger
          og tegnes rett fra punkt til punkt. */
-      var pts = v.map(function (x, i) { return [X(i), Y(x)]; }), line = M.kind === 'wx' ? curvePath(pts) : linePath(pts);
-      var rain = '', syms = '';
+      var pts = v.map(function (x, i) { return [X(i), Y(x)]; }), p2 = M.v2 && M.v2.map(function (x, i) { return [X(i), Y(x || 0)]; });
+      var line = M.kind === 'wx' ? curvePath(pts) : M.band ? segPath(pts, M.has2) + ' ' + segPath(p2, M.has2) : linePath(pts);
+      /* Ensfarget felt: under linja ned til bunnen, eller mellom de to kantene (dagslyset). */
+      var area = M.band ? linePath(pts) + ' L' + linePath(p2.slice().reverse()).slice(1) + ' Z' : M.area ? line + ' L1000,400 L0,400 Z' : '';
+      var cmp = p2 && !M.band ? segPath(p2, M.has2) : '';
+      var rain = '', syms = '', notes = '';
+      if (M.band) {
+        /* «Sola ned» over øvre kant og «Sola opp» under nedre, helt til venstre der feltet er smalest.
+           Høyden tas fra dagene teksten dekker (ca. 70 px), så den aldri ligger oppå kanten. */
+        var nd = Math.min(n, Math.ceil(70 / (E.plot.clientWidth || 600) * n) + 1);
+        notes = '<span class="mdb-note is-up" style="top:' + pctY(Y(Math.max.apply(null, v.slice(0, nd)))) + '">' + esc(M.notes[0]) + '</span>' +
+                '<span class="mdb-note" style="top:' + pctY(Y(Math.min.apply(null, M.v2.slice(0, nd)))) + '">' + esc(M.notes[1]) + '</span>';
+      }
       if (M.p) {
         /* Nedbør nederst: høyden skaleres mot minst 2 mm/t, så yr ikke ser ut som styrtregn.
            Søyla står midt i timen den gjelder (fra punktet til neste); siste punkt er periodens slutt. */
@@ -1214,8 +1419,9 @@
       html += '<div class="mdb-rev">' + rain +
         '<svg class="mdb-svg mdb-line" viewBox="0 0 1000 400" preserveAspectRatio="none"><defs>' +
           '<clipPath id="mdbCutL"><rect class="mdb-cut" x="-40" y="-80" width="1200" height="560"/></clipPath></defs>' +
+          (area ? '<path class="mdb-area" d="' + area + '"/>' : '') + (cmp ? '<path class="mdb-cmp" d="' + cmp + '"/>' : '') +
           '<path class="mdb-dim" d="' + line + '"/><path d="' + line + '" clip-path="url(#mdbCutL)"/></svg>' +
-        syms + '</div>';
+        syms + notes + '</div>';
     } else {
       /* Søyler fra nullinja: positive opp, negative ned. Passerte timer er dempet (velges en
          av dem, vises den i full farge), og billigste time har egen farge — som på kortet. */
@@ -1237,9 +1443,11 @@
       html += '<span class="mdb-avg" style="top:' + ay + '"></span>';
       tags += '<span class="mdb-tag is-avg" style="top:' + ay + '"><b>' + nb(M.avgV, M.ydec) + '</b></span>';
     }
+    /* Den andre linja får sitt eget punkt; dagslyset får også klokkeslettet for soloppgang på y-aksen. */
     html += '<span class="mdb-vx"></span><span class="mdb-hx"></span><span class="mdb-dot"></span>' +
-      tags + '<span class="mdb-tag mdb-ytag"><b></b></span>';
-    if (!M.line && M.nowIdx != null) html += '<span class="mdb-now" style="left:' + pct(X(M.nowIdx)) + '">' + esc(ph('Nå')) + '</span>';
+      (M.v2 ? '<span class="mdb-dot mdb-dot2' + (M.band ? '' : ' is-cmp') + '"></span>' : '') +
+      tags + '<span class="mdb-tag mdb-ytag"><b></b></span>' + (M.band ? '<span class="mdb-tag mdb-ytag mdb-ytag2"><b></b></span>' : '');
+    if (nowLine) html += '<span class="mdb-now" style="left:' + pct(X(M.nowIdx)) + '">' + esc(M.nowLbl || ph('Nå')) + '</span>';
 
     if (anim) E.chart.classList.add('mdb-pre'); // startpunktet for inn-animasjonen, satt FØR nye noder tegnes
     E.y.innerHTML = yl;
@@ -1258,6 +1466,7 @@
     function q(s) { return E.plot.querySelector(s); }
     E.cuts = E.plot.querySelectorAll('.mdb-cut'); E.bars = E.plot.querySelectorAll('.mdb-bar'); E.selBar = null;
     E.vx = q('.mdb-vx'); E.hx = q('.mdb-hx'); E.dot = q('.mdb-dot'); E.ytag = q('.mdb-ytag');
+    E.dot2 = q('.mdb-dot2'); E.ytag2 = q('.mdb-ytag2');
     cancelAnimationFrame(_rvF);
     if (anim) {
       void E.chart.offsetWidth;
@@ -1279,15 +1488,25 @@
     E.selBar = null;
     function vis(el, on) { el.classList.toggle('is-on', !!on); }
     var cx = sel != null ? M.X(sel) : 0;
-    for (var i = 0; i < E.cuts.length; i++) E.cuts[i].setAttribute('width', hov && M.line ? (cx + 40).toFixed(1) : '1200');
-    vis(E.vx, hov && M.line); vis(E.hx, hov); vis(E.ytag, hov);
-    vis(E.dot, sel != null && M.line);
+    /* on2: den andre verdien finnes i dette punktet. I dagslyset (band) gjelder det begge kantene:
+       i mørketid og midnattssol er det verken punkter eller klokkeslett å vise. */
+    var on2 = sel != null && !!M.v2 && M.has2(sel), on1 = sel != null && (!M.band || on2);
+    for (var i = 0; i < E.cuts.length; i++) E.cuts[i].setAttribute('width', hov && M.line && !M.band ? (cx + 40).toFixed(1) : '1200');
+    vis(E.vx, hov && M.line); vis(E.hx, hov && !M.band); vis(E.ytag, hov && on1);
+    vis(E.dot, on1 && M.line);
+    if (E.dot2) vis(E.dot2, on2);
+    if (E.ytag2) vis(E.ytag2, hov && on2);
     if (sel == null) return;
-    var cy = M.Y(M.v[sel]), L = pct(cx), Tp = pctY(cy);
+    var cy = M.Y(M.v[sel]), L = pct(cx), Tp = pctY(cy), dd = (0.2 + cx / 1000 * 0.6).toFixed(2) + 's';
     E.vx.style.left = E.dot.style.left = L;
     E.hx.style.top = E.dot.style.top = E.ytag.style.top = Tp;
-    E.dot.style.setProperty('--dd', (0.2 + cx / 1000 * 0.6).toFixed(2) + 's');
-    E.ytag.firstChild.textContent = nb(M.v[sel], M.ydec);
+    E.dot.style.setProperty('--dd', dd);
+    if (on1) E.ytag.firstChild.textContent = M.tagOf ? M.tagOf(sel) : nb(M.v[sel], M.ydec);
+    if (on2) {
+      var T2 = pctY(M.Y(M.v2[sel]));
+      E.dot2.style.left = L; E.dot2.style.top = T2; E.dot2.style.setProperty('--dd', dd);
+      if (E.ytag2) { E.ytag2.style.top = T2; E.ytag2.firstChild.textContent = M.tagOf(sel, 1); }
+    }
     if (!M.line && E.bars[sel]) { E.selBar = E.bars[sel]; E.selBar.classList.add('on'); }
     if (hov) {
       E.tip.firstChild.textContent = M.label(H);
@@ -1327,7 +1546,8 @@
     if (k === 'wx') { _wxFail = false; loadWeather(getPlace(), true); }
     else if (k === 'st') { for (var key in _stDays) if (_stDays[key].d === false) delete _stDays[key]; }
     else if (k === 'sr') _srLFail = 0;
-    else delete _fxYFail[_fxCode];
+    else if (k === 'fx') delete _fxYFail[_fxCode];
+    else delete _ssbLFail[k];
     bigRender(true);
     BIG.panel.focus(); // knappen forsvant med feilmeldingen
   }
@@ -1744,15 +1964,16 @@
     span.innerHTML = arrowSvg(dir) + '<span>' + (dir > 0 ? '+' : dir < 0 ? '−' : '±') + nb(Math.abs(diff), dec) + '<i>' + unit + '</i></span>';
   }
   /* Grafen: rekka det store tallet viser, med høyeste/laveste verdi på y-aksen og
-     første, midterste og siste måned under. */
-  function ssbSpark(k, dates, vals, dec) {
-    var n = vals.length;
-    setText(k + 'YMax', nb(Math.max.apply(null, vals), dec));
-    setText(k + 'YMin', nb(Math.min.apply(null, vals), dec));
+     første, midterste og siste måned under. ref (målet for prisveksten) er med på
+     skalaen og får stiplet linje. */
+  function ssbSpark(k, dates, vals, dec, ref) {
+    var n = vals.length, all = ref == null ? vals : vals.concat(ref);
+    setText(k + 'YMax', nb(Math.max.apply(null, all), dec));
+    setText(k + 'YMin', nb(Math.min.apply(null, all), dec));
     setText(k + 'Ax0', monthLbl(dates[0]));
     setText(k + 'Ax1', monthLbl(dates[Math.round((n - 1) / 2)]));
     setText(k + 'Ax2', monthLbl(dates[n - 1]));
-    applySpark($(k + 'Card'), vals);
+    applySpark($(k + 'Card'), vals, ref);
   }
 
   function renderDf(d) { // bensin i tallet og grafen, diesel i faktaradene
@@ -1775,7 +1996,7 @@
       [ph('Måneden før'), nb(v[last - 1], 1) + ' %'],
       [ph('Norges Banks mål'), nb(2, 0) + ' %']]);
     setText('kpLine', ph('Siste 12 mnd. til') + ' ' + mnd + ' · ' + ph('målet er 2 %'));
-    ssbSpark('kp', d.dates, v, 1);
+    ssbSpark('kp', d.dates, v, 1, 2); // stiplet linje på målet (2 %)
   }
   function renderBl(d) { // snittrente på nye nedbetalingslån med flytende rente
     var v = d.series[0], last = v.length - 1, mnd = mndYr(d.dates[last]);
@@ -1819,7 +2040,7 @@
     var noon = J2000 + (n + 0.0053 * Math.sin(M) - 0.0069 * Math.sin(2 * L)) * 864e5;
     var dec = Math.asin(Math.sin(L) * Math.sin(23.4397 * RAD)), phi = lat * RAD;
     var c = (Math.sin(-0.833 * RAD) - Math.sin(phi) * Math.sin(dec)) / (Math.cos(phi) * Math.cos(dec));
-    if (c >= 1) return { len: 0, polar: -1 };     // mørketid: sola står ikke opp
+    if (c >= 1) return { len: 0, polar: -1, noon: noon }; // mørketid: sola står ikke opp (noon: der feltet i fullskjermgrafen lukker seg)
     if (c <= -1) return { len: 1440, polar: 1 };  // midnattssol: sola går ikke ned
     var w = Math.acos(c) / (2 * Math.PI) * 864e5; // halve dagen i ms
     return { len: 2 * w / 6e4, rise: new Date(noon - w), set: new Date(noon + w), polar: 0 };
@@ -1871,20 +2092,19 @@
       setText('suLine', fill(ph('Sola opp {a} · ned {b}'), { a: hhmm(td.rise), b: hhmm(td.set) }));
     }
 
-    /* Grafen: dagslengden gjennom hele året (annenhver dag), punkt for i dag og en
-       stiplet linje ved 12 timer, der dag og natt er like lange (jevndøgn). */
+    /* Grafen: dagslengden gjennom hele året (annenhver dag), punkt og loddrett strek for
+       i dag og en stiplet linje ved 12 timer, der dag og natt er like lange (jevndøgn). */
     var yrDays = Math.round((Date.UTC(y + 1, 0, 1) - Date.UTC(y, 0, 1)) / 864e5), lens = [];
     for (var dd = 0; dd < yrDays; dd += 2) lens.push(sunDay(place.lat, place.lon, y, 0, dd + 1).len);
-    var mn = Math.min.apply(null, lens), mx = Math.max.apply(null, lens), rng = (mx - mn) || 1, pad = 6;
-    var yOf = function (v) { return pad + (1 - (v - mn) / rng) * (SPARK_H - 2 * pad); };
-    var pts = lens.map(function (v, k) { return [(k / (lens.length - 1)) * 200, yOf(v)]; });
+    var mn = Math.min.apply(null, lens), mx = Math.max.apply(null, lens);
+    var pts = lens.map(function (v, k) { return [(k / (lens.length - 1)) * 200, sparkY(v, mn, mx)]; });
     var doy = Math.round((today - Date.UTC(y, 0, 1)) / 864e5);
-    var dot = [(doy / 2 / (lens.length - 1)) * 200, yOf(td.len)];
+    var dot = [(doy / 2 / (lens.length - 1)) * 200, sparkY(td.len, mn, mx)];
     var svg = $('suSpark');
     if (svg) {
-      var y12 = yOf(720).toFixed(1);
-      svg.innerHTML = (720 > mn && 720 < mx ? '<line class="spark-base" x1="0" y1="' + y12 + '" x2="200" y2="' + y12 + '"/>' : '') +
-        '<path class="spark-line" d="' + linePath(pts) + '"/>' + sparkDot(dot);
+      var dx = dot[0].toFixed(1);
+      svg.innerHTML = sparkSvg(linePath(pts), dot, (720 > mn && 720 < mx ? sparkRef(sparkY(720, mn, mx)) : '') +
+        '<line class="spark-drop" x1="' + dx + '" y1="' + dot[1].toFixed(1) + '" x2="' + dx + '" y2="' + SPARK_H + '"/>');
     }
     setText('suYMax', fill(ph('{n} t'), { n: Math.round(mx / 60) }));
     setText('suYMin', fill(ph('{n} t'), { n: Math.round(mn / 60) }));
