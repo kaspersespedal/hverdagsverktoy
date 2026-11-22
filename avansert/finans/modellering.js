@@ -64,12 +64,13 @@
   //   start = { revenue, fixed, nwc, cash, debt, equity }   (other = det som står igjen, holdes fast)
   //   a = { growth[], ebitdaMargin[], depr[], capex[], nwcPct[], rate[], tax[], payout[], debtChange[] }
   // depr og capex er i % av omsetningen, nwcPct er arbeidskapital i % av omsetningen,
-  // rate er renten på gjelden ved inngangen til året. Underskudd gir ingen skatt.
+  // rate er renten på gjelden ved inngangen til året. Underskudd gir ingen skatt, men fremføres
+  // og trekkes fra overskuddet de neste årene før skatten regnes (y.lossCf = det som gjenstår ved årets slutt).
   function forecast(start, a, years){
     years = years || 3;
     var other = start.equity + start.debt - start.fixed - start.nwc - start.cash;
     var prev = { revenue:start.revenue, fixed:start.fixed, nwc:start.nwc, cash:start.cash, debt:start.debt, equity:start.equity };
-    var out = { other:other, years:[] };
+    var out = { other:other, years:[] }, loss = 0;
     for(var i = 0; i < years; i++){
       var y = {};
       y.revenue = prev.revenue * (1 + a.growth[i]);
@@ -78,7 +79,9 @@
       y.ebit = y.ebitda - y.depr;
       y.interest = prev.debt * a.rate[i];
       y.ebt = y.ebit - y.interest;
-      y.tax = Math.max(0, y.ebt) * a.tax[i];
+      y.tax = Math.max(0, y.ebt - loss) * a.tax[i];
+      loss = Math.max(0, loss - y.ebt);
+      y.lossCf = loss;
       y.net = y.ebt - y.tax;
       y.dividend = Math.max(0, y.net) * a.payout[i];
 

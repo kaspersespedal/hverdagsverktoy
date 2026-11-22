@@ -439,7 +439,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       <div class="side-card method">
         <h4 aria-level="3" data-i18n="avsSideMethod">Når skal det avskrives?</h4>
         <ol class="method-list">
-          <li><span class="n">01</span><span class="t"><span data-i18n="avsMethod3">Et driftsmiddel over 30 000 kr og forventet levetid over 3 år</span> <b data-i18n="avsMethod3B">skal aktiveres og avskrives</b>.</span></li>
+          <li><span class="n">01</span><span class="t"><span data-i18n="avsMethod3">Et driftsmiddel på 30 000 kr eller mer og forventet levetid på minst 3 år</span> <b data-i18n="avsMethod3B">skal aktiveres og avskrives</b>.</span></li>
           <li><span class="n">02</span><span class="t"><b data-i18n="avsMethod4B">Påkost</b> <span data-i18n="avsMethod4">aktiveres på saldoen, salg/skroting trekkes fra. Negativ saldo gir gevinst.</span></span></li>
         </ol>
       </div>
@@ -623,7 +623,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 <script defer src="/shared/site-shell.js?v=v358"></script>
 <script defer src="/shared/top-chrome.js?v=v375"></script>
 <script defer src="/shared/core.js?v=v375"></script>
-<script defer src="/shared/lang/no.js?v=v375"></script>
+<script defer src="/shared/lang/no.js?v=v391"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
@@ -888,7 +888,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
       if(!raw) return;
       var s = JSON.parse(raw);
       if(s.price != null) document.getElementById('avs-price').value = s.price;
-      if(s.group != null) document.getElementById('avs-group').value = s.group;
+      // Et lagret valg som ikke finnes lenger (ny sats eller nytt navn), gir et tomt valg: da beholdes standardvalget.
+      if(s.group != null){ var ag = document.getElementById('avs-group'), g0 = ag.value; ag.value = s.group; if(ag.selectedIndex < 0) ag.value = g0; }
       if(s.life != null) document.getElementById('avs-life').value = s.life;
       if(s.regPct != null) document.getElementById('avs-reg-pct').value = s.regPct;
       if(s.scrap != null) document.getElementById('avs-scrap').value = s.scrap;
