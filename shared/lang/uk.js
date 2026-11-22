@@ -5028,6 +5028,8 @@ REGIONS['uk']._ph = {
 "Få oversikt over hva du betaler i abonnementer":"Дізнайся, скільки ти платиш за підписки",
 "Får i tillegg":"Отримує додатково",
 "Får ikke utsatt leveringsfrist":"Не отримаєш відтермінування подання",
+"Får jeg BSU-fradrag hvis jeg kjøper bolig?":"Чи отримаю я вирахування BSU, якщо куплю житло?",
+"Ikke for året du eier boligen 31. desember. Kjøper du bolig i løpet av året, får du ikke fradrag for det året, selv om du satte inn pengene før kjøpet. Du kan heller ikke sette inn mer når du har begynt å bruke pengene.":"Не за рік, у якому 31 грудня ви володієте житлом. Якщо ви купуєте житло протягом року, вирахування за цей рік не буде, навіть якщо внески зроблено до купівлі. Також не можна вносити більше, коли ви почали використовувати кошти.",
 "Får jeg full lønn når jeg er syk?":"Чи отримаю я повну зарплату, коли хворію?",
 "Får jeg garantert lånet kalkulatoren viser?":"Чи гарантовано я отримаю кредит, який показує калькулятор?",
 "Får jeg igjen hele fradragsbeløpet?":"Чи повертається вся сума вирахування?",
