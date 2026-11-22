@@ -11095,6 +11095,8 @@ REGIONS['en']._ph = {
 "Få oversikt over hva du betaler i abonnementer":"Get an overview of what you pay in subscriptions",
 "Får i tillegg":"Also gets",
 "Får ikke utsatt leveringsfrist":"No extension of the filing deadline",
+"Får jeg BSU-fradrag hvis jeg kjøper bolig?":"Do I get the BSU deduction if I buy a home?",
+"Ikke for året du eier boligen 31. desember. Kjøper du bolig i løpet av året, får du ikke fradrag for det året, selv om du satte inn pengene før kjøpet. Du kan heller ikke sette inn mer når du har begynt å bruke pengene.":"Not for the year you own the home on 31 December. If you buy a home during the year, you get no deduction for that year, even if you made the deposits before the purchase. You also cannot deposit more once you have started using the money.",
 "Får jeg full lønn når jeg er syk?":"Do I get full salary when I am ill?",
 "Får jeg garantert lånet kalkulatoren viser?":"Am I guaranteed the loan the calculator shows?",
 "Får jeg igjen hele fradragsbeløpet?":"Do I get the whole deduction back?",

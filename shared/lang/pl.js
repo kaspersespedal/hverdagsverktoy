@@ -5742,6 +5742,8 @@ REGIONS['pl']._ph = {
 "Få oversikt over hva du betaler i abonnementer":"Zobacz, ile płacisz za abonamenty",
 "Får i tillegg":"Dodatkowo dostaje",
 "Får ikke utsatt leveringsfrist":"Brak przedłużenia terminu złożenia",
+"Får jeg BSU-fradrag hvis jeg kjøper bolig?":"Czy dostanę odliczenie BSU, jeśli kupię mieszkanie?",
+"Ikke for året du eier boligen 31. desember. Kjøper du bolig i løpet av året, får du ikke fradrag for det året, selv om du satte inn pengene før kjøpet. Du kan heller ikke sette inn mer når du har begynt å bruke pengene.":"Nie za rok, w którym 31 grudnia jesteś właścicielem mieszkania. Jeśli kupisz mieszkanie w ciągu roku, nie dostaniesz odliczenia za ten rok, nawet jeśli wpłaty zrobiłeś przed zakupem. Nie możesz też wpłacać więcej, gdy zaczniesz korzystać z pieniędzy.",
 "Får jeg full lønn når jeg er syk?":"Czy dostanę pełne wynagrodzenie na chorobowym?",
 "Får jeg garantert lånet kalkulatoren viser?":"Czy na pewno dostanę kredyt, który pokazuje kalkulator?",
 "Får jeg igjen hele fradragsbeløpet?":"Czy dostanę z powrotem całą kwotę odliczenia?",
