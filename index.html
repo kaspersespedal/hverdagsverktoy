@@ -2481,11 +2481,13 @@ body.introAct .daily-frame::after{
 body.introAct.heroLanded .daily .daily-frame.reveal.in::after{animation:hvSweep 1.5s cubic-bezier(.6,.05,.3,1) 1.05s 1 both}
 /* .title > *, ikke .title: i Carbon på telefon er .title display:contents (se over) */
 body.introAct .daily .daily-head .title > *,
+body.introAct .daily .daily-head .daily-cal,
 body.introAct .daily .daily-head .stamp{opacity:0;transform:translateY(7px)}
 body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .title > *{
   opacity:1;transform:none;
   transition:opacity .5s var(--ease-out-quart) 430ms, transform .55s var(--ease-out-expo) 430ms;
 }
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .daily-cal,
 body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .stamp{
   opacity:1;transform:none;
   transition:opacity .5s var(--ease-out-quart) 510ms, transform .55s var(--ease-out-expo) 510ms;
@@ -2856,6 +2858,58 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   html[data-theme="carbon"] #navWrap .tc-btn .swatch{width:12px;height:12px}
 }
 </style>
+<style id="kalKnapp">/* ══ Kalender-knappen i dagsoversikt-toppen ══════════════════════════════
+   Kasper 2026-11-22: en knapp som åpner en kalender på siden (ikke nytt vindu).
+   Knappen er en pille som «Sist oppdatert» og står rett til venstre for den.
+   .daily-tools er rammen rundt de to: det er den som plasseres i toppen, så
+   knappen og pillen alltid står sammen og brytes til ny linje som én enhet.
+   Står sist i <head> fordi toppen har tre ulike oppsett (vanlig rad, rutenett på
+   telefon, flex med order i Carbon og Mørk-blå), og reglene her må vinne over dem.
+   Selve kalenderen og utseendet på den ligger i shared/kalender.js. */
+.daily-tools{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.daily-cal{
+  display:inline-flex;align-items:center;gap:7px;flex-shrink:0;
+  height:26px;padding:0 11px 0 9px;
+  border:1px solid var(--line-2);border-radius:999px;
+  background:color-mix(in srgb,var(--ink) 3%,transparent);
+  color:var(--ink2);font:500 11px/1 var(--font-sans);letter-spacing:.4px;white-space:nowrap;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:color .2s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
+}
+.daily-cal svg{width:13px;height:13px;flex-shrink:0}
+@media(hover:hover){
+  .daily-cal:hover{color:var(--ink);border-color:color-mix(in srgb,var(--accent) 50%,transparent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+}
+.daily-cal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.daily-cal:active{transform:translateY(1px)}
+/* Telefon: bare ikonet (teksten leses fortsatt opp). I rutenettet (alle temaer
+   unntatt Carbon) tar rammen plassen status-pillen hadde alene. For at begge skal
+   få plass ved siden av «Dagsoversikt», viser pillen bare klokkeslettet, som i
+   Carbon: «Sist oppdatert» skjules visuelt, men leses fortsatt opp. */
+@media (max-width:640px){
+  .daily-tools{grid-column:2;grid-row:1;gap:7px}
+  .daily-head .daily-cal{width:26px;padding:0;justify-content:center}
+  .daily-cal-lbl,
+  .daily-head .stamp .stamp-pre{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+}
+/* Carbon (telefon og PC): toppen er én flex-rad med order. Rammen står helt til høyre. */
+html[data-theme="carbon"] .daily-tools{order:3;margin-left:auto;gap:8px}
+html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-rgb),.025)}
+@media (max-width:640px){
+  html[data-theme="carbon"] .daily-head .daily-cal{width:28px}
+}
+/* Smale telefoner (360 px): litt tettere, så etikett, uke, knapp og pille får plass på én linje */
+@media (max-width:374px){
+  html[data-theme="carbon"] .daily-head{column-gap:7px}
+  html[data-theme="carbon"] .daily-head .title > span[data-i18n]{gap:7px;letter-spacing:1.4px}
+  html[data-theme="carbon"] .daily-head .title #dailyWeek{gap:7px;letter-spacing:1.4px}
+}
+/* Mørk-blå på PC har samme topp som Carbon (#gammelPC) */
+@media (min-width:641px){
+  html[data-theme="dark"] .daily-tools{order:3;margin-left:auto;gap:8px}
+  html[data-theme="dark"] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-rgb),.025)}
+}
+</style>
 </head>
 <body class="atmo-on">
 <script>/* Lasteanimasjonen i #carbonMobil: Carbon (telefon og PC) og Mørk-blå på PC
@@ -3027,7 +3081,13 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
       <div class="daily-frame reveal">
         <header class="daily-head">
           <div class="title"><span data-i18n="homeMarketTitle">Dagsoversikt</span><span class="sep"></span><b id="dailyDate">Fredag 25. april 2026</b><span class="sep"></span><b id="dailyWeek">Uke 18</b></div>
+          <!-- Kalender-knappen (se #kalKnapp): åpner kalenderen som sidepanel (PC) eller ark nedenfra (telefon).
+               Selve kalenderen ligger i shared/kalender.js og lastes først når knappen brukes.
+               .daily-tools holder knappen og status-pillen samlet, så de brytes til ny linje som én enhet. -->
+          <div class="daily-tools">
+          <button type="button" class="daily-cal" id="dailyCal" aria-haspopup="dialog" aria-label="Åpne kalenderen" title="Kalender"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="3.2" width="11.6" height="10.6" rx="2"/><path d="M2.2 6.7h11.6M5.4 1.8v2.6M10.6 1.8v2.6"/></svg><span class="daily-cal-lbl">Kalender</span></button>
           <div class="stamp" id="dailyStamp"><span class="stamp-pre">Sist oppdatert </span>—</div>
+          </div>
           <!-- Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon, se #gammelPC): skala fra 00 til 24 med et lyspunkt
                for klokka nå. Ren pynt, derfor aria-hidden. Skriptet «Døgnlinja» setter --dl-now. -->
           <div class="dayline" id="dayLine" aria-hidden="true">
@@ -4955,6 +5015,35 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
   }
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot);
   else boot();
+
+  /* Kalenderen (shared/kalender.js) bruker de samme fristene og de samme datoreglene. */
+  window.HVFrister={D:D,CATS:CATS,AUD:AUD,easter:easter,workday:workday,dateIn:dateIn,nextDate:nextDate};
+})();
+</script>
+
+<script id="kalBoot">
+/* Kalender-knappen i dagsoversikt-toppen. shared/kalender.js (kalenderen + utseendet)
+   hentes først når knappen brukes, så forsiden ikke blir tyngre å laste. Fila hentes
+   på forhånd idet pekeren eller fingeren treffer knappen, så panelet åpner uten ventetid. */
+(function(){
+  var btn=document.getElementById("dailyCal"); if(!btn) return;
+  var SRC="/shared/kalender.js?v=v1", state=0, wantOpen=false; /* 0 = ikke hentet, 1 = henter, 2 = klar */
+  function load(){
+    if(state) return;
+    state=1;
+    var s=document.createElement("script");
+    s.src=SRC;
+    s.onload=function(){ state=2; if(wantOpen && window.HVKalender) window.HVKalender.open(btn); };
+    s.onerror=function(){ state=0; wantOpen=false; };
+    document.head.appendChild(s);
+  }
+  btn.addEventListener("pointerenter",load);
+  btn.addEventListener("touchstart",load,{passive:true});
+  btn.addEventListener("focus",load);
+  btn.addEventListener("click",function(){
+    if(state===2 && window.HVKalender){ window.HVKalender.open(btn); return; }
+    wantOpen=true; load();
+  });
 })();
 </script>
 
