@@ -4,6 +4,7 @@
 // Leser bare det resultat-, balanse- og kontantstrømsiden selv lagrer i nettleseren:
 //   hv-rr-v2            feltene på /regnskap/resultat/        hv-rr-arsresultat   {belop, forSkatt, avskr}
 //   hv-balanse-v1       feltene på /regnskap/balanse/         hv-balanse-sum      {eiend, diff, bank, tom}
+//                       + ekstra: [{id, g, p, k, n, v, f}] = egne poster (se POSTER)
 //   hv-kontantstrom-v2  feltene på /regnskap/kontantstrom/    hv-kontantstrom-sum {ub, any}
 (function(){
   function read(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } }
@@ -38,6 +39,36 @@
   var KS  = ['opRes','opSkatt','opGevinst','opAvskr','opNedskr','opVarelager','opKunde','opLevgjeld','opAnnet',
              'invSalg','invKjop','invAksjer','finGjeld','finKasse','finEk','finUtbytte','kontIB','kontBalUB'];
   var SATS = 0.22;   // selskapsskatt, samme sats som resultatsiden
+
+  // Egne poster i balansen («+ Legg til post»). Loven har en fast oppstillingsplan, men sier at poster skal
+  // legges til når forholdene tilsier det (regnskapsloven § 6-3 første ledd). Kontonumrene følger Skatteetatens
+  // standard kontoplan (SAF-T). Rollen sier hvor endringen i posten hører hjemme i kontantstrømmen:
+  //   anl      kjøp og salg av varige driftsmidler      aksjer   kjøp og salg av aksjer og andeler
+  //   drift    andre tidsavgrensningsposter               skatt    utsatt skatt: ikke betalt, trekkes ut av betalt skatt
+  //   ek       inn- eller utbetalt egenkapital            gjeld    endring i langsiktig gjeld
+  //   kasse    endring i kassekreditt                     utbytte  skyldig utbytte: styrets forslag står som kortsiktig
+  //            gjeld til det betales neste år (NRS 8 kap. 5.3.1 og 6.2.1.7.1), så endringen skal ikke inn i driften
+  var POSTER = {
+    anl: [{p:'1020', n:'Konsesjoner, patenter og lisenser', r:'anl'}, {p:'1070', n:'Utsatt skattefordel', r:'skatt'},
+          {p:'1230', n:'Biler og andre transportmidler', r:'anl'}, {p:'1250', n:'Inventar og kontormaskiner', r:'anl'}],
+    oml: [{p:'1700', n:'Forskuddsbetalte kostnader', r:'drift'}, {p:'1810', n:'Markedsbaserte aksjer og fond', r:'aksjer'}],
+    ek:  [{p:'2010', n:'Egne aksjer', sub:'føres med minus', r:'ek'}, {p:'2030', n:'Annen innskutt egenkapital', r:'ek'}],
+    gl:  [{p:'2120', n:'Utsatt skatt', r:'skatt'}, {p:'2255', n:'Lån fra eier', r:'gjeld'}],
+    gk:  [{p:'2380', n:'Kassekreditt', r:'kasse'}, {p:'2700', n:'Skyldige offentlige avgifter', r:'drift'},
+          {p:'2800', n:'Skyldig utbytte', r:'utbytte'}, {p:'2940', n:'Skyldige feriepenger', r:'drift'}]
+  };
+  // «Egen post» får gruppas vanlige rolle. Egenkapitalen har ingen: lovens poster der er faste (§ 6-2 C).
+  var EGEN = {anl:'anl', oml:'drift', gl:'gjeld', gk:'drift'};
+  function eiendel(g){ return g === 'anl' || g === 'oml'; }
+  // De lagrede egne postene som tall, med konto, navn og rolle. Ukjente poster hoppes over.
+  function ekstraTall(liste){
+    return (Array.isArray(liste) ? liste : []).map(function(e){
+      if(!e || !POSTER[e.g]) return null;
+      var q = e.p === 'egen' ? (EGEN[e.g] ? {p:'', n:String(e.n || '').trim() || 'Egen post', r:EGEN[e.g]} : null)
+        : POSTER[e.g].filter(function(x){ return x.p === e.p; })[0];
+      return q ? {id:e.id, g:e.g, k:q.p, n:q.n, r:q.r, v:tall(e.v), f:tall(e.f)} : null;
+    }).filter(Boolean);
+  }
 
   function tall(v){
     var s = String(v == null ? '' : v).replace(/[−‒-―]/g, '-').replace(/\s/g, '').replace(',', '.').replace(/[^0-9.\-]/g, '');
@@ -74,8 +105,9 @@
   }
   function regnBal(b, f){
     var g = function(k){ return +b[k + (f || '')] || 0; };
-    var anl = g('bAnlForsk') + g('bAnlEiend') + g('bAnlMask') + g('bAnlInv'), oml = g('bOmlVare') + g('bOmlKund') + g('bOmlBank');
-    var ek = g('bEkAks') + g('bEkOver') + g('bEkOpp'), gl = g('bGLBank') + g('bGLAnnen'), gk = g('bGKLev') + g('bGKSkat') + g('bGKAnnen');
+    var x = function(grp){ return (b.ekstra || []).reduce(function(t, e){ return t + (e.g === grp ? (f ? e.f : e.v) : 0); }, 0); };
+    var anl = g('bAnlForsk') + g('bAnlEiend') + g('bAnlMask') + g('bAnlInv') + x('anl'), oml = g('bOmlVare') + g('bOmlKund') + g('bOmlBank') + x('oml');
+    var ek = g('bEkAks') + g('bEkOver') + g('bEkOpp') + x('ek'), gl = g('bGLBank') + g('bGLAnnen') + x('gl'), gk = g('bGKLev') + g('bGKSkat') + g('bGKAnnen') + x('gk');
     return {anl:anl, oml:oml, eiend:anl + oml, ek:ek, gl:gl, gk:gk, ekGjeld:ek + gl + gk,
             diff:anl + oml - ek - gl - gk, bank:g('bOmlBank'), tom:anl + oml === 0 && ek + gl + gk === 0};
   }
@@ -86,14 +118,18 @@
   function utled(res, b){
     var R = regnRes(res);
     var d = function(k){ return (+b[k] || 0) - (+b[k + '_f'] || 0); };
-    var betalt = R.skatt - d('bGKSkat'), rest = 0;      // skatten som faktisk er betalt i år
+    // Endringen i de egne postene med rolle r, med fortegnet som styrker kassen (eiendeler minus, gjeld og egenkapital pluss)
+    var x = function(r){ return (b.ekstra || []).reduce(function(t, e){ return e.r === r ? t + (eiendel(e.g) ? e.f - e.v : e.v - e.f) : t; }, 0); };
+    var betalt = R.skatt - d('bGKSkat') - x('skatt'), rest = 0;   // skatten som faktisk er betalt i år
     if(betalt < 0){ rest = -betalt; betalt = 0; }       // gjelden økte mer enn årets skatt: resten er avgifter
-    var inv = d('bAnlForsk') + d('bAnlEiend') + d('bAnlMask') + R.avskr;   // kjøp til kostpris = endring + avskrivning
+    var inv = d('bAnlForsk') + d('bAnlEiend') + d('bAnlMask') - x('anl') + R.avskr;   // kjøp til kostpris = endring + avskrivning
     var o = {
       opRes: R.forSkatt, opSkatt: -betalt, opAvskr: R.avskr,
-      opVarelager: -d('bOmlVare'), opKunde: -d('bOmlKund'), opLevgjeld: d('bGKLev'), opAnnet: d('bGKAnnen') + rest,
-      invKjop: inv > 0 ? -inv : 0, invSalg: inv < 0 ? -inv : 0, invAksjer: -d('bAnlInv'),
-      finGjeld: d('bGLBank') + d('bGLAnnen'), finEk: d('bEkAks') + d('bEkOver'), finUtbytte: -(R.ar - d('bEkOpp')),
+      opVarelager: -d('bOmlVare'), opKunde: -d('bOmlKund'), opLevgjeld: d('bGKLev'), opAnnet: d('bGKAnnen') + x('drift') + rest,
+      invKjop: inv > 0 ? -inv : 0, invSalg: inv < 0 ? -inv : 0, invAksjer: -d('bAnlInv') + x('aksjer'),
+      finGjeld: d('bGLBank') + d('bGLAnnen') + x('gjeld'), finKasse: x('kasse'), finEk: d('bEkAks') + d('bEkOver') + x('ek'),
+      // Utbytte satt av i år = årsresultat − økningen i opptjent egenkapital. Det som fortsatt er skyldig, er ikke betalt.
+      finUtbytte: -(R.ar - d('bEkOpp')) + x('utbytte'),
       kontIB: +b.bOmlBank_f || 0, kontBalUB: +b.bOmlBank || 0
     };
     KS.forEach(function(k){ o[k] = Math.round(o[k] || 0); });
@@ -112,6 +148,7 @@
     var res = {mode: r.mode === 'enk' ? 'enk' : 'as'}, bal = {}, ks = {};
     RES.forEach(function(id){ res[id] = tall(r[id]); });
     BAL.forEach(function(id){ bal[id] = tall(b[id]); bal[id + '_f'] = tall(b[id + '_f']); });
+    bal.ekstra = ekstraTall(b.ekstra);
     KS.forEach(function(id){ ks[id] = tall(k[id]); });
     // Resultatsiden kan ha en annen skattekostnad enn 22 % (det ekte eksempelet). Da gjelder den.
     if(res.mode === 'as' && a && typeof a.belop === 'number' && typeof a.forSkatt === 'number'
@@ -124,7 +161,8 @@
     var n = 0;
     if(del === 'res'){ var r = read('hv-rr-v2') || {}; RES.forEach(function(id){ if(tall(r[id]) !== (EKS.res[id] || 0)) n++; }); }
     if(del === 'bal'){ var b = read('hv-balanse-v1') || {}; BAL.forEach(function(id){
-      if(tall(b[id]) !== (EKS.bal[id] || 0) || tall(b[id + '_f']) !== (EKS.bal[id + '_f'] || 0)) n++; }); }
+      if(tall(b[id]) !== (EKS.bal[id] || 0) || tall(b[id + '_f']) !== (EKS.bal[id + '_f'] || 0)) n++; });
+      ekstraTall(b.ekstra).forEach(function(e){ if(e.v || e.f) n++; }); }
     if(del === 'ks'){ var k = read('hv-kontantstrom-v2') || {}; KS.forEach(function(id){ if(tall(k[id]) !== (eksKs[id] || 0)) n++; }); }
     return n > 0;
   }
@@ -169,7 +207,7 @@
     if(!xl) xl = new Promise(function(ok, feil){
       if(window.HVRegnskapExcel) return ok();
       var s = document.createElement('script');
-      s.src = '/shared/regnskap-excel.js?v=v2'; s.onload = function(){ ok(); }; s.onerror = function(){ xl = null; feil(new Error('excel')); };
+      s.src = '/shared/regnskap-excel.js?v=v3'; s.onload = function(){ ok(); }; s.onerror = function(){ xl = null; feil(new Error('excel')); };
       document.head.appendChild(s);
     });
     return xl;
@@ -185,7 +223,7 @@
     }, function(){ if(note) note.textContent = 'Fikk ikke hentet Excel-motoren. Prøv igjen.'; });
   });
 
-  window.HVRegnskap = {RES:RES, BAL:BAL, KS:KS, EKS:EKS, SATS:SATS, tall:tall, felt:felt,
+  window.HVRegnskap = {RES:RES, BAL:BAL, KS:KS, EKS:EKS, SATS:SATS, POSTER:POSTER, EGEN:EGEN, tall:tall, felt:felt,
     regnRes:regnRes, regnBal:regnBal, regnKs:regnKs, utled:utled, lagret:lagret, fyllAndre:fyllAndre,
     balUtdatert:balUtdatert, UTDATERT:UTDATERT,
     eksKs:function(){ return utled(EKS.res, EKS.bal); }};
