@@ -4,7 +4,7 @@
    Her står hver sats ÉN gang. Sidene under leser herfra i stedet for å ha
    egne kopier, så årsoppdateringen blir én endring i denne fila:
      skatt/inntekt, kalkulator/lonnut, personlig/lonn, personlig/budsjett,
-     skatt/skattemelding, skatt/utbytte, skatt/uttak, skatt/reise, boliglan/bsu,
+     skatt/skattemelding, skatt/utbytte, skatt/uttak, skatt/reise, boliglan/bsu (også renter),
      avgift/aga, kalkulator/ferie, personlig/foreldrepenger, personlig/pensjon,
      personlig/syk
 
@@ -87,6 +87,19 @@
       reiseBomGrense:   3300,    // bom og ferge teller bare over dette (FSFIN § 6-44-4)
       finnmarkSats:     0.185,   // alminnelig inntekt i tiltakssonen (2,40 + 11,35 + 4,75)
       finnmarkFradrag:  45000    // særskilt fradrag i tiltakssonen
+    },
+
+    // Typiske renter: snittet for husholdninger hos SSB (tabell 11018, renter på innskudd).
+    // Standardverdier i boliglan/bsu. Samme tall står som tekst på personlig/spare (kortet
+    // «Typiske renter» og spørsmålet «Hvilken rente bør jeg legge inn?»), så de må følge med.
+    // SSB publiserer nye tall hver måned; oppdater gjerne når tallene har flyttet seg.
+    renter: {
+      maaned:              '2026-09',
+      kontrollert:         '2026-11-23',
+      url:                 'https://www.ssb.no/statbank/table/11018',
+      innskuddUtenBinding: 2.88,   // ikke-bundne innskudd (vanlig sparekonto)
+      innskuddMedBinding:  4.60,   // bundne innskudd
+      bsu:                 5.60
     },
 
     // Grunnbeløpet i folketrygden, fastsatt hvert år per 1. mai (nav.no/grunnbelopet)
