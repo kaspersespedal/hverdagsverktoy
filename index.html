@@ -886,6 +886,7 @@
   .widget-spark .bar-now{fill:var(--accent-2);opacity:.95}
   .widget-spark .bar-cheap{fill:var(--ink);opacity:.8}
   .widget-spark .bar-cheap-mark{fill:var(--ink);opacity:.9}
+  .widget-spark .spark-cmp{fill:none;stroke:var(--accent-2);stroke-width:1.25;stroke-dasharray:3 3;opacity:.75;vector-effect:non-scaling-stroke} /* nominell boliglånsrente */
   .widget-spark .spark-base{stroke:var(--ink3);stroke-width:1;stroke-dasharray:2 3;opacity:.55;vector-effect:non-scaling-stroke}
   .widget-axis{
     display:flex;justify-content:space-between;
@@ -1052,6 +1053,7 @@
      dagslyset), og en grå linje å måle mot (det andre drivstoffet, styringsrenta). Ingen fargeovergang. */
   .mdb-line .mdb-area{fill:currentColor;stroke:none;opacity:.1}
   .mdb-line .mdb-cmp{stroke:var(--ink3);stroke-width:1.5}
+  .mdb-line .mdb-nom{stroke-width:1.5;stroke-dasharray:5 4;stroke-linecap:butt} /* nominell boliglånsrente */
   .mdb-dot2.is-cmp{width:8px;height:8px;margin:-4px 0 0 -4px;background:var(--ink3)}
   /* «Sola ned» over feltet og «Sola opp» under, helt til venstre */
   .mdb-note{left:2px;margin-top:8px;font:500 11px/1 var(--font-sans);color:var(--ink2);white-space:nowrap}
@@ -1061,6 +1063,7 @@
   .mdb-leg span{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
   .mdb-leg i{width:16px;height:0;border-top:2px solid var(--accent-2)}
   .mdb-leg .is-c i{border-top:1.5px solid var(--ink3)}
+  .mdb-leg .is-n i{border-top-style:dashed}
   .mdb-leg .is-r i{border-top:1px dashed color-mix(in srgb,var(--ink) 45%,transparent)}
   .mdb-rain{bottom:0;transform:translateX(-50%);border-radius:1px 1px 0 0;background:color-mix(in srgb,var(--ink) 22%,transparent)}
   /* Værsymbol like over kurven, ved punktet det gjelder */
@@ -2118,7 +2121,7 @@
 </script>
 <link rel="preload" href="/shared/core.js?v=v504" as="script" fetchpriority="high">
 <script src="/shared/core.js?v=v504" defer></script>
-<script src="/shared/lang/no.js?v=v504" defer></script>
+<script src="/shared/lang/no-lett/felles.js?v=v506" defer></script>
 <script src="/shared/site-shell.js?v=v359" defer></script>
 <script src="/shared/top-chrome.js?v=v496" defer></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
@@ -3290,35 +3293,28 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
             </div>
           </div>
 
-          <div class="widget reveal" style="--i:2" id="srCard" aria-label="Norges Banks styringsrente">
+          <div class="widget reveal" style="--i:2" id="blCard" aria-label="Boliglånsrente">
             <div class="widget-top">
-              <span class="widget-label">Styringsrente</span>
-              <span class="widget-trend trend-flat" id="srTrend" aria-hidden="true">
+              <span class="widget-label">Boliglånsrente</span>
+              <span class="widget-trend trend-flat" id="blTrend" aria-hidden="true">
                 <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
                 <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="srVal">—</span><span class="unit">%</span>
-              <button type="button" class="md-exp" data-big="sr" aria-haspopup="dialog" aria-label="Vis styringsrenta i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+            <div class="widget-value"><span class="count-up" id="blVal">—</span><span class="unit">% effektiv</span>
+              <button type="button" class="md-exp" data-big="bl" aria-haspopup="dialog" aria-label="Vis boliglånsrenta i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
             </div>
-            <div class="widget-facts" id="srSub">Norges Bank · styringsrenta</div>
-            <p class="w-line"><span class="ctx" id="srLine">Norges Bank · styringsrenta</span></p>
-            <!-- Carbon på telefon: neste rentemøte i stedet for grafen under. -->
-            <div class="sr-next-wrap">
-              <div class="sr-next">
-                <span class="sr-next-lbl" id="srNextLbl">Neste rentemøte</span>
-                <b class="sr-next-val" id="srNext">—</b><!-- «om N dager» legges til av markedsdata.js -->
-              </div>
-            </div>
-            <!-- På telefon er grafen skjult; der vises renta bare i fullskjerm (knappen over). -->
+            <div class="widget-facts" id="blSub">Henter boliglånsrenta …</div>
+            <p class="w-line"><span class="ctx" id="blLine">Henter boliglånsrenta …</span></p>
             <div class="widget-spark-wrap has-yax">
-              <!-- Y-akse: høyeste og laveste rentenivå i perioden. Fylles av markedsdata.js. -->
-              <div class="spark-yax" aria-hidden="true"><span id="srYMax">—</span><span id="srYMin">—</span></div>
-              <!-- Renta de siste 18 månedene tegnes av shared/markedsdata.js (applySpark). Tom til data er hentet. -->
-              <svg class="widget-spark" id="srSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
-              <div class="spark-scrub" id="srScrub" aria-hidden="true"><span id="srScrubTxt"></span></div>
-              <div class="widget-axis"><span id="srAx0"></span><span id="srAx1"></span></div>
+              <!-- Y-akse: høyeste og laveste snittrente i perioden. Fylles av markedsdata.js. -->
+              <div class="spark-yax" aria-hidden="true"><span id="blYMax">—</span><span id="blYMin">—</span></div>
+              <!-- Snittrenta på nye boliglån de siste 24 månedene (applySpark): effektiv heltrukket, nominell stiplet. Tom til data er hentet. -->
+              <svg class="widget-spark" id="blSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="spark-scrub" id="blScrub" aria-hidden="true"><span id="blScrubTxt"></span></div>
+              <div class="widget-axis"><span id="blAx0"></span><span id="blAx1"></span><span id="blAx2"></span></div>
             </div>
+            <p class="w-note"><a href="/boliglan/">Regn på lånet ditt</a></p>
           </div>
 
           <div class="widget reveal" style="--i:3" id="stCard" aria-label="Strømpris">
@@ -3378,7 +3374,8 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       <!-- Fire kort til (Kasper 2026-11-22): drivstoff, prisvekst og boliglånsrente fra SSB, og dagslys
            som regnes ut på siden for stedet i værkortet. Egen ramme under de fire over, men samme klasser
            som de fire over, så alle temaene og telefonoppsettet virker uten egne regler.
-           SSB-tallene er månedstall: kortene sier alltid hvilken måned tallet gjelder. Fylles av markedsdata.js. -->
+           SSB-tallene er månedstall: kortene sier alltid hvilken måned tallet gjelder. Fylles av markedsdata.js.
+           2026-11-23: boliglånsrenta og styringsrenta har byttet plass, så boliglånsrenta står i øverste rad. -->
       <div class="daily-frame daily-frame-2 reveal" style="--i:5">
         <div class="daily-grid">
 
@@ -3428,28 +3425,35 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
             </div>
           </div>
 
-          <div class="widget reveal" style="--i:7" id="blCard" aria-label="Boliglånsrente">
+          <div class="widget reveal" style="--i:7" id="srCard" aria-label="Norges Banks styringsrente">
             <div class="widget-top">
-              <span class="widget-label">Boliglånsrente</span>
-              <span class="widget-trend trend-flat" id="blTrend" aria-hidden="true">
+              <span class="widget-label">Styringsrente</span>
+              <span class="widget-trend trend-flat" id="srTrend" aria-hidden="true">
                 <svg class="trend-arrow" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2,5 L8,5 M6,3 L8,5 L6,7"/></svg>
                 <span>—</span>
               </span>
             </div>
-            <div class="widget-value"><span class="count-up" id="blVal">—</span><span class="unit">%</span>
-              <button type="button" class="md-exp" data-big="bl" aria-haspopup="dialog" aria-label="Vis boliglånsrenta i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
+            <div class="widget-value"><span class="count-up" id="srVal">—</span><span class="unit">%</span>
+              <button type="button" class="md-exp" data-big="sr" aria-haspopup="dialog" aria-label="Vis styringsrenta i fullskjerm" title="Fullskjerm"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2.5h4v4M6.5 13.5h-4v-4M13.5 2.5 9 7M2.5 13.5 7 9"/></svg></button>
             </div>
-            <div class="widget-facts" id="blSub">Henter boliglånsrenta …</div>
-            <p class="w-line"><span class="ctx" id="blLine">Henter boliglånsrenta …</span></p>
+            <div class="widget-facts" id="srSub">Norges Bank · styringsrenta</div>
+            <p class="w-line"><span class="ctx" id="srLine">Norges Bank · styringsrenta</span></p>
+            <!-- Carbon på telefon: neste rentemøte i stedet for grafen under. -->
+            <div class="sr-next-wrap">
+              <div class="sr-next">
+                <span class="sr-next-lbl" id="srNextLbl">Neste rentemøte</span>
+                <b class="sr-next-val" id="srNext">—</b><!-- «om N dager» legges til av markedsdata.js -->
+              </div>
+            </div>
+            <!-- På telefon er grafen skjult; der vises renta bare i fullskjerm (knappen over). -->
             <div class="widget-spark-wrap has-yax">
-              <!-- Y-akse: høyeste og laveste snittrente i perioden. Fylles av markedsdata.js. -->
-              <div class="spark-yax" aria-hidden="true"><span id="blYMax">—</span><span id="blYMin">—</span></div>
-              <!-- Snittrenta på nye boliglån de siste 24 månedene (applySpark). Tom til data er hentet. -->
-              <svg class="widget-spark" id="blSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
-              <div class="spark-scrub" id="blScrub" aria-hidden="true"><span id="blScrubTxt"></span></div>
-              <div class="widget-axis"><span id="blAx0"></span><span id="blAx1"></span><span id="blAx2"></span></div>
+              <!-- Y-akse: høyeste og laveste rentenivå i perioden. Fylles av markedsdata.js. -->
+              <div class="spark-yax" aria-hidden="true"><span id="srYMax">—</span><span id="srYMin">—</span></div>
+              <!-- Renta de siste 18 månedene tegnes av shared/markedsdata.js (applySpark). Tom til data er hentet. -->
+              <svg class="widget-spark" id="srSpark" viewBox="0 0 200 88" preserveAspectRatio="none" aria-hidden="true"></svg>
+              <div class="spark-scrub" id="srScrub" aria-hidden="true"><span id="srScrubTxt"></span></div>
+              <div class="widget-axis"><span id="srAx0"></span><span id="srAx1"></span></div>
             </div>
-            <p class="w-note"><a href="/boliglan/">Regn på lånet ditt</a></p>
           </div>
 
           <div class="widget reveal" style="--i:8" id="suCard" aria-label="Dagslys">

@@ -1,44 +1,62 @@
 /* ═══════════════════════════════════════════════════════════
-   gen-no-lett.js — bygger shared/lang/no-lett.js fra no.js.
+   gen-no-lett.js — bygger de lette norske språkfilene fra no.js.
 
-   Kjør fra repo-rota etter hver endring i no.js:  node scripts/gen-no-lett.js
+   Kjør fra repo-rota etter hver endring i no.js eller i en side:
+     node scripts/gen-no-lett.js            skriver filene
+     node scripts/gen-no-lett.js --sjekk    skriver ingenting, feiler hvis en fil er utdatert
+                                            (kjøres av scripts/sjekk-pr.js på hver PR)
 
-   Bakgrunn (2026-10-17, forsøk): no.js er 407 KB (116 KB komprimert) og
-   lastes på alle sider, men /skatt/inntekt/ og /boliglan/mor/ leser bare
-   230 av 3 655 nøkler. Disse to sidene laster no-lett.js i stedet:
-   ~4 KB komprimert, kalkulatoren klar ~0,85 s tidligere på telefon.
+   Bakgrunn: no.js er ~380 KB (~110 KB komprimert) og ble lastet på over 100
+   sider, men teksten står allerede i HTML-en. En side leser bare noen hundre
+   av ~3 500 nøkler. Forsøket på to sider 2026-10-17 ga kalkulatoren klar
+   ~0,85 s tidligere på telefon.
 
-   Nøklene hentes fra to steder:
-   1. nøklene som står i no-lett.js fra før (funnet ved å spore hvilke
-      nøkler sidene faktisk leser i nettleseren, også core.js sine), og
-   2. alle ord i sidenes egen HTML som er en nøkkel i no.js
-      (data-i18n-attributter og R().x i sidenes skript).
-   Verdiene hentes alltid fra no.js, så endret tekst i no.js følger med.
+   Hver side laster én lett fil for sin seksjon: <script src="/shared/lang/no-lett/skatt.js">.
+   Det er sidens egen lenke som avgjør hvilken fil den hører til. En ny side i
+   en seksjon trenger bare samme lenke som søsknene, og så kjøre dette skriptet.
 
-   Det skriptet IKKE fanger: en ny nøkkel som bare core.js eller en annen
-   delt fil leser på disse sidene. Den må legges til for hånd i NEW_KEYS.
-   Mangler en nøkkel, faller data-i18n tilbake til den norske HTML-teksten.
+   Nøklene en fil får (for alle sidene som lenker til den):
+   1. hvert ord i sidens HTML og skript som er en nøkkel i no.js
+      (data-i18n-attributter, R().x, T('x') osv.),
+   2. hvert ord i de delte skriptene siden laster (core.js, search.js, timer.js …),
+   3. nøkler som koden setter sammen av et ord og en hale:
+      prefix + 'Rows'/'Lead'/'P1'/'Helper'/'Outro'/'Title' (forklaringsboksene),
+      nøkkel + '_one'/'_few' (flertall) og 'trBokKonstNavn_' + nummer,
+   4. alle nøkler med et forledd fra FORLEDD, for delte skript som setter
+      nøkkelen sammen av forleddet og et navn (temavelgeren i top-chrome.js),
+   5. EKSTRA under, for nøkler ingen av reglene finner.
+   Verdiene hentes alltid fra no.js, så endret tekst i no.js følger med når
+   skriptet kjøres.
+
+   Mangler en nøkkel likevel, faller data-i18n tilbake til den norske teksten
+   i HTML-en, og T(nøkkel, norsk) til sin norske reservetekst.
    ═══════════════════════════════════════════════════════════ */
 'use strict';
 const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
+const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const PAGES = ['skatt/inntekt/index.html', 'boliglan/mor/index.html'];
-const OUT = path.join(ROOT, 'shared/lang/no-lett.js');
-// Funnet i kontrollrunden 2026-10-17: nøkler som delte filer leser, men som
-// første sporing ikke traff. Koden har i dag samme norske reservetekst.
-const NEW_KEYS = [
-  // timer.js (nedtellingen i toppmenyen): start, pause, ferdig, lyd av, skjermleser
-  'timerAgain', 'timerPause', 'timerResume', 'timerSoundOff', 'timerSrDone', 'timerSrPaused',
-  'timerSrReset', 'timerSrStarted', 'timerStateDone', 'timerStatePaused', 'timerStateRunning',
-  // core.js switchCalcMode/getFcConfigs: bare når adressen slutter på f.eks. #finance
-  'cmBasic', 'cmFinance', 'cmScientific', 'cmUnit', 'fcBe', 'fcCompound', 'fcCost', 'fcDiscPct',
-  'fcDiscount', 'fcFixed', 'fcFreq', 'fcMargin', 'fcOrig', 'fcPmt', 'fcPriceU', 'fcPrinc', 'fcPv',
-  'fcRate', 'fcSell', 'fcTvm', 'fcVarCost', 'fcYears', 'lblAga', 'lblAvs', 'lblFerie', 'lblLikvid',
-  'lblLvu', 'lblPensjon', 'lblRente', 'lblValgevinst', 'npvTitle'
-];
+const DIR = 'shared/lang/no-lett';
+const LENKE = /\/shared\/lang\/no-lett\/([a-z0-9-]+)\.js/;
+const SJEKK = process.argv.includes('--sjekk');
+
+// Delte skript som lastes av et annet skript, ikke av sidens egen <script>-lenke.
+const LASTER_OGSA = {
+  '/shared/top-chrome.js': ['/shared/timer.js'],
+  '/shared/site-shell.js': ['/shared/learn.js'],
+  '/shared/search.js': ['/shared/ordliste.js', '/shared/search-intents.js'],
+  '/shared/ordforklaring.js': ['/shared/ordliste.js']
+};
+// Haler koden setter på et ord: forklaringsboksene (renderHowto), flertall (_one, _few …), løpenummer.
+const HALE = /^(?:Rows|Lead|P\d{1,2}|Helper|Outro|Title|_[a-z]+|_?\d+)$/;
+// Delte skript som setter sammen nøkkelen av et fast forledd og et navn: alle nøkler med forleddet.
+const FORLEDD = {
+  '/shared/top-chrome.js': ['tcTheme', 'tcSub'] // tcKey(tema, 'tcTheme'): temanavnene i temavelgeren
+};
+// Nøkler som leses uten at noen regel over finner dem. Hold lista kort, og skriv hvorfor.
+const EKSTRA = [];
 
 function load(file) {
   const ctx = { REGIONS: {}, window: {}, document: {} };
@@ -55,24 +73,88 @@ function ser(v) {
 }
 
 const no = load(path.join(ROOT, 'shared/lang/no.js'));
-const old = fs.existsSync(OUT) ? load(OUT) : {};
-const want = new Set(Object.keys(old).concat(NEW_KEYS));
-for (const p of PAGES) {
-  for (const w of fs.readFileSync(path.join(ROOT, p), 'utf8').match(/[A-Za-z_$][\w$]*/g)) want.add(w);
+const KEYS = Object.keys(no);
+
+// Ord i en tekst, også med punktum («fr.title»). Hvert ord gir seg selv, delene
+// mellom punktumene, og nøklene som er ordet + en hale fra HALE.
+function ordI(txt, ut) {
+  const ord = new Set();
+  for (const w of txt.match(/[A-Za-z_$][\w$]*(?:\.[\w$]+)*/g) || []) {
+    ord.add(w);
+    if (w.includes('.')) w.split('.').forEach(d => ord.add(d));
+  }
+  for (const k of KEYS) {
+    if (ord.has(k)) { ut.add(k); continue; }
+    // Lengste ord som er starten på nøkkelen, og resten er en hale.
+    for (let i = k.length - 1; i > 1; i--) {
+      if (ord.has(k.slice(0, i)) && HALE.test(k.slice(i))) { ut.add(k); break; }
+    }
+  }
+  return ut;
 }
 
-const keys = Object.keys(no).filter(k => want.has(k));
-const body = keys.map(k =>
-  '    ' + (/^[A-Za-z_$][\w$]*$/.test(k) ? k : JSON.stringify(k)) + ': ' + ser(no[k])
-).join(',\n');
+const delt = {};
+function deltSkript(src, ut, sett) {
+  if (sett.has(src)) return;
+  sett.add(src);
+  const fil = path.join(ROOT, src.replace(/^\//, ''));
+  if (!fs.existsSync(fil)) return;
+  if (!delt[src]) {
+    delt[src] = ordI(fs.readFileSync(fil, 'utf8'), new Set());
+    for (const f of FORLEDD[src] || []) KEYS.filter(k => k.startsWith(f)).forEach(k => delt[src].add(k));
+  }
+  delt[src].forEach(k => ut.add(k));
+  (LASTER_OGSA[src] || []).forEach(s => deltSkript(s, ut, sett));
+}
 
-const src =
-  '// Hverdagsverktøy — no-lett.js: utdrag av no.js for /' + PAGES.map(p => p.replace(/index\.html$/, '')).join(' og /') + '.\n' +
-  '// Generert av scripts/gen-no-lett.js — ikke rediger for hånd.\n' +
-  "REGIONS['no'] = {\n" + body + '\n};\n';
+// Sidene som lenker til en lett fil, gruppert etter fila.
+const sider = execFileSync('git', ['ls-files', '*.html'], { cwd: ROOT, encoding: 'utf8' }).split('\n').filter(Boolean);
+const grupper = {};
+for (const p of sider) {
+  const html = fs.readFileSync(path.join(ROOT, p), 'utf8');
+  const m = html.match(LENKE);
+  if (!m) continue;
+  const ut = grupper[m[1]] || (grupper[m[1]] = { sider: [], nokler: new Set(EKSTRA) });
+  ut.sider.push(p);
+  ordI(html, ut.nokler);
+  const sett = new Set();
+  for (const s of html.match(/\/shared\/[\w./-]+\.js/g) || []) if (!s.includes('/lang/')) deltSkript(s, ut.nokler, sett);
+}
 
-fs.writeFileSync(OUT, src, 'utf8');
-const added = keys.filter(k => !(k in old)).length;
-const removed = Object.keys(old).filter(k => !keys.includes(k)).length;
-console.log('no-lett.js skrevet: ' + keys.length + ' av ' + Object.keys(no).length +
-  ' nøkler (' + added + ' nye, ' + removed + ' fjernet), ' + Buffer.byteLength(src) + ' byte.');
+const utdatert = [];
+const filer = new Set();
+for (const navn of Object.keys(grupper).sort()) {
+  const g = grupper[navn];
+  const keys = KEYS.filter(k => g.nokler.has(k));
+  const body = keys.map(k => '    ' + (/^[A-Za-z_$][\w$]*$/.test(k) ? k : JSON.stringify(k)) + ': ' + ser(no[k])).join(',\n');
+  const src =
+    '// Hverdagsverktøy — no-lett/' + navn + '.js: utdrag av no.js for ' + g.sider.length + ' side(r):\n' +
+    '// ' + g.sider.map(p => '/' + p.replace(/index\.html$/, '')).join(' ') + '\n' +
+    '// Generert av scripts/gen-no-lett.js — ikke rediger for hånd.\n' +
+    "REGIONS['no'] = {\n" + body + '\n};\n';
+  const fil = path.join(ROOT, DIR, navn + '.js');
+  filer.add(navn + '.js');
+  // Git på Windows (core.autocrlf) sjekker ut med CRLF: sammenlign uten linjeslutt-forskjell.
+  const gammel = fs.existsSync(fil) ? fs.readFileSync(fil, 'utf8').replace(/\r\n/g, '\n') : null;
+  if (gammel !== src) {
+    utdatert.push(DIR + '/' + navn + '.js');
+    if (!SJEKK) { fs.mkdirSync(path.dirname(fil), { recursive: true }); fs.writeFileSync(fil, src, 'utf8'); }
+  }
+  console.log((navn + '.js').padEnd(16) + String(keys.length).padStart(5) + ' av ' + KEYS.length + ' nøkler, ' +
+    String(Math.round(Buffer.byteLength(src) / 1024)).padStart(3) + ' KB, ' + g.sider.length + ' side(r)');
+}
+// Filer ingen side lenker til lenger.
+const mappe = path.join(ROOT, DIR);
+for (const f of fs.existsSync(mappe) ? fs.readdirSync(mappe) : []) {
+  if (f.endsWith('.js') && !filer.has(f)) {
+    utdatert.push(DIR + '/' + f + ' (ingen side lenker til den)');
+    if (!SJEKK) fs.unlinkSync(path.join(mappe, f));
+  }
+}
+
+if (SJEKK && utdatert.length) {
+  console.error('\nDe lette språkfilene er utdatert (no.js eller en side er endret):\n  ' + utdatert.join('\n  ') +
+    '\nKjør: node scripts/gen-no-lett.js');
+  process.exit(1);
+}
+console.log(utdatert.length ? '\n' + (SJEKK ? '' : 'Skrevet: ') + utdatert.join(', ') : '\nAlle lette språkfiler er oppdatert.');

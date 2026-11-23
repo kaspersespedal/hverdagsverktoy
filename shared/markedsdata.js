@@ -183,15 +183,18 @@
     return '<path class="spark-ring" d="' + d + '"/><path class="spark-dot" d="' + d + '"/>';
   }
   /* ref: en verdi som skal være med på skalaen og få stiplet linje (målet for prisveksten). */
-  function applySpark(card, vals, ref) {
+  function applySpark(card, vals, ref, cmp) { // cmp: en stiplet linje til (nominell boliglånsrente)
     if (!card) return;
     var svg = card.querySelector('.widget-spark'); if (!svg) return;
     var clean = (vals || []).filter(function (v) { return typeof v === 'number' && !isNaN(v); }), n = clean.length;
     if (n < 2) return;
-    var all = ref == null ? clean : clean.concat(ref);
+    if (cmp && cmp.length !== n) cmp = null;
+    var all = (ref == null ? clean : clean.concat(ref)).concat(cmp || []);
     var mn = Math.min.apply(null, all), mx = Math.max.apply(null, all);
-    var pts = clean.map(function (v, i) { return [(i / (n - 1)) * 200, sparkY(v, mn, mx)]; });
-    svg.innerHTML = sparkSvg(linePath(pts), pts[n - 1], ref == null ? '' : sparkRef(sparkY(ref, mn, mx)));
+    function P(a) { return a.map(function (v, i) { return [(i / (n - 1)) * 200, sparkY(v, mn, mx)]; }); }
+    var pts = P(clean);
+    svg.innerHTML = sparkSvg(linePath(pts), pts[n - 1], (ref == null ? '' : sparkRef(sparkY(ref, mn, mx))) +
+      (cmp ? '<path class="spark-cmp" d="' + linePath(P(cmp)) + '"/>' : ''));
   }
 
   /* ── Scrub-chip: verdien under pekeren, festet til .widget-spark-wrap ──
@@ -976,7 +979,7 @@
       M.foot = ph('SSB · prisene sammenlignet med samme måned året før');
     } else {
       M.eye = ph('Boliglånsrente');
-      M.foot = ph('SSB · snittrente på nye boliglån med flytende rente · styringsrenta fra Norges Bank');
+      M.foot = ph('SSB · snittrente på nye boliglån med flytende rente, effektiv uten gebyrer · nominell er regnet om med månedlige terminer · anslaget med gebyrer gjelder et lån på 3 mill. kr over 25 år med 2 000 kr i etableringsgebyr og 50 kr i termingebyr · styringsrenta fra Norges Bank');
     }
     if (!src) { M.state = _ssbLFail[k] ? 'err' : 'load'; return M; }
     var cut = [24, 60, 120][r] + 1, dates = src.dates.slice(-cut), n = dates.length;
@@ -989,7 +992,7 @@
     }
     function val(x) { return nb(x, dec) + u; }
     function sgn(x, d) { var a = +Math.abs(x).toFixed(d); return (!a ? '±' : x > 0 ? '+' : '−') + nb(a, d); }
-    function other(i) { return v2 && v2[i] != null ? ' · ' + low(n2) + ' ' + val(v2[i]) : ''; }
+    function other(i) { return (k === 'bl' ? ' · ' + ph('nominell') + ' ' + val(nomRate(v[i])) : '') + (v2 && v2[i] != null ? ' · ' + low(n2) + ' ' + val(v2[i]) : ''); }
     function gap(x) { // avstanden til målet på 2 %
       var g = +(x - 2).toFixed(1);
       return g ? fill(ph(g > 0 ? '{v} pp over målet' : '{v} pp under målet'), { v: nb(Math.abs(g), 1) }) : ph('på målet');
@@ -1014,10 +1017,11 @@
         [ph('Over målet'), fill(ph('{a} av {b}'), { a: v.filter(function (x) { return x > 2; }).length, b: n }), ph('måneder')]);
       M.sub0 = ph('Siste 12 mnd. til') + ' ' + mndYr(dates[last]) + ' · ' + gap(v[last]);
     } else {
-      M.leg = [['a', ph('Boliglånsrente')]].concat(v2 ? [['c', n2]] : []);
-      M.stats.push([ph('Endring'), sgn(ch, 2) + ' pp', ph('i perioden')]);
+      M.v3 = v.map(nomRate); // stiplet linje: nominell rente
+      M.leg = [['a', ph('Effektiv rente')], ['n', ph('Nominell rente')]].concat(v2 ? [['c', n2]] : []);
+      M.stats.push([ph('Med gebyrer'), val(feeRate(v[last])), ph('anslag for 3 mill. kr')], [ph('Endring'), sgn(ch, 2) + ' pp', ph('i perioden')]);
       if (v2 && v2[last] != null) M.stats.push([ph('Over styringsrenta'), sgn(v[last] - v2[last], 2) + ' pp', mndYr(dates[last])]);
-      M.sub0 = ph('Snitt for nye lån') + ' · ' + mndYr(dates[last]);
+      M.sub0 = ph('Effektiv, uten gebyrer') + ' · ' + ph('nominell') + ' ' + val(M.v3[last]) + ' · ' + mndYr(dates[last]);
     }
     M.state = 'ok';
     return M;
@@ -1340,7 +1344,7 @@
     E.src.textContent = M.foot;
     var ok = M.state === 'ok';
     E.state.hidden = ok;
-    /* Forklaring til linjene: a = linja i farge, c = den grå å måle mot, r = stiplet. */
+    /* Forklaring til linjene: a = linja i farge, n = stiplet i farge (nominell), c = den grå å måle mot, r = stiplet. */
     E.leg.hidden = !(ok && M.leg);
     E.leg.innerHTML = ok && M.leg ? M.leg.map(function (l) { return '<span class="is-' + l[0] + '"><i></i>' + esc(l[1]) + '</span>'; }).join('') : '';
     if (ok) drawChart(M, anim && !_reduce);
@@ -1365,6 +1369,7 @@
     /* Skalaen dekker også linja det måles mot og den stiplede linja (målet for prisveksten). */
     var E = BIG, v = M.v, n = M.n, all = v, T;
     if (M.v2 && !M.band) all = all.concat(M.v2.filter(function (x) { return x != null; }));
+    if (M.v3) all = all.concat(M.v3);
     if (M.avg) all = all.concat(M.avgV);
     var mn = Math.min.apply(null, all), mx = Math.max.apply(null, all);
     if (M.T) T = M.T; // fast akse (døgnet, 00–24)
@@ -1435,6 +1440,7 @@
         '<svg class="mdb-svg mdb-line" viewBox="0 0 1000 400" preserveAspectRatio="none"><defs>' +
           '<clipPath id="mdbCutL"><rect class="mdb-cut" x="-40" y="-80" width="1200" height="560"/></clipPath></defs>' +
           (area ? '<path class="mdb-area" d="' + area + '"/>' : '') + (cmp ? '<path class="mdb-cmp" d="' + cmp + '"/>' : '') +
+          (M.v3 ? '<path class="mdb-nom" d="' + linePath(M.v3.map(function (x, i) { return [X(i), Y(x)]; })) + '"/>' : '') +
           '<path class="mdb-dim" d="' + line + '"/><path d="' + line + '" clip-path="url(#mdbCutL)"/></svg>' +
         syms + notes + '</div>';
     } else {
@@ -2023,14 +2029,33 @@
   /* Grafen: rekka det store tallet viser, med høyeste/laveste verdi på y-aksen og
      første, midterste og siste måned under. ref (målet for prisveksten) er med på
      skalaen og får stiplet linje. */
-  function ssbSpark(k, dates, vals, dec, ref) {
-    var n = vals.length, all = ref == null ? vals : vals.concat(ref);
+  function ssbSpark(k, dates, vals, dec, ref, cmp) {
+    var n = vals.length, all = (ref == null ? vals : vals.concat(ref)).concat(cmp || []);
     setText(k + 'YMax', nb(Math.max.apply(null, all), dec));
     setText(k + 'YMin', nb(Math.min.apply(null, all), dec));
     setText(k + 'Ax0', monthLbl(dates[0]));
     setText(k + 'Ax1', monthLbl(dates[Math.round((n - 1) / 2)]));
     setText(k + 'Ax2', monthLbl(dates[n - 1]));
-    applySpark($(k + 'Card'), vals, ref);
+    applySpark($(k + 'Card'), vals, ref, cmp);
+  }
+  /* SSBs boliglånsrente er effektiv rente uten gebyrer: «helårlig etterskuddsrente»,
+     x = (1 + r/n)^n − 1, der r er avtalt (nominell) rente og n antall terminer. Etablerings- og
+     termingebyr er ikke med (SSB, Om statistikken, sjekket 2026-11-23). Den nominelle renta
+     regnes tilbake med 12 terminer i året, som er det vanlige for boliglån. */
+  function nomRate(x) { return (Math.pow(1 + x / 100, 1 / 12) - 1) * 1200; }
+  /* Anslag for effektiv rente MED gebyrer, for et eksempellån: annuitetslån på 3 mill. kr over
+     25 år, 2 000 kr i etableringsgebyr og 50 kr i termingebyr hver måned (midt i det
+     /boliglan/ oppgir som vanlig). Månedsrenta r der nåverdien av alle betalingene er lik det
+     som blir utbetalt (lån − etableringsgebyr), funnet ved halvering. Årlig: (1 + r)^12 − 1. */
+  var BL_EKS = { lan: 3e6, ar: 25, etabl: 2000, termin: 50 };
+  function feeRate(x) {
+    var i = nomRate(x) / 1200, N = BL_EKS.ar * 12, P = BL_EKS.lan;
+    var pay = P * i / (1 - Math.pow(1 + i, -N)) + BL_EKS.termin, lo = i, hi = i + 0.01;
+    for (var k = 0; k < 50; k++) {
+      var m = (lo + hi) / 2;
+      if (pay * (1 - Math.pow(1 + m, -N)) / m > P - BL_EKS.etabl) lo = m; else hi = m;
+    }
+    return (Math.pow(1 + lo, 12) - 1) * 100;
   }
 
   function renderDf(d) { // bensin i tallet og grafen, diesel i faktaradene
@@ -2055,15 +2080,15 @@
     setText('kpLine', ph('Siste 12 mnd. til') + ' ' + mnd + ' · ' + ph('målet er 2 %'));
     ssbSpark('kp', d.dates, v, 1, 2); // stiplet linje på målet (2 %)
   }
-  function renderBl(d) { // snittrente på nye nedbetalingslån med flytende rente
-    var v = d.series[0], last = v.length - 1, mnd = mndYr(d.dates[last]);
+  function renderBl(d) { // snittrente på nye nedbetalingslån med flytende rente: effektiv (SSB) og nominell (regnet om)
+    var v = d.series[0], last = v.length - 1, mnd = mndYr(d.dates[last]), nom = nb(nomRate(v[last]), 2) + ' %';
     setVal('blVal', v[last], 2);
     ssbTrend('bl', v[last] - v[last - 1], 2, ' pp');
-    var rows = [[ph('Nye lån, flytende rente'), mnd], [ph('Måneden før'), nb(v[last - 1], 2) + ' %']];
+    var rows = [[ph('Effektiv, uten gebyrer'), mnd], [ph('Nominell rente'), nom]];
     if (last >= 12) rows.push([ph('Ett år før'), nb(v[last - 12], 2) + ' %']);
     setFacts('blSub', rows);
-    setText('blLine', ph('Snitt for nye lån') + ' · ' + mnd);
-    ssbSpark('bl', d.dates, v, 2);
+    setText('blLine', ph('Effektiv') + ' · ' + ph('nominell') + ' ' + nom + ' · ' + mnd);
+    ssbSpark('bl', d.dates, v, 2, null, v.map(nomRate));
   }
   var SSB_R = { df: renderDf, kp: renderKp, bl: renderBl };
   function renderSsb(k, d) { _ssb[k] = d; SSB_R[k](d); }
@@ -2219,7 +2244,8 @@
       bindScrub(k + 'Spark', k + 'Scrub', k + 'ScrubTxt', function (frac) {
         var d = _ssb[k], v = d && d.series[0]; if (!v || !v.length) return '';
         var i = Math.min(v.length - 1, Math.round(frac * (v.length - 1)));
-        return '<span class="mut">' + mndYr(d.dates[i]) + '</span> · ' + nb(v[i], k === 'kp' ? 1 : 2) + (k === 'df' ? ' kr' : ' %');
+        return '<span class="mut">' + mndYr(d.dates[i]) + '</span> · ' + nb(v[i], k === 'kp' ? 1 : 2) + (k === 'df' ? ' kr' : ' %') +
+          (k === 'bl' ? ' · <span class="mut">' + esc(ph('nominell')) + '</span> ' + nb(nomRate(v[i]), 2) + ' %' : '');
       });
     });
     bindScrub('suSpark', 'suScrub', 'suScrubTxt', function (frac) {
