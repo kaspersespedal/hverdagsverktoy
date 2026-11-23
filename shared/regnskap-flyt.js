@@ -3,9 +3,11 @@
 // 2) HVRegnskap: eksempelselskapet med enkle tall, og kontantstrømmen utledet av resultat og balanse.
 // Leser bare det resultat-, balanse- og kontantstrømsiden selv lagrer i nettleseren:
 //   hv-rr-v2            feltene på /regnskap/resultat/        hv-rr-arsresultat   {belop, forSkatt, avskr}
+//                       + ekstra: [{id, g, p, k, n, v}] = egne poster (se POSTER)
 //   hv-balanse-v1       feltene på /regnskap/balanse/         hv-balanse-sum      {eiend, diff, bank, tom}
 //                       + ekstra: [{id, g, p, k, n, v, f}] = egne poster (se POSTER)
 //   hv-kontantstrom-v2  feltene på /regnskap/kontantstrom/    hv-kontantstrom-sum {ub, any}
+//                       + ekstra: [{id, g, p, n, v}] = egne poster (se POSTER)
 (function(){
   function read(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } }
   function kr(n){ return Math.round(n).toLocaleString('nb-NO') + ' kr'; }
@@ -55,20 +57,46 @@
     ek:  [{p:'2010', n:'Egne aksjer', sub:'føres med minus', r:'ek'}, {p:'2030', n:'Annen innskutt egenkapital', r:'ek'}],
     gl:  [{p:'2120', n:'Utsatt skatt', r:'skatt'}, {p:'2255', n:'Lån fra eier', r:'gjeld'}],
     gk:  [{p:'2380', n:'Kassekreditt', r:'kasse'}, {p:'2700', n:'Skyldige offentlige avgifter', r:'drift'},
-          {p:'2800', n:'Skyldig utbytte', r:'utbytte'}, {p:'2940', n:'Skyldige feriepenger', r:'drift'}]
+          {p:'2800', n:'Skyldig utbytte', r:'utbytte'}, {p:'2940', n:'Skyldige feriepenger', r:'drift'}],
+    // Resultatet (§ 6-1): driftsinntekter, driftskostnader, finansinntekter og finanskostnader. Bare «i år».
+    //   res      ingen egen linje i kontantstrømmen (pengene ligger i resultatet og i endringen i balansepostene)
+    //   gev      gevinst (inntekt) eller tap (kostnad) ved salg av anleggsmidler: trekkes ut av driften,
+    //            hele salgssummen står under investering
+    //   ned      nedskrivning av varige driftsmidler      nedfin   nedskrivning av finansielle anleggsmidler
+    //            Begge er uten kontanter: legges til i driften, og kjøpet regnes som endring + nedskrivning
+    di:  [{p:'3400', n:'Offentlige tilskudd', r:'res'}, {p:'3600', n:'Leieinntekt', r:'res'},
+          {p:'3700', n:'Provisjonsinntekt', r:'res'}, {p:'3880', n:'Gevinst ved salg av anleggsmidler', r:'gev'}],
+    dk:  [{p:'6050', n:'Nedskrivning av varige driftsmidler', r:'ned'}, {p:'6300', n:'Leie lokale', r:'res'},
+          {p:'7500', n:'Forsikringspremie', r:'res'}, {p:'7830', n:'Tap på fordringer', r:'res'},
+          {p:'7880', n:'Tap ved salg av anleggsmidler', r:'gev'}],
+    fi:  [{p:'8030', n:'Renteinntekt fra foretak i samme konsern', r:'res'}, {p:'8060', n:'Valutagevinst (agio)', r:'res'},
+          {p:'8070', n:'Mottatt aksjeutbytte', r:'res'}],
+    fk:  [{p:'8120', n:'Nedskrivning av finansielle anleggsmidler', r:'nedfin'}, {p:'8130', n:'Rentekostnad til foretak i samme konsern', r:'res'},
+          {p:'8160', n:'Valutatap (disagio)', r:'res'}],
+    // Kontantstrømmen: linjer fra NRS(F) Kontantstrømoppstilling (2025, vedlegg I) som skjemaet ikke har.
+    // Beløpet føres med fortegn som de andre linjene (+ styrker kassen). Ingen kontonummer.
+    op:  [{p:'pensjon', n:'Forskjell mellom pensjonskostnad og inn- og utbetalinger i pensjonsordninger', r:'ks'},
+          {p:'valuta', n:'Effekt av valutakursendringer', r:'ks'}],
+    inv: [{p:'andreSalg', n:'Salg av andre investeringer', r:'ks'}, {p:'andreKjop', n:'Kjøp av andre investeringer', r:'ks'}],
+    fin: [{p:'kgOpp', n:'Opptak av kortsiktig gjeld', r:'ks'}, {p:'kgNed', n:'Nedbetaling av kortsiktig gjeld', r:'ks'},
+          {p:'ekTilb', n:'Tilbakebetaling av egenkapital', r:'ks'}, {p:'konsern', n:'Inn- eller utbetalt konsernbidrag', r:'ks'}]
   };
   // «Egen post» får gruppas vanlige rolle. Egenkapitalen har ingen: lovens poster der er faste (§ 6-2 C).
-  var EGEN = {anl:'anl', oml:'drift', gl:'gjeld', gk:'drift'};
+  var EGEN = {anl:'anl', oml:'drift', gl:'gjeld', gk:'drift', di:'res', dk:'res', fi:'res', fk:'res', op:'ks', inv:'ks', fin:'ks'};
+  // Gruppene på hver side. Rekkefølgen er den postene står i på siden.
+  var GRUPPER = {bal:['anl', 'oml', 'ek', 'gl', 'gk'], res:['di', 'dk', 'fi', 'fk'], ks:['op', 'inv', 'fin']};
   function eiendel(g){ return g === 'anl' || g === 'oml'; }
-  // De lagrede egne postene som tall, med konto, navn og rolle. Ukjente poster hoppes over.
-  function ekstraTall(liste){
+  // De lagrede egne postene på én side (del = bal, res eller ks) som tall, med konto, navn og rolle. Ukjente poster hoppes over.
+  function ekstraTall(liste, del){
     return (Array.isArray(liste) ? liste : []).map(function(e){
-      if(!e || !POSTER[e.g]) return null;
+      if(!e || GRUPPER[del || 'bal'].indexOf(e.g) < 0) return null;
       var q = e.p === 'egen' ? (EGEN[e.g] ? {p:'', n:String(e.n || '').trim() || 'Egen post', r:EGEN[e.g]} : null)
         : POSTER[e.g].filter(function(x){ return x.p === e.p; })[0];
-      return q ? {id:e.id, g:e.g, k:q.p, n:q.n, r:q.r, v:tall(e.v), f:tall(e.f)} : null;
+      return q ? {id:e.id, g:e.g, k:/^\d+$/.test(q.p) ? q.p : '', n:q.n, r:q.r, v:tall(e.v), f:tall(e.f)} : null;
     }).filter(Boolean);
   }
+  // Summen av de egne postene i gruppa g (resultatet og kontantstrømmen, bare «i år»)
+  function xsum(liste, g){ return (liste || []).reduce(function(t, e){ return e.g === g ? t + e.v : t; }, 0); }
 
   function tall(v){
     var s = String(v == null ? '' : v).replace(/[−‒-―]/g, '-').replace(/\s/g, '').replace(',', '.').replace(/[^0-9.\-]/g, '');
@@ -95,13 +123,17 @@
   };
 
   function regnRes(r){
-    var g = function(k){ return +r[k] || 0; };
-    var sumDrift = g('rSalg') + g('rAnnen');
-    var sumKost = g('rVare') + g('rLonn') + g('rAvskr') + g('rAnnenKost');
-    var drift = sumDrift - sumKost, finans = g('rFinInnt') - g('rFinKost'), forSkatt = drift + finans;
+    var g = function(k){ return +r[k] || 0; }, X = r.ekstra || [];
+    var rolle = function(ro, grp){ return X.reduce(function(t, e){ return e.r === ro && e.g === grp ? t + e.v : t; }, 0); };
+    var sumDrift = g('rSalg') + g('rAnnen') + xsum(X, 'di');
+    var sumKost = g('rVare') + g('rLonn') + g('rAvskr') + g('rAnnenKost') + xsum(X, 'dk');
+    var drift = sumDrift - sumKost, finans = g('rFinInnt') + xsum(X, 'fi') - g('rFinKost') - xsum(X, 'fk'), forSkatt = drift + finans;
     var skatt = r.mode === 'enk' ? 0 : (typeof r.skatt === 'number' ? r.skatt : Math.max(0, forSkatt) * SATS);
     return {sumDrift:sumDrift, sumKost:sumKost, drift:drift, finans:finans, forSkatt:forSkatt,
-            skatt:skatt, ar:forSkatt - skatt, avskr:g('rAvskr'), tom:sumDrift === 0 && sumKost === 0 && finans === 0};
+            skatt:skatt, ar:forSkatt - skatt, avskr:g('rAvskr'),
+            // Til kontantstrømmen: gevinst minus tap ved salg av anleggsmidler, og nedskrivningene (egne poster)
+            gev:rolle('gev', 'di') - rolle('gev', 'dk'), ned:rolle('ned', 'dk'), nedfin:rolle('nedfin', 'fk'),
+            tom:sumDrift === 0 && sumKost === 0 && finans === 0};
   }
   function regnBal(b, f){
     var g = function(k){ return +b[k + (f || '')] || 0; };
@@ -122,11 +154,13 @@
     var x = function(r){ return (b.ekstra || []).reduce(function(t, e){ return e.r === r ? t + (eiendel(e.g) ? e.f - e.v : e.v - e.f) : t; }, 0); };
     var betalt = R.skatt - d('bGKSkat') - x('skatt'), rest = 0;   // skatten som faktisk er betalt i år
     if(betalt < 0){ rest = -betalt; betalt = 0; }       // gjelden økte mer enn årets skatt: resten er avgifter
-    var inv = d('bAnlForsk') + d('bAnlEiend') + d('bAnlMask') - x('anl') + R.avskr;   // kjøp til kostpris = endring + avskrivning
+    // Kjøp til kostpris minus bokført verdi av det som er solgt = endring + avskrivning + nedskrivning.
+    // Salgssummen er bokført verdi + gevinst, så netto investering = −(det over) + gevinst.
+    var inv = d('bAnlForsk') + d('bAnlEiend') + d('bAnlMask') - x('anl') + R.avskr + R.ned, netInv = R.gev - inv;
     var o = {
-      opRes: R.forSkatt, opSkatt: -betalt, opAvskr: R.avskr,
+      opRes: R.forSkatt, opSkatt: -betalt, opGevinst: -R.gev, opAvskr: R.avskr, opNedskr: R.ned + R.nedfin,
       opVarelager: -d('bOmlVare'), opKunde: -d('bOmlKund'), opLevgjeld: d('bGKLev'), opAnnet: d('bGKAnnen') + x('drift') + rest,
-      invKjop: inv > 0 ? -inv : 0, invSalg: inv < 0 ? -inv : 0, invAksjer: -d('bAnlInv') + x('aksjer'),
+      invKjop: netInv < 0 ? netInv : 0, invSalg: netInv > 0 ? netInv : 0, invAksjer: -d('bAnlInv') + x('aksjer') - R.nedfin,
       finGjeld: d('bGLBank') + d('bGLAnnen') + x('gjeld'), finKasse: x('kasse'), finEk: d('bEkAks') + d('bEkOver') + x('ek'),
       // Utbytte satt av i år = årsresultat − økningen i opptjent egenkapital. Det som fortsatt er skyldig, er ikke betalt.
       finUtbytte: -(R.ar - d('bEkOpp')) + x('utbytte'),
@@ -136,10 +170,10 @@
     return o;
   }
   function regnKs(k){
-    var s = function(a){ return a.reduce(function(t, id){ return t + (+k[id] || 0); }, 0); };
-    var op = s(KS.slice(0, 9)), inv = s(KS.slice(9, 12)), fin = s(KS.slice(12, 16));
+    var s = function(a){ return a.reduce(function(t, id){ return t + (+k[id] || 0); }, 0); }, X = k.ekstra || [];
+    var op = s(KS.slice(0, 9)) + xsum(X, 'op'), inv = s(KS.slice(9, 12)) + xsum(X, 'inv'), fin = s(KS.slice(12, 16)) + xsum(X, 'fin');
     return {op:op, inv:inv, fin:fin, net:op + inv + fin, ib:+k.kontIB || 0, ub:(+k.kontIB || 0) + op + inv + fin,
-            any:KS.some(function(id){ return (+k[id] || 0) !== 0; })};
+            any:KS.some(function(id){ return (+k[id] || 0) !== 0; }) || X.some(function(e){ return e.v !== 0; })};
   }
 
   // Det som er lagret på de tre sidene, som tall
@@ -147,9 +181,11 @@
     var r = read('hv-rr-v2') || {}, b = read('hv-balanse-v1') || {}, k = read('hv-kontantstrom-v2') || {}, a = read('hv-rr-arsresultat');
     var res = {mode: r.mode === 'enk' ? 'enk' : 'as'}, bal = {}, ks = {};
     RES.forEach(function(id){ res[id] = tall(r[id]); });
+    res.ekstra = ekstraTall(r.ekstra, 'res');
     BAL.forEach(function(id){ bal[id] = tall(b[id]); bal[id + '_f'] = tall(b[id + '_f']); });
     bal.ekstra = ekstraTall(b.ekstra);
     KS.forEach(function(id){ ks[id] = tall(k[id]); });
+    ks.ekstra = ekstraTall(k.ekstra, 'ks');
     // Resultatsiden kan ha en annen skattekostnad enn 22 % (det ekte eksempelet). Da gjelder den.
     if(res.mode === 'as' && a && typeof a.belop === 'number' && typeof a.forSkatt === 'number'
        && Math.round(regnRes(res).forSkatt) === a.forSkatt) res.skatt = a.forSkatt - a.belop;
@@ -159,11 +195,13 @@
   // Har brukeren ført egne tall i en del (noe annet enn tomt eller eksempelet)?
   function egneTall(del, eksKs){
     var n = 0;
-    if(del === 'res'){ var r = read('hv-rr-v2') || {}; RES.forEach(function(id){ if(tall(r[id]) !== (EKS.res[id] || 0)) n++; }); }
+    if(del === 'res'){ var r = read('hv-rr-v2') || {}; RES.forEach(function(id){ if(tall(r[id]) !== (EKS.res[id] || 0)) n++; });
+      ekstraTall(r.ekstra, 'res').forEach(function(e){ if(e.v) n++; }); }
     if(del === 'bal'){ var b = read('hv-balanse-v1') || {}; BAL.forEach(function(id){
       if(tall(b[id]) !== (EKS.bal[id] || 0) || tall(b[id + '_f']) !== (EKS.bal[id + '_f'] || 0)) n++; });
       ekstraTall(b.ekstra).forEach(function(e){ if(e.v || e.f) n++; }); }
-    if(del === 'ks'){ var k = read('hv-kontantstrom-v2') || {}; KS.forEach(function(id){ if(tall(k[id]) !== (eksKs[id] || 0)) n++; }); }
+    if(del === 'ks'){ var k = read('hv-kontantstrom-v2') || {}; KS.forEach(function(id){ if(tall(k[id]) !== (eksKs[id] || 0)) n++; });
+      ekstraTall(k.ekstra, 'ks').forEach(function(e){ if(e.v) n++; }); }
     return n > 0;
   }
   var NAVN = {res:'resultatet', bal:'balansen', ks:'kontantstrømmen'};
@@ -207,7 +245,7 @@
     if(!xl) xl = new Promise(function(ok, feil){
       if(window.HVRegnskapExcel) return ok();
       var s = document.createElement('script');
-      s.src = '/shared/regnskap-excel.js?v=v3'; s.onload = function(){ ok(); }; s.onerror = function(){ xl = null; feil(new Error('excel')); };
+      s.src = '/shared/regnskap-excel.js?v=v4'; s.onload = function(){ ok(); }; s.onerror = function(){ xl = null; feil(new Error('excel')); };
       document.head.appendChild(s);
     });
     return xl;

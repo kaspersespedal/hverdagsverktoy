@@ -6367,7 +6367,7 @@ REGIONS['pl']._ph = {
 "Lag et budsjett":"Zrób budżet",
 "Lag et budsjett av dette":"Zrób z tego budżet",
 "Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV":"Stwórz osobisty budżet ze wszystkimi dochodami i wydatkami — pobierz jako CSV",
-"Lag et personlig budsjett med inntekter og utgifter":"Stwórz osobisty budżet z dochodami i wydatkami",
+"Lag et budsjett for deg selv eller bedriften, med inntekter og utgifter":"Stwórz budżet dla siebie lub firmy, z dochodami i wydatkami",
 "Lager du én ensartet vare, deler du periodens totale kostnader på antall produserte enheter. Ferdig.":"Jeśli robisz jeden jednorodny towar, dzielisz łączne koszty okresu przez liczbę wyprodukowanych jednostek. Gotowe.",
 "Landet kost inn i marginkalkylen gir en veiledende utsalgspris som faktisk holder.":"Koszt importu w kalkulacji marży daje sugerowaną cenę sprzedaży, która naprawdę się broni.",
 "Lang sikt (10+ år):":"Długi termin (10+ lat):",

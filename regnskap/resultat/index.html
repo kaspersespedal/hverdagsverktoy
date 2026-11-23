@@ -46,7 +46,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v482" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v497" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -1030,6 +1030,7 @@ body .ks-mode .mdesc{font-size:12px}
             <span class="rr-name"><span class="rr-konto">3900</span><span class="rr-lab">Annen driftsinntekt</span></span>
             <span class="rr-amtcell"><input class="rr-num" aria-label="Annen driftsinntekt" id="rAnnen" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
+          <div class="rr-pluss" data-gruppe="di" data-tekst="Legg til inntekt"></div>
           <div class="rr-sub">
             <span class="lbl">Sum driftsinntekter</span>
             <span class="rr-amtcell"><span class="rr-out" id="oSumDrift">0</span><span class="rr-kr">kr</span></span>
@@ -1052,6 +1053,7 @@ body .ks-mode .mdesc{font-size:12px}
             <span class="rr-name"><span class="rr-konto">6790</span><span class="rr-lab">Annen driftskostnad</span></span>
             <span class="rr-amtcell"><input class="rr-num" aria-label="Annen driftskostnad" id="rAnnenKost" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
+          <div class="rr-pluss" data-gruppe="dk" data-tekst="Legg til kostnad"></div>
           <div class="rr-sub muted">
             <span class="lbl">Sum driftskostnader</span>
             <span class="rr-amtcell"><span class="rr-out" id="oSumKost">0</span><span class="rr-kr">kr</span></span>
@@ -1067,10 +1069,12 @@ body .ks-mode .mdesc{font-size:12px}
             <span class="rr-name"><span class="rr-konto">8050</span><span class="rr-lab">Finansinntekt</span></span>
             <span class="rr-amtcell"><input class="rr-num" aria-label="Finansinntekt" id="rFinInnt" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
+          <div class="rr-pluss" data-gruppe="fi" data-tekst="Legg til finansinntekt"></div>
           <div class="rr-line">
             <span class="rr-name"><span class="rr-konto">8150</span><span class="rr-lab">Finanskostnad</span></span>
             <span class="rr-amtcell"><input class="rr-num" aria-label="Finanskostnad" id="rFinKost" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>
           </div>
+          <div class="rr-pluss" data-gruppe="fk" data-tekst="Legg til finanskostnad"></div>
           <div class="rr-sub">
             <span class="lbl">Netto finansposter</span>
             <span class="rr-amtcell"><span class="rr-out" id="oNettoFinans">0</span><span class="rr-kr">kr</span></span>
@@ -1368,12 +1372,13 @@ body .ks-mode .mdesc{font-size:12px}
       {key:'lonn',  l:'Lønnskostnad',        bg:'rgba(var(--wash-rgb),.21)', acc:false},
       {key:'avskr', l:'Avskrivning',         bg:'rgba(var(--wash-rgb),.13)', acc:false},
       {key:'annen', l:'Annen driftskostnad', bg:'rgba(var(--wash-rgb),.08)', acc:false},
+      {key:'egne',  l:'Egne poster',         bg:'rgba(var(--wash-rgb),.05)', acc:false},
       {key:'kept',  l:'Igjen til drift',     bg:'linear-gradient(90deg,var(--accent-deep),var(--accent-2))', acc:true}
     ];
     function renderCost(sumDrift, amt){
       var bar=el('costBar'), leg=el('costLegend'), wrap=el('costWrap'), empty=el('costEmpty');
       if(!bar||!leg) return;
-      var base = Math.max(sumDrift, amt.vare+amt.lonn+amt.avskr+amt.annen);
+      var base = Math.max(sumDrift, amt.vare+amt.lonn+amt.avskr+amt.annen+amt.egne);
       var active = SEGS.filter(function(s){ return amt[s.key] > 0; });
       if(!active.length){
         if(wrap) wrap.classList.add('hidden');
@@ -1400,10 +1405,11 @@ body .ks-mode .mdesc{font-size:12px}
       var salg=num('rSalg'), annen=num('rAnnen'), vare=num('rVare'), lonn=num('rLonn'),
           avskr=num('rAvskr'), annenKost=num('rAnnenKost'), finInnt=num('rFinInnt'), finKost=num('rFinKost');
       var isAS = mode==='as';
-      var sumDrift = salg+annen;
-      var sumKost = vare+lonn+avskr+annenKost;
+      var xDi=xsum('di'), xDk=xsum('dk');
+      var sumDrift = salg+annen+xDi;
+      var sumKost = vare+lonn+avskr+annenKost+xDk;
       var driftsres = sumDrift-sumKost;
-      var nettoFinans = finInnt-finKost;
+      var nettoFinans = finInnt+xsum('fi')-finKost-xsum('fk');
       var resForSkatt = driftsres+nettoFinans;
       // Ekte eksempel: Nilles faktiske skattekostnad. 22 % av resultatet pluss skatt på permanente forskjeller (note 12).
       var nille = isAS && erNille();
@@ -1447,11 +1453,11 @@ body .ks-mode .mdesc{font-size:12px}
       } else { show('boxLoss', false); }
 
       set('kDrift', pct(driftsres, sumDrift));
-      set('kEbitda', pct(driftsres+avskr, sumDrift));
+      set('kEbitda', pct(driftsres+avskr+xsum('dk','ned'), sumDrift));   // av- og nedskrivninger legges tilbake
       set('kNetto', pct(resForSkatt, sumDrift));
       set('kKost', pct(sumKost, sumDrift));
 
-      renderCost(sumDrift, {vare:vare,lonn:lonn,avskr:avskr,annen:annenKost,kept:Math.max(0,driftsres)});
+      renderCost(sumDrift, {vare:vare,lonn:lonn,avskr:avskr,annen:annenKost,egne:Math.max(0,xDk),kept:Math.max(0,driftsres)});
 
       persist();
       persistResult(isEmpty ? null : Math.round(arsresultat), Math.round(resForSkatt), Math.round(avskr));
@@ -1461,6 +1467,10 @@ body .ks-mode .mdesc{font-size:12px}
       try{
         var snap={mode:mode};
         INPUTS.forEach(function(id){ var e=el(id); if(e) snap[id]=e.value; });
+        if(ekstra.length) snap.ekstra = ekstra.map(function(x){
+          var n = x.p==='egen' ? el(x.id+'_n') : null;
+          return {id:x.id, g:x.g, p:x.p, k:x.k, n:n ? n.value : x.n, v:el(x.id).value};
+        });
         localStorage.setItem(KEY, JSON.stringify(snap));
       }catch(e){}
     }
@@ -1493,6 +1503,7 @@ body .ks-mode .mdesc{font-size:12px}
         var s=JSON.parse(raw);
         if(s.mode==='as'||s.mode==='enk') mode=s.mode;
         INPUTS.forEach(function(id){ if(s[id]!=null){ var e=el(id); if(e) e.value=s[id]; } });
+        if(Array.isArray(s.ekstra)) s.ekstra.forEach(function(x){ if(x && /^x\d+$/.test(x.id) && boks(x.g)) leggTil(x); });
         syncModes();
       }catch(e){}
     }
@@ -1515,16 +1526,97 @@ body .ks-mode .mdesc{font-size:12px}
       b.addEventListener('click', function(){
         var k=b.getAttribute('data-preset'), p=(k==='enkel' && window.HVRegnskap) ? HVRegnskap.EKS.res : PRESETS[k]; if(!p) return;
         if(p.mode){ mode=p.mode; syncModes(); }
+        fjernAlle();                                   // eksemplene og «Tøm» har bare de faste postene
         INPUTS.forEach(function(id){ var e=el(id); if(e){ var v=p[id]; e.value=(v===''||v==null)?'':fmt(v); } });
         compute();
         if(k==='enkel') HVRegnskap.fyllAndre('res');   // samme selskap i balansen og kontantstrømmen
       });
     });
 
-    function erNille(){ return INPUTS.every(function(id){ return num(id) === (PRESETS.nille[id] || 0); }); }
+    function erNille(){ return !ekstra.length && INPUTS.every(function(id){ return num(id) === (PRESETS.nille[id] || 0); }); }
+
+    // ── Egne poster («+ Legg til post») ──
+    // Samme mønster som balansen: under hver gruppe kan brukeren legge til en vanlig post fra en kort liste,
+    // eller en egen post med eget navn. Lista, og hvordan postene påvirker kontantstrømmen (gevinst, tap og
+    // nedskrivninger), står i shared/regnskap-flyt.js (HVRegnskap.POSTER), så kontantstrømmen og Excel regner
+    // likt. Lagres i KEY som ekstra: [{id, g, p, k, n, v}]. Feltet heter x1, en egen post har navnet i x1_n.
+    // Grupper: di driftsinntekter, dk driftskostnader, fi finansinntekter, fk finanskostnader.
+    var ekstra = [];
+    function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    // Summen av egne poster i gruppa g, eventuelt bare de med rollen r (fra POSTER)
+    function xsum(g, r){
+      var H = window.HVRegnskap, s=0;
+      ekstra.forEach(function(x){
+        if(x.g!==g) return;
+        if(r && !(H && H.POSTER[g].some(function(q){ return q.p===x.p && q.r===r; }))) return;
+        s+=num(x.id);
+      });
+      return s;
+    }
+    function boks(g){ return document.querySelector('.rr-pluss[data-gruppe="'+g+'"]'); }
+    // Lager linja for posten x = {id, g, p, k, n, v} rett over «+»-knappen i gruppa
+    function leggTil(x){
+      var egen = x.p==='egen', lab = egen ? 'Egen post' : x.n;
+      var rad = document.createElement('div');
+      rad.className = 'rr-line rr-ekstra';
+      rad.innerHTML = '<span class="rr-name"><span class="rr-konto">'+esc(egen ? '' : x.k)+'</span><span class="rr-xnavn">'
+        + (egen ? '<input class="rr-navn" id="'+x.id+'_n" type="text" maxlength="60" autocomplete="off" placeholder="Navn på posten" aria-label="Navn på posten">'
+                : '<span class="rr-lab">'+esc(x.n)+'</span>')
+        + '<button type="button" class="rr-fjern" aria-label="Fjern posten" title="Fjern posten">×</button></span></span>'
+        + '<span class="rr-amtcell"><input class="rr-num" id="'+x.id+'" aria-label="'+esc(lab)+'" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>';
+      boks(x.g).parentNode.insertBefore(rad, boks(x.g));
+      var post = {id:x.id, g:x.g, p:x.p, k:x.k||'', n:x.n||''};
+      ekstra.push(post);
+      el(x.id).value = x.v || '';
+      if(egen) el(x.id+'_n').value = x.n || '';
+      rad.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', compute); });
+      rad.querySelector('.rr-fjern').addEventListener('click', function(){
+        rad.remove();
+        ekstra = ekstra.filter(function(e){ return e !== post; });
+        compute();
+        var b = boks(post.g).querySelector('.rr-pluss-btn'); if(b) b.focus();
+      });
+      return rad;
+    }
+    function fjernAlle(){ document.querySelectorAll('.rr-ekstra').forEach(function(r){ r.remove(); }); ekstra = []; }
+    function nyId(){ var n=0; ekstra.forEach(function(x){ n=Math.max(n, +x.id.slice(1)); }); return 'x'+(n+1); }
+
+    // Knappen åpner lista. Poster som alt står i gruppa, vises ikke igjen. «Egen post» kan legges til flere ganger.
+    document.querySelectorAll('.rr-pluss').forEach(function(b){
+      var g = b.getAttribute('data-gruppe');
+      b.innerHTML = '<button type="button" class="rr-pluss-btn" aria-expanded="false" aria-controls="pm-'+g+'"><span aria-hidden="true">+</span> <span>'+esc(b.getAttribute('data-tekst') || 'Legg til post')+'</span></button>'
+        + '<div class="rr-pluss-meny hidden" id="pm-'+g+'"></div>';
+      var knapp = b.firstChild, meny = b.lastChild;
+      function lukk(fokus){ meny.classList.add('hidden'); knapp.setAttribute('aria-expanded','false'); if(fokus) knapp.focus(); }
+      function apne(){
+        var H = window.HVRegnskap, html = '';
+        (H ? H.POSTER[g] : []).forEach(function(q){
+          if(ekstra.some(function(x){ return x.g===g && x.p===q.p; })) return;
+          html += '<button type="button" data-p="'+q.p+'"><span class="rr-konto">'+q.p+'</span><span>'+esc(q.n)+'</span></button>';
+        });
+        if(H && H.EGEN[g]) html += '<button type="button" data-p="egen"><span class="rr-konto"></span><span>Egen post</span></button>';
+        if(!html) html = '<p class="rr-pluss-tom">Alle postene i lista er lagt til.</p>';
+        meny.innerHTML = html;
+        meny.classList.remove('hidden'); knapp.setAttribute('aria-expanded','true');
+        var forste = meny.querySelector('button'); if(forste) forste.focus();
+      }
+      knapp.addEventListener('click', function(){ if(meny.classList.contains('hidden')) apne(); else lukk(false); });
+      meny.addEventListener('click', function(ev){
+        var v = ev.target.closest('button[data-p]'), H = window.HVRegnskap; if(!v || !H) return;
+        var p = v.getAttribute('data-p'), q = H.POSTER[g].filter(function(x){ return x.p===p; })[0] || {};
+        var rad = leggTil({id:nyId(), g:g, p:p, k:q.p, n:q.n});
+        lukk(false);
+        compute();
+        rad.querySelector('input').focus();
+      });
+      b.addEventListener('keydown', function(ev){ if(ev.key==='Escape' && !meny.classList.contains('hidden')){ ev.stopPropagation(); lukk(true); } });
+      document.addEventListener('click', function(ev){ if(!b.contains(ev.target)) lukk(false); });
+    });
 
     restore();
     compute();
+    // Rollene til de egne postene (EBITDA legger tilbake nedskrivning) står i regnskap-flyt.js, som lastes etter (defer)
+    document.addEventListener('DOMContentLoaded', compute);
   })();
 </script>
 
@@ -1542,16 +1634,16 @@ body .ks-mode .mdesc{font-size:12px}
   });
 })();
 </script>
-<script src="/shared/top-chrome.js?v=v464" defer></script>
-<script defer src="/shared/core.js?v=v482"></script>
+<script src="/shared/top-chrome.js?v=v496" defer></script>
+<script defer src="/shared/core.js?v=v497"></script>
 <script defer src="/shared/lang/no.js?v=v464"></script>
 
-<script defer src="/shared/regnskap-flyt.js?v=v4"></script>
+<script defer src="/shared/regnskap-flyt.js?v=v5"></script>
 <script defer src="/shared/steg-guide.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
-<script src="/shared/search.js?v=v483" defer></script>
+<script src="/shared/search.js?v=v496" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');

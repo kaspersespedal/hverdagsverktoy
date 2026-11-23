@@ -46,7 +46,7 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v482" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v497" as="script" fetchpriority="high">
 <script>
   (function(){
     try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
@@ -1087,6 +1087,7 @@ body .ks-mode .mdesc{font-size:12px}
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opKunde">Endring kundefordringer</label></span><span class="rr-amtcell"><input class="rr-num" id="opKunde" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opLevgjeld">Endring leverandørgjeld</label></span><span class="rr-amtcell"><input class="rr-num" id="opLevgjeld" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="opAnnet">Endring andre tidsavgrensningsposter</label></span><span class="rr-amtcell"><input class="rr-num" id="opAnnet" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-pluss" data-gruppe="op"></div>
           <div class="rr-sub"><span class="lbl">Netto kontantstrøm fra drift</span><span class="rr-amtcell"><span class="rr-out" id="opNet">0</span><span class="rr-kr">kr</span></span></div>
 
           <div class="rr-group gap">Investeringsaktiviteter</div>
@@ -1094,6 +1095,7 @@ body .ks-mode .mdesc{font-size:12px}
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="invSalg">+ Salg av varige driftsmidler</label></span><span class="rr-amtcell"><input class="rr-num" id="invSalg" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="invKjop">− Kjøp av varige driftsmidler</label></span><span class="rr-amtcell"><input class="rr-num" id="invKjop" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="invAksjer">Salg / kjøp av aksjer og andeler</label></span><span class="rr-amtcell"><input class="rr-num" id="invAksjer" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-pluss" data-gruppe="inv"></div>
           <div class="rr-sub"><span class="lbl">Netto kontantstrøm fra investering</span><span class="rr-amtcell"><span class="rr-out" id="invNet">0</span><span class="rr-kr">kr</span></span></div>
 
           <div class="rr-group gap">Finansieringsaktiviteter</div>
@@ -1102,6 +1104,7 @@ body .ks-mode .mdesc{font-size:12px}
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finKasse">Endring kassekreditt</label></span><span class="rr-amtcell"><input class="rr-num" id="finKasse" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finEk">Inn- eller utbetalt egenkapital</label></span><span class="rr-amtcell"><input class="rr-num" id="finEk" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
           <div class="rr-line"><span class="rr-name"><label class="rr-lab" for="finUtbytte">− Utbetalt utbytte (fjorårets avsatte)</label></span><span class="rr-amtcell"><input class="rr-num" id="finUtbytte" type="text" step="any" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span></div>
+          <div class="rr-pluss" data-gruppe="fin"></div>
           <div class="rr-sub"><span class="lbl">Netto kontantstrøm fra finansiering</span><span class="rr-amtcell"><span class="rr-out" id="finNet">0</span><span class="rr-kr">kr</span></span></div>
 
           <!-- NETTO ENDRING -->
@@ -1501,9 +1504,10 @@ body .ks-mode .mdesc{font-size:12px}
     }
 
     function compute(){
-      var op  = sumIds(OP);
-      var inv = sumIds(INV);
-      var fin = sumIds(FIN);
+      var xOp = xsum('op'), xInv = xsum('inv'), xFin = xsum('fin');
+      var op  = sumIds(OP) + xOp;
+      var inv = sumIds(INV) + xInv;
+      var fin = sumIds(FIN) + xFin;
       var net = op + inv + fin;
       var ib  = parseNum('kontIB');
       var balUB = parseNum('kontBalUB');
@@ -1517,6 +1521,7 @@ body .ks-mode .mdesc{font-size:12px}
 
       var anyInput = false;
       ALL.forEach(function(id){ if(parseNum(id)!==0) anyInput=true; });
+      if(xOp || xInv || xFin) anyInput = true;
 
       // Netto endring-merkelapp (pos = accent, neg = neutral; ingen rød/grønn)
       var netTag = document.getElementById('netTag');
@@ -1572,7 +1577,7 @@ body .ks-mode .mdesc{font-size:12px}
         opVare:parseNum('opVarelager'), opKunde:parseNum('opKunde'), opLev:parseNum('opLevgjeld'), opAnnet:parseNum('opAnnet'),
         invSalg:parseNum('invSalg'), invKjop:parseNum('invKjop'), invAksjer:parseNum('invAksjer'),
         finGjeld:parseNum('finGjeld'), finKasse:parseNum('finKasse'), finEk:parseNum('finEk'), finUtb:parseNum('finUtbytte'),
-        ib:ib, ub:balUB, hasBal:hasBal, any:anyInput };
+        xOp:xOp, xInv:xInv, xFin:xFin, ib:ib, ub:balUB, hasBal:hasBal, any:anyInput };
       if(window.hvtLearn) hvtLearn.update('regnskap-kontantstrom', window._ks);
 
       // Tegnmønster-dom
@@ -1662,6 +1667,10 @@ body .ks-mode .mdesc{font-size:12px}
       try {
         var snap = {};
         ALL.forEach(function(id){ var el=document.getElementById(id); if(el) snap[id]=el.value; });
+        if(ekstra.length) snap.ekstra = ekstra.map(function(x){
+          var n = x.p==='egen' ? document.getElementById(x.id+'_n') : null;
+          return {id:x.id, g:x.g, p:x.p, n:n ? n.value : x.n, v:document.getElementById(x.id).value};
+        });
         localStorage.setItem(KEY, JSON.stringify(snap));
       } catch(e){}
     }
@@ -1671,6 +1680,7 @@ body .ks-mode .mdesc{font-size:12px}
         if(!raw) return;
         var s = JSON.parse(raw);
         ALL.forEach(function(id){ if(s[id]!=null){ var el=document.getElementById(id); if(el) el.value=s[id]; } });
+        if(Array.isArray(s.ekstra)) s.ekstra.forEach(function(x){ if(x && /^x\d+$/.test(x.id) && boks(x.g)) leggTil(x); });
       } catch(e){}
     }
 
@@ -1688,8 +1698,11 @@ body .ks-mode .mdesc{font-size:12px}
       },
       clear: {}
     };
-    function erNille(){ return ALL.every(function(id){ return parseNum(id) === (PRESETS.nille[id] || 0); }); }
+    function erNille(){ return !ekstra.length && ALL.every(function(id){ return parseNum(id) === (PRESETS.nille[id] || 0); }); }
+    // Eksemplene, «Tøm» og «Hent fra resultat og balanse» fyller bare de faste linjene: egne poster fjernes.
+    // Hentet regnes alt ut av resultatet og balansen, så en egen post ville blitt telt to ganger.
     function fyll(p){
+      fjernAlle();
       ALL.forEach(function(id){
         var el = document.getElementById(id);
         if(el){ var v = p[id]; el.value = (v===undefined || v===null || v===0) ? '' : fmtN(v); }
@@ -1715,10 +1728,12 @@ body .ks-mode .mdesc{font-size:12px}
       var L = HVRegnskap.lagret(), R = HVRegnskap.regnRes(L.res), B = HVRegnskap.regnBal(L.bal), Fj = HVRegnskap.regnBal(L.bal, '_f');
       if(R.tom || B.tom){ if(hentNote) hentNote.textContent = 'Fyll ut resultatet og balansen først. Da kan tallene hentes hit.'; return; }
       if(HVRegnskap.balUtdatert()){ if(hentNote) hentNote.textContent = HVRegnskap.UTDATERT; return; }
+      var hadde = ekstra.length > 0;
       fyll(HVRegnskap.utled(L.res, L.bal));
-      if(hentNote) hentNote.textContent = Fj.tom ? 'Hentet. Balansen mangler tallene fra i fjor, så endringene er regnet fra null.'
+      if(hentNote) hentNote.textContent = (Fj.tom ? 'Hentet. Balansen mangler tallene fra i fjor, så endringene er regnet fra null.'
         : Math.abs(B.diff) >= 1 || Math.abs(Fj.diff) >= 1 ? 'Hentet. Balansen stemmer ikke ennå, så kontantene går ikke opp.'
-        : 'Hentet fra resultatet og balansen.';
+        : 'Hentet fra resultatet og balansen.')
+        + (hadde ? ' Egne poster er fjernet, fordi alt nå regnes ut av resultatet og balansen.' : '');
     });
     document.querySelectorAll('[data-preset]').forEach(function(b){
       b.addEventListener('click', function(){ applyPreset(b.getAttribute('data-preset')); });
@@ -1728,6 +1743,73 @@ body .ks-mode .mdesc{font-size:12px}
     ALL.forEach(function(id){
       var el = document.getElementById(id);
       if(el) el.addEventListener('input', compute);
+    });
+
+    // ── Egne poster («+ Legg til post») ──
+    // Samme mønster som balansen og resultatet: under hver aktivitet kan brukeren legge til en linje fra
+    // NRS(F)-lista i shared/regnskap-flyt.js (HVRegnskap.POSTER op/inv/fin), eller en egen post med eget navn.
+    // Beløpet føres med fortegn som de andre linjene. Lagres i KEY som ekstra: [{id, g, p, n, v}].
+    var ekstra = [];
+    function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    function xsum(g){ var s=0; ekstra.forEach(function(x){ if(x.g===g) s+=parseNum(x.id); }); return s; }
+    function boks(g){ return document.querySelector('.rr-pluss[data-gruppe="'+g+'"]'); }
+    // Lager linja for posten x = {id, g, p, n, v} rett over «+»-knappen i gruppa
+    function leggTil(x){
+      var egen = x.p==='egen', lab = egen ? 'Egen post' : x.n;
+      var rad = document.createElement('div');
+      rad.className = 'rr-line rr-ekstra';
+      rad.innerHTML = '<span class="rr-name"><span class="rr-xnavn">'
+        + (egen ? '<input class="rr-navn" id="'+x.id+'_n" type="text" maxlength="60" autocomplete="off" placeholder="Navn på posten" aria-label="Navn på posten">'
+                : '<span class="rr-lab">'+esc(x.n)+'</span>')
+        + '<button type="button" class="rr-fjern" aria-label="Fjern posten" title="Fjern posten">×</button></span></span>'
+        + '<span class="rr-amtcell"><input class="rr-num" id="'+x.id+'" aria-label="'+esc(lab)+'" type="text" inputmode="numeric" autocomplete="off" placeholder="0"><span class="rr-kr">kr</span></span>';
+      boks(x.g).parentNode.insertBefore(rad, boks(x.g));
+      var post = {id:x.id, g:x.g, p:x.p, n:x.n||''};
+      ekstra.push(post);
+      document.getElementById(x.id).value = x.v || '';
+      if(egen) document.getElementById(x.id+'_n').value = x.n || '';
+      rad.querySelectorAll('input').forEach(function(i){ i.addEventListener('input', compute); });
+      rad.querySelector('.rr-fjern').addEventListener('click', function(){
+        rad.remove();
+        ekstra = ekstra.filter(function(e){ return e !== post; });
+        compute();
+        var b = boks(post.g).querySelector('.rr-pluss-btn'); if(b) b.focus();
+      });
+      return rad;
+    }
+    function fjernAlle(){ document.querySelectorAll('.rr-ekstra').forEach(function(r){ r.remove(); }); ekstra = []; }
+    function nyId(){ var n=0; ekstra.forEach(function(x){ n=Math.max(n, +x.id.slice(1)); }); return 'x'+(n+1); }
+
+    // Knappen åpner lista. Poster som alt står i gruppa, vises ikke igjen. «Egen post» kan legges til flere ganger.
+    document.querySelectorAll('.rr-pluss').forEach(function(b){
+      var g = b.getAttribute('data-gruppe');
+      b.innerHTML = '<button type="button" class="rr-pluss-btn" aria-expanded="false" aria-controls="pm-'+g+'"><span aria-hidden="true">+</span> <span>Legg til post</span></button>'
+        + '<div class="rr-pluss-meny hidden" id="pm-'+g+'"></div>';
+      var knapp = b.firstChild, meny = b.lastChild;
+      function lukk(fokus){ meny.classList.add('hidden'); knapp.setAttribute('aria-expanded','false'); if(fokus) knapp.focus(); }
+      function apne(){
+        var H = window.HVRegnskap, html = '';
+        (H ? H.POSTER[g] : []).forEach(function(q){
+          if(ekstra.some(function(x){ return x.g===g && x.p===q.p; })) return;
+          html += '<button type="button" data-p="'+q.p+'"><span>'+esc(q.n)+'</span></button>';
+        });
+        if(H && H.EGEN[g]) html += '<button type="button" data-p="egen"><span>Egen post</span></button>';
+        if(!html) html = '<p class="rr-pluss-tom">Alle postene i lista er lagt til.</p>';
+        meny.innerHTML = html;
+        meny.classList.remove('hidden'); knapp.setAttribute('aria-expanded','true');
+        var forste = meny.querySelector('button'); if(forste) forste.focus();
+      }
+      knapp.addEventListener('click', function(){ if(meny.classList.contains('hidden')) apne(); else lukk(false); });
+      meny.addEventListener('click', function(ev){
+        var v = ev.target.closest('button[data-p]'), H = window.HVRegnskap; if(!v || !H) return;
+        var p = v.getAttribute('data-p'), q = H.POSTER[g].filter(function(x){ return x.p===p; })[0] || {};
+        var rad = leggTil({id:nyId(), g:g, p:p, n:q.n});
+        lukk(false);
+        compute();
+        rad.querySelector('input').focus();
+      });
+      b.addEventListener('keydown', function(ev){ if(ev.key==='Escape' && !meny.classList.contains('hidden')){ ev.stopPropagation(); lukk(true); } });
+      document.addEventListener('click', function(ev){ if(!b.contains(ev.target)) lukk(false); });
     });
 
     // Init
@@ -1751,17 +1833,17 @@ body .ks-mode .mdesc{font-size:12px}
   });
 })();
 </script>
-<script src="/shared/top-chrome.js?v=v464" defer></script>
-<script defer src="/shared/core.js?v=v482"></script>
+<script src="/shared/top-chrome.js?v=v496" defer></script>
+<script defer src="/shared/core.js?v=v497"></script>
 <script defer src="/shared/lang/no.js?v=v464"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 
-<script defer src="/shared/regnskap-flyt.js?v=v4"></script>
+<script defer src="/shared/regnskap-flyt.js?v=v5"></script>
 <script defer src="/shared/steg-guide.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
-<script src="/shared/search.js?v=v483" defer></script>
+<script src="/shared/search.js?v=v496" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');
@@ -1839,8 +1921,10 @@ body .ks-mode .mdesc{font-size:12px}
     v.hasBal = dine ? !!d.hasBal : true;
     var fl = !dine && flip;
     if(fl) v.opKunde = -tv.opKunde;
-    var op = v.opRes + v.opSkatt + v.opGevinst + v.opAvskr + v.opNedskr + v.opVare + v.opKunde + v.opLev + v.opAnnet;
-    var inv = v.invSalg + v.invKjop + v.invAksjer, fin = v.finGjeld + v.finKasse + v.finEk + v.finUtb;
+    // Egne poster («+ Legg til post») står som én rad per aktivitet
+    v.xOp = dine ? +d.xOp || 0 : 0; v.xInv = dine ? +d.xInv || 0 : 0; v.xFin = dine ? +d.xFin || 0 : 0;
+    var op = v.opRes + v.opSkatt + v.opGevinst + v.opAvskr + v.opNedskr + v.opVare + v.opKunde + v.opLev + v.opAnnet + v.xOp;
+    var inv = v.invSalg + v.invKjop + v.invAksjer + v.xInv, fin = v.finGjeld + v.finKasse + v.finEk + v.finUtb + v.xFin;
     var net = op + inv + fin, fcf = op + inv, calcUB = v.ib + net, avDiff = calcUB - v.ub, avstemt = v.hasBal && Math.abs(avDiff) < 0.5;
 
     root.querySelector('.lrn-state').setAttribute('data-state', dine ? 'dine' : 'eksempel');
@@ -1865,15 +1949,18 @@ body .ks-mode .mdesc{font-size:12px}
     delta(0, 'kunde', v.opKunde, (+tv.opKunde || 0) < 0 ? ph('Kundefordringene økte') : ph('Kundefordringene sank'));
     delta(0, 'lev', v.opLev, v.opLev > 0 ? ph('Leverandørgjelden økte') : ph('Leverandørgjelden sank'));
     delta(0, 'annet', v.opAnnet, ph('Andre tidsavgrensninger'));
+    delta(0, 'xop', v.xOp, ph('Egne poster'));
     sub(0, 'opnet', ph('Netto fra drift'));
     delta(1, 'salg', v.invSalg, ph('Salg av driftsmidler'));
     delta(1, 'kjop', v.invKjop, ph('Kjøp av driftsmidler'));
     delta(1, 'aksjer', v.invAksjer, ph('Aksjer og andeler'));
+    delta(1, 'xinv', v.xInv, ph('Egne poster'));
     sub(1, 'fcf', ph('Fri kontantstrøm'));
     delta(2, 'gjeld', v.finGjeld, ph('Langsiktig gjeld'));
     delta(2, 'kasse', v.finKasse, ph('Kassekreditt'));
     delta(2, 'ek', v.finEk, ph('Egenkapital'));
     delta(2, 'utb', v.finUtb, ph('Utbytte'));
+    delta(2, 'xfin', v.xFin, ph('Egne poster'));
     sub(2, 'net', ph('Netto endring i kontanter'));
 
     // ── Geometrien: etikettkolonnen følger den lengste etiketten, stolpene tar resten ──
