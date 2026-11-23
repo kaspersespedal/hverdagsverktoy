@@ -84,9 +84,9 @@ var SEARCH_DATA = [
   {name:'Rentes rente',desc:'Avkastning på avkastning — effekten som gjør sparing kraftig over tid',url:'/personlig/spare/',tags:'rentes rente compound interest sparing effekt tid avkastning',type:'concept',page:'Privatøkonomi',sk:'rentesRente'},
   {name:'Annuitetslån',desc:'Lån med like store månedlige betalinger hele perioden',url:'/boliglan/mor/',tags:'annuitetslån annuitet fast betaling like stor måned annuity loan',type:'concept',page:'Boliglån',sk:'annuitet'},
   {name:'Serielån',desc:'Lån med like store avdrag — totalt billigere enn annuitet',url:'/boliglan/mor/',tags:'serielån serie avdrag billigere synkende betaling serial loan',type:'concept',page:'Boliglån',sk:'serieLan'},
-  {name:'Næring eller hobby?',desc:'Når blir biinntekt skattepliktig næringsvirksomhet?',url:'/skatt/',tags:'næring hobby biinntekt skattepliktig virksomhet grense business hobby',type:'concept',page:'Skatt',sk:'naeringHobby'},
-  {name:'Konsernbidrag',desc:'Overføring av overskudd mellom selskaper i samme konsern',url:'/lov/skattelov/#kap-skatteloven-10',tags:'konsernbidrag konsern overføring selskap morselskap datterselskap group contribution',type:'concept',page:'Skatt',sk:'konsernbidrag'},
-  {name:'Fritaksmetoden',desc:'Selskaper slipper skatt på aksjeutbytte og -gevinst',url:'/lov/skattelov/#kap-skatteloven-10',tags:'fritaksmetoden fritak skatt utbytte aksjegevinst selskap participation exemption',type:'concept',page:'Skatt',sk:'fritaksmetoden'},
+  {name:'Næring eller hobby?',desc:'Når blir biinntekt skattepliktig næringsvirksomhet?',url:'/skatt/#cc-sjekk',tags:'næring hobby biinntekt skattepliktig virksomhet grense business hobby',type:'concept',page:'Skatt',sk:'naeringHobby'},
+  {name:'Konsernbidrag',desc:'Overføring av overskudd mellom selskaper i samme konsern',url:'/avansert/skatt/#sa-oversikt-ordene',tags:'konsernbidrag konsern overføring selskap morselskap datterselskap group contribution',type:'concept',page:'Skatt',sk:'konsernbidrag'},
+  {name:'Fritaksmetoden',desc:'Selskaper slipper skatt på aksjeutbytte og -gevinst',url:'/lov/skattelov/#kap-skatteloven-2',tags:'fritaksmetoden fritak skatt utbytte aksjegevinst selskap participation exemption',type:'concept',page:'Skatt',sk:'fritaksmetoden'},
   {name:'Avanse',desc:'Påslag i % av varekost: Bruttofortjeneste / Varekost × 100',url:'/kalkyle/margin/#formel',tags:'avanse påslag paslag markup bruttofortjeneste varekost innkjøpspris prissetting formel',type:'concept',page:'Kalkyle'},
   {name:'Dekningsgrad',desc:'Fortjeneste i % av pris: Bruttofortjeneste / Pris × 100',url:'/kalkyle/margin/#formel',tags:'dekningsgrad dg margin bruttomargin bruttofortjeneste pris prissetting formel gross margin',type:'concept',page:'Kalkyle'},
   {name:'Deltakerligning',desc:'Overskudd fordeles og beskattes hos hver deltaker — ANS, DA og KS',url:'/selskap/#selskap-ans-card',tags:'deltakerligning deltakermodellen ansvarlig selskap kommandittselskap fordeling partner taxation',type:'concept',page:'Selskap',sk:'deltakerligning'},
@@ -132,7 +132,7 @@ var SEARCH_DATA = [
   {name:'Regnskapsplikt',desc:'Hvem må føre regnskap etter regnskapsloven',url:'/regnskap/',tags:'regnskapsplikt regnskap plikt foretak as enk accounting obligation',type:'concept',page:'Regnskap',sk:'regnskapsplikt'},
   {name:'Bokføring',desc:'Daglig registrering av bilag og transaksjoner',url:'/regnskap/',tags:'bokforing regnskap bilag transaksjon registrering daglig bookkeeping',type:'concept',page:'Regnskap',sk:'bokforingConcept'},
   {name:'Årsregnskap',desc:'Resultat, balanse og noter — formell avslutning av året',url:'/regnskap/',tags:'arsregnskap regnskap resultat balanse noter avslutning annual accounts',type:'concept',page:'Regnskap',sk:'arsregnskap'},
-  {name:'Revisjon',desc:'Når kreves ekstern revisor — terskler og unntak',url:'/regnskap/',tags:'revisjon revisor revisjonsplikt regnskap ekstern audit',type:'concept',page:'Regnskap',sk:'revisjon'},
+  {name:'Revisjon',desc:'Når kreves ekstern revisor — terskler og unntak',url:'/selskap/styre/',tags:'revisjon revisor revisjonsplikt regnskap ekstern audit',type:'concept',page:'Regnskap',sk:'revisjon'},
   {name:'Resultatregnskap',desc:'Driftsinntekter, driftskostnader, driftsresultat, finansposter, årsresultat — etter regnskapsloven § 6-1',url:'/regnskap/resultat/',tags:'resultatregnskap resultat regnskap driftsresultat arsresultat skatt regnskapsloven 6-1 oppstillingsplan AS ENK income statement',type:'tool',page:'Regnskap',sk:'resultatregnskap'},
   {name:'MVA-melding',desc:'Termin-vis MVA-oppgjør — utgående og inngående merverdiavgift, 4 satser',url:'/regnskap/mva/',tags:'mva merverdiavgift mvameld melding skattemelding rf-0002 25 15 12 0 prosent termin inngående utgående value added tax',type:'tool',page:'Regnskap',sk:'mvaMelding'},
   {name:'Balanse',desc:'Eiendeler = EK + Gjeld — sett opp balansen etter regnskapsloven § 6-2 med automatic balance-check',url:'/regnskap/balanse/',tags:'balanse regnskap eiendeler egenkapital gjeld anleggsmidler omlopsmidler regnskapsloven 6-2 oppstillingsplan AS balance sheet',type:'tool',page:'Regnskap',sk:'balanseregn'},
@@ -573,6 +573,50 @@ function loadSearchIntents(){
   document.head.appendChild(s);
 }
 
+/* ─── Ordlista (shared/ordliste.js) — lastes først når noen bruker søket.
+   Hvert ord blir et begrep i søket. Har ordet en egen god side (direkte:1),
+   går treffet dit; ellers til ordet på /ordliste/. Ord som allerede har en
+   oppføring med samme navn her, hoppes over — den gamle vinner. */
+var __hvtOrdStarted = false;
+function loadOrdliste(){
+  if(__hvtOrdStarted) return;
+  __hvtOrdStarted = true;
+  if(window.HVT_ORDLISTE){ mergeOrdliste(); return; }
+  var s = document.createElement('script');
+  s.src = '/shared/ordliste.js?v=v502';
+  s.async = true;
+  s.onload = mergeOrdliste;
+  document.head.appendChild(s);
+}
+// Navnet uten forklaring i parentes eller etter tankestrek: «Arbeidsgiveravgift (AGA)» → «arbeidsgiveravgift»
+function baseName(s){ return norm(String(s || '').split(/ — | \(/)[0]); }
+function mergeOrdliste(){
+  var list = window.HVT_ORDLISTE;
+  if(!list || !list.length || mergeOrdliste.done) return;
+  mergeOrdliste.done = true;
+  var finnes = {};
+  for(var i=0; i<SEARCH_DATA.length; i++){ var k = baseName(SEARCH_DATA[i].name); if(!finnes[k]) finnes[k] = SEARCH_DATA[i]; }
+  for(var j=0; j<list.length; j++){
+    var o = list[j];
+    var gammel = finnes[baseName(o.ord)];
+    if(gammel){
+      // Den gamle oppføringen vinner, men får ordlistas søkeord, så de ikke går tapt
+      if(o.alias && o.alias.length){ gammel.tags = (gammel.tags || '') + ' ' + o.alias.join(' '); gammel.alias = (gammel.alias || []).concat(o.alias); }
+      continue;
+    }
+    SEARCH_DATA.push({
+      name: o.ord, desc: o.tekst,
+      url: (o.direkte && o.side) ? o.side : '/ordliste/#' + o.id,
+      tags: (o.alias || []).join(' '), type: 'concept', page: o.omr, alias: o.alias || []
+    });
+  }
+  _i18nHaystacks = null;
+  // Skriver noen allerede, vises treffene på nytt med ordene med
+  var inp = document.getElementById('search-input') || document.getElementById('searchInput');
+  if(inp && inp.value && inp.value.trim() && document.activeElement === inp) inp.dispatchEvent(new Event('input'));
+}
+window.__mergeOrdliste = mergeOrdliste;
+
 /* ─── Question-suggestion matcher (2026-04-20) ─── */
 /* Triggers when query starts with Norwegian question-word. Returns array of
    matching questions from SEARCH_INTENTS[section].questions. All-words-present
@@ -639,6 +683,19 @@ function matchQuestions(q){
 }
 
 /* ─── Intent pre-matcher (Mac-leveranse 2026-04-19) ─── */
+// Et nøkkelord treffer bare fra starten av et ord i søket, og korte nøkkelord
+// (4 tegn eller færre) bare som hele ord. Før traff «enk» inne i «egenkapital»,
+// «budsjett» inne i «likviditetsbudsjett» og «nv» inne i «investering».
+function kwHit(qn, kw){
+  var i = qn.indexOf(kw);
+  while(i >= 0){
+    var foran = i === 0 || !/[a-z0-9æøå]/.test(qn.charAt(i - 1));
+    var etter = kw.length > 4 || i + kw.length === qn.length || !/[a-z0-9æøå]/.test(qn.charAt(i + kw.length));
+    if(foran && etter) return true;
+    i = qn.indexOf(kw, i + 1);
+  }
+  return false;
+}
 function matchIntent(q){
   if(typeof window.SEARCH_INTENTS !== 'object' || !window.SEARCH_INTENTS) return null;
   var qn = q.toLowerCase().trim();
@@ -655,7 +712,7 @@ function matchIntent(q){
       var kwMatch = false;
       var kws = it.keywords || [];
       for(var j=0; j<kws.length; j++){
-        if(kws[j] && qn.indexOf(kws[j].toLowerCase()) >= 0){ kwMatch = true; break; }
+        if(kws[j] && kwHit(qn, kws[j].toLowerCase())){ kwMatch = true; break; }
       }
       if(qMatch || kwMatch){
         var t = targetMap[it.target];
@@ -687,6 +744,17 @@ function search(q){
       results.unshift({ item:{ name:intent.name, desc:intent.desc||'', url:intent.url, tags:'', type:'tool', page:'' }, score:1000 });
     }
   }
+  // Skriver du hele navnet på et begrep, et ord fra ordlista eller et verktøy, kommer det først — foran
+  // snarveiene. Seksjonene er holdt utenfor: «boliglån» og «kalkulator» skal fortsatt gi kalkulatoren.
+  var qb = norm(q), exact = false;
+  for(var e=0; e<results.length; e++){
+    var it = results[e].item;
+    if(it.type === 'section') continue;
+    var hit = baseName(it.name) === qb;
+    for(var a=0; !hit && it.alias && a<it.alias.length; a++) hit = norm(it.alias[a]) === qb;
+    if(hit){ results[e].score = 1500; exact = true; }
+  }
+  if(exact) results.sort(function(a,b){ return b.score - a.score; });
   // Question-suggestions — prepend when query starts with question-word
   var questions = matchQuestions(q);
   if(questions.length > 0){
@@ -830,18 +898,26 @@ function renderResults(results, q){
   }
   if(!CURRENT_SECTION || deduped.length === 0) return groupRowsHtml(deduped.slice(0,7), q);
 
+  // Har du skrevet hele ordet eller navnet (se search()), står det treffet øverst, også når det
+  // ligger i en annen seksjon — ellers havnet «fradrag» under seksjonens egne treff på /skatt/.
+  var top = '';
+  if(deduped[0].score >= 1500 && sectionFromUrl(deduped[0].item.url) !== CURRENT_SECTION){
+    top = groupRowsHtml([deduped[0]], q);
+    deduped = deduped.slice(1);
+  }
+
   var here = [], rest = [];
   for(var k=0; k<deduped.length; k++){
     if(sectionFromUrl(deduped[k].item.url) === CURRENT_SECTION) here.push(deduped[k]);
     else rest.push(deduped[k]);
   }
   if(here.length && rest.length){
-    return '<div class="search-group-label" role="presentation">'+escHtml(T('searchGroupHere','På denne siden'))+'</div>' +
+    return top + '<div class="search-group-label" role="presentation">'+escHtml(T('searchGroupHere','På denne siden'))+'</div>' +
            groupRowsHtml(here.slice(0,5), q) +
            '<div class="search-group-label" role="presentation">'+escHtml(T('searchGroupElse','Ellers på hverdagsverktøy'))+'</div>' +
-           groupRowsHtml(rest.slice(0,4), q);
+           groupRowsHtml(rest.slice(0, top ? 3 : 4), q);
   }
-  return groupRowsHtml(deduped.slice(0,7), q);
+  return top + groupRowsHtml(deduped.slice(0, top ? 6 : 7), q);
 }
 
 /* ─── Tastetipset ───
@@ -889,6 +965,9 @@ function fitPlaceholder(input){
 /* ─── Build and inject the search bar ─── */
 function initSearch(){
   fixHomeKbd();
+  // Forsiden har sitt eget søkefelt, men leser det samme registeret — last ordlista når det brukes
+  var homeInput = document.getElementById('searchInput');
+  if(homeInput) homeInput.addEventListener('focus', loadOrdliste);
   var point = findInjectionPoint();
   if(!point) return;
   injectSearchStyles();
@@ -949,6 +1028,7 @@ function initSearch(){
   // Show chips on focus (if input is empty) + close language dropdown + kickstart intents-load
   input.addEventListener('focus', function(){
     loadSearchIntents();
+    loadOrdliste();
     // Close language dropdown when search is focused
     var rdd=document.getElementById('rdd');if(rdd)rdd.classList.remove('open');
     if(!input.value.trim()){

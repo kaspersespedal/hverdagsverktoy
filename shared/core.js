@@ -489,17 +489,27 @@ function updateFooter() {
       // rundt, « · » som tekst, eller ingen separator (da styrer gap/padding avstanden).
       const sepSrc = box.querySelector('.foot-sep');
       const hadDot = box.textContent.indexOf('·') >= 0;
+      const addSep = function(){
+        if (sepSrc) {
+          box.insertBefore(document.createTextNode(' '), first);
+          box.insertBefore(sepSrc.cloneNode(true), first);
+          box.insertBefore(document.createTextNode(' '), first);
+        } else if (hadDot) {
+          box.insertBefore(document.createTextNode(' · '), first);
+        }
+      };
       box.insertBefore(a, first);
-      if (sepSrc) {
-        box.insertBefore(document.createTextNode(' '), first);
-        box.insertBefore(sepSrc.cloneNode(true), first);
-        box.insertBefore(document.createTextNode(' '), first);
-      } else if (hadDot) {
-        box.insertBefore(document.createTextNode(' · '), first);
-      }
+      addSep();
+      // «Ordliste» rett etter «Om» — samme grep, så ingen av HTML-filene må redigeres
+      const ord = document.createElement('a');
+      ord.id = 'fl-ord';
+      ord.href = '/ordliste/';
+      box.insertBefore(ord, first);
+      addSep();
     });
   }
   setText('fl-about', r.footerAbout||'About');
+  setText('fl-ord', r.footerOrd||'Ordliste');
   setText('fl-priv', r.footerPriv||'Privacy');
   setText('fl-con', r.footerCon||'Contact');
   setText('fl-author', r.footerAuthor||'Hverdagsverktøy — gratis norske finanskalkulatorer');
