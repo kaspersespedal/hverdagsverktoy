@@ -197,7 +197,9 @@
     var U = H.utled(res, bal), ksTom = !H.regnKs(ks).any;
     // Kontantstrømmen skrives som formler når den er lik det resultat og balanse gir (eller ikke er fylt ut ennå).
     // Har brukeren ført egne tall der, skrives de som de er.
-    var avledet = !R.tom && !B.tom && (ksTom || H.KS.every(function(id){ return (ks[id] || 0) === (U[id] || 0); }));
+    var KX = ks.ekstra || [];
+    var avledet = !R.tom && !B.tom && (ksTom || (H.KS.every(function(id){ return (ks[id] || 0) === (U[id] || 0); })
+      && KX.every(function(e){ return !e.v; })));
     var kv = avledet ? U : ks, K = H.regnKs(kv);
     // Det ekte eksempelet (Nille) gjelder 2025. Samme kjennetegn som sidene selv bruker.
     var aar = (res.rSalg === 1769689501 || bal.bAnlForsk === 42844941) ? 2025 : 2026;
@@ -208,21 +210,32 @@
     var a1 = new Ark('Resultat', [3, 9, 46, 19, 3], 'D'), w = Skriver(a1, st, ['D']), P = {};
     w.tittel('Resultatregnskap', (enk ? 'Enkeltpersonforetak' : 'Aksjeselskap') + ' · regnskapsåret ' + aar + ' · beløp i kroner');
     w.hode([String(aar)], 'Konto');
+    // Egne poster («+ Legg til post») står sist i gruppa si. Gir siste rad i gruppa, eller forrige rad.
+    var RX = res.ekstra || [];
+    function egneR(g, forrige){
+      RX.forEach(function(e){ if(e.g === g) forrige = P[e.id] = w.post(e.k, e.n, [I(e.v)]); });
+      return forrige;
+    }
     w.gruppe('Driftsinntekter');
     P.salg = w.post('3000', 'Salgsinntekt', [I(res.rSalg)]);
     P.annen = w.post('3900', 'Annen driftsinntekt', [I(res.rAnnen)]);
-    P.sumDrift = w.sum('Sum driftsinntekter', [{f:'SUM(D' + P.salg + ':D' + P.annen + ')', v:R.sumDrift}]);
+    var tilR = egneR('di', P.annen);
+    P.sumDrift = w.sum('Sum driftsinntekter', [{f:'SUM(D' + P.salg + ':D' + tilR + ')', v:R.sumDrift}]);
     w.gruppe('Driftskostnader');
     P.vare = w.post('4000', 'Varekostnad', [I(res.rVare)]);
     w.post('5000', 'Lønnskostnad inkl. arbeidsgiveravgift', [I(res.rLonn)]);
     P.avskr = w.post('6000', 'Avskrivning', [I(res.rAvskr)]);
     P.annenK = w.post('6790', 'Annen driftskostnad', [I(res.rAnnenKost)]);
-    P.sumKost = w.sum('Sum driftskostnader', [{f:'SUM(D' + P.vare + ':D' + P.annenK + ')', v:R.sumKost}]);
+    tilR = egneR('dk', P.annenK);
+    P.sumKost = w.sum('Sum driftskostnader', [{f:'SUM(D' + P.vare + ':D' + tilR + ')', v:R.sumKost}]);
     P.drift = w.total('Driftsresultat', [{f:'D' + P.sumDrift + '-D' + P.sumKost, v:R.drift}]);
     w.gruppe('Finansposter');
     P.finI = w.post('8050', 'Finansinntekt', [I(res.rFinInnt)]);
+    var tilFi = egneR('fi', P.finI);
     P.finK = w.post('8150', 'Finanskostnad', [I(res.rFinKost)]);
-    P.finans = w.sum('Netto finansposter', [{f:'D' + P.finI + '-D' + P.finK, v:R.finans}]);
+    var tilFk = egneR('fk', P.finK);
+    P.finans = w.sum('Netto finansposter', [{f:(tilFi === P.finI ? 'D' + P.finI : 'SUM(D' + P.finI + ':D' + tilFi + ')')
+      + '-' + (tilFk === P.finK ? 'D' + P.finK : 'SUM(D' + P.finK + ':D' + tilFk + ')'), v:R.finans}]);
     P.forSkatt = w.total('Resultat før skatt', [{f:'D' + P.drift + '+D' + P.finans, v:R.forSkatt}]);
     var skattCelle = enk ? {v:0} : egenSkatt ? I(R.skatt) : {f:'', v:R.skatt};
     P.skatt = w.post('8300', enk ? 'Skattekostnad (eieren skatter privat)' : 'Skattekostnad', [skattCelle]);
@@ -297,20 +310,34 @@
     function x(r){ return EX.filter(function(e){ return e.r === r; }).map(function(e){ return (e.g === 'anl' || e.g === 'oml' ? '-' : '+') + d(e.id); }).join(''); }
     var skattRef = 'Resultat!D' + P.skatt, avskrRef = 'Resultat!D' + P.avskr;
     var skattGjeld = '(' + d('bGKSkat') + x('skatt') + ')';
-    // Kjøp til kostpris = endring i driftsmidlene (også egne poster med rolle anl, alltid eiendeler) + avskrivning
+    // De egne resultatpostene med rollen ro, som cellereferanser med fortegn (samme regler som regnRes)
+    function rx(ro, g, tegn){ return RX.filter(function(e){ return e.r === ro && e.g === g; }).map(function(e){ return tegn + 'Resultat!D' + P[e.id]; }).join(''); }
+    var gevF = rx('gev', 'di', '+') + rx('gev', 'dk', '-'), gev = '(' + gevF.replace(/^\+/, '') + ')';
+    var nedF = rx('ned', 'dk', '+'), nedfinF = rx('nedfin', 'fk', '+');
+    // Kjøp til kostpris = endring i driftsmidlene (også egne poster med rolle anl, alltid eiendeler) + avskrivning + nedskrivning
     var kjop = '(' + d('bAnlForsk') + '+' + d('bAnlEiend') + '+' + d('bAnlMask')
-      + EX.filter(function(e){ return e.r === 'anl'; }).map(function(e){ return '+' + d(e.id); }).join('') + '+' + avskrRef + ')';
+      + EX.filter(function(e){ return e.r === 'anl'; }).map(function(e){ return '+' + d(e.id); }).join('') + '+' + avskrRef + nedF + ')';
     var FORM = {
       opRes: 'Resultat!D' + P.forSkatt, opSkatt: '-MAX(0,' + skattRef + '-' + skattGjeld + ')', opAvskr: avskrRef,
       opVarelager: '-' + d('bOmlVare'), opKunde: '-' + d('bOmlKund'), opLevgjeld: d('bGKLev'),
       opAnnet: d('bGKAnnen') + x('drift') + '+MAX(0,' + skattGjeld + '-' + skattRef + ')',
-      invSalg: 'MAX(0,-' + kjop + ')', invKjop: '-MAX(0,' + kjop + ')', invAksjer: '-' + d('bAnlInv') + x('aksjer'),
+      // Salgssummen = bokført verdi + gevinst: netto investering = gevinst − (endring + avskrivning + nedskrivning)
+      invSalg: gevF ? 'MAX(0,' + gev + '-' + kjop + ')' : 'MAX(0,-' + kjop + ')',
+      invKjop: gevF ? '-MAX(0,' + kjop + '-' + gev + ')' : '-MAX(0,' + kjop + ')',
+      invAksjer: '-' + d('bAnlInv') + x('aksjer') + nedfinF.replace(/\+/g, '-'),
       finGjeld: d('bGLBank') + '+' + d('bGLAnnen') + x('gjeld'), finEk: d('bEkAks') + '+' + d('bEkOver') + x('ek'),
       // Utbytte satt av i år minus det som fortsatt er skyldig (NRS 8 kap. 5.3.1)
       finUtbytte: '-(Resultat!D' + P.ar + '-' + d('bEkOpp') + ')' + x('utbytte'),
       kontIB: 'Balanse!E' + Q.bOmlBank, kontBalUB: 'Balanse!D' + Q.bOmlBank
     };
     if(x('kasse')) FORM.finKasse = x('kasse').replace(/^\+/, '');
+    if(gevF) FORM.opGevinst = '-' + gev;
+    if(nedF || nedfinF) FORM.opNedskr = (nedF + nedfinF).replace(/^\+/, '');
+    // Egne poster i kontantstrømmen står sist i aktiviteten sin (bare når tallene er brukerens egne, ikke hentet)
+    function egneK(g, forrige){
+      if(!avledet) KX.forEach(function(e){ if(e.g === g) forrige = w.post('', e.n, [I(e.v)]); });
+      return forrige;
+    }
     function k(id){ return [avledet && FORM[id] ? {f:FORM[id], v:kv[id] || 0} : I(kv[id])]; }
     w.tittel('Kontantstrøm', 'Indirekte modell · regnskapsåret ' + aar + ' · beløp i kroner');
     w.hode([String(aar)]);
@@ -326,18 +353,21 @@
     w.post('', 'Endring i kundefordringer', k('opKunde'));
     w.post('', 'Endring i leverandørgjeld', k('opLevgjeld'));
     X.opAnnet = w.post('', 'Endring i andre tidsavgrensningsposter', k('opAnnet'));
-    X.op = w.sum('Netto kontantstrøm fra drift', [{f:'SUM(D' + X.opRes + ':D' + X.opAnnet + ')', v:K.op}]);
+    var tilK = egneK('op', X.opAnnet);
+    X.op = w.sum('Netto kontantstrøm fra drift', [{f:'SUM(D' + X.opRes + ':D' + tilK + ')', v:K.op}]);
     w.gruppe('Investering');
     X.invSalg = w.post('', 'Salg av varige driftsmidler', k('invSalg'));
     w.post('', 'Kjøp av varige driftsmidler', k('invKjop'));
     X.invAksjer = w.post('', 'Salg og kjøp av aksjer og andeler', k('invAksjer'));
-    X.inv = w.sum('Netto kontantstrøm fra investering', [{f:'SUM(D' + X.invSalg + ':D' + X.invAksjer + ')', v:K.inv}]);
+    tilK = egneK('inv', X.invAksjer);
+    X.inv = w.sum('Netto kontantstrøm fra investering', [{f:'SUM(D' + X.invSalg + ':D' + tilK + ')', v:K.inv}]);
     w.gruppe('Finansiering');
     X.finGjeld = w.post('', 'Endring i langsiktig gjeld', k('finGjeld'));
     w.post('', 'Endring i kassekreditt', k('finKasse'));
     w.post('', 'Inn- eller utbetalt egenkapital', k('finEk'));
     X.finUtbytte = w.post('', 'Utbetalt utbytte', k('finUtbytte'));
-    X.fin = w.sum('Netto kontantstrøm fra finansiering', [{f:'SUM(D' + X.finGjeld + ':D' + X.finUtbytte + ')', v:K.fin}]);
+    tilK = egneK('fin', X.finUtbytte);
+    X.fin = w.sum('Netto kontantstrøm fra finansiering', [{f:'SUM(D' + X.finGjeld + ':D' + tilK + ')', v:K.fin}]);
     X.net = w.band('Netto endring i kontanter', [{f:'D' + X.op + '+D' + X.inv + '+D' + X.fin, v:K.net}]);
     w.gruppe('Avstemming mot balansen');
     X.ib = w.post('', 'Kontanter 1. januar', k('kontIB'));
