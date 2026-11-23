@@ -27,6 +27,15 @@
       '</div>');
   }
 
+  /* Lyset står stille på undersidene (2026-11-23). Fire store lag med
+     mix-blend-mode som flytter seg, må settes sammen på nytt for hvert
+     bilde, også under rulling. Målt uten skjermkort (slik en eldre maskin
+     arbeider) på boliglån: 18 → 1,7 ms per bilde under rulling, og i ro
+     ingen bilder i stedet for ett ti ganger i sekundet. Lagene står der
+     de sto idet siden ble lastet, så bildet er det samme; bare driften
+     (perioder på 29–101 s) er borte. Forsiden beholder bevegelsen. */
+  if(!/^\/(index\.html)?$/.test(location.pathname)) document.documentElement.classList.add('a5-still');
+
   /* ── AURORA v5 CSS — injiseres sist i head så den vinner over alle
      eldre kopier. Nye klasse-/keyframe-navn (a5-prefiks) unngår kollisjon
      med bandA-/bandB-keyframes som er definert 3 steder (site-shell,
@@ -83,6 +92,20 @@
     '  .a5-arc{display:none}',
     '}',
     'html.a5-paused .a5,html.a5-paused .a5 *{animation-play-state:paused}',
+    /* html.a5-still (undersidene): ingen animasjon og ingen egne flater. 2D-transform, ikke
+       translate3d: 3D ville gitt hvert lag sin egen flate igjen. Verdiene er der animasjonene
+       sto ved sidelast (0 %, og de med negativ forsinkelse regnet fram). .a5 beholder a5In,
+       så lagene blandes med hverandre akkurat som før. */
+    'html.a5-still .a5>div,html.a5-still .a5 .a5-i{animation:none;will-change:auto}',
+    'html.a5-still .a5-arc{transform:rotate(-2.1deg) translate(-1.4%,0)}',
+    'html.a5-still .a5-va{transform:translate(-5.5%,0) rotate(-1.4deg)}',
+    'html.a5-still .a5-vb{transform:translate(-4.9%,.35%) rotate(-1.46deg)}',
+    'html.a5-still .a5-va .a5-i{transform:translate(0,-2%)}',
+    'html.a5-still .a5-vb .a5-i{transform:translate(0,-1.57%) scale(1.003)}',
+    '@media (max-width:768px){',
+    '  html.a5-still .a5-vb{transform:translate(-3%,-.52%) rotate(-.65deg)}',
+    '  html.a5-still .a5-vb .a5-i{transform:translate(0,1.8%) scale(1.03)}',
+    '}',
     /* Muselyset og kornlaget er borte (2026-11-03). De lå på 4–5 og 3,5 % styrke, men målt
        før/etter på Retina-skjerm (1440×900 @2x) ga det 60–70 % mindre arbeid på hovedtråden og
        60–90 % mindre på skjermkortet når musa beveges, og 15–25 % mindre på skjermkortet under
