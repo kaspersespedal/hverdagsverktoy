@@ -6509,7 +6509,7 @@ REGIONS['ar']._ph = {
 "Lag et budsjett":"أنشئ ميزانية",
 "Lag et budsjett av dette":"أنشئ ميزانية من هذا",
 "Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV":"أنشئ ميزانية شخصية بكل الدخل والمصاريف — نزّلها كملف CSV",
-"Lag et personlig budsjett med inntekter og utgifter":"أنشئ ميزانية شخصية بالدخل والمصاريف",
+"Lag et budsjett for deg selv eller bedriften, med inntekter og utgifter":"أنشئ ميزانية لنفسك أو لشركتك، بالدخل والمصاريف",
 "Lager du én ensartet vare, deler du periodens totale kostnader på antall produserte enheter. Ferdig.":"إذا صنعت سلعة واحدة متجانسة، تقسم إجمالي تكاليف الفترة على عدد الوحدات المنتجة. انتهى.",
 "Landet kost inn i marginkalkylen gir en veiledende utsalgspris som faktisk holder.":"إدخال التكلفة عند الوصول في حساب الهامش يعطي سعر بيع إرشاديًا يصمد فعلًا.",
 "Lang sikt (10+ år):":"المدى الطويل (10+ سنوات):",

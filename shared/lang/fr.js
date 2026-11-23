@@ -6217,7 +6217,7 @@ REGIONS['fr']._ph = {
 "Lag et budsjett":"Faites un budget",
 "Lag et budsjett av dette":"Faire un budget à partir de ça",
 "Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV":"Créez un budget personnel avec tous les revenus et dépenses — téléchargez en CSV",
-"Lag et personlig budsjett med inntekter og utgifter":"Créez un budget personnel avec revenus et dépenses",
+"Lag et budsjett for deg selv eller bedriften, med inntekter og utgifter":"Créez un budget pour vous ou pour votre entreprise, avec revenus et dépenses",
 "Lager du én ensartet vare, deler du periodens totale kostnader på antall produserte enheter. Ferdig.":"Si vous fabriquez un seul produit uniforme, divisez les coûts totaux de la période par le nombre d'unités produites. C'est tout.",
 "Landet kost inn i marginkalkylen gir en veiledende utsalgspris som faktisk holder.":"Le coût d'importation intégré au calcul de marge donne un prix de vente indicatif qui tient vraiment.",
 "Lang sikt (10+ år):":"Long terme (10+ ans) :",
