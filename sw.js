@@ -1,5 +1,5 @@
 // Hverdagsverktøy — Service Worker v1.0
-const CACHE_NAME = 'hverdagsverktoy-v503';
+const CACHE_NAME = 'hverdagsverktoy-v504';
 
 // Files to cache on SW install for offline use.
 // Lang files are NOT precached — they'd add ~2.5 MB to install cost and most users
@@ -12,7 +12,7 @@ const PRECACHE_URLS = [
   './',
   './manifest.json',
   './skatt/skattemelding/',
-  './shared/satser.js?v=v2',  // skattemeldingen virker ikke uten den; samme ?v= som på sidene
+  './shared/satser.js?v=v3',  // skattemeldingen virker ikke uten den; samme ?v= som på sidene
   './shared/kalender.js?v=v2',  // kalenderen på forsiden hentes først ved trykk; uten denne er knappen død uten nett. Samme ?v= som i index.html (#kalBoot)
   './avansert/finans/',
   './avansert/finans/dcf/',

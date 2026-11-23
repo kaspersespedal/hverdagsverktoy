@@ -317,11 +317,11 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                 <div class="ik-row">
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bsu-alt-rate"><span data-i18n="bsuLblAltRate">Rente på vanlig sparekonto</span> <span class="cap">(%)</span></label>
-                    <input id="bsu-alt-rate" class="ik-input" type="text" value="4,0" step="0.1" min="0" max="20" inputmode="decimal" autocomplete="off">
+                    <input id="bsu-alt-rate" class="ik-input" type="text" value="2,88" step="0.1" min="0" max="20" inputmode="decimal" autocomplete="off">
                   </div>
                   <div class="ik-fg">
                     <label class="ik-lbl" for="bsu-bsu-rate"><span data-i18n="bsuLblBsuRate">BSU-rente</span> <span class="cap">(%)</span></label>
-                    <input id="bsu-bsu-rate" class="ik-input" type="text" value="4,5" step="0.1" min="0" max="20" inputmode="decimal" autocomplete="off">
+                    <input id="bsu-bsu-rate" class="ik-input" type="text" value="5,6" step="0.1" min="0" max="20" inputmode="decimal" autocomplete="off">
                   </div>
                 </div>
               </div>
@@ -401,7 +401,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
         <p class="lrn-lede">Du kan sette inn 27&nbsp;500 kr i året med 10&nbsp;% skattefradrag, til innskuddene til sammen når 300&nbsp;000 kr. Rentene teller ikke mot taket, så saldoen kan bli høyere.</p>
       </div>
       <div class="lrn-bar">
-        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">27&nbsp;500 kr i året · fra 23 år · 4,5 % rente</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
+        <p class="lrn-state" data-state="eksempel"><span class="lrn-state-l"><span class="lrn-dot" aria-hidden="true"></span><span data-lrn="stateLabel">Eksempel</span></span><span class="lrn-state-t" data-lrn="stateText">27&nbsp;500 kr i året · fra 23 år · 5,6 % rente</span><a class="lrn-state-a" href="#main">Bruk mine tall ↑</a></p>
         <div class="lrn-age">
           <div class="lrn-age-t"><span id="lrn-bsu-alder">Alder i år</span><span data-lrn="ageHint">Valgfritt. Lagres ikke og endrer ikke kalkulatoren.</span></div>
           <div class="lrn-step" role="group" aria-labelledby="lrn-bsu-alder">
@@ -514,12 +514,12 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v358"></script>
 <script defer src="/shared/top-chrome.js?v=v496"></script>
-<script defer src="/shared/core.js?v=v502"></script>
-<script defer src="/shared/lang/no.js?v=v464"></script>
+<script defer src="/shared/core.js?v=v504"></script>
+<script defer src="/shared/lang/no.js?v=v504"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
-<script src="/shared/satser.js?v=v2" data-varsel="skatt"></script>
+<script src="/shared/satser.js?v=v3" data-varsel="skatt"></script>
 <script>
 // ── BSU-kalkulator: portet calcBsu-logikk (matte uendret), nå live + ks-skall ──
 (function(){
@@ -558,8 +558,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     var years   = rawYears > 0 ? Math.max(1, Math.min(rawYears, 15)) : 10;
     // «Fradrag du får brukt» i prosent: 100 = hele fradraget går til fratrekk i skatten
     var fradragBrukt = Math.max(0, getVal('bsu-tax-rate', 100));
-    var altRate = Math.max(0, getVal('bsu-alt-rate', 4.0));
-    var bsuRate = Math.max(0, getVal('bsu-bsu-rate', 4.5));
+    var altRate = Math.max(0, getVal('bsu-alt-rate', HV_SATSER.renter.innskuddUtenBinding));
+    var bsuRate = Math.max(0, getVal('bsu-bsu-rate', HV_SATSER.renter.bsu));
 
     // Sync år-input hvis clamped
     var _yEl = document.getElementById('bsu-years');
@@ -750,6 +750,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   if(_yearsEl) _yearsEl.addEventListener('blur', recalc);
 
   // ── Init ──
+  // Standardrentene er SSB-snittet i shared/satser.js (verdiene i feltene over er bare reserve)
+  document.getElementById('bsu-alt-rate').value = String(HV_SATSER.renter.innskuddUtenBinding).replace('.', ',');
+  document.getElementById('bsu-bsu-rate').value = String(HV_SATSER.renter.bsu).replace('.', ',');
   restore();
   recalc();
   // core.js laster språkfila etter dette skriptet, og på nytt ved språkbytte.
@@ -769,8 +772,8 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   var KEY = 'boliglan-bsu';
   var MAXY = HV_SATSER.skatt.bsuMaksAar, CAP = HV_SATSER.skatt.bsuMaksTotalt;
   // Standardverdiene i feltene over. Står alle slik, viser blokken eksempelet: maks innskudd i elleve år fra 23 år.
-  var DEF = {monthly:2291, years:10, brukt:100, alt:4, bsu:4.5};
-  var EKS = {yearly:MAXY, years:11, brukt:100, alt:4, bsu:4.5};
+  var DEF = {monthly:2291, years:10, brukt:100, alt:HV_SATSER.renter.innskuddUtenBinding, bsu:HV_SATSER.renter.bsu};
+  var EKS = {yearly:MAXY, years:11, brukt:100, alt:HV_SATSER.renter.innskuddUtenBinding, bsu:HV_SATSER.renter.bsu};
   var root, plot, svg, raw = null, age = null, lastW = 0, queued = false, ctx;
 
   function q(name){ return root.querySelector('[data-lrn="' + name + '"]'); }
