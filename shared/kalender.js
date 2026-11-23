@@ -6,6 +6,7 @@
    Viser: månedsvisning med ukenummer, norske helligdager og merkedager, egne
    avtaler og de fristene brukeren selv har valgt (via «Hvem er du?» eller én
    og én). Alt brukeren legger inn, lagres bare i nettleseren (localStorage).
+   Søkefeltet over rutenettet hopper til en dato, en uke eller en navngitt dag.
 
    Bare norsk tekst foreløpig: roten har data-ph-skip, så frase-ordboka i
    core.js ikke oversetter enkeltord midt i norsk tekst.
@@ -182,7 +183,7 @@ function dayInfo(d){return yearIdx(d.getFullYear())[key(d)]||null;}
 function isRed(d,info){return d.getDay()===0||!!(info&&info.hol.some(function(h){return h.red;}));}
 
 /* ═══ Tilstand ═══ */
-var S={today:day0(new Date()),sel:null,y:0,m:0,view:"cal",editId:null,q:"",trigger:null,dir:"",armed:false};
+var S={today:day0(new Date()),sel:null,y:0,m:0,view:"cal",editId:null,q:"",sq:"",trigger:null,dir:"",armed:false};
 var root=null,panel=null,viewEl=null,hideTimer=null;
 
 /* ═══ Ikoner ═══ */
@@ -216,7 +217,7 @@ function gridHtml(){
     h+='<div class="kal-row"><span class="kal-wk" aria-hidden="true">'+isoWeek(d)+'</span>';
     for(i=0;i<7;i++){
       d=addDays(start,w*7+i);info=dayInfo(d);
-      cls="kal-d";lab=longDate(d);dots="";
+      cls="kal-d";lab=longDate(d)+", uke "+isoWeek(d);dots="";
       if(d.getMonth()!==S.m)cls+=" is-out";
       if(isRed(d,info))cls+=" is-red";
       if(key(d)===tk){cls+=" is-today";lab+=", i dag";}
@@ -269,6 +270,98 @@ function upcoming(max){
   }
   return out.slice(0,max);
 }
+
+/* ═══ Søk: hopp til en dato ═══
+   «17.5.2027», «17. mai», «mai 2027», «uke 12», «2030», «om 3 uker», eller et navn
+   som «påske» (helligdager, egne avtaler og valgte frister). Uten årstall gjelder
+   neste gang datoen kommer. */
+function monthOf(s){
+  if(s.length<3)return -1;
+  for(var i=0;i<12;i++)if(MOL[i].indexOf(s)===0)return i;
+  return -1;
+}
+function okYear(y){return y>=1900&&y<=2199;}
+function addMonths(d,n){
+  var x=new Date(d.getFullYear(),d.getMonth()+n,1),last=new Date(x.getFullYear(),x.getMonth()+1,0).getDate();
+  return new Date(x.getFullYear(),x.getMonth(),Math.min(d.getDate(),last));
+}
+/* Dag d i måned m i året ys, eller neste gang den kommer når året mangler (29. februar kan ta noen år) */
+function dmy(d,m,ys){
+  var y,i,x;
+  if(ys){y=ys.length===2?2000+(+ys):+ys;x=new Date(y,m,d);return okYear(y)&&x.getMonth()===m&&x.getDate()===d?x:null;}
+  for(i=0;i<9;i++){y=S.today.getFullYear()+i;x=new Date(y,m,d);if(x.getMonth()===m&&x.getDate()===d&&x>=S.today)return x;}
+  return null;
+}
+/* Mandagen i ISO-uke w i år y, eller null når året ikke har den uka */
+function weekStart(y,w){
+  var j=new Date(y,0,4),mon=addDays(j,-((j.getDay()+6)%7)+(w-1)*7);
+  return w>=1&&isoWeek(mon)===w?mon:null;
+}
+function parseQ(q){
+  var m,mo,y,n,u,d;
+  if((m=q.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/)))return {d:dmy(+m[3],+m[2]-1,m[1])};
+  if((m=q.match(/^(\d{1,2})[.\/-](\d{1,2})(?:[.\/-](\d{2}|\d{4}))?\.?$/)))return {d:dmy(+m[1],+m[2]-1,m[3])};
+  if((m=q.match(/^(\d{1,2})\.? ?([a-zæøå]+)\.?(?: (\d{2}|\d{4}))?$/))&&(mo=monthOf(m[2]))>=0)return {d:dmy(+m[1],mo,m[3])};
+  if((m=q.match(/^([a-zæøå]+)\.?(?: (\d{4}))?$/))&&(mo=monthOf(m[1]))>=0){
+    y=m[2]?+m[2]:S.today.getFullYear()+(mo<S.today.getMonth()?1:0);
+    return okYear(y)?{d:new Date(y,mo,1),mo:1}:null;
+  }
+  if((m=q.match(/^(?:uke|u)\.? ?(\d{1,2})(?: (\d{4}))?$/))){
+    n=+m[1];
+    if(m[2])y=+m[2];
+    else{y=addDays(S.today,3-((S.today.getDay()+6)%7)).getFullYear();if(n<isoWeek(S.today))y++;}
+    return okYear(y)?{d:weekStart(y,n),w:n,y:y}:null;
+  }
+  if(/^\d{4}$/.test(q))return okYear(+q)?{d:new Date(+q,0,1)}:null;
+  if((m=q.match(/^(?:om )?(\d{1,4}) ?(dager|dag|d|uker|uke|u|måneder|måned|mnd|år)$/))){
+    n=+m[1];u=m[2];
+    d=u.charAt(0)==="d"?addDays(S.today,n):u.charAt(0)==="u"?addDays(S.today,7*n):addMonths(S.today,u==="år"?12*n:n);
+    return okYear(d.getFullYear())?{d:d}:null;
+  }
+  return null;
+}
+/* Navngitte dager fra i dag og to år frem */
+function nameHits(q,max){
+  var out=[],y=S.today.getFullYear(),tk=key(S.today),yy,mm,ks,i,info,d;
+  if(q.length<3||!/[a-zæøå]/.test(q))return out;
+  function hit(s){return s.toLowerCase().indexOf(q)>=0;}
+  for(yy=y;yy<=y+2&&out.length<max;yy++){
+    mm=yearIdx(yy);ks=Object.keys(mm).sort();
+    for(i=0;i<ks.length&&out.length<max;i++){
+      if(ks[i]<tk)continue;
+      info=mm[ks[i]];d=fromKey(ks[i]);
+      info.hol.forEach(function(x){if(hit(x.n))out.push({d:d,t:x.n});});
+      info.ev.forEach(function(e){if(hit(e.t))out.push({d:d,t:e.t});});
+      info.fr.forEach(function(x){if(hit(x.n+" "+x.short))out.push({d:d,t:x.short});});
+    }
+  }
+  return out.slice(0,max);
+}
+function fullDate(d){return cap(WDL[d.getDay()])+" "+d.getDate()+". "+MOL[d.getMonth()]+" "+d.getFullYear();}
+function searchResults(){
+  var q=S.sq.trim().toLowerCase().replace(/,/g," ").replace(/\s+/g," "),p,r=[];
+  if(!q)return r;
+  p=parseQ(q);
+  if(p&&p.d){
+    if(p.w)r.push({d:p.d,t:"Uke "+p.w+", "+p.y,s:"Fra "+longDate(p.d)+" til "+longDate(addDays(p.d,6))});
+    else r.push({d:p.d,t:p.mo?MOF[p.d.getMonth()]+" "+p.d.getFullYear():fullDate(p.d),s:"Uke "+isoWeek(p.d)+" · "+relText(p.d)});
+  }
+  nameHits(q,4).forEach(function(x){r.push({d:x.d,t:x.t,s:fullDate(x.d)+" · uke "+isoWeek(x.d)});});
+  return r;
+}
+function searchHtml(){
+  if(!S.sq.trim())return "";
+  var r=searchResults(),h='';
+  if(!r.length)return '<p class="kal-empty">Fant ingen dato. Prøv for eksempel 17.5.2027, 3. mars, uke 12, om 3 uker eller påske.</p>';
+  h+='<ul class="kal-list kal-up">';
+  r.forEach(function(u){
+    h+='<li><button type="button" class="kal-upb" data-act="sgo" data-d="'+key(u.d)+'">'+
+      '<span class="kal-flak"><b>'+u.d.getDate()+'</b><i>'+MOS[u.d.getMonth()]+'</i></span>'+
+      '<span class="kal-tx"><b>'+esc(u.t)+'</b><small>'+esc(u.s)+'</small></span></button></li>';
+  });
+  return h+'</ul>';
+}
+function refreshSearch(){var l=viewEl.querySelector("[data-kal-sres]");if(l)l.innerHTML=searchHtml();}
 function calHtml(){
   var info=dayInfo(S.sel),items=itemsHtml(S.sel,info),up=upcoming(5),h,n=0;
   data.fr.forEach(function(id){if(fristById(id))n++;});
@@ -278,9 +371,12 @@ function calHtml(){
     '<button type="button" class="kal-arrow" data-act="prev" aria-label="Forrige måned">'+I.l+'</button>'+
     '<button type="button" class="kal-arrow" data-act="next" aria-label="Neste måned">'+I.r+'</button></div></div>');
   h+='<div class="kal-body"><div class="kal-pad">';
+  h+='<div class="kal-search" role="search"><input type="search" class="kal-in" data-kal-s placeholder="Søk: 17. mai, uke 12, påske" '+
+    'aria-label="Søk etter dato, uke eller dag" autocomplete="off" enterkeyhint="go" value="'+esc(S.sq)+'">'+
+    '<div class="kal-sres" data-kal-sres aria-live="polite">'+searchHtml()+'</div></div>';
   h+='<div class="kal-grid'+(S.dir?" go-"+S.dir:"")+'" data-kal-grid>'+gridHtml()+'</div>';
   h+='<p class="kal-legend" aria-hidden="true"><span><i class="f"></i>Frist</span><span><i class="e"></i>Avtale</span><span><i class="h"></i>Merkedag</span><span><b>7</b>Rød dag</span></p>';
-  h+='<section class="kal-sec" aria-live="polite"><div class="kal-sec-head"><h3>'+esc(cap(longDate(S.sel)))+'</h3><span class="kal-rel">'+relText(S.sel)+'</span></div>'+
+  h+='<section class="kal-sec" aria-live="polite"><div class="kal-sec-head"><h3>'+esc(cap(longDate(S.sel)))+'</h3><span class="kal-rel">Uke '+isoWeek(S.sel)+' · '+relText(S.sel)+'</span></div>'+
     (items?'<ul class="kal-list">'+items+'</ul>':'<p class="kal-empty">Ingenting denne dagen.</p>')+
     '<button type="button" class="kal-btn kal-add" data-act="new">'+I.plus+'<span>Ny avtale</span></button></section>';
   if(up.length){
@@ -415,6 +511,7 @@ function onClick(ev){
   else if(act==="next")shiftMonth(1,'[data-act="next"]');
   else if(act==="today")select(S.today,true);
   else if(act==="goto")select(fromKey(b.getAttribute("data-d")),true);
+  else if(act==="sgo"){S.sq="";select(fromKey(b.getAttribute("data-d")),true);}
   else if(act==="new"){S.editId=null;show("form","first");}
   else if(act==="edit"){S.editId=b.getAttribute("data-id");show("form","first");}
   else if(act==="fr"){S.q="";show("fr","first");}
@@ -446,6 +543,7 @@ function onChange(ev){
 }
 function onInput(ev){
   if(ev.target.matches&&ev.target.matches("[data-kal-q]")){S.q=ev.target.value.trim().toLowerCase();refreshFrList();}
+  if(ev.target.matches&&ev.target.matches("[data-kal-s]")){S.sq=ev.target.value;refreshSearch();}
 }
 function onSubmit(ev){
   var f=ev.target;
@@ -463,6 +561,10 @@ function onSubmit(ev){
 }
 function onKey(ev){
   if(!root||!root.classList.contains("open"))return;
+  var sf=ev.target.matches&&ev.target.matches("[data-kal-s]");
+  /* I søkefeltet: Enter hopper til første treff, Escape tømmer feltet før det lukker */
+  if(sf&&ev.key==="Enter"){ev.preventDefault();var r=searchResults();if(r.length){S.sq="";select(r[0].d,true);}return;}
+  if(sf&&ev.key==="Escape"&&S.sq){ev.preventDefault();S.sq="";ev.target.value="";refreshSearch();return;}
   if(ev.key==="Escape"){ev.preventDefault();if(S.view==="cal")close();else show("cal","day");return;}
   var day=ev.target.closest&&ev.target.closest(".kal-d");
   if(day){
@@ -551,7 +653,7 @@ function open(trigger){
   if(hideTimer){clearTimeout(hideTimer);hideTimer=null;}
   data=load();idx={};
   S.trigger=trigger||null;S.today=day0(new Date());S.sel=S.today;
-  S.y=S.today.getFullYear();S.m=S.today.getMonth();S.view="cal";S.q="";S.editId=null;S.dir="";
+  S.y=S.today.getFullYear();S.m=S.today.getMonth();S.view="cal";S.q="";S.sq="";S.editId=null;S.dir="";
   render(null);
   root.hidden=false;root.setAttribute("aria-hidden","false");
   if(S.trigger)S.trigger.setAttribute("aria-expanded","true");
@@ -612,6 +714,11 @@ var CSS=
 /* Rullefelt */
 '.kal-body{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}'+
 '.kal-pad{padding:4px 22px 28px}'+
+
+/* Søk */
+'.kal-search{margin:2px 0 16px}'+
+'.kal-sres{margin-top:8px}'+
+'.kal-sres:empty{display:none}'+
 
 /* Rutenett */
 '.kal-grid{touch-action:pan-y;user-select:none;-webkit-user-select:none}'+
