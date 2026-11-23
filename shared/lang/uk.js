@@ -5658,7 +5658,7 @@ REGIONS['uk']._ph = {
 "Lag et budsjett":"Склади бюджет",
 "Lag et budsjett av dette":"Зроби з цього бюджет",
 "Lag et personlig budsjett med alle inntekter og utgifter — last ned som CSV":"Складіть особистий бюджет з усіма доходами та витратами — завантажте як CSV",
-"Lag et personlig budsjett med inntekter og utgifter":"Складіть особистий бюджет з доходами та витратами",
+"Lag et budsjett for deg selv eller bedriften, med inntekter og utgifter":"Складіть бюджет для себе або для компанії, з доходами та витратами",
 "Lager du én ensartet vare, deler du periodens totale kostnader på antall produserte enheter. Ferdig.":"Якщо ви виробляєте один однорідний товар, поділіть загальні витрати періоду на кількість вироблених одиниць. Готово.",
 "Landet kost inn i marginkalkylen gir en veiledende utsalgspris som faktisk holder.":"Вартість ввезення в розрахунку маржі дає орієнтовну роздрібну ціну, яка справді тримається.",
 "Lang sikt (10+ år):":"Довга перспектива (10+ років):",
