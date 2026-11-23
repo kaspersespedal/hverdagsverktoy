@@ -27,7 +27,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-normal.woff2?v=v1">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-italic.woff2?v=v1">
 <link rel="stylesheet" href="/shared/fonts.css?v=v2">
-<link rel="preload" href="/shared/core.js?v=v502" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v504" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -183,7 +183,7 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/learn.css?v=v8">
 
 <script defer src="/shared/atmosphere.js?v=v7"></script>
-<script defer src="/shared/core.js?v=v502"></script>
+<script defer src="/shared/core.js?v=v504"></script>
 <script defer src="/shared/lang/no.js?v=v464"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 
@@ -442,7 +442,7 @@ body.focus-mode > footer{display:none}
   </div>
 </footer>
 
-<script src="/shared/satser.js?v=v2" data-varsel="g"></script>
+<script src="/shared/satser.js?v=v3" data-varsel="g"></script>
 <script>
 (function(){
   'use strict';
@@ -450,6 +450,7 @@ body.focus-mode > footer{display:none}
   // ── Konstanter: G fra shared/satser.js ─
   var G        = HV_SATSER.g.verdi;
   var SIX_G    = 6 * G;
+  var HALV_G   = G / 2;          // nedre grense for sykepenger fra NAV (ftrl. § 8-3)
   var ARB_DAYS = 12;             // 16 kalenderdager ≈ 12 dager mandag–fredag (ftrl. § 8-19 og § 8-34)
   var MAX_NAV_DAYS = 248;        // 52 uker
   var TOTAL_MAX = ARB_DAYS + MAX_NAV_DAYS;  // 260
@@ -475,7 +476,9 @@ body.focus-mode > footer{display:none}
     var arbSum  = arbDays * arbDagSats;
 
     var navDays = Math.max(0, Math.min(sykDager - ARB_DAYS, MAX_NAV_DAYS));
-    var navGrunnlag = Math.min(brutto, SIX_G);
+    // Under halv G gir ingen sykepenger fra NAV, men arbeidsgiverperioden betales likevel (ftrl. § 8-3)
+    var underHalvG = brutto < HALV_G;
+    var navGrunnlag = underHalvG ? 0 : Math.min(brutto, SIX_G);
     var navProsent = status === 'selvstendig' ? 0.80 : 1.00;
     var navDagSats = (navGrunnlag * navProsent) / 260;
     var navSum = navDays * navDagSats;
@@ -495,7 +498,7 @@ body.focus-mode > footer{display:none}
       arbDays:arbDays, arbSum:arbSum, arbDagSats:arbDagSats,
       navDays:navDays, navSum:navSum, navDagSats:navDagSats, navMnd:navMnd,
       arbTopUpSum:arbTopUpSum, arbMnd:arbMnd, sumNavPeriodeMnd:sumNavPeriodeMnd,
-      overskudd:overskudd, overGrense:brutto > SIX_G,
+      overskudd:overskudd, overGrense:brutto > SIX_G, underHalvG:underHalvG,
       selvKarens:selvKarens,
       sumIalt:arbSum + navSum + arbTopUpSum,
       overflow:sykDager > TOTAL_MAX
@@ -624,7 +627,9 @@ body.focus-mode > footer{display:none}
 
   function renderStatusCap(r){
     var box = $('#syk-status-cap');
-    if(state.status === 'selvstendig'){
+    if(r.underHalvG){
+      box.innerHTML = '<div class="syk-cap warn"><span class="syk-cap-glyph">!</span><span class="syk-cap-text">' + tx('trPersonligSykCapHalvG', 'Lønnen din er under <b>halv G</b> ({grense} kr i året). Da får du <b>ikke sykepenger fra NAV</b>. Er du ansatt, betaler arbeidsgiveren likevel de første 16 dagene.').replace('{grense}', fmtKr(HALV_G)) + '</span></div>';
+    } else if(state.status === 'selvstendig'){
       box.innerHTML = '<div class="syk-cap warn"><span class="syk-cap-glyph">!</span><span class="syk-cap-text">' + tx('trPersonligSykCapSelv', 'Som <b>selvstendig næringsdrivende</b> får du <b>ingen utbetaling</b> de første 16 kalenderdagene, og deretter <b>80 %</b> av grunnlaget — opp til 6G. Tilleggsforsikring hos NAV kan heve dekningen.') + '</span></div>';
     } else if(r.overGrense){
       box.innerHTML = '<div class="syk-cap warn"><span class="syk-cap-glyph">!</span><span class="syk-cap-text">Lønnen din er over <b>6G-taket</b>' + tx('trPersonligSykCapOver', ' ({tak} kr). NAV utbetaler kun opp til taket — {over} kr per år regnes ikke med. Mange tariffavtaler dekker mellomlegget.').replace('{tak}', fmtKr(SIX_G)).replace('{over}', fmtKr(r.overskudd)) + '</span></div>';
@@ -714,7 +719,9 @@ body.focus-mode > footer{display:none}
       : r.arbDagSats < r.dagSats ? 'Lønn opp til 6G (arbeidsgiver)' : 'Full lønn (arbeidsgiver)';
     $('[data-syk="resMnd"]').textContent = fmtKr(r.navDays > 0 ? r.sumNavPeriodeMnd : r.arbDagSats * 260 / 12);
     var sub = $('[data-syk="resSub"]');
-    if(r.navDays > 0){
+    if(r.navDays > 0 && r.underHalvG){
+      sub.textContent = tx('trPersonligSykSubHalvG', 'Ingen sykepenger fra NAV under halv G.');
+    } else if(r.navDays > 0){
       sub.innerHTML = tx('trPersonligSykSubNav', 'NAV utbetaler i <b>{n} dager</b>', r.navDays) + (r.arbMnd > 0 ? ' · <span style="color:var(--accent-2)">+'+fmtKr(r.arbMnd)+'</span> fra arbeidsgiver' : '');
     } else if(selv){
       sub.textContent = 'Selvstendige får ikke sykepenger de første 16 kalenderdagene.';
@@ -840,7 +847,7 @@ body.focus-mode > footer{display:none}
     var dagSats = S / 260, arbDays = Math.min(dager, 12);
     // Uten avtale om full lønn betaler arbeidsgiveren bare av lønn opp til 6G; selvstendige har ventetid uten utbetaling
     var arbSum = arbDays * (status === 'selvstendig' ? 0 : (arbDekker ? dagSats : Math.min(S, SIX) / 260));
-    var navDays = Math.max(0, Math.min(dager - 12, 248)), navDagSats = Math.min(S, SIX) * (status === 'selvstendig' ? 0.8 : 1) / 260, navSum = navDays * navDagSats;
+    var navDays = Math.max(0, Math.min(dager - 12, 248)), navDagSats = S < G1 / 2 ? 0 : Math.min(S, SIX) * (status === 'selvstendig' ? 0.8 : 1) / 260, navSum = navDays * navDagSats;
     var overskudd = Math.max(0, S - SIX), dekker = arbDekker && status !== 'selvstendig';
     var topUp = dekker ? navDays * overskudd / 260 : 0;
     return {dagSats:dagSats, arbDays:arbDays, arbSum:arbSum, navDays:navDays, navSum:navSum, topUp:topUp, sum:arbSum + navSum + topUp, navMnd:navDagSats * 260 / 12, arbMnd:dekker ? overskudd / 12 : 0};

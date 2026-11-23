@@ -57,6 +57,15 @@
       minsteSats:       0.46,    // minstefradrag i lønn (skatteloven § 6-32)
       minsteMaks:       95700,   // skattevedtaket § 6-1
       personfradrag:    114540,  // klasse 1, skattevedtaket § 6-3
+      minstePensjonSats: 0.40,   // minstefradrag i pensjon (skatteloven § 6-32)
+      minstePensjonMaks: 75400,  // skattevedtaket § 6-1
+
+      // Skattefradrag for pensjonsinntekt (skatteloven § 16-1, skattevedtaket § 6-5 endret 19.6.2026)
+      pensjonFradrag:     39100,
+      pensjonTrinn1:      294200,  // fradraget trappes ned med 19,1 % av pensjonen over dette
+      pensjonTrinn1Sats:  0.191,
+      pensjonTrinn2:      437100,  // og med 6 % av pensjonen over dette
+      pensjonTrinn2Sats:  0.06,
 
       // Trygdeavgift (skatteetaten.no/satser/trygdeavgift)
       trygdLonn:        0.076,   // lønn, 17–69 år

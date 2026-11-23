@@ -295,6 +295,10 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
                 <span class="fp-cap-glyph" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="2.5 7.5 5.5 10.5 11.5 3.5"/></svg></span>
                 <span class="fp-cap-text">Lønnen din er under <b>6G-taket</b> — du får full kompensasjon for hele grunnlaget på <b id="capUnderG">0 kr</b>.</span>
               </div>
+              <div class="fp-cap alert" id="capHalvG" style="display:none">
+                <span class="fp-cap-glyph">!</span>
+                <span class="fp-cap-text">Lønnen din er under <b>halv G</b> (<b id="capHalvGG">68 275 kr</b>). Da får du ikke foreldrepenger fra NAV, men du kan ha rett til engangsstønad.</span>
+              </div>
               <div class="fp-cap alert" id="capOver" style="display:none">
                 <span class="fp-cap-glyph">!</span>
                 <span class="fp-cap-text">Lønnen din er over <b>6G-taket</b> (<b id="capOverTak">819 294 kr</b>). NAV kompenserer kun opp til taket — de øverste <b id="capOverDiff">0 kr</b> av årslønnen din regnes ikke med. Mange arbeidsgivere dekker mellomlegget.</span>
@@ -515,12 +519,12 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
 
 <script defer src="/shared/site-shell.js?v=v358"></script>
 <script defer src="/shared/top-chrome.js?v=v496"></script>
-<script defer src="/shared/core.js?v=v502"></script>
+<script defer src="/shared/core.js?v=v504"></script>
 <script defer src="/shared/lang/no.js?v=v464"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script src="/shared/atmosphere.js?v=v7" defer></script>
 
-<script src="/shared/satser.js?v=v2" data-varsel="g"></script>
+<script src="/shared/satser.js?v=v3" data-varsel="g"></script>
 <script>
 // ── Foreldrepenger 2026: vanilla-port av "Foreldrepenger on Site.html" (design-system ZIP)
 // Kilde: NAV, Folketrygdloven kap. 14. G leses fra shared/satser.js.
@@ -548,7 +552,9 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   var state = { brutto:620000, uttak:100, arbDekker:true };
 
   function calcFP(brutto, uttakPct, arbDekker){
-    var grunnlag  = Math.min(brutto, SIX_G);
+    // Under halv G gir ingen foreldrepenger (ftrl. § 14-7)
+    var underHalvG = brutto < G / 2;
+    var grunnlag  = underHalvG ? 0 : Math.min(brutto, SIX_G);
     var overskudd = Math.max(0, brutto - SIX_G);
     var aarSats = uttakPct === 100 ? grunnlag : grunnlag * 0.80;
     var ukeSats = aarSats / 52;
@@ -568,7 +574,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     return {
       grunnlag: grunnlag, overskudd: overskudd, ukeSats: ukeSats, mndSats: mndSats,
       totalNAV: totalNAV, dager: p.total, kvoter: kvoter, mndTotal: mndTotal,
-      arbTopUp: arbTopUp, overGrense: brutto > SIX_G
+      arbTopUp: arbTopUp, overGrense: brutto > SIX_G, underHalvG: underHalvG
     };
   }
 
@@ -597,7 +603,13 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
     $('rLengde').textContent   = fmtUker(r.dager);
 
     // Over/under 6G callout + arbeidsgiver-seksjon
-    if(r.overGrense){
+    $('capHalvG').style.display = r.underHalvG ? '' : 'none';
+    $('capHalvGG').textContent = fmtKr(G / 2);
+    if(r.underHalvG){
+      $('capUnder').style.display = 'none';
+      $('capOver').style.display = 'none';
+      $('secArb').style.display = 'none';
+    } else if(r.overGrense){
       $('capUnder').style.display = 'none';
       $('capOver').style.display = '';
       $('capOverTak').textContent = fmtKr(SIX_G);
@@ -720,7 +732,7 @@ details.howto[open] > summary{margin-bottom:14px;padding-bottom:14px;border-bott
   function rect(x, y, w, h){ return w > 0.2 && h > 0.2 ? 'M' + f2(x) + ',' + f2(y) + ' h' + f2(w) + ' v' + f2(h) + ' h' + f2(-w) + ' Z ' : ''; }
   // Kalkulatorens calcFP(): grunnlag opp til 6G, 80 % av det ved redusert sats, faste stønadsdager
   function calc(S, pct){
-    var grunnlag = Math.min(S, SIX), aar = pct === 100 ? grunnlag : grunnlag * 0.8, p = PER[pct], uke = aar / 52;
+    var grunnlag = S < HV_SATSER.g.verdi / 2 ? 0 : Math.min(S, SIX), aar = pct === 100 ? grunnlag : grunnlag * 0.8, p = PER[pct], uke = aar / 52;
     return {grunnlag:grunnlag, uke:uke, dager:p.total, uker:p.total / 5, tot:uke * p.total / 5, days:[p.pre, p.mor, p.total - p.pre - p.mor - p.far, p.far]};
   }
   function groupsOf(days){ return ['pre', 'mor', 'felles', 'far'].map(function(k, i){ return {k:k, days:days[i], n:Math.floor(days[i] / 5), part:(days[i] % 5) / 5}; }); }

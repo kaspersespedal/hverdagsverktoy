@@ -28,7 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-normal.woff2?v=v1">
 <link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-italic.woff2?v=v1">
 <link rel="stylesheet" href="/shared/fonts.css?v=v2">
-<link rel="preload" href="/shared/core.js?v=v502" as="script" fetchpriority="high">
+<link rel="preload" href="/shared/core.js?v=v504" as="script" fetchpriority="high">
 
 <script type="application/ld+json">
 {
@@ -306,7 +306,7 @@ footer em{font-style:italic}
 <link rel="stylesheet" href="/shared/calm-override.css?v=v5">
 
 <script defer src="/shared/atmosphere.js?v=v7"></script>
-<script defer src="/shared/core.js?v=v502"></script>
+<script defer src="/shared/core.js?v=v504"></script>
 <script defer src="/shared/lang/no.js?v=v464"></script>
 <script defer src="/shared/learn.js?v=v5"></script>
 <script defer src="/shared/steg-guide.js?v=v1"></script>
@@ -496,7 +496,7 @@ footer em{font-style:italic}
   </div>
 </footer>
 
-<script src="/shared/satser.js?v=v2" data-varsel="skatt g"></script>
+<script src="/shared/satser.js?v=v3" data-varsel="skatt g"></script>
 <script>
 (function(){
   'use strict';
@@ -661,6 +661,23 @@ footer em{font-style:italic}
     return Math.max(0, alm + trinn + trygd);
   }
 
+  // Skatt på alderspensjon per år (2026-satser, resten av Norge): 40 % minstefradrag med eget tak,
+  // trygdeavgift 5,1 % og skattefradrag for pensjonsinntekt (skatteloven § 16-1).
+  // Fradraget kan ikke bli større enn skatten (§ 16-1 sjette ledd).
+  function skattAvPensjon(pensjon){
+    var S = HV_SATSER.skatt;
+    var minste = Math.min(pensjon*S.minstePensjonSats, S.minstePensjonMaks);
+    var alm = Math.max(0, pensjon - minste - S.personfradrag) * 0.22;
+    var trinn = 0;
+    S.trinn.forEach(function(t){ trinn += Math.max(0, Math.min(pensjon, t.til) - t.fra) * t.sats; });
+    var trygd = pensjon > S.trygdNedre ? Math.min(pensjon*S.trygdLav, (pensjon-S.trygdNedre)*S.trygdOpptrapping) : 0;
+    var fradrag = S.pensjonFradrag
+      - Math.max(0, pensjon - S.pensjonTrinn1) * S.pensjonTrinn1Sats
+      - Math.max(0, pensjon - S.pensjonTrinn2) * S.pensjonTrinn2Sats;
+    var skatt = alm + trinn + trygd;
+    return Math.max(0, skatt - Math.min(skatt, Math.max(0, fradrag)));
+  }
+
   var BUD_CALCS = [
     {
       id:'lonn', col:'inntekt', label:'Lønn etter skatt',
@@ -822,7 +839,7 @@ footer em{font-style:italic}
       id:'pensjon', col:'inntekt', label:'Pensjon',
       eyebrow:'Inntekt', title:'Alderspensjon per måned',
       blurb:'Grovt anslag på alderspensjon ved 67 år: folketrygd (18,1 % opptjening opp til 7,1 G) pluss tjenestepensjon (OTP). Forenklet og veiledende — privat sparing og avkastning er holdt utenfor.',
-      resLabel:'Pensjon per måned før skatt', resSub:'Skatten er ikke trukket fra. Trekk den fra selv før du setter inn.',
+      resLabel:'Netto per måned', resSub:'Etter skatt på pensjon (2026-satser).',
       source:{href:'/personlig/pensjon/', text:'Åpne full pensjonskalkulator'},
       fields:[
         {id:'lonn', label:'Brutto årslønn', unit:'kr/år', def:650000, money:true},
@@ -846,9 +863,12 @@ footer em{font-style:italic}
         var otpAar = (lonn * (otp / 100) * aar) / 20;
         var totalAar = folkeAar + otpAar;
         var ratio = lonn > 0 ? Math.round(totalAar / lonn * 100) : 0;
-        return { amount: totalAar/12, lines:[
+        var skatt = skattAvPensjon(totalAar);
+        return { amount: (totalAar - skatt)/12, lines:[
           {l:tr('trPersonligBudsjettFolketrygd','Folketrygd'), v: fmtKr(folkeAar/12)},
           {l:'Tjenestepensjon (OTP)', v: fmtKr(otpAar/12)},
+          {l:'Brutto per måned', v: fmtKr(totalAar/12)},
+          {l:'Skatt per måned', v:'−'+fmtKr(skatt/12)},
           {l:'Erstatningsgrad', v: ratio + ' %'}
         ]};
       }
@@ -863,6 +883,8 @@ footer em{font-style:italic}
       compute:function(v){
         var brutto = Math.max(0, v.brutto);
         var SIX_G = 6 * HV_SATSER.g.verdi;
+        // Under halv G gir ingen sykepenger fra NAV (ftrl. § 8-3)
+        if(brutto < HV_SATSER.g.verdi / 2) return { invalid:'Under halv G ('+fmtKr(HV_SATSER.g.verdi / 2)+' i året) gir ingen sykepenger fra NAV.', lines:[] };
         var grunnlag = Math.min(brutto, SIX_G);
         var skatt = skattAvLonn(grunnlag);
         var lines = [
@@ -892,6 +914,8 @@ footer em{font-style:italic}
         var brutto = Math.max(0, v.brutto);
         var SIX_G = 6 * HV_SATSER.g.verdi;
         var pct = parseInt(v.dekning, 10) === 80 ? 80 : 100;
+        // Under halv G gir ingen foreldrepenger (ftrl. § 14-7)
+        if(brutto < HV_SATSER.g.verdi / 2) return { invalid:'Under halv G ('+fmtKr(HV_SATSER.g.verdi / 2)+' i året) gir ingen foreldrepenger. Du kan ha rett til engangsstønad.', lines:[] };
         var grunnlag = Math.min(brutto, SIX_G);
         var aarSats = pct === 100 ? grunnlag : grunnlag * 0.80;
         var over6G = Math.max(0, brutto - SIX_G);
