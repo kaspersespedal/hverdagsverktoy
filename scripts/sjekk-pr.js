@@ -12,6 +12,9 @@
       så uten nytt CACHE_NAME når endringen ikke dem som har vært innom før.
    3. Lærebokinnholdet: ingen commit i PR-en kan ha docs/referanse/ eller
       matematikk-22a-fila (fjernet av opphavsrettsgrunner 2026-08-19).
+   4. Lette språkfiler: shared/lang/no-lett/*.js må være laget fra dagens
+      no.js og sider (node scripts/gen-no-lett.js). Ellers viser sidene
+      gammel tekst eller mangler en tekst.
    ═══════════════════════════════════════════════════════════ */
 'use strict';
 const fs = require('fs');
@@ -60,6 +63,11 @@ if (treff.length) {
   feil.push('Commits i denne PR-en inneholder lærebokinnhold som ble fjernet 2026-08-19:\n  ' + treff.join('\n  '));
 }
 console.log('Lærebokinnhold: ' + (treff.length ? treff.length + ' treff' : 'ingen treff') + '.');
+
+// 4. Lette språkfiler
+const lett = spawnSync(process.execPath, ['scripts/gen-no-lett.js', '--sjekk'], { cwd: ROOT, encoding: 'utf8' });
+if (lett.status !== 0) feil.push(((lett.stderr || '') + (lett.stdout || '')).trim().split('\n').filter(l => !/nøkler, /.test(l)).join('\n'));
+console.log('Lette språkfiler: ' + (lett.status === 0 ? 'oppdatert' : 'utdatert') + '.');
 
 if (feil.length) {
   console.error('\n' + feil.length + ' feil:\n\n' + feil.join('\n\n'));

@@ -33,7 +33,7 @@
         1,72 (utbytte/uttak), og verdiene 0.22 / 0.185 i regionvalget på
         skatt/inntekt og kalkulator/lonnut (må være lik finnmarkSats).
      3. Satser i vanlig tekst og i shared/lang/*.js («Trinn 1 (1,7 %)», titler,
-        meta-beskrivelser), og shared/lang/no-lett.js (scripts/gen-no-lett.js).
+        meta-beskrivelser), og de lette filene i shared/lang/no-lett/ (lages av node scripts/gen-no-lett.js).
      4. Død kode i shared/core.js har fortsatt gamle kopier (slettes i P27).
    VED NYTT GRUNNBELØP (1.5.): kopier `g` til shared/satser-arkiv/g-<år>.js, så `g.verdi`, `g.fra`, `g.til`, og nytt år i `g.per31des`.
    ──────────────────────────────────────────────────────────────────────── */
