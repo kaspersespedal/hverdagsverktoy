@@ -630,7 +630,7 @@
   /* kind: åpen graf (wx/sr/st/fx/df/kp/bl/su) · r: tidsrom per graf · fuel: 0 bensin, 1 diesel
      · hov: punkt under peker/piltast · M: tegnet modell · sig: modellens signatur
      (minutt-pulsen tegner bare om ved endring) */
-  var _big = { kind: null, r: { wx: 0, st: 0, fx: 0, sr: 1, df: 1, kp: 1, bl: 1, su: 0 }, zone: 'NO1', fuel: 0, hov: null, M: null, sig: '', ret: null, ov: '' };
+  var _big = { kind: null, r: { wx: 0, st: 0, fx: 0, sr: 1, df: 1, kp: 1, bl: 1, su: 0 }, zone: 'NO1', fuel: 0, hov: null, M: null, sig: '', ret: null, ov: '', kc: null }; // kc: valgt fra/til i «Regn ut prisveksten»
   var RANGES = { wx: ['12 t', '24 t', '48 t'], st: ['I dag', 'I morgen', '7 dager'], fx: ['30 d', '90 d', '1 år'], sr: ['1 år', '5 år', '10 år'],
     df: ['2 år', '5 år', '10 år'], kp: ['2 år', '5 år', '10 år'], bl: ['2 år', '5 år', '10 år'], su: [] }; // dagslyset viser alltid hele året
   var ZONES = [['NO1', 'Øst'], ['NO2', 'Sør'], ['NO3', 'Midt'], ['NO4', 'Nord'], ['NO5', 'Vest']];
@@ -762,7 +762,7 @@
       .then(function (j) { var d = parseSsb(j); if (!d.series[0] || d.series[0].length < 2) throw 0; return d; })
       .then(function (d) { cacheSet('ssbl_' + k, d); _ssbL[k] = { t: Date.now(), d: d }; delete _ssbLFail[k]; },
             function () { _ssbLFail[k] = Date.now(); })
-      .then(function () { delete _ssbLBusy[k]; if (_big.kind === k) bigRefresh(); });
+      .then(function () { delete _ssbLBusy[k]; if (_big.kind === (k === 'ki' ? 'kp' : k)) bigRefresh(); }); // ki = KPI-indeksen til prisvekst-utregningen
   }
 
   /* ── Seriemodeller: én per graf og tidsrom ──
@@ -968,6 +968,8 @@
     }
     var dec = k === 'kp' ? 1 : 2, u = k === 'df' ? ' kr' : ' %', fuel = _big.fuel, names = [ph('Bensin 95'), ph('Diesel')];
     var M = { kind: k, line: true, area: true, ydec: dec, unit: k === 'df' ? 'kr/l' : '%', seps: [], nowIdx: null };
+    /* Prisvekst: KPI-indeksen hele veien fra 2000, til «Regn ut prisveksten» under grafen. */
+    if (k === 'kp') { M.calc = ssbLong('ki'); M.calcSig = M.calc ? M.calc.dates[M.calc.dates.length - 1] : _ssbLFail.ki ? 'err' : 'load'; }
     if (k === 'df') {
       M.eye = ph('Drivstoffpris'); M.title = M.eye + ' · ' + names[fuel];
       M.chips = names.map(function (nm, i) { return [String(i), nm, i === fuel]; }); M.chipLbl = ph('Velg drivstoff');
@@ -1090,7 +1092,7 @@
     M.r = r;
     M.msg = M.state === 'load' ? ph('Henter data …') : M.state === 'err' ? ph('Kunne ikke hente data. Sjekk nettet og prøv igjen.') : M.msg;
     M.sig = [k, r, M.title || M.eye, M.foot, M.state, M.msg, M.v && M.v.join(','), M.v2 && M.v2.join(','), M.p && M.p.join(','), M.nowIdx,
-             M.sub0, M.ax && M.ax.join('|'), M.sym && M.sym.join('|'), JSON.stringify(M.week || null), document.documentElement.lang].join('§');
+             M.sub0, M.ax && M.ax.join('|'), M.sym && M.sym.join('|'), JSON.stringify(M.week || null), M.calcSig, document.documentElement.lang].join('§');
     return M;
   }
 
@@ -1121,6 +1123,11 @@
           '</div>' +
           '<div class="mdb-foot"><div class="mdb-stats"></div><div class="mdb-meta"><span class="mdb-src"></span><span class="mdb-keys" aria-hidden="true"></span></div></div>' +
           '<section class="wx-week" hidden><div class="wx-kicker"></div><ul class="wx-week-list"></ul></section>' +
+          /* Prisvekst: regn ut fra én måned til en annen. data-ph-skip: tekstene skrives ferdig oversatt (månedsnavnene). */
+          '<section class="mdb-calc" hidden data-ph-skip><div class="wx-kicker"></div><div class="mdb-calc-row">' +
+            '<div class="mdb-calc-f"><span></span><select data-c="fm"></select><select data-c="fy"></select></div>' +
+            '<div class="mdb-calc-f"><span></span><select data-c="tm"></select><select data-c="ty"></select></div>' +
+            '<p class="mdb-calc-out" aria-live="polite"></p></div></section>' +
         '</div>' +
         '<p class="sr-only" aria-live="polite"></p>' +
       '</div>';
@@ -1131,8 +1138,14 @@
       fs: q('.mdb-fs'), x: q('.mdb-x'), body: q('.mdb-body'), val: q('.mdb-val'), unit: q('.mdb-unit'), sub: q('.mdb-sub'), leg: q('.mdb-leg'),
       chart: q('.mdb-chart'), y: q('.mdb-yax-in'), pc: q('.mdb-pc'), plot: q('.mdb-plot'), tip: q('.mdb-tip'),
       xax: q('.mdb-xax'), state: q('.mdb-state'), stats: q('.mdb-stats'), src: q('.mdb-src'), keys: q('.mdb-keys'),
-      week: q('.wx-week'), weekK: q('.wx-kicker'), weekList: q('.wx-week-list'), live: q('.sr-only'), head: ''
+      week: q('.wx-week'), weekK: q('.wx-kicker'), weekList: q('.wx-week-list'), live: q('.sr-only'), head: '',
+      calc: q('.mdb-calc'), calcSel: root.querySelectorAll('.mdb-calc select'), calcOut: q('.mdb-calc-out'), calcKey: ''
     };
+    E.calc.addEventListener('change', function () {
+      var s = E.calcSel;
+      _big.kc = { f: s[1].value + '-' + s[0].value, t: s[3].value + '-' + s[2].value };
+      calcOut();
+    });
     E.fsPath = E.fs.querySelector('path');
     root.addEventListener('click', function (e) { if (e.target === root) closeBig(); });
     E.x.addEventListener('click', closeBig);
@@ -1225,12 +1238,13 @@
     if (k === 'Enter') { stopEnter(e); return; }
     if (k === '/' || ((e.metaKey || e.ctrlKey) && String(k).toLowerCase() === 'k')) { e.preventDefault(); e.stopPropagation(); return; }
     if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target && e.target.nodeName === 'SELECT') return; // pilene og bokstavene velger i nedtrekkslista («Regn ut prisveksten»)
     if (k === 'ArrowLeft' || k === 'ArrowRight') { e.preventDefault(); nudge(k === 'ArrowLeft' ? -1 : 1); }
     else if (k === 'Home' || k === 'End') { e.preventDefault(); nudge(k === 'Home' ? -1e9 : 1e9); }
     else if ((k === 'f' || k === 'F') && fsOk()) { e.preventDefault(); toggleFs(); }
   }
   function trapTab(e) {
-    var f = BIG.panel.querySelectorAll('button,[href],input,[tabindex]:not([tabindex="-1"])'), list = [];
+    var f = BIG.panel.querySelectorAll('button,[href],input,select,[tabindex]:not([tabindex="-1"])'), list = [];
     for (var i = 0; i < f.length; i++) if (f[i].offsetParent !== null && !f[i].disabled) list.push(f[i]);
     if (!list.length) { e.preventDefault(); return; }
     var first = list[0], last = list[list.length - 1], a = document.activeElement;
@@ -1344,6 +1358,7 @@
     E.week.hidden = !wk;
     E.body.classList.toggle('has-week', !!wk);
     if (wk) renderWeek(M.week);
+    renderCalc(M);
     /* Ruller innholdet (lav skjerm, stor zoom), må tastaturet kunne nå det med Tab og rulle med piltastene. */
     E.body.tabIndex = E.body.scrollHeight > E.body.clientHeight + 1 ? 0 : -1;
     E.body.setAttribute('aria-label', M.title || M.eye);
@@ -1553,9 +1568,47 @@
     else if (k === 'st') { for (var key in _stDays) if (_stDays[key].d === false) delete _stDays[key]; }
     else if (k === 'sr') _srLFail = 0;
     else if (k === 'fx') delete _fxYFail[_fxCode];
-    else delete _ssbLFail[k];
+    else { delete _ssbLFail[k]; if (k === 'kp') delete _ssbLFail.ki; }
     bigRender(true);
     BIG.panel.focus(); // knappen forsvant med feilmeldingen
+  }
+
+  /* «Regn ut prisveksten» under prisvekstgrafen: fra- og til-måned velges fritt, fra januar 2000
+     til siste måned SSB har tall for. Indeksen «til» delt på indeksen «fra» gir endringen, og
+     100 kr gjør den håndfast. Velgerne bygges bare når dataene eller språket endres, så valget
+     og fokuset står mens grafen tegnes om. Uten eget valg: samme måned året før → siste måned. */
+  var MND_LANG = 'januar,februar,mars,april,mai,juni,juli,august,september,oktober,november,desember';
+  function renderCalc(M) {
+    var E = BIG, d = M.calc, on = M.kind === 'kp', s = E.calcSel;
+    E.calc.hidden = !on;
+    if (!on) return;
+    var lbl = [ph('Fra måned'), ph('Fra år'), ph('Til måned'), ph('Til år')], f = E.calc.querySelectorAll('.mdb-calc-f > span');
+    E.calc.firstChild.textContent = ph('Regn ut prisveksten');
+    f[0].textContent = ph('Fra'); f[1].textContent = ph('Til');
+    for (var i = 0; i < s.length; i++) { s[i].setAttribute('aria-label', lbl[i]); s[i].disabled = !d; }
+    if (!d) { E.calcOut.textContent = ph(_ssbLFail.ki ? 'Fikk ikke hentet KPI-tallene nå.' : 'Henter KPI-tallene …'); return; }
+    var n = d.dates.length, key = document.documentElement.lang + d.dates[0] + d.dates[n - 1];
+    if (E.calcKey !== key) {
+      E.calcKey = key;
+      var names = T('trSharedMonthsLong', MND_LANG).split(','), mo = '', yr = '';
+      for (var m = 0; m < 12; m++) mo += '<option value="' + pad2(m + 1) + '">' + esc(cap(names[m])) + '</option>';
+      for (var y = +d.dates[n - 1].slice(0, 4); y >= +d.dates[0].slice(0, 4); y--) yr += '<option value="' + y + '">' + y + '</option>';
+      s[0].innerHTML = s[2].innerHTML = mo; s[1].innerHTML = s[3].innerHTML = yr;
+      var c = _big.kc || { f: d.dates[Math.max(0, n - 13)], t: d.dates[n - 1] };
+      s[0].value = c.f.slice(5); s[1].value = c.f.slice(0, 4); s[2].value = c.t.slice(5); s[3].value = c.t.slice(0, 4);
+    }
+    calcOut();
+  }
+  function calcOut() {
+    var E = BIG, M = _big.M, d = M && M.calc; if (!d) return;
+    var n = d.dates.length, c = _big.kc || { f: d.dates[Math.max(0, n - 13)], t: d.dates[n - 1] };
+    var i = d.dates.indexOf(c.f), j = d.dates.indexOf(c.t), I = d.series[0];
+    if (i < 0 || j < 0) { E.calcOut.textContent = fill(ph('SSB har ikke tall for {m} ennå.'), { m: mndYr(i < 0 ? c.f : c.t) }); return; }
+    if (i >= j) { E.calcOut.textContent = ph('Velg en fra-måned som ligger før til-måneden.'); return; }
+    var r = I[j] / I[i], p = +((r - 1) * 100).toFixed(1), mo = j - i; // månedene ligger etter hverandre uten hull
+    E.calcOut.innerHTML = '<b>' + (p > 0 ? '+' : p < 0 ? '−' : '±') + nb(Math.abs(p), 1) + ' %</b><span>' +
+      esc(fill(ph('Det som kostet 100 kr i {a}, kostet {b} kr i {c}.'), { a: mndYr(c.f), b: nb(100 * r, 2), c: mndYr(c.t) })) +
+      (mo > 12 ? ' ' + esc(fill(ph('I snitt {p} % i året.'), { p: nb((Math.pow(r, 12 / mo) - 1) * 100, 1) })) : '') + '</span>';
   }
 
   /* Neste 7 dager (under grafen i værvisningen): typografisk tabell (dag · symbol · maks/min-stolpe · temp). */
@@ -1937,12 +1990,16 @@
        09654 Priser på drivstoff: 031 bensin 95 blyfri, 035 diesel (kr per liter, landssnitt)
        14700 KPI (2025=100): 00 i alt, 12-måneders endring (03013 ble avsluttet i 2025)
        10748 Renter på nye boliglån: 70 nedbetalingslån, 04b husholdninger, 08 flytende rente
-     25 måneder: to år med graf, og tallet for samme måned året før. */
+     25 måneder: to år med graf, og tallet for samme måned året før.
+     ki: KPI-indeksen (14700, KpiIndMnd) for alle måneder fra 2000, hentes først når
+     prisvekst-fullvisningen åpnes. Indeks til / indeks fra − 1 gir nøyaktig SSBs egne
+     12-måneders tall (sjekket mot alle 310 måneder 2026-11-23). */
   var SSB = 'https://data.ssb.no/api/pxwebapi/v2/tables/';
   var SSB_Q = {
     df: '09654/data?lang=no&valueCodes[PetroleumProd]=031,035&valueCodes[ContentsCode]=Priser&valueCodes[Tid]=top(25)',
     kp: '14700/data?lang=no&valueCodes[VareTjenesteGrp]=00&valueCodes[ContentsCode]=Tolvmanedersendring&valueCodes[Tid]=top(25)',
-    bl: '10748/data?lang=no&valueCodes[Utlanstype]=70&valueCodes[Sektor]=04b&valueCodes[Rentebinding]=08&valueCodes[ContentsCode]=RenterNyeBolig&valueCodes[Tid]=top(25)'
+    bl: '10748/data?lang=no&valueCodes[Utlanstype]=70&valueCodes[Sektor]=04b&valueCodes[Rentebinding]=08&valueCodes[ContentsCode]=RenterNyeBolig&valueCodes[Tid]=top(25)',
+    ki: '14700/data?lang=no&valueCodes[VareTjenesteGrp]=00&valueCodes[ContentsCode]=KpiIndMnd&valueCodes[Tid]=*'
   };
   var _ssb = {}; // siste SSB-data per kort — scrub-chipen leser herfra
 
