@@ -2315,13 +2315,15 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
     }
   }
   html[data-theme] #dailyDate .dd-yr{color:var(--ink3)}
-  html[data-theme] .daily-head{position:relative;isolation:isolate;z-index:1;padding-bottom:12px;row-gap:10px}
+  html[data-theme] .daily-head{position:relative;isolation:isolate;z-index:1;padding-bottom:20px;row-gap:10px}
   html[data-theme] .daily-head::before{
     content:"";position:absolute;z-index:-1;pointer-events:none;
     left:-14px;top:-50px;width:88%;height:200px;
     background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
   }
-  html[data-theme] .dayline{order:5;flex:0 0 100%;display:block;margin-top:4px;--dl-spill:36px}
+  /* Litt mer luft over og under døgnlinja (Kasper 2026-11-27: «LITT mer pusterom»): 14 → 20 px til
+     datoen og 13 → 21 px til kortene (padding-bottom over). */
+  html[data-theme] .dayline{order:5;flex:0 0 100%;display:block;margin-top:10px;--dl-spill:36px}
   html[data-theme] body.introAct .daily-frame::after{content:none}
 
   /* Hvert kort i egen boks med tittelstripe, som de andre temaene fikk i #288.
@@ -2632,10 +2634,12 @@ body.heroLanded .daily-frame.in .dayline{--dl-p:var(--dl-now,0)}
 }
 /* Gløden rundt «nå»-punktet. Den ligger som bakgrunn i et lag som bare går
    12 px ut over linja på hver side (mindre enn sidemargen på telefon) og tones bort mot kantene: som eget element
-   rundt punktet stakk den 240 px ut av siden rundt midnatt og ga sidelengs rulling. */
+   rundt punktet stakk den 240 px ut av siden rundt midnatt og ga sidelengs rulling.
+   Laget går 100 px opp og ned, mer enn gløden (96 px). Før gikk det bare 74 px opp, så
+   gløden ble kuttet rett av og sto som en strek over «Dagsoversikt» (Kasper 2026-11-27, Carbon). */
 .dayline::after{
-  content:"";position:absolute;left:-12px;right:-12px;top:-74px;height:180px;pointer-events:none;
-  background:radial-gradient(260px 96px at calc(12px + var(--dl-p) * (100% - 24px)) 74px,rgba(var(--glow-rgb),.12),rgba(var(--glow-rgb),.035) 56%,transparent);
+  content:"";position:absolute;left:-12px;right:-12px;top:-100px;height:200px;pointer-events:none;
+  background:radial-gradient(260px 96px at calc(12px + var(--dl-p) * (100% - 24px)) 100px,rgba(var(--glow-rgb),.12),rgba(var(--glow-rgb),.035) 56%,transparent);
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
   mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
 }
@@ -4131,9 +4135,10 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
         dl.style.setProperty('--dl-now', p.toFixed(4));
         dl.classList.add('is-set');
         // Klokkeslettet under nåla. Timetallet det ville stått oppå (nærmere enn 30 px), skjules.
+        // På telefon 40 px, så det alltid er minst ca. 17 px luft mellom klokkeslettet og timetallet.
         tid.textContent = ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
-        var W = dl.clientWidth, c = Math.min(Math.max(p * W, 15), W - 15);
-        for(var i = 0; i < hrs.length; i++) hrs[i].classList.toggle('is-off', Math.abs(c - (i === 0 ? 7 : i === 4 ? W - 7 : W * i / 4)) < 30);
+        var W = dl.clientWidth, c = Math.min(Math.max(p * W, 15), W - 15), luft = innerWidth <= 640 ? 40 : 30;
+        for(var i = 0; i < hrs.length; i++) hrs[i].classList.toggle('is-off', Math.abs(c - (i === 0 ? 7 : i === 4 ? W - 7 : W * i / 4)) < luft);
       };
       naa(); setInterval(naa, 60000);
       window.addEventListener('resize', naa);
