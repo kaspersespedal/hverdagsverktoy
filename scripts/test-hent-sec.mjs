@@ -33,7 +33,8 @@ sann('Negative investeringer stopper', kontroller(selskap({ 'aar.capex': -5 * M 
 sann('Negativ gjeld stopper', kontroller(selskap({ 'balanse.gjeld': -1 * M }), null).stopp.length === 1);
 sann('Kontantstrøm over 1,5 × omsetning stopper', kontroller(selskap({ 'aar.cfo': 1600 * M }), null).stopp.length === 1);
 sann('Kontanter større enn eiendelene stopper', kontroller(selskap({ 'balanse.kont': 2500 * M }), null).stopp.length === 1);
-sann('Gjeld større enn eiendelene stopper', kontroller(selskap({ 'balanse.gjeld': 2100 * M }), null).stopp.length === 1);
+sann('Gjeld større enn eiendelene er lov (negativ egenkapital, som Domino\'s)', kontroller(selskap({ 'balanse.gjeld': 2100 * M }), null).stopp.length === 0);
+sann('Null omsetning er lov (biotek uten salg)', kontroller(selskap({ 'aar.oms': 0 }), null).stopp.length === 0);
 sann('Null aksjer stopper', kontroller(selskap({ aksjer: { antall: 0, type: 'utestaende' } }), null).stopp.length === 1);
 sann('Banker kontrolleres ikke', kontroller({ unntatt: 'finans' }, null).stopp.length === 0);
 
