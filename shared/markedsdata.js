@@ -752,14 +752,18 @@
   var _ssbL = {}, _ssbLBusy = {}, _ssbLFail = {};
   function ssbLong(k) {
     var e = _ssbL[k] || (_ssbL[k] = cacheGet('ssbl_' + k));
-    if ((!e || !fresh(e, 12 * 36e5)) && !_ssbLBusy[k] && !(_ssbLFail[k] && Date.now() - _ssbLFail[k] < 120000)) fetchSsbLong(k);
+    if ((!e || !fresh(e, e.d && e.d.hole ? SSB_RETRY : 12 * 36e5)) && !_ssbLBusy[k] && !(_ssbLFail[k] && Date.now() - _ssbLFail[k] < 120000)) fetchSsbLong(k);
     return e && e.d && e.d.dates ? e.d : null;
   }
   function fetchSsbLong(k) {
     _ssbLBusy[k] = true;
     fetch(SSB + SSB_Q[k].replace('top(25)', 'top(121)'))
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (j) { var d = parseSsb(j); if (!d.series[0] || d.series[0].length < 2) throw 0; return d; })
+      .then(function (j) {
+        var d = parseSsb(j), e = _ssbL[k];
+        if (!d.series[0] || d.series[0].length < 2 || ssbOlder(d, e && e.d)) throw 0; // eldre enn det vi har: behold det
+        return d;
+      })
       .then(function (d) { cacheSet('ssbl_' + k, d); _ssbL[k] = { t: Date.now(), d: d }; delete _ssbLFail[k]; },
             function () { _ssbLFail[k] = Date.now(); })
       .then(function () { delete _ssbLBusy[k]; if (_big.kind === (k === 'ki' ? 'kp' : k)) bigRefresh(); }); // ki = KPI-indeksen til prisvekst-utregningen
@@ -2013,8 +2017,18 @@
     var end = n;
     while (end > 0 && out.some(function (r) { return typeof r[end - 1] !== 'number'; })) end--;
     return { dates: keys.slice(0, end).map(function (k) { return k.replace('M', '-'); }),
-             series: out.map(function (r) { return r.slice(0, end); }) };
+             series: out.map(function (r) { return r.slice(0, end); }),
+             hole: n - end }; // måneder tabellen har, men uten tall ennå: SSB er midt i en publisering
   }
+  /* SSB tømmer de nyeste månedene i en tabell en stund før nye tall publiseres. 27.11.2026
+     sto 10748 (boliglånsrenta) uten tall etter april, og kortet hoppet fra september tilbake
+     til april. Et svar som slutter på en eldre måned enn det vi alt har, er derfor ikke
+     ferskere: da beholdes det vi har, og vi spør igjen litt senere. */
+  function ssbOlder(d, than) {
+    return !!(than && than.dates && than.dates.length &&
+      d.dates[d.dates.length - 1] < than.dates[than.dates.length - 1]);
+  }
+  var SSB_RETRY = 15 * 6e4; // nytt forsøk etter et kvarter når SSB er midt i en publisering
   function mndYr(ym) { // '2026-10' → «okt. 2026»
     var p = ym.split('-');
     return T('trSharedMonthsShort', MND.join(',')).split(',')[parseInt(p[1], 10) - 1] + ' ' + p[0];
@@ -2093,16 +2107,21 @@
   var SSB_R = { df: renderDf, kp: renderKp, bl: renderBl };
   function renderSsb(k, d) { _ssb[k] = d; SSB_R[k](d); }
 
-  /* Månedstall: det holder å spørre SSB to ganger i døgnet. Cachen vises med en gang. */
+  /* Månedstall: spør SSB hver time, så nye tall kommer samme morgen som SSB publiserer dem.
+     Cachen vises med en gang. Et svar vi forkaster (se ssbOlder), eller et svar med tomme
+     måneder på slutten, gir nytt forsøk etter et kvarter – ikke hvert minutt. */
+  var _ssbTry = {};
   function loadSsb(k, force) {
     var c = cacheGet('ssb_' + k), ok = c && c.d && c.d.series && c.d.series[0] && c.d.series[0].length > 1;
     if (ok) renderSsb(k, c.d);
-    if (ok && !force && fresh(c, 12 * 36e5)) return;
+    if (!force && ((ok && fresh(c, c.d.hole ? SSB_RETRY : 36e5)) || Date.now() - (_ssbTry[k] || 0) < SSB_RETRY)) return;
+    _ssbTry[k] = Date.now();
     fetch(SSB + SSB_Q[k])
       .then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (j) {
         var d = parseSsb(j);
         if (!d.series[0] || d.series[0].length < 2) throw 0;
+        if (ok && ssbOlder(d, c.d)) return; // SSB er midt i en publisering: behold de nyere tallene
         cacheSet('ssb_' + k, d); renderSsb(k, d);
       })
       .catch(function () {});

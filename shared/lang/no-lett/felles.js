@@ -1,5 +1,5 @@
-// Hverdagsverktøy — no-lett/felles.js: utdrag av no.js for 5 side(r):
-// /404.html / /kontakt/ /ordliste/ /personvern/
+// Hverdagsverktøy — no-lett/felles.js: utdrag av no.js for 6 side(r):
+// /404.html / /kontakt/ /ordliste/ /personvern/ /regnskap/bokforing/
 // Generert av scripts/gen-no-lett.js — ikke rediger for hånd.
 REGIONS['no'] = {
     flag: "no",

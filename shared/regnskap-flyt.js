@@ -8,6 +8,8 @@
 //                       + ekstra: [{id, g, p, k, n, v, f}] = egne poster (se POSTER)
 //   hv-kontantstrom-v2  feltene på /regnskap/kontantstrom/    hv-kontantstrom-sum {ub, any}
 //                       + ekstra: [{id, g, p, n, v}] = egne poster (se POSTER)
+// Bokføringsverktøyet (/regnskap/bokforing/) kan fylle ut de tre sidene. Det som sist kom derfra, ligger i
+// hv-bok-kobling (shared/bokforing/kobling.js).
 (function(){
   function read(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } }
   function kr(n){ return Math.round(n).toLocaleString('nb-NO') + ' kr'; }
@@ -260,6 +262,47 @@
       if(note) note.textContent = ok ? '' : 'Fyll inn minst én av de tre delene først.';
     }, function(){ if(note) note.textContent = 'Fikk ikke hentet Excel-motoren. Prøv igjen.'; });
   });
+
+  // ── Tall fra bokføringsverktøyet ──
+  // Så lenge tallene på siden er de som kom fra bokføringen, vises en linje om det, og hvert tall får en lenke
+  // til kontoene og bilagene bak. Endrer brukeren et tall, forsvinner begge deler.
+  var BOK = '/regnskap/bokforing/', bokTs = (read('hv-bok-kobling') || {}).ts;
+  function verdi(id){ var e = document.getElementById(id); return e ? tall(e.value) : 0; }
+  function bokSide(){ return document.getElementById('rSalg') ? 'res' : document.getElementById('bEkOpp') ? 'bal' : document.getElementById('opRes') ? 'ks' : ''; }
+  function bokLinje(){
+    var rf = document.querySelector('.rf'), del = bokSide(), k = read('hv-bok-kobling'), linje = document.querySelector('.rf-bok');
+    if(!rf || !del) return;
+    var alle = del === 'res' ? RES : del === 'bal' ? BAL.concat(BAL.map(function(id){ return id + '_f'; })) : KS;
+    var x = k && k[del] && Array.isArray(k[del].ekstra) ? k[del].ekstra : [];
+    var likt = !!(k && k.v === 1 && k[del]) && alle.every(function(id){ return verdi(id) === tall(k[del][id]); })
+      && x.every(function(e){ return verdi(e.id) === tall(e.v) && (del !== 'bal' || verdi(e.id + '_f') === tall(e.f)); })
+      && document.querySelectorAll('.rr-ekstra').length === x.length;
+    document.documentElement.classList.toggle('rf-fra-bok', likt);
+    if(!likt){ if(linje) linje.remove(); return; }
+    if(linje) return;
+    linje = document.createElement('p');
+    linje.className = 'rf-bok';
+    linje.textContent = 'Tallene er hentet fra bokføringen til ' + k.navn + ', til og med ' + k.til.split('-').reverse().map(Number).join('.') + '. ';
+    var a = document.createElement('a'); a.href = BOK; a.textContent = 'Åpne bokføringen'; linje.appendChild(a);
+    rf.appendChild(linje);
+    if(del === 'ks') return;
+    alle.concat(x.map(function(e){ return e.id; })).forEach(function(id){
+      var inp = document.getElementById(id), rad = inp && inp.closest('.rr-line'), navn = rad && rad.querySelector('.rr-name'), e = x.filter(function(q){ return q.id === id; })[0];
+      if(!navn || /_f$/.test(id) || !tall(inp.value) || navn.querySelector('.rf-bilag')) return;
+      var l = document.createElement('a');
+      l.className = 'rf-bilag'; l.textContent = 'Bilag';
+      l.href = BOK + '#felt=' + (del === 'res' ? 'hv-rr-v2:' : 'hv-balanse-v1:') + (e ? 'ekstra/' + e.g + '/' + e.p : id);
+      l.setAttribute('aria-label', 'Se bilagene bak ' + (inp.getAttribute('aria-label') || 'tallet'));
+      navn.appendChild(l);
+    });
+  }
+  // Bokføringen har skrevet nye tall mens siden lå åpen i en annen fane eller i nettleserens minne
+  function friske(){ var k = read('hv-bok-kobling'); if(bokSide() && k && k.ts !== bokTs) location.reload(); }
+  window.addEventListener('storage', function(e){ if(e.key === 'hv-bok-kobling') friske(); });
+  window.addEventListener('pageshow', function(e){ if(e.persisted) friske(); });
+  document.addEventListener('input', function(){ setTimeout(bokLinje, 0); });
+  document.addEventListener('click', function(){ setTimeout(bokLinje, 0); });
+  bokLinje();
 
   window.HVRegnskap = {RES:RES, BAL:BAL, KS:KS, EKS:EKS, SATS:SATS, POSTER:POSTER, EGEN:EGEN, tall:tall, felt:felt,
     regnRes:regnRes, regnBal:regnBal, regnKs:regnKs, utled:utled, lagret:lagret, fyllAndre:fyllAndre,

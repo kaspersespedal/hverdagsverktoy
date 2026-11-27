@@ -5205,6 +5205,8 @@ REGIONS['en']._ph = {
 "Hele regnskapet i tre deler":"The whole set of accounts in three parts",
 "Fyll inn tallene, så regner vi ut summene og sier fra hvis balansen ikke stemmer.":"Enter the figures and we calculate the totals and tell you if the balance sheet does not balance.",
 "8 verktøy":"8 tools",
+"9 verktøy":"9 tools",
+"Velg hva som skjedde, og se føringen, resultatet og balansen før du bokfører.":"Choose what happened and see the entry, the income statement and the balance sheet before you post it.",
 "Lønnsomhet, likviditet og soliditet fra et årsregnskap, to år side om side.":"Profitability, liquidity and solvency from annual accounts, two years side by side.",
 "Årsoppgjør":"Year-end close",
 "Steg for steg fra avstemming til innsending, for ENK og AS.":"Step by step from reconciliation to filing, for ENK and AS.",
