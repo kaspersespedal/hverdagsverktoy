@@ -2359,31 +2359,14 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
   }
   html[data-theme] .fxc-io{padding-top:14px}
 
-  /* Kortene: én linje i stedet for faktaradene og lave grafer (48 px). Værkortet har
-     fire ruter og renta «Neste rentemøte» i stedet for graf; strøm har fotnoten.
-     Fullskjermknappen (↗ ved tallet) er med, så alle fire grafene kan åpnes stort.
-     Ingen fast femte rad lenger: i egen boks trenger ikke kortene like høye rader,
-     og den tomme raden ga 30 px dødluft i bunnen av vær- og rentekortet. */
-  html[data-theme] .widget{grid-template-rows:auto auto minmax(34px,auto) 1fr;gap:7px}
-  html[data-theme] .widget > .widget-facts,
-  html[data-theme] #wxCard > .widget-spark-wrap{display:none}
+  /* Kortinnholdet: faktaradene (Maks/min, Vind, Nedbør …), værgrafen med kurve og
+     symboler og grafene i full høyde. Kasper 2026-11-27: «Bilde 2 ja i mobilvisning».
+     #365 ga alle temaer de korte kortene fra oktober (én linje, 48 px grafer, fire
+     værruter); de er tatt bort her, så grunnreglene for kortinnholdet gjelder igjen,
+     som før 27.11. På PC står de korte kortene til man trykker «Vis mer» (#gammelPC). */
+  html[data-theme] .widget-label{font-size:10.5px}
   /* Rentegrafen vises på PC, men på telefon bare i fullskjerm. */
   #srCard > .widget-spark-wrap{display:none}
-  html[data-theme] .widget-label{font-size:10.5px}
-  html[data-theme] .widget .w-line{
-    display:flex;align-items:center;gap:8px;margin:0;
-    font-size:12px;line-height:1.4;letter-spacing:-.05px;color:var(--ink3);
-    font-variant-numeric:tabular-nums;
-  }
-  html[data-theme] .widget .w-line .ctx{color:var(--ink4)}
-  html[data-theme] .widget-spark-wrap,
-  html[data-theme] #wxCard .wx-fc-wrap,
-  html[data-theme] #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
-  html[data-theme] .spark-yax{top:11px;height:48px;font-size:8.5px}
-  html[data-theme] .widget-axis{font-size:8.5px}
-  html[data-theme] .widget-spark{height:48px}
-  html[data-theme] #fxTrend i{display:none}
-  html[data-theme] #stCard .w-note{display:block}
 }
 .w-line,.wx-fc-wrap,.sr-next-wrap,.w-note{display:none}
 .sr-next{display:flex;flex-direction:column;gap:4px}
@@ -2407,6 +2390,8 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
    Da står bare første og siste; visibility (ikke display) holder dem ytterst i hver ende. */
 @media (min-width:881px) and (max-width:1099px){
   :is(#dfCard,#kpCard,#blCard) .widget-axis span:nth-child(2){visibility:hidden}
+  /* Med «Vis mer» (#gammelPC) får aksen vanlig skriftstørrelse, og da gikk også valutadatoene i hverandre. */
+  .daily.vis-mer #fxCard .widget-axis span:nth-child(2){visibility:hidden}
 }
 .wx-fc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-height:48px}
 .wx-fc-cell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:7px}
@@ -2859,25 +2844,44 @@ html[data-theme]:is([lang="pl"],[lang="uk"]){
 
   /* Kortinnholdet fra den gang: én linje i stedet for faktaradene, lave grafer
      (60 px), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
-     graf. Rentegrafen og de andre grafene åpnes stort med fullskjermknappen. */
-  html[data-theme] .widget > .widget-facts,
-  html[data-theme] #wxCard > .widget-spark-wrap,
-  html[data-theme] #srCard > .widget-spark-wrap{display:none}
+     graf. Rentegrafen og de andre grafene åpnes stort med fullskjermknappen.
+     Kasper 2026-11-27: «Vis mer» under kortene (#dailyMer) setter .vis-mer på
+     section.daily. Da gjelder ikke reglene under, og kortene viser faktaradene,
+     værgrafen og de høye grafene, som på telefon. */
   html[data-theme] .widget-label{font-size:10.5px}
-  html[data-theme] .widget .w-line{
+  html[data-theme] .daily:not(.vis-mer) .widget > .widget-facts,
+  html[data-theme] .daily:not(.vis-mer) #wxCard > .widget-spark-wrap,
+  html[data-theme] .daily:not(.vis-mer) #srCard > .widget-spark-wrap{display:none}
+  html[data-theme] .daily:not(.vis-mer) .widget .w-line{
     display:flex;align-items:center;gap:8px;margin:0;
     font-size:12px;line-height:1.4;letter-spacing:-.05px;color:var(--ink3);
     font-variant-numeric:tabular-nums;
   }
   html[data-theme] .widget .w-line .ctx{color:var(--ink4)}
-  html[data-theme] .widget-spark-wrap,
-  html[data-theme] #wxCard .wx-fc-wrap,
-  html[data-theme] #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
-  html[data-theme] .spark-yax{top:11px;height:60px;font-size:8.5px}
-  html[data-theme] .widget-axis{font-size:8.5px}
-  html[data-theme] .widget-spark{height:60px}
-  html[data-theme] #fxTrend i{display:none}
+  html[data-theme] .daily:not(.vis-mer) .widget-spark-wrap,
+  html[data-theme] .daily:not(.vis-mer) #wxCard .wx-fc-wrap,
+  html[data-theme] .daily:not(.vis-mer) #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
+  html[data-theme] .daily:not(.vis-mer) .spark-yax{top:11px;height:60px;font-size:8.5px}
+  html[data-theme] .daily:not(.vis-mer) .widget-axis{font-size:8.5px}
+  html[data-theme] .daily:not(.vis-mer) .widget-spark{height:60px}
+  html[data-theme] .daily:not(.vis-mer) #fxTrend i{display:none}
   html[data-theme] #stCard .w-note{display:block}
+
+  /* «Vis mer» / «Vis mindre»: en rolig tekstknapp midt under kortene, i samme stil som
+     etikettene i kortene. Pila snus når kortene er åpne. */
+  html[data-theme] .daily-mer{
+    display:flex;align-items:center;gap:8px;margin:14px auto 0;padding:8px 16px;min-height:36px;
+    border:1px solid var(--line-2);border-radius:999px;background:rgba(var(--wash-rgb),.025);
+    font:600 10.5px/1 var(--font-sans);letter-spacing:1.6px;text-transform:uppercase;color:var(--ink2);
+    cursor:pointer;transition:color .2s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
+  }
+  html[data-theme] .daily-mer svg{width:10px;height:10px;transition:transform .3s var(--ease-out-quart)}
+  html[data-theme] .daily.vis-mer .daily-mer svg{transform:rotate(180deg)}
+  html[data-theme] .daily-mer:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
+}
+.daily-mer{display:none}
+@media (min-width:641px) and (hover:hover){
+  html[data-theme] .daily-mer:hover{color:var(--ink);border-color:var(--accent-2);background:rgba(var(--glow-rgb),.06)}
 }
 @media (min-width:641px) and (hover:hover){
   html[data-theme] .qc:hover{background:rgba(var(--wash-rgb),.018);color:var(--ink)}
@@ -3236,7 +3240,7 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
             </div>
             <!-- Faktarader (nøkkel · verdi). Fylles av markedsdata.js; teksten her står til data er hentet. -->
             <div class="widget-facts" id="wxSub">Henter værdata …</div>
-            <!-- Carbon på telefon (#carbonMobil) viser kortene som i oktober: én linje i stedet for
+            <!-- PC (#gammelPC) viser kortene som i oktober til man trykker «Vis mer»: én linje i stedet for
                  faktaradene. På værkortet står fire ruter (nå, +2, +4, +6 t) i stedet for grafen. Fylles av markedsdata.js. -->
             <p class="w-line"><span class="ctx" id="wxLine">Henter værdata …</span></p>
             <div class="widget-spark-wrap has-yax has-syms">
@@ -3449,6 +3453,9 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
 
         </div>
       </div>
+
+      <!-- Bare PC: viser faktaradene og de høye grafene i alle åtte kortene (se #gammelPC). Teksten settes av skriptet «Vis mer». -->
+      <button type="button" class="daily-mer reveal" style="--i:6" id="dailyMer" aria-expanded="false" aria-controls="dagsoversikt" data-ph-skip><span id="dailyMerTxt">Vis mer</span><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2,3.5 L5,6.5 L8,3.5"/></svg></button>
 
       <!-- Omregner på kursene som allerede er hentet til valutakortet over. Egen boks nederst, under de fire nye kortene.
            Valuta-brikka og NOK-brikka bytter plass når retningen snus (markedsdata.js). -->
@@ -4166,6 +4173,32 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
         grid.classList.remove('is-lit');
       });
     });
+  })();
+
+  // ── «Vis mer» under kortene (bare PC, se #gammelPC) ──
+  // Slår faktaradene og de høye grafene av og på i alle åtte kortene. Valget huskes i
+  // nettleseren. Teksten står her på hvert språk, så språkfilene slipper nye nøkler.
+  (function(){
+    var btn = document.getElementById('dailyMer'), sec = document.getElementById('dagsoversikt');
+    if(!btn || !sec) return;
+    var txt = document.getElementById('dailyMerTxt');
+    var ORD = {nb:['Vis mer','Vis mindre'], en:['Show more','Show less'], fr:['Afficher plus','Afficher moins'],
+      pl:['Pokaż więcej','Pokaż mniej'], uk:['Показати більше','Показати менше'], ar:['عرض المزيد','عرض أقل'],
+      lt:['Rodyti daugiau','Rodyti mažiau'], zh:['显示更多','收起']};
+    function vis(on){
+      sec.classList.toggle('vis-mer', on);
+      btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+      txt.textContent = (ORD[(document.documentElement.lang || 'nb').slice(0, 2)] || ORD.nb)[on ? 1 : 0];
+    }
+    var lagret = false;
+    try { lagret = localStorage.getItem('hvt-dagsoversikt-mer') === '1'; } catch(e){}
+    vis(lagret);
+    btn.addEventListener('click', function(){
+      var on = !sec.classList.contains('vis-mer');
+      vis(on);
+      try { localStorage.setItem('hvt-dagsoversikt-mer', on ? '1' : '0'); } catch(e){}
+    });
+    new MutationObserver(function(){ vis(sec.classList.contains('vis-mer')); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
   })();
 
   // ── Dagsoversikt: ærlig tom- og feiltilstand ──────────────
