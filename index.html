@@ -2612,6 +2612,9 @@ body.heroLanded .daily-frame.in .dayline{--dl-p:var(--dl-now,0)}
   fill:none;stroke:currentColor;stroke-width:1;shape-rendering:crispEdges;
   color:rgba(var(--wash-rgb),.26);
 }
+/* Halvtimestrekene vises bare der det er plass (nettbrett og PC). */
+.dl-half{display:none}
+@media (min-width:641px){.dl-half{display:inline}}
 .dl-ticks.is-lit{
   color:var(--accent-2);
   -webkit-mask-image:linear-gradient(90deg,transparent 0,rgba(0,0,0,.4) calc(var(--dl-p) * 60%),rgba(0,0,0,.85) calc(var(--dl-p) * 100% - 6px),transparent calc(var(--dl-p) * 100% + var(--dl-spill) * .4));
@@ -2636,21 +2639,37 @@ body.heroLanded .daily-frame.in .dayline{--dl-p:var(--dl-now,0)}
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
   mask-image:linear-gradient(90deg,transparent,#000 70px,#000 calc(100% - 70px),transparent);
 }
-.dl-now{position:absolute;z-index:1;top:0;left:calc(var(--dl-p) * 100%);width:0;height:0}
+/* «Nå»: en tynn nål gjennom skalaen med en liten perle på linja, og klokkeslettet under.
+   2026-11-27, Kasper: «mye penere og bedre». Før var det et uskarpt lyspunkt uten tall.
+   round() setter nåla på en hel piksel, så den står skarp når lyset har landet
+   (nettlesere uten round() bruker linja over). */
+.dl-now{position:absolute;z-index:1;top:0;left:calc(var(--dl-p) * 100%);left:round(calc(var(--dl-p) * 100%),1px);width:0;height:0}
+.dl-now::before{
+  content:"";position:absolute;left:0;top:-7px;width:1px;height:19px;
+  background:linear-gradient(180deg,transparent,var(--accent-2) 38%,var(--accent-2) 62%,transparent);
+}
 .dl-now i{
-  position:absolute;left:-3px;top:-2.5px;width:6px;height:6px;border-radius:50%;
-  background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.9) 0,var(--accent-2) 62%);
-  box-shadow:0 0 4px 1px rgba(var(--glow-rgb),.6),0 0 14px 4px rgba(var(--glow-rgb),.3);
+  position:absolute;left:-2px;top:-2px;width:5px;height:5px;border-radius:50%;
+  background:radial-gradient(circle at 50% 40%,rgba(255,255,255,.85) 0,var(--accent-2) 58%);
+  box-shadow:0 0 0 2.5px rgba(var(--glow-rgb),.16),0 0 10px 2px rgba(var(--glow-rgb),.42);
 }
 .dl-now i::after{
   content:"";position:absolute;inset:-1px;border-radius:50%;border:1px solid var(--accent-2);opacity:0;
 }
+/* Klokkeslettet står under nåla og følger den. Ved kantene holder det seg innenfor linja.
+   Det tones inn idet lyset lander, så det aldri sees på vei bortover. */
+.dl-tid{
+  position:absolute;top:13px;left:clamp(15px,calc(var(--dl-p) * 100%),calc(100% - 15px));transform:translateX(-50%);
+  font:600 10px/1 var(--font-sans);letter-spacing:.6px;color:var(--accent-2);font-variant-numeric:tabular-nums;
+  opacity:0;transition:opacity .6s var(--ease-out-quart);
+}
+body.heroLanded .daily-frame.in .dayline.is-set .dl-tid{opacity:1;transition-delay:2.1s}
 /* To rolige ringer når lyset har landet, så står punktet stille */
 body.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{
   animation:hvDlPulse 2.8s var(--ease-out-quart) 2.5s 2 both;
 }
 @keyframes hvDlPulse{0%{opacity:.45;transform:scale(1)}100%{opacity:0;transform:scale(3)}}
-.dayline:not(.is-set) :is(.dl-now,.dl-fill,.dl-ticks.is-lit),
+.dayline:not(.is-set) :is(.dl-now,.dl-tid,.dl-fill,.dl-ticks.is-lit),
 .dayline:not(.is-set)::after{display:none}
 .dl-hrs b{
   position:absolute;top:14px;transform:translateX(-50%);
@@ -2661,14 +2680,17 @@ body.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{
 .dl-hrs b:nth-child(3){left:50%}
 .dl-hrs b:nth-child(4){left:75%}
 .dl-hrs b:nth-child(5){right:-1.3px;transform:none}
+/* Timetallet som klokkeslettet ville stått oppå, viker plass (settes av skriptet «Døgnlinja»). */
+.dl-hrs b.is-off{opacity:0}
 /* Lasteanimasjonen: linja tones inn etter datoen, og lyset starter litt seinere */
 body.introAct .daily .daily-head .dayline{opacity:0}
 body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .dayline{
   opacity:1;transition:opacity .8s var(--ease-out-quart) 620ms, --dl-p 2.2s var(--dl-ease) 900ms;
 }
 body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animation-delay:3.1s}
+body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-tid{transition-delay:2.7s}
 @media (prefers-reduced-motion:reduce){
-  .dayline{transition:none}
+  .dayline,.dl-tid{transition:none !important}
   .dl-now i::after{animation:none !important}
 }
 /* Lyse temaer (2026-11-27, da oppsettet ble felles): skyggen under kortene var laget
@@ -3166,17 +3188,20 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
           <button type="button" class="daily-cal" id="dailyCal" aria-haspopup="dialog" aria-label="Åpne kalenderen" title="Kalender"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="3.2" width="11.6" height="10.6" rx="2"/><path d="M2.2 6.7h11.6M5.4 1.8v2.6M10.6 1.8v2.6"/></svg><span class="daily-cal-lbl">Kalender</span></button>
           <div class="stamp" id="dailyStamp"><span class="stamp-pre">Sist oppdatert </span>—</div>
           </div>
-          <!-- Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon, se #gammelPC): skala fra 00 til 24 med et lyspunkt
-               for klokka nå. Ren pynt, derfor aria-hidden. Skriptet «Døgnlinja» setter --dl-now. -->
+          <!-- Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon, se #gammelPC): skala fra 00 til 24 med en nål og
+               klokkeslettet for nå. Ren pynt, derfor aria-hidden. Skriptet «Døgnlinja» setter --dl-now. -->
           <div class="dayline" id="dayLine" aria-hidden="true">
             <svg class="dl-ticks" viewBox="0 0 24 8" preserveAspectRatio="none" focusable="false">
-              <path id="dlTMin" vector-effect="non-scaling-stroke" stroke-opacity=".6" d="M1,0V4M2,0V4M3,0V4M4,0V4M5,0V4M7,0V4M8,0V4M9,0V4M10,0V4M11,0V4M13,0V4M14,0V4M15,0V4M16,0V4M17,0V4M19,0V4M20,0V4M21,0V4M22,0V4M23,0V4"/>
+              <path id="dlTHalf" class="dl-half" vector-effect="non-scaling-stroke" stroke-opacity=".4" d="M.5,0V2M1.5,0V2M2.5,0V2M3.5,0V2M4.5,0V2M5.5,0V2M6.5,0V2M7.5,0V2M8.5,0V2M9.5,0V2M10.5,0V2M11.5,0V2M12.5,0V2M13.5,0V2M14.5,0V2M15.5,0V2M16.5,0V2M17.5,0V2M18.5,0V2M19.5,0V2M20.5,0V2M21.5,0V2M22.5,0V2M23.5,0V2"/>
+              <path id="dlTMin" vector-effect="non-scaling-stroke" stroke-opacity=".6" d="M1,0V4M2,0V4M4,0V4M5,0V4M7,0V4M8,0V4M10,0V4M11,0V4M13,0V4M14,0V4M16,0V4M17,0V4M19,0V4M20,0V4M22,0V4M23,0V4"/>
+              <path id="dlTMid" vector-effect="non-scaling-stroke" stroke-opacity=".8" d="M3,0V6M9,0V6M15,0V6M21,0V6"/>
               <path id="dlTMaj" vector-effect="non-scaling-stroke" d="M0,0V8M6,0V8M12,0V8M18,0V8M24,0V8"/>
             </svg>
-            <svg class="dl-ticks is-lit" viewBox="0 0 24 8" preserveAspectRatio="none" focusable="false"><use href="#dlTMin"/><use href="#dlTMaj"/></svg>
+            <svg class="dl-ticks is-lit" viewBox="0 0 24 8" preserveAspectRatio="none" focusable="false"><use href="#dlTHalf" class="dl-half"/><use href="#dlTMin"/><use href="#dlTMid"/><use href="#dlTMaj"/></svg>
             <span class="dl-fill"></span>
             <span class="dl-now"><i></i></span>
             <span class="dl-hrs"><b>00</b><b>06</b><b>12</b><b>18</b><b>24</b></span>
+            <b class="dl-tid" id="dlTid"></b>
           </div>
         </header>
 
@@ -4100,12 +4125,18 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
     // Hvor langt døgnet er kommet (0–1). CSS-en flytter lyspunktet dit.
     var dl = document.getElementById('dayLine');
     if(dl){
+      var tid = document.getElementById('dlTid'), hrs = dl.querySelectorAll('.dl-hrs b');
       var naa = function(){
-        var d = new Date();
-        dl.style.setProperty('--dl-now', ((d.getHours() * 60 + d.getMinutes()) / 1440).toFixed(4));
+        var d = new Date(), p = (d.getHours() * 60 + d.getMinutes()) / 1440;
+        dl.style.setProperty('--dl-now', p.toFixed(4));
         dl.classList.add('is-set');
+        // Klokkeslettet under nåla. Timetallet det ville stått oppå (nærmere enn 30 px), skjules.
+        tid.textContent = ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+        var W = dl.clientWidth, c = Math.min(Math.max(p * W, 15), W - 15);
+        for(var i = 0; i < hrs.length; i++) hrs[i].classList.toggle('is-off', Math.abs(c - (i === 0 ? 7 : i === 4 ? W - 7 : W * i / 4)) < 30);
       };
       naa(); setInterval(naa, 60000);
+      window.addEventListener('resize', naa);
     }
     // Musas plass i hvert kort (--mx/--my), høyst én gang per bilde.
     // To rutenett: de fire kortene øverst og de fire under dem.
@@ -5951,8 +5982,15 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
     '// Formoerket sol bare i programmet for carbon (#define SUN 1 i JS, ellers udefinert).',
     '#ifdef SUN',
     'uniform vec3 uMoonP;',
-    '// Baumbach (1937): koronaens lysstyrke i solradier r >= 1 (K- og F-korona sammen)',
-    'float baumbach(float r){ return 0.0532 * pow(r, -2.5) + 1.425 * pow(r, -7.0) + 2.565 * pow(r, -17.0); }',
+    '// En hjelmstraaler: bred fot ved randen som smalner til en stilk utover.',
+    '// d = retning fra sentrum, h = hoyde over randen i solradier, at = straalens retning,',
+    '// len = rekkevidde i solradier, w = halv bredde ved foten (sinus av vinkelen).',
+    'float helm(vec2 d, float h, vec2 at, float len, float w){',
+    '  float s = d.x * at.y - d.y * at.x;',
+    '  float ww = max(w * pow(1.0 + 1.5 * h, -1.1), 0.05);',
+    '  float x = h / (0.36 * len);',
+    '  return step(0.0, dot(d, at)) * exp(-s * s / (ww * ww)) * pow(1.0 + x * x, -1.3);',
+    '}',
     '// En protuberans: en liten flamme over randen ved retningen at (enhetsvektor).',
     '// h0 = hoyde over randen i solradier, h = toppen, w = halv bredde (radianer).',
     'float prom(vec2 dir, float h0, vec2 at, float h, float w, float sd, float t){',
@@ -6041,45 +6079,60 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
     '  {',
     '    vec2 sv = vec2((frag.x - 0.5) * aspect, frag.y) - uMoonP.xy;',
     '    float R = max(uMoonP.z, 0.001), sd = length(sv), r = sd / R, px = 1.0 / uRes.y;',
-    '    // utenfor ni solradier er det ingenting aa tegne',
-    '    if (r < 9.0) {',
-    '      vec2 dir = sv / max(sd, 1e-5);',
+    '    // koronaen tegnes bare utenfor skiva og ut til sju solradier',
+    '    float outside = smoothstep(R - 0.8 * px, R + 0.8 * px, sd);',
+    '    // skiva: helt moerk (maanen foran sola)',
+    '    col = mix(col, vec3(0.011, 0.008, 0.006), 1.0 - outside);',
+    '    if (outside > 0.0 && r < 7.0) {',
+    '      vec2 dir = sv / sd;',
+    '      float h = max(r - 1.0, 0.0);',
     '      float cloudAmt = clamp(aur.a, 0.0, 1.0);',
-    '      // straaler: soemloes vinkelstoy paa retningsvektoren (ingen skjoet ved +-180 grader),',
-    '      // monsteret glir sakte = straalene puster',
-    '      float br = t * 0.018;',
-    '      float s1 = vnoise(dir * 2.3 + vec2(3.1 + br, 7.7 - br * 0.7));',
-    '      float s2 = vnoise(dir * 6.8 + vec2(11.3 - br * 1.3, 2.9 + br));',
-    '      float s3 = vnoise(dir * 19.0 + vec2(5.7 + br * 0.6, 19.1 + br * 1.7));',
-    '      float streak = 0.40 + 0.95 * smoothstep(0.25, 0.85, s1) + 0.35 * s2 + 0.30 * s3 * s3;',
-    '      // hjelmstraalere: koronaen strekker seg lenger ut der vinkelstoyen er sterk',
-    '      float reach = 0.60 + 1.60 * smoothstep(0.35, 0.90, s1);',
-    '      float re = 1.0 + (max(r, 1.0) - 1.0) / reach;',
-    '      // Baumbach tonet ned: I/I(1) komprimert (^0.36), saa den ytre koronaen synes',
-    '      float cor = pow(baumbach(re) / 4.0432, 0.36) * streak;',
-    '      float breathe = 0.94 + 0.04 * sin(t * 0.11) + 0.02 * sin(t * 0.29 + 1.3);',
-    '      vec3 corC = mix(uCMid, uCEdge, smoothstep(2.4, 1.0, r));',
-    '      float outside = smoothstep(R - 0.8 * px, R + 0.8 * px, sd);',
-    '      col += corC * cor * 0.26 * breathe * outside * (1.0 - 0.5 * cloudAmt);',
-    '      // skiva: nesten svart, med svak varm granulering',
-    '      if (r < 1.0 + 3.0 * px / R) {',
-    '        vec2 q = sv / R;',
-    '        float gr = vnoise(q * 24.0 + vec2(t * 0.015, 3.0)) * 0.6 + vnoise(q * 53.0 - vec2(1.0, t * 0.021)) * 0.4;',
-    '        vec3 disc = vec3(0.011, 0.008, 0.006) + uCMid * smoothstep(0.35, 0.85, gr) * 0.028 * (1.0 - 0.6 * dot(q, q));',
-    '        col = mix(col, disc, 1.0 - outside);',
+    '      // solas akse er vippet 15 grader: ekvator (ax) og pol (pz)',
+    '      vec2 ax = vec2(0.966, 0.259), pz = vec2(-0.259, 0.966);',
+    '      float ce = dot(dir, ax), sp = dot(dir, pz);',
+    '      // feltlinjene boyer av fra polene mot ekvator: fotpunktet til en linje ligger',
+    '      // naermere polen enn punktet selv, mest midt mellom pol og ekvator',
+    '      vec2 fd = normalize(dir + pz * (sp * ce * ce * 1.5 * (1.0 - 1.0 / (1.0 + 1.2 * h))));',
+    '      // traader i koronaen: soemloes stoy paa retningsvektoren (ingen skjoet ved +-180 grader)',
+    '      // i tre finheter. Monsteret glir sakte = lyset puster. Den fineste folger skivas',
+    '      // storrelse i piksler, saa den ikke blir til grus paa smaa skjermer.',
+    '      float br = t * 0.014;',
+    '      float n1 = vnoise(fd * 5.2 + vec2(3.1 + br, 7.7 - br * 0.7));',
+    '      float n2 = vnoise(fd * 15.0 + vec2(11.3 - br * 1.3, 2.9 + br));',
+    '      float n3 = vnoise(fd * clamp(R / px * 0.6, 14.0, 44.0) + vec2(5.7 + br * 0.6, 19.1 + br * 1.7));',
+    '      float tex = 0.50 + 0.48 * n1 + 0.32 * n2 + 0.20 * n3;',
+    '      tex *= sqrt(tex);',
+    '      // fire hjelmstraalere av ulik lengde: to lange paa skraa og to kortere',
+    '      float st = helm(fd, h, vec2(-0.906, -0.423), 3.4, 0.44)',
+    '               + helm(fd, h, vec2(0.766, 0.643), 2.9, 0.36) * 0.92',
+    '               + helm(fd, h, vec2(0.883, -0.469), 2.1, 0.30) * 0.80',
+    '               + helm(fd, h, vec2(-0.966, 0.259), 1.3, 0.22) * 0.65;',
+    '      // polstraaler: tynne, korte straaler rundt polene',
+    '      float pn = 0.35 * n2 + 0.65 * n3;',
+    '      float plume = smoothstep(0.55, 0.97, abs(sp)) * pn * pn * 0.34 * exp(-h / 0.42);',
+    '      // indre korona: hvitgloedende helt inntil randen, faller raskt. Utenfor den en svak',
+    '      // glorie hele veien rundt, og straalene.',
+    '      float inner = 2.4 * exp(-h / 0.035) + 0.85 * exp(-h / 0.14);',
+    '      float halo = 0.26 * pow(1.0 + h * h / 0.06, -1.15);',
+    '      float lum = inner * (0.62 + 0.20 * tex + 0.30 * min(st, 1.0)) + (halo + 0.75 * st) * mix(1.0, tex, 0.30 + 0.60 * smoothstep(0.0, 0.6, h)) + plume;',
+    '      float breathe = 0.95 + 0.035 * sin(t * 0.11) + 0.015 * sin(t * 0.29 + 1.3);',
+    '      // fargen: hvitt ved randen, lys messing i den indre koronaen, moerkere messing ytterst',
+    '      vec3 corC = mix(uCMid * vec3(1.0, 0.86, 0.70), mix(uCMid, uCEdge, 0.45), smoothstep(2.6, 1.1, r));',
+    '      corC = mix(corC, vec3(1.0, 0.955, 0.87), exp(-h / 0.07));',
+    '      // kromosfaeren og protuberansene finnes bare helt inntil randen: en tynn kobberrosa',
+    '      // rand, ujevn som spikler, og tre smaa flammer (hoyde i solradier)',
+    '      float chrom = 0.0;',
+    '      if (r < 1.3) {',
+    '        float dr = (sd - R) / px;',
+    '        float spic = 0.55 + 0.45 * vnoise(dir * 44.0 + vec2(t * 0.05, 1.0));',
+    '        chrom = exp(-dr * dr / 1.6) * 0.45 * spic',
+    '              + prom(dir, h, vec2(0.469, 0.883), 0.11, 0.10, 1.0, t)',
+    '              + prom(dir, h, vec2(-0.940, -0.342), 0.08, 0.08, 5.0, t)',
+    '              + prom(dir, h, vec2(0.174, -0.985), 0.06, 0.07, 9.0, t) * 0.8;',
     '      }',
-    '      // kromosfaeren: en tynn, gloedende messingring like utenfor skiva, ujevn som spikler',
-    '      float dr = (sd - R) / px;',
-    '      float spic = 0.70 + 0.30 * vnoise(dir * 44.0 + vec2(t * 0.05, 1.0));',
-    '      vec3 brass = mix(uCMid, uCEdge, 0.40) * vec3(1.12, 0.92, 0.70);',
-    '      float ring = exp(-(dr - 0.7) * (dr - 0.7) / 1.3) * 0.85 * spic + exp(-max(dr, 0.0) / 3.5) * 0.16 * outside;',
-    '      // to eller tre smaa protuberanser (rosa kobber), hoyde i solradier',
-    '      float h0 = r - 1.0;',
-    '      float pr = prom(dir, h0, vec2(0.766, 0.643), 0.22, 0.17, 1.0, t)',
-    '               + prom(dir, h0, vec2(-0.940, -0.342), 0.15, 0.13, 5.0, t)',
-    '               + prom(dir, h0, vec2(0.174, -0.985), 0.10, 0.11, 9.0, t) * 0.8;',
-    '      vec3 promC = mix(brass, vec3(1.0, 0.55, 0.42), 0.45);',
-    '      col += (brass * ring + promC * pr * 1.10) * outside * (1.0 - 0.35 * cloudAmt);',
+    '      vec3 light = mix(corC, vec3(1.0, 0.50, 0.36), min(chrom, 0.85)) * (lum + chrom * 1.2) * breathe * (1.0 - 0.5 * cloudAmt);',
+    '      // lyset legges paa som i en film (mykt tak), saa randen gloeder uten aa brenne ut',
+    '      col = 1.0 - (1.0 - col) * exp(-light * outside);',
     '    }',
     '  }',
     '#endif',
