@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <title>Verdsettelse med DCF — nåverdi, WACC og verdi per aksje · Hverdagsverktøy</title>
-<meta name="description" content="Regn ut hva et selskap er verdt: fri kontantstrøm, WACC, terminalverdi, nåverdi og verdi per aksje, med følsomhetstabell og eksempel.">
+<meta name="description" content="Regn ut hva et selskap er verdt: fri kontantstrøm, WACC, terminalverdi, nåverdi og verdi per aksje, med følsomhetstabell og eksempel. Hent tall for store amerikanske selskaper rett fra årsrapporten.">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://xn--hverdagsverkty-2qb.no/avansert/finans/dcf/">
 <meta property="og:title" content="Verdsettelse med DCF — Hverdagsverktøy">
-<meta property="og:description" content="Regn ut hva et selskap er verdt: fri kontantstrøm, WACC, terminalverdi, nåverdi og verdi per aksje, med følsomhetstabell og eksempel.">
+<meta property="og:description" content="Regn ut hva et selskap er verdt: fri kontantstrøm, WACC, terminalverdi, nåverdi og verdi per aksje, med følsomhetstabell og eksempel. Hent tall for store amerikanske selskaper rett fra årsrapporten.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://xn--hverdagsverkty-2qb.no/avansert/finans/dcf/">
 <meta property="og:locale" content="nb_NO">
@@ -70,7 +70,7 @@
 <link rel="stylesheet" href="/shared/site-shell.css?v=v357">
 <link rel="stylesheet" href="/shared/calm-override.css?v=v5">
 <link rel="stylesheet" href="/shared/atmosphere.css?v=v245">
-<link rel="stylesheet" href="/avansert/finans/modellering.css?v=v2">
+<link rel="stylesheet" href="/avansert/finans/modellering.css?v=v3">
 </head>
 <body>
 
@@ -155,7 +155,7 @@
           <span class="here">Verdsettelse (DCF)</span>
         </div>
         <h1 class="page-title"><em>Verdsettelse</em> med DCF</h1>
-        <p class="page-lead">Et selskap er verdt pengene det skal tjene i fremtiden, regnet om til kroner i dag. Legg inn fri kontantstrøm, avkastningskrav og vekst, så får du selskapsverdien og verdien per aksje. Siden starter med et eksempel fra Medistim ASAs årsrapport for 2025.</p>
+        <p class="page-lead">Et selskap er verdt pengene det skal tjene i fremtiden, regnet om til kroner i dag. Legg inn fri kontantstrøm, avkastningskrav og vekst, så får du selskapsverdien og verdien per aksje. Siden starter med et eksempel fra Medistim ASAs årsrapport for 2025. For store amerikanske selskaper kan du hente tallene rett fra årsrapporten.</p>
       </div>
     </div>
   </section>
@@ -188,6 +188,27 @@
           </div>
           <p class="md-msg" id="dcf-eksinfo">Eksempelet bruker tall fra Medistim ASAs årsrapport for 2025, i tusen kroner. Vekst og avkastningskrav er våre antakelser. Dette er et regneeksempel, ikke investeringsråd. <a href="#eksempel">Se tallene og kilden.</a></p>
 
+          <section class="md-sec" aria-labelledby="sec-h">
+            <h2 class="md-h2" id="sec-h">Hent tall for et amerikansk selskap</h2>
+            <p class="md-lead">Skriv ticker eller navn. Tallene kommer fra årsrapporten selskapet har levert til det amerikanske finanstilsynet (SEC). Vekst og avkastningskrav setter du selv.</p>
+            <div class="md-sok">
+              <label class="ik-lbl" for="sec-sok">Ticker eller navn</label>
+              <div class="md-sok-felt">
+                <input class="ik-input" id="sec-sok" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" role="combobox" aria-expanded="false" aria-controls="sec-liste" aria-autocomplete="list">
+                <ul class="md-sok-liste" id="sec-liste" role="listbox" aria-label="Selskaper" hidden></ul>
+              </div>
+              <span class="ik-hint" id="sec-hint">For eksempel AAPL eller Microsoft.</span>
+            </div>
+            <p class="md-msg" id="sec-info" role="status" hidden></p>
+            <div id="sec-ut" hidden>
+              <div class="md-tables">
+                <div class="md-tw"><table class="md-t" id="sec-aar"></table></div>
+                <div class="md-tw"><table class="md-t" id="sec-bal"></table></div>
+              </div>
+              <p class="md-src" id="sec-kilde"></p>
+            </div>
+          </section>
+
           <section class="md-sec" aria-labelledby="dcf-h1">
             <h2 class="md-h2" id="dcf-h1">1. Fri kontantstrøm per år</h2>
             <p class="md-lead">Pengene driften gir etter skatt og investeringer, før renter og avdrag.</p>
@@ -200,7 +221,7 @@
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-vekst5">Vekst per år fremover</label>
                 <div class="md-inp-u"><input class="ik-input" id="dcf-vekst5" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
-                <span class="ik-hint">Hvert år i prognosen.</span>
+                <span class="ik-hint" id="dcf-vekst5-h">Hvert år i prognosen.</span>
               </div>
               <div class="md-f" style="justify-content:flex-start">
                 <span class="ik-lbl" aria-hidden="true">&nbsp;</span>
@@ -251,7 +272,7 @@
                   <div class="md-f">
                     <label class="ik-lbl" for="w-rf">Risikofri rente</label>
                     <div class="md-inp-u"><input class="ik-input" id="w-rf" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
-                    <span class="ik-hint">Renten på tiårige norske statsobligasjoner. Norges Bank publiserer den.</span>
+                    <span class="ik-hint" id="w-rf-h">Renten på tiårige norske statsobligasjoner. Norges Bank publiserer den.</span>
                   </div>
                   <div class="md-f">
                     <label class="ik-lbl" for="w-beta">Beta</label>
@@ -261,22 +282,22 @@
                   <div class="md-f">
                     <label class="ik-lbl" for="w-mp">Markedspremie</label>
                     <div class="md-inp-u"><input class="ik-input" id="w-mp" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
-                    <span class="ik-hint">Ekstra avkastning aksjer gir over risikofri rente. 5 % er mye brukt i Norge.</span>
+                    <span class="ik-hint" id="w-mp-h">Ekstra avkastning aksjer gir over risikofri rente. 5 % er mye brukt i Norge.</span>
                   </div>
                   <div class="md-f">
                     <label class="ik-lbl" for="w-rd">Lånerente før skatt</label>
                     <div class="md-inp-u"><input class="ik-input" id="w-rd" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
-                    <span class="ik-hint">Renten selskapet betaler på lån. Står i noten om rentebærende gjeld.</span>
+                    <span class="ik-hint" id="w-rd-h">Renten selskapet betaler på lån. Står i noten om rentebærende gjeld.</span>
                   </div>
                   <div class="md-f">
                     <label class="ik-lbl" for="w-tax">Skattesats</label>
                     <div class="md-inp-u"><input class="ik-input" id="w-tax" type="text" inputmode="decimal" autocomplete="off"><span class="u">%</span></div>
-                    <span class="ik-hint">22 % for norske aksjeselskaper. Renter er fradragsberettiget, derfor trekkes skatten fra.</span>
+                    <span class="ik-hint" id="w-tax-h">22 % for norske aksjeselskaper. Renter er fradragsberettiget, derfor trekkes skatten fra.</span>
                   </div>
                   <div class="md-f">
                     <label class="ik-lbl" for="w-e">Markedsverdi egenkapital</label>
                     <input class="ik-input" id="w-e" type="text" inputmode="decimal" autocomplete="off">
-                    <span class="ik-hint">Børskurs ganger antall aksjer. For et selskap uten børskurs: bruk bokført egenkapital som et grovt anslag.</span>
+                    <span class="ik-hint" id="w-e-h">Børskurs ganger antall aksjer. For et selskap uten børskurs: bruk bokført egenkapital som et grovt anslag.</span>
                   </div>
                   <div class="md-f">
                     <label class="ik-lbl" for="w-d">Rentebærende gjeld</label>
@@ -302,12 +323,12 @@
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-gjeld">Rentebærende gjeld</label>
                 <input class="ik-input" id="dcf-gjeld" type="text" inputmode="decimal" autocomplete="off">
-                <span class="ik-hint">Banklån, obligasjoner og leie.</span>
+                <span class="ik-hint" id="dcf-gjeld-h">Banklån, obligasjoner og leie.</span>
               </div>
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-kont">Kontanter og bankinnskudd</label>
                 <input class="ik-input" id="dcf-kont" type="text" inputmode="decimal" autocomplete="off">
-                <span class="ik-hint">Nederst på eiendelssiden.</span>
+                <span class="ik-hint" id="dcf-kont-h">Nederst på eiendelssiden.</span>
               </div>
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-aksjer">Antall aksjer</label>
@@ -316,8 +337,8 @@
               </div>
               <div class="md-f">
                 <label class="ik-lbl" for="dcf-kurs">Børskurs i dag (valgfritt)</label>
-                <div class="md-inp-u"><input class="ik-input" id="dcf-kurs" type="text" inputmode="decimal" autocomplete="off"><span class="u">kr</span></div>
-                <span class="ik-hint">Kroner per aksje, for å sammenligne.</span>
+                <div class="md-inp-u"><input class="ik-input" id="dcf-kurs" type="text" inputmode="decimal" autocomplete="off"><span class="u" id="dcf-kurs-u">kr</span></div>
+                <span class="ik-hint" id="dcf-kurs-h">Kroner per aksje, for å sammenligne.</span>
               </div>
             </div>
             <details class="md-help">
@@ -340,6 +361,7 @@
               <dt>Delt på antall aksjer</dt><dd id="r-aksjer">–</dd>
               <dt class="tot">Verdi per aksje</dt><dd class="tot" id="r-ps">–</dd>
               <dt>Børskurs<small id="r-kurs-s"></small></dt><dd id="r-kurs">–</dd>
+              <dt>Veksten kursen forutsetter<small id="r-impl-s">Fyll inn børskurs og fri kontantstrøm i fjor</small></dt><dd id="r-impl">–</dd>
             </dl>
             <p class="md-msg" id="dcf-tvvarsel" role="status" hidden></p>
           </section>
@@ -398,7 +420,26 @@
           <div class="md-fld"><h3>Børskurs</h3>
             <p><b>Hva det er</b>Prisen markedet betaler for én aksje. Er verdien din lavere enn kursen, regner markedet med mer vekst eller lavere risiko enn du gjør.</p>
             <p><b>Hvor du finner det</b>Oslo Børs eller nettbanken. Selskaper som ikke er på børs, har ingen kurs. La feltet stå tomt.</p></div>
+          <div class="md-fld"><h3>Veksten kursen forutsetter</h3>
+            <p><b>Hva det er</b>Regnestykket snudd: hvor mye må kontantstrømmen vokse hvert år i fem år for at verdien skal bli akkurat lik børskursen? Da ser du hva markedet regner med, og kan vurdere om det er realistisk.</p>
+            <p><b>Hvor du finner det</b>Regnes ut når du har fylt inn fri kontantstrøm i fjor, avkastningskrav, vekst for alltid, antall aksjer og børskurs. Sammenlign med veksten selskapet faktisk har hatt.</p></div>
         </div>
+      </section>
+
+      <section class="lc-sec" id="usa" aria-labelledby="lc-usa">
+        <div class="lc-head"><span class="lc-kicker">Amerikanske selskaper</span><h2 class="lc-title" id="lc-usa">Slik hentes tallene <em>fra SEC</em></h2><p class="lc-intro">Alle selskaper på børs i USA leverer årsrapporten (skjema 10-K) til finanstilsynet SEC, med hvert tall merket. Vi leser de merkede tallene hver natt for de største selskapene. Tallene er selskapets egne, og vi endrer dem ikke.</p></div>
+        <ul class="md-list">
+          <li><strong>Fri kontantstrøm regnes fra kontantstrømoppstillingen.</strong> Kontantstrøm fra drift, pluss rentekostnaden etter 21 % skatt, minus investeringer i varige driftsmidler, minus aksjebasert lønn. Rentene legges tilbake fordi kontantstrømmen skal være før renter når den regnes med WACC.</li>
+          <li><strong>Aksjebasert lønn trekkes fra.</strong> Mange amerikanske selskaper betaler ansatte delvis med aksjer. Kontantstrømoppstillingen legger kostnaden tilbake fordi den ikke betales i kontanter, men eierne betaler den ved at det blir flere aksjer.</li>
+          <li><strong>Gjeld er lån og obligasjoner.</strong> Vanlig leie av lokaler og utstyr er ikke med. I amerikanske regnskap ligger den alt i driftskostnadene, så den ville blitt regnet to ganger. Finansiell leie, som i praksis er et lån, er med der selskapet fører den sammen med lånene.</li>
+          <li><strong>Kontanter er kontanter pluss kortsiktige plasseringer.</strong> Langsiktige verdipapirer er ikke med. Noen selskaper fører også de kortsiktige under poster vi ikke leser, og da er bare kontantene med. Tabellen viser hva som er lest, så du kan legge til resten selv.</li>
+          <li><strong>Antall aksjer er tallet på forsiden av årsrapporten.</strong> Har selskapet flere aksjeklasser, brukes snittet for året, eller feltet står tomt.</li>
+          <li><strong>Banker, forsikring og eiendomsselskaper er ikke med.</strong> For dem er gjeld en del av driften, og fri kontantstrøm gir ikke mening. De verdsettes med andre metoder.</li>
+          <li><strong>Selskapene merker tallene ulikt.</strong> Finner vi ikke en post, står feltet tomt, og siden sier fra. Da finner du tallet i årsrapporten, som det lenkes til. Uttrekket er kontrollert mot årsrapportene til 36 store selskaper. Hver natt sjekkes tallene automatisk, og tall som ikke kan stemme blir ikke lagt ut. Hver måned kontrolleres et utvalg mot årsrapportene for hånd. Likevel kan det bli lest feil post hos enkelte selskaper, så sjekk mot årsrapporten før du stoler på et tall.</li>
+          <li><strong>Børskursen skriver du inn selv.</strong> Siden viser ikke kurser. Beta og markedspremie setter du også selv. <a href="https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datacurrent.html" rel="noopener">Aswath Damodaran ved New York University</a> legger ut betaer per bransje og sitt anslag på markedspremien.</li>
+          <li><strong>Tallene fra årsrapporten er fakta. Resten er dine antakelser.</strong> Vekst og avkastningskrav bestemmer verdien, og siden foreslår dem ikke. Den sier heller ikke hva du bør gjøre med en aksje.</li>
+        </ul>
+        <p class="md-src">Kilder: regnskapstall fra <a href="https://www.sec.gov/search-filings/edgar-application-programming-interfaces" rel="noopener">U.S. Securities and Exchange Commission, EDGAR</a>. Risikofri rente fra <a href="https://home.treasury.gov/resource-center/data-chart-center/interest-rates/TextView?type=daily_treasury_yield_curve" rel="noopener">U.S. Department of the Treasury</a>, daglig rentekurve.</p>
       </section>
 
       <section class="lc-sec" id="eksempel" aria-labelledby="lc-eks">
@@ -522,8 +563,8 @@
 <script defer src="/shared/lang/no-lett/avansert.js?v=v506"></script>
 <script src="/shared/atmosphere.js?v=v8" defer></script>
 <script src="/shared/search.js?v=v511" defer></script>
-<script defer src="/avansert/finans/modellering.js?v=v3"></script>
-<script defer src="/avansert/finans/dcf/dcf.js?v=v3"></script>
+<script defer src="/avansert/finans/modellering.js?v=v4"></script>
+<script defer src="/avansert/finans/dcf/dcf.js?v=v4"></script>
 
 </body>
 </html>

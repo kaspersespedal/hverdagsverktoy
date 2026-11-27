@@ -1,0 +1,64 @@
+# Henter regnskapstall for store amerikanske selskaper fra SEC EDGAR hver natt og legger dem i data/sec/.
+# /avansert/finans/dcf/ leser filene («Hent tall for et amerikansk selskap»).
+#
+# Krever hemmeligheten SEC_USER_AGENT (Settings → Secrets and variables → Actions → New repository secret):
+#   navnet på nettstedet og en e-postadresse SEC kan nå, f.eks.  Hverdagsverktøy kontakt@eksempel.no
+# SEC krever dette av alle som henter automatisk. Uten den stopper jobben med en forklaring.
+#
+# Jobben legger tallene rett på main. Hvis main senere beskyttes med «Require a pull request»,
+# må denne jobben få unntak, ellers feiler siste steg.
+name: SEC-tall
+
+on:
+  schedule:
+    - cron: '23 5 * * *'   # hver natt 05:23 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sec-tall
+  cancel-in-progress: false
+
+jobs:
+  hent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Test kontrollene
+        run: node scripts/test-hent-sec.mjs
+
+      # Skriptet kontrollerer tallene før det lagrer (se kontroller() og fasiten i scripts/sec-fasit.json).
+      # Stopper det et selskap, lagres resten likevel, og jobben feiler til slutt så GitHub sender e-post.
+      - name: Hent tall fra SEC
+        id: hent
+        continue-on-error: true
+        env:
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: node scripts/hent-sec.mjs
+
+      - name: Lagre endringer
+        run: |
+          git add data/sec
+          if git diff --cached --quiet; then
+            echo "Ingen nye tall i dag."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "data(sec): oppdaterte regnskapstall fra SEC EDGAR"
+          git pull --rebase origin main
+          git push
+
+      - name: Si fra hvis kontrollen stoppet noe
+        if: steps.hent.outcome == 'failure'
+        run: |
+          echo "Kontrollen stoppet ett eller flere selskaper, eller hele kjøringen. Se oppsummeringen over og data/sec/kontroll.json." >&2
+          exit 1
