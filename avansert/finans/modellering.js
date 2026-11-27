@@ -59,6 +59,31 @@
     });
   }
 
+  // Omvendt DCF: hvilken jevn vekst per år gir akkurat denne verdien per aksje (target)?
+  // base: fri kontantstrøm siste år. years: antall prognoseår (5). r, g, debt, cash, shares, unit som i dcf().
+  // Svaret er Infinity / −Infinity når kursen krever mer enn +100 % eller mindre enn −50 % per år,
+  // og NaN når det ikke kan regnes (ingen positiv kontantstrøm, eller krav og vekst mangler).
+  function impliedGrowth(o){
+    var n = o.years || 5;
+    if(!(o.base > 0) || !(o.target > 0) || !(o.shares > 0)) return NaN;
+    function val(v){
+      var fcf = [];
+      for(var t = 1; t <= n; t++) fcf.push(o.base * Math.pow(1 + v, t));
+      var res = dcf({ fcf:fcf, r:o.r, g:o.g, debt:o.debt, cash:o.cash, shares:o.shares, unit:o.unit });
+      return res.ok ? res.perShare : NaN;
+    }
+    var lo = -0.5, hi = 1, vLo = val(lo), vHi = val(hi);
+    if(!isFinite(vLo) || !isFinite(vHi)) return NaN;
+    if(o.target > vHi) return Infinity;
+    if(o.target < vLo) return -Infinity;
+    // Verdien stiger med veksten, så halvering av intervallet finner svaret.
+    for(var i = 0; i < 60; i++){
+      var mid = (lo + hi) / 2;
+      if(val(mid) < o.target) lo = mid; else hi = mid;
+    }
+    return (lo + hi) / 2;
+  }
+
   // Treårsprognose der resultat, balanse og kontantstrøm henger sammen.
   // start: siste regnskapsår (år 0). a: forutsetninger, én verdi per år i arrays på tre.
   //   start = { revenue, fixed, nwc, cash, debt, equity }   (other = det som står igjen, holdes fast)
@@ -139,7 +164,7 @@
   }
   function pct(x, d){ return isFinite(x) ? fmt(x * 100, d == null ? 1 : d) + ' %' : '–'; }
 
-  var api = { pv:pv, capm:capm, wacc:wacc, dcf:dcf, sensitivity:sensitivity, forecast:forecast, parseNum:parseNum, fmt:fmt, pct:pct };
+  var api = { pv:pv, capm:capm, wacc:wacc, dcf:dcf, sensitivity:sensitivity, impliedGrowth:impliedGrowth, forecast:forecast, parseNum:parseNum, fmt:fmt, pct:pct };
   if(typeof module === 'object' && module.exports) module.exports = api;
   else root.HVModell = api;
 })(this);

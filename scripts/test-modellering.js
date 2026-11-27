@@ -100,5 +100,19 @@ near('Tolker «1.500,5»', M.parseNum('1.500,5'), 1500.5);
 near('Tolker «8.5» som desimal', M.parseNum('8.5'), 8.5);
 sann('Viser 1234567,8 som «1 234 567,8»', M.fmt(1234567.8, 1) === '1 234 567,8');
 
+// Omvendt DCF: veksten som gir en bestemt verdi per aksje.
+// Rundtur: regn verdien med 8 % vekst i fem år, og spør så hvilken vekst den verdien forutsetter.
+const ro = { r:0.09, g:0.025, debt:300, cash:50, shares:10e6, unit:1e6 };
+const rps = M.dcf(Object.assign({ fcf:[1, 2, 3, 4, 5].map(t => 100 * Math.pow(1.08, t)) }, ro)).perShare;
+near('Omvendt DCF: 8 % vekst gir verdien, og verdien gir 8 % tilbake', M.impliedGrowth(Object.assign({ base:100, target:rps, years:5 }, ro)), 0.08, 1e-9);
+const nps = M.dcf(Object.assign({ fcf:[1, 2, 3, 4, 5].map(t => 100 * Math.pow(0.97, t)) }, ro)).perShare;
+near('Omvendt DCF: −3 % vekst tur og retur', M.impliedGrowth(Object.assign({ base:100, target:nps, years:5 }, ro)), -0.03, 1e-9);
+sann('Omvendt DCF: høyere kurs gir høyere vekst', M.impliedGrowth(Object.assign({ base:100, target:rps * 1.5, years:5 }, ro)) > 0.08);
+sann('Omvendt DCF: en kurs ingen vekst opp til 100 % kan forklare gir Infinity', M.impliedGrowth(Object.assign({ base:100, target:rps * 1000, years:5 }, ro)) === Infinity);
+// Uten gjeld er verdien positiv også ved −50 % vekst, så en kurs nær null ligger under hele området.
+sann('Omvendt DCF: en kurs under verdien ved −50 % vekst gir −Infinity', M.impliedGrowth({ base:100, target:0.001, years:5, r:0.09, g:0.025, shares:10e6, unit:1e6 }) === -Infinity);
+sann('Omvendt DCF: negativ kontantstrøm kan ikke regnes', isNaN(M.impliedGrowth(Object.assign({ base:-100, target:50, years:5 }, ro))));
+sann('Omvendt DCF: krav lik vekst kan ikke regnes', isNaN(M.impliedGrowth({ base:100, target:50, years:5, r:0.03, g:0.03, shares:10, unit:1 })));
+
 console.log('\n' + pass + ' bestått, ' + fail + ' feilet');
 process.exit(fail ? 1 : 0);
