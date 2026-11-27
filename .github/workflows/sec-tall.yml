@@ -32,7 +32,14 @@ jobs:
         with:
           node-version: 22
 
+      - name: Test kontrollene
+        run: node scripts/test-hent-sec.mjs
+
+      # Skriptet kontrollerer tallene før det lagrer (se kontroller() og fasiten i scripts/sec-fasit.json).
+      # Stopper det et selskap, lagres resten likevel, og jobben feiler til slutt så GitHub sender e-post.
       - name: Hent tall fra SEC
+        id: hent
+        continue-on-error: true
         env:
           SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
         run: node scripts/hent-sec.mjs
@@ -49,3 +56,9 @@ jobs:
           git commit -m "data(sec): oppdaterte regnskapstall fra SEC EDGAR"
           git pull --rebase origin main
           git push
+
+      - name: Si fra hvis kontrollen stoppet noe
+        if: steps.hent.outcome == 'failure'
+        run: |
+          echo "Kontrollen stoppet ett eller flere selskaper, eller hele kjøringen. Se oppsummeringen over og data/sec/kontroll.json." >&2
+          exit 1

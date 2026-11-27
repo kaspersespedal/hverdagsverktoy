@@ -27,15 +27,9 @@ for (let i = 0; i < av.length; i++) if (av[i].startsWith('--')) A[av[i].slice(2)
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const UT = path.join(ROOT, 'data', 'sec');
 const UA = process.env.SEC_USER_AGENT;
-const V = 1;                       // øk når uttrekket endres, så alle filene lages på nytt
+const V = 2;                       // øk når uttrekket endres, så alle filene lages på nytt
 const ANTALL = +A.antall || 1000;
 const PAUSE = 200;                 // ms mellom kall
-
-if (!UA) {
-  console.error('SEC_USER_AGENT mangler. SEC krever at automatiske kall sier hvem de er, med e-postadresse.\n' +
-    'Eksempel:  SEC_USER_AGENT="Hverdagsverktøy kontakt@eksempel.no" node scripts/hent-sec.mjs');
-  process.exit(1);
-}
 
 const sov = ms => new Promise(r => setTimeout(r, ms));
 let sist = 0;
@@ -227,13 +221,63 @@ function trekkUt(inn, fakta) {
     ? 'https://www.sec.gov/Archives/edgar/data/' + cik + '/' + aar0.accn.replace(/-/g, '') + '/' + r.primaryDocument[n]
     : 'https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=' + cik + '&type=10-K';
 
+  const eiendeler = paaDato(gaap, 'Assets', dato), samlet = paaDato(gaap, 'DebtLongtermAndShorttermCombinedAmount', dato);
   return { ...grunn,
     rapport: { skjema: aar0.form, slutt: dato, levert: aar0.filed, nr: aar0.accn, lenke },
     aar,
     // kontBundet: selskapet oppgir bare kontanter medregnet bundne midler (sperret for bestemte formål).
-    balanse: { dato, kont: kont ? kont.val : null, kontBundet: !!kont && /RestrictedCash/.test(kont.tag), plass: plass ? plass.val : null,
-      gjeld: g ? g.sum : null, gjeldDeler: g ? g.deler : null },
-    aksjer: aks, merk, mangler };
+    balanse: { dato, eiendeler: eiendeler ? eiendeler.val : null, kont: kont ? kont.val : null, kontBundet: !!kont && /RestrictedCash/.test(kont.tag),
+      plass: plass ? plass.val : null, gjeld: g ? g.sum : null, gjeldDeler: g ? g.deler : null },
+    aksjer: aks, merk, mangler,
+    // Brukes bare av kontrollen under, og lagres ikke.
+    _gjeldSamlet: samlet ? samlet.val : null };
+}
+
+// ── Kontroll før noe lagres ─────────────────────────────────────────────────────────────
+// «stopp»: tall som ikke kan stemme. Selskapet beholder forrige versjon, og jobben melder feil.
+// «varsel»: tall som kan stemme, men som bør ses på (store hopp, to regnemåter som spriker).
+//           De lagres, og står i data/sec/kontroll.json til den månedlige gjennomgangen.
+function kontroller(d, gammel) {
+  const stopp = [], varsel = [];
+  if (d.unntatt) return { stopp, varsel };
+  const s = d.aar[d.aar.length - 1], b = d.balanse, mrd = x => (x / 1e9).toFixed(1) + ' mrd.';
+  if (s.oms != null && s.oms <= 0) stopp.push('omsetningen er ' + mrd(s.oms));
+  for (const [navn, x] of [['investeringer', s.capex], ['aksjebasert lønn', s.sbc], ['kontanter', b.kont], ['plasseringer', b.plass], ['gjeld', b.gjeld]])
+    if (x != null && x < 0) stopp.push(navn + ' er negative (' + mrd(x) + ')');
+  if (s.oms > 0 && s.cfo > 1.5 * s.oms) stopp.push('kontantstrøm fra drift (' + mrd(s.cfo) + ') er over 1,5 ganger omsetningen (' + mrd(s.oms) + ')');
+  if (b.eiendeler > 0) {
+    if ((b.kont || 0) + (b.plass || 0) > b.eiendeler) stopp.push('kontanter og plasseringer er større enn alle eiendelene');
+    if (b.gjeld > b.eiendeler) stopp.push('gjelden (' + mrd(b.gjeld) + ') er større enn alle eiendelene (' + mrd(b.eiendeler) + ')');
+  }
+  if (d.aksjer && !(d.aksjer.antall > 0)) stopp.push('antall aksjer er ' + d.aksjer.antall);
+  if (d._gjeldSamlet > 0 && b.gjeld > 0 && Math.abs(b.gjeld - d._gjeldSamlet) > 0.10 * d._gjeldSamlet)
+    varsel.push('gjelden (' + mrd(b.gjeld) + ') spriker over 10 % fra selskapets egen sum (' + mrd(d._gjeldSamlet) + ')');
+  // Store hopp fra forrige årsrapport. Oppkjøp og nye lån kan forklare dem, så de lagres, men merkes.
+  const g = gammel && !gammel.unntatt && gammel.rapport && gammel.rapport.nr !== d.rapport.nr ? gammel : null;
+  if (g) {
+    const gs = g.aar[g.aar.length - 1], hopp = (navn, ny, gml, lav, hoy) => {
+      if (ny > 0 && gml > 0 && (ny / gml < lav || ny / gml > hoy)) varsel.push(navn + ' endret fra ' + mrd(gml) + ' til ' + mrd(ny));
+    };
+    hopp('omsetningen', s.oms, gs.oms, 0.5, 2);
+    if (Math.abs((b.gjeld || 0) - (g.balanse.gjeld || 0)) > 1e9) hopp('gjelden', b.gjeld, g.balanse.gjeld, 0.33, 3);
+    if (d.aksjer && g.aksjer && d.aksjer.type === g.aksjer.type) {
+      const f = d.aksjer.antall / g.aksjer.antall;
+      if (f < 0.7 || f > 1.5) varsel.push('antall aksjer endret fra ' + g.aksjer.antall + ' til ' + d.aksjer.antall);
+    }
+  }
+  return { stopp, varsel };
+}
+
+// Fasit: selskaper som er kontrollert for hånd (scripts/sec-fasit.json). Samme årsrapport skal gi samme tall.
+function motFasit(d, f) {
+  if (!d.rapport || d.rapport.nr !== f.rapport) return null;   // ny årsrapport: fasiten gjelder ikke lenger
+  const s = d.aar[d.aar.length - 1], b = d.balanse;
+  const na = { oms: s.oms, cfo: s.cfo, capex: s.capex, sbc: s.sbc, renter: s.renter, kont: b.kont, plass: b.plass, gjeld: b.gjeld, aksjer: d.aksjer ? d.aksjer.antall : null };
+  const avvik = Object.keys(f.tall).filter(k => {
+    const x = na[k], y = f.tall[k];
+    return (x == null) !== (y == null) || (x != null && Math.abs(x - y) > 0.005 * Math.max(Math.abs(x), Math.abs(y)));
+  });
+  return avvik.length ? f.ticker + ': ' + avvik.map(k => k + ' ' + na[k] + ' (fasit ' + f.tall[k] + ')').join(', ') : null;
 }
 
 // ── Hvilke selskaper: de største etter «public float» (børsverdien av aksjene som ikke eies av innsidere),
@@ -306,32 +350,77 @@ async function ettSelskap(cik, tving) {
 }
 
 async function main() {
+  if (!UA) {
+    console.error('SEC_USER_AGENT mangler. SEC krever at automatiske kall sier hvem de er, med e-postadresse.\n' +
+      'Eksempel:  SEC_USER_AGENT="Hverdagsverktøy kontakt@eksempel.no" node scripts/hent-sec.mjs');
+    process.exit(1);
+  }
   if (A.vis) {
-    for (const cik of String(A.vis).split(',')) console.log(JSON.stringify(await ettSelskap(+cik, true), null, 1));
+    for (const cik of String(A.vis).split(',')) {
+      const d = await ettSelskap(+cik, true), k = d ? kontroller(d, null) : null;
+      console.log(JSON.stringify(d, null, 1));
+      if (k) console.log('Kontroll:', JSON.stringify(k));
+    }
     return;
   }
   fs.mkdirSync(UT, { recursive: true });
   const indeksFil = path.join(UT, 'indeks.json'), gammelIndeks = les(indeksFil);
   const kandidater = A.cik ? String(A.cik).split(',').map(c => ({ cik: +c })) : await storste(ANTALL);
   const maal = A.cik ? kandidater.length : ANTALL;
-  console.log(kandidater.length + ' kandidater, mål ' + maal);
+  const fasit = les(path.join(ROOT, 'scripts', 'sec-fasit.json'))?.selskaper || [];
+  const fasitCik = new Map(fasit.map(f => [f.cik, f]));
+  console.log(kandidater.length + ' kandidater, mål ' + maal + ', ' + fasit.length + ' selskaper i fasit');
 
-  const ferdige = new Map();
-  let nye = 0, feil = 0;
+  // Ingenting skrives før alle selskapene er hentet og kontrollert.
+  const ferdige = new Map(), skriv = new Map(), stoppet = [], varsler = [], fasitAvvik = [];
+  let feil = 0, endretGamle = 0, gamleMedSammeUttrekk = 0;
   for (const [i, { cik, flyt, eiendeler }] of kandidater.entries()) {
     if (ferdige.size >= maal) break;
     try {
-      const d = await ettSelskap(cik, !!A.alt);
+      const fil = path.join(UT, cik + '.json'), gammel = les(fil);
+      // Selskapene i fasiten hentes på nytt hver natt, så en feil i programmet eller hos SEC blir oppdaget.
+      const d = await ettSelskap(cik, !!A.alt || fasitCik.has(cik));
       if (!d || !d.ticker || d.unntatt === 'ingen-tall' || d.unntatt === 'gammel') continue;
       if (tastefeil(d, flyt, eiendeler)) { console.warn('Hopper over ' + d.ticker + ': børsverdien i innleveringen er i feil enhet.'); continue; }
-      const fil = path.join(UT, cik + '.json'), tekst = JSON.stringify(d) + '\n';
-      if (!fs.existsSync(fil) || fs.readFileSync(fil, 'utf8') !== tekst) { fs.writeFileSync(fil, tekst); nye++; }
-      ferdige.set(cik, d);
+      if (fasitCik.has(cik)) { const a = motFasit(d, fasitCik.get(cik)); if (a) fasitAvvik.push(a); }
+      const k = kontroller(d, gammel);
+      for (const v of k.varsel) varsler.push({ ticker: d.ticker, cik, rapport: d.rapport?.nr || null, grunn: v });
+      if (k.stopp.length) {
+        stoppet.push({ ticker: d.ticker, cik, rapport: d.rapport?.nr || null, grunn: k.stopp.join('; ') });
+        console.warn('Lagrer ikke ' + d.ticker + ': ' + k.stopp.join('; '));
+        if (gammel && gammel.ticker) ferdige.set(cik, gammel);   // forrige versjon står til feilen er forstått
+        continue;
+      }
+      const { _gjeldSamlet, ...lagre } = d;
+      const tekst = JSON.stringify(lagre) + '\n';
+      if (!fs.existsSync(fil) || fs.readFileSync(fil, 'utf8') !== tekst) {
+        skriv.set(fil, tekst);
+        if (gammel && gammel.v === V) endretGamle++;
+      }
+      if (gammel && gammel.v === V) gamleMedSammeUttrekk++;
+      ferdige.set(cik, lagre);
     } catch (e) { feil++; console.warn('CIK ' + cik + ': ' + e.message); }
     if ((i + 1) % 50 === 0) console.log('  ' + (i + 1) + ' / ' + kandidater.length);
   }
-  // Mer enn hvert femte selskap feilet: noe er galt hos SEC eller i nettet. Da røres ikke indeksen.
-  if (feil > maal / 5) { console.error(feil + ' av ' + maal + ' feilet. Indeksen er ikke endret.'); process.exit(1); }
+
+  // Tre grunner til å stoppe uten å skrive noe:
+  // 1. Mer enn hvert femte selskap feilet: noe er galt hos SEC eller i nettet.
+  if (feil > maal / 5) { console.error(feil + ' av ' + maal + ' feilet. Ingenting er lagret.'); process.exit(1); }
+  // 2. Et selskap i fasiten gir andre tall for samme årsrapport: programmet eller SEC har endret seg.
+  if (fasitAvvik.length) {
+    console.error('Fasiten stemmer ikke. Ingenting er lagret. Finn ut hva som har endret seg før neste kjøring:\n  ' + fasitAvvik.join('\n  '));
+    sammendrag('Stoppet: fasiten stemmer ikke', fasitAvvik);
+    process.exit(1);
+  }
+  // 3. Over en firedel av selskapene som var hentet fra før, fikk nye tall på én natt. Så mange årsrapporter
+  //    kommer aldri samme dag, så det er nesten sikkert en feil. (Nye selskaper og --alt teller ikke.)
+  if (!A.alt && gamleMedSammeUttrekk >= 40 && endretGamle > gamleMedSammeUttrekk / 4) {
+    console.error(endretGamle + ' av ' + gamleMedSammeUttrekk + ' selskaper fikk nye tall på én natt. Ingenting er lagret.');
+    sammendrag('Stoppet: for mange endringer på én natt', [endretGamle + ' av ' + gamleMedSammeUttrekk]);
+    process.exit(1);
+  }
+  for (const [fil, tekst] of skriv) fs.writeFileSync(fil, tekst);
+  const nye = skriv.size;
 
   // Indeksen: én rad per ticker → [ticker, navn, cik, 1 hvis unntatt]. Med --cik beholdes radene fra før.
   const rader = new Map();
@@ -350,7 +439,35 @@ async function main() {
     const beholdt = new Set(selskaper.map(r => r[2] + '.json'));
     for (const f of fs.readdirSync(UT)) if (/^\d+\.json$/.test(f) && !beholdt.has(f)) fs.unlinkSync(path.join(UT, f));
   }
-  console.log('Ferdig: ' + ferdige.size + ' selskaper, ' + nye + ' filer endret, ' + feil + ' feil. Rente: ' + (r ? r.us10 + ' % (' + r.dato + ')' : 'ikke hentet'));
+  // Kontrollrapporten: det som ble stoppet og det som bør ses på. Den leses av den månedlige gjennomgangen.
+  // Varsler fra tidligere netter blir stående til selskapet leverer en ny årsrapport.
+  const kontrollFil = path.join(UT, 'kontroll.json'), gammelKontroll = les(kontrollFil);
+  const iDag = new Map(varsler.map(v => [v.cik + '|' + v.grunn, v]));
+  for (const v of gammelKontroll?.varsler || []) {
+    const d = ferdige.get(v.cik);
+    if (d && d.rapport && d.rapport.nr === v.rapport && !iDag.has(v.cik + '|' + v.grunn)) iDag.set(v.cik + '|' + v.grunn, v);
+  }
+  const kontroll = { stoppet, varsler: [...iDag.values()] };
+  if (!gammelKontroll || JSON.stringify({ stoppet: gammelKontroll.stoppet, varsler: gammelKontroll.varsler }) !== JSON.stringify(kontroll))
+    fs.writeFileSync(kontrollFil, JSON.stringify({ oppdatert: new Date().toISOString().slice(0, 10), ...kontroll }, null, 1) + '\n');
+
+  console.log('Ferdig: ' + ferdige.size + ' selskaper, ' + nye + ' filer endret, ' + feil + ' feil, ' + stoppet.length + ' stoppet, ' +
+    kontroll.varsler.length + ' varsler. Rente: ' + (r ? r.us10 + ' % (' + r.dato + ')' : 'ikke hentet'));
+  if (kontroll.varsler.length) sammendrag('Bør ses på', kontroll.varsler.map(v => v.ticker + ': ' + v.grunn));
+  if (stoppet.length) {
+    sammendrag('Ikke lagret (forrige versjon står)', stoppet.map(s => s.ticker + ': ' + s.grunn));
+    console.error(stoppet.length + ' selskap(er) ble ikke lagret. Se data/sec/kontroll.json.');
+    process.exit(1);
+  }
 }
 
-main().catch(e => { console.error(e); process.exit(1); });
+// Skriver en liste til oppsummeringen på GitHub (siden for hver kjøring under Actions).
+function sammendrag(tittel, linjer) {
+  const fil = process.env.GITHUB_STEP_SUMMARY;
+  if (!fil || !linjer.length) return;
+  fs.appendFileSync(fil, '### ' + tittel + '\n\n' + linjer.map(l => '- ' + l).join('\n') + '\n\n');
+}
+
+// Kjøres som program, eller importeres av scripts/test-hent-sec.mjs (som tester kontrollene uten nett).
+export { kontroller, motFasit, gjeld };
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main().catch(e => { console.error(e); process.exit(1); });
