@@ -65,7 +65,7 @@
      inline kopi og hadde drevet fra de kanoniske verdiene (carbon før OKLCH,
      mørk hendrix, nordlys uten atmosfære). Én kilde for alle sider nå. -->
 <link rel="stylesheet" href="/shared/themes.css?v=v12">
-<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v5">
+<link rel="stylesheet" href="/shared/regnskap-flyt.css?v=v6">
 <link rel="stylesheet" href="/shared/steg-guide.css?v=v1">
 <!-- atmosphere.css inlined for perf (saves 1 render-blocking req) -->
 <style>
@@ -1413,7 +1413,9 @@ body .ks-mode .mdesc{font-size:12px}
       var resForSkatt = driftsres+nettoFinans;
       // Ekte eksempel: Nilles faktiske skattekostnad. 22 % av resultatet pluss skatt på permanente forskjeller (note 12).
       var nille = isAS && erNille();
-      var skatt = nille ? NILLE_SKATT : (isAS ? Math.max(0,resForSkatt)*RATE : 0);
+      // Tall fra bokføringen: skatten som er ført der, ikke 22 % av resultatet.
+      var bok = isAS ? fraBok(resForSkatt) : null;
+      var skatt = nille ? NILLE_SKATT : bok ? bok.skatt : (isAS ? Math.max(0,resForSkatt)*RATE : 0);
       var arsresultat = resForSkatt-skatt;
       var isEmpty = sumDrift===0 && sumKost===0 && nettoFinans===0;
       var isLoss = arsresultat<0;
@@ -1426,8 +1428,8 @@ body .ks-mode .mdesc{font-size:12px}
       set('oSkatt', paren(skatt));
       set('oArsresultat', fmt(arsresultat));
       set('oFormLabel', isAS ? 'Aksjeselskap' : 'Enkeltpersonforetak');
-      set('oSkattLabel', nille ? 'Skattekostnad (faktisk, 23,7 %)' : 'Skattekostnad (22 %)');
-      set('oAar', nille ? 'Nille AS · 2025 · NOK' : 'Regnskapsåret 2026 · NOK');
+      set('oSkattLabel', nille ? 'Skattekostnad (faktisk, 23,7 %)' : bok ? (bok.skatt ? 'Skattekostnad (fra bokføringen)' : 'Skattekostnad (ikke ført ennå)') : 'Skattekostnad (22 %)');
+      set('oAar', nille ? 'Nille AS · 2025 · NOK' : 'Regnskapsåret ' + (bok ? bok.aar : 2026) + ' · NOK');
       set('oEyebrow', isAS ? 'Årsresultat etter skatt' : 'Årsresultat — før privat skatt');
 
       show('rowSkatt', isAS);
@@ -1533,6 +1535,13 @@ body .ks-mode .mdesc{font-size:12px}
       });
     });
 
+    // Er tallene de samme som bokføringsverktøyet la inn (shared/bokforing/kobling.js)?
+    function fraBok(forSkatt){
+      try{
+        var k = JSON.parse(localStorage.getItem('hv-bok-kobling'));
+        return k && k.v===1 && k.form==='AS' && k.forSkatt===Math.round(forSkatt) && INPUTS.every(function(id){ return num(id)===parse(k.res[id]); }) ? k : null;
+      }catch(e){ return null; }
+    }
     function erNille(){ return !ekstra.length && INPUTS.every(function(id){ return num(id) === (PRESETS.nille[id] || 0); }); }
 
     // ── Egne poster («+ Legg til post») ──
@@ -1638,12 +1647,12 @@ body .ks-mode .mdesc{font-size:12px}
 <script defer src="/shared/core.js?v=v504"></script>
 <script defer src="/shared/lang/no-lett/regnskap.js?v=v506"></script>
 
-<script defer src="/shared/regnskap-flyt.js?v=v5"></script>
+<script defer src="/shared/regnskap-flyt.js?v=v6"></script>
 <script defer src="/shared/steg-guide.js?v=v1"></script>
 <script src="/shared/atmosphere.js?v=v8" defer></script>
 <!-- Siden har <div id="site-search-anchor">, men lastet aldri søket —
      boksen kunne derfor aldri rendres. -->
-<script src="/shared/search.js?v=v502" defer></script>
+<script src="/shared/search.js?v=v511" defer></script>
 <script>
 (function(){
   var menu = document.getElementById('langMenu');
