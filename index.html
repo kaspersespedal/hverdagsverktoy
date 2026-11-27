@@ -4,7 +4,7 @@
   https://xn--hverdagsverkty-2qb.no
 -->
 <!doctype html>
-<html lang="nb" data-theme="carbon">
+<html lang="nb" data-theme="dark">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,14 +33,17 @@
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231a1714'/%3E%3Crect x='10' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='18' y='8' width='4' height='16' rx='1' fill='%23d8ad7e'/%3E%3Crect x='14' y='14' width='4' height='4' rx='.6' fill='%23d8ad7e'/%3E%3C/svg%3E">
 <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#070504">
+<meta name="theme-color" content="#0e111c">
 <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-<link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/geist-latin-wght-normal.woff2?v=v1">
-<link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/newsreader-latin-500-normal.woff2?v=v1">
+<!-- Første skjermbilde bruker Source Serif 4 500 (tittel, dato, tall) og Inter 500 (knapper,
+     etiketter) i alle temaer (#carbonMobil, #gammelPC). Geist og Newsreader brukes først i
+     fristene lenger ned. -->
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/source-serif-4-latin-500-normal.woff2?v=v1">
+<link rel="preload" as="font" type="font/woff2" crossorigin href="/shared/fonts/inter-latin-500-normal.woff2?v=v1">
 <link rel="stylesheet" href="/shared/fonts.css?v=v2">
 <script>
   (function(){
-    try{var t=localStorage.getItem('hvt-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}
+    try{var t=localStorage.getItem('hvt-theme');if(t&&(t!=='carbon'||localStorage.getItem('hvt-theme-valgt')))document.documentElement.setAttribute('data-theme',t);}catch(e){}
   })();
 </script>
 <script>
@@ -1965,91 +1968,13 @@
     font-weight:600;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--ink3);
   }
 
-  /* ── Dagsoversikt-headeren på mobil: to rader i stedet for tre løse
-     tekstlinjer. Øverst etikett + status-pille (● 14:44 ↻), under datoen i
-     serif som overskrift + uke-pille. «Sist oppdatert» skjules visuelt, men
-     leses fortsatt opp. Rutenettet ligger på .title (ikke display:contents),
-     så intro-animasjonen på .title og .stamp virker som før. ── */
+  /* Trykkflater på telefon. (Rutenettet for dagsoversikt-toppen som sto her, er
+     fjernet 2026-11-27: alle temaer har nå flex-toppen i #carbonMobil.) */
   @media (max-width: 640px){
-    .daily-head{
-      display:grid;grid-template-columns:minmax(0,1fr) auto;
-      align-items:start;column-gap:12px;
-      padding:14px 16px 16px;
-    }
-    .daily-head .title{
-      grid-column:1 / -1;grid-row:1;
-      display:grid;grid-template-columns:minmax(0,1fr) auto;
-      grid-template-areas:"lbl ." "date week";
-      align-items:center;column-gap:12px;row-gap:12px;
-    }
-    .daily-head .title::before,
-    .daily-head .title .sep{display:none}
-    .daily-head .title > span[data-i18n]{
-      grid-area:lbl;flex:none;
-      display:inline-flex;align-items:center;gap:9px;min-height:26px;
-      letter-spacing:1.8px;
-    }
-    .daily-head .title > span[data-i18n]::before{
-      content:"";width:15px;height:1px;background:var(--accent);opacity:.7;flex-shrink:0;
-    }
-    .daily-head .title #dailyDate{
-      grid-area:date;
-      font-family:var(--font-serif);font-weight:500;font-size:19px;line-height:1.2;
-      letter-spacing:-.2px;color:var(--ink);white-space:normal;
-    }
-    .daily-head .title #dailyWeek{
-      grid-area:week;
-      padding:4px 10px;border:1px solid var(--line-2);border-radius:999px;
-      background:color-mix(in srgb,var(--accent) 7%,transparent);
-      font-size:11px;font-weight:600;letter-spacing:.3px;color:var(--ink2);
-      line-height:1.3;
-    }
-    .daily-head .stamp{
-      grid-column:2;grid-row:1;
-      height:26px;gap:7px;padding:0 3px 0 10px;
-      border:1px solid var(--line-2);border-radius:999px;
-      background:color-mix(in srgb,var(--ink) 3%,transparent);
-      font-size:11px;color:var(--ink2);
-    }
-    .daily-head .stamp .daily-refresh{width:24px;height:24px}
     .wx-place,.wx-geo,.fxc-cur,.fr-link{min-height:24px}
     .wx-geo{min-width:24px}
   }
 
-  /* ── Dagsoversikten på telefon: hvert kort i egen avrundet boks ──
-     Kasper 2026-11-16: vær, rente, strøm og valuta sto klemt i én ramme med
-     bare en hårstrek mellom. Nå er rammen borte, toppen (etikett + dato) står
-     fritt som overskrift, og hvert kort er en egen boks med luft mellom og en
-     tittelstripe øverst. Carbon på telefon har sin egen utgave i #carbonMobil.
-     border-right må være !important: telefonregelen «.widget{border-right:none
-     !important}» tok ellers høyrekanten av boksen. */
-  @media (max-width: 640px){
-    html:not([data-theme="carbon"]) .daily-frame{
-      background:none;border:0;border-radius:0;overflow:visible;box-shadow:none;
-    }
-    html:not([data-theme="carbon"]) .daily-head{
-      background:none;border-bottom:0;padding:4px 4px 14px;
-    }
-    html:not([data-theme="carbon"]) .daily-grid{gap:12px}
-    html:not([data-theme="carbon"]) .daily-grid > .widget{
-      background:var(--surface);
-      border:1px solid var(--line);border-right:1px solid var(--line) !important;border-radius:18px;
-      padding:0 16px 16px;
-    }
-    html:not([data-theme="carbon"]) .daily-grid > .widget > .widget-top{
-      margin:0 -16px;padding:12px 16px;min-height:46px;
-      border-bottom:1px solid var(--line);border-radius:17px 17px 0 0;
-      background:color-mix(in srgb,var(--accent) 5%,transparent);
-    }
-    html:not([data-theme="carbon"]) .daily-credits{border-top:0;padding:4px 4px 0}
-    html:not([data-theme="carbon"]) .fxc{--fxc-r:18px}
-    html:not([data-theme="carbon"]) .fxc-label{
-      justify-self:stretch;padding:12px 16px;min-height:46px;box-sizing:border-box;
-      border-bottom:1px solid var(--line);border-radius:17px 17px 0 0;
-      background:color-mix(in srgb,var(--accent) 5%,transparent);
-    }
-    html:not([data-theme="carbon"]) .fxc-io{padding-top:14px}
-  }
   /* PC og nettbrett: rammen beholdes, men hvert kort får samme tittelstripe
      øverst, så de fire delene leses som hver sin seksjon. Første rad er auto
      (ikke 23px) for å få plass til stripa; den er like høy i alle kort, så
@@ -2123,7 +2048,7 @@
 <script src="/shared/core.js?v=v504" defer></script>
 <script src="/shared/lang/no-lett/felles.js?v=v506" defer></script>
 <script src="/shared/site-shell.js?v=v359" defer></script>
-<script src="/shared/top-chrome.js?v=v496" defer></script>
+<script src="/shared/top-chrome.js?v=v513" defer></script>
 <script src="/shared/atmosphere.js?v=v8" defer></script>
 <script src="/shared/markedsdata.js?v=v512" defer></script>
 <!-- Kun for det delte søkeregisteret (window.HVT_SEARCH_DATA). Forsiden har
@@ -2143,6 +2068,15 @@
    negative z-index-lag, så auroraen ligger fortsatt oppå, mens overscroll og
    repaint-etterslep på mobil ikke lenger slår gjennom som hvitt. */
 html:has(body.atmo-on){ background:var(--bg) !important; }
+/* SAFARI-STRIPE: Safari på iOS 26 tegner ikke position:fixed-lag under den flytende
+   verktøylinja nederst. Der vises lerretet (html-bakgrunnen over) i stedet for
+   WebGL-himmelen, og i Mørk-blå ble det en svart stripe på ~56 pt. Lerretet får derfor
+   samme farge som bunnen av himmelen, målt med readPixels (snitt av de nederste 60 px
+   ved 440×900, 2026-11-27). Carbon (formørket sol) og bw trenger det ikke: himmelen
+   ender på --bg (Carbon målt til #070504). */
+html[data-theme="dark"]:has(body.nordlys-on){ background:#181b2b !important; }
+html[data-theme="disco"]:has(body.nordlys-on){ background:#121827 !important; }
+html[data-theme="nordlys"]:has(body.nordlys-on){ background:#051212 !important; }
 body.atmo-on{ background:transparent !important; }
 body.atmo-on .atmo,
 body.atmo-on .atmo-base,
@@ -2167,9 +2101,7 @@ body.nordlys-on{background:transparent!important}
 /* Lyse temaer: ingen WebGL-aurora (som i produksjon). Canvas ligger på z-index:-2 bak body,
    så en opak --bg-bakgrunn dekker den helt — tekst forblir lesbar, ingen resize-bug ved temabytte. */
 html:is([data-theme="frost"],[data-theme="glass"],[data-theme="hendrix"],[data-theme="pink"]) body.nordlys-on{background:var(--bg)!important}
-/* Carbon = som live-siden: kun CSS-auroraen (.a5), ingen WebGL-nordlys. Skjul canvas via opacity
-   (IKKE display:none → nuller ResizeObserver = 2×2-bug ved temabytte). !important slår JS-inline opacity:1. */
-html[data-theme="carbon"] #nordlysCanvas{opacity:0!important}
+/* Carbon har sin egen WebGL-scene fra 2026-11-27: en formørket sol (SCENE 5 i #nordlysEngine). */
 /* Nordlys v2 har en skarp, lys underkant som på PC ofte går rett bak tittelens
    siste linje («skatt og lovverk.»), og kontrasten falt da under 3:1. En mørk glød
    rundt bokstavene holder den over 3:1. Kursivordet tegnes med background-clip:text,
@@ -2177,10 +2109,10 @@ html[data-theme="carbon"] #nordlysCanvas{opacity:0!important}
    visker ut ordet. Ordmaskene (overflow:hidden for innglidningen) klipper gløden til
    harde bokser per ord, så de åpnes når tittelen har landet. Disco-kanten går bak
    kursivordet på mindre PC-skjermer, derfor sterkere skygge der. */
-html:is([data-theme="nordlys"],[data-theme="disco"]) #heroH1{text-shadow:0 1px 3px rgba(3,4,9,.85),0 0 14px rgba(3,4,9,.8),0 0 34px rgba(3,4,9,.85)}
-html:is([data-theme="nordlys"],[data-theme="disco"]) #heroH1 .shimmer{text-shadow:none;filter:drop-shadow(0 0 5px rgba(3,4,9,.85)) drop-shadow(0 0 14px rgba(3,4,9,.75))}
-html[data-theme="disco"] #heroH1 .shimmer{filter:drop-shadow(0 0 2px rgba(3,4,9,.95)) drop-shadow(0 0 6px rgba(3,4,9,.9)) drop-shadow(0 0 16px rgba(3,4,9,.8))}
-html:is([data-theme="nordlys"],[data-theme="disco"]) body.heroLanded #heroH1 .word-mask{overflow:visible}
+html:is([data-theme="nordlys"],[data-theme="disco"]) :is(#heroH1,#heroH1Alt){text-shadow:0 1px 3px rgba(3,4,9,.85),0 0 14px rgba(3,4,9,.8),0 0 34px rgba(3,4,9,.85)}
+html:is([data-theme="nordlys"],[data-theme="disco"]) :is(#heroH1,#heroH1Alt) .shimmer{text-shadow:none;filter:drop-shadow(0 0 5px rgba(3,4,9,.85)) drop-shadow(0 0 14px rgba(3,4,9,.75))}
+html[data-theme="disco"] :is(#heroH1,#heroH1Alt) .shimmer{filter:drop-shadow(0 0 2px rgba(3,4,9,.95)) drop-shadow(0 0 6px rgba(3,4,9,.9)) drop-shadow(0 0 16px rgba(3,4,9,.8))}
+html:is([data-theme="nordlys"],[data-theme="disco"]) body.heroLanded :is(#heroH1,#heroH1Alt) .word-mask{overflow:visible}
 /* bw = smokey-jazz noir forside: ellers lyst tema (lys bg/sort tekst), her flippet
    til mork jazzklubb - dyp sort, drivende WebGL-royk, lys serif-tekst. Token-drevet
    forside -> hero/kort/linjer folger token-overrideet. !important slar themes.css. */
@@ -2249,7 +2181,8 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
    sidelengs i, dagsoversikten rett under, og lasteanimasjonen fra den gang.
    2026-11-16: dagsoversiktens kort står i egne bokser med tittelstripe (som de
    andre temaene) og har fullskjermknapp; innholdet i kortene er som i oktober.
-   Alle andre temaer, og Carbon på PC og nettbrett, er urørt.
+   Fra 2026-11-27 gjelder blokka alle temaer på telefon (html[data-theme]); Kasper ville
+   ha samme forsidestil i alle. PC og nettbrett står i #gammelPC.
    Kategoriene står fortsatt i tre grupper i markupen (#280). Her løses gruppene
    opp (display:contents) til én rad, så også nye lenker – som den top-chrome.js
    legger sist i siste gruppe – havner i raden. En lenke med langt navn får en
@@ -2264,60 +2197,60 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
 @font-face{font-family:'Source Serif 4';font-style:normal;font-weight:600;font-display:swap;src:url(/shared/fonts/source-serif-4-latin-600-normal.woff2?v=v1) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
 .hero-h1-alt{display:none}
 @media (max-width:640px){
-  html[data-theme="carbon"]{
+  html[data-theme]{
     --font-sans:'Inter', system-ui, -apple-system, sans-serif;
     --font-serif:'Source Serif 4', Georgia, 'Times New Roman', serif;
   }
   /* Tittelen. Norsk har egen tekst; andre språk beholder sin oversatte tittel. */
-  html[data-theme="carbon"][lang="nb"] #heroH1{display:none}
-  html[data-theme="carbon"][lang="nb"] #heroH1Alt{display:block}
-  html[data-theme="carbon"] .hero{min-height:0;display:block;text-align:left;padding:44px 0 28px}
-  html[data-theme="carbon"] #heroH1,
-  html[data-theme="carbon"] #heroH1Alt{font-size:clamp(36px,9vw,46px);letter-spacing:-1.1px;text-wrap:balance}
+  html[data-theme][lang="nb"] #heroH1{display:none}
+  html[data-theme][lang="nb"] #heroH1Alt{display:block}
+  html[data-theme] .hero{min-height:0;display:block;text-align:left;padding:44px 0 28px}
+  html[data-theme] #heroH1,
+  html[data-theme] #heroH1Alt{font-size:clamp(36px,9vw,46px);letter-spacing:-1.1px;text-wrap:balance}
 
   /* Søkefeltet: firkantet med avrundede hjørner og mørk gradient */
-  html[data-theme="carbon"] .search-wrap{margin:24px 0 0;max-width:none}
-  html[data-theme="carbon"] .search-shell{border-radius:8px;background:linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%)}
-  html[data-theme="carbon"] .search-shell.focused{background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%)}
-  html[data-theme="carbon"] .search-shell input{padding:14px 18px 14px 44px;font-size:14.5px}
-  html[data-theme="carbon"] .search-icon{left:14px}
+  html[data-theme] .search-wrap{margin:24px 0 0;max-width:none}
+  html[data-theme] .search-shell{border-radius:8px;background:linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%)}
+  html[data-theme] .search-shell.focused{background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%)}
+  html[data-theme] .search-shell input{padding:14px 18px 14px 44px;font-size:14.5px}
+  html[data-theme] .search-icon{left:14px}
 
   /* Kategoriene: én rad i en ramme, 88 px per celle, blas sidelengs. Luften over og
      under (14 px) kom i v242 fra telefonregelen «nav{padding:14px 0}» – raden er en <nav>. */
-  html[data-theme="carbon"] .quick-cats{
+  html[data-theme] .quick-cats{
     max-width:none;margin:14px 0 0;padding:14px 0;
     display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:max-content;gap:0;
     overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
   }
-  html[data-theme="carbon"] .quick-cats::-webkit-scrollbar{display:none}
-  html[data-theme="carbon"] .qg-col{display:contents}
-  html[data-theme="carbon"] .qg-h{display:none}
+  html[data-theme] .quick-cats::-webkit-scrollbar{display:none}
+  html[data-theme] .qg-col{display:contents}
+  html[data-theme] .qg-h{display:none}
   /* .quick-cats i velgeren: slår «.qc:last-child:nth-child(even){grid-column:1/-1}» over,
      som ellers ville kastet siste lenke i siste gruppe ut av raden */
-  html[data-theme="carbon"] .quick-cats .qc{
+  html[data-theme] .quick-cats .qc{
     min-width:88px;grid-column:auto;
     flex-direction:column;justify-content:center;gap:9px;
     padding:14px 6px 12px;border-radius:0;color:var(--ink2);
     border-right:1px solid var(--line);scroll-snap-align:start;
     transition:background .2s var(--ease), color .2s var(--ease);
   }
-  html[data-theme="carbon"] .qg-col:last-child .qc:last-child{border-right:0}
-  html[data-theme="carbon"] .qc-ico{width:24px;height:24px;transition:color .2s var(--ease), transform .25s var(--ease)}
-  html[data-theme="carbon"] .qc-ico svg{width:22px;height:22px}
-  html[data-theme="carbon"] .qc-lbl{font:500 10.5px/1 var(--font-sans);letter-spacing:-.05px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-  html[data-theme="carbon"] .qc::after{
+  html[data-theme] .qg-col:last-child .qc:last-child{border-right:0}
+  html[data-theme] .qc-ico{width:24px;height:24px;transition:color .2s var(--ease), transform .25s var(--ease)}
+  html[data-theme] .qc-ico svg{width:22px;height:22px}
+  html[data-theme] .qc-lbl{font:500 10.5px/1 var(--font-sans);letter-spacing:-.05px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  html[data-theme] .qc::after{
     content:"";inset:auto 0 0 0;width:auto;height:1px;margin:0;border:0;
     background:var(--accent-2);opacity:1;transform:scaleX(0);transform-origin:center;
     transition:transform .25s var(--ease);
   }
 
   /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
-  html[data-theme="carbon"] section.daily{margin-top:0}
-  html[data-theme="carbon"] section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
+  html[data-theme] section.daily{margin-top:0}
+  html[data-theme] section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
 
   /* Toppmenyen 58 px høy som da (nå 55) */
-  html[data-theme="carbon"] body .nav-wrap nav{min-height:57px}
+  html[data-theme] body .nav-wrap nav{min-height:57px}
 
   /* Dagsoversikt-toppen som en ekte overskrift over boksene.
      Kasper 2026-11-16: «gjør det MARKANT BEDRE». Før: tre små, løse tekstlinjer
@@ -2329,67 +2262,67 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
      flex-rad som brytes: blir første linje for trang (smal telefon, langt språk),
      flytter pillen ned i stedet for å legge seg over uka. Lasteanimasjonen
      toner derfor barna av .title, ikke .title selv (se body.introAct under). */
-  html[data-theme="carbon"] .daily-head{
+  html[data-theme] .daily-head{
     display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;
     column-gap:10px;row-gap:12px;padding:4px 0 18px;background:none;border-bottom:0;
   }
-  html[data-theme="carbon"] .daily-head .title{display:contents}
-  html[data-theme="carbon"] .daily-head .title::before{content:none}
-  html[data-theme="carbon"] .daily-head .title .sep{display:none}
-  html[data-theme="carbon"] .daily-head .title > span[data-i18n]{
+  html[data-theme] .daily-head .title{display:contents}
+  html[data-theme] .daily-head .title::before{content:none}
+  html[data-theme] .daily-head .title .sep{display:none}
+  html[data-theme] .daily-head .title > span[data-i18n]{
     order:1;flex:none;display:inline-flex;align-items:center;gap:9px;min-height:28px;
     font-size:10.5px;letter-spacing:1.8px;color:var(--ink3);
   }
-  html[data-theme="carbon"] .daily-head .title > span[data-i18n]::before{
+  html[data-theme] .daily-head .title > span[data-i18n]::before{
     content:"";width:16px;height:1px;background:var(--accent);opacity:.85;flex-shrink:0;
   }
-  html[data-theme="carbon"] .daily-head .title #dailyWeek{
+  html[data-theme] .daily-head .title #dailyWeek{
     order:2;display:inline-flex;align-items:center;gap:10px;
     padding:0;border:0;border-radius:0;background:none;
     font:600 10.5px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
     color:var(--ink4);white-space:nowrap;
   }
-  html[data-theme="carbon"] .daily-head .title #dailyWeek::before{content:"";width:1px;height:11px;background:var(--line-2)}
-  html[data-theme="carbon"] .daily-head .stamp{
+  html[data-theme] .daily-head .title #dailyWeek::before{content:"";width:1px;height:11px;background:var(--line-2)}
+  html[data-theme] .daily-head .stamp{
     order:3;margin-left:auto;height:28px;gap:7px;padding:0 3px 0 11px;
     border:1px solid var(--line-2);border-radius:999px;background:rgba(var(--wash-rgb),.025);
     font-size:11px;color:var(--ink2);
   }
   /* Glød som filter: ping-animasjonen (livePulseOnce) eier box-shadow og nullstiller den */
-  html[data-theme="carbon"] .daily-head .stamp::before{background:var(--accent-2);filter:drop-shadow(0 0 3px rgba(var(--glow-rgb),.9))}
-  html[data-theme="carbon"] .daily-head .stamp .stamp-pre{
+  html[data-theme] .daily-head .stamp::before{background:var(--accent-2);filter:drop-shadow(0 0 3px rgba(var(--glow-rgb),.9))}
+  html[data-theme] .daily-head .stamp .stamp-pre{
     position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;
   }
-  html[data-theme="carbon"] .daily-head .daily-refresh{display:inline-flex;width:24px;height:24px}
-  html[data-theme="carbon"] .daily-head .title #dailyDate{
+  html[data-theme] .daily-head .daily-refresh{display:inline-flex;width:24px;height:24px}
+  html[data-theme] .daily-head .title #dailyDate{
     order:4;flex:0 0 100%;margin-top:2px;padding:0;border:0;background:none;
     font-family:var(--font-serif);font-weight:500;font-size:clamp(21px,6vw,24px);line-height:1.15;
     letter-spacing:-.4px;color:var(--ink);white-space:normal;
   }
   /* Ukedagen og resten står i hvert sitt <span> (skriptet «Localized date»): datoen
      brekker bare etter ukedagen, aldri mellom «16.» og «november». */
-  html[data-theme="carbon"] #dailyDate .dd-wd{color:var(--accent-2)}
-  html[data-theme="carbon"] #dailyDate .dd-rest{white-space:nowrap}
+  html[data-theme] #dailyDate .dd-wd{color:var(--accent-2)}
+  html[data-theme] #dailyDate .dd-rest{white-space:nowrap}
 
   /* Toppen som på PC (#gammelPC). Kasper 2026-11-19 ombestemte seg: «telefon også».
      Karbonveven er byttet med samme topp som på PC: ukedagen med metallskjær, året
      dempet, et mykt lys bak datoen og døgnlinja under (reglene for linja står
      felles øverst i #gammelPC). z-index:1 lar gløden fra «nå»-punktet falle på kortene. */
   @supports ((-webkit-background-clip:text) or (background-clip:text)){
-    html[data-theme="carbon"] #dailyDate .dd-wd{
-      background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 46%,color-mix(in srgb,var(--accent-2) 55%,#fff) 100%);
+    html[data-theme] #dailyDate .dd-wd{
+      background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 46%,color-mix(in srgb,var(--accent-2) 55%,var(--dd-glans,#fff)) 100%);
       -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
     }
   }
-  html[data-theme="carbon"] #dailyDate .dd-yr{color:var(--ink3)}
-  html[data-theme="carbon"] .daily-head{position:relative;isolation:isolate;z-index:1;padding-bottom:12px;row-gap:10px}
-  html[data-theme="carbon"] .daily-head::before{
+  html[data-theme] #dailyDate .dd-yr{color:var(--ink3)}
+  html[data-theme] .daily-head{position:relative;isolation:isolate;z-index:1;padding-bottom:12px;row-gap:10px}
+  html[data-theme] .daily-head::before{
     content:"";position:absolute;z-index:-1;pointer-events:none;
     left:-14px;top:-50px;width:88%;height:200px;
     background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
   }
-  html[data-theme="carbon"] .dayline{order:5;flex:0 0 100%;display:block;margin-top:4px;--dl-spill:36px}
-  html[data-theme="carbon"] body.introAct .daily-frame::after{content:none}
+  html[data-theme] .dayline{order:5;flex:0 0 100%;display:block;margin-top:4px;--dl-spill:36px}
+  html[data-theme] body.introAct .daily-frame::after{content:none}
 
   /* Hvert kort i egen boks med tittelstripe, som de andre temaene fikk i #288.
      Kasper 2026-11-16: «implementer det vi har gjort under forsidetittelen» også i
@@ -2398,57 +2331,57 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
      18 px), så boksene passer med søkefeltet (8) og kategoriraden (6) over.
      border-right må være !important: telefonregelen «.widget{border-right:none
      !important}» tok ellers høyrekanten av boksen. */
-  html[data-theme="carbon"] .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
-  html[data-theme="carbon"] .daily-grid{gap:12px}
-  html[data-theme="carbon"] .daily-grid > .widget{
+  html[data-theme] .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
+  html[data-theme] .daily-grid{gap:12px}
+  html[data-theme] .daily-grid > .widget{
     background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
     border:1px solid var(--line);border-right:1px solid var(--line) !important;border-radius:12px;
-    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,.8);
+    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,var(--kort-skygge,.8));
     padding:0 16px 16px;
   }
-  html[data-theme="carbon"] .daily-grid > .widget > .widget-top{
+  html[data-theme] .daily-grid > .widget > .widget-top{
     margin:0 -16px 5px;padding:12px 16px;min-height:46px;box-sizing:border-box;
     border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
     background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 8%,transparent),color-mix(in srgb,var(--accent) 3%,transparent));
   }
-  html[data-theme="carbon"] .daily-credits{border-top:0;padding:4px 4px 0}
-  html[data-theme="carbon"] .fxc{
+  html[data-theme] .daily-credits{border-top:0;padding:4px 4px 0}
+  html[data-theme] .fxc{
     --fxc-r:12px;
     background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
-    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,.8);
+    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,var(--kort-skygge,.8));
   }
-  html[data-theme="carbon"] .fxc-label{
+  html[data-theme] .fxc-label{
     justify-self:stretch;padding:12px 16px;min-height:46px;box-sizing:border-box;
     border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
     background:color-mix(in srgb,var(--accent) 5%,transparent);
   }
-  html[data-theme="carbon"] .fxc-io{padding-top:14px}
+  html[data-theme] .fxc-io{padding-top:14px}
 
   /* Kortene: én linje i stedet for faktaradene og lave grafer (48 px). Værkortet har
      fire ruter og renta «Neste rentemøte» i stedet for graf; strøm har fotnoten.
      Fullskjermknappen (↗ ved tallet) er med, så alle fire grafene kan åpnes stort.
      Ingen fast femte rad lenger: i egen boks trenger ikke kortene like høye rader,
      og den tomme raden ga 30 px dødluft i bunnen av vær- og rentekortet. */
-  html[data-theme="carbon"] .widget{grid-template-rows:auto auto minmax(34px,auto) 1fr;gap:7px}
-  html[data-theme="carbon"] .widget > .widget-facts,
-  html[data-theme="carbon"] #wxCard > .widget-spark-wrap{display:none}
+  html[data-theme] .widget{grid-template-rows:auto auto minmax(34px,auto) 1fr;gap:7px}
+  html[data-theme] .widget > .widget-facts,
+  html[data-theme] #wxCard > .widget-spark-wrap{display:none}
   /* Rentegrafen vises på PC, men på telefon bare i fullskjerm. */
   #srCard > .widget-spark-wrap{display:none}
-  html[data-theme="carbon"] .widget-label{font-size:10.5px}
-  html[data-theme="carbon"] .widget .w-line{
+  html[data-theme] .widget-label{font-size:10.5px}
+  html[data-theme] .widget .w-line{
     display:flex;align-items:center;gap:8px;margin:0;
     font-size:12px;line-height:1.4;letter-spacing:-.05px;color:var(--ink3);
     font-variant-numeric:tabular-nums;
   }
-  html[data-theme="carbon"] .widget .w-line .ctx{color:var(--ink4)}
-  html[data-theme="carbon"] .widget-spark-wrap,
-  html[data-theme="carbon"] #wxCard .wx-fc-wrap,
-  html[data-theme="carbon"] #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
-  html[data-theme="carbon"] .spark-yax{top:11px;height:48px;font-size:8.5px}
-  html[data-theme="carbon"] .widget-axis{font-size:8.5px}
-  html[data-theme="carbon"] .widget-spark{height:48px}
-  html[data-theme="carbon"] #fxTrend i{display:none}
-  html[data-theme="carbon"] #stCard .w-note{display:block}
+  html[data-theme] .widget .w-line .ctx{color:var(--ink4)}
+  html[data-theme] .widget-spark-wrap,
+  html[data-theme] #wxCard .wx-fc-wrap,
+  html[data-theme] #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
+  html[data-theme] .spark-yax{top:11px;height:48px;font-size:8.5px}
+  html[data-theme] .widget-axis{font-size:8.5px}
+  html[data-theme] .widget-spark{height:48px}
+  html[data-theme] #fxTrend i{display:none}
+  html[data-theme] #stCard .w-note{display:block}
 }
 .w-line,.wx-fc-wrap,.sr-next-wrap,.w-note{display:none}
 .sr-next{display:flex;flex-direction:column;gap:4px}
@@ -2481,24 +2414,24 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
 .wx-fc-temp{font-family:var(--font-serif);font-weight:500;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
 .wx-fc-time{font:600 8.5px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink4);font-variant-numeric:tabular-nums}
 @media (max-width:640px) and (hover:hover){
-  html[data-theme="carbon"] .qc:hover{background:rgba(255,255,255,.018);color:var(--ink)}
-  html[data-theme="carbon"] .qc:hover::after{transform:scaleX(.5)}
-  html[data-theme="carbon"] .qc:hover .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
+  html[data-theme] .qc:hover{background:rgba(var(--wash-rgb),.018);color:var(--ink)}
+  html[data-theme] .qc:hover::after{transform:scaleX(.5)}
+  html[data-theme] .qc:hover .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
 }
 @media (max-width:480px){
-  html[data-theme="carbon"] .hero{padding:36px 0 22px}
-  html[data-theme="carbon"] #heroH1,
-  html[data-theme="carbon"] #heroH1Alt{font-size:clamp(30px,9.4vw,38px);letter-spacing:-.6px}
-  html[data-theme="carbon"] .search-shell input{padding:13px 16px 13px 40px;font-size:14px}
-  html[data-theme="carbon"] .search-icon{left:12px}
+  html[data-theme] .hero{padding:36px 0 22px}
+  html[data-theme] #heroH1,
+  html[data-theme] #heroH1Alt{font-size:clamp(30px,9.4vw,38px);letter-spacing:-.6px}
+  html[data-theme] .search-shell input{padding:13px 16px 13px 40px;font-size:14px}
+  html[data-theme] .search-icon{left:12px}
 }
 @media (max-width:380px){
-  html[data-theme="carbon"] #heroH1,
-  html[data-theme="carbon"] #heroH1Alt{font-size:28px;letter-spacing:-.4px}
+  html[data-theme] #heroH1,
+  html[data-theme] #heroH1Alt{font-size:28px;letter-spacing:-.4px}
 }
 
 /* ── Lasteanimasjonen (fra v242, fjernet for alle i #252) ──
-   Slås på bare for Carbon på telefon, første gang i fanen, og aldri med redusert
+   Slås på for alle temaer (telefon og PC), første gang i fanen, og aldri med redusert
    bevegelse: skriptet øverst i <body> setter body.introAct, #introBoot tar den av
    etter 5 s. Alt som skjules her ligger under body.introAct, så ingenting kan bli
    stående usynlig hvis animasjonen ikke kjører. Fem akter:
@@ -2638,11 +2571,11 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
    med: tittelteksten, kategorirekkefølgen, Inter + Source Serif 4, dagsoversikt-
    toppen med stor dato, pille og karbonvev, kortene i egne bokser med tittelstripe
    og fullskjermknapp, og kortinnholdet fra den gang (én linje, lave grafer).
-   Bare over 640 px og bare disse to temaene; telefon står i #carbonMobil.
+   Bare over 640 px; telefon står i #carbonMobil. Fra 2026-11-27 gjelder blokka alle
+   temaer (html[data-theme]), ikke bare Carbon og Mørk-blå.
    2026-11-19: dagsoversikt-toppen har fått døgnlinja i stedet for karbonveven,
    og kortene lys ovenfra og en lysring som følger musa (se lenger ned). */
-/* Døgnlinja vises bare for Carbon og Mørk-blå på PC (her) og Carbon på telefon
-   (#carbonMobil). Reglene under er felles; de virker bare der linja slås på med
+/* Døgnlinja vises i alle temaer, på PC (her) og telefon (#carbonMobil). Reglene under er felles; de virker bare der linja slås på med
    display:block. --dl-p er registrert som tall, så den kan tones med transition;
    uten støtte hopper lyset rett på plass. */
 .dayline{display:none}
@@ -2738,195 +2671,208 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
   .dayline{transition:none}
   .dl-now i::after{animation:none !important}
 }
+/* Lyse temaer (2026-11-27, da oppsettet ble felles): skyggen under kortene var laget
+   for en nesten svart side og ble en skitten flekk på lys bakgrunn, og det lyseste
+   stoppet i ukedagens metallskjær (hvitt) forsvant mot lyst. Begge brukes også i
+   #carbonMobil. */
+html:is([data-theme="frost"],[data-theme="glass"],[data-theme="pink"],[data-theme="hendrix"]){--kort-skygge:.16;--dd-glans:var(--ink)}
+/* Inter og Source Serif 4 ligger bare som latin her: på polsk kom ą, ę, ś og ż fra en
+   systemskrift midt i ordene, og på ukrainsk sto knappene i systemskrift. Disse to
+   språkene beholder nettstedets vanlige skrifter (Geist og Newsreader har latin-ext,
+   Geist og Source Serif 4 har kyrillisk). Slår overstyringen i #carbonMobil og under. */
+html[data-theme]:is([lang="pl"],[lang="uk"]){
+  --font-sans:'Geist', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-serif:'Newsreader', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+}
 @media (min-width:641px){
-  html:is([data-theme="carbon"],[data-theme="dark"]){
+  html[data-theme]{
     --font-sans:'Inter', system-ui, -apple-system, sans-serif;
     --font-serif:'Source Serif 4', Georgia, 'Times New Roman', serif;
   }
   /* Tittelen: norsk har egen tekst; andre språk beholder sin oversatte tittel */
-  html:is([data-theme="carbon"],[data-theme="dark"])[lang="nb"] #heroH1{display:none}
-  html:is([data-theme="carbon"],[data-theme="dark"])[lang="nb"] #heroH1Alt{display:block}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .hero{min-height:0;display:block;text-align:left;padding:96px 0 24px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .hero h1{
+  html[data-theme][lang="nb"] #heroH1{display:none}
+  html[data-theme][lang="nb"] #heroH1Alt{display:block}
+  html[data-theme] .hero{min-height:0;display:block;text-align:left;padding:96px 0 24px}
+  html[data-theme] .hero h1{
     max-width:18ch;font-size:clamp(46px,5.8vw,72px);letter-spacing:-1.6px;text-wrap:balance;
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .hero h1 em{letter-spacing:-1.2px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .hero-more{display:none}
+  html[data-theme] .hero h1 em{letter-spacing:-1.2px}
+  html[data-theme] .hero-more{display:none}
 
   /* Søkefeltet: hele bredden, firkantet med avrundede hjørner og mørk gradient */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .search-wrap{margin:32px 0 0;max-width:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .search-shell{border-radius:8px;background:linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%)}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .search-shell.focused{background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%)}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .search-shell input{padding:18px 64px 18px 50px;font-size:15.5px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .search-icon{left:18px}
+  html[data-theme] .search-wrap{margin:32px 0 0;max-width:none}
+  html[data-theme] .search-shell{border-radius:8px;background:linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%)}
+  html[data-theme] .search-shell.focused{background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%)}
+  html[data-theme] .search-shell input{padding:18px 64px 18px 50px;font-size:15.5px}
+  html[data-theme] .search-icon{left:18px}
 
   /* Kategoriene: én rad i en ramme, ikon over navn. Gruppene løses opp
      (display:contents) som på telefon, så også lenka top-chrome.js legger sist
      havner i raden. Cellene deler bredden, men blir aldri smalere enn navnet
      eller 80 px (da får alle 11 plass ned til 1024 px vindu); er vinduet for
      smalt til alle, blar man sidelengs som på telefon. */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .quick-cats{
+  html[data-theme] .quick-cats{
     max-width:none;margin:20px 0 0;padding:0;
     display:grid;grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:minmax(max-content,1fr);gap:0;
     overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
     background:var(--surface);border:1px solid var(--line);border-radius:6px;
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .quick-cats::-webkit-scrollbar{display:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qg-col{display:contents}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qg-h{display:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .quick-cats .qc{
+  html[data-theme] .quick-cats::-webkit-scrollbar{display:none}
+  html[data-theme] .qg-col{display:contents}
+  html[data-theme] .qg-h{display:none}
+  html[data-theme] .quick-cats .qc{
     min-width:80px;grid-column:auto;flex-direction:column;justify-content:center;gap:9px;
     padding:18px 8px 15px;border-radius:0;color:var(--ink2);
     border-right:1px solid var(--line);
     transition:background .2s var(--ease), color .2s var(--ease);
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qg-col:last-child .qc:last-child{border-right:0}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qc-ico{width:24px;height:24px;transition:color .2s var(--ease), transform .25s var(--ease)}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qc-ico svg{width:22px;height:22px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qc-lbl{font:500 11.5px/1 var(--font-sans);letter-spacing:-.05px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qc::after{
+  html[data-theme] .qg-col:last-child .qc:last-child{border-right:0}
+  html[data-theme] .qc-ico{width:24px;height:24px;transition:color .2s var(--ease), transform .25s var(--ease)}
+  html[data-theme] .qc-ico svg{width:22px;height:22px}
+  html[data-theme] .qc-lbl{font:500 11.5px/1 var(--font-sans);letter-spacing:-.05px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+  html[data-theme] .qc::after{
     content:"";inset:auto 0 0 0;width:auto;height:1px;margin:0;border:0;
     background:var(--accent-2);opacity:1;transform:scaleX(0);transform-origin:center;
     transition:transform .25s var(--ease);
   }
 
   /* Dagsoversikten står rett under, synlig fra start (ikke trukket opp og holdt skjult) */
-  html:is([data-theme="carbon"],[data-theme="dark"]) section.daily{margin-top:0;padding-top:18px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
+  html[data-theme] section.daily{margin-top:0;padding-top:18px}
+  html[data-theme] section.daily.is-held > .container{opacity:1;transform:none;pointer-events:auto}
 
   /* Dagsoversikt-toppen: «— DAGSOVERSIKT | UKE 47» og status-pillen på første
      linje, datoen i stor serif under, og nederst døgnlinja (se under).
      .title er display:contents, så barna er søsken i én flex-rad.
      z-index:1 løfter toppen over kortene, så gløden fra «nå»-punktet faller på dem. */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head{
+  html[data-theme] .daily-head{
     display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:flex-start;
     column-gap:10px;row-gap:8px;padding:4px 0 12px;background:none;border-bottom:0;
     position:relative;z-index:1;
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title{display:contents}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title::before{content:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title .sep{display:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title > span[data-i18n]{
+  html[data-theme] .daily-head .title{display:contents}
+  html[data-theme] .daily-head .title::before{content:none}
+  html[data-theme] .daily-head .title .sep{display:none}
+  html[data-theme] .daily-head .title > span[data-i18n]{
     order:1;flex:none;display:inline-flex;align-items:center;gap:9px;min-height:28px;
     font-size:10.5px;letter-spacing:1.8px;color:var(--ink3);
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title > span[data-i18n]::before{
+  html[data-theme] .daily-head .title > span[data-i18n]::before{
     content:"";width:16px;height:1px;background:var(--accent);opacity:.85;flex-shrink:0;
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title #dailyWeek{
+  html[data-theme] .daily-head .title #dailyWeek{
     order:2;display:inline-flex;align-items:center;gap:10px;
     padding:0;border:0;border-radius:0;background:none;
     font:600 10.5px/1 var(--font-sans);letter-spacing:1.8px;text-transform:uppercase;
     color:var(--ink4);white-space:nowrap;
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title #dailyWeek::before{content:"";width:1px;height:11px;background:var(--line-2)}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .stamp{
+  html[data-theme] .daily-head .title #dailyWeek::before{content:"";width:1px;height:11px;background:var(--line-2)}
+  html[data-theme] .daily-head .stamp{
     order:3;margin-left:auto;height:28px;gap:7px;padding:0 3px 0 11px;
     border:1px solid var(--line-2);border-radius:999px;background:rgba(var(--wash-rgb),.025);
     font-size:11px;color:var(--ink2);
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .stamp::before{background:var(--accent-2);filter:drop-shadow(0 0 3px rgba(var(--glow-rgb),.9))}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .daily-refresh{display:inline-flex;width:24px;height:24px}
+  html[data-theme] .daily-head .stamp::before{background:var(--accent-2);filter:drop-shadow(0 0 3px rgba(var(--glow-rgb),.9))}
+  html[data-theme] .daily-head .daily-refresh{display:inline-flex;width:24px;height:24px}
   /* Datoen: ukedagen i aksentfargen med et metallskjær (kobber → champagne i
      Carbon, blå → isblå i Mørk-blå), dag og måned i hvitt, året dempet. */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head .title #dailyDate{
+  html[data-theme] .daily-head .title #dailyDate{
     order:4;flex:0 0 100%;margin:0;padding:0;border:0;background:none;
     font-family:var(--font-serif);font-weight:500;font-size:clamp(30px,2.7vw,38px);line-height:1.14;
     letter-spacing:-.8px;color:var(--ink);white-space:normal;text-transform:none;
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-wd{color:var(--accent-2)}
+  html[data-theme] #dailyDate .dd-wd{color:var(--accent-2)}
   @supports ((-webkit-background-clip:text) or (background-clip:text)){
-    html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-wd{
-      background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 46%,color-mix(in srgb,var(--accent-2) 55%,#fff) 100%);
+    html[data-theme] #dailyDate .dd-wd{
+      background:linear-gradient(100deg,var(--accent) 0%,var(--accent-2) 46%,color-mix(in srgb,var(--accent-2) 55%,var(--dd-glans,#fff)) 100%);
       -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
     }
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-rest{white-space:nowrap}
-  html:is([data-theme="carbon"],[data-theme="dark"]) #dailyDate .dd-yr{color:var(--ink3)}
+  html[data-theme] #dailyDate .dd-rest{white-space:nowrap}
+  html[data-theme] #dailyDate .dd-yr{color:var(--ink3)}
 
   /* Et mykt lys bak datoen. Ren radial toning uten kanter (karbonveven som sto
      her før, ble kuttet i en firkant og så ut som en tegnefeil på PC).
      inset-inline-start: på arabisk (RTL) står lyset til høyre, bak datoen, i stedet for
      å stikke 150 px ut til venstre og gjøre siden for bred (P51). */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-head::before{
+  html[data-theme] .daily-head::before{
     content:"";position:absolute;z-index:-1;pointer-events:none;
     left:auto;inset-inline-start:-150px;top:-70px;width:min(780px,72%);height:250px;
     background:radial-gradient(closest-side,rgba(var(--glow-rgb),.10),transparent);
   }
 
-  html:is([data-theme="carbon"],[data-theme="dark"]) .dayline{order:5;flex:0 0 100%;display:block;margin-top:8px}
+  html[data-theme] .dayline{order:5;flex:0 0 100%;display:block;margin-top:8px}
   /* Lyssveipet over hele dagsoversikten (fra #carbonMobil) er tatt ut her: uten
      ramme rundt kortene sto det et øyeblikk som en firkant bak toppen. Lyset som
      glir langs døgnlinja gjør samme jobb. */
-  html:is([data-theme="carbon"],[data-theme="dark"]) body.introAct .daily-frame::after{content:none}
+  html[data-theme] body.introAct .daily-frame::after{content:none}
 
   /* Hvert kort i egen boks med tittelstripe, rammen rundt hele dagsoversikten er
      borte. Hjørnene 12 px, som på Carbon-telefon. Kortet får lys ovenfra (en svak
      toning og en lys hårstrek i overkanten) og skygge under, som .ks i themes.css. */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid{gap:12px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget{
+  html[data-theme] .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
+  html[data-theme] .daily-grid{gap:12px}
+  html[data-theme] .daily-grid > .widget{
     background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
     border:1px solid var(--line);border-radius:12px;
-    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,.8);
+    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,var(--kort-skygge,.8));
     padding:0 20px 18px;min-height:0;
     grid-template-rows:auto auto minmax(34px,auto) 1fr;gap:7px;
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget > .widget-top{
+  html[data-theme] .daily-grid > .widget > .widget-top{
     margin:0 -20px 5px;padding:12px 20px;height:auto;min-height:46px;box-sizing:border-box;
     border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
     background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 8%,transparent),color-mix(in srgb,var(--accent) 3%,transparent));
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-credits{border-top:0;padding:4px 4px 0}
+  html[data-theme] .daily-credits{border-top:0;padding:4px 4px 0}
   /* Valutaomregneren står på én rad på PC: samme hjørner, lys ovenfra og skygge som kortene */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .fxc{
+  html[data-theme] .fxc{
     --fxc-r:12px;
     background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
-    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,.8);
+    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,var(--kort-skygge,.8));
   }
 
   /* Kortinnholdet fra den gang: én linje i stedet for faktaradene, lave grafer
      (60 px), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
      graf. Rentegrafen og de andre grafene åpnes stort med fullskjermknappen. */
-  html:is([data-theme="carbon"],[data-theme="dark"]) .widget > .widget-facts,
-  html:is([data-theme="carbon"],[data-theme="dark"]) #wxCard > .widget-spark-wrap,
-  html:is([data-theme="carbon"],[data-theme="dark"]) #srCard > .widget-spark-wrap{display:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-label{font-size:10.5px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .widget .w-line{
+  html[data-theme] .widget > .widget-facts,
+  html[data-theme] #wxCard > .widget-spark-wrap,
+  html[data-theme] #srCard > .widget-spark-wrap{display:none}
+  html[data-theme] .widget-label{font-size:10.5px}
+  html[data-theme] .widget .w-line{
     display:flex;align-items:center;gap:8px;margin:0;
     font-size:12px;line-height:1.4;letter-spacing:-.05px;color:var(--ink3);
     font-variant-numeric:tabular-nums;
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .widget .w-line .ctx{color:var(--ink4)}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-spark-wrap,
-  html:is([data-theme="carbon"],[data-theme="dark"]) #wxCard .wx-fc-wrap,
-  html:is([data-theme="carbon"],[data-theme="dark"]) #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .spark-yax{top:11px;height:60px;font-size:8.5px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-axis{font-size:8.5px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .widget-spark{height:60px}
-  html:is([data-theme="carbon"],[data-theme="dark"]) #fxTrend i{display:none}
-  html:is([data-theme="carbon"],[data-theme="dark"]) #stCard .w-note{display:block}
+  html[data-theme] .widget .w-line .ctx{color:var(--ink4)}
+  html[data-theme] .widget-spark-wrap,
+  html[data-theme] #wxCard .wx-fc-wrap,
+  html[data-theme] #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
+  html[data-theme] .spark-yax{top:11px;height:60px;font-size:8.5px}
+  html[data-theme] .widget-axis{font-size:8.5px}
+  html[data-theme] .widget-spark{height:60px}
+  html[data-theme] #fxTrend i{display:none}
+  html[data-theme] #stCard .w-note{display:block}
 }
 @media (min-width:641px) and (hover:hover){
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qc:hover{background:rgba(255,255,255,.018);color:var(--ink)}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qc:hover::after{opacity:1;transform:scaleX(.5)}
-  html:is([data-theme="carbon"],[data-theme="dark"]) .qc:hover .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
+  html[data-theme] .qc:hover{background:rgba(var(--wash-rgb),.018);color:var(--ink)}
+  html[data-theme] .qc:hover::after{opacity:1;transform:scaleX(.5)}
+  html[data-theme] .qc:hover .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
 }
 /* Lysringen på kortene (bare mus): et mykt lys i kortflata og i kanten der pila
    er, også på nabokortene når pila er nær dem. --mx/--my settes per kort av
    skriptet «Døgnlinja»; .is-lit står på rutenettet så lenge pila er over det.
    ::after er bare selve kanten (masken skjærer ut alt innenfor 1 px). */
 @media (min-width:641px) and (hover:hover) and (pointer:fine){
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget::before,
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget::after{
+  html[data-theme] .daily-grid > .widget::before,
+  html[data-theme] .daily-grid > .widget::after{
     content:"";position:absolute;border-radius:inherit;pointer-events:none;opacity:0;
     transition:opacity .45s var(--ease-out-quart);
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget::before{
+  html[data-theme] .daily-grid > .widget::before{
     inset:0;
     background:radial-gradient(380px circle at var(--mx,50%) var(--my,0px),rgba(var(--glow-rgb),.075),transparent 68%);
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid > .widget::after{
+  html[data-theme] .daily-grid > .widget::after{
     inset:-1px;padding:1px;
     background:radial-gradient(240px circle at var(--mx,50%) var(--my,0px),rgba(var(--glow-rgb),.85),transparent 72%);
     -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
@@ -2934,12 +2880,12 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
     mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
     mask-composite:exclude;
   }
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid.is-lit > .widget::before,
-  html:is([data-theme="carbon"],[data-theme="dark"]) .daily-grid.is-lit > .widget::after{opacity:1}
+  html[data-theme] .daily-grid.is-lit > .widget::before,
+  html[data-theme] .daily-grid.is-lit > .widget::after{opacity:1}
 }
 /* Nettbrett: mindre luft over tittelen, som i v242 */
 @media (min-width:641px) and (max-width:900px){
-  html:is([data-theme="carbon"],[data-theme="dark"]) .hero{padding-top:64px}
+  html[data-theme] .hero{padding-top:64px}
 }
 </style>
 <style id="carbonNav">/* ══ Navbaren i Carbon (forsiden, PC og telefon) ═══════════════════════
@@ -2951,52 +2897,52 @@ body.introAct.heroLanded .daily-frame.in .dayline.is-set .dl-now i::after{animat
    pil), logoflisa har en svak messingkant, og baren er gjennomsiktig til man blar
    (.scrolled settes etter 8 px; da blir den tett som på resten av nettstedet).
    #navWrap i velgeren: top-chrome.js har «#tc-theme-btn{…}» for berøringsskjerm,
-   og en id-regel slås bare av en annen id-regel. Bare Carbon; andre temaer er urørt. */
-html[data-theme="carbon"] body #navWrap{transition:background-color .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease)}
-html[data-theme="carbon"] body #navWrap:not(.scrolled){background:transparent}
-html[data-theme="carbon"] #navWrap nav,
-html[data-theme="carbon"] #navWrap .tc-actions{gap:8px}
-html[data-theme="carbon"] #navWrap .mark{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
-html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){
+   og en id-regel slås bare av en annen id-regel. Fra 2026-11-27 alle temaer, ikke bare Carbon. */
+html[data-theme] body #navWrap{transition:background-color .3s var(--ease),border-color .3s var(--ease),box-shadow .3s var(--ease)}
+html[data-theme] body #navWrap:not(.scrolled){background:transparent}
+html[data-theme] #navWrap nav,
+html[data-theme] #navWrap .tc-actions{gap:8px}
+html[data-theme] #navWrap .mark{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
+html[data-theme] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){
   position:relative;height:34px;box-sizing:border-box;margin:0;padding:0 14px;gap:8px;
   border:1px solid var(--line-2);border-radius:999px;
   background:rgba(var(--wash-rgb),.025);color:var(--ink2);
   font:500 12.5px/1 var(--font-sans);
 }
-html[data-theme="carbon"] #navWrap :is(.tmr-pill.is-live,.tc-btn[aria-expanded="true"]){color:var(--ink);border-color:var(--line-warm);background:rgba(var(--wash-rgb),.05)}
+html[data-theme] #navWrap :is(.tmr-pill.is-live,.tc-btn[aria-expanded="true"]){color:var(--ink);border-color:var(--line-warm);background:rgba(var(--wash-rgb),.05)}
 @media(hover:hover){
-  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn):hover{color:var(--ink);border-color:var(--line-warm);background:rgba(var(--wash-rgb),.05)}
+  html[data-theme] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn):hover{color:var(--ink);border-color:var(--line-warm);background:rgba(var(--wash-rgb),.05)}
 }
-html[data-theme="carbon"] #navWrap .tc-btn:focus-visible{outline-offset:2px;border-radius:999px}
+html[data-theme] #navWrap .tc-btn:focus-visible{outline-offset:2px;border-radius:999px}
 /* Trykkflaten blir 44 px høy uten at knappen vokser (erstatter polstringstrikset i
    top-chrome.js, som ville gjort pillene 78 px høye på berøringsskjerm). 3 px til
    hver side, så flatene ikke overlapper i mellomrommet på 6 px på telefon. */
-html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::after{content:"";position:absolute;inset:-5px -3px}
+html[data-theme] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::after{content:"";position:absolute;inset:-5px -3px}
 /* 641–760 px: med søkepilla framme ble raden for bred (cirka 23 px over på 641 px).
    Nedtellingen blir et rundt ikon her, slik den er på telefon. */
 @media (min-width:641px) and (max-width:760px){
-  html[data-theme="carbon"] #navWrap .tmr-pill{width:34px;padding:0;justify-content:center}
-  html[data-theme="carbon"] #navWrap .tmr-pill .tmr-pill-t{display:none}
+  html[data-theme] #navWrap .tmr-pill{width:34px;padding:0;justify-content:center}
+  html[data-theme] #navWrap .tmr-pill .tmr-pill-t{display:none}
 }
 @media (max-width:640px){
-  html[data-theme="carbon"] #navWrap nav,
-  html[data-theme="carbon"] #navWrap .nav-right,
-  html[data-theme="carbon"] #navWrap .tc-actions{gap:6px}
-  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:34px;padding:0;justify-content:center}
-  html[data-theme="carbon"] #navWrap .tc-btn .chev{display:none}
-  html[data-theme="carbon"] #navWrap .tc-btn .swatch{width:12px;height:12px}
+  html[data-theme] #navWrap nav,
+  html[data-theme] #navWrap .nav-right,
+  html[data-theme] #navWrap .tc-actions{gap:6px}
+  html[data-theme] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:34px;padding:0;justify-content:center}
+  html[data-theme] #navWrap .tc-btn .chev{display:none}
+  html[data-theme] #navWrap .tc-btn .swatch{width:12px;height:12px}
 }
 /* Under 360 px fikk logoen og de fire knappene ikke plass: siden ble 17 px for bred
    på 320 px (P50). Litt mindre knapper, mellomrom og logotekst; trykkflaten er
    fortsatt 44 px høy. */
 @media (max-width:360px){
-  html[data-theme="carbon"] #navWrap nav,
-  html[data-theme="carbon"] #navWrap .nav-right,
-  html[data-theme="carbon"] #navWrap .tc-actions{gap:4px}
-  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:30px;height:30px}
-  html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::after{inset:-7px -2px}
-  html[data-theme="carbon"] #navWrap .brand-row{gap:8px}
-  html[data-theme="carbon"] #navWrap .wordmark{font-size:14.5px}
+  html[data-theme] #navWrap nav,
+  html[data-theme] #navWrap .nav-right,
+  html[data-theme] #navWrap .tc-actions{gap:4px}
+  html[data-theme] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn){width:30px;height:30px}
+  html[data-theme] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::after{inset:-7px -2px}
+  html[data-theme] #navWrap .brand-row{gap:8px}
+  html[data-theme] #navWrap .wordmark{font-size:14.5px}
 }
 </style>
 <style id="kalKnapp">/* ══ Kalender-knappen i dagsoversikt-toppen ══════════════════════════════
@@ -3023,44 +2969,35 @@ html[data-theme="carbon"] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::afte
 }
 .daily-cal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .daily-cal:active{transform:translateY(1px)}
-/* Telefon: bare ikonet (teksten leses fortsatt opp). I rutenettet (alle temaer
-   unntatt Carbon) tar rammen plassen status-pillen hadde alene. For at begge skal
-   få plass ved siden av «Dagsoversikt», viser pillen bare klokkeslettet, som i
-   Carbon: «Sist oppdatert» skjules visuelt, men leses fortsatt opp. */
+/* Telefon: bare ikonet (teksten leses fortsatt opp). For at knappen og pillen skal
+   få plass ved siden av «Dagsoversikt», viser pillen bare klokkeslettet:
+   «Sist oppdatert» skjules visuelt, men leses fortsatt opp. */
 @media (max-width:640px){
-  .daily-tools{grid-column:2;grid-row:1;gap:7px}
   .daily-head .daily-cal{width:26px;padding:0;justify-content:center}
   .daily-cal-lbl,
   .daily-head .stamp .stamp-pre{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 }
-/* Carbon (telefon og PC): toppen er én flex-rad med order. Rammen står helt til høyre. */
-html[data-theme="carbon"] .daily-tools{order:3;margin-left:auto;gap:8px}
-html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-rgb),.025)}
+/* Alle temaer (telefon og PC): toppen er én flex-rad med order. Rammen står helt til høyre. */
+html[data-theme] .daily-tools{order:3;margin-left:auto;gap:8px}
+html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-rgb),.025)}
 @media (max-width:640px){
-  html[data-theme="carbon"] .daily-head .daily-cal{width:28px}
+  html[data-theme] .daily-head .daily-cal{width:28px}
 }
 /* Smale telefoner (360 px): litt tettere, så etikett, uke, knapp og pille får plass på én linje */
 @media (max-width:374px){
-  html[data-theme="carbon"] .daily-head{column-gap:7px}
-  html[data-theme="carbon"] .daily-head .title > span[data-i18n]{gap:7px;letter-spacing:1.4px}
-  html[data-theme="carbon"] .daily-head .title #dailyWeek{gap:7px;letter-spacing:1.4px}
-}
-/* Mørk-blå på PC har samme topp som Carbon (#gammelPC) */
-@media (min-width:641px){
-  html[data-theme="dark"] .daily-tools{order:3;margin-left:auto;gap:8px}
-  html[data-theme="dark"] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-rgb),.025)}
+  html[data-theme] .daily-head{column-gap:7px}
+  html[data-theme] .daily-head .title > span[data-i18n]{gap:7px;letter-spacing:1.4px}
+  html[data-theme] .daily-head .title #dailyWeek{gap:7px;letter-spacing:1.4px}
 }
 </style>
 </head>
 <body class="atmo-on">
-<script>/* Lasteanimasjonen i #carbonMobil: Carbon (telefon og PC) og Mørk-blå på PC
-   (#gammelPC). Settes FØR første maling, ellers rekker kategoriene å vises og så
-   skjule seg igjen. Én gang per fane. */
+<script>/* Lasteanimasjonen i #carbonMobil: alle temaer, telefon og PC (fra 2026-11-27;
+   før bare Carbon og Mørk-blå på PC). Settes FØR første maling, ellers rekker
+   kategoriene å vises og så skjule seg igjen. Én gang per fane. */
 (function(){
   try{
-    var t = document.documentElement.getAttribute('data-theme');
     if(!window.matchMedia || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if(t !== 'carbon' && !(t === 'dark' && matchMedia('(min-width:641px)').matches)) return;
     if(sessionStorage.getItem('hvt-intro')) return;
     sessionStorage.setItem('hvt-intro', '1');
   }catch(e){ return; }
@@ -3139,7 +3076,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
   <section class="hero" data-screen-label="02 Hero">
     <div class="container">
       <h1 id="heroH1" data-headline data-i18n-html="homeHeroTitle">Økonomi <em>uten fagspråk</em>.</h1>
-      <!-- Carbon på telefon (norsk) har denne tittelen i stedet, se #carbonMobil. Bare én av de to vises. -->
+      <!-- På norsk vises denne tittelen i stedet (alle temaer), se #carbonMobil og #gammelPC. Bare én av de to vises. -->
       <h1 id="heroH1Alt" class="hero-h1-alt" data-headline>Praktiske verktøy for <em>økonomi</em>, skatt, lovverk og regnskap.</h1>
       <div class="search-wrap" id="searchWrap">
         <div class="search-shell" id="searchShell">
@@ -4007,7 +3944,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
   var IS_MOBILE = window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
 
   // ── Tittelen: ett ord per boks ───────────────────
-  // To titler (#heroH1 og #heroH1Alt for Carbon på telefon); bare én vises, begge deles.
+  // To titler (#heroH1, og #heroH1Alt på norsk); bare én vises, begge deles.
   (function(){
     var all = document.querySelectorAll('[data-headline]');
     if(!all.length) return;
@@ -4180,8 +4117,6 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
         if(raf) return;
         raf = requestAnimationFrame(function(){
           raf = 0;
-          var t = document.documentElement.getAttribute('data-theme');
-          if(t !== 'carbon' && t !== 'dark') return;
           for(var i = 0; i < kort.length; i++){
             var r = kort[i].getBoundingClientRect();
             kort[i].style.setProperty('--mx', Math.round(px - r.left) + 'px');
@@ -5348,7 +5283,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
 </script>
 
 <script id="introBoot">
-/* Lasteanimasjonen (Carbon på telefon, se #carbonMobil): strek-ikonene i søkefeltet
+/* Lasteanimasjonen (alle temaer, se #carbonMobil): strek-ikonene i søkefeltet
    og kategoriraden tegner seg selv. Hver strek måles og får dasharray/-offset, så
    overtar overgangene i CSS-en. Kategoriene tas ved DOMContentLoaded, så også lenka
    top-chrome.js legger til sist er med, og hver får sin plass i kaskaden (--qcd).
@@ -5459,7 +5394,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
      stedet for teal, og kanten under (N2) er magenta-fiolett. */
   var THEMES = {
     nordlys: { light: 0, sky: ['#030409', '#070a0e'], edge: '#4dffa0', mid: '#19b37a', top: '#7340a6', fringe: '#b267d8', star: '#c2d4e6', lim: 6.9, mw: 1.0 },
-    carbon:  { light: 0, sky: ['#0a0806', '#050403'], edge: '#f2e2c6', mid: '#c69a63', top: '#7d5a34', fringe: '#b98a55', star: '#d9c6a4', lim: 6.4, mw: 0.6 },
+    carbon:  { light: 0, sky: ['#0a0705', '#070504'], edge: '#f2e2c6', mid: '#c69a63', top: '#7d5a34', fringe: '#b98a55', star: '#e3c08e', lim: 5.0, mw: 0.0 },
     dark:    { light: 0, sky: ['#0c0f19', '#171b2a'], edge: '#a3b8ff', mid: '#6c8aef', top: '#3d3490', fringe: '#9a6cf0', star: '#bcc8f0', lim: 6.6, mw: 1.15 },
     frost:   { light: 1, sky: ['#dfe6f6', '#f7f9fc'], edge: '#4f5fe5', mid: '#7d88f0', top: '#c8cff8', fringe: '#7a5bd8', star: '#ffffff', lim: 5.0, mw: 0.0 },
     glass:   { light: 1, sky: ['#d5deee', '#e8edf6'], edge: '#5b69ea', mid: '#8b95ff', top: '#c5cbf5', fringe: '#8a76f2', star: '#ffffff', lim: 5.0, mw: 0.0 },
@@ -5468,10 +5403,10 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     disco:   { light: 0, sky: ['#0a0714', '#151021'], edge: '#ff5cb2', mid: '#28c0dc', top: '#45208f', fringe: '#9a4df0', star: '#e0c0ff', lim: 6.2, mw: 0.5 },
     pink:    { light: 1, sky: ['#f9e3ec', '#fffbfc'], edge: '#c25574', mid: '#d4748e', top: '#f0c8d6', fringe: '#a13d6d', star: '#ffffff', lim: 5.0, mw: 0.0 }
   };
-  // Kun disse temaene VISER canvaset (carbon er opacity:0, lyse temaer dekkes av opak body).
-  var CANVAS_THEMES = { nordlys: 1, dark: 1, disco: 1, bw: 1 };
-  // disco står ikke her og faller derfor til 0 = gardin-scenen, som før.
-  var MODE = { nordlys: 0, bw: 1, dark: 4 };
+  // Kun disse temaene VISER canvaset (lyse temaer dekkes av opak body).
+  var CANVAS_THEMES = { nordlys: 1, dark: 1, disco: 1, bw: 1, carbon: 1 };
+  // disco står ikke her og faller derfor til 0 = gardin-scenen, som før. 5 = formørket sol (carbon).
+  var MODE = { nordlys: 0, bw: 1, dark: 4, carbon: 5 };
   // Temabytte fra menyen toner hele siden over (top-chrome.js, window.hvThemeFade).
   // Motoren svarer først når toningen er ferdig: oppstarten (WebGL-kontekst, måling
   // av siden) og nye shadere kan låse hovedtråden i 50–150 ms, og det skal ikke
@@ -5613,7 +5548,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     '    return s;',
     '}',
     '// Hvert program har bare scenen til sitt tema (#define SCENE settes i JS):',
-    '// 0 = nordlysgardiner (nordlys, disco), 1 = noir (bw), 4 = maanenatt (dark).',
+    '// 0 = nordlysgardiner (nordlys, disco), 1 = noir (bw), 4 = maanenatt (dark), 5 = formoerket sol (carbon).',
     '#if SCENE == 0',
     '// samme heltallsregning som hashL (se over)',
     'float hash11(float p){ return fract(perm(perm(mod(p, 289.0))) / 289.0); }',
@@ -5833,12 +5768,44 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       '    return vec4(outc, clamp(neb * 0.6 + cirBand * 0.5 + fogA * 0.4 + bank * 0.35, 0.0, 1.0));',
       '}',
     '#endif',
+    '#if SCENE == 5',
+      '// solas plass: som maanen (moonSpot i JS), x fra midten og y fra bunnen i hoydeenheter, z = radius',
+      'uniform vec3 uMoonP;',
+      '// ---- FORMOERKET SOL (carbon) - himmel naer --bg (#070504), varm royk og dis.',
+      '// Skiva, kromosfaeren og koronaen tegnes i kompositten (SUN), i full opplosning.',
+      '// Ingen tonekurve: himmelen skal ligge paa --bg, saa kortene ser ut som foer.',
+      'vec4 sunScene(vec2 frag, float t){',
+      '    float aspect = uRes.x / uRes.y;',
+      '    vec2 p = vec2((frag.x - 0.5) * aspect, frag.y);',
+      '    vec3 col = mix(uSkyBot, uSkyTop, smoothstep(0.0, 1.0, frag.y));',
+      '    float amp = uAmp * 1.5;',
+      '    float sd = length(p - uMoonP.xy);',
+      '    float sr = max(uMoonP.z, 0.001) / 0.038;',
+      '    // lufta rundt sola lyser svakt opp (spredt lys), stort og mykt',
+      '    col += uCMid * (exp(-sd / (0.30 * sr)) * 0.030 + exp(-sd / (0.085 * sr)) * 0.030) * amp;',
+      '    // varm royk: to plan domenevridd fbm som kroller seg sakte oppover, svakest langt fra sola',
+      '    vec2 sq = vec2(p.x * 0.95 + t * 0.006, frag.y * 1.35 - t * 0.011);',
+      '    float body = smoothstep(0.42, 0.92, fbm(sq + (fbm(sq * 1.7 + vec2(0.0, t * 0.004)) - 0.5) * 1.1));',
+      '    vec2 sq2 = vec2(p.x * 1.9 - t * 0.005, frag.y * 2.8 - t * 0.017);',
+      '    float curl = smoothstep(0.55, 0.95, fbm(sq2 + (fbm(sq2 * 1.5 + vec2(t * 0.003, 0.0)) - 0.5) * 0.8));',
+      '    float lit = exp(-sd * 1.7);',
+      '    vec3 smokeC = mix(uCTop, uCMid, 0.30 + 0.50 * lit);',
+      '    col += smokeC * (body * (0.014 + 0.040 * lit) + curl * (0.008 + 0.028 * lit)) * amp;',
+      '    // dis langs bunnen',
+      '    float haze = smoothstep(0.45, 0.90, fbm(vec2(p.x * 1.2 - t * 0.007, frag.y * 6.0 + 2.0))) * exp(-max(frag.y - 0.04, 0.0) * 7.0);',
+      '    col += mix(uCTop, uCMid, 0.3) * (haze * 0.022 + exp(-frag.y * 9.0) * 0.008) * amp;',
+      '    col += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (1.5 / 255.0);',
+      '    return vec4(col, clamp(body * 0.30 + curl * 0.20 + haze * 0.35, 0.0, 1.0));',
+      '}',
+    '#endif',
     'void main(){',
     '    vec2 frag = gl_FragCoord.xy / uRes;',
     '    float aspect = uRes.x / uRes.y;',
     '    float t = uTime;',
     '#if SCENE == 4',
     '    gl_FragColor = nightScene(frag, t);',
+    '#elif SCENE == 5',
+    '    gl_FragColor = sunScene(frag, t);',
     '#elif SCENE == 1',
     '    gl_FragColor = vec4(smokeScene(frag, frag, t), 1.0);',
     '#else',
@@ -5981,6 +5948,24 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       '  return exp(-dot(rel, rel) / 0.0000042) * on * blink * edgeFade;',
       '}',
     '#endif',
+    '// Formoerket sol bare i programmet for carbon (#define SUN 1 i JS, ellers udefinert).',
+    '#ifdef SUN',
+    'uniform vec3 uMoonP;',
+    '// Baumbach (1937): koronaens lysstyrke i solradier r >= 1 (K- og F-korona sammen)',
+    'float baumbach(float r){ return 0.0532 * pow(r, -2.5) + 1.425 * pow(r, -7.0) + 2.565 * pow(r, -17.0); }',
+    '// En protuberans: en liten flamme over randen ved retningen at (enhetsvektor).',
+    '// h0 = hoyde over randen i solradier, h = toppen, w = halv bredde (radianer).',
+    'float prom(vec2 dir, float h0, vec2 at, float h, float w, float sd, float t){',
+    '  float ca = dot(dir, at);',
+    '  if (ca < 0.0 || h0 < -0.02) return 0.0;',
+    '  float u = (dir.x * at.y - dir.y * at.x) / w;',
+    '  float wob = vnoise(vec2(u * 1.7 + sd, h0 * 22.0 - t * 0.06)) - 0.5;',
+    '  float uu = u + wob * 0.9 * min(h0 / h, 1.0);',
+    '  float prof = exp(-uu * uu * 1.5);',
+    '  float top = h * (0.55 + 0.45 * prof);',
+    '  return prof * (1.0 - smoothstep(top * 0.45, top, h0)) * (0.75 + 0.25 * vnoise(vec2(u * 4.0, h0 * 60.0 + sd)));',
+    '}',
+    '#endif',
     'void main(){',
     '  vec2 frag = gl_FragCoord.xy / uRes;',
     '  float aspect = uRes.x / uRes.y;',
@@ -6052,6 +6037,52 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       '',
     '  col += mix(uStarTint, vec3(1.0), 0.4) * satDot(frag, aspect, t) * uFx.z * occl * 0.5 * (1.0 - uLight);',
     '#endif',
+    '#ifdef SUN',
+    '  {',
+    '    vec2 sv = vec2((frag.x - 0.5) * aspect, frag.y) - uMoonP.xy;',
+    '    float R = max(uMoonP.z, 0.001), sd = length(sv), r = sd / R, px = 1.0 / uRes.y;',
+    '    // utenfor ni solradier er det ingenting aa tegne',
+    '    if (r < 9.0) {',
+    '      vec2 dir = sv / max(sd, 1e-5);',
+    '      float cloudAmt = clamp(aur.a, 0.0, 1.0);',
+    '      // straaler: soemloes vinkelstoy paa retningsvektoren (ingen skjoet ved +-180 grader),',
+    '      // monsteret glir sakte = straalene puster',
+    '      float br = t * 0.018;',
+    '      float s1 = vnoise(dir * 2.3 + vec2(3.1 + br, 7.7 - br * 0.7));',
+    '      float s2 = vnoise(dir * 6.8 + vec2(11.3 - br * 1.3, 2.9 + br));',
+    '      float s3 = vnoise(dir * 19.0 + vec2(5.7 + br * 0.6, 19.1 + br * 1.7));',
+    '      float streak = 0.40 + 0.95 * smoothstep(0.25, 0.85, s1) + 0.35 * s2 + 0.30 * s3 * s3;',
+    '      // hjelmstraalere: koronaen strekker seg lenger ut der vinkelstoyen er sterk',
+    '      float reach = 0.60 + 1.60 * smoothstep(0.35, 0.90, s1);',
+    '      float re = 1.0 + (max(r, 1.0) - 1.0) / reach;',
+    '      // Baumbach tonet ned: I/I(1) komprimert (^0.36), saa den ytre koronaen synes',
+    '      float cor = pow(baumbach(re) / 4.0432, 0.36) * streak;',
+    '      float breathe = 0.94 + 0.04 * sin(t * 0.11) + 0.02 * sin(t * 0.29 + 1.3);',
+    '      vec3 corC = mix(uCMid, uCEdge, smoothstep(2.4, 1.0, r));',
+    '      float outside = smoothstep(R - 0.8 * px, R + 0.8 * px, sd);',
+    '      col += corC * cor * 0.26 * breathe * outside * (1.0 - 0.5 * cloudAmt);',
+    '      // skiva: nesten svart, med svak varm granulering',
+    '      if (r < 1.0 + 3.0 * px / R) {',
+    '        vec2 q = sv / R;',
+    '        float gr = vnoise(q * 24.0 + vec2(t * 0.015, 3.0)) * 0.6 + vnoise(q * 53.0 - vec2(1.0, t * 0.021)) * 0.4;',
+    '        vec3 disc = vec3(0.011, 0.008, 0.006) + uCMid * smoothstep(0.35, 0.85, gr) * 0.028 * (1.0 - 0.6 * dot(q, q));',
+    '        col = mix(col, disc, 1.0 - outside);',
+    '      }',
+    '      // kromosfaeren: en tynn, gloedende messingring like utenfor skiva, ujevn som spikler',
+    '      float dr = (sd - R) / px;',
+    '      float spic = 0.70 + 0.30 * vnoise(dir * 44.0 + vec2(t * 0.05, 1.0));',
+    '      vec3 brass = mix(uCMid, uCEdge, 0.40) * vec3(1.12, 0.92, 0.70);',
+    '      float ring = exp(-(dr - 0.7) * (dr - 0.7) / 1.3) * 0.85 * spic + exp(-max(dr, 0.0) / 3.5) * 0.16 * outside;',
+    '      // to eller tre smaa protuberanser (rosa kobber), hoyde i solradier',
+    '      float h0 = r - 1.0;',
+    '      float pr = prom(dir, h0, vec2(0.766, 0.643), 0.22, 0.17, 1.0, t)',
+    '               + prom(dir, h0, vec2(-0.940, -0.342), 0.15, 0.13, 5.0, t)',
+    '               + prom(dir, h0, vec2(0.174, -0.985), 0.10, 0.11, 9.0, t) * 0.8;',
+    '      vec3 promC = mix(brass, vec3(1.0, 0.55, 0.42), 0.45);',
+    '      col += (brass * ring + promC * pr * 1.10) * outside * (1.0 - 0.35 * cloudAmt);',
+    '    }',
+    '  }',
+    '#endif',
     '  vec2 m = vec2(uMouse.x, 1.0 - uMouse.y);',
     '  vec2 md = (frag - m) * vec2(aspect, 1.0);',
     '  col += uCMid * exp(-dot(md, md) * 5.5) * 0.05 * uMouseAmt * (1.0 - uLight);',
@@ -6080,6 +6111,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     'uniform float uMoon;',
     'uniform vec3 uMoonP;',
     'uniform float uMaxPt;',
+    'uniform float uTintK;',
     'varying vec3 vCol;',
     'varying float vSize;',
     'varying float vHalo;',
@@ -6111,7 +6143,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     '  float ph = uTime * 6.1 + s * 5.0;',
     '  c *= 1.0 + smoothstep(0.30, 0.90, I) * (1.0 - ext) * 0.22 * uTwk * vec3(sin(ph), sin(ph + 2.094), sin(ph + 4.189));',
     '  float lc = dot(c, vec3(0.299, 0.587, 0.114));',
-    '  c = mix(c, uTint * lc / max(dot(uTint, vec3(0.299, 0.587, 0.114)), 0.05), 0.16);',
+    '  c = mix(c, uTint * lc / max(dot(uTint, vec3(0.299, 0.587, 0.114)), 0.05), uTintK);',
     '  vCol = c * I;',
     '  vHalo = clamp(I - 0.45, 0.0, 1.6);',
     '  vBloom = clamp((I - 0.90) * 0.7, 0.0, 1.2);',
@@ -6144,7 +6176,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     '  float glow = vBloom * 0.05 * exp(-rc / 4.5);',
     '  // kryss-spikes bare paa maanenatt (uMode 4), og bare paa de sterkeste stjernene',
     '  vec2 ap = abs(p) / uDpr;',
-    '  float spk = uMode > 3.5 ? vBloom * 0.20 * (exp(-ap.x * 1.5) * exp(-ap.y * 0.28) + exp(-ap.y * 1.5) * exp(-ap.x * 0.28)) : 0.0;',
+    '  float spk = abs(uMode - 4.0) < 0.5 ? vBloom * 0.20 * (exp(-ap.x * 1.5) * exp(-ap.y * 0.28) + exp(-ap.y * 1.5) * exp(-ap.x * 0.28)) : 0.0;',
     '  float win = 1.0 - smoothstep(0.36, 0.5, sqrt(r2) / vSize);',
     '  vec4 bg = texture2D(uTex, gl_FragCoord.xy / uRes);',
     '  // skyer (maanenatt) og horisont dekker; sterkt nordlys senker bare kontrasten',
@@ -6230,10 +6262,14 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     var isStatic = !!(mq && mq.matches);
     var ro = null, mo = null, subs = [], started = false;   // started: siden er lest, se start()
     var anchorEl = opts.anchor || null, anchorY = 0;
-    var avoidEl = opts.avoid || null, avoidMo = null, moonP = [0, 0.76, 0.038], moonDirty = true;   // se moonSpot()
+    // opts.avoid kan være flere elementer (forsiden har to titler, og bare én vises):
+    // avoidNow() gir den som vises nå, så månen, sola og nordlysankeret følger den.
+    var avoidEls = [].concat(opts.avoid || []).filter(Boolean), avoidMo = null, moonP = [0, 0.76, 0.038], moonDirty = true;   // se moonSpot()
+    function avoidNow() { for (var i = 0; i < avoidEls.length; i++) if (avoidEls[i].offsetHeight) return avoidEls[i]; return null; }
+    var clearEls = [].concat(opts.clear || []).filter(Boolean);   // flater månen ikke skal dekke (se moonSpot)
     function on(target, type, fn, o) { if (!target || !target.addEventListener) return; target.addEventListener(type, fn, o); subs.push([target, type, fn, o]); }
 
-    function themeKey() { var k = root.getAttribute('data-theme') || 'carbon'; return THEMES[k] ? k : 'carbon'; }
+    function themeKey() { var k = root.getAttribute('data-theme') || 'dark'; return THEMES[k] ? k : 'dark'; }
     function canvasVisible() { return !!CANVAS_THEMES[themeKey()]; }
 
     function syncTheme() {
@@ -6271,15 +6307,16 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       pendingProgs = []; SCENES = {}; COMPS = {}; scene = null; starsLinked = false;
       progA = progC = progP = null; uA = uC = uP = null;
       // Programmene lenkes først ved første tegning, og bare for scenen temaet viser.
-      // Carbon og de lyse temaene, der canvaset er skjult, kompilerer ingenting, og
-      // nordlys slipper å kompilere månen og noir-scenen den aldri viser.
+      // De lyse temaene, der canvaset er skjult, kompilerer ingenting, og nordlys
+      // slipper å kompilere månen, sola og noir-scenen den aldri viser.
       ensureScene = function () {
-        var k = mode === 4 ? 4 : mode === 1 ? 1 : 0, S = SCENES[k], m = k === 4 ? 1 : 0;
-        // Komposittpasset uten måne er likt for nordlys og noir, så det lenkes én gang.
+        var k = mode === 4 ? 4 : mode === 5 ? 5 : mode === 1 ? 1 : 0, S = SCENES[k], m = k === 4 ? 1 : k === 5 ? 2 : 0;
+        // Komposittpasset uten måne og sol er likt for nordlys og noir, så det lenkes én gang.
+        // m: 0 = ingen, 1 = måne (dark), 2 = formørket sol (carbon).
         if (!COMPS[m]) {
           // Månenatt slår på EXT_shader_texture_lod når den finnes (MOON_LOD i COMP_FS).
           var lod = m === 1 && gl.getExtension('EXT_shader_texture_lod') ? '#extension GL_EXT_shader_texture_lod : enable\n#define MOON_LOD 1\n' : '';
-          COMPS[m] = link(QUAD_VS, lod + '#define MOON ' + m + '\n' + COMP_FS, ['aPos']);
+          COMPS[m] = link(QUAD_VS, lod + (m === 2 ? '#define MOON 0\n#define SUN 1\n' : '#define MOON ' + m + '\n') + COMP_FS, ['aPos']);
         }
         if (!S) S = SCENES[k] = { A: link(QUAD_VS, '#define SCENE ' + k + '\n' + AURORA_FS, ['aPos']), C: COMPS[m], uA: null, uC: null };
         if (!starsLinked && k !== 1) { starsLinked = true; progP = link(STAR_VS, STAR_FS, ['aPos', 'aMag', 'aCol', 'aSeed']); } // noir har ingen stjerner
@@ -6319,7 +6356,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
           S.uA = U(S.A, ['uRes', 'uTime', 'uTimeR', 'uAmp', 'uLight', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe', 'uCss', 'uMW', 'uAnchor', 'uMoonGlow', 'uMoonP']);
           S.uC = U(S.C, ['uRes', 'uTime', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx', 'uMoonAlb', 'uMoonNrm', 'uMoonMap', 'uMoonL', 'uMoonK', 'uMoonP']);
         }
-        if (progP && !uP) uP = U(progP, ['uCss', 'uDpr', 'uTime', 'uLim', 'uGain', 'uTwk', 'uTint', 'uMoon', 'uMoonP', 'uMaxPt', 'uTex', 'uRes', 'uMode']);
+        if (progP && !uP) uP = U(progP, ['uCss', 'uDpr', 'uTime', 'uLim', 'uGain', 'uTwk', 'uTint', 'uTintK', 'uMoon', 'uMoonP', 'uMaxPt', 'uTex', 'uRes', 'uMode']);
         if (scene) { uA = scene.uA; uC = scene.uC; }
       };
       return true;
@@ -6420,7 +6457,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
         // Canvaset tømmes ved ny størrelse — tegn på nytt når loopen står (redusert
         // bevegelse, skjult fane). Før siden er lest gjør draw() ingenting (se start()),
         // så statussjekken aldri havner midt i parsingen (E257). Ikke på tema der
-        // canvaset er skjult (carbon og de lyse): der skal motoren ikke gjøre noe.
+        // canvaset er skjult (de lyse): der skal motoren ikke gjøre noe.
         if (!raf && canvasVisible() && (isStatic || document.hidden)) draw();
       }
     }
@@ -6553,7 +6590,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       var W = window.__smk || {};
       // månefase (bare månenatt): sola fra høyre og litt under (voksende kveldsmåne)
       var mph = Math.max(0, Math.min(165, +CONFIG.MOON_PHASE || 0)) * Math.PI / 180, mk = (1 + Math.cos(mph)) / 2;
-      if (mode === 4 && moonDirty) moonSpot();
+      if ((mode === 4 || mode === 5) && moonDirty) moonSpot();
 
       // 1) tema-scene -> lavoppløst tekstur
       gl.disable(gl.BLEND);
@@ -6573,6 +6610,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       gl.uniform1f(uA.uAnchor, anchorY);
       gl.uniform1f(uA.uMW, Math.max(0, cc.mw[0] * CONFIG.MILKY_WAY));
       if (mode === 4) { gl.uniform1f(uA.uMoonGlow, 0.35 + 0.65 * Math.pow(mk, 1.3)); gl.uniform3f(uA.uMoonP, moonP[0], moonP[1], moonP[2]); }
+      else if (mode === 5) gl.uniform3f(uA.uMoonP, moonP[0], moonP[1], moonP[2]);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       // 2) kompositt i full oppløsning
@@ -6594,6 +6632,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
         gl.uniform1f(uC.uMoonK, mk);
         gl.uniform3f(uC.uMoonP, moonP[0], moonP[1], moonP[2]);
       }
+      else if (mode === 5) gl.uniform3f(uC.uMoonP, moonP[0], moonP[1], moonP[2]);   // sola (SUN)
       // Stjerneskudd og blitzlys er fjernet (brukervalg); kun satellitten på månenatt.
       gl.uniform3f(uC.uFx, 0, 0, (!isStatic && mode === 4) ? 1 : 0);
       v3(uC.uCEdge, cc.edge);
@@ -6620,8 +6659,10 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
         gl.uniform1f(uP.uGain, gain);
         gl.uniform1f(uP.uTwk, isStatic ? 0 : Math.max(0, Math.min(1, +CONFIG.TWINKLE || 0)));
         v3(uP.uTint, cc.star);
-        gl.uniform1f(uP.uMoon, mode === 4 ? 1 : 0);
-        if (mode === 4) gl.uniform3f(uP.uMoonP, moonP[0], moonP[1], moonP[2]);
+        gl.uniform1f(uP.uTintK, mode === 5 ? 0.45 : 0.16);   // carbon: få, varme stjerner
+        // sola (carbon) skjuler stjernene bak skiva og visker dem ut i koronaen, som månen
+        gl.uniform1f(uP.uMoon, (mode === 4 || mode === 5) ? 1 : 0);
+        if (mode === 4 || mode === 5) gl.uniform3f(uP.uMoonP, moonP[0], moonP[1], moonP[2]);
         gl.uniform1f(uP.uMaxPt, maxPt);
         gl.uniform1f(uP.uMode, mode);
         gl.drawArrays(gl.POINTS, 0, starCount);
@@ -6643,7 +6684,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     // rundt ankeret eller body endrer størrelse (fonter, språk, rotasjon, innhold over).
     function pageTop(e) { var y = 0; while (e) { y += e.offsetTop; e = e.offsetParent; } return y; }
     function measureAnchor() {
-      var old = anchorY;
+      var old = anchorY, avoidEl = avoidNow();
       if (!anchorEl || !anchorEl.offsetHeight) anchorY = 0;
       else {
         var top = pageTop(anchorEl);
@@ -6651,7 +6692,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       }
       return anchorY !== old;
     }
-    // Månens plass (bare månenatt, regnes i draw() når moonDirty er satt): oppe til
+    // Månens plass (månenatt, og sola i Carbon; regnes i draw() når moonDirty er satt): oppe til
     // høyre som før. Står den bak tittelen (opts.avoid), som på stående telefon, flyttes
     // en mindre måne til den ledige himmelen til høyre for tittelens første linje.
     // Ordboksene (.word-mask) flyttes ikke av intro-animasjonen, og linjene måles i
@@ -6660,7 +6701,8 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       moonDirty = false;
       var cw = canvas.clientWidth || 2, ch = canvas.clientHeight || 2, a = cw / ch;
       moonP = [Math.min(a * 0.31, Math.max(a * 0.5 - 0.20, 0)), 0.76, 0.038];
-      if (!avoidEl || !avoidEl.offsetHeight) return;
+      var avoidEl = avoidNow();
+      if (!avoidEl) return;
       var base = avoidEl.getBoundingClientRect(), x0 = 0, y0 = 0, e = avoidEl;
       while (e) { x0 += e.offsetLeft; y0 += e.offsetTop; e = e.offsetParent; }
       var boxes = avoidEl.querySelectorAll('.word-mask'), rs = [], lines = [], i, j, q, L, top, bot;
@@ -6674,9 +6716,19 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
         L.l = Math.min(L.l, q.left - base.left + x0); L.r = Math.max(L.r, q.right - base.left + x0);
         L.t = Math.min(L.t, top); L.b = Math.max(L.b, bot);
       }
+      // Søkefeltet og kategoriraden (opts.clear) er også hindre. I det tette oppsettet
+      // (alle temaer fra 2026-11-27) havnet standardplassen ellers bak søkefeltet på
+      // telefon når tittelen er kort (arabisk, polsk, ukrainsk) og på nettbrett.
+      var blocks = [];
+      for (i = 0; i < clearEls.length; i++) {
+        if (!clearEls[i].offsetHeight) continue;
+        q = clearEls[i].getBoundingClientRect();
+        blocks.push({ l: q.left - base.left + x0, r: q.right - base.left + x0, t: q.top - base.top + y0, b: q.bottom - base.top + y0 });
+      }
       function hits(cx, cy, r, pad) {
-        for (var k = 0; k < lines.length; k++) {
-          var o = lines[k];
+        var all = lines.concat(blocks);
+        for (var k = 0; k < all.length; k++) {
+          var o = all[k];
           if (cx + r + pad > o.l && cx - r - pad < o.r && cy + r + pad > o.t && cy - r - pad < o.b) return true;
         }
         return false;
@@ -6684,7 +6736,10 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       var r = moonP[2] * ch;
       if (!lines.length || !hits(cw / 2 + moonP[0] * ch, (1 - moonP[1]) * ch, r, 10)) return;
       lines.sort(function (p, s) { return p.t - s.t; });
-      var L1 = lines[0], free = x0 + avoidEl.offsetWidth - L1.r, cx = L1.r + free / 2, cy = L1.t + 2;
+      // Ledig plass ved siden av første linje: til høyre, eller til venstre når tittelen
+      // står til høyre (arabisk).
+      var L1 = lines[0], right = x0 + avoidEl.offsetWidth - L1.r, left = L1.l - x0, free = Math.max(right, left);
+      var cx = right >= left ? L1.r + right / 2 : x0 + left / 2, cy = L1.t + 2;
       for (r = Math.min(r, 22, free / 2 - 10); r >= 12; r -= 2) {
         if (!hits(cx, cy, r, 6)) { moonP = [(cx - cw / 2) / ch, 1 - cy / ch, r / ch]; return; }
       }
@@ -6692,8 +6747,8 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
       // himmelen mellom toppmenyen (toppen av heroen) og tittelen, ved tre fjerdedeler
       // av bredden (over «fagspråk»).
       var sky = avoidEl.closest('.hero'), skyTop = sky ? pageTop(sky) : 0;
-      cx = cw * 0.76; cy = (skyTop + L1.t) / 2; r = Math.min(moonP[2] * ch, 22, (L1.t - skyTop) / 2 - 12);
-      if (r >= 12) moonP = [(cx - cw / 2) / ch, 1 - cy / ch, r / ch];
+      cx = cw * 0.76; cy = (skyTop + L1.t) / 2; r = Math.min(moonP[2] * ch, 22, (L1.t - skyTop) / 2 - 5);
+      if (r >= 11) moonP = [(cx - cw / 2) / ch, 1 - cy / ch, r / ch];
     }
     function onResize() {
       var moved = measureAnchor();
@@ -6708,15 +6763,18 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     }
     else on(window, 'resize', onResize);
     // Tittelen bytter tekst (språk), får ordbokser (introen) og ny skrift uten at
-    // størrelsen nødvendigvis endres: mål månens plass på nytt.
-    if (avoidEl && typeof MutationObserver !== 'undefined') {
+    // størrelsen nødvendigvis endres: mål månens plass på nytt. Språkbytte (lang på
+    // <html>) bytter også hvilken av de to titlene som vises: mål ankeret på nytt.
+    if (avoidEls.length && typeof MutationObserver !== 'undefined') {
       avoidMo = new MutationObserver(function () {
         moonDirty = true;
-        if (mode === 4 && !raf && canvasVisible() && (isStatic || document.hidden)) draw();
+        var moved = measureAnchor();
+        if ((moved || mode === 4 || mode === 5) && !raf && canvasVisible() && (isStatic || document.hidden)) draw();
       });
-      avoidMo.observe(avoidEl, { childList: true, subtree: true, characterData: true });
+      for (var ai = 0; ai < avoidEls.length; ai++) avoidMo.observe(avoidEls[ai], { childList: true, subtree: true, characterData: true });
+      avoidMo.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
     }
-    if (avoidEl && document.fonts && document.fonts.ready) document.fonts.ready.then(function () { moonDirty = true; });
+    if (avoidEls.length && document.fonts && document.fonts.ready) document.fonts.ready.then(function () { moonDirty = true; });
     resize(true);
 
     on(canvas, 'webglcontextlost', function (e) { e.preventDefault(); pause(); });
@@ -6820,7 +6878,7 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
   //
   // mount() oppretter WebGL-konteksten og måler siden (measureAnchor). Midt i
   // HTML-tolkingen tvang det fram et fullt sideoppsett før første maling, også på
-  // carbon og de lyse temaene, der canvaset aldri vises. Derfor monteres motoren
+  // de lyse temaene, der canvaset aldri vises. Derfor monteres motoren
   // først når temaet faktisk viser canvaset, og tidligst når HTML-en er lest, sidens
   // skript har kjørt og neste bilde er malt. Konteksten kan låse hovedtråden i
   // 50–150 ms, og da skal innholdet allerede stå der.
@@ -6828,11 +6886,11 @@ html[data-theme="carbon"] .daily-head .daily-cal{height:28px;background:rgba(var
     var el = document.getElementById('nordlysCanvas');
     if (el) {
       var themeRoot = document.documentElement, waitMo = null;
-      var wantsCanvas = function () { var k = themeRoot.getAttribute('data-theme') || 'carbon'; return !!(THEMES[k] && CANVAS_THEMES[k]); };
+      var wantsCanvas = function () { var k = themeRoot.getAttribute('data-theme') || 'dark'; return !!(THEMES[k] && CANVAS_THEMES[k]); };
       var mountNow = function () {
         if (window.HVNordlys.active) return;
         if (waitMo) { waitMo.disconnect(); waitMo = null; }
-        var h = window.HVNordlys.active = mount(el, { anchor: document.getElementById('searchShell'), avoid: document.getElementById('heroH1') });
+        var h = window.HVNordlys.active = mount(el, { anchor: document.getElementById('searchShell'), avoid: [document.getElementById('heroH1'), document.getElementById('heroH1Alt')], clear: [document.getElementById('searchShell'), document.querySelector('.quick-cats')] });
         if (h.failed && document.body) document.body.classList.remove('nordlys-on');
       };
       // Klassen gjør body gjennomsiktig (se #nordlysCSS) og settes med en gang, som før,
