@@ -191,7 +191,9 @@ function trekkUt(inn, fakta) {
   const aar = slutter.map((slutt, i) => {
     const rad = { slutt };
     for (const post of POSTER) {
-      const treff = serier[post].find(([, m]) => m.has(slutt));
+      // En merkelapp med 0 er ofte et tomt felt (Flowserve fører «Revenues» = 0 ved siden av den ekte
+      // omsetningen). Da prøves neste merkelapp, og 0 brukes bare når ingen har et annet tall.
+      const treff = serier[post].find(([, m]) => m.has(slutt) && m.get(slutt).val !== 0) || serier[post].find(([, m]) => m.has(slutt));
       rad[post] = treff ? treff[1].get(slutt).val : null;
       if (i === 0) { if (treff) merk[post] = treff[0]; else mangler.push(post); }
     }
@@ -241,14 +243,14 @@ function kontroller(d, gammel) {
   const stopp = [], varsel = [];
   if (d.unntatt) return { stopp, varsel };
   const s = d.aar[d.aar.length - 1], b = d.balanse, mrd = x => (x / 1e9).toFixed(1) + ' mrd.';
-  if (s.oms != null && s.oms <= 0) stopp.push('omsetningen er ' + mrd(s.oms));
+  // Null omsetning er lov: biotekselskaper uten produkter på markedet har ingen (Revolution Medicines).
+  if (s.oms != null && s.oms < 0) stopp.push('omsetningen er ' + mrd(s.oms));
   for (const [navn, x] of [['investeringer', s.capex], ['aksjebasert lønn', s.sbc], ['kontanter', b.kont], ['plasseringer', b.plass], ['gjeld', b.gjeld]])
     if (x != null && x < 0) stopp.push(navn + ' er negative (' + mrd(x) + ')');
   if (s.oms > 0 && s.cfo > 1.5 * s.oms) stopp.push('kontantstrøm fra drift (' + mrd(s.cfo) + ') er over 1,5 ganger omsetningen (' + mrd(s.oms) + ')');
-  if (b.eiendeler > 0) {
-    if ((b.kont || 0) + (b.plass || 0) > b.eiendeler) stopp.push('kontanter og plasseringer er større enn alle eiendelene');
-    if (b.gjeld > b.eiendeler) stopp.push('gjelden (' + mrd(b.gjeld) + ') er større enn alle eiendelene (' + mrd(b.eiendeler) + ')');
-  }
+  // Gjeld større enn eiendelene er derimot lov: selskaper som har lånt for å kjøpe tilbake aksjer, har
+  // negativ egenkapital (Domino's, Yum, FICO, TransDigm). Regelen ble prøvd og forkastet 27.11.2026.
+  if (b.eiendeler > 0 && (b.kont || 0) + (b.plass || 0) > b.eiendeler) stopp.push('kontanter og plasseringer er større enn alle eiendelene');
   if (d.aksjer && !(d.aksjer.antall > 0)) stopp.push('antall aksjer er ' + d.aksjer.antall);
   if (d._gjeldSamlet > 0 && b.gjeld > 0 && Math.abs(b.gjeld - d._gjeldSamlet) > 0.10 * d._gjeldSamlet)
     varsel.push('gjelden (' + mrd(b.gjeld) + ') spriker over 10 % fra selskapets egen sum (' + mrd(d._gjeldSamlet) + ')');
@@ -305,13 +307,14 @@ async function storste(antall) {
     .sort((x, z) => z.val - x.val).slice(0, Math.ceil(antall * 1.25) + 30)
     .map(d => ({ cik: d.cik, flyt: d.val, eiendeler: eiendeler.get(d.cik)?.val || 0 }));
 }
-// Samme kontroll en gang til når tallene er hentet: børsverdi mot omsetning og mot antall aksjer.
-// Banker og forsikring har store balanser, så der er grensen fem ganger eiendelene.
+// Samme kontroll en gang til når tallene er hentet. En børsverdi oppgitt i feil enhet er tusen ganger for høy,
+// så børsverdien per aksje blir urimelig (over 20 000 dollar). Banker og andre finansselskaper har store
+// balanser, så for dem holder det å se på eiendelene. Børsverdi mot omsetning ble prøvd og forkastet:
+// selskaper uten salg ennå (Archer, D-Wave, Aurora) har med rette svært høy børsverdi mot omsetningen.
 function tastefeil(d, flyt, eiendeler) {
-  if (d.unntatt === 'finans') return eiendeler > 0 && flyt > 5 * eiendeler;
-  const siste = d.aar ? d.aar[d.aar.length - 1] : null;
-  if (!siste || !flyt) return false;
-  return (siste.oms > 0 && flyt > 200 * siste.oms) || (!!d.aksjer && flyt / d.aksjer.antall > 20000);
+  if (!flyt) return false;
+  if (d.unntatt === 'finans') return eiendeler > 0 && flyt > 50 * eiendeler;
+  return !!d.aksjer && d.aksjer.type === 'utestaende' && flyt / d.aksjer.antall > 20000;
 }
 
 // Renten på tiårige amerikanske statsobligasjoner, siste dag i Treasurys daglige rentekurve.
@@ -393,7 +396,8 @@ async function main() {
       }
       const { _gjeldSamlet, ...lagre } = d;
       const tekst = JSON.stringify(lagre) + '\n';
-      if (!fs.existsSync(fil) || fs.readFileSync(fil, 'utf8') !== tekst) {
+      // Git på Windows kan ha lagt inn \r\n i filene. Det er ikke en endring i tallene.
+      if (!fs.existsSync(fil) || fs.readFileSync(fil, 'utf8').replace(/\r\n/g, '\n') !== tekst) {
         skriv.set(fil, tekst);
         if (gammel && gammel.v === V) endretGamle++;
       }
