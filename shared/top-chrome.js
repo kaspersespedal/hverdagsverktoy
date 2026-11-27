@@ -20,8 +20,8 @@
   // men ikke themes.css: de har sin egen palett inline og faller derfor
   // utenfor speilingen — det kan ikke rettes herfra.
   var THEMES = [
-    {k:'carbon',  l:'Carbon',    group:'dark',  sub:'Bek og messing',     pv:{bg:'#0f0e0d', ink:'#ecebe7', accent:'#c58e5a'}},
     {k:'dark',    l:'Mørk-blå',  group:'dark',  sub:'Kjølig natt',        pv:{bg:'#141a2c', ink:'#e9edf4', accent:'#7f9ad6'}},
+    {k:'carbon',  l:'Carbon',    group:'dark',  sub:'Bek og messing',     pv:{bg:'#0f0e0d', ink:'#ecebe7', accent:'#c58e5a'}},
     {k:'nordlys', l:'Nordlys',   group:'dark',  sub:'Aurora over fjord',  pv:{bg:'#0c1416', ink:'#e6f0ec', accent:'#4ec9a0'}},
     {k:'bw',      l:'Sort/hvit', group:'dark',  sub:'Høy kontrast',       pv:{bg:'#0a0a0a', ink:'#fafafa', accent:'#fafafa'}},
     {k:'disco',   l:'Kosmisk',   group:'dark',  sub:'Nebula i neon',      pv:{bg:'#161226', ink:'#f0e6ff', accent:'#ec3a9a'}},
@@ -68,10 +68,11 @@
   function applyTheme(t, opts){
     if (!isTheme(t)) return;
     document.documentElement.setAttribute('data-theme', t);
-    // Inside an embed we don't want to clobber the parent's localStorage value
-    // with whatever the embedded page happened to start at — only persist when
-    // top-level OR when the change originated from a user action here.
-    if (!IN_IFRAME || (opts && opts.persist)) setStored('hvt-theme', t);
+    // Temaet lagres bare når brukeren selv velger i menyen (persist), ikke ved hver
+    // last: da kan standardtemaet byttes senere uten å overstyre et ekte valg.
+    // hvt-theme-valgt skiller en lagret 'carbon' som brukeren valgte, fra en som
+    // bare ble lagret fordi Carbon var standard før 2026-11-27 (se hodeskriptet).
+    if (opts && opts.persist){ setStored('hvt-theme', t); setStored('hvt-theme-valgt', '1'); }
     broadcastTheme(t);
   }
   function applyLang(l){
@@ -88,12 +89,16 @@
   // Apply persisted theme ASAP (idempotent — html may already have it).
   // Inside an iframe, defer to whatever the parent broadcasts — don't read
   // localStorage (the embed may have been opened separately with a stale theme).
-  // Ukjent verdi (fra lagring eller hodeskriptet) faller tilbake til carbon.
+  // Ukjent verdi (fra lagring eller hodeskriptet) faller tilbake til dark (Mørk-blå).
+  // En lagret 'carbon' uten hvt-theme-valgt er fra da Carbon var standard: den
+  // brukes ikke (samme regel som hodeskriptet på hver side).
   (function(){
+    var s = getStored('hvt-theme', '');
+    if (s === 'carbon' && !getStored('hvt-theme-valgt', '')) s = '';
     var t = IN_IFRAME
-      ? (document.documentElement.getAttribute('data-theme') || 'carbon')
-      : getStored('hvt-theme', document.documentElement.getAttribute('data-theme') || 'carbon');
-    applyTheme(isTheme(t) ? t : 'carbon');
+      ? (document.documentElement.getAttribute('data-theme') || 'dark')
+      : (s || document.documentElement.getAttribute('data-theme') || 'dark');
+    applyTheme(isTheme(t) ? t : 'dark');
   })();
 
   // Receive theme pushes from a host page (Subpage Preview etc.).
@@ -117,13 +122,13 @@
     if (!ev || ev.origin !== location.origin) return;
     var d = ev.data;
     if (!d || d.type !== '__hv_theme_request') return;
-    var t = document.documentElement.getAttribute('data-theme') || 'carbon';
+    var t = document.documentElement.getAttribute('data-theme') || 'dark';
     try{ ev.source && ev.source.postMessage({type:'__hv_theme', theme:t}, '*'); }catch(_e){}
   });
 
   // Also push to iframes added after page load (focus modal opens lazily).
   var __frameObs = new MutationObserver(function(records){
-    var t = document.documentElement.getAttribute('data-theme') || 'carbon';
+    var t = document.documentElement.getAttribute('data-theme') || 'dark';
     for (var i=0;i<records.length;i++){
       var added = records[i].addedNodes;
       for (var j=0; added && j<added.length; j++){
@@ -418,8 +423,8 @@
     // 2) Theme + language buttons → inject into nav
     var navEl = document.querySelector('.nav-wrap nav');
     if (!navEl) return;
-    var curTheme = document.documentElement.getAttribute('data-theme') || 'carbon';
-    if (!isTheme(curTheme)) curTheme = 'carbon';
+    var curTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    if (!isTheme(curTheme)) curTheme = 'dark';
     var curLang = getStored('hvt-lang','no');
     var curLangObj = LANGS.find(function(x){return x.k===curLang;}) || LANGS[0];
 
