@@ -2529,12 +2529,14 @@ body.introAct.heroLanded .daily .daily-frame.reveal.in::after{animation:hvSweep 
 /* .title > *, ikke .title: i Carbon på telefon er .title display:contents (se over) */
 body.introAct .daily .daily-head .title > *,
 body.introAct .daily .daily-head .daily-cal,
+body.introAct .daily .daily-head .daily-sources,
 body.introAct .daily .daily-head .stamp{opacity:0;transform:translateY(7px)}
 body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .title > *{
   opacity:1;transform:none;
   transition:opacity .5s var(--ease-out-quart) 430ms, transform .55s var(--ease-out-expo) 430ms;
 }
 body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .daily-cal,
+body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .daily-sources,
 body.introAct.heroLanded .daily .daily-frame.reveal.in .daily-head .stamp{
   opacity:1;transform:none;
   transition:opacity .5s var(--ease-out-quart) 510ms, transform .55s var(--ease-out-expo) 510ms;
@@ -2856,6 +2858,31 @@ html[data-theme]:is([lang="pl"],[lang="uk"]){
   html[data-theme] .fxc-swap{width:32px;height:32px;border-color:transparent;border-radius:6px;background:none;color:var(--ink3)}
   html[data-theme] .fxc-rate{padding-right:20px}
 
+  /* «Kilder» i toppen (Kasper 2026-11-28: lenka «svevde» alene under omregneren). Skriptet
+     «Kilder i toppen» flytter den inn i .daily-tools på PC. Pille som «Kalender», og lista
+     åpnes som en liten boks under pillene, så ingenting under flytter seg. */
+  html[data-theme] .daily-tools .daily-sources{position:relative}
+  html[data-theme] .daily-tools .daily-sources[open]{padding-bottom:0}
+  html[data-theme] .daily-tools .daily-sources summary{
+    display:inline-flex;align-items:center;height:28px;box-sizing:border-box;padding:0 11px;
+    border:1px solid var(--line-2);border-radius:999px;background:rgba(var(--wash-rgb),.025);
+    color:var(--ink2);-webkit-tap-highlight-color:transparent;
+    transition:color .2s var(--ease),border-color .2s var(--ease),background .2s var(--ease);
+  }
+  html[data-theme] .daily-tools .daily-sources-toggle{font:500 11px/1 var(--font-sans);letter-spacing:.4px;text-transform:none;color:inherit}
+  html[data-theme] .daily-tools .daily-sources summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  html[data-theme] .daily-tools .daily-sources[open] summary{color:var(--ink);border-color:color-mix(in srgb,var(--accent) 50%,transparent)}
+  html[data-theme] .daily-sources-body{
+    position:absolute;top:calc(100% + 8px);right:0;z-index:20;width:360px;box-sizing:border-box;
+    padding:12px 16px 14px;
+    background:var(--surface);border:1px solid var(--line-2);border-radius:8px;
+    box-shadow:0 14px 32px -14px rgba(0,0,0,.6);
+    font-size:11.5px;line-height:1.65;color:var(--ink3);white-space:normal;
+  }
+  html[data-theme] .daily-sources-body p:first-child{margin-top:0}
+  html[data-theme] .daily-sources-body a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line-2)}
+  html[data-theme] .daily-credits:not(:has(.daily-sources)){display:none}
+
   /* Kortinnholdet fra den gang: én linje i stedet for faktaradene, lave grafer
      (60 px den gang, 80 nå), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
      graf. Rentegrafen og de andre grafene åpnes stort med fullskjermknappen.
@@ -2898,6 +2925,8 @@ html[data-theme]:is([lang="pl"],[lang="uk"]){
 .daily-mer{display:none}
 @media (min-width:641px) and (hover:hover){
   html[data-theme] .daily-mer:hover{color:var(--ink);border-color:var(--accent-2);background:rgba(var(--glow-rgb),.06)}
+  html[data-theme] .daily-tools .daily-sources summary:hover{color:var(--ink);border-color:color-mix(in srgb,var(--accent) 50%,transparent);background:color-mix(in srgb,var(--accent) 8%,transparent)}
+  html[data-theme] .daily-sources-body a:hover{color:var(--accent-2);border-bottom-color:currentColor}
 }
 @media (min-width:641px) and (hover:hover){
   html[data-theme] .qc:hover{background:rgba(var(--wash-rgb),.018);color:var(--ink)}
@@ -3449,10 +3478,8 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
         </div>
       </div>
 
-      <!-- Bare PC: viser faktaradene og de høye grafene i alle åtte kortene (se #gammelPC). Teksten settes av skriptet «Vis mer». -->
-      <button type="button" class="daily-mer reveal" style="--i:6" id="dailyMer" aria-expanded="false" aria-controls="dagsoversikt" data-ph-skip><span id="dailyMerTxt">Vis mer</span><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2,3.5 L5,6.5 L8,3.5"/></svg></button>
-
-      <!-- Omregner på kursene som allerede er hentet til valutakortet over. Egen boks nederst, under de fire nye kortene.
+      <!-- Omregner på kursene som allerede er hentet til valutakortet over. Egen boks rett under de fire nye kortene,
+           med samme mellomrom som mellom kortradene, og over «Vis mer» (Kasper 2026-11-28: den «svevde» under knappen).
            Valuta-brikka og NOK-brikka bytter plass når retningen snus (markedsdata.js). -->
       <div class="fxc reveal" id="fxConv" data-screen-label="04 Omregner">
         <span class="fxc-label" data-i18n="homeFxConvLabel">Valutaomregner</span>
@@ -3477,12 +3504,17 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
         <span class="fxc-rate" id="fxcRate"></span>
       </div>
 
-      <!-- Kildene nederst i dagsoversikten, under omregneren: de gjelder alle kortene. -->
+      <!-- Bare PC: viser faktaradene og de høye grafene i alle åtte kortene (se #gammelPC). Teksten settes av skriptet «Vis mer». -->
+      <button type="button" class="daily-mer reveal" style="--i:6" id="dailyMer" aria-expanded="false" aria-controls="dagsoversikt" data-ph-skip><span id="dailyMerTxt">Vis mer</span><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2,3.5 L5,6.5 L8,3.5"/></svg></button>
+
+      <!-- Kildene nederst i dagsoversikten: de gjelder alle kortene. På PC flytter skriptet «Kilder i toppen» dem opp
+           ved «Sist oppdatert», der de åpnes som en liten boks. -->
       <div class="daily-credits">
         <details class="daily-sources">
           <summary>
             <span class="daily-sources-toggle">Kilder</span>
           </summary>
+          <div class="daily-sources-body">
           <p>
             Vær: <a href="https://www.met.no/" target="_blank" rel="noopener">MET Norway</a> ·
             Valuta og styringsrente: <a href="https://www.norges-bank.no/" target="_blank" rel="noopener">Norges Bank</a> ·
@@ -3492,6 +3524,7 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
           <p>Drivstoff, prisvekst og boliglånsrente: <a href="https://www.ssb.no/" target="_blank" rel="noopener">Statistisk sentralbyrå (SSB)</a>, månedstall.</p>
           <p>Dagslys: regnet ut på siden for stedet i værkortet.</p>
           <p class="daily-disclaimer">Veiledende, muligens forsinkede tall — ikke investeringsrådgivning.</p>
+          </div>
         </details>
       </div>
     </div>
@@ -4072,6 +4105,28 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
       try { localStorage.setItem('hvt-dagsoversikt-mer', on ? '1' : '0'); } catch(e){}
     });
     new MutationObserver(function(){ vis(sec.classList.contains('vis-mer')); }).observe(document.documentElement, {attributes:true, attributeFilter:['lang']});
+  })();
+
+  // ── Kilder i toppen (bare PC, se #gammelPC) ──
+  // På PC står «Kilder» som en pille ved «Sist oppdatert» og åpnes som en liten boks;
+  // på telefon står den nederst i dagsoversikten som før. Boksen lukkes ved klikk utenfor og Esc.
+  (function(){
+    var kilder = document.querySelector('.daily-sources'), topp = document.querySelector('.daily-tools'),
+        bunn = document.querySelector('.daily-credits');
+    if(!kilder || !topp || !bunn || !window.matchMedia) return;
+    var pc = window.matchMedia('(min-width:641px)');
+    function plasser(){
+      var mål = pc.matches ? topp : bunn;
+      if(kilder.parentNode !== mål){ kilder.open = false; mål.appendChild(kilder); }
+    }
+    plasser();
+    if(pc.addEventListener) pc.addEventListener('change', plasser); else pc.addListener(plasser);
+    document.addEventListener('click', function(e){
+      if(kilder.open && kilder.parentNode === topp && !kilder.contains(e.target)) kilder.open = false;
+    });
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && kilder.open && kilder.parentNode === topp){ kilder.open = false; kilder.querySelector('summary').focus(); }
+    });
   })();
 
   // ── Dagsoversikt: ærlig tom- og feiltilstand ──────────────
