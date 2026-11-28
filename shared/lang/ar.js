@@ -2745,7 +2745,6 @@ REGIONS['ar'] = {
     kalkyleStatCount: 'الحاسبات في القسم',
     kalkyleStatLogin: 'تسجيل الدخول',
     kalkyleStatLoginVal: 'بدون',
-    kalkCatKalkyleKicker: 'قسم جديد',
     kalkCatKalkyleTitle: 'حساب التكاليف — التسعير للشركات',
     kalkCatKalkyleDesc: 'الهامش، والتكلفة الكلية، ونقطة التعادل، وسعر الساعة، وتكلفة الطعام (food cost) والمزيد — 9 حسابات للشركات الصغيرة والعمل الحر والحرف.',
     // --- nav tab labels (category nav, 2026-08-09) ---

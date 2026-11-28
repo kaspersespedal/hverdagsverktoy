@@ -503,7 +503,6 @@ REGIONS['no'] = {
     kalkyleDestBe: "Dekningsbidrag og break-even",
     kalkyleDestTp: "Timepris",
     kalkyleDestTilbud: "Tilbud",
-    kalkCatKalkyleKicker: "Ny seksjon",
     kalkCatKalkyleTitle: "Kalkyle — prising for bedrift",
     kalkCatKalkyleDesc: "Margin, selvkost, break-even, timepris, food cost og mer — 9 kalkyler for småbedrift, frilans og håndverk.",
     kalkTimeprisModusTitle: "Modus",
