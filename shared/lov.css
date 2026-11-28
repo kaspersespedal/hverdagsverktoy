@@ -1,10 +1,12 @@
 /* ═══════════════════════════════════════════════════════════
-   lov.css — lovleseren på de fire lovsidene under /lov/ (lastes etter sidens egen <style>)
+   lov.css — lovleseren på lov- og standardsidene under /lov/ (lastes etter sidens egen <style>)
 
    Siden viser én ting om gangen:
    - kapittelboksen #lov-kapitler (samme utforming som innholdslista på
      forsiden: tre grupper med overskrift, én lenke per kapittel)
    - eller ett kapittel, når adressen er #<kapittel-id> (:target)
+   - eller kapitlet en paragraf står i, når adressen er #<paragraf-id>
+     (f.eks. #sktl-6-1), med paragrafen markert
    Under søk (lov.js setter .is-searching) vises treff fra alle kapitlene.
    ═══════════════════════════════════════════════════════════ */
 
@@ -123,6 +125,16 @@
 .lov-body .lov-chapter{display:none;max-width:820px;margin:0 auto;scroll-margin-top:136px}
 .lov-body .lov-chapter:target{display:block}
 .lov-body:has(.lov-chapter:target) .lov-kap{display:none}
+/* Lenke rett til én paragraf: kapitlet åpnes, og paragrafen vises og markeres
+   selv om den ellers ligger bak «Vis alle». */
+.lov-body .lov-chapter:has(.par:target){display:block}
+.lov-body:has(.par:target) .lov-kap{display:none}
+.lov-chapter .par{scroll-margin-top:136px}
+.lov-chapter .par.is-extra:target{display:grid}
+.lov-chapter .par:target{
+  background:color-mix(in srgb, var(--accent) 6%, transparent);border-radius:12px;
+  box-shadow:0 0 0 14px color-mix(in srgb, var(--accent) 6%, transparent);
+}
 
 .chap-back{
   display:inline-flex;align-items:center;gap:8px;margin:0 0 32px;padding:8px 14px 8px 11px;
@@ -182,12 +194,44 @@
   .chap-pager .cp-next{margin-inline-start:0}
 }
 
+/* ── Regnskapsstandardene: et enkelt regneeksempel og «Henger sammen med» per tema ── */
+.std-eks{
+  margin:40px 0 0;padding:22px 26px 24px;border:1px solid var(--line);border-radius:14px;
+  background:color-mix(in srgb, var(--surface) 55%, transparent);
+}
+.std-eks .cs-h{
+  display:flex;align-items:center;gap:10px;margin:0 0 12px;
+  font:500 10.5px/1 var(--font-sans);letter-spacing:.28em;text-transform:uppercase;color:var(--accent);
+}
+.std-eks .cs-h::before{content:"";width:14px;height:1px;background:var(--accent);opacity:.6;flex-shrink:0}
+.std-eks p{margin:0 0 14px;font-family:var(--font-serif);font-size:16.5px;line-height:1.7;color:var(--ink);text-wrap:pretty}
+.std-eks p:last-child{margin-bottom:0}
+.std-eks .eks-tab{overflow-x:auto;margin:0 0 14px}
+.std-eks table{width:100%;border-collapse:collapse;font:400 14px/1.45 var(--font-sans);font-variant-numeric:tabular-nums;color:var(--ink)}
+.std-eks th,.std-eks td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:end;vertical-align:top}
+.std-eks th:first-child,.std-eks td:first-child{text-align:start;padding-inline-start:0}
+.std-eks thead th{font-weight:500;font-size:12.5px;color:var(--ink2)}
+.std-eks tr.sum td{font-weight:500;border-bottom:none}
+.std-kob{margin:28px 0 0;font:400 13.5px/1.7 var(--font-sans);color:var(--ink2)}
+.std-kob + .std-kob{margin-top:6px}
+.std-kob strong{font-weight:500;color:var(--ink)}
+.std-kob a{color:var(--ink2);text-decoration:none;border-bottom:1px solid var(--line-2);transition:color .2s var(--ease), border-color .2s var(--ease)}
+.std-kob a:hover{color:var(--accent-2);border-color:var(--line-warm)}
+@media (max-width:560px){
+  .std-eks{padding:18px 16px 20px}
+  .std-eks p{font-size:16px}
+  .std-eks table{font-size:13px}
+  .std-eks th,.std-eks td{padding:8px 6px}
+}
+
 /* ── Søk: treff fra alle kapitlene, uten boks, oppsummering og navigasjon ── */
 .lov-shell.is-searching .lov-kap,
 .lov-shell.is-searching .chap-back,
 .lov-shell.is-searching .chap-sum,
 .lov-shell.is-searching .chap-lbl,
 .lov-shell.is-searching .chap-more,
+.lov-shell.is-searching .std-eks,
+.lov-shell.is-searching .std-kob,
 .lov-shell.is-searching .chap-pager{display:none}
 .lov-shell.is-searching .lov-body .lov-chapter{display:block;margin-bottom:64px}
 .lov-shell.is-searching .lov-chapter .par.is-extra{display:grid}

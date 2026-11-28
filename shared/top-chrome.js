@@ -900,7 +900,8 @@
     ['/kalkulator/avs/', 'bedrift'], ['/kalkulator/dekningsbidrag/', 'bedrift'], ['/kalkulator/likviditet/', 'bedrift'],
     ['/kalkulator/npv/', 'bedrift'], ['/kalkulator/tilbud/', 'bedrift'], ['/kalkulator/timepris/', 'bedrift'],
     ['/kalkulator/valgevinst/', 'bedrift'],
-    ['/lov/aksjelov/', 'bedrift'], ['/lov/bokforingslov/', 'bedrift'], ['/lov/mvalov/', 'bedrift']
+    ['/lov/aksjelov/', 'bedrift'], ['/lov/bokforingslov/', 'bedrift'], ['/lov/mvalov/', 'bedrift'],
+    ['/lov/regnskapslov/', 'bedrift'], ['/lov/regnskapsstandarder/', 'bedrift']
   ];
   // Fanene i fast rekkefølge: privat, bedrift, så de felles. Samme rekkefølge som kategorilista
   // på forsiden (index.html).

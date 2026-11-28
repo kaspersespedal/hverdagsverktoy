@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════════════════════
-   lov.js — lovleseren på lovsidene under /lov/ (skatteloven, aksjeloven, mva, bokføring)
+   lov.js — lovleseren på lovsidene under /lov/ (skatteloven, aksjeloven, mva, bokføring,
+   regnskapsloven) og på regnskapsstandardene
 
    Siden viser én ting om gangen:
    - kapittelboksen (#lov-kapitler) når adressen ikke peker på et kapittel

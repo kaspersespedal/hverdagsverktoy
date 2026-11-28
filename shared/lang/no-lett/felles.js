@@ -283,7 +283,7 @@ REGIONS['no'] = {
     tabKalkulator: "Kalkulator",
     tabSkattAvgift: "Skatt og avgift",
     tabRegnskap: "Regnskap",
-    tabLov: "Lov",
+    tabLov: "Lover og standarder",
     tabBudsjett: "Budsjett",
     tabKalkyle: "Kalkyle",
     likvidTitle: "Likviditetsbudsjett",
