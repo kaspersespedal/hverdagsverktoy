@@ -2676,7 +2676,6 @@ REGIONS['pl'] = {
     kalkyleStatCount: 'Kalkulacje w sekcji',
     kalkyleStatLogin: 'Logowanie',
     kalkyleStatLoginVal: 'Brak',
-    kalkCatKalkyleKicker: 'Nowa sekcja',
     kalkCatKalkyleTitle: 'Kalkulacje — wycena dla firm',
     kalkCatKalkyleDesc: 'Marża, koszt własny, próg rentowności, stawka godzinowa, food cost i więcej — 9 kalkulacji dla małych firm, freelancerów i rzemiosła.',
     // --- nav tab labels (category nav, 2026-08-09) ---
