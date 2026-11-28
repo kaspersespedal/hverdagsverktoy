@@ -2687,7 +2687,6 @@ REGIONS['fr'] = {
     kalkyleStatCount: 'Calculs dans la section',
     kalkyleStatLogin: 'Connexion',
     kalkyleStatLoginVal: 'Aucune',
-    kalkCatKalkyleKicker: 'Nouvelle section',
     kalkCatKalkyleTitle: 'Calculs de coûts — tarification pour l\'entreprise',
     kalkCatKalkyleDesc: 'Marge, coût de revient complet, seuil de rentabilité, taux horaire, food cost et plus — 9 calculs pour les petites entreprises, les indépendants et l\'artisanat.',
     // --- nav tab labels (category nav, 2026-08-09) ---

@@ -2044,8 +2044,8 @@
   ]
 }
 </script>
-<link rel="preload" href="/shared/core.js?v=v504" as="script" fetchpriority="high">
-<script src="/shared/core.js?v=v504" defer></script>
+<link rel="preload" href="/shared/core.js?v=v526" as="script" fetchpriority="high">
+<script src="/shared/core.js?v=v526" defer></script>
 <script src="/shared/lang/no-lett/felles.js?v=v506" defer></script>
 <script src="/shared/site-shell.js?v=v359" defer></script>
 <script src="/shared/top-chrome.js?v=v513" defer></script>
@@ -3023,6 +3023,9 @@ html[data-theme] #navWrap :is(.nav-search-pill,.tmr-pill,.tc-btn)::after{content
 }
 .daily-cal:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .daily-cal:active{transform:translateY(1px)}
+/* Kalkulator-ikonet: samme pille som Kalender, men bare ikonet (rund) */
+.daily-head .daily-kalk{width:26px;padding:0;justify-content:center}
+html[data-theme] .daily-head .daily-kalk{width:28px}
 /* Telefon: bare ikonet (teksten leses fortsatt opp). For at knappen og pillen skal
    få plass ved siden av «Dagsoversikt», viser pillen bare klokkeslettet:
    «Sist oppdatert» skjules visuelt, men leses fortsatt opp. */
@@ -3042,6 +3045,15 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
   html[data-theme] .daily-head{column-gap:7px}
   html[data-theme] .daily-head .title > span[data-i18n]{gap:7px;letter-spacing:1.4px}
   html[data-theme] .daily-head .title #dailyWeek{gap:7px;letter-spacing:1.4px}
+}
+/* Kalkulator-ikonet tar plass (Kasper 2026-11-28: alt skal stå på én linje). På telefon står etiketten
+   uten streken foran, og under 390 px står knappene tettere, så raden får plass helt ned til 360 px. */
+@media (max-width:640px){
+  html[data-theme] .daily-head .title > span[data-i18n]::before{content:none}
+}
+@media (max-width:389px){
+  html[data-theme] .daily-tools{gap:4px}
+  html[data-theme] .daily-head .daily-cal{width:26px;height:26px}
 }
 </style>
 </head>
@@ -3217,6 +3229,8 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
                Selve kalenderen ligger i shared/kalender.js og lastes først når knappen brukes.
                .daily-tools holder knappen og status-pillen samlet, så de brytes til ny linje som én enhet. -->
           <div class="daily-tools">
+          <!-- Kalkulator-ikonet (Kasper 2026-11-28): åpner den enkle kalkulatoren på siden, som kalenderen. shared/kalkulator-panel.js -->
+          <button type="button" class="daily-cal daily-kalk" id="dailyKalk" aria-haspopup="dialog" aria-label="Åpne kalkulatoren" title="Kalkulator"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="1.8" width="10" height="12.4" rx="2"/><path d="M5.5 4.6h5"/><path d="M5.7 8.2h.01M8 8.2h.01M10.3 8.2h.01M5.7 11h.01M8 11h.01M10.3 11h.01" stroke-width="1.7"/></svg></button>
           <button type="button" class="daily-cal" id="dailyCal" aria-haspopup="dialog" aria-label="Åpne kalenderen" title="Kalender"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.2" y="3.2" width="11.6" height="10.6" rx="2"/><path d="M2.2 6.7h11.6M5.4 1.8v2.6M10.6 1.8v2.6"/></svg><span class="daily-cal-lbl">Kalender</span></button>
           <div class="stamp" id="dailyStamp"><span class="stamp-pre">Sist oppdatert </span>—</div>
           </div>
@@ -5229,28 +5243,33 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
 </script>
 
 <script id="kalBoot">
-/* Kalender-knappen i dagsoversikt-toppen. shared/kalender.js (kalenderen + utseendet)
-   hentes først når knappen brukes, så forsiden ikke blir tyngre å laste. Fila hentes
-   på forhånd idet pekeren eller fingeren treffer knappen, så panelet åpner uten ventetid. */
+/* Kalender-knappen og kalkulator-ikonet i dagsoversikt-toppen. shared/kalender.js og
+   shared/kalkulator-panel.js (panelet + utseendet) hentes først når knappen brukes, så
+   forsiden ikke blir tyngre å laste. Fila hentes på forhånd idet pekeren eller fingeren
+   treffer knappen, så panelet åpner uten ventetid. */
 (function(){
-  var btn=document.getElementById("dailyCal"); if(!btn) return;
-  var SRC="/shared/kalender.js?v=v2", state=0, wantOpen=false; /* 0 = ikke hentet, 1 = henter, 2 = klar */
-  function load(){
-    if(state) return;
-    state=1;
-    var s=document.createElement("script");
-    s.src=SRC;
-    s.onload=function(){ state=2; if(wantOpen && window.HVKalender) window.HVKalender.open(btn); };
-    s.onerror=function(){ state=0; wantOpen=false; };
-    document.head.appendChild(s);
+  function boot(id, SRC, navn){
+    var btn=document.getElementById(id); if(!btn) return;
+    var state=0, wantOpen=false; /* 0 = ikke hentet, 1 = henter, 2 = klar */
+    function load(){
+      if(state) return;
+      state=1;
+      var s=document.createElement("script");
+      s.src=SRC;
+      s.onload=function(){ state=2; if(wantOpen && window[navn]) window[navn].open(btn); };
+      s.onerror=function(){ state=0; wantOpen=false; };
+      document.head.appendChild(s);
+    }
+    btn.addEventListener("pointerenter",load);
+    btn.addEventListener("touchstart",load,{passive:true});
+    btn.addEventListener("focus",load);
+    btn.addEventListener("click",function(){
+      if(state===2 && window[navn]){ window[navn].open(btn); return; }
+      wantOpen=true; load();
+    });
   }
-  btn.addEventListener("pointerenter",load);
-  btn.addEventListener("touchstart",load,{passive:true});
-  btn.addEventListener("focus",load);
-  btn.addEventListener("click",function(){
-    if(state===2 && window.HVKalender){ window.HVKalender.open(btn); return; }
-    wantOpen=true; load();
-  });
+  boot("dailyCal", "/shared/kalender.js?v=v2", "HVKalender");
+  boot("dailyKalk", "/shared/kalkulator-panel.js?v=v1", "HVKalkulator");
 })();
 </script>
 
