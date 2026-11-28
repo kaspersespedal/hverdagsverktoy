@@ -2393,13 +2393,17 @@ html[data-theme="glass"] .tmr-pop{ background:var(--menu-bg); }
   /* Med «Vis mer» (#gammelPC) får aksen vanlig skriftstørrelse, og da gikk også valutadatoene i hverandre. */
   .daily.vis-mer #fxCard .widget-axis span:nth-child(2){visibility:hidden}
 }
-.wx-fc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;min-height:48px}
-.wx-fc-cell{display:flex;flex-direction:column;align-items:center;gap:2px;padding:5px 0;border-radius:7px}
-.wx-fc-cell:first-child{background:rgba(var(--glow-rgb),.10)}
+/* Værrutene vises bare på PC (de korte kortene i #gammelPC). Like høye som grafen med akse i
+   nabokortene (80 + 5 + 10 px). Hårstreker mellom rutene i stedet for en farget rute rundt
+   «nå»: der er det bare klokkeslettet som har aksentfargen. */
+.wx-fc{display:grid;grid-template-columns:repeat(4,1fr);min-height:95px}
+.wx-fc-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;border-left:1px solid var(--line)}
+.wx-fc-cell:first-child{border-left:0}
+.wx-fc-cell:first-child .wx-fc-time{color:var(--accent-2)}
 .wx-fc-ico{display:flex;color:var(--ink3);transition:color .3s var(--ease)}
-.wx-fc-ico svg{width:15px;height:15px;display:block}
-.wx-fc-temp{font-family:var(--font-serif);font-weight:500;font-size:14px;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
-.wx-fc-time{font:600 8.5px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink4);font-variant-numeric:tabular-nums}
+.wx-fc-ico svg{width:18px;height:18px;display:block}
+.wx-fc-temp{font-family:var(--font-serif);font-weight:500;font-size:16px;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums lining-nums}
+.wx-fc-time{font:600 9.5px/1 var(--font-sans);letter-spacing:1px;text-transform:uppercase;color:var(--ink4);font-variant-numeric:tabular-nums}
 @media (max-width:640px) and (hover:hover){
   html[data-theme] .qc:hover{background:rgba(var(--wash-rgb),.018);color:var(--ink)}
   html[data-theme] .qc:hover::after{transform:scaleX(.5)}
@@ -2560,8 +2564,9 @@ body.introAct.heroLanded .daily .widget.reveal.in .widget-spark-wrap{opacity:1;t
    og fullskjermknapp, og kortinnholdet fra den gang (én linje, lave grafer).
    Bare over 640 px; telefon står i #carbonMobil. Fra 2026-11-27 gjelder blokka alle
    temaer (html[data-theme]), ikke bare Carbon og Mørk-blå.
-   2026-11-19: dagsoversikt-toppen har fått døgnlinja i stedet for karbonveven,
-   og kortene lys ovenfra og en lysring som følger musa (se lenger ned). */
+   2026-11-19: dagsoversikt-toppen har fått døgnlinja i stedet for karbonveven.
+   2026-11-28: kortene og valutaomregneren er matte (flate, uten lys, skygge og
+   lysringen som fulgte musa), se «Hvert kort i egen boks» lenger ned. */
 /* Døgnlinja vises i alle temaer, på PC (her) og telefon (#carbonMobil). Reglene under er felles; de virker bare der linja slås på med
    display:block. --dl-p er registrert som tall, så den kan tones med transition;
    uten støtte hopper lyset rett på plass. */
@@ -2817,33 +2822,42 @@ html[data-theme]:is([lang="pl"],[lang="uk"]){
      glir langs døgnlinja gjør samme jobb. */
   html[data-theme] body.introAct .daily-frame::after{content:none}
 
-  /* Hvert kort i egen boks med tittelstripe, rammen rundt hele dagsoversikten er
-     borte. Hjørnene 12 px, som på Carbon-telefon. Kortet får lys ovenfra (en svak
-     toning og en lys hårstrek i overkanten) og skygge under, som .ks i themes.css. */
+  /* Hvert kort i egen boks, rammen rundt hele dagsoversikten er borte.
+     Kasper 2026-11-28: «mer matt design … mer profesjonelt», kortene så «AI-genererte»
+     ut. Bare PC. Kortene er derfor helt flate her: én farge og en hårstrek rundt, uten
+     toning, lys i overkanten eller skygge. Den fargede tittelstripa er borte, så
+     etiketten står som vanlig tekst over tallet. Hjørnene 8 px, som søkefeltet.
+     Telefon (#carbonMobil) har fortsatt tittelstripe, lys ovenfra og skygge. */
   html[data-theme] .daily-frame{background:none;border:0;border-radius:0;overflow:visible;box-shadow:none}
   html[data-theme] .daily-grid{gap:12px}
   html[data-theme] .daily-grid > .widget{
-    background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
-    border:1px solid var(--line);border-radius:12px;
-    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,var(--kort-skygge,.8));
-    padding:0 20px 18px;min-height:0;
-    grid-template-rows:auto auto minmax(34px,auto) 1fr;gap:7px;
+    background:var(--surface);
+    border:1px solid var(--line);border-radius:8px;
+    padding:0 20px 22px;min-height:0;
+    grid-template-rows:auto auto minmax(34px,auto) 1fr;gap:8px;
   }
+  /* 44 px i alle kort (værkortet har en knapp i raden), så tallene står på linje. */
   html[data-theme] .daily-grid > .widget > .widget-top{
-    margin:0 -20px 5px;padding:12px 20px;height:auto;min-height:46px;box-sizing:border-box;
-    border-bottom:1px solid var(--line);border-radius:11px 11px 0 0;
-    background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 8%,transparent),color-mix(in srgb,var(--accent) 3%,transparent));
+    margin:0;padding:18px 0 0;height:auto;min-height:44px;box-sizing:border-box;
+    border-bottom:0;background:none;
   }
   html[data-theme] .daily-credits{border-top:0;padding:4px 4px 0}
-  /* Valutaomregneren står på én rad på PC: samme hjørner, lys ovenfra og skygge som kortene */
-  html[data-theme] .fxc{
-    --fxc-r:12px;
-    background:linear-gradient(180deg,rgba(var(--wash-rgb),.03) 0%,transparent 40%),var(--surface);
-    box-shadow:inset 0 1px 0 rgba(var(--wash-rgb),.05),0 24px 48px -30px rgba(0,0,0,var(--kort-skygge,.8));
-  }
+  /* Valutaomregneren står på én rad på PC, i samme flate boks som kortene. «Mer naturlig»
+     (Kasper 2026-11-28): etiketten er vanlig tekst uten egen rute, bare beløpet man skriver
+     står i et felt, svaret står som tekst ved siden av, og bytteknappen er et rent ikon. */
+  html[data-theme] .fxc{--fxc-r:8px;min-height:72px}
+  html[data-theme] .fxc-label{padding:0 20px;border-right:0;background:none;font-size:10.5px}
+  html[data-theme] .fxc-io{gap:10px}
+  html[data-theme] .fxc-field{height:42px;border-radius:6px;border-color:var(--line-2);background:rgba(var(--wash-rgb),.03)}
+  html[data-theme] .fxc-field:focus-within{border-color:var(--accent-2);box-shadow:none}
+  html[data-theme] .fxc-field-out{border-color:transparent;background:none}
+  html[data-theme] .fxc-field-out .fxc-res{flex:none;padding-right:0}
+  html[data-theme] .fxc-cur{border-left:0;border-radius:5px;min-width:0;padding:0 12px 0 8px}
+  html[data-theme] .fxc-swap{width:32px;height:32px;border-color:transparent;border-radius:6px;background:none;color:var(--ink3)}
+  html[data-theme] .fxc-rate{padding-right:20px}
 
   /* Kortinnholdet fra den gang: én linje i stedet for faktaradene, lave grafer
-     (60 px), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
+     (60 px den gang, 80 nå), værkortet med fire ruter og renta med «Neste rentemøte» i stedet for
      graf. Rentegrafen og de andre grafene åpnes stort med fullskjermknappen.
      Kasper 2026-11-27: «Vis mer» under kortene (#dailyMer) setter .vis-mer på
      section.daily. Da gjelder ikke reglene under, og kortene viser faktaradene,
@@ -2860,10 +2874,12 @@ html[data-theme]:is([lang="pl"],[lang="uk"]){
   html[data-theme] .widget .w-line .ctx{color:var(--ink4)}
   html[data-theme] .daily:not(.vis-mer) .widget-spark-wrap,
   html[data-theme] .daily:not(.vis-mer) #wxCard .wx-fc-wrap,
-  html[data-theme] .daily:not(.vis-mer) #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:3px;padding-top:11px}
-  html[data-theme] .daily:not(.vis-mer) .spark-yax{top:11px;height:60px;font-size:8.5px}
-  html[data-theme] .daily:not(.vis-mer) .widget-axis{font-size:8.5px}
-  html[data-theme] .daily:not(.vis-mer) .widget-spark{height:60px}
+  html[data-theme] .daily:not(.vis-mer) #srCard .sr-next-wrap{display:flex;flex-direction:column;gap:5px;padding-top:14px}
+  /* Kortene er litt høyere enn før (Kasper 2026-11-28): grafene 80 px mot 60, og tallene
+     på aksene 9,5 px mot 8,5. */
+  html[data-theme] .daily:not(.vis-mer) .spark-yax{top:14px;height:80px;font-size:9.5px}
+  html[data-theme] .daily:not(.vis-mer) .widget-axis{font-size:9.5px}
+  html[data-theme] .daily:not(.vis-mer) .widget-spark{height:80px}
   html[data-theme] .daily:not(.vis-mer) #fxTrend i{display:none}
   html[data-theme] #stCard .w-note{display:block}
 
@@ -2888,30 +2904,9 @@ html[data-theme]:is([lang="pl"],[lang="uk"]){
   html[data-theme] .qc:hover::after{opacity:1;transform:scaleX(.5)}
   html[data-theme] .qc:hover .qc-ico{color:var(--accent-2);transform:translateY(-1px)}
 }
-/* Lysringen på kortene (bare mus): et mykt lys i kortflata og i kanten der pila
-   er, også på nabokortene når pila er nær dem. --mx/--my settes per kort av
-   skriptet «Døgnlinja»; .is-lit står på rutenettet så lenge pila er over det.
-   ::after er bare selve kanten (masken skjærer ut alt innenfor 1 px). */
-@media (min-width:641px) and (hover:hover) and (pointer:fine){
-  html[data-theme] .daily-grid > .widget::before,
-  html[data-theme] .daily-grid > .widget::after{
-    content:"";position:absolute;border-radius:inherit;pointer-events:none;opacity:0;
-    transition:opacity .45s var(--ease-out-quart);
-  }
-  html[data-theme] .daily-grid > .widget::before{
-    inset:0;
-    background:radial-gradient(380px circle at var(--mx,50%) var(--my,0px),rgba(var(--glow-rgb),.075),transparent 68%);
-  }
-  html[data-theme] .daily-grid > .widget::after{
-    inset:-1px;padding:1px;
-    background:radial-gradient(240px circle at var(--mx,50%) var(--my,0px),rgba(var(--glow-rgb),.85),transparent 72%);
-    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-    -webkit-mask-composite:xor;
-    mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-    mask-composite:exclude;
-  }
-  html[data-theme] .daily-grid.is-lit > .widget::before,
-  html[data-theme] .daily-grid.is-lit > .widget::after{opacity:1}
+/* Fire smale kort på rad: datoene under grafene får ikke plass med 9,5 px, så de står i 8,5 som før. */
+@media (min-width:881px) and (max-width:1099px){
+  html[data-theme] .daily:not(.vis-mer) .widget-axis{font-size:8.5px}
 }
 /* Nettbrett: mindre luft over tittelen, som i v242 */
 @media (min-width:641px) and (max-width:900px){
@@ -4032,7 +4027,7 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
   })();
   // dailyStamp eies nå av shared/markedsdata.js (ekte hentetidspunkt + oppdater-knapp)
 
-  // ── Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon) og lysringen på kortene (bare PC), se #gammelPC ──
+  // ── Døgnlinja (Carbon og Mørk-blå på PC, Carbon på telefon), se #gammelPC ──
   (function(){
     // Hvor langt døgnet er kommet (0–1). CSS-en flytter lyspunktet dit.
     var dl = document.getElementById('dayLine');
@@ -4051,29 +4046,6 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
       naa(); setInterval(naa, 60000);
       window.addEventListener('resize', naa);
     }
-    // Musas plass i hvert kort (--mx/--my), høyst én gang per bilde.
-    // To rutenett: de fire kortene øverst og de fire under dem.
-    if(!window.matchMedia || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
-    document.querySelectorAll('.daily-grid').forEach(function(grid){
-      var kort = grid.querySelectorAll('.widget'), raf = 0, px = 0, py = 0;
-      grid.addEventListener('pointermove', function(e){
-        px = e.clientX; py = e.clientY;
-        if(raf) return;
-        raf = requestAnimationFrame(function(){
-          raf = 0;
-          for(var i = 0; i < kort.length; i++){
-            var r = kort[i].getBoundingClientRect();
-            kort[i].style.setProperty('--mx', Math.round(px - r.left) + 'px');
-            kort[i].style.setProperty('--my', Math.round(py - r.top) + 'px');
-          }
-          grid.classList.add('is-lit');
-        });
-      });
-      grid.addEventListener('pointerleave', function(){
-        if(raf){ cancelAnimationFrame(raf); raf = 0; }
-        grid.classList.remove('is-lit');
-      });
-    });
   })();
 
   // ── «Vis mer» under kortene (bare PC, se #gammelPC) ──
