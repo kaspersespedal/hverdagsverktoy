@@ -1,5 +1,5 @@
-// Hverdagsverktøy — no-lett/lov.js: utdrag av no.js for 5 side(r):
-// /lov/aksjelov/ /lov/bokforingslov/ /lov/ /lov/mvalov/ /lov/skattelov/
+// Hverdagsverktøy — no-lett/lov.js: utdrag av no.js for 7 side(r):
+// /lov/aksjelov/ /lov/bokforingslov/ /lov/ /lov/mvalov/ /lov/regnskapslov/ /lov/regnskapsstandarder/ /lov/skattelov/
 // Generert av scripts/gen-no-lett.js — ikke rediger for hånd.
 REGIONS['no'] = {
     flag: "no",
@@ -256,7 +256,7 @@ REGIONS['no'] = {
     tabKalkulator: "Kalkulator",
     tabSkattAvgift: "Skatt og avgift",
     tabRegnskap: "Regnskap",
-    tabLov: "Lov",
+    tabLov: "Lover og standarder",
     tabBudsjett: "Budsjett",
     tabKalkyle: "Kalkyle",
     likvidTitle: "Likviditetsbudsjett",
@@ -264,11 +264,11 @@ REGIONS['no'] = {
     kalkTilbudHeroTitle: "Tilbud / Anbud-kalkyle",
     kalkTilbudHeroDesc: "Regn ut hva kunden skal betale: materiell, arbeid, påslag og MVA. Last ned tilbudet som CSV.",
     kalkTilbudHowtoTitle: "Slik bruker du Tilbud / Anbud-kalkylen",
-    lovCatHeroSub: "De viktigste reglene i fire lover, forkortet og forklart på vanlig norsk. Hver lov har eget søk og lenke til hele lovteksten på Lovdata.",
-    lovCatDeckTitle: "Lover",
-    lovCatDeckCount: "4 lover",
+    lovCatHeroSub: "De viktigste reglene i fem lover og i regnskapsstandardene, forkortet og forklart på vanlig norsk. Hver lov har eget søk og lenke til hele lovteksten på Lovdata.",
+    lovCatDeckTitle: "Lover og standarder",
+    lovCatDeckCount: "5 lover · standarder",
     lovCatCtaOpen: "Åpne",
-    lovCatHeroTitle: "<em>Lov</em> — skatt, avgift, selskap og regnskap",
+    lovCatHeroTitle: "<em>Lover og standarder</em> — skatt, avgift, selskap og regnskap",
     tcGroupDark: "Mørke",
     tcGroupLight: "Lyse",
     tcThemeCarbon: "Carbon",
