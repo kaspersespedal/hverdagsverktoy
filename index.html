@@ -3640,111 +3640,20 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
   transition:color .2s var(--fease)}
 @media(hover:hover){.fr-link:hover{color:var(--fink)}.fr-link:hover svg{transform:translateX(3px)}}
 
-/* ── Reveal (sidens .reveal-mønster, skopet til seksjonen) ── */
-.frister .reveal,.frmodal .reveal{opacity:0;transform:translateY(18px);
+/* ── Innlasting (2026-11-28): hele panelet glir rolig inn én gang når man ruller
+   ned til det. Den gamle koreografien (rundt tjue trinn med egne forsinkelser,
+   uskarpe tall, lys-sveip og opptelling) hakket ofte. Innholdet har fortsatt
+   .reveal-klassen, men følger panelet uten egne trinn. ── */
+.fr-panel{position:relative}
+.frister .fr-panel.reveal{opacity:0;transform:translateY(12px);
+  transition:opacity .6s var(--fease),transform .6s var(--fease)}
+.frister .fr-panel.reveal.in{opacity:1;transform:none}
+/* :where() holder spesifisiteten lav, så hover på radene (.fr-row:hover) slår gjennom */
+:where(.frister .fr-panel) .reveal{opacity:1;transform:none}
+.frmodal .reveal{opacity:0;transform:translateY(18px);
   transition:opacity .7s var(--fexpo),transform .7s var(--fexpo);
   transition-delay:calc(var(--d,0)*70ms)}
-.frister .reveal.in,.frmodal .reveal.in{opacity:1;transform:none}
-
-/* ── Innlastings-koreografi ────────────────────────────────────────────
-   Seksjonen hadde .reveal-klassene fra før, men koreografien ble aldri sett:
-   setupReveal() satte .in på ALT etter 700 ms — altså mens panelet fortsatt lå
-   ~1070 px under skjermkanten. Overgangen brant av utenfor synsfeltet, og den
-   som scrollet ned møtte et ferdig panel. Failsafe-en er nå avgrenset til det
-   som faktisk står i viewporten (se setupReveal), og under ligger selve
-   koreografien: samme oppbygning som Dagsoversikten — ramma lander først, så
-   kaskaderer innholdet innenfra og ut.
-
-   De indre trinnene er ANIMASJONER, ikke overganger, og med fill «backwards».
-   Det er ikke stilvalg: .fr-btn og .fr-row har egne transition-erklæringer for
-   hover, og en `transition:`-linje her ville overskrevet dem for godt. Med
-   backwards holdes startbildet under forsinkelsen, og når animasjonen er ferdig
-   faller elementet tilbake til sin egen, vanlige stil — hover intakt. Derfor er
-   hviletilstanden også skrevet som .reveal:not(.in) og ikke .reveal: ellers
-   ville opacity:0 tatt over igjen i det animasjonen slapp taket. */
-
-.frister .reveal{--fd:calc(var(--d,0)*70ms)}
-
-/* Ramma lander med et hint av skala — samme grep som .daily-frame */
-.fr-panel{position:relative}
-.frister .fr-panel.reveal{transform:translateY(22px) scale(.99)}
-.frister .fr-panel.reveal.in{transform:none}
-
-/* Ett stille lys-sveip over panelet når det har landet */
-.fr-panel::after{
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;z-index:3;
-  background:linear-gradient(115deg,transparent 42%,rgba(var(--fglow),.07) 50%,transparent 58%);
-  background-size:240% 100%;background-position:0% 0}
-.frister .fr-panel.reveal.in::after{animation:frSweep 1.5s cubic-bezier(.6,.05,.3,1) .6s 1 both}
-
-@keyframes frSweep{
-  0%{opacity:0;background-position:0% 0}
-  14%{opacity:1}
-  86%{opacity:1}
-  100%{opacity:0;background-position:170% 0}}
-@keyframes frInUp{0%{opacity:0;transform:translateY(9px)}100%{opacity:1;transform:none}}
-@keyframes frInNum{
-  0%{opacity:0;transform:translateY(10px) scale(.92);filter:blur(5px)}
-  100%{opacity:1;transform:none;filter:blur(0)}}
-@keyframes frPop{0%{opacity:0;transform:scale(.72)}100%{opacity:1;transform:none}}
-@keyframes frGrowY{0%{transform:scaleY(0)}100%{transform:scaleY(1)}}
-@keyframes frGrowX{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
-
-/* ── Panel-header ── */
-.frister .fr-ph.reveal:not(.in) :is(.fr-eyebrow,.fr-htitle,.fr-btn){opacity:0}
-.frister .fr-ph.reveal:not(.in) .fr-eyebrow::before{transform:scaleX(0)}
-.frister .fr-ph.reveal.in .fr-eyebrow{animation:frInUp .5s var(--fease) calc(var(--fd) + 40ms) backwards}
-.frister .fr-ph.reveal.in .fr-eyebrow::before{
-  transform-origin:left center;
-  animation:frGrowX .55s var(--fexpo) calc(var(--fd) + 90ms) backwards}
-.frister .fr-ph.reveal.in .fr-htitle{animation:frInUp .58s var(--fexpo) calc(var(--fd) + 110ms) backwards}
-.frister .fr-ph.reveal.in .fr-btn{animation:frPop .5s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) calc(var(--fd) + 220ms) backwards}
-
-/* ── Fremhevet «neste frist»-band ──
-   ::after (glødet) er bevisst urørt: den bærer frBreath-loopen, og forelderens
-   egen .reveal-fade tar den med seg inn uansett. */
-.frister .fr-feat.reveal:not(.in) :is(.fr-flak .d,.fr-flak .mo,.fr-eyebrow,.fr-feat-name,.fr-feat-who,.fr-feat-date,.fr-feat-miss,.fr-cd-lead,.fr-cd-big,.fr-cd-unit,.fr-aud){opacity:0}
-.frister .fr-feat.reveal:not(.in)::before{transform:scaleY(0)}
-.frister .fr-feat.reveal:not(.in) .fr-div{transform:scaleY(0)}
-.frister .fr-feat.reveal.in::before{
-  transform-origin:top center;
-  animation:frGrowY .6s var(--fexpo) calc(var(--fd) + 40ms) backwards}
-.frister .fr-feat.reveal.in .fr-div{
-  animation:frGrowY .55s var(--fexpo) calc(var(--fd) + 120ms) backwards}
-.frister .fr-feat.reveal.in .fr-flak .d{animation:frInNum .62s var(--fexpo) calc(var(--fd) + 90ms) backwards}
-.frister .fr-feat.reveal.in .fr-flak .mo{animation:frInUp .5s var(--fease) calc(var(--fd) + 150ms) backwards}
-.frister .fr-feat.reveal.in .fr-eyebrow{animation:frInUp .5s var(--fease) calc(var(--fd) + 130ms) backwards}
-.frister .fr-feat.reveal.in .fr-feat-name{animation:frInUp .55s var(--fexpo) calc(var(--fd) + 190ms) backwards}
-.frister .fr-feat.reveal.in .fr-feat-who{animation:frInUp .5s var(--fease) calc(var(--fd) + 250ms) backwards}
-.frister .fr-feat.reveal.in .fr-feat-date{animation:frInUp .5s var(--fease) calc(var(--fd) + 300ms) backwards}
-.frister .fr-feat.reveal.in .fr-feat-miss{animation:frInUp .5s var(--fease) calc(var(--fd) + 340ms) backwards}
-.frister .fr-feat.reveal.in .fr-cd-lead{animation:frInUp .5s var(--fease) calc(var(--fd) + 230ms) backwards}
-.frister .fr-feat.reveal.in .fr-cd-big{animation:frInNum .65s var(--fexpo) calc(var(--fd) + 290ms) backwards}
-.frister .fr-feat.reveal.in .fr-cd-unit{animation:frInUp .5s var(--fease) calc(var(--fd) + 350ms) backwards}
-.frister .fr-feat.reveal.in .fr-aud{animation:frPop .48s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) calc(var(--fd) + 390ms) backwards}
-
-/* ── Listeradene ── */
-.frister .fr-row.reveal:not(.in) :is(.fr-flak .d,.fr-flak .mo,.fr-row-name,.fr-row-who,.fr-row-cd,.fr-aud){opacity:0}
-.frister .fr-row.reveal.in .fr-flak .d{animation:frInNum .55s var(--fexpo) calc(var(--fd) + 50ms) backwards}
-.frister .fr-row.reveal.in .fr-flak .mo{animation:frInUp .45s var(--fease) calc(var(--fd) + 95ms) backwards}
-.frister .fr-row.reveal.in .fr-row-name{animation:frInUp .5s var(--fexpo) calc(var(--fd) + 100ms) backwards}
-.frister .fr-row.reveal.in .fr-row-who{animation:frInUp .45s var(--fease) calc(var(--fd) + 150ms) backwards}
-.frister .fr-row.reveal.in .fr-row-cd{animation:frInUp .45s var(--fease) calc(var(--fd) + 190ms) backwards}
-.frister .fr-row.reveal.in .fr-aud{animation:frPop .42s var(--ease-spring-soft,cubic-bezier(.34,1.56,.64,1)) calc(var(--fd) + 240ms) backwards}
-
-/* ── Panel-fot ── */
-.frister .fr-foot.reveal:not(.in) :is(.fr-verify,.fr-link){opacity:0}
-.frister .fr-foot.reveal.in .fr-verify{animation:frInUp .5s var(--fease) calc(var(--fd) + 30ms) backwards}
-.frister .fr-foot.reveal.in .fr-link{animation:frInUp .5s var(--fease) calc(var(--fd) + 110ms) backwards}
-
-/* Mobil: samme kaskade, men uten blur-filteret (E228 — filtre på store flater
-   er det som får scrollingen til å slepe på telefon). */
-@media(max-width:768px){
-  @keyframes frInNum{
-    0%{opacity:0;transform:translateY(10px) scale(.92)}
-    100%{opacity:1;transform:none}}
-  .frister .fr-panel.reveal.in::after{animation:none}
-}
+.frmodal .reveal.in{opacity:1;transform:none}
 
 /* ══ MODAL ══════════════════════════════════════════════════════════ */
 .frmodal{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;
@@ -3910,14 +3819,6 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
 @media (prefers-reduced-motion:reduce){
   .frister .reveal,.frmodal .reveal{opacity:1;transform:none;transition:none}
   .fr-feat::after{animation:none;opacity:.6}
-  /* Koreografien er animasjonsbasert, ikke overgangsbasert. Uten dette blir
-     hviletilstandens opacity:0 stående på barna og halve seksjonen usynlig. */
-  .frister .reveal :is(.fr-eyebrow,.fr-htitle,.fr-btn,.fr-flak .d,.fr-flak .mo,
-    .fr-feat-name,.fr-feat-who,.fr-feat-date,.fr-feat-miss,.fr-cd-lead,.fr-cd-big,.fr-cd-unit,
-    .fr-aud,.fr-row-name,.fr-row-who,.fr-row-cd,.fr-verify,.fr-link,.fr-div){
-    opacity:1 !important;transform:none !important;filter:none !important;animation:none !important}
-  .frister .fr-eyebrow::before,.frister .fr-feat::before{transform:none !important;animation:none !important}
-  .fr-panel::after{display:none !important}
   .frmodal,.fr-sheet{transition:opacity .01ms}
   .fr-sheet{transform:none}
 }
@@ -5187,34 +5088,9 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
   }
 
   /* ═══ Reveal (sidens .reveal-mønster) ═══ */
-  var REDUCED=!!(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-
-  /* Nedtellingstallet i det fremhevede bandet teller opp når bandet lander.
-     Starten er lagt til 430 ms fordi CSS-en holder .fr-cd-big skjult til da —
-     uten forsinkelsen ville halve opptellingen skjedd bak et usynlig tall.
-     Trygt mot i18n: elementet har ingen data-i18n-nøkkel, og innholdet er rene
-     siffer, så verken språkbytteren eller _ph-ordboka rører det underveis. */
-  function countUp(el){
-    if(REDUCED||!el||!el.querySelector)return;
-    var n=el.querySelector(".fr-cd-num");
-    if(!n||n.__frCount)return;
-    var target=parseInt(n.textContent,10);
-    if(isNaN(target)||target<2)return;
-    n.__frCount=true;
-    var from=Math.max(0,target-60),t0=0,dur=800;
-    setTimeout(function(){
-      requestAnimationFrame(function step(ts){
-        if(!t0)t0=ts;
-        var p=Math.min(1,(ts-t0)/dur),e=1-Math.pow(1-p,3);
-        n.textContent=String(Math.round(from+(target-from)*e));
-        if(p<1)requestAnimationFrame(step);else n.textContent=String(target);
-      });
-    },430);
-  }
-
   function setupReveal(root){
     var els=root.querySelectorAll(".reveal");
-    function show(e){e.classList.add("in");countUp(e);}
+    function show(e){e.classList.add("in");}
     if(!("IntersectionObserver" in window)){els.forEach(show);return;}
     var io=new IntersectionObserver(function(ent){ent.forEach(function(en){
       if(en.isIntersecting){show(en.target);io.unobserve(en.target);}
@@ -5423,21 +5299,26 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
  *    vinduet så stjernene står stille ved resize.
  *  • Farger fra B−V-indeks via sortlegemetemperatur. Svake stjerner er nesten
  *    hvite — øyet ser ikke farge i svakt lys.
- *  • Tegnet som i et astrofoto (2026-11-27): skarp kjerne som brenner ut mot hvitt,
- *    farget glorie, og fire tynne stråler på de sterkeste (pluss fire korte på skrå).
+ *  • Tegnet som i et astrofoto (2026-11-27): skarp kjerne som brenner ut mot hvitt
+ *    og farget glorie. Dempet 2026-11-28: korte stråler bare på de aller sterkeste
+ *    (ingen på skrå), de sterkeste stjernene tas bort (uCap), og midten av skjermen,
+ *    der innholdet står, er roligere enn kantene.
+ *  • Nordlys og kosmisk: stjerner bare oppe ved nordlyset, ikke lenger ned.
+ *    Carbon: ingen stjerner, tynn tåke i sol-scenen i stedet.
  *  • Scintillasjon som øker mot horisonten, ekstinksjon og rødfarging lavt
  *    nede, fargeblink bare hos sterke stjerner nær horisonten.
- *  • Glimt: omtrent annenhver stjerne blusser kort opp hvert 10.–30. sekund.
+ *  • Glimt: noen få stjerner (ca. 15 %) blusser svakt opp hvert 10.–30. sekund.
  *  • Dybde: stjernene flytter seg litt mot musa, de sterkeste mest (maks 11 px).
  *  • Når en scene tennes, kommer stjernene fram over ca. 2,6 s, de sterkeste først.
  *  • Nordlyset er gjennomsiktig: stjernene skinner gjennom, men svakere der
  *    lyset er sterkt. Skyer og horisont dekker dem fortsatt.
  *  • Svak Melkevei med støvbånd: glød + flere svake stjerner langs båndet.
  * YTELSE
- *  • Stjernene er punkter (ca. 2 000 på telefon, 5 000–12 000 på PC) i stedet for
+ *  • Stjernene er punkter (ca. 1 000 på telefon, 3 000–5 000 på PC) i stedet for
  *    tre støyfelt per piksel i full oppløsning — komposittpasset blir billigere.
- *    Katalogen lages i celler, bare for den delen av himmelen som synes. Punktene
- *    dekker til sammen 17–25 % av skjermflaten (5–6 % før astrofoto-tegningen).
+ *    Katalogen lages i celler, bare for den delen av himmelen som synes. Med
+ *    astrofoto-tegningen 27.11 dekket punktene 17–25 % av skjermflaten; etter
+ *    dempingen 28.11 er de færre og mindre (ikke målt på nytt).
  *  • KHR_parallel_shader_compile der den finnes: ingen tegning før shaderne er
  *    ferdige, så hovedtråden aldri står og venter på driveren.
  * MÅNENATT (mørk) — fra Nordlys v3 (Claude Design, oktober 2026)
@@ -5456,7 +5337,7 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
     INTENSITY: 0.62,     // uAmp — aurora-styrke
     SPEED: 1.0,          // tids-multiplikator (0 = frys)
     STARS: true,         // stjernelag av/på
-    STAR_DENSITY: 1.5,   // 0–2: antall stjerner
+    STAR_DENSITY: 1.0,   // 0–2: antall stjerner
     MILKY_WAY: 1.0,      // 0–1,5: Melkeveiens styrke
     TWINKLE: 1.0,        // 0–1: scintillasjon (0 = stille stjerner)
     MOON_PHASE: 35       // månenatt: fasevinkel i grader (0 = full, 90 = halv, 140 = smal sigd)
@@ -5489,7 +5370,7 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
   /* ── Himmelgeometri — delt mellom JS (stjernetetthet) og GLSL (glød) ─── */
   var REF = 1000;                  // CSS-px per himmelenhet
   var BASE_DENS = 1900;            // stjerner per himmelenhet² ved STAR_DENSITY 1
-  var MW_DENS = 5200;              // forsøk per himmelenhet² for Melkevei-stjernene
+  var MW_DENS = 2600;              // forsøk per himmelenhet² for Melkevei-stjernene
   function mwDensity(qx, qy) {     // MÅ speile mwDensity() i AURORA_FS
     var rx = qx - 0.30, ry = qy;
     var along = rx * -0.4614 + ry * 0.8872;
@@ -5867,6 +5748,10 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
       '    // dis langs bunnen',
       '    float haze = smoothstep(0.45, 0.90, fbm(vec2(p.x * 1.2 - t * 0.007, frag.y * 6.0 + 2.0))) * exp(-max(frag.y - 0.04, 0.0) * 7.0);',
       '    col += mix(uCTop, uCMid, 0.3) * (haze * 0.022 + exp(-frag.y * 9.0) * 0.008) * amp;',
+      '    // tynn taake over hele himmelen i stedet for stjerner: store, myke slor som driver sakte',
+      '    vec2 fq = vec2(p.x * 1.5 + t * 0.004, frag.y * 2.6 - t * 0.002);',
+      '    float fog = smoothstep(0.36, 0.74, fbm(fq));',
+      '    col += mix(uCTop, uCMid, 0.25) * fog * (0.055 + 0.030 * smoothstep(0.3, 1.0, frag.y)) * amp;',
       '    col += (hash21(gl_FragCoord.xy * 1.7) - 0.5) * (1.5 / 255.0);',
       '    return vec4(col, clamp(body * 0.30 + curl * 0.20 + haze * 0.35, 0.0, 1.0));',
       '}',
@@ -6209,6 +6094,9 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
     'uniform float uTintK;',
     'uniform vec3 uPar;',
     'uniform float uIn;',
+    'uniform float uCap;',
+    'uniform float uAurOnly;',
+    'uniform float uAnchor;',
     'varying vec3 vCol;',
     'varying vec3 vGlow;',
     'varying vec4 vS;',
@@ -6216,11 +6104,19 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
     '  // tilsynelatende lysstyrke: komprimert magnitudeskala, myk grensemagnitude',
     '  float I0 = exp2(-0.58 * (aMag - 1.6));',
     '  float I = I0 * (1.0 - smoothstep(uLim - 0.5, uLim + 0.5, aMag));',
+    '  // de sterkeste stjernene tas bort (uCap = sterkeste magnitude som vises)',
+    '  I *= smoothstep(uCap - 0.4, uCap, aMag);',
     '  // dybde: sterke stjerner ligger naermest og flytter seg mest naar musa beveges (uPar)',
     '  float depth = (0.30 + 0.70 * fract(aSeed * 91.7)) * (0.25 + 0.75 * sqrt(min(I0, 1.0)));',
     '  vec2 css = vec2(uCss.x * 0.5 + aPos.x * 1000.0, aPos.y * 1000.0) - uPar.xy * uPar.z * depth * 22.0;',
     '  vec2 frag = vec2(css.x / uCss.x, 1.0 - css.y / uCss.y);',
     '  float aspect = uCss.x / uCss.y;',
+    '  // nordlys og kosmisk: stjerner bare oppe ved nordlyset, ikke lenger ned. baseY er',
+    '  // hovedbuens underkant og MAA speile baseY i AURORA_FS (scene 0).',
+    '  float por = 1.0 - smoothstep(0.60, 1.00, aspect);',
+    '  float anc = step(0.5, uAnchor) * (1.0 - smoothstep(0.55, 0.65, aspect));',
+    '  float baseY = mix(0.625 + 0.065 * por, 1.0 - uAnchor / uCss.y, anc);',
+    '  I *= mix(1.0, smoothstep(baseY - 0.16, baseY + 0.04, frag.y), uAurOnly);',
     '  // stjernene kommer fram litt etter litt, de sterkeste foerst (uIn gaar 0 -> 1)',
     '  float born = 0.70 * fract(aSeed * 37.3) * (1.0 - 0.6 * min(I0, 1.0));',
     '  I *= smoothstep(born, born + 0.30, uIn);',
@@ -6233,11 +6129,12 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
     '           + 0.3 * sin(uTime * (2.9 + 3.6 * fract(aSeed * 13.71)) + s * 3.7)',
     '           + 0.2 * sin(uTime * (6.3 + 5.2 * fract(aSeed * 29.37)) + s * 9.1);',
     '  I *= max(1.0 + mix(0.42, 0.14, ext) * uTwk * tw, 0.0);',
-    '  // glimt: omtrent annenhver stjerne blusser kort opp en gang iblant (hvert 10.-30. sekund)',
+    '  // glimt: noen faa stjerner (ca. 15 %) blusser svakt opp en gang iblant (hvert 10.-30. sekund)',
     '  float glint = pow(max(sin(uTime * (0.21 + 0.37 * fract(aSeed * 53.3)) + s * 11.0), 0.0), 48.0);',
-    '  I *= 1.0 + 1.5 * uTwk * glint * step(0.55, fract(aSeed * 17.9)) / (1.0 + 2.0 * I0);',
+    '  I *= 1.0 + 0.6 * uTwk * glint * step(0.85, fract(aSeed * 17.9)) / (1.0 + 2.0 * I0);',
+    '  // midten, der innholdet staar, er roligere enn kantene',
     '  vec2 vq = (frag - vec2(0.5, 0.55)) * vec2(1.0, 1.25);',
-    '  I *= 1.0 - 0.16 * dot(vq, vq);',
+    '  I *= 1.0 - 0.45 * exp(-dot(vq, vq) * 6.0);',
     '  // maanenatt: glansen visker ut stjerner rundt maanen, skiva dekker dem',
     '  float Rm = max(uMoonP.z, 0.001), mdd = length(vec2((frag.x - 0.5) * aspect, frag.y) - uMoonP.xy) * 0.038 / Rm;',
     '  I *= mix(1.0, (1.0 - 0.85 * exp(-mdd * mdd * 22.0)) * smoothstep(0.039, 0.054, mdd), uMoon);',
@@ -6251,10 +6148,10 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
     '  vCol = mix(c, vec3(max(c.r, max(c.g, c.b))), 0.55 * smoothstep(0.5, 1.3, I)) * I;',
     '  vGlow = max(mix(vec3(dot(c, vec3(0.299, 0.587, 0.114))), c, 1.9), 0.0) * I;',
     '  float halo = clamp((I - 0.20) / 0.9, 0.0, 1.6);',   // glorie fra ca. mag 5,6
-    '  float rays = clamp((I - 0.50) / 0.7, 0.0, 1.5);',   // stråler fra ca. mag 3,3
+    '  float rays = clamp((I - 0.90) / 0.8, 0.0, 1.0);',   // korte stråler bare på de aller sterkeste (fra ca. mag 1,9)
     '  float sig = max((0.52 + 0.30 * min(I, 1.2)) * uDpr, 0.6);',
     '  // punktet er bare saa stort som stjerna trenger: de fleste er 5 piksler brede',
-    '  float rad = max(1.6 + 18.4 * min(halo, 1.0), rays > 0.0 ? 2.7 * (2.0 + 13.0 * rays) : 0.0);',
+    '  float rad = max(1.6 + 18.4 * min(halo, 1.0), rays > 0.0 ? 2.7 * (2.0 + 8.0 * rays) : 0.0);',
     '  vS = vec4(min(2.0 * rad * uDpr + 2.0, uMaxPt), sig, halo, rays);',
     '  gl_PointSize = vS.x;',
     '  gl_Position = I < 0.003 ? vec4(-9.0, -9.0, 0.0, 1.0) : vec4(frag * 2.0 - 1.0, 0.0, 1.0);',
@@ -6278,14 +6175,12 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
     '  float rc2 = dot(q, q);',
     '  // punktspredning: skarp kjerne, tett gloed, vid aureole og lang hale hos de sterke',
     '  float core = exp(-r2 / (2.0 * vS.y * vS.y));',
-    '  float halo = vS.z * (0.30 * exp(-rc2 / 3.0) + 0.12 * exp(-rc2 / (10.0 + 30.0 * vS.z)) + 0.05 * exp(-sqrt(rc2) / (4.0 + 6.0 * vS.z)));',
-    '  // straaler: fire tynne og lange (diffraksjonskors), fire korte paa skraa',
-    '  float len = 2.0 + 13.0 * vS.w;',
+    '  float halo = vS.z * (0.26 * exp(-rc2 / 3.0) + 0.09 * exp(-rc2 / (10.0 + 30.0 * vS.z)) + 0.035 * exp(-sqrt(rc2) / (4.0 + 6.0 * vS.z)));',
+    '  // straaler: fire tynne og korte (diffraksjonskors), ingen paa skraa',
+    '  float len = 2.0 + 8.0 * vS.w;',
     '  vec2 a = abs(q);',
-    '  vec2 d = abs(vec2(q.x + q.y, q.x - q.y)) * 0.7071;',
-    '  float rays = 0.34 * (exp(-a.y * a.y * 2.2 - a.x / len) + exp(-a.x * a.x * 2.2 - a.y / len))',
-    '             + 0.09 * (exp(-d.y * d.y * 2.6 - d.x / (len * 0.42)) + exp(-d.x * d.x * 2.6 - d.y / (len * 0.42)));',
-    '  rays *= min(vS.w, 1.0);',
+    '  float rays = 0.20 * (exp(-a.y * a.y * 2.6 - a.x / len) + exp(-a.x * a.x * 2.6 - a.y / len));',
+    '  rays *= vS.w;',
     '  float win = 1.0 - smoothstep(0.36, 0.5, sqrt(r2) / vS.x);',
     '  vec4 bg = texture2D(uTex, gl_FragCoord.xy / uRes);',
     '  // skyer (maanenatt) og horisont dekker; sterkt nordlys senker bare kontrasten',
@@ -6466,7 +6361,7 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
           S.uA = U(S.A, ['uRes', 'uTime', 'uTimeR', 'uAmp', 'uLight', 'uSmk', 'uSkyTop', 'uSkyBot', 'uCEdge', 'uCMid', 'uCTop', 'uCFringe', 'uCss', 'uMW', 'uAnchor', 'uMoonGlow', 'uMoonP']);
           S.uC = U(S.C, ['uRes', 'uTime', 'uLight', 'uMouse', 'uMouseAmt', 'uCMid', 'uStarTint', 'uTex', 'uDust', 'uMoon', 'uCEdge', 'uFx', 'uMoonAlb', 'uMoonNrm', 'uMoonMap', 'uMoonL', 'uMoonK', 'uMoonP']);
         }
-        if (progP && !uP) uP = U(progP, ['uCss', 'uDpr', 'uTime', 'uLim', 'uGain', 'uTwk', 'uTint', 'uTintK', 'uMoon', 'uMoonP', 'uMaxPt', 'uTex', 'uRes', 'uMode', 'uPar', 'uIn']);
+        if (progP && !uP) uP = U(progP, ['uCss', 'uDpr', 'uTime', 'uLim', 'uGain', 'uTwk', 'uTint', 'uTintK', 'uMoon', 'uMoonP', 'uMaxPt', 'uTex', 'uRes', 'uMode', 'uPar', 'uIn', 'uCap', 'uAurOnly', 'uAnchor']);
         if (scene) { uA = scene.uA; uC = scene.uC; }
       };
       return true;
@@ -6755,7 +6650,8 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
       // 3) stjerner — punkter, additivt
-      var gain = (CONFIG.STARS && !isSmoke) ? (1 - cc.light[0]) : 0;
+      // carbon (mode 5) har tåke i stedet for stjerner
+      var gain = (CONFIG.STARS && !isSmoke && mode !== 5) ? (1 - cc.light[0]) : 0;
       if (progP && uP && starCount > 0 && gain > 0) {
         gl.useProgram(progP);
         useStars();
@@ -6770,10 +6666,14 @@ html[data-theme] .daily-head .daily-cal{height:28px;background:rgba(var(--wash-r
         gl.uniform1f(uP.uGain, gain);
         gl.uniform1f(uP.uTwk, isStatic ? 0 : Math.max(0, Math.min(1, +CONFIG.TWINKLE || 0)));
         v3(uP.uTint, cc.star);
-        gl.uniform1f(uP.uTintK, mode === 5 ? 0.45 : 0.16);   // carbon: få, varme stjerner
-        // sola (carbon) skjuler stjernene bak skiva og visker dem ut i koronaen, som månen
-        gl.uniform1f(uP.uMoon, (mode === 4 || mode === 5) ? 1 : 0);
-        if (mode === 4 || mode === 5) gl.uniform3f(uP.uMoonP, moonP[0], moonP[1], moonP[2]);
+        gl.uniform1f(uP.uTintK, 0.16);
+        gl.uniform1f(uP.uMoon, mode === 4 ? 1 : 0);
+        if (mode === 4) gl.uniform3f(uP.uMoonP, moonP[0], moonP[1], moonP[2]);
+        // De sterkeste stjernene tas bort: i nordlys og kosmisk alle som ville fått stråler,
+        // på månenatt står noen få igjen. Nordlys og kosmisk har stjerner bare oppe ved lyset.
+        gl.uniform1f(uP.uCap, mode === 0 ? 2.6 : 0.4);
+        gl.uniform1f(uP.uAurOnly, mode === 0 ? 1 : 0);
+        gl.uniform1f(uP.uAnchor, anchorY);
         gl.uniform1f(uP.uMaxPt, maxPt);
         gl.uniform1f(uP.uMode, mode);
         gl.uniform3f(uP.uPar, mx - 0.5, my - 0.5, isStatic ? 0 : mAmt);
