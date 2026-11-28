@@ -2579,7 +2579,7 @@ REGIONS['no'] = {
     kalkyleReassure:'Tallene du skriver inn, blir i nettleseren din.',
 
     // kalkulator/-hub: Kalkyle-promobanner
-    kalkCatKalkyleKicker:'Ny seksjon', kalkCatKalkyleTitle:'Kalkyle — prising for bedrift',
+    kalkCatKalkyleTitle:'Kalkyle — prising for bedrift',
     kalkCatKalkyleDesc:'Margin, selvkost, break-even, timepris, food cost og mer — 9 kalkyler for småbedrift, frilans og håndverk.',
 
     // kalkyle/margin — Margin og påslag

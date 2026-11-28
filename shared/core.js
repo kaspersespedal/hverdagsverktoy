@@ -26,7 +26,7 @@ function loadLang(code) {
   if(_langLoading[code]) return _langLoading[code];
   _langLoading[code] = new Promise(function(resolve, reject) {
     var s = document.createElement('script');
-    s.src = '/shared/lang/' + code + '.js?v=v525';
+    s.src = '/shared/lang/' + code + '.js?v=v528';
     s.onload = function() { delete _langLoading[code]; resolve(); };
     s.onerror = function() { delete _langLoading[code]; reject(new Error('Failed to load lang: ' + code)); };
     document.head.appendChild(s);
@@ -66,6 +66,7 @@ function setEl(id, val) { var el=document.getElementById(id); if(el) el.textCont
 function getVal(id, fallback) { var el=document.getElementById(id); var v=el?+el.value:NaN; return isNaN(v)?(fallback||0):v; }
 function getChk(id) { var el=document.getElementById(id); return el?!!el.checked:false; }
 // Live-format number inputs
+// Alle tallfelt (inputmode="numeric" og "decimal") får tusenskille mens man skriver.
 // Leser teksten i et tallfelt og skriver den pent tilbake: tusenskille i heltallsdelen,
 // desimalene beholdes. Komma er desimaltegn. Punktum er tusenskille når det står komma
 // i tallet («1.500,50») eller når bare grupper på tre sifre følger («1.000», «2.000.000»);
@@ -79,7 +80,8 @@ function fmtLiveNum(value) {
   var neg = s.charAt(0) === '-';
   var sep = '', i;
   if(s.indexOf(',') > -1) { s = s.replace(/\./g,''); i = s.indexOf(','); sep = ','; }
-  else if(/^-?\d{1,3}(\.\d{3})+$/.test(s)) { s = s.replace(/\./g,''); i = -1; }
+  // Tusengruppe kan ikke starte med 0: «0.125» (kurs, rente) er et desimaltall, ikke 125.
+  else if(/^-?[1-9]\d{0,2}(\.\d{3})+$/.test(s)) { s = s.replace(/\./g,''); i = -1; }
   else { i = s.indexOf('.'); if(i > -1) sep = '.'; }
   var intPart = (i < 0 ? s : s.slice(0, i)).replace(/\D/g,'');
   var decPart = i < 0 ? '' : s.slice(i + 1).replace(/\D/g,'');
@@ -87,9 +89,10 @@ function fmtLiveNum(value) {
   return (neg ? '-' : '') + fmtInput(intPart === '' ? 0 : parseInt(intPart, 10)) + sep + decPart;
 }
 let _fmtLiveBusy = false;
+function _isTallfelt(el) { return el.inputMode === 'numeric' || el.inputMode === 'decimal'; }
 document.addEventListener('input', function(e) {
   const el = e.target;
-  if(_fmtLiveBusy || el.inputMode !== 'numeric') return;
+  if(_fmtLiveBusy || !_isTallfelt(el)) return;
   const out = fmtLiveNum(el.value);
   // Hardt mellomrom som tusenskille (noen sider formaterer selv slik) regnes som ferdig formatert.
   if(out === null || out === el.value.replace(/[\u00a0\u202f]/g,' ')) return;
@@ -111,7 +114,7 @@ document.addEventListener('input', function(e) {
 // som alle sidenes egne tolkere leser riktig.
 document.addEventListener('change', function(e) {
   const el = e.target;
-  if(el.inputMode !== 'numeric' || !/^-?[\d ]*\.\d+$/.test(el.value)) return;
+  if(!_isTallfelt(el) || !/^-?[\d ]*\.\d+$/.test(el.value)) return;
   el.value = el.value.replace('.', ',');
   el.dispatchEvent(new Event('input', {bubbles:true}));
 });
